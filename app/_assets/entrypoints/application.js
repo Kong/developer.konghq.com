@@ -5,4 +5,4 @@
 console.log('Vite ⚡️ Ruby')
 
 // Example: Import a stylesheet in <sourceCodeDir>/index.css
-// import '~/index.css'
+import '~/stylesheets/index.css'
