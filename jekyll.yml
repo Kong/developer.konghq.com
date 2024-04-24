@@ -1,0 +1,24 @@
+source: app
+destination: dist
+permalink: pretty
+timezone: America/San_Francisco
+markdown: kramdown
+kramdown:
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: "highlight"
+    guess_lang: true
+incremental: true
+
+keep_files:
+  - assets
+
+# Site settings
+name: Kong Developer
+title: Kong Developer
+
+links:
+  web: https://developer.konghq.com
+
+plugins:
+  - jekyll-include-cache
