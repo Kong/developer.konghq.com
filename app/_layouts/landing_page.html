@@ -7,9 +7,9 @@ layout: default
     {% for column in rows.row %}
       <div class="p-4 bg-red-200">
         {% for entry in column.column %}
-          <p class="mb-2">This is a [{{ entry.type }}] block</p>
-
-          <code class="w-128 mb-2 inline-block">{{ entry | inspect }}</code>
+          {% assign include_path = "landing_pages/" | append: entry.type | append : ".erb.html" %}
+          {% assign config = entry[entry.type] %}
+          {% include {{ include_path }} type=entry.type config=config %}
         {% endfor %}
       </div>
     {% endfor %}
