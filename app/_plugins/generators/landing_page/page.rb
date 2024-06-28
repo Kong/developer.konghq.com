@@ -12,9 +12,10 @@ module Jekyll
 
         @dir = output_path(file)
 
-        @content = "HELLO WORLD"
+        @content = ""
         @data = {
-          'title' => 'This is a test'
+          'title' => 'This is a test',
+          'config' => @data['content']
         }
 
         # Needed so that regeneration works for single sourced pages
@@ -22,7 +23,7 @@ module Jekyll
         # Also, @path MUST NOT be set, it falls back to @relative_path
         @relative_path = file
 
-        @data['layout'] = 'default'
+        @data['layout'] = 'landing_page'
       end
 
       private

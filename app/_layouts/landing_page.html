@@ -1,0 +1,17 @@
+---
+layout: default
+---
+
+{% for rows in page.config %}
+  <div class="grid grid-cols-{{ rows.row | size }} gap-4 mb-2">
+    {% for column in rows.row %}
+      <div class="p-4 bg-red-200">
+        {% for entry in column.column %}
+          <p class="mb-2">This is a [{{ entry.type }}] block</p>
+
+          <code class="w-128 mb-2 inline-block">{{ entry | inspect }}</code>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+{% endfor %}
