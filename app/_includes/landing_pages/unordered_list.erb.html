@@ -1,2 +1,10 @@
-<p class="mb-2">This is a [{{ include.type }}] block</p>
-<code class="w-128 mb-2 inline-block">{{ include.config | inspect }}</code>
+<ul class="list-disc ml-4">
+  {% for list_item in include.config %}
+    <li>
+      {% for badge in list_item.badges %}
+        <span class="bg-blue-200 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full mr-0.5">{{ badge }}</span>
+      {% endfor %}
+      {{ list_item.text }}
+    </li>
+  {% endfor %}
+</ul>

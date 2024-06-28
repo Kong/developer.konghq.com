@@ -1,2 +1,24 @@
-<p class="mb-2">This is a [{{ include.type }}] block</p>
-<code class="w-128 mb-2 inline-block">{{ include.config | inspect }}</code>
+<h3 class="text-xl mb-2">{{ include.config.header }}</h3>
+
+{% for item in include.config.blocks %}
+  {% if item.type == "text" %}
+    <p class="mb-2">{{ item.text }}</p>
+  {% endif %}
+
+  {% if item.type == "ordered_list" %}
+    <ol class="list-decimal mb-2 ml-4">
+      {% for list_item in item.items %}
+        <li>{{ list_item }}</li>
+      {% endfor %}
+    </ol>
+  {% endif %}
+
+  {% if item.type == "unordered_list" %}
+    <ul class="list-disc mb-2 ml-4">
+      {% for list_item in item.items %}
+        <li>{{ list_item }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+{% endfor %}

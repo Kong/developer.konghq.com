@@ -12,19 +12,19 @@ content:
           - type: structured_text
             structured_text:
               header: "What is Rate Limiting?"
-              text:
-                - content:
-                    Rate Limiting is a technique for preventing individual
+              blocks:
+                - type: text
+                  text: Rate Limiting is a technique for preventing individual
                     users or clients from overloading a system by making
                     too many requests over a specific time period.
                     It's a critical function that helps maintain
                     the performance and availability of web
                     services and APIs by controlling the request traffic.
       - column:
-          - type: diagram
+          - type: mermaid
             alt_text: "A diagram with alt text for compliance"
             align: left
-            mermaid: >
+            mermaid: |
               sequenceDiagram
               autonumber
               activate Client
@@ -44,40 +44,47 @@ content:
           - type: structured_text
             structured_text:
               header: "Why is Rate Limiting important?"
-              text:
-                - content: Rate Limiting is necessary when using an API Gateway for the following reasons
-                - content:
-                  type: ordered_list
-                  list:
-                    - item: "Resource Protection: Ensures that no single user or client could monopolize resources and degrade the performance or impact the experience of other users."
-                    - item: "Security: Helps protect against certain types of security attacks, like DDoS (Distributed Denial of Service) attacks, by limiting the rate at which requests can be made."
-                    - item: "Cost Management: Prevents an explosion of usage (therefore cost) from either a bug or deliberately heavy usage by a consumer."
-                    - item: "Quality of Service: Certain user tiers may be given different rate limits to ensure a level of service. For example, premium users may have a higher rate limit than free users."
-                    - item: "Enforcing API Tiers/Plans: Different pricing plans may have different usage limits."
-                - content: Rate limits are typically defined on per-second, per-minute or hourly intervals and are often configurable so they can be finely tuned based on the specific requirements of the system and its users
+              blocks:
+                - type: text
+                  text: Rate Limiting is necessary when using an API Gateway for the following reasons
+                - type: ordered_list
+                  items:
+                    - "Resource Protection: Ensures that no single user or client could monopolize resources and degrade the performance or impact the experience of other users."
+                    - "Security: Helps protect against certain types of security attacks, like DDoS (Distributed Denial of Service) attacks, by limiting the rate at which requests can be made."
+                    - "Cost Management: Prevents an explosion of usage (therefore cost) from either a bug or deliberately heavy usage by a consumer."
+                    - "Quality of Service: Certain user tiers may be given different rate limits to ensure a level of service. For example, premium users may have a higher rate limit than free users."
+                    - "Enforcing API Tiers/Plans: Different pricing plans may have different usage limits."
+                - type: text
+                  text: Rate limits are typically defined on per-second, per-minute or hourly intervals and are often configurable so they can be finely tuned based on the specific requirements of the system and its users
 
   - row:
       - column:
           - type: structured_text
             structured_text:
               header: "Kong Gateway"
-              text:
-                - content: Kong Gateway provides several Plugins to add Rate Limiting to the Kong Gateway API.
-                - content: <a href="https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/how-to/">Add Rate Limiting per Service Using the Rate Limiting Plugin</a>
+              blocks:
+                - type: text
+                  text: Kong Gateway provides several Plugins to add Rate Limiting to the Kong Gateway API.
+                - type: text
+                  text: <a href="https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/how-to/">Add Rate Limiting per Service Using the Rate Limiting Plugin</a>
       - column:
           - type: structured_text
             structured_text:
               header: "KIC"
-              text:
-                - content: KIC relies on Kong Gateway's Plugins, but configuring them with Kong Ingress Controller is different. Rather than attaching a configuration directly to a Service or Route, you create a KongPlugin definition and then annotate your Kubernetes resource with the konghq.com/plugins annotation..
-                - content: <a href="https://docs.konghq.com/hub/kIC/">Add Rate Limiting per Service using KIC</a>
+              blocks:
+                - type: text
+                  text: KIC relies on Kong Gateway's Plugins, but configuring them with Kong Ingress Controller is different. Rather than attaching a configuration directly to a Service or Route, you create a KongPlugin definition and then annotate your Kubernetes resource with the konghq.com/plugins annotation..
+                - type: text
+                  text: <a href="https://docs.konghq.com/hub/kIC/">Add Rate Limiting per Service using KIC</a>
       - column:
           - type: structured_text
             structured_text:
               header: "Kong Mesh"
-              text:
-                - content: Kong Mesh supports rate limiting via Mesh Proxies. There are two rate limiting mechanisms local using MeshRateLimit and global using MeshGlobalRateLimit policies.
-                - content: <a href="https://docs.konghq.com/hub/kIC/">Add Global Rate Limiting with Kong Mesh</a>
+              blocks:
+                - type: text
+                  text: Kong Mesh supports rate limiting via Mesh Proxies. There are two rate limiting mechanisms local using MeshRateLimit and global using MeshGlobalRateLimit policies.
+                - type: text
+                  text: <a href="https://docs.konghq.com/hub/kIC/">Add Global Rate Limiting with Kong Mesh</a>
 
   - row:
       - column:
@@ -90,11 +97,11 @@ content:
                   product: None, # where none means all
                   topic: rate-limiting
             quantity: 5
-          - type: see_more
-            action_button:
+          - type: cta
+            cta:
               text: "View more"
               url: "https://docs.devsite.com/search/{tutorial.topic}+{other stuff}" ## Takes you to search with terms that match this.
-              align_button: right
+              align: end
 
   - row:
       - column:
@@ -103,11 +110,10 @@ content:
               content: "## References"
           - type: unordered_list
             unordered_list:
-              list:
-                - item: "[Mesh Rate Limiting Policy](/voice/voice-api/code-snippets/before-you-begin)"
-                  badge: ["kuma", "oss"]
-                - item: "[Rate Limiting per consumer using Kic](/voice/voice-api/guides/ncco)"
-                  badge: ["kic", "oss"]
+              - text: "[Mesh Rate Limiting Policy](/voice/voice-api/code-snippets/before-you-begin)"
+                badges: ["kuma", "oss"]
+              - text: "[Rate Limiting per consumer using Kic](/voice/voice-api/guides/ncco)"
+                badges: ["kic", "oss"]
   - row:
       - column:
           - type: header
@@ -126,8 +132,6 @@ content:
               content: "## Related Resources"
           - type: unordered_list
             unordered_list:
-              bullet_shape: simple
-              list:
-                - item: "[Leveraging Mesh](/voice/voice-api/code-snippets/before-you-begin)"
-                - item: "[How to ratelimiting](/voice/voice-api/guides/ncco)"
-                - item: "[How to design a scalable Rate Limiting Algorithm with Kong API](https://www.nexmo.com/blog/2018/06/28/receive-an-inbound-voice-call-with-php-dr/)"
+              - text: "[Leveraging Mesh](/voice/voice-api/code-snippets/before-you-begin)"
+              - text: "[How to ratelimiting](/voice/voice-api/guides/ncco)"
+              - text: "[How to design a scalable Rate Limiting Algorithm with Kong API](https://www.nexmo.com/blog/2018/06/28/receive-an-inbound-voice-call-with-php-dr/)"
