@@ -4,11 +4,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
     <title>{{ page.title }} - {{ site.title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 
     {% vite_client_tag %}
     {% vite_javascript_tag application %}
   </head>
   <body>
-    {{ content }}
-  </body>
+    <header class='flex spy-4 px-10 bg-slate-500 min-h-[70px] tracking-wide relative z-50'>
+      <div class='flex flex-wrap items-center justify-between gap-5 w-full'>
+
+        <div class="flex flex-row items-center">
+          <a href="https://konghq.com" class="pr-4" target="_blank" rel="noopener noreferrer">
+            <img src="https://docs.konghq.com/assets/images/logos/konglogo-dark-theme.svg" alt="Kong Logo" id="kong-logo">
+          </a>
+          <a href="/">
+            <img src="https://docs.konghq.com//assets/images/logos/docslogo-dark-theme.svg" alt="Kong Docs Logo" id="kong-docs-logo">
+          </a>
+        </div>
+
+        <div id="collapseMenu">
+
+          <ul
+        class='lg:flex gap-x-5 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-1/2 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-6 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50'>
+            <li class='max-lg:border-b border-gray-300 max-lg:py-3 px-3'>
+              <a href='/' class='text-white hover:text-red-200'>Home</a>
+            </li>
+          </li>
+        </ul>
+      </div>
+
+      <div class='flex max-lg:ml-auto space-x-3'>
+        <button
+        class='px-4 py-2 text-sm rounded-full font-bold text-white border-2'>Login</button>
+        <button
+        class='px-4 py-2 text-sm rounded-full font-bold text-white border-2'>Sign up</button>
+
+      </div>
+    </div>
+  </header>
+  {{ content }}
+</body>
 </html>
