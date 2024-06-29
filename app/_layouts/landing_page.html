@@ -4,7 +4,7 @@ layout: default
 
 <div class="mx-16">
 {% for rows in page.config %}
-  <div class="grid grid-cols-{{ rows.row | size }} gap-2 mb-2">
+  <div class="grid grid-cols-1 lg:grid-cols-{{ rows.row | size }} gap-2 mb-2">
     {% for column in rows.row %}
       <div class="p-4 flex flex-col">
         {% for entry in column.column %}
