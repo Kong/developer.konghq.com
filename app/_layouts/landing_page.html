@@ -7,7 +7,7 @@ layout: default
     {% for column in rows.row %}
       <div class="p-4 bg-red-200 flex flex-col">
         {% for entry in column.column %}
-          {% assign include_path = "landing_pages/" | append: entry.type | append : ".erb.html" %}
+          {% assign include_path = "landing_pages/" | append: entry.type | append : ".erb.md" %}
           {% assign config = entry[entry.type] %}
           {% include {{ include_path }} type=entry.type config=config %}
         {% endfor %}
