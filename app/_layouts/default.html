@@ -4,7 +4,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
     <title>{{ page.title }} - {{ site.title }}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
 
     {% vite_client_tag %}
     {% vite_javascript_tag application %}
@@ -22,7 +21,7 @@
           </a>
         </div>
 
-        <ul class='flex gap-x-5 z-50'>
+        <ul class='flex gap-x-5 list-none'>
           <li class='border-gray-300 max-lg:py-3 px-3'>
             <a href='/' class='text-white hover:text-red-200'>Home</a>
           </li>

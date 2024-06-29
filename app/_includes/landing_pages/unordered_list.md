@@ -1,4 +1,4 @@
-<ul class="list-disc ml-4">
+<ul>
   {% for list_item in include.config %}
     <li>
       {% for badge in list_item.badges %}

@@ -1,0 +1,27 @@
+h1 {
+  @apply text-3xl mb-2;
+}
+
+h2 {
+  @apply text-2xl mb-2;
+}
+
+h3 {
+  @apply text-xl mb-2;
+}
+
+ul {
+  @apply list-disc mb-2 ml-6;
+}
+
+ol {
+  @apply list-decimal mb-2 ml-6;
+}
+
+p {
+  @apply mb-2;
+}
+
+li {
+  @apply mb-1;
+}
