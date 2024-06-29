@@ -26,6 +26,10 @@ module Jekyll
         @data['layout'] = 'tutorial'
       end
 
+      def url
+        @dir.sub(@site.dest, '')
+      end
+
       private
 
       def output_path(file)
