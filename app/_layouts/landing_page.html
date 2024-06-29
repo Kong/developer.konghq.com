@@ -2,16 +2,17 @@
 layout: default
 ---
 
+<div class="mx-16">
 {% for rows in page.config %}
-  <div class="grid grid-cols-{{ rows.row | size }} gap-4 mb-2">
+  <div class="grid grid-cols-{{ rows.row | size }} gap-2 mb-2">
     {% for column in rows.row %}
-      <div class="p-4 bg-red-200 flex flex-col">
+      <div class="p-4 flex flex-col">
         {% for entry in column.column %}
-          {% assign include_path = "landing_pages/" | append: entry.type | append : ".erb.md" %}
-          {% assign config = entry[entry.type] %}
-          {% include {{ include_path }} type=entry.type config=config %}
+          {% assign include_path = "landing_pages/" | append: entry.type | append : ".md" %}
+          {% include {{ include_path }} type=entry.type config=entry.config %}
         {% endfor %}
       </div>
     {% endfor %}
   </div>
 {% endfor %}
+</div>

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Jekyll
   module CustomFilters
     def markdown(input)
@@ -6,7 +8,7 @@ module Jekyll
       ).convert(input.to_s)
 
       # Remove the outer paragraph tag that markdown converter adds
-      r.sub(/<p>/, '').sub(/<\/p>/, '')
+      r.sub(/<p>/, '').sub(%r{</p>}, '')
     end
   end
 end

@@ -12,7 +12,7 @@ module Jekyll
 
         @dir = output_path(file)
 
-        @content = ""
+        @content = ''
         @data = {
           'title' => 'This is a test',
           'config' => @data['content']
@@ -29,7 +29,7 @@ module Jekyll
       private
 
       def output_path(file)
-        file.sub(@site.source, @site.dest).sub(/\/_landing_pages\/([\w\/]+)\.yaml$/, '/\1/')
+        file.sub(@site.source, @site.dest).sub(%r{/_landing_pages/([\w/]+)\.yaml$}, '/\1/')
       end
     end
   end

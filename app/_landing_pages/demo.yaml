@@ -2,16 +2,17 @@ content:
   - row:
       - column:
           - type: header
-            header:
-              title:
-                text: "Rate Limiting"
-                align: center
+            config:
+              type: h1
+              text: "Rate Limiting"
+              align: center
 
   - row:
       - column:
           - type: structured_text
-            structured_text:
-              header: "What is Rate Limiting?"
+            config:
+              header:
+                text: "What is Rate Limiting?"
               blocks:
                 - type: text
                   text: Rate Limiting is a technique for preventing individual
@@ -22,28 +23,29 @@ content:
                     services and APIs by controlling the request traffic.
       - column:
           - type: mermaid
-            alt_text: "A diagram with alt text for compliance"
-            align: left
-            mermaid: |
-              sequenceDiagram
-              autonumber
-              activate Client
-              activate Kong
-              Client->>Kong: text(fin=false, len=500, msg=[...])
-              note right of Kong: buffer += 500 (500)
-              Client->>Kong: continue(fin=false, len=500, msg=[...])
-              note right of Kong: buffer += 500 (1000)
-              Client->>Kong: continue(fin=false, len=500, msg=[...])
-              note right of Kong: buffer += 500 (1500) <br> buffer >= 1024 (limit exceeded!)
-              Kong->>Client: close(status=1009, msg="Payload Too Large")
-              deactivate Kong
-              deactivate Client
+            config:
+              alt_text: "A diagram with alt text for compliance"
+              diagram: |
+                sequenceDiagram
+                autonumber
+                activate Client
+                activate Kong
+                Client->>Kong: text(fin=false, len=500, msg=[...])
+                note right of Kong: buffer += 500 (500)
+                Client->>Kong: continue(fin=false, len=500, msg=[...])
+                note right of Kong: buffer += 500 (1000)
+                Client->>Kong: continue(fin=false, len=500, msg=[...])
+                note right of Kong: buffer += 500 (1500) <br> buffer >= 1024 (limit exceeded!)
+                Kong->>Client: close(status=1009, msg="Payload Too Large")
+                deactivate Kong
+                deactivate Client
 
   - row:
       - column:
           - type: structured_text
-            structured_text:
-              header: "Why is Rate Limiting important?"
+            config:
+              header:
+                text: "Why is Rate Limiting important?"
               blocks:
                 - type: text
                   text: Rate Limiting is necessary when using an API Gateway for the following reasons
@@ -60,8 +62,9 @@ content:
   - row:
       - column:
           - type: structured_text
-            structured_text:
-              header: "Kong Gateway"
+            config:
+              header:
+                text: "Kong Gateway"
               blocks:
                 - type: text
                   text: Kong Gateway provides several Plugins to add Rate Limiting to the Kong Gateway API.
@@ -69,8 +72,9 @@ content:
                   text: <a href="https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/how-to/">Add Rate Limiting per Service Using the Rate Limiting Plugin</a>
       - column:
           - type: structured_text
-            structured_text:
-              header: "KIC"
+            config:
+              header:
+                text: "KIC"
               blocks:
                 - type: text
                   text: KIC relies on Kong Gateway's Plugins, but configuring them with Kong Ingress Controller is different. Rather than attaching a configuration directly to a Service or Route, you create a KongPlugin definition and then annotate your Kubernetes resource with the konghq.com/plugins annotation..
@@ -78,8 +82,9 @@ content:
                   text: <a href="https://docs.konghq.com/hub/kIC/">Add Rate Limiting per Service using KIC</a>
       - column:
           - type: structured_text
-            structured_text:
-              header: "Kong Mesh"
+            config:
+              header:
+                text: "Kong Mesh"
               blocks:
                 - type: text
                   text: Kong Mesh supports rate limiting via Mesh Proxies. There are two rate limiting mechanisms local using MeshRateLimit and global using MeshGlobalRateLimit policies.
@@ -89,27 +94,28 @@ content:
   - row:
       - column:
           - type: header
-            text:
-              content: "## Tutorials"
-          - type: unordered_list
-            tutorial:
-              - metadata:
-                  product: None, # where none means all
-                  topic: rate-limiting
+            config:
+              type: h2
+              text: Tutorials
+          - type: tutorial_list
+            config:
+              - topic: rate-limiting
+                product: gateway # omit for all products
             quantity: 5
           - type: cta
-            cta:
-              text: "View more"
+            config:
+              text: "View more tutorials &raquo;"
               url: "https://docs.devsite.com/search/{tutorial.topic}+{other stuff}" ## Takes you to search with terms that match this.
               align: end
 
   - row:
       - column:
           - type: header
-            text:
-              content: "## References"
+            config:
+              type: h2
+              text: References
           - type: unordered_list
-            unordered_list:
+            config:
               - text: "[Mesh Rate Limiting Policy](/voice/voice-api/code-snippets/before-you-begin)"
                 badges: ["kuma", "oss"]
               - text: "[Rate Limiting per consumer using Kic](/voice/voice-api/guides/ncco)"
@@ -117,21 +123,30 @@ content:
   - row:
       - column:
           - type: header
-            text:
-              content: "## Recommended Plugins"
+            config:
+              type: h2
+              text: Recommended Plugins
+  - row:
+      - column:
           - type: plugin
-            plugin: plugin.ratelimiting
+            config:
+              name: rate-limiting
+      - column:
           - type: plugin
-            plugin: plugin.ratelimitingadvanced
+            config:
+              name: rate-limiting-advanced
+      - column:
           - type: plugin
-            plugin: plugin.AIRatelimitingAdvanced
+            config:
+              name: ai-rate-limiting-advanced
   - row:
       - column:
           - type: header
-            text:
-              content: "## Related Resources"
+            config:
+              type: h2
+              text: "Related Resources"
           - type: unordered_list
-            unordered_list:
+            config:
               - text: "[Leveraging Mesh](/voice/voice-api/code-snippets/before-you-begin)"
               - text: "[How to ratelimiting](/voice/voice-api/guides/ncco)"
               - text: "[How to design a scalable Rate Limiting Algorithm with Kong API](https://www.nexmo.com/blog/2018/06/28/receive-an-inbound-voice-call-with-php-dr/)"

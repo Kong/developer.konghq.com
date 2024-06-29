@@ -1,1 +1,0 @@
-<h2 class="text-2xl align-{{ include.config.title.align }}">{{ include.config.title.text }}</h2>

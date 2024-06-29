@@ -1,4 +1,4 @@
-<h3 class="text-xl mb-2">{{ include.config.header }}</h3>
+<h3 class="text-xl mb-2">{{ include.config.header.text }}</h3>
 
 {% for item in include.config.blocks %}
 {% if item.type == "text" %}
