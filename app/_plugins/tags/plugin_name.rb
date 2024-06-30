@@ -14,7 +14,7 @@ module Jekyll
       r = {
         'rate-limiting' => 'Rate Limiting',
         'rate-limiting-advanced' => 'Rate Limiting Advanced',
-        'ai-rate-limiting-advanced' => 'AI Rate Limiting Advanced',
+        'ai-rate-limiting-advanced' => 'AI Rate Limiting Advanced'
       }[t]
 
       return r if r
@@ -27,7 +27,7 @@ module Jekyll
       # 0 is the page scope, 1 is the local scope
       [0, 1].each do |k|
         next unless context.scopes[k]
-            
+
         ref = context.scopes[k].dig(*path)
         variable = ref if ref
       end
