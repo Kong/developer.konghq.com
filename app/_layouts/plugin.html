@@ -28,7 +28,16 @@ layout: default
   </div>
   <div class="flex">
     <div class="p-4 w-2/3">
-      {{ content }}
+
+      <div id="plugin-content">
+        {{ content }}
+      </div>
+      {% ifhascontent faq %}
+      <div id="faq" class="mt-4">
+        <h2>FAQ</h2>
+        {% contentblock faq %}
+      </div>
+      {% endifhascontent faq %}
     </div>
     <div class="pl-4 mt-4 w-1/3">
       <div class="bg-blue-200 py-4 px-8">
