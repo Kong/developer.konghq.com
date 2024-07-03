@@ -13,3 +13,7 @@ group :development do
   gem 'rubocop'
   gem 'foreman'
 end
+
+group :jekyll_plugins do
+  gem 'jekyll-contentblocks'
+end
