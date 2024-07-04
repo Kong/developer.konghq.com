@@ -1,0 +1,40 @@
+---
+layout: default
+---
+
+<div class="mx-16 mt-8">
+  <div class="flex">
+    <div class="p-4 w-full">
+      <div id="content">
+        {{ content }}
+      </div>
+
+      {% ifhascontent schema %}
+        <div id="schema" class="mt-4">
+          <h2>Schema</h2>
+          {% contentblock schema %}
+        </div>
+      {% endifhascontent schema %}
+
+      {% ifhascontent faq %}
+        <div id="faq" class="mt-4">
+          <h2>FAQ</h2>
+          {% contentblock faq %}
+        </div>
+      {% endifhascontent faq %}
+
+      {% ifhascontent manage_entity %}
+        <div id="manage-entity" class="mt-4">
+          {% contentblock manage_entity %}
+        </div>
+      {% endifhascontent manage_entity %}
+
+      {% if page.related_resources %}
+        <div id="related-resources" class="mt-4">
+          <h2>Related Resources</h2>
+          {% include landing_pages/unordered_list.md config=page.related_resources %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
