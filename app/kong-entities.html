@@ -1,0 +1,14 @@
+---
+layout: default
+---
+
+<div class="mx-16">
+  <h1 class="text-3xl my-4">All Kong Entities</h1>
+  {% for entity in site.kong_entities %}
+    <ul class="list-disc list-inside">
+      <li>
+        <a href="{{ entity.url }}" class="text-blue-500 hover:underline">{{ entity.title }}</a>
+      </li>
+    </ul>
+  {% endfor %}
+</div>
