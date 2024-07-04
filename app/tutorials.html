@@ -4,10 +4,10 @@ layout: default
 
 <div class="mx-16">
   <h1 class="text-3xl my-4">All Tutorials</h1>
-  {% for t in page.tutorials %}
+  {% for tutorial in site.tutorials %}
     <ul class="list-disc list-inside">
       <li>
-        <a href="{{ t.url }}" class="text-blue-500 hover:underline">{{ t.title }}</a>
+        <a href="{{ tutorial.url }}" class="text-blue-500 hover:underline">{{ tutorial.title }}</a>
       </li>
     </ul>
   {% endfor %}

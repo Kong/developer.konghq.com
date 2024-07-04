@@ -24,6 +24,37 @@ plugins:
   - jekyll-include-cache
   - jekyll/vite
 
+# Collections
+collections:
+  kong_plugins:
+    output: true
+  kong_entities:
+    output: true
+  tutorials:
+    output: true
+
+defaults:
+  - scope:
+      path: "_kong_plugins"
+      type: "kong_plugins"
+    values:
+      layout: "plugin"
+      permalink: /plugins/:path/
+  - scope:
+      path: "_tutorials"
+      type: "tutorials"
+    values:
+      layout: "tutorial"
+      permalink: /:collection/:path/
+  - scope:
+      path: "_kong_entities"
+      type: "kong_entities"
+    values:
+      layout: "kong_entity"
+      permalink: /kong-entities/:path/
+
+
+
 # product name vars
 base_gateway: Kong Gateway
 konnect_short_name: Konnect
