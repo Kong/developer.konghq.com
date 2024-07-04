@@ -145,8 +145,11 @@ content:
             config:
               type: h2
               text: "Related Resources"
-          - type: unordered_list
+          - type: related_resources
             config:
-              - text: "[Leveraging Mesh](/voice/voice-api/code-snippets/before-you-begin)"
-              - text: "[How to ratelimiting](/voice/voice-api/guides/ncco)"
-              - text: "[How to design a scalable Rate Limiting Algorithm with Kong API](https://www.nexmo.com/blog/2018/06/28/receive-an-inbound-voice-call-with-php-dr/)"
+              - text: Leveraging Mesh
+                url: /voice/voice-api/code-snippets/before-you-begin
+              - text: How to ratelimiting
+                url: /voice/voice-api/guides/ncco
+              - text: How to design a scalable Rate Limiting Algorithm with Kong API
+                url: https://www.nexmo.com/blog/2018/06/28/receive-an-inbound-voice-call-with-php-dr/

@@ -4,7 +4,7 @@ module Jekyll
   module LiquifyFilter
     def liquify(input)
       if input.is_a? String
-        Liquid::Template.parse(input).render(@context)
+        Liquid::Template.parse(input).render(@context.environments.first)
       else
         input
       end

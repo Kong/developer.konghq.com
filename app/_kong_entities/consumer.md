@@ -1,11 +1,16 @@
 ---
 title: Consumers
 related_resources:
-  - text: "[Authentication reference](https://docs.konghq.com/gateway/latest/kong-plugins/authentication/reference/)"
-  - text: "[Consumers API reference - {{site.base_gateway}}](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Consumers)"
-  - text: "[Consumers API reference - {{site.konnect_short_name}}](https://docs.konghq.com/konnect/api/control-plane-configuration/latest/#/Consumers)"
-  - text: "[Consumer groups API reference](https://docs.konghq.com/gateway/api/admin-ee/latest/#/consumer_groups)"
-  - text: "[Plugins that can be enabled on consumers](https://docs.konghq.com/hub/plugins/compatibility/#scopes)"
+  - text: Authentication reference
+    url: https://docs.konghq.com/gateway/latest/kong-plugins/authentication/reference/
+  - text: Consumers API reference - {{site.base_gateway}}
+    url: https://docs.konghq.com/gateway/api/admin-ee/latest/#/Consumers
+  - text: Consumers API reference - {{site.konnect_short_name}}
+    url: https://docs.konghq.com/konnect/api/control-plane-configuration/latest/#/Consumers
+  - text: Consumer groups API reference
+    url: https://docs.konghq.com/gateway/api/admin-ee/latest/#/consumer_groups
+  - text: Plugins that can be enabled on consumers
+    url: https://docs.konghq.com/hub/plugins/compatibility/#scopes
 ---
 
 ## What is a consumer?
