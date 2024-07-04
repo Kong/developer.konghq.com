@@ -23,3 +23,7 @@ links:
 plugins:
   - jekyll-include-cache
   - jekyll/vite
+
+# product name vars
+base_gateway: Kong Gateway
+konnect_short_name: Konnect
