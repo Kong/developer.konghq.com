@@ -1,0 +1,6 @@
+{% for faq in include.faqs %}
+  <details class="mb-2">
+    <summary class="rounded mb-0.5 bg-gray-200 p-2">{{ faq.q }}</summary>
+    {{ faq.a }}
+  </details>
+{% endfor %}
