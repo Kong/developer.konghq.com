@@ -29,12 +29,12 @@ layout: default
         </div>
       {% endifhascontent manage_entity %}
 
-      {% ifhascontent faq %}
+      {% if page.faqs %}
         <div id="faq" class="mt-4">
           <h2>FAQ</h2>
-          {% contentblock faq %}
+          {% faqs %}
         </div>
-      {% endifhascontent faq %}
+      {% endif %}
 
       {% if page.related_resources %}
         <div id="related-resources" class="mt-4">
