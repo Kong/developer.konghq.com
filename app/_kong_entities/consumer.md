@@ -103,4 +103,36 @@ The following are examples of common use cases for consumers:
 |Rate limiting | Rate limit specific consumers based on tiers.|
 
 {% contentfor manage_entity %}
+{% entity_example %}
+type: consumer
+data:
+  custom_id: example-consumer-id
+  username: example-consumer
+  tags:
+    - silver-tier
+
+formats:
+  - admin-api
+  - konnect
+  - kic
+  - deck
+  - ui
+{% endentity_example %}
+
+{% entity_example %}
+type: plugin 
+data:
+  name: rate-limiting
+  config:
+    second: 5
+    hour: 1000
+    policy: local
+target: consumer
+formats:
+  - admin-api
+  - konnect
+  - kic
+  - deck
+  - ui
+{% endentity_example %}
 {% endcontentfor %}
