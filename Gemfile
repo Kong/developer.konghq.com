@@ -12,6 +12,7 @@ group :development do
   gem 'puma'
   gem 'rubocop'
   gem 'foreman'
+  gem 'byebug'
 end
 
 group :jekyll_plugins do

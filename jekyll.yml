@@ -9,6 +9,8 @@ kramdown:
     css_class: "highlight"
     guess_lang: true
 incremental: true
+liquid:
+  error_mode: strict
 
 keep_files:
   - assets
