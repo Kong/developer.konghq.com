@@ -5,7 +5,7 @@ related_resources:
     url: https://docs.konghq.com/gateway/api/admin-ee/latest/
   - text: Rate Limiting Advanced plugin
     url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/
-info_box
+info_box:
   products: ["konnect", "gateway"]
   plugins: ["Rate Limiting Advanced"]
   apis: ["consumer group", "consumer", "rate limiting advanced"]
