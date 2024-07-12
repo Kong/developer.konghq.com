@@ -91,36 +91,11 @@ layout: default
         </div>
       </div>
 
-      <div id="config-examples" class="mt-8">
-        <div class="bg-blue-600 p-2 flex justify-between">
-          <span class="font-bold text-white">Configuration</span>
-          <div>
-            <select class="w-36">
-              <option>Service</option>
-              <option>Route</option>
-              <option>Consumer</option>
-            </select>
-            <select class="ml-1 w-36">
-              <option>deck YAML</option>
-              <option>Terraform</option>
-            </select>
-            <span class="ml-2 text-white">&copy;</span>
-          </div>
+      {% ifhascontent config_examples %}
+        <div id="config-examples" class="mt-8 border">
+        {% contentblock config_examples %}
         </div>
-        <code class="block bg-gray-100 p-4">
-          <span class="text-gray-500"># Example configuration</span>
-          <br>
-          <span class="text-gray-500">config:</span>
-          <br>
-          <span class="text-gray-500">  limits:</span>
-          <br>
-          <span class="text-gray-500">  - second: 5</span>
-          <br>
-          <span class="text-gray-500">    minute: 10</span>
-          <br>
-          <span class="text-gray-500">    hour: 100</span>
-        </code>
-      </div>
+      {% endifhascontent %}
     </div>
   </div>
 </div>
