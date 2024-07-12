@@ -34,7 +34,7 @@ To use consumer groups for rate limiting, you need to:
 
 1. Create a consumer group named `Gold`:
   {% entity_example %}
-    type: consumer-group
+    type: consumer_group
     data:
       custom_id: 8a4bba3c-7f82-45f0-8121-ed4d2847c4a4
       name: Gold
@@ -64,13 +64,14 @@ To use consumer groups for rate limiting, you need to:
 
 1. Add `Amal` to the `Gold` consumer group:
    {% entity_example %}
-    type: consumer-group
+    type: consumer_group
     data:
       custom_id: 8a4bba3c-7f82-45f0-8121-ed4d2847c4a4
       name: Gold
-      consumer.id: 8089a0e6-1d31-4e00-bf51-5b902899b4cb
-      consumer.username: Amal
-      consumer.username_lower: amal
+      consumer:
+        id: 8089a0e6-1d31-4e00-bf51-5b902899b4cb
+        username: Amal
+        username_lower: amal
   
     formats:
       - admin-api
@@ -81,23 +82,27 @@ To use consumer groups for rate limiting, you need to:
     {% endentity_example %}
 
 1. Enable the plugin on the consumer group:
-   {% plugin_example %}
-    type: rate-limiting-advanced
-    request:
-      name: gold
+   {% entity_example %}
+    type: plugin
     data:
       name: rate-limiting-advanced
-      config.limit: 5
-      config.window_size: 30
-      config.window_type: sliding
-      config.retry_after_jitter_max=0
-  
+      config:
+        limit: 5
+        window_size: 30
+        window_type: sliding
+        retry_after_jitter_max: 0
+ 
+    targets:
+        - consumer_group
     formats:
       - admin-api
       - konnect
       - kic
       - deck
       - ui
+
+    variables:
+      'consumerGroupName|ID': gold
     {% endentity_example %}
 
     This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
