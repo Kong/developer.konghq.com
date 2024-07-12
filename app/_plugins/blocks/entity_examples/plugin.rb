@@ -6,7 +6,7 @@ module Jekyll
   module EntityExamples
     class Plugin < Base
       def targets
-        @targets ||= @example.fetch('targets').map do |t|
+        @targets ||= @example.fetch('targets').sort.map do |t|
           Jekyll::EntityExamples::Target::Base.make_for(target: t)
         end
       end

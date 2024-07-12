@@ -35,7 +35,7 @@ module Jekyll
       end
 
       def formats
-        @formats ||= @example.fetch('formats').map do |f|
+        @formats ||= @example.fetch('formats').sort.map do |f|
           Jekyll::EntityExamples::Format::Base.make_for(format: f)
         end
       end
