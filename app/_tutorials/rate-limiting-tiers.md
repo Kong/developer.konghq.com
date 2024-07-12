@@ -5,10 +5,34 @@ related_resources:
     url: https://docs.konghq.com/gateway/api/admin-ee/latest/
   - text: Rate Limiting Advanced plugin
     url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/
-info_box:
-  products: ["konnect", "gateway"]
-  plugins: ["Rate Limiting Advanced"]
-  apis: ["consumer group", "consumer", "rate limiting advanced"]
+
+products:
+  - konnect
+  - gateway
+
+min_version:
+  gateway: X.Y.Z
+    
+plugins: 
+  - rate-limiting-advanced
+
+entites:
+  - consumer
+  - consumer_group
+
+tiers:
+  - enterprise
+
+tags:
+  - rate-limiting
+
+content_type: tutorial
+
+
+tldr:
+  question: ...
+  answer: ...
+
 faqs:
   - q: Why can't I use the regular Rate Limiting plugin to rate limit tiers of consumers?
     a: answer here. 
@@ -29,6 +53,8 @@ To use consumer groups for rate limiting, you need to:
 * Create one or more consumer groups
 * Create consumers
 * Assign consumers to groups
+
+{% info_box %}
 
 ## Create rate limiting tiers
 
