@@ -54,8 +54,6 @@ To use consumer groups for rate limiting, you need to:
 * Create consumers
 * Assign consumers to groups
 
-{% info_box %}
-
 ## Create rate limiting tiers
 
 1. Create a consumer group named `Gold`:
