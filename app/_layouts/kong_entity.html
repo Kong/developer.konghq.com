@@ -23,11 +23,12 @@ layout: default
         </div>
       {% endifhascontent schema %}
 
-      {% ifhascontent manage_entity %}
-        <div id="manage-entity" class="mt-4">
-          {% contentblock manage_entity %}
+      {% ifhascontent setup_entity %}
+        <div id="setup-entity" class="mt-4">
+          <h2>Set up a {{ page.kong_entity }}</h2>
+          {% contentblock setup_entity %}
         </div>
-      {% endifhascontent manage_entity %}
+      {% endifhascontent setup_entity %}
 
       {% if page.faqs %}
         <div id="faq" class="mt-4">
