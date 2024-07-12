@@ -11,9 +11,10 @@ module Jekyll
             BASE_URL = 'https://{us|eu}.api.konghq.com/v2/control-planes/{controlPlaneId}/core-entities'.freeze
 
             URLS = {
-              'consumer' => "#{BASE_URL}/consumers/",
-              'route'    => "#{BASE_URL}/routes/",
-              'service'  => "#{BASE_URL}/services/"
+              'consumer'       => "#{BASE_URL}/consumers/",
+              'consumer_group' => "#{BASE_URL}/consumer_groups/",
+              'route'          => "#{BASE_URL}/routes/",
+              'service'        => "#{BASE_URL}/services/"
             }.freeze
 
             def initialize(data:, target:, entity_type:, variables:)

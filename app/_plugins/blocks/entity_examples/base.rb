@@ -4,10 +4,11 @@ module Jekyll
   module EntityExamples
     class Base
       MAPPINGS = {
-        'consumer' => 'Consumer',
-        'plugin'   => 'Plugin',
-        'service'  => 'Service',
-        'route'    => 'Route',
+        'consumer'       => 'Consumer',
+        'consumer_group' => 'ConsumerGroup',
+        'plugin'         => 'Plugin',
+        'service'        => 'Service',
+        'route'          => 'Route',
       }
 
       def self.make_for(example:)
