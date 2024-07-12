@@ -31,11 +31,13 @@ targets:
   - consumer
   - service
   - route
+  - global
+  - consumer_group
 formats:
   - admin-api
   - konnect
   - kic
   - deck
-  - ui
+  - terraform
 {% endentity_example %}
 {% endcontentfor %}
