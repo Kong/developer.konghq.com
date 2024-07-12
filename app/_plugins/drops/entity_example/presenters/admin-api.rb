@@ -31,9 +31,11 @@ module Jekyll
 
           class Plugin < Base
             URLS = {
-              'consumer' => "#{BASE_URL}/consumers/{consumerName|Id}/plugins",
-              'route'    => "#{BASE_URL}/routes/{routeName|Id}/plugins",
-              'service'  => "#{BASE_URL}/services/{serviceName|Id}/plugins"
+              'consumer'       => "#{BASE_URL}/consumers/{consumerName|Id}/plugins/",
+              'consumer_group' => "#{BASE_URL}/consumer_groups/{consumerGroupName|Id}/plugins/",
+              'route'          => "#{BASE_URL}/routes/{routeName|Id}/plugins/",
+              'service'        => "#{BASE_URL}/services/{serviceName|Id}/plugins/",
+              'global'         => "#{BASE_URL}/plugins/"
             }.freeze
 
             def url
