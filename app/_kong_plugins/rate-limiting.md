@@ -16,3 +16,26 @@ faqs:
 Rate limit how many HTTP requests can be made in a given period of seconds, minutes, hours, days,
 months, or years. If the underlying service or route has no authentication layer, the Client IP address is
 used. Otherwise, the consumer is used if an authentication plugin has been configured
+
+
+{% contentfor config_examples %}
+{% entity_example %}
+type: plugin
+data:
+  name: rate-limiting
+  config:
+    second: 5
+    hour: 1000
+    policy: local
+targets:
+  - consumer
+  - service
+  - route
+formats:
+  - admin-api
+  - konnect
+  - kic
+  - deck
+  - ui
+{% endentity_example %}
+{% endcontentfor %}
