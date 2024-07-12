@@ -1,5 +1,7 @@
 ---
 title: Consumers
+kong_entity: Consumer # we could use this to pull the schema too
+
 related_resources:
   - text: Authentication reference
     url: https://docs.konghq.com/gateway/latest/kong-plugins/authentication/reference/
@@ -60,7 +62,7 @@ faqs:
       which can easily grow into hundreds of thousands or millions of records.
 ---
 
-## What is a consumer?
+## What is a Consumer?
 
 A consumer typically refers to an entity that consumes or uses the APIs managed by {{site.base_gateway}}. 
 Consumers can be applications, services, or users who interact with your APIs. 
@@ -92,7 +94,7 @@ end
 B-->C
 {% endmermaid %}
 
-## Use cases for consumers
+## Use cases for Consumers
 
 The following are examples of common use cases for consumers:
 
@@ -102,7 +104,7 @@ The following are examples of common use cases for consumers:
 |Consumer groups | Group consumers by sets of criteria and apply certain rules to them.|
 |Rate limiting | Rate limit specific consumers based on tiers.|
 
-{% contentfor manage_entity %}
+{% contentfor setup_entity %}
 {% entity_example %}
 type: consumer
 data:
