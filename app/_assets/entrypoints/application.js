@@ -8,7 +8,9 @@ import '~/stylesheets/index.css'
 import '~/stylesheets/core.css'
 
 import EntityExample from '@/javascripts/components/entity_example';
+import Tabs from '@/javascripts/components/tabs';
 
 document.addEventListener('DOMContentLoaded', function () {
   new EntityExample();
+  new Tabs();
 });
