@@ -1,0 +1,41 @@
+{% assign tabs = 'navtabs-' | append: navtabs_id %}
+
+<div class="tabs {{ class }} {{ environment['additional_classes'] }}">
+  <ul class="tablist" role="tablist">
+    {% for tab in environment[tabs] %}
+      {% assign slug = tab[0] | slugify %}
+      {% if forloop.first %}
+        {% assign aria_selected = true %}
+      {% else %}
+        {% assign aria_selected = false %}
+      {% endif %}
+      <button
+        id="navtab-{{ navtabs_id }}-tab-{{ forloop.index }}"
+        class="p-4 border-b-2"
+        aria-controls="navtab-{{ navtabs_id }}-tabpanel-{{ forloop.index }}"
+        role="tab"
+        aria-selected="{{ aria_selected }}"
+        {% if forloop.first %} tabindex="0" {% else %} tabindex="-1" {% endif %}
+        data-slug="{{ slug }}"
+      >
+        {{ tab[0] }}
+      </button>
+    {% endfor %}
+  </ul>
+
+  <div class="navtab-contents">
+    {% for tab in environment[tabs] %}
+      {% assign slug = tab[0] | slugify %}
+      <div
+        class="navtab-content {% unless forloop.first %} hidden {% endunless %}"
+        role="tabpanel"
+        id="navtab-{{ navtabs_id }}-tabpanel-{{ forloop.index }}"
+        tabindex="0"
+        aria-labelledby="navtab-{{ navtabs_id }}-tab-{{ forloop.index }}"
+        data-panel="{{ slug }}"
+      >
+        {{ tab[1] }}
+      </div>
+    {% endfor %}
+  </div>
+</div>
