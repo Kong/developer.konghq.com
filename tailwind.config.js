@@ -7,6 +7,7 @@ module.exports = {
     "app/_landing_pagees/**/*.yaml",
     "app/_tutorials/**/*.md",
     "app/_plugins/**/*.rb",
+    "app/_assets/javascripts/**"
   ],
   safelist: [
     {
