@@ -1,6 +1,9 @@
 ---
 title: Consumers
-kong_entity: Consumer # we could use this to pull the schema too
+entities:
+  - consumer # we could use this to pull the schema too
+
+content_type: reference
 
 related_resources:
   - text: Authentication reference

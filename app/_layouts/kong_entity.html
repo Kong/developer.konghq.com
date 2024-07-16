@@ -25,7 +25,7 @@ layout: default
 
       {% ifhascontent setup_entity %}
         <div id="setup-entity" class="mt-4">
-          <h2>Set up a {{ page.kong_entity }}</h2>
+          <h2>Set up a {{ page.entities | first | titleize }}</h2>
           {% contentblock setup_entity %}
         </div>
       {% endifhascontent setup_entity %}
