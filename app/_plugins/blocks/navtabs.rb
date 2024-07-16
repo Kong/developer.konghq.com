@@ -44,26 +44,45 @@ module Jekyll
         super
         raise SyntaxError, "No toggle name given in #{tag_name} tag" if markup == ''
 
-        @title = markup.strip
+        @title, @attributes_string = parse_markup(markup)
+        @attributes = @attributes_string ? parse_attributes(@attributes_string) : {}
       end
 
-      def render(context) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-        # Add support for variable titles
-        path = @title.split('.')
-        # 0 is the page scope, 1 is the local scope
-        [0, 1].each do |k|
-          next unless context.scopes[k]
+      def parse_markup(markup)
+        match = markup.match(/\s*(?:"([^"]+)"|\{\{\s*([^}]+)\s*\}\})\s*(.*)/)
+        # Extract the title
+        title = match[1] ? match[1] : "{{#{match[2]}}}"
 
-          ref = context.scopes[k].dig(*path)
-          @title = ref if ref
+        # Extract the attributes string
+        attributes_string = match[3]
+        [title, attributes_string]
+      end
+
+      def parse_attributes(attributes_string)
+        attributes = {}
+        attributes_string.scan(/(\w+)=(?:"([^"]+)"|\{\{\s*([^}]+)\s*\}\})/) do |key, value1, value2|
+          attributes[key] = value1 || "{{#{value2}}}"
         end
+        attributes
+      end
+
+      def render(context)
+        evaluated_title = Liquid::Template.parse(@title).render(context)
+        evaluated_attributes = @attributes.transform_values { |v| Liquid::Template.parse(v).render(context) }
+
+        # Set a default slug if not provided
+        evaluated_attributes['slug'] ||= Jekyll::Utils.slugify(evaluated_title)
 
         site = context.registers[:site]
         converter = site.find_converter_instance(::Jekyll::Converters::Markdown)
         environment = context.environments.first
 
         navtabs_id = environment['navtabs-stack'].last
-        environment["navtabs-#{navtabs_id}"][@title] = converter.convert(render_block(context))
+        environment["navtabs-#{navtabs_id}"][evaluated_title] = {
+          'content' => converter.convert(render_block(context)),
+          'attributes' => evaluated_attributes
+        }
+        ''
       end
     end
   end

@@ -3,7 +3,7 @@
 <div class="tabs {{ class }} {{ environment['additional_classes'] }}">
   <ul class="tablist" role="tablist">
     {% for tab in environment[tabs] %}
-      {% assign slug = tab[0] | slugify %}
+      {% assign slug = tab[1].attributes.slug %}
       {% if forloop.first %}
         {% assign aria_selected = true %}
       {% else %}
@@ -18,14 +18,14 @@
         {% if forloop.first %} tabindex="0" {% else %} tabindex="-1" {% endif %}
         data-slug="{{ slug }}"
       >
-        {{ tab[0] }}
+        {{ tab[0] | markdown | markdownify }}
       </button>
     {% endfor %}
   </ul>
 
   <div class="navtab-contents">
     {% for tab in environment[tabs] %}
-      {% assign slug = tab[0] | slugify %}
+      {% assign slug = tab[1].attributes.slug %}
       <div
         class="navtab-content {% unless forloop.first %} hidden {% endunless %}"
         role="tabpanel"
@@ -34,7 +34,7 @@
         aria-labelledby="navtab-{{ navtabs_id }}-tab-{{ forloop.index }}"
         data-panel="{{ slug }}"
       >
-        {{ tab[1] }}
+        {{ tab[1].content | safe }}
       </div>
     {% endfor %}
   </div>
