@@ -28,7 +28,7 @@
   </div>
 
   {% if targets_dropdown %}
-    {% for target_with_examples in entity_example.formatted_eamples_by_target %}
+    {% for target_with_examples in entity_example.formatted_examples_by_target %}
      {% assign target = target_with_examples[0] %}
      {% assign formatted_examples = target_with_examples[1] %}
       <div tabindex="0" class="entity-example-target-panel hidden overflow-auto" aria-labelledby="select-target-{{ entity_example.id }}" data-target="{{ target }}">

@@ -37,8 +37,8 @@ module Jekyll
           end.flatten
         end
 
-        def formatted_eamples_by_target
-          @formatted_eamples_by_target ||= formatted_examples.group_by { |fe| fe.target }
+        def formatted_examples_by_target
+          @formatted_examples_by_target ||= formatted_examples.group_by { |fe| fe.target }
         end
       end
     end

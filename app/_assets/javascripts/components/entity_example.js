@@ -12,6 +12,10 @@ class EntityExampleComponent {
     if (this.targetSelect) {
       this.targetSelect.dispatchEvent(new Event('change'));
     } else {
+      const targetPanel = this.elem.querySelector('.entity-example-target-panel');
+      if (targetPanel) {
+        targetPanel.classList.remove('hidden');
+      }
       this.elem.querySelector('.entity-example-format-panel').classList.remove('hidden');
     }
     if (this.formatSelect) {
