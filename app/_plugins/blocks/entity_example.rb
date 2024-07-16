@@ -20,6 +20,13 @@ module Jekyll
           { 'site' => @site.config, 'page' => @page, 'include' => { 'entity_example' => entity_example_drop } },
           { registers: @context.registers, context: @context }
         )
+    rescue Psych::SyntaxError => e
+      message = <<~STRING
+      On `#{@page['path']}`, the following {% entity_example %} block contains a malformed yaml:
+      #{contents.strip.split("\n").each_with_index.map { |l, i| "#{i}: #{l}" }.join("\n")}
+      #{e.message}
+      STRING
+      raise ArgumentError.new(message)
     end
   end
 end
