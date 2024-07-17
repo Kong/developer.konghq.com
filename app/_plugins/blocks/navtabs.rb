@@ -11,7 +11,7 @@ module Jekyll
         @class = markup.strip
       end
 
-      def render(context) # rubocop:disable Metrics/MethodLength
+      def render(context)
         navtabs_id = SecureRandom.uuid
         environment = context.environments.first
         @site = context.registers[:site]
@@ -26,13 +26,16 @@ module Jekyll
         environment['additional_classes'] = ''
 
         Liquid::Template
-          .parse(File.read('app/_includes/components/tabs.html'))
+          .parse(File.read(File.join(@site.source, '_includes/components/tabs.html')))
           .render(
             {
-              'site' => @site.config, 'page' => @page,
-              'class' => @class, 'environment' => environment, 'navtabs_id' => navtabs_id,
+              'site' => @site.config,
+              'page' => context['page'],
+              'class' => @class,
+              'environment' => environment,
+              'navtabs_id' => navtabs_id
             },
-            { registers: context.registers, context: @context }
+            { registers: context.registers, context: context }
           )
       end
     end
@@ -42,7 +45,7 @@ module Jekyll
 
       def initialize(tag_name, markup, tokens)
         super
-        raise SyntaxError, "No toggle name given in #{tag_name} tag" if markup == ''
+        raise SyntaxError, "No toggle name given in #{tag_name} tag" if markup.strip.empty?
 
         @title, @attributes_string = parse_markup(markup)
         @attributes = @attributes_string ? parse_attributes(@attributes_string) : {}
