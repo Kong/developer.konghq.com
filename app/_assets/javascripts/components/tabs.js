@@ -13,46 +13,57 @@ class TabsComponent {
       tab.addEventListener('keydown', this.onKeydown.bind(this));
       tab.addEventListener('click', this.onClick.bind(this));
     });
+    // Listen for the custom event to update tabs
+    document.addEventListener('tabSelected', this.onTabSelected.bind(this));
 
     this.setSelectedTab(this.firstTab, false);
   }
 
   onKeydown(event) {
     const tgt = event.currentTarget;
+    let selectedTab;
     let flag = false;
 
     switch (event.key) {
       case 'ArrowLeft':
-        this.setSelectedToPreviousTab(tgt);
+        selectedTab = this.getPreviousTab(tgt)
         flag = true;
         break;
 
       case 'ArrowRight':
-        this.setSelectedToNextTab(tgt);
+        selectedTab = this.getNextTab(tgt)
         flag = true;
         break;
 
       case 'Home':
-        this.setSelectedTab(this.firstTab);
+        selectedTab = this.firstTab;
         flag = true;
         break;
 
       case 'End':
-        this.setSelectedTab(this.lastTab);
+        selectedTab = this.lastTab;
         flag = true;
         break;
 
       default:
         break;
     }
+    if (selectedTab) {
+      this.setSelectedTab(selectedTab);
+    }
+
     if (flag) {
       event.stopPropagation();
       event.preventDefault();
+      if (selectedTab) {
+        this.dispatchTabSelectedEvent(selectedTab.dataset.slug);
+      }
     }
   }
 
   onClick(event) {
     this.setSelectedTab(event.currentTarget);
+    this.dispatchTabSelectedEvent(event.currentTarget.dataset.slug);
   }
 
   setSelectedTab(currentTab, setFocus) {
@@ -64,8 +75,7 @@ class TabsComponent {
       if (currentTab === tab) {
         tab.setAttribute('aria-selected', 'true');
         tab.tabIndex = 0;
-        tab.classList.add(...this.activeTabClasses);
-        tab.classList.remove(...this.inactiveTabClasses);
+        this.toggleTabClasses(tab, true);
         tabPanel.classList.remove('hidden');
         if (setFocus) {
           tab.focus();
@@ -73,28 +83,54 @@ class TabsComponent {
       } else {
         tab.setAttribute('aria-selected', 'false');
         tab.tabIndex = -1;
-        tab.classList.add(...this.inactiveTabClasses);
-        tab.classList.remove(...this.activeTabClasses);
+        this.toggleTabClasses(tab, false);
         tabPanel.classList.add('hidden');
       }
     });
   }
 
-  setSelectedToPreviousTab(currentTab) {
+  getPreviousTab(currentTab) {
     if (currentTab === this.firstTab) {
-      this.setSelectedTab(this.lastTab);
+      return this.lastTab;
     } else {
       const index = this.tabs.indexOf(currentTab);
-      this.setSelectedTab(this.tabs[index - 1]);
+      return this.tabs[index - 1];
     }
   }
 
-  setSelectedToNextTab(currentTab) {
+  getNextTab(currentTab) {
     if (currentTab === this.lastTab) {
-      this.setSelectedTab(this.firstTab);
+      return this.firstTab;
     } else {
       const index = this.tabs.indexOf(currentTab);
-      this.setSelectedTab(this.tabs[index + 1]);
+      return this.tabs[index + 1];
+    }
+  }
+
+  setSelectedTabBySlug(slug, setFocus = true) {
+    const tab = this.tabs.find(tab => tab.dataset.slug === slug);
+    if (tab) {
+      this.setSelectedTab(tab, setFocus);
+    }
+  }
+
+  dispatchTabSelectedEvent(tabSlug) {
+    const event = new CustomEvent('tabSelected', { detail: { tabSlug } });
+    document.dispatchEvent(event);
+  }
+
+  onTabSelected(event) {
+    const { tabSlug } = event.detail;
+    this.setSelectedTabBySlug(tabSlug, false);
+  }
+
+  toggleTabClasses(tab, isActive) {
+    if (isActive) {
+      tab.classList.add(...this.activeTabClasses);
+      tab.classList.remove(...this.inactiveTabClasses);
+    } else {
+      tab.classList.add(...this.inactiveTabClasses);
+      tab.classList.remove(...this.activeTabClasses);
     }
   }
 }
@@ -104,5 +140,17 @@ export default class Tabs {
     document.querySelectorAll('.tabs').forEach((elem) => {
       new TabsComponent(elem);
     });
+
+    // Check if a tab query param exists in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabSlug = urlParams.get('tab');
+    if (tabSlug) {
+      this.selectTabBySlug(tabSlug);
+    }
+  }
+
+  selectTabBySlug(tabSlug) {
+    const event = new CustomEvent('tabSelected', { detail: { tabSlug } });
+    document.dispatchEvent(event);
   }
 }
