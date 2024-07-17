@@ -6,10 +6,11 @@ module Jekyll
       module Presenters
         module Terraform
           class Base < Liquid::Drop
-            def initialize(data:, target:, entity_type:)
+            def initialize(data:, target:, entity_type:, variables:)
               @data        = data
               @target      = target
               @entity_type = entity_type
+              @variables   = variables
             end
 
             def data

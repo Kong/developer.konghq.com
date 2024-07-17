@@ -31,6 +31,7 @@ module Jekyll
                 target: t,
                 data: @example.data,
                 presenter_class: 'Plugin',
+                variables: @example.variables,
                 entity_type: @example.type
               )
             end

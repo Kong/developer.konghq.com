@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
+require_relative '../utils/variable_replacer'
 
 module Jekyll
   module Drops
@@ -8,10 +9,11 @@ module Jekyll
       module Presenters
         module Deck
           class Base < Liquid::Drop
-            def initialize(target:, data:, entity_type:)
+            def initialize(target:, data:, entity_type:, variables:)
               @target      = target
               @data        = data
               @entity_type = entity_type
+              @variables   = variables
             end
 
             def entity
@@ -25,20 +27,29 @@ module Jekyll
 
           class Plugin < Base
             TARGETS = {
-              'consumer'       => 'CONSUMER_NAME|ID',
-              'consumer_group' => 'CONSUMER_GROUP_NAME|ID',
+              'consumer'       => 'consumerName|Id',
+              'consumer_group' => 'consumerGroupName|Id',
               'global'         => nil,
-              'route'          => 'ROUTE_NAME|ID',
-              'service'        => 'SERVICE_NAME|ID'
+              'route'          => 'routeName|Id',
+              'service'        => 'serviceName|Id'
             }.freeze
 
             def data
               YAML.dump(
                 {
                   'name' => @data.fetch('name'),
-                  @target => TARGETS.fetch(@target)
+                  @target => target
                 }.merge('config' => @data.fetch('config'))
               ).delete_prefix("---\n")
+            end
+
+            def target
+              return unless TARGETS.fetch(@target)
+
+              Utils::VariableReplacer::Text.run(
+                string: TARGETS.fetch(@target),
+                variables: @variables
+              )
             end
           end
         end

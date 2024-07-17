@@ -34,6 +34,10 @@ module Jekyll
         @data ||= @example.fetch('data')
       end
 
+      def variables
+        @variables ||= @example.fetch('variables', {})
+      end
+
       def formats
         @formats ||= @example.fetch('formats').sort.map do |f|
           Jekyll::EntityExamples::Format::Base.make_for(format: f)

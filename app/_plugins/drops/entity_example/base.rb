@@ -25,6 +25,7 @@ module Jekyll
               target: Jekyll::EntityExamples::Target::Base.make_for(target: @example.type).to_drop,
               data: @example.data,
               presenter_class: 'Base',
+              variables: @example.variables,
               entity_type: @example.type
             )
           end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative '../utils/variable_replacer'
+
 module Jekyll
   module Drops
     module EntityExample
@@ -14,14 +16,18 @@ module Jekyll
               'service'  => "#{BASE_URL}/services/"
             }.freeze
 
-            def initialize(data:, target:, entity_type:)
+            def initialize(data:, target:, entity_type:, variables:)
               @data        = data
               @target      = target
               @entity_type = entity_type
+              @variables   = variables
             end
 
             def url
-              @url ||= self.class::URLS.fetch(@entity_type)
+              @url ||= Utils::VariableReplacer::URL.run(
+                string: self.class::URLS.fetch(@entity_type),
+                variables: @variables
+              )
             end
 
             def data
@@ -39,7 +45,10 @@ module Jekyll
             }.freeze
 
             def url
-              @url ||= self.class::URLS.fetch(@target)
+              @url ||= Utils::VariableReplacer::URL.run(
+                string: self.class::URLS.fetch(@target),
+                variables: @variables
+              )
             end
           end
         end
