@@ -1,0 +1,9 @@
+---
+layout: default
+title: Supported protocols by plugin
+content_type: reference
+
+related_resources:
+  - text: Kong Plugin Hub
+    url: /hub/
+---
