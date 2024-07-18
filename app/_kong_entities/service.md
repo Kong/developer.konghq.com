@@ -1,0 +1,60 @@
+---
+title: Services
+entities:
+  - service
+
+content_type: reference
+
+related_resources:
+  - text: Routes entity
+    url: /kong-entities/route/
+---
+
+## What is a service?
+
+In {{site.base_gateway}}, a service is an abstraction of an existing upstream application. Services can store collections of objects like plugin configurations, and policies, and they can be associated with routes.
+
+When defining a service, the administrator provides a name and the upstream application connection information. The connection details can be provided in the url field as a single string, or by providing individual values for protocol, host, port, and path individually.
+
+Services have a one-to-many relationship with upstream applications, which allows administrators to create sophisticated traffic management behaviors.
+
+Services, in conjunction with [routes](/kong-entities/route/), let you expose your services to clients with {{site.base_gateway}}. {{site.base_gateway}} abstracts the service from the clients by using routes. Since the client always calls the route, changes to the services (like versioning) don’t impact how clients make the call. Routes also allow the same service to be used by multiple clients and apply different policies based on the route used.
+
+{% mermaid %}
+flowchart LR
+  A(API client)
+  B("`Route 
+  (/mock)`")
+  C("`Service
+  (example-service)`")
+  D(Upstream 
+  application)
+  
+  A <--requests
+  responses--> B
+  subgraph id1 ["`
+  **KONG GATEWAY**`"]
+    B <--requests
+    responses--> C
+  end
+  C <--requests
+  responses--> D
+
+  style id1 rx:10,ry:10
+  
+{% endmermaid %}
+
+{% contentfor setup_entity %}
+{% entity_example %}
+type: service
+data:
+  name: example-service
+  url: "http://httpbin.org"
+formats:
+  - admin-api
+  - konnect
+  - kic
+  - deck
+  - ui
+{% endentity_example %}
+{% endcontentfor %}
