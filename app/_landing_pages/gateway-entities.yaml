@@ -28,14 +28,9 @@ content:
           text: "Entity References"
   - row:
     - column:
-      - type: card
+      - type: entity_card
         config:
-          title: "Service"
-          description: "Represent your upstream APIs or microservices. Each Service corresponds to a set of APIs that you want to expose through Kong."
-          cta:
-            text: ABC
-            url: "#"
-            align: end
+          entity: service
     - column: 
       - type: card
         config: 
