@@ -11,17 +11,13 @@ module Jekyll
 
       contents = super
 
-      # Extract the indentation of the block tag
-      tag_indentation = contents.match(/^\s*/)[0]
-
       entity_example = EntityExamples::Base.make_for(example: YAML.load(contents))
       entity_example_drop = entity_example.to_drop
 
       template = File.read(entity_example_drop.template)
-      indented_template = preserve_indentation(template, tag_indentation)
 
       rendered_content = Liquid::Template
-        .parse(indented_template)
+        .parse(template)
         .render(
           { 'site' => @site.config, 'page' => @page, 'include' => { 'entity_example' => entity_example_drop } },
           { registers: @context.registers, context: @context }
@@ -33,10 +29,6 @@ module Jekyll
       #{e.message}
       STRING
       raise ArgumentError.new(message)
-    end
-
-    def preserve_indentation(template, indentation)
-      template.lines.map { |line| "#{indentation}#{line}" }.join("\n")
     end
   end
 end
