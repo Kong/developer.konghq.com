@@ -1,0 +1,1 @@
+<img src="{{include.config.url}}" alt="{{include.config.alt_text}}" />
