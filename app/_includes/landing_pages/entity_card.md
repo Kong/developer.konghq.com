@@ -1,7 +1,7 @@
 {% assign entity_id = include.config.entity %}
 
-{% assign entities = site.collections | first %}
-{% assign entity = entities.docs | where_exp: "doc", "doc.entities contains entity_id" | first %}
+{% assign entities_list = site.kong_entities %}
+{% assign entity = entities_list | where_exp: "entity", "entity.entities contains entity_id" | first %}
 
 <div class="rounded p-2 border-2 border-gray-200 flex flex-col">
     <div>
