@@ -16,15 +16,15 @@ module Jekyll
         def presenter
           @presenter ||= Object.const_get(
             "Jekyll::Drops::EntityExample::Presenters::#{@format.class.name.split('::').last}::#{@presenter_class}"
-          ).new(target: target, data: @data, entity_type: @entity_type, variables: @variables)
+          ).new(target: @target.value, data: @data, entity_type: @entity_type, variables: @variables)
         end
 
         def format
-          @format.value
+          @format
         end
 
         def target
-          @target.value
+          @target
         end
 
         def template_file

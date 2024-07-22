@@ -1,49 +1,7 @@
 {% assign entity_example = include.entity_example %}
-{% assign targets_dropdown = entity_example.targets_dropdown %}
-{% assign formats_dropdown = entity_example.formats_dropdown %}
 
-<div id="{{ entity_example.id }}" class="entity-example">
-  <div class="p-2 flex justify-end">
-    <div>
-      {% if targets_dropdown %}
-        {% if targets_dropdown.options.size > 1 %}
-          <label for="select-target-{{ entity_example.id }}" class="sr-only">Select an entity</label>
-          <select id="select-target-{{ entity_example.id }}" class="ml-1 w-36 select-target border border-gray-300 ">
-            {% for option in targets_dropdown.options %}
-              <option value="{{ option.value }}">{{ option.text }}</option>
-            {% endfor %}
-          </select>
-        {% endif %}
-      {% endif %}
-
-      {% if formats_dropdown.options.size > 1 %}
-        <label for="select-format-{{ entity_example.id }}" class="sr-only">Select a format</label>
-        <select id="select-format-{{ entity_example.id }}" class="ml-1 w-36 select-format border border-gray-300 ">
-          {% for option in formats_dropdown.options %}
-            <option value="{{ option.value }}">{{ option.text }}</option>
-          {% endfor %}
-        </select>
-      {% endif %}
-    </div>
-  </div>
-
-  {% if targets_dropdown %}
-    {% for target_with_examples in entity_example.formatted_examples_by_target %}
-     {% assign target = target_with_examples[0] %}
-     {% assign formatted_examples = target_with_examples[1] %}
-      <div tabindex="0" class="entity-example-target-panel hidden overflow-auto" aria-labelledby="select-target-{{ entity_example.id }}" data-target="{{ target }}">
-        {% for formatted_example in formatted_examples %}
-          <div tabindex="0" class="entity-example-format-panel hidden overflow-auto" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ formatted_example.format }}">
-            {% include {{ formatted_example.template_file }} presenter=formatted_example.presenter %}
-          </div>
-        {% endfor %}
-      </div>
-    {% endfor %}
-  {% else %}
-    {% for formatted_example in entity_example.formatted_examples %}
-      <div tabindex="0" class="entity-example-format-panel hidden overflow-auto" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ formatted_example.format }}">
-        {% include {{ formatted_example.template_file }} presenter=formatted_example.presenter %}
-      </div>
-    {% endfor %}
-  {% endif %}
-</div>
+{% if page.collection == 'kong_plugins' %}
+  {% include components/entity_example/dropdowns.html entity_example=include.entity_example %}
+{% else %}
+  {% include components/entity_example/tabs.html entity_example=include.entity_example %}
+{% endif %}

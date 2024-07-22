@@ -39,7 +39,7 @@ module Jekyll
         end
 
         def formatted_examples_by_target
-          @formatted_examples_by_target ||= formatted_examples.group_by { |fe| fe.target }
+          @formatted_examples_by_target ||= formatted_examples.group_by { |fe| fe.target.value }
         end
       end
     end
