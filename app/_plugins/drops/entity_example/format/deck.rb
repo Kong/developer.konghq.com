@@ -24,7 +24,7 @@ module Jekyll
           end
 
           def to_option
-            'Deck'
+            'decK'
           end
         end
       end
