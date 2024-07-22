@@ -1,0 +1,22 @@
+---
+layout: default
+---
+
+<div class="mx-16">
+  <h1 class="text-3xl my-4">{{ page.title }}</h1>
+  {{ content }}
+
+  {% if page.faqs %}
+  <div id="faq" class="mt-4">
+    <h2>FAQ</h2>
+    {% faqs %}
+  </div>
+  {% endif %}
+
+  {% if page.related_resources %}
+  <div id="related-resources" class="mt-4">
+    <h2>Related Resources</h2>
+    {% related_resources %}
+  </div>
+{% endif %}
+</div>

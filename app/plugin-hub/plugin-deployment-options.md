@@ -3,6 +3,7 @@ layout: default
 title: Plugin deployment topologies
 
 content_type: reference
+layout: reference
 
 related_resources:
   - text: Kong Plugin Hub
