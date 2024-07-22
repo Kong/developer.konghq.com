@@ -3,6 +3,7 @@ layout: default
 title: Supported scopes by plugin
 
 content_type: reference
+layout: reference
 
 related_resources:
   - text: Kong Plugin Hub

@@ -75,7 +75,7 @@ tools:
     - terraform
 ---
 
-## What is a Consumer?
+## What is a consumer?
 
 {{ page.description }} Consumers can be applications, services, or users who interact with your APIs.
 Since they are not always human, {{site.base_gateway}} calls them consumers, because they "consume" the service.
@@ -106,7 +106,7 @@ end
 B-->C
 {% endmermaid %}
 
-## Use cases for Consumers
+## Use cases for consumers
 
 The following are examples of common use cases for consumers:
 
