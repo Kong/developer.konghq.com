@@ -5,6 +5,8 @@ entities:
 
 content_type: reference
 
+description: A route is a path to a resource within an upstream application.
+
 related_resources:
   - text: Services
     url: /kong-entity/service/
@@ -12,7 +14,7 @@ related_resources:
 
 ## What is a route?
 
-A route is a path to a resource within an upstream application. Routes are added to services to allow access to the underlying application. In Kong Gateway, routes typically map to endpoints that are exposed through the Kong Gateway application. Routes can also define rules that match requests to associated services. Because of this, one route can reference multiple endpoints. A basic route should have a name, path or paths, and reference an existing service.
+{{page.description}} Services can store collections of objects like plugin configurations, and policies, and they can be associated with routes. In {{site.base_gateway}}, routes typically map to endpoints that are exposed through the Kong Gateway application. Routes can also define rules that match requests to associated services. Because of this, one route can reference multiple endpoints. A basic route should have a name, path or paths, and reference an existing service.
 
 You can also configure routes with:
 

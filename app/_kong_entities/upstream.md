@@ -5,6 +5,8 @@ entities:
 
 content_type: reference
 
+description: An upstream refers to the service applications sitting behind Kong Gateway, to which client requests are forwarded.
+
 related_resources:
   - text:
     url: 
@@ -12,7 +14,7 @@ related_resources:
 
 ## What is an upstream?
 
-An upstream refers to the service applications sitting behind Kong Gateway, to which client requests are forwarded. In {{site.base_gateway}}, an upstream represents a virtual hostname and can be used to health check, circuit break, and load balance incoming requests over multiple [target](/kong-entity/target/) backend services.
+{{page.description}} In {{site.base_gateway}}, an upstream represents a virtual hostname and can be used to health check, circuit break, and load balance incoming requests over multiple [target](/kong-entity/target/) backend services.
 
 ## Use cases for upstreams
 

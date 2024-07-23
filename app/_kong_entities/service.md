@@ -5,6 +5,8 @@ entities:
 
 content_type: reference
 
+description: In Kong Gateway, a service is an abstraction of an existing upstream application.
+
 related_resources:
   - text: Routes entity
     url: /kong-entities/route/
@@ -12,7 +14,7 @@ related_resources:
 
 ## What is a service?
 
-In {{site.base_gateway}}, a service is an abstraction of an existing upstream application. Services can store collections of objects like plugin configurations, and policies, and they can be associated with routes.
+{{ page.description }} Services can store collections of objects like plugin configurations, and policies, and they can be associated with routes.
 
 When defining a service, the administrator provides a name and the upstream application connection information. The connection details can be provided in the url field as a single string, or by providing individual values for protocol, host, port, and path individually.
 

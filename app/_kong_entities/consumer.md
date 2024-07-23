@@ -5,6 +5,8 @@ entities:
 
 content_type: reference
 
+description: A consumer typically refers to an entity that consumes or uses the APIs managed by Kong Gateway.
+
 related_resources:
   - text: Authentication reference
     url: https://docs.konghq.com/gateway/latest/kong-plugins/authentication/reference/
@@ -67,8 +69,7 @@ faqs:
 
 ## What is a Consumer?
 
-A consumer typically refers to an entity that consumes or uses the APIs managed by {{site.base_gateway}}. 
-Consumers can be applications, services, or users who interact with your APIs. 
+{{ page.description }} Consumers can be applications, services, or users who interact with your APIs.
 Since they are not always human, {{site.base_gateway}} calls them consumers, because they "consume" the service.
 {{site.base_gateway}} allows you to define and manage consumers, apply access control policies, and monitor their API usage.
 

@@ -5,6 +5,8 @@ entities:
 
 content_type: reference
 
+description:
+
 related_resources:
   - text: 
     url: 
@@ -12,6 +14,8 @@ related_resources:
 ---
 
 ## What is a target?
+
+{{page.description}}
 
 
 ## Use cases for targets
