@@ -32,88 +32,43 @@ content:
         config:
           entity: service
     - column: 
-      - type: card
-        config: 
-          title: "Routes"
-          description: "Define how requests are mapped to Services. Routes specify criteria such as paths, hosts, methods, and headers that determine which Service a request should be proxied to"
-          cta:
-            text: XYZ
-            url: "x"
-            align: end
+      - type: entity_card
+        config:
+          entity: route
     - column: 
-      - type: card
-        config: 
-          title: "Consumers"
-          description: "Represent the clients or users consuming your APIs. Consumers can be individual users, applications, or other services."
-          cta:
-              text: ABC
-              url: "#"
-              align: end
+      - type: entity_card
+        config:
+          entity: consumer
     - column: 
-      - type: card
-        config: 
-          title: "Certificates"
-          description: "Used for securing communication between clients and Kong or between Kong and upstream services using SSL/TLS."
-          cta:
-              text: ABC
-              url: "#"
-              align: end
+      - type: entity_card
+        config:
+          entity: certificate
   - row:
     - column:
-      - type: card
+      - type: entity_card
         config:
-          title: "Upstreams"
-          description: "Represent a load-balanced group of backend services. An Upstream can have multiple Targets (backend services), and Kong will distribute requests among these Targets."
-          cta:
-            text: ABC
-            url: "#"
-            align: end
+          entity: upstream
     - column: 
-      - type: card
-        config: 
-          title: "Targets"
-          description: "he actual backend servers or instances that Kong forwards requests to. They are part of an Upstream."
-          cta:
-            text: XYZ
-            url: "x"
-            align: end
+      - type: entity_card
+        config:
+          entity: target
     - column: 
-      - type: card
-        config: 
-          title: "SNIs"
-          description: "Server Name Indications used to support multiple SSL certificates for different domain names using a single IP address"
-          cta:
-              text: ABC
-              url: "#"
-              align: end
+      - type: entity_card
+        config:
+          entity: sni
     - column: 
-      - type: card
-        config: 
-          title: "ACLs"
-          description: "Used to control access to Services and Routes by grouping Consumers and allowing or denying access based on these groups"
-          cta:
-            text: ABC
-            url: "#"
-            align: end
+      - type: entity_card
+        config:
+          entity: acl
   - row:
     - column:
-      - type: card
+      - type: entity_card
         config:
-          title: "Plugins"
-          description: "Extend Kong’s functionality by adding features such as authentication, rate limiting, logging, and transformations. Plugins can be applied globally or on specific Services"
-          cta:
-            text: ABC
-            url: "#"
-            align: end
+          entity: plugin
     - column: 
-      - type: card
-        config: 
-          title: "Workspace"
-          description: "Extend Kong’s functionality by adding features such as authentication, rate limiting, logging, and transformations. Plugins can be applied globally or on specific Services"
-          cta:
-            text: XYZ
-            url: "x"
-            align: end
+      - type: entity_card
+        config:
+          entity: workspace
     - column: 
       - type: structured_text
         config:
