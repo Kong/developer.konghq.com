@@ -123,5 +123,6 @@ formats:
   - kic
   - deck
   - ui
+  - terraform
 {% endentity_example %}
 {% endcontentfor %}
