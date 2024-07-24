@@ -144,8 +144,11 @@ export default class Tabs {
     // Check if a tab query param exists in the URL
     const urlParams = new URLSearchParams(window.location.search);
     const tabSlug = urlParams.get('tab');
+    const formatSlug = urlParams.get('format');
     if (tabSlug) {
       this.selectTabBySlug(tabSlug);
+    } else if (formatSlug) {
+      this.selectTabBySlug(formatSlug);
     }
   }
 

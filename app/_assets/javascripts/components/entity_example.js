@@ -6,6 +6,9 @@ class EntityExampleComponent {
 
     this.addEventListeners();
     this.initializeSelects();
+
+    document.addEventListener('formatSelected', this.onFormatSelected.bind(this));
+    document.addEventListener('targetSelected', this.onTargetSelected.bind(this));
   }
 
   initializeSelects() {
@@ -25,14 +28,14 @@ class EntityExampleComponent {
 
   addEventListeners() {
     if (this.targetSelect) {
-      this.targetSelect.addEventListener('change', this.selectTarget.bind(this));
+      this.targetSelect.addEventListener('change', this.onTargetChange.bind(this));
     }
     if (this.formatSelect) {
-      this.formatSelect.addEventListener('change', this.selectFormat.bind(this));
+      this.formatSelect.addEventListener('change', this.onFormatChange.bind(this));
     }
   }
 
-  selectFormat(event) {
+  onFormatChange(event) {
     event.stopPropagation();
     const select = event.currentTarget;
 
@@ -45,7 +48,7 @@ class EntityExampleComponent {
     })
   }
 
-  selectTarget(event) {
+  onTargetChange(event) {
     event.stopPropagation();
     const select = event.currentTarget;
 
@@ -57,6 +60,36 @@ class EntityExampleComponent {
       }
     })
   }
+
+  onFormatSelected(event) {
+    const { option } = event.detail;
+    if (this.formatSelect) {
+      const optionElement = this.findOptionForSelect(option, this.formatSelect);
+
+      if (optionElement) {
+        this.formatSelect.value = optionElement.value;
+        const event = new Event('change', { bubbles: false });
+        this.formatSelect.dispatchEvent(event);
+      }
+    }
+  }
+
+  onTargetSelected(event) {
+    const { option } = event.detail;
+    if (this.targetSelect) {
+      const optionElement = this.findOptionForSelect(option, this.targetSelect);
+
+      if (optionElement) {
+        this.targetSelect.value = optionElement.value;
+        const event = new Event('change', { bubbles: false });
+        this.targetSelect.dispatchEvent(event);
+      }
+    }
+  }
+
+  findOptionForSelect(option, selectElement) {
+    return Array.from(selectElement.options).find(o => o.value === option);
+  }
 }
 
 export default class EntityExample {
@@ -64,5 +97,22 @@ export default class EntityExample {
     document.querySelectorAll('.entity-example').forEach((elem) => {
       new EntityExampleComponent(elem);
     });
+
+    // Check if a dropdown query param exists in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const formatOption = urlParams.get('format');
+    if (formatOption) {
+      this.selectDropdownOption(formatOption, 'formatSelected');
+    }
+
+    const targetOption = urlParams.get('target');
+    if (targetOption) {
+      this.selectDropdownOption(targetOption, 'targetSelected');
+    }
+  }
+
+  selectDropdownOption(option, eventName) {
+    const event = new CustomEvent(eventName, { detail: { option } });
+    document.dispatchEvent(event);
   }
 }
