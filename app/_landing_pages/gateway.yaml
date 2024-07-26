@@ -1,0 +1,141 @@
+content:
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h1
+              text: "Kong Gateway"
+              align: center
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h2
+              text: "API gateway built for hybrid and multi-cloud, optimized for microservices and distributed architectures"
+              align: left
+  - row:
+      - column:
+          - type: structured_text
+            config:
+              header:
+                text: "Introducing Kong Gateway"
+              blocks:
+                - type: text
+                  text: | 
+                    Kong Gateway is a lightweight, fast, and flexible cloud-native API gateway. An API gateway is a reverse proxy that lets you manage, configure, and route requests to your APIs.
+                    
+                    Kong Gateway runs in front of any RESTful API and can be extended through modules and plugins. 
+                    It’s designed to run on decentralized architectures, including hybrid-cloud and multi-cloud deployments.
+
+                    With Kong Gateway, users can:
+                - type: ordered_list
+                  items:
+                    - Leverage workflow automation and modern GitOps practices
+                    - Decentralize applications/services and transition to microservices
+                    - Create a thriving API developer ecosystem
+                    - Proactively identify API-related anomalies and threats
+                    - Secure and govern APIs/services, and improve API visibility across the entire organization. 
+      - column:
+          - type: image
+            config:
+              url: https://raw.githubusercontent.com/Kong/docs.konghq.com/main/app/assets/images/products/gateway/gateway_overview.png
+              alt_text: Diagram of how Kong Gateway works
+  - row: 
+    - column: 
+      - type: header
+        config: 
+          type: h2
+          text: "How to get started"
+  - row:
+    - column:
+      - type: card
+        config:
+          title: Start with Konnect
+          icon:  https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/kong-gradient.svg
+          cta: /konnect/getting-started/
+    - column:
+      - type: card
+        config:
+          title: Kong Gateway quickstart
+          icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-learning.svg
+          cta: https://docs.konghq.com/gateway/latest/get-started/
+    - column:
+      - type: card
+        config:
+          title: Install on your platform
+          icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-deployment-color.svg
+          cta: https://docs.konghq.com/gateway/latest/install/
+    - column:
+      - type: card
+        config:
+          title: Kong Plugin Hub
+          description: Extend your Gateway with powerful plugins
+          icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-api-plugins-color.svg
+          cta: /plugins
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h2
+              text: Learn
+          - type: concept_list
+            config:
+              - topic: beginner
+                product: gateway 
+            quantity: 5
+          - type: cta
+            config:
+              text: "Learn more &raquo;"
+              url: "https://docs.devsite.com/search/{concept.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h2
+              text: Tutorials
+          - type: tutorial_list
+            config:
+              - topic: beginner
+                product: gateway 
+            quantity: 5
+          - type: cta
+            config:
+              text: "View more tutorials &raquo;"
+              url: "https://docs.devsite.com/search/{tutorial.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h2
+              text: References & Tools
+          - type: reference_list
+            config:
+              - topic: beginner
+                product: gateway 
+            quantity: 5
+          - type: cta
+            config:
+              text: "View more references &raquo;"
+              url: "https://docs.devsite.com/search/{reference.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h2
+              text: Recommended Plugins
+  - row:
+      - column:
+          - type: plugin
+            config:
+              name: rate-limiting
+      - column:
+          - type: plugin
+            config:
+              name: key-auth
+      - column:
+          - type: plugin
+            config:
+              name: ai-rate-limiting-advanced

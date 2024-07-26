@@ -2,6 +2,7 @@
 <div>
 <h3>{{ include.config.title}}</h3>
 <p>{{ include.config.description}}</p>
+<a href="{{ include.config.icon}}"><img src="{{ include.config.icon}}"></a>
 </div>
 {% if include.config.cta %}
 {% include landing_pages/cta.md config=include.config.cta %}
