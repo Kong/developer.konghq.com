@@ -5,7 +5,7 @@ module Jekyll
     class Page < Jekyll::Page
       def initialize(site, file)
         @site = site
-        @data = YAML.load_file(file)
+        data = YAML.load_file(file)
 
         # Set self.ext and self.basename by extracting information from the page filename
         process('index.md')
@@ -13,10 +13,8 @@ module Jekyll
         @dir = output_path(file)
 
         @content = ''
-        @data = {
-          'title' => 'This is a test',
-          'config' => @data['content']
-        }
+        @data = data.fetch('metadata', {})
+        @data['config'] = data['content']
 
         # Needed so that regeneration works for single sourced pages
         # It must be set to the source file

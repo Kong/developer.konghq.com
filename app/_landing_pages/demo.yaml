@@ -1,3 +1,7 @@
+metadata:
+  title: "Rate Limiting"
+  tags:
+    - rate-limiting
 content:
   - row:
       - column:
