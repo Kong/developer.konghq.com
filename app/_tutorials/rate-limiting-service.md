@@ -15,8 +15,6 @@ entities:
 
 content_type: tutorial
 
-test:
-  - /tests/rate-limiting-service.py
 ---
 
 ## Prerequisites 
@@ -25,45 +23,51 @@ place holder for prerendered prereq instructions that contains:
 
 * Docker: Docker is used to run a temporary Kong Gateway and database to allow you to run this tutorial
 * curl: curl is used to send requests to Kong Gateway . 
-* Kong Gateway
 
 
-1. Get Kong
+{% step title="Install Kong Gateway" %}
 
-    Run Kong Gateway with the quickstart script:
-    ```bash
-    curl -Ls https://get.konghq.com/quickstart | bash -s
-    ```
+Run Kong Gateway with the quickstart script:
+```bash
+curl -Ls https://get.konghq.com/quickstart | bash -s
+```
 
-    Once the Kong Gateway is ready, you will see the following message:
+Once the Kong Gateway is ready, you will see the following message:
 
-    ```bash
-    Kong Gateway Ready 
-    ```
+```bash
+Kong Gateway Ready 
+```
+{% endstep %}
 
-1. Create a service 
+{% step title="Create a Service" %}
 
-{% capture step %}
+Create a service named `example_service` mapped to the upstream URL `http://httpbin.org` with:
+
 {% entity_example %}
  type: service
  data:
    name: example_service
+   url: 'http://httpbin.org'
  formats:
    - admin-api
    - konnect
    - deck
    - terraform
 {% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3}}
+{% endstep %}
 
-1. Create a route 
+{% step title="Create a Route" %}
 
-{% capture step %}
+Create a route associated with the service we created in the previous step.
+
+Configure the route on the `/mock` path to direct traffic to the `example_service` created earlier.
+
 {% entity_example %}
 type: route
 data:
   name: example_route
+  paths:
+    - /example-route
   service:
     name: example_service
 formats:
@@ -72,19 +76,20 @@ formats:
   - deck
   - terraform
 {% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3 }}
+{% endstep %}
 
-1. Enable the Rate Limiting Plugin on the Service
+{% step title="Enable the Rate Limiting Plugin on the Service" %}
+Install the Rate Limiting plugin on the service and configure a policy of 5 requests per second. 
 
-{% capture step %}
+Note: This setup uses the client's IP for rate limiting if no authentication layer is present.
+If an authentication plugin is configured, the consumer is used instead.
+
 {% entity_example %}
 type: plugin
 data:
   name: rate-limiting
   config:
     second: 5
-    hour: 1000
     policy: local
 targets:
   - service
@@ -96,28 +101,27 @@ formats:
 variables: 
     serviceName|Id: example_service
 {% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3 }}
+{% endstep %}
 
-1. Validate
+{% step title="Validate" %}
+After configuring the Rate Limiting plugin, you can verify that it was configured correctly and is working, by sending more requests then allowed in the configured time limit.
+```bash
+for _ in {1..6}
+do
+  curl http://localhost:8000/example-route/anything/
+done
+```
+After the 5th request, you should receive the following `429` error:
 
-   After configuring the Rate Limiting plugin, you can verify that it was configured correctly and is working, by sending more requests then allowed in the configured time limit.
-   ```bash
-   for _ in {1..6}
-   do
-     curl http://localhost:8000/example-route/anything/
-   done
-   ```
-   After the 5th request, you should receive the following `429` error:
+```bash
+{ "message": "API rate limit exceeded" }
+```
+{% endstep %}
 
-   ```bash
-   { "message": "API rate limit exceeded" }
-   ```
+{% step title="Teardown" %}
+Destroy the Kong Gateway container.
 
-1. Teardown
-
-   Destroy the Kong Gateway container.
-
-   ```bash
-   curl -Ls https://get.konghq.com/quickstart | bash -s -- -d
-   ```
+```bash
+curl -Ls https://get.konghq.com/quickstart | bash -s -- -d
+```
+{% endstep %}

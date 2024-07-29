@@ -1,8 +1,3 @@
 {% highlight bash %}
-curl -X POST {{ include.presenter.url }} \
-    --header "accept: application/json" \
-    --header "Content-Type: application/json" \
-    --data '
-{{ include.presenter.data | json_prettify | indent: 4 }}
-    '
+{% include components/entity_example/plain/konnect.html presenter=include.presenter %}
 {% endhighlight %}

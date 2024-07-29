@@ -31,6 +31,15 @@ module Jekyll
             def data
               @data
             end
+
+            def endpoint
+              @endpoint ||= self.class::URLS.fetch(@entity_type)
+                .gsub(self.class::BASE_URL, '')
+            end
+
+            def entity
+              @entity_type
+            end
           end
 
           class Plugin < Base
@@ -47,6 +56,11 @@ module Jekyll
                 string: self.class::URLS.fetch(@target),
                 variables: @variables
               )
+            end
+
+            def endpoint
+              @endpoint ||= self.class::URLS.fetch(@target)
+                .gsub(self.class::BASE_URL, '')
             end
           end
         end

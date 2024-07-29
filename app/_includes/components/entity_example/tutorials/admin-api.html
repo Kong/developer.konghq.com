@@ -1,0 +1,7 @@
+Send a `POST` request to {{ site.base_gateway }} Admin API `{{ include.presenter.endpoint }}` endpoint:
+
+{% highlight bash %}
+{% include components/entity_example/plain/admin-api.html presenter=include.presenter -%}
+{% endhighlight %}
+
+If your request was successful, you will see a `201` response header from {{ site.base_gateway }} confirming that your {{ include.presenter.entity }} was created.

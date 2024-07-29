@@ -1,6 +1,7 @@
+{% if page.content_type == 'tutorial' %}
+{% include components/entity_example/tutorials/deck.html presenter=include.presenter %}
+{% else %}
 {% highlight yaml %}
-_format_version: "3.0"
-{{ include.presenter.entity }}:
-  -
-{{ include.presenter.data | indent: 2 }}
+{% include components/entity_example/plain/deck.html presenter=include.presenter %}
 {% endhighlight %}
+{% endif %}

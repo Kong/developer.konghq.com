@@ -1,8 +1,7 @@
-{% highlight bash %}
-curl -X POST {{ include.presenter.url }} \
-    --header "accept: application/json" \
-    --header "Content-Type: application/json" \
-    --data '
-{{ include.presenter.data | json_prettify | indent: 4 }}
-    '
+{% if page.content_type == 'tutorial' %}
+{% include components/entity_example/tutorials/admin-api.html presenter=include.presenter %}
+{% else %}
+{% highlight yaml %}
+{% include components/entity_example/plain/admin-api.html presenter=include.presenter %}
 {% endhighlight %}
+{% endif %}

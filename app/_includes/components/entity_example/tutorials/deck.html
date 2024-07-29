@@ -1,0 +1,13 @@
+Add this section to your configuration file `kong.yaml`:
+
+{% highlight bash %}
+echo "
+{% include components/entity_example/plain/deck.html presenter=include.presenter -%}
+" >> kong.yaml
+{% endhighlight %}
+
+Apply the changes:
+
+{% highlight bash %}
+deck gateway sync kong.yaml
+{% endhighlight %}

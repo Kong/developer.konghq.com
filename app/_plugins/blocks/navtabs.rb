@@ -2,6 +2,7 @@
 
 require 'erb'
 require 'securerandom'
+require_relative './attributes'
 
 module Jekyll
   module NavTabs
@@ -62,16 +63,12 @@ module Jekyll
       end
 
       def parse_attributes(attributes_string)
-        attributes = {}
-        attributes_string.scan(/(\w+)=(?:"([^"]+)"|\{\{\s*([^}]+)\s*\}\})/) do |key, value1, value2|
-          attributes[key] = value1 || "{{#{value2}}}"
-        end
-        attributes
+        Blocks::Attributes.parse(attributes_string)
       end
 
       def render(context)
-        evaluated_title = Liquid::Template.parse(@title).render(context)
-        evaluated_attributes = @attributes.transform_values { |v| Liquid::Template.parse(v).render(context) }
+        evaluated_title = Blocks::Attributes.evaluate(@title, context)
+        evaluated_attributes = @attributes.transform_values { |v| Blocks::Attributes.evaluate(v, context)  }
 
         # Set a default slug if not provided
         evaluated_attributes['slug'] ||= Jekyll::Utils.slugify(evaluated_title)
