@@ -14,9 +14,6 @@ entities:
   - plugin
 
 content_type: tutorial
-
-test:
-  - /tests/rate-limiting-service.py
 ---
 
 ## Prerequisites 
