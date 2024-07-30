@@ -4,15 +4,15 @@ related_resources:
   - text: Consumer Group API documentation
     url: https://docs.konghq.com/gateway/api/admin-ee/latest/
   - text: Rate Limiting Advanced plugin
-    url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/
+    url: /plugins/rate-limiting-advanced/
 
 products:
   - konnect
   - gateway
 
 min_version:
-  gateway: X.Y.Z
-    
+  gateway: 3.4.x
+
 plugins: 
   - rate-limiting-advanced
 
@@ -27,7 +27,6 @@ tags:
   - rate-limiting
 
 content_type: tutorial
-
 
 tldr:
   question: ...
@@ -57,10 +56,10 @@ To use consumer groups for rate limiting, you need to:
 ## Create rate limiting tiers
 
 1. Create a consumer group named `Gold`:
+{% capture step %}
   {% entity_example %}
     type: consumer_group
     data:
-      custom_id: 8a4bba3c-7f82-45f0-8121-ed4d2847c4a4
       name: Gold
   
     formats:
@@ -69,9 +68,12 @@ To use consumer groups for rate limiting, you need to:
       - kic
       - deck
       - ui
-    {% endentity_example %}
+  {% endentity_example %}
+{% endcapture %}
+{{ step | indent: 3 }}
 
 1. Create a consumer, `Amal`:
+{% capture step %}
    {% entity_example %}
     type: consumer
     data:
@@ -85,15 +87,16 @@ To use consumer groups for rate limiting, you need to:
       - deck
       - ui
     {% endentity_example %}
+{% endcapture %}
+{{ step | indent: 3 }}
 
 1. Add `Amal` to the `Gold` consumer group:
+{% capture step %}
    {% entity_example %}
     type: consumer_group
     data:
-      custom_id: 8a4bba3c-7f82-45f0-8121-ed4d2847c4a4
       name: Gold
       consumer:
-        id: 8089a0e6-1d31-4e00-bf51-5b902899b4cb
         username: Amal
         username_lower: amal
   
@@ -104,8 +107,11 @@ To use consumer groups for rate limiting, you need to:
       - deck
       - ui
     {% endentity_example %}
+{% endcapture %}
+{{ step | indent: 3 }}
 
 1. Enable the plugin on the consumer group:
+{% capture step %}
    {% entity_example %}
     type: plugin
     data:
@@ -126,7 +132,9 @@ To use consumer groups for rate limiting, you need to:
       - ui
 
     variables:
-      'consumerGroupName|ID': gold
+      'consumerGroupName|Id': Gold
     {% endentity_example %}
+{% endcapture %}
+{{ step | indent: 3 }}
 
     This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
