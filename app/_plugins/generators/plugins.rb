@@ -8,8 +8,8 @@ module Jekyll
       collection = site.collections['kong_plugins']
       collection.docs.map do |doc|
         slug = doc.relative_path
-          .gsub(collection.relative_directory, '')
-          .gsub(doc.basename, '')
+          .gsub("#{collection.relative_directory}/", '')
+          .gsub("/#{doc.basename}", '')
 
         doc.data['slug'] = slug
         doc.data['permalink'] = "/plugins/#{slug}/"
