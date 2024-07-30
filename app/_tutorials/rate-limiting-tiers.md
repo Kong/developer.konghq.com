@@ -28,13 +28,11 @@ tags:
 
 content_type: tutorial
 
-tldr:
-  question: ...
-  answer: ...
+description: You can rate limit tiers of users by creating different consumer groups, assigning consumers to those groups, and then configure the Rate Limiting Advanced plugin to limit the requests.
 
 faqs:
   - q: Why can't I use the regular Rate Limiting plugin to rate limit tiers of consumers?
-    a: answer here. 
+    a: In this tutorial, we use the Rate Limiting Advanced plugin because it supports sliding windows, which we use to apply the rate limiting logic while taking into account previous hit rates (from the window that immediately precedes the current) using a dynamic weight.
 ---
 
 With consumer groups, you can define rate limiting tiers and apply them to subsets of application consumers.
