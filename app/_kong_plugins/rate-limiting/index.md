@@ -1,9 +1,7 @@
 ---
 title: Rate Limiting
 content_type: concept
-description:
-    q: What does the Rate Limiting plugin do?
-    a: You can use the Rate Limiting plugin to limit how many HTTP requests can be made in a given period of seconds, minutes, hours, days, months, or years.
+description: You can use the Rate Limiting plugin to limit how many HTTP requests can be made in a given period of seconds, minutes, hours, days, months, or years.
 entities: 
     - service
     - route
