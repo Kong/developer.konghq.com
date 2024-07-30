@@ -10,10 +10,9 @@ entities:
     - consumer
     - consumer_group
     - plugin
-metadata:
-    tags:
-        - rate-limiting
-        - traffic-control
+tags:
+    - rate-limiting
+    - traffic-control
 ---
 
 Rate limit how many HTTP requests can be made in a given period of seconds, minutes, hours, days, months, or years.
