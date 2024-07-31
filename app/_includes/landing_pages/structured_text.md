@@ -24,4 +24,12 @@
 </ul>
 {% endif %}
 
+{% if item.type == "toggle" %}
+
+<div>
+<summary>{{ item.title | markdown }}</summary>
+<p>{{ item.text | markdown }}</p>
+</div>
+{% endif %}
+
 {% endfor %}
