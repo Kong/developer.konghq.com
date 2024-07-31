@@ -1,5 +1,5 @@
 ---
-title: How to create rate limiting tiers
+title: How to create rate limiting tiers with Kong Gateway
 related_resources:
   - text: Consumer Group API documentation
     url: https://docs.konghq.com/gateway/api/admin-ee/latest/
@@ -7,8 +7,11 @@ related_resources:
     url: /plugins/rate-limiting-advanced/
 
 products:
-  - konnect
-  - gateway
+    - gateway
+
+platforms:
+    - on-prem
+    - konnect
 
 min_version:
   gateway: 3.4.x

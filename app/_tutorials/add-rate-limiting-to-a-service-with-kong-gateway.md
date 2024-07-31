@@ -1,10 +1,20 @@
 ---
-title: Enable rate limiting on a service
+title: Enable rate limiting on a service with Kong Gateway
 related_resources:
-  - text: How to create rate limiting tiers
-    url: https://docs.konghq.com/gateway/api/admin-ee/latest/
+  - text: How to create rate limiting tiers with Kong Gateway
+    url:  /tutorials/add-rate-limiting-tiers-with-kong-gateway/
   - text: Rate Limiting Advanced plugin
     url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/
+
+products:
+    - gateway
+
+platform:
+    - on-prem
+    - konnect
+
+min_version:
+  gateway: 3.4.x
 
 plugins:
   - rate-limiting
@@ -13,7 +23,17 @@ entities:
   - service
   - plugin
 
+tiers:
+    - oss
+
+tags:
+    - rate-limiting
+
 content_type: tutorial
+
+tldr:
+    q: How do I add Rate Limiting to a Service with Kong Gateway?
+    a: Install the Rate Limiting plugin and enable it on the service.
 
 tools:
     - deck
