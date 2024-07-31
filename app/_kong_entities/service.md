@@ -10,6 +10,14 @@ description: In Kong Gateway, a service is an abstraction of an existing upstrea
 related_resources:
   - text: Routes entity
     url: /kong-entities/route/
+
+tools:
+    - admin-api
+    - konnect-api
+    - kic
+    - deck
+    - ui
+    - terraform
 ---
 
 ## What is a service?
@@ -52,11 +60,5 @@ type: service
 data:
   name: example-service
   url: "http://httpbin.org"
-formats:
-  - admin-api
-  - konnect
-  - kic
-  - deck
-  - ui
 {% endentity_example %}
 {% endcontentfor %}

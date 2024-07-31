@@ -11,6 +11,12 @@ faqs:
       Yes, Z is the best, much better than Y.
 
       Oscillation within a space time matrix, with respect to quantum intersection matrices, interwoven on a molecular level with geodesic lattice structures to elicit a persistent linkage between subordinate levels of abstraction.
+tools:
+    - admin-api
+    - konnect-api
+    - kic
+    - deck
+    - terraform
 ---
 
 Rate limit how many HTTP requests can be made in a given period of seconds, minutes, hours, days,
@@ -33,11 +39,5 @@ targets:
   - route
   - global
   - consumer_group
-formats:
-  - admin-api
-  - konnect
-  - kic
-  - deck
-  - terraform
 {% endentity_example %}
 {% endcontentfor %}

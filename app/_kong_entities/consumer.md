@@ -65,6 +65,14 @@ faqs:
       If you have many consumers in your database, don't export or manage them using decK.
       decK is built for managing entity configuration. It is not meant for end user data,
       which can easily grow into hundreds of thousands or millions of records.
+
+tools:
+    - admin-api
+    - konnect-api
+    - kic
+    - deck
+    - ui
+    - terraform
 ---
 
 ## What is a Consumer?
@@ -116,13 +124,5 @@ data:
   username: example-consumer
   tags:
     - silver-tier
-
-formats:
-  - admin-api
-  - konnect
-  - kic
-  - deck
-  - ui
-  - terraform
 {% endentity_example %}
 {% endcontentfor %}

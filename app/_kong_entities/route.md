@@ -10,6 +10,14 @@ description: A route is a path to a resource within an upstream application.
 related_resources:
   - text: Services
     url: /kong-entity/service/
+
+tools:
+    - admin-api
+    - konnect-api
+    - kic
+    - deck
+    - ui
+    - terraform
 ---
 
 ## What is a route?
@@ -33,12 +41,6 @@ data:
   name: example-route
   paths:
     - "/mock"
-formats:
-  - admin-api
-  - konnect
-  - kic
-  - deck
-  - ui
 {% endentity_example %}
 {% endcontentfor %}
 

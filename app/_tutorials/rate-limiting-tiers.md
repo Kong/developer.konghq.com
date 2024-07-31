@@ -35,6 +35,9 @@ tldr:
 faqs:
   - q: Why can't I use the regular Rate Limiting plugin to rate limit tiers of consumers?
     a: In this tutorial, we use the Rate Limiting Advanced plugin because it supports sliding windows, which we use to apply the rate limiting logic while taking into account previous hit rates (from the window that immediately precedes the current) using a dynamic weight.
+
+tools:
+    - deck
 ---
 
 With consumer groups, you can define rate limiting tiers and apply them to subsets of application consumers.
@@ -79,40 +82,26 @@ To use consumer groups for rate limiting, you need to:
     data:
       username: Amal
       username_lower: amal
-  
-    formats:
-      - admin-api
-      - konnect
-      - kic
-      - deck
-      - ui
-    {% endentity_example %}
+   {% endentity_example %}
 {% endcapture %}
 {{ step | indent: 3 }}
 
 1. Add `Amal` to the `Gold` consumer group:
 {% capture step %}
-   {% entity_example %}
+  {% entity_example %}
     type: consumer_group
     data:
       name: Gold
       consumer:
         username: Amal
         username_lower: amal
-  
-    formats:
-      - admin-api
-      - konnect
-      - kic
-      - deck
-      - ui
-    {% endentity_example %}
+  {% endentity_example %}
 {% endcapture %}
 {{ step | indent: 3 }}
 
 1. Enable the plugin on the consumer group:
 {% capture step %}
-   {% entity_example %}
+  {% entity_example %}
     type: plugin
     data:
       name: rate-limiting-advanced
@@ -124,16 +113,10 @@ To use consumer groups for rate limiting, you need to:
  
     targets:
         - consumer_group
-    formats:
-      - admin-api
-      - konnect
-      - kic
-      - deck
-      - ui
 
     variables:
       'consumerGroupName|Id': Gold
-    {% endentity_example %}
+  {% endentity_example %}
 {% endcapture %}
 {{ step | indent: 3 }}
 

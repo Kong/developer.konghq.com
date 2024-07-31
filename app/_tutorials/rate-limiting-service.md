@@ -14,6 +14,9 @@ entities:
   - plugin
 
 content_type: tutorial
+
+tools:
+    - deck
 ---
 
 ## Prerequisites 
@@ -45,11 +48,6 @@ place holder for prerendered prereq instructions that contains:
  type: service
  data:
    name: example_service
- formats:
-   - admin-api
-   - konnect
-   - deck
-   - terraform
 {% endentity_example %}
 {% endcapture %}
 {{ step | indent: 3}}
@@ -63,11 +61,6 @@ data:
   name: example_route
   service:
     name: example_service
-formats:
-  - admin-api
-  - konnect
-  - deck
-  - terraform
 {% endentity_example %}
 {% endcapture %}
 {{ step | indent: 3 }}
@@ -85,11 +78,6 @@ data:
     policy: local
 targets:
   - service
-formats:
-  - admin-api
-  - konnect
-  - deck
-  - terraform
 variables: 
     serviceName|Id: example_service
 {% endentity_example %}
