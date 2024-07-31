@@ -47,6 +47,7 @@ place holder for prerendered prereq instructions that contains:
 * curl: curl is used to send requests to Kong Gateway . 
 * Kong Gateway
 
+## Steps
 
 1. Get Kong
 
