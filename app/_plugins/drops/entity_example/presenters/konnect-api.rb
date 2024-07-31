@@ -6,7 +6,7 @@ module Jekyll
   module Drops
     module EntityExample
       module Presenters
-        module Konnect
+        module KonnectAPI
           class Base < Liquid::Drop
             BASE_URL = 'https://{us|eu}.api.konghq.com/v2/control-planes/{controlPlaneId}/core-entities'.freeze
 

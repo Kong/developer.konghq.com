@@ -5,12 +5,12 @@ module Jekyll
     module Format
       class Base
         MAPPINGS = {
-          'admin-api' => 'AdminAPI',
-          'deck'      => 'Deck',
-          'konnect'   => 'Konnect',
-          'kic'       => 'KIC',
-          'ui'        => 'UI',
-          'terraform' => 'Terraform'
+          'admin-api'   => 'AdminAPI',
+          'deck'        => 'Deck',
+          'konnect-api' => 'KonnectAPI',
+          'kic'         => 'KIC',
+          'ui'          => 'UI',
+          'terraform'   => 'Terraform'
         }
 
         def self.make_for(format:)

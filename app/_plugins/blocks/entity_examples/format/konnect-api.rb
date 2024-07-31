@@ -5,7 +5,7 @@ require_relative './base'
 module Jekyll
   module EntityExamples
     module Format
-      class Konnect < Base
+      class KonnectAPI < Base
       end
     end
   end

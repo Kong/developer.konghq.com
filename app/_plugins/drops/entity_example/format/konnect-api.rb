@@ -6,13 +6,13 @@ module Jekyll
   module Drops
     module EntityExample
       module Format
-        class Konnect < Base
+        class KonnectAPI < Base
           def template_file(_type)
             @template_file ||= '/components/entity_example/format/konnect.html'
           end
 
           def to_option
-            'Konnect'
+            'Konnect API'
           end
         end
       end
