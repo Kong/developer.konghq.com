@@ -6,9 +6,9 @@ layout: reference
 
 related_resources:
   - text: Route entity
-    url: /kong-entity/route/
+    url: /gateway/entities/route/
   - text: Expressions router
-    url: /gateway/entities/routes/expressions/
+    url: /gateway/routing/expressions/
 ---
 
 ## How requests are routed
@@ -25,7 +25,7 @@ The default mode of the router is `traditional_compat` and the
 following sections describe how it operates. `traditional_compat`
 mode is designed to behave like the router in versions before
 {{site.base_gateway}} 3.x. For a description of the `expressions` mode, see
-[How to Configure Routes using Expressions](/gateway/entities/routes/expressions/).
+[How to Configure Routes using Expressions](/gateway/routing/expressions/).
 
 In general, the router orders all defined routes by their priority and
 uses the highest priority matching route to handle a request. If there
@@ -95,7 +95,7 @@ can suffer and its CPU usage can increase. In installations with
 thousands of routes, replacing regular expression routes by simple
 prefix routes can improve throughput and latency of
 {{site.base_gateway}}. If regex must be used because an exact
-path match must be performed, using the [expressions router](/gateway/entities/routes/expressions/)
+path match must be performed, using the [expressions router](/gateway/routing/expressions/)
 will significantly improve {{site.base_gateway}}'s performance in this case.
 
 Starting with version 3.0, {{site.base_gateway}} uses the regular

@@ -9,11 +9,11 @@ description: A route is a path to a resource within an upstream application.
 
 related_resources:
   - text: Services
-    url: /kong-entity/service/
+    url: /gateway/entities/service/
   - text: Routing in Kong Gateway
-    url: /gateway/entities/routes/routing/
+    url: /gateway/routing/
   - text: Expressions router
-    url: /gateway/entities/routes/expressions/
+    url: /gateway/routing/expressions/
 
 tools:
     - admin-api
@@ -50,7 +50,7 @@ data:
 
 ## Route and service interaction
 
-Routes, in conjunction with [services](/kong-entities/service/), let you expose your services to applications with Kong Gateway. Kong Gateway abstracts the service from the applications by using routes. Since the application always uses the route to make a request, changes to the services, like versioning, don’t impact how applications make the request. Routes also allow the same service to be used by multiple applications and apply different policies based on the route used.
+Routes, in conjunction with [services](/gateway/entities/service/), let you expose your services to applications with Kong Gateway. Kong Gateway abstracts the service from the applications by using routes. Since the application always uses the route to make a request, changes to the services, like versioning, don’t impact how applications make the request. Routes also allow the same service to be used by multiple applications and apply different policies based on the route used.
 
 For example, if you have an external application and an internal application that need to access the example_service service, but the external application should be limited in how often it can query the service to assure no denial of service. If a rate limit policy is configured for the service when the internal application calls the service, the internal application is limited as well. Routes can solve this problem.
 
@@ -60,6 +60,6 @@ In the example above, two routes can be created, say /external and /internal, an
 
 Routes can be configured dynamically to rewrite the requested URL to a different URL for the upstream. For example, your legacy upstream endpoint may have a base URI like `/api/old/`. However, you want your publicly accessible API endpoint to now be named `/new/api`. To route the service's upstream endpoint to the new URL, you could set up a service with the path `/api/old/` and a route with the path `/new/api`. 
 
-{{site.base_gateway}} can also handle more complex URL rewriting cases by using regular expression capture groups in the route path and the [Request Transformer Advanced](/hub/kong-inc/request-transformer-advanced/) plugin. For example, this can be used when you must replace `/api/<function>/old` with `/new/api/<function>`.
+{{site.base_gateway}} can also handle more complex URL rewriting cases by using regular expression capture groups in the route path and the [Request Transformer Advanced](https://docs.konghq.com/hub/kong-inc/request-transformer-advanced/) plugin. For example, this can be used when you must replace `/api/<function>/old` with `/new/api/<function>`.
 
-{{site.base_gateway}} 3.0.x or later ships with a new router. The new router can use regex expression capture groups to describe routes using a domain-specific language called Expressions. Expressions can describe routes or paths as patterns using regular expressions. For more information about how to configure the router using Expressions, see [How to configure routes using expressions](/gateway/{{page.release}}/key-concepts/routes/expressions/).
+{{site.base_gateway}} 3.0.x or later ships with a new router. The new router can use regex expression capture groups to describe routes using a domain-specific language called Expressions. Expressions can describe routes or paths as patterns using regular expressions. For more information about how to configure the router using Expressions, see [How to configure routes using expressions](https://docs.konghq.com/gateway/latest/key-concepts/routes/expressions/).

@@ -21,7 +21,7 @@ Each plugin can run globally, or be scoped to some combination of the following:
 
 Using scopes, you can customize how Kong handles functions in your environment, 
 either before a request is sent to your backend services or after it receives a response.
-For example, if you apply a plugin to a single [**route**](/kong-entities/route/), that plugin will trigger only on the specific path requests take through your system.
+For example, if you apply a plugin to a single [**route**](/gateway/entities/route/), that plugin will trigger only on the specific path requests take through your system.
 On the other hand, if you apply the plugin [**globally**](#global-scope), it will run on every request, regardless of any other configuration.
 
 ### Global scope
