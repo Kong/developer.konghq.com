@@ -1,0 +1,42 @@
+content:
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h1
+              text: "Terraform"
+              align: center
+
+  - row:
+      - column:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Kong provides [terraform-provider-konnect](https://github.com/Kong/terraform-provider-konnect), which allows you to manage your {{ site.konnect_short_name }} resources using Terraform.
+
+                    The provider allows you to manage {{ site.konnect_short_name }} resources, {{ site.base_gateway }} resources and {{ site.mesh_product_name }} resources.
+                - type: text
+                  text: |
+                  | kasjldf | laksjdflkja|
+                  | ---- | ---- |
+                  | slkdjflkj | laksjdflja |
+      - column:
+          - type: mermaid
+            config:
+              alt_text: "A diagram that explains how Terraform works with Konnect"
+              diagram: |
+                sequenceDiagram
+                participant User
+                participant Terraform
+                participant KongKonnectAPI
+                participant KongKonnect
+                participant KongGateway
+                participant Application
+
+                User->>Terraform: Write configuration code
+                Terraform->>KongKonnectAPI: Send configuration instructions
+                KongKonnectAPI->>KongKonnect: Apply configuration
+                KongKonnect->>KongGateway: Configure Kong Gateway
+                KongGateway->>Application: Manage and handle application traffic
