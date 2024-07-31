@@ -9,7 +9,7 @@ description: In Kong Gateway, a service is an abstraction of an existing upstrea
 
 related_resources:
   - text: Routes entity
-    url: /kong-entities/route/
+    url: /gateway/entities/route/
 
 tools:
     - admin-api
@@ -28,7 +28,7 @@ When defining a service, the administrator provides a name and the upstream appl
 
 Services have a one-to-many relationship with upstream applications, which allows administrators to create sophisticated traffic management behaviors.
 
-Services, in conjunction with [routes](/kong-entities/route/), let you expose your services to clients with {{site.base_gateway}}. {{site.base_gateway}} abstracts the service from the clients by using routes. Since the client always calls the route, changes to the services (like versioning) don’t impact how clients make the call. Routes also allow the same service to be used by multiple clients and apply different policies based on the route used.
+Services, in conjunction with [routes](/gateway/entities/route/), let you expose your services to clients with {{site.base_gateway}}. {{site.base_gateway}} abstracts the service from the clients by using routes. Since the client always calls the route, changes to the services (like versioning) don’t impact how clients make the call. Routes also allow the same service to be used by multiple clients and apply different policies based on the route used.
 
 {% mermaid %}
 flowchart LR

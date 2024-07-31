@@ -6,9 +6,9 @@ layout: reference
 
 related_resources:
   - text: Route entity
-    url: /kong-entity/route/
+    url: /gateway/entities/route/
   - text: Routing in Kong Gateway
-    url: /gateway/entities/routes/routing/
+    url: /gateway/routing/
   - text: Expressions repository
     url: https://github.com/Kong/atc-router
 
@@ -44,7 +44,7 @@ The results of the comparisons can be combined with logical operations, which al
   The bigger the priority, the sooner a route will be evaluated. In the case of duplicate
   priority values between two routes in the same router, their order of evaluation is undefined.
 
-![Structure of a predicate](/assets/images/products/gateway/reference/expressions-language/predicate.png)
+![Structure of a predicate](https://docs.konghq.com/assets/images/products/gateway/reference/expressions-language/predicate.png)
 
 A predicate is structured like the following: 
 
@@ -69,7 +69,7 @@ the configured routes in descending order (routes with a higher `priority` numbe
 
 As soon as a route yields a match, the router stops matching and the matched route is used to process the current request/connection.
 
-![Router matching flow](/assets/images/products/gateway/reference/expressions-language/router-matching-flow.png)
+![Router matching flow](https://docs.konghq.com/assets/images/products/gateway/reference/expressions-language/router-matching-flow.png)
 
 > _**Figure 1:**_ Diagram of how {{site.base_gateway}} executes routes. The diagram shows that {{site.base_gateway}} selects the route that both matches the expression and then selects the matching route with the highest priority.
 
@@ -140,7 +140,7 @@ http.path ~ r#"/foo/(?P<component>.+)"#
 ```
 
 The matched value of `component` will be made available later to plugins such as
-[Request Transformer Advanced](/hub/kong-inc/request-transformer-advanced/how-to/templates/).
+[Request Transformer Advanced](https://docs.konghq.com/hub/kong-inc/request-transformer-advanced/how-to/templates/).
 
 ## Expression router examples (TCP, TLS, UDP)
 
