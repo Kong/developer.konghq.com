@@ -38,7 +38,7 @@ content:
       - column:
           - type: image
             config:
-              url: https://raw.githubusercontent.com/Kong/docs.konghq.com/main/app/assets/images/products/gateway/gateway_overview.png
+              url: https://docs.konghq.com/assets/images/products/gateway/kong-gateway-features.png
               alt_text: Diagram of how Kong Gateway works
   - row: 
     - column: 
