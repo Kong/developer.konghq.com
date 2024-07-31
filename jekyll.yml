@@ -30,7 +30,7 @@ plugins:
 collections:
   kong_plugins:
     output: true
-  kong_entities:
+  gateway_entities:
     output: true
   tutorials:
     output: true
@@ -49,11 +49,11 @@ defaults:
       layout: "tutorial"
       permalink: /:collection/:path/
   - scope:
-      path: "_kong_entities"
-      type: "kong_entities"
+      path: "_gateway_entities"
+      type: "gateway_entities"
     values:
-      layout: "kong_entity"
-      permalink: /kong-entities/:path/
+      layout: "gateway_entity"
+      permalink: /gateway/entities/:path/
 
 
 
