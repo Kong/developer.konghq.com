@@ -18,9 +18,9 @@ If the underlying service or route has no authentication layer,
 the **Client IP** address is used. Otherwise, the consumer is used if an
 authentication plugin has been configured.
  
-The advanced version of this plugin, [Rate Limiting Advanced](/hub/kong-inc/rate-limiting-advanced/),
+The advanced version of this plugin, [Rate Limiting Advanced](https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/),
 provides the ability to apply
-[multiple limits in sliding or fixed windows](/hub/kong-inc/rate-limiting-advanced/#multi-limits-windows).
+[multiple limits in sliding or fixed windows](https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/#multi-limits-windows).
 
 {:.note}
 > **Note:** At least one limit (`second`, `minute`, `hour`, `day`, `month`, `year`) must be configured. 
@@ -37,7 +37,7 @@ The plugin supports three strategies.
 | `redis`   | Accurate<sup>1</sup>, less performance impact than a `cluster` policy. | Needs a Redis installation. Bigger performance impact than a `local` policy. |
 
 {:.note .no-icon}
-> **\[1\]**: Only when `sync_rate` option is set to `-1` (synchronous behavior). When using Redis, it's possible to set the sync rate to a positive value, which can lead to some inaccuracies. See the [configuration reference](/hub/kong-inc/rate-limiting/configuration/#config-sync_rate) for more details.
+> **\[1\]**: Only when `sync_rate` option is set to `-1` (synchronous behavior). When using Redis, it's possible to set the sync rate to a positive value, which can lead to some inaccuracies. See the [configuration reference](https://docs.konghq.com/hub/kong-inc/rate-limiting/configuration/#config-sync_rate) for more details.
 
 {:.warning}
 > **Note**: **Enterprise-Only**: The Kong Community Edition of this Rate Limiting plugin does not
@@ -89,7 +89,7 @@ selected header was not sent by the client or the configured service was not fou
 
 If limiting by IP address, it's important to understand how the IP address is determined. The IP address is determined by the request header sent to Kong from downstream. In most cases, the header has a name of `X-Real-IP` or `X-Forwarded-For`. 
 
-By default, Kong uses the header name `X-Real-IP`. If a different header name is required, it needs to be defined using the [real_ip_header](/gateway/latest/reference/configuration/#real_ip_header) Nginx property. Depending on the environmental network setup, the [trusted_ips](/gateway/latest/reference/configuration/#trusted_ips) Nginx property may also need to be configured to include the load balancer IP address.
+By default, Kong uses the header name `X-Real-IP`. If a different header name is required, it needs to be defined using the [real_ip_header](https://docs.konghq.com/gateway/latest/reference/configuration/#real_ip_header) Nginx property. Depending on the environmental network setup, the [trusted_ips](https://docs.konghq.com/gateway/latest/reference/configuration/#trusted_ips) Nginx property may also need to be configured to include the load balancer IP address.
 
 ## Headers sent to the client
 
