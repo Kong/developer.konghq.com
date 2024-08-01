@@ -134,15 +134,7 @@ content:
       - column:
           - type: plugin
             config:
-              name: rate-limiting
-      - column:
-          - type: plugin
-            config:
-              name: rate-limiting-advanced
-      - column:
-          - type: plugin
-            config:
-              name: ai-rate-limiting-advanced
+              slug: rate-limiting
   - row:
       - column:
           - type: header
