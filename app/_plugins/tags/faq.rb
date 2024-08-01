@@ -5,25 +5,27 @@ module Jekyll
     def initialize(tag_name, param, _tokens)
       super
 
-      @param = param
+      @param = param.strip
     end
 
     def render(context)
       @context = context
       @site = context.registers[:site]
       @page = @context.environments.first['page']
+      keys = @param.split('.')
       faqs = if !@param.nil? && !@param.empty?
-                            @context['include']['config']
-                          else
-                            @page['faqs']
-                          end
+               keys.reduce(context) { |c, key| c[key] }
+             else
+               @page['faqs']
+             end
 
-      Liquid::Template
-        .parse(template)
-        .render(
-          { 'site' => @site.config, 'page' => @page, 'include' => { 'faqs' => faqs } },
-          { registers: @context.registers, context: @context }
-        )
+      @context.environments.unshift('faqs' => faqs)
+
+      rendered_content = Liquid::Template.parse(template).render(@context)
+
+      @context.environments.shift
+
+      rendered_content
     end
 
     private

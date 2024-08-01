@@ -29,7 +29,7 @@ faqs:
 
   - q: What is the difference between consumers and applications?
     a: |
-      Applications provide developers the ability to get access to APIs managed by {{site.base_gateway}} or {{site.konnect_short_name}}
+      Applications provide developers the ability to get access to APIs managed by Kong Gateway or Konnect
       with no interaction from the Kong admin team to generate credentials required.
       <br><br>
       With consumers, the Kong team creates consumers, generates credentials and needs to share them with the developers that need access to the APIs.
