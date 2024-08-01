@@ -1,5 +1,5 @@
 <ul>
-  {% for related_resource in include.related_resources %}
+  {% for related_resource in related_resources %}
     <li>
       <a href="{{ related_resource.url }}">{{ related_resource.text | liquify }}</a>
     </li>

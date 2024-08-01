@@ -10,9 +10,9 @@ description: A consumer typically refers to an entity that consumes or uses the 
 related_resources:
   - text: Authentication reference
     url: https://docs.konghq.com/gateway/latest/kong-plugins/authentication/reference/
-  - text: Consumers API reference - {{site.base_gateway}}
+  - text: Consumers API reference - Kong Gateway
     url: https://docs.konghq.com/gateway/api/admin-ee/latest/#/Consumers
-  - text: Consumers API reference - {{site.konnect_short_name}}
+  - text: Consumers API reference - Konnect
     url: https://docs.konghq.com/konnect/api/control-plane-configuration/latest/#/Consumers
   - text: Consumer groups API reference
     url: https://docs.konghq.com/gateway/api/admin-ee/latest/#/consumer_groups
