@@ -1,7 +1,5 @@
-{% assign entity_example = include.entity_example %}
-
 {% if page.collection == 'kong_plugins' %}
-  {% include components/entity_example/dropdowns.html entity_example=include.entity_example %}
+  {% include components/entity_example/dropdowns.html entity_example=entity_example %}
 {% else %}
-  {% include components/entity_example/tabs.html entity_example=include.entity_example %}
+  {% include components/entity_example/tabs.html entity_example=entity_example %}
 {% endif %}
