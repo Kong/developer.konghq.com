@@ -103,7 +103,7 @@ content:
               text: Tutorials
           - type: tutorial_list
             config:
-              - topic: rate-limiting
+              - tag: rate-limiting
                 product: gateway # omit for all products
             quantity: 5
           - type: cta
