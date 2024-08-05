@@ -1,5 +1,5 @@
 ---
-title: Enable key authentication on a service
+title: Enable key authentication on a service with Kong Gateway
 related_resources:
   - text: Authentication
     url: /authentication
