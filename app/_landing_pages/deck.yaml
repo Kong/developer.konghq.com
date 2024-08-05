@@ -1,0 +1,56 @@
+content: 
+  - row: 
+    - type: x-with-y
+      config: 
+        headers:
+          - Use case
+          - Do this...
+        items:
+          - text: | 
+              This is two columns of text
+            action:
+              type: entity_card
+              config:
+                entity: Service
+          - text: | 
+              Sync configs between gateway and Konnect
+            action:
+              type: command
+              config:
+                cmd: deck
+                args:
+                  - gateway
+                  - sync
+                  - /path/to/file.json
+          - text: | 
+              Does a thing
+            action:
+              type: formula
+              config:
+                name: WGet
+                desc: Internet file retriever 
+                install: |
+                    system "./configure", "--prefix=#{prefix}"
+                    system "make", "install"
+          - text: | 
+              Sync configs between gateway and Konnect
+            action:
+              type: entity_example
+              config:
+                type: consumer
+                formats:
+                  - terraform
+                data:
+                  custom_id: example-consumer-id
+                  username: example-consumer
+                  tags:
+                    - silver-tier
+
+  - row:
+    - type: command
+      config:
+        cmd: deck
+        args:
+          - gateway
+          - sync
+          - /path/to/file.json
