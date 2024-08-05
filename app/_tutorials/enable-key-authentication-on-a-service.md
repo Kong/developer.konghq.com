@@ -66,8 +66,6 @@ formats:
 type: route
 data:
   name: example_route
-  service:
-    name: example_service
 {% endentity_example %}
 {% endcapture %}
 {{ step | indent: 3 }}
@@ -81,7 +79,6 @@ formats:
 type: plugin
 data:
   name: key-auth
-  service: example_service
   config:
     key_names:
     - apikey
@@ -100,7 +97,6 @@ formats:
 type: consumer
 data:
   username: alex
-  service: example_service
   keyauth_credentials:
   - key: hello_world
 {% endentity_example %}
