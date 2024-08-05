@@ -23,8 +23,8 @@ tldr:
   a: asdf
 
 faqs:
-  - q: `terraform init` fails with an error like `Failed to authenticate`.
-    a: Double-check your kong_admin_url and token values in main.tf. Ensure there are no typos and that the token is valid.
+  - q: "`terraform init` fails with an error like `Failed to authenticate`."
+    a: "Double-check your `kong_admin_url` and token values in `main.tf`. Ensure there arn't typos and that the token is valid."
   - q:
     a: 
 
@@ -37,7 +37,7 @@ cover what the tutorial will talk about, what you will learn
 
 Need to explain the prereqs, why do you need these?
 
-1. Install Terraform if it's not already installed. Follow the instructions at Terraform Installation Guide.
+1. Install Terraform if it's not already installed. Follow the instructions in the Terraform Installation Guide.
 
 1. Obtain an API token from your Konnect account:
 
@@ -59,67 +59,33 @@ What is this doing?
   This file will contain the main configuration for Terraform.
 
 1. Define the Terraform provider by opening `main.tf` and adding the following:
+  ```hcl
+    terraform {
+      required_providers {
+        konnect = {
+          source  = "kong/konnect"
+        }
+      }
+    }
 
-  {% entity_example %}
-  terraform
+    provider "konnect" {
+      personal_access_token = "kpat_YOUR_PAT"
+      server_url            = "https://us.api.konghq.com"
+    }
+  ```
 
+  This tells Terraform to use Kong as a provider and provides necessary connection details. `kong_admin_url` is the URL for your Kong Admin API, and `token` is your authentication token. These settings enable Terraform to communicate with your Kong instance.
+
+1. Initialize Terraform:
+  ```bash
+   terraform init
+   ```
+
+   This downloads the provider plugins specified in your configuration and prepares your working directory for other Terraform commands.
 
 
 
 <!-- all draft content below to pick through 
-
-# Tutorial: Setting Up Kong Konnect with Terraform
-
-## Prerequisites
-
-1. **Kong Konnect Account**: Ensure you have an account with Kong Konnect.
-2. **Terraform Installed**: Install Terraform if it's not already installed. Follow the instructions at [Terraform Installation Guide](https://learn.hashicorp.com/tutorials/terraform/install-cli).
-3. **Kong Konnect API Token**: Obtain an API token from your Kong Konnect account.
-
-## Step 1: Initialize Your Terraform Project
-
-### Actions
-
-1. **Create a Directory for Your Project**:
-   ```bash
-   mkdir kong-konnect-terraform
-   cd kong-konnect-terraform
-   ```
-
-2. **Create a `main.tf` File**:
-   ```bash
-   touch main.tf
-   ```
-
-3. **Define the Terraform Provider**:
-   Open `main.tf` and add the following content:
-   ```hcl
-   terraform {
-     required_providers {
-       kong = {
-         source  = "konghq/kong"
-         version = "~> 0.14.1"
-       }
-     }
-   }
-
-   provider "kong" {
-     kong_admin_url = "https://<your-kong-admin-url>"
-     token          = "<your-kong-admin-token>"
-   }
-   ```
-
-4. **Initialize Terraform**:
-   ```bash
-   terraform init
-   ```
-
-### Explanation
-
-- **Create a Directory**: This keeps your Terraform configuration files organized in one place.
-- **Create a `main.tf` File**: This file will contain the main configuration for Terraform.
-- **Define the Terraform Provider**: This tells Terraform which provider (in this case, Kong) to use and provides necessary connection details. `kong_admin_url` is the URL for your Kong Admin API, and `token` is your authentication token. These settings enable Terraform to communicate with your Kong instance.
-- **Initialize Terraform**: This downloads the provider plugins specified in your configuration and prepares your working directory for other Terraform commands.
 
 ## Step 2: Define a Kong Service
 
