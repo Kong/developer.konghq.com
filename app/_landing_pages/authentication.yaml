@@ -147,7 +147,7 @@ content:
               text: Tutorials
           - type: tutorial_list
             config:
-              - topic: authentication
+              - tag: authentication
                 product: gateway # omit for all products
             quantity: 5
   - row:
