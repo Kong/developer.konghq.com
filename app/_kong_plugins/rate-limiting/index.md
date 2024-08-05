@@ -3,7 +3,7 @@ title: Rate Limiting
 
 name: Rate Limiting
 publisher: kong-inc
-content_type: concept
+content_type: plugin
 description: You can use the Rate Limiting plugin to limit how many HTTP requests can be made in a given period of seconds, minutes, hours, days, months, or years.
 tags:
     - rate-limiting
