@@ -140,6 +140,47 @@ targets:
     curl -i -X GET http://localhost:8001/plugins
     ```
 
+1. Optional: If you want to test the rate limiting, you can set up authentication for this consumer and call the service with its credentials.
+{% capture auth %}
+{% entity_example %}
+type: plugin
+data:
+  name: key-auth
+  config:
+    key_names:
+    - apikey
+targets:
+  - global
+{% endentity_example %}
+{% endcapture %}
+
+{% capture key %}
+{% entity_example %}
+type: consumer
+data:
+  username: jsmith
+  keyauth_credentials:
+  - key: example_key
+{% endentity_example %}
+{% endcapture %}
+
+    Enable the Key Authentication plugin:
+    {{ auth | indent: 3 }}
+
+
+    Update the consumer configuration to add an API key:
+    {{ key | indent: 3 }}
+
+    Synchronize your configuration, and run the following command to test the rate limiting:
+    ```bash
+    for _ in {1..6}; do curl -i http://localhost:8000/example_route -H 'apikey:example_key'; echo; done
+    ```
+
+    You should get an `429` error with the message `API rate limit exceeded`.
+
+
+
+
 1. Teardown
 
    Destroy the Kong Gateway container.
