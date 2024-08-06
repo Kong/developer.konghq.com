@@ -129,7 +129,7 @@ data:
     second: 5
     hour: 1000
 targets:
-  - consumer
+  - global
 {% endentity_example %}
 {% endcapture %}
 {{ plugin | indent: 3 }}
@@ -177,9 +177,6 @@ data:
     ```
 
     You should get an `429` error with the message `API rate limit exceeded`.
-
-
-
 
 1. Teardown
 
