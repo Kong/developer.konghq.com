@@ -1,0 +1,145 @@
+content:
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h1
+              text: "decK"
+
+  - row: 
+    - column: 
+      - type: structured_text
+        config: 
+          blocks:
+            - type: text
+              text: |
+               Manage Kong Konnect, Kong Gateway, and Kong Ingress Controller configuration declaratively
+  - row: 
+    - column:
+      - type: structured_text
+        config: 
+          blocks: 
+            - type: text
+              text: | 
+                decK is a command line tool that facilitates API Lifecycle Automation (APIOps) by offering a comprehensive toolkit of commands designed to orchestrate and automate the entire process of API delivery. APIOps involves leveraging automation frameworks to streamline and enforce best practices throughout the API lifecycle. This enables developers and operations teams to manage APIs from development through deployment, ensuring consistency, reliability, and speed in API integrations. 
+                decK is one of the many supported tools used to interact with Kong, to learn about other tools review our [tools page](/tools)
+  - row:
+    - column:
+      - type: header
+        config:
+          type: h3
+          text: "OSX"
+          align: center
+    - column:
+      - type: header
+        config:
+          type: h3
+          text: "Linux"
+          align: center
+    - column:
+      - type: header
+        config:
+          type: h3
+          text: "Windows"
+          align: center
+    - column:
+      - type: header
+        config:
+          type: h3
+          text: "Docker"
+          align: center
+  - row:
+    - column:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: | 
+                1.  `brew tap kong/deck`
+                2. `brew install deck`
+
+
+
+  
+  - row: 
+    - column:
+      - type: x_with_y
+        config: 
+            headers:
+              - What does decK do?
+            items:
+              - text: | 
+                  Export the current configuration from Kong Gateway
+                action:
+                  type: command
+                  config:
+                    cmd: deck
+                    args:
+                      - gateway
+                      - sync
+                      - /path/to/file.json
+              - text: | 
+                  Sync configs between Gateway and Konnect
+                action:
+                  type: command
+                  config:
+                    cmd: deck
+                    args:
+                      - gateway
+                      - sync
+                      - /path/to/file.json
+              - text: | 
+                  Manage secrets
+                action:
+                  type: entity_example
+                  config:
+                    type: vault
+                    formats:
+                      - deck
+                    data:
+                      custom_id: example-consumer-id
+                      username: example-consumer
+                      tags:
+                        - silver-tier
+                  
+              - text: | 
+                  Manage secrets
+                action:
+                  type: formula
+                  config:
+                    name: WGet
+                    desc: Internet file retriever 
+                    install: |
+                        system "./configure", "--prefix=#{prefix}"
+                        system "make", "install"
+              - text: | 
+                  Sync configs between gateway and Konnect
+                action:
+                  type: entity_example
+                  config:
+                    type: consumer
+                    formats:
+                      - terraform
+                    data:
+                      custom_id: example-consumer-id
+                      username: example-consumer
+                      tags:
+                        - silver-tier
+
+  
+  - row:
+    - column:
+      - type: card
+        config:
+          title: decK Reference
+          cta: https://docs.konghq.com/gateway/latest/get-started/
+    - column:
+      - type: card
+        config:
+          title: Autocomplete
+          cta: https://docs.konghq.com/gateway/latest/get-started/
+    - column:
+      - type: card
+        config:
+          title: Changelog
+          cta: https://docs.konghq.com/gateway/latest/get-started/
