@@ -19,13 +19,10 @@ module Jekyll
                @page['faqs']
              end
 
-      @context.environments.unshift('faqs' => faqs)
-
-      rendered_content = Liquid::Template.parse(template).render(@context)
-
-      @context.environments.shift
-
-      rendered_content
+      context.stack do
+        context['faqs'] = faqs
+        Liquid::Template.parse(template).render(context)
+      end
     end
 
     private

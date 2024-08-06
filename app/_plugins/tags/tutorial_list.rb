@@ -22,13 +22,10 @@ module Jekyll
           (!config.key?('product') || t.data['products'].include?(config['product']))
       end
 
-      @context.environments.unshift('tutorials' => tutorials)
-
-      rendered_content = Liquid::Template.parse(template).render(@context)
-
-      @context.environments.shift
-
-      rendered_content
+      context.stack do
+        context['tutorials'] = tutorials
+        Liquid::Template.parse(template).render(context)
+      end
     end
 
     private

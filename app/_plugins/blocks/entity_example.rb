@@ -21,15 +21,10 @@ module Jekyll
 
       template = File.read(entity_example_drop.template)
 
-      @context.environments.unshift('entity_example' => entity_example_drop)
-
-      rendered_content = Liquid::Template
-        .parse(template)
-        .render(@context)
-
-      @context.environments.shift
-
-      rendered_content
+      context.stack do
+        context['entity_example'] = entity_example_drop
+        Liquid::Template.parse(template).render(context)
+      end
     rescue Psych::SyntaxError => e
       message = <<~STRING
       On `#{@page['path']}`, the following {% entity_example %} block contains a malformed yaml:

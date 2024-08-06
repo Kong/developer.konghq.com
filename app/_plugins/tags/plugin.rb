@@ -21,13 +21,10 @@ module Jekyll
 
       raise ArgumentError, "Error rendering {% plugin %} on page: #{@page['path']}. The plugin `#{@plugin_slug}` doesn't exist." unless plugin
 
-      @context.environments.unshift('plugin' => plugin)
-
-      rendered_content = Liquid::Template.parse(template).render(@context)
-
-      @context.environments.shift
-
-      rendered_content
+      context.stack do
+        context['plugin'] = plugin
+        Liquid::Template.parse(template).render(context)
+      end
     end
 
     private

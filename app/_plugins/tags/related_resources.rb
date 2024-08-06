@@ -19,13 +19,10 @@ module Jekyll
                             @page['related_resources']
                           end
 
-      @context.environments.unshift('related_resources' => related_resources)
-
-      rendered_content = Liquid::Template.parse(template).render(@context)
-
-      @context.environments.shift
-
-      rendered_content
+      context.stack do
+        context['related_resources'] = related_resources
+        Liquid::Template.parse(template).render(context)
+      end
     end
 
     private
