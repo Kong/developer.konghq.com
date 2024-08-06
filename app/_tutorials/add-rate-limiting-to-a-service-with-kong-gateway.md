@@ -71,6 +71,20 @@ variables:
 {% endcapture %}
 {{ step | indent: 3 }}
 
+1. Run the diff command:
+
+  ```bash
+  deck gateway diff kong.yaml
+  ```
+
+  You should see decK reporting that the properties you had changed in the file are going to be changed by decK in Kong Gateway’s database.
+
+1. Apply the changes:
+
+  ```bash
+  deck gateway sync kong.yaml
+  ```
+
 1. Verify that the Rate Limiting plugin was configured correctly by sending more requests then allowed in the configured time limit:
 
    ```bash
