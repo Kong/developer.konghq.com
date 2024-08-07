@@ -19,30 +19,32 @@ content:
                 text: "What is Rate Limiting?"
               blocks:
                 - type: text
-                  text: Rate Limiting is a technique for preventing individual
-                    users or clients from overloading a system by making
-                    too many requests over a specific time period.
+                  text: Rate limiting controls the number of API requests a client can make within a specified time frame. 
                     It's a critical function that helps maintain
                     the performance and availability of web
                     services and APIs by controlling the request traffic.
       - column:
           - type: mermaid
             config:
-              alt_text: "A diagram with alt text for compliance"
+              alt_text: "A diagram that shows how Kong Gateway uses the Rate Limiting plugin to rate limit a service"
               diagram: |
                 sequenceDiagram
-                autonumber
-                activate Client
-                activate Kong
-                Client->>Kong: text(fin=false, len=500, msg=[...])
-                note right of Kong: buffer += 500 (500)
-                Client->>Kong: continue(fin=false, len=500, msg=[...])
-                note right of Kong: buffer += 500 (1000)
-                Client->>Kong: continue(fin=false, len=500, msg=[...])
-                note right of Kong: buffer += 500 (1500) <br> buffer >= 1024 (limit exceeded!)
-                Kong->>Client: close(status=1009, msg="Payload Too Large")
-                deactivate Kong
-                deactivate Client
+                participant Client as Client
+                participant Kong as Kong Gateway
+                participant RateLimitPlugin as Rate Limiting plugin
+                participant Service as Service
+
+                Client->>Kong: Send API request
+                Kong->>RateLimitPlugin: Check rate limits
+                RateLimitPlugin-->>Kong: Rate limit status
+                alt Within limits
+                    RateLimitPlugin->>Service: Forward request
+                    Service-->>Kong: Service response
+                    Kong-->>Client: Forward service response
+                else Exceeds limits
+                    RateLimitPlugin-->>Kong: Rate limit exceeded response
+                    Kong-->>Client: Return 429 status code
+                end
 
   - row:
       - column:
@@ -53,16 +55,29 @@ content:
               blocks:
                 - type: text
                   text: Rate Limiting is necessary when using an API Gateway for the following reasons
-                - type: ordered_list
+                - type: unordered_list
                   items:
-                    - "Resource Protection: Ensures that no single user or client could monopolize resources and degrade the performance or impact the experience of other users."
-                    - "Security: Helps protect against certain types of security attacks, like DDoS (Distributed Denial of Service) attacks, by limiting the rate at which requests can be made."
-                    - "Cost Management: Prevents an explosion of usage (therefore cost) from either a bug or deliberately heavy usage by a consumer."
-                    - "Quality of Service: Certain user tiers may be given different rate limits to ensure a level of service. For example, premium users may have a higher rate limit than free users."
-                    - "Enforcing API Tiers/Plans: Different pricing plans may have different usage limits."
+                    - "**Resource Protection:** Ensures that no single user or client could monopolize resources and degrade the performance or impact the experience of other users."
+                    - "**Security:** Helps protect against certain types of security attacks, like DDoS (Distributed Denial of Service) attacks, by limiting the rate at which requests can be made."
+                    - "**Cost Management:** Prevents an explosion of usage (therefore cost) from either a bug or deliberately heavy usage by a consumer."
+                    - "**Quality of Service:** Certain user tiers may be given different rate limits to ensure a level of service. For example, premium users may have a higher rate limit than free users."
+                    - "**Enforcing API Tiers/Plans:** Different pricing plans may have different usage limits."
                 - type: text
-                  text: Rate limits are typically defined on per-second, per-minute or hourly intervals and are often configurable so they can be finely tuned based on the specific requirements of the system and its users
-
+                  text: Rate limits are typically defined on per-second, per-minute, or hourly intervals and are often configurable so they can be finely tuned based on the specific requirements of the system and its users.
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h2
+              text: "Learn more about rate limiting with Kong"
+              align: left
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h2
+              text: "Get started with rate limiting"
+              align: left
   - row:
       - column:
           - type: structured_text
@@ -93,7 +108,7 @@ content:
                 - type: text
                   text: Kong Mesh supports rate limiting via Mesh Proxies. There are two rate limiting mechanisms local using MeshRateLimit and global using MeshGlobalRateLimit policies.
                 - type: text
-                  text: <a href="https://docs.konghq.com/hub/kIC/">Add Global Rate Limiting with Kong Mesh</a>
+                  text: <a href="https://docs.konghq.com/mesh/latest/features/meshglobalratelimit/">Add Global Rate Limiting with Kong Mesh</a>
 
   - row:
       - column:
