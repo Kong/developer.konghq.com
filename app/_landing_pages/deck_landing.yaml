@@ -42,12 +42,6 @@ content:
           type: h3
           text: "Windows"
           align: center
-    - column:
-      - type: header
-        config:
-          type: h3
-          text: "Docker"
-          align: center
   - row:
     - column:
       - type: structured_text
@@ -57,10 +51,15 @@ content:
               text: | 
                 1.  `brew tap kong/deck`
                 2. `brew install deck`
-
-
-
-  
+    - column: 
+      - type: structured_text
+        config: 
+          blocks:
+            - type: text
+              text: |
+                1. `curl -sL https://github.com/kong/deck/releases/download/v1.38.1/deck_1.38.1_windows_amd64.tar.gz -o deck.tar.gz`
+                2. `tar -xf deck.tar.gz -C /tmp`
+                3. `sudo cp /tmp/deck /usr/local/bin/`
   - row: 
     - column:
       - type: x_with_y
@@ -86,21 +85,15 @@ content:
                     cmd: deck
                     args:
                       - gateway
-                      - sync
-                      - /path/to/file.json
+                      - ping
               - text: | 
                   Manage secrets
                 action:
-                  type: entity_example
+                  type: command
                   config:
                     type: consumer
                     formats:
                       - deck
-                    data:
-                      custom_id: example-consumer-id
-                      username: example-consumer
-                      tags:
-                        - silver-tier
                   
               - text: | 
                   Sync configs between gateway and Konnect
@@ -121,15 +114,112 @@ content:
     - column:
       - type: card
         config:
-          title: decK Reference
-          cta: https://docs.konghq.com/gateway/latest/get-started/
+          title: decK Entities
+          cta: https://docs.konghq.com/deck/latest/reference/entities/
     - column:
       - type: card
         config:
-          title: Autocomplete
-          cta: https://docs.konghq.com/gateway/latest/get-started/
+          title: Best Practices
+          cta: https://docs.konghq.com/deck/latest/guides/best-practices/
     - column:
       - type: card
         config:
           title: Changelog
-          cta: https://docs.konghq.com/gateway/latest/get-started/
+          cta: https://github.com/kong/deck/blob/main/CHANGELOG.md/
+  - row:
+    - column:
+      - type: header
+        config:
+          type: h2
+          text: "Frequently Asked Questions"
+  - row:
+    - column:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: "**I use Terraform to configure Kong, why should I care about decK?**"
+            - type: text
+              text: |
+                If you are using Terraform and are happy with it, you should continue to use it. decK covers all the problems that Terraform solves and goes beyond it:
+                * With Terraform, you have to track and maintain Terraform files (*.tf) and the Terraform state (likely using a cloud storage solution). With decK, the entire configuration is stored in the YAML/JSON file(s) only. There is no separate state that needs to be tracked.
+                * decK can export and back up your existing Kong’s configuration, meaning, you can take an existing Kong installation, and have a backup, as well as a declarative configuration for it. With Terraform, you will have to import each and every entity in Kong into Terraform’s state.
+                * decK can check if a configuration file is valid or not (validate sub-command).
+                * decK can quickly reset your Kong’s configuration when needed.
+                * decK works out of the box with Kong Gateway features like Workspaces and RBAC.
+    - column:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: "**Can I run multiple decK processes at the same time?**"
+            - type: text
+              text: |
+                The two processes will step on each other and might corrupt Kong’s configuration. You should ensure that there is only one instance of decK running at any point in time.
+  - row:
+    - column:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: "**Kong already has built-in declarative configuration, do I still need decK?**"
+            - type: text
+              text: |
+                Kong has an official declarative configuration format.
+
+                Kong can generate such a file with the kong config db_export command, which dumps almost the entire database of Kong into a file.
+
+                You can use a file in this format to configure Kong when it is running in a DB-less or in-memory mode. If you’re using Kong in DB-less mode, you can’t use decK for any sync, dump, or similar operations, as they require write access to the Admin API.
+
+                If you are using Kong alongside a database, you need decK because:
+
+                * Kong’s kong config db_import command is used to initialize a Kong database, but it is not recommended to use it if there are existing Kong nodes that are running, as the cache in these nodes will not be invalidated when entities are changed/added. You will need to manually restart all existing Kong nodes. decK performs all the changes via Kong’s Admin API, meaning the changes are always propagated to all nodes.
+                * Kong’s kong config db_import can only add and update entities in the database. It will not remove the entities that are present in the database but are not present in the configuration file.
+                * Kong’s kong config db_import command needs direct access to Kong’s database, which might or might not be possible in your production networking environment.
+                * decK can easily perform detect drifts in configuration. For example, it can verify if the configuration stored inside Kong’s database and that inside the config file is the same. This feature is designed in decK to integrate decK with a CI system or a cronjob which periodically checks for drifts and alerts a team if needed.
+                * deck dump or deck gateway dump outputs a more human-readable configuration file compared to Kong’s db_import.
+                However, decK has the following limitations which might or might not affect your use case:
+
+                If you have a very large installation, it can take some time for decK to sync up the configuration to Kong. This can be mitigated by adopting distributed configuration for your Kong installation and tweaking the --parallelism value. Kong’s db_import will usually be faster by orders of magnitude.
+                decK cannot export and re-import fields that are hashed in the database. This means fields like password of basic-auth credential cannot be correctly re-imported by decK. This happens because Kong’s Admin API call to sync the configuration will re-hash the already hashed password.
+    - column:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: "**I’m a Kong Gateway customer, can I use decK?**"
+            - type: text
+              text: Of course, decK is designed to be compatible with open-source and enterprise versions of Kong.
+  - row:
+    - column:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: "**Why the name ‘decK’?**"
+            - type: text
+              text: |
+                It is simple, short, and easy to use in the terminal. It is derived from the combination of words ‘declarative’ and ‘Kong’.
+    - column:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: "**Is there a JSON Schema for decK?**"
+            - type: text
+              text: |
+               Yes. The decK team maintains a JSON schema that you can use to validate YAML files on Github. You can use the schema with a text editor to provide JIT YAML validation. For example, to use the JSON schema with VS Code:
+               1. Install the Red Hat YAML extension:
+                
+                      code --install-extension redhat.vscode-yaml
+               2. Edit the plugin settings in VS Code:
+                       
+                      "yaml.schemas": {
+                        "https://json.schemastore.org/kong_json_schema.json": [
+                            "kong.yml",
+                            "kong.yaml"
+                        ]
+                    }
+               3. Verify that it works by opening your existing `kong.yml` or `kong.yaml` file.
+
+
