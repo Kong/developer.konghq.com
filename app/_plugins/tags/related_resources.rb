@@ -19,6 +19,17 @@ module Jekyll
                             @page['related_resources']
                           end
 
+      # Check if it's using the convenience syntax, or the full syntax
+      # If it's using convenience syntax, default to list style
+      if related_resources.is_a?(Array)
+        related_resources = {
+          'layout' => {
+            'style' => 'list'
+          },
+          'items' => related_resources
+        }
+      end
+
       context.stack do
         context['related_resources'] = related_resources
         Liquid::Template.parse(template).render(context)

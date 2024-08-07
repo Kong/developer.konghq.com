@@ -84,9 +84,12 @@ content:
               text: "Related Resources"
           - type: related_resources
             config:
-              - text: Protecting Services with Kong Gateway Rate Limiting
-                type: blog
-                url: https://konghq.com/blog/engineering/kong-gateway-rate-limiting
-              - text: How to design a scalable Rate Limiting Algorithm with Kong API
-                type: blog
-                url: https://konghq.com/blog/engineering/how-to-design-a-scalable-rate-limiting-algorithm
+              layout:
+                style: cards
+              items:
+                - text: Protecting Services with Kong Gateway Rate Limiting
+                  type: blog
+                  url: https://konghq.com/blog/engineering/kong-gateway-rate-limiting
+                - text: How to design a scalable Rate Limiting Algorithm with Kong API
+                  type: blog
+                  url: https://konghq.com/blog/engineering/how-to-design-a-scalable-rate-limiting-algorithm
