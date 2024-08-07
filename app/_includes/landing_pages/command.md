@@ -1,0 +1,1 @@
+<pre>{{ include.config.cmd }} {{ include.config.args | join: " " }}</pre>

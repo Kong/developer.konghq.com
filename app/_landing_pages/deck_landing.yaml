@@ -93,7 +93,7 @@ content:
                 action:
                   type: entity_example
                   config:
-                    type: vault
+                    type: consumer
                     formats:
                       - deck
                     data:
@@ -102,16 +102,6 @@ content:
                       tags:
                         - silver-tier
                   
-              - text: | 
-                  Manage secrets
-                action:
-                  type: formula
-                  config:
-                    name: WGet
-                    desc: Internet file retriever 
-                    install: |
-                        system "./configure", "--prefix=#{prefix}"
-                        system "make", "install"
               - text: | 
                   Sync configs between gateway and Konnect
                 action:
