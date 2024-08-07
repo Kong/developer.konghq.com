@@ -7,6 +7,8 @@ entities:
     - consumer
     - consumer_group
     - plugin
+tools:
+    - deck
 faqs:
   - q: What is the Rate Limiting plugin used for?
     a: The Rate Limiting plugin is used to control the rate of requests that clients can make to your services. It helps prevent abuse and ensures fair usage by limiting the number of requests a client can make in a given time period.
