@@ -52,7 +52,7 @@ prereqs:
 
 ## Steps
 
-1. Enable the Rate Limiting Plugin on the service:
+1. Enable the Rate Limiting Plugin on the service by adding the following to your `kong.yaml` file:
 
 {% capture step %}
 {% entity_example %}
@@ -71,13 +71,6 @@ variables:
 {% endcapture %}
 {{ step | indent: 3 }}
 
-1. Run the diff command:
-
-  ```bash
-  deck gateway diff kong.yaml
-  ```
-
-  You should see decK reporting that the properties you had changed in the file are going to be changed by decK in Kong Gateway’s database.
 
 1. Apply the changes:
 
