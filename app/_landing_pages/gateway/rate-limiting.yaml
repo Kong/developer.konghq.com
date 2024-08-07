@@ -1,0 +1,92 @@
+metadata:
+  title: Gateway Rate Limiting
+content:
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h1
+              text: "Rate Limiting with Kong Gateway"
+              align: center
+
+  - row:
+      - column:
+          - type: structured_text
+            config:
+              header:
+                text: "Capabilities"
+              blocks:
+                - type: text
+                  text: |
+                    Kong Gateway allows you to limit how many HTTP requests can be made in a given period.
+
+                    Rate limits can be applied to a [service](/gateway/entities/service/) or individual [routes](/gateway/entities/route/) to protect the upstream API, or to a [consumer](/gateway/entities/consumer/) to restrict how many times a user can call the API in the specified period.
+
+                    In addition to the OSS Rate Limiting plugin, Kong offer an Enterprise rate limiting plugin with additional capabilities.
+  - row:
+      - column:
+          - type: structured_text
+            config:
+              header:
+                text: "Open Source Features"
+                icon: deployment
+              blocks:
+                - type: text
+                  text: |
+                    Rate limit based on `consumer`, `consumer-group`, `credential`, `ip`, `service`, `header` or `path`. If the route being accessed does not require authentication, rate limiting is applied to the Client IP.
+
+                    The rate limit counter can be stored in memory, Redis, or in the Postgres database (traditional mode only).
+
+                    Multiple rate limits can be configured, allowing you to specify complex rules such as 1000 requests per hour, but no more than 100 per minute.
+          - type: plugin
+            config:
+              slug: rate-limiting
+      - column:
+          - type: structured_text
+            config:
+              header:
+                text: "Enterprise"
+                icon: enterprise-blue
+              blocks:
+                - type: text
+                  text: |
+                    Everything in OSS, plus:
+
+                    * Enhanced window size configuration. You are no longer limited to pre-defined intervals
+                    * Support for Redis Sentinel, Redis cluster and Redis SSL
+                    * Additional rate limiting algorithms, including leaky bucket, fixed window and sliding window
+                    * Precise control over high requests increment rate limiting counters (e.g. you may choose not to increment rate limiting if Kong Gateway blocks the request)
+          - type: plugin
+            config:
+              slug: rate-limiting-advanced
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h2
+              text: Tutorials
+          - type: tutorial_list
+            config:
+              - tag: rate-limiting
+                product: gateway
+            quantity: 5
+          - type: cta
+            config:
+              text: "View more tutorials &raquo;"
+              url: "https://docs.devsite.com/search/{tutorial.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
+
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h2
+              text: "Related Resources"
+          - type: related_resources
+            config:
+              - text: Protecting Services with Kong Gateway Rate Limiting
+                type: blog
+                url: https://konghq.com/blog/engineering/kong-gateway-rate-limiting
+              - text: How to design a scalable Rate Limiting Algorithm with Kong API
+                type: blog
+                url: https://konghq.com/blog/engineering/how-to-design-a-scalable-rate-limiting-algorithm
