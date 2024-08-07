@@ -1,1 +1,1 @@
-<{{ include.config.type }} class="{% if include.config.align %}elf-{{ include.config.align }}{% endif %}">{{ include.config.text }}</{{ include.config.type }}>
+<{{ include.config.type }} class="{% if include.config.align %}self-{{ include.config.align }}{% endif %}">{{ include.config.text }}</{{ include.config.type }}>
