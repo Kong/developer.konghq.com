@@ -24,6 +24,10 @@ module Jekyll
         @data['layout'] = 'landing_page'
       end
 
+      def url
+        @dir.sub(@site.dest, '')
+      end
+
       private
 
       def output_path(file)
