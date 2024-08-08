@@ -1,8 +1,29 @@
-<ul>
-  {% for related_resource in related_resources %}
-    <li>
-      <a href="{{ related_resource.url }}">{{ related_resource.text | liquify }}</a>
-    </li>
-  {% endfor %}
-</ul>
-
+{% if related_resources.layout.style == "cards" %}
+  <div class="grid grid-cols-4 gap-2">
+    {% for related_resource in related_resources.items %}
+      <div class="flex flex-col border-2 border-gray-200 rounded-md p-3">
+        <div>
+          {% if related_resource.type %}
+            <span class="bg-blue-200 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full mb-0.5">{{ related_resource.type }}</span>
+          {% endif %}
+        </div>
+        <a href="{{ related_resource.url }}">{{ related_resource.text | liquify }}</a>
+      </div>
+    {% endfor %}
+  </div>
+  {% elsif related_resources.layout.style == "list" %}
+  <ul>
+    {% for related_resource in related_resources.items %}
+      <li>
+        {% if related_resource.type %}
+          <span class="bg-blue-200 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full mr-0.5">{{ related_resource.type }}</span>
+        {% endif %}
+        <a href="{{ related_resource.url }}">{{ related_resource.text | liquify }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <div>
+Unsupported related_resources layout: {{ related_resources.layout.style }}
+  </div>
+{% endif %}
