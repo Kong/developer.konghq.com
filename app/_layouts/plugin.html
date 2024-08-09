@@ -16,13 +16,13 @@ layout: default
             <a href="#">Overview</a>
           </li>
           <li class="mr-2">
-            <a href="#">Configuration Reference</a>
+            <a href="/plugins/{{page.slug}}/reference/">Configuration Reference</a>
           </li>
           <li class="text-gray-200">
             <a href="#">Tutorials</a>
           </li>
         </ul>
-        <a class="mr-8 rounded-xl bg-white text-black p-4 w-64 text-center" href="#">Try it on Konnect</a>
+        <a class="mr-8 rounded-xl bg-white text-black p-4 w-64 text-center" href="cloud.konghq.com">Try it on Konnect</a>
       </div>
     </div>
   </div>
@@ -30,6 +30,9 @@ layout: default
     <div class="p-4 w-2/3">
 
       <div id="plugin-content">
+        {% if page.description %}
+          {{ page.description }}
+        {% endif %}
         {{ content }}
       </div>
       {% if page.faqs %}
@@ -53,13 +56,7 @@ layout: default
             <strong>Made by:</strong> Kong Inc.
           </li>
           <li>
-            <strong>Made by:</strong> Kong Inc.
-          </li>
-          <li>
             <strong>Categories:</strong> Authentication
-          </li>
-          <li>
-            <strong>Made by:</strong> Kong Inc.
           </li>
           <li>
             <strong>Supported topologies:</strong> hybrid, traditional, db-less
