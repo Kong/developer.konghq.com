@@ -11,6 +11,9 @@ tags:
   - rate-limiting
   - rate-limiting-advanced
   - traffic-control
+related_resources:
+  - text: How to create rate limiting tiers with Rate Limiting Advanced
+    url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/how-to/
 ---
 
 Rate limit how many HTTP requests can be made in a given time frame.
