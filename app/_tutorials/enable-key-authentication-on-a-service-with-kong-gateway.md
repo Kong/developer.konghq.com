@@ -19,55 +19,20 @@ content_type: tutorial
 tools:
     - deck
 
+prereqs:
+    services:
+        - example-service
+    routes:
+        - example-route
+
 ---
 
 ## Steps
-
-1. Get Kong
-
-    Run Kong Gateway with the quickstart script:
-    ```bash
-    curl -Ls https://get.konghq.com/quickstart | bash -s
-    ```
-
-    Once the Kong Gateway is ready, you will see the following message:
-
-    ```bash
-    Kong Gateway Ready 
-    ```
-
-1. Create a service 
-
-{% capture step %}
-{% entity_example %}
-formats:
-    - deck
-type: service
-data:
-   name: example_service
-{% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3}}
-
-1. Create a route 
-
-{% capture step %}
-{% entity_example %}
-formats:
-    - deck
-type: route
-data:
-  name: example_route
-{% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3 }}
 
 1. Enable the Key Authentication plugin on the Service
 
 {% capture step %}
 {% entity_example %}
-formats:
-    - deck
 type: plugin
 data:
   name: key-auth
@@ -76,6 +41,8 @@ data:
     - apikey
 targets:
 - service
+variables: 
+    serviceName|Id: example-service
 {% endentity_example %}
 {% endcapture %}
 {{ step | indent: 3 }}
@@ -84,8 +51,6 @@ targets:
 
 {% capture step %}
 {% entity_example %}
-formats:
-    - deck
 type: consumer
 data:
   username: alex

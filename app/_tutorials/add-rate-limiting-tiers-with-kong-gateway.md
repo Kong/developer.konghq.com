@@ -41,6 +41,12 @@ faqs:
 
 tools:
     - deck
+
+prereqs:
+    services:
+        - example-service
+    routes:
+        - example-route
 ---
 
 With consumer groups, you can define rate limiting tiers and apply them to subsets of application consumers.

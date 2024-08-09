@@ -79,7 +79,7 @@ targets:
     ```bash
     deck gateway sync kong.yaml
     ```
-3. Check that the configuration was applied
+3. Validate
 
     You can run the following command to test the rate limiting as the consumer:
     ```bash
