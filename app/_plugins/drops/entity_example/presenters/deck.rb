@@ -37,16 +37,11 @@ module Jekyll
             }.freeze
 
             def data
-              Jekyll::Utils::HashToYAML.new(
-                {
-                  'plugins' => [
-                    {
-                      'name' => @data.fetch('name'),
-                      @target => target
-                    }.merge('config' => @data.fetch('config'))
-                  ]
-                }
-              ).convert
+              plugin = { 'name' => @data.fetch('name') }
+              plugin.merge!(@target => target) if @target != 'glboal'
+              plugin.merge!('config' => @data.fetch('config'))
+
+              Jekyll::Utils::HashToYAML.new({ 'plugins' => [plugin] }).convert
             end
 
             def target

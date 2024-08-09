@@ -21,7 +21,7 @@ module Jekyll
       end
 
       def entities?
-        services.any? || routes.any? || consumers.any?
+        services.any? || routes.any? || consumers.any? || plugins.any?
       end
 
       def data
@@ -31,6 +31,7 @@ module Jekyll
         yaml.merge!('services' => services) if services.any?
         yaml.merge!('routes' => routes) if routes.any?
         yaml.merge!('consumers' => consumers) if consumers.any?
+        yaml.merge!('plugins' => plugins) if plugins.any?
 
         Jekyll::Utils::HashToYAML.new(yaml).convert
       end
@@ -50,6 +51,12 @@ module Jekyll
       def consumers
         @consumers ||= @prereqs.fetch('consumers', []).map do |c|
           load_yaml(find_file(folder: 'consumers', example: c))
+        end
+      end
+
+      def plugins
+        @plugins ||= @prereqs.fetch('plugins', []).map do |p|
+          load_yaml(find_file(folder: 'plugins', example: p))
         end
       end
 
