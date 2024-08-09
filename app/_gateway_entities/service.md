@@ -1,5 +1,6 @@
 ---
 title: Services
+name: Service
 entities:
   - service
 

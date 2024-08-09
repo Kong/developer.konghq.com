@@ -1,5 +1,6 @@
 ---
 title: Routes
+name: Route
 entities:
   - route
 

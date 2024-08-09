@@ -3,30 +3,68 @@
     <h3 class="font-bold mb-0">About</h3>
   </div>
 
-  <div class="mt-4">
-    <h3 class="font-bold">Products</h3>
-    <ul class="list-none m-0 mt-4">
-      <li class="flex grid-cols-2 justify-between items-center flex-wrap">
-        <a href="/gateway/">{{ site.base_gateway }}</a>
-      </li>
-    </ul>
-  </div>
+  {% if info_box.products.size > 0 %}
+    <div class="mt-4">
+      <h3 class="font-bold">Products</h3>
+      <ul class="list-none m-0 mt-4">
+        {% for product in info_box.products %}
+          <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+            <a class="border px-4 py-2 rounded inline-flex inline-flex items-center px-4 py-2 border border-transparent rounded-md bg-slate-200 " href="https://docs.devsite.com/search/{tutorial.topic}+{other stuff}">{{ product.name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
 
-  <div class="mt-4">
-    <h3 class="font-bold">Plugins</h3>
-    <ul class="list-none m-0 mt-4">
-      <li class="flex grid-cols-2 justify-between items-center flex-wrap">
-        <a href="/plugins/rate-limiting/">Rate Limiting</a>
-      </li>
-    </ul>
-  </div>
+  {% if info_box.plugins.size > 0 %}
+    <div class="mt-4">
+      <h3 class="font-bold">Plugins</h3>
+      <ul class="list-none m-0 mt-4">
+        {% for plugin in info_box.plugins %}
+          <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+            <a href="{{ plugin.url }}">{{ plugin.name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
 
-  <div class="mt-4">
-    <h3 class="font-bold">Entities</h3>
-    <ul class="list-none m-0 mt-4">
-      <li class="flex grid-cols-2 justify-between items-center flex-wrap">
-        <a href="/kong-entities/service/">Service</a>
-      </li>
-    </ul>
-  </div>
+  {% if info_box.entities.size > 0 %}
+    <div class="mt-4">
+      <h3 class="font-bold">Gateway Entities</h3>
+      <ul class="list-none m-0 mt-4">
+        {% for entity in info_box.entities %}
+          <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+            <a href="{{ entity.url }}">{{ entity.name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if info_box.tools.size > 0 %}
+    <div class="mt-4">
+      <h3 class="font-bold">Tools</h3>
+      <ul class="list-none m-0 mt-4">
+        {% for tool in info_box.tools %}
+          <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+            <a href="{{ tool.url }}">{{ tool.name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if info_box.tags.size > 0 %}
+    <div class="mt-4">
+      <h3 class="font-bold">Tags</h3>
+      <ul class="list-none m-0 mt-4">
+        {% for tag in info_box.tags %}
+          <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+            <a class="border px-4 py-2 rounded inline-flex inline-flex items-center px-4 py-2 border border-transparent rounded-md bg-slate-200 " href="https://docs.devsite.com/search/{tutorial.topic}+{other stuff}">{{ tag.name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
 </div>

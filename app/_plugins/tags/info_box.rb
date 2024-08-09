@@ -7,14 +7,14 @@ module Jekyll
       @site = context.registers[:site]
       @page = context.environments.first['page']
 
-      info_box = Drops::InfoBox::Base.make_for(page: @page)
+      info_box = Drops::InfoBox::Base.make_for(page: @page, site: @site)
 
-      rendered_content = Liquid::Template
-        .parse(File.read(info_box.template_file))
-        .render(
-          { 'site' => @site.config, 'page' => @page, 'include' => { 'info_box' => info_box } },
-          { registers: @context.registers, context: @context }
-        )
+      context.stack do
+        context['info_box'] = info_box
+        Liquid::Template
+          .parse(File.read(info_box.template_file))
+          .render(context)
+      end
     end
   end
 end

@@ -1,5 +1,6 @@
 ---
 title: Targets
+name: Target
 entities:
   - target
 

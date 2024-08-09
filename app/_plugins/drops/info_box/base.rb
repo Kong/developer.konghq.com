@@ -10,16 +10,17 @@ module Jekyll
           'tutorials'        => 'Tutorial'
         }
 
-        def self.make_for(page:)
+        def self.make_for(page:, site:)
           klass = MAPPINGS[page.collection]
 
           raise ArgumentError, "Unsupported info box type: #{page.collection}. Available types: #{MAPPINGS.keys.join(', ')}" unless klass
 
-          Object.const_get("Jekyll::Drops::InfoBox::#{klass}").new(page:)
+          Object.const_get("Jekyll::Drops::InfoBox::#{klass}").new(page:, site:)
         end
 
-        def initialize(page:)
+        def initialize(page:, site:)
           @page = page
+          @site = site
         end
 
         def template_file
