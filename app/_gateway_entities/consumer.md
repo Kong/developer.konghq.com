@@ -1,5 +1,6 @@
 ---
 title: Consumers
+name: Consumer
 entities:
   - consumer # we could use this to pull the schema too
 

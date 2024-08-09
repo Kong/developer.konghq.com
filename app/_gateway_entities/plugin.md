@@ -1,5 +1,6 @@
 ---
 title: Plugins
+name: Plugin
 entities:
   - plugin
 
