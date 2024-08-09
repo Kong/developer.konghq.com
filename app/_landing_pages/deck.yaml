@@ -16,23 +16,18 @@ content:
 
   - row:
     - column:
-      - type: header
+      - type: tabs
         config:
-          type: h3
-          text: "OSX"
-          align: center
-    - column:
-      - type: header
-        config:
-          type: h3
-          text: "Linux"
-          align: center
-    - column:
-      - type: header
-        config:
-          type: h3
-          text: "Windows"
-          align: center
+          - title: OSX
+            content: | 
+              OSX Install
+            #include_content: tools/deck/install/osx
+          - title: Windows
+            content: | 
+              Windows Install
+          - title: Linux
+            content: | 
+              Linux Install
   - row:
     - column:
       - type: text
