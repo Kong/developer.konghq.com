@@ -1,0 +1,22 @@
+<ol class="list-none mx-0">
+  <li>
+{% capture kong_gateway %}{% include prereqs/kong_gateway.md %}{% endcapture %}
+{{ kong_gateway | markdownify }}
+  </li>
+
+  {% for tool in prereqs.tools %}
+    <li>
+      {% assign tool_include = 'prereqs/tools/' | append: tool | append: '.md' %}
+      {% capture tool_template %}{% include {{ tool_include }} %}{% endcapture %}
+      {{ tool_template | markdownify }}
+    </li>
+  {% endfor %}
+
+  {% if prereqs.entities? %}
+    <li>
+      {% capture entities_template %}{% include prereqs/entities.md data=prereqs.data %}{% endcapture %}
+      {{ entities_template | markdownify }}
+    </li>
+  {% endif %}
+
+</ul>

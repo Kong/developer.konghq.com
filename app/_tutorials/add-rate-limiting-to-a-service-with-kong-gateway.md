@@ -37,54 +37,15 @@ tldr:
 
 tools:
     - deck
+
+prereqs:
+    services:
+        - example-service
+    routes:
+        - example-route
 ---
 
-## Prerequisites 
-
-place holder for prerendered prereq instructions that contains: 
-
-* Docker: Docker is used to run a temporary Kong Gateway and database to allow you to run this tutorial
-* curl: curl is used to send requests to Kong Gateway . 
-* Kong Gateway
-
 ## Steps
-
-1. Get Kong
-
-    Run Kong Gateway with the quickstart script:
-    ```bash
-    curl -Ls https://get.konghq.com/quickstart | bash -s
-    ```
-
-    Once the Kong Gateway is ready, you will see the following message:
-
-    ```bash
-    Kong Gateway Ready 
-    ```
-
-1. Create a service 
-
-{% capture step %}
-{% entity_example %}
- type: service
- data:
-   name: example_service
-{% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3}}
-
-1. Create a route 
-
-{% capture step %}
-{% entity_example %}
-type: route
-data:
-  name: example_route
-  service:
-    name: example_service
-{% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3 }}
 
 1. Enable the Rate Limiting Plugin on the Service
 
@@ -100,7 +61,7 @@ data:
 targets:
   - service
 variables: 
-    serviceName|Id: example_service
+    serviceName|Id: example-service
 {% endentity_example %}
 {% endcapture %}
 {{ step | indent: 3 }}

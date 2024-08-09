@@ -40,15 +40,6 @@ tools:
     - deck
 ---
 
-## Prerequisites 
-
-place holder for prerendered prereq instructions that contains: 
-
-* Docker: Docker is used to run a temporary Kong Gateway and database to allow you to run this tutorial
-* curl: curl is used to send requests to Kong Gateway
-* Kong Gateway
-* decK
-
 ## Steps
 
 1. Start Kong Gateway

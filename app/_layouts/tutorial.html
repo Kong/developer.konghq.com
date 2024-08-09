@@ -9,6 +9,13 @@ layout: default
     {% include tutorials/tldr.html %}
   </div>
 
+  {% if page.tools or page.prereqs %}
+    <div id="prereqs" class="mt-4">
+      <h2>Prerequisites</h2>
+      {% prereqs %}
+    </div>
+  {% endif %}
+
   {{ content }}
 
   {% if page.faqs %}

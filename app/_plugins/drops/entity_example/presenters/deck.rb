@@ -21,7 +21,9 @@ module Jekyll
             end
 
             def data
-              YAML.dump(@data).delete_prefix("---\n")
+              Jekyll::Utils::HashToYAML.new(
+                { entity => [ @data ] }
+              ).convert
             end
           end
 
@@ -35,12 +37,16 @@ module Jekyll
             }.freeze
 
             def data
-              YAML.dump(
+              Jekyll::Utils::HashToYAML.new(
                 {
-                  'name' => @data.fetch('name'),
-                  @target => target
-                }.merge('config' => @data.fetch('config'))
-              ).delete_prefix("---\n")
+                  'plugins' => [
+                    {
+                      'name' => @data.fetch('name'),
+                      @target => target
+                    }.merge('config' => @data.fetch('config'))
+                  ]
+                }
+              ).convert
             end
 
             def target
