@@ -1,0 +1,101 @@
+---
+layout: default
+---
+
+<div class="mx-16 mt-8">
+  <div id="index-link" class="text-gray-400 text-sm">
+    <a href="/plugins/">Plugins ></a>
+  </div>
+
+  <div class="pl-4 pb-2 pt-12 flex items-end bg-sky-500 mt-4">
+    <div class="flex flex-col w-full">
+      <h1 class="text-3xl mt-4 text-white">{{ page.title }}</h1>
+      <div class="flex justify-between items-end">
+        <ul class="list-none flex text-white m-0 align-bottom">
+          <li class="mr-2 text-gray-200 underline">
+            <a href="#">Overview</a>
+          </li>
+          <li class="mr-2">
+            <a href="/plugins/{{page.slug}}/reference/">Configuration Reference</a>
+          </li>
+          <li class="text-gray-200">
+            <a href="#">Tutorials</a>
+          </li>
+        </ul>
+        <a class="mr-8 rounded-xl bg-white text-black p-4 w-64 text-center" href="cloud.konghq.com">Try it on Konnect</a>
+      </div>
+    </div>
+  </div>
+  <div class="flex">
+    <div class="p-4 w-2/3">
+
+      <div id="plugin-content">
+        {% if page.description %}
+          {{ page.description }}
+        {% endif %}
+        {% if page.extended_description %}
+          {{ page.extended_description }}
+        {% endif %}
+        {{ plugin.schema }}
+      </div>
+      {% if page.faqs %}
+      <div id="faq" class="mt-4">
+        <h2>FAQ</h2>
+        {% faqs %}
+      </div>
+      {% endif %}
+    </div>
+    <div class="pl-4 mt-4 w-1/3">
+      <div class="bg-blue-200 py-4 px-8">
+        <div class="flex mb-2 flex items-center">
+          <img class="w-8 h-8 mr-2" src="https://docs.konghq.com/assets/images/icons/hub/kong-inc_rate-limiting.png">
+          <h3 class="font-bold mb-0">About the Rate Limiting plugin</h3>
+        </div>
+        <span class="bg-purple-600 text-gray-200 text-xs font-semibold px-2 py-1 rounded-full mr-0.5">OSS</span>
+        <span class="bg-blue-600 text-gray-200 text-xs font-semibold px-2 py-1 rounded-full mr-0.5">Konnect Free</span>
+
+        <ul class="list-none m-0 mt-4">
+          <li>
+            <strong>Made by:</strong> Kong Inc.
+          </li>
+          <li>
+            <strong>Categories:</strong> Authentication
+          </li>
+          <li>
+            <strong>Supported topologies:</strong> hybrid, traditional, db-less
+          </li>
+          <li>
+            <strong>Compatible protocols:</strong> grpc, grpcs, http, https
+          </li>
+          <li>
+            <strong>Minimum Gateway version:</strong> 2.1.0
+          </li>
+          <li>
+            <strong>Last Updated:</strong> Sept 20, 2023
+          </li>
+        </ul>
+
+        <div class="mt-4">
+          <h3 class="font-bold">Related links</h3>
+          <ul class="list-none m-0 mt-4">
+            <li>
+              <a href="#" class="text-blue-500 hover:underline">Rate Limiting Advanced Plugin</a>
+            </li>
+            <li>
+              <a href="#" class="text-blue-500 hover:underline">Rate Limiting with consumer groups</a>
+            </li>
+            <li>
+              <a href="#" class="text-blue-500 hover:underline">See more tutorials &raquo;</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {% if page.examples %}
+        <div id="config-examples" class="mt-8 border">
+        {% contentblock examples %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

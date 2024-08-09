@@ -42,9 +42,10 @@ defaults:
     values:
       layout: "plugin"
   - scope:
-      path: "_kong_plugins/*/reference.md"
+      path: "_kong_plugins/*/reference.yaml"
+      type: "plugin_reference"
     values:
-      layout: "plugin"
+      layout: "plugin_reference"
   - scope:
       path: "_tutorials"
       type: "tutorials"
