@@ -160,12 +160,12 @@ content:
     - column:
         - type: plugin
           config:
-            name: basic-auth
+            slug: basic-auth
     - column:
         - type: plugin
           config:
-            name: jwt
+             slug: jwt
     - column:
         - type: plugin
           config:
-            name: key-auth
+            slug: key-auth
