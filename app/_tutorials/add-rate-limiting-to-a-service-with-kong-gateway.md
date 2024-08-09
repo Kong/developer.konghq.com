@@ -68,7 +68,7 @@ variables:
 
 1. Validate
 
-   After configuring the Rate Limiting plugin, you can verify that it was configured correctly and is working, by sending more requests then allowed in the configured time limit.
+   After configuring the Rate Limiting plugin, you can verify that it was configured correctly and is working, by sending more requests than allowed in the configured time limit.
    ```bash
    for _ in {1..6}
    do
