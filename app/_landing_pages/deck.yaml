@@ -1,0 +1,274 @@
+metadata:
+  title: decK
+content:
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h1
+              text: "decK"
+  - row: 
+    - column:
+      - type: structured_text
+        config: 
+          blocks: 
+            - type: text
+              text: | 
+                decK is a command line tool that facilitates API Lifecycle Automation (APIOps) by offering a comprehensive toolkit of commands designed to orchestrate and automate the entire process of API delivery. APIOps involves leveraging automation frameworks to streamline and enforce best practices throughout the API lifecycle. This enables developers and operations teams to manage APIs from development through deployment, ensuring consistency, reliability, and speed in API integrations. 
+                decK is one of the many supported tools used to interact with Kong, to learn about other tools review our [tools page](/tools)
+
+  - row:
+    - column:
+      - type: header
+        config:
+          type: h3
+          text: "OSX"
+          align: center
+    - column:
+      - type: header
+        config:
+          type: h3
+          text: "Linux"
+          align: center
+    - column:
+      - type: header
+        config:
+          type: h3
+          text: "Windows"
+          align: center
+  - row:
+    - column:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: | 
+                1.  `brew tap kong/deck`
+                2. `brew install deck`
+    - column: 
+      - type: structured_text
+        config: 
+          blocks:
+            - type: text
+              text: |
+                1. `curl -sL https://github.com/kong/deck/releases/download/v1.38.1/deck_1.38.1_windows_amd64.tar.gz -o deck.tar.gz`
+                2. `tar -xf deck.tar.gz -C /tmp`
+                3. `sudo cp /tmp/deck /usr/local/bin/`
+    - column: 
+      - type: structured_text
+        config: 
+          blocks:
+            - type: text
+              text: |
+                If you are on Windows, you can either use the compressed archive from the [Github release page](https://github.com/kong/deck/releases) or install using CMD by entering the target installation folder and downloading a compressed archive, which contains the binary.
+                1. `curl -sL https://github.com/kong/deck/releases/download/v1.38.1/deck_1.38.1_windows_amd64.tar.gz -o deck.tar.gz`
+                2. `mkdir deck`
+                2. `tar -xf deck.tar.gz -C deck`
+                3. `powershell -command "[Environment]::SetEnvironmentVariable('Path', [Environment]::GetEnvironmentVariable('Path', 'User') + [IO.Path]::PathSeparator + [System.IO.Directory]::GetCurrentDirectory() + '\deck', 'User')"`
+  - row: 
+    - column: 
+      - type: header
+        config: 
+          type: h2
+          text: "How does decK work?"
+  - row: 
+    - column: 
+      - type: structured_text
+        config: 
+          blocks:  
+            - type: text
+              text: | 
+                decK operates on state files. 
+                decK state files describe the configuration of Kong Gateway. 
+                State files store Kong Gateway configuration in a declarative format, letting you manage services, routes, plugins, consumers, and other entities that define how requests are processed and routed through Kong Gateway.
+
+                In the background, decK communicates to your Kong Gateways via the Admin API.
+  
+  
+  - row: 
+    - column:
+      - type: x_with_y
+        config: 
+            type: h2
+            headers:
+              - What can decK do?
+
+            items:
+              - text: | 
+                  Export your current settings from Kong Gateway
+                action:
+                  type: command
+                  config:
+                    cmd: deck
+                    args:
+                      - gateway
+                      - sync
+                      - /path/to/file.json
+              - text: | 
+                  Sync configs between Gateway and Konnect
+                action:
+                  type: command
+                  config:
+                    cmd: deck
+                    args:
+                      - gateway
+                      - ping
+                  
+              - text: | 
+                  Self-validate it's own configuration
+                action:
+                  type: command
+                  config:
+                    cmd: deck
+                    args:
+                      - deck
+                      - gateway
+                      - validate
+                  
+
+  
+  - row:
+    - column:
+      - type: card
+        config:
+          title: decK Entities
+          cta: https://docs.konghq.com/deck/latest/reference/entities/
+    - column:
+      - type: card
+        config:
+          title: Best Practices
+          cta: https://docs.konghq.com/deck/1.38.x/guides/best-practices/
+    - column:
+      - type: card
+        config:
+          title: Changelog
+          cta: https://github.com/kong/deck/blob/main/CHANGELOG.md/
+  - row: 
+    - column:
+      - type: header
+        config:
+          type: h3
+          text: "Frequently Asked Questions"
+
+  - row:
+    - column:
+      - type: faqs
+        config:
+          - q: I use Terraform to configure Kong, why should I care about decK?
+            a: |
+              If you are using Terraform and are happy with it, you should continue to use it. decK covers all the problems that Terraform solves and goes beyond it:
+              
+              * With Terraform, you have to track and maintain Terraform files (*.tf) and the Terraform state (likely using a cloud storage solution). With decK, the entire configuration is stored in the YAML/JSON file(s) only. There is no separate state that needs to be tracked.
+              * decK can export and back up your existing Kong’s configuration, meaning, you can take an existing Kong installation, and have a backup, as well as a declarative configuration for it. With Terraform, you will have to import each and every entity in Kong into Terraform’s state.
+              * decK can check if a configuration file is valid or not (validate sub-command).
+              * decK can quickly reset your Kong’s configuration when needed.
+              * decK works out of the box with Kong Gateway features like Workspaces and RBAC.
+  - row:
+    - column:
+      - type: faqs
+        config:
+          - q: Can I run multiple decK processes at the same time?
+            a: |
+              The two processes will step on each other and might corrupt Kong’s configuration. You should ensure that there is only one instance of decK running at any point in time.
+  - row:
+    - column:
+      - type: faqs
+        config:
+          - q: Kong already has built-in declarative configuration, do I still need decK?
+            a: |
+              Kong has an official declarative configuration format.
+
+              Kong can generate such a file with the kong config db_export command, which dumps almost the entire database of Kong into a file.
+
+              You can use a file in this format to configure Kong when it is running in a DB-less or in-memory mode. If you’re using Kong in DB-less mode, you can’t use decK for any sync, dump, or similar operations, as they require write access to the Admin API.
+
+              If you are using Kong alongside a database, you need decK because:
+
+              * Kong’s kong config db_import command is used to initialize a Kong database, but it is not recommended to use it if there are existing Kong nodes that are running, as the cache in these nodes will not be invalidated when entities are changed/added. You will need to manually restart all existing Kong nodes. decK performs all the changes via Kong’s Admin API, meaning the changes are always propagated to all nodes.
+              * Kong’s kong config db_import can only add and update entities in the database. It will not remove the entities that are present in the database but are not present in the configuration file.
+              * Kong’s kong config db_import command needs direct access to Kong’s database, which might or might not be possible in your production networking environment.
+              * decK can easily perform detect drifts in configuration. For example, it can verify if the configuration stored inside Kong’s database and that inside the config file is the same. This feature is designed in decK to integrate decK with a CI system or a cronjob which periodically checks for drifts and alerts a team if needed.
+              * deck dump or deck gateway dump outputs a more human-readable configuration file compared to Kong’s db_import.
+              However, decK has the following limitations which might or might not affect your use case:
+
+              If you have a very large installation, it can take some time for decK to sync up the configuration to Kong. This can be mitigated by adopting distributed configuration for your Kong installation and tweaking the --parallelism value. Kong’s db_import will usually be faster by orders of magnitude.
+              decK cannot export and re-import fields that are hashed in the database. This means fields like password of basic-auth credential cannot be correctly re-imported by decK. This happens because Kong’s Admin API call to sync the configuration will re-hash the already hashed password.
+  - row:
+    - column:
+      - type: faqs
+        config:
+          - q: I’m a Kong Gateway customer, can I use decK?
+            a: |
+              decK is designed to be compatible with open-source and enterprise versions of Kong.
+
+
+  - row:
+    - column:
+      - type: faqs
+        config:
+          - q: I'm a Konnect user can I use decK
+            a: |
+              Yes, decK is compatible with Konnect. We recommend upgrading to decK 1.12 to take advantage of the new --konnect CLI flags.
+
+
+  - row:
+    - column:
+      - type: faqs
+        config:
+          - q: I use Cassandra as a data store for Kong, can I use decK?
+            a: |
+              As of Kong Gateway 3.4, you can’t use Cassandra as a data store, as it is longer supported by Kong.
+              You can use decK with earlier versions of Kong backed by Cassandra. However, if you observe errors during a sync process, you will have to tweak decK’s settings and make a few adjustments.
+
+              decK heavily parallelizes its operations, which can induce a lot of load onto your Cassandra cluster. You should consider:
+
+              * decK is read-intensive for most parts, meaning it will perform read-intensive queries on your Cassandra cluster, so make sure you tune your Cassandra cluster accordingly.
+              * decK talks to the same Kong node that talks to the same Cassandra node in your cluster.
+              Use the `--parallelism 1` flag to ensure that there is only request being processed at a time. This will slow down sync process and should be used as a last resort.
+  - row: 
+    - column:
+      - type: faqs
+        config:
+          - q: Is there a JSON Schema for decK?
+            a:  |
+               Yes. The decK team maintains a JSON schema that you can use to validate YAML files on Github. You can use the schema with a text editor to provide JIT YAML validation. For example, to use the JSON schema with VS Code:
+               1. Install the Red Hat YAML extension:
+                
+                      code --install-extension redhat.vscode-yaml
+               2. Edit the plugin settings in VS Code:
+                       
+                      "yaml.schemas": {
+                        "https://json.schemastore.org/kong_json_schema.json": [
+                            "kong.yml",
+                            "kong.yaml"
+                        ]
+                    }
+               3. Verify that it works by opening your existing `kong.yml` or `kong.yaml` file.
+  - row: 
+    - column:
+      - type: faqs
+        config:
+          - q: What endpoints does decK use?
+            a:  |
+
+              decK uses Kong's Admin API to communicate with {{site.base_gateway}}. 
+              If you have RBAC enabled, you need to give decK permissions to perform operations, or use an admin account that has these permissions. 
+
+              Here are some common endpoints hit by decK for normal operations:
+
+              * `GET, POST, PATCH, PUT, DELETE /{entityType}` or `GET, POST, PATCH, PUT, DELETE /{workspace}/{entityType}`: Perform read and write operations on entities.
+
+                If you are running {{site.ee_product_name}}, then decK interacts with entities inside workspaces. 
+                See the [Entities managed by decK](/deck/{{page.release}}/reference/entities/) reference for the full list.
+                
+                Note that decK also performs operations on entities enabled by plugins, such as `/basic-auths`, `/jwts`, and so on.
+              * `GET /`: Get the {{site.base_gateway}} version.
+              * `GET /{workspace}/kong`: Get entities in a workspace.
+              * `GET /{workspace}/workspaces/{entityType}`: Check whether the workspace or other entity exists or not.
+              * `GET /{workspace}/schemas/{entityType}`: Retrieves the schema for a specified entity type within a workspace and applies default settings.
+              * `GET /{workspace}/schemas/plugins/{pluginName}`: Retrieves the schema for a specified plugin within a workspace and applies default settings.
+              * `POST /workspaces`: Create missing workspaces.
+
+              To find out which endpoints your instance of decK is hitting, execute any decK command with the `--verbose 1` flag. 
+              This outputs all of the queries being made. For example, here's a snippet from `deck gateway dump --verbose 1`:
+
