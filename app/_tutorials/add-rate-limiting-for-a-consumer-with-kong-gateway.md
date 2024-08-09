@@ -71,13 +71,13 @@ targets:
 
 2. Synchronize your configuration
 
-    Check the differences in your file:
+    Check the differences in your files:
     ```bash
-    deck gateway diff kong.yaml
+    deck gateway diff deck_files
     ```
-    If everything looks right, synchronize it to update your Gateway configuration:
+    If everything looks right, synchronize them to update your Gateway configuration:
     ```bash
-    deck gateway sync kong.yaml
+    deck gateway sync deck_files
     ```
 3. Validate
 
