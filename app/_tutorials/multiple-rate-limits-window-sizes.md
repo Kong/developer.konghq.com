@@ -30,20 +30,24 @@ tags:
 content_type: tutorial
 
 prereqs:
-  - services:
-      - example-service
-  - routes:
-      - example-route
+  services:
+    - example-service
+  routes:
+    - example-route
 
 tldr: 
-  q: Can I apply multiple rate limits or window sizes with one plugin instance?
-  a: You can apply any number of rate limits and window sizes per plugin instance. This lets you create multiple rate limiting windows, for example, rate limit per minute and per hour, and per any arbitrary window size.
+  q: How do I apply multiple rate limits or window sizes with one plugin instance?
+  a: |
+    You can use the Rate Limiting Advanced plugin to apply any number of rate limits and window sizes per plugin instance. 
+    This lets you create multiple rate limiting windows, for example, rate limit per minute and per hour, and per any arbitrary window size.
 
 faqs:
   - q: Why can't I use the regular Rate Limiting plugin to set multiple limits and window sizes?
     a: You could use the regular Rate Limiting plugin to just set multiple limits, but the regular plugin doesn't support configurable window sizes.
 
 ---
+
+## Steps
 
 1. Enable the Rate Limiting Advanced plugin on a service:
 
@@ -54,11 +58,11 @@ data:
   name: rate-limiting-advanced
   config:
     limit:
-      - 10
-      - 100
+    - 10
+    - 100
     window_size:
-      - 60
-      - 3600
+    - 60
+    - 3600
 tools:
   - deck
 targets:
