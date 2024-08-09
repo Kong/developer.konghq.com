@@ -99,4 +99,5 @@ figure[data-file]:before {
   display: inline-block;
   z-index: 5;
   width: 100%;
+  background-color: darkslategrey;
 }
