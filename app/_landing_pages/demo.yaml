@@ -152,6 +152,19 @@ content:
           - type: plugin
             config:
               slug: rate-limiting-advanced
+      - column:
+          - type: plugin
+            config:
+              slug: ai-rate-limiting-advanced
+  - row:
+      - column:
+          - type: plugin
+            config:
+              slug: graphql-rate-limiting-advanced
+      - column:
+          - type: plugin
+            config:
+              slug: response-ratelimiting
   - row:
       - column:
           - type: header
