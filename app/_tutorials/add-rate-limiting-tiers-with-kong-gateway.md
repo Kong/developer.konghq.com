@@ -13,6 +13,13 @@ platforms:
     - on-prem
     - konnect
 
+tools:
+    - admin-api
+    - konnect-api
+    - kic
+    - deck
+    - ui
+
 min_version:
   gateway: 3.4.x
 
@@ -74,12 +81,6 @@ To use consumer groups for rate limiting, you need to:
     data:
       name: Gold
   
-    formats:
-      - admin-api
-      - konnect
-      - kic
-      - deck
-      - ui
   {% endentity_example %}
 {% endcapture %}
 {{ step | indent: 3 }}

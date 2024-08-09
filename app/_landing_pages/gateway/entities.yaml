@@ -11,12 +11,9 @@ content:
 
   - row:
       - column:
-          - type: structured_text
+          - type: text
             config:
-              blocks:
-                - type: text
-                  text: |
-                    Kong entities refer to the various components and objects that make up the Kong API Gateway and its ecosystem.
+              Kong entities refer to the various components and objects that make up the Kong API Gateway and its ecosystem.
           - type: image
             config:
               url: "https://raw.githubusercontent.com/Kong/docs.konghq.com/main/app/assets/images/products/konnect/getting-started/konnect-gateway-entities.png"
@@ -72,14 +69,8 @@ content:
         config:
           entity: workspace
     - column: 
-      - type: structured_text
-        config:
-          blocks:
-            type: text 
-            text: "&nbsp;"
+      - type: text
+        config: "&nbsp;"
     - column: 
-      - type: structured_text
-        config:
-          blocks:
-            type: text 
-            text: "&nbsp;"
+      - type: text
+        config: "&nbsp;"
