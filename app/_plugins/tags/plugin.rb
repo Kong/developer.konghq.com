@@ -15,9 +15,7 @@ module Jekyll
       @config = @param.split('.').reduce(context) { |c, key| c[key] } || @param
       @plugin_slug = @config.is_a?(Hash) ? @config['slug'] : @config
 
-      plugin = @site.collections['kong_plugins'].docs.find do |d|
-        d.data['slug'] == @plugin_slug
-      end
+      plugin = @site.data['kong_plugins'][@plugin_slug]
 
       raise ArgumentError, "Error rendering {% plugin %} on page: #{@page['path']}. The plugin `#{@plugin_slug}` doesn't exist." unless plugin
 

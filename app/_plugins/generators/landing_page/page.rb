@@ -19,7 +19,7 @@ module Jekyll
         # Needed so that regeneration works for single sourced pages
         # It must be set to the source file
         # Also, @path MUST NOT be set, it falls back to @relative_path
-        @relative_path = file
+        @relative_path = file.gsub("#{@site.source}/", '')
 
         @data['layout'] = 'landing_page'
       end
