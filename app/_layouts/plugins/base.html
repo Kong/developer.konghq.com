@@ -38,6 +38,13 @@ layout: default
           {% faqs %}
         </div>
       {% endif %}
+
+      {% if page.related_resources %}
+        <div id="related-resources" class="mt-4">
+          <h2>Related Resources</h2>
+          {% related_resources %}
+        </div>
+      {% endif %}
     </div>
 
     <div class="pl-4 mt-4 w-1/3">
