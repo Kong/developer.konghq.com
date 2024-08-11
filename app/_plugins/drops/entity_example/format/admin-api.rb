@@ -8,7 +8,7 @@ module Jekyll
       module Format
         class AdminAPI < Base
           def template_file(_type)
-            @template_file ||= '/components/entity_example/format/admin-api.html'
+            @template_file ||= '/components/entity_example/format/admin-api.md'
           end
 
           def to_option

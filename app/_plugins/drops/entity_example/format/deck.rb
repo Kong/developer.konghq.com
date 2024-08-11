@@ -8,7 +8,7 @@ module Jekyll
       module Format
         class Deck < Base
           def template_file(_type)
-            @template_file ||= '/components/entity_example/format/deck.html'
+            @template_file ||= '/components/entity_example/format/deck.md'
           end
 
           def to_option

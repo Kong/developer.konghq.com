@@ -8,7 +8,7 @@ module Jekyll
       module Format
         class Terraform < Base
           def template_file(_type)
-            @template_file ||= '/components/entity_example/format/terraform.html'
+            @template_file ||= '/components/entity_example/format/terraform.md'
           end
 
           def to_option

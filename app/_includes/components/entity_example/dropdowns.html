@@ -34,7 +34,8 @@
       <div tabindex="0" class="entity-example-target-panel hidden overflow-auto" aria-labelledby="select-target-{{ entity_example.id }}" data-target="{{ target }}">
         {% for formatted_example in formatted_examples %}
           <div tabindex="0" class="entity-example-format-panel hidden overflow-auto" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ formatted_example.format.value }}">
-            {% include {{ formatted_example.template_file }} presenter=formatted_example.presenter %}
+            {% capture markdown_template %}{% include {{ formatted_example.template_file }} presenter=formatted_example.presenter %}{% endcapture %}
+            {{ markdown_template | markdownify }}
           </div>
         {% endfor %}
       </div>
@@ -42,7 +43,8 @@
   {% else %}
     {% for formatted_example in entity_example.formatted_examples %}
       <div tabindex="0" class="entity-example-format-panel hidden overflow-auto" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ formatted_example.format.value }}">
-        {% include {{ formatted_example.template_file }} presenter=formatted_example.presenter %}
+        {% capture markdown_template %}{% include {{ formatted_example.template_file }} presenter=formatted_example.presenter %}{% endcapture %}
+        {{ markdown_template | markdownify }}
       </div>
     {% endfor %}
   {% endif %}
