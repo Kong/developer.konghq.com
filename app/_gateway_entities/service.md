@@ -10,6 +10,8 @@ description: In Kong Gateway, a service is an abstraction of an existing upstrea
 related_resources:
   - text: Routes entity
     url: /gateway/entities/route/
+  - text: Enable rate limiting on a service with Kong Gateway
+    url: /tutorials/add-rate-limiting-to-a-service-with-kong-gateway/
 
 tools:
     - admin-api
