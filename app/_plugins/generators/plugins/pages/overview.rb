@@ -16,6 +16,10 @@ module Jekyll
           'plugins/base'
         end
 
+        def data
+          super.merge('overview?' => true)
+        end
+
         private
 
         def parser
