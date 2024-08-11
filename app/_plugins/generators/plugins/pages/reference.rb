@@ -15,7 +15,7 @@ module Jekyll
         end
 
         def data
-          super.merge(metadata)
+          super.merge(metadata).merge('reference?' => true)
         end
 
         def metadata

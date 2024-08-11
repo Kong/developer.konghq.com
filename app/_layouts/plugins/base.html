@@ -12,10 +12,10 @@ layout: default
       <h1 class="text-3xl mt-4 text-white">{{ page.title }}</h1>
       <div class="flex justify-between items-end">
         <ul class="list-none flex text-white m-0 align-bottom">
-          <li class="mr-2 text-gray-200 underline">
+          <li class="mr-2 text-gray-200 {% if page.overview? %} underline {% endif %}">
             <a href="/plugins/{{page.slug}}/">Overview</a>
           </li>
-          <li class="mr-2">
+          <li class="mr-2 {% if page.reference? %} underline {% endif %}">
             <a href="/plugins/{{page.slug}}/reference/">Configuration Reference</a>
           </li>
           <li class="text-gray-200">
