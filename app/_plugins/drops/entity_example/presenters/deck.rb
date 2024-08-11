@@ -38,7 +38,7 @@ module Jekyll
 
             def data
               plugin = { 'name' => @data.fetch('name') }
-              plugin.merge!(@target => target) if @target != 'glboal'
+              plugin.merge!(@target => target) if @target != 'global'
               plugin.merge!('config' => @data.fetch('config'))
 
               Jekyll::Utils::HashToYAML.new({ 'plugins' => [plugin] }).convert
