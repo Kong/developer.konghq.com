@@ -1,5 +1,5 @@
 {: data-file="kong.yaml" }
-{% highlight yaml %}
+```yaml
 _format_version: '3.0'
 {{ include.presenter.data }}
-{% endhighlight %}
+```

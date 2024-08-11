@@ -90,14 +90,15 @@
   color: #859900;
 }
 
-figure[data-file] {
+[data-file] {
   position: relative;
 }
 
-figure[data-file]:before {
+[data-file]:before {
   content: attr(data-file);
   display: inline-block;
   z-index: 5;
   width: 100%;
   background-color: darkslategrey;
+  color: #93a1a1;
 }

@@ -8,7 +8,7 @@ module Jekyll
       module Format
         class KonnectAPI < Base
           def template_file(_type)
-            @template_file ||= '/components/entity_example/format/konnect.html'
+            @template_file ||= '/components/entity_example/format/konnect.md'
           end
 
           def to_option

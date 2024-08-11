@@ -8,7 +8,7 @@ module Jekyll
       module Format
         class KIC < Base
           def template_file(_type)
-            @template_file ||= '/components/entity_example/format/kic.html'
+            @template_file ||= '/components/entity_example/format/kic.md'
           end
 
           def to_option
