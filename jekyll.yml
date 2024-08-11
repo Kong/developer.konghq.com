@@ -37,16 +37,6 @@ collections:
 
 defaults:
   - scope:
-      path: "_kong_plugins/*/index.md"
-      type: "kong_plugins"
-    values:
-      layout: "plugin"
-  - scope:
-      path: "_kong_plugins/*/reference.yaml"
-      type: "plugin_reference"
-    values:
-      layout: "plugin_reference"
-  - scope:
       path: "_tutorials"
       type: "tutorials"
     values:
