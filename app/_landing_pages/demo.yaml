@@ -127,10 +127,6 @@ content:
           - type: tutorial_list
             config:
               - tag: rate-limiting
-                product: 
-                  - gateway 
-                  - mesh
-                  - kic
             quantity: 5
           - type: cta
             config:
