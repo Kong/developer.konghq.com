@@ -39,6 +39,10 @@ module Jekyll
           end
         end
 
+        def platforms
+          @platforms ||= @page.fetch('platforms', [])
+        end
+
         def template_file
           @template_file ||= File.expand_path('app/_includes/components/info_box/tutorial.html')
         end

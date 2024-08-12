@@ -16,6 +16,20 @@
     </div>
   {% endif %}
 
+  {% if info_box.platforms.size > 0 %}
+    <div class="mt-4">
+      <h3 class="font-bold">Works on</h3>
+      <ul class="list-none m-0 mt-4">
+        {% for platform in info_box.platforms %}
+          <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+            <span>{{ platform }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+
   {% if info_box.plugins.size > 0 %}
     <div class="mt-4">
       <h3 class="font-bold">Plugins</h3>
