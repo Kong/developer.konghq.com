@@ -11,10 +11,6 @@ description: A consumer typically refers to an entity that consumes or uses the 
 related_resources:
   - text: Authentication reference
     url: https://docs.konghq.com/gateway/latest/kong-plugins/authentication/reference/
-  - text: Consumers API reference - Kong Gateway
-    url: https://docs.konghq.com/gateway/api/admin-ee/latest/#/Consumers
-  - text: Consumers API reference - Konnect
-    url: https://docs.konghq.com/konnect/api/control-plane-configuration/latest/#/Consumers
   - text: Consumer groups API reference
     url: https://docs.konghq.com/gateway/api/admin-ee/latest/#/consumer_groups
   - text: Plugins that can be enabled on consumers
@@ -74,6 +70,14 @@ tools:
     - deck
     - ui
     - terraform
+
+api_specs:
+    gateway:
+        - admin-ee
+        - admin-oss
+    konnect:
+        - control-planes-config
+
 ---
 
 ## What is a consumer?
