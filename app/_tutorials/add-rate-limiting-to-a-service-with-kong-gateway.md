@@ -9,7 +9,7 @@ related_resources:
 products:
     - gateway
 
-platform:
+platforms:
     - on-prem
     - konnect
 
