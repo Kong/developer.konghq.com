@@ -3,3 +3,9 @@ rate-limiting:
 
 authentication:
   name: Authentication
+
+oidc:
+  name: OIDC
+
+sso:
+  name: SSO
