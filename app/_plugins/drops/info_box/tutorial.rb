@@ -15,20 +15,6 @@ module Jekyll
           end
         end
 
-        def entities
-          @entities ||= begin
-            entities = @page.fetch('entities', [])
-
-            if entities.any?
-              @site.collections['gateway_entities'].docs.select do |d|
-                entities.include?(d.data['slug'])
-              end
-            else
-              entities
-            end
-          end
-        end
-
         def min_versions
           @min_versions ||= begin
             min_versions = @page.fetch('min_version', {})
