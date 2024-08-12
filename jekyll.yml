@@ -28,8 +28,6 @@ plugins:
 
 # Collections
 collections:
-  kong_plugins:
-    output: true
   gateway_entities:
     output: true
   tutorials:
