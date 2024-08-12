@@ -1,7 +1,5 @@
-oss:
+- slug: oss
   name: OSS
-  slug: oss
 
-enterprise:
+- slug: enterprise
   name: Enterprise
-  slug: enterprise

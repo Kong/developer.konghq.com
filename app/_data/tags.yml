@@ -1,11 +1,11 @@
-rate-limiting:
+- slug: rate-limiting
   name: Rate Limiting
 
-authentication:
+- slug: authentication
   name: Authentication
 
-oidc:
+- slug: oidc
   name: OIDC
 
-sso:
+- slug: sso
   name: SSO

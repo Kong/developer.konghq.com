@@ -46,7 +46,7 @@ module Jekyll
             tags = @page.fetch('tags', [])
             return [] if tags.empty?
 
-            @site.data['tags'].values_at(*tags)
+            @site.data['tags'].select { |t| tags.include?(t) }
           end
         end
 
@@ -64,7 +64,7 @@ module Jekyll
             tiers = @page.fetch('tiers', [])
             return [] if tiers.empty?
 
-            @site.data['tiers'].values_at(*tiers)
+            @site.data['tiers'].select { |t| tiers.include?(t) }
           end
         end
       end
