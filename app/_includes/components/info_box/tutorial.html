@@ -43,19 +43,6 @@
     </div>
   {% endif %}
 
-  {% if info_box.entities.size > 0 %}
-    <div class="mt-4">
-      <h3 class="font-bold">Gateway Entities</h3>
-      <ul class="list-none m-0 mt-4">
-        {% for entity in info_box.entities %}
-          <li class="flex grid-cols-2 justify-between items-center flex-wrap">
-            <a href="{{ entity.url }}">{{ entity.name }}</a>
-          </li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
-
   {% if info_box.tools.size > 0 %}
     <div class="mt-4">
       <h3 class="font-bold">Tools</h3>
