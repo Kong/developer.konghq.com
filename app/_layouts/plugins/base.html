@@ -28,6 +28,12 @@ layout: default
   </div>
   <div class="flex">
     <div class="p-4 w-2/3">
+      {% if page.extended_description %}
+        <div id="extended-description">
+          {{ page.extended_description | markdownify }}
+        </div>
+      {% endif %}
+
       <div id="plugin-content">
         {{ content }}
       </div>
