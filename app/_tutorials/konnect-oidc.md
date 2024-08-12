@@ -5,9 +5,6 @@ related_resources:
     url: /authentication
 
 
-products:
-    - konnect
-
 platforms:
     - konnect
 
