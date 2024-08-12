@@ -19,7 +19,7 @@ module Jekyll
 
       tutorials = @site.collections['tutorials'].docs.select do |t|
         t.data['tags'].include?(config['tag']) &&
-          (!config.key?('product') || t.data['products'].include?(config['product']))
+          (!config.key?('product') || t.data.fetch('products', []).include?(config['product']))
       end
 
       context.stack do
