@@ -56,15 +56,13 @@
     </div>
   {% endif %}
 
-  {% if info_box.tiers.size > 0 %}
+  {% if info_box.tier %}
     <div class="mt-4">
       <h3 class="font-bold">Available on</h3>
       <ul class="list-none m-0 mt-4">
-        {% for tier in info_box.tiers %}
-          <li class="flex grid-cols-2 justify-between items-center flex-wrap">
-            <a class="bg-slate-200 text-blue-800 px-1.5 py-0.5 rounded-md mb-0.5" href="https://docs.devsite.com/search/{tutorial.topic}+{other stuff}">{{ tier.name }}</a>
-          </li>
-        {% endfor %}
+        <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+          <a class="bg-slate-200 text-blue-800 px-1.5 py-0.5 rounded-md mb-0.5" href="https://docs.devsite.com/search/{tutorial.topic}+{other stuff}">{{ info_box.tier.name }}</a>
+        </li>
       </ul>
     </div>
   {% endif %}

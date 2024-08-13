@@ -59,12 +59,12 @@ module Jekyll
           end
         end
 
-        def tiers
-          @tiers ||= begin
-            tiers = @page.fetch('tiers', [])
-            return [] if tiers.empty?
+        def tier
+          @tier ||= begin
+            tier = @page.fetch('tier', '')
+            return if tier.empty?
 
-            @site.data['tiers'].select { |t| tiers.include?(t) }
+            @site.data['tiers'].detect { |t| t['slug'] == tier }
           end
         end
       end
