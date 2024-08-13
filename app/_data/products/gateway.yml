@@ -1,2 +1,7 @@
 name: Kong Gateway
 slug: gateway
+
+topologies:
+  - traditional
+  - hybrid
+  - db-less
