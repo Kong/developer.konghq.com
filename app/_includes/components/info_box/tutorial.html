@@ -16,13 +16,13 @@
     </div>
   {% endif %}
 
-  {% if info_box.platforms.size > 0 %}
+  {% if info_box.works_on.size > 0 %}
     <div class="mt-4">
       <h3 class="font-bold">Works on</h3>
       <ul class="list-none m-0 mt-4">
-        {% for platform in info_box.platforms %}
+        {% for distribution in info_box.works_on %}
           <li class="flex grid-cols-2 justify-between items-center flex-wrap">
-            <span>{{ platform }}</span>
+            <span>{{ distribution }}</span>
           </li>
         {% endfor %}
       </ul>

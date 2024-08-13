@@ -25,8 +25,8 @@ module Jekyll
           end
         end
 
-        def platforms
-          @platforms ||= @page.fetch('platforms', [])
+        def works_on
+          @works_on ||= @page.fetch('works_on', [])
         end
 
         def template_file
