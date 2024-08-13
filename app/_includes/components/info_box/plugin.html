@@ -1,28 +1,82 @@
-<div class="bg-blue-200 py-4 px-8">
+<div class="bg-slate-50 py-4 px-8">
   <div class="flex mb-2 flex items-center">
-    <img class="w-8 h-8 mr-2" src="https://docs.konghq.com/assets/images/icons/hub/kong-inc_rate-limiting.png">
-    <h3 class="font-bold mb-0">About the Rate Limiting plugin</h3>
+    <img class="w-8 h-8 mr-2" src="https://docs.konghq.com/assets/images/icons/hub/{{ info_box.publisher.slug }}_{{ info_box.plugin.slug }}.png">
+    <h3 class="font-bold mb-0">About</h3>
   </div>
-  <span class="bg-purple-600 text-gray-200 text-xs font-semibold px-2 py-1 rounded-full mr-0.5">OSS</span>
-  <span class="bg-blue-600 text-gray-200 text-xs font-semibold px-2 py-1 rounded-full mr-0.5">Konnect Free</span>
 
-  <ul class="list-none m-0 mt-4">
-    <li>
-      <strong>Made by:</strong> Kong Inc.
-    </li>
-    <li>
-      <strong>Categories:</strong> Authentication
-    </li>
-    <li>
-      <strong>Supported topologies:</strong> hybrid, traditional, db-less
-    </li>
-    <li>
-      <strong>Compatible protocols:</strong> grpc, grpcs, http, https
-    </li>
-    <li>
-      <strong>Minimum Gateway version:</strong> 2.1.0
-    </li>
-  </ul>
+  <div class="mt-4">
+    <h3 class="font-bold">Made by</h3>
+    <ul class="list-none m-0 mt-4">
+      <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+        <span> {{ info_box.publisher.name }}</span>
+      </li>
+    </ul>
+  </div>
+
+  {% if info_box.works_on.size > 0 %}
+    <div class="mt-4">
+      <h3 class="font-bold">Works on</h3>
+      <ul class="list-none m-0 mt-4">
+        {% for distribution in info_box.works_on %}
+          <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+            <span>{{ distribution }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if info_box.topologies.size > 0 %}
+    <div class="mt-4">
+      <h3 class="font-bold">Supported Topologies</h3>
+      <ul class="list-none m-0 mt-4">
+        {% for topology in info_box.topologies %}
+          <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+            <span>{{ topology }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if info_box.protocols.size > 0 %}
+    <div class="mt-4">
+      <h3 class="font-bold">Compatible Protocols</h3>
+      <ul class="list-none m-0 mt-4">
+        {% for protocol in info_box.protocols %}
+          <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+            <span>{{ protocol }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if info_box.min_versions.size > 0 %}
+    <div class="mt-4">
+      <h3 class="font-bold">Minimum version</h3>
+      <ul class="list-none m-0 mt-4">
+        {% for min_version in info_box.min_versions %}
+          <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+            <span>{{ min_version.product }} - {{ min_version.version }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if info_box.tags.size > 0 %}
+    <div class="mt-4">
+      <h3 class="font-bold">Tags</h3>
+      <ul class="list-none m-0 mt-4">
+        {% for tag in info_box.tags %}
+          <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+            <a class="bg-slate-200 text-blue-800 px-1.5 py-0.5 rounded-md mb-0.5" href="https://docs.devsite.com/search/{tutorial.topic}+{other stuff}">{{ tag.name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
 
   <div class="mt-4">
     <h3 class="font-bold">Related links</h3>

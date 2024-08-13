@@ -7,6 +7,10 @@ content_type: plugin
 description: Secure services and routes with key authetication
 tags:
     - authentication
+
+works_on:
+    - on-prem
+    - konnect
 ---
 
 This plugin lets you add API key authentication to a service or a route. Consumers then add their API key either in a query string parameter, a header, or a request body to authenticate their requests.

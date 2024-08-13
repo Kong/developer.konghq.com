@@ -46,7 +46,7 @@ module Jekyll
             tags = @page.fetch('tags', [])
             return [] if tags.empty?
 
-            @site.data['tags'].select { |t| tags.include?(t) }
+            @site.data['tags'].select { |t| tags.include?(t['slug']) }
           end
         end
 
@@ -66,6 +66,20 @@ module Jekyll
 
             @site.data['tiers'].detect { |t| t['slug'] == tier }
           end
+        end
+
+        def min_versions
+          @min_versions ||= begin
+            min_versions = @page.fetch('min_version', {})
+
+            min_versions.map do |product, version|
+              { 'product' => @site.data['products'][product]['name'], 'version' => version }
+            end
+          end
+        end
+
+        def works_on
+          @works_on ||= @page.fetch('works_on', [])
         end
       end
     end

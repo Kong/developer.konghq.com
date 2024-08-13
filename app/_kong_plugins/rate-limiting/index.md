@@ -23,6 +23,10 @@ related_resources:
     url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/how-to/
   - text: Rate Limiting Advanced plugin overview
     url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/
+
+works_on:
+    - on-prem
+    - konnect
 ---
 
 Rate limit how many HTTP requests can be made in a given period of seconds, minutes, hours, days, months, or years.
