@@ -30,8 +30,7 @@ entites:
   - consumer
   - consumer_group
 
-tiers:
-  - enterprise
+tier: enterprise
 
 tags:
   - rate-limiting

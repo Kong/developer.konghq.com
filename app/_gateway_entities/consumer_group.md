@@ -14,8 +14,7 @@ tools:
     - ui
     - terraform
 
-tiers:
-    - enterprise
+tier: enterprise
 
 ---
 

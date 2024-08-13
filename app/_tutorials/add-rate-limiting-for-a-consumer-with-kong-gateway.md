@@ -24,9 +24,6 @@ entities:
   - plugin
   - consumer
 
-tiers:
-    - oss
-
 tags:
     - rate-limiting
 

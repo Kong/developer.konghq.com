@@ -23,9 +23,6 @@ entities:
   - service
   - plugin
 
-tiers:
-    - oss
-
 tags:
     - rate-limiting
 
