@@ -4,13 +4,16 @@ title: GraphQL Rate Limiting Advanced plugin
 name: GraphQL Rate Limiting Advanced
 publisher: kong-inc
 tier: enterprise
-konnect_compatible: true
 content_type: plugin
 description: Provides rate limiting for GraphQL queries.
 tags:
   - rate-limiting
   - graphql-rate-limiting-advanced
   - traffic-control
+
+works_on:
+    - on-prem
+    - konnect
 ---
 
 The GraphQL Rate Limiting Advanced plugin provides rate limiting for GraphQL queries. The GraphQL Rate Limiting plugin extends the [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) plugin.
