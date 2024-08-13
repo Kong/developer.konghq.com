@@ -1,0 +1,135 @@
+metadata:
+  title: "Kong Tools"
+  tags:
+    - deck
+    - kic
+    - terraform
+    - konnect-api
+    - admin-api
+content:
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h1
+              text: "Kong Tools"
+              align: center
+
+  - row:
+      - column:
+          - type: structured_text
+            config:
+              header:
+                text: "What are Kong tools?"
+              blocks:
+                - type: text
+                  text: Rate limiting controls the number of API requests a client can make within a specified time frame. 
+                    It's a critical function that helps maintain
+                    the performance and availability of web
+                    services and APIs by controlling the request traffic.
+      - column:
+          - type: mermaid
+            config:
+              alt_text: "A diagram that shows how various Kong tools work, with Konnect as an example"
+              diagram: |
+                graph TD
+                subgraph "Deployment & Configuration"
+                    A[Terraform] -->|Configures| B(Konnect)
+                end
+
+                subgraph "Management"
+                    B -->|Managed by| C(KIC)
+                    B -->|Configures Gateway entities| D(Admin API)
+                end
+
+                subgraph "Configuration Updates"
+                    F(decK) -->|Updates| B
+                    B -->|Updated by| E(Konnect API)
+                end
+
+  - row:
+      - column:
+          - type: structured_text
+            config:
+              header:
+                text: "Which Kong tools should I use?"
+              blocks:
+                - type: text
+                  text: "You can use multiple tools, depending on your use case:"
+                - type: unordered_list
+                  items:
+                    - "**Admin API:** Allows you to configure and manage Kong Gateway entities."
+                    - "**Konnect API:** Allows you to configure and manage Konnect-specific components, like Dev Portal or API Products."
+                    - "**decK:** Allows you to visualize configurations and apply changes in a declarative manner to Kong Gateway or Konnect."
+                    - "**Terraform:** Allows you to manage infrastructure as code and automated deployments to streamline setup and configuration of Konnect and Kong Gateway."
+                    - "**KIC:** Allows you to manage ingress traffic and routing rules."
+  
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h2
+              text: "Learn more about Kong tools"
+              align: left
+  - row:
+    - column:
+      - type: card
+        config:
+          title: Admin API
+          icon:  https://docs.konghq.com/assets/images/icons/documentation/icn-admin-api-color.svg
+          cta: https://docs.konghq.com/gateway/latest/admin-api/
+    - column:
+      - type: card
+        config:
+          title: Konnect API
+          icon: https://docs.konghq.com/assets/images/icons/documentation/icn-references-color.svg
+          cta: https://docs.konghq.com/konnect/api/
+    - column:
+      - type: card
+        config:
+          title: decK
+          icon: https://docs.konghq.com/assets/images/icons/konnect/icn-cogwheel-nav.svg
+          cta: /deck/
+  - row:
+    - column:
+      - type: card
+        config:
+          title: Terraform
+          icon:  https://www.svgrepo.com/show/376353/terraform.svg
+          cta: https://docs.konghq.com/konnect/reference/terraform/
+    - column:
+      - type: card
+        config:
+          title: KIC
+          icon: https://docs.konghq.com/assets/images/icons/documentation/icn-kubernetes-color.svg
+          cta: https://docs.konghq.com/kubernetes-ingress-controller/latest/
+      
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h2
+              text: Tutorials
+          - type: tutorial_list
+            config:
+              - tag: deck
+            quantity: 5
+          - type: cta
+            config:
+              text: "View more tutorials &raquo;"
+              url: "https://docs.devsite.com/search/{tutorial.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
+  - row:
+      - column:
+          - type: header
+            config:
+              type: h2
+              text: "Related Resources"
+          - type: related_resources
+            config:
+              - text: About Kong Gateway
+                url: /gateway/
+              - text: Kong Gateway Entities
+                url: /gateway/entities/
+              - text: API specs
+                url: https://docs.konghq.com/api/
