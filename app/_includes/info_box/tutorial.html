@@ -30,4 +30,8 @@
   {% if page.tags %}
     {% include info_box/sections/tags.html tags=page.tags %}
   {% endif %}
+
+  {% if page.related_resources %}
+    {% include info_box/sections/related_resources.html related_resources=page.related_resources %}
+  {% endif %}
 </div>

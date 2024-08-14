@@ -1,0 +1,10 @@
+<div class="mt-4 flex flex-wrap flex-col">
+  <h3 class="font-bold">Related resources</h3>
+  <ul class="list-none m-0 flex flex-wrap flex-col">
+    {% for resource in include.related_resources %}
+      <li>
+        <a href="{{ resource.url }}" class="text-blue-500 hover:underline">{{ resource.text }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

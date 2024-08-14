@@ -30,19 +30,7 @@
     {% include info_box/sections/tags.html tags=page.tags %}
   {% endif %}
 
-
-  <div class="mt-4">
-    <h3 class="font-bold">Related links</h3>
-    <ul class="list-none m-0 mt-4">
-      <li>
-        <a href="#" class="text-blue-500 hover:underline">Rate Limiting Advanced Plugin</a>
-      </li>
-      <li>
-        <a href="#" class="text-blue-500 hover:underline">Rate Limiting with consumer groups</a>
-      </li>
-      <li>
-        <a href="#" class="text-blue-500 hover:underline">See more tutorials &raquo;</a>
-      </li>
-    </ul>
-  </div>
+  {% if page.related_resources %}
+    {% include info_box/sections/related_resources.html related_resources=page.related_resources %}
+  {% endif %}
 </div>
