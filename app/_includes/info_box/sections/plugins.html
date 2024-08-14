@@ -1,0 +1,11 @@
+<div class="mt-4">
+  <h3 class="font-bold">Plugins</h3>
+  <ul class="list-none m-0 mt-4">
+    {% for plugin_slug in include.plugins %}
+      {% assign plugin = site.data['kong_plugins'][plugin_slug] %}
+      <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+        <a href="{{ plugin.url }}">{{ plugin.name }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

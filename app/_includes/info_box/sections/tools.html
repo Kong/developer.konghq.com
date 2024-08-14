@@ -1,0 +1,11 @@
+<div class="mt-4">
+  <h3 class="font-bold">Tools</h3>
+  <ul class="list-none m-0 mt-4">
+    {% for tool in include.tools %}
+      {% assign tool_info = site.data.tools[tool] %}
+      <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+        <a href="/{{ tool }}/">{{ tool_info.name }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

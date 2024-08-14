@@ -1,0 +1,33 @@
+<div class="bg-slate-50 py-4 px-8">
+  <div class="flex mb-2 flex items-center">
+    <h3 class="font-bold mb-0">About</h3>
+  </div>
+
+  {% if page.products %}
+    {% include info_box/sections/products.html products=page.products %}
+  {% endif %}
+
+  {% if page.works_on %}
+    {% include info_box/sections/works_on.html works_on=page.works_on %}
+  {% endif %}
+
+  {% if page.tier %}
+    {% include info_box/sections/tier.html tier=page.tier %}
+  {% endif %}
+
+  {% if page.plugins %}
+    {% include info_box/sections/plugins.html plugins=page.plugins %}
+  {% endif %}
+
+  {% if page.tools %}
+    {% include info_box/sections/tools.html tools=page.tools %}
+  {% endif %}
+
+  {% if page.min_version %}
+    {% include info_box/sections/min_version.html min_version=page.min_version %}
+  {% endif %}
+
+  {% if page.tags %}
+    {% include info_box/sections/tags.html tags=page.tags %}
+  {% endif %}
+</div>

@@ -1,5 +1,4 @@
 name: Kong Mesh
-slug: mesh
 
 topologies:
   - universal
