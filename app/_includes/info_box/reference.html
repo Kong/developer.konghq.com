@@ -1,0 +1,25 @@
+<div class="bg-slate-50 py-4 px-8">
+  <div class="flex mb-2 flex items-center">
+    <h3 class="font-bold mb-0">About</h3>
+  </div>
+
+  {% if page.api_specs %}
+    <div class="mt-4 flex flex-wrap flex-col">
+      <h3 class="font-bold">OpenAPI Specifications</h3>
+      <ul class="list-none m-0 mt-4">
+        {% for api_spec in page.api_specs %}
+          <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+            <a href="{{ api_spec.url }}">{{ api_spec.text }}</a>
+            {% if api_spec.insomnia_link %}
+              <a class="rounded bg-indigo-500 text-white p-2 text-center" href="{{ api_spec.insomnia_link }}">Run in Insomnia</a>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if page.related_resources %}
+    {% include info_box/sections/related_resources.html %}
+  {% endif %}
+</div>
