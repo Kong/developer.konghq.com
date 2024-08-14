@@ -88,17 +88,26 @@ content:
       - type: card
         config:
           title: decK Entities
-          cta: https://docs.konghq.com/deck/latest/reference/entities/
+          cta:
+            text:
+            url: https://docs.konghq.com/deck/latest/reference/entities/
+            align: end
     - column:
       - type: card
         config:
           title: Best Practices
-          cta: https://docs.konghq.com/deck/1.38.x/guides/best-practices/
+          cta:
+            text:
+            url: https://docs.konghq.com/deck/1.38.x/guides/best-practices/
+            align: end
     - column:
       - type: card
         config:
           title: Changelog
-          cta: https://github.com/kong/deck/blob/main/CHANGELOG.md/
+          cta:
+            text:
+            url: https://github.com/kong/deck/blob/main/CHANGELOG.md/
+            align: end
   - row:
     - column:
       - type: header

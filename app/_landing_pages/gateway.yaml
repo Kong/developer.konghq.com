@@ -54,26 +54,38 @@ content:
         config:
           title: Start with Konnect
           icon:  https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/kong-gradient.svg
-          cta: /konnect/getting-started/
+          cta:
+            text: 
+            url: /konnect/getting-started/
+            align: end
     - column:
       - type: card
         config:
           title: Kong Gateway quickstart
           icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-learning.svg
-          cta: https://docs.konghq.com/gateway/latest/get-started/
+          cta:
+            text: 
+            url: https://docs.konghq.com/gateway/latest/get-started/
+            align: end
     - column:
       - type: card
         config:
           title: Install on your platform
           icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-deployment-color.svg
-          cta: https://docs.konghq.com/gateway/latest/install/
+          cta:
+            text: 
+            url: https://docs.konghq.com/gateway/latest/install/
+            align: end
     - column:
       - type: card
         config:
           title: Kong Plugin Hub
           description: Extend your Gateway with powerful plugins
           icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-api-plugins-color.svg
-          cta: /plugins
+          cta:
+            text: 
+            url: /plugins
+            align: end
   - row:
       - column:
           - type: header
