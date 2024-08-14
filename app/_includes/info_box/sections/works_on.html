@@ -1,10 +1,8 @@
-<div class="mt-4">
-  <h3 class="font-bold">Works on</h3>
-  <ul class="list-none m-0 mt-4">
+<div class="mt-1 flex flex-wrap gap-x-2 flex-col">
+  <strong>Works on:</strong>
+  <div class="flex gap-x-2 flex-wrap">
     {% for distribution in include.works_on %}
-      <li class="flex grid-cols-2 justify-between items-center flex-wrap">
-        <span>{{ distribution }}</span>
-      </li>
+      <span>{{ distribution }}</span>
     {% endfor %}
-  </ul>
+  </div>
 </div>
