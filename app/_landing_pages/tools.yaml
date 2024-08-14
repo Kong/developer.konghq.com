@@ -77,32 +77,47 @@ content:
         config:
           title: Admin API
           icon:  https://docs.konghq.com/assets/images/icons/documentation/icn-admin-api-color.svg
-          cta: https://docs.konghq.com/gateway/latest/admin-api/
+          cta:
+            text: View Admin API docs
+            url: https://docs.konghq.com/gateway/latest/admin-api/
+            align: end
     - column:
       - type: card
         config:
           title: Konnect API
           icon: https://docs.konghq.com/assets/images/icons/documentation/icn-references-color.svg
-          cta: https://docs.konghq.com/konnect/api/
+          cta:
+            text: View Konnect API docs
+            url: https://docs.konghq.com/konnect/api/
+            align: end
     - column:
       - type: card
         config:
           title: decK
           icon: https://docs.konghq.com/assets/images/icons/konnect/icn-cogwheel-nav.svg
-          cta: /deck/
+          cta:
+            text: View decK docs
+            url: /deck/
+            align: end
   - row:
     - column:
       - type: card
         config:
           title: Terraform
-          icon:  https://www.svgrepo.com/show/376353/terraform.svg
-          cta: https://docs.konghq.com/konnect/reference/terraform/
+          icon: https://docs.konghq.com/assets/images/icons/third-party/terraform.svg
+          cta:
+            text: View Terraform docs
+            url: https://docs.konghq.com/konnect/reference/terraform/
+            align: end
     - column:
       - type: card
         config:
-          title: KIC
+          title: Kong Ingress Controller (KIC)
           icon: https://docs.konghq.com/assets/images/icons/documentation/icn-kubernetes-color.svg
-          cta: https://docs.konghq.com/kubernetes-ingress-controller/latest/
+          cta:
+            text: View KIC docs
+            url: https://docs.konghq.com/kubernetes-ingress-controller/latest/
+            align: end
       
   - row:
       - column:
