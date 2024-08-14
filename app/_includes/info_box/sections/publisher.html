@@ -1,10 +1,6 @@
 {% assign publisher = site.data.plugin_publishers[include.publisher] %}
 
-<div class="mt-4">
-  <h3 class="font-bold">Made by</h3>
-  <ul class="list-none m-0 mt-4">
-    <li class="flex grid-cols-2 justify-between items-center flex-wrap">
-      <span> {{ publisher.name }}</span>
-    </li>
-  </ul>
+<div class="mt-1 flex flex-wrap gap-x-2 flex-col">
+  <strong>Made by:</strong>
+  <span> {{ publisher.name }}</span>
 </div>

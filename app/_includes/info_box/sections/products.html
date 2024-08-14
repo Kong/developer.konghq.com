@@ -1,9 +1,9 @@
-<div class="mt-4">
-  <h3 class="font-bold">Products</h3>
-  <ul class="list-none m-0 mt-4">
+<div class="mt-1 flex flex-wrap gap-x-2 flex-col">
+  <strong>Products:</strong>
+  <ul class="flex gap-x-2 flex-wrap list-none m-0">
     {% for product in include.products %}
       {% assign product_info = site.data.products[product] %}
-      <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+      <li>
         <a class="bg-slate-200 text-blue-800 px-1.5 py-0.5 rounded-md mb-0.5" href="https://docs.devsite.com/search/{tutorial.topic}+{other stuff}">{{ product_info.name }}</a>
       </li>
     {% endfor %}

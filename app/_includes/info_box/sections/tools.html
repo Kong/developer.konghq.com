@@ -1,9 +1,9 @@
-<div class="mt-4">
-  <h3 class="font-bold">Tools</h3>
-  <ul class="list-none m-0 mt-4">
+<div class="mt-1 flex flex-wrap gap-x-2 flex-col">
+  <strong>Tools</strong>
+  <ul class="flex gap-x-2 flex-wrap list-none m-0">
     {% for tool in include.tools %}
       {% assign tool_info = site.data.tools[tool] %}
-      <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+      <li>
         <a href="/{{ tool }}/">{{ tool_info.name }}</a>
       </li>
     {% endfor %}
