@@ -27,6 +27,11 @@ related_resources:
 works_on:
     - on-prem
     - konnect
+
+topologies:
+    - hybrid
+    - db-less
+    - traditional
 ---
 
 Rate limit how many HTTP requests can be made in a given period of seconds, minutes, hours, days, months, or years.
