@@ -3,7 +3,7 @@
   <ul class="flex gap-x-2 flex-wrap list-none m-0">
     {% for tag in include.tags %}
       <li>
-        <a class="bg-slate-200 text-blue-800 px-1.5 py-0.5 rounded-md mb-0.5" href="https://docs.devsite.com/search/{tutorial.topic}+{other stuff}">{{ tag }}</a>
+        <a href="https://docs.devsite.com/search/{tutorial.topic}+{other stuff}">{{ tag }}</a>
       </li>
     {% endfor %}
   </ul>
