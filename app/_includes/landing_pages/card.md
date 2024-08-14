@@ -1,6 +1,6 @@
 <div class="rounded p-2 border-2 border-gray-200 flex flex-col">
 <div>
-<h3>{{ include.config.title}} <img src="{{ include.config.icon}}" class="w-5 h-5 inline"></h3>
+<h3>{{ include.config.title}}{% if include.config.icon %} <img src="{{ include.config.icon}}" class="w-5 h-5 inline">{% endif %}</h3>
 <p>{{ include.config.description}}</p>
 </div>
 {% if include.config.cta %}
