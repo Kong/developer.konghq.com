@@ -1,0 +1,10 @@
+<div class="mt-4">
+  <h3 class="font-bold">Supported Topologies</h3>
+  <ul class="list-none m-0 mt-4">
+    {% for topology in include.topologies %}
+      <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+        <span>{{ topology }}</span>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

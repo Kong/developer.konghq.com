@@ -1,0 +1,10 @@
+<div class="mt-4">
+  <h3 class="font-bold">Tags</h3>
+  <ul class="list-none m-0 mt-4">
+    {% for tag in include.tags %}
+      <li class="flex grid-cols-2 justify-between items-center flex-wrap">
+        <a class="bg-slate-200 text-blue-800 px-1.5 py-0.5 rounded-md mb-0.5" href="https://docs.devsite.com/search/{tutorial.topic}+{other stuff}">{{ tag }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

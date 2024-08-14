@@ -1,5 +1,4 @@
 name: Kong Gateway
-slug: gateway
 
 topologies:
   - traditional

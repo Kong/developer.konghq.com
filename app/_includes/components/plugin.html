@@ -1,8 +1,8 @@
-{% assign publisher = site.data.plugin_publishers | find: "slug", plugin.publisher %}
+{% assign publisher = site.data.plugin_publishers[plugin.publisher] %}
 
 <div class="rounded p-2 border-2 border-gray-200 flex flex-col">
   <div class="flex">
-    <img class="w-6 h-6 mr-1" src="https://docs.konghq.com/assets/images/icons/hub/{{ publisher.slug }}_{{ plugin.slug }}.png">
+    <img class="w-6 h-6 mr-1" src="https://docs.konghq.com/assets/images/icons/hub/{{ plugin.publisher }}_{{ plugin.slug }}.png">
     <h3>{{ plugin.name }}</h3>
   </div>
   <p>{{ plugin.description }}</p>
