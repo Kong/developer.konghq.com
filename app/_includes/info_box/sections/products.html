@@ -4,7 +4,7 @@
     {% for product in include.products %}
       {% assign product_info = site.data.products[product] %}
       <li>
-        <a class="bg-slate-200 text-blue-800 px-1.5 py-0.5 rounded-md mb-0.5" href="https://docs.devsite.com/search/{tutorial.topic}+{other stuff}">{{ product_info.name }}</a>
+        <a href="/{{ product }}/">{{ product_info.name }}</a>
       </li>
     {% endfor %}
   </ul>
