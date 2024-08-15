@@ -49,10 +49,10 @@ tools:
     - deck
 
 prereqs:
-    services:
-        - example-service
-    routes:
-        - example-route
+    consumers:
+        - example-consumer
+    consumer-groups:
+        - example-consumer-group
 ---
 
 With consumer groups, you can define rate limiting tiers and apply them to subsets of application consumers.
@@ -65,50 +65,9 @@ You can define consumer groups as tiers, for example:
   
 Consumers that are not in a consumer group default to the Rate Limiting advanced plugin’s configuration, so you can define tier groups for some users and have a default behavior for consumers without groups.
 
-To use consumer groups for rate limiting, you need to:
-
-* Create one or more consumer groups
-* Create consumers
-* Assign consumers to groups
-
 ## Steps
 
-1. Create a consumer group named `Gold`:
-{% capture step %}
-  {% entity_example %}
-    type: consumer_group
-    data:
-      name: Gold
-  
-  {% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3 }}
-
-1. Create a consumer, `Amal`:
-{% capture step %}
-   {% entity_example %}
-    type: consumer
-    data:
-      username: Amal
-      username_lower: amal
-   {% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3 }}
-
-1. Add `Amal` to the `Gold` consumer group:
-{% capture step %}
-  {% entity_example %}
-    type: consumer_group
-    data:
-      name: Gold
-      consumer:
-        username: Amal
-        username_lower: amal
-  {% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3 }}
-
-1. Enable the plugin on the consumer group:
+1. Enable the Rate Limiting Advanced plugin on the consumer group:
 {% capture step %}
   {% entity_example %}
     type: plugin
@@ -130,3 +89,16 @@ To use consumer groups for rate limiting, you need to:
 {{ step | indent: 3 }}
 
     This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
+
+1. Synchronize your configuration
+
+  Check the differences in your files:
+  ```sh
+  deck gateway diff deck_files
+  ```
+
+  If everything looks right, synchronize them to update your Kong Gateway configuration:
+  ```sh
+  deck gateway sync deck_files
+  ```
+
