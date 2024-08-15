@@ -9,4 +9,10 @@
 {{ include.data }}
 {% endhighlight %}
 
+1. Sync your changes:
+
+  ```sh
+  deck gateway sync prereqs.yaml
+  ```
+
 </details>
