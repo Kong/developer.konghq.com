@@ -38,21 +38,18 @@ Rate limit how many HTTP requests can be made in a given period of seconds, minu
 If the underlying service or route has no authentication layer,
 the **Client IP** address is used. Otherwise, the consumer is used if an
 authentication plugin has been configured.
- 
-## Overview
 
-| Strategy    | Pros | Cons   |
-| --------- | ---- | ------ |
-| `local`   | Minimal performance impact. | Less accurate. Unless there's a consistent-hashing load balancer in front of Kong, it diverges when scaling the number of nodes.
-| `cluster` | Accurate, no extra components to support. | Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact. |
-| `redis`   | Accurate<sup>1</sup>, less performance impact than a `cluster` policy. | Needs a Redis installation. Bigger performance impact than a `local` policy. |
+The advanced version of this plugin, [Rate Limiting Advanced](https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/), provides the ability to apply
+[multiple limits in sliding or fixed windows](https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/#multi-limits-windows).
 
-{:.note .no-icon}
-> **\[1\]**: Only when `sync_rate` option is set to `-1` (synchronous behavior). When using Redis, it's possible to set the sync rate to a positive value, which can lead to some inaccuracies. See the [configuration reference](https://docs.konghq.com/hub/kong-inc/rate-limiting/configuration/#config-sync_rate) for more details.
 
-{:.warning}
-> **Note**: **Enterprise-Only**: The Kong Community Edition of this Rate Limiting plugin does not
-include [Redis Cluster](https://redis.io/docs/management/scaling/) or [Redis Sentinel](https://redis.io/topics/sentinel) support. Only [{{site.ee_product_name}}](https://www.konghq.com/kong) customers can use Redis Cluster or Redis Sentinel with Kong Rate Limiting, enabling them to deliver highly performant and available primary-replica deployments.
+
+## IP Address limitations 
+
+When configuring IP address-based limitations, it's essential to understand how Kong determines the IP address of incoming requests. The IP address is extracted from the request headers sent to Kong by downstream clients. Typically, these headers are named` X-Real-IP` or `X-Forwarded-For`, which contain the client’s IP address.
+
+By default, Kong uses the` X-Real-IP` header to identify the client's IP address. However, if your environment requires the use of a different header, you can specify this by setting the real_ip_header property in Nginx. Additionally, depending on your network setup, you may need to configure the trusted_ips Nginx property to include the IP addresses of any load balancers or proxies that are part of your infrastructure. This ensures that Kong correctly interprets the client’s IP address, even when the request passes through multiple network layers.
+
 
 ## Headers sent to the client
 
@@ -91,42 +88,4 @@ When a limit is reached, the plugin returns an `HTTP/1.1 429` status code, with 
 {:.important}
 > The headers `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset` are based on the Internet-Draft [RateLimit Header Fields for HTTP](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/) and may change in the future to respect specification updates.
 
-
-
-## Use Casese
-Two common use cases are:
-
-| You need... | Use the following plugin policy strategies... |
-| --------- | ---- | 
-| A high level of accuracy in ?. An example is a transaction with financial consequences. | `cluster` or `redis` | 
-| Protect backend services from overloading that's caused either by specific users or by attacks. ___ accuracy is not as relevant. | `local` |
-
-If the plugin can't retrieve the selected policy, it falls back to [limiting usage by identifying the IP address](#limit-by-ip-address).
-
-### High accuracy use case recommendations
-
-In this scenario, because accuracy is important, the `local` policy is not an option. Consider the support effort you might need
-for Redis, and then choose either `cluster` or `redis`.
-
-You could start with the `cluster` policy, and move to `redis`
-if performance reduces drastically.
-
-Do remember that you cannot port the existing usage metrics from the data store to Redis.
-This might not be a problem with short-lived metrics (for example, seconds or minutes)
-but if you use metrics with a longer time frame (for example, months), plan
-your switch carefully.
-
-### Backend protection use case recommendations
-
-If accuracy is of lesser importance, choose the `local` policy. You might need to experiment a little
-before you get a setting that works for your scenario. As the cluster scales to more nodes, more user requests are handled.
-When the cluster scales down, the probability of false negatives increases. So, adjust your limits when scaling.
-
-For example, if a user can make 100 requests every second, and you have an
-equally balanced 5-node Kong cluster, setting the `local` limit to something like 30 requests every second
-should work. If you see too many false negatives, increase the limit.
-
-To minimize inaccuracies, consider using a consistent-hashing load balancer in front of
-Kong. The load balancer ensures that a user is always directed to the same Kong node, thus reducing
-inaccuracies and preventing scaling problems.
 
