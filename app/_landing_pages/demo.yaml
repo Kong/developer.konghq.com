@@ -126,8 +126,9 @@ content:
               text: Tutorials
           - type: tutorial_list
             config:
-              - tag: rate-limiting
-            quantity: 5
+              tags:
+                - rate-limiting
+              quantity: 5
           - type: cta
             config:
               text: "View more tutorials &raquo;"

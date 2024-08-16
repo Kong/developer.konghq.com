@@ -1,0 +1,8 @@
+<div class="mt-1 flex flex-wrap gap-x-2 flex-col">
+  <strong>Works on:</strong>
+  <div class="flex gap-x-2 flex-wrap">
+    {% for distribution in include.works_on %}
+      <span>{{ distribution }}</span>
+    {% endfor %}
+  </div>
+</div>

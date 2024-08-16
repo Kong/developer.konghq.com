@@ -147,9 +147,11 @@ content:
               text: Tutorials
           - type: tutorial_list
             config:
-              - tag: authentication
-                product: gateway # omit for all products
-            quantity: 5
+              tags:
+                - authentication
+              products:
+                - gateway # omit for all products
+              quantity: 5
   - row:
     - column:
         - type: header

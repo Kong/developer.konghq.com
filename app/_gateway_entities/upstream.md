@@ -1,5 +1,6 @@
 ---
 title: Upstreams
+name: Upstream
 entities:
   - upstream
 

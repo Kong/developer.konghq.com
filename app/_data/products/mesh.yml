@@ -1,0 +1,5 @@
+name: Kong Mesh
+
+topologies:
+  - universal
+  - kubernetes

@@ -9,7 +9,7 @@ related_resources:
 products:
     - gateway
 
-platform:
+works_on:
     - on-prem
     - konnect
 
@@ -23,9 +23,6 @@ entities:
   - service
   - plugin
   - consumer
-
-tiers:
-    - oss
 
 tags:
     - rate-limiting

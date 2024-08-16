@@ -1,0 +1,6 @@
+name: Kong Gateway
+
+topologies:
+  - traditional
+  - hybrid
+  - db-less

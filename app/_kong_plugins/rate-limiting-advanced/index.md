@@ -4,7 +4,6 @@ title: Rate Limiting Advanced plugin
 name: Rate Limiting Advanced
 publisher: kong-inc
 tier: enterprise
-konnect_compatible: true
 content_type: plugin
 description: Enhanced Rate Limiting capabilities such as sliding window, Redis Sentinel support and increased performance.
 tags:
@@ -14,6 +13,10 @@ tags:
 related_resources:
   - text: How to create rate limiting tiers with Rate Limiting Advanced
     url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/how-to/
+
+works_on:
+    - on-prem
+    - konnect
 ---
 
 Rate limit how many HTTP requests can be made in a given time frame.

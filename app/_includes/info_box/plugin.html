@@ -1,0 +1,36 @@
+<div class="bg-slate-50 py-4 px-8">
+  <div class="flex mb-2 flex items-center">
+    <img class="w-6 h-6 mr-1" src="https://docs.konghq.com/assets/images/icons/hub/{{ page.publisher }}_{{ page.slug }}.png">
+    <h3 class="font-bold mb-0">About</h3>
+  </div>
+
+  {% if page.publisher %}
+    {% include info_box/sections/publisher.html publisher=page.publisher %}
+  {% endif %}
+
+  {% if page.works_on %}
+    {% include info_box/sections/works_on.html works_on=page.works_on %}
+  {% endif %}
+
+  {% if page.tier %}
+    {% include info_box/sections/tier.html tier=page.tier %}
+  {% endif %}
+
+  {% if page.topologies %}
+    {% include info_box/sections/topologies.html topologies=page.topologies %}
+  {% endif %}
+
+  {% include info_box/sections/compatible_protocols.html protocols=page.protocols %}
+
+  {% if page.min_version %}
+    {% include info_box/sections/min_version.html min_version=page.min_version %}
+  {% endif %}
+
+  {% if page.tags %}
+    {% include info_box/sections/tags.html tags=page.tags %}
+  {% endif %}
+
+  {% if page.related_resources %}
+    {% include info_box/sections/related_resources.html %}
+  {% endif %}
+</div>

@@ -1,0 +1,9 @@
+{% assign protocols = 'grpc,grpcs,http,https' | split: ',' %}
+<div class="mt-1 flex flex-wrap gap-x-2 flex-col">
+  <strong>Compatible Protocols:</strong>
+  <ul class="flex gap-x-2 flex-wrap list-none m-0">
+    {% for protocol in protocols %}
+      <li><span>{{ protocol }}</span></li>
+    {% endfor %}
+  </ul>
+</div>

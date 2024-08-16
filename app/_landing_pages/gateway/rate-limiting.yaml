@@ -67,9 +67,11 @@ content:
               text: Tutorials
           - type: tutorial_list
             config:
-              - tag: rate-limiting
-                product: gateway
-            quantity: 5
+              tags:
+                - rate-limiting
+              products:
+                - gateway
+              quantity: 5
           - type: cta
             config:
               text: "View more tutorials &raquo;"

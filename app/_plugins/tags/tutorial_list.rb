@@ -15,11 +15,18 @@ module Jekyll
       @context = context
       @site = context.registers[:site]
       keys = @param.split('.')
-      config = keys.reduce(context) { |c, key| c[key] }.first
+      config = keys.reduce(context) { |c, key| c[key] }
 
-      tutorials = @site.collections['tutorials'].docs.select do |t|
-        t.data['tags'].include?(config['tag']) &&
-          (!config.key?('product') || t.data['products'].include?(config['product']))
+      quantity = config.fetch('quantity', 10)
+
+      tutorials = @site.collections['tutorials'].docs.inject([]) do |result, t|
+        match = (!config.key?('tags') || t.data.fetch('tags', []).intersect?(config['tags'])) &&
+          (!config.key?('products') || t.data.fetch('products', []).intersect?(config['products']))
+
+        result << t if match
+        break result if result.size == quantity
+
+        result
       end
 
       context.stack do

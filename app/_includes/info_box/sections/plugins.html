@@ -1,0 +1,11 @@
+<div class="mt-1 flex flex-wrap gap-x-2 flex-col">
+  <strong>Plugins:</strong>
+  <ul class="flex gap-x-2 flex-wrap list-none m-0">
+    {% for plugin_slug in include.plugins %}
+      {% assign plugin = site.data['kong_plugins'][plugin_slug] %}
+      <li>
+        <a href="{{ plugin.url }}">{{ plugin.name }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</div>

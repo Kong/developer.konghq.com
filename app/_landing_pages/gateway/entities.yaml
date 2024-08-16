@@ -41,7 +41,7 @@ content:
     - column: 
       - type: entity_card
         config:
-          entity: certificate
+          entity: consumer_group
   - row:
     - column:
       - type: entity_card

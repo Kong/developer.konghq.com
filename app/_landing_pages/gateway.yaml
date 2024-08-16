@@ -110,9 +110,9 @@ content:
               text: Tutorials
           - type: tutorial_list
             config:
-              - topic: beginner
-                product: gateway 
-            quantity: 5
+              products:
+                  - gateway
+              quantity: 5
           - type: cta
             config:
               text: "View more tutorials &raquo;"

@@ -1,0 +1,12 @@
+<div class="mt-1 flex flex-wrap gap-x-2 flex-col">
+  <strong>Minimum version</strong>
+  <ul class="flex gap-x-2 flex-wrap list-none m-0">
+    {% for min_version in include.min_version %}
+      <li>
+        {% assign product = min_version[0] %}
+        {% assign version = min_version[1] %}
+        <span>{{ site.data.products[product].name }} - {{ version }}</span>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
