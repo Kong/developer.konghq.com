@@ -57,12 +57,13 @@ prereqs:
 type: plugin
 data:
   name: rate-limiting
-  consumer: jsmith
   config:
     second: 5
     hour: 1000
 targets:
-  - global
+  - consumer 
+variables:
+    consumerName|Id: jsmith
 {% endentity_example %}
 {% endcapture %}
 {{ plugin | indent: 3 }}
