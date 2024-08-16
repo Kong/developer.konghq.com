@@ -21,7 +21,12 @@ content:
 
           decK is one of the many supported tools used to interact with Kong. To learn about other tools, 
           review our [tools page](/tools).
-
+  - row: 
+    - column:
+      - type: header
+        config:
+          type: h2
+          text: "Install decK"
   - row:
     - column:
       - type: tabs
@@ -38,17 +43,31 @@ content:
         config:
           type: h2
           text: "How does decK work?"
+    - column:
+      - type: header
+        config: 
+          type: h2
+          text: 
+            Other tools
   - row:
     - column:
       - type: text
         config:
-          decK operates on state files.
-          decK state files describe the configuration of Kong Gateway.
-          State files store Kong Gateway configuration in a declarative format, 
-          letting you manage services, routes, plugins, consumers, and other entities 
-          that define how requests are processed and routed through Kong Gateway.
-
-          In the background, decK communicates to your Kong Gateways via the Admin API.
+          decK is a tool that works with state files, which describe the configuration of Kong Gateway. These state files store Kong Gateway's configuration in a clear, declarative format, allowing you to manage services, routes, plugins, consumers, and other entities that define how requests are processed and routed through the Gateway.
+          decK communicates with Kong Gateways via the [Admin API](https://docs.konghq.com/gateway/api/admin-ee/latest/). 
+      - type: text
+        config:
+          decK is one of several [tools](/tools/) available for managing Kong Gateway. 
+    - column:
+      - type: structured_text
+        config:
+          blocks:
+          - type: unordered_list
+            items:
+                - "**[Terraform](/terraform/)**: Allows you to manage infrastructure as code and automated deployments to streamline setup and configuration of Konnect and Kong Gateway."
+                - "**[KIC](/kic/)**:Manages ingress traffic and routing rules for your services."
+                - "**[Kong Gateway Admin API](/admin-api/)**: Manage Kong Gateway services, routes, certificates, consumer, and global configuration within Kong Gateway On-prem"
+                - "**[Control Plane Config API](/admin-api/)**: Manage Kong Gateway services, routes, certificates, consumer, and global configuration within Konnect"
 
   - row:
     - column:
