@@ -127,8 +127,9 @@ content:
               text: Tutorials
           - type: tutorial_list
             config:
-              - tag: deck
-            quantity: 5
+              tools:
+                - deck
+              quantity: 5
           - type: cta
             config:
               text: "View more tutorials &raquo;"
