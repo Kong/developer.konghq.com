@@ -37,6 +37,7 @@ tools:
     - deck
 
 prereqs:
+  entities:
     services:
         - example-service
     routes:

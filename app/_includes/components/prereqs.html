@@ -19,4 +19,10 @@
     </li>
   {% endif %}
 
+  {% for prereq in prereqs.inline %}
+    <li>
+      {% capture inline_template %}{% include prereqs/inline.md prereq=prereq %}{% endcapture %}
+      {{ inline_template | markdownify }}
+    </li>
+  {% endfor %}
 </ul>

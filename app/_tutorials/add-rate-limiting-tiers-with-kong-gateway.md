@@ -49,10 +49,11 @@ tools:
     - deck
 
 prereqs:
-    consumers:
-        - example-consumer
-    consumer-groups:
-        - example-consumer-group
+    entities:
+        consumers:
+            - example-consumer
+        consumer-groups:
+            - example-consumer-group
 ---
 
 With consumer groups, you can define rate limiting tiers and apply them to subsets of application consumers.
