@@ -10,9 +10,17 @@ content:
   - row:
     - column:
       - type: text
-        config:
-          decK is a command line tool that facilitates API Lifecycle Automation (APIOps) by offering a comprehensive toolkit of commands designed to orchestrate and automate the entire process of API delivery. APIOps involves leveraging automation frameworks to streamline and enforce best practices throughout the API lifecycle. This enables developers and operations teams to manage APIs from development through deployment, ensuring consistency, reliability, and speed in API integrations.
-          decK is one of the many supported tools used to interact with Kong, to learn about other tools review our [tools page](/tools)
+        config: |
+          decK is a command line tool that facilitates API Lifecycle Automation (APIOps) 
+          by offering a comprehensive toolkit of commands designed to orchestrate and automate the 
+          entire process of API delivery. 
+          APIOps involves leveraging automation frameworks to streamline and enforce best practices 
+          throughout the API lifecycle. 
+          This enables developers and operations teams to manage APIs from development through deployment, 
+          ensuring consistency, reliability, and speed in API integrations.
+
+          decK is one of the many supported tools used to interact with Kong. To learn about other tools, 
+          review our [tools page](/tools).
 
   - row:
     - column:
@@ -36,10 +44,18 @@ content:
         config:
           decK operates on state files.
           decK state files describe the configuration of Kong Gateway.
-          State files store Kong Gateway configuration in a declarative format, letting you manage services, routes, plugins, consumers, and other entities that define how requests are processed and routed through Kong Gateway.
+          State files store Kong Gateway configuration in a declarative format, 
+          letting you manage services, routes, plugins, consumers, and other entities 
+          that define how requests are processed and routed through Kong Gateway.
 
           In the background, decK communicates to your Kong Gateways via the Admin API.
 
+  - row:
+    - column:
+      - type: header
+        config:
+          type: h2
+          text: "What can decK do?"
 
   - row:
     - column:
@@ -47,7 +63,7 @@ content:
         config:
             type: h2
             headers:
-              - What can decK do?
+              - Commonly used decK Gateway commands
 
             items:
               - text: |
@@ -58,10 +74,34 @@ content:
                     cmd: deck
                     args:
                       - gateway
-                      - sync
-                      - /path/to/file.json
+                      - dump
+                      - -o
+                      - kong.yaml
+                   
               - text: |
-                  Sync configs between Gateway and Konnect
+                  Diff a state file with the configuration in Kong Gateway
+                action:
+                  type: command
+                  config:
+                    cmd: deck
+                    args:
+                      - gateway
+                      - diff
+                      - kong.yaml
+
+              - text: |
+                  Sync a state file with the configuration in Kong Gateway
+                action:
+                  type: command
+                  config:
+                    cmd: deck
+                    args:
+                      - gateway
+                      - sync
+                      - kong.yaml         
+
+              - text: |
+                  Check the connection to Kong Gateway
                 action:
                   type: command
                   config:
@@ -69,43 +109,99 @@ content:
                     args:
                       - gateway
                       - ping
-
               - text: |
-                  Self-validate it's own configuration
+                  Self-validate its own configuration
                 action:
                   type: command
                   config:
                     cmd: deck
                     args:
-                      - deck
                       - gateway
                       - validate
+              - text: |
+                  Sync Gateway configs to Konnect
 
+                  Tip: You can add Konnect flags to any deck command 
+                  to target a Konnect control plane instead of a self-managed Kong Gateway.
 
+                action:
+                  type: command
+                  config:
+                    cmd: deck
+                    args:
+                      - gateway
+                      - sync
+                      - kong.yaml
+                      - --konnect-control-plane-name 
+                      - staging
+
+  - row:
+    - column:
+      - type: x_with_y
+        config:
+            type: h2
+            headers:
+              - Commonly used decK file commands for APIOps
+
+            items:
+              - text: |
+                  Generate a Kong Gateway configuration file from an API spec
+                action:
+                  type: command
+                  config:
+                    cmd: deck
+                    args:
+                      - file
+                      - openapi2kong
+                      - -s
+                      - oas.yaml
+                      - -o
+                      - httpbin.yaml
+              - text: |
+                  Merge two configuration files into one
+                action:
+                  type: command
+                  config:
+                    cmd: deck
+                    args:
+                      - file
+                      - merge
+                      - httpbin.yaml
+                      - another-httpbin.yaml
+                      - -o merged-kong.yaml
+                   
+  - row:
+    - column:
+       - type: text
+         config: |
+          [View all decK commands and options &rarr;](/deck/commands/)
 
   - row:
     - column:
       - type: card
         config:
-          title: decK Entities
+          title: Entities Managed by decK
+          description: decK manages entity configuration for Kong Gateway, including all core proxy entities
           cta:
-            text:
+            text: decK Entities &rarr;
             url: https://docs.konghq.com/deck/latest/reference/entities/
             align: end
     - column:
       - type: card
         config:
           title: Best Practices
+          description: Learn about recommended approaches for using decK and avoid common pitfalls
           cta:
-            text:
+            text: Best practices &rarr;
             url: https://docs.konghq.com/deck/1.38.x/guides/best-practices/
             align: end
     - column:
       - type: card
         config:
           title: Changelog
+          description: Running list of release notes for decK
           cta:
-            text:
+            text: decK Changelog &rarr;
             url: https://github.com/kong/deck/blob/main/CHANGELOG.md/
             align: end
   - row:
@@ -162,7 +258,7 @@ content:
     - column:
       - type: faqs
         config:
-          - q: I’m a Kong Gateway customer, can I use decK?
+          - q: I’m a Kong Gateway user, can I use decK?
             a: |
               decK is designed to be compatible with open-source and enterprise versions of Kong.
 
@@ -171,7 +267,7 @@ content:
     - column:
       - type: faqs
         config:
-          - q: I'm a Konnect user can I use decK
+          - q: I'm a Konnect user, can I use decK?
             a: |
               Yes, decK is compatible with Konnect. We recommend upgrading to decK 1.12 to take advantage of the new --konnect CLI flags.
 
@@ -213,7 +309,7 @@ content:
     - column:
       - type: faqs
         config:
-          - q: What endpoints does decK use?
+          - q: What Admin API endpoints does decK use?
             a:  |
 
               decK uses Kong's Admin API to communicate with {{site.base_gateway}}.
