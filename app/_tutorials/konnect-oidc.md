@@ -15,7 +15,6 @@ tags:
 
 content_type: tutorial
 
-
 tldr: 
   q: How do I configure SSO?
   a: As an alternative to Kong Konnect’s native authentication, you can set up single sign-on (SSO) access to Konnect using OpenID Connect or SAML. This authentication method allows your users to log in to Kong Konnect using their IdP credentials, without needing a separate login. This topic covers configuring SSO for use with various identity providers.

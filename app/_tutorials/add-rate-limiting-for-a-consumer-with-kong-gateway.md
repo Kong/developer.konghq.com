@@ -30,7 +30,7 @@ tags:
 content_type: tutorial
 
 tldr:
-    q: How do I add Rate Limiting to a consumer with Kong Gateway?
+    q: How do I rate limit a consumer with Kong Gateway?
     a: Install the Rate Limiting plugin and enable it for the consumer.
 
 tools:
