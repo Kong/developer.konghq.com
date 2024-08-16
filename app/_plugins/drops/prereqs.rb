@@ -38,7 +38,7 @@ module Jekyll
       private
 
       def find_file(folder:, example:)
-        file = "#{EXAMPLES_FOLDER}/#{folder}/#{example}.yml"
+        file = File.join(EXAMPLES_FOLDER, folder, "#{example}.yml")
         unless File.exist?(file)
           raise ArgumentError, "Missing example file: #{file}"
         end
