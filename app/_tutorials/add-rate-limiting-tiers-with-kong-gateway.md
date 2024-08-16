@@ -92,13 +92,13 @@ Consumers that are not in a consumer group default to the Rate Limiting advanced
 
 1. Synchronize your configuration
 
-  Check the differences in your files:
-  ```sh
-  deck gateway diff deck_files
-  ```
+   Check the differences in your files:
+   ```sh
+   deck gateway diff deck_files
+   ```
 
-  If everything looks right, synchronize them to update your Kong Gateway configuration:
-  ```sh
-  deck gateway sync deck_files
-  ```
+   If everything looks right, synchronize them to update your Kong Gateway configuration:
+   ```sh
+   deck gateway sync deck_files
+   ```
 
