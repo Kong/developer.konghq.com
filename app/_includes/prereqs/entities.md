@@ -4,15 +4,18 @@
 1. Create a `deck_files` folder and add your `kong.yaml` file in it.
 1. Create a `prereqs.yaml` file in the same folder, and add the following content to it:
 
+{% capture entities %}
 {: data-file="prereqs.yaml" }
 {% highlight yaml %}
 {{ include.data }}
 {% endhighlight %}
+{% endcapture %}
+{{ entities | indent: 3 }}
 
 1. Sync your changes:
 
-  ```sh
-  deck gateway sync prereqs.yaml
-  ```
+   ```sh
+   deck gateway sync prereqs.yaml
+   ```
 
 </details>
