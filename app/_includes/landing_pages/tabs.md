@@ -7,7 +7,7 @@
 {% assign include_path = item.include_content | append: ".md" %}
 {% include {{ include_path }} %}
 {% else %}
-{% raise "content or included_content must be set when using the `tabs` block" %}
+{% raise "content or include_content must be set when using the `tabs` block" %}
 {% endif %}
 {% endnavtab %}
 {% endfor %}
