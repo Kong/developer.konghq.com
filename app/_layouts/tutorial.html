@@ -27,6 +27,13 @@ layout: default
         {{ content }}
       </div>
 
+      {% if page.products contains "gateway" or page.cleanup %}
+      <div id="clean" class="mt-4">
+        <h2>Cleanup</h2>
+        {% cleanup %}
+      </div>
+      {% endif %}
+
       {% if page.faqs %}
       <div id="faq" class="mt-4">
         <h2>FAQ</h2>

@@ -1,0 +1,16 @@
+<ol class="list-none mx-0">
+  {% if page.tools and page.products contains "gateway" %}
+  <li>
+{% capture kong_gateway %}{% include cleanup/kong_gateway.md %}{% endcapture %}
+{{ kong_gateway | markdownify }}
+  </li>
+  {% endif %}
+
+  {% for step in cleanup.inline %}
+    <li>
+      {% capture inline_template %}{% include cleanup/inline.md step=step %}{% endcapture %}
+      {{ inline_template | markdownify }}
+    </li>
+  {% endfor %}
+  </ul>
+</ol>
