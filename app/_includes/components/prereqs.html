@@ -1,8 +1,10 @@
 <ol class="list-none mx-0">
+  {% if prereqs.tools and page.products contains "gateway" %}
   <li>
 {% capture kong_gateway %}{% include prereqs/kong_gateway.md %}{% endcapture %}
 {{ kong_gateway | markdownify }}
   </li>
+  {% endif %}
 
   {% for tool in prereqs.tools %}
     <li>
