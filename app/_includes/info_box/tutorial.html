@@ -19,6 +19,10 @@
     {% include info_box/sections/plugins.html plugins=page.plugins %}
   {% endif %}
 
+  {% if page.entities %}
+    {% include info_box/sections/entities.html entities=page.entities products=page.products %}
+  {% endif %}
+
   {% if page.tools %}
     {% include info_box/sections/tools.html tools=page.tools %}
   {% endif %}
