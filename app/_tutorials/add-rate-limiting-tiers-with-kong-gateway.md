@@ -51,18 +51,46 @@ tools:
 
 ## Steps
 
+1. Create the Free, Basic, and Premium tier consumer groups:
+  ```yaml
+  _format_version: '3.0'
+  consumer_groups:
+  - name: Free
+  - name: Basic
+  - name: Premium
+  ```
+  Add this configuration to a `kong.yaml` file in a `deck_files` directory.
+
+1. Synchronize your configuration
+
+   Check the differences in your files:
+   ```sh
+   deck gateway diff deck_files
+   ```
+
+   If everything looks right, synchronize them to update your Kong Gateway configuration:
+   ```sh
+   deck gateway sync deck_files
+   ```
+
 1. Create four consumers, one for each tier and one that won't be assigned to a consumer group tier:
-{% capture step %}
-   {% entity_example %}
-    type: consumer
-    data:
-      username: Amal
-      username: Dana
-      username: Mahan
-      username: Rosario
-   {% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3 }}
+  
+  ```yaml
+  consumers:
+  - username: Amal
+    groups:
+    - name: Free
+  - username: Dana
+    groups:
+    - name: Basic
+  - username: Mahan
+    groups:
+    - name: Premium
+  - username: Rosario
+  ```
+
+  Apphend this to your `kong.yaml` file. 
+
   In this tutorial, one consumer won't be assigned to a tier, which is a consumer group. Consumers that are not in a consumer group default to the Rate Limiting advanced plugin’s configuration, so you can define tier groups for some users and have a default behavior for consumers without groups.
 
 1. Synchronize your configuration
@@ -77,155 +105,43 @@ tools:
    deck gateway sync deck_files
    ```
 
-1. Create the Free, Basic, and Premium tier consumer groups:
-{% capture step %}
-   {% entity_example %}
-    type: consumer_group
-    data:
-      name: Free
-      name: Basic
-      name: Premium
-   {% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3 }}
-
-  The Free tier consumer group will allow six requests per second.
-
-1. Synchronize your configuration
-
-   Check the differences in your files:
-   ```sh
-   deck gateway diff deck_files
-   ```
-
-   If everything looks right, synchronize them to update your Kong Gateway configuration:
-   ```sh
-   deck gateway sync deck_files
-   ```
-
-1. Assign your consumers to the different tiers:
-{% capture step %}
-  {% entity_example %}
-    type: consumer
-    data:
-      username: Amal
-      groups:
-      - name: Free
-      username: Dana
-      groups:
-      - name: Basic
-      username: Mahan
-      groups:
-      - name: Premium
-      username: Rosario
-  {% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3 }}
-
-1. Enable the Rate Limiting plugin globally as a default for consumers who aren't in a tier consumer group:
-{% capture step %}
-  {% entity_example %}
-    type: plugin
-    data:
-      name: rate-limiting
-      config:
-        second: 5
-        hour: 10000
-        policy: local
-  {% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3 }}
-  This global rate limiting policy is configured to allow five HTTP requests per second (`config.second`), 10,000 HTTP requests per hour (`config.hour`), and uses a local policy (`config.local`).
-
-1. Enable the Rate Limiting Advanced plugin on the Free tier consumer group:
-{% capture step %}
-  {% entity_example %}
-    type: plugin
-    data:
-      name: rate-limiting-advanced
-      config:
-        limit: 3
-        window_size: 30
-        window_type: sliding
-        retry_after_jitter_max: 0
-
-    targets:
-        - consumer_group
-
-    variables:
-      'consumerGroupName|Id': Free
-  {% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3 }}
-    The Free tier consumer group will allow six requests per second. This configuration sets the rate limit to three requests (`config.limit`) for every 30 seconds (`config.window_size`).
-
-1. Synchronize your configuration
-
-   Check the differences in your files:
-   ```sh
-   deck gateway diff deck_files
-   ```
-
-   If everything looks right, synchronize them to update your Kong Gateway configuration:
-   ```sh
-   deck gateway sync deck_files
-   ```
-
-1. Enable the Rate Limiting Advanced plugin on the Basic tier consumer group:
-{% capture step %}
-  {% entity_example %}
-    type: plugin
-    data:
-      name: rate-limiting-advanced
-      config:
-        limit: 5
-        window_size: 30
-        window_type: sliding
-        retry_after_jitter_max: 0
-
-    targets:
-        - consumer_group
-
-    variables:
-      'consumerGroupName|Id': Basic
-  {% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3 }}
-    The Basic tier consumer group will allow 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
-
-1. Synchronize your configuration
-
-   Check the differences in your files:
-   ```sh
-   deck gateway diff deck_files
-   ```
-
-   If everything looks right, synchronize them to update your Kong Gateway configuration:
-   ```sh
-   deck gateway sync deck_files
-   ```
-
-1. Enable the Rate Limiting Advanced plugin on the Premium tier consumer group:
-{% capture step %}
-  {% entity_example %}
-    type: plugin
-    data:
-      name: rate-limiting-advanced
-      config:
-        limit: 500
-        window_size: 30
-        window_type: sliding
-        retry_after_jitter_max: 0
-
-    targets:
-        - consumer_group
-
-    variables:
-      'consumerGroupName|Id': Premium
-  {% endentity_example %}
-{% endcapture %}
-{{ step | indent: 3 }}
-    The Premium tier consumer group will allow 1,000 requests per second. This configuration sets the rate limit to 500 requests (`config.limit`) for every 30 seconds (`config.window_size`).
+1. Enable the Rate Limiting and Rate Limiting Advanced plugins for each tier:
+  ```yaml
+  plugins:
+  - consumer_group: Free
+    config:
+      limit: 3
+      window_size: 30
+      window_type: sliding
+      retry_after_jitter_max: 0
+    name: rate-limiting-advanced
+  - consumer_group: Basic
+    config:
+      limit: 5
+      window_size: 30
+      window_type: sliding
+      retry_after_jitter_max: 0
+    name: rate-limiting-advanced
+  - consumer_group: Premium
+    config:
+      limit: 500
+      window_size: 30
+      window_type: sliding
+      retry_after_jitter_max: 0
+    name: rate-limiting-advanced
+  - name: rate-limiting
+    config:
+      second: 5
+      hour: 10000
+      policy: local
+  ```
+  Apphend this to your `kong.yaml` file.
+  
+  This configures the different tiers like the following:
+  * **Free:** Allows six requests per second. This configuration sets the rate limit to three requests (`config.limit`) for every 30 seconds (`config.window_size`).
+  * **Basic:** Allows 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
+  * **Premium:** Allows 1,000 requests per second. This configuration sets the rate limit to 500 requests (`config.limit`) for every 30 seconds (`config.window_size`).
+  * **Global:** Allows five HTTP requests per second (`config.second`), 10,000 HTTP requests per hour (`config.hour`), and uses a local policy (`config.local`).
 
 1. Synchronize your configuration
 
