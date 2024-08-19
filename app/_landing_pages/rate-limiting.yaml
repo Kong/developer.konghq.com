@@ -23,28 +23,6 @@ content:
                     It's a critical function that helps maintain
                     the performance and availability of web
                     services and APIs by controlling the request traffic.
-      - column:
-          - type: mermaid
-            config:
-              alt_text: "A diagram that shows how Kong Gateway uses the Rate Limiting plugin to rate limit a service"
-              diagram: |
-                sequenceDiagram
-                participant Client as Client
-                participant Kong as Kong Gateway
-                participant RateLimitPlugin as Rate Limiting plugin
-                participant Service as Service
-
-                Client->>Kong: Send API request
-                Kong->>RateLimitPlugin: Check rate limits
-                RateLimitPlugin-->>Kong: Rate limit status
-                alt Within limits
-                    RateLimitPlugin->>Service: Forward request
-                    Service-->>Kong: Service response
-                    Kong-->>Client: Forward service response
-                else Exceeds limits
-                    RateLimitPlugin-->>Kong: Rate limit exceeded response
-                    Kong-->>Client: Return 429 status code
-                end
 
   - row:
       - column:
@@ -64,20 +42,6 @@ content:
                     - "**Enforcing API Tiers/Plans:** Different pricing plans may have different usage limits."
                 - type: text
                   text: Rate limits are typically defined on per-second, per-minute, or hourly intervals and are often configurable so they can be finely tuned based on the specific requirements of the system and its users.
-  - row:
-      - column:
-          - type: structured_text
-            config:
-              header:
-                text: "How do I configure rate limiting?"
-              blocks:
-                - type: text
-                  text: "There are multiple ways to rate limit using Kong's products. You can combine multiple methods to fit your use case. The following list can help you decide which solution to use based on your specific requirements:"
-                - type: unordered_list
-                  items:
-                    - "**Kong Gateway:** Kong Gateway can be configured to apply rate limiting rules on API traffic entering the system. This includes rate limiting by IP, API key, consumer, or other criteria. This is ideal for handling external API traffic with advanced rate limiting policies and comprehensive traffic management."
-                    - "**Kong Mesh:** Kong Mesh can apply rate limiting policies at the service level within the mesh. This includes controlling traffic between microservices and managing inter-service communication. This is ideal for internal service-to-service communication where you need fine-grained control over traffic within the mesh."
-                    - "**KIC:** Rate limiting capabilities in KIC vary by the ingress controller implementation (e.g., NGINX, Traefik). Basic rate limiting can be configured for external traffic entering the Kubernetes cluster. This is ideal for for controlling external traffic entering your Kubernetes environment with simpler rate limiting requirements."
   
   - row:
       - column:
@@ -94,9 +58,9 @@ content:
                 text: "Rate Limiting in Kong Gateway"
               blocks:
                 - type: text
-                  text: Kong Gateway provides several plugins to add rate limiting to the Kong Gateway API.
+                  text: Kong Gateway can be configured to apply rate limiting rules on API traffic entering the system. This includes rate limiting by IP, API key, consumer, or other criteria. This is ideal for handling external API traffic with advanced rate limiting policies and comprehensive traffic management.
                 - type: text
-                  text: <a href="/gateway/rate-limiting/">Add Rate Limiting per Service Using the Rate Limiting Plugin</a>
+                  text: <a href="/gateway/rate-limiting/">Add Rate Limiting with Kong Gateway</a>
       - column:
           - type: structured_text
             config:
@@ -104,9 +68,9 @@ content:
                 text: "Rate Limiting in KIC"
               blocks:
                 - type: text
-                  text: KIC uses Kong Gateway's rate limiting plugins, but the configuration is slightly different.
+                  text: Rate limiting capabilities in KIC vary by the ingress controller implementation (e.g., NGINX, Traefik). Basic rate limiting can be configured for external traffic entering the Kubernetes cluster. This is ideal for for controlling external traffic entering your Kubernetes environment with simpler rate limiting requirements.
                 - type: text
-                  text: <a href="https://docs.konghq.com/hub/kIC/">Add Rate Limiting per Service using KIC</a>
+                  text: <a href="https://docs.konghq.com/kubernetes-ingress-controller/latest/plugins/rate-limiting/#main">Add Rate Limiting with KIC</a>
       - column:
           - type: structured_text
             config:
@@ -114,9 +78,9 @@ content:
                 text: "Rate Limiting in Kong Mesh"
               blocks:
                 - type: text
-                  text: "Kong Mesh supports rate limiting via Mesh proxies. There are two rate limiting method: local using MeshRateLimit and global using MeshGlobalRateLimit policies."
+                  text: Kong Mesh can apply rate limiting policies at the service level within the mesh. This includes controlling traffic between microservices and managing inter-service communication. This is ideal for internal service-to-service communication where you need fine-grained control over traffic within the mesh.
                 - type: text
-                  text: <a href="https://docs.konghq.com/mesh/latest/features/meshglobalratelimit/">Add Global Rate Limiting with Kong Mesh</a>
+                  text: <a href="https://docs.konghq.com/mesh/latest/features/meshglobalratelimit/">Add Rate Limiting with Kong Mesh</a>
 
   - row:
       - column:
@@ -134,34 +98,7 @@ content:
               text: "View more tutorials &raquo;"
               url: "https://docs.devsite.com/search/{tutorial.topic}+{other stuff}" ## Takes you to search with terms that match this.
               align: end
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h2
-              text: Recommended Plugins
-  - row:
-      - column:
-          - type: plugin
-            config:
-              slug: rate-limiting
-      - column:
-          - type: plugin
-            config:
-              slug: rate-limiting-advanced
-      - column:
-          - type: plugin
-            config:
-              slug: ai-rate-limiting-advanced
-  - row:
-      - column:
-          - type: plugin
-            config:
-              slug: graphql-rate-limiting-advanced
-      - column:
-          - type: plugin
-            config:
-              slug: response-ratelimiting
+
   - row:
       - column:
           - type: header
