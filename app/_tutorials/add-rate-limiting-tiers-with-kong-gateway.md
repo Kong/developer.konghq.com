@@ -20,6 +20,15 @@ tools:
     - deck
     - ui
 
+prereqs:
+  entities:
+    services:
+        - example-service
+    routes:
+        - example-route
+    plugins:
+        - key-auth
+
 min_version:
   gateway: 3.4.x
 
@@ -29,13 +38,6 @@ plugins:
 entites:
   - consumer
   - consumer_group
-
-prereqs:
-  entities:
-    services:
-        - example-service
-    routes:
-        - example-route
 
 tier: enterprise
 
@@ -86,20 +88,23 @@ tools:
    ```yaml
    consumers:
    - username: Amal
-     custom_id: example_key_for_free
      groups:
      - name: Free
+     keyauth_credentials:
+     - key: amal
    - username: Dana
-     custom_id: example_key_for_basic
      groups:
      - name: Basic
+     keyauth_credentials:
+     - key: dana
    - username: Mahan
-     custom_id: example_key_for_premium
      groups:
      - name: Premium
+     keyauth_credentials:
+     - key: mahan
    ```
 
-   Append this to your `kong.yaml` file. 
+   Append this to your `kong.yaml` file. By adding key auth credentials here you can test later that rate limiting was correctly configured for the different tiers.
 
 1. Synchronize your configuration
 
@@ -113,48 +118,49 @@ tools:
    deck gateway sync deck_files
    ```
 
-1. Enable the Rate Limiting and Rate Limiting Advanced plugins for each tier:
+1. Enable the Rate Limiting and Rate Limiting Advanced plugins for each tier by replacing the `consumer_group` config in your `kong.yaml` file with the following:
 
    ```yaml
-   plugins:
-   - consumer_group: Free
-     config:
-       limit: 
-       - 3
-       window_size: 
-       - 30
-       window_type: sliding
-       retry_after_jitter_max: 0
-       namespace: free
-     name: rate-limiting-advanced
-   - consumer_group: Basic
-     config:
-       limit: 
-       - 5
-       window_size: 
-       - 30
-       window_type: sliding
-       retry_after_jitter_max: 0
-       namespace: basic
-     name: rate-limiting-advanced
-   - consumer_group: Premium
-     config:
-       limit: 
-       - 500
-       window_size: 
-       - 30
-       window_type: sliding
-       retry_after_jitter_max: 0
-       namespace: premium
-     name: rate-limiting-advanced
+   consumer_groups:
+   - name: Free
+     plugins:
+     - name: rate-limiting-advanced
+       config:
+         limit: 
+         - 3
+         window_size: 
+         - 30
+         window_type: fixed
+         retry_after_jitter_max: 0
+         namespace: free
+   - name: Basic
+     plugins:
+     - name: rate-limiting-advanced
+       config:
+         limit: 
+         - 5
+         window_size: 
+         - 30
+         window_type: sliding
+         retry_after_jitter_max: 0
+         namespace: basic
+   - name: Premium
+     plugins:
+     - name: rate-limiting-advanced
+       config:
+         limit: 
+         - 500
+         window_size: 
+         - 30
+         window_type: sliding
+         retry_after_jitter_max: 0
+         namespace: premium
    ```
-   Append this to your `kong.yaml` file.
    
    This configures the different tiers like the following:
    * **Free:** Allows six requests per second. This configuration sets the rate limit to three requests (`config.limit`) for every 30 seconds (`config.window_size`).
    * **Basic:** Allows 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
    * **Premium:** Allows 1,000 requests per second. This configuration sets the rate limit to 500 requests (`config.limit`) for every 30 seconds (`config.window_size`).
-
 
 1. Synchronize your configuration
 
@@ -178,7 +184,7 @@ Each of these tests sends a series of HTTP requests (for example, six for Free T
     echo "Testing Free Tier Rate Limit..."
 
     for i in {1..6}; do
-      curl -i http://localhost:8000/example-route -H 'apikey:example_key_for_free'
+      curl -I http://localhost:8000/anything -H 'apikey:amal'
       echo
       sleep 1
     done
@@ -191,7 +197,7 @@ Each of these tests sends a series of HTTP requests (for example, six for Free T
     echo "Testing Basic Tier Rate Limit..."
 
     for i in {1..7}; do
-      curl -i http://localhost:8000/example-route -H 'apikey:example_key_for_basic'
+      curl -I http://localhost:8000/anything -H 'apikey:dana'
       echo
       sleep 1
     done
@@ -204,7 +210,7 @@ Each of these tests sends a series of HTTP requests (for example, six for Free T
     echo "Testing Premium Tier Rate Limit..."
 
     for i in {1..11}; do
-      curl -i http://localhost:8000/example-route -H 'apikey:example_key_for_premium'
+      curl -I http://localhost:8000/anything -H 'apikey:mahan'
       echo
       sleep 1
     done
