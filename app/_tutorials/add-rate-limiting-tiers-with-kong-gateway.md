@@ -30,6 +30,13 @@ entites:
   - consumer
   - consumer_group
 
+prereqs:
+  entities:
+    services:
+        - example-service
+    routes:
+        - example-route
+
 tier: enterprise
 
 tags:
@@ -74,25 +81,25 @@ tools:
    deck gateway sync deck_files
    ```
 
-1. Create four consumers, one for each tier and one that won't be assigned to a consumer group tier:
+1. Create three consumers, one for each tier:
   
    ```yaml
    consumers:
    - username: Amal
+     custom_id: example_key_for_free
      groups:
      - name: Free
    - username: Dana
+     custom_id: example_key_for_basic
      groups:
      - name: Basic
    - username: Mahan
+     custom_id: example_key_for_premium
      groups:
      - name: Premium
-   - username: Rosario
    ```
 
    Append this to your `kong.yaml` file. 
-
-   In this tutorial, one consumer won't be assigned to a tier, which is a consumer group. Consumers that are not in a consumer group default to the Rate Limiting advanced plugin’s configuration, so you can define tier groups for some users and have a default behavior for consumers without groups.
 
 1. Synchronize your configuration
 
@@ -112,30 +119,34 @@ tools:
    plugins:
    - consumer_group: Free
      config:
-       limit: 3
-       window_size: 30
+       limit: 
+       - 3
+       window_size: 
+       - 30
        window_type: sliding
        retry_after_jitter_max: 0
+       namespace: free
      name: rate-limiting-advanced
    - consumer_group: Basic
      config:
-       limit: 5
-       window_size: 30
+       limit: 
+       - 5
+       window_size: 
+       - 30
        window_type: sliding
        retry_after_jitter_max: 0
+       namespace: basic
      name: rate-limiting-advanced
    - consumer_group: Premium
      config:
-       limit: 500
-       window_size: 30
+       limit: 
+       - 500
+       window_size: 
+       - 30
        window_type: sliding
        retry_after_jitter_max: 0
+       namespace: premium
      name: rate-limiting-advanced
-   - name: rate-limiting
-     config:
-       second: 5
-       hour: 10000
-       policy: local
    ```
    Append this to your `kong.yaml` file.
    
@@ -143,7 +154,6 @@ tools:
    * **Free:** Allows six requests per second. This configuration sets the rate limit to three requests (`config.limit`) for every 30 seconds (`config.window_size`).
    * **Basic:** Allows 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
    * **Premium:** Allows 1,000 requests per second. This configuration sets the rate limit to 500 requests (`config.limit`) for every 30 seconds (`config.window_size`).
-   * **Global:** Allows five HTTP requests per second (`config.second`), 10,000 HTTP requests per hour (`config.hour`), and uses a local policy (`config.local`).
 
 1. Synchronize your configuration
 
@@ -157,13 +167,49 @@ tools:
    deck gateway sync deck_files
    ```
 
-1. Run the following command to test the rate limiting as the consumer:
+## Test
+
+Each of these tests sends a series of HTTP requests (for example, six for Free Tier and seven for Basic Tier) to the endpoint with the appropriate API key with the goal of exceeding the configured rate limit for that tier. It waits for one second between requests to avoid overwhelming the server and test rate limits more clearly.
+
+1. Test the rate limiting of the Free tier:
 
    ```sh
-   for _ in {1..6}; do curl -i http://localhost:8000/example_route -H 'apikey:example_key'; echo; done
+    echo "Testing Free Tier Rate Limit..."
+
+    for i in {1..6}; do
+      curl -i http://localhost:8000/example-route -H 'apikey:example_key_for_free'
+      echo
+      sleep 1
+    done
    ```
 
-   You should get a 429 error with the message API rate limit exceeded.
+   For the first few requests (up to the configured limit, which is 3 requests in 30 seconds), you should receive a `200 OK` status code. Once the limit is exceeded, you should receive a `429 Too Many Requests` status code with a message indicating the rate limit has been exceeded.
+
+1. Test the rate limiting of the Basic tier:
+   ```sh
+    echo "Testing Basic Tier Rate Limit..."
+
+    for i in {1..7}; do
+      curl -i http://localhost:8000/example-route -H 'apikey:example_key_for_basic'
+      echo
+      sleep 1
+    done
+   ```
+
+   For the first few requests (up to the configured limit, which is 5 requests in 30 seconds), you should receive a `200 OK` status code. After exceeding the limit, you should receive a `429 Too Many Requests` status code with a rate limit exceeded message.
+
+1. Test the rate limiting of the Premium tier:
+   ```sh
+    echo "Testing Premium Tier Rate Limit..."
+
+    for i in {1..11}; do
+      curl -i http://localhost:8000/example-route -H 'apikey:example_key_for_premium'
+      echo
+      sleep 1
+    done
+   ```
+
+   For the initial requests (up to the configured limit, which is 500 requests in 30 seconds), you should receive a `200 OK` status code. After exceeding the limit, you should receive a `429 Too Many Requests` status code.
 
 ## Cleanup
 
