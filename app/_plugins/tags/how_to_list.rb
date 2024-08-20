@@ -31,6 +31,7 @@ module Jekyll
 
       context.stack do
         context['how_tos'] = how_tos
+        context['config'] = config
         Liquid::Template.parse(template).render(context)
       end
     end
