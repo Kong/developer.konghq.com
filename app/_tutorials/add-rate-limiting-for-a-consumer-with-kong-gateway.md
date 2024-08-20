@@ -31,7 +31,7 @@ content_type: tutorial
 
 tldr:
     q: How do I add Rate Limiting to a consumer with Kong Gateway?
-    a: Install the Rate Limiting plugin and enable it for the consumer.
+    a: Make sure you have enabled an authentication plugin and created a consumer with credentials, then enable the <a href="/plugins/rate-limiting/reference">Rate Limiting plugin</a> for that consumer. 
 
 tools:
     - deck
@@ -42,10 +42,6 @@ prereqs:
         - example-service
     routes:
         - example-route
-    consumers:
-        - key-auth-consumer
-    plugins:
-        - key-auth
 
 cleanup:
   inline:
@@ -55,7 +51,36 @@ cleanup:
 
 ## Steps
 
-1. Enable the Rate Limiting Plugin for the consumer
+1. Add the following content to `kong.yaml` to enable the Key Authentication plugin. You need [authentication](/authentication/) to identify the consumer and apply rate limiting.
+
+{% capture plugin %}
+{% entity_example %}
+type: plugin
+data:
+  name: key-auth
+  config:
+    key_names:
+    - apikey
+targets:
+  - global
+{% endentity_example %}
+{% endcapture %}
+{{ plugin | indent: 3 }}
+
+1. Create a [consumer](/gateway/entities/consumer/) with a key.
+
+{% capture consumer %}
+{% entity_example %}
+type: consumer
+data:
+  username: jsmith
+  keyauth_credentials:
+      - key: example-key
+{% endentity_example %}
+{% endcapture %}
+{{ consumer | indent: 3 }}
+
+1. Enable the [Rate Limiting plugin](/plugins/rate-limiting/) for the consumer. In this example, the limit is 5 requests per second and 1000 requests per hour.
 
 {% capture plugin %}
 {% entity_example %}
@@ -73,7 +98,7 @@ variables:
 {% endcapture %}
 {{ plugin | indent: 3 }}
 
-2. Synchronize your configuration
+2. Synchronize your [decK](/deck/) configuration files:
 
     Check the differences in your files:
     ```bash
@@ -83,7 +108,7 @@ variables:
     ```bash
     deck gateway sync deck_files
     ```
-3. Validate
+3. Validate:
 
     You can run the following command to test the rate limiting as the consumer:
     ```bash
@@ -91,11 +116,3 @@ variables:
     ```
 
     You should get a `429` error with the message `API rate limit exceeded`.
-
-1. Teardown
-
-   Destroy the Kong Gateway container.
-
-   ```bash
-   curl -Ls https://get.konghq.com/quickstart | bash -s -- -d
-   ```
