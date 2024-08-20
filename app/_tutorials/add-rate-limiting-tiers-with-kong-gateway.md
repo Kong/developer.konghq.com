@@ -52,14 +52,15 @@ tools:
 ## Steps
 
 1. Create the Free, Basic, and Premium tier consumer groups:
-  ```yaml
-  _format_version: '3.0'
-  consumer_groups:
-  - name: Free
-  - name: Basic
-  - name: Premium
-  ```
-  Add this configuration to a `kong.yaml` file in a `deck_files` directory.
+
+    ```yaml
+    _format_version: '3.0'
+    consumer_groups:
+    - name: Free
+    - name: Basic
+    - name: Premium
+    ```
+   Add this configuration to a `kong.yaml` file in a `deck_files` directory.
 
 1. Synchronize your configuration
 
@@ -75,23 +76,23 @@ tools:
 
 1. Create four consumers, one for each tier and one that won't be assigned to a consumer group tier:
   
-  ```yaml
-  consumers:
-  - username: Amal
-    groups:
-    - name: Free
-  - username: Dana
-    groups:
-    - name: Basic
-  - username: Mahan
-    groups:
-    - name: Premium
-  - username: Rosario
-  ```
+   ```yaml
+   consumers:
+   - username: Amal
+     groups:
+     - name: Free
+   - username: Dana
+     groups:
+     - name: Basic
+   - username: Mahan
+     groups:
+     - name: Premium
+   - username: Rosario
+   ```
 
-  Apphend this to your `kong.yaml` file. 
+   Append this to your `kong.yaml` file. 
 
-  In this tutorial, one consumer won't be assigned to a tier, which is a consumer group. Consumers that are not in a consumer group default to the Rate Limiting advanced plugin’s configuration, so you can define tier groups for some users and have a default behavior for consumers without groups.
+   In this tutorial, one consumer won't be assigned to a tier, which is a consumer group. Consumers that are not in a consumer group default to the Rate Limiting advanced plugin’s configuration, so you can define tier groups for some users and have a default behavior for consumers without groups.
 
 1. Synchronize your configuration
 
@@ -106,42 +107,43 @@ tools:
    ```
 
 1. Enable the Rate Limiting and Rate Limiting Advanced plugins for each tier:
-  ```yaml
-  plugins:
-  - consumer_group: Free
-    config:
-      limit: 3
-      window_size: 30
-      window_type: sliding
-      retry_after_jitter_max: 0
-    name: rate-limiting-advanced
-  - consumer_group: Basic
-    config:
-      limit: 5
-      window_size: 30
-      window_type: sliding
-      retry_after_jitter_max: 0
-    name: rate-limiting-advanced
-  - consumer_group: Premium
-    config:
-      limit: 500
-      window_size: 30
-      window_type: sliding
-      retry_after_jitter_max: 0
-    name: rate-limiting-advanced
-  - name: rate-limiting
-    config:
-      second: 5
-      hour: 10000
-      policy: local
-  ```
-  Apphend this to your `kong.yaml` file.
-  
-  This configures the different tiers like the following:
-  * **Free:** Allows six requests per second. This configuration sets the rate limit to three requests (`config.limit`) for every 30 seconds (`config.window_size`).
-  * **Basic:** Allows 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
-  * **Premium:** Allows 1,000 requests per second. This configuration sets the rate limit to 500 requests (`config.limit`) for every 30 seconds (`config.window_size`).
-  * **Global:** Allows five HTTP requests per second (`config.second`), 10,000 HTTP requests per hour (`config.hour`), and uses a local policy (`config.local`).
+
+   ```yaml
+   plugins:
+   - consumer_group: Free
+     config:
+       limit: 3
+       window_size: 30
+       window_type: sliding
+       retry_after_jitter_max: 0
+     name: rate-limiting-advanced
+   - consumer_group: Basic
+     config:
+       limit: 5
+       window_size: 30
+       window_type: sliding
+       retry_after_jitter_max: 0
+     name: rate-limiting-advanced
+   - consumer_group: Premium
+     config:
+       limit: 500
+       window_size: 30
+       window_type: sliding
+       retry_after_jitter_max: 0
+     name: rate-limiting-advanced
+   - name: rate-limiting
+     config:
+       second: 5
+       hour: 10000
+       policy: local
+   ```
+   Append this to your `kong.yaml` file.
+   
+   This configures the different tiers like the following:
+   * **Free:** Allows six requests per second. This configuration sets the rate limit to three requests (`config.limit`) for every 30 seconds (`config.window_size`).
+   * **Basic:** Allows 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
+   * **Premium:** Allows 1,000 requests per second. This configuration sets the rate limit to 500 requests (`config.limit`) for every 30 seconds (`config.window_size`).
+   * **Global:** Allows five HTTP requests per second (`config.second`), 10,000 HTTP requests per hour (`config.hour`), and uses a local policy (`config.local`).
 
 1. Synchronize your configuration
 
@@ -157,11 +159,11 @@ tools:
 
 1. Run the following command to test the rate limiting as the consumer:
 
-  ```sh
-  for _ in {1..6}; do curl -i http://localhost:8000/example_route -H 'apikey:example_key'; echo; done
-  ```
+   ```sh
+   for _ in {1..6}; do curl -i http://localhost:8000/example_route -H 'apikey:example_key'; echo; done
+   ```
 
-  You should get a 429 error with the message API rate limit exceeded.
+   You should get a 429 error with the message API rate limit exceeded.
 
 ## Cleanup
 
