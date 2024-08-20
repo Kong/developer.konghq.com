@@ -13,7 +13,10 @@
     {% for f in include.config.features %}
       <tr>
         <td>
-          <span>{{ f.title }}</span>
+          <span class="block">{{ f.title | markdown }}</span>
+          {% if f.subtitle %}
+          <span class="text-sm text-gray-500">{{ f.subtitle }}</span>
+          {% endif %}
         </td>
         {% for c in include.config.columns %}
         {% assign v = f[c.key] %}
