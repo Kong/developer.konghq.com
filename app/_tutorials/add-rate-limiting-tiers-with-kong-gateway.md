@@ -75,8 +75,10 @@ Consumers that are not in a consumer group default to the Rate Limiting advanced
     data:
       name: rate-limiting-advanced
       config:
-        limit: 5
-        window_size: 30
+        limit: 
+          - 5
+        window_size: 
+          - 30
         window_type: sliding
         retry_after_jitter_max: 0
  
