@@ -1,14 +1,4 @@
 <ol class="list-none mx-0">
-  {% if page.products %}
-    {% for product in page.products %}
-      <li>
-{% assign product_include = 'cleanup/products/' | append: product | append: '.md' %}
-{% capture product_template %}{% include {{ product_include }} %}{% endcapture %}
-{{ product_template | markdownify }}
-      </li>
-    {% endfor %}
-  {% endif %}
-
   {% for step in cleanup.inline %}
     <li>
       {% capture inline_template %}{% include cleanup/inline.md step=step %}{% endcapture %}

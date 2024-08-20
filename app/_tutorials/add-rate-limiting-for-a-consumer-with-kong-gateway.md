@@ -46,6 +46,11 @@ prereqs:
         - key-auth-consumer
     plugins:
         - key-auth
+
+cleanup:
+  inline:
+    - title: Destroy the Kong Gateway container
+      include_content: cleanup/products/gateway
 ---
 
 ## Steps
