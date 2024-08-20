@@ -1,0 +1,13 @@
+<div class="mt-1 flex flex-wrap gap-x-2 flex-col">
+  <strong>Entities:</strong>
+  <ul class="flex gap-x-2 flex-wrap list-none m-0">
+    {% if include.products contains "gateway" %}
+      {% for entity_slug in include.entities %}
+        {% assign entity = site.gateway_entities | find: "slug", entity_slug %}
+        <li>
+          <a href="{{ entity.url }}">{{ entity.name }}</a>
+        </li>
+      {% endfor %}
+    {% endif %}
+  </ul>
+</div>

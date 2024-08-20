@@ -1,8 +1,13 @@
 <ol class="list-none mx-0">
-  <li>
-{% capture kong_gateway %}{% include prereqs/kong_gateway.md %}{% endcapture %}
-{{ kong_gateway | markdownify }}
-  </li>
+  {% if page.products %}
+    {% for product in page.products %}
+      <li>
+{% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
+{% capture product_template %}{% include {{ product_include }} %}{% endcapture %}
+{{ product_template | markdownify }}
+      </li>
+    {% endfor %}
+  {% endif %}
 
   {% for tool in prereqs.tools %}
     <li>
@@ -19,4 +24,10 @@
     </li>
   {% endif %}
 
+  {% for prereq in prereqs.inline %}
+    <li>
+      {% capture inline_template %}{% include prereqs/inline.md prereq=prereq %}{% endcapture %}
+      {{ inline_template | markdownify }}
+    </li>
+  {% endfor %}
 </ul>

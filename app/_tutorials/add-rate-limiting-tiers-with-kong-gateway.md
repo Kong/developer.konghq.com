@@ -155,6 +155,7 @@ tools:
    * **Basic:** Allows 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
    * **Premium:** Allows 1,000 requests per second. This configuration sets the rate limit to 500 requests (`config.limit`) for every 30 seconds (`config.window_size`).
 
+
 1. Synchronize your configuration
 
    Check the differences in your files:

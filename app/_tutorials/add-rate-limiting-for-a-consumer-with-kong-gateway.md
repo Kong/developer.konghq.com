@@ -30,13 +30,14 @@ tags:
 content_type: tutorial
 
 tldr:
-    q: How do I add Rate Limiting to a consumer with Kong Gateway?
+    q: How do I rate limit a consumer with Kong Gateway?
     a: Install the Rate Limiting plugin and enable it for the consumer.
 
 tools:
     - deck
 
 prereqs:
+  entities:
     services:
         - example-service
     routes:
@@ -45,6 +46,11 @@ prereqs:
         - key-auth-consumer
     plugins:
         - key-auth
+
+cleanup:
+  inline:
+    - title: Destroy the Kong Gateway container
+      include_content: cleanup/products/gateway
 ---
 
 ## Steps
@@ -56,12 +62,13 @@ prereqs:
 type: plugin
 data:
   name: rate-limiting
-  consumer: jsmith
   config:
     second: 5
     hour: 1000
 targets:
-  - global
+  - consumer 
+variables:
+    consumerName|Id: jsmith
 {% endentity_example %}
 {% endcapture %}
 {{ plugin | indent: 3 }}

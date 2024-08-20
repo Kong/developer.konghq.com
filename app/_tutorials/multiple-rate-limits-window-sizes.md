@@ -29,10 +29,11 @@ tags:
 content_type: tutorial
 
 prereqs:
-  services:
-    - example-service
-  routes:
-    - example-route
+  entities:
+      services:
+        - example-service
+      routes:
+        - example-route
 
 tldr: 
   q: How do I apply multiple rate limits or window sizes with one plugin instance?

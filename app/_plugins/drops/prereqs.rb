@@ -21,13 +21,17 @@ module Jekyll
       end
 
       def entities?
-        @prereqs.any?
+        @prereqs.fetch('entities', []).any?
+      end
+
+      def inline
+        @inlines ||= @prereqs.fetch('inline', [])
       end
 
       def data
         yaml = { '_format_version' => '3.0' }
 
-        @prereqs.each do |k, files|
+        @prereqs.fetch('entities', []).each do |k, files|
           entities = files.map { |f| load_yaml(find_file(folder: k, example: f)) }
           yaml.merge!(k => entities) if entities
         end

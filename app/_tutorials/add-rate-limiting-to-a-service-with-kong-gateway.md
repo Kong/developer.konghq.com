@@ -36,6 +36,7 @@ tools:
     - deck
 
 prereqs:
+  entities:
     services:
         - example-service
     routes:
@@ -44,7 +45,7 @@ prereqs:
 
 ## Steps
 
-1. Enable the Rate Limiting Plugin on the Service
+1. Enable the Rate Limiting plugin on a service:
 
 {% capture step %}
 {% entity_example %}

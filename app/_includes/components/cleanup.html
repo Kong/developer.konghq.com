@@ -1,0 +1,9 @@
+<ol class="list-none mx-0">
+  {% for step in cleanup.inline %}
+    <li>
+      {% capture inline_template %}{% include cleanup/inline.md step=step %}{% endcapture %}
+      {{ inline_template | markdownify }}
+    </li>
+  {% endfor %}
+  </ul>
+</ol>

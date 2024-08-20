@@ -20,16 +20,20 @@ tools:
     - deck
 
 prereqs:
+  entities:
     services:
         - example-service
     routes:
         - example-route
+tldr:
+    q: How do I secure a service with key authentication?
+    a: Enable the Key Authentication plugin on the service. This plugin will require all requests made to this service to have a valid API key.
 
 ---
 
 ## Steps
 
-1. Enable the Key Authentication plugin on the Service
+1. Enable the Key Authentication plugin on the service:
 
 {% capture step %}
 {% entity_example %}
@@ -62,7 +66,7 @@ data:
 
 1. Validate
 
-   After configuring the Key Authentication plugin, you can verify that it was configured correctly and is working, by sending requests with and without the api key you created for your consumer.
+   After configuring the Key Authentication plugin, you can verify that it was configured correctly and is working, by sending requests with and without the API key you created for your consumer.
 
    This request should be successful:
    ```bash
