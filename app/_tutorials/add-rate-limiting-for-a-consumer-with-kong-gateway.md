@@ -115,4 +115,4 @@ variables:
     for _ in {1..6}; do curl -i http://localhost:8000/example_route -H 'apikey:example_key'; echo; done
     ```
 
-    You should get a `429` error with the message `API rate limit exceeded`.
+    This command sends six consecutive requests to the route. On the last one you should get a `429` error with the message `API rate limit exceeded`.
