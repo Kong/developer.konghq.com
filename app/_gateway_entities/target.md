@@ -17,6 +17,11 @@ tools:
     - deck
     - ui
     - terraform
+
+schema:
+    api: gateway/admin-ee
+    path: /schemas/Target
+
 ---
 
 ## What is a target?

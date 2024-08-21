@@ -13,6 +13,10 @@ tools:
 
 description: An upstream refers to the service applications sitting behind Kong Gateway, to which client requests are forwarded.
 
+schema:
+    api: gateway/admin-ee
+    path: /schemas/Upstream
+
 ---
 
 ## What is an upstream?
