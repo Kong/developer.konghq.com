@@ -5,11 +5,12 @@ module Jekyll
     def render(context)
       @context = context
       @page = context.environments.first['page']
+      site = context.registers[:site]
 
       tools   = @page.fetch('tools', {})
       prereqs = @page.fetch('prereqs', {})
 
-      prereqs_drop = Drops::Prereqs.new(prereqs:, tools:)
+      prereqs_drop = Drops::Prereqs.new(prereqs:, tools:, site:)
 
       if prereqs_drop.any?
         context.stack do
