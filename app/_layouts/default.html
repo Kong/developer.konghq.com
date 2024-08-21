@@ -11,6 +11,10 @@
 
     {% vite_client_tag %}
     {% vite_javascript_tag application %}
+
+    {% if layout.entity_schema %}
+      {% vite_javascript_tag entity_schema %}
+    {% endif %}
   </head>
 
   <body class="bg-primary leading-6">

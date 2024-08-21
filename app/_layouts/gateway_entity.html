@@ -1,5 +1,6 @@
 ---
 layout: with_aside
+entity_schema: true
 ---
 
 {% contentfor index_link %}
@@ -16,8 +17,17 @@ layout: with_aside
 {% include sections/setup_entity.html %}
 {% endifhascontent setup_entity %}
 
+
 {% if page.faqs %}
 {% include sections/faq.html %}
+{% endif %}
+
+
+{% if page.schema %}
+  <div id="schema" class="mt-4">
+    <h2>Schema</h2>
+    {% entity_schema %}
+  </div>
 {% endif %}
 
 {% if page.next_steps %}
