@@ -49,6 +49,11 @@ export default ({ command, mode }) => {
       RubyPlugin(),
       vue()
     ],
+    build: {
+      rollupOptions: {
+        external: ['shiki/onig.wasm']
+      }
+    },
     server: {
       proxy: {
         '^/api': {
