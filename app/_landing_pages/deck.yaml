@@ -27,16 +27,16 @@ content:
         config:
           type: h2
           text: "Install decK"
-  - row:
-    - column:
-      - type: tabs
-        config:
-          - title: OSX
-            include_content: tools/deck/install/osx
-          - title: Windows
-            include_content: tools/deck/install/windows
-          - title: Linux
-            include_content: tools/deck/install/linux
+          align: center
+      - column:
+        - type: tabs
+          config:
+            - title: OSX
+              include_content: tools/deck/install/osx
+            - title: Windows
+              include_content: tools/deck/install/windows
+            - title: Linux
+              include_content: tools/deck/install/linux
   - row:
     - column:
       - type: header
