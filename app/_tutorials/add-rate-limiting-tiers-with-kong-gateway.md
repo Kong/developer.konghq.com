@@ -56,6 +56,11 @@ faqs:
 
 tools:
     - deck
+
+cleanup:
+  inline:
+    - title: Destroy the Kong Gateway container
+      include_content: cleanup/products/gateway
 ---
 
 ## Steps
@@ -118,45 +123,44 @@ tools:
    deck gateway sync deck_files
    ```
 
-1. Enable the Rate Limiting and Rate Limiting Advanced plugins for each tier by replacing the `consumer_group` config in your `kong.yaml` file with the following:
+1. Enable the Rate Limiting Advanced plugins for each tier:
 
    ```yaml
-   consumer_groups:
-   - name: Free
-     plugins:
-     - name: rate-limiting-advanced
-       config:
-         limit: 
-         - 3
-         window_size: 
-         - 30
-         window_type: fixed
-         retry_after_jitter_max: 0
-         namespace: free
-   - name: Basic
-     plugins:
-     - name: rate-limiting-advanced
-       config:
-         limit: 
-         - 5
-         window_size: 
-         - 30
-         window_type: sliding
-         retry_after_jitter_max: 0
-         namespace: basic
-   - name: Premium
-     plugins:
-     - name: rate-limiting-advanced
-       config:
-         limit: 
-         - 500
-         window_size: 
-         - 30
-         window_type: sliding
-         retry_after_jitter_max: 0
-         namespace: premium
+   plugins:
+   - name: rate-limiting-advanced
+     consumer_group: Free
+     config:
+       limit: 
+       - 3
+       window_size: 
+       - 30
+       window_type: fixed
+       retry_after_jitter_max: 0
+       namespace: free
+   - name: rate-limiting-advanced
+     consumer_group: Basic
+     config:
+       limit: 
+       - 5
+       window_size: 
+       - 30
+       window_type: sliding
+       retry_after_jitter_max: 0
+       namespace: basic
+   - name: rate-limiting-advanced
+     consumer_group: Premium
+     config:
+       limit: 
+       - 500
+       window_size: 
+       - 30
+       window_type: sliding
+       retry_after_jitter_max: 0
+       namespace: premium
    ```
    
+   Append this to your `kong.yaml` file.
+
    This configures the different tiers like the following:
    * **Free:** Allows six requests per second. This configuration sets the rate limit to three requests (`config.limit`) for every 30 seconds (`config.window_size`).
    * **Basic:** Allows 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
@@ -217,13 +221,5 @@ Each of these tests sends a series of HTTP requests (for example, six for Free T
    ```
 
    For the initial requests (up to the configured limit, which is 500 requests in 30 seconds), you should receive a `200 OK` status code. After exceeding the limit, you should receive a `429 Too Many Requests` status code.
-
-## Cleanup
-
-If you used the Kong Gateway quickstart from the prerequistes, destroy the Kong Gateway container:
-
-```sh
-curl -Ls https://get.konghq.com/quickstart | bash -s -- -d
-```
 
 
