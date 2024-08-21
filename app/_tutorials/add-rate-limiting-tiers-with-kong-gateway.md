@@ -26,14 +26,13 @@ prereqs:
         - example-service
     routes:
         - example-route
-    plugins:
-        - key-auth
 
 min_version:
   gateway: 3.4.x
 
 plugins: 
   - rate-limiting-advanced
+  - key-auth
 
 entites:
   - consumer
@@ -64,6 +63,22 @@ cleanup:
 ---
 
 ## Steps
+
+1. Add the following content to `kong.yaml` to enable the Key Authentication plugin. You need [authentication](/authentication/) to identify the consumer and apply rate limiting.
+
+{% capture plugin %}
+{% entity_example %}
+type: plugin
+data:
+  name: key-auth
+  config:
+    key_names:
+    - apikey
+targets:
+  - global
+{% endentity_example %}
+{% endcapture %}
+{{ plugin | indent: 3 }}
 
 1. Create the Free, Basic, and Premium tier consumer groups:
 
@@ -159,7 +174,7 @@ cleanup:
        namespace: premium
    ```
    
-   Append this to your `kong.yaml` file.
+   Append this to the existing `plugin` configuration in your `kong.yaml` file.
 
    This configures the different tiers like the following:
    * **Free:** Allows six requests per second. This configuration sets the rate limit to three requests (`config.limit`) for every 30 seconds (`config.window_size`).
