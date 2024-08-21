@@ -27,6 +27,10 @@ tools:
     - kic
     - terraform
 
+schema:
+    api: gateway/admin-ee
+    path: /schemas/Plugin
+
 ---
 
 ## What is a plugin?

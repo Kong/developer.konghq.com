@@ -19,6 +19,11 @@ tools:
     - deck
     - ui
     - terraform
+
+schema:
+    api: gateway/admin-ee
+    path: /schemas/Service
+
 ---
 
 ## What is a service?

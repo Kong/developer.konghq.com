@@ -21,6 +21,11 @@ tools:
     - deck
     - ui
     - terraform
+
+schema:
+    api: gateway/admin-ee
+    path: /schemas/Route
+
 ---
 
 ## What is a route?
