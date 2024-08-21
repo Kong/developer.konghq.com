@@ -18,6 +18,7 @@ min_version:
 
 plugins:
   - rate-limiting
+  - key-auth
 
 entities: 
   - service
