@@ -17,6 +17,8 @@ module Jekyll
               'service'        => "#{BASE_URL}/services/"
             }.freeze
 
+            attr_reader :entity_type
+
             def initialize(data:, target:, entity_type:, variables:)
               @data        = data
               @target      = target

@@ -21,7 +21,11 @@ module Jekyll
             end
 
             def data
-              Jekyll::Utils::HashToYAML.new(
+              @data
+            end
+
+            def config
+              @config ||= Jekyll::Utils::HashToYAML.new(
                 { entity => [ @data ] }
               ).convert
             end
