@@ -90,6 +90,7 @@ entities:
       config:
         second: 5
         hour: 1000
+append_to_existing_section: true
 {% endentity_examples %}
 {% endcapture %}
 {{ plugin | indent: 3 }}

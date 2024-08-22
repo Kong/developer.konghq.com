@@ -180,12 +180,11 @@ entities:
        window_type: sliding
        retry_after_jitter_max: 0
        namespace: premium
+append_to_existing_section: true
 {% endentity_examples %}
 {% endcapture %}
 {{ groups | indent: 3 }}
    
-   Append this to the existing `plugin` configuration in your `kong.yaml` file.
-
    This configures the different tiers like the following:
    * **Free:** Allows six requests per second. This configuration sets the rate limit to three requests (`config.limit`) for every 30 seconds (`config.window_size`).
    * **Basic:** Allows 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
