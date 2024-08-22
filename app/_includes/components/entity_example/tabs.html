@@ -4,11 +4,11 @@
 {% navtabs %}
 {% for formatted_example in entity_example.formatted_examples %}
 {% navtab {{ formatted_example.format.to_option }} slug={{ formatted_example.format.value }} %}
-  {% include {{ formatted_example.template_file }} presenter=formatted_example.presenter example_index=include.example_index content_type=include.content_type %}
+  {% include {{ formatted_example.template_file }} presenter=formatted_example.presenter %}
 {% endnavtab %}
 {% endfor %}
 {% endnavtabs %}
 {% else %}
   {% assign formatted_example = entity_example.formatted_examples | first %}
-  {% include {{ formatted_example.template_file }} presenter=formatted_example.presenter example_index=include.example_index content_type=include.content_type %}
+  {% include {{ formatted_example.template_file }} presenter=formatted_example.presenter %}
 {% endif %}
