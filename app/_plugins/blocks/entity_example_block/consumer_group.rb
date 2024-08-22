@@ -3,10 +3,8 @@
 require_relative './base'
 
 module Jekyll
-  module EntityExamples
-    module Format
-      class Deck < Base
-      end
+  module EntityExampleBlock
+    class ConsumerGroup < Base
     end
   end
 end

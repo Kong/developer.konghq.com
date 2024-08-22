@@ -3,9 +3,9 @@
 require_relative './base'
 
 module Jekyll
-  module EntityExamples
-    module Target
-      class Global < Base
+  module EntityExampleBlock
+    module Format
+      class KIC < Base
       end
     end
   end

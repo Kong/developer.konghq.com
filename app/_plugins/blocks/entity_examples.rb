@@ -3,7 +3,7 @@
 require 'yaml'
 
 module Jekyll
-  class EntityExample < Liquid::Block
+  class EntityExamples < Liquid::Block
     def render(context) # rubocop:disable Metrics/MethodLength
       @context = context
       @site = context.registers[:site]
@@ -12,27 +12,28 @@ module Jekyll
 
       contents = super
 
-      example = YAML.load(contents)
-      example = example.merge('formats' => @page['tools']) unless example['formats']
+      config = YAML.load(contents)
+      config = config.merge('formats' => @page['tools']) unless config['formats']
 
-      unless example['formats']
-        raise ArgumentError, "Missing key `tools` in metadata, or `formats` in entity_example block on page #{@page['path']}"
+      unless config['formats']
+        raise ArgumentError, "Missing key `tools` in metadata, or `formats` in entity_examples block on page #{@page['path']}"
+      end
+      unless config['formats'] == ['deck']
+        raise ArgumentError, "entity_examples only supports deck, on page #{@page['path']}"
       end
 
+      entity_examples_drop = Drops::EntityExamples.new(config:)
 
-      entity_example = EntityExampleBlock::Base.make_for(example: example)
-      entity_example_drop = entity_example.to_drop
-
-      template = File.read(entity_example_drop.template)
+      template = File.read(entity_examples_drop.template)
 
       context.stack do
-        context['entity_example'] = entity_example_drop
+        context['entity_examples'] = entity_examples_drop
         context['example_index'] = example_index(@page, environment)
         Liquid::Template.parse(template).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING
-      On `#{@page['path']}`, the following {% entity_example %} block contains a malformed yaml:
+      On `#{@page['path']}`, the following {% entity_examples %} block contains a malformed yaml:
       #{contents.strip.split("\n").each_with_index.map { |l, i| "#{i}: #{l}" }.join("\n")}
       #{e.message}
       STRING
@@ -49,4 +50,4 @@ module Jekyll
   end
 end
 
-Liquid::Template.register_tag('entity_example', Jekyll::EntityExample)
+Liquid::Template.register_tag('entity_examples', Jekyll::EntityExamples)

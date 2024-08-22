@@ -3,7 +3,7 @@
 require_relative './base'
 
 module Jekyll
-  module EntityExamples
+  module EntityExampleBlock
     class Plugin < Base
       def targets
         @targets ||= @example.fetch('targets').sort.map do |t|

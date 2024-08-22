@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jekyll
-  module EntityExamples
+  module EntityExampleBlock
     module Format
       class Base
         MAPPINGS = {
@@ -18,7 +18,7 @@ module Jekyll
 
           raise ArgumentError, "Unsupported `format`: #{format}. Available formats: #{MAPPINGS.keys.join(', ')}" unless klass
 
-          Object.const_get("Jekyll::EntityExamples::Format::#{klass}").new(format:)
+          Object.const_get("Jekyll::EntityExampleBlock::Format::#{klass}").new(format:)
         end
 
         def initialize(format:)

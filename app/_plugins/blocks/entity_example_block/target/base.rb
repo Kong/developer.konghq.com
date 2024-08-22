@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jekyll
-  module EntityExamples
+  module EntityExampleBlock
     module Target
       class Base
         MAPPINGS = {
@@ -17,7 +17,7 @@ module Jekyll
 
           raise ArgumentError, "Unsupported `target`: #{target}. Available targets: #{MAPPINGS.keys.join(', ')}" unless klass
 
-          Object.const_get("Jekyll::EntityExamples::Target::#{klass}").new(target:)
+          Object.const_get("Jekyll::EntityExampleBlock::Target::#{klass}").new(target:)
         end
 
         def initialize(target:)

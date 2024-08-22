@@ -52,24 +52,19 @@ faqs:
 1. Enable the Rate Limiting Advanced plugin on a service:
 
 {% capture step %}
-{% entity_example %}
-type: plugin
-data:
-  name: rate-limiting-advanced
-  config:
-    limit:
-    - 10
-    - 100
-    window_size:
-    - 60
-    - 3600
-tools:
-  - deck
-targets:
-  - service
-variables: 
-    serviceName|Id: example_service
-{% endentity_example %}
+{% entity_examples %}
+entities:
+  plugins:
+    - name: rate-limiting-advanced
+      service: example-service
+      config:
+        limit:
+        - 10
+        - 100
+        window_size:
+        - 60
+        - 3600
+{% endentity_examples %}
 {% endcapture %}
 {{ step | indent: 3 }}
 

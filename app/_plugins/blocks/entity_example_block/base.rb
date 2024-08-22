@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jekyll
-  module EntityExamples
+  module EntityExampleBlock
     class Base
       MAPPINGS = {
         'consumer'       => 'Consumer',
@@ -18,7 +18,7 @@ module Jekyll
 
         raise ArgumentError, "Unsupported entity example type: #{example['type']}. Available types: #{MAPPINGS.keys.join(', ')}" unless klass
 
-        Object.const_get("Jekyll::EntityExamples::#{klass}").new(example:)
+        Object.const_get("Jekyll::EntityExampleBlock::#{klass}").new(example:)
       end
 
       def initialize(example:)
@@ -41,7 +41,7 @@ module Jekyll
 
       def formats
         @formats ||= @example.fetch('formats').sort.map do |f|
-          Jekyll::EntityExamples::Format::Base.make_for(format: f)
+          Jekyll::EntityExampleBlock::Format::Base.make_for(format: f)
         end
       end
 
