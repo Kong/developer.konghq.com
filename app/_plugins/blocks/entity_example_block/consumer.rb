@@ -3,8 +3,8 @@
 require_relative './base'
 
 module Jekyll
-  module EntityExamples
-    class Route < Base
+  module EntityExampleBlock
+    class Consumer < Base
     end
   end
 end

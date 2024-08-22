@@ -19,15 +19,13 @@ module Jekyll
         raise ArgumentError, "Missing key `tools` in metadata, or `formats` in entity_example block on page #{@page['path']}"
       end
 
-
-      entity_example = EntityExamples::Base.make_for(example: example)
+      entity_example = EntityExampleBlock::Base.make_for(example: example)
       entity_example_drop = entity_example.to_drop
 
       template = File.read(entity_example_drop.template)
 
       context.stack do
         context['entity_example'] = entity_example_drop
-        context['example_index'] = example_index(@page, environment)
         Liquid::Template.parse(template).render(context)
       end
     rescue Psych::SyntaxError => e
@@ -37,14 +35,6 @@ module Jekyll
       #{e.message}
       STRING
       raise ArgumentError.new(message)
-    end
-
-    def example_index(page, environment)
-      if page['content_type'] == 'tutorial'
-        environment[page['id']] ||= {}
-        environment[page['id']]['examples'] ||= 0
-        environment[page['id']]['examples'] += 1
-      end
     end
   end
 end

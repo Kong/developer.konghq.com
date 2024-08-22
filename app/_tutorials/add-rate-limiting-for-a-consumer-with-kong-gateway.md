@@ -55,47 +55,43 @@ cleanup:
 1. Add the following content to `kong.yaml` to enable the Key Authentication plugin. You need [authentication](/authentication/) to identify the consumer and apply rate limiting.
 
 {% capture plugin %}
-{% entity_example %}
-type: plugin
-data:
-  name: key-auth
-  config:
-    key_names:
-    - apikey
-targets:
-  - global
-{% endentity_example %}
+{% entity_examples %}
+entities:
+  plugins:
+    - name: key-auth
+      config:
+        key_names:
+          - apikey
+{% endentity_examples %}
 {% endcapture %}
 {{ plugin | indent: 3 }}
 
 1. Create a [consumer](/gateway/entities/consumer/) with a key.
 
 {% capture consumer %}
-{% entity_example %}
-type: consumer
-data:
-  username: jsmith
-  keyauth_credentials:
-      - key: example-key
-{% endentity_example %}
+{% entity_examples %}
+entities:
+  consumers:
+    - username: jsmith
+      keyauth_credentials:
+        - key: example-key
+{% endentity_examples %}
 {% endcapture %}
 {{ consumer | indent: 3 }}
 
 1. Enable the [Rate Limiting plugin](/plugins/rate-limiting/) for the consumer. In this example, the limit is 5 requests per second and 1000 requests per hour.
 
 {% capture plugin %}
-{% entity_example %}
-type: plugin
-data:
-  name: rate-limiting
-  config:
-    second: 5
-    hour: 1000
-targets:
-  - consumer 
-variables:
-    consumerName|Id: jsmith
-{% endentity_example %}
+{% entity_examples %}
+entities:
+  plugins:
+    - name: rate-limiting
+      consumer: jsmith
+      config:
+        second: 5
+        hour: 1000
+append_to_existing_section: true
+{% endentity_examples %}
 {% endcapture %}
 {{ plugin | indent: 3 }}
 
@@ -113,7 +109,7 @@ variables:
 
     You can run the following command to test the rate limiting as the consumer:
     ```bash
-    for _ in {1..6}; do curl -i http://localhost:8000/example_route -H 'apikey:example_key'; echo; done
+    for _ in {1..6}; do curl -i http://localhost:8000/example-route -H 'apikey:example_key'; echo; done
     ```
 
     This command sends six consecutive requests to the route. On the last one you should get a `429` error with the message `API rate limit exceeded`.

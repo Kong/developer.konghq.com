@@ -22,7 +22,7 @@ module Jekyll
           @formatted_examples ||= formats.map do |f|
             Drops::EntityExample::FormattedExample.new(
               format: f,
-              target: Jekyll::EntityExamples::Target::Base.make_for(target: @example.type).to_drop,
+              target: Jekyll::EntityExampleBlock::Target::Base.make_for(target: @example.type).to_drop,
               data: @example.data,
               presenter_class: 'Base',
               variables: @example.variables,

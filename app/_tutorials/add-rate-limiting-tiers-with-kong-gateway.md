@@ -67,28 +67,30 @@ cleanup:
 1. Add the following content to `kong.yaml` to enable the Key Authentication plugin. You need [authentication](/authentication/) to identify the consumer and apply rate limiting.
 
 {% capture plugin %}
-{% entity_example %}
-type: plugin
-data:
-  name: key-auth
-  config:
-    key_names:
-    - apikey
-targets:
-  - global
-{% endentity_example %}
+{% entity_examples %}
+entities:
+  plugins:
+    - name: key-auth
+      config:
+        key_names:
+          - apikey
+{% endentity_examples %}
 {% endcapture %}
 {{ plugin | indent: 3 }}
 
 1. Create the Free, Basic, and Premium tier consumer groups:
 
-    ```yaml
-    _format_version: '3.0'
-    consumer_groups:
+{% capture groups %}
+{% entity_examples %}
+entities:
+  consumer_groups:
     - name: Free
     - name: Basic
     - name: Premium
-    ```
+{% endentity_examples %}
+{% endcapture %}
+{{ groups | indent: 3 }}
+
    Add this configuration to a `kong.yaml` file in a `deck_files` directory.
 
 1. Synchronize your configuration
@@ -105,24 +107,28 @@ targets:
 
 1. Create three consumers, one for each tier:
   
-   ```yaml
-   consumers:
-   - username: Amal
-     groups:
-     - name: Free
-     keyauth_credentials:
-     - key: amal
-   - username: Dana
-     groups:
-     - name: Basic
-     keyauth_credentials:
-     - key: dana
-   - username: Mahan
-     groups:
-     - name: Premium
-     keyauth_credentials:
-     - key: mahan
-   ```
+{% capture consumers %}
+{% entity_examples %}
+entities:
+  consumers:
+    - username: Amal
+      groups:
+        - name: Free
+      keyauth_credentials:
+        - key: amal
+    - username: Dana
+      groups:
+        - name: Basic
+      keyauth_credentials:
+        - key: dana
+    - username: Mahan
+      groups:
+        - name: Premium
+      keyauth_credentials:
+        - key: mahan
+{% endentity_examples %}
+{% endcapture %}
+{{ consumers | indent: 3 }}
 
    Append this to your `kong.yaml` file. By adding key auth credentials here you can test later that rate limiting was correctly configured for the different tiers.
 
@@ -140,7 +146,9 @@ targets:
 
 1. Enable the Rate Limiting Advanced plugins for each tier:
 
-   ```yaml
+{% capture groups %}
+{% entity_examples %}
+entities:
    plugins:
    - name: rate-limiting-advanced
      consumer_group: Free
@@ -172,10 +180,11 @@ targets:
        window_type: sliding
        retry_after_jitter_max: 0
        namespace: premium
-   ```
+append_to_existing_section: true
+{% endentity_examples %}
+{% endcapture %}
+{{ groups | indent: 3 }}
    
-   Append this to the existing `plugin` configuration in your `kong.yaml` file.
-
    This configures the different tiers like the following:
    * **Free:** Allows six requests per second. This configuration sets the rate limit to three requests (`config.limit`) for every 30 seconds (`config.window_size`).
    * **Basic:** Allows 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).

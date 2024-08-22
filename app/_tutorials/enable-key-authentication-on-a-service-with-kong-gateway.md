@@ -36,31 +36,28 @@ tldr:
 1. Enable the Key Authentication plugin on the service:
 
 {% capture step %}
-{% entity_example %}
-type: plugin
-data:
-  name: key-auth
-  config:
-    key_names:
-    - apikey
-targets:
-- service
-variables: 
-    serviceName|Id: example-service
-{% endentity_example %}
+{% entity_examples %}
+entities:
+  plugins:
+    - name: key-auth
+      service: example-service
+      config:
+        key_names:
+        - apikey
+{% endentity_examples %}
 {% endcapture %}
 {{ step | indent: 3 }}
 
 1. Create a consumer
 
 {% capture step %}
-{% entity_example %}
-type: consumer
-data:
-  username: alex
-  keyauth_credentials:
-  - key: hello_world
-{% endentity_example %}
+{% entity_examples %}
+entities:
+  consumers:
+    - username: alex
+      keyauth_credentials:
+        - key: hello_world
+{% endentity_examples %}
 {% endcapture %}
 {{ step | indent: 3 }}
 
@@ -71,7 +68,7 @@ data:
    This request should be successful:
    ```bash
    curl --request GET \
-    --url http://localhost:8000/example_route/anything \
+    --url http://localhost:8000/example-route/anything \
     --header 'apikey: hello_world'
    ```
 
@@ -79,7 +76,7 @@ data:
 
    ```bash
    curl --request GET \
-    --url http://localhost:8000/example_route/anything \
+    --url http://localhost:8000/example-route/anything \
     --header 'apikey: another_key'
    ```
 

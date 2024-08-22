@@ -3,10 +3,8 @@
 require_relative './base'
 
 module Jekyll
-  module EntityExamples
-    module Format
-      class KIC < Base
-      end
+  module EntityExampleBlock
+    class Route < Base
     end
   end
 end

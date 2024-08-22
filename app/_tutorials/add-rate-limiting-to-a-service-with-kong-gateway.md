@@ -48,19 +48,16 @@ prereqs:
 1. Enable the Rate Limiting plugin on a service:
 
 {% capture step %}
-{% entity_example %}
-type: plugin
-data:
-  name: rate-limiting
-  config:
-    second: 5
-    hour: 1000
-    policy: local
-targets:
-  - service
-variables: 
-    serviceName|Id: example-service
-{% endentity_example %}
+{% entity_examples %}
+entities:
+  plugins:
+    - name: rate-limiting
+      service: example-service
+      config:
+        second: 5
+        hour: 1000
+        policy: local
+{% endentity_examples %}
 {% endcapture %}
 {{ step | indent: 3 }}
 

@@ -3,7 +3,7 @@
 require_relative './base'
 
 module Jekyll
-  module EntityExamples
+  module EntityExampleBlock
     module Target
       class Consumer < Base
       end

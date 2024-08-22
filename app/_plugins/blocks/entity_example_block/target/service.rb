@@ -3,9 +3,9 @@
 require_relative './base'
 
 module Jekyll
-  module EntityExamples
-    module Format
-      class Terraform < Base
+  module EntityExampleBlock
+    module Target
+      class Service < Base
       end
     end
   end
