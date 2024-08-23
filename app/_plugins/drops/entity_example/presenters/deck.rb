@@ -18,8 +18,12 @@ module Jekyll
             end
 
             def data
-              @data ||= Jekyll::Utils::HashToYAML.new(
-                { entity => [ @example_drop.data ] }
+              @data ||= @example_drop.data
+            end
+
+            def config
+              @config ||= Jekyll::Utils::HashToYAML.new(
+                { entity => [ data ] }
               ).convert
             end
           end
@@ -33,7 +37,7 @@ module Jekyll
               'service'        => 'serviceName|Id'
             }.freeze
 
-            def data
+            def config
               plugin = { 'name' => @example_drop.data.fetch('name') }
               plugin.merge!(target.key => target.value) if target.key != 'global'
               plugin.merge!('config' => @example_drop.data.fetch('config'))
