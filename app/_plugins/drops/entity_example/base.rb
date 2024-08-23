@@ -1,13 +1,22 @@
 # frozen_string_literal: true
 
 require 'securerandom'
+require 'forwardable'
 
 module Jekyll
   module Drops
     module EntityExample
       class Base < Liquid::Drop
+        extend Forwardable
+
+        def_delegators :@example, :data, :variables
+
         def initialize(example:)
           @example = example
+        end
+
+        def entity_type
+          @entity_type ||= @example.type
         end
 
         def template
@@ -22,11 +31,8 @@ module Jekyll
           @formatted_examples ||= formats.map do |f|
             Drops::EntityExample::FormattedExample.new(
               format: f,
-              target: Jekyll::EntityExampleBlock::Target::Base.make_for(target: @example.type).to_drop,
-              data: @example.data,
               presenter_class: 'Base',
-              variables: @example.variables,
-              entity_type: @example.type
+              example_drop: self
             )
           end
         end

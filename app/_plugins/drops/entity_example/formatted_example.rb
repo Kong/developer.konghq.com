@@ -4,31 +4,24 @@ module Jekyll
   module Drops
     module EntityExample
       class FormattedExample < Liquid::Drop
-        def initialize(format:, data:, target:, presenter_class:, entity_type:, variables:)
+        def initialize(format:, presenter_class:, example_drop:)
           @format          = format
-          @data            = data
-          @target          = target
           @presenter_class = presenter_class
-          @entity_type     = entity_type
-          @variables       = variables
+          @example_drop    = example_drop
         end
 
         def presenter
           @presenter ||= Object.const_get(
             "Jekyll::Drops::EntityExample::Presenters::#{@format.class.name.split('::').last}::#{@presenter_class}"
-          ).new(target: @target.value, data: @data, entity_type: @entity_type, variables: @variables)
+          ).new(example_drop: @example_drop)
         end
 
         def format
           @format
         end
 
-        def target
-          @target
-        end
-
         def template_file
-          @template_file ||= @format.template_file(@entity_type)
+          @template_file ||= @format.template_file(@example_drop.entity_type)
         end
       end
     end

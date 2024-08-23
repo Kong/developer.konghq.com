@@ -6,24 +6,21 @@ module Jekyll
       module Presenters
         module Terraform
           class Base < Liquid::Drop
-            def initialize(data:, target:, entity_type:, variables:)
-              @data        = data
-              @target      = target
-              @entity_type = entity_type
-              @variables   = variables
+            def initialize(example_drop:)
+              @example_drop = example_drop
             end
 
             def data
-              @data
+              @data ||= @example_drop.data
             end
 
             def target
-              return nil if @target == "global"
-              @target
+              return nil if @example_drop.target.key == "global"
+              @target.target.key
             end
 
             def entity_type
-              @entity_type
+              @entity_type ||= @example_drop.entity_type
             end
 
             def provider
@@ -35,7 +32,7 @@ module Jekyll
             end
 
             def render
-              tfData = @data.clone
+              tfData = data.clone
               tfData.delete("name")
               output(
                 tfData,

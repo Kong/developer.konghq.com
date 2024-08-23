@@ -6,15 +6,12 @@ module Jekyll
       module Presenters
         module KIC
           class Base < Liquid::Drop
-            def initialize(data:, target:, entity_type:, variables:)
-              @data        = data
-              @target      = target
-              @entity_type = entity_type
-              @variables   = variables
+            def initialize(example_drop:)
+              @example_drop = example_drop
             end
 
             def data
-              @data
+              @data ||= @example_drop.data
             end
           end
 

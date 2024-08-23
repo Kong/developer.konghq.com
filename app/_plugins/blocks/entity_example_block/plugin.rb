@@ -1,22 +1,13 @@
 # frozen_string_literal: true
 
 require_relative './base'
+require_relative './target'
 
 module Jekyll
   module EntityExampleBlock
     class Plugin < Base
-      def targets
-        @targets ||= @example.fetch('targets').sort.map do |t|
-          Jekyll::EntityExamples::Target::Base.make_for(target: t)
-        end
-      end
-
-      def validate!
-        super
-
-        raise ArgumentError, "Missing `targets` for entity_type `plugin`. Available targets: #{Target::Base::MAPPINGS.keys.join(', ')}." unless @example['targets']
-
-        targets.map(&:validate!)
+      def target
+        @target ||= Target.new(data: @data)
       end
     end
   end

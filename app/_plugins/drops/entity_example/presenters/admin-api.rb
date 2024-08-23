@@ -17,21 +17,20 @@ module Jekyll
               'service'        => "#{BASE_URL}/services/"
             }.freeze
 
-            attr_reader :entity_type
-
-            def initialize(target:, data:, entity_type:, variables:)
-              @target      = target
-              @data        = data
-              @entity_type = entity_type
-              @variables   = variables
+            def initialize(example_drop:)
+              @example_drop = example_drop
             end
 
             def url
-              @url ||= self.class::URLS.fetch(@entity_type)
+              @url ||= self.class::URLS.fetch(entity_type)
             end
 
             def data
-              @data
+              @data ||= @example_drop.data
+            end
+
+            def entity_type
+              @entity_type ||= @example_drop.entity_type
             end
           end
 
@@ -46,8 +45,8 @@ module Jekyll
 
             def url
               @url ||= Utils::VariableReplacer::URL.run(
-                string: self.class::URLS.fetch(@target),
-                variables: @variables
+                string: self.class::URLS.fetch(@example_drop.target.key),
+                variables: @example_drop.variables
               )
             end
           end

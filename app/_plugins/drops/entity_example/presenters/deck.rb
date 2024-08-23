@@ -9,24 +9,21 @@ module Jekyll
       module Presenters
         module Deck
           class Base < Liquid::Drop
-            def initialize(target:, data:, entity_type:, variables:)
-              @target      = target
-              @data        = data
-              @entity_type = entity_type
-              @variables   = variables
+            def initialize(example_drop:)
+              @example_drop = example_drop
             end
 
             def entity
-              @entity ||= "#{@entity_type}s"
+              @entity ||= "#{@example_drop.entity_type}s"
             end
 
             def data
-              @data
+              @data ||= @example_drop.data
             end
 
             def config
               @config ||= Jekyll::Utils::HashToYAML.new(
-                { entity => [ @data ] }
+                { entity => [ data ] }
               ).convert
             end
           end
@@ -41,20 +38,15 @@ module Jekyll
             }.freeze
 
             def data
-              plugin = { 'name' => @data.fetch('name') }
-              plugin.merge!(@target => target) if @target != 'global'
-              plugin.merge!('config' => @data.fetch('config'))
+              plugin = { 'name' => @example_drop.data.fetch('name') }
+              plugin.merge!(target.key => target.value) if target.key != 'global'
+              plugin.merge!('config' => @example_drop.data.fetch('config'))
 
               Jekyll::Utils::HashToYAML.new({ 'plugins' => [plugin] }).convert
             end
 
             def target
-              return unless TARGETS.fetch(@target)
-
-              Utils::VariableReplacer::Text.run(
-                string: TARGETS.fetch(@target),
-                variables: @variables
-              )
+              @target ||= @example_drop.target
             end
           end
         end
