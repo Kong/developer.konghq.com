@@ -39,13 +39,15 @@ defaults:
       type: "tutorials"
     values:
       layout: "tutorial"
-      permalink: /:collection/:path/
+      permalink: "/:collection/:path/"
+      content_type: "tutorial"
   - scope:
       path: "_gateway_entities"
       type: "gateway_entities"
     values:
       layout: "gateway_entity"
-      permalink: /gateway/entities/:path/
+      permalink: "/gateway/entities/:path/"
+      content_type: "reference"
 
 
 

@@ -4,8 +4,6 @@ name: Plugin
 entities:
   - plugin
 
-content_type: reference
-
 description: Kong Gateway is a Lua application designed to load and execute modules, which we commonly refer to as plugins.
 
 related_resources:

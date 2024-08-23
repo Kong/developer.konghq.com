@@ -4,8 +4,6 @@ name: Consumer
 entities:
   - consumer # we could use this to pull the schema too
 
-content_type: reference
-
 description: A consumer typically refers to an entity that consumes or uses the APIs managed by Kong Gateway.
 
 related_resources:

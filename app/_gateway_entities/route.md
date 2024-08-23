@@ -4,8 +4,6 @@ name: Route
 entities:
   - route
 
-content_type: reference
-
 description: A route is a path to a resource within an upstream application.
 
 related_resources:

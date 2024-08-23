@@ -43,8 +43,6 @@ tier: enterprise
 tags:
   - rate-limiting
 
-content_type: tutorial
-
 tldr: 
   q: How do I rate limit different tiers of users, such as free vs. premium subscribers, in my API using Kong Gateway?
   a: To effectively manage API traffic for various user tiers (such as free, basic, and premium subscribers) you can create consumer groups for each tier and assign individual consumers to these groups. Then, configure the Rate Limiting Advanced plugin to apply specific rate limits based on these groups. This setup allows you to enforce customized request limits for each tier, ensuring fair usage and optimizing performance for high-value users.

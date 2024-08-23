@@ -26,8 +26,6 @@ tier: enterprise
 tags:
   - rate-limiting
 
-content_type: tutorial
-
 prereqs:
   entities:
       services:

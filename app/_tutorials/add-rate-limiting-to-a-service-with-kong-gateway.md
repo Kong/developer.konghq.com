@@ -26,8 +26,6 @@ entities:
 tags:
     - rate-limiting
 
-content_type: tutorial
-
 tldr:
     q: How do I rate limit a service with Kong Gateway?
     a: Install the Rate Limiting plugin and enable it on the service.

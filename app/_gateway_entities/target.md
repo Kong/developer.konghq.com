@@ -4,8 +4,6 @@ name: Target
 entities:
   - target
 
-content_type: reference
-
 description:
 
 related_resources:

@@ -4,8 +4,6 @@ name: Upstream
 entities:
   - upstream
 
-content_type: reference
-
 tools:
     - admin-api
     - kic

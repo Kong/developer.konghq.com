@@ -14,8 +14,6 @@ tags:
   - authentication
   - key-auth
 
-content_type: tutorial
-
 tools:
     - deck
 

@@ -4,8 +4,6 @@ name: Workspace
 entities:
   - workspace 
 
-content_type: reference
-
 tools:
     - admin-api
     - kic

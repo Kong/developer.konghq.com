@@ -4,8 +4,6 @@ name: Consumer Group
 entities:
   - consumer_group
 
-content_type: reference
-
 tools:
     - admin-api
     - konnect-api
