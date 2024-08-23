@@ -22,6 +22,13 @@ related_resources:
   - text: Konnect pricing tiers
     url: 'https://docs.konghq.com/konnect/compatibility/#plugin-compatibility'
 
+tools:
+    - admin-api
+    - konnect-api
+    - deck
+    - kic
+    - terraform
+
 ---
 
 ## What is a plugin?

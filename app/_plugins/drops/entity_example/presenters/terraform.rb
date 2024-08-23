@@ -16,7 +16,7 @@ module Jekyll
 
             def target
               return nil if @example_drop.target.key == "global"
-              @target.target.key
+              @example_drop.target.key
             end
 
             def entity_type

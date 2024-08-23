@@ -18,12 +18,8 @@ module Jekyll
             end
 
             def data
-              @data ||= @example_drop.data
-            end
-
-            def config
-              @config ||= Jekyll::Utils::HashToYAML.new(
-                { entity => [ data ] }
+              @data ||= Jekyll::Utils::HashToYAML.new(
+                { entity => [ @example_drop.data ] }
               ).convert
             end
           end

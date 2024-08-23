@@ -31,7 +31,7 @@ module Jekyll
           @formatted_examples ||= formats.map do |f|
             Drops::EntityExample::FormattedExample.new(
               format: f,
-              presenter_class: 'Base',
+              presenter_class: self.class.name.split('::').last,
               example_drop: self
             )
           end

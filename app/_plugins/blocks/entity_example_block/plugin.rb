@@ -7,7 +7,7 @@ module Jekyll
   module EntityExampleBlock
     class Plugin < Base
       def target
-        @target ||= PluginTarget.new(data: @data)
+        @target ||= PluginTarget.new(data: data)
       end
     end
   end

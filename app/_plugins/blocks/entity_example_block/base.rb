@@ -3,25 +3,14 @@
 module Jekyll
   module EntityExampleBlock
     class Base
-      MAPPINGS = {
-        'consumer'       => 'Consumer',
-        'consumer_group' => 'ConsumerGroup',
-        'plugin'         => 'Plugin',
-        'service'        => 'Service',
-        'route'          => 'Route',
-        'target'         => 'Target',
-        'upstream'       => 'Upstream',
-        'workspace'      => 'Workspace'
-      }
-
       def self.make_for(example:)
-        raise ArgumentError, "Missing `type` for entity_example. Available types: #{MAPPINGS.keys.join(', ')}" unless example['type']
+        raise ArgumentError, "Missing `type` for entity_example.}" unless example['type']
 
-        klass = MAPPINGS[example['type']]
-
-        raise ArgumentError, "Unsupported entity example type: #{example['type']}. Available types: #{MAPPINGS.keys.join(', ')}" unless klass
-
-        Object.const_get("Jekyll::EntityExampleBlock::#{klass}").new(example:)
+        if example['type'] == 'plugin'
+          Plugin.new(example:)
+        else
+          new(example:)
+        end
       end
 
       def initialize(example:)
