@@ -2,7 +2,7 @@
 title: Enable rate limiting for a consumer with Kong Gateway
 related_resources:
   - text: How to create rate limiting tiers with Kong Gateway
-    url:  /how-tos/add-rate-limiting-tiers-with-kong-gateway/
+    url:  /how-to/add-rate-limiting-tiers-with-kong-gateway/
   - text: Rate Limiting Advanced plugin
     url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/
 

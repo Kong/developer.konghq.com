@@ -64,7 +64,7 @@ content:
           - type: header
             config:
               type: h2
-              text: How-tos
+              text: How-to
           - type: how_to_list
             config:
               tags:
@@ -74,7 +74,7 @@ content:
               quantity: 5
           - type: cta
             config:
-              text: "View more how-tos &raquo;"
+              text: "View more &raquo;"
               url: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
               align: end
 

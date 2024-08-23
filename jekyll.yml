@@ -39,7 +39,7 @@ defaults:
       type: "how-tos"
     values:
       layout: "how-to"
-      permalink: "/:collection/:path/"
+      permalink: "/how-to/:path/"
       content_type: "how-to"
   - scope:
       path: "_gateway_entities"
