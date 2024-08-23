@@ -41,7 +41,7 @@ module Jekyll
     end
 
     def example_index(page, environment)
-      if page['content_type'] == 'tutorial'
+      if page['content_type'] == 'how-to'
         environment[page['id']] ||= {}
         environment[page['id']]['examples'] ||= 0
         environment[page['id']]['examples'] += 1

@@ -14,8 +14,8 @@ content:
           - type: header
             config:
               type: h2
-              text: Tutorials
-          - type: tutorial_list
+              text: How-tos
+          - type: how_to_list
             config:
               tags:
                 - rate-limiting

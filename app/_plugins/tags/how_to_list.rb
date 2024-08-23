@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Jekyll
-  class RenderTutorialList < Liquid::Tag
+  class RenderHowToList < Liquid::Tag
     def initialize(tag_name, param, _tokens)
       super
 
       @param = param.strip
       if @param.nil? || @param.empty?
-        raise ArgumentError, "Missing param for {% tutorial_list %}"
+        raise ArgumentError, "Missing param for {% how_to_list %}"
       end
     end
 
@@ -19,7 +19,7 @@ module Jekyll
 
       quantity = config.fetch('quantity', 10)
 
-      tutorials = @site.collections['tutorials'].docs.inject([]) do |result, t|
+      how_tos = @site.collections['how-tos'].docs.inject([]) do |result, t|
         match = (!config.key?('tags') || t.data.fetch('tags', []).intersect?(config['tags'])) &&
           (!config.key?('products') || t.data.fetch('products', []).intersect?(config['products']))
 
@@ -30,7 +30,7 @@ module Jekyll
       end
 
       context.stack do
-        context['tutorials'] = tutorials
+        context['how_tos'] = how_tos
         Liquid::Template.parse(template).render(context)
       end
     end
@@ -38,9 +38,9 @@ module Jekyll
     private
 
     def template
-      @template ||= File.read(File.expand_path('app/_includes/components/tutorial_list.html'))
+      @template ||= File.read(File.expand_path('app/_includes/components/how_to_list.html'))
     end
   end
 end
 
-Liquid::Template.register_tag('tutorial_list', Jekyll::RenderTutorialList)
+Liquid::Template.register_tag('how_to_list', Jekyll::RenderHowToList)

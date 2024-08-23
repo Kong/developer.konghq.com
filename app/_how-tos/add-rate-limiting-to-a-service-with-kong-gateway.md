@@ -2,7 +2,7 @@
 title: Enable rate limiting on a service with Kong Gateway
 related_resources:
   - text: How to create rate limiting tiers with Kong Gateway
-    url:  /tutorials/add-rate-limiting-tiers-with-kong-gateway/
+    url:  /how-tos/add-rate-limiting-tiers-with-kong-gateway/
   - text: Rate Limiting Advanced plugin
     url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/
 
