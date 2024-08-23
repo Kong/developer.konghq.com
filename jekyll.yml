@@ -30,17 +30,17 @@ plugins:
 collections:
   gateway_entities:
     output: true
-  tutorials:
+  how-tos:
     output: true
 
 defaults:
   - scope:
-      path: "_tutorials"
-      type: "tutorials"
+      path: "_how-tos"
+      type: "how-tos"
     values:
-      layout: "tutorial"
-      permalink: "/:collection/:path/"
-      content_type: "tutorial"
+      layout: "how-to"
+      permalink: "/how-to/:path/"
+      content_type: "how-to"
   - scope:
       path: "_gateway_entities"
       type: "gateway_entities"
