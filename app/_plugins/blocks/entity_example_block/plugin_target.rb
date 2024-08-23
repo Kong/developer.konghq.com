@@ -2,7 +2,7 @@
 
 module Jekyll
   module EntityExampleBlock
-    class Target < Base
+    class PluginTarget < Base
       TARGETS = [
         'consumer',
         'consumer_group',
