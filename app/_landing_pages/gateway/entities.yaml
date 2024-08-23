@@ -51,15 +51,6 @@ content:
       - type: entity_card
         config:
           entity: target
-    - column: 
-      - type: entity_card
-        config:
-          entity: sni
-    - column: 
-      - type: entity_card
-        config:
-          entity: acl
-  - row:
     - column:
       - type: entity_card
         config:
@@ -68,9 +59,3 @@ content:
       - type: entity_card
         config:
           entity: workspace
-    - column: 
-      - type: text
-        config: "&nbsp;"
-    - column: 
-      - type: text
-        config: "&nbsp;"
