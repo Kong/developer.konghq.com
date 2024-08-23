@@ -21,7 +21,8 @@ module Jekyll
 
       tutorials = @site.collections['tutorials'].docs.inject([]) do |result, t|
         match = (!config.key?('tags') || t.data.fetch('tags', []).intersect?(config['tags'])) &&
-          (!config.key?('products') || t.data.fetch('products', []).intersect?(config['products']))
+          (!config.key?('products') || t.data.fetch('products', []).intersect?(config['products'])) &&
+          (!config.key?('tools') || t.data.fetch('tools', []).intersect?(config['tools']))
 
         result << t if match
         break result if result.size == quantity
