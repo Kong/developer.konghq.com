@@ -21,3 +21,11 @@ tier: enterprise
 ## What is a consumer group?
 
 This page is a stub
+
+{% contentfor setup_entity %}
+{% entity_example %}
+type: consumer_group
+data:
+    name: my_group
+{% endentity_example %}
+{% endcontentfor %}

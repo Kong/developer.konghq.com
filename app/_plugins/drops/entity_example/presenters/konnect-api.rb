@@ -14,7 +14,9 @@ module Jekyll
               'consumer'       => "#{BASE_URL}/consumers/",
               'consumer_group' => "#{BASE_URL}/consumer_groups/",
               'route'          => "#{BASE_URL}/routes/",
-              'service'        => "#{BASE_URL}/services/"
+              'service'        => "#{BASE_URL}/services/",
+              'target'         => "#{BASE_URL}/upstreams/{upstreamId}/targets/",
+              'upstream'       => "#{BASE_URL}/upstreams/"
             }.freeze
 
             def initialize(example_drop:)

@@ -9,6 +9,9 @@ module Jekyll
         'plugin'         => 'Plugin',
         'service'        => 'Service',
         'route'          => 'Route',
+        'target'         => 'Target',
+        'upstream'       => 'Upstream',
+        'workspace'      => 'Workspace'
       }
 
       def self.make_for(example:)
