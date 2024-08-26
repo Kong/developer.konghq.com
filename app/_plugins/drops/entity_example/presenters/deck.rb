@@ -43,7 +43,7 @@ module Jekyll
 
             def config
               plugin = { 'name' => @example_drop.data.fetch('name') }
-              plugin.merge!(target.key => target.value) if target.key != 'global'
+              plugin.merge!(target.key => target_value) if target.key != 'global'
               plugin.merge!('config' => @example_drop.data.fetch('config'))
 
               Jekyll::Utils::HashToYAML.new({ 'plugins' => [plugin] }).convert
@@ -51,6 +51,10 @@ module Jekyll
 
             def target
               @target ||= @example_drop.target
+            end
+
+            def target_value
+              @target_value ||= target.value || TARGETS.fetch(target.key)
             end
           end
         end

@@ -5,7 +5,7 @@ module Jekyll
     module EntityExample
       class Plugin < Base
         def target
-          @target ||= @example.target
+          @target ||= PluginTarget.new(target: @example.target)
         end
       end
     end

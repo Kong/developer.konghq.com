@@ -1,6 +1,6 @@
-{% assign entity_example = include.entity_example %}
-{% assign targets_dropdown = entity_example.targets_dropdown %}
-{% assign formats_dropdown = entity_example.formats_dropdown %}
+{% assign plugin_example = include.plugin_example %}
+{% assign targets_dropdown = plugin_example.targets_dropdown %}
+{% assign formats_dropdown = plugin_example.formats_dropdown %}
 
 <div id="{{ entity_example.id }}" class="entity-example">
   <div class="p-2 flex justify-end">
@@ -28,9 +28,10 @@
   </div>
 
   {% if targets_dropdown %}
-    {% for target_with_examples in entity_example.formatted_examples_by_target %}
-     {% assign target = target_with_examples[0] %}
-     {% assign formatted_examples = target_with_examples[1] %}
+    {% for entity_example in plugin_example.entity_examples %}
+     {% assign target = entity_example.target.key %}
+
+     {% assign formatted_examples = entity_example.formatted_examples %}
       <div tabindex="0" class="entity-example-target-panel hidden overflow-auto" aria-labelledby="select-target-{{ entity_example.id }}" data-target="{{ target }}">
         {% for formatted_example in formatted_examples %}
           <div tabindex="0" class="entity-example-format-panel hidden overflow-auto" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ formatted_example.format.value }}">
@@ -39,13 +40,7 @@
           </div>
         {% endfor %}
       </div>
-    {% endfor %}
-  {% else %}
-    {% for formatted_example in entity_example.formatted_examples %}
-      <div tabindex="0" class="entity-example-format-panel hidden overflow-auto" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ formatted_example.format.value }}">
-        {% capture markdown_template %}{% include {{ formatted_example.template_file }} presenter=formatted_example.presenter %}{% endcapture %}
-        {{ markdown_template | markdownify }}
-      </div>
+
     {% endfor %}
   {% endif %}
 </div>

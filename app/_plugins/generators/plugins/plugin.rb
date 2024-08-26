@@ -31,6 +31,11 @@ module Jekyll
           File.read(File.join(@folder, 'index.md'))
         ).frontmatter
       end
+
+      def targets
+        # TODO: pull targets from the schema when we have them
+        @targets = ['consumer', 'consumer_group', 'service', 'global', 'route']
+      end
     end
   end
 end

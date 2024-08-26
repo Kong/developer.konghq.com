@@ -1,0 +1,6 @@
+description: 'some dummy description for now'
+
+config:
+  second: 5
+  hour: 1000
+  policy: local

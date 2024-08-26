@@ -115,6 +115,17 @@ module Jekyll
           end
 
           class Plugin < Base
+            TARGETS = [
+              'consumer',
+              'consumer_group',
+              'global',
+              'route',
+              'service'
+            ].freeze
+
+            def data
+              @data ||= @example_drop.data.except(*TARGETS)
+            end
           end
         end
       end
