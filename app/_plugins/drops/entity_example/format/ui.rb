@@ -7,8 +7,8 @@ module Jekyll
     module EntityExample
       module Format
         class UI < Base
-          def template_file(type)
-            @template_file ||= "/components/entity_example/#{type}/ui.md"
+          def template_file(_type)
+            @template_file ||= "/components/entity_example/format/ui.md"
           end
 
           def to_option

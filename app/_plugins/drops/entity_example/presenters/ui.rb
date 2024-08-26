@@ -10,6 +10,10 @@ module Jekyll
               @example_drop = example_drop
             end
 
+            def entity_type
+              @entity_type ||= @example_drop.entity_type
+            end
+
             def data
               @data ||= @example_drop.data
             end
