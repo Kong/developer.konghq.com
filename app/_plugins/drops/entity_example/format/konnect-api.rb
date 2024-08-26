@@ -7,7 +7,7 @@ module Jekyll
     module EntityExample
       module Format
         class KonnectAPI < Base
-          def template_file(_type)
+          def template_file
             @template_file ||= "/components/entity_example/format/konnect-api.md"
           end
 

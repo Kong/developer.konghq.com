@@ -21,7 +21,7 @@ module Jekyll
         end
 
         def template_file
-          @template_file ||= @format.template_file(@example_drop.entity_type)
+          @template_file ||= @format.template_file
         end
       end
     end

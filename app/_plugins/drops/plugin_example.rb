@@ -36,7 +36,7 @@ module Jekyll
               target   => nil,
               'config' => config
             },
-            'formats' => @formats
+            'formats' => @formats.map(&:value)
           }).to_drop
         end
       end
@@ -50,12 +50,10 @@ module Jekyll
 
       def formats_dropdown
         @formats_dropdown ||= begin
-          options = @formats.sort.map do |f|
-            Jekyll::EntityExampleBlock::Format::Base.make_for(format: f).to_drop
+          options = @formats.map(&:to_drop).map do |f|
+            Drops::Dropdowns::Option.new(text: f.to_option, value: f.value)
           end
-          Drops::Dropdowns::Select.new(
-            options.map { |f| Drops::Dropdowns::Option.new(text: f.to_option, value: f.value) }
-          )
+          Drops::Dropdowns::Select.new(options)
         end
       end
 

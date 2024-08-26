@@ -7,7 +7,7 @@ module Jekyll
     module EntityExample
       module Format
         class UI < Base
-          def template_file(_type)
+          def template_file
             @template_file ||= "/components/entity_example/format/ui.md"
           end
 
