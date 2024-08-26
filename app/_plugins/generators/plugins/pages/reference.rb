@@ -15,7 +15,12 @@ module Jekyll
         end
 
         def data
-          super.merge(metadata).merge('reference?' => true)
+          super
+            .merge(metadata)
+            .merge(
+              'reference?' => true,
+              'examples' => examples
+            )
         end
 
         def metadata
@@ -28,6 +33,17 @@ module Jekyll
 
         def layout
           'plugins/reference'
+        end
+
+        def examples
+          @examples ||= Dir.glob(File.join(@plugin.folder, 'examples', '*')).map do |e|
+            Drops::PluginExample.new(example_file: e, plugin: @plugin, formats:)
+          end
+        end
+
+        def formats
+          # TODO: pull any extra formats from the metadata
+          @formats ||= ['admin-api', 'konnect-api', 'deck', 'kic', 'terraform']
         end
       end
     end

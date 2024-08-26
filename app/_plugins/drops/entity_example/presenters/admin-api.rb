@@ -46,6 +46,10 @@ module Jekyll
               'global'         => "#{BASE_URL}/plugins/"
             }.freeze
 
+            def data
+              @example_drop.data.except(*URLS.keys)
+            end
+
             def url
               @url ||= Utils::VariableReplacer::URL.run(
                 string: self.class::URLS.fetch(@example_drop.target.key),
