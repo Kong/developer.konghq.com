@@ -43,7 +43,9 @@ module Jekyll
 
         def formats
           # TODO: pull any extra formats from the metadata
-          @formats ||= ['admin-api', 'konnect-api', 'deck', 'kic', 'terraform']
+          @formats ||= ['admin-api', 'konnect-api', 'deck', 'kic', 'terraform'].sort.map do |f|
+            Jekyll::EntityExampleBlock::Format::Base.make_for(format: f)
+          end
         end
       end
     end

@@ -34,9 +34,46 @@
      {% assign formatted_examples = entity_example.formatted_examples %}
       <div tabindex="0" class="entity-example-target-panel hidden overflow-auto" aria-labelledby="select-target-{{ entity_example.id }}" data-target="{{ target }}">
         {% for formatted_example in formatted_examples %}
-          <div tabindex="0" class="entity-example-format-panel hidden overflow-auto" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ formatted_example.format.value }}">
+          {% assign format = formatted_example.format %}
+          <div tabindex="0" class="entity-example-format-panel hidden overflow-auto" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ format.value }}">
+            {% case format.value %}
+            {% when 'admin-api' %}
+              Make the following request:
+            {% when 'konnect-api' %}
+              Make the following request:
+            {% when 'deck' %}
+              Add this section to your declarative configuration file:
+            {% when 'kic' %}
+            {% when 'terraform' %}
+              <details>
+                <summary><strong>Prerequisite:</strong> Configure your Personal Access Token</summary>
+
+{% capture prereq_block %}
+```hcl
+terraform {
+  required_providers {
+    konnect = {
+      source  = "kong/konnect"
+    }
+  }
+}
+
+provider "konnect" {
+  personal_access_token = "kpat_YOUR_TOKEN"
+  server_url            = "https://us.api.konghq.com/"
+}
+```
+{% endcapture %}
+                {{ prereq_block | markdownify }}
+              </details>
+
+              Add the following to your Terraform configuration to create a Konnect Gateway Plugin:
+            {% else %}
+            {% endcase %}
+
             {% capture markdown_template %}{% include {{ formatted_example.template_file }} presenter=formatted_example.presenter %}{% endcapture %}
             {{ markdown_template | markdownify }}
+
           </div>
         {% endfor %}
       </div>

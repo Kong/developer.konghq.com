@@ -13,7 +13,7 @@ module Jekyll
             @value ||= @format.value
           end
 
-          def template_file(_type)
+          def template_file(collection)
             raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
           end
 

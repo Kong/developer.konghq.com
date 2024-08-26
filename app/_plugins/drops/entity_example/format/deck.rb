@@ -7,7 +7,7 @@ module Jekyll
     module EntityExample
       module Format
         class Deck < Base
-          def template_file(_type)
+          def template_file
             @template_file ||= "/components/entity_example/format/deck.md"
           end
 
