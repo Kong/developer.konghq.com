@@ -32,9 +32,7 @@ module Jekyll
       end
 
       def formats
-        @formats ||= @example.fetch('formats').sort.map do |f|
-          Jekyll::EntityExampleBlock::Format::Base.make_for(format: f)
-        end
+        @formats ||= @example.fetch('formats', [])
       end
 
       def to_drop
@@ -46,8 +44,6 @@ module Jekyll
       def validate!
         raise ArgumentError, "Missing `data` for entity_type `#{@example['type']}`." unless @example['data']
         raise ArgumentError, "Missing `formats` for entity_type `#{@example['type']}`. Available formats: #{Format::Base::MAPPINGS.keys.join(', ')}." unless @example['formats']
-
-        formats.map(&:validate!)
       end
     end
   end
