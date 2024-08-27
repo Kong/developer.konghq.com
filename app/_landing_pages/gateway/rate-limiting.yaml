@@ -22,7 +22,7 @@ content:
 
                     Rate limits can be applied to a [service](/gateway/entities/service/) or individual [routes](/gateway/entities/route/) to protect the upstream API, or to a [consumer](/gateway/entities/consumer/) to restrict how many times a user can call the API in the specified period.
 
-                    Kong offer standard HTTP `rate-limiting` or `rate-limiting-advanced` plugins in addition to [specialised](#specialized-plugins) AI, GraphQL and dynamic rate limiting plugins.
+                    Kong offers two standard HTTP rate limiting plugins: [`rate-limiting`](/plugins/rate-limiting) or [`rate-limiting-advanced`](/plugins/rate-limiting-advanced) plugins in addition to a series [specialised](#specialized-plugins) AI, GraphQL and dynamic rate limiting plugins.
   - row:
       - column:
           - type: feature_table
@@ -50,11 +50,11 @@ content:
                   oss: false
                   ee: true
                 - title: Enhanced window size configuration
-                  subtitle: Choose any interval, not just `second`, `minute` etc
+                  subtitle: Configure custom intervals beyond standard options like `second` or `minute`.
                   oss: false
                   ee: true
                 - title: Precise counter control
-                  subtitle: Choose if a blocked request contributes towards a rate limit
+                  subtitle: Specify whether blocked requests count towards the rate limit calculation.
                   oss: false
                   ee: true
   - row:
@@ -72,7 +72,7 @@ content:
           - type: header
             config:
               type: h1
-              text: "Specialized Plugins"
+              text: "Specialized Rate Limiting Plugins"
               align: center
   - row:
       - column:
