@@ -19,4 +19,9 @@
 {% else %}
 {% endcase %}
 {% endif %}
+
 {% include components/entity_example/format/snippets/deck.md presenter=include.presenter %}
+
+{% if include.render_context %}
+{% include components/entity_example/replace_variables.md missing_variables=include.presenter.missing_variables %}
+{% endif %}

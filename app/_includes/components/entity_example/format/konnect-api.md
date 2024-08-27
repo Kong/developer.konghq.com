@@ -17,4 +17,10 @@
   Make the following request:
 {% else %}
 {% endcase %}
+
 {% include components/entity_example/format/snippets/konnect-api.md presenter=include.presenter %}
+
+{% if include.render_context %}
+{% include components/entity_example/replace_variables.md missing_variables=include.presenter.missing_variables %}
+  See the <a href="https://docs.konghq.com/konnect/api/">Konnect API reference</a> to learn about region-specific URLs and personal access tokens.
+{% endif %}

@@ -18,6 +18,7 @@ module Jekyll
           def variables
             @variables ||= @example_drop.variables
           end
+
           private
 
           def site

@@ -29,6 +29,13 @@ module Jekyll
               @pat ||= variables['pat'] || "{#{formats['konnect-api']['variables']['pat']['placeholder']}}"
             end
 
+            def missing_variables
+              @missing_variables ||= begin
+                available_variables = formats['konnect-api']['variables'].except(*targets.keys, 'upstream')
+                available_variables.except(*variables.keys).values
+              end
+            end
+
             private
 
             def build_url
@@ -46,6 +53,22 @@ module Jekyll
 
             def variables
               super.merge(@example_drop.target.key => @example_drop.target.value)
+            end
+
+            def missing_variables
+              @missing_variables ||= begin
+                missing = super
+
+                if @example_drop.target.key == 'global'
+                  missing
+                else
+                  if variables[@example_drop.target.key]
+                    missing
+                  else
+                    missing << formats['konnect-api']['variables'][@example_drop.target.key]
+                  end
+                end
+              end
             end
 
             def build_url

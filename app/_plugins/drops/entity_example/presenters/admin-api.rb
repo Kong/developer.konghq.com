@@ -25,6 +25,10 @@ module Jekyll
               '/components/entity_example/format/admin-api.md'
             end
 
+            def missing_variables
+              @missing_variables ||= []
+            end
+
             private
 
             def build_url
@@ -42,6 +46,12 @@ module Jekyll
 
             def variables
               super.merge(@example_drop.target.key => @example_drop.target.value)
+            end
+
+            def missing_variables
+              return [] if @example_drop.target.key == 'global'
+
+              @missing_variables ||= [formats['admin-api']['variables'][@example_drop.target.key]]
             end
 
             def build_url

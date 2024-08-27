@@ -15,6 +15,32 @@ variables: &variables
     placeholder: 'serviceName|Id'
     description: 'The `id` or `name` of the service the plugin configuration will target.'
 
+konnect_variables: &konnect_variables
+  region:
+    placeholder: 'region'
+    description: 'Geographic region where your Kong Konnect is hosted and operates.'
+  control_plane:
+    placeholder: 'controlPlaneId'
+    description: 'The `id` of the control plane.'
+  pat:
+    placeholder: 'kpat_YOUR_PAT'
+    description: 'Your Personal Access Token (PAT) associated with your Konnect account.'
+  upstream:
+    placeholder: 'upstreamId'
+    description: 'The `id` of the upstream the target is associated with.'
+  consumer:
+    placeholder: 'consumerId'
+    description: 'The `id` of the consumer the plugin configuration will target.'
+  consumer_group:
+    placeholder: 'consumerGroupId'
+    description: 'The `id` of the consumer group the plugin configuration will target.'
+  route:
+    placeholder: 'routeId'
+    description: 'The `id` of the route the plugin configuration will target.'
+  service:
+    placeholder: 'serviceId'
+    description: 'The `id` of the service the plugin configuration will target.'
+
 formats:
   admin-api:
     label: 'Admin API'
@@ -53,34 +79,7 @@ formats:
       route:          '/routes/{route}/plugins/'
       service:        '/services/{service}/plugins/'
     variables:
-      region:
-        placeholder: 'us|eu|au'
-        description: 'Geographic region where your Kong Konnect is hosted and operates.'
-        values:
-          - us
-          - eu
-          - au
-      control_plane:
-        placeholder: 'controlPlaneId'
-        description: 'The `id` of the control plane.'
-      pat:
-        placeholder: 'PersonalAccessToken'
-        description: 'Your Personal Access Token (PAT).'
-      upstream:
-        placeholder: 'upstreamId'
-        description: 'The `id` of the upstream the target is associated with.'
-      consumer:
-        placeholder: 'consumerId'
-        description: 'The `id` of the consumer the plugin configuration will target.'
-      consumer_group:
-        placeholder: 'consumerGroupId'
-        description: 'The `id` of the consumer group the plugin configuration will target.'
-      route:
-        placeholder: 'routeId'
-        description: 'The `id` of the route the plugin configuration will target.'
-      service:
-        placeholder: 'serviceId'
-        description: 'The `id` of the service the plugin configuration will target.'
+      <<: *konnect_variables
 
   deck:
     label: 'decK'
@@ -88,7 +87,7 @@ formats:
       <<: *variables
 
   kic:
-    label: 'Kubernetes'
+    label: 'KIC'
 
   terraform:
     label: 'Terraform'
