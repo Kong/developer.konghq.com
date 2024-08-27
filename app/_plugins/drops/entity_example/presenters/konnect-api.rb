@@ -25,6 +25,10 @@ module Jekyll
               '/components/entity_example/format/konnect-api.md'
             end
 
+            def pat
+              @pat ||= variables['pat'] || formats['konnect-api']['variables']['pat']['placeholder']
+            end
+
             private
 
             def build_url
