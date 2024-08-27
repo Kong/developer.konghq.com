@@ -29,6 +29,10 @@ module Jekyll
         result
       end
 
+      if how_tos.empty? && !config.fetch('allow_empty', false)
+        raise "No how-tos found for #{@context['page']['path']} - #{config}"
+      end
+
       context.stack do
         context['how_tos'] = how_tos
         context['config'] = config

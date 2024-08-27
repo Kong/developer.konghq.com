@@ -22,6 +22,7 @@ content:
               products:
                 - mesh
               quantity: 5
+              allow_empty: true
 
   - row:
       - column:

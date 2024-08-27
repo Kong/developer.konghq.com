@@ -80,7 +80,7 @@ content:
             config:
               slug: ai-rate-limiting-advanced
 
-          - type: tutorial_list
+          - type: how_to_list
             config:
               tags:
                 - ai-rate-limiting-advanced
@@ -93,7 +93,7 @@ content:
           - type: plugin
             config:
               slug: graphql-rate-limiting-advanced
-          - type: tutorial_list
+          - type: how_to_list
             config:
               tags:
                 - graphql-rate-limiting-advanced
@@ -106,7 +106,7 @@ content:
           - type: plugin
             config:
               slug: response-ratelimiting
-          - type: tutorial_list
+          - type: how_to_list
             config:
               tags:
                 - response-ratelimiting
