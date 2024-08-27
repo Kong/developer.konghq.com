@@ -26,7 +26,7 @@ module Jekyll
             end
 
             def pat
-              @pat ||= variables['pat'] || formats['konnect-api']['variables']['pat']['placeholder']
+              @pat ||= variables['pat'] || "{#{formats['konnect-api']['variables']['pat']['placeholder']}}"
             end
 
             private
