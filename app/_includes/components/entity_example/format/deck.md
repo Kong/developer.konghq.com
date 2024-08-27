@@ -1,4 +1,4 @@
-{% if page.collection == 'gateway_entities' %}
+{% if include.render_context %}
 {% case include.presenter.entity_type %}
 {% when 'consumer' %}
   The following creates a new consumer called **{{ include.presenter.data['username'] }}**:
@@ -14,6 +14,8 @@
   The following creates a new upstream called **{{ include.presenter.data['name'] }}**:
 {% when workspace %}
   The following creates a new workspace called **{{ include.presenter.data['name'] }}**:
+{% when 'plugin' %}
+  Add this section to your declarative configuration file:
 {% else %}
 {% endcase %}
 {% endif %}
