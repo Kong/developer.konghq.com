@@ -68,7 +68,7 @@ content:
                 text: "Rate Limiting in KIC"
               blocks:
                 - type: text
-                  text: Rate limiting capabilities in KIC vary by the ingress controller implementation (e.g., NGINX, Traefik). Basic rate limiting can be configured for external traffic entering the Kubernetes cluster. This is ideal for for controlling external traffic entering your Kubernetes environment with simpler rate limiting requirements.
+                  text: Rate limiting capabilities in KIC vary by the ingress controller implementation (e.g., NGINX, Traefik). Basic rate limiting can be configured for external traffic entering the Kubernetes cluster. This is ideal for controlling external traffic entering your Kubernetes environment with simpler rate limiting requirements.
                 - type: text
                   text: <a href="/kic/rate-limiting/">Add Rate Limiting with KIC</a>
       - column:
