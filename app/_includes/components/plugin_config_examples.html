@@ -1,7 +1,7 @@
 <div class="plugin-config-example">
   <div class="flex">
     <label for="select-plugin-config-example" class="sr-only">Select a plugin configuration example</label>
-    <select id="select-plugin-config-example" class="ml-1 w-1/2 select-plugin-config  border border-gray-300">
+    <select id="select-plugin-config-example" class="ml-1 w-2/3 select-plugin-config  border border-gray-300">
       {% for plugin_example in plugin_examples %}
         <option value="{{ plugin_example.slug }}">{{ plugin_example.slug }}</option>
       {% endfor %}

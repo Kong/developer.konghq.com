@@ -27,6 +27,10 @@ module Jekyll
             def template_file
               '/components/entity_example/format/deck.md'
             end
+
+            def missing_variables
+              @missing_variables ||= []
+            end
           end
 
           class Plugin < Base
@@ -40,6 +44,16 @@ module Jekyll
 
             def target
               @target ||= @example_drop.target
+            end
+
+            def variables
+              super.merge(@example_drop.target.key => target_value)
+            end
+
+            def missing_variables
+              return [] if @example_drop.target.key == 'global'
+
+              @missing_variables ||= [formats['deck']['variables'][@example_drop.target.key]]
             end
 
             def target_value

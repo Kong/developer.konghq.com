@@ -9,7 +9,7 @@ terraform {
 }
 
 provider "konnect" {
-  personal_access_token = "kpat_YOUR_TOKEN"
+  personal_access_token = "{{ site.data.entity_examples.config.konnect_variables.pat.placeholder }}"
   server_url            = "https://us.api.konghq.com/"
 }
 ```
