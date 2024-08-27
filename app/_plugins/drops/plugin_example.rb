@@ -36,31 +36,27 @@ module Jekyll
               target   => nil,
               'config' => config
             },
-            'formats' => @formats.map(&:value)
+            'formats' => @formats
           }).to_drop
         end
       end
 
-      def targets_dropdown
-        options = @plugin.targets.map do |t|
-          Drops::Dropdowns::Option.new(text: t, value: t)
-        end
-        Drops::Dropdowns::Select.new(options)
+      def targets
+        @targets ||= @plugin.targets
       end
 
-      def formats_dropdown
-        @formats_dropdown ||= begin
-          options = @formats.map(&:to_drop).map do |f|
-            Drops::Dropdowns::Option.new(text: f.to_option, value: f.value)
-          end
-          Drops::Dropdowns::Select.new(options)
-        end
+      def formats
+        @formats
       end
 
       private
 
       def example
         @example ||= YAML.load(File.read(@example_file))
+      end
+
+      def site
+        @site ||= Jekyll.sites.first
       end
     end
   end

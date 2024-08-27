@@ -4,6 +4,15 @@ module Jekyll
   module Drops
     module EntityExample
       class FormattedExample < Liquid::Drop
+        MAPPINGS = {
+          'admin-api'   => 'AdminAPI',
+          'deck'        => 'Deck',
+          'konnect-api' => 'KonnectAPI',
+          'kic'         => 'KIC',
+          'ui'          => 'UI',
+          'terraform'   => 'Terraform'
+        }
+
         def initialize(format:, presenter_class:, example_drop:)
           @format          = format
           @presenter_class = presenter_class
@@ -12,7 +21,7 @@ module Jekyll
 
         def presenter
           @presenter ||= Object.const_get(
-            "Jekyll::Drops::EntityExample::Presenters::#{@format.class.name.split('::').last}::#{@presenter_class}"
+            "Jekyll::Drops::EntityExample::Presenters::#{MAPPINGS[@format]}::#{@presenter_class}"
           ).new(example_drop: @example_drop)
         end
 
@@ -21,7 +30,7 @@ module Jekyll
         end
 
         def template_file
-          @template_file ||= @format.template_file
+          @template_file ||= presenter.template_file
         end
       end
     end

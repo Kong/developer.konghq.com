@@ -1,21 +1,19 @@
 # frozen_string_literal: true
 
+require_relative './base'
+
 module Jekyll
   module Drops
     module EntityExample
       module Presenters
         module UI
-          class Base < Liquid::Drop
-            def initialize(example_drop:)
-              @example_drop = example_drop
-            end
-
-            def entity_type
-              @entity_type ||= @example_drop.entity_type
-            end
-
+          class Base < Presenters::Base
             def data
               @data ||= @example_drop.data
+            end
+
+            def template_file
+              '/components/entity_example/format/ui.md'
             end
           end
 

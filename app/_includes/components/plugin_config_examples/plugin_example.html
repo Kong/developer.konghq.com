@@ -1,33 +1,31 @@
 {% assign plugin_example = include.plugin_example %}
-{% assign targets_dropdown = plugin_example.targets_dropdown %}
-{% assign formats_dropdown = plugin_example.formats_dropdown %}
+{% assign targets = plugin_example.targets %}
+{% assign formats = plugin_example.formats %}
 
 <div id="{{ entity_example.id }}" class="entity-example">
   <div class="p-2 flex justify-end">
     <div>
-      {% if targets_dropdown %}
-        {% if targets_dropdown.options.size > 1 %}
-          <label for="select-target-{{ entity_example.id }}" class="sr-only">Select an entity</label>
-          <select id="select-target-{{ entity_example.id }}" class="ml-1 w-36 select-target border border-gray-300 ">
-            {% for option in targets_dropdown.options %}
-              <option value="{{ option.value }}">{{ option.text }}</option>
-            {% endfor %}
-          </select>
-        {% endif %}
+      {% if targets.size > 0 %}
+        <label for="select-target-{{ entity_example.id }}" class="sr-only">Select an entity</label>
+        <select id="select-target-{{ entity_example.id }}" class="ml-1 w-36 select-target border border-gray-300 ">
+          {% for target in targets %}
+            <option value="{{ target }}">{{ site.data.entity_examples.config.targets[target]['label'] }}</option>
+          {% endfor %}
+        </select>
       {% endif %}
 
-      {% if formats_dropdown.options.size > 1 %}
+      {% if formats.size > 1 %}
         <label for="select-format-{{ entity_example.id }}" class="sr-only">Select a format</label>
         <select id="select-format-{{ entity_example.id }}" class="ml-1 w-36 select-format border border-gray-300 ">
-          {% for option in formats_dropdown.options %}
-            <option value="{{ option.value }}">{{ option.text }}</option>
+          {% for format in formats %}
+            <option value="{{ format }}">{{ site.data.entity_examples.config.formats[format].label }}</option>
           {% endfor %}
         </select>
       {% endif %}
     </div>
   </div>
 
-  {% if targets_dropdown %}
+  {% if targets.size > 0 %}
     {% for entity_example in plugin_example.entity_examples %}
      {% assign target = entity_example.target.key %}
 
@@ -35,8 +33,8 @@
       <div tabindex="0" class="entity-example-target-panel hidden overflow-auto" aria-labelledby="select-target-{{ entity_example.id }}" data-target="{{ target }}">
         {% for formatted_example in formatted_examples %}
           {% assign format = formatted_example.format %}
-          <div tabindex="0" class="entity-example-format-panel hidden overflow-auto" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ format.value }}">
-            {% case format.value %}
+          <div tabindex="0" class="entity-example-format-panel hidden overflow-auto" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ format }}">
+            {% case format %}
             {% when 'admin-api' %}
               Make the following request:
             {% when 'konnect-api' %}

@@ -3,13 +3,6 @@
 module Jekyll
   module EntityExampleBlock
     class PluginTarget < Base
-      TARGETS = [
-        'consumer',
-        'consumer_group',
-        'route',
-        'service'
-      ].freeze
-
       def initialize(data:)
         @data = data
       end
@@ -24,9 +17,19 @@ module Jekyll
 
       def target
         @target ||= begin
-                      key, value = @data.slice(*TARGETS).first
+                      key, value = @data.slice(*targets).first
                       OpenStruct.new(key:, value:)
                     end
+      end
+
+      private
+
+      def targets
+        @targets ||= site.data['entity_examples']['config']['targets'].keys
+      end
+
+      def site
+        @site ||= Jekyll.sites.first
       end
     end
   end

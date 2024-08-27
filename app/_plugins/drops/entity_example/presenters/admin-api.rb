@@ -1,60 +1,54 @@
 # frozen_string_literal: true
 
 require_relative '../utils/variable_replacer'
+require_relative './base'
 
 module Jekyll
   module Drops
     module EntityExample
       module Presenters
         module AdminAPI
-          class Base < Liquid::Drop
-            BASE_URL = 'http://localhost:8001'.freeze
-
-            URLS = {
-              'consumer'       => "#{BASE_URL}/consumers/",
-              'consumer_group' => "#{BASE_URL}/consumer_groups/",
-              'route'          => "#{BASE_URL}/routes/",
-              'service'        => "#{BASE_URL}/services/",
-              'target'         => "#{BASE_URL}/upstreams/{upstreamName|Id}/targets/",
-              'upstream'       => "#{BASE_URL}/upstreams/",
-              'workspace'      => "#{BASE_URL}/workspaces/"
-            }.freeze
-
-            def initialize(example_drop:)
-              @example_drop = example_drop
-            end
-
+          class Base < Presenters::Base
             def url
-              @url ||= self.class::URLS.fetch(entity_type)
+              @url ||= Utils::VariableReplacer::URL.run(
+                url: build_url,
+                defaults: formats['admin-api']['variables'],
+                variables: variables
+              )
             end
 
             def data
               @data ||= @example_drop.data
             end
 
-            def entity_type
-              @entity_type ||= @example_drop.entity_type
+            def template_file
+              '/components/entity_example/format/admin-api.md'
+            end
+
+            private
+
+            def build_url
+              [
+                formats['admin-api']['base_url'],
+                formats['admin-api']['endpoints'][entity_type]
+              ].join
             end
           end
 
           class Plugin < Base
-            URLS = {
-              'consumer'       => "#{BASE_URL}/consumers/{consumerName|Id}/plugins/",
-              'consumer_group' => "#{BASE_URL}/consumer_groups/{consumerGroupName|Id}/plugins/",
-              'route'          => "#{BASE_URL}/routes/{routeName|Id}/plugins/",
-              'service'        => "#{BASE_URL}/services/{serviceName|Id}/plugins/",
-              'global'         => "#{BASE_URL}/plugins/"
-            }.freeze
-
             def data
-              @example_drop.data.except(*URLS.keys)
+              @example_drop.data.except(*targets.keys)
             end
 
-            def url
-              @url ||= Utils::VariableReplacer::URL.run(
-                string: self.class::URLS.fetch(@example_drop.target.key),
-                variables: @example_drop.variables
-              )
+            def variables
+              super.merge(@example_drop.target.key => @example_drop.target.value)
+            end
+
+            def build_url
+              [
+                formats['admin-api']['base_url'],
+                formats['admin-api']['plugin_endpoints'][@example_drop.target.key]
+              ].join
             end
           end
         end

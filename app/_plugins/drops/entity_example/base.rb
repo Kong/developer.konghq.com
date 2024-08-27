@@ -38,16 +38,7 @@ module Jekyll
         end
 
         def formats
-          @formats ||= @example.formats.map(&:to_drop)
-        end
-
-        def formats_dropdown
-          @formats_dropdown ||= begin
-            options = formats.map do |f|
-              Drops::Dropdowns::Option.new(text: f.to_option, value: f.value)
-            end
-            Drops::Dropdowns::Select.new(options)
-          end
+          @formats ||= @example.formats
         end
       end
     end

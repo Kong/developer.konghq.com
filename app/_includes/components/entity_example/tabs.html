@@ -3,7 +3,7 @@
 {% if entity_example.formatted_examples.size > 1 %}
 {% navtabs %}
 {% for formatted_example in entity_example.formatted_examples %}
-{% navtab {{ formatted_example.format.to_option }} slug={{ formatted_example.format.value }} %}
+{% navtab {{ site.data.entity_examples.config.formats[formatted_example.format].label }} slug={{ formatted_example.format }} %}
   {% include {{ formatted_example.template_file }} presenter=formatted_example.presenter %}
 {% endnavtab %}
 {% endfor %}

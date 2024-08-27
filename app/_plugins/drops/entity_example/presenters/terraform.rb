@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
+require_relative './base'
+
 module Jekyll
   module Drops
     module EntityExample
       module Presenters
         module Terraform
-          class Base < Liquid::Drop
-            def initialize(example_drop:)
-              @example_drop = example_drop
-            end
-
+          class Base < Presenters::Base
             def data
               @data ||= @example_drop.data
             end
@@ -17,10 +15,6 @@ module Jekyll
             def target
               return nil if @example_drop.target.key == "global"
               @example_drop.target.key
-            end
-
-            def entity_type
-              @entity_type ||= @example_drop.entity_type
             end
 
             def provider
@@ -112,19 +106,15 @@ module Jekyll
                 #{render.strip}
               TERRAFORM
             end
+
+            def template_file
+              '/components/entity_example/format/terraform.md'
+            end
           end
 
           class Plugin < Base
-            TARGETS = [
-              'consumer',
-              'consumer_group',
-              'global',
-              'route',
-              'service'
-            ].freeze
-
             def data
-              @data ||= @example_drop.data.except(*TARGETS)
+              @data ||= @example_drop.data.except(*targets.keys)
             end
           end
         end
