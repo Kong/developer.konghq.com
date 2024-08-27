@@ -1,8 +1,7 @@
-{% if page.collection == 'gateway_entities' %}
+{% if include.render_context %}
 {% case include.presenter.entity_type %}
 {% when 'consumer' %}
   To create a consumer, call the [Admin API’s /consumers endpoint](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Consumers/create-consumer).
-  The following creates a new consumer called **{{ include.presenter.data['username'] }}**:
 {% when 'consumer_group' %}
   To create a consumer group, call the [Admin API’s /consumer_groups endpoint](https://docs.konghq.com/gateway/api/admin-ee/latest/#/consumer_groups/post-consumer_groups).
 {% when 'route' %}
@@ -13,10 +12,10 @@
   To create a target, call the [Admin API’s /targets endpoint](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Targets).
 {% when 'upstream' %}
   To create a upstream, call the [Admin API’s /upstreams endpoint](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Upstreams/create-upstream).
-  The following creates a new upstream called **{{ include.presenter.data['name'] }}**:
 {% when workspace %}
   To create a workspace, call the [Admin API’s /workspaces endpoint](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Workspaces/create-workspace).
-  The following creates a new workspace called **{{ include.presenter.data['name'] }}**:
+{% when 'plugin' %}
+  Make the following request:
 {% else %}
 {% endcase %}
 {% endif %}
