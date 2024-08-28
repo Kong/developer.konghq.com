@@ -16,6 +16,7 @@ node_modules
 # https://vitejs.dev/guide/env-and-mode.html#env-files
 *.local
 
+.DS_Store
 
 # Local Netlify folder
 .netlify
