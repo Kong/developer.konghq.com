@@ -245,17 +245,9 @@ content:
               * decK can check if a configuration file is valid or not (validate sub-command).
               * decK can quickly reset your Kong’s configuration when needed.
               * decK works out of the box with Kong Gateway features like Workspaces and RBAC.
-  - row:
-    - column:
-      - type: faqs
-        config:
           - q: Can I run multiple decK processes at the same time?
             a: |
               The two processes will step on each other and might corrupt Kong’s configuration. You should ensure that there is only one instance of decK running at any point in time.
-  - row:
-    - column:
-      - type: faqs
-        config:
           - q: Kong already has built-in declarative configuration, do I still need decK?
             a: |
               Kong has an official declarative configuration format.
@@ -275,28 +267,12 @@ content:
 
               If you have a very large installation, it can take some time for decK to sync up the configuration to Kong. This can be mitigated by adopting distributed configuration for your Kong installation and tweaking the --parallelism value. Kong’s db_import will usually be faster by orders of magnitude.
               decK cannot export and re-import fields that are hashed in the database. This means fields like password of basic-auth credential cannot be correctly re-imported by decK. This happens because Kong’s Admin API call to sync the configuration will re-hash the already hashed password.
-  - row:
-    - column:
-      - type: faqs
-        config:
           - q: I’m a Kong Gateway user, can I use decK?
             a: |
               decK is designed to be compatible with open-source and enterprise versions of Kong.
-
-
-  - row:
-    - column:
-      - type: faqs
-        config:
           - q: I'm a Konnect user, can I use decK?
             a: |
               Yes, decK is compatible with Konnect. We recommend upgrading to decK 1.12 to take advantage of the new --konnect CLI flags.
-
-
-  - row:
-    - column:
-      - type: faqs
-        config:
           - q: I use Cassandra as a data store for Kong, can I use decK?
             a: |
               As of Kong Gateway 3.4, you can’t use Cassandra as a data store, as it is longer supported by Kong.
@@ -307,10 +283,6 @@ content:
               * decK is read-intensive for most parts, meaning it will perform read-intensive queries on your Cassandra cluster, so make sure you tune your Cassandra cluster accordingly.
               * decK talks to the same Kong node that talks to the same Cassandra node in your cluster.
               Use the `--parallelism 1` flag to ensure that there is only request being processed at a time. This will slow down sync process and should be used as a last resort.
-  - row:
-    - column:
-      - type: faqs
-        config:
           - q: Is there a JSON Schema for decK?
             a:  |
                Yes. The decK team maintains a JSON schema that you can use to validate YAML files on Github. You can use the schema with a text editor to provide JIT YAML validation. For example, to use the JSON schema with VS Code:
@@ -326,10 +298,6 @@ content:
                         ]
                     }
                3. Verify that it works by opening your existing `kong.yml` or `kong.yaml` file.
-  - row:
-    - column:
-      - type: faqs
-        config:
           - q: What Admin API endpoints does decK use?
             a:  |
               decK uses Kong's Admin API to communicate with Kong Gateway.
