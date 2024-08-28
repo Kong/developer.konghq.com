@@ -14,7 +14,7 @@ content:
           - type: header
             config:
               type: h2
-              text: How-tos
+              text: How-to Guides
           - type: how_to_list
             config:
               tags:
