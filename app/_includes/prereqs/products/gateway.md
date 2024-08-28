@@ -11,5 +11,6 @@
   ```bash
   Kong Gateway Ready 
   ```
+  {:.no-copy-code}
 
 </details>

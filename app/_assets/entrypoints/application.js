@@ -6,10 +6,12 @@
 // Example: Import a stylesheet in <sourceCodeDir>/index.css
 import '~/stylesheets/index.css'
 import '~/stylesheets/syntax_highlighting.css'
+import '~/stylesheets/copy_code_snippet.css'
 import '~/stylesheets/core.css'
 
 import EntityExample from '@/javascripts/components/entity_example';
 import Tabs from '@/javascripts/components/tabs';
+import '@/javascripts/copy_code_snippet';
 
 document.addEventListener('DOMContentLoaded', function () {
   new EntityExample();
