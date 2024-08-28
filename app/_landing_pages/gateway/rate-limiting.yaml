@@ -22,76 +22,95 @@ content:
 
                     Rate limits can be applied to a [service](/gateway/entities/service/) or individual [routes](/gateway/entities/route/) to protect the upstream API, or to a [consumer](/gateway/entities/consumer/) to restrict how many times a user can call the API in the specified period.
 
-                    In addition to the OSS Rate Limiting plugin, Kong offer an Enterprise rate limiting plugin with additional capabilities.
+                    Kong offers two standard HTTP rate limiting plugins: [`rate-limiting`](/plugins/rate-limiting) or [`rate-limiting-advanced`](/plugins/rate-limiting-advanced) plugins in addition to a series [specialised](#specialized-rate-limiting-plugins) AI, GraphQL and dynamic rate limiting plugins.
   - row:
       - column:
-          - type: structured_text
+          - type: feature_table
             config:
-              header:
-                text: "Open Source Features"
-                icon: deployment
-              blocks:
-                - type: text
-                  text: |
-                    Rate limit based on `consumer`, `consumer-group`, `credential`, `ip`, `service`, `header` or `path`. If the route being accessed does not require authentication, rate limiting is applied to the Client IP.
-
-                    The rate limit counter can be stored in memory, Redis, or in the Postgres database (traditional mode only).
-
-                    Multiple rate limits can be configured, allowing you to specify complex rules such as 1000 requests per hour, but no more than 100 per minute.
+              columns:
+                - title: Rate Limiting
+                  key: oss
+                - title: Rate Limiting Advanced
+                  key: ee
+              features:
+                - title: Rate limit based on `consumer`, `consumer-group`, `credential`, `ip` and `service`
+                  oss: true
+                  ee: true
+                - title: Basic Redis support
+                  oss: true
+                  ee: true
+                - title: Redis Sentinel, Cluster + SSL support
+                  oss: false
+                  ee: true
+                - title: Fixed window rate limits
+                  oss: true
+                  ee: true
+                - title: Advanced rate limiting algorithms
+                  subtitle: e.g. Leaky bucket, Sliding window
+                  oss: false
+                  ee: true
+                - title: Enhanced window size configuration
+                  subtitle: Configure custom intervals beyond standard options like `second` or `minute`.
+                  oss: false
+                  ee: true
+                - title: Precise counter control
+                  subtitle: Specify whether blocked requests count towards the rate limit calculation.
+                  oss: false
+                  ee: true
+  - row:
+      - column:
           - type: plugin
             config:
               slug: rate-limiting
       - column:
-          - type: structured_text
-            config:
-              header:
-                text: "Enterprise"
-                icon: enterprise-blue
-              blocks:
-                - type: text
-                  text: |
-                    Everything in OSS, plus:
-
-                    * Enhanced window size configuration. You are no longer limited to pre-defined intervals
-                    * Support for Redis Sentinel, Redis cluster and Redis SSL
-                    * Additional rate limiting algorithms, including leaky bucket, fixed window and sliding window
-                    * Precise control over high requests increment rate limiting counters (e.g. you may choose not to increment rate limiting if Kong Gateway blocks the request)
           - type: plugin
             config:
               slug: rate-limiting-advanced
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h2
-              text: How-to
-          - type: how_to_list
-            config:
-              tags:
-                - rate-limiting
-              products:
-                - gateway
-              quantity: 5
-          - type: cta
-            config:
-              text: "View more &raquo;"
-              url: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
-              align: end
 
   - row:
       - column:
           - type: header
             config:
-              type: h2
-              text: "Related Resources"
-          - type: related_resources
+              type: h1
+              text: "Specialized Rate Limiting Plugins"
+              align: center
+  - row:
+      - column:
+          - type: plugin
             config:
-              layout:
-                style: cards
-              items:
-                - text: Protecting Services with Kong Gateway Rate Limiting
-                  type: blog
-                  url: https://konghq.com/blog/engineering/kong-gateway-rate-limiting
-                - text: How to design a scalable Rate Limiting Algorithm with Kong API
-                  type: blog
-                  url: https://konghq.com/blog/engineering/how-to-design-a-scalable-rate-limiting-algorithm
+              slug: ai-rate-limiting-advanced
+
+          - type: how_to_list
+            config:
+              tags:
+                - ai-rate-limiting-advanced
+              products:
+                - gateway
+              quantity: 3
+              allow_empty: true
+
+      - column:
+          - type: plugin
+            config:
+              slug: graphql-rate-limiting-advanced
+          - type: how_to_list
+            config:
+              tags:
+                - graphql-rate-limiting-advanced
+              products:
+                - gateway
+              quantity: 3
+              allow_empty: true
+
+      - column:
+          - type: plugin
+            config:
+              slug: response-ratelimiting
+          - type: how_to_list
+            config:
+              tags:
+                - response-ratelimiting
+              products:
+                - gateway
+              quantity: 3
+              allow_empty: true
