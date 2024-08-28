@@ -3,8 +3,10 @@ title: Enable rate limiting for a consumer with Kong Gateway
 related_resources:
   - text: How to create rate limiting tiers with Kong Gateway
     url:  /how-to/add-rate-limiting-tiers-with-kong-gateway/
+  - text: Rate Limiting plugin
+    url: /plugins/rate-limiting/
   - text: Rate Limiting Advanced plugin
-    url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/
+    url: /plugins/rate-limiting-advanced/
 
 products:
     - gateway
@@ -48,11 +50,13 @@ cleanup:
       include_content: cleanup/products/gateway
 ---
 
-## Steps
+## 1. Enable authentication
 
-1. Add the following content to `kong.yaml` to enable the Key Authentication plugin. You need [authentication](/authentication/) to identify the consumer and apply rate limiting.
+You need [authentication](/authentication/) to identify a consumer and apply rate limiting.
+This example uses the [Key Authentication](/plugins/key-auth) plugin, but you can use any authentication plugin that you prefer.
 
-{% capture plugin %}
+Add the following content to `kong.yaml` to enable the plugin globally, which means it applies to all Kong Gateway services and routes:
+
 {% entity_examples %}
 entities:
   plugins:
@@ -61,25 +65,28 @@ entities:
         key_names:
           - apikey
 {% endentity_examples %}
-{% endcapture %}
-{{ plugin | indent: 3 }}
 
-1. Create a [consumer](/gateway/entities/consumer/) with a key.
+## 2. Create a consumer
 
-{% capture consumer %}
+Consumers let you identify the client that's interacting with Kong Gateway. 
+With the Key Authentication plugin enabled globally, the consumer needs an API key to access any Kong Gateway services.
+
+Append the following snippet to the `kong.yaml` file to create a [consumer](/gateway/entities/consumer/) with an API key:
+
 {% entity_examples %}
 entities:
   consumers:
     - username: jsmith
       keyauth_credentials:
         - key: example-key
+append_to_existing_section: true
 {% endentity_examples %}
-{% endcapture %}
-{{ consumer | indent: 3 }}
 
-1. Enable the [Rate Limiting plugin](/plugins/rate-limiting/) for the consumer. In this example, the limit is 5 requests per second and 1000 requests per hour.
+## 3. Enable rate limiting
 
-{% capture plugin %}
+Enable the [Rate Limiting plugin](/plugins/rate-limiting/) for the consumer. 
+In this example, the limit is 5 requests per second and 1000 requests per hour.
+
 {% entity_examples %}
 entities:
   plugins:
@@ -90,24 +97,27 @@ entities:
         hour: 1000
 append_to_existing_section: true
 {% endentity_examples %}
-{% endcapture %}
-{{ plugin | indent: 3 }}
 
-2. Synchronize your [decK](/deck/) configuration files:
+## 4. Apply configuration
 
-    Check the differences in your files:
-    ```bash
-    deck gateway diff deck_files
-    ```
-    If everything looks right, synchronize them to update your Gateway configuration:
-    ```bash
-    deck gateway sync deck_files
-    ```
-3. Validate:
+Synchronize your [decK](/deck/) configuration files.
 
-    You can run the following command to test the rate limiting as the consumer:
-    ```bash
-    for _ in {1..6}; do curl -i http://localhost:8000/example-route -H 'apikey:example_key'; echo; done
-    ```
+First, compare the decK file or files to the state of the Kong Gateway:
+```bash
+deck gateway diff deck_files
+```
+The output shows you which entities are changing. 
+If everything looks right, synchronize them to update your Gateway configuration:
 
-    This command sends six consecutive requests to the route. On the last one you should get a `429` error with the message `API rate limit exceeded`.
+```bash
+deck gateway sync deck_files
+```
+
+## 5. Validate
+
+You can run the following command to test the rate limiting as the consumer:
+```bash
+for _ in {1..6}; do curl -i http://localhost:8000/example-route -H 'apikey:example_key'; echo; done
+```
+
+This command sends six consecutive requests to the route. On the last one you should get a `429` error with the message `API rate limit exceeded`.
