@@ -358,16 +358,16 @@ content:
           - type: header
             config:
               type: h2
-              text: Tutorials
-          - type: tutorial_list
+              text: How-to Guides
+          - type: how_to_list
             config:
               tools:
                 - deck
               quantity: 5
           - type: cta
             config:
-              text: "View more tutorials &raquo;"
-              url: "https://docs.devsite.com/search/{tutorial.topic}+{other stuff}"
+              text: "View more &raquo;"
+              url: "https://docs.devsite.com/search/{topic}+{other stuff}"
               align: end
 
   - row:
