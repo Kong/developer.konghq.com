@@ -5,10 +5,10 @@ For this tutorial, you'll need Kong Gateway entities, like services and routes, 
 1. Create a `prereqs.yaml` file within the same folder, and add the following content to it:
 
 {% capture entities %}
-{: data-file="prereqs.yaml" }
-{% highlight yaml %}
+```yaml
 {{ include.data }}
-{% endhighlight %}
+```
+{: data-file="prereqs.yaml" }
 {% endcapture %}
 {{ entities | indent: 3 }}
 
