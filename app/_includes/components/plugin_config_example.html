@@ -1,6 +1,6 @@
-{% assign plugin_example = include.plugin_example %}
-{% assign targets = plugin_example.targets %}
-{% assign formats = plugin_example.formats %}
+{% assign plugin_config_example = include.plugin_config_example %}
+{% assign targets = plugin_config_example.targets %}
+{% assign formats = plugin_config_example.formats %}
 
 <div id="{{ entity_example.id }}" class="entity-example">
   <div class="p-2 flex justify-end">
@@ -26,13 +26,13 @@
   </div>
 
   {% if targets.size > 0 %}
-    {% for entity_example in plugin_example.entity_examples %}
+    {% for entity_example in plugin_config_example.entity_examples %}
      {% assign target = entity_example.target.key %}
 
      {% assign formatted_examples = entity_example.formatted_examples %}
       <div tabindex="0" class="entity-example-target-panel hidden overflow-auto" aria-labelledby="select-target-{{ entity_example.id }}" data-target="{{ target }}">
         {% if target == 'global' %}
-          {% capture global_context %}{% include components/plugin_config_examples/global.md %}{% endcapture %}
+          {% capture global_context %}{% include components/plugin_config_example/global.md %}{% endcapture %}
           {{ global_context | markdownify }}
         {% endif %}
 

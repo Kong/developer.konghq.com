@@ -1,0 +1,23 @@
+---
+layout: plugins/base
+---
+
+<h2>Description</h2>
+
+<div class="flex mb-2">
+{{ page.example.description | markdoownify }}
+</div>
+
+<h2>Set up the plugin</h2>
+
+{% include components/plugin_config_example.html plugin_config_example=page.example %}
+
+<h2>Available examples</h2>
+
+<ul>
+{% for example in page.examples %}
+  <li>
+    <a href="/plugins/{{ page.slug }}/examples/{{ example.slug }}"> {{ example.slug }}</a>
+  </li>
+{% endfor %}
+</ul>

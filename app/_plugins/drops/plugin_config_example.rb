@@ -4,15 +4,16 @@ require 'yaml'
 
 module Jekyll
   module Drops
-    class PluginExample < Liquid::Drop
-      def initialize(example_file:, plugin:, formats:)
-        @example_file = example_file
-        @plugin       = plugin
-        @formats      = formats
+    class PluginConfigExample < Liquid::Drop
+      attr_reader :file
+
+      def initialize(file:, plugin:)
+        @file   = file
+        @plugin = plugin
       end
 
       def slug
-        @slug ||= File.basename(@example_file, File.extname(@example_file))
+        @slug ||= File.basename(@file, File.extname(@file))
       end
 
       def config
@@ -36,7 +37,7 @@ module Jekyll
               target   => nil,
               'config' => config
             },
-            'formats' => @formats
+            'formats' => formats
           }).to_drop
         end
       end
@@ -46,13 +47,13 @@ module Jekyll
       end
 
       def formats
-        @formats
+        @formats ||= @plugin.formats
       end
 
       private
 
       def example
-        @example ||= YAML.load(File.read(@example_file))
+        @example ||= YAML.load(File.read(@file))
       end
 
       def site

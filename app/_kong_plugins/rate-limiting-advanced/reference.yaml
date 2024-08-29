@@ -10,10 +10,3 @@ extended_description: |
 
   We recommend setting `namespace` to a static value in DB-less mode. 
   The namespace will be regenerated on every configuration change if not explicitly set, resetting counters to zero.
-examples:
-  - fixed-window-200-requests-per-30-min.yaml
-  - fixed-window-500-requests-per-hour.yaml
-  - fixed-window-5000-requests-per-day.yaml
-  - sliding-window-100-requests-per-hour.yaml
-  - sliding-window-300-requests-per-30-min.yaml
-  - sliding-window-500-requests-per-hour.yaml

@@ -15,7 +15,7 @@ provider "konnect" {
 ```
 {% endcapture %}
 
-{% if page.collection == 'gateway_entities' or page.reference? %}
+{% if include.render_context %}
   <details class="mb-2">
     <summary class="rounded mb-0.5 bg-gray-200 p-2"><strong>Prerequisite:</strong> Configure your Personal Access Token</summary>
     <div>

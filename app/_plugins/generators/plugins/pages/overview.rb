@@ -23,13 +23,7 @@ module Jekyll
         private
 
         def parser
-          @parser ||= Jekyll::Utils::MarkdownParser.new(
-            File.read(file)
-          )
-        end
-
-        def file
-          @file ||= File.join(@plugin.folder, 'index.md')
+          @parser ||= Jekyll::Utils::MarkdownParser.new(File.read(file))
         end
       end
     end
