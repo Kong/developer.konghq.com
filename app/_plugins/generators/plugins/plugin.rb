@@ -29,8 +29,7 @@ module Jekyll
       end
 
       def formats
-        # TODO: pull any extra formats from the metadata
-        @formats ||= ['admin-api', 'konnect-api', 'deck', 'kic', 'terraform']
+        @formats ||= @site.data.dig('entity_examples', 'config', 'formats').except('ui').keys
       end
 
       def example_files
