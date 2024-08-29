@@ -25,7 +25,8 @@ module Jekyll
             'slug'   => @plugin.slug,
             'plugin?' => true,
             'layout' => layout,
-            'examples' => examples
+            'examples' => examples,
+            'tools' => @plugin.formats
           )
         end
 

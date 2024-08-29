@@ -3,10 +3,14 @@
     <h3 class="font-bold mb-0">About</h3>
   </div>
 
+  {% if page.tools %}
+    {% include info_box/sections/tools.html tools=page.tools %}
+  {% endif %}
+
   {% if page.api_specs %}
-    <div class="mt-4 flex flex-wrap flex-col">
-      <h3 class="font-bold">OpenAPI Specifications</h3>
-      <ul class="list-none m-0 mt-4">
+    <div class="mt-1 flex flex-wrap flex-col">
+      <strong>OpenAPI Specifications</strong>
+      <ul class="list-none m-0 mt-1">
         {% for api_spec in page.api_specs %}
           <li class="flex grid-cols-2 justify-between items-center flex-wrap">
             <a href="{{ api_spec.url }}">{{ api_spec.text }}</a>
