@@ -71,8 +71,6 @@ entities:
 Consumers let you identify the client that's interacting with Kong Gateway. 
 With the Key Authentication plugin enabled globally, the consumer needs an API key to access any Kong Gateway services.
 
-Append the following snippet to the `kong.yaml` file to create a [consumer](/gateway/entities/consumer/) with an API key:
-
 {% entity_examples %}
 entities:
   consumers:
@@ -100,13 +98,15 @@ append_to_existing_section: true
 
 ## 4. Apply configuration
 
-Synchronize your [decK](/deck/) configuration files.
+Synchronize your [decK](/deck/) configuration files. 
+Make sure you created the `deck_files` directory in the [prerequisites](#prerequisites).
 
 First, compare the decK file or files to the state of the Kong Gateway:
 ```bash
 deck gateway diff deck_files
 ```
 The output shows you which entities are changing. 
+
 If everything looks right, synchronize them to update your Gateway configuration:
 
 ```bash
