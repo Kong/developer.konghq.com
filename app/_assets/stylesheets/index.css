@@ -67,4 +67,8 @@
   tbody tr {
     @apply border-t border-primary;
   }
+
+  details[open] summary .fa-chevron-down {
+    @apply rotate-180;
+  }
 }

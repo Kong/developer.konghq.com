@@ -1,6 +1,8 @@
+<div class="bg-secondary shadow-primary rounded-md flex flex-col">
 {% for faq in faqs %}
-  <details class="mb-2">
-    <summary class="rounded mb-0.5 bg-gray-200 p-2">{{ faq.q }}</summary>
+  <details class="py-4 px-5 flex gap-1 {% unless forloop.last %} border-b border-primary {% endunless %}">
+    <summary class="text-sm text-primary list-none">{{ faq.q }}<span class="fa fa-chevron-down float-right text-terciary"></span></summary>
     {{ faq.a | markdownify }}
   </details>
 {% endfor %}
+</div>
