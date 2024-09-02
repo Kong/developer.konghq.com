@@ -13,6 +13,7 @@
     --color-text-terciary: 143, 163, 184;
 
     --color-border-primary: 5, 47, 92;
+    --color-shadow-primary: 5, 47, 92;
 
     --color-brand: 66, 140, 220;
     --color-brand-saturated: 24, 128, 240;
@@ -26,13 +27,44 @@
     --color-text-primary: 255, 255, 255;
     --color-text-secondary: 191, 202, 213;
     --color-text-terciary: 170, 185, 200;
+
+    --color-border-primary: 255, 255, 255;
+    --color-shadow-secondary: 255, 255, 255;
   }
 
   * {
-    @apply text-secondary;
+    @apply text-secondary font-normal leading-[22px] text-sm;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply text-primary;
+  }
+
+  table {
+    @apply bg-secondary shadow-primary border-none rounded-lg;
+  }
+
+  thead {
+    @apply bg-secondary;
+  }
+
+  th {
+    @apply bg-secondary text-primary leading-5 font-semibold py-4 px-5 border-none text-left;
+  }
+
+  th:first-child {
+    @apply rounded-tl-lg;
+  }
+
+  th:last-child {
+    @apply rounded-tr-lg;
+  }
+
+  td {
+    @apply py-4 px-5 border-none;
+  }
+
+  tbody tr {
+    @apply border-t border-primary;
   }
 }

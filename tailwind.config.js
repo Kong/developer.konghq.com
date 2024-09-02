@@ -37,6 +37,9 @@ module.exports = {
         secondary: 'rgb(var(--color-bg-secondary), 1)',
         'code-block': 'rgb(var(--color-bg-code-blcock), 1)'
       },
+      boxShadow: {
+        primary: '0 4px 12px 0 rgb(var(--color-shadow-primary), 0.04)'
+      }
     },
   },
   plugins: [],
