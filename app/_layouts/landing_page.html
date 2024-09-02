@@ -2,7 +2,7 @@
 layout: default
 ---
 
-<div>
+<main class="gap-14 pt-12">
 {% for rows in page.config %}
   <div class="grid grid-cols-1 lg:grid-cols-{{ rows.row | size }} gap-2 mb-2">
     {% for column in rows.row %}
@@ -15,4 +15,4 @@ layout: default
     {% endfor %}
   </div>
 {% endfor %}
-</div>
+</main>
