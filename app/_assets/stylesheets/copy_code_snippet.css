@@ -8,7 +8,7 @@
   top: 0;
   right: 4px;
   cursor: pointer;
-  fill: white;
+  color: white;
   opacity: 0.4;
   transition: color 0.3s;
   z-index: 10;

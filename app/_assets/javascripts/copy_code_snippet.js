@@ -33,13 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     snippet.classList.add("copy-code-snippet");
 
-    const action = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    action.setAttribute("viewBox", "0 0 115.77 122.88");
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", "M89.62 13.96v7.73h12.19c3.85 0 7.34 1.57 9.86 4.1 2.5 2.51 4.06 5.98 4.07 9.82v73.28c-0.01 3.84-1.57 7.33-4.1 9.85-2.51 2.5-5.98 4.07-9.82 4.07H40.1c-3.84-0.01-7.34-1.57-9.86-4.1-2.5-2.51-4.06-5.98-4.07-9.82V92.51H13.96c-3.84-0.01-7.34-1.57-9.86-4.1-2.5-2.51-4.06-5.98-4.07-9.82V13.96c0.01-3.85 1.58-7.34 4.1-9.86 2.51-2.5 5.98-4.07 9.82-4.07h61.7c3.85 0.01 7.34 1.57 9.86 4.1 2.5 2.51 4.06 5.98 4.07 9.82v7.73zM79.04 21.69v-7.73c0-0.91-0.39-1.75-1.01-2.37-0.61-0.61-1.46-1-2.37-1H13.96c-0.91 0-1.75 0.39-2.37 1.01-0.61 0.61-1 1.46-1 2.37v64.59c0 0.91 0.39 1.75 1.01 2.37 0.61 0.61 1.46 1 2.37 1h12.19V35.65c0.01-3.85 1.58-7.34 4.1-9.86 2.51-2.5 5.98-4.06 9.82-4.07h40.78zM105.18 108.92V35.65c0-0.91-0.39-1.75-1.01-2.37-0.61-0.61-1.46-1-2.37-1H40.1c-0.91 0-1.75 0.39-2.37 1.01-0.61 0.61-1 1.46-1 2.37v73.27c0 0.91 0.39 1.75 1.01 2.37 0.61 0.61 1.46 1 2.37 1h61.7c0.91 0 1.75-0.39 2.37-1.01 0.61-0.61 1-1.46 1-2.37z");
-    action.appendChild(path);
-
-    action.classList.add("copy-action");
+    const action = document.createElement("i");
+    action.className = "copy-action fa fa-copy";
     action.addEventListener("click", function () {
       if (document.getElementById("copy-code-success-info")) {
         return;
@@ -55,8 +50,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const successInfo = document.createElement("div");
       successInfo.id = "copy-code-success-info";
       successInfo.textContent = "Copied to clipboard!";
-      successInfo.style.top = `${rect.top - rect.height / 2}px`;
-      successInfo.style.left = `${rect.left + rect.width / 2}px`;
+      successInfo.style.top = `${rect.top - action.oofsetHeight / 2}px`;
+      successInfo.style.left = `${rect.left + action.offsetWidth / 2}px`;
       successInfo.style.opacity = "1";
 
       setTimeout(function () {
