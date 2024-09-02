@@ -19,7 +19,22 @@ module.exports = {
     "self-end",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors:{
+        brand: 'rgb(var(--color-brand), 1)',
+        'brand-saturated': 'rgb(var(--color-brand-saturated), 1)'
+      },
+      textColor: {
+        primary: 'rgb(var(--color-text-primary), 1)',
+        secondary: 'rgb(var(--color-text-secondary), 1)',
+        terciary: 'rgb(var(--color-text-terciary), 1)',
+      },
+      backgroundColor: {
+        primary: 'rgb(var(--color-bg-primary), 1)',
+        secondary: 'rgb(var(--color-bg-secondary), 1)',
+        'code-block': 'rgb(var(--color-bg-code-blcock), 1)'
+      },
+    },
   },
   plugins: [],
 };

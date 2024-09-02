@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg-primary: 247, 251, 255;
+    --color-bg-secondary: 255, 255, 255;
+    --color-bg-code-block: 5, 47, 92;
+
+    --color-text-primary: 5, 47, 92;
+    --color-text-secondary: 86, 113, 143;
+    --color-text-terciary: 143, 163, 184;
+
+    --color-brand: 66, 140, 220;
+    --color-brand-saturated: 24, 128, 240;
+  }
+
+  :root[data-theme="dark"] {
+    --color-bg-primary: 2, 20, 40;
+    --color-bg-secondary: 5, 47, 92;
+    --color-bg-code-block: 40, 106, 175;
+
+    --color-text-primary: 255, 255, 255;
+    --color-text-secondary: 191, 202, 213;
+    --color-text-terciary: 170, 185, 200;
+  }
+}
