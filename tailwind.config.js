@@ -29,6 +29,9 @@ module.exports = {
         secondary: 'rgb(var(--color-text-secondary), 1)',
         terciary: 'rgb(var(--color-text-terciary), 1)',
       },
+      borderColor: {
+        primary: 'rgb(var(--color-border-primary), .05)'
+      },
       backgroundColor: {
         primary: 'rgb(var(--color-bg-primary), 1)',
         secondary: 'rgb(var(--color-bg-secondary), 1)',
