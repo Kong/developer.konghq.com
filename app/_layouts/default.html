@@ -12,47 +12,40 @@
     {% vite_client_tag %}
     {% vite_javascript_tag application %}
   </head>
-  <body>
-    <header class='flex spy-4 px-10 bg-slate-500 min-h-[70px] tracking-wide relative z-50'>
-      <div class='flex flex-wrap items-center justify-between gap-5 w-full'>
 
-        <div class="flex flex-row items-center">
-          <a href="https://konghq.com" class="pr-4" target="_blank" rel="noopener noreferrer">
-            <img src="https://docs.konghq.com/assets/images/logos/konglogo-dark-theme.svg" alt="Kong Logo" id="kong-logo">
-          </a>
+  <body class="bg-primary">
+    <header class='flex bg-header h-[64px] border-b border-primary'>
+      <div class="flex justify-between w-full max-w-screen-2xl 2xl:mx-auto px-5 md:px-8 2xl:px-[156px]">
+        <div class="flex flex-row items-center gap-2.5">
           <a href="/">
-            <img src="https://docs.konghq.com//assets/images/logos/docslogo-dark-theme.svg" alt="Kong Docs Logo" id="kong-docs-logo">
+            <img src="/assets/logos/brand/KongDeveloper.svg" alt="Kong Developer Logo" id="kong-developer-logo">
           </a>
         </div>
 
-        <ul class='flex gap-x-5 list-none'>
-          <li class='border-gray-300 max-lg:py-3 px-3'>
-            <a href='/' class='text-white hover:text-red-200'>Home</a>
-          </li>
-          <li class='border-gray-300 max-lg:py-3 px-3'>
-            <a href='/how-to/' class='text-white hover:text-red-200'>How-to Guides</a>
-          </li>
-          <li class='border-gray-300 max-lg:py-3 px-3'>
-            <a href='/plugins/' class='text-white hover:text-red-200'>Plugins</a>
-          </li>
-          <li class='border-gray-300 max-lg:py-3 px-3'>
-            <a href='/gateway/entities/' class='text-white hover:text-red-200'>Gateway Entities</a>
-          </li>
-          <li class='border-gray-300 max-lg:py-3 px-3'>
-            <a href='/landing-pages/' class='text-white hover:text-red-200'>All Landing Pages</a>
-          </li>
-        </li>
-      </ul>
-
-      <div class='flex space-x-3'>
-        <button
-        class='px-4 py-2 text-sm rounded-full font-bold text-white border-2'>Login</button>
-        <button
-        class='px-4 py-2 text-sm rounded-full font-bold text-white border-2'>Sign up</button>
-
+        <div class='flex gap-8 list-none items-center font-normal leading-5 text-sm py-5'>
+          <a href='/' class='text-terciary'>Home</a>
+          <a href='/how-to/' class='text-terciary'>How-to Guides</a>
+          <a href='/plugins/' class='text-terciary'>Plugins</a>
+          <a href='/gateway/entities/' class='text-terciary'>Gateway Entities</a>
+          <a href='/landing-pages/' class='text-terciary'>All Landing Pages</a>
+          <div class='flex gap-3 leading-6 font-medium text-sm'>
+            <button class='rounded-lg border-2 py-1 px-4 text-primary border-brand'>Login</button>
+            <button class='rounded-lg border-2 py-1 px-4 bg-brand text-white border-brand'>Sign up</button>
+          </div>
+        </div>
       </div>
-    </div>
   </header>
-  {{ content }}
+
+  {% ifhascontent nav_header %}
+    <section class="flex px-5 md:px-8 2xl:px-[156px] gap-4 2xl:mx-auto max-w-screen-2xl">
+      {% contentblock nav_header %}
+    </section>
+  {% endifhascontent %}
+
+  <div class="flex px-5 md:px-8 2xl:px-[156px] gap-4 2xl:mx-auto max-w-screen-2xl">
+    {{ content }}
+  </div>
+
+  {% include footer.html %}
 </body>
 </html>
