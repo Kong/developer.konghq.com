@@ -36,8 +36,8 @@
     @apply mb-4;
   }
 
-  * {
-    @apply text-secondary font-normal text-sm;
+  html {
+    @apply text-secondary font-normal;
   }
 
   h1, h2, h3, h4, h5, h6 {
