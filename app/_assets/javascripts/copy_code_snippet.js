@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const successInfo = document.createElement("div");
       successInfo.id = "copy-code-success-info";
       successInfo.textContent = "Copied to clipboard!";
-      successInfo.style.top = `${rect.top - action.oofsetHeight / 2}px`;
+      successInfo.style.top = `${rect.top - action.offsetHeight / 2}px`;
       successInfo.style.left = `${rect.left + action.offsetWidth / 2}px`;
       successInfo.style.opacity = "1";
 
