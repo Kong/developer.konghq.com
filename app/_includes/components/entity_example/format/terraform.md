@@ -16,12 +16,14 @@ provider "konnect" {
 {% endcapture %}
 
 {% if include.render_context %}
-  <details class="mb-2">
-    <summary class="rounded mb-0.5 bg-gray-200 p-2"><strong>Prerequisite:</strong> Configure your Personal Access Token</summary>
-    <div>
+<div class="bg-secondary shadow-primary rounded-md flex flex-col mb-3">
+  <details class="py-4 px-5 flex gap-1 border-b border-primary/5">
+    <summary class="text-sm text-primary list-none"><strong>Prerequisite:</strong> Configure your Personal Access Token<span class="fa fa-chevron-down float-right text-terciary"></span></summary>
+    <div class="mt-2">
       {{ terraform_prereq_block | markdownify }}
     </div>
   </details>
+</div>
 {% case include.presenter.entity_type %}
 {% when 'plugin' %}
   Add the following to your Terraform configuration to create a Konnect Gateway Plugin:
