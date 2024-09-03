@@ -44,6 +44,10 @@
     @apply text-primary;
   }
 
+  h2 {
+    @apply mt-14;
+  }
+
   table {
     @apply bg-secondary shadow-primary border-none rounded-lg;
   }
