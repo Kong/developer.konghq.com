@@ -44,8 +44,12 @@
     @apply text-primary;
   }
 
+  h1 {
+    @apply font-bold text-3xl;
+  }
+
   h2 {
-    @apply mt-14;
+    @apply mt-14 mb-3 font-bold text-lg;
   }
 
   table {
