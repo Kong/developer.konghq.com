@@ -7,15 +7,9 @@ layout: with_aside
 </div>
 
 {% if page.faqs %}
-<div id="faq" class="mt-4">
-  <h2>FAQ</h2>
-  {% faqs %}
-</div>
+{% include sections/faq.html %}
 {% endif %}
 
 {% if page.next_steps %}
-<div id="next-steps" class="mt-4">
-  <h2>Next Steps</h2>
-  {% next_steps %}
-</div>
+{% include sections/next_steps.html %}
 {% endif %}

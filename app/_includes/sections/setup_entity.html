@@ -1,0 +1,5 @@
+<div class="mt-4">
+    {% capture title %}Set up a {{ page.entities | first | titleize }}{% endcapture %}
+    <h2 id="{{ title | slugify }}">{{ title }}</h2>
+    {% contentblock setup_entity %}
+</div>
