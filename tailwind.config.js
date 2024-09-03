@@ -21,22 +21,22 @@ module.exports = {
   theme: {
     extend: {
       colors:{
-        brand: 'rgb(var(--color-brand), 1)',
-        'brand-saturated': 'rgb(var(--color-brand-saturated), 1)'
+        brand: 'rgb(var(--color-brand), <alpha-value>)',
+        'brand-saturated': 'rgb(var(--color-brand-saturated), <alpha-value>)'
       },
       textColor: {
-        primary: 'rgb(var(--color-text-primary), 1)',
-        secondary: 'rgb(var(--color-text-secondary), 1)',
-        terciary: 'rgb(var(--color-text-terciary), 1)',
+        primary: 'rgb(var(--color-text-primary), <alpha-value>)',
+        secondary: 'rgb(var(--color-text-secondary), <alpha-value>)',
+        terciary: 'rgb(var(--color-text-terciary), <alpha-value>)',
       },
       borderColor: {
-        primary: 'rgb(var(--color-border-primary), .05)'
+        primary: 'rgb(var(--color-border-primary), <alpha-value>)',
+        brand: 'rgb(var(--color-brand), <alpha-value>)'
       },
       backgroundColor: {
-        primary: 'rgb(var(--color-bg-primary), 1)',
-        secondary: 'rgb(var(--color-bg-secondary), 1)',
-        'code-block': 'rgb(var(--color-bg-code-blcock), 1)',
-        brand: 'rgb(var(--color-brand), 0.5)'
+        primary: 'rgb(var(--color-bg-primary), <alpha-value>)',
+        secondary: 'rgb(var(--color-bg-secondary), <alpha-value>)',
+        'code-block': 'rgb(var(--color-bg-code-bcock), <alpha-value>)',
       },
       boxShadow: {
         primary: '0 4px 12px 0 rgb(var(--color-shadow-primary), 0.04)'
