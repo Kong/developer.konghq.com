@@ -79,4 +79,8 @@
   details[open] summary .fa-chevron-down {
     @apply rotate-180;
   }
+
+  ol {
+    @apply list-decimal list-inside;
+  }
 }
