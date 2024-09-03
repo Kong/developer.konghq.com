@@ -32,8 +32,12 @@
     --color-shadow-secondary: 255, 255, 255;
   }
 
+  p {
+    @apply font-normal text-sm  leading-[22px];
+  }
+
   * {
-    @apply text-secondary font-normal leading-[22px] text-sm;
+    @apply text-secondary;
   }
 
   h1, h2, h3, h4, h5, h6 {

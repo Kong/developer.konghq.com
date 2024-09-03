@@ -3,14 +3,16 @@ layout: default
 ---
 
 <div class="flex gap-16">
-    <main class="w-3/4 gap-14 pt-12">
+    <main class="flex flex-col w-3/4 gap-14 pt-12">
         <h1 class="text-3xl mt-4">{{ page.title }}</h1>
 
         {{ content }}
     </main>
 
 
-    <aside class="w-1/4 gap-8 pt-[92px]">
+    <aside class="flex flex-col w-1/4 gap-8 pt-[92px]">
+        <div class="flex flex-col rounded-md p-5 gap-5 bg-secondary shadow-primary">
         {% contentblock info_box %}
+        </div>
     </aside>
 </div>
