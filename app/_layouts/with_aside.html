@@ -9,10 +9,14 @@ layout: default
         {{ content }}
     </main>
 
-
-    <aside class="flex flex-col w-1/4 gap-8 pt-[92px]">
-        <div class="flex flex-col rounded-md p-5 gap-5 bg-secondary shadow-primary  sticky top-0 items-baseline">
-        {% contentblock info_box %}
+<aside class="flex flex-col w-1/4 pt-[92px]">
+    <div class="flex flex-col gap-8 sticky top-0 items-baseline">
+        <div class="flex flex-col rounded-md p-5 gap-5 bg-secondary shadow-primary w-full">
+            {% contentblock info_box %}
         </div>
-    </aside>
+        <div clas="flex flex-col">
+            {% include toc.html html=content h_min=2 h_max=3 id='toc' item_class='py-2 px-5 scroll-to' %}
+        </div>
+    </div>
+</aside>
 </div>
