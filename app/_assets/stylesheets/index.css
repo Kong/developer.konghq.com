@@ -19,7 +19,7 @@
     --color-brand-saturated: 24, 128, 240;
   }
 
-  :root[data-theme="dark"] {
+  .dark {
     --color-bg-primary: 2, 20, 40;
     --color-bg-secondary: 5, 47, 92;
     --color-bg-code-block: 40, 106, 175;

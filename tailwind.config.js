@@ -9,6 +9,7 @@ module.exports = {
     "app/_plugins/**/*.rb",
     "app/_assets/javascripts/**"
   ],
+  darkMode: 'selector',
   safelist: [
     {
       pattern: /grid-cols-[1-6]/,
