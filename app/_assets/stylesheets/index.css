@@ -33,11 +33,11 @@
   }
 
   p {
-    @apply font-normal text-sm  leading-[22px] mb-4;
+    @apply mb-4;
   }
 
   * {
-    @apply text-secondary;
+    @apply text-secondary font-normal text-sm;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -57,7 +57,7 @@
   }
 
   th {
-    @apply bg-secondary text-primary leading-5 font-semibold py-4 px-5 border-none text-left;
+    @apply bg-secondary text-primary font-semibold py-4 px-5 border-none text-left;
   }
 
   th:first-child {
