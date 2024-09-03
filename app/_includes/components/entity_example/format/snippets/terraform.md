@@ -1,6 +1,6 @@
 {% if include.presenter.entity_type == "plugin" %}
 {% assign plugin_name = include.presenter.data.name | replace: "-","_" %}
-{% highlight hcl %}
+```hcl
 resource "{{ include.presenter.resource_name }}_{{ plugin_name }}" "my_{{ plugin_name }}" {
   enabled = true
 
@@ -11,12 +11,12 @@ resource "{{ include.presenter.resource_name }}_{{ plugin_name }}" "my_{{ plugin
   }
 {%- endif %}
 }
-{% endhighlight %}
+```
 {% else %}
-{% highlight hcl %}
+```hcl
 resource "{{ include.presenter.resource_name }}" "my_{{ include.presenter.entity_type }}" {
   {{ include.presenter }}
   control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id
 }
-{% endhighlight %}
+```
 {% endif %}

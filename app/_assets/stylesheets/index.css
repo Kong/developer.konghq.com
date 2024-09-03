@@ -88,3 +88,53 @@
     @apply list-decimal list-inside;
   }
 }
+
+@layer components {
+  pre.highlight {
+    @apply bg-code-block rounded-lg p-3 overflow-scroll mb-3;
+  }
+
+  pre.highlight code {
+    @apply text-white;
+  }
+
+  pre.highlight code span {
+    @apply text-white;
+  }
+
+  .copy-code-snippet {
+    @apply relative;
+  }
+
+  .copy-code-snippet .copy-action {
+    @apply absolute cursor-pointer text-white right-3 top-3 p-1 w-5 opacity-40;
+  }
+
+  .copy-code-snippet .copy-action:hover {
+    @apply opacity-20;
+  }
+
+  #copy-code-success-info {
+    @apply fixed bg-primary border border-white px-1 py-2 rounded -mt-8 -translate-x-1/2;
+  }
+
+  #copy-code-input {
+    @apply fixed;
+  }
+
+  [data-file] {
+    @apply relative;
+  }
+
+  [data-file] pre.highlight {
+    @apply rounded-t-none;
+  }
+
+  [data-file]:before {
+    @apply bg-code-block px-3 py-2 rounded-t-lg text-white w-full inline-block border-b border-white/20 content-[attr(data-file)];
+  }
+
+  .copy-code-snippet[data-file] .copy-action {
+    @apply top-2;
+  }
+}

@@ -5,8 +5,6 @@
 
 // Example: Import a stylesheet in <sourceCodeDir>/index.css
 import '~/stylesheets/index.css'
-import '~/stylesheets/syntax_highlighting.css'
-import '~/stylesheets/copy_code_snippet.css'
 
 import EntityExample from '@/javascripts/components/entity_example';
 import PluginConfigExample from '@/javascripts/components/plugin_config_example';
