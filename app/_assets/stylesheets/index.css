@@ -33,7 +33,7 @@
   }
 
   p {
-    @apply font-normal text-sm  leading-[22px];
+    @apply font-normal text-sm  leading-[22px] mb-4;
   }
 
   * {
