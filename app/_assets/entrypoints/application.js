@@ -11,7 +11,9 @@ import '~/stylesheets/copy_code_snippet.css'
 import EntityExample from '@/javascripts/components/entity_example';
 import PluginConfigExample from '@/javascripts/components/plugin_config_example';
 import Tabs from '@/javascripts/components/tabs';
+import '@/javascripts/anchor_links';
 import '@/javascripts/copy_code_snippet';
+import '@/javascripts/toc';
 
 document.addEventListener('DOMContentLoaded', function () {
   new EntityExample();

@@ -15,8 +15,8 @@ layout: default
             {% contentblock info_box %}
         </div>
         {% if page.toc != false %}
-        <div clas="flex flex-col">
-            {% include toc.html html=content h_min=2 h_max=3 id='toc' item_class='py-2 px-5 scroll-to' %}
+        <div class="flex flex-col w-full">
+            {% include toc.html html=content h_min=2 h_max=3 id='toc' item_class='py-2 px-5' anchor_class='scroll-to' %}
         </div>
         {% endif %}
     </div>
