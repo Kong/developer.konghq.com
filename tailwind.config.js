@@ -35,7 +35,8 @@ module.exports = {
       backgroundColor: {
         primary: 'rgb(var(--color-bg-primary), 1)',
         secondary: 'rgb(var(--color-bg-secondary), 1)',
-        'code-block': 'rgb(var(--color-bg-code-blcock), 1)'
+        'code-block': 'rgb(var(--color-bg-code-blcock), 1)',
+        brand: 'rgb(var(--color-brand), 0.5)'
       },
       boxShadow: {
         primary: '0 4px 12px 0 rgb(var(--color-shadow-primary), 0.04)'
