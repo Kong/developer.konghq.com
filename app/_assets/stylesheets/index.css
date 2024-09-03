@@ -119,7 +119,7 @@
   }
 
   #copy-code-input {
-    @apply fixed;
+    @apply fixed -top-full;
   }
 
   [data-file] {
