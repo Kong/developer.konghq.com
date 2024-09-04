@@ -1,8 +1,7 @@
 <ol class="list-none flex flex-col gap-1">
   {% for step in cleanup.inline %}
     <li>
-      {% capture inline_template %}{% include cleanup/inline.md step=step %}{% endcapture %}
-      {{ inline_template | markdownify }}
+{% include cleanup/inline.md step=step %}
     </li>
   {% endfor %}
   </ul>

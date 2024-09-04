@@ -1,15 +1,15 @@
 {% assign prereq = include.prereq %}
-<details class="py-4 px-5 flex flex-col gap-1 bg-secondary shadow-primary rounded-md text-sm" markdown="1">
-  <summary class="text-sm text-primary list-none">{{ include.prereq.title | liquify }}<span class="fa fa-chevron-down float-right text-terciary"></span></summary>
+{% capture details_content %}
+{% if prereq.content %}
+{{ include.prereq.content }}
+{% elsif prereq.include_content %}
+{% assign include_path = prereq.include_content | append: ".md" %}
+{% include {{ include_path }} %}
+{% else %}
+    {% raise "content or include_content must be set when using the `prereqs.inline` block" %}
+{% endif %}
+{% endcapture %}
 
-  {% if prereq.content %}
-  {{ include.prereq.content | liquify | markdownify }}
-  {% elsif prereq.include_content %}
-  {% assign include_path = prereq.include_content | append: ".md" %}
-  {% capture included_content %}{% include {{ include_path }} %}{% endcapture %}
-  {{ included_content | liquify | markdownify }}
-  {% else %}
-      {% raise "content or include_content must be set when using the `prereqs.inline` block" %}
-  {% endif %}
+{% assign summary = include.prereq.title %}
 
-</details>
+{% include details.html summary=summary details_content=details_content %}
