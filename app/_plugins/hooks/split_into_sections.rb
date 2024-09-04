@@ -18,12 +18,12 @@ def wrap_sections_with_nokogiri(content)
     title = h2.text
 
     wrapper = Nokogiri::HTML::DocumentFragment.parse <<-HTML
-      <div class="flex flex-col gap-3" aria-expanded="true">
+      <div class="flex flex-col gap-3 collapsible" aria-expanded="true">
         <a href="##{slug}" title="#{title}" class="flex items-baseline justify-between">
           #{h2.to_html}
           <span class="fa fa-chevron-down text-terciary rotate-180" aria-hidden="true"></span>
         </a>
-        <div></div>
+        <div class="content"></div>
       </div>
     HTML
 
@@ -34,7 +34,7 @@ def wrap_sections_with_nokogiri(content)
 
     while current_node && current_node.name != 'h2'
       next_node = current_node.next_sibling
-      wrapper.at_css('div > div').add_child(current_node)
+      wrapper.at_css('.content').add_child(current_node)
       current_node = next_node
 
       while current_node && !current_node.element?
