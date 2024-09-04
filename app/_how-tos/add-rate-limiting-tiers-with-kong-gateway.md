@@ -60,13 +60,12 @@ cleanup:
       include_content: cleanup/products/gateway
 ---
 
-### 1. Set up consumer authentication
+## 1. Set up consumer authentication
 
 We need to set up [authentication](/authentication/) to identify the consumer and apply rate limiting. In this guide, we'll be using the [Key Auth plugin](https://docs.konghq.com/hub/kong-inc/key-auth/) plugin, but you can use any [Kong authentication plugin](https://docs.konghq.com/hub/?category=authentication). 
 
 Add the following content to your `kong.yaml` file in the `deck_files` directory to configure the Key Auth plugin:
 
-{% capture plugin %}
 {% entity_examples %}
 entities:
   plugins:
@@ -75,16 +74,13 @@ entities:
         key_names:
           - apikey
 {% endentity_examples %}
-{% endcapture %}
-{{ plugin | indent: 3 }}
 
-### 2. Create consumer groups for each tier
+## 2. Create consumer groups for each tier
 
 Before you can enable rate limiting for tiers of users, we first have to create consumer groups for each tier and then add consumers to those groups. Consumer groups are soley a way to organize consumers of your APIs. In this guide, we'll create three tiers (Free, Basic, and Premium), so we need to create a unique consumer group for each tier.
 
 Apphend the following content to your `kong.yaml` file in the `deck_files` directory to create consumer groups for each tier:
 
-{% capture groups %}
 {% entity_examples %}
 entities:
   consumer_groups:
@@ -92,10 +88,8 @@ entities:
     - name: Basic
     - name: Premium
 {% endentity_examples %}
-{% endcapture %}
-{{ groups | indent: 3 }}
 
-### 3. Create consumers 
+## 3. Create consumers 
 
 Now that you've added consumer groups for each tier, you can create three consumers, one for each tier. Here, we're manually adding consumers for the sake of ease, but in a production environment, you could use a script that would automatically add consumers to the correct groups as they sign up for a tier of service. 
 
@@ -103,7 +97,6 @@ We're also adding key auth credentials (`key`) to each consumer so they can auth
 
 Apphend the following content to your `kong.yaml` file in the `deck_files` directory to create consumers and their authentication credentials:
   
-{% capture consumers %}
 {% entity_examples %}
 entities:
   consumers:
@@ -123,14 +116,11 @@ entities:
       keyauth_credentials:
         - key: mahan
 {% endentity_examples %}
-{% endcapture %}
-{{ consumers | indent: 3 }} 
 
-### 4. Enable rate limiting on each tier
+## 4. Enable rate limiting on each tier
 
 Enable the Rate Limiting Advanced plugins for each tier:
 
-{% capture groups %}
 {% entity_examples %}
 entities:
    plugins:
@@ -166,15 +156,13 @@ entities:
        namespace: premium
 append_to_existing_section: true
 {% endentity_examples %}
-{% endcapture %}
-{{ groups | indent: 3 }}
    
-   This configures the different tiers like the following:
-   * **Free:** Allows six requests per second. This configuration sets the rate limit to three requests (`config.limit`) for every 30 seconds (`config.window_size`).
-   * **Basic:** Allows 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
-   * **Premium:** Allows 1,000 requests per second. This configuration sets the rate limit to 500 requests (`config.limit`) for every 30 seconds (`config.window_size`).
+This configures the different tiers like the following:
+* **Free:** Allows six requests per second. This configuration sets the rate limit to three requests (`config.limit`) for every 30 seconds (`config.window_size`).
+* **Basic:** Allows 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
+* **Premium:** Allows 1,000 requests per second. This configuration sets the rate limit to 500 requests (`config.limit`) for every 30 seconds (`config.window_size`).
 
-### 5. Synchronize your configuration
+## 5. Synchronize your configuration
 
 Now that we have a testable configuration of the rate limiting tiers, we can sync our configuration. With decK, you have to synchronize your configuration with `deck gateway sync` so that Kong Gateway is updated with your configuration changes. It's also a best practice to use `deck gateway diff` to verify the changes that would be make with a sync. 
 
@@ -188,7 +176,7 @@ If everything looks right, synchronize them to update your Kong Gateway configur
 deck gateway sync deck_files
 ```
 
-### 6. Validate that rate limiting is working on each tier
+## 6. Validate that rate limiting is working on each tier
 
 Now we can test that each rate limiting tier is working as expected by sending a series of HTTP requests (for example, six for Free Tier and seven for Basic Tier) to the endpoint with the appropriate API key with the goal of exceeding the configured rate limit for that tier. The tests wait for one second between requests to avoid overwhelming the server and test rate limits more clearly.
 
