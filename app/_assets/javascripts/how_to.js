@@ -11,6 +11,7 @@ class CollapsibleSection {
     }
 
     toggleSection(event) {
+        event.preventDefault();
         this.elem.querySelector('span.fa').classList.toggle('rotate-180');
         this.elem.querySelector('.content').classList.toggle('hidden');
     }

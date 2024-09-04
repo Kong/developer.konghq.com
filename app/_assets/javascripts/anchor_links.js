@@ -6,12 +6,12 @@ const anchorForId = (id) => {
     return anchor;
   };
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const headers = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
+document.addEventListener("DOMContentLoaded", () => {
+  const headers = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
 
-    headers.forEach(header => {
-      if (header.id) {
-        header.prepend(anchorForId(header.id));
-      }
-    });
+  headers.forEach(header => {
+    if (!header.parentElement.classList.contains('header-link') && header.id) {
+      header.prepend(anchorForId(header.id));
+    }
   });
+});
