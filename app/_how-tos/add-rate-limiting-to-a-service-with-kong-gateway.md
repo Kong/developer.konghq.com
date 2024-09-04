@@ -39,13 +39,18 @@ prereqs:
         - example-service
     routes:
         - example-route
+
+cleanup:
+  inline:
+    - title: Destroy the Kong Gateway container
+      include_content: cleanup/products/gateway
 ---
 
-## Steps
+## 1. Enable rate limiting
 
-1. Enable the Rate Limiting plugin on a service:
+Enable the [Rate Limiting plugin](/plugins/rate-limiting/) for the service. 
+In this example, the limit is 5 requests per second and 1000 requests per hour.
 
-{% capture step %}
 {% entity_examples %}
 entities:
   plugins:
@@ -54,30 +59,19 @@ entities:
       config:
         second: 5
         hour: 1000
-        policy: local
 {% endentity_examples %}
-{% endcapture %}
-{{ step | indent: 3 }}
 
-1. Validate
+## 2. Validate
 
-   After configuring the Rate Limiting plugin, you can verify that it was configured correctly and is working, by sending more requests than allowed in the configured time limit.
-   ```bash
-   for _ in {1..6}
-   do
-     curl http://localhost:8000/example-route/anything/
-   done
-   ```
-   After the 5th request, you should receive the following `429` error:
+After configuring the Rate Limiting plugin, you can verify that it was configured correctly and is working, by sending more requests than allowed in the configured time limit.
+```bash
+for _ in {1..6}
+do
+  curl http://localhost:8000/example-route/anything/
+done
+```
+After the 5th request, you should receive the following `429` error:
 
-   ```bash
-   { "message": "API rate limit exceeded" }
-   ```
-
-1. Teardown
-
-   Destroy the Kong Gateway container.
-
-   ```bash
-   curl -Ls https://get.konghq.com/quickstart | bash -s -- -d
-   ```
+```bash
+{ "message": "API rate limit exceeded" }
+```
