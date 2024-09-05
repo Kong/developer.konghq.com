@@ -1,6 +1,6 @@
 {% assign tabs = 'navtabs-' | append: navtabs_id %}
 
-<div class="tabs {{ class }} {{ environment['additional_classes'] }}">
+<div class="tabs flex flex-col {{ class }} {{ environment['additional_classes'] }}">
   <ul class="tablist flex gap-[19px]" role="tablist">
     {% for tab in environment[tabs] %}
       {% assign slug = tab[1].attributes.slug %}
@@ -23,11 +23,11 @@
     {% endfor %}
   </ul>
 
-  <div class="navtab-contents mt-6">
+  <div class="navtab-contents mt-6 flex flex-col">
     {% for tab in environment[tabs] %}
       {% assign slug = tab[1].attributes.slug %}
       <div
-        class="navtab-content {% unless forloop.first %} hidden {% endunless %}"
+        class="navtab-content flex flex-col {% unless forloop.first %} hidden {% endunless %}"
         role="tabpanel"
         id="navtab-{{ navtabs_id }}-tabpanel-{{ forloop.index }}"
         tabindex="0"
