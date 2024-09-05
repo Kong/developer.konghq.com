@@ -7,7 +7,6 @@ content:
             config:
               type: h1
               text: "Kong Gateway Entities"
-              align: center
 
   - row:
       - column:

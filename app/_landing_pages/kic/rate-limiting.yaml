@@ -7,7 +7,6 @@ content:
             config:
               type: h1
               text: "Rate Limiting with Kong Ingress Controller"
-              align: center
 
   - row:
       - column:

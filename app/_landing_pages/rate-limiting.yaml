@@ -9,7 +9,6 @@ content:
             config:
               type: h1
               text: "Rate Limiting"
-              align: center
 
   - row:
       - column:

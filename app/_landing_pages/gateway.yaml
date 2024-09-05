@@ -7,7 +7,6 @@ content:
             config:
               type: h1
               text: "Kong Gateway"
-              align: center
   - row:
       - column:
           - type: header

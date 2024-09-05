@@ -9,7 +9,6 @@ content:
             config:
               type: h1
               text: "Authentication"
-              align: center
 
   - row:
       - column:

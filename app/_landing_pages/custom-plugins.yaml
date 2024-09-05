@@ -7,7 +7,6 @@ content:
             config:
               type: h1
               text: "Custom plugins"
-              align: center
 
   - row:
       - column:

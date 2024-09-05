@@ -7,7 +7,6 @@ content:
             config:
               type: h1
               text: "Rate Limiting with Kong Gateway"
-              align: center
 
   - row:
       - column:
