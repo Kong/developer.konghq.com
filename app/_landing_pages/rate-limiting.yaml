@@ -51,35 +51,42 @@ content:
               align: left
   - row:
       - column:
-          - type: structured_text
-            config:
-              header:
-                text: "Rate Limiting in Kong Gateway"
-              blocks:
-                - type: text
-                  text: Kong Gateway can be configured to apply rate limiting rules on API traffic entering the system. This includes rate limiting by IP, API key, consumer, or other criteria. This is ideal for handling external API traffic with advanced rate limiting policies and comprehensive traffic management.
-                - type: text
-                  text: <a href="/gateway/rate-limiting/">Add Rate Limiting with Kong Gateway</a>
+        - type: card
+          config:
+            title: Rate Limiting in Kong Gateway
+            description: |
+              Kong Gateway can be configured to apply rate limiting rules on API traffic entering the system.
+
+              This includes rate limiting by IP, API key, consumer, or other criteria. This is ideal for handling external API traffic with advanced rate limiting policies and comprehensive traffic management.
+            icon: /assets/icons/gateway.svg
+            cta:
+              text: Add Rate Limiting with Kong Gateway
+              url: "/gateway/rate-limiting/"
       - column:
-          - type: structured_text
-            config:
-              header:
-                text: "Rate Limiting in KIC"
-              blocks:
-                - type: text
-                  text: Rate limiting capabilities in KIC vary by the ingress controller implementation (e.g., NGINX, Traefik). Basic rate limiting can be configured for external traffic entering the Kubernetes cluster. This is ideal for controlling external traffic entering your Kubernetes environment with simpler rate limiting requirements.
-                - type: text
-                  text: <a href="/kic/rate-limiting/">Add Rate Limiting with KIC</a>
+        - type: card
+          config:
+            title: Rate Limiting in KIC
+            description: |
+              Rate limiting capabilities in KIC vary by the ingress controller implementation (e.g., NGINX, Traefik).
+
+              Basic rate limiting can be configured for external traffic entering the Kubernetes cluster. This is ideal for controlling external traffic entering your Kubernetes environment with simpler rate limiting requirements.
+            icon: /assets/icons/kic.svg
+            cta:
+              text: Add Rate Limiting with KIC
+              url: "/kic/rate-limiting/"
       - column:
-          - type: structured_text
-            config:
-              header:
-                text: "Rate Limiting in Kong Mesh"
-              blocks:
-                - type: text
-                  text: Kong Mesh can apply rate limiting policies at the service level within the mesh. This includes controlling traffic between microservices and managing inter-service communication. This is ideal for internal service-to-service communication where you need fine-grained control over traffic within the mesh.
-                - type: text
-                  text: <a href="/mesh/rate-limiting/">Add Rate Limiting with Kong Mesh</a>
+        - type: card
+          config:
+            title: Rate Limiting in Kong Mesh
+            description: |
+              Kong Mesh can apply rate limiting policies at the service level within the mesh.
+
+              This includes controlling traffic between microservices and managing inter-service communication. This is ideal for internal service-to-service communication where you need fine-grained control over traffic within the mesh.
+            icon: /assets/icons/mesh.svg
+            cta:
+              text: Add Rate Limiting with Kong Mesh
+              url: "/mesh/rate-limiting/"
+
 
   - row:
       - column:
