@@ -9,7 +9,8 @@ layout: default
     <div class="grid gap-3">
       {% for entry in column.column %}
       {% assign include_path = "landing_pages/" | append: entry.type | append : ".md" %}
-      {% include {{ include_path }} type=entry.type config=entry.config %}
+      {% capture include_template %}{% include {{ include_path }} type=entry.type config=entry.config %}{% endcapture %}
+      {{ include_template | markdownify }}
       {% endfor %}
     </div>
     {% endfor %}
