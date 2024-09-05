@@ -4,7 +4,7 @@
       <th></th>
       {% for c in include.config.columns %}
         <th>
-          <strong>{{ c.title }}</strong>
+          <span class="font-semibold text-primary">{{ c.title }}</span>
         </th>
       {% endfor %}
     </tr>
@@ -13,15 +13,15 @@
     {% for f in include.config.features %}
       <tr>
         <td>
-          <span class="block">{{ f.title | markdown }}</span>
+          <span class="block text-primary">{{ f.title | markdown }}</span>
           {% if f.subtitle %}
-          <span class=" text-gray-500">{{ f.subtitle }}</span>
+          <span class="text-secondary">{{ f.subtitle | markdown }}</span>
           {% endif %}
         </td>
         {% for c in include.config.columns %}
         {% assign v = f[c.key] %}
-        <td>
-        {% if v %}✅{% else %}❌{% endif %}
+        <td class="text-center">
+        {% if v %}<i class="fa fa-xs fa-check text-primary"></i>{% else %}<i class="fa fa-times text-brand"></i>{% endif %}
         </td>
         {% endfor %}
       </tr>
