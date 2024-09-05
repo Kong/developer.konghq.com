@@ -1,7 +1,7 @@
 {% if page.collection == 'gateway_entities' %}
 {% case include.presenter.entity_type %}
 {% when 'consumer' %}
-<div markdown="1" class="prose-ol:list-inside text-sm">
+<div markdown="1" class="prose-ol:list-inside">
 The following creates a new consumer called **{{ include.presenter.data['username'] }}**:
 
 1. In Kong Manager or Gateway Manager, go to **Consumers**.
@@ -10,7 +10,7 @@ The following creates a new consumer called **{{ include.presenter.data['usernam
 4. Click **Save**.
 </div>
 {% when 'consumer_group' %}
-<div markdown="1" class="prose-ol:list-inside text-sm">
+<div markdown="1" class="prose-ol:list-inside">
 The following creates a new Consumer Group called **{{ include.presenter.data['name'] }}**:
 
 1. In Kong Manager or Gateway Manager, go to **API Gateway** > **Consumers**.
@@ -20,7 +20,7 @@ The following creates a new Consumer Group called **{{ include.presenter.data['n
 5. Click **Save**.
 </div>
 {% when 'route' %}
-<div markdown="1" class="prose-ol:list-inside text-sm">
+<div markdown="1" class="prose-ol:list-inside">
 The following creates a new route called **{{ include.presenter.data['name'] }}** with basic configuration:
 
 1. In Kong Manager or Gateway Manager, go to **Routes**.
@@ -30,7 +30,7 @@ The following creates a new route called **{{ include.presenter.data['name'] }}*
 5. Click **Save**.
 </div>
 {% when 'service' %}
-<div markdown="1" class="prose-ol:list-inside text-sm">
+<div markdown="1" class="prose-ol:list-inside">
 The following creates a new service called **{{ include.presenter.data['name'] }}** with basic configuration:
 
 1. In Kong Manager or Gateway Manager, go to **Gateway Services**.
@@ -40,7 +40,7 @@ The following creates a new service called **{{ include.presenter.data['name'] }
 5. Click **Save**.
 </div>
 {% when 'plugin' %}
-<div markdown="1" class="prose-ol:list-inside text-sm">
+<div markdown="1" class="prose-ol:list-inside">
 1. In Kong Manager or Gateway Manager, go to **Plugins**.
 2. Click **New Plugin**.
 3. Choose a scope for the plugin:
