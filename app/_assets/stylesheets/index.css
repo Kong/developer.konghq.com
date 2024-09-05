@@ -110,11 +110,11 @@
     @apply bg-code-block rounded-lg p-3 mb-3;
   }
 
-  pre.highlight code {
-    @apply text-white;
+  code {
+    @apply text-white bg-code-block rounded p-[2px] text-sm;
   }
 
-  pre.highlight code span {
+  code span {
     @apply text-white;
   }
 
