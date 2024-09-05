@@ -2,7 +2,7 @@
 layout: default
 ---
 
-<main class="flex flex-col gap-14 pt-12">
+<main class="flex flex-col gap-14 py-12">
   {% for rows in page.config %}
   <div class="grid grid-cols-1 lg:grid-cols-{{ rows.row | size }} gap-14">
     {% for column in rows.row %}
