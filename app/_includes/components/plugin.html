@@ -1,4 +1,6 @@
-{% assign icon="https://docs.konghq.com/assets/images/icons/hub/{{ plugin.publisher }}_{{ plugin.slug }}.png" %}
+{% capture icon %}
+https://docs.konghq.com/assets/images/icons/hub/{{ plugin.publisher }}_{{ plugin.slug }}.png
+{% endcapture %}
 {% capture cta %}
 <a href="{{ plugin.url }}">See plugin &rarr;</a>
 {% endcapture %}
