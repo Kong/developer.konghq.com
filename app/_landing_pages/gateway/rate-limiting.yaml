@@ -67,36 +67,26 @@ content:
               slug: rate-limiting-advanced
 
   - row:
-      - column:
+     - column:
           - type: header
             config:
               type: h2
               text: How-to Guides
-  - row:
-     - column:
           - type: how_to_list
             config:
               tags:
                 - rate-limiting
-              products:
-                - gateway
-              quantity: 3
-              allow_empty: true
-
-     - column:
-          - type: how_to_list
-            config:
-              tags:
                 - rate-limiting-advanced
               products:
                 - gateway
-              quantity: 3
+              quantity: 6
               allow_empty: true
+
   - row:
       - column:
           - type: header
             config:
-              type: h1
+              type: h2
               text: "Specialized Rate Limiting Plugins"
               align: center
   - row:
