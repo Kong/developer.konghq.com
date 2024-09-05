@@ -6,7 +6,7 @@ layout: default
   {% for rows in page.config %}
   <div class="grid grid-cols-1 lg:grid-cols-{{ rows.row | size }} gap-14">
     {% for column in rows.row %}
-    <div class="flex flex-col">
+    <div class="grid gap-3">
       {% for entry in column.column %}
       {% assign include_path = "landing_pages/" | append: entry.type | append : ".md" %}
       {% include {{ include_path }} type=entry.type config=entry.config %}
