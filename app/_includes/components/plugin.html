@@ -1,11 +1,6 @@
-{% assign publisher = site.data.plugin_publishers[plugin.publisher] %}
+{% assign icon="https://docs.konghq.com/assets/images/icons/hub/{{ plugin.publisher }}_{{ plugin.slug }}.png" %}
+{% capture cta %}
+<a href="{{ plugin.url }}">See plugin &rarr;</a>
+{% endcapture %}
 
-<div class="rounded p-2 border-2 border-gray-200 flex flex-col">
-  <div class="flex">
-    <img class="w-6 h-6 mr-1" src="https://docs.konghq.com/assets/images/icons/hub/{{ plugin.publisher }}_{{ plugin.slug }}.png">
-    <h3>{{ plugin.name }}</h3>
-  </div>
-  <p>{{ plugin.description }}</p>
-  <p>Support by: {{ publisher.name }}</p>
-  <a href="{{ plugin.url }}">See plugin</a>
-</div>
+{% include card.html icon=icon title=plugin.name description=plugin.description cta=cta %}
