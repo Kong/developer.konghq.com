@@ -94,8 +94,20 @@
 }
 
 @layer components {
+  .highlight {
+    @apply inline-grid w-full;
+  }
+
+  pre {
+    @apply overflow-auto whitespace-pre;
+  }
+
+  pre code {
+    @apply whitespace-pre;
+  }
+
   pre.highlight {
-    @apply bg-code-block rounded-lg p-3 overflow-scroll mb-3;
+    @apply bg-code-block rounded-lg p-3 mb-3;
   }
 
   pre.highlight code {
