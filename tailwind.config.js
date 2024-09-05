@@ -40,7 +40,7 @@ module.exports = {
         'code-block': 'rgb(var(--color-bg-code-block), <alpha-value>)',
       },
       boxShadow: {
-        primary: '0 4px 12px 0 rgb(var(--color-shadow-primary), 0.04)'
+        primary: '0 4px 12px 0 rgb(var(--color-shadow-primary))'
       }
     },
   },
