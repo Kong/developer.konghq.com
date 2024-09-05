@@ -7,6 +7,7 @@ gem 'liquid-c'
 gem 'rouge', '~> 4.3'
 gem 'jekyll-vite'
 gem 'activesupport'
+gem 'nokogiri'
 
 group :development do
   gem 'pry'

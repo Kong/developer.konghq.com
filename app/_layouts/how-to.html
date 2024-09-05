@@ -1,57 +1,29 @@
 ---
-layout: default
+layout: with_aside
 ---
 
-<div class="mx-16 mt-8">
-  <div class="pl-4 pb-2 pt-12 flex items-end bg-sky-500 mt-4">
-    <div class="flex flex-col w-full">
-      <h1 class="text-3xl mt-4 text-white">{{ page.title }}</h1>
-    </div>
-  </div>
-
-
-  <div class="flex">
-    <div class="p-4 w-2/3">
-      <div id="tldr">
-        {% include how-tos/tldr.html %}
-      </div>
-
-      {% if page.tools or page.prereqs %}
-        <div id="prereqs" class="mt-4">
-          <h2>Prerequisites</h2>
-          {% prereqs %}
-        </div>
-      {% endif %}
-
-      <div id="content">
-        {{ content }}
-      </div>
-
-      {% if page.cleanup %}
-      <div id="clean" class="mt-4">
-        <h2>Cleanup</h2>
-        {% cleanup %}
-      </div>
-      {% endif %}
-
-      {% if page.faqs %}
-      <div id="faq" class="mt-4">
-        <h2>FAQ</h2>
-        {% faqs %}
-      </div>
-      {% endif %}
-
-      {% if page.next_steps %}
-      <div id="next-steps" class="mt-4">
-        <h2>Next Steps</h2>
-        {% next_steps %}
-      </div>
-      {% endif %}
-    </div>
-
-    <div class="pl-4 mt-4 w-1/3">
-      {% include info_box/how-to.html %}
-    </div>
-
-  </div>
+<div id="tldr">
+  {% include how-tos/tldr.html %}
 </div>
+
+{% if page.tools or page.prereqs %}
+{% include sections/prerequisites.html %}
+{% endif %}
+
+{{ content }}
+
+{% if page.cleanup %}
+{% include sections/cleanup.html %}
+{% endif %}
+
+{% if page.faqs %}
+{% include sections/faq.html %}
+{% endif %}
+
+{% if page.next_steps %}
+{% include sections/next_steps.html %}
+{% endif %}
+
+{% contentfor info_box %}
+  {% include info_box/how-to.html %}
+{% endcontentfor %}

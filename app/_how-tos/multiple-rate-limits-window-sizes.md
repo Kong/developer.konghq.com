@@ -43,13 +43,17 @@ faqs:
   - q: Why can't I use the regular Rate Limiting plugin to set multiple limits and window sizes?
     a: You could use the regular Rate Limiting plugin to just set multiple limits, but the regular plugin doesn't support configurable window sizes.
 
+cleanup:
+  inline:
+    - title: Destroy the Kong Gateway container
+      include_content: cleanup/products/gateway
+
 ---
 
-## Steps
+## 1. Enable rate limiting
 
-1. Enable the Rate Limiting Advanced plugin on a service:
+Enable the [Rate Limiting Advanced plugin](/plugins/rate-limiting-advanced/) for the service.
 
-{% capture step %}
 {% entity_examples %}
 entities:
   plugins:
@@ -63,42 +67,32 @@ entities:
         - 60
         - 3600
 {% endentity_examples %}
-{% endcapture %}
-{{ step | indent: 3 }}
 
-    Each *nth* limit will apply to each *nth* window size.
+Each *nth* limit will apply to each *nth* window size.
 
-    This example applies rate limiting policies, one of which will trip when 10 hits have been counted in 60 seconds,
-    or the other when 100 hits have been counted in 3600 seconds. 
+This example applies rate limiting policies, one of which will trip when 10 hits have been counted in 60 seconds,
+or the other when 100 hits have been counted in 3600 seconds. 
 
-    The number of configured window sizes and limits parameters must be equal (as shown above);
-    otherwise, an error occurs:
+The number of configured window sizes and limits parameters must be equal (as shown above);
+otherwise, an error occurs:
 
-    ```plaintext
-    You must provide the same number of windows and limits
-    ```
+```plaintext
+You must provide the same number of windows and limits
+```
 
-1. Validate:
+## 2. Validate
 
-   After configuring the Rate Limiting Advanced plugin, you can verify that it was configured correctly and is working, 
-   by sending more requests then allowed in the configured time limit.
+After configuring the Rate Limiting Advanced plugin, you can verify that it was configured correctly and is working, 
+by sending more requests then allowed in the configured time limit.
 
-   ```bash
-   for _ in {1..11}
-   do
-     curl http://localhost:8000/example-route/anything/
-   done
-   ```
-   After the 11th request in a minute, you should receive the following `429` error:
+```bash
+for _ in {1..11}
+do
+  curl http://localhost:8000/example-route/anything/
+done
+```
+After the 11th request in a minute, you should receive the following `429` error:
 
-   ```bash
-   { "message": "API rate limit exceeded" }
-   ```
-
-1. Teardown:
-
-   Destroy the Kong Gateway container.
-
-   ```bash
-   curl -Ls https://get.konghq.com/quickstart | bash -s -- -d
-   ```
+```bash
+{ "message": "API rate limit exceeded" }
+```

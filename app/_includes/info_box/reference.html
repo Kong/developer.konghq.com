@@ -1,29 +1,24 @@
-<div class="bg-slate-50 py-4 px-8">
-  <div class="flex mb-2 flex items-center">
-    <h3 class="font-bold mb-0">About</h3>
-  </div>
+{% if page.tools %}
+{% include info_box/sections/tools.html tools=page.tools %}
+{% endif %}
 
-  {% if page.tools %}
-    {% include info_box/sections/tools.html tools=page.tools %}
-  {% endif %}
-
-  {% if page.api_specs %}
-    <div class="mt-1 flex flex-wrap flex-col">
-      <strong>OpenAPI Specifications</strong>
-      <ul class="list-none m-0 mt-1">
-        {% for api_spec in page.api_specs %}
-          <li class="flex grid-cols-2 justify-between items-center flex-wrap">
-            <a href="{{ api_spec.url }}">{{ api_spec.text }}</a>
-            {% if api_spec.insomnia_link %}
-              <a class="rounded bg-indigo-500 text-white p-2 text-center" href="{{ api_spec.insomnia_link }}">Run in Insomnia</a>
-            {% endif %}
-          </li>
-        {% endfor %}
-      </ul>
+{% if page.api_specs %}
+<div class="flex flex-col gap-2 w-full">
+  <div class="text-primary font-medium">OpenAPI Specifications</div>
+  <div class="flex gap-[6px] flex-col">
+    {% for api_spec in page.api_specs %}
+    <div class="flex justify-between">
+      <a href="{{ api_spec.url }}">{{ api_spec.text }}</a>
+      {% if api_spec.insomnia_link %}
+      <a class="flex-shrink-0" href="{{ api_spec.insomnia_link }}"><img src="/assets/logos/brand/Insomnia.svg">
+      </a>
+      {% endif %}
     </div>
-  {% endif %}
-
-  {% if page.related_resources %}
-    {% include info_box/sections/related_resources.html %}
-  {% endif %}
+    {% endfor %}
+  </div>
 </div>
+{% endif %}
+
+{% if page.related_resources %}
+{% include info_box/sections/related_resources.html %}
+{% endif %}

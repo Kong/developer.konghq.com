@@ -1,11 +1,9 @@
-<div class="mt-1 flex flex-wrap gap-x-2 flex-col">
-  <strong>Plugins:</strong>
-  <ul class="flex gap-x-2 flex-wrap list-none m-0">
+<div class="flex flex-col gap-2  w-full">
+  <div class="text-primary font-medium">Plugins</div>
+  <div class="flex gap-[6px] flex-col md:flex-row">
     {% for plugin_slug in include.plugins %}
-      {% assign plugin = site.data['kong_plugins'][plugin_slug] %}
-      <li>
-        <a href="{{ plugin.url }}">{{ plugin.name }}</a>
-      </li>
+    {% assign plugin = site.data['kong_plugins'][plugin_slug] %}
+    <a href="{{ plugin.url }}">{{ plugin.name }}</a>
     {% endfor %}
-  </ul>
+  </div>
 </div>

@@ -1,10 +1,8 @@
-<div class="mt-1 flex flex-wrap gap-x-2 flex-col">
-  <strong>Tags</strong>
-  <ul class="flex gap-x-2 flex-wrap list-none m-0">
+<div class="flex flex-col gap-2  w-full">
+  <div class="text-primary font-medium">Tags</div>
+  <div class="flex gap-[6px] flex-col md:flex-row">
     {% for tag in include.tags %}
-      <li>
-        <a href="https://docs.devsite.com/search/{topic}+{other stuff}">{{ tag }}</a>
-      </li>
+    <a href="https://docs.devsite.com/search/{topic}+{other stuff}">{{ tag }}</a>
     {% endfor %}
-  </ul>
+  </div>
 </div>

@@ -15,7 +15,7 @@
         <td>
           <span class="block">{{ f.title | markdown }}</span>
           {% if f.subtitle %}
-          <span class="text-sm text-gray-500">{{ f.subtitle }}</span>
+          <span class=" text-gray-500">{{ f.subtitle }}</span>
           {% endif %}
         </td>
         {% for c in include.config.columns %}

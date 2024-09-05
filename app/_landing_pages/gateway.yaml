@@ -113,11 +113,7 @@ content:
               products:
                   - gateway
               quantity: 5
-          - type: cta
-            config:
-              text: "View more &raquo;"
-              url: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
-              align: end
+              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
   - row:
       - column:
           - type: header

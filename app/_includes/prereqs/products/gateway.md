@@ -1,6 +1,5 @@
-<details class="mb-2" markdown="1">
-  <summary class="rounded mb-0.5 bg-gray-200 p-2">Kong Gateway running</summary>
-
+{% assign summary='Kong Gateway running' %}
+{% capture details_content %}
   This tutorial requires Kong Gateway. 
   If you don't have it set up yet, you can use the [quickstart script](https://get.konghq.com/quickstart) to get an instance of Kong Gateway running almost instantly:
 
@@ -12,5 +11,7 @@
   Kong Gateway Ready 
   ```
   {:.no-copy-code}
+{% endcapture %}
 
-</details>
+
+{% include details.html summary=summary details_content=details_content %}

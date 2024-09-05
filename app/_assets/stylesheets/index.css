@@ -1,3 +1,140 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg-primary: 247, 251, 255;
+    --color-bg-secondary: 255, 255, 255;
+    --color-bg-code-block: 5, 47, 92;
+
+    --color-text-primary: 5, 47, 92;
+    --color-text-secondary: 86, 113, 143;
+    --color-text-terciary: 143, 163, 184;
+
+    --color-border-primary: 5, 47, 92;
+    --color-shadow-primary: 5, 47, 92;
+
+    --color-brand: 66, 140, 220;
+    --color-brand-saturated: 24, 128, 240;
+  }
+
+  .dark {
+    --color-bg-primary: 2, 20, 40;
+    --color-bg-secondary: 5, 47, 92;
+    --color-bg-code-block: 40, 106, 175;
+
+    --color-text-primary: 255, 255, 255;
+    --color-text-secondary: 191, 202, 213;
+    --color-text-terciary: 170, 185, 200;
+
+    --color-border-primary: 255, 255, 255;
+    --color-shadow-secondary: 255, 255, 255;
+  }
+
+  p {
+    @apply mb-4;
+  }
+
+  html {
+    @apply text-secondary font-normal;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-primary;
+  }
+
+  h1 {
+    @apply font-bold text-3xl;
+  }
+
+  h2 {
+    @apply font-bold text-lg;
+  }
+
+  table {
+    @apply bg-secondary shadow-primary border-none rounded-lg;
+  }
+
+  thead {
+    @apply bg-secondary;
+  }
+
+  th {
+    @apply bg-secondary text-primary font-semibold py-4 px-5 border-none text-left;
+  }
+
+  th:first-child {
+    @apply rounded-tl-lg;
+  }
+
+  th:last-child {
+    @apply rounded-tr-lg;
+  }
+
+  td {
+    @apply py-4 px-5 border-none;
+  }
+
+  tbody tr {
+    @apply border-t border-primary/5;
+  }
+
+  details[open] summary .fa-chevron-down {
+    @apply rotate-180;
+  }
+
+  ol {
+    @apply list-decimal list-outside;
+  }
+}
+
+@layer components {
+  pre.highlight {
+    @apply bg-code-block rounded-lg p-3 overflow-scroll mb-3;
+  }
+
+  pre.highlight code {
+    @apply text-white;
+  }
+
+  pre.highlight code span {
+    @apply text-white;
+  }
+
+  .copy-code-snippet {
+    @apply relative;
+  }
+
+  .copy-code-snippet .copy-action {
+    @apply absolute cursor-pointer text-white right-3 top-3 p-1 w-5 opacity-40;
+  }
+
+  .copy-code-snippet .copy-action:hover {
+    @apply opacity-20;
+  }
+
+  #copy-code-success-info {
+    @apply fixed bg-primary border border-white px-1 py-2 rounded -mt-8 -translate-x-1/2;
+  }
+
+  #copy-code-input {
+    @apply fixed -top-full;
+  }
+
+  [data-file] {
+    @apply relative;
+  }
+
+  [data-file] pre.highlight {
+    @apply rounded-t-none;
+  }
+
+  [data-file]:before {
+    @apply bg-code-block px-3 py-2 rounded-t-lg text-white w-full inline-block border-b border-white/20 content-[attr(data-file)];
+  }
+
+  .copy-code-snippet[data-file] .copy-action {
+    @apply top-2;
+  }
+}

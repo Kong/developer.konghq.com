@@ -9,6 +9,7 @@ module.exports = {
     "app/_plugins/**/*.rb",
     "app/_assets/javascripts/**"
   ],
+  darkMode: 'selector',
   safelist: [
     {
       pattern: /grid-cols-[1-6]/,
@@ -19,7 +20,31 @@ module.exports = {
     "self-end",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors:{
+        brand: 'rgb(var(--color-brand), <alpha-value>)',
+        'brand-saturated': 'rgb(var(--color-brand-saturated), <alpha-value>)'
+      },
+      textColor: {
+        primary: 'rgb(var(--color-text-primary), <alpha-value>)',
+        secondary: 'rgb(var(--color-text-secondary), <alpha-value>)',
+        terciary: 'rgb(var(--color-text-terciary), <alpha-value>)',
+      },
+      borderColor: {
+        primary: 'rgb(var(--color-border-primary), <alpha-value>)',
+        brand: 'rgb(var(--color-brand), <alpha-value>)'
+      },
+      backgroundColor: {
+        primary: 'rgb(var(--color-bg-primary), <alpha-value>)',
+        secondary: 'rgb(var(--color-bg-secondary), <alpha-value>)',
+        'code-block': 'rgb(var(--color-bg-code-block), <alpha-value>)',
+      },
+      boxShadow: {
+        primary: '0 4px 12px 0 rgb(var(--color-shadow-primary), 0.04)'
+      }
+    },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 };
