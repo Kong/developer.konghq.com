@@ -87,6 +87,10 @@
   ol {
     @apply list-decimal list-outside;
   }
+
+  main a {
+    @apply text-brand;
+  }
 }
 
 @layer components {
