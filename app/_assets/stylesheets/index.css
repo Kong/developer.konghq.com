@@ -40,6 +40,10 @@
     @apply text-secondary font-normal;
   }
 
+  body {
+    @apply transition-colors duration-200;
+  }
+
 
   code {
     font-family: "JetBrains Mono", system-ui, sans-serif;
