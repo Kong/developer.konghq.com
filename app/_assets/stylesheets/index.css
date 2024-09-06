@@ -119,8 +119,12 @@
     @apply bg-code-block rounded-lg p-3 mb-3;
   }
 
+  .highlighter-rouge {
+    @apply px-1;
+  }
+
   code {
-    @apply text-white bg-code-block rounded p-[2px] text-sm;
+    @apply text-white bg-code-block rounded text-sm;
   }
 
   code span {
