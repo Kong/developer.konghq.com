@@ -15,10 +15,10 @@
   <div class="flex gap-[6px] flex-col">
     {% for related_resource in related_resources.items %}
       <div>
+        <a href="{{ related_resource.url }}">{{ related_resource.text | liquify }}</a>
         {% if related_resource.type %}
           <span class="bg-blue-200 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full mr-0.5">{{ related_resource.type }}</span>
         {% endif %}
-        <a href="{{ related_resource.url }}">{{ related_resource.text | liquify }}</a>
       </div>
     {% endfor %}
     </div>
