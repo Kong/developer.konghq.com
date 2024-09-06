@@ -1,22 +1,20 @@
 metadata:
   title: Custom Plugins
-content:
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h1
-              text: "Custom plugins"
 
-  - row:
-      - column:
+rows:
+  - header:
+      type: h1
+      text: "Custom plugins"
+
+  - columns:
+      - blocks:
           - type: structured_text
             config:
               header:
                 text: "Developing custom plugins"
               blocks:
                 - type: text
-                  text: | 
+                  text: |
                     Kong provides an entire development environment for developing plugins, 
                     including Plugin Development Kits (or PDKs), database abstractions, migrations, and more.
 
@@ -28,20 +26,20 @@ content:
                     * [Plugin Development Kit reference](https://docs.konghq.com/gateway/latest/plugin-development/pdk/)
                     * [Other Language Support](https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/go/)
 
-
-  - row:
-      - column:
+  - columns:
+      - blocks:
           - type: structured_text
             config:
               header:
                 text: "Plugin Development Kits (PDKs)"
               blocks:
                 - type: text
-                  text: "PDKs are sets of functions that a plugin can use to facilitate interactions between plugins
+                  text:
+                    "PDKs are sets of functions that a plugin can use to facilitate interactions between plugins
                     and the core (or other components) of Kong. Kong provides PDKs in the following languages:"
 
-  - row:
-      - column:
+  - columns:
+      - blocks:
           - type: structured_text
             config:
               header:
@@ -52,7 +50,7 @@ content:
                 - type: text
                   text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/">Lua PDK &rarr;</a>
 
-      - column:
+      - blocks:
           - type: structured_text
             config:
               header:
@@ -62,7 +60,7 @@ content:
                   text: Something about the Go PDK
                 - type: text
                   text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/go/">Go PDK &rarr;</a>
-      - column:
+      - blocks:
           - type: structured_text
             config:
               header:
@@ -72,8 +70,7 @@ content:
                   text: Something about the Python PDK
                 - type: text
                   text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/python/">Python PDK &rarr;</a>
-
-      - column:
+      - blocks:
           - type: structured_text
             config:
               header:
@@ -84,8 +81,8 @@ content:
                 - type: text
                   text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/javascript/">JavaScript PDK &rarr;</a>
 
-  - row:
-      - column:
+  - columns:
+      - blocks:
           - type: structured_text
             config:
               header:
@@ -96,4 +93,3 @@ content:
                     Through partnerships with third parties, Kong lists some [third-party custom plugins](https://docs.konghq.com/hub/?support=third-party-partner%2Ccommunity) on the Kong Plugin Hub. 
                     These plugins are maintained by Kong partners. 
                     If you would like to have your plugin featured on the Kong Plugin Hub, we encourage you to become a [Kong Partner](https://konghq.com/partners/).
-

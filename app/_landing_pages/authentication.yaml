@@ -2,122 +2,118 @@ metadata:
   title: "Authentication"
   tags:
     - authentication
-content:
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h1
-              text: "Authentication"
+rows:
+  - header:
+      type: h1
+      text: "Authentication"
 
-  - row:
-      - column:
-          - type: structured_text
-            config:
-              header:
-                text: "What is authentication?"
-              blocks:
-                - type: text
-                  text: |
-                    Authentication is the process of verifying that a requester has permissions to access a resource. 
-                    As its name implies, API gateway authentication authenticates the flow of data to and from your upstream services. 
-                    
-                    Kong Gateway has a library of plugins that support the most widely used methods of API gateway authentication.
-  - row:
-      - column:
-          - type: structured_text
-            config:
-              header:
-                text: "Basic Authentication"
-              blocks:
-                - type: text
-                  text: |
-                    Basic authentication is a simple authentication method that uses a base64-encoded username and password combination as token.
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "What is authentication?"
+            blocks:
+              - type: text
+                text: |
+                  Authentication is the process of verifying that a requester has permissions to access a resource. 
+                  As its name implies, API gateway authentication authenticates the flow of data to and from your upstream services. 
 
-                    - <a href="https://docs.konghq.com/hub/kong-inc/basic-auth/how-to/basic-example/">Example</a>
-                    - <a href="https://docs.konghq.com/hub/kong-inc/basic-auth/configuration/">Plugin reference</a>
+                  Kong Gateway has a library of plugins that support the most widely used methods of API gateway authentication.
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Basic Authentication"
+            blocks:
+              - type: text
+                text: |
+                  Basic authentication is a simple authentication method that uses a base64-encoded username and password combination as token.
 
-      - column:
-          - type: structured_text
-            config:
-              header:
-                text: "Key Authentication"
-              blocks:
-                - type: text
-                  text: |
-                    Key authentication generates an API key for a consumer, which can be passed in an `apikey` header to access services and routes.            
+                  - <a href="https://docs.konghq.com/hub/kong-inc/basic-auth/how-to/basic-example/">Example</a>
+                  - <a href="https://docs.konghq.com/hub/kong-inc/basic-auth/configuration/">Plugin reference</a>
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Key Authentication"
+            blocks:
+              - type: text
+                text: |
+                  Key authentication generates an API key for a consumer, which can be passed in an `apikey` header to access services and routes.            
 
-                    - <a href="https://docs.konghq.com/hub/kong-inc/key-auth/how-to/basic-example/">Example</a>
-                    - <a href="https://docs.konghq.com/hub/kong-inc/key-auth/configuration/">Plugin reference</a>
-                    
-      - column:
-          - type: structured_text
-            config:
-              header:
-                text: "OAuth 2.0 Authentication"
-              blocks:
-                - type: text
-                  text: |
-                    OAuth 2.0 is a protocol that relies on an application to authorize access to services and routes.            
+                  - <a href="https://docs.konghq.com/hub/kong-inc/key-auth/how-to/basic-example/">Example</a>
+                  - <a href="https://docs.konghq.com/hub/kong-inc/key-auth/configuration/">Plugin reference</a>
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "OAuth 2.0 Authentication"
+            blocks:
+              - type: text
+                text: |
+                  OAuth 2.0 is a protocol that relies on an application to authorize access to services and routes.            
 
-                    - <a href="https://docs.konghq.com/hub/kong-inc/oauth2/how-to/basic-example/">Example</a>
-                    - <a href="https://docs.konghq.com/hub/kong-inc/oauth2/configuration/">Plugin reference</a>
-  - row:
-      - column:
-          - type: structured_text
-            config:
-              header:
-                text: "LDAP Authentication"
-              blocks:
-                - type: text
-                  text: |
-                    LDAP is a protocol that uses a directory to check credentials provided by a client.         
+                  - <a href="https://docs.konghq.com/hub/kong-inc/oauth2/how-to/basic-example/">Example</a>
+                  - <a href="https://docs.konghq.com/hub/kong-inc/oauth2/configuration/">Plugin reference</a>
 
-                    - <a href="https://docs.konghq.com/hub/kong-inc/ldap-auth/how-to/basic-example/">Example</a>
-                    - <a href="https://docs.konghq.com/hub/kong-inc/ldap-auth/configuration/">Plugin reference</a>
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "LDAP Authentication"
+            blocks:
+              - type: text
+                text: |
+                  LDAP is a protocol that uses a directory to check credentials provided by a client.         
 
-      - column:
-          - type: structured_text
-            config:
-              header:
-                text: "OpenID Connect Authentication"
-              blocks:
-                - type: text
-                  text: |
-                    OpenID Connect (OICD) is an authentication protocol based on OAuth 2.0. It works with identity providers to verify a user's identity without storing credentials.
+                  - <a href="https://docs.konghq.com/hub/kong-inc/ldap-auth/how-to/basic-example/">Example</a>
+                  - <a href="https://docs.konghq.com/hub/kong-inc/ldap-auth/configuration/">Plugin reference</a>
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "OpenID Connect Authentication"
+            blocks:
+              - type: text
+                text: |
+                  OpenID Connect (OICD) is an authentication protocol based on OAuth 2.0. It works with identity providers to verify a user's identity without storing credentials.
 
-                    - <a href="https://docs.konghq.com/hub/kong-inc/openid-connect/how-to/basic-example/">Example</a>
-                    - <a href="https://docs.konghq.com/hub/kong-inc/openid-connect/configuration/">Plugin reference</a>
-
-      - column:
-          - type: structured_text
-            config:
-              header:
-                text: "SAML Authentication"
-              blocks:
-                - type: text
-                  text: |
-                    SAML is a standard used to exchange authentication and authorization information between an identity provider and a service provider.      
+                  - <a href="https://docs.konghq.com/hub/kong-inc/openid-connect/how-to/basic-example/">Example</a>
+                  - <a href="https://docs.konghq.com/hub/kong-inc/openid-connect/configuration/">Plugin reference</a>
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "SAML Authentication"
+            blocks:
+              - type: text
+                text: |
+                  SAML is a standard used to exchange authentication and authorization information between an identity provider and a service provider.      
+                
+                  - <a href="https://docs.konghq.com/hub/kong-inc/saml/how-to/basic-example/">Example</a>
+                  - <a href="https://docs.konghq.com/hub/kong-inc/saml/configuration/">Plugin reference</a>
                   
-                    - <a href="https://docs.konghq.com/hub/kong-inc/saml/how-to/basic-example/">Example</a>
-                    - <a href="https://docs.konghq.com/hub/kong-inc/saml/configuration/">Plugin reference</a>
-                    
-  - row:
-      - column:
-          - type: structured_text
-            config:
-              header:
-                text: "Why is authentication important?"
-              blocks:
-                - type: text
-                  text: |
-                    With Kong Gateway controlling authentication, requests won’t reach upstream services unless the client has successfully authenticated. This means upstream services process pre-authorized requests, freeing them from the cost of authentication, which is a savings in compute time and development effort.
 
-                    Kong Gateway has visibility into all authentication attempts, which provides the ability to build monitoring and alerting capabilities supporting service availability and compliance.
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Why is authentication important?"
+            blocks:
+              - type: text
+                text: |
+                  With Kong Gateway controlling authentication, requests won’t reach upstream services unless the client has successfully authenticated. This means upstream services process pre-authorized requests, freeing them from the cost of authentication, which is a savings in compute time and development effort.
 
-                    For more information, see What is <a href="https://konghq.com/learning-center/api-gateway/api-gateway-authentication">API Gateway Authentication</a>.
-  - row:
-      - column:
+                  Kong Gateway has visibility into all authentication attempts, which provides the ability to build monitoring and alerting capabilities supporting service availability and compliance.
+
+                  For more information, see What is <a href="https://konghq.com/learning-center/api-gateway/api-gateway-authentication">API Gateway Authentication</a>.
+ 
+  - columns:
+      - blocks:
           - type: structured_text
             config:
               header:
@@ -127,7 +123,7 @@ content:
                   text: Kong Gateway provides several Plugins to add authentication to the Kong Gateway API.
                 - type: text
                   text: <a href="https://docs.konghq.com/hub/?category=authentication">Authentication plugins</a>
-      - column:
+      - blocks:
           - type: structured_text
             config:
               header:
@@ -138,12 +134,11 @@ content:
                 - type: text
                   text: <a href="https://docs.konghq.com/kubernetes-ingress-controller/latest/plugins/authentication/">Add authentication using KIC</a>
 
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h2
-              text: How-to Guides
+  - header:
+      text: How-to Guides
+      type: h2
+    columns:
+        - blocks:
           - type: how_to_list
             config:
               tags:
@@ -151,22 +146,20 @@ content:
               products:
                 - gateway # omit for all products
               quantity: 5
-  - row:
-    - column:
-        - type: header
-          config:
-            type: h2
-            text: Recommended Plugins
-  - row:
-    - column:
+
+  - header:
+      text: Recommended Plugins
+      type: h2
+    columns:
+      - blocks:
         - type: plugin
           config:
             slug: basic-auth
-    - column:
+      - blocks:
         - type: plugin
           config:
              slug: jwt
-    - column:
+      - blocks:
         - type: plugin
           config:
             slug: key-auth

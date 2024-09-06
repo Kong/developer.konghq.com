@@ -1,31 +1,24 @@
 metadata:
   title: Mesh Rate Limiting
-content:
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h1
-              text: "Rate Limiting with Kong Mesh"
+rows:
+  - header:
+      type: h1
+      text: "Rate Limiting with Kong Mesh"
 
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h2
-              text: How-to Guides
-          - type: how_to_list
-            config:
-              tags:
-                - rate-limiting
-              products:
-                - mesh
-              quantity: 5
-              allow_empty: true
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+        - type: how_to_list
+          config:
+            tags:
+              - rate-limiting
+            products:
+              - mesh
+            quantity: 5
+            allow_empty: true
 
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h2
-              text: "Related Resources"
+  - header:
+      type: h2
+      text: "Related Resources"

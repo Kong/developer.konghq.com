@@ -14,7 +14,7 @@ module Jekyll
 
         @content = ''
         @data = data.fetch('metadata', {})
-        @data['config'] = data['content']
+        @data['rows'] = data['rows']
 
         # Needed so that regeneration works for single sourced pages
         # It must be set to the source file

@@ -1,21 +1,14 @@
 metadata:
   title: Kong Gateway
-content:
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h1
-              text: "Kong Gateway"
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h2
-              text: "API gateway built for hybrid and multi-cloud, optimized for microservices and distributed architectures"
-              align: left
-  - row:
-      - column:
+rows:
+  - header:
+      type: h1
+      text: "Kong Gateway"
+  - header:
+      type: h2
+      text: "API gateway built for hybrid and multi-cloud, optimized for microservices and distributed architectures"
+    columns:
+      - blocks:
           - type: structured_text
             config:
               header:
@@ -36,61 +29,58 @@ content:
                     - Create a thriving API developer ecosystem
                     - Proactively identify API-related anomalies and threats
                     - Secure and govern APIs/services, and improve API visibility across the entire organization. 
-      - column:
+      - blocks:
           - type: image
             config:
               url: https://docs.konghq.com/assets/images/products/gateway/kong-gateway-features.png
               alt_text: Diagram of how Kong Gateway works
-  - row: 
-    - column: 
-      - type: header
-        config: 
-          type: h2
-          text: "How to get started"
-  - row:
-    - column:
-      - type: card
-        config:
-          title: Start with Konnect
-          icon:  https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/kong-gradient.svg
-          cta:
-            text: 
-            url: /konnect/getting-started/
-            align: end
-    - column:
-      - type: card
-        config:
-          title: Kong Gateway quickstart
-          icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-learning.svg
-          cta:
-            text: 
-            url: https://docs.konghq.com/gateway/latest/get-started/
-            align: end
-    - column:
-      - type: card
-        config:
-          title: Install on your platform
-          icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-deployment-color.svg
-          cta:
-            text: 
-            url: https://docs.konghq.com/gateway/latest/install/
-            align: end
-    - column:
-      - type: card
-        config:
-          title: Kong Plugin Hub
-          description: Extend your Gateway with powerful plugins
-          icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-api-plugins-color.svg
-          cta:
-            text: 
-            url: /plugins
-            align: end
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h2
-              text: Learn
+  - header:
+      type: h2
+      text: "How to get started"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Start with Konnect
+            icon:  https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/kong-gradient.svg
+            cta:
+              text: 
+              url: /konnect/getting-started/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Kong Gateway quickstart
+            icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-learning.svg
+            cta:
+              text: 
+              url: https://docs.konghq.com/gateway/latest/get-started/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Install on your platform
+            icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-deployment-color.svg
+            cta:
+              text: 
+              url: https://docs.konghq.com/gateway/latest/install/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Kong Plugin Hub
+            description: Extend your Gateway with powerful plugins
+            icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-api-plugins-color.svg
+            cta:
+              text: 
+              url: /plugins
+              align: end
+
+  - header:
+      type: h2
+      text: Learn
+    columns:
+      - blocks:
           - type: concept_list
             config:
               - topic: beginner
@@ -101,24 +91,24 @@ content:
               text: "Learn more &raquo;"
               url: "https://docs.devsite.com/search/{concept.topic}+{other stuff}" ## Takes you to search with terms that match this.
               align: end
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h2
-              text: How-to Guides
+
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
           - type: how_to_list
             config:
               products:
                   - gateway
               quantity: 5
               view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h2
-              text: References & Tools
+
+  - header:
+      type: h2
+      text: References & Tools
+    columns:
+      - blocks:
           - type: reference_list
             config:
               - topic: beginner
@@ -129,14 +119,12 @@ content:
               text: "View more references &raquo;"
               url: "https://docs.devsite.com/search/{reference.topic}+{other stuff}" ## Takes you to search with terms that match this.
               align: end
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h2
-              text: Recommended Plugins
-  - row:
-      - column:
+
+  - header:
+      type: h2
+      text: Recommended Plugins
+    columns:
+      - blocks:
           - type: plugin
             config:
               slug: rate-limiting

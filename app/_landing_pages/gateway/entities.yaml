@@ -1,60 +1,54 @@
 metadata:
   title: Gateway Entities
-content:
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h1
-              text: "Kong Gateway Entities"
+rows:
+  -  header:
+        type: h1
+        text: "Kong Gateway Entities"
 
-  - row:
-      - column:
-          - type: text
-            config:
-              Kong entities refer to the various components and objects that make up the Kong API Gateway and its ecosystem.
-          - type: image
-            config:
-              url: "https://raw.githubusercontent.com/Kong/docs.konghq.com/main/app/assets/images/products/konnect/getting-started/konnect-gateway-entities.png"
-              alt_text: "this is alt text"
-  
-  - row: 
-    - column: 
-      - type: header
-        config: 
-          type: h2
-          text: "Entity References"
-  - row:
-    - column:
-      - type: entity_card
-        config:
-          entity: service
-    - column: 
-      - type: entity_card
-        config:
-          entity: route
-    - column: 
-      - type: entity_card
-        config:
-          entity: consumer
-    - column: 
-      - type: entity_card
-        config:
-          entity: consumer_group
-  - row:
-    - column:
+  - columns:
+    - blocks:
+        - type: text
+          config:
+            Kong entities refer to the various components and objects that make up the Kong API Gateway and its ecosystem.
+        - type: image
+          config:
+            url: "https://raw.githubusercontent.com/Kong/docs.konghq.com/main/app/assets/images/products/konnect/getting-started/konnect-gateway-entities.png"
+            alt_text: "this is alt text"
+
+  - header:
+      type: h2
+      text: "Entity References"
+    columns:
+      - blocks:
+        - type: entity_card
+          config:
+            entity: service
+      - blocks:
+        - type: entity_card
+          config:
+            entity: route
+      - blocks:
+        - type: entity_card
+          config:
+            entity: consumer
+      - blocks:
+        - type: entity_card
+          config:
+            entity: consumer_group
+  - columns:
+    - blocks:
       - type: entity_card
         config:
           entity: upstream
-    - column: 
+    - blocks:
       - type: entity_card
         config:
           entity: target
-    - column:
+    - blocks:
       - type: entity_card
         config:
           entity: plugin
-    - column: 
+    - blocks:
       - type: entity_card
         config:
           entity: workspace

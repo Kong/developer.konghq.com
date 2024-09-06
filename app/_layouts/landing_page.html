@@ -3,17 +3,31 @@ layout: default
 ---
 
 <main class="flex flex-col gap-14 py-12">
-  {% for rows in page.config %}
-  <div class="grid grid-cols-1 lg:grid-cols-{{ rows.row | size }} gap-14">
-    {% for column in rows.row %}
-    <div class="grid gap-3">
-      {% for entry in column.column %}
-      {% assign include_path = "landing_pages/" | append: entry.type | append : ".md" %}
-      {% capture include_template %}{% include {{ include_path }} type=entry.type config=entry.config %}{% endcapture %}
-      {{ include_template | markdownify }}
-      {% endfor %}
-    </div>
-    {% endfor %}
-  </div>
+  {% for row in page.rows %}
+
+      <div class="grid gap-3">
+        {% if row.header %}
+            {% include landing_pages/header.md config = row.header %}
+        {% endif %}
+
+        {% if row.columns %}
+          <div class="grid grid-cols-1 lg:grid-cols-{{ row.columns | size }} gap-14">
+            {% for column in row.columns %}
+              <div class="grid gap-3">
+                {% if column.header %}
+                {% include landing_pages/header.md config = column.header %}
+                {% endif %}
+
+                {% for entry in column.blocks %}
+                    {% assign include_path = "landing_pages/" | append: entry.type | append : ".md" %}
+                    {% capture include_template %}{% include {{ include_path }} type=entry.type config=entry.config %}{% endcapture %}
+                    {{ include_template | markdownify }}
+                {% endfor %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
   {% endfor %}
 </main>
