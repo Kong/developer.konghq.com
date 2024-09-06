@@ -32,7 +32,7 @@
     --color-text-terciary: 170, 185, 200;
 
     --color-border-primary: 255, 255, 255;
-    --color-shadow-primary: 255, 255, 255, 0.08;
+    --color-shadow-primary: 2, 20, 40, 0.08;
   }
 
   html {
