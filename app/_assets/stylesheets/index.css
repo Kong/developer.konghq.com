@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -32,12 +35,18 @@
     --color-shadow-primary: 255, 255, 255, 0.08;
   }
 
-  p {
-    @apply mb-4;
+  html {
+    font-family: "Inter", system-ui, sans-serif;
+    @apply text-secondary font-normal;
   }
 
-  html {
-    @apply text-secondary font-normal;
+
+  code {
+    font-family: "JetBrains Mono", system-ui, sans-serif;
+  }
+
+  p {
+    @apply mb-4;
   }
 
   h1, h2, h3, h4, h5, h6 {
