@@ -58,11 +58,15 @@
   }
 
   h1 {
-    @apply font-bold text-3xl;
+    @apply font-bold leading-[3rem] text-[2rem] tracking-tight;
   }
 
   h2 {
-    @apply font-bold text-lg;
+    @apply font-bold leading-[1.875rem] text-[1.25rem] tracking-tight;
+  }
+
+  h3 {
+    @apply font-bold leading-[1.25rem] tracking-[-0.02em];
   }
 
   table {
@@ -132,7 +136,7 @@
   }
 
   code {
-    @apply text-white bg-code-block rounded text-sm;
+    @apply text-white bg-code-block rounded text-sm/6;
   }
 
   code span {
