@@ -26,6 +26,10 @@
     {{ content }}
   </div>
 
+  {% if page.get_help != false %}
+    {% include get_help.html %}
+  {% endif %}
+
   {% include footer.html %}
 </body>
 </html>

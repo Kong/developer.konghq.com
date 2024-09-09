@@ -56,3 +56,8 @@ defaults:
 # product name vars
 base_gateway: Kong Gateway
 konnect_short_name: Konnect
+
+
+repos:
+  developer: https://github.com/Kong/developer.konghq.com
+  docs: https://github.com/Kong/docs.konghq.com
