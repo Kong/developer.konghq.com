@@ -2,7 +2,7 @@
   <div class="text-primary font-medium">Tags</div>
   <div class="flex gap-[6px] flex-col md:flex-row">
     {% for tag in include.tags %}
-    <a href="https://docs.devsite.com/search/{topic}+{other stuff}">{{ tag }}</a>
+    <a href="https://docs.devsite.com/search/{topic}+{other stuff}">#{{ tag }}</a>
     {% endfor %}
   </div>
 </div>
