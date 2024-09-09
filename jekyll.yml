@@ -48,6 +48,8 @@ defaults:
       layout: "gateway_entity"
       permalink: "/gateway/entities/:path/"
       content_type: "reference"
+      products:
+        - gateway
 
 
 
