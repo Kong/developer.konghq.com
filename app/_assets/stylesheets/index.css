@@ -104,6 +104,10 @@
   main a {
     @apply text-brand;
   }
+
+  a code {
+    @apply text-brand;
+  }
 }
 
 @layer components {
