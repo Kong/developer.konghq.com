@@ -1,6 +1,10 @@
 ---
 layout: with_aside
 ---
+{% contentfor index_link %}
+  {% include index_link.html text="How-to Guides" url="/how-to/" %}
+{% endcontentfor %}
+
 
 <div id="tldr" class="flex flex-col gap-3 ">
   {% include how-tos/tldr.html %}

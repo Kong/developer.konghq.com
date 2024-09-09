@@ -2,6 +2,10 @@
 layout: with_aside
 ---
 
+{% contentfor index_link %}
+  {% include index_link.html text="Gateway Entities" url="/gateway/entities/" %}
+{% endcontentfor %}
+
 {{ content }}
 
 {% ifhascontent schema %}
