@@ -4,7 +4,11 @@ layout: default
 
 <div class="flex gap-16 w-full">
     <main class="flex flex-col basis-3/4 py-12 gap-14 {{ page.content_type | slugify }}">
-        <h1>{{ page.title }}</h1>
+        <div class="flex flex-col gap-3">
+            <h1>{{ page.title }}</h1>
+
+            {% include uses.html products=page.products tools=page.tools %}
+        </div>
 
         {{ content }}
     </main>

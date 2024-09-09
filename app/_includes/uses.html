@@ -1,0 +1,24 @@
+{% if include.products or include.tools %}
+<div class="flex gap-[6px] items-center">
+    <span>Uses: </span>
+
+    {% for product in include.products %}
+    {% assign product_info = site.data.products[product] %}
+        {% capture url %}/{{ product }}/{% endcapture %}
+        {% include badge.html url=url text=product_info.name %}
+    {% endfor %}
+
+    {% if include.products and include.tools %}
+        <span class="bg-secondary w-[1px] h-1/2"></span>
+    {% endif %}
+
+    {% assign tools = include.tools | sort %}
+    {% for tool in tools %}
+    {% assign tool_info = site.data.tools[tool] %}
+    {% if tool_info %}
+        {% capture url %}/{{ tool }}/{% endcapture %}
+        {% include badge.html url=url text=tool_info.name %}
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
