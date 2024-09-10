@@ -112,6 +112,14 @@
   a code {
     @apply text-brand;
   }
+
+  code {
+    @apply text-primary bg-secondary rounded text-sm/6 border border-brand-saturated/40;
+  }
+
+  code span {
+    @apply text-white;
+  }
 }
 
 @layer components {
@@ -124,7 +132,7 @@
   }
 
   pre code {
-    @apply whitespace-pre;
+    @apply whitespace-pre text-white bg-code-block text-sm/6 border-none;
   }
 
   pre.highlight {
@@ -133,14 +141,6 @@
 
   .highlighter-rouge {
     @apply px-1;
-  }
-
-  code {
-    @apply text-white bg-code-block rounded text-sm/6;
-  }
-
-  code span {
-    @apply text-white;
   }
 
   .copy-code-snippet {
