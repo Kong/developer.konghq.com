@@ -72,6 +72,7 @@ rows:
       - blocks:
         - type: x_with_y
           config:
+              border: true
               type: h2
               headers:
                 - Commonly used decK Gateway commands
@@ -150,6 +151,7 @@ rows:
       - blocks:
         - type: x_with_y
           config:
+              border: true
               type: h2
               headers:
                 - Commonly used decK file commands for APIOps
