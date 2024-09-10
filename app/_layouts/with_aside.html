@@ -4,7 +4,7 @@ layout: default
 
 <div class="flex gap-16 w-full">
     <main class="flex flex-col basis-3/4 py-12 gap-12 {{ page.content_type | slugify }}">
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-3">
             {% ifhascontent index_link %}
                 {% capture index_link_include %}{% contentblock index_link %}{% endcapture %}
                 {{ index_link_include | markdown }}
@@ -18,7 +18,18 @@ layout: default
         {{ content }}
     </main>
 
-    <aside class="flex flex-col basis-1/4 pt-[92px] gap-8">
+    <aside class="flex flex-col basis-1/4 pt-12 gap-8">
+        <div class="flex flex-col xl:flex-row gap-3 w-full">
+            <a class="text-terciary flex gap-1 px-1 items-center" href="{{ page.edit_link }}">
+                <div class="flex w-3 h-3 bg-brand" style="mask:url('/assets/icons/github.svg'); mask-size: cover;"></div>
+                Edit this Page
+            </a>
+            <a class="text-terciary flex gap-1 px-1 items-center" href="{{ site.repos.developer }}/issues/">
+                <div class="flex w-3 h-3 bg-brand" style="mask:url('/assets/icons/warning.svg'); mask-size: cover;"></div>
+                Report an Issue
+            </a>
+        </div>
+
         <div class="flex flex-col rounded-md p-5 gap-5 bg-secondary shadow-primary w-full">
             {% contentblock info_box %}
         </div>
