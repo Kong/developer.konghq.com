@@ -16,5 +16,10 @@
     "@vitejs/plugin-vue": "^5.1.2",
     "axios": "^1.7.4",
     "vue": "^3.4.38"
+  },
+  "overrides": {
+    "vite": {
+      "rollup": "npm:@rollup/wasm-node"
+    }
   }
 }
