@@ -44,7 +44,7 @@ module SectionWrapper
 
     def build_wrapper(h2, slug, title)
       Nokogiri::HTML::DocumentFragment.parse <<-HTML
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-4">
             #{h2.to_html}
             <div class="content"></div>
         </div>

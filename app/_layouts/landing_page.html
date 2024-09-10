@@ -5,7 +5,7 @@ layout: default
 <main class="flex flex-col gap-14 py-12">
   {% for row in page.rows %}
 
-      <div class="grid gap-3">
+      <div class="grid gap-4">
         {% if row.header %}
             {% include landing_pages/header.md config = row.header %}
         {% endif %}
