@@ -1,7 +1,7 @@
-<ol class="list-decimal list-inside flex flex-col gap-1">
+<ol class="list-decimal list-inside flex flex-col">
   {% if page.products %}
     {% for product in page.products %}
-      <li>
+      <li class="px-5 py-4 border-b border-primary/5">
 {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
 {% include {{ product_include }} %}
       </li>
@@ -9,20 +9,20 @@
   {% endif %}
 
   {% for tool in prereqs.tools %}
-    <li>
+    <li class="px-5 py-4 border-b border-primary/5">
 {% assign tool_include = 'prereqs/tools/' | append: tool | append: '.md' %}
 {% include {{ tool_include }} %}
     </li>
   {% endfor %}
 
   {% if prereqs.entities? %}
-    <li>
+    <li class="px-5 py-4 border-b border-primary/5">
 {% include prereqs/entities.md data=prereqs.data %}
     </li>
   {% endif %}
 
   {% for prereq in prereqs.inline %}
-    <li>
+  <li class="px-5 py-4 border-b border-primary/5">
 {% include prereqs/inline.md prereq=prereq %}
     </li>
   {% endfor %}
