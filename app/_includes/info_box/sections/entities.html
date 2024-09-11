@@ -4,7 +4,7 @@
     {% if include.products contains "gateway" %}
     {% for entity_slug in include.entities %}
     {% assign entity = site.gateway_entities | find: "slug", entity_slug %}
-    <a href="{{ entity.url }}">{{ entity.name }}</a>
+    {% include badge.html url=entity.url text=entity.name %}
     {% endfor %}
     {% endif %}
   </div>

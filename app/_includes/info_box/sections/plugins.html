@@ -3,7 +3,7 @@
   <div class="flex gap-[6px] flex-col md:flex-row">
     {% for plugin_slug in include.plugins %}
     {% assign plugin = site.data['kong_plugins'][plugin_slug] %}
-    <a href="{{ plugin.url }}">{{ plugin.name }}</a>
+    {% include badge.html url=plugin.url text=plugin.name %}
     {% endfor %}
   </div>
 </div>
