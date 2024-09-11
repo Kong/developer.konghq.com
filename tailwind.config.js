@@ -29,6 +29,7 @@ module.exports = {
         primary: 'rgb(var(--color-text-primary), <alpha-value>)',
         secondary: 'rgb(var(--color-text-secondary), <alpha-value>)',
         terciary: 'rgb(var(--color-text-terciary), <alpha-value>)',
+        'semantic-red-primary': 'rgb(var(--color-semantic-red-primary), <alpha-value>)',
       },
       borderColor: {
         primary: 'rgb(var(--color-border-primary), <alpha-value>)',

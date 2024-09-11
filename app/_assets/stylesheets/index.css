@@ -20,6 +20,8 @@
 
     --color-brand: 66, 140, 220;
     --color-brand-saturated: 24, 128, 240;
+
+    --color-semantic-red-primary: 214, 67, 67;
   }
 
   .dark {
