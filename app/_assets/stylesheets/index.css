@@ -107,6 +107,10 @@
     @apply list-decimal list-outside;
   }
 
+  a {
+    @apply hover:underline;
+  }
+
   main a {
     @apply text-brand;
   }
