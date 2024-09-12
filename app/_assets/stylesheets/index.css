@@ -72,7 +72,7 @@
   }
 
   table {
-    @apply bg-secondary shadow-primary border-none rounded-lg;
+    @apply bg-secondary shadow-primary border-none rounded-lg text-sm;
   }
 
   thead {
