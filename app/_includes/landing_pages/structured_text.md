@@ -24,7 +24,7 @@
 
 {% if item.type == "unordered_list" %}
 
-<ul class="list-disc ">
+<ul>
 {% for list_item in item.items %}
 <li>{{ list_item | markdown }}</li>
 {% endfor %}

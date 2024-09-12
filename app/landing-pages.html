@@ -5,7 +5,7 @@ title: Landing Page Index
 
 <div class="mx-16">
   <h1 class="my-4">Landing Page Index</h1>
-  <ul class="list-disc ">
+  <ul>
     {% assign all_pages = site.pages | sort: 'dir' %}
     {% for page in all_pages %}
     {% if page.layout == "landing_page" %}
