@@ -1,8 +1,10 @@
 <div class="bg-secondary shadow-primary rounded-md flex flex-col text-sm">
 {% for faq in faqs %}
-  <details class="py-4 px-5 flex gap-1 {% unless forloop.last %} border-b border-primary/5 {% endunless %}">
-    <summary class="flex justify-between items-center cursor-pointer text-primary list-none mb-2">{{ faq.q }}<span class="fa fa-chevron-down float-right text-terciary"></span></summary>
+  <details class="py-4 px-5 flex flex-col {% unless forloop.last %} border-b border-primary/5 {% endunless %}">
+    <summary class="flex justify-between items-center cursor-pointer text-primary list-none">{{ faq.q }}<span class="fa fa-chevron-down float-right text-terciary"></span></summary>
+    <div class="flex flex-col gap-3 mt-1.5">
     {{ faq.a | markdownify }}
+    </div>
   </details>
 {% endfor %}
 </div>

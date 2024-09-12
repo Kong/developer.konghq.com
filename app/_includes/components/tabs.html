@@ -1,7 +1,7 @@
 {% assign tabs = 'navtabs-' | append: navtabs_id %}
 
 <div class="tabs flex flex-col {{ class }} {{ environment['additional_classes'] }}">
-  <ul class="tablist flex gap-4 text-sm ml-0" role="tablist">
+  <ul class="tablist flex gap-4 text-sm ml-0 flex-row" role="tablist">
     {% for tab in environment[tabs] %}
       {% assign slug = tab[1].attributes.slug %}
       {% if forloop.first %}
@@ -27,7 +27,7 @@
     {% for tab in environment[tabs] %}
       {% assign slug = tab[1].attributes.slug %}
       <div
-        class="navtab-content flex flex-col {% unless forloop.first %} hidden {% endunless %}"
+        class="navtab-content flex flex-col gap-3 prose-ol:{% unless forloop.first %} hidden {% endunless %}"
         role="tabpanel"
         id="navtab-{{ navtabs_id }}-tabpanel-{{ forloop.index }}"
         tabindex="0"

@@ -51,10 +51,6 @@
     font-family: "JetBrains Mono", system-ui, sans-serif;
   }
 
-  p {
-    @apply mb-4;
-  }
-
   h1, h2, h3, h4, h5, h6 {
     @apply text-primary;
   }
@@ -104,7 +100,7 @@
   }
 
   ol, ul {
-    @apply list-outside ml-4;
+    @apply list-outside ml-4 flex flex-col gap-1;
   }
 
   ol {
@@ -150,7 +146,7 @@
   }
 
   pre.highlight {
-    @apply bg-code-block rounded-lg p-3 mb-3;
+    @apply bg-code-block rounded-lg p-3;
   }
 
   .highlighter-rouge {
@@ -191,5 +187,9 @@
 
   .copy-code-snippet[data-file] .copy-action {
     @apply top-2;
+  }
+
+  .content {
+    @apply flex flex-col gap-3;
   }
 }

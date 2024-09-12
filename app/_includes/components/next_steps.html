@@ -12,7 +12,7 @@
     {% endfor %}
   </div>
   {% elsif next_steps.layout.style == "list" %}
-  <ul>
+  <ul class="flex flex-col bg-secondary shadow-primary  rounded-md text-sm ml-0 gap-0">
     {% for next_step in next_steps.items %}
       <li>
         {% if next_step.type %}
