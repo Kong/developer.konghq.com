@@ -16,12 +16,6 @@
   <body class="bg-primary leading-6">
     {% include header.html %}
 
-  {% ifhascontent nav_header %}
-    <section class="flex px-5 md:px-8 2xl:px-[156px] gap-4 2xl:mx-auto max-w-screen-2xl">
-      {% contentblock nav_header %}
-    </section>
-  {% endifhascontent %}
-
   <div class="flex px-5 md:px-8 2xl:px-[156px] 2xl:mx-auto max-w-screen-2xl">
     {{ content }}
   </div>

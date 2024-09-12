@@ -8,22 +8,21 @@ layout: with_aside
 
 {% contentfor nav_header %}
 <header class="w-full">
-  <div class="pl-4 pb-2 pt-12 flex items-end bg-sky-500 mt-4">
+  <div class="flex items-end">
     <div class="flex flex-col w-full">
-      <h1 class="mt-4 ">{{ page.title }}</h1>
       <div class="flex justify-between items-end">
-        <ul class="list-none flex text-white m-0 align-bottom">
-          <li class="mr-2 text-gray-200 {% if page.overview? %} underline {% endif %}">
-            <a href="/plugins/{{page.slug}}/">Overview</a>
+        <ul class="list-none flex align-bottom">
+          <li class="px-4 py-3 {% if page.overview? %}  border-b-2 border-brand {% endif %}">
+            <a class="text-primary" href="/plugins/{{page.slug}}/">Overview</a>
           </li>
-          <li class="mr-2 {% if page.reference? %} underline {% endif %}">
-            <a href="/plugins/{{page.slug}}/reference/">Configuration Reference</a>
+          <li class="px-4 py-3 {% if page.reference? %}  border-b-2 border-brand {% endif %}">
+            <a class="text-primary" href="/plugins/{{page.slug}}/reference/">Configuration Reference</a>
           </li>
-          <li class="text-gray-200">
-            <a href="#">How-to Guides</a>
+          <li class="px-4 py-3">
+            <a class="text-primary" href="#">How-to Guides</a>
           </li>
         </ul>
-        <a class="mr-8 rounded-xl bg-white text-black p-4 w-64 text-center" href="cloud.konghq.com">Try it on Konnect</a>
+        <a class="border-2 rounded-md border-brand px-4 py-1 text-primary" href="https://cloud.konghq.com">Try it on Konnect</a>
       </div>
     </div>
   </div>
