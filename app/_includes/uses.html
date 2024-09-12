@@ -1,5 +1,5 @@
 {% if include.products or include.tools %}
-<div class="flex gap-[6px] items-center">
+<div class="flex gap-2 items-center">
     <span>Uses: </span>
 
     {% for product in include.products %}
@@ -9,7 +9,7 @@
     {% endfor %}
 
     {% if include.products and include.tools %}
-        <span class="bg-secondary w-[1px] h-1/2"></span>
+        <span class="bg-brand-saturated/40 w-[1px] h-3/4"></span>
     {% endif %}
 
     {% assign tools = include.tools | sort %}
