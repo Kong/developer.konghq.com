@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-2  w-full">
   <div class="text-primary font-medium">Tags</div>
-  <div class="flex gap-[6px] flex-col items-start md:flex-row flex-wrap">
+  <div class="flex gap-1.5 flex-col items-start md:flex-row flex-wrap">
     {% for tag in include.tags %}
       {% capture text %}#{{ tag }}{% endcapture %}
       {% include badge.html url="https://docs.devsite.com/search/{topic}+{other stuff}" text=text %}

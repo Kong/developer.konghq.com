@@ -1,7 +1,7 @@
 {% if page.api_specs %}
 <div class="flex flex-col gap-2 w-full">
   <div class="text-primary font-medium">OpenAPI Specifications</div>
-  <div class="flex gap-[6px] flex-col">
+  <div class="flex gap-1.5 flex-col">
     {% for api_spec in page.api_specs %}
     <div class="flex justify-between">
       <a href="{{ api_spec.url }}">{{ api_spec.text }}</a>
