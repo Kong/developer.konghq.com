@@ -34,6 +34,30 @@ rows:
             config:
               url: https://docs.konghq.com/assets/images/products/gateway/kong-gateway-features.png
               alt_text: Diagram of how Kong Gateway works
+  
+  - header:
+      type: h2
+      text: "Install Kong Gateway"
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  You can use the [quickstart script](https://get.konghq.com/quickstart) to get an instance of Kong Gateway running almost instantly:
+        - type: tabs
+          config:
+            - title: Kong Gateway Enterprise
+              include_content: products/gateway/install/quickstart-ee
+            - title: Kong Gateway OSS
+              include_content: products/gateway/install/quickstart-oss
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  Visit the [Gateway install page](/gateway/install) for all installation options.
   - header:
       type: h2
       text: "How to get started"
