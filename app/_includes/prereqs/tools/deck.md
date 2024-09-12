@@ -9,4 +9,4 @@
   decK enables a simpler configuration and troubleshooting process allowing you to focus on the tutorial and not the tools.
 {% endcapture %}
 
-{% include details.html summary=summary details_content=details_content %}
+{% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content %}

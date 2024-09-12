@@ -13,4 +13,4 @@
 
 {% assign summary = include.step.title %}
 
-{% include details.html summary=summary details_content=details_content %}
+{% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content %}

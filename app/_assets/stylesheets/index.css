@@ -103,8 +103,16 @@
     @apply rotate-180;
   }
 
+  ol, ul {
+    @apply list-outside ml-4;
+  }
+
   ol {
-    @apply list-decimal list-outside;
+    @apply list-decimal;
+  }
+
+  ul {
+    @apply list-disc;
   }
 
   a {

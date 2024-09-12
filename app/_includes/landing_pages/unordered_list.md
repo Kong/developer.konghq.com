@@ -1,4 +1,4 @@
-<ul class="list-disc list-inside">
+<ul class="list-disc ">
   {% for list_item in include.config.items %}
     <li>
       {% for badge in list_item.badges %}

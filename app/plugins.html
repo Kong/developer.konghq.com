@@ -6,7 +6,7 @@ layout: default
   <h1 class="my-4">All Plugins</h1>
   {% for plugin_hash in site.data['kong_plugins'] %}
     {% assign plugin = plugin_hash[1] %}
-    <ul class="list-disc list-inside">
+    <ul class="list-disc ">
       <li>
         <a href="{{ plugin.url }}" class="text-blue-500 hover:underline">{{ plugin.title }}</a>
       </li>
