@@ -16,6 +16,8 @@ works_on:
     - konnect
 ---
 
+## Overview
+
 The GraphQL Rate Limiting Advanced plugin provides rate limiting for GraphQL queries. The GraphQL Rate Limiting plugin extends the [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) plugin.
 
 Due to the nature of client-specified GraphQL queries, the same HTTP request to the same URL with the same method can vary greatly in cost depending on the semantics of the GraphQL operation in the body.

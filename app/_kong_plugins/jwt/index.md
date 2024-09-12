@@ -13,6 +13,8 @@ works_on:
     - konnect
 ---
 
+## Overview
+
 The JWT plugin lets you verify requests containing HS256 or RS256 signed JSON Web Tokens, as specified in [RFC 7519](https://tools.ietf.org/html/rfc7519).
 
 When you enable this plugin, it grants JWT credentials (public and secret keys) to each of your consumers, which must be used to sign their JWTs. You can then pass a token through any of the following:
