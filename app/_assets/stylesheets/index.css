@@ -128,7 +128,7 @@
   }
 
   code {
-    @apply text-primary bg-secondary rounded text-sm/6 border border-brand-saturated/40 text-xs;
+    @apply text-primary bg-secondary rounded border border-brand-saturated/40 text-xs;
   }
 
   code span {
@@ -146,7 +146,7 @@
   }
 
   pre code {
-    @apply whitespace-pre text-white bg-code-block text-sm/6 border-none text-sm;
+    @apply whitespace-pre text-white bg-code-block border-none text-sm;
   }
 
   pre.highlight {
