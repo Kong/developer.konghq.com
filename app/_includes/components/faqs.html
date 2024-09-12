@@ -1,4 +1,4 @@
-<div class="bg-secondary shadow-primary rounded-md flex flex-col">
+<div class="bg-secondary shadow-primary rounded-md flex flex-col text-sm">
 {% for faq in faqs %}
   <details class="py-4 px-5 flex gap-1 {% unless forloop.last %} border-b border-primary/5 {% endunless %} cursor-pointer">
     <summary class="text-primary list-none mb-2">{{ faq.q }}<span class="fa fa-chevron-down float-right text-terciary"></span></summary>

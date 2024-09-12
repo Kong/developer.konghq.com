@@ -24,7 +24,7 @@
     {% endfor %}
   </div>
   {% elsif related_resources.layout.style == "list" %}
-  <div class="flex gap-[6px] flex-col">
+  <div class="flex gap-3 flex-col text-sm">
     {% for related_resource in related_resources.items %}
       <div class="flex gap-2">
         {% if related_resource.type %}
