@@ -60,15 +60,15 @@
   }
 
   h1 {
-    @apply font-bold leading-[3rem] text-[2rem] tracking-tight;
+    @apply font-bold text-3xl tracking-[-.01em];
   }
 
   h2 {
-    @apply font-bold leading-[1.875rem] text-[1.25rem] tracking-tight;
+    @apply font-bold text-xl tracking-[-.01em];
   }
 
   h3 {
-    @apply font-bold leading-[1.25rem] tracking-[-0.02em];
+    @apply font-bold text-lg tracking-[-.01em];
   }
 
   table {
