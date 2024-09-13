@@ -1,8 +1,11 @@
 ---
 title: Manage decK with Docker
 
-# tools:
-#    - deck
+content_type: reference
+layout: reference
+
+tools:
+   - deck
 
 works_on:
     - on-prem
@@ -11,21 +14,13 @@ works_on:
 tags:
   - docker
   - api-ops
-  
-tldr:
-  q: |
-    How do I use decK through the [kong/deck](https://hub.docker.com/r/kong/deck) Docker image?
-  a: |
-    If you used the kong/deck Docker image to install decK, you can use the same Docker image to manage decK.  
-
-prereqs:
-  inline:
-    - title: decK installed with Docker
-      content: |
-        decK must be installed using the [kong/deck Docker image](https://hub.docker.com/r/kong/deck).
 ---
 
-Adjust `KONG_ADMIN_HOST` and the port `8001` in the following examples to the host and port of your own {{site.base_gateway}} instance.
+If you used the [kong/deck](https://hub.docker.com/r/kong/deck) Docker image to 
+install decK, you can use the same Docker image to manage decK.  
+
+Adjust `KONG_ADMIN_HOST` and the port `8001` in the following examples to the 
+host and port of your own {{site.base_gateway}} instance.
 
 ## Export the configuration
 Run this command to export the `kong.yaml` file:
