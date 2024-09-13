@@ -124,7 +124,7 @@
   }
 
   code {
-    @apply text-primary bg-secondary rounded border border-brand-saturated/40 text-xs;
+    @apply text-primary bg-secondary rounded border border-brand-saturated/40 text-xs overflow-auto;
   }
 
   code span {
@@ -155,6 +155,10 @@
 
   .copy-code-snippet {
     @apply relative;
+  }
+
+  .copy-code-snippet pre.highlight {
+    @apply pr-8;
   }
 
   .copy-code-snippet .copy-action {
