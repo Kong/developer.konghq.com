@@ -2,7 +2,7 @@
   <div class="text-primary font-medium">Supported Topologies</div>
   <div class="flex gap-1.5 flex-col md:flex-row">
     {% for topology in include.topologies %}
-    <span>{{ topology }}</span>
+    <span {% unless forloop.last %}class="after:content-[',']"{% endunless %}>{{ topology }}</span>
     {% endfor %}
   </div>
 </div>

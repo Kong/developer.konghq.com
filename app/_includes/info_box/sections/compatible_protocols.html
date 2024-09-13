@@ -3,7 +3,7 @@
   <div class="text-primary font-medium">Compatible Protocols</div>
   <div class="flex gap-1.5 flex-col md:flex-row">
     {% for protocol in protocols %}
-    <span>{{ protocol }}</span>
+    <span {% unless forloop.last %}class="after:content-[',']"{% endunless %}>{{ protocol }}</span>
     {% endfor %}
   </div>
 </div>
