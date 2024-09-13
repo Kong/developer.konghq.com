@@ -182,7 +182,7 @@
   }
 
   [data-file]:before {
-    @apply bg-code-block px-3 py-2 rounded-t-lg text-white w-full inline-block border-b border-white/20 content-[attr(data-file)];
+    @apply bg-code-block px-3 py-2 rounded-t-lg text-white w-full inline-block border-b border-white/20 content-[attr(data-file)] text-sm;
   }
 
   .copy-code-snippet[data-file] .copy-action {
