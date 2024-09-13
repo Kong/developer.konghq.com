@@ -3,21 +3,7 @@
     {% for related_resource in related_resources.items %}
       <div class="flex flex-col border-2 border-gray-200 rounded-md p-3">
         <div class="flex gap-2">
-          {% if related_resource.type %}
-          {%- capture icon_url -%}
-            {%- case related_resource.type -%}
-            {%- when 'video' -%}
-              /assets/icons/youtube.svg
-            {%- when 'learning-center' -%}
-              /assets/icons/graduation.svg
-            {%- when 'github' -%}
-              /assets/icons/github.svg
-            {%- else -%}
-              /assets/icons/book.svg
-            {%- endcase -%}
-          {%- endcapture -%}
-          <div class="flex w-5 h-5 bg-brand" style="mask:url('{{icon_url}}'); mask-size: cover;"></div>
-        {% endif %}
+          <div class="flex w-5 h-5 bg-brand shrink-0" style="mask:url('{{related_resource.icon}}'); mask-size: cover;"></div>
         </div>
         <a href="{{ related_resource.url }}">{{ related_resource.text | liquify }}</a>
       </div>
@@ -27,21 +13,7 @@
   <div class="flex gap-3 flex-col text-sm">
     {% for related_resource in related_resources.items %}
       <div class="flex gap-2">
-        {% if related_resource.type %}
-          {%- capture icon_url -%}
-            {%- case related_resource.type -%}
-            {%- when 'video' -%}
-              /assets/icons/youtube.svg
-            {%- when 'learning-center' -%}
-              /assets/icons/graduation.svg
-            {%- when 'github' -%}
-              /assets/icons/github.svg
-            {%- else -%}
-              /assets/icons/book.svg
-            {%- endcase -%}
-          {%- endcapture -%}
-          <div class="flex w-5 h-5 bg-brand" style="mask:url('{{icon_url}}'); mask-size: cover;"></div>
-        {% endif %}
+          <div class="flex w-5 h-5 bg-brand shrink-0" style="mask:url('{{related_resource.icon}}'); mask-size: cover;"></div>
         <a href="{{ related_resource.url }}">{{ related_resource.text | liquify }}</a>
       </div>
     {% endfor %}

@@ -30,6 +30,8 @@ module Jekyll
         }
       end
 
+      set_icons(related_resources['items'])
+
       context.stack do
         context['related_resources'] = related_resources
         Liquid::Template.parse(template).render(context)
@@ -37,6 +39,12 @@ module Jekyll
     end
 
     private
+
+    def set_icons(related_resources)
+      related_resources.map do |resource|
+        RelatedResourceIconAssigner.new(resource).process
+      end
+    end
 
     def template
       @template ||= File.read(File.expand_path('app/_includes/components/related_resources.html'))
