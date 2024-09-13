@@ -30,7 +30,7 @@ rows:
       - blocks:
         - type: tabs
           config:
-            - title: OSX (Homebrew)
+            - title: OSX
               include_content: tools/deck/install/osx
             - title: Windows
               include_content: tools/deck/install/windows
@@ -318,6 +318,8 @@ rows:
       - blocks:
           - type: how_to_list
             config:
+              tags:
+                - "api-ops"
               tools:
                 - deck
               quantity: 5
