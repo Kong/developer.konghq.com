@@ -221,4 +221,54 @@
   .content {
     @apply flex flex-col gap-3;
   }
+
+  .success, .warning, .danger, .info, .neutral {
+    @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex;
+
+    &:not(.no-icon)::before {
+      @apply text-base content-['\f05a'];
+      font-family: "Font Awesome", FontAwesome;
+    }
+  }
+
+  .info {
+    @apply bg-semantic-blue-secondary border-semantic-blue-primary;
+
+    &:not(.no-icon)::before {
+      @apply text-semantic-blue-primary;
+    }
+  }
+
+  .success {
+    @apply bg-semantic-green-secondary border-semantic-green-primary;
+
+    &:not(.no-icon)::before {
+      @apply text-semantic-green-primary;
+    }
+  }
+
+  .warning {
+    @apply bg-semantic-yellow-secondary border-semantic-yellow-primary;
+
+    &:not(.no-icon)::before {
+      @apply content-['\f071'] text-semantic-yellow-primary;
+    }
+  }
+
+  .danger {
+    @apply bg-semantic-red-secondary border-semantic-red-primary;
+
+    &:not(.no-icon)::before {
+      @apply content-['\f057'] text-semantic-red-primary;
+    }
+  }
+
+  .neutral {
+    @apply bg-semantic-grey-secondary border-semantic-grey-primary;
+
+    &:not(.no-icon)::before {
+      @apply text-semantic-grey-primary;
+    }
+  }
+
 }
