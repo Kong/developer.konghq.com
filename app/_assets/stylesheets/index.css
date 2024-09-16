@@ -136,6 +136,10 @@
     @apply list-disc;
   }
 
+  li > *:not(:last-child) {
+    @apply mb-2;
+  }
+
   a {
     @apply hover:underline;
   }

@@ -15,6 +15,7 @@ For this tutorial, you'll need Kong Gateway entities, like services and routes, 
 {{ entities | indent: 3 }}
 
 1. Sync your changes:
+
    ```sh
    deck gateway sync prereqs.yaml
    ```
