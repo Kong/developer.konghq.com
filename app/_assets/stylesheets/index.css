@@ -76,7 +76,7 @@
   }
 
   th {
-    @apply bg-secondary text-primary font-semibold py-4 px-5 border-none text-center;
+    @apply bg-secondary text-primary font-semibold py-4 px-5 border-none text-left;
   }
 
   th:first-child {

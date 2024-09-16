@@ -3,7 +3,7 @@
     <tr>
       <th></th>
       {% for c in include.config.columns %}
-        <th>
+        <th class="text-center">
           <span class="font-semibold text-primary">{{ c.title }}</span>
         </th>
       {% endfor %}
