@@ -88,7 +88,7 @@ The {{site.konnect_short_name}} SAML integration allows you to configure various
 {% navtabs %}
 {% navtab "OIDC" %}
 
-{:.important}
+{:.warning}
 > **Important:** Keep built-in authentication enabled while you are testing IdP authentication. Only disable built-in authentication after successfully testing IdP authentication.
 
 You can test the SSO configuration by navigating to the login URI based on the organization login path you set earlier. For example: `https://cloud.konghq.com/login/examplepath`, where `examplepath` is the unique login path string set in the steps above. 
@@ -101,7 +101,7 @@ application.
 {% endnavtab %}
 {% navtab "SAML" %}
 
-{:.important}
+{:.warning}
 > **Important:** Keep built-in authentication enabled while you are testing IdP authentication. Only disable built-in authentication after successfully testing IdP authentication.
 
 Test the SSO configuration by navigating to the login URI based on the organization login path you set earlier. For example: `https://cloud.konghq.com/login/examplepath`, where `examplepath` is the unique login path string set in the previous steps.

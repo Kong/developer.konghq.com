@@ -33,7 +33,7 @@ The complete order of precedence for plugins configured to multiple entities is:
 1. **Service**: Specific to given service. 
 1. **Globally configured plugins**: Lowest precedence, applies to all requests across all services and routes regardless of consumer status.
 
-{:.note}
+{:.info}
 > **Note on precedence for consumer groups**:
 When a consumer is a member of two consumer groups, each with a scoped plugin, 
 {{site.base_gateway}} ensures deterministic behavior by executing only one of these plugins. 

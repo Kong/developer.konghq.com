@@ -30,7 +30,7 @@ All rate limiting plugins support some subset of the following strategies:
 | GraphQL Rate Limiting Advanced | ❌ | ✅ | ✅ |
 | Response Ratelimiting | ✅ | ✅ | ✅ | -->
 
-{:.note .no-icon}
+{:.info .no-icon}
 > **\[1\]**: Only when `sync_rate` option is set to `0` (synchronous behavior). See the configuration reference for each plugin for more details.
 
 Two common use cases are:
