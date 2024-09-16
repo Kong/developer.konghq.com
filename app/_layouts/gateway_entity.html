@@ -9,9 +9,9 @@ entity_schema: true
 
 {{ content }}
 
-{% if page.schema %}
-  {% include sections/schema.html %}
-{% endif %}
+{% ifhascontent schema %}
+{% include sections/schema.html %}
+{% endifhascontent schema %}
 
 {% ifhascontent setup_entity %}
 {% include sections/setup_entity.html %}
@@ -20,6 +20,14 @@ entity_schema: true
 
 {% if page.faqs %}
 {% include sections/faq.html %}
+{% endif %}
+
+
+{% if page.schema %}
+  <div id="schema" class="mt-4">
+    <h2>Schema</h2>
+    {% entity_schema %}
+  </div>
 {% endif %}
 
 {% if page.next_steps %}
