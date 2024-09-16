@@ -76,7 +76,7 @@
   }
 
   th {
-    @apply bg-secondary text-primary font-semibold py-4 px-5 border-none text-left;
+    @apply bg-secondary text-primary font-semibold py-4 px-5 text-left;
   }
 
   th:first-child {
@@ -87,8 +87,16 @@
     @apply rounded-tr-lg;
   }
 
+  th:not(:last-child) {
+    @apply border-r border-primary/5;
+  }
+
   td {
-    @apply py-4 px-5 border-none;
+    @apply py-4 px-5;
+  }
+
+  td:not(:last-child) {
+    @apply border-r border-primary/5;
   }
 
   tbody tr {
