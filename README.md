@@ -10,6 +10,10 @@ make install-prerequisites
 # Install dependencies
 make install
 
+# Create local .env file
+# OAS Pages require VITE_PORTAL_API_URL to be set in your current environment, it should match the Kong supplied portal URL
+cp .env.example .env
+
 # Build the site and watch for changes 
 make run
 ```
