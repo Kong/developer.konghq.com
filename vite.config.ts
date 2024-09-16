@@ -28,6 +28,10 @@ export default ({ command, mode }) => {
   process.env.VITE_LOCALE = process.env.VITE_LOCALE || 'en'
 
   let portalApiUrl = process.env.VITE_PORTAL_API_URL;
+  if (!portalApiUrl) {
+    console.error('\x1b[31m Missing `VITE_PORTAL_API_URL`, update your .env file or set it as an ENV variable. \x1b[0m');
+    process.exit(1);
+  }
   if (!portalApiUrl.endsWith('/')) {
     portalApiUrl += '/'
   }
