@@ -62,7 +62,7 @@ async function fetchSpec() {
   @apply text-secondary !important;
 }
 :deep(code) {
-  @apply bg-code-block text-white !important;
+  @apply text-primary bg-secondary rounded border border-brand-saturated/40 text-xs py-0 px-1 !important;
 }
 :deep(.property-title-name) {
   @apply  text-brand !important;
