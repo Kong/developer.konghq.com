@@ -53,3 +53,18 @@ async function fetchSpec() {
   specText.value = response.data.content
 }
 </script>
+
+<style scoped>
+:deep(.default-markdown) {
+  @apply text-secondary !important;
+}
+:deep(.property-type) {
+  @apply text-secondary !important;
+}
+:deep(code) {
+  @apply bg-code-block text-white !important;
+}
+:deep(.property-title-name) {
+  @apply  text-brand !important;
+}
+</style>

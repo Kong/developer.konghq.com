@@ -9,9 +9,9 @@ entity_schema: true
 
 {{ content }}
 
-{% ifhascontent schema %}
+{% if page.schema %}
 {% include sections/schema.html %}
-{% endifhascontent schema %}
+{% endif %}
 
 {% ifhascontent setup_entity %}
 {% include sections/setup_entity.html %}
