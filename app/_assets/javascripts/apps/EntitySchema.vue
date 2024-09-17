@@ -1,5 +1,5 @@
 <template>
-  <div class="sandbox-container">
+  <div>
     <main class="page-main">
       <SpecModelNode
         v-if="schema"
@@ -65,6 +65,10 @@ async function fetchSpec() {
   @apply text-primary bg-secondary rounded border border-brand-saturated/40 text-xs py-0 px-1 !important;
 }
 :deep(.property-title-name) {
-  @apply  text-brand !important;
+  @apply text-brand !important;
+}
+
+:deep(.model-node-container:not(.nested-model-node) > .model-node-property) {
+  @apply border-t border-primary/5 !important;
 }
 </style>
