@@ -178,7 +178,7 @@
     @apply bg-code-block rounded-lg p-3;
   }
 
-  .highlighter-rouge {
+  code.highlighter-rouge {
     @apply px-1;
   }
 
