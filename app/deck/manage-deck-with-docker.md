@@ -13,6 +13,8 @@ works_on:
 
 tags:
   - docker
+
+product:
   - api-ops
 ---
 

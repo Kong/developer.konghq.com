@@ -318,7 +318,7 @@ rows:
       - blocks:
           - type: how_to_list
             config:
-              tags:
+              product:
                 - "api-ops"
               tools:
                 - deck
