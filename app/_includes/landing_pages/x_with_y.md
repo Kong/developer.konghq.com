@@ -1,7 +1,7 @@
 <div class="flex flex-col">
   <div class="grid grid-cols-2 gap-4">
     {% for header in include.config.headers %}
-      <div class="font-bold">{{ header }}</div>
+      <h3>{{ header }}</h3>
     {% endfor %}
   </div>
   {% for item in include.config.items %}
