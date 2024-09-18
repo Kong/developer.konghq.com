@@ -1,0 +1,6 @@
+metadata:
+  title: Debug APIs
+rows:
+  - header:
+      type: h1
+      text: "Debug APIs with Insomnia"

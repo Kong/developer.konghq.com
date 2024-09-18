@@ -1,0 +1,6 @@
+metadata:
+  title: Test APIs
+rows:
+  - header:
+      type: h1
+      text: "Test APIs with Insomnia"

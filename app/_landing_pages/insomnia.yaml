@@ -40,10 +40,10 @@ rows:
           config:
             title: Design APIs
             description: Design and preview new APIs with OpenAPI
-            icon:  https://insomnia.rest/images/icons/design.svg
+            icon:  /assets/icons/insomnia/design.svg
             cta:
               text: Learn more
-              url: /assets/icons/insomnia/design.svg
+              url: /insomnia/design
               align: end
       - blocks:
         - type: card
@@ -53,7 +53,7 @@ rows:
             icon: /assets/icons/insomnia/checkbox-active.svg
             cta:
               text: Learn more
-              url: https://insomnia.rest/features/api-test
+              url: /insomnia/test
               align: end
       - blocks:
         - type: card
@@ -63,7 +63,7 @@ rows:
             icon: /assets/icons/insomnia/bug.svg
             cta:
               text: Learn more
-              url: https://insomnia.rest/features/api-debug
+              url: /insomnia/debug
               align: end
       - blocks:
         - type: card
