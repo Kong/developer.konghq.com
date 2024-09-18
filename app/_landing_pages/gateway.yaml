@@ -35,18 +35,18 @@ rows:
               - type: text
                 text: |
                   You can use the [quickstart script](https://get.konghq.com/quickstart) to get an instance of Kong Gateway running almost instantly:
-        - type: tabs
-          config:
-            - title: Kong Gateway Enterprise
-              include_content: products/gateway/install/quickstart-ee
-            - title: Kong Gateway OSS
-              include_content: products/gateway/install/quickstart-oss
-        - type: structured_text
-          config:
-            blocks:
-              - type: text
-                text: |
-                  Visit the [Gateway install page](/gateway/install) for all installation options.
+                  
+                  ```sh
+                  curl -Ls https://get.konghq.com/quickstart | bash -s
+                  ```
+
+                  This script sets up two Docker containers: an Enterprise Gateway instance running in free mode, and a 
+                  PostgreSQL database.
+                  
+                  Pass the `-- -h` option to the script to see all possible configuration options, including how to pass a license
+                  to the script, how to switch to an open-source Gateway image, enable RBAC, and more.
+
+                  Visit the [Gateway install page](/gateway/install) for all other installation options.
   - header:
       type: h2
       text: "What can Kong Gateway do?"
