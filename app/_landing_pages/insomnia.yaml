@@ -28,7 +28,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: https://docs.insomnia.rest/assets/images/entry-page.png
+              url: /assets/images/insomnia/entry-page.png
               alt_text: Image of the Insomnia UI
   
   - header:
@@ -43,14 +43,14 @@ rows:
             icon:  https://insomnia.rest/images/icons/design.svg
             cta:
               text: Learn more
-              url: https://insomnia.rest/features/api-design
+              url: /assets/icons/insomnia/design.svg
               align: end
       - blocks:
         - type: card
           config:
             title: Test APIs
             description: Automatically test multiple requests in your collections, with no limits on the amount of collection runs that you can execute.
-            icon: https://insomnia.rest/images/icons/checkbox-active.svg
+            icon: /assets/icons/insomnia/checkbox-active.svg
             cta:
               text: Learn more
               url: https://insomnia.rest/features/api-test
@@ -60,7 +60,7 @@ rows:
           config:
             title: Debug APIs
             description: Debug and use APIs across your collections
-            icon: https://insomnia.rest/images/icons/bug.svg
+            icon: /assets/icons/insomnia/bug.svg
             cta:
               text: Learn more
               url: https://insomnia.rest/features/api-debug
