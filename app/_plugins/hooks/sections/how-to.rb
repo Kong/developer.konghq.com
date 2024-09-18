@@ -13,7 +13,7 @@ module SectionWrapper
 
     def build_wrapper(section_title = '')
       Nokogiri::HTML::DocumentFragment.parse <<-HTML
-        <div class="flex flex-col gap-4 collapsible" aria-expanded="true">
+        <div class="flex flex-col gap-4 step" aria-expanded="true">
             #{section_title}
             <div class="content"></div>
         </div>

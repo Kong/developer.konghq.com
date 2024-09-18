@@ -1,4 +1,7 @@
-<h3 class="inline-flex">{{ include.summary | liquify }}</h3>
-<div class="flex flex-col gap-3 pl-4">
+<a class="flex gap-1 items-baseline justify-between hover:no-underline accordion-trigger" href="#{{ include.summary | liquify | slugify }}">
+    <h3 class="[counter-increment:section] before:content-[counter(section)_'._']">{{ include.summary | liquify }}</h3>
+    <span class="fa fa-chevron-down text-terciary rotate-180" aria-hidden="true"></span>
+</a>
+<div class="flex flex-col gap-3 px-4 accordion-panel">
 {{ include.details_content | markdownify }}
 </div>
