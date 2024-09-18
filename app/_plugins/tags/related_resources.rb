@@ -42,7 +42,7 @@ module Jekyll
 
     def set_icons(related_resources)
       related_resources.map do |resource|
-        RelatedResourceIconAssigner.new(resource).process
+        LinkIconAssigner.new(resource).process
       end
     end
 

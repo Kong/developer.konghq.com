@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jekyll
-  class RelatedResourceIconAssigner
+  class LinkIconAssigner
     ICON_MAP = {
       'video'           => 'youtube',
       'learning-center' => 'graduation',

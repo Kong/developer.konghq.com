@@ -30,9 +30,17 @@ module Jekyll
         }
       end
 
+      set_icons(next_steps['items'])
+
       context.stack do
         context['next_steps'] = next_steps
         Liquid::Template.parse(template).render(context)
+      end
+    end
+
+    def set_icons(next_steps)
+      next_steps.map do |step|
+        LinkIconAssigner.new(step).process
       end
     end
 
