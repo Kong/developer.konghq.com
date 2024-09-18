@@ -41,3 +41,9 @@ If the operations in the API spec have tags, the requests are organized into fol
 
 {:.info}
 > Since this collection is linked to a document, it cannot be accessed from the **Collections** list. You can find it in the **COLLECTION** tab of your document.
+
+## 3. Send requests
+
+If the necessary environment variables are set, you can send a request right away. In this example using the [Konnect API Products specification](https://docs.konghq.com/konnect/api/api-products/latest/), we can send the *List API Products* request with only the base URL and Bearer token defined:
+
+![Insomnia request with 200 status code](/assets/images/generate-collection-request.png)
