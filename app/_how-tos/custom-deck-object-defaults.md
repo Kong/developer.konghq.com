@@ -22,10 +22,6 @@ tldr:
     You can configure your own custom Kong Gateway defaults via decK to
     enforce a set of standard values and avoid repetition in your configuration.
 
-prereqs:
-  entities:
-    services:
-        - example-service
 ---
 
 
