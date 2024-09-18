@@ -33,7 +33,7 @@ For example:
 | Very large configuration | You have a large set of entities - hundreds, maybe thousands - and it's very difficult to manage them all in one file. You can use decK to break up the configuration into different files with specific purposes. |
 | Separation of consumer management | You want to declaratively manage all of the configuration for Kong except consumers and their credentials. This could be for any number of reasons: <br> - The consumers are being managed by another service <br> - The consumers are dynamically created <br> - The number of consumers is so large that it makes no sense to manage them in a declarative fashion | 
 
-## Methods for managing distrubuted configuration
+## Methods for managing distributed configuration
 
 ### Tags
 
