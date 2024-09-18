@@ -16,8 +16,8 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    Insomnia is an open source desktop application that takes the pain out of interacting with and designing, debugging, and testing APIs. 
-                    Insomnia combines an easy-to-use interface with advanced functionality like authentication helpers, code generation, and environment variables.
+                    Insomnia is an open source desktop application that simplifies designing, debugging, and testing APIs. 
+                    Insomnia combines an easy-to-use interface with advanced functionality, like authentication helpers, code generation, and environment variables.
 
                     You can install Insomnia on macOS, Windows, and Linux.
           - type: install-button
