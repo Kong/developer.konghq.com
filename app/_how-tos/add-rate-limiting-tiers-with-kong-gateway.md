@@ -34,7 +34,7 @@ plugins:
   - rate-limiting-advanced
   - key-auth
 
-entites:
+entities:
   - consumer
   - consumer_group
 
