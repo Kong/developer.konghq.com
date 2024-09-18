@@ -1,5 +1,5 @@
 ---
-title: Customise object defaults in decK
+title: Object defaults reference
 
 content_type: reference
 layout: reference

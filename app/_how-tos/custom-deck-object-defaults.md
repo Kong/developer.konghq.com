@@ -1,5 +1,5 @@
 ---
-title: Set custom default values for Gateway entities
+title: Customise object defaults in decK
 
 works_on:
     - on-prem
