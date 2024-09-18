@@ -1,5 +1,5 @@
 ---
-title: Customise object defaults in decK
+title: Customize object defaults in decK
 
 works_on:
     - on-prem
@@ -55,29 +55,14 @@ decK supports setting custom object defaults both in self-managed
 decK has no way of knowing that this change has occurred, as its `defaults`
 configuration would overwrite the value in your environment.
 
-## 1. Add defaults section
+## 1. Define default properties
 
-In the `deck_files` directory you created in the [prerequisites](#prerequisites), create a `defaults.yaml` file
-and add an `_info` section with `defaults`:
-
-```yaml
-_format_version: "3.0"
-_info:
-  defaults:
-```
-{: data-file="defaults.yaml" }
-
-{:.note}
-> You can also use [tags](/deck/distributed-config/)
-to apply the defaults wherever they are needed, instead of separate files.
-
-## 2. Define default properties
-
-Define the properties you want to set for {{site.base_gateway}} objects.
+Define the properties you want to customize for {{site.base_gateway}} objects.
 See the [object defaults reference](/deck/object-defaults) for all configurable objects and default values.
 
-For example, you could define default values for a few fields of the
-service object:
+In the `deck_files` directory you created in the [prerequisites](#prerequisites), create a `defaults.yaml` file
+and add an `_info` section with `defaults`. 
+You can define a few select properties for a supported entity, such as a service:
 
 ```yaml
 _format_version: "3.0"
@@ -117,7 +102,7 @@ _info:
 ```
 {: data-file="defaults.yaml" }
 
-## 3. Validate
+## 2. Validate
 
 Sync your changes with {{site.base_gateway}}:
 
