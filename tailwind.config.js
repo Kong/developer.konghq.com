@@ -4,7 +4,7 @@ module.exports = {
     "app/*.{html,md}",
     "app/_layouts/**/*.html",
     "app/_includes/**/*.{html,md}",
-    "app/_landing_pagees/**/*.yaml",
+    "app/_landing_pages/**/*.yaml",
     "app/_how-tos/**/*.md",
     "app/_plugins/**/*.rb",
     "app/_assets/javascripts/**"
