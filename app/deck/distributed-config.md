@@ -8,7 +8,7 @@ works_on:
     - on-prem
     - konnect
 
-product:
+productss:
   - api-ops
 
 tools:

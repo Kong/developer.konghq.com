@@ -5,11 +5,11 @@ works_on:
     - on-prem
     - konnect
 
-product:
-  - api-ops
+products:
+    - api-ops
 
 tools:
-  - deck
+    - deck
 
 related_resources:
   - text: decK object defaults reference
@@ -23,7 +23,6 @@ tldr:
     enforce a set of standard values and avoid repetition in your configuration.
 
 ---
-
 
 You can set custom configuration defaults for the following core
 {{site.base_gateway}} objects:
