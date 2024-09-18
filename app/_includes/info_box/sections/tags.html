@@ -1,3 +1,4 @@
+{% if include.tags != empty %}
 <div class="flex flex-col gap-2  w-full">
   <div class="text-primary font-medium">Tags</div>
   <div class="flex gap-1.5 flex-col items-start md:flex-row flex-wrap">
@@ -7,3 +8,4 @@
     {% endfor %}
   </div>
 </div>
+{% endif %}
