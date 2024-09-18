@@ -10,7 +10,7 @@ layout: with_aside
   {% include how-tos/tldr.html %}
 </div>
 
-<div class="flex flex-col gap-8">
+<div class="flex flex-col gap-8 accordion" data-multiple="true">
 {% if page.tools or page.prereqs %}
 {% include sections/prerequisites.html %}
 {% endif %}

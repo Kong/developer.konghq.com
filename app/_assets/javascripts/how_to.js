@@ -1,7 +1,7 @@
 class Accordion {
     constructor(elem) {
         this.accordion = elem;
-        this.items = Array.from(this.accordion.querySelectorAll('.accordion-item'));
+        this.items = Array.from(this.accordion.querySelectorAll(':scope > .accordion-item'));
 
         // Specify if there's a default opened item.
         this.defaultItem = this.accordion.dataset.default;
@@ -57,13 +57,14 @@ class Accordion {
     }
 
     addEventListeners() {
-        this.accordion.querySelectorAll('.accordion-trigger').forEach((trigger) => {
+        this.accordion.querySelectorAll(':scope > .accordion-item > .accordion-trigger').forEach((trigger) => {
             trigger.addEventListener('click', this.onItemClick.bind(this));
         })
     }
 
     onItemClick(event) {
         event.preventDefault();
+        event.stopPropagation();
 
         const accordionItem = event.target.closest('.accordion-item');
         const itemIndex = this.items.indexOf(accordionItem);
@@ -79,31 +80,8 @@ class Accordion {
     }
 }
 
-class Step {
-    constructor(elem) {
-        this.elem = elem;
-        this.link = elem.querySelector('a');
-
-        this.addEventListeners();
-    }
-
-    addEventListeners() {
-        this.link.addEventListener('click', this.toggleSection.bind(this));
-    }
-
-    toggleSection(event) {
-        event.preventDefault();
-        this.elem.querySelector('span.fa').classList.toggle('rotate-180');
-        this.elem.querySelector('.content').classList.toggle('hidden');
-    }
-}
-
 document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll('.how-to .step').forEach((elem) => {
-        new Step(elem);
-    });
-
-    document.querySelectorAll('.how-to .accordion').forEach((accordion) => {
+    document.querySelectorAll('.accordion').forEach((accordion) => {
         new Accordion(accordion);
     })
 });
