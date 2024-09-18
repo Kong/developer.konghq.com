@@ -1,5 +1,5 @@
 
-{% assign summary = 'Pre-configured Entities' %}
+{% assign summary = 'Pre-configured entities' %}
 
 {% capture details_content %}
 For this tutorial, you'll need Kong Gateway entities, like services and routes, pre-configured. These entities are essential for Kong Gateway to function but installing them isn't the focus of this guide. Follow these steps to pre-configure them:

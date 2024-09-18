@@ -3,7 +3,7 @@
     {% for product in page.products %}
       <div class="flex flex-col px-5 py-4 gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
 {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
-{% include {{ product_include }} %}
+{% include {{ product_include }} tier=include.tier %}
       </div>
     {% endfor %}
   {% endif %}

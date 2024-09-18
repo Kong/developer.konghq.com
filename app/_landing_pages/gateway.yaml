@@ -11,8 +11,6 @@ rows:
       - blocks:
           - type: structured_text
             config:
-              header:
-                text: "Introducing Kong Gateway"
               blocks:
                 - type: text
                   text: | 
@@ -20,20 +18,54 @@ rows:
                     
                     Kong Gateway runs in front of any RESTful API and can be extended through modules and plugins. 
                     It’s designed to run on decentralized architectures, including hybrid-cloud and multi-cloud deployments.
-
-                    With Kong Gateway, users can:
-                - type: ordered_list
-                  items:
-                    - Leverage workflow automation and modern GitOps practices
-                    - Decentralize applications/services and transition to microservices
-                    - Create a thriving API developer ecosystem
-                    - Proactively identify API-related anomalies and threats
-                    - Secure and govern APIs/services, and improve API visibility across the entire organization. 
       - blocks:
           - type: image
             config:
               url: https://docs.konghq.com/assets/images/products/gateway/kong-gateway-features.png
               alt_text: Diagram of how Kong Gateway works
+
+  - header:
+      type: h2
+      text: "Install Kong Gateway"
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  You can use the [quickstart script](https://get.konghq.com/quickstart) to get an instance of Kong Gateway running almost instantly:
+                  
+                  ```sh
+                  curl -Ls https://get.konghq.com/quickstart | bash -s
+                  ```
+
+                  This script sets up two Docker containers: an Enterprise Gateway instance running in free mode, and a 
+                  PostgreSQL database.
+                  
+                  Pass the `-- -h` option to the script to see all possible configuration options, including how to pass a license
+                  to the script, how to switch to an open-source Gateway image, enable RBAC, and more.
+
+                  Visit the [Gateway install page](/gateway/install) for all other installation options.
+  - header:
+      type: h2
+      text: "What can Kong Gateway do?"
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: | 
+                    With Kong Gateway, users can:
+              - type: ordered_list
+                items:
+                  - Leverage workflow automation and modern GitOps practices
+                  - Decentralize applications/services and transition to microservices
+                  - Create a thriving API developer ecosystem
+                  - Proactively identify API-related anomalies and threats
+                  - Secure and govern APIs/services, and improve API visibility across the entire organization. 
+     
   - header:
       type: h2
       text: "How to get started"
