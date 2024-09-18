@@ -3,10 +3,10 @@
 {% capture details_content %}
 {% if include.tier=='enterprise' %}
 
-This tutorial requires Kong Gateway Enterprise. That means you'll need an Enterprise license.
-
+This tutorial requires Kong Gateway Enterprise. 
 If you don't have Kong Gateway set up yet, you can use the 
-[quickstart script](https://get.konghq.com/quickstart) to get an instance of Kong Gateway running almost instantly:
+[quickstart script](https://get.konghq.com/quickstart) with an enterprise license
+to get an instance of Kong Gateway running almost instantly.
 
 1. Export your license to an environment variable:
   
@@ -19,7 +19,7 @@ If you don't have Kong Gateway set up yet, you can use the
     ```bash
     curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA
     ```
-    
+
     Once Kong Gateway is ready, you will see the following message:
     ```bash
     Kong Gateway Ready 
