@@ -44,6 +44,7 @@ cleanup:
   inline:
     - title: Destroy the Kong Gateway container
       include_content: cleanup/products/gateway
+      icon_url: /assets/icons/gateway.svg
 ---
 
 ## 1. Enable rate limiting

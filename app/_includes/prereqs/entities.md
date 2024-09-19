@@ -23,4 +23,4 @@ For this tutorial, you'll need Kong Gateway entities, like services and routes, 
 To learn more about entities, you can read our [entities documentation](/entities/). 
 {% endcapture %}
 
-{% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content %}
+{% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/widgets.svg' %}
