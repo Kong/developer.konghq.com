@@ -1,0 +1,242 @@
+metadata:
+  title: Insomnia
+rows:
+  - header:
+      type: h1
+      text: "Insomnia"
+  - header:
+      type: h2
+      text: "Design, debug, test, and mock APIs locally, on Git, or cloud"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Introducing Kong Insomnia"
+              blocks:
+                - type: text
+                  text: | 
+                    Insomnia is an open source desktop application that simplifies designing, debugging, and testing APIs. 
+                    Insomnia combines an easy-to-use interface with advanced functionality, like authentication helpers, code generation, and environment variables.
+
+                    You can install Insomnia on macOS, Windows, and Linux.
+          - type: install-button
+            config:
+              align: left
+              text: Install Insomnia
+              url: https://insomnia.rest/download
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/insomnia/entry-page.png
+              alt_text: Image of the Insomnia UI
+  
+  - header:
+      type: h2
+      text: "Features"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Design APIs
+            description: Design and preview new APIs with OpenAPI
+            icon:  /assets/icons/insomnia/design.svg
+            cta:
+              text: Learn more
+              url: /insomnia/design
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Test APIs
+            description: Automatically test multiple requests in your collections, with no limits on the amount of collection runs that you can execute.
+            icon: /assets/icons/insomnia/checkbox-active.svg
+            cta:
+              text: Learn more
+              url: /insomnia/test
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Debug APIs
+            description: Debug and use APIs across your collections
+            icon: /assets/icons/insomnia/bug.svg
+            cta:
+              text: Learn more
+              url: /insomnia/debug
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Insomnia Plugin Hub
+            description: Extend Insomnia with powerful plugins
+            icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-api-plugins-color.svg
+            cta:
+              text: Learn more
+              url: https://insomnia.rest/plugins
+              align: end
+  - header:
+      type: h2
+      text: "Capabilities"
+    columns:
+      - blocks:
+          - type: feature_table
+            config:
+              columns:
+                - title: Free
+                  key: oss
+                - title: Individual
+                  key: individual
+                - title: Team
+                  key: team
+                - title: Enterprise
+                  key: ee
+              features:
+                - title: Local vault for local storage of collections, design specs, and every other resource
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Debug APIs using the most popular protocols and formats
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Design APIs using the native OpenAPI editor and visual preview
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Test APIs using native test suites
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Mock APIs using cloud and/or self-hosted Mock servers
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Build CI/CD pipelines using the native Insomnia CLI for linting and testing
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Cloud Sync for cloud collaboration, end-to-end encrypted (E2EE) and free
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Git Sync for Git storage of all files using any 3rd party Git repository
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Unlimited collaborators for accounts
+                  subtitle: Free is only on one project
+                  oss: false
+                  individual: true
+                  team: true
+                  ee: true 
+                - title: Unlimited organizations
+                  oss: false
+                  individual: false
+                  team: true
+                  ee: true
+                - title: Native Git support
+                  oss: false
+                  individual: false
+                  team: true
+                  ee: true
+                - title: RBAC and permissions
+                  oss: false
+                  individual: false
+                  team: true
+                  ee: true
+                - title: Enterprise SSO (SAML, OIDC)
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+                - title: Storage control to mandate Cloud, Local or Git
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+                - title: Collaboration Invite Control to allow and deny domains
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+                - title: Self-hosted API mocking
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+                - title: Enterprise support
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+                - title: Kong Professional Services
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+                - title: Custom payment options
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+                - title: Unlimited mock requests
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+
+  - header:
+      type: h2
+      text: Learn
+    columns:
+      - blocks:
+          - type: concept_list
+            config:
+              - topic: beginner
+                product: insomnia 
+            quantity: 5
+            allow_empty: true
+          - type: cta
+            config:
+              text: "Learn more &raquo;"
+              url: "https://docs.devsite.com/search/{concept.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
+
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              products:
+                  - insomnia
+              quantity: 5
+              allow_empty: true
+              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
+
+  - header:
+      type: h2
+      text: References & Tools
+    columns:
+      - blocks:
+          - type: reference_list
+            config:
+              - topic: beginner
+                product: insomnia 
+            quantity: 5
+            allow_empty: true
+          - type: cta
+            config:
+              text: "View more references &raquo;"
+              url: "https://docs.devsite.com/search/{reference.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
