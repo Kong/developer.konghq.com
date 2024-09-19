@@ -24,7 +24,7 @@ module SectionWrapper
         <div class="flex flex-col gap-4 border-b border-primary/5 pb-8">
           <div class="content"></div>
         </div>
-      HTML
+        HTML
       end
       Nokogiri::HTML::DocumentFragment.parse(wrapper)
     end

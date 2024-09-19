@@ -10,6 +10,18 @@ class Accordion {
         // by default they don't.
         this.multipleItems = this.accordion.dataset.multiple;
 
+        // Specify if the accordion should have all the items expanded by default.
+        this.allExpanded = this.accordion.dataset.allExpanded;
+
+        if (this.allExpanded) {
+            if (!this.multipleItems) {
+                console.log('Accordion Error: data-all-expanded is valid only if data-multiple="true".');
+            }
+            if (this.defaultItem) {
+                console.log('Accordion Error: data-all-expanded and data-default are mutually exclusive.')
+            }
+        }
+
         this.init();
         this.addEventListeners();
     }
@@ -17,10 +29,10 @@ class Accordion {
     init() {
         // if defaultItem initialize everything closed except for that one item.
         this.items.forEach((item, index) => {
-            if (this.defaultItem && parseInt(this.defaultItem) !== index) {
-                this.closeItem(index);
-            } else {
+            if (this.allExpanded || this.defaultItem && parseInt(this.defaultItem) === index) {
                 this.openItem(index);
+            } else {
+                this.closeItem(index);
             }
         })
     }
