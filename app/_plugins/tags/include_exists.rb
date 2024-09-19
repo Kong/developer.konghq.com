@@ -7,7 +7,7 @@ module Jekyll
 
     def render(context)
       site_source = context.registers[:site].source
-      file_path = File.join(site_source, '_includes', @file)
+      file_path = File.join(site_source, '_includes', context[@file])
       File.exist?(file_path).to_s
     end
   end

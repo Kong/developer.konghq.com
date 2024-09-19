@@ -3,7 +3,7 @@
     {% for product in page.products %}
       {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
       {% capture product_include_exists %}{% include_exists product_include %}{% endcapture %}
-      {% if capture_include_exists == 'true' %}
+      {% if product_include_exists == 'true' %}
         <div class="flex flex-col px-5 py-4 gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
   {% include {{ product_include }} tier=include.tier %}
         </div>
