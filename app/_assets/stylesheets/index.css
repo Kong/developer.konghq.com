@@ -187,7 +187,7 @@
   }
 
   .copy-code-snippet pre.highlight {
-    @apply pr-8;
+    @apply pr-10;
   }
 
   .copy-code-snippet .copy-action {
