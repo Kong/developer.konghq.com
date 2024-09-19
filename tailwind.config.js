@@ -5,9 +5,11 @@ module.exports = {
     "app/_layouts/**/*.html",
     "app/_includes/**/*.{html,md}",
     "app/_landing_pages/**/*.yaml",
+    "app/_gateway_entities/**",
     "app/_how-tos/**/*.md",
     "app/_plugins/**/*.rb",
-    "app/_assets/javascripts/**"
+    "app/_assets/javascripts/**",
+    "app/gateway/**"
   ],
   darkMode: 'selector',
   safelist: [
