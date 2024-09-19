@@ -4,3 +4,109 @@ rows:
   - header:
       type: h1
       text: "Design APIs with Insomnia"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Design and preview new APIs with OpenAPI"
+              blocks:
+                - type: text
+                  text: Leverage OpenAPI with a spec-driven, design-first approach to accelerate development and build beautiful APIs.                
+
+  - header:
+      type: h2
+      text: Features
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Live OpenAPI preview"
+            blocks:
+              - type: text
+                text: |
+                  As you create OpenAPI design specifications, see a live preview of the routes you have generated, with the possibility of testing the requests immediately.
+      - blocks:
+          - type: image
+            config:
+              url: https://insomnia.rest/images/features/api-design/graphic-live-openai-preview.png
+              alt_text: Image of the OpenAI preview in Insomnia
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Generate collections and tests"
+            blocks:
+              - type: text
+                text: |
+                  When the OpenAPI specification is ready, complete your workflow by generating request collections, API tests, and API mocks for your API specifications.
+      - blocks:
+          - type: image
+            config:
+              url: https://insomnia.rest/images/features/api-design/graphic-generate-collections-and-tests.png
+              alt_text: Image of the generating collections and tests
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Automate your workflow with CLI"
+            blocks:
+              - type: text
+                text: |
+                  With the Inso CLI, automate the validation and linting of the OpenAPI specifications using your existing Git workflows. The CLI can also generate API infrastructure configuration if you use Insomnia with Kong Gateway.
+      - blocks:
+          - type: image
+            config: 
+              url: https://insomnia.rest/images/features/api-design/graphic-automate-your-workflow-with-cli.pnghttps://insomnia.rest/images/features/api-design/graphic-live-openai-preview.png
+              alt_text: Image of linting in Insomnia    
+    
+    - header:
+      type: h2
+      text: Learn
+    columns:
+      - blocks:
+          - type: concept_list
+            config:
+              - topic: beginner
+                product: insomnia 
+            quantity: 5
+            allow_empty: true
+          - type: cta
+            config:
+              text: "Learn more &raquo;"
+              url: "https://docs.devsite.com/search/{concept.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
+
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              products:
+                  - insomnia
+              quantity: 5
+              allow_empty: true
+              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
+
+  - header:
+      type: h2
+      text: References & Tools
+    columns:
+      - blocks:
+          - type: reference_list
+            config:
+              - topic: beginner
+                product: insomnia 
+            quantity: 5
+            allow_empty: true
+          - type: cta
+            config:
+              text: "View more references &raquo;"
+              url: "https://docs.devsite.com/search/{reference.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
+      
