@@ -112,6 +112,7 @@ Created: 0
 Updated: 0
 Deleted: 0
 ```
+{:.no-copy-code}
 
 Whether you choose to define a subset of custom defaults or all available
 options, the result is the same: the diff summary doesn't show any changes, 
