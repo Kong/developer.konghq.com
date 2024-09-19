@@ -12,12 +12,21 @@ module SectionWrapper
     end
 
     def build_wrapper(section_title = '')
-      Nokogiri::HTML::DocumentFragment.parse <<-HTML
-        <div class="flex flex-col gap-4 border-b border-primary/5 pb-8 accordion-item" aria-expanded="true">
+      wrapper = if section_title != ''
+        <<-HTML
+          <div class="flex flex-col gap-4 border-b border-primary/5 pb-8 accordion-item">
             #{section_title}
             <div class="content accordion-panel"></div>
+          </div>
+        HTML
+      else
+        <<-HTML
+        <div class="flex flex-col gap-4 border-b border-primary/5 pb-8">
+          <div class="content"></div>
         </div>
       HTML
+      end
+      Nokogiri::HTML::DocumentFragment.parse(wrapper)
     end
   end
 end
