@@ -43,7 +43,7 @@ order of precedence.
 decK supports setting custom object defaults both in self-managed
 {{site.base_gateway}} and with {{site.konnect_saas}}.
 
-{:.important}
+{:.warning}
 > **Important:** This feature has the following limitations:
 * Custom plugin object defaults are not supported.
 * If an existing property's default value changes in a future {{site.base_gateway}} release,
