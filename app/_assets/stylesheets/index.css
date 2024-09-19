@@ -227,10 +227,10 @@
   }
 
   .success, .warning, .danger, .info, .neutral {
-    @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex;
+    @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-11 relative;
 
     &:not(.no-icon)::before {
-      @apply text-base content-['\f05a'];
+      @apply text-base content-['\f05a'] absolute left-4;
       font-family: "Font Awesome", FontAwesome;
     }
   }
