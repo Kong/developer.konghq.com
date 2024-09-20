@@ -10,6 +10,7 @@
     --color-bg-primary: 247, 251, 255;
     --color-bg-secondary: 255, 255, 255;
     --color-bg-code-block: 5, 47, 92;
+    --color-bg-hover-component: 245, 250, 255;
 
     --color-text-primary: 5, 47, 92;
     --color-text-secondary: 74, 96, 120;
@@ -31,12 +32,15 @@
     --color-semantic-green-secondary: 236, 255, 251;
     --color-semantic-grey-primary: 86, 86, 86;
     --color-semantic-grey-secondary: 242, 242, 242;
+
+    --color-shadow-hover-card: 24, 128, 240, 0.16;
   }
 
   .dark {
     --color-bg-primary: 2, 20, 40;
     --color-bg-secondary: 4, 40, 79;
     --color-bg-code-block: 28, 85, 146;
+    --color-bg-hover-component: 7, 53, 103;
 
     --color-text-primary: 255, 255, 255;
     --color-text-secondary: 191, 202, 213;
@@ -52,6 +56,8 @@
     --color-semantic-green-secondary: 18, 51, 43;
     --color-semantic-grey-primary: 176, 176, 176;
     --color-semantic-grey-secondary: 21, 31, 43;
+
+    --color-shadow-hover-card: 24, 128, 240, 0.4;
   }
 
   html {
