@@ -1,6 +1,2 @@
 
-{% if include.config.cta %}
-{% capture cta %}{% include landing_pages/cta.md config=include.config.cta %}{% endcapture %}
-{% endif %}
-
-{% include card.html icon=include.config.icon title=include.config.title description=include.config.description cta=cta %}
+{% include card.html icon=include.config.icon title=include.config.title description=include.config.description cta_url=include.config.cta.url cta_text=include.config.cta.text %}
