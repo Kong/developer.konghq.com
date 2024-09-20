@@ -35,7 +35,7 @@ Click **Base Environment**, then click the pencil icon to open the **Manage Envi
 
 ## 2. Generate a collection
 
-Open your document and click the cog icon next to the **Preview** button. A collection of requests in created in the **COLLECTION** tab. 
+Open your document and click the settings icon next to **Preview**. Click **Generate collection**. A collection of requests in created in the **COLLECTION** tab. 
 
 If the operations in the API spec have tags, the requests are organized into folders based on these tags. If an operation has multiple tags, the request is duplicated and appears in each folder. You can reorganize the requests as needed. For more information, see [Collections]().
 
