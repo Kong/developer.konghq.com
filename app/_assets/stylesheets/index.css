@@ -197,7 +197,7 @@
   }
 
   .copy-code-snippet .copy-action {
-    @apply absolute cursor-pointer text-white right-3 top-3 p-1 w-5 opacity-40;
+    @apply absolute cursor-pointer text-white right-3 top-2.5 p-1 w-5 opacity-40;
   }
 
   .copy-code-snippet .copy-action:hover {
@@ -221,11 +221,11 @@
   }
 
   [data-file]:before {
-    @apply bg-code-block px-3 py-2 rounded-t-lg text-white w-full inline-block border-b border-white/20 content-[attr(data-file)] text-sm;
+    @apply bg-hover-component px-3 py-2 rounded-t-lg text-white w-full inline-block content-[attr(data-file)] text-sm;
   }
 
   .copy-code-snippet[data-file] .copy-action {
-    @apply top-2;
+    @apply top-[0.4rem];
   }
 
   .content {
