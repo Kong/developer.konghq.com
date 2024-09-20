@@ -10,6 +10,7 @@
     --color-bg-primary: 247, 251, 255;
     --color-bg-secondary: 255, 255, 255;
     --color-bg-code-block: 5, 47, 92;
+    --color-bg-code-block-header: 28, 85, 146;
     --color-bg-hover-component: 235, 244, 254;
 
     --color-text-primary: 5, 47, 92;
@@ -40,6 +41,7 @@
     --color-bg-primary: 2, 20, 40;
     --color-bg-secondary: 4, 40, 79;
     --color-bg-code-block: 28, 85, 146;
+    --color-bg-code-block-header: 7, 53, 103;
     --color-bg-hover-component: 7, 53, 103;
 
     --color-text-primary: 255, 255, 255;
@@ -221,7 +223,7 @@
   }
 
   [data-file]:before {
-    @apply bg-hover-component px-3 py-2 rounded-t-lg text-white w-full inline-block content-[attr(data-file)] text-sm;
+    @apply bg-code-block-header px-3 py-2 rounded-t-lg text-white w-full inline-block content-[attr(data-file)] text-sm;
   }
 
   .copy-code-snippet[data-file] .copy-action {

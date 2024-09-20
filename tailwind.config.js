@@ -49,11 +49,12 @@ module.exports = {
         primary: 'rgb(var(--color-bg-primary), <alpha-value>)',
         secondary: 'rgb(var(--color-bg-secondary), <alpha-value>)',
         'code-block': 'rgb(var(--color-bg-code-block), <alpha-value>)',
+        'code-block-header': 'rgb(var(--color-bg-code-block-header), <alpha-value>)',
         'hover-component': 'rgb(var(--color-bg-hover-component), <alpha-value>)',
       },
       boxShadow: {
         primary: '0 4px 12px 0 rgb(var(--color-shadow-primary))',
-        'hover-card': '0 4px 20px 0 rgb(var(--color-shadow-hover-card))'
+        'hover-card': '0 4px 20px 0 rgb(var(--color-shadow-hover-cardp))'
       }
     },
   },
