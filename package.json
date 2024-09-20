@@ -11,7 +11,7 @@
     "vite-plugin-ruby": "^5.0.0"
   },
   "dependencies": {
-    "@kong/sdk-portal-js": "^2.14.0",
+    "@kong/sdk-portal-js": "^2.15.2",
     "@kong/spec-renderer-dev": "^1.68.6-pr.278.95ae439.0",
     "@vitejs/plugin-vue": "^5.1.2",
     "axios": "^1.7.4",
