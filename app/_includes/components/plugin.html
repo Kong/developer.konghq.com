@@ -5,4 +5,4 @@ https://docs.konghq.com/assets/images/icons/hub/{{ plugin.publisher }}_{{ plugin
 <a href="{{ plugin.url }}">See plugin &rarr;</a>
 {% endcapture %}
 
-{% include card.html icon=icon title=plugin.name description=plugin.description cta=cta %}
+{% include card.html icon=icon title=plugin.name description=plugin.description cta_url=plugin.url cta_text='See plugin &rarr;' %}
