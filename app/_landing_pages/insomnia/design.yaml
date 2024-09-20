@@ -63,7 +63,7 @@ rows:
               url: https://insomnia.rest/images/features/api-design/graphic-automate-your-workflow-with-cli.pnghttps://insomnia.rest/images/features/api-design/graphic-live-openai-preview.png
               alt_text: Image of linting in Insomnia    
     
-    - header:
+  - header:
       type: h2
       text: Learn
     columns:
