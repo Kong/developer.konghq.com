@@ -30,7 +30,8 @@ GEM
     ffi (1.16.3)
     foreman (0.88.1)
     forwardable-extended (2.6.0)
-    google-protobuf (4.26.1)
+    google-protobuf (4.27.5)
+      bigdecimal
       rake (>= 13)
     http_parser.rb (0.8.0)
     i18n (1.14.4)
