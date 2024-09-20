@@ -1,4 +1,4 @@
-<div class="flex flex-col accordion" data-default="0">
+<div class="flex flex-col accordion" data-default="0" data-multiple="false">
   {% if page.products %}
     {% for product in page.products %}
       {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}

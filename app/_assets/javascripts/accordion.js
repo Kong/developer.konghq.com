@@ -7,8 +7,11 @@ class Accordion {
         this.defaultItem = this.accordion.dataset.default;
 
         // Specify if the accordion can have multiple items open at a time,
-        // by default they don't.
-        this.multipleItems = this.accordion.dataset.multiple;
+        // true by default.
+        this.multipleItems = true;
+        if (this.accordion.dataset.multiple === 'false') {
+            this.multipleItems = false;
+        }
 
         // Specify if the accordion should have all the items expanded by default.
         this.allExpanded = this.accordion.dataset.allExpanded;
@@ -27,14 +30,25 @@ class Accordion {
     }
 
     init() {
-        // if defaultItem initialize everything closed except for that one item.
+        const hash = window.location.hash.substring(1);
+        let hashItemIndex;
+        if (hash) {
+            const itemIndex = this.items.findIndex((item) => item.querySelector(`:scope > .accordion-trigger[id="${hash}"]`));
+            if (itemIndex !== -1) {
+                hashItemIndex = itemIndex;
+            }
+        }
+
         this.items.forEach((item, index) => {
-            if (this.allExpanded || this.defaultItem && parseInt(this.defaultItem) === index) {
+            if (hashItemIndex && hashItemIndex === index) {
+                this.openItem(index);
+            } else if (this.allExpanded || !hashItemIndex && this.defaultItem && parseInt(this.defaultItem) === index) {
                 this.openItem(index);
             } else {
                 this.closeItem(index);
             }
         })
+
     }
 
     toggleItem (index) {
