@@ -1,0 +1,5 @@
+<select class="bg-secondary rounded-md py-2 px-4 border-transparent border-r-[1rem] shadow-primary">
+    {% for option in include.works_on %}
+        <option value="{{ option }}">{{ option }}</option>
+    {% endfor %}
+</select>
