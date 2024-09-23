@@ -1,0 +1,1 @@
+To conserve your free trial credits or avoid unnecessary charges delete the [control plane](https://cloud.konghq.com/us/gateway-manager/) used in this tutorial.
