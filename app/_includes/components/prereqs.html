@@ -4,7 +4,7 @@
       {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
       {% capture product_include_exists %}{% include_exists product_include %}{% endcapture %}
       {% if product_include_exists == 'true' %}
-        <div class="flex flex-col px-5 py-4 gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
   {% include {{ product_include }} tier=include.tier %}
         </div>
       {% endif %}
@@ -12,20 +12,20 @@
   {% endif %}
 
   {% for tool in prereqs.tools %}
-    <div class="flex flex-col px-5 py-4 gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
+    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
 {% assign tool_include = 'prereqs/tools/' | append: tool | append: '.md' %}
 {% include {{ tool_include }} %}
     </div>
   {% endfor %}
 
   {% if prereqs.entities? %}
-    <div class="flex flex-col px-5 py-4 gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
+    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
 {% include prereqs/entities.md data=prereqs.data %}
     </div>
   {% endif %}
 
   {% for prereq in prereqs.inline %}
-  <div class="flex flex-col px-5 py-4 gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
 {% include prereqs/inline.md prereq=prereq %}
   </div>
   {% endfor %}

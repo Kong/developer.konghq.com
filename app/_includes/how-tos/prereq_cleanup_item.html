@@ -1,4 +1,4 @@
-<a class="flex gap-2 items-center hover:no-underline accordion-trigger" href="#{{ include.summary | liquify | slugify }}">
+<a class="px-5 py-4 flex gap-2 items-center hover:no-underline accordion-trigger" href="#{{ include.summary | liquify | slugify }}">
     <div class="flex p-[3px] w-6 h-6 justify-center items-center rounded-[3px]  {% if include.icon_url %}bg-brand-saturated/40{% endif %}">
         {% if include.icon_url %}
         <div class="flex w-[18px] h-[18px] bg-white" style="mask:url('{{include.icon_url}}'); mask-size: cover;"></div>
@@ -9,6 +9,6 @@
         <span class="fa fa-chevron-down text-terciary rotate-180" aria-hidden="true"></span>
     </div>
 </a>
-<div class="flex flex-col gap-3 px-8 accordion-panel">
+<div class="flex flex-col gap-3 px-[3.25rem] pb-4 accordion-panel">
 {{ include.details_content | markdownify }}
 </div>
