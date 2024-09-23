@@ -163,19 +163,9 @@ This configures the different tiers like the following:
 * **Basic:** Allows 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
 * **Premium:** Allows 1,000 requests per second. This configuration sets the rate limit to 500 requests (`config.limit`) for every 30 seconds (`config.window_size`).
 
-## 5. Synchronize your configuration
+## 5. Apply configuration
 
-Now that we have a testable configuration of the rate limiting tiers, we can sync our configuration. With decK, you have to synchronize your configuration with `deck gateway sync` so that Kong Gateway is updated with your configuration changes. It's also a best practice to use `deck gateway diff` to verify the changes that would be make with a sync. 
-
-Check the differences in your files:
-```sh
-deck gateway diff deck_files
-```
-
-If everything looks right, synchronize them to update your Kong Gateway configuration:
-```sh
-deck gateway sync deck_files
-```
+{% include how-tos/steps/apply_config.md %}
 
 ## 6. Validate that rate limiting is working on each tier
 
