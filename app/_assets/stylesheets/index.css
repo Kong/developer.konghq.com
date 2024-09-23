@@ -283,4 +283,27 @@
     }
   }
 
+  .mermaid svg {
+    @apply m-auto;
+
+    p, span {
+      @apply text-primary !important;
+    }
+
+    rect, circle, ellipse, polygon {
+      @apply fill-transparent stroke-[rgb(var(--color-brand))] !important;
+    }
+
+    .label-container {
+      @apply fill-[rgb(var(--color-bg-secondary))] !important;
+    }
+
+    .edgeLabel {
+      @apply bg-primary !important;
+    }
+
+    path {
+      @apply fill-[rgb(var(--color-brand))] stroke-[rgb(var(--color-brand))] stroke-1 !important
+    }
+  }
 }
