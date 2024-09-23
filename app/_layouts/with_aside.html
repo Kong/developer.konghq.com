@@ -12,7 +12,7 @@ layout: default
 
             <h1>{{ page.title }}</h1>
 
-            {% include uses.html products=page.products tools=page.tools %}
+            {% include uses.html products=page.products tools=page.tools tier=page.tier %}
 
             {% ifhascontent nav_header %}
                 <section class="flex">

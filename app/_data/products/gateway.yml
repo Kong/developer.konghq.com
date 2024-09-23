@@ -4,3 +4,8 @@ topologies:
   - traditional
   - hybrid
   - db-less
+
+tiers:
+  enterprise:
+    text: Enterprise only
+    url: '/gateway/enterprise/'
