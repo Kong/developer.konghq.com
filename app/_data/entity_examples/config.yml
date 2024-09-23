@@ -23,7 +23,7 @@ konnect_variables: &konnect_variables
     placeholder: 'controlPlaneId'
     description: 'The `id` of the control plane.'
   pat:
-    placeholder: 'kpat_YOUR_PAT'
+    placeholder: 'KONNECT_TOKEN'
     description: 'Your Personal Access Token (PAT) associated with your Konnect account.'
   upstream:
     placeholder: 'upstreamId'
