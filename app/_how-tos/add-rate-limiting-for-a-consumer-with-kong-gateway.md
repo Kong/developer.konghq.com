@@ -99,20 +99,7 @@ append_to_existing_section: true
 
 ## 4. Apply configuration
 
-Synchronize your [decK](/deck/) configuration files. 
-Make sure you created the `deck_files` directory in the [prerequisites](#prerequisites).
-
-First, compare the decK file or files to the state of the Kong Gateway:
-```bash
-deck gateway diff deck_files
-```
-The output shows you which entities are changing. 
-
-If everything looks right, synchronize them to update your Gateway configuration:
-
-```bash
-deck gateway sync deck_files
-```
+{% include how-tos/steps/apply_config.md %}
 
 ## 5. Validate
 

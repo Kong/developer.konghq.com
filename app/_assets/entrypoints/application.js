@@ -12,6 +12,7 @@ import Tabs from '@/javascripts/components/tabs';
 import '@/javascripts/accordion';
 import '@/javascripts/anchor_links';
 import '@/javascripts/copy_code_snippet';
+import '@/javascripts/how_to';
 import '@/javascripts/mode';
 import '@/javascripts/toc';
 
