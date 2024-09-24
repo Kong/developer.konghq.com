@@ -4,3 +4,115 @@ rows:
   - header:
       type: h1
       text: "Design APIs with Insomnia"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Design and preview new APIs with OpenAPI"
+              blocks:
+                - type: text
+                  text: |
+                    Leverage OpenAPI with a spec-driven, design-first approach to accelerate development and build APIs.  
+
+                    Using Insomnia, you can build API specs or generate them. You can see the live API previews as you're creating your specs.
+
+                    Collaboratively create APIs with an unlimited number of contributers (Free accounts allow unlimited contributors on one project) and git version control.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/insomnia/graphic-api-design-hero.png
+              alt_text: Image of the generating collections and tests         
+
+  - header:
+      type: h2
+      text: "Get started"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Design APIs with documents
+            description: Use Insomnia to create APIs with a spec-first approach. Leverage OpenAPI, live API previews, and more.
+            icon: /assets/icons/insomnia/design.svg
+            cta:
+              text: Learn more
+              url: https://docs.insomnia.rest/insomnia/design-documents
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Validate your API specs
+            description: Automatically validate OpenAPI specs with the Inso CLI and custom linting rules.
+            icon: /assets/icons/insomnia/stars.svg
+            cta:
+              text: Learn more
+              url: https://docs.insomnia.rest/insomnia/linting
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Collaborate on APIs
+            description: Collaborate with others and use git version control on your APIs.
+            icon: /assets/icons/insomnia/local-git-cloud-storage.svg
+            cta:
+              text: Learn more
+              url: https://docs.insomnia.rest/insomnia/git-sync
+              align: end 
+      - blocks:
+        - type: card
+          config:
+            title: Deploy an API with Konnect
+            description: Deploy your APIs with API Products in Konnect.
+            icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/kong-gradient.svg
+            cta:
+              text: Learn more
+              url: https://docs.konghq.com/konnect/api-products/
+              align: end  
+
+  - header:
+      type: h2
+      text: Learn
+    columns:
+      - blocks:
+          - type: concept_list
+            config:
+              - topic: design-apis
+                product: insomnia 
+            quantity: 5
+            allow_empty: true
+          - type: cta
+            config:
+              text: "Learn more &raquo;"
+              url: "https://docs.devsite.com/search/{concept.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
+
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              products:
+                  - insomnia
+              quantity: 5
+              allow_empty: true
+              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
+  
+  - header:
+      type: h2
+      text: References & Tools
+    columns:
+      - blocks:
+          - type: reference_list
+            config:
+              products:
+                  - insomnia 
+            quantity: 5
+            allow_empty: true
+          - type: cta
+            config:
+              text: "View more references &raquo;"
+              url: "https://docs.devsite.com/search/{reference.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
+      
