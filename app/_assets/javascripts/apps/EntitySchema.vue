@@ -55,20 +55,16 @@ async function fetchSpec() {
 </script>
 
 <style scoped>
-:deep(.default-markdown) {
-  @apply text-secondary !important;
-}
-:deep(.property-type) {
-  @apply text-secondary !important;
-}
 :deep(code) {
-  @apply text-primary bg-secondary rounded border border-brand-saturated/40 text-xs py-0 px-1 !important;
+  @apply bg-secondary rounded border border-brand-saturated/40 text-xs py-0 px-1 !important;
 }
-:deep(.property-title-name) {
-  @apply text-brand !important;
+
+:deep(.property-field-default-value) {
+  @apply bg-secondary rounded border border-brand-saturated/40 text-xs py-0 px-1 shadow-none !important;
 }
 
 :deep(.model-node-container:not(.nested-model-node) > .model-node-property) {
   @apply border-t border-primary/5 !important;
 }
+
 </style>

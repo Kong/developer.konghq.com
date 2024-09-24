@@ -35,6 +35,12 @@
     --color-semantic-grey-secondary: 242, 242, 242;
 
     --color-shadow-hover-card: 24, 128, 240, 0.16;
+
+    --kui-color-text-neutral-stronger: rgb(var(--color-text-secondary));
+    --kui-color-text-neutral-strong: rgb(var(--color-text-secondary));
+    --kui-color-text-neutral: rgb(var(--color-text-primary));
+    --kui-color-text: rgb(var(--color-text-primary));
+    --kui-color-text-primary: rgb(var(--color-brand));
   }
 
   .dark {
