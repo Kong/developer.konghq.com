@@ -56,6 +56,9 @@ tools:
 
 cleanup:
   inline:
+    - title: Clean-up Konnect Environment
+      include_content: cleanup/platform/konnect
+      icon_url: /assets/icons/gateway.svg
     - title: Destroy the Kong Gateway container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
