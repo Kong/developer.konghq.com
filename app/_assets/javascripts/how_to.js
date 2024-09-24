@@ -23,7 +23,6 @@ class HowTo {
 
     toggleTopology(topology, trigger) {
         this.prerequisites.querySelectorAll('[data-deployment-topology]').forEach((item) => {
-            console.log(item)
             this.toggleItem(item, topology, trigger);
         })
 
