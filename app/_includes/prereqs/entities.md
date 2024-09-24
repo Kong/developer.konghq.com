@@ -23,7 +23,7 @@ For this tutorial, you'll need Kong Gateway entities, like services and routes, 
    {: data-deployment-topology="on-prem" }
 
    ```sh
-   deck gateway sync prereqs.yaml --konect-token ${{konnect_token}} --konnect-control-plane $KONNECT_CP_NAME
+   deck gateway sync prereqs.yaml --konect-token ${{konnect_token}} --konnect-control-plane-name $KONNECT_CP_NAME
    ```
    {: data-deployment-topology="konnect" }
 
