@@ -2,7 +2,7 @@
   {% for step in cleanup.inline %}
     {% if step.include_content == 'cleanup/products/gateway' %}
       {% assign deployment_topology = 'on-prem' %}
-    {% elsif step.include_content == 'cleanup/products/konnect' %}
+    {% elsif step.include_content == 'cleanup/platform/konnect' %}
       {% assign deployment_topology = 'konnect' %}
     {% endif %}
   <div class="flex flex-col gap-1.5 accordion-item {% unless forloop.last %} border-b border-primary/5 {% endunless %}" {% if deployment_topology %}data-deployment-topology="{{deployment_topology}}"{% endif %}>
