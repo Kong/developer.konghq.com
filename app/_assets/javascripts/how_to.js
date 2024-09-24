@@ -2,6 +2,7 @@ class HowTo {
     constructor() {
         this.deploymentTopologySwitch = document.getElementById('deployment-topology-switch');
         this.prerequisites = document.querySelector('.prerequisites');
+        this.cleanup = document.querySelector('.cleanup');
 
         this.init();
         this.addEventListeners();
@@ -26,9 +27,13 @@ class HowTo {
             this.toggleItem(item, topology, trigger);
         })
 
-        document.querySelectorAll(':not(.prerequisites) [data-deployment-topology]').forEach((item) => {
+        document.querySelectorAll(':not(.prerequisites,.cleanup) [data-deployment-topology]').forEach((item) => {
             this.toggleItem(item, topology);
         });
+
+        this.cleanup.querySelectorAll('[data-deployment-topology]').forEach((item) => {
+            this.toggleItem(item, topology, trigger);
+        })
     }
 
     toggleItem(item, topology, trigger) {
