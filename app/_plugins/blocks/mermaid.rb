@@ -27,7 +27,7 @@ module Jekyll
               'secondaryTextColor': '#5096f2',
               'tertiaryBorderColor': '#AAB4BB',
               'edgeLabelBackground': '#fff',
-              'fontFamily': 'Roboto',
+              'fontFamily': '"Inter", system-ui, sans-serif',
               'fontSize': '15px',
               'lineColor': '#99b0c0',
               'activationBorderColor': '#c2d4e0',
