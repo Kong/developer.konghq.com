@@ -13,7 +13,16 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    Insomnia provides several tools you can use to test APIs. 
+                    Using Insomnia you can create manual and automated tests for your APIs. 
+                    
+                    Insomnia has several features that can help you ensure the quality of your APIs: 
+                - type: unordered_list
+                  items:
+                    - Pre-request and after-response scripting to add logic to your requests
+                    - Automate your tests with Inso CLI
+                    - Test complex workflows by chaining the responses from requests together
+                    - Execute unlimited test runs simultaneously 
+                    - Import your tests from Postman
       - blocks:
           - type: image
             config:
@@ -32,7 +41,7 @@ rows:
             icon: /assets/icons/insomnia/checkbox-active.svg
             cta:
               text: Learn more
-              url: 
+              url: /how-to/write-tests-in-insomnia/
               align: end
       - blocks:
         - type: card
@@ -42,7 +51,7 @@ rows:
             icon: /assets/icons/insomnia/icon-transfer-light-02.svg
             cta:
               text: Learn more
-              url: 
+              url: /how-to/chain-requests/
               align: end
       - blocks:
         - type: card
@@ -52,7 +61,7 @@ rows:
             icon: /assets/icons/insomnia/icon-omnichannel-light-02.svg
             cta:
               text: Learn more
-              url: 
+              url: /how-to/automate-tests/
               align: end 
       - blocks:
         - type: card
@@ -62,9 +71,8 @@ rows:
             icon: /assets/icons/insomnia/icon-innovation-light-02.svg
             cta:
               text: Learn more
-              url: 
+              url: /how-to/collection-runner/
               align: end  
-
   - header:
       type: h2
       text: Learn
