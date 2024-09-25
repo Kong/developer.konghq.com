@@ -4,10 +4,9 @@ rows:
   - header:
       type: h1
       text: "Insomnia"
-  - header:
-      type: h2
-      text: "Design, debug, test, and mock APIs locally, on Git, or cloud"
-    columns:
+      sub_text: "Design, debug, test, and mock APIs locally, on Git, or cloud"
+
+  - columns:
       - blocks:
           - type: structured_text
             config:
