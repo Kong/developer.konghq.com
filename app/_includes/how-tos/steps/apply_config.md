@@ -14,7 +14,7 @@ deck gateway diff deck_files --konnect-token ${{konnect_token}} --konnect-contro
 ```
 {: data-deployment-topology="konnect" }
 
-The output shows you which entities are changing.
+The output shows you which entities will change if you sync the state files.
 
 If everything looks right, synchronize them to update your Gateway configuration:
 
@@ -23,6 +23,6 @@ deck gateway sync deck_files
 ```
 {: data-deployment-topology="on-prem" }
 ```bash
-deck gateway diff deck_files --konnect-token ${{konnect_token}} --konnect-control-plane-name $KONNECT_CP_NAME
+deck gateway sync deck_files --konnect-token ${{konnect_token}} --konnect-control-plane-name $KONNECT_CP_NAME
 ```
 {: data-deployment-topology="konnect" }

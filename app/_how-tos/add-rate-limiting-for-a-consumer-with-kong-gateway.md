@@ -81,7 +81,6 @@ entities:
     - username: jsmith
       keyauth_credentials:
         - key: example-key
-append_to_existing_section: true
 {% endentity_examples %}
 
 ## 3. Enable rate limiting
@@ -107,8 +106,15 @@ append_to_existing_section: true
 ## 5. Validate
 
 You can run the following command to test the rate limiting as the consumer:
+
 ```bash
 for _ in {1..6}; do curl -i http://localhost:8000/example-route -H 'apikey:example_key'; echo; done
 ```
+{: data-deployment-topology="on-prem" }
+
+```bash
+for _ in {1..6}; do curl -i http://{host}/example-route -H 'apikey:example_key'; echo; done
+```
+{: data-deployment-topology="konnect" }
 
 This command sends six consecutive requests to the route. On the last one you should get a `429` error with the message `API rate limit exceeded`.
