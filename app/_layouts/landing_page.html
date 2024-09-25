@@ -2,10 +2,24 @@
 layout: default
 ---
 
+{% capture edit_links %}
+<div class="flex gap-3 justify-end">
+  {% include edit_and_issue_links.html edit_link=page.edit_link %}
+</div>
+{% endcapture %}
+
 <main class="flex flex-col gap-3 py-12 w-full">
-  <div class="flex gap-3 w-full justify-end">
-    {% include edit_and_issue_links.html edit_link=page.edit_link %}
+  {% if page.url == '/gateway/rate-limiting/' %}
+  <div class="flex justify-between">
+    <div class="flex gap-1 justify-start text-xs">
+      <a class="text-terciary" href="/rate-limiting/">Rate Limiting</a><span>/</span>
+      <a class="text-terciary" href="/gateway/rate-limiting/">Kong Gateway</a>
+    </div>
+    {{edit_links}}
   </div>
+  {% else %}
+    {{edit_links}}
+  {% endif %}
 
   <div class="flex flex-col gap-12">
     {% for row in page.rows %}
