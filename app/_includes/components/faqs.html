@@ -1,6 +1,6 @@
 <div class="bg-secondary shadow-primary rounded-md flex flex-col text-sm accordion">
 {% for faq in faqs %}
-  <div class="flex-col hover:bg-hover-component/100 {% unless forloop.last %} border-b border-primary/5 {% endunless %} accordion-item">
+  <div class="flex-col hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md {% unless forloop.last %} border-b border-primary/5 {% endunless %} accordion-item">
     <a href="#{{ faq.q | slugify }}" id="{{ faq.q | slugify }}" class="py-4 px-5 flex justify-between items-center cursor-pointer text-primary list-none accordion-trigger hover:no-underline">
       {{ faq.q }}<span class="fa fa-chevron-down float-right text-terciary"></span>
     </a>
