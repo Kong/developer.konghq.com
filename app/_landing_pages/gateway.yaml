@@ -4,10 +4,9 @@ rows:
   - header:
       type: h1
       text: "Kong Gateway"
-  - header:
-      type: h2
-      text: "API gateway built for hybrid and multi-cloud, optimized for microservices and distributed architectures"
-    columns:
+      sub_text: "API gateway built for hybrid and multi-cloud, optimized for microservices and distributed architectures"
+
+  - columns:
       - blocks:
           - type: structured_text
             config:
