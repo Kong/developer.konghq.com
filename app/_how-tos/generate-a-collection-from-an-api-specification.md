@@ -10,13 +10,14 @@ tags:
 
 tldr: 
   q: How do I generate a collection from an API spec?
-  a: Create or import an API spec and define environment variables, then click cog icon and click Generate collection.
+  a: Create or import an API spec as a design document and define environment variables, then click settings icon and click <b>Generate collection</b>. Generating a collection from a document allows you to test your requests while still working on the design.
 
 prereqs:
   inline:
     - title: Create an API specification
       content: |
         You can either [create an empty document]() and design your specification from scratch, or [import an existing specification](). This example uses the [Konnect API Products specification](https://docs.konghq.com/konnect/api/api-products/latest/).
+      icon_url: /assets/icons/insomnia/design.svg
 
 ---
 
