@@ -116,5 +116,7 @@ for _ in {1..6}; do curl -i http://localhost:8000/example-route -H 'apikey:examp
 for _ in {1..6}; do curl -i http://{host}/example-route -H 'apikey:example_key'; echo; done
 ```
 {: data-deployment-topology="konnect" }
+Replace `{host}` with the proxy URL for this data plane node.
+{: data-deployment-topology="konnect" }
 
 This command sends six consecutive requests to the route. On the last one you should get a `429` error with the message `API rate limit exceeded`.
