@@ -12,4 +12,4 @@
 
 {% assign summary = include.prereq.title %}
 
-{% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content %}
+{% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url=prereq.icon_url %}
