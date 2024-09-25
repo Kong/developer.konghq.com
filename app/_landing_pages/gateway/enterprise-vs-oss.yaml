@@ -1,0 +1,162 @@
+metadata:
+  title: Kong Gateway Open Source vs Enterprise
+rows:
+  - header:
+      type: h1
+      text: "Kong Gateway: Open Source vs Enterprise"
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    **Kong Gateway (OSS):** An open-source package containing the basic API gateway functionality and open-source plugins. 
+                      You can manage the open-source Gateway with Kong’s Admin API, Kong Manager Open Source, or with declarative configuration.
+                    
+                    **Kong Gateway Enterprise (available in Free or Enterprise mode)**: Kong’s API gateway with added functionality.
+                    
+                    * In Free mode, this package adds Kong Manager
+                    * With an Enterprise subscription, it also includes:
+                      * RBAC
+                      * Enterprise plugins
+                    
+  - columns:
+      - blocks:
+          - type: feature_table
+            config:
+              columns:
+                - title: Open Source
+                  key: oss
+                - title: Enterprise
+                  key: enterprise
+              features:
+                - title: Fast, Lightweight, Cloud-Native API Gateway
+                  oss: true
+                  enterprise: true
+                - title: End-to-End Automation
+                  subtitle: Drive a GitOps flow of API design and execution
+                  oss: true
+                  enterprise: true
+                - title: Kong Ingress Controller
+                  subtitle: Deploy APIs to Kubernetes in a native fashion.
+                  oss: true
+                  enterprise: true
+                - title: Gateway Mocking
+                  subtitle: Mock API responses directly on the API gateway.
+                  oss: false
+                  enterprise: true
+                - title: "Kong Manager: Admin GUI"
+                  subtitle: Visually manage Kong cluster, plugins, APIs, and consumers.
+                  oss: true
+                  enterprise: true
+                - title: Basic Traffic Control Plugins
+                  subtitle: Manage ACME certificates, basic rate limiting, and lightweight caching.
+                  oss: true
+                  enterprise: true
+                - title: Simple Data Transformations
+                  subtitle: Add or remove headers, JSON data, or query strings.
+                  oss: true
+                  enterprise: true
+                - title: gRPC Transformations
+                  subtitle: Translate requests from gRPC-Web and REST to backend gRPC services.
+                  oss: true
+                  enterprise: true
+                - title: GraphQL
+                  subtitle: Convert GraphQL queries to REST requests. Rate limit and cache GraphQL queries.
+                  oss: false
+                  enterprise: true
+                - title: Request Validation
+                  subtitle: Validate requests using either Kong’s own schema validator or a JSON Schema Draft 4-compliant validator.
+                  oss: false
+                  enterprise: true
+                - title: jq Transformations
+                  subtitle: Advanced JSON transformations of requests or responses with the ability to chain transformations.
+                  oss: false
+                  enterprise: true
+                - title: Advanced Caching
+                  subtitle: Cache responses and optimize for high scale by integrating distributed backends
+                  oss: false
+                  enterprise: true
+                - title: Advanced Rate Limiting
+                  subtitle: Enterprise-grade rate limiting with sliding window controls
+                  oss: false
+                  enterprise: true
+                - title: Authentication
+                  subtitle: Common methods of API authentication - Basic Auth, HMAC, JWT Key Auth, limited OAuth 2.0, limited LDAP
+                  oss: true
+                  enterprise: true
+                - title: Advanced Authentication
+                  subtitle: Enterprise-grade API authentication - Full OAuth 2.0, OpenID Connect, Vault, mutual TLS, JWT signing/resigning, full LDAP
+                  oss: false
+                  enterprise: true
+                - title: Role-Based Access Control (RBAC)
+                  subtitle: Control gateway configurations based on a user's role in the organization
+                  oss: false
+                  enterprise: true
+                - title: Basic Authorization (Bot Detection, CORS controls, ACLs)
+                  subtitle: Control access to APIs by rules of user behavior and control lists
+                  oss: true
+                  enterprise: true
+                - title: Advanced Authorization (OPA)
+                  subtitle: Control access to APIs with complex, programmable, enterprise-wide rules
+                  oss: false
+                  enterprise: true
+                - title: Secret Management
+                  subtitle: Encrypt sensitive keys, certificates, and passwords
+                  oss: false
+                  enterprise: true
+                - title: FIPS 140-2 Support
+                  subtitle: Kong Gateway now provides a FIPS mode, which at its core uses the FIPS 140-2 compliant BoringCrypto for cryptographic operations.
+                  oss: false
+                  enterprise: true
+                - title: Signed Kong Images
+                  subtitle: Kong Gateway container images are signed and verifiable in accordance with SLSA guidelines.
+                  oss: false
+                  enterprise: true
+                - title: Kong Images Build Provenance
+                  subtitle: Kong Gateway container images generate build level provenance and are verifiable in accordance with SLSA guidelines.
+                  oss: false
+                  enterprise: true
+                - title: Simple logging
+                  subtitle: Send basic API gateway logs - File logging, HTTP logging, basic StatsD, TCP/UDP logging
+                  oss: true
+                  enterprise: true
+                - title: API Analytics
+                  subtitle: Natively analyze requests and responses flowing through the API gateway
+                  oss: false
+                  enterprise: true
+                - title: Gateway Event Hooks
+                  subtitle: Automatically log out or send web hooks on changes to the gateway, such as administrators added or rate limits exceeded
+                  oss: false
+                  enterprise: true
+                - title: Multi-LLM support
+                  subtitle: Switch between different AI providers and models without having to change your application code
+                  oss: true
+                  enterprise: true
+                - title: AI traffic control
+                  subtitle: Proxy AI traffic through the Kong Gateway and manage it with AI plugins
+                  oss: true
+                  enterprise: true
+                - title: AI prompt security
+                  subtitle: Enforce secure and compliant AI prompts with the AI Prompt Decorator, AI Prompt Guard, and AI Prompt Template plugins
+                  oss: true
+                  enterprise: true
+                - title: AI observability
+                  subtitle: Collect metrics from AI traffic, and use any Kong Gateway logging plugin to send it to your logging provider of choice
+                  oss: true
+                  enterprise: true
+                - title: Enterprise support
+                  subtitle: 24/7 x 365 technical support SLAs
+                  oss: false
+                  enterprise: true
+                - title: Security CVE and Bug Fix Backports
+                  oss: false
+                  enterprise: true
+                - title: Performance Tuning Guidance
+                  oss: false
+                  enterprise: true
+                - title: Customer Success Packages - Add-on
+                  subtitle: Accelerate time to value with dedicated Technical Account Managers and Field Engineers
+                  oss: false
+                  enterprise: true
