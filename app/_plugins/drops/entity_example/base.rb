@@ -38,7 +38,7 @@ module Jekyll
         end
 
         def formats
-          @formats ||= @example.formats
+          @formats ||= Jekyll.sites.first.data['entity_examples']['config']['formats'].keys & @example.formats
         end
       end
     end
