@@ -2,8 +2,8 @@ class TabsComponent {
   constructor(elem) {
     this.elem = elem;
     this.tablistNode = this.elem.querySelector('[role=tablist]');
-    this.activeTabClasses = ['text-primary', 'font-semibold', 'border-b-2', 'border-brand'];
-    this.inactiveTabClasses = [];
+    this.activeTabClasses = ['text-primary', 'font-semibold', 'border-brand'];
+    this.inactiveTabClasses = ['border-transparent'];
 
     this.tabs = Array.from(this.tablistNode.querySelectorAll('[role=tab]'));
     this.firstTab = this.tabs[0];
