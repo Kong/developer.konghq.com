@@ -1,4 +1,4 @@
 <div id="tldr" class="flex flex-col gap-1">
     <span class="text-base font-semibold text-primary">TL;DR</span>
-    <p>{{ page.tldr.a }}</p>
+    <p>{{ page.tldr.a | markdonify | markdown }}</p>
 </div>
