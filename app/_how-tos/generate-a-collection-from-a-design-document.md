@@ -5,7 +5,6 @@ products:
     - insomnia
 
 tags:
-  - collections
   - documents
 
 tldr: 
