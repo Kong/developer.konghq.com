@@ -32,7 +32,7 @@ tags:
 
 tldr:
     q: How do I rate limit a consumer with Kong Gateway?
-    a: Make sure you have enabled an authentication plugin and created a consumer with credentials, then enable the <a href="/plugins/rate-limiting/reference">Rate Limiting plugin</a> for that consumer. 
+    a: Enable an authentication plugin and create a consumer with credentials, then enable the <a href="/plugins/rate-limiting/reference">Rate Limiting plugin</a> on the new consumer.
 
 tools:
     - deck
