@@ -81,6 +81,8 @@ rows:
               text: 
               url: https://docs.konghq.com/gateway/latest/install/
               align: end
+  - header:
+    columns:
       - blocks:
         - type: card
           config:
@@ -90,6 +92,16 @@ rows:
             cta:
               text: 
               url: /plugins
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Kong Gateway Entities
+            description: Kong entities are the various components and objects that make up the Kong API Gateway and its ecosystem
+            icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-api-plugins-color.svg
+            cta:
+              text: 
+              url: /gateway/entities
               align: end
   - header:
         type: h2
@@ -282,18 +294,3 @@ rows:
                   - gateway
               quantity: 5
               view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
-
-  - header:
-      type: h2
-      text: References & Tools
-    columns:
-      - blocks:
-          - type: reference_list
-            config:
-              - product: gateway
-            quantity: 5
-          - type: cta
-            config:
-              text: "View more references &raquo;"
-              url: "https://docs.devsite.com/search/{reference.topic}+{other stuff}" ## Takes you to search with terms that match this.
-              align: end
