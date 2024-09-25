@@ -108,12 +108,12 @@ append_to_existing_section: true
 You can run the following command to test the rate limiting as the consumer:
 
 ```bash
-for _ in {1..6}; do curl -i http://localhost:8000/example-route -H 'apikey:example_key'; echo; done
+for _ in {1..6}; do curl -i http://localhost:8000/example-route -H 'apikey:example-key'; echo; done
 ```
 {: data-deployment-topology="on-prem" }
 
 ```bash
-for _ in {1..6}; do curl -i http://{host}/example-route -H 'apikey:example_key'; echo; done
+for _ in {1..6}; do curl -i http://{host}/example-route -H 'apikey:example-key'; echo; done
 ```
 {: data-deployment-topology="konnect" }
 Replace `{host}` with the proxy URL for this data plane node.
