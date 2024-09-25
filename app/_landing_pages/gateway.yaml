@@ -10,6 +10,8 @@ rows:
       - blocks:
           - type: structured_text
             config:
+              header:
+                text: "Introducing Kong Gateway"
               blocks:
                 - type: text
                   text: | 
@@ -20,7 +22,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/gateway/kong-gateway-overview.png
+              url: /assets/images/gateway/kong-gateway-overview.svg
               alt_text: Diagram of how Kong Gateway works
 
   - header:
@@ -64,8 +66,8 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Start locally with Docker
-            description: Using our quickstart script, learn how to use core Gateway capabilities
+            title: Try out the Gateway with Docker
+            description: Using a local container, learn how to use core Gateway capabilities, including rate limiting, authentication, and load balancing
             icon: /assets/icons/graduation.svg
             cta:
               text: 
@@ -80,16 +82,6 @@ rows:
             cta:
               text: 
               url: https://docs.konghq.com/gateway/latest/install/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Kong Plugin Hub
-            description: Extend your Gateway with powerful plugins
-            icon: /assets/icons/plug.svg
-            cta:
-              text: 
-              url: /plugins
               align: end
 
   - header:
@@ -202,6 +194,43 @@ rows:
               url: https://docs.konghq.com/gateway/latest/production/monitoring/
               align: end
 
+  - header:
+      type: h2
+      text: Key References
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Kong Plugin Hub
+              description: Extend your Gateway with powerful plugins
+              icon: /assets/icons/plug.svg
+              cta:
+                text: View all available plugins
+                url: /plugins
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Kong Gateway Entities
+              description: |
+                Learn about Kong entities, which are the various components and objects that make up the Kong API Gateway and its ecosystem.
+                This includes services, routes, consumers, and more.
+              icon: /assets/icons/linked-services.svg
+              cta:
+                text: Learn about Kong Gateway entities
+                url: /gateway/entities/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: API Reference
+              description: |
+                Explore the reference documentation for all Kong Gateway APIs
+              icon: /assets/icons/data-object.svg
+              cta:
+                text: Kong API reference
+                url: /gateway/entities/
+                align: end
   - header:
       type: h2
       text: How-to Guides
