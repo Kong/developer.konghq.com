@@ -31,6 +31,8 @@ layout: with_aside
   {% include info_box/how-to.html %}
 {% endcontentfor %}
 
+{% if page.works_on %}
 {% contentfor controls %}
 {% include how-tos/controls.html works_on=page.works_on %}
 {% endcontentfor %}
+{% endif %}
