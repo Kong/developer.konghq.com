@@ -4,7 +4,8 @@ rows:
   - header:
       type: h1
       text: "Design APIs with Insomnia"
-    columns:
+
+  - columns:
       - blocks:
           - type: structured_text
             config:
