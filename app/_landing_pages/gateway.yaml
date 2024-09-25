@@ -20,7 +20,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: https://docs.konghq.com/assets/images/products/gateway/kong-gateway-features.png
+              url: /assets/images/gateway/kong-gateway-overview.png
               alt_text: Diagram of how Kong Gateway works
 
   - header:
