@@ -15,7 +15,7 @@ prereqs:
   inline:
     - title: Create an API specification
       content: |
-        You can either [create an empty document]() and design your specification from scratch, or [import an existing specification](). This example uses the [Konnect API Products specification](https://docs.konghq.com/konnect/api/api-products/latest/). Make sure that the specification doesn't have any errors, otherwise the collection can't be generated.
+        You can either [create an empty document](/how-to/create-a-design-document/) and design your specification from scratch, or [import an existing specification](/how-to/import-an-api-spec-as-a-document/). This example uses the [Konnect API Products specification](https://docs.konghq.com/konnect/api/api-products/latest/). Make sure that the specification doesn't have any errors, otherwise the collection can't be generated.
       icon_url: /assets/icons/insomnia/design.svg
 
 ---
