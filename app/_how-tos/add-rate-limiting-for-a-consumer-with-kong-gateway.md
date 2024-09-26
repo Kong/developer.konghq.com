@@ -86,7 +86,7 @@ entities:
 ## 3. Enable rate limiting
 
 Enable the [Rate Limiting plugin](/plugins/rate-limiting/) for the consumer. 
-In this example, the limit is 5 requests per second and 1000 requests per hour.
+In this example, the limit is 5 requests per minute and 1000 requests per hour.
 
 {% entity_examples %}
 entities:
@@ -94,7 +94,7 @@ entities:
     - name: rate-limiting
       consumer: jsmith
       config:
-        second: 5
+        minute: 5
         hour: 1000
 append_to_existing_section: true
 {% endentity_examples %}
@@ -108,12 +108,12 @@ append_to_existing_section: true
 You can run the following command to test the rate limiting as the consumer:
 
 ```bash
-for _ in {1..6}; do curl -i http://localhost:8000/example-route -H 'apikey:example-key'; echo; done
+for _ in {1..6}; do curl -i http://localhost:8000/anything -H 'apikey:example-key'; echo; done
 ```
 {: data-deployment-topology="on-prem" }
 
 ```bash
-for _ in {1..6}; do curl -i http://{host}/example-route -H 'apikey:example-key'; echo; done
+for _ in {1..6}; do curl -i http://{host}/anything -H 'apikey:example-key'; echo; done
 ```
 {: data-deployment-topology="konnect" }
 Replace `{host}` with the proxy URL for this data plane node.
