@@ -1,2 +1,2 @@
 name: example-service
-host: httpbin.org
+url: http://httpbin.org/anything
