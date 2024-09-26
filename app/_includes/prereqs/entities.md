@@ -15,17 +15,20 @@ For this tutorial, you'll need Kong Gateway entities, like services and routes, 
 {% endcapture %}
 {{ entities | indent: 3 }}
 
-1. Sync your changes in the `deck_files` directory, making sure to substitute your Konnect Personal Access Token for `konnect_token` and the control plane name for `KONNECT_CP_NAME` in the command:
+1. Sync your changes in the `deck_files` directory.
 
    ```sh
    deck gateway sync prereqs.yaml
    ```
    {: data-deployment-topology="on-prem" }
 
+
+   <div class="flex flex-col gap-2" data-deployment-topology="konnect" markdown="1">
+    Make sure to substitute your Konnect Personal Access Token for `konnect_token` and the control plane name for `KONNECT_CP_NAME` in the command:
    ```sh
    deck gateway sync prereqs.yaml --konnect-token ${{konnect_token}} --konnect-control-plane-name $KONNECT_CP_NAME
    ```
-   {: data-deployment-topology="konnect" }
+   </div>
 
 To learn more about entities, you can read our [entities documentation](/entities/). 
 {% endcapture %}
