@@ -29,7 +29,7 @@ tldr:
 
 cleanup:
   inline:
-    - title: Clean-up Konnect Environment
+    - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
     - title: Destroy the Kong Gateway container
