@@ -4,7 +4,7 @@ name: Service
 entities:
   - service
 
-description: In Kong Gateway, a service is an abstraction of an existing upstream application.
+description: In Kong Gateway, a service is an abstraction of an upstream application that services requests.
 
 related_resources:
   - text: Routes entity
