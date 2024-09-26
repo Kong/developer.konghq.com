@@ -16,6 +16,13 @@ prereqs:
           include_content: prereqs/collection
           icon_url: /assets/icons/menu.svg
 
+next_steps:
+    layout:
+        style: list
+    items:
+        - text: Run a collection
+          url: /how-to/run-a-collection
+
 tldr:
     q: How can I reuse content from a response in another request?
     a: Create at least two requests, send one to get a response, then configure a template tag in the second request to reuse a value from the first request's response.
