@@ -1,5 +1,5 @@
 ---
-title: Import an API specification as a design document
+title: Import an API specification as a design document in Insomnia
 products:
     - insomnia
 

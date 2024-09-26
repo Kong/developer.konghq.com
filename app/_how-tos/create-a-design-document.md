@@ -1,5 +1,5 @@
 ---
-title: Create a design document
+title: Create a design document in Insomnia
 
 products:
     - insomnia
