@@ -8,26 +8,13 @@ tags:
     - requests
     - responses
     - template-tags
+    - collections
 
 prereqs:
     inline:
-        - title: Create a collection with requests
-          content: |
-            [Create a collection]() and [import]() the [KongAir Flights](https://raw.githubusercontent.com/Kong/KongAir/refs/heads/main/flight-data/flights/openapi.yaml) requests.
-          icon_url: /assets/icons/add.svg
-        - title: Configure the environment
-          content: |
-            Add the KongAir base URL to your environment.
-
-            1. In your collection, click **Base Environment**
-            1. Click the edit button and add the following content:
-            ```json
-                {
-                    "base_url": "https://api.kong-air.com"
-                }
-            ```
-            1. Click **Close**.
-          icon_url: /assets/icons/world.svg
+        - title: Create and configure a collection
+          include_content: prereqs/collection
+          icon_url: /assets/icons/menu.svg
 
 tldr:
     q: How can I reuse content from a response in another request?
