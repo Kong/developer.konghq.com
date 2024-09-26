@@ -10,7 +10,9 @@ deck gateway diff deck_files
 {: data-deployment-topology="on-prem" }
 
 ```bash
-deck gateway diff deck_files --konnect-token ${{konnect_token}} --konnect-control-plane-name $KONNECT_CP_NAME
+deck gateway diff deck_files \
+  --konnect-token ${{konnect_token}} \
+  --konnect-control-plane-name $KONNECT_CP_NAME
 ```
 {: data-deployment-topology="konnect" }
 
@@ -23,6 +25,8 @@ deck gateway sync deck_files
 ```
 {: data-deployment-topology="on-prem" }
 ```bash
-deck gateway sync deck_files --konnect-token ${{konnect_token}} --konnect-control-plane-name $KONNECT_CP_NAME
+deck gateway sync deck_files \
+  --konnect-token ${{konnect_token}} \
+  --konnect-control-plane-name $KONNECT_CP_NAME
 ```
 {: data-deployment-topology="konnect" }
