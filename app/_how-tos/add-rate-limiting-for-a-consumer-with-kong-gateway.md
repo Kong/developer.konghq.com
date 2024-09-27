@@ -54,9 +54,22 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Enable authentication
+## 1. Create a consumer
 
-You need [authentication](/authentication/) to identify a consumer and apply rate limiting.
+Consumers let you identify the client that's interacting with Kong Gateway.
+We're going to use key [authentication](/authentication/) in this tutorial, so the consumer needs an API key to access any Kong Gateway services.
+
+{% entity_examples %}
+entities:
+  consumers:
+    - username: jsmith
+      keyauth_credentials:
+        - key: example-key
+{% endentity_examples %}
+
+## 2. Enable authentication
+
+Authentication lets you identify a consumer so that you can apply rate limiting.
 This example uses the [Key Authentication](/plugins/key-auth) plugin, but you can use any authentication plugin that you prefer.
 
 Add the following content to `kong.yaml` to enable the plugin globally, which means it applies to all Kong Gateway services and routes:
@@ -68,19 +81,6 @@ entities:
       config:
         key_names:
           - apikey
-{% endentity_examples %}
-
-## 2. Create a consumer
-
-Consumers let you identify the client that's interacting with Kong Gateway. 
-With the Key Authentication plugin enabled globally, the consumer needs an API key to access any Kong Gateway services.
-
-{% entity_examples %}
-entities:
-  consumers:
-    - username: jsmith
-      keyauth_credentials:
-        - key: example-key
 {% endentity_examples %}
 
 ## 3. Enable rate limiting
