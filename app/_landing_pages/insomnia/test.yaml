@@ -31,18 +31,8 @@ rows:
 
   - header:
       type: h2
-      text: "Get started"
+      text: "Features"
     columns:
-      - blocks:
-        - type: card
-          config:
-            title: Organize and run your API tests
-            description: Write customizable Javascript tests directly in Insomnia. Organize your integration tests as needed and run them simultaneously to identify errors.
-            icon: /assets/icons/insomnia/checkbox-active.svg
-            cta:
-              text: Learn more
-              url: /how-to/write-tests-in-insomnia/
-              align: end
       - blocks:
         - type: card
           config:
@@ -73,6 +63,43 @@ rows:
               text: Learn more
               url: /how-to/collection-runner/
               align: end  
+  
+  - header:
+      type: h2
+      text: "Get started writing tests"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Write tests for HTTP status codes
+            cta:
+              text: Learn more
+              url: /how-to/write-http-status-tests/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Write tests for content types
+            cta:
+              text: Learn more
+              url: /how-to/write-content-type-tests/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Write tests for headers in the response
+            cta:
+              text: Learn more
+              url: /how-to/write-headers-in-response-tests/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Write tests for data types
+            cta:
+              text: Learn more
+              url: /how-to/write-data-type-tests/
+              align: end
   - header:
       type: h2
       text: Learn

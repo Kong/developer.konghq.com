@@ -5,6 +5,7 @@
 1. Add the following content to the base environment:
 ```json
 {
-    "base_url": "https://api.kong-air.com",
+	"base_url": "https://api.kong-air.com",
+	"flightNumber": "KA0284"
 }
 ```
