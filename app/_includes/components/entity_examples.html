@@ -6,10 +6,12 @@
 Add the following to your existing `{{ entity_examples.append_to }}` section in `kong.yaml`:
 {% endif %}
 ```yaml
+echo '
 {%- if render_format_version %}
-_format_version: '3.0'
+_format_version: "3.0"
 {%- endif %}
 {{ entity_examples.data }}
+' | kongctl apply gateway -
 ```
 {: data-file="kong.yaml" data-test-step="block" }
 
