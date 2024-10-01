@@ -9,31 +9,15 @@ For this tutorial, you'll need {{site.base_gateway}} entities, like Gateway Serv
 
 {% capture entities %}
 ```yaml
+echo '
 {{ include.data }}
+' | kongctl apply gateway -
 ```
 {: data-file="prereqs.yaml" data-test-prereqs="block" }
 {% endcapture %}
 {{ entities | indent: 3 }}
 
-1. Sync your changes.
-
-   ```sh
-   deck gateway sync deck_files
-   ```
-   {: data-deployment-topology="on-prem" data-test-prereqs="block" }
-
-
-   <div class="flex flex-col gap-2" data-deployment-topology="konnect" markdown="1">
-    Make sure to substitute your Konnect Personal Access Token for `konnect_token` and the control plane name for `KONNECT_CP_NAME` in the command:
-   ```sh
-   deck gateway sync deck_files \
-     --konnect-token ${{konnect_token}} \
-     --konnect-control-plane-name $KONNECT_CP_NAME
-   ```
-   {:  data-test-prereqs="block" }
-   </div>
-
-To learn more about entities, you can read our [entities documentation](/gateway/entities/).
+To learn more about entities, you can read our [entities documentation](/entities/). 
 {% endcapture %}
 
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/widgets.svg' %}
