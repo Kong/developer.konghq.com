@@ -101,7 +101,6 @@ entities:
       config:
         minute: 5
         hour: 1000
-append_to_existing_section: true
 {% endentity_examples %}
 
 ## 4. Apply configuration
