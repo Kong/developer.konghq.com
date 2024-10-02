@@ -65,6 +65,6 @@ flowchart LR
 type: service
 data:
   name: example-service
-  url: "http://httpbin.org"
+  url: "http://httpbin.konghq.com"
 {% endentity_example %}
 {% endcontentfor %}
