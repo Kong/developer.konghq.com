@@ -6,11 +6,11 @@ module Jekyll
 
     def generate(site)
       site.pages.each do |page|
-        EditLink::Base.new(site:, page:).process
+        Data::EditLink::Base.new(site:, page:).process
       end
 
       site.documents.each do |doc|
-        EditLink::Base.new(site:, page: doc).process
+        Data::EditLink::Base.new(site:, page: doc).process
       end
     end
   end
