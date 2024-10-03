@@ -1,6 +1,8 @@
 ---
 title: Unit testing
 name: Unit testing
+
+content_type: concept
 layout: concept
 
 description: Test the responses of a single endpoint in Insomnia.
