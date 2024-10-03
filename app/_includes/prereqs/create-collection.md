@@ -4,4 +4,4 @@ For this tutorial, you'll need a collection in Insomnia. A collection is essenti
 This pre-configured collection contains:
 * The example "Flights Service 0.1.0" spec [added as a document](/how-to/create-a-design-document/)
 * [A collection generated from the spec](/how-to/generate-a-collection-from-a-design-document/)
-* Pre-configured [base environment variables](/references/env-variables/)
+* Pre-configured [base environment variables](/insomnia/env-variables/)

@@ -2,7 +2,7 @@
 title: Write pre-request scripts to add dynamic behavior in Insomnia
 related_resources:
   - text: Test examples library
-    url: /reference/test-examples-insomnia/ 
+    url: /insomnia/test-examples-insomnia/ 
   - text: Automate tests in Insomnia
     url:  /how-to/automate-tests/
   - text: Chain requests in Insomnia
