@@ -1,6 +1,8 @@
+{% if page.prerequisites.any? %}
 <div class="flex flex-col gap-4 border-b border-primary/5 pb-8">
     <h2 id="prerequisites">Prerequisites</h2>
     <div class="content bg-secondary rounded-md shadow-primary">
     {% prereqs %}
     </div>
 </div>
+{% endif %}

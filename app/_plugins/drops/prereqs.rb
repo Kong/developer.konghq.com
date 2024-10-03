@@ -5,32 +5,27 @@ require 'yaml'
 module Jekyll
   module Drops
     class Prereqs < Liquid::Drop
-      def initialize(prereqs:, tools:, site:)
-        @prereqs = prereqs
-        @tools   = tools
-        @site    = site
+      def initialize(page:, site:)
+        @page = page
+        @site = site
       end
 
       def any?
-        @tools.any? || @prereqs.any?
-      end
-
-      def tools
-        @tools
+        [tools, prereqs, products].any?(&:any?)
       end
 
       def entities?
-        @prereqs.fetch('entities', []).any?
+        prereqs.fetch('entities', []).any?
       end
 
       def inline
-        @inlines ||= @prereqs.fetch('inline', [])
+        @inline ||= prereqs.fetch('inline', [])
       end
 
       def data
         yaml = { '_format_version' => '3.0' }
 
-        @prereqs.fetch('entities', []).each do |k, files|
+        prereqs.fetch('entities', []).each do |k, files|
           entities = files.map do |f|
             example = @site.data.dig('entity_examples', k, f)
 
@@ -44,6 +39,26 @@ module Jekyll
         end
 
         Jekyll::Utils::HashToYAML.new(yaml).convert
+      end
+
+      def products
+        @products ||= @page.data.fetch('products', [])
+          .reject { |p| p == 'gateway' }
+          .select { |p| File.exist?(product_include_file_path(p)) }
+      end
+
+      def tools
+        @tools ||= @page.data.fetch('tools', [])
+      end
+
+      private
+
+      def prereqs
+        @prereqs ||= @page.data.fetch('prereqs', {})
+      end
+
+      def product_include_file_path(product)
+        File.join(@site.source, '_includes', 'prereqs', 'products', "#{product}.md")
       end
     end
   end

@@ -5,16 +5,10 @@ module Jekyll
     def render(context)
       @context = context
       @page = context.environments.first['page']
-      site = context.registers[:site]
 
-      tools   = @page.fetch('tools', {})
-      prereqs = @page.fetch('prereqs', {})
-
-      prereqs_drop = Drops::Prereqs.new(prereqs:, tools:, site:)
-
-      if prereqs_drop.any?
+      if @page['prerequisites'].any?
         context.stack do
-          context['prereqs'] = prereqs_drop
+          context['prereqs'] = @page['prerequisites']
           Liquid::Template.parse(template).render(context)
         end
       end

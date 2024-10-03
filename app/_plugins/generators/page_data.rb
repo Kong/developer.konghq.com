@@ -11,6 +11,7 @@ module Jekyll
 
       site.documents.each do |doc|
         Data::EditLink::Base.new(site:, page: doc).process
+        Data::Prerequisites.new(site:, page: doc).process
       end
     end
   end
