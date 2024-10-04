@@ -1,0 +1,119 @@
+metadata:
+  title: Inso CLI
+rows:
+  - header:
+      type: h1
+      text: "Inso CLI"
+
+  - header:
+      type: h2
+      text: What is Inso CLI?
+    columns:
+    - blocks:
+        - type: text
+          config: |
+            Inso CLI is a command line tool that allows you to use Insomnia features in your terminal and CI/CD environments for automation.
+            
+  - header:
+      type: h2
+      text: "Install Inso CLI"
+    columns:
+      - blocks:
+        - type: tabs
+          config:
+            - title: OSX
+              include_content: tools/inso-cli/install/osx
+            - title: Windows
+              include_content: tools/inso-cli/install/windows
+            - title: Linux
+              include_content: tools/inso-cli/install/linux
+
+  - header:
+    columns:
+      - header:
+          type: h2
+          text: "How does Inso CLI work?"
+        blocks:
+        - type: text
+          config: |
+            When you run a command, Inso CLI will look for Insomnia data in two places:
+            * In the .insomnia directory in the working directory. This directory is created automatically when [Git sync]() is set up.
+            * In the Insomnia app data directory if Insomnia is installed.
+
+            You can also use the `--workingDir` or `--src` options to specify a different data source. For more information, see the [Inso CLI reference]().
+
+  - header:
+      text: "What can Inso CLI do?"
+      type: h2
+    columns:
+      - blocks:
+        - type: x_with_y
+          config:
+              border: true
+              type: h2
+              headers:
+                - Commonly used Inso CLI commands
+
+              items:
+                - text: |
+                    Run tests on a design document
+                  action:
+                    type: command
+                    config:
+                      cmd: inso
+                      args:
+                        - run
+                        - test
+                        - '"design document name"'
+                        - --env
+                        - '"environment name"'
+                    
+                - text: |
+                    Validate an API specification
+                  action:
+                    type: command
+                    config:
+                      cmd: inso
+                      args:
+                        - lint
+                        - spec
+                        - '"design document name"'
+                    
+                - text: |
+                    Export an API specification to a file
+                  action:
+                    type: command
+                    config:
+                      cmd: inso
+                      args:
+                        - export
+                        - spec
+                        - '"design document name"'
+                        - --output
+                        - output.yaml
+
+
+  - header:
+      text: "Frequently Asked Questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: 
+              a: 
+                
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              products:
+                - insomnia
+              tools:
+                - inso-cli
+              quantity: 5
+              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}"
+              allow_empty: true
