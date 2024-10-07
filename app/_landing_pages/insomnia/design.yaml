@@ -16,14 +16,79 @@ rows:
                   text: |
                     Leverage OpenAPI with a spec-driven, design-first approach to accelerate development and build APIs.  
 
-                    Using Insomnia, you can build API specs or generate them. You can see the live API previews as you're creating your specs.
+                    Using Insomnia, you can build API specs or generate them. You can also use an example Petstore API spec by creating a Document and clicking **Start from an example** in the empty API spec editor. 
+                    
+                    As you're creating or editing specs, you can see the live preview and Insomnia automatically lints them. Linting error messages display at the bottom of the center panel. Error details include the error type, line number, and error message.
 
                     Collaboratively create APIs with an unlimited number of contributers (Free accounts allow unlimited contributors on one project) and git version control.
       - blocks:
           - type: image
             config:
-              url: /assets/images/insomnia/graphic-api-design-hero.png
-              alt_text: Image of the generating collections and tests         
+              url: /assets/images/insomnia/document-spec.png
+              alt_text: Image of the generating collections and tests  
+  - header:
+      type: h2
+      text: API spec information
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  In the left-side panel of your spec, a menu populates with information about your API spec. See the following table for the information it displays:
+        - type: x_with_y
+          config:
+            border: true
+            items:
+              - text: INFO
+                action:
+                  type: text
+                  config:
+                    text: |
+                      Overview data about the API, including title, description, version, and license. This section is always visible.
+              - text: SERVERS
+                action:
+                  type: text
+                  config:
+                    text: |
+                      Servers that access requests for the API.
+              - text: PATHS
+                action:
+                  type: text
+                  config:
+                    text: All paths available for the API, with request types listed.
+              - text: REQUESTS
+                action:
+                  type: text
+                  config:
+                    text: |
+                      API objects with content types. For example, in the Pet Store API, an object is `Pet` and content types for that object are `application/json` and `application/xml`.
+              - text: RESPONSES
+                action:
+                  type: text
+                  config:
+                    text: Lists structured, expected responses for each request.
+              - text: PARAMETERS
+                action:
+                  type: text
+                  config:
+                    text: Lists parameters that the API recognizes.
+              - text: HEADERS
+                action:
+                  type: text
+                  config:
+                    text: Header types accepted by the API.
+              - text: SCHEMAS
+                action:
+                  type: text
+                  config:
+                    text: Schemas detailing the input/output of the API.
+              - text: SECURITY
+                action:
+                  type: text
+                  config:
+                    text: Authentication information and options.       
 
   - header:
       type: h2
