@@ -13,7 +13,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    Design Documents (also called Documents) hold specifications, API requests, and tests. They also offer the capability to [sync with git](/). 
+                    Design Documents (also called Documents) hold API specifications, API requests, and tests. 
                     
                     Documents have three main capabilities:  
                 - type: text
@@ -101,7 +101,7 @@ rows:
                   text: | 
                     To debug your API spec, you can generate a collection of requests from it and debug those. 
                     
-                    In the sidebar, you'll see a list of the requests. When you select one, you can send requests and then see the response in the right menu. The center panel will populate with the following:
+                    In the sidebar, you'll see a list of the requests associated with the collection. The center panel will auto-populate with the following variables from the API spec:
                 - type: unordered_list
                   items:
                     - Request URL
@@ -150,7 +150,7 @@ rows:
   
   - header:
       type: h2
-      text: "Test API specs"
+      text: "Test APIs"
     columns:
       - blocks:
           - type: image
@@ -163,9 +163,9 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    You can create tests for the requests populated from your specification in the Tests tab of a design document. You can use Insomnia's pre-configured test examples by editing a test and pressing **Control + Space**.
+                    You can test your API from the **Tests** tab of a design document. The Insomnia testing library offers boiler-plate tests, examples, and auto-complete (`Control+Space`) to make writing tests easier.
                     
-                    You can manually run an individual test or an entire test suite from Insomnia. You can also automate tests with the Inso CLI.
+                    You can manually run an individual test or an entire test suite from Insomnia, and you can automate tests with the [Inso CLI](/).
 
                     If you want to run pre-request or after-response tests, you can do that from the **Collection** tab under **Scripts**.
           - type: button
