@@ -4,8 +4,7 @@ rows:
   - header:
       type: h1
       text: "Design APIs with Insomnia"
-
-  - columns:
+    columns:
       - blocks:
           - type: structured_text
             config:
@@ -13,19 +12,66 @@ rows:
                 text: "Design and preview new APIs with OpenAPI"
               blocks:
                 - type: text
+                  text: | 
+                    Using Insomnia, you can create or upload an API spec to a document. 
+                      
+                      As you write or edit your spec:  
+                - type: text
                   text: |
-                    Leverage OpenAPI with a spec-driven, design-first approach to accelerate development and build APIs.  
-
-                    Using Insomnia, you can build API specs or generate them. You can also use an example Petstore API spec by creating a Document and clicking **Start from an example** in the empty API spec editor. 
-                    
-                    As you're creating or editing specs, you can see the live preview and Insomnia automatically lints them. Linting error messages display at the bottom of the center panel. Error details include the error type, line number, and error message.
-
-                    Collaboratively create APIs with an unlimited number of contributers (Free accounts allow unlimited contributors on one project) and git version control.
+                    - View a generated preview of your spec in the right pane.
+                    - Automatically linted. Errors display at the bottom of the center pane and include error type, line number, and error message
+                    - View information about your spec in the left sidebar, such as servers, request body, and schemas.
+                    - Collaboratively create APIs with an unlimited number of contributers (free accounts allow unlimited contributors on one project) and git version control.
       - blocks:
           - type: image
             config:
               url: /assets/images/insomnia/document-spec.png
-              alt_text: Image of the generating collections and tests  
+              alt_text: Image of the generating collections and tests        
+
+  - header:
+      type: h2
+      text: "Get started"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Design APIs with documents
+            description: Use Insomnia to create APIs with a spec-first approach. Leverage OpenAPI, live API previews, and more.
+            icon: /assets/icons/insomnia/design.svg
+            cta:
+              text: Learn more
+              url: https://docs.insomnia.rest/insomnia/design-documents
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Validate your API specs
+            description: Automatically validate OpenAPI specs with the Inso CLI and custom linting rules.
+            icon: /assets/icons/insomnia/stars.svg
+            cta:
+              text: Learn more
+              url: https://docs.insomnia.rest/insomnia/linting
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Collaborate on APIs
+            description: Collaborate with others and use git version control on your APIs.
+            icon: /assets/icons/insomnia/local-git-cloud-storage.svg
+            cta:
+              text: Learn more
+              url: https://docs.insomnia.rest/insomnia/git-sync
+              align: end 
+      - blocks:
+        - type: card
+          config:
+            title: Deploy an API with Konnect
+            description: Deploy your APIs with API Products in Konnect.
+            icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/kong-gradient.svg
+            cta:
+              text: Learn more
+              url: https://docs.konghq.com/konnect/api-products/
+              align: end  
   - header:
       type: h2
       text: API spec information
@@ -88,52 +134,36 @@ rows:
                 action:
                   type: text
                   config:
-                    text: Authentication information and options.       
-
+                    text: Authentication information and options. 
+  
   - header:
+      text: "Frequently Asked Questions"
       type: h2
-      text: "Get started"
     columns:
       - blocks:
-        - type: card
+        - type: faqs
           config:
-            title: Design APIs with documents
-            description: Use Insomnia to create APIs with a spec-first approach. Leverage OpenAPI, live API previews, and more.
-            icon: /assets/icons/insomnia/design.svg
-            cta:
-              text: Learn more
-              url: https://docs.insomnia.rest/insomnia/design-documents
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Validate your API specs
-            description: Automatically validate OpenAPI specs with the Inso CLI and custom linting rules.
-            icon: /assets/icons/insomnia/stars.svg
-            cta:
-              text: Learn more
-              url: https://docs.insomnia.rest/insomnia/linting
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Collaborate on APIs
-            description: Collaborate with others and use git version control on your APIs.
-            icon: /assets/icons/insomnia/local-git-cloud-storage.svg
-            cta:
-              text: Learn more
-              url: https://docs.insomnia.rest/insomnia/git-sync
-              align: end 
-      - blocks:
-        - type: card
-          config:
-            title: Deploy an API with Konnect
-            description: Deploy your APIs with API Products in Konnect.
-            icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/kong-gradient.svg
-            cta:
-              text: Learn more
-              url: https://docs.konghq.com/konnect/api-products/
-              align: end  
+            - q: How do I create a new API spec in Insomnia?
+              a: |
+                Create a new API spec in Insomnia by clicking **Create > Design document** and then adding your spec in the center pane editor. 
+                Specs must be in the OpenAPI 2.0.x or later format. 
+                You can create specs for a REST API or GraphQL API.
+            - q: Why is a preview not displaying for my spec?
+              a:
+            - q: Why can't I generate a collection from the API spec in my design document?
+              a: Check the linting errors, if there's any warning level errors, you won't be able to generate a collection from your spec.
+            - q: How do I import an existing spec in Insomnia?
+              a:
+            - q: How do I migrate my specs from another API client, like Postman, to Insomnia?
+              a:
+            - q: How does Insomnia pull information from my spec?
+              a: 
+            - q: How do I generate requests from my spec?
+              a: 
+            - q: Can I create a GraphQL API spec in Insomnia?
+              a: Yes. For Insomnia to autodetect that your spec is in GraphQL format, the path must be `/graphql`, the method must be `POST`, the request body must be application/json and must contain a property query with the type string, and the response body must be application/json.
+            - q: Can I create a spec in a collection?
+              a: No, you can import an existing spec into a collection, but you can only create a new API spec in a document.
 
   - header:
       type: h2
