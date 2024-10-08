@@ -4,4 +4,4 @@
 {% endcapture %}
 
 
-{% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/logos/brand/Insomnia.svg'%}
+{% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/insomnia/insomnia.svg'%}

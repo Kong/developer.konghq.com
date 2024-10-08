@@ -134,7 +134,7 @@
     @apply border-t border-primary/5;
   }
 
-  details[open] summary .fa-chevron-down {
+  details[open] summary .chevron-icon {
     @apply rotate-180;
   }
 
@@ -205,7 +205,7 @@
   }
 
   .copy-code-snippet .copy-action {
-    @apply absolute cursor-pointer text-white right-3 top-2.5 p-1 w-5 opacity-40;
+    @apply absolute cursor-pointer text-secondary right-3 top-3;
   }
 
   .copy-code-snippet .copy-action:hover {
@@ -233,7 +233,7 @@
   }
 
   .copy-code-snippet[data-file] .copy-action {
-    @apply top-[0.4rem];
+    @apply top-2;
   }
 
   .content {
