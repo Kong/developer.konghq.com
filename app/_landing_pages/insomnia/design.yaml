@@ -37,7 +37,7 @@ rows:
             icon: /assets/icons/insomnia/design.svg
             cta:
               text: Learn more
-              url: https://docs.insomnia.rest/insomnia/design-documents
+              url: /how-to/create-a-design-document/
               align: end
       - blocks:
         - type: card
@@ -75,17 +75,17 @@ rows:
       text: Learn
     columns:
       - blocks:
-          - type: concept_list
+          - type: card
             config:
-              - topic: design-apis
-                product: insomnia 
-            quantity: 5
-            allow_empty: true
-          - type: cta
-            config:
-              text: "Learn more &raquo;"
-              url: "https://docs.devsite.com/search/{concept.topic}+{other stuff}" ## Takes you to search with terms that match this.
-              align: end
+              title: API specs
+              description: |
+                Insomnia provides capabilities to create, import, lint, and collaborate on API specs. 
+                You can easily generate a collection of requests from an API spec.
+              icon: /assets/icons/admin-api.svg
+              cta:
+                text: Learn more about API specs in Insomnia
+                url: /insomnia/api-specs/
+                align: end
 
   - header:
       type: h2
