@@ -71,115 +71,24 @@ rows:
             cta:
               text: Learn more
               url: https://docs.konghq.com/konnect/api-products/
-              align: end  
-  - header:
-      type: h2
-      text: API spec information
-    columns:
-      - blocks:
-        - type: structured_text
-          config:
-            blocks:
-              - type: text
-                text: |
-                  In the left-side panel of your spec, a menu populates with information about your API spec. See the following table for the information it displays:
-        - type: x_with_y
-          config:
-            border: true
-            items:
-              - text: INFO
-                action:
-                  type: text
-                  config:
-                    text: |
-                      Overview data about the API, including title, description, version, and license. This section is always visible.
-              - text: SERVERS
-                action:
-                  type: text
-                  config:
-                    text: |
-                      Servers that access requests for the API.
-              - text: PATHS
-                action:
-                  type: text
-                  config:
-                    text: All paths available for the API, with request types listed.
-              - text: REQUESTS
-                action:
-                  type: text
-                  config:
-                    text: |
-                      API objects with content types. For example, in the Pet Store API, an object is `Pet` and content types for that object are `application/json` and `application/xml`.
-              - text: RESPONSES
-                action:
-                  type: text
-                  config:
-                    text: Lists structured, expected responses for each request.
-              - text: PARAMETERS
-                action:
-                  type: text
-                  config:
-                    text: Lists parameters that the API recognizes.
-              - text: HEADERS
-                action:
-                  type: text
-                  config:
-                    text: Header types accepted by the API.
-              - text: SCHEMAS
-                action:
-                  type: text
-                  config:
-                    text: Schemas detailing the input/output of the API.
-              - text: SECURITY
-                action:
-                  type: text
-                  config:
-                    text: Authentication information and options. 
-  
-  - header:
-      text: "Frequently Asked Questions"
-      type: h2
-    columns:
-      - blocks:
-        - type: faqs
-          config:
-            - q: How do I create a new API spec in Insomnia?
-              a: |
-                Create a new API spec in Insomnia by clicking **Create > Design document** and then adding your spec in the center pane editor. 
-                Specs must be in the OpenAPI 2.0.x or later format. 
-                You can create specs for a REST API or GraphQL API.
-            - q: Why is a preview not displaying for my spec?
-              a:
-            - q: Why can't I generate a collection from the API spec in my design document?
-              a: Check the linting errors, if there's any warning level errors, you won't be able to generate a collection from your spec.
-            - q: How do I import an existing spec in Insomnia?
-              a:
-            - q: How do I migrate my specs from another API client, like Postman, to Insomnia?
-              a:
-            - q: How does Insomnia pull information from my spec?
-              a: 
-            - q: How do I generate requests from my spec?
-              a: 
-            - q: Can I create a GraphQL API spec in Insomnia?
-              a: Yes. For Insomnia to autodetect that your spec is in GraphQL format, the path must be `/graphql`, the method must be `POST`, the request body must be application/json and must contain a property query with the type string, and the response body must be application/json.
-            - q: Can I create a spec in a collection?
-              a: No, you can import an existing spec into a collection, but you can only create a new API spec in a document.
+              align: end   
 
   - header:
       type: h2
       text: Learn
     columns:
       - blocks:
-          - type: concept_list
-            config:
-              - topic: design-apis
-                product: insomnia 
-            quantity: 5
-            allow_empty: true
-          - type: cta
-            config:
-              text: "Learn more &raquo;"
-              url: "https://docs.devsite.com/search/{concept.topic}+{other stuff}" ## Takes you to search with terms that match this.
+        - type: card
+          config:
+            title: Documents
+            description: |
+              Design documents (also called documents) hold API specifications, API requests, and tests. 
+                    
+              Documents have three main capabilities: design APIs, debug APIs, and test APIs.
+            icon: /assets/icons/insomnia/design.svg
+            cta:
+              text: Learn about design documents
+              url: /insomnia/documents/
               align: end
 
   - header:

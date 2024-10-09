@@ -226,6 +226,22 @@ rows:
               a: Insomnia supports REST OpenAPI specs as well as GraphQL OpenAPI specs. 
   - header:
       type: h2
+      text: Learn
+    columns:
+      - blocks:
+          - type: concept_list
+            config:
+              - topic: documents
+                product: insomnia 
+            quantity: 5
+            allow_empty: true
+          - type: cta
+            config:
+              text: "Learn more &raquo;"
+              url: "https://docs.devsite.com/search/{concept.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
+  - header:
+      type: h2
       text: References & Tools
     columns:
       - blocks:
