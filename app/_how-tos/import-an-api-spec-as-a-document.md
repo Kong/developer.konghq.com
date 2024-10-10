@@ -10,6 +10,10 @@ tldr:
   q: How do I create a design document from an existing API spec?
   a: In your Insomnia workspace, click **Import**, choose between importing from a file, a URL, or your clipboard, and click **Scan**.
 
+faqs:
+  - q: Can I import a GraphQL API spec in Insomnia?
+    a: Yes. For Insomnia to autodetect that your spec is in GraphQL format, the path must be `/graphql`, the method must be `POST`, the request body must be application/json and must contain a property query with the type string, and the response body must be application/json.
+
 prereqs:
   inline:
     - title: API specification
