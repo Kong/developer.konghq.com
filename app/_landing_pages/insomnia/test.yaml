@@ -64,6 +64,19 @@ rows:
               url: /how-to/collection-runner/
               align: end  
   
+  
+  - header:
+      type: h2
+      text: "Learn about testing types"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Unit testing
+            cta:
+              text: Learn more
+              url: /concept/unit-testing/
+              align: end
   - header:
       type: h2
       text: "Get started writing tests"
