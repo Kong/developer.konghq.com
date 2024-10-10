@@ -67,6 +67,18 @@ rows:
                         - '"design document name"'
                         - --env
                         - '"environment name"'
+                - text: |
+                    Run a request collection
+                  action:
+                    type: command
+                    config:
+                      cmd: inso
+                      args:
+                        - run
+                        - collection
+                        - '"collection name"'
+                        - --env
+                        - '"environment name"'
                     
                 - text: |
                     Validate an API specification
@@ -91,6 +103,18 @@ rows:
                         - '"design document name"'
                         - --output
                         - output.yaml
+                    
+                - text: |
+                    Run a script defined in the configuration file
+                  action:
+                    type: command
+                    config:
+                      cmd: inso
+                      args:
+                        - script
+                        - script-name
+                        - --env
+                        - environment-id
 
 
   - header:
