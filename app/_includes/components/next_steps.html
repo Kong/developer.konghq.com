@@ -15,7 +15,7 @@
   <div class="flex gap-3 flex-col text-sm">
     {% for next_step in next_steps.items %}
       <div class="flex gap-2">
-        <div class="flex w-5 h-5 bg-brand shrink-0" style="mask:url('{{next_step.icon}}'); mask-size: cover;"></div>
+        <div class="flex w-5 h-5 text-brand shrink-0">{% include_svg next_step.icon %}</div>
         <a href="{{ next_step.url }}">{{ next_step.text | liquify }}</a>
       </div>
     {% endfor %}

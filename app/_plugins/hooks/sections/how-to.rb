@@ -6,7 +6,9 @@ module SectionWrapper
       Nokogiri::HTML::DocumentFragment.parse <<-HTML
         <a aria-label="Anchor" href="##{slug}" title="#{title}" class="header-link flex items-baseline justify-between hover:no-underline accordion-trigger">
           #{h2.to_html}
-          <span class="fa fa-chevron-down text-terciary rotate-180" aria-hidden="true"></span>
+          <span class="inline-flex chevron-icon rotate-180" aria-hidden="true">
+            #{File.read('app/assets/icons/chevron-down.svg')}
+          </span>
         </a>
       HTML
     end

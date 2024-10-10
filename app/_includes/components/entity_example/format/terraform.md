@@ -18,7 +18,7 @@ provider "konnect" {
 {% if include.render_context %}
 <div class="bg-secondary shadow-primary rounded-md flex flex-col text-sm">
   <details class="py-3 px-5 flex gap-1 border-b border-primary/5">
-    <summary class="text-primary list-none"><strong>Prerequisite:</strong> Configure your Personal Access Token<span class="fa fa-chevron-down float-right text-terciary"></span></summary>
+    <summary class="text-primary list-none"><strong>Prerequisite:</strong> Configure your Personal Access Token<span class="inline-flex chevron-icon float-right">{% include_svg '/assets/icons/chevron-down.svg' %}</span></summary>
     <div class="mt-2">
       {{ terraform_prereq_block | markdownify }}
     </div>

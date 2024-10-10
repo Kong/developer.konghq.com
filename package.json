@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@kong/sdk-portal-js": "^2.15.2",
-    "@kong/spec-renderer-dev": "^1.68.6-pr.278.95ae439.0",
+    "@kong/spec-renderer-dev": "^1.79.3",
     "@vitejs/plugin-vue": "^5.1.2",
     "axios": "^1.7.4",
     "vue": "^3.4.38"

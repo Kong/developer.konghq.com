@@ -1,9 +1,11 @@
 <template>
   <div>
     <main class="page-main">
-      <SpecModelNode
+      <SchemaRenderer
         v-if="schema"
         :schema="schema.data"
+        :exampleVisible="false"
+        :headerVisible="false"
       />
     </main>
   </div>
@@ -12,7 +14,7 @@
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
 
-import { SpecModelNode, parseSpecDocument, parsedDocument } from '@kong/spec-renderer-dev'
+import { SchemaRenderer, parseSpecDocument, parsedDocument } from '@kong/spec-renderer-dev'
 import ApiService from '../services/api.js'
 
 const { path, product, version } = window.entitySchema;

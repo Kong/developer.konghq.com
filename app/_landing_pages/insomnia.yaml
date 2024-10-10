@@ -19,7 +19,7 @@ rows:
                     Insomnia combines an easy-to-use interface with advanced functionality, like authentication helpers, code generation, and environment variables.
 
                     You can install Insomnia on macOS, Windows, and Linux.
-          - type: install-button
+          - type: button
             config:
               align: left
               text: Install Insomnia

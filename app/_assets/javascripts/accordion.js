@@ -63,7 +63,7 @@ class Accordion {
     closeItem (index) {
         const item = this.items.at(index);
         item.setAttribute('aria-expanded', 'false');
-        item.querySelector('span.fa').classList.remove('rotate-180');
+        item.querySelector('span.chevron-icon').classList.remove('rotate-180');
 
         const panel = item.querySelector('.accordion-panel');
         panel.classList.add('hidden');
@@ -74,7 +74,7 @@ class Accordion {
     openItem (index) {
         const item = this.items.at(index);
         item.setAttribute('aria-expanded', 'true');
-        item.querySelector('span.fa').classList.add('rotate-180');
+        item.querySelector('span.chevron-icon').classList.add('rotate-180');
 
         const panel = item.querySelector('.accordion-panel');
         panel.classList.remove('hidden');

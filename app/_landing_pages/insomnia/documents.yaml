@@ -1,0 +1,258 @@
+metadata:
+  title: Documents
+rows:
+  - header:
+      type: h1
+      text: "Documents"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Design documents in Insomnia"
+              blocks:
+                - type: text
+                  text: | 
+                    Design documents (also called documents) hold API specifications, API requests, and tests. 
+                    
+                    Documents have three main capabilities:  
+                - type: text
+                  text: |
+                    - **Design**: Create or upload API specs. Lint your specs for errors.
+                    - **Debug**: Generate a collection from your API spec. Debug requests and responses.
+                    - **Test**: Create a test suite for requests in your collection.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/insomnia/graphic-api-design-hero.png
+              alt_text: Image of a Document. 
+  
+  - header:
+      type: h2
+      text: "Design API specs"
+    columns:
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/insomnia/document-spec.png
+              alt_text: Image of API spec in a document.
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    Using Insomnia, you can create or upload an API spec to a document. As you write or edit your spec:
+                     
+                - type: text
+                  text: |
+                    - View a generated preview of your spec in the right pane.
+                    - Automatically linted. Errors display at the bottom of the center pane and include error type, line number, and error message
+                    - View information about your spec in the left sidebar, such as servers, request body, and schemas.
+          - type: button
+            config:
+              align: left
+              text: Learn more about designing APIs
+              url: /insomnia/design/
+  - header:
+      type: h3
+      text: "Get started with designing APIs"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Create a design document
+            cta:
+              text: Learn more
+              url: /how-to/create-a-design-document/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Import an API specification
+            cta:
+              text: Learn more
+              url: /how-to/import-an-api-spec-as-a-document/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Lint a design document
+            cta:
+              text: Learn more
+              url: /
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Automate design document linting
+            cta:
+              text: Learn more
+              url: /
+              align: end
+  - header:
+      type: h2
+      text: "Debug API specs"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    To debug your API spec, you can autogenerate a collection of requests from it and debug those. 
+                    
+                    In the sidebar, you'll see a list of the requests associated with the collection. The center panel will auto-populate with the following variables from the API spec:
+
+                    You can then debug your collection with the following:
+                - type: unordered_list
+                  items: 
+                    - Send requests to your endpoints
+                    - Create a [mock server](/) to simulate your endpoints
+                    - Use [pre-request](/) and [after-response scripts](/) to manipulate variables and perform tests and assertions on the response
+          - type: button
+            config:
+              align: left
+              text: Learn more about debugging APIs
+              url: /insomnia/debug/
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/insomnia/document-debug.png
+              alt_text: Image of debugging a document in Insomnia.
+
+  - header:
+      type: h3
+      text: "Get started with debugging APIs"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Generate a collection from a design document
+            cta:
+              text: Learn more
+              url: /how-to/generate-a-collection-from-a-design-document/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Send requests in Insomnia
+            cta:
+              text: Learn more
+              url: /
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Chain requests in Insomnia
+            cta:
+              text: Learn more
+              url: /how-to/chain-requests/
+              align: end
+  
+  - header:
+      type: h2
+      text: "Test APIs"
+    columns:
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/insomnia/document-test.png
+              alt_text: Image of document tests in a test suite.
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    You can test your API from the **Tests** tab of a design document:
+
+                - type: unordered_list
+                  items: 
+                    - Use boiler-plate tests, examples, and auto-complete (`Control+Space`) to make writing tests easier.
+                    - Run a single test or a suite of tests, manually or automatically with the Inso CLI
+          - type: button
+            config:
+              align: left
+              text: Learn more about testing APIs
+              url: /insomnia/test/
+
+  - header:
+      type: h3
+      text: "Get started with testing APIs"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Automate tests in Insomnia
+            cta:
+              text: Learn more
+              url: /how-to/automate-tests/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Write tests for HTTP status codes
+            cta:
+              text: Learn more
+              url: /how-to/write-http-status-tests/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Write tests for content types
+            cta:
+              text: Learn more
+              url: /how-to/write-content-type-tests/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Write tests for headers in the response
+            cta:
+              text: Learn more
+              url: /how-to/write-headers-in-response-tests/
+              align: end
+  - header:
+      text: "Frequently Asked Questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: What's the difference between a collection and a design document?
+              a: You can't create, lint, and edit a spec from a collection. Documents are a way to store all your information about an API in one place. 
+            - q: Which types of API specs are supported in Insomnia?
+              a: Insomnia supports REST OpenAPI specs as well as GraphQL OpenAPI specs. 
+  - header:
+      type: h2
+      text: Learn
+    columns:
+      - blocks:
+          - type: concept_list
+            config:
+              - topic: documents
+                product: insomnia 
+            quantity: 5
+            allow_empty: true
+          - type: cta
+            config:
+              text: "Learn more &raquo;"
+              url: "https://docs.devsite.com/search/{concept.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
+  - header:
+      type: h2
+      text: References & Tools
+    columns:
+      - blocks:
+          - type: reference_list
+            config:
+              products:
+                  - insomnia
+            quantity: 5
+            allow_empty: true
+          - type: cta
+            config:
+              text: "View more references &raquo;"
+              url: "https://docs.devsite.com/search/{reference.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
