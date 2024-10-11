@@ -244,8 +244,9 @@
     @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-11 relative;
 
     &:not(.no-icon)::before {
-      @apply text-base content-['\f05a'] absolute left-4;
-      font-family: "Font Awesome", FontAwesome;
+      @apply text-base absolute left-4 w-4 h-4 content-[''];
+      mask-size: cover;
+      mask:url(/assets/icons/admonitions/info.svg);
     }
   }
 
@@ -253,7 +254,7 @@
     @apply bg-semantic-blue-secondary border-semantic-blue-primary;
 
     &:not(.no-icon)::before {
-      @apply text-semantic-blue-primary;
+      @apply bg-semantic-blue-primary;
     }
   }
 
@@ -261,7 +262,7 @@
     @apply bg-semantic-green-secondary border-semantic-green-primary;
 
     &:not(.no-icon)::before {
-      @apply text-semantic-green-primary;
+      @apply bg-semantic-green-primary;
     }
   }
 
@@ -269,7 +270,8 @@
     @apply bg-semantic-yellow-secondary border-semantic-yellow-primary;
 
     &:not(.no-icon)::before {
-      @apply content-['\f071'] text-semantic-yellow-primary;
+      @apply bg-semantic-yellow-primary;
+      mask:url(/assets/icons/admonitions/warning.svg);
     }
   }
 
@@ -277,7 +279,8 @@
     @apply bg-semantic-red-secondary border-semantic-red-primary;
 
     &:not(.no-icon)::before {
-      @apply content-['\f057'] text-semantic-red-primary;
+      @apply bg-semantic-red-primary;
+      mask:url(/assets/icons/admonitions/danger.svg);
     }
   }
 
@@ -285,7 +288,7 @@
     @apply bg-semantic-grey-secondary border-semantic-grey-primary;
 
     &:not(.no-icon)::before {
-      @apply text-semantic-grey-primary;
+      @apply bg-semantic-grey-primary;
     }
   }
 
