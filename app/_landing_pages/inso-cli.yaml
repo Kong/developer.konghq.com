@@ -115,17 +115,6 @@ rows:
                         - script-name
                         - --env
                         - environment-id
-
-
-  - header:
-      text: "Frequently Asked Questions"
-      type: h2
-    columns:
-      - blocks:
-        - type: faqs
-          config:
-            - q: 
-              a: 
                 
   - header:
       type: h2
