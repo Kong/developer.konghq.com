@@ -69,20 +69,20 @@ The following sections provide common API spec use cases you can solve with Inso
 
 ### Manage API specs
 
-| Create a new spec directly in the Insomnia editor | In your Insomnia workspace, click **Create** and select **Design document**. ![Create a design document](/assets/images/insomnia/create-a-design-document.png) Your spec editor is in the center pane. ![Spec editor](/assets/images/insomnia/document-spec-editor.png) For more information, see [Create a design document](/how-to/create-a-design-document/). |
-| [Import an existing spec](/how-to/import-an-api-spec-as-a-document/) | In your workspace, click **Import** and select the source of the import: **File**, **URL**, or **Clipboard**. |
+| Create a new spec directly in the Insomnia editor | In your Insomnia workspace, click **Create** and select **Design document**. Your spec editor is in the center pane. For more information, see [Create a design document](/how-to/create-a-design-document/). |
+| Import an existing spec | In your workspace, click **Import** and select the source of the import: **File**, **URL**, or **Clipboard**. For more information, see [Import an API specification as a design document in Insomnia](/how-to/import-an-api-spec-as-a-document/). |
 
 ### Linting
 
-| Automatic linting on your specs (new or imported) directly in Insomnia | Navigate to the design document with your API spec. The linting error messages display below the center pane. ![Linting error messages](/assets/images/insomnia/linting-messages.png) |
-| [Automate linting on specs using the Inso CLI](/) | Run `inso lint spec` and select the spec from the list that displays. |
+| Automatic linting on your specs (new or imported) directly in Insomnia | Navigate to the design document with your API spec. The linting error messages display below the center pane. |
+| Automate linting on specs using the Inso CLI | Run `inso lint spec` and select the spec from the list that displays. For more information, see the [`inso lint spec` reference](/). |
 | Use custom linting to ensure your spec adheres to your team or company's standards | To [lint locally](/), create a `.spectral.yaml` file with the custom rules in the same directory as the `oas.yaml` file you want to lint. Then run `inso lint spec ./oas.yaml` from that directory. To [apply custom lint rules in the Insomnia UI](/), add the `.spectral.yaml` file to the root of the collection git repository at the same level as the `.insomnia` folder. |
 
 ### Work with requests
 
-| [Automatically generate a collection and requests from your spec](/how-to/generate-a-collection-from-a-design-document/) | From your design document with your API spec, click the **Settings** icon and select **Generate collection**. ![Generate a collection](/assets/images/insomnia/generate-collection.png) |
-| [Use mock servers to mock your requests](/) | Run a request, then click the **Mock** tab in the response pane. Create a new mock server there along with the route for the request.  |
+| Automatically generate a collection and requests from your spec | From your design document with your API spec, click the **Settings** icon and select **Generate collection**. For more information, see [Generate a collection from a design document](/how-to/generate-a-collection-from-a-design-document/). |
+| Use mock servers to mock your requests | Run a request, then click the **Mock** tab in the response pane. Create a new mock server there along with the route for the request. For more information, see [Mock server](/).  |
 
 ### Collaboration
 
-| Collaborate with a team on API specs using git sync and version control | You can collaborate on API specs by cloning your existing repository with the specs. For more information, see [how to git sync in Insomnia](/). ![Clone a git repository](/assets/images/insomnia/git-sync-git-clone.jpg) |
+| Collaborate with a team on API specs using git sync and version control | You can collaborate on API specs by cloning your existing repository with the specs. For more information, see [how to git sync in Insomnia](/). |
