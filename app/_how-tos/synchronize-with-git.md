@@ -15,16 +15,16 @@ prereqs:
     inline:
     - title: Git repository
       content: |
-        For this task, you need to have an empty remote Git repository.
+        Create an empty remote Git repository.
       icon_url: /assets/icons/git.svg
     - title: Insomnia workspace
       content: |
-        Create an workspace in Insomnia. A workspace can be a [design document](/how-to/create-a-design-document), a [collection](), a [mock server](), or an [environment]().
+        Create a workspace in Insomnia. A workspace can be a [design document](/how-to/create-a-design-document), a [collection](), a [mock server](), or an [environment]().
       icon_url: /assets/icons/git.svg
 
 tldr:
-    q: b
-    a: b
+    q: How can I push content from Insomnia to a Git repository?
+    a: Create an empty Git repository and an Insomnia workspace. In the workspace, click the button at the bottom of the left pane and connect the repository, then commit and push your content.
 ---
 
 ## 1. Select the workspace to synchronize

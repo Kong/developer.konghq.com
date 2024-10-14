@@ -21,8 +21,8 @@ prereqs:
       icon_url: /assets/icons/git.svg
 
 tldr:
-    q: b
-    a: b
+    q: How can I import Insomnia content from a Git repository?
+    a: Click **Create** > **Git Clone** and connect to the Git repository.
 ---
 
 ## 1. Clone the repository
