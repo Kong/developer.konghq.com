@@ -40,7 +40,7 @@ rows:
             icon: /assets/icons/insomnia/design.svg
             cta:
               text: Learn more
-              url: https://docs.insomnia.rest/insomnia/design-documents
+              url: /how-to/create-a-design-document/
               align: end
       - blocks:
         - type: card
@@ -78,18 +78,30 @@ rows:
       text: Learn
     columns:
       - blocks:
-        - type: card
-          config:
-            title: Documents
-            description: |
-              Design documents (also called documents) hold API specifications, API requests, and tests. 
-                    
-              Documents have three main capabilities: design APIs, debug APIs, and test APIs.
-            icon: /assets/icons/insomnia/design.svg
-            cta:
-              text: Learn about design documents
-              url: /insomnia/documents/
-              align: end
+          - type: card
+            config:
+              title: API specs
+              description: |
+                Insomnia provides capabilities to create, import, lint, and collaborate on API specs. 
+                You can easily generate a collection of requests from an API spec.
+              icon: /assets/icons/admin-api.svg
+              cta:
+                text: Learn more about API specs in Insomnia
+                url: /insomnia/api-specs/
+                align: end
+      - blocks:    
+          - type: card
+            config:
+              title: Documents
+              description: |
+                Design documents (also called documents) hold API specifications, API requests, and tests. 
+
+                Documents have three main capabilities: design APIs, debug APIs, and test APIs.
+              icon: /assets/icons/insomnia/design.svg
+              cta:
+                text: Learn about design documents
+                url: /insomnia/documents/
+                align: end
 
   - header:
       type: h2
