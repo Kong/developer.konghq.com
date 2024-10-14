@@ -24,15 +24,15 @@ prereqs:
 
 ---
 
-## Create add the file ruleset
+## 1. Create add the file ruleset
 
 In the Git repository connected to your document, create a `.spectral.yaml` at the same level as the `.insomnia` folder.
 
-## Define the rules
+## 2. Define the rules
 
 The custom ruleset overrides the default one. If you want to create a completely new ruleset, you can simply add your rules in the file using the [Spectral](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) syntax. If you want to extend an existing ruleset, specify the ruleset with the `extend` property in `.spectral.yaml`.
 
-For example, if you want to extend the [Spectral OpenAPI](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules) ruleset to add a warning when tags don't have a description, you can add the following content to `.spectral.yaml`:
+For example, if you want to extend the default [Spectral OpenAPI](https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules) ruleset to add a warning when tags don't have a description, you can add the following content to `.spectral.yaml`:
 
 ```yaml
 extends: spectral:oas
@@ -46,6 +46,17 @@ rules:
       function: truthy
 ```
 
-## Synchronize the changes
+## 3. Synchronize the changes
 
-Commit and push the file on the repository, then pull the changes in Insomnia. You may need to close and reopen the document to see the new rules applied.
+Commit and push the file on the repository, then pull the changes in Insomnia.
+
+## 4. Validate
+
+Close and reopen the document to apply the changes. In this example, you can validate by removing creating a new tag without a description:
+```yaml
+tags:
+  - name: flight-data
+```
+
+This causes a new warning to appear:
+![Missing tag description warning](/assets/images/insomnia/custom-linting-warning.png)
