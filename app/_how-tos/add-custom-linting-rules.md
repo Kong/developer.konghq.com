@@ -52,7 +52,7 @@ Commit and push the file on the repository, then pull the changes in Insomnia.
 
 ## 4. Validate
 
-Close and reopen the document to apply the changes. In this example, you can validate by removing creating a new tag without a description:
+Close and reopen the document to apply the changes. In this example, you can validate by creating a new tag without a description:
 ```yaml
 tags:
   - name: flight-data
