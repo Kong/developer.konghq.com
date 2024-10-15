@@ -1,0 +1,26 @@
+{% if page.breadcrumbs %}
+{% assign breadcrumbs_length = page.breadcrumbs.size %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+{%- for breadcrumb in page.breadcrumbs -%}
+  {
+    "@type": "ListItem",
+    "position": {{ forloop.index }},
+    "name": "{{ breadcrumb.title }}",
+    "item": "{{ site.links.web | append: breadcrumb.url }}"
+  },
+{%- endfor -%}
+{%- assign current_page_url = page.url | prepend: '/' | append: '/' | replace: '//', '/' -%}
+  {
+    "@type": "ListItem",
+    "position": {{ breadcrumbs_length | plus: 1 }},
+    "name": "{{ page.title }}",
+    "item": "{{ site.links.web | append: current_page_url }}"
+  }
+  ]
+}
+</script>
+{% endif %}
