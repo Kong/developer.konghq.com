@@ -1,5 +1,7 @@
 metadata:
   title: Mesh Rate Limiting
+  breadcrumbs:
+    - /rate-limiting/
 rows:
   - header:
       type: h1
