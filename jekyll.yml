@@ -41,6 +41,8 @@ defaults:
       layout: "how-to"
       permalink: "/how-to/:path/"
       content_type: "how-to"
+      breadcrumbs:
+        - "/how-to/"
   - scope:
       path: "_gateway_entities"
       type: "gateway_entities"
@@ -50,6 +52,9 @@ defaults:
       content_type: "reference"
       products:
         - gateway
+      breadcrumbs:
+        - "/gateway/"
+        - "/gateway/entities/"
 
 
 
