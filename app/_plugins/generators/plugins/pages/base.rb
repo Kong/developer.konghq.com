@@ -26,7 +26,8 @@ module Jekyll
             'plugin?' => true,
             'layout' => layout,
             'examples' => examples,
-            'tools' => @plugin.formats
+            'tools' => @plugin.formats,
+            'breadcrumbs' => ['/plugins/']
           )
         end
 
