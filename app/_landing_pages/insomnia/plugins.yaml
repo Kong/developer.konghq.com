@@ -76,5 +76,3 @@ rows:
                       1. Go to **Preferences** > **Plugins**.
                       1. Click **Generate New Plugin**.
                       1. Enter a name for the new plugin and click **Generate**.
-                      
-                      See the [plugins reference](/insomnia/plugins-reference) for more information about creating a plugin.
