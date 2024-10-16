@@ -1,0 +1,103 @@
+metadata:
+  title: Insomnia Storage Options
+rows:
+  - header:
+      type: h1
+      text: "Insomnia Storage Options"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    Insomnia offers various storage options to cater to different user needs and preferences as well as to ensure data compliance requirements. 
+                    Understanding these options is crucial for efficient and secure management of your API projects. 
+                    The three primary storage options available in Insomnia are:
+                - type: text
+                  text: |
+                    - Local vault (scratch pad)
+                    - Cloud sync
+                    - Git sync
+  
+  - columns:
+      - blocks:
+        - type: x_with_y
+          config:
+              border: true
+              type: h2
+              headers:
+                - Storage option use cases
+
+              items:
+                - text: |
+                    [Local vault (scratch pad)](/insomnia/scratch-pad)
+                  action:
+                    type: text
+                    config:
+                      blocks:
+                        - type: unordered-list
+                          items:
+                            - Organizations with strict data privacy regulations.
+                            - Users working on sensitive projects that require enhanced security.
+                            - Environments with limited or restricted internet access.
+              items:
+                - text: |
+                    [Cloud sync](/insomnia/cloud-sync)
+                  action:
+                    type: text
+                    config:
+                      blocks:
+                        - type: unordered-list
+                          items:
+                            - Teams requiring collaboration on API projects.
+                            - Users who work from multiple locations or devices.
+                            - Projects that benefit from centralized, cloud-based management.
+              items:
+                - text: |
+                    [Git sync](/insomnia/git-sync)
+                  action:
+                    type: text
+                    config:
+                      blocks:
+                        - type: unordered-list
+                          items:
+                            - Users comfortable with Git and its versioning system.
+                            - Projects that require detailed version tracking and rollback capabilities.
+                            - Teams that already use Git for other aspects of their development workflow.
+
+  - header:
+      type: h2
+      text: "Storage options"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Local vault (scratch pad)
+            description: Local Vault is a storage option that allows all project data to be stored locally on your device. This option is ideal for users who prefer or require their data to remain off the cloud for privacy or security reasons.
+            icon:  /assets/icons/edit.svg
+            cta:
+              text: Learn more
+              url: /insomnia/scratch-pad
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Git sync
+            description: Git Sync allows users to use a third-party Git repository for storing project data. This option is independent of cloud access and is suitable for users familiar with Git workflows.
+            icon: /assets/icons/insomnia/local-git-cloud-storage.svg
+            cta:
+              text: Learn more
+              url: /insomnia/git-sync
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Cloud sync
+            description: Cloud Sync enables users to store and synchronize their project data in the cloud securely. This feature is beneficial for collaboration, providing easy access to projects from different devices and locations.
+            icon: /assets/icons/insomnia/icon-cloud-light-01.svg
+            cta:
+              text: Learn more
+              url: /insomnia/cloud-sync
+              align: end
