@@ -69,7 +69,7 @@ rows:
                       1. Click **Reveal Plugins Folder** to open the Insomnia plugins directory.
                       1. Delete the plugin's folder.
                 - text: |
-                    Create starter files for new a plugin
+                    Generate starter files for new a plugin
                   action:
                     type: text
                     config: |
