@@ -11,6 +11,8 @@ tags:
 - environments
 - git
 
+tier: team
+
 prereqs:
     inline:
     - title: Git repository
