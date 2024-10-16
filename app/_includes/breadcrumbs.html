@@ -1,6 +1,6 @@
 <div class="flex gap-1 justify-start text-xs items-center">
   {% for breadcrumb in page.breadcrumbs %}
     <a class="text-terciary" href="{{ breadcrumb.url }}">{{ breadcrumb.title }}</a>
-    <span>/</span>
+  {% unless forloop.last %}<span>/</span>{% endunless %}
   {% endfor %}
 </div>
