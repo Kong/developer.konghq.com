@@ -11,3 +11,7 @@ layout: with_aside
 {% if page.next_steps %}
 {% include sections/next_steps.html %}
 {% endif %}
+
+{% contentfor info_box %}
+  {% include info_box/reference.html %}
+{% endcontentfor %}
