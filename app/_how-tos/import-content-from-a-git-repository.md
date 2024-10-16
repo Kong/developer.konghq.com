@@ -7,7 +7,7 @@ products:
 tags:
 - documents
 - collections
-- mock servers
+- mock-servers
 - environments
 - git
 
