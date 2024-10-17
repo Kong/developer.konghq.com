@@ -6,6 +6,9 @@ layout: reference
 
 products:
     - insomnia
+
+breadcrumbs:
+  - /insomnia/
 ---
 
 content

@@ -16,6 +16,9 @@ tags:
 
 products:
   - api-ops
+
+breadcrumbs:
+  - /deck/
 ---
 
 If you used the [kong/deck](https://hub.docker.com/r/kong/deck) Docker image to 

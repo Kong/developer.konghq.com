@@ -13,6 +13,9 @@ products:
 
 tools:
   - deck
+
+breadcrumbs:
+  - /deck/
 ---
 
 To manage any values in decK files with environment varaibles, you can create environment variables 
