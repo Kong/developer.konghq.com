@@ -1,0 +1,1 @@
+This example requires a workspace synchronized with Git. You can either [clone a repository to import a workspace](/how-to/import-content-from-a-git-repository), or [sync an existing workspace with a Git repository](/how-to/synchronize-with-git).

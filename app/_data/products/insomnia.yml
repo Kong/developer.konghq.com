@@ -1,1 +1,5 @@
 name: Insomnia
+tiers:
+  team:
+    text: Team and above
+    url: /insomnia/teams
