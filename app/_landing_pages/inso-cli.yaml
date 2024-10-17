@@ -1,5 +1,7 @@
 metadata:
   title: Inso CLI
+  breadcrumbs:
+    - /insomnia/
 rows:
   - header:
       type: h1
