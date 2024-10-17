@@ -12,6 +12,9 @@ related_resources:
   - text: Expressions repository
     url: https://github.com/Kong/atc-router
 
+breadcrumbs:
+  - /gateway/
+  - /gateway/routing/
 ---
 
 {{site.base_gateway}} includes a rule-based engine using a domain-specific expressions language. Expressions can be used to perform tasks such as defining
