@@ -22,13 +22,15 @@ related_resources:
     url: /insomnia/scratch-pad
   - text: SSO
     url: /
+  - text: About version control in Insomnia
+    url: /insomnia/version-control
 
 ---
 
 Git sync allows users to use a third-party Git repository for storing project data. This option is independent of cloud access and is suitable for users familiar with Git workflows.
 
 Key features:
-* **Version control:** Leverage Git’s version control capabilities for your projects.
+* **Version control:** Leverage Git’s [version control](/insomnia/version-control) capabilities for your projects.
 * **Independence from Insomnia’scCloud** Uses external Git repositories for storage.
 * **Provider flexibility:** Choose any Git service provider, like GitHub, GitLab, or Bitbucket.
 * **Collaboration via Git:** Collaborate with others using standard Git practices.

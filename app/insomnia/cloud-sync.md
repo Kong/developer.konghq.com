@@ -18,10 +18,12 @@ related_resources:
     url: /insomnia/scratch-pad
   - text: SSO
     url: /
+  - text: About version control in Insomnia
+    url: /insomnia/version-control
 
 ---
 
-Cloud sync enables users to store and synchronize their project data in the cloud securely. This feature is beneficial for collaboration, providing easy access to projects from different devices and locations. 
+Cloud sync enables users to store and synchronize their project data in the cloud securely as well as use [version control](/insomnia/version-control). This feature is beneficial for collaboration, providing easy access to projects from different devices and locations. 
 
 Cloud sync provides the following abilities on top of the base Insomnia functionality:
 * Commit and push the contents of projects
