@@ -9,7 +9,8 @@ related_resources:
   - text: Kong Plugins
     url: /plugins/
 
-
+breadcrumbs:
+  - /gateway/
 ---
 
 ## Plugin compatibility with deployment types

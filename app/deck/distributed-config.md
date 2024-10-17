@@ -13,6 +13,9 @@ productss:
 
 tools:
   - deck
+
+breadcrumbs:
+  - /deck/
 ---
 
 decK can operate on a subset of configuration instead of

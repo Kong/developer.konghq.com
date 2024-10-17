@@ -8,6 +8,9 @@ layout: reference
 related_resources:
   - text: Kong Plugins
     url: /plugins/
+
+breadcrumbs:
+  - /gateway/
 ---
 
 A single plugin instance always runs _once_ per request. The

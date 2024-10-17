@@ -41,6 +41,9 @@ faqs:
     a: Yes. For Insomnia to autodetect that your spec is in GraphQL format, the path must be `/graphql`, the method must be `POST`, the request body must be application/json and must contain a property query with the type string, and the response body must be application/json.
   - q: Can I create a spec in a collection?
     a: No, you can import an existing spec into a collection, but you can only create a new API spec in a document.
+
+breadcrumbs:
+  - /insomnia/
 ---
 
 ## What are API specs?
