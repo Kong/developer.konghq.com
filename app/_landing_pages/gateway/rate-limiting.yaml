@@ -1,5 +1,8 @@
 metadata:
   title: Gateway Rate Limiting
+  breadcrumbs:
+    - /rate-limiting/
+
 rows:
   - header:
       type: h1

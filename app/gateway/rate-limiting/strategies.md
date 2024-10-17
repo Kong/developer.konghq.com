@@ -10,6 +10,10 @@ plugins:
   - rate-limiting-advanced
   - ai-rate-limiting-advanced
   - graphql-rate-limiting-advanced
+
+breadcrumbs:
+  - /gateway/
+  - /gateway/rate-limiting/
 ---
 
 All rate limiting plugins support some subset of the following strategies:

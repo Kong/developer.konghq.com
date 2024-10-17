@@ -9,6 +9,9 @@ related_resources:
     url: /gateway/entities/route/
   - text: Expressions router
     url: /gateway/routing/expressions/
+
+breadcrumbs:
+  - /gateway/
 ---
 
 ## How requests are routed

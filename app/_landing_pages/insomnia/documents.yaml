@@ -1,5 +1,7 @@
 metadata:
   title: Documents
+  breadcrumbs:
+    - /insomnia/
 rows:
   - header:
       type: h1

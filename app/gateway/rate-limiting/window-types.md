@@ -14,6 +14,10 @@ plugins:
   - graphql-rate-limiting-advanced
 
 tier: enterprise
+
+breadcrumbs:
+  - /gateway/
+  - /gateway/rate-limiting/
 ---
 
 The Rate Limiting Advanced, AI Rate Limiting Advanced, and GraphQL Rate Limiting Advanced plugins support the following window types:
