@@ -1,5 +1,7 @@
 metadata:
   title: Gateway Entities
+  breadcrumbs:
+    - /gateway/
 rows:
   -  header:
         type: h1
