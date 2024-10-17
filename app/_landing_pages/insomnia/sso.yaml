@@ -1,0 +1,21 @@
+metadata:
+  title: "Insomnia SSO"
+  tags:
+    - sso
+rows:
+  - header:
+      type: h1
+      text: "Insomnia SSO"
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "What is Insomnia SSO?"
+            blocks:
+              - type: text
+                text: |
+                  intro paragraph about sso in Insomnia
+                  don't forget enterprise badge
+                  cards with Okta SSO how to, Azure SSO how to

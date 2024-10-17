@@ -1,0 +1,21 @@
+metadata:
+  title: "SSO"
+  tags:
+    - sso
+rows:
+  - header:
+      type: h1
+      text: "SSO"
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "What is SSO?"
+            blocks:
+              - type: text
+                text: |
+                  why sso???
+                  table of supported providers?
+                  cards with links off to Konnect SSO, Dev portal sso, Insomnia SSO
