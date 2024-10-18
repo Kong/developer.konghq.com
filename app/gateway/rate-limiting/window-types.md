@@ -13,6 +13,9 @@ plugins:
   - ai-rate-limiting-advanced
   - graphql-rate-limiting-advanced
 
+products:
+  - gateway
+
 tier: enterprise
 
 breadcrumbs:
