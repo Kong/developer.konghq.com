@@ -33,31 +33,24 @@ faqs:
   - q: Should I use Git sync or cloud sync?
     a: Both allow you to use version control and collaborate with your team. You should use Git sync if you're already using a Git repository and your team requires detailed version tracking and rollback capabilities.
   - q: I'm using Git sync, does Insomnia uphold the branch protections we have in our repository?
-    a: 
+    a: Yes, if you have branch protections for a branch, say `main`, you won't be able to push to that branch in Insomnia.
   - q: With Git sync, if I create a branch in my Git repository, will it pull that branch into Insomnia? And vice versa?
-    a: 
+    a: Yes, you'll have to pull it into Insomnia. You can push branches you make in Insomnia to your repository.
   - q: Can I create branch protetions in Insomnia for cloud sync?
-    a:  
+    a: No.
   - q: How do I collaborate with others in Insomnia and use version control?
     a: If you invite them to your organization or workspace, other users can edit the same Insomnia entities and use the same branches for version control.
 ---
 
 Insomnia allows you to manage versions of collections, mock servers, design documents, and global environments in Insomnia, both with cloud sync and git sync. Branches are object-specific, meaning that the branches you have in a collection are specific to that one collection. They aren't shared with other collections or other objects, like a mock server. 
 
-With cloud sync, versions are managed only in the Insomnia UI and can be shared with other users you've invited to your workspace. 
-
-In git sync, <!-- do you pull down the branches from your repo? if I create a branch in Insomnia, will it push it to my repo?-->
-
-Branch protections, are they available? In cloud? In git?
-
-when should I use git sync vs cloud sync? link to longer form storage about docs
-
+With cloud sync, versions are managed only in the Insomnia UI and can be shared with other users you've invited to your workspace. In git sync, you can pull branches from your repository into Insomnia and can also push local branches you make in Insomnia to your repository.
 
 ## Version control capabilties
 
 The following sections describe how to perform version control actions in Insomnia. 
 
-Before you can manage branches, commits, and merges, click the entity (document, collection, mock server, or global environment) from your workspace.
+Before you can manage branches, commits, and merges, click the workspace (document, collection, mock server, or global environment) from your project.
 
 Version control is managed from the bottom left of the sidebar.
 

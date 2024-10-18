@@ -20,6 +20,8 @@ related_resources:
     url: /insomnia/cloud-sync
   - text: Scratch pad
     url: /insomnia/scratch-pad
+  - text: Local vault
+    url: /insomnia/local-vault
   - text: SSO
     url: /
   - text: About version control in Insomnia
