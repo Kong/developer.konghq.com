@@ -4,6 +4,9 @@ title: Routing in Kong Gateway
 content_type: reference
 layout: reference
 
+products:
+  - gateway
+
 related_resources:
   - text: Route entity
     url: /gateway/entities/route/

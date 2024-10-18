@@ -4,6 +4,9 @@ title: Rate Limiting Strategies
 content_type: reference
 layout: reference
 
+products:
+   - gateway
+
 plugins:
   - rate-limiting
   - response-ratelimiting
