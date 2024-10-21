@@ -23,6 +23,12 @@ related_resources:
   - text: About version control in Insomnia
     url: /insomnia/version-control
 
+faqs:
+  - q: Should I use Git sync or cloud sync?
+    a: Both allow you to use version control and collaborate with your team. You should use Git sync if you're already using a Git repository and your team requires detailed version tracking and rollback capabilities.
+  - q: Can I create branch protections in Insomnia for cloud sync?
+    a: No.
+
 ---
 
 Cloud sync enables users to store and synchronize their project data in the cloud securely as well as use [version control](/insomnia/version-control). This feature is beneficial for collaboration, providing easy access to projects from different devices and locations. 

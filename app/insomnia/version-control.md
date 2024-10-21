@@ -36,7 +36,7 @@ faqs:
     a: Yes, if you have branch protections for a branch, say `main`, you won't be able to push to that branch in Insomnia.
   - q: With Git sync, if I create a branch in my Git repository, will it pull that branch into Insomnia? And vice versa?
     a: Yes, you'll have to pull it into Insomnia. You can push branches you make in Insomnia to your repository.
-  - q: Can I create branch protetions in Insomnia for cloud sync?
+  - q: Can I create branch protections in Insomnia for cloud sync?
     a: No.
   - q: How do I collaborate with others in Insomnia and use version control?
     a: If you invite them to your organization or workspace, other users can edit the same Insomnia entities and use the same branches for version control.
@@ -48,20 +48,17 @@ With cloud sync, versions are managed only in the Insomnia UI and can be shared 
 
 ## Version control capabilties
 
-The following sections describe how to perform version control actions in Insomnia. 
-
 Before you can manage branches, commits, and merges, click the workspace (document, collection, mock server, or global environment) from your project.
+
+You can perform the following version control actions from Insomnia:
+* Create a branch
+* Checkout a branch
+* Commit or push changes
+* Revert changes
+* Pull changes
+* Merge a branch
+* Resolve merge conflicts
 
 Version control is managed from the bottom left of the sidebar.
 
 ![Version control sidebar menu location](/assets/images/insomnia/version-control-menu.png)
-
-| Task | Steps |
-| ---- | ------------ |
-| Create a branch | 1. From the version control menu at the bottom left of the sidebar, click the current branch or select the branch you want to createa a branch off of from the dropdown menu.<br>1. Select **Branches** from the dropdown menu.<br>1. Enter a name for the new branch and click **Create**. |
-| Checkout a branch | From the version control menu at the bottom left of the sidebar, click the current branch and then select the branch you want to checkout from the list. |
-| Commit or push changes | 1. From the version control menu at the bottom left of the sidebar, click the current branch.<br>1. Select **Commit** from the dropdown menu.<br>1. Stage the changes by clicking **+** next to the changed object in the left sidebar.<br>1. Enter a commit message and either click **Commit** to commit the changes locally or click **Commit and push** to push the commit to the cloud. |
-| Revert changes | 1. From the version control menu at the bottom left of the sidebar, click the current branch and then select the branch you want to revert changes on.<br>1. Select **History** from the branch dropdown menu.<br>1. Click **Restore** next to the commit you'd like to restore.<br>1. Click **Confirm**. |
-| Pull changes | From the version control menu at the bottom left of the sidebar, click the current branch and then select the branch you want to pull the changes to. Click the **Pull** icon next to your branch. |
-| Merge a branch | 1. From the version control menu at the bottom left of the sidebar, click the current branch and then select the branch you want to merge to. You can't merge a branch that you currently have checked out.<br>1. Select **Branches** from the dropdown menu.<br>1. Click **Merge** next to the branch you want to merge. The branch will merge into the branch it was branched off of. |
-| Resolve merge conflicts | When you are merging, if there's a merge conflict, a dialog will display with the merge conflicts. Select the object in the left sidebar to view the differences and then either select **Ours** or **Theirs** to determine which changes to merge. Then, click **Resolve conflicts**.  |
