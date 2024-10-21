@@ -221,17 +221,17 @@ rows:
                 text: Learn more about storage in Insomnia
                 url: /insomnia/storage-options/
                 align: end
-     - blocks:
-        - type: card
-          config:
-            title: Security at Insomnia
-            description: |
-              Learn how Insomnia prioritizes data protection through encryption, product and application security, and organizational measures.
-            icon: /assets/icons/lock.svg
-            cta:
-              text: Learn about security at Insomnia
-              url: /insomnia/security/
-              align: end
+      - blocks:
+          - type: card
+            config:
+              title: Security at Insomnia
+              description: |
+                Learn how Insomnia prioritizes data protection through encryption, product and application security, and organizational measures.
+              icon: /assets/icons/lock.svg
+              cta:
+                text: Learn about security at Insomnia
+                url: /insomnia/security/
+                align: end
       
 
 
