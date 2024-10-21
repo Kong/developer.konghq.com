@@ -3,6 +3,8 @@
 module Jekyll
   module Drops
     class Release < Liquid::Drop
+      include Comparable
+
       attr_reader :release_hash
 
       def initialize(release_hash)
@@ -26,10 +28,8 @@ module Jekyll
         @hash ||= @release_hash['release'].hash
       end
 
-      def ==(other)
-        return @release_hash['release'] == other if other.is_a?(String)
-
-        @release_hash == other.release_hash
+      def <=>(other)
+        @release_hash['release'] <=> other['release']
       end
 
       def [](key)
