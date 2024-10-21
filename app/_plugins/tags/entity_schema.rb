@@ -6,11 +6,11 @@ module Jekyll
       @context = context
       page = context.environments.first['page']
       site = context.registers[:site]
-
+      release = page['release']
       schema = page['schema']
 
       if schema
-        entity_schema_drop = Drops::EntitySchema.new(schema:, site:)
+        entity_schema_drop = Drops::EntitySchema.new(schema:, site:, release:)
 
         context.stack do
           context['entity_schema'] = entity_schema_drop

@@ -3,9 +3,10 @@
 module Jekyll
   module Drops
     class EntitySchema < Liquid::Drop
-      def initialize(schema:, site:)
-        @schema = schema
-        @site   = site
+      def initialize(schema:, site:, release:)
+        @schema  = schema
+        @site    = site
+        @release = release
       end
 
       def data
@@ -34,8 +35,14 @@ module Jekyll
       end
 
       def version_id
-        # XXX: for now, until we generate versions
-        @version_id ||= product.dig('latestVersion', 'id')
+        @version_id ||= if @release.label?
+          product.dig('latestVersion', 'id')
+        else
+          product
+            .fetch('versions', [])
+            .detect { |v| v['name'] == @release.to_konnect_version }
+            .fetch('id')
+        end
       end
 
       private
