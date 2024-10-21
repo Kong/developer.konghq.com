@@ -15,9 +15,9 @@ module Jekyll
 
       def dir
         @dir ||= if @page.is_a?(Jekyll::Document)
-          "#{@page.url}#{@release['release']}/"
+          "#{@page.url}#{@release}/"
         else
-          "#{@page.dir}#{@release['release']}/"
+          "#{@page.dir}#{@release}/"
           end
       end
 
