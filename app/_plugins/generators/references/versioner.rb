@@ -13,7 +13,7 @@ module Jekyll
       def process
         page.data['release'] = latest_release
 
-        releases.reject { |r| r['latest'] }.map do |release|
+        releases.reject(&:latest?).map do |release|
           Page.new(site:, page:, release:).to_jekyll_page
         end
       end
@@ -29,11 +29,11 @@ module Jekyll
           site.data.dig('tools', page.data['tools'].first, 'releases') || []
         else
           site.data.dig('products', product, 'releases') || []
-        end
+        end.map { |r| Drops::Release.new(r) }
       end
 
       def latest_release
-        @latest_release ||= releases.detect { |r| r['latest'] }
+        @latest_release ||= releases.detect(&:latest?)
       end
     end
   end
