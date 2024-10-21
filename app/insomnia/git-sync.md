@@ -1,6 +1,5 @@
 ---
 title: Git sync
-
 content_type: concept
 layout: concept
 

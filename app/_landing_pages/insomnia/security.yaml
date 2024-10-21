@@ -1,0 +1,97 @@
+metadata:
+  title: Security at Insomnia
+rows:
+  - header:
+      type: h1
+      text: "Security at Insomnia"
+      sub_text: "Learn how Insomnia prioritizes data protection through encryption, product and application security, and organizational measures."
+  
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    Insomnia believes that it is your right to know how your sensitive project data is transported and handled, so this document is an effort to explain exactly how it works.
+
+                    If you find that any part of this document is incorrect, missing, or wrong, please don’t hesitate to reach out.
+  
+  - header:
+      type: h2
+      text: "Learn more about how Insomnia secures data"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Data security
+            description: Learn about how Insomnia secures data
+            icon:  /assets/icons/insomnia/design.svg
+            cta:
+              text: Learn more
+              url: /insomnia/data-security
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Infrastructure security
+            description: Learn about what infrastructure security Insomnia uses
+            icon: /assets/icons/insomnia/checkbox-active.svg
+            cta:
+              text: Learn more
+              url: /insomnia/infrastructure-security
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Collected data
+            description: Learn about what data Insomnia collects and how to opt out of data collection
+            icon: /assets/icons/insomnia/checkbox-active.svg
+            cta:
+              text: Learn more
+              url: /insomnia/collected-data
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Incident response and vulnerability management
+            description: Learn about how Insomnia reports incidents and how they manage security vulnerabilities
+            icon: /assets/icons/insomnia/checkbox-active.svg
+            cta:
+              text: Learn more
+              url: /insomnia/incident-response
+              align: end
+  - header:
+      type: h2
+      text: "Key security features"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Enterprise Single Sign-On (SSO)
+            description: Learn about SSO security and see the different options to configure SSO.
+            icon:  /assets/icons/insomnia/design.svg
+            cta:
+              text: Learn more
+              url: /insomnia/sso
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Role-Based Access Control
+            description: Learn about RBAC in Insomnia.
+            icon: /assets/icons/insomnia/checkbox-active.svg
+            cta:
+              text: Learn more
+              url: /insomnia/rbac
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Insomnia Storage Options
+            description: Learn about local storage, git sync, and cloud sync in Insomnia
+            icon: /assets/icons/insomnia/checkbox-active.svg
+            cta:
+              text: Learn more
+              url: /insomnia/storage-options
+              align: end

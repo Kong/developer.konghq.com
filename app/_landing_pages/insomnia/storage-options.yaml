@@ -4,7 +4,6 @@ rows:
   - header:
       type: h1
       text: "Insomnia Storage Options"
-
   - columns:
       - blocks:
           - type: structured_text
@@ -21,7 +20,7 @@ rows:
                     - Scratch pad
                     - Cloud sync
                     - Git sync
-  
+ 
   - header:
       type: h2
       text: "Storage options"
