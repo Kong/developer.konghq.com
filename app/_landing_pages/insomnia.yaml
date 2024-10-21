@@ -198,17 +198,42 @@ rows:
       text: Learn
     columns:
       - blocks:
-        - type: card
-          config:
-            title: Security at Insomnia
-            description: |
-              Learn how Insomnia prioritizes data protection through encryption, product and application security, and organizational measures.
-            icon: /assets/icons/lock.svg
-            cta:
-              text: Learn about security at Insomnia
-              url: /insomnia/security/
-              align: end
+          - type: card
+            config:
+              title: API specs
+              description: |
+                Insomnia provides capabilities to create, import, lint, and collaborate on API specs. 
+                You can easily generate a collection of requests from an API spec.
+              icon: /assets/icons/admin-api.svg
+              cta:
+                text: Learn more about API specs in Insomnia
+                url: /insomnia/api-specs/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Storage options in Insomnia
+              description: |
+                Insomnia offers various storage options to cater to different user needs and preferences as well as to ensure data compliance requirements. 
+                Understanding these options is crucial for efficient and secure management of your API projects.
+              icon: /assets/icons/data-object.svg
+              cta:
+                text: Learn more about storage in Insomnia
+                url: /insomnia/storage-options/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Security at Insomnia
+              description: |
+                Learn how Insomnia prioritizes data protection through encryption, product and application security, and organizational measures.
+              icon: /assets/icons/lock.svg
+              cta:
+                text: Learn about security at Insomnia
+                url: /insomnia/security/
+                align: end
       
+
 
   - header:
       type: h2
