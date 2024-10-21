@@ -1,4 +1,4 @@
-{% if page.collection == 'gateway_entities' %}
+{% if page.layout == 'gateway_entity' %}
 {% case include.presenter.entity_type %}
 {% when 'consumer' %}
 The following creates a new consumer called **{{ include.presenter.data['username'] }}**:
