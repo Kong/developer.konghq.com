@@ -14,6 +14,7 @@ import '@/javascripts/anchor_links';
 import '@/javascripts/copy_code_snippet';
 import '@/javascripts/how_to';
 import '@/javascripts/mode';
+import '@/javascripts/releases_dropdown';
 import '@/javascripts/toc';
 
 document.addEventListener('DOMContentLoaded', function () {

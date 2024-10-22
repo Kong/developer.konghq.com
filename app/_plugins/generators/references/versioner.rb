@@ -11,8 +11,22 @@ module Jekyll
       end
 
       def process
-        page.data['release'] = canonical_release
+        set_release_info!
+        generate_pages!
+      end
 
+      def set_release_info!
+        page.data.merge!(
+          'canonical_url'     => page.url,
+          'canonical_release' => canonical_release,
+          'canonical?'        => true,
+          'release'           => canonical_release,
+          'releases'          => releases,
+          'releases_dropdown' => Drops::ReleasesDropdown.new(page:, releases:)
+        )
+      end
+
+      def generate_pages!
         releases.reject{ |r| r == canonical_release }.map do |release|
           Page.new(site:, page:, release:).to_jekyll_page
         end
