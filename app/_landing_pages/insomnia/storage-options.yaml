@@ -94,7 +94,9 @@ rows:
                       blocks:
                         - type: unordered_list
                           items:
-                            - "thing"
+                            - "Individual contributors who don't want their projects saved to the cloud"
+                            - "Work on projects offline"
+                            - "A sandbox type environment where you can experiment without interfering with team projects"
                 - text: |
                     [Cloud sync](/insomnia/cloud-sync)
                   action:

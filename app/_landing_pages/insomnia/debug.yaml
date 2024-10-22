@@ -6,3 +6,90 @@ rows:
   - header:
       type: h1
       text: "Debug APIs with Insomnia"
+      sub_text: ""
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Debugging APIs in all common formats and protocols is easy and fully customizable with Insomnia's projects and collections."
+              blocks:
+                - type: text
+                  text: | 
+                    Using Insomnia, you can debug your APIs with the following: 
+                - type: text
+                  text: |
+                    - **Multi-protocol support:** Insomnia natively supports HTTP, REST, gRPC, GraphQL, Websockets, SOAP, and SSE.
+                    - **Multi-environment:** Easily manage multiple environments for development and production workflows.
+                    - **Advanced scripting:** Create complex workflows and tests with pre-request and after-response scripting.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/insomnia/debug.png
+              alt_text: Image of debugging a request and the console log
+  
+  - header:
+      type: h2
+      text: "Features"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Troubleshooting your requests"
+              blocks:
+                - type: text
+                  text: |
+                    Insomnia will alert you if your request is missing any environment variables before you send the request.
+                    In addition, you can use the console to further debug any issues with sending requests.
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Debugging in the Console"
+              blocks:
+                - type: text
+                  text: |
+                    Insomnia creates a console log for every request you send, so you can view the detail of what happened when you sent a request.
+
+                    The Insomnia console logs the following information:
+                - type: text
+                  text: |
+                    - The primary request that was sent as well as the headers sent
+                    - The raw response sent by the server before it's processed by Insomnia
+                    - Network information such as IP addresses, ciphers, and protocols used
+                    - The certificates presented by the server that were used for the request
+  - header:
+      type: h2
+      text: "Get started"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Send requests
+            description: Learn how to create a request in Insomnia
+            icon: /assets/icons/insomnia/checkbox-active.svg
+            cta:
+              text: Learn more
+              url: /how-to/create-a-request/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Generate a collection
+            description: Use Insomnia to generate collections of responses.
+            icon: /assets/icons/insomnia/icon-multiple-light-02.svg
+            cta:
+              text: Learn more
+              url: /how-to/generate-a-collection-from-a-design-document/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Chain requests
+            description: Insomnia provides the ability to chain requests. This means you can extract values from the responses of other requests while also sharing state across requests.
+            icon: /assets/icons/insomnia/icon-transfer-light-02.svg
+            cta:
+              text: Learn more
+              url: /how-to/chain-requests/
+              align: end
