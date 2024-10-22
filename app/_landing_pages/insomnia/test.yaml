@@ -1,5 +1,7 @@
 metadata:
   title: Test APIs
+  breadcrumbs:
+    - /insomnia/
 rows:
   - header:
       type: h1
@@ -61,7 +63,7 @@ rows:
             icon: /assets/icons/insomnia/icon-innovation-light-02.svg
             cta:
               text: Learn more
-              url: /how-to/collection-runner/
+              url: /how-to/run-a-collection/
               align: end  
   
   - header:
