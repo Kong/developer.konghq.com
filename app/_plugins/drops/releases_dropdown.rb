@@ -4,9 +4,11 @@ module Jekyll
   module Drops
     class ReleasesDropdown < Liquid::Drop
       class Option < Liquid::Drop
-        def initialize(page:, release:)
-          @page    = page
-          @release = release
+        attr_reader :release
+
+        def initialize(base_url:, release:)
+          @base_url = base_url
+          @release  = release
         end
 
         def value
@@ -14,10 +16,10 @@ module Jekyll
         end
 
         def url
-          @url ||= if @release == @page.data['canonical_release']
-            @page.data['canonical_url']
+          @url ||= if latest?
+            @base_url
           else
-            "#{@page.data['canonical_url']}#{value}/"
+            "#{@base_url}#{value}/"
           end
         end
 
@@ -28,27 +30,23 @@ module Jekyll
         def latest?
           !!@release['latest']
         end
-
-        def selected?
-          @page.data['release'] == @release
-        end
       end
 
-      attr_reader :page
+      attr_reader :base_url
 
-      def initialize(page:, releases:)
-        @page     = page
+      def initialize(base_url:, releases:)
+        @base_url = base_url
         @releases = releases
       end
 
       def options
         @options ||= @releases.map do |release|
-          Option.new(page:, release:)
+          Option.new(base_url:, release:)
         end
       end
 
       def hash
-        @hash ||= "#{@page.data['products']}-#{@page.data['release']}-#{@page.dir}".hash
+        @hash ||= base_url.hash
       end
     end
   end
