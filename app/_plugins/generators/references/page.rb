@@ -24,10 +24,9 @@ module Jekyll
       def data
         @data ||= @page.data.dup
           .merge(
-            'release' => @release,
-            'canonical_url' => @page.url,
-            'releases_dropdown' => releases_dropdown,
-            'canonical?' => false
+            'release'     => @release,
+            'seo_noindex' => true,
+            'latest?'     => false
           )
       end
 
@@ -41,13 +40,6 @@ module Jekyll
 
       def url
         @url ||= dir
-      end
-
-      def releases_dropdown
-        @releases_dropdown ||= Drops::ReleasesDropdown.new(
-          page: self,
-          releases: @page.data['releases']
-        )
       end
     end
   end
