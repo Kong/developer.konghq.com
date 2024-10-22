@@ -1,11 +1,12 @@
 metadata:
   title: Design APIs
+  breadcrumbs:
+    - /insomnia/
 rows:
   - header:
       type: h1
       text: "Design APIs with Insomnia"
-
-  - columns:
+    columns:
       - blocks:
           - type: structured_text
             config:
@@ -13,17 +14,21 @@ rows:
                 text: "Design and preview new APIs with OpenAPI"
               blocks:
                 - type: text
+                  text: | 
+                    Using Insomnia, you can create or upload an API spec to a document. 
+                      
+                      As you write or edit your spec:  
+                - type: text
                   text: |
-                    Leverage OpenAPI with a spec-driven, design-first approach to accelerate development and build APIs.  
-
-                    Using Insomnia, you can build API specs or generate them. You can see the live API previews as you're creating your specs.
-
-                    Collaboratively create APIs with an unlimited number of contributers (Free accounts allow unlimited contributors on one project) and git version control.
+                    - View a generated preview of your spec in the right pane.
+                    - Automatically linted. Errors display at the bottom of the center pane and include error type, line number, and error message
+                    - View information about your spec in the left sidebar, such as servers, request body, and schemas.
+                    - Collaboratively create APIs with an unlimited number of contributers (free accounts allow unlimited contributors on one project) and git version control.
       - blocks:
           - type: image
             config:
-              url: /assets/images/insomnia/graphic-api-design-hero.png
-              alt_text: Image of the generating collections and tests         
+              url: /assets/images/insomnia/document-spec.png
+              alt_text: Image of the generating collections and tests        
 
   - header:
       type: h2
@@ -37,7 +42,7 @@ rows:
             icon: /assets/icons/insomnia/design.svg
             cta:
               text: Learn more
-              url: https://docs.insomnia.rest/insomnia/design-documents
+              url: /how-to/create-a-design-document/
               align: end
       - blocks:
         - type: card
@@ -68,24 +73,37 @@ rows:
             cta:
               text: Learn more
               url: https://docs.konghq.com/konnect/api-products/
-              align: end  
+              align: end   
 
   - header:
       type: h2
       text: Learn
     columns:
       - blocks:
-          - type: concept_list
+          - type: card
             config:
-              - topic: design-apis
-                product: insomnia 
-            quantity: 5
-            allow_empty: true
-          - type: cta
+              title: API specs
+              description: |
+                Insomnia provides capabilities to create, import, lint, and collaborate on API specs. 
+                You can easily generate a collection of requests from an API spec.
+              icon: /assets/icons/admin-api.svg
+              cta:
+                text: Learn more about API specs in Insomnia
+                url: /insomnia/api-specs/
+                align: end
+      - blocks:    
+          - type: card
             config:
-              text: "Learn more &raquo;"
-              url: "https://docs.devsite.com/search/{concept.topic}+{other stuff}" ## Takes you to search with terms that match this.
-              align: end
+              title: Documents
+              description: |
+                Design documents (also called documents) hold API specifications, API requests, and tests. 
+
+                Documents have three main capabilities: design APIs, debug APIs, and test APIs.
+              icon: /assets/icons/insomnia/design.svg
+              cta:
+                text: Learn about design documents
+                url: /insomnia/documents/
+                align: end
 
   - header:
       type: h2

@@ -3,3 +3,7 @@ layout: with_aside
 ---
 
 {{ content }}
+
+{% contentfor info_box %}
+  {% include info_box/concept.html %}
+{% endcontentfor %}

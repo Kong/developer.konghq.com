@@ -1,5 +1,7 @@
 metadata:
   title: Kong Gateway Open Source vs Enterprise
+  breadcrumbs:
+  - /gateway/
 rows:
   - header:
       type: h1

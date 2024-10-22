@@ -6,7 +6,8 @@
     </div>
     <div class="flex items-baseline justify-between w-full">
         <h3>{{ include.summary | liquify }}</h3>
-        <span class="fa fa-chevron-down text-terciary rotate-180" aria-hidden="true"></span>
+
+        <span class="inline-flex chevron-icon rotate-180" aria-hidden="true">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
     </div>
 </a>
 <div class="flex flex-col gap-3 px-[3.25rem] pb-4 accordion-panel">

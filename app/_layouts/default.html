@@ -15,14 +15,15 @@
           document.documentElement.classList.remove('dark');
         }
     </script>
+
+    {% include structured_data.html %}
+
     {% vite_client_tag %}
     {% vite_javascript_tag application %}
 
     {% if layout.entity_schema %}
       {% vite_javascript_tag entity_schema %}
     {% endif %}
-
-    <script src="https://kit.fontawesome.com/1332a92967.js" crossorigin="anonymous"></script>
   </head>
 
   <body class="bg-primary leading-6">

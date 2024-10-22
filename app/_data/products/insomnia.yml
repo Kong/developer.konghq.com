@@ -1,5 +1,11 @@
 name: Insomnia
 tiers:
+  individual:
+    text: Individual and above
+    url: /insomnia/
   team:
     text: Team and above
-    url: /insomnia/teams
+    url: /insomnia/
+  Enterprise:
+    text: Enterprise
+    url: /insomnia/
