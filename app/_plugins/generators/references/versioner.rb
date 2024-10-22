@@ -12,22 +12,36 @@ module Jekyll
 
       def process
         set_release_info!
+        handle_canonicals!
         generate_pages!
       end
 
       def set_release_info!
         page.data.merge!(
-          'canonical_url'     => page.url,
-          'canonical_release' => canonical_release,
-          'canonical?'        => true,
-          'release'           => canonical_release,
+          'base_url'          => page.url,
+          'latest?'           => latest_release_in_range == latest_available_release,
+          'release'           => latest_release_in_range,
           'releases'          => releases,
-          'releases_dropdown' => Drops::ReleasesDropdown.new(page:, releases:)
+          'releases_dropdown' => Drops::ReleasesDropdown.new(base_url: page.url, releases:)
         )
       end
 
+      def handle_canonicals!
+        # Setting published: false prevents Jekyll from rendering the page.
+        if min_version && min_version > latest_available_release
+          page.data.merge!('published' => false)
+        elsif max_version && max_version < latest_available_release
+          page.data.merge!(
+            'published'     => false,
+            'canonical_url' => "#{page.url}#{max_version}/"
+          )
+        else
+          page.data.merge!('canonical_url' => page.url)
+        end
+      end
+
       def generate_pages!
-        releases.reject{ |r| r == canonical_release }.map do |release|
+        releases.map do |release|
           Page.new(site:, page:, release:).to_jekyll_page
         end
       end
@@ -74,16 +88,16 @@ module Jekyll
         end.map { |r| Drops::Release.new(r) }
       end
 
-      def latest_release
-        @latest_release ||= available_releases.detect(&:latest?)
+      def latest_available_release
+        @latest_available_release ||= available_releases.detect(&:latest?)
       end
 
-      def canonical_release
-        @canonical_release ||= begin
-          return min_version if min_version && min_version > latest_release
-          return max_version if max_version && max_version < latest_release
+      def latest_release_in_range
+        @latest_release_in_range ||= begin
+          return min_version if min_version && min_version > latest_available_release
+          return max_version if max_version && max_version < latest_available_release
 
-          latest_release
+          latest_available_release
         end
       end
     end
