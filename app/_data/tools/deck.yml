@@ -1,1 +1,9 @@
 name: decK
+
+releases:
+  - release: "1.40.x"
+    version: "1.40.2"
+    latest: true
+  - release: "1.41.x"
+    version: "1.41.0"
+    label: unreleased
