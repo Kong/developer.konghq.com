@@ -17,6 +17,8 @@ module Jekyll
       end
 
       def set_release_info!
+        raise ArgumentError, "Missing release for page: #{page.url} in site.data.#{releases_key.join('.')}" unless latest_release_in_range
+
         page.data.merge!(
           'base_url'          => page.url,
           'latest?'           => latest_release_in_range == latest_available_release,
@@ -81,11 +83,16 @@ module Jekyll
       end
 
       def available_releases
-        @available_releases ||= if product == 'api-ops'
-          site.data.dig('tools', page.data['tools'].first, 'releases') || []
+        @available_releases ||= (site.data.dig(*releases_key, 'releases') || [])
+          .map { |r| Drops::Release.new(r) }
+      end
+
+      def releases_key
+        @releases_key ||= if product == 'api-ops'
+          ['tools', page.data['tools'].first]
         else
-          site.data.dig('products', product, 'releases') || []
-        end.map { |r| Drops::Release.new(r) }
+          ['products', product]
+        end
       end
 
       def latest_available_release
