@@ -5,8 +5,7 @@ Jekyll::Hooks.register :documents, :post_convert do |doc, payload|
 end
 
 Jekyll::Hooks.register :pages, :post_convert do |page, payload|
-  next if page.data['layout'] == 'landing_page'
-  next if page.url == '/'
+  next unless ['concept', 'reference', 'plugin', 'plugin_reference'].include?(page.data['content_type'])
 
   SectionWrapper::Base.make_for(page).process
 end
