@@ -7,6 +7,19 @@
 
     <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico" />
 
+    {% if page.canonical_url %}
+      <link rel="canonical" href="{{ site.links.web }}{{ page.canonical_url }}" />
+    {% endif %}
+
+    {% if page.seo_noindex == true %}
+      <meta name="robots" content="follow,noindex" />
+    {% else %}
+      {% comment %}
+      TODO: uncomment this when the site goes live
+      <meta name="robots" content="follow,index" />
+      {% endcomment %}
+    {% endif %}
+
     <script>
       // On page load or when changing themes, best to add inline in `head` to avoid FOUC
         if (localStorage.mode === 'dark' || (!('mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
