@@ -1,0 +1,16 @@
+{
+    "name": "konnect-oas-data-generator",
+    "version": "1.0.0",
+    "description": "Update app/_data/konnect_oas_data.json.",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+      "@kong/sdk-portal-js": "^2.14.0",
+      "axios": "^1.0.0",
+      "minimist": "^1.2.8"
+    }
+  }
