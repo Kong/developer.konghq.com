@@ -5,7 +5,7 @@
         <div class="flex gap-2">
           <div class="flex w-5 h-5 text-brand shrink-0">{% include_svg related_resource.icon %}</div>
         </div>
-        <a href="{{ related_resource.url }}">{{ related_resource.text | liquify }}</a>
+        <a href="{{ related_resource.url | liquify }}">{{ related_resource.text | liquify }}</a>
       </div>
     {% endfor %}
   </div>
@@ -14,7 +14,7 @@
     {% for related_resource in related_resources.items %}
       <div class="flex gap-2">
         <div class="flex w-5 h-5 text-brand shrink-0">{% include_svg related_resource.icon %}</div>
-        <a href="{{ related_resource.url }}">{{ related_resource.text | liquify }}</a>
+        <a href="{{ related_resource.url | liquify }}">{{ related_resource.text | liquify }}</a>
       </div>
     {% endfor %}
     </div>
