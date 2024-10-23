@@ -1,4 +1,5 @@
 name: Insomnia
+
 tiers:
   individual:
     text: Individual and above
@@ -9,3 +10,8 @@ tiers:
   Enterprise:
     text: Enterprise
     url: /insomnia/
+
+releases:
+  - release: "10.1.x"
+    version: "10.1.0"
+    latest: true
