@@ -16,7 +16,7 @@ works_on:
     - konnect
 
 min_version:
-  gateway: 3.4.x
+  gateway: 3.4
 
 plugins:
   - rate-limiting
