@@ -1,0 +1,124 @@
+metadata:
+  title: Insomnia Feature Comparison
+  breadcrumbs:
+  - /insomnia/
+rows:
+  - header:
+      type: h1
+      text: Insomnia Feature Comparison
+                    
+  - columns:
+      - blocks:
+          - type: feature_table
+            config:
+              columns:
+                - title: Free
+                  key: oss
+                - title: Individual
+                  key: individual
+                - title: Team
+                  key: team
+                - title: Enterprise
+                  key: ee
+              features:
+                - title: Local vault for local storage of collections, design specs, and every other resource
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Debug APIs using the most popular protocols and formats
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Design APIs using the native OpenAPI editor and visual preview
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Test APIs using native test suites
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Mock APIs using cloud and/or self-hosted Mock servers
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Build CI/CD pipelines using the native Insomnia CLI for linting and testing
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Cloud Sync for cloud collaboration, end-to-end encrypted (E2EE) and free
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Unlimited collaborators
+                  subtitle: The Free plan has unlimited collaborators for accounts with a single project
+                  oss: false
+                  individual: true
+                  team: true
+                  ee: true 
+                - title: Git Sync for Git storage of all files using any 3rd party Git repository
+                  oss: false
+                  individual: false
+                  team: true
+                  ee: true
+                - title: Unlimited organizations
+                  oss: false
+                  individual: false
+                  team: true
+                  ee: true
+                - title: Native Git support
+                  oss: false
+                  individual: false
+                  team: true
+                  ee: true
+                - title: RBAC and permissions
+                  oss: false
+                  individual: false
+                  team: true
+                  ee: true
+                - title: Enterprise SSO (SAML, OIDC)
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+                - title: Storage control to mandate Cloud, Local or Git
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+                - title: Collaboration Invite Control to allow and deny domains
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+                - title: Self-hosted API mocking
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+                - title: Enterprise support
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+                - title: Kong Professional Services
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+                - title: Custom payment options
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+                - title: Unlimited mock requests
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
