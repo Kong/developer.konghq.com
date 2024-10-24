@@ -1,9 +1,15 @@
 metadata:
   title: Insomnia SSO
+  description: "You can configure SSO for Insomnia with SAML 2.0 providers like Microsoft Azure or Okta."
+  breadcrumbs: 
+    - /insomnia
+  tags:
+    - sso
+    - authentication
 rows:
   - header:
       type: h1
-      text: "Security at Insomnia"
+      text: "Insomnia Single-Sign On"
       sub_text:
   - columns:
     - blocks:
@@ -12,19 +18,21 @@ rows:
           blocks:
             - type: text
               text: | 
-                Insomnia supports federating user authentication through third-party identity providers for access management. 
-                You can leverage your existing identity management workflow to govern which users can access the application. 
-                Additionally, users must be entitled to the appropriate Organizations before they can access specific projects managed in Insomnia.
+                You can configure SSO for Insomnia Enterprise with SAML 2.0 providers like Microsoft Azure or Okta. 
+                
+                With SSO, you can use existing identity management workflows and groups to control which users can access Insomnia.
+                This allows users to log in to Insomnia with their identity provider (IdP) credentials without needing a separate login.
+
   - header:
       type: h2
-      text: "SAML provider setup instructions"
+      text: "Learn how to configure providers for SSO with Insomnia"
     columns:
       - blocks:
         - type: card
           config:
             title: Azure
             description: Learn how to configure SSO with Azure for Insomnia.
-            icon:  /assets/icons/insomnia/design.svg
+            icon:  /assets/icons/azure.svg
             cta:
               text: Learn more
               url: /how-to/azure-sso
@@ -34,7 +42,7 @@ rows:
           config:
             title: Okta
             description:  Learn how to configure SSO with Okta for Insomnia.
-            icon:  /assets/icons/insomnia/design.svg
+            icon:  /assets/icons/okta.svg
             cta:
               text: Learn more
               url: /how-to/okta-sso
