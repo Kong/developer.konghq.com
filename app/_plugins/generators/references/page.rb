@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'active_support'
+require 'active_support/core_ext/object/deep_dup'
+
 module Jekyll
   module ReferencePages
     class Page
@@ -15,19 +18,20 @@ module Jekyll
 
       def dir
         @dir ||= if @page.is_a?(Jekyll::Document)
-          "#{@page.url}#{@release}/"
-        else
-          "#{@page.dir}#{@release}/"
-          end
+                   "#{@page.url}#{@release}/"
+                 else
+                   "#{@page.dir}#{@release}/"
+                 end
       end
 
       def data
-        @data ||= @page.data.dup
-          .merge(
-            'release'     => @release,
-            'seo_noindex' => true,
-            'latest?'     => false
-          )
+        @data ||= @page.data
+                       .deep_dup
+                       .merge(
+                         'release' => @release,
+                         'seo_noindex' => true,
+                         'latest?' => false
+                       )
       end
 
       def relative_path
@@ -35,7 +39,7 @@ module Jekyll
       end
 
       def content
-        @content ||= @page.content
+        @content ||= @page.content.deep_dup
       end
 
       def url
