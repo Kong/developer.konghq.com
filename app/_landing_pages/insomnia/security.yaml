@@ -19,36 +19,11 @@ rows:
                 - type: text
                   text: | 
                     Insomnia believes that it is your right to know how your sensitive project data is transported and handled. 
-                    The sections on this page explain how Insomnia secures data and infrastructure, what data is collected, how Insomnia responds to security incidents, and how you can increase security with Insomnia's features.
+                    The sections on this page explain how Insomnia secures data and infrastructure, what data is collected, and how Insomnia responds to security incidents.
   
   - header:
       type: h2
-      text: "Additional security features you can configure"
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: Enterprise single sign-on (SSO)
-            description: Learn about SSO security and see the different identity providers (IdPs) you can use to configure SSO.
-            icon:  /assets/icons/insomnia/sso.svg
-            cta:
-              text: Learn more
-              url: /insomnia/sso
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Local vault storage
-            description: Local vault is a secure storage option that allows all project data to be stored locally on your device. This option is ideal for users and organizations who prefer or require their data to remain off the cloud for privacy or security reasons.
-            icon:  /assets/icons/vault.svg
-            cta:
-              text: Learn more
-              url: /insomnia/local-vault
-              align: end
-  
-  - header:
-      type: h2
-      text: "Learn more about how Insomnia secures data"
+      text: "Learn more about Insomnia security"
     columns:
       - blocks:
         - type: card
