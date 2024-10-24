@@ -11,7 +11,7 @@ related_resources:
   - text: Storage options
     url: /insomnia/storage-options
   - text: Security at Insomnia
-    url: /
+    url: /insomnia/security
   - text: Git sync
     url: /insomnia/git-sync
   - text: Scratch pad
@@ -19,7 +19,7 @@ related_resources:
   - text: Local vault
     url: /insomnia/local-vault
   - text: SSO
-    url: /
+    url: /insomnia/sso
   - text: About version control in Insomnia
     url: /insomnia/version-control
 

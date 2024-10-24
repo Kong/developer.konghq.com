@@ -11,12 +11,6 @@ related_resources:
     url: /how-to/create-a-design-document/
   - text: Generate a collection from a design document
     url: /how-to/generate-a-collection-from-a-design-document/
-  - text: Lint API specs
-    url: /
-  - text: Automate linting
-    url: /
-  - text: Create a request
-    url: /how-to/create-a-request/
 
 tags:
     - requests
