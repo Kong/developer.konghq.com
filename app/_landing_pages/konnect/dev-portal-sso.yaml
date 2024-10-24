@@ -1,0 +1,19 @@
+metadata:
+  title: "Dev Portal SSO"
+  tags:
+    - sso
+rows:
+  - header:
+      type: h1
+      text: "Dev Portal SSO"
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "What is Dev Portal SSO?"
+            blocks:
+              - type: text
+                text: |
+                  content

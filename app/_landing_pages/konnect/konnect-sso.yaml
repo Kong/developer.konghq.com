@@ -1,0 +1,19 @@
+metadata:
+  title: "Konnect SSO"
+  tags:
+    - sso
+rows:
+  - header:
+      type: h1
+      text: "Konnect SSO"
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "What is Konnect SSO?"
+            blocks:
+              - type: text
+                text: |
+                  content
