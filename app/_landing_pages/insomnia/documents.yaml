@@ -76,22 +76,6 @@ rows:
               text: Learn more
               url: /how-to/import-an-api-spec-as-a-document/
               align: end
-      - blocks:
-        - type: card
-          config:
-            title: Lint a design document
-            cta:
-              text: Learn more
-              url: /
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Automate design document linting
-            cta:
-              text: Learn more
-              url: /
-              align: end
   - header:
       type: h2
       text: "Debug API specs"
@@ -134,14 +118,6 @@ rows:
             cta:
               text: Learn more
               url: /how-to/generate-a-collection-from-a-design-document/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Send requests in Insomnia
-            cta:
-              text: Learn more
-              url: /
               align: end
       - blocks:
         - type: card

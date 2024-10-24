@@ -66,16 +66,6 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Send requests
-            description: Learn how to create a request in Insomnia
-            icon: /assets/icons/insomnia/checkbox-active.svg
-            cta:
-              text: Learn more
-              url: /how-to/create-a-request/
-              align: end
-      - blocks:
-        - type: card
-          config:
             title: Generate a collection
             description: Use Insomnia to generate collections of responses.
             icon: /assets/icons/insomnia/icon-multiple-light-02.svg

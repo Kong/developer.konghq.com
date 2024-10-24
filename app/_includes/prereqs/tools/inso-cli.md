@@ -2,7 +2,7 @@
 
 {% capture details_content %}
   The Inso CLI (Command Line Interface) allows you to use Insomnia application functionality in your terminal and CI/CD environments for automation.
-  To complete this tutorial, you will need to install the [Inso CLI](/insomnia/inso-cli/).
+  To complete this tutorial, you will need to install the [Inso CLI](/inso-cli/).
 
 {% endcapture %}
 

@@ -9,13 +9,13 @@ products:
 
 related_resources:
   - text: Security at Insomnia
-    url: /
+    url: /insomnia/security
   - text: Git sync
-    url: /
+    url: /insomnia/git-sync
   - text: Scratch pad
-    url: /
+    url: /insomnia/scratch-pad
   - text: SSO
-    url: /
+    url: /insomnia/sso
 
 ---
 

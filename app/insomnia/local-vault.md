@@ -21,7 +21,7 @@ related_resources:
   - text: Write tests for HTTP status codes
     url: /how-to/write-http-status-tests/
   - text: Security at Insomnia
-    url: /
+    url: /insomnia/security
 
 faqs:
   - q: What is the difference between local vault and scratch pad?
