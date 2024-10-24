@@ -7,7 +7,7 @@
             <span class="bg-blue-200 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full mb-0.5">{{ next_step.type }}</span>
           {% endif %}
         </div>
-        <a href="{{ next_step.url }}">{{ next_step.text | liquify }}</a>
+        <a href="{{ next_step.url | liquify }}">{{ next_step.text | liquify }}</a>
       </div>
     {% endfor %}
   </div>
@@ -16,7 +16,7 @@
     {% for next_step in next_steps.items %}
       <div class="flex gap-2">
         <div class="flex w-5 h-5 text-brand shrink-0">{% include_svg next_step.icon %}</div>
-        <a href="{{ next_step.url }}">{{ next_step.text | liquify }}</a>
+        <a href="{{ next_step.url | liquify }}">{{ next_step.text | liquify }}</a>
       </div>
     {% endfor %}
   </div>
