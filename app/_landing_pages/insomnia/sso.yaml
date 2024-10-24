@@ -15,4 +15,27 @@ rows:
                 Insomnia supports federating user authentication through third-party identity providers for access management. 
                 You can leverage your existing identity management workflow to govern which users can access the application. 
                 Additionally, users must be entitled to the appropriate Organizations before they can access specific projects managed in Insomnia.
-  
+  - header:
+      type: h2
+      text: "SAML provider setup instructions"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Azure
+            description: Learn how to configure SSO with Azure for Insomnia.
+            icon:  /assets/icons/insomnia/design.svg
+            cta:
+              text: Learn more
+              url: /how-to/azure-sso
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Okta
+            description:  Learn how to configure SSO with Okta for Insomnia.
+            icon:  /assets/icons/insomnia/design.svg
+            cta:
+              text: Learn more
+              url: /how-to/okta-sso
+              align: end
