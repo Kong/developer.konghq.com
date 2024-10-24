@@ -4,12 +4,6 @@ name: Target
 entities:
   - target
 
-description:
-
-related_resources:
-  - text: 
-    url: 
-
 tools:
     - admin-api
     - konnect-api
