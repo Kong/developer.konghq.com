@@ -1,0 +1,29 @@
+{
+    "extends": [
+        "config:recommended"
+    ],
+    "schedule": "every weekend",
+    "bundler": {
+        "enabled": true
+    },
+    "ignoreDeps": [
+        "jekyll"
+    ],
+    "labels": [
+        "review:tech"
+    ],
+    "cloneSubmodules": true,
+    "packageRules": [
+        {
+            "groupName": "Non-major dependencies",
+            "groupSlug": "all-minor-patch",
+            "matchUpdateTypes": [
+                "minor",
+                "patch"
+            ],
+            "matchPackageNames": [
+                "*"
+            ]
+        }
+    ]
+}
