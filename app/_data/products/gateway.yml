@@ -11,6 +11,19 @@ tiers:
     url: '/gateway/enterprise/'
 
 releases:
+  - release: "3.7.x"
+    ee-version: "3.7.1.2"
+    ce-version: "3.7.1"
+    luarocks_version: "3.0.0-0"
+    dependencies:
+      luajit: "2.1-20220411"
+      luarocks: "3.9.1"
+      postgres: "9.5+"
+      openresty: "1.21.4.1"
+      openssl: "1.1.1.q"
+      libyaml: "0.2.5"
+      pcre: 8.45
+    lua_doc: true
   - release: "3.8.x"
     ee-version: "3.8.0.0"
     ce-version: "3.8.0"
