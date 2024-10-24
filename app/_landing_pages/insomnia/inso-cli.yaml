@@ -1,8 +1,0 @@
-metadata:
-  title: Inso CLI
-  breadcrumbs:
-    - /insomnia/
-rows:
-  - header:
-      type: h1
-      text: "Automate Insomnia with the Inso CLI"
