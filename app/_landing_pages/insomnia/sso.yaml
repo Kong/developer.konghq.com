@@ -18,7 +18,7 @@ rows:
           blocks:
             - type: text
               text: | 
-                You can configure SSO for Insomnia Enterprise with SAML 2.0 providers like Microsoft Azure or Okta. 
+                You can configure SSO for Insomnia Enterprise with SAML 2.0 providers like [Microsoft Entra](https://learn.microsoft.com/entra/identity/enterprise-apps/what-is-single-sign-on) or [Okta](https://help.okta.com/oie/en-us/content/topics/apps/apps-about-sso.htm). 
                 
                 With SSO, you can use existing identity management workflows and groups to control which users can access Insomnia.
                 This allows users to log in to Insomnia with their identity provider (IdP) credentials without needing a separate login.
