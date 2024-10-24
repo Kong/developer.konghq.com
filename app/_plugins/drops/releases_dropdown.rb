@@ -17,10 +17,10 @@ module Jekyll
 
         def url
           @url ||= if latest?
-            @base_url
-          else
-            "#{@base_url}#{value}/"
-          end
+                     @base_url
+                   else
+                     "#{@base_url}#{value}/"
+                   end
         end
 
         def lts?
@@ -40,7 +40,7 @@ module Jekyll
       end
 
       def options
-        @options ||= @releases.map do |release|
+        @options ||= @releases.sort.reverse.map do |release|
           Option.new(base_url:, release:)
         end
       end
