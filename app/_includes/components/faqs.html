@@ -6,7 +6,7 @@
 
     </a>
     <div class="pb-4 px-5 flex flex-col gap-3 mt-1.5 accordion-panel">
-    {{ faq.a | markdownify }}
+    {{ faq.a | liquify | markdownify }}
     </div>
   </div>
 {% endfor %}
