@@ -12,6 +12,6 @@ tiers:
     url: /insomnia/
 
 releases:
-  - release: "10.1.x"
+  - release: "10.1"
     version: "10.1.0"
     latest: true
