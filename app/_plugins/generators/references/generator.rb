@@ -22,6 +22,8 @@ module Jekyll
         versioned_pages = []
         site.pages.each do |page|
           next if page.data['content_type'] != 'reference'
+          # TODO: handle auto_generated pages
+          next if page.data['auto_generated']
 
           versioned_pages.concat(Versioner.new(site:, page:).process)
         end
