@@ -31,7 +31,7 @@ rows:
   
   - header:
       type: h2
-      text: "Design API specs"
+      text: "Design APIs"
     columns:
       - blocks:
           - type: image
@@ -44,13 +44,15 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    Using Insomnia, you can create or upload an API spec to a document. As you write or edit your spec:
+                    The interactive API spec renderer lets you develop and refine your API spec in the same environment where you’ll test it.
                      
                 - type: text
                   text: |
-                    - View a generated preview of your spec in the right pane.
-                    - Automatically linted. Errors display at the bottom of the center pane and include error type, line number, and error message
-                    - View information about your spec in the left sidebar, such as servers, request body, and schemas.
+                    - Built for spec-first development.
+                    - View a generated preview of your spec in Insomnia.
+                    - Automatic linting, with the ability to write custom linting rules.
+                    - Errors console.
+                    - Automatically parse and categorize data from your API spec such as server request body, and schemas.
           - type: button
             config:
               align: left
@@ -76,57 +78,7 @@ rows:
               text: Learn more
               url: /how-to/import-an-api-spec-as-a-document/
               align: end
-  - header:
-      type: h2
-      text: "Debug API specs"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: | 
-                    To debug your API spec, you can autogenerate a collection of requests from it and debug those. 
-                    
-                    In the sidebar, you'll see a list of the requests associated with the collection. The center panel will auto-populate with the following variables from the API spec:
-
-                    You can then debug your collection with the following:
-                - type: unordered_list
-                  items: 
-                    - Send requests to your endpoints
-                    - Create a [mock server](/) to simulate your endpoints
-                    - Use [pre-request](/) and [after-response scripts](/) to manipulate variables and perform tests and assertions on the response
-          - type: button
-            config:
-              align: left
-              text: Learn more about debugging APIs
-              url: /insomnia/debug/
-      - blocks:
-          - type: image
-            config:
-              url: /assets/images/insomnia/document-debug.png
-              alt_text: Image of debugging a document in Insomnia.
-
-  - header:
-      type: h3
-      text: "Get started with debugging APIs"
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: Generate a collection from a design document
-            cta:
-              text: Learn more
-              url: /how-to/generate-a-collection-from-a-design-document/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Chain requests in Insomnia
-            cta:
-              text: Learn more
-              url: /how-to/chain-requests/
-              align: end
+  
   
   - header:
       type: h2
@@ -143,12 +95,13 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    You can test your API from the **Tests** tab of a design document:
+                    Documents bundle all API testing ability together.
 
                 - type: unordered_list
                   items: 
-                    - Use boiler-plate tests, examples, and auto-complete (`Control+Space`) to make writing tests easier.
-                    - Run a single test or a suite of tests, manually or automatically with the Inso CLI
+                    - Use boiler-plate tests and examples, and 
+                    - auto-complete
+                    - Automation capabilities
           - type: button
             config:
               align: left
@@ -199,9 +152,9 @@ rows:
         - type: faqs
           config:
             - q: What's the difference between a collection and a design document?
-              a: You can't create, lint, and edit a spec from a collection. Documents are a way to store all your information about an API in one place. 
-            - q: Which types of API specs are supported in Insomnia?
-              a: Insomnia supports REST OpenAPI specs as well as GraphQL OpenAPI specs. 
+              a: Documents are a data object that can contain an API spec, a collection of API requests, and tests. Collections are simply a series of API requests that you intend to interact with Insomnia.
+            - q: Does Insomnia support GraphQL?
+              a: Yes 
   - header:
       type: h2
       text: Learn
@@ -234,3 +187,8 @@ rows:
               text: "View more references &raquo;"
               url: "https://docs.devsite.com/search/{reference.topic}+{other stuff}" ## Takes you to search with terms that match this.
               align: end
+
+
+
+
+              
