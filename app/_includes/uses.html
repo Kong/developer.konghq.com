@@ -1,11 +1,7 @@
 {% if include.products or include.tools or include.tier %}
 <div class="flex gap-2 items-center">
     {% if include.tier %}
-        {% if include.products and include.products.size > 1 %}
-            {% raise "uses.html include called with a tier and more than one product." %}
-        {% endif %}
-        {% assign tier = site.data.products[include.products.first].tiers[include.tier] %}
-        {% include badge.html url=tier.url text=tier.text %}
+        {% include tier.html products=include.products tier=include.tier %}
     {% endif %}
 
     {% if include.tier %}
