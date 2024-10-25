@@ -5,6 +5,8 @@ content_type: reference
 layout: reference
 
 related_resources:
+  - text: Authentication & Authorization in Insomnia
+    url: /insomnia/authentication-authorization
 
 tags:
     - allowlist

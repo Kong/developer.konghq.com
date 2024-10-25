@@ -5,6 +5,10 @@ content_type: reference
 layout: reference
 
 related_resources:
+  - text: Authentication & Authorization in Insomnia
+    url: /insomnia/authentication-authorization
+  - text: Testing in Insomnia
+    url: /insomnia/test
 
 tags:
     - requests
@@ -14,34 +18,28 @@ tags:
 products:
     - insomnia
 
-faqs:
-  - q: 
-    a: 
-
 breadcrumbs:
   - /insomnia/
 ---
 
 ## What is request authentication in Insomnia?
 
-Request authentication allows you to configure different authentication types and parameters to send with requests. This allows you to authenticate when you send a request.
+Some requests require authentication to send. In Insomnia, you can configure different authentication types and parameters when you send a request so that it can authenticate.
 
-## Why would I want to authenticate with requests in Insomnia?
+## How do I configure authentication in my requests in Insomnia? 
 
-Some requests require authentication to send. 
+In a collection or design document in Insomnia, navigate to a request in your collection. Click the **Auth** tab below your request and select an authentication type from the dropdown menu.
 
 ## Which authentication types are supported?
 
-| Authentication type | Description |
-|---------------------|-------------|
-| [Basic auth](https://datatracker.ietf.org/doc/html/rfc7617.html) | Allows you to authenticate with a username and password |
-| Digest auth | Allows you to authenticate with a username and password, but the client must send two requests instead of one. The first request sent to the server receives a nonce value, which is then used to produce a one-time-use hash key to authenticate the request.  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
-|  |  |
+The following authentication types are supported for request authentication in Insomnia:
+* [Basic auth](https://datatracker.ietf.org/doc/html/rfc7617.html)
+* [Digest auth](https://datatracker.ietf.org/doc/html/rfc7616)
+* [OAuth 1.0](https://datatracker.ietf.org/doc/html/rfc5849)
+* [OAuth 2.0](https://datatracker.ietf.org/doc/html/rfc6749)
+* [Microsoft NTLM](https://learn.microsoft.com/en-us/windows-server/security/kerberos/ntlm-overview)
+* [AWS IAM v4](https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html)
+* [Bearer token](https://swagger.io/docs/specification/v3_0/authentication/bearer-authentication/)
+* [HawK](https://github.com/mozilla/hawk)
+* [Atlassian ASAP](https://s2sauth.bitbucket.io/spec/)
+* [Netrc file](https://www.gnu.org/software/inetutils/manual/html_node/The-_002enetrc-file.html)
