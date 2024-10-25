@@ -17,13 +17,16 @@ module Jekyll
       end
 
       def set_release_info!
-        raise ArgumentError, "Missing release for page: #{page.url} in site.data.#{releases_key.join('.')}" unless latest_release_in_range
+        unless latest_release_in_range
+          raise ArgumentError,
+                "Missing release for page: #{page.url} in site.data.#{releases_key.join('.')}"
+        end
 
         page.data.merge!(
-          'base_url'          => page.url,
-          'latest?'           => latest_release_in_range == latest_available_release,
-          'release'           => latest_release_in_range,
-          'releases'          => releases,
+          'base_url' => page.url,
+          'latest?' => latest_release_in_range == latest_available_release,
+          'release' => latest_release_in_range,
+          'releases' => releases,
           'releases_dropdown' => Drops::ReleasesDropdown.new(base_url: page.url, releases:)
         )
       end
@@ -34,7 +37,7 @@ module Jekyll
           page.data.merge!('published' => false)
         elsif max_version && max_version < latest_available_release
           page.data.merge!(
-            'published'     => false,
+            'published' => false,
             'canonical_url' => "#{page.url}#{max_version}/"
           )
         else
@@ -57,14 +60,14 @@ module Jekyll
       def min_version
         @min_version ||= begin
           min_version = version_range('min_version')
-          min_version && available_releases.detect { |r| r['release'] == min_version }
+          min_version && available_releases.detect { |r| r['release'] == min_version.to_s }
         end
       end
 
       def max_version
         @max_version ||= begin
           max_version = version_range('max_version')
-          max_version && available_releases.detect { |r| r['release'] == max_version }
+          max_version && available_releases.detect { |r| r['release'] == max_version.to_s }
         end
       end
 
@@ -84,15 +87,15 @@ module Jekyll
 
       def available_releases
         @available_releases ||= (site.data.dig(*releases_key, 'releases') || [])
-          .map { |r| Drops::Release.new(r) }
+                                .map { |r| Drops::Release.new(r) }
       end
 
       def releases_key
         @releases_key ||= if product == 'api-ops'
-          ['tools', page.data['tools'].first]
-        else
-          ['products', product]
-        end
+                            ['tools', page.data['tools'].first]
+                          else
+                            ['products', product]
+                          end
       end
 
       def latest_available_release
