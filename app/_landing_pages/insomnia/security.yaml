@@ -1,6 +1,6 @@
 metadata:
-  title: Security at Insomnia
-  description: "Learn how Insomnia prioritizes data protection through encryption, product and application security, and organizational measures."
+  title: Insomnia Security Policies
+  description: "Find additional resources that explain how Insomnia prioritizes data protection through encryption, product and application security, and organizational measures."
   breadcrumbs:
     - /insomnia/
   tags:
@@ -9,7 +9,6 @@ rows:
   - header:
       type: h1
       text: "Security at Insomnia"
-      sub_text: "Learn how Insomnia prioritizes data protection through encryption, product and application security, and organizational measures."
   
   - columns:
       - blocks:
