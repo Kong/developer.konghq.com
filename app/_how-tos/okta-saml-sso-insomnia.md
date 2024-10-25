@@ -1,11 +1,15 @@
 ---
 title: Configure Okta SAML SSO in Insomnia
 
-content_type: reference
-layout: reference
-
 products:
     - insomnia
+
+related_resources:
+  - text: Authentication & Authorization in Insomnia
+    url: /insomnia/authentication-authorization
+
+tier:
+  - enterprise
 
 tags:
   - sso
@@ -14,20 +18,20 @@ tags:
   - security
 
 tldr:
-    q: thing
-    a: thing
+    q: How do I configure SSO with SAML 2.0 and Okta in Insomnia?
+    a: Obtain the single sign-on URL and audience URI from the Insomnia SSO settings and add them to an application integration in Okta. Copy the sign on URL and signing certificate from Okta and enter those in the Insomnia SSO settings. Finally, add users or groups to the Okta app integration and invite those same users to the Insomnia app.
 
 prereqs:
   inline:
   - title: Insomnia permissions
     include_content: prereqs/insomnia-sso
-    icon_url: /assets/icons/file.svg
+    icon_url: /assets/icons/insomnia/insomnia.svg
   - title: Okta permissions
     include_content: prereqs/okta-sso
-    icon_url: /assets/icons/file.svg
+    icon_url: /assets/icons/okta.svg
   - title: Domain permissions
     include_content: prereqs/sso-domain
-    icon_url: /assets/icons/file.svg
+    icon_url: /assets/icons/domain.svg
 ---
 
 ## 1. Create the SSO connection in Insomnia
@@ -76,7 +80,7 @@ Now that Okta SSO is configured and you have the sign on URL and certificate fro
 
 You can add users or groups to the application in Okta. They won't be allowed to log in with SSO yet though.
 
-1. In Okta, [assign users or groups to the app integration](https://help.okta.com/en-us/content/topics/apps/apps-manage-assignments.htm). 
+In Okta, [assign users or groups to the app integration](https://help.okta.com/en-us/content/topics/apps/apps-manage-assignments.htm). 
 
 ## 5. Invite users to Insomnia
 
