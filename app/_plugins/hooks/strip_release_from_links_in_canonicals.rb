@@ -3,16 +3,16 @@
 require 'nokogiri'
 
 class StripReleaseFromLinks
-  def initialize(thing)
-    @thing = thing
+  def initialize(page_or_doc)
+    @page_or_doc = page_or_doc
   end
 
   def process
-    return unless @thing.data['content_type'] == 'reference' && @thing.url == @thing.data['base_url']
+    return unless @page_or_doc.data['content_type'] == 'reference' && @page_or_doc.url == @page_or_doc.data['base_url']
 
-    doc = Nokogiri::HTML(@thing.output)
+    doc = Nokogiri::HTML(@page_or_doc.output)
     changes = false
-    release = @thing.data['release']['release']
+    release = @page_or_doc.data['release']['release']
 
     doc.css('a').each do |link|
       href = link['href']
@@ -24,10 +24,10 @@ class StripReleaseFromLinks
       link['href'] = modified_href
     end
 
-    @thing.output = doc.to_html if changes
+    @page_or_doc.output = doc.to_html if changes
   end
 end
 
-Jekyll::Hooks.register [:documents, :pages], :post_render do |thing|
-  StripReleaseFromLinks.new(thing).process
+Jekyll::Hooks.register [:documents, :pages], :post_render do |page_or_doc|
+  StripReleaseFromLinks.new(page_or_doc).process
 end
