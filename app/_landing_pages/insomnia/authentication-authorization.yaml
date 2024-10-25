@@ -44,7 +44,7 @@ rows:
             icon:  /assets/icons/azure.svg
             cta:
               text: Learn more
-              url: /insomnia/data-security
+              url: /how-to/azure-saml-sso-insomnia
               align: end
       - blocks:
         - type: card
@@ -54,7 +54,7 @@ rows:
             icon:  /assets/icons/okta.svg
             cta:
               text: Learn more
-              url: /insomnia/data-security
+              url: /how-to/okta-saml-sso-insomnia
               align: end
       - blocks:
         - type: card

@@ -7,6 +7,8 @@ products:
 related_resources:
   - text: Authentication & Authorization in Insomnia
     url: /insomnia/authentication-authorization
+  - text: Configure Azure SAML SSO in Insomnia
+    url: /how-to/azure-saml-sso-insomnia
 
 tier:
   - enterprise
