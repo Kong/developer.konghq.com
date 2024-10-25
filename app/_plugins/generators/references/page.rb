@@ -27,6 +27,7 @@ module Jekyll
       def data
         @data ||= @page.data
                        .deep_dup
+                       .except('published')
                        .merge(
                          'release' => @release,
                          'seo_noindex' => true,
