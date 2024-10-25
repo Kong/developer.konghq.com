@@ -17,11 +17,8 @@ prereqs:
           icon_url: /assets/icons/menu.svg
 
 next_steps:
-    layout:
-        style: list
-    items:
-        - text: Run a collection
-          url: /how-to/use-the-collection-runner
+    - text: Run a collection
+      url: /how-to/use-the-collection-runner/
 
 tldr:
     q: How can I reuse content from a response in another request?
