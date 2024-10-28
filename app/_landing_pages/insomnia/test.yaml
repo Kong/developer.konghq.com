@@ -63,7 +63,7 @@ rows:
             icon: /assets/icons/insomnia/icon-innovation-light-02.svg
             cta:
               text: Learn more
-              url: /how-to/run-a-collection/
+              url: /how-to/use-the-collection-runner/
               align: end  
   
   - header:
