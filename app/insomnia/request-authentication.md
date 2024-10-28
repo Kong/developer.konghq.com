@@ -24,11 +24,11 @@ breadcrumbs:
 
 ## What is request authentication in Insomnia?
 
-Some requests require authentication to send. In Insomnia, you can configure different authentication types and parameters when you send a request so that it can authenticate.
+Some requests require authentication. In Insomnia, you can configure different authentication types and parameters when you send a request so that it can authenticate.
 
 ## How do I configure authentication in my requests in Insomnia? 
 
-In a collection or design document in Insomnia, navigate to a request in your collection. Click the **Auth** tab below your request and select an authentication type from the dropdown menu.
+Navigate to a request in a collection, click the **Auth** tab below your request, and select an authentication type from the dropdown menu.
 
 ## Which authentication types are supported?
 
