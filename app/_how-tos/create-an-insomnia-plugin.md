@@ -27,42 +27,24 @@ Develop your plugin and make sure the `package.json` file includes the content r
 
 ```json
 {
-  "name": "insomnia-plugin-base64", // NPM module name, must be prepended with insomnia-plugin-
-  "version": "1.0.0",               // Plugin version
-  "main": "app.js",                 // Entry point
-
-  // Insomnia-specific metadata. Without this, Insomnia won't recognize the module as a plugin.
+  "name": "insomnia-plugin-base64",
+  "version": "1.0.0",
+  "main": "app.js",
   "insomnia": {
-    "name": "base64",                                                       // Internal Insomnia plugin name
-    "displayName": "base64 Plugin",                                         // Plugin display name
-    "description": "The base64 plugin encodes and decodes basic strings.",  // Plugin description
-
-    // Optional plugin metadata
-
-    // Plugin images for Plugin Hub and other interfaces
+    "name": "base64",
+    "displayName": "base64 Plugin",
+    "description": "The base64 plugin encodes and decodes basic strings.",
     "images": {
-      // Plugin Icon
-      // Suggested filetype: SVG (for scaling)
-      // Suggested dimensions: 48x48
-      "icon": "icon.svg", // relative path, relative to package root
-
-      // Plugin Cover Image
-      // Suggested filetype: SVG (for scaling)
-      // Suggested dimensions: 952w x 398h
-      "cover": "cover.svg", // relative path, relative to package root
+      "icon": "icon.svg",
+      "cover": "cover.svg",
     },
-
-    // Force plugin hub and other entities to show specific author details
-    // Useful for teams and organizations who work on the same plugin
     "publisher": {
-      "name": "YOUR NAME HERE", // Plugin publisher name, displayed on plugin hub
-      "icon": "https://...",    // Plugin publisher avatar or icon, absolute url
+      "name": "YOUR NAME HERE",
+      "icon": "https://...",
     },
 
-    "unlisted": false // Set to true if this plugin should not be available on the Plugin Hub
+    "unlisted": false
   },
-
-  // External dependencies are also supported
   "dependencies": [],
   "devDependencies": []
 }
