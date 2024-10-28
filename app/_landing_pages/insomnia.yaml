@@ -62,7 +62,7 @@ rows:
             icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-api-plugins-color.svg
             cta:
               text: Learn more
-              url: https://insomnia.rest/plugins
+              url: /insomnia/plugins
               align: end
   - header:
       type: h2
@@ -86,7 +86,7 @@ rows:
                   individual: true
                   team: true
                   ee: true
-                - title: Access to API testing suite
+                - title: API Testing tools
                   oss: true
                   individual: true
                   team: true
