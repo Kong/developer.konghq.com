@@ -12,7 +12,7 @@ rows:
                 - type: text
                   text: | 
                     Insomnia plugins can be used to extend the functionality of Insomnia. 
-                    They are commonly used for advanced features, such as custom authentication mechanisms and complex workflows.
+                    They are commonly used for advanced features, such as custom authentication mechanisms and complex workflows. They can also be used to customize the Insomnia theme.
 
   - columns:
       - blocks:
@@ -33,7 +33,7 @@ rows:
             icon: /assets/icons/insomnia/design.svg
             cta:
               text: Learn more
-              url: /how-to/create-a-plugin-in-insomnia
+              url: /how-to/create-an-insomnia-plugin
   
   - header:
       text: "How to use plugins"
@@ -46,26 +46,28 @@ rows:
               type: h2
               items:
                 - text: |
+                    Access the plugins preferences
+                  action:
+                    type: text
+                    config: |
+                      Go to **Preferences** > **Plugins**.
+                - text: |
                     Add a plugin
                   action:
                     type: text
                     config: |
-                      1. Go to **Preferences** > **Plugins**.
                       1. Enter the name of the plugin.
                       1. Click **Install Plugin**.
                 - text: |
                     Disable a plugin
                   action:
                     type: text
-                    config: |
-                      1. Go to **Preferences** > **Plugins**.
-                      1. Click the checkbox under **Enable?** for the plugin you want to disable.
+                    config: Click the checkbox under **Enable?** for the plugin you want to disable.
                 - text: |
                     Remove a plugin permanently
                   action:
                     type: text
                     config: |
-                      1. Go to **Preferences** > **Plugins**.
                       1. Click **Reveal Plugins Folder** to open the Insomnia plugins directory.
                       1. Delete the plugin's folder.
                 - text: |
@@ -73,6 +75,5 @@ rows:
                   action:
                     type: text
                     config: |
-                      1. Go to **Preferences** > **Plugins**.
                       1. Click **Generate New Plugin**.
                       1. Enter a name for the new plugin and click **Generate**.
