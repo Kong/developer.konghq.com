@@ -1,5 +1,5 @@
 ---
-title: Postman Migration to Insomnia
+title: Migrate from Postman
 content_type: reference
 layout: reference
 
@@ -19,35 +19,55 @@ related_resources:
     url: /insomnia/api-specs
 
 faqs:
-  - q: I've got many collections and environments in Postman, how do I migrate that?
+  - q: I've got many collections and environments in Postman, how do I migrate them?
     a: You can import all your collections and environments in Insomnia by navigating to the Postman settings and doing a data dump of all your collections and environments. Once you download the data, you can upload each environment and collection to Insomnia like normal.
   - q: How does script syntax map in Insomnia?
     a: |
-        Insomnia uses `insomnia` instead of `pm` in scripts. For example, a Postman script like `pm.test("Status code is 200", function () {pm.response.to.have.status(200);});` would turn into `insomnia.test("Status code is 200", function () {insomnia.response.to.have.status(200);});`. Insomnia automatically converts script syntax when you copy and paste it from Postman or import files with Postman scripts.
+      Insomnia automatically converts script syntax when you copy and paste it from Postman or import files with Postman scripts.
   - q: Is there anything that can't be pasted, migrated, or imported from Postman to Insomnia?
-    a: You can't copy and paste or migrate Postman dynamic variables. Insomnia doesn't convert them to Insomnia dynamic variables automatically. 
+    a: You can't copy and paste or migrate Postman dynamic variables. Insomnia doesn't convert them to Insomnia dynamic variables automatically.
+  - q: What can I import from Postman to Insomnia?
+    a: |
+        * Pre-request scripts
+        * Post-request scripts
+        * Collections
+        * Environments
+  - q: What Postman features map to Insomnia features?
+    a: | 
+      |Postman feature|Insomnia feature|
+      |--|--|
+      |Workspaces|Organization|
+      |Collection| Collection|
+      |Environments| Global environments |
+      |API Builder| [Design documents](/insomnia/documents)|
+      |Postman CLI | [Inso CLI](/insomnia/inso-cli)|
+      |Post-response scripts| After-response scripts|
+      |pre-resonse scripts |Pre-response scripts|
+
 ---
 
-## What are features called in Insomnia in comparison to Postman?
 
-The following table describes how features in Postman map to features in Insomnia:
+## Migrate Collections
 
-| Postman feature | Insomnia feature |
-|-----------------|------------------|
-| Workspaces | Organization |
-| Collection | Collection |
-| Environments | Global environments |
-| API Builder | [Design documents](/insomnia/documents) |
-| Mock servers | Mock Server |
-| Postman CLI | [Inso CLI](/inso-cli) |
-| Post-response scripts | After-response scripts |
+To migrate a collection from Postman, select the collection in Postman click the `...` icon and select **Export**. Select **Collection v2.1**. This will create a JSON file of your entire Postman collection. 
 
-## What can I import or migrate from Postman in Insomnia?
+![Postman Export](/assets/images/insomnia/postman-export.png)
 
-When you migrate the following from Postman, either by import or copy and paste, Insomnia will automatically convert them to the correct format and syntax for Insomnia:
+From Insomnia select **Import** and select the JSON file you exported from Postman. This will import the collection into Insomnia, including any scripts, collections, and specs.
 
-* Pre-request scripts
-* Post-response scripts
-* Collections
-* Environments
-* Data dumps of all your collections and environments in Postman
+## Migrate Environments
+
+Postman environments are stored seperatly from collections. To import an environment file from Postman to Insomnia. 
+Click the `...` icon and select **Export** and save the environment file.
+
+From Insomnia select **Import** and select the JSON file you exported from Postman. This will import the environment file into Insomnia which you can view from the **Environments** tab. 
+
+
+## Postman scripts
+
+Postman supports Pre-response and Post-response scripts. These scripts map directly 1:1 to Insomnia Post-response scripts and After-response scripts. Scripts can be copy and pasted from 
+
+![Postman script](/assets/images/insomnia/postman-scripts.png) 
+![Insomnia script](/assets/images/insomnia/insomnia-scripts.png)
+
+
