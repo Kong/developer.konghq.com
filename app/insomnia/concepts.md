@@ -1,7 +1,7 @@
 ---
 title: Insomnia concepts
 
-content_type: concept
+content_type: reference
 layout: concept
 
 products:
@@ -13,12 +13,12 @@ products:
 ---
 
 ## Design document
-A design document is a workspace containing tools to design an API specification. You can write and edit a spec, generate a collection from the spec to send requests, and create test suites to run different types of tests.
+A design document is a workspace containing tools to design an API specification. You can write and edit a spec, generate a collection from the spec to send requests, and create test suites to run different types of tests against your API or API spec.
 
 For more details, see [Documents](/insomnia/documents)
 
 ## Request collection
-A request collection is a workspace in which you can create or import requests, and send them. You can customize your requests with environment variables, template tags, pre-request and after-response scripts. You can run a single request or select a series of requests to run together.
+A request collection is a workspace for sending requests. You can create new requests or import requests from an API spec, clipboard, or even from a Postman collection. Requests can be customized with environment variables, template tags, pre-request and after-response scripts. Requests can be run individually or as a series of requests to run together.
 
 <!-- Create collection page and add link -->
 
@@ -28,7 +28,7 @@ A mock server allows you to simulate an API endpoint. You can create a mock serv
 <!-- Create mock server page and add link -->
 
 ## Scratch Pad
-The Insomnia Scratch Pad is a local workspace that you can use to send requests. It doesn't require creating an Insomnia account. The Scratch Pad functions as a collection, you have access to all collection features, but you can't create multiple collections. You can't create design documents or mock servers either.
+The Insomnia Scratch Pad is a local workspace that you can use to send requests. It doesn't require creating an Insomnia account. The Scratch Pad functions as a collection, and you have access to all collection features.
 
 For more details, see [Scratch Pad](/insomnia/scratch-pad).
 
