@@ -1,10 +1,10 @@
 metadata:
   title: Insomnia
+  product: insomnia
 rows:
   - header:
       type: h1
       text: "Insomnia"
-      sub_text: "Design, debug, test, and mock APIs locally, on Git, or cloud"
 
   - columns:
       - blocks:
@@ -32,12 +32,11 @@ rows:
   
   - header:
       type: h2
-      text: "Features"
     columns:
       - blocks:
         - type: card
           config:
-            title: Design APIs
+            title: Design
             description: Design and preview new APIs with OpenAPI
             icon:  /assets/icons/insomnia/design.svg
             cta:
@@ -47,32 +46,23 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Test APIs
-            description: Automatically test multiple requests in your collections, with no limits on the amount of collection runs that you can execute.
+            title: Test
+            description: Test APIs and run automated tests seamlessly across collections. 
             icon: /assets/icons/insomnia/checkbox-active.svg
             cta:
               text: Learn more
               url: /insomnia/test
               align: end
+      
       - blocks:
         - type: card
           config:
-            title: Debug APIs
-            description: Debug and use APIs across your collections
-            icon: /assets/icons/insomnia/bug.svg
-            cta:
-              text: Learn more
-              url: /insomnia/debug
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Insomnia Plugin Hub
+            title: Plugins
             description: Extend Insomnia with powerful plugins
             icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-api-plugins-color.svg
             cta:
               text: Learn more
-              url: https://insomnia.rest/plugins
+              url: /insomnia/plugins
               align: end
   - header:
       type: h2
@@ -91,37 +81,32 @@ rows:
                 - title: Enterprise
                   key: ee
               features:
-                - title: Local vault for local storage of collections, design specs, and every other resource
+                - title: Local storage
                   oss: true
                   individual: true
                   team: true
                   ee: true
-                - title: Debug APIs using the most popular protocols and formats
+                - title: API Testing tools
                   oss: true
                   individual: true
                   team: true
                   ee: true
-                - title: Test APIs using native test suites
+                - title: Cloud-hosted mock server
                   oss: true
                   individual: true
                   team: true
                   ee: true
-                - title: Mock APIs using cloud and/or self-hosted Mock servers
+                - title: Automated API testing
                   oss: true
                   individual: true
                   team: true
                   ee: true
-                - title: Build CI/CD pipelines using the native Insomnia CLI for linting and testing
+                - title: Cloud Sync
                   oss: true
                   individual: true
                   team: true
                   ee: true
-                - title: Cloud Sync for cloud collaboration, end-to-end encrypted (E2EE) and free
-                  oss: true
-                  individual: true
-                  team: true
-                  ee: true
-                - title: Git Sync for Git storage of all files using any 3rd party Git repository
+                - title: Git Sync
                   oss: false
                   individual: false
                   team: true
@@ -144,45 +129,33 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    See the full [feature comparison &rarr;](/insomnia/feature-comparison)
+                    See the full feature comparison on our [pricing page&rarr;](https://insomnia.rest/pricing)
 
   - header:
       type: h2
-      text: Learn
+      text: Features
     columns:
       - blocks:
           - type: card
             config:
-              title: API specs
-              description: |
-                Insomnia provides capabilities to create, import, lint, and collaborate on API specs. 
-                You can easily generate a collection of requests from an API spec.
-              icon: /assets/icons/admin-api.svg
-              cta:
-                text: Learn more about API specs in Insomnia
-                url: /insomnia/api-specs/
-                align: end
-      - blocks:
-          - type: card
-            config:
-              title: Storage options in Insomnia
+              title: Storage
               description: |
                 Insomnia offers various storage options to cater to different user needs and preferences as well as to ensure data compliance requirements. 
                 Understanding these options is crucial for efficient and secure management of your API projects.
               icon: /assets/icons/data-object.svg
               cta:
-                text: Learn more about storage in Insomnia
+                text: Learn more about storage
                 url: /insomnia/storage-options/
                 align: end
       - blocks:
           - type: card
             config:
-              title: Security at Insomnia
+              title: Security
               description: |
                 Learn how Insomnia prioritizes data protection through encryption, product and application security, and organizational measures.
               icon: /assets/icons/lock.svg
               cta:
-                text: Learn about security at Insomnia
+                text: Learn about security
                 url: /insomnia/security/
                 align: end
       
