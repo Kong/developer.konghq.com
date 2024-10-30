@@ -65,9 +65,14 @@ From Insomnia select **Import** and select the JSON file you exported from Postm
 
 ## Postman scripts
 
-Postman supports Pre-response and Post-response scripts. These scripts map directly 1:1 to Insomnia Post-response scripts and After-response scripts. Scripts can be copy and pasted from 
+Postman supports Pre-response and Post-response scripts. These scripts map directly 1:1 to Insomnia Post-response scripts and After-response scripts. Scripts can be copied directly from Postman and used in Insomnia automatically. Insomnia will convert the script for you. 
 
-![Postman script](/assets/images/insomnia/postman-scripts.png) 
-![Insomnia script](/assets/images/insomnia/insomnia-scripts.png)
-
+<div style="display: flex;">
+    <div>
+        <img src="/assets/images/insomnia/postman-scripts.png" alt="Postman script" />
+    </div>
+    <div>
+        <img src="/assets/images/insomnia/insomnia-scripts.png" alt="Insomnia script" />
+    </div>
+</div>
 
