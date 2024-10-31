@@ -2,7 +2,7 @@
 title: Insomnia concepts
 
 content_type: reference
-layout: concept
+layout: reference
 
 products:
 - insomnia
@@ -20,12 +20,12 @@ For more details, see [Documents](/insomnia/documents)
 ## Request collection
 A request collection is a workspace for sending requests. You can create new requests or import requests from an API spec, clipboard, or even from a Postman collection. Requests can be customized with environment variables, template tags, pre-request and after-response scripts. Requests can be run individually or as a series of requests to run together.
 
-<!-- Create collection page and add link -->
+For more details, see [Documents](/insomnia/collections)
 
 ## Mock server
-A mock server allows you to simulate an API endpoint. You can create a mock server and define endpoints with a sample response to return. You can customize the response code, body, and headers. A mock server can be hosted on Insomnia Cloud or self-hosted.
+A mock server is a self-hosted or cloud-hosted way to simulate an API endpoint. You can create a mock server and define endpoints manually, or generate them from existing responses. You can customize the response code, body, and headers.
 
-<!-- Create mock server page and add link -->
+For more details, see [Documents](/insomnia/mocks)
 
 ## Scratch Pad
 The Insomnia Scratch Pad is a local workspace that you can use to send requests. It doesn't require creating an Insomnia account. The Scratch Pad functions as a collection, and you have access to all collection features.
