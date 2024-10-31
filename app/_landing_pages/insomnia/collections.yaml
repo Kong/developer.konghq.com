@@ -82,10 +82,10 @@ rows:
                     The pre-request and after-response scripts allows you to interact with the request and its response. You can use these to:
                 - type: unordered_list
                   items:
-                  - Set or clear variables
+                  - Set or unset variables
                   - Update the contents of the request
-                  - Send other requests
-                  - Run tests on the response
+                  - Dynamically update request bodies
+                  - Test the response
           - type: button
             config:
               align: left
