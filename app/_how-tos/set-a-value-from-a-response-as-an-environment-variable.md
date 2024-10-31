@@ -42,7 +42,10 @@ If you imported the [Konnect Identity Management API](https://docs.konghq.com/ko
 ## 2. Create the after-response script
 
 1. Open the **Scripts** tab and click **After-response**.
-1. Add the following script. It will check that the request returns the expected 201 status code, get the token value, and set it as the value of a new `systemToken` environment variable.
+1. Add the following script. When this script run it will: 
+    * Check that the request returns the expected 201 status code
+    * Get the value of the token
+    * Assign the value to the `systemToken` environment variable.
 
     ```js
     insomnia.test('Check if status is 201', () => {
