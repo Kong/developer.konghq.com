@@ -1,0 +1,162 @@
+metadata:
+  title: Collections
+  breadcrumbs:
+    - /insomnia/
+rows:
+  - header:
+      type: h1
+      text: "Collections"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Request collections in Insomnia"
+              blocks:
+                - type: text
+                  text: | 
+                    Collections are a way to group requests in Insomnia. You can use them to:
+                - type: unordered_list
+                  items: 
+                    - Create and send requests
+                    - Run multiple requests with the Collection Runner
+                    - Write scripts to modify requests or check responses
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/insomnia/collection.png
+              alt_text: Image of a collection
+  
+  - header:
+      type: h2
+      text: "Send requests"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    With Insomnia, you can send requests via HTTP, gRPC, GraphQL, and WebSockets. You can send a single request or run a series of requests in a specific order.
+          - type: button
+            config:
+              align: left
+              text: Learn more about requests
+              url: /insomnia/requests/
+      - blocks:
+        - type: image
+          config:
+            url: /assets/images/insomnia/request.png
+            alt_text: Image of a request
+  - header:
+      type: h3
+      text: "Get started with requests"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Use the Collection Runner
+            cta:
+              text: Learn more
+              url: /how-to/use-the-collection-runner/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Chain requests
+            cta:
+              text: Learn more
+              url: /how-to/chain-requests/
+              align: end
+ 
+  - header:
+      type: h2
+      text: "Write scripts"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    The pre-request and after-response scripts allows you to interact with the request and its response. You can use these to:
+                - type: unordered_list
+                  items:
+                  - Set or clear variables
+                  - Update the contents of the request
+                  - Send other requests
+                  - Run tests on the response
+          - type: button
+            config:
+              align: left
+              text: Learn more about scripts
+              url: /insomnia/scripts/
+      - blocks:
+        - type: image
+          config:
+            url: /assets/images/insomnia/after-response-script.png
+            alt_text: Image of an after-response script
+  - header:
+      type: h3
+      text: "Get started with scripts"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Write pre-request scripts to add dynamic behavior
+            cta:
+              text: Learn more
+              url: /how-to/write-pre-request-scripts/
+              align: end
+  - header:
+      text: "Frequently Asked Questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: What's the difference between a collection and a design document?
+              a: Documents are a data object that can contain an API spec, a collection of API requests, and tests. Collections are simply a series of API requests that you intend to interact with Insomnia.
+            - q: Can I import requests from another tool?
+              a: |
+                Yes, you can create requests in collections by importing:
+                - Postman collections
+                - Swagger/OpenAPI specifications
+                - cURL commands
+                - Insomnia files
+                - HAR files
+                - WSDL files
+            - q: Can I run collections in CI/CD environments?
+              a: Yes, you can use the [`inso run collection`](/inso-cli/reference/run_collection/) command in Inso CLI to run a collection automatically.
+  - header:
+      type: h2
+      text: Learn
+    columns:
+      - blocks:
+          - type: concept_list
+            config:
+              - topic: documents
+                product: insomnia 
+            quantity: 5
+            allow_empty: true
+          - type: cta
+            config:
+              text: "Learn more &raquo;"
+              url: "https://docs.devsite.com/search/{concept.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
+  - header:
+      type: h2
+      text: References & Tools
+    columns:
+      - blocks:
+          - type: reference_list
+            config:
+              products:
+                  - insomnia
+            quantity: 5
+            allow_empty: true
+          - type: cta
+            config:
+              text: "View more references &raquo;"
+              url: "https://docs.devsite.com/search/{reference.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
