@@ -1,5 +1,5 @@
 ---
-title: Run a collection in Insomnia
+title: Use the Collection Runner in Insomnia
 
 products:
     - insomnia

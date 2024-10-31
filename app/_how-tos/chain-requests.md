@@ -21,7 +21,7 @@ next_steps:
         style: list
     items:
         - text: Run a collection
-          url: /how-to/run-a-collection
+          url: /how-to/use-the-collection-runner
 
 tldr:
     q: How can I reuse content from a response in another request?
