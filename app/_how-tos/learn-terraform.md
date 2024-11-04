@@ -5,10 +5,13 @@ related_resources:
     url: /terraform/
 
 products:
-    - konnect
+  - konnect
 
 platforms:
-    - konnect
+  - konnect
+
+tools:
+  - terraform
 
 entities: 
   - service
@@ -27,8 +30,6 @@ faqs:
     a: "Double-check your `kong_admin_url` and token values in `main.tf`. Ensure there arn't typos and that the token is valid."
   - q:
     a: 
-
-content_type: tutorial
 ---
 
 cover what the tutorial will talk about, what you will learn

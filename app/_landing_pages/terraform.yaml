@@ -1,21 +1,23 @@
-content:
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h1
-              text: "Terraform"
-              align: center
+metadata:
+  title: Terraform
+  product: terraform
+rows:
+  - header:
+      type: h1
+      text: "Terraform"
 
-  - row:
-      - column:
+  - columns:
+      - blocks:
           - type: structured_text
             config:
+              header:
+                text: "Terraform"
               blocks:
                 - type: text
-                  text: Kong provides [terraform-provider-konnect](https://github.com/Kong/terraform-provider-konnect), which allows you to manage your Konnect resources using Terraform. 
-  - row:    
-      - column:
+                  text: |
+                    Kong provides [terraform-provider-konnect](https://github.com/Kong/terraform-provider-konnect), which allows you to manage your Konnect resources using Terraform.  
+     
+      - blocks:
           - type: mermaid
             config:
               alt_text: "A diagram that explains how Terraform works with Konnect"
@@ -33,129 +35,16 @@ content:
                 Konnect API->>Konnect: Apply configuration
                 Konnect->>Kong Gateway: Configure Kong Gateway
                 Kong Gateway->>Application: Manage and handle application traffic
-  - row:
-      - column:
-          - type: structured_text
+  
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
             config:
-              blocks:
-                - type: text
-                  text: |
-                    The provider allows you to manage the following Konnect, Kong Gateway, and Kong Mesh resources:
-                - type: toggle
-                  title: Gateway Manager
-                  text: | 
-                    - Gateway Hybrid Control Plane
-                    - Gateway KIC Control Plane
-                    - Gateway Control Plane Group
-                      - Control Plane Group Memberships
-                    - Gateway Data Plane Client Certificates
-                - type: toggle
-                  title: Cloud Gateways
-                  text: |
-                    - Cloud Gateway Configuration
-                    - Custom Domain
-                    - Network
-                    - Transit Gateway
-                    - Serverless Cloud Gateway
-                - type: toggle
-                  title: Kong Gateway Entities
-                  text: |
-                    - Service
-                    - Route
-                    - Plugins
-                      - ACL
-                      - AI Prompt Decorator
-                      - AI Prompt Guard
-                      - AI Prompt Template
-                      - AI Proxy
-                      - AWS Lambda
-                      - Basic Auth
-                      - Correlation ID
-                      - CORS
-                      - File Log
-                      - IP Restriction
-                      - JQ
-                      - JWT
-                      - JWT Signer
-                      - KeyAuth
-                      - OAuth2
-                      - OpenID Connect
-                      - OpenTelemetry
-                      - Pre-function
-                      - Prometheus
-                      - Proxy Cache
-                      - Rate Limiting
-                      - Rate Limiting Advanced
-                      - Request Termination
-                      - Request Transformer
-                      - Request Transformer Advanced
-                      - Response Transformer
-                      - Response Transformer Advanced
-                      - SAML
-                      - Exit Transformer
-                    - Consumers
-                    - Consumer Groups
-                      - Consumer Group Members
-                    - Credentials
-                      - Basic Auth
-                      - Key Auth
-                      - JWT
-                      - HMAC Auth
-                      - ACL
-                    - Upstream
-                    - Target
-                    - Vault
-                    - Certificate
-                    - CA Certificate
-                    - SNI
-                    - Key
-                    - Key Set
-                    - Custom Plugin Schema
-                - type: toggle
-                  title: Mesh
-                  text: |
-                    - Mesh Control Plane
-                - type: toggle
-                  title: API Products
-                  text: |
-                    - API Product
-                    - API Product Version
-                    - API Product Specification
-                    - API Product Documentation
-                - type: toggle
-                  title: Dev Portal
-                  text: |
-                    - Portal
-                    - Portal Authentication
-                    - Application Auth Strategy
-                    - Portal Product Version
-                    - Portal Appearance
-                - type: toggle
-                  title: Organization
-                  text: |
-                    - System Account
-                    - System Account Access Tokens
-                    - System Account Roles
-                    - System Account Teams
-                    - Team
-                    - Team Roles
-                    - Team Users
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h2
-              text: Tutorials
-          - type: tutorial_list
-            config:
-              - topic: terraform
-                product: 
-                  - gateway 
-                  - konnect
-                  - mesh 
-            quantity: 5
-          - type: cta
-            config:
-              text: "View more tutorials &raquo;"
-              url: "https://docs.devsite.com/search/{tutorial.topic}+{other stuff}" ## Takes you to search with terms that match this.
-              align: end
+              products:
+                  - terraform
+              quantity: 5
+              allow_empty: true
+              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
