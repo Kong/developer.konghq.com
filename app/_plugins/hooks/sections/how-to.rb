@@ -4,7 +4,7 @@ module SectionWrapper
   class HowTo < Base
     def section_title(h2, slug, title)
       Nokogiri::HTML::DocumentFragment.parse <<-HTML
-        <a aria-label="Anchor" href="##{slug}" title="#{title}" class="header-link flex items-baseline justify-between hover:no-underline accordion-trigger">
+        <a aria-label="Anchor" href="##{slug}" title="#{title}" class="header-link flex items-center justify-between hover:no-underline accordion-trigger">
           #{h2.to_html}
           <span class="inline-flex chevron-icon rotate-180" aria-hidden="true">
             #{File.read('app/assets/icons/chevron-down.svg')}
