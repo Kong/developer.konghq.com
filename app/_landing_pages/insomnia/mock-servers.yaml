@@ -27,11 +27,11 @@ rows:
                 - type: text
                   text: | 
                     The Insomnia Cloud mock servers allow you to create a mock endpoint in a few steps. You simply need to provide an endpoint and a sample response. You get a number or free mock requests based on your plan. For more details, see the [pricing page](https://insomnia.rest/pricing).
-          # - type: button
-          #   config:
-          #     align: left
-          #     text: Learn more about cloud-hosted mock servers
-          #     url: how-to about creating a mock server and endpoints
+          - type: button
+            config:
+              align: left
+              text: Learn more about cloud-hosted mock servers
+              url: /how-to/create-a-cloud-hosted-mock-server
   - header:
       type: h2
       text: "Self-hosted mocks"
