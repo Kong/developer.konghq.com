@@ -55,6 +55,14 @@ rows:
       - blocks:
         - type: card
           config:
+            title: Requests reference
+            cta:
+              text: Learn more
+              url: /insomnia/requests
+              align: end
+      - blocks:
+        - type: card
+          config:
             title: Use the Collection Runner
             cta:
               text: Learn more
