@@ -81,8 +81,7 @@ Folders can be used to organize requests, but you can also add configuration to 
 
 * Authentication
 * Headers
+* Scripts
 * Environment variables
 
-You can also create scripts and add documentation.
-
-<!-- Need to clarify how scripts work on the folder level -->
+You can also add documentation about the folder.
