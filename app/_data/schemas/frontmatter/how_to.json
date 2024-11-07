@@ -1,0 +1,45 @@
+{
+  "$id": "schema:how_to",
+  "allOf": [
+    {
+      "$ref": "schema:base"
+    }
+  ],
+  "properties": {
+    "tldr": {
+      "type": "object",
+      "properties": {
+        "q": {
+          "type": "string"
+        },
+        "a": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "q",
+        "a"
+      ]
+    },
+    "min_version": {
+      "type": "object"
+    }
+  },
+  "if": {
+    "properties": {
+      "products": {
+        "contains": {
+          "const": "gateway"
+        }
+      }
+    }
+  },
+  "then": {
+    "required": [
+      "works_on"
+    ]
+  },
+  "required": [
+    "tldr"
+  ]
+}

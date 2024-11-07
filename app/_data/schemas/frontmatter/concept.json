@@ -1,0 +1,4 @@
+{
+  "$id": "schema:concept",
+  "allOf": [{ "$ref": "schema:base" }]
+}
