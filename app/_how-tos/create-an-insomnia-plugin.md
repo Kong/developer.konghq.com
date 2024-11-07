@@ -1,5 +1,6 @@
 ---
 title: Create and publish an Insomnia plugin
+content_type: how_to
 
 products:
 - insomnia

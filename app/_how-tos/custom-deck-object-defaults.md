@@ -1,5 +1,6 @@
 ---
 title: Customize object defaults in decK
+content_type: how_to
 
 works_on:
     - on-prem

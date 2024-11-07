@@ -1,5 +1,7 @@
 ---
 title: Write pre-request scripts to add dynamic behavior in Insomnia
+content_type: how_to
+
 related_resources:
   - text: Automate tests in Insomnia
     url:  /how-to/automate-tests/

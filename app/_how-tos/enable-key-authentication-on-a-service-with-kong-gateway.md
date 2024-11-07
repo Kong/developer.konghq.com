@@ -1,5 +1,7 @@
 ---
 title: Enable key authentication on a service with Kong Gateway
+content_type: how_to
+
 related_resources:
   - text: Authentication
     url: /authentication
@@ -16,6 +18,10 @@ tags:
 
 tools:
     - deck
+
+works_on:
+    - on-prem
+    - konnect
 
 prereqs:
   entities:
