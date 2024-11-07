@@ -1,5 +1,6 @@
 metadata:
   title: decK
+  content_type: landing_page
 rows:
   - header:
       type: h1

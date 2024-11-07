@@ -1,5 +1,6 @@
 metadata:
   title: Kong Gateway
+  content_type: landing_page
 rows:
   - header:
       type: h1
