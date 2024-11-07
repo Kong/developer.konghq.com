@@ -1,5 +1,6 @@
 ---
 title: Synchronize Insomnia content with Git
+content_type: how_to
 
 products:
 - insomnia

@@ -1,5 +1,7 @@
 ---
 title: Write tests for data types in Insomnia
+content_type: how_to
+
 related_resources:
   - text: Write tests for headers in the response in Insomnia
     url: /how-to/write-headers-in-response-test/ 

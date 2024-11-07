@@ -1,5 +1,6 @@
 ---
 title: Multiple rate limits and window sizes
+content_type: how_to
 
 related_resources:
   - text: Rate Limiting Advanced plugin
