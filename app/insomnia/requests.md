@@ -62,7 +62,7 @@ In Insomnia, you can configure every part of your request, and you can also add 
 
 ## What can I do with requests?
 
-You can simply click **Send** to send a request, but you can also click the **Send** menu to see more options.
+You can simply click **Send** to send a request, but you can also click the context menu to see more options.
 
 {:.note}
 > These options are only available for HTTP and event stream requests.
