@@ -1,0 +1,19 @@
+name: Validate frontmatters
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [synchronize, opened]
+  push:
+    branches: [main]
+
+jobs:
+  validate-frontmatters:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run validator
+        working-directory: tools/frontmatter-validator
+        run: |
+          npm ci
+          node index.js
