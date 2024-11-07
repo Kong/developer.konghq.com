@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ site.lang | default: "en-US" }}">
+<html lang="{{ site.lang | default: "en-US" }}" class="scroll-smooth scroll-pt-20">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
@@ -7,50 +7,49 @@
 
     <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico" />
 
+    {% if page.canonical_url %}
+      <link rel="canonical" href="{{ site.links.web }}{{ page.canonical_url }}" />
+    {% endif %}
+
+    {% if page.seo_noindex == true %}
+      <meta name="robots" content="follow,noindex" />
+    {% else %}
+      {% comment %}
+      TODO: uncomment this when the site goes live
+      <meta name="robots" content="follow,index" />
+      {% endcomment %}
+    {% endif %}
+
+    <script>
+      // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.mode === 'dark' || (!('mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    {% include structured_data.html %}
+
     {% vite_client_tag %}
     {% vite_javascript_tag application %}
+
+    {% if layout.entity_schema %}
+      {% vite_javascript_tag entity_schema %}
+    {% endif %}
   </head>
-  <body>
-    <header class='flex spy-4 px-10 bg-slate-500 min-h-[70px] tracking-wide relative z-50'>
-      <div class='flex flex-wrap items-center justify-between gap-5 w-full'>
 
-        <div class="flex flex-row items-center">
-          <a href="https://konghq.com" class="pr-4" target="_blank" rel="noopener noreferrer">
-            <img src="https://docs.konghq.com/assets/images/logos/konglogo-dark-theme.svg" alt="Kong Logo" id="kong-logo">
-          </a>
-          <a href="/">
-            <img src="https://docs.konghq.com//assets/images/logos/docslogo-dark-theme.svg" alt="Kong Docs Logo" id="kong-docs-logo">
-          </a>
-        </div>
+  <body class="bg-primary leading-6">
+    {% include header.html %}
 
-        <ul class='flex gap-x-5 list-none'>
-          <li class='border-gray-300 max-lg:py-3 px-3'>
-            <a href='/' class='text-white hover:text-red-200'>Home</a>
-          </li>
-          <li class='border-gray-300 max-lg:py-3 px-3'>
-            <a href='/tutorials/' class='text-white hover:text-red-200'>Tutorials</a>
-          </li>
-          <li class='border-gray-300 max-lg:py-3 px-3'>
-            <a href='/plugins/' class='text-white hover:text-red-200'>Plugins</a>
-          </li>
-          <li class='border-gray-300 max-lg:py-3 px-3'>
-            <a href='/gateway/entities/' class='text-white hover:text-red-200'>Gateway Entities</a>
-          </li>
-          <li class='border-gray-300 max-lg:py-3 px-3'>
-            <a href='/landing-pages/' class='text-white hover:text-red-200'>All Landing Pages</a>
-          </li>
-        </li>
-      </ul>
+  <div class="flex px-5 md:px-8 2xl:px-[156px] 2xl:mx-auto max-w-screen-2xl">
+    {{ content }}
+  </div>
 
-      <div class='flex space-x-3'>
-        <button
-        class='px-4 py-2 text-sm rounded-full font-bold text-white border-2'>Login</button>
-        <button
-        class='px-4 py-2 text-sm rounded-full font-bold text-white border-2'>Sign up</button>
+  {% if page.get_help != false %}
+    {% include get_help.html %}
+  {% endif %}
 
-      </div>
-    </div>
-  </header>
-  {{ content }}
+  {% include footer.html %}
 </body>
 </html>

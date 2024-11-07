@@ -6,19 +6,14 @@ module Jekyll
       module Utils
         module VariableReplacer
           class URL
-            def self.run(string:, variables:)
-              variables.each_with_object(string.dup) do |(key, value), result|
-                placeholder = "{#{key}}"
-                result.gsub!(placeholder, value) if result.include?(placeholder)
+            def self.run(url:, defaults:, variables:)
+              url = url.dup
+              url.scan(/\{(.*?)\}/).flatten.each do |p|
+                value = variables[p] || "{#{defaults[p]['placeholder']}}"
+                url.gsub!("{#{p}}", value)
               end
-            end
-          end
 
-          class Text
-            def self.run(string:, variables:)
-              variables.each_with_object(string.dup) do |(key, value), result|
-                result.gsub!(key, value) if result.include?(key)
-              end
+              url
             end
           end
         end

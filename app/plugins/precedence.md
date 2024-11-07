@@ -5,9 +5,15 @@ title: Plugin precedence
 content_type: reference
 layout: reference
 
+products:
+  - gateway
+
 related_resources:
   - text: Kong Plugins
     url: /plugins/
+
+breadcrumbs:
+  - /gateway/
 ---
 
 A single plugin instance always runs _once_ per request. The
@@ -21,19 +27,19 @@ Therefore, there is an order of precedence for running a plugin when it has been
 The complete order of precedence for plugins configured to multiple entities is:
 
 1. **Consumer** + **route** + **service**: Highest precedence, affecting authenticated requests that match a specific consumer on a particular route and service.
-1. **Consumer group** + **service** + **route**: Affects groups of authenticated users across specific services and routes.
-1. **Consumer** + **route**: Targets authenticated requests from a specific consumer on a particular route.
-1. **Consumer** + **service**: Applies to authenticated requests from a specific consumer accessing any route within a given service.
-1. **Consumer group** + **route**: Affects groups of authenticated users on specific routes.
-1. **Consumer group** + **service**: Applies to all routes within a specific service for groups of authenticated users.
-1. **Route** + **service**: Targets all consumers on a specific route and service.
-1. **Consumer**: Applies to all requests from a specific, authenticated consumer across all routes and services.
-1. **Consumer group**: Affects all routes and services for a designated group of authenticated users.
-1. **Route**: Specific to given route.
-1. **Service**: Specific to given service. 
-1. **Globally configured plugins**: Lowest precedence, applies to all requests across all services and routes regardless of consumer status.
+2. **Consumer group** + **service** + **route**: Affects groups of authenticated users across specific services and routes.
+3. **Consumer** + **route**: Targets authenticated requests from a specific consumer on a particular route.
+4. **Consumer** + **service**: Applies to authenticated requests from a specific consumer accessing any route within a given service.
+5. **Consumer group** + **route**: Affects groups of authenticated users on specific routes.
+6. **Consumer group** + **service**: Applies to all routes within a specific service for groups of authenticated users.
+7. **Route** + **service**: Targets all consumers on a specific route and service.
+8. **Consumer**: Applies to all requests from a specific, authenticated consumer across all routes and services.
+9. **Consumer group**: Affects all routes and services for a designated group of authenticated users.
+10. **Route**: Specific to given route.
+11. **Service**: Specific to given service. 
+12. **Globally configured plugins**: Lowest precedence, applies to all requests across all services and routes regardless of consumer status.
 
-{:.note}
+{:.info}
 > **Note on precedence for consumer groups**:
 When a consumer is a member of two consumer groups, each with a scoped plugin, 
 {{site.base_gateway}} ensures deterministic behavior by executing only one of these plugins. 

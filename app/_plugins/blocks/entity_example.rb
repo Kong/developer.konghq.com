@@ -8,18 +8,18 @@ module Jekyll
       @context = context
       @site = context.registers[:site]
       @page = context.environments.first['page']
+      environment = context.environments.first
 
       contents = super
 
       example = YAML.load(contents)
-
       example = example.merge('formats' => @page['tools']) unless example['formats']
 
       unless example['formats']
         raise ArgumentError, "Missing key `tools` in metadata, or `formats` in entity_example block on page #{@page['path']}"
       end
 
-      entity_example = EntityExamples::Base.make_for(example: example)
+      entity_example = EntityExampleBlock::Base.make_for(example: example)
       entity_example_drop = entity_example.to_drop
 
       template = File.read(entity_example_drop.template)

@@ -10,7 +10,7 @@ module Jekyll
       end
 
       def convert
-        indent_yaml(YAML.dump(@hash).delete_prefix("---\n"))
+        indent_yaml(YAML.dump(@hash).delete_prefix("---\n").chomp)
       end
 
       def indent_yaml(yaml_string, indent_level = 2)

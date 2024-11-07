@@ -1,5 +1,8 @@
-<div class="mt-4 flex flex-wrap flex-col">
-  <h3 class="font-bold">Related resources</h3>
-
+{% unless page.related_resources == empty %}
+<div class="flex flex-col gap-2  w-full">
+  <div class="text-primary font-medium">Related Resources</div>
+  <div class="flex gap-1.5 flex-col md:flex-row">
   {% related_resources %}
+  </div>
 </div>
+{% endunless %}

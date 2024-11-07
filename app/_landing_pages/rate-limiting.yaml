@@ -1,0 +1,117 @@
+metadata:
+  title: "Rate Limiting"
+  tags:
+    - rate-limiting
+rows:
+  - header:
+      type: h1
+      text: "Rate Limiting"
+
+  - columns:
+      -
+        blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "What is Rate Limiting?"
+              blocks:
+                - type: text
+                  text:
+                    Rate limiting controls the number of API requests a client can make within a specified time frame.
+                    It's a critical function that helps maintain
+                    the performance and availability of web
+                    services and APIs by controlling the request traffic.
+
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Why is Rate Limiting important?"
+            blocks:
+              - type: text
+                text: "Rate Limiting is necessary when using an API gateway for the following reasons:"
+              - type: unordered_list
+                items:
+                  - "**Resource Protection:** Ensures that no single user or client could monopolize resources and degrade the performance or impact the experience of other users."
+                  - "**Security:** Helps protect against certain types of security attacks, like DDoS (Distributed Denial of Service) attacks, by limiting the rate at which requests can be made."
+                  - "**Cost Management:** Prevents a sharp increase in usage (therefore cost) from either a bug or deliberately heavy usage by a consumer."
+                  - "**Quality of Service:** Certain user tiers may be given different rate limits to ensure a level of service. For example, premium users may have a higher rate limit than free users."
+                  - "**Enforcing API Tiers/Plans:** Different pricing plans may have different usage limits."
+              - type: text
+                text: Rate limits are typically defined on per-second, per-minute, or hourly intervals and are often configurable so they can be finely tuned based on the specific requirements of the system and its users.
+
+  - header:
+      text: Learn more about rate limiting with Kong
+      type: h2
+    columns:
+      -
+        blocks:
+        - type: card
+          config:
+            title: Rate Limiting in Kong Gateway
+            description: |
+              Kong Gateway can be configured to apply rate limiting rules on API traffic entering the system.
+
+              This includes rate limiting by IP, API key, consumer, or other criteria. This is ideal for handling external API traffic with advanced rate limiting policies and comprehensive traffic management.
+            icon: /assets/icons/gateway.svg
+            cta:
+              text: Add Rate Limiting with Kong Gateway
+              url: "/gateway/rate-limiting/"
+      - blocks:
+        - type: card
+          config:
+            title: Rate Limiting in KIC
+            description: |
+              Rate limiting capabilities in KIC vary by the ingress controller implementation (e.g., NGINX, Traefik).
+
+              Basic rate limiting can be configured for external traffic entering the Kubernetes cluster. This is ideal for controlling external traffic entering your Kubernetes environment with simpler rate limiting requirements.
+            icon: /assets/icons/kic.svg
+            cta:
+              text: Add Rate Limiting with KIC
+              url: "/kic/rate-limiting/"
+      - blocks:
+        - type: card
+          config:
+            title: Rate Limiting in Kong Mesh
+            description: |
+              Kong Mesh can apply rate limiting policies at the service level within the mesh.
+
+              This includes controlling traffic between microservices and managing inter-service communication. This is ideal for internal service-to-service communication where you need fine-grained control over traffic within the mesh.
+            icon: /assets/icons/mesh.svg
+            cta:
+              text: Add Rate Limiting with Kong Mesh
+              url: "/mesh/rate-limiting/"
+
+
+  - header:
+      text: How-to Guides
+      type: h2
+    columns:
+      -
+        blocks:
+          - type: how_to_list
+            config:
+              tags:
+                - rate-limiting
+              quantity: 5
+              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
+
+  - header:
+      text: "Related Resources"
+      type: h2
+    columns:
+      -
+        blocks:
+          - type: related_resources
+            config:
+              - text: Protecting Services With Kong Gateway Rate Limiting
+                type: blog
+                url: https://konghq.com/blog/engineering/kong-gateway-rate-limiting
+              - text: How to Design a Scalable Rate Limiting Algorithm with Kong API
+                type: blog
+                url: https://konghq.com/blog/engineering/how-to-design-a-scalable-rate-limiting-algorithm
+              - text: "API Rate Limiting: Beginner's Guide"
+                type: learning-center
+                url: https://konghq.com/blog/learning-center/what-is-api-rate-limiting

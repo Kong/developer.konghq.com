@@ -1,0 +1,18 @@
+{
+  "name": "track-docs-changes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@octokit/rest": "^21.0.2",
+    "simple-git": "^3.27.0",
+    "yaml": "^2.5.1"
+  }
+}

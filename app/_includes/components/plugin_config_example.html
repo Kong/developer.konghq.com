@@ -1,0 +1,49 @@
+{% assign plugin_config_example = include.plugin_config_example %}
+{% assign targets = plugin_config_example.targets %}
+{% assign formats = plugin_config_example.formats %}
+
+<div id="{{ entity_example.id }}" class="entity-example">
+  <div class="p-2 flex justify-end">
+    <div>
+      {% if targets.size > 0 %}
+        <label for="select-target-{{ entity_example.id }}" class="sr-only">Select an entity</label>
+        <select id="select-target-{{ entity_example.id }}" class="ml-1 w-36 select-target border border-gray-300 ">
+          {% for target in targets %}
+            <option value="{{ target }}">{{ site.data.entity_examples.config.targets[target]['label'] }}</option>
+          {% endfor %}
+        </select>
+      {% endif %}
+
+      {% if formats.size > 1 %}
+        <label for="select-format-{{ entity_example.id }}" class="sr-only">Select a format</label>
+        <select id="select-format-{{ entity_example.id }}" class="ml-1 w-36 select-format border border-gray-300 ">
+          {% for format in formats %}
+            <option value="{{ format }}">{{ site.data.entity_examples.config.formats[format].label }}</option>
+          {% endfor %}
+        </select>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if targets.size > 0 %}
+    {% for entity_example in plugin_config_example.entity_examples %}
+     {% assign target = entity_example.target.key %}
+
+     {% assign formatted_examples = entity_example.formatted_examples %}
+      <div tabindex="0" class="entity-example-target-panel hidden overflow-auto" aria-labelledby="select-target-{{ entity_example.id }}" data-target="{{ target }}">
+        {% if target == 'global' %}
+          {% capture global_context %}{% include components/plugin_config_example/global.md %}{% endcapture %}
+          {{ global_context | markdownify }}
+        {% endif %}
+
+        {% for formatted_example in formatted_examples %}
+          {% assign format = formatted_example.format %}
+          <div tabindex="0" class="entity-example-format-panel hidden overflow-auto" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ format }}">
+            {% capture markdown_template %}{% include {{ formatted_example.template_file }} presenter=formatted_example.presenter render_context=true %}{% endcapture %}
+            {{ markdown_template | markdownify }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>

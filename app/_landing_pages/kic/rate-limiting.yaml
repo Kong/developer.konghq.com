@@ -1,0 +1,26 @@
+metadata:
+  title: KIC Rate Limiting
+  breadcrumbs:
+    - /rate-limiting/
+rows:
+  - header:
+      type: h1
+      text: "Rate Limiting with Kong Ingress Controller"
+
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tags:
+                - rate-limiting
+              products:
+                - kic
+              quantity: 5
+              allow_empty: true
+
+  - header:
+      type: h2
+      text: "Related Resources"

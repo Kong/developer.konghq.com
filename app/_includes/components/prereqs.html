@@ -1,22 +1,41 @@
-<ol class="list-none mx-0">
-  <li>
-{% capture kong_gateway %}{% include prereqs/kong_gateway.md %}{% endcapture %}
-{{ kong_gateway | markdownify }}
-  </li>
+<div class="flex flex-col accordion prerequisites" data-default="0" data-multiple="false">
+  {% if page.products %}
+
+    {% if page.products contains 'gateway' %}
+      {% if page.works_on contains 'konnect' %}
+      <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="konnect">
+        {% include prereqs/products/konnect.md tier=include.tier %}
+      </div>
+      {% endif %}
+      <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="on-prem">
+        {% include prereqs/products/gateway.md tier=include.tier %}
+      </div>
+    {% endif %}
+
+    {% for product in prereqs.products %}
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
+{% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
+{% include {{ product_include }} tier=include.tier %}
+        </div>
+    {% endfor %}
+  {% endif %}
 
   {% for tool in prereqs.tools %}
-    <li>
-      {% assign tool_include = 'prereqs/tools/' | append: tool | append: '.md' %}
-      {% capture tool_template %}{% include {{ tool_include }} %}{% endcapture %}
-      {{ tool_template | markdownify }}
-    </li>
+    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
+{% assign tool_include = 'prereqs/tools/' | append: tool | append: '.md' %}
+{% include {{ tool_include }} %}
+    </div>
   {% endfor %}
 
   {% if prereqs.entities? %}
-    <li>
-      {% capture entities_template %}{% include prereqs/entities.md data=prereqs.data %}{% endcapture %}
-      {{ entities_template | markdownify }}
-    </li>
+    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
+{% include prereqs/entities.md data=prereqs.data %}
+    </div>
   {% endif %}
 
-</ul>
+  {% for prereq in prereqs.inline %}
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+{% include prereqs/inline.md prereq=prereq %}
+  </div>
+  {% endfor %}
+</div>

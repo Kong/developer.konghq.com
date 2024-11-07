@@ -30,25 +30,39 @@ plugins:
 collections:
   gateway_entities:
     output: true
-  tutorials:
+  how-tos:
     output: true
 
 defaults:
   - scope:
-      path: "_tutorials"
-      type: "tutorials"
+      path: "_how-tos"
+      type: "how-tos"
     values:
-      layout: "tutorial"
-      permalink: /:collection/:path/
+      layout: "how-to"
+      permalink: "/how-to/:path/"
+      content_type: "how-to"
+      breadcrumbs:
+        - "/how-to/"
   - scope:
       path: "_gateway_entities"
       type: "gateway_entities"
     values:
       layout: "gateway_entity"
-      permalink: /gateway/entities/:path/
+      permalink: "/gateway/entities/:path/"
+      content_type: "reference"
+      products:
+        - gateway
+      breadcrumbs:
+        - "/gateway/"
+        - "/gateway/entities/"
 
 
 
 # product name vars
 base_gateway: Kong Gateway
 konnect_short_name: Konnect
+
+
+repos:
+  developer: https://github.com/Kong/developer.konghq.com
+  docs: https://github.com/Kong/docs.konghq.com

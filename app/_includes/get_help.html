@@ -1,0 +1,45 @@
+<div class="w-full max-w-screen-2xl 2xl:mx-auto px-5 md:px-8 2xl:px-[156px] text-sm mt-16">
+    <div class="grid md:grid-cols-3 py-12 gap-20 border-t border-primary/5">
+        <div class="flex flex-col gap-5">
+            <div class="flex flex-col gap-4">
+                <h3>Did this doc help?</h3>
+                <div class="flex gap-2">
+                    <a class="rounded-md border border-brand py-2 px-3 text-primary hover:no-underline" href="#yes">Yes</a>
+                    <a class="rounded-md border border-brand py-2 px-3 text-primary hover:no-underline" href="#no">No</a>
+                </div>
+            </div>
+            <div class="flex gap-1">
+                <span>Something wrong?</span>
+                <div class="flex gap-2">
+                    <a class="text-brand" href="{{ site.repos.developer }}/issues/">Report an Issue</a>
+                    <span class="text-secondary">|</span>
+                    <a class="text-brand" href="{{ page.edit_link }}">Edit this Page</a>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col gap-5">
+            <div class="flex flex-col gap-4">
+                <h3>Help us make these docs great!</h3>
+                <div>Kong Developer docs are open source. If you find these useful and want to make them better,
+                    contribute today!</div>
+            </div>
+            <div class="flex">
+                <a class="rounded-md border border-brand py-2 px-3 text-primary hover:no-underline"
+                    href="{{ site.repos.developer }}">Contribute</a>
+            </div>
+        </div>
+        <div class="flex flex-col gap-4">
+            <h3>Still need help</h3>
+            <div class="flex flex-col gap-2">
+                <a class="text-brand flex gap-2" href="https://discuss.konghq.com/">
+                    <div class="flex w-5 h-5 text-brand">{% include_svg '/assets/icons/book.svg' %}</div>
+                    Ask in our Forum
+                </a>
+                <a class="text-brand flex gap-2" href="https://support.konghq.com/support/s/">
+                    <div class="flex w-5 h-5 text-brand">{% include_svg '/assets/icons/support.svg' %}</div>
+                    Contact Support
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+---
+layout: with_aside
+---
+{% include how-tos/tldr.html %}
+
+<div class="flex flex-col gap-8 accordion" data-all-expanded="true">
+{% include sections/prerequisites.html tier=page.tier %}
+
+{{ content }}
+
+{% if page.cleanup %}
+{% include sections/cleanup.html %}
+{% endif %}
+</div>
+
+{% if page.faqs %}
+{% include sections/faq.html %}
+{% endif %}
+
+{% if page.next_steps %}
+{% include sections/next_steps.html %}
+{% endif %}
+
+{% contentfor info_box %}
+  {% include info_box/how-to.html %}
+{% endcontentfor %}
+
+{% if page.works_on %}
+{% contentfor controls %}
+{% include how-tos/controls.html works_on=page.works_on %}
+{% endcontentfor %}
+{% endif %}

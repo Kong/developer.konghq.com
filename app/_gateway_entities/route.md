@@ -4,8 +4,6 @@ name: Route
 entities:
   - route
 
-content_type: reference
-
 description: A route is a path to a resource within an upstream application.
 
 related_resources:
@@ -23,6 +21,11 @@ tools:
     - deck
     - ui
     - terraform
+
+schema:
+    api: gateway/admin-ee
+    path: /schemas/Route
+
 ---
 
 ## What is a route?

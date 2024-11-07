@@ -1,7 +1,11 @@
-<ul>
-  {% for tutorial in tutorials %}
-    <li>
-      <a href="{{ tutorial.url }}">{{ tutorial.title }}</a>
-    </li>
-  {% endfor %}
-</ul>
+{% if tutorials.length %}
+<ul class="flex flex-col bg-secondary shadow-primary  rounded-md text-sm ml-0 gap-0">
+    {% for tutorial in tutorials %}
+      <li>
+        <a href="{{ tutorial.url }}">{{ tutorial.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% elsif config['allow_empty'] != true %}
+  <p class="bg-red-200 p-4">No tutorials found for '{{ config['products'] | join:', ' }}' with tags '{{ config['tags'] | join:', ' }}'</p>
+{% endif %}

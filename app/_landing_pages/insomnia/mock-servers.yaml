@@ -1,0 +1,99 @@
+metadata:
+  title: Mocks
+  breadcrumbs:
+    - /insomnia/
+rows:
+  - header:
+      type: h1
+      text: "Mocks"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Mock servers in Insomnia"
+              blocks:
+                - type: text
+                  text: | 
+                    A mock server is a tool used to simulate API endpoints. These can be particularly useful while [designing an API](/insomnia/design). Insomnia offers cloud-hosted mock servers, but you can also deploy self-hosted mocks.
+  - header:
+      type: h2
+      text: "Cloud-hosted mocks"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    The Insomnia Cloud mock servers allow you to create a mock endpoint in a few steps. You simply need to provide an endpoint and a sample response. You get a number or free mock requests based on your plan. For more details, see the [pricing page](https://insomnia.rest/pricing).
+          - type: button
+            config:
+              align: left
+              text: Learn more about cloud-hosted mock servers
+              url: /how-to/create-a-cloud-hosted-mock-server
+  - header:
+      type: h2
+      text: "Self-hosted mocks"
+    columns:
+    - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: | 
+                  Enterprise users can deploy self-hosted mock servers using [Insomnia Mockbin](https://github.com/kong/insomnia-mockbin). This allows you to have more control over usage for your mocks.
+        # - type: button
+        #   config:
+        #     align: left
+        #     text: Learn more about self-hosted mock servers
+        #     url: how-to about deploying a self-hosted mock server
+  - header:
+      text: "Frequently Asked Questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: Are mock servers available for all users?
+              a: Yes, all plans have access to mocks, with some limitations based on the plan. Enterprise users have unlimited requests on cloud-hosted mock servers and have the option to deploy self-hosted mocks. See the API mocking section of the [pricing page](https://insomnia.rest/pricing) for more information.
+            - q: Can I automatically generate mock endpoints?
+              a: Yes, you can generate a mock endpoint from a request response. The generated endpoint will contain the response body, headers, and status.
+
+  - header:
+      type: h2
+      text: Learn
+    columns:
+      - blocks:
+          - type: concept_list
+            config:
+              - topic: documents
+                product: insomnia 
+            quantity: 5
+            allow_empty: true
+          - type: cta
+            config:
+              text: "Learn more &raquo;"
+              url: "https://docs.devsite.com/search/{concept.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
+  - header:
+      type: h2
+      text: References & Tools
+    columns:
+      - blocks:
+          - type: reference_list
+            config:
+              products:
+                  - insomnia
+            quantity: 5
+            allow_empty: true
+          - type: cta
+            config:
+              text: "View more references &raquo;"
+              url: "https://docs.devsite.com/search/{reference.topic}+{other stuff}" ## Takes you to search with terms that match this.
+              align: end
+
+
+
+
+              

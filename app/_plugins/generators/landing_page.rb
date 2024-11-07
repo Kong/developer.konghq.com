@@ -2,7 +2,7 @@
 
 module Jekyll
   class LandingPagesGenerator < Jekyll::Generator
-    priority :low
+    priority :high
 
     def generate(site)
       Jekyll::LandingPages::Generator.run(site)

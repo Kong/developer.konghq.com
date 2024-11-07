@@ -1,0 +1,33 @@
+---
+layout: plugins/base
+---
+
+<div class="flex flex-col gap-3 ">
+  <h2>Description</h2>
+
+  <div class="content">
+    {{ page.example.description | markdoownify }}
+  </div>
+</div>
+
+<div class="flex flex-col gap-3 ">
+  <h2>Set up the plugin</h2>
+
+  <div class="content">
+    {% include components/plugin_config_example.html plugin_config_example=page.example %}
+  </div>
+</div>
+
+<div class="flex flex-col gap-3 ">
+  <h2>Available examples</h2>
+
+  <div class="content">
+    <ul>
+      {% for example in page.examples %}
+      <li>
+        <a href="/plugins/{{ page.slug }}/examples/{{ example.slug }}"> {{ example.slug }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

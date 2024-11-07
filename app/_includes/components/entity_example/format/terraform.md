@@ -1,22 +1,32 @@
-{% if include.presenter.entity_type == "plugin" %}
-{% assign plugin_name = include.presenter.data.name | replace: "-","_" %}
-{% highlight hcl %}
-resource "{{ include.presenter.resource_name }}_{{ plugin_name }}" "my_{{ plugin_name }}" {
-  enabled = true
-
-  {{ include.presenter }}
-  control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id{% if include.presenter.target %}
-  {{ include.presenter.target }} = {
-    id = konnect_gateway_{{ include.presenter.target }}.my_{{ include.presenter.target }}.id
+{% capture terraform_prereq_block %}
+```hcl
+terraform {
+  required_providers {
+    konnect = {
+      source  = "kong/konnect"
+    }
   }
-{%- endif %}
 }
-{% endhighlight %}
-{% else %}
-{% highlight hcl %}
-resource "{{ include.presenter.resource_name }}" "my_{{ include.presenter.entity_type }}" {
-  {{ include.presenter }}
-  control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id
+
+provider "konnect" {
+  personal_access_token = "${{site.data.entity_examples.config.konnect_variables.pat.placeholder}}"
+  server_url            = "https://us.api.konghq.com/"
 }
-{% endhighlight %}
+```
+{% endcapture %}
+
+{% if include.render_context %}
+<div class="bg-secondary shadow-primary rounded-md flex flex-col text-sm">
+  <details class="py-3 px-5 flex gap-1 border-b border-primary/5">
+    <summary class="text-primary list-none"><strong>Prerequisite:</strong> Configure your Personal Access Token<span class="inline-flex chevron-icon float-right">{% include_svg '/assets/icons/chevron-down.svg' %}</span></summary>
+    <div class="mt-2">
+      {{ terraform_prereq_block | markdownify }}
+    </div>
+  </details>
+</div>
+{% case include.presenter.entity_type %}
+{% when 'plugin' %}
+  Add the following to your Terraform configuration to create a Konnect Gateway Plugin:
+{% endcase %}
 {% endif %}
+{% include components/entity_example/format/snippets/terraform.md presenter=include.presenter %}

@@ -1,22 +1,13 @@
 metadata:
   title: Kong Gateway
-content:
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h1
-              text: "Kong Gateway"
-              align: center
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h2
-              text: "API gateway built for hybrid and multi-cloud, optimized for microservices and distributed architectures"
-              align: left
-  - row:
-      - column:
+rows:
+  - header:
+      type: h1
+      text: "Kong Gateway"
+      sub_text: "API gateway built for hybrid and multi-cloud, optimized for microservices and distributed architectures"
+
+  - columns:
+      - blocks:
           - type: structured_text
             config:
               header:
@@ -28,120 +19,226 @@ content:
                     
                     Kong Gateway runs in front of any RESTful API and can be extended through modules and plugins. 
                     It’s designed to run on decentralized architectures, including hybrid-cloud and multi-cloud deployments.
-
-                    With Kong Gateway, users can:
-                - type: ordered_list
-                  items:
-                    - Leverage workflow automation and modern GitOps practices
-                    - Decentralize applications/services and transition to microservices
-                    - Create a thriving API developer ecosystem
-                    - Proactively identify API-related anomalies and threats
-                    - Secure and govern APIs/services, and improve API visibility across the entire organization. 
-      - column:
+      - blocks:
           - type: image
             config:
-              url: https://docs.konghq.com/assets/images/products/gateway/kong-gateway-features.png
+              url: /assets/images/gateway/kong-gateway-overview.svg
               alt_text: Diagram of how Kong Gateway works
-  - row: 
-    - column: 
-      - type: header
-        config: 
-          type: h2
-          text: "How to get started"
-  - row:
-    - column:
-      - type: card
-        config:
-          title: Start with Konnect
-          icon:  https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/kong-gradient.svg
-          cta:
-            text: 
-            url: /konnect/getting-started/
-            align: end
-    - column:
-      - type: card
-        config:
-          title: Kong Gateway quickstart
-          icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-learning.svg
-          cta:
-            text: 
-            url: https://docs.konghq.com/gateway/latest/get-started/
-            align: end
-    - column:
-      - type: card
-        config:
-          title: Install on your platform
-          icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-deployment-color.svg
-          cta:
-            text: 
-            url: https://docs.konghq.com/gateway/latest/install/
-            align: end
-    - column:
-      - type: card
-        config:
-          title: Kong Plugin Hub
-          description: Extend your Gateway with powerful plugins
-          icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-api-plugins-color.svg
-          cta:
-            text: 
-            url: /plugins
-            align: end
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h2
-              text: Learn
-          - type: concept_list
-            config:
-              - topic: beginner
-                product: gateway 
-            quantity: 5
-          - type: cta
-            config:
-              text: "Learn more &raquo;"
-              url: "https://docs.devsite.com/search/{concept.topic}+{other stuff}" ## Takes you to search with terms that match this.
+
+  - header:
+      type: h2
+      text: "Install Kong Gateway"
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  You can use the [quickstart script](https://get.konghq.com/quickstart) to get an instance of Kong Gateway running almost instantly:
+                  
+                  ```sh
+                  curl -Ls https://get.konghq.com/quickstart | bash -s
+                  ```
+
+                  This script sets up two Docker containers: an Enterprise Gateway instance running in free mode, and a 
+                  PostgreSQL database.
+                  
+                  Pass the `-- -h` option to the script to see all possible configuration options, including how to pass a license
+                  to the script, how to switch to an open-source Gateway image, enable RBAC, and more.
+
+                  Visit the [Gateway install page](/gateway/install) for all other installation options.
+
+  - header:
+      type: h2
+      text: "More ways to get started"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Start with Konnect
+            description: Let Kong manage your control plane for you
+            icon:  https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/kong-gradient.svg
+            cta:
+              text: 
+              url: https://docs.konghq.com/konnect/getting-started/
               align: end
-  - row:
-      - column:
-          - type: header
+      - blocks:
+        - type: card
+          config:
+            title: Try out the Gateway with Docker
+            description: Using a local container, learn how to use core Gateway capabilities, including rate limiting, authentication, and load balancing
+            icon: /assets/icons/graduation.svg
+            cta:
+              text: 
+              url: https://docs.konghq.com/gateway/latest/get-started/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Install on your platform
+            description: Set up Kong Gateway on any supported platform
+            icon: /assets/icons/deployment.svg
+            cta:
+              text: 
+              url: https://docs.konghq.com/gateway/latest/install/
+              align: end
+
+  - header:
+        type: h2
+        text: "Capabilities"
+    columns:
+      - blocks:
+          - type: feature_table
             config:
-              type: h2
-              text: Tutorials
-          - type: tutorial_list
+              columns:
+                - title: Open Source
+                  key: oss
+                - title: Enterprise
+                  key: enterprise
+              features:
+                - title: Fast, Lightweight, Cloud-Native API Gateway
+                  oss: true
+                  enterprise: true
+                - title: End-to-End Automation
+                  subtitle: Drive a GitOps flow of API design and execution
+                  oss: true
+                  enterprise: true
+                - title: Kong Ingress Controller
+                  subtitle: Deploy APIs to Kubernetes in a native fashion.
+                  oss: true
+                  enterprise: true
+                - title: Gateway Mocking
+                  subtitle: Mock API responses directly on the API gateway.
+                  oss: false
+                  enterprise: true
+                - title: "Kong Manager: Admin GUI"
+                  subtitle: Visually manage Kong cluster, plugins, APIs, and consumers.
+                  oss: true
+                  enterprise: true
+                - title: Traffic Management and Transformations
+                  oss: true
+                  enterprise: true
+                - title: Security and Governance
+                  oss: true
+                  enterprise: true
+                - title: AI Gateway
+                  oss: true
+                  enterprise: true
+                - title: Enterprise Support and Services
+                  oss: false
+                  enterprise: true
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    See the full [Enterprise vs Open Source page feature comparison &rarr;](/gateway/enterprise-vs-oss)
+  - header:
+      type: h2
+      text: Learn
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI Gateway
+            description: |
+              Kong AI Gateway is a powerful set of features built on top of Kong Gateway, 
+              designed to help developers and organizations effectively adopt AI capabilities quickly and securely.
+            icon: /assets/icons/ai.svg
+            cta:
+              text: Start using Kong AI Gateway
+              url: https://docs.konghq.com/gateway/latest/ai-gateway/
+              align: end
+
+      - blocks:
+        - type: card
+          config:
+            title: Authentication
+            description: |
+              Authentication is the process of verifying that a requester has permissions to access a resource. 
+              As its name implies, API gateway authentication authenticates the flow of data to and from your upstream services. 
+
+              Kong Gateway has a library of plugins that support the most widely used methods of API gateway authentication.
+            icon: /assets/icons/lock.svg
+            cta:
+              text: Learn about Kong Gateway authentication methods
+              url: /authentication
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Rate Limiting in Kong Gateway
+            description: |
+              Kong Gateway can be configured to apply rate limiting rules on API traffic entering the system.
+
+              This includes rate limiting by IP, API key, consumer, or other criteria. This is ideal for handling external API traffic with advanced rate limiting policies and comprehensive traffic management.
+            icon: /assets/icons/gateway.svg
+            cta:
+              text: Add Rate Limiting with Kong Gateway
+              url: "/gateway/rate-limiting/"
+      - blocks:
+        - type: card
+          config:
+            title: Analytics & Observability
+            description: |
+              Understanding the state of your API gateway system is critical to providing reliable API-based systems.
+
+              There are many monitoring and alerting systems available, and Kong Gateway integrates with multiple solutions.
+            icon: /assets/icons/analytics.svg
+            cta:
+              text: Start monitoring your Kong Gateway
+              url: https://docs.konghq.com/gateway/latest/production/monitoring/
+              align: end
+
+  - header:
+      type: h2
+      text: Key References
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Kong Plugin Hub
+              description: Extend your Gateway with powerful plugins
+              icon: /assets/icons/plug.svg
+              cta:
+                text: View all available plugins
+                url: /plugins
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Kong Gateway Entities
+              description: |
+                Learn about Kong entities, which are the various components and objects that make up the Kong API Gateway and its ecosystem.
+                This includes services, routes, consumers, and more.
+              icon: /assets/icons/linked-services.svg
+              cta:
+                text: Learn about Kong Gateway entities
+                url: /gateway/entities/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: API Reference
+              description: |
+                Explore the reference documentation for all Kong Gateway APIs
+              icon: /assets/icons/data-object.svg
+              cta:
+                text: Kong API reference
+                url: /gateway/entities/
+                align: end
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
             config:
               products:
                   - gateway
               quantity: 5
-          - type: cta
-            config:
-              text: "View more tutorials &raquo;"
-              url: "https://docs.devsite.com/search/{tutorial.topic}+{other stuff}" ## Takes you to search with terms that match this.
-              align: end
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h2
-              text: References & Tools
-          - type: reference_list
-            config:
-              - topic: beginner
-                product: gateway 
-            quantity: 5
-          - type: cta
-            config:
-              text: "View more references &raquo;"
-              url: "https://docs.devsite.com/search/{reference.topic}+{other stuff}" ## Takes you to search with terms that match this.
-              align: end
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h2
-              text: Recommended Plugins
-  - row:
-      - column:
-          - type: plugin
-            config:
-              slug: rate-limiting
+              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.

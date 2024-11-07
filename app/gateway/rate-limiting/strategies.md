@@ -4,12 +4,19 @@ title: Rate Limiting Strategies
 content_type: reference
 layout: reference
 
+products:
+   - gateway
+
 plugins:
   - rate-limiting
   - response-ratelimiting
   - rate-limiting-advanced
   - ai-rate-limiting-advanced
   - graphql-rate-limiting-advanced
+
+breadcrumbs:
+  - /gateway/
+  - /gateway/rate-limiting/
 ---
 
 All rate limiting plugins support some subset of the following strategies:
@@ -30,7 +37,7 @@ All rate limiting plugins support some subset of the following strategies:
 | GraphQL Rate Limiting Advanced | ❌ | ✅ | ✅ |
 | Response Ratelimiting | ✅ | ✅ | ✅ | -->
 
-{:.note .no-icon}
+{:.info .no-icon}
 > **\[1\]**: Only when `sync_rate` option is set to `0` (synchronous behavior). See the configuration reference for each plugin for more details.
 
 Two common use cases are:

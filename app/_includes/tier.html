@@ -1,0 +1,5 @@
+{% if include.products and include.products.size > 1 %}
+{% raise "tier.html include called with a tier and more than one product." %}
+{% endif %}
+{% assign tier = site.data.products[include.products.first].tiers[include.tier] %}
+{% include badge.html url=tier.url text=tier.text %}

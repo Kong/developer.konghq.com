@@ -1,5 +1,5 @@
 ---
-title: Rate Limiting
+title: Rate Limiting plugin
 
 name: Rate Limiting
 publisher: kong-inc
@@ -33,6 +33,8 @@ topologies:
     - db-less
     - traditional
 ---
+
+## Overview
 
 Rate limit how many HTTP requests can be made in a given period of seconds, minutes, hours, days, months, or years.
 If the underlying service or route has no authentication layer,
@@ -85,7 +87,7 @@ When a limit is reached, the plugin returns an `HTTP/1.1 429` status code, with 
 { "message": "API rate limit exceeded" }
 ```
 
-{:.important}
+{:.warning}
 > The headers `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset` are based on the Internet-Draft [RateLimit Header Fields for HTTP](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/) and may change in the future to respect specification updates.
 
 

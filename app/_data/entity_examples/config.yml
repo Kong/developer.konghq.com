@@ -1,0 +1,108 @@
+variables: &variables
+  upstream:
+    placeholder: 'upstreamName|Id'
+    description: 'The `id` or `name` of the upstream the target is associated with.'
+  consumer:
+    placeholder: 'consumerName|Id'
+    description: 'The `id` or `name` of the consumer the plugin configuration will target.'
+  consumer_group:
+    placeholder: 'consumerGroupName|Id'
+    description: 'The `id` or `name` of the consumer group the plugin configuration will target.'
+  route:
+    placeholder: 'routeName|Id'
+    description: 'The `id` or `name` of the route the plugin configuration will target.'
+  service:
+    placeholder: 'serviceName|Id'
+    description: 'The `id` or `name` of the service the plugin configuration will target.'
+
+konnect_variables: &konnect_variables
+  region:
+    placeholder: 'region'
+    description: 'Geographic region where your Kong Konnect is hosted and operates.'
+  control_plane:
+    placeholder: 'controlPlaneId'
+    description: 'The `id` of the control plane.'
+  pat:
+    placeholder: 'KONNECT_TOKEN'
+    description: 'Your Personal Access Token (PAT) associated with your Konnect account.'
+  upstream:
+    placeholder: 'upstreamId'
+    description: 'The `id` of the upstream the target is associated with.'
+  consumer:
+    placeholder: 'consumerId'
+    description: 'The `id` of the consumer the plugin configuration will target.'
+  consumer_group:
+    placeholder: 'consumerGroupId'
+    description: 'The `id` of the consumer group the plugin configuration will target.'
+  route:
+    placeholder: 'routeId'
+    description: 'The `id` of the route the plugin configuration will target.'
+  service:
+    placeholder: 'serviceId'
+    description: 'The `id` of the service the plugin configuration will target.'
+
+formats:
+  deck:
+    label: 'decK'
+    variables:
+      <<: *variables
+
+  admin-api:
+    label: 'Admin API'
+    base_url: 'http://localhost:8001'
+    endpoints:
+      consumer:       '/consumers/'
+      consumer_group: '/consumer_groups/'
+      route:          '/routes/'
+      service:        '/services/'
+      target:         '/upstreams/{upstream}/targets/'
+      upstream:       '/upstreams/'
+      workspace:      '/workspaces/'
+    plugin_endpoints:
+      consumer:       '/consumers/{consumer}/plugins/'
+      consumer_group: '/consumer_groups/{consumer_group}/plugins/'
+      route:          '/routes/{route}/plugins/'
+      service:        '/services/{service}/plugins/'
+      global:         '/plugins/'
+    variables:
+      <<: *variables
+
+  konnect-api:
+    label: 'Konnect API'
+    base_url: 'https://{region}.api.konghq.com/v2/control-planes/{control_plane}/core-entities'
+    endpoints:
+      consumer:       '/consumers/'
+      consumer_group: '/consumer_groups/'
+      route:          '/routes/'
+      service:        '/services/'
+      target:         '/upstreams/{upstream}/targets/'
+      upstream:       '/upstreams/'
+    plugin_endpoints:
+      consumer:       '/consumers/{consumer}/plugins/'
+      consumer_group: '/consumer_groups/{consumer_group}/plugins/'
+      global:         '/plugins/'
+      route:          '/routes/{route}/plugins/'
+      service:        '/services/{service}/plugins/'
+    variables:
+      <<: *konnect_variables
+
+  kic:
+    label: 'KIC'
+
+  terraform:
+    label: 'Terraform'
+
+  ui:
+    label: 'Kong/Gateway Manager'
+
+targets:
+  consumer:
+    label: 'consumer'
+  consumer_group:
+    label: 'consumer_group'
+  global:
+    label: 'global'
+  route:
+    label: 'route'
+  service:
+    label: 'service'

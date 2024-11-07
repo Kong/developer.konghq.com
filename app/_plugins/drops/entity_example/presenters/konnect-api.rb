@@ -1,55 +1,81 @@
 # frozen_string_literal: true
 
 require_relative '../utils/variable_replacer'
+require_relative './base'
 
 module Jekyll
   module Drops
     module EntityExample
       module Presenters
         module KonnectAPI
-          class Base < Liquid::Drop
-            BASE_URL = 'https://{us|eu}.api.konghq.com/v2/control-planes/{controlPlaneId}/core-entities'.freeze
-
-            URLS = {
-              'consumer'       => "#{BASE_URL}/consumers/",
-              'consumer_group' => "#{BASE_URL}/consumer_groups/",
-              'route'          => "#{BASE_URL}/routes/",
-              'service'        => "#{BASE_URL}/services/"
-            }.freeze
-
-            def initialize(data:, target:, entity_type:, variables:)
-              @data        = data
-              @target      = target
-              @entity_type = entity_type
-              @variables   = variables
-            end
-
+          class Base < Presenters::Base
             def url
               @url ||= Utils::VariableReplacer::URL.run(
-                string: self.class::URLS.fetch(@entity_type),
-                variables: @variables
+                url: build_url,
+                defaults: formats['konnect-api']['variables'],
+                variables: variables
               )
             end
 
             def data
-              @data
+              @data ||= @example_drop.data
+            end
+
+            def template_file
+              '/components/entity_example/format/konnect-api.md'
+            end
+
+            def pat
+              @pat ||= variables['pat'] || "#{formats['konnect-api']['variables']['pat']['placeholder']}"
+            end
+
+            def missing_variables
+              @missing_variables ||= begin
+                available_variables = formats['konnect-api']['variables'].except(*targets.keys, 'upstream')
+                available_variables.except(*variables.keys).values
+              end
+            end
+
+            private
+
+            def build_url
+              [
+                formats['konnect-api']['base_url'],
+                formats['konnect-api']['endpoints'][entity_type]
+              ].join
             end
           end
 
           class Plugin < Base
-            URLS = {
-              'consumer'       => "#{BASE_URL}/consumers/{consumerId}/plugins/",
-              'consumer_group' => "#{BASE_URL}/consumer_groups/{consumerGroupId}/plugins/",
-              'global'         => "#{BASE_URL}/plugins/",
-              'route'          => "#{BASE_URL}/routes/{routeId}/plugins/",
-              'service'        => "#{BASE_URL}/services/{serviceId}/plugins/"
-            }.freeze
+            def data
+              @example_drop.data.except(*targets.keys)
+            end
 
-            def url
-              @url ||= Utils::VariableReplacer::URL.run(
-                string: self.class::URLS.fetch(@target),
-                variables: @variables
-              )
+            def variables
+              super.merge(@example_drop.target.key => @example_drop.target.value)
+            end
+
+            def missing_variables
+              @missing_variables ||= begin
+                missing = super
+
+                if @example_drop.target.key == 'global'
+                  missing
+                else
+                  if variables[@example_drop.target.key]
+                    missing
+                  else
+                    missing << formats['konnect-api']['variables'][@example_drop.target.key]
+                  end
+                end
+              end
+            end
+
+            def build_url
+              [
+                formats['konnect-api']['base_url'],
+                formats['konnect-api']['plugin_endpoints'][@example_drop.target.key]
+              ].join
             end
           end
         end

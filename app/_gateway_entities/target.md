@@ -4,13 +4,19 @@ name: Target
 entities:
   - target
 
-content_type: reference
+tools:
+    - admin-api
+    - konnect-api
+    - kic
+    - deck
+    - ui
+    - terraform
 
-description:
+description: A target identifies a specific instance of an upstream service.
 
-related_resources:
-  - text: 
-    url: 
+schema:
+    api: gateway/admin-ee
+    path: /schemas/Target
 
 ---
 
@@ -22,4 +28,3 @@ related_resources:
 ## Use cases for targets
 
 The following are examples of common use cases for targets:
-

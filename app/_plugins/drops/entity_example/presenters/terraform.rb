@@ -1,29 +1,20 @@
 # frozen_string_literal: true
 
+require_relative './base'
+
 module Jekyll
   module Drops
     module EntityExample
       module Presenters
         module Terraform
-          class Base < Liquid::Drop
-            def initialize(data:, target:, entity_type:, variables:)
-              @data        = data
-              @target      = target
-              @entity_type = entity_type
-              @variables   = variables
-            end
-
+          class Base < Presenters::Base
             def data
-              @data
+              @data ||= @example_drop.data
             end
 
             def target
-              return nil if @target == "global"
-              @target
-            end
-
-            def entity_type
-              @entity_type
+              return nil if @example_drop.target.key == "global"
+              @example_drop.target.key
             end
 
             def provider
@@ -35,7 +26,7 @@ module Jekyll
             end
 
             def render
-              tfData = @data.clone
+              tfData = data.clone
               tfData.delete("name")
               output(
                 tfData,
@@ -115,9 +106,16 @@ module Jekyll
                 #{render.strip}
               TERRAFORM
             end
+
+            def template_file
+              '/components/entity_example/format/terraform.md'
+            end
           end
 
           class Plugin < Base
+            def data
+              @data ||= @example_drop.data.except(*targets.keys)
+            end
           end
         end
       end

@@ -1,0 +1,18 @@
+metadata:
+  title: Insomnia SSO
+rows:
+  - header:
+      type: h1
+      text: "Security at Insomnia"
+      sub_text:
+  - columns:
+    - blocks:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: | 
+                Insomnia supports federating user authentication through third-party identity providers for access management. 
+                You can leverage your existing identity management workflow to govern which users can access the application. 
+                Additionally, users must be entitled to the appropriate Organizations before they can access specific projects managed in Insomnia.
+  

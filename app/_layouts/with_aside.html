@@ -1,0 +1,54 @@
+---
+layout: default
+---
+
+<div class="flex gap-16 w-full">
+    <main class="flex flex-col basis-3/4 py-12 gap-12 {{ page.content_type | slugify }}">
+        <div class="flex flex-col gap-3">
+            {% if page.breadcrumbs %}
+                {% include breadcrumbs.html %}
+            {% endif %}
+
+            <h1>{{ page.title }}</h1>
+
+            {% if layout.uses != false %}
+            {% include uses.html products=page.products tools=page.tools tier=page.tier %}
+            {% endif %}
+
+            {% ifhascontent nav_header %}
+                <section class="flex">
+                {% contentblock nav_header %}
+                </section>
+            {% endifhascontent %}
+        </div>
+
+        {{ content }}
+    </main>
+
+    <aside class="flex flex-col basis-1/4 pt-12 gap-8 text-sm">
+        <div class="flex flex-col xl:flex-row gap-3 w-full text-xs">
+            {% include edit_and_issue_links.html edit_link=page.edit_link %}
+        </div>
+
+        {% if page.releases_dropdown %}
+            {% include releases_dropdown.html releases_dropdown=page.releases_dropdown release=page.release %}
+        {% endif %}
+
+        {% ifhascontent controls %}
+            <div class="flex flex-col text-xs">
+                {% contentblock controls no-convert %}
+            </div>
+        {% endifhascontent %}
+
+        <div class="flex flex-col rounded-md p-5 gap-5 bg-secondary shadow-primary w-full">
+            {% contentblock info_box %}
+        </div>
+
+        {% if page.toc != false %}
+        <div class="flex flex-col w-full sticky top-[96px] items-baseline">
+            {% include toc.html html=content h_min=2 h_max=2 id='toc' item_class='py-2 px-5'
+            anchor_class='scroll-to  text-secondary' class="list-none ml-0" %}
+        </div>
+        {% endif %}
+    </aside>
+</div>

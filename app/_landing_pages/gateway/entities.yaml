@@ -1,76 +1,52 @@
 metadata:
   title: Gateway Entities
-content:
-  - row:
-      - column:
-          - type: header
-            config:
-              type: h1
-              text: "Kong Gateway Entities"
-              align: center
+  breadcrumbs:
+    - /gateway/
+rows:
+  -  header:
+        type: h1
+        text: "Kong Gateway Entities"
 
-  - row:
-      - column:
-          - type: text
-            config:
-              Kong entities refer to the various components and objects that make up the Kong API Gateway and its ecosystem.
-          - type: image
-            config:
-              url: "https://raw.githubusercontent.com/Kong/docs.konghq.com/main/app/assets/images/products/konnect/getting-started/konnect-gateway-entities.png"
-              alt_text: "this is alt text"
-  
-  - row: 
-    - column: 
-      - type: header
-        config: 
-          type: h2
-          text: "Entity References"
-  - row:
-    - column:
+  - columns:
+    - blocks:
+        - type: text
+          config:
+            Kong entities refer to the various components and objects that make up the Kong API Gateway and its ecosystem.
+
+  - header:
+      type: h2
+      text: "Entity References"
+  - columns:
+    - blocks:
       - type: entity_card
         config:
           entity: service
-    - column: 
+    - blocks:
       - type: entity_card
         config:
           entity: route
-    - column: 
+    - blocks:
       - type: entity_card
         config:
           entity: consumer
-    - column: 
+    - blocks:
       - type: entity_card
         config:
           entity: consumer_group
-  - row:
-    - column:
+  - columns:
+    - blocks:
       - type: entity_card
         config:
           entity: upstream
-    - column: 
+    - blocks:
       - type: entity_card
         config:
           entity: target
-    - column: 
-      - type: entity_card
-        config:
-          entity: sni
-    - column: 
-      - type: entity_card
-        config:
-          entity: acl
-  - row:
-    - column:
+    - blocks:
       - type: entity_card
         config:
           entity: plugin
-    - column: 
+    - blocks:
       - type: entity_card
         config:
           entity: workspace
-    - column: 
-      - type: text
-        config: "&nbsp;"
-    - column: 
-      - type: text
-        config: "&nbsp;"

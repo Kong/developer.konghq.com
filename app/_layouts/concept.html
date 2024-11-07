@@ -1,8 +1,9 @@
 ---
-layout: default
+layout: with_aside
 ---
 
-<div class="mx-16">
-  <h1 class="text-3xl my-4">{{ page.title }}</h1>
-  {{ content }}
-</div>
+{{ content }}
+
+{% contentfor info_box %}
+  {% include info_box/concept.html %}
+{% endcontentfor %}

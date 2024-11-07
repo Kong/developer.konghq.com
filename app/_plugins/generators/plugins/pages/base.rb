@@ -4,9 +4,12 @@ module Jekyll
   module PluginPages
     module Pages
       class Base
-        def initialize(site:, plugin:)
+        attr_reader :file
+
+        def initialize(site:, plugin:, file:)
           @site   = site
           @plugin = plugin
+          @file   = file
         end
 
         def to_jekyll_page
@@ -21,12 +24,26 @@ module Jekyll
           @plugin.metadata.merge(
             'slug'   => @plugin.slug,
             'plugin?' => true,
-            'layout' => layout
+            'layout' => layout,
+            'examples' => examples,
+            'tools' => @plugin.formats,
+            'breadcrumbs' => ['/plugins/']
           )
         end
 
         def relative_path
           @relative_path = file.gsub("#{@site.source}/", "")
+        end
+
+        private
+
+        def examples
+          @examples ||= @plugin.example_files.map do |file|
+            Drops::PluginConfigExample.new(
+              file: file,
+              plugin: @plugin,
+            )
+          end
         end
       end
     end

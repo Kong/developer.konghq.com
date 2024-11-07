@@ -1,13 +1,22 @@
 # frozen_string_literal: true
 
 require 'securerandom'
+require 'forwardable'
 
 module Jekyll
   module Drops
     module EntityExample
       class Base < Liquid::Drop
+        extend Forwardable
+
+        def_delegators :@example, :data, :variables
+
         def initialize(example:)
           @example = example
+        end
+
+        def entity_type
+          @entity_type ||= @example.type
         end
 
         def template
@@ -22,26 +31,14 @@ module Jekyll
           @formatted_examples ||= formats.map do |f|
             Drops::EntityExample::FormattedExample.new(
               format: f,
-              target: Jekyll::EntityExamples::Target::Base.make_for(target: @example.type).to_drop,
-              data: @example.data,
-              presenter_class: 'Base',
-              variables: @example.variables,
-              entity_type: @example.type
+              presenter_class: self.class.name.split('::').last,
+              example_drop: self
             )
           end
         end
 
         def formats
-          @formats ||= @example.formats.map(&:to_drop)
-        end
-
-        def formats_dropdown
-          @formats_dropdown ||= begin
-            options = formats.map do |f|
-              Drops::Dropdowns::Option.new(text: f.to_option, value: f.value)
-            end
-            Drops::Dropdowns::Select.new(options)
-          end
+          @formats ||= Jekyll.sites.first.data['entity_examples']['config']['formats'].keys & @example.formats
         end
       end
     end

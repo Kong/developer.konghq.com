@@ -1,5 +1,13 @@
-<details class="mb-2" markdown="1">
-  <summary class="rounded mb-0.5 bg-gray-200 p-2">decK</summary>
+{% assign summary = 'decK' %}
 
-  Install [decK](/deck/) and create a `kong.yaml` file.
-</details>
+{% capture details_content %}
+  decK is a CLI tool for managing Kong Gateway declaratively with state files.
+  To complete this tutorial you will first need to:
+  1. Install [decK](/deck/)
+  1. Create a `deck_files` directory and a `kong.yaml` file in the directory:
+      
+          mkdir deck_files  && touch deck_files/kong.yaml
+
+{% endcapture %}
+
+{% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/code.svg' %}

@@ -15,15 +15,13 @@ module Jekyll
         end
 
         def data
-          super.merge(metadata).merge('reference?' => true)
+          super
+            .merge(metadata)
+            .merge('reference?' => true)
         end
 
         def metadata
           @metadata ||= YAML.load(File.read(file)) || {}
-        end
-
-        def file
-          @file ||= File.join(@plugin.folder, 'reference.yaml')
         end
 
         def layout

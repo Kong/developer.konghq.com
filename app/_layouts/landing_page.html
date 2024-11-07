@@ -2,17 +2,44 @@
 layout: default
 ---
 
-<div class="mx-16">
-{% for rows in page.config %}
-  <div class="grid grid-cols-1 lg:grid-cols-{{ rows.row | size }} gap-2 mb-2">
-    {% for column in rows.row %}
-      <div class="p-4 flex flex-col">
-        {% for entry in column.column %}
-          {% assign include_path = "landing_pages/" | append: entry.type | append : ".md" %}
-          {% include {{ include_path }} type=entry.type config=entry.config %}
-        {% endfor %}
-      </div>
+<main class="flex flex-col gap-3 py-12 w-full">
+
+  <div class="grid {% if page.breadcrumbs %}sm:grid-cols-2{% endif %}">
+    {% if page.breadcrumbs %}
+      {% include breadcrumbs.html %}
+    {% endif %}
+    <div class="hidden sm:flex gap-3 justify-end items-end">
+      {% include edit_and_issue_links.html edit_link=page.edit_link %}
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-12">
+    {% for row in page.rows %}
+
+        <div class="grid gap-4">
+          {% if row.header %}
+              {% include landing_pages/header.md config = row.header %}
+          {% endif %}
+
+          {% if row.columns %}
+            <div class="grid grid-cols-1 lg:grid-cols-{{ row.columns | size }} gap-8">
+              {% for column in row.columns %}
+                <div class="flex flex-col gap-3">
+                  {% if column.header %}
+                  {% include landing_pages/header.md config = column.header %}
+                  {% endif %}
+
+                  {% for entry in column.blocks %}
+                      {% assign include_path = "landing_pages/" | append: entry.type | append : ".md" %}
+                      {% capture include_template %}{% include {{ include_path }} type=entry.type config=entry.config %}{% endcapture %}
+                      {{ include_template | markdownify }}
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
     {% endfor %}
   </div>
-{% endfor %}
-</div>
+</main>

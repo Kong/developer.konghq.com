@@ -1,9 +1,2 @@
-<div class="rounded p-2 border-2 border-gray-200 flex flex-col">
-<div>
-<h3>{{ include.config.title}}{% if include.config.icon %} <img src="{{ include.config.icon}}" class="w-5 h-5 inline">{% endif %}</h3>
-<p>{{ include.config.description}}</p>
-</div>
-{% if include.config.cta %}
-{% include landing_pages/cta.md config=include.config.cta %}
-{% endif %}
-</div>
+
+{% include card.html icon=include.config.icon title=include.config.title description=include.config.description cta_url=include.config.cta.url cta_text=include.config.cta.text %}

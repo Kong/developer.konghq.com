@@ -1,0 +1,38 @@
+{% if include.products or include.tools or include.tier %}
+<div class="flex gap-2 items-center">
+    {% if include.tier %}
+        {% include tier.html products=include.products tier=include.tier %}
+    {% endif %}
+
+    {% if include.tier %}
+        {% if include.products or include.tools %}
+        <span class="text-sm"> and uses: </span>
+        {% endif %}
+    {% else %}
+        <span class="text-sm">Uses: </span>
+    {% endif %}
+
+    {% if include.products %}
+        {% for product in include.products %}
+        {% assign product_info = site.data.products[product] %}
+            {% capture url %}/{{ product }}/{% endcapture %}
+            {% include badge.html url=url text=product_info.name %}
+        {% endfor %}
+    {% endif %}
+
+    {% if include.products and include.tools %}
+        <span class="bg-brand-saturated/40 w-[1px] h-3/4"></span>
+    {% endif %}
+
+    {% if include.tools %}
+        {% assign tools = include.tools | sort %}
+        {% for tool in tools %}
+        {% assign tool_info = site.data.tools[tool] %}
+        {% if tool_info %}
+            {% capture url %}/{{ tool }}/{% endcapture %}
+            {% include badge.html url=url text=tool_info.name %}
+        {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
+{% endif %}

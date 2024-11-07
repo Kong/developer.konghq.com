@@ -19,6 +19,8 @@ works_on:
     - konnect
 ---
 
+## Overview
+
 Rate limit how many HTTP requests can be made in a given time frame.
 
 [to do: write this section in a better way]
@@ -75,7 +77,7 @@ The [`Retry-After`] header will be present on `429` errors to indicate how long 
 expected to be unavailable to the client. When using `window_type=sliding` and `RateLimit-Reset`, `Retry-After`
 may increase due to the rate calculation for the sliding window.
 
-{:.important}
+{:.warning}
 > The headers `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset` are based on the Internet-Draft [RateLimit Header Fields for HTTP](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers) and may change in the future to respect specification updates.
 
 ## Limit by IP address

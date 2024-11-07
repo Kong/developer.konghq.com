@@ -1,0 +1,23 @@
+{% if page.works_on %}
+{% include info_box/sections/works_on.html works_on=page.works_on %}
+{% endif %}
+
+{% if page.plugins %}
+{% include info_box/sections/plugins.html plugins=page.plugins %}
+{% endif %}
+
+{% if page.entities %}
+{% include info_box/sections/entities.html entities=page.entities products=page.products %}
+{% endif %}
+
+{% if page.min_version %}
+{% include info_box/sections/min_version.html min_version=page.min_version %}
+{% endif %}
+
+{% if page.tags %}
+{% include info_box/sections/tags.html tags=page.tags %}
+{% endif %}
+
+{% if page.related_resources %}
+{% include info_box/sections/related_resources.html %}
+{% endif %}

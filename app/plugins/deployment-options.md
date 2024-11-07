@@ -5,11 +5,15 @@ title: Plugin deployment topologies
 content_type: reference
 layout: reference
 
+products:
+  - gateway
+
 related_resources:
   - text: Kong Plugins
     url: /plugins/
 
-
+breadcrumbs:
+  - /gateway/
 ---
 
 ## Plugin compatibility with deployment types

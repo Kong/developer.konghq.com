@@ -1,3 +1,318 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg-primary: 247, 251, 255;
+    --color-bg-secondary: 255, 255, 255;
+    --color-bg-code-block: 7, 53, 103;
+    --color-bg-code-block-header: 28, 85, 146;
+    --color-bg-hover-component: 235, 244, 254;
+
+    --color-text-primary: 5, 47, 92;
+    --color-text-secondary: 74, 96, 120;
+    --color-text-terciary: 99, 119, 140;
+
+    --color-border-primary: 5, 47, 92;
+    --color-shadow-primary: 5, 47, 92, 0.04;
+
+    --color-brand: 66, 140, 220;
+    --color-brand-saturated: 24, 128, 240;
+
+    --color-semantic-red-primary: 214, 67, 67;
+    --color-semantic-red-secondary: 255, 229, 229;
+    --color-semantic-yellow-primary: 220, 158, 66;
+    --color-semantic-yellow-secondary: 255, 252, 224;
+    --color-semantic-blue-primary: 33, 112, 197;
+    --color-semantic-blue-secondary: 238, 250, 255;
+    --color-semantic-green-primary: 66, 174, 148;
+    --color-semantic-green-secondary: 236, 255, 251;
+    --color-semantic-grey-primary: 86, 86, 86;
+    --color-semantic-grey-secondary: 242, 242, 242;
+
+    --color-shadow-hover-card: 24, 128, 240, 0.16;
+
+    --kui-color-text-neutral-stronger: rgb(var(--color-text-secondary));
+    --kui-color-text-neutral-strong: rgb(var(--color-text-secondary));
+    --kui-color-text-neutral: rgb(var(--color-text-primary));
+    --kui-color-text: rgb(var(--color-text-primary));
+    --kui-color-text-primary: rgb(var(--color-brand));
+  }
+
+  .dark {
+    --color-bg-primary: 2, 20, 40;
+    --color-bg-secondary: 4, 40, 79;
+    --color-bg-code-block: 28, 85, 146;
+    --color-bg-code-block-header: 7, 53, 103;
+    --color-bg-hover-component: 7, 53, 103;
+
+    --color-text-primary: 255, 255, 255;
+    --color-text-secondary: 191, 202, 213;
+    --color-text-terciary: 170, 185, 200;
+
+    --color-border-primary: 255, 255, 255;
+    --color-shadow-primary: 2, 20, 40, 0.08;
+
+    --color-semantic-red-secondary: 79, 28, 28;
+    --color-semantic-yellow-secondary: 64, 42, 10;
+    --color-semantic-blue-primary: 66, 140, 220;
+    --color-semantic-blue-secondary: 4, 40, 79;
+    --color-semantic-green-secondary: 18, 51, 43;
+    --color-semantic-grey-primary: 176, 176, 176;
+    --color-semantic-grey-secondary: 21, 31, 43;
+
+    --color-shadow-hover-card: 24, 128, 240, 0.4;
+  }
+
+  html {
+    font-family: "Inter", system-ui, sans-serif;
+    @apply text-secondary font-normal;
+  }
+
+  body {
+    @apply transition-colors duration-200;
+  }
+
+
+  code {
+    font-family: "JetBrains Mono", system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-primary;
+  }
+
+  h1 {
+    @apply font-bold text-3xl tracking-[-.01em];
+  }
+
+  h2 {
+    @apply font-bold text-xl tracking-[-.01em];
+  }
+
+  h3 {
+    @apply font-bold text-lg tracking-[-.01em];
+  }
+
+  table {
+    @apply bg-secondary shadow-primary border-none rounded-lg text-sm;
+  }
+
+  thead {
+    @apply bg-secondary;
+  }
+
+  th {
+    @apply bg-secondary text-primary font-semibold py-4 px-5 text-left;
+  }
+
+  th:first-child {
+    @apply rounded-tl-lg;
+  }
+
+  th:last-child {
+    @apply rounded-tr-lg;
+  }
+
+  th:not(:last-child) {
+    @apply border-r border-primary/5;
+  }
+
+  td {
+    @apply py-4 px-5;
+  }
+
+  td:not(:last-child) {
+    @apply border-r border-primary/5;
+  }
+
+  tbody tr {
+    @apply border-t border-primary/5;
+  }
+
+  details[open] summary .chevron-icon {
+    @apply rotate-180;
+  }
+
+  ol, ul {
+    @apply list-outside ml-4 flex flex-col gap-1;
+  }
+
+  ol {
+    @apply list-decimal;
+  }
+
+  ul {
+    @apply list-disc;
+  }
+
+  li > *:not(:last-child) {
+    @apply mb-2;
+  }
+
+  a {
+    @apply hover:underline;
+  }
+
+  main a {
+    @apply text-brand;
+  }
+
+  a code {
+    @apply text-brand;
+  }
+
+  code {
+    @apply text-primary bg-secondary rounded border border-brand-saturated/40 text-xs overflow-auto;
+  }
+
+  code span {
+    @apply text-white;
+  }
+}
+
+@layer components {
+  .highlight {
+    @apply inline-grid w-full;
+  }
+
+  pre {
+    @apply overflow-auto whitespace-pre;
+  }
+
+  pre code {
+    @apply whitespace-pre text-white bg-code-block border-none text-sm;
+  }
+
+  pre.highlight {
+    @apply bg-code-block rounded-lg p-3;
+  }
+
+  code.highlighter-rouge {
+    @apply px-1;
+  }
+
+  .copy-code-snippet {
+    @apply relative;
+  }
+
+  .copy-code-snippet pre.highlight {
+    @apply pr-10;
+  }
+
+  .copy-code-snippet .copy-action {
+    @apply absolute cursor-pointer text-secondary right-3 top-3;
+  }
+
+  .copy-code-snippet .copy-action:hover {
+    @apply opacity-20;
+  }
+
+  #copy-code-success-info {
+    @apply fixed bg-primary border border-white px-1 py-2 rounded -mt-8 -translate-x-1/2;
+  }
+
+  #copy-code-input {
+    @apply fixed -top-full;
+  }
+
+  [data-file] {
+    @apply relative;
+  }
+
+  [data-file] pre.highlight {
+    @apply rounded-t-none;
+  }
+
+  [data-file]:before {
+    @apply bg-code-block-header px-3 py-2 rounded-t-lg text-white w-full inline-block content-[attr(data-file)] text-sm;
+  }
+
+  .copy-code-snippet[data-file] .copy-action {
+    @apply top-2;
+  }
+
+  .content {
+    @apply flex flex-col gap-3;
+  }
+
+  .success, .warning, .danger, .info, .neutral {
+    @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-11 relative;
+
+    &:not(.no-icon)::before {
+      @apply text-base absolute left-4 w-4 h-4 content-[''];
+      mask-size: cover;
+      mask:url(/assets/icons/admonitions/info.svg);
+    }
+  }
+
+  .info {
+    @apply bg-semantic-blue-secondary border-semantic-blue-primary;
+
+    &:not(.no-icon)::before {
+      @apply bg-semantic-blue-primary;
+    }
+  }
+
+  .success {
+    @apply bg-semantic-green-secondary border-semantic-green-primary;
+
+    &:not(.no-icon)::before {
+      @apply bg-semantic-green-primary;
+    }
+  }
+
+  .warning {
+    @apply bg-semantic-yellow-secondary border-semantic-yellow-primary;
+
+    &:not(.no-icon)::before {
+      @apply bg-semantic-yellow-primary;
+      mask:url(/assets/icons/admonitions/warning.svg);
+    }
+  }
+
+  .danger {
+    @apply bg-semantic-red-secondary border-semantic-red-primary;
+
+    &:not(.no-icon)::before {
+      @apply bg-semantic-red-primary;
+      mask:url(/assets/icons/admonitions/danger.svg);
+    }
+  }
+
+  .neutral {
+    @apply bg-semantic-grey-secondary border-semantic-grey-primary;
+
+    &:not(.no-icon)::before {
+      @apply bg-semantic-grey-primary;
+    }
+  }
+
+  .mermaid svg {
+    @apply m-auto;
+
+    p, span {
+      @apply text-primary !important;
+    }
+
+    rect, circle, ellipse, polygon {
+      @apply fill-transparent stroke-[rgb(var(--color-brand))] !important;
+    }
+
+    .label-container {
+      @apply fill-[rgb(var(--color-bg-secondary))] !important;
+    }
+
+    .edgeLabel {
+      @apply bg-primary !important;
+    }
+
+    path {
+      @apply fill-[rgb(var(--color-brand))] stroke-[rgb(var(--color-brand))] stroke-1 !important
+    }
+  }
+}

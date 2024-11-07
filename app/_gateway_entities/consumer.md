@@ -4,8 +4,6 @@ name: Consumer
 entities:
   - consumer # we could use this to pull the schema too
 
-content_type: reference
-
 description: A consumer typically refers to an entity that consumes or uses the APIs managed by Kong Gateway.
 
 related_resources:
@@ -82,6 +80,9 @@ api_specs:
       url: 'https://docs.konghq.com/konnect/api/control-plane-configuration/latest/#/Consumers'
       insomnia_link: 'https://insomnia.rest/run/?label=Konnect%20Control%20Plane%20Config&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdocs.konghq.com%2Fmain%2Fapi-specs%2FKonnect%2Fcontrol-planes-config%2Fcontrol-planes-config.yaml'
 
+schema:
+    api: gateway/admin-ee
+    path: /schemas/Consumer
 ---
 
 ## What is a consumer?

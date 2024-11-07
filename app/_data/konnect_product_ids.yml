@@ -1,0 +1,25 @@
+gateway:
+  admin-ee: '937dcdd7-4485-47dc-af5f-b805d562552f'
+  admin-oss: '680541e5-de6e-46e5-b43d-0bd1b2369453'
+  status: '9542436a-58d1-4522-a00b-32125b5940f0'
+
+konnect:
+  api-portal: 'd420333f-01b0-464e-a87a-97acc92c2026'
+  api-requests: '51eda0ea-74ca-48c9-bf6e-80a413d620b4'
+  application-auth-strategies: 'ccb264be-1963-49a4-b6e8-bc7c98a6e4c2'
+  audit-logs: 'e46e7742-befb-49b1-9bf1-7cbe477ab818'
+  cloud-gateways: '3e660af4-c727-4640-8f71-19718640d6b4'
+  control-plane-configuration: '0267e60f-bf5d-4565-9618-b061f8398e14'
+  control-planes: '98e74b12-7b86-429f-9255-d4a33e40f13b'
+  identity-management: '5175b87f-bfae-40f6-898d-82d224387f9b'
+  mesh-manager: 'f3675942-dbc0-4298-bec2-cbcfdcc10fab'
+  portal-management: 'f99f0f29-be4e-4fc8-8cec-64e5d3511bff'
+  portal: '2aad2bcb-8d82-43b3-abdd-1d5e6e84dbd6'
+  runtime-groups-configuration: '3c38bff8-3b7b-4323-8e2e-690d35ef97e0'
+  runtime-groups: 'cd849478-4628-4bc2-abcd-5d8a83d3b5f2'
+  search: '97cb97c2-0824-4e87-a13f-2fad352d698f'
+
+dev-portal: '3e65edbc-364d-4762-9d3e-f13083e1b534'
+
+konnect-portal: '295fef86-02f3-438a-ada1-256680ba6424'
+

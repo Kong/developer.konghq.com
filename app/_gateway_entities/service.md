@@ -4,15 +4,13 @@ name: Service
 entities:
   - service
 
-content_type: reference
-
-description: In Kong Gateway, a service is an abstraction of an existing upstream application.
+description: In Kong Gateway, a service is an abstraction of an upstream application that services requests.
 
 related_resources:
   - text: Routes entity
     url: /gateway/entities/route/
   - text: Enable rate limiting on a service with Kong Gateway
-    url: /tutorials/add-rate-limiting-to-a-service-with-kong-gateway/
+    url: /how-to/add-rate-limiting-to-a-service-with-kong-gateway/
 
 tools:
     - admin-api
@@ -21,6 +19,11 @@ tools:
     - deck
     - ui
     - terraform
+
+schema:
+    api: gateway/admin-ee
+    path: /schemas/Service
+
 ---
 
 ## What is a service?
@@ -62,6 +65,6 @@ flowchart LR
 type: service
 data:
   name: example-service
-  url: "http://httpbin.org"
+  url: "http://httpbin.konghq.com"
 {% endentity_example %}
 {% endcontentfor %}

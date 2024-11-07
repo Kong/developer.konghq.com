@@ -1,66 +1,48 @@
 ---
-layout: default
+layout: with_aside
+uses: false
 ---
 
-<div class="mx-16 mt-8">
-  <div id="index-link" class="text-gray-400 text-sm">
-    <a href="/plugins/">Plugins ></a>
-  </div>
-
-  <div class="pl-4 pb-2 pt-12 flex items-end bg-sky-500 mt-4">
+{% contentfor nav_header %}
+<header class="w-full">
+  <div class="flex items-end">
     <div class="flex flex-col w-full">
-      <h1 class="text-3xl mt-4 text-white">{{ page.title }}</h1>
-      <div class="flex justify-between items-end">
-        <ul class="list-none flex text-white m-0 align-bottom">
-          <li class="mr-2 text-gray-200 {% if page.overview? %} underline {% endif %}">
-            <a href="/plugins/{{page.slug}}/">Overview</a>
+      <div class="flex justify-between items-center text-sm">
+        <ul class="list-none flex align-bottom ml-0 flex-row gap-0">
+          <li class="px-4 py-3 {% if page.overview? %}  border-b-2 border-brand {% endif %}">
+            <a class="text-primary" href="/plugins/{{page.slug}}/">Overview</a>
           </li>
-          <li class="mr-2 {% if page.reference? %} underline {% endif %}">
-            <a href="/plugins/{{page.slug}}/reference/">Configuration Reference</a>
+          <li class="px-4 py-3 {% if page.reference? %}  border-b-2 border-brand {% endif %}">
+            <a class="text-primary" href="/plugins/{{page.slug}}/reference/">Configuration Reference</a>
           </li>
-          <li class="text-gray-200">
-            <a href="#">Tutorials</a>
+          <li class="px-4 py-3">
+            <a class="text-primary" href="#">How-to Guides</a>
           </li>
         </ul>
-        <a class="mr-8 rounded-xl bg-white text-black p-4 w-64 text-center" href="cloud.konghq.com">Try it on Konnect</a>
+        <a class="border-2 rounded-md border-brand px-4 py-1 text-primary" href="https://cloud.konghq.com">Try it on Konnect</a>
       </div>
     </div>
   </div>
-  <div class="flex">
-    <div class="p-4 w-2/3">
-      {% if page.extended_description %}
-        <div id="extended-description">
-          {{ page.extended_description | markdownify }}
-        </div>
-      {% endif %}
+</header>
+{% endcontentfor %}
 
-      <div id="plugin-content">
-        {{ content }}
-      </div>
-
-      {% if page.faqs %}
-        <div id="faq" class="mt-4">
-          <h2>FAQ</h2>
-          {% faqs %}
-        </div>
-      {% endif %}
-
-      {% if page.next_steps %}
-      <div id="next-steps" class="mt-4">
-        <h2>Next Steps</h2>
-        {% next_steps %}
-      </div>
-      {% endif %}
-    </div>
-
-    <div class="pl-4 mt-4 w-1/3">
-      {% include info_box/plugin.html %}
-
-      {% ifhascontent config_examples %}
-        <div id="config-examples" class="mt-8 border">
-        {% contentblock config_examples %}
-        </div>
-      {% endifhascontent %}
-    </div>
-  </div>
+{% if page.extended_description %}
+<div id="extended-description">
+  {{ page.extended_description | markdownify }}
 </div>
+{% endif %}
+
+{{ content }}
+
+{% if page.faqs %}
+{% include sections/faq.html %}
+{% endif %}
+
+{% if page.next_steps %}
+{% include sections/next_steps.html %}
+{% endif %}
+
+
+{% contentfor info_box %}
+  {% include info_box/plugin.html %}
+{% endcontentfor %}

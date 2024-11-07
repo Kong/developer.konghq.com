@@ -16,6 +16,8 @@ tags:
 
 ---
 
+## Overview
+
 The AI Rate Limiting Advanced plugin provides rate limiting for the providers used by any AI plugins. The
 AI Rate Limiting plugin extends the
 [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) plugin.

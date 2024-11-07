@@ -4,3 +4,21 @@ topologies:
   - traditional
   - hybrid
   - db-less
+
+tiers:
+  enterprise:
+    text: Enterprise only
+    url: '/gateway/enterprise/'
+
+releases:
+  - release: "3.7"
+    ee-version: "3.7.1.2"
+    ce-version: "3.7.1"
+  - release: "3.8"
+    ee-version: "3.8.0.0"
+    ce-version: "3.8.0"
+    latest: true
+  - release: "3.9"
+    ee-version: "3.9.0.0"
+    ce-version: "3.9.0"
+    label: unreleased

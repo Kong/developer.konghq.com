@@ -1,10 +1,11 @@
-<div class="mt-1 flex flex-wrap gap-x-2 flex-col">
-  <strong>Tags</strong>
-  <ul class="flex gap-x-2 flex-wrap list-none m-0">
+{% if include.tags != empty %}
+<div class="flex flex-col gap-2  w-full">
+  <div class="text-primary font-medium">Tags</div>
+  <div class="flex gap-1.5 flex-col items-start md:flex-row flex-wrap">
     {% for tag in include.tags %}
-      <li>
-        <a href="https://docs.devsite.com/search/{tutorial.topic}+{other stuff}">{{ tag }}</a>
-      </li>
+      {% capture text %}#{{ tag }}{% endcapture %}
+      {% include badge.html url="https://docs.devsite.com/search/{topic}+{other stuff}" text=text %}
     {% endfor %}
-  </ul>
+  </div>
 </div>
+{% endif %}

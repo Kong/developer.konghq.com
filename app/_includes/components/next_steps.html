@@ -7,21 +7,19 @@
             <span class="bg-blue-200 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full mb-0.5">{{ next_step.type }}</span>
           {% endif %}
         </div>
-        <a href="{{ next_step.url }}">{{ next_step.text | liquify }}</a>
+        <a href="{{ next_step.url | liquify }}">{{ next_step.text | liquify }}</a>
       </div>
     {% endfor %}
   </div>
   {% elsif next_steps.layout.style == "list" %}
-  <ul>
+  <div class="flex gap-3 flex-col text-sm">
     {% for next_step in next_steps.items %}
-      <li>
-        {% if next_step.type %}
-          <span class="bg-blue-200 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full mr-0.5">{{ next_step.type }}</span>
-        {% endif %}
-        <a href="{{ next_step.url }}">{{ next_step.text | liquify }}</a>
-      </li>
+      <div class="flex gap-2">
+        <div class="flex w-5 h-5 text-brand shrink-0">{% include_svg next_step.icon %}</div>
+        <a href="{{ next_step.url | liquify }}">{{ next_step.text | liquify }}</a>
+      </div>
     {% endfor %}
-  </ul>
+  </div>
 {% else %}
   <div>
 Unsupported next_steps layout: {{ next_steps.layout.style }}

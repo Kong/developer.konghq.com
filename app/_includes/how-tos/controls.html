@@ -1,0 +1,8 @@
+<div class="bg-secondary rounded-md flex justify-between py-2 px-4 gap-2 w-full shadow-primary items-center">
+<label for="deployment-topology-switch" class="text-primary">Deployment Platform:</label>
+<select id="deployment-topology-switch" class="bg-secondary grow">
+    {% for option in include.works_on %}
+        <option value="{{ option }}" {% if option == 'konnect' %}selected{% endif %}>{{ option }}</option>
+    {% endfor %}
+</select>
+</div>
