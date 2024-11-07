@@ -1,6 +1,8 @@
 const fs = require("fs").promises;
 const fg = require("fast-glob");
 const matter = require("gray-matter");
+const path = require("path");
+const YAML = require("yaml");
 
 const Ajv = require("ajv");
 const addFormats = require("ajv-formats");
@@ -16,16 +18,23 @@ async function validateFrontmatters() {
   }
 
   // Ignore plugins pages for now.
-  // TODO: landing pages.
-  const files = await fg("app/**/*.md", {
-    ignore: ["app/_includes/**", "app/_kong_plugins"],
-    cwd: "../../",
-  });
+  const files = await fg(
+    ["app/**/*.md", "app/_landing_pages/**/*.{yaml,yml}"],
+    {
+      ignore: ["app/_includes/**", "app/_kong_plugins"],
+      cwd: "../../",
+    }
+  );
 
   const errors = [];
-  for (const path of files) {
-    const markdown = await fs.readFile(`../../${path}`);
-    const { data } = matter(markdown);
+  for (const filePath of files) {
+    let data;
+    const file = await fs.readFile(`../../${filePath}`, "utf-8");
+    if (path.extname(filePath) == ".md") {
+      data = matter(file).data;
+    } else {
+      data = YAML.parse(file)["metadata"];
+    }
 
     // look for specific schema
     let validate = ajv.getSchema(`schema:${data.content_type}`);
@@ -35,7 +44,7 @@ async function validateFrontmatters() {
 
     const valid = validate(data);
     if (!valid) {
-      errors.push({ filePath: path, errors: validate.errors });
+      errors.push({ filePath: filePath, errors: validate.errors });
     }
   }
 
