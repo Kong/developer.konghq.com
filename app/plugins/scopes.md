@@ -1,5 +1,4 @@
 ---
-layout: default
 title: Supported scopes by plugin
 
 content_type: reference

@@ -1,5 +1,4 @@
 ---
-layout: default
 title: Plugin precedence
 
 content_type: reference
