@@ -1,0 +1,4 @@
+{
+  "$id": "schema:landing_page",
+  "allOf": [{ "$ref": "schema:base" }]
+}
