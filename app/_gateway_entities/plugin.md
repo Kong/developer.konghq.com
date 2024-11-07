@@ -1,5 +1,6 @@
 ---
 title: Plugins
+content_type: reference
 entities:
   - plugin
 

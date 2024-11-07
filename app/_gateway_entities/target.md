@@ -1,5 +1,6 @@
 ---
 title: Targets
+content_type: reference
 entities:
   - target
 
@@ -22,7 +23,6 @@ schema:
 ## What is a target?
 
 {{page.description}}
-
 
 ## Use cases for targets
 

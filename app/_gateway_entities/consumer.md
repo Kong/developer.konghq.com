@@ -1,5 +1,6 @@
 ---
 title: Consumers
+content_type: reference
 entities:
   - consumer # we could use this to pull the schema too
 
