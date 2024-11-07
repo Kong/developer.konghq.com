@@ -1,61 +1,73 @@
 {
-    "$id": "schema:base",
-    "type": "object",
-    "properties": {
-      "title": {
-        "type": "string"
-      },
-      "content_type": {
-        "type": "string",
-        "enum": ["landing_page", "how_to", "reference", "concept"]
-      },
-      "description": {
-        "type": "string"
-      },
-      "related_resources": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "text": {
-              "type": "string"
-            },
-            "url": {
-              "type": "string",
-              "format": "uri-reference"
-            }
+  "$id": "schema:base",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "content_type": {
+      "type": "string",
+      "enum": ["landing_page", "how_to", "reference", "concept"]
+    },
+    "description": {
+      "type": "string"
+    },
+    "auto_generated": { "type": "boolean" },
+    "related_resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri-reference"
           }
-        }
-      },
-      "products": {
-        "type": "array",
-        "items": {
-          "type": "string",
-          "enum": ["api-ops", "gateway", "insomnia", "mesh"]
-        }
-      },
-      "tools": {
-        "type": "array",
-        "items": {
-          "type": "string",
-          "enum": [
-            "deck",
-            "inso-cli",
-            "kic",
-            "terraform",
-            "admin-api",
-            "konnect-api",
-            "ui"
-          ]
-        }
-      },
-      "works_on": {
-        "type": "array",
-        "items": {
-          "type": "string",
-          "enum": ["on-prem", "konnect"]
         }
       }
     },
+    "products": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["api-ops", "gateway", "insomnia", "mesh"]
+      }
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "deck",
+          "inso-cli",
+          "kic",
+          "terraform",
+          "admin-api",
+          "konnect-api",
+          "ui"
+        ]
+      }
+    },
+    "works_on": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["on-prem", "konnect"]
+      }
+    }
+  },
+  "if": {
+    "anyOf": [
+      { "properties": { "content_type": { "const": "how_to" } } },
+      { "required": ["auto_generated"] }
+    ]
+  },
+  "then": {
     "required": ["content_type", "title"]
+  },
+  "else": {
+    "required": ["content_type", "title", "description"]
   }
+}
