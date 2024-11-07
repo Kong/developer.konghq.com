@@ -3,6 +3,10 @@ title: inso script
 auto_generated: true
 layout: reference
 content_type: reference
+products:
+    - insomnia
+tools:
+    - inso-cli
 ---
 
 ## Command Description
