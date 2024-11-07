@@ -67,7 +67,7 @@ rows:
                 - type: text
                   text: |
                     Authorization controls who can do what in Insomnia. 
-                    Authorization ensures users have the correct amount of permissions and that you can access the Insomnia app through allowlisting domains.
+                    Authorization ensures users have the correct permissions and that you can access the Insomnia app through allowlisting domains.
   
   - columns:
       - blocks:
