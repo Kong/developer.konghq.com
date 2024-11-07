@@ -40,7 +40,6 @@ defaults:
     values:
       layout: "how-to"
       permalink: "/how-to/:path/"
-      content_type: "how-to"
       breadcrumbs:
         - "/how-to/"
   - scope:
