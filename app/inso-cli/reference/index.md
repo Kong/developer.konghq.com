@@ -3,6 +3,10 @@ title: Inso CLI
 auto_generated: true
 content_type: reference
 layout: reference
+products:
+    - insomnia
+tools:
+    - inso-cli
 ---
 
 

@@ -1,4 +1,8 @@
 {
   "$id": "schema:reference",
-  "allOf": [{ "$ref": "schema:base" }]
+  "allOf": [{ "$ref": "schema:base" }],
+  "anyOf": [
+    { "required": ["products"] },
+    { "required": ["tools"] }
+  ]
 }
