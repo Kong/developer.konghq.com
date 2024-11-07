@@ -12,6 +12,7 @@ tags:
     - requests
     - testing
     - authentication
+    - beginner
 
 products:
     - insomnia
