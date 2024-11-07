@@ -49,6 +49,7 @@ async function validateFrontmatters() {
   }
 
   if (errors.length) {
+    console.log(`Errors: ${errors.length}`);
     for (const error of errors) {
       console.log(error.filePath);
       console.log(JSON.stringify(error.errors, null, 2));
