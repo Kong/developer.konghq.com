@@ -1,5 +1,6 @@
 ---
 title: Upstreams
+content_type: reference
 entities:
   - upstream
 

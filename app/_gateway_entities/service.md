@@ -1,5 +1,6 @@
 ---
 title: Services
+content_type: reference
 entities:
   - service
 

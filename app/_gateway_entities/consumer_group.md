@@ -1,5 +1,6 @@
 ---
 title: Consumer Groups
+content_type: reference
 entities:
   - consumer_group
 
