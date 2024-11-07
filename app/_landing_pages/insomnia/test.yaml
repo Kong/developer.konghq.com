@@ -1,5 +1,6 @@
 metadata:
   title: Test APIs
+  content_type: landing_page
   breadcrumbs:
     - /insomnia/
 rows:

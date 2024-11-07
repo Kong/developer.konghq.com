@@ -1,5 +1,6 @@
 metadata:
   title: "Authentication"
+  content_type: landing_page
   tags:
     - authentication
 rows:
