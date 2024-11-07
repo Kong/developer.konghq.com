@@ -1,5 +1,4 @@
 ---
-layout: default
 title: Plugin deployment topologies
 
 content_type: reference
