@@ -7,7 +7,7 @@ tiers:
   team:
     text: Team and above
     url: /insomnia/
-  Enterprise:
+  enterprise:
     text: Enterprise
     url: /insomnia/
 
