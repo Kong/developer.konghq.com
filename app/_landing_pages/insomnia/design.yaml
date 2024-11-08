@@ -126,12 +126,7 @@ rows:
           - type: reference_list
             config:
               products:
-                  - insomnia 
-            quantity: 5
-            allow_empty: true
-          - type: cta
-            config:
-              text: "View more references &raquo;"
-              url: "https://docs.devsite.com/search/{reference.topic}+{other stuff}" ## Takes you to search with terms that match this.
-              align: end
-      
+                - insomnia
+              quantity: 5
+              allow_empty: true
+              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
