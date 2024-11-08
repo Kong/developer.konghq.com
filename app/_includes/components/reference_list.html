@@ -1,0 +1,14 @@
+{% if references.size > 0 %}
+<ul class="flex flex-col bg-secondary shadow-primary  rounded-md text-sm ml-0 gap-0">
+  {% for reference in references %}
+    <li class="flex hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md {% unless forloop.last %} border-b border-primary/5 {% endunless %} {% if forloop.last and config.view_more %} border-b border-primary/5 {% endif %}">
+      <a class="py-4 px-5 w-full text-primary flex justify-between hover:no-underline" href="{{ reference.url }}">{{ reference.title }}<span class="text-terciary inline">View &rarr;</span></a>
+    </li>
+  {% endfor %}
+  {% if config.view_more %}
+  <li class="flex hover:bg-hover-component/100 hover:last:rounded-b-md">
+    <a class="py-4 px-5 w-full hover:no-underline" href="{{ config.view_more }}">View More &rarr;</a>
+  </li>
+  {% endif %}
+</ul>
+{% endif %}
