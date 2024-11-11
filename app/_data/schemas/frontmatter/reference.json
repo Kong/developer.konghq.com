@@ -4,5 +4,16 @@
   "anyOf": [
     { "required": ["products"] },
     { "required": ["tools"] }
-  ]
+  ],
+  "if": {
+    "anyOf": [
+      { "required": ["auto_generated"] }
+    ]
+  },
+  "then": {
+    "required": ["content_type", "title"]
+  },
+  "else": {
+    "required": ["content_type", "title", "description"]
+  }
 }

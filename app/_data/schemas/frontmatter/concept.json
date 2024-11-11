@@ -1,4 +1,5 @@
 {
   "$id": "schema:concept",
-  "allOf": [{ "$ref": "schema:base" }]
+  "allOf": [{ "$ref": "schema:base" }],
+  "required": ["content_type", "title", "description"]
 }
