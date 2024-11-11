@@ -39,7 +39,5 @@
       "works_on"
     ]
   },
-  "required": [
-    "tldr"
-  ]
+  "required": ["tldr", "content_type", "title"]
 }

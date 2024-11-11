@@ -57,17 +57,5 @@
         "enum": ["on-prem", "konnect"]
       }
     }
-  },
-  "if": {
-    "anyOf": [
-      { "properties": { "content_type": { "const": "how_to" } } },
-      { "required": ["auto_generated"] }
-    ]
-  },
-  "then": {
-    "required": ["content_type", "title"]
-  },
-  "else": {
-    "required": ["content_type", "title", "description"]
   }
 }
