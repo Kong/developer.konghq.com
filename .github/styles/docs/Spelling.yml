@@ -4,5 +4,5 @@ level: error
 filters:
   - '\W'
 ignore:
- - .github/styles/kong/dictionary.txt
- - .github/styles/kong/auto-ignore.txt
+ - .github/styles/base/Dictionary.txt
+ - .github/styles/base/Auto-Ignore.txt

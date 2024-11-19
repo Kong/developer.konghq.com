@@ -187,6 +187,7 @@ conntrack
 cors
 crds
 created_at
+cronjob
 Curity
 DAO
 DAOs
@@ -198,6 +199,8 @@ datagrams
 dataplane
 dataplanes
 db-ip
+db_export
+db_import
 dbless
 declaratively
 deduplicate
@@ -558,6 +561,7 @@ timeframe
 timeframes
 tlds
 tproxy
+Traefik
 transcoded
 transcoder
 transpile
