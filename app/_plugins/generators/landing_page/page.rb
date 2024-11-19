@@ -5,7 +5,7 @@ module Jekyll
     class Page < Jekyll::Page
       def initialize(site, file)
         @site = site
-        data = YAML.load_file(file)
+        data = load_file(file)
 
         # Set self.ext and self.basename by extracting information from the page filename
         process('index.md')
@@ -29,6 +29,14 @@ module Jekyll
       end
 
       private
+
+      def load_file(file)
+        data = YAML.load_file(file)
+
+        raise ArgumentError, "Landing pages: The file #{file} is empty." if data.nil?
+
+        data
+      end
 
       def output_path(file)
         file.sub(@site.source, @site.dest).sub(%r{/_landing_pages/(.+)\.yaml$}, '/\1/')
