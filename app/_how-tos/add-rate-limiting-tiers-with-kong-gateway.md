@@ -1,5 +1,7 @@
 ---
 title: How to create rate limiting tiers with Kong Gateway
+content_type: how_to
+
 related_resources:
   - text: Consumer Group API documentation
     url: https://docs.konghq.com/gateway/api/admin-ee/latest/
@@ -14,11 +16,7 @@ works_on:
     - konnect
 
 tools:
-    - admin-api
-    - konnect-api
-    - kic
     - deck
-    - ui
 
 prereqs:
   entities:
@@ -50,9 +48,6 @@ tldr:
 faqs:
   - q: Why can't I use the regular Rate Limiting plugin to rate limit tiers of consumers?
     a: We use the Rate Limiting Advanced plugin because it supports sliding windows, which we use to apply the rate limiting logic while taking into account previous hit rates (from the window that immediately precedes the current) using a dynamic weight.
-
-tools:
-    - deck
 
 cleanup:
   inline:

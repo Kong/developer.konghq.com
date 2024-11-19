@@ -1,6 +1,8 @@
 ---
 title: Collected data
 
+description: Insomnia collects usage analytics data to help improve the application.
+
 content_type: reference
 layout: reference
 

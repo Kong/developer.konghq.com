@@ -1,5 +1,6 @@
 ---
 title: Import content to Insomnia from a Git repository
+content_type: how_to
 
 products:
 - insomnia

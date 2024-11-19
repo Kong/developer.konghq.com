@@ -1,5 +1,7 @@
 ---
 title: Configure Generic SSO in Konnect
+content_type: how_to
+
 related_resources:
   - text: Authentication
     url: /authentication

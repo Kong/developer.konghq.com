@@ -1,5 +1,6 @@
 ---
 title: Generate a collection from a design document
+content_type: how_to
 
 products:
     - insomnia

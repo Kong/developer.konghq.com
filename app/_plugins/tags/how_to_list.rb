@@ -6,9 +6,9 @@ module Jekyll
       super
 
       @param = param.strip
-      if @param.nil? || @param.empty?
-        raise ArgumentError, "Missing param for {% how_to_list %}"
-      end
+      return unless @param.nil? || @param.empty?
+
+      raise ArgumentError, 'Missing param for {% how_to_list %}'
     end
 
     def render(context)
@@ -19,15 +19,13 @@ module Jekyll
 
       quantity = config.fetch('quantity', 10)
 
-      how_tos = @site.collections['how-tos'].docs.inject([]) do |result, t|
+      how_tos = @site.collections['how-tos'].docs.each_with_object([]) do |t, result|
         match = (!config.key?('tags') || t.data.fetch('tags', []).intersect?(config['tags'])) &&
-          (!config.key?('products') || t.data.fetch('products', []).intersect?(config['products'])) &&
-          (!config.key?('tools') || t.data.fetch('tools', []).intersect?(config['tools']))
+                (!config.key?('products') || t.data.fetch('products', []).intersect?(config['products'])) &&
+                (!config.key?('tools') || t.data.fetch('tools', []).intersect?(config['tools']))
 
         result << t if match
         break result if result.size == quantity
-
-        result
       end
 
       if how_tos.empty? && !config.fetch('allow_empty', false)

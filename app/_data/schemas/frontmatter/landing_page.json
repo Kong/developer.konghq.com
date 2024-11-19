@@ -1,0 +1,5 @@
+{
+  "$id": "schema:landing_page",
+  "allOf": [{ "$ref": "schema:base" }],
+  "required": ["content_type", "title", "description"]
+}

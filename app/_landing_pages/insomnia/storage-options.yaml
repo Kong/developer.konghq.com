@@ -1,5 +1,7 @@
 metadata:
   title: Insomnia Storage Options
+  content_type: landing_page
+  description: This page is an introduction to storage options in Insomnia.
 rows:
   - header:
       type: h1

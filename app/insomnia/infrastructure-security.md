@@ -1,6 +1,8 @@
 ---
 title: Infrastructure security
 
+description: This page explains where your data is stored.
+
 content_type: reference
 layout: reference
 

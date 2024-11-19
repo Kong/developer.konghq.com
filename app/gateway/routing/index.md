@@ -1,6 +1,8 @@
 ---
 title: Routing in Kong Gateway
 
+description: This page explains how routing works in Kong Gateway.
+
 content_type: reference
 layout: reference
 

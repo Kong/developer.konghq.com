@@ -1,6 +1,6 @@
 ---
 title: Upstreams
-name: Upstream
+content_type: reference
 entities:
   - upstream
 
@@ -8,7 +8,6 @@ tools:
     - admin-api
     - kic
     - deck
-    - ui
     - terraform
 
 description: An upstream refers to the service applications sitting behind Kong Gateway, to which client requests are forwarded.
@@ -27,10 +26,14 @@ schema:
 
 The following are examples of common use cases for upstreams:
 
+## Schema
 
-{% contentfor setup_entity %}
+{% entity_schema %}
+
+## Set up an Upstream
+
 {% entity_example %}
-type: upstream 
+type: upstream
 data:
     name: api.example.internal
     tags:
@@ -38,4 +41,3 @@ data:
       - low-priority
     algorithm: round-robin
 {% endentity_example %}
-{% endcontentfor %}

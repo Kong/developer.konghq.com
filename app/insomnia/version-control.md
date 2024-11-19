@@ -1,6 +1,8 @@
 ---
 title: About version control in Insomnia
 
+description: Insomnia allows you to manage versions of collections, mock servers, design documents, and global environments in Insomnia, both with cloud sync and git sync.
+
 content_type: concept
 layout: concept
 
@@ -42,7 +44,8 @@ faqs:
     a: If you invite them to your organization or workspace, other users can edit the same Insomnia entities and use the same branches for version control.
 ---
 
-Insomnia allows you to manage versions of collections, mock servers, design documents, and global environments in Insomnia, both with cloud sync and git sync. Branches are object-specific, meaning that the branches you have in a collection are specific to that one collection. They aren't shared with other collections or other objects, like a mock server. 
+{{ page.description }}
+Branches are object-specific, meaning that the branches you have in a collection are specific to that one collection. They aren't shared with other collections or other objects, like a mock server. 
 
 With cloud sync, versions are managed only in the Insomnia UI and can be shared with other users you've invited to your workspace. In git sync, you can pull branches from your repository into Insomnia and can also push local branches you make in Insomnia to your repository.
 

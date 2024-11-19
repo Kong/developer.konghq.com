@@ -40,7 +40,6 @@ defaults:
     values:
       layout: "how-to"
       permalink: "/how-to/:path/"
-      content_type: "how-to"
       breadcrumbs:
         - "/how-to/"
   - scope:
@@ -49,7 +48,6 @@ defaults:
     values:
       layout: "gateway_entity"
       permalink: "/gateway/entities/:path/"
-      content_type: "reference"
       products:
         - gateway
       breadcrumbs:

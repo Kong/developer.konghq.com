@@ -1,6 +1,8 @@
 ---
 title: Add custom linting rules in Insomnia
 
+content_type: how_to
+
 products:
 - insomnia
 

@@ -1,6 +1,6 @@
 ---
 title: Services
-name: Service
+content_type: reference
 entities:
   - service
 
@@ -17,7 +17,6 @@ tools:
     - konnect-api
     - kic
     - deck
-    - ui
     - terraform
 
 schema:
@@ -60,11 +59,15 @@ flowchart LR
   
 {% endmermaid %}
 
-{% contentfor setup_entity %}
+## Schema
+
+{% entity_schema %}
+
+## Set up a Service
+
 {% entity_example %}
 type: service
 data:
   name: example-service
   url: "http://httpbin.konghq.com"
 {% endentity_example %}
-{% endcontentfor %}

@@ -1,5 +1,12 @@
 {% if include.products and include.products.size > 1 %}
 {% raise "tier.html include called with a tier and more than one product." %}
 {% endif %}
-{% assign tier = site.data.products[include.products.first].tiers[include.tier] %}
+{% assign product = include.products.first %}
+{% assign tier = site.data.products[product].tiers[include.tier] %}
+{% unless tier %}
+    {%- capture available_tiers -%}
+        {%- for tier in site.data.products[product].tiers -%}{{tier[0]}}{% unless forloop.last %}, {% endunless %}{%- endfor -%}
+    {%- endcapture -%}
+    {% raise "tier.html: invalid tier `{{include.tier}}` for product: `{{product}}`. Available tiers: {{available_tiers}}" %}
+{% endunless %}
 {% include badge.html url=tier.url text=tier.text %}

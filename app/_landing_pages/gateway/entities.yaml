@@ -1,5 +1,7 @@
 metadata:
   title: Gateway Entities
+  content_type: landing_page
+  description: This page lists the different entities that make up Kong Gateway.
   breadcrumbs:
     - /gateway/
 rows:

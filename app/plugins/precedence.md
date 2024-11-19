@@ -1,6 +1,7 @@
 ---
-layout: default
 title: Plugin precedence
+
+description: This page describes the order of precedence when a plugin is applied to different entities.
 
 content_type: reference
 layout: reference

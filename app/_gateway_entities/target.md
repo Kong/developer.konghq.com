@@ -1,6 +1,6 @@
 ---
 title: Targets
-name: Target
+content_type: reference
 entities:
   - target
 
@@ -9,7 +9,6 @@ tools:
     - konnect-api
     - kic
     - deck
-    - ui
     - terraform
 
 description: A target identifies a specific instance of an upstream service.
@@ -24,7 +23,10 @@ schema:
 
 {{page.description}}
 
-
 ## Use cases for targets
 
 The following are examples of common use cases for targets:
+
+## Schema
+
+{% entity_schema %}

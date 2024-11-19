@@ -1,6 +1,6 @@
 ---
 title: Consumer Groups
-name: Consumer Group
+content_type: reference
 entities:
   - consumer_group
 
@@ -11,7 +11,6 @@ tools:
     - konnect-api
     - kic
     - deck
-    - ui
     - terraform
 
 tier: enterprise
@@ -22,10 +21,10 @@ tier: enterprise
 
 This page is a stub
 
-{% contentfor setup_entity %}
+## Set up a Consumer Group
+
 {% entity_example %}
 type: consumer_group
 data:
     name: my_group
 {% endentity_example %}
-{% endcontentfor %}

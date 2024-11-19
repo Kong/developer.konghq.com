@@ -1,5 +1,6 @@
 ---
 title: Use the Collection Runner in Insomnia
+content_type: how_to
 
 products:
     - insomnia

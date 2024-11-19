@@ -1,5 +1,6 @@
 ---
 title: Set a value from a response as an environment variable in Insomnia
+content_type: how_to
 
 products:
 - insomnia
