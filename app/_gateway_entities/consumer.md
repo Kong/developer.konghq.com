@@ -125,7 +125,12 @@ The following are examples of common use cases for consumers:
 |Consumer groups | Group consumers by sets of criteria and apply certain rules to them.|
 |Rate limiting | Rate limit specific consumers based on tiers.|
 
-{% contentfor setup_entity %}
+## Schema
+
+{% entity_schema %}
+
+## Set up a Consumer
+
 {% entity_example %}
 type: consumer
 data:
@@ -134,8 +139,3 @@ data:
   tags:
     - silver-tier
 {% endentity_example %}
-{% endcontentfor %}
-
-## Schema
-
-{% entity_schema %}
