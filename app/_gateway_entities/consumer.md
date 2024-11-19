@@ -1,6 +1,5 @@
 ---
 title: Consumers
-name: Consumer
 entities:
   - consumer # we could use this to pull the schema too
 
@@ -136,3 +135,7 @@ data:
     - silver-tier
 {% endentity_example %}
 {% endcontentfor %}
+
+## Schema
+
+{% entity_schema %}

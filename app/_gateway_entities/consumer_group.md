@@ -1,6 +1,5 @@
 ---
 title: Consumer Groups
-name: Consumer Group
 entities:
   - consumer_group
 
@@ -21,6 +20,10 @@ tier: enterprise
 ## What is a consumer group?
 
 This page is a stub
+
+## Schema
+
+{% entity_schema %}
 
 {% contentfor setup_entity %}
 {% entity_example %}

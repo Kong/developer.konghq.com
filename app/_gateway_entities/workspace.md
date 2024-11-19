@@ -1,6 +1,5 @@
 ---
 title: Workspaces 
-name: Workspace
 entities:
   - workspace 
 
@@ -14,10 +13,15 @@ tools:
     - terraform
 
 tier: enterprise
-
+schema:
+    api: gateway/admin-ee
+    path: /schemas/Workspace
 ---
 
 ## What is a workspace?
 
 This page is a stub
 
+## Schema
+
+{% entity_schema %}
