@@ -40,7 +40,7 @@
   </head>
 
   <body class="bg-primary leading-6">
-    {% include header.html %}
+    {% include_cached header.html %}
 
   <div class="flex px-5 md:px-8 2xl:px-[156px] 2xl:mx-auto max-w-screen-2xl">
     {{ content }}
@@ -50,6 +50,6 @@
     {% include get_help.html %}
   {% endif %}
 
-  {% include footer.html %}
+  {% include_cached footer.html %}
 </body>
 </html>
