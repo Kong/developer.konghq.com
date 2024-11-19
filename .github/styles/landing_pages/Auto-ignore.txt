@@ -1,5 +1,5 @@
-github
 cmd
-oss
-ee
 consumer_group
+ee
+github
+oss
