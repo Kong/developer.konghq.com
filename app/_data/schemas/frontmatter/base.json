@@ -45,8 +45,7 @@
           "kic",
           "terraform",
           "admin-api",
-          "konnect-api",
-          "ui"
+          "konnect-api"
         ]
       }
     },

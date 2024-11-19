@@ -10,7 +10,6 @@ tools:
     - admin-api
     - kic
     - deck
-    - ui
     - terraform
 
 tier: enterprise

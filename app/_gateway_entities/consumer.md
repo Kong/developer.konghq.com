@@ -66,7 +66,6 @@ tools:
     - konnect-api
     - kic
     - deck
-    - ui
     - terraform
 
 api_specs:

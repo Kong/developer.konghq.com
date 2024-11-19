@@ -19,7 +19,6 @@ tools:
     - konnect-api
     - kic
     - deck
-    - ui
     - terraform
 
 schema:
