@@ -1,0 +1,5 @@
+app/changelogs/kong-ee.md:
+  - app/_src/gateway/changelog.md
+
+app/changelogs/kong-oss.md:
+  - app/_src/gateway/changelog.md
