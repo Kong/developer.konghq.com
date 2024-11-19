@@ -10,8 +10,7 @@ related_resources:
   - text: Configure Azure SAML SSO in Insomnia
     url: /how-to/azure-saml-sso-insomnia
 
-tier:
-  - enterprise
+tier: enterprise
 
 tags:
   - sso

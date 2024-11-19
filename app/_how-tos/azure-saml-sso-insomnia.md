@@ -10,8 +10,7 @@ related_resources:
   - text: Configure Okta SAML SSO in Insomnia
     url: /how-to/okta-saml-sso-insomnia
 
-tier:
-  - enterprise
+tier: enterprise
 
 tags:
   - sso
