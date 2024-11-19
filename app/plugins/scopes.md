@@ -1,6 +1,8 @@
 ---
 title: Supported scopes by plugin
 
+description: This page describes the different scopes available for each plugin.
+
 content_type: reference
 layout: reference
 

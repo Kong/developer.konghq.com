@@ -1,5 +1,6 @@
 ---
 title: Scratch pad in Insomnia
+description: Scratch pad is a storage option that allows all project data to be stored locally on your device.
 
 content_type: concept
 layout: concept
@@ -28,7 +29,7 @@ faqs:
     a: In both local vault and scratch pad, project data is stored locally. With local vault, you can also use git sync. In scratch pad, all data is stored locally, so it is best suited for individual developers who aren't working as part of a team.
 ---
 
-Scratch pad is a storage option that allows all project data to be stored locally on your device. This option is ideal for users who prefer or require their data to remain off the cloud for privacy or security reasons.
+{{ page.description }} This option is ideal for users who prefer or require their data to remain off the cloud for privacy or security reasons.
 
 Key features:
 * **Local storage:** All project files are stored on your local machine.

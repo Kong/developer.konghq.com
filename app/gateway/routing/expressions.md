@@ -1,6 +1,8 @@
 ---
 title: Expressions router
 
+description: Kong Gateway includes a rule-based engine using a domain-specific expressions language.
+
 content_type: reference
 layout: reference
 
@@ -20,7 +22,7 @@ breadcrumbs:
   - /gateway/routing/
 ---
 
-{{site.base_gateway}} includes a rule-based engine using a domain-specific expressions language. Expressions can be used to perform tasks such as defining
+{{ page.description }} Expressions can be used to perform tasks such as defining
 complex routing logic.
 This guide is a reference for the expressions language and explains how it can be used.
 

@@ -1,6 +1,7 @@
 metadata:
   title: Documents
   content_type: landing_page
+  description: This page is an introduction to design documents in Insomnia.
   breadcrumbs:
     - /insomnia/
 rows:

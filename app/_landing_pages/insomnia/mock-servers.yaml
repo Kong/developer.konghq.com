@@ -1,6 +1,7 @@
 metadata:
   title: Mocks
   content_type: landing_page
+  description: This page is an introduction to mock servers in Insomnia.
   breadcrumbs:
     - /insomnia/
 rows:

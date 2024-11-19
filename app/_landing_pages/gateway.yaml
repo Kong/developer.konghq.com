@@ -1,6 +1,7 @@
 metadata:
   title: Kong Gateway
   content_type: landing_page
+  description: This page is an introduction to Kong Gateway.
 rows:
   - header:
       type: h1

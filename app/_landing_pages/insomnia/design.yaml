@@ -1,6 +1,7 @@
 metadata:
   title: Design APIs
   content_type: landing_page
+  description: This page is an introduction to API design in Insomnia.
   breadcrumbs:
     - /insomnia/
 rows:

@@ -1,6 +1,7 @@
 metadata:
   title: Insomnia SSO
   content_type: landing_page
+  description: This page is an introduction to SSO for Insomnia.
 rows:
   - header:
       type: h1
