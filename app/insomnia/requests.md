@@ -1,6 +1,8 @@
 ---
 title: Requests in Insomnia
 
+description: Insomnia allows you to configure and send different types of requests.
+
 content_type: reference
 layout: reference
 
