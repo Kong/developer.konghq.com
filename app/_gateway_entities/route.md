@@ -1,6 +1,5 @@
 ---
 title: Routes
-name: Route
 entities:
   - route
 
@@ -67,3 +66,7 @@ Routes can be configured dynamically to rewrite the requested URL to a different
 {{site.base_gateway}} can also handle more complex URL rewriting cases by using regular expression capture groups in the route path and the [Request Transformer Advanced](https://docs.konghq.com/hub/kong-inc/request-transformer-advanced/) plugin. For example, this can be used when you must replace `/api/<function>/old` with `/new/api/<function>`.
 
 {{site.base_gateway}} 3.0.x or later ships with a new router. The new router can use regex expression capture groups to describe routes using a domain-specific language called Expressions. Expressions can describe routes or paths as patterns using regular expressions. For more information about how to configure the router using Expressions, see [How to configure routes using expressions](https://docs.konghq.com/gateway/latest/key-concepts/routes/expressions/).
+
+## Schema
+
+{% entity_schema %}

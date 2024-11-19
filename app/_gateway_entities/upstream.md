@@ -1,6 +1,5 @@
 ---
 title: Upstreams
-name: Upstream
 entities:
   - upstream
 
@@ -26,6 +25,10 @@ schema:
 ## Use cases for upstreams
 
 The following are examples of common use cases for upstreams:
+
+## Schema
+
+{% entity_schema %}
 
 
 {% contentfor setup_entity %}

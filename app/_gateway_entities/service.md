@@ -1,6 +1,5 @@
 ---
 title: Services
-name: Service
 entities:
   - service
 
@@ -59,6 +58,11 @@ flowchart LR
   style id1 rx:10,ry:10
   
 {% endmermaid %}
+
+## Schema
+
+{% entity_schema %}
+
 
 {% contentfor setup_entity %}
 {% entity_example %}

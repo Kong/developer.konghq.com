@@ -1,6 +1,5 @@
 ---
 title: Plugins
-name: Plugin
 entities:
   - plugin
 
@@ -41,3 +40,7 @@ Kong provides a set of standard Lua plugins that get bundled with {{site.base_ga
 The set of plugins you have access to depends on your license tier.
 
 You can also develop custom plugins, adding your own custom functionality to {{site.base_gateway}}.
+
+## Schema
+
+{% entity_schema %}

@@ -1,6 +1,5 @@
 ---
 title: Targets
-name: Target
 entities:
   - target
 
@@ -28,3 +27,7 @@ schema:
 ## Use cases for targets
 
 The following are examples of common use cases for targets:
+
+## Schema
+
+{% entity_schema %}
