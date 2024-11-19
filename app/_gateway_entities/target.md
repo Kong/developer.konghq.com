@@ -9,7 +9,6 @@ tools:
     - konnect-api
     - kic
     - deck
-    - ui
     - terraform
 
 description: A target identifies a specific instance of an upstream service.

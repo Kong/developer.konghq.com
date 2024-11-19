@@ -8,7 +8,6 @@ tools:
     - admin-api
     - kic
     - deck
-    - ui
     - terraform
 
 description: An upstream refers to the service applications sitting behind Kong Gateway, to which client requests are forwarded.

@@ -11,7 +11,6 @@ tools:
     - konnect-api
     - kic
     - deck
-    - ui
     - terraform
 
 tier: enterprise
