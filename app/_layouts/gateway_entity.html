@@ -5,10 +5,6 @@ entity_schema: true
 
 {{ content }}
 
-{% ifhascontent setup_entity %}
-{% include sections/setup_entity.html %}
-{% endifhascontent setup_entity %}
-
 {% if page.faqs %}
 {% include sections/faq.html %}
 {% endif %}

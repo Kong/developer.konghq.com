@@ -40,17 +40,6 @@ You can also configure routes with:
 * Redirect status codes: HTTPS status codes
 * Tags: Optional set of strings to group routes with
 
-
-{% contentfor setup_entity %}
-{% entity_example %}
-type: route
-data:
-  name: example-route
-  paths:
-    - "/mock"
-{% endentity_example %}
-{% endcontentfor %}
-
 ## Route and service interaction
 
 Routes, in conjunction with [services](/gateway/entities/service/), let you expose your services to applications with Kong Gateway. Kong Gateway abstracts the service from the applications by using routes. Since the application always uses the route to make a request, changes to the services, like versioning, don’t impact how applications make the request. Routes also allow the same service to be used by multiple applications and apply different policies based on the route used.
@@ -70,3 +59,13 @@ Routes can be configured dynamically to rewrite the requested URL to a different
 ## Schema
 
 {% entity_schema %}
+
+## Set up a Route
+
+{% entity_example %}
+type: route
+data:
+  name: example-route
+  paths:
+    - "/mock"
+{% endentity_example %}

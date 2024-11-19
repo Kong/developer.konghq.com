@@ -30,10 +30,10 @@ The following are examples of common use cases for upstreams:
 
 {% entity_schema %}
 
+## Set up an Upstream
 
-{% contentfor setup_entity %}
 {% entity_example %}
-type: upstream 
+type: upstream
 data:
     name: api.example.internal
     tags:
@@ -41,4 +41,3 @@ data:
       - low-priority
     algorithm: round-robin
 {% endentity_example %}
-{% endcontentfor %}

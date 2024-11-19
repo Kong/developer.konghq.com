@@ -21,14 +21,10 @@ tier: enterprise
 
 This page is a stub
 
-## Schema
+## Set up a Consumer Group
 
-{% entity_schema %}
-
-{% contentfor setup_entity %}
 {% entity_example %}
 type: consumer_group
 data:
     name: my_group
 {% endentity_example %}
-{% endcontentfor %}

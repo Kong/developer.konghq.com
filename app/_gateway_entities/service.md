@@ -63,12 +63,11 @@ flowchart LR
 
 {% entity_schema %}
 
+## Set up a Service
 
-{% contentfor setup_entity %}
 {% entity_example %}
 type: service
 data:
   name: example-service
   url: "http://httpbin.konghq.com"
 {% endentity_example %}
-{% endcontentfor %}
