@@ -1,0 +1,1 @@
+You need a domain you own as well as permissions to make DNS records. 

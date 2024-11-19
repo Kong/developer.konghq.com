@@ -1,12 +1,14 @@
 metadata:
-  title: Security at Insomnia
-  content_type: landing_page
-  description: This page is an introduction to security with Insomnia.
+  title: Insomnia Security Policies
+  description: "Find additional resources that explain how Insomnia prioritizes data protection through encryption, product and application security, and organizational measures."
+  breadcrumbs:
+    - /insomnia/
+  tags:
+    - security
 rows:
   - header:
       type: h1
       text: "Security at Insomnia"
-      sub_text: "Learn how Insomnia prioritizes data protection through encryption, product and application security, and organizational measures."
   
   - columns:
       - blocks:
@@ -15,20 +17,19 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    Insomnia believes that it is your right to know how your sensitive project data is transported and handled, so this document is an effort to explain exactly how it works.
-
-                    If you find that any part of this document is incorrect, missing, or wrong, please don’t hesitate to reach out.
+                    Insomnia believes that it is your right to know how your sensitive project data is transported and handled. 
+                    The sections on this page explain how Insomnia secures data and infrastructure, what data is collected, and how Insomnia responds to security incidents.
   
   - header:
       type: h2
-      text: "Learn more about how Insomnia secures data"
+      text: "Learn more about Insomnia security"
     columns:
       - blocks:
         - type: card
           config:
             title: Data security
-            description: Learn about how Insomnia secures data
-            icon:  /assets/icons/insomnia/design.svg
+            description: Learn about how Insomnia data is encrypted and what data models, keys, and salts are used
+            icon:  /assets/icons/insomnia/data-security.svg
             cta:
               text: Learn more
               url: /insomnia/data-security
@@ -38,7 +39,7 @@ rows:
           config:
             title: Infrastructure security
             description: Learn about what infrastructure security Insomnia uses
-            icon: /assets/icons/insomnia/checkbox-active.svg
+            icon: /assets/icons/insomnia/infrastructure-security.svg
             cta:
               text: Learn more
               url: /insomnia/infrastructure-security
@@ -48,7 +49,7 @@ rows:
           config:
             title: Collected data
             description: Learn about what data Insomnia collects and how to opt out of data collection
-            icon: /assets/icons/insomnia/checkbox-active.svg
+            icon: /assets/icons/insomnia/data-collected.svg
             cta:
               text: Learn more
               url: /insomnia/collected-data
@@ -58,42 +59,8 @@ rows:
           config:
             title: Incident response and vulnerability management
             description: Learn about how Insomnia reports incidents and how they manage security vulnerabilities
-            icon: /assets/icons/insomnia/checkbox-active.svg
+            icon: /assets/icons/insomnia/incident-response.svg
             cta:
               text: Learn more
               url: /insomnia/incident-response
-              align: end
-  - header:
-      type: h2
-      text: "Key security features"
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: Enterprise Single Sign-On (SSO)
-            description: Learn about SSO security and see the different options to configure SSO.
-            icon:  /assets/icons/insomnia/design.svg
-            cta:
-              text: Learn more
-              url: /insomnia/sso
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Role-Based Access Control
-            description: Learn about RBAC in Insomnia.
-            icon: /assets/icons/insomnia/checkbox-active.svg
-            cta:
-              text: Learn more
-              url: /insomnia/rbac
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Insomnia Storage Options
-            description: Learn about local storage, git sync, and cloud sync in Insomnia
-            icon: /assets/icons/insomnia/checkbox-active.svg
-            cta:
-              text: Learn more
-              url: /insomnia/storage-options
               align: end

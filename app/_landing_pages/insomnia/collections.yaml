@@ -78,6 +78,14 @@ rows:
               text: Learn more
               url: /how-to/chain-requests/
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: Request authentication
+            cta:
+              text: Learn more
+              url: /insomnia/request-authentication/
+              align: end
  
   - header:
       type: h2

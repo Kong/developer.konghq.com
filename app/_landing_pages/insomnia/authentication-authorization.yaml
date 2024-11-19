@@ -1,0 +1,83 @@
+metadata:
+  title: Authentication and authorization at Insomnia
+  breadcrumbs:
+    - /insomnia/
+  description: Secure Insomnia with native or external authentication and authorization.
+  tags:
+    - authentication
+    - authorization
+    - whitelist
+
+rows:
+  - header:
+      type: h1
+      text: "Authentication and authorization at Insomnia"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: "Secure Insomnia by setting up native or external authentication and configure authorization settings."
+  
+  - header:
+      type: h2
+      text: "Authentication"
+    columns: 
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    To authenticate with Insomnia, you can use either external authentication (SSO) or native authentication to log in to the Insomnia app. For SSO, you can use any identity provider (IdP) that supports SAML 2.0. 
+
+                    If you are looking for information about how to authenticate requests in Insomnia, see [Request authentication](/insomnia/request-authentication/).
+
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Configure SSO with Microsoft Entra SAML
+            description: Learn how to configure Microsoft Entra as your SAML provider for SSO with Insomnia 
+            icon:  /assets/icons/azure.svg
+            cta:
+              text: Learn more
+              url: /how-to/azure-saml-sso-insomnia
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Configure SSO with Okta SAML
+            description: Learn how to configure Okta as your SAML provider for SSO with Insomnia
+            icon:  /assets/icons/okta.svg
+            cta:
+              text: Learn more
+              url: /how-to/okta-saml-sso-insomnia
+              align: end
+  
+  - header:
+      type: h2
+      text: "Authorization"
+    columns: 
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Authorization controls who can do what in Insomnia. 
+                    Authorization ensures users have the correct permissions and that you can access the Insomnia app through allowlisting domains.
+  
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Domain allowlist reference
+            description: Learn which domains to add to your allowlist so all Insomnia features work correctly
+            icon:  /assets/icons/insomnia/allowlist.svg
+            cta:
+              text: Learn more
+              url: /insomnia/allowlist
+              align: end
+
