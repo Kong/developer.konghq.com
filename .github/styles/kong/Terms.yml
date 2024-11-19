@@ -1,0 +1,20 @@
+extends: substitution
+message: Use '%s' instead of '%s'.
+level: error
+ignorecase: true
+scope: text
+swap:
+
+  datacenter: data center
+  codeblock': code block
+  blacklist: denylist
+  codeblock: code block
+  file name: filename
+  # '(?:kubernetes|k8s)': Kubernetes
+  multizone: multi-zone
+  pg: PostgreSQL
+  'postgres$': PostgreSQL
+  redhat: Red Hat
+  timezone: time zone
+  utilize: use
+  whitelist: allowlist
