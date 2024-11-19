@@ -1,6 +1,8 @@
 ---
 title: Using environment variables with decK
 
+description: decK allows you to manage values in decK files using environment variables.
+
 content_type: reference
 layout: reference
 
@@ -18,7 +20,7 @@ breadcrumbs:
   - /deck/
 ---
 
-To manage any values in decK files with environment varaibles, you can create environment variables 
+To manage any values in decK files with environment variables, you can create environment variables 
 with the `DECK_` prefix and reference them as `{%raw%}${{ env "DECK_*" }}{%endraw%}` in your state file.
 
 When you use decK to apply configurations to {{site.base_gateway}},

@@ -1,6 +1,8 @@
 ---
 title: Incident response and vulnerability management
 
+description: We monitor the security of our products and applications through various ongoing activities, including logs.
+
 content_type: reference
 layout: reference
 
@@ -24,4 +26,4 @@ faqs:
     a: Our [open source GitHub repository](https://github.com/kong/insomnia) and [support channels](https://insomnia.rest/support).
 ---
 
-We monitor the security of our products and applications through various ongoing activities, including logs.
+{{ page.description }}

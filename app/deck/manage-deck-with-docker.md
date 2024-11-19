@@ -1,6 +1,8 @@
 ---
 title: Manage decK with Docker
 
+description: If you used the [kong/deck](https://hub.docker.com/r/kong/deck) Docker image to install decK, you can use the same Docker image to manage decK.  
+
 content_type: reference
 layout: reference
 
@@ -21,8 +23,7 @@ breadcrumbs:
   - /deck/
 ---
 
-If you used the [kong/deck](https://hub.docker.com/r/kong/deck) Docker image to 
-install decK, you can use the same Docker image to manage decK.  
+{{ page.description }}
 
 Adjust `KONG_ADMIN_HOST` and the port `8001` in the following examples to the 
 host and port of your own {{site.base_gateway}} instance.

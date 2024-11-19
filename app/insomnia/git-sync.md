@@ -1,5 +1,8 @@
 ---
 title: Git sync
+
+description: Git sync allows users to use a third-party Git repository for storing project data.
+
 content_type: concept
 layout: concept
 
@@ -36,7 +39,8 @@ faqs:
    
 ---
 
-Git sync allows users to use a third-party Git repository for storing project data. This option is independent of cloud access and is suitable for users familiar with Git workflows.
+{{ page.description }}
+This option is independent of cloud access and is suitable for users familiar with Git workflows.
 
 Key features:
 * **Version control:** Leverage Git’s [version control](/insomnia/version-control) capabilities for your projects.

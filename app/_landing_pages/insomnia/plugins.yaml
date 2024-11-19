@@ -1,6 +1,7 @@
 metadata:
   title: Insomnia Plugins
   content_type: landing_page
+  description: This page is an introduction to Insomnia plugins.
 rows:
   - header:
       type: h1

@@ -1,6 +1,8 @@
 ---
 title: Insomnia concepts
 
+description: This page defines some concepts related to Insomnia.
+
 content_type: reference
 layout: reference
 

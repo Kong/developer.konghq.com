@@ -1,6 +1,8 @@
 ---
 title: Distributed Configuration for Kong using decK
 
+description: decK can operate on a subset of configuration instead of managing the entire configuration of Kong Gateway.
+
 content_type: reference
 layout: reference
 
@@ -18,8 +20,7 @@ breadcrumbs:
   - /deck/
 ---
 
-decK can operate on a subset of configuration instead of
-managing the entire configuration of {{site.base_gateway}}.
+{{ page.description }}
 You can do this by breaking up the configuration into multiple files and managing them using tags.
 
 With tags, you can use decK's `select-tag` feature to export, sync, or reset

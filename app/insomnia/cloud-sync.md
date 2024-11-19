@@ -1,6 +1,8 @@
 ---
 title: Cloud sync 
 
+description: Cloud sync enables users to store and synchronize their project data in the cloud securely as well as use [version control](/insomnia/version-control).
+
 content_type: concept
 layout: concept
 
@@ -31,7 +33,8 @@ faqs:
 
 ---
 
-Cloud sync enables users to store and synchronize their project data in the cloud securely as well as use [version control](/insomnia/version-control). This feature is beneficial for collaboration, providing easy access to projects from different devices and locations. 
+{{page.description}}
+This feature is beneficial for collaboration, providing easy access to projects from different devices and locations. 
 
 Cloud sync provides the following abilities on top of the base Insomnia functionality:
 * Commit and push the contents of projects

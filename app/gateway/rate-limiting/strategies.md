@@ -1,6 +1,8 @@
 ---
 title: Rate Limiting Strategies
 
+description: This page describes the rate limiting strategies supported by Kong Gateway plugins.
+
 content_type: reference
 layout: reference
 
@@ -23,9 +25,9 @@ All rate limiting plugins support some subset of the following strategies:
 
 | Strategy  | Pros | Cons   | Supported in plugin |
 | --------- | ---- | ------ | ------------------- |
-| `local`   | Minimal performance impact. | Less accurate. Unless there's a consistent-hashing load balancer in front of Kong, it diverges when scaling the number of nodes. | AI Rate Limiting Advanced <br> Rate Limiting Advanced <br> Rate Limiting <br> Response Ratelimiting |
-| `cluster` | Accurate<sup>1</sup>, no extra components to support. | Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact. | AI Rate Limiting Advanced <br> Rate Limiting Advanced <br> Rate Limiting <br> Response Ratelimiting <br> GraphQL Rate Limiting Advanced |
-| `redis`   | Accurate<sup>1</sup>, less performance impact than a `cluster` policy. | Needs a Redis installation. Bigger performance impact than a `local` policy. | AI Rate Limiting Advanced <br> Rate Limiting Advanced <br> Rate Limiting <br> Response Ratelimiting <br> GraphQL Rate Limiting Advanced |
+| `local`   | Minimal performance impact. | Less accurate. Unless there's a consistent-hashing load balancer in front of Kong, it diverges when scaling the number of nodes. | AI Rate Limiting Advanced <br> Rate Limiting Advanced <br> Rate Limiting <br> Response Rate Limiting |
+| `cluster` | Accurate<sup>1</sup>, no extra components to support. | Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact. | AI Rate Limiting Advanced <br> Rate Limiting Advanced <br> Rate Limiting <br> Response Rate Limiting <br> GraphQL Rate Limiting Advanced |
+| `redis`   | Accurate<sup>1</sup>, less performance impact than a `cluster` policy. | Needs a Redis installation. Bigger performance impact than a `local` policy. | AI Rate Limiting Advanced <br> Rate Limiting Advanced <br> Rate Limiting <br> Response Rate Limiting <br> GraphQL Rate Limiting Advanced |
 
 <!-- 
 

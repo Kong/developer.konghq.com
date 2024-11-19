@@ -1,6 +1,8 @@
 ---
 title: Insomnia RBAC
 
+description: Insomnia allows admins to scope user access with Role-Based Access Control.
+
 content_type: reference
 layout: reference
 

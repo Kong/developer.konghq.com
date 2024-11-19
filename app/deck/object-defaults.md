@@ -1,6 +1,8 @@
 ---
 title: Object defaults reference
 
+description: Kong Gateway sets some default values for most objects, including Kong plugins.
+
 content_type: reference
 layout: reference
 
@@ -22,8 +24,7 @@ breadcrumbs:
   - /deck/
 ---
 
-Kong Gateway sets some default values for most objects, including Kong
-plugins. You can see what the defaults are for each object in the
+{{ page.description }} You can see what the defaults are for each object in the
 [Admin API reference](/gateway/latest/admin-api/), or use the
 [`/schemas`](#find-defaults-for-an-object) endpoint to
 check the latest object schemas for your instance of the Kong Gateway.
