@@ -2,7 +2,7 @@ metadata:
   title: Authentication and authorization at Insomnia
   breadcrumbs:
     - /insomnia/
-  description: 
+  description: Secure Insomnia with native or external authentication and authorization.
   tags:
     - authentication
     - authorization
