@@ -176,6 +176,7 @@ clipanion
 CLIs
 CloudFormation
 Cloudformation
+cmd
 cncf
 cncf's
 Cognito
