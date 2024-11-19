@@ -25,7 +25,7 @@ breadcrumbs:
   - /insomnia/
 ---
 
-To ensure full functionality of Insomnia features, allowlist the domains in the following table:
+To ensure full functionality of Insomnia features, allowlist the following domains:
 
 | Domain | Description |
 |--------|-------------|
