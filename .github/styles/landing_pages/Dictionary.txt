@@ -1,6 +1,6 @@
 consumer_group
+content_type
 ee
 github
-oss
-content_type
 landing_page
+oss
