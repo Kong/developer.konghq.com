@@ -1,7 +1,7 @@
 metadata:
   title: Mesh Rate Limiting
   content_type: landing_page
-  description: This page is an introduction to rate limiting in with Kong Mesh.
+  description: This page is an introduction to rate limiting in with {{site.mesh_product_name}}.
   breadcrumbs:
     - /rate-limiting/
 rows:

@@ -27,7 +27,7 @@ breadcrumbs:
 
 Some requests require authentication to ensure that the client requests access data securely. In Insomnia, you can configure different authentication types and parameters when you send a request so that it can authenticate. 
 
-The Insomnia UI provides a simplified configuration for request authentication. It prepopulates the parameters when you select an auth type so you only have to fill in the values. 
+The Insomnia UI provides a simplified configuration for request authentication. It pre-populates the parameters when you select an auth type so you only have to fill in the values. 
 
 ## How do I configure authentication in my requests in Insomnia? 
 
