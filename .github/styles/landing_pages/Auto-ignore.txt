@@ -3,3 +3,5 @@ consumer_group
 ee
 github
 oss
+content_type
+landing_page

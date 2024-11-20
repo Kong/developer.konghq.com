@@ -1,7 +1,7 @@
 metadata:
   title: Gateway Rate Limiting
   content_type: landing_page
-  description: This page is an introduction to rate limiting with Kong Gateway.
+  description: This page is an introduction to rate limiting with {{site.base_gateway}}.
   breadcrumbs:
     - /rate-limiting/
 

@@ -1,7 +1,7 @@
 metadata:
   title: "{{site.base_gateway}} Open Source vs Enterprise"
   content_type: landing_page
-  description: This page lists the different Kong Gateway features for each tier.
+  description: This page lists the different {{site.base_gateway}} features for each tier.
   breadcrumbs:
   - /gateway/
 rows:
