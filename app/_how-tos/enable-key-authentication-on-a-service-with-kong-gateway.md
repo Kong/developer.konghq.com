@@ -1,5 +1,5 @@
 ---
-title: Enable key authentication on a service with Kong Gateway
+title: Enable key authentication on a service with {{site.base_gateway}}
 content_type: how_to
 
 related_resources:
@@ -38,7 +38,7 @@ cleanup:
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
-    - title: Destroy the Kong Gateway container
+    - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 

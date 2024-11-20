@@ -1,7 +1,7 @@
 ---
 title: Rate Limiting Window Types
 
-description: This page describes the rate limiting window types supported by Kong Gateway plugins.
+description: This page describes the rate limiting window types supported by {{site.base_gateway}} plugins.
 
 content_type: reference
 layout: reference

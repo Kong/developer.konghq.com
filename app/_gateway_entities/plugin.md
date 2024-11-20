@@ -15,7 +15,7 @@ related_resources:
     url:  'https://docs.konghq.com/hub/plugins/compatibility/'
   - text: Supported protocols for each plugin
     url:  'https://docs.konghq.com/hub/plugins/compatibility/#protocols'
-  - text: Self-managed Kong Gateway license tiers
+  - text: Self-managed {{site.base_gateway}} license tiers
     url:  'https://docs.konghq.com/hub/plugins/license-tiers/'
   - text: Konnect pricing tiers
     url: 'https://docs.konghq.com/konnect/compatibility/#plugin-compatibility'

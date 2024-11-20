@@ -1,7 +1,7 @@
 ---
 title: Expressions router
 
-description: Kong Gateway includes a rule-based engine using a domain-specific expressions language.
+description: "{{site.base_gateway}} includes a rule-based engine using a domain-specific expressions language."
 
 content_type: reference
 layout: reference
@@ -12,7 +12,7 @@ products:
 related_resources:
   - text: Route entity
     url: /gateway/entities/route/
-  - text: Routing in Kong Gateway
+  - text: Routing in {{site.base_gateway}}
     url: /gateway/routing/
   - text: Expressions repository
     url: https://github.com/Kong/atc-router

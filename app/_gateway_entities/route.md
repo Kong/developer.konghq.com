@@ -9,7 +9,7 @@ description: A route is a path to a resource within an upstream application.
 related_resources:
   - text: Services
     url: /gateway/entities/service/
-  - text: Routing in Kong Gateway
+  - text: Routing in {{site.base_gateway}}
     url: /gateway/routing/
   - text: Expressions router
     url: /gateway/routing/expressions/

@@ -1,9 +1,9 @@
 ---
-title: Enable rate limiting on a service with Kong Gateway
+title: Enable rate limiting on a service with {{site.base_gateway}}
 content_type: how_to
 
 related_resources:
-  - text: How to create rate limiting tiers with Kong Gateway
+  - text: How to create rate limiting tiers with {{site.base_gateway}}
     url:  /how-to/add-rate-limiting-tiers-with-kong-gateway/
   - text: Rate Limiting Advanced plugin
     url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/
@@ -29,7 +29,7 @@ tags:
     - rate-limiting
 
 tldr:
-    q: How do I rate limit a service with Kong Gateway?
+    q: How do I rate limit a service with {{site.base_gateway}}?
     a: Install the Rate Limiting plugin and enable it on the service.
 
 tools:
@@ -47,7 +47,7 @@ cleanup:
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
-    - title: Destroy the Kong Gateway container
+    - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 ---

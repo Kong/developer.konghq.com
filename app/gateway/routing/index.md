@@ -1,7 +1,7 @@
 ---
-title: Routing in Kong Gateway
+title: Routing in {{site.base_gateway}}
 
-description: This page explains how routing works in Kong Gateway.
+description: This page explains how routing works in {{site.base_gateway}}.
 
 content_type: reference
 layout: reference
