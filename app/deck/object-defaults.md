@@ -1,7 +1,7 @@
 ---
 title: Object defaults reference
 
-description: {{site.base_gateway}} sets some default values for most objects, including Kong plugins.
+description: "{{site.base_gateway}} sets some default values for most objects, including Kong plugins."
 
 content_type: reference
 layout: reference
