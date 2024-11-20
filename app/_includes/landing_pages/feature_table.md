@@ -4,7 +4,7 @@
       <th></th>
       {% for c in include.config.columns %}
         <th class="text-center">
-          <span class="font-semibold text-primary">{{ c.title }}</span>
+          <span class="font-semibold text-primary">{{ c.title | liquify }}</span>
         </th>
       {% endfor %}
     </tr>
@@ -13,9 +13,9 @@
     {% for f in include.config.features %}
       <tr>
         <td>
-          <span class="block text-primary">{{ f.title | markdown }}</span>
+          <span class="block text-primary">{{ f.title | liquify | markdown }}</span>
           {% if f.subtitle %}
-          <span class="text-secondary">{{ f.subtitle | markdown }}</span>
+          <span class="text-secondary">{{ f.subtitle | liquify | markdown }}</span>
           {% endif %}
         </td>
         {% for c in include.config.columns %}

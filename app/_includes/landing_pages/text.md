@@ -1,1 +1,1 @@
-{{ include.config | markdownify }}
+{{ include.config | liquify | markdownify }}

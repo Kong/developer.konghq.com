@@ -8,7 +8,7 @@ layout: default
   {% for how_to in site.how-tos %}
     <ul>
       <li>
-        <a href="{{ how_to.url }}" class="text-blue-500 hover:underline">{{ how_to.title }}</a>
+        <a href="{{ how_to.url }}" class="text-blue-500 hover:underline">{{ how_to.title | liquify }}</a>
       </li>
     </ul>
   {% endfor %}
