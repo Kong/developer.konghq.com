@@ -1,7 +1,7 @@
 ---
 title: Rate Limiting Strategies
 
-description: This page describes the rate limiting strategies supported by Kong Gateway plugins.
+description: This page describes the rate limiting strategies supported by {{site.base_gateway}} plugins.
 
 content_type: reference
 layout: reference

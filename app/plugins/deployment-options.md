@@ -1,7 +1,7 @@
 ---
 title: Plugin deployment topologies
 
-description: This page describes the different deployment options for Kong Gateway.
+description: This page describes the different deployment options for {{site.base_gateway}}.
 
 content_type: reference
 layout: reference

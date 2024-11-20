@@ -18,9 +18,9 @@ related_resources:
 
 tldr:
   q: |
-    How do I set custom default values for Kong Gateway entities?
+    How do I set custom default values for {{site.base_gateway}} entities?
   a: |
-    You can configure your own custom Kong Gateway defaults via decK to
+    You can configure your own custom {{site.base_gateway}} defaults via decK to
     enforce a set of standard values and avoid repetition in your configuration.
 
 ---

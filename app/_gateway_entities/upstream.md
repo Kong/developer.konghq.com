@@ -10,7 +10,7 @@ tools:
     - deck
     - terraform
 
-description: An upstream refers to the service applications sitting behind Kong Gateway, to which client requests are forwarded.
+description: An upstream refers to the service applications sitting behind {{site.base_gateway}}, to which client requests are forwarded.
 
 schema:
     api: gateway/admin-ee

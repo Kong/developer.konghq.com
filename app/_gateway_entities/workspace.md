@@ -4,7 +4,7 @@ content_type: reference
 entities:
   - workspace
 
-description: Workspaces provide a way to segment Kong Gateway entities. Entities in a workspace are isolated from those in other workspaces.
+description: Workspaces provide a way to segment {{site.base_gateway}} entities. Entities in a workspace are isolated from those in other workspaces.
 
 tools:
     - admin-api

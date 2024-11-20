@@ -4,7 +4,7 @@ title: Key Auth plugin
 name: Key Auth
 publisher: kong-inc
 content_type: plugin
-description: Secure services and routes with key authetication
+description: Secure services and routes with key authentication
 tags:
     - authentication
 

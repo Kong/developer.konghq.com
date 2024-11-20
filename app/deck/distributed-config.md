@@ -1,7 +1,7 @@
 ---
 title: Distributed Configuration for Kong using decK
 
-description: decK can operate on a subset of configuration instead of managing the entire configuration of Kong Gateway.
+description: decK can operate on a subset of configuration instead of managing the entire configuration of {{site.base_gateway}}.
 
 content_type: reference
 layout: reference
