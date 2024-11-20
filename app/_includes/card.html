@@ -3,15 +3,15 @@
 <img src="{{ include.icon }}" class="w-8 h-8"/>
 {% endif %}
 
-<h3>{{ include.title }}</h3>
+<h3>{{ include.title | liquify }}</h3>
 
 <div class="flex flex-col flex-grow text-sm gap-3">
-{{ include.description | markdownify }}
+{{ include.description | liquify | markdownify }}
 </div>
 
 {% if include.cta_text %}
 <div class="flex text-sm text-brand">
-{{ include.cta_text }}
+{{ include.cta_text | liquify }}
 </div>
 {% endif %}
 {% endcapture %}

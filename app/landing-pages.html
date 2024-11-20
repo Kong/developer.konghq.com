@@ -10,7 +10,7 @@ title: Landing Page Index
     {% for page in all_pages %}
     {% if page.layout == "landing_page" %}
       <li>
-        <a href="{{ page.url }}" class="text-blue-500 hover:underline">{{ page.title | default: "MISSING TITLE" }}</a> ({{ page.dir }})
+        <a href="{{ page.url }}" class="text-blue-500 hover:underline">{{ page.title | liquify | default: "MISSING TITLE" }}</a> ({{ page.dir }})
       </li>
     {% endif %}
     {% endfor %}
