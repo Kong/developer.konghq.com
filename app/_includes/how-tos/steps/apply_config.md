@@ -3,7 +3,7 @@
 Synchronize your [decK](/deck/) configuration files.
 Make sure you created the `deck_files` directory in the [prerequisites](#prerequisites).
 
-First, compare the decK file or files to the state of the Kong Gateway:
+First, compare the decK file or files to the state of the {{site.base_gateway}}:
 ```bash
 deck gateway diff deck_files
 ```

@@ -29,7 +29,7 @@ schema:
 
 ## What is a route?
 
-{{page.description}} Services can store collections of objects like plugin configurations, and policies, and they can be associated with routes. In {{site.base_gateway}}, routes typically map to endpoints that are exposed through the Kong Gateway application. Routes can also define rules that match requests to associated services. Because of this, one route can reference multiple endpoints. A basic route should have a name, path or paths, and reference an existing service.
+{{page.description}} Services can store collections of objects like plugin configurations, and policies, and they can be associated with routes. In {{site.base_gateway}}, routes typically map to endpoints that are exposed through the {{site.base_gateway}} application. Routes can also define rules that match requests to associated services. Because of this, one route can reference multiple endpoints. A basic route should have a name, path or paths, and reference an existing service.
 
 You can also configure routes with:
 
@@ -42,11 +42,11 @@ You can also configure routes with:
 
 ## Route and service interaction
 
-Routes, in conjunction with [services](/gateway/entities/service/), let you expose your services to applications with Kong Gateway. Kong Gateway abstracts the service from the applications by using routes. Since the application always uses the route to make a request, changes to the services, like versioning, don’t impact how applications make the request. Routes also allow the same service to be used by multiple applications and apply different policies based on the route used.
+Routes, in conjunction with [services](/gateway/entities/service/), let you expose your services to applications with {{site.base_gateway}}. {{site.base_gateway}} abstracts the service from the applications by using routes. Since the application always uses the route to make a request, changes to the services, like versioning, don’t impact how applications make the request. Routes also allow the same service to be used by multiple applications and apply different policies based on the route used.
 
-For example, if you have an external application and an internal application that need to access the example_service service, but the external application should be limited in how often it can query the service to assure no denial of service. If a rate limit policy is configured for the service when the internal application calls the service, the internal application is limited as well. Routes can solve this problem.
+For example, if you have an external application and an internal application that need to access the `example_service` service, but the external application should be limited in how often it can query the service to assure no denial of service. If a rate limit policy is configured for the service when the internal application calls the service, the internal application is limited as well. Routes can solve this problem.
 
-In the example above, two routes can be created, say /external and /internal, and both routes can point to example_service. A policy can be configured to limit how often the /external route is used and the route can be communicated to the external client for use. When the external client tries to access the service via Kong Gateway using /external, they are rate limited. But when the internal client accesses the service using Kong Gateway using /internal, the internal client will not be limited.
+In the example above, two routes can be created, say /external and /internal, and both routes can point to `example_service`. A policy can be configured to limit how often the /external route is used and the route can be communicated to the external client for use. When the external client tries to access the service via {{site.base_gateway}} using /external, they are rate limited. But when the internal client accesses the service using {{site.base_gateway}} using /internal, the internal client will not be limited.
 
 ## Dynamically rewrite request URLs with routes
 

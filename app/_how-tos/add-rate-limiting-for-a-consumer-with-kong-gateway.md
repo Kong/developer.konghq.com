@@ -1,9 +1,8 @@
 ---
-title: Enable rate limiting for a consumer with Kong Gateway
+title: Enable rate limiting for a consumer with {{site.base_gateway}}
 content_type: how_to
-
 related_resources:
-  - text: How to create rate limiting tiers with Kong Gateway
+  - text: How to create rate limiting tiers with {{site.base_gateway}}
     url:  /how-to/add-rate-limiting-tiers-with-kong-gateway/
   - text: Rate Limiting plugin
     url: /plugins/rate-limiting/
@@ -33,7 +32,7 @@ tags:
     - rate-limiting
 
 tldr:
-    q: How do I rate limit a consumer with Kong Gateway?
+    q: How do I rate limit a consumer with {{site.base_gateway}}?
     a: Enable an authentication plugin and create a consumer with credentials, then enable the <a href="/plugins/rate-limiting/reference">Rate Limiting plugin</a> on the new consumer.
 
 tools:
@@ -51,15 +50,15 @@ cleanup:
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
-    - title: Destroy the Kong Gateway container
+    - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 ---
 
 ## 1. Create a consumer
 
-Consumers let you identify the client that's interacting with Kong Gateway.
-We're going to use key [authentication](/authentication/) in this tutorial, so the consumer needs an API key to access any Kong Gateway services.
+Consumers let you identify the client that's interacting with {{site.base_gateway}}.
+We're going to use key [authentication](/authentication/) in this tutorial, so the consumer needs an API key to access any {{site.base_gateway}} services.
 
 Add the following content to `kong.yaml` to create a consumer:
 
@@ -76,7 +75,7 @@ entities:
 Authentication lets you identify a consumer so that you can apply rate limiting.
 This example uses the [Key Authentication](/plugins/key-auth) plugin, but you can use any authentication plugin that you prefer.
 
-Enable the plugin globally, which means it applies to all Kong Gateway services and routes:
+Enable the plugin globally, which means it applies to all {{site.base_gateway}} services and routes:
 
 {% entity_examples %}
 entities:

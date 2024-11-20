@@ -55,7 +55,7 @@ In Insomnia, you can configure every part of your request, and you can also add 
 |---|---|
 |Method|Select an HTTP method in the dropdown list, or add a custom method.|
 |Endpoint|Enter a URL, and use environment variables and template tags if needed.|
-|Query parameters|In the **Params** tab, click **Add** to create a new query parameter and enter the name and value. You can also add a description. The value can be single line or multiline text. You can use the checkbox next to the parameter to remove it from the URL without deleting it completely.|
+|Query parameters|In the **Params** tab, click **Add** to create a new query parameter and enter the name and value. You can also add a description. The value can be single line or multi-line text. You can use the checkbox next to the parameter to remove it from the URL without deleting it completely.|
 |Body|In the **Body** tab, select the type of body from the dropdown list.|
 |Authentication|In  the **Auth** tab, select the authentication type from the dropdown list to get the corresponding form. If the request is in a folder, you can select **Inherit from parent** to use the folder's authentication.|
 |Headers|In the **Headers** tab, click **Add** to create a new header and enter the name and value. You can also add a description. You can use the checkbox next to the header to remove it from the request without deleting it completely.|

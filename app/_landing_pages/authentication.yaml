@@ -21,11 +21,11 @@ rows:
                   Authentication is the process of verifying that a requester has permissions to access a resource. 
                   As its name implies, API gateway authentication controls the flow of data between clients and the gateway.
                   
-                  With Kong Gateway controlling authentication, requests won’t reach upstream services unless the client has successfully authenticated. 
+                  With {{site.base_gateway}} controlling authentication, requests won’t reach upstream services unless the client has successfully authenticated. 
                   This means upstream services process pre-authorized requests, freeing them from the cost of authentication, which 
                   is a savings in compute time and development effort.
 
-                  Kong Gateway has a library of plugins that support the most widely used methods of API gateway authentication.
+                  {{site.base_gateway}} has a library of plugins that support the most widely used methods of API gateway authentication.
   - columns:
       - blocks:
         - type: structured_text
@@ -122,9 +122,9 @@ rows:
             blocks:
               - type: text
                 text: |
-                  With Kong Gateway controlling authentication, requests won’t reach upstream services unless the client has successfully authenticated. This means upstream services process pre-authorized requests, freeing them from the cost of authentication, which is a savings in compute time and development effort.
+                  With {{site.base_gateway}} controlling authentication, requests won’t reach upstream services unless the client has successfully authenticated. This means upstream services process pre-authorized requests, freeing them from the cost of authentication, which is a savings in compute time and development effort.
 
-                  Kong Gateway has visibility into all authentication attempts, which provides the ability to build monitoring and alerting capabilities supporting service availability and compliance.
+                  {{site.base_gateway}} has visibility into all authentication attempts, which provides the ability to build monitoring and alerting capabilities supporting service availability and compliance.
 
                   For more information, see [What is API Gateway Authentication](https://konghq.com/learning-center/api-gateway/api-gateway-authentication).
  
@@ -132,9 +132,9 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Authentication in Kong Gateway
+            title: Authentication in {{site.base_gateway}}
             description: |
-              Kong Gateway provides several plugins to add authentication to the Kong Gateway API.
+              {{site.base_gateway}} provides several plugins to add authentication to the {{site.base_gateway}} API.
             icon: /assets/icons/gateway.svg
             cta:
               text: See all authentication plugins
@@ -144,7 +144,7 @@ rows:
           config:
             title: Authentication in KIC
             description: |
-              KIC relies on Kong Gateway's Plugins, but configuring them with Kong Ingress Controller is different. 
+              KIC relies on {{site.base_gateway}}'s Plugins, but configuring them with {{site.kic_product_name}} is different. 
               
               Rather than attaching a configuration directly to a service or route, you create a KongPlugin definition and then annotate your 
               Kubernetes resource with the `konghq.com/plugins` annotation.

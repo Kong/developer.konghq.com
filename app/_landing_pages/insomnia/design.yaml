@@ -25,7 +25,7 @@ rows:
                     - View a generated preview of your spec in the right pane.
                     - Automatically linted. Errors display at the bottom of the center pane and include error type, line number, and error message
                     - View information about your spec in the left sidebar, such as servers, request body, and schemas.
-                    - Collaboratively create APIs with an unlimited number of contributers (free accounts allow unlimited contributors on one project) and git version control.
+                    - Collaboratively create APIs with an unlimited number of contributors (free accounts allow unlimited contributors on one project) and git version control.
       - blocks:
           - type: image
             config:

@@ -41,7 +41,7 @@ The following are data models we use.
 | Data Model | Definition |
 | ---------- | ----------- |
 | `M_Account` | A user that can log in |
-| `M_Resource` | An entity that can be synced (eg. Request, Workspace, etc.) |
+| `M_Resource` | An entity that can be synced (e.g. Request, Workspace, etc.) |
 | `M_ResourceGroup` | A group of M_Resource that can be shared as one |
 | `M_Link` | A relationship linking a M_Account to M_ResourceGroup |
 

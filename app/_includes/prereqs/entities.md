@@ -3,7 +3,7 @@
 {% assign konnect_token = site.data.entity_examples.config.konnect_variables.pat.placeholder %}
 
 {% capture details_content %}
-For this tutorial, you'll need Kong Gateway entities, like services and routes, pre-configured. These entities are essential for Kong Gateway to function but installing them isn't the focus of this guide. Follow these steps to pre-configure them:   
+For this tutorial, you'll need {{site.base_gateway}} entities, like services and routes, pre-configured. These entities are essential for {{site.base_gateway}} to function but installing them isn't the focus of this guide. Follow these steps to pre-configure them:
 
 1. Create a `prereqs.yaml` file within your `deck_files` directory, and add the following content to it:
 

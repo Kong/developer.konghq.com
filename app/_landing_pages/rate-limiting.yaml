@@ -52,14 +52,14 @@ rows:
         blocks:
         - type: card
           config:
-            title: Rate Limiting in Kong Gateway
+            title: Rate Limiting in {{site.base_gateway}}
             description: |
-              Kong Gateway can be configured to apply rate limiting rules on API traffic entering the system.
+              {{site.base_gateway}} can be configured to apply rate limiting rules on API traffic entering the system.
 
               This includes rate limiting by IP, API key, consumer, or other criteria. This is ideal for handling external API traffic with advanced rate limiting policies and comprehensive traffic management.
             icon: /assets/icons/gateway.svg
             cta:
-              text: Add Rate Limiting with Kong Gateway
+              text: Add Rate Limiting with {{site.base_gateway}}
               url: "/gateway/rate-limiting/"
       - blocks:
         - type: card
@@ -76,14 +76,14 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Rate Limiting in Kong Mesh
+            title: Rate Limiting in {{site.mesh_product_name}}
             description: |
-              Kong Mesh can apply rate limiting policies at the service level within the mesh.
+              {{site.mesh_product_name}} can apply rate limiting policies at the service level within the mesh.
 
               This includes controlling traffic between microservices and managing inter-service communication. This is ideal for internal service-to-service communication where you need fine-grained control over traffic within the mesh.
             icon: /assets/icons/mesh.svg
             cta:
-              text: Add Rate Limiting with Kong Mesh
+              text: Add Rate Limiting with {{site.mesh_product_name}}
               url: "/mesh/rate-limiting/"
 
 
@@ -108,7 +108,7 @@ rows:
         blocks:
           - type: related_resources
             config:
-              - text: Protecting Services With Kong Gateway Rate Limiting
+              - text: Protecting Services With {{site.base_gateway}} Rate Limiting
                 type: blog
                 url: https://konghq.com/blog/engineering/kong-gateway-rate-limiting
               - text: How to Design a Scalable Rate Limiting Algorithm with Kong API

@@ -4,7 +4,7 @@ content_type: reference
 entities:
   - plugin
 
-description: Plugins are modules that extend the functionality of Kong Gateway.
+description: Plugins are modules that extend the functionality of {{site.base_gateway}}.
 
 related_resources:
   - text: Plugin Hub
@@ -35,9 +35,9 @@ schema:
 
 ## What is a plugin?
 
-Kong Gateway is a Lua application designed to load and execute modules. These modules, called plugins, allow you to add more features to your implementation.
+{{site.base_gateway}} is a Lua application designed to load and execute modules. These modules, called plugins, allow you to add more features to your implementation.
 
-Kong provides a set of standard Lua plugins that get bundled with {{site.base_gateway}} and {{site.konnect_short_name}}. 
+Kong provides a set of standard Lua plugins that get bundled with {{site.base_gateway}} and {{site.konnect_short_name}}.
 The set of plugins you have access to depends on your license tier.
 
 You can also develop custom plugins, adding your own custom functionality to {{site.base_gateway}}.

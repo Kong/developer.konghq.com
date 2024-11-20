@@ -1,7 +1,7 @@
 ---
 title: Object defaults reference
 
-description: Kong Gateway sets some default values for most objects, including Kong plugins.
+description: {{site.base_gateway}} sets some default values for most objects, including Kong plugins.
 
 content_type: reference
 layout: reference
@@ -24,22 +24,23 @@ breadcrumbs:
   - /deck/
 ---
 
-{{ page.description }} You can see what the defaults are for each object in the
+{{site.base_gateway}} sets some default values for most objects, including Kong
+plugins. You can see what the defaults are for each object in the
 [Admin API reference](/gateway/latest/admin-api/), or use the
 [`/schemas`](#find-defaults-for-an-object) endpoint to
-check the latest object schemas for your instance of the Kong Gateway.
+check the latest object schemas for your instance of the {{site.base_gateway}}.
 
 decK recognizes value defaults and doesn't interpret them as changes to
-configuration. If you push a config for an object to Kong Gateway with
-`sync`, Kong Gateway applies its default values to the object,
+configuration. If you push a config for an object to {{site.base_gateway}} with
+`sync`, {{site.base_gateway}} applies its default values to the object,
 but a further `diff` or `sync` does not show any changes.
 
-If you upgrade Kong Gateway to a version that introduces a new
+If you upgrade {{site.base_gateway}} to a version that introduces a new
 property with a default value, a `diff` will catch the difference.
 
 You can also configure your own [custom defaults](#set-custom-defaults) to
 enforce a set of standard values and avoid repetition in your configuration.
-    
+
 ## Value order of precedence
 
 decK assigns values in the following order of precedence, from highest to lowest:
