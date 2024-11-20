@@ -5,4 +5,4 @@ filters:
   - '\W'
 ignore:
  - .github/styles/base/Dictionary.txt
- - .github/styles/base/Auto-Ignore.txt
+ - .github/styles/base/Auto-ignore.txt
