@@ -19,6 +19,7 @@ dao
 daos
 datastore
 datastores
+deck_files
 endpoint_key
 eventTime
 firstTimestamp
@@ -53,6 +54,7 @@ max_args
 max_headers
 metatable
 narr
+nbf
 neg_ttl
 ngx
 ngx_stream_proxy_module
@@ -108,3 +110,8 @@ KongConsumer
 Rekor
 Sigstore
 Hasura
+userDesktop
+workingDir
+M_Account
+M_Resource
+SLT_Enc

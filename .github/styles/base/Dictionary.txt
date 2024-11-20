@@ -308,6 +308,7 @@ iptables
 Istio
 Istio's
 istioctl
+Javascript
 jetstack
 Jira
 journald
