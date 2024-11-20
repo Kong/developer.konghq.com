@@ -8,4 +8,4 @@ ignore:
  - .github/styles/base/Dictionary.txt
  - .github/styles/base/Auto-ignore.txt
  - .github/styles/landing_pages/Components.txt
- - .github/styles/landing_pages/Auto-ignore.txt
+ - .github/styles/landing_pages/Dictionary.txt
