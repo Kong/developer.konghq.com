@@ -14,7 +14,7 @@ swap:
   multizone: multi-zone
   pg: PostgreSQL
   'postgres$': PostgreSQL
-  redhat: Red Hat
+  'redhat$': Red Hat
   timezone: time zone
   utilize: use
   whitelist: allowlist
