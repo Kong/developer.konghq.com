@@ -1,7 +1,6 @@
 ---
-title: How to create rate limiting tiers with Kong Gateway
+title: How to create rate limiting tiers with {{site.base_gateway}}
 content_type: how_to
-
 related_resources:
   - text: Consumer Group API documentation
     url: https://docs.konghq.com/gateway/api/admin-ee/latest/
@@ -28,7 +27,7 @@ prereqs:
 min_version:
   gateway: 3.4
 
-plugins: 
+plugins:
   - rate-limiting-advanced
   - key-auth
 
@@ -41,8 +40,8 @@ tier: enterprise
 tags:
   - rate-limiting
 
-tldr: 
-  q: How do I rate limit different tiers of users, such as free vs. premium subscribers, in my API using Kong Gateway?
+tldr:
+  q: How do I rate limit different tiers of users, such as free vs. premium subscribers, in my API using {{site.base_gateway}}?
   a: To effectively manage API traffic for various user tiers (such as free, basic, and premium subscribers) you can create consumer groups for each tier and assign individual consumers to these groups. Then, configure the Rate Limiting Advanced plugin to apply specific rate limits based on these groups. This setup allows you to enforce customized request limits for each tier, ensuring fair usage and optimizing performance for high-value users.
 
 faqs:
@@ -54,7 +53,7 @@ cleanup:
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
-    - title: Destroy the Kong Gateway container
+    - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 ---
@@ -78,7 +77,7 @@ entities:
 
 Before you can enable rate limiting for tiers of users, we first have to create consumer groups for each tier and then add consumers to those groups. Consumer groups are soley a way to organize consumers of your APIs. In this guide, we'll create three tiers (Free, Basic, and Premium), so we need to create a unique consumer group for each tier.
 
-Apphend the following content to your `kong.yaml` file in the `deck_files` directory to create consumer groups for each tier:
+Append the following content to your `kong.yaml` file in the `deck_files` directory to create consumer groups for each tier:
 
 {% entity_examples %}
 entities:
@@ -88,14 +87,14 @@ entities:
     - name: Premium
 {% endentity_examples %}
 
-## 3. Create consumers 
+## 3. Create consumers
 
-Now that you've added consumer groups for each tier, you can create three consumers, one for each tier. Here, we're manually adding consumers for the sake of ease, but in a production environment, you could use a script that would automatically add consumers to the correct groups as they sign up for a tier of service. 
+Now that you've added consumer groups for each tier, you can create three consumers, one for each tier. Here, we're manually adding consumers for the sake of ease, but in a production environment, you could use a script that would automatically add consumers to the correct groups as they sign up for a tier of service.
 
 We're also adding key auth credentials (`key`) to each consumer so they can authenticate and we can test later that rate limiting was correctly configured for the different tiers.
 
-Apphend the following content to your `kong.yaml` file in the `deck_files` directory to create consumers and their authentication credentials:
-  
+Append the following content to your `kong.yaml` file in the `deck_files` directory to create consumers and their authentication credentials:
+
 {% entity_examples %}
 entities:
   consumers:

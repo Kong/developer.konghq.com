@@ -22,7 +22,7 @@ rows:
             This enables developers and operations teams to manage APIs from development through deployment, 
             ensuring consistency, reliability, and speed in API integrations.
 
-            decK is one of the many tools you can use to manage Kong Gateway and Konnect. To learn about other tools, 
+            decK is one of the many tools you can use to manage {{site.base_gateway}} and Konnect. To learn about other tools, 
             review our [tools page](/tools).
 
   - header:
@@ -47,11 +47,11 @@ rows:
         blocks:
         - type: text
           config:
-            decK is a tool that works with state files, which describe the configuration of Kong Gateway. These state files store Kong Gateway's configuration in a clear, declarative format, allowing you to manage services, routes, plugins, consumers, and other entities that define how requests are processed and routed through the Gateway.
+            decK is a tool that works with state files, which describe the configuration of {{site.base_gateway}}. These state files store {{site.base_gateway}}'s configuration in a clear, declarative format, allowing you to manage services, routes, plugins, consumers, and other entities that define how requests are processed and routed through the Gateway.
             decK communicates with Kong Gateways via the [Admin API](https://docs.konghq.com/gateway/api/admin-ee/latest/). 
         - type: text
           config:
-            decK is one of several [tools](/tools/) available for managing Kong Gateway. 
+            decK is one of several [tools](/tools/) available for managing {{site.base_gateway}}.
 
       - header:
           type: h2
@@ -62,10 +62,10 @@ rows:
               blocks:
               - type: unordered_list
                 items:
-                    - "**[Terraform](/terraform/)**: Manage infrastructure as code and automated deployments to streamline setup and configuration of Konnect and Kong Gateway"
+                    - "**[Terraform](/terraform/)**: Manage infrastructure as code and automated deployments to streamline setup and configuration of Konnect and {{site.base_gateway}}"
                     - "**[KIC](/kic/)**: Manage ingress traffic and routing rules for your services"
-                    - "**[Kong Gateway Admin API](/admin-api/)**: Manage on-prem Kong Gateway entities via an API"
-                    - "**[Control Plane Config API](/admin-api/)**: Manage Kong Gateway entities within Konnect control planes via an API"
+                    - "**[{{site.base_gateway}} Admin API](/admin-api/)**: Manage on-prem {{site.base_gateway}} entities via an API"
+                    - "**[Control Plane Config API](/admin-api/)**: Manage {{site.base_gateway}} entities within Konnect control planes via an API"
 
   - header:
       text: "What can decK do?"
@@ -81,7 +81,7 @@ rows:
 
               items:
                 - text: |
-                    Export your current settings from Kong Gateway
+                    Export your current settings from {{site.base_gateway}}
                   action:
                     type: command
                     config:
@@ -91,9 +91,9 @@ rows:
                         - dump
                         - -o
                         - kong.yaml
-                    
+
                 - text: |
-                    Diff a state file with the configuration in Kong Gateway
+                    Diff a state file with the configuration in {{site.base_gateway}}
                   action:
                     type: command
                     config:
@@ -104,7 +104,7 @@ rows:
                         - kong.yaml
 
                 - text: |
-                    Sync a state file with the configuration in Kong Gateway
+                    Sync a state file with the configuration in {{site.base_gateway}}
                   action:
                     type: command
                     config:
@@ -112,10 +112,10 @@ rows:
                       args:
                         - gateway
                         - sync
-                        - kong.yaml         
+                        - kong.yaml
 
                 - text: |
-                    Check the connection to Kong Gateway
+                    Check the connection to {{site.base_gateway}}
                   action:
                     type: command
                     config:
@@ -135,8 +135,8 @@ rows:
                 - text: |
                     Sync Gateway configs to Konnect
 
-                    _Tip: You can add Konnect flags to any deck command 
-                    to target a Konnect control plane instead of a self-managed Kong Gateway._
+                    _Tip: You can add Konnect flags to any deck command
+                    to target a Konnect control plane instead of a self-managed {{site.base_gateway}}._
 
                   action:
                     type: command
@@ -146,7 +146,7 @@ rows:
                         - gateway
                         - sync
                         - kong.yaml
-                        - --konnect-control-plane-name 
+                        - --konnect-control-plane-name
                         - staging
 
   - columns:
@@ -160,7 +160,7 @@ rows:
 
               items:
                 - text: |
-                    Generate a Kong Gateway configuration file from an API spec
+                    Generate a {{site.base_gateway}} configuration file from an API spec
                   action:
                     type: command
                     config:
@@ -196,7 +196,7 @@ rows:
       - type: card
         config:
           title: Entities Managed by decK
-          description: decK manages entity configuration for Kong Gateway, including all core proxy entities
+          description: decK manages entity configuration for {{site.base_gateway}}, including all core proxy entities
           cta:
             text: decK Entities &rarr;
             url: https://docs.konghq.com/deck/latest/reference/entities/
@@ -236,7 +236,7 @@ rows:
                 * decK can export and back up your existing Kong’s configuration, meaning, you can take an existing Kong installation, and have a backup, as well as a declarative configuration for it. With Terraform, you will have to import each and every entity in Kong into Terraform’s state.
                 * decK can check if a configuration file is valid or not (validate sub-command).
                 * decK can quickly reset your Kong’s configuration when needed.
-                * decK works out of the box with Kong Gateway features like Workspaces and RBAC.
+                * decK works out of the box with {{site.base_gateway}} features like Workspaces and RBAC.
             - q: Can I run multiple decK processes at the same time?
               a: |
                 The two processes will step on each other and might corrupt Kong’s configuration. You should ensure that there is only one instance of decK running at any point in time.
@@ -259,7 +259,7 @@ rows:
 
                 If you have a very large installation, it can take some time for decK to sync up the configuration to Kong. This can be mitigated by adopting distributed configuration for your Kong installation and tweaking the --parallelism value. Kong’s db_import will usually be faster by orders of magnitude.
                 decK cannot export and re-import fields that are hashed in the database. This means fields like password of basic-auth credential cannot be correctly re-imported by decK. This happens because Kong’s Admin API call to sync the configuration will re-hash the already hashed password.
-            - q: I’m a Kong Gateway user, can I use decK?
+            - q: I’m a {{site.base_gateway}} user, can I use decK?
               a: |
                 decK is designed to be compatible with open-source and enterprise versions of Kong.
             - q: I'm a Konnect user, can I use decK?
@@ -267,7 +267,7 @@ rows:
                 Yes, decK is compatible with Konnect. We recommend upgrading to decK 1.12 to take advantage of the new --konnect CLI flags.
             - q: I use Cassandra as a data store for Kong, can I use decK?
               a: |
-                As of Kong Gateway 3.4, you can’t use Cassandra as a data store, as it is longer supported by Kong.
+                As of {{site.base_gateway}} 3.4, you can’t use Cassandra as a data store, as it is longer supported by Kong.
                 You can use decK with earlier versions of Kong backed by Cassandra. However, if you observe errors during a sync process, you will have to tweak decK’s settings and make a few adjustments.
 
                 decK heavily parallelizes its operations, which can induce a lot of load onto your Cassandra cluster. You should consider:
@@ -292,7 +292,7 @@ rows:
                 3. Verify that it works by opening your existing `kong.yml` or `kong.yaml` file.
             - q: What Admin API endpoints does decK use?
               a:  |
-                decK uses Kong's Admin API to communicate with Kong Gateway.
+                decK uses Kong's Admin API to communicate with {{site.base_gateway}}.
                 If you have RBAC enabled, you need to give decK permissions to perform operations, or use an admin account that has these permissions.
 
                 Here are some common endpoints hit by decK for normal operations:
@@ -303,7 +303,7 @@ rows:
                   See the [Entities managed by decK](/deck/{{page.release}}/reference/entities/) reference for the full list.
 
                   Note that decK also performs operations on entities enabled by plugins, such as `/basic-auths`, `/jwts`, and so on.
-                * `GET /`: Get the Kong Gateway version.
+                * `GET /`: Get the {{site.base_gateway}} version.
                 * `GET /{workspace}/kong`: Get entities in a workspace.
                 * `GET /{workspace}/workspaces/{entityType}`: Check whether the workspace or other entity exists or not.
                 * `GET /{workspace}/schemas/{entityType}`: Retrieves the schema for a specified entity type within a workspace and applies default settings.

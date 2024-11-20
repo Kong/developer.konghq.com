@@ -8,7 +8,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Rate Limiting with Kong Gateway"
+      text: "Rate Limiting with {{site.base_gateway}}"
 
   - header:
       type: h2
@@ -20,7 +20,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Kong Gateway allows you to limit how many HTTP requests can be made in a given period.
+                    {{site.base_gateway}} allows you to limit how many HTTP requests can be made in a given period.
 
                     Rate limits can be applied to a [service](/gateway/entities/service/) or individual [routes](/gateway/entities/route/) to protect the upstream API, or to a [consumer](/gateway/entities/consumer/) to restrict how many times a user can call the API in the specified period.
 

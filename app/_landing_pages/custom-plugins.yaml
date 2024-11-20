@@ -21,7 +21,7 @@ rows:
                     including Plugin Development Kits (or PDKs), database abstractions, migrations, and more.
 
                     Plugins consist of modules interacting with the request/response objects or
-                    streams via a PDK to implement arbitrary logic. With custom plugins, you can configure these modules to provide custom functionality to Kong Gateway.
+                    streams via a PDK to implement arbitrary logic. With custom plugins, you can configure these modules to provide custom functionality to {{site.base_gateway}}.
 
                     To start creating your own plugins, review the [Getting Started documentation](https://docs.konghq.com/gateway/latest/plugin-development/get-started/),
                     or see the following references:

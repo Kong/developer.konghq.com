@@ -7,7 +7,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Rate Limiting with Kong Ingress Controller"
+      text: "Rate Limiting with {{site.kic_product_name}}"
 
   - header:
       type: h2

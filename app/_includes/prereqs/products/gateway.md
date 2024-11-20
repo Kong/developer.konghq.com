@@ -1,15 +1,15 @@
-{% assign summary='Kong Gateway running' %}
+{% assign summary='{{site.base_gateway}} running' %}
 
 {% capture details_content %}
 {% if include.tier=='enterprise' %}
 
-This tutorial requires Kong Gateway Enterprise. 
-If you don't have Kong Gateway set up yet, you can use the 
+This tutorial requires {{site.ee_product_name}}.
+If you don't have {{site.base_gateway}} set up yet, you can use the
 [quickstart script](https://get.konghq.com/quickstart) with an enterprise license
-to get an instance of Kong Gateway running almost instantly.
+to get an instance of {{site.base_gateway}} running almost instantly.
 
 1. Export your license to an environment variable:
-  
+
     ```
     export KONG_LICENSE_DATA='<license-contents-go-here>'
     ```
@@ -20,21 +20,21 @@ to get an instance of Kong Gateway running almost instantly.
     curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA
     ```
 
-    Once Kong Gateway is ready, you will see the following message:
+    Once {{site.base_gateway}} is ready, you will see the following message:
     ```bash
-    Kong Gateway Ready 
+    Kong Gateway Ready
     ```
     {:.no-copy-code}
 
 {% else %}
 
-This tutorial requires Kong Gateway. 
-If you don't have it set up yet, you can use the [quickstart script](https://get.konghq.com/quickstart) to get an instance of Kong Gateway running almost instantly:
+This tutorial requires {{site.base_gateway}}.
+If you don't have it set up yet, you can use the [quickstart script](https://get.konghq.com/quickstart) to get an instance of {{site.base_gateway}} running almost instantly:
 
 ```bash
 curl -Ls https://get.konghq.com/quickstart | bash -s
 ```
-Once Kong Gateway is ready, you will see the following message:
+Once {{site.base_gateway}} is ready, you will see the following message:
 ```bash
 Kong Gateway Ready
 ```

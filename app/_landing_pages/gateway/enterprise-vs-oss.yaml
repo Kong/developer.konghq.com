@@ -1,5 +1,5 @@
 metadata:
-  title: Kong Gateway Open Source vs Enterprise
+  title: "{{site.base_gateway}} Open Source vs Enterprise"
   content_type: landing_page
   description: This page lists the different Kong Gateway features for each tier.
   breadcrumbs:
@@ -7,24 +7,24 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Kong Gateway: Open Source vs Enterprise"
+      text: "{{site.base_gateway}}: Open Source vs Enterprise"
   - columns:
       - blocks:
           - type: structured_text
             config:
               blocks:
                 - type: text
-                  text: | 
-                    **Kong Gateway (OSS):** An open-source package containing the basic API gateway functionality and open-source plugins. 
+                  text: |
+                    **{{site.base_gateway}} (OSS):** An open-source package containing the basic API gateway functionality and open-source plugins.
                       You can manage the open-source Gateway with Kong’s Admin API, Kong Manager Open Source, or with declarative configuration.
-                    
-                    **Kong Gateway Enterprise (available in Free or Enterprise mode)**: Kong’s API gateway with added functionality.
-                    
+
+                    **{{site.base_gateway}} Enterprise (available in Free or Enterprise mode)**: Kong’s API gateway with added functionality.
+
                     * In Free mode, this package adds Kong Manager
                     * With an Enterprise subscription, it also includes:
                       * RBAC
                       * Enterprise plugins
-                    
+
   - columns:
       - blocks:
           - type: feature_table
@@ -42,7 +42,7 @@ rows:
                   subtitle: Drive a GitOps flow of API design and execution
                   oss: true
                   enterprise: true
-                - title: Kong Ingress Controller
+                - title: "{{site.kic_product_name}}"
                   subtitle: Deploy APIs to Kubernetes in a native fashion.
                   oss: true
                   enterprise: true
@@ -111,15 +111,15 @@ rows:
                   oss: false
                   enterprise: true
                 - title: FIPS 140-2 Support
-                  subtitle: Kong Gateway now provides a FIPS mode, which at its core uses the FIPS 140-2 compliant BoringCrypto for cryptographic operations.
+                  subtitle: "{{site.base_gateway}} now provides a FIPS mode, which at its core uses the FIPS 140-2 compliant BoringCrypto for cryptographic operations."
                   oss: false
                   enterprise: true
                 - title: Signed Kong Images
-                  subtitle: Kong Gateway container images are signed and verifiable in accordance with SLSA guidelines.
+                  subtitle: "{{site.base_gateway}} container images are signed and verifiable in accordance with SLSA guidelines."
                   oss: false
                   enterprise: true
                 - title: Kong Images Build Provenance
-                  subtitle: Kong Gateway container images generate build level provenance and are verifiable in accordance with SLSA guidelines.
+                  subtitle: "{{site.base_gateway}} container images generate build level provenance and are verifiable in accordance with SLSA guidelines."
                   oss: false
                   enterprise: true
                 - title: Simple logging
@@ -139,7 +139,7 @@ rows:
                   oss: true
                   enterprise: true
                 - title: AI traffic control
-                  subtitle: Proxy AI traffic through the Kong Gateway and manage it with AI plugins
+                  subtitle: Proxy AI traffic through the {{site.base_gateway}} and manage it with AI plugins
                   oss: true
                   enterprise: true
                 - title: AI prompt security
@@ -147,7 +147,7 @@ rows:
                   oss: true
                   enterprise: true
                 - title: AI observability
-                  subtitle: Collect metrics from AI traffic, and use any Kong Gateway logging plugin to send it to your logging provider of choice
+                  subtitle: Collect metrics from AI traffic, and use any {{site.base_gateway}} logging plugin to send it to your logging provider of choice
                   oss: true
                   enterprise: true
                 - title: Enterprise support

@@ -50,7 +50,7 @@ Click the template tag, and configure it with the following values to get the fl
 |Filter|`$.[0].number`|
 |Trigger Behavior|Never|
 
-Once this is done, we can see the live preview of the value (KA0284 in this example). We can can then click **Done** to apply the changes.
+Once this is done, we can see the live preview of the value (KA0284 in this example). We can then click **Done** to apply the changes.
 
 ## 4. Send the second request
 
