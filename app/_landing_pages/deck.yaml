@@ -288,7 +288,7 @@ rows:
                               "kong.yml",
                               "kong.yaml"
                           ]
-                      }
+                        }
                 3. Verify that it works by opening your existing `kong.yml` or `kong.yaml` file.
             - q: What Admin API endpoints does decK use?
               a:  |
