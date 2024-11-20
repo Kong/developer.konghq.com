@@ -1,4 +1,3 @@
-_Tip
 consumer_group
 ee
 github
