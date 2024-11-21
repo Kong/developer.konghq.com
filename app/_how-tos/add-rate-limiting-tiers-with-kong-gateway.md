@@ -75,7 +75,7 @@ entities:
 
 ## 2. Create consumer groups for each tier
 
-Before you can enable rate limiting for tiers of users, we first have to create consumer groups for each tier and then add consumers to those groups. Consumer groups are soley a way to organize consumers of your APIs. In this guide, we'll create three tiers (Free, Basic, and Premium), so we need to create a unique consumer group for each tier.
+Before you can enable rate limiting for tiers of users, we first have to create consumer groups for each tier and then add consumers to those groups. Consumer groups are solely a way to organize consumers of your APIs. In this guide, we'll create three tiers (Free, Basic, and Premium), so we need to create a unique consumer group for each tier.
 
 Append the following content to your `kong.yaml` file in the `deck_files` directory to create consumer groups for each tier:
 

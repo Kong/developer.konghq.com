@@ -96,7 +96,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  OpenID Connect (OICD) is an authentication protocol based on OAuth 2.0. It works with identity providers to verify a user's identity without storing credentials.
+                  OpenID Connect (OIDC) is an authentication protocol based on OAuth 2.0. It works with identity providers to verify a user's identity without storing credentials.
 
                   - [Example](https://docs.konghq.com/hub/kong-inc/openid-connect/how-to/basic-example/)
                   - [Plugin reference](https://docs.konghq.com/hub/kong-inc/openid-connect/configuration/)
