@@ -9,7 +9,7 @@ description: In {{site.base_gateway}}, a service is an abstraction of an upstrea
 related_resources:
   - text: Routes entity
     url: /gateway/entities/route/
-  - text: Enable rate limiting on a service with Kong Gateway
+  - text: Enable rate limiting on a service with {{site.base_gateway}}
     url: /how-to/add-rate-limiting-to-a-service-with-kong-gateway/
 
 tools:

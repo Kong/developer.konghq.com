@@ -1,7 +1,7 @@
 ---
-title: Response Ratelimiting plugin
+title: Response Rate Limiting plugin
 
-name: Response Ratelimiting
+name: Response Rate Limiting
 publisher: kong-inc
 tier: oss
 content_type: plugin
