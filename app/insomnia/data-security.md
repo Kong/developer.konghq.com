@@ -17,7 +17,7 @@ faqs:
   - q: What authentication is implemented by the application?
     a: Secure Remote Passwords (SRP) encrypted key exchange protocol. You can read more about the exact SRP implementation that Insomnia paid plans use in [RFC-2945](https://datatracker.ietf.org/doc/html/rfc2945).
   - q: Where is data stored?
-    a: Information is stored in GCP, within Postgress, in US Central region.
+    a: Information is stored in GCP, within Postgres, in US Central region.
   - q: What does Insomnia use passphrases for?
     a: Insomnia requires users who use cloud or git sync storage to have a passphrase to decrypt their account keys.
   - q: I lost my passphrase, how can I access my account?
