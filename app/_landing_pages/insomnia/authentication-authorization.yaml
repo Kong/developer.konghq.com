@@ -6,7 +6,7 @@ metadata:
   tags:
     - authentication
     - authorization
-    - whitelist
+    - allowlist
 
 rows:
   - header:

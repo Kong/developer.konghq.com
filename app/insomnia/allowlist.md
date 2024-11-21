@@ -12,7 +12,6 @@ related_resources:
 
 tags:
     - allowlist
-    - whitelist
     - authorization
 
 products:
