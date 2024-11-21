@@ -1,0 +1,14 @@
+api_specs
+auto_generated
+content_type
+faqs
+icon_url
+include_content
+insomnia_link
+min_version
+next_steps
+prereqs
+related_resources
+tier
+tldr
+works_on
