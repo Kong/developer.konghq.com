@@ -5,3 +5,4 @@ filters:
   - '\W'
 ignore:
  - .github/styles/base/Dictionary.txt
+ - .github/styles/landing_pages/Components.txt
