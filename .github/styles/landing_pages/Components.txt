@@ -1,12 +1,14 @@
 allow_empty
 alt_text
 concept_list
+content_type
 cta
 entity_card
 faqs
 feature_table
 how_to_list
 include_content
+landing_page
 reference_list
 related_resources
 structured_text

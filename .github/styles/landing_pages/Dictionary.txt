@@ -1,6 +1,0 @@
-consumer_group
-content_type
-ee
-github
-landing_page
-oss
