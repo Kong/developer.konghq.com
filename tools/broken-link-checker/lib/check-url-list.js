@@ -11,6 +11,9 @@ export default function (urls, opts) {
     const ignoredTargets = JSON.parse(
       readFileSync(resolvePath("./config/ignored_targets.json"), "utf-8")
     );
+    const ignoredPlaceholders = JSON.parse(
+      readFileSync("./config/ignored_placeholder_paths.json")
+    );
 
     const checker = new HtmlUrlChecker(
       {
@@ -29,7 +32,12 @@ export default function (urls, opts) {
                 return;
               }
             }
-
+            // Ignore placeholder links
+            for (const link of ignoredPlaceholders) {
+              if (result.url.resolved.match(link)) {
+                return;
+              }
+            }
             // Don't report on the "Edit this Page" links for forks as
             // they'll always be broken
             if (
