@@ -1,4 +1,5 @@
 import pkg from "broken-link-checker";
+import { readFileSync } from "node:fs";
 const { SiteChecker } = pkg;
 
 export default function (options) {
@@ -7,6 +8,10 @@ export default function (options) {
     const otherErrors = new Set();
     let processed = 0;
     const outputInterval = 1000;
+    const ignoredPlaceholders = JSON.parse(
+      readFileSync("./config/ignored_placeholder_paths.json")
+    );
+
     const siteChecker = new SiteChecker(
       {
         honorRobotExclusions: false,
@@ -19,6 +24,13 @@ export default function (options) {
           processed++;
           if (processed % outputInterval === 0) {
             console.log(`Processed ${processed} links`);
+          }
+
+          // Ignore placeholder links
+          for (const link of ignoredPlaceholders) {
+            if (result.url.resolved.match(link)) {
+              return;
+            }
           }
 
           if (result.broken) {
