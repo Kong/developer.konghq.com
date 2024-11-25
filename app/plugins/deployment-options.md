@@ -20,5 +20,5 @@ breadcrumbs:
 ## Plugin compatibility with deployment types
 
 {{site.base_gateway}} can be deployed in a variety of ways, and not all plugins
-are fully compatible with each mode. See [Plugin Compatibility](/hub/plugins/compatibility#plugin-compatibility)
+are fully compatible with each mode. See [Plugin Compatibility](https://docs.konghq.com/hub/plugins/compatibility#plugin-compatibility)
 for a comparison.

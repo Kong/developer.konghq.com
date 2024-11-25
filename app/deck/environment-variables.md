@@ -30,7 +30,7 @@ environment variables. decK can then read data directly from the environment
 variables and apply it.
 
 {:.note}
-> For storing {{site.base_gateway}} secrets in environment variables, see [Secrets Management with decK](/deck/latest/guides/vaults/).
+> For storing {{site.base_gateway}} secrets in environment variables, see [Secrets Management with decK](https://docs.konghq.com/deck/latest/guides/vaults/).
 The reference format for secrets is _not_ the same as references for environment variables used by decK.
 
 The following example demonstrates how to apply an API key stored in an environment variable.

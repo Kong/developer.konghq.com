@@ -64,8 +64,8 @@ rows:
                 items:
                     - "**[Terraform](/terraform/)**: Manage infrastructure as code and automated deployments to streamline setup and configuration of Konnect and {{site.base_gateway}}"
                     - "**[KIC](/kic/)**: Manage ingress traffic and routing rules for your services"
-                    - "**[{{site.base_gateway}} Admin API](/admin-api/)**: Manage on-prem {{site.base_gateway}} entities via an API"
-                    - "**[Control Plane Config API](/admin-api/)**: Manage {{site.base_gateway}} entities within Konnect control planes via an API"
+                    - "**[{{site.base_gateway}} Admin API](https://docs.konghq.com/gateway/api/admin-ee/latest/)**: Manage on-prem {{site.base_gateway}} entities via an API"
+                    - "**[Control Plane Config API](https://docs.konghq.com/konnect/api/control-plane-configuration/latest/)**: Manage {{site.base_gateway}} entities within Konnect control planes via an API"
 
   - header:
       text: "What can decK do?"
@@ -189,7 +189,7 @@ rows:
     - blocks:
        - type: text
          config: |
-          [View all decK commands and options &rarr;](/deck/commands/)
+          [View all decK commands and options &rarr;](https://docs.konghq.com/deck/latest/reference/deck/)
 
   - columns:
     - blocks:
@@ -300,7 +300,7 @@ rows:
                 * `GET, POST, PATCH, PUT, DELETE /{entityType}` or `GET, POST, PATCH, PUT, DELETE /{workspace}/{entityType}`: Perform read and write operations on entities.
 
                   If you are running {{site.ee_product_name}}, then decK interacts with entities inside workspaces.
-                  See the [Entities managed by decK](/deck/{{page.release}}/reference/entities/) reference for the full list.
+                  See the [Entities managed by decK](https://docs.konghq.com/deck/latest/reference/entities/) reference for the full list.
 
                   Note that decK also performs operations on entities enabled by plugins, such as `/basic-auths`, `/jwts`, and so on.
                 * `GET /`: Get the {{site.base_gateway}} version.

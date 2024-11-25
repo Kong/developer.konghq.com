@@ -24,9 +24,8 @@ breadcrumbs:
   - /deck/
 ---
 
-{{site.base_gateway}} sets some default values for most objects, including Kong
-plugins. You can see what the defaults are for each object in the
-[Admin API reference](/gateway/latest/admin-api/), or use the
+{{ page.description }} You can see what the defaults are for each object in the
+[Admin API reference](https://docs.konghq.com/gateway/latest/admin-api/), or use the
 [`/schemas`](#find-defaults-for-an-object) endpoint to
 check the latest object schemas for your instance of the {{site.base_gateway}}.
 
@@ -96,7 +95,7 @@ schema value must be `false`. If set to `true`, deck returns a schema
 violation error.
 
 For documentation on all available properties, see the
-[Route object](/gateway/api/admin-ee/latest/#/Routes/list-route/) documentation.
+[Route object](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Routes/list-route/) documentation.
 
 {% endnavtab %}
 {% navtab "Service" %}
@@ -123,7 +122,7 @@ _info:
 ```
 
 For documentation on all available properties, see the
-[Service object](/gateway/api/admin-ee/latest/#/Services) documentation.
+[Service object](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Services) documentation.
 
 {% endnavtab %}
 {% navtab "Upstream" %}
@@ -209,7 +208,7 @@ _info:
 ```
 
 For documentation on all available properties, see the
-[Upstream object](/gateway/api/admin-ee/latest/#/Upstreams/list-upstream/) documentation.
+[Upstream object](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Upstreams/list-upstream/) documentation.
 
 {% endnavtab %}
 {% navtab "Target" %}
@@ -230,7 +229,7 @@ _info:
       weight: 100
 ```
 For all available properties, see the
-[Target object](/gateway/api/admin-ee/latest/#/Targets/list-target-with-upstream/) documentation.
+[Target object](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Targets/list-target-with-upstream/) documentation.
 
 {% endnavtab %}
 {% navtab "Plugins" %}
