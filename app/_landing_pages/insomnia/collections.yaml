@@ -104,11 +104,6 @@ rows:
                   - Update the contents of the request
                   - Dynamically update request bodies
                   - Test the response
-          - type: button
-            config:
-              align: left
-              text: Learn more about scripts
-              url: /insomnia/scripts/
       - blocks:
         - type: image
           config:
