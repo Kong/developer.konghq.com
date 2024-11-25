@@ -8,6 +8,8 @@ import processResult from "./lib/process-result.js";
 
 const argv = minimist(process.argv.slice(2));
 
+const DEFAULT_URL = "http://localhost:8888";
+
 const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
@@ -28,17 +30,26 @@ async function getPRFiles(options) {
   return fileList;
 }
 
-async function getSourceUrlsMappings() {
-  const filePath = "../../dist/sources_urls_mapping.json";
-  try {
-    const data = await fs.readFile(filePath, {
-      encoding: "utf8",
-    });
-    return JSON.parse(data);
-  } catch (err) {
-    console.error(err);
-    console.error(`There's was an error while reading ${filePath}`);
-    process.exit(1);
+async function getSourceUrlsMappings(options) {
+  if (options.type === "pr") {
+    const response = await fetch(
+      `${options.baseUrl}/sources_urls_mapping.json`
+    );
+
+    let body = await response.json();
+    return body;
+  } else {
+    const filePath = "../../dist/sources_urls_mapping.json";
+    try {
+      const data = await fs.readFile(filePath, {
+        encoding: "utf8",
+      });
+      return JSON.parse(data);
+    } catch (err) {
+      console.error(err);
+      console.error(`There's was an error while reading ${filePath}`);
+      process.exit(1);
+    }
   }
 }
 
@@ -69,7 +80,7 @@ async function filterIgnoredPaths(urlsToCheck) {
 }
 
 async function urlsToCheck(files, options) {
-  let mappings = await getSourceUrlsMappings();
+  let mappings = await getSourceUrlsMappings(options);
   let filteredMappings = Object.fromEntries(
     files
       .map((file) => [file, mappings[file]])
@@ -108,7 +119,7 @@ async function urlsFromFiles(options) {
 }
 
 (async function main() {
-  const baseUrl = argv.base_url || "http://localhost:8888";
+  const baseUrl = argv.base_url || DEFAULT_URL;
   const type = argv._[0];
 
   if (
@@ -125,7 +136,7 @@ async function urlsFromFiles(options) {
   }
   const ignoreFailures = ignore.map((i) => new RegExp(i));
 
-  let options = { baseUrl, ignore: ignoreFailures };
+  let options = { baseUrl, type, ignore: ignoreFailures };
   let urls = [];
 
   if (type === "pr") {
