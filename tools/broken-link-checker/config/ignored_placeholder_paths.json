@@ -5,6 +5,7 @@
     "/service-catalog/",
     "/audit/",
     "/mesh/install/",
+    "/kic/",
     "/kic/install/",
     "/gateway/install/",
     "/gateway/enterprise/",
