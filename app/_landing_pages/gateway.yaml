@@ -49,7 +49,7 @@ rows:
                   Pass the `-- -h` option to the script to see all possible configuration options, including how to pass a license
                   to the script, how to switch to an open-source Gateway image, enable RBAC, and more.
 
-                  Visit the [Gateway install page](/gateway/install) for all other installation options.
+                  Visit the [Gateway install page](/gateway/install/) for all other installation options.
 
   - header:
       type: h2

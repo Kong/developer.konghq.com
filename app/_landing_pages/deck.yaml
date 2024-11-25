@@ -22,8 +22,8 @@ rows:
             This enables developers and operations teams to manage APIs from development through deployment, 
             ensuring consistency, reliability, and speed in API integrations.
 
-            decK is one of the many tools you can use to manage {{site.base_gateway}} and Konnect. To learn about other tools, 
-            review our [tools page](/tools).
+            decK is one of the many tools you can use to manage Kong Gateway and Konnect. To learn about other tools, 
+            review our [tools page](/tools/).
 
   - header:
       type: h2
