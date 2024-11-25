@@ -49,5 +49,7 @@
     "https://github.com/kong/deck/releases",
     "https://docs.devsite.com/*",
     "https://github.com/Kong/developer.konghq.com/issues/",
-    "https://twitter.com/thekonginc"
+    "https://twitter.com/thekonginc",
+    "https://updates.insomnia.rest/*",
+    "https://insomnia.rest/run/*"
   ]
