@@ -17,9 +17,14 @@ install-prerequisites:
 install: ruby-version-check
 	npm ci
 	bundle install
+	cd tools/frontmatter-validator
+	npm ci
+
+validate-frontmatters:
+	npm --prefix tools/frontmatter-validator run validate
 
 # Using local dependencies, starts a doc site instance on http://localhost:4000.
-run: ruby-version-check
+run: ruby-version-check validate-frontmatters
 	netlify dev
 
 run-debug: ruby-version-check
@@ -43,3 +48,4 @@ kill-ports:
 
 vale:
 	-git diff --name-only --diff-filter=d HEAD | grep '\.md$$' | xargs vale
+
