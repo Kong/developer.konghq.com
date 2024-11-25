@@ -7,7 +7,7 @@ const YAML = require("yaml");
 const Ajv = require("ajv");
 const addFormats = require("ajv-formats");
 
-const ajv = new Ajv({ allErrors: true });
+const ajv = new Ajv({ allErrors: true, strict: false });
 addFormats(ajv);
 
 async function validateFrontmatters() {
