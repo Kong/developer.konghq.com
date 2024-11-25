@@ -133,7 +133,7 @@ async function urlsFromFiles(options) {
     options.isFork =
       argv.isFork !== undefined
         ? argv.isFork
-        : github.context.payload.pull_request.head.repo.fork;
+        : context.payload.pull_request.head.repo.fork;
     options.skipEditLink = options.isFork;
     urls = await urlsFromPR(options);
   } else if (type === undefined) {
