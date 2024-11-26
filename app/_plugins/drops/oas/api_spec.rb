@@ -4,6 +4,8 @@ module Jekyll
   module Drops
     module OAS
       class APISpec < Liquid::Drop
+        attr_reader :version
+
         def initialize(product:, version:)
           @product = product
           @version = version

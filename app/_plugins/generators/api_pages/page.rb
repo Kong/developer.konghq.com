@@ -34,14 +34,14 @@ module Jekyll
 
       def data
         {
-          'title' => @product['title'],
+          'title' => api_spec.title,
           'api_spec' => api_spec,
-          'version' => @version.slice('id', 'name'),
-          'description' => @product['description'],
+          'description' => api_spec.description,
           'layout' => 'api/spec',
           'content_type' => 'reference',
           'canonical_url' => base_url,
-          'seo_noindex' => true
+          'seo_noindex' => true,
+          'namespace' => namespace
         }
       end
 
@@ -59,6 +59,10 @@ module Jekyll
 
       def version_segment
         @version_segment ||= @version.fetch('name')
+      end
+
+      def namespace
+        @namespace ||= @file.split('/')[1]
       end
     end
   end
