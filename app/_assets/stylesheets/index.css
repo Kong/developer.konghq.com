@@ -41,6 +41,9 @@
     --kui-color-text-neutral: rgb(var(--color-text-primary));
     --kui-color-text: rgb(var(--color-text-primary));
     --kui-color-text-primary: rgb(var(--color-brand));
+    --kui-color-background: rgb(var(--color-bg-primary));
+    --kui-color-background-neutral-weakest: rgb(var(--color-bg-primary));
+    --kui-color-border: rgb(var(--color-border-primary), 0.05);
   }
 
   .dark {
