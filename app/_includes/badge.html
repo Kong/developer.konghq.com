@@ -1,2 +1,6 @@
-<a class="rounded bg-brand-saturated/40 px-1.5 py-0.5 text-primary text-xs"
-    href="{{ include.url }}">{{ include.text }}</a>
+{%- assign cssClasses = "rounded px-1.5 py-0.5 text-primary text-xs bg-brand-saturated/40 " | append: include.css_class -%}
+{%- if include.url -%}
+<a class="{{ cssClasses }}" href="{{ include.url }}">{{ include.text }}</a>
+{%- else -%}
+<span class="{{ cssClasses }}">{{ include.text }}</span>
+{%- endif -%}

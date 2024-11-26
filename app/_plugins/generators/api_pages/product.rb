@@ -12,11 +12,23 @@ module Jekyll
         @frontmatter = frontmatter
       end
 
-      def generate_pages!
+      def generate_pages! # rubocop:disable Metrics/AbcSize
         product['versions'].map do |version|
           site.pages << Page.new(product:, version:, file:, site:).to_jekyll_page
         end
-        site.pages << APIPages::Canonical.new(product:, version: latest_version, file:, site:).to_jekyll_page
+        site.pages << latest_page
+        site.data['ssg_oas_pages'] << latest_page
+      end
+
+      private
+
+      def latest_page
+        @latest_page ||= APIPages::Canonical.new(
+          product:,
+          version: latest_version,
+          file:,
+          site:
+        ).to_jekyll_page
       end
 
       def latest_version

@@ -1,0 +1,79 @@
+---
+layout: default
+---
+
+<div class="flex flex-col gap-12 w-full pb-36">
+    <div class="flex justify-between gap-[60px]">
+        <div class="flex flex-col gap-8 py-24">
+            <div class="flex flex-col gap-2">
+                <h1 class="font-extrabold text-[40px] leading-[60px]">{{ page.title }}</h1>
+                <span class="leading-7">{{ page.description }}</span>
+            </div>
+        </div>
+        <div class="hidden lg:flex pt-9 pr-[61px]">
+            <svg class="hidden dark:inline" width="252" height="252" viewBox="0 0 252 252" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M109.563 0.36V109.563H0.36V33.0652L37.6737 0.36H109.563ZM251.64 109.563H142.437V0.36H218.935L251.64 37.6737V109.563ZM142.437 251.64V142.437H251.64V218.935L214.326 251.64H142.437ZM0.36 142.437H109.563V251.64H33.0652L0.36 214.326V142.437Z" fill="url(#paint0_linear_7922_14787)" stroke="url(#paint1_linear_7922_14787)" stroke-width="0.72"/>
+                <defs>
+                <linearGradient id="paint0_linear_7922_14787" x1="126" y1="0" x2="126" y2="237.415" gradientUnits="userSpaceOnUse">
+                <stop offset="0.015" stop-color="#0C3867"/>
+                <stop offset="0.25" stop-color="#04284F"/>
+                <stop offset="1" stop-color="#021428"/>
+                </linearGradient>
+                <linearGradient id="paint1_linear_7922_14787" x1="126" y1="0" x2="126" y2="239.035" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#428CDC" stop-opacity="0.5"/>
+                <stop offset="1" stop-color="#428CDC" stop-opacity="0"/>
+                </linearGradient>
+                </defs>
+            </svg>
+            <svg class="inline dark:hidden" width="252" height="252" viewBox="0 0 252 252" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M109.423 0.5V109.423H0.5V33.1287L37.7264 0.5H109.423ZM251.5 109.423H142.577V0.5H218.871L251.5 37.7264V109.423ZM142.577 251.5V142.577H251.5V218.871L214.274 251.5H142.577ZM0.5 142.577H109.423V251.5H33.1287L0.5 214.274V142.577Z" fill="url(#paint0_linear_7922_39307)" stroke="url(#paint1_linear_7922_39307)"/>
+                <defs>
+                <linearGradient id="paint0_linear_7922_39307" x1="126" y1="0" x2="126" y2="237.415" gradientUnits="userSpaceOnUse">
+                <stop offset="0.015" stop-color="#D3E8FF"/>
+                <stop offset="0.3" stop-color="#EEF6FF"/>
+                <stop offset="1" stop-color="#F7FBFF"/>
+                </linearGradient>
+                <linearGradient id="paint1_linear_7922_39307" x1="126" y1="0" x2="126" y2="239.035" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#428CDC" stop-opacity="0.5"/>
+                <stop offset="1" stop-color="#428CDC" stop-opacity="0"/>
+                </linearGradient>
+                </defs>
+            </svg>
+        </div>
+    </div>
+
+    {% assign oas_pages = site.data.ssg_oas_pages | where_exp: "oas_page", "oas_page.api_spec.deprecated? == false" %}
+    <div class="flex flex-col gap-3">
+        <h2>{{ site.base_gateway }}</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {% assign gateway_api_specs = oas_pages | where_exp: "oas_page", "oas_page.namespace == 'gateway'" %}
+        {% for oas_page in gateway_api_specs %}
+            {% include_cached cards/api_spec.html icon='/assets/icons/gateway.svg' title=oas_page.title version=oas_page.api_spec.version.name description=oas_page.description spec_url=oas_page.url %}
+        {% endfor %}
+        </div>
+    </div>
+
+    <div class="flex flex-col gap-3">
+        <h2>{{ site.konnect_short_name }}</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {% assign konnect_api_specs = oas_pages | where_exp: "oas_page", "oas_page.namespace == 'konnect'" %}
+        {% for oas_page in konnect_api_specs %}
+            {% include_cached cards/api_spec.html icon='/assets/icons/gateway.svg' title=oas_page.title version=oas_page.api_spec.version.name description=oas_page.description spec_url=oas_page.url %}
+        {% endfor %}
+        </div>
+    </div>
+
+    <div class="flex flex-col gap-3">
+        <h2>Deprecated</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {% assign deprecated_api_specs = site.data.ssg_oas_pages | where_exp: "oas_page", "oas_page.api_spec.deprecated? == true" %}
+
+        {% for oas_page in deprecated_api_specs %}
+            {% include_cached cards/api_spec.html icon='/assets/icons/gateway.svg' deprecated=true title=oas_page.title version=oas_page.api_spec.version.name description=oas_page.description spec_url=oas_page.url %}
+        {% endfor %}
+        </div>
+    </div>
+</div>

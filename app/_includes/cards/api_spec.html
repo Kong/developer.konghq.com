@@ -1,0 +1,18 @@
+<div class="flex flex-col gap-5 p-6 pb-4 rounded-md bg-secondary shadow-primary h-full">
+    <div class="flex justify-between items-center">
+        <img src="{{ include.icon }}" class="w-8 h-8"/>
+        <div class="flex gap-2">
+            {% if include.deprecated == true %}
+            {% include badge.html text='Deprecated' css_class='bg-semantic-red-secondary' %}
+            {% endif %}
+            {% include badge.html text=include.version %}
+        </div>
+    </div>
+    <div class="flex flex-col gap-3 grow">
+        <h3>{{ include.title }}</h3>
+        <p class="text-sm text-secondary">{{ include.description }}</p>
+    </div>
+    <div class="flex flex-col w-full text-primary text-sm">
+        <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="{{ include.spec_url }}">Specification <span class="text-terciary">&rarr;</span></a>
+    </div>
+</div>
