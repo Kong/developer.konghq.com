@@ -1,0 +1,10 @@
+---
+layout: default
+api_spec: true
+---
+
+<div id="api-spec" class="w-full"></div>
+
+<script>
+  window.apiSpec = {{ page.api_spec.as_json | jsonify }}
+</script>
