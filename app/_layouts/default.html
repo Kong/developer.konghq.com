@@ -37,6 +37,10 @@
     {% if layout.entity_schema %}
       {% vite_javascript_tag entity_schema %}
     {% endif %}
+
+    {% if layout.api_spec %}
+      {% vite_javascript_tag api_spec %}
+    {% endif %}
   </head>
 
   <body class="bg-primary leading-6 h-full">
