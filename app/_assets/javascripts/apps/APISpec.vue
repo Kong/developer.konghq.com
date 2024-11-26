@@ -43,3 +43,9 @@ async function fetchSpec() {
   specText.value = response.data.content
 }
 </script>
+
+<style scoped>
+:deep(.spec-renderer-small-screen-header) {
+  @apply -mx-5 md:-mx-8 top-16 !important;
+}
+</style>
