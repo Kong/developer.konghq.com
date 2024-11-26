@@ -4,10 +4,11 @@ module Jekyll
   class APIPagesGenerator < Generator
     SOURCE_FILE = '_data/konnect_oas_data.json'
 
-    priority :low
+    priority :normal
 
     def generate(site)
       @site = site
+      @site.data['ssg_oas_pages'] = []
 
       Dir.glob(File.join(site.source, '_api/**/**/_index.md')).each do |file|
         frontmatter = page_frontmatter(file)
@@ -17,6 +18,8 @@ module Jekyll
 
         Jekyll::APIPages::Product.new(product:, file:, site:, frontmatter:).generate_pages!
       end
+
+      @site.pages << APIPages::Index.new(site:).to_jekyll_page
     end
 
     private
