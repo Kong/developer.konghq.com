@@ -17,7 +17,7 @@ module Jekyll
           site.pages << Page.new(product:, version:, file:, site:).to_jekyll_page
         end
         site.pages << latest_page
-        site.data['ssg_oas_pages'] << latest_page
+        site.data['ssg_api_pages'] << latest_page
       end
 
       private
