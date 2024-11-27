@@ -1,35 +1,16 @@
 # frozen_string_literal: true
 
+require_relative './base'
+
 module Jekyll
   module APIPages
-    class Page
-      attr_reader :product, :version
-
-      def initialize(product:, version:, file:, site:)
+    class Page < Base
+      def initialize(product:, version:, file:, site:, frontmatter:)
         @product = product
         @version = version
         @file = file
         @site = site
-      end
-
-      def to_jekyll_page
-        CustomJekyllPage.new(site: @site, page: self)
-      end
-
-      def dir
-        @dir ||= "#{base_url}#{version_segment}/"
-      end
-
-      def relative_path
-        @relative_path ||= @file
-      end
-
-      def content
-        @content ||= ''
-      end
-
-      def url
-        @url || dir
+        @frontmatter = frontmatter
       end
 
       def data
@@ -39,36 +20,20 @@ module Jekyll
           'description' => api_spec.description,
           'layout' => 'api/spec',
           'content_type' => 'reference',
-          'canonical_url' => base_url,
+          'canonical_url' => canonical_url,
           'seo_noindex' => true,
           'namespace' => namespace
-        }.merge(frontmatter_attrs)
+        }.merge(@frontmatter)
       end
 
       private
-
-      def api_spec
-        @api_spec ||= Drops::OAS::APISpec.new(product:, version:)
-      end
-
-      def base_url
-        @base_url ||= @file
-                      .gsub('_index.md', '')
-                      .gsub('_api', '/api')
-      end
-
-      def version_segment
-        @version_segment ||= @version.fetch('name')
-      end
 
       def namespace
         @namespace ||= @file.split('/')[1]
       end
 
-      def frontmatter_attrs
-        @frontmatter_attrs ||= Utils::MarkdownParser.new(
-          File.read(File.expand_path(@file, @site.source))
-        ).frontmatter
+      def url_generator
+        @url_generator ||= URLGenerator::API.new(file:, version:)
       end
     end
   end
