@@ -22,12 +22,17 @@ module Jekyll
           'content_type' => 'reference',
           'canonical_url' => canonical_url,
           'seo_noindex' => true,
-          'errors' => @errors.map { |k, v| Drops::OAS::Error.new(code: k, values: v) }
+          'errors' => @errors.map { |k, v| Drops::OAS::Error.new(code: k, values: v) },
+          'breadcrumbs' => breadcrumbs
         }
       end
 
       def url_generator
         @url_generator ||= URLGenerator::Error.new(file:, version:)
+      end
+
+      def breadcrumbs
+        ['/api/', url_generator.api_versioned_url]
       end
     end
   end
