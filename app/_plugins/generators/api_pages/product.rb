@@ -49,7 +49,7 @@ module Jekyll
       end
 
       def latest_page
-        @latest_page ||= APIPages::Canonical.new(
+        @latest_page ||= APIPages::CanonicalPage.new(
           product:,
           version: latest_version,
           file:,
@@ -59,7 +59,7 @@ module Jekyll
       end
 
       def latest_error_page
-        @latest_error_page ||= APIPages::CanonicalError.new(
+        @latest_error_page ||= APIPages::CanonicalErrorPage.new(
           product:,
           version: latest_version,
           file:,
