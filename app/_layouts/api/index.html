@@ -49,7 +49,7 @@ layout: default
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {% assign gateway_api_specs = oas_pages | where_exp: "oas_page", "oas_page.namespace == 'gateway'" %}
         {% for oas_page in gateway_api_specs %}
-            {% include_cached cards/api_spec.html icon='/assets/icons/gateway.svg' title=oas_page.title version=oas_page.api_spec.version.name description=oas_page.description spec_url=oas_page.url %}
+            {% include_cached cards/api_spec.html icon='/assets/icons/gateway.svg' title=oas_page.title version=oas_page.api_spec.version.name description=oas_page.description spec_url=oas_page.url insomnia_link=oas_page.insomnia_link %}
         {% endfor %}
         </div>
     </div>
@@ -60,7 +60,7 @@ layout: default
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         {% assign konnect_api_specs = oas_pages | where_exp: "oas_page", "oas_page.namespace == 'konnect'" %}
         {% for oas_page in konnect_api_specs %}
-            {% include_cached cards/api_spec.html icon='/assets/icons/gateway.svg' title=oas_page.title version=oas_page.api_spec.version.name description=oas_page.description spec_url=oas_page.url %}
+            {% include_cached cards/api_spec.html icon='/assets/icons/gateway.svg' title=oas_page.title version=oas_page.api_spec.version.name description=oas_page.description spec_url=oas_page.url insomnia_link=oas_page.insomnia_link %}
         {% endfor %}
         </div>
     </div>
@@ -72,7 +72,7 @@ layout: default
         {% assign deprecated_api_specs = site.data.ssg_oas_pages | where_exp: "oas_page", "oas_page.api_spec.deprecated? == true" %}
 
         {% for oas_page in deprecated_api_specs %}
-            {% include_cached cards/api_spec.html icon='/assets/icons/gateway.svg' deprecated=true title=oas_page.title version=oas_page.api_spec.version.name description=oas_page.description spec_url=oas_page.url %}
+            {% include_cached cards/api_spec.html icon='/assets/icons/gateway.svg' deprecated=true title=oas_page.title version=oas_page.api_spec.version.name description=oas_page.description spec_url=oas_page.url insomnia_link=oas_page.insomnia_link %}
         {% endfor %}
         </div>
     </div>
