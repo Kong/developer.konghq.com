@@ -1,0 +1,22 @@
+---
+layout: with_aside
+---
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Description</th>
+      <th>Resolution</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for error in page.errors %}
+      <tr id="{{ error.key }}">
+        <td>{{ error.key }}</td>
+        <td>{{ error.description }}</td>
+        <td>{{ error.resolution }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

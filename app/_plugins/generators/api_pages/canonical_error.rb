@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative './page'
+require_relative './error_page'
 
 module Jekyll
   module APIPages
-    class Canonical < APIPages::Page
+    class CanonicalError < APIPages::ErrorPage
       def dir
         @dir ||= canonical_url
       end
