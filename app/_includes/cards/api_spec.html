@@ -13,6 +13,15 @@
         <p class="text-sm text-secondary">{{ include.description }}</p>
     </div>
     <div class="flex flex-col w-full text-primary text-sm">
-        <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="{{ include.spec_url }}">Specification <span class="text-terciary">&rarr;</span></a>
+        <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline items-center" href="{{ include.spec_url }}">
+            <span class="flex gap-2 items-center"><div class="w-4 text-brand">{% include_svg "/assets/icons/service-document.svg" %}</div>Specification</span>
+            <span class="flex text-terciary">&rarr;</span>
+        </a>
+        {% if include.insomnia_link %}
+        <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline items-center" href="{{ include.insomnia_link }}">
+            <span class="flex gap-2 items-center"><div class="w-4 text-brand">{% include_svg "/assets/icons/insomnia/insomnia.svg" %}</div>Run in Insomnia</span>
+            <span class="flex text-terciary">&rarr;</span>
+        </a>
+        {% endif %}
     </div>
 </div>
