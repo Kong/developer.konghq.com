@@ -2,9 +2,10 @@
 layout: default
 api_spec: true
 ---
+<div class="flex flex-col gap-3 py-12 w-full">
+  <div id="api-spec" class="w-full"></div>
 
-<div id="api-spec" class="w-full"></div>
-
-<script>
-  window.apiSpec = {{ page.api_spec.as_json | jsonify }}
-</script>
+  <script>
+    window.apiSpec = {{ page.api_spec.as_json | jsonify }}
+  </script>
+</div>
