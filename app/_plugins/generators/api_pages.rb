@@ -8,7 +8,7 @@ module Jekyll
 
     def generate(site)
       @site = site
-      @site.data['ssg_oas_pages'] = []
+      @site.data['ssg_api_pages'] = []
 
       Dir.glob(File.join(site.source, '_api/**/**/_index.md')).each do |file|
         frontmatter = page_frontmatter(file)
