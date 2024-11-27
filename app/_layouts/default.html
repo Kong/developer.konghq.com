@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ site.lang | default: "en-US" }}" class="scroll-smooth scroll-pt-20">
+<html lang="{{ site.lang | default: "en-US" }}" class="scroll-smooth scroll-pt-20 h-full">
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
@@ -39,17 +39,19 @@
     {% endif %}
   </head>
 
-  <body class="bg-primary leading-6">
-    {% include_cached header.html %}
+  <body class="bg-primary leading-6 h-full">
+    <div class="min-h-full flex flex-col">
+      {% include_cached header.html %}
 
-  <div class="flex px-5 md:px-8 2xl:px-[156px] 2xl:mx-auto max-w-screen-2xl">
-    {{ content }}
+    <div class="flex px-5 md:px-8 2xl:px-[156px] 2xl:mx-auto max-w-screen-2xl flex-1 w-full">
+      {{ content }}
+    </div>
+
+    {% if page.get_help != false %}
+      {% include get_help.html %}
+    {% endif %}
+
+    {% include_cached footer.html %}
   </div>
-
-  {% if page.get_help != false %}
-    {% include get_help.html %}
-  {% endif %}
-
-  {% include_cached footer.html %}
 </body>
 </html>
