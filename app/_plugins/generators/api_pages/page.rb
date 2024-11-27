@@ -33,7 +33,7 @@ module Jekyll
       end
 
       def data
-        {
+        @data ||= {
           'title' => api_spec.title,
           'api_spec' => api_spec,
           'description' => api_spec.description,
@@ -42,7 +42,7 @@ module Jekyll
           'canonical_url' => base_url,
           'seo_noindex' => true,
           'namespace' => namespace
-        }
+        }.merge(frontmatter_attrs)
       end
 
       private
@@ -63,6 +63,12 @@ module Jekyll
 
       def namespace
         @namespace ||= @file.split('/')[1]
+      end
+
+      def frontmatter_attrs
+        @frontmatter_attrs ||= Utils::MarkdownParser.new(
+          File.read(File.expand_path(@file, @site.source))
+        ).frontmatter
       end
     end
   end
