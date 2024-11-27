@@ -17,6 +17,14 @@ module Jekyll
         def versioned_url
           @versioned_url ||= "#{@api_url.versioned_url}errors/"
         end
+
+        def api_canonical_url
+          @api_canonical_url ||= @api_url.canonical_url
+        end
+
+        def api_versioned_url
+          @api_versioned_url ||= @api_url.versioned_url
+        end
       end
     end
   end
