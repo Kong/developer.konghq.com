@@ -1,17 +1,33 @@
 <template>
-  <div class="flex w-full gap-16">
-      <SpecRenderer
-        v-if="specText"
-        :spec="specText"
+  <div class="flex w-full gap-1 w-full">
+    <nav class="sticky top-0">
+      <SpecRendererToc
+        v-if="tableOfContents"
         navigation-type="hash"
         :base-path="basePath"
-    />
+        :table-of-contents="tableOfContents"
+        :control-address-bar="true"
+        :current-path="currentPathTOC"
+      />
+    </nav>
+    <main class="w-full">
+      <SpecDocument
+        v-if="parsedDocument"
+        :document="parsedDocument"
+        current-path="/"
+        navigation-type="hash"
+        :base-path="basePath"
+        :control-address-bar="true"
+        @content-scrolled="onDocumentScroll"
+        :current-path="currentPathTOC"
+      />
+    </main>
   </div>
 </template>
 
 <script setup>
 import { onBeforeMount, ref, watch } from 'vue';
-import { SpecRenderer, parseSpecDocument } from '@kong/spec-renderer-dev';
+import { SpecRenderer, parseSpecDocument, SpecRendererToc, SpecDocument, parsedDocument, tableOfContents } from '@kong/spec-renderer-dev';
 import ApiService from '../services/api.js'
 
 const { product_id, version_id } = window.apiSpec;
@@ -20,6 +36,7 @@ const productId = ref(product_id);
 const productVersionId = ref(version_id);
 const specText = ref('');
 const basePath = window.location.pathname;
+const currentPathTOC = ref('/');
 
 onBeforeMount(async () =>  {
   await fetchSpec();
@@ -41,6 +58,12 @@ async function fetchSpec() {
     console.log(e)
   })
   specText.value = response.data.content
+}
+
+const onDocumentScroll = (path) => {
+  currentPathTOC.value = path
+  // we need to re-calculate initiallyExpanded property based on the new path
+    window.history.pushState({}, '', basePath + path)
 }
 </script>
 
