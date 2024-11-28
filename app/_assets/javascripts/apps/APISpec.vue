@@ -1,10 +1,11 @@
 <template>
-  <div class="flex w-full gap-16">
-      <SpecRenderer
-        v-if="specText"
-        :spec="specText"
-        navigation-type="hash"
-        :base-path="basePath"
+  <div class="flex w-full gap-16 min-h-96">
+    <KSkeleton v-if="loading" type="spinner" class="mx-auto self-center"/>
+    <SpecRenderer
+      v-if="!loading && specText"
+      :spec="specText"
+      navigation-type="hash"
+      :base-path="basePath"
     />
   </div>
 </template>
@@ -13,7 +14,9 @@
 import { onBeforeMount, ref, watch } from 'vue';
 import { SpecRenderer, parseSpecDocument } from '@kong/spec-renderer-dev';
 import ApiService from '../services/api.js'
+import { KSkeleton } from '@kong/kongponents'
 
+const loading = ref(true);
 const { product_id, version_id } = window.apiSpec;
 const versionsAPI = new ApiService().versionsAPI;
 const productId = ref(product_id);
@@ -39,7 +42,9 @@ async function fetchSpec() {
     productVersionId: productVersionId.value,
   }).catch(e => {
     console.log(e)
-  })
+  }).finally(() => {
+   loading.value = false;
+  });
   specText.value = response.data.content
 }
 </script>
