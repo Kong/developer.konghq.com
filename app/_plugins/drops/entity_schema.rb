@@ -23,26 +23,23 @@ module Jekyll
 
       def product_id
         @product_id ||= begin
-          product_ids = @site.data.fetch('konnect_product_ids')
+          id = @site.data['konnect_product_ids']["/api/#{@schema.fetch('api')}/"]
 
-          product_id = product_ids.dig(*@schema.fetch('api').split('/'))
+          raise ArgumentError, "There's no API in app/_api/ that matches #{@schema.fetch('api')}" unless id
 
-          unless product_id
-            raise ArgumentError, "Missing `konnect_product_id` for #{@schema['api']} in app/_data/konnect_product_ids.yml"
-          end
-          product_id
+          id
         end
       end
 
       def version_id
         @version_id ||= if @release.label?
-          product.dig('latestVersion', 'id')
-        else
-          product
-            .fetch('versions', [])
-            .detect { |v| v['name'] == @release.to_konnect_version }
-            .fetch('id')
-        end
+                          product.dig('latestVersion', 'id')
+                        else
+                          product
+                            .fetch('versions', [])
+                            .detect { |v| v['name'] == @release.to_konnect_version }
+                            .fetch('id')
+                        end
       end
 
       private

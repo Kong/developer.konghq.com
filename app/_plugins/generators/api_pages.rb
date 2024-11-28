@@ -20,6 +20,8 @@ module Jekyll
       end
 
       @site.pages << APIPages::Index.new(site:).to_jekyll_page
+
+      set_konnect_product_ids
     end
 
     private
@@ -36,6 +38,13 @@ module Jekyll
 
     def products
       @products ||= JSON.parse(File.read(File.join(@site.source, SOURCE_FILE)))
+    end
+
+    def set_konnect_product_ids
+      @site.data['konnect_product_ids'] = {}
+      @site.data['ssg_api_pages'].each do |api|
+        @site.data['konnect_product_ids'][api.url] = api.data.fetch('konnect_product_id')
+      end
     end
   end
 end
