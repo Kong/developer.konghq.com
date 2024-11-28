@@ -3,7 +3,7 @@ title: How to create rate limiting tiers with {{site.base_gateway}}
 content_type: how_to
 related_resources:
   - text: Consumer Group API documentation
-    url: https://docs.konghq.com/gateway/api/admin-ee/latest/
+    url: /api/gateway/admin-ee/
   - text: Rate Limiting Advanced plugin
     url: /plugins/rate-limiting-advanced/
 

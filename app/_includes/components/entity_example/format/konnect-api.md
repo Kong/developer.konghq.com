@@ -12,7 +12,7 @@
 {% when 'upstream' %}
   The following creates a new upstream called **{{ include.presenter.data['name'] }}**:
 {% when workspace %}
-  To create a workspace, call the [Admin API’s /workspaces endpoint](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Workspaces/create-workspace).
+  To create a workspace, call the [Admin API’s /workspaces endpoint](/api/gateway/admin-ee/#/operations/create-workspace).
 {% when 'plugin' %}
   Make the following request:
 {% else %}

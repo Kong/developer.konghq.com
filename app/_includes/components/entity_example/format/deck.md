@@ -9,7 +9,7 @@
 {% when 'service' %}
   The following creates a new service called **{{ include.presenter.data['name'] }}** with basic configuration:
 {% when 'target' %}
-  To create a target, call the [Admin API’s /targets endpoint](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Targets).
+  To create a target, call the [Admin API’s /targets endpoint](/api/gateway/admin-ee/#/operations/create-target-with-upstream).
 {% when 'upstream' %}
   The following creates a new upstream called **{{ include.presenter.data['name'] }}**:
 {% when workspace %}
