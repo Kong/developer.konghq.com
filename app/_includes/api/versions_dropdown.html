@@ -1,0 +1,10 @@
+<div class="bg-secondary rounded-md flex justify-between py-2 px-4 gap-2 w-full shadow-primary items-center text-sm max-w-[300px]">
+    <label for="releases-dropdown" class="text-primary">Version:</label>
+    <select id="releases-dropdown" class="bg-secondary grow">
+        {% for option in include.versions_dropdown.options %}
+            <option value="{{option.url}}" {% if option.version == include.version %}selected{% endif %}>
+                {{option.value}}
+            </option>
+        {% endfor %}
+    </select>
+</div>

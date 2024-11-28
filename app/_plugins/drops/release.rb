@@ -30,7 +30,7 @@ module Jekyll
           @release_hash['release']
         end
       end
-      alias :to_s :to_str
+      alias to_s to_str
 
       def hash
         @hash ||= @release_hash['release'].hash

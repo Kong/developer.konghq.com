@@ -5,6 +5,8 @@ require_relative './base'
 module Jekyll
   module APIPages
     class Page < Base
+      attr_reader :product
+
       def initialize(product:, version:, file:, site:, frontmatter:)
         @product = product
         @version = version
@@ -13,7 +15,7 @@ module Jekyll
         @frontmatter = frontmatter
       end
 
-      def data
+      def data # rubocop:disable Metrics/MethodLength
         @data ||= {
           'title' => api_spec.title,
           'api_spec' => api_spec,
@@ -23,7 +25,9 @@ module Jekyll
           'canonical_url' => canonical_url,
           'seo_noindex' => true,
           'namespace' => namespace,
-          'breadcrumbs' => ['/api/']
+          'breadcrumbs' => ['/api/'],
+          'version' => Drops::OAS::Version.new(@version),
+          'versions_dropdown' => Drops::OAS::VersionsDropdown.new(base_url: canonical_url, product:)
         }.merge(@frontmatter)
       end
 
