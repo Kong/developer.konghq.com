@@ -65,7 +65,7 @@ rows:
                     - "**[Terraform](/terraform/)**: Manage infrastructure as code and automated deployments to streamline setup and configuration of Konnect and {{site.base_gateway}}"
                     - "**[KIC](/kic/)**: Manage ingress traffic and routing rules for your services"
                     - "**[{{site.base_gateway}} Admin API](/api/gateway/admin-ee/)**: Manage on-prem {{site.base_gateway}} entities via an API"
-                    - "**[Control Plane Config API](https://docs.konghq.com/konnect/api/control-plane-configuration/latest/)**: Manage {{site.base_gateway}} entities within Konnect control planes via an API"
+                    - "**[Control Plane Config API](/api/konnect/control-plane-configuration/)**: Manage {{site.base_gateway}} entities within Konnect control planes via an API"
 
   - header:
       text: "What can decK do?"
