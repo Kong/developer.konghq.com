@@ -88,7 +88,7 @@ By default, Kong uses the header name `X-Real-IP`. If a different header name is
 
 ## Rate limiting for consumer groups
 
-You can use the [consumer groups entity](https://docs.konghq.com/gateway/api/admin-ee/latest/#/consumer_groups/get-consumer_groups) to manage custom rate limiting configurations for
+You can use the [consumer groups entity](/api/gateway/admin-ee/#/operations/get-consumer_groups) to manage custom rate limiting configurations for
 subsets of consumers. This is enabled by default **without** using the `/consumer_groups/:id/overrides` endpoint.
 
 You can see an example of this in the [Enforcing rate limiting tiers with the Rate Limiting Advanced plugin](https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/how-to/) guide.

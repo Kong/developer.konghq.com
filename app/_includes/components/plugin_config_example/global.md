@@ -4,5 +4,5 @@ A plugin which is not associated to any service, route, consumer, or consumer gr
 * In self-managed {{site.base_gateway}} (OSS), the plugin applies to your entire environment.
 * In Konnect, the plugin applies to every entity in a given control plane.
 
-Read the [Plugin Reference](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Plugins) and the [Plugin Precedence](/plugins/precedence/)
+Read the [Plugin Reference](/api/gateway/admin-ee/#/operations/list-plugins-with-consumer) and the [Plugin Precedence](/plugins/precedence/)
 sections for more information. 
