@@ -22,7 +22,8 @@ module Jekyll
           'content_type' => 'reference',
           'canonical_url' => canonical_url,
           'seo_noindex' => true,
-          'namespace' => namespace
+          'namespace' => namespace,
+          'breadcrumbs' => ['/api/']
         }.merge(@frontmatter)
       end
 
