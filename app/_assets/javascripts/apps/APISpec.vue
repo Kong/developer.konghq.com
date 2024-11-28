@@ -48,4 +48,20 @@ async function fetchSpec() {
 :deep(.spec-renderer-small-screen-header) {
   @apply -mx-5 md:-mx-8 top-16 !important;
 }
+
+:deep(.spec-renderer-small-screen-header .slideout-toc-trigger-button) {
+  @apply px-3 md:px-6 !important;
+}
+
+:deep(.node-item) {
+  @apply pl-0 !important;
+}
+
+:deep(.group-item.root) {
+  @apply pl-0 !important;
+}
+
+:deep(.spec-renderer-toc) {
+  @apply bg-transparent !important;
+}
 </style>
