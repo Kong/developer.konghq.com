@@ -13,16 +13,20 @@ module Jekyll
             @latest = latest
           end
 
-          def value
-            @value ||= @version.to_s
+          def label
+            @label ||= @version.to_s
           end
 
-          def url
-            @url ||= if @version == @latest
-                       @base_url
-                     else
-                       "#{@base_url}#{value}/"
-                     end
+          def value
+            @value ||= if @version == @latest
+                         @base_url
+                       else
+                         "#{@base_url}#{@version}/"
+                       end
+          end
+
+          def as_json
+            { 'value' => value, 'label' => label }
           end
         end
 
@@ -51,6 +55,10 @@ module Jekyll
 
         def hash
           @hash ||= base_url.hash
+        end
+
+        def as_json
+          options.map(&:as_json)
         end
       end
     end
