@@ -3,7 +3,7 @@
         <img src="{{ include.icon }}" class="w-8 h-8"/>
         <div class="flex gap-2">
             {% if include.deprecated == true %}
-            {% include badge.html text='Deprecated' css_class='bg-semantic-red-secondary' %}
+            {% include badge.html text='Deprecated' css_class='deprecated' %}
             {% endif %}
             {% include badge.html text=include.version %}
         </div>
