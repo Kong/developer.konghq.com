@@ -13,7 +13,7 @@ module Jekyll
         @errors = errors
       end
 
-      def data
+      def data # rubocop:disable Metrics/MethodLength
         @data ||= {
           'title' => 'Errors',
           'api_spec' => api_spec,
