@@ -318,4 +318,8 @@
       @apply fill-[rgb(var(--color-brand))] stroke-[rgb(var(--color-brand))] stroke-1 !important
     }
   }
+
+  .badge.deprecated {
+    @apply bg-semantic-red-secondary;
+  }
 }
