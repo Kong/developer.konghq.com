@@ -76,7 +76,7 @@ api_specs:
       url: '/api/gateway/admin-oss/#/operations/list-consumer'
       insomnia_link: 'https://insomnia.rest/run/?label=Gateway%20Admin%20OSS%20API&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2FGateway-OSS%2Flatest%2Fkong-oss.yaml'
     - text: Konnect Control Planes Config
-      url: 'https://docs.konghq.com/konnect/api/control-plane-configuration/latest/#/Consumers'
+      url: '/api/konnect/control-plane-configuration/#/operations/list-consumer'
       insomnia_link: 'https://insomnia.rest/run/?label=Konnect%20Control%20Plane%20Config&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2FKonnect%2Fcontrol-planes-config%2Fcontrol-planes-config.yaml'
 
 schema:
