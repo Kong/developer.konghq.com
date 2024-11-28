@@ -6,6 +6,11 @@ const fs = require("fs");
 (async function () {
   const konnectPortalApiUrl = argv.url;
 
+  if (konnectPortalApiUrl === undefined || konnectPortalApiUrl === true) {
+    console.log("Missing flag --url");
+    process.exit(1);
+  }
+
   const client = axios.create({
     baseURL: konnectPortalApiUrl,
     withCredentials: false,
@@ -24,7 +29,7 @@ const fs = require("fs");
     config,
     konnectPortalApiUrl,
     client,
-    products,
+    products
   );
 
   writeProductsToFile(data);
@@ -67,7 +72,7 @@ async function fetchProductVersions(baseConfig, baseURL, client, products) {
     console.log("Fetching versions...");
     const promises = products.map(async (product) => {
       let versions = await fetchAll((meta) =>
-        versionsApi.listProductVersions({ ...meta, productId: product.id }),
+        versionsApi.listProductVersions({ ...meta, productId: product.id })
       );
 
       return { ...product, versions };
