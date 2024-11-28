@@ -1,0 +1,39 @@
+# api pages
+app/_api/gateway/admin-ee/_index.md:
+ - app/_api/gateway/admin-ee/_index.md
+app/_api/gateway/admin-oss/_index.md:
+ - app/_api/gateway/admin-oss/_index.md
+app/_api/gateway/dev-portal/_index.md:
+ - app/_api/dev-portal/_index.md
+app/_api/gateway/status/_index.md:
+ - app/_api/gateway/status/_index.md
+app/_api/konnect/api-products/_index.md:
+ - app/_api/konnect/api-products/_index.md
+app/_api/konnect/api-requests/_index.md:
+ - app/_api/konnect/api-requests/_index.md
+app/_api/konnect/application-auth-strategies/_index.md:
+ - app/_api/konnect/application-auth-strategies/_index.md
+app/_api/konnect/audit-logs/_index.md:
+ - app/_api/konnect/audit-logs/_index.md
+app/_api/konnect/cloud-gateways/_index.md:
+ - app/_api/konnect/cloud-gateways/_index.md
+app/_api/konnect/control-plane-configuration/_index.md:
+ - app/_api/konnect/control-plane-configuration/_index.md
+app/_api/konnect/control-planes/_index.md:
+ - app/_api/konnect/control-planes/_index.md
+app/_api/konnect/dev-portal/_index.md:
+ - app/_api/konnect-portal/_index.md
+app/_api/konnect/identity-management/_index.md:
+ - app/_api/konnect/identity-management/_index.md
+app/_api/konnect/mesh-manager/_index.md:
+ - app/_api/konnect/mesh-manager/_index.md
+app/_api/konnect/portal/_index.md:
+ - app/_api/konnect/portal/_index.md
+app/_api/konnect/portal-management/_index.md:
+ - app/_api/konnect/portal-management/_index.md
+app/_api/konnect/runtime-groups/_index.md:
+ - app/_api/konnect/runtime-groups/_index.md
+app/_api/konnect/runtime-groups-configuration/_index.md:
+ - app/_api/konnect/runtime-groups-configuration/_index.md
+app/_api/konnect/search/_index.md:
+ - app/_api/konnect/search/_index.md
