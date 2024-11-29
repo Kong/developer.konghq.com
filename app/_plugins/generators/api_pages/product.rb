@@ -15,7 +15,7 @@ module Jekyll
       end
 
       def generate_pages! # rubocop:disable Metrics/AbcSize
-        product['versions'].map do |version|
+        versions.map do |version|
           site.pages << Page.new(product:, version:, file:, site:, frontmatter:).to_jekyll_page
           site.pages << ErrorPage.new(product:, version:, file:, site:, errors:).to_jekyll_page if errors
         end
@@ -69,7 +69,13 @@ module Jekyll
       end
 
       def latest_version
-        @latest_version ||= @product['latestVersion']
+        @latest_version ||= Drops::OAS::Version.new(@product['latestVersion'])
+      end
+
+      def versions
+        @versions ||= product.fetch('versions', []).map do |v|
+          Drops::OAS::Version.new(v)
+        end
       end
     end
   end

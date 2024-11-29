@@ -24,7 +24,7 @@ module Jekyll
         end
 
         def version_segment
-          @version_segment ||= @version.fetch('name')
+          @version_segment ||= @version.to_s
         end
       end
     end
