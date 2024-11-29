@@ -83,7 +83,7 @@ const basePath = window.location.pathname;
 const slideoutTocVisible = ref(false)
 
 const versions = window.versions.map((v) => {
-  return { ...v, selected: v.value === window.location.pathname };
+  return { ...v, selected: v.id === version_id };
 });
 
 onBeforeMount(async () =>  {

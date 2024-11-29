@@ -25,8 +25,12 @@ module Jekyll
                        end
           end
 
+          def id
+            @id ||= @version.id
+          end
+
           def as_json
-            { 'value' => value, 'label' => label }
+            { 'value' => value, 'label' => label, 'id' => id }
           end
         end
 
