@@ -26,7 +26,7 @@ module Jekyll
           'seo_noindex' => true,
           'namespace' => namespace,
           'breadcrumbs' => ['/api/'],
-          'version' => Drops::OAS::Version.new(@version),
+          'version' => @version,
           'versions_dropdown' => Drops::OAS::VersionsDropdown.new(base_url: canonical_url, product:)
         }.merge(@frontmatter)
       end

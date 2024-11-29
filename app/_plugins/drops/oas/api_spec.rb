@@ -34,7 +34,7 @@ module Jekyll
         def as_json
           {
             'product_id' => @product.fetch('id'),
-            'version_id' => @version.fetch('id')
+            'version_id' => @version.id
           }
         end
       end
