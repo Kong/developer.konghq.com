@@ -1,0 +1,10 @@
+{
+    "$id": "schema:plugin",
+    "allOf": [{ "$ref": "schema:base" }],
+    "properties": {
+        "min_version": {
+          "type": "object"
+        }
+    },
+    "required": ["content_type", "title", "description", "min_version", "products", "works_on"]
+  }
