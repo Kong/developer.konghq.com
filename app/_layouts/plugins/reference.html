@@ -1,6 +1,10 @@
 ---
 layout: plugins/base
+plugin_schema: true
 ---
 
 
-Schema goes here
+<div id="schema"></div>
+<script>
+  window.schema = {{ page.schema | jsonify }}
+</script>
