@@ -8,6 +8,9 @@ description: Secure services and routes with Basic Authentication
 tags:
     - authentication
 
+products:
+    - gateway
+
 works_on:
     - on-prem
     - konnect

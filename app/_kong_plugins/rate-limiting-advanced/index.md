@@ -14,6 +14,9 @@ related_resources:
   - text: How to create rate limiting tiers with Rate Limiting Advanced
     url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/how-to/
 
+products:
+    - gateway
+
 works_on:
     - on-prem
     - konnect
