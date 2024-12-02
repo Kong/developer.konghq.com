@@ -33,8 +33,8 @@ module Jekyll
 
         def value
           @value ||= if Gem::Version.correct?(name)
-                       if name.match?(/^(\d+\.\d+\.\d+)\.\d+$/)
-                         name.sub(/^(\d+\.\d+\.\d+)\.\d+$/, '\1')
+                       if name.match?(/^\d+\.\d+\.\d+\.\d+$/)
+                         name.sub(/^(\d+\.\d+)\.\d+\.\d+$/, '\1')
                        else
                          name.sub(/^(\d+\.\d+)\.\d+$/, '\1')
                        end
