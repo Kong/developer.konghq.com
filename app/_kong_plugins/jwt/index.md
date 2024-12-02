@@ -8,6 +8,9 @@ description: Verify and authenticate JSON Web Tokens
 tags:
     - authentication
 
+products:
+    - gateway
+
 works_on:
     - on-prem
     - konnect

@@ -4,9 +4,14 @@ title: AI Rate Limiting Advanced plugin
 name: AI Rate Limiting Advanced
 publisher: kong-inc
 tier: enterprise
+
+products:
+    - gateway
+
 works_on:
     - on-prem
     - konnect
+
 content_type: plugin
 description: Provides rate limiting for the providers used by any AI plugins. 
 tags:
