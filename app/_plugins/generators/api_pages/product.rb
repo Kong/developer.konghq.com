@@ -20,7 +20,7 @@ module Jekyll
           site.pages << page
           site.data['ssg_api_pages'] << page if page.data['canonical?']
 
-          site.pages << ErrorPage.new(product:, version:, file:, site:, errors:).to_jekyll_page if errors
+          site.pages << ErrorPage.new(product:, version:, file:, site:, errors:).to_jekyll_page if errors.any?
         end
       end
 
@@ -28,24 +28,21 @@ module Jekyll
 
       def errors
         @errors ||= begin
-          return [] unless api_spec_path
+          return [] unless api_spec_file.exist?
 
-          oas = YAML.load_file(api_spec_path)
-          raise ArgumentError, "Could not load #{api_spec_path}" unless oas
+          oas = YAML.load_file(api_spec_file.path)
+          raise ArgumentError, "Could not load #{api_spec_file.path}" unless oas
 
-          oas['x-errors']
+          oas.fetch('x-errors', [])
         end
       end
 
-      def api_spec_path
-        @api_spec_path ||= begin
-          return nil unless @frontmatter.fetch('insomnia_link', nil)
-
-          spec_file = CGI.unescape(@frontmatter.fetch('insomnia_link')).split('&uri=')[1].gsub(
-            'https://raw.githubusercontent.com/Kong/developer.konghq.com/main/', ''
-          )
-          File.join(@site.source, '..', spec_file)
-        end
+      def api_spec_file
+        @api_spec_file ||= APISpecFile.new(
+          site:,
+          page_source_file: file,
+          version: latest_version
+        )
       end
 
       def versions
