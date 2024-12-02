@@ -24,6 +24,9 @@ related_resources:
   - text: Rate Limiting Advanced Plugin
     url: /plugins/rate-limiting-advanced/
 
+products:
+  - gateway
+
 works_on:
     - on-prem
     - konnect
