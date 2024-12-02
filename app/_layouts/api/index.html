@@ -66,7 +66,7 @@ layout: default
     </div>
 
     {% assign deprecated_api_specs = site.data.ssg_api_pages | where_exp: "api_page", "api_page.api_spec.deprecated? == true" %}
-    {% if deprecated_api_specs %}
+    {% if deprecated_api_specs != empty %}
         <div class="flex flex-col gap-3">
             <h2>Deprecated</h2>
 
