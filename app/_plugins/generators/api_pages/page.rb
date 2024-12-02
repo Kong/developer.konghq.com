@@ -5,7 +5,7 @@ require_relative './base'
 module Jekyll
   module APIPages
     class Page < Base
-      attr_reader :product
+      attr_reader :product, :version, :site
 
       def initialize(product:, version:, file:, site:, frontmatter:)
         @product = product
@@ -30,10 +30,20 @@ module Jekyll
           'breadcrumbs' => ['/api/'],
           'version' => @version,
           'versions_dropdown' => Drops::OAS::VersionsDropdown.new(base_url:, product:)
+          'insomnia_link' => insomnia_link
         }.merge(@frontmatter)
       end
 
       private
+
+      def insomnia_link
+        @insomnia_link ||= Drops::OAS::InsomniaLink.new(
+          label: api_spec.title,
+          version:,
+          site:,
+          page_relative_path: relative_path.dup
+        )
+      end
 
       def namespace
         @namespace ||= @file.split('/')[1]
