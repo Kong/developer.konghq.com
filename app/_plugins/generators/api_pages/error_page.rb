@@ -21,14 +21,15 @@ module Jekyll
           'layout' => 'api/errors',
           'content_type' => 'reference',
           'canonical_url' => canonical_url,
-          'seo_noindex' => true,
+          'canonical?' => canonical?,
+          'seo_noindex' => seo_noindex,
           'errors' => @errors.map { |k, v| Drops::OAS::Error.new(code: k, values: v) },
           'breadcrumbs' => breadcrumbs
         }
       end
 
       def url_generator
-        @url_generator ||= URLGenerator::Error.new(file:, version:)
+        @url_generator ||= URLGenerator::Error.new(file:, version:, latest_version:)
       end
 
       def breadcrumbs

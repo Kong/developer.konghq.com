@@ -4,10 +4,11 @@ module Jekyll
   module APIPages
     module URLGenerator
       class Error
-        def initialize(file:, version:)
+        def initialize(file:, version:, latest_version:)
           @file = file
           @version = version
-          @api_url = API.new(file:, version:)
+          latest_version = latest_version
+          @api_url = API.new(file:, version:, latest_version:)
         end
 
         def canonical_url

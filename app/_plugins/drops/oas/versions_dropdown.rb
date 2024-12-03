@@ -7,10 +7,9 @@ module Jekyll
         class Option < Liquid::Drop
           attr_reader :version
 
-          def initialize(base_url:, version:, latest:)
+          def initialize(base_url:, version:)
             @base_url = base_url
             @version  = version
-            @latest = latest
           end
 
           def label
@@ -18,11 +17,7 @@ module Jekyll
           end
 
           def value
-            @value ||= if @version == @latest
-                         @base_url
-                       else
-                         "#{@base_url}#{@version}/"
-                       end
+            @value ||= "#{@base_url}#{@version}/"
           end
 
           def id
@@ -43,7 +38,7 @@ module Jekyll
 
         def options
           @options ||= versions.sort.reverse.map do |version|
-            Option.new(base_url:, version:, latest:)
+            Option.new(base_url:, version:)
           end
         end
 
@@ -51,10 +46,6 @@ module Jekyll
           @versions ||= @product.fetch('versions', []).map do |v|
             Version.new(v)
           end
-        end
-
-        def latest
-          @latest ||= Version.new(@product.fetch('latestVersion'))
         end
 
         def hash

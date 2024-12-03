@@ -18,16 +18,18 @@ module Jekyll
       def data # rubocop:disable Metrics/MethodLength
         @data ||= {
           'title' => api_spec.title,
+          'base_url' => base_url,
           'api_spec' => api_spec,
           'description' => api_spec.description,
           'layout' => 'api/spec',
           'content_type' => 'reference',
           'canonical_url' => canonical_url,
-          'seo_noindex' => true,
+          'canonical?' => canonical?,
+          'seo_noindex' => seo_noindex,
           'namespace' => namespace,
           'breadcrumbs' => ['/api/'],
           'version' => @version,
-          'versions_dropdown' => Drops::OAS::VersionsDropdown.new(base_url: canonical_url, product:)
+          'versions_dropdown' => Drops::OAS::VersionsDropdown.new(base_url:, product:)
         }.merge(@frontmatter)
       end
 
@@ -38,7 +40,7 @@ module Jekyll
       end
 
       def url_generator
-        @url_generator ||= URLGenerator::API.new(file:, version:)
+        @url_generator ||= URLGenerator::API.new(file:, version:, latest_version:)
       end
     end
   end
