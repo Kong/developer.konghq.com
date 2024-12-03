@@ -16,12 +16,12 @@ module Jekyll
 
       def generate_pages! # rubocop:disable Metrics/AbcSize
         versions.map do |version|
-          site.pages << Page.new(product:, version:, file:, site:, frontmatter:).to_jekyll_page
+          page = Page.new(product:, version:, file:, site:, frontmatter:).to_jekyll_page
+          site.pages << page
+          site.data['ssg_api_pages'] << page if page.data['canonical?']
+
           site.pages << ErrorPage.new(product:, version:, file:, site:, errors:).to_jekyll_page if errors
         end
-        site.pages << canonical_page
-        site.pages << canonical_error_page if errors
-        site.data['ssg_api_pages'] << canonical_page
       end
 
       private
@@ -46,30 +46,6 @@ module Jekyll
           )
           File.join(@site.source, '..', spec_file)
         end
-      end
-
-      def canonical_page
-        @canonical_page ||= APIPages::CanonicalPage.new(
-          product:,
-          version: latest_version,
-          file:,
-          site:,
-          frontmatter:
-        ).to_jekyll_page
-      end
-
-      def canonical_error_page
-        @canonical_error_page ||= APIPages::CanonicalErrorPage.new(
-          product:,
-          version: latest_version,
-          file:,
-          site:,
-          errors:
-        ).to_jekyll_page
-      end
-
-      def latest_version
-        @latest_version ||= Drops::OAS::Version.new(@product['latestVersion'])
       end
 
       def versions

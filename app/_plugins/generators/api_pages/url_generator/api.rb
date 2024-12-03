@@ -4,17 +4,22 @@ module Jekyll
   module APIPages
     module URLGenerator
       class API
-        def initialize(file:, version:)
+        def initialize(file:, version:, latest_version:)
           @file = file
           @version = version
+          @latest_version = latest_version
+        end
+
+        def base_url
+          @base_url ||= file_to_url
         end
 
         def canonical_url
-          @canonical_url ||= file_to_url
+          @canonical_url ||= "#{base_url}#{@latest_version}/"
         end
 
         def versioned_url
-          @versioned_url ||= "#{canonical_url}#{version_segment}/"
+          @versioned_url ||= "#{base_url}#{version_segment}/"
         end
 
         def file_to_url

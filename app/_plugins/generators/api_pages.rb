@@ -43,7 +43,7 @@ module Jekyll
     def set_konnect_product_ids
       @site.data['konnect_product_ids'] = {}
       @site.data['ssg_api_pages'].each do |api|
-        @site.data['konnect_product_ids'][api.url] = api.data.fetch('konnect_product_id')
+        @site.data['konnect_product_ids'][api.data['base_url']] = api.data.fetch('konnect_product_id')
       end
     end
   end
