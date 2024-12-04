@@ -13,7 +13,7 @@ works_on:
     - konnect
 
 min_version:
-  gateway: 3.7
+  gateway: '3.7'
 
 content_type: plugin
 description: Provides rate limiting for the providers used by any AI plugins. 

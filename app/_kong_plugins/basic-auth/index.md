@@ -16,7 +16,7 @@ works_on:
     - konnect
 
 min_version:
-    gateway: 2.8
+    gateway: '2.8'
 ---
 
 ## Overview
