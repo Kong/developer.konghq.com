@@ -16,6 +16,7 @@ module Jekyll
 
         def data
           super
+            .except('faqs')
             .merge(metadata)
             .merge('reference?' => true)
         end
