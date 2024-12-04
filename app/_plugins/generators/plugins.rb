@@ -5,7 +5,7 @@ module Jekyll
     priority :high
 
     def generate(site)
-      site.data['kong_plugins'] ||= {};
+      site.data['kong_plugins'] ||= {}
       Jekyll::PluginPages::Generator.run(site)
     end
   end
