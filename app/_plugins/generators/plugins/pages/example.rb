@@ -15,10 +15,12 @@ module Jekyll
         end
 
         def data
-          super.merge(
-            'example?' => true,
-            'example' => example
-          )
+          super
+            .except('faqs')
+            .merge(
+              'example?' => true,
+              'example' => example
+            )
         end
 
         def layout
