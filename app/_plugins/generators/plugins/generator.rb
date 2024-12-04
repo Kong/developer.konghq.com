@@ -3,7 +3,7 @@
 module Jekyll
   module PluginPages
     class Generator
-      PLUGINS_FOLDER = '_kong_plugins'.freeze
+      PLUGINS_FOLDER = '_kong_plugins'
 
       def self.run(site)
         Dir.glob(File.join(site.source, "#{PLUGINS_FOLDER}/*/")).each do |folder|

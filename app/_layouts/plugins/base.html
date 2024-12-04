@@ -15,6 +15,9 @@ uses: false
           <li class="px-4 py-3 {% if page.reference? %}  border-b-2 border-brand {% endif %}">
             <a class="text-primary" href="/plugins/{{page.slug}}/reference/">Configuration Reference</a>
           </li>
+          <li class="px-4 py-3 {% if page.changelog? %}  border-b-2 border-brand {% endif %}">
+            <a class="text-primary" href="/plugins/{{page.slug}}/changelog/">Changelog</a>
+          </li>
           <li class="px-4 py-3">
             <a class="text-primary" href="#">How-to Guides</a>
           </li>
