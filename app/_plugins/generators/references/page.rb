@@ -31,7 +31,7 @@ module Jekyll
                        .merge(
                          'release' => @release,
                          'seo_noindex' => true,
-                         'latest?' => false
+                         'canonical?' => url == @page.data['canonical_url']
                        )
       end
 
