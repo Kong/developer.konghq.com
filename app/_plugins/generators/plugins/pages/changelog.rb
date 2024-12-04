@@ -15,7 +15,9 @@ module Jekyll
         end
 
         def data
-          super.merge(metadata, 'changelog?' => true)
+          super
+            .except('faqs')
+            .merge(metadata, 'changelog?' => true)
         end
 
         def metadata
