@@ -1,8 +1,7 @@
-{% assign protocols = 'grpc,grpcs,http,https' | split: ',' %}
 <div class="flex flex-col gap-2  w-full">
   <div class="text-primary font-medium">Compatible Protocols</div>
   <div class="flex gap-1.5 flex-col md:flex-row">
-    {% for protocol in protocols %}
+    {% for protocol in include.protocols %}
     <span {% unless forloop.last %}class="after:content-[',']"{% endunless %}>{{ protocol }}</span>
     {% endfor %}
   </div>
