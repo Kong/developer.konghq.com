@@ -9,7 +9,7 @@ app/_api/gateway/status/_index.md:
  - app/_api/gateway/status/_index.md
 app/_api/konnect/api-products/_index.md:
  - app/_api/konnect/api-products/_index.md
-app/_api/konnect/api-requests/_index.md:
+app/_api/konnect/analytics-requests/_index.md:
  - app/_api/konnect/api-requests/_index.md
 app/_api/konnect/application-auth-strategies/_index.md:
  - app/_api/konnect/application-auth-strategies/_index.md
