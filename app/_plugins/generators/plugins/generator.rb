@@ -19,7 +19,7 @@ module Jekyll
         Dir.glob(File.join(site.source, "#{PLUGINS_FOLDER}/*/")).each do |folder|
           slug = folder.gsub("#{site.source}/#{PLUGINS_FOLDER}/", '').chomp('/')
 
-          generate_pages(Jekyll::PluginPages::Plugin.new(site:, folder:, slug:))
+          generate_pages(Jekyll::PluginPages::Plugin.new(folder:, slug:))
         end
       end
 
@@ -32,7 +32,7 @@ module Jekyll
 
       def generate_overview_page(plugin)
         overview = Jekyll::PluginPages::Pages::Overview
-                   .new(site:, plugin:, file: File.join(plugin.folder, 'index.md'))
+                   .new(plugin:, file: File.join(plugin.folder, 'index.md'))
                    .to_jekyll_page
 
         site.data['kong_plugins'][plugin.slug] = overview
@@ -41,7 +41,7 @@ module Jekyll
 
       def generate_reference_page(plugin)
         reference = Jekyll::PluginPages::Pages::Reference
-                    .new(site:, plugin:, file: File.join(plugin.folder, 'reference.yaml'))
+                    .new(plugin:, file: File.join(plugin.folder, 'reference.yaml'))
                     .to_jekyll_page
 
         site.pages << reference
@@ -49,7 +49,7 @@ module Jekyll
 
       def generate_changelog_page(plugin)
         changelog = Jekyll::PluginPages::Pages::Changelog
-                    .new(site:, plugin:, file: File.join(plugin.folder, 'changelog.md'))
+                    .new(plugin:, file: File.join(plugin.folder, 'changelog.md'))
                     .to_jekyll_page
 
         site.pages << changelog
@@ -58,7 +58,7 @@ module Jekyll
       def generate_example_pages(plugin)
         plugin.example_files.each do |example_file|
           example = Jekyll::PluginPages::Pages::Example
-                    .new(site:, plugin:, file: example_file)
+                    .new(plugin:, file: example_file)
                     .to_jekyll_page
 
           site.pages << example
