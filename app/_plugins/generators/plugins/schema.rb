@@ -25,6 +25,10 @@ module Jekyll
         schema
       end
 
+      def compatible_protocols
+        @compatible_protocols ||= schema.dig('properties', 'protocols', 'items', 'enum')
+      end
+
       private
 
       def schema

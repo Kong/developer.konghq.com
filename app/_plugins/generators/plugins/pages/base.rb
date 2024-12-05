@@ -30,7 +30,8 @@ module Jekyll
             'layout' => layout,
             'examples' => examples,
             'tools' => @plugin.formats,
-            'breadcrumbs' => ['/plugins/']
+            'breadcrumbs' => ['/plugins/'],
+            'compatible_protocols' => compatible_protocols
           )
         end
 
@@ -38,7 +39,15 @@ module Jekyll
           @relative_path = file.gsub("#{site.source}/", '')
         end
 
+        def compatible_protocols
+          @compatible_protocols ||= schema.compatible_protocols
+        end
+
         private
+
+        def schema
+          @schema ||= @plugin.schema
+        end
 
         def examples
           @examples ||= @plugin.example_files.map do |file|
