@@ -1,19 +1,19 @@
 {% if include.render_context %}
 {% case include.presenter.entity_type %}
 {% when 'consumer' %}
-  To create a consumer, call the [Admin API’s /consumers endpoint](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Consumers/create-consumer).
+  To create a consumer, call the [Admin API’s /consumers endpoint](/api/gateway/admin-ee/#/operations/create-consumer).
 {% when 'consumer_group' %}
-  To create a consumer group, call the [Admin API’s /consumer_groups endpoint](https://docs.konghq.com/gateway/api/admin-ee/latest/#/consumer_groups/post-consumer_groups).
+  To create a consumer group, call the [Admin API’s /consumer_groups endpoint](/api/gateway/admin-ee/#/operations/post-consumer_groups).
 {% when 'route' %}
-  To create a route, call the [Admin API’s /routes endpoint](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Routes/create-route).
+  To create a route, call the [Admin API’s /routes endpoint](/api/gateway/admin-ee/#/operations/create-route).
 {% when 'service' %}
-  To create a service, call the [Admin API’s /services endpoint](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Services/create-service).
+  To create a service, call the [Admin API’s /services endpoint](/api/gateway/admin-ee/#/operations/create-service).
 {% when 'target' %}
-  To create a target, call the [Admin API’s /targets endpoint](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Targets).
+  To create a target, call the [Admin API’s /targets endpoint](/api/gateway/admin-ee/#/operations/create-target-with-upstream).
 {% when 'upstream' %}
-  To create a upstream, call the [Admin API’s /upstreams endpoint](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Upstreams/create-upstream).
+  To create a upstream, call the [Admin API’s /upstreams endpoint](/api/gateway/admin-ee/#/operations/create-upstream).
 {% when workspace %}
-  To create a workspace, call the [Admin API’s /workspaces endpoint](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Workspaces/create-workspace).
+  To create a workspace, call the [Admin API’s /workspaces endpoint](/api/gateway/admin-ee/#/operations/create-workspace).
 {% when 'plugin' %}
   Make the following request:
 {% else %}

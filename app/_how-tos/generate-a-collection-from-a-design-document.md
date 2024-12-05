@@ -16,7 +16,7 @@ prereqs:
   inline:
     - title: Create an API specification
       content: |
-        You can either [create an empty document](/how-to/create-a-design-document/) and design your specification from scratch, or [import an existing specification](/how-to/import-an-api-spec-as-a-document/). This example uses the [Konnect API Products specification](https://docs.konghq.com/konnect/api/api-products/latest/). Make sure that the specification doesn't have any errors, otherwise the collection can't be generated.
+        You can either [create an empty document](/how-to/create-a-design-document/) and design your specification from scratch, or [import an existing specification](/how-to/import-an-api-spec-as-a-document/). This example uses the [Konnect API Products specification](/api/konnect/api-products/). Make sure that the specification doesn't have any errors, otherwise the collection can't be generated.
       icon_url: /assets/icons/insomnia/design.svg
 
 ---
@@ -45,6 +45,6 @@ If the operations in the API spec have tags, the requests are organized into fol
 
 ## 3. Send requests
 
-If the necessary environment variables are set, you can send a request right away. In this example using the [Konnect API Products specification](https://docs.konghq.com/konnect/api/api-products/latest/), we can send the *List API Products* request with only the base URL and Bearer token defined:
+If the necessary environment variables are set, you can send a request right away. In this example using the [Konnect API Products specification](/api/konnect/api-products/), we can send the *List API Products* request with only the base URL and Bearer token defined:
 
 ![Insomnia request with 200 status code](/assets/images/insomnia/generate-collection-request.png)

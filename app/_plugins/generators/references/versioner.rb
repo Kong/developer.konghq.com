@@ -41,7 +41,7 @@ module Jekyll
             'canonical_url' => "#{page.url}#{max_version}/"
           )
         else
-          page.data.merge!('canonical_url' => page.url)
+          page.data.merge!('canonical_url' => page.url, 'canonical?' => true)
         end
       end
 

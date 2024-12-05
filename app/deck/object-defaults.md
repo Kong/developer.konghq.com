@@ -95,7 +95,7 @@ schema value must be `false`. If set to `true`, deck returns a schema
 violation error.
 
 For documentation on all available properties, see the
-[Route object](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Routes/list-route/) documentation.
+[Route object](/api/gateway/admin-ee/#/operations/list-route/) documentation.
 
 {% endnavtab %}
 {% navtab "Service" %}
@@ -122,7 +122,7 @@ _info:
 ```
 
 For documentation on all available properties, see the
-[Service object](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Services) documentation.
+[Service object](/api/gateway/admin-ee/#/operations/list-service) documentation.
 
 {% endnavtab %}
 {% navtab "Upstream" %}
@@ -208,7 +208,7 @@ _info:
 ```
 
 For documentation on all available properties, see the
-[Upstream object](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Upstreams/list-upstream/) documentation.
+[Upstream object](/api/gateway/admin-ee/#/operations/list-upstream/) documentation.
 
 {% endnavtab %}
 {% navtab "Target" %}
@@ -229,7 +229,7 @@ _info:
       weight: 100
 ```
 For all available properties, see the
-[Target object](https://docs.konghq.com/gateway/api/admin-ee/latest/#/Targets/list-target-with-upstream/) documentation.
+[Target object](/api/gateway/admin-ee/#/operations/list-target-with-upstream/) documentation.
 
 {% endnavtab %}
 {% navtab "Plugins" %}

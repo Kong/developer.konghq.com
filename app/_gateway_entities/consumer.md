@@ -10,7 +10,7 @@ related_resources:
   - text: Authentication reference
     url: https://docs.konghq.com/gateway/latest/kong-plugins/authentication/reference/
   - text: Consumer groups API reference
-    url: https://docs.konghq.com/gateway/api/admin-ee/latest/#/consumer_groups
+    url: /api/gateway/admin-ee/#/operations/get-consumer_groups
   - text: Plugins that can be enabled on consumers
     url: https://docs.konghq.com/hub/plugins/compatibility/#scopes
 
@@ -70,14 +70,14 @@ tools:
 
 api_specs:
     - text: Gateway Admin - EE
-      url: 'https://docs.konghq.com/gateway/api/admin-ee/latest/#/Consumers'
-      insomnia_link: 'https://insomnia.rest/run/?label=Gateway%20Admin%20Enterprise%20API&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdocs.konghq.com%2Fmain%2Fapi-specs%2FGateway-EE%2Flatest%2Fkong-ee.yaml'
+      url: '/api/gateway/admin-ee/#/operations/list-consumer'
+      insomnia_link: 'https://insomnia.rest/run/?label=Gateway%20Admin%20Enterprise%20API&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2FGateway-EE%2Flatest%2Fkong-ee.yaml'
     - text: Gateway Admin - OSS
-      url: 'https://docs.konghq.com/gateway/api/admin-oss/latest/#/Consumers'
-      insomnia_link: 'https://insomnia.rest/run/?label=Gateway%20Admin%20OSS%20API&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdocs.konghq.com%2Fmain%2Fapi-specs%2FGateway-OSS%2Flatest%2Fkong-oss.yaml'
+      url: '/api/gateway/admin-oss/#/operations/list-consumer'
+      insomnia_link: 'https://insomnia.rest/run/?label=Gateway%20Admin%20OSS%20API&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2FGateway-OSS%2Flatest%2Fkong-oss.yaml'
     - text: Konnect Control Planes Config
-      url: 'https://docs.konghq.com/konnect/api/control-plane-configuration/latest/#/Consumers'
-      insomnia_link: 'https://insomnia.rest/run/?label=Konnect%20Control%20Plane%20Config&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdocs.konghq.com%2Fmain%2Fapi-specs%2FKonnect%2Fcontrol-planes-config%2Fcontrol-planes-config.yaml'
+      url: '/api/konnect/control-planes-config/#/operations/list-consumer'
+      insomnia_link: 'https://insomnia.rest/run/?label=Konnect%20Control%20Plane%20Config&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2FKonnect%2Fcontrol-planes-config%2Fcontrol-planes-config.yaml'
 
 schema:
     api: gateway/admin-ee

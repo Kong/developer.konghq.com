@@ -1,7 +1,7 @@
 name: Linting
 on:
   pull_request:
-    types: [synchronize, ready_for_review, opened]
+    types: [synchronize, ready_for_review, opened, labeled]
 concurrency:
   cancel-in-progress: true
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}

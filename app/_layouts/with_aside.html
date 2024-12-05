@@ -40,9 +40,11 @@ layout: default
             </div>
         {% endifhascontent %}
 
+        {% ifhascontent info_box %}
         <div class="flex flex-col rounded-md p-5 gap-5 bg-secondary shadow-primary w-full">
             {% contentblock info_box %}
         </div>
+        {% endifhascontent %}
 
         {% if page.toc != false %}
         <div class="flex flex-col w-full sticky top-[96px] items-baseline">

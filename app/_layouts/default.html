@@ -37,13 +37,17 @@
     {% if layout.entity_schema %}
       {% vite_javascript_tag entity_schema %}
     {% endif %}
+
+    {% if layout.api_spec %}
+      {% vite_javascript_tag api_spec %}
+    {% endif %}
   </head>
 
   <body class="bg-primary leading-6 h-full">
     <div class="min-h-full flex flex-col">
       {% include_cached header.html %}
 
-    <div class="flex px-5 md:px-8 2xl:px-[156px] 2xl:mx-auto max-w-screen-2xl flex-1 w-full">
+    <div class="flex px-5 md:px-8 2xl:px-[156px] 2xl:mx-auto {% unless layout.api_spec == true %}max-w-screen-2xl{% endunless %} flex-1 w-full">
       {{ content }}
     </div>
 
