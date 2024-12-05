@@ -37,7 +37,7 @@ module Jekyll
       end
 
       def <=>(other)
-        @release_hash['release'] <=> other['release']
+        Gem::Version.new(@release_hash['release']) <=> Gem::Version.new(other['release'])
       end
 
       def [](key)
