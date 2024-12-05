@@ -17,7 +17,7 @@ app/_api/konnect/audit-logs/_index.md:
  - app/_api/konnect/audit-logs/_index.md
 app/_api/konnect/cloud-gateways/_index.md:
  - app/_api/konnect/cloud-gateways/_index.md
-app/_api/konnect/control-plane-configuration/_index.md:
+app/_api/konnect/control-planes-config/_index.md:
  - app/_api/konnect/control-plane-configuration/_index.md
 app/_api/konnect/control-planes/_index.md:
  - app/_api/konnect/control-planes/_index.md
