@@ -19,7 +19,7 @@ prereqs:
     content: |
       This tutorial requires a collection with at least one request. 
       
-      In this example, we'll use the [Konnect Identity Management API](/api/konnect/identity-management/). For this, you'll need personal access token and a system account ID.
+      In this example, we'll use the [Konnect Identity Management API](/api/konnect/identity/). For this, you'll need personal access token and a system account ID.
     icon_url: /assets/icons/menu.svg
 cleanup:
   inline:
@@ -30,9 +30,9 @@ cleanup:
 
 ## 1. Configure the request
 
-In this example, we want to generate a token for a {{site.konnect_short_name}} system account and set it as an environment variable. We first need to configure the [Create System Account Access Token](/api/konnect/identity-management/#/operations/post-system-accounts-id-access-tokens) request to generate the token.
+In this example, we want to generate a token for a {{site.konnect_short_name}} system account and set it as an environment variable. We first need to configure the [Create System Account Access Token](/api/konnect/identity/#/operations/post-system-accounts-id-access-tokens) request to generate the token.
 
-If you imported the [Konnect Identity Management API](/api/konnect/identity-management/) specification into a new collection, most of the parameters are already set.
+If you imported the [Konnect Identity Management API](/api/konnect/identity/) specification into a new collection, most of the parameters are already set.
 
 1. Click **Base Environment**, then click the **OpenAPI env global.api.konghq.com** sub environment to use its variables.
 1. Click the pencil icon to update the environment if needed. For this example, you need to:

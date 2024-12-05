@@ -1,14 +1,14 @@
 {% case include.presenter.entity_type %}
 {% when 'consumer' %}
-  To create a consumer, call the Konnect [control plane config API’s /consumers endpoint](/api/konnect/control-plane-configuration/#/operations/create-consumer). 
+  To create a consumer, call the Konnect [control plane config API’s /consumers endpoint](/api/konnect/control-planes-config/#/operations/create-consumer). 
 {% when 'consumer_group' %}
-  To create a consumer group, call the Konnect [control plane config API’s /consumer_groups endpoint](/api/konnect/control-plane-configuration/#/operations/create-consumer_group).
+  To create a consumer group, call the Konnect [control plane config API’s /consumer_groups endpoint](/api/konnect/control-planes-config/#/operations/create-consumer_group).
 {% when 'route' %}
-  To create a route, call the Konnect [control plane config API's /routes endpoint](/api/konnect/control-plane-configuration/#/operations/create-route).
+  To create a route, call the Konnect [control plane config API's /routes endpoint](/api/konnect/control-planes-config/#/operations/create-route).
 {% when 'service' %}
-  To create a service, call the Konnect [control plane config API’s /services endpoint](/api/konnect/control-plane-configuration/#/operations/create-service).
+  To create a service, call the Konnect [control plane config API’s /services endpoint](/api/konnect/control-planes-config/#/operations/create-service).
 {% when 'target' %}
-  To create a target, call the Konnect [control plane config API’s /targets endpoint](/api/konnect/control-plane-configuration/#/operations/create-target-with-upstream). 
+  To create a target, call the Konnect [control plane config API’s /targets endpoint](/api/konnect/control-planes-config/#/operations/create-target-with-upstream). 
 {% when 'upstream' %}
   The following creates a new upstream called **{{ include.presenter.data['name'] }}**:
 {% when workspace %}
