@@ -23,6 +23,10 @@ module Jekyll
         @release_hash['ee-version'].sub(/^(\d+\.\d+)\.\d+.*$/, '\1.0.0')
       end
 
+      def number
+        @number ||= @release_hash['release']
+      end
+
       def to_str
         if @release_hash.key?('label')
           @release_hash['label']

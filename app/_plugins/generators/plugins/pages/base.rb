@@ -1,19 +1,22 @@
 # frozen_string_literal: true
 
+require_relative '../../../lib/site_accessor'
+
 module Jekyll
   module PluginPages
     module Pages
       class Base
+        include Jekyll::SiteAccessor
+
         attr_reader :file
 
-        def initialize(site:, plugin:, file:)
-          @site   = site
+        def initialize(plugin:, file:)
           @plugin = plugin
           @file   = file
         end
 
         def to_jekyll_page
-          CustomJekyllPage.new(site: @site, page: self)
+          CustomJekyllPage.new(site:, page: self)
         end
 
         def dir
@@ -22,7 +25,7 @@ module Jekyll
 
         def data
           @plugin.metadata.merge(
-            'slug'   => @plugin.slug,
+            'slug' => @plugin.slug,
             'plugin?' => true,
             'layout' => layout,
             'examples' => examples,
@@ -32,7 +35,7 @@ module Jekyll
         end
 
         def relative_path
-          @relative_path = file.gsub("#{@site.source}/", "")
+          @relative_path = file.gsub("#{site.source}/", '')
         end
 
         private
@@ -41,7 +44,7 @@ module Jekyll
           @examples ||= @plugin.example_files.map do |file|
             Drops::PluginConfigExample.new(
               file: file,
-              plugin: @plugin,
+              plugin: @plugin
             )
           end
         end
