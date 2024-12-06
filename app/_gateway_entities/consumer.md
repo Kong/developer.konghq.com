@@ -71,7 +71,7 @@ tools:
 api_specs:
     - gateway/admin-oss
     - gateway/admin-ee
-    - konnect/control-plane-configuration
+    - konnect/control-planes-config
 
 schema:
     api: gateway/admin-ee

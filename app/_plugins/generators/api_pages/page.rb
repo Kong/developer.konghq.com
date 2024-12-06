@@ -29,7 +29,7 @@ module Jekyll
           'namespace' => namespace,
           'breadcrumbs' => ['/api/'],
           'version' => @version,
-          'versions_dropdown' => Drops::OAS::VersionsDropdown.new(base_url:, product:)
+          'versions_dropdown' => Drops::OAS::VersionsDropdown.new(base_url:, product:),
           'insomnia_link' => insomnia_link
         }.merge(@frontmatter)
       end
