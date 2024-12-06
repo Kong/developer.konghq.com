@@ -41,7 +41,7 @@ module Jekyll
         @api_spec_file ||= APISpecFile.new(
           site:,
           page_source_file: file,
-          version: latest_version
+          version: Drops::OAS::Version.new(@product.fetch('latestVersion'))
         )
       end
 

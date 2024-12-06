@@ -31,7 +31,7 @@ module Jekyll
         site
           .data
           .fetch('ssg_api_pages', [])
-          .detect { |page| page.url == "/api/#{spec}/" }
+          .detect { |page| page.data['base_url'] == "/api/#{spec}/" }
       end
     end
   end
