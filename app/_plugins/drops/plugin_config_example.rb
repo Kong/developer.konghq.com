@@ -30,15 +30,17 @@ module Jekyll
 
       def entity_examples
         @entity_examples ||= @plugin.targets.map do |target|
-          EntityExampleBlock::Plugin.new(example: {
-            'type' => 'plugin',
-            'data' => {
-              'name'   => plugin_slug,
-              target   => nil,
-              'config' => config
-            },
-            'formats' => formats
-          }).to_drop
+          EntityExampleBlock::Plugin.new(
+            example: {
+              'type' => 'plugin',
+              'data' => {
+                'name' => plugin_slug,
+                target => nil,
+                'config' => config
+              },
+              'formats' => formats
+            }
+          ).to_drop
         end
       end
 
