@@ -6,5 +6,5 @@
           "type": "object"
         }
     },
-    "required": ["content_type", "title", "description", "min_version", "products", "works_on"]
+    "required": ["content_type", "title", "description", "products", "works_on"]
   }

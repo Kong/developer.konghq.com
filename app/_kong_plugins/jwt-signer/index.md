@@ -15,8 +15,6 @@ products:
 works_on:
     - on-prem
 
-min_version:
-    gateway: '2.8'
 
 # topologies:
 #    - hybrid
