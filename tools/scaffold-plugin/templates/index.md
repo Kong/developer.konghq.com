@@ -17,7 +17,7 @@ products:
 #     - konnect
 
 # min_version:
-#     gateway: '2.8'
+#     gateway: '3.4'
 
 # topologies:
 #    - hybrid
