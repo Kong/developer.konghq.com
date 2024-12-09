@@ -29,13 +29,10 @@ module Jekyll
         page.data.merge!('base_url' => page.url)
       end
 
-      def set_release_info! # rubocop:disable Metrics/AbcSize
+      def set_release_info!
         return if page.data['no_version']
 
-        unless latest_release_in_range
-          raise ArgumentError,
-                "Missing release for page: #{page.url} in site.data.#{releases_key.join('.')}"
-        end
+        raise ArgumentError, "Missing release for page: #{page.url}" unless latest_release_in_range
 
         page.data.merge!(
           'release' => latest_release_in_range,
