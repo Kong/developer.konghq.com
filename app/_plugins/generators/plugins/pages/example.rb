@@ -19,7 +19,8 @@ module Jekyll
             .except('faqs')
             .merge(
               'example?' => true,
-              'example' => example
+              'example' => example,
+              'examples' => examples
             )
         end
 
@@ -29,6 +30,15 @@ module Jekyll
 
         def example
           @example ||= examples.detect { |e| e.file == @file }
+        end
+
+        def examples
+          @examples ||= @plugin.example_files.map do |file|
+            Drops::PluginConfigExample.new(
+              file: file,
+              plugin: @plugin
+            )
+          end
         end
       end
     end
