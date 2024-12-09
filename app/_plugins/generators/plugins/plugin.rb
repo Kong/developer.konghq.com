@@ -8,7 +8,8 @@ module Jekyll
       extend Forwardable
       include Jekyll::SiteAccessor
 
-      def_delegators :@release_info, :releases, :latest_available_release, :latest_release_in_range
+      def_delegators :@release_info, :releases, :latest_available_release,
+                     :latest_release_in_range, :unreleased?
 
       attr_reader :folder, :slug
 

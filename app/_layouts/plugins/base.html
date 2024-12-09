@@ -10,13 +10,13 @@ uses: false
       <div class="flex justify-between items-center text-sm">
         <ul class="list-none flex align-bottom ml-0 flex-row gap-0">
           <li class="px-4 py-3 {% if page.overview? %}  border-b-2 border-brand {% endif %}">
-            <a class="text-primary" href="/plugins/{{page.slug}}/">Overview</a>
+            <a class="text-primary" href="{{page.overview_url}}">Overview</a>
           </li>
           <li class="px-4 py-3 {% if page.reference? %}  border-b-2 border-brand {% endif %}">
-            <a class="text-primary" href="/plugins/{{page.slug}}/reference/">Configuration Reference</a>
+            <a class="text-primary" href="{{page.reference_url}}">Configuration Reference</a>
           </li>
           <li class="px-4 py-3 {% if page.changelog? %}  border-b-2 border-brand {% endif %}">
-            <a class="text-primary" href="/plugins/{{page.slug}}/changelog/">Changelog</a>
+            <a class="text-primary" href="{{page.changelog_url}}">Changelog</a>
           </li>
           <li class="px-4 py-3">
             <a class="text-primary" href="#">How-to Guides</a>
