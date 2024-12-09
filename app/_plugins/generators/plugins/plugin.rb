@@ -26,8 +26,13 @@ module Jekyll
       end
 
       def targets
-        # TODO: pull targets from the schema when we have them
-        @targets = %w[consumer consumer_group service global route]
+        @targets ||= begin
+          targets = %w[consumer consumer_group service route].select do |t|
+            schema.to_json.dig('properties', t)
+          end
+          targets << 'global' if global?
+          targets.sort
+        end
       end
 
       def formats
@@ -44,6 +49,12 @@ module Jekyll
 
       def schemas
         @schemas ||= Schema.all(plugin: self)
+      end
+
+      def global?
+        return @global if defined? @global
+
+        @global = metadata.fetch('global', true)
       end
 
       private
