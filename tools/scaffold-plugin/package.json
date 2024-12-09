@@ -1,0 +1,15 @@
+{
+    "name": "scaffold-plugin",
+    "version": "1.0.0",
+    "description": "Scaffold a new plugin.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "type": "module",
+    "keywords": [],
+    "license": "MIT",
+    "dependencies": {
+        "minimist": "^1.2.8"
+    }
+}
