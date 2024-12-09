@@ -21,7 +21,7 @@ module Jekyll
         @plugin_slug = plugin_slug
       end
 
-      def as_json
+      def to_json(*_args)
         schema
       end
 

@@ -8,7 +8,7 @@ module Jekyll
       extend Forwardable
       include Jekyll::SiteAccessor
 
-      def_delegators :@release_info, :releases, :latest_available_release
+      def_delegators :@release_info, :releases, :latest_available_release, :latest_release_in_range
 
       attr_reader :folder, :slug
 
@@ -39,14 +39,14 @@ module Jekyll
       end
 
       def schema
-        @schema ||= schemas.detect { |s| s.release == latest_available_release }
+        @schema ||= schemas.detect { |s| s.release == latest_release_in_range }
       end
-
-      private
 
       def schemas
         @schemas ||= Schema.all(plugin: self)
       end
+
+      private
 
       def release_info
         ReleaseInfo::Product.new(

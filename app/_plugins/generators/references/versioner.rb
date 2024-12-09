@@ -62,7 +62,7 @@ module Jekyll
         return [] if @page.data['no_version']
 
         releases.map do |release|
-          Page.new(site:, page:, release:).to_jekyll_page
+          Page::Base.make_for(site:, page:, release:).to_jekyll_page
         end
       end
 
