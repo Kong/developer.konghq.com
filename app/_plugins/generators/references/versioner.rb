@@ -44,9 +44,11 @@ module Jekyll
         )
       end
 
-      def handle_canonicals! # rubocop:disable Metrics/AbcSize
-        # Setting published: false prevents Jekyll from rendering the page.
-        if min_release && min_release > latest_available_release
+      def handle_canonicals! # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+        if page.data['no_version']
+          page.data.merge!('canonical_url' => page.url, 'canonical?' => true)
+        elsif min_release && min_release > latest_available_release
+          # Setting published: false prevents Jekyll from rendering the page.
           page.data.merge!('published' => false)
         elsif max_release && max_release < latest_available_release
           page.data.merge!(
