@@ -30,6 +30,10 @@ module Jekyll
         end
       end
 
+      def unreleased?
+        latest_release_in_range != latest_available_release
+      end
+
       private
 
       def min_version

@@ -6,8 +6,8 @@ module Jekyll
   module PluginPages
     module Pages
       class Reference < Base
-        def url
-          @url ||= "/plugins/#{@plugin.slug}/reference/"
+        def self.url(slug)
+          "/plugins/#{slug}/reference/"
         end
 
         def content

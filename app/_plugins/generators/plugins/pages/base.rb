@@ -32,7 +32,10 @@ module Jekyll
             'breadcrumbs' => ['/plugins/'],
             'compatible_protocols' => compatible_protocols,
             'schema' => schema.to_json,
-            'plugin' => @plugin
+            'plugin' => @plugin,
+            'overview_url' => Overview.url(@plugin.slug),
+            'changelog_url' => Changelog.url(@plugin.slug),
+            'reference_url' => reference_url
           )
         end
 
@@ -44,7 +47,18 @@ module Jekyll
           @compatible_protocols ||= schema.compatible_protocols
         end
 
+        def url
+          @url ||= self.class.url(@plugin.slug)
+        end
+
         private
+
+        def reference_url
+          base_url = Reference.url(@plugin.slug)
+          return base_url unless @plugin.unreleased?
+
+          "#{base_url}#{@plugin.latest_release_in_range}/"
+        end
 
         def schema
           @schema ||= @plugin.schema
