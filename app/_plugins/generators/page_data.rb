@@ -2,7 +2,7 @@
 
 module Jekyll
   class PageDataGenerator < Generator
-    priority :low
+    priority :lowest
 
     def generate(site)
       site.pages.each do |page|
