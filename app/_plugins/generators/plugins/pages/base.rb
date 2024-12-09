@@ -28,7 +28,6 @@ module Jekyll
             'slug' => @plugin.slug,
             'plugin?' => true,
             'layout' => layout,
-            'examples' => examples,
             'tools' => @plugin.formats,
             'breadcrumbs' => ['/plugins/'],
             'compatible_protocols' => compatible_protocols,
@@ -49,15 +48,6 @@ module Jekyll
 
         def schema
           @schema ||= @plugin.schema
-        end
-
-        def examples
-          @examples ||= @plugin.example_files.map do |file|
-            Drops::PluginConfigExample.new(
-              file: file,
-              plugin: @plugin
-            )
-          end
         end
       end
     end
