@@ -1,0 +1,93 @@
+metadata:
+  title: Changelogs
+  breadcrumbs:
+    - /changelogs/
+  description: A list of all changelogs for all products and platforms.
+
+rows:
+  - header:
+      type: h1
+      text: "Kong changelogs"
+  - header:
+      type: h2
+      text: Platforms
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Kong Gateway Enterprise
+            icon: /assets/icons/gateway.svg
+            cta:
+              url: /changelogs/kong-ee/
+      - blocks:
+        - type: card
+          config:
+            title: Kong Gateway Open Source
+            icon: /assets/icons/gateway.svg
+            cta:
+              url: /changelogs/kong-ee/
+      - blocks:
+        - type: card
+          config:
+            title: Kong Konnect
+            icon: /assets/icons/gateway.svg
+            url: https://docs.konghq.com/hub/?category=authentication
+
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tags:
+                - rate-limiting
+                - rate-limiting-advanced
+              products:
+                - gateway
+              quantity: 6
+              allow_empty: true
+
+  - header:
+      type: h2
+      text: "Specialized Rate Limiting Plugins"
+    columns:
+      - blocks:
+          - type: plugin
+            config:
+              slug: ai-rate-limiting-advanced
+
+          - type: how_to_list
+            config:
+              tags:
+                - ai-rate-limiting-advanced
+              products:
+                - gateway
+              quantity: 3
+              allow_empty: true
+
+      - blocks:
+          - type: plugin
+            config:
+              slug: graphql-rate-limiting-advanced
+          - type: how_to_list
+            config:
+              tags:
+                - graphql-rate-limiting-advanced
+              products:
+                - gateway
+              quantity: 3
+              allow_empty: true
+
+      - blocks:
+          - type: plugin
+            config:
+              slug: response-ratelimiting
+          - type: how_to_list
+            config:
+              tags:
+                - response-ratelimiting
+              products:
+                - gateway
+              quantity: 3
+              allow_empty: true
