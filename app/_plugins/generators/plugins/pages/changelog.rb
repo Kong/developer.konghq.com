@@ -6,8 +6,8 @@ module Jekyll
   module PluginPages
     module Pages
       class Changelog < Base
-        def url
-          @url ||= "/plugins/#{@plugin.slug}/changelog/"
+        def self.url(slug)
+          "/plugins/#{slug}/changelog/"
         end
 
         def content
