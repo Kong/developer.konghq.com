@@ -3,7 +3,6 @@ title: Response Rate Limiting plugin
 
 name: Response Rate Limiting
 publisher: kong-inc
-tier: oss
 content_type: plugin
 description: Rate limit based on a custom response header value.
 tags:
