@@ -1,4 +1,4 @@
-content_type: plugin_reference
+content_type: reference
 description: This page provides a reference for the Rate Limiting Advanced plugin configuration parameters.
 extended_description: |
   ## DB-less and hybrid mode limitations
