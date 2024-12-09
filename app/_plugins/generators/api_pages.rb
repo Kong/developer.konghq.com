@@ -4,7 +4,7 @@ module Jekyll
   class APIPagesGenerator < Generator
     SOURCE_FILE = '_data/konnect_oas_data.json'
 
-    priority :normal
+    priority :low
 
     def generate(site)
       @site = site
