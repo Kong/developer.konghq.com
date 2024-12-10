@@ -2,7 +2,7 @@
 
 module Jekyll
   class ReferencePagesGenerator < Generator
-    priority :high
+    priority :normal
 
     def generate(site)
       ReferencePages::Generator.run(site)

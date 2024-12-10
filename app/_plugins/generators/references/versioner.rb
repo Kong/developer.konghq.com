@@ -1,44 +1,56 @@
 # frozen_string_literal: true
 
+require 'forwardable'
+
 module Jekyll
   module ReferencePages
     class Versioner
+      extend Forwardable
+
+      def_delegators :@release_info, :latest_release_in_range, :latest_available_release, :releases,
+                     :min_release, :max_release
+
       attr_reader :page, :site
 
       def initialize(site:, page:)
         @site = site
         @page = page
+        @release_info = release_info
       end
 
       def process
+        set_base_url!
         set_release_info!
         handle_canonicals!
         generate_pages!
       end
 
+      def set_base_url!
+        page.data.merge!('base_url' => page.url)
+      end
+
       def set_release_info!
-        unless latest_release_in_range
-          raise ArgumentError,
-                "Missing release for page: #{page.url} in site.data.#{releases_key.join('.')}"
-        end
+        return if page.data['no_version']
+
+        raise ArgumentError, "Missing release for page: #{page.url}" unless latest_release_in_range
 
         page.data.merge!(
-          'base_url' => page.url,
-          'latest?' => latest_release_in_range == latest_available_release,
           'release' => latest_release_in_range,
           'releases' => releases,
           'releases_dropdown' => Drops::ReleasesDropdown.new(base_url: page.url, releases:)
         )
       end
 
-      def handle_canonicals!
-        # Setting published: false prevents Jekyll from rendering the page.
-        if min_version && min_version > latest_available_release
+      def handle_canonicals! # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+        if page.data['no_version']
+          page.data.merge!('canonical_url' => page.url, 'canonical?' => true)
+        elsif min_release && min_release > latest_available_release
+          # Setting published: false prevents Jekyll from rendering the page.
           page.data.merge!('published' => false)
-        elsif max_version && max_version < latest_available_release
+        elsif max_release && max_release < latest_available_release
           page.data.merge!(
             'published' => false,
-            'canonical_url' => "#{page.url}#{max_version}/"
+            'canonical_url' => "#{page.url}#{max_release}/"
           )
         else
           page.data.merge!('canonical_url' => page.url, 'canonical?' => true)
@@ -46,69 +58,35 @@ module Jekyll
       end
 
       def generate_pages!
+        return [] if @page.data['no_version']
+
         releases.map do |release|
-          Page.new(site:, page:, release:).to_jekyll_page
+          Page::Base.make_for(site:, page:, release:).to_jekyll_page
         end
       end
 
-      private
-
-      def product
-        @product ||= page.data['products'].first
-      end
-
-      def min_version
-        @min_version ||= begin
-          min_version = version_range('min_version')
-          min_version && available_releases.detect { |r| r['release'] == min_version.to_s }
-        end
-      end
-
-      def max_version
-        @max_version ||= begin
-          max_version = version_range('max_version')
-          max_version && available_releases.detect { |r| r['release'] == max_version.to_s }
-        end
-      end
-
-      def version_range(version_type)
-        if product == 'api-ops'
-          page.data.dig(version_type, page.data['tools'].first)
-        else
-          page.data.dig(version_type, product)
-        end
-      end
-
-      def releases
-        @releases ||= available_releases.select do |r|
-          Utils::Version.in_range?(r['release'], min: min_version, max: max_version)
-        end
-      end
-
-      def available_releases
-        @available_releases ||= (site.data.dig(*releases_key, 'releases') || [])
-                                .map { |r| Drops::Release.new(r) }
-      end
-
-      def releases_key
-        @releases_key ||= if product == 'api-ops'
-                            ['tools', page.data['tools'].first]
+      def release_info
+        @release_info ||= if product && product == 'api-ops'
+                            ReleaseInfo::Tool.new(site:, tool:, min_version:, max_version:)
                           else
-                            ['products', product]
+                            ReleaseInfo::Product.new(site:, product:, min_version:, max_version:)
                           end
       end
 
-      def latest_available_release
-        @latest_available_release ||= available_releases.detect(&:latest?)
+      def product
+        @product ||= page.data.fetch('products', []).first
       end
 
-      def latest_release_in_range
-        @latest_release_in_range ||= begin
-          return min_version if min_version && min_version > latest_available_release
-          return max_version if max_version && max_version < latest_available_release
+      def tool
+        @tool ||= page.data.fetch('tools', []).first
+      end
 
-          latest_available_release
-        end
+      def min_version
+        @min_version ||= @page.data.fetch('min_version', {})
+      end
+
+      def max_version
+        @max_version ||= @page.data.fetch('max_version', {})
       end
     end
   end

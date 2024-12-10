@@ -8,9 +8,13 @@ description: Secure services and routes with key authentication
 tags:
     - authentication
 
+products:
+    - gateway
+
 works_on:
     - on-prem
     - konnect
+
 ---
 
 ## Overview

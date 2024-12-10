@@ -11,9 +11,13 @@ tags:
   - graphql-rate-limiting-advanced
   - traffic-control
 
+products:
+  - gateway
+
 works_on:
     - on-prem
     - konnect
+
 ---
 
 ## Overview
