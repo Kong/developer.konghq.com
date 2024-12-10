@@ -17,8 +17,7 @@ install-prerequisites:
 install: ruby-version-check
 	npm ci
 	bundle install
-	cd tools/frontmatter-validator
-	npm ci
+	cd tools/frontmatter-validator && npm ci
 
 validate-frontmatters:
 	npm --prefix tools/frontmatter-validator run validate
