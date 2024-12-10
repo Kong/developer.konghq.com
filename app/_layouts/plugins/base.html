@@ -29,12 +29,6 @@ uses: false
 </header>
 {% endcontentfor %}
 
-{% if page.extended_description %}
-<div id="extended-description">
-  {{ page.extended_description | markdownify }}
-</div>
-{% endif %}
-
 {{ content }}
 
 {% if page.faqs %}
