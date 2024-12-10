@@ -78,9 +78,63 @@ In the example above, two routes can be created, say `/external` and `/internal`
 
 ## How routing works
 
-### Proxying?
+For each incoming request, {{site.base_gateway}} must determine which service gets to handle it based on the routes that are defined. In general, the router orders all defined routes by their priority and
+uses the highest priority matching route to handle a request. If there
+are multiple matching routes with the same priority, it is not defined
+which of the matching routes will be used and {{site.base_gateway}}
+will use either of them according to how its internal data structures
+are organized.
 
+{{site.base_gateway}} supports native proxying of HTTP/HTTPS, TCP/TLS, and GRPC/GRPCS protocols. Each of these protocols accept a different set of routing attributes:
+- `http`: `methods`, `hosts`, `headers`, `paths` (and `snis`, if `https`)
+- `tcp`: `sources`, `destinations` (and `snis`, if `tls`)
+- `grpc`: `hosts`, `headers`, `paths` (and `snis`, if `grpcs`)
 
+Note that all of these fields are **optional**, but at least **one of them**
+must be specified.
+
+For a request to match a route:
+
+- The request **must** include **all** of the configured fields
+- The values of the fields in the request **must** match at least one of the
+  configured values (While the field configurations accepts one or more values,
+  a request needs only one of the values to be considered a match)
+
+The routing method you should use depends on your {{site.base_gateway}} version:
+
+| {{site.base_gateway}} version | Routing method | Description |
+|-------------------------------|----------------|-------------|
+| All | Traditional compatibility | Only recommended for anyone running {{site.base_gateway}} 2.9.x or earlier. The original routing method for {{site.base_gateway}}. |
+| 3.0.x or later | [Expressions router](/gateway/routing/expressions/) | The recommended method for anyone running {{site.base_gateway}} 3.0.x or later. Can be run in both `traditional_compat` and `expressions` modes. |
+
+### Traditional compatibility mode
+
+In `traditional_compat` mode, the priority of a route is determined as
+follows, by the order of descending significance:
+
+1. **Priority points:** For the presence of each of a route's `methods`, `host`, `headers`, and `snis`, a "priority point" will be added to the route. The number of "priority points" determines the overall order in which the routes will be considered. Routes with a higher "priority point" values will be considered before those with lower values. This means that if one route has `methods` defined, and second one has `methods` and `headers` defined, the second one will be considered before the first one.
+2. **Wildcard hosts:** Among the routes with the same "priority point" value, those that have any wildcard host specification will be considered after routes that don't have any wildcard host (or no host) specified.
+3. **Header count:** The resulting groups are sorted so the routes with a higher number of specified headers have higher priority than those with a lower number of headers.
+4. **Regular expressions and prefix paths:** Within the resulting groups of routes with equal priority, the router sorts the routes as follows:
+  - Routes that have a regular expression path are considered first and are ordered by their `regex_priority` value. Routes with a higher `regex_priority` are considered before routes with lower `regex_priority` values.
+  - Routes that have no regular expression path are ordered by the length of their paths. Routes with longer paths are considered before routes with shorter paths.
+  
+  For a route with multiple paths, each path will be considered separately for priority determination. Effectively, this means that separate routes exists for each of the paths.
+
+As soon as a route yields a match, the router stops matching and {{site.base_gateway}} uses the matched route to [proxy the current request](/).
+
+### Expressions router mode
+
+In [`expressions` mode](/gateway/routing/expressions/) when a request comes in, {{site.base_gateway}} evaluates routes with a higher `priority` number first. The priority is a positive integer that defines the order of evaluation of the router. The larger the priority integer, the sooner a route will be evaluated. In the case of duplicate priority values between two routes in the same router, their order of evaluation is undefined.
+
+As soon as a route yields a match, the router stops matching and {{site.base_gateway}} uses the matched route to [proxy the current request](/).
+
+### Routing performance recommendations
+
+You can use the following recommendations to increase routing performance:
+
+* In `expressions` mode, we recommend putting more likely matched routes before (as in, higher priority) less frequently matched routes.
+* Regular expressions used in routes use more resources to evaluate than simple prefix routes. In installations with thousands of routes, replacing regular expression routes with simple prefix routes can improve throughput and latency of {{site.base_gateway}}. If regex must be used because an exact path match must be performed, using the [expressions router](/gateway/routing/expressions/) will significantly improve {{site.base_gateway}}’s performance in this case.
 
 ## Dynamically rewrite request URLs with routes
 
@@ -88,7 +142,7 @@ Routes can be configured dynamically to rewrite the requested URL to a different
 
 | You want to... | Then use... |
 |--------|----------|
-| Perform a simple URL rewrite, such as renaming your legacy `/api/old/` upstream endpoint to a publicly accessible API endpoint that is now named `/new/api`. | [Set up a service with the old path and a route with new path](/) |
+| Perform a simple URL rewrite, such as renaming your legacy `/api/old/` upstream endpoint to a publicly accessible API endpoint that is now named `/new/api`. | [Set up a service with the old path and a route with new path](/how-to/dynamically-rewrite-simple-request-urls-with-routes/) |
 | Performa complex URL rewrite, such as replacing `/api/<function>/old` with `/new/api/<function>`. | [Request Transformer Advanced plugin](https://docs.konghq.com/hub/kong-inc/request-transformer-advanced/) |
 | Describe routes or paths as patterns using regular expressions. | [Expressions router](/gateway/routing/expressions/) |
 
