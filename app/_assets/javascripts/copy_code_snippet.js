@@ -66,7 +66,9 @@ document.addEventListener("DOMContentLoaded", function () {
           successInfo.remove();
         });
       }, 1000);
-      document.body.appendChild(successInfo);
+      // XXX: Commenting this out for now, it breaks the extraction of instructions.
+      // We need to refactor this implementation.
+      // document.body.appendChild(successInfo);
     });
     snippet.appendChild(action);
   });
