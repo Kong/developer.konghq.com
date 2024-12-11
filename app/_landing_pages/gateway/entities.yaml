@@ -52,3 +52,7 @@ rows:
       - type: entity_card
         config:
           entity: workspace
+    - blocks: 
+      - type: entity_card
+        config:
+          entity: event_hooks
