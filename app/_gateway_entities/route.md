@@ -80,12 +80,16 @@ In the example above, two Routes can be created, say `/external` and `/internal`
 
 ## How routing works
 
-For each incoming request, {{site.base_gateway}} must determine which service gets to handle it based on the Routes that are defined. In general, the router orders all defined Routes by their priority and
-uses the highest priority matching Route to handle a request. If there
-are multiple matching Routes with the same priority, it is not defined
+For each incoming request, {{site.base_gateway}} must determine which service gets to handle it based on the Routes that are defined. {{site.base_gateway}} first finds Routes that match by comparing the defined routing attributes with the attributes in the request. If multiple Routes match, the {{site.base_gateway}} router then orders all defined Routes by their priority and uses the highest priority matching Route to handle a request. 
+
+If there are multiple matching Routes with the same priority, it is not defined
 which of the matching Routes will be used and {{site.base_gateway}}
 will use either of them according to how its internal data structures
-are organized.
+are organized. If two or more Routes are configured with fields containing the same values, {{site.base_gateway}} applies a priority rule. {{site.base_gateway}} first tries to match the routes with the most rules.
+
+### Matching routing attributes
+
+When you configure a Route, you must define certain attributes that {{site.base_gateway}} will use to match incoming requests.
 
 {{site.base_gateway}} supports native proxying of HTTP/HTTPS, TCP/TLS, and GRPC/GRPCS protocols. Each of these protocols accept a different set of routing attributes:
 - `http`: `methods`, `hosts`, `headers`, `paths` (and `snis`, if `https`)
@@ -102,6 +106,23 @@ For a request to match a Route:
   configured values (While the field configurations accepts one or more values,
   a request needs only one of the values to be considered a match)
 
+#### things to cover in some way
+
+* Headers
+  * regular hosts (how an array is handled)
+  * wild card host
+  * explain preserve_host=true
+  * other headers (like `version`)
+* Paths (the longest paths get evaluated first)
+  * regex in paths (and `regex_priority`)
+  * capturing groups?
+  * note: escaping characters/percent encoding
+  
+
+### Routing priority 
+
+If multiple Routes match an incoming request, the {{site.base_gateway}} router then orders all defined Routes by their priority and uses the highest priority matching Route to handle a request.
+
 The routing method you should use depends on your {{site.base_gateway}} version:
 
 | Recommended {{site.base_gateway}} version | Routing method | Description |
@@ -109,7 +130,7 @@ The routing method you should use depends on your {{site.base_gateway}} version:
 | 2.9.x or earlier | Traditional compatibility | Only recommended for anyone running {{site.base_gateway}} 2.9.x or earlier. The original routing method for {{site.base_gateway}}. |
 | 3.0.x or later | [Expressions router](/gateway/routing/expressions/) | The recommended method for anyone running {{site.base_gateway}} 3.0.x or later. Can be run in both `traditional_compat` and `expressions` modes. |
 
-### Traditional compatibility mode
+#### Traditional compatibility mode
 
 In `traditional_compat` mode, the priority of a Route is determined as
 follows, by the order of descending significance:
@@ -125,7 +146,7 @@ follows, by the order of descending significance:
 
 As soon as a Route yields a match, the router stops matching and {{site.base_gateway}} uses the matched Route to [proxy the current request](/).
 
-### Expressions router mode
+#### Expressions router mode
 
 In [`expressions` mode](/gateway/routing/expressions/) when a request comes in, {{site.base_gateway}} evaluates Routes with a higher `priority` number first. The priority is a positive integer that defines the order of evaluation of the router. The larger the priority integer, the sooner a Route will be evaluated. In the case of duplicate priority values between two Routes in the same router, their order of evaluation is undefined.
 
