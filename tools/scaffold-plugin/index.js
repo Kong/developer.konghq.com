@@ -1,5 +1,5 @@
 import minimist from "minimist";
-import { promises as fs } from "fs";
+import { promises as fs, existsSync } from "fs";
 import path from "path";
 
 const argv = minimist(process.argv.slice(2));
@@ -20,7 +20,10 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
   try {
     console.log(`Scaffolding plugin: ${pluginName}...`);
-    await fs.mkdir(pluginFolder);
+
+    if (!existsSync(pluginFolder)) {
+      await fs.mkdir(pluginFolder);
+    }
     console.log(`Plugin folder created at: ${pluginFolder}`);
 
     const items = await fs.readdir(templatesFolder, { withFileTypes: true });
