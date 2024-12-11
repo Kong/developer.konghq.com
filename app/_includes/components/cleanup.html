@@ -2,10 +2,15 @@
   {% for step in cleanup.inline %}
     {% if step.include_content == 'cleanup/products/gateway' %}
       {% assign deployment_topology = 'on-prem' %}
+      {% assign data_test_cleanup = 'data-test-cleanup="destroy-container"' %}
     {% elsif step.include_content == 'cleanup/platform/konnect' %}
       {% assign deployment_topology = 'konnect' %}
+      {% assign data_test_cleanup = 'data-test-cleanup="delete-control-plane"' %}
     {% endif %}
-  <div class="flex flex-col gap-1.5 accordion-item {% unless forloop.last %} border-b border-primary/5 {% endunless %}" {% if deployment_topology %}data-deployment-topology="{{deployment_topology}}"{% endif %}>
+  <div
+    class="flex flex-col gap-1.5 accordion-item {% unless forloop.last %} border-b border-primary/5 {% endunless %}" {% if deployment_topology %}data-deployment-topology="{{deployment_topology}}"{% endif %}
+    {% if data_test_cleanup %}{{data_test_cleanup | liquify}}{% endif %}
+  >
 {% include cleanup/inline.md step=step %}
   </div>
   {% endfor %}

@@ -67,8 +67,8 @@ async function extractSetup(config, page) {
   for (const elem of setups) {
     if (await elem.isVisible()) {
       const instruction = await elem.evaluate((el) => el.dataset.testSetup);
-      if (config[instruction]) {
-        instructions.push({ [instruction]: config[instruction] });
+      if (config.versions[instruction]) {
+        instructions.push({ [instruction]: config.versions[instruction] });
       } else {
         instructions.push(instruction);
       }
@@ -90,6 +90,20 @@ async function extractSteps(page) {
 
       const copiedText = await copyFromClipboard(page);
       instructions.push(copiedText);
+    }
+    await elem.dispose();
+  }
+  return instructions;
+}
+
+async function extractCleanup(page) {
+  const instructions = [];
+  const steps = await page.$$("[data-test-cleanup]");
+
+  for (const elem of steps) {
+    if (await elem.isVisible()) {
+      const instruction = await elem.evaluate((el) => el.dataset.testCleanup);
+      instructions.push(instruction);
     }
     await elem.dispose();
   }
@@ -123,13 +137,17 @@ async function extractInstructions(uri, config) {
     log(`Extracting instructions from: ${url}`);
     await page.goto(url, { waitUntil: "domcontentloaded" });
 
+    await page.select("select#deployment-topology-switch", config.platform);
+
     const setup = await extractSetup(config, page);
     const prereqs = await extractPrereqs(page);
     const steps = await extractSteps(page);
+    const cleanup = await extractCleanup(page);
     const instructionsFile = await writeInstrctionsToFile(url, config, {
       setup,
       prereqs,
       steps,
+      cleanup,
     });
 
     log(`Instructions extracted successfully to ${instructionsFile}`);
@@ -154,6 +172,17 @@ async function loadConfig() {
       config[key] = process.env[envKey];
     }
   });
+
+  // Overwrite `versions` nested keys with `*_VERSION` environment variables,
+  // e.g. GATEWAY_VERSION='3.5'
+  if (config.versions && typeof config.versions === "object") {
+    Object.keys(config.versions).forEach((key) => {
+      const envKey = `${key.toUpperCase()}_VERSION`;
+      if (process.env[envKey]) {
+        config.versions[key] = process.env[envKey];
+      }
+    });
+  }
 
   return config;
 }
