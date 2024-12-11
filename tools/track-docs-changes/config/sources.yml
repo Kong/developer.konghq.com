@@ -35,3 +35,83 @@ app/_api/konnect/runtime-groups/_index.md:
  - app/_api/konnect/runtime-groups/_index.md
 app/_api/konnect/ksearch/_index.md:
  - app/_api/konnect/search/_index.md
+
+# entities
+ app/_gateway_entities/consumer_group.md:
+  - app/_src/gateway/key-concepts/consumer-groups.md
+app/_gateway_entities/consumer.md:
+  - app/_src/gateway/key-concepts/consumers.md
+app/_gateway_entities/plugin.md:
+  - app/hub/plugins/overview/index.md
+app/_gateway_entities/route.md:
+  - app/_src/gateway/key-concepts/routes.md
+  - app/_src/gateway/how-kong-works/routing-traffic.md
+app/_gateway_entities/service.md:
+  - app/_src/gateway/key-concepts/services.md
+app/_gateway_entities/target.md:
+  - app/_src/gateway/key-concepts/services.md
+app/_gateway_entities/upstream.md:
+  - app/_src/gateway/key-concepts/upstreams.md
+app/_gateway_entities/workspace.md:
+  - app/_src/gateway/kong-manager/workspaces.md
+  - app/_src/gateway/kong-enterprise/workspaces.md
+
+# how-tos
+app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
+  - /app/_hub/kong-inc/rate-limiting-advanced/how-to/_index.md
+app/_how-tos/custom-deck-object-defaults.md:
+  - app/_src/deck/guides/defaults.md
+app/_how-tos/multiple-rate-limits-window-sizes.md:
+  - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
+app/_kong_plugins/ai-rate-limiting-advanced/index.md:
+  - app/_hub/kong-inc/ai-rate-limiting-advanced/overview/_index.md
+app/_kong_plugins/basic-auth/index.md:
+  - app/_hub/kong-inc/basic-auth/overview/_index.md
+app/_kong_plugins/graphql-rate-limiting-advanced/index.md:
+  - app/_hub/kong-inc/graphql-rate-limiting-advanced/overview/_index.md
+app/_kong_plugins/jwt/index.md:
+  - app/_hub/kong-inc/jwt/_index.md
+app/_kong_plugins/key-auth/index.md:
+  - app/_hub/kong-inc/key-auth/overview/_index.md
+app/_kong_plugins/rate-limiting/index.md:
+  - app/_hub/kong-inc/rate-limiting/overview/_index.md
+app/_kong_plugins/rate-limiting-advanced/index.md:
+  - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
+app/_landing_pages/gateway/enterprise-vs-oss.yaml:
+  - app/_src/gateway/index.md
+  - app/_data/tables/features/gateway.yml
+app/_landing_pages/gateway/rate-limiting.yaml:
+  - app/_hub/kong-inc/rate-limiting/overview/_index.md
+  - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
+app/_landing_pages/deck.yaml:
+  - app/_src/deck/index.md
+  - app/_src/deck/installation.md
+  - app/_src/deck/faqs.md
+app/_landing_pages/gateway.yaml:
+  - app/_src/gateway/index.md
+app/deck/distributed-config.md:
+  - app/_src/deck/guides/distributed-configuration.md
+app/deck/environment-variables.md:
+  - app/_src/deck/guides/environment-variables.md
+app/deck/manage-deck-with-docker.md:
+  - app/_src/deck/guides/run-with-docker-1.28.md
+app/deck/object-defaults.md:
+  - app/_src/deck/guides/defaults-v2.md
+app/gateway/rate-limiting/strategies.md:
+  - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
+  - app/_hub/kong-inc/rate-limiting/overview/_index.md
+app/gateway/rate-limiting/window-types.md:
+  - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
+  - app/_hub/kong-inc/rate-limiting/overview/_index.md
+app/gateway/routing/expressions.md:
+  - app/_src/gateway/reference/expressions-language/index.md
+app/gateway/routing/index.md:
+  - app/_src/gateway/key-concepts/routes/index.md
+app/plugins/deployment-options.md:
+  - app/hub/plugins/compatibility/index.md
+app/plugins/precedence.md:
+  - app/hub/plugins/overview/index.md
+app/plugins/protocols.md:
+  - app/hub/plugins/compatibility/index.md
+app/plugins/scopes.md:
+  - app/hub/plugins/compatibility/index.md
