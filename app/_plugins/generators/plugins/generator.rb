@@ -41,7 +41,7 @@ module Jekyll
 
       def generate_reference_page(plugin)
         reference = Jekyll::PluginPages::Pages::Reference
-                    .new(plugin:, file: File.join(plugin.folder, 'reference.yaml'))
+                    .new(plugin:, file: File.join(plugin.folder, 'reference.md'))
                     .to_jekyll_page
 
         site.pages << reference
