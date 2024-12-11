@@ -143,7 +143,7 @@ Routes can be configured dynamically to rewrite the requested URL to a different
 | You want to... | Then use... |
 |--------|----------|
 | Perform a simple URL rewrite, such as renaming your legacy `/api/old/` upstream endpoint to a publicly accessible API endpoint that is now named `/new/api`. | [Set up a service with the old path and a route with new path](/how-to/dynamically-rewrite-simple-request-urls-with-routes/) |
-| Performa complex URL rewrite, such as replacing `/api/<function>/old` with `/new/api/<function>`. | [Request Transformer Advanced plugin](https://docs.konghq.com/hub/kong-inc/request-transformer-advanced/) |
+| Perform complex URL rewrite, such as replacing `/api/<function>/old` with `/new/api/<function>`. | [Request Transformer Advanced plugin](https://docs.konghq.com/hub/kong-inc/request-transformer-advanced/) |
 | Describe routes or paths as patterns using regular expressions. | [Expressions router](/gateway/routing/expressions/) |
 
 ## Schema
