@@ -1,0 +1,4 @@
+platform: konnect
+gateway: '3.4'
+
+outputDir: './instructions'
