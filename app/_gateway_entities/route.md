@@ -13,6 +13,8 @@ related_resources:
     url: /gateway/routing/
   - text: Expressions router
     url: /gateway/routing/expressions/
+  - text: Upstreams
+    url: /gateway/entities/upstream/
 
 tools:
   - admin-api
@@ -35,14 +37,18 @@ Routes can also define rules that match requests to associated Services. Because
 
 When you configure Routes, you can also specify the following:
 
-* **Protocols:** The protocol used to communicate with the upstream application.
+* **Protocols:** The protocol used to communicate with the [upstream application](/gateway/entities/upstream/).
 * **Hosts:** Lists of domains that match a Route
 * **Methods:** HTTP methods that match a Route
 * **Headers:** Lists of values that are expected in the header of a request
 * **Redirect status codes:** HTTPS status codes
 * **Tags:** Optional set of strings to group Routes with
 
-The following diagram shows how Routes work:
+## Route and Service interaction
+
+Routes, in conjunction with [Services](/gateway/entities/service/), let you expose your Services to applications with {{site.base_gateway}}. {{site.base_gateway}} abstracts the Service from the applications by using Routes. Since the application always uses the Route to make a request, changes to the Services, like versioning, don’t impact how applications make the request. Routes also allow the same Service to be used by multiple applications and apply different policies based on the Route used.
+
+The following diagram shows how Routes interact with other {{site.base_gateway}} entities:
 
 {% mermaid %}
 flowchart LR
@@ -68,11 +74,7 @@ flowchart LR
   
 {% endmermaid %}
 
-## Route and Service interaction
-
-Routes, in conjunction with [Services](/gateway/entities/service/), let you expose your Services to applications with {{site.base_gateway}}. {{site.base_gateway}} abstracts the Service from the applications by using Routes. Since the application always uses the Route to make a request, changes to the Services, like versioning, don’t impact how applications make the request. Routes also allow the same Service to be used by multiple applications and apply different policies based on the Route used.
-
-For example, if you have an external application and an internal application that need to access the `example_service` Service, but the external application should be limited in how often it can query the Service to assure no denial of service. If a rate limit policy is configured for the Service when the internal application calls the Service, the internal application is limited as well. Routes can solve this problem.
+For example, if you have an external application and an internal application that need to access the `example_service` Service, but the external application should be limited in how often it can query the Service to assure no denial of service. If a rate limit policy is configured for the Service when the internal application calls it, the internal application is limited as well. Routes can solve this problem.
 
 In the example above, two Routes can be created, say `/external` and `/internal`, and both of them can point to `example_service`. You can configure a policy to limit how often the `/external` Route is used and it can be communicated to the external client for use. When the external client tries to access the Service via {{site.base_gateway}} using `/external`, they're rate limited. But when the internal client accesses the Service using {{site.base_gateway}} using `/internal`, the internal client isn't limited.
 
@@ -102,9 +104,9 @@ For a request to match a Route:
 
 The routing method you should use depends on your {{site.base_gateway}} version:
 
-| {{site.base_gateway}} version | Routing method | Description |
+| Recommended {{site.base_gateway}} version | Routing method | Description |
 |-------------------------------|----------------|-------------|
-| All | Traditional compatibility | Only recommended for anyone running {{site.base_gateway}} 2.9.x or earlier. The original routing method for {{site.base_gateway}}. |
+| 2.9.x or earlier | Traditional compatibility | Only recommended for anyone running {{site.base_gateway}} 2.9.x or earlier. The original routing method for {{site.base_gateway}}. |
 | 3.0.x or later | [Expressions router](/gateway/routing/expressions/) | The recommended method for anyone running {{site.base_gateway}} 3.0.x or later. Can be run in both `traditional_compat` and `expressions` modes. |
 
 ### Traditional compatibility mode
@@ -136,14 +138,15 @@ You can use the following recommendations to increase routing performance:
 * In `expressions` mode, we recommend putting more likely matched Routes before (as in, higher priority) those that are less frequently matched.
 * Regular expressions in Routes use more resources to evaluate than simple prefixes. In installations with thousands of Routes, replacing regular expression with simple prefix can improve throughput and latency of {{site.base_gateway}}. If regex must be used because an exact path match must be performed, using the [expressions router](/gateway/routing/expressions/) will significantly improve {{site.base_gateway}}’s performance in this case.
 
-## Dynamically rewrite request URLs with Routes
+## Route use cases
 
-Routes can be configured dynamically to rewrite the requested URL to a different URL for the Upstream. Depending on your use case, there are several methods you can use:
+Use the following table to help you understand how Routes can be configured for different use cases:
 
 | You want to... | Then use... |
 |--------|----------|
+| Rate limit internal and external traffic to a service | [Enable a rate limiting plugin on routes attached to the service](/plugins/rate-limiting-advanced/) |
 | Perform a simple URL rewrite, such as renaming your legacy `/api/old/` upstream endpoint to a publicly accessible API endpoint that is now named `/new/api`. | [Set up a Gateway Service with the old path and a Route with new path](/how-to/dynamically-rewrite-simple-request-urls-with-routes/) |
-| Perform complex URL rewrite, such as replacing `/api/<function>/old` with `/new/api/<function>`. | [Request Transformer Advanced plugin](https://docs.konghq.com/hub/kong-inc/request-transformer-advanced/) |
+| Perform a complex URL rewrite, such as replacing `/api/<function>/old` with `/new/api/<function>`. | [Request Transformer Advanced plugin](https://docs.konghq.com/hub/kong-inc/request-transformer-advanced/) |
 | Describe Routes or paths as patterns using regular expressions. | [Expressions router](/gateway/routing/expressions/) |
 
 ## Schema
