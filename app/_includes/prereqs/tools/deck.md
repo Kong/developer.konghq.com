@@ -6,7 +6,11 @@
   1. Install [decK](/deck/).
   1. Create a `deck_files` directory and a `kong.yaml` file in the directory:
 
-          mkdir deck_files  && touch deck_files/kong.yaml
+      ```bash
+      mkdir deck_files  && touch deck_files/kong.yaml
+      ```
+      {: data-test-prereqs="block" }
+
 
 {% endcapture %}
 

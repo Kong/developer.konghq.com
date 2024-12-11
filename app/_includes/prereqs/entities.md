@@ -11,7 +11,7 @@ For this tutorial, you'll need {{site.base_gateway}} entities, like Gateway Serv
 ```yaml
 {{ include.data }}
 ```
-{: data-file="prereqs.yaml" }
+{: data-file="prereqs.yaml" data-test-prereqs="block" }
 {% endcapture %}
 {{ entities | indent: 3 }}
 
@@ -20,7 +20,7 @@ For this tutorial, you'll need {{site.base_gateway}} entities, like Gateway Serv
    ```sh
    deck gateway sync deck_files
    ```
-   {: data-deployment-topology="on-prem" }
+   {: data-deployment-topology="on-prem" data-test-prereqs="block" }
 
 
    <div class="flex flex-col gap-2" data-deployment-topology="konnect" markdown="1">
@@ -30,6 +30,7 @@ For this tutorial, you'll need {{site.base_gateway}} entities, like Gateway Serv
      --konnect-token ${{konnect_token}} \
      --konnect-control-plane-name $KONNECT_CP_NAME
    ```
+   {:  data-test-prereqs="block" }
    </div>
 
 To learn more about entities, you can read our [entities documentation](/gateway/entities/).
