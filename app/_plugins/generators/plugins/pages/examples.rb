@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-require 'yaml'
-
 module Jekyll
   module PluginPages
     module Pages
-      class Example < Base
-        def url
-          @url ||= example.url
+      class Examples < Base
+        def self.url(slug)
+          "/plugins/#{slug}/examples/"
         end
 
         def content
@@ -18,8 +16,7 @@ module Jekyll
           super
             .except('faqs')
             .merge(
-              'example?' => true,
-              'example' => example,
+              'examples?' => true,
               'examples' => examples,
               'content_type' => 'reference',
               'no_version' => true
@@ -27,11 +24,7 @@ module Jekyll
         end
 
         def layout
-          'plugins/example'
-        end
-
-        def example
-          @example ||= examples.detect { |e| e.file == @file }
+          'plugins/examples'
         end
 
         def examples

@@ -18,8 +18,8 @@ uses: false
           <li class="px-4 py-3 {% if page.changelog? %}  border-b-2 border-brand {% endif %}">
             <a class="text-primary" href="{{page.changelog_url}}">Changelog</a>
           </li>
-          <li class="px-4 py-3">
-            <a class="text-primary" href="#">How-to Guides</a>
+          <li class="px-4 py-3 {% if page.example? or page.examples? %}  border-b-2 border-brand {% endif %}">
+            <a class="text-primary" href="{{page.examples_url}}">Get Started</a>
           </li>
         </ul>
         <a class="border-2 rounded-md border-brand px-4 py-1 text-primary" href="https://cloud.konghq.com">Try it on Konnect</a>

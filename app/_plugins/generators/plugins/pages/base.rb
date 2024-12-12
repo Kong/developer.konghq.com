@@ -35,6 +35,7 @@ module Jekyll
             'plugin' => @plugin,
             'overview_url' => Overview.url(@plugin.slug),
             'changelog_url' => Changelog.url(@plugin.slug),
+            'examples_url' => Examples.url(@plugin.slug),
             'reference_url' => reference_url
           )
         end

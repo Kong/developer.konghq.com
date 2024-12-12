@@ -25,7 +25,7 @@ layout: plugins/base
     <ul>
       {% for example in page.examples %}
       <li>
-        <a href="/plugins/{{ page.slug }}/examples/{{ example.slug }}"> {{ example.slug }}</a>
+        <a href="{{ example.url }}"> {{ example.slug }}</a>
       </li>
       {% endfor %}
     </ul>
