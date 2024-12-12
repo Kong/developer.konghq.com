@@ -63,6 +63,12 @@ module Jekyll
 
           site.pages << example
         end
+
+        examples = Jekyll::PluginPages::Pages::Examples
+                   .new(plugin:, file: '')
+                   .to_jekyll_page
+
+        site.pages << examples
       end
     end
   end

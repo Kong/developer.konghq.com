@@ -28,7 +28,7 @@ module Jekyll
         @plugin_slug ||= @plugin.slug
       end
 
-      def entity_examples
+      def entity_examples # rubocop:disable Metrics/MethodLength
         @entity_examples ||= @plugin.targets.map do |target|
           EntityExampleBlock::Plugin.new(
             example: {
@@ -50,6 +50,10 @@ module Jekyll
 
       def formats
         @formats ||= @plugin.formats
+      end
+
+      def url
+        @url ||= "/plugins/#{@plugin.slug}/examples/#{slug}/"
       end
 
       private

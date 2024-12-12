@@ -1,0 +1,14 @@
+---
+layout: plugins/base
+---
+
+<h2>Available examples</h2>
+
+
+<ul>
+    {% for example in page.examples %}
+    <li>
+        <a href="{{ example.url }}"> {{ example.slug }}</a>
+    </li>
+    {% endfor %}
+</ul>
