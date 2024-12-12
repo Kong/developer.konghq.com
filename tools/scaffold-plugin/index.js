@@ -31,17 +31,25 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname);
     console.log("Copying templates...");
     for (const item of items) {
       if (item.isDirectory()) {
-        await fs.mkdir(path.join(pluginFolder, item.name));
+        if (!existsSync(path.join(pluginFolder, item.name))) {
+          await fs.mkdir(path.join(pluginFolder, item.name));
+        }
         const subFolder = path.join(templatesFolder, item.name);
         const files = await fs.readdir(subFolder);
 
         for (const file of files) {
+          if (existsSync(path.join(pluginFolder, item.name, file))) {
+            continue;
+          }
           await fs.copyFile(
             path.join(subFolder, file),
             path.join(pluginFolder, item.name, file)
           );
         }
       } else {
+        if (existsSync(path.join(pluginFolder, item.name))) {
+          continue;
+        }
         await fs.copyFile(
           path.join(templatesFolder, item.name),
           path.join(pluginFolder, item.name)
