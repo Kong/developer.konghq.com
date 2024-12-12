@@ -18,6 +18,10 @@ tools:
 schema:
     api: gateway/admin-ee
     path: /schemas/Event-hooks
+api_specs:
+    - text: Gateway Admin - EE
+      url: '/api/gateway/admin-ee/#/Event-hooks/get-event-hooks-sources'
+      insomnia_link: 'https://insomnia.rest/run/?label=Gateway%20Admin%20Enterprise%20API&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2FGateway-EE%2Flatest%2Fkong-ee.yaml'
 
 ---
 
