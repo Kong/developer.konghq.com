@@ -4,7 +4,7 @@ content_type: reference
 entities:
   - plugin
 
-description: Plugins are modules that extend the functionality of {{site.base_gateway}}.
+description: Plugins are modules that extend the functionality of Kong Gateway.
 
 related_resources:
   - text: Plugin Hub
@@ -30,6 +30,17 @@ tools:
 schema:
     api: gateway/admin-ee
     path: /schemas/Plugin
+
+api_specs:
+    - text: Gateway Admin - EE
+      url: '/api/gateway/admin-ee/#/operations/list-plugin'
+      insomnia_link: 'https://insomnia.rest/run/?label=Gateway%20Admin%20Enterprise%20API&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2FGateway-EE%2Flatest%2Fkong-ee.yaml'
+    - text: Gateway Admin - OSS
+      url: '/api/gateway/admin-oss/#/operations/list-plugin'
+      insomnia_link: 'https://insomnia.rest/run/?label=Gateway%20Admin%20OSS%20API&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2FGateway-OSS%2Flatest%2Fkong-oss.yaml'
+    - text: Konnect Control Planes Config
+      url: '/api/konnect/control-planes-config/#/operations/list-plugin'
+      insomnia_link: 'https://insomnia.rest/run/?label=Konnect%20Control%20Plane%20Config&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2FKonnect%2Fcontrol-planes-config%2Fcontrol-planes-config.yaml'
 
 ---
 
