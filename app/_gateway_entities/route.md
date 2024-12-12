@@ -46,7 +46,7 @@ When you configure Routes, you can also specify the following:
 
 ## Route and Service interaction
 
-Routes, in conjunction with [Services](/gateway/entities/service/), let you expose your Services to applications with {{site.base_gateway}}. {{site.base_gateway}} abstracts the Service from the applications by using Routes. Since the application always uses the Route to make a request, changes to the Services, like versioning, don’t impact how applications make the request. Routes also allow the same Service to be used by multiple applications and apply different policies based on the Route used.
+Routes, in conjunction with [Services](/gateway/entities/service/), let you expose your Services to applications with {{site.base_gateway}}. {{site.base_gateway}} abstracts the Service from the applications by using Routes. Since the application always uses the Route to make a request, changes to the Services, like versioning, don’t impact how applications make the request.
 
 The following diagram shows how Routes interact with other {{site.base_gateway}} entities:
 
@@ -74,9 +74,15 @@ flowchart LR
   
 {% endmermaid %}
 
-For example, if you have an external application and an internal application that need to access the `example_service` Service, but the external application should be limited in how often it can query the Service to assure no denial of service. If a rate limit policy is configured for the Service when the internal application calls it, the internal application is limited as well. Routes can solve this problem.
+Routes also allow the same Service to be used by multiple applications and apply different policies based on the Route used.
 
-In the example above, two Routes can be created, say `/external` and `/internal`, and both of them can point to `example_service`. You can configure a policy to limit how often the `/external` Route is used and it can be communicated to the external client for use. When the external client tries to access the Service via {{site.base_gateway}} using `/external`, they're rate limited. But when the internal client accesses the Service using {{site.base_gateway}} using `/internal`, the internal client isn't limited.
+For example, say you have an external application and an internal application that need to access the `example_service` Service, but the *external* application should be limited in how often it can query the Service to avoid a denial of service. If you apply a rate limit policy to the Service and the *internal* application calls it, the internal application is also limited. Routes can solve this problem.
+
+
+In this example, you can create two Routes to handle the two applications, say `/external` and `/internal`, and point both of them to `example_service`. 
+You can configure a policy to limit how often the `/external` Route is used. 
+When the external application tries to access the Service via {{site.base_gateway}} using `/external`, they're rate limited. 
+But when the internal application accesses the Service using {{site.base_gateway}} using `/internal`, the internal application isn't limited.
 
 ## How routing works
 
