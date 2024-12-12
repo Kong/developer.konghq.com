@@ -25,7 +25,7 @@ module Jekyll
         end
 
         def layout
-          'plugins/base'
+          'plugins/with_aside'
         end
       end
     end

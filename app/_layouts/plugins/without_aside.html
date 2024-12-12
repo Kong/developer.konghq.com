@@ -1,0 +1,12 @@
+---
+layout: without_aside
+uses: false
+---
+
+{% contentfor nav_header %}
+  {% include layouts/plugins/nav_header.html %}
+{% endcontentfor %}
+
+{{ content }}
+
+{% include layouts/plugins/sections.html %}

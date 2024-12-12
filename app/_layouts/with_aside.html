@@ -3,27 +3,7 @@ layout: default
 ---
 
 <div class="flex gap-16 w-full">
-    <main class="flex flex-col basis-3/4 py-12 gap-12 {{ page.content_type | slugify }}">
-        <div class="flex flex-col gap-3">
-            {% if page.breadcrumbs %}
-                {% include breadcrumbs.html %}
-            {% endif %}
-
-            <h1>{{ page.title | liquify }}</h1>
-
-            {% if layout.uses != false %}
-            {% include uses.html products=page.products tools=page.tools tier=page.tier %}
-            {% endif %}
-
-            {% ifhascontent nav_header %}
-                <section class="flex">
-                {% contentblock nav_header %}
-                </section>
-            {% endifhascontent %}
-        </div>
-
-        {{ content }}
-    </main>
+    {% include layouts/main.html class="basis-3/4" %}
 
     <aside class="flex flex-col basis-1/4 pt-12 gap-8 text-sm">
         <div class="flex flex-col xl:flex-row gap-3 w-full text-xs">
