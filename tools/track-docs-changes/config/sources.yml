@@ -27,12 +27,8 @@ app/_api/konnect/identity/_index.md:
  - app/_api/konnect/identity-management/_index.md
 app/_api/konnect/mesh-control-planes/_index.md:
  - app/_api/konnect/mesh-manager/_index.md
-app/_api/konnect/portal/_index.md:
- - app/_api/konnect/portal/_index.md
 app/_api/konnect/portal-management/_index.md:
  - app/_api/konnect/portal-management/_index.md
-app/_api/konnect/runtime-groups/_index.md:
- - app/_api/konnect/runtime-groups/_index.md
 app/_api/konnect/ksearch/_index.md:
  - app/_api/konnect/search/_index.md
 
