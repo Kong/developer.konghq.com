@@ -54,7 +54,7 @@ defaults:
         - "/gateway/"
         - "/gateway/entities/"
 
-
+insomnia_run: https://insomnia.rest/run/
 
 # product name vars
 base_gateway: Kong Gateway
@@ -64,4 +64,5 @@ kic_product_name: Kong Ingress Controller
 
 repos:
   developer: https://github.com/Kong/developer.konghq.com
+  developer_raw: https://raw.githubusercontent.com/Kong/developer.konghq.com
   docs: https://github.com/Kong/docs.konghq.com
