@@ -35,3 +35,19 @@ app/_api/konnect/runtime-groups/_index.md:
  - app/_api/konnect/runtime-groups/_index.md
 app/_api/konnect/ksearch/_index.md:
  - app/_api/konnect/search/_index.md
+
+# how tos
+app/_how-tos/dynamically-rewrite-simple-request-urls-with-routes.md:
+  - app/_src/gateway/key-concepts/routes/index.md 
+
+# traffic control
+app/gateway/traffic-control/proxy.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
+  - app/_includes/md/admin-listen.md
+
+# entities
+app/_gateway_entities/route.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
+  - app/_src/gateway/key-concepts/routes/index.md
+app/_gateway_entities/upstream.md:
+  - app/_src/gateway/key-concepts/upstreams.md

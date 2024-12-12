@@ -15,6 +15,8 @@ related_resources:
     url: /gateway/routing/expressions/
   - text: Upstreams
     url: /gateway/entities/upstream/
+  - text: Proxying with {{site.base_gateway}}
+    url: /gateway/traffic-control/proxy/
 
 tools:
   - admin-api
@@ -37,7 +39,7 @@ Routes can also define rules that match requests to associated Services. Because
 
 When you configure Routes, you can also specify the following:
 
-* **Protocols:** The protocol used to communicate with the [upstream application](/gateway/entities/upstream/).
+* **Protocols:** The protocol used to communicate with the [upstream](/gateway/entities/upstream/) application.
 * **Hosts:** Lists of domains that match a Route
 * **Methods:** HTTP methods that match a Route
 * **Headers:** Lists of values that are expected in the header of a request
@@ -112,22 +114,128 @@ For a request to match a Route:
   configured values (While the field configurations accepts one or more values,
   a request needs only one of the values to be considered a match)
 
-#### things to cover in some way
+#### Request header
 
-* Headers
-  * regular hosts (how an array is handled)
-  * wild card host
-  * explain preserve_host=true
-  * other headers (like `version`)
-* Paths (the longest paths get evaluated first)
-  * regex in paths (and `regex_priority`)
-  * capturing groups?
-  * note: escaping characters/percent encoding
-  
+**Supported protocols:** `http`and `grpc`
+
+Routing a request based on its Host header is the most straightforward way to proxy traffic through Kong Gateway, especially since this is the intended usage of the HTTP Host header. `hosts` accepts multiple values, which must be comma-separated when specifying them via the Admin API, and is represented in a JSON payload. You can also use wildcards in hostnames. Wildcard hostnames must contain only one asterisk at the leftmost or rightmost label of the domain.
+
+When proxying, Kong Gateway’s default behavior is to set the upstream request’s Host header to the hostname specified in the service’s `host`. The `preserve_host` field accepts a boolean flag instructing Kong Gateway not to do so.
+
+| Example config | Example routing request matches |
+|---------------|--------------------------------|
+| `{"hosts":["example.com", "foo-service.com"]}` | `Host: example.com` and `Host: foo-service.com` | 
+| `headers.region=north` | `Region: North` |
+| `"hosts": ["*.example.com", "example.*"]` | `Host: an.example.com` and `Host: example.org` |
+| `"hosts": ["service.com"], "preserve_host": true,` | `Host: service.com` |
+| `"headers": { "version": ["v1", "v2"] }` | `version: v1` |
+
+#### Request path
+
+**Supported protocols:** `http` and `grpc`
+
+Another way for a route to be matched is via request paths. To satisfy this routing condition, a client request’s normalized path must be prefixed with one of the values of the `paths` attribute.
+
+Kong Gateway detects that the request's normalized URL path is prefixed with one of the routes’ `paths` values. By default, Kong Gateway would then proxy the request upstream without changing the URL path.
+
+When proxying with path prefixes, the longest paths get evaluated first. This allow you to define two routes with two paths: `/service` and `/service/resource`, and ensure that the former does not “shadow” the latter.
+
+* **Regex in paths:** For a path to be considered a regular expression, it must be prefixed with a `~`. For example: `paths: ["~/foo/bar$"]`. 
+* **Evaluation order:** The router evaluates routes using the `regex_priority` field of the Route where a route is configured. Higher `regex_priority` values mean higher priority. If you have the following paths configured:
+  ```sh
+  [
+    {
+        "paths": ["~/status/\d+"],
+        "regex_priority": 0
+    },
+    {
+        "paths": ["~/version/\d+/status/\d+"],
+        "regex_priority": 6
+    },
+    {
+        "paths": /version,
+    },
+    {
+        "paths": ["~/version/any/"],
+    }
+  ]
+  ```
+  They are evaluated in the following order:
+  1. `/version/\d+/status/\d+`
+  1. `/status/\d+`
+  1. `/version/any/`
+  1. `/version`
+* **Capturing groups:** Capturing groups are also supported, and the matched group will be extracted from the path and available for plugins consumption.
+* **Escaping special characters:** When configuring routes with regex paths via the Admin API, be sure to URL encode your payload if necessary according to [RFC 3986](https://tools.ietf.org/html/rfc3986).
+* **`strip_path` property:** If you want to specify a path prefix to match a route, but not include it in the upstream request, you can set the `strip_path` boolean property to `true`.
+* **Normalization behavior:** To prevent trivial route match bypass, the incoming request URI from client
+is always normalized according to [RFC 3986](https://tools.ietf.org/html/rfc3986)
+before router matching occurs. Specifically, the following normalization techniques are
+used for incoming request URIs, which are selected because they generally do not change
+semantics of the request URI:
+  1. Percent-encoded triplets are converted to uppercase.  For example: `/foo%3a` becomes `/foo%3A`.
+  2. Percent-encoded triplets of unreserved characters are decoded. For example: `/fo%6F` becomes `/foo`.
+  3. Dot segments are removed as necessary.  For example: `/foo/./bar/../baz` becomes `/foo/baz`.
+  4. Duplicate slashes are merged. For example: `/foo//bar` becomes `/foo/bar`.
+
+  Regex route paths only use methods 1 and 2. In addition, if the decoded character becomes a regex meta character, it will be escaped with backslash.
+
+Routers with a large number of regexes can consume traffic intended for other rules. Regular expressions are much more expensive to build and execute and can’t be optimized easily. You can avoid creating complex regular expressions using the [Router Expressions language](/gateway/routing/expressions/).
+
+| Example config | Example routing request matches |
+|---------------|--------------------------------|
+| `"paths": ["/service", "/hello/world"]` | `GET /service HTTP/1.1
+Host: example.com`, `GET /service/resource?param=value HTTP/1.1
+Host: example.com`, and `GET /hello/world/resource HTTP/1.1
+Host: anything.com` |
+| `paths: ["~/foo/bar$"]` | ? |
+| `/version/(?<version>\d+)/users/(?<user>\S+)` | `/version/1/users/john` |
+
+#### Request HTTP method
+
+**Supported protocols:** `http`
+
+The `methods` field allows matching the requests depending on their HTTP method. It accepts multiple values. Its default value is empty (the HTTP method is not used for routing).
+
+#### Request source
+
+**Supported protocols:** `tcp` and `tls` routes
+
+The `sources` routing attribute allows matching a route by a list of incoming connection IP and/or port sources.
+
+#### Request destination
+
+**Supported protocols:** `tcp` and `tls` routes
+
+The `destinations` attribute, similarly to `sources`, allows matching a route by a list of incoming connection IP and/or port, but uses the destination of the TCP/TLS connection as routing attribute.
+
+#### Request SNI
+
+**Supported protocols:** `https`, `grpcs`, or `tls`
+
+You can use a [Server Name Indication (SNI)](https://en.wikipedia.org/wiki/Server_Name_Indication) as a routing attribute. 
+
+Incoming requests with a matching hostname set in the TLS connection’s SNI extension would be routed to this route. As mentioned, SNI routing applies not only to TLS, but also to other protocols carried over TLS - such as HTTPS and If multiple SNIs are specified in the route, any of them can match with the incoming request’s SNI. with the incoming request (OR relationship between the names).
+
+The SNI is indicated at TLS handshake time and cannot be modified after the TLS connection has been established. This means, for example, that multiple requests reusing the same keepalive connection will have the same SNI hostname while performing router match, regardless of the `host` header. has been established. This means keepalive connections that send multiple requests will have the same SNI hostnames while performing router match (regardless of the `host` header).
+
+Please note that creating a route with mismatched SNI and `host` header matcher is possible, but generally discouraged.
+
 
 ### Routing priority 
 
 If multiple Routes match an incoming request, the {{site.base_gateway}} router then orders all defined Routes by their priority and uses the highest priority matching Route to handle a request.
+
+If the rule count for the given request is the same in two routes `A` and
+`B`, then the following tiebreaker rules will be applied in the order they
+are listed. Route `A` will be selected over `B` if:
+
+* `A` has only "plain" Host headers and `B` has one or more "wildcard"
+  host headers
+* `A` has more non-Host headers than `B`.
+* `A` has at least one "regex" paths and `B` has only "plain" paths.
+* `A`'s longest path is longer than `B`'s longest path.
+* `A.created_at < B.created_at`
 
 The routing method you should use depends on your {{site.base_gateway}} version:
 
