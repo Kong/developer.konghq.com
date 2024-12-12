@@ -1,0 +1,13 @@
+description: ''
+
+title: ''
+
+# requirements: <- not required
+# - "some req"
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config: # plugin config in yaml format goes here
