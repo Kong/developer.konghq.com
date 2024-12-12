@@ -111,3 +111,16 @@ app/plugins/protocols.md:
   - app/hub/plugins/compatibility/index.md
 app/plugins/scopes.md:
   - app/hub/plugins/compatibility/index.md
+
+# Plugins
+
+app/_kong_plugins/cors/index.md:
+  - app/_hub/kong-inc/cors/overview/_index.md
+app/_kong_plugins/mocking/index.md:
+  - /app/_hub/kong-inc/mocking/overview/_index.md
+
+
+# References
+
+app/gateway/networking/dns-config-reference.md:
+  - app/_src/gateway/production/networking/dns-considerations.md
