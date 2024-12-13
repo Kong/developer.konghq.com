@@ -1,4 +1,5 @@
 {% assign plugin = include.plugin %}
+{% assign id = plugin | slugify %}
 
 {{ page.description }}
 
@@ -26,13 +27,18 @@ The following table describes which providers and requests the {{ plugin }} plug
 | Mistral (mistral.ai, OpenAI, raw, and OLLAMA formats) | ✅ | ✅ | ✅ |
 | Llama2 (raw, OLLAMA, and OpenAI formats) | ✅ | ✅ | ✅ |
 | Llama3 (OLLAMA and OpenAI formats) | ✅ | ✅ | ✅ |
+
 <!-- endif_version -->
 <!-- if_version gte:3.8.x -->
+
 | Amazon Bedrock | ✅ | ✅ | ✅ |
 | Gemini | ✅ | ✅ | ✅ |
+
 <!-- endif_version -->
 <!-- if_version gte:3.9.x -->
+
 | Hugging Face | ✅ | ✅ | ✅ |
+
 <!-- endif_version -->
 
 ## How it works
@@ -83,11 +89,11 @@ This plugin does not support fallback over targets with different formats. You c
 ## Request and response formats
 
 {% if plugin == 'AI Proxy'%}
-The plugin's [`config.route_type`](/hub/kong-inc/ai-proxy/configuration/#config-route_type) should be set based on the target upstream endpoint and model, based on this capability matrix:
+The plugin's [`config.route_type`](/hub/kong-inc/{{ id }}/configuration/#config-route_type) should be set based on the target upstream endpoint and model, based on this capability matrix:
 {% endif %}
 
 {% if plugin == 'AI Proxy Advanced'%}
-The plugin's [`config.targets.route_type`](/hub/kong-inc/ai-proxy-advanced/configuration/#config-targets-route_type) should be set based on the target upstream endpoint and model, based on this capability matrix:
+The plugin's [`config.targets.route_type`](/hub/kong-inc/{{ id }}/configuration/#config-targets-route_type) should be set based on the target upstream endpoint and model, based on this capability matrix:
 {% endif %}
 
 | Provider Name | Provider Upstream Path                                   | Kong `route_type`    | Example Model Name     |
@@ -100,10 +106,14 @@ The plugin's [`config.targets.route_type`](/hub/kong-inc/ai-proxy-advanced/confi
 | Azure         | `/openai/deployments/{deployment_name}/completions`      | `llm/v1/completions` | gpt-3.5-turbo-instruct |
 
 <!-- if_version gte:3.7.x -->
+
 | Anthropic     | `/v1/messages`                                           | `llm/v1/chat`        | claude-2.1             |
+
 <!-- endif_version -->
 <!-- if_version lte:3.6.x -->
+
 | Anthropic     | `/v1/complete`                                           | `llm/v1/chat`        | claude-2.1             |
+
 <!-- endif_version -->
 
 | Anthropic     | `/v1/complete`                                           | `llm/v1/completions` | claude-2.1             |
@@ -113,14 +123,18 @@ The plugin's [`config.targets.route_type`](/hub/kong-inc/ai-proxy-advanced/confi
 | Mistral       | User-defined                                             | `llm/v1/completions` | User-defined           |
 
 <!-- if_version gte:3.8.x -->
+
 | Amazon Bedrock     | Use the LLM `chat` upstream path                    | `llm/v1/chat`        | [Use the model name for the specific LLM provider](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)            |
 | Amazon Bedrock     | Use the LLM `completions` upstream path             | `llm/v1/completions` | [Use the model name for the specific LLM provider](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html)             |
 | Gemini     | `llm/v1/chat`                            | `llm/v1/chat`        | `gemini-1.5-flash` or `gemini-1.5-pro`           |
 | Gemini     | `llm/v1/completions`                     | `llm/v1/completions` | `gemini-1.5-flash` or `gemini-1.5-pro`            |
+
 <!-- endif_version -->
 <!-- if_version gte:3.9.x -->
+
 | Hugging Face | `/models/{model_provider}/{model_name}` | `llm/v1/chat` | [Use the model name for the specific LLM provider](https://huggingface.co/models?inference=warm&pipeline_tag=text-generation&sort=trending) |
 | Hugging Face | `/models/{model_provider}/{model_name}` | `llm/v1/completions` | [Use the model name for the specific LLM provider](https://huggingface.co/models?inference=warm&pipeline_tag=text-generation&sort=trending) |
+
 <!-- endif_version -->
 
 The following upstream URL patterns are used:
@@ -135,30 +149,34 @@ The following upstream URL patterns are used:
 | Mistral   | As defined in  `config.model.options.upstream_url`                                                     |
 
 <!-- if_version gte:3.8.x -->
+
 | Amazon Bedrock   | `https://bedrock-runtime.{region}.amazonaws.com`                                                   |
 | Gemini  | `https://generativelanguage.googleapis.com`                                                    |
+
 <!-- endif_version -->
 <!-- if_version gte:3.9.x -->
+
 | Hugging Face | `https://api-inference.huggingface.co` |
+
 <!-- endif_version -->
 
 {:.important}
 > While only the **Llama2** and **Mistral** models are classed as self-hosted, the target URL can be overridden for any of the supported providers.
 {% if plugin == 'AI Proxy'%}
-> For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same [`config.model.options.upstream_url`](/hub/kong-inc/ai-proxy/configuration/#config-model-options-upstream_url) plugin option.
+> For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same [`config.model.options.upstream_url`](/hub/kong-inc/{{ id }}/configuration/#config-model-options-upstream_url) plugin option.
 {% endif %}
 {% if plugin == 'AI Proxy Advanced'%}
-> For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same [`config.embeddings.model.options.upstream_url`](/hub/kong-inc/ai-proxy-advanced/configuration/#config-embeddings-model-options-upstream_url) plugin option.
+> For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same [`config.embeddings.model.options.upstream_url`](/hub/kong-inc/{{ id }}/configuration/#config-embeddings-model-options-upstream_url) plugin option.
 {% endif %}
 
 ### Input formats
 
 {% if plugin == 'AI Proxy'%}
-Kong will mediate the request and response format based on the selected [`config.provider`](/hub/kong-inc/ai-proxy/configuration/#config-provider) and [`config.route_type`](/hub/kong-inc/ai-proxy/configuration/#config-route_type), as outlined in the table above.
+Kong will mediate the request and response format based on the selected [`config.provider`](/hub/kong-inc/{{ id }}/configuration/#config-provider) and [`config.route_type`](/hub/kong-inc/{{ id }}/configuration/#config-route_type), as outlined in the table above.
 {% endif %}
 
 {% if plugin == 'AI Proxy Advanced'%}
-Kong will mediate the request and response format based on the selected [`config.embeddings.model.provider`](/hub/kong-inc/ai-proxy-advanced/configuration/#config-embeddings-model-provider) and [`config.targets.route_type`](/hub/kong-inc/ai-proxy-advanced/configuration/#config-targets-route_type), as outlined in the table above.
+Kong will mediate the request and response format based on the selected [`config.embeddings.model.provider`](/hub/kong-inc/{{ id }}/configuration/#config-embeddings-model-provider) and [`config.targets.route_type`](/hub/kong-inc/{{ id }}/configuration/#config-targets-route_type), as outlined in the table above.
 {% endif %}
 
 The Kong AI Proxy accepts the following inputs formats, standardized across all providers; the `config.route_type` must be configured respective to the required request and response format examples:
@@ -273,7 +291,7 @@ Conversely, the response formats are also transformed to a standard format acros
 {% endnavtabs %}
 
 The request and response formats are loosely based on OpenAI.
-See the [sample OpenAPI specification](https://github.com/kong/kong/blob/master/spec/fixtures/ai-proxy/oas.yaml) for more detail on the supported formats.
+See the [sample OpenAPI specification](https://github.com/kong/kong/blob/master/spec/fixtures/{{ id }}/oas.yaml) for more detail on the supported formats.
 
 
 {:.note}
@@ -282,14 +300,14 @@ See the [sample OpenAPI specification](https://github.com/kong/kong/blob/master/
 ## Get started with the {{ plugin }} plugin
 
 * [AI Gateway quickstart: Set up {{ plugin }}](/gateway/latest/get-started/ai-gateway/)
-* [Configuration reference](/hub/kong-inc/ai-proxy/configuration/)
-* [Basic configuration example](/hub/kong-inc/ai-proxy/how-to/basic-example/)
+* [Configuration reference](/hub/kong-inc/{{ id }}/configuration/)
+* [Basic configuration example](/hub/kong-inc/{{ id }}/how-to/basic-example/)
 * Learn how to use the plugin with different providers:
-  * [OpenAI](/hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/openai/)
-  * [Cohere](/hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/cohere/)
-  * [Azure](/hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/azure/)
-  * [Anthropic](/hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/anthropic/)
-  * [Mistral](/hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/mistral/)
-  * [Llama2](/hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/llama2/)
-  * [Gemini/Vertex](/hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/gemini/)
-  * [Amazon Bedrock](/hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/bedrock/)
+  * [OpenAI](/hub/kong-inc/{{ id }}/how-to/llm-provider-integration-guides/openai/)
+  * [Cohere](/hub/kong-inc/{{ id }}/how-to/llm-provider-integration-guides/cohere/)
+  * [Azure](/hub/kong-inc/{{ id }}/how-to/llm-provider-integration-guides/azure/)
+  * [Anthropic](/hub/kong-inc/{{ id }}/how-to/llm-provider-integration-guides/anthropic/)
+  * [Mistral](/hub/kong-inc/{{ id }}/how-to/llm-provider-integration-guides/mistral/)
+  * [Llama2](/hub/kong-inc/{{ id }}/how-to/llm-provider-integration-guides/llama2/)
+  * [Gemini/Vertex](/hub/kong-inc/{{ id }}/how-to/llm-provider-integration-guides/gemini/)
+  * [Amazon Bedrock](/hub/kong-inc/{{ id }}/how-to/llm-provider-integration-guides/bedrock/)

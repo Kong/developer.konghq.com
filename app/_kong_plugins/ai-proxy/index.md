@@ -25,4 +25,4 @@ min_version:
 #    - traditional
 ---
 
-{% include plugins/ai-proxy.md plugin='AI Proxy' %}
+{% include plugins/ai-proxy.md plugin=page.name %}
