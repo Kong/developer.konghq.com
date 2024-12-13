@@ -46,8 +46,13 @@ app/_gateway_entities/service.md:
   - app/_src/gateway/key-concepts/services.md
 app/_gateway_entities/target.md:
   - app/_src/gateway/key-concepts/services.md
+  - app/_src/gateway/get-started/load-balancing.md
+  - app/_src/gateway/key-concepts/upstreams.md
+  - app/_src/gateway/how-kong-works/load-balancing.md
 app/_gateway_entities/upstream.md:
   - app/_src/gateway/key-concepts/upstreams.md
+  - app/_src/gateway/how-kong-works/load-balancing.md
+  - app/_src/gateway/how-kong-works/health-checks.md
 app/_gateway_entities/workspace.md:
   - app/_src/gateway/kong-manager/workspaces.md
   - app/_src/gateway/kong-enterprise/workspaces.md

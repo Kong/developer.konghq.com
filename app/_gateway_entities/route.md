@@ -13,7 +13,7 @@ related_resources:
     url: /gateway/routing/
   - text: Expressions router
     url: /gateway/routing/expressions/
-  - text: Upstreams
+  - text: Upstreams entity
     url: /gateway/entities/upstream/
   - text: Proxying with {{site.base_gateway}}
     url: /gateway/traffic-control/proxy/
@@ -45,6 +45,8 @@ When you configure Routes, you can also specify the following:
 * **Headers:** Lists of values that are expected in the header of a request
 * **Redirect status codes:** HTTPS status codes
 * **Tags:** Optional set of strings to group Routes with
+
+Use Routes if you don't need to load balance traffic to hosts. If you need to do load balancing between hostnames, configure your hosts in an [Upstream](/gateway/entities/upstream/) instead.
 
 ## Route and Service interaction
 
@@ -88,7 +90,10 @@ But when the internal application accesses the Service using {{site.base_gateway
 
 ## How routing works
 
-For each incoming request, {{site.base_gateway}} must determine which service gets to handle it based on the Routes that are defined. {{site.base_gateway}} first finds Routes that match by comparing the defined routing attributes with the attributes in the request. If multiple Routes match, the {{site.base_gateway}} router then orders all defined Routes by their priority and uses the highest priority matching Route to handle a request. 
+For each incoming request, {{site.base_gateway}} must determine which service gets to handle it based on the Routes that are defined. {{site.base_gateway}} handles routing in the following order:
+
+1. {{site.base_gateway}} finds Routes that match the request by comparing the defined routing attributes with the attributes in the request. 
+1. If multiple Routes match, the {{site.base_gateway}} router then orders all defined Routes by their priority and uses the highest priority matching Route to handle a request. 
 
 If there are multiple matching Routes with the same priority, it is not defined
 which of the matching Routes will be used and {{site.base_gateway}}
@@ -190,24 +195,6 @@ Host: example.com`, and `GET /hello/world/resource HTTP/1.1
 Host: anything.com` |
 | `paths: ["~/foo/bar$"]` | ? |
 | `/version/(?<version>\d+)/users/(?<user>\S+)` | `/version/1/users/john` |
-
-#### Request HTTP method
-
-**Supported protocols:** `http`
-
-The `methods` field allows matching the requests depending on their HTTP method. It accepts multiple values. Its default value is empty (the HTTP method is not used for routing).
-
-#### Request source
-
-**Supported protocols:** `tcp` and `tls` routes
-
-The `sources` routing attribute allows matching a route by a list of incoming connection IP and/or port sources.
-
-#### Request destination
-
-**Supported protocols:** `tcp` and `tls` routes
-
-The `destinations` attribute, similarly to `sources`, allows matching a route by a list of incoming connection IP and/or port, but uses the destination of the TCP/TLS connection as routing attribute.
 
 #### Request SNI
 

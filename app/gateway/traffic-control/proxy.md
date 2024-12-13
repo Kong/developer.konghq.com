@@ -21,7 +21,19 @@ breadcrumbs:
   - /gateway/
 ---
 
-{{ page.description }} This doc explains how {{site.base_gateway}}'s proxying capabilities works in detail.
+{{ page.description }} This doc details information about how {{site.base_gateway}} handles proxying. For more indepth details about how {{site.base_gateway}} handles routing, see the [Routes entity](/gateway/entities/route/). 
+
+{{site.base_gateway}} handles proxying in the following order:
+
+1. {{site.base_gateway}} listens for HTTP traffic on its configured
+proxy port(s) (`8000` and `8443` by default) and L4 traffic on explicitly configured
+`stream_listen` ports.
+1. {{site.base_gateway}} will evaluate any incoming HTTP request or L4 connection against the Routes you have configured and try to find a matching one.
+1. If multiple Routes match, the {{site.base_gateway}} router then orders all defined Routes by their priority and uses the highest priority matching Route to handle a request.
+1. Because each route may be linked to a service, {{site.base_gateway}} will run the plugins you have configured on your route and its associated service, and then proxy the request upstream.
+1. If a given request matches the rules of a specific route, {{site.base_gateway}} will
+process proxying the request. When {{site.base_gateway}} proxies a request, the following happens:
+    1. 
 
 <!--should the list below be moved to a listeners type page? and then linked here???-->
 
