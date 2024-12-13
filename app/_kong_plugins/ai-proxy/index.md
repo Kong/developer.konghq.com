@@ -24,3 +24,5 @@ min_version:
 #    - db-less
 #    - traditional
 ---
+
+{% include plugins/ai-proxy.md plugin='AI Proxy' %}
