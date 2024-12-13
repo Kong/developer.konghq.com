@@ -19,7 +19,6 @@ related_resources:
 
 breadcrumbs:
   - /gateway/
-  - /gateway/traffic-control/
 ---
 
 {{ page.description }} This doc explains how {{site.base_gateway}}'s proxying capabilities works in detail.
