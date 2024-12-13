@@ -1,5 +1,5 @@
 ---
-title: JWT plugin
+title: JWT
 
 name: JWT
 publisher: kong-inc

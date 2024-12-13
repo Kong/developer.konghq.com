@@ -1,5 +1,5 @@
 ---
-title: 'Key Authentication - Encrypted plugin'
+title: 'Key Authentication - Encrypted'
 name: 'Key Authentication - Encrypted'
 
 content_type: plugin

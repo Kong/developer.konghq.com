@@ -1,5 +1,5 @@
 ---
-title: 'OpenTelemetry plugin'
+title: 'OpenTelemetry'
 name: 'OpenTelemetry'
 
 content_type: plugin

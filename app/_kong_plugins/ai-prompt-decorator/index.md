@@ -1,5 +1,5 @@
 ---
-title: 'AI Prompt Decorator plugin'
+title: 'AI Prompt Decorator'
 name: 'AI Prompt Decorator'
 
 content_type: plugin

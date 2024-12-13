@@ -1,5 +1,5 @@
 ---
-title: 'Azure Functions plugin'
+title: 'Azure Functions'
 name: 'Azure Functions'
 
 content_type: plugin

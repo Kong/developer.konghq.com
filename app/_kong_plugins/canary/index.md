@@ -1,5 +1,5 @@
 ---
-title: 'Canary Release plugin'
+title: 'Canary Release'
 name: 'Canary Release'
 
 content_type: plugin

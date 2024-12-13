@@ -1,5 +1,5 @@
 ---
-title: 'TLS Handshake Modifier plugin'
+title: 'TLS Handshake Modifier'
 name: 'TLS Handshake Modifier'
 
 content_type: plugin

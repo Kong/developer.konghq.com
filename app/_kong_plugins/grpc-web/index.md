@@ -1,5 +1,5 @@
 ---
-title: 'gRPC-Web plugin'
+title: 'gRPC-Web'
 name: 'gRPC-Web'
 
 content_type: plugin

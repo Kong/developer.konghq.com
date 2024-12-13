@@ -1,5 +1,5 @@
 ---
-title: 'StatsD plugin'
+title: 'StatsD'
 name: 'StatsD'
 
 content_type: plugin

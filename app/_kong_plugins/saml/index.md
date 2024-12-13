@@ -1,5 +1,5 @@
 ---
-title: 'SAML plugin'
+title: 'SAML'
 name: 'SAML'
 
 content_type: plugin

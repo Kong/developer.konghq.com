@@ -1,5 +1,5 @@
 ---
-title: Basic Auth plugin
+title: Basic Auth
 
 name: Basic Auth
 publisher: kong-inc

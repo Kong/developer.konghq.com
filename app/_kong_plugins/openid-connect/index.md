@@ -1,5 +1,5 @@
 ---
-title: 'OpenID Connect plugin'
+title: 'OpenID Connect'
 name: 'OpenID Connect'
 
 content_type: plugin

@@ -1,5 +1,5 @@
 ---
-title: 'UDP Log plugin'
+title: 'UDP Log'
 name: 'UDP Log'
 
 content_type: plugin

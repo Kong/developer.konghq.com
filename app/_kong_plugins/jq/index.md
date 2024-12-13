@@ -1,5 +1,5 @@
 ---
-title: 'jq plugin'
+title: 'jq'
 name: 'jq'
 
 content_type: plugin

@@ -1,5 +1,5 @@
 ---
-title: 'Bot Detection plugin'
+title: 'Bot Detection'
 name: 'Bot Detection'
 
 content_type: plugin

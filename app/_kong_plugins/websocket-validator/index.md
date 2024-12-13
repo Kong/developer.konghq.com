@@ -1,5 +1,5 @@
 ---
-title: 'WebSocket Validator plugin'
+title: 'WebSocket Validator'
 name: 'WebSocket Validator'
 
 content_type: plugin

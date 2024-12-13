@@ -1,5 +1,5 @@
 ---
-title: 'OAS Validation plugin'
+title: 'OAS Validation'
 name: 'OAS Validation'
 
 content_type: plugin

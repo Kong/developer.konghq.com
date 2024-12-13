@@ -1,5 +1,5 @@
 ---
-title: 'File Log plugin'
+title: 'File Log'
 name: 'File Log'
 
 content_type: plugin

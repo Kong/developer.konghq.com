@@ -1,5 +1,5 @@
 ---
-title: 'Request Validator plugin'
+title: 'Request Validator'
 name: 'Request Validator'
 
 content_type: plugin

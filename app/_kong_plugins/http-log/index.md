@@ -1,5 +1,5 @@
 ---
-title: 'HTTP Log plugin'
+title: 'HTTP Log'
 name: 'HTTP Log'
 
 content_type: plugin

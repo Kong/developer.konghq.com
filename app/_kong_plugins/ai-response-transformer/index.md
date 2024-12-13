@@ -1,5 +1,5 @@
 ---
-title: 'AI Response Transformer plugin'
+title: 'AI Response Transformer'
 name: 'AI Response Transformer'
 
 content_type: plugin

@@ -1,5 +1,5 @@
 ---
-title: 'Kafka Log plugin'
+title: 'Kafka Log'
 name: 'Kafka Log'
 
 content_type: plugin

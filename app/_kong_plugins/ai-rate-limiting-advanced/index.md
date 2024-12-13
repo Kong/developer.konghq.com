@@ -1,5 +1,5 @@
 ---
-title: AI Rate Limiting Advanced plugin
+title: AI Rate Limiting Advanced
 
 name: AI Rate Limiting Advanced
 publisher: kong-inc

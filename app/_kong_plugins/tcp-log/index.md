@@ -1,5 +1,5 @@
 ---
-title: 'TCP Log plugin'
+title: 'TCP Log'
 name: 'TCP Log'
 
 content_type: plugin

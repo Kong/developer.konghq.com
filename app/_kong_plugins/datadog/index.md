@@ -1,5 +1,5 @@
 ---
-title: 'Datadog plugin'
+title: 'Datadog'
 name: 'Datadog'
 
 content_type: plugin

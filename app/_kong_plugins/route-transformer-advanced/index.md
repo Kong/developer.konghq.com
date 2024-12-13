@@ -1,5 +1,5 @@
 ---
-title: 'Route Transformer Advanced plugin'
+title: 'Route Transformer Advanced'
 name: 'Route Transformer Advanced'
 
 content_type: plugin

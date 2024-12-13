@@ -1,5 +1,5 @@
 ---
-title: 'Mocking plugin'
+title: 'Mocking'
 name: 'Mocking'
 
 content_type: plugin

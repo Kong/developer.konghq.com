@@ -1,5 +1,5 @@
 ---
-title: 'Kafka Upstream plugin'
+title: 'Kafka Upstream'
 name: 'Kafka Upstream'
 
 content_type: plugin

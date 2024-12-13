@@ -1,5 +1,5 @@
 ---
-title: 'OAuth 2.0 Authentication plugin'
+title: 'OAuth 2.0 Authentication'
 name: 'OAuth 2.0 Authentication'
 
 content_type: plugin

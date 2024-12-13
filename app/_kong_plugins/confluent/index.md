@@ -1,5 +1,5 @@
 ---
-title: 'Confluent plugin'
+title: 'Confluent'
 name: 'Confluent'
 
 content_type: plugin

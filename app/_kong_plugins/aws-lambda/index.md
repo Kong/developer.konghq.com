@@ -1,5 +1,5 @@
 ---
-title: 'AWS Lambda plugin'
+title: 'AWS Lambda'
 name: 'AWS Lambda'
 
 content_type: plugin

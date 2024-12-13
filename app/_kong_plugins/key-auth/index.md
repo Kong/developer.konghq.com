@@ -1,5 +1,5 @@
 ---
-title: Key Auth plugin
+title: Key Auth
 
 name: Key Auth
 publisher: kong-inc

@@ -1,5 +1,5 @@
 ---
-title: 'XML Threat Protection plugin'
+title: 'XML Threat Protection'
 name: 'XML Threat Protection'
 
 content_type: plugin

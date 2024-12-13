@@ -1,5 +1,5 @@
 ---
-title: 'Exit Transformer plugin'
+title: 'Exit Transformer'
 name: 'Exit Transformer'
 
 content_type: plugin

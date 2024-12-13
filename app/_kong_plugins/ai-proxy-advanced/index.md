@@ -1,5 +1,5 @@
 ---
-title: 'AI Proxy Advanced plugin'
+title: 'AI Proxy Advanced'
 name: 'AI Proxy Advanced'
 
 content_type: plugin

@@ -1,5 +1,5 @@
 ---
-title: Response Rate Limiting plugin
+title: Response Rate Limiting
 
 name: Response Rate Limiting
 publisher: kong-inc

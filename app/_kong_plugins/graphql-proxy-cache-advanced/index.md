@@ -1,5 +1,5 @@
 ---
-title: 'GraphQL Proxy Caching Advanced plugin'
+title: 'GraphQL Proxy Caching Advanced'
 name: 'GraphQL Proxy Caching Advanced'
 
 content_type: plugin
