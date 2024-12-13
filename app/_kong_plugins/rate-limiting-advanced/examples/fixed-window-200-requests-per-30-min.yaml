@@ -2,6 +2,8 @@ title: Fixed window 200 reqs per 30 mins
 description: |
   Users are allowed 200 requests per 30 minutes, resetting exactly on the 30 minute mark with no carryover of unused limits.
 
+weight: 900
+
 config:
   limit: 
     - 200
