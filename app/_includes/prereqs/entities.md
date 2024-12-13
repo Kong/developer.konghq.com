@@ -11,7 +11,7 @@ For this tutorial, you'll need {{site.base_gateway}} entities, like Gateway Serv
 ```yaml
 echo '
 {{ include.data }}
-' | kongctl apply gateway -
+' | deck gateway apply -
 ```
 {: data-file="prereqs.yaml" }
 {% endcapture %}
