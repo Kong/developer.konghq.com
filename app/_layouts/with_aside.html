@@ -28,8 +28,7 @@ layout: default
 
         {% if page.toc != false %}
         <div class="flex flex-col w-full sticky top-[96px] items-baseline">
-            {% include toc.html html=content h_min=2 h_max=2 id='toc' item_class='py-2 px-5'
-            anchor_class='scroll-to  text-secondary' class="list-none ml-0" %}
+            {% include toc.html html=content h_min=2 h_max=2 id='toc' anchor_class='tab-button__vertical scroll-to' class="tabcolumn" %}
         </div>
         {% endif %}
     </aside>

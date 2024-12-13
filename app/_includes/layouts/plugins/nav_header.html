@@ -1,21 +1,11 @@
 <header class="w-full">
   <div class="flex items-end">
     <div class="flex flex-col w-full">
-      <div class="flex justify-between items-center text-sm">
-        <ul class="list-none flex align-bottom ml-0 flex-row gap-0">
-          <li class="px-4 py-3 {% if page.overview? %}  border-b-2 border-brand {% endif %}">
-            <a class="text-primary" href="{{page.overview_url}}">Overview</a>
-          </li>
-          <li class="px-4 py-3 {% if page.example? %}  border-b-2 border-brand {% endif %}">
-            <a class="text-primary" href="{{page.get_started_url}}">Get started</a>
-          </li>
-          <li class="px-4 py-3 {% if page.reference? %}  border-b-2 border-brand {% endif %}">
-            <a class="text-primary" href="{{page.reference_url}}">Configuration reference</a>
-          </li>
-          <li class="px-4 py-3 {% if page.changelog? %}  border-b-2 border-brand {% endif %}">
-            <a class="text-primary" href="{{page.changelog_url}}">Changelog</a>
-          </li>
-        </ul>
+      <div class="tablist">
+        <a class="tab-button__horizontal{% if page.overview? %} tab-button__horizontal--active{% endif %}" href="{{page.overview_url}}">Overview</a>
+        <a class="tab-button__horizontal{% if page.example? %} tab-button__horizontal--active{% endif %}" href="{{page.get_started_url}}">Get started</a>
+        <a class="tab-button__horizontal{% if page.reference? %} tab-button__horizontal--active{% endif %}" href="{{page.reference_url}}">Configuration reference</a>
+        <a class="tab-button__horizontal{% if page.changelog? %} tab-button__horizontal--active{% endif %}" href="{{page.changelog_url}}">Changelog</a>
       </div>
     </div>
   </div>

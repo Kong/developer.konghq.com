@@ -322,4 +322,36 @@
   .badge.deprecated {
     @apply bg-semantic-red-secondary;
   }
+
+  .tablist {
+    @apply list-none flex gap-4 text-sm ml-0 flex-row border-b border-primary/5 w-full items-center;
+  }
+
+  .tabcolumn {
+    @apply list-none flex text-sm ml-0  w-full gap-0;
+  }
+
+  .tab-button {
+    @apply flex text-sm max-h-11 box-border;
+  }
+
+  .tab-button--active {
+    @apply text-primary font-semibold border-brand !important;
+  }
+
+  .tab-button__horizontal {
+    @apply tab-button py-3 text-terciary hover:no-underline items-center;
+
+    &.tab-button__horizontal--active {
+      @apply tab-button--active border-b-2 -mb-0.5 !important;
+    }
+  }
+
+  .tab-button__vertical {
+    @apply tab-button py-2 px-5 text-terciary hover:no-underline border-l-2 border-transparent;
+
+    &.tab-button__vertical--active {
+      @apply tab-button--active !important;
+    }
+  }
 }
