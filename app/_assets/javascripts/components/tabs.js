@@ -1,20 +1,19 @@
 class TabsComponent {
   constructor(elem) {
     this.elem = elem;
-    this.tablistNode = this.elem.querySelector('[role=tablist]');
-    this.activeTabClasses = ['text-primary', 'font-semibold', 'border-brand'];
-    this.inactiveTabClasses = ['border-transparent'];
+    this.tablistNode = this.elem.querySelector("[role=tablist]");
+    this.activeTabClasses = ["tab-button__horizontal--active"];
 
-    this.tabs = Array.from(this.tablistNode.querySelectorAll('[role=tab]'));
+    this.tabs = Array.from(this.tablistNode.querySelectorAll("[role=tab]"));
     this.firstTab = this.tabs[0];
     this.lastTab = this.tabs[this.tabs.length - 1];
 
     this.tabs.forEach((tab) => {
-      tab.addEventListener('keydown', this.onKeydown.bind(this));
-      tab.addEventListener('click', this.onClick.bind(this));
+      tab.addEventListener("keydown", this.onKeydown.bind(this));
+      tab.addEventListener("click", this.onClick.bind(this));
     });
     // Listen for the custom event to update tabs
-    document.addEventListener('tabSelected', this.onTabSelected.bind(this));
+    document.addEventListener("tabSelected", this.onTabSelected.bind(this));
 
     this.setSelectedTab(this.firstTab, false);
   }
@@ -25,22 +24,22 @@ class TabsComponent {
     let flag = false;
 
     switch (event.key) {
-      case 'ArrowLeft':
-        selectedTab = this.getPreviousTab(tgt)
+      case "ArrowLeft":
+        selectedTab = this.getPreviousTab(tgt);
         flag = true;
         break;
 
-      case 'ArrowRight':
-        selectedTab = this.getNextTab(tgt)
+      case "ArrowRight":
+        selectedTab = this.getNextTab(tgt);
         flag = true;
         break;
 
-      case 'Home':
+      case "Home":
         selectedTab = this.firstTab;
         flag = true;
         break;
 
-      case 'End':
+      case "End":
         selectedTab = this.lastTab;
         flag = true;
         break;
@@ -67,24 +66,26 @@ class TabsComponent {
   }
 
   setSelectedTab(currentTab, setFocus) {
-    if (typeof setFocus !== 'boolean') {
+    if (typeof setFocus !== "boolean") {
       setFocus = true;
     }
     this.tabs.forEach((tab) => {
-      const tabPanel = document.getElementById(tab.getAttribute('aria-controls'));
+      const tabPanel = document.getElementById(
+        tab.getAttribute("aria-controls")
+      );
       if (currentTab === tab) {
-        tab.setAttribute('aria-selected', 'true');
+        tab.setAttribute("aria-selected", "true");
         tab.tabIndex = 0;
         this.toggleTabClasses(tab, true);
-        tabPanel.classList.remove('hidden');
+        tabPanel.classList.remove("hidden");
         if (setFocus) {
           tab.focus();
         }
       } else {
-        tab.setAttribute('aria-selected', 'false');
+        tab.setAttribute("aria-selected", "false");
         tab.tabIndex = -1;
         this.toggleTabClasses(tab, false);
-        tabPanel.classList.add('hidden');
+        tabPanel.classList.add("hidden");
       }
     });
   }
@@ -108,14 +109,14 @@ class TabsComponent {
   }
 
   setSelectedTabBySlug(slug, setFocus = true) {
-    const tab = this.tabs.find(tab => tab.dataset.slug === slug);
+    const tab = this.tabs.find((tab) => tab.dataset.slug === slug);
     if (tab) {
       this.setSelectedTab(tab, setFocus);
     }
   }
 
   dispatchTabSelectedEvent(tabSlug) {
-    const event = new CustomEvent('tabSelected', { detail: { tabSlug } });
+    const event = new CustomEvent("tabSelected", { detail: { tabSlug } });
     document.dispatchEvent(event);
   }
 
@@ -127,9 +128,7 @@ class TabsComponent {
   toggleTabClasses(tab, isActive) {
     if (isActive) {
       tab.classList.add(...this.activeTabClasses);
-      tab.classList.remove(...this.inactiveTabClasses);
     } else {
-      tab.classList.add(...this.inactiveTabClasses);
       tab.classList.remove(...this.activeTabClasses);
     }
   }
@@ -137,14 +136,14 @@ class TabsComponent {
 
 export default class Tabs {
   constructor() {
-    document.querySelectorAll('.tabs').forEach((elem) => {
+    document.querySelectorAll(".tabs").forEach((elem) => {
       new TabsComponent(elem);
     });
 
     // Check if a tab query param exists in the URL
     const urlParams = new URLSearchParams(window.location.search);
-    const tabSlug = urlParams.get('tab');
-    const formatSlug = urlParams.get('format');
+    const tabSlug = urlParams.get("tab");
+    const formatSlug = urlParams.get("format");
     if (tabSlug) {
       this.selectTabBySlug(tabSlug);
     } else if (formatSlug) {
@@ -153,7 +152,7 @@ export default class Tabs {
   }
 
   selectTabBySlug(tabSlug) {
-    const event = new CustomEvent('tabSelected', { detail: { tabSlug } });
+    const event = new CustomEvent("tabSelected", { detail: { tabSlug } });
     document.dispatchEvent(event);
   }
 }

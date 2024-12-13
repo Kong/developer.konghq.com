@@ -6,11 +6,10 @@ layout: plugins/without_aside
   <nav class="flex gap-8 basis-1/4">
     <div class="flex gap-3 flex-col">
       <div class="text-sm text-brand font-semibold">Basic use cases</div>
-      <ul class="flex list-none ml-0">
+      <ul class="tabcolumn">
         {% for example in page.examples %}
-          {% assign current_page = false %}{% if page.url == example.url %}{% assign current_page = true %}{% endif%}
-          <li class="flex py-2 px-5 {% if current_page %}border-l-2 border-brand{% endif %}">
-            <a href="{{ example.url }}" class="text-sm {% if current_page %}text-primary -ml-0.5{% else %}text-secondary{% endif %}">{{ example.title }}</a>
+          <li>
+            <a class="tab-button__vertical{% if page.url == example.url %} tab-button__vertical--active{% endif %}" href="{{ example.url }}">{{ example.title }}</a>
           </li>
         {% endfor %}
       </ul>

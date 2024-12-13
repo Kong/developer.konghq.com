@@ -1,7 +1,7 @@
 {% assign tabs = 'navtabs-' | append: navtabs_id %}
 
 <div class="tabs flex flex-col {{ class }} {{ environment['additional_classes'] }}">
-  <ul class="tablist flex gap-4 text-sm ml-0 flex-row" role="tablist">
+  <ul class="tablist" role="tablist">
     {% for tab in environment[tabs] %}
       {% assign slug = tab[1].attributes.slug %}
       {% if forloop.first %}
@@ -11,7 +11,7 @@
       {% endif %}
       <button
         id="navtab-{{ navtabs_id }}-tab-{{ forloop.index }}"
-        class="py-3 border-b-2"
+        class="tab-button__horizontal"
         aria-controls="navtab-{{ navtabs_id }}-tabpanel-{{ forloop.index }}"
         role="tab"
         aria-selected="{{ aria_selected }}"
