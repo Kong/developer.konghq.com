@@ -44,6 +44,15 @@ module Jekyll
         @example_files ||= Dir.glob(File.join(folder, 'examples', '*'))
       end
 
+      def examples
+        @examples ||= example_files.map do |file|
+          Drops::PluginConfigExample.new(
+            file: file,
+            plugin: self
+          )
+        end.sort_by { |e| -e.weight }
+      end
+
       def schema
         @schema ||= schemas.detect { |s| s.release == latest_release_in_range }
       end
