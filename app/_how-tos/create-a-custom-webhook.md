@@ -24,4 +24,8 @@ prereqs:
     routes:
         - example-route
 ---
-ssss
+
+
+
+{:.warning}
+> **Important**:  Before you can use event hooks for the first time, {{site.base_gateway}} needs to be reloaded.
