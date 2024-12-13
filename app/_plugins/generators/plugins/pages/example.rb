@@ -11,7 +11,7 @@ module Jekyll
         end
 
         def content
-          ''
+          @content ||= File.read('app/_includes/plugins/example.md')
         end
 
         def data
