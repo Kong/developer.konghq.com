@@ -103,11 +103,7 @@ entities:
         hour: 1000
 {% endentity_examples %}
 
-## 4. Apply configuration
-
-{% include how-tos/steps/apply_config.md %}
-
-## 5. Validate
+## 4. Validate
 
 {% validation rate-limit-check %}
 preamble: |
