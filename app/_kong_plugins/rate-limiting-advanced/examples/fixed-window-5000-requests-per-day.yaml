@@ -2,6 +2,8 @@ title: Fixed window 5000 reqs per day
 description: |
   A strict limit of 5000 requests per day resetting promptly at midnight, preventing any burst traffic or inconsistent user experiences.
 
+weight: 700
+
 config:
   limit: 
     - 500
