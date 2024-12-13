@@ -111,3 +111,9 @@ app/plugins/protocols.md:
   - app/hub/plugins/compatibility/index.md
 app/plugins/scopes.md:
   - app/hub/plugins/compatibility/index.md
+
+#plugins
+app/_kong_plugins/ai-proxy-advanced/index.md:
+  - app/_hub/kong-inc/ai-proxy-advanced/overview/_index.md
+app/_kong_plugins/ai-proxy/index.md:
+  - app/_hub/kong-inc/ai-proxy/overview/_index.md
