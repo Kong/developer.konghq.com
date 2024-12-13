@@ -21,11 +21,15 @@ module Jekyll
       end
 
       def description
-        @description ||= example.fetch('description', '')
+        @description ||= example.fetch('description')
       end
 
       def plugin_slug
         @plugin_slug ||= @plugin.slug
+      end
+
+      def title
+        @title ||= example.fetch('title')
       end
 
       def entity_examples # rubocop:disable Metrics/MethodLength

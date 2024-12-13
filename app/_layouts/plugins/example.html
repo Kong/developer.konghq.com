@@ -2,32 +2,22 @@
 layout: plugins/without_aside
 ---
 
-<div class="flex flex-col gap-3 ">
-  <h2>Description</h2>
-
-  <div class="content">
-    {{ page.example.description | markdoownify }}
-  </div>
+<div class="flex gap-16 w-full">
+  <nav class="flex gap-8 basis-1/4">
+    <div class="flex gap-3 flex-col">
+      <div class="text-sm text-brand font-semibold">Basic use cases</div>
+      <ul class="flex list-none ml-0">
+        {% for example in page.examples %}
+          {% assign current_page = false %}{% if page.url == example.url %}{% assign current_page = true %}{% endif%}
+          <li class="flex py-2 px-5 {% if current_page %}border-l-2 border-brand{% endif %}">
+            <a href="{{ example.url }}" class="text-sm {% if current_page %}text-primary -ml-0.5{% else %}text-secondary{% endif %}">{{ example.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </nav>
+  <article class="flex flex-col basis-3/4 gap-12">
+    {{content}}
+  </article>
 </div>
 
-<div class="flex flex-col gap-3 ">
-  <h2>Set up the plugin</h2>
-
-  <div class="content">
-    {% include components/plugin_config_example.html plugin_config_example=page.example %}
-  </div>
-</div>
-
-<div class="flex flex-col gap-3 ">
-  <h2>Available examples</h2>
-
-  <div class="content">
-    <ul>
-      {% for example in page.examples %}
-      <li>
-        <a href="{{ example.url }}"> {{ example.slug }}</a>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
-</div>

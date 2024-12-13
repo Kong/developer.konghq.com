@@ -1,3 +1,4 @@
+title: Sliding window 500 reqs per hour
 description: |
   Each user is allowed 500 requests every rolling hour.
   If the limit is exceeded and the user receives a 429 error, each additional request within the sliding window (hour) 

@@ -1,3 +1,4 @@
+title: Fixed window 500 reqs per hour
 description: |
   A fixed limit of 500 requests per hour resetting sharply on the hour, ensuring no user can exceed this limit.
 
