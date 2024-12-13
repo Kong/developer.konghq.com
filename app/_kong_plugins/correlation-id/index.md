@@ -1,5 +1,5 @@
 ---
-title: 'Correlation ID plugin'
+title: 'Correlation ID'
 name: 'Correlation ID'
 
 content_type: plugin

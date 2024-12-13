@@ -1,5 +1,5 @@
 ---
-title: 'JWE Decrypt plugin'
+title: 'JWE Decrypt'
 name: 'JWE Decrypt'
 
 content_type: plugin

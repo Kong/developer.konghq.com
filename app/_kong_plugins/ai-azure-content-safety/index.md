@@ -1,5 +1,5 @@
 ---
-title: 'AI Azure Content Safety plugin'
+title: 'AI Azure Content Safety'
 name: 'AI Azure Content Safety'
 
 content_type: plugin

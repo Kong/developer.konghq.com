@@ -1,5 +1,5 @@
 ---
-title: 'AI Request Transformer plugin'
+title: 'AI Request Transformer'
 name: 'AI Request Transformer'
 
 content_type: plugin

@@ -1,5 +1,5 @@
 ---
-title: 'DeGraphQL plugin'
+title: 'DeGraphQL'
 name: 'DeGraphQL'
 
 content_type: plugin

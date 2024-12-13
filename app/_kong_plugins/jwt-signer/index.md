@@ -1,5 +1,5 @@
 ---
-title: Kong JWT Signer plugin'
+title: Kong JWT Signer
 name: 'Kong JWT Signer'
 
 content_type: plugin

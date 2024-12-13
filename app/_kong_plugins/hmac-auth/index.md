@@ -1,5 +1,5 @@
 ---
-title: 'HMAC Auth plugin'
+title: 'HMAC Auth'
 name: 'HMAC Auth'
 
 content_type: plugin

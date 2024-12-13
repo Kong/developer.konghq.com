@@ -1,5 +1,5 @@
 ---
-title: 'Kong Functions (Pre-Plugins) plugin'
+title: 'Kong Functions (Pre-Plugins)'
 name: 'Kong Functions (Pre-Plugins)'
 
 content_type: plugin

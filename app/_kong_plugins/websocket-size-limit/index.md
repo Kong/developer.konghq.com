@@ -1,5 +1,5 @@
 ---
-title: 'WebSocket Size Limit plugin'
+title: 'WebSocket Size Limit'
 name: 'WebSocket Size Limit'
 
 content_type: plugin

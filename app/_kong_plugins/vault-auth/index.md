@@ -1,5 +1,5 @@
 ---
-title: 'Vault Authentication plugin'
+title: 'Vault Authentication'
 name: 'Vault Authentication'
 
 content_type: plugin

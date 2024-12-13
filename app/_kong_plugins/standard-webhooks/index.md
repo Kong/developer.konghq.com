@@ -1,5 +1,5 @@
 ---
-title: 'Standard Webhooks plugin'
+title: 'Standard Webhooks'
 name: 'Standard Webhooks'
 
 content_type: plugin

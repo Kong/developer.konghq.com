@@ -1,5 +1,5 @@
 ---
-title: 'AI Semantic Cache plugin'
+title: 'AI Semantic Cache'
 name: 'AI Semantic Cache'
 
 content_type: plugin

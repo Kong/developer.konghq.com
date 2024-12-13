@@ -1,5 +1,5 @@
 ---
-title: 'OPA plugin'
+title: 'OPA'
 name: 'OPA'
 
 content_type: plugin

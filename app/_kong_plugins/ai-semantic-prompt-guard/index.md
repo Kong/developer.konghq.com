@@ -1,5 +1,5 @@
 ---
-title: 'AI Semantic Prompt Guard plugin'
+title: 'AI Semantic Prompt Guard'
 name: 'AI Semantic Prompt Guard'
 
 content_type: plugin

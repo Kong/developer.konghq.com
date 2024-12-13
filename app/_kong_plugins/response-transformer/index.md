@@ -1,5 +1,5 @@
 ---
-title: 'Response Transformer plugin'
+title: 'Response Transformer'
 name: 'Response Transformer'
 
 content_type: plugin

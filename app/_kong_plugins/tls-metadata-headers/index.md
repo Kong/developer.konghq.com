@@ -1,5 +1,5 @@
 ---
-title: 'TLS Metadata Headers plugin'
+title: 'TLS Metadata Headers'
 name: 'TLS Metadata Headers'
 
 content_type: plugin

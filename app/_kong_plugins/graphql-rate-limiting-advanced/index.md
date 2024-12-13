@@ -1,5 +1,5 @@
 ---
-title: GraphQL Rate Limiting Advanced plugin
+title: GraphQL Rate Limiting Advanced
 
 name: GraphQL Rate Limiting Advanced
 publisher: kong-inc

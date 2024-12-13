@@ -1,5 +1,5 @@
 ---
-title: 'Request Termination plugin'
+title: 'Request Termination'
 name: 'Request Termination'
 
 content_type: plugin

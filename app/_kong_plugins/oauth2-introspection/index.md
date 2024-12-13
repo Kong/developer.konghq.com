@@ -1,5 +1,5 @@
 ---
-title: 'OAuth 2.0 Introspection plugin'
+title: 'OAuth 2.0 Introspection'
 name: 'OAuth 2.0 Introspection'
 
 content_type: plugin

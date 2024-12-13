@@ -1,5 +1,5 @@
 ---
-title: 'Upstream Timeout plugin'
+title: 'Upstream Timeout'
 name: 'Upstream Timeout'
 
 content_type: plugin

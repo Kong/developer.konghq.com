@@ -1,5 +1,5 @@
 ---
-title: 'Redirect plugin'
+title: 'Redirect'
 name: 'Redirect'
 
 content_type: plugin

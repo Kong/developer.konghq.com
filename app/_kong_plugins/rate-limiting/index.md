@@ -1,5 +1,5 @@
 ---
-title: Rate Limiting plugin
+title: Rate Limiting
 
 name: Rate Limiting
 publisher: kong-inc

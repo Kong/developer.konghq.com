@@ -1,5 +1,5 @@
 ---
-title: 'IP Restriction plugin'
+title: 'IP Restriction'
 name: 'IP Restriction'
 
 content_type: plugin

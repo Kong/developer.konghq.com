@@ -1,5 +1,5 @@
 ---
-title: 'ACL plugin'
+title: 'ACL'
 name: 'ACL'
 
 content_type: plugin

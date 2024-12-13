@@ -1,5 +1,5 @@
 ---
-title: 'Portal Application Registration plugin'
+title: 'Portal Application Registration'
 name: 'Portal Application Registration'
 
 content_type: plugin

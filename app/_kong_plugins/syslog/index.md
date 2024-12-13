@@ -1,5 +1,5 @@
 ---
-title: 'Syslog plugin'
+title: 'Syslog'
 name: 'Syslog'
 
 content_type: plugin

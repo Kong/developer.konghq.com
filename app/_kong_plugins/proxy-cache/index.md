@@ -1,5 +1,5 @@
 ---
-title: 'Proxy Cache plugin'
+title: 'Proxy Cache'
 name: 'Proxy Cache'
 
 content_type: plugin

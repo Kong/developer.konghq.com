@@ -1,5 +1,5 @@
 ---
-title: 'Upstream OAuth plugin'
+title: 'Upstream OAuth'
 name: 'Upstream OAuth'
 
 content_type: plugin

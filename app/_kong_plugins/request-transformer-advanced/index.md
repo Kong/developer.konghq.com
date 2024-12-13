@@ -1,5 +1,5 @@
 ---
-title: 'Request Transformer Advanced plugin'
+title: 'Request Transformer Advanced'
 name: 'Request Transformer Advanced'
 
 content_type: plugin

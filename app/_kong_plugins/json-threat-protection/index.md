@@ -1,5 +1,5 @@
 ---
-title: 'JSON Threat Protection plugin'
+title: 'JSON Threat Protection'
 name: 'JSON Threat Protection'
 
 content_type: plugin

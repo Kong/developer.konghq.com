@@ -1,5 +1,5 @@
 ---
-title: 'Request Size Limiting plugin'
+title: 'Request Size Limiting'
 name: 'Request Size Limiting'
 
 content_type: plugin

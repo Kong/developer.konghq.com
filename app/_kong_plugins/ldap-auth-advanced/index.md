@@ -1,5 +1,5 @@
 ---
-title: 'LDAP Authentication Advanced plugin'
+title: 'LDAP Authentication Advanced'
 name: 'LDAP Authentication Advanced'
 
 content_type: plugin

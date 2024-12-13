@@ -1,5 +1,5 @@
 ---
-title: 'AppDynamics plugin'
+title: 'AppDynamics'
 name: 'AppDynamics'
 
 content_type: plugin

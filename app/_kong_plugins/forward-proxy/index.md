@@ -1,5 +1,5 @@
 ---
-title: 'Forward Proxy Advanced plugin'
+title: 'Forward Proxy Advanced'
 name: 'Forward Proxy Advanced'
 
 content_type: plugin

@@ -1,5 +1,5 @@
 ---
-title: 'Prometheus plugin'
+title: 'Prometheus'
 name: 'Prometheus'
 
 content_type: plugin

@@ -1,5 +1,5 @@
 ---
-title: 'Zipkin plugin'
+title: 'Zipkin'
 name: 'Zipkin'
 
 content_type: plugin

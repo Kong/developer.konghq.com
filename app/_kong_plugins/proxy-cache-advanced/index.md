@@ -1,5 +1,5 @@
 ---
-title: 'Proxy Caching Advanced plugin'
+title: 'Proxy Caching Advanced'
 name: 'Proxy Caching Advanced'
 
 content_type: plugin

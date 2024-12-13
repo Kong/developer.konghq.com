@@ -1,5 +1,5 @@
 ---
-title: 'ACME plugin'
+title: 'ACME'
 name: 'ACME'
 
 content_type: plugin

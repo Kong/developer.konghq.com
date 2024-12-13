@@ -1,5 +1,5 @@
 ---
-title: 'Session plugin'
+title: 'Session'
 name: 'Session'
 
 content_type: plugin

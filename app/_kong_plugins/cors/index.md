@@ -1,5 +1,5 @@
 ---
-title: 'CORS plugin'
+title: 'CORS'
 name: 'CORS'
 
 content_type: plugin

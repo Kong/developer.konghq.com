@@ -1,5 +1,5 @@
 ---
-title: 'Mutual TLS Authentication plugin'
+title: 'Mutual TLS Authentication'
 name: 'Mutual TLS Authentication'
 
 content_type: plugin

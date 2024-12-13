@@ -1,5 +1,5 @@
 ---
-title: 'Route By Header plugin'
+title: 'Route By Header'
 name: 'Route By Header'
 
 content_type: plugin

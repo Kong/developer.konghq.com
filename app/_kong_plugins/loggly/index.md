@@ -1,5 +1,5 @@
 ---
-title: 'Loggly plugin'
+title: 'Loggly'
 name: 'Loggly'
 
 content_type: plugin

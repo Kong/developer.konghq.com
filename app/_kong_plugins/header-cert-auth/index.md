@@ -1,5 +1,5 @@
 ---
-title: 'Header Cert Authentication plugin'
+title: 'Header Cert Authentication'
 name: 'Header Cert Authentication'
 
 content_type: plugin

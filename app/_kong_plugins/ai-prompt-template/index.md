@@ -1,5 +1,5 @@
 ---
-title: 'AI Prompt Template plugin'
+title: 'AI Prompt Template'
 name: 'AI Prompt Template'
 
 content_type: plugin
