@@ -6,14 +6,14 @@
           <li class="px-4 py-3 {% if page.overview? %}  border-b-2 border-brand {% endif %}">
             <a class="text-primary" href="{{page.overview_url}}">Overview</a>
           </li>
+          <li class="px-4 py-3 {% if page.example? %}  border-b-2 border-brand {% endif %}">
+            <a class="text-primary" href="{{page.get_started_url}}">Get started</a>
+          </li>
           <li class="px-4 py-3 {% if page.reference? %}  border-b-2 border-brand {% endif %}">
-            <a class="text-primary" href="{{page.reference_url}}">Configuration Reference</a>
+            <a class="text-primary" href="{{page.reference_url}}">Configuration reference</a>
           </li>
           <li class="px-4 py-3 {% if page.changelog? %}  border-b-2 border-brand {% endif %}">
             <a class="text-primary" href="{{page.changelog_url}}">Changelog</a>
-          </li>
-          <li class="px-4 py-3 {% if page.example? %}  border-b-2 border-brand {% endif %}">
-            <a class="text-primary" href="{{page.get_started_url}}">Get Started</a>
           </li>
         </ul>
         <a class="border-2 rounded-md border-brand px-4 py-1 text-primary" href="https://cloud.konghq.com">Try it on Konnect</a>
