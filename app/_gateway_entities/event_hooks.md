@@ -18,10 +18,7 @@ tools:
 schema:
     api: gateway/admin-ee
     path: /schemas/Event-hooks
-api_specs:
-    - text: Gateway Admin - EE
-      url: '/api/gateway/admin-ee/#/Event-hooks/get-event-hooks-sources'
-      insomnia_link: 'https://insomnia.rest/run/?label=Gateway%20Admin%20Enterprise%20API&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2FGateway-EE%2Flatest%2Fkong-ee.yaml'
+
 
 ---
 
@@ -52,7 +49,7 @@ flowchart LR
         W(<b> POST to third party application</b>)
         X(<b> Log to /usr/local/kong/logs/error.log</b>)
         Y(<b> POST to third party application</b><br>Fully customizable)
-        Z(<b> Custom Code Lua code </br>)
+        Z(<b> Custom Code Lua code </b>)
     end
     
     A --> handlers
