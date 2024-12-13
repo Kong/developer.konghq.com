@@ -5,8 +5,8 @@
     {% for api_spec in page.api_specs %}
     <div class="flex justify-between">
       <a href="{{ api_spec.url }}">{{ api_spec.text }}</a>
-      {% if api_spec.insomnia_link %}
-      <a class="flex-shrink-0" href="{{ api_spec.insomnia_link }}"><img src="/assets/logos/brand/Insomnia.svg">
+      {% if api_spec.insomnia_link.exist? %}
+      <a class="flex-shrink-0" href="{{ api_spec.insomnia_link.url }}"><img src="/assets/logos/brand/Insomnia.svg">
       </a>
       {% endif %}
     </div>
