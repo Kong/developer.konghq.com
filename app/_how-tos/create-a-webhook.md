@@ -21,7 +21,7 @@ prereqs:
   inline:
     - title: A webhook URL
       content: |
-        * You can gnerate a URL by navigating to https://webhook.site and copying the free URL.
+        * You can generate a URL by navigating to https://webhook.site and copying the free URL.
 ---
 
 

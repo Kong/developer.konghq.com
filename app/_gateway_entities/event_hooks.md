@@ -121,7 +121,8 @@ These parameters can be used to issue notifications any time an upstream in your
 
 For step-by-step guides on configuring event hooks see the following docs: 
 
-* [How to configure a custom webhook](/how-to/create-a-custom-webhook)
+* [Create a webhook](/how-to/create-a-webhook/)
+* [How to configure `webhook-custom`](/how-to/create-a-custom-webhook)
 * [How to create a log event hook](/how-to/create-a-log-event-hook)
 * [How to create a lambda event hook](/how-to-create-a-lambda-event-hook)
 
