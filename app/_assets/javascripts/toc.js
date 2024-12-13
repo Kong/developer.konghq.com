@@ -1,13 +1,14 @@
 function toggleTocLinkClasses(link, isActive) {
   const activeClasses = ['border-l-2', 'border-brand'];
+  const activeLinkClasses = ['text-primary', '-ml-0.5'];
 
   if (isActive) {
-      link.classList.add('text-primary');
+      link.classList.add(...activeLinkClasses);
       link.classList.remove('text-secondary');
       link.parentElement.classList.add(...activeClasses);
   } else {
       link.classList.add('text-secondary');
-      link.classList.remove('text-primary');
+      link.classList.remove(...activeLinkClasses);
       link.parentElement.classList.remove(...activeClasses);
   }
 }
