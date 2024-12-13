@@ -1,6 +1,27 @@
 {% assign plugin = include.plugin %}
 {% assign id = plugin | slugify %}
 
+{% if plugin == 'AI Proxy'%}
+
+{% assign provider = 'config.provider' %}
+{% assign route_type = 'config.route_type' %}
+{% assign options = 'config.model.options' %}
+{% assign upstream_url = 'config.model.options.upstream_url' %}
+
+{% else %}
+
+{% assign provider = 'config.targets.model.provider' %}
+{% assign route_type = 'config.targets.route_type' %}
+{% assign options = 'config.targets.model.options' %}
+{% assign upstream_url = 'config.targets.model.options.upstream_url' %}
+
+{% endif %}
+
+{% assign provider_slug = provider | slugify %}
+{% assign route_type_slug = route_type | replace: '.', '-' %}
+{% assign upstream_url_slug = upstream_url | replace: '.', '-' %}
+
+
 {{ page.description }}
 
 The plugin accepts requests in one of a few defined and standardized formats, translates them to the configured target format, and then transforms the response back into a standard format.
@@ -53,7 +74,7 @@ The {{ plugin }} plugin will mediate the following for you:
   * Path
   * HTTP method
 * Authentication on behalf of the Kong API consumer
-* Decorating the request with parameters from the `config.options` block, appropriate for the chosen provider
+* Decorating the request with parameters from the `{{ options }}` block, appropriate for the chosen provider
 * Recording of usage statistics of the configured LLM provider and model into your selected [Kong log](/hub/?category=logging) plugin output
 * Optionally, additionally recording all post-transformation request and response messages from users, to and from the configured LLM
 * Fulfillment of requests to self-hosted models, based on select supported format transformations
@@ -88,13 +109,7 @@ This plugin does not support fallback over targets with different formats. You c
 
 ## Request and response formats
 
-{% if plugin == 'AI Proxy'%}
-The plugin's [`config.route_type`](/hub/kong-inc/{{ id }}/configuration/#config-route_type) should be set based on the target upstream endpoint and model, based on this capability matrix:
-{% endif %}
-
-{% if plugin == 'AI Proxy Advanced'%}
-The plugin's [`config.targets.route_type`](/hub/kong-inc/{{ id }}/configuration/#config-targets-route_type) should be set based on the target upstream endpoint and model, based on this capability matrix:
-{% endif %}
+The plugin's [`{{ route_type }}`](/hub/kong-inc/{{ id }}/configuration/#{{ route_type_slug }}) should be set based on the target upstream endpoint and model, based on this capability matrix:
 
 | Provider Name | Provider Upstream Path                                   | Kong `route_type`    | Example Model Name     |
 |---------------|----------------------------------------------------------|----------------------|------------------------|
@@ -145,8 +160,8 @@ The following upstream URL patterns are used:
 | Cohere    | `https://api.cohere.com:443/{route_type_path}`                                                         |
 | Azure     | `https://{azure_instance}.openai.azure.com:443/openai/deployments/{deployment_name}/{route_type_path}` |
 | Anthropic | `https://api.anthropic.com:443/{route_type_path}`                                                      |
-| Llama2    | As defined in `config.model.options.upstream_url`                                                      |
-| Mistral   | As defined in  `config.model.options.upstream_url`                                                     |
+| Llama2    | As defined in `{{ upstream_url }}`                                                      |
+| Mistral   | As defined in  `{{ upstream_url }}`                                                     |
 
 <!-- if_version gte:3.8.x -->
 
@@ -162,24 +177,12 @@ The following upstream URL patterns are used:
 
 {:.important}
 > While only the **Llama2** and **Mistral** models are classed as self-hosted, the target URL can be overridden for any of the supported providers.
-{% if plugin == 'AI Proxy'%}
-> For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same [`config.model.options.upstream_url`](/hub/kong-inc/{{ id }}/configuration/#config-model-options-upstream_url) plugin option.
-{% endif %}
-{% if plugin == 'AI Proxy Advanced'%}
-> For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same [`config.embeddings.model.options.upstream_url`](/hub/kong-inc/{{ id }}/configuration/#config-embeddings-model-options-upstream_url) plugin option.
-{% endif %}
+> For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same [`{{ upstream_url }}`](/hub/kong-inc/{{ id }}/configuration/#{{ upstream_url_slug }}) plugin option.
 
 ### Input formats
+Kong will mediate the request and response format based on the selected [`{{ provider }}`](/hub/kong-inc/{{ id }}/configuration/#{{ provider_slug }}) and [`{{ route_type }}`](/hub/kong-inc/{{ id }}/configuration/#{{ route_type_slug }}), as outlined in the table above.
 
-{% if plugin == 'AI Proxy'%}
-Kong will mediate the request and response format based on the selected [`config.provider`](/hub/kong-inc/{{ id }}/configuration/#config-provider) and [`config.route_type`](/hub/kong-inc/{{ id }}/configuration/#config-route_type), as outlined in the table above.
-{% endif %}
-
-{% if plugin == 'AI Proxy Advanced'%}
-Kong will mediate the request and response format based on the selected [`config.embeddings.model.provider`](/hub/kong-inc/{{ id }}/configuration/#config-embeddings-model-provider) and [`config.targets.route_type`](/hub/kong-inc/{{ id }}/configuration/#config-targets-route_type), as outlined in the table above.
-{% endif %}
-
-The Kong AI Proxy accepts the following inputs formats, standardized across all providers; the `config.route_type` must be configured respective to the required request and response format examples:
+The Kong AI Proxy accepts the following inputs formats, standardized across all providers; the `{{ route_type }}` must be configured respective to the required request and response format examples:
 
 {% navtabs %}
 {% navtab "llm/v1/chat" %}
