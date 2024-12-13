@@ -20,7 +20,7 @@ module Jekyll
             .merge(
               'example?' => true,
               'example' => example,
-              'examples' => examples,
+              'examples' => @plugin.examples,
               'content_type' => 'reference',
               'no_version' => true
             )
@@ -31,16 +31,7 @@ module Jekyll
         end
 
         def example
-          @example ||= examples.detect { |e| e.file == @file }
-        end
-
-        def examples
-          @examples ||= @plugin.example_files.map do |file|
-            Drops::PluginConfigExample.new(
-              file: file,
-              plugin: @plugin
-            )
-          end
+          @example ||= @plugin.examples.detect { |e| e.file == @file }
         end
       end
     end

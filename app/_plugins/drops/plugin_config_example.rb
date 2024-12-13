@@ -32,6 +32,10 @@ module Jekyll
         @title ||= example.fetch('title')
       end
 
+      def weight
+        @weight ||= example.fetch('weight')
+      end
+
       def entity_examples # rubocop:disable Metrics/MethodLength
         @entity_examples ||= @plugin.targets.map do |target|
           EntityExampleBlock::Plugin.new(
