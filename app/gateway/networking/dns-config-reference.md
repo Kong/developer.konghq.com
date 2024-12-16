@@ -64,28 +64,3 @@ These errors are generally self-explanatory, but if the issue is not clear,
 check the Network developer tool, find the requests for the path in the error,
 and compare its `Origin` request header and `Access-Control-Allow-Origin`
 response header.
-
-##  {{site.base_gateway}} Cookies 
-
-
-After you log in to Kong Manager, Kong stores session information in a cookie
-to recognize your browser during future requests. These cookies are created
-using the [Sessions Plugin](/plugins/sessions) or [OpenID Connect](/plugins/oidc). 
-
-- Cookie scope, defined by the cookie's `Domain` and `Path` directives. Absent
-  these, cookies are sent only to the hostname that created them: a cookie
-  created by `example.com` will not be sent with a request to
-  `www.example.com`. When `Domain` is specified, cookies are sent to that
-  hostname and its subdomains, so a cookie from `example.com` with
-  `Domain=example.com` *will* be sent with requests to `www.example.com`.
-- The `Secure` directive, which determines whether a cookie can be sent over an
-  unencrypted (HTTP rather than HTTPS) connection. A cookie with `Secure`
-  cannot be sent over HTTP, and must be set using HTTPS.
-- The `SameSite` directive, which controls when a cookie can be sent with
-  cross-origin requests. Note that cookies have a different notion of
-  cross-origin than CORS and check against the domain suffix: while
-  `example.com` sending a request to `api.example.com` is cross-origin for the
-  purposes of CORS, a cookie with `Domain=example.com` is considered same-site
-  for requests to `api.example.com`. `SameSite=Strict` cookies are only sent
-  with same-site requests, `Lax` are sent when navigating to a link from
-  another site, and `None` are sent with all cross-origin requests.

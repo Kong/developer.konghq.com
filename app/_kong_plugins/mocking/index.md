@@ -17,6 +17,13 @@ works_on:
     - on-prem
     - konnect
 
+# topologies:
+#    - hybrid
+#    - db-less
+#    - traditional
+
+icon: mocking.png
+
 related_resources:
   - text: DNS configuration reference
     url: /gateway/networking/dns-config-reference
@@ -86,14 +93,3 @@ paths:
 By default, the plugin chooses the minimum status code that is defined in the corresponding method.
 
 The `X-Kong-Mocking-Status-Code` header allows requests to change the default status code selection behavior by specifying a status code that is defined in the corresponding method.
-=======
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
-
-icon: mocking.png
----
-
-## Overview
-

@@ -15,6 +15,12 @@ products:
 works_on:
     - on-prem
     - konnect
+# topologies:
+#    - hybrid
+#    - db-less
+#    - traditional
+
+icon: cors.png
 
 
 related_resources:
@@ -42,13 +48,5 @@ Because of this limitation, this plugin only works for routes that have been
 configured with a `paths` setting. The CORS plugin does not work for routes that
 are being resolved using a custom DNS (the `hosts` property).
 
-To learn how to configure `paths` for a route, read the [Proxy Reference](/gateway/latest/reference/proxy).
-=======
+To learn how to configure `paths` for a route, read the [Proxy Reference](/gateway/traffic-control/proxy/).
 
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
-
-icon: cors.png
----
