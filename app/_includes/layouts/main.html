@@ -4,7 +4,10 @@
             {% include breadcrumbs.html %}
         {% endif %}
 
-        <h1>{{ page.title | liquify }}</h1>
+        <div class="flex gap-3 items-center">
+            {% if page.icon %}<img src="{{ page.icon }}" class="w-8 h-8"/>{% endif %}
+            <h1>{{ page.title | liquify }}</h1>
+        </div>
 
         {% if layout.uses != false %}
         {% include uses.html products=page.products tools=page.tools tier=page.tier %}

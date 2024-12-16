@@ -36,7 +36,8 @@ module Jekyll
             'overview_url' => Overview.url(@plugin.slug),
             'changelog_url' => Changelog.url(@plugin.slug),
             'get_started_url' => @plugin.examples.first.url,
-            'reference_url' => reference_url
+            'reference_url' => reference_url,
+            'icon' => icon
           )
         end
 
@@ -53,6 +54,10 @@ module Jekyll
         end
 
         private
+
+        def icon
+          @icon ||= "/assets/icons/plugins/#{@plugin.icon}"
+        end
 
         def reference_url
           base_url = Reference.url(@plugin.slug)

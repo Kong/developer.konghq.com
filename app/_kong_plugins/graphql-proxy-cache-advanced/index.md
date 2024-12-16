@@ -20,4 +20,6 @@ works_on:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+icon: graphql-proxy-cache-advanced.png
 ---

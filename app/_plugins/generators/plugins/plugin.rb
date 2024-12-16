@@ -61,6 +61,10 @@ module Jekyll
         @schemas ||= Schema.all(plugin: self)
       end
 
+      def icon
+        @icon ||= metadata.fetch('icon')
+      end
+
       private
 
       def release_info

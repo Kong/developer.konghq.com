@@ -23,4 +23,6 @@ min_version:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+icon: ai-azure-content-safety.png
 ---

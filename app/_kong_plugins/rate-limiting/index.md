@@ -35,6 +35,8 @@ topologies:
     - hybrid
     - db-less
     - traditional
+
+icon: rate-limiting.png
 ---
 
 ## Overview

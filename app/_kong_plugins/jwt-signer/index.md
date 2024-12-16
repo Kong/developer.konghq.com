@@ -20,4 +20,6 @@ works_on:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+icon: jwt-signer.png
 ---

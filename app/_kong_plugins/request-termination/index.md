@@ -19,4 +19,6 @@ works_on:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+icon: request-termination.png
 ---

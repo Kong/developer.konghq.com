@@ -20,4 +20,6 @@ works_on:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+icon: route-by-header.png
 ---

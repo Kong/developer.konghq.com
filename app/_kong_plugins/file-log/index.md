@@ -18,4 +18,6 @@ works_on:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+icon: file-log.png
 ---

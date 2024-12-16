@@ -22,4 +22,6 @@ min_version:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+icon: redirect.png
 ---

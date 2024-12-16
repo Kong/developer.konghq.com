@@ -22,4 +22,7 @@ min_version:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+
+icon: ai-response-transformer.png
 ---

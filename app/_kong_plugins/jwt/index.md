@@ -15,6 +15,7 @@ works_on:
     - on-prem
     - konnect
 
+icon: jwt.png
 ---
 
 ## Overview
