@@ -1,0 +1,2 @@
+Before you can use event hooks for the first time, {{site.base_gateway}} needs to be reloaded. To do this, run `kong-reload`.
+You can verify your ability to use event hooks by issuing a `GET` request to the `/event-hooks` endpoint.

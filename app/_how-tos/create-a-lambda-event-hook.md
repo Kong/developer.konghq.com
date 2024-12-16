@@ -9,13 +9,20 @@ related_resources:
 works_on:
     - on-prem
 
+
 tags:
   - eventhooks
   - webhook
   - notifications
 tldr: 
   q: How do I write custom code in an event hook
-  a: Send a `POST` request to the event_hooks endpoint containing the source and event for the webhook.
+  a: Send a `POST` request to the event_hooksusing the `lambda` handler and pass in the custom Lua code you wish to run.
+
+prereqs:
+  inline:
+    - title: Reload Kong Gateway
+      include_content: prereqs/event-hooks/restart-kong-gateway
+
 ---
 
 ## Create a lambda event hook
@@ -30,12 +37,19 @@ tldr:
     ```
 2. Create a lambda event hook on the `consumers` event, with the `crud` source by creating a `POST` request to the Admin API. 
 
-    curl -i -X POST http://localhost:8001/event-hooks \
-        -d source=crud \
-        -d event=consumers:update \
-        -d handler=lambda \
-        -d on_change=true \
-        -d config.functions='return function (data, event, source, pid) local user = data.entity.username error("Event hook on consumer " .. user .. "") end'
+        curl -i -X POST http://{HOSTNAME}:8001/event-hooks \
+        -H "Content-Type: application/json" \
+        -d '{
+          "source": "crud",
+          "event": "consumers",
+          "handler": "lambda",
+          "config": {
+            "functions": [
+              "return function (data, event, source, pid) local user = data.entity.username error(\"Event hook on consumer \" .. user .. \"\") end"
+            ]
+          }
+        }'
+
 
 ## Validate the webhook
 
@@ -49,6 +63,7 @@ tldr:
 2. Review the logs at `/usr/local/kong/logs/error.log` for an an update about the creation of this consumer. The log will look similar to this: 
     
     ```sh
-     11/Dec/2024:23:20:56 +0000 [error] 114#0: *153047 [kong] event_hooks.lua:190 [string "return function (data, event, source, pid)..."]:3: Event hook on consumer my-consumer, context: ngx.timer, client: 172.19.0.1, server: 0.0.0.0:8001
+     2024/12/16 21:52:54 [error] 114#0: *153047 [kong] event_hooks.lua:190 [string "return function (data, event, source, pid)..."]:3: Event hook on consumer my-consumer, context: ngx.timer, client: 172.19.0.1, server: 0.0.0.0:8001
+
 
     ```

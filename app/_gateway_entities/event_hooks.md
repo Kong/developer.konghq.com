@@ -74,8 +74,6 @@ There are four types of handlers that can be used with the Event Hooks entity:
 
 {{site.base_gateway}} offers the [`/event-hooks/sources`](/api/gateway/admin-ee/#/Event-hooks/get-event-hooks-sources) endpoint where you can see all available sources, events and fields that are available for creating event hook templates. Sources are the actions that trigger the event hook.
 
-
-
 The response body from the endpoint describes a source that can be interepreted in the following pattern: 
 
 1. **Level 1**: The source, the action that triggers the event hook.
@@ -119,34 +117,31 @@ The values in the `fields` array represent the availble template parameters you 
 
 These parameters can be used to issue notifications any time an upstream in your application is not reachable. 
 
-For step-by-step guides on configuring event hooks see the following docs: 
 
-* [Create a webhook](/how-to/create-a-webhook/)
-* [How to configure `webhook-custom`](/how-to/create-a-custom-webhook)
-* [How to create a log event hook](/how-to/create-a-log-event-hook)
-* [How to create a lambda event hook](/how-to-create-a-lambda-event-hook)
+### Available sources
 
+- `dao:crud`
+- `balancer`
+- `ai-rate-limiting-advanced`
+- `service-protection`
+- `rate-limiting-advanced`
+- `crud`
+- `oas-validation`
 
-
+For information about specific events related to a source issue a `GET` request to the `/event-hooks/sources/{source}` endpoint. Doing so will return a list of all of the events associated to a source like: `balancer: health`. 
 
 ## Schema
 
 {% entity_schema %}
 
 
-
 ## Configure an event hook
 
 
-    curl --request POST \
-      --url http://localhost:8001/event-hooks \
-      --header 'Content-Type: application/json' \
-      --header 'Kong-Admin-Token: kongAdminToken' \
-      --data '{
-      "source": "crud",
-      "event": "admins:create",
-      "handler": "webhook",
-      "config": {
-        "url": "http://<your host>/admin-1created"
-      }
-    }'
+For step-by-step guides on configuring event hooks see the following docs: 
+
+* [Create a webhook](/how-to/create-a-webhook/)
+* [Create a webhook that posts to Slack](/how-to/create-a-custom-webhook-slack)
+* [How to create a log event hook](/how-to/create-a-log-event-hook)
+* [How to create a lambda event hook](/how-to/create-a-lambda-event-hook)
+
