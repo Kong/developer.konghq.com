@@ -31,7 +31,7 @@ module Jekyll
           targets = %w[consumer consumer_group service route].select do |t|
             schema.to_json.dig('properties', t)
           end
-          targets << 'global' if global?
+          targets << 'global'
           targets.sort
         end
       end
@@ -50,7 +50,7 @@ module Jekyll
             file: file,
             plugin: self
           )
-        end.sort_by { |e| -e.weight }
+        end.sort_by { |e| -e.weight } # rubocop:disable Style/MultilineBlockChain
       end
 
       def schema
@@ -59,12 +59,6 @@ module Jekyll
 
       def schemas
         @schemas ||= Schema.all(plugin: self)
-      end
-
-      def global?
-        return @global if defined? @global
-
-        @global = metadata.fetch('global', true)
       end
 
       private
