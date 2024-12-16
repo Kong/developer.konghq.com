@@ -32,17 +32,17 @@ providers:
       supported: ✅
   - name: 'Azure'
     url_pattern: 'https://{azure_instance}.openai.azure.com:443/openai/deployments/{deployment_name}/{route_type_path}'
-    min_version: ''
+    min_version: '3.6'
     chat:
       supported: ✅
-      upstream_path: ''
+      upstream_path: '/openai/deployments/{deployment_name}/chat/completions'
       route_type: 'llm/v1/chat'
-      model_example: ''
+      model_example: 'gpt-4'
     completions:
       supported: ✅
-      upstream_path: ''
+      upstream_path: '/openai/deployments/{deployment_name}/completions'
       route_type: 'llm/v1/completions'
-      model_example: ''
+      model_example: 'gpt-3.5-turbo-instruct'
     streaming:
       supported: ✅
   - name: 'Anthropic'
@@ -62,7 +62,7 @@ providers:
       supported: Chat type only
   - name: 'Mistral'
     formats: 'mistral.ai, OpenAI, raw, and OLLAMA formats'
-    url_pattern: 'As defined in  `{{ upstream_url }}'
+    url_pattern: 'As defined in `{{ upstream_url }}'
     min_version: '3.6'
     chat:
       supported: ✅
@@ -77,25 +77,9 @@ providers:
     streaming:
       supported: ✅
   - name: 'Llama2'
-    formats: 'raw, OLLAMA, and OpenAI formats'
+    formats: 'supports Llama2 and Llama3 models and raw, OLLAMA, and OpenAI formats'
     url_pattern: 'As defined in `{{ upstream_url }}'
     min_version: ''
-    chat:
-      supported: ✅
-      upstream_path: 'User-defined'
-      route_type: 'llm/v1/chat'
-      model_example: 'User-defined'
-    completions:
-      supported: ✅
-      upstream_path: 'User-defined'
-      route_type: 'llm/v1/completions'
-      model_example: 'User-defined'
-    streaming:
-      supported: ✅
-  - name: 'Llama3'
-    formats: 'OLLAMA, and OpenAI formats'
-    url_pattern: 'As defined in `{{ upstream_url }}'
-    min_version: '3.7'
     chat:
       supported: ✅
       upstream_path: 'User-defined'
