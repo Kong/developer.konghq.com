@@ -2,6 +2,7 @@
   "scripts": {
     "dev": "bundle exec foreman start"
   },
+  "type": "module",
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
     "autoprefixer": "^10.4.19",
