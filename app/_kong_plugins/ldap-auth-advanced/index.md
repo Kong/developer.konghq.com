@@ -23,3 +23,5 @@ works_on:
 
 icon: ldap-auth-advanced.png
 ---
+
+## Overview
