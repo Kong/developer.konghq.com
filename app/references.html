@@ -7,7 +7,7 @@ title: Reference Page Index
 <div class="mx-16">
   <h1 class="my-4">Reference Page Index</h1>
   <ul>
-    {% assign all_pages = site.pages | sort: 'dir' | where: "plugin?", empty %}
+    {% assign all_pages = site.pages | sort: 'dir' | where: "plugin?", empty | where: "api_spec", empty %}
     {% for page in all_pages %}
     {% if page.content_type == "reference" and page.canonical? %}
       <li>
