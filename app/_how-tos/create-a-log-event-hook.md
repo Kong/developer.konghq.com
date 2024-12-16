@@ -19,7 +19,7 @@ tldr:
   
 prereqs:
   inline:
-    - title: Reload Kong Gateway
+    - title: Reload {{site.base_gateway}}
       include_content: prereqs/event-hooks/restart-kong-gateway
   
 ---
@@ -28,7 +28,7 @@ prereqs:
 
 Create a long event hook on the `consumers` event using the `crud` source: 
 
-      curl -i -X POST http://{HOSTNAME}:8001/event-hooks \
+      curl -i -X POST http://localhost:8001/event-hooks \
       -H "Content-Type: application/json" \
       -d '{
         "source": "crud",

@@ -10,7 +10,7 @@ tags:
   - container
 
 tldr: 
-  q: How do I restart Kong Gateway when it is running inside of a container
+  q: How do I restart {{site.base_gateway}} when it is running inside of a container
   a: You can use `kong reload`.
 
 faqs:

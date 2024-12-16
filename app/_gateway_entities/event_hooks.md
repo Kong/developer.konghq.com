@@ -35,7 +35,7 @@ schema:
 flowchart LR
     subgraph events [Kong gateway Events]
         A(<b>Service</b><br>Create<br>Delete<br>Modify)
-        B(<b>Admins</b><br>Create<br>Deleteh<br>Modify)
+        B(<b>Admins</b><br>Create<br>Delete<br>Modify)
     end 
 
     subgraph handlers [Handlers]
@@ -66,7 +66,7 @@ flowchart LR
 There are four types of handlers that can be used with the Event Hooks entity: 
 
 * **`webhook`**: Issues a `POST` request to a provided URL with the event data as a payload. 
-* **`log`**: Logs the event and the content of the payload as a Kong Gateway log.
+* **`log`**: Logs the event and the content of the payload as a {{site.base_gateway}} log.
 * **`webhook-custom`**: Fully configurable request. Supports templating, configurable body, payload, and headers. 
 * **`lambda`**: This handler runs Lua code after an event is triggered.
 
@@ -74,7 +74,7 @@ There are four types of handlers that can be used with the Event Hooks entity:
 
 {{site.base_gateway}} offers the [`/event-hooks/sources`](/api/gateway/admin-ee/#/Event-hooks/get-event-hooks-sources) endpoint where you can see all available sources, events and fields that are available for creating event hook templates. Sources are the actions that trigger the event hook.
 
-The response body from the endpoint describes a source that can be interepreted in the following pattern: 
+The response body from the endpoint describes a source that can be interpreted in the following pattern: 
 
 1. **Level 1**: The source, the action that triggers the event hook.
 2. **Level 2**: The event, this is the {{site.base_gateway}} entity that the event hook listens to for events.
@@ -107,7 +107,7 @@ You can apply the pattern to the response body and extract the following informa
 * **event**: `health`
 * **handler**: `webhook-custom`
 
-The values in the `fields` array represent the availble template parameters you can use when constructing a payload.
+The values in the `fields` array represent the available template parameters you can use when constructing a payload.
 
 * `upstream_id`
 * `ip`
