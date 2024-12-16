@@ -101,12 +101,9 @@ providers:
       route_type: 'llm/v1/chat'
       model_example: '<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html">Use the model name for the specific LLM provider</a>'
     completions:
-      supported: ✅
-      upstream_path: 'Use the LLM <code>completions</code> upstream path'
-      route_type: 'llm/v1/completions'
-      model_example: '<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html">Use the model name for the specific LLM provider</a>'
+      supported: ❌
     streaming:
-      supported: ✅
+      supported: Chat type only
   - name: 'Gemini'
     url_pattern: 'https://generativelanguage.googleapis.com'
     min_version: '3.8'
@@ -116,12 +113,9 @@ providers:
       route_type: 'llm/v1/chat'
       model_example: 'gemini-1.5-flash or gemini-1.5-pro'
     completions:
-      supported: ✅
-      upstream_path: 'llm/v1/completions'
-      route_type: 'llm/v1/completions'
-      model_example: 'gemini-1.5-flash or gemini-1.5-pro'
+      supported: ❌
     streaming:
-      supported: ✅
+      supported: Chat type only
   - name: 'Hugging Face'
     url_pattern: 'https://api-inference.huggingface.co'
     min_version: '3.9'
