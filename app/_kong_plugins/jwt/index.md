@@ -1,5 +1,5 @@
 ---
-title: JWT plugin
+title: JWT
 
 name: JWT
 publisher: kong-inc
@@ -8,9 +8,14 @@ description: Verify and authenticate JSON Web Tokens
 tags:
     - authentication
 
+products:
+    - gateway
+
 works_on:
     - on-prem
     - konnect
+
+icon: jwt.png
 ---
 
 ## Overview

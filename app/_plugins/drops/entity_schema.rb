@@ -38,7 +38,7 @@ module Jekyll
                           product
                             .fetch('versions', [])
                             .detect { |v| v['name'] == @release.to_konnect_version }
-                            .fetch('id')
+                            &.fetch('id', '')
                         end
       end
 

@@ -21,7 +21,11 @@ async function validateFrontmatters() {
   const files = await fg(
     ["app/**/*.md", "app/_landing_pages/**/*.{yaml,yml}"],
     {
-      ignore: ["app/_includes/**", "app/_kong_plugins"],
+      ignore: [
+        "app/_includes/**",
+        "app/_kong_plugins/**/changelog.md",
+        "app/_kong_plugins/**/reference.md",
+      ],
       cwd: "../../",
     }
   );

@@ -1,13 +1,17 @@
 ---
-title: The Mocking Plugin
+title: 'Mocking'
+name: 'Mocking'
 
-name: Mocking
-publisher: kong-inc
 content_type: plugin
+
+publisher: kong-inc
+description: ''
 tier: enterprise
-description: rovide mock endpoints to test your APIs in development against your services.
-tags:
-    - traffic-control
+
+
+products:
+    - gateway
+
 
 works_on:
     - on-prem
@@ -82,3 +86,14 @@ paths:
 By default, the plugin chooses the minimum status code that is defined in the corresponding method.
 
 The `X-Kong-Mocking-Status-Code` header allows requests to change the default status code selection behavior by specifying a status code that is defined in the corresponding method.
+=======
+# topologies:
+#    - hybrid
+#    - db-less
+#    - traditional
+
+icon: mocking.png
+---
+
+## Overview
+

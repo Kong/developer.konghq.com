@@ -1,17 +1,21 @@
 ---
-title: The Cross-Origin Resource Sharing (CORS) Plugin
+title: 'CORS'
+name: 'CORS'
 
-name: CORS
-publisher: kong-inc
 content_type: plugin
-tier: enterprise
-description: The CORS plugin lets you add cross-origin resource sharing (CORS) to a service or a route.
-tags:
-    - security
+
+publisher: kong-inc
+description: 'The CORS plugin lets you add cross-origin resource sharing (CORS) to a service or a route.'
+
+
+products:
+    - gateway
+
 
 works_on:
     - on-prem
     - konnect
+
 
 related_resources:
   - text: DNS configuration reference
@@ -39,3 +43,12 @@ configured with a `paths` setting. The CORS plugin does not work for routes that
 are being resolved using a custom DNS (the `hosts` property).
 
 To learn how to configure `paths` for a route, read the [Proxy Reference](/gateway/latest/reference/proxy).
+=======
+
+# topologies:
+#    - hybrid
+#    - db-less
+#    - traditional
+
+icon: cors.png
+---

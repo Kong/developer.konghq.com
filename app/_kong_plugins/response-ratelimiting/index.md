@@ -1,9 +1,8 @@
 ---
-title: Response Rate Limiting plugin
+title: Response Rate Limiting
 
 name: Response Rate Limiting
 publisher: kong-inc
-tier: oss
 content_type: plugin
 description: Rate limit based on a custom response header value.
 tags:
@@ -11,9 +10,14 @@ tags:
   - graphql-rate-limiting-advanced
   - traffic-control
 
+products:
+    - gateway
+
 works_on:
     - on-prem
     - konnect
+
+icon: response-ratelimiting.png
 ---
 
 ## Overview

@@ -1,5 +1,5 @@
 ---
-title: Rate Limiting plugin
+title: Rate Limiting
 
 name: Rate Limiting
 publisher: kong-inc
@@ -24,6 +24,9 @@ related_resources:
   - text: Rate Limiting Advanced Plugin
     url: /plugins/rate-limiting-advanced/
 
+products:
+  - gateway
+
 works_on:
     - on-prem
     - konnect
@@ -32,6 +35,8 @@ topologies:
     - hybrid
     - db-less
     - traditional
+
+icon: rate-limiting.png
 ---
 
 ## Overview
