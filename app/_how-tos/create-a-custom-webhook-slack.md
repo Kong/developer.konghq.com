@@ -23,7 +23,7 @@ prereqs:
     - title: A Slack webhook application
       include_content: prereqs/event-hooks/slack
 
-    - title: Reload Kong Gateway
+    - title: Reload {{site.base_gateway}}
       include_content: prereqs/event-hooks/restart-kong-gateway
 
 ---

@@ -22,7 +22,7 @@ prereqs:
     - title: A webhook URL
       content: |
         * You can generate a URL by navigating to https://webhook.site and copying the free URL.
-    - title: Reload Kong Gateway
+    - title: Reload {{site.base_gateway}}
       include_content: prereqs/event-hooks/restart-kong-gateway
 
 ---
