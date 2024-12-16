@@ -49,7 +49,7 @@ Create a long event hook on the `consumers` event using the `crud` source:
     curl -i -X POST http://localhost:8001/consumers \
         -d username="my-consumer"
     ```
-2. Review the logs at `/usr/local/kong/logs/error.log` for an an update about the creation of this consumer. The log will look similar to this: 
+2. Review the logs at `/usr/local/kong/logs/error.log` for an update about the creation of this consumer. The log will look similar to this: 
     
         172.19.0.1 - - [16/Dec/2024:15:57:15 +0000] "POST /consumers HTTP/1.1" 409 147 "-" "HTTPie/2.4.0"
         2024/12/16 15:57:26 [notice] 68854#0: *819021 +--------------------------------------------------+, context: ngx.timer, client: 172.19.0.1, server: 0.0.0.0:8001
