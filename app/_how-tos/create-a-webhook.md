@@ -1,5 +1,5 @@
 ---
-title: Create a webhook that monitors Consumer creation
+title: Create a webhook that monitors the creation of consumers
 content_type: how_to
 
 related_resources:
@@ -22,6 +22,9 @@ prereqs:
     - title: A webhook URL
       content: |
         * You can generate a URL by navigating to https://webhook.site and copying the free URL.
+    - title: Reload Kong Gateway
+      include_content: prereqs/event-hooks/restart-kong-gateway
+
 ---
 
 
@@ -30,11 +33,16 @@ prereqs:
 1. Using the Admin API, create an event hook on the consumers event by issuing a `POST` request to the `/event-hooks` endpoint.
 
         curl -i -X POST http://localhost:8001/event-hooks \
-            -d source=crud \
-            -d event=consumers:update \
-            -d handler=webhook \
-            -d on_change=true \
-            -d config.url=https://webhook.site/94688621-990a-407f-b0b2-f92322d04c700"
+        -H "Content-Type: application/json" \
+        -d '{
+            "source": "crud",
+            "event": "consumers",
+            "handler": "webhook",
+            "on_change": true,
+            "config": {
+              "url": "https://webhook.site/94688621-990a-407f-b0b2-f923ad04c700"
+            }
+          }'
 
 2. Issuing this `POST` request will send a request of type `ping` to the webhook URL verifying that the webhook is configured correctly.
 
@@ -42,6 +50,8 @@ prereqs:
 
 ## Validate the webhook
 
+{:.warning}
+> **Important**:  Before you can use event hooks for the first time, {{site.base_gateway}} needs to be reloaded.
 
 1. Using the Admin API create a new consumer: 
 
@@ -49,7 +59,7 @@ prereqs:
     curl -i -X POST http://localhost:8001/consumers \
         -d username="my-consumer"
     ```
-2. Verify on webhook.site that you received a `POST` request. It will look like this: 
+2. Verify on` webhook.site` that you received a `POST` request. It will look like this: 
 
     ```json
     {
