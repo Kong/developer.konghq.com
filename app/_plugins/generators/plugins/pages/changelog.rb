@@ -11,7 +11,7 @@ module Jekyll
         end
 
         def content
-          ''
+          @content ||= parser.content
         end
 
         def data
@@ -21,11 +21,17 @@ module Jekyll
         end
 
         def metadata
-          @metadata ||= YAML.load(File.read(file)) || {}
+          @metadata ||= parser.frontmatter
         end
 
         def layout
           'plugins/with_aside'
+        end
+
+        private
+
+        def parser
+          @parser ||= Jekyll::Utils::MarkdownParser.new(File.read(file))
         end
       end
     end
