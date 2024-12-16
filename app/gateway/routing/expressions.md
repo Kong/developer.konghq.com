@@ -19,7 +19,6 @@ related_resources:
 
 breadcrumbs:
   - /gateway/
-  - /gateway/routing/
 ---
 
 {{ page.description }} Expressions can be used to perform tasks such as defining
