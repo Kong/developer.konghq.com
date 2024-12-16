@@ -12,26 +12,46 @@ products:
 related_resources:
   - text: Route entity
     url: /gateway/entities/route/
-  - text: Routing in {{site.base_gateway}}
-    url: /gateway/routing/
+  - text: Expressions router reference
+    url: /gateway/routing/expressions-router-reference/
   - text: Expressions repository
     url: https://github.com/Kong/atc-router
 
 breadcrumbs:
   - /gateway/
+
+faq:
+  - q: When should I use the expressions router in place of (or alongside) the traditional compat router?
+    a: We recommend using the expressions router if you are running {{site.base_gateway}} 3.0.x or later. 
 ---
 
-{{ page.description }} Expressions can be used to perform tasks such as defining
-complex routing logic.
-This guide is a reference for the expressions language and explains how it can be used.
+<!--outlines:
+Expressions router:
+- what is it?
+- why should I use this? When should I use this in place of (or alongside) the traditional compat router?
+- how do i format it/understand it?
+- how are expression router routes routed?
+- where do I go to configure it? how do I go about doing that?
+-->
 
-## About the expressions language
+{{ page.description }} Expressions can be used to perform tasks such as defining
+complex routing logic on a [Route](/gateway/entities/route/).
 
 The expressions language is a strongly typed Domain-Specific Language (DSL)
 that allows you to define comparison operations on various input data.
 The results of the comparisons can be combined with logical operations, which allows complex routing logic to be written while ensuring good runtime matching performance.
 
-### Key concepts
+You can enable the expressions router in your [kong.conf]<!--TODO: link to kong.conf--> file by setting `router_flavor = expressions` and restarting your {{site.base_gateway}}.
+
+## Use cases
+
+Expressions router can help you with the following use cases:
+  * complex routes with regex
+  * something else
+
+## Key concepts
+
+<!--Need some lead in info here that states that this is explaining how things are formatted.-->
 
 * **Field:** The field contains value extracted from the incoming request. For example,
   the request path or the value of a header field. The field value could also be absent
@@ -64,7 +84,7 @@ This predicate example has the following structure:
 * `^=`: Operator
 * `"/foo/bar"`: Constant value
 
-## How routes are executed
+## How requests are routed with the expressions router
 
 At runtime, {{site.base_gateway}} builds two separate routers for the HTTP and Stream (TCP, TLS, UDP) subsystem.
 Routes are inserted into each router with the appropriate `priority` field set. The router is
@@ -80,90 +100,4 @@ As soon as a route yields a match, the router stops matching and the matched rou
 
 > _**Figure 1:**_ Diagram of how {{site.base_gateway}} executes routes. The diagram shows that {{site.base_gateway}} selects the route that both matches the expression and then selects the matching route with the highest priority.
 
-## Expression router examples (HTTP)
-### Prefix based path matching
-
-Prefix based path matching is one of the most commonly used methods for routing. For example, if you want to match HTTP requests that have a path starting with `/foo/bar`, you can write the following route:
-
-```
-http.path ^= "/foo/bar"
-```
-
-### Regex based path matching
-
-If you prefer to match a HTTP requests path against a regex, you can write the following route:
-
-```
-http.path ~ r#"/foo/bar/\d+"#
-```
-
-### Case insensitive path matching
-
-If you want to ignore case when performing the path match, use the `lower()` modifier on the field
-to ensure it always returns a lowercase value:
-
-```
-lower(http.path) == "/foo/bar"
-```
-
-This will match requests with a path of `/foo/bar` and `/FOO/bAr`, for example.
-
-### Match by header value
-
-If you want to match incoming requests by the value of header `X-Foo`, do the following:
-
-```
-http.headers.x_foo ~ r#"bar\d"#
-```
-
-If there are multiple header values for `X-Foo` and the client sends more than
-one `X-Foo` header with different value, the above example will ensure **each** instance of the
-value will match the regex `r#"bar\d"#`. This is called "all" style matching, meaning each instance
-of the field value must pass the comparison for the predicate to return `true`. This is the default behavior.
-
-If you do not want this behavior, you can turn on "any" style of matching which returns
-`true` for the predicate as soon as any of the values pass the comparison:
-
-```
-any(http.headers.x_foo) ~ r#"bar\d"#
-```
-
-This will return `true` as soon as any value of `http.headers.x_foo` matches regex `r#"bar\d"#`.
-
-Different transformations can be chained together. The following is also a valid use case
-that performs case-insensitive matching:
-
-```
-any(lower(http.headers.x_foo)) ~ r#"bar\d"#
-```
-
-### Regex captures
-
-You can define regex capture groups in any regex operation which will be made available
-later for plugins to use. Currently, this is only supported with the `http.path` field:
-
-```
-http.path ~ r#"/foo/(?P<component>.+)"#
-```
-
-The matched value of `component` will be made available later to plugins such as
-[Request Transformer Advanced](https://docs.konghq.com/hub/kong-inc/request-transformer-advanced/how-to/templates/).
-
-## Expression router examples (TCP, TLS, UDP)
-
-### Match by source IP and destination port
-
-```
-net.src.ip in 192.168.1.0/24 && net.dst.port == 8080
-```
-
-This matches all clients in the `192.168.1.0/24` subnet and the destination port (which is listened to by Kong)
-is `8080`. IPv6 addresses are also supported.
-
-### Match by SNI (for TLS routes)
-
-```
-tls.sni =^ ".example.com"
-```
-
-This matches all TLS connections with the `.example.com` SNI ending.
+<!--performance optimizations? https://docs.konghq.com/gateway/latest/reference/expressions-language/performance/>
