@@ -1,7 +1,7 @@
 ---
 title: DNS Config Reference
 
-description: This reference explains DNS clients, CORS, and Cookie management in Kong Gateway
+description: This reference explains DNS clients, CORS, and Cookie management in {{site.base_gateway}}
 content_type: reference
 layout: reference
 tier: enterprise
