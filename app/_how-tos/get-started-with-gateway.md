@@ -11,7 +11,7 @@ works_on:
 
 plugins:
   - rate-limiting
-  - key-auths
+  - key-auth
   - proxy-cache
 
 entities: 
@@ -25,7 +25,7 @@ tags:
     - get-started
 
 tldr: 
-  q: What is Kong Gateway, and how can I get started with it?
+  q: What is {{site.base_gateway}}, and how can I get started with it?
   a: |
     [{{site.base_gateway}}](/gateway/) is a lightweight, fast, and flexible cloud-native API gateway. 
     {{site.base_gateway}} sits in front of your service applications, dynamically controlling, analyzing, and 
@@ -39,6 +39,7 @@ tldr:
     > **Note:**
     > This quickstart runs a simple Docker container to explore {{ site.base_gateway }}'s capabilities. 
     If you want to run {{ site.base_gateway }} as a part of a production-ready API platform, start on the [Install](/gateway/install/) page.
+
 tools:
     - deck
   
@@ -46,7 +47,8 @@ prereqs:
   inline:
     - title: cURL
       content: |
-        [cURL](https://curl.se/) is used to send requests to {{site.base_gateway}}. `curl` is pre-installed on most systems
+        [cURL](https://curl.se/) is used to send requests to {{site.base_gateway}}. 
+        `curl` is pre-installed on most systems.
       icon_url: /assets/icons/code.svg
 
 cleanup:
@@ -59,17 +61,21 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Check that Kong Gateway is running
+## 1. Check that {{site.base_gateway}} is running
 
-{{site.base_gateway}} serves an Admin API on the default port `8001`. The Admin API can be used for
-both querying and controlling the state of {{site.base_gateway}}. The following command
-will query the Admin API, fetching the headers only:
+We'll be using decK for this tutorial, so let's check that {{site.base_gateway}} is running and that decK can access it:
 
 ```sh
-curl --head localhost:8001
+deck gateway ping
 ```
 
-If {{site.base_gateway}} is running properly, it will respond with a `200` HTTP code.
+If everything is running, then you should get the following response:
+
+```sh
+Successfully connected to Kong!
+Kong version: 3.9.0.0
+```
+{:.no-copy-code}
 
 ## 2. Create a Service
 
@@ -107,7 +113,8 @@ Configure a new Route on the `/mock` path to direct traffic to the `example_serv
 entities:
   routes:
     - name: example_route
-      service: example_service
+      service:
+        id: example_service
       paths:
         - /mock
 {% endentity_examples %}
@@ -120,8 +127,6 @@ entities:
 
 Using the Service and Route, you can now 
 access `https://httpbin.konghq.com/` using `http://localhost:8000/mock`.
-
-By default, {{site.base_gateway}}'s Admin API listens for administrative requests on port `8001`.
 
 Httpbin provides an `/anything` resource which will echo back to clients information about requests made to it.
 Proxy a request through {{site.base_gateway}} to the `/anything` resource:
@@ -157,7 +162,7 @@ In this example, you configured a limit of 5 requests per minute for all Routes,
 After configuring rate limiting, you can verify that it was configured correctly and is working 
 by sending more requests than allowed in the configured time limit.
 
-[Sync your decK](#apply-configuration) file again, then run the following command to quickly send 6 mock requests:
+[Sync your decK file](#apply-configuration) again, then run the following command to quickly send 6 mock requests:
 
 ```sh
 for _ in {1..6}; do curl -s -i localhost:8000/mock/anything; echo; sleep 1; done
@@ -185,10 +190,13 @@ entities:
   plugins:
     - name: proxy-cache
       config:
-        request_method: GET
-        response_code: 200
-        content_type: application/json
-        cache_ttl: 30
+        request_method: 
+          - GET
+        response_code: 
+          - 200
+        content_type: 
+          - application/json
+        cache_ttl: 5
         strategy: memory
 append_to_existing_section: true
 {% endentity_examples %}
@@ -196,7 +204,7 @@ append_to_existing_section: true
 This configures a Proxy Cache plugin with the following attributes:
 * {{site.base_gateway}} will cache all `GET` requests that result in response codes of `200`
 * It will also cache responses with the `Content-Type` headers that *equal* `application/json`
-* `cache_ttl` instructs the plugin to flush values after 30 seconds
+* `cache_ttl` instructs the plugin to flush values after 5 seconds
 * `config.strategy=memory` specifies the backing data store for cached responses. More
 information on `strategy` can be found in the [parameter reference](/plugins/proxy-cache/reference/)
 for the Proxy Cache plugin.
@@ -206,7 +214,7 @@ for the Proxy Cache plugin.
 You can check that the Proxy Cache plugin is working by sending `GET` requests and examining
 the returned headers.
 
-[Sync your decK](#apply-configuration) file, then make an initial request to the `/mock` Route. 
+[Sync your decK file](#apply-configuration), then make an initial request to the `/mock` Route. 
 The Proxy Cache plugin returns status
 information headers prefixed with `X-Cache`, so you can use `grep` to filter for that information:
 
@@ -221,14 +229,16 @@ On the initial request, there should be no cached responses, and the headers wil
 X-Cache-Key: c9e1d4c8e5fd8209a5969eb3b0e85bc6
 X-Cache-Status: Miss
 ```
+{:.no-copy-code}
 
-Within 30 seconds of the initial request, repeat the command to send an identical request and the
+Within 5 seconds of the initial request, repeat the command to send an identical request and the
 headers will indicate a cache `Hit`:
 
 ```
 X-Cache-Key: c9e1d4c8e5fd8209a5969eb3b0e85bc6
 X-Cache-Status: Hit
 ```
+{:.no-copy-code}
 
 ## 5. Enable key authentication
 
@@ -247,8 +257,8 @@ entities:
   plugins:
     - name: key-auth
       config:
-        key-names:
-          - api-key
+        key_names:
+          - apikey
 append_to_existing_section: true
 {% endentity_examples %}
 
@@ -277,7 +287,7 @@ Only specify a key for testing or when migrating existing systems.
 
 ### Validate key authentication
 
-[Sync your decK](#apply-configuration) file, then let's try to access the Service without providing the key:
+[Sync your decK file](#apply-configuration), then try to access the Service without providing the key:
    
 ```sh
 curl -i http://localhost:8000/mock/anything
@@ -292,6 +302,7 @@ HTTP/1.1 401 Unauthorized
     "message": "No API key found in request"
 }
 ```
+{:.no-copy-code}
 
 Now, let's send a request with the valid key in the `apikey` header:
 
@@ -319,8 +330,10 @@ entities:
   upstreams:
     - name: example_upstream
       targets:
-        - target: "httpbun.com:80"
-        - target: "httpbin.konghq.com:80"
+        - target: httpbun.com:80
+          weight: 100
+        - target: httpbin.konghq.com:80
+          weight: 100
 {% endentity_examples %}
 
 Update the `example_service` Service to point to this Upstream, instead of pointing directly to a URL. 
@@ -341,11 +354,16 @@ More commonly, Targets will be instances of the same backend service running on 
 
 ### Validate load balancing
 
-[Sync your decK](#apply-configuration) file one more time.
+[Sync your decK file](#apply-configuration) one more time.
 
-Validate that the Upstream you configured is working by visiting the Route 
-`http://localhost:8000/mock` using a web browser or CLI. Remember to add your apikey!
+Validate that the Upstream you configured is working by visiting the `/mock` route several times, 
+waiting a few seconds between each time.
+You will see the hostname change between `httpbin` and `httpbun`:
 
-* **Web browser**: Visit `http://localhost:8000/mock?apikey=top-secret-key` and refresh the page several times to see the site change from `httpbin` to `httpbun`.
-* **CLI**: Execute the command `curl -s http://localhost:8000/mock/headers -H 'apikey:top-secret-key' |grep -i -A1 '"host"'` several times. You will see the hostname change between `httpbin` and `httpbun`.
+```sh
+curl -s http://localhost:8000/mock/headers -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
+```
+
+Since the Proxy Cache plugin is configured with a time-to-live of 5 seconds, 
+the host will take at least 5 seconds to change.
 
