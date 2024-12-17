@@ -37,7 +37,7 @@ faqs:
 
   - q: When a Consumer is part of multiple Consumer Groups, how is precedence determined?
     a: |
-      When a Consumer is a member of two Consumer Groups, each with a scoped plugin, Kong Gateway ensures deterministic behavior by executing only one of these plugins. Currently, this is determined by the Group name, in alphabetical order. 
+      When a Consumer is a member of two Consumer Groups, each with a scoped plugin, {{site.base_gateway}} ensures deterministic behavior by executing only one of these plugins. Currently, this is determined by the Group name, in alphabetical order. 
       However, the specific rules that govern this behavior are not defined and are subject to change in future releases.
 ---
 

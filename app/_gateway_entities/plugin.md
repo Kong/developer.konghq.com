@@ -4,7 +4,7 @@ content_type: reference
 entities:
   - plugin
 
-description: Plugins are modules that extend the functionality of Kong Gateway.
+description: Plugins are modules that extend the functionality of {{site.base_gateway}}.
 
 related_resources:
   - text: Plugin Hub
