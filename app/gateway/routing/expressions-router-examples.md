@@ -1,10 +1,13 @@
 ---
 title: Expressions router examples
 
-description: "{{site.base_gateway}} includes a rule-based engine using a domain-specific expressions language."
+description: "The expressions router can be used to perform tasks such as defining complex routing logic on a [Route](/gateway/entities/route/)."
 
 content_type: reference
 layout: reference
+
+min_version:
+  gateway: 3.0
 
 products:
   - gateway
@@ -14,6 +17,8 @@ related_resources:
     url: /gateway/entities/route/
   - text: About the expressions router
     url: /gateway/routing/expressions/
+  - text: Expressions router reference
+    url: /gateway/routing/expressions-router-reference/
   - text: Expressions repository
     url: https://github.com/Kong/atc-router
 
@@ -21,7 +26,9 @@ breadcrumbs:
   - /gateway/
 ---
 
-## Expression router examples (HTTP)
+{{ page.description }} This page shows some example Routes in the expression language that you can use when you're configuring your own Routes.
+
+## HTTP examples 
 ### Prefix based path matching
 
 Prefix based path matching is one of the most commonly used methods for routing. For example, if you want to match HTTP requests that have a path starting with `/foo/bar`, you can write the following route:
@@ -90,7 +97,7 @@ http.path ~ r#"/foo/(?P<component>.+)"#
 The matched value of `component` will be made available later to plugins such as
 [Request Transformer Advanced](https://docs.konghq.com/hub/kong-inc/request-transformer-advanced/how-to/templates/).
 
-## Expression router examples (TCP, TLS, UDP)
+## TCP, TLS, and UDP examples
 
 ### Match by source IP and destination port
 

@@ -1,11 +1,17 @@
 ---
-title: How to create rate limiting tiers with {{site.base_gateway}}
+title: Create complex routes with regex in {{site.base_gateway}}
 content_type: how_to
 related_resources:
-  - text: Consumer Group API documentation
-    url: /api/gateway/admin-ee/
-  - text: Rate Limiting Advanced plugin
-    url: /plugins/rate-limiting-advanced/
+  - text: Route entity
+    url: /gateway/entities/route/
+  - text: About the expressions router
+    url: /gateway/routing/expressions/
+  - text: Expressions router reference
+    url: /gateway/routing/expressions-router-reference/
+  - text: Expressions router examples
+    url: /gateway/routing/expressions-router-examples/
+  - text: Expressions repository
+    url: https://github.com/Kong/atc-router
 
 products:
     - gateway
@@ -21,32 +27,26 @@ prereqs:
   entities:
     services:
         - example-service
-    routes:
-        - example-route
 
 min_version:
-  gateway: 3.4
-
-plugins:
-  - rate-limiting-advanced
-  - key-auth
+  gateway: 3.0
 
 entities:
-  - consumer
-  - consumer_group
+  - route
 
 tier: enterprise
 
 tags:
-  - rate-limiting
+  - routing
+  - traffic-control
 
 tldr:
-  q: How do I rate limit different tiers of users, such as free vs. premium subscribers, in my API using {{site.base_gateway}}?
-  a: To effectively manage API traffic for various user tiers (such as free, basic, and premium subscribers) you can create consumer groups for each tier and assign individual consumers to these groups. Then, configure the Rate Limiting Advanced plugin to apply specific rate limits based on these groups. This setup allows you to enforce customized request limits for each tier, ensuring fair usage and optimizing performance for high-value users.
+  q: lkjblk
+  a: aksjlkj
 
 faqs:
-  - q: Why can't I use the regular Rate Limiting plugin to rate limit tiers of consumers?
-    a: We use the Rate Limiting Advanced plugin because it supports sliding windows, which we use to apply the rate limiting logic while taking into account previous hit rates (from the window that immediately precedes the current) using a dynamic weight.
+  - q: asfa
+    a: asdfa
 
 cleanup:
   inline:
@@ -58,9 +58,30 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. things
 <!--outlines:
+
+Configuring routes using expressions allows for more flexibility and better performance when dealing with complex or large configurations. This how-to guide explains how to switch to the expressions router and how to configure routes with the new expressive domain specific language. 
+
 How to:
 - how do I configure it alongside the other entities it relies on? 
 - since regex is a common use case, I'd like to see that.
 -->
+
+## 1. Edit the kong.conf to contain the line router_flavor = expressions and restart Kong Gateway.
+
+## 2. Create complex routes with expressions
+
+```sh
+
+curl --request POST \
+ --url http://localhost:8001/services/example-service/routes \
+ --header 'Content-Type: multipart/form-data' \
+ --form-string name=complex_object \
+ --form-string 'expression=(net.protocol == "http" || net.protocol == "https") &&
+               (http.method == "GET" || http.method == "POST") &&
+               (http.host == "example.com" || http.host == "example.test") &&
+               (http.path ^= "/mock" || http.path ^= "/mocking") &&
+               http.headers.x_another_header == "example_header" && (http.headers.x_my_header == "example" || http.headers.x_my_header == "example2")'
+```
+
+## 3. Validate this against a matching regex path

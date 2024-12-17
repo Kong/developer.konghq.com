@@ -6,6 +6,9 @@ description: "{{site.base_gateway}} includes a rule-based engine using a domain-
 content_type: reference
 layout: reference
 
+min_version:
+  gateway: 3.0
+
 products:
   - gateway
 
@@ -14,6 +17,8 @@ related_resources:
     url: /gateway/entities/route/
   - text: About the expressions router
     url: /gateway/routing/expressions/
+  - text: Expressions router examples
+    url: /gateway/routing/expressions-router-examples/
   - text: Expressions repository
     url: https://github.com/Kong/atc-router
 
@@ -27,7 +32,7 @@ Reference:
 - the pieces are explained, but I need something at the front that explains how the things all work together, what does a completed one look like? and then we get into the bits and pieces.
 -->
 
-This reference explains the parts of the expressions language structure used for the expression router.
+This reference explains the different configurable entities for the [expressions router](/gateway/routing/expressions/).
 
 ## Predicates
 
@@ -37,10 +42,14 @@ A predicate is the basic unit of expressions code which takes the following form
 http.path ^= "/foo/bar"
 ```
 
-This predicate example has the following structure:
-* `http.path`: Field
-* `^=`: Operator
-* `"/foo/bar"`: Constant value
+Predicates are made up of smaller units that you can configure:
+
+| Object | Description | Example |
+|--------|-------------|---------|
+| Field | The field contains value extracted from the incoming request. For example, the request path or the value of a header field. The field value could also be absent in some cases. An absent field value will always cause the predicate to yield `false` no matter the operator. The field always displays to the left of the predicate. | `http.path` |
+| Constant value | The constant value is what the field is compared to based on the provided operator. The constant value always displays to the right of the predicate. | `"/foo/bar"` |
+| Operator | An operator defines the desired comparison action to be performed on the field against the provided constant value. The operator always displays in the middle of the predicate, between the field and constant value. | `^=` |
+| Predicate | A predicate compares a field against a pre-defined value using the provided operator and returns `true` if the field passed the comparison or `false` if it didn't. | `http.path ^= "/foo/bar"` |
 
 ## Type system
 
@@ -158,9 +167,9 @@ Expressions language support a rich set of operators that can be performed on va
 | `>`            | Greater than          | Field value is greater than the constant value                                                                                                                                                               |
 | `<=`           | Less than or equal    | Field value is less than or equal to the constant value                                                                                                                                                      |
 | `<`            | Less than             | Field value is less than the constant value                                                                                                                                                                  |
-| `in`           | In                    | Field value is inside the constant value                                                                                                                                                                     |
-| `not in`       | Not in                | Field value is not inside the constant value                                                                                                                                                                 |
-| `contains`     | Contains              | Field value contains the constant value                                                                                                                                                                      |
+| `in`           | In                    | Field value is inside the constant value. This operator is used with `IpAddr` and `IpCidr` types to perform an efficient IP list check. For example, `net.src.ip in 192.168.0.0/24` will only return `true` if the value of `net.src.ip` is within `192.168.0.0/24`.                                                                                                                                                                    |
+| `not in`       | Not in                | Field value is not inside the constant value. This operator is used with `IpAddr` and `IpCidr` types to perform an efficient IP list check. For example, `net.src.ip in 192.168.0.0/24` will only return `true` if the value of `net.src.ip` is within `192.168.0.0/24`.                                                                                                                                                                |
+| `contains`     | Contains              | Field value contains the constant value. This operator is used to check the existence of a string inside another string. For example, `http.path contains "foo"` will return `true` if `foo` can be found anywhere inside `http.path`. This will match a `http.path` that looks like `/foo`, `/abc/foo`, or `/xfooy`, for example.                            |
 | `&&`           | And                   | Returns `true` if **both** expressions on the left and right side evaluates to `true`                                                                                                                        |
 | `||` | Or | Returns `true` if **any** expressions on the left and right side evaluates to `true` |                                                                                                                    |
 | `(Expression)` | Parenthesis           | Groups expressions together to be evaluated first                                                                                                                                                            |
@@ -168,21 +177,7 @@ Expressions language support a rich set of operators that can be performed on va
 | `!`            | Not                   | Negates the result of a parenthesized expression. **Note:** The `!` operator can only be used with parenthesized expression like `!(foo == 1)`, it **cannot** be used with a bare predicate like `! foo == 1` |
 {% endif_version %}
 
-### Extended descriptions
-
-### In and not in
-
-These operators are used with `IpAddr` and `IpCidr` types to perform an efficient IP list check.
-For example, `net.src.ip in 192.168.0.0/24` will only return `true` if the value of `net.src.ip` is within
-`192.168.0.0/24`.
-
-### Contains
-
-This operator is used to check the existence of a string inside another string.
-For example, `http.path contains "foo"` will return `true` if `foo` can be found anywhere inside `http.path`.
-This will match a `http.path` that looks like `/foo`, `/abc/foo`, or `/xfooy`, for example.
-
-### Type and operator semantics
+## Allowed type and operator combinations
 
 Here are the allowed combination of field types and constant types with each operator.
 In the following table, rows represent field types that display on the left-hand side (LHS) of the predicate, 
@@ -210,4 +205,133 @@ whereas columns represent constant value types that display on the right-hand si
   * When performing IP address-related comparisons with `==`, `in`, or `not in`, different families of
   address types for the field and constant value will always cause the predicate to return `false` at
   runtime.
+
+## Matching fields
+
+The following table describes the available matching fields, as well as their associated type when using an expressions based router.
+
+<!-- There are two separate tables because Liquid's whitespace handling breaks tables when using if tags -->
+
+{% if_version gte:3.4.x %}
+| Field                                                | Type       | Available in HTTP Subsystem | Available in Stream Subsystem | Description |
+|------------------------------------------------------|------------|-----------------------------|-------------------------------|-------------|
+| `net.protocol`                                       | `String`   | ✅  | ✅  | Protocol of the route. Roughly equivalent to the `protocols` field on the `Route` entity.  **Note:** Configured `protocols` on the `Route` entity are always added to the top level of the generated route but additional constraints can be provided by using the `net.prococol` field directly inside the expression. |
+| `tls.sni`                                            | `String`   | ✅  | ✅  | If the connection is over TLS, the `server_name` extension from the ClientHello packet. |
+| `http.method`                                        | `String`   | ✅  | ❌  | The method of the incoming HTTP request. (for example, `"GET"` or `"POST"`) |
+| `http.host`                                          | `String`   | ✅  | ❌  | The `Host` header of the incoming HTTP request. |
+| `http.path`                                          | `String`   | ✅  | ❌  | The normalized request path according to rules defined in [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986#section-6). This field value does **not** contain any query parameters that might exist. |
+| `http.path.segments.<segment_index>`                 | `String`   | ✅  | ❌  | A path segment extracted from the incoming (normalized) `http.path` with zero-based index. For example, for request path `"/a/b/c/"` or `"/a/b/c"`, `http.path.segments.1` will return `"b"`. |
+| `http.path.segments.<segment_index>_<segment_index>` | `String`   | ✅  | ❌  | Path segments extracted from the incoming (normalized) `http.path` within the given closed interval joined by `"/"`. Indexes are zero-based. For example, for request path `"/a/b/c/"` or `"/a/b/c"`, `http.path.segments.0_1` will return `"a/b"`. |
+| `http.path.segments.len`                             | `Int`      | ✅  | ❌  | Number of segments from the incoming (normalized) `http.path`. For example, for request path `"/a/b/c/"` or `"/a/b/c"`, `http.path.segments.len` will return `3`. |
+| `http.headers.<header_name>`                         | `String[]` | ✅  | ❌  | The value(s) of request header `<header_name>`. **Note:** The header name is always normalized to the underscore and lowercase form, so `Foo-Bar`, `Foo_Bar`, and `fOo-BAr` all become values of the `http.headers.foo_bar` field. |
+| `http.queries.<query_parameter_name>`                | `String[]` | ✅  | ❌  | The value(s) of query parameter `<query_parameter_name>`. |
+| `net.src.ip`                          | `IpAddr`   | ✅  | ✅  | IP address of the client.                                                          |
+| `net.src.port`                        | `Int`      | ✅  | ✅  | The port number used by the client to connect.                                     |
+| `net.dst.ip`                          | `IpAddr`   | ✅  | ✅  | Listening IP address where {{site.base_gateway}} accepts the incoming connection.  |
+| `net.dst.port`                        | `Int`      | ✅  | ✅  | Listening port number where {{site.base_gateway}} accepts the incoming connection. |
+{% endif_version %}
+
+{% if_version lte:3.4.x %}
+| Field                                                | Type       | Available in HTTP Subsystem | Available in Stream Subsystem | Description |
+|------------------------------------------------------|------------|-----------------------------|-------------------------------|-------------|
+| `net.protocol`                                       | `String`   | ✅  | ✅  | Protocol of the route. Roughly equivalent to the `protocols` field on the `Route` entity.  **Note:** Configured `protocols` on the `Route` entity are always added to the top level of the generated route but additional constraints can be provided by using the `net.prococol` field directly inside the expression. |
+| `tls.sni`                                            | `String`   | ✅  | ✅  | If the connection is over TLS, the `server_name` extension from the ClientHello packet. |
+| `http.method`                                        | `String`   | ✅  | ❌  | The method of the incoming HTTP request. (for example, `"GET"` or `"POST"`) |
+| `http.host`                                          | `String`   | ✅  | ❌  | The `Host` header of the incoming HTTP request. |
+| `http.path`                                          | `String`   | ✅  | ❌  | The normalized request path according to rules defined in [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986#section-6). This field value does **not** contain any query parameters that might exist. |
+| `http.headers.<header_name>`                         | `String[]` | ✅  | ❌  | The value(s) of request header `<header_name>`. **Note:** The header name is always normalized to the underscore and lowercase form, so `Foo-Bar`, `Foo_Bar`, and `fOo-BAr` all become values of the `http.headers.foo_bar` field. |
+| `http.queries.<query_parameter_name>`                | `String[]` | ✅  | ❌  | The value(s) of query parameter `<query_parameter_name>`. |
+| `net.src.ip`                          | `IpAddr`   | ❌  | ✅  | IP address of the client.                                                          |
+| `net.src.port`                        | `Int`      | ❌  | ✅  | The port number used by the client to connect.                                     |
+| `net.dst.ip`                          | `IpAddr`   | ❌  | ✅  | Listening IP address where {{site.base_gateway}} accepts the incoming connection.  |
+| `net.dst.port`                        | `Int`      | ❌  | ✅  | Listening port number where {{site.base_gateway}} accepts the incoming connection. |
+{% endif_version %}
+
+## Expressions router performance considerations
+
+Performance is critical when it comes to proxying API traffic. This guide explains how to optimize the
+expressions you write to get the most performance out of the routing engine.
+
+### Number of routes
+
+#### Route matching priority order
+
+Expressions routes are always evaluated in the descending `priority` order they were defined.
+Therefore, it is helpful to put more likely matched routes before (as in, higher priority)
+less frequently matched routes.
+
+The following examples show how you would prioritize two routes based on if they were likely to be matched or not.
+
+Example route 1:
+```
+expression: http.path == "/likely/matched/request/path"
+priority: 100
+```
+
+Example route 2:
+```
+expression: http.path == "/unlikely/matched/request/path"
+priority: 50
+```
+
+It's also best to reduce the number of `Route` entities created by leveraging the
+logical combination capability of the expressions language.
+
+#### Combining routes
+
+If multiple routes result in the same `Service` and `Plugin` config being used,
+they should be combined into a single expression `Route` with the `||` logical or operator. By combining routes into a single expression, this results in fewer `Route` objects created and better performance.
+
+Example route 1:
+```
+service: example-service
+expression: http.path == "/hello"
+```
+
+Example route 2:
+```
+service: example-service
+expression: http.path == "/world"
+```
+
+These two routes can instead be combined as:
+
+```
+service: example-service
+expression: http.path == "/hello" || http.path == "/world"
+```
+
+### Regular expressions usage
+
+Regular expressions (regexes) are powerful tool that can be used to match strings based on
+very complex criteria. Unfortunately, this has also made them more expensive to
+evaluate at runtime and hard to optimize. Therefore, there are some common
+scenarios where regex usages can be eliminated, resulting in significantly
+better matching performance.
+
+When performing exact matches (non-prefix matching) of a request path, use the `==` operator
+instead of regex.
+
+**Faster performance example:**
+```
+http.path == "/foo/bar"
+```
+
+**Slower performance example:**
+```
+http.path ~ r#"^/foo/bar$"#
+```
+
+When performing exact matches with the `/` optional slash at the end, it is tempting to write
+regexes. However, this is completely unnecessary with the expressions language.
+
+**Faster performance example:**
+```
+http.path == "/foo/bar" || http.path == "/foo/bar/"
+```
+
+**Slower performance example:**
+```
+http.path ~ r#"^/foo/?$"#
+```
 
