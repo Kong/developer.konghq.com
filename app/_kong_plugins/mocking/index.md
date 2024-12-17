@@ -53,13 +53,6 @@ Behavioral headers allow you to change the behavior of the Mocking plugin for th
 
 The` X-Kong-Mocking-Delay` header tells the plugin how many milliseconds to delay before responding. The delay value must be between `0`(inclusive) and `10000`(inclusive), otherwise it returns a `400` error like this: 
 
-```json
-HTTP/1.1 400 Bad Request
-
-{
-    "message": "Invalid value for X-Kong-Mocking-Delay. The delay value should between 0 and 10000ms"
-}
-```
 ### X-Kong-Mocking-Example-Id
 
 The `X-Kong-Mocking-Example-Id` header tells the plugin which response example is used when the endpoint has multiple examples for a single status code.

@@ -1,7 +1,7 @@
 ---
 title: DNS Config Reference
 
-description: This reference explains DNS clients, CORS, and Cookie management in {{site.base_gateway}}
+description: This reference explains DNS clients, CORS, and cookie management in {{site.base_gateway}}
 content_type: reference
 layout: reference
 tier: enterprise
@@ -22,7 +22,7 @@ breadcrumbs:
 
 ## Overview 
 
-{{site.base_gateway}} provides the Kong Manager, which must be able to interact with the Admin API. This application is subject to security restrictions enforced by browsers, and Kong must send appropriate information to browsers in order for it to function properly.
+{{page.description}} {{site.base_gateway}} provides the Kong Manager, which must be able to interact with the Admin API. This application is subject to security restrictions enforced by browsers, and Kong must send appropriate information to browsers in order for it to function properly.
 
 These security restrictions use the applications’ DNS hostnames to evaluate whether the applications’ metadata satisfies the security constraints. As such, you must design your DNS structure to meet the requirements.
 

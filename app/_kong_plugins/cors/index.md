@@ -5,7 +5,7 @@ name: 'CORS'
 content_type: plugin
 
 publisher: kong-inc
-description: 'The CORS plugin lets you add cross-origin resource sharing (CORS) to a service or a route.'
+description: 'The CORS plugin lets you add Cross-Origin Resource Sharing (CORS) to a service or a route.'
 
 
 products:
@@ -32,7 +32,7 @@ related_resources:
 ## Overview
 
 
-The CORS plugin lets you add cross-origin resource sharing (CORS) to a service or a route. Allowing you to automate the s the configuration of CORS rules, ensuring that your APIs only accept requests from approved sources. 
+The CORS plugin lets you add Cross-Origin Resource Sharing (CORS) to a Service or a Route. This allows you to automate the configuration of CORS rules, ensuring that your APIs only accept requests from approved sources. 
 
 
 {% include sections/cors-and-kong-gateway.md %}

@@ -23,7 +23,7 @@ HTTP/1.1 200 OK
 Access-Control-Allow-Origin: *
 ```
 
-These two requests do not have a matching CORS headers and therefore will fail: 
+These two request/response pairs do not have a matching CORS headers and therefore will fail: 
 
 ```sh
 GET / HTTP/1.1
