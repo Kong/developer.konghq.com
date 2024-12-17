@@ -59,6 +59,15 @@ app/_how-tos/custom-deck-object-defaults.md:
   - app/_src/deck/guides/defaults.md
 app/_how-tos/multiple-rate-limits-window-sizes.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
+app/_how-tos/get-started-with-gateway.md:
+  - app/_src/gateway/get-started/index.md
+  - app/_src/gateway/get-started/services-and-routes.md
+  - app/_src/gateway/get-started/rate-limiting.md
+  - app/_src/gateway/get-started/proxy-caching.md
+  - app/_src/gateway/get-started/key-authentication.md
+  - app/_src/gateway/get-started/load-balancing.md
+
+# plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/ai-rate-limiting-advanced/overview/_index.md
 app/_kong_plugins/basic-auth/index.md:
@@ -73,6 +82,8 @@ app/_kong_plugins/rate-limiting/index.md:
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
 app/_kong_plugins/rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
+
+# landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
   - app/_src/gateway/index.md
   - app/_data/tables/features/gateway.yml
@@ -85,6 +96,8 @@ app/_landing_pages/deck.yaml:
   - app/_src/deck/faqs.md
 app/_landing_pages/gateway.yaml:
   - app/_src/gateway/index.md
+
+# references 
 app/deck/distributed-config.md:
   - app/_src/deck/guides/distributed-configuration.md
 app/deck/environment-variables.md:
