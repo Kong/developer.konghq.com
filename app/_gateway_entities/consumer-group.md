@@ -20,16 +20,25 @@ related_resources:
       url: /how-to/add-rate-limiting-tiers-with-kong-gateway/
 
 api_specs:
-    - text: Gateway Admin - EE
-      url: '/api/gateway/admin-ee/#/operations/get-consumer_groups'
-      insomnia_link: 'https://insomnia.rest/run/?label=Gateway%20Admin%20Enterprise%20API&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2FGateway-EE%2Flatest%2Fkong-ee.yaml'
-    - text: Gateway Admin - OSS
-      url: '/api/gateway/admin-oss/#/operations/get-consumer_groups'
-      insomnia_link: 'https://insomnia.rest/run/?label=Gateway%20Admin%20OSS%20API&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2FGateway-OSS%2Flatest%2Fkong-oss.yaml'
-    - text: Konnect Control Planes Config
-      url: '/api/konnect/control-planes-config/#/operations/get-consumer_groups'
-      insomnia_link: 'https://insomnia.rest/run/?label=Konnect%20Control%20Plane%20Config&uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2FKonnect%2Fcontrol-planes-config%2Fcontrol-planes-config.yaml'
+    - gateway/admin-ee
+    - konnect/control-planes-config
 
+faqs:
+  - q: Why aren't Consumer Group overrides working anymore?
+    a: |
+      Consumer Groups became a core Gateway entity in 3.4, which opened up a wide range of use cases for grouping Consumers.
+      
+      Before 3.4, Consumer Groups were limited to rate limiting plugins, where they were configured through overrides. This is no longer necessary. Instead, you can enable any rate limiting plugin directly on a consumer group without worrying about extra configuration.
+  - q: How do I enable a plugin on a Consumer Group?
+    a: |
+      First, [find out](/plugins/scopes/) if the plugin you want supports Consumer Groups. 
+      
+      If it does, head over to the plugin's documentation, open the "Get Started" tab, and choose "Consumer Groups" from the dropdown for any available example.
+
+  - q: When a Consumer is part of multiple Consumer Groups, how is precedence determined?
+    a: |
+      When a Consumer is a member of two Consumer Groups, each with a scoped plugin, Kong Gateway ensures deterministic behavior by executing only one of these plugins. Currently, this is determined by the Group name, in alphabetical order. 
+      However, the specific rules that govern this behavior are not defined and are subject to change in future releases.
 ---
 
 ## What is a Consumer Group?
@@ -37,9 +46,9 @@ api_specs:
 Consumer Groups enable the organization and categorization of [Consumers](/gateway/entities/consumer/) (users or applications) within an API ecosystem. By grouping Consumers together, you eliminate the need to manage them individually, providing a scalable, efficient approach to managing configurations.
 
 With Consumer Groups, you can scope plugins to specifically defined Consumer Groups and a new plugin instance will be created for each individual Consumer Group, making configurations and customizations more flexible and convenient.
-For all plugins available on the consumer groups scope, see the [Plugin Scopes Reference](/hub/plugins/compatibility/#scopes).
+For all plugins available on the consumer groups scope, see the [Plugin Scopes Reference](/plugins/scopes/).
 
-{:.note}
+{:.info}
 > **Note**: Consumer Groups plugin scoping is a feature that was added in {{site.base_gateway}} version 3.4. Running a mixed-version {{site.base_gateway}} cluster (3.4 control plane, and <=3.3 data planes) is not supported when using plugins scoped to Consumer Groups. 
 
 For example, you could define two groups, Gold and Silver, assign different rate limits to them, then process each group using a different plugin:
@@ -52,13 +61,13 @@ flowchart LR
     B(<b>Consumer Group Gold</b>
     10 requests/second
 
-    <i>fa:fa-user Consumer 1, fa:fa-user Consumer 2, 
-    fa:fa-user Consumer 5</i> )
+    fa:fa-user Consumer 1, fa:fa-user Consumer 2, 
+    fa:fa-user Consumer 5 )
     
     C(<b>Consumer Group Silver</b>
     5 requests/minute
 
-    <i>fa:fa-user Consumer 3, fa:fa-user Consumer 4</i>)
+    fa:fa-user Consumer 3, fa:fa-user Consumer 4)
 
     D(Rate Limiting Advanced)
     E(Request Transformer Advanced)

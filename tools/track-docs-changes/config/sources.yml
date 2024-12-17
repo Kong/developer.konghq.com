@@ -105,8 +105,6 @@ app/gateway/routing/index.md:
   - app/_src/gateway/key-concepts/routes/index.md
 app/plugins/deployment-options.md:
   - app/hub/plugins/compatibility/index.md
-app/plugins/precedence.md:
-  - app/hub/plugins/overview/index.md
 app/plugins/protocols.md:
   - app/hub/plugins/compatibility/index.md
 app/plugins/scopes.md:

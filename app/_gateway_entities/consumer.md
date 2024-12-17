@@ -4,10 +4,10 @@ content_type: reference
 entities:
   - consumer # we could use this to pull the schema too
 
-description: A Consumer typically refers to an entity that consumes or uses the APIs managed by Kong Gateway.
+description: A Consumer typically refers to an entity that consumes or uses the APIs managed by {{site.base_gateway}}.
 
 related_resources:
-  - text: Authentication in Kong Gateway
+  - text: Authentication in {{site.base_gateway}}
     url: /authentication/
   - text: Consumer Groups API reference
     url: /api/gateway/admin-ee/#/operations/get-consumer_groups
@@ -24,7 +24,7 @@ faqs:
 
   - q: What is the difference between Consumers and Applications?
     a: |
-      Applications provide developers the ability to get access to APIs managed by Kong Gateway or Konnect
+      Applications provide developers the ability to get access to APIs managed by {{site.base_gateway}} or {{site.konnect_short_name}}
       with no interaction from the Kong admin team to generate the required credentials.
       <br><br>
       With Consumers, the Kong team creates Consumers, generates credentials, and shares them with the developers that need access to the APIs.
