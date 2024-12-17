@@ -37,8 +37,8 @@ tldr:
 
     {:.info}
     > **Note:**
-    > This quickstart runs a simple Docker container to explore {{ site.base_gateway }}'s capabilities. 
-    If you want to run {{ site.base_gateway }} as a part of a production-ready API platform, start on the [Install](/gateway/install/) page.
+    > This quickstart runs a Docker container to explore {{ site.base_gateway }}'s capabilities. 
+    If you want to run {{ site.base_gateway }} as a part of a production-ready API platform, start with the [Install](/gateway/install/) page.
 
 tools:
     - deck
@@ -83,7 +83,7 @@ Kong version: 3.9.0.0
 desired traffic management policies. Two important objects in that model are 
 [Services](/gateway/entities/service/) and 
 [Routes](/gateway/entities/route/). Together, 
-Services and Routes define the routing path that requests and responses will take 
+Services and Routes define the path that requests and responses will take 
 through the system.
 
 Add the following content to `kong.yaml` to create a 
@@ -99,13 +99,13 @@ entities:
 In this example, you are configuring the following attributes:
 
 * `name`: The name of the Service
-* `url` : An argument that populates the `host`, `port`, and `path` attributes of the Service
+* `url` : An attribute that populates the `host`, `port`, and `path` of the Service
 
 ## 3. Create a Route 
 
 Routes define how requests are proxied by {{site.base_gateway}}. You can
 create a Route associated with a specific Service by sending a `POST`
-request to the Service URL.
+request to the URL defined in the Service.
 
 Configure a new Route on the `/mock` path to direct traffic to the `example_service` Service:
 
@@ -128,7 +128,7 @@ entities:
 Using the Service and Route, you can now 
 access `https://httpbin.konghq.com/` using `http://localhost:8000/mock`.
 
-Httpbin provides an `/anything` resource which will echo back to clients information about requests made to it.
+Httpbin provides an `/anything` resource which will return information about requests made to it.
 Proxy a request through {{site.base_gateway}} to the `/anything` resource:
 
 ```sh
@@ -143,7 +143,7 @@ Without rate limiting, clients have unlimited access to your upstream Services, 
 may negatively impact availability.
 
 In this example, we'll use the [Rate Limiting plugin](/plugins/rate-limiting/).
-Let's install the plugin globally, which means that *every* proxy request to {{site.base_gateway}}
+Installing the plugin globally means that *every* proxy request to {{site.base_gateway}}
 will be subject to rate limit enforcement:
 
 {% entity_examples %}
@@ -175,7 +175,7 @@ After the 6th request, you should receive a 429 "API rate limit exceeded" error:
 }
 ```
 
-## 4. Enable proxy caching 
+## 4. Enable caching 
 
 One of the ways Kong delivers performance is through caching.
 The [Proxy Cache plugin](/plugins/proxy-cache/) accelerates performance by caching
@@ -231,7 +231,7 @@ X-Cache-Status: Miss
 ```
 {:.no-copy-code}
 
-Within 5 seconds of the initial request, repeat the command to send an identical request and the
+Within 5 seconds of the initial request, repeat the command to send an identical request. The
 headers will indicate a cache `Hit`:
 
 ```
@@ -240,9 +240,9 @@ X-Cache-Status: Hit
 ```
 {:.no-copy-code}
 
-## 5. Enable key authentication
+## 5. Enable authentication
 
-Authentication is the process of verifying that a requester has permissions to access a resource. 
+Authentication is the process of verifying that the requester has permissions to access a resource. 
 As its name implies, API gateway authentication authenticates the flow of data to and from your upstream services. 
 
 ### Enable Key Auth plugin
@@ -268,7 +268,7 @@ The plugin looks for the field in headers, query string parameters, and the requ
 
 ### Create a Consumer
 
-Consumers let you identify the client that's interacting with {{site.base_gateway}}, so you need a Consumer for key authentication to work.
+Consumers let you identify the client that's interacting with {{site.base_gateway}}. You need to create a Consumer for key authentication to work.
 
 Create a new Consumer with the username `luka` and the key `top-secret-key`:
 
@@ -285,7 +285,7 @@ entities:
 In production, it is recommended that you let the API gateway autogenerate a complex key for you. 
 Only specify a key for testing or when migrating existing systems.
 
-### Validate key authentication
+### Validate using key authentication
 
 [Sync your decK file](#apply-configuration), then try to access the Service without providing the key:
    
@@ -319,9 +319,9 @@ Load balancing is a method of distributing API request traffic across
 multiple upstream services. Load balancing improves overall system responsiveness
 and reduces failures by preventing overloading of individual resources. 
 
-In the following example, you’ll use an application deployed across two different servers, or upstream targets. 
-{{site.base_gateway}} needs to load balance across both servers, so that if one of the servers is unavailable, 
-it automatically detects the problem and routes all traffic to the working server.
+In the following example, you’ll use an application deployed across two different hosts, or upstream targets. 
+{{site.base_gateway}} needs to load balance across the upstreams, so that if one of them is unavailable, 
+it automatically detects the problem and routes all traffic to the working upstream.
 
 You'll need to configure two new types of entities: an [Upstream](/gateway/entities/upstream/) and two [Targets](/gateway/entities/target/). Create an Upstream named `example_upstream` and add two Targets to it:
 
