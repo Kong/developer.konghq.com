@@ -23,4 +23,8 @@ products:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+icon: plugin-slug.ext
 ---
+
+## Overview

@@ -21,4 +21,8 @@ works_on:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+icon: openid-connect.png
 ---
+
+## Overview

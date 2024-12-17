@@ -23,6 +23,8 @@ min_version:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+icon: ai-proxy.png
 ---
 
 {% include plugins/ai-proxy/overview.md plugin=page.name params=site.data.plugins.ai-proxy.parameters %}

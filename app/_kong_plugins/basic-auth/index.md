@@ -16,6 +16,7 @@ works_on:
     - konnect
 
 
+icon: basic-auth.png
 ---
 
 ## Overview

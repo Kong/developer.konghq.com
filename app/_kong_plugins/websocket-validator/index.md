@@ -23,4 +23,8 @@ min_version:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+icon: websocket-validator.png
 ---
+
+## Overview

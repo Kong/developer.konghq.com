@@ -1,3 +1,0 @@
----
-content_type: reference
----

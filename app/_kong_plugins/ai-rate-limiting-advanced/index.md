@@ -22,6 +22,7 @@ tags:
   - ai-rate-limiting-advanced
   - traffic-control
 
+icon: ai-rate-limiting-advanced.png
 ---
 
 ## Overview

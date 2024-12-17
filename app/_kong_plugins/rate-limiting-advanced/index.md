@@ -21,6 +21,7 @@ works_on:
     - on-prem
     - konnect
 
+icon: rate-limiting-advanced.png
 ---
 
 ## Overview

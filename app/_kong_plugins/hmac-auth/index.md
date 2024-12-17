@@ -19,4 +19,8 @@ works_on:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+icon: hmac-auth.png
 ---
+
+## Overview

@@ -18,6 +18,7 @@ works_on:
     - on-prem
     - konnect
 
+icon: graphql-rate-limiting-advanced.png
 ---
 
 ## Overview

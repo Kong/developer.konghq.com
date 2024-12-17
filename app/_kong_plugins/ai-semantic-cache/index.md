@@ -23,4 +23,9 @@ min_version:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+
+icon: ai-semantic-cache.png
 ---
+
+## Overview

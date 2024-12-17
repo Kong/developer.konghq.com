@@ -23,4 +23,8 @@ min_version:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+icon: ai-prompt-guard.png
 ---
+
+## Overview

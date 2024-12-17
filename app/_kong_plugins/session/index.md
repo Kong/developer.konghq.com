@@ -19,4 +19,8 @@ works_on:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+icon: session.png
 ---
+
+## Overview

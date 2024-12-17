@@ -17,6 +17,7 @@ works_on:
     - on-prem
     - konnect
 
+icon: response-ratelimiting.png
 ---
 
 ## Overview

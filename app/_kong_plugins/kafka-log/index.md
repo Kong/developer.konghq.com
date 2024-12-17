@@ -20,4 +20,8 @@ works_on:
 #    - hybrid
 #    - db-less
 #    - traditional
+
+icon: kafka-log.png
 ---
+
+## Overview
