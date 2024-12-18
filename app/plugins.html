@@ -5,7 +5,7 @@ layout: default
 
 <div class="flex flex-col gap-12 w-full pb-36">
   <div class="flex justify-between gap-[60px]">
-      <div class="flex flex-col gap-6 py-24">
+      <div class="flex flex-col gap-6 py-24 self-center">
           <div class="flex flex-col gap-2">
               <h1 class="font-extrabold text-[40px] leading-[60px]">Kong Plugins</h1>
               <span class="leading-7">Extend Kong Gateway and Kong Konnect with powerful plugins and easy integrations.</span>
@@ -53,8 +53,36 @@ layout: default
   {% assign kong_plugins = site.data.kong_plugins %}
 
   <div class="grid grid-cols-4 gap-16">
-    <div class="w-full">
+    <div class="w-full flex flex-col gap-8 sticky top-24 self-start">
+      <div class="flex flex-col gap-3">
+        <div class="text-sm text-brand font-semibold">Deployment Platforms</div>
+        <div class="flex flex-col gap-3">
+          {% for deployment_topology in site.data.products.gateway.deployment_topologies %}
+            <div class="flex">
+              <label class="w-full">
+                <input type="checkbox" value="{{deployment_topology.slug}}" name="deployment-topology">
+                {{deployment_topology.text}}
+              </label>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="flex flex-col gap-3">
+        <div class="text-sm text-brand font-semibold">Functionality</div>
+        <div class="flex flex-col gap-3">
+
+          {% for category in categories %}
+            <div class="flex">
+              <label class="w-full">
+                <input type="checkbox" value="{{category.slug}}" name="category">
+                {{category.name}}
+              </label>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
+
     <div class="flex flex-col col-span-3 w-full gap-16">
       {% for cat in categories %}
         {% assign plugins_for_category = kong_plugins | where_exp: "plugin", "plugin.categories contains cat.slug" | sort: "name" %}
