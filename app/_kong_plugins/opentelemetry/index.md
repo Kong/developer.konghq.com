@@ -24,6 +24,9 @@ min_version:
 #    - traditional
 
 icon: opentelemetry.png
+
+categories:
+  - analytics-monitoring
 ---
 
 ## Overview

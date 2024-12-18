@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: proxy-cache.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

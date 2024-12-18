@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: opa.png
+
+categories:
+  - security
 ---
 
 ## Overview

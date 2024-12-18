@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: app-dynamics.png
+
+categories:
+  - analytics-monitoring
 ---
 
 ## Overview

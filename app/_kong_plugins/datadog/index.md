@@ -20,6 +20,9 @@ works_on:
 #    - traditional
 
 icon: datadog.png
+
+categories:
+  - analytics-monitoring
 ---
 
 ## Overview

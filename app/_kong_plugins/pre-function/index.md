@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: pre-function.png
+
+categories:
+  - serverless
 ---
 
 ## Overview

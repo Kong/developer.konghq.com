@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: syslog.png
+
+categories:
+  - logging
 ---
 
 ## Overview

@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: jq.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

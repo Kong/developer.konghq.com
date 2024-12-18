@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: request-validator.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

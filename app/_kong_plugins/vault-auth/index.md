@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: vault-auth.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

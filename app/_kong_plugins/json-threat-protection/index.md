@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: json-threat-protection.png
+
+categories:
+  - security
 ---
 
 ## Overview

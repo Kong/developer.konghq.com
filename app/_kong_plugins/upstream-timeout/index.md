@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: upstream-timeout.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

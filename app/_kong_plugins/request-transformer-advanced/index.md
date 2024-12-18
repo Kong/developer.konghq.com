@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: request-transformer-advanced.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

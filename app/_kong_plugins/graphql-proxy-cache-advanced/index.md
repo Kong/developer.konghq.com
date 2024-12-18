@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: graphql-proxy-cache-advanced.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

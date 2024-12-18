@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: ai-prompt-template.png
+
+categories:
+  - ai
 ---
 
 ## Overview

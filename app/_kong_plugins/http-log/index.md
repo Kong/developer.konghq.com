@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: http-log.png
+
+categories:
+  - logging
 ---
 
 ## Overview

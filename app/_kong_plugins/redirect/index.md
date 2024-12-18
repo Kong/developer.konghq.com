@@ -24,6 +24,9 @@ min_version:
 #    - traditional
 
 icon: redirect.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

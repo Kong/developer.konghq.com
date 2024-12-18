@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: forward-proxy.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

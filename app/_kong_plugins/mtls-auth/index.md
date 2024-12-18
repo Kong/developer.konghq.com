@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: mtls-auth.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

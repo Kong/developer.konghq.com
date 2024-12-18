@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: jwt-signer.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

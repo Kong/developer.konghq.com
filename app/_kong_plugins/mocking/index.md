@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: mocking.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

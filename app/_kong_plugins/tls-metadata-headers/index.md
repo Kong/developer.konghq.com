@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: tls-metadata-headers.png
+
+categories:
+  - security
 ---
 
 ## Overview

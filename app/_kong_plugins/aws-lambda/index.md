@@ -23,6 +23,9 @@ works_on:
 
 
 icon: aws-lambda.png
+
+categories:
+  - serverless
 ---
 
 ## Overview

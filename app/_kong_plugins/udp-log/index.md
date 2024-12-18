@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: udp-log.png
+
+categories:
+  - logging
 ---
 
 ## Overview

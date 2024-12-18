@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: session.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

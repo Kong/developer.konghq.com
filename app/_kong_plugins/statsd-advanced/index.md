@@ -23,6 +23,9 @@ works_on:
 #    - traditional
 
 icon: statsd-advanced.png
+
+categories:
+  - analytics-monitoring
 ---
 
 ## Overview

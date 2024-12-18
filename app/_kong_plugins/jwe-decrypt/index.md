@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: jwe-decrypt.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

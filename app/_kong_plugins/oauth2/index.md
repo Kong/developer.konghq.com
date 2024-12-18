@@ -20,6 +20,9 @@ works_on:
 #    - traditional
 
 icon: oauth2.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

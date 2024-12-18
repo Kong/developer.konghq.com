@@ -26,6 +26,9 @@ min_version:
 
 
 icon: confluent.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

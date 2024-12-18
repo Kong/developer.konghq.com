@@ -23,6 +23,9 @@ works_on:
 #    - traditional
 
 icon: route-transformer-advanced.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

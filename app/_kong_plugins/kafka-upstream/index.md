@@ -23,6 +23,9 @@ works_on:
 #    - traditional
 
 icon: kafka-upstream.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

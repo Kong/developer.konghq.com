@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: grpc-web.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

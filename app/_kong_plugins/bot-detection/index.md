@@ -22,6 +22,9 @@ works_on:
 
 
 icon: bot-detection.png
+
+categories:
+  - security
 ---
 
 ## Overview

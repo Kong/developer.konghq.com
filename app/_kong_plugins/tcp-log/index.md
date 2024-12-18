@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: tcp-log.png
+
+categories:
+  - logging
 ---
 
 ## Overview

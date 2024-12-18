@@ -23,6 +23,9 @@ works_on:
 
 
 icon: azure-functions.png
+
+categories:
+  - serverless
 ---
 
 ## Overview

@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: kafka-log.png
+
+categories:
+  - logging
 ---
 
 ## Overview

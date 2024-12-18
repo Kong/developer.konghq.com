@@ -23,6 +23,9 @@ works_on:
 
 
 icon: exit-transformer.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

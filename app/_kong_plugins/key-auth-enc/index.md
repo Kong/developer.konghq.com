@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: key-auth-enc.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

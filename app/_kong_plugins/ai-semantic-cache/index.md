@@ -26,6 +26,9 @@ min_version:
 
 
 icon: ai-semantic-cache.png
+
+categories:
+  - ai
 ---
 
 ## Overview

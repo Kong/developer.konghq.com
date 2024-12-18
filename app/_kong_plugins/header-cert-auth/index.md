@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: header-cert-auth.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

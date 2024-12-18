@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: websocket-size-limit.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

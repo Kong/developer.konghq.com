@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: request-transformer.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

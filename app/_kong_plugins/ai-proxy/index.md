@@ -24,6 +24,9 @@ min_version:
 #    - traditional
 
 icon: ai-proxy.png
+
+categories:
+  - ai
 ---
 
 {% include plugins/ai-proxy/overview.md plugin=page.name params=site.data.plugins.ai-proxy.parameters %}

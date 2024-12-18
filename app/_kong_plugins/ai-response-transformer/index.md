@@ -25,6 +25,9 @@ min_version:
 
 
 icon: ai-response-transformer.png
+
+categories:
+  - ai
 ---
 
 ## Overview

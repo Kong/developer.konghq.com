@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: websocket-validator.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

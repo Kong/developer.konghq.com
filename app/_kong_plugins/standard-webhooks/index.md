@@ -24,6 +24,9 @@ min_version:
 #    - traditional
 
 icon: standard-webhooks.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

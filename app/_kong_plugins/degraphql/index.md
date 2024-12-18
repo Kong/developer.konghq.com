@@ -23,6 +23,9 @@ works_on:
 
 
 icon: degraphql.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

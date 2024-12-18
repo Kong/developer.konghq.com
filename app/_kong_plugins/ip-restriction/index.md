@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: ip-restriction.png
+
+categories:
+  - security
 ---
 
 ## Overview

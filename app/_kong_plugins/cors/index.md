@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: cors.png
+
+categories:
+  - security
 ---
 
 ## Overview

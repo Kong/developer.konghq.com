@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: ldap-auth-advanced.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

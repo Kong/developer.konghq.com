@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: request-termination.png
+
+ategories:
+  - traffic-control
 ---
 
 ## Overview

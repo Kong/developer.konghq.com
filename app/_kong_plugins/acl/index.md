@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: acl.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

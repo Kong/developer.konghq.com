@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: ai-prompt-guard.png
+
+categories:
+  - ai
 ---
 
 ## Overview

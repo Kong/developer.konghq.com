@@ -17,6 +17,9 @@ works_on:
 
 
 icon: basic-auth.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

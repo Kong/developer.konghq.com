@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: oas-validation.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

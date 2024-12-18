@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: response-transformer.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

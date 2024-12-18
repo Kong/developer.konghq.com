@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: request-size-limiting.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

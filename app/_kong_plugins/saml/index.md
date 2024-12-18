@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: saml.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

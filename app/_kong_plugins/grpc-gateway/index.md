@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: grpc-gateway.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

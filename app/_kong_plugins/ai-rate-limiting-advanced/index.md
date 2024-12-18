@@ -23,6 +23,9 @@ tags:
   - traffic-control
 
 icon: ai-rate-limiting-advanced.png
+
+categories:
+  - ai
 ---
 
 ## Overview

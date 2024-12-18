@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: acme.png
+
+categories:
+  - security
 ---
 
 ## Overview

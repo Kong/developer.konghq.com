@@ -20,6 +20,9 @@ works_on:
 #    - traditional
 
 icon: file-log.png
+
+categories:
+  - logging
 ---
 
 ## Overview

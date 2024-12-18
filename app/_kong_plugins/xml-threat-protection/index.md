@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: xml-threat-protection.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

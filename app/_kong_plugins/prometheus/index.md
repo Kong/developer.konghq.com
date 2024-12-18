@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: prometheus.png
+
+categories:
+  - analytics-monitoring
 ---
 
 ## Overview

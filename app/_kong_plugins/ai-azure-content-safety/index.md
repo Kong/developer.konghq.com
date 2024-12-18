@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: ai-azure-content-safety.png
+
+categories:
+  - ai
 ---
 
 ## Overview

@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: statsd.png
+
+categories:
+  - analytics-monitoring
 ---
 
 ## Overview

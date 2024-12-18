@@ -23,4 +23,7 @@ works_on:
 #    - traditional
 
 icon: response-transformer-advanced.png
+
+categories:
+  - transformations
 ---

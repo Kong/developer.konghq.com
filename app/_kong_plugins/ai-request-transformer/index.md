@@ -24,6 +24,9 @@ min_version:
 #    - traditional
 
 icon: ai-request-transformer.png
+
+categories:
+  - ai
 ---
 
 ## Overview

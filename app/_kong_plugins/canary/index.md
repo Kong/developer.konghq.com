@@ -23,6 +23,9 @@ works_on:
 
 
 icon: canary.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

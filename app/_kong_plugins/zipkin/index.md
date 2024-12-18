@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: zipkin.png
+
+categories:
+  - analytics-monitoring
 ---
 
 ## Overview

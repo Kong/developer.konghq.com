@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: correlation-id.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

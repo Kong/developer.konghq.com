@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: upstream-oauth.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

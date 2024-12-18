@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: route-by-header.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

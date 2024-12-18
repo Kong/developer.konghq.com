@@ -23,6 +23,9 @@ works_on:
 #    - traditional
 
 icon: openid-connect.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

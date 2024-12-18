@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: tls-handshake-modifier.png
+
+categories:
+  - security
 ---
 
 ## Overview

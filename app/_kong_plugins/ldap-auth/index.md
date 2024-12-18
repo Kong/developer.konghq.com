@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: ldap-auth.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

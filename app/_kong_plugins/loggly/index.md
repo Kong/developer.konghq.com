@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: loggly.png
+
+categories:
+  - logging
 ---
 
 ## Overview
