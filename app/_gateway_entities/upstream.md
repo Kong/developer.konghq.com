@@ -53,38 +53,41 @@ If one of the servers (like `httpbin.konghq.com` in the previous example) is una
 
 The following diagram shows how Upstreams interact with other {{site.base_gateway}} entities:
 
+<!--vale off-->
+
 {% mermaid %}
 flowchart LR
-  A(API client)
-  B("`Route 
+  A("`Route 
   (/mock)`")
-  C("`Service
-  (example-service)`")
-  D(Upstream 
-  application)
-  
-  A <--requests
-  responses--> B
-  subgraph id1 ["`
-  **KONG GATEWAY**`"]
-    B <--requests
-    responses--> C
+  B("`Service
+  (example_service)`")
+  C(Upstream load balancer)
+  D(httpbin.konghq.com)
+  E(httpbun.com)
+
+  subgraph id1 ["`**KONG GATEWAY**`"]
+    A --> B --> C
   end
-  C <--requests
-  responses--> D
+
+  subgraph id2 ["`Targets (example_upstream)`"]
+    C --> D & E
+  end
 
   style id1 rx:10,ry:10
-  
+  style id2 stroke:none
 {% endmermaid %}
+
+<!--vale on-->
 
 ## Use cases for Upstreams
 
 The following are examples of common use cases for Upstreams:
 
-* **Load balance:<!--TODO link how-to-->** When an Upstream points to multiple upstream targets, you can configure the Upstream entity to load balance traffic between the targets.
-* **Health check:<!--TODO link how-to-->** Configure Upstreams to dynamically mark a target as healthy or unhealthy. This is an active check where a specific HTTP or HTTPS endpoint in the target is periodically requested and the health of the target is determined based on its response. 
-* **Circuit break:<!--TODO link how-to-->** Configure Upstreams to allow {{site.base_gateway}} to passively analyze the ongoing traffic being proxied and determine the health of targets based on their behavior responding to requests.
-  **Note:** This feature is not supported in hybrid mode.
+| Use case | Description |
+|----------|-------------|
+| Load balance | When an Upstream points to multiple upstream targets, you can configure the Upstream entity to load balance traffic between the targets. |
+| Health check | Configure Upstreams to dynamically mark a target as healthy or unhealthy. This is an active check where a specific HTTP or HTTPS endpoint in the target is periodically requested and the health of the target is determined based on its response. |
+| Circuit break | Configure Upstreams to allow {{site.base_gateway}} to passively analyze the ongoing traffic being proxied and determine the health of targets based on their behavior responding to requests. **Note:** This feature is not supported in hybrid mode. |
 
 ## Schema
 
