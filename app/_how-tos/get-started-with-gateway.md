@@ -63,19 +63,7 @@ cleanup:
 
 ## 1. Check that {{site.base_gateway}} is running
 
-We'll be using decK for this tutorial, so let's check that {{site.base_gateway}} is running and that decK can access it:
-
-```sh
-deck gateway ping
-```
-
-If everything is running, then you should get the following response:
-
-```sh
-Successfully connected to Kong!
-Kong version: 3.9.0.0
-```
-{:.no-copy-code}
+{% include how-tos/steps/ping-gateway.md %}
 
 ## 2. Create a Service
 
@@ -157,30 +145,14 @@ entities:
 
 In this example, you configured a limit of 5 requests per minute for all Routes, Services, and Consumers.
 
-### Validate rate limiting
-
-After configuring rate limiting, you can verify that it was configured correctly and is working 
-by sending more requests than allowed in the configured time limit.
-
-[Sync your decK file](#apply-configuration) again, then run the following command to quickly send 6 mock requests:
-
-```sh
-for _ in {1..6}; do curl -s -i localhost:8000/mock/anything; echo; sleep 1; done
-```
-
-After the 6th request, you should receive a 429 "API rate limit exceeded" error:
-```
-{
-    "message": "API rate limit exceeded"
-}
-```
+We'll validate that this worked in the next step, but first let's set up caching.
 
 ## 4. Enable caching 
 
 One of the ways Kong delivers performance is through caching.
 The [Proxy Cache plugin](/plugins/proxy-cache/) accelerates performance by caching
 responses based on configurable response codes, content types, and request methods.
-When caching is enabled, upstream Services are not bogged down with repetitive requests,
+When caching is enabled, upstream services are not bogged down with repetitive requests,
 because {{site.base_gateway}} responds on their behalf with cached results.
 
 Let's enable the Proxy Cache plugin globally:
@@ -196,7 +168,7 @@ entities:
           - 200
         content_type: 
           - application/json
-        cache_ttl: 5
+        cache_ttl: 30
         strategy: memory
 append_to_existing_section: true
 {% endentity_examples %}
@@ -204,39 +176,45 @@ append_to_existing_section: true
 This configures a Proxy Cache plugin with the following attributes:
 * {{site.base_gateway}} will cache all `GET` requests that result in response codes of `200`
 * It will also cache responses with the `Content-Type` headers that *equal* `application/json`
-* `cache_ttl` instructs the plugin to flush values after 5 seconds
+* `cache_ttl` instructs the plugin to flush values after 30 seconds
 * `config.strategy=memory` specifies the backing data store for cached responses. More
 information on `strategy` can be found in the [parameter reference](/plugins/proxy-cache/reference/)
 for the Proxy Cache plugin.
 
-### Validate proxy caching
+### Validate proxy caching and rate limiting
 
-You can check that the Proxy Cache plugin is working by sending `GET` requests and examining
+You can check that the Rate Limiting and Proxy Cache plugins are working by sending `GET` requests and examining
 the returned headers.
 
-[Sync your decK file](#apply-configuration), then make an initial request to the `/mock` Route. 
-The Proxy Cache plugin returns status
-information headers prefixed with `X-Cache`, so you can use `grep` to filter for that information:
+[Sync your decK file](#apply-configuration) again, then run the following command to quickly send 6 mock requests. 
+The Proxy Cache plugin returns status information headers prefixed with `X-Cache`, so you can use `grep` to filter for that information:
 
-```
-curl -i -s -XGET http://localhost:8000/mock/anything | grep X-Cache
+```sh
+for _ in {1..6}; do curl -s -i localhost:8000/mock/anything; echo; sleep 1; done | grep -E 'X-Cache|HTTP/1.1'
 ```
 
 On the initial request, there should be no cached responses, and the headers will indicate this with
-`X-Cache-Status: Miss`.
+`X-Cache-Status: Miss`:
 
 ```
+HTTP/1.1 200 OK
 X-Cache-Key: c9e1d4c8e5fd8209a5969eb3b0e85bc6
 X-Cache-Status: Miss
 ```
 {:.no-copy-code}
 
-Within 5 seconds of the initial request, repeat the command to send an identical request. The
-headers will indicate a cache `Hit`:
+Subsequent responses will be cached and show `X-Cache-Status: Hit`:
 
 ```
+HTTP/1.1 200 OK
 X-Cache-Key: c9e1d4c8e5fd8209a5969eb3b0e85bc6
 X-Cache-Status: Hit
+```
+{:.no-copy-code}
+
+After the 6th request, you should receive a 429 error, which means your requests were rate limited according to the policy:
+```
+HTTP/1.1 429 Too Many Requests
 ```
 {:.no-copy-code}
 
