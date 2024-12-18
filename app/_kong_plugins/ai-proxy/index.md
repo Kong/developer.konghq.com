@@ -5,8 +5,7 @@ name: 'AI Proxy'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
-tier: enterprise
+description: The AI Proxy plugin lets you transform and proxy requests to a number of AI providers and models.
 
 
 products:
@@ -34,3 +33,4 @@ icon: ai-proxy.png
 > Check out the [AI Gateway quickstart](/gateway/latest/get-started/ai-gateway/) to get an AI proxy up and running within minutes!
 
 {% include plugins/ai-proxy/links.md plugin=page.name %}
+

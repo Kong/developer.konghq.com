@@ -1,3 +1,5 @@
+## Overview
+
 {% assign plugin = include.plugin %}
 {% assign id = plugin | slugify %}
 {% assign provider = include.params.provider %}
@@ -5,21 +7,10 @@
 {% assign options = include.params.options %}
 {% assign providers = site.data.plugins.ai-proxy.providers %}
 
-
 {{ page.description }}
 
 The plugin accepts requests in one of a few defined and standardized formats, translates them to the configured target format, and then transforms the response back into a standard format.
 
-<!-- if_version lte:3.6.x -->
-The {{ plugin }} plugin supports `llm/v1/chat` and `llm/v1/completions` style requests for all of the following providers:
-* OpenAI
-* Cohere
-* Azure
-* Anthropic
-* Mistral (raw and OLLAMA formats)
-* Llama2 (raw, OLLAMA, and OpenAI formats)
-<!-- endif_version -->
-<!-- if_version gte:3.7.x -->
 The following table describes which providers and requests the {{ plugin }} plugin supports:
 
 {% include plugins/ai-proxy/tables/supported-providers.html providers=providers %}

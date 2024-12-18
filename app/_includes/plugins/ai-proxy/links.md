@@ -14,3 +14,5 @@
   * [Llama2](/plugins/{{ id }}/how-to/llm-provider-integration-guides/llama2/)
   * [Gemini/Vertex](/plugins/{{ id }}/how-to/llm-provider-integration-guides/gemini/)
   * [Amazon Bedrock](/plugins/{{ id }}/how-to/llm-provider-integration-guides/bedrock/)
+
+{% include plugins/ai-plugins.md %}
