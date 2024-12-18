@@ -35,15 +35,6 @@ schema:
 
 Routes can also define rules that match requests to associated Services. Because of this, one Route can reference multiple endpoints. Once a Route is matched, {{site.base_gateway}} proxies the request to its associated Service. A basic Route should have a name, path or paths, and reference an existing Service.
 
-When you configure Routes, you can also specify the following:
-
-* **Protocols:** The protocol used to communicate with the [Upstream](/gateway/entities/upstream/) application.
-* **Hosts:** Lists of domains that match a Route
-* **Methods:** HTTP methods that match a Route
-* **Headers:** Lists of values that are expected in the header of a request
-* **Redirect status codes:** HTTPS status codes
-* **Tags:** Optional set of strings to group Routes with
-
 Use Routes if you don't need to load balance traffic to hosts. If you need to do load balancing between hostnames, configure your hosts in an [Upstream](/gateway/entities/upstream/) instead.
 
 ## Route and Service interaction
@@ -54,26 +45,33 @@ The following diagram shows how Routes interact with other {{site.base_gateway}}
 
 {% mermaid %}
 flowchart LR
-  A(API client)
-  B("`Route 
-  (/mock)`")
-  C("`Service
-  (example-service)`")
-  D(Upstream 
-  application)
+  A(External application)
+  B("`Route (/external)`")
+  C("`Service (example-service)`")
+  D(Upstream application)
+  E(Internal application)
+  F("`Route (/internal)`")
   
-  A <--requests
-  responses--> B
   subgraph id1 ["`
   **KONG GATEWAY**`"]
     B <--requests
-    responses--> C
+  responses--> C
+    F <--requests
+  responses--> C
   end
+
+  A <--requests
+  responses--> B
+  E <--requests
+  responses--> F
+
   C <--requests
   responses--> D
 
+  B -.->|Rate Limiting plugin| C
+
   style id1 rx:10,ry:10
-  
+
 {% endmermaid %}
 
 Routes also allow the same Service to be used by multiple applications and apply different policies based on the Route used.
@@ -86,85 +84,51 @@ You can configure a policy to limit how often the `/external` Route is used.
 When the external application tries to access the Service via {{site.base_gateway}} using `/external`, it's rate limited. 
 But when the internal application accesses the Service using {{site.base_gateway}} using `/internal`, the internal application isn't limited.
 
+## Route use cases
+
+Use the following table to help you understand how Routes can be configured for different use cases:
+
+| You want to... | Then use... |
+|--------|----------|
+| Rate limit internal and external traffic to a Service | [Enable a rate limiting plugin on Routes attached to the Service](/plugins/rate-limiting-advanced/) |
+| Perform a simple URL rewrite, such as renaming your legacy `/api/old/` Upstream endpoint to a publicly accessible API endpoint that is now named `/new/api`. | [Set up a Gateway Service with the old path and a Route with new path](/how-to/rewrite-simple-request-urls-with-routes/) |
+| Perform a complex URL rewrite, such as replacing `/api/<function>/old` with `/new/api/<function>`. | [Request Transformer Advanced plugin](https://docs.konghq.com/hub/kong-inc/request-transformer-advanced/) |
+| Describe Routes or paths as patterns using regular expressions. | [Expressions router](/gateway/routing/expressions/) |
+
 ## How routing works
 
-{% include_cached /content/how-routing-works.md %}
+For each incoming request, {{site.base_gateway}} must determine which Service gets to handle it based on the Routes that are defined. {{site.base_gateway}} handles routing in the following order:
 
-### Matching routing attributes
+1. {{site.base_gateway}} finds Routes that match the request by comparing the defined routing attributes with the attributes in the request. 
 
-When you configure a Route, you must define certain attributes that {{site.base_gateway}} will use to match incoming requests.
+    If the rule count for the given request is the same in two Routes `A` and
+    `B`, then the following tiebreaker rules will be applied in the order they
+    are listed. Route `A` will be selected over `B` if:
+    * `A` has only "plain" Host headers and `B` has one or more "wildcard"
+    host headers
+    * `A` has more non-Host headers than `B`.
+    * `A` has at least one "regex" paths and `B` has only "plain" paths.
+    * `A`'s longest path is longer than `B`'s longest path.
+    * `A.created_at < B.created_at`
+1. If multiple Routes match, the {{site.base_gateway}} router then orders all defined Routes by their priority and uses the highest priority matching Route to handle a request. 
+1. As soon as a Route yields a match, the router stops matching and {{site.base_gateway}} uses the matched Route to [proxy the current request](/gateway/traffic-control/proxy/).
 
-{{site.base_gateway}} supports native proxying of HTTP/HTTPS, TCP/TLS, and GRPC/GRPCS protocols. Each of these protocols accepts a different set of routing attributes:
-- `http`: `methods`, `hosts`, `headers`, `paths` (and `snis`, if `https`)
-- `tcp`: `sources`, `destinations` (and `snis`, if `tls`)
-- `grpc`: `hosts`, `headers`, `paths` (and `snis`, if `grpcs`)
+{{site.base_gateway}} uses a router to route requests. There are two different routers you can use. Which you should use depends on your use case and {{site.base_gateway}} version:
 
-Note that all of these fields are **optional**, but at least **one of them**
-must be specified.
+| Recommended {{site.base_gateway}} version | Routing method | Description |
+|-------------------------------|----------------|-------------|
+| 2.9.x or earlier | Traditional compatibility | Only recommended for anyone running {{site.base_gateway}} 2.9.x or earlier. The default routing method for {{site.base_gateway}}. Doesn't handle complex routing logic. |
+| 3.0.x or later | [Expressions router](/gateway/routing/expressions/) | The recommended method for anyone running {{site.base_gateway}} 3.0.x or later. Can be run in both `traditional_compat` and `expressions` modes. Handles complex routing logic and regex in Routes. |
 
-For a request to match a Route:
-
-- The request **must** include **all** of the configured fields
-- The values of the fields in the request **must** match at least one of the
-  configured values (While the field configurations accepts one or more values,
-  a request needs only one of the values to be considered a match)
-
-The following sections describe specifics about the headers, paths, and SNI attributes you can configure. For information about additional attributes you can configure for Route matching, see the [Routes schema](/gateway/entities/route/#schema).
-
-#### Request header
-
-**Supported protocols:** `http`and `grpc`
-
-Routing a request based on its Host header is the most straightforward way to proxy traffic through {{site.base_gateway}}, especially since this is the intended usage of the HTTP Host header. `hosts` accepts multiple values, which must be comma-separated when specifying them via the Admin API, and is represented in a JSON payload. You can also use wildcards in hostnames. Wildcard hostnames must contain only one asterisk at the leftmost or rightmost label of the domain.
-
-When proxying, {{site.base_gateway}}’s default behavior is to set the upstream request’s Host header to the hostname specified in the Service’s `host`. The `preserve_host` field accepts a boolean flag instructing {{site.base_gateway}} not to do so.
-
-| Example config | Example routing request matches |
-|---------------|--------------------------------|
-| `{"hosts":["example.com", "foo-service.com"]}` | `Host: example.com` and `Host: foo-service.com` | 
-| `headers.region=north` | `Region: North` |
-| `"hosts": ["*.example.com", "example.*"]` | `Host: an.example.com` and `Host: example.org` |
-| `"hosts": ["service.com"], "preserve_host": true,` | `Host: service.com` |
-| `"headers": { "version": ["v1", "v2"] }` | `version: v1` |
-
-#### Request path
-
-**Supported protocols:** `http` and `grpc`
-
-Another way for a Route to be matched is via request paths. To satisfy this routing condition, a client request’s normalized path must be prefixed with one of the values of the `paths` attribute.
-
-{{site.base_gateway}} detects that the request's normalized URL path is prefixed with one of the Routes’ `paths` values. By default, {{site.base_gateway}} would then proxy the request Upstream without changing the URL path.
+### Path matching
 
 When proxying with path prefixes, the longest paths get evaluated first. This allows you to define two Routes with two paths: `/service` and `/service/resource`, and ensure that the former doesn't “shadow” the latter.
 
-* **Regex in paths:** For a path to be considered a regular expression, it must be prefixed with a `~`. For example: `paths: ["~/foo/bar$"]`. 
-* **Evaluation order:** The router evaluates Routes using the `regex_priority` field of the Route where a Route is configured. Higher `regex_priority` values mean higher priority. If you have the following paths configured:
-  ```sh
-  [
-    {
-        "paths": ["~/status/\d+"],
-        "regex_priority": 0
-    },
-    {
-        "paths": ["~/version/\d+/status/\d+"],
-        "regex_priority": 6
-    },
-    {
-        "paths": /version,
-    },
-    {
-        "paths": ["~/version/any/"],
-    }
-  ]
-  ```
-  They are evaluated in the following order:
-  1. `/version/\d+/status/\d+`
-  1. `/status/\d+`
-  1. `/version/any/`
-  1. `/version`
+Keep the following path matching recommendations in mind when configuring paths:
+
+* **Regex in paths:** For a path to be considered a regular expression, it must be prefixed with a `~`. For example: `paths: ["~/foo/bar$"]`. Routers with a large number of regexes can consume traffic intended for other rules. Regular expressions are much more expensive to build and execute and can’t be optimized easily. You can avoid creating complex regular expressions using the [Router Expressions language](/gateway/routing/expressions/).
 * **Capturing groups:** Capturing groups are also supported, and the matched group will be extracted from the path and available for plugins consumption.
 * **Escaping special characters:** When configuring Routes with regex paths via the Admin API, be sure to URL encode your payload if necessary according to [RFC 3986](https://tools.ietf.org/html/rfc3986).
-* **`strip_path` property:** If you want to specify a path prefix to match a Route, but not include it in the Upstream request, you can set the `strip_path` boolean property to `true`.
 * **Normalization behavior:** To prevent trivial Route match bypass, the incoming request URI from client
 is always normalized according to [RFC 3986](https://tools.ietf.org/html/rfc3986)
 before router matching occurs. Specifically, the following normalization techniques are
@@ -177,48 +141,9 @@ semantics of the request URI:
 
   Regex Route paths only use methods 1 and 2. In addition, if the decoded character becomes a regex meta character, it will be escaped with backslash.
 
-Routers with a large number of regexes can consume traffic intended for other rules. Regular expressions are much more expensive to build and execute and can’t be optimized easily. You can avoid creating complex regular expressions using the [Router Expressions language](/gateway/routing/expressions/).
+### Priority matching
 
-| Example config | Example routing request matches |
-|---------------|--------------------------------|
-| `"paths": ["/service", "/hello/world"]` | `GET /service HTTP/1.1 Host: example.com`, `GET /service/resource?param=value HTTP/1.1 Host: example.com`, and `GET /hello/world/resource HTTP/1.1 Host: anything.com` |
-| `paths: ["~/foo/bar$"]` | `GET /foo/bar HTTP/1.1 Host: example.com` |
-| `/version/(?<version>\d+)/users/(?<user>\S+)` | `/version/1/users/john` |
-
-#### Request SNI
-
-**Supported protocols:** `https`, `grpcs`, or `tls`
-
-You can use a [Server Name Indication (SNI)](https://en.wikipedia.org/wiki/Server_Name_Indication) as a routing attribute. 
-
-Incoming requests with a matching hostname set in the TLS connection’s SNI extension would be routed to this Route. As mentioned, SNI routing applies not only to TLS, but also to other protocols carried over TLS, such as HTTPS. If multiple SNIs are specified in the Route, any of them can match with the incoming request’s SNI (or relationship between the names).
-
-The SNI is indicated at TLS handshake time and can't be modified after the TLS connection has been established. This means keepalive connections that send multiple requests will have the same SNI hostnames while performing router match (regardless of the `host` header).
-
-Creating a Route with a mismatched SNI and `host` header matcher is possible, but generally discouraged.
-
-
-### Routing priority 
-
-If multiple Routes match an incoming request, the {{site.base_gateway}} router then orders all defined Routes by their priority and uses the highest priority matching Route to handle a request.
-
-If the rule count for the given request is the same in two Routes `A` and
-`B`, then the following tiebreaker rules will be applied in the order they
-are listed. Route `A` will be selected over `B` if:
-
-* `A` has only "plain" Host headers and `B` has one or more "wildcard"
-  host headers
-* `A` has more non-Host headers than `B`.
-* `A` has at least one "regex" paths and `B` has only "plain" paths.
-* `A`'s longest path is longer than `B`'s longest path.
-* `A.created_at < B.created_at`
-
-The routing method you should use depends on your {{site.base_gateway}} version:
-
-| Recommended {{site.base_gateway}} version | Routing method | Description |
-|-------------------------------|----------------|-------------|
-| 2.9.x or earlier | Traditional compatibility | Only recommended for anyone running {{site.base_gateway}} 2.9.x or earlier. The original routing method for {{site.base_gateway}}. |
-| 3.0.x or later | [Expressions router](/gateway/routing/expressions/) | The recommended method for anyone running {{site.base_gateway}} 3.0.x or later. Can be run in both `traditional_compat` and `expressions` modes. |
+If multiple Routes match, the {{site.base_gateway}} router then orders all defined Routes by their priority and uses the highest priority matching Route to handle a request. How Routes are prioritized depends on the router mode you're using.
 
 #### Traditional compatibility mode
 
@@ -234,13 +159,9 @@ follows, by the order of descending significance:
   
   For a Route with multiple paths, each path will be considered separately for priority determination. Effectively, this means that separate Routes exist for each of the paths.
 
-As soon as a Route yields a match, the router stops matching and {{site.base_gateway}} uses the matched Route to [proxy the current request](/).
-
 #### Expressions router mode
 
 In [`expressions` mode](/gateway/routing/expressions/) when a request comes in, {{site.base_gateway}} evaluates Routes with a higher `priority` number first. The priority is a positive integer that defines the order of evaluation of the router. The larger the priority integer, the sooner a Route will be evaluated. In the case of duplicate priority values between two Routes in the same router, their order of evaluation is undefined.
-
-As soon as a Route yields a match, the router stops matching and {{site.base_gateway}} uses the matched Route to [proxy the current request](/gateway/traffic-control/proxy/).
 
 ### Routing performance recommendations
 
@@ -248,17 +169,6 @@ You can use the following recommendations to increase routing performance:
 
 * In `expressions` mode, we recommend putting more likely matched Routes before (as in, higher priority) those that are less frequently matched.
 * Regular expressions in Routes use more resources to evaluate than simple prefixes. In installations with thousands of Routes, replacing regular expression with simple prefix can improve throughput and latency of {{site.base_gateway}}. If regex must be used because an exact path match must be performed, using the [expressions router](/gateway/routing/expressions/) will significantly improve {{site.base_gateway}}’s performance in this case.
-
-## Route use cases
-
-Use the following table to help you understand how Routes can be configured for different use cases:
-
-| You want to... | Then use... |
-|--------|----------|
-| Rate limit internal and external traffic to a Service | [Enable a rate limiting plugin on Routes attached to the Service](/plugins/rate-limiting-advanced/) |
-| Perform a simple URL rewrite, such as renaming your legacy `/api/old/` Upstream endpoint to a publicly accessible API endpoint that is now named `/new/api`. | [Set up a Gateway Service with the old path and a Route with new path](/how-to/rewrite-simple-request-urls-with-routes/) |
-| Perform a complex URL rewrite, such as replacing `/api/<function>/old` with `/new/api/<function>`. | [Request Transformer Advanced plugin](https://docs.konghq.com/hub/kong-inc/request-transformer-advanced/) |
-| Describe Routes or paths as patterns using regular expressions. | [Expressions router](/gateway/routing/expressions/) |
 
 ## Schema
 
