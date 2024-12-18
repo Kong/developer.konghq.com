@@ -28,7 +28,7 @@ The {{ plugin }} plugin will mediate the following for you:
   * HTTP method
 * Authentication on behalf of the Kong API consumer
 * Decorating the request with parameters from the `{{ options }}` block, appropriate for the chosen provider
-* Recording of usage statistics of the configured LLM provider and model into your selected [Kong log](/hub/?category=logging) plugin output
+* Recording of usage statistics of the configured LLM provider and model into your selected [Kong log](/plugins/?category=logging) plugin output
 * Optionally, additionally recording all post-transformation request and response messages from users, to and from the configured LLM
 * Fulfillment of requests to self-hosted models, based on select supported format transformations
 

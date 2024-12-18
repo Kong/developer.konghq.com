@@ -1,5 +1,5 @@
 
-title: 'Chat route with local Llama2 model'
+title: 'Chat route with Llama2'
 description: 'Configure a chat route using a local Llama2 model with the OLLAMA format.'
 
 weight: 900

@@ -4,15 +4,15 @@
 ## Get started with the {{ plugin }} plugin
 
 * [Configuration reference](/plugins/{{ id }}/reference/)
-* [Basic configuration example](/plugins/{{ id }}/how-to/basic-example/)
 * Learn how to use the plugin with different providers:
-  * [OpenAI](/plugins/{{ id }}/how-to/llm-provider-integration-guides/openai/)
-  * [Cohere](/plugins/{{ id }}/how-to/llm-provider-integration-guides/cohere/)
-  * [Azure](/plugins/{{ id }}/how-to/llm-provider-integration-guides/azure/)
-  * [Anthropic](/plugins/{{ id }}/how-to/llm-provider-integration-guides/anthropic/)
-  * [Mistral](/plugins/{{ id }}/how-to/llm-provider-integration-guides/mistral/)
-  * [Llama2](/plugins/{{ id }}/how-to/llm-provider-integration-guides/llama2/)
-  * [Gemini/Vertex](/plugins/{{ id }}/how-to/llm-provider-integration-guides/gemini/)
-  * [Amazon Bedrock](/plugins/{{ id }}/how-to/llm-provider-integration-guides/bedrock/)
+  * [OpenAI](/plugins/{{ id }}/examples/openai-chat-route/)
+  * [Cohere](/plugins/{{ id }}/examples/cohere-chat-route/)
+  * [Azure](/plugins/{{ id }}/examples/azure-chat-route/)
+  * [Anthropic](/plugins/{{ id }}/examples/anthropic-chat-route/)
+  * [Mistral](/plugins/{{ id }}/examples/mistral-chat-route/)
+  * [Llama2](/plugins/{{ id }}/examples/llama2-chat-route/)
+  * [Gemini/Vertex](/plugins/{{ id }}/examples/gemini-chat-route/)
+  * [Amazon Bedrock](/plugins/{{ id }}/examples/bedrock-chat-route/)
+  * [Hugging Face](/plugins/{{ id }}/examples/huggingface-chat-route/)
 
 {% include plugins/ai-plugins.md %}
