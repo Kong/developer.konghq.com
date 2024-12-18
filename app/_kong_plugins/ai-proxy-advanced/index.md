@@ -5,7 +5,7 @@ name: 'AI Proxy Advanced'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: The AI Proxy Advanced plugin lets you transform and proxy requests to multiple AI providers and models at the same time. This lets you set up load balancing between targets.
 tier: enterprise
 
 

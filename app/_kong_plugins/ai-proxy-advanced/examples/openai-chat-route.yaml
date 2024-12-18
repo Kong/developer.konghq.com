@@ -1,11 +1,11 @@
 
-title: 'Chat route with Cohere'
-description: 'Configure a chat route using the Cohere command model.'
+title: 'Chat route with OpenAI'
+description: 'Configure a chat route using the OpenAI GPT-4 model.'
 
 weight: 900
 
 requirements:
-- Cohere account
+- OpenAI account
 
 # variables: <- not required
 #   my-region:

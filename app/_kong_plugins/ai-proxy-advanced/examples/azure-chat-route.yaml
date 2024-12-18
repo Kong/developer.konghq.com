@@ -14,14 +14,15 @@ requirements:
 #     value: us
 
 config:
-  route_type: llm/v1/chat
-  auth:
-    header_name: api-key
-    header_value: $AZURE_OPENAI_API_KEY
-  model:
-    provider: azure
-    name: gpt-35-turbo
-    options:
-      azure_instance: $AZURE_INSTANCE_NAME
-      azure_deployment_id: $AZURE_DEPLOYMENT_ID
-      azure_api_version: "2023-01-01"
+  targets:
+    - route_type: llm/v1/chat
+      auth:
+        header_name: api-key
+        header_value: $AZURE_OPENAI_API_KEY
+      model:
+        provider: azure
+        name: gpt-35-turbo
+        options:
+          azure_instance: $AZURE_INSTANCE_NAME
+          azure_deployment_id: $AZURE_DEPLOYMENT_ID
+          azure_api_version: "2023-01-01"

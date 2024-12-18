@@ -13,14 +13,15 @@ requirements:
 #     value: us
 
 config:
-  route_type: llm/v1/chat
-  auth:
-    header_name: x-api-key
-    header_value: $ANTHROPIC_API_KEY
-  model:
-    provider: anthropic
-    name: claude-3-5-sonnet-latest
-    options:
-      anthropic_version: "2023-06-01"
-      max_tokens: 512
-      temperature: 1.0
+  targets:
+    - route_type: llm/v1/chat
+      auth:
+        header_name: x-api-key
+        header_value: $ANTHROPIC_API_KEY
+      model:
+        provider: anthropic
+        name: claude-3-5-sonnet-latest
+        options:
+          anthropic_version: "2023-06-01"
+          max_tokens: 512
+          temperature: 1.0
