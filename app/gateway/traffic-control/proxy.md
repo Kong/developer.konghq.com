@@ -85,7 +85,7 @@ one.
 - `stream_listen`, which is similar to `proxy_listen` but for Layer 4 (TCP, TLS)
   generic proxy. This is turned off by default.
 
-Kong Gateway is a transparent proxy, and it defaults to forwarding the request to your upstream service untouched, with the exception of various headers such as `Connection`, `Date`, and others as required by the HTTP specifications.
+{{site.base_gateway}} is a transparent proxy, and it defaults to forwarding the request to your upstream service untouched, with the exception of various headers such as `Connection`, `Date`, and others as required by the HTTP specifications.
 
 ## Routing
 
@@ -173,7 +173,7 @@ subsequent plugins added to the route or service that implement a hook in
 the `header_filter` phase.
 
 Once the `header_filter` phase of all registered plugins has been executed, the
-following headers are added by {{site.base_gateway}} and the full set of headers be sent to
+following headers are added by {{site.base_gateway}} and the full set of headers is sent to
 the client:
 
 | Header                                      | Description |

@@ -11,7 +11,7 @@ related_resources:
     url: /gateway/entities/service/
   - text: Expressions router
     url: /gateway/routing/expressions/
-  - text: Upstreams entity
+  - text: Upstream entity
     url: /gateway/entities/upstream/
   - text: Proxying with {{site.base_gateway}}
     url: /gateway/traffic-control/proxy/
@@ -31,7 +31,7 @@ schema:
 
 ## What is a Route? 
 
-{{page.description}} [Gateway Services](/gateway/entities/service/) can store collections of objects like plugin configurations, and policies, and they can be associated with Routes. In {{site.base_gateway}}, Routes typically map to endpoints that are exposed through the {{site.base_gateway}} application. Routes determine how (and if) requests are sent to their Services after they reach {{site.base_gateway}}. Where a Service represents the backend API, a Route defines what is exposed to clients. 
+{{page.description}} [Gateway Services](/gateway/entities/service/) can store collections of objects like plugin configurations and policies, and they can be associated with Routes. In {{site.base_gateway}}, Routes typically map to endpoints that are exposed through the {{site.base_gateway}} application. Routes determine how (and if) requests are sent to their Services after they reach {{site.base_gateway}}. Where a Service represents the backend API, a Route defines what is exposed to clients. 
 
 Routes can also define rules that match requests to associated Services. Because of this, one Route can reference multiple endpoints. Once a Route is matched, {{site.base_gateway}} proxies the request to its associated Service. A basic Route should have a name, path or paths, and reference an existing Service.
 
@@ -83,7 +83,7 @@ For example, say you have an external application and an internal application th
 
 In this example, you can create two Routes to handle the two applications, say `/external` and `/internal`, and point both of them to `example_service`. 
 You can configure a policy to limit how often the `/external` Route is used. 
-When the external application tries to access the Service via {{site.base_gateway}} using `/external`, they're rate limited. 
+When the external application tries to access the Service via {{site.base_gateway}} using `/external`, it's rate limited. 
 But when the internal application accesses the Service using {{site.base_gateway}} using `/internal`, the internal application isn't limited.
 
 ## How routing works
@@ -94,7 +94,7 @@ But when the internal application accesses the Service using {{site.base_gateway
 
 When you configure a Route, you must define certain attributes that {{site.base_gateway}} will use to match incoming requests.
 
-{{site.base_gateway}} supports native proxying of HTTP/HTTPS, TCP/TLS, and GRPC/GRPCS protocols. Each of these protocols accept a different set of routing attributes:
+{{site.base_gateway}} supports native proxying of HTTP/HTTPS, TCP/TLS, and GRPC/GRPCS protocols. Each of these protocols accepts a different set of routing attributes:
 - `http`: `methods`, `hosts`, `headers`, `paths` (and `snis`, if `https`)
 - `tcp`: `sources`, `destinations` (and `snis`, if `tls`)
 - `grpc`: `hosts`, `headers`, `paths` (and `snis`, if `grpcs`)
@@ -115,9 +115,9 @@ The following sections describe specifics about the headers, paths, and SNI attr
 
 **Supported protocols:** `http`and `grpc`
 
-Routing a request based on its Host header is the most straightforward way to proxy traffic through Kong Gateway, especially since this is the intended usage of the HTTP Host header. `hosts` accepts multiple values, which must be comma-separated when specifying them via the Admin API, and is represented in a JSON payload. You can also use wildcards in hostnames. Wildcard hostnames must contain only one asterisk at the leftmost or rightmost label of the domain.
+Routing a request based on its Host header is the most straightforward way to proxy traffic through {{site.base_gateway}}, especially since this is the intended usage of the HTTP Host header. `hosts` accepts multiple values, which must be comma-separated when specifying them via the Admin API, and is represented in a JSON payload. You can also use wildcards in hostnames. Wildcard hostnames must contain only one asterisk at the leftmost or rightmost label of the domain.
 
-When proxying, Kong Gateway’s default behavior is to set the Upstream request’s Host header to the hostname specified in the Service’s `host`. The `preserve_host` field accepts a boolean flag instructing Kong Gateway not to do so.
+When proxying, {{site.base_gateway}}’s default behavior is to set the upstream request’s Host header to the hostname specified in the Service’s `host`. The `preserve_host` field accepts a boolean flag instructing {{site.base_gateway}} not to do so.
 
 | Example config | Example routing request matches |
 |---------------|--------------------------------|
@@ -133,9 +133,9 @@ When proxying, Kong Gateway’s default behavior is to set the Upstream request�
 
 Another way for a Route to be matched is via request paths. To satisfy this routing condition, a client request’s normalized path must be prefixed with one of the values of the `paths` attribute.
 
-Kong Gateway detects that the request's normalized URL path is prefixed with one of the Routes’ `paths` values. By default, Kong Gateway would then proxy the request Upstream without changing the URL path.
+{{site.base_gateway}} detects that the request's normalized URL path is prefixed with one of the Routes’ `paths` values. By default, {{site.base_gateway}} would then proxy the request Upstream without changing the URL path.
 
-When proxying with path prefixes, the longest paths get evaluated first. This allow you to define two Routes with two paths: `/service` and `/service/resource`, and ensure that the former does not “shadow” the latter.
+When proxying with path prefixes, the longest paths get evaluated first. This allows you to define two Routes with two paths: `/service` and `/service/resource`, and ensure that the former doesn't “shadow” the latter.
 
 * **Regex in paths:** For a path to be considered a regular expression, it must be prefixed with a `~`. For example: `paths: ["~/foo/bar$"]`. 
 * **Evaluation order:** The router evaluates Routes using the `regex_priority` field of the Route where a Route is configured. Higher `regex_priority` values mean higher priority. If you have the following paths configured:
@@ -168,7 +168,7 @@ When proxying with path prefixes, the longest paths get evaluated first. This al
 * **Normalization behavior:** To prevent trivial Route match bypass, the incoming request URI from client
 is always normalized according to [RFC 3986](https://tools.ietf.org/html/rfc3986)
 before router matching occurs. Specifically, the following normalization techniques are
-used for incoming request URIs, which are selected because they generally do not change
+used for incoming request URIs, which are selected because they generally don't change
 semantics of the request URI:
   1. Percent-encoded triplets are converted to uppercase.  For example: `/foo%3a` becomes `/foo%3A`.
   2. Percent-encoded triplets of unreserved characters are decoded. For example: `/fo%6F` becomes `/foo`.
@@ -191,7 +191,7 @@ Routers with a large number of regexes can consume traffic intended for other ru
 
 You can use a [Server Name Indication (SNI)](https://en.wikipedia.org/wiki/Server_Name_Indication) as a routing attribute. 
 
-Incoming requests with a matching hostname set in the TLS connection’s SNI extension would be Routed to this Route. As mentioned, SNI routing applies not only to TLS, but also to other protocols carried over TLS, such as HTTPS. If multiple SNIs are specified in the Route, any of them can match with the incoming request’s SNI (or relationship between the names).
+Incoming requests with a matching hostname set in the TLS connection’s SNI extension would be routed to this Route. As mentioned, SNI routing applies not only to TLS, but also to other protocols carried over TLS, such as HTTPS. If multiple SNIs are specified in the Route, any of them can match with the incoming request’s SNI (or relationship between the names).
 
 The SNI is indicated at TLS handshake time and can't be modified after the TLS connection has been established. This means keepalive connections that send multiple requests will have the same SNI hostnames while performing router match (regardless of the `host` header).
 
@@ -225,7 +225,7 @@ The routing method you should use depends on your {{site.base_gateway}} version:
 In `traditional_compat` mode, the priority of a Route is determined as
 follows, by the order of descending significance:
 
-1. **Priority points:** For the presence of each of a Route's `methods`, `host`, `headers`, and `snis`, a "priority point" is added. The number of "priority points" determines the overall order in which the Routes will be considered. Routes with a higher "priority point" values will be considered before those with lower values. This means that if one Route has `methods` defined, and second one has `methods` and `headers` defined, the second one will be considered before the first one.
+1. **Priority points:** For the presence of each of a Route's `methods`, `host`, `headers`, and `snis`, a "priority point" is added. The number of "priority points" determines the overall order in which the Routes will be considered. Routes with higher "priority point" values will be considered before those with lower values. This means that if one Route has `methods` defined, and second one has `methods` and `headers` defined, the second one will be considered before the first one.
 2. **Wildcard hosts:** Among Routes with the same "priority point" value, those that have any wildcard host specification will be considered after those that don't have any wildcard host (or no host) specified.
 3. **Header count:** The resulting groups are sorted so the Routes with a higher number of specified headers have higher priority than those with a lower number of headers.
 4. **Regular expressions and prefix paths:** Within the resulting groups of Routes with equal priority, the router sorts them as follows:

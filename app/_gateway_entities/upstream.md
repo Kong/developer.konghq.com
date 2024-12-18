@@ -16,18 +16,16 @@ tools:
 description: An upstream refers to the service applications sitting behind {{site.base_gateway}}, to which client requests are forwarded.
 
 related_resources:
-  - text: Gateway Services entity
+  - text: Gateway Service entity
     url: /gateway/entities/service/
-  - text: Routes entity
+  - text: Route entity
     url: /gateway/entities/route/
-  - text: Targets entity
+  - text: Target entity
     url: /gateway/entities/target/
   - text: Routing in {{site.base_gateway}}
     url: /gateway/routing/
   - text: Expressions router
     url: /gateway/routing/expressions/
-  - text: Upstreams
-    url: /gateway/entities/upstream/
   - text: Proxying with {{site.base_gateway}}
     url: /gateway/traffic-control/proxy/
 
@@ -38,20 +36,20 @@ schema:
 
 ## What is an Upstream?
 
-{{page.description}} In {{site.base_gateway}}, an Upstream represents a virtual hostname and can be used to [health check, circuit break]<!--TODO link concept-->, and [load balance]<!--TODO link concept--> incoming requests over multiple [Gateway Services](/gateway/entities/service/). In addition, the upstream entity has more advanced functionality algorithms like least-connections, consistent-hashing, and lowest-latency.
+{{page.description}} In {{site.base_gateway}}, an Upstream represents a virtual hostname and can be used to [health check, circuit break]<!--TODO link concept-->, and [load balance]<!--TODO link concept--> incoming requests over multiple [Gateway Services](/gateway/entities/service/). In addition, the Upstream entity has more advanced functionality algorithms like least-connections, consistent-hashing, and lowest-latency.
 
-If you don't need to load balance hostnames, we recommend using the `host` header on a [Route](/gateway/entities/route/) as the preferred method for routing a request and proxying traffic.
+If you don't need to load balance, we recommend using the `host` header on a [Route](/gateway/entities/route/) as the preferred method for routing a request and proxying traffic.
 
 ## Upstream and Service interaction
 
 You can configure a Service to point to an Upstream instead of a host. 
 For example, if you have a Service called `example_service` and an Upstream called `example_upstream`, you can point `example_service` to `example_upstream` instead of specifying a host. 
-The `example_upstream` Upstream can then point to two different [targets](/gateway/entities/target/): `httpbin.konghq.com` and `httpbun.com`. 
+The `example_upstream` Upstream can then point to two different [Targets](/gateway/entities/target/): `httpbin.konghq.com` and `httpbun.com`. 
 In a real environment, the Upstream points to the same Service running on multiple systems.
 
-This setup allows you to [load balance]<!--TODO link concept--> between upstream targets. 
+This setup allows you to load balance between upstream targets. 
 For example, if an application is deployed across two different servers or upstream targets, {{site.base_gateway}} needs to load balance across both servers. 
-This is so that if one of the servers (like `httpbin.konghq.com` in the previous example) is unavailable, it automatically detects the problem and routes all traffic to the working server (`httpbun.com`). 
+If one of the servers (like `httpbin.konghq.com` in the previous example) is unavailable, it automatically detects the problem and routes all traffic to the working server (`httpbun.com`). 
 
 The following diagram shows how Upstreams interact with other {{site.base_gateway}} entities:
 

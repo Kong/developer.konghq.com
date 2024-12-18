@@ -39,7 +39,7 @@ http.path ^= "/foo/bar"
 
 ### Regex based path matching
 
-If you prefer to match a HTTP requests path against a regex, you can write the following route:
+If you prefer to match an HTTP request's path against a regex, you can write the following route:
 
 ```
 http.path ~ r#"/foo/bar/\d+"#
@@ -65,7 +65,7 @@ http.headers.x_foo ~ r#"bar\d"#
 ```
 
 If there are multiple header values for `X-Foo` and the client sends more than
-one `X-Foo` header with different value, the above example will ensure **each** instance of the
+one `X-Foo` header with different values, the above example will ensure **each** instance of the
 value will match the regex `r#"bar\d"#`. This is called "all" style matching, meaning each instance
 of the field value must pass the comparison for the predicate to return `true`. This is the default behavior.
 

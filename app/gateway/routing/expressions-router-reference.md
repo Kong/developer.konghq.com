@@ -140,7 +140,7 @@ The following table describes the available matching fields, as well as their as
 
 An operator defines the desired comparison action to be performed on the field against the provided constant value. The operator always displays in the middle of the predicate, between the field and constant value.
 
-Expressions language support a rich set of operators that can be performed on various data types.
+The expressions language supports a rich set of operators that can be performed on various data types.
 
 | Operator       | Name                  | Description                  |
 |----------------|-----------------------|--------------------------------------------------------------------------------------|
@@ -250,7 +250,7 @@ expression: http.path == "/hello" || http.path == "/world"
 Regular expressions (regexes) are powerful tool that can be used to match strings based on
 very complex criteria. Unfortunately, this has also made them more expensive to
 evaluate at runtime and hard to optimize. Therefore, there are some common
-scenarios where regex usages can be eliminated, resulting in significantly
+scenarios where regex usage can be eliminated, resulting in significantly
 better matching performance.
 
 When performing exact matches (non-prefix matching) of a request path, use the `==` operator

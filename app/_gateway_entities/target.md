@@ -11,10 +11,10 @@ tools:
     - deck
     - terraform
 
-description: A target is an IP address/hostname with a port that identifies an instance of a backend service.
+description: A Target is an IP address/hostname with a port that identifies an instance of a backend service.
 
 related_resources:
-  - text: Upstreams entity
+  - text: Upstream entity
     url: /gateway/entities/upstream/
   - text: Routing in {{site.base_gateway}}
     url: /gateway/routing/
@@ -27,9 +27,9 @@ schema:
 
 ---
 
-## What is a target?
+## What is a Target?
 
-{{page.description}} Each [Upstream](/gateway/entities/upstream/) can have many Targets. Targets are used by Upstreams for [load balancing]<!--TODO link concept-->. For example, if you have an `example_upstream` upstream, you can point it to two different Targets: `httpbin.konghq.com` and `httpbun.com`. This is so that if one of the servers (like `httpbin.konghq.com`) is unavailable, it automatically detects the problem and routes all traffic to the working server (`httpbun.com`).
+{{page.description}} Each [Upstream](/gateway/entities/upstream/) can have many Targets. Targets are used by Upstreams for [load balancing]<!--TODO link concept-->. For example, if you have an `example_upstream` Upstream, you can point it to two different Targets: `httpbin.konghq.com` and `httpbun.com`. This is so that if one of the servers (like `httpbin.konghq.com`) is unavailable, it automatically detects the problem and routes all traffic to the working server (`httpbun.com`).
 
 The following diagram illustrates how Targets are used by Upstreams for load balancing:
 
@@ -68,8 +68,8 @@ flowchart LR
 {% entity_example %}
 type: target
 data:
-    upstream: 
-      description: example_upstream
-      id: 173a6cee-90d1-40a7-89cf-0329eca780a6
-    weight: 100
+   - target: httpbun.com:80
+     weight: 100
+   - target: httpbin.konghq.com:80
+     weight: 100
 {% endentity_example %}
