@@ -15,6 +15,9 @@ plugins:
   - sessions
   - oidc
 
+related_resources:
+  - text: Kong Plugins
+    url: /plugins/cors
 
 breadcrumbs:
   - /gateway/networking/dns-config-reference
@@ -22,13 +25,14 @@ breadcrumbs:
 
 ## Overview 
 
-{{page.description}} {{site.base_gateway}} provides the Kong Manager, which must be able to interact with the Admin API. This application is subject to security restrictions enforced by browsers, and Kong must send appropriate information to browsers in order for it to function properly.
+{{page.description}}. {{site.base_gateway}} provides Kong Manager, which must be able to interact with the Admin API. This application is subject to security restrictions enforced by browsers, and Kong must send appropriate information to browsers in order for it to function properly.
 
 These security restrictions use the applications’ DNS hostnames to evaluate whether the applications’ metadata satisfies the security constraints. As such, you must design your DNS structure to meet the requirements.
 
 
 ## DNS structure requirements
 
+The two types of requirements are: 
 
 * Kong Manager and the Admin API are served from the same hostname, typically by placing the Admin API under an otherwise unused path, such as `/_adminapi/`.
 
@@ -37,14 +41,12 @@ These security restrictions use the applications’ DNS hostnames to evaluate wh
 The first option simplifies configuration in kong.conf, but requires an HTTP proxy in front of the applications (because it uses HTTP path-based routing). The Kong proxy can be used for this. The second option requires more configuration in kong.conf, but can be used without proxying the applications.
 
 
-{% include sections/cors-and-kong-gateway.md %}
-
 ### CORS and Kong Manager
 
 
 Kong Manager operate by issuing requests to the Admin API using JavaScript. These requests may be cross-origin depending on your environment. The Admin API obtains its `ACAO header` value from the `admin_gui_url` in kong.conf.
 
-You can configure your environment such that these requests are not cross-origin by accessing both the Kong Manager and its associated API via the same hostname, like: https://admin.kong.example/ and the Admin API at https://admin.kong.example/_api/. This option requires placing a proxy in front of both Kong Manager and the Admin API to handle path-based routing. You can use Kong’s proxy for this purpose. Kong Manager must be served at the root of the domains and you cannot place the APIs at the root and Kong Manager under a path.
+You can configure your environment such that these requests are not cross-origin by accessing both the Kong Manager and its associated API via the same hostname, like: https://admin.kong.example/ and the Admin API at https://admin.kong.example/_api/. This option requires placing a proxy in front of both Kong Manager and the Admin API to handle path-based routing. You can use Kong’s proxy for this purpose. Kong Manager must be served at the root of the domains and you cannot place the APIs at the root and Kong Manager under a path. You can manage CORS in {{site.base_gateway}} using the [CORS plugin](/plugins/cors)
 
 
 ### Troubleshooting CORS
