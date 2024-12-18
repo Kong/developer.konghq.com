@@ -5,7 +5,7 @@ name: 'AWS Lambda'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Invoke and manage AWS Lambda functions from Kong'
 
 
 products:

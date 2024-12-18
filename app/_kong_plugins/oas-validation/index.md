@@ -5,7 +5,7 @@ name: 'OAS Validation'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Validate HTTP requests and responses based on an OpenAPI 3.0 or Swagger API Specification'
 tier: enterprise
 
 

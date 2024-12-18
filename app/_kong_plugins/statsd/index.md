@@ -5,7 +5,7 @@ name: 'StatsD'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Send metrics to StatsD'
 
 
 products:

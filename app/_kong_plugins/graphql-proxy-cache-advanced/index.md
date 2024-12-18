@@ -5,7 +5,7 @@ name: 'GraphQL Proxy Caching Advanced'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Cache and serve commonly requested responses in Kong'
 tier: enterprise
 
 

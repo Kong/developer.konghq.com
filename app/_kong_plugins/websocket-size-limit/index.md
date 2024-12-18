@@ -5,7 +5,7 @@ name: 'WebSocket Size Limit'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Block incoming WebSocket messages greater than a specified size'
 tier: enterprise
 
 

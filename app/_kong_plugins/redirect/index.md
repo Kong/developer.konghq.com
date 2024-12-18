@@ -5,7 +5,7 @@ name: 'Redirect'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Redirect incoming requests to a new URL'
 
 
 products:

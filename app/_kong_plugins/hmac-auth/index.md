@@ -5,7 +5,7 @@ name: 'HMAC Auth'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Add HMAC Authentication to your services'
 
 
 products:

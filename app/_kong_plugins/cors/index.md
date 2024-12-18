@@ -5,7 +5,7 @@ name: 'CORS'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Allow developers to make requests from the browser'
 
 
 products:

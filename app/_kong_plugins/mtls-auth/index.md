@@ -5,7 +5,7 @@ name: 'Mutual TLS Authentication'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Secure routes and services with client certificate and mutual TLS authentication'
 tier: enterprise
 
 

@@ -5,7 +5,7 @@ name: 'Standard Webhooks'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Validate that incoming webhooks adhere to the Standard Webhooks specification, which Kong contributes to'
 
 
 products:

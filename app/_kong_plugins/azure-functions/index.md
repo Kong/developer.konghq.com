@@ -5,7 +5,7 @@ name: 'Azure Functions'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Invoke and manage Azure functions from Kong'
 
 
 products:

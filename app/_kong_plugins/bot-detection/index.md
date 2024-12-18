@@ -5,7 +5,7 @@ name: 'Bot Detection'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Detect and block bots or custom clients'
 
 
 products:

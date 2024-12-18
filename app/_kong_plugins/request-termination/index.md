@@ -5,7 +5,7 @@ name: 'Request Termination'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Terminates all requests with a specific response'
 
 
 products:

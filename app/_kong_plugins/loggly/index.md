@@ -5,7 +5,7 @@ name: 'Loggly'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Send request and response logs to Loggly'
 
 
 products:

@@ -5,7 +5,7 @@ name: 'AI Prompt Guard'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Check llm/v1/chat or llm/v1/completions requests against a list of allowed or denied expressions'
 tier: enterprise
 
 

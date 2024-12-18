@@ -5,7 +5,7 @@ name: 'OpenID Connect'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Integrate Kong with a third-party OpenID Connect provider'
 tier: enterprise
 
 

@@ -5,7 +5,7 @@ name: 'Request Transformer'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Use regular expressions, variables, and templates to transform requests'
 
 
 products:

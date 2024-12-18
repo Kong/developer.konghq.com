@@ -5,7 +5,7 @@ name: 'Upstream OAuth'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Configure Kong Gateway to obtain an OAuth2 token to consume an upstream API'
 tier: enterprise
 
 

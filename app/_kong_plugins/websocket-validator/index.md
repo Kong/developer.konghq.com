@@ -5,7 +5,7 @@ name: 'WebSocket Validator'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Validate WebSocket messages before they are proxied'
 tier: enterprise
 
 

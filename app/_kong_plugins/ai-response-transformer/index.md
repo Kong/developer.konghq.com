@@ -5,7 +5,7 @@ name: 'AI Response Transformer'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Use an LLM service to examine the upstream HTTP(S) prior to forwarding it to the client'
 
 
 products:

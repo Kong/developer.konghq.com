@@ -5,7 +5,7 @@ name: 'OPA'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Authorize requests against Open Policy Agent'
 tier: enterprise
 
 

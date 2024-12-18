@@ -5,7 +5,7 @@ name: 'StatsD Advanced'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: '(Deprecated) Send metrics to StatsD with more flexible options'
 tier: enterprise
 
 

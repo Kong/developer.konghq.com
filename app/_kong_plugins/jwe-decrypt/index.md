@@ -5,7 +5,7 @@ name: 'JWE Decrypt'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Decrypt a JWE token in a request'
 tier: enterprise
 
 

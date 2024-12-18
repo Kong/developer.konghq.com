@@ -5,7 +5,7 @@ name: 'Session'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Support sessions for Kong authentication plugins.'
 
 
 products:

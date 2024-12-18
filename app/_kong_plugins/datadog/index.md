@@ -5,7 +5,7 @@ name: 'Datadog'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Visualize metrics on Datadog'
 
 products:
     - gateway

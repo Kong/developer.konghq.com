@@ -5,7 +5,7 @@ name: 'Kong Functions (Post-Plugin)'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Add and manage custom Lua functions to run after other plugins'
 
 
 products:

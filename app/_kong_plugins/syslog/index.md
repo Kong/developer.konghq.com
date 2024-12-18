@@ -5,7 +5,7 @@ name: 'Syslog'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Send request and response logs to Syslog'
 
 
 products:

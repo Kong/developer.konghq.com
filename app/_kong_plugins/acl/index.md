@@ -5,7 +5,7 @@ name: 'ACL'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Control which consumers can access services'
 tier: enterprise
 
 

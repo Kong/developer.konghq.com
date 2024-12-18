@@ -5,7 +5,7 @@ name: 'gRPC-Web'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Allow browser clients to call gRPC services'
 
 
 products:

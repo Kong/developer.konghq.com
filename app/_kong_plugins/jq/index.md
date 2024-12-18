@@ -5,7 +5,7 @@ name: 'jq'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Transform JSON objects included in API requests or responses using jq programs.'
 tier: enterprise
 
 

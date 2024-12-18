@@ -5,7 +5,7 @@ name: 'AI Request Transformer'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: Use an LLM service to inspect and transform the client's request body prior to proxying the request to the upstream server
 
 
 products:

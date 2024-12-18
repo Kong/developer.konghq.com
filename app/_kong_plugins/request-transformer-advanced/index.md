@@ -5,7 +5,7 @@ name: 'Request Transformer Advanced'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Use powerful regular expressions, variables, and templates to transform API requests'
 tier: enterprise
 
 

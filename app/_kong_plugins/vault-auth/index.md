@@ -5,7 +5,7 @@ name: 'Vault Authentication'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Add Vault authentication to your services'
 tier: enterprise
 
 
