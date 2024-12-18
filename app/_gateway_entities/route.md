@@ -256,7 +256,7 @@ Use the following table to help you understand how Routes can be configured for 
 | You want to... | Then use... |
 |--------|----------|
 | Rate limit internal and external traffic to a Service | [Enable a rate limiting plugin on Routes attached to the Service](/plugins/rate-limiting-advanced/) |
-| Perform a simple URL rewrite, such as renaming your legacy `/api/old/` Upstream endpoint to a publicly accessible API endpoint that is now named `/new/api`. | [Set up a Gateway Service with the old path and a Route with new path](/how-to/dynamically-rewrite-simple-request-urls-with-routes/) |
+| Perform a simple URL rewrite, such as renaming your legacy `/api/old/` Upstream endpoint to a publicly accessible API endpoint that is now named `/new/api`. | [Set up a Gateway Service with the old path and a Route with new path](/how-to/rewrite-simple-request-urls-with-routes/) |
 | Perform a complex URL rewrite, such as replacing `/api/<function>/old` with `/new/api/<function>`. | [Request Transformer Advanced plugin](https://docs.konghq.com/hub/kong-inc/request-transformer-advanced/) |
 | Describe Routes or paths as patterns using regular expressions. | [Expressions router](/gateway/routing/expressions/) |
 
