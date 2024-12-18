@@ -72,7 +72,6 @@ How to:
 ## 2. Create complex routes with expressions
 
 ```sh
-
 curl --request POST \
  --url http://localhost:8001/services/example-service/routes \
  --header 'Content-Type: multipart/form-data' \
