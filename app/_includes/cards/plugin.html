@@ -1,0 +1,9 @@
+{% assign plugin = include.plugin %}
+
+{% capture badges %}
+{%- if plugin.tier -%}
+{%- include tier.html products=plugin.products tier=plugin.tier url=false-%}
+{%- endif -%}
+{% endcapture %}
+
+{% include card.html icon=plugin.icon title=plugin.name description=plugin.description cta_url=plugin.url badges=badges css_class="min-h-[260px]" %}

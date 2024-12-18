@@ -9,4 +9,9 @@
     {%- endcapture -%}
     {% raise "tier.html: invalid tier `{{include.tier}}` for product: `{{product}}`. Available tiers: {{available_tiers}}" %}
 {% endunless %}
+
+{% if include.url %}
 {% include badge.html url=tier.url text=tier.text %}
+{% else %}
+{% include badge.html text=tier.text %}
+{% endif %}

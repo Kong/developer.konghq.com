@@ -3,10 +3,12 @@
 <img src="{{ include.icon }}" class="w-8 h-8"/>
 {% endif %}
 
-<h3>{{ include.title | liquify }}</h3>
+<div class="flex flex-col gap-3 flex-grow">
+    <h4>{{ include.title | liquify }}</h4>
 
-<div class="flex flex-col flex-grow text-sm gap-3">
-{{ include.description | liquify | markdownify }}
+    <p class="text-sm line-clamp-3">
+        {{ include.description | liquify | markdownify | markdown }}
+    </p>
 </div>
 
 {% if include.cta_text %}
@@ -14,16 +16,22 @@
 {{ include.cta_text | liquify }}
 </div>
 {% endif %}
+
+{% if include.badges %}
+<div class="flex flex-wrap gap-2">
+    {{include.badges}}
+</div>
+{% endif %}
 {% endcapture %}
 
-<div class="flex p-6 rounded-md border border-primary/5 bg-secondary shadow-primary h-full hover:border hover:border-brand-saturated/40 hover:shadow-hover-card">
+<div class="flex rounded-md border border-primary/5 bg-secondary shadow-primary h-full hover:border hover:border-brand-saturated/40 hover:shadow-hover-card {{ include.css_class}}">
 
     {% if include.cta_url %}
-        <a href="{{include.cta_url}}" class="flex flex-col gap-5 hover:no-underline text-secondary">
+        <a href="{{include.cta_url}}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
             {{ card_content }}
         </a>
     {% else %}
-        <div class="flex flex-col gap-5">
+        <div class="flex flex-col gap-5 p-6">
             {{ card_content }}
         </div>
     {% endif %}
