@@ -1,5 +1,6 @@
 ---
 title: Plugins
+hub: true
 layout: default
 ---
 
@@ -49,21 +50,16 @@ layout: default
   </div>
 
 
-  {% assign categories = site.data.plugin_categories | sort: "name" %}
+  {% assign categories = site.data.plugin_categories | sort: "text" %}
   {% assign kong_plugins = site.data.kong_plugins %}
 
   <div class="grid grid-cols-4 gap-16">
-    <div class="w-full flex flex-col gap-8 sticky top-24 self-start">
+    <div id="filters" class="w-full flex flex-col gap-8 sticky top-24 self-start">
       <div class="flex flex-col gap-3">
         <div class="text-sm text-brand font-semibold">Deployment Platforms</div>
         <div class="flex flex-col gap-3">
           {% for deployment_topology in site.data.products.gateway.deployment_topologies %}
-            <div class="flex">
-              <label class="w-full">
-                <input type="checkbox" value="{{deployment_topology.slug}}" name="deployment-topology">
-                {{deployment_topology.text}}
-              </label>
-            </div>
+            {% include checkbox.html value=deployment_topology.slug name="deployment-topology" label=deployment_topology.text %}
           {% endfor %}
         </div>
       </div>
@@ -72,12 +68,7 @@ layout: default
         <div class="flex flex-col gap-3">
 
           {% for category in categories %}
-            <div class="flex">
-              <label class="w-full">
-                <input type="checkbox" value="{{category.slug}}" name="category">
-                {{category.name}}
-              </label>
-            </div>
+            {% include checkbox.html value=category.slug name="category" label=category.text %}
           {% endfor %}
         </div>
       </div>
@@ -85,10 +76,10 @@ layout: default
 
     <div class="flex flex-col col-span-3 w-full gap-16">
       {% for cat in categories %}
-        {% assign plugins_for_category = kong_plugins | where_exp: "plugin", "plugin.categories contains cat.slug" | sort: "name" %}
+        {% assign plugins_for_category = kong_plugins | where_exp: "plugin", "plugin.categories contains cat.slug" | sort: "text" %}
         {% if plugins_for_category.size > 0 %}
-          <div class="flex flex-col gap-4">
-            <h2>{{ cat.name }}</h2>
+          <div class="flex flex-col gap-4" id="{{cat.slug}}">
+            <h2>{{ cat.text }}</h2>
 
             <div class="grid auto-rows-fr grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {% for plugin in plugins_for_category %}

@@ -1,24 +1,24 @@
-- name: AI
+- text: AI
   slug: ai
   desc: Govern, secure, and control AI traffic with multi-LLM AI Gateway plugins
-- name: Authentication
+- text: Authentication
   slug: authentication
   desc: Protect your services with an authentication layer
-- name: Security
+- text: Security
   slug: security
   desc: Protect your services with additional security layer
-- name: Traffic Control
+- text: Traffic Control
   slug: traffic-control
   desc: Manage, throttle and restrict inbound and outbound API traffic
-- name: Serverless
+- text: Serverless
   slug: serverless
   desc: Invoke serverless functions in combination with other plugins
-- name: Analytics & Monitoring
+- text: Analytics & Monitoring
   slug: analytics-monitoring
   desc: Visualize, inspect and monitor APIs and microservices traffic
-- name: Transformations
+- text: Transformations
   slug: transformations
   desc: Transform request and responses on the fly on Kong
-- name: Logging
+- text: Logging
   slug: logging
   desc: Log request and response data using the best transport for your infrastructure
