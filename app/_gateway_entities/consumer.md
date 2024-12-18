@@ -46,12 +46,10 @@ faqs:
 
   - q: Can you scope authentication plugins to Consumers?
     a: |
-      No. You can associate Consumers with an auth plugin by configuring credentials - for example, a Consumer with basic
+      No. You can associate Consumers with an auth plugin by configuring credentials. For example, a Consumer with basic
       auth credentials will use the Basic Authentication plugin.
-      But that plugin must be scoped to either a route, service, or globally, so that the Consumer can access it.
+      But that plugin must be scoped to either a Route, Service, or globally, so that the Consumer can access it.
 
-  - q: Are consumers used in Kuma/Mesh?
-    a: No.
 
   - q: Can you manage Consumers with decK?
     a: |
