@@ -1,7 +1,7 @@
 ---
 title: Expressions router examples
 
-description: "The expressions router can be used to perform tasks such as defining complex routing logic on a [Route](/gateway/entities/route/)."
+description: "The [expressions router](/gateway/routing/expressions/) can be used to perform tasks such as defining complex routing logic on a [Route](/gateway/entities/route/)."
 
 content_type: reference
 layout: reference

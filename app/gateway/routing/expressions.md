@@ -3,8 +3,8 @@ title: Expressions router
 
 description: "The {{site.base_gateway}} expressions router is a rule-based engine that uses a Domain-Specific Expressions Language to define complex routing logic on a [Route](/gateway/entities/route/)."
 
-content_type: concept
-layout: concept
+content_type: reference
+layout: reference
 
 products:
   - gateway
@@ -29,7 +29,19 @@ faqs:
   - q: When should I use the expressions router in place of (or alongside) the traditional compat router?
     a: We recommend using the expressions router if you are running {{site.base_gateway}} 3.0.x or later. After enabling expressions, traditional match fields on the Route object (such as `paths` and `methods`) remain configurable. You may specify Expressions in the new `expression` field. However, these cannot be configured simultaneously with traditional match fields. Additionally, a new `priority` field, used in conjunction with the expression field, allows you to specify the order of evaluation for Expression Routes.
   - q: How do I enable the expressions router?
-    a: In your [kong.conf] <!--TODO link to kong.conf--> file, by set `router_flavor = expressions` and restart your {{site.base_gateway}}. Once it's enabled, you can use the expressions language as you create Routes.
+    a: |
+      In your [kong.conf] <!--TODO link to kong.conf--> file, set `router_flavor = expressions` and restart your {{site.base_gateway}}. Once the router is enabled, you can use the `expression` parameter when you're creating a Route to specify the Routes. For example:
+      ```sh
+      curl --request POST \
+      --url http://localhost:8001/services/example-service/routes \
+      --header 'Content-Type: multipart/form-data' \
+      --form-string name=complex_object \
+      --form-string 'expression=(net.protocol == "http" || net.protocol == "https") &&
+                    (http.method == "GET" || http.method == "POST") &&
+                    (http.host == "example.com" || http.host == "example.test") &&
+                    (http.path ^= "/mock" || http.path ^= "/mocking") &&
+                    http.headers.x_another_header == "example_header" && (http.headers.x_my_header == "example" || http.headers.x_my_header == "example2")'
+      ```
 ---
 
 {{ page.description }}
