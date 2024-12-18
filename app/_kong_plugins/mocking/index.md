@@ -34,7 +34,7 @@ related_resources:
 
 The Mocking plugin allows you to provide mock endpoints to test APIs in development against your existing services. The Mocking plugin leverages standards based on the Open API Specification (OAS) for sending out mock responses to APIs. Mocking supports both Swagger 2.0 and OpenAPI 3.0.
 
-The Mocking plugin requires an API spec to work correctly. Depending on the {{site.base_gateway}} deployment mode, set either the `api_specification_filename` or the `api_specification` parameter in `kong.conf`.
+You need an API spec you want to mock the endpoints of for the Mocking plugin to work correctly. Depending on the {{site.base_gateway}} deployment mode, set either the `api_specification_filename` or the `api_specification` parameter in `kong.conf`.
 
 ## Mocked responses
 
