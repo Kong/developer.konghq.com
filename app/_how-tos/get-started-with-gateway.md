@@ -181,12 +181,12 @@ This configures a Proxy Cache plugin with the following attributes:
 information on `strategy` can be found in the [parameter reference](/plugins/proxy-cache/reference/)
 for the Proxy Cache plugin.
 
-### Validate proxy caching and rate limiting
+### Validate caching and rate limiting
 
 You can check that the Rate Limiting and Proxy Cache plugins are working by sending `GET` requests and examining
 the returned headers.
 
-[Sync your decK file](#apply-configuration) again, then run the following command to quickly send 6 mock requests. 
+[Sync your decK file](#apply-configuration) again, then run the following command to send 6 mock requests. 
 The Proxy Cache plugin returns status information headers prefixed with `X-Cache`, so you can use `grep` to filter for that information:
 
 ```sh
