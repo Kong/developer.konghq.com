@@ -6,6 +6,9 @@ related_resources:
   - text: Authentication
     url: /authentication
 
+products:
+  - gateway
+
 works_on:
     - konnect
 

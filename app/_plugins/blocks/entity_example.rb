@@ -39,6 +39,7 @@ module Jekyll
 
     def formats(page)
       return page['tools'] unless page['layout'] == 'gateway_entity'
+      return page['tools'] unless page['slug'] != 'event_hook'
 
       page['tools'].dup << 'ui'
     end
