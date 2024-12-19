@@ -57,8 +57,8 @@ Using the `webhook-custom` handler, you can configure an Event Hook that listens
 Posting this will result in a `200` response. The `config` body in the Event Hook contains information about the webhook that was created: 
 
 * **`"method": "POST"`**: The method we are using in the webhook.
-* **`"url": "$SLACK_WEBHOOK_URL"`: The URL of the webhook, in this case we are using the Slack URl that we created and set as an environment variable. 
-* **`"payload"`: What this webhook will `POST`. 
+* **`"url": "$SLACK_WEBHOOK_URL"`**: The URL of the webhook, in this case we are using the Slack URl that we created and set as an environment variable. 
+* **`"payload"`**: What this webhook will `POST`. 
 
 
 ## 2. Validate the webhook
