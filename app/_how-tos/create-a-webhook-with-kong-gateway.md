@@ -1,5 +1,5 @@
 ---
-title: Create a Web Hook with Kong Gateway
+title: Create a Web Hook with {{site.base_gateway}}
 content_type: how_to
 
 products:
