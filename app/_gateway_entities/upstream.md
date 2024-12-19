@@ -36,9 +36,7 @@ schema:
 
 ## What is an Upstream?
 
-An Upstream refers to the service applications sitting behind {{site.base_gateway}}, to which client requests are forwarded. In {{site.base_gateway}}, an Upstream represents a virtual hostname and can be used to [health check, circuit break](https://docs.konghq.com/gateway/latest/how-kong-works/health-checks/), and [load balance](https://docs.konghq.com/gateway/latest/how-kong-works/load-balancing/) incoming requests over multiple [Gateway Services](/gateway/entities/service/). In addition, the Upstream entity has more advanced functionality algorithms like least-connections, consistent-hashing, and lowest-latency.
-
-If you don't need to load balance, we recommend using the `host` header on a [Route](/gateway/entities/route/) as the preferred method for routing a request and proxying traffic.
+An Upstream refers to the service applications sitting behind {{site.base_gateway}}, to which client requests are forwarded. In {{site.base_gateway}}, an Upstream represents a virtual hostname and can be used to [health check](https://docs.konghq.com/gateway/latest/how-kong-works/health-checks/#active-health-checks), [circuit break](https://docs.konghq.com/gateway/latest/how-kong-works/health-checks/#passive-health-checks-circuit-breakers), and [load balance](https://docs.konghq.com/gateway/latest/how-kong-works/load-balancing/) incoming requests over multiple [Gateway Services](/gateway/entities/service/). In addition, the Upstream entity has more advanced functionality algorithms like least-connections, consistent-hashing, and lowest-latency.
 
 ## Upstream and Gateway Service interaction
 
@@ -53,30 +51,7 @@ If one of the servers (like `httpbin.konghq.com` in the previous example) is una
 
 The following diagram shows how Upstreams interact with other {{site.base_gateway}} entities:
 
-<!--vale off-->
-
-{% mermaid %}
-flowchart LR
-  A("`Route 
-  (/mock)`")
-  B("`Service
-  (example_service)`")
-  C(Upstream load balancer)
-  D(httpbin.konghq.com)
-  E(httpbun.com)
-
-  subgraph id1 ["`**KONG GATEWAY**`"]
-    A --> B --> C
-  end
-
-  subgraph id2 ["`Targets`"]
-    C --> D & E
-  end
-
-  style id2 stroke:none
-{% endmermaid %}
-
-<!--vale on-->
+{% include entities/upstreams-targets-diagram.md %}
 
 ## Use cases for Upstreams
 
@@ -84,7 +59,7 @@ The following are examples of common use cases for Upstreams:
 
 | Use case | Description |
 |----------|-------------|
-| Load balance | When an Upstream points to multiple upstream targets, you can configure the Upstream entity to load balance traffic between the targets. |
+| Load balance | When an Upstream points to multiple upstream targets, you can configure the Upstream entity to load balance traffic between the targets. If you don't need to load balance, we recommend using the `host` header on a [Route](/gateway/entities/route/) as the preferred method for routing a request and proxying traffic.|
 | Health check | Configure Upstreams to dynamically mark a target as healthy or unhealthy. This is an active check where a specific HTTP or HTTPS endpoint in the target is periodically requested and the health of the target is determined based on its response. |
 | Circuit break | Configure Upstreams to allow {{site.base_gateway}} to passively analyze the ongoing traffic being proxied and determine the health of targets based on their behavior responding to requests. **Note:** This feature is not supported in hybrid mode. |
 
