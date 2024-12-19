@@ -29,35 +29,11 @@ schema:
 
 ## What is a Target?
 
-{{page.description}} Each [Upstream](/gateway/entities/upstream/) can have many Targets. Targets are used by Upstreams for load balancing. For example, if you have an `example_upstream` Upstream, you can point it to two different Targets: `httpbin.konghq.com` and `httpbun.com`. This is so that if one of the servers (like `httpbin.konghq.com`) is unavailable, it automatically detects the problem and routes all traffic to the working server (`httpbun.com`).
+{{page.description}} Each [Upstream](/gateway/entities/upstream/) can have many Targets. Targets are used by Upstreams for [load balancing](https://docs.konghq.com/gateway/latest/how-kong-works/load-balancing/). For example, if you have an `example_upstream` Upstream, you can point it to two different Targets: `httpbin.konghq.com` and `httpbun.com`. This is so that if one of the servers (like `httpbin.konghq.com`) is unavailable, it automatically detects the problem and routes all traffic to the working server (`httpbun.com`).
 
 The following diagram illustrates how Targets are used by Upstreams for load balancing:
 
-<!--vale off-->
-
-{% mermaid %}
-flowchart LR
-  A("`Route 
-  (/mock)`")
-  B("`Service
-  (example_service)`")
-  C(Load balancer)
-  D(httpbin.konghq.com)
-  E(httpbun.com)
-  
-  subgraph id1 ["`**KONG GATEWAY**`"]
-    A --> B --> C
-  end
-
-  subgraph id2 ["`Targets (example_upstream)`"]
-    C --> D & E
-  end
-
-  style id1 rx:10,ry:10
-  style id2 stroke:none
-{% endmermaid %}
-
-<!--vale on-->
+{% include entities/upstreams-targets-diagram.md %}
 
 ## Schema
 
