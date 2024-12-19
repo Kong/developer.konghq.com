@@ -33,6 +33,7 @@ An Event Hook is a {{site.base_gateway}} entity that can be configured to listen
 * Events: The Kong entity that the Event Hook monitors for actions.
 * Handlers: The mechanism that defines what action is performed when an event is triggered, like sending a webhook, logging, or executing custom code.
 
+<!-- vale off -->
 {% mermaid %}
 flowchart LR
     subgraph events [Kong Gateway Events]
@@ -62,6 +63,7 @@ flowchart LR
     E --> Y
     F --> Z 
 {% endmermaid %}
+<!-- vale on -->
 
 ### Handlers
 
@@ -72,7 +74,7 @@ There are four types of handlers that can be used with Event Hooks:
 * **`webhook-custom`**: Fully configurable request. Supports templating, configurable body, payload, and headers. 
 * **`lambda`**: This handler runs Lua code after an event is triggered.
 
-By default, the `lambda` handler is "Sandboxed". Sandboxing means that {{site.base_gateway}} restricts the types of Lua functions that can be loaded as well as the level of access to {{site.base_gateway}} that is availble for these custom functions. For example, in `sandbox` mode, a `lambda` Event Hook will not have access to global values such as `kong.configuration.pg_password`, or OS level functions like `os.execute(rm -rf /*)`, but can still run Lua code like `local foo = 1 + 1`. Removing `sandbox` requires editing the `kong.conf` value `untrusted_lua`, for more information see the [kong.conf documentation](https://docs.konghq.com/gateway/3.9.x/reference/configuration/#untrusted_lua).
+By default, the `lambda` handler is "Sandboxed". Sandboxing means that {{site.base_gateway}} restricts the types of Lua functions that can be loaded as well as the level of access to {{site.base_gateway}} that is available for these custom functions. For example, in `sandbox` mode, a `lambda` Event Hook will not have access to global values such as `kong.configuration.pg_password`, or OS level functions like `os.execute(rm -rf /*)`, but can still run Lua code like `local foo = 1 + 1`. Removing `sandbox` requires editing the `kong.conf` value `untrusted_lua`, for more information see the [kong.conf documentation](https://docs.konghq.com/gateway/3.9.x/reference/configuration/#untrusted_lua).
 
 ### Sources
 
@@ -157,7 +159,7 @@ data:
 
 For step-by-step guides on configuring Event Hooks see the following docs: 
 
-* [Create a Web Hook with Kong Gateway](/how-to/create-a-webhook-with-kong-gateway/)
+* [Create a Web Hook with {{site.base_gateway}}](/how-to/create-a-webhook-with-kong-gateway/)
 * [Push Event Hook information to Slack](/how-to/create-a-custom-webhook-slack)
 * [How to create a log Event Hook](/how-to/create-a-log-event-hook)
 * [Configure an Event Hook to log events](/how-to/create-a-lambda-event-hook)

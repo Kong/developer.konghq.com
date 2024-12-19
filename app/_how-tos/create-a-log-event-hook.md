@@ -31,7 +31,7 @@ cleanup:
 ---
 
 
-`log` Event Hook configuration specifies an event and a source. In this guide you will create an Event Hook that listens for CRUD events on the Consumers entity. This Event Hook will create a log entry when a CRUD event occurrs. 
+`log` Event Hook configuration specifies an event and a source. In this guide you will create an Event Hook that listens for CRUD events on the Consumers entity. This Event Hook will create a log entry when a CRUD event occurs. 
 
 ## 1. Create the Event Hook
 
