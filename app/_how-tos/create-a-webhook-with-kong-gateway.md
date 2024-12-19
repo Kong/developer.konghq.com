@@ -21,7 +21,7 @@ prereqs:
   inline:
     - title: A webhook URL
       content: |
-        * You can generate a URL by navigating to https://webhook.site and copying the free URL.
+        * You can generate a URL by navigating to [https://webhook.site](https://webhook.site) and copying the free URL.
         * Set that URL as an environment variable `export WEBHOOK_URL=YOUR_URL`.
     - title: cURL
       include_content: prereqs/tools/curl
@@ -71,7 +71,7 @@ curl -i -X POST http://localhost:8001/consumers \
     -d username="my-consumer"
 ```
 
-Verify on `webhook.site` that you received a `POST` request. It will look like this: 
+Verify on [`https://webhook.site`](https://webhook.site) that you received a `POST` request. It will look like this: 
 
 ```json
 {
@@ -90,4 +90,4 @@ Verify on `webhook.site` that you received a `POST` request. It will look like t
 }
 ```
 
-This response body contains the `operation`, the `source`, and the `event`, confirming that a new Consumer was created 
+This response body contains the `operation`, the `source`, and the `event`, confirming that a new Consumer was created.
