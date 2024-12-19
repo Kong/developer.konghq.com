@@ -1,0 +1,139 @@
+providers:
+  - name: 'OpenAI'
+    formats: 'GPT-3.5, GPT-4, GPT-4o, and Multi-Modal'
+    url_pattern: 'https://api.openai.com:443/{route_type_path}'
+    min_version: '3.6'
+    chat:
+      supported: ✅
+      upstream_path: '/v1/chat/completions'
+      route_type: 'llm/v1/chat'
+      model_example: 'gpt-4'
+    completions:
+      supported: ✅
+      upstream_path: '/v1/completions'
+      route_type: 'llm/v1/completions'
+      model_example: 'gpt-3.5-turbo-instruct'
+    streaming:
+      supported: ✅
+  - name: 'Cohere'
+    url_pattern: 'https://api.cohere.com:443/{route_type_path}'
+    min_version: '3.6'
+    chat:
+      supported: ✅
+      upstream_path: '/v1/chat'
+      route_type: 'llm/v1/chat'
+      model_example: 'command'
+    completions:
+      supported: ✅
+      upstream_path: '/v1/generate'
+      route_type: 'llm/v1/completions'
+      model_example: 'command'
+    streaming:
+      supported: ✅
+  - name: 'Azure'
+    url_pattern: 'https://{azure_instance}.openai.azure.com:443/openai/deployments/{deployment_name}/{route_type_path}'
+    min_version: '3.6'
+    chat:
+      supported: ✅
+      upstream_path: '/openai/deployments/{deployment_name}/chat/completions'
+      route_type: 'llm/v1/chat'
+      model_example: 'gpt-4'
+    completions:
+      supported: ✅
+      upstream_path: '/openai/deployments/{deployment_name}/completions'
+      route_type: 'llm/v1/completions'
+      model_example: 'gpt-3.5-turbo-instruct'
+    streaming:
+      supported: ✅
+  - name: 'Anthropic'
+    url_pattern: 'https://api.anthropic.com:443/{route_type_path}'
+    min_version: '3.6'
+    chat:
+      supported: ✅
+      upstream_path: '/v1/complete in version 3.6, /v1/messages since version 3.7'
+      route_type: 'llm/v1/chat'
+      model_example: 'claude-2.1'
+    completions:
+      supported: ✅
+      upstream_path: '/v1/complete'
+      route_type: 'llm/v1/completions'
+      model_example: 'claude-2.1'
+    streaming:
+      supported: Chat type only
+  - name: 'Mistral'
+    formats: 'mistral.ai, OpenAI, raw, and OLLAMA formats'
+    url_pattern: 'As defined in <code>$UPSTREAM_URL</code>'
+    min_version: '3.6'
+    chat:
+      supported: ✅
+      upstream_path: 'User-defined'
+      route_type: 'llm/v1/chat'
+      model_example: 'User-defined'
+    completions:
+      supported: ✅
+      upstream_path: 'User-defined'
+      route_type: 'llm/v1/completions'
+      model_example: 'User-defined'
+    streaming:
+      supported: ✅
+  - name: 'Llama2'
+    formats: 'supports Llama2 and Llama3 models and raw, OLLAMA, and OpenAI formats'
+    url_pattern: 'As defined in <code>$UPSTREAM_URL</code>'
+    min_version: ''
+    chat:
+      supported: ✅
+      upstream_path: 'User-defined'
+      route_type: 'llm/v1/chat'
+      model_example: 'User-defined'
+    completions:
+      supported: ✅
+      upstream_path: 'User-defined'
+      route_type: 'llm/v1/completions'
+      model_example: 'User-defined'
+    streaming:
+      supported: ✅
+  - name: 'Amazon Bedrock'
+    url_pattern: 'https://bedrock-runtime.{region}.amazonaws.com'
+    min_version: '3.8'
+    chat:
+      supported: ✅
+      upstream_path: 'Use the LLM <code>chat</code> upstream path'
+      route_type: 'llm/v1/chat'
+      model_example: '<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html">Use the model name for the specific LLM provider</a>'
+    completions:
+      supported: ❌
+    streaming:
+      supported: Chat type only
+  - name: 'Gemini'
+    url_pattern: 'https://generativelanguage.googleapis.com'
+    min_version: '3.8'
+    chat:
+      supported: ✅
+      upstream_path: 'llm/v1/chat'
+      route_type: 'llm/v1/chat'
+      model_example: 'gemini-1.5-flash or gemini-1.5-pro'
+    completions:
+      supported: ❌
+    streaming:
+      supported: Chat type only
+  - name: 'Hugging Face'
+    url_pattern: 'https://api-inference.huggingface.co'
+    min_version: '3.9'
+    chat:
+      supported: ✅
+      upstream_path: '/models/{model_provider}/{model_name}'
+      route_type: 'llm/v1/chat'
+      model_example: '<a href="https://huggingface.co/models?inference=warm&pipeline_tag=text-generation&sort=trending">Use the model name for the specific LLM provider</a>'
+    completions:
+      supported: ✅
+      upstream_path: '/models/{model_provider}/{model_name}'
+      route_type: 'llm/v1/completions'
+      model_example: '<a href="https://huggingface.co/models?inference=warm&pipeline_tag=text-generation&sort=trending">Use the model name for the specific LLM provider</a>'
+    streaming:
+      supported: ✅
+
+parameters:
+  provider: 'config.provider'
+  route_type: 'config.route_type'
+  options: 'config.model.options'
+  upstream_url: 'config.model.options.upstream_url'
