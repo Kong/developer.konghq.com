@@ -71,6 +71,7 @@ data:
         PXy3PkB8++6U4Y3vdk2Ni2WYYlIls8yqbM4327IKmkDc2TimS8u60CT47mKU7aDY
         cbTV5RDkrlaYwm5yqlTIglvCv7o=
         -----END CERTIFICATE-----
+    id: b2f34145-0343-41a4-9602-4c69dec2f269
     key: |
         -----BEGIN RSA PRIVATE KEY-----
         MIIEowIBAAKCAQEAvpnaPKLIKdvx98KW68lz8pGaRRcYersNGqPjpifMVjjE8LuC
