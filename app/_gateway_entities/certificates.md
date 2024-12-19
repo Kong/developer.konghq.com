@@ -2,7 +2,7 @@
 title: Certificates
 content_type: reference
 entities:
-  - consumer-group
+  - certificate
 
 description: A certificate object represents a public certificate, and can be optionally paired with the corresponding private key.
 
@@ -12,10 +12,6 @@ tools:
     - kic
     - deck
     - terraform
-
-related_resources:
-    - text: Create rate limiting tiers with {{site.base_gateway}}
-      url: /how-to/add-rate-limiting-tiers-with-kong-gateway/
 
 api_specs:
     - gateway/admin-ee
