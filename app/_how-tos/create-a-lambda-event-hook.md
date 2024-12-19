@@ -1,69 +1,87 @@
 ---
-title: Run custom code in a event hook
+title: Create an Event Hook that can run custom code
 content_type: how_to
 
-related_resources:
-  - text: Event hooks
-    url: /gateway/entities/event_hooks
-
+entities:
+  - event_hook
 works_on:
     - on-prem
-
+products:
+    - gateway
+tier: enterprise
 
 tags:
   - eventhooks
   - webhook
   - notifications
 tldr: 
-  q: How do I write custom code in an event hook
-  a: Send a `POST` request to the event_hooksusing the `lambda` handler and pass in the custom Lua code you wish to run.
+  q: Can you write code to pass into an Event Hook?
+  a: The `lambda` Event Hook handler can be used to pass custom Lua code. You can then configure the Event Hook to execute that code on an event.
 
 prereqs:
   inline:
     - title: Reload {{site.base_gateway}}
-      include_content: prereqs/event-hooks/restart-kong-gateway
-
+      include_content: prereqs/event-hook/restart-kong-gateway
+cleanup:
+  inline:
+    - title: Destroy the {{site.base_gateway}} container
+      include_content: cleanup/products/gateway
+      icon_url: /assets/icons/gateway.svg
 ---
 
-## Create a lambda event hook
-
-1. Create a lua script to load into the lambda event hook. 
-
-    ```lua
-    return function (data, event, source, pid)
-    local user = data.entity.username
-    error("Event hook on consumer " .. user .. "")
-    end
-    ```
-2. Create a lambda event hook on the `consumers` event, with the `crud` source by creating a `POST` request to the Admin API. 
-
-        curl -i -X POST http://localhost:8001/event-hooks \
-        -H "Content-Type: application/json" \
-        -d '{
-          "source": "crud",
-          "event": "consumers",
-          "handler": "lambda",
-          "config": {
-            "functions": [
-              "return function (data, event, source, pid) local user = data.entity.username error(\"Event hook on consumer \" .. user .. \"\") end"
-            ]
-          }
-        }'
+A `lambda` Event Hook is an Event Hook that utilizes the `lambda` handler to pass custom code to an Event Hook. Depending on the source and individual event, that code can execute during various stages of the lifecycle of an event. In this guide, you will create an `lambda` Event Hook with custom code that logs an error with a specific message every time you create a Consumer. 
 
 
-## Validate the webhook
+## 1. Create a lambda Event Hook
+
+Create a lua script to load into the lambda Event Hook. 
+
+```lua
+return function (data, event, source, pid)
+local user = data.entity.username
+error("Event Hook on consumer " .. user .. "")
+end
+```
+
+Create a lambda Event Hook on the `consumers` event, with the `crud` source by creating a `POST` request to the Admin API and passing the code in the request body as an array of strings.
+
+```sh
+curl -i -X POST http://localhost:8001/event-hooks \
+-H "Content-Type: application/json" \
+-d '{
+  "source": "crud",
+  "event": "consumers",
+  "handler": "lambda",
+  "config": {
+    "functions": [
+      "return function (data, event, source, pid) local user = data.entity.username error(\"Event Hook on consumer \" .. user .. \"\") end"
+    ]
+  }
+}'
+```
 
 
-1. Using the Admin API create a new consumer: 
 
-    ```sh
-    curl -i -X POST http://localhost:8001/consumers \
-        -d username="my-consumer"
-    ```
-2. Review the logs at `/usr/local/kong/logs/error.log` for an update about the creation of this consumer. The log will look similar to this: 
+## 2. Validate the webhook
+
+Validation happens in two steps: 
+1. Create a Consumer
+2. Checking  the logs file for your event
+
+{:.warning}
+> **Important**:  Before you can use event hooks for the first time, {{site.base_gateway}} needs to be reloaded.
+
+Using the Admin API create a new Consumer: 
+
+```sh
+curl -i -X POST http://localhost:8001/consumers \
+    -d username="my-consumer"
+```
+
+Review the logs at `/usr/local/kong/logs/error.log` for an update about the creation of this Consumer. The log will look similar to this: 
     
-    ```sh
-     2024/12/16 21:52:54 [error] 114#0: *153047 [kong] event_hooks.lua:190 [string "return function (data, event, source, pid)..."]:3: Event hook on consumer my-consumer, context: ngx.timer, client: 172.19.0.1, server: 0.0.0.0:8001
+```sh
+2024/12/16 21:52:54 [error] 114#0: *153047 [kong] event_hooks.lua:190 [string "return function (data, event, source, pid)..."]:3: Event Hook on consumer my-consumer, context: ngx.timer, client: 172.19.0.1, server: 0.0.0.0:8001
+```
 
-
-    ```
+In the error logs, you will see the Event Hook, and the error log that resulted from `error("Event Hook on consumer " .. user .. "")`. 

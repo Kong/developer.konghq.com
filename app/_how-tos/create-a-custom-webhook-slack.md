@@ -1,35 +1,39 @@
 ---
-title: Create a custom webhook to push information to Slack
+title: Push Event Hook information to Slack
 content_type: how_to
-
-related_resources:
-  - text: Event hooks
-    url: /gateway/entities/event_hooks
-
 works_on:
     - on-prem
-
-
+products:
+    - gateway
+entities:
+  - event_hook
+tier: enterprise
 tags:
-  - eventhooks
+  - eventhook
   - webhook
   - notifications
 
 tldr:
-  q: How can I create a custom webhook to push information to Slack using event hooks.
-  a: Using the Slack application URL along with the `webhook-custom` handler to create an event hook that `POSTS` to your Slack application.
+  q: How can I create a custom webhook to push information to Slack using Event Hooks.
+  a: With an application URL from Slack, you can configure an Event Hook using the `webhook-custom` handler that can `POST` event information to Slack.
 prereqs:
   inline:
     - title: A Slack webhook application
-      include_content: prereqs/event-hooks/slack
+      include_content: prereqs/event-hook/slack
 
     - title: Reload {{site.base_gateway}}
-      include_content: prereqs/event-hooks/restart-kong-gateway
+      include_content: prereqs/event-hook/restart-kong-gateway
+cleanup:
+  inline:
+    - title: Destroy the {{site.base_gateway}} container
+      include_content: cleanup/products/gateway
+      icon_url: /assets/icons/gateway.svg
 
 ---
 
+Using the `webhook-custom` handler, you can configure an Event Hook that listens for events on a source. The `webhook-custom` handler offers a template that you can configure to create a custom webhook. In this tutorial, we will configure an Event Hook that issues a `POST` request when a `crud` event happens on the Consumer entity. That `POST` request will be made to a Slack webhook application containing a custom message describing the event. 
 
-## Configure an event hook using the  `webhook-custom` handler
+## 1. Configure an Event Hook using the `webhook-custom` handler
 
     curl -X POST http://localhost:8001/event-hooks \
       -H "Content-Type: application/json" \
@@ -40,7 +44,7 @@ prereqs:
         "on_change": true,
         "config": {
           "method": "POST",
-          "url": "{SLACK_WEBHOOK_URL}",
+          "url": "$SLACK_WEBHOOK_URL",
           "headers": {
             "Content-type": "application/json"
           },
@@ -50,23 +54,30 @@ prereqs:
         }
       }'
 
+Posting this will result in a `200` response. The `config` body in the Event Hook contains information about the webhook that was created: 
 
-Be sure to replace `{SLACK_WEBHOOK_URL}` with the one you copied from Slack. 
+* **`"method": "POST"`**: The method we are using in the webhook.
+* **`"url": "$SLACK_WEBHOOK_URL"`: The URL of the webhook, in this case we are using the Slack URl that we created and set as an environment variable. 
+* **`"payload"`: What this webhook will `POST`. 
 
 
+## 2. Validate the webhook
 
-## Validate the webhook
+Validation happens in two steps: 
+1. Create a Consumer
+2. Check Slack for a response containing your payload.
+
 
 {:.warning}
-> **Important**:  Before you can use event hooks for the first time, {{site.base_gateway}} needs to be reloaded.
+> **Important**:  Before you can use Event Hooks for the first time, {{site.base_gateway}} needs to be [reloaded](/how-tos/restart-kong-gateway-container).
 
 
-1. Using the Admin API to create a new consumer: 
+Using the Admin API to create a new Consumer: 
 
-    ```sh
-    curl -i -X POST http://localhost:8001/consumers \
-        -d username="my-consumer"
-    ```
+```sh
+curl -i -X POST http://localhost:8001/consumers \
+    -d username="my-consumer"
+```
 
 
-2. Slack will post a message to the channel informing you that a consumer was added. 
+Slack will post a message to the channel informing you that a Consumer was added. 
