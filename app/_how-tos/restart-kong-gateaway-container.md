@@ -4,7 +4,8 @@ content_type: how_to
 
 works_on:
     - on-prem
-
+products:
+    - gateway
 tags:
   - gateway
   - container
