@@ -1,6 +1,6 @@
 title: Mock endpoints using an API spec
 description: |
-  Configures the Mocking plugin and passes a the [PetStore](https://petstore3.swagger.io/) API specification.
+  Configures the Mocking plugin and passes the [PetStore](https://petstore3.swagger.io/) API specification.
 
 weight: 400
 config:
