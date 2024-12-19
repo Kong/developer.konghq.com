@@ -22,7 +22,7 @@ works_on:
 
 icon: request-termination.png
 
-ategories:
+categories:
   - traffic-control
 ---
 
