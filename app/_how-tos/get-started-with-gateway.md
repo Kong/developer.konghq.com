@@ -146,7 +146,7 @@ In this example, you configured a limit of 5 requests per minute for all Routes,
 
 We'll validate that this worked in the next step, but first let's set up caching.
 
-## 4. Enable caching 
+## 5. Enable caching
 
 One of the ways Kong delivers performance is through caching.
 The [Proxy Cache plugin](/plugins/proxy-cache/) accelerates performance by caching
@@ -217,7 +217,7 @@ HTTP/1.1 429 Too Many Requests
 ```
 {:.no-copy-code}
 
-## 5. Enable authentication
+## 6. Enable authentication
 
 Authentication is the process of verifying that the requester has permissions to access a resource. 
 As its name implies, API gateway authentication authenticates the flow of data to and from your upstream services. 
@@ -290,7 +290,7 @@ curl -i http://localhost:8000/mock/anything \
 
 You will receive a `200 OK` response.
 
-## 6. Enable load balancing
+## 7. Enable load balancing
 
 Load balancing is a method of distributing API request traffic across
 multiple upstream services. Load balancing improves overall system responsiveness
