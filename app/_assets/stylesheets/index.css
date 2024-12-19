@@ -244,7 +244,7 @@
   }
 
   .success, .warning, .danger, .info, .neutral {
-    @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-11 relative;
+    @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-11 relative text-sm;
 
     &:not(.no-icon)::before {
       @apply text-base absolute left-4 w-4 h-4 content-[''];
