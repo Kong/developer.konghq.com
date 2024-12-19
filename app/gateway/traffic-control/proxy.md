@@ -50,14 +50,14 @@ sequenceDiagram
 1. {{site.base_gateway}} listens for HTTP traffic on its configured
 proxy port(s) (`8000` and `8443` by default) and L4 traffic on explicitly configured
 `stream_listen` ports.
-1. {{site.base_gateway}} will evaluate any incoming HTTP request or L4 connection against the Routes you have configured and try to find a matching one.
+1. {{site.base_gateway}} will evaluate any incoming HTTP request or L4 connection against the Routes you have configured and try to find a matching one. For more details about how {{site.base_gateway}} handles routing, see the [Routes entity](/gateway/entities/route/).
 1. If multiple Routes match, the {{site.base_gateway}} router then orders all defined Routes by their priority and uses the highest priority matching Route to handle a request.
 1. If a given request matches the rules of a specific route, {{site.base_gateway}} will
-run any global, Route, or Service [plugins]() before it proxies the request. They are run in the following order: Route, Service <!--when does the global config get run?--> These configured plugins will run their `access` phase, which you can find more
+run any global, Route, or Service [plugins]() before it proxies the request. Plugins configured on Routes run before those configured on Services. These configured plugins will run their `access` phase, which you can find more
 information about in the [Plugin development guide][plugin-development-guide].
 1. {{site.base_gateway}} implements [load balancing]() capabilities to distribute proxied
 requests across a pool of instances of an upstream service.
-1. Once {{site.base_gateway}} has executed all the necessary logic (including plugins), it is ready to forward the request to your upstream service. This is done via Nginx's [`ngx_http_proxy_module`][ngx-http-proxy-module].
+1. Once {{site.base_gateway}} has executed all the necessary logic (including plugins), it is ready to forward the request to your upstream service. This is done via Nginx's [`ngx_http_proxy_module`](https://nginx.org/docs/http/ngx_http_proxy_module.html).
 1. {{site.base_gateway}} receives the response from the upstream service and sends it back to the
 downstream client in a streaming fashion. At this point, {{site.base_gateway}} executes
 subsequent plugins added to the route and/or service that implement a hook in
@@ -87,20 +87,6 @@ one.
 
 {{site.base_gateway}} is a transparent proxy, and it defaults to forwarding the request to your upstream service untouched, with the exception of various headers such as `Connection`, `Date`, and others as required by the HTTP specifications.
 
-## Routing
-
-{% include_cached /content/how-routing-works.md %}
-
-For more details about how {{site.base_gateway}} handles routing, see the [Routes entity](/gateway/entities/route/).
-
-## Load balancing
-
-{{site.base_gateway}} implements load balancing capabilities to distribute proxied
-requests across a pool of instances of an upstream service. <!--add more content after writing load balancing-->
-
-You can find more information about load balancing in
-the [Load Balancing Reference][].
-
 ## Proxying
 
 Once {{site.base_gateway}} has executed all the necessary logic (including plugins), it is ready
@@ -123,7 +109,6 @@ timeouts for the connection between {{site.base_gateway}} and a given Upstream, 
 
 {{site.base_gateway}} will send the request over HTTP/1.1 and set the following headers:
 
-<!-- vale off -->
 | Header                                  | Description |
 |-----------------------------------------|-------------|
 | `Host: <your_upstream_host>`            | The host of your Upstream. |
@@ -136,7 +121,7 @@ timeouts for the connection between {{site.base_gateway}} and a given Upstream, 
 | `X-Forwarded-Prefix: <path>`            | `<path>` is the path of the request which was accepted by {{site.base_gateway}}. If `$realip_remote_addr` is one of the **trusted** addresses, the request header with the same name gets forwarded if provided. Otherwise, the value of the `$request_uri` variable (with the query string stripped) provided by [ngx_http_core_module](https://nginx.org/docs/http/ngx_http_core_module.html#var_server_port) will be used. **Note**: {{site.base_gateway}} returns `"/"` for an empty path, but it doesn't do any other normalization on the request path. |
 | All other headers | Forwarded as-is by {{site.base_gateway}} | 
 
-One exception to this is made when using the WebSocket protocol. If so, {{site.base_gateway}}
+One exception to this is made when using the WebSocket protocol. {{site.base_gateway}}
 sets the following headers to allow for upgrading the protocol between the
 client and your upstream services:
 
@@ -149,7 +134,7 @@ More information on this topic is covered in the
 ### Errors and retries during proxying
 
 Whenever an error occurs during proxying, {{site.base_gateway}} uses the underlying
-Nginx [retries][https://nginx.org/docs/http/ngx_http_proxy_module.html#proxy_next_upstream_tries] mechanism to pass the request on to
+Nginx [retries](https://nginx.org/docs/http/ngx_http_proxy_module.html#proxy_next_upstream_tries) mechanism to pass the request on to
 the next upstream.
 
 There are two configurable elements:
