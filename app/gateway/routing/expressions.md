@@ -99,6 +99,17 @@ updated incrementally as configured Routes change.
 
 As soon as a Route yields a match, the router stops matching and the matched Route is used to process the current request/connection.
 
-![Router matching flow](https://docs.konghq.com/assets/images/products/gateway/reference/expressions-language/router-matching-flow.png)
+{% mermaid %}
+flowchart LR
+    A["Incoming request<br>http.path:#quot;/foo/bar#quot;<br>http.post:#quot;konghq.com#quot;"] -->|Checks first, doesn't match| B1
+    A --> |Checks second, does match|B2
+
+    subgraph router[Expressions Router]
+        direction TB
+        B1["**Route A:** <br>*expression:* http.path ^= #quot;/foo#quot; && http.host == #quot;example.com#quot;<br>*priority:* 100"]
+        B2["**Route B:** <br>*expression:* http.path ^= #quot;/foo#quot;<br>*priority:* 50"]
+        B3["**Route C:** <br>*expression:* http.path ^= #quot;/#quot;<br>*priority:* 10"]
+    end
+{% endmermaid %}
 
 > _**Figure 1:**_ Diagram of how {{site.base_gateway}} executes Routes. The diagram shows that {{site.base_gateway}} selects the Route that both matches the expression and then selects the matching Route with the highest priority.
