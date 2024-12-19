@@ -35,8 +35,8 @@ This plugin supports several load-balancing algorithms, similar to those used fo
 * **Lowest-usage**: The lowest-usage algorithm in AI Proxy Advanced is based on the volume of usage for each model. It balances the load by distributing requests to models with the lowest usage, measured by factors such as prompt token counts, response token counts, or other resource metrics.
 * **Lowest-latency**: The lowest-latency algorithm is based on the response time for each model. It distributes requests to models with the lowest response time.
 * **Semantic**: The semantic algorithm distributes requests to different models based on the similarity between the prompt in the request and the description provided in the model configuration. This allows Kong to automatically select the model that is best suited for the given domain or use case. This feature enhances the flexibility and efficiency of model selection, especially when dealing with a diverse range of AI providers and models.
-* [Round-robin (weighted)](/gateway/load-balancing/#round-robin)
-* [Consistent-hashing (sticky-session on given header value)](/gateway/load-balancing/#consistent-hashing)
+* [Round-robin (weighted)](https://docs.konghq.com/gateway/latest/how-kong-works/load-balancing/#round-robin)
+* [Consistent-hashing (sticky-session on given header value)](https://docs.konghq.com/gateway/latest/how-kong-works/load-balancing/#consistent-hashing)
 
 
 ## Retry and fallback
