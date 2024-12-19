@@ -43,6 +43,14 @@ The following creates a new service called **{{ include.presenter.data['name'] }
 5. Click **Save**.
 {% when 'target' %}
 {% when 'upstream' %}
+The following creates a new Upstream with basic configuration:
+
+1. In Kong Manager or Gateway Manager, click the Workspace you want to add the Upstream to.
+1. Click **Upstreams** in the sidebar.
+1. Click **New Upstream**.
+1. Enter or select a host in the **Name** field. 
+1. Configure load balancing and health check settings as needed.
+1. Click **Save**.
 {% when workspace %}
 {% else %}
 {% endcase %}
