@@ -2,7 +2,7 @@
 title: Consumer Groups
 content_type: reference
 entities:
-  - consumer_group
+  - consumer-group
 
 description: Consumer Groups let you apply common configurations to groups of Consumers, such as rate limiting policies or request and response transformation. 
 
