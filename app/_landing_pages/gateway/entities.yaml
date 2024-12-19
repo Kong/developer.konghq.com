@@ -61,4 +61,4 @@ rows:
     - blocks:
       - type: entity_card
         config:
-          entity: certificates
+          entity: certificate
