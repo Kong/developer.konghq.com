@@ -5,7 +5,7 @@ name: 'AppDynamics'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Integrate Kong with the AppDynamics APM Platform'
 tier: enterprise
 
 
@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: app-dynamics.png
+
+categories:
+  - analytics-monitoring
 ---
 
 ## Overview

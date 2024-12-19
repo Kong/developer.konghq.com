@@ -5,7 +5,7 @@ name: 'JWE Decrypt'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Decrypt a JWE token in a request'
 tier: enterprise
 
 
@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: jwe-decrypt.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

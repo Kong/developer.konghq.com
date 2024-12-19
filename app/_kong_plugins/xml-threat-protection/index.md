@@ -5,7 +5,7 @@ name: 'XML Threat Protection'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Apply structural and size checks on XML payloads'
 tier: enterprise
 
 
@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: xml-threat-protection.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

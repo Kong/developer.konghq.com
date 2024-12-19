@@ -34,7 +34,7 @@ rows:
     - blocks:
       - type: entity_card
         config:
-          entity: consumer_group
+          entity: consumer-group
   - columns:
     - blocks:
       - type: entity_card

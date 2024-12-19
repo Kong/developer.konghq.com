@@ -5,7 +5,7 @@ name: 'SAML'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Provides SAML v2.0 authentication and authorization between a service provider (Kong) and an identity provider (IdP)'
 tier: enterprise
 
 
@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: saml.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

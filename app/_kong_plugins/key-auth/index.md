@@ -16,6 +16,9 @@ works_on:
     - konnect
 
 icon: key-auth.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

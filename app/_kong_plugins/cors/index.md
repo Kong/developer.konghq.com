@@ -5,6 +5,7 @@ name: 'CORS'
 content_type: plugin
 
 publisher: kong-inc
+
 description: 'The CORS plugin lets you add Cross-Origin Resource Sharing (CORS) to a service or a route.'
 
 
@@ -20,12 +21,15 @@ topologies:
     - db-less
     - traditional
 
-icon: cors.png
-
 
 related_resources:
   - text: DNS configuration reference
     url: /gateway/networking/dns-config-reference
+
+icon: cors.png
+
+categories:
+  - security
 
 ---
 

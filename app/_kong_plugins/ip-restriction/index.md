@@ -5,7 +5,7 @@ name: 'IP Restriction'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Allow or deny IPs that can make requests to your services'
 
 
 products:
@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: ip-restriction.png
+
+categories:
+  - security
 ---
 
 ## Overview

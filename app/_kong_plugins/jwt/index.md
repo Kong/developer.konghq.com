@@ -16,6 +16,9 @@ works_on:
     - konnect
 
 icon: jwt.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

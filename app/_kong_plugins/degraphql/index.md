@@ -5,7 +5,7 @@ name: 'DeGraphQL'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Transform a GraphQL upstream into a REST API'
 tier: enterprise
 
 
@@ -23,6 +23,9 @@ works_on:
 
 
 icon: degraphql.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

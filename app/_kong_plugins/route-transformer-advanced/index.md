@@ -5,7 +5,7 @@ name: 'Route Transformer Advanced'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Transform routing by changing the upstream server, port, or path'
 tier: enterprise
 
 
@@ -23,6 +23,9 @@ works_on:
 #    - traditional
 
 icon: route-transformer-advanced.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

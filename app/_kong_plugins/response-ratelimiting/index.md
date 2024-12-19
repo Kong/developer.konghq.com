@@ -18,6 +18,9 @@ works_on:
     - konnect
 
 icon: response-ratelimiting.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

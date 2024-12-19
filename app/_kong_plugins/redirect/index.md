@@ -5,7 +5,7 @@ name: 'Redirect'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Redirect incoming requests to a new URL'
 
 
 products:
@@ -24,6 +24,9 @@ min_version:
 #    - traditional
 
 icon: redirect.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

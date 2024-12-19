@@ -37,6 +37,9 @@ topologies:
     - traditional
 
 icon: rate-limiting.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

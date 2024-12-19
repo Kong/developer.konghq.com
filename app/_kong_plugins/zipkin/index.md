@@ -5,7 +5,7 @@ name: 'Zipkin'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Propagate Zipkin spans and report space to a Zipkin server'
 
 
 products:
@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: zipkin.png
+
+categories:
+  - analytics-monitoring
 ---
 
 ## Overview

@@ -5,7 +5,7 @@ name: 'Kong JWT Signer'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Verify and sign one or two tokens in a request'
 tier: enterprise
 
 
@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: jwt-signer.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

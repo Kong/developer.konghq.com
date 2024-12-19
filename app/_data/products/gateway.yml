@@ -10,6 +10,13 @@ tiers:
     text: Enterprise only
     url: '/gateway/enterprise/'
 
+deployment_topologies:
+  - slug: on-prem
+    text: on-prem
+  - slug: konnect
+    text: Konnect
+
+
 releases:
   - release: "3.7"
     ee-version: "3.7.1.2"
@@ -17,8 +24,11 @@ releases:
   - release: "3.8"
     ee-version: "3.8.0.0"
     ce-version: "3.8.0"
-    latest: true
   - release: "3.9"
     ee-version: "3.9.0.0"
     ce-version: "3.9.0"
+    latest: true
+  - release: "3.10"
+    ee-version: "3.10.0.0"
+    ce-version: "3.10.0"
     label: unreleased

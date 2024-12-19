@@ -5,7 +5,7 @@ name: 'gRPC-gateway'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Access gRPC services through HTTP REST'
 
 
 products:
@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: grpc-gateway.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

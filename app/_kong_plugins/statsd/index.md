@@ -5,7 +5,7 @@ name: 'StatsD'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Send metrics to StatsD'
 
 
 products:
@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: statsd.png
+
+categories:
+  - analytics-monitoring
 ---
 
 ## Overview

@@ -5,7 +5,7 @@ name: 'Correlation ID'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Correlate requests and responses using a unique ID'
 
 
 products:
@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: correlation-id.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

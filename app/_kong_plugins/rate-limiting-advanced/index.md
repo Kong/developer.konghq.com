@@ -22,6 +22,9 @@ works_on:
     - konnect
 
 icon: rate-limiting-advanced.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

@@ -59,6 +59,15 @@ app/_how-tos/custom-deck-object-defaults.md:
   - app/_src/deck/guides/defaults.md
 app/_how-tos/multiple-rate-limits-window-sizes.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
+app/_how-tos/get-started-with-gateway.md:
+  - app/_src/gateway/get-started/index.md
+  - app/_src/gateway/get-started/services-and-routes.md
+  - app/_src/gateway/get-started/rate-limiting.md
+  - app/_src/gateway/get-started/proxy-caching.md
+  - app/_src/gateway/get-started/key-authentication.md
+  - app/_src/gateway/get-started/load-balancing.md
+
+# plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/ai-rate-limiting-advanced/overview/_index.md
 app/_kong_plugins/basic-auth/index.md:
@@ -73,6 +82,8 @@ app/_kong_plugins/rate-limiting/index.md:
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
 app/_kong_plugins/rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
+
+# landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
   - app/_src/gateway/index.md
   - app/_data/tables/features/gateway.yml
@@ -85,6 +96,8 @@ app/_landing_pages/deck.yaml:
   - app/_src/deck/faqs.md
 app/_landing_pages/gateway.yaml:
   - app/_src/gateway/index.md
+
+# references 
 app/deck/distributed-config.md:
   - app/_src/deck/guides/distributed-configuration.md
 app/deck/environment-variables.md:
@@ -105,12 +118,11 @@ app/gateway/routing/index.md:
   - app/_src/gateway/key-concepts/routes/index.md
 app/plugins/deployment-options.md:
   - app/hub/plugins/compatibility/index.md
-app/plugins/precedence.md:
-  - app/hub/plugins/overview/index.md
 app/plugins/protocols.md:
   - app/hub/plugins/compatibility/index.md
 app/plugins/scopes.md:
   - app/hub/plugins/compatibility/index.md
+
 
 # Plugins
 
@@ -124,3 +136,15 @@ app/_kong_plugins/mocking/index.md:
 
 app/gateway/networking/dns-config-reference.md:
   - app/_src/gateway/production/networking/dns-considerations.md
+
+app/_how-tos/set-up-ai-proxy-advanced-with-anthropic.md:
+  - app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_anthropic.md
+app/_how-tos/set-up-ai-proxy-with-anthropic.md:
+  - app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_anthropic.md
+
+#plugins
+app/_kong_plugins/ai-proxy-advanced/index.md:
+  - app/_hub/kong-inc/ai-proxy-advanced/overview/_index.md
+app/_kong_plugins/ai-proxy/index.md:
+  - app/_hub/kong-inc/ai-proxy/overview/_index.md
+

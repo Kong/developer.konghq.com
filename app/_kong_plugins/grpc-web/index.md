@@ -5,7 +5,7 @@ name: 'gRPC-Web'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Allow browser clients to call gRPC services'
 
 
 products:
@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: grpc-web.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

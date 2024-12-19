@@ -5,7 +5,7 @@ name: 'OAuth 2.0 Introspection'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Integrate Kong with a third-party OAuth 2.0 Authorization Server'
 tier: enterprise
 
 
@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: oauth2-introspection.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

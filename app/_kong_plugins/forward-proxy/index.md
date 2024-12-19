@@ -5,7 +5,7 @@ name: 'Forward Proxy Advanced'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Allows Kong to connect to intermediary transparent HTTP proxies'
 tier: enterprise
 
 
@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: forward-proxy.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

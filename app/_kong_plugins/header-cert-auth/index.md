@@ -5,7 +5,7 @@ name: 'Header Cert Authentication'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Authenticate clients with mTLS certificates passed in headers by a WAF or load balancer'
 tier: enterprise
 
 
@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: header-cert-auth.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

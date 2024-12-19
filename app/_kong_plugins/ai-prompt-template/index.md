@@ -5,7 +5,7 @@ name: 'AI Prompt Template'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Provide fill-in-the-blank AI prompts to users'
 tier: enterprise
 
 
@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: ai-prompt-template.png
+
+categories:
+  - ai
 ---
 
 ## Overview

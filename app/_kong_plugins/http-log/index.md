@@ -5,7 +5,7 @@ name: 'HTTP Log'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Send request and response logs to an HTTP server'
 
 
 products:
@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: http-log.png
+
+categories:
+  - logging
 ---
 
 ## Overview

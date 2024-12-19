@@ -19,6 +19,9 @@ works_on:
     - konnect
 
 icon: graphql-rate-limiting-advanced.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

@@ -5,7 +5,7 @@ name: 'ACME'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: Let's Encrypt and ACMEv2 integration with Kong Gateway
 tier: enterprise
 
 
@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: acme.png
+
+categories:
+  - security
 ---
 
 ## Overview

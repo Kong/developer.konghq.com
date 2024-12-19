@@ -5,7 +5,7 @@ name: 'Vault Authentication'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Add Vault authentication to your services'
 tier: enterprise
 
 
@@ -14,7 +14,6 @@ products:
 
 works_on:
     - on-prem
-    - konnect
 
 # topologies:
 #    - hybrid
@@ -22,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: vault-auth.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

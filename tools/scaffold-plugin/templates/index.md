@@ -25,6 +25,9 @@ products:
 #    - traditional
 
 icon: plugin-slug.ext
+
+categories:
+    - traffic-control
 ---
 
 ## Overview

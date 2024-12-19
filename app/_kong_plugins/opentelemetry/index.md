@@ -5,7 +5,7 @@ name: 'OpenTelemetry'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Propagate spans and report space to a backend server through OTLP protocol.'
 
 
 products:
@@ -24,6 +24,9 @@ min_version:
 #    - traditional
 
 icon: opentelemetry.png
+
+categories:
+  - analytics-monitoring
 ---
 
 ## Overview

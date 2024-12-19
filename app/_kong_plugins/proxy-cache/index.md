@@ -5,7 +5,7 @@ name: 'Proxy Cache'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Cache and serve commonly requested responses in Kong'
 
 
 products:
@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: proxy-cache.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

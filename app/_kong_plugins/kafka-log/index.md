@@ -5,7 +5,7 @@ name: 'Kafka Log'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Publish logs to a Kafka topic'
 tier: enterprise
 
 
@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: kafka-log.png
+
+categories:
+  - logging
 ---
 
 ## Overview

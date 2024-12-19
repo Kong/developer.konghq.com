@@ -5,7 +5,7 @@ name: 'OAuth 2.0 Authentication'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Add OAuth 2.0 authentication to your service'
 
 
 products:
@@ -20,6 +20,9 @@ works_on:
 #    - traditional
 
 icon: oauth2.png
+
+categories:
+  - authentication
 ---
 
 ## Overview

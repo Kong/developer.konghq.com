@@ -5,7 +5,7 @@ name: 'Upstream Timeout'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Set timeouts on routes and override service-level timeouts'
 tier: enterprise
 
 
@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: upstream-timeout.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

@@ -5,7 +5,7 @@ name: 'AI Prompt Decorator'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: Prepend or append an array of llm/v1/chat messages to a user's chat history
 tier: enterprise
 
 
@@ -25,6 +25,9 @@ min_version:
 #    - traditional
 
 icon: ai-prompt-decorator.png
+
+categories:
+  - ai
 ---
 
 ## Overview

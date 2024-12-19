@@ -5,7 +5,7 @@ name: 'Request Validator'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Validates requests before they reach the upstream service'
 tier: enterprise
 
 
@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: request-validator.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

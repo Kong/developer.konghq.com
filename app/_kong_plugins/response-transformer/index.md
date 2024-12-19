@@ -5,7 +5,7 @@ name: 'Response Transformer'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Modify the upstream response before returning it to the client'
 
 
 products:
@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: response-transformer.png
+
+categories:
+  - transformations
 ---
 
 ## Overview

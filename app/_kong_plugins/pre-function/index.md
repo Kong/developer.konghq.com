@@ -5,7 +5,7 @@ name: 'Kong Functions (Pre-Plugins)'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Add and manage custom Lua functions to run before other plugins'
 
 
 products:
@@ -22,6 +22,9 @@ works_on:
 #    - traditional
 
 icon: pre-function.png
+
+categories:
+  - serverless
 ---
 
 ## Overview

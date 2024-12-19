@@ -5,7 +5,7 @@ name: 'TCP Log'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: 'Send request and response logs to a TCP server'
 
 
 products:
@@ -21,6 +21,9 @@ works_on:
 #    - traditional
 
 icon: tcp-log.png
+
+categories:
+  - logging
 ---
 
 ## Overview
