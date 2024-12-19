@@ -58,8 +58,8 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Try out the Gateway with Docker
-            description: Learn how to use Kong Gateway on Konnect or on-prem
+            title: Try the Getting Started guide
+            description: description: Learn how to use Kong Gateway on Konnect or on-prem
             icon: /assets/icons/graduation.svg
             cta:
               text: 
@@ -221,7 +221,7 @@ rows:
               icon: /assets/icons/data-object.svg
               cta:
                 text: Kong API reference
-                url: /gateway/entities/
+                url: /api/gateway/admin-ee/
                 align: end
   - header:
       type: h2
@@ -234,3 +234,4 @@ rows:
                   - gateway
               quantity: 5
               view_more: /how-to/ ##"https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
+

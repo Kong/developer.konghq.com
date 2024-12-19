@@ -42,6 +42,19 @@ The following creates a new service called **{{ include.presenter.data['name'] }
 4. Configure your plugin. The configuration options will depend on which plugin you picked.
 5. Click **Save**.
 {% when 'target' %}
+The following creates a new Upstream and a Target with basic configuration:
+
+The following creates a new Upstream with basic configuration:
+
+1. In Kong Manager or Gateway Manager, Navigate to **Workspaces** > **Upstreams**.
+1. Click **New Upstream**.
+1. Enter a unique name for the Upstream. For example: `{{ include.presenter.data['name'] }}`.
+1. Click **Save**.
+1. From your Upstream, select the **Targets** tab.
+1. Click **New Target**.
+1. Enter an IP address/hostname and port in the **Target Address** field, for example: `{{ include.presenter.data['target'] }}`
+1. Update the weight for example: `{{ include.presenter.data['weight'] }}`.
+1. Click **Save**.
 {% when 'upstream' %}
 The following creates a new Upstream with basic configuration:
 
