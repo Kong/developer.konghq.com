@@ -22,6 +22,8 @@ prereqs:
   inline:
     - title: Reload {{site.base_gateway}}
       include_content: prereqs/event-hook/restart-kong-gateway
+    - title: cURL
+      include_content: prereqs/tools/curl
 cleanup:
   inline:
     - title: Destroy the {{site.base_gateway}} container
@@ -31,9 +33,9 @@ cleanup:
 ---
 
 
-`log` Event Hook configuration specifies an event and a source. In this guide you will create an Event Hook that listens for CRUD events on the Consumers entity. This Event Hook will create a log entry when a CRUD event occurs. 
-
 ## 1. Create the Event Hook
+
+`log` Event Hook configuration specifies an event and a source. In this guide you will create an Event Hook that listens for CRUD events on the Consumers entity. This Event Hook will create a log entry when a CRUD event occurs. 
 
 Create a long Event Hook on the `consumers` event using the `crud` source: 
 

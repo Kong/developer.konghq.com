@@ -22,7 +22,9 @@ prereqs:
     - title: A webhook URL
       content: |
         * You can generate a URL by navigating to https://webhook.site and copying the free URL.
-        * Set that URL as an environment variable `export WEBHOOK_URL=YOUR_URL`
+        * Set that URL as an environment variable `export WEBHOOK_URL=YOUR_URL`prereqs:
+    - title: cURL
+      include_content: prereqs/tools/curl
     - title: Reload {{site.base_gateway}}
       include_content: prereqs/event-hook/restart-kong-gateway
 cleanup:
@@ -33,10 +35,9 @@ cleanup:
 
 ---
 
-The `webhook` handler is used to configure webhooks that make a `POST` request to the URL provided during configuration. The Event Hook will push information to this URL with the event data. In this guide you will configure an Event Hook that will issue a `POST` request every time an event type `consumers` has a CRUD event. 
-
-
 ## 1. Create a webhook
+
+The `webhook` handler is used to configure webhooks that make a `POST` request to the URL provided during configuration. The Event Hook will push information to this URL with the event data. In this guide you will configure an Event Hook that will issue a `POST` request every time an event type `consumers` has a CRUD event. 
 
 Using the Admin API, create an Event Hook on the Consumers event by issuing a `POST` request to the `/event-hooks` endpoint.
 
@@ -58,12 +59,7 @@ Issuing this `POST` request will send a request of type `ping` to the webhook UR
 
 
 
-## Validate the webhook
-
-Validation happens in two steps: 
-1. Create a Consumer using the Admin API
-
-2. Check `webhook.site` for a `POST` request containing information about the event. 
+## 2. Validate the webhook
 
 {:.warning}
 > **Important**:  Before you can use Event Hooks for the first time, {{site.base_gateway}} needs to be reloaded.

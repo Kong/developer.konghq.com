@@ -22,6 +22,8 @@ prereqs:
   inline:
     - title: Reload {{site.base_gateway}}
       include_content: prereqs/event-hook/restart-kong-gateway
+    - title: cURL
+      include_content: prereqs/tools/curl
 cleanup:
   inline:
     - title: Destroy the {{site.base_gateway}} container
@@ -29,10 +31,9 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-A `lambda` Event Hook is an Event Hook that utilizes the `lambda` handler to pass custom code to an Event Hook. Depending on the source and individual event, that code can execute during various stages of the lifecycle of an event. In this guide, you will create an `lambda` Event Hook with custom code that logs an error with a specific message every time you create a Consumer. 
-
-
 ## 1. Create a lambda Event Hook
+
+A `lambda` Event Hook is an Event Hook that utilizes the `lambda` handler to pass custom code to an Event Hook. Depending on the source and individual event, that code can execute during various stages of the lifecycle of an event. In this guide, you will create an `lambda` Event Hook with custom code that logs an error with a specific message every time you create a Consumer. 
 
 Create a lua script to load into the lambda Event Hook. 
 
@@ -63,10 +64,6 @@ curl -i -X POST http://localhost:8001/event-hooks \
 
 
 ## 2. Validate the webhook
-
-Validation happens in two steps: 
-1. Create a Consumer
-2. Checking  the logs file for your event
 
 {:.warning}
 > **Important**:  Before you can use event hooks for the first time, {{site.base_gateway}} needs to be reloaded.
