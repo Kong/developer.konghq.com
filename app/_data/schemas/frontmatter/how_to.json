@@ -39,5 +39,5 @@
       "works_on"
     ]
   },
-  "required": ["tldr", "content_type", "title"]
+  "required": ["tldr", "content_type", "title", "products"]
 }

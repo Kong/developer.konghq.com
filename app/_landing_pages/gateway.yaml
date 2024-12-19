@@ -58,7 +58,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Try out the Gateway with Docker
+            title: Try the Getting Started guide
             description: Learn how to use core Gateway capabilities, including rate limiting, caching, authentication, and load balancing
             icon: /assets/icons/graduation.svg
             cta:
@@ -221,7 +221,7 @@ rows:
               icon: /assets/icons/data-object.svg
               cta:
                 text: Kong API reference
-                url: /gateway/entities/
+                url: /api/gateway/admin-ee/
                 align: end
   - header:
       type: h2
