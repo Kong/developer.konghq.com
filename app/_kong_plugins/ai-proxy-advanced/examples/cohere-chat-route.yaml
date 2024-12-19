@@ -1,0 +1,26 @@
+
+title: 'Chat route with Cohere'
+description: 'Configure a chat route using the Cohere command model.'
+
+weight: 900
+
+requirements:
+- Cohere account
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config:
+  targets:
+    - route_type: llm/v1/chat
+      auth:
+        header_name: Authorization
+        header_value: Bearer $OPENAI_API_TOKEN
+      model:
+        provider: openai
+        name: gpt-4
+        options:
+          max_tokens: 512
+          temperature: 1.0

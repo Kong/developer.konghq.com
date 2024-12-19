@@ -1,0 +1,26 @@
+
+title: 'Chat route with Anthropic'
+description: 'Configure a chat route using Anthropic with the latest Claude 3.5 Sonnet model and version `2023-06-01` of the Anthropic API.'
+
+weight: 900
+
+requirements:
+- Anthropic subscription
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config:
+  route_type: llm/v1/chat
+  auth:
+    header_name: x-api-key
+    header_value: $ANTHROPIC_API_KEY
+  model:
+    provider: anthropic
+    name: claude-3-5-sonnet-latest
+    options:
+      anthropic_version: "2023-06-01"
+      max_tokens: 512
+      temperature: 1.0

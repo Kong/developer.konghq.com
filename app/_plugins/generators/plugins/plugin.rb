@@ -1,20 +1,23 @@
 # frozen_string_literal: true
 
+require_relative '../../lib/site_accessor'
+
 module Jekyll
   module PluginPages
     class Plugin
-      attr_reader :folder, :slug, :site
+      extend Forwardable
+      include Jekyll::SiteAccessor
 
-      def initialize(site:, folder:, slug:)
-        @site   = site
+      def_delegators :@release_info, :releases, :latest_available_release,
+                     :latest_release_in_range, :unreleased?
+
+      attr_reader :folder, :slug
+
+      def initialize(folder:, slug:)
         @folder = folder
         @slug   = slug
-      end
 
-      def generate_pages
-        generate_overview_page
-        generate_reference_page
-        generate_example_pages
+        @release_info = release_info
       end
 
       def metadata
@@ -24,45 +27,65 @@ module Jekyll
       end
 
       def targets
-        # TODO: pull targets from the schema when we have them
-        @targets = ['consumer', 'consumer_group', 'service', 'global', 'route']
+        @targets ||= begin
+          targets = %w[consumer consumer_group service route].select do |t|
+            schema.to_json.dig('properties', t)
+          end
+          targets << 'global'
+          targets.sort
+        end
       end
 
       def formats
-        @formats ||= @site.data.dig('entity_examples', 'config', 'formats').except('ui').keys
+        @formats ||= site.data.dig('entity_examples', 'config', 'formats').except('ui').keys
       end
 
       def example_files
         @example_files ||= Dir.glob(File.join(folder, 'examples', '*'))
       end
 
+      def examples
+        @examples ||= example_files.map do |file|
+          Drops::PluginConfigExample.new(
+            file: file,
+            plugin: self
+          )
+        end.sort_by { |e| -e.weight } # rubocop:disable Style/MultilineBlockChain
+      end
+
+      def schema
+        @schema ||= schemas.detect { |s| s.release == latest_release_in_range }
+      end
+
+      def schemas
+        @schemas ||= Schema.all(plugin: self)
+      end
+
+      def icon
+        @icon ||= metadata.fetch('icon')
+      end
+
       private
 
-      def generate_overview_page
-        overview = Jekyll::PluginPages::Pages::Overview
-          .new(site:, plugin: self, file: File.join(@folder, 'index.md'))
-          .to_jekyll_page
-
-        site.data['kong_plugins'][@slug] = overview
-        site.pages << overview
+      def release_info
+        ReleaseInfo::Product.new(
+          site:,
+          product:,
+          min_version:,
+          max_version:
+        )
       end
 
-      def generate_reference_page
-        reference = Jekyll::PluginPages::Pages::Reference
-          .new(site:, plugin: self, file: File.join(@folder, 'reference.yaml'))
-          .to_jekyll_page
-
-        site.pages << reference
+      def product
+        @product ||= metadata.fetch('products', []).first
       end
 
-      def generate_example_pages
-        example_files.each do |example_file|
-          example = Jekyll::PluginPages::Pages::Example
-            .new(site:, plugin: self, file: example_file)
-            .to_jekyll_page
+      def min_version
+        @min_version ||= metadata.fetch('min_version', {})
+      end
 
-          site.pages << example
-        end
+      def max_version
+        @max_version ||= metadata.fetch('maxs_version', {})
       end
     end
   end

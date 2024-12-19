@@ -1,0 +1,30 @@
+<table>
+    <thead>
+        <tr>
+        <th>Provider name</th>
+        <th>Provider path</th>
+        <th>Kong route type</th>
+        <th>Example model name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for provider in include.providers %}
+            {% if provider.chat.upstream_path %}
+            <tr id="{{ provider.name }}">
+                <td>{{ provider.name }}</td>
+                <td>{{ provider.chat.upstream_path }}</td>
+                <td>{{ provider.chat.route_type }}</td>
+                <td>{{ provider.chat.model_example }}</td>
+            </tr>
+            {% endif %}
+            {% if provider.completions.upstream_path %}
+            <tr id="{{ provider.name }}">
+                <td>{{ provider.name }}</td>
+                <td>{{ provider.completions.upstream_path }}</td>
+                <td>{{ provider.completions.route_type }}</td>
+                <td>{{ provider.completions.model_example }}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>

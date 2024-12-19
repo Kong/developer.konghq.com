@@ -1,0 +1,29 @@
+{% assign plugin = include.plugin %}
+
+<div
+  class="flex rounded-md border border-primary/5 bg-secondary shadow-primary h-full hover:border hover:border-brand-saturated/40 hover:shadow-hover-card min-h-[260px]"
+  data-card="plugin"
+  data-category="{{plugin.categories | join: ','}}"
+  data-deployment-topology="{{plugin.works_on | join: ','}}"
+  {% if plugin.tier %}data-tier="{{plugin.tier}}"{% endif %}
+>
+    <a href="{{plugin.url}}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
+        <img src="{{ plugin.icon }}" class="w-8 h-8"/>
+
+        <div class="flex flex-col gap-3 flex-grow">
+            <h4>{{ plugin.name | liquify }}</h4>
+
+            <p class="text-sm line-clamp-3">
+                {{ plugin.description | liquify | markdownify | markdown }}
+            </p>
+        </div>
+
+        {% if plugin.tier %}
+            <div class="flex flex-wrap gap-2">
+                {%- if plugin.tier -%}
+                {%- include tier.html products=plugin.products tier=plugin.tier url=false-%}
+                {%- endif -%}
+            </div>
+        {% endif %}
+    </a>
+</div>

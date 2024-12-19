@@ -4,8 +4,8 @@ module Jekyll
   module PluginPages
     module Pages
       class Overview < Base
-        def url
-          @url ||= "/plugins/#{@plugin.slug}/"
+        def self.url(slug)
+          "/plugins/#{slug}/"
         end
 
         def content
@@ -13,7 +13,7 @@ module Jekyll
         end
 
         def layout
-          'plugins/base'
+          'plugins/with_aside'
         end
 
         def data

@@ -58,22 +58,12 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Start with Konnect
-            description: Let Kong manage your control plane for you
-            icon:  https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/kong-gradient.svg
-            cta:
-              text: 
-              url: https://docs.konghq.com/konnect/getting-started/
-              align: end
-      - blocks:
-        - type: card
-          config:
             title: Try out the Gateway with Docker
-            description: Using a local container, learn how to use core Gateway capabilities, including rate limiting, authentication, and load balancing
+            description: Learn how to use core Gateway capabilities, including rate limiting, caching, authentication, and load balancing
             icon: /assets/icons/graduation.svg
             cta:
               text: 
-              url: https://docs.konghq.com/gateway/latest/get-started/
+              url: /how-to/get-started-with-gateway/
               align: end
       - blocks:
         - type: card

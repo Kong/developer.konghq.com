@@ -1,8 +1,5 @@
-{% capture icon %}
-https://docs.konghq.com/assets/images/icons/hub/{{ plugin.publisher }}_{{ plugin.slug }}.png
-{% endcapture %}
 {% capture cta %}
 <a href="{{ plugin.url }}">See plugin &rarr;</a>
 {% endcapture %}
 
-{% include card.html icon=icon title=plugin.name description=plugin.description cta_url=plugin.url cta_text='See plugin &rarr;' %}
+{% include card.html icon=plugin.icon title=plugin.name description=plugin.description cta_url=plugin.url cta_text='See plugin &rarr;' %}

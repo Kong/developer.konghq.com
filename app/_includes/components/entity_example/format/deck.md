@@ -1,19 +1,19 @@
 {% if include.render_context %}
 {% case include.presenter.entity_type %}
 {% when 'consumer' %}
-  The following creates a new consumer called **{{ include.presenter.data['username'] }}**:
+  The following creates a new Consumer called **{{ include.presenter.data['username'] }}**:
 {% when 'consumer_group' %}
   The following creates a new Consumer Group called **{{ include.presenter.data['name'] }}**:
 {% when 'route' %}
-  The following creates a new route called **{{ include.presenter.data['name'] }}** with basic configuration:
+  The following creates a new Route called **{{ include.presenter.data['name'] }}** with basic configuration:
 {% when 'service' %}
-  The following creates a new service called **{{ include.presenter.data['name'] }}** with basic configuration:
+  The following creates a new Gateway Service called **{{ include.presenter.data['name'] }}** with basic configuration:
 {% when 'target' %}
   To create a target, call the [Admin API’s /targets endpoint](/api/gateway/admin-ee/#/operations/create-target-with-upstream).
 {% when 'upstream' %}
-  The following creates a new upstream called **{{ include.presenter.data['name'] }}**:
+  The following creates a new Upstream called **{{ include.presenter.data['name'] }}**:
 {% when workspace %}
-  The following creates a new workspace called **{{ include.presenter.data['name'] }}**:
+  The following creates a new Workspace called **{{ include.presenter.data['name'] }}**:
 {% when 'plugin' %}
   Add this section to your declarative configuration file:
 {% else %}

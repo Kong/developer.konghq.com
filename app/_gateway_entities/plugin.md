@@ -10,15 +10,11 @@ related_resources:
   - text: Plugin Hub
     url: /plugins/
   - text: Supported scopes by plugin
-    url: 'https://docs.konghq.com/hub/plugins/compatibility/#scopes'
-  - text: Supported topologies by plugin
-    url:  'https://docs.konghq.com/hub/plugins/compatibility/'
+    url: '/plugins/scopes/'
+  - text: Supported topologies and deployment options by plugin
+    url:  '/plugins/deployment-options/'
   - text: Supported protocols for each plugin
-    url:  'https://docs.konghq.com/hub/plugins/compatibility/#protocols'
-  - text: Self-managed {{site.base_gateway}} license tiers
-    url:  'https://docs.konghq.com/hub/plugins/license-tiers/'
-  - text: Konnect pricing tiers
-    url: 'https://docs.konghq.com/konnect/compatibility/#plugin-compatibility'
+    url:  '/plugins/protocols/'
 
 tools:
     - admin-api
@@ -31,6 +27,11 @@ schema:
     api: gateway/admin-ee
     path: /schemas/Plugin
 
+api_specs:
+    - gateway/admin-oss
+    - gateway/admin-ee
+    - konnect/control-planes-config
+
 ---
 
 ## What is a plugin?
@@ -42,6 +43,42 @@ The set of plugins you have access to depends on your license tier.
 
 You can also develop custom plugins, adding your own custom functionality to {{site.base_gateway}}.
 
+## Custom plugins
+
+Kong provides an entire development environment for developing plugins, including Plugin Development Kits (or PDKs), database abstractions, migrations, and more.
+
+Plugins consist of modules interacting with the request/response objects or streams via a PDK to implement arbitrary logic. Kong provides PDKs in the following languages:
+
+* Lua
+* Go
+* Python
+* JavaScript
+
+These PDKs are sets of functions that a plugin can use to facilitate interactions between plugins and the core (or other components) of Kong.
+
+To start creating your own plugins, review the Getting Started documentation, or see the following references:
+
+* Plugin Development Kit reference
+* Other Language Support
+
 ## Schema
 
 {% entity_schema %}
+
+## Set up a Plugin
+
+Kong has many bundled plugins available, all of which have their own specific configurations and examples. See all 
+[Kong plugins](/plugins/) for their individual configurations.
+
+Here's an example of configuration for the ACL plugin:
+
+{% entity_example %}
+type: plugin
+data:
+  name: acl
+  config:
+    allow:
+      - dev
+      - admin
+    hide_groups_header: false
+{% endentity_example %}
