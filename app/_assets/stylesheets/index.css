@@ -315,7 +315,7 @@
     }
 
     path {
-      @apply fill-[rgb(var(--color-brand))] stroke-[rgb(var(--color-brand))] stroke-1 !important
+      @apply fill-[context-stroke] stroke-[rgb(var(--color-brand))] stroke-1 !important
     }
   }
 
