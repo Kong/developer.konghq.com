@@ -1,6 +1,8 @@
 ---
 title: Targets
 content_type: reference
+description: A Target is an IP address/hostname with a port that identifies an instance of a backend service.
+
 entities:
   - target
 
@@ -10,10 +12,6 @@ tools:
     - kic
     - deck
     - terraform
-entities:
-  - target
-
-description: A Target is an IP address/hostname with a port that identifies an instance of a backend service.
 
 related_resources:
   - text: Upstream entity
