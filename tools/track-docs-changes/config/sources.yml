@@ -46,11 +46,21 @@ app/_gateway_entities/service.md:
   - app/_src/gateway/key-concepts/services.md
 app/_gateway_entities/target.md:
   - app/_src/gateway/key-concepts/services.md
+  - app/_src/gateway/get-started/load-balancing.md
+  - app/_src/gateway/key-concepts/upstreams.md
+  - app/_src/gateway/how-kong-works/load-balancing.md
 app/_gateway_entities/upstream.md:
   - app/_src/gateway/key-concepts/upstreams.md
+  - app/_src/gateway/how-kong-works/load-balancing.md
+  - app/_src/gateway/how-kong-works/health-checks.md
 app/_gateway_entities/workspace.md:
   - app/_src/gateway/kong-manager/workspaces.md
   - app/_src/gateway/kong-enterprise/workspaces.md
+app/_gateway_entities/route.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
+  - app/_src/gateway/key-concepts/routes/index.md
+app/_gateway_entities/upstream.md:
+  - app/_src/gateway/key-concepts/upstreams.md
 
 # how-tos
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
@@ -66,6 +76,12 @@ app/_how-tos/get-started-with-gateway.md:
   - app/_src/gateway/get-started/proxy-caching.md
   - app/_src/gateway/get-started/key-authentication.md
   - app/_src/gateway/get-started/load-balancing.md
+app/_how-tos/dynamically-rewrite-simple-request-urls-with-routes.md:
+  - app/_src/gateway/key-concepts/routes/index.md
+app/_how-tos/set-up-ai-proxy-advanced-with-anthropic.md:
+  - app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_anthropic.md
+app/_how-tos/set-up-ai-proxy-with-anthropic.md:
+  - app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_anthropic.md
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
@@ -82,6 +98,11 @@ app/_kong_plugins/rate-limiting/index.md:
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
 app/_kong_plugins/rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
+app/_kong_plugins/ai-proxy-advanced/index.md:
+  - app/_hub/kong-inc/ai-proxy-advanced/overview/_index.md
+app/_kong_plugins/ai-proxy/index.md:
+  - app/_hub/kong-inc/ai-proxy/overview/_index.md
+
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
@@ -112,8 +133,6 @@ app/gateway/rate-limiting/strategies.md:
 app/gateway/rate-limiting/window-types.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
-app/gateway/routing/expressions.md:
-  - app/_src/gateway/reference/expressions-language/index.md
 app/gateway/routing/index.md:
   - app/_src/gateway/key-concepts/routes/index.md
 app/plugins/deployment-options.md:
@@ -122,13 +141,18 @@ app/plugins/protocols.md:
   - app/hub/plugins/compatibility/index.md
 app/plugins/scopes.md:
   - app/hub/plugins/compatibility/index.md
-app/_how-tos/set-up-ai-proxy-advanced-with-anthropic.md:
-  - app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_anthropic.md
-app/_how-tos/set-up-ai-proxy-with-anthropic.md:
-  - app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_anthropic.md
 
-#plugins
-app/_kong_plugins/ai-proxy-advanced/index.md:
-  - app/_hub/kong-inc/ai-proxy-advanced/overview/_index.md
-app/_kong_plugins/ai-proxy/index.md:
-  - app/_hub/kong-inc/ai-proxy/overview/_index.md
+# traffic control
+app/gateway/traffic-control/proxy.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
+  - app/_includes/md/admin-listen.md
+app/gateway/routing/expressions.md:
+  - app/_src/gateway/reference/expressions-language/index.md
+  - app/_src/gateway/key-concepts/routes/expressions.md
+app/gateway/routing/expressions-router-reference.md:
+  - app/_src/gateway/key-concepts/routes/expressions.md
+  - app/_src/gateway/reference/expressions-language/language-references.md
+  - app/_src/gateway/reference/expressions-language/performance.md
+app/gateway/routing/expressions-router-examples.md:
+  - app/_src/gateway/reference/expressions-language/index.md 
+
