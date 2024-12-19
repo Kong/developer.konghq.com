@@ -18,7 +18,8 @@ flowchart LR
   A --> B
   subgraph id1 ["`**KONG GATEWAY**`"]
     B --> C --> D & E
-  subgraph id3 ["`**Upstream**`"]
+  subgraph id3 ["`**Upstream** (load balancer)`"]
+  
     D & E
   end
 
