@@ -1,5 +1,5 @@
 ---
-title: Upstreams 
+title: Upstreams
 content_type: reference
 entities:
   - upstream
@@ -26,8 +26,6 @@ related_resources:
     url: /gateway/routing/
   - text: Expressions router
     url: /gateway/routing/expressions/
-  - text: Proxying with {{site.base_gateway}}
-    url: /gateway/traffic-control/proxy/
 
 schema:
     api: gateway/admin-ee
@@ -72,9 +70,6 @@ The following are examples of common use cases for Upstreams:
 {% entity_example %}
 type: upstream
 data:
-    name: api.example.internal
-    tags:
-      - user-level
-      - low-priority
+    name: example-upstream
     algorithm: round-robin
 {% endentity_example %}
