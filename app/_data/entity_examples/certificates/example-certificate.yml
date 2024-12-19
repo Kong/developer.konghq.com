@@ -1,0 +1,2 @@
+cert: -----BEGIN CERTIFICATE-----\ncertificate-content\n-----END CERTIFICATE-----
+key: -----BEGIN PRIVATE KEY-----\nprivate-key-content\n-----END PRIVATE KEY-----
