@@ -16,7 +16,7 @@ tags:
   - notifications
 tldr: 
   q: How do I create an Event Hook that logs events on the Consumer entity.
-  a: The `log` Event Hook handler can write log events. You can configure an Event Hook using the `log` handler to write to the log file every time a CRUD event happens on the Consumer entity by issuing a `POST` request to the `/event_hooks` endpoint. 
+  a: The `log` Event Hook handler can write log events. You can configure an Event Hook using the `log` handler to write to the log file every time a CRUD event happens on the Consumer entity by issuing a `POST` request to the `/event-hooks` endpoint. 
   
 prereqs:
   inline:
