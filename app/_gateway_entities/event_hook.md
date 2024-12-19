@@ -138,6 +138,19 @@ For information about specific events related to a source issue a `GET` request 
 
 {% entity_schema %}
 
+## Set up an Event Hook
+
+{% entity_example %}
+type: event_hook
+data:
+  source: "crud"
+  event: "consumers"
+  handler: "webhook"
+  on_change: true
+  config:
+      "url": "$WEBHOOK_URL"
+{% endentity_example %}
+
 
 ## Configure an Event Hook
 
