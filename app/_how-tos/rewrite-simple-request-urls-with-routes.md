@@ -38,7 +38,7 @@ tldr:
 
 faqs:
   - q: My URLs are more complex, such as replacing `/api/<function>/old` with `/new/api/<function>`, what should I use instead to rewrite them?
-    a: You can use either the [Request Transformer plugin](/hub/request-transformer/) or the [expressions router](/gateway/routing/expressions/) for complex URLs. 
+    a: You can use either the [Request Transformer plugin](/plugins/request-transformer/) or the [expressions router](/gateway/routing/expressions/) for complex URLs. 
 
 cleanup:
   inline:

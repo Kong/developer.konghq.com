@@ -83,7 +83,7 @@ one.
   Kong's configuration capabilities: the **Admin API** (`8001` by default).
     {:.important}
    > **Important**: If you need to expose the `admin_listen` port to the internet in a production environment,
-   > {% if_version lte:2.8.x %}[secure it with authentication](/gateway/{{include.release}}/admin-api/secure-admin-api/).{% endif_version %}{% if_version gte:3.0.x %}[secure it with authentication](/gateway/{{include.release}}/production/running-kong/secure-admin-api/).{% endif_version %}
+   > [secure it with authentication](/api/gateway/admin-ee/).
 - `stream_listen`, which is similar to `proxy_listen` but for Layer 4 (TCP, TLS)
   generic proxy. This is turned off by default.
 
