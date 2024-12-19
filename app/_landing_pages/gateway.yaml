@@ -221,7 +221,7 @@ rows:
               icon: /assets/icons/data-object.svg
               cta:
                 text: Kong API reference
-                url: /gateway/entities/
+                url: /api/gateway/admin-ee/
                 align: end
   - header:
       type: h2
