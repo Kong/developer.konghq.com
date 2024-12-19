@@ -21,7 +21,10 @@
     {% endif %}
 
     {% if include.products and include.tools %}
-        <span class="bg-brand-saturated/40 w-[1px] h-3/4"></span>
+        {% assign tool = include.tools | find_exp: "tool", "site.data.tools[tool]" %}
+        {% if tool %}
+            <span class="bg-brand-saturated/40 w-[1px] h-3/4"></span>
+        {% endif %}
     {% endif %}
 
     {% if include.tools %}

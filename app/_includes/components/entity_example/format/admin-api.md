@@ -12,8 +12,10 @@
   To create a Target, call the [Admin API’s /targets endpoint](/api/gateway/admin-ee/#/operations/create-target-with-upstream).
 {% when 'upstream' %}
   To create a Upstream, call the [Admin API’s /upstreams endpoint](/api/gateway/admin-ee/#/operations/create-upstream).
-{% when workspace %}
+{% when 'workspace' %}
   To create a Workspace, call the [Admin API’s /workspaces endpoint](/api/gateway/admin-ee/#/operations/create-workspace).
+{% when 'event_hook' %}
+  To create an Event Hook, call the [Admin API’s /event-hooks endpoint](/api/gateway/admin-ee/#/operations/post-event-hooks).
 {% when 'plugin' %}
   Make the following request:
 {% else %}
