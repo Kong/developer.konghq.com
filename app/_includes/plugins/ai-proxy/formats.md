@@ -30,7 +30,7 @@ The following upstream URL patterns are used:
 ### Input formats
 Kong will mediate the request and response format based on the selected [`{{ provider }}`](/plugins/{{ id }}/reference/#{{ provider_slug }}) and [`{{ route_type }}`](/plugins/{{ id }}/reference/#{{ route_type_slug }}), as outlined in the table above.
 
-The Kong AI Proxy accepts the following inputs formats, standardized across all providers; the `{{ route_type }}` must be configured respective to the required request and response format examples:
+The Kong AI Proxy accepts the following inputs formats, standardized across all providers. The `{{ route_type }}` must be configured respective to the required request and response format examples:
 
 {% navtabs %}
 {% navtab "llm/v1/chat" %}
