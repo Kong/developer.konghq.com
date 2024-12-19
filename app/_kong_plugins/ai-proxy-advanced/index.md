@@ -55,4 +55,3 @@ This plugin does not support fallback over targets with different formats. You c
 > Some errors, such as client errors, result in a failure and don't failover to another target.
 
 {% include plugins/ai-proxy/formats.md plugin=page.name params=site.data.plugins.ai-proxy-advanced.parameters %}
-{% include plugins/ai-proxy/links.md plugin=page.name %}

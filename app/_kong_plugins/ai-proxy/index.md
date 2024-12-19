@@ -36,5 +36,3 @@ categories:
 <!-- {:.note}
 > Check out the [AI Gateway quickstart](/gateway/latest/get-started/ai-gateway/) to get an AI proxy up and running within minutes! -->
 
-{% include plugins/ai-proxy/links.md plugin=page.name %}
-

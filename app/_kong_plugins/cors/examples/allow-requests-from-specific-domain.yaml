@@ -1,0 +1,12 @@
+title: Allow requests from a specific domain
+description: |
+  Configures the CORS plugin to allow `GET` and `POST` requests from a specific domain.
+
+weight: 400
+
+config:
+  origins:
+    - http://mockbin.com
+  methods:
+    - GET
+    - POST

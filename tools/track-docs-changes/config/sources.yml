@@ -68,6 +68,10 @@ app/_how-tos/get-started-with-gateway.md:
   - app/_src/gateway/get-started/proxy-caching.md
   - app/_src/gateway/get-started/key-authentication.md
   - app/_src/gateway/get-started/load-balancing.md
+app/_how-tos/set-up-ai-proxy-advanced-with-anthropic.md:
+  - app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_anthropic.md
+app/_how-tos/set-up-ai-proxy-with-anthropic.md:
+  - app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_anthropic.md
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
@@ -88,7 +92,10 @@ app/_kong_plugins/ai-proxy-advanced/index.md:
   - app/_hub/kong-inc/ai-proxy-advanced/overview/_index.md
 app/_kong_plugins/ai-proxy/index.md:
   - app/_hub/kong-inc/ai-proxy/overview/_index.md
-
+app/_kong_plugins/cors/index.md:
+  - app/_hub/kong-inc/cors/overview/_index.md
+app/_kong_plugins/mocking/index.md:
+  - /app/_hub/kong-inc/mocking/overview/_index.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
@@ -129,7 +136,6 @@ app/plugins/protocols.md:
   - app/hub/plugins/compatibility/index.md
 app/plugins/scopes.md:
   - app/hub/plugins/compatibility/index.md
-app/_how-tos/set-up-ai-proxy-advanced-with-anthropic.md:
-  - app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_anthropic.md
-app/_how-tos/set-up-ai-proxy-with-anthropic.md:
-  - app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_anthropic.md
+app/gateway/networking/dns-config-reference.md:
+  - app/_src/gateway/production/networking/dns-considerations.md
+
