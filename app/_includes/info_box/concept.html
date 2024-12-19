@@ -9,3 +9,7 @@
 {% if page.related_resources %}
 {% include info_box/sections/related_resources.html %}
 {% endif %}
+
+{% if page.min_version %}
+{% include info_box/sections/min_version.html min_version=page.min_version %}
+{% endif %}
