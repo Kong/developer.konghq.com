@@ -1,5 +1,5 @@
 ---
-title: How to restart Kong Gateway in a Docker Container
+title: How to restart {{site.base_gateway}} in a Docker Container
 content_type: how_to
 
 works_on:
