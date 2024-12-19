@@ -24,7 +24,7 @@ prereqs:
         * You can generate a URL by navigating to https://webhook.site and copying the free URL.
         * Set that URL as an environment variable `export WEBHOOK_URL=YOUR_URL`
     - title: Reload {{site.base_gateway}}
-      include_content: prereqs/event-hooks/restart-kong-gateway
+      include_content: prereqs/event-hook/restart-kong-gateway
 cleanup:
   inline:
     - title: Destroy the {{site.base_gateway}} container
@@ -64,6 +64,7 @@ Validation happens in two steps:
 1. Create a Consumer using the Admin API
 
 2. Check `webhook.site` for a `POST` request containing information about the event. 
+
 {:.warning}
 > **Important**:  Before you can use Event Hooks for the first time, {{site.base_gateway}} needs to be reloaded.
 
