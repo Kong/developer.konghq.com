@@ -54,7 +54,7 @@ curl -i -X POST http://localhost:8001/event-hooks \
   }'
 ```
 
-2. Issuing this `POST` request will send a request of type `ping` to the webhook URL verifying that the webhook is configured correctly.
+Issuing this `POST` request will send a request of type `ping` to the webhook URL verifying that the webhook is configured correctly.
 
 
 
