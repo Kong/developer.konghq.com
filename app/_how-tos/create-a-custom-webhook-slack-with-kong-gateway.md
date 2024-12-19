@@ -29,6 +29,13 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+related_resources:
+  - text: Create a webhook with Kong Gateway {{site.base_gateway}}
+    url: /how-to/create-a-webhook-with-kong-gateway/
+  - text: Configure an Event Hook to log events with {{site.base_gateway}}
+    url: /how-to/create-a-log-event-hook-with-kong-gateway/
+  - text: Create an Event Hook that can run custom code with {{site.base_gateway}}
+    url: /how-to/create-a-lambda-event-hook-with-kong-gateway/
 
 ---
 
