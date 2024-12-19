@@ -22,7 +22,7 @@ prereqs:
     - title: A webhook URL
       content: |
         * You can generate a URL by navigating to https://webhook.site and copying the free URL.
-        * Set that URL as an environment variable `export WEBHOOK_URL=YOUR_URL`prereqs:
+        * Set that URL as an environment variable `export WEBHOOK_URL=YOUR_URL`.
     - title: cURL
       include_content: prereqs/tools/curl
     - title: Reload {{site.base_gateway}}
