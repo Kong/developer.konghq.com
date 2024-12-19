@@ -44,8 +44,6 @@ The following diagram illustrates how Targets are used by Upstreams for load bal
 {% entity_example %}
 type: target
 data:
-   - target: httpbun.com:80
-     weight: 100
-   - target: httpbin.konghq.com:80
-     weight: 100
+  target: httpbun.com:80
+  weight: 100
 {% endentity_example %}
