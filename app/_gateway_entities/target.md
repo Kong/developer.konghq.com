@@ -10,16 +10,16 @@ tools:
     - kic
     - deck
     - terraform
+entities:
+  - target
 
 description: A Target is an IP address/hostname with a port that identifies an instance of a backend service.
 
 related_resources:
   - text: Upstream entity
     url: /gateway/entities/upstream/
-  - text: Routing in {{site.base_gateway}}
-    url: /gateway/routing/
-  - text: Proxying with {{site.base_gateway}}
-    url: /gateway/traffic-control/proxy/
+  - text: Route entity
+    url: /gateway/entities/route/
 
 schema:
     api: gateway/admin-ee
