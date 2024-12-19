@@ -24,7 +24,7 @@ topologies:
 
 related_resources:
   - text: DNS configuration reference
-    url: /gateway/networking/dns-config-reference
+    url: /gateway/networking/dns-config-reference/
 
 icon: cors.png
 

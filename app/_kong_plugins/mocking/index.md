@@ -17,16 +17,16 @@ works_on:
     - on-prem
     - konnect
 
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
+topologies:
+    - hybrid
+    - db-less
+    - traditional
 
 icon: mocking.png
 
 related_resources:
   - text: DNS configuration reference
-    url: /gateway/networking/dns-config-reference
+    url: /gateway/networking/dns-config-reference/
 
 categories:
   - traffic-control
