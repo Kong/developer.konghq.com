@@ -9,7 +9,7 @@ entities:
   - event_hook
 tier: enterprise
 tags:
-  - eventhook
+  - eventhooks
   - webhook
   - notifications
 
