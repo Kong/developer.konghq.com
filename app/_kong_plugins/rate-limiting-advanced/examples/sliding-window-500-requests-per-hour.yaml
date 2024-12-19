@@ -1,7 +1,10 @@
+title: Sliding window 500 reqs per hour
 description: |
   Each user is allowed 500 requests every rolling hour.
   If the limit is exceeded and the user receives a 429 error, each additional request within the sliding window (hour) 
   will extend the wait time by about 12 minutes, continuously adjusting as new requests are made.
+
+weight: 400
 
 config:
   limit: 

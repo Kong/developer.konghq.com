@@ -1,0 +1,23 @@
+
+title: 'Chat route with Gemini'
+description: 'Configure a chat route using the Gemini 1.5 Flash model.'
+
+weight: 900
+
+requirements:
+- Google Cloud account with access to Gemini
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config:
+  route_type: llm/v1/chat
+  auth:
+    param_name: key
+    param_value: $GEMINI_API_TOKEN
+    param_location: query
+  model:
+    provider: gemini
+    name: gemini-1.5-flash

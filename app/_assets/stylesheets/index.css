@@ -244,7 +244,7 @@
   }
 
   .success, .warning, .danger, .info, .neutral {
-    @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-11 relative;
+    @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-11 relative text-sm;
 
     &:not(.no-icon)::before {
       @apply text-base absolute left-4 w-4 h-4 content-[''];
@@ -315,11 +315,43 @@
     }
 
     path {
-      @apply fill-[rgb(var(--color-brand))] stroke-[rgb(var(--color-brand))] stroke-1 !important
+      @apply fill-[context-stroke] stroke-[rgb(var(--color-brand))] stroke-1 !important
     }
   }
 
   .badge.deprecated {
     @apply bg-semantic-red-secondary;
+  }
+
+  .tablist {
+    @apply list-none flex gap-4 text-sm ml-0 flex-row border-b border-primary/5 w-full items-center;
+  }
+
+  .tabcolumn {
+    @apply list-none flex text-sm ml-0  w-full gap-0;
+  }
+
+  .tab-button {
+    @apply flex text-sm box-border;
+  }
+
+  .tab-button--active {
+    @apply text-primary font-semibold border-brand !important;
+  }
+
+  .tab-button__horizontal {
+    @apply tab-button py-3 text-terciary hover:no-underline items-center max-h-11;
+
+    &.tab-button__horizontal--active {
+      @apply tab-button--active border-b-2 -mb-0.5 !important;
+    }
+  }
+
+  .tab-button__vertical {
+    @apply tab-button py-2 px-5 text-terciary hover:no-underline border-l-2 border-transparent flex-wrap block;
+
+    &.tab-button__vertical--active {
+      @apply tab-button--active !important;
+    }
   }
 }

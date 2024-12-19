@@ -1,0 +1,26 @@
+
+title: 'Chat route with Amazon Bedrock'
+description: 'Configure a chat route using Amazon Bedrock with the Meta Llama 3 70B Instruct model and the US East 1 AWS region.'
+
+weight: 900
+
+requirements:
+- AWS account with access to Bedrock
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config:
+  targets:
+    - route_type: llm/v1/chat
+      auth:
+        allow_override: false
+        aws_access_key_id: $AWS_ACCESS_KEY_ID
+        aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
+      model:
+        provider: bedrock
+        name: meta.llama3-70b-instruct-v1:0
+        options:
+          aws_region: us-east-1

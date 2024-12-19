@@ -1,5 +1,5 @@
 ---
-title: Rate Limiting Advanced plugin
+title: Rate Limiting Advanced
 
 name: Rate Limiting Advanced
 publisher: kong-inc
@@ -14,9 +14,17 @@ related_resources:
   - text: How to create rate limiting tiers with Rate Limiting Advanced
     url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/how-to/
 
+products:
+    - gateway
+
 works_on:
     - on-prem
     - konnect
+
+icon: rate-limiting-advanced.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

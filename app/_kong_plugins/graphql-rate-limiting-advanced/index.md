@@ -1,5 +1,5 @@
 ---
-title: GraphQL Rate Limiting Advanced plugin
+title: GraphQL Rate Limiting Advanced
 
 name: GraphQL Rate Limiting Advanced
 publisher: kong-inc
@@ -11,9 +11,17 @@ tags:
   - graphql-rate-limiting-advanced
   - traffic-control
 
+products:
+  - gateway
+
 works_on:
     - on-prem
     - konnect
+
+icon: graphql-rate-limiting-advanced.png
+
+categories:
+  - traffic-control
 ---
 
 ## Overview

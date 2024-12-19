@@ -7,18 +7,23 @@ module Jekyll
     module Pages
       class Example < Base
         def url
-          @url ||= "/plugins/#{@plugin.slug}/examples/#{example.slug}/"
+          @url ||= example.url
         end
 
         def content
-          ''
+          @content ||= File.read('app/_includes/plugins/example.md')
         end
 
         def data
-          super.merge(
-            'example?' => true,
-            'example' => example
-          )
+          super
+            .except('faqs')
+            .merge(
+              'example?' => true,
+              'example' => example,
+              'examples' => @plugin.examples,
+              'content_type' => 'reference',
+              'no_version' => true
+            )
         end
 
         def layout
@@ -26,7 +31,7 @@ module Jekyll
         end
 
         def example
-          @example ||= examples.detect { |e| e.file == @file }
+          @example ||= @plugin.examples.detect { |e| e.file == @file }
         end
       end
     end

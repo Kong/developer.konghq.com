@@ -41,6 +41,14 @@
     {% if layout.api_spec %}
       {% vite_javascript_tag api_spec %}
     {% endif %}
+
+    {% if layout.plugin_schema %}
+      {% vite_javascript_tag plugin_schema %}
+    {% endif %}
+
+    {% if page.hub %}
+      {% vite_javascript_tag hub %}
+    {% endif %}
   </head>
 
   <body class="bg-primary leading-6 h-full">

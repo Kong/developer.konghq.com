@@ -45,13 +45,15 @@ async function prepareMarkdownFilesForVale() {
       const parsed = matter(contents);
       let frontmatter = parsed.matter;
 
-      for (const key of keys) {
-        const keyRegex = new RegExp(`^\\s*${key}:.*$`, "gm");
+      if (frontmatter) {
+        for (const key of keys) {
+          const keyRegex = new RegExp(`^\\s*${key}:.*$`, "gm");
 
-        frontmatter = frontmatter.replace(keyRegex, "");
+          frontmatter = frontmatter.replace(keyRegex, "");
+        }
+
+        await fs.writeFile(`../../${path}`, frontmatter, "utf-8");
       }
-
-      await fs.writeFile(`../../${path}`, frontmatter, "utf-8");
     }
     console.log("Done.");
   }

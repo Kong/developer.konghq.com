@@ -1,0 +1,30 @@
+---
+title: 'Kong Functions (Pre-Plugins)'
+name: 'Kong Functions (Pre-Plugins)'
+
+content_type: plugin
+
+publisher: kong-inc
+description: 'Add and manage custom Lua functions to run before other plugins'
+
+
+products:
+    - gateway
+
+works_on:
+    - on-prem
+    - konnect
+
+
+# topologies:
+#    - hybrid
+#    - db-less
+#    - traditional
+
+icon: pre-function.png
+
+categories:
+  - serverless
+---
+
+## Overview
