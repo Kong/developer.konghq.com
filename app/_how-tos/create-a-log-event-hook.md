@@ -20,10 +20,10 @@ tldr:
   
 prereqs:
   inline:
-    - title: Reload {{site.base_gateway}}
-      include_content: prereqs/event-hook/restart-kong-gateway
     - title: cURL
       include_content: prereqs/tools/curl
+    - title: Reload {{site.base_gateway}}
+      include_content: prereqs/event-hook/restart-kong-gateway
 cleanup:
   inline:
     - title: Destroy the {{site.base_gateway}} container
