@@ -67,7 +67,7 @@ Posting this will result in a `200` response. The `config` body in the Event Hoo
 
 
 {:.warning}
-> **Important**:  Before you can use Event Hooks for the first time, {{site.base_gateway}} needs to be [reloaded](/how-tos/restart-kong-gateway-container).
+> **Important**:  Before you can use Event Hooks for the first time, {{site.base_gateway}} needs to be [reloaded](/how-to/restart-kong-gateway-container).
 
 
 Using the Admin API to create a new Consumer: 
