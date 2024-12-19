@@ -43,7 +43,7 @@ rows:
                   oss: true
                   enterprise: true
                 - title: "{{site.kic_product_name}}"
-                  subtitle: Deploy APIs to Kubernetes in a native fashion.
+                  subtitle: Deploy APIs to Kubernetes
                   oss: true
                   enterprise: true
                 - title: Gateway Mocking

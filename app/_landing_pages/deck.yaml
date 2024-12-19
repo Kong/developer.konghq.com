@@ -23,7 +23,7 @@ rows:
             ensuring consistency, reliability, and speed in API integrations.
 
             decK is one of the many tools you can use to manage {{site.base_gateway}} and Konnect. To learn about other tools, 
-            review our [tools page](/tools/).
+            review our [tools page](/references/).
 
   - header:
       type: h2
@@ -51,7 +51,7 @@ rows:
             decK communicates with Kong Gateways via the [Admin API](/api/gateway/admin-ee/). 
         - type: text
           config:
-            decK is one of several [tools](/tools/) available for managing {{site.base_gateway}}.
+            decK is one of several [tools](/references/) available for managing {{site.base_gateway}}.
 
       - header:
           type: h2
@@ -62,8 +62,8 @@ rows:
               blocks:
               - type: unordered_list
                 items:
-                    - "**[Terraform](/terraform/)**: Manage infrastructure as code and automated deployments to streamline setup and configuration of Konnect and {{site.base_gateway}}"
-                    - "**[KIC](/kic/)**: Manage ingress traffic and routing rules for your services"
+                    - "**[Terraform](https://docs.konghq.com/konnect/reference/terraform/)**: Manage infrastructure as code and automated deployments to streamline setup and configuration of Konnect and {{site.base_gateway}}"
+                    - "**[KIC](https://docs.konghq.com/kubernetes-ingress-controller/latest/)**: Manage ingress traffic and routing rules for your services"
                     - "**[{{site.base_gateway}} Admin API](/api/gateway/admin-ee/)**: Manage on-prem {{site.base_gateway}} entities via an API"
                     - "**[Control Plane Config API](/api/konnect/control-planes-config/)**: Manage {{site.base_gateway}} entities within Konnect control planes via an API"
 
