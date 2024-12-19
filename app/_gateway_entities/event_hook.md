@@ -14,8 +14,6 @@ products:
     - gateway
 tools:
     - admin-api
-    - kic
-    - terraform
 schema:
     api: gateway/admin-ee
     path: /schemas/Event-hooks
