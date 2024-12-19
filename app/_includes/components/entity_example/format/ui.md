@@ -43,6 +43,12 @@ The following creates a new service called **{{ include.presenter.data['name'] }
 5. Click **Save**.
 {% when 'target' %}
 {% when 'upstream' %}
+The following creates a new Upstream with basic configuration:
+
+1. In Kong Manager or Gateway Manager, Navigate to **Workspaces** > **Upstreams**.
+1. Click **New Upstream**.
+1. Enter a unique name for the Upstream. For example: `{{ include.presenter.data['name'] }}`.
+1. Click **Save**.
 {% when workspace %}
 {% else %}
 {% endcase %}
