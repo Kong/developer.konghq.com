@@ -26,7 +26,7 @@ breadcrumbs:
   - /gateway/
 
 faqs:
-  - q: When should I use the expressions router in place of (or alongside) the traditional compat router?
+  - q: When should I use the expressions router in place of (or alongside) the traditional router?
     a: We recommend using the expressions router if you are running {{site.base_gateway}} 3.0.x or later. After enabling expressions, traditional match fields on the Route object (such as `paths` and `methods`) remain configurable. You may specify Expressions in the new `expression` field. However, these cannot be configured simultaneously with traditional match fields. Additionally, a new `priority` field, used in conjunction with the expression field, allows you to specify the order of evaluation for Expression Routes.
   - q: How do I enable the expressions router?
     a: |
@@ -55,8 +55,8 @@ Common use cases for the expressions router:
 
 | Use case | Description |
 |---------|------------|
-| Complex Routes | You can define complex Routes with the expressions router that the regular traditional compat router can't handle. For example, the expressions router allows you to use the following complex routing logic: <br>* Prefix-based path matching<br>* Regex-based path matching<br>* Case insensitive path matching<br>* Match by header value<br>* Regex captures<br>* Match by source IP and destination port<br>* Match by SNI (for TLS Routes) |
-| Routes with regex | Although you can use some regex with the regular tradidtional compat router, it's capabilities aren't as powerful as the expressions router. Additionally, regex in Routes can become a performance burden for {{site.base_gateway}}, but the expressions router can handle the performance load more gracefully. |
+| Complex Routes | You can define complex Routes with the expressions router that the traditional router can't handle. For example, the expressions router allows you to use the following complex routing logic: <br>* Prefix-based path matching<br>* Regex-based path matching<br>* Case insensitive path matching<br>* Match by header value<br>* Regex captures<br>* Match by source IP and destination port<br>* Match by SNI (for TLS Routes) |
+| Routes with regex | Although you can use some regex with the traditional router, it's capabilities aren't as powerful as the expressions router. Additionally, regex in Routes can become a performance burden for {{site.base_gateway}}, but the expressions router can handle the performance load more gracefully. |
 
 ## How expressions are formatted in the expressions router
 

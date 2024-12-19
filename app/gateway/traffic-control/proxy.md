@@ -23,6 +23,7 @@ breadcrumbs:
 
 {{ page.description }} This page details information about how {{site.base_gateway}} handles proxying. The following diagram shows how proxying is handled by {{site.base_gateway}}:
 
+<!--vale off-->
 {% mermaid %}
 sequenceDiagram
     actor Client
@@ -44,6 +45,7 @@ sequenceDiagram
     Gateway->>Plugins: Executes plugins in the `header_filter` phase
     Gateway->>Client: Streams response back to client
 {% endmermaid %}
+<!--vale on-->
 
 {{site.base_gateway}} handles proxying in the following order:
 
@@ -109,6 +111,8 @@ timeouts for the connection between {{site.base_gateway}} and a given Upstream, 
 
 {{site.base_gateway}} will send the request over HTTP/1.1 and set the following headers:
 
+<!--vale off-->
+
 | Header                                  | Description |
 |-----------------------------------------|-------------|
 | `Host: <your_upstream_host>`            | The host of your Upstream. |
@@ -120,6 +124,7 @@ timeouts for the connection between {{site.base_gateway}} and a given Upstream, 
 | `X-Forwarded-Port: <port>`              | `<port>` is the port of the server which accepted a request. If `$realip_remote_addr` is one of the **trusted** addresses, the request header with the same name gets forwarded if provided. Otherwise, the value of the `$server_port` variable provided by [ngx_http_core_module](https://nginx.org/docs/http/ngx_http_core_module.html#var_server_port) will be used. |
 | `X-Forwarded-Prefix: <path>`            | `<path>` is the path of the request which was accepted by {{site.base_gateway}}. If `$realip_remote_addr` is one of the **trusted** addresses, the request header with the same name gets forwarded if provided. Otherwise, the value of the `$request_uri` variable (with the query string stripped) provided by [ngx_http_core_module](https://nginx.org/docs/http/ngx_http_core_module.html#var_server_port) will be used. **Note**: {{site.base_gateway}} returns `"/"` for an empty path, but it doesn't do any other normalization on the request path. |
 | All other headers | Forwarded as-is by {{site.base_gateway}} | 
+<!--vale on-->
 
 One exception to this is made when using the WebSocket protocol. {{site.base_gateway}}
 sets the following headers to allow for upgrading the protocol between the

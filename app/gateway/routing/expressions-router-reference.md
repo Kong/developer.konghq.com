@@ -47,7 +47,7 @@ curl --request POST \
                http.headers.x_another_header == "example_header" && (http.headers.x_my_header == "example" || http.headers.x_my_header == "example2")'
 ```
 
-This reference explains the different configurable entities for the expressions router. To learn more about how to configure a route using the expressions router, see [Create complex routes with regex in {{site.base_gateway}}](/how-to/create-complex-routes-with-the-expressions-router/).
+This reference explains the different configurable entities for the expressions router.
 
 
 ## Predicates
