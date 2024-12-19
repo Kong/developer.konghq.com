@@ -13,7 +13,7 @@ tools:
     - deck
     - terraform
 
-description: An upstream refers to the service applications sitting behind {{site.base_gateway}}, to which client requests are forwarded.
+description: An Upstream refers to the service applications sitting behind {{site.base_gateway}}, to which client requests are forwarded.
 
 related_resources:
   - text: Gateway Service entity
@@ -36,11 +36,11 @@ schema:
 
 ## What is an Upstream?
 
-{{page.description}} In {{site.base_gateway}}, an Upstream represents a virtual hostname and can be used to [health check, circuit break]<!--TODO link concept-->, and [load balance]<!--TODO link concept--> incoming requests over multiple [Gateway Services](/gateway/entities/service/). In addition, the Upstream entity has more advanced functionality algorithms like least-connections, consistent-hashing, and lowest-latency.
+An Upstream refers to the service applications sitting behind {{site.base_gateway}}, to which client requests are forwarded. In {{site.base_gateway}}, an Upstream represents a virtual hostname and can be used to [health check, circuit break](https://docs.konghq.com/gateway/latest/how-kong-works/health-checks/), and [load balance](https://docs.konghq.com/gateway/latest/how-kong-works/load-balancing/) incoming requests over multiple [Gateway Services](/gateway/entities/service/). In addition, the Upstream entity has more advanced functionality algorithms like least-connections, consistent-hashing, and lowest-latency.
 
 If you don't need to load balance, we recommend using the `host` header on a [Route](/gateway/entities/route/) as the preferred method for routing a request and proxying traffic.
 
-## Upstream and Service interaction
+## Upstream and Gateway Service interaction
 
 You can configure a Service to point to an Upstream instead of a host. 
 For example, if you have a Service called `example_service` and an Upstream called `example_upstream`, you can point `example_service` to `example_upstream` instead of specifying a host. 
@@ -69,11 +69,10 @@ flowchart LR
     A --> B --> C
   end
 
-  subgraph id2 ["`Targets (example_upstream)`"]
+  subgraph id2 ["`Targets`"]
     C --> D & E
   end
 
-  style id1 rx:10,ry:10
   style id2 stroke:none
 {% endmermaid %}
 
