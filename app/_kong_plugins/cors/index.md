@@ -15,10 +15,10 @@ products:
 works_on:
     - on-prem
     - konnect
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
+topologies:
+    - hybrid
+    - db-less
+    - traditional
 
 icon: cors.png
 

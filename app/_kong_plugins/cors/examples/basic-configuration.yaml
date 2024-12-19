@@ -1,0 +1,28 @@
+title: Configure the plugin on a Service
+description: |
+  Configures the CORS plugin on a specific Service to accept common methods and headers from a specified Service.
+
+weight: 400
+
+config:
+  plugins:
+  - name: cors
+    service: SERVICE_NAME|ID
+    config:
+      origins:
+      - http://mockbin.com
+      methods:
+      - GET
+      - POST
+      headers:
+      - Accept
+      - Accept-Version
+      - Content-Length
+      - Content-MD5
+      - Content-Type
+      - Date
+      - X-Auth-Token
+      exposed_headers:
+      - X-Auth-Token
+      credentials: true
+      max_age: 3600
