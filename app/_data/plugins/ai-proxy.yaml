@@ -62,7 +62,7 @@ providers:
       supported: Chat type only
   - name: 'Mistral'
     formats: 'mistral.ai, OpenAI, raw, and OLLAMA formats'
-    url_pattern: 'As defined in `{{ upstream_url }}'
+    url_pattern: 'As defined in <code>$UPSTREAM_URL</code>'
     min_version: '3.6'
     chat:
       supported: ✅
@@ -78,7 +78,7 @@ providers:
       supported: ✅
   - name: 'Llama2'
     formats: 'supports Llama2 and Llama3 models and raw, OLLAMA, and OpenAI formats'
-    url_pattern: 'As defined in `{{ upstream_url }}'
+    url_pattern: 'As defined in <code>$UPSTREAM_URL</code>'
     min_version: ''
     chat:
       supported: ✅

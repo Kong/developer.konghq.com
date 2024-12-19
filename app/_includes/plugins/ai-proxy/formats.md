@@ -21,7 +21,7 @@ The plugin's [`{{ route_type }}`](/plugins/{{ id }}/reference/#{{ route_type_slu
 
 The following upstream URL patterns are used:
 
-{% include plugins/ai-proxy/tables/upstream-urls.html providers=providers %}
+{% include plugins/ai-proxy/tables/upstream-urls.html providers=providers upstream=upstream_url %}
 
 {:.important}
 > While only the **Llama2** and **Mistral** models are classed as self-hosted, the target URL can be overridden for any of the supported providers.

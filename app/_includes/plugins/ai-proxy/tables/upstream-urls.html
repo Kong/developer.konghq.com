@@ -1,3 +1,4 @@
+{% assign upstream = include.upstream %}
 <table>
     <thead>
         <tr>
@@ -9,7 +10,7 @@
         {% for provider in include.providers %}
         <tr id="{{ provider.name }}">
             <td>{{ provider.name }}</td>
-            <td>{{ provider.url_pattern }}</td>
+            <td>{{ provider.url_pattern | replace: "$UPSTREAM_URL", upstream }}</td>
         </tr>
         {% endfor %}
     </tbody>
