@@ -6,7 +6,7 @@ works_on:
 products:
     - gateway
 entities:
-  - event_hook
+  - event-hook
 tier: enterprise
 tags:
   - eventhooks

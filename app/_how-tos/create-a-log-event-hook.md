@@ -3,7 +3,7 @@ title: Configure an Event Hook to log events
 content_type: how_to
 
 entities:
-  - event_hook
+  - event-hook
 works_on:
     - on-prem
 products:

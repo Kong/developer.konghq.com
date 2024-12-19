@@ -3,7 +3,7 @@ title: Create an Event Hook that can run custom code
 content_type: how_to
 
 entities:
-  - event_hook
+  - event-hook
 works_on:
     - on-prem
 products:

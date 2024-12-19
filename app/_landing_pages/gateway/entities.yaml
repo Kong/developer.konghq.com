@@ -56,4 +56,4 @@ rows:
     - blocks:
       - type: entity_card
         config:
-          entity: event_hook
+          entity: event-hook

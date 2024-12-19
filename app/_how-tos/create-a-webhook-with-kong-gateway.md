@@ -5,7 +5,7 @@ content_type: how_to
 products:
     - gateway
 entities:
-  - event_hook
+  - event-hook
 tier: enterprise
 works_on:
     - on-prem
