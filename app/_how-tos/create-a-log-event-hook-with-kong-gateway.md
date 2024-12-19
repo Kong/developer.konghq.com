@@ -1,5 +1,5 @@
 ---
-title: Configure an Event Hook to log events
+title: Configure an Event Hook to log events with {{site.base_gateway}}
 content_type: how_to
 
 entities:

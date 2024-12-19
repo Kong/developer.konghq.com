@@ -1,5 +1,5 @@
 ---
-title: Push Event Hook information to Slack
+title: Push Event Hook information to Slack with {{site.base_gateway}}
 content_type: how_to
 works_on:
     - on-prem

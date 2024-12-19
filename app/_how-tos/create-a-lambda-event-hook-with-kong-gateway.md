@@ -1,5 +1,5 @@
 ---
-title: Create an Event Hook that can run custom code
+title: Create an Event Hook that can run custom code with {{site.base_gateway}}
 content_type: how_to
 
 entities:

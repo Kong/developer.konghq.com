@@ -160,7 +160,7 @@ data:
 For step-by-step guides on configuring Event Hooks see the following docs: 
 
 * [Create a Web Hook with {{site.base_gateway}}](/how-to/create-a-webhook-with-kong-gateway/)
-* [Push Event Hook information to Slack](/how-to/create-a-custom-webhook-slack)
-* [How to create a log Event Hook](/how-to/create-a-log-event-hook)
-* [Configure an Event Hook to log events](/how-to/create-a-lambda-event-hook)
+* [Push Event Hook information to Slack with {{site.base_gateway}}](/how-to/create-a-custom-webhook-slack-with-kong-gateway/)
+* [How to create a log Event Hook with {{site.base_gateway}}](/how-to/create-a-log-event-hook-with-kong-gateway/)
+* [Configure an Event Hook to log events with {{site.base_gateway}}](/how-to/create-a-lambda-event-hook-with-kong-gateway/)
 
