@@ -1,6 +1,8 @@
 ---
 title: Targets
 content_type: reference
+description: A Target is an IP address/hostname with a port that identifies an instance of a backend service.
+
 entities:
   - target
 
@@ -11,7 +13,11 @@ tools:
     - deck
     - terraform
 
-description: A target identifies a specific instance of an upstream service.
+related_resources:
+  - text: Upstream entity
+    url: /gateway/entities/upstream/
+  - text: Route entity
+    url: /gateway/entities/route/
 
 schema:
     api: gateway/admin-ee
@@ -19,13 +25,13 @@ schema:
 
 ---
 
-## What is a target?
+## What is a Target?
 
-{{page.description}}
+{{page.description}} Each [Upstream](/gateway/entities/upstream/) can have many Targets. Targets are used by Upstreams for [load balancing](https://docs.konghq.com/gateway/latest/how-kong-works/load-balancing/). For example, if you have an `example_upstream` Upstream, you can point it to two different Targets: `httpbin.konghq.com` and `httpbun.com`. This is so that if one of the servers (like `httpbin.konghq.com`) is unavailable, it automatically detects the problem and routes all traffic to the working server (`httpbun.com`).
 
-## Use cases for targets
+The following diagram illustrates how Targets are used by Upstreams for load balancing:
 
-The following are examples of common use cases for targets:
+{% include entities/upstreams-targets-diagram.md %}
 
 ## Schema
 
