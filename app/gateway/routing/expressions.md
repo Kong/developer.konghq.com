@@ -1,7 +1,7 @@
 ---
 title: Expressions router
 
-description: "The {{site.base_gateway}} expressions router is a rule-based engine that uses a Domain-Specific Expressions Language to define complex routing logic on a [Route](/gateway/entities/route/)."
+description: "The expressions router is a collection of Routes that are all evaluated against incoming requests until a match can be found."
 
 content_type: reference
 layout: reference
@@ -14,8 +14,6 @@ related_resources:
     url: /gateway/entities/route/
   - text: Expressions router reference
     url: /gateway/routing/expressions-router-reference/
-  - text: Expressions router examples
-    url: /gateway/routing/expressions-router-examples/
   - text: Expressions repository
     url: https://github.com/Kong/atc-router
 
@@ -44,25 +42,20 @@ faqs:
       ```
 ---
 
-{{ page.description }}
+The expressions router is a collection of [Routes](/gateway/entities/route/) that are all evaluated against incoming requests until a match can be found. This allows for more complex routing logic than the traditional router and ensures good runtime matching performance. 
 
-The expressions language is a strongly typed [Domain-Specific Language (DSL)](https://developer.mozilla.org/docs/Glossary/DSL/Domain_specific_language)
-which allows you to define fields, data, and operators for a Route. This allows for more complex routing logic than the traditional router and ensures good runtime matching performance. 
-
-## Use cases
-
-Common use cases for the expressions router:
-
-| Use case | Description |
-|---------|------------|
-| Complex Routes | You can define complex Routes with the expressions router that the traditional router can't handle. For example, the expressions router allows you to use the following complex routing logic: <br>* Prefix-based path matching<br>* Regex-based path matching<br>* Case insensitive path matching<br>* Match by header value<br>* Regex captures<br>* Match by source IP and destination port<br>* Match by SNI (for TLS Routes) |
-| Routes with regex | Although you can use some regex with the traditional router, it's capabilities aren't as powerful as the expressions router. Additionally, regex in Routes can become a performance burden for {{site.base_gateway}}, but the expressions router can handle the performance load more gracefully. |
+You can do the following with the expressions router:
+* Prefix-based path matching
+* Regex-based path matching that is less of a performance burden than the traditional router
+* Case insensitive path matching
+* Match by header value
+* Regex captures
+* Match by source IP and destination port
+* Match by SNI (for TLS Routes)
 
 ## How expressions are formatted in the expressions router
 
-To understand how the expressions router routes requests, it's important to how an Route is formatted in expressions. 
-
-The expressions router is a collection of Routes that are all evaluated against incoming requests until a match can be found. Each Route contains one or more predicates combined with logical operators, which {{site.base_gateway}} uses to match requests with Routes.
+To understand how the expressions router routes requests, it's important to how an Route is formatted in expressions. Each Route contains one or more predicates combined with logical operators, which {{site.base_gateway}} uses to match requests with Routes.
 
 A predicate is the basic unit of expressions code which takes the following form:
 
@@ -99,17 +92,31 @@ updated incrementally as configured Routes change.
 
 As soon as a Route yields a match, the router stops matching and the matched Route is used to process the current request/connection.
 
-{% mermaid %}
-flowchart LR
-    A["Incoming request<br>http.path:#quot;/foo/bar#quot;<br>http.post:#quot;konghq.com#quot;"] -->|Checks first, doesn't match| B1
-    A --> |Checks second, does match|B2
+For example, if you have the following three Routes:
 
-    subgraph router[Expressions Router]
-        direction TB
-        B1["**Route A:** <br>*expression:* http.path ^= #quot;/foo#quot; && http.host == #quot;example.com#quot;<br>*priority:* 100"]
-        B2["**Route B:** <br>*expression:* http.path ^= #quot;/foo#quot;<br>*priority:* 50"]
-        B3["**Route C:** <br>*expression:* http.path ^= #quot;/#quot;<br>*priority:* 10"]
-    end
-{% endmermaid %}
+* **Route A**
+  ```
+  expression: http.path ^= "/foo" && http.host == "example.com"
+  priority: 100
+  ```
+* **Route B**
+  ```
+  expression: http.path ^= "/foo"
+  priority: 50
+  ```
+* **Route C**
+  ```
+  expression: http.path ^= "/"
+  priority: 10
+  ```
 
-> _**Figure 1:**_ Diagram of how {{site.base_gateway}} executes Routes. The diagram shows that {{site.base_gateway}} selects the Route that both matches the expression and then selects the matching Route with the highest priority.
+And you have the following incoming request:
+```
+http.path:"/foo/bar"
+http.post:"konghq.com"
+```
+
+The router does the following:
+
+1. The router checks Route A first because it has the highest priority. It doesn't match the incoming request, so the router checks the Route with the next highest priority.
+1. Route B has the next highest priority, so the router checks this one second. It matches the request, so the router doesn't check Route C.

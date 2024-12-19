@@ -17,8 +17,6 @@ related_resources:
     url: /gateway/entities/route/
   - text: About the expressions router
     url: /gateway/routing/expressions/
-  - text: Expressions router examples
-    url: /gateway/routing/expressions-router-examples/
   - text: Expressions repository
     url: https://github.com/Kong/atc-router
 
@@ -159,10 +157,7 @@ The expressions language supports a rich set of operators that can be performed 
 | `&&`           | And                   | Returns `true` if **both** expressions on the left and right side evaluates to `true`                                                                                                                        |
 | `||` | Or | Returns `true` if **any** expressions on the left and right side evaluates to `true` |                                                                                                                    |
 | `(Expression)` | Parenthesis           | Groups expressions together to be evaluated first                                                                                                                                                            |
-
-{% if_version gte:3.4.x %}
 | `!`            | Not                   | Negates the result of a parenthesized expression. **Note:** The `!` operator can only be used with parenthesized expression like `!(foo == 1)`, it **cannot** be used with a bare predicate like `! foo == 1` |
-{% endif_version %}
 
 ## Allowed type and operator combinations
 
@@ -190,6 +185,26 @@ Depending on the field type, only certain content types and operators are suppor
   * When performing IP address-related comparisons with `==`, `in`, or `not in`, different families of
   address types for the field and constant value will always cause the predicate to return `false` at
   runtime.
+
+## Example expressions
+
+### HTTP examples 
+
+| Name | Example expression | Description |
+|------|--------------------|-------------|
+| Prefix based path matching | `http.path ^= "/foo/bar"` | Matches HTTP requests that have a path starting with `/foo/bar` |
+| Regex based path matching | `http.path ~ r#"/foo/bar/\d+"#` | N/A |
+| Case insensitive path matching | `lower(http.path) == "/foo/bar"` | Ignores case when performing the path match. |
+| Match by header value ("all" style matching) | `http.headers.x_foo ~ r#"bar\d"#` | If there are multiple header values for `X-Foo` and the client sends more than one `X-Foo` header with different values, the above example will ensure **each** instance of the value will match the regex `r#"bar\d"#`. This is called "all" style matching. |
+| Match by header value ("any" style matching) | `any(http.headers.x_foo) ~ r#"bar\d"#` | Returns `true` for the predicate as soon as any of the values pass the comparison. Can be combined with other transformations, like `lower()`. |
+| Regex captures | `http.path ~ r#"/foo/(?P<component>.+)"#` | You can define regex capture groups in any regex operation which will be made available later for plugins to use. Currently, this is only supported with the `http.path` field. The matched value of `component` will be made available later to plugins such as [Request Transformer Advanced](/plugins/request-transformer-advanced/). |
+
+### TCP, TLS, and UDP examples
+
+| Name | Example expression | Description |
+|------|--------------------|-------------|
+| Match by source IP and destination port | `net.src.ip in 192.168.1.0/24 && net.dst.port == 8080` | This matches all clients in the `192.168.1.0/24` subnet and the destination port (which is listened to by {{site.base_gateway}}) is `8080`. IPv6 addresses are also supported. |
+| Match by SNI (for TLS routes) | `tls.sni =^ ".example.com"` | This matches all TLS connections with the `.example.com` SNI ending. |
 
 ## Expressions router performance considerations
 
