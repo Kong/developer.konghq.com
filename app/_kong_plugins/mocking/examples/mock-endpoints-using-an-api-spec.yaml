@@ -1,13 +1,9 @@
-title: Pass an OpenAPI spec to the plugin through decK
+title: Mock endpoints using an API spec
 description: |
-  Configures the Mocking plugin and passes an API spec.
+  Configures the Mocking plugin and passes a the [PetStore](https://petstore3.swagger.io/) API specification.
 
 weight: 400
 config:
-  random_delay: true
-  max_delay_time: 1
-  min_delay_time: 0.001
-  random_examples: true
   api_specification: |
     openapi: 3.0.2
     servers:
