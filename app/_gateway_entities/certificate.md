@@ -18,6 +18,10 @@ api_specs:
     - konnect/control-planes-config 
     - gateway/admin-oss
 
+schema:
+    api: gateway/admin-ee
+    path: /schemas/Certificate
+
 faqs:
   - q: What's the difference between the Certificate entity and the CA Certificate entity?
     a: Certificates handle SSL/TLS termination for encrypted requests and CA Certificates validate client or server certificates.
