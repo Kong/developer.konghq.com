@@ -17,7 +17,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Kong provides an entire development environment for developing plugins, 
+                    Kong provides a development environment for developing plugins, 
                     including Plugin Development Kits (or PDKs), database abstractions, migrations, and more.
 
                     Plugins consist of modules interacting with the request/response objects or
@@ -48,7 +48,7 @@ rows:
                 text: "Lua"
               blocks:
                 - type: text
-                  text: Something about the Lua PDK
+                  text: "{{site.base_gateway}} provides a broad plugin development environment including an SDK, database abstractions, migrations"
                 - type: text
                   text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/">Lua PDK &rarr;</a>
 
@@ -59,7 +59,7 @@ rows:
                 text: "Go"
               blocks:
                 - type: text
-                  text: Something about the Go PDK
+                  text: "{{site.base_gateway}} supports the Go language with the Go PDK, a library that provides Go bindings for {{site.base_gateway}}"
                 - type: text
                   text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/go/">Go PDK &rarr;</a>
       - blocks:
@@ -69,7 +69,7 @@ rows:
                 text: "Python"
               blocks:
                 - type: text
-                  text: Something about the Python PDK
+                  text: "{{site.base_gateway}} support for Python plugin development is provided by the [kong-python-pdk](https://github.com/Kong/kong-python-pdk) library."
                 - type: text
                   text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/python/">Python PDK &rarr;</a>
       - blocks:
@@ -79,7 +79,7 @@ rows:
                 text: "JavaScript"
               blocks:
                 - type: text
-                  text: Something about the JavaScript PDK
+                  text: "{{site.base_gateway}} support for the JavaScript language is provided by the [JavaScript PDK](https://github.com/Kong/kong-js-pdk)."
                 - type: text
                   text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/javascript/">JavaScript PDK &rarr;</a>
 

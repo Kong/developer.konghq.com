@@ -1,7 +1,7 @@
 metadata:
   title: "Authentication"
   content_type: landing_page
-  description: This page is an introduction to authentication with Kong.
+  description: An introduction to authentication with Kong.
   tags:
     - authentication
 rows:
@@ -37,8 +37,8 @@ rows:
                 text: |
                   Basic authentication is a simple authentication method that uses a base64-encoded username and password combination as token.
 
-                  - [Example](https://docs.konghq.com/hub/kong-inc/basic-auth/how-to/basic-example)
-                  - [Plugin reference](https://docs.konghq.com/hub/kong-inc/basic-auth/configuration)
+                  - [Get Started](/plugins/basic-auth/examples/example/)
+                  - [Plugin reference](/plugins/basic-auth/reference/)
 
       - blocks:
         - type: structured_text
@@ -51,12 +51,12 @@ rows:
                   Key authentication generates an API key for a consumer, which can be passed in an `apikey` header to access services and routes.            
 
                   Open-source plugin:
-                  - [Example](https://docs.konghq.com/hub/kong-inc/key-auth/how-to/basic-example/)
-                  - [Plugin reference](https://docs.konghq.com/hub/kong-inc/key-auth/configuration/)
+                  - [Get Started](/plugins/key-auth/examples/example/)
+                  - [Plugin reference](/plugins/key-auth/reference/)
                   
-                  Advanced Enterprise plugin with enhanced capabilities:
-                  - [Example](https://docs.konghq.com/hub/kong-inc/key-auth-enc/how-to/basic-example/)
-                  - [Plugin reference](https://docs.konghq.com/hub/kong-inc/key-auth-enc/configuration/)
+                  Advanced Enterprise plugin with enhanced encryption:
+                  - [Get Started](/plugins/key-auth-enc/examples/example/)
+                  - [Plugin reference](/plugins/key-auth-enc/reference/)
       - blocks:
         - type: structured_text
           config:
@@ -68,12 +68,12 @@ rows:
                   LDAP is a protocol that uses a directory to check credentials provided by a client.
 
                   Open source plugin:
-                  - [Example](https://docs.konghq.com/hub/kong-inc/ldap-auth/how-to/basic-example/)
-                  - [Plugin reference](https://docs.konghq.com/hub/kong-inc/ldap-auth/configuration/)
+                  - [Get Started](/plugins/ldap-auth/examples/example/)
+                  - [Plugin reference](/plugins/ldap-auth/reference/)
 
                   Advanced Enterprise plugin with enhanced capabilities:
-                  - [Example](https://docs.konghq.com/hub/kong-inc/ldap-auth-advanced/how-to/basic-example/)
-                  - [Plugin reference](https://docs.konghq.com/hub/kong-inc/ldap-auth-advanced/configuration/)
+                  - [Get Started](/plugins/ldap-auth-advanced/examples/example/)
+                  - [Plugin reference](/plugins/ldap-auth-advanced/reference/)
   - columns:
       - blocks:
         - type: structured_text
@@ -85,8 +85,8 @@ rows:
                 text: |
                   OAuth 2.0 is a protocol that relies on an application to authorize access to services and routes.
 
-                  - [Example](https://docs.konghq.com/hub/kong-inc/oauth2/how-to/basic-example/)
-                  - [Plugin reference](https://docs.konghq.com/hub/kong-inc/oauth2/configuration/)
+                  - [Get Started](/plugins/oauth2/examples/example/)
+                  - [Plugin reference](/plugins/oauth2/reference/)
 
       - blocks:
         - type: structured_text
@@ -98,8 +98,8 @@ rows:
                 text: |
                   OpenID Connect (OIDC) is an authentication protocol based on OAuth 2.0. It works with identity providers to verify a user's identity without storing credentials.
 
-                  - [Example](https://docs.konghq.com/hub/kong-inc/openid-connect/how-to/basic-example/)
-                  - [Plugin reference](https://docs.konghq.com/hub/kong-inc/openid-connect/configuration/)
+                  - [Get Started](/plugins/openid-connect/examples/example/)
+                  - [Plugin reference](/plugins/openid-connect/reference/)
       - blocks:
         - type: structured_text
           config:
@@ -110,8 +110,8 @@ rows:
                 text: |
                   SAML is a standard used to exchange authentication and authorization information between an identity provider and a service provider.      
                 
-                  - [Example](https://docs.konghq.com/hub/kong-inc/saml/how-to/basic-example/)
-                  - [Plugin reference](https://docs.konghq.com/hub/kong-inc/saml/configuration/)
+                  - [Get Started](/plugins/saml/examples/example/)
+                  - [Plugin reference](/plugins/samle/reference)
                   
   - columns:
       - blocks:
@@ -122,11 +122,11 @@ rows:
             blocks:
               - type: text
                 text: |
-                  With {{site.base_gateway}} controlling authentication, requests won’t reach upstream services unless the client has successfully authenticated. This means upstream services process pre-authorized requests, freeing them from the cost of authentication, which is a savings in compute time and development effort.
+                  {{site.base_gateway}} authentication plugins protect your upstream services from unauthorized access. This means upstream services process pre-authorized requests, freeing them from the cost of authentication, which is a savings in compute time and development effort.
 
-                  {{site.base_gateway}} has visibility into all authentication attempts, which provides the ability to build monitoring and alerting capabilities supporting service availability and compliance.
+                  {{site.base_gateway}} offers tools that give visibility into all authentication attempts, which provides the ability to build monitoring and alerting capabilities supporting service availability and compliance.
 
-                  For more information, see [What is API Gateway Authentication](https://konghq.com/learning-center/api-gateway/api-gateway-authentication).
+                  For more information, see [What is API Gateway Authentication](https://konghq.com/learning-center/api-gateway/api-gateway-authentication) in our Learning Center.
  
   - columns:
       - blocks:
@@ -138,7 +138,7 @@ rows:
             icon: /assets/icons/gateway.svg
             cta:
               text: See all authentication plugins
-              url: "https://docs.konghq.com/hub/?category=authentication"
+              url: /plugins/ ##"https://docs.konghq.com/hub/?category=authentication"
       - blocks:
         - type: card
           config:
