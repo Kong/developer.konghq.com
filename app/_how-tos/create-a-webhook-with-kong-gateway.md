@@ -71,7 +71,7 @@ curl -i -X POST http://localhost:8001/consumers \
     -d username="my-consumer"
 ```
 
-Verify on` webhook.site` that you received a `POST` request. It will look like this: 
+Verify on `webhook.site` that you received a `POST` request. It will look like this: 
 
 ```json
 {
