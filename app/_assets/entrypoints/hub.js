@@ -16,6 +16,7 @@ class Hub {
     this.typeInterval = 400;
 
     this.addEventListeners();
+    this.updateFiltersFromURL();
   }
 
   addEventListeners() {
@@ -37,6 +38,7 @@ class Hub {
     this.deploymentValues = this.getValues(this.deploymentTopologies);
     this.categoryValues = this.getValues(this.categories);
 
+    this.updateURL();
     this.filterPlugins();
   }
 
@@ -103,6 +105,54 @@ class Hub {
 
       return [title, ...aliases].some((string) => string.includes(query));
     }
+  }
+
+  updateURL() {
+    const params = new URLSearchParams(window.location.search);
+
+    if (this.deploymentValues.length > 0) {
+      params.set("deployment-topology", this.deploymentValues.join(","));
+    } else {
+      params.delete("deployment-topology");
+    }
+
+    if (this.categoryValues.length > 0) {
+      params.set("category", this.categoryValues.join(","));
+    } else {
+      params.delete("category");
+    }
+
+    if (this.textInput.value) {
+      params.set("search", encodeURIComponent(this.textInput.value));
+    } else {
+      params.delete("search");
+    }
+
+    let newUrl = window.location.pathname;
+    if (params.size > 0) {
+      newUrl += "?" + params.toString();
+    }
+    window.history.replaceState({}, "", newUrl);
+  }
+
+  updateFiltersFromURL() {
+    const params = new URLSearchParams(window.location.search);
+
+    const deploymentValues =
+      params.get("deployment-topology")?.split(",") || [];
+    this.deploymentTopologies.forEach((checkbox) => {
+      checkbox.checked = deploymentValues.includes(checkbox.value);
+    });
+
+    const categoryValues = params.get("category")?.split(",") || [];
+    this.categories.forEach((checkbox) => {
+      checkbox.checked = categoryValues.includes(checkbox.value);
+    });
+
+    const searchValue = params.get("search") || "";
+    this.textInput.value = decodeURIComponent(searchValue);
+
+    this.onChange();
   }
 }
 
