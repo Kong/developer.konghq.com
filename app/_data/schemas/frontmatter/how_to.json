@@ -21,9 +21,7 @@
         "a"
       ]
     },
-    "min_version": {
-      "type": "object"
-    }
+    "min_version": { "$ref": "schema:base#/definitions/min_version" }
   },
   "if": {
     "properties": {
