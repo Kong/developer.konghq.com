@@ -21,7 +21,7 @@
         {% for c in include.config.columns %}
         {% assign v = f[c.key] %}
         <td class="text-center">
-        {% if v %}<span class="inline-flex text-terciary w-5 h-5">{% include_svg '/assets/icons/check.svg' %}</span>{% else %}<span class="inline-flex text-semantic-red-primary w-5 h-5">{% include_svg '/assets/icons/close.svg' %}</span>{% endif %}
+        {% if v %}{% include icon_true.html %}{% else %}{% include icon_false.html %}{% endif %}
         </td>
         {% endfor %}
       </tr>
