@@ -1,5 +1,5 @@
 ---
-title: Enable rate limiting for a consumer with {{site.base_gateway}}
+title: Rate limit a consumer with {{site.base_gateway}}
 content_type: how_to
 related_resources:
   - text: How to create rate limiting tiers with {{site.base_gateway}}
@@ -33,7 +33,7 @@ tags:
 
 tldr:
     q: How do I rate limit a consumer with {{site.base_gateway}}?
-    a: Enable an authentication plugin and create a consumer with credentials, then enable the <a href="/plugins/rate-limiting/reference/">Rate Limiting plugin</a> on the new consumer.
+    a: Enable an authentication plugin and create a consumer with credentials, then enable the <a href="/plugins/rate-limiting/">Rate Limiting plugin</a> on the new consumer.
 
 tools:
     - deck
@@ -116,10 +116,8 @@ for _ in {1..6}; do curl -i http://localhost:8000/anything -H 'apikey:example-ke
 {: data-deployment-topology="on-prem" }
 
 ```bash
-for _ in {1..6}; do curl -i http://{host}/anything -H 'apikey:example-key'; echo; done
+for _ in {1..6}; do curl -i $KONNECT_PROXY_URL/anything -H 'apikey:example-key'; echo; done
 ```
-{: data-deployment-topology="konnect" }
-Replace `{host}` with the proxy URL for this data plane node.
 {: data-deployment-topology="konnect" }
 
 This command sends six consecutive requests to the route. On the last one you should get a `429` error with the message `API rate limit exceeded`.

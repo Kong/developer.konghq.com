@@ -71,11 +71,20 @@ entities:
 After configuring the Key Authentication plugin, you can verify that it was configured correctly and is working, by sending requests with and without the API key you created for your consumer.
 
 This request should be successful:
+
 ```bash
 curl --request GET \
  --url http://localhost:8000/example-route/anything \
  --header 'apikey: hello_world'
 ```
+{: data-deployment-topology="on-prem" }
+
+```bash
+curl --request GET \
+ --url $KONNECT_PROXY_URL/example-route/anything \
+ --header 'apikey: hello_world'
+```
+{: data-deployment-topology="konnect" }
 
 This request should return a `401 Unauthorized` error:
 
@@ -84,3 +93,11 @@ curl --request GET \
  --url http://localhost:8000/example-route/anything \
  --header 'apikey: another_key'
 ```
+{: data-deployment-topology="on-prem" }
+
+```bash
+curl --request GET \
+ --url $KONNECT_PROXY_URL/example-route/anything \
+ --header 'apikey: another_key'
+```
+{: data-deployment-topology="konnect" }

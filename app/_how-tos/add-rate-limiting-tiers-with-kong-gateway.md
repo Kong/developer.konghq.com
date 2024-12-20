@@ -178,10 +178,23 @@ for i in {1..6}; do
   sleep 1
 done
 ```
+{: data-deployment-topology="on-prem" }
+
+```sh
+echo "Testing Free Tier Rate Limit..."
+
+for i in {1..6}; do
+  curl -I $KONNECT_PROXY_URL/anything -H 'apikey:amal'
+  echo
+  sleep 1
+done
+```
+{: data-deployment-topology="konnect" }
 
 For the first few requests (up to the configured limit, which is 3 requests in 30 seconds), you should receive a `200 OK` status code. Once the limit is exceeded, you should receive a `429 Too Many Requests` status code with a message indicating the rate limit has been exceeded.
 
 Test the rate limiting of the Basic tier:
+
 ```sh
 echo "Testing Basic Tier Rate Limit..."
 
@@ -191,10 +204,23 @@ for i in {1..7}; do
   sleep 1
 done
 ```
+{: data-deployment-topology="on-prem" }
+
+```sh
+echo "Testing Basic Tier Rate Limit..."
+
+for i in {1..7}; do
+  curl -I $KONNECT_PROXY_URL/anything -H 'apikey:dana'
+  echo
+  sleep 1
+done
+```
+{: data-deployment-topology="konnect" }
 
 For the first few requests (up to the configured limit, which is 5 requests in 30 seconds), you should receive a `200 OK` status code. After exceeding the limit, you should receive a `429 Too Many Requests` status code with a rate limit exceeded message.
 
 Test the rate limiting of the Premium tier:
+
 ```sh
 echo "Testing Premium Tier Rate Limit..."
 
@@ -204,6 +230,18 @@ for i in {1..11}; do
   sleep 1
 done
 ```
+{: data-deployment-topology="on-prem" }
+
+```sh
+echo "Testing Premium Tier Rate Limit..."
+
+for i in {1..11}; do
+  curl -I $KONNECT_PROXY_URL/anything -H 'apikey:mahan'
+  echo
+  sleep 1
+done
+```
+{: data-deployment-topology="konnect" }
 
 For the initial requests (up to the configured limit, which is 500 requests in 30 seconds), you should receive a `200 OK` status code. After exceeding the limit, you should receive a `429 Too Many Requests` status code.
 
