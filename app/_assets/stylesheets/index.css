@@ -101,6 +101,10 @@
     @apply font-bold text-lg tracking-[-.01em];
   }
 
+  h4 {
+    @apply font-bold text-base tracking-[-.01em];
+  }
+
   table {
     @apply bg-secondary shadow-primary border-none rounded-lg text-sm;
   }
