@@ -29,7 +29,7 @@ schema:
 
 ## What is a route?
 
-{{page.description}} Services can store collections of objects like plugin configurations, and policies, and they can be associated with routes. In {{site.base_gateway}}, routes typically map to endpoints that are exposed through the {{site.base_gateway}} application. Routes can also define rules that match requests to associated services. Because of this, one route can reference multiple endpoints. A basic route should have a name, path or paths, and reference an existing service.
+{{page.description | liquify}} Services can store collections of objects like plugin configurations, and policies, and they can be associated with routes. In {{site.base_gateway}}, routes typically map to endpoints that are exposed through the {{site.base_gateway}} application. Routes can also define rules that match requests to associated services. Because of this, one route can reference multiple endpoints. A basic route should have a name, path or paths, and reference an existing service.
 
 You can also configure routes with:
 

@@ -44,7 +44,7 @@ breadcrumbs:
 
 ## What are API specs?
 
-{{ page.description }}
+{{ page.description | liquify }}
 API specs can function like API documentation, but they also explain the values, parameters, and objects in the schema of the API. An API spec helps users know how to make requests to the APIs contained within the spec.
 
 ## How does Insomnia parse API specs?

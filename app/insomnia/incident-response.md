@@ -26,4 +26,4 @@ faqs:
     a: Our [open source GitHub repository](https://github.com/kong/insomnia) and [support channels](https://insomnia.rest/support).
 ---
 
-{{ page.description }}
+{{ page.description | liquify }}

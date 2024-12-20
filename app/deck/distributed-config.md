@@ -20,7 +20,7 @@ breadcrumbs:
   - /deck/
 ---
 
-{{ page.description }}
+{{ page.description | liquify }}
 You can do this by breaking up the configuration into multiple files and managing them using tags.
 
 With tags, you can use decK's `select-tag` feature to export, sync, or reset

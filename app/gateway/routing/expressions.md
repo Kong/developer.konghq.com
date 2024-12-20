@@ -22,7 +22,7 @@ breadcrumbs:
   - /gateway/routing/
 ---
 
-{{ page.description }} Expressions can be used to perform tasks such as defining
+{{ page.description | liquify }} Expressions can be used to perform tasks such as defining
 complex routing logic.
 This guide is a reference for the expressions language and explains how it can be used.
 

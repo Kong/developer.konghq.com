@@ -47,9 +47,9 @@ rows:
                   PostgreSQL database.
                   
                   Pass the `-- -h` option to the script to see all possible configuration options, including how to pass a license
-                  to the script, how to switch to an open-source Gateway image, enable RBAC, and more.
+                  to the script, switch to an open-source Gateway image, enable RBAC, and more.
 
-                  Visit the [Gateway install page](/gateway/install/) for all other installation options.
+                  Visit the [Gateway install page](https://docs.konghq.com/gateway/latest/install/) for all other installation options.
 
   - header:
       type: h2
@@ -101,7 +101,7 @@ rows:
                   oss: true
                   enterprise: true
                 - title: Gateway Mocking
-                  subtitle: Mock API responses directly on the API gateway.
+                  subtitle: Mock API responses directly on the API gateway
                   oss: false
                   enterprise: true
                 - title: "Kong Manager: Admin GUI"

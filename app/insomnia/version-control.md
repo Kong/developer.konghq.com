@@ -44,7 +44,7 @@ faqs:
     a: If you invite them to your organization or workspace, other users can edit the same Insomnia entities and use the same branches for version control.
 ---
 
-{{ page.description }}
+{{ page.description | liquify }}
 Branches are object-specific, meaning that the branches you have in a collection are specific to that one collection. They aren't shared with other collections or other objects, like a mock server. 
 
 With cloud sync, versions are managed only in the Insomnia UI and can be shared with other users you've invited to your workspace. In git sync, you can pull branches from your repository into Insomnia and can also push local branches you make in Insomnia to your repository.
