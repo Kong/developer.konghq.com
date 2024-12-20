@@ -111,7 +111,7 @@ rows:
                   SAML is a standard used to exchange authentication and authorization information between an identity provider and a service provider.      
                 
                   - [Get Started](/plugins/saml/examples/example/)
-                  - [Plugin reference](/plugins/samle/reference)
+                  - [Plugin reference](/plugins/saml/reference/)
                   
   - columns:
       - blocks:
