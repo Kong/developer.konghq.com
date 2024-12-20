@@ -25,6 +25,11 @@ icon: post-function.png
 
 categories:
   - serverless
+
+search_aliases:
+  - post-function
+  - serverless function
+  - serverless functions
 ---
 
 ## Overview

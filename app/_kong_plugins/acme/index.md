@@ -25,6 +25,10 @@ icon: acme.png
 
 categories:
   - security
+
+search_aliases:
+  - let's encrypt
+  - certificates
 ---
 
 ## Overview

@@ -19,6 +19,10 @@ icon: key-auth.png
 
 categories:
   - authentication
+
+search_aliases:
+  - key authentication
+  - key-auth
 ---
 
 ## Overview

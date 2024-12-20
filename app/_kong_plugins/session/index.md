@@ -24,6 +24,9 @@ icon: session.png
 
 categories:
   - authentication
+
+search_aliases:
+  - sessions
 ---
 
 ## Overview

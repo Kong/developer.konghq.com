@@ -26,6 +26,9 @@ icon: route-transformer-advanced.png
 
 categories:
   - transformations
+
+search_aliases:
+  - route-transformer-advanced
 ---
 
 ## Overview

@@ -25,6 +25,9 @@ icon: rate-limiting-advanced.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - rate-limiting-advanced
 ---
 
 ## Overview

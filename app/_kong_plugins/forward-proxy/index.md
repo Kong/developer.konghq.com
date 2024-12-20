@@ -25,6 +25,9 @@ icon: forward-proxy.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - forward-proxy
 ---
 
 ## Overview

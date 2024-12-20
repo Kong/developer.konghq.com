@@ -24,6 +24,9 @@ icon: vault-auth.png
 
 categories:
   - authentication
+
+search_aliases:
+  - vault-auth
 ---
 
 ## Overview

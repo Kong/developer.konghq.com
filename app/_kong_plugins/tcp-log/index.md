@@ -24,6 +24,9 @@ icon: tcp-log.png
 
 categories:
   - logging
+
+search_aliases:
+  - tcp-log
 ---
 
 ## Overview

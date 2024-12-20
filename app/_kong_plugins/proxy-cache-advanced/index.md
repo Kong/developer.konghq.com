@@ -25,6 +25,11 @@ icon: proxy-cache-advanced.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - proxy cache
+  - proxy cache advanced
+  - proxy-cache-advanced
 ---
 
 ## Overview

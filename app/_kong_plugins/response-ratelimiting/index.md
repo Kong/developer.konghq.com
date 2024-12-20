@@ -21,6 +21,10 @@ icon: response-ratelimiting.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - ratelimiting
+  - response-ratelimiting
 ---
 
 ## Overview

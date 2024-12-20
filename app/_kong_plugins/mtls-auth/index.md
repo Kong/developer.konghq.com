@@ -25,6 +25,12 @@ icon: mtls-auth.png
 
 categories:
   - authentication
+
+search_aliases:
+  - mtls
+  - mtls authentication
+  - mtls-auth
+  - certificates
 ---
 
 ## Overview

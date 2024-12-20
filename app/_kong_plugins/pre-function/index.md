@@ -25,6 +25,11 @@ icon: pre-function.png
 
 categories:
   - serverless
+
+search_aliases:
+  - pre-function
+  - serverless function
+  - serverless functions
 ---
 
 ## Overview

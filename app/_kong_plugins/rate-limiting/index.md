@@ -40,6 +40,9 @@ icon: rate-limiting.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - rate-limiting
 ---
 
 ## Overview

@@ -28,6 +28,9 @@ icon: xml-threat-protection.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - xml-threat-protection
 ---
 
 ## Overview

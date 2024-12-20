@@ -28,6 +28,14 @@ icon: ai-proxy.png
 
 categories:
   - ai
+
+search_aliases:
+  - ai
+  - llm
+  - artificial
+  - intelligence
+  - language
+  - model
 ---
 
 {% include plugins/ai-proxy/overview.md plugin=page.name params=site.data.plugins.ai-proxy.parameters %}

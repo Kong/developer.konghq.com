@@ -1,6 +1,7 @@
 class Hub {
   constructor() {
     this.filters = document.getElementById("filters");
+    this.textInput = document.getElementById("plugins-search");
     this.plugins = document.querySelectorAll("[data-card='plugin']");
 
     this.deploymentTopologies = this.filters.querySelectorAll(
@@ -11,6 +12,9 @@ class Hub {
     this.deploymentValues = [];
     this.categoryValues = [];
 
+    this.typingTimer;
+    this.typeInterval = 400;
+
     this.addEventListeners();
   }
 
@@ -18,6 +22,14 @@ class Hub {
     const checkboxes = [...this.deploymentTopologies, ...this.categories];
     checkboxes.forEach((checkbox) => {
       checkbox.addEventListener("change", () => this.onChange());
+    });
+
+    this.textInput.addEventListener("keyup", () => {
+      clearTimeout(this.typingTimer);
+
+      this.typingTimer = setTimeout(() => {
+        this.onChange();
+      }, this.typeInterval);
     });
   }
 
@@ -36,18 +48,21 @@ class Hub {
 
   filterPlugins() {
     this.plugins.forEach((plugin) => {
-      const matchesDeploymentTopology = this.filterBy(
+      const matchesDeploymentTopology = this.matchesFilter(
         plugin,
         this.deploymentTopologies,
         "deploymentTopology"
       );
-      const matchesCategory = this.filterBy(
+      const matchesCategory = this.matchesFilter(
         plugin,
         this.categories,
         "category"
       );
 
-      const showPlugin = matchesDeploymentTopology && matchesCategory;
+      const matchesText = this.matchesQuery(plugin);
+
+      const showPlugin =
+        matchesDeploymentTopology && matchesCategory && matchesText;
 
       plugin.classList.toggle("hidden", !showPlugin);
     });
@@ -66,7 +81,7 @@ class Hub {
     });
   }
 
-  filterBy(plugin, filterGroup, dataAttribute) {
+  matchesFilter(plugin, filterGroup, dataAttribute) {
     const checkedValues = Array.from(filterGroup)
       .filter((checkbox) => checkbox.checked)
       .map((checkbox) => checkbox.value);
@@ -76,6 +91,18 @@ class Hub {
       checkedValues.length === 0 ||
       checkedValues.some((value) => dataValues.includes(value))
     );
+  }
+
+  matchesQuery(plugin) {
+    if (this.textInput.value === "") {
+      return true;
+    } else {
+      const query = this.textInput.value.toLowerCase();
+      const title = plugin.querySelector("h4").innerText.toLowerCase();
+      const aliases = plugin.dataset.search?.split(",") || [];
+
+      return [title, ...aliases].some((string) => string.includes(query));
+    }
   }
 }
 

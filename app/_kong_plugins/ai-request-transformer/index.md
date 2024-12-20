@@ -27,6 +27,14 @@ icon: ai-request-transformer.png
 
 categories:
   - ai
+
+search_aliases:
+  - ai
+  - llm
+  - artificial
+  - intelligence
+  - language
+  - model
 ---
 
 ## Overview

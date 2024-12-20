@@ -28,6 +28,10 @@ icon: json-threat-protection.png
 
 categories:
   - security
+
+search_aliases:
+  - json threat protection
+  - json-threat-protection
 ---
 
 ## Overview

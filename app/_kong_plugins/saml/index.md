@@ -28,6 +28,10 @@ icon: saml.png
 
 categories:
   - authentication
+
+search_aliases:
+  - azure
+  - security assertion markup language
 ---
 
 ## Overview

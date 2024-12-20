@@ -25,6 +25,10 @@ icon: ldap-auth-advanced.png
 
 categories:
   - authentication
+
+search_aliases:
+  - ldap-auth-advanced
+  - ldap auth advanced
 ---
 
 ## Overview

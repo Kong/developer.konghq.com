@@ -24,6 +24,9 @@ icon: ldap-auth.png
 
 categories:
   - authentication
+
+search_aliases:
+  - ldap-auth
 ---
 
 ## Overview

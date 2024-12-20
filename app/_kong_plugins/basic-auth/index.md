@@ -20,6 +20,9 @@ icon: basic-auth.png
 
 categories:
   - authentication
+
+search_aliases:
+  - basic-auth
 ---
 
 ## Overview

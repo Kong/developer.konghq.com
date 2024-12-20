@@ -28,6 +28,9 @@ icon: jwe-decrypt.png
 
 categories:
   - authentication
+
+search_aliases:
+  - jwe-decrypt
 ---
 
 ## Overview

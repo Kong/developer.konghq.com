@@ -26,4 +26,7 @@ icon: response-transformer-advanced.png
 
 categories:
   - transformations
+
+search_aliases:
+  - response-transformer-advanced
 ---

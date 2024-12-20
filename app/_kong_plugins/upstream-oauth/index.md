@@ -28,6 +28,11 @@ icon: upstream-oauth.png
 
 categories:
   - authentication
+
+search_aliases:
+  - upstream-oauth
+  - upstream authentication
+  - oauth2
 ---
 
 ## Overview

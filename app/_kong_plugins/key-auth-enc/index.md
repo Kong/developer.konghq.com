@@ -25,6 +25,13 @@ icon: key-auth-enc.png
 
 categories:
   - authentication
+
+search_aliases:
+  - key auth encrypted
+  - key authentication encrypted
+  - key auth advanced
+  - key authentication advanced
+  - key-auth-enc
 ---
 
 ## Overview

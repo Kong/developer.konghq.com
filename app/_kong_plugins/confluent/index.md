@@ -29,6 +29,9 @@ icon: confluent.png
 
 categories:
   - transformations
+
+search_aliases:
+  - confluent
 ---
 
 ## Overview

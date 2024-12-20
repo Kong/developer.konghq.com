@@ -24,6 +24,10 @@ icon: hmac-auth.png
 
 categories:
   - authentication
+
+search_aliases:
+  - hmac authentication
+  - hmac-auth
 ---
 
 ## Overview

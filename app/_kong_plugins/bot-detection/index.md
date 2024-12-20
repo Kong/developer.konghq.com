@@ -25,6 +25,9 @@ icon: bot-detection.png
 
 categories:
   - security
+
+search_aliases:
+  - bot-detection
 ---
 
 ## Overview
