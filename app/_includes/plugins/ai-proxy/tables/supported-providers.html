@@ -4,21 +4,27 @@
         <th>Provider</th>
         <th>Chat</th>
         <th>Completion</th>
-        <th>Streaming</th>
+        <th>Chat streaming</th>
+        <th>Completions streaming</th>
         <th>Minimum {{ site.base_gateway }} version</th>
         </tr>
     </thead>
     <tbody>
         {% for provider in include.providers %}
+        {% assign chat = provider.chat.supported %}
+        {% assign completions = provider.completions.supported %}
+        {% assign chat_streaming = provider.chat.streaming %}
+        {% assign completions_streaming = provider.completions.streaming %}
         <tr id="{{ provider.name }}">
             <td>{{ provider.name }}     
                 {% if provider.formats %}
                     ({{ provider.formats }})
                 {% endif %}
             </td>
-            <td>{{ provider.chat.supported }}</td>
-            <td>{{ provider.completions.supported }}</td>
-            <td>{{ provider.streaming.supported }}</td>
+            <td>{% if chat %}<span class="inline-flex text-terciary w-5 h-5">{% include_svg '/assets/icons/check.svg' %}</span>{% else %}<span class="inline-flex text-semantic-red-primary w-5 h-5">{% include_svg '/assets/icons/close.svg' %}</span>{% endif %}</td>
+            <td>{% if completions %}<span class="inline-flex text-terciary w-5 h-5">{% include_svg '/assets/icons/check.svg' %}</span>{% else %}<span class="inline-flex text-semantic-red-primary w-5 h-5">{% include_svg '/assets/icons/close.svg' %}</span>{% endif %}</td>
+            <td>{% if chat_streaming %}<span class="inline-flex text-terciary w-5 h-5">{% include_svg '/assets/icons/check.svg' %}</span>{% else %}<span class="inline-flex text-semantic-red-primary w-5 h-5">{% include_svg '/assets/icons/close.svg' %}</span>{% endif %}</td>
+            <td>{% if completions_streaming %}<span class="inline-flex text-terciary w-5 h-5">{% include_svg '/assets/icons/check.svg' %}</span>{% else %}<span class="inline-flex text-semantic-red-primary w-5 h-5">{% include_svg '/assets/icons/close.svg' %}</span>{% endif %}</td>
             <td>
                 {% if provider.min_version < page.min_version.gateway %}
                     {{ page.min_version.gateway }}
