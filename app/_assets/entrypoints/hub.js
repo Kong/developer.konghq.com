@@ -123,9 +123,9 @@ class Hub {
     }
 
     if (this.textInput.value) {
-      params.set("search", encodeURIComponent(this.textInput.value));
+      params.set("terms", encodeURIComponent(this.textInput.value));
     } else {
-      params.delete("search");
+      params.delete("terms");
     }
 
     let newUrl = window.location.pathname;
@@ -149,8 +149,8 @@ class Hub {
       checkbox.checked = categoryValues.includes(checkbox.value);
     });
 
-    const searchValue = params.get("search") || "";
-    this.textInput.value = decodeURIComponent(searchValue);
+    const termsValue = params.get("terms") || "";
+    this.textInput.value = decodeURIComponent(termsValue);
 
     this.onChange();
   }
