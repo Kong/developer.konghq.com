@@ -22,7 +22,7 @@ rows:
                   text: |
                     {{site.base_gateway}} allows you to limit how many HTTP requests can be made in a given period.
 
-                    Rate limits can be applied to a [service](/gateway/entities/service/) or individual [routes](/gateway/entities/route/) to protect the upstream API, or to a [consumer](/gateway/entities/consumer/) to restrict how many times a user can call the API in the specified period.
+                    Rate limits can be applied to a [Gateway Service](/gateway/entities/service/) or individual [Routes](/gateway/entities/route/) to protect the upstream API, or to a [Consumer](/gateway/entities/consumer/) to restrict how many times a user can call the API in the specified period.
 
                     Kong offers two standard HTTP rate limiting plugins: [Rate Limiting](/plugins/rate-limiting) or [Rate Limiting Advanced](/plugins/rate-limiting-advanced) plugins in addition to a series [specialized](#specialized-rate-limiting-plugins) AI, GraphQL and dynamic rate limiting plugins.
   - columns:

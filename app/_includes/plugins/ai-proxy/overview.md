@@ -7,7 +7,7 @@
 {% assign options = include.params.options %}
 {% assign providers = site.data.plugins.ai-proxy.providers %}
 
-{{ page.description }}
+{{ page.description | liquify }}
 
 The plugin accepts requests in one of a few defined and standardized formats, translates them to the configured target format, and then transforms the response back into a standard format.
 

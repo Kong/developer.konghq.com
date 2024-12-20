@@ -39,7 +39,7 @@ faqs:
    
 ---
 
-{{ page.description }}
+{{ page.description | liquify }}
 This option is independent of cloud access and is suitable for users familiar with Git workflows.
 
 Key features:

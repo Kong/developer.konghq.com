@@ -23,7 +23,7 @@ breadcrumbs:
   - /deck/
 ---
 
-{{ page.description }}
+{{ page.description | liquify }}
 
 Adjust `KONG_ADMIN_HOST` and the port `8001` in the following examples to the 
 host and port of your own {{site.base_gateway}} instance.

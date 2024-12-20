@@ -33,7 +33,7 @@ faqs:
 
 ---
 
-{{page.description}}
+{{page.description | liquify}}
 This feature is beneficial for collaboration, providing easy access to projects from different devices and locations. 
 
 Cloud sync provides the following abilities on top of the base Insomnia functionality:
