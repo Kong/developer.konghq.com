@@ -28,12 +28,22 @@ async function prepareMarkdownFilesForVale() {
   }
   let files = await fg(pattern, { cwd: "../../" });
 
-  const frontmatterDictionary = await fs.readFile(
-    `../../.github/styles/docs/Frontmatter.txt`,
+  const frontmatterKeys = await fs.readFile(
+    `../../.github/styles/frontmatter/Keys.txt`,
     "utf-8"
   );
 
-  const keys = frontmatterDictionary
+  const frontmatterDictionary = await fs.readFile(
+    `../../.github/styles/frontmatter/Dictionary.txt`,
+    "utf-8"
+  );
+
+  const keys = frontmatterKeys
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+
+  const frontmatterExceptions = frontmatterDictionary
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => line.length > 0);
@@ -50,6 +60,10 @@ async function prepareMarkdownFilesForVale() {
           const keyRegex = new RegExp(`^\\s*${key}:.*$`, "gm");
 
           frontmatter = frontmatter.replace(keyRegex, "");
+        }
+
+        for (const word of frontmatterExceptions) {
+          frontmatter = frontmatter.replaceAll(word, "");
         }
 
         await fs.writeFile(`../../${path}`, frontmatter, "utf-8");
