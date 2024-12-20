@@ -114,6 +114,11 @@ entities:
 
 Using the Service and Route, you can now 
 access `https://httpbin.konghq.com/` using `http://localhost:8000/mock`.
+{: data-deployment-topology="on-prem" }
+
+Using the Service and Route, you can now 
+access `https://httpbin.konghq.com/` using `$KONNECT_PROXY_URL/mock`.
+{: data-deployment-topology="konnect" }
 
 Httpbin provides an `/anything` resource which will return information about requests made to it.
 Proxy a request through {{site.base_gateway}} to the `/anything` resource:
@@ -121,6 +126,13 @@ Proxy a request through {{site.base_gateway}} to the `/anything` resource:
 ```sh
 curl -X GET http://localhost:8000/mock/anything
 ```
+{: data-deployment-topology="on-prem" }
+
+```sh
+curl -X GET $KONNECT_PROXY_URL/mock/anything
+```
+{: data-deployment-topology="konnect" }
+
 
 ## 4. Enable rate limiting
 
@@ -189,8 +201,15 @@ the returned headers.
 The Proxy Cache plugin returns status information headers prefixed with `X-Cache`, so you can use `grep` to filter for that information:
 
 ```sh
-for _ in {1..6}; do curl -s -i localhost:8000/mock/anything; echo; sleep 1; done | grep -E 'X-Cache|HTTP/1.1'
+for _ in {1..6}; do curl -s -i http://localhost:8000/mock/anything; echo; sleep 1; done | grep -E 'X-Cache|HTTP/1.1'
 ```
+{: data-deployment-topology="on-prem" }
+
+```sh
+for _ in {1..6}; do curl -s -i $KONNECT_PROXY_URL/mock/anything; echo; sleep 1; done | grep -E 'X-Cache|HTTP/1.1'
+```
+{: data-deployment-topology="konnect" }
+
 
 On the initial request, there should be no cached responses, and the headers will indicate this with
 `X-Cache-Status: Miss`:
@@ -269,6 +288,12 @@ Only specify a key for testing or when migrating existing systems.
 ```sh
 curl -i http://localhost:8000/mock/anything
 ```
+{: data-deployment-topology="on-prem" }
+
+```sh
+curl -i $KONNECT_PROXY_URL/mock/anything
+```
+{: data-deployment-topology="konnect" }
 
 Since you enabled key authentication globally, you will receive an unauthorized response:
 
@@ -287,6 +312,12 @@ Now, let's send a request with the valid key in the `apikey` header:
 curl -i http://localhost:8000/mock/anything \
   -H 'apikey:top-secret-key'
 ```
+{: data-deployment-topology="on-prem" }
+
+```sh
+curl -i $KONNECT_PROXY_URL/mock/anything
+```
+{: data-deployment-topology="konnect" }
 
 You will receive a `200 OK` response.
 
@@ -340,6 +371,12 @@ You will see the hostname change between `httpbin` and `httpbun`:
 ```sh
 curl -s http://localhost:8000/mock/headers -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
 ```
+{: data-deployment-topology="on-prem" }
+
+```sh
+curl -s $KONNECT_PROXY_URL/mock/headers -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
+```
+{: data-deployment-topology="konnect" }
 
 Since the Proxy Cache plugin is configured with a time-to-live of 5 seconds, 
 the host will take at least 5 seconds to change.
