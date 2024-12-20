@@ -37,7 +37,7 @@ rows:
                 text: |
                   Basic authentication is a simple authentication method that uses a base64-encoded username and password combination as token.
 
-                  - [Get Started](/plugins/basic-auth/examples/example/)
+                  - [Get Started](/plugins/basic-auth/examples/)
                   - [Plugin reference](/plugins/basic-auth/reference/)
 
       - blocks:
@@ -51,11 +51,11 @@ rows:
                   Key authentication generates an API key for a consumer, which can be passed in an `apikey` header to access services and routes.            
 
                   Open-source plugin:
-                  - [Get Started](/plugins/key-auth/examples/example/)
+                  - [Get Started](/plugins/key-auth/examples/)
                   - [Plugin reference](/plugins/key-auth/reference/)
                   
                   Advanced Enterprise plugin with enhanced encryption:
-                  - [Get Started](/plugins/key-auth-enc/examples/example/)
+                  - [Get Started](/plugins/key-auth-enc/examples/)
                   - [Plugin reference](/plugins/key-auth-enc/reference/)
       - blocks:
         - type: structured_text
@@ -68,11 +68,11 @@ rows:
                   LDAP is a protocol that uses a directory to check credentials provided by a client.
 
                   Open source plugin:
-                  - [Get Started](/plugins/ldap-auth/examples/example/)
+                  - [Get Started](/plugins/ldap-auth/examples/)
                   - [Plugin reference](/plugins/ldap-auth/reference/)
 
                   Advanced Enterprise plugin with enhanced capabilities:
-                  - [Get Started](/plugins/ldap-auth-advanced/examples/example/)
+                  - [Get Started](/plugins/ldap-auth-advanced/examples/)
                   - [Plugin reference](/plugins/ldap-auth-advanced/reference/)
   - columns:
       - blocks:
@@ -85,7 +85,7 @@ rows:
                 text: |
                   OAuth 2.0 is a protocol that relies on an application to authorize access to services and routes.
 
-                  - [Get Started](/plugins/oauth2/examples/example/)
+                  - [Get Started](/plugins/oauth2/examples/)
                   - [Plugin reference](/plugins/oauth2/reference/)
 
       - blocks:
@@ -98,7 +98,7 @@ rows:
                 text: |
                   OpenID Connect (OIDC) is an authentication protocol based on OAuth 2.0. It works with identity providers to verify a user's identity without storing credentials.
 
-                  - [Get Started](/plugins/openid-connect/examples/example/)
+                  - [Get Started](/plugins/openid-connect/examples/)
                   - [Plugin reference](/plugins/openid-connect/reference/)
       - blocks:
         - type: structured_text
@@ -110,7 +110,7 @@ rows:
                 text: |
                   SAML is a standard used to exchange authentication and authorization information between an identity provider and a service provider.      
                 
-                  - [Get Started](/plugins/saml/examples/example/)
+                  - [Get Started](/plugins/saml/examples/)
                   - [Plugin reference](/plugins/saml/reference/)
                   
   - columns:
@@ -138,7 +138,7 @@ rows:
             icon: /assets/icons/gateway.svg
             cta:
               text: See all authentication plugins
-              url: /plugins/ ##"https://docs.konghq.com/hub/?category=authentication"
+              url: /plugins/?category=authentication
       - blocks:
         - type: card
           config:
