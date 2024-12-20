@@ -14,8 +14,8 @@ tags:
   - notifications
 
 tldr:
-  q: How can I create a custom webhook to push information to Slack using Event Hooks.
-  a: With an application URL from Slack, you can configure an Event Hook using the `webhook-custom` handler that can `POST` event information to Slack.
+  q: How can I create a custom webhook to push information to Slack using Event Hooks?
+  a: With an application URL from Slack, you can configure an <a href="/gateway/entities/event-hook/>Event Hook</a> using the `webhook-custom` handler that can `POST` event information to Slack.
 prereqs:
   inline:
     - title: A Slack webhook application
@@ -42,6 +42,7 @@ related_resources:
 
 ## 1. Configure an Event Hook using the `webhook-custom` handler
 
+
 Using the `webhook-custom` handler, you can configure an Event Hook that listens for events on a source. The `webhook-custom` handler offers a template that you can configure to create a custom webhook. In this tutorial, we will configure an Event Hook that issues a `POST` request when a `crud` event happens on the Consumer entity. That `POST` request will be made to a Slack webhook application containing a custom message describing the event. 
 ```sh
 curl -i -X POST http://localhost:8001/event-hooks \
@@ -58,7 +59,7 @@ curl -i -X POST http://localhost:8001/event-hooks \
 Posting this will result in a `200` response. The `config` body in the Event Hook contains information about the webhook that was created: 
 
 * **`"method": "POST"`**: The method we are using in the webhook.
-* **`"url": "$SLACK_WEBHOOK_URL"`**: The URL of the webhook, in this case we are using the Slack URl that we created and set as an environment variable. 
+* **`"url": "$SLACK_WEBHOOK_URL"`**: The URL of the webhook. In this case, we are using the Slack URl that we created and set as an environment variable. 
 * **`"payload"`**: What this webhook will `POST`. 
 
 
@@ -69,7 +70,7 @@ Posting this will result in a `200` response. The `config` body in the Event Hoo
 > **Important**:  Before you can use Event Hooks for the first time, {{site.base_gateway}} needs to be [reloaded](/how-to/restart-kong-gateway-container).
 
 
-Using the Admin API to create a new Consumer: 
+Use the Admin API to create a new Consumer: 
 
 ```sh
 curl -i -X POST http://localhost:8001/consumers \

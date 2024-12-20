@@ -1,1 +1,1 @@
-If you created a new control plane and want to conserve your free trial credits or avoid unnecessary charges, delete the new [control plane](https://cloud.konghq.com/us/gateway-manager/) used in this tutorial.
+If you created a new control plane and want to conserve your free trial credits or avoid unnecessary charges, delete the new [control plane](https://cloud.konghq.com/gateway-manager/) used in this tutorial.

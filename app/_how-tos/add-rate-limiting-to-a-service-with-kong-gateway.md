@@ -1,8 +1,12 @@
 ---
-title: Enable rate limiting on a service with {{site.base_gateway}}
+title: Rate limit a Gateway Service with {{site.base_gateway}}
 content_type: how_to
 
 related_resources:
+  - text: Rate Limiting
+    url: /rate-limiting/
+  - text: Rate Limiting plugin
+    url: /plugins/rate-limiting/
   - text: How to create rate limiting tiers with {{site.base_gateway}}
     url:  /how-to/add-rate-limiting-tiers-with-kong-gateway/
   - text: Rate Limiting Advanced plugin
@@ -29,8 +33,8 @@ tags:
     - rate-limiting
 
 tldr:
-    q: How do I rate limit a service with {{site.base_gateway}}?
-    a: Install the Rate Limiting plugin and enable it on the service.
+    q: How do I rate limit a Gateway Service with {{site.base_gateway}}?
+    a: Install the <a href="/plugins/rate-limiting/">Rate Limiting plugin</a> and enable it on the <a href="/gateway/entities/service/">Service</a>.
 
 tools:
     - deck
@@ -54,7 +58,7 @@ cleanup:
 
 ## 1. Enable rate limiting
 
-Enable the [Rate Limiting plugin](/plugins/rate-limiting/) for the service. 
+Enable the [Rate Limiting plugin](/plugins/rate-limiting/) for the Service. 
 In this example, the limit is 5 requests per second and 1000 requests per hour.
 
 {% entity_examples %}

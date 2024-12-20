@@ -1,2 +1,2 @@
-Before you can Event Hooks for the first time, {{site.base_gateway}} needs to be reloaded. To do this, run `kong-reload`.
-You can verify your ability to use Event Hooks by issuing a `GET` request to the [`/event-hooks/`](/api/gateway/admin-ee/#/operations/get-event-hooks) endpoint.
+Before you can use Event Hooks for the first time, {{site.base_gateway}} needs to be reloaded. To do this, run `kong-reload`.
+You can verify that this worked by issuing a `GET` request to the [`/event-hooks/`](/api/gateway/admin-ee/#/operations/get-event-hooks) endpoint.

@@ -15,8 +15,8 @@ tags:
   - webhook
   - notifications
 tldr: 
-  q: How do I create an Event Hook that logs events on the Consumer entity.
-  a: The `log` Event Hook handler can write log events. You can configure an Event Hook using the `log` handler to write to the log file every time a CRUD event happens on the Consumer entity by issuing a `POST` request to the `/event-hooks` endpoint. 
+  q: How do I create an Event Hook that logs events on the Consumer entity?
+  a: The `log` Event Hook handler can write log events. You can configure an Event Hook using the `log` handler to write to the log file every time a CRUD event happens on the <a href="/gateway/entities/consumer/>Consumer entity</a> by issuing a `POST` request to the `/event-hooks` endpoint. 
   
 prereqs:
   inline:
@@ -41,7 +41,7 @@ related_resources:
 
 ## 1. Create the Event Hook
 
-`log` Event Hook configuration specifies an event and a source. In this guide you will create an Event Hook that listens for CRUD events on the Consumers entity. This Event Hook will create a log entry when a CRUD event occurs. 
+The `log` Event Hook configuration specifies an event and a source. In this guide you will create an Event Hook that listens for CRUD events on the [Consumers](/gateway/entities/consumer/) entity. This Event Hook will create a log entry when a CRUD event occurs. 
 
 Create a long Event Hook on the `consumers` event using the `crud` source: 
 
@@ -59,7 +59,7 @@ curl -i -X POST http://localhost:8001/event-hooks \
 ## 2. Validate the webhook
 
 {:.warning}
-> **Important**:  Before you can use Event Hooks for the first time, {{site.base_gateway}} needs to be reloaded.
+> **Important**:  Before you can use Event Hooks for the first time, {{site.base_gateway}} needs to be [reloaded](/how-to/restart-kong-gateway-container).
 
 Use the Admin API to create a new Consumer: 
 

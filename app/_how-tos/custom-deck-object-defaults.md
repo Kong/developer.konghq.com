@@ -27,10 +27,10 @@ tldr:
 
 You can set custom configuration defaults for the following core
 {{site.base_gateway}} objects:
-- Service
-- Route
-- Upstream
-- Target
+- [Gateway Service](/gateway/entities/service/)
+- [Route](/gateway/entities/route/)
+- [Upstream](/gateway/entities/upstream/)
+- [Target](/gateway/entities/target/)
 
 Default values get applied to both new and existing objects. See the
 [order of precedence](/deck/object-defaults/#value-order-of-precedence) for more detail on how they
@@ -56,9 +56,9 @@ configuration would overwrite the value in your environment.
 Define the properties you want to customize for {{site.base_gateway}} objects.
 See the [object defaults reference](/deck/object-defaults) for all configurable objects and default values.
 
-In the `deck_files` directory you created in the [prerequisites](#prerequisites), create a `defaults.yaml` file
+In the `deck_files` directory you created in the prerequisites, create a `defaults.yaml` file
 and add an `_info` section with `defaults`. 
-You can define a few select properties for a supported entity, such as a service:
+You can define a few select properties for a supported entity, such as a Service:
 
 ```yaml
 _format_version: "3.0"
@@ -71,7 +71,7 @@ _info:
 ```
 {: data-file="defaults.yaml" }
 
-Or you could define custom default values for all available fields of a service and a route:
+Or you could define custom default values for all available fields of a Service and a Route:
 
 ```yaml
 _format_version: "3.0"

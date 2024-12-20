@@ -14,8 +14,8 @@ tags:
   - webhook
   - notifications
 tldr: 
-  q: How do I create a webhook using Event Hooks
-  a: The `webhook` handler can be configured with a URL. When configured the Event Hook will listen on for the event and push information to the configured URL.
+  q: How do I create a webhook using Event Hooks?
+  a: The `webhook` handler can be configured with a URL. When configured, the Event Hook will listen for the event and push information to the configured URL.
 
 prereqs:
   inline:
@@ -49,7 +49,7 @@ related_resources:
 
 The `webhook` handler is used to configure webhooks that make a `POST` request to the URL provided during configuration. The Event Hook will push information to this URL with the event data. In this guide you will configure an Event Hook that will issue a `POST` request every time an event type `consumers` has a CRUD event. 
 
-Using the Admin API, create an Event Hook on the Consumers event by issuing a `POST` request to the `/event-hooks` endpoint.
+Using the Admin API, create an Event Hook on the [Consumers](/gateway/entities/consumer/) event by issuing a `POST` request to the `/event-hooks` endpoint.
 
 ```sh
 curl -i -X POST http://localhost:8001/event-hooks \

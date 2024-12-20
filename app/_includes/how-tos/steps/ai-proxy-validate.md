@@ -1,4 +1,4 @@
-Send a request to the route to validate.
+Send a request to the Route to validate.
 
 ```sh
 curl -X POST http://localhost:8000/anything \
