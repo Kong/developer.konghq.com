@@ -12,12 +12,12 @@ tags:
 
 tldr: 
   q: How do I restart {{site.base_gateway}} when it is running inside of a container
-  a: You can use `kong reload`.
+  a: Use `kong reload`.
 
 faqs:
   - q: What happens when I run `kong restart`?
     a: |
-      Kong restart kills the `pid` which will kill the container.
+      `kong restart` kills the `pid` which will kill the container.
 
 ---
 
@@ -25,4 +25,4 @@ faqs:
 
 ## Restart a {{site.base_gateway}} Docker container
 
-To restart a {{site.base_gateway}} container without killing the container run `kong reload` from within the container. 
+To restart a {{site.base_gateway}} container without killing the container, run `kong reload` from within the container. 

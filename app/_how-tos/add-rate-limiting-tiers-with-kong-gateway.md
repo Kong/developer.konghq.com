@@ -1,8 +1,11 @@
 ---
 title: Create rate limiting tiers with {{site.base_gateway}}
 content_type: how_to
-
 related_resources:
+  - text: Rate Limiting
+    url: /rate-limiting/
+  - text: Rate Limiting Advanced plugin
+    url: /plugins/rate-limiting-advanced/
   - text: Consumer Group API documentation
     url: /api/gateway/admin-ee/#/operations/get-consumer_groups
   
@@ -41,7 +44,7 @@ tags:
 
 tldr:
   q: How do I rate limit different tiers of users, such as free vs. premium subscribers, in my API using {{site.base_gateway}}?
-  a: To effectively manage API traffic for various user tiers (such as free, basic, and premium subscribers), you can create **Consumer Groups** for each tier and assign individual Consumers to these groups. Then, configure the Rate Limiting Advanced plugin to apply specific rate limits based on these groups. This setup allows you to enforce customized request limits for each tier, ensuring fair usage and optimizing performance for high-value users.
+  a: To manage API traffic for various user tiers (such as free, basic, and premium subscribers), you can create <a href="/gateway/entities/consumer-group/">Consumer Groups</a> for each tier and assign individual <a href="/gateway/entities/consumer/">Consumers</a> to these groups. Then, configure the <a href="/plugins/rate-limiting-advanced/">Rate Limiting Advanced plugin</a> to apply specific rate limits based on these groups. This setup allows you to enforce customized request limits for each tier, ensuring fair usage and optimizing performance for high-value users.
 
 faqs:
   - q: Why can't I use the regular Rate Limiting plugin to rate limit tiers of Consumers?
@@ -116,7 +119,7 @@ entities:
 
 ## 4. Enable rate limiting on each tier
 
-Enable the Rate Limiting Advanced plugin for each tier:
+Enable the Rate Limiting Advanced plugin for each tier.
 
 {% entity_examples %}
 entities:

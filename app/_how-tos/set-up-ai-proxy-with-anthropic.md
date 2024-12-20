@@ -20,6 +20,7 @@ plugins:
 
 entities: 
   - service
+  - route
   - plugin
 
 tags:
@@ -27,7 +28,7 @@ tags:
 
 tldr:
     q: How do I use the AI Proxy plugin with Anthropic?
-    a: Create a service and a route, then add the AI Proxy plugin and configure it with the Anthropic provider and add the model and your API key.
+    a: Create a Gateway Service and a Route, then enable the AI Proxy plugin and configure it with the Anthropic provider and add the model and your API key.
 
 tools:
     - deck

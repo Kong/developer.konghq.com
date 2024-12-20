@@ -1,13 +1,20 @@
 ---
-title: Enable key authentication on a service with {{site.base_gateway}}
+title: Enable key authentication on a Gateway Service with {{site.base_gateway}}
 content_type: how_to
 
 related_resources:
   - text: Authentication
-    url: /authentication
+    url: /authentication/
+  - text: Key Auth plugin
+    url: /plugins/key-auth/
 
 products:
     - gateway
+
+entities: 
+  - service
+  - consumer
+  - route
 
 plugins:
     - key-auth
@@ -31,7 +38,7 @@ prereqs:
         - example-route
 tldr:
     q: How do I secure a service with key authentication?
-    a: Enable the Key Authentication plugin on the service. This plugin will require all requests made to this service to have a valid API key.
+    a: Enable the Key Authentication plugin on the Gateway Service. This plugin will require all requests made to this Service to have a valid API key.
 
 cleanup:
   inline:
@@ -44,7 +51,9 @@ cleanup:
 
 ---
 
-## 1. Enable the Key Authentication plugin on the service:
+## 1. Enable the Key Authentication plugin on the Service:
+
+Enable Key Auth for the Service. 
 
 {% entity_examples %}
 entities:
@@ -56,7 +65,10 @@ entities:
         - apikey
 {% endentity_examples %}
 
-## 2. Create a consumer
+## 2. Create a Consumer
+
+[Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.
+The Consumer needs an API key to access any {{site.base_gateway}} Services.
 
 {% entity_examples %}
 entities:
@@ -66,9 +78,13 @@ entities:
         - key: hello_world
 {% endentity_examples %}
 
-## 3. Validate
+## 3. Apply the configuration
 
-After configuring the Key Authentication plugin, you can verify that it was configured correctly and is working, by sending requests with and without the API key you created for your consumer.
+{% include how-tos/steps/apply_config.md %}
+
+## 4. Validate
+
+After configuring the Key Authentication plugin, you can verify that it was configured correctly and is working, by sending requests with and without the API key you created for your Consumer.
 
 This request should be successful:
 
