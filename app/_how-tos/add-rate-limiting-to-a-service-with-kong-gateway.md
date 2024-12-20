@@ -71,14 +71,18 @@ entities:
         hour: 1000
 {% endentity_examples %}
 
-## 2. Validate
+## 2. Apply configuration
+
+{% include how-tos/steps/apply_config.md %}
+
+## 3. Validate
 
 After configuring the Rate Limiting plugin, you can verify that it was configured correctly and is working, by sending more requests than allowed in the configured time limit.
 
 ```bash
 for _ in {1..6}
 do
-  curl http://localhost:8000/example-route/anything/
+  curl -i http://localhost:8000/anything
 done
 ```
 {: data-deployment-topology="on-prem" }

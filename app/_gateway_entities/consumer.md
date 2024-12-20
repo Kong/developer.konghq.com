@@ -78,7 +78,7 @@ schema:
 
 ## What is a Consumer?
 
-{{ page.description }} Consumers can be applications, services, or users who interact with your APIs.
+{{ page.description | liquify }} Consumers can be applications, services, or users who interact with your APIs.
 Since they are not always human, {{site.base_gateway}} calls them Consumers, because they "consume" the service.
 {{site.base_gateway}} allows you to define and manage Consumers, apply access control policies, and monitor their API usage.
 
