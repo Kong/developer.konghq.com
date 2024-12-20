@@ -6,7 +6,7 @@ related_resources:
   - text: How to create rate limiting tiers with {{site.base_gateway}}
     url:  /how-to/add-rate-limiting-tiers-with-kong-gateway/
   - text: Rate Limiting Advanced plugin
-    url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/
+    url: /plugins/rate-limiting-advanced/
 
 products:
     - gateway

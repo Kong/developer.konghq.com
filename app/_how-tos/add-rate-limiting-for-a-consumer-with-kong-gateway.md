@@ -33,7 +33,7 @@ tags:
 
 tldr:
     q: How do I rate limit a consumer with {{site.base_gateway}}?
-    a: Enable an authentication plugin and create a consumer with credentials, then enable the <a href="/plugins/rate-limiting/reference">Rate Limiting plugin</a> on the new consumer.
+    a: Enable an authentication plugin and create a consumer with credentials, then enable the <a href="/plugins/rate-limiting/reference/">Rate Limiting plugin</a> on the new consumer.
 
 tools:
     - deck

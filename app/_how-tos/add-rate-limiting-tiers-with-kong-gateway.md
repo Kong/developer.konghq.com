@@ -59,7 +59,7 @@ cleanup:
 
 ## 1. Set up Consumer authentication
 
-We need to set up [authentication](/authentication/) to identify the Consumer and apply rate limiting. In this guide, we'll be using the [Key Auth plugin](https://docs.konghq.com/hub/kong-inc/key-auth/) plugin, but you can use any Kong authentication plugin. 
+We need to set up [authentication](/authentication/) to identify the Consumer and apply rate limiting. In this guide, we'll be using the [Key Auth plugin](/plugins/key-auth/) plugin, but you can use any Kong authentication plugin. 
 
 Add the following content to your `kong.yaml` file in the `deck_files` directory to configure the Key Auth plugin:
 
