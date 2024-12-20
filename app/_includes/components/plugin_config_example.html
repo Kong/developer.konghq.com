@@ -10,7 +10,7 @@
           <label for="select-target-{{ entity_example.id }}" class="sr-only">Select an entity</label>
           <select id="select-target-{{ entity_example.id }}" class="select-target bg-secondary">
             {% for target in targets %}
-            <option value="{{ target }}">{{ site.data.entity_examples.config.targets[target]['label'] }}</option>
+            <option value="{{ target }}">{{ site.data.entity_examples.config.targets[target].label }}</option>
             {% endfor %}
           </select>
         </div>
