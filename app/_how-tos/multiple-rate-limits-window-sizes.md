@@ -96,6 +96,16 @@ do
   curl http://localhost:8000/example-route/anything/
 done
 ```
+{: data-deployment-topology="on-prem" }
+
+```bash
+for _ in {1..11}
+do
+  curl $KONNECT_PROXY_URL/example-route/anything/
+done
+```
+{: data-deployment-topology="konnect" }
+
 After the 11th request in a minute, you should receive the following `429` error:
 
 ```bash

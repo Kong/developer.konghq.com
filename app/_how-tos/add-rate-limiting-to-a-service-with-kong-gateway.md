@@ -70,12 +70,23 @@ entities:
 ## 2. Validate
 
 After configuring the Rate Limiting plugin, you can verify that it was configured correctly and is working, by sending more requests than allowed in the configured time limit.
+
 ```bash
 for _ in {1..6}
 do
   curl http://localhost:8000/example-route/anything/
 done
 ```
+{: data-deployment-topology="on-prem" }
+
+```bash
+for _ in {1..6}
+do
+  curl $KONNECT_PROXY_URL/example-route/anything/
+done
+```
+{: data-deployment-topology="konnect" }
+
 After the 5th request, you should receive the following `429` error:
 
 ```bash
