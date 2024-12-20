@@ -59,7 +59,7 @@ rows:
         - type: card
           config:
             title: Try the Getting Started guide
-            description: Learn how to use Kong Gateway on Konnect or on-prem
+            description: Learn how to use {{site.base_gateway}} on Konnect or on-prem
             icon: /assets/icons/graduation.svg
             cta:
               text: 
