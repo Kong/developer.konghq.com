@@ -1,0 +1,30 @@
+<table>
+    <thead>
+        <tr>
+        <th></th>
+        {% for c in include.columns %}
+            <th class="text-center">
+            <span class="font-semibold text-primary">{{ c.title | liquify }}</span>
+            </th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in include.rows %}
+        <tr>
+            <td>
+            <span class="block text-primary">{{ row.title | liquify | markdown }}</span>
+            {% if row.subtitle %}
+            <span class="text-secondary">{{ row.subtitle | liquify | markdown }}</span>
+            {% endif %}
+            </td>
+            {% for c in include.columns %}
+            {% assign v = row[c.key] %}
+            <td class="text-center">
+            {% if v %}{% include icon_true.html %}{% else %}{% include icon_false.html %}{% endif %}
+            </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
