@@ -18,7 +18,10 @@ module Jekyll
             end
 
             def data
-              @data ||= @example_drop.data
+              @data ||= Utils::VariableReplacer::Data.run(
+                data: @example_drop.data,
+                variables: variables
+              )
             end
 
             def template_file
@@ -41,7 +44,10 @@ module Jekyll
 
           class Plugin < Base
             def data
-              @example_drop.data.except(*targets.keys)
+              @data ||= Utils::VariableReplacer::Data.run(
+                data: @example_drop.data.except(*targets.keys),
+                variables: variables
+              )
             end
 
             def variables

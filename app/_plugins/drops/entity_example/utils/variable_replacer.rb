@@ -16,6 +16,51 @@ module Jekyll
               url
             end
           end
+
+          class Data
+            def self.run(data:, variables:)
+              new(variables:).run(data)
+            end
+
+            attr_reader :variables
+
+            def initialize(variables:)
+              @variables = variables
+            end
+
+            def run(data) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
+              keys_pattern = variables.keys.map { |key| Regexp.escape(key.to_s) }.join('|')
+              regex = /\$\{(#{keys_pattern})\}/
+
+              case data
+              when Hash
+                data.transform_values { |value| run(value) }
+              when Array
+                data.map { |item| run(item) }
+              when String
+                data.gsub(regex) do |match|
+                  replace_variable(Regexp.last_match(1)) || match
+                end
+              else
+                data
+              end
+            end
+
+            def replace_variable(variable)
+              variables.dig(variable, 'value')
+            end
+          end
+
+          class DeckData < Data
+            def replace_variable(variable)
+              value = super
+
+              return nil unless value
+
+              env_variable = value.gsub('$', 'DECK_')
+              "${{ env \"#{env_variable}\" }}"
+            end
+          end
         end
       end
     end

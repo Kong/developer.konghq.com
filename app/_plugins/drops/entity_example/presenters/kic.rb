@@ -9,7 +9,10 @@ module Jekyll
         module KIC
           class Base < Presenters::Base
             def data
-              @data ||= @example_drop.data
+              @data ||= Utils::VariableReplacer::Data.run(
+                data: @example_drop.data,
+                variables: variables
+              )
             end
 
             def custom_template

@@ -15,12 +15,15 @@ module Jekyll
             end
 
             def data
-              @data ||= @example_drop.data
+              @data ||= Utils::VariableReplacer::DeckData.run(
+                data: @example_drop.data,
+                variables: variables
+              )
             end
 
             def config
               @config ||= Jekyll::Utils::HashToYAML.new(
-                { entity => [ data ] }
+                { entity => [data] }
               ).convert
             end
 
@@ -39,6 +42,11 @@ module Jekyll
               plugin.merge!(target.key => target_value) if target.key != 'global'
               plugin.merge!('config' => @example_drop.data.fetch('config'))
 
+              plugin = Utils::VariableReplacer::DeckData.run(
+                data: plugin,
+                variables:
+              )
+
               Jekyll::Utils::HashToYAML.new({ 'plugins' => [plugin] }).convert
             end
 
@@ -53,11 +61,15 @@ module Jekyll
             def missing_variables
               return [] if @example_drop.target.key == 'global'
 
-              @missing_variables ||= [formats['deck']['variables'][@example_drop.target.key]]
+              @missing_variables ||= [formats['deck']['variables'][target.key]]
             end
 
             def target_value
-              @target_value ||= target.value || formats['deck']['variables'][target.key]['placeholder']
+              @target_value ||= if target.key == 'global'
+                                  nil
+                                else
+                                  target.value || formats['deck']['variables'][target.key]['placeholder']
+                                end
             end
           end
         end
