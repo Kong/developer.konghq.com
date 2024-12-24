@@ -7,21 +7,17 @@ require_relative '../../lib/site_accessor'
 module Jekyll
   module Drops
     module Plugins
-      class Scope < Liquid::Drop
+      class Protocol < Liquid::Drop
         include Tabular
 
         def columns
-          @columns ||= site.data.dig('plugins', 'tables', 'scopes', 'columns').map do |c|
+          @columns ||= site.data.dig('plugins', 'tables', 'protocols', 'columns').map do |c|
             c.fetch('key')
           end
         end
 
-        def value(field)
-          if field == 'global'
-            true
-          else
-            !!json_schema.dig('properties', field)
-          end
+        def value(protocol)
+          !!json_schema.dig('properties', 'protocols', 'items', 'enum').include?(protocol)
         end
       end
     end
