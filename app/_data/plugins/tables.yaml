@@ -1,0 +1,12 @@
+scopes:
+  columns:
+    - title: Consumer
+      key: consumer
+    - title: Consumer Group
+      key: consumer_group
+    - title: Route
+      key: route
+    - title: Service
+      key: service
+    - title: Global
+      key: global

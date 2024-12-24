@@ -107,7 +107,16 @@
 
   table {
     @apply bg-secondary shadow-primary border-none rounded-lg text-sm;
+
+    &.table__sticky {
+      @apply w-full;
+
+      thead {
+        @apply sticky top-0;
+      }
+    }
   }
+
 
   thead {
     @apply bg-secondary;

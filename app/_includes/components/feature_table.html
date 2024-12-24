@@ -1,10 +1,10 @@
-<table>
+<table class="{% if include.sticky %}table__sticky{% endif %}">
     <thead>
         <tr>
         <th></th>
-        {% for c in include.columns %}
+        {% for column in include.columns %}
             <th class="text-center">
-            <span class="font-semibold text-primary">{{ c.title | liquify }}</span>
+            <span class="font-semibold text-primary">{{ column.title | liquify }}</span>
             </th>
         {% endfor %}
         </tr>
@@ -13,16 +13,28 @@
         {% for row in include.rows %}
         <tr>
             <td>
-            <span class="block text-primary">{{ row.title | liquify | markdown }}</span>
+            <span class="block text-primary">
+                {% if row.url %}
+                    <a href="{{row.url}}">{{ row.title | liquify | markdown }}</a>
+                {% else %}
+                    {{ row.title | liquify | markdown }}
+                {% endif %}
+            </span>
             {% if row.subtitle %}
-            <span class="text-secondary">{{ row.subtitle | liquify | markdown }}</span>
+                <span class="text-secondary">{{ row.subtitle | liquify | markdown }}</span>
             {% endif %}
             </td>
-            {% for c in include.columns %}
-            {% assign v = row[c.key] %}
-            <td class="text-center">
-            {% if v %}{% include icon_true.html %}{% else %}{% include icon_false.html %}{% endif %}
-            </td>
+            {% for column in include.columns %}
+                {% assign v = row[column.key] %}
+                <td class="text-center">
+                {% if v == true %}
+                    {% include icon_true.html %}
+                {% elsif v == false %}
+                    {% include icon_false.html %}
+                {% else %}
+                    {{v}}
+                {% endif %}
+                </td>
             {% endfor %}
         </tr>
         {% endfor %}
