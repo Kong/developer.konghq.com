@@ -3,6 +3,7 @@ class Hub {
     this.filters = document.getElementById("filters");
     this.textInput = document.getElementById("plugins-search");
     this.plugins = document.querySelectorAll("[data-card='plugin']");
+    this.pluginCards = document.getElementById("plugin-cards");
 
     this.deploymentTopologies = this.filters.querySelectorAll(
       'input[name="deployment-topology"]'
@@ -39,7 +40,15 @@ class Hub {
     this.categoryValues = this.getValues(this.categories);
 
     this.updateURL();
+    this.scrollCardsIntoView();
     this.filterPlugins();
+  }
+
+  scrollCardsIntoView() {
+    const rect = this.pluginCards.getBoundingClientRect();
+    if (rect.top < 0) {
+      this.pluginCards.scrollIntoView({ behavior: "smooth" });
+    }
   }
 
   getValues(filterGroup) {
@@ -152,7 +161,9 @@ class Hub {
     const termsValue = params.get("terms") || "";
     this.textInput.value = decodeURIComponent(termsValue);
 
-    this.onChange();
+    if (deploymentValues.length || categoryValues.length || termsValue) {
+      this.onChange();
+    }
   }
 }
 
