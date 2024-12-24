@@ -9,7 +9,7 @@
 {% when 'service' %}
   The following creates a new Gateway Service called **{{ include.presenter.data['name'] }}** with basic configuration:
 {% when 'target' %}
-  To create a target, call the [Admin API’s /targets endpoint](/api/gateway/admin-ee/#/operations/create-target-with-upstream).
+  To create a Target, call the [Admin API’s /targets endpoint](/api/gateway/admin-ee/#/operations/create-target-with-upstream).
 {% when 'upstream' %}
   The following creates a new Upstream called **{{ include.presenter.data['name'] }}**:
 {% when workspace %}
