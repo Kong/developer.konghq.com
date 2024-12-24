@@ -36,3 +36,12 @@ The following diagram illustrates how Targets are used by Upstreams for load bal
 ## Schema
 
 {% entity_schema %}
+
+## Set up a Target
+
+{% entity_example %}
+type: target
+data:
+  target: httpbun.com:80
+  weight: 100
+{% endentity_example %}

@@ -11,12 +11,16 @@ module Jekyll
         module Deck
           class Base < Presenters::Base
             def entity
-              @entity ||= "#{@example_drop.entity_type}s"
+              @entity ||= if @example_drop.entity_type == 'target'
+                            'upstreams'
+                          else
+                            "#{@example_drop.entity_type}s"
+                          end
             end
 
             def data
               @data ||= Utils::VariableReplacer::DeckData.run(
-                data: @example_drop.data,
+                data: _data,
                 variables: variables
               )
             end
@@ -33,6 +37,16 @@ module Jekyll
 
             def missing_variables
               @missing_variables ||= []
+            end
+
+            private
+
+            def _data
+              if @example_drop.entity_type == 'target'
+                { 'name' => 'example_upstream', 'targets' => [@example_drop.data] }
+              else
+                @example_drop.data
+              end
             end
           end
 
