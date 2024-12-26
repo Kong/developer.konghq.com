@@ -1,6 +1,3 @@
-platform: konnect
-
-versions:
-  gateway: '3.4'
+platform: gateway
 
 outputDir: './instructions'
