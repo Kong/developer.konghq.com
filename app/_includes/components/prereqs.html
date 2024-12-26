@@ -7,7 +7,8 @@
         {% include prereqs/products/konnect.md tier=include.tier %}
       </div>
       {% endif %}
-      <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="on-prem" data-test-setup="gateway">
+      {% assign latest_release = site.data.products.gateway.releases | find_exp: "release", "release.latest == true" %}
+      <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{latest_release.release}}" }'>
         {% include prereqs/products/gateway.md tier=include.tier %}
       </div>
     {% endif %}
