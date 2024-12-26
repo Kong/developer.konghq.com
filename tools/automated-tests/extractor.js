@@ -98,15 +98,7 @@ async function extractSteps(page) {
 
 async function extractCleanup(page) {
   const instructions = [];
-  const steps = await page.$$("[data-test-cleanup]");
 
-  for (const elem of steps) {
-    if (await elem.isVisible()) {
-      const instruction = await elem.evaluate((el) => el.dataset.testCleanup);
-      instructions.push(instruction);
-    }
-    await elem.dispose();
-  }
   return instructions;
 }
 
