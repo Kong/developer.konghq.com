@@ -67,9 +67,19 @@ async function extractSetup(config, page) {
   for (const elem of setups) {
     if (await elem.isVisible()) {
       const instruction = await elem.evaluate((el) => el.dataset.testSetup);
-      if (config.versions[instruction]) {
-        instructions.push({ [instruction]: config.versions[instruction] });
-      } else {
+      let key;
+      try {
+        const json = JSON.parse(instruction);
+        key = Object.keys(json)[0];
+
+        if (config.versions[key]) {
+          // Overwrite the version with env variable
+          instructions.push({ [key]: config.versions[key] });
+        } else {
+          instructions.push(json);
+        }
+      } catch (error) {
+        // Not a json, for products/platforms that don't have versions.
         instructions.push(instruction);
       }
     }
@@ -156,6 +166,14 @@ async function loadConfig() {
 
   const fileContent = await fs.readFile(configFile, "utf8");
   const config = yaml.load(fileContent);
+  config.versions = {};
+
+  const versionEnvVars = Object.keys(process.env)
+    .filter((key) => key.startsWith("TEST_") && key.endsWith("_VERSION"))
+    .reduce((acc, key) => {
+      acc[key] = process.env[key];
+      return acc;
+    }, {});
 
   // Overwrite config values with environment variables
   Object.keys(config).forEach((key) => {
@@ -165,15 +183,11 @@ async function loadConfig() {
     }
   });
 
-  // Overwrite `versions` nested keys with `*_VERSION` environment variables,
-  // e.g. GATEWAY_VERSION='3.5'
-  if (config.versions && typeof config.versions === "object") {
-    Object.keys(config.versions).forEach((key) => {
-      const envKey = `${key.toUpperCase()}_VERSION`;
-      if (process.env[envKey]) {
-        config.versions[key] = process.env[envKey];
-      }
-    });
+  // Set versions based on `TEST_<product>_VERSION` env variables
+  // e.g. TEST_GATEWAY_VERSION='3.5'
+  for (const envVar in versionEnvVars) {
+    const key = envVar.replace(/^TEST_|_VERSION$/g, "").toLowerCase();
+    config.versions[key] = process.env[envVar];
   }
 
   return config;
