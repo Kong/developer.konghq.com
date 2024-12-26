@@ -1,0 +1,12 @@
+{% if page.breadcrumbs or page.edit_and_issue_links != false %}
+<div class="flex w-full justify-between pt-12 gap-16">
+    {% if page.breadcrumbs %}
+        {% include breadcrumbs.html %}
+    {% endif%}
+
+    {% if page.layout == 'plugins/example' or page.layout == 'landing_page' %}{% assign no_aside = true %}{% endif %}
+    <div class="flex gap-3 text-xs {% if page.breadcrumbs %} xl:basis-1/4 {% else %} w-full {% endif %}items-center {% if no_aside == true %}justify-end{% endif %}">
+        {% include edit_and_issue_links.html edit_link=page.edit_link %}
+    </div>
+  </div>
+{% endif %}
