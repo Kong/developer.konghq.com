@@ -59,7 +59,7 @@ cleanup:
 ## 1. Enable rate limiting
 
 Enable the [Rate Limiting plugin](/plugins/rate-limiting/) for the Service. 
-In this example, the limit is 5 requests per second and 1000 requests per hour.
+In this example, the limit is 5 requests per minute and 1000 requests per hour.
 
 {% entity_examples %}
 entities:
@@ -67,7 +67,7 @@ entities:
     - name: rate-limiting
       service: example-service
       config:
-        second: 5
+        minute: 5
         hour: 1000
 {% endentity_examples %}
 
