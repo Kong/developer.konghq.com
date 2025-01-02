@@ -95,27 +95,9 @@ You must provide the same number of windows and limits
 
 ## 3. Validate
 
-After configuring the Rate Limiting Advanced plugin, you can verify that it was configured correctly and is working, 
-by sending more requests then allowed in the configured time limit.
-
-```bash
-for _ in {1..11}
-do
-  curl http://localhost:8000/example-route/anything/
-done
-```
-{: data-deployment-topology="on-prem" }
-
-```bash
-for _ in {1..11}
-do
-  curl $KONNECT_PROXY_URL/example-route/anything/
-done
-```
-{: data-deployment-topology="konnect" }
-
-After the 11th request in a minute, you should receive the following `429` error:
-
-```bash
-{ "message": "API rate limit exceeded" }
-```
+{% validation rate-limit-check %}
+preamble: |
+  After configuring the Rate Limiting Advanced plugin, you can verify that it was configured correctly and is working, by sending more requests then allowed in the configured time limit.
+iterations: 11
+url: '/anything'
+{% endvalidation %}
