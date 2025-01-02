@@ -170,82 +170,30 @@ This configures the different tiers like the following:
 
 Now we can test that each rate limiting tier is working as expected by sending a series of HTTP requests (for example, six for Free Tier and seven for Basic Tier) to the endpoint with the appropriate API key with the goal of exceeding the configured rate limit for that tier. The tests wait for one second between requests to avoid overwhelming the server and test rate limits more clearly.
 
-Test the rate limiting of the Free tier:
 
-```sh
-echo "Testing Free Tier Rate Limit..."
+{% validation rate-limit-check %}
+preamble: 'Test the rate limiting of the Free tier:'
+iterations: 6
+url: '/anything'
+headers:
+  - 'apikey:amal'
+sleep: 1
+{% endvalidation %}
 
-for i in {1..6}; do
-  curl -I http://localhost:8000/anything -H 'apikey:amal'
-  echo
-  sleep 1
-done
-```
-{: data-deployment-topology="on-prem" }
+{% validation rate-limit-check %}
+preamble: 'Test the rate limiting of the Basic tier:'
+iterations: 7
+url: '/anything'
+headers:
+  - 'apikey:dana'
+sleep: 1
+{% endvalidation %}
 
-```sh
-echo "Testing Free Tier Rate Limit..."
-
-for i in {1..6}; do
-  curl -I $KONNECT_PROXY_URL/anything -H 'apikey:amal'
-  echo
-  sleep 1
-done
-```
-{: data-deployment-topology="konnect" }
-
-For the first few requests (up to the configured limit, which is 3 requests in 30 seconds), you should receive a `200 OK` status code. Once the limit is exceeded, you should receive a `429 Too Many Requests` status code with a message indicating the rate limit has been exceeded.
-
-Test the rate limiting of the Basic tier:
-
-```sh
-echo "Testing Basic Tier Rate Limit..."
-
-for i in {1..7}; do
-  curl -I http://localhost:8000/anything -H 'apikey:dana'
-  echo
-  sleep 1
-done
-```
-{: data-deployment-topology="on-prem" }
-
-```sh
-echo "Testing Basic Tier Rate Limit..."
-
-for i in {1..7}; do
-  curl -I $KONNECT_PROXY_URL/anything -H 'apikey:dana'
-  echo
-  sleep 1
-done
-```
-{: data-deployment-topology="konnect" }
-
-For the first few requests (up to the configured limit, which is 5 requests in 30 seconds), you should receive a `200 OK` status code. After exceeding the limit, you should receive a `429 Too Many Requests` status code with a rate limit exceeded message.
-
-Test the rate limiting of the Premium tier:
-
-```sh
-echo "Testing Premium Tier Rate Limit..."
-
-for i in {1..11}; do
-  curl -I http://localhost:8000/anything -H 'apikey:mahan'
-  echo
-  sleep 1
-done
-```
-{: data-deployment-topology="on-prem" }
-
-```sh
-echo "Testing Premium Tier Rate Limit..."
-
-for i in {1..11}; do
-  curl -I $KONNECT_PROXY_URL/anything -H 'apikey:mahan'
-  echo
-  sleep 1
-done
-```
-{: data-deployment-topology="konnect" }
-
-For the initial requests (up to the configured limit, which is 500 requests in 30 seconds), you should receive a `200 OK` status code. After exceeding the limit, you should receive a `429 Too Many Requests` status code.
-
-
+{% validation rate-limit-check %}
+preamble: 'Test the rate limiting of the Premium tier:'
+iterations: 11
+url: '/anything'
+headers:
+  - 'apikey:mahan'
+sleep: 1
+{% endvalidation %}
