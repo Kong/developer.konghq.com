@@ -1,0 +1,17 @@
+{
+    "name": "automated-tests",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "type": "module",
+    "keywords": [],
+    "license": "MIT",
+    "dependencies": {
+        "debug": "^4.4.0",
+        "js-yaml": "^4.1.0",
+        "puppeteer": "^23.10.2"
+    }
+}
