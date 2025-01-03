@@ -2,11 +2,11 @@
 {{ config.preamble | liquify | markdownify }}
 {% endif %}
 
-<div data-deployment-topology="konnect" markdown="1" data-test-validate="{{ config.data_validate_konnect | escape }}">
+<div data-deployment-topology="konnect" markdown="1" data-test-step="{{ config.data_validate_konnect | escape }}">
   {% include how-tos/validations/rate-limit-check/snippet.md iterations=config.iterations url=config.konnect_url headers=config.headers sleep=config.sleep %}
 </div>
 
-<div data-deployment-topology="on-prem"  markdown="1" data-test-validate="{{ config.data_validate_on_prem | escape }}">
+<div data-deployment-topology="on-prem"  markdown="1" data-test-step="{{ config.data_validate_on_prem | escape }}">
   {% include how-tos/validations/rate-limit-check/snippet.md iterations=config.iterations url=config.on_prem_url headers=config.headers sleep=config.sleep %}
 </div>
 
