@@ -91,7 +91,7 @@ async function extractSetup(config, page) {
 
 async function extractSteps(page) {
   const instructions = [];
-  const steps = await page.$$("[data-test-step='block']");
+  const steps = await page.$$("[data-test-step]");
 
   for (const elem of steps) {
     if (await elem.isVisible()) {
@@ -100,6 +100,22 @@ async function extractSteps(page) {
 
       const copiedText = await copyFromClipboard(page);
       instructions.push(copiedText);
+    }
+    await elem.dispose();
+  }
+  return instructions;
+}
+
+async function extractValidations(page) {
+  const instructions = [];
+  const steps = await page.$$("[data-test-validate]");
+
+  for (const elem of steps) {
+    if (await elem.isVisible()) {
+      const instruction = await elem.evaluate((el) => el.dataset.testValidate);
+      const parsedInstruction = JSON.parse(instruction);
+
+      instructions.push(parsedInstruction);
     }
     await elem.dispose();
   }
@@ -144,11 +160,13 @@ async function extractInstructions(uri, config) {
     const setup = await extractSetup(config, page);
     const prereqs = await extractPrereqs(page);
     const steps = await extractSteps(page);
+    const validations = await extractValidations(page);
     const cleanup = await extractCleanup(page);
     const instructionsFile = await writeInstrctionsToFile(url, config, {
       setup,
       prereqs,
       steps,
+      validations,
       cleanup,
     });
 
