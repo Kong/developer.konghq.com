@@ -114,7 +114,7 @@ Use the following table to help you understand how Routes can be configured for 
 
 ## How routing works
 
-For each incoming request, {{site.base_gateway}} must determine which Service gets to handle it based on the Routes that are defined. As soon as a Route yields a match, the router stops matching and {{site.base_gateway}} uses the matched Route to [proxy the current request](https://docs.konghq.com/gateway/latest/how-kong-works/routing-traffic/).
+For each incoming request, {{site.base_gateway}} must determine which Service gets to handle it based on the Routes that are defined. As soon as a Route yields a match, the router stops matching and {{site.base_gateway}} uses the matched Route to [proxy the current request](/gateway/traffic-control/proxying/).
 
 If multiple Routes match, {{site.base_gateway}} handles routing in the following order:
 
