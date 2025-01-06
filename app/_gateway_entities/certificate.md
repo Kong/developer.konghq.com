@@ -6,6 +6,10 @@ entities:
 
 description: A certificate object represents a public certificate, and can be optionally paired with the corresponding private key.
 
+related_resources:
+  - text: Set up {{site.base_gateway}} to serve an SSL certificate for API requests
+    url: /how-to/setup-gateway-to-serve-SSL-certificates
+
 tools:
     - admin-api
     - konnect-api
