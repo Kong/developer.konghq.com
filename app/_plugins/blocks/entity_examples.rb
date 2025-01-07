@@ -28,7 +28,6 @@ module Jekyll
 
       context.stack do
         context['entity_examples'] = entity_examples_drop
-        context['example_index'] = example_index(@page, environment)
         Liquid::Template.parse(template).render(context)
       end
     rescue Psych::SyntaxError => e
@@ -38,14 +37,6 @@ module Jekyll
       #{e.message}
       STRING
       raise ArgumentError.new(message)
-    end
-
-    def example_index(page, environment)
-      if page['content_type'] == 'how_to'
-        environment[page['id']] ||= {}
-        environment[page['id']]['examples'] ||= 0
-        environment[page['id']]['examples'] += 1
-      end
     end
   end
 end
