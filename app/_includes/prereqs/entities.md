@@ -11,9 +11,18 @@ For this tutorial, you'll need {{site.base_gateway}} entities, like Gateway Serv
 ```yaml
 echo '
 {{ include.data }}
+' | deck gateway apply - \
+  --konnect-token $KONNECT_TOKEN \
+  --konnect-control-plane-name $KONNECT_CP_NAME
+```
+{: data-file="prereqs.yaml" data-deployment-topology="konnect"}
+
+```yaml
+echo '
+{{ include.data }}
 ' | deck gateway apply -
 ```
-{: data-file="prereqs.yaml" }
+{: data-file="prereqs.yaml" data-deployment-topology="on-prem"}
 {% endcapture %}
 {{ entities | indent: 3 }}
 
