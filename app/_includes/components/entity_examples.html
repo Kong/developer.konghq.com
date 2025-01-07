@@ -2,7 +2,16 @@
 echo '
 _format_version: "3.0"
 {{ entity_examples.data }}
+' | deck gateway apply - \
+  --konnect-token $KONNECT_TOKEN \
+  --konnect-control-plane-name $KONNECT_CP_NAME
+```
+{: data-file="kong.yaml" data-deployment-topology="konnect"}
+
+```yaml
+echo '
+_format_version: "3.0"
+{{ entity_examples.data }}
 ' | deck gateway apply -
 ```
-{: data-file="kong.yaml" }
-
+{: data-file="kong.yaml" data-deployment-topology="on-prem"}
