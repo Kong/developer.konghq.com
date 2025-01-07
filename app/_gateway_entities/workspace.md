@@ -37,7 +37,7 @@ faqs:
 
 ## What is a Workspace?
 
-Workspaces are a way of namespacing {{site.base_gateway}} entities so they can be managed indepdently. Workspaces maintain a unified routing table on the data plane to support client traffic segmentation.
+Workspaces are a way of namespacing {{site.base_gateway}} entities so they can be managed independently. Workspaces maintain a unified routing table on the data plane to support client traffic segmentation.
 
 The data plane routes client traffic based on the configuration applied across all Workspaces. Configuring entities related to routing such as Services and Routes alter the client traffic routing behavior of the data plane but {{site.base_gateway}} will always attempt to ensure that routing rules don't contain conflicts. 
 
@@ -75,7 +75,7 @@ flowchart LR
 
 Routing rules are configured at the data plane level. To ensure that traffic can be routed to the appropriate Workspace, {{site.base_gateway}} uses a conflict detection algorithm. The algorithm can be explained like this: 
 
-When a Service or Route is **created** or **modified**, the {{site.base_gateway}} Router performs the following sequence to check for duplicate or matchine rules: 
+When a Service or Route is **created** or **modified**, the {{site.base_gateway}} Router performs the following sequence to check for duplicate or matching rules: 
 
 1. If no matches found: The operation proceeds.
 2. If a match is found in the same Workspace: The operation proceeds
@@ -131,7 +131,7 @@ services:
 ```
 ### Deploying Workspace-specific config 
 
-Configurations deployed with decK must be deployed on a per-Workspace basis, indvidually. This is achieved using the `--workspace` flag: 
+Configurations deployed with decK must be deployed on a per-Workspace basis, individually. This is achieved using the `--workspace` flag: 
 
 `deck gateway sync default.yaml --workspace default`
 
