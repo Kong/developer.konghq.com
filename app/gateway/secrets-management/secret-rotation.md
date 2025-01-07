@@ -18,7 +18,6 @@ layout: concept
 
 products:
    - gateway
-   - konnect
 
 breadcrumbs:
   - /gateway/

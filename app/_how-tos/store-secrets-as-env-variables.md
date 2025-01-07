@@ -2,8 +2,8 @@
 title: Store secrets as environment variables
 content_type: how_to
 related_resources:
-  - text: 
-    url: 
+  - text: Secrets management
+    url: /secrets-management
 
 products:
     - gateway
@@ -27,7 +27,7 @@ tags:
 
 tldr:
     q: How do I 
-    a: 
+    a: placeholder
 
 tools:
     - deck

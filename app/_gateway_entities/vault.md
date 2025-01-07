@@ -8,7 +8,7 @@ description: A Vault is used to store secrets.
 
 related_resources:
   - text: Vault CLI
-    url: 
+    url: /
   - text: Secrets Management
     url: /secrets-management
   - text: Secret rotation

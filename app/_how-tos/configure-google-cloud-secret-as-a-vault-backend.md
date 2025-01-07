@@ -4,6 +4,8 @@ content_type: how_to
 related_resources:
   - text: Rotate secrets in Google Cloud Secret with {{site.base_gateway}}
     url: /how-to/rotate-secrets-in-google-cloud-secret 
+  - text: Secrets management
+    url: /secrets-management
 
 products:
     - gateway
@@ -27,7 +29,7 @@ tags:
 
 tldr:
     q: How do I 
-    a: 
+    a: placeholder
 
 tools:
     - deck

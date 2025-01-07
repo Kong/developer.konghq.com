@@ -2,16 +2,14 @@
 title: Store secrets in Konnect Config Store
 content_type: how_to
 related_resources:
-  - text: 
-    url: 
+  - text: Secrets management
+    url: /secrets-management 
 
 products:
-    - konnect
+    - gateway
 
 works_on:
     - konnect
-
-plugins:
 
 entities: 
   - vault
@@ -21,11 +19,11 @@ tags:
 
 tldr:
     q: How do I 
-    a: 
+    a: placeholder
 
 tools:
     - deck
-    - api
+    - konnect-api
 
 prereqs:
 

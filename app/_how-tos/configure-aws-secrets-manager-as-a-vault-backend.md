@@ -3,7 +3,9 @@ title: Configure AWS Secrets Manager as a vault backend
 content_type: how_to
 related_resources:
   - text: Rotate secrets in AWS Secrets Manager with {{site.base_gateway}}
-    url: /how-to/rotate-secrets-in-aws-secrets-manager   
+    url: /how-to/rotate-secrets-in-aws-secrets-manager  
+  - text: Secrets management
+    url: /secrets-management 
 
 products:
     - gateway
@@ -27,7 +29,7 @@ tags:
 
 tldr:
     q: How do I 
-    a: 
+    a: placeholder
 
 tools:
     - deck

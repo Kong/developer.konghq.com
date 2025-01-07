@@ -4,6 +4,8 @@ content_type: how_to
 related_resources:
   - text: Rotate secrets in Hashicorp Vault with {{site.base_gateway}}
     url: /how-to/rotate-secrets-in-hashicorp-vault
+  - text: Secrets management
+    url: /secrets-management
 
 products:
     - gateway
@@ -27,7 +29,7 @@ tags:
 
 tldr:
     q: How do I 
-    a: 
+    a: placeholder
 
 tools:
     - deck
