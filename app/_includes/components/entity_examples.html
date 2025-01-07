@@ -1,15 +1,6 @@
-{%- assign render_format_version = true %}
-{%- if page.content_type == 'how_to' and example_index != 1 %}
-{% assign render_format_version = false %}
-{%- endif %}
-{% if entity_examples.append_to_existing_section %}
-Add the following to your existing `{{ entity_examples.append_to }}` section in `kong.yaml`:
-{% endif %}
 ```yaml
 echo '
-{%- if render_format_version %}
 _format_version: "3.0"
-{%- endif %}
 {{ entity_examples.data }}
 ' | deck gateway apply -
 ```
