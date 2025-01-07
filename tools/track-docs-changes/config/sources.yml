@@ -53,6 +53,11 @@ app/_gateway_entities/workspace.md:
   - app/_src/gateway/kong-enterprise/workspaces.md
 app/_gateway_entities/event_hooks.md:
   - app/_src/gateway/latest/kong-enterprise/event-hooks.md
+app/_gateway_entities/vault.md:
+  - app/_src/gateway/kong-enterprise/secrets-management/advanced-usage.md
+  - app/_src/deck/guides/vaults.md
+  - app/_src/gateway/kong-enterprise/secrets-management/index.md
+  - 
 
 # how-tos
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
