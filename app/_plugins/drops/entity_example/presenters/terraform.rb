@@ -9,7 +9,10 @@ module Jekyll
         module Terraform
           class Base < Presenters::Base
             def data
-              @data ||= @example_drop.data
+              @data ||= Utils::VariableReplacer::TerraformData.run(
+                data: @example_drop.data,
+                variables: variables
+              )
             end
 
             def target
@@ -92,6 +95,8 @@ module Jekyll
             def quote(input)
               return '' if input.nil?
 
+              return input if input.is_a?(String) && input.start_with?("var.")
+
               return input if ['true', 'false', true, false].include?(input)
 
               return input if input.is_a?(Numeric)
@@ -114,7 +119,18 @@ module Jekyll
 
           class Plugin < Base
             def data
-              @data ||= @example_drop.data.except(*targets.keys)
+              @data ||= Utils::VariableReplacer::TerraformData.run(
+                data: @example_drop.data.except(*targets.keys),
+                variables: variables
+              )
+            end
+
+            def variable_names
+              keys = []
+              variables.each do |k, v|
+                keys = v['value'].gsub("$","").downcase
+              end
+              keys
             end
           end
         end
