@@ -50,7 +50,7 @@ api_specs:
 
 schema:
     api: gateway/admin-ee
-    path: /schemas/Vaults
+    path: /schemas/Vault
 ---
 
 ## What is a Vault?

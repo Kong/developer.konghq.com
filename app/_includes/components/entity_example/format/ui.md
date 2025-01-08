@@ -61,6 +61,15 @@ The following creates a new Upstream with basic configuration:
 3. Enter a unique name for the Upstream. For example: `{{ include.presenter.data['name'] }}`.
 4. Click **Save**.
 {% when workspace %}
+{% when 'vault' %}
+The following creates a new Vault with basic configuration:
+
+1. In Kong Manager or Gateway Manager, navigate to a control plane and click **Vaults** in the sidebar.
+2. Click **New Vault**.
+3. Select a configuration for the Vault. For example: `{{ include.presenter.data['name'] }}`
+1. Enter a prefix for the Vault. For example: `{{ include.presenter.data['config.prefix'] }}`
+1. Enter a description for the Vault. For example: `{{ include.presenter.data['description'] }}`
+4. Click **Save**.
 {% else %}
 {% endcase %}
 {% endif %}
