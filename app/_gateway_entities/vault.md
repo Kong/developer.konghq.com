@@ -16,8 +16,25 @@ related_resources:
   
 
 faqs:
-  - q: 
-    a: 
+  - q: I'm using declarative configuration for my Vault. Should I split my Vault configuration?
+    a: |
+        For larger teams with many contributors, or organizations with multiple teams, we recommend splitting Vault configuration and managing it separately. We recommend splitting the configuration for the following reasons:
+        * Vault are closer to infrastructure than other {{site.base_gateway}} configurations.
+        Separation of routing policies from infrastructure-specific configurations helps
+        keep configuration organized.
+        * Vaults may be shared across teams. In this case, one specific team shouldn't
+        control the Vault's configuration. One team changing the Vault a can have
+        disastrous impact on another team.
+        * If a Vault is deleted while in use -- that is, if there are still references to
+        secrets in a Vault in configuration -- it can lead to total loss of proxy capabilities.
+        Those secrets would be unrecoverable.
+  - q: How should I manage my Vault configuration with decK?
+    a: |
+        To keep your environment secure and avoid taking down your proxies by accident, make sure to:
+        * Manage Vaults with distributed configuration via tags.
+        * Use a separate [RBAC role, user, and token](/gateway/entities/rbac/)
+        to manage Vaults. Don't use a generic admin user.
+        * Set up a separate CI pipeline for Vaults.
 
 tools:
     - admin-api
@@ -36,17 +53,9 @@ schema:
     path: /schemas/Vaults
 ---
 
-what is a vault + why
-schema
-best practices
-hint of secrets management (link to landing page) (/secrets-management/)
-link to backends
-link to Vault CLI ref
-
 ## What is a Vault?
 In {{site.base_gateway}}, the Vault object is used to store secrets. A secret is any sensitive piece of information required for API gateway
-operations. Secrets may be part of the core {{site.base_gateway}} configuration,
-they may be used in plugins, or they might be part of configuration associated
+operations. Secrets can be used as part of the core {{site.base_gateway}} configuration, in plugins, or in configuration associated
 with APIs serviced by the gateway.
 
 Some of the most common types of secrets used by {{site.base_gateway}} include:
@@ -54,30 +63,32 @@ Some of the most common types of secrets used by {{site.base_gateway}} include:
 * Data store usernames and passwords, used with PostgreSQL and Redis
 * Private X.509 certificates
 * API keys
-* Sensitive plugin configuration fields, generally used for authentication, hashing, signing, or encryption.
+* Sensitive plugin configuration fields, generally used for authentication, hashing, signing, or encryption
 
 ## Vault use cases
 
-Storing secrets in a Vault ensures they are protected and allows you to reference secrets from other entities. By storing sensitive values as secrets, you ensure that they are not
-visible in plaintext throughout the platform, in places such as `kong.conf`,
-in declarative configuration files, logs, or in the Kong Manager UI.
+The main use case for Vaults is that they allow you to securely store and then reference those secrets from other entities. This ensures that secrets aren't visible in plaintext throughout the platform, in places such as `kong.conf`,
+in declarative configuration files, logs, or in the UI.
 
 For example, you could store a certificate and a key in a Vault, then reference them from a [Certificate entity](/gateway/entities/certificate/). This way, the certificate and key are not stored in the entity directly and are more secure.
 
 ## How do I add secrets to a Vault?
 
-Vaults are an object that stores secrets, it doesn't create secrets. You must add those secrets with environment variables, {{site.konnect_short_name}} Config Store, or a supported third-party backend vault.
+Vaults store secrets, they don't create secrets. You must add secrets to the Vault in one of the following ways: 
+* Environment variables
+* {{site.konnect_short_name}} Config Store
+* Supported third-party backend vault
 
-The following table describes the different options you have:
+The following table goes into detail about the different options you have:
 
-| Backend | {{site.base_gateway}} OSS | {{site.base_gateway}} Enterprise | Uses Vault entity | {{site.konnect_short_name}} supported |
-|--------|--------------------|----------------|--------------|---------------|
-| [Environment variable](/how-to/store-secrets-as-env-variables) | {% include icon_true.html %} | {% include icon_true.html %} | {% include icon_false.html %}| {% include icon_true.html %} |
-| [{{site.konnect_short_name}} Config Store](/how-to/store-secrets-in-konnect-config-store) | {% include icon_false.html %}| {% include icon_false.html %}| {% include icon_true.html %} | {% include icon_true.html %}|
-| [AWS Secrets Manager](/how-to/configure-aws-secrets-manager-as-a-vault-backend) | {% include icon_false.html %}| {% include icon_true.html %} | {% include icon_true.html %} | {% include icon_true.html %}|
-| [Azure Key Vaults](/how-to/configure-azure-key-vaults-as-a-vault-backend) | {% include icon_false.html %} | {% include icon_true.html %}| {% include icon_true.html %}| {% include icon_true.html %}|
-| [Google Cloud Secret](/how-to/configure-google-cloud-secret-as-a-vault-backend) | {% include icon_false.html %} | {% include icon_true.html %}| {% include icon_true.html %}| {% include icon_true.html %}|
-| [Hashicorp Vault](/how-to/configure-hashicorp-vault-as-a-vault-backend) | {% include icon_false.html %} | {% include icon_true.html %}| {% include icon_true.html %}| {% include icon_true.html %}|
+| Backend                                                   | {{site.base_gateway}} OSS | {{site.base_gateway}} Enterprise | Uses Vault entity              | {{site.konnect_short_name}} supported |
+| --------------------------------------------------------- | ------------------------ | -------------------------------- | ------------------------------ | ------------------------------------- |
+| [Environment variable](/how-to/store-secrets-as-env-variables) | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/close.svg" alt="Cross icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">        |
+| [{{site.konnect_short_name}} Config Store](/how-to/store-secrets-in-konnect-config-store) | <img src="/app/assets/icons/close.svg" alt="Cross icon"> | <img src="/app/assets/icons/close.svg" alt="Cross icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">        |
+| [AWS Secrets Manager](/how-to/configure-aws-secrets-manager-as-a-vault-backend) | <img src="/app/assets/icons/close.svg" alt="Cross icon"> | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">        |
+| [Azure Key Vaults](/how-to/configure-azure-key-vaults-as-a-vault-backend) | <img src="/app/assets/icons/close.svg" alt="Cross icon"> | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">        |
+| [Google Cloud Secret](/how-to/configure-google-cloud-secret-as-a-vault-backend) | <img src="/app/assets/icons/close.svg" alt="Cross icon"> | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">        |
+| [Hashicorp Vault](/how-to/configure-hashicorp-vault-as-a-vault-backend) | <img src="/app/assets/icons/close.svg" alt="Cross icon"> | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">        |
 
 
 ## How do I use secrets stored in a Vault?
@@ -103,7 +114,7 @@ Would point to a secret object called `pg` inside a HashiCorp Vault, which may r
 ```
 
 <!-- vale off -->
-Kong receives the payload and extracts the `"username"` value of `"john"` for the secret reference of
+{{site.base_gateway}} receives the payload and extracts the `"username"` value of `"john"` for the secret reference of
 `{vault://hcv/pg/username}`.
 <!-- vale on -->
 
@@ -131,32 +142,5 @@ data:
 {% endentity_example %}
 
 
-## Vault best practices
 
-When managing Vaults with declarative configuration, you need to take certain precautions.
-For larger teams with many contributors, or organizations with multiple teams,
-we recommend splitting Vault configuration and managing it separately.
-
-**Why split out Vault configuration?**
-
-* Vault are closer to infrastructure than other {{site.base_gateway}} configurations.
-Separation of routing policies from infrastructure-specific configurations helps
-keep configuration organized.
-* Vaults may be shared across teams. In this case, one specific team shouldn't
-control the Vault's configuration. One team changing the Vault a can have
-disastrous impact on another team.
-* If a Vault is deleted while in use -- that is, if there are still references to
-secrets in a Vault in configuration -- it can lead to total loss of proxy capabilities.
-Those secrets would be unrecoverable.
-
-**How should I manage my Vault configuration with decK?**
-
-To keep your environment secure and avoid taking down your proxies by accident, make sure to:
-
-* Manage Vaults with distributed configuration via tags.
-* Use a separate [RBAC role, user, and token](/gateway/api/admin-ee/latest/#/rbac/get-rbac-users/)
-to manage Vaults. Don't use a generic admin user.
-* Set up a separate CI pipeline for Vaults.
-
-## Vault backends
 
