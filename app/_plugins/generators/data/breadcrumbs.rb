@@ -22,6 +22,12 @@ module Jekyll
         @page.data['breadcrumbs'].map do |url|
           normalized_url = Utils::URL.normalize_path(url)
           breadcrumb = find_page_by_url(normalized_url)
+
+          unless breadcrumb
+            raise ArgumentError,
+                  "On #{@page.relative_path}, the breadcrumb `#{normalized_url}` is invalid. No page exists with a matching URL." # rubocop:disable Layout/LineLength
+          end
+
           { 'url' => normalized_url, 'title' => breadcrumb.data['title'] }
         end
       end

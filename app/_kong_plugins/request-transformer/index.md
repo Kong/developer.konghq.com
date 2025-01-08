@@ -24,6 +24,9 @@ icon: request-transformer.png
 
 categories:
   - transformations
+
+search_aliases:
+  - request-transformer
 ---
 
 ## Overview

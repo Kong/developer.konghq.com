@@ -49,7 +49,6 @@ prereqs:
       content: |
         [cURL](https://curl.se/) is used to send requests to {{site.base_gateway}}. 
         `curl` is pre-installed on most systems.
-      icon_url: /assets/icons/code.svg
 
 cleanup:
   inline:
@@ -115,6 +114,11 @@ entities:
 
 Using the Service and Route, you can now 
 access `https://httpbin.konghq.com/` using `http://localhost:8000/mock`.
+{: data-deployment-topology="on-prem" }
+
+Using the Service and Route, you can now 
+access `https://httpbin.konghq.com/` using `$KONNECT_PROXY_URL/mock`.
+{: data-deployment-topology="konnect" }
 
 Httpbin provides an `/anything` resource which will return information about requests made to it.
 Proxy a request through {{site.base_gateway}} to the `/anything` resource:
@@ -122,6 +126,13 @@ Proxy a request through {{site.base_gateway}} to the `/anything` resource:
 ```sh
 curl -X GET http://localhost:8000/mock/anything
 ```
+{: data-deployment-topology="on-prem" }
+
+```sh
+curl -X GET $KONNECT_PROXY_URL/mock/anything
+```
+{: data-deployment-topology="konnect" }
+
 
 ## 4. Enable rate limiting
 
@@ -147,7 +158,7 @@ In this example, you configured a limit of 5 requests per minute for all Routes,
 
 We'll validate that this worked in the next step, but first let's set up caching.
 
-## 4. Enable caching 
+## 5. Enable caching
 
 One of the ways Kong delivers performance is through caching.
 The [Proxy Cache plugin](/plugins/proxy-cache/) accelerates performance by caching
@@ -190,8 +201,15 @@ the returned headers.
 The Proxy Cache plugin returns status information headers prefixed with `X-Cache`, so you can use `grep` to filter for that information:
 
 ```sh
-for _ in {1..6}; do curl -s -i localhost:8000/mock/anything; echo; sleep 1; done | grep -E 'X-Cache|HTTP/1.1'
+for _ in {1..6}; do curl -s -i http://localhost:8000/mock/anything; echo; sleep 1; done | grep -E 'X-Cache|HTTP/1.1'
 ```
+{: data-deployment-topology="on-prem" }
+
+```sh
+for _ in {1..6}; do curl -s -i $KONNECT_PROXY_URL/mock/anything; echo; sleep 1; done | grep -E 'X-Cache|HTTP/1.1'
+```
+{: data-deployment-topology="konnect" }
+
 
 On the initial request, there should be no cached responses, and the headers will indicate this with
 `X-Cache-Status: Miss`:
@@ -218,7 +236,7 @@ HTTP/1.1 429 Too Many Requests
 ```
 {:.no-copy-code}
 
-## 5. Enable authentication
+## 6. Enable authentication
 
 Authentication is the process of verifying that the requester has permissions to access a resource. 
 As its name implies, API gateway authentication authenticates the flow of data to and from your upstream services. 
@@ -270,6 +288,12 @@ Only specify a key for testing or when migrating existing systems.
 ```sh
 curl -i http://localhost:8000/mock/anything
 ```
+{: data-deployment-topology="on-prem" }
+
+```sh
+curl -i $KONNECT_PROXY_URL/mock/anything
+```
+{: data-deployment-topology="konnect" }
 
 Since you enabled key authentication globally, you will receive an unauthorized response:
 
@@ -288,10 +312,16 @@ Now, let's send a request with the valid key in the `apikey` header:
 curl -i http://localhost:8000/mock/anything \
   -H 'apikey:top-secret-key'
 ```
+{: data-deployment-topology="on-prem" }
+
+```sh
+curl -i $KONNECT_PROXY_URL/mock/anything
+```
+{: data-deployment-topology="konnect" }
 
 You will receive a `200 OK` response.
 
-## 6. Enable load balancing
+## 7. Enable load balancing
 
 Load balancing is a method of distributing API request traffic across
 multiple upstream services. Load balancing improves overall system responsiveness
@@ -341,6 +371,12 @@ You will see the hostname change between `httpbin` and `httpbun`:
 ```sh
 curl -s http://localhost:8000/mock/headers -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
 ```
+{: data-deployment-topology="on-prem" }
+
+```sh
+curl -s $KONNECT_PROXY_URL/mock/headers -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
+```
+{: data-deployment-topology="konnect" }
 
 Since the Proxy Cache plugin is configured with a time-to-live of 5 seconds, 
 the host will take at least 5 seconds to change.

@@ -1,5 +1,16 @@
 {
   "$id": "schema:base",
+  "definitions": {
+    "min_version": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z_]+$": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
   "type": "object",
   "properties": {
     "title": {

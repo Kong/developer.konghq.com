@@ -25,6 +25,12 @@ icon: graphql-proxy-cache-advanced.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - proxy cache
+  - graphql proxy cache
+  - graphql proxy cache advanced
+  - graphql-proxy-cache-advanced
 ---
 
 ## Overview

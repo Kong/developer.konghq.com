@@ -28,6 +28,9 @@ icon: websocket-size-limit.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - websocket-size-limit
 ---
 
 ## Overview

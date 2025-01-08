@@ -28,6 +28,14 @@ icon: ai-proxy.png
 
 categories:
   - ai
+
+search_aliases:
+  - ai
+  - llm
+  - artificial
+  - intelligence
+  - language
+  - model
 ---
 
 {% include plugins/ai-proxy/overview.md plugin=page.name params=site.data.plugins.ai-proxy.parameters %}
@@ -35,6 +43,4 @@ categories:
 
 <!-- {:.note}
 > Check out the [AI Gateway quickstart](/gateway/latest/get-started/ai-gateway/) to get an AI proxy up and running within minutes! -->
-
-{% include plugins/ai-proxy/links.md plugin=page.name %}
 

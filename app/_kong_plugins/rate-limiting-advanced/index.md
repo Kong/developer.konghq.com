@@ -12,7 +12,7 @@ tags:
   - traffic-control
 related_resources:
   - text: How to create rate limiting tiers with Rate Limiting Advanced
-    url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/how-to/
+    url: /how-to/add-rate-limiting-tiers-with-kong-gateway/
 
 products:
     - gateway
@@ -25,6 +25,9 @@ icon: rate-limiting-advanced.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - rate-limiting-advanced
 ---
 
 ## Overview
@@ -99,4 +102,4 @@ By default, Kong uses the header name `X-Real-IP`. If a different header name is
 You can use the [consumer groups entity](/api/gateway/admin-ee/#/operations/get-consumer_groups) to manage custom rate limiting configurations for
 subsets of consumers. This is enabled by default **without** using the `/consumer_groups/:id/overrides` endpoint.
 
-You can see an example of this in the [Enforcing rate limiting tiers with the Rate Limiting Advanced plugin](https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/how-to/) guide.
+You can see an example of this in the [Enforcing rate limiting tiers with the Rate Limiting Advanced plugin](/how-to/add-rate-limiting-tiers-with-kong-gateway/) guide.

@@ -25,6 +25,9 @@ icon: opa.png
 
 categories:
   - security
+
+search_aliases:
+  - open policy agent
 ---
 
 ## Overview

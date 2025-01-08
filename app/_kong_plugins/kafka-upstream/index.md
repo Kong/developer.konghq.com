@@ -26,6 +26,9 @@ icon: kafka-upstream.png
 
 categories:
   - transformations
+
+search_aliases:
+  - kafka-upstream
 ---
 
 ## Overview

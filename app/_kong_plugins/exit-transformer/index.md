@@ -26,6 +26,9 @@ icon: exit-transformer.png
 
 categories:
   - transformations
+
+search_aliases:
+  - exit-transformer
 ---
 
 ## Overview

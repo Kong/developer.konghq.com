@@ -6,7 +6,7 @@ module Jekyll
       class Plugin < Base
         def data
           @data ||= super.merge(
-            'schema' => schema.to_json,
+            'schema' => schema,
             'compatible_protocols' => schema.compatible_protocols
           )
         end

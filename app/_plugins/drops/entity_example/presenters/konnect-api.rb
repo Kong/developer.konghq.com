@@ -48,7 +48,10 @@ module Jekyll
 
           class Plugin < Base
             def data
-              @example_drop.data.except(*targets.keys)
+              @data ||= Utils::VariableReplacer::Data.run(
+                data: @example_drop.data.except(*targets.keys),
+                variables: variables
+              )
             end
 
             def variables
@@ -61,12 +64,10 @@ module Jekyll
 
                 if @example_drop.target.key == 'global'
                   missing
+                elsif variables[@example_drop.target.key]
+                  missing
                 else
-                  if variables[@example_drop.target.key]
-                    missing
-                  else
-                    missing << formats['konnect-api']['variables'][@example_drop.target.key]
-                  end
+                  missing << formats['konnect-api']['variables'][@example_drop.target.key]
                 end
               end
             end

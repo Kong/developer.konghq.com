@@ -28,6 +28,15 @@ icon: ai-semantic-prompt-guard.png
 
 categories:
   - ai
+
+search_aliases:
+  - ai
+  - llm
+  - artificial
+  - intelligence
+  - language
+  - model
+  - semantic
 ---
 
 ## Overview

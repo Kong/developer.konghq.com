@@ -28,6 +28,16 @@ icon: ai-azure-content-safety.png
 
 categories:
   - ai
+
+search_aliases:
+  - ai
+  - llm
+  - artificial
+  - intelligence
+  - language
+  - model
+  - moderation
+  - azure cognitive services
 ---
 
 ## Overview

@@ -25,6 +25,9 @@ icon: oauth2-introspection.png
 
 categories:
   - authentication
+
+search_aliases:
+  - oauth2-introspection
 ---
 
 ## Overview

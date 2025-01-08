@@ -46,7 +46,8 @@ module Jekyll
                 target => nil,
                 'config' => config
               },
-              'formats' => formats
+              'formats' => formats,
+              'variables' => example.fetch('variables', {})
             }
           ).to_drop
         end

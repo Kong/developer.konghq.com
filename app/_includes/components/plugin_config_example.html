@@ -2,25 +2,29 @@
 {% assign targets = plugin_config_example.targets %}
 {% assign formats = plugin_config_example.formats %}
 
-<div id="{{ entity_example.id }}" class="entity-example">
-  <div class="p-2 flex justify-end">
-    <div>
+<div id="{{ entity_example.id }}" class="entity-example content">
+  <div class="flex justify-end">
+    <div class="flex gap-2 text-xs">
       {% if targets.size > 0 %}
-        <label for="select-target-{{ entity_example.id }}" class="sr-only">Select an entity</label>
-        <select id="select-target-{{ entity_example.id }}" class="ml-1 w-36 select-target border border-gray-300 ">
-          {% for target in targets %}
-            <option value="{{ target }}">{{ site.data.entity_examples.config.targets[target]['label'] }}</option>
-          {% endfor %}
-        </select>
+        <div class="bg-secondary rounded-md flex justify-between py-2 px-4 w-full shadow-primary items-center">
+          <label for="select-target-{{ entity_example.id }}" class="sr-only">Select an entity</label>
+          <select id="select-target-{{ entity_example.id }}" class="select-target bg-secondary">
+            {% for target in targets %}
+            <option value="{{ target }}">{{ site.data.entity_examples.config.targets[target].label }}</option>
+            {% endfor %}
+          </select>
+        </div>
       {% endif %}
 
       {% if formats.size > 1 %}
+      <div class="bg-secondary rounded-md flex justify-between py-2 px-4 w-full shadow-primary items-center">
         <label for="select-format-{{ entity_example.id }}" class="sr-only">Select a format</label>
-        <select id="select-format-{{ entity_example.id }}" class="ml-1 w-36 select-format border border-gray-300 ">
+        <select id="select-format-{{ entity_example.id }}" class="select-format bg-secondary">
           {% for format in formats %}
             <option value="{{ format }}">{{ site.data.entity_examples.config.formats[format].label }}</option>
           {% endfor %}
         </select>
+      </div>
       {% endif %}
     </div>
   </div>

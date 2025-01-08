@@ -11,5 +11,9 @@
 {% endcapture %}
 
 {% assign summary = include.prereq.title %}
+{% assign icon_url = prereq.icon_url %}
+{% unless icon_url %}
+{% assign icon_url = "/assets/icons/code.svg" %}
+{% endunless %}
 
-{% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url=prereq.icon_url %}
+{% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url=icon_url %}

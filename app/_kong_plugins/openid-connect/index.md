@@ -26,6 +26,13 @@ icon: openid-connect.png
 
 categories:
   - authentication
+
+search_aliases:
+  - oidc
+  - oauth2
+  - openid-connect
+  - idp
+  - identity provider
 ---
 
 ## Overview

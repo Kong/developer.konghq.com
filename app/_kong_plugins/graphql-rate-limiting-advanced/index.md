@@ -22,6 +22,9 @@ icon: graphql-rate-limiting-advanced.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - graphql-rate-limiting-advanced
 ---
 
 ## Overview

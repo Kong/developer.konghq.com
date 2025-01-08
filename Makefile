@@ -15,6 +15,7 @@ install-prerequisites:
 
 # Installs npm packages and gems.
 install: ruby-version-check
+	git submodule update --init
 	npm ci
 	bundle install
 	cd tools/frontmatter-validator && npm ci

@@ -25,6 +25,9 @@ icon: ip-restriction.png
 
 categories:
   - security
+
+search_aliases:
+  - ip-restriction
 ---
 
 ## Overview

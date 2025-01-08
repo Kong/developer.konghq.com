@@ -26,6 +26,9 @@ icon: aws-lambda.png
 
 categories:
   - serverless
+
+search_aliases:
+  - aws-lambda
 ---
 
 ## Overview

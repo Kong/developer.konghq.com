@@ -24,6 +24,9 @@ icon: grpc-web.png
 
 categories:
   - transformations
+
+search_aliases:
+  - grpc web
 ---
 
 ## Overview

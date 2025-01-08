@@ -1,7 +1,9 @@
 ---
-title: Enable rate limiting for a consumer with {{site.base_gateway}}
+title: Rate limit a consumer with {{site.base_gateway}}
 content_type: how_to
 related_resources:
+  - text: Rate Limiting
+    url: /rate-limiting/
   - text: How to create rate limiting tiers with {{site.base_gateway}}
     url:  /how-to/add-rate-limiting-tiers-with-kong-gateway/
   - text: Rate Limiting plugin
@@ -32,8 +34,8 @@ tags:
     - rate-limiting
 
 tldr:
-    q: How do I rate limit a consumer with {{site.base_gateway}}?
-    a: Enable an authentication plugin and create a consumer with credentials, then enable the <a href="/plugins/rate-limiting/reference">Rate Limiting plugin</a> on the new consumer.
+    q: How do I rate limit a Consumer with {{site.base_gateway}}?
+    a: Enable an authentication plugin and create a <a href="/gateway/entities/consumer/">Consumer</a> with credentials, then enable the <a href="/plugins/rate-limiting/">Rate Limiting plugin</a> on the new Consumer.
 
 tools:
     - deck
@@ -55,12 +57,12 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create a consumer
+## 1. Create a Consumer
 
-Consumers let you identify the client that's interacting with {{site.base_gateway}}.
-We're going to use key [authentication](/authentication/) in this tutorial, so the consumer needs an API key to access any {{site.base_gateway}} services.
+[Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.
+We're going to use key [authentication](/authentication/) in this tutorial, so the Consumer needs an API key to access any {{site.base_gateway}} Services.
 
-Add the following content to `kong.yaml` to create a consumer:
+Add the following content to `kong.yaml` to create a Consumer:
 
 {% entity_examples %}
 entities:
@@ -72,10 +74,10 @@ entities:
 
 ## 2. Enable authentication
 
-Authentication lets you identify a consumer so that you can apply rate limiting.
+Authentication lets you identify a Consumer so that you can apply rate limiting.
 This example uses the [Key Authentication](/plugins/key-auth) plugin, but you can use any authentication plugin that you prefer.
 
-Enable the plugin globally, which means it applies to all {{site.base_gateway}} services and routes:
+Enable the plugin globally, which means it applies to all {{site.base_gateway}} Services and Routes:
 
 {% entity_examples %}
 entities:
@@ -88,7 +90,7 @@ entities:
 
 ## 3. Enable rate limiting
 
-Enable the [Rate Limiting plugin](/plugins/rate-limiting/) for the consumer. 
+Enable the [Rate Limiting plugin](/plugins/rate-limiting/) for the Consumer. 
 In this example, the limit is 5 requests per minute and 1000 requests per hour.
 
 {% entity_examples %}
@@ -108,7 +110,7 @@ append_to_existing_section: true
 
 ## 5. Validate
 
-You can run the following command to test the rate limiting as the consumer:
+You can run the following command to test the rate limiting as the Consumer:
 
 ```bash
 for _ in {1..6}; do curl -i http://localhost:8000/anything -H 'apikey:example-key'; echo; done
@@ -116,10 +118,8 @@ for _ in {1..6}; do curl -i http://localhost:8000/anything -H 'apikey:example-ke
 {: data-deployment-topology="on-prem" }
 
 ```bash
-for _ in {1..6}; do curl -i http://{host}/anything -H 'apikey:example-key'; echo; done
+for _ in {1..6}; do curl -i $KONNECT_PROXY_URL/anything -H 'apikey:example-key'; echo; done
 ```
 {: data-deployment-topology="konnect" }
-Replace `{host}` with the proxy URL for this data plane node.
-{: data-deployment-topology="konnect" }
 
-This command sends six consecutive requests to the route. On the last one you should get a `429` error with the message `API rate limit exceeded`.
+This command sends six consecutive requests to the Route. On the last one, you should get a `429` error with the message `API rate limit exceeded`.

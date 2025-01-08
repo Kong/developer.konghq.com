@@ -1,14 +1,13 @@
-function toggleTocLinkClasses(link, isActive) {
-  const activeClasses = ["tab-button__vertical--active"];
-
+function toggleTocLinkClasses(link, isActive, activeClass) {
   if (isActive) {
-    link.classList.add(...activeClasses);
+    link.classList.add(activeClass);
   } else {
-    link.classList.remove(...activeClasses);
+    link.classList.remove(activeClass);
   }
 }
 
 window.addEventListener("scroll", () => {
+  const activeClass = "tab-button__vertical--active";
   const anchors = document.querySelectorAll("a.header-link");
   const scrollToLinks = document.querySelectorAll("a.scroll-to");
   const navHeight = document.getElementById("header-nav").offsetHeight;
@@ -17,9 +16,9 @@ window.addEventListener("scroll", () => {
     return;
   }
 
-  let activeSet = false;
-
-  scrollToLinks.forEach((link) => toggleTocLinkClasses(link, false));
+  let activeSet = document.querySelectorAll(
+    `a.scroll-to.${activeClass}`
+  ).length;
 
   // Convert NodeList to Array and reverse it
   const anchorsArray = Array.from(anchors).reverse();
@@ -33,7 +32,12 @@ window.addEventListener("scroll", () => {
         `a.scroll-to[href$="${element.getAttribute("href")}"]`
       );
       if (matchingLink) {
-        toggleTocLinkClasses(matchingLink, true);
+        toggleTocLinkClasses(matchingLink, true, activeClass);
+        scrollToLinks.forEach(
+          (link) =>
+            link !== matchingLink &&
+            toggleTocLinkClasses(link, false, activeClass)
+        );
         activeSet = true;
       }
       break;

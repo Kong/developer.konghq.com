@@ -28,6 +28,14 @@ icon: ai-prompt-template.png
 
 categories:
   - ai
+
+search_aliases:
+  - ai
+  - llm
+  - artificial
+  - intelligence
+  - language
+  - model
 ---
 
 ## Overview

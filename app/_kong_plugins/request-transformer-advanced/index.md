@@ -25,6 +25,9 @@ icon: request-transformer-advanced.png
 
 categories:
   - transformations
+
+search_aliases:
+  - request-transformer-advanced
 ---
 
 ## Overview

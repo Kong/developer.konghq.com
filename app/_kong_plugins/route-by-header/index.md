@@ -25,6 +25,10 @@ icon: route-by-header.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - route-by-header
+  - route by request header
 ---
 
 ## Overview

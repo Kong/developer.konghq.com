@@ -21,7 +21,7 @@ related_resources:
 
 ---
 
-{{ page.description }}
+{{ page.description | liquify }}
 Understanding these options is crucial for efficient and secure management of your API projects. This document outlines the three primary storage options available in Insomnia: Local Vault, Cloud Sync, and Git Sync.
 
 | You have... | Then use... |

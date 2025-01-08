@@ -28,6 +28,12 @@ icon: oas-validation.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - specification
+  - openapi
+  - swagger
+  - oas-validation
 ---
 
 ## Overview

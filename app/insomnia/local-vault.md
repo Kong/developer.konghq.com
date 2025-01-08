@@ -31,7 +31,7 @@ faqs:
 
 ---
 
-{{ page.description }}
+{{ page.description | liquify }}
 This option is ideal for users who prefer or require their data to remain off the cloud for privacy or security reasons.
 
 Key features:

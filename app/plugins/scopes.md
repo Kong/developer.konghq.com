@@ -46,7 +46,7 @@ Every plugin supports a subset of these scopes.
 
 See the following table for plugins and their compatible scopes:
 
-[Placeholder for table that gets generated from plugin schemas, which will show all the plugin scope compatibilities (equivalent of [scopes](https://docs.konghq.com/hub/plugins/compatibility/#scopes).)]
+{% plugin_scopes %}
 
 ## Plugin precedence
 

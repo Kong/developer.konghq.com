@@ -29,6 +29,15 @@ icon: ai-semantic-cache.png
 
 categories:
   - ai
+
+search_aliases:
+  - ai-semantic-cache
+  - ai
+  - llm
+  - artificial
+  - intelligence
+  - language
+  - model
 ---
 
 ## Overview

@@ -24,6 +24,9 @@ icon: correlation-id.png
 
 categories:
   - transformations
+
+search_aliases:
+  - correlation-id
 ---
 
 ## Overview

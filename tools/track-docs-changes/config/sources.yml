@@ -61,6 +61,8 @@ app/_gateway_entities/route.md:
   - app/_src/gateway/key-concepts/routes/index.md
 app/_gateway_entities/upstream.md:
   - app/_src/gateway/key-concepts/upstreams.md
+app/_gateway_entities/event_hooks.md:
+  - app/_src/gateway/latest/kong-enterprise/event-hooks.md
 
 # how-tos
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
@@ -102,7 +104,10 @@ app/_kong_plugins/ai-proxy-advanced/index.md:
   - app/_hub/kong-inc/ai-proxy-advanced/overview/_index.md
 app/_kong_plugins/ai-proxy/index.md:
   - app/_hub/kong-inc/ai-proxy/overview/_index.md
-
+app/_kong_plugins/cors/index.md:
+  - app/_hub/kong-inc/cors/overview/_index.md
+app/_kong_plugins/mocking/index.md:
+  - /app/_hub/kong-inc/mocking/overview/_index.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
@@ -155,4 +160,6 @@ app/gateway/routing/expressions-router-reference.md:
   - app/_src/gateway/reference/expressions-language/performance.md
 app/gateway/routing/expressions-router-examples.md:
   - app/_src/gateway/reference/expressions-language/index.md 
+app/gateway/networking/dns-config-reference.md:
+  - app/_src/gateway/production/networking/dns-considerations.md
 

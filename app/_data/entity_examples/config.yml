@@ -97,12 +97,12 @@ formats:
 
 targets:
   consumer:
-    label: 'consumer'
+    label: 'Consumer'
   consumer_group:
-    label: 'consumer_group'
+    label: 'Consumer Group'
   global:
-    label: 'global'
+    label: 'Global'
   route:
-    label: 'route'
+    label: 'Route'
   service:
-    label: 'service'
+    label: 'Service'

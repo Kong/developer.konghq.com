@@ -33,7 +33,8 @@ module Jekyll
           'description' => 'Directory of OpenAPI specifications for various Kong APIs.',
           'layout' => 'api/index',
           'content_type' => 'reference',
-          'get_help' => false
+          'get_help' => false,
+          'edit_and_issue_links' => false
         }
       end
     end

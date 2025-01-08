@@ -26,6 +26,9 @@ icon: ai-rate-limiting-advanced.png
 
 categories:
   - ai
+
+search_aliases:
+  - ai-rate-limiting-advanced
 ---
 
 ## Overview

@@ -101,9 +101,22 @@
     @apply font-bold text-lg tracking-[-.01em];
   }
 
+  h4 {
+    @apply font-bold text-base tracking-[-.01em];
+  }
+
   table {
     @apply bg-secondary shadow-primary border-none rounded-lg text-sm;
+
+    &.table__sticky {
+      @apply w-full;
+
+      thead {
+        @apply sticky top-0;
+      }
+    }
   }
+
 
   thead {
     @apply bg-secondary;
@@ -170,7 +183,7 @@
   }
 
   code {
-    @apply text-primary bg-secondary rounded border border-brand-saturated/40 text-xs overflow-auto;
+    @apply text-primary bg-secondary rounded border border-brand-saturated/40 text-xs;
   }
 
   code span {
@@ -180,7 +193,11 @@
 
 @layer components {
   .highlight {
-    @apply inline-grid w-full;
+    @apply w-full bg-code-block h-fit;
+  }
+
+  div.highlight {
+    @apply p-3 inline-grid rounded-lg;
   }
 
   pre {
@@ -191,8 +208,16 @@
     @apply whitespace-pre text-white bg-code-block border-none text-sm;
   }
 
-  pre.highlight {
-    @apply bg-code-block rounded-lg p-3;
+  pre:not(.shiki)::-webkit-scrollbar {
+    @apply w-1 h-1;
+  }
+
+  pre:not(.shiki)::-webkit-scrollbar-thumb {
+    @apply bg-brand rounded-lg;
+  }
+
+  pre::-webkit-scrollbar-track {
+    @apply bg-code-block-header rounded-lg;
   }
 
   code.highlighter-rouge {
@@ -203,7 +228,7 @@
     @apply relative;
   }
 
-  .copy-code-snippet pre.highlight {
+  .copy-code-snippet div.highlight {
     @apply pr-10;
   }
 
@@ -227,7 +252,7 @@
     @apply relative;
   }
 
-  [data-file] pre.highlight {
+  [data-file] div.highlight {
     @apply rounded-t-none;
   }
 
@@ -244,10 +269,10 @@
   }
 
   .success, .warning, .danger, .info, .neutral {
-    @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-11 relative text-sm;
+    @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-10 relative text-sm;
 
     &:not(.no-icon)::before {
-      @apply text-base absolute left-4 w-4 h-4 content-[''];
+      @apply text-base absolute left-4 w-4 h-4 content-[''] top-[18px];
       mask-size: cover;
       mask:url(/assets/icons/admonitions/info.svg);
     }

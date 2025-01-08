@@ -25,6 +25,10 @@ icon: jwt-signer.png
 
 categories:
   - authentication
+
+search_aliases:
+  - json web tokens
+  - jwt-signer
 ---
 
 ## Overview

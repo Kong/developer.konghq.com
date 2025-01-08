@@ -11,16 +11,23 @@ module Jekyll
         module Deck
           class Base < Presenters::Base
             def entity
-              @entity ||= "#{@example_drop.entity_type}s"
+              @entity ||= if @example_drop.entity_type == 'target'
+                            'upstreams'
+                          else
+                            "#{@example_drop.entity_type}s"
+                          end
             end
 
             def data
-              @data ||= @example_drop.data
+              @data ||= Utils::VariableReplacer::DeckData.run(
+                data: _data,
+                variables: variables
+              )
             end
 
             def config
               @config ||= Jekyll::Utils::HashToYAML.new(
-                { entity => [ data ] }
+                { entity => [data] }
               ).convert
             end
 
@@ -31,6 +38,16 @@ module Jekyll
             def missing_variables
               @missing_variables ||= []
             end
+
+            private
+
+            def _data
+              if @example_drop.entity_type == 'target'
+                { 'name' => 'example_upstream', 'targets' => [@example_drop.data] }
+              else
+                @example_drop.data
+              end
+            end
           end
 
           class Plugin < Base
@@ -38,6 +55,11 @@ module Jekyll
               plugin = { 'name' => @example_drop.data.fetch('name') }
               plugin.merge!(target.key => target_value) if target.key != 'global'
               plugin.merge!('config' => @example_drop.data.fetch('config'))
+
+              plugin = Utils::VariableReplacer::DeckData.run(
+                data: plugin,
+                variables:
+              )
 
               Jekyll::Utils::HashToYAML.new({ 'plugins' => [plugin] }).convert
             end
@@ -53,11 +75,15 @@ module Jekyll
             def missing_variables
               return [] if @example_drop.target.key == 'global'
 
-              @missing_variables ||= [formats['deck']['variables'][@example_drop.target.key]]
+              @missing_variables ||= [formats['deck']['variables'][target.key]]
             end
 
             def target_value
-              @target_value ||= target.value || formats['deck']['variables'][target.key]['placeholder']
+              @target_value ||= if target.key == 'global'
+                                  nil
+                                else
+                                  target.value || formats['deck']['variables'][target.key]['placeholder']
+                                end
             end
           end
         end

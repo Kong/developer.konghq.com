@@ -27,6 +27,16 @@ icon: opentelemetry.png
 
 categories:
   - analytics-monitoring
+
+search_aliases:
+  - otlp
+  - otel
+  - open telemetry
+  - dynatrace
+  - tracing
+  - logging
+  - analytics
+  - monitoring
 ---
 
 ## Overview

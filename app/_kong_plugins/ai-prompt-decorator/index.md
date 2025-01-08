@@ -28,6 +28,14 @@ icon: ai-prompt-decorator.png
 
 categories:
   - ai
+
+search_aliases:
+  - ai
+  - llm
+  - artificial
+  - intelligence
+  - language
+  - model
 ---
 
 ## Overview

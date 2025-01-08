@@ -378,6 +378,8 @@ enum
 env
 etag
 etcd
+event_hook
+eventhooks
 eventTime
 failover
 favicon
@@ -507,6 +509,7 @@ loggly
 lookup
 lookups
 loopback
+llm
 lua
 max_args
 max_headers

@@ -1,8 +1,10 @@
 ---
-title: Multiple rate limits and window sizes
+title: Apply multiple rate limits and window sizes
 content_type: how_to
 
 related_resources:
+  - text: Rate Limiting
+    url: /rate-limiting/
   - text: Rate Limiting Advanced plugin
     url: /plugins/rate-limiting-advanced/
 
@@ -57,7 +59,7 @@ cleanup:
 
 ## 1. Enable rate limiting
 
-Enable the [Rate Limiting Advanced plugin](/plugins/rate-limiting-advanced/) for the service.
+Enable the [Rate Limiting Advanced plugin](/plugins/rate-limiting-advanced/) for the Gateway Service.
 
 {% entity_examples %}
 entities:
@@ -85,7 +87,11 @@ otherwise, an error occurs:
 You must provide the same number of windows and limits
 ```
 
-## 2. Validate
+## 2. Apply the configuration
+
+{% include how-tos/steps/apply_config.md %}
+
+## 3. Validate
 
 After configuring the Rate Limiting Advanced plugin, you can verify that it was configured correctly and is working, 
 by sending more requests then allowed in the configured time limit.
@@ -96,6 +102,16 @@ do
   curl http://localhost:8000/example-route/anything/
 done
 ```
+{: data-deployment-topology="on-prem" }
+
+```bash
+for _ in {1..11}
+do
+  curl $KONNECT_PROXY_URL/example-route/anything/
+done
+```
+{: data-deployment-topology="konnect" }
+
 After the 11th request in a minute, you should receive the following `429` error:
 
 ```bash

@@ -25,6 +25,9 @@ icon: http-log.png
 
 categories:
   - logging
+
+search_aliases:
+  - http-log
 ---
 
 ## Overview

@@ -24,7 +24,7 @@ breadcrumbs:
   - /deck/
 ---
 
-{{ page.description }} You can see what the defaults are for each object in the
+{{ page.description | liquify }} You can see what the defaults are for each object in the
 [Admin API reference](https://docs.konghq.com/gateway/latest/admin-api/), or use the
 [`/schemas`](#find-defaults-for-an-object) endpoint to
 check the latest object schemas for your instance of the {{site.base_gateway}}.
@@ -45,7 +45,7 @@ enforce a set of standard values and avoid repetition in your configuration.
 decK assigns values in the following order of precedence, from highest to lowest:
 
 1. Values set for a specific instance of an object in the state file
-(for example, for a service named `example_service` defined in `kong.yml`).
+(for example, for a Gateway Service named `example_service` defined in `kong.yaml`).
 2. Values set in the `{_info: defaults:}` object in the state file.
 3. Self-managed {{site.base_gateway}} only: Values are checked against the Kong
 Admin API schemas.
@@ -237,7 +237,7 @@ For all available properties, see the
 Use the Kong Admin API `/schemas` endpoint to find default values:
 
 ```sh
-curl -i http://localhost:8001/schemas/plugins/<plugin-name>
+curl -i http://localhost:8001/schemas/plugins/$PLUGIN_NAME
 ```
 
 decK doesn't support setting custom default values for the plugin object.

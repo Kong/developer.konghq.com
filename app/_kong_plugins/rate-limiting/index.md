@@ -20,7 +20,7 @@ faqs:
 
 related_resources:
   - text: How to create rate limiting tiers with Rate Limiting Advanced
-    url: https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/how-to/
+    url: /how-to/add-rate-limiting-tiers-with-kong-gateway/
   - text: Rate Limiting Advanced Plugin
     url: /plugins/rate-limiting-advanced/
 
@@ -40,6 +40,9 @@ icon: rate-limiting.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - rate-limiting
 ---
 
 ## Overview
@@ -49,8 +52,8 @@ If the underlying service or route has no authentication layer,
 the **Client IP** address is used. Otherwise, the consumer is used if an
 authentication plugin has been configured.
 
-The advanced version of this plugin, [Rate Limiting Advanced](https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/), provides the ability to apply
-[multiple limits in sliding or fixed windows](https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/#multi-limits-windows).
+The advanced version of this plugin, [Rate Limiting Advanced](/plugins/rate-limiting-advanced/), provides the ability to apply
+[multiple limits in sliding or fixed windows](/plugins/rate-limiting-advanced/#multi-limits-windows).
 
 
 

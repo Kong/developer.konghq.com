@@ -25,6 +25,9 @@ icon: response-transformer.png
 
 categories:
   - transformations
+
+search_aliases:
+  - response-transformer
 ---
 
 ## Overview

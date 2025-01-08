@@ -53,9 +53,16 @@
 
   <body class="bg-primary leading-6 h-full">
     <div class="min-h-full flex flex-col">
+      <blockquote class="danger w-full m-auto">
+        Tech Preview: This website is a confidential tech preview. Do not share the link or its contents with anyone outside the Kong organization.
+      </blockquote>
       {% include_cached header.html %}
 
-    <div class="flex px-5 md:px-8 2xl:px-[156px] 2xl:mx-auto {% unless layout.api_spec == true %}max-w-screen-2xl{% endunless %} flex-1 w-full">
+    <div class="flex flex-col gap-3 px-5 md:px-8 2xl:px-[156px] 2xl:mx-auto {% unless layout.api_spec == true %}max-w-screen-2xl{% endunless %} flex-1 w-full">
+      {% unless layout.api_spec == true %}
+        {% include breadcrumbs_and_links.html %}
+      {% endunless%}
+
       {{ content }}
     </div>
 

@@ -1,0 +1,35 @@
+scopes:
+  columns:
+    - title: Consumer
+      key: consumer
+    - title: Consumer Group
+      key: consumer_group
+    - title: Route
+      key: route
+    - title: Service
+      key: service
+    - title: Global
+      key: global
+
+protocols:
+  columns:
+    - title: "grpc"
+      key: "grpc"
+    - title: "grpcs"
+      key: "grpcs"
+    - title: "http"
+      key: "http"
+    - title: "https"
+      key: "https"
+    - title: "tcp"
+      key: "tcp"
+    - title: "tls"
+      key: "tls"
+    - title: "tls_passthrough"
+      key: "tls_passthrough"
+    - title: "udp"
+      key: "udp"
+    - title: "ws"
+      key: "ws"
+    - title: "wss"
+      key: "wss"

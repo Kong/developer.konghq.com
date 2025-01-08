@@ -1,0 +1,5 @@
+name: my-upstream
+paths:
+  - /upstreams
+service: 
+  name: example-upstreams

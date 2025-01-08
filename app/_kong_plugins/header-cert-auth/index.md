@@ -28,6 +28,11 @@ icon: header-cert-auth.png
 
 categories:
   - authentication
+
+search_aliases:
+  - header cert auth
+  - header-cert-auth
+  - authentication
 ---
 
 ## Overview

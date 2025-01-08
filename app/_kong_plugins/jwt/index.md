@@ -19,6 +19,9 @@ icon: jwt.png
 
 categories:
   - authentication
+
+search_aliases:
+  - json web tokens
 ---
 
 ## Overview

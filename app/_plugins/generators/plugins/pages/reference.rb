@@ -18,7 +18,7 @@ module Jekyll
           super
             .except('faqs')
             .merge(metadata)
-            .merge('reference?' => true)
+            .merge('reference?' => true, 'toc' => false)
         end
 
         def metadata

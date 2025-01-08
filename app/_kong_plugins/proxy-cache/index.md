@@ -25,6 +25,10 @@ icon: proxy-cache.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - proxy caching
+  - proxy-cache
 ---
 
 ## Overview

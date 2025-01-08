@@ -28,6 +28,10 @@ icon: app-dynamics.png
 
 categories:
   - analytics-monitoring
+
+search_aliases:
+  - app dynamics
+  - app-dynamics
 ---
 
 ## Overview

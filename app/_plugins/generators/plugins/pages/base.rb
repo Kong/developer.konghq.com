@@ -31,7 +31,7 @@ module Jekyll
             'tools' => @plugin.formats,
             'breadcrumbs' => ['/plugins/'],
             'compatible_protocols' => compatible_protocols,
-            'schema' => schema.to_json,
+            'schema' => schema,
             'plugin' => @plugin,
             'overview_url' => Overview.url(@plugin.slug),
             'changelog_url' => Changelog.url(@plugin.slug),

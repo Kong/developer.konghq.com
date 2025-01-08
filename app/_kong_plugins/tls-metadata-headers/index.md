@@ -28,6 +28,10 @@ icon: tls-metadata-headers.png
 
 categories:
   - security
+
+search_aliases:
+  - tls-metadata-headers
+  - certificates
 ---
 
 ## Overview

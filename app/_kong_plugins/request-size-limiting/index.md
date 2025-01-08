@@ -25,6 +25,9 @@ icon: request-size-limiting.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - request-size-limiting
 ---
 
 ## Overview

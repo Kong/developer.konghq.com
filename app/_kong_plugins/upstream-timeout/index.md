@@ -25,6 +25,9 @@ icon: upstream-timeout.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - upstream-timeout
 ---
 
 ## Overview

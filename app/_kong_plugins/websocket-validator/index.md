@@ -28,6 +28,9 @@ icon: websocket-validator.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - websocket-validator
 ---
 
 ## Overview

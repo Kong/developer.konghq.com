@@ -26,6 +26,9 @@ icon: azure-functions.png
 
 categories:
   - serverless
+
+search_aliases:
+  - azure-functions
 ---
 
 ## Overview

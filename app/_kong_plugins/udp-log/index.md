@@ -24,6 +24,9 @@ icon: udp-log.png
 
 categories:
   - logging
+
+search_aliases:
+  - udp-log
 ---
 
 ## Overview

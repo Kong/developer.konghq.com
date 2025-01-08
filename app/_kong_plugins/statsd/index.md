@@ -25,6 +25,9 @@ icon: statsd.png
 
 categories:
   - analytics-monitoring
+
+search_aliases:
+  - collectd
 ---
 
 ## Overview

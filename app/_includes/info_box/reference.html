@@ -15,6 +15,10 @@
 </div>
 {% endif %}
 
+{% if page.plugins %}
+{% include info_box/sections/plugins.html plugins=page.plugins %}
+{% endif %}
+
 {% if page.related_resources %}
 {% include info_box/sections/related_resources.html %}
 {% endif %}

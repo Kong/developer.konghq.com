@@ -5,6 +5,7 @@
   data-card="plugin"
   data-category="{{plugin.categories | join: ','}}"
   data-deployment-topology="{{plugin.works_on | join: ','}}"
+  data-search="{{plugin.search_aliases | join: ','}}"
   {% if plugin.tier %}data-tier="{{plugin.tier}}"{% endif %}
 >
     <a href="{{plugin.url}}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">

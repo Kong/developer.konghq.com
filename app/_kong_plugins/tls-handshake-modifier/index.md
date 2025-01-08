@@ -28,6 +28,10 @@ icon: tls-handshake-modifier.png
 
 categories:
   - security
+
+search_aliases:
+  - tls-handshake-modifier
+  - certificates
 ---
 
 ## Overview

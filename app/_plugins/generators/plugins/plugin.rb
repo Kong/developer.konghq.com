@@ -29,7 +29,7 @@ module Jekyll
       def targets
         @targets ||= begin
           targets = %w[consumer consumer_group service route].select do |t|
-            schema.to_json.dig('properties', t)
+            schema.as_json.dig('properties', t)
           end
           targets << 'global'
           targets.sort
@@ -58,11 +58,15 @@ module Jekyll
       end
 
       def schemas
-        @schemas ||= Schema.all(plugin: self)
+        @schemas ||= Drops::Plugins::Schema.all(plugin: self)
       end
 
       def icon
         @icon ||= metadata.fetch('icon')
+      end
+
+      def name
+        @name ||= metadata.fetch('name')
       end
 
       private

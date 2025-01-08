@@ -23,6 +23,10 @@ icon: file-log.png
 
 categories:
   - logging
+
+search_aliases:
+  - log file
+  - file-log
 ---
 
 ## Overview
