@@ -89,11 +89,7 @@ otherwise, an error occurs:
 You must provide the same number of windows and limits
 ```
 
-## 2. Apply the configuration
-
-{% include how-tos/steps/apply_config.md %}
-
-## 3. Validate
+## 2. Validate
 
 {% validation rate-limit-check %}
 preamble: |

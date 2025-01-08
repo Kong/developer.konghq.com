@@ -109,10 +109,6 @@ entities:
         - /mock
 {% endentity_examples %}
 
-### Apply configuration
-
-{% include how-tos/steps/apply_config.md %}
-
 ### Validate the Service and Route by proxying a request
 
 Using the Service and Route, you can now 
@@ -184,7 +180,6 @@ entities:
           - application/json
         cache_ttl: 30
         strategy: memory
-append_to_existing_section: true
 {% endentity_examples %}
 
 This configures a Proxy Cache plugin with the following attributes:
@@ -200,7 +195,7 @@ for the Proxy Cache plugin.
 You can check that the Rate Limiting and Proxy Cache plugins are working by sending `GET` requests and examining
 the returned headers.
 
-[Sync your decK file](#apply-configuration) again, then run the following command to send 6 mock requests. 
+Run the following command to send 6 mock requests. 
 The Proxy Cache plugin returns status information headers prefixed with `X-Cache`, so you can use `grep` to filter for that information:
 
 ```sh
@@ -258,7 +253,6 @@ entities:
       config:
         key_names:
           - apikey
-append_to_existing_section: true
 {% endentity_examples %}
 
 The `key_names` configuration field defines the name of the field that the
@@ -286,7 +280,7 @@ Only specify a key for testing or when migrating existing systems.
 
 ### Validate using key authentication
 
-[Sync your decK file](#apply-configuration), then try to access the Service without providing the key:
+Try to access the Service without providing the key:
 
 {% validation auth-check %}
 url: /mock/anything
@@ -356,8 +350,6 @@ You now have an Upstream with two Targets, `httpbin.konghq.com` and `httpbun.com
 More commonly, Targets will be instances of the same backend service running on different host systems.
 
 ### Validate load balancing
-
-[Sync your decK file](#apply-configuration) one more time.
 
 Validate that the Upstream you configured is working by visiting the `/mock` route several times, 
 waiting a few seconds between each time.
