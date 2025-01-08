@@ -287,16 +287,12 @@ Only specify a key for testing or when migrating existing systems.
 ### Validate using key authentication
 
 [Sync your decK file](#apply-configuration), then try to access the Service without providing the key:
-   
-```sh
-curl -i http://localhost:8000/mock/anything
-```
-{: data-deployment-topology="on-prem" }
 
-```sh
-curl -i $KONNECT_PROXY_URL/mock/anything
-```
-{: data-deployment-topology="konnect" }
+{% validation auth-check %}
+url: /mock/anything
+headers: []
+message: No API key found in request
+{% endvalidation %}
 
 Since you enabled key authentication globally, you will receive an unauthorized response:
 
@@ -311,17 +307,12 @@ HTTP/1.1 401 Unauthorized
 
 Now, let's send a request with the valid key in the `apikey` header:
 
-```sh
-curl -i http://localhost:8000/mock/anything \
-  -H 'apikey:top-secret-key'
-```
-{: data-deployment-topology="on-prem" }
-
-```sh
-curl -i $KONNECT_PROXY_URL/mock/anything \
-  -H 'apikey:top-secret-key'
-```
-{: data-deployment-topology="konnect" }
+{% validation request %}
+url: /mock/anything
+headers:
+  - 'apikey:top-secret-key'
+status_code: 200
+{% endvalidation %}
 
 You will receive a `200 OK` response.
 
