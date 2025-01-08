@@ -660,6 +660,7 @@ sso
 stapxx
 start_cmd
 statsd
+status_code
 stderr
 stdin
 stdout
