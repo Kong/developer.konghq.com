@@ -64,7 +64,7 @@ cleanup:
 
 We need to set up [authentication](/authentication/) to identify the Consumer and apply rate limiting. In this guide, we'll be using the [Key Auth plugin](/plugins/key-auth/) plugin, but you can use any Kong authentication plugin. 
 
-Add the following content to your `kong.yaml` file in the `deck_files` directory to configure the Key Auth plugin:
+Run the following command to configure the Key Auth plugin:
 
 {% entity_examples %}
 entities:
@@ -79,7 +79,7 @@ entities:
 
 Before you can enable rate limiting for tiers of users, we first have to create Consumer Groups for each tier and then add Consumers to those groups. Consumer Groups are solely a way to organize Consumers of your APIs. In this guide, we'll create three tiers (Free, Basic, and Premium), so we need to create a unique Consumer Group for each tier.
 
-Append the following content to your `kong.yaml` file in the `deck_files` directory to create Consumer Groups for each tier:
+Create Consumer Groups for each tier:
 
 {% entity_examples %}
 entities:
@@ -95,7 +95,7 @@ Now that you've added Consumer Groups for each tier, you can create three Consum
 
 We're also adding key auth credentials (`key`) to each Consumer so they can authenticate and we can test later that rate limiting was correctly configured for the different tiers.
 
-Append the following content to your `kong.yaml` file in the `deck_files` directory to create Consumers and their authentication credentials:
+Create Consumers and their authentication credentials:
 
 {% entity_examples %}
 entities:
@@ -154,7 +154,6 @@ entities:
        window_type: sliding
        retry_after_jitter_max: 0
        namespace: premium
-append_to_existing_section: true
 {% endentity_examples %}
    
 This configures the different tiers like the following:
@@ -162,11 +161,7 @@ This configures the different tiers like the following:
 * **Basic:** Allows 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
 * **Premium:** Allows 1,000 requests per second. This configuration sets the rate limit to 500 requests (`config.limit`) for every 30 seconds (`config.window_size`).
 
-## 5. Apply configuration
-
-{% include how-tos/steps/apply_config.md %}
-
-## 6. Validate that rate limiting is working on each tier
+## 5. Validate that rate limiting is working on each tier
 
 Now we can test that each rate limiting tier is working as expected by sending a series of HTTP requests (for example, six for Free Tier and seven for Basic Tier) to the endpoint with the appropriate API key with the goal of exceeding the configured rate limit for that tier. The tests wait for one second between requests to avoid overwhelming the server and test rate limits more clearly.
 

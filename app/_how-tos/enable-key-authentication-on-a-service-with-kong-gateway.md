@@ -80,11 +80,7 @@ entities:
         - key: hello_world
 {% endentity_examples %}
 
-## 3. Apply the configuration
-
-{% include how-tos/steps/apply_config.md %}
-
-## 4. Validate
+## 3. Validate
 
 After configuring the Key Authentication plugin, you can verify that it was configured correctly and is working, by sending requests with and without the API key you created for your Consumer.
 
