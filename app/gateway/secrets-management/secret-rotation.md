@@ -21,7 +21,6 @@ products:
 
 breadcrumbs:
   - /gateway/
-  - /gateway/secrets-management/
 ---
 
 @todo
@@ -29,4 +28,4 @@ breadcrumbs:
 Content ideas:
 * Use content from https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/secrets-rotation/#main
 * explain how secrets are rotated, why, and any best practices/recommendations
-* Link to the related how tos about rotating secrets with third-party backends
+* Link to the related multiple how to about rotating secrets with third-party backends

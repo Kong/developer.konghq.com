@@ -23,9 +23,8 @@ tldr:
 
 tools:
     - deck
-    - konnect-api
+    # - konnect-api
 
-prereqs:
 
 cleanup:
   inline:

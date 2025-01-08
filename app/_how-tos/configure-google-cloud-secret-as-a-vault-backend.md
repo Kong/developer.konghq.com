@@ -34,7 +34,6 @@ tldr:
 tools:
     - deck
 
-prereqs:
 
 cleanup:
   inline:

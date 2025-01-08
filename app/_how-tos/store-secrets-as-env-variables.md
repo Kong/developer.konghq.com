@@ -8,7 +8,6 @@ related_resources:
 products:
     - gateway
 
-tier: free
 
 works_on:
     - on-prem
@@ -32,7 +31,6 @@ tldr:
 tools:
     - deck
 
-prereqs:
 
 cleanup:
   inline:

@@ -38,7 +38,7 @@ schema:
 
 what is a vault + why
 schema
-best practicies
+best practices
 hint of secrets management (link to landing page) (/secrets-management/)
 link to backends
 link to Vault CLI ref
@@ -109,7 +109,7 @@ Kong receives the payload and extracts the `"username"` value of `"john"` for th
 
 ## How do I manage secrets stored in a Vault?
 
-Although {{site.base_gateway}} can't create or add secrets to a Vault, it can help you [manage your secrets](/secrets-management/). By default, {{site.base_gateway}} automatically rotates secrets *once every minute* in the background. You can also futher configure how often {{site.base_gateway}} rotates secrets using the Vault entity configuration and if it rotates secrets on failure (such as a database authentication failure).
+Although {{site.base_gateway}} can't create or add secrets to a Vault, it can help you [manage your secrets](/secrets-management/). By default, {{site.base_gateway}} automatically rotates secrets *once every minute* in the background. You can also further configure how often {{site.base_gateway}} rotates secrets using the Vault entity configuration and if it rotates secrets on failure (such as a database authentication failure).
 
 For more information, see [Secret rotation](/gateway/secrets-management/secret-rotation/).
 
