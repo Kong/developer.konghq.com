@@ -135,10 +135,11 @@ The Vault entity can only be used once the database is initialized. Secrets for 
 {% entity_example %}
 type: vault
 data:
-  name: env
-  description: 'ENV vault for secrets'
   config:
-    prefix: SECRET_
+    prefix: MY_SECRET_
+  description: ENV vault for secrets
+  name: env
+  prefix: my-env-vault
 {% endentity_example %}
 
 
