@@ -61,7 +61,7 @@ The following creates a new Upstream with basic configuration:
 3. Enter a unique name for the Upstream. For example: `{{ include.presenter.data['name'] }}`.
 4. Click **Save**.
 {% when workspace %}
-{% when sni %}
+{% when 'sni' %}
 The following creates a new SNI with basic configuration:
 
 1. In Kong Manager or Gateway Manager, go to **SNIs**.
