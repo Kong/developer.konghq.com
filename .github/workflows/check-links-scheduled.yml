@@ -51,16 +51,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
 
+      - name: npm install
+        run: npm ci
+
       # Build the Docs
       - name: Build Docs
         run: |
-          npm ci
           exe/build
 
       - name: Run site
         run: |
-          npm install -g wait-on
-          netlify dev & wait-on http://localhost:8888
+          npx netlify dev & wait-on http://localhost:8888
 
       - name: Run link checker
         run: |
