@@ -8,7 +8,7 @@ description: An SNI object represents a many-to-one mapping of hostnames to a ce
 
 related_resources:
   - text: Certificates
-    url: /gateway/entities/certificates
+    url: /gateway/entities/certificate
       
 tools:
     - admin-api
@@ -29,7 +29,7 @@ schema:
 
 ## What is an SNI?
 
-An SNI (Server Name Indication) is used to map multiple hostnames to a [Certificate](/gateway/entities/certificates). It allows {{site.base_gateway}} to select which SSL/TLS Certificate to use based on the hostname in the client request. This feature ensures that multiple domains can be securely served through the same gateway.
+An SNI (Server Name Indication) is used to map multiple hostnames to a [Certificate](/gateway/entities/certificate). It allows {{site.base_gateway}} to select which SSL/TLS Certificate to use based on the hostname in the client request. This feature ensures that multiple domains can be securely served through the same gateway.
 
 ## Schema
 
