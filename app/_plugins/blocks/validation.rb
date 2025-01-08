@@ -4,6 +4,11 @@ require 'yaml'
 
 module Jekyll
   class Validation < Liquid::Block # rubocop:disable Style/Documentation
+    def initialize(tag_name, markup, tokens)
+      super
+      @name = markup.strip
+    end
+
     def render(context) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
       @context = context
       @site = context.registers[:site]
@@ -11,13 +16,17 @@ module Jekyll
 
       contents = super
 
+      unless @page.fetch('products', []).include?('gateway')
+        raise ArgumentError,
+              "Unsupported product for {% validation #{@name} %}"
+      end
+
       config = YAML.load(contents)
+      drop = Drops::Validations::Base.make_for(yaml: config, name: @name)
 
       context.stack do
-        context['config'] = Drops::Validations::RateLimitCheck.new(config)
-        Liquid::Template.parse(
-          File.read('app/_includes/how-tos/validations/rate-limit-check/index.html')
-        ).render(context)
+        context['config'] = drop
+        Liquid::Template.parse(File.read(drop.template_file)).render(context)
       end
     rescue Psych::SyntaxError => e
       message = <<~STRING

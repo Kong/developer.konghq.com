@@ -1,6 +1,6 @@
 ```bash
 for _ in {1..{{include.iterations}}}; do
-  curl -I {{include.url}} {% if include.headers %}\{%- endif -%}
+  curl {{include.url}} {% if include.headers %}\{%- endif -%}
      {%- for header in include.headers %}
        -H '{{header}}' {%- unless forloop.last -%}\{% endunless %}{%- endfor %}
   echo

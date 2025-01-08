@@ -88,34 +88,17 @@ entities:
 
 After configuring the Key Authentication plugin, you can verify that it was configured correctly and is working, by sending requests with and without the API key you created for your Consumer.
 
-This request should be successful:
+{% validation request %}
+preamble: "This request should be successful:"
+url: /anything
+headers:
+  - 'apikey:hello_world'
+status_code: 200
+{% endvalidation %}
 
-```bash
-curl --request GET \
- --url http://localhost:8000/example-route/anything \
- --header 'apikey: hello_world'
-```
-{: data-deployment-topology="on-prem" }
-
-```bash
-curl --request GET \
- --url $KONNECT_PROXY_URL/example-route/anything \
- --header 'apikey: hello_world'
-```
-{: data-deployment-topology="konnect" }
-
-This request should return a `401 Unauthorized` error:
-
-```bash
-curl --request GET \
- --url http://localhost:8000/example-route/anything \
- --header 'apikey: another_key'
-```
-{: data-deployment-topology="on-prem" }
-
-```bash
-curl --request GET \
- --url $KONNECT_PROXY_URL/example-route/anything \
- --header 'apikey: another_key'
-```
-{: data-deployment-topology="konnect" }
+{% validation auth-check %}
+preamble: "This request should return a `401` error with the message `Unauthorized`:"
+url: /anything
+headers:
+  - 'apikey:another_key'
+{% endvalidation %}
