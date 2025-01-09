@@ -20,17 +20,17 @@ schema:
 faqs:
   - q: Do I have to enable Workspaces? 
     a: |
-      {{site.base_gateway}} ships with Workspaces, the default Workspace is named `default` and contains any global {{site.base_gateway}} configuration. 
+     No, {{site.base_gateway}} Enterprise ships with the `default` Workspace, which contains any global {{site.base_gateway}} configuration. 
   - q: Are there entities that can't exist in a Workspace?
     a: |
       Yes, some entities are global meaning they don't exist in any individual Workspace. For example `ca_certificates`.
   - q: Can I use Workspaces in Konnect?
     a: |
-      Konnect offers access to the more power Consumer Groups [/gateway/entities/consumer-group/]
+      No. Instead, {{site.konnect_short_name}} offers the more powerful Consumer Groups [/gateway/entities/consumer-group/] to organize and categorize of Consumers (users or applications) within an API ecosystem 
 
   - q: Can a Workspace share a name with another Workspace?
     a: |
-      Individual Workspaces can be managed using [decK](/deck/). However, decK can't manage multiple Workspaces at the same time, or delete Workspaces.
+      Yes
   
 ---
 
@@ -39,7 +39,7 @@ faqs:
 
 Workspaces are a way of namespacing {{site.base_gateway}} entities so they can be managed independently. Workspaces maintain a unified routing table on the data plane to support client traffic segmentation.
 
-The data plane routes client traffic based on the configuration applied across all Workspaces. Configuring entities related to routing such as Services and Routes alter the client traffic routing behavior of the data plane but {{site.base_gateway}} will always attempt to ensure that routing rules don't contain conflicts. 
+Workspaces can't share entities, like Services, between them. Only users with the correct Workspace permissions can manage entities in a particular Workspace.
 
 Workspaces support multi-tenancy in that they isolate {{site.base_gateway}} configuration objects and when paired with RBAC,  {{site.base_gateway}} administrators can effectively create tenants within the control plane. The Workspace administrators have segregated and secure access to only their portion of the {{site.base_gateway}} configuration in Kong Manager, the Admin API, and the declarative configuration tool decK.
 
