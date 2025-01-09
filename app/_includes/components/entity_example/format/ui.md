@@ -60,11 +60,6 @@ The following creates a new Upstream with basic configuration:
 2. Click **New Upstream**.
 3. Enter a unique name for the Upstream. For example: `{{ include.presenter.data['name'] }}`.
 4. Click **Save**.
-{% when workspace %}
-{% else %}
-{% endcase %}
-{% endif %}
-
 {% when 'workspace' %}
 The following creates a new Workspace:
 
@@ -72,3 +67,7 @@ The following creates a new Workspace:
 2. Add a name, then select **Create New Workspace**
 
 This will create a new Workspace, and from here you can start managing entities from Kong Manager.
+{% else %}
+{% endcase %}
+{% endif %}
+
