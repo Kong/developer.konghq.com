@@ -181,7 +181,7 @@ async function extractInstructions(uri, config) {
 
 // TODO: extract the following functions from this file
 async function loadConfig() {
-  const configFile = "./config/setup.yaml";
+  const configFile = "./config.yaml";
 
   const fileContent = await fs.readFile(configFile, "utf8");
   const config = yaml.load(fileContent);
