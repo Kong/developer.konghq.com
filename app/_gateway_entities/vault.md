@@ -28,7 +28,7 @@ faqs:
         * If a Vault is deleted while in use -- that is, if there are still references to
         secrets in a Vault in configuration -- it can lead to total loss of proxy capabilities.
         Those secrets would be unrecoverable.
-  - q: How should I manage my Vault configuration with decK?
+  - q: What are general best practices for managing Vaults?
     a: |
         To keep your environment secure and avoid taking down your proxies by accident, make sure to:
         * Manage Vaults with distributed configuration via tags.
@@ -63,18 +63,18 @@ Some of the most common types of secrets used by {{site.base_gateway}} include:
 * Data store usernames and passwords, used with PostgreSQL and Redis
 * Private X.509 certificates
 * API keys
-* Sensitive plugin configuration fields, generally used for authentication, hashing, signing, or encryption
+* Sensitive configuration fields, generally used for authentication, hashing, signing, or encryption
 
 ## Vault use cases
 
-The main use case for Vaults is that they allow you to securely store and then reference those secrets from other entities. This ensures that secrets aren't visible in plaintext throughout the platform, in places such as `kong.conf`,
-in declarative configuration files, logs, or in the UI.
+Vaults allow you to securely store and then reference secrets from within other entities. This ensures that secrets aren't visible in plaintext throughout the platform, in places such as `kong.conf`,
+declarative configuration files, logs, or the UI.
 
 For example, you could store a certificate and a key in a Vault, then reference them from a [Certificate entity](/gateway/entities/certificate/). This way, the certificate and key are not stored in the entity directly and are more secure.
 
 ## How do I add secrets to a Vault?
 
-Vaults store secrets, they don't create secrets. You must add secrets to the Vault in one of the following ways: 
+You can add secrets to Vaults in one of the following ways: 
 * Environment variables
 * {{site.konnect_short_name}} Config Store
 * Supported third-party backend vault
@@ -132,7 +132,7 @@ features:
     supports_konnect: true
 {% endfeature_table %}
 
-## How do I use secrets stored in a Vault?
+## How do I reference secrets stored in a Vault
 
 When you want to use a secret stored in a Vault, you can reference the secret with a `vault` reference. You can use the `vault` reference in places such as `kong.conf`, declarative configuration files, logs, or in the UI.
 
@@ -159,9 +159,13 @@ Would point to a secret object called `pg` inside a HashiCorp Vault, which may r
 `{vault://hcv/pg/username}`.
 <!-- vale on -->
 
-## How do I manage secrets stored in a Vault?
+## Secret rotation in Vault
 
-Although {{site.base_gateway}} can't create or add secrets to a Vault, it can help you [manage your secrets](/secrets-management/). By default, {{site.base_gateway}} automatically rotates secrets *once every minute* in the background. You can also further configure how often {{site.base_gateway}} rotates secrets using the Vault entity configuration and if it rotates secrets on failure (such as a database authentication failure).
+By default, {{site.base_gateway}} automatically rotates secrets *once every minute* in the background. You can also configure how often {{site.base_gateway}} rotates secrets using the Vault entity configuration. 
+
+There are two types of rotation configuration available: 
+* Rotate periodically using TTLs (for example: check for a new TLS certificate once per day)
+* Rotate on failure (for example: on a database authentication failure, check if the secrets were updated, and try again)
 
 For more information, see [Secret rotation](/gateway/secrets-management/secret-rotation/).
 
