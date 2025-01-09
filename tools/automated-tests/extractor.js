@@ -114,7 +114,7 @@ async function extractCleanup(page) {
   return instructions;
 }
 
-async function writeInstrctionsToFile(url, config, platform, instructions) {
+async function writeInstructionsToFile(url, config, platform, instructions) {
   const instructionsFile = path.join(
     config.outputDir,
     url.pathname,
@@ -158,7 +158,7 @@ async function extractInstructions(uri, config) {
       const prereqs = await extractPrereqs(page);
       const steps = await extractSteps(page);
       const cleanup = await extractCleanup(page);
-      const instructionsFile = await writeInstrctionsToFile(
+      const instructionsFile = await writeInstructionsToFile(
         url,
         config,
         platform,
