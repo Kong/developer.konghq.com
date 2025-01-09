@@ -8,11 +8,15 @@ description: A Vault is used to store secrets.
 
 related_resources:
   - text: Vault CLI
-    url: /
+    url: /secrets-management/vault-cli
   - text: Secrets Management
     url: /secrets-management
   - text: Secret rotation
     url: /gateway/secret-management/secret-rotation
+  - text: Workspaces 
+    url: /gateway/entities/workspace 
+  - text: RBAC 
+    url: /gateway/entities/rbac
   
 
 faqs:
@@ -35,6 +39,12 @@ faqs:
         * Use a separate [RBAC role, user, and token](/gateway/entities/rbac/)
         to manage Vaults. Don't use a generic admin user.
         * Set up a separate CI pipeline for Vaults.
+  - q: What types of fields can be used in Vaults?
+    a: Vault works with "referenceable" fields. All fields in `kong.conf` are referenceable and some fields within entities (ex. plugins, certificates) are also. Refer to the appropriate entity documentation to learn more.
+  - q: Can Vaults be referenced during custom plugin development?
+    a: Yes. The plugin development kit (PDK) offers a Vaults module (`kong.vault`) that can be used to resolve, parse, and verify Vault references.
+  - q: What data types can I use when referencing a secret in a Vault?
+    a: A secret reference points to a string value. No other data types are currently supported.
 
 tools:
     - admin-api
@@ -79,7 +89,7 @@ You can add secrets to Vaults in one of the following ways:
 * {{site.konnect_short_name}} Config Store
 * Supported third-party backend vault
 
-The following table goes into detail about the different options you have:
+## Supported backends
 
 {% feature_table %}
 item_title: Backend
@@ -88,55 +98,47 @@ columns:
     key: oss
   - title: Kong Gateway Enterprise
     key: enterprise
-  - title: Uses Vault entity
-    key: uses_vault
   - title: Konnect supported
     key: supports_konnect
 
 features:
-  - title: Environment variable
+  - title: Environment variable<sup>1</sup>
     url: /how-to/store-secrets-as-env-variables/
     oss: true
     enterprise: true
-    uses_vault: false
     supports_konnect: true
   - title: Konnect Config Store
     url: /how-to/store-secrets-in-konnect-config-store/
     oss: false
     enterprise: false
-    uses_vault: true
     supports_konnect: true
   - title: AWS Secrets Manager
     url: /how-to/configure-aws-secrets-manager-as-a-vault-backend/
     oss: false
     enterprise: true
-    uses_vault: true
     supports_konnect: true
   - title: Azure Key Vaults
     url: /how-to/configure-azure-key-vaults-as-a-vault-backend/
     oss: false
     enterprise: true
-    uses_vault: true
     supports_konnect: true
   - title: Google Cloud Secret
     url: /how-to/configure-google-cloud-secret-as-a-vault-backend/
     oss: false
     enterprise: true
-    uses_vault: true
     supports_konnect: true
   - title: Hashicorp Vault
     url: /how-to/configure-hashicorp-vault-as-a-vault-backend/
     oss: false
     enterprise: true
-    uses_vault: true
     supports_konnect: true
 {% endfeature_table %}
+
+<sup>1</sup> You can use environment variables as a Vaults backend either with or without using the Vaults entity.
 
 ## How do I reference secrets stored in a Vault
 
 When you want to use a secret stored in a Vault, you can reference the secret with a `vault` reference. You can use the `vault` reference in places such as `kong.conf`, declarative configuration files, logs, or in the UI.
-
-A secret reference points to a string value. No other data types are currently supported.
 
 The Vault backend may store multiple related secrets inside an object, but the reference
 should always point to a key that resolves to a string value. For example, the following reference:
@@ -180,11 +182,11 @@ The Vault entity can only be used once the database is initialized. Secrets for 
 {% entity_example %}
 type: vault
 data:
+  name: env
+  description: ENV vault for secrets
+  prefix: my-env-vault
   config:
     prefix: MY_SECRET_
-  description: ENV vault for secrets
-  name: env
-  prefix: my-env-vault
 {% endentity_example %}
 
 
