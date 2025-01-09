@@ -58,9 +58,8 @@ async function extractPrereqs(page) {
   return { blocks };
 }
 
-async function extractSetup(config, page) {
+async function extractSetup(page) {
   // Fetch all elements that have data-test-setup and copy its value.
-  // Check the config for specific values.
   const instructions = [];
   const setups = await page.$$("[data-test-setup]");
 
@@ -70,14 +69,7 @@ async function extractSetup(config, page) {
       let key;
       try {
         const json = JSON.parse(instruction);
-        key = Object.keys(json)[0];
-
-        if (config.versions[key]) {
-          // Overwrite the version with env variable
-          instructions.push({ [key]: config.versions[key] });
-        } else {
-          instructions.push(json);
-        }
+        instructions.push(json);
       } catch (error) {
         // Not a json, for products/platforms that don't have versions.
         instructions.push(instruction);
@@ -122,10 +114,11 @@ async function extractCleanup(page) {
   return instructions;
 }
 
-async function writeInstrctionsToFile(url, config, instructions) {
+async function writeInstrctionsToFile(url, config, platform, instructions) {
   const instructionsFile = path.join(
     config.outputDir,
-    url.pathname.slice(1, -1) + ".yaml"
+    url.pathname,
+    `${platform}.yaml`
   );
   const outputDir = path.dirname(instructionsFile);
   await fs.mkdir(outputDir, { recursive: true });
@@ -149,20 +142,36 @@ async function extractInstructions(uri, config) {
     log(`Extracting instructions from: ${url}`);
     await page.goto(url, { waitUntil: "domcontentloaded" });
 
-    await page.select("select#deployment-topology-switch", config.platform);
+    const platforms = await page.evaluate(() => {
+      const dropdown = document.querySelector(
+        "select#deployment-topology-switch"
+      );
+      if (!dropdown) return [];
 
-    const setup = await extractSetup(config, page);
-    const prereqs = await extractPrereqs(page);
-    const steps = await extractSteps(page);
-    const cleanup = await extractCleanup(page);
-    const instructionsFile = await writeInstrctionsToFile(url, config, {
-      setup,
-      prereqs,
-      steps,
-      cleanup,
+      return Array.from(dropdown.options).map((option) => option.value);
     });
 
-    log(`Instructions extracted successfully to ${instructionsFile}`);
+    for (const platform of platforms) {
+      await page.select("select#deployment-topology-switch", platform);
+
+      const setup = await extractSetup(page);
+      const prereqs = await extractPrereqs(page);
+      const steps = await extractSteps(page);
+      const cleanup = await extractCleanup(page);
+      const instructionsFile = await writeInstrctionsToFile(
+        url,
+        config,
+        platform,
+        {
+          setup,
+          prereqs,
+          steps,
+          cleanup,
+        }
+      );
+
+      log(`Instructions extracted successfully to ${instructionsFile}`);
+    }
   } catch (error) {
     log("There was an error extracting the instructions:", error);
   } finally {
@@ -207,7 +216,6 @@ async function loadConfig() {
   const config = await loadConfig();
   log(`Config: ${JSON.stringify(config)}`);
 
-  // TODO: toggle config.platform, i.e. konnect or gateway
   extractInstructions(
     "http://localhost:8888/how-to/add-rate-limiting-for-a-consumer-with-kong-gateway/",
     config
