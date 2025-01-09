@@ -64,3 +64,11 @@ The following creates a new Upstream with basic configuration:
 {% else %}
 {% endcase %}
 {% endif %}
+
+{% when 'workspace' %}
+The following creates a new Workspace:
+
+1. From the Kong Manager Dashboard select **New Workspace**
+2. Add a name, then select **Create New Workspace**
+
+This will create a new Workspace, and from here you can start managing entities from Kong Manager.

@@ -37,20 +37,13 @@ faqs:
 
 ## What is a Workspace?
 
-Workspaces are a way of namespacing {{site.base_gateway}} entities so they can be managed independently. Workspaces maintain a unified routing table on the data plane to support client traffic segmentation.
-
-Workspaces can't share entities, like Services, between them. Only users with the correct Workspace permissions can manage entities in a particular Workspace.
-
-Workspaces support multi-tenancy in that they isolate {{site.base_gateway}} configuration objects and when paired with RBAC,  {{site.base_gateway}} administrators can effectively create tenants within the control plane. The Workspace administrators have segregated and secure access to only their portion of the {{site.base_gateway}} configuration in Kong Manager, the Admin API, and the declarative configuration tool decK.
-
-How you design your Workspaces is largely influenced by your specific requirements and the layout of your organization. You may choose to create Workspaces for teams, business units, environments, projects, or some other aspect of your system.
+Workspaces are a way of namespacing {{site.base_gateway}} entities so they can be managed independently. Workspaces work in combination with RBAC to create isolated environments for teams to operate independently of each other. Workspaces can't share entities, like Services, between them, and only Workspace Admins with the correct permissions, in the Workspace, can manage them. Workspaces support [multi-tenancy](/gateway/multi-tenancy) by isolating {{site.base_gateway}} configuration objects and when paired with RBAC, {{site.base_gateway}} administrators can effectively create tenants within the control plane. The Workspace administrators have segregated and secure access to only their portion of the {{site.base_gateway}} configuration in Kong Manager, the Admin API, and the declarative configuration tool decK.
 
 
-For more information, see [Multi-tenant architecture ](/gateway/multi-tenancy).
 {% mermaid %}
 flowchart LR
     subgraph Workspace1 [Workspace-1]
-        A(Team A's Service)
+        A(Team A's - Service)
         B(Route)
     end 
 
@@ -80,16 +73,17 @@ Routing rules are configured at the data plane level. The data plane routes clie
 
 To route traffic to the appropriate Workspace, {{site.base_gateway}} uses a conflict detection algorithm.
 
-When a Service or Route is **created** or **modified**, the {{site.base_gateway}} Router does the following: 
+When a Service or Route is **created** or **modified**, the {{site.base_gateway}} Router checks for the existence of that object before allowing the operation to proceed in this order:
 
-1. If no matches found: The operation proceeds.
-2. If a Service or Route match is found in the Workspace that matches the one listed in the request: The operation proceeds
-3. If a Service or Route match is found in a different Workspace: 
-  * If the matching Service or Route has no host value: issue a `409 Conflict` error
-  * If the host is a wildcard:
-        * If it matches, issue a `409 Conflict` error
-        * If it doesn't match, the operation proceeds.
+* If the Service or Route created is totally unique and does not match an existing entity, the new entity is created. 
+* If an existing Service or Route object that matches the one being created is found, a `409 Conflict` error is returned. 
+* If an equivalent Service or a Route is found in a different Workspace, the new entity is created.
+* If an equivalent Service or Route is found in a different Workspace, and the host is a wildcard: 
+  * If the host field matches in both workspaces, a `409 Conflict` error is returned.
+  * If the host field does not match, the new entity can be created.
   * If the host is an absolute value: Issue a `409 Conflict` error.
+
+ 
 
 ## Roles, groups, and permissions
 
@@ -105,7 +99,6 @@ The following table details which Workspace permissions each Admin role has:
 | Manage all Workspaces across the organization |  ✅  |  ❌  | 
 
 For more information, see [Roles and permissions](/gateway/roles-and-permissions).
-
 
 
 ### Manage multiple Workspaces with decK 
