@@ -41,6 +41,12 @@ Workspaces are a way of namespacing {{site.base_gateway}} entities so they can b
 
 The data plane routes client traffic based on the configuration applied across all Workspaces. Configuring entities related to routing such as Services and Routes alter the client traffic routing behavior of the data plane but {{site.base_gateway}} will always attempt to ensure that routing rules don't contain conflicts. 
 
+Workspaces support multi-tenancy in that they isolate {{site.base_gateway}} configuration objects and when paired with RBAC,  {{site.base_gateway}} administrators can effectively create tenants within the control plane. The Workspace administrators have segregated and secure access to only their portion of the {{site.base_gateway}} configuration in Kong Manager, the Admin API, and the declarative configuration tool decK.
+
+How you design your Workspaces is largely influenced by your specific requirements and the layout of your organization. You may choose to create Workspaces for teams, business units, environments, projects, or some other aspect of your system.
+
+
+For more information, see [Multi-tenant architecture ](/gateway/multi-tenancy).
 {% mermaid %}
 flowchart LR
     subgraph Workspace1 [Workspace-1]
@@ -66,51 +72,41 @@ flowchart LR
  
 {% endmermaid %}
 
-## Schema
-
-{% entity_schema %}
 
 
-### Conflict detection algorithm
+### How does {{site.base_gateway}} resolve entity conflicts between Workspaces?
 
-Routing rules are configured at the data plane level. To ensure that traffic can be routed to the appropriate Workspace, {{site.base_gateway}} uses a conflict detection algorithm. The algorithm can be explained like this: 
+Routing rules are configured at the data plane level. The data plane routes client traffic based on the configuration applied across all Workspaces. Configuring entities related to routing, such as [Gateway Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/), alter the client traffic routing behavior of the data plane, but {{site.base_gateway}} will always attempt to ensure that routing rules don't contain conflicts. 
 
-When a Service or Route is **created** or **modified**, the {{site.base_gateway}} Router performs the following sequence to check for duplicate or matching rules: 
+To route traffic to the appropriate Workspace, {{site.base_gateway}} uses a conflict detection algorithm.
+
+When a Service or Route is **created** or **modified**, the {{site.base_gateway}} Router does the following: 
 
 1. If no matches found: The operation proceeds.
-2. If a match is found in the same Workspace: The operation proceeds
-3. If a match is found in a different Workspace: 
+2. If a Service or Route match is found in the Workspace that matches the one listed in the request: The operation proceeds
+3. If a Service or Route match is found in a different Workspace: 
   * If the matching Service or Route has no host value: issue a `409 Conflict` error
   * If the host is a wildcard:
-        * if it matches issue a `409 Conflict` error
+        * If it matches, issue a `409 Conflict` error
         * If it doesn't match, the operation proceeds.
   * If the host is an absolute value: Issue a `409 Conflict` error.
 
 ## Roles, groups, and permissions
 
-Workspaces allow users to control {{site.base_gateway}} entities in isolation. Individual permissions for Workspaces are configured using RBAC. Roles are sets of permissions that can be assigned to admins and users and can be specific to a Workspace. There are two types of Admin roles in {{site.base_gateway}}: **Super Admin** and **Admin**. 
+Because Workspaces allow users to control {{site.base_gateway}} entities in isolation, users must have the correct permissions to configure a particular Workspace. Users will require either a Super Admin or Admin role to configure Workspaces. 
 
-A super admin within the contexts of Workspaces can perform the following actions: 
-* Create new Workspaces
-* Assign and revoke roles to admins
-* Manage all Workspaces across the organization
+The following table details which Workspace permissions each Admin role has:
 
-An admin within the context of Workspaces can only manage entities within the specified Workspace. 
+| Permission | Super Admin | Admin |
+|-----------|---------------|-------|
+| Manage entities within the specified Workspace |  ✅  |  ✅  |
+| Create new Workspaces |  ✅  |  ❌  |
+| Assign and revoke roles to admins |  ✅  |  ❌  |
+| Manage all Workspaces across the organization |  ✅  |  ❌  | 
 
-For more information see [Roles and permissions](/gateway/roles-and-permissions)
-
-
-## Multi-tenant Control Plane and Data Plane
-
-Multi-tenancy is supported with Workspaces. Workspaces provide an isolation of {{site.base_gateway}} configuration objects while maintaining a unified routing table on the data plane to support client traffic. You can create Workspaces for teams, business units, environments, projects or other aspects of your system. 
-
-When pairing Workspaces with RBAC, {{site.base_gateway}} administrators can effectively create tenants within the control plane. The {{site.base_gateway}} administrator creates Workspaces and assigns administrators to them. The Workspace administrators have segregated and secure access to only their portion of the {{site.base_gateway}} configuration in Kong Manager, the Admin API, and the declarative configuration tool decK.
+For more information, see [Roles and permissions](/gateway/roles-and-permissions).
 
 
-How you design your Workspaces is largely influenced by your specific requirements and the layout of your organization. You may choose to create Workspaces for teams, business units, environments, projects, or some other aspect of your system.
-
-
-For more information, view [Multi-tenant architecture ](/gateway/multi-tenancy)
 
 ### Manage multiple Workspaces with decK 
 
@@ -129,19 +125,23 @@ _workspace: default
 services:
 - name: example_service
 ```
-### Deploying Workspace-specific config 
+### Deploy Workspace-specific config 
 
-Configurations deployed with decK must be deployed on a per-Workspace basis, individually. This is achieved using the `--workspace` flag: 
+decK configurations must be deployed on a per-Workspace basis, individually. This is achieved using the `--workspace` flag: 
 
 `deck gateway sync default.yaml --workspace default`
 
 
-### Delete Workspace configuration
+### Delete a Workspace configuration
 
 decK can't delete Workspaces. However, using `deck gateway reset` in combination with the `--workspace` or `--all-workspaces` flags forces decK to delete the entire configuration inside the Workspace, but not the Workspace itself.
 
 
-## Configure a Workspace
+## Schema
+
+{% entity_schema %}
+
+## Set up a Workspace
 
 {% entity_example %}
 type: workspace
