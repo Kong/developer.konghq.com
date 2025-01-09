@@ -81,15 +81,56 @@ Vaults store secrets, they don't create secrets. You must add secrets to the Vau
 
 The following table goes into detail about the different options you have:
 
-| Backend                                                   | {{site.base_gateway}} OSS | {{site.base_gateway}} Enterprise | Uses Vault entity              | {{site.konnect_short_name}} supported |
-| --------------------------------------------------------- | ------------------------ | -------------------------------- | ------------------------------ | ------------------------------------- |
-| [Environment variable](/how-to/store-secrets-as-env-variables) | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/close.svg" alt="Cross icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">        |
-| [{{site.konnect_short_name}} Config Store](/how-to/store-secrets-in-konnect-config-store) | <img src="/app/assets/icons/close.svg" alt="Cross icon"> | <img src="/app/assets/icons/close.svg" alt="Cross icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">        |
-| [AWS Secrets Manager](/how-to/configure-aws-secrets-manager-as-a-vault-backend) | <img src="/app/assets/icons/close.svg" alt="Cross icon"> | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">        |
-| [Azure Key Vaults](/how-to/configure-azure-key-vaults-as-a-vault-backend) | <img src="/app/assets/icons/close.svg" alt="Cross icon"> | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">        |
-| [Google Cloud Secret](/how-to/configure-google-cloud-secret-as-a-vault-backend) | <img src="/app/assets/icons/close.svg" alt="Cross icon"> | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">        |
-| [Hashicorp Vault](/how-to/configure-hashicorp-vault-as-a-vault-backend) | <img src="/app/assets/icons/close.svg" alt="Cross icon"> | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">   | <img src="/app/assets/icons/check.svg" alt="Check icon">        |
+{% feature_table %}
+item_title: Backend
+columns:
+  - title: Kong Gateway OSS
+    key: oss
+  - title: Kong Gateway Enterprise
+    key: enterprise
+  - title: Uses Vault entity
+    key: uses_vault
+  - title: Konnect supported
+    key: supports_konnect
 
+features:
+  - title: Environment variable
+    url: /how-to/store-secrets-as-env-variables/
+    oss: true
+    enterprise: true
+    uses_vault: false
+    supports_konnect: true
+  - title: Konnect Config Store
+    url: /how-to/store-secrets-in-konnect-config-store/
+    oss: false
+    enterprise: false
+    uses_vault: true
+    supports_konnect: true
+  - title: AWS Secrets Manager
+    url: /how-to/configure-aws-secrets-manager-as-a-vault-backend/
+    oss: false
+    enterprise: true
+    uses_vault: true
+    supports_konnect: true
+  - title: Azure Key Vaults
+    url: /how-to/configure-azure-key-vaults-as-a-vault-backend/
+    oss: false
+    enterprise: true
+    uses_vault: true
+    supports_konnect: true
+  - title: Google Cloud Secret
+    url: /how-to/configure-google-cloud-secret-as-a-vault-backend/
+    oss: false
+    enterprise: true
+    uses_vault: true
+    supports_konnect: true
+  - title: Hashicorp Vault
+    url: /how-to/configure-hashicorp-vault-as-a-vault-backend/
+    oss: false
+    enterprise: true
+    uses_vault: true
+    supports_konnect: true
+{% endfeature_table %}
 
 ## How do I use secrets stored in a Vault?
 
