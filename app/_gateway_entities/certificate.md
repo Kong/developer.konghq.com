@@ -9,6 +9,8 @@ description: A certificate object represents a public certificate, and can be op
 related_resources:
   - text: Set up {{site.base_gateway}} to serve an SSL certificate for API requests
     url: /how-to/setup-gateway-to-serve-SSL-certificates
+  - text: CA Certificate entity
+    url: /gateway/entities/ca-certificate/
 
 tools:
     - admin-api
@@ -28,7 +30,7 @@ schema:
 
 faqs:
   - q: What's the difference between the Certificate entity and the CA Certificate entity?
-    a: Certificates handle SSL/TLS termination for encrypted requests and CA Certificates validate client or server certificates.
+    a: Certificates handle [SSL/TLS termination](/kic/tls-termination-passthrough) for encrypted requests and [CA Certificates](/gateway/entities/ca-certificate/) validate client or server certificates.
   - q: Is the Certificate entity used in {{site.konnect_short_name}} for data plane nodes as well?
     a: No, the data plane nodes use a [different certificate](/api/konnect/control-planes-config/).
 ---
@@ -38,7 +40,7 @@ faqs:
 A Certificate object represents a public certificate, which is used to validate the sender's authorization and name. It can optionally be paired with the corresponding private key to initiate secure connections and encrypt sensitive data. 
 
 {{site.base_gateway}} can use Certificates in the following ways:
-* Handle [SSL/TLS termination](https://docs.konghq.com/kubernetes-ingress-controller/latest/guides/services/tls/) for encrypted requests
+* Handle [SSL/TLS termination](/kic/tls-termination-passthrough) for encrypted requests
 * Use as a trusted CA store when validating peer certificate of client or Service
 * Tie a certificate and key pair to one or more hostnames using the associated SNI object
 
