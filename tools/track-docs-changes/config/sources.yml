@@ -53,7 +53,6 @@ app/_gateway_entities/workspace.md:
   - app/_src/gateway/kong-enterprise/workspaces.md
 app/_gateway_entities/event_hooks.md:
   - app/_src/gateway/latest/kong-enterprise/event-hooks.md
-
 # how-tos
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
   - /app/_hub/kong-inc/rate-limiting-advanced/how-to/_index.md
@@ -72,6 +71,8 @@ app/_how-tos/set-up-ai-proxy-advanced-with-anthropic.md:
   - app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_anthropic.md
 app/_how-tos/set-up-ai-proxy-with-anthropic.md:
   - app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_anthropic.md
+app/_how-tos/proxy-tls-passthrough-traffic-using-sni.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
