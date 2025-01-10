@@ -108,8 +108,23 @@ async function extractSteps(page) {
   return instructions;
 }
 
-async function extractCleanup(page) {
+async function extractCleanup(setup) {
+  const fileContent = await fs.readFile("./config/cleanup.yaml", "utf8");
+  const cleanupConfig = yaml.load(fileContent);
   const instructions = [];
+
+  for (const item of setup) {
+    let product;
+    if (typeof item === "object") {
+      product = Object.keys(item)[0];
+    } else {
+      product = item;
+    }
+    let config = cleanupConfig[product];
+    if (config) {
+      instructions.push(...config.commands);
+    }
+  }
 
   return instructions;
 }
@@ -157,7 +172,7 @@ async function extractInstructions(uri, config) {
       const setup = await extractSetup(page);
       const prereqs = await extractPrereqs(page);
       const steps = await extractSteps(page);
-      const cleanup = await extractCleanup(page);
+      const cleanup = await extractCleanup(setup);
       const instructionsFile = await writeInstructionsToFile(
         url,
         config,
@@ -185,29 +200,6 @@ async function loadConfig() {
 
   const fileContent = await fs.readFile(configFile, "utf8");
   const config = yaml.load(fileContent);
-  config.versions = {};
-
-  const versionEnvVars = Object.keys(process.env)
-    .filter((key) => key.startsWith("TEST_") && key.endsWith("_VERSION"))
-    .reduce((acc, key) => {
-      acc[key] = process.env[key];
-      return acc;
-    }, {});
-
-  // Overwrite config values with environment variables
-  Object.keys(config).forEach((key) => {
-    const envKey = key.toUpperCase();
-    if (process.env[envKey]) {
-      config[key] = process.env[envKey];
-    }
-  });
-
-  // Set versions based on `TEST_<product>_VERSION` env variables
-  // e.g. TEST_GATEWAY_VERSION='3.5'
-  for (const envVar in versionEnvVars) {
-    const key = envVar.replace(/^TEST_|_VERSION$/g, "").toLowerCase();
-    config.versions[key] = process.env[envVar];
-  }
 
   return config;
 }
