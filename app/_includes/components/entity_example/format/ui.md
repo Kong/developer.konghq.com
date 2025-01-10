@@ -73,6 +73,19 @@ The following creates a new SNI with basic configuration:
 4. In the **SSL Certificate ID** field, enter the ID for an existing Certificate:
     ```
     {{ include.presenter.data['certificate']['id'] }}
+
+{% when 'certificate' %}
+The following creates a new Certificate with basic configuration:
+
+1. In Kong Manager or Gateway Manager, go to **Certificates**.
+2. On the Certificates tab, click **New Certificate**.
+3. In the **Cert** field, enter the PEM-encoded public certificate:
+    ```
+    {{ include.presenter.data['cert'] }}
+    ```
+4. In the **Key** field, enter the PEM-encoded private key:
+    ```
+    {{ include.presenter.data['key'] }}
     ```
 5. Click **Save**.
 {% else %}

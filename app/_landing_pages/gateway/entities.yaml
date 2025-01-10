@@ -53,6 +53,7 @@ rows:
       - type: entity_card
         config:
           entity: workspace
+  - columns:
     - blocks:
       - type: entity_card
         config:
@@ -62,3 +63,7 @@ rows:
       - type: entity_card
         config:
           entity: sni
+    - blocks:
+      - type: entity_card
+        config:
+          entity: certificate

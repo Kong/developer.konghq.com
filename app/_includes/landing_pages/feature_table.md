@@ -1,1 +1,1 @@
-{% include components/feature_table.html columns=include.config.columns rows=include.config.features %}
+{% include components/feature_table.html columns=include.config.columns rows=include.config.features item_title=include.config.item_title %}

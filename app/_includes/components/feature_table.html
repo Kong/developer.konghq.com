@@ -1,7 +1,7 @@
 <table class="{% if include.sticky %}table__sticky{% endif %}">
     <thead>
         <tr>
-        <th></th>
+        <th>{% if include.item_title %}{{ include.item_title }}{% endif %}</th>
         {% for column in include.columns %}
             <th class="text-center">
             <span class="font-semibold text-primary">{{ column.title | liquify }}</span>
