@@ -82,15 +82,15 @@ documentation on Workspaces contains details on how conflicts are detected acros
 
 
 
-### {{site.konnect_product_name}} Runtime Group Model
+### {{site.konnect_short_name}} Runtime Group Model
 
-{{site.konnect_product_name}} is an end-to-end SaaS API lifecycle management platform. Included in {{site.konnect_product_name}} is **Gateway Manager**, a fully hosted, cloud-native gateway Control Plane management system. Using Gateway Manager, you can provision virtual Control Planes, called **Runtime Groups**, which are lightweight Control Planes that provision instantly and provide segregated management of runtime configurations.
+{{site.konnect_short_name}} is an end-to-end SaaS API lifecycle management platform. Included in {{site.konnect_short_name}} is **Gateway Manager**, a fully hosted, cloud-native gateway Control Plane management system. Using Gateway Manager, you can provision virtual Control Planes, called **Runtime Groups**, which are lightweight Control Planes that provision instantly and provide segregated management of runtime configurations.
 
 Generally, a multi-tenant Control Plane paired with single-tenant Data Planes allows for centralized control over shared API gateway configurations, while allowing for flexible control over Data Plane deployment and management. A few specific examples include:
 
 - The central operational teams want to relax control over pre-production environments. For example, if there are dozens of pre-production environments spread across multiple development teams, management of pre-prod environments can be delegated to development teams, freeing them of central control for experimentation and testing.
 - Central API management is required but, for performance reasons, Data Planes can’t be shared. In high-traffic environments, the noisy neighbor problem for shared Data Planes may not be an acceptable tradeoff. In this model, the Data Plane is single tenant while the Control Plane is multi-tenant.
 
-{{site.konnect_product_name}} allows you to define a management hierarchy
+{{site.konnect_short_name}} allows you to define a management hierarchy
 
 
