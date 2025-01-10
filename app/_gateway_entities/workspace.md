@@ -91,12 +91,29 @@ Because Workspaces allow users to control {{site.base_gateway}} entities in isol
 
 The following table details which Workspace permissions each Admin role has:
 
-| Permission | Super Admin | Admin |
-|-----------|---------------|-------|
-| Manage entities within the specified Workspace |  ✅  |  ✅  |
-| Create new Workspaces |  ✅  |  ❌  |
-| Assign and revoke roles to admins |  ✅  |  ❌  |
-| Manage all Workspaces across the organization |  ✅  |  ❌  | 
+{% feature_table %}
+columns:
+  - title: Super Admin
+    key: super_admin
+  - title: Admin
+    key: admin
+
+features:
+
+  - title: Manage entities within the specified Workspace
+    super_admin: true
+    admin: true
+  - title: Create new Workspaces
+    super_admin: true
+    admin: false
+  - title: Assign and revoke roles to admins
+    super_admin: true
+    admin: false
+  - title: Manage all Workspaces across the organization
+    super_admin: true
+    admin: false
+
+{% endfeature_table %}
 
 For more information, see [Roles and permissions](/gateway/roles-and-permissions).
 
