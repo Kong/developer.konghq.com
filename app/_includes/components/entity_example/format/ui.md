@@ -60,6 +60,7 @@ The following creates a new Upstream with basic configuration:
 2. Click **New Upstream**.
 3. Enter a unique name for the Upstream. For example: `{{ include.presenter.data['name'] }}`.
 4. Click **Save**.
+
 {% when 'sni' %}
 The following creates a new SNI with basic configuration:
 
@@ -72,6 +73,13 @@ The following creates a new SNI with basic configuration:
 4. In the **SSL Certificate ID** field, enter the ID for an existing Certificate:
     ```
     {{ include.presenter.data['certificate']['id'] }}
+{% when 'workspace' %}
+The following creates a new Workspace:
+
+1. From the Kong Manager Dashboard select **New Workspace**
+2. Add a name, then select **Create New Workspace**
+
+This will create a new Workspace, and from here you can start managing entities from Kong Manager.
 
 {% when 'certificate' %}
 The following creates a new Certificate with basic configuration:
@@ -90,3 +98,5 @@ The following creates a new Certificate with basic configuration:
 {% else %}
 {% endcase %}
 {% endif %}
+
+
