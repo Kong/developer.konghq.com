@@ -66,16 +66,16 @@ documentation on Workspaces contains details on how conflicts are detected acros
 Single tenant control and Data Planes are the default behavior in {{site.base_gateway}}. For single tenancy, designing the gateway configuration is straightforward, as you don’t need to be concerned with logical separation of objects within the configuration. Each configuration supports one tenant, and every deployed Data Plane will receive the full configuration. Every Data Plane node can Route traffic for every client (assuming network connectivity). 
 
 
-## Multi-tenant CP / Single Tenant DP (Kong Konnect Runtime Group Model)
+## Multi-tenant CP / Single Tenant DP ({{site.konnect_product_name}} Runtime Group Model)
 
-Kong Konnect is an end-to-end SaaS API lifecycle management platform. Included in Kong Konnect is **Runtime Manager**, a fully hosted, cloud-native gateway Control Plane management system. Using Runtime Manager, you can provision virtual Control Planes, called **Runtime Groups**, which are lightweight Control Planes that provision instantly and provide segregated management of runtime configurations.
+{{site.konnect_product_name}} is an end-to-end SaaS API lifecycle management platform. Included in {{site.konnect_product_name}} is **Gateway Manager**, a fully hosted, cloud-native gateway Control Plane management system. Using Gateway Manager, you can provision virtual Control Planes, called **Runtime Groups**, which are lightweight Control Planes that provision instantly and provide segregated management of runtime configurations.
 
-Before continuing on with details on the Kong Konnect model, what are some reasons engineering teams want a multi-tenant Control Plane paired with single-tenant Data Planes? Generally, this deployment strategy allows for centralized control over shared API gateway configurations, while allowing for flexible control over Data Plane deployment and management. A few specific examples include:
+Before continuing on with details on the {{site.konnect_product_name}} model, what are some reasons engineering teams want a multi-tenant Control Plane paired with single-tenant Data Planes? Generally, this deployment strategy allows for centralized control over shared API gateway configurations, while allowing for flexible control over Data Plane deployment and management. A few specific examples include:
 
 - The central operational teams want to relax control over pre-production environments. For example, if there are dozens of pre-production environments spread across multiple development teams, management of pre-prod environments can be delegated to development teams, freeing them of central control for experimentation and testing.
 - Central API management is required but, for performance reasons, Data Planes can’t be shared. In high-traffic environments, the noisy neighbor problem for shared Data Planes may not be an acceptable tradeoff. In this model, the Data Plane is single tenant while the Control Plane is multi-tenant.
 
-Kong Konnect allows you to define a management hierarchy
+{{site.konnect_product_name}} allows you to define a management hierarchy
 
 
 ## Tenancy Tradeoffs
@@ -83,7 +83,7 @@ Kong Konnect allows you to define a management hierarchy
 | **Design**           | **Advantages**                                    | **Disadvantages**                                  |
 |----------------------|---------------------------------------------------|----------------------------------------------------|
 | **Single Tenancy**    | - Strongest tenant data protection                | - Higher operational burden                        |
-|                      | - Prevents unintended exposure of data across tenants | - Potential resource underutilization             |
+|                      | - Prevents unintended exposure of data across tenants | - Potential resource under-utilization             |
 | **Multi-Tenancy**     | - Lower operational burden                        | - Weaker tenant data protections                   |
 |                      | - Potential resource optimization                 | - "Noisy neighbor" problem                        |
 
