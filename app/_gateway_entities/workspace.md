@@ -90,7 +90,7 @@ When a Service or Route is **created** or **modified**, the {{site.base_gateway}
 Because Workspaces allow users to control {{site.base_gateway}} entities in isolation, users must have the correct permissions to configure a particular Workspace. Users will require either a Super Admin or Admin role to configure Workspaces. 
 
 The following table details which Workspace permissions each Admin role has:
-
+<!-- vale off -->
 {% feature_table %}
 columns:
   - title: Super Admin
@@ -114,7 +114,7 @@ features:
     admin: false
 
 {% endfeature_table %}
-
+<!-- vale on -->
 For more information, see [Roles and permissions](/gateway/roles-and-permissions).
 
 
