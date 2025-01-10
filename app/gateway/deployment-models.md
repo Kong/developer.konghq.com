@@ -36,17 +36,36 @@ The {{site.base_gateway}} configuration (`kong.conf`) is the main system that de
 
 In Hybrid Mode, all connected Data Planes receive the full configuration from their connected Control Plane. This design allows the Data Plane nodes to be fungible, meaning any node in the cluster can serve traffic for any client (assuming network connectivity). There are, however, tradeoffs to this design, and how you organize your {{site.base_gateway}} configurations will largely depend on the deployment strategies you choose.
 
+## Tenancy Tradeoffs
+
+{{site.base_gateway}} uses single tenant and multi-tenant designs in the different deployment strategies. It's important to understand the tradeoffs of each before deciding on a deployment strategy.
+
+| **Design**           | **Advantages**                                    | **Disadvantages**                                  |
+|----------------------|---------------------------------------------------|----------------------------------------------------|
+| **Single Tenancy**    | - Strongest tenant data protection                | - Higher operational burden                        |
+|                      | - Prevents unintended exposure of data across tenants | - Potential resource under-utilization             |
+| **Multi-Tenancy**     | - Lower operational burden                        | - Weaker tenant data protections                   |
+|                      | - Potential resource optimization                 | - "Noisy neighbor" problem                        |
+
+Generally, single-tenant solutions promote stronger data segregation and reduce noisy neighbor concerns at the cost of more operational overhead. Multi-tenant solutions allow for greater resource utilization and potentially reduce operational toil while securely commingling tenant data within the software boundaries. 
+
 ## Deployment Strategies
 
 We’re going to look at the different deployment strategies for {{site.base_gateway}}. We’ll break these strategies down by the combination of tenancy in both the control and Data Planes.
 
-## Single Tenant CP / Single Tenant DP ({{site.base_gateway}} Enterprise Default Model)
+| Deployment topology | Control Plane tenant type | Data Plane tenant type |
+|--------------------|---------------------------|------------------------|
+| Default Model | Single | Single |
+| Workspaces Model | Multi | Multi |
+| Runtime Group Model | Multi | Single |
+
+### {{site.base_gateway}} Enterprise Default Model
 
 Single tenant control and Data Planes are the default behavior in {{site.base_gateway}}. For single tenancy, designing the gateway configuration is straightforward, as you don’t need to be concerned with logical separation of objects within the configuration. Each configuration supports one tenant, and every deployed Data Plane will receive the full configuration. Every Data Plane node can Route traffic for every client (assuming network connectivity). 
 
 In this model, you’ll be required to manage a full deployment for each tenant in your organization. Every tenant added in this model will incur direct increases in actual compute expense and indirect added expense in operational burden. In return, each tenant will have a full dedicated deployment that includes allocated Data Plane compute and a fully isolated Control Plane configuration.
 
-## Multi-tenant CP / Multi-tenant DP ({{site.base_gateway}} Enterprise Workspaces Model)
+### {{site.base_gateway}} Enterprise Workspaces Model
 
 In {{site.base_gateway}} Enterprise, multi-tenancy is supported with **Workspaces**. Workspaces provide an isolation of gateway configuration objects while maintaining a unified routing table on the Data Plane to support client traffic.
 
@@ -61,16 +80,13 @@ For example, two separate tenants may desire to have an API Route path matching 
 {{site.base_gateway}} supports routing rules based on regular expressions, which complicates the Route collision detection mechanism when Workspaces are in use. Regular expressions can’t be fully evaluated by the conflict detection algorithm to prevent all collisions. The 
 documentation on Workspaces contains details on how conflicts are detected across, and within, Workspaces.
 
-## Single Tenant CP / Single Tenant DP ({{site.base_gateway}} Enterprise Default Model)
-
-Single tenant control and Data Planes are the default behavior in {{site.base_gateway}}. For single tenancy, designing the gateway configuration is straightforward, as you don’t need to be concerned with logical separation of objects within the configuration. Each configuration supports one tenant, and every deployed Data Plane will receive the full configuration. Every Data Plane node can Route traffic for every client (assuming network connectivity). 
 
 
-## Multi-tenant CP / Single Tenant DP ({{site.konnect_product_name}} Runtime Group Model)
+### {{site.konnect_product_name}} Runtime Group Model
 
 {{site.konnect_product_name}} is an end-to-end SaaS API lifecycle management platform. Included in {{site.konnect_product_name}} is **Gateway Manager**, a fully hosted, cloud-native gateway Control Plane management system. Using Gateway Manager, you can provision virtual Control Planes, called **Runtime Groups**, which are lightweight Control Planes that provision instantly and provide segregated management of runtime configurations.
 
-Before continuing on with details on the {{site.konnect_product_name}} model, what are some reasons engineering teams want a multi-tenant Control Plane paired with single-tenant Data Planes? Generally, this deployment strategy allows for centralized control over shared API gateway configurations, while allowing for flexible control over Data Plane deployment and management. A few specific examples include:
+Generally, a multi-tenant Control Plane paired with single-tenant Data Planes allows for centralized control over shared API gateway configurations, while allowing for flexible control over Data Plane deployment and management. A few specific examples include:
 
 - The central operational teams want to relax control over pre-production environments. For example, if there are dozens of pre-production environments spread across multiple development teams, management of pre-prod environments can be delegated to development teams, freeing them of central control for experimentation and testing.
 - Central API management is required but, for performance reasons, Data Planes can’t be shared. In high-traffic environments, the noisy neighbor problem for shared Data Planes may not be an acceptable tradeoff. In this model, the Data Plane is single tenant while the Control Plane is multi-tenant.
@@ -78,13 +94,3 @@ Before continuing on with details on the {{site.konnect_product_name}} model, wh
 {{site.konnect_product_name}} allows you to define a management hierarchy
 
 
-## Tenancy Tradeoffs
-
-| **Design**           | **Advantages**                                    | **Disadvantages**                                  |
-|----------------------|---------------------------------------------------|----------------------------------------------------|
-| **Single Tenancy**    | - Strongest tenant data protection                | - Higher operational burden                        |
-|                      | - Prevents unintended exposure of data across tenants | - Potential resource under-utilization             |
-| **Multi-Tenancy**     | - Lower operational burden                        | - Weaker tenant data protections                   |
-|                      | - Potential resource optimization                 | - "Noisy neighbor" problem                        |
-
-Generally, single-tenant solutions promote stronger data segregation and reduce noisy neighbor concerns at the cost of more operational overhead. Multi-tenant solutions allow for greater resource utilization and potentially reduce operational toil while securely commingling tenant data within the software boundaries. 
