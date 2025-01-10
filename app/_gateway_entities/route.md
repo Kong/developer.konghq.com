@@ -26,6 +26,10 @@ schema:
   api: gateway/admin-ee
   path: /schemas/Route
 
+faq:
+  - q: How can I divert traffic from an old URL to a new one with {{site.base_gateway}}?
+    a: Create a new route and point it to the existing Gateway Service. The new route will proxy traffic to the existing service at the new URL.
+
 ---
 
 ## What is a Route? 
@@ -75,28 +79,26 @@ The following diagram illustrates this example:
 flowchart LR
   A(External application)
   B("`Route (/external)`")
+  B2(Rate Limiting 
+  plugin)
   C("`Service (example-service)`")
   D(Upstream application)
   E(Internal application)
   F("`Route (/internal)`")
-  
+
+  A --request--> B
+  E --request--> F
+
   subgraph id1 ["`
   **KONG GATEWAY**`"]
-    B <--requests
-  responses--> C
-    F <--requests
-  responses--> C
+    B --> B2 --"10 requests 
+    per minute"--> C
+    F ---> C
   end
 
-  A <--requests
-  responses--> B
-  E <--requests
-  responses--> F
-
-  C <--requests
-  responses--> D
-
-  B -.->|Rate Limiting plugin| C
+  C --transformed 
+  and routed 
+  requests--> D
 
   style id1 rx:10,ry:10
 
@@ -109,7 +111,7 @@ Common use cases for Routes:
 | You want to... | Then use... |
 |--------|----------|
 | Rate limiting | Use Routes to set different rate limits for clients accessing the upstream application via specific paths, for example `/internal` or `/external`. <br><br>[Enable a rate limiting plugin on Routes attached to the Service](/plugins/rate-limiting-advanced/) |
-| Perform a simple URL rewrite | Use the Routes entity to rename an endpoint. For example, you can rename your legacy `/api/old/` upstream endpoint to a publicly accessible API endpoint named `/new/api`. <br><br> [Set up a Gateway Service with the old path and a Route with new path](/how-to/rewrite-simple-request-urls-with-routes/) |
+| Perform a simple URL rewrite | Use the Routes entity to rename an endpoint. For example, you can rename your legacy `/api/old/` upstream endpoint to a publicly accessible API endpoint named `/new/api`. |
 | Perform a complex URL rewrite | Use the Routes entity to rewrite a group of paths, such as replacing `/api/<function>/old` with `/new/api/<function>`. <br><br> [Request Transformer Advanced plugin](/plugins/request-transformer-advanced/) |
 | Describe paths as patterns using regular expressions | [Expressions router](/gateway/routing/expressions/) |
 
@@ -131,7 +133,7 @@ If multiple Routes match, {{site.base_gateway}} handles routing in the following
 Keep the following path matching criteria in mind when configuring paths:
 
 * **Regex in paths:** For a path to be considered a regular expression, it must be prefixed with a `~`. You can avoid creating complex regular expressions using the [Router Expressions language](/gateway/routing/expressions/).
-* **Capturing groups:** Capturing groups are also supported, and the matched group will be extracted from the path and available for plugins consumption.
+* **Capturing groups:** [Regex capture groups](/gateway/routing/expressions/#example-expressions) are also supported, and the matched group will be extracted from the path and available for plugins consumption.
 * **Escaping special characters:** When configuring Routes with regex paths via the Admin API, be sure to URL encode your payload if necessary according to [RFC 3986](https://tools.ietf.org/html/rfc3986).
 * **Normalization behavior:** To prevent trivial Route match bypass, the incoming request URI from client
 is always normalized according to [RFC 3986](https://tools.ietf.org/html/rfc3986)
@@ -152,6 +154,7 @@ follows, by the order of descending significance:
 2. **Wildcard hosts:** Among Routes with the same priority point value, Routes without a wildcard host specified (or no host at all) are prioritized before those that have any wildcard host specification.
 3. **Header count:** The resulting groups are sorted so the Routes with a higher number of specified headers have higher priority than those with a lower number of headers.
 4. **Regular expressions and prefix paths:** Routes that have a regular expression path are considered first and are ordered by their `regex_priority` value. Routes that have no regular expression path are ordered by the length of their paths. 
+5. **Creation date:** If all of the above are equal, the router chooses the Route that was created first using the Route's `created_at` value.
 
 When two Routes have the same path, {{site.base_gateway}} uses a tiebreaker. For example, if the rule count for the given request is the same for both Routes `A` and `B`, then the following tiebreaker rules are applied in the order they are listed. Route `A` will be selected over `B` if:
   * `A` has only plain Host headers and `B` has one or more wildcard

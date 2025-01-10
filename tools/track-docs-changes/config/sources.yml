@@ -78,8 +78,6 @@ app/_how-tos/get-started-with-gateway.md:
   - app/_src/gateway/get-started/proxy-caching.md
   - app/_src/gateway/get-started/key-authentication.md
   - app/_src/gateway/get-started/load-balancing.md
-app/_how-tos/dynamically-rewrite-simple-request-urls-with-routes.md:
-  - app/_src/gateway/key-concepts/routes/index.md
 app/_how-tos/set-up-ai-proxy-advanced-with-anthropic.md:
   - app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_anthropic.md
 app/_how-tos/set-up-ai-proxy-with-anthropic.md:
@@ -153,8 +151,6 @@ app/gateway/traffic-control/proxy.md:
   - app/_includes/md/admin-listen.md
 app/gateway/routing/expressions.md:
   - app/_src/gateway/reference/expressions-language/index.md
-  - app/_src/gateway/key-concepts/routes/expressions.md
-app/gateway/routing/expressions-router-reference.md:
   - app/_src/gateway/key-concepts/routes/expressions.md
   - app/_src/gateway/reference/expressions-language/language-references.md
   - app/_src/gateway/reference/expressions-language/performance.md
