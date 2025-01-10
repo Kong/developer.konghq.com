@@ -315,7 +315,8 @@ curl -i http://localhost:8000/mock/anything \
 {: data-deployment-topology="on-prem" }
 
 ```sh
-curl -i $KONNECT_PROXY_URL/mock/anything
+curl -i $KONNECT_PROXY_URL/mock/anything \
+  -H 'apikey:top-secret-key'
 ```
 {: data-deployment-topology="konnect" }
 
