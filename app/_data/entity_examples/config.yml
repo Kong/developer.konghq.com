@@ -58,6 +58,7 @@ formats:
       target:         '/upstreams/{upstream}/targets/'
       upstream:       '/upstreams/'
       workspace:      '/workspaces/'
+      certificate:     '/certificates/'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'
