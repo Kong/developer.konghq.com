@@ -4,10 +4,11 @@ content_type: reference
 entities:
   - route
 
-description: A Route is a path to a resource within an upstream application.
+description: |
+  A Route is a path which defines how (and if) requests are passed to Gateway Services and their respective upstream applications based on a set of configured rules.
 
 related_resources:
-  - text: Gateway Services
+  - text: Gateway Service entity
     url: /gateway/entities/service/
   - text: Expressions router
     url: /gateway/routing/expressions/
@@ -29,7 +30,7 @@ schema:
 
 ## What is a Route? 
 
-{{page.description}} [Gateway Services](/gateway/entities/service/) can store collections of objects like plugin configurations and policies, and they can be associated with Routes. In {{site.base_gateway}}, Routes typically map to endpoints that are exposed through the {{site.base_gateway}} application. Routes determine how (and if) requests are sent to their Services after they reach {{site.base_gateway}}. Where a Service represents the backend API, a Route defines what is exposed to clients. 
+A Route is a path to a resource within an upstream application. In {{site.base_gateway}}, Routes typically map to endpoints exposed through [Gateway Services](/gateway/entities/service/). Routes determine how (and if) requests are sent to their Services after they reach {{site.base_gateway}}. Where a Service represents the backend API, a Route defines what is exposed to clients. 
 
 Routes can also define rules that match requests to associated Services. Because of this, one Route can reference multiple endpoints. Once a Route is matched, {{site.base_gateway}} proxies the request to its associated Service. A basic Route should have a name, path or paths, and reference an existing Service.
 
@@ -103,14 +104,14 @@ flowchart LR
 
 ## Route use cases
 
-Use the following table to help you understand how Routes can be configured for different use cases:
+Common use cases for Routes:
 
 | You want to... | Then use... |
 |--------|----------|
-| Rate limit internal and external traffic to a Service | [Enable a rate limiting plugin on Routes attached to the Service](/plugins/rate-limiting-advanced/) |
-| Perform a simple URL rewrite, such as renaming your legacy `/api/old/` Upstream endpoint to a publicly accessible API endpoint that is now named `/new/api`. | [Set up a Gateway Service with the old path and a Route with new path](/how-to/rewrite-simple-request-urls-with-routes/) |
-| Perform a complex URL rewrite, such as replacing `/api/<function>/old` with `/new/api/<function>`. | [Request Transformer Advanced plugin](/plugins/request-transformer-advanced/) |
-| Describe Routes or paths as patterns using regular expressions. | [Expressions router](/gateway/routing/expressions/) |
+| Rate limiting | Use Routes to set different rate limits for clients accessing the upstream application via specific paths, for example `/internal` or `/external`. <br><br>[Enable a rate limiting plugin on Routes attached to the Service](/plugins/rate-limiting-advanced/) |
+| Perform a simple URL rewrite | Use the Routes entity to rename an endpoint. For example, you can rename your legacy `/api/old/` upstream endpoint to a publicly accessible API endpoint named `/new/api`. <br><br> [Set up a Gateway Service with the old path and a Route with new path](/how-to/rewrite-simple-request-urls-with-routes/) |
+| Perform a complex URL rewrite | Use the Routes entity to rewrite a group of paths, such as replacing `/api/<function>/old` with `/new/api/<function>`. <br><br> [Request Transformer Advanced plugin](/plugins/request-transformer-advanced/) |
+| Describe paths as patterns using regular expressions | [Expressions router](/gateway/routing/expressions/) |
 
 ## How routing works
 
@@ -119,15 +120,15 @@ For each incoming request, {{site.base_gateway}} must determine which Service ge
 If multiple Routes match, {{site.base_gateway}} handles routing in the following order:
 
 1. {{site.base_gateway}} finds Routes that match the request by comparing the defined routing attributes with the attributes in the request. 
-1. If multiple Routes match, the {{site.base_gateway}} router then orders all defined Routes by their priority and uses the highest priority matching Route to handle a request. 
+1. If multiple Routes match, the {{site.base_gateway}} router then orders all defined Routes by their [priority](#priority-matching) and uses the highest priority matching Route to handle a request. 
 
-{{site.base_gateway}} uses a router to route requests. There are two different routers you can use. Which you should use depends on your use case and {{site.base_gateway}} version:
+{{site.base_gateway}} provides two different routers, enabled via the `router_flavor` property in `kong.conf`. The router you should use depends on your use case and {{site.base_gateway}} version:
 * **[Expressions router](/gateway/routing/expressions/):** The recommended method for anyone running {{site.base_gateway}} 3.4.x or later. Can be run in both `traditional_compat` and `expressions` modes. Handles complex routing logic and regex in Routes.
 * **Traditional compatibility router:** Only recommended for anyone running {{site.base_gateway}} 2.9.x or earlier. The default routing method for {{site.base_gateway}}. Doesn't handle complex routing logic.
 
 ### Path matching
 
-Keep the following path matching recommendations in mind when configuring paths:
+Keep the following path matching criteria in mind when configuring paths:
 
 * **Regex in paths:** For a path to be considered a regular expression, it must be prefixed with a `~`. You can avoid creating complex regular expressions using the [Router Expressions language](/gateway/routing/expressions/).
 * **Capturing groups:** Capturing groups are also supported, and the matched group will be extracted from the path and available for plugins consumption.
@@ -147,29 +148,29 @@ If multiple Routes match, the {{site.base_gateway}} router then orders all defin
 In `traditional_compat` mode, the priority of a Route is determined as
 follows, by the order of descending significance:
 
-1. **Priority points:** For the presence of each of a Route's `methods`, `host`, `headers`, and `snis`, a "priority point" is added. Routes with higher "priority point" values will be considered before those with lower values.
-2. **Wildcard hosts:** Among Routes with the same "priority point" value, those that have any wildcard host specification will be considered after those that don't have any wildcard host (or no host) specified.
+1. **Priority points:** A priority point is added for every `methods`, `host`, `headers`, and `snis` value that a Route has. Routes with higher priority point values will be considered before those with lower values.
+2. **Wildcard hosts:** Among Routes with the same priority point value, Routes without a wildcard host specified (or no host at all) are prioritized before those that have any wildcard host specification.
 3. **Header count:** The resulting groups are sorted so the Routes with a higher number of specified headers have higher priority than those with a lower number of headers.
 4. **Regular expressions and prefix paths:** Routes that have a regular expression path are considered first and are ordered by their `regex_priority` value. Routes that have no regular expression path are ordered by the length of their paths. 
 
-When two Routes have the same path, {{site.base_gateway}} uses a tiebreaker. For example, if the rule count for the given request is the same in two Routes `A` and `B`, then the following tiebreaker rules will be applied in the order they are listed. Route `A` will be selected over `B` if:
-  * `A` has only "plain" Host headers and `B` has one or more "wildcard"
+When two Routes have the same path, {{site.base_gateway}} uses a tiebreaker. For example, if the rule count for the given request is the same for both Routes `A` and `B`, then the following tiebreaker rules are applied in the order they are listed. Route `A` will be selected over `B` if:
+  * `A` has only plain Host headers and `B` has one or more wildcard
   host headers
-  * `A` has more non-Host headers than `B`.
-  * `A` has at least one "regex" paths and `B` has only "plain" paths.
-  * `A`'s longest path is longer than `B`'s longest path.
+  * `A` has more non-Host headers than `B`
+  * `A` has at least one regex path and `B` has only plain paths
+  * `A`'s longest path is longer than `B`'s longest path
   * `A.created_at < B.created_at`
 
 #### Expressions router mode
 
-In [`expressions` mode](/gateway/routing/expressions/) when a request comes in, {{site.base_gateway}} evaluates Routes with a higher `priority` number first. The priority is a positive integer that defines the order of evaluation of the router. The larger the priority integer, the sooner a Route will be evaluated. In the case of duplicate priority values between two Routes in the same router, their order of evaluation is undefined.
+In [`expressions` mode](/gateway/routing/expressions/), when a request comes in, {{site.base_gateway}} evaluates Routes with a higher `priority` number first. The priority is a positive integer that defines the order of evaluation of the router. The larger the priority integer, the sooner a Route will be evaluated. In the case of duplicate priority values between two Routes in the same router, their order of evaluation is undefined.
 
 ### Routing performance recommendations
 
 You can use the following recommendations to increase routing performance:
 
 * In `expressions` mode, we recommend putting more likely matched Routes before (as in, higher priority) those that are less frequently matched.
-* Regular expressions in Routes use more resources to evaluate than simple prefixes. In installations with thousands of Routes, replacing regular expression with simple prefix can improve throughput and latency of {{site.base_gateway}}. If regex must be used because an exact path match must be performed, using the [expressions router](/gateway/routing/expressions/) will significantly improve {{site.base_gateway}}’s performance in this case.
+* Regular expressions in Routes use more resources to evaluate than simple prefixes. In installations with thousands of Routes, replacing a regular expression with simple prefix can improve throughput and latency of {{site.base_gateway}}. If a regex must be used because an exact path match must be performed, using the [expressions router](/gateway/routing/expressions/) will significantly improve {{site.base_gateway}}’s performance in this case.
 
 ## Schema
 

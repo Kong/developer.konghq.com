@@ -70,18 +70,6 @@ This predicate example has the following structure:
 
 For more information about each unit of the predicate, see the [Expressions router reference](/gateway/routing/expressions-router-reference/).
 
-A correctly formatted Route with multiple predicates would look like the following:
-```sh
-curl --request POST \
- --url http://localhost:8001/services/example-service/routes \
- --header 'Content-Type: multipart/form-data' \
- --form-string name=complex_object \
- --form-string 'expression=(net.protocol == "http" || net.protocol == "https") &&
-               (http.method == "GET" || http.method == "POST") &&
-               (http.host == "example.com" || http.host == "example.test") &&
-               (http.path ^= "/mock" || http.path ^= "/mocking") &&
-               http.headers.x_another_header == "example_header" && (http.headers.x_my_header == "example" || http.headers.x_my_header == "example2")'
-```
 
 ## How requests are routed with the expressions router
 

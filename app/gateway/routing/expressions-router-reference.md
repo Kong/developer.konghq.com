@@ -1,7 +1,7 @@
 ---
 title: Expressions router reference
 
-description: "The {{site.base_gateway}} [expressions router](/gateway/routing/expressions/) is a rule-based engine that uses a Domain-Specific Expressions Language to define complex routing logic on a [Route](/gateway/entities/route/)."
+description: The expressions router is a rule-based engine that uses a Domain-Specific Expressions Language to define complex routing logic on a Route.
 
 content_type: reference
 layout: reference
@@ -30,7 +30,9 @@ Reference:
 - the pieces are explained, but I need something at the front that explains how the things all work together, what does a completed one look like? and then we get into the bits and pieces.
 -->
 
-{{ page.description }} The expressions router is a collection of Routes that are all evaluated against incoming requests until a match can be found. Each Route contains one or more predicates combined with logical operators, which {{site.base_gateway}} uses to match requests with Routes. 
+The {{site.base_gateway}} [expressions router](/gateway/routing/expressions/) is a rule-based engine that uses a Domain-Specific Expressions Language to define complex routing logic on a [Route](/gateway/entities/route/). 
+
+A router is a collection of Routes that are all evaluated against incoming requests until a match can be found. Each Route contains one or more predicates combined with logical operators, which {{site.base_gateway}} uses to match requests with Routes. 
 
 A correctly formatted Route with multiple predicates would look like the following:
 ```sh
@@ -118,7 +120,7 @@ The following table describes the available matching fields, as well as their as
 | `net.dst.port`                        | `Int`      | ✅  | ✅  | Listening port number where {{site.base_gateway}} accepts the incoming connection. |
 {% endif_version %}
 
-{% if_version lte:3.4.x %}
+{% if_version lte:3.3.x %}
 | Field                                                | Type       | Available in HTTP Subsystem | Available in Stream Subsystem | Description |
 |------------------------------------------------------|------------|-----------------------------|-------------------------------|-------------|
 | `net.protocol`                                       | `String`   | ✅  | ✅  | Protocol of the route. Roughly equivalent to the `protocols` field on the `Route` entity.  **Note:** Configured `protocols` on the `Route` entity are always added to the top level of the generated route but additional constraints can be provided by using the `net.prococol` field directly inside the expression. |
