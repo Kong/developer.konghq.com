@@ -462,6 +462,7 @@ ips
 iptables
 istioctl
 istioctl
+item_title
 jQuery
 jetstack
 journald
@@ -558,6 +559,7 @@ onwards
 opa
 openid
 openresty
+oss
 outbounds
 param
 params
@@ -679,6 +681,7 @@ subtree
 subtrees
 sudo
 superset
+supports_konnect
 svg
 svgs
 syscall

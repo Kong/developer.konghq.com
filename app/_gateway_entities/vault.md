@@ -94,11 +94,11 @@ You can add secrets to Vaults in one of the following ways:
 {% feature_table %}
 item_title: Backend
 columns:
-  - title: Kong Gateway OSS
+  - title: {{site.base_gateway}} OSS
     key: oss
-  - title: Kong Gateway Enterprise
+  - title: {{site.ee_product_name}}
     key: enterprise
-  - title: Konnect supported
+  - title: {{site.konnect_short_name}} supported
     key: supports_konnect
 
 features:
