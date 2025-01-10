@@ -73,7 +73,7 @@ Filter Services with the OR (`/`) delimited to get entities that only match one 
 
 ## Add tags to a Gateway Service
 
-The following examples show how you would tag a Gateway Service, however most Kong Gateway entities can be tagged in the same way.
+The following examples show how you would tag a Gateway Service, however most {{site.base_gateway}} entities can be tagged in the same way.
 
 {% entity_example %}
 type: service
