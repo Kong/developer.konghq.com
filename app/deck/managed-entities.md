@@ -32,14 +32,13 @@ See the [Workspace](/gateway/entities/workspace) documentation for more informat
 
 
 ## Managed entities
+
 {% feature_table %}
 columns:
   - title: Managed by decK
     key: managed
-
-
 features:
-- title: Services
+  - title: Services
     url: /gateway/entities/service/
     managed: true
   - title: Routes
@@ -86,7 +85,6 @@ features:
     managed: false
   - title: Keyring and data encryption
     managed: false
-   
 {% endfeature_table %}
 
 {:.info}
