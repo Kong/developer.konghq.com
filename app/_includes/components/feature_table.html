@@ -32,7 +32,7 @@
                 {% elsif v == false %}
                     {% include icon_false.html %}
                 {% else %}
-                    {{v}}
+                    {{v | liquify | markdown}}
                 {% endif %}
                 </td>
             {% endfor %}
