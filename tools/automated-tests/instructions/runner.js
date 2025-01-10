@@ -5,14 +5,16 @@ import fg from "fast-glob";
 import fs from "fs/promises";
 import yaml from "js-yaml";
 import { fileURLToPath } from "url";
+import { processPrereqs } from "./prereqs.js";
+import { processCleanup } from "./cleanup.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-function executeCommand(container, cmds) {
+function executeCommand(container, cmd) {
   return new Promise(async (resolve, reject) => {
     try {
       const execCommand = await container.exec({
-        Cmd: ["bash", "-c", cmds.join(" && ")],
+        Cmd: ["bash", "-c", cmd],
         AttachStdout: true,
         AttachStderr: true,
       });
@@ -30,11 +32,10 @@ function executeCommand(container, cmds) {
       const execInfo = await execCommand.inspect();
 
       if (execInfo.ExitCode === 0) {
-        console.log("Command completed successfully.");
         resolve();
       } else {
         console.error("Command failed with exit code:", execInfo.ExitCode);
-        reject(`Failed to run commands ${cmds}`);
+        reject(`Failed to run command ${cmd}`);
       }
     } catch (error) {
       throw error;
@@ -105,6 +106,36 @@ async function fetchImage(docker, setupConfig) {
   }
 }
 
+async function runSetup(config, container) {
+  console.log("Setting things up...");
+  if (config.commands) {
+    for (const command of config.commands) {
+      await executeCommand(container, command);
+    }
+  }
+}
+
+async function runPrereqs(prereqs, container) {
+  console.log("Running prereqs...");
+  if (prereqs) {
+    const prereqsConfig = await processPrereqs(prereqs);
+    for (const command of prereqsConfig.commands) {
+      await executeCommand(container, command);
+    }
+  }
+}
+
+async function runCleanup(cleanup, container) {
+  console.log("Cleaning up...");
+  if (cleanup) {
+    const cleanupConfig = await processCleanup(cleanup);
+    for (const command of cleanupConfig.commands) {
+      console.log(command);
+      await executeCommand(container, command);
+    }
+  }
+}
+
 export async function runInstructions(instructions) {
   let container;
 
@@ -132,22 +163,14 @@ export async function runInstructions(instructions) {
     await container.start();
     console.log("Container started.");
 
-    console.log("Setting things up...");
-    // run setup commmands
-    if (setupConfig.commands) {
-      await executeCommand(container, setupConfig.commands);
-    }
+    await runSetup(setupConfig, container);
 
-    console.log("Running prereqs...");
-    // run prereqs
+    await runPrereqs(instructions.prereqs, container);
 
     console.log("Running steps...");
     // run steps
 
-    console.log("Cleaning up...");
-    if (instructions.cleanup) {
-      await executeCommand(container, instructions.cleanup);
-    }
+    await runCleanup(instructions.cleanup, container);
 
     await stopContainer(container);
 
