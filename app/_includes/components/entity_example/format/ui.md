@@ -60,7 +60,6 @@ The following creates a new Upstream with basic configuration:
 2. Click **New Upstream**.
 3. Enter a unique name for the Upstream. For example: `{{ include.presenter.data['name'] }}`.
 4. Click **Save**.
-{% when workspace %}
 {% when 'sni' %}
 The following creates a new SNI with basic configuration:
 

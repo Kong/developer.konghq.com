@@ -53,9 +53,6 @@ app/_gateway_entities/workspace.md:
   - app/_src/gateway/kong-enterprise/workspaces.md
 app/_gateway_entities/event_hooks.md:
   - app/_src/gateway/latest/kong-enterprise/event-hooks.md
-app/_gateway_entities/snis.md:
-  - app/_api/gateway/admin-ee/_index.md
-
 # how-tos
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
   - /app/_hub/kong-inc/rate-limiting-advanced/how-to/_index.md
