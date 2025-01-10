@@ -1,31 +1,28 @@
 ---
 title: Tags
 content_type: reference
-entities:
-  - tag
+layout: reference
+
+products:
+  - gateway
 
 description: Tags are strings associated with entities in {{site.base_gateway}}, which you can use to filter entities on most GET endpoints.
 
-tools:
-    - admin-api
-    - konnect-api
-    - kic
-    - deck
-    - terraform
-
-schema:
-    api: gateway/admin-ee
-    path: /schemas/Tag
-
-api_specs:
-    - gateway/admin-oss
-    - gateway/admin-ee
-    - konnect/control-planes-config
-
 related_resources:
-    - text: Distributed Configuration for Kong using decK
-      url: /deck/distributed-config/
+  - text: Gateway Entities
+    url: /gateway/entities/
+  - text: Distributed Configuration for Kong using decK
+    url: /deck/distributed-config/
 
+tools:
+    - deck
+
+breadcrumbs:
+  - /gateway/
+
+works_on:
+    - on-prem
+    - konnect
 ---
 
 ## What is a tag?
@@ -44,6 +41,21 @@ Tags can contain almost all UTF-8 characters, with the following exceptions:
 * `,` and `/` are reserved for filtering tags with AND and OR, so they are not allowed in tags.
 * Non-printable ASCII (for example, the space character) is not allowed.
 
+### Add tags to an entity
+
+The following example shows how you would tag a Gateway Service, however most {{site.base_gateway}} entities can be tagged in the same way:
+
+{% entity_examples %}
+entities:
+  services:
+    - name: example_service
+      url: "https://httpbin.konghq.com"
+      tags: 
+      - example
+      - test
+{% endentity_examples %}
+
+
 ## Filtering entities using tags
 
 You can use tags to filter most entities via the `?tags` querystring parameter.
@@ -57,7 +69,7 @@ you will receive an error.
   the `tags` parameter will be ignored in a request such as `GET /services/foo/routes?tags=a,b`.
 * `offset` parameters are not guaranteed to work if the `tags` parameter is altered or removed.
 
-## Filtering examples 
+### Filtering examples 
 
 The following examples show how you would filter Gateway Services based on the tags `example` and `admin`:
 
@@ -66,21 +78,3 @@ Use case | Example
 Get the list of all Services tagged `example` by passing the `example` tag as a querystring parameter | <code>GET /services?tags=example</code>
 Filter Services with the AND (`,`) delimiter to get all entities that match multiple tags | <code>GET /services?tags=example,admin</code>
 Filter Services with the OR (`/`) delimited to get entities that only match one of the specified tags | <code>GET /services?tags=example/admin</code>
-
-## Schema
-
-{% entity_schema %}
-
-## Add tags to a Gateway Service
-
-The following examples show how you would tag a Gateway Service, however most {{site.base_gateway}} entities can be tagged in the same way.
-
-{% entity_example %}
-type: service
-data:
-  name: example-service
-  url: "http://httpbin.konghq.com"
-  tags: 
-  - example
-  - test
-{% endentity_example %}

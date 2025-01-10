@@ -18,6 +18,11 @@ tools:
 
 breadcrumbs:
   - /deck/
+
+related_resources:
+  - text: Tags reference
+    url: /gateway/tags/
+
 ---
 
 decK can operate on a subset of configuration instead of managing the entire configuration of {{site.base_gateway}}.
