@@ -16,7 +16,7 @@ related_resources:
    
 ---
 
-Roles and permissions are administered using the {{site.base_gateway}} [RBAC system](/gateway/rbac/). Roles are sets of permissions that can be assigned to admins and users and can be specific to a [Workspace](/gateway/entities/workspace). {{site.base_gateway}} uses a precedence model, from most specificity to least specificity, to determine if a user has access to an endpoint.
+Roles and permissions are administered using the {{site.base_gateway}} [RBAC system](/gateway/entities/rbac/). Roles are sets of permissions that can be assigned to admins and users and can be specific to a [Workspace](/gateway/entities/workspace). {{site.base_gateway}} uses a precedence model, from most specificity to least specificity, to determine if a user has access to an endpoint.
 
 
 ## Default {{site.base_gateway}}  roles
