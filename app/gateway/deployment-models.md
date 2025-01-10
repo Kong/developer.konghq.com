@@ -6,8 +6,18 @@ layout: reference
 products:
     - gateway
 tools:
-    - Admin-api
-
+    - admin-api
+    - konnect-api
+    - deck
+    - kic
+    - terraform
+related_resources:
+  - text: Gateway Services
+    url: /gateway/entities/service/
+  - text: Routing in {{site.base_gateway}}
+    url: /gateway/routing/
+  - text: Workspaces
+    url: /gateway/entities/workspace
 ---
 
 
