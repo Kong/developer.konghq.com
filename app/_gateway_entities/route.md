@@ -26,7 +26,7 @@ schema:
   api: gateway/admin-ee
   path: /schemas/Route
 
-faq:
+faqs:
   - q: How can I divert traffic from an old URL to a new one with {{site.base_gateway}}?
     a: Create a new route and point it to the existing Gateway Service. The new route will proxy traffic to the existing service at the new URL.
 
