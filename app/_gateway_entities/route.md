@@ -108,7 +108,7 @@ flowchart LR
 
 Common use cases for Routes:
 
-| You want to... | Then use... |
+| Use Case | Description |
 |--------|----------|
 | Rate limiting | Use Routes to set different rate limits for clients accessing the upstream application via specific paths, for example `/internal` or `/external`. <br><br>[Enable a rate limiting plugin on Routes attached to the Service](/plugins/rate-limiting-advanced/) |
 | Perform a simple URL rewrite | Use the Routes entity to rename an endpoint. For example, you can rename your legacy `/api/old/` upstream endpoint to a publicly accessible API endpoint named `/new/api`. |

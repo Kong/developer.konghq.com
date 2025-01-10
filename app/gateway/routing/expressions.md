@@ -205,6 +205,7 @@ if the operator cannot be performed on the provided field and constant.
 
 The expressions language currently supports the following types:
 
+<!-- vale off -->
 
 {% feature_table %}
 item_title: Object
@@ -253,6 +254,8 @@ features:
     constant_type: true
 {% endfeature_table %}
 
+<!--vale on-->
+
 
 In addition, expressions also supports one composite type, `Array`. Array types are written as `Type[]`.
 For example: `String[]`, `Int[]`. Currently, arrays can only be present in field values. They are used in
@@ -262,6 +265,7 @@ case one field could contain multiple values. For example, `http.headers.x` or `
 
 The following table describes the available matching fields, as well as their associated type when using an expressions based router.
 
+<!--vale off-->
 
 {% feature_table %}
 item_title: Type
@@ -375,6 +379,7 @@ features:
       Listening port number where {{site.base_gateway}} accepts the incoming connection.
 {% endfeature_table %}
 
+<!--vale on-->
 
 ### Operators
 
