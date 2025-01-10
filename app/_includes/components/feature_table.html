@@ -26,7 +26,7 @@
             </td>
             {% for column in include.columns %}
                 {% assign v = row[column.key] %}
-                <td class="text-center">
+                <td{% if v == true or v == false %} class="text-center"{% endif %}>
                 {% if v == true %}
                     {% include icon_true.html %}
                 {% elsif v == false %}
