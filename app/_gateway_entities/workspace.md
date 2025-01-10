@@ -26,7 +26,7 @@ faqs:
       Yes, some entities are global meaning they don't exist in any individual Workspace. For example `ca_certificates`.
   - q: Can I use Workspaces in Konnect?
     a: |
-      No. Instead, {{site.konnect_short_name}} offers the more powerful Consumer Groups [/gateway/entities/consumer-group/] to organize and categorize of Consumers (users or applications) within an API ecosystem 
+      No. Instead, {{site.konnect_short_name}} offers the more powerful [Consumer Groups](/gateway/entities/consumer-group/) to organize and categorize of Consumers (users or applications) within an API ecosystem 
 
   - q: Can a Workspace share a name with another Workspace?
     a: |
@@ -81,7 +81,7 @@ When a Service or Route is **created** or **modified**, the {{site.base_gateway}
 * If an equivalent Service or Route is found in a different Workspace, and the host is a wildcard: 
   * If the host field matches in both workspaces, a `409 Conflict` error is returned.
   * If the host field does not match, the new entity can be created.
-  * If the host is an absolute value: Issue a `409 Conflict` error.
+  * If the host is an absolute value, a `409 Conflict` error is returned.
 
  
 
