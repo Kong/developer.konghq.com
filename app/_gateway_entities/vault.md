@@ -7,13 +7,9 @@ entities:
 description: A Vault is used to store secrets.
 
 related_resources:
-  - text: Vault CLI
-    url: /secrets-management/vault-cli
   - text: Secrets Management
     url: /secrets-management
-  - text: Secret rotation
-    url: /gateway/secret-management/secret-rotation
-  - text: Workspaces 
+  - text: Workspaces
     url: /gateway/entities/workspace 
   - text: RBAC 
     url: /gateway/entities/rbac
@@ -157,7 +153,7 @@ There are two types of rotation configuration available:
 * Rotate periodically using TTLs (for example: check for a new TLS certificate once per day)
 * Rotate on failure (for example: on a database authentication failure, check if the secrets were updated, and try again)
 
-For more information, see [Secret rotation](/gateway/secrets-management/secret-rotation/).
+For more information, see [Secret management](/secrets-management/).
 
 ## Declarative configuration (decK) best practices for Vaults
 

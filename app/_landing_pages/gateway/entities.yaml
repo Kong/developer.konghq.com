@@ -63,7 +63,7 @@ rows:
       - type: entity_card
         config:
           entity: vault
-- columns:
+  - columns:
     - blocks:
       - type: entity_card
         config:
