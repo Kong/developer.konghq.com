@@ -59,8 +59,9 @@ formats:
       upstream:       '/upstreams/'
       workspace:      '/workspaces/'
       vault:          '/vaults/'
-      certificate:     '/certificates/'
+      certificate:    '/certificates/'
       sni:            '/snis/'
+      ca_certificate: '/ca_certificates/'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'
@@ -81,6 +82,7 @@ formats:
       target:         '/upstreams/{upstream}/targets/'
       upstream:       '/upstreams/'
       vault:          '/vaults/'
+      ca_certificate: '/ca_certificates/'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'

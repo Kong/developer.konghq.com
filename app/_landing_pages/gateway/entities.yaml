@@ -72,3 +72,7 @@ rows:
       - type: entity_card
         config:
           entity: certificate
+    - blocks:
+      - type: entity_card
+        config:
+          entity: ca_certificate

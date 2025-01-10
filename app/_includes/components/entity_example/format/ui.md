@@ -85,8 +85,8 @@ The following creates a new SNI with basic configuration:
 {% when 'workspace' %}
 The following creates a new Workspace:
 
-1. From the Kong Manager Dashboard select **New Workspace**
-2. Add a name, then select **Create New Workspace**
+1. From the Kong Manager Dashboard select **New Workspace**.
+2. Add a name, then select **Create New Workspace**.
 
 This will create a new Workspace, and from here you can start managing entities from Kong Manager.
 
@@ -102,6 +102,16 @@ The following creates a new Certificate with basic configuration:
 4. In the **Key** field, enter the PEM-encoded private key:
     ```
     {{ include.presenter.data['key'] }}
+    ```
+{% when 'ca_certificate' %}
+The following creates a new Certificate with basic configuration:
+
+1. In Kong Manager or Gateway Manager, go to **Certificates**.
+2. Click the **CA Certificates** tab.
+3. Click **New CA Certificate**.
+4. In the **Cert** field, enter the PEM-encoded public certificate of the CA:
+    ```
+    {{ include.presenter.data['cert'] }}
     ```
 5. Click **Save**.
 {% else %}
