@@ -15,10 +15,11 @@ products:
 
 tools:
   - deck
-
-breadcrumbs:
-  - /deck/
+related_resources:
+  - text: Customize decK object defaults
+    url:  /how-to/custom-deck-object-defaults
 ---
+
 
 
 decK manages entity configuration for {{site.base_gateway}}, including all core proxy entities.

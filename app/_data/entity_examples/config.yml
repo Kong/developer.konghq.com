@@ -58,6 +58,8 @@ formats:
       target:         '/upstreams/{upstream}/targets/'
       upstream:       '/upstreams/'
       workspace:      '/workspaces/'
+      certificate:     '/certificates/'
+      sni:            '/snis/'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'
@@ -83,6 +85,7 @@ formats:
       global:         '/plugins/'
       route:          '/routes/{route}/plugins/'
       service:        '/services/{service}/plugins/'
+      sni:            '/snis/'
     variables:
       <<: *konnect_variables
 

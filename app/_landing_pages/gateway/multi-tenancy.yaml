@@ -1,0 +1,18 @@
+metadata:
+  title: Multi-tenancy and Kong
+  content_type: landing_page
+  description: "This page explains how to build multi-tenant architecture"
+
+rows:
+  - header:
+      type: h1
+      text: "@TODO"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    Insomnia plugins can be used to extend the functionality of Insomnia. 
+                    They are commonly used for advanced features, such as custom authentication mechanisms and complex workflows. They can also be used to customize the Insomnia theme.
