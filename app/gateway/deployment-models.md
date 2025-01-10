@@ -55,12 +55,6 @@ documentation on Workspaces contains details on how conflicts are detected acros
 
 Single tenant control and Data Planes are the default behavior in {{site.base_gateway}}. For single tenancy, designing the gateway configuration is straightforward, as you don’t need to be concerned with logical separation of objects within the configuration. Each configuration supports one tenant, and every deployed Data Plane will receive the full configuration. Every Data Plane node can Route traffic for every client (assuming network connectivity). 
 
-An example single tenant hybrid-mode deployment diagram is straightforward.
-
-In this model, you’ll be required to manage a full deployment for each tenant in your organization. Every tenant added in this model will incur direct increases in actual compute expense and indirect added expense in operational burden. In return, each tenant will have a full dedicated deployment that includes allocated Data Plane compute and a fully isolated Control Plane configuration.
-
-The documentation provides instructions on deploying {{site.base_gateway}} in Hybrid Mode.
-
 
 ## Multi-tenant CP / Single Tenant DP (Kong Konnect Runtime Group Model)
 
