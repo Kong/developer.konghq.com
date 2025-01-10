@@ -67,6 +67,20 @@ The following creates a new Workspace:
 2. Add a name, then select **Create New Workspace**
 
 This will create a new Workspace, and from here you can start managing entities from Kong Manager.
+{% when 'certificate' %}
+The following creates a new Certificate with basic configuration:
+
+1. In Kong Manager or Gateway Manager, go to **Certificates**.
+2. On the Certificates tab, click **New Certificate**.
+3. In the **Cert** field, enter the PEM-encoded public certificate:
+    ```
+    {{ include.presenter.data['cert'] }}
+    ```
+4. In the **Key** field, enter the PEM-encoded private key:
+    ```
+    {{ include.presenter.data['key'] }}
+    ```
+5. Click **Save**.
 {% else %}
 {% endcase %}
 {% endif %}
