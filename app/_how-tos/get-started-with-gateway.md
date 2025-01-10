@@ -124,12 +124,12 @@ Httpbin provides an `/anything` resource which will return information about req
 Proxy a request through {{site.base_gateway}} to the `/anything` resource:
 
 ```sh
-curl -X GET http://localhost:8000/mock/anything
+curl -i -X GET http://localhost:8000/mock/anything
 ```
 {: data-deployment-topology="on-prem" }
 
 ```sh
-curl -X GET $KONNECT_PROXY_URL/mock/anything
+curl -i -X GET $KONNECT_PROXY_URL/mock/anything
 ```
 {: data-deployment-topology="konnect" }
 
