@@ -1,5 +1,5 @@
 ---
-title: Define a global CA certificate to verify server certificates
+title: Define a global CA Certificate to verify server certificates
 content_type: how_to
 related_resources:
   - text: CA Certificate entity
@@ -27,8 +27,8 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 tldr:
-  q: How do I create a cloud-hosted mock server in Insomnia?
-  a: In your Insomnia project, click **Create** > **Mock Server**, then enter a name, select **Cloud Mock**, and click **Create**. Once the server is created, click **New Mock Route** and configure the route.
+  q: How do I define CA Certificates to verify all upstream server certificates?
+  a: Define a global CA Certificate entity in {{site.base_gateway}} and set the ID of that entity in the `kong.conf` parameter `NGINX_PROXY_PROXY_SSL_TRUSTED_CERTIFICATE`.
 ---
 
 @todo
