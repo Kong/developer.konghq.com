@@ -9,3 +9,4 @@ otel
 dynatrace
 ratelimiting
 collectd
+ca_certificate

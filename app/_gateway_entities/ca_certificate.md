@@ -13,7 +13,7 @@ related_resources:
     url: /plugins/mtls-auth/
   - text: Define global CA Certificate
     url: /how-to/global-ca-cert-for-server/
-  - text: Define Service-level CA Certicate
+  - text: Define Service-level CA Certificate
     url: /how-to/ca-cert-for-server-on-service/
 
 tools:

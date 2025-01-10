@@ -6,7 +6,7 @@ entities:
   - ca_certificate
 
 related_resources:
-  - text: Define Service-level CA Certicate
+  - text: Define Service-level CA Certificate
     url: /how-to/ca-cert-for-server-on-service/
   
 products:
