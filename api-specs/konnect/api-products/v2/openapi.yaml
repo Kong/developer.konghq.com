@@ -8,11 +8,13 @@ info:
     url: 'https://cloud.konghq.com'
 servers:
   - url: 'https://us.api.konghq.com/v2'
-    description: US Region Base URL
+    description: United-States Production region
   - url: 'https://eu.api.konghq.com/v2'
-    description: EU Region Base URL
+    description: Europe Production region
   - url: 'https://au.api.konghq.com/v2'
-    description: AU Region Base URL
+    description: Australia Production region
+  - url: 'https://me.api.konghq.com/v2'
+    description: Middle-East Production region
 paths:
   /api-products:
     post:
@@ -53,6 +55,7 @@ paths:
         - $ref: '#/components/parameters/APIProductFilters'
         - $ref: '#/components/parameters/APIProductSort'
         - $ref: '#/components/parameters/LabelsFilter'
+        - $ref: '#/components/parameters/PublicLabelsFilter'
       responses:
         '200':
           $ref: '#/components/responses/ListAPIProductResponse'
@@ -644,6 +647,14 @@ components:
       schema:
         type: integer
         example: 10
+    PublicLabelsFilter:
+      name: public_labels
+      description: Filters requested resource by associated public labels.
+      required: false
+      in: query
+      schema:
+        type: string
+        example: 'key:value,keyExists'
   schemas:
     APIProductFilterParameters:
       type: object
@@ -807,6 +818,8 @@ components:
           $ref: '#/components/schemas/UpdatedAt'
         labels:
           $ref: '#/components/schemas/Labels'
+        public_labels:
+          $ref: '#/components/schemas/PublicLabels'
       additionalProperties: false
       required:
         - id
@@ -817,6 +830,7 @@ components:
         - created_at
         - updated_at
         - labels
+        - public_labels
         - version_count
       title: API Product
     APIProductDocumentSummary:
@@ -991,7 +1005,7 @@ components:
             - id
             - control_plane_id
         publish_status:
-          description: 'This field is published if the API product version is published to at least one portal. This field is deprecated: Use [PortalProductVersion.publish_status](/api/konnect/portal-management/#/operations/create-portal-product-version) instead.'
+          description: 'This field is published if the API product version is published to at least one portal. This field is deprecated: Use [PortalProductVersion.publish_status](https://docs.konghq.com/konnect/api/portal-management/latest/#/Portal%20Product%20Versions/create-portal-product-version) instead.'
           type: string
           example: unpublished
           enum:
@@ -999,7 +1013,7 @@ components:
             - published
           deprecated: true
         deprecated:
-          description: 'Whether this API product version is deprecated in at least one portal. This field is deprecated: Use [PortalProductVersion.deprecated](/api/konnect/portal-management/#/operations/create-portal-product-version) instead'
+          description: 'Whether this API product version is deprecated in at least one portal. This field is deprecated: Use [PortalProductVersion.deprecated](https://docs.konghq.com/konnect/api/portal-management/latest/#/Portal%20Product%20Versions/create-portal-product-version) instead'
           type: boolean
           example: false
           deprecated: true
@@ -1073,6 +1087,8 @@ components:
           nullable: true
         labels:
           $ref: '#/components/schemas/Labels'
+        public_labels:
+          $ref: '#/components/schemas/PublicLabels'
         portal_ids:
           description: The list of portal identifiers which this API product should be published to
           type: array
@@ -1104,6 +1120,8 @@ components:
           nullable: true
         labels:
           $ref: '#/components/schemas/LabelsUpdate'
+        public_labels:
+          $ref: '#/components/schemas/PublicLabelsUpdate'
         portal_ids:
           description: The list of portal identifiers which this API product should be published to
           type: array
@@ -1119,7 +1137,7 @@ components:
     CreateAPIProductVersionDTO:
       description: |
         The request schema to create a version of an API product.
-        Note that the `publish_status` and `deprecated` fields are deprecated:  Use [PortalProductVersion.publish_status](/api/konnect/portal-management/#/operations/create-portal-product-version) instead.
+        Note that the `publish_status` and `deprecated` fields are deprecated:  Use [PortalProductVersion.publish_status](https://docs.konghq.com/konnect/api/portal-management/latest/#/Portal%20Product%20Versions/create-portal-product-version) instead.
       type: object
       properties:
         name:
@@ -1129,7 +1147,7 @@ components:
           minLength: 1
           nullable: false
         publish_status:
-          description: 'The publish status of the API product version. Applies publish status to all related portal product versions. This field is deprecated: Use [PortalProductVersion.publish_status](/api/konnect/portal-management/#/operations/create-portal-product-version) instead.'
+          description: 'The publish status of the API product version. Applies publish status to all related portal product versions. This field is deprecated: Use [PortalProductVersion.publish_status](https://docs.konghq.com/konnect/api/portal-management/latest/#/Portal%20Product%20Versions/create-portal-product-version) instead.'
           type: string
           example: unpublished
           default: unpublished
@@ -1139,7 +1157,7 @@ components:
           deprecated: true
           nullable: false
         deprecated:
-          description: 'Indicates if the version of the API product is deprecated. Applies deprecation or removes deprecation from all related portal product versions. This field is deprecated: Use [PortalProductVersion.deprecated](/api/konnect/portal-management/#/operations/create-portal-product-version) instead.'
+          description: 'Indicates if the version of the API product is deprecated. Applies deprecation or removes deprecation from all related portal product versions. This field is deprecated: Use [PortalProductVersion.deprecated](https://docs.konghq.com/konnect/api/portal-management/latest/#/Portal%20Product%20Versions/create-portal-product-version) instead.'
           type: boolean
           example: false
           default: false
@@ -1254,7 +1272,7 @@ components:
     UpdateAPIProductVersionDTO:
       description: |
         The request schema for updating a version of an API product.
-        Note that the `publish_status` and `deprecated` fields are deprecated:  Use [PortalProductVersion.publish_status](/api/konnect/portal-management/#/operations/create-portal-product-version) instead.
+        Note that the `publish_status` and `deprecated` fields are deprecated:  Use [PortalProductVersion.publish_status](https://docs.konghq.com/konnect/api/portal-management/latest/#/Portal%20Product%20Versions/create-portal-product-version) instead.
       type: object
       properties:
         name:
@@ -1263,7 +1281,7 @@ components:
           example: v1
           minLength: 1
         publish_status:
-          description: 'The publish status of the API product version. Applies publish status to all related portal product versions. This field is deprecated: Use [PortalProductVersion.publish_status](/api/konnect/portal-management/#/operations/create-portal-product-version) instead.'
+          description: 'The publish status of the API product version. Applies publish status to all related portal product versions. This field is deprecated: Use [PortalProductVersion.publish_status](https://docs.konghq.com/konnect/api/portal-management/latest/#/Portal%20Product%20Versions/create-portal-product-version) instead.'
           type: string
           example: unpublished
           enum:
@@ -1271,7 +1289,7 @@ components:
             - published
           deprecated: true
         deprecated:
-          description: 'Indicates if the version of the API product is deprecated. Applies deprecation or removes deprecation from all related portal product versions. This field is deprecated: Use [PortalProductVersion.deprecated](/api/konnect/portal-management/#/operations/create-portal-product-version) instead.'
+          description: 'Indicates if the version of the API product is deprecated. Applies deprecation or removes deprecation from all related portal product versions. This field is deprecated: Use [PortalProductVersion.deprecated](https://docs.konghq.com/konnect/api/portal-management/latest/#/Portal%20Product%20Versions/create-portal-product-version) instead.'
           type: boolean
           example: false
           deprecated: true
@@ -1492,6 +1510,23 @@ components:
         maxLength: 63
       maxProperties: 50
       title: Labels
+    PublicLabels:
+      description: |
+        Public labels store information about an entity that can be used for filtering a list of objects.
+
+        Public labels are intended to store **PUBLIC** metadata. 
+
+        Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_".
+      type: object
+      example:
+        category: finance
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+      maxProperties: 50
+      title: PublicLabels
     BaseError:
       description: standard error
       type: object
@@ -1552,6 +1587,7 @@ components:
         - is_fqdn
         - is_arn
         - unknown_property
+        - missing_reference
         - is_label
         - matches_regex
         - invalid
@@ -1815,6 +1851,25 @@ components:
         nullable: true
       maxProperties: 50
       nullable: true
+      writeOnly: true
+    PublicLabelsUpdate:
+      description: |
+        Public labels store information about an entity that can be used for filtering a list of objects.
+
+        Public labels are intended to store **PUBLIC** metadata.
+
+        Keys must be of length 1-63 characters, and cannot start with "kong", "konnect", "mesh", "kic", or "_".
+      type: object
+      example:
+        category: finance
+      additionalProperties:
+        type: string
+        pattern: '^[a-z0-9A-Z]{1}([a-z0-9A-Z-._]*[a-z0-9A-Z]+)?$'
+        minLength: 1
+        maxLength: 63
+        nullable: true
+      maxProperties: 50
+      title: PublicLabelsUpdate
       writeOnly: true
     PublishStatus:
       type: string
@@ -2221,6 +2276,8 @@ components:
         version_count: 10
         labels:
           env: test
+        public_labels:
+          label: value
     APIProductVersionExample:
       value:
         id: 9f5061ce-78f6-4452-9108-ad7c02821fd5
@@ -2745,6 +2802,8 @@ components:
                     version_count: 10
                     labels:
                       env: test
+                    public_labels:
+                      label: value
                 meta:
                   page:
                     number: 1

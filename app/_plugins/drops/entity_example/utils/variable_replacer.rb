@@ -61,6 +61,18 @@ module Jekyll
               "${{ env \"#{env_variable}\" }}"
             end
           end
+
+          class TerraformData < Data
+            def replace_variable(variable)
+              value = super
+
+              return nil unless value
+
+              env_variable = value.gsub('$', '').downcase
+              "var.#{env_variable}"
+            end
+          end
+
         end
       end
     end

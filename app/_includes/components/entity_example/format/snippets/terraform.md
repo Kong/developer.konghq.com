@@ -28,3 +28,16 @@ resource "{{ include.presenter.resource_name }}" "my_{{ include.presenter.entity
 }
 ```
 {% endif %}
+
+{% if include.presenter.variable_names.size > 0 %}
+
+This example requires the following variables to be added to your manifest. You can specify values at runtime by setting `TF_VAR_name=value`.
+
+```
+{% for variable in include.presenter.variable_names -%}
+variable "{{ variable }}" {
+  type = string
+}
+{% endfor -%}
+```
+{% endif %}
