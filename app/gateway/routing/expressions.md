@@ -205,13 +205,49 @@ if the operator cannot be performed on the provided field and constant.
 
 The expressions language currently supports the following types:
 
-| Type     | Description | Field type | Constant type |
-|----------|----------------------|------------|---------------|
-| `String` | A string value, always in valid UTF-8. They can be defined with string literal that looks like `"content"`. You can also use the following escape sequences: <br>* `\n`: Newline character<br>* `\r`: Carriage return character <br>* `\t`: Horizontal tab character <br>* `\\`: The `\` character <br>* `\"`: The `"` character | ✅          | ✅             | 
-| `IpCidr` | Range of IP addresses in CIDR format. Can be either IPv4 (`net.src.ip in 192.168.1.0/24`) or IPv6 (`net.src.ip in fd00::/8`). The expressions parser rejects any CIDR literal where the host portion contains any non-zero bits. This means that `192.168.0.1/24` won't pass the parser check because the intention of the author is unclear.    | ❌          | ✅             |
-| `IpAddr` | A single IP address in IPv4 Dot-decimal notation (`net.src.ip == 192.168.1.1`), or the standard IPv6 Address Format (`net.src.ip == fd00::1`). Can be either IPv4 or IPv6.                                                    | ✅          | ✅             | 
-| `Int`    | A 64-bit signed integer. There is only one integer type in expressions. All integers are signed 64-bit integers. Integer literals can be written as `12345`, `-12345`, or in hexadecimal format, such as `0xab12ff`, or in octet format like `0751`.      | ✅          | ✅             |
-| `Regex`  | Regex are written as `String` literals, but they are parsed when the `~` regex operator is present and checked for validity according to the [Rust `regex` crate syntax](https://docs.rs/regex/latest/regex/#syntax). For example, in the following predicate, the constant is parsed as a regex: `http.path ~ r#"/foo/bar/.+"#` | ❌          | ✅             |
+
+{% feature_table %}
+item_title: Object
+columns:
+  - title: Description
+    key: description
+  - title: Field type
+    key: field_type
+  - title: Constant type
+    key: constant_type
+features:
+  - title: |
+      `String`
+    description: |
+      A string value, always in valid UTF-8. They can be defined with string literal that looks like <code>"content"</code>. You can also use the following escape sequences: <br>* <code>\n</code>: Newline character<br>* <code>\r</code>: Carriage return character <br>* <code>\t</code>: Horizontal tab character <br>* <code>\\</code>: The <code>\</code> character <br>* <code>\"</code>: The <code>"</code> character
+    field_type: true
+    constant_type: true
+  - title: |
+      `IpCidr`
+    description: |
+      Range of IP addresses in CIDR format. Can be either IPv4 (<code>net.src.ip in 192.168.1.0/24</code>) or IPv6 (<code>net.src.ip in fd00::/8</code>). The expressions parser rejects any CIDR literal where the host portion contains any non-zero bits. This means that <code>192.168.0.1/24</code> won't pass the parser check because the intention of the author is unclear.
+    field_type: false
+    constant_type: true
+  - title: |
+      `IpAddr`
+    description: |
+      A single IP address in IPv4 Dot-decimal notation (<code>net.src.ip == 192.168.1.1</code>), or the standard IPv6 Address Format (<code>net.src.ip == fd00::1</code>). Can be either IPv4 or IPv6.
+    field_type: true
+    constant_type: true
+  - title: |
+      `Int`
+    description: |
+      A 64-bit signed integer. There is only one integer type in expressions. All integers are signed 64-bit integers. Integer literals can be written as <code>12345</code>, <code>-12345</code>, or in hexadecimal format, such as <code>0xab12ff</code>, or in octet format like <code>0751</code>.
+    field_type: true
+    constant_type: true
+  - title: |
+      `Regex`
+    description: |
+      Regex are written as <code>String</code> literals, but they are parsed when the <code>~</code> regex operator is present and checked for validity according to the <a href="https://docs.rs/regex/latest/regex/#syntax">Rust <code>regex</code> crate syntax</a>. For example, in the following predicate, the constant is parsed as a regex: <code>http.path ~ r#"/foo/bar/.+"#</code>
+    field_type: false
+    constant_type: true
+{% endfeature_table %}
+
 
 In addition, expressions also supports one composite type, `Array`. Array types are written as `Type[]`.
 For example: `String[]`, `Int[]`. Currently, arrays can only be present in field values. They are used in
@@ -221,42 +257,120 @@ case one field could contain multiple values. For example, `http.headers.x` or `
 
 The following table describes the available matching fields, as well as their associated type when using an expressions based router.
 
-<!-- There are two separate tables because Liquid's whitespace handling breaks tables when using if tags -->
 
-{% if_version gte:3.4.x %}
-| Field                                                | Type       | Available in HTTP Subsystem | Available in Stream Subsystem | Description |
-|------------------------------------------------------|------------|-----------------------------|-------------------------------|-------------|
-| `net.protocol`                                       | `String`   | ✅  | ✅  | Protocol of the route. Roughly equivalent to the `protocols` field on the `Route` entity.  **Note:** Configured `protocols` on the `Route` entity are always added to the top level of the generated route but additional constraints can be provided by using the `net.prococol` field directly inside the expression. |
-| `tls.sni`                                            | `String`   | ✅  | ✅  | If the connection is over TLS, the `server_name` extension from the ClientHello packet. |
-| `http.method`                                        | `String`   | ✅  | ❌  | The method of the incoming HTTP request. (for example, `"GET"` or `"POST"`) |
-| `http.host`                                          | `String`   | ✅  | ❌  | The `Host` header of the incoming HTTP request. |
-| `http.path`                                          | `String`   | ✅  | ❌  | The normalized request path according to rules defined in [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986#section-6). This field value does **not** contain any query parameters that might exist. |
-| `http.path.segments.<segment_index>`                 | `String`   | ✅  | ❌  | A path segment extracted from the incoming (normalized) `http.path` with zero-based index. For example, for request path `"/a/b/c/"` or `"/a/b/c"`, `http.path.segments.1` will return `"b"`. |
-| `http.path.segments.<segment_index>_<segment_index>` | `String`   | ✅  | ❌  | Path segments extracted from the incoming (normalized) `http.path` within the given closed interval joined by `"/"`. Indexes are zero-based. For example, for request path `"/a/b/c/"` or `"/a/b/c"`, `http.path.segments.0_1` will return `"a/b"`. |
-| `http.path.segments.len`                             | `Int`      | ✅  | ❌  | Number of segments from the incoming (normalized) `http.path`. For example, for request path `"/a/b/c/"` or `"/a/b/c"`, `http.path.segments.len` will return `3`. |
-| `http.headers.<header_name>`                         | `String[]` | ✅  | ❌  | The value(s) of request header `<header_name>`. **Note:** The header name is always normalized to the underscore and lowercase form, so `Foo-Bar`, `Foo_Bar`, and `fOo-BAr` all become values of the `http.headers.foo_bar` field. |
-| `http.queries.<query_parameter_name>`                | `String[]` | ✅  | ❌  | The value(s) of query parameter `<query_parameter_name>`. |
-| `net.src.ip`                          | `IpAddr`   | ✅  | ✅  | IP address of the client.                                                          |
-| `net.src.port`                        | `Int`      | ✅  | ✅  | The port number used by the client to connect.                                     |
-| `net.dst.ip`                          | `IpAddr`   | ✅  | ✅  | Listening IP address where {{site.base_gateway}} accepts the incoming connection.  |
-| `net.dst.port`                        | `Int`      | ✅  | ✅  | Listening port number where {{site.base_gateway}} accepts the incoming connection. |
-{% endif_version %}
+{% feature_table %}
+item_title: Type
+columns:
+  - title: Type
+    key: type
+  - title: Available in HTTP Subsystem
+    key: http_subsystem
+  - title: Available in Stream Subsystem
+    key: stream_subsystem
+  - title: Description
+    key: description
+features:
+  - title: |
+      `net.protocol`
+    type: String
+    http_subsystem: true
+    stream_subsystem: true
+    description: |
+      Protocol of the route. Roughly equivalent to the <code>protocols</code> field on the <code>Route</code> entity.  <b>Note:</b> Configured <code>protocols</code> on the <code>Route</code> entity are always added to the top level of the generated route but additional constraints can be provided by using the <code>net.prococol</code> field directly inside the expression.
+  - title: |
+      `tls.sni`
+    type: String
+    http_subsystem: true
+    stream_subsystem: true
+    description: |
+      If the connection is over TLS, the <code>server_name</code> extension from the ClientHello packet.
+  - title: |
+      `http.method`
+    type: String
+    http_subsystem: true
+    stream_subsystem: false
+    description: |
+      The method of the incoming HTTP request. (for example, <code>"GET"</code> or <code>"POST"</code>)
+  - title: |
+      `http.host`
+    type: String
+    http_subsystem: true
+    stream_subsystem: false
+    description: |
+      The <code>Host</code> header of the incoming HTTP request.
+  - title: |
+      `http.path`
+    type: String
+    http_subsystem: true
+    stream_subsystem: false
+    description: |
+      The normalized request path according to rules defined in <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-6">RFC 3986</a>. This field value does <b>not</b> contain any query parameters that might exist.
+  - title: |
+      `http.path.segments.<segment_index>`
+    type: String
+    http_subsystem: true
+    stream_subsystem: false
+    description: |
+      A path segment extracted from the incoming (normalized) <code>http.path</code> with zero-based index. For example, for request path <code>"/a/b/c/"</code> or <code>"/a/b/c"</code>, <code>http.path.segments.1</code> will return <code>"b"<code>.
+  - title: |
+      `http.path.segments.<segment_index>_<segment_index>`
+    type: String
+    http_subsystem: true
+    stream_subsystem: false
+    description: |
+      Path segments extracted from the incoming (normalized) <code>http.path</code> within the given closed interval joined by <code>"/"</code>. Indexes are zero-based. For example, for request path <code>"/a/b/c/"</code> or </code>"/a/b/c"</code>, <code>http.path.segments.0_1</code> will return <code>"a/b"</code>.
+  - title: |
+      `http.path.segments.len`
+    type: Int
+    http_subsystem: true
+    stream_subsystem: false
+    description: |
+      Number of segments from the incoming (normalized) <code>http.path</code>. For example, for request path <code>"/a/b/c/"</code> or <code>"/a/b/c"</code>, <code>http.path.segments.len</code> will return <code>3<c/ode>.
+  - title: |
+      `http.headers.<header_name>`
+    type: String[]
+    http_subsystem: true
+    stream_subsystem: false
+    description: |
+      The value(s) of request header <code>&lt;header_name&gt;</code>. <b>Note:</b> The header name is always normalized to the underscore and lowercase form, so <code>Foo-Bar</code>, <code>Foo_Bar</code>, and <code>fOo-BAr</code> all become values of the <code>http.headers.foo_bar</code> field.
+  - title: |
+      `http.queries.<query_parameter_name>`
+    type: String[]
+    http_subsystem: true
+    stream_subsystem: false
+    description: |
+      The value(s) of query parameter <code>&lt;query_parameter_name&gt;</code>.
+  - title: |
+      `net.src.ip`
+    type: IpAddr
+    http_subsystem: true
+    stream_subsystem: true
+    description: |
+      IP address of the client.
+  - title: |
+      `net.src.port`
+    type: Int
+    http_subsystem: true
+    stream_subsystem: true
+    description: |
+      The port number used by the client to connect.
+  - title: |
+      `net.dst.ip`
+    type: IpAddr
+    http_subsystem: true
+    stream_subsystem: true
+    description: |
+      Listening IP address where {{site.base_gateway}} accepts the incoming connection.
+  - title: |
+      `net.dst.port`
+    type: Int
+    http_subsystem: true
+    stream_subsystem: true
+    description: |
+      Listening port number where {{site.base_gateway}} accepts the incoming connection.
+{% endfeature_table %}
 
-{% if_version lte:3.3.x %}
-| Field                                                | Type       | Available in HTTP Subsystem | Available in Stream Subsystem | Description |
-|------------------------------------------------------|------------|-----------------------------|-------------------------------|-------------|
-| `net.protocol`                                       | `String`   | ✅  | ✅  | Protocol of the route. Roughly equivalent to the `protocols` field on the `Route` entity.  **Note:** Configured `protocols` on the `Route` entity are always added to the top level of the generated route but additional constraints can be provided by using the `net.prococol` field directly inside the expression. |
-| `tls.sni`                                            | `String`   | ✅  | ✅  | If the connection is over TLS, the `server_name` extension from the ClientHello packet. |
-| `http.method`                                        | `String`   | ✅  | ❌  | The method of the incoming HTTP request. (for example, `"GET"` or `"POST"`) |
-| `http.host`                                          | `String`   | ✅  | ❌  | The `Host` header of the incoming HTTP request. |
-| `http.path`                                          | `String`   | ✅  | ❌  | The normalized request path according to rules defined in [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986#section-6). This field value does **not** contain any query parameters that might exist. |
-| `http.headers.<header_name>`                         | `String[]` | ✅  | ❌  | The value(s) of request header `<header_name>`. **Note:** The header name is always normalized to the underscore and lowercase form, so `Foo-Bar`, `Foo_Bar`, and `fOo-BAr` all become values of the `http.headers.foo_bar` field. |
-| `http.queries.<query_parameter_name>`                | `String[]` | ✅  | ❌  | The value(s) of query parameter `<query_parameter_name>`. |
-| `net.src.ip`                          | `IpAddr`   | ❌  | ✅  | IP address of the client.                                                          |
-| `net.src.port`                        | `Int`      | ❌  | ✅  | The port number used by the client to connect.                                     |
-| `net.dst.ip`                          | `IpAddr`   | ❌  | ✅  | Listening IP address where {{site.base_gateway}} accepts the incoming connection.  |
-| `net.dst.port`                        | `Int`      | ❌  | ✅  | Listening port number where {{site.base_gateway}} accepts the incoming connection. |
-{% endif_version %}
+
 
 ### Operators
 
