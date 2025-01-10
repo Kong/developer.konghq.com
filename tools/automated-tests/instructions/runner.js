@@ -7,6 +7,7 @@ import yaml from "js-yaml";
 import { fileURLToPath } from "url";
 import { processPrereqs } from "./prereqs.js";
 import { processCleanup } from "./cleanup.js";
+import { processSteps } from "./step.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -106,8 +107,7 @@ async function fetchImage(docker, setupConfig) {
   }
 }
 
-async function runSetup(config, container) {
-  console.log("Setting things up...");
+async function runConfig(config, container) {
   if (config.commands) {
     for (const command of config.commands) {
       await executeCommand(container, command);
@@ -115,24 +115,32 @@ async function runSetup(config, container) {
   }
 }
 
+async function runSetup(config, container) {
+  console.log("Setting things up...");
+  await runConfig(config, container);
+}
+
 async function runPrereqs(prereqs, container) {
   console.log("Running prereqs...");
   if (prereqs) {
-    const prereqsConfig = await processPrereqs(prereqs);
-    for (const command of prereqsConfig.commands) {
-      await executeCommand(container, command);
-    }
+    const config = await processPrereqs(prereqs);
+    await runConfig(config, container);
   }
 }
 
 async function runCleanup(cleanup, container) {
   console.log("Cleaning up...");
   if (cleanup) {
-    const cleanupConfig = await processCleanup(cleanup);
-    for (const command of cleanupConfig.commands) {
-      console.log(command);
-      await executeCommand(container, command);
-    }
+    const config = await processCleanup(cleanup);
+    await runConfig(config, container);
+  }
+}
+
+async function runSteps(steps, container) {
+  console.log("Running steps...");
+  if (steps) {
+    const config = await processSteps(steps);
+    await runConfig(config, container);
   }
 }
 
@@ -167,8 +175,7 @@ export async function runInstructions(instructions) {
 
     await runPrereqs(instructions.prereqs, container);
 
-    console.log("Running steps...");
-    // run steps
+    await runSteps(instructions.steps, container);
 
     await runCleanup(instructions.cleanup, container);
 
