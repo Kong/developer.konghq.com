@@ -1,7 +1,7 @@
 ---
 title: Entities Managed by decK
 
-description: "decK manages entity configuration for{{site.base_gateway}}, including all core proxy entities."
+description: "decK manages entity configuration for {{site.base_gateway}}, including all core proxy entities."
 
 content_type: reference
 layout: reference
