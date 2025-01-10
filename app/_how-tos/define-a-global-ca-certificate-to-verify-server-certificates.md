@@ -1,10 +1,9 @@
 ---
-title: 
+title: Define a global CA certificate to verify server certificates
 content_type: how_to
 related_resources:
-related_resources:
   - text: CA Certificate entity
-    url: /gateway/entities/ca-certificate
+    url: /gateway/entities/ca_ertificate
   - text: Certificate entity
     url: /gateway/entities/certificate
 
@@ -26,6 +25,10 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+tldr:
+  q: How do I create a cloud-hosted mock server in Insomnia?
+  a: In your Insomnia project, click **Create** > **Mock Server**, then enter a name, select **Cloud Mock** and click **Create**. Once the server is created, click **New Mock Route** and configure the route.
 ---
 
 @todo

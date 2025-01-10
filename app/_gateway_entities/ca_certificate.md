@@ -2,8 +2,7 @@
 title: CA Certificates
 content_type: reference
 entities:
-  - ca-certificate
-
+  - ca_certificate
 description: A CA certificate object represents a trusted certificate authority. These objects are used by {{site.base_gateway}} to verify the validity of a client or server certificate.
 
 related_resources:
@@ -18,13 +17,10 @@ tools:
     - kic
     - deck
     - terraform
-
-
 api_specs:
     - gateway/admin-oss
     - gateway/admin-ee
     - konnect/control-planes-config
-
 schema:
     api: gateway/admin-ee
     path: /schemas/CA-Certificate
