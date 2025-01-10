@@ -46,11 +46,21 @@ app/_gateway_entities/service.md:
   - app/_src/gateway/key-concepts/services.md
 app/_gateway_entities/target.md:
   - app/_src/gateway/key-concepts/services.md
+  - app/_src/gateway/get-started/load-balancing.md
+  - app/_src/gateway/key-concepts/upstreams.md
+  - app/_src/gateway/how-kong-works/load-balancing.md
 app/_gateway_entities/upstream.md:
   - app/_src/gateway/key-concepts/upstreams.md
+  - app/_src/gateway/how-kong-works/load-balancing.md
+  - app/_src/gateway/how-kong-works/health-checks.md
 app/_gateway_entities/workspace.md:
   - app/_src/gateway/kong-manager/workspaces.md
   - app/_src/gateway/kong-enterprise/workspaces.md
+app/_gateway_entities/route.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
+  - app/_src/gateway/key-concepts/routes/index.md
+app/_gateway_entities/upstream.md:
+  - app/_src/gateway/key-concepts/upstreams.md
 app/_gateway_entities/event_hooks.md:
   - app/_src/gateway/latest/kong-enterprise/event-hooks.md
 # how-tos
@@ -127,8 +137,6 @@ app/gateway/rate-limiting/strategies.md:
 app/gateway/rate-limiting/window-types.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
-app/gateway/routing/expressions.md:
-  - app/_src/gateway/reference/expressions-language/index.md
 app/gateway/routing/index.md:
   - app/_src/gateway/key-concepts/routes/index.md
 app/plugins/deployment-options.md:
@@ -137,6 +145,18 @@ app/plugins/protocols.md:
   - app/hub/plugins/compatibility/index.md
 app/plugins/scopes.md:
   - app/hub/plugins/compatibility/index.md
+
+# traffic control
+app/gateway/traffic-control/proxy.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
+  - app/_includes/md/admin-listen.md
+app/gateway/routing/expressions.md:
+  - app/_src/gateway/reference/expressions-language/index.md
+  - app/_src/gateway/key-concepts/routes/expressions.md
+  - app/_src/gateway/reference/expressions-language/language-references.md
+  - app/_src/gateway/reference/expressions-language/performance.md
+app/gateway/routing/expressions-router-examples.md:
+  - app/_src/gateway/reference/expressions-language/index.md 
 app/gateway/networking/dns-config-reference.md:
   - app/_src/gateway/production/networking/dns-considerations.md
 
