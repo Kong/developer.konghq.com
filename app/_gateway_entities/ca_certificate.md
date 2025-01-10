@@ -32,10 +32,10 @@ schema:
 A CA certificate object represents a trusted certificate authority. These objects are used by {{site.base_gateway}} to verify the validity of a client or server certificate.
 
 To verify server certificates, you can define your CA Certificate:
-- [Globally](/how-to/define-a-global-ca-certificate-to-verify-server-certificates), to cover verification of all upstream server certificates
-- [On a specific Gateway service](define-a-ca-certificate-to-verify-server-certificates-for-a-service)
+- [Globally](/how-to/global-ca-cert-for-server/), to cover verification of all upstream server certificates
+- [On a specific Gateway service](/how-to/ca-cert-for-server-on-service/)
 
-To verify client certificates, you can use the [Mutual TLS Authentication plugin](/plugins/mtls-auth).
+To verify client certificates, you can use the [Mutual TLS Authentication plugin](/plugins/mtls-auth/).
 
 ## Schema
 
