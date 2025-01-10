@@ -20,7 +20,7 @@ breadcrumbs:
   - /deck/
 ---
 
-{{ page.description | liquify }}
+decK can operate on a subset of configuration instead of managing the entire configuration of {{site.base_gateway}}.
 You can do this by breaking up the configuration into multiple files and managing them using tags.
 
 With tags, you can use decK's `select-tag` feature to export, sync, or reset
