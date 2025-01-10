@@ -3,13 +3,18 @@ title: CA Certificates
 content_type: reference
 entities:
   - ca_certificate
+
 description: A CA certificate object represents a trusted certificate authority. These objects are used by {{site.base_gateway}} to verify the validity of a client or server certificate.
 
 related_resources:
   - text: Certificate entity
-    url: /gateway/entities/certificate
+    url: /gateway/entities/certificate/
   - text: Mutual TLS Authentication plugin
-    url: /plugins/mtls-auth
+    url: /plugins/mtls-auth/
+  - text: Define global CA Certificate
+    url: /how-to/global-ca-cert-for-server/
+  - text: Define Service-level CA Certicate
+    url: /how-to/ca-cert-for-server-on-service/
 
 tools:
     - admin-api

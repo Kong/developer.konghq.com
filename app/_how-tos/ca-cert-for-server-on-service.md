@@ -1,11 +1,13 @@
 ---
 title: Define a CA Certificate on a Service to verify server certificates
 content_type: how_to
+
+entities: 
+  - ca_certificate
+
 related_resources:
-  - text: CA Certificate entity
-    url: /gateway/entities/ca_certificate
-  - text: Certificate entity
-    url: /gateway/entities/certificate
+  - text: Define global CA Certificate
+    url: /how-to/global-ca-cert-for-server/
 
 products:
     - gateway
