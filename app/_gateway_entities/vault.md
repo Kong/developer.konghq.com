@@ -20,18 +20,6 @@ related_resources:
   
 
 faqs:
-  - q: I'm using declarative configuration for my Vault. Should I split my Vault configuration?
-    a: |
-        For larger teams with many contributors, or organizations with multiple teams, we recommend splitting Vault configuration and managing it separately. We recommend splitting the configuration for the following reasons:
-        * Vault are closer to infrastructure than other {{site.base_gateway}} configurations.
-        Separation of routing policies from infrastructure-specific configurations helps
-        keep configuration organized.
-        * Vaults may be shared across teams. In this case, one specific team shouldn't
-        control the Vault's configuration. One team changing the Vault a can have
-        disastrous impact on another team.
-        * If a Vault is deleted while in use -- that is, if there are still references to
-        secrets in a Vault in configuration -- it can lead to total loss of proxy capabilities.
-        Those secrets would be unrecoverable.
   - q: What are general best practices for managing Vaults?
     a: |
         To keep your environment secure and avoid taking down your proxies by accident, make sure to:
@@ -170,6 +158,13 @@ There are two types of rotation configuration available:
 * Rotate on failure (for example: on a database authentication failure, check if the secrets were updated, and try again)
 
 For more information, see [Secret rotation](/gateway/secrets-management/secret-rotation/).
+
+## Declarative configuration (decK) best practices for Vaults
+
+For larger teams with many contributors, or organizations with multiple teams, we recommend splitting Vault configurations into separate files and managing them isolated from other [entities's](/gateway/entities/) configuration using tags. We recommend splitting the configuration for the following reasons:
+* Vaults are closer to infrastructure than other {{site.base_gateway}} configurations. Separation of routing policies from infrastructure-specific configurations helps keep configuration organized.
+* Vaults may be shared across teams. In this case, one specific team shouldn't control the Vault's configuration. One team changing the Vault a can have a negative impact on another team.
+* If a Vault is deleted while in use -- that is, if there are still references to secrets in a Vault in configuration -- it can lead to total loss of proxy capabilities. Those secrets would be unrecoverable.
 
 ## Schema
 
