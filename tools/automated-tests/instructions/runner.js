@@ -29,7 +29,6 @@ function executeCommand(container, cmd) {
           if (err) {
             reject(err);
           }
-          //stream.pipe(debugLog);
           stream.on("data", (chunk) => {
             output += chunk.toString();
           });
