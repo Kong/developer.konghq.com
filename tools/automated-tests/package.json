@@ -14,6 +14,7 @@
         "dockerode": "^4.0.3",
         "fast-glob": "^3.3.3",
         "js-yaml": "^4.1.0",
+        "node-fetch": "^3.3.2",
         "puppeteer": "^23.10.2"
     }
 }
