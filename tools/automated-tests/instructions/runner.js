@@ -187,7 +187,7 @@ export async function runInstructions(instructions) {
 
     await runSteps(instructions.steps, container);
 
-    await runCleanup(instructions.cleanup, container);
+    await runCleanup(setupConfig, container);
 
     await stopContainer(container);
 

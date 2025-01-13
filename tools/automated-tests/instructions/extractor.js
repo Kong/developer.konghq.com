@@ -108,27 +108,6 @@ async function extractSteps(page) {
   return instructions;
 }
 
-async function extractCleanup(setup) {
-  const fileContent = await fs.readFile("./config/cleanup.yaml", "utf8");
-  const cleanupConfig = yaml.load(fileContent);
-  const instructions = [];
-
-  for (const item of setup) {
-    let product;
-    if (typeof item === "object") {
-      product = Object.keys(item)[0];
-    } else {
-      product = item;
-    }
-    let config = cleanupConfig[product];
-    if (config) {
-      instructions.push(...config.commands);
-    }
-  }
-
-  return instructions;
-}
-
 async function writeInstructionsToFile(url, config, platform, instructions) {
   const instructionsFile = path.join(
     config.outputDir,
@@ -172,7 +151,6 @@ async function extractInstructions(uri, config) {
       const setup = await extractSetup(page);
       const prereqs = await extractPrereqs(page);
       const steps = await extractSteps(page);
-      const cleanup = await extractCleanup(setup);
       const instructionsFile = await writeInstructionsToFile(
         url,
         config,
@@ -181,7 +159,6 @@ async function extractInstructions(uri, config) {
           setup,
           prereqs,
           steps,
-          cleanup,
         }
       );
 
