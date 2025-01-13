@@ -62,6 +62,13 @@ formats:
       certificate:    '/certificates/'
       sni:            '/snis/'
       ca_certificate: '/ca_certificates/'
+      rbac:           '/rbac/'
+      admin:          '/admins/'
+      group:          '/groups/'
+      license:        '/licenses/'
+      key:            '/keys/'
+      key-set:        '/key-sets/'
+      keyring:        '/keyring/'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'
@@ -82,14 +89,17 @@ formats:
       target:         '/upstreams/{upstream}/targets/'
       upstream:       '/upstreams/'
       vault:          '/vaults/'
+      certificate:    '/certificates/'
       ca_certificate: '/ca_certificates/'
+      sni:            '/snis/'
+      key:            '/keys/'
+      key-set:        '/key-sets/'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'
       global:         '/plugins/'
       route:          '/routes/{route}/plugins/'
       service:        '/services/{service}/plugins/'
-      sni:            '/snis/'
     variables:
       <<: *konnect_variables
 
