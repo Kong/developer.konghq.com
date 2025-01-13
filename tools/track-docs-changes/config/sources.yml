@@ -71,6 +71,11 @@ app/_gateway_entities/vault.md:
 app/_gateway_entities/license.md:
   - app/_src/gateway/licenses/index.md
   - app/_src/gateway/licenses/download.md
+  - app/_src/gateway/licenses/deploy.md
+  - app/_includes/md/enterprise/deploy-license.md
+  - app/_src/gateway/install/docker/index.md
+  - app/_src/gateway/licenses/report-v2.md
+  - app/_src/gateway/licenses/examples.md
 
 # how-tos
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
