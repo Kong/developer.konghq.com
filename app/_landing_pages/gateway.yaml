@@ -47,7 +47,7 @@ rows:
                   PostgreSQL database.
                   
                   Pass the `-- -h` option to the script to see all possible configuration options, including how to pass a license
-                  to the script, switch to an open-source Gateway image, enable RBAC, and more.
+                  to the script, switch to an open-source Gateway image, [enable RBAC](/gateway/entities/rbac/#enable-rbac), and more.
 
                   Visit the [Gateway install page](https://docs.konghq.com/gateway/latest/install/) for all other installation options.
 
