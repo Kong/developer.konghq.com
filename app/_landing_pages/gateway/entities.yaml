@@ -17,7 +17,8 @@ rows:
 
   - header:
       type: h2
-      text: "Entity References"
+      text: "Core Entities"
+  
   - columns:
     - blocks:
       - type: entity_card
@@ -31,11 +32,11 @@ rows:
       - type: entity_card
         config:
           entity: consumer
-  - columns:
     - blocks:
       - type: entity_card
         config:
           entity: consumer-group
+  - columns:
     - blocks:
       - type: entity_card
         config:
@@ -44,25 +45,14 @@ rows:
       - type: entity_card
         config:
           entity: target
-  - columns:
     - blocks:
       - type: entity_card
         config:
           entity: plugin
-    - blocks:
-      - type: entity_card
-        config:
-          entity: workspace
-  - columns:
-    - blocks:
-      - type: entity_card
-        config:
-          entity: event-hook
-  - columns:
-    - blocks:
-      - type: entity_card
-        config:
-          entity: vault
+
+  - header:
+      type: h2
+      text: "Security"
   - columns:
     - blocks:
       - type: entity_card
@@ -76,3 +66,59 @@ rows:
       - type: entity_card
         config:
           entity: ca_certificate
+    - blocks:
+      - type: entity_card
+        config:
+          entity: vault
+  - columns:
+    - blocks:
+      - type: entity_card
+        config:
+          entity: key
+    - blocks:
+      - type: entity_card
+        config:
+          entity: key-set
+    - blocks:
+      - type: entity_card
+        config:
+          entity: keyring
+
+  
+  - header:
+      type: h2
+      text: "Admin"
+
+  - columns:
+    - blocks:
+      - type: entity_card
+        config:
+          entity: rbac
+    - blocks:
+      - type: entity_card
+        config:
+          entity: admin
+    - blocks:
+      - type: entity_card
+        config:
+          entity: group
+  
+  - columns:
+    - blocks:
+      - type: entity_card
+        config:
+          entity: workspace
+    - blocks:
+      - type: entity_card
+        config:
+          entity: license
+
+  - header:
+      type: h2
+      text: "Misc"
+  - columns:
+    - blocks:
+      - type: entity_card
+        config:
+          entity: event-hook
+
