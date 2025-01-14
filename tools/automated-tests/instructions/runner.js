@@ -86,15 +86,11 @@ async function fetchImage(docker, setupConfig) {
         "docker",
         setupConfig.product
       );
-      // This shuold be just Dockerfile, but for now we need the binary for deck apply
-      const srcFiles = fg.sync(["Dockerfile", "./**/*"], {
-        cwd: dockerContext,
-      });
 
       docker.buildImage(
         {
           context: dockerContext,
-          src: srcFiles,
+          src: ["Dockerfile"],
         },
         { t: imageName },
         function (error, stream) {
