@@ -5,7 +5,7 @@ entities:
   - keyring
 
 description: |
-  A Keyring is the mechanism for storing sensitive data fields, such as consumer secrets, in an encrypted format within the database. 
+  A Keyring is a mechanism that encrypts sensitive data fields, such as consumer secrets, before storing them in the database.
   This provides for encryption-at-rest security controls in a {{site.base_gateway}} cluster.
 
 related_resources:
@@ -31,12 +31,12 @@ faqs:
     a: |
       A Keyring and a Vault are both used to secure secrets, but they use different approaches. The Keyring contains encryption keys used to encrypt sensitive data fields before they're written to the database. The same key is then used to decrypt the data when reading from the database. A Vault is a container that securely stores secrets. You can then reference these secrets in other {{site.base_gateway}} entities. 
       
-      The Keyring is configured for the whole {{site.base_gateway}} instance and will automatically encrypt any sensitive field. In a Vault, each secret needs to be added and then referenced.
+      The Keyring is configured for the whole {{site.base_gateway}} instance and will automatically encrypt a [list of fields](#encrypted-fields) defined by Kong. In a Vault, each secret needs to be added and then referenced.
 ---
 
 ## What is a Keyring?
 
-A Keyring is a mechanism for storing sensitive data fields, such as consumer secrets, in an encrypted format within the database. 
+A Keyring is a mechanism that encrypts sensitive data fields, such as consumer secrets, before storing them in the database. 
 
 This functionality provides transparent, symmetric encryption of sensitive data fields at rest. 
 When enabled, encryption and decryption of data are done on-the-fly by Kong immediately before writing to the database and after reading from the database. 
@@ -53,7 +53,7 @@ The Keyring encrypts the following fields:
 
 ### Encryption and decryption
 
-{{site.base_gateway}} uses 256-bit AES encryption in GCM mode. Cryptographic nonce values for each encryption routine execution are derived from the kernel CSPRNG (`/dev/urandom`). The AES routines used by Kong are provided by the OpenSSL library bundled with the {{site.base_gateway}}package.
+{{site.base_gateway}} uses 256-bit AES encryption in GCM mode. Cryptographic nonce values for each encryption routine execution are derived from the kernel CSPRNG (`/dev/urandom`). The AES routines used by Kong are provided by the OpenSSL library bundled with the {{site.base_gateway}} package.
 
 ## Key generation and lifecycle
 
@@ -61,7 +61,7 @@ The Keyring encrypts the following fields:
 
 Through the kernel CSPRNG, Kong derives keyring material generated through the `/keyring/generate` Admin API endpoint. Kong stores keyring material in a shared memory zone that all Kong worker processes access. To prevent key material from being written to disk as part of memory paging operations, we recommend that swap be disabled on systems running Kong.
 
-When operating in cluster mode, keyring material propagates automatically among all nodes in the Kong cluster. Because Kong nodes don't have a notion of direct peer-to-peer communication, the underlying data store serves as a communication channel to transmit messages. When a Kong node starts, it generates an ephemeral RSA key pair. The node’s public keys propagate to all other active nodes in the cluster. When an active node sees a message request for keyring material, it wraps the in-memory keyring material in the presented public key, and transmits the payload back over the central messaging channel provided by the underlying data store. This process allows each node in the cluster to broadcast keyring material to new nodes, without sending key material in plaintext over the wire. This model requires that at least one node be running at all times within the cluster; a failure of all nodes requires manually re-importing the keyring to one node during an outage recovery.
+When operating in cluster mode, keyring material propagates automatically among all nodes in the Kong cluster. Because Kong nodes don't have a notion of direct peer-to-peer communication, the underlying data store serves as a communication channel to transmit messages. When a Kong node starts, it generates an ephemeral RSA key pair. The node’s public keys propagate to all other active nodes in the cluster. When an active node sees a message request for keyring material, it wraps the in-memory keyring material in the presented public key, and transmits the payload back over the central messaging channel provided by the underlying data store. This process allows each node in the cluster to broadcast keyring material to new nodes, without sending key material in plain text over the wire. This model requires that at least one node be running at all times within the cluster; a failure of all nodes requires manually re-importing the keyring to one node during an outage recovery.
 
 ## Disaster recovery
 
@@ -72,7 +72,7 @@ The Keyring material is then encrypted with the public RSA key defined with the 
 curl -X POST localhost:8001/keyring/recover -F recovery_private_key=@/path/to/generated/key.pem
 ```
 
-The response contains a list of keys that were successfully recovered and that could not be recovered. The Kong error log will contain the detailed reason why the keys could not be recovered.
+The response contains a list of keys that were successfully recovered and a list of keys that could not be recovered. The Kong error log will contain the detailed reason why the keys could not be recovered.
 
 ## Enable Keyring
 
