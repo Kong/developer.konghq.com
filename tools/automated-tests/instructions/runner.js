@@ -9,12 +9,13 @@ import { processPrereqs } from "./prereqs.js";
 import { processCleanup } from "./cleanup.js";
 import { processSteps } from "./step.js";
 import debug from "debug";
+import { validate, ValidationError } from "./validations.js";
 
 const log = debug("runner");
 const debugLog = debug("debug");
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-function executeCommand(container, cmd) {
+async function executeCommand(container, cmd) {
   return new Promise(async (resolve, reject) => {
     try {
       const execCommand = await container.exec({
@@ -27,14 +28,14 @@ function executeCommand(container, cmd) {
         execCommand.start({}, (err, stream) => {
           let output = "";
           if (err) {
-            reject(err);
+            return reject(err);
           }
           stream.on("data", (chunk) => {
             output += chunk.toString();
           });
           stream.on("end", function () {
             debugLog(output);
-            resolve();
+            return resolve(output);
           });
         });
       });
@@ -117,10 +118,14 @@ async function fetchImage(docker, setupConfig) {
 }
 
 async function runConfig(config, container) {
-  if (config.commands) {
-    for (const command of config.commands) {
-      await executeCommand(container, command);
+  try {
+    if (config.commands) {
+      for (const command of config.commands) {
+        await executeCommand(container, command);
+      }
     }
+  } catch (error) {
+    throw error;
   }
 }
 
@@ -134,6 +139,7 @@ async function runPrereqs(prereqs, container) {
   if (prereqs) {
     const config = await processPrereqs(prereqs);
     await runConfig(config, container);
+    log(`   prereq ✅ .`);
   }
 }
 
@@ -146,10 +152,26 @@ async function runCleanup(cleanup, container) {
 }
 
 async function runSteps(steps, container) {
-  log("Running steps...");
-  if (steps) {
-    const config = await processSteps(steps);
-    await runConfig(config, container);
+  try {
+    log("Running steps...");
+    if (steps) {
+      const config = await processSteps(steps);
+      if (config.commands) {
+        for (const command of config.commands) {
+          if (typeof command === "string") {
+            await executeCommand(container, command);
+            log(`   step ✅ .`);
+          } else {
+            // XXX: Sleep needed here because we need to wait for the iterator
+            // rebuilding in Gateway.
+            await new Promise((resolve) => setTimeout(resolve, 4000));
+            await validate(command);
+          }
+        }
+      }
+    }
+  } catch (error) {
+    throw error;
   }
 }
 
@@ -192,17 +214,25 @@ export async function runInstructions(instructions) {
 
     await removeContainer(container);
   } catch (err) {
-    console.error("Error: ", err);
     await stopContainer(container);
     await removeContainer(container);
+    if (err instanceof ValidationError) {
+      console.error(err.message);
+    } else {
+      console.error("Error: ", err);
+    }
+    process.exit(1);
   }
 }
 
-(async function main() {
-  const fileContent = await fs.readFile(
-    "output/instructions/how-to/add-rate-limiting-for-a-consumer-with-kong-gateway/on-prem.yaml",
-    "utf8"
-  );
+export async function runInstructionsFile(file) {
+  const fileContent = await fs.readFile(file, "utf8");
   const instructions = yaml.load(fileContent);
   await runInstructions(instructions);
+}
+
+(async function main() {
+  await runInstructionsFile(
+    "output/instructions/how-to/add-rate-limiting-for-a-consumer-with-kong-gateway/on-prem.yaml"
+  );
 })();
