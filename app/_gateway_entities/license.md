@@ -18,7 +18,7 @@ schema:
   api: gateway/admin-ee
   path: /schemas/License
 
-faq: 
+faqs: 
   - q: How do I troubleshoot the `license path environment variable not set` error?
     a: Neither the `KONG_LICENSE_DATA` nor the `KONG_LICENSE_PATH` environmental variables were defined, and no license file could be opened at the default license location (`/etc/kong/license.json`)
   - q: How do I troubleshoot the `internal error` error?
