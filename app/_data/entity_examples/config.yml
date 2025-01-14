@@ -111,6 +111,21 @@ formats:
 
   ui:
     label: 'Kong/Gateway Manager'
+    entities:
+      - ca_certificate
+      - certificate
+      - consumer
+      - consumer_group
+      - key
+      - key_set
+      - plugin
+      - route
+      - service
+      - sni
+      - target
+      - upstream
+      - vault
+      - workspace
 
 targets:
   consumer:
