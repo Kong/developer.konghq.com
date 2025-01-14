@@ -20,8 +20,6 @@ api_specs:
 tools:
   - admin-api
   - konnect-api
-  - kic
-  - terraform
 
 schema:
   api: gateway/admin-ee

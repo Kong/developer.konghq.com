@@ -92,8 +92,8 @@ formats:
       certificate:    '/certificates/'
       ca_certificate: '/ca_certificates/'
       sni:            '/snis/'
-      key:            '/keys/'
-      key-set:        '/key-sets/'
+      key:            '/keys'
+      key-set:        '/key-sets'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'
