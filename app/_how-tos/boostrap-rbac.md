@@ -17,4 +17,4 @@ tldr:
 
 ---
 
-@todo Create a super-admin in KGW set up default workspaces and teams validate isolatedness
+@todo Create a super-admin in KGW set up default workspaces and teams validate isolated workspace.

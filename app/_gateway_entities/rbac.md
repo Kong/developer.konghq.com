@@ -24,7 +24,7 @@ related_resources:
 ---
 
 ## What is RBAC?
-RBAC (Role based access control) is a {{site.base_gateway}} entity used to manage administrative and operational features based on [roles and permissions](/gateway/roles-and-permissions). RBAC is built on the following fundemental principles: 
+RBAC (Role based access control) is a {{site.base_gateway}} entity used to manage administrative and operational features based on [roles and permissions](/gateway/roles-and-permissions). RBAC is built on the following fundamental principles: 
 
 * In {{site.base_gateway}} there are users. 
 * Every user has a Role
@@ -34,7 +34,7 @@ Permissions effect {{site.base_gateway}} resources which are the core components
 
 ## RBAC Rules
 
-{{site.base_gateway}} uses a precendence model when checking if a user has suffcient permissions to access an endpoint, a resource, or a Workspace. This information is collected from the various rules applied across the roles and groups assigned to a user. 
+{{site.base_gateway}} uses a precedence model when checking if a user has sufficient permissions to access an endpoint, a resource, or a Workspace. This information is collected from the various rules applied across the roles and groups assigned to a user. 
 
 For each request {{site.base_gateway}} checks for an RBAC rule assigned to the requesting user in the following order:
 
@@ -43,7 +43,7 @@ For each request {{site.base_gateway}} checks for an RBAC rule assigned to the r
 3. An allow or deny rule against any endpoint (wildcard) in the current Workspace.
 4. A wildcard allow or deny rule against any endpoint in any Workspace. 
 
-If {{site.base_gateway}} finds a matching rule for the current user, endpoint or Workspace it allows or denies the request based on the rule. Once {{site.base_gateway}} finds an applicable rule, the algorithm stops and doesn't check les sspecific rules. If no rules are found (approval or denial) the request is denied. 
+If {{site.base_gateway}} finds a matching rule for the current user, endpoint or Workspace it allows or denies the request based on the rule. Once {{site.base_gateway}} finds an applicable rule, the algorithm stops and doesn't check less specific rules. If no rules are found (approval or denial) the request is denied. 
 
 
 ## RBAC Entities
@@ -99,7 +99,7 @@ curl -Ls get.konghq.com/quickstart | bash -s -- -e "KONG_LICENSE_DATA" \
    -e 'KONG_ADMIN_GUI_SESSION_CONF={"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}'
 ```
 
-This command will start {{site.base_gateway}} with RBAC and the default password `kong`. Kong Manager access is availble using the username `kong_admin` and the password `kong`
+This command will start {{site.base_gateway}} with RBAC and the default password `kong`. Kong Manager access is available using the username `kong_admin` and the password `kong`
 {% endnavtab %}
 {% navtab "Kong Gateway" %}
 
@@ -133,15 +133,16 @@ This entire process can be automated, for more information read [creating Admins
 
 [Workspaces](/gateway/entities/workspace/) provide a way to logically segment configurations and entities with RBAC. Using RBAC you can restrict access to groups of users and create roles within a Workspace so that users can manage each other. This is done using the [`workspaces/rbac/roles`](/gateway/api/admin-ee/latest/#/RBAC/get-rbac-roles-by-workspace) endpoint.  
 
-## Kong Mesh
+## {{site.mesh_product_name}}
 
 Kubernetes provides its own RBAC system but it does not allow you to: 
 
 * Restrict access to a resource on a specific Mesh. 
 * Restrict access based on the content of the policy.
 
-Kong Mesh RBAC works on top of Kubernetes providing two globally scoped (not bound to Kong Mesh) resources to aid in implementing RBAC.
+{{site.mesh_product_name}} RBAC works on top of Kubernetes providing two globally scoped (not bound to {{site.mesh_product_name}}) resources to aid in implementing RBAC.
 
+<!--vale off-->
 {% feature_table %} 
 item_title: Mesh RBAC Role
 columns:
@@ -161,6 +162,7 @@ features:
     global_scope: true
 
 {% endfeature_table %}
+<!--vale on -->
 
 ## Schema
 

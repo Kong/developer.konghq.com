@@ -20,7 +20,7 @@ Roles and permissions are administered using the {{site.base_gateway}} [RBAC sys
 
 ## What are Permissions?
 
-Each role may may have a number of permissions that determine its ability to interact with a resource. The RBAC system provides a level of granularity that works by assigning actions on a per-resource level using the principle of least privilege.This means that a user can have **read** permissions on `/foo/bar` and **write** permissions on `/foo/bar/far`. 
+Each role may have a number of permissions that determine its ability to interact with a resource. The RBAC system provides a level of granularity that works by assigning actions on a per-resource level using the principle of least privilege.This means that a user can have **read** permissions on `/foo/bar` and **write** permissions on `/foo/bar/far`. 
 
 That results in the following flow: 
 
