@@ -50,6 +50,8 @@ You will receive this file from Kong when you sign up for a
 
 You can deploy a License in one of the following ways:
 
+<!--vale off-->
+
 {% feature_table %}
 item_title: Method
 columns:
@@ -87,6 +89,8 @@ features:
     description: |
       If you deploy a License using a `KONG_LICENSE_DATA` or `KONG_LICENSE_PATH` environment variable, the control plane **does not** propagate the License to data plane nodes. You **must** add the License to each data plane node, and each node **must** start with the License. The License can't be added after starting the node.<br><br> Note that unlike most other `KONG_*` environmental variables, the `KONG_LICENSE_DATA` and `KONG_LICENSE_PATH` cannot be defined in-line as part of any `kong` CLI commands. License file environmental variables must be exported to the shell in which the Nginx process will run, ahead of the `kong` CLI tool.
 {% endfeature_table %}
+
+<!--vale on-->
 
 Keep the following in mind: 
 * **Hybrid mode:** The license file must be deployed to each control plane and data plane node. Apply the License through the Kong Admin API to the control plane. The control plane distributes the License to its data plane nodes. This is the only method that applies the License to data planes automatically.
