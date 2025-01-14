@@ -10,6 +10,33 @@ By default, when {{site.base_gateway}} is configured, the starting user is confi
 
 An **Admin** has full permissions to every endpoint in {{site.base_gateway}}, but they can't assign and modify RBAC permissions. An **Admin** can't modify their own permissions, or configure the permissions of the **Super Admin**.   
 
+{% mermaid %}
+
+flowchart LR
+    A((fa:fa-user Super-admin user<br><b>permissions<br>CRUD</b>))
+    B(<b>Kong Manager</b>)
+    C(<b>Admin API</b>)
+    D(RBAC)
+    E(Routes)
+    F(Services)
+    G(Plugins)
+    H(Workspaces)
+    A--> B & C
+    subgraph id1 [Control Plane]
+        B --> C
+    direction LR
+        subgraph id2 [Kong Entities]
+        direction LR
+        D
+        E
+        F
+        G
+        H
+        end
+    C --> D & E & F & G & H
+    end
+
+{% endmermaid %}
 ## Workspace roles
 
 | Role      | Description |
