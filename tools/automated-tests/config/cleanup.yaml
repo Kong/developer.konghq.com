@@ -1,3 +1,3 @@
 gateway:
   commands:
-    - curl -Ls get.konghq.com/quickstart | bash -s -- -d -a kong-quickstart
+    - curl -Ls https://get.konghq.com/quickstart | bash -s -- -d -a kong-quickstart
