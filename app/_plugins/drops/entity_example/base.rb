@@ -9,7 +9,7 @@ module Jekyll
       class Base < Liquid::Drop
         extend Forwardable
 
-        def_delegators :@example, :data, :variables
+        def_delegators :@example, :data, :variables, :headers
 
         def initialize(example:)
           @example = example

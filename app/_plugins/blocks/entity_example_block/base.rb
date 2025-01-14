@@ -4,7 +4,7 @@ module Jekyll
   module EntityExampleBlock
     class Base
       def self.make_for(example:)
-        raise ArgumentError, "Missing `type` for entity_example.}" unless example['type']
+        raise ArgumentError, 'Missing `type` for entity_example.}' unless example['type']
 
         if example['type'] == 'plugin'
           Plugin.new(example:)
@@ -35,6 +35,10 @@ module Jekyll
         @formats ||= @example.fetch('formats', [])
       end
 
+      def headers
+        @headers ||= @example.fetch('headers', {})
+      end
+
       def to_drop
         Object.const_get(
           "Jekyll::Drops::EntityExample::#{self.class.name.split('::').last}"
@@ -43,7 +47,11 @@ module Jekyll
 
       def validate!
         raise ArgumentError, "Missing `data` for entity_type `#{@example['type']}`." unless @example['data']
-        raise ArgumentError, "Missing `formats` for entity_type `#{@example['type']}`. Available formats: #{Format::Base::MAPPINGS.keys.join(', ')}." unless @example['formats']
+
+        return if @example['formats']
+
+        raise ArgumentError,
+              "Missing `formats` for entity_type `#{@example['type']}`. Available formats: #{Format::Base::MAPPINGS.keys.join(', ')}."
       end
     end
   end
