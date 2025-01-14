@@ -120,7 +120,7 @@ Creating the `super-admin` username automatically adds the user to the `super-ad
 export KONG_ENFORCE_RBAC=on && kong reload
 ```
 
-This will enable RBAC. From here, you can use the `super-admin` user to manage your RBAC hierarchy. For an in-depth walkthrough of how to do this, review the [Bootstrapping RBAC](/how-to/bootstrap-rbac/)
+This will enable RBAC. From here, you can use the `super-admin` user to manage your RBAC hierarchy. For an in-depth walkthrough of how to do this, review the [Bootstrapping RBAC](/how-to/bootstrap-rbac/) documentation.
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -131,7 +131,7 @@ This entire process can be automated, for more information read [creating Admins
 
 ## Workspaces
 
-[Workspaces](/gateway/entities/workspace/) provide a way to logically segment configurations and entities with RBAC. Using RBAC you can restrict access to groups of users and create roles within a Workspace so that users can manage each other. This is done using the [`workspaces/rbac/roles`](/gateway/api/admin-ee/latest/#/RBAC/get-rbac-roles-by-workspace) endpoint.  
+[Workspaces](/gateway/entities/workspace/) provide a way to logically segment configurations and entities with RBAC. Using RBAC you can restrict access to groups of users and create roles within a Workspace so that users can manage each other. This is done using the [`workspaces/rbac/roles`](/api/gateway/admin-ee/3.9/#/operations/post-rbac-roles-workspace) endpoint.  
 
 ## {{site.mesh_product_name}}
 
