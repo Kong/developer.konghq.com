@@ -90,7 +90,7 @@ features:
 
 Keep the following in mind: 
 * **Hybrid mode:** The license file must be deployed to each control plane and data plane node. Apply the License through the Kong Admin API to the control plane. The control plane distributes the License to its data plane nodes. This is the only method that applies the License to data planes automatically.
-* **Traditional deployment with no separate control plane:** The license file must be deployed to each node running Kong Gateway.
+* **Traditional deployment with no separate control plane:** The license file must be deployed to each node running {{site.base_gateway}}.
 
 License file checking is done independently by each node as the Kong process starts. No network connectivity is necessary to execute the license validation process.
 
