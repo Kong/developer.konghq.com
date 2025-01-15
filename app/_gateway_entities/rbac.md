@@ -23,7 +23,7 @@ related_resources:
 
 ## What is RBAC?
 
-Roles and permissions are administered using the {{site.base_gateway}} RBAC entity. Roles are sets of permissions that can be assigned to admins and users and can be specific to a [Workspace](/gateway/entities/workspace). Permissions are types of rules that effect {{site.base_gateway}} resources which are the core components of an API. RBAC and {{site.base_gateway}} follow the following core principle: 
+Roles and permissions are administered using the {{site.base_gateway}} RBAC entity. Roles are sets of permissions that can be assigned to admins and users and can be specific to a [Workspace](/gateway/entities/workspace). Permissions are types of rules that effect {{site.base_gateway}} resources which are the core components of an API. RBAC and {{site.base_gateway}} follow the following core principles: 
 
 * In {{site.base_gateway}} there are users
 * Every user has a Role
@@ -141,14 +141,11 @@ features:
 {% navtabs %}
 {% navtab "Quickstart" %}
 
-This command sets the Kong super admin password to `kong` and sets up RBAC and a Developer Portal. This command assumes you have a [valid license in the environment variable `KONG_LICENSE_DATA`](/gateway/entities/license/):
+This command sets the Kong super admin password to `kong` and sets up RBAC. This command assumes you have a [valid license in the environment variable `KONG_LICENSE_DATA`](/gateway/entities/license/):
 ```
 curl -Ls get.konghq.com/quickstart | bash -s -- -e "KONG_LICENSE_DATA" \
    -e "KONG_ENFORCE_RBAC=on" \
-   -e "KONG_ADMIN_GUI_AUTH=basic-auth" \
-   -e "KONG_PASSWORD=kong" \
-   -e "KONG_PORTAL=on" \
-   -e 'KONG_ADMIN_GUI_SESSION_CONF={"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}'
+   -e "KONG_PASSWORD=kong"
 ```
 
 {% endnavtab %}
