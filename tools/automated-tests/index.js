@@ -71,6 +71,8 @@ async function removeContainer(container) {
 
     if (!process.env.SKIP_INSTRUCTIONS_EXTRACTION) {
       await generateInstructionFiles(testsConfig);
+    } else {
+      log(`Skipping extraction...`);
     }
 
     const filesByRuntime = await groupInstructionFilesByRuntime(testsConfig);
@@ -81,12 +83,12 @@ async function removeContainer(container) {
       }
       log(`Running ${runtime} tests...`);
 
-      const runtimeConfig = await getRuntimeConfig(runtime);
-      container = await setupRuntime(testsConfig, runtimeConfig, docker);
+      const runtimeConfig = await getRuntimeConfig(testsConfig, runtime);
+      container = await setupRuntime(runtimeConfig, docker);
 
       for (const instructionFile of instructionFiles) {
         await resetRuntime(runtimeConfig, container);
-        await runInstructionsFile(instructionFile, container);
+        await runInstructionsFile(instructionFile, runtimeConfig, container);
       }
 
       await cleanupRuntime(runtimeConfig, container);
