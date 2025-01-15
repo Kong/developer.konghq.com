@@ -1,8 +1,5 @@
 outputDir: './output/instructions'
 
-howTos:
- - http://localhost:8888/how-to/add-rate-limiting-for-a-consumer-with-kong-gateway/
- - http://localhost:8888/how-to/add-rate-limiting-to-a-service-with-kong-gateway/
-
+baseUrl: http://localhost:8888
 
 gateway: "3.9"

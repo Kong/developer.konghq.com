@@ -4,7 +4,7 @@ import debug from "debug";
 import path from "path";
 import fastGlob from "fast-glob";
 import Dockerode from "dockerode";
-import { extractInstructions } from "./instructions/extractor.js";
+import { generateInstructionFiles } from "./instructions/extractor.js";
 import { runInstructionsFile } from "./instructions/runner.js";
 import {
   setupRuntime,
@@ -26,14 +26,6 @@ async function loadConfig() {
   const config = yaml.load(fileContent);
 
   return config;
-}
-
-async function generateInstructionFiles(config) {
-  log("Generating instruction files...");
-  const howTos = config.howTos;
-  for (const howTo of howTos) {
-    await extractInstructions(howTo, config);
-  }
 }
 
 async function groupInstructionFilesByRuntime(config) {
@@ -70,6 +62,7 @@ async function removeContainer(container) {
     const testsConfig = await loadConfig();
 
     if (!process.env.SKIP_INSTRUCTIONS_EXTRACTION) {
+      log("Generating instruction files...");
       await generateInstructionFiles(testsConfig);
     } else {
       log(`Skipping extraction...`);
