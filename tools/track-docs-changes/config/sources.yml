@@ -82,6 +82,8 @@ app/_how-tos/integrate-keyring-with-vault.md:
   - app/_src/gateway/kong-enterprise/db-encryption.md
 app/_gateway_entities/key.md:
   - app/_src/gateway/reference/key-management.md
+app/_gateway_entities/key-set.md:
+  - app/_src/gateway/reference/key-management.md
 app/_how-tos/create-a-key-set-with-a-jwk.md:
   - app/_src/gateway/reference/key-management.md
 app/_how-tos/create-a-key-set-with-a-pem-key.md:
