@@ -9,10 +9,10 @@ description: |
   This provides for encryption-at-rest security controls in a {{site.base_gateway}} cluster.
 
 related_resources:
-  - text: Key entity
-    url: /gateway/entities/key/
-  - text: Key-set entity
-    url: /gateway/entities/key-set/
+- text: Vault entity
+   url: /gateway/entities/vault/
+- text: Certificate entity
+   url: /gateway/entities/certificate/
 
 tier: enterprise
 
@@ -29,14 +29,16 @@ schema:
 faqs:
   - q: What is the difference between a Vault and a Keyring?
     a: |
-      A Keyring and a Vault are both used to secure secrets, but they use different approaches. The Keyring contains encryption keys used to encrypt sensitive data fields before they're written to the database. The same key is then used to decrypt the data when reading from the database. A Vault is a container that securely stores secrets. You can then reference these secrets in other {{site.base_gateway}} entities. 
+      A Keyring and a [Vault](/gateway/entities/vault) are both used to secure secrets, but they use different approaches. The Keyring contains encryption keys used to encrypt sensitive data fields before they're written to the database. The same key is then used to decrypt the data when reading from the database. A Vault is a container that securely stores secrets. You can then reference these secrets in other {{site.base_gateway}} entities. 
       
-      The Keyring is configured for the whole {{site.base_gateway}} instance and will automatically encrypt a [list of fields](#encrypted-fields) defined by Kong. In a Vault, each secret needs to be added and then referenced.
+      The Keyring is configured for the whole {{site.base_gateway}} instance and will automatically encrypt a [list of fields](#encrypted-fields) defined by Kong. In a Vault, each secret needs to be added and then referenced. However, a Vault supports storing some fields not supported by the Keyring.
+      
+      You may choose a Vault if you want to secure certain fields that are not encrypted by the Keyring. If all the fields you want to secure are encrypted, the Keyring may be a quicker solution to implement.
 ---
 
 ## What is a Keyring?
 
-A Keyring is a mechanism that encrypts sensitive data fields, such as consumer secrets, before storing them in the database. 
+A Keyring is a mechanism that encrypts sensitive data fields, such as consumer secrets, before storing them in the database. The Keyring stores keys used to encrypt and decrypt data.
 
 This functionality provides transparent, symmetric encryption of sensitive data fields at rest. 
 When enabled, encryption and decryption of data are done on-the-fly by Kong immediately before writing to the database and after reading from the database. 
@@ -57,17 +59,19 @@ The Keyring encrypts the following fields:
 
 ## Key generation and lifecycle
 
-{{site.base_gateway}}’s keyring handling mechanisms allow for more than one key to be present on any given Kong node at a time. Each key may be used to read encrypted fields from the database, but only one key at any given time is used to write encrypted fields back to the data store. This process allows for a key rotation mechanism wherein new keyring material is introduced, and older keys may be present for a time to allow rotating previously-encrypted fields.
+{{site.base_gateway}}’s Keyring mechanisms allow for more than one key to be present at the same time. Each key may be used to read encrypted fields from the database, but only one key is used to write encrypted fields back to the data store. This process allows for a key rotation. When a new key is added, older keys remain in the Keyring to allow rotating previously-encrypted fields.
 
-Through the kernel CSPRNG, Kong derives keyring material generated through the `/keyring/generate` Admin API endpoint. Kong stores keyring material in a shared memory zone that all Kong worker processes access. To prevent key material from being written to disk as part of memory paging operations, we recommend that swap be disabled on systems running Kong.
+Through the kernel CSPRNG, Kong derives Keyring material generated through the `/Keyring/generate` Admin API endpoint. Kong stores Keyring material in a shared memory zone that all Kong worker processes access. To prevent key material from being written to disk as part of memory paging operations, we recommend that swap be disabled on systems running Kong.
 
-When operating in cluster mode, keyring material propagates automatically among all nodes in the Kong cluster. Because Kong nodes don't have a notion of direct peer-to-peer communication, the underlying data store serves as a communication channel to transmit messages. When a Kong node starts, it generates an ephemeral RSA key pair. The node’s public keys propagate to all other active nodes in the cluster. When an active node sees a message request for keyring material, it wraps the in-memory keyring material in the presented public key, and transmits the payload back over the central messaging channel provided by the underlying data store. This process allows each node in the cluster to broadcast keyring material to new nodes, without sending key material in plain text over the wire. This model requires that at least one node be running at all times within the cluster; a failure of all nodes requires manually re-importing the keyring to one node during an outage recovery.
+When operating in cluster mode, Keyring material propagates automatically among all nodes in the Kong cluster. Because Kong nodes don't have direct peer-to-peer communication, the underlying data store serves as a communication channel to transmit messages. When a Kong node starts, it generates an ephemeral RSA key pair. The node’s public keys propagate to all other active nodes in the cluster. 
+
+When an active node sees a message request for Keyring material, it wraps the in-memory Keyring material in the presented public key, and transmits the payload back over the central messaging channel provided by the underlying data store. This process allows each node in the cluster to broadcast Keyring material to new nodes, without sending key material in plain text over the wire. This model requires that at least one node be running at all times within the cluster; a failure of all nodes requires manually re-importing the Keyring to one node during an outage recovery.
 
 ## Disaster recovery
 
 To automatically back up your Keyring material, make sure to configure the `keyring_recovery_public_key` parameter to point to your `cert.pem` file. See [Enable Keyring](#enable-keyring) for more details.
 
-The Keyring material is then encrypted with the public RSA key defined with the `keyring_recovery_public_key` value in the database. The corresponding private key can be used to decrypt the keyring material in the database:
+The Keyring material is then encrypted with the public RSA key defined with the `keyring_recovery_public_key` value in the database. The corresponding private key can be used to decrypt the Keyring material in the database:
 ```sh
 curl -X POST localhost:8001/keyring/recover -F recovery_private_key=@/path/to/generated/key.pem
 ```
@@ -78,7 +82,7 @@ The response contains a list of keys that were successfully recovered and a list
 
 ### 1. Generate an RSA key pair
 
-Use the `openssl` CLI to generate an RSA key pair that can be used to export and recover keyring material:
+Use the `openssl` CLI to generate an RSA key pair that can be used to export and recover Keyring material:
 ```sh
 openssl genrsa -out key.pem 2048
 openssl rsa -in key.pem -pubout -out cert.pem
