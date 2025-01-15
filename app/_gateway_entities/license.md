@@ -19,7 +19,7 @@ schema:
   path: /schemas/License
 
 related_resources:
-  - text: Kong Gateway Enterprise features
+  - text: Enterprise features
     url: /gateway/enterprise-vs-oss/
 
 faqs: 
