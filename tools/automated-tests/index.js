@@ -1,0 +1,104 @@
+import fs from "fs/promises";
+import yaml from "js-yaml";
+import debug from "debug";
+import path from "path";
+import fastGlob from "fast-glob";
+import Dockerode from "dockerode";
+import { extractInstructions } from "./instructions/extractor.js";
+import { runInstructionsFile } from "./instructions/runner.js";
+import {
+  setupRuntime,
+  cleanupRuntime,
+  resetRuntime,
+  getRuntimeConfig,
+} from "./runtimes.js";
+
+const log = debug("tests");
+
+const docker = new Dockerode({
+  socketPath: "/var/run/docker.sock",
+});
+
+async function loadConfig() {
+  const configFile = "./config.yaml";
+
+  const fileContent = await fs.readFile(configFile, "utf8");
+  const config = yaml.load(fileContent);
+
+  return config;
+}
+
+async function generateInstructionFiles(config) {
+  log("Generating instruction files...");
+  const howTos = config.howTos;
+  for (const howTo of howTos) {
+    await extractInstructions(howTo, config);
+  }
+}
+
+async function groupInstructionFilesByRuntime(config) {
+  const groupedFiles = {};
+
+  const files = await fastGlob("**/*", { cwd: config.outputDir });
+
+  for (const file of files) {
+    const runtime = path.basename(file, path.extname(file));
+    groupedFiles[runtime] = groupedFiles[runtime] || [];
+    groupedFiles[runtime].push(path.join(config.outputDir, file));
+  }
+
+  return groupedFiles;
+}
+
+async function stopContainer(container) {
+  if (container) {
+    await container.stop();
+    log("Container stopped.");
+  }
+}
+
+async function removeContainer(container) {
+  if (container) {
+    await container.remove();
+    log("Container removed.");
+  }
+}
+
+(async function main() {
+  let container;
+  try {
+    const testsConfig = await loadConfig();
+
+    if (!process.env.SKIP_INSTRUCTIONS_EXTRACTION) {
+      await generateInstructionFiles(testsConfig);
+    }
+
+    const filesByRuntime = await groupInstructionFilesByRuntime(testsConfig);
+
+    for (const [runtime, instructionFiles] of Object.entries(filesByRuntime)) {
+      if (process.env.RUNTIME && process.env.RUNTIME !== runtime) {
+        continue;
+      }
+      log(`Running ${runtime} tests...`);
+
+      const runtimeConfig = await getRuntimeConfig(runtime);
+      container = await setupRuntime(testsConfig, runtimeConfig, docker);
+
+      for (const instructionFile of instructionFiles) {
+        await resetRuntime(runtimeConfig, container);
+        await runInstructionsFile(instructionFile, container);
+      }
+
+      await cleanupRuntime(runtimeConfig, container);
+    }
+    await stopContainer(container);
+    await removeContainer(container);
+  } catch (error) {
+    console.error(error);
+
+    await stopContainer(container);
+    await removeContainer(container);
+
+    process.exit(1);
+  }
+})();
