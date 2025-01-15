@@ -12,10 +12,17 @@ export async function getRuntimeConfig(testsConfig, runtime) {
 
   if (configs[runtime]) {
     let config = { ...configs[runtime], runtime, imageName };
-    const version = testsConfig[runtime];
-    // TODO: overwrite the version with an env variable
-    if (version) {
-      config["version"] = version;
+
+    // Overwrite the version with an env variable
+    const versionFromEnv = process.env[`${runtime.toUpperCase()}_VERSION`];
+    if (versionFromEnv) {
+      config["version"] = versionFromEnv;
+    } else {
+      // pull the version from the config file
+      const version = testsConfig[runtime];
+      if (version) {
+        config["version"] = version;
+      }
     }
 
     return config;
@@ -49,8 +56,15 @@ export async function runtimeEnvironment(runtimeConfig) {
 }
 
 export async function setupRuntime(runtimeConfig, docker) {
-  await fetchImage(docker, runtimeConfig.imageName, runtimeConfig.runtime, log);
+  const runtime = runtimeConfig.runtime;
+  await fetchImage(docker, runtimeConfig.imageName, runtime, log);
   const env = await runtimeEnvironment(runtimeConfig);
+
+  if (runtimeConfig.version) {
+    log(`Setting up ${runtime} version: ${runtimeConfig.version}...`);
+  } else {
+    log(`Setting up ${runtime}...`);
+  }
 
   const container = await docker.createContainer({
     Image: runtimeConfig.imageName,

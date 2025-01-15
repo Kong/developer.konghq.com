@@ -54,7 +54,7 @@ async function checkSetup(setup, runtimeConfig) {
     // that we are running.
     if (compareVersions(minVersion, runtimeConfig.version) === 1) {
       log(
-        `⚠️ Skipping test. The version in 'setup' is greater than ${runtimeConfig.version}`
+        `⚠️ Skipping test. The version ${minVersion} in 'setup' is greater than ${runtimeConfig.version}`
       );
       return false;
     }
