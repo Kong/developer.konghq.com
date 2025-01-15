@@ -74,6 +74,13 @@ app/_gateway_entities/vault.md:
   - app/_src/gateway/kong-enterprise/secrets-management/advanced-usage.md
   - app/_src/deck/guides/vaults.md
   - app/_src/gateway/kong-enterprise/secrets-management/index.md
+app/_gateway_entities/keyring.md:
+  - app/_src/gateway/kong-enterprise/db-encryption.md
+app/_how-tos/encrypt-sensitive-data-in-kong-gateway-with-keyring.md:
+  - app/_src/gateway/kong-enterprise/db-encryption.md
+app/_how-tos/integrate-keyring-with-vault.md:
+  - app/_src/gateway/kong-enterprise/db-encryption.md
+
 # how-tos
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
   - /app/_hub/kong-inc/rate-limiting-advanced/how-to/_index.md
