@@ -11,11 +11,12 @@ export class ValidationError extends Error {
 
 function processHeaders(config) {
   let headers = {};
-  config.headers.forEach((header) => {
-    const [key, value] = header.split(":");
-    headers[key] = value;
-  });
-
+  if (config.headers) {
+    config.headers.forEach((header) => {
+      const [key, value] = header.split(":");
+      headers[key] = value;
+    });
+  }
   return headers;
 }
 
