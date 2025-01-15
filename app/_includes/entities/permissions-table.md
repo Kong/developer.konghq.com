@@ -1,6 +1,6 @@
 ## Default {{site.base_gateway}}  roles
 
-By default, when {{site.base_gateway}} is configured, the starting user is configured as a **Super Admin** in the `default` Workspace. Workspace's by default contain the following roles: 
+By default, when {{site.base_gateway}} is configured, the starting user is configured as a **Super Admin** in the `default` Workspace. Workspaces, by default, contain the following roles: 
 
 | Role      | Description |
 | ----------- | ----------- |
@@ -39,11 +39,11 @@ flowchart LR
 {% endmermaid %}
 ## Workspace roles
 
-[Workspaces](/gateway/entities/workspace/) provide a way to logically segment configurations and entities with RBAC. Using RBAC you can restrict access to groups of users and create roles within a Workspace so that users can manage each other. This is done using the [`workspaces/rbac/roles`](/api/gateway/admin-ee/3.9/#/operations/post-rbac-roles-workspace) endpoint.  
+[Workspaces](/gateway/entities/workspace/) provide a way to logically segment configurations and entities with RBAC. Using RBAC, you can restrict access to groups of users and create roles within a Workspace so that users can manage each other. This is done using the [`workspaces/rbac/roles`](/api/gateway/admin-ee/3.9/#/operations/post-rbac-roles-workspace) endpoint.  
 
 | Role      | Description |
 | ----------- | ----------- |
 |`workspace-admin` | Full access to all endpoints in the Workspace, except the RBAC Admin API.| 
 |`Workspace-read-only` | Read access to all endpoints in the Workspace | 
 
-A role assigned in the `default` WorkSpace has permissions across all subsequently created Workspaces unless the roles in the specific Workplace are explicitly assigned. When a Workspace has explicitly assigned roles, they take precedent over the `default` Workspace. 
+A role assigned in the `default` Workspace has permissions across all subsequently created Workspaces unless the roles in the specific Workplace are explicitly assigned. When a Workspace has explicitly assigned roles, they take precedent over the `default` Workspace. 
