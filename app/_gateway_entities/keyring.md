@@ -34,6 +34,10 @@ faqs:
       The Keyring is configured for the whole {{site.base_gateway}} instance and will automatically encrypt a [list of fields](#encrypted-fields) defined by Kong. In a Vault, each secret needs to be added and then referenced. However, a Vault supports storing some fields not supported by the Keyring.
       
       You may choose a Vault if you want to secure certain fields that are not encrypted by the Keyring. If all the fields you want to secure are encrypted, the Keyring may be a quicker solution to implement.
+  - q: Where does Kong store the contents of the Keyring?
+    a: Kong stores Keyring material in a shared memory zone that all Kong worker processes access. To prevent keys from being written to disk as part of memory paging operations, we recommend disabling memory swapping on systems running Kong.
+  - q: What happens to the keys if a Kong node fails?
+    a: In cluster mode, the contents of the Keyring propagate automatically among all nodes in the Kong cluster. One node failing does not impact the Keyring. However, at least one node must be running at all times within the cluster; a failure of all nodes requires manually re-importing the Keyring to one node during an outage recovery.
 ---
 
 ## What is a Keyring?
@@ -59,13 +63,16 @@ The Keyring encrypts the following fields:
 
 ## Key generation and lifecycle
 
-{{site.base_gateway}}’s Keyring mechanism allows for more than one key to be present at the same time. Each key may be used to read encrypted fields from the database, but only one key is used to write encrypted fields back to the data store. This process allows for a key rotation. When a new key is added, older keys remain in the Keyring to allow rotating previously-encrypted fields.
+Once you've enabled Keyring with the `cluster` strategy on all Kong nodes in your cluster, the encryption process will work like this:
+1. You generate a key using the `/keyring/generate` Admin API endpoint. 
+1. Kong stores this key and its ID in a shared memory zone in the data store, which is accessible to all nodes in your cluster.
+1. You create a plugin that contains an encrypted field. For example, a plugin with an API key field.
+1. Using the key you generated, Kong encrypts the value of the encrypted fields and writes the data to the Kong database.
+1. If any Kong node in the cluster receives a request, through the `/plugins` API endpoint for example, it uses the key you generated to decrypt the sensitive fields and returns the data in plain text.
 
-Through the kernel CSPRNG, Kong derives Keyring material generated through the `/Keyring/generate` Admin API endpoint. Kong stores Keyring material in a shared memory zone that all Kong worker processes access. To prevent keys from being written to disk as part of memory paging operations, we recommend disabling memory swapping on systems running Kong.
-
-In cluster mode, Keyring material propagates automatically among all nodes in the Kong cluster. Because Kong nodes don't have direct peer-to-peer communication, the underlying data store serves as a communication channel to transmit messages. When a Kong node starts, it generates an ephemeral RSA key pair. The node’s public keys propagate to all other active nodes in the cluster. 
-
-When an active node receives a request for Keyring material, it wraps the in-memory Keyring material in the presented public key, and transmits the payload back over the central messaging channel provided by the underlying data store. This process allows each node in the cluster to broadcast Keyring material to new nodes, without sending key material in plain text over the wire. This model requires that at least one node be running at all times within the cluster; a failure of all nodes requires manually re-importing the Keyring to one node during an outage recovery.
+If you generate a new key:
+- New data is encrypted using the new key
+- Older keys remain in the Keyring to decrypt previously-encrypted data, but are no longer used for encryption
 
 ## Disaster recovery
 
