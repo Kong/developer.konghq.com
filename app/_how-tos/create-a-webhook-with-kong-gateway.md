@@ -44,6 +44,8 @@ related_resources:
 
 min_version:
     gateway: '3.4'
+
+automated_tests: false
 ---
 
 ## 1. Create a webhook
