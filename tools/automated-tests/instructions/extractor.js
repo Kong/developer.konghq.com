@@ -3,8 +3,6 @@ import fs from "fs/promises";
 import debug from "debug";
 import path from "path";
 import yaml from "js-yaml";
-import fastGlob from "fast-glob";
-import matter from "gray-matter";
 
 const log = debug("tests:extractor");
 
@@ -172,50 +170,14 @@ export async function extractInstructionsFromURL(uri, config, browser) {
   }
 }
 
-async function testeableUrlsFromFiles(config) {
-  const howTosUrls = [];
-  const howToFiles = await fastGlob("../../app/_how-tos/**/*");
-
-  for (const file of howToFiles) {
-    const { data: frontmatter, content } = matter.read(file);
-
-    const isTesteable =
-      frontmatter.products &&
-      frontmatter.products.length === 1 &&
-      frontmatter.products.includes("gateway");
-
-    if (isTesteable) {
-      const skipHowTo =
-        content.includes("@todo") || frontmatter.automated_tests === false;
-      if (skipHowTo) {
-        const relativeFilePath = file.replace("../../", "");
-        if (frontmatter.automated_tests === false) {
-          log(
-            `Skipping file: ${relativeFilePath}, it's tagged with automated_tests=false`
-          );
-        } else {
-          log(`Skipping file: ${relativeFilePath}, it's tagged with @todo.`);
-        }
-      } else {
-        const fileToUrl = file
-          .replace("../../app/_how-tos/", "")
-          .replace(".md", "/");
-        howTosUrls.push(`${config.baseUrl}/how-to/${fileToUrl}`);
-      }
-    }
-  }
-  return howTosUrls;
-}
-
-export async function generateInstructionFiles(config) {
-  const testeableUrls = await testeableUrlsFromFiles(config);
+export async function generateInstructionFiles(urlsToTest, config) {
   const browser = await puppeteer.launch();
   try {
     await browser
       .defaultBrowserContext()
       .overridePermissions(new URL(config.baseUrl).origin, ["clipboard-read"]);
 
-    for (const uri of testeableUrls) {
+    for (const uri of urlsToTest) {
       await extractInstructionsFromURL(uri, config, browser);
     }
   } catch (error) {

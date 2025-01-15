@@ -34,7 +34,7 @@ async function groupInstructionFilesByRuntime(config) {
   const files = await fastGlob("**/*", { cwd: config.outputDir });
   if (files.length === 0) {
     console.error(
-      `The platform couldn't find any instructions file in ${config.outputDir}.`
+      `The platform couldn't find any instructions files to run in ${config.outputDir}.`
     );
     console.error(
       `Please run \`DEBUG='tests:extractor' npm run generate-instruction-files\` first`
