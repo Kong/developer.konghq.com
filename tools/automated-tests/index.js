@@ -81,9 +81,10 @@ async function removeContainer(container) {
       if (process.env.RUNTIME && process.env.RUNTIME !== runtime) {
         continue;
       }
-      log(`Running ${runtime} tests...`);
 
       const runtimeConfig = await getRuntimeConfig(testsConfig, runtime);
+      log(`Running ${runtime} tests...`);
+
       container = await setupRuntime(runtimeConfig, docker);
 
       for (const instructionFile of instructionFiles) {
