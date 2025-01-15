@@ -4,7 +4,7 @@ import debug from "debug";
 import path from "path";
 import fastGlob from "fast-glob";
 import Dockerode from "dockerode";
-import { generateInstructionFiles } from "./instructions/extractor.js";
+
 import { runInstructionsFile } from "./instructions/runner.js";
 import {
   setupRuntime,
@@ -19,7 +19,7 @@ const docker = new Dockerode({
   socketPath: "/var/run/docker.sock",
 });
 
-async function loadConfig() {
+export async function loadConfig() {
   const configFile = "./config.yaml";
 
   const fileContent = await fs.readFile(configFile, "utf8");
@@ -32,6 +32,15 @@ async function groupInstructionFilesByRuntime(config) {
   const groupedFiles = {};
 
   const files = await fastGlob("**/*", { cwd: config.outputDir });
+  if (files.length === 0) {
+    console.error(
+      `The platform couldn't find any instructions file in ${config.outputDir}.`
+    );
+    console.error(
+      `Please run \`DEBUG='tests:extractor' npm run generate-instruction-files\` first`
+    );
+    process.exit(1);
+  }
 
   for (const file of files) {
     const runtime = path.basename(file, path.extname(file));
@@ -60,14 +69,6 @@ async function removeContainer(container) {
   let container;
   try {
     const testsConfig = await loadConfig();
-
-    if (!process.env.SKIP_INSTRUCTIONS_EXTRACTION) {
-      log("Generating instruction files...");
-      await generateInstructionFiles(testsConfig);
-    } else {
-      log(`Skipping extraction...`);
-    }
-
     const filesByRuntime = await groupInstructionFilesByRuntime(testsConfig);
 
     for (const [runtime, instructionFiles] of Object.entries(filesByRuntime)) {
