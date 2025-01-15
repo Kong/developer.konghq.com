@@ -31,10 +31,10 @@ export async function loadConfig() {
 async function groupInstructionFilesByRuntime(config) {
   const groupedFiles = {};
 
-  const files = await fastGlob("**/*", { cwd: config.outputDir });
+  const files = await fastGlob("**/*", { cwd: config.instructionsDir });
   if (files.length === 0) {
     console.error(
-      `The platform couldn't find any instructions files to run in ${config.outputDir}.`
+      `The platform couldn't find any instructions files to run in ${config.instructionsDir}.`
     );
     console.error(
       `Please run \`DEBUG='tests:extractor' npm run generate-instruction-files\` first`
@@ -45,7 +45,7 @@ async function groupInstructionFilesByRuntime(config) {
   for (const file of files) {
     const runtime = path.basename(file, path.extname(file));
     groupedFiles[runtime] = groupedFiles[runtime] || [];
-    groupedFiles[runtime].push(path.join(config.outputDir, file));
+    groupedFiles[runtime].push(path.join(config.instructionsDir, file));
   }
 
   return groupedFiles;

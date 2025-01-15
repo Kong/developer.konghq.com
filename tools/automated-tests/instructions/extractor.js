@@ -114,12 +114,12 @@ async function writeInstructionsToFile(url, config, platform, instructions) {
     runtime = "gateway";
   }
   const instructionsFile = path.join(
-    config.outputDir,
+    config.instructionsDir,
     url.pathname,
     `${runtime}.yaml`
   );
-  const outputDir = path.dirname(instructionsFile);
-  await fs.mkdir(outputDir, { recursive: true });
+  const instructionsDir = path.dirname(instructionsFile);
+  await fs.mkdir(instructionsDir, { recursive: true });
 
   await fs.writeFile(instructionsFile, yaml.dump(instructions), "utf-8");
 
