@@ -12,7 +12,7 @@ module Jekyll
       contents = super
 
       example = YAML.load(contents)
-      example = example.merge('formats' => formats(@page)) unless example['formats']
+      example = example.merge('formats' => formats(@page, @site)) unless example['formats']
 
       unless example['formats']
         raise ArgumentError,
@@ -37,9 +37,11 @@ module Jekyll
       raise ArgumentError, message
     end
 
-    def formats(page)
+    def formats(page, site)
       return page['tools'] unless page['layout'] == 'gateway_entity'
-      return page['tools'] unless page['slug'] != 'event-hook'
+
+      supported_entities = site.data.dig('entity_examples', 'config', 'formats', 'ui', 'entities') || []
+      return page['tools'] unless supported_entities.include?(page['entities'].first)
 
       page['tools'].dup << 'ui'
     end

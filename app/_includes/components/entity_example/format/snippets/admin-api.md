@@ -1,7 +1,8 @@
 ```bash
 curl -X POST {{ include.presenter.url }} \
-    --header "accept: application/json" \
-    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "Content-Type: application/json" \ {% if include.presenter.headers %}{%- for header in include.presenter.headers %}
+    --header "{{header}}" \ {% endfor %}{% endif %}
     --data '
 {{ include.presenter.data | json_prettify | indent: 4 }}
     '

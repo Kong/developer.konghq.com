@@ -24,6 +24,10 @@ module Jekyll
               )
             end
 
+            def headers
+              @headers ||= @example_drop.headers.fetch('admin-api', [])
+            end
+
             def template_file
               '/components/entity_example/format/admin-api.md'
             end
