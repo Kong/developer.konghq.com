@@ -161,7 +161,7 @@ If you have configured [RBAC](/gateway/entities/rbac/#enable-rbac) and configure
 3. Select the desired [roles](/gateway/entities/rbac/#default-kong-gateway-roles).
 4. Select **Invite Admin**.
 
-If you have not configured [Kong Manager to send email](/how-to/configure-kong-manager-email), you can generate a registration link by selecting the newely invited Admin, and clicking **Generate Registration Link**.
+If you have not configured [Kong Manager to send email](/how-to/configure-kong-manager-email), you can generate a registration link by selecting the newly invited Admin, and clicking **Generate Registration Link**.
 {% else %}
 {% endcase %}
 {% endif %}
