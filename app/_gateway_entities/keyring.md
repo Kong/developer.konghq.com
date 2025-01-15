@@ -59,13 +59,13 @@ The Keyring encrypts the following fields:
 
 ## Key generation and lifecycle
 
-{{site.base_gateway}}’s Keyring mechanisms allow for more than one key to be present at the same time. Each key may be used to read encrypted fields from the database, but only one key is used to write encrypted fields back to the data store. This process allows for a key rotation. When a new key is added, older keys remain in the Keyring to allow rotating previously-encrypted fields.
+{{site.base_gateway}}’s Keyring mechanism allows for more than one key to be present at the same time. Each key may be used to read encrypted fields from the database, but only one key is used to write encrypted fields back to the data store. This process allows for a key rotation. When a new key is added, older keys remain in the Keyring to allow rotating previously-encrypted fields.
 
-Through the kernel CSPRNG, Kong derives Keyring material generated through the `/Keyring/generate` Admin API endpoint. Kong stores Keyring material in a shared memory zone that all Kong worker processes access. To prevent key material from being written to disk as part of memory paging operations, we recommend that swap be disabled on systems running Kong.
+Through the kernel CSPRNG, Kong derives Keyring material generated through the `/Keyring/generate` Admin API endpoint. Kong stores Keyring material in a shared memory zone that all Kong worker processes access. To prevent keys from being written to disk as part of memory paging operations, we recommend disabling memory swapping on systems running Kong.
 
-When operating in cluster mode, Keyring material propagates automatically among all nodes in the Kong cluster. Because Kong nodes don't have direct peer-to-peer communication, the underlying data store serves as a communication channel to transmit messages. When a Kong node starts, it generates an ephemeral RSA key pair. The node’s public keys propagate to all other active nodes in the cluster. 
+In cluster mode, Keyring material propagates automatically among all nodes in the Kong cluster. Because Kong nodes don't have direct peer-to-peer communication, the underlying data store serves as a communication channel to transmit messages. When a Kong node starts, it generates an ephemeral RSA key pair. The node’s public keys propagate to all other active nodes in the cluster. 
 
-When an active node sees a message request for Keyring material, it wraps the in-memory Keyring material in the presented public key, and transmits the payload back over the central messaging channel provided by the underlying data store. This process allows each node in the cluster to broadcast Keyring material to new nodes, without sending key material in plain text over the wire. This model requires that at least one node be running at all times within the cluster; a failure of all nodes requires manually re-importing the Keyring to one node during an outage recovery.
+When an active node receives a request for Keyring material, it wraps the in-memory Keyring material in the presented public key, and transmits the payload back over the central messaging channel provided by the underlying data store. This process allows each node in the cluster to broadcast Keyring material to new nodes, without sending key material in plain text over the wire. This model requires that at least one node be running at all times within the cluster; a failure of all nodes requires manually re-importing the Keyring to one node during an outage recovery.
 
 ## Disaster recovery
 
@@ -110,18 +110,12 @@ export KONG_KEYRING_RECOVERY_PUBLIC_KEY=/path/to/generated/cert.pem
 {% endnavtab %}
 {% endnavtabs %}
 
-### 3. Start Kong and validate
-Once the configuration is updated, you can start your {{site.base_gateway}} instance and use the following request to make sure the Keyring is enabled:
+### 3. Start Kong and generate a key
+Once the configuration is updated, you can start your {{site.base_gateway}} instance and use the following request to make create a new key in the Keyring:
 
 ```sh
-curl -s localhost:8001/keyring
+curl -X POST localhost:8001/keyring/generate
 ```
 
-If you haven't added any keys, you'll get the following response:
-
-```json
-{
-	"ids": {}
-}
-```
-
+This key will then be used to encrypt sensitive fields in the database. 
+To validate that it is working, you can create a plugin with data in an encrypted field, and then check the database to make sure the data is encrypted.
