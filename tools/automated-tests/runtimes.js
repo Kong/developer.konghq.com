@@ -5,24 +5,30 @@ import { executeCommand, fetchImage } from "./docker-helper.js";
 
 const log = debug("tests:setup:runtime");
 
-export async function getRuntimeConfig(runtime) {
+export async function getRuntimeConfig(testsConfig, runtime) {
   const fileContent = await fs.readFile(`./config/runtimes.yaml`, "utf8");
   const configs = yaml.load(fileContent);
   const imageName = `automated-tests:${runtime}`;
 
   if (configs[runtime]) {
-    return { ...configs[runtime], runtime, imageName };
+    let config = { ...configs[runtime], runtime, imageName };
+    const version = testsConfig[runtime];
+    // TODO: overwrite the version with an env variable
+    if (version) {
+      config["version"] = version;
+    }
+
+    return config;
   } else {
     throw new Error(`Unsupported runtime: ${runtime}`);
   }
 }
 
-export async function runtimeEnvironment(testsConfig, runtimeConfig) {
-  const version = testsConfig[runtimeConfig.runtime];
+export async function runtimeEnvironment(runtimeConfig) {
   let environment = [];
+  const version = runtimeConfig.version;
 
   if (version) {
-    // TODO: overwrite the version with an env variable
     const versionConfig = runtimeConfig["versions"].find(
       (v) => v["version"] == version
     );
@@ -42,11 +48,10 @@ export async function runtimeEnvironment(testsConfig, runtimeConfig) {
   return environment;
 }
 
-export async function setupRuntime(testsConfig, runtimeConfig, docker) {
+export async function setupRuntime(runtimeConfig, docker) {
   await fetchImage(docker, runtimeConfig.imageName, runtimeConfig.runtime, log);
-  const env = await runtimeEnvironment(testsConfig, runtimeConfig);
+  const env = await runtimeEnvironment(runtimeConfig);
 
-  // TODO: extract env from runtimeConfig + testsConfig
   const container = await docker.createContainer({
     Image: runtimeConfig.imageName,
     Tty: true,
