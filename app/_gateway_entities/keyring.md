@@ -10,9 +10,9 @@ description: |
 
 related_resources:
 - text: Vault entity
-   url: /gateway/entities/vault/
+  url: /gateway/entities/vault/
 - text: Certificate entity
-   url: /gateway/entities/certificate/
+  url: /gateway/entities/certificate/
 
 tier: enterprise
 
