@@ -32,11 +32,11 @@ RBAC (Role based access control) is a {{site.base_gateway}} entity used to manag
 * A Group is a collection of permissions. 
 Permissions effect {{site.base_gateway}} resources which are the core components of an API. 
 
-## RBAC Rules
+## RBAC precedence order
 
 {{site.base_gateway}} uses a precedence model when checking if a user has sufficient permissions to access an endpoint, a resource, or a Workspace. This information is collected from the various rules applied across the roles and groups assigned to a user. 
 
-For each request {{site.base_gateway}} checks for an RBAC rule assigned to the requesting user in the following order:
+For each request, {{site.base_gateway}} checks for an RBAC rule assigned to the requesting user in the following order:
 
 1. An allow or deny rule against the current endpoint in the current Workspace.
 2. A wildcard allow or deny rule against the current endpoint in any Workspace.
@@ -67,7 +67,7 @@ features:
 
   - title: "`role_source`"
     description: |
-      The origin of the RBAC user role. Specifies where the user role is defined, either locally or through an identity provider (IdP).
+      Specifies where the user role is defined, either locally or through an identity provider (IdP).
 
   - title: "`role_endpoint`"
     description: |
@@ -89,7 +89,7 @@ features:
 {% navtabs %}
 {% navtab "Quickstart" %}
 
-This command sets the Kong super admin password to kong and sets up RBAC and Kong Developer Portal. This command assumes you have a valid license in the environment variable `KONG_LICENSE_DATA`:
+This command sets the Kong super admin password to `kong` and sets up RBAC and a Developer Portal. This command assumes you have a [valid license in the environment variable `KONG_LICENSE_DATA`](/gateway/entities/license/):
 ```
 curl -Ls get.konghq.com/quickstart | bash -s -- -e "KONG_LICENSE_DATA" \
    -e "KONG_ENFORCE_RBAC=on" \
@@ -99,13 +99,10 @@ curl -Ls get.konghq.com/quickstart | bash -s -- -e "KONG_LICENSE_DATA" \
    -e 'KONG_ADMIN_GUI_SESSION_CONF={"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}'
 ```
 
-This command will start {{site.base_gateway}} with RBAC and the default password `kong`. Kong Manager access is available using the username `kong_admin` and the password `kong`
 {% endnavtab %}
 {% navtab "Kong Gateway" %}
 
-Before enforcing RBAC on your {{site.base_gateway}} instance, we recommend that you create a `super-admin` user first. 
-
-1. Create the RBAC user `super-admin`: 
+1. Before enforcing RBAC on your {{site.base_gateway}} instance, we recommend that you create a `super-admin` user first: 
 
 ```sh
  curl -i -X POST http://localhost:8001/rbac/users \
@@ -115,7 +112,7 @@ Before enforcing RBAC on your {{site.base_gateway}} instance, we recommend that 
 ```
 Creating the `super-admin` username automatically adds the user to the `super-admin` role.
 
-2. Enforce RBAC and reload {{site.base_gateway}}
+2. Enforce RBAC and reload {{site.base_gateway}}:
 ```sh
 export KONG_ENFORCE_RBAC=on && kong reload
 ```
@@ -125,13 +122,10 @@ This will enable RBAC. From here, you can use the `super-admin` user to manage y
 {% endnavtab %}
 {% endnavtabs %}
 
-This entire process can be automated, for more information read [creating Admins using the Admin API](/how-to/programatically-create-rbac-admins)
+You can automate the creation of Admins. For more information, see [creating Admins using the Admin API](/how-to/programatically-create-rbac-admins)
 
 
 
-## Workspaces
-
-[Workspaces](/gateway/entities/workspace/) provide a way to logically segment configurations and entities with RBAC. Using RBAC you can restrict access to groups of users and create roles within a Workspace so that users can manage each other. This is done using the [`workspaces/rbac/roles`](/api/gateway/admin-ee/3.9/#/operations/post-rbac-roles-workspace) endpoint.  
 
 ## {{site.mesh_product_name}}
 
