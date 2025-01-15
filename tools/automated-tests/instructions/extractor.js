@@ -4,7 +4,7 @@ import debug from "debug";
 import path from "path";
 import yaml from "js-yaml";
 
-const log = debug("extractor");
+const log = debug("tests:extractor");
 
 async function copyFromClipboard(page) {
   const copiedText = await page.evaluate(async () => {
@@ -122,7 +122,7 @@ async function writeInstructionsToFile(url, config, platform, instructions) {
   return instructionsFile;
 }
 
-async function extractInstructions(uri, config) {
+export async function extractInstructions(uri, config) {
   const browser = await puppeteer.launch();
   const url = new URL(uri);
 
@@ -162,7 +162,7 @@ async function extractInstructions(uri, config) {
         }
       );
 
-      log(`Instructions extracted successfully to ${instructionsFile}`);
+      log(`  Instructions extracted successfully to ${instructionsFile}`);
     }
   } catch (error) {
     log("There was an error extracting the instructions:", error);
@@ -170,23 +170,3 @@ async function extractInstructions(uri, config) {
     await browser.close();
   }
 }
-
-// TODO: extract the following functions from this file
-async function loadConfig() {
-  const configFile = "./config.yaml";
-
-  const fileContent = await fs.readFile(configFile, "utf8");
-  const config = yaml.load(fileContent);
-
-  return config;
-}
-
-(async function main() {
-  const config = await loadConfig();
-  log(`Config: ${JSON.stringify(config)}`);
-
-  extractInstructions(
-    "http://localhost:8888/how-to/add-rate-limiting-for-a-consumer-with-kong-gateway/",
-    config
-  );
-})();

@@ -1,8 +1,0 @@
-gateway:
-  versions:
-    - version: "3.9"
-      env:
-        KONG_IMAGE_NAME: kong/kong
-        KONG_IMAGE_TAG: "3.9.0"
-  commands:
-    - curl -Ls https://get.konghq.com/quickstart | bash -s -- -r "" -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_LICENSE_DATA
