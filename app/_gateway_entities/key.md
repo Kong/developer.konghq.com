@@ -28,7 +28,7 @@ schema:
 
 A Key object holds a representation of asymmetric keys, either public or private. When Kong or a Kong plugin requires a specific public or private key to perform certain operations, it can use this entity.
 
-The JWK and PEM formats are currently supported. Both formats carry the same base information, such as the public and private keys, but may allow you to specify additional meta information. The JWK format carries more information than PEM. One key pair can have multiple different representations (JWK or PEM) while being the same key.
+Keys currently support JWK and PEM formats. Both formats carry the same base information, such as the public and private keys, but may allow you to specify additional meta information. For example, the JWK format carries more information than PEM. One key pair can have multiple different representations (JWK or PEM) while being the same key.
 
 ## Schema
 
