@@ -20,7 +20,7 @@ schema:
 
 faqs: 
   - q: How do I troubleshoot the `license path environment variable not set` error?
-    a: Neither the `KONG_LICENSE_DATA` nor the `KONG_LICENSE_PATH` environmental variables were defined, and no license file could be opened at the default license location (`/etc/kong/license.json`)
+    a: Neither the `KONG_LICENSE_DATA` nor the `KONG_LICENSE_PATH` environment variables were defined, and no license file could be opened at the default license location (`/etc/kong/license.json`)
   - q: How do I troubleshoot the `internal error` error?
     a: An internal error has occurred while attempting to validate the License. Such cases are extremely unlikely. [Contact Kong support](https://support.konghq.com) to further troubleshoot.
   - q: How do I troubleshoot the `error opening license file` error?
@@ -43,12 +43,20 @@ faqs:
 
 A License entity allows you configure a License in your {{site.base_gateway}} cluster, in both [traditional and hybrid mode deployments](/gateway/deployment-topologies/). {{site.base_gateway}} can be used with or without a License. A License is required to use [{{site.base_gateway}} Enterprise features](/gateway/enterprise-vs-oss/).
 
+License file checking is done independently by each node as the Kong process starts. No network connectivity is necessary to execute the license validation process.
+
+Kong checks for a license file in the following order:
+
+1. If present, the contents of the environmental variable `KONG_LICENSE_DATA` are used.
+2. Kong will search in the default location `/etc/kong/license.json`.
+3. If present, the contents of the file defined by the environment variable `KONG_LICENSE_PATH` is used.
+4. Directly deploy a License using the `/licenses` Admin API endpoint.
 You will receive this file from Kong when you sign up for a
 {{site.konnect_product_name}} Enterprise subscription. [Contact Kong](https://support.konghq.com) for more information. If you have purchased a subscription but haven’t received a license file, contact your sales representative.
 
 ## How to deploy a License
 
-You can deploy a License in one of the following ways:
+Licenses are deployed according to your deployment topology: 
 
 <!--vale off-->
 
@@ -65,7 +73,7 @@ columns:
     key: description
 features:
   - title: |
-      `/licenses` Admin API endpoint
+    Admin API
     url: /gateway/entities/license/#deploy-a-license-with-the-licenses-admin-api-endpoint
     traditional: true
     hybrid: true
@@ -73,7 +81,7 @@ features:
     description: |
       The control plane sends Licenses configured through the `/licenses` endpoint to all data planes in the cluster. The data planes use the most recent `updated_at` License. This is the only method that applies the License to data planes automatically.
   - title: |
-      File on the node filesystem (`license.json`)
+      License File
     url: /gateway/entities/license/#deploy-a-license-with-a-file-on-the-node-filesystem-licensejson
     traditional: true
     hybrid: false
@@ -81,7 +89,7 @@ features:
     description: |
       The license data must contain straight quotes to be considered valid JSON (`'` and `"`, not `’` or `“`). Kong will search in the default location `/etc/kong/license.json`.
   - title: |
-      Environment variable (`KONG_LICENSE_DATA` or `KONG_LICENSE_PATH`)
+      Environment variable
     url: /gateway/entities/license/#deploy-a-license-with-an-environment-variable
     traditional: true
     hybrid: false
@@ -92,20 +100,10 @@ features:
 
 <!--vale on-->
 
-Keep the following in mind: 
 * **Hybrid mode:** The license file must be deployed to each control plane and data plane node. Apply the License through the Kong Admin API to the control plane. The control plane distributes the License to its data plane nodes. This is the only method that applies the License to data planes automatically.
 * **Traditional deployment with no separate control plane:** The license file must be deployed to each node running {{site.base_gateway}}.
 
-License file checking is done independently by each node as the Kong process starts. No network connectivity is necessary to execute the license validation process.
-
-Kong checks for a license file in the following order:
-
-1. If present, the contents of the environmental variable `KONG_LICENSE_DATA` are used.
-2. Kong will search in the default location `/etc/kong/license.json`.
-3. If present, the contents of the file defined by the environment variable `KONG_LICENSE_PATH` is used.
-4. Directly deploy a License using the `/licenses` Admin API endpoint.
-
-### Deploy a License with the '/licenses' Admin API endpoint
+### Deploy a License using the Admin API
 
 {% entity_example %}
 type: license
@@ -113,36 +111,35 @@ data:
   payload: "{\"license\":{\"payload\":{\"admin_seats\":\"1\",\"customer\":\"Example Company, Inc\",\"dataplanes\":\"1\",\"license_creation_date\":\"2017-07-20\",\"license_expiration_date\":\"2017-07-20\",\"license_key\":\"00141000017ODj3AAG_a1V41000004wT0OEAU\",\"product_subscription\":\"Konnect Enterprise\",\"support_plan\":\"None\"},\"signature\":\"6985968131533a967fcc721244a979948b1066967f1e9cd65dbd8eeabe060fc32d894a2945f5e4a03c1cd2198c74e058ac63d28b045c2f1fcec95877bd790e1b\",\"version\":\"1\"}}"
 {% endentity_example %}
 
-[Restart](/how-to/restart-kong-gateway-container/) the {{site.base_gateway}} nodes after adding or updating a License.
+[Reload](/how-to/restart-kong-gateway-container/) the {{site.base_gateway}} nodes after adding or updating a License.
 
-### Deploy a License with a file on the node filesystem ('license.json')
+### Deploy a License with `license.json`
 
-Save your License to a `license.json` file. The license data must contain straight quotes to be considered valid JSON (`'` and `"`, not `’` or `“`). Copy the license file to the `/etc/kong` directory.
+1. Save your License to a file titled `license.json`.  
+2. Copy the license file to the `/etc/kong`.
+3. Apply your license??? 
 
-### Deploy a License with an environment variable 
+### Deploy a License as an environment variable 
 
-#### 'KONG_LICENSE_DATA'
 
-Export your License to an environment variable (`export KONG_LICENSE_DATA='<license-contents-go-here>'`) and then include the `KONG_LICENSE_DATA` as part of the `docker run` command when starting a {{site.base_gateway}} container. The license data must contain straight quotes to be considered valid JSON
-(`'` and `"`, not `’` or `“`).
+Export your License to an environment variable: 
+`export KONG_LICENSE_DATA=$YOUR_LICENSE DATA`
 
-#### 'KONG_LICENSE_PATH'
+Then reference the variable as part of your {{site.base_gateway}} deployment. 
 
-Include the License with `"KONG_LICENSE_PATH=/kong-license/license.json"` as part of the `docker run` command when starting a
-{{site.base_gateway}} container. Mount the path to the file on your
-local filesystem to a directory in the Docker container, making the file visible
-from the container.
 
-## License expiration
+By default Kong Gateway looks for a License file at `/etc/kong/license.json`, if your default Kong Gateway directory is different, or the location of `license.json` is different than the default, you can use the `KONG_LICENSE_PATH` variable to force Kong Gateway to check a different directory.
 
-### Behavior
+## Expiration
 
-Licenses expire at 00:00 on the date of expiration, relative to the time zone the machine is running in.
 
-Kong Manager displays a banner with a license expiration warning starting at 15 days before expiration.
+
+All Licenses expire at midnight(00:00) on the date of expiriaton relative to the time zone of the Control Plane. 
+If you are using Kong Manager, it will display a banner with warnings starting 15 days before the expiration.
+Expiration warnings also appear in [{{site.base_gateway}} logs. 
 Expiration warnings also appear in [{{site.base_gateway}} logs.
 
-After the License expires, {{site.base_gateway}} behaves as follows:
+After a License expires, {{site.base_gateway}} behaves as follows:
 
 * Kong Manager and its configuration are accessible and may be changed, however any Enterprise-specific features become read-only.
 * The Admin API allows OSS features to continue working and configured {{site.ee_product_name}} features to continue operating in read-only mode.
@@ -165,7 +162,7 @@ You can update your License with a `PUT` request to the [`/license/{license-id}`
 * 30 days before: `ERR` log entry once a day
 * At and after expiration: `CRIT` log entry once a day
 
-## Monitor License usage and deployment information
+## License reports
 
 A license report contains information about your {{site.base_gateway}} database-backed deployment, including License usage and deployment information. The license report module manually generates a report containing usage and deployment data by sending a request to the `/license/report` endpoint. Share this information with Kong Support to perform a health-check analysis of product utilization and overall deployment performance to ensure your organization is optimized with the best License and deployment plan for your needs.
 
@@ -176,7 +173,6 @@ The license report **does not**:
 {:.important}
 > **Important:** The license report functionality cannot be used in a DB-less deployment.
 
-### Get a license report
 
 | Method | Command |
 |--------|----------|
