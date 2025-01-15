@@ -69,33 +69,22 @@ columns:
     key: hybrid
   - title: DB-less mode
     key: dbless
-  - title: Description
-    key: description
 features:
-  - title: |
-    Admin API
+  - title: Admin API
     url: /gateway/entities/license/#deploy-a-license-with-the-licenses-admin-api-endpoint
     traditional: true
     hybrid: true
     dbless: false
-    description: |
-      The control plane sends Licenses configured through the `/licenses` endpoint to all data planes in the cluster. The data planes use the most recent `updated_at` License. This is the only method that applies the License to data planes automatically.
-  - title: |
-      License File
+  - title: License File
     url: /gateway/entities/license/#deploy-a-license-with-a-file-on-the-node-filesystem-licensejson
     traditional: true
     hybrid: false
     dbless: true
-    description: |
-      The license data must contain straight quotes to be considered valid JSON (`'` and `"`, not `’` or `“`). Kong will search in the default location `/etc/kong/license.json`.
-  - title: |
-      Environment variable
+  - title: Environment variable
     url: /gateway/entities/license/#deploy-a-license-with-an-environment-variable
     traditional: true
     hybrid: false
     dbless: true
-    description: |
-      If you deploy a License using a `KONG_LICENSE_DATA` or `KONG_LICENSE_PATH` environment variable, the control plane **does not** propagate the License to data plane nodes. You **must** add the License to each data plane node, and each node **must** start with the License. The License can't be added after starting the node.<br><br> Note that unlike most other `KONG_*` environmental variables, the `KONG_LICENSE_DATA` and `KONG_LICENSE_PATH` cannot be defined in-line as part of any `kong` CLI commands. License file environmental variables must be exported to the shell in which the Nginx process will run, ahead of the `kong` CLI tool.
 {% endfeature_table %}
 
 <!--vale on-->
@@ -104,6 +93,8 @@ features:
 * **Traditional deployment with no separate control plane:** The license file must be deployed to each node running {{site.base_gateway}}.
 
 ### Deploy a License using the Admin API
+
+The control plane sends Licenses configured through the `/licenses` endpoint to all data planes in the cluster. The data planes use the most recent `updated_at` License. This is the only method that applies the License to data planes automatically.
 
 {% entity_example %}
 type: license
@@ -115,26 +106,26 @@ data:
 
 ### Deploy a License with `license.json`
 
+The license data must contain straight quotes to be considered valid JSON (`'` and `"`, not `’` or `“`). Kong will search in the default location `/etc/kong/license.json`.
+
 1. Save your License to a file titled `license.json`.  
 2. Copy the license file to the `/etc/kong`.
 3. Apply your license??? 
 
 ### Deploy a License as an environment variable 
 
+If you deploy a License using a `KONG_LICENSE_DATA` or `KONG_LICENSE_PATH` environment variable, the control plane **does not** propagate the License to data plane nodes. You **must** add the License to each data plane node, and each node **must** start with the License. The License can't be added after starting the node.<br><br> Note that unlike most other `KONG_*` environmental variables, the `KONG_LICENSE_DATA` and `KONG_LICENSE_PATH` cannot be defined in-line as part of any `kong` CLI commands. License file environmental variables must be exported to the shell in which the Nginx process will run, ahead of the `kong` CLI tool.
 
 Export your License to an environment variable: 
 `export KONG_LICENSE_DATA=$YOUR_LICENSE DATA`
 
 Then reference the variable as part of your {{site.base_gateway}} deployment. 
 
-
-By default Kong Gateway looks for a License file at `/etc/kong/license.json`, if your default Kong Gateway directory is different, or the location of `license.json` is different than the default, you can use the `KONG_LICENSE_PATH` variable to force Kong Gateway to check a different directory.
+By default {{site.base_gateway}} looks for a License file at `/etc/kong/license.json`, if your default {{site.base_gateway}} directory is different, or the location of `license.json` is different than the default, you can use the `KONG_LICENSE_PATH` variable to force {{site.base_gateway}} to check a different directory.
 
 ## Expiration
 
-
-
-All Licenses expire at midnight(00:00) on the date of expiriaton relative to the time zone of the Control Plane. 
+All Licenses expire at midnight(00:00) on the date of expiration relative to the time zone of the Control Plane. 
 If you are using Kong Manager, it will display a banner with warnings starting 15 days before the expiration.
 Expiration warnings also appear in [{{site.base_gateway}} logs. 
 Expiration warnings also appear in [{{site.base_gateway}} logs.
