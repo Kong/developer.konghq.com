@@ -7,8 +7,6 @@ entities:
 description: A Key object holds a representation of asymmetric keys in various formats.
 
 related_resources:
-  - text: Keyring entity
-    url: /gateway/entities/keyring/
   - text: Key-set entity
     url: /gateway/entities/key-set/
 
