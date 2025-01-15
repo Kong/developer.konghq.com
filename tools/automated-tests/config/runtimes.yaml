@@ -8,6 +8,10 @@ gateway:
       env:
         KONG_IMAGE_NAME: kong/kong
         KONG_IMAGE_TAG: "3.8.0"
+    - version: "3.4"
+      env:
+        KONG_IMAGE_NAME: kong/kong
+        KONG_IMAGE_TAG: "3.4.0"
   setup:
     commands:
       - curl -Ls https://get.konghq.com/quickstart | bash -s -- -r "" -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_LICENSE_DATA
