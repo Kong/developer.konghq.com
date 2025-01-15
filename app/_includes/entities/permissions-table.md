@@ -39,6 +39,8 @@ flowchart LR
 {% endmermaid %}
 ## Workspace roles
 
+[Workspaces](/gateway/entities/workspace/) provide a way to logically segment configurations and entities with RBAC. Using RBAC you can restrict access to groups of users and create roles within a Workspace so that users can manage each other. This is done using the [`workspaces/rbac/roles`](/api/gateway/admin-ee/3.9/#/operations/post-rbac-roles-workspace) endpoint.  
+
 | Role      | Description |
 | ----------- | ----------- |
 |`workspace-admin` | Full access to all endpoints in the Workspace, except the RBAC Admin API.| 
