@@ -109,10 +109,14 @@ async function extractSteps(page) {
 }
 
 async function writeInstructionsToFile(url, config, platform, instructions) {
+  let runtime = platform;
+  if (runtime === "on-prem") {
+    runtime = "gateway";
+  }
   const instructionsFile = path.join(
     config.outputDir,
     url.pathname,
-    `${platform}.yaml`
+    `${runtime}.yaml`
   );
   const outputDir = path.dirname(instructionsFile);
   await fs.mkdir(outputDir, { recursive: true });
