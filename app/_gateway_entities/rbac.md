@@ -19,35 +19,91 @@ related_resources:
     url: /gateway/entities/workspace/
   - text: Gateway Vault entity
     url: /gateway/entities/vault/
-  - text: Roles and Permissions
-    url: /gateway/roles-and-permissions/
 ---
 
 ## What is RBAC?
-RBAC (Role based access control) is a {{site.base_gateway}} entity used to manage administrative and operational features based on [roles and permissions](/gateway/roles-and-permissions). RBAC is built on the following fundamental principles: 
 
-* In {{site.base_gateway}} there are users. 
+Roles and permissions are administered using the {{site.base_gateway}} RBAC entity. Roles are sets of permissions that can be assigned to admins and users and can be specific to a [Workspace](/gateway/entities/workspace). Permissions are types of rules that effect {{site.base_gateway}} resources which are the core components of an API. RBAC and {{site.base_gateway}} follow the following core principle: 
+
+* In {{site.base_gateway}} there are users
 * Every user has a Role
+* Roles are assigned Permissions
 * Every Role belongs to a Group
-* A Group is a collection of permissions. 
-Permissions effect {{site.base_gateway}} resources which are the core components of an API. 
+* A Group is a collection of Roles
+
+{{site.base_gateway}} uses a precedence model, from most specificity to least specificity, to determine if a user has access to an endpoint.
+
+
+## What are Permissions?
+
+Each role may have a number of permissions that determine its ability to interact with a resource. The RBAC system provides a level of granularity that works by assigning actions on a per-resource level using the principle of least privilege.This means that a user can have **read** permissions on `/foo/bar` and **write** permissions on `/foo/bar/far`. 
+
+{% include entities/permissions-table.md %}
 
 ## RBAC precedence order
 
-{{site.base_gateway}} uses a precedence model when checking if a user has sufficient permissions to access an endpoint, a resource, or a Workspace. This information is collected from the various rules applied across the roles and groups assigned to a user. 
+{{site.base_gateway}} uses a precedence model when checking if a user has sufficient permissions to access an endpoint, a resource, or a Workspace. This information is collected from the various permissions or applied across the roles and groups assigned to a user. 
 
 For each request, {{site.base_gateway}} checks for an RBAC rule assigned to the requesting user in the following order:
 
-1. An allow or deny rule against the current endpoint in the current Workspace.
-2. A wildcard allow or deny rule against the current endpoint in any Workspace.
-3. An allow or deny rule against any endpoint (wildcard) in the current Workspace.
-4. A wildcard allow or deny rule against any endpoint in any Workspace. 
+1. Allow or deny permissions against the current endpoint in the current Workspace.
+2. Wildcard allow or deny permissions against the current endpoint in any Workspace.
+3. Allow or deny permissions against any endpoint (wildcard) in the current Workspace.
+4. Wildcard allow or deny permissions against any endpoint in any Workspace. 
 
-If {{site.base_gateway}} finds a matching rule for the current user, endpoint or Workspace it allows or denies the request based on the rule. Once {{site.base_gateway}} finds an applicable rule, the algorithm stops and doesn't check less specific rules. If no rules are found (approval or denial) the request is denied. 
+If {{site.base_gateway}} finds a matching permission for the current user, endpoint or Workspace it allows or denies the request based on it. Once {{site.base_gateway}} finds an applicable rule, the algorithm stops and doesn't check less specific permissions. If no permission is found (approval or denial) the request is denied. 
+
+## Role configuration
+
+This diagram helps explain how individual workspace roles and cross-workspace roles interact. 
+
+{% mermaid %}
+flowchart LR
+    subgraph team-a-roles [Team A Roles]
+        Admin2["Admin"]
+        RO2["Read Only"]
+        C2["Custom"]
+    end 
+    subgraph team-b-roles [Team B Roles]
+        Admin3["Admin"]
+        RO3["Read Only"]
+        C3["Custom"]
+    end 
+    subgraph cross-workspace-roles [Platform Admins]
+        SA["Super Admin"]
+        Admin["Admin"]
+        RO["Read Only"]
+        C["Custom"]
+    end 
+
+    subgraph defaultWorkspace [Default Workspace]
+        routes["Route"]
+        service["Service"]
+        plugin["Plugin"]
+    end
+
+    subgraph teamAworkspace [Team A Workspace]
+        routes2["Route"]
+        service2["Service"]
+        plugin2["Plugin"]
+    end
+    subgraph teamBworkspace [Team B Workspace]
+       routes3["Route"]
+        service3["Service"]
+        plugin3["Plugin"]
+    end
+
+    team-a-roles --> teamAworkspace
+    team-b-roles --> teamBworkspace
+    cross-workspace-roles --> defaultWorkspace
+    cross-workspace-roles --> teamAworkspace
+    cross-workspace-roles --> teamBworkspace
+
+
+{% endmermaid %}
 
 
 ## RBAC Entities
-
 
 
 {% feature_table %} 
@@ -63,7 +119,7 @@ features:
 
   - title: "`Role`"
     description: |
-      A set of permissions (`role_endpoint` and `role_entity`). Has a name and can be associated with zero, one, or more permissions.
+      A set of permissions
 
   - title: "`role_source`"
     description: |
@@ -71,18 +127,14 @@ features:
 
   - title: "`role_endpoint`"
     description: |
-      A set of enabled or disabled actions.
+      The endpoint associated with the RBAC role.
 
   - title: "`role_entity`"
     description: |
-      A set of enabled or disabled actions. For example: The role developer has one `role_entity` attached to a UUID. 
+      The ID of the entity associated with the RBAC role. For example: The role developer has one `role_entity` attached to a UUID. 
 
 {% endfeature_table %}
 
-
-
-
-{% include entities/permissions-table.md %}
 
 
 ## Enable RBAC
@@ -126,38 +178,6 @@ You can automate the creation of Admins. For more information, see [creating Adm
 
 
 
-
-## {{site.mesh_product_name}}
-
-Kubernetes provides its own RBAC system but it does not allow you to: 
-
-* Restrict access to a resource on a specific Mesh. 
-* Restrict access based on the content of the policy.
-
-{{site.mesh_product_name}} RBAC works on top of Kubernetes providing two globally scoped (not bound to {{site.mesh_product_name}}) resources to aid in implementing RBAC.
-
-<!--vale off-->
-{% feature_table %} 
-item_title: Mesh RBAC Role
-columns:
-  - title: Description
-    key: description
-  - title: Scoped Globally
-    key: global_scope
-
-features:
-  - title: "`AccessRole`"
-    description: |
-      Specifies the access and resources that are granted.
-    global_scope: true
-  - title: "`AccessRoleBinding`"
-    description: |
-      Assigns a set of `AccessRoles` to a set of objects (users and groups). 
-    global_scope: true
-
-{% endfeature_table %}
-<!--vale on -->
-
 ## Schema
 
 {% entity_schema %}
@@ -171,5 +191,6 @@ data:
   name: my-user
   user_token: exampletoken
 headers:
-  - "Kong-Admin-Token: kong"
+  admin-api:
+    - "Kong-Admin-Token: $ADMIN_TOKEN"
 {% endentity_example %}
