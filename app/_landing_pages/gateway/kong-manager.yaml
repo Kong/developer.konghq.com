@@ -1,0 +1,19 @@
+metadata:
+  title: Kong Manager
+  content_type: landing_page
+  description: This page explains Kong Manager and an overview of what it is.
+  breadcrumbs:
+    - /gateway/
+rows:
+  - header:
+      type: h1
+      text: "Kong Manager"
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    @todo
+                    contains content from https://docs.konghq.com/gateway/latest/kong-manager/enable/

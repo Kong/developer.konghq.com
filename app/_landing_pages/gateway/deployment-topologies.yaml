@@ -1,6 +1,19 @@
 metadata:
-  title: Kong on-prem deployment topologies
+  title: Kong Deployment Topologies
   content_type: landing_page
   description: This page lists the different {{site.base_gateway}} deployment topologies.
   breadcrumbs:
     - /gateway/
+rows:
+  - header:
+      type: h1
+      text: "Deployment Topologies"
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    @todo
+                    pull content from https://docs.konghq.com/gateway/latest/production/deployment-topologies/, cover what a deployment topology is along with links to more info about each topology

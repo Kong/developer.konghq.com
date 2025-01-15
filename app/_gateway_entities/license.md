@@ -18,41 +18,32 @@ schema:
   api: gateway/admin-ee
   path: /schemas/License
 
+related_resources:
+  - text: Kong Gateway Enterprise features
+    url: /gateway/enterprise-vs-oss/
+
 faqs: 
-  - q: How do I troubleshoot the `license path environment variable not set` error?
-    a: Neither the `KONG_LICENSE_DATA` nor the `KONG_LICENSE_PATH` environment variables were defined, and no license file could be opened at the default license location (`/etc/kong/license.json`)
-  - q: How do I troubleshoot the `internal error` error?
-    a: An internal error has occurred while attempting to validate the License. Such cases are extremely unlikely. [Contact Kong support](https://support.konghq.com) to further troubleshoot.
-  - q: How do I troubleshoot the `error opening license file` error?
-    a: The license file defined either in the default location, or using the `KONG_LICENSE_PATH` env variable, couldn't be opened. Check that the user executing the Nginx process (e.g., the user executing the Kong CLI utility) has permissions to read this file.
-  - q: How do I troubleshoot the `error reading license file` error?
-    a: The license file defined either in the default location, or using the `KONG_LICENSE_PATH` env variable, could be opened, but an error occurred while reading. Confirm that the file isn't corrupt, that there are no kernel error messages reported (e.g., out of memory conditions, etc). This is a generic error and is extremely unlikely to occur if the file could be opened.
-  - q: How do I troubleshoot the `could not decode license json` error?
-    a: The license file data couldn't be decoded as valid JSON. Confirm that the file isn't corrupt and hasn't been altered since you received it from Kong. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com).
-  - q: How do I troubleshoot the `invalid license format` error?
-    a: The license file data is missing one or more key/value pairs. Confirm that the file isn't corrupt and hasn't been altered since you received it from Kong. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com).
-  - q: How do I troubleshoot the `validation failed` error?
-    a: The attempt to verify the payload of the License with the License's signature failed. Confirm that the file isn't corrupt and hasn't been altered since you received it from Kong. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com).
-  - q: How do I troubleshoot the `license expired` error?
-    a: The system time is past the License's `license_expiration_date`.
-  - q: How do I troubleshoot the `invalid license expiration date` error?
-    a: The data in the `license_expiration_date` field is incorrectly formatted. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com).
+  - q: How do I make sure the License is deployed to data plane nodes correctly in hybrid mode?
+    a: In hybrid mode, the license file must be deployed to each control plane and data plane node. As long as you deploy the License with the [`/licenses` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-licenses), the control plane automatically applies the License to it's data plane nodes. 
+  - q: What happens to the license file in traditional mode when there are no separate control planes? 
+    a: The license file must be deployed to each node running {{site.base_gateway}}.
 ---
 
 ## What is a License?
 
 A License entity allows you configure a License in your {{site.base_gateway}} cluster, in both [traditional and hybrid mode deployments](/gateway/deployment-topologies/). {{site.base_gateway}} can be used with or without a License. A License is required to use [{{site.base_gateway}} Enterprise features](/gateway/enterprise-vs-oss/).
 
-License file checking is done independently by each node as the Kong process starts. No network connectivity is necessary to execute the license validation process.
+Kong provides you with a license file when you sign up for a
+{{site.konnect_product_name}} Enterprise subscription. [Contact Kong](https://support.konghq.com) for more information. If you purchased a subscription but haven’t received a license file, contact your sales representative.
 
-Kong checks for a license file in the following order:
+Kong checks for a license in the following order:
 
-1. If present, the contents of the environmental variable `KONG_LICENSE_DATA` are used.
-2. Kong will search in the default location `/etc/kong/license.json`.
-3. If present, the contents of the file defined by the environment variable `KONG_LICENSE_PATH` is used.
-4. Directly deploy a License using the `/licenses` Admin API endpoint.
-You will receive this file from Kong when you sign up for a
-{{site.konnect_product_name}} Enterprise subscription. [Contact Kong](https://support.konghq.com) for more information. If you have purchased a subscription but haven’t received a license file, contact your sales representative.
+1. The contents of the environmental variable `KONG_LICENSE_DATA`
+2. The default location `/etc/kong/license.json`
+3. The contents of the file defined by the `KONG_LICENSE_PATH` environment variable
+4. A License directly deployed with the [`/licenses` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-licenses).
+
+Each node independently checks for the license file when the {{site.base_gateway}} process starts. Network connectivity isn't required for license validation.
 
 ## How to deploy a License
 
@@ -71,7 +62,7 @@ columns:
     key: dbless
 features:
   - title: Admin API
-    url: /gateway/entities/license/#deploy-a-license-with-the-licenses-admin-api-endpoint
+    url: /api/gateway/admin-ee/#/operations/post-licenses
     traditional: true
     hybrid: true
     dbless: false
@@ -89,12 +80,9 @@ features:
 
 <!--vale on-->
 
-* **Hybrid mode:** The license file must be deployed to each control plane and data plane node. Apply the License through the Kong Admin API to the control plane. The control plane distributes the License to its data plane nodes. This is the only method that applies the License to data planes automatically.
-* **Traditional deployment with no separate control plane:** The license file must be deployed to each node running {{site.base_gateway}}.
-
 ### Deploy a License using the Admin API
 
-The control plane sends Licenses configured through the `/licenses` endpoint to all data planes in the cluster. The data planes use the most recent `updated_at` License. This is the only method that applies the License to data planes automatically.
+The control plane sends Licenses configured through the [`/licenses` endpoint](/api/gateway/admin-ee/#/operations/post-licenses) to all data planes in the cluster. The data planes use the most recent `updated_at` License. This is the only method that automatically applies the License to data planes.
 
 {% entity_example %}
 type: license
@@ -106,115 +94,110 @@ data:
 
 ### Deploy a License with `license.json`
 
-The license data must contain straight quotes to be considered valid JSON (`'` and `"`, not `’` or `“`). Kong will search in the default location `/etc/kong/license.json`.
+The license data must contain straight quotes to be considered valid JSON (`'` and `"`, not `’` or `“`). Kong searches for the License by default in `/etc/kong/license.json`.
 
-1. Save your License to a file titled `license.json`.  
-2. Copy the license file to the `/etc/kong`.
-3. Apply your license??? 
+1. Save your License to a file named `license.json`.  
+1. Copy the license file to the `/etc/kong`.
+1. [Reload](/how-to/restart-kong-gateway-container/) the {{site.base_gateway}} nodes to apply the license by running `kong reload` from within the container.
 
 ### Deploy a License as an environment variable 
 
-If you deploy a License using a `KONG_LICENSE_DATA` or `KONG_LICENSE_PATH` environment variable, the control plane **does not** propagate the License to data plane nodes. You **must** add the License to each data plane node, and each node **must** start with the License. The License can't be added after starting the node.<br><br> Note that unlike most other `KONG_*` environmental variables, the `KONG_LICENSE_DATA` and `KONG_LICENSE_PATH` cannot be defined in-line as part of any `kong` CLI commands. License file environmental variables must be exported to the shell in which the Nginx process will run, ahead of the `kong` CLI tool.
+If you deploy a License using a `KONG_LICENSE_DATA` or `KONG_LICENSE_PATH` environment variable, the control plane **does not** propagate the License to data plane nodes. You **must** add the License to each data plane node, and each node **must** start with the License. The License can't be added after starting the node.
 
-Export your License to an environment variable: 
-`export KONG_LICENSE_DATA=$YOUR_LICENSE DATA`
+Unlike other `KONG_*` environmental variables, the `KONG_LICENSE_DATA` and `KONG_LICENSE_PATH` can't be defined in-line as part of any `kong` CLI commands. License file environmental variables must be exported to the shell where the Nginx process runs, ahead of the `kong` CLI tool.
 
-Then reference the variable as part of your {{site.base_gateway}} deployment. 
+1. Export your License to an environment variable: 
+  ```sh
+  export KONG_LICENSE_DATA=$YOUR_LICENSE_DATA
+  ```
+1. Reference the variable as part of your {{site.base_gateway}} deployment. 
+1. [Reload](/how-to/restart-kong-gateway-container/) the {{site.base_gateway}} nodes to apply the license by running `kong reload` from within the container.
 
-By default {{site.base_gateway}} looks for a License file at `/etc/kong/license.json`, if your default {{site.base_gateway}} directory is different, or the location of `license.json` is different than the default, you can use the `KONG_LICENSE_PATH` variable to force {{site.base_gateway}} to check a different directory.
+By default, {{site.base_gateway}} looks for a License file at `/etc/kong/license.json`. If your default {{site.base_gateway}} directory is different, or the location of `license.json` is different than the default, you can use the `KONG_LICENSE_PATH` variable instead to force {{site.base_gateway}} to check a different directory.
 
 ## Expiration
 
-All Licenses expire at midnight(00:00) on the date of expiration relative to the time zone of the Control Plane. 
-If you are using Kong Manager, it will display a banner with warnings starting 15 days before the expiration.
-Expiration warnings also appear in [{{site.base_gateway}} logs. 
-Expiration warnings also appear in [{{site.base_gateway}} logs.
+Licenses expire at midnight on the expiration date. The expiration time is the same as that of the time zone of your control plane.
+
+[Kong Manager](/gateway/kong-manager/) warns you of your license expiring 15 days before it expires. {{site.base_gateway}} logs also show a license expiration alert 90 and 30 days before the license expires as well as on and after the expiration date.
 
 After a License expires, {{site.base_gateway}} behaves as follows:
 
-* Kong Manager and its configuration are accessible and may be changed, however any Enterprise-specific features become read-only.
-* The Admin API allows OSS features to continue working and configured {{site.ee_product_name}} features to continue operating in read-only mode.
-* Proxy traffic, including traffic using Enterprise plugins, continues to be processed as if the License hadn't expired.
-* Other Enterprise features aren't accessible.
-* There may be some Enterprise features that are still writable, but they may also change later, so don't rely on this behavior.
+* All configured Enterprise-specific features become read-only
+* You can't configure additional Enterprise features
+* You can continue to access Kong Manager and change it's configuration
+* You can continue to use OSS features via the Admin API
+* All proxy traffic, including Enterprise plugin traffic, continues to be processed as if the License wasn't expired
+* You can still restart and scale nodes in traditional mode
+* Data planes can still accept config from a control plane with an expired license in hybrid mode
+* New nodes can't come up and restarts will break in DB-less mode and KIC
 
-The behavior of the different deployment modes is as follows:
-
-- **Traditional:** Nodes will be able to restart/scale as needed.
-- **Hybrid:** Existing data planes or new data planes **can accept** config from a control plane with an expired License.
-- **DB-less and KIC:** New nodes **cannot** come up, restarts will break.
-
-You can update your License with a `PUT` request to the [`/license/{license-id}` Admin API endpoint](/api/gateway/admin-ee/).
-
-### Logs
-
-{{site.base_gateway}} logs the License expiration date on the following schedule:
-* 90 days before: `WARN` log entry once a day
-* 30 days before: `ERR` log entry once a day
-* At and after expiration: `CRIT` log entry once a day
+You can update your License with a `PUT` request to the [`/license/{license-id}` Admin API endpoint](/api/gateway/admin-ee/#/operations/put-licenses-license-id).
 
 ## License reports
 
-A license report contains information about your {{site.base_gateway}} database-backed deployment, including License usage and deployment information. The license report module manually generates a report containing usage and deployment data by sending a request to the `/license/report` endpoint. Share this information with Kong Support to perform a health-check analysis of product utilization and overall deployment performance to ensure your organization is optimized with the best License and deployment plan for your needs.
+A license report contains information about your {{site.base_gateway}} database-backed deployment, including License usage and deployment information. You can generate a license report by sending a request to the [`/license/report` endpoint](/api/gateway/admin-ee/#/operations/get-license-report). You can't automatically generate a license report and the report doesn't send data to Kong servers. License reports aren't supported in a DB-less deployment.
 
-The license report **does not**:
-*   Automatically generate a report or send any data to any Kong servers
-*   Track or generate any data other than the data that is returned in the response after you send a request to the endpoint
-
-{:.important}
-> **Important:** The license report functionality cannot be used in a DB-less deployment.
-
-
-| Method | Command |
-|--------|----------|
-| JSON | `curl -i -X GET http://localhost:8001/license/report` |
-| TAR | `curl http://localhost:8001/license/report -o response.json && tar -cf report-$(date +"%Y_%m_%d_%I_%M_%p").tar response.json` |
+You can share the report with Kong Support to perform a health-check analysis of product usage and overall deployment performance to ensure your organization is optimized with the best License and deployment plan for your needs.
 
 Here's an example license report:
 
 ```json
 {
-   "counters": [
-       {
-           "bucket": "2021-12",
-           "request_count": 0
-       }
-   ],
-   "db_version": "postgres 9.6.19",
-   "kong_version": "3.9.0.0",
-   "license_key": "ASDASDASDASDASDASDASDASDASD_ASDASDA",
-   "rbac_users": 0,
-   "services_count": 0,
-   "system_info": {
-       "cores": 4,
-       "hostname": "13b867agsa008",
-       "uname": "Linux x86_64"
-   },
-   "workspaces_count": 1
+	"license": {
+		"license_key": "UNLICENSED",
+		"license_expiration_date": "2017-7-20"
+	},
+	"counters": {
+		"total_requests": 0,
+		"buckets": [
+			{
+				"request_count": 0,
+				"bucket": "2025-01"
+			}
+		]
+	},
+	"timestamp": 1736965123,
+	"routes_count": 0,
+	"plugins_count": {
+		"unique_route_lambdas": 0,
+		"tiers": {
+			"free": {},
+			"custom": {},
+			"enterprise": {}
+		},
+		"unique_route_kafkas": 0
+	},
+	"consumers_count": 0,
+	"services_count": 0,
+	"workspaces_count": 1,
+	"deployment_info": {
+		"type": "traditional"
+	},
+	"system_info": {
+		"hostname": "e478496664a2",
+		"uname": "Linux aarch64",
+		"cores": 4
+	},
+	"db_version": "postgres 13.18",
+	"kong_version": "3.9.0.0",
+	"checksum": "bcae6019df62de4843b2d77dd883db0194bcf862",
+	"rbac_users": 0
 }
 ```
 
-### License report reference
+## Common errors
 
-The following table describes the different fields in a license report:
-
-| Field             | Description                                                                                                                                                                                                 |
-|-------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `counters`        | Counts the number of requests. <br><br> &#8226; `buckets`: Counts the number of requests made in a given month. <br><br> &#8729; `bucket`: Year and month when the requests were processed. If the value in `bucket` is `UNKNOWN`, then the requests were processed before {{site.base_gateway}} 2.7.0.1. <br> &#8729; `request_count`: Number of requests processed in the given month and year. <br><br> &#8226; `total_requests`: Number of requests processed in the `buckets`. i.e. `total_requests` is equivalent to adding up the `request_count` of each item in `buckets`. |
-| `plugins_count`   | Counts the number of plugins in use. <br><br> &#8226; `tiers`: Separate counts by license tiers. <br><br> &#8729; `free`: Number of free plugins in use. <br> &#8729; `enterprise`: Number of enterprise plugins in use. <br> &#8729; `custom`: Number of custom plugins in use. <br><br> &#8226; `unique_route_lambdas`: Number of `awk-lambda` plugin in use. Only counts in case of the plugin is defined on a service-less route level and have a unique function name. <br> &#8226; `unique_route_kafkas`: Number of unique broker IPs listed in broker array across `kafka-upstream` plugin defined on a service-less route level. |
-| `db_version`      | The type and version of the datastore {{site.base_gateway}} is using.                                                                                                                                       |
-| `kong_version`    | The version of the {{site.base_gateway}} instance.                                                                                                                                                         |
-| `license`         | Displays information about the current License running {{site.base_gateway}} instance. <br><br> &#8226; `license_expiration_date`: The date current License expires. If no License is present, the field displays as `2017-7-20`. <br> &#8226; `license_key`: Current license key. If no License is present, the field displays as `UNLICENSED`. |
-| `rbac_users`      | The number of users registered with through RBAC.                                                                                                                                                         |
-| `services_count`  | The number of configured services in the {{site.base_gateway}} instance.                                                                                                                                  |
-| `routes_count`    | The number of configured routes in the {{site.base_gateway}} instance.                                                                                                                                   |
-| `system_info`     | Displays information about the system running {{site.base_gateway}}. <br><br> &#8226; `cores`: Number of CPU cores on the node <br> &#8226; `hostname`: Encrypted system hostname <br> &#8226; `uname`: Operating system |
-| `deployment_info` | Displays information about the deployment running {{site.base_gateway}}. <br><br> &#8226; `type`: Type of the deployment mode <br> &#8226; `connected_dp_count`: Number of dataplanes across the cluster. If the deployment isn't hybrid mode, the field isn't displayed. |
-| `timestamp`       | Timestamp of the current response.                                                                                                                                                                         |
-| `checksum`        | The checksum of the current report.                                                                                                                                                                        |
-| `workspaces_count`| The number of workspaces configured in the {{site.base_gateway}} instance.                                                                                                                                 |
-
-
+| Error | Description |
+|-------|-------------|
+| `license path environment variable not set` | The `KONG_LICENSE_DATA` or `KONG_LICENSE_PATH` environment variables weren't defined. No license file could be opened at the default license location (`/etc/kong/license.json`). |
+| `error opening license file` | The license file defined either in the default location, or using the `KONG_LICENSE_PATH` env variable, couldn't be opened. Check that the user executing the Nginx process (e.g., the user executing the Kong CLI utility) has permissions to read this file. |
+| `error reading license file` | The license file defined either in the default location, or using the `KONG_LICENSE_PATH` env variable, could be opened, but an error occurred while reading it. Confirm that the file isn't corrupt, that there are no kernel error messages reported (e.g., out of memory conditions, etc). |
+| `could not decode license json` | The license file data couldn't be decoded as valid JSON. Confirm that the file isn't corrupt and hasn't been altered since you received it from Kong. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com). |
+| `invalid license format` | The license file data is missing one or more key/value pairs. Confirm that the file isn't corrupt and hasn't been altered since you received it from Kong. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com). |
+| `validation failed` | Verifying the payload of the License with the License's signature failed. Confirm that the file isn't corrupt and hasn't been altered since you received it from Kong. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com). |
+| `license expired` | This error displays when the system time is past the License's `license_expiration_date`. [Contact Kong support](https://support.konghq.com) for a new license. |
+| `invalid license expiration date` | The data in the `license_expiration_date` field is incorrectly formatted. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com). |
 
 ## Schema
 
