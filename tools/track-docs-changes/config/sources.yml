@@ -63,6 +63,12 @@ app/_gateway_entities/upstream.md:
   - app/_src/gateway/key-concepts/upstreams.md
 app/_gateway_entities/event_hooks.md:
   - app/_src/gateway/latest/kong-enterprise/event-hooks.md
+app/_gateway_entities/rbac.md:
+  - app/_src/gateway/production/access-control/enable-rbac.md
+  - app/_src/gateway/production/access-control/start-securely.md
+  - app/_src/gateway/production/access-control/register-admin-api.md
+  - app/_src/gateway/kong-manager/auth/rbac.md
+  - app/konnect/dev-portal/access-and-approval/manage-teams.md
 
 app/_gateway_entities/vault.md:
   - app/_src/gateway/kong-enterprise/secrets-management/advanced-usage.md

@@ -62,7 +62,7 @@ formats:
       certificate:    '/certificates/'
       sni:            '/snis/'
       ca_certificate: '/ca_certificates/'
-      rbac:           '/rbac/'
+      rbac:           '/rbac/users'
       admin:          '/admins/'
       group:          '/groups/'
       license:        '/licenses/'

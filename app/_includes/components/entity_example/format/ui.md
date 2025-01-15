@@ -114,6 +114,14 @@ The following creates a new Certificate with basic configuration:
     {{ include.presenter.data['cert'] }}
     ```
 5. Click **Save**.
+
+{% when 'rbac' %}
+The following instructions create an RBAC user in Kong Manager. `kong.conf` must be configured to `ENFORCE_RBAC=on`.
+
+1. In Kong Manager, go to **Teams**. 
+2. Select the **RBAC Users** tab, 
+4. Select the appropriate [Workspace](/gateway/entities/workspace/) then **Add new user**.
+3. Create a **Name**, **User Token**, and press **Create**. 
 {% else %}
 {% endcase %}
 {% endif %}
