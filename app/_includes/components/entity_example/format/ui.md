@@ -131,7 +131,7 @@ The following creates a new JSON Web Key with basic configuration:
     ```
     {{ include.presenter.data['kid'] }}
     ```
-5. Enter a name for the key:
+5. Enter a name for the Key:
     ```
     {{ include.presenter.data['name'] }}
     ```
@@ -140,6 +140,18 @@ The following creates a new JSON Web Key with basic configuration:
     {{ include.presenter.data['jwk'] }}
     ```
 6. Click **Save**.
+{% when 'key-set' %}
+The following creates a new JSON Web Key Set with basic configuration:
+
+1. In Kong Manager or Gateway Manager, go to **Keys**.
+2. Click the **Key Sets** tab.
+3. Click **New Key Set**.
+4. Enter a name for the Key Set:
+    ```
+    {{ include.presenter.data['name'] }}
+    ```
+    ```
+5. Click **Save**.
 {% else %}
 {% endcase %}
 {% endif %}

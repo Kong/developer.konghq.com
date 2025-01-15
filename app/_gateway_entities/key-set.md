@@ -38,7 +38,7 @@ You can assign one or many Keys to a Key Set. This can be useful to logically gr
 ## Set up a Key Set
 
 {% entity_example %}
-type: key
+type: key-set
 data:
   name: example-key-set
 {% endentity_example %}
