@@ -1,7 +1,6 @@
 import fetch from "node-fetch";
 import debug from "debug";
-import yaml from "js-yaml";
-const log = debug("runner");
+const log = debug("tests:runner");
 
 export class ValidationError extends Error {
   constructor(message) {
