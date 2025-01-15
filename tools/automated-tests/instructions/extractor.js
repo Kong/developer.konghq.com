@@ -3,6 +3,8 @@ import fs from "fs/promises";
 import debug from "debug";
 import path from "path";
 import yaml from "js-yaml";
+import fastGlob from "fast-glob";
+import matter from "gray-matter";
 
 const log = debug("tests:extractor");
 
@@ -126,13 +128,8 @@ async function writeInstructionsToFile(url, config, platform, instructions) {
   return instructionsFile;
 }
 
-export async function extractInstructions(uri, config) {
-  const browser = await puppeteer.launch();
+export async function extractInstructionsFromURL(uri, config, browser) {
   const url = new URL(uri);
-
-  await browser
-    .defaultBrowserContext()
-    .overridePermissions(url.origin, ["clipboard-read"]);
 
   const page = await browser.newPage();
 
@@ -171,6 +168,59 @@ export async function extractInstructions(uri, config) {
   } catch (error) {
     log("There was an error extracting the instructions:", error);
   } finally {
-    await browser.close();
+    await page.close();
+  }
+}
+
+async function testeableUrlsFromFiles(config) {
+  const howTosUrls = [];
+  const howToFiles = await fastGlob("../../app/_how-tos/**/*");
+
+  for (const file of howToFiles) {
+    const { data: frontmatter, content } = matter.read(file);
+
+    const isTesteable =
+      frontmatter.products &&
+      frontmatter.products.length === 1 &&
+      frontmatter.products.includes("gateway");
+
+    if (isTesteable) {
+      const skipHowTo =
+        content.includes("@todo") || frontmatter.automated_tests === false;
+      if (skipHowTo) {
+        const relativeFilePath = file.replace("../../", "");
+        if (frontmatter.automated_tests === false) {
+          log(
+            `Skipping file: ${relativeFilePath}, it's tagged with automated_tests=false`
+          );
+        } else {
+          log(`Skipping file: ${relativeFilePath}, it's tagged with @todo.`);
+        }
+      } else {
+        const fileToUrl = file
+          .replace("../../app/_how-tos/", "")
+          .replace(".md", "/");
+        howTosUrls.push(`${config.baseUrl}/how-to/${fileToUrl}`);
+      }
+    }
+  }
+  return howTosUrls;
+}
+
+export async function generateInstructionFiles(config) {
+  const testeableUrls = await testeableUrlsFromFiles(config);
+  const browser = await puppeteer.launch();
+  try {
+    await browser
+      .defaultBrowserContext()
+      .overridePermissions(new URL(config.baseUrl).origin, ["clipboard-read"]);
+
+    for (const uri of testeableUrls) {
+      await extractInstructionsFromURL(uri, config, browser);
+    }
+  } catch (error) {
+    throw error;
+  } finally {
+    browser.close();
   }
 }
