@@ -95,6 +95,8 @@ async function runSteps(steps, container) {
   } catch (error) {
     if (error instanceof ValidationError) {
       assertions.push(...error.assertions);
+    } else {
+      assertions.push(error.message);
     }
 
     throw error;
@@ -123,7 +125,7 @@ export async function runInstructions(instructions, runtimeConfig, container) {
       result["assertions"] = err.assertions;
     } else {
       result["assertions"] = [err.message];
-      console.error("Error: ", err);
+      console.error("Error: ", err.message);
     }
     if (!process.env.CONTINUE_ON_ERROR) {
       process.exit(1);
