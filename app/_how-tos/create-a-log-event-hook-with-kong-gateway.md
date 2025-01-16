@@ -85,7 +85,7 @@ Review the logs at `/usr/local/kong/logs/error.log` for an update about the crea
 2024/12/16 15:57:26 [notice] 68854#0: *819021 |      created_at = 1702735046,                    |, context: ngx.timer, client: 172.19.0.1, server: 0.0.0.0:8001
 2024/12/16 15:57:26 [notice] 68854#0: *819021 |      id = "4757bd6b-8d54-4b08-bf24-01e346a9323e",|, context: ngx.timer, client: 172.19.0.1, server: 0.0.0.0:8001
 2024/12/16 15:57:26 [notice] 68854#0: *819021 |      type = 0,                                   |, context: ngx.timer, client: 172.19.0.1, server: 0.0.0.0:8001
-2024/12/16 15:57:26 [notice] 68854#0: *819021 |      username = "my-consumer"               |, context: ngx.timer, client: 172.19.0.1, server: 0.0.0.0:8001
+2024/12/16 15:57:26 [notice] 68854#0: *819021 |      username = "my-consumer"                    |, context: ngx.timer, client: 172.19.0.1, server: 0.0.0.0:8001
 2024/12/16 15:57:26 [notice] 68854#0: *819021 |    },                                            |, context: ngx.timer, client: 172.19.0.1, server: 0.0.0.0:8001
 2024/12/16 15:57:26 [notice] 68854#0: *819021 |    operation = "create",                         |, context: ngx.timer, client: 172.19.0.1, server: 0.0.0.0:8001
 2024/12/16 15:57:26 [notice] 68854#0: *819021 |    schema = "consumers"                          |, context: ngx.timer, client: 172.19.0.1, server: 0.0.0.0:8001
