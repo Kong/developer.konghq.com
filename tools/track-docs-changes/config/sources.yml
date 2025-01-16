@@ -80,7 +80,14 @@ app/_how-tos/encrypt-sensitive-data-in-kong-gateway-with-keyring.md:
   - app/_src/gateway/kong-enterprise/db-encryption.md
 app/_how-tos/integrate-keyring-with-vault.md:
   - app/_src/gateway/kong-enterprise/db-encryption.md
-
+app/_gateway_entities/key.md:
+  - app/_src/gateway/reference/key-management.md
+app/_gateway_entities/key-set.md:
+  - app/_src/gateway/reference/key-management.md
+app/_how-tos/create-a-key-set-with-a-jwk.md:
+  - app/_src/gateway/reference/key-management.md
+app/_how-tos/create-a-key-set-with-a-pem-key.md:
+  - app/_src/gateway/reference/key-management.md
 # how-tos
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
   - /app/_hub/kong-inc/rate-limiting-advanced/how-to/_index.md

@@ -114,7 +114,6 @@ The following creates a new Certificate with basic configuration:
     {{ include.presenter.data['cert'] }}
     ```
 5. Click **Save**.
-
 {% when 'rbac' %}
 The following instructions create an RBAC user in Kong Manager. `kong.conf` must be configured to `ENFORCE_RBAC=on`.
 
@@ -122,6 +121,37 @@ The following instructions create an RBAC user in Kong Manager. `kong.conf` must
 2. Select the **RBAC Users** tab, 
 4. Select the appropriate [Workspace](/gateway/entities/workspace/) then **Add new user**.
 3. Create a **Name**, **User Token**, and press **Create**. 
+{% when 'key' %}
+The following creates a new JSON Web Key with basic configuration:
+
+1. In Kong Manager or Gateway Manager, go to **Keys**.
+2. Click the **Keys** tab.
+3. Click **New Key**.
+4. In the **Key ID** field, enter the key ID. It should match the `kid` field in the key:
+    ```
+    {{ include.presenter.data['kid'] }}
+    ```
+5. Enter a name for the Key:
+    ```
+    {{ include.presenter.data['name'] }}
+    ```
+5. In the **JWK** field, enter the JSON Web Key:
+    ```
+    {{ include.presenter.data['jwk'] }}
+    ```
+6. Click **Save**.
+{% when 'key-set' %}
+The following creates a new JSON Web Key Set with basic configuration:
+
+1. In Kong Manager or Gateway Manager, go to **Keys**.
+2. Click the **Key Sets** tab.
+3. Click **New Key Set**.
+4. Enter a name for the Key Set:
+    ```
+    {{ include.presenter.data['name'] }}
+    ```
+    ```
+5. Click **Save**.
 {% else %}
 {% endcase %}
 {% endif %}
