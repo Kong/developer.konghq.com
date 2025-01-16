@@ -70,7 +70,7 @@ entities:
 ## 2. Create a Consumer
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.
-The Consumer needs an API key to access any {{site.base_gateway}} Services.
+he Consumer needs an API key to access any {{site.base_gateway}} Services.
 
 {% entity_examples %}
 entities:
@@ -84,16 +84,18 @@ entities:
 
 After configuring the Key Authentication plugin, you can verify that it was configured correctly and is working, by sending requests with and without the API key you created for your Consumer.
 
+This request should be successful:
+
 {% validation request-check %}
-preamble: "This request should be successful:"
 url: /anything
 headers:
   - 'apikey:hello_world'
 status_code: 200
 {% endvalidation %}
 
-{% validation auth-check %}
-preamble: "This request should return a `401` error with the message `Unauthorized`:"
+Sending the wrong API key:
+
+{% validation unauthorized-check %}
 url: /anything
 headers:
   - 'apikey:another_key'
