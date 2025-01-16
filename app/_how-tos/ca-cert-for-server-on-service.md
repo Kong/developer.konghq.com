@@ -110,7 +110,7 @@ entities:
       port: 443
       ca_certificates:
       - 4ae235fd-bcc0-4d08-9689-5ade8f143hjf7
-            routes:
+      routes:
         - name: example_route
           paths:
             - /example
