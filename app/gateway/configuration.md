@@ -1,5 +1,5 @@
 ---
-title: Kong Gateway Configuration Reference
+title: "{{site.base_gateway}} Configuration Reference"
 
 description: |
   Reference for {{site.base_gateway}} configuration parameters. Set these parameters in kong.conf.
