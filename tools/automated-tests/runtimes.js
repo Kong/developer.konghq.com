@@ -5,7 +5,7 @@ import { executeCommand, fetchImage } from "./docker-helper.js";
 
 const log = debug("tests:setup:runtime");
 
-export async function getRuntimeConfig(testsConfig, runtime) {
+export async function getRuntimeConfig(runtime) {
   const fileContent = await fs.readFile(`./config/runtimes.yaml`, "utf8");
   const configs = yaml.load(fileContent);
   const imageName = `automated-tests:${runtime}`;
@@ -13,16 +13,11 @@ export async function getRuntimeConfig(testsConfig, runtime) {
   if (configs[runtime]) {
     let config = { ...configs[runtime], runtime, imageName };
 
-    // Overwrite the version with an env variable
     const versionFromEnv = process.env[`${runtime.toUpperCase()}_VERSION`];
     if (versionFromEnv) {
       config["version"] = versionFromEnv;
     } else {
-      // pull the version from the config file
-      const version = testsConfig[runtime];
-      if (version) {
-        config["version"] = version;
-      }
+      throw new Error(`Missing env variable ${runtime.toUpperCase()}_VERSION`);
     }
 
     return config;
