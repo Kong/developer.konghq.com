@@ -33,8 +33,7 @@ faqs:
 
 A License entity allows you configure a License in your {{site.base_gateway}} cluster, in both [traditional and hybrid mode deployments](/gateway/deployment-topologies/). {{site.base_gateway}} can be used with or without a License. A License is required to use [{{site.base_gateway}} Enterprise features](/gateway/enterprise-vs-oss/).
 
-Kong provides you with a license file when you sign up for a
-{{site.konnect_product_name}} Enterprise subscription. [Contact Kong](https://support.konghq.com) for more information. If you purchased a subscription but haven’t received a license file, contact your sales representative.
+A license file when you sign up for a {{site.konnect_product_name}} Enterprise subscription. [Contact Kong](https://support.konghq.com) for more information. If you purchased a subscription but haven’t received a license file, contact your sales representative.
 
 Kong checks for a license in the following order:
 
@@ -45,7 +44,7 @@ Kong checks for a license in the following order:
 
 Each node independently checks for the license file when the {{site.base_gateway}} process starts. Network connectivity isn't required for license validation.
 
-## How to deploy a License
+## Deployment methods
 
 Licenses are deployed according to your deployment topology: 
 
@@ -80,6 +79,8 @@ features:
 
 <!--vale on-->
 
+{% navtabs %}
+{% navtab "Admin API" %}
 ### Deploy a License using the Admin API
 
 The control plane sends Licenses configured through the [`/licenses` endpoint](/api/gateway/admin-ee/#/operations/post-licenses) to all data planes in the cluster. The data planes use the most recent `updated_at` License. This is the only method that automatically applies the License to data planes.
@@ -92,6 +93,8 @@ data:
 
 [Reload](/how-to/restart-kong-gateway-container/) the {{site.base_gateway}} nodes after adding or updating a License.
 
+{% endnavtab %}
+{% navtab "license.json" %}
 ### Deploy a License with `license.json`
 
 The license data must contain straight quotes to be considered valid JSON (`'` and `"`, not `’` or `“`). Kong searches for the License by default in `/etc/kong/license.json`.
@@ -99,7 +102,8 @@ The license data must contain straight quotes to be considered valid JSON (`'` a
 1. Save your License to a file named `license.json`.  
 1. Copy the license file to the `/etc/kong`.
 1. [Reload](/how-to/restart-kong-gateway-container/) the {{site.base_gateway}} nodes to apply the license by running `kong reload` from within the container.
-
+{% endnavtab %}
+{% navtab "Environment variable" %}
 ### Deploy a License as an environment variable 
 
 If you deploy a License using a `KONG_LICENSE_DATA` or `KONG_LICENSE_PATH` environment variable, the control plane **does not** propagate the License to data plane nodes. You **must** add the License to each data plane node, and each node **must** start with the License. The License can't be added after starting the node.
@@ -110,10 +114,11 @@ Unlike other `KONG_*` environmental variables, the `KONG_LICENSE_DATA` and `KONG
   ```sh
   export KONG_LICENSE_DATA=$YOUR_LICENSE_DATA
   ```
-1. Reference the variable as part of your {{site.base_gateway}} deployment. 
-1. [Reload](/how-to/restart-kong-gateway-container/) the {{site.base_gateway}} nodes to apply the license by running `kong reload` from within the container.
+1. Reference the variable as part of your {{site.base_gateway}} deployment.
 
 By default, {{site.base_gateway}} looks for a License file at `/etc/kong/license.json`. If your default {{site.base_gateway}} directory is different, or the location of `license.json` is different than the default, you can use the `KONG_LICENSE_PATH` variable instead to force {{site.base_gateway}} to check a different directory.
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Expiration
 
@@ -140,51 +145,6 @@ A license report contains information about your {{site.base_gateway}} database-
 
 You can share the report with Kong Support to perform a health-check analysis of product usage and overall deployment performance to ensure your organization is optimized with the best License and deployment plan for your needs.
 
-Here's an example license report:
-
-```json
-{
-	"license": {
-		"license_key": "UNLICENSED",
-		"license_expiration_date": "2017-7-20"
-	},
-	"counters": {
-		"total_requests": 0,
-		"buckets": [
-			{
-				"request_count": 0,
-				"bucket": "2025-01"
-			}
-		]
-	},
-	"timestamp": 1736965123,
-	"routes_count": 0,
-	"plugins_count": {
-		"unique_route_lambdas": 0,
-		"tiers": {
-			"free": {},
-			"custom": {},
-			"enterprise": {}
-		},
-		"unique_route_kafkas": 0
-	},
-	"consumers_count": 0,
-	"services_count": 0,
-	"workspaces_count": 1,
-	"deployment_info": {
-		"type": "traditional"
-	},
-	"system_info": {
-		"hostname": "e478496664a2",
-		"uname": "Linux aarch64",
-		"cores": 4
-	},
-	"db_version": "postgres 13.18",
-	"kong_version": "3.9.0.0",
-	"checksum": "bcae6019df62de4843b2d77dd883db0194bcf862",
-	"rbac_users": 0
-}
-```
 
 ## Common errors
 
