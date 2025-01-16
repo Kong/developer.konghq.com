@@ -13,8 +13,8 @@ module Jekyll
           case name
           when 'rate-limit-check'
             RateLimitCheck.new(name:, yaml:)
-          when 'auth-check'
-            AuthCheck.new(name:, yaml:)
+          when 'unauthorized-check'
+            UnauthorizedCheck.new(name:, yaml:)
           when 'request-check'
             RequestCheck.new(name:, yaml:)
           else

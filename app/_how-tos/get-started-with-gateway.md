@@ -284,7 +284,7 @@ Only specify a key for testing or when migrating existing systems.
 
 Try to access the Service without providing the key:
 
-{% validation auth-check %}
+{% validation unauthorized-check %}
 url: /mock/anything
 headers: []
 message: No API key found in request

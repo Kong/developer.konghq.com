@@ -7,7 +7,7 @@ validations:
     message: API rate limit exceeded
     status_code: 429
 
-  - name: auth-check
+  - name: unauthorized-check
     message: Unauthorized
     status_code: 401
 
