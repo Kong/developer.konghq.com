@@ -30,6 +30,9 @@ export async function runtimeEnvironment(runtimeConfig) {
   let environment = { ...runtimeConfig.env };
   const version = runtimeConfig.version;
 
+  for (const [key, value] of Object.entries({ ...runtimeConfig.env })) {
+    environment[`DECK_${key}`] = value;
+  }
   if (version) {
     const versionConfig = runtimeConfig["versions"].find(
       (v) => v["version"] == version
