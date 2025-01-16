@@ -122,7 +122,7 @@ entities:
 
 ## 5. Validate 
 
-Now, any time an upsteam presentes a server certificate, {{site.base_gateway}} will attempt to verify it using the CA root certificate linked to the Service.
+Now, any time an upstream presents a server certificate, {{site.base_gateway}} will attempt to verify it using the CA root certificate linked to the Service.
 <!-- 
 Access the `example_route` Route: 
 
