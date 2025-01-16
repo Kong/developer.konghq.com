@@ -112,6 +112,7 @@ formats:
   ui:
     label: 'Kong/Gateway Manager'
     entities:
+      - admin
       - ca_certificate
       - certificate
       - consumer

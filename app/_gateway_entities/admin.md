@@ -15,7 +15,9 @@ related_resources:
     url: /gateway/entities/group/
   - text: Workspace entity
     url: /gateway/entities/workspace/
-
+  - text: Sending Email with Kong Manager
+    url: /how-to/configure-kong-manager-email
+    
 tier: enterprise
 
 api_specs:
@@ -47,21 +49,6 @@ Admins can be managed using the Admin API or Kong Manager and are used in the fo
 
 
 Admins can only interact with entities from within their Workspace. Depending on the Admin's specific role, they can enforce RBAC roles and permissions across that Workspace, including creating and inviting other Admins. 
-
-## Kong Manager
-
-You can use Kong Manager to manage Admins. It supports all the same Admin operations as the Kong Admin API.  
-
-To use Admins, {{site.base_gateway}} needs to have:
-* [RBAC enabled](/gateway/entities/rbac/#enable-rbac) 
-* [Sending email configured](/how-to/configure-kong-manager-email). 
-
-To enable RBAC on Kong Manager, set the following in `kong.conf`: 
-
-* Set `enforce_rbac` to `on`
-* Set `admin_gui_auth ` to the desired authentication like `basic-auth`
-* Add a session secret to `admin_gui_session_conf`
-
 
 ## Schema
 

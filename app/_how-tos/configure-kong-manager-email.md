@@ -14,7 +14,8 @@ works_on:
 
 tags:
   - authentication
-
+min_version:
+  gateway: '3.4'
 tldr: 
   q: placeholder
   a: placeholder
