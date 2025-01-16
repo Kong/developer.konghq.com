@@ -40,12 +40,12 @@ faqs:
 Admins in {{site.base_gateway}} are [RBAC](/gateway/entities/rbac/) entities used to used to manage all administrators for a specific [Workspace](/gateway/entities/workspace/). 
 Admins can be managed using the Admin API or Kong Manager and are used in the following operations:
 
-* [Admin registration](/api/gateway/admin-ee/3.9/#/operations/post-admins-register)
-* [Password reset](/api/gateway/admin-ee/3.9/#/operations/get-admins-password_resets)
-* [Read, Update, or Delete Admins](/api/gateway/admin-ee/3.9/#/operations/patch-admins-name_or_id-generate_register_url)
-* [Viewing roles for specific Admins](/api/gateway/admin-ee/3.9/#/operations/get-admins-name_or_id-roles)
-* [Creating, updating, and deleting Admin roles](/api/gateway/admin-ee/3.9/#/operations/post-admins-name_or_id-roles)
-* [Viewing associated Workspaces](/api/gateway/admin-ee/3.9/#/operations/get-admins-name_or_id-workspaces)
+* [Admin registration](/api/gateway/admin-ee/#/operations/post-admins-register)
+* [Password reset](/api/gateway/admin-ee/#/operations/get-admins-password_resets)
+* [Read, update, or delete Admins](/api/gateway/admin-ee/#/operations/patch-admins-name_or_id-generate_register_url)
+* [Viewing Roles for specific Admins](/api/gateway/admin-ee/#/operations/get-admins-name_or_id-roles)
+* [Creating, updating, and deleting Admin Roles](/api/gateway/admin-ee/#/operations/post-admins-name_or_id-roles)
+* [Viewing associated Workspaces](/api/gateway/admin-ee/#/operations/get-admins-name_or_id-workspaces)
 
 
 Admins can only interact with entities from within their Workspace. Depending on the Admin's specific role, they can enforce RBAC roles and permissions across that Workspace, including creating and inviting other Admins. 
