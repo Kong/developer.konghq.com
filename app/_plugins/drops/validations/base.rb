@@ -15,8 +15,8 @@ module Jekyll
             RateLimitCheck.new(name:, yaml:)
           when 'auth-check'
             AuthCheck.new(name:, yaml:)
-          when 'request'
-            Request.new(name:, yaml:)
+          when 'request-check'
+            RequestCheck.new(name:, yaml:)
           else
             raise ArgumentError, "Missing Drop for `#{name}`"
           end
@@ -74,9 +74,7 @@ module Jekyll
 
         def configuration
           @configuration ||= begin
-            config = how_tos_config['validations'].detect { |v| v['name'] == name }
-            raise ArgumentError, "Missing config for `#{name}` in data/how-tos/validations.yaml" unless config
-
+            config = how_tos_config['validations'].detect { |v| v['name'] == name } || {}
             config.except('name')
           end
         end

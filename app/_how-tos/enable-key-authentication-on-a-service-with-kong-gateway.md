@@ -84,7 +84,7 @@ entities:
 
 After configuring the Key Authentication plugin, you can verify that it was configured correctly and is working, by sending requests with and without the API key you created for your Consumer.
 
-{% validation request %}
+{% validation request-check %}
 preamble: "This request should be successful:"
 url: /anything
 headers:
