@@ -1,31 +1,20 @@
 ---
-title: Store secrets in Konnect Config Store
+title: Integrate a Keyring with a Vault
 content_type: how_to
 related_resources:
-  - text: Secrets management
-    url: /secrets-management 
+  - text: Keyring
+    url: /gateway/entities/keyring
 
 products:
     - gateway
 
 works_on:
+    - on-prem
     - konnect
 
-entities: 
-  - vault
-
-tags:
-    - security
-
 tldr:
-    q: How do I 
-    a: placeholder
-
-tools:
-    - deck
-    # - konnect-api
-
-
+    q: How do I integrate a Keyring with a Vault?
+    a: Set the `kong_keyring_strategy` parameter to `vault` in your configuration and set the required `keyring_vault_*` parameters.
 cleanup:
   inline:
     - title: Clean up Konnect environment
@@ -38,7 +27,6 @@ cleanup:
 min_version:
     gateway: '3.4'
 ---
-
 @todo
 
-Use content from https://docs.konghq.com/konnect/gateway-manager/configuration/config-store/#main 
+based on https://docs.konghq.com/gateway/latest/kong-enterprise/db-encryption/#vault-integration

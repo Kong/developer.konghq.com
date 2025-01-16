@@ -49,6 +49,8 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
+min_version:
+    gateway: '3.4'
 ---
 
 ## 1. Enable the Key Authentication plugin on the Service:

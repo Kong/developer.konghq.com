@@ -37,6 +37,8 @@ related_resources:
   - text: Push Event Hook information to Slack with {{site.base_gateway}}
     url: /how-to/create-a-custom-webhook-slack-with-kong-gateway/
 
+min_version:
+    gateway: '3.4'
 ---
 
 ## 1. Create a lambda Event Hook

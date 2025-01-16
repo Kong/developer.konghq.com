@@ -115,7 +115,7 @@ features:
 
 {% endfeature_table %}
 <!-- vale on -->
-For more information, see [Roles and permissions](/gateway/roles-and-permissions).
+For more information, see [Roles and permissions](/gateway/entities/rbac/).
 
 
 ### Manage multiple Workspaces with decK 

@@ -34,7 +34,7 @@
   },
   "then": {
     "required": [
-      "works_on"
+      "works_on", "min_version"
     ]
   },
   "required": ["tldr", "content_type", "title", "products"]

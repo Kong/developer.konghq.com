@@ -63,11 +63,18 @@ app/_gateway_entities/upstream.md:
   - app/_src/gateway/key-concepts/upstreams.md
 app/_gateway_entities/event_hooks.md:
   - app/_src/gateway/latest/kong-enterprise/event-hooks.md
+app/_gateway_entities/rbac.md:
+  - app/_src/gateway/production/access-control/enable-rbac.md
+  - app/_src/gateway/production/access-control/start-securely.md
+  - app/_src/gateway/production/access-control/register-admin-api.md
+  - app/_src/gateway/kong-manager/auth/rbac.md
+  - app/konnect/dev-portal/access-and-approval/manage-teams.md
 
 app/_gateway_entities/vault.md:
   - app/_src/gateway/kong-enterprise/secrets-management/advanced-usage.md
   - app/_src/deck/guides/vaults.md
   - app/_src/gateway/kong-enterprise/secrets-management/index.md
+
 app/_gateway_entities/license.md:
   - app/_src/gateway/licenses/index.md
   - app/_src/gateway/licenses/download.md
@@ -76,6 +83,21 @@ app/_gateway_entities/license.md:
   - app/_src/gateway/install/docker/index.md
   - app/_src/gateway/licenses/report-v2.md
   - app/_src/gateway/licenses/examples.md
+
+app/_gateway_entities/keyring.md:
+  - app/_src/gateway/kong-enterprise/db-encryption.md
+app/_how-tos/encrypt-sensitive-data-in-kong-gateway-with-keyring.md:
+  - app/_src/gateway/kong-enterprise/db-encryption.md
+app/_how-tos/integrate-keyring-with-vault.md:
+  - app/_src/gateway/kong-enterprise/db-encryption.md
+app/_gateway_entities/key.md:
+  - app/_src/gateway/reference/key-management.md
+app/_gateway_entities/key-set.md:
+  - app/_src/gateway/reference/key-management.md
+app/_how-tos/create-a-key-set-with-a-jwk.md:
+  - app/_src/gateway/reference/key-management.md
+app/_how-tos/create-a-key-set-with-a-pem-key.md:
+  - app/_src/gateway/reference/key-management.md
 
 # how-tos
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
