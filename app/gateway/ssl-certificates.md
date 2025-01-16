@@ -57,7 +57,7 @@ Verify client certificates sent in headers | Verify client certificates sent in 
 
 Use Case | Description | Method 
 ---------|-------------|-------
-Server certificates for SNIs | Standard certificates that {{site.base_gateway}} presents if a specific domain is requested when a TLS handshake is attempted at the proxy. | Upload certificates for SNIs using the [Certificates](/gateway/entities/certificates/) entity, then create an [SNI](/gateway/entities/sni/) using the ID of the Certificate.
+Server certificates for SNIs | Standard certificates that {{site.base_gateway}} presents if a specific domain is requested when a TLS handshake is attempted at the proxy. | Upload certificates for SNIs using the [Certificates](/gateway/entities/certificate/) entity, then create an [SNI](/gateway/entities/sni/) using the ID of the Certificate.
 
 ## Configuring SSL connections through kong.conf
 
