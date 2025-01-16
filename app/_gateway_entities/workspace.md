@@ -16,7 +16,13 @@ tier: enterprise
 schema:
     api: gateway/admin-ee
     path: /schemas/Workspace
-
+related_resources:
+  - text: Gateway RBAC entity
+    url: /gateway/entities/rbac/
+  - text: Gateway Vault entity
+    url: /gateway/entities/vault/
+  - text: Gateway Admin entity
+    url: /gateway/entities/admin/
 faqs:
   - q: Do I have to enable Workspaces? 
     a: |
