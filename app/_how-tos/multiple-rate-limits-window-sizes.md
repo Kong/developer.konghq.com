@@ -92,9 +92,9 @@ You must provide the same number of windows and limits
 
 ## 2. Validate
 
+After configuring the Rate Limiting Advanced plugin, you can verify that it was configured correctly and is working, by sending more requests then allowed in the configured time limit.
+
 {% validation rate-limit-check %}
-preamble: |
-  After configuring the Rate Limiting Advanced plugin, you can verify that it was configured correctly and is working, by sending more requests then allowed in the configured time limit.
 iterations: 11
 url: '/anything'
 {% endvalidation %}
