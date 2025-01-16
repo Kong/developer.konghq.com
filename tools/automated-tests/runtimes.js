@@ -27,7 +27,7 @@ export async function getRuntimeConfig(runtime) {
 }
 
 export async function runtimeEnvironment(runtimeConfig) {
-  let environment = [];
+  let environment = { ...runtimeConfig.env };
   const version = runtimeConfig.version;
 
   if (version) {
@@ -41,13 +41,12 @@ export async function runtimeEnvironment(runtimeConfig) {
       );
     }
 
-    let env = versionConfig["env"];
+    environment = { ...environment, ...versionConfig["env"] };
     // Add gateway license
-    env["KONG_LICENSE_DATA"] = process.env.KONG_LICENSE_DATA;
-
-    environment = Object.entries(env).map(([key, value]) => `${key}=${value}`);
+    environment["KONG_LICENSE_DATA"] = process.env.KONG_LICENSE_DATA;
   }
-  return environment;
+
+  return Object.entries(environment).map(([key, value]) => `${key}=${value}`);
 }
 
 export async function setupRuntime(runtimeConfig, docker) {
