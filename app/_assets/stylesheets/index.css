@@ -240,8 +240,8 @@
     @apply opacity-20;
   }
 
-  #copy-code-success-info {
-    @apply fixed bg-primary border border-white px-1 py-2 rounded -mt-8 -translate-x-1/2;
+  .copy-code-success-info {
+    @apply absolute bg-primary border border-white px-1 py-2 rounded -mt-9 translate-x-1/3 transition-opacity duration-700 ease-out top-0 right-0 opacity-0;
   }
 
   #copy-code-input {
