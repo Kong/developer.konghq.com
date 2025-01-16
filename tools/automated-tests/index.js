@@ -76,7 +76,7 @@ async function removeContainer(container) {
         continue;
       }
 
-      const runtimeConfig = await getRuntimeConfig(testsConfig, runtime);
+      const runtimeConfig = await getRuntimeConfig(runtime);
       log(`Running ${runtime} tests...`);
 
       container = await setupRuntime(runtimeConfig, docker);
