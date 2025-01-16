@@ -53,14 +53,35 @@ export async function executeCommand(container, cmd) {
         AttachStderr: true,
       });
 
-      await new Promise((resolve, reject) => {
+      const result = await new Promise((resolve, reject) => {
         execCommand.start({}, (err, stream) => {
+          // Extracted from https://github.com/apocas/dockerode/issues/736
+          let buffer = Buffer.alloc(0);
           let output = "";
           if (err) {
             return reject(err);
           }
           stream.on("data", (chunk) => {
-            output += chunk.toString();
+            buffer = Buffer.concat([buffer, chunk]);
+
+            while (buffer.length >= 8) {
+              // Parse the header
+              const header = buffer.slice(0, 8);
+              const size = header.readUInt32BE(4); // Last 4 bytes indicate the payload size (big-endian)
+
+              // Check if the full frame is available
+              if (buffer.length < 8 + size) {
+                break; // Wait for more data if the payload is incomplete
+              }
+
+              // Extract the payload
+              const payload = buffer.slice(8, 8 + size).toString("utf-8");
+
+              // Append the payload to the appropriate stream
+              output += payload;
+              // Remove the processed frame from the buffer
+              buffer = buffer.slice(8 + size);
+            }
           });
           stream.on("end", function () {
             debugLog(output);
@@ -74,8 +95,11 @@ export async function executeCommand(container, cmd) {
       if (execInfo.ExitCode === 0) {
         resolve();
       } else {
-        console.error("Command failed with exit code:", execInfo.ExitCode);
-        reject(`Failed to run command ${cmd}`);
+        const message = `
+        Failed to run command ${cmd}
+        Got:
+        ${result}`;
+        reject({ message });
       }
     } catch (error) {
       throw error;
