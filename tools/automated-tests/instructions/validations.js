@@ -53,6 +53,7 @@ async function validateRequest(validationName, config, checks) {
       const { assert, message } = check(response, body);
       assertions.push(message);
       if (!assert) {
+        assertions.push(body);
         logAndError(validationName, message, assertions);
       }
     }
