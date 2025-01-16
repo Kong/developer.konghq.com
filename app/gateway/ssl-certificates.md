@@ -1,5 +1,5 @@
 ---
-title: SSL Certificates reference
+title: "Using SSL certificates in {{site.base_gateway}}"
 description: How to define SSL Certificates and where you can use them.
 content_type: reference
 layout: reference
@@ -50,8 +50,8 @@ Use Case | Description | Method
 ---------|-------------|-------
 Global CA certificate | Import a CA root certificate to cover verification of all upstream server certificates. | Set the `nginx_proxy_proxy_ssl_trusted_certificate` parameter in `kong.conf`, or as an environment variable. <br> If you want to disable or enable verification of upstream server certificates globally, you can also set the `nginx_proxy_proxy_tls_verify` option.
 Service-level CA certificate | Define individual CA root certificates for each Gateway Service. | Upload the certificate and private key to a CA Certificate entity, then pass the entity's ID to a Gateway Service. See the [how-to guide for setting up CA certificates for a Service](/how-to/ca-cert-for-server-on-service/).
-Verify client certificates | Verify client certificates by passing CA certificates to the [mTLS Auth](/plugins/mtls-auth/) plugin. | Upload the certificate and private key to a CA Certificate entity, then pass the entity's ID to the plugin via its `ca_certificates` parameter.
-Verify client certificates sent in headers | Verify client certificates sent in headers by passing CA certificates to the [Header Cert Auth](/plugins/header-cert-auth/) plugin. | Upload the certificate and private key to a CA Certificate entity, then pass the entity's ID to the plugin via its `ca_certificates` parameter.
+Verify client certificates | Verify client certificates by passing CA certificates to the [mTLS Auth](/plugins/mtls-auth/) plugin. | Upload the certificate and private key to a [CA Certificate entity](/gateway/entities/ca-certificate/), then pass the entity's ID to the plugin via its `ca_certificates` parameter.
+Verify client certificates sent in headers | Verify client certificates sent in headers by passing CA certificates to the [Header Cert Auth](/plugins/header-cert-auth/) plugin. | Upload the certificate and private key to a [CA Certificate entity](/gateway/entities/ca-certificate/), then pass the entity's ID to the plugin via its `ca_certificates` parameter.
  
 ## Server certificates
 
@@ -73,7 +73,7 @@ Parameter | Environment variable | Type | Description
 `admin_ssl_cert_key` | `KONG_ADMIN_SSL_CERT_KEY` | Private key  | Contains the contents or path to a private key for the certificate set via the `admin_ssl_cert` parameter.
 `client_ssl_cert` | `KONG_CLIENT_SSL_CERT` | Client cert | Contains the contents or path to a certificate you want your Kong instance to serve as a client certificate to ALL upstreams.
 `client_ssl_cert_key` | `KONG_CLIENT_SSL_CERT_KEY` | Private key  | Contains the contents or path to a private key for the certificate set via the `client_ssl_cert` parameter.
-`status_ssl_cert` | `KONG_STATUS_SSL_CERT` | Server cert | Contains the contents or path to a certificate you want your Status Endpoint to server as a server certificate.
+`status_ssl_cert` | `KONG_STATUS_SSL_CERT` | Server cert | Contains the contents or path to a certificate you want your Status Endpoint to serve as a server certificate.
 `status_ssl_cert_key` | `KONG_STATUS_SSL_CERT_KEY` | Private key  | Contains the contents or path to a private key for the certificate set via the `status_ssl_cert` parameter.
 `lua_ssl_trusted_certificate` | `KONG_LUA_SSL_TRUSTED_CERTIFICATE` | CA cert | Contains the paths to CA root certificates used for verifying Lua cosocket connections. Any time that {{site.base_gateway}} uses Lua to create SSL connections, it'll use the CA root certs at this path to verify any certificates sent.
 `nginx_proxy_proxy_ssl_trusted_certificate` | `KONG_NGINX_PROXY_PROXY_SSL_TRUSTED_CERTIFICATE` | CA cert | Contains the path to a PEM file that can hold multiple CA Root certificates for verifying all upstream server certificates.
