@@ -105,9 +105,9 @@ entities:
 
 ## 4. Validate
 
+You can run the following command to test the rate limiting as the Consumer:
+
 {% validation rate-limit-check %}
-preamble: |
-  You can run the following command to test the rate limiting as the Consumer:
 iterations: 6
 url: '/anything'
 headers:
