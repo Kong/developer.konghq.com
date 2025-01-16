@@ -32,6 +32,9 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+min_version:
+    gateway: '3.4'
 ---
 
 @todo

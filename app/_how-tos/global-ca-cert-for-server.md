@@ -31,6 +31,9 @@ cleanup:
 tldr:
   q: How do I define CA Certificates to verify all upstream server certificates?
   a: Define a global CA Certificate entity in {{site.base_gateway}} and set the ID of that entity in the `kong.conf` parameter `NGINX_PROXY_PROXY_SSL_TRUSTED_CERTIFICATE`.
+
+min_version:
+    gateway: '3.4'
 ---
 
 @todo

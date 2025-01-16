@@ -28,6 +28,9 @@ prereqs:
       content: |
         * Konnect must be added to your IdP as an application
         * Claims are set up in your IdP
+
+min_version:
+    gateway: '3.4'
 ---
 
 ## 1. Set up SSO in {{site.konnect_short_name}}

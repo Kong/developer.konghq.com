@@ -36,6 +36,9 @@ related_resources:
     url: /how-to/create-a-webhook-with-kong-gateway/
   - text: Create an Event Hook that can run custom code with {{site.base_gateway}}
     url: /how-to/create-a-lambda-event-hook-with-kong-gateway/
+
+min_version:
+    gateway: '3.4'
 ---
 
 
