@@ -19,6 +19,9 @@ works_on:
     - on-prem
     - konnect
 
+min_version:
+  gateway: '3.4'
+
 tldr:
   q: How do I create a JWK and add it to a Key Set?
   a: Create a Key Set with the `/key-sets` endpoint, then create a Key and configure the `set.id` or `set.name` parameter to point to the Key Set. 

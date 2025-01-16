@@ -19,7 +19,8 @@ works_on:
     - on-prem
     - konnect
 
-
+min_version:
+  gateway: '3.4'
 
 tldr:
   q: How do I create a PEM key and add it to a Key Set?
