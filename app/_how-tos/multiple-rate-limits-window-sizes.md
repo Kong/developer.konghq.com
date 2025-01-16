@@ -69,6 +69,7 @@ entities:
     - name: rate-limiting-advanced
       service: example-service
       config:
+        namespace: example-namespace
         limit:
         - 10
         - 100
