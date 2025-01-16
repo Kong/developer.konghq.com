@@ -41,7 +41,6 @@ related_resources:
 min_version:
     gateway: '3.4'
 
-automated_tests: false
 ---
 
 
@@ -49,17 +48,24 @@ automated_tests: false
 
 
 Using the `webhook-custom` handler, you can configure an Event Hook that listens for events on a source. The `webhook-custom` handler offers a template that you can configure to create a custom webhook. In this tutorial, we will configure an Event Hook that issues a `POST` request when a `crud` event happens on the Consumer entity. That `POST` request will be made to a Slack webhook application containing a custom message describing the event. 
-```sh
-curl -i -X POST http://localhost:8001/event-hooks \
-  -d source="crud" \
-  -d event="consumers" \
-  -d handler="webhook-custom" \
-  -d on_change=true \
-  -d config.method="POST" \
-  -d config.url=$SLACK_WEBHOOK_URL \
-  -d config.headers.Content-type="application/json" \
-  -d config.payload.text="new consumer added"
-```
+
+{% entity_example %}
+type: event_hook
+data:
+  source: "crud"
+  event: "consumers"
+  handler: "webhook-custom"
+  on_change: true
+  config:
+    method: "POST"
+    url: $SLACK_WEBHOOK_URL
+    headers:
+      "Content-type": "application/json"
+    payload:
+      text: "new consumer added"
+formats:
+  - admin-api
+{% endentity_example %}
 
 Posting this will result in a `200` response. The `config` body in the Event Hook contains information about the webhook that was created: 
 
@@ -77,10 +83,13 @@ Posting this will result in a `200` response. The `config` body in the Event Hoo
 
 Use the Admin API to create a new Consumer: 
 
-```sh
-curl -i -X POST http://localhost:8001/consumers \
-    -d username="my-consumer"
-```
 
+{% entity_example %}
+type: consumer
+data:
+  username: my-consumer
+formats:
+  - admin-api
+{% endentity_example %}
 
 Slack will post a message to the channel informing you that a Consumer was added. 

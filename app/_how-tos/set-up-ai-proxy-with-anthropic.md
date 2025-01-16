@@ -53,7 +53,6 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
-automated_tests: false
 ---
 
 ## 1. Configure the plugin
