@@ -166,8 +166,9 @@ This configures the different tiers like the following:
 Now we can test that each rate limiting tier is working as expected by sending a series of HTTP requests (for example, six for Free Tier and seven for Basic Tier) to the endpoint with the appropriate API key with the goal of exceeding the configured rate limit for that tier. The tests wait for one second between requests to avoid overwhelming the server and test rate limits more clearly.
 
 
+Test the rate limiting of the Free tier:
+
 {% validation rate-limit-check %}
-preamble: 'Test the rate limiting of the Free tier:'
 iterations: 6
 url: '/anything'
 headers:
@@ -175,8 +176,9 @@ headers:
 sleep: 1
 {% endvalidation %}
 
+Test the rate limiting of the Basic tier:
+
 {% validation rate-limit-check %}
-preamble: 'Test the rate limiting of the Basic tier:'
 iterations: 7
 url: '/anything'
 headers:
@@ -184,8 +186,9 @@ headers:
 sleep: 1
 {% endvalidation %}
 
+Test the rate limiting of the Premium tier:
+
 {% validation rate-limit-check %}
-preamble: 'Test the rate limiting of the Premium tier:'
 iterations: 11
 url: '/anything'
 headers:

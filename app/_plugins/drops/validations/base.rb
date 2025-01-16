@@ -63,7 +63,7 @@ module Jekyll
         end
 
         def config
-          @config ||= configuration.merge(@yaml.except('preamble', 'url'))
+          @config ||= configuration.merge(@yaml.except('url'))
         end
 
         def template_file

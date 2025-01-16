@@ -73,10 +73,9 @@ entities:
 
 ## 2. Validate
 
-{% validation rate-limit-check %}
-preamble: |
-  After configuring the Rate Limiting plugin, you can verify that it was configured correctly and is working, by sending more requests than allowed in the configured time limit.
+After configuring the Rate Limiting plugin, you can verify that it was configured correctly and is working, by sending more requests than allowed in the configured time limit.
 
+{% validation rate-limit-check %}
 iterations: 6
 url: '/anything'
 {% endvalidation %}
