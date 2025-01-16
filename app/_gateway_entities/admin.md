@@ -13,7 +13,7 @@ related_resources:
     url: /gateway/entities/rbac/
   - text: Groups entity
     url: /gateway/entities/group/
-  - text: Workspace
+  - text: Workspace entity
     url: /gateway/entities/workspace/
 
 tier: enterprise
@@ -28,35 +28,39 @@ schema:
   api: gateway/admin-ee
   path: /schemas/Admin
 faqs:
-  - q: What happens when an Admin does not have a role assigned?
+  - q: What happens when an Admin doesn't have a role assigned?
     a: If an Admin is in a Workspace without a role, they can’t see or interact with anything. Admins can manage entities inside Workspaces, including users and their roles.
     
 
 ---
 
-## What is the Admins entity? 
-The Admins entity in {{site.base_gateway}} is an [RBAC](/gateway/entities/rbac) entity used to used to manage all administrators for a specific [Workspace](/gateway/entities/workspace). 
-The Admins entity can be managed using the Admin API or Kong Manager and is used in the following operations:
+## What are Admins?
+Admins in {{site.base_gateway}} are [RBAC](/gateway/entities/rbac/) entities used to used to manage all administrators for a specific [Workspace](/gateway/entities/workspace/). 
+Admins can be managed using the Admin API or Kong Manager and are used in the following operations:
 
 * [Admin registration](/api/gateway/admin-ee/3.9/#/operations/post-admins-register)
 * [Password reset](/api/gateway/admin-ee/3.9/#/operations/get-admins-password_resets)
-* [Read, Update Delete Admins](/api/gateway/admin-ee/3.9/#/operations/patch-admins-name_or_id-generate_register_url)
+* [Read, Update, or Delete Admins](/api/gateway/admin-ee/3.9/#/operations/patch-admins-name_or_id-generate_register_url)
 * [Viewing roles for specific Admins](/api/gateway/admin-ee/3.9/#/operations/get-admins-name_or_id-roles)
-* [Creating, updating and deleting Admin roles](/api/gateway/admin-ee/3.9/#/operations/post-admins-name_or_id-roles)
+* [Creating, updating, and deleting Admin roles](/api/gateway/admin-ee/3.9/#/operations/post-admins-name_or_id-roles)
 * [Viewing associated Workspaces](/api/gateway/admin-ee/3.9/#/operations/get-admins-name_or_id-workspaces)
 
 
-Admins can only interact with entities from within their Workspace, depending on the Admin's specific role they can enforce RBAC roles and permissions across that Workspace, including creating and inviting other Admins. 
+Admins can only interact with entities from within their Workspace. Depending on the Admin's specific role, they can enforce RBAC roles and permissions across that Workspace, including creating and inviting other Admins. 
 
 ## Kong Manager
 
-Kong Manager has the capability to manage the Admin's entity and can handle all operations that can be managed with the Admin API. {{site.base_gateway}} should be configured to have [RBAC enabled](/gateway/entities/rbac/#enable-rbac), as well as configured for [sending email](/how-to/configure-kong-manager-email). To enable RBAC on Kong Manager to be able to configure the Admins entity, set the following: 
+You can use Kong Manager to manage Admins. It supports all the same Admin operations as the Kong Admin API.  
+
+To use Admins, {{site.base_gateway}} needs to have:
+* [RBAC enabled](/gateway/entities/rbac/#enable-rbac) 
+* [Sending email configured](/how-to/configure-kong-manager-email). 
+
+To enable RBAC on Kong Manager, set the following in `kong.conf`: 
 
 * Set `enforce_rbac` to `on`
-* Set `admin_gui_auth `to the desired authentication like `basic-auth`
+* Set `admin_gui_auth ` to the desired authentication like `basic-auth`
 * Add a session secret to `admin_gui_session_conf`
-
-You can do all of this automatically with the 
 
 
 ## Schema
@@ -65,7 +69,9 @@ You can do all of this automatically with the
 
 ## Invite an Admin
 
-Inviting an Admin can only be done if you have [Enabled RBAC](/gateway/entities/rbac/#enable-rbac). You can invite an Admin by issuing a `POST` request to [`/admins/`](/api/gateway/admin-ee/3.9/#/operations/post-admins). If you have not configured [sending email](/how-to/configure-kong-manager-email) your Admin will not receive an invite link, but will still be created.
+Inviting an Admin can only be done if you have [enabled RBAC](/gateway/entities/rbac/#enable-rbac). You can invite an Admin by issuing a `POST` request to [`/admins`](/api/gateway/admin-ee/3.9/#/operations/post-admins). 
+
+If you haven't configured [sending email](/how-to/configure-kong-manager-email), your Admin won't receive an invite link, but will still be created.
 
 {% entity_example %}
 type: admin

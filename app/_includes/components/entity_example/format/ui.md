@@ -154,9 +154,9 @@ The following creates a new JSON Web Key Set with basic configuration:
 5. Click **Save**.
 
 {% when 'admin' %}
-If you have configured [RBAC](/gateway/entities/rbac/#enable-rbac) and configured [Kong Manager to send email](/how-to/configure-kong-manager-email) you can create new Admins from within Kong Manager 
+If you have configured [RBAC](/gateway/entities/rbac/#enable-rbac) and configured [Kong Manager to send email](/how-to/configure-kong-manager-email), you can create new Admins from within Kong Manager: 
 
-1. In Kong Manager navigate to **Teams** and select **Invite Admin**. 
+1. In Kong Manager, navigate to **Teams** and select **Invite Admin**. 
 2. Enter the appropriate information for your Admin. 
 3. Select the desired [roles](/gateway/entities/rbac/#default-kong-gateway-roles).
 4. Select **Invite Admin**.
