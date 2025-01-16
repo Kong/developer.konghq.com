@@ -71,7 +71,7 @@ async function runPrereqs(prereqs, container) {
   }
 }
 
-async function runSteps(steps, container) {
+async function runSteps(steps, runtimeConfig, container) {
   let assertions = [];
   try {
     log("Running steps...");
@@ -85,8 +85,8 @@ async function runSteps(steps, container) {
           } else {
             // XXX: Sleep needed here because we need to wait for the iterator
             // rebuilding in Gateway.
-            await new Promise((resolve) => setTimeout(resolve, 4000));
-            const result = await validate(command);
+            await new Promise((resolve) => setTimeout(resolve, 5000));
+            const result = await validate(command, runtimeConfig);
             assertions.push(...result);
           }
         }
@@ -115,7 +115,12 @@ export async function runInstructions(instructions, runtimeConfig, container) {
     }
 
     await runPrereqs(instructions.prereqs, container);
-    const assertions = await runSteps(instructions.steps, container);
+
+    const assertions = await runSteps(
+      instructions.steps,
+      runtimeConfig,
+      container
+    );
 
     result["assertions"] = assertions;
     result["status"] = "passed";
