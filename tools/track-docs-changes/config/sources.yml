@@ -99,6 +99,12 @@ app/_how-tos/create-a-key-set-with-a-jwk.md:
 app/_how-tos/create-a-key-set-with-a-pem-key.md:
   - app/_src/gateway/reference/key-management.md
 
+app/_gateway_entities/admin.md:
+  - app/_src/gateway/production/access-control/start-securely.md
+  - app/_src/gateway/production/access-control/register-admin-api.md
+  - app/_src/gateway/production/access-control/enable-rbac.md
+
+
 # how-tos
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
   - /app/_hub/kong-inc/rate-limiting-advanced/how-to/_index.md

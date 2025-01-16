@@ -19,6 +19,8 @@ related_resources:
     url: /gateway/entities/workspace/
   - text: Gateway Vault entity
     url: /gateway/entities/vault/
+  - text: Gateway Admin entity
+    url: /gateway/entities/admin/
 ---
 
 ## What is RBAC?
@@ -145,7 +147,10 @@ This command sets the Kong super admin password to `kong` and sets up RBAC. This
 ```
 curl -Ls get.konghq.com/quickstart | bash -s -- -e "KONG_LICENSE_DATA" \
    -e "KONG_ENFORCE_RBAC=on" \
-   -e "KONG_PASSWORD=kong"
+   -e "KONG_ADMIN_GUI_AUTH=basic-auth" \
+   -e "KONG_PASSWORD=kong" \
+   -e "KONG_PORTAL=on" \
+   -e 'KONG_ADMIN_GUI_SESSION_CONF={"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}'
 ```
 
 {% endnavtab %}
@@ -167,6 +172,20 @@ export KONG_ENFORCE_RBAC=on && kong reload
 ```
 
 This will enable RBAC. From here, you can use the `super-admin` user to manage your RBAC hierarchy. For an in-depth walkthrough of how to do this, review the [Bootstrapping RBAC](/how-to/bootstrap-rbac/) documentation.
+
+{% endnavtab %}
+{% navtab "Kong Manager" %}
+
+You can use Kong Manager to manage Admins. It supports all the same Admin operations as the Kong Admin API.  
+
+To use Admins, {{site.base_gateway}} needs to have:
+* [Sending email configured](/how-to/configure-kong-manager-email). 
+
+To enable RBAC on Kong Manager, set the following in `kong.conf`: 
+
+* Set `enforce_rbac` to `on`
+* Set `admin_gui_auth ` to the desired authentication like `basic-auth`
+* Add a session secret to `admin_gui_session_conf`
 
 {% endnavtab %}
 {% endnavtabs %}
