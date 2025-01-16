@@ -55,7 +55,7 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
-automated_tests: false
+
 ---
 
 ## 1. Configure the plugin
@@ -67,7 +67,7 @@ In this example, we'll use the Claude 2.1 model and version 2023-06-01 of the AP
 {% entity_examples %}
 entities:
     plugins:
-    - name: ai-proxy
+    - name: ai-proxy-advanced
       config:
         targets:
           - route_type: llm/v1/chat
