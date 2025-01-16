@@ -72,6 +72,7 @@ async function runPrereqs(prereqs, container) {
 }
 
 async function runSteps(steps, container) {
+  let assertions = [];
   try {
     log("Running steps...");
     if (steps) {
@@ -85,42 +86,60 @@ async function runSteps(steps, container) {
             // XXX: Sleep needed here because we need to wait for the iterator
             // rebuilding in Gateway.
             await new Promise((resolve) => setTimeout(resolve, 4000));
-            await validate(command);
+            const result = await validate(command);
+            assertions.push(...result);
           }
         }
       }
     }
   } catch (error) {
+    if (error instanceof ValidationError) {
+      assertions.push(...error.assertions);
+    }
+
     throw error;
   }
+  return assertions;
 }
 
 export async function runInstructions(instructions, runtimeConfig, container) {
+  let result = {};
   try {
     const check = await checkSetup(instructions.setup, runtimeConfig);
 
     if (!check) {
-      return;
+      result["status"] = "skipped";
+      return result;
     }
 
     await runPrereqs(instructions.prereqs, container);
+    const assertions = await runSteps(instructions.steps, container);
 
-    await runSteps(instructions.steps, container);
+    result["assertions"] = assertions;
+    result["status"] = "passed";
   } catch (err) {
+    result["status"] = "failed";
     if (err instanceof ValidationError) {
-      console.error(err.message);
+      result["assertions"] = err.assertions;
     } else {
+      result["assertions"] = [err.message];
       console.error("Error: ", err);
     }
     if (!process.env.CONTINUE_ON_ERROR) {
       process.exit(1);
     }
   }
+  return result;
 }
 
 export async function runInstructionsFile(file, runtimeConfig, container) {
   log(`Running file: ${file}`);
   const fileContent = await fs.readFile(file, "utf8");
   const instructions = yaml.load(fileContent);
-  await runInstructions(instructions, runtimeConfig, container);
+  const { status, assertions } = await runInstructions(
+    instructions,
+    runtimeConfig,
+    container
+  );
+  return { file, status, assertions };
 }

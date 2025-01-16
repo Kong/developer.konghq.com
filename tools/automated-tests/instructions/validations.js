@@ -3,9 +3,10 @@ import debug from "debug";
 const log = debug("tests:runner");
 
 export class ValidationError extends Error {
-  constructor(message) {
+  constructor(message, assertions) {
     super(message);
     this.name = "ValidationError";
+    this.assertions = assertions;
   }
 }
 
@@ -20,12 +21,16 @@ function processHeaders(config) {
   return headers;
 }
 
-function logAndError(message) {
+function logAndError(message, expecations) {
   log(`   rate-limit-check ❌. ${message}`);
-  throw new ValidationError(`ValidationError: rate-limit-check. ${message}`);
+  throw new ValidationError(
+    `ValidationError: rate-limit-check. ${message}`,
+    expecations
+  );
 }
 
 async function rateLimit(config) {
+  let assertions = [];
   log("   rate-limit-check:");
   const headers = processHeaders(config);
 
@@ -33,28 +38,27 @@ async function rateLimit(config) {
     const response = await fetch(config.url, { headers });
     const body = await response.json();
     const requestNumber = i + 1;
-    if (i === config.iterations - 1) {
-      if (response.status !== config.status_code) {
-        const message = `Expected: last request to have a status code equal to ${config.status_code}, got: ${response.status}.`;
-        logAndError(message);
-      }
 
+    const statusCode =
+      requestNumber === config.iterations ? config.status_code : 200;
+    const assertion = `Expected: request ${requestNumber} to have a status code equal to ${statusCode}, got: ${response.status}.`;
+    assertions.push(assertion);
+
+    if (statusCode !== response.status) {
+      log(`     request #${requestNumber}: ❌ .`);
+      logAndError(assertion, assertions);
+    }
+    if (i === config.iterations - 1) {
+      const messageAssertion = `Expected: last request to have message: '${config.message}', got: '${body.message}'.`;
+      assertions.push(messageAssertion);
       if (body.message !== config.message) {
-        const message = `Expected: last request to have message: ${config.message}, got: ${body.message}.`;
-        logAndError(message);
-      }
-      log(`     request #${requestNumber}: ✅ .`);
-      log(`   rate-limit-check ✅ .`);
-    } else {
-      if (response.status !== 200) {
-        log(`     request #${requestNumber}: ❌ .`);
-        const message = `Expected: request #${requestNumber} to have a status code equal to 200, got: ${response.status}.`;
-        logAndError(message);
-      } else {
-        log(`     request #${requestNumber}: ✅ .`);
+        logAndError(messageAssertion, assertions);
       }
     }
+    log(`     request #${requestNumber}: ✅ .`);
   }
+  log(`   rate-limit-check ✅ .`);
+  return assertions;
 }
 
 export async function validate(validation) {
