@@ -23,6 +23,7 @@ function processHeaders(config) {
 
 function logAndError(validationName, message, expecations) {
   log(`   ${validationName} ❌. ${message}`);
+  console.error(` ${validationName} ❌. ${message}`);
   throw new ValidationError(
     `ValidationError: ${validationName}. ${message}`,
     expecations
@@ -31,7 +32,14 @@ function logAndError(validationName, message, expecations) {
 
 async function executeRequest(config, onResponse) {
   const headers = processHeaders(config);
-  const response = await fetch(config.url, { headers });
+  const options = { method: config.method || "GET", headers };
+
+  if (config.body && options.method === "POST") {
+    options.body = JSON.stringify(config.body);
+    headers["Content-Type"] = headers["Content-Type"] || "application/json";
+  }
+
+  const response = await fetch(config.url, options);
   const body = await response.json();
 
   return onResponse(response, body);
