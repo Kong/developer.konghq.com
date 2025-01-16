@@ -79,8 +79,6 @@ entities:
 
 Before you can enable rate limiting for tiers of users, we first have to create Consumer Groups for each tier and then add Consumers to those groups. Consumer Groups are solely a way to organize Consumers of your APIs. In this guide, we'll create three tiers (Free, Basic, and Premium), so we need to create a unique Consumer Group for each tier.
 
-Create Consumer Groups for each tier:
-
 {% entity_examples %}
 entities:
   consumer_groups:
@@ -94,8 +92,6 @@ entities:
 Now that you've added Consumer Groups for each tier, you can create three Consumers, one for each tier. Here, we're manually adding Consumers for the sake of ease, but in a production environment, you could use a script that would automatically add Consumers to the correct groups as they sign up for a tier of service.
 
 We're also adding key auth credentials (`key`) to each Consumer so they can authenticate and we can test later that rate limiting was correctly configured for the different tiers.
-
-Create Consumers and their authentication credentials:
 
 {% entity_examples %}
 entities:
@@ -148,7 +144,7 @@ entities:
      consumer_group: Premium
      config:
        limit: 
-       - 500
+       - 10
        window_size: 
        - 30
        window_type: sliding
@@ -157,9 +153,9 @@ entities:
 {% endentity_examples %}
    
 This configures the different tiers like the following:
-* **Free:** Allows six requests per second. This configuration sets the rate limit to three requests (`config.limit`) for every 30 seconds (`config.window_size`).
-* **Basic:** Allows 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
-* **Premium:** Allows 1,000 requests per second. This configuration sets the rate limit to 500 requests (`config.limit`) for every 30 seconds (`config.window_size`).
+* **Free:** This configuration sets the rate limit to three requests for every 30 seconds.
+* **Basic:** This configuration sets the rate limit to five requests for every 30 seconds.
+* **Premium:** This configuration sets the rate limit to ten requests for every 30 seconds.
 
 ## 5. Validate that rate limiting is working on each tier
 
@@ -169,21 +165,19 @@ Now we can test that each rate limiting tier is working as expected by sending a
 Test the rate limiting of the Free tier:
 
 {% validation rate-limit-check %}
-iterations: 6
+iterations: 4
 url: '/anything'
 headers:
   - 'apikey:amal'
-sleep: 1
 {% endvalidation %}
 
 Test the rate limiting of the Basic tier:
 
 {% validation rate-limit-check %}
-iterations: 7
+iterations: 6
 url: '/anything'
 headers:
   - 'apikey:dana'
-sleep: 1
 {% endvalidation %}
 
 Test the rate limiting of the Premium tier:
@@ -193,5 +187,4 @@ iterations: 11
 url: '/anything'
 headers:
   - 'apikey:mahan'
-sleep: 1
 {% endvalidation %}
