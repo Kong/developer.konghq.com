@@ -56,7 +56,7 @@ The following creates a new Upstream and a Target with basic configuration:
 {% when 'upstream' %}
 The following creates a new Upstream with basic configuration:
 
-1. In Kong Manager or Gateway Manager, Navigate to **Workspaces** > **Upstreams**.
+1. In Kong Manager or Gateway Manager, navigate to **Workspaces** > **Upstreams**.
 2. Click **New Upstream**.
 3. Enter a unique name for the Upstream. For example: `{{ include.presenter.data['name'] }}`.
 4. Click **Save**.
@@ -158,7 +158,7 @@ If you have configured [RBAC](/gateway/entities/rbac/#enable-rbac) and configure
 
 1. In Kong Manager, navigate to **Teams** and select **Invite Admin**. 
 2. Enter the appropriate information for your Admin. 
-3. Select the desired [roles](/gateway/entities/rbac/#default-kong-gateway-roles).
+3. Select the desired [Roles](/gateway/entities/rbac/#default-kong-gateway-roles).
 4. Select **Invite Admin**.
 
 If you have not configured [Kong Manager to send email](/how-to/configure-kong-manager-email), you can generate a registration link by selecting the newly invited Admin, and clicking **Generate Registration Link**.

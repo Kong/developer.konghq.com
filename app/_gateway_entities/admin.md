@@ -5,7 +5,7 @@ entities:
   - admin
 
 description: |
-  Admins can manage entities inside workspaces, including users and their roles.
+  Admins can manage entities inside Workspaces, including Users and their Roles.
 
 
 related_resources:
@@ -30,8 +30,8 @@ schema:
   api: gateway/admin-ee
   path: /schemas/Admin
 faqs:
-  - q: What happens when an Admin doesn't have a role assigned?
-    a: If an Admin is in a Workspace without a role, they can’t see or interact with anything. Admins can manage entities inside Workspaces, including users and their roles.
+  - q: What happens when an Admin doesn't have a Role assigned?
+    a: If an Admin is in a Workspace without a Role, they can’t see or interact with anything. Admins can manage entities inside Workspaces, including Users and their Roles.
     
 
 ---
@@ -48,7 +48,7 @@ Admins can be managed using the Admin API or Kong Manager and are used in the fo
 * [Viewing associated Workspaces](/api/gateway/admin-ee/#/operations/get-admins-name_or_id-workspaces)
 
 
-Admins can only interact with entities from within their Workspace. Depending on the Admin's specific role, they can enforce RBAC roles and permissions across that Workspace, including creating and inviting other Admins. 
+Admins can only interact with entities from within their Workspace. Depending on the Admin's specific Role, they can enforce RBAC Roles and Permissions across that Workspace, including creating and inviting other Admins. 
 
 ## Schema
 
