@@ -6,7 +6,7 @@ require_relative './base'
 module Jekyll
   module Drops
     module Validations
-      class AuthCheck < Base # rubocop:disable Style/Documentation
+      class UnauthorizedCheck < Base # rubocop:disable Style/Documentation
         def validate_yaml!
           raise ArgumentError, "Missing `headers` in {% validation #{name} %}." unless @yaml.key?('headers')
 
