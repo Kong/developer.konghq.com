@@ -16,7 +16,7 @@ tags:
   - notifications
 tldr: 
   q: How do I create an Event Hook that logs events on the Consumer entity?
-  a: The `log` Event Hook handler can write log events. You can configure an Event Hook using the `log` handler to write to the log file every time a CRUD event happens on the <a href="/gateway/entities/consumer/>Consumer entity</a> by issuing a `POST` request to the `/event-hooks` endpoint. 
+  a: The `log` Event Hook handler can write log events. You can configure an Event Hook using the `log` handler to write to the log file every time a CRUD event happens on the [Consumer entity](/gateway/entities/consumer/) by issuing a `POST` request to the `/event-hooks` endpoint. 
   
 prereqs:
   inline:
@@ -40,8 +40,6 @@ related_resources:
 min_version:
     gateway: '3.4'
 
-automated_tests: false
-
 ---
 
 
@@ -51,16 +49,15 @@ The `log` Event Hook configuration specifies an event and a source. In this guid
 
 Create a long Event Hook on the `consumers` event using the `crud` source: 
 
-```sh
-curl -i -X POST http://localhost:8001/event-hooks \
--H "Content-Type: application/json" \
--d '{
-  "source": "crud",
-  "event": "consumers",
-  "handler": "log"
-}'
-```
-
+{% entity_example %}
+type: event_hook
+data:
+  source: "crud"
+  event: "consumers"
+  handler: "log"
+formats:
+  - admin-api
+{% endentity_example %}
 
 ## 2. Validate the webhook
 
@@ -69,10 +66,14 @@ curl -i -X POST http://localhost:8001/event-hooks \
 
 Use the Admin API to create a new Consumer: 
 
-```sh
-curl -i -X POST http://localhost:8001/consumers \
-    -d username="my-consumer"
-```
+{% entity_example %}
+type: consumer
+data:
+  username: my-consumer
+formats:
+  - admin-api
+{% endentity_example %}
+
 
 Review the logs at `/usr/local/kong/logs/error.log` for an update about the creation of this Consumer. The log will look similar to this: 
  
