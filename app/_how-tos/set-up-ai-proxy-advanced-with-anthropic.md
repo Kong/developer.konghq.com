@@ -73,12 +73,15 @@ entities:
           - route_type: llm/v1/chat
             auth:
               header_name: x-api-key
-              header_value: "<anthropic-api-key>"
+              header_value: ${anthropic_api_key}
             model:
               provider: anthropic
               name: claude-2.1
               options:
                   anthropic_version: "2023-06-01"
+variables:
+  anthropic_api_key:
+    value: $ANTHROPIC_API_KEY
 {% endentity_examples %}
 
 ## 2. Validate
