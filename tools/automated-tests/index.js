@@ -65,8 +65,25 @@ async function removeContainer(container) {
   }
 }
 
+async function logResults(results) {
+  const passed = results.filter((r) => r.status === "passed");
+  const failed = results.filter((r) => r.status === "failed");
+  const skipped = results.filter((r) => r.status === "skipped");
+  log(
+    `Summary: ${results.length} total. ${passed.length} passed, ${failed.length} failed, ${skipped.length} skipped.`
+  );
+
+  console.log("Tests result logged to ./testReport.json");
+  await fs.writeFile(
+    "testReport.json",
+    JSON.stringify(results, null, 2),
+    "utf-8"
+  );
+}
+
 (async function main() {
   let container;
+  let results = [];
   try {
     const testsConfig = await loadConfig();
     const filesByRuntime = await groupInstructionFilesByRuntime(testsConfig);
@@ -83,7 +100,12 @@ async function removeContainer(container) {
 
       for (const instructionFile of instructionFiles) {
         await resetRuntime(runtimeConfig, container);
-        await runInstructionsFile(instructionFile, runtimeConfig, container);
+        const result = await runInstructionsFile(
+          instructionFile,
+          runtimeConfig,
+          container
+        );
+        results.push(result);
       }
 
       await cleanupRuntime(runtimeConfig, container);
@@ -96,6 +118,14 @@ async function removeContainer(container) {
     await stopContainer(container);
     await removeContainer(container);
 
+    await logResults(results);
     process.exit(1);
+  }
+  await logResults(results);
+
+  if (results.filter((r) => r.status === "failed").length > 0) {
+    process.exit(1);
+  } else {
+    return 0;
   }
 })();
