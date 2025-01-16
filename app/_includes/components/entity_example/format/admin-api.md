@@ -22,7 +22,9 @@
 {% endcase %}
 {% endif %}
 
+<div data-deployment-topology="on-prem"  markdown="1" data-test-step="{{ include.presenter.data_validate_on_prem | escape }}">
 {% include components/entity_example/format/snippets/admin-api.md presenter=include.presenter %}
+</div>
 
 {% if include.render_context %}
 {% include components/entity_example/replace_variables.md missing_variables=include.presenter.missing_variables %}

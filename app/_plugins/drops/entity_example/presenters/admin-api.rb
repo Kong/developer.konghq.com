@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'json'
 require_relative '../utils/variable_replacer'
 require_relative './base'
 
@@ -34,6 +35,11 @@ module Jekyll
 
             def missing_variables
               @missing_variables ||= []
+            end
+
+            def data_validate_on_prem
+              JSON.dump({ name: 'request-check',
+                          config: { url:, headers:, body: data, method: 'POST', status_code: 201 } })
             end
 
             private
