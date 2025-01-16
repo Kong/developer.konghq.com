@@ -21,56 +21,104 @@ function processHeaders(config) {
   return headers;
 }
 
-function logAndError(message, expecations) {
-  log(`   rate-limit-check ❌. ${message}`);
+function logAndError(validationName, message, expecations) {
+  log(`   ${validationName} ❌. ${message}`);
   throw new ValidationError(
-    `ValidationError: rate-limit-check. ${message}`,
+    `ValidationError: ${validationName}. ${message}`,
     expecations
   );
 }
 
-async function rateLimit(config) {
-  let assertions = [];
-  log("   rate-limit-check:");
+async function executeRequest(config, onResponse) {
   const headers = processHeaders(config);
+  const response = await fetch(config.url, { headers });
+  const body = await response.json();
 
-  for (let i = 0; i < config.iterations; i++) {
-    const response = await fetch(config.url, { headers });
-    const body = await response.json();
-    const requestNumber = i + 1;
+  return onResponse(response, body);
+}
 
-    const statusCode =
-      requestNumber === config.iterations ? config.status_code : 200;
-    const assertion = `Expected: request ${requestNumber} to have a status code equal to ${statusCode}, got: ${response.status}.`;
-    assertions.push(assertion);
+async function validateRequest(validationName, config, checks) {
+  const assertions = [];
 
-    if (statusCode !== response.status) {
-      log(`     request #${requestNumber}: ❌ .`);
-      logAndError(assertion, assertions);
-    }
-    if (i === config.iterations - 1) {
-      const messageAssertion = `Expected: last request to have message: '${config.message}', got: '${body.message}'.`;
-      assertions.push(messageAssertion);
-      if (body.message !== config.message) {
-        logAndError(messageAssertion, assertions);
+  await executeRequest(config, (response, body) => {
+    for (const check of checks) {
+      const { assert, message } = check(response, body);
+      assertions.push(message);
+      if (!assert) {
+        logAndError(validationName, message, assertions);
       }
     }
+  });
+  return assertions;
+}
+
+async function rateLimit(validationName, config) {
+  let assertions = [];
+
+  for (let i = 0; i < config.iterations; i++) {
+    const requestNumber = i + 1;
+    const expectedStatus =
+      requestNumber === config.iterations ? config.status_code : 200;
+
+    const result = await validateRequest(validationName, config, [
+      (response) => ({
+        assert: response.status === expectedStatus,
+        message: `Expected: request ${requestNumber} to have status code ${expectedStatus}, got: ${response.status}.`,
+      }),
+      ...(requestNumber === config.iterations
+        ? [
+            (response, body) => ({
+              assert: body.message === config.message,
+              message: `Expected: last request to have message '${config.message}', got: '${body.message}'.`,
+            }),
+          ]
+        : []),
+    ]);
+    assertions.push(...result);
     log(`     request #${requestNumber}: ✅ .`);
   }
-  log(`   rate-limit-check ✅ .`);
   return assertions;
+}
+
+async function requestCheck(validationName, config) {
+  return validateRequest(validationName, config, [
+    (response) => ({
+      assert: response.status === config.status_code,
+      message: `Expected: request ${config.url} to have status code ${config.status_code}, got: ${response.status}.`,
+    }),
+  ]);
+}
+
+async function unauthorizedCheck(validationName, config) {
+  return validateRequest(validationName, config, [
+    (response) => ({
+      assert: response.status === config.status_code,
+      message: `Expected: request ${config.url} to have status code ${config.status_code}, got: ${response.status}.`,
+    }),
+    (response, body) => ({
+      assert: body.message === config.message,
+      message: `Expected: request to have message '${config.message}', got: '${body.message}'.`,
+    }),
+  ]);
 }
 
 export async function validate(validation) {
   let result;
+  log(`   ${validation.name}`);
 
   switch (validation.name) {
     case "rate-limit-check":
-      result = await rateLimit(validation.config);
+      result = await rateLimit(validation.name, validation.config);
+      break;
+    case "request-check":
+      result = await requestCheck(validation.name, validation.config);
+      break;
+    case "unauthorized-check":
+      result = await unauthorizedCheck(validation.name, validation.config);
       break;
     default:
       throw new Error(`Unsupported validation '${validation.name}'.`);
   }
-
+  log(`   ${validation.name} ✅ .`);
   return result;
 }
