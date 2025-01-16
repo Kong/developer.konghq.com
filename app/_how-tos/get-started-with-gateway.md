@@ -303,7 +303,7 @@ HTTP/1.1 401 Unauthorized
 
 Now, let's send a request with the valid key in the `apikey` header:
 
-{% validation request %}
+{% validation request-check %}
 url: /mock/anything
 headers:
   - 'apikey:top-secret-key'
