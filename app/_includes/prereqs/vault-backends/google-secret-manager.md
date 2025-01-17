@@ -4,7 +4,11 @@ To add Secret Manager as a Vault backend to {{site.base_gateway}}, you must conf
 1. On the [Secret Manager page](https://console.cloud.google.com/security/secret-manager), create a secret called `test-secret` with the following JSON content:
     ```json
     {
-    "key": "example-key"
+    "key": "Bearer your-mistral-api-key"
     }
     ```
-1. Credentials/service account key: https://cloud.google.com/iam/docs/keys-create-delete#creating 
+1. Create a service account key:
+    1. In the [Google Cloud console](https://console.cloud.google.com/), click the `test-gateway-vault` project.
+    1. Click the email address of the service account that you want to create a key for.
+    1. From the Keys tab, create a new key from the add key menu and select JSON for the key type.
+    1. Save the JSON file you downloaded.

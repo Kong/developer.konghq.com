@@ -40,8 +40,6 @@ prereqs:
         - example-service
     routes:
         - example-route
-    plugins:
-        - example-key-auth
   inline:
     - title: Google Cloud Secret Manager
       include_content: prereqs/vault-backends/google-secret-manager
