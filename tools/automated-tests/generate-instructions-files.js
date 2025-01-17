@@ -46,7 +46,7 @@ async function testeableUrlsFromFiles(config) {
 (async function main() {
   try {
     const args = minimist(process.argv.slice(2));
-    const fileContent = await fs.readFile("./config.yaml", "utf8");
+    const fileContent = await fs.readFile("./config/tests.yaml", "utf8");
     const testsConfig = yaml.load(fileContent);
     let urlsToTest;
 
