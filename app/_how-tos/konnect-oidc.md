@@ -31,6 +31,8 @@ prereqs:
 
 min_version:
     gateway: '3.4'
+
+automated_tests: false
 ---
 
 ## 1. Set up SSO in {{site.konnect_short_name}}

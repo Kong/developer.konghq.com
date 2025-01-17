@@ -1,5 +1,5 @@
 ```bash
-curl -X POST {{ include.presenter.url }} \
+curl -i -X POST {{ include.presenter.url }} \
     --header "Accept: application/json" \
     --header "Content-Type: application/json" \{% if include.presenter.headers %}{%- for header in include.presenter.headers %}
     --header "{{header}}" \{% endfor %}{% endif %}

@@ -1,0 +1,3 @@
+instructionsDir: './input/instructions'
+
+baseUrl: http://localhost:8888

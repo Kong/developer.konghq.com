@@ -52,22 +52,20 @@ The `webhook` handler is used to configure webhooks that make a `POST` request t
 
 Using the Admin API, create an Event Hook on the [Consumers](/gateway/entities/consumer/) event by issuing a `POST` request to the `/event-hooks` endpoint.
 
-```sh
-curl -i -X POST http://localhost:8001/event-hooks \
--H "Content-Type: application/json" \
--d '{
-    "source": "crud",
-    "event": "consumers",
-    "handler": "webhook",
-    "on_change": true,
-    "config": {
-      "url": "$WEBHOOK_URL"
-    }
-  }'
-```
+{% entity_example %}
+type: event_hook
+data:
+  source: "crud"
+  event: "consumers"
+  handler: "webhook"
+  on_change: true
+  config:
+    url: $WEBHOOK_URL
+formats:
+  - admin-api
+{% endentity_example %}
 
 Issuing this `POST` request will send a request of type `ping` to the webhook URL verifying that the webhook is configured correctly.
-
 
 
 ## 2. Validate the webhook
@@ -77,10 +75,13 @@ Issuing this `POST` request will send a request of type `ping` to the webhook UR
 
 Using the Admin API create a new Consumer: 
 
-```sh
-curl -i -X POST http://localhost:8001/consumers \
-    -d username="my-consumer"
-```
+{% entity_example %}
+type: consumer
+data:
+  username: my-consumer
+formats:
+  - admin-api
+{% endentity_example %}
 
 Verify on [`https://webhook.site`](https://webhook.site) that you received a `POST` request. It will look like this: 
 

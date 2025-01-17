@@ -38,7 +38,7 @@ module Jekyll
           yaml.merge!(k => entities) if entities
         end
 
-        Jekyll::Utils::HashToYAML.new(yaml).convert
+        Jekyll::Utils::HashToYAML.new(yaml).convert.gsub("'3.0'", '"3.0"')
       end
 
       def products

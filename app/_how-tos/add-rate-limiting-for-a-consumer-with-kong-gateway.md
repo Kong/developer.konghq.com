@@ -101,25 +101,15 @@ entities:
       config:
         minute: 5
         hour: 1000
-append_to_existing_section: true
 {% endentity_examples %}
 
-## 4. Apply configuration
-
-{% include how-tos/steps/apply_config.md %}
-
-## 5. Validate
+## 4. Validate
 
 You can run the following command to test the rate limiting as the Consumer:
 
-```bash
-for _ in {1..6}; do curl -i http://localhost:8000/anything -H 'apikey:example-key'; echo; done
-```
-{: data-deployment-topology="on-prem" }
-
-```bash
-for _ in {1..6}; do curl -i $KONNECT_PROXY_URL/anything -H 'apikey:example-key'; echo; done
-```
-{: data-deployment-topology="konnect" }
-
-This command sends six consecutive requests to the Route. On the last one, you should get a `429` error with the message `API rate limit exceeded`.
+{% validation rate-limit-check %}
+iterations: 6
+url: '/anything'
+headers:
+  - 'apikey:example-key'
+{% endvalidation %}

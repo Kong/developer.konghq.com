@@ -64,7 +64,7 @@ cleanup:
 
 We need to set up [authentication](/authentication/) to identify the Consumer and apply rate limiting. In this guide, we'll be using the [Key Auth plugin](/plugins/key-auth/) plugin, but you can use any Kong authentication plugin. 
 
-Add the following content to your `kong.yaml` file in the `deck_files` directory to configure the Key Auth plugin:
+Run the following command to configure the Key Auth plugin:
 
 {% entity_examples %}
 entities:
@@ -79,8 +79,6 @@ entities:
 
 Before you can enable rate limiting for tiers of users, we first have to create Consumer Groups for each tier and then add Consumers to those groups. Consumer Groups are solely a way to organize Consumers of your APIs. In this guide, we'll create three tiers (Free, Basic, and Premium), so we need to create a unique Consumer Group for each tier.
 
-Append the following content to your `kong.yaml` file in the `deck_files` directory to create Consumer Groups for each tier:
-
 {% entity_examples %}
 entities:
   consumer_groups:
@@ -94,8 +92,6 @@ entities:
 Now that you've added Consumer Groups for each tier, you can create three Consumers, one for each tier. Here, we're manually adding Consumers for the sake of ease, but in a production environment, you could use a script that would automatically add Consumers to the correct groups as they sign up for a tier of service.
 
 We're also adding key auth credentials (`key`) to each Consumer so they can authenticate and we can test later that rate limiting was correctly configured for the different tiers.
-
-Append the following content to your `kong.yaml` file in the `deck_files` directory to create Consumers and their authentication credentials:
 
 {% entity_examples %}
 entities:
@@ -148,104 +144,47 @@ entities:
      consumer_group: Premium
      config:
        limit: 
-       - 500
+       - 10
        window_size: 
        - 30
        window_type: sliding
        retry_after_jitter_max: 0
        namespace: premium
-append_to_existing_section: true
 {% endentity_examples %}
    
 This configures the different tiers like the following:
-* **Free:** Allows six requests per second. This configuration sets the rate limit to three requests (`config.limit`) for every 30 seconds (`config.window_size`).
-* **Basic:** Allows 10 requests per second. This configuration sets the rate limit to five requests (`config.limit`) for every 30 seconds (`config.window_size`).
-* **Premium:** Allows 1,000 requests per second. This configuration sets the rate limit to 500 requests (`config.limit`) for every 30 seconds (`config.window_size`).
+* **Free:** This configuration sets the rate limit to three requests for every 30 seconds.
+* **Basic:** This configuration sets the rate limit to five requests for every 30 seconds.
+* **Premium:** This configuration sets the rate limit to ten requests for every 30 seconds.
 
-## 5. Apply configuration
-
-{% include how-tos/steps/apply_config.md %}
-
-## 6. Validate that rate limiting is working on each tier
+## 5. Validate that rate limiting is working on each tier
 
 Now we can test that each rate limiting tier is working as expected by sending a series of HTTP requests (for example, six for Free Tier and seven for Basic Tier) to the endpoint with the appropriate API key with the goal of exceeding the configured rate limit for that tier. The tests wait for one second between requests to avoid overwhelming the server and test rate limits more clearly.
 
+
 Test the rate limiting of the Free tier:
 
-```sh
-echo "Testing Free Tier Rate Limit..."
-
-for i in {1..6}; do
-  curl -I http://localhost:8000/anything -H 'apikey:amal'
-  echo
-  sleep 1
-done
-```
-{: data-deployment-topology="on-prem" }
-
-```sh
-echo "Testing Free Tier Rate Limit..."
-
-for i in {1..6}; do
-  curl -I $KONNECT_PROXY_URL/anything -H 'apikey:amal'
-  echo
-  sleep 1
-done
-```
-{: data-deployment-topology="konnect" }
-
-For the first few requests (up to the configured limit, which is 3 requests in 30 seconds), you should receive a `200 OK` status code. Once the limit is exceeded, you should receive a `429 Too Many Requests` status code with a message indicating the rate limit has been exceeded.
+{% validation rate-limit-check %}
+iterations: 4
+url: '/anything'
+headers:
+  - 'apikey:amal'
+{% endvalidation %}
 
 Test the rate limiting of the Basic tier:
 
-```sh
-echo "Testing Basic Tier Rate Limit..."
-
-for i in {1..7}; do
-  curl -I http://localhost:8000/anything -H 'apikey:dana'
-  echo
-  sleep 1
-done
-```
-{: data-deployment-topology="on-prem" }
-
-```sh
-echo "Testing Basic Tier Rate Limit..."
-
-for i in {1..7}; do
-  curl -I $KONNECT_PROXY_URL/anything -H 'apikey:dana'
-  echo
-  sleep 1
-done
-```
-{: data-deployment-topology="konnect" }
-
-For the first few requests (up to the configured limit, which is 5 requests in 30 seconds), you should receive a `200 OK` status code. After exceeding the limit, you should receive a `429 Too Many Requests` status code with a rate limit exceeded message.
+{% validation rate-limit-check %}
+iterations: 6
+url: '/anything'
+headers:
+  - 'apikey:dana'
+{% endvalidation %}
 
 Test the rate limiting of the Premium tier:
 
-```sh
-echo "Testing Premium Tier Rate Limit..."
-
-for i in {1..11}; do
-  curl -I http://localhost:8000/anything -H 'apikey:mahan'
-  echo
-  sleep 1
-done
-```
-{: data-deployment-topology="on-prem" }
-
-```sh
-echo "Testing Premium Tier Rate Limit..."
-
-for i in {1..11}; do
-  curl -I $KONNECT_PROXY_URL/anything -H 'apikey:mahan'
-  echo
-  sleep 1
-done
-```
-{: data-deployment-topology="konnect" }
-
-For the initial requests (up to the configured limit, which is 500 requests in 30 seconds), you should receive a `200 OK` status code. After exceeding the limit, you should receive a `429 Too Many Requests` status code.
-
-
+{% validation rate-limit-check %}
+iterations: 11
+url: '/anything'
+headers:
+  - 'apikey:mahan'
+{% endvalidation %}

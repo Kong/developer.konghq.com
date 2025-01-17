@@ -69,6 +69,7 @@ formats:
       key:            '/keys/'
       key-set:        '/key-sets/'
       keyring:        '/keyring/'
+      event_hook:     '/event-hooks/'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'

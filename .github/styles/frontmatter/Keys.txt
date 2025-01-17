@@ -1,5 +1,6 @@
 api_specs
 auto_generated
+automated_tests
 content_type
 faqs
 icon_url

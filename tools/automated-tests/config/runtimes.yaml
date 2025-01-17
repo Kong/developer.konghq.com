@@ -1,0 +1,30 @@
+gateway:
+  versions:
+    - version: "3.9"
+      env:
+        KONG_IMAGE_NAME: kong/kong-gateway
+        KONG_IMAGE_TAG: "3.9"
+    - version: "3.8"
+      env:
+        KONG_IMAGE_NAME: kong/kong-gateway
+        KONG_IMAGE_TAG: "3.8"
+    - version: "3.4"
+      env:
+        KONG_IMAGE_NAME: kong/kong-gateway
+        KONG_IMAGE_TAG: "3.4"
+  env:
+    WEBHOOK_URL: http://httpbin.konghq.com/anything
+    SLACK_WEBHOOK_URL: http://httpbin.konghq.com/anything
+    ANTHROPIC_API_KEY: anthropic-api-key
+  setup:
+    commands:
+      - curl -Ls https://get.konghq.com/quickstart | bash -s -- -r "" -i $KONG_IMAGE_NAME -t $KONG_IMAGE_TAG -e KONG_LICENSE_DATA
+      - sleep 5
+
+  cleanup:
+    commands:
+      - curl -Ls https://get.konghq.com/quickstart | bash -s -- -d -a kong-quickstart
+
+  reset:
+    commands:
+      - deck gateway reset -f

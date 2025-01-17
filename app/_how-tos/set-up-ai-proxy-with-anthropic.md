@@ -52,6 +52,7 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
 ---
 
 ## 1. Configure the plugin
@@ -68,18 +69,17 @@ entities:
         route_type: llm/v1/chat
         auth:
             header_name: x-api-key
-            header_value: "<anthropic-api-key>"
+            header_value: ${anthropic_api_key}
         model:
             provider: anthropic
             name: claude-2.1
             options:
                 anthropic_version: "2023-06-01"
+variables:
+  anthropic_api_key:
+    value: $ANTHROPIC_API_KEY
 {% endentity_examples %}
 
-## 2. Apply the configuration
-
-{% include how-tos/steps/apply_config.md %}
-
-## 3. Validate
+## 2. Validate
 
 {% include how-tos/steps/ai-proxy-validate.md %}

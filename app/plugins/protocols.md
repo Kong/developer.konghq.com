@@ -17,7 +17,7 @@ breadcrumbs:
   - /gateway/
 ---
 
-## Supported protoocls by plugin
+## Supported protocols by plugin
 
 See the following table for plugins and their compatible protocols:
 
