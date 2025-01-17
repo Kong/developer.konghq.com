@@ -4,6 +4,7 @@ import path from "path";
 import fastGlob from "fast-glob";
 import Dockerode from "dockerode";
 
+import { logResult, logResults } from "./reporting.js";
 import { runInstructionsFile } from "./instructions/runner.js";
 import {
   setupRuntime,
@@ -58,47 +59,6 @@ async function removeContainer(container) {
   if (container) {
     await container.remove();
   }
-}
-
-function logResult(result) {
-  switch (result.status) {
-    case "passed":
-      process.stdout.write("✅");
-      break;
-    case "failed":
-      process.stdout.write("❌");
-      break;
-    case "skipped":
-      process.stdout.write("⚠️");
-      break;
-    default:
-      process.stdout.write("🤔");
-  }
-}
-
-async function logResults(results) {
-  const passed = results.filter((r) => r.status === "passed");
-  const failed = results.filter((r) => r.status === "failed");
-  const skipped = results.filter((r) => r.status === "skipped");
-  console.log();
-
-  if (failed.length > 0) {
-    for (const failure of failed) {
-      console.log(`Test: ${failure.file} failed.`);
-      console.log(failure.assertions);
-    }
-  }
-
-  console.log(
-    `Summary: ${results.length} total. ${passed.length} passed, ${failed.length} failed, ${skipped.length} skipped.`
-  );
-
-  console.log("Tests result logged to ./testReport.json");
-  await fs.writeFile(
-    "testReport.json",
-    JSON.stringify(results, null, 2),
-    "utf-8"
-  );
 }
 
 (async function main() {

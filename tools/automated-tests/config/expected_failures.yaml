@@ -1,0 +1,2 @@
+input/instructions/how-to/set-up-ai-proxy-advanced-with-anthropic/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 201, got: 401."
+input/instructions/how-to/set-up-ai-proxy-with-anthropic/gateway.yaml: "Expected: request http://localhost:8000/anything to have status code 201, got: 401."
