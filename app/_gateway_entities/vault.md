@@ -80,7 +80,7 @@ columns:
 
 features:
   - title: Environment variable<sup>1</sup>
-    url: /how-to/store-secrets-as-env-variables/
+    url: /gateway/entities/vault/#store-secrets-as-environment-variables 
     oss: true
     enterprise: true
     supports_konnect: true
@@ -165,12 +165,6 @@ For larger teams with many contributors, or organizations with multiple teams, w
 * Vaults may be shared across teams. In this case, one specific team shouldn't control the Vault's configuration. One team changing the Vault a can have a negative impact on another team.
 * If a Vault is deleted while in use -- that is, if there are still references to secrets in a Vault in configuration -- it can lead to total loss of proxy capabilities. Those secrets would be unrecoverable.
 
-## Schema
-
-The Vault entity can only be used once the database is initialized. Secrets for values that are used before the database is initialized can’t make use of the Vaults entity.
-
-{% entity_schema %}
-
 ## Set up a Vault
 
 {% entity_example %}
@@ -182,6 +176,21 @@ data:
   config:
     prefix: MY_SECRET_
 {% endentity_example %}
+
+## Store secrets as environment variables
+
+You can store secrets as environment variables instead of configuring a Vault entity or third-party backend vault. 
+
+| Use case | Environment variable example | Secret reference example |
+|-------|-------------|-------------|
+| Single secret value | `export MY_SECRET_VALUE=example-secret` | `{vault://env/my-secret-value}` |
+| Multiple secrets (flat JSON string) | `export PG_CREDS='{"username":"user", "password":"pass"}'` | `{vault://env/pg-creds/username}`<br><br>`{vault://env/pg-creds/password}` | 
+
+## Schema
+
+The Vault entity can only be used once the database is initialized. Secrets for values that are used before the database is initialized can’t make use of the Vaults entity.
+
+{% entity_schema %}
 
 
 
