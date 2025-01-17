@@ -150,8 +150,15 @@ The following creates a new JSON Web Key Set with basic configuration:
     ```
     {{ include.presenter.data['name'] }}
     ```
-    ```
 5. Click **Save**.
+
+{% when 'group' %}
+The following instructions create a Group in Kong Manager. Groups are a function of RBAC, and require RBAC to be [enabled](/gateway/entities/rbac/#enable-rbac).
+
+1. In Kong Manager, go to **Teams**, then select the **Groups** tab. 
+2. Select **New Group**, enter a name for your Group.
+3. Select **Add/Edit Roles** to assign Roles to this Group.
+4. Press **Create**.
 
 {% when 'admin' %}
 If you have configured [RBAC](/gateway/entities/rbac/#enable-rbac) and configured [Kong Manager to send email](/how-to/configure-kong-manager-email), you can create new Admins from within Kong Manager: 
@@ -162,6 +169,7 @@ If you have configured [RBAC](/gateway/entities/rbac/#enable-rbac) and configure
 4. Select **Invite Admin**.
 
 If you have not configured [Kong Manager to send email](/how-to/configure-kong-manager-email), you can generate a registration link by selecting the newly invited Admin, and clicking **Generate Registration Link**.
+
 {% else %}
 {% endcase %}
 {% endif %}
