@@ -1,6 +1,6 @@
 ## Description
 
-Fixes [#issue]
+Fixes #issue
 
 ## Preview Links
 
