@@ -126,6 +126,7 @@ formats:
       - upstream
       - vault
       - workspace
+      - group
 
 targets:
   consumer:
