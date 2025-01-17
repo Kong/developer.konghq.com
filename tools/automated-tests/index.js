@@ -1,7 +1,5 @@
 import fs from "fs/promises";
 import yaml from "js-yaml";
-import path from "path";
-import fastGlob from "fast-glob";
 import Dockerode from "dockerode";
 
 import { logResult, logResults } from "./reporting.js";
@@ -12,6 +10,11 @@ import {
   resetRuntime,
   getRuntimeConfig,
 } from "./runtimes.js";
+import { stopContainer, removeContainer } from "./docker-helper.js";
+import {
+  instructionFileFromConfig,
+  groupInstructionFilesByRuntime,
+} from "./instructions-file.js";
 
 const docker = new Dockerode({
   socketPath: "/var/run/docker.sock",
@@ -26,47 +29,13 @@ export async function loadConfig() {
   return config;
 }
 
-async function groupInstructionFilesByRuntime(config) {
-  const groupedFiles = {};
-
-  const files = await fastGlob("**/*", { cwd: config.instructionsDir });
-  if (files.length === 0) {
-    console.error(
-      `The platform couldn't find any instructions files to run in ${config.instructionsDir}.`
-    );
-    console.error(
-      `Please run \`DEBUG='tests:extractor' npm run generate-instruction-files\` first`
-    );
-    process.exit(1);
-  }
-
-  for (const file of files) {
-    const runtime = path.basename(file, path.extname(file));
-    groupedFiles[runtime] = groupedFiles[runtime] || [];
-    groupedFiles[runtime].push(path.join(config.instructionsDir, file));
-  }
-
-  return groupedFiles;
-}
-
-async function stopContainer(container) {
-  if (container) {
-    await container.stop();
-  }
-}
-
-async function removeContainer(container) {
-  if (container) {
-    await container.remove();
-  }
-}
-
 (async function main() {
   let container;
   let results = [];
   try {
     const testsConfig = await loadConfig();
-    const filesByRuntime = await groupInstructionFilesByRuntime(testsConfig);
+    const files = await instructionFileFromConfig(testsConfig);
+    const filesByRuntime = await groupInstructionFilesByRuntime(files);
 
     for (const [runtime, instructionFiles] of Object.entries(filesByRuntime)) {
       if (process.env.RUNTIME && process.env.RUNTIME !== runtime) {

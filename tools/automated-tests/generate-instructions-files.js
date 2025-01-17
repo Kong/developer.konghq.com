@@ -1,47 +1,8 @@
-import debug from "debug";
 import yaml from "js-yaml";
 import fs from "fs/promises";
 import minimist from "minimist";
-import fastGlob from "fast-glob";
-import matter from "gray-matter";
 import { generateInstructionFiles } from "./instructions/extractor.js";
-
-const log = debug("tests:extractor");
-
-async function testeableUrlsFromFiles(config) {
-  const howTosUrls = [];
-  const howToFiles = await fastGlob("../../app/_how-tos/**/*");
-
-  for (const file of howToFiles) {
-    const { data: frontmatter, content } = matter.read(file);
-
-    const isTesteable =
-      frontmatter.products &&
-      frontmatter.products.length === 1 &&
-      frontmatter.products.includes("gateway");
-
-    if (isTesteable) {
-      const skipHowTo =
-        content.includes("@todo") || frontmatter.automated_tests === false;
-      if (skipHowTo) {
-        const relativeFilePath = file.replace("../../", "");
-        if (frontmatter.automated_tests === false) {
-          log(
-            `Skipping file: ${relativeFilePath}, it's tagged with automated_tests=false`
-          );
-        } else {
-          log(`Skipping file: ${relativeFilePath}, it's tagged with @todo.`);
-        }
-      } else {
-        const fileToUrl = file
-          .replace("../../app/_how-tos/", "")
-          .replace(".md", "/");
-        howTosUrls.push(`${config.baseUrl}/how-to/${fileToUrl}`);
-      }
-    }
-  }
-  return howTosUrls;
-}
+import { testeableUrlsFromFiles } from "./instructions-file.js";
 
 (async function main() {
   try {
@@ -50,7 +11,7 @@ async function testeableUrlsFromFiles(config) {
     const testsConfig = yaml.load(fileContent);
     let urlsToTest;
 
-    log("Generating instruction files...");
+    console.log("Generating instruction files...");
 
     if (args.urls) {
       urlsToTest = Array.isArray(args.urls) ? args.urls : [args.urls];
@@ -59,7 +20,7 @@ async function testeableUrlsFromFiles(config) {
     }
     await generateInstructionFiles(urlsToTest, testsConfig);
 
-    log("done.");
+    console.log("done.");
   } catch (error) {
     console.error(error);
     process.exit(1);

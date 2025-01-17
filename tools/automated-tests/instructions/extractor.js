@@ -1,10 +1,7 @@
 import puppeteer from "puppeteer";
 import fs from "fs/promises";
-import debug from "debug";
 import path from "path";
 import yaml from "js-yaml";
-
-const log = debug("tests:extractor");
 
 async function copyFromClipboard(page) {
   const copiedText = await page.evaluate(async () => {
@@ -132,7 +129,7 @@ export async function extractInstructionsFromURL(uri, config, browser) {
   const page = await browser.newPage();
 
   try {
-    log(`Extracting instructions from: ${url}`);
+    console.log(`Extracting instructions from: ${url}`);
     await page.goto(url, { waitUntil: "domcontentloaded" });
 
     const platforms = await page.evaluate(() => {
@@ -161,10 +158,12 @@ export async function extractInstructionsFromURL(uri, config, browser) {
         }
       );
 
-      log(`  Instructions extracted successfully to ${instructionsFile}`);
+      console.log(
+        `  Instructions extracted successfully to ${instructionsFile}`
+      );
     }
   } catch (error) {
-    log("There was an error extracting the instructions:", error);
+    console.error("There was an error extracting the instructions:", error);
   } finally {
     await page.close();
   }

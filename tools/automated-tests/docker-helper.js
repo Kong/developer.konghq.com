@@ -106,3 +106,15 @@ export async function executeCommand(container, cmd) {
     }
   });
 }
+
+export async function stopContainer(container) {
+  if (container) {
+    await container.stop();
+  }
+}
+
+export async function removeContainer(container) {
+  if (container) {
+    await container.remove();
+  }
+}
