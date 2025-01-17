@@ -47,3 +47,8 @@ min_version:
 ---
 
 @todo
+
+<!--
+From this page: https://support.konghq.com/support/s/article/How-to-define-SSL-Certificates-and-where-you-can-use-them
+How to define CA Root Certificates to verify upstream server certificates > Define a CA Root on a specific service
+-->

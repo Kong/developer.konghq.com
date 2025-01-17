@@ -9,6 +9,8 @@ description: A certificate object represents a public certificate, and can be op
 related_resources:
   - text: CA Certificate entity
     url: /gateway/entities/ca-certificate/
+  - text: SNI entity
+    url: /gateway/entities/sni/
   - text: SSL certificates reference
     url: /gateway/ssl-certificates/
   - text: Define a client certificate on a Service
@@ -43,8 +45,8 @@ A Certificate object represents a public certificate, which is used to validate 
 
 {{site.base_gateway}} can use Certificates in the following ways:
 * Handle [SSL/TLS termination](/kic/tls-termination-passthrough) for encrypted requests
-* Use as a trusted CA store when validating peer certificate of client or Service
-* Tie a certificate and key pair to one or more hostnames using the associated SNI object
+* Use as a trusted CA store when validating the peer certificate of a client or Service 
+* Tie a certificate and key pair to one or more hostnames using the associated [SNI object](/gateway/entities/sni/)
 
 ## Schema
 

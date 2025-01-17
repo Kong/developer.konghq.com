@@ -47,3 +47,9 @@ min_version:
 
 ---
 @to-do
+
+
+<!--
+From this page: https://support.konghq.com/support/s/article/How-to-define-SSL-Certificates-and-where-you-can-use-them
+How to define a Client Certificate to send to an upstream > Define a Client Certificate per service
+-->
