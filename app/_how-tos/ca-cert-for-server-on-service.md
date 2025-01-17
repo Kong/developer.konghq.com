@@ -1,13 +1,16 @@
 ---
-title: Define a CA Certificate on a Service to verify server certificates
+title: Define a CA certificate on a Service to verify server certificates
 content_type: how_to
 
 entities: 
-  - ca_certificate
+  - ca-certificate
+  - service
 
 related_resources:
-  - text: Define global CA Certificate
-    url: /how-to/global-ca-cert-for-server/
+  - text: Define a client certificate on a Service
+    url: /how-to/client-cert-for-service/
+  - text: SSL certificates reference
+    url: /gateway/ssl-certificates/
 
 products:
     - gateway
@@ -21,6 +24,15 @@ tools:
 tldr:
   q: How do I define CA Certificates to verify upstream server certificates for a specific Gateway Service?
   a: Define a CA Certificate entity in {{site.base_gateway}}, and set the ID of that entity via the `ca_certificate` parameter of a Gateway Service.
+
+prereqs:
+  inline:
+    - title: PEM-encoded CA certificate
+      content: |
+        {{site.base_gateway}} accepts PEM-encoded CA certificates signed by a central certificate authority (CA).
+        Prepare your CA certificates on the host where {{site.base_gateway}} is running. 
+      icon_url: /assets/icons/file.svg
+
 cleanup:
   inline:
     - title: Clean up Konnect environment

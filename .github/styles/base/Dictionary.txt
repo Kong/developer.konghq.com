@@ -327,6 +327,7 @@ conntrack
 consumer_group
 consumer_id
 cors
+cosocket
 crds
 created_at
 creationTimestamp
