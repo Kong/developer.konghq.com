@@ -181,10 +181,14 @@ data:
 
 You can store secrets as environment variables instead of configuring a Vault entity or third-party backend vault. 
 
+<!--vale off-->
+
 | Use case | Environment variable example | Secret reference example |
 |-------|-------------|-------------|
 | Single secret value | `export MY_SECRET_VALUE=example-secret` | `{vault://env/my-secret-value}` |
 | Multiple secrets (flat JSON string) | `export PG_CREDS='{"username":"user", "password":"pass"}'` | `{vault://env/pg-creds/username}`<br><br>`{vault://env/pg-creds/password}` | 
+
+<!--vale on-->
 
 ## Schema
 
