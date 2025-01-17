@@ -47,7 +47,6 @@ function replaceEnvVars(object, variables) {
 
 function logAndError(validationName, message, expecations) {
   log(`   ${validationName} ❌. ${message}`);
-  console.error(` ${validationName} ❌. ${message}`);
   throw new ValidationError(
     `ValidationError: ${validationName}. ${message}`,
     expecations
