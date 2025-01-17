@@ -43,8 +43,8 @@ export async function logResults(results) {
         continue;
       }
 
-      console.log(`Test: ${failure.file} failed.`);
-      console.log(failure.assertions);
+      console.error(`Test: ${failure.file} failed.`);
+      console.error(failure.assertions);
     }
   }
 
