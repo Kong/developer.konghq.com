@@ -3,7 +3,7 @@ import yaml from "js-yaml";
 import Dockerode from "dockerode";
 import minimist from "minimist";
 import { logResult, logResults } from "./reporting.js";
-import { runInstructionsFile } from "./instructions/runner.js";
+import { ExitOnFailure, runInstructionsFile } from "./instructions/runner.js";
 import {
   setupRuntime,
   cleanupRuntime,
@@ -69,8 +69,9 @@ export async function loadConfig() {
     await stopContainer(container);
     await removeContainer(container);
   } catch (error) {
-    console.log(error);
-    console.error(error);
+    if (typeof error !== ExitOnFailure) {
+      console.error(error);
+    }
 
     await stopContainer(container);
     await removeContainer(container);

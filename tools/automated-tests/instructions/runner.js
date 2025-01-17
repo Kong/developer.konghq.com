@@ -4,10 +4,18 @@ import debug from "debug";
 import { processPrereqs } from "./prereqs.js";
 import { processSteps } from "./step.js";
 import { validate, ValidationError } from "./validations.js";
-import { executeCommand } from "../docker-helper.js";
+import { executeCommand, removeContainer } from "../docker-helper.js";
 import { getSetupConfig } from "./setup.js";
+import { logResult } from "../reporting.js";
 
 const log = debug("tests:runner");
+
+export class ExitOnFailure extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "ExitOnFailure";
+  }
+}
 
 function compareVersions(v1, v2) {
   const v1Parts = v1.split(".");
@@ -130,10 +138,6 @@ export async function runInstructions(instructions, runtimeConfig, container) {
       result["assertions"] = err.assertions;
     } else {
       result["assertions"] = [err.message];
-      console.error("Error: ", err.message);
-    }
-    if (!process.env.CONTINUE_ON_ERROR) {
-      process.exit(1);
     }
   }
   return result;
@@ -148,5 +152,11 @@ export async function runInstructionsFile(file, runtimeConfig, container) {
     runtimeConfig,
     container
   );
-  return { file, status, assertions };
+
+  const result = { file, status, assertions };
+  if (result.status === "error" && !process.env.CONTINUE_ON_ERROR) {
+    logResult(result);
+    throw new ExitOnFailure();
+  }
+  return result;
 }
