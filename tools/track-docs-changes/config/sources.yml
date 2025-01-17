@@ -127,6 +127,8 @@ app/_how-tos/set-up-ai-proxy-with-anthropic.md:
   - app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_anthropic.md
 app/_how-tos/proxy-tls-passthrough-traffic-using-sni.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
+app/_how-tos/configure-google-cloud-secret-as-a-vault-backend.md:
+  - app/_src/gateway/kong-enterprise/secrets-management/backends/gcp-sm.md
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
