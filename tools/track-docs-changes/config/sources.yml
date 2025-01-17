@@ -69,6 +69,8 @@ app/_gateway_entities/rbac.md:
   - app/_src/gateway/production/access-control/register-admin-api.md
   - app/_src/gateway/kong-manager/auth/rbac.md
   - app/konnect/dev-portal/access-and-approval/manage-teams.md
+app/_gateway_entities/group.md:
+  - app/_src/gateway/kong-manager/auth/ldap/service-directory-mapping/
 
 app/_gateway_entities/vault.md:
   - app/_src/gateway/kong-enterprise/secrets-management/advanced-usage.md

@@ -19,6 +19,9 @@ related_resources:
     url: /gateway/entities/workspace/
   - text: Gateway Vault entity
     url: /gateway/entities/vault/
+  - text: Gateway Group entity
+    url: /gateway/entities/group/
+
   - text: Gateway Admin entity
     url: /gateway/entities/admin/
 ---
@@ -30,7 +33,7 @@ Roles and permissions are administered using the {{site.base_gateway}} RBAC enti
 * In {{site.base_gateway}} there are users
 * Every user has a Role
 * Roles are assigned Permissions
-* Every Role belongs to a Group
+* Every Role belongs to a [Group](/gateway/entities/group/)
 * A Group is a collection of Roles
 
 {{site.base_gateway}} uses a precedence model, from most specificity to least specificity, to determine if a user has access to an endpoint.
@@ -200,7 +203,7 @@ You can automate the creation of Admins. For more information, see [creating Adm
 
 ## Create an RBAC user
 
-Creating an RBAC user requires RBAC to be enabled for {{site.base_gateway}}, for instructions on how to do that see [Enable RBAC](#enable-rbac).
+Creating an RBAC User requires [RBAC to be enabled](/gateway/entities/rbac/#enable-rbac) for {{site.base_gateway}}.
 {% entity_example %}
 type: rbac
 data:
