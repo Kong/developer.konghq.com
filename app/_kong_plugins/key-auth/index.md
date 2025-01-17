@@ -15,6 +15,10 @@ works_on:
     - on-prem
     - konnect
 
+konnect_deployments:
+    - cloud-gateways
+    - serverless
+
 icon: key-auth.png
 
 categories:

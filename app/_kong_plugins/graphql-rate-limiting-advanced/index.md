@@ -18,6 +18,9 @@ works_on:
     - on-prem
     - konnect
 
+konnect_deployments:
+    - cloud-gateways
+
 icon: graphql-rate-limiting-advanced.png
 
 categories:

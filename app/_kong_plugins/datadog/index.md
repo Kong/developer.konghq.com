@@ -14,10 +14,9 @@ works_on:
     - on-prem
     - konnect
 
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
+konnect_deployments:
+    - cloud-gateways
+    - serverless
 
 icon: datadog.png
 

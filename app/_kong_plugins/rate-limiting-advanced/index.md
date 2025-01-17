@@ -21,6 +21,10 @@ works_on:
     - on-prem
     - konnect
 
+konnect_deployments:
+    - cloud-gateways
+    - serverless
+
 icon: rate-limiting-advanced.png
 
 categories:

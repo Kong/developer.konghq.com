@@ -15,11 +15,6 @@ products:
 works_on:
     - on-prem
 
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
-
 icon: vault-auth.png
 
 categories:

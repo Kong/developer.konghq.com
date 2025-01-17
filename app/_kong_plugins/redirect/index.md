@@ -15,13 +15,12 @@ works_on:
     - on-prem
     - konnect
 
+konnect_deployments:
+    - cloud-gateways
+    - serverless
+
 min_version:
     gateway: '3.9'
-
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
 
 icon: redirect.png
 

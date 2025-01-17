@@ -19,11 +19,6 @@ works_on:
 min_version:
     gateway: '3.1'
 
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
-
 icon: app-dynamics.png
 
 categories:

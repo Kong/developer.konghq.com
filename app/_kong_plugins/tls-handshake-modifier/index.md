@@ -16,13 +16,11 @@ works_on:
     - on-prem
     - konnect
 
+konnect_deployments:
+    - cloud-gateways
+
 min_version:
     gateway: '3.1'
-
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
 
 icon: tls-handshake-modifier.png
 

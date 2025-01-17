@@ -16,13 +16,12 @@ works_on:
     - on-prem
     - konnect
 
+konnect_deployments:
+    - cloud-gateways
+    - serverless
+
 min_version:
     gateway: '3.8'
-
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
 
 
 icon: confluent.png

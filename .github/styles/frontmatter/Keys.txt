@@ -13,5 +13,6 @@ tier
 tldr
 works_on
 konnect_product_id
+konnect_deployments
 no_version
 search_aliases

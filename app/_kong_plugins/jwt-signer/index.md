@@ -16,11 +16,6 @@ works_on:
     - on-prem
 
 
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
-
 icon: jwt-signer.png
 
 categories:

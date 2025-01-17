@@ -15,11 +15,10 @@ works_on:
     - on-prem
     - konnect
 
+konnect_deployments:
+    - cloud-gateways
+    - serverless
 
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
 
 icon: request-size-limiting.png
 

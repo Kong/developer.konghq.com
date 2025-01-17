@@ -16,11 +16,10 @@ products:
 works_on:
     - on-prem
     - konnect
-topologies:
-    - hybrid
-    - db-less
-    - traditional
 
+konnect_deployments:
+    - cloud-gateways
+    - serverless
 
 related_resources:
   - text: DNS configuration reference
