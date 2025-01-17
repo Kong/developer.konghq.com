@@ -5,7 +5,7 @@ entities:
   - group
 
 description: |
-  Groups of RBAC users in {{site.base_gateway}}
+  Groups of RBAC users in {{site.base_gateway}}.
   
 related_resources:
   - text: RBAC entity
@@ -13,7 +13,7 @@ related_resources:
   - text: Admins entity
     url: /gateway/entities/admin/
   - text: LDAP Authentication
-    url: /plugin/ldap-auth
+    url: /plugin/ldap-auth/
   - text: Workspace
     url: /gateway/entities/workspace/
 
@@ -32,7 +32,7 @@ schema:
 faqs:
   - q: What authentication types work with the Group entity?
     a: |
-      [Basic-auth](/plugins/basic-auth/), [LDAP](/plugins/ldap-auth),[OIDC](/plugins/oidc/).
+      [Basic authentication](/plugins/basic-auth/), [LDAP authentication](/plugins/ldap-auth-advanced/), and [OpenID Connect (OIDC)](/plugins/openid-connect/).
 ---
 
 ## What is a Group?
