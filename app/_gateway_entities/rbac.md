@@ -203,7 +203,7 @@ You can automate the creation of Admins. For more information, see [creating Adm
 
 ## Create an RBAC user
 
-Creating an RBAC user requires RBAC to be enabled for {{site.base_gateway}}, for instructions on how to do that see [Enable RBAC](/gateway/entities/#enable-rbac).
+Creating an RBAC User requires [RBAC to be enabled](/gateway/entities/rbac/#enable-rbac) for {{site.base_gateway}}.
 {% entity_example %}
 type: rbac
 data:

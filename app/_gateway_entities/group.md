@@ -38,18 +38,21 @@ faqs:
 ## What is a Group?
 
 
-In {{site.base_gateway}}, the Group entity functions as a resource for [RBAC](/gateway/entities/rbac/#role-configuration). {{site.base_gateway}} admins can map permissions and Roles to a Group, and use the Group to simplify role assignment across the {{site.base_gateway}} environment. The group’s resource can also be used to integrate identity providers like [Okta](/plugins/okta/) with Kong Manager allowing mapping of relationships between your service directory mappings and Kong Manager Roles.
+In {{site.base_gateway}}, the Group entity functions as a resource for [RBAC](/gateway/entities/rbac/#role-configuration). {{site.base_gateway}} Admins can map Permissions and Roles to a Group, and use the Group to simplify Role assignment across the {{site.base_gateway}} environment. 
+
+The Group resource can also be used to integrate identity providers like Okta with Kong Manager, letting you map relationships between your service directory mappings and Kong Manager Roles.
 
 
 ## Service directory mapping
 
-With Service directory mapping, Groups are mapped to [RBAC Roles](/gateway/entities/rbac/#role-configuration/). When a user logs in to Kong Manager, they are identified with their Admin username and authenticated with the user credentials in a service directory, like [LDAP](/plugins/ldap-auth/). The service directory creates a relationship with the associated RBAC Roles that are defined in {{site.base_gateway}}. This follows the following steps: 
+With service directory mapping, Groups can be mapped to [RBAC Roles](/gateway/entities/rbac/#role-configuration/). When a user logs in to Kong Manager, they are identified with their Admin username and authenticated with user credentials from a service directory, like [LDAP](/plugins/ldap-auth/). The service directory creates a relationship with the associated RBAC Roles that are defined in {{site.base_gateway}}. 
+This happens in the following order: 
 
 
 1. Roles are created in {{site.base_gateway}}.
-2. Groups are created and associated with RBAC Roles
-3. Groups are associated with a directory
-4. Permissions will be assigned to {{site.base_gateway}} users based on Group assignment.
+2. Groups are created and associated with RBAC Roles.
+3. Groups are associated with an external directory.
+4. Permissions are assigned to {{site.base_gateway}} users based on Group assignment.
 
 For more information, read the [LDAP](/plugins/ldap-auth/) documentation.
 
@@ -60,7 +63,7 @@ For more information, read the [LDAP](/plugins/ldap-auth/) documentation.
 
 ## Create a group
 
-Creating an RBAC user requires RBAC to be enabled for {{site.base_gateway}}, for instructions on how to do that see [Enable RBAC](/gateway/entities/#enable-rbac).
+Creating an RBAC Group requires [RBAC to be enabled](/gateway/entities/rbac/#enable-rbac) for {{site.base_gateway}}.
 
 {% entity_example %}
 type: group
