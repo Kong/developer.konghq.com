@@ -11,6 +11,7 @@ function isFailureExpected(result) {
 }
 
 export function logResult(result) {
+  process.stdout.write(`Test: ${result.file} `);
   switch (result.status) {
     case "passed":
       process.stdout.write("✅");
@@ -28,6 +29,7 @@ export function logResult(result) {
     default:
       process.stdout.write("❓");
   }
+  console.log();
 }
 
 export async function logResults(results) {
