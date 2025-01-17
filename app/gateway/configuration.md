@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}} Configuration Reference"
+title: "{{site.base_gateway}} configuration reference"
 
 description: |
   Reference for {{site.base_gateway}} configuration parameters. Set these parameters in kong.conf.
@@ -8,6 +8,10 @@ layout: reference
 products:
    - gateway
 
+related_resources:
+  - text: "Managing {{site.base_gateway}} configuration"
+    url: /gateway/manage-kong-conf/
+   
 works_on:
    - on-prem
    - konnect
