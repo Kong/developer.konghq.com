@@ -5,7 +5,7 @@ entities:
   - group
 
 description: |
-  Groups of RBAC users in Kong Gateway
+  Groups of RBAC users in {{site.base_gateway}}
   
 related_resources:
   - text: RBAC entity
@@ -30,7 +30,7 @@ schema:
   path: /schemas/Group
 
 faqs:
-  - q: What authentication types work with the Group entitiy?
+  - q: What authentication types work with the Group entity?
     a: |
       [Basic-auth](/plugins/basic-auth/), [LDAP](/plugins/ldap-auth),[OIDC](/plugins/oidc/).
 ---
