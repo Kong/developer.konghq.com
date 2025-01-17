@@ -1,6 +1,5 @@
 import fs from "fs/promises";
 import yaml from "js-yaml";
-import debug from "debug";
 import path from "path";
 import fastGlob from "fast-glob";
 import Dockerode from "dockerode";
@@ -12,8 +11,6 @@ import {
   resetRuntime,
   getRuntimeConfig,
 } from "./runtimes.js";
-
-const log = debug("tests");
 
 const docker = new Dockerode({
   socketPath: "/var/run/docker.sock",
@@ -54,14 +51,28 @@ async function groupInstructionFilesByRuntime(config) {
 async function stopContainer(container) {
   if (container) {
     await container.stop();
-    log("Container stopped.");
   }
 }
 
 async function removeContainer(container) {
   if (container) {
     await container.remove();
-    log("Container removed.");
+  }
+}
+
+function logResult(result) {
+  switch (result.status) {
+    case "passed":
+      process.stdout.write("✅");
+      break;
+    case "failed":
+      process.stdout.write("❌");
+      break;
+    case "skipped":
+      process.stdout.write("⚠️");
+      break;
+    default:
+      process.stdout.write("🤔");
   }
 }
 
@@ -69,7 +80,16 @@ async function logResults(results) {
   const passed = results.filter((r) => r.status === "passed");
   const failed = results.filter((r) => r.status === "failed");
   const skipped = results.filter((r) => r.status === "skipped");
-  log(
+  console.log();
+
+  if (failed.length > 0) {
+    for (const failure of failed) {
+      console.log(`Test: ${failure.file} failed.`);
+      console.log(failure.assertions);
+    }
+  }
+
+  console.log(
     `Summary: ${results.length} total. ${passed.length} passed, ${failed.length} failed, ${skipped.length} skipped.`
   );
 
@@ -94,7 +114,7 @@ async function logResults(results) {
       }
 
       const runtimeConfig = await getRuntimeConfig(runtime);
-      log(`Running ${runtime} tests...`);
+      console.log(`Running ${runtime} tests...`);
 
       container = await setupRuntime(runtimeConfig, docker);
 
@@ -105,6 +125,7 @@ async function logResults(results) {
           runtimeConfig,
           container
         );
+        logResult(result);
         results.push(result);
       }
 
