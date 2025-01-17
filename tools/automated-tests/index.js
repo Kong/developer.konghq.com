@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import yaml from "js-yaml";
 import Dockerode from "dockerode";
-
+import minimist from "minimist";
 import { logResult, logResults } from "./reporting.js";
 import { runInstructionsFile } from "./instructions/runner.js";
 import {
@@ -32,9 +32,15 @@ export async function loadConfig() {
 (async function main() {
   let container;
   let results = [];
+  let files = [];
+  const args = minimist(process.argv.slice(2));
   try {
     const testsConfig = await loadConfig();
-    const files = await instructionFileFromConfig(testsConfig);
+    if (args.files) {
+      files = Array.isArray(args.files) ? args.files : [args.files];
+    } else {
+      files = await instructionFileFromConfig(testsConfig);
+    }
     const filesByRuntime = await groupInstructionFilesByRuntime(files);
 
     for (const [runtime, instructionFiles] of Object.entries(filesByRuntime)) {
@@ -63,6 +69,7 @@ export async function loadConfig() {
     await stopContainer(container);
     await removeContainer(container);
   } catch (error) {
+    console.log(error);
     console.error(error);
 
     await stopContainer(container);
