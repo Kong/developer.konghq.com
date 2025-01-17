@@ -32,7 +32,9 @@ schema:
 faqs:
   - q: What authentication types work with the Group entity?
     a: |
-      The Group entity works with the following authentication protocols: [Basic authentication](/plugins/basic-auth/), [LDAP authentication](/plugins/ldap-auth-advanced/), and [OpenID Connect (OIDC)](/plugins/openid-connect/). Configuring an auth protocol to work with {{site.base_gateway}} and Kong Manager is done using `kong.conf`, for more information review our guide on [Configuring LDAP with Kong Manager](/how-to/configure-ldap-with-kong-manager).
+      The Group entity works with the following authentication protocols: [Basic authentication](/plugins/basic-auth/), [LDAP authentication](/plugins/ldap-auth-advanced/), and [OpenID Connect (OIDC)](/plugins/openid-connect/). 
+      
+      Configuring an auth protocol to work with {{site.base_gateway}} and Kong Manager is done using `kong.conf`. For more information, review our guide on [Configuring LDAP with Kong Manager](/how-to/configure-ldap-with-kong-manager).
 ---
 
 ## What is a Group?
@@ -45,7 +47,7 @@ The Group resource can also be used to integrate identity providers like Okta wi
 
 ## Service directory mapping
 
-With service directory mapping, Groups can be mapped to [RBAC Roles](/gateway/entities/rbac/#role-configuration/). When a user logs in to Kong Manager, they are identified with their Admin username and authenticated with user credentials from a service directory, like [LDAP](/plugins/ldap-auth/). The service directory creates a relationship with the associated RBAC Roles that are defined in {{site.base_gateway}}. 
+With service directory mapping, Groups can be mapped to [RBAC Roles](/gateway/entities/rbac/#role-configuration). When a user logs in to Kong Manager, they are identified with their Admin username and authenticated with user credentials from a service directory, like [LDAP](/plugins/ldap-auth/). The service directory creates a relationship with the associated RBAC Roles that are defined in {{site.base_gateway}}. 
 This happens in the following order: 
 
 
