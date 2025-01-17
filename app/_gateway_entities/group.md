@@ -38,7 +38,7 @@ faqs:
 ## What is a Group?
 
 
-In {{site.base_gateway}}, the Group entity functions as a resource for [RBAC](/gateway/entities/rbac/#role-configuration). {{site.base_gateway}} admins can map permissions and Roles to a Group, and use the Group to simplify role assignment accross the {{site.base_gateway}} environment. The group’s resource can also be used to integrate IDPs like [Okta](/plugins/okta/) with Kong Manager allowing mapping of relationships between your service directory mappings and Kong Manager Roles.
+In {{site.base_gateway}}, the Group entity functions as a resource for [RBAC](/gateway/entities/rbac/#role-configuration). {{site.base_gateway}} admins can map permissions and Roles to a Group, and use the Group to simplify role assignment across the {{site.base_gateway}} environment. The group’s resource can also be used to integrate identity providers like [Okta](/plugins/okta/) with Kong Manager allowing mapping of relationships between your service directory mappings and Kong Manager Roles.
 
 
 ## Service directory mapping
