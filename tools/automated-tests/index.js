@@ -17,7 +17,7 @@ const docker = new Dockerode({
 });
 
 export async function loadConfig() {
-  const configFile = "./config.yaml";
+  const configFile = "./config/tests.yaml";
 
   const fileContent = await fs.readFile(configFile, "utf8");
   const config = yaml.load(fileContent);
