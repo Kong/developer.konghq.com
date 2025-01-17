@@ -7,10 +7,14 @@ related_resources:
     url: /how-to/write-headers-in-response-test/ 
 
 products:
+    - gateway
+min_version:
+  gateway: '3.4'
+tier: enterprise
+
+works_on:
     - on-prem
 
-tools:
-    - admin-api
 
 tags:
     - authentication
@@ -18,7 +22,6 @@ tags:
 tldr:
     q: How do I automate tests in Insomnia?
     a: You can automate tests written in Insomnia by using the Inso CLI with the `inso run test "document name" --env "environment name"` command.
-
 
 ---
 
