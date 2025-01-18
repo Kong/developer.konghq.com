@@ -34,7 +34,7 @@ api_specs:
 
 ## What is a Gateway Service?
 
-{{ page.description | liquify }} 
+A Gateway Service is an abstraction of an upstream application that services requests.
 Services can store collections of objects like plugin configurations, and policies, and they can be associated with routes.
 
 When defining a Service, the administrator provides a name and the upstream application connection information. 

@@ -21,16 +21,17 @@ related_resources:
     url: /gateway/entities/vault/
   - text: Gateway Group entity
     url: /gateway/entities/group/
-
   - text: Gateway Admin entity
     url: /gateway/entities/admin/
 ---
 
 ## What is RBAC?
 
-Roles and permissions are administered using the {{site.base_gateway}} RBAC entity. Roles are sets of permissions that can be assigned to admins and users and can be specific to a [Workspace](/gateway/entities/workspace). Permissions are types of rules that effect {{site.base_gateway}} resources which are the core components of an API. RBAC and {{site.base_gateway}} follow the following core principles: 
+Roles and permissions are administered using the {{site.base_gateway}} RBAC entity, which stands for Role-Based Access Control. Roles are sets of permissions that can be assigned to admins and users and can be specific to a [Workspace](/gateway/entities/workspace). Permissions are types of rules that affect {{site.base_gateway}} resources, which are the core components of an API. 
 
-* In {{site.base_gateway}} there are users
+RBAC in {{site.base_gateway}} conforms to the following core principles: 
+
+* In {{site.base_gateway}} there are Users
 * Every user has a Role
 * Roles are assigned Permissions
 * Every Role belongs to a [Group](/gateway/entities/group/)
@@ -56,11 +57,11 @@ For each request, {{site.base_gateway}} checks for an RBAC rule assigned to the 
 3. Allow or deny permissions against any endpoint (wildcard) in the current Workspace.
 4. Wildcard allow or deny permissions against any endpoint in any Workspace. 
 
-If {{site.base_gateway}} finds a matching permission for the current user, endpoint or Workspace it allows or denies the request based on it. Once {{site.base_gateway}} finds an applicable rule, the algorithm stops and doesn't check less specific permissions. If no permission is found (approval or denial) the request is denied. 
+If {{site.base_gateway}} finds a matching permission for the current user, endpoint, or Workspace, it allows or denies the request based on it. Once {{site.base_gateway}} finds an applicable rule, the algorithm stops and doesn't check less specific permissions. If no permission is found (approval or denial), the request is denied. 
 
 ## Role configuration
 
-This diagram helps explain how individual workspace roles and cross-workspace roles interact. 
+This diagram helps explain how individual workspace roles and cross-workspace roles interact:
 
 {% mermaid %}
 flowchart LR
@@ -152,50 +153,59 @@ curl -Ls get.konghq.com/quickstart | bash -s -- -e "KONG_LICENSE_DATA" \
    -e "KONG_ENFORCE_RBAC=on" \
    -e "KONG_ADMIN_GUI_AUTH=basic-auth" \
    -e "KONG_PASSWORD=kong" \
-   -e "KONG_PORTAL=on" \
    -e 'KONG_ADMIN_GUI_SESSION_CONF={"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}'
 ```
 
 {% endnavtab %}
-{% navtab "Kong Gateway" %}
+{% navtab "Docker container" %}
 
-1. Before enforcing RBAC on your {{site.base_gateway}} instance, we recommend that you create a `super-admin` user first: 
+If you have a running {{site.base_gateway}} Docker container, you can enable RBAC using environment variables.
 
-```sh
- curl -i -X POST http://localhost:8001/rbac/users \
-   -H 'Kong-Admin-Token:$YOUR_TOKEN' \
-   --data name=super-admin \
-   --data user_token=$SUPER_ADMIN_USER_TOKEN
-```
-Creating the `super-admin` username automatically adds the user to the `super-admin` role.
+1. Before enforcing RBAC on your {{site.base_gateway}} instance, create a `super-admin` user: 
 
-2. Enforce RBAC and reload {{site.base_gateway}}:
-```sh
-export KONG_ENFORCE_RBAC=on && kong reload
-```
+    ```sh
+    curl -i -X POST http://localhost:8001/rbac/users \
+      --data name=super-admin \
+      --data user_token=$SUPER_ADMIN_USER_TOKEN
+    ```
+    Creating the `super-admin` username automatically adds the user to the `super-admin` role.
 
-This will enable RBAC. From here, you can use the `super-admin` user to manage your RBAC hierarchy. For an in-depth walkthrough of how to do this, review the [Bootstrapping RBAC](/how-to/bootstrap-rbac/) documentation.
+2. In the container where Gateway is running, enable RBAC with the auth method of your choice and reload {{site.base_gateway}}. 
+The following example uses basic auth:
+
+    ```sh
+    export KONG_ENFORCE_RBAC=on && \
+    export KONG_ADMIN_GUI_SESSION_CONF='{"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}' && \
+    export KONG_ADMIN_GUI_AUTH=basic-auth && \
+    kong reload
+    ```
 
 {% endnavtab %}
-{% navtab "Kong Manager" %}
+{% navtab "kong.conf" %}
 
-You can use Kong Manager to manage Admins. It supports all the same Admin operations as the Kong Admin API.  
-
-To use Admins, {{site.base_gateway}} needs to have:
-* [Sending email configured](/how-to/configure-kong-manager-email). 
-
-To enable RBAC on Kong Manager, set the following in `kong.conf`: 
+To enable RBAC, set the following parameters in `kong.conf`: 
 
 * Set `enforce_rbac` to `on`
-* Set `admin_gui_auth ` to the desired authentication like `basic-auth`
+* Set `admin_gui_auth` to the desired authentication like `basic-auth`
 * Add a session secret to `admin_gui_session_conf`
+
+For example:
+
+```
+enforce_rbac=on
+admin_gui_auth=basic-auth
+admin_gui_session_conf={"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}
+```
 
 {% endnavtab %}
 {% endnavtabs %}
 
-You can automate the creation of Admins. For more information, see [creating Admins using the Admin API](/how-to/programatically-create-rbac-admins)
+From here, you can use the `super-admin` user to manage your RBAC hierarchy. For an in-depth walkthrough of how to do this, review the [Bootstrapping RBAC](/how-to/bootstrap-rbac/) documentation.
 
+{:.info}
+> The `super-admin` user only has permissions to manage RBAC. You must create other admins or users to be able to interact with other {{site.base_gateway}} entities, such as Gateway Services and Routes.
 
+You can also automate the creation of Admins. For more information, see [creating Admins using the Admin API](/how-to/programatically-create-rbac-admins/)
 
 ## Schema
 
@@ -203,7 +213,8 @@ You can automate the creation of Admins. For more information, see [creating Adm
 
 ## Create an RBAC user
 
-Creating an RBAC User requires [RBAC to be enabled](/gateway/entities/rbac/#enable-rbac) for {{site.base_gateway}}.
+Creating an RBAC User requires [RBAC to be enabled](#enable-rbac) for {{site.base_gateway}}.
+
 {% entity_example %}
 type: rbac
 data:
