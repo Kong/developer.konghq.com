@@ -27,7 +27,8 @@ schema:
 
 ## What is a Target?
 
-{{page.description | liquify}} Each [Upstream](/gateway/entities/upstream/) can have many Targets. Targets are used by Upstreams for [load balancing](https://docs.konghq.com/gateway/latest/how-kong-works/load-balancing/). For example, if you have an `example_upstream` Upstream, you can point it to two different Targets: `httpbin.konghq.com` and `httpbun.com`. This is so that if one of the servers (like `httpbin.konghq.com`) is unavailable, it automatically detects the problem and routes all traffic to the working server (`httpbun.com`).
+A Target is an IP address/hostname with a port that identifies an instance of a backend service.
+Each [Upstream](/gateway/entities/upstream/) can have many Targets. Targets are used by Upstreams for [load balancing](https://docs.konghq.com/gateway/latest/how-kong-works/load-balancing/). For example, if you have an `example_upstream` Upstream, you can point it to two different Targets: `httpbin.konghq.com` and `httpbun.com`. This is so that if one of the servers (like `httpbin.konghq.com`) is unavailable, it automatically detects the problem and routes all traffic to the working server (`httpbun.com`).
 
 The following diagram illustrates how Targets are used by Upstreams for load balancing:
 

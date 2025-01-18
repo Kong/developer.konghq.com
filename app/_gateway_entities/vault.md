@@ -8,23 +8,16 @@ description: A Vault is used to store secrets.
 
 related_resources:
   - text: Secrets Management
-    url: /secrets-management
+    url: /secrets-management/
   - text: Workspaces
-    url: /gateway/entities/workspace 
+    url: /gateway/entities/workspace/
   - text: RBAC 
-    url: /gateway/entities/rbac
+    url: /gateway/entities/rbac/
   
 
 faqs:
-  - q: What are general best practices for managing Vaults?
-    a: |
-        To keep your environment secure and avoid taking down your proxies by accident, make sure to:
-        * Manage Vaults with distributed configuration via tags.
-        * Use a separate [RBAC role, user, and token](/gateway/entities/rbac/)
-        to manage Vaults. Don't use a generic admin user.
-        * Set up a separate CI pipeline for Vaults.
   - q: What types of fields can be used in Vaults?
-    a: Vault works with "referenceable" fields. All fields in `kong.conf` are referenceable and some fields within entities (ex. plugins, certificates) are also. Refer to the appropriate entity documentation to learn more.
+    a: Vaults work with "referenceable" fields. All fields in `kong.conf` are referenceable and some fields within entities (for example, plugins, certificates) are also. Refer to the appropriate entity documentation to learn more.
   - q: Can Vaults be referenced during custom plugin development?
     a: Yes. The plugin development kit (PDK) offers a Vaults module (`kong.vault`) that can be used to resolve, parse, and verify Vault references.
   - q: What data types can I use when referencing a secret in a Vault?
@@ -120,7 +113,7 @@ features:
 
 <sup>1</sup> You can use environment variables as a Vaults backend either with or without using the Vaults entity.
 
-## How do I reference secrets stored in a Vault
+## How do I reference secrets stored in a Vault?
 
 When you want to use a secret stored in a Vault, you can reference the secret with a `vault` reference. You can use the `vault` reference in places such as `kong.conf`, declarative configuration files, logs, or in the UI.
 
@@ -145,19 +138,29 @@ Would point to a secret object called `pg` inside a HashiCorp Vault, which may r
 `{vault://hcv/pg/username}`.
 <!-- vale on -->
 
-## Secret rotation in Vault
+## Secret rotation in Vaults
 
 By default, {{site.base_gateway}} automatically rotates secrets *once every minute* in the background. You can also configure how often {{site.base_gateway}} rotates secrets using the Vault entity configuration. 
 
 There are two types of rotation configuration available: 
-* Rotate periodically using TTLs (for example: check for a new TLS certificate once per day)
-* Rotate on failure (for example: on a database authentication failure, check if the secrets were updated, and try again)
+* Rotate periodically using TTLs: For example, check for a new TLS certificate once per day.
+* Rotate on failure: For example, on a database authentication failure, check if the secrets were updated, and try again.
 
 For more information, see [Secret management](/secrets-management/).
 
-## Declarative configuration (decK) best practices for Vaults
+## Best practices for Vaults
 
-For larger teams with many contributors, or organizations with multiple teams, we recommend splitting Vault configurations into separate files and managing them isolated from other [entities's](/gateway/entities/) configuration using tags. We recommend splitting the configuration for the following reasons:
+### General best practices
+
+To keep your environment secure and avoid taking down your proxies by accident, make sure to:
+* Manage Vaults with distributed configuration via tags.
+* Use a separate [RBAC role, user, and token](/gateway/entities/rbac/).
+to manage Vaults. Don't use a generic admin user.
+* Set up a separate CI pipeline for Vaults.
+
+### Best practices for managing Vaults using decK
+
+For larger teams with many contributors, or organizations with multiple teams, we recommend splitting Vault configurations into separate files and managing them isolated from other [entities'](/gateway/entities/) configuration using tags. We recommend splitting the configuration for the following reasons:
 * Vaults are closer to infrastructure than other {{site.base_gateway}} configurations. Separation of routing policies from infrastructure-specific configurations helps keep configuration organized.
 * Vaults may be shared across teams. In this case, one specific team shouldn't control the Vault's configuration. One team changing the Vault a can have a negative impact on another team.
 * If a Vault is deleted while in use -- that is, if there are still references to secrets in a Vault in configuration -- it can lead to total loss of proxy capabilities. Those secrets would be unrecoverable.

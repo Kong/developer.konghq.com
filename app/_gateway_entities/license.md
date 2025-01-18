@@ -24,16 +24,16 @@ related_resources:
 
 faqs: 
   - q: How do I make sure the License is deployed to data plane nodes correctly in hybrid mode?
-    a: In hybrid mode, the license file must be deployed to each control plane and data plane node. As long as you deploy the License with the [`/licenses` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-licenses), the control plane automatically applies the License to it's data plane nodes. 
+    a: In hybrid mode, the license file must be deployed to each control plane and data plane node. As long as you deploy the License with the [`/licenses` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-licenses), the control plane automatically applies the License to its data plane nodes. 
   - q: What happens to the license file in traditional mode when there are no separate control planes? 
-    a: The license file must be deployed to each node running {{site.base_gateway}}.
+    a: The license file must be manually deployed to each node running {{site.base_gateway}}.
 ---
 
 ## What is a License?
 
 A License entity allows you configure a License in your {{site.base_gateway}} cluster, in both [traditional and hybrid mode deployments](/gateway/deployment-topologies/). {{site.base_gateway}} can be used with or without a License. A License is required to use [{{site.base_gateway}} Enterprise features](/gateway/enterprise-vs-oss/).
 
-A license file when you sign up for a {{site.konnect_product_name}} Enterprise subscription. [Contact Kong](https://support.konghq.com) for more information. If you purchased a subscription but haven’t received a license file, contact your sales representative.
+You receive a license file when you sign up for a {{site.konnect_product_name}} Enterprise subscription. If you purchased a subscription but haven’t received a license file, contact your sales representative.
 
 Kong checks for a license in the following order:
 
@@ -130,7 +130,7 @@ After a License expires, {{site.base_gateway}} behaves as follows:
 
 * All configured Enterprise-specific features become read-only
 * You can't configure additional Enterprise features
-* You can continue to access Kong Manager and change it's configuration
+* You can continue to access Kong Manager and change its configuration
 * You can continue to use OSS features via the Admin API
 * All proxy traffic, including Enterprise plugin traffic, continues to be processed as if the License wasn't expired
 * You can still restart and scale nodes in traditional mode
@@ -152,7 +152,7 @@ You can share the report with Kong Support to perform a health-check analysis of
 |-------|-------------|
 | `license path environment variable not set` | The `KONG_LICENSE_DATA` or `KONG_LICENSE_PATH` environment variables weren't defined. No license file could be opened at the default license location (`/etc/kong/license.json`). |
 | `error opening license file` | The license file defined either in the default location, or using the `KONG_LICENSE_PATH` env variable, couldn't be opened. Check that the user executing the Nginx process (e.g., the user executing the Kong CLI utility) has permissions to read this file. |
-| `error reading license file` | The license file defined either in the default location, or using the `KONG_LICENSE_PATH` env variable, could be opened, but an error occurred while reading it. Confirm that the file isn't corrupt, that there are no kernel error messages reported (e.g., out of memory conditions, etc). |
+| `error reading license file` | The license file defined either in the default location, or using the `KONG_LICENSE_PATH` env variable, could be opened, but an error occurred while reading it. Confirm that the file isn't corrupt, and that there are no kernel error messages reported (e.g., out of memory conditions, etc). |
 | `could not decode license json` | The license file data couldn't be decoded as valid JSON. Confirm that the file isn't corrupt and hasn't been altered since you received it from Kong. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com). |
 | `invalid license format` | The license file data is missing one or more key/value pairs. Confirm that the file isn't corrupt and hasn't been altered since you received it from Kong. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com). |
 | `validation failed` | Verifying the payload of the License with the License's signature failed. Confirm that the file isn't corrupt and hasn't been altered since you received it from Kong. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com). |

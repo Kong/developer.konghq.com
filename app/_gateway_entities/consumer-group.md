@@ -18,6 +18,8 @@ tier: enterprise
 related_resources:
     - text: Create rate limiting tiers with {{site.base_gateway}}
       url: /how-to/add-rate-limiting-tiers-with-kong-gateway/
+    - text: Consumer entity
+      url: /gateway/entities/consumer/
 
 api_specs:
     - gateway/admin-ee
@@ -38,6 +40,10 @@ faqs:
   - q: When a Consumer is part of multiple Consumer Groups, how is precedence determined?
     a: |
       Currently, this is determined by the Group name, in alphabetical order. For more details, see [Plugin precedence](/plugins/scopes/#plugin-precedence).
+
+schema:
+    api: gateway/admin-ee
+    path: /schemas/Consumer-Group
 ---
 
 ## What is a Consumer Group?
