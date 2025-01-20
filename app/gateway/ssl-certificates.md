@@ -65,6 +65,7 @@ You can directly upload certificates and keys to {{site.base_gateway}} through c
 
 All of the following parameters can also be set via [environment variables](/gateway/manage-kong-conf/).
 
+<!--vale off-->
 {% kong_config_table %}
 config:
   - name: ssl_cert
@@ -79,5 +80,6 @@ config:
   - name: status_ssl_cert_key
   - name: lua_ssl_trusted_certificate
 {% endkong_config_table %}
+<!--vale on-->
 
 {{site.base_gateway}} also provides many customization settings for SSL connections. See the [Kong Configuration Reference](/gateway/configuration/) for all available options.
