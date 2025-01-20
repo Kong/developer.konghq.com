@@ -65,20 +65,19 @@ You can directly upload certificates and keys to {{site.base_gateway}} through c
 
 All of the following parameters can also be set via [environment variables](/gateway/manage-kong-conf/).
 
-| Parameter | Type | Description |
-| ----------|------|-------------| 
-| [`ssl_cert`](/gateway/configuration/#ssl_cert) | Server cert |  Contains the contents or path to a certificate you want your proxy to present as a server certificate. |
-| [`ssl_cert_key`](/gateway/configuration/#ssl_cert_key) | Private key | Contains the contents or path to a private key for the certificate set via the `ssl_cert` parameter. |
-| [`admin_gui_ssl_cert`](/gateway/configuration/#admin_gui_ssl_cert) | Server cert | Contains the contents or path to a certificate you want your Kong Manager GUI to present as a server certificate. |
-| [`admin_gui_ssl_cert_key`](/gateway/configuration/#admin_gui_ssl_cert_key) | Private key  | Contains the contents or path to a private key for the certificate set via the `admin_gui_ssl_cert` parameter. |
-| [`admin_ssl_cert`](/gateway/configuration/#admin_ssl_cert) |  Server cert | Contains the contents or path to a certificate you want your Admin API to present as a server certificate. |
-| [`admin_ssl_cert_key`](/gateway/configuration/#admin_ssl_cert_key) | Private key  | Contains the contents or path to a private key for the certificate set via the `admin_ssl_cert` parameter. |
-| [`client_ssl_cert`](/gateway/configuration/#client_ssl_cert) | Client cert | Contains the contents or path to a certificate you want your Kong instance to serve as a client certificate to all upstreams. |
-| [`client_ssl_cert_key`](/gateway/configuration/#client_ssl_cert_key)  | Private key  | Contains the contents or path to a private key for the certificate set via the `client_ssl_cert` parameter. |
-| [`status_ssl_cert`](/gateway/configuration/#status_ssl_cert) | Server cert | Contains the contents or path to a certificate you want your Status Endpoint to serve as a server certificate. |
-| [`status_ssl_cert_key`](/gateway/configuration/#status_ssl_cert_key) | Private key  | Contains the contents or path to a private key for the certificate set via the `status_ssl_cert` parameter. |
-| [`lua_ssl_trusted_certificate`](/gateway/configuration/#lua_ssl_trusted_certificate) | CA cert | Contains the paths to CA root certificates used for verifying Lua cosocket connections. Any time that {{site.base_gateway}} uses Lua to create SSL connections, it'll use the CA root certs at this path to verify any certificates sent. |
-| [`nginx_proxy_proxy_ssl_trusted_certificate`](/gateway/configuration/#nginx_proxy_proxy_ssl_trusted_certificate)| CA cert | Contains the path to a PEM file that can hold multiple CA Root certificates for verifying all upstream server certificates. |
+{% kong_config_table %}
+config:
+  - name: ssl_cert
+  - name: ssl_cert_key
+  - name: admin_gui_ssl_cert
+  - name: admin_gui_ssl_cert_key
+  - name: admin_ssl_cert
+  - name: admin_ssl_cert_key
+  - name: client_ssl_cert
+  - name: client_ssl_cert_key
+  - name: status_ssl_cert
+  - name: status_ssl_cert_key
+  - name: lua_ssl_trusted_certificate
+{% endkong_config_table %}
 
 {{site.base_gateway}} also provides many customization settings for SSL connections. See the [Kong Configuration Reference](/gateway/configuration/) for all available options.
-
