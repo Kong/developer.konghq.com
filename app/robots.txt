@@ -1,5 +1,8 @@
 ---
 layout: none
 ---
+User-agent: Algolia Crawler
+Allow: *
+
 User-agent: *
 Disallow: /
