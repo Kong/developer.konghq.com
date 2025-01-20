@@ -1,0 +1,23 @@
+<table class="table-auto">
+    <thead>
+        <tr>
+          <th class="font-semibold text-primary">Parameter</th>
+          <th class="font-semibold text-primary">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for field in config.fields %}
+        <tr>
+            <td>
+                <span class="block text-primary">
+                    <a href="/gateway/configuration/#{{field['name']}}"><code>{{ field['name'] | markdown }}</code></a>
+                </span>
+                <span class="text-secondary text-xs">env variable: <code>{{ field['name'] | upcase | liquify | markdown }}</code></span>
+            </td>
+            <td>
+                <span class="text-primary">{{ field['description'] | liquify | markdownify | markdown }}</span>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
