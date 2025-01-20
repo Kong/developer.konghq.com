@@ -69,3 +69,4 @@ repos:
   docs: https://github.com/Kong/docs.konghq.com
 
 plugin_schemas_path: app/.repos/kong-plugins/json_schemas
+plugin_referenceable_fields_path: app/.repos/kong-plugins/data/referenceable_fields
