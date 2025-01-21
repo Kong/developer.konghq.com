@@ -144,6 +144,7 @@ features:
 
 
 ## Enable RBAC
+
 {% navtabs %}
 {% navtab "Quickstart" %}
 
@@ -157,28 +158,19 @@ curl -Ls get.konghq.com/quickstart | bash -s -- -e "KONG_LICENSE_DATA" \
 ```
 
 {% endnavtab %}
-{% navtab "Docker container" %}
+{% navtab "Environment variables" %}
 
-If you have a running {{site.base_gateway}} Docker container, you can enable RBAC using environment variables.
+You can enable RBAC using environment variables.
 
-1. Before enforcing RBAC on your {{site.base_gateway}} instance, create a `super-admin` user: 
-
-    ```sh
-    curl -i -X POST http://localhost:8001/rbac/users \
-      --data name=super-admin \
-      --data user_token=$SUPER_ADMIN_USER_TOKEN
-    ```
-    Creating the `super-admin` username automatically adds the user to the `super-admin` role.
-
-2. In the container where Gateway is running, enable RBAC with the auth method of your choice and reload {{site.base_gateway}}. 
+In the location where {{site.base_gateway}} is running, enable RBAC with the auth method of your choice and reload {{site.base_gateway}}. 
 The following example uses basic auth:
 
-    ```sh
-    export KONG_ENFORCE_RBAC=on && \
-    export KONG_ADMIN_GUI_SESSION_CONF='{"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}' && \
-    export KONG_ADMIN_GUI_AUTH=basic-auth && \
-    kong reload
-    ```
+```sh
+export KONG_ENFORCE_RBAC=on && \
+export KONG_ADMIN_GUI_SESSION_CONF='{"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}' && \
+export KONG_ADMIN_GUI_AUTH=basic-auth && \
+kong reload
+```
 
 {% endnavtab %}
 {% navtab "kong.conf" %}
