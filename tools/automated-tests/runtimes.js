@@ -56,6 +56,9 @@ export async function setupRuntime(runtimeConfig, docker) {
 
   const environment = await runtimeEnvironment(runtimeConfig);
   // Add gateway license
+  if (!process.env.KONG_LICENSE_DATA) {
+    throw new Error("Missing env variable KONG_LICENSE_DATA");
+  }
   environment["KONG_LICENSE_DATA"] = process.env.KONG_LICENSE_DATA;
 
   if (runtimeConfig.version) {
