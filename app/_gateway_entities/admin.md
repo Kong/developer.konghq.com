@@ -16,7 +16,7 @@ related_resources:
   - text: Workspace entity
     url: /gateway/entities/workspace/
   - text: Sending Email with Kong Manager
-    url: /how-to/configure-kong-manager-email
+    url: /how-to/configure-kong-manager-email/
     
 tier: enterprise
 
@@ -36,7 +36,7 @@ faqs:
 
 ---
 
-## What are Admins?
+## What is an Admin?
 Admins in {{site.base_gateway}} are [RBAC](/gateway/entities/rbac/) entities used to used to manage all administrators for a specific [Workspace](/gateway/entities/workspace/). 
 Admins can be managed using the Admin API or Kong Manager and are used in the following operations:
 

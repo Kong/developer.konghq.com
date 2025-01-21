@@ -11,6 +11,8 @@ related_resources:
     url: /gateway/entities/certificate/
   - text: Mutual TLS Authentication plugin
     url: /plugins/mtls-auth/
+  - text: Header Cert Authentication plugin
+    url: /plugins/header-cert-auth/
   - text: Define Service-level CA certificate
     url: /how-to/ca-cert-for-server-on-service/
   - text: SSL certificates reference
