@@ -79,6 +79,10 @@ config:
   - name: status_ssl_cert
   - name: status_ssl_cert_key
   - name: lua_ssl_trusted_certificate
+directives:
+  - name: nginx_proxy_proxy_ssl_trusted_certificate
+    description: |
+      Path to a PEM file that can hold multiple CA Root certificates for verifying all upstream server certificates.
 {% endkong_config_table %}
 <!--vale on-->
 
