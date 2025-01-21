@@ -46,7 +46,7 @@ To verify server certificates, you can define your CA Certificate:
 - [Globally](/gateway/ssl-certificates/), to cover verification of all upstream server certificates
 - [On a specific Gateway service](/how-to/ca-cert-for-server-on-service/)
 
-To verify client certificates, you can use the [Mutual TLS Authentication plugin](/plugins/mtls-auth/).
+To verify client certificates, you can use the [Mutual TLS Authentication plugin](/plugins/mtls-auth/) or the [Header Cert Authentication plugin](/plugins/header-cert-auth/).
 
 ## Schema
 
