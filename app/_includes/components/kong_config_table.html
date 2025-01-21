@@ -24,7 +24,7 @@
                 {% endif %}
             </td>
             <td>
-                <span class="text-primary">{{ field.description | liquify | markdownify | markdown }}</span>
+                <span class="text-primary content">{{ field.description | markdownify }}</span>
             </td>
         </tr>
         {% endfor %}
