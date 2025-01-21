@@ -13,15 +13,17 @@
                     <code>{{ field.name | markdown }}</code>
                 </span>
                 {% if field.default_value != nil %}
+                {% assign default_value = field.default_value %}
                 {% if field.array? %}
-                    <span class="text-secondary text-xs">Default: <code>{{ field.default_value | join: ', ' | markdown }}</code></span>
-                {% else %}
-                    <span class="text-primary text-xs">Default: <code>{{ field.default_value | markdown }}</code></span>
+                    {% assign default_value = field.default_value | join: ', ' %}
                 {% endif %}
+                <span class="block mt-2">
+                    <span class="text-secondary text-xs">Default: <code>{{ default_value| markdown }}</code></span>
+                </span>
             {% endif %}
             </td>
             <td>
-                <span class="text-primary content">{{ field.description | markdownify }}</span>
+                <span class="content">{{ field.description | markdownify }}</span>
             </td>
         </tr>
         {% endfor %}
