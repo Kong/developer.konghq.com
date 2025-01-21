@@ -8,7 +8,6 @@ products:
 works_on:
     - on-prem
 
-
 tldr: 
   q: How do I create a {{site.base_gateway}} Super-Admin using the Admin API
   a: |

@@ -23,6 +23,8 @@ related_resources:
     url: /gateway/entities/group/
   - text: Gateway Admin entity
     url: /gateway/entities/admin/
+  - text: Create a Super Admin
+    url: /how-to/create-a-super-admin/
 ---
 
 ## What is RBAC?
