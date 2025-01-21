@@ -100,6 +100,9 @@ app/_how-tos/create-a-key-set-with-a-jwk.md:
   - app/_src/gateway/reference/key-management.md
 app/_how-tos/create-a-key-set-with-a-pem-key.md:
   - app/_src/gateway/reference/key-management.md
+app/_how-tos/create-a-super-admin.md:
+  - app/_src/gateway/kong-manager/auth/super-admin.md
+  - app/_src/gateway/latest/production/access-control/enable-rbac.md
 
 app/_gateway_entities/admin.md:
   - app/_src/gateway/production/access-control/start-securely.md
