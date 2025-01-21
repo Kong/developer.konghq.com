@@ -18,7 +18,11 @@ module Jekyll
         end
 
         def default_value
-          @default_value ||= @field.fetch('default_value')
+          @default_value ||= @field.fetch('defaultValue')
+        end
+
+        def array?
+          default_value&.is_a?(Array)
         end
 
         def description
