@@ -9,14 +9,14 @@ module Jekyll
       @name = markup.strip
     end
 
-    def render(context)
+    def render(context) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
       @context = context
       @site = context.registers[:site]
       @page = context.environments.first['page']
 
       contents = super
       config = YAML.load(contents)
-      drop = Drops::KongConfigTable.new(config['config'], release(@site, @page))
+      drop = Drops::KongConfigTable.new(config, release(@site, @page))
 
       context.stack do
         context['config'] = drop
