@@ -6,3 +6,5 @@ Allow: *
 
 User-agent: *
 Disallow: /
+
+Sitemap: {{ site.links.web }}/sitemap-index/default.xml

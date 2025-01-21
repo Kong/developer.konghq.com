@@ -70,3 +70,10 @@ repos:
 
 plugin_schemas_path: app/.repos/kong-plugins/json_schemas
 plugin_referenceable_fields_path: app/.repos/kong-plugins/data/referenceable_fields
+
+sitemap:
+  exclude:
+    - /robots.txt
+    - /404
+    - /_redirects
+    - /sources_urls_mapping.json
