@@ -10,13 +10,19 @@ import { testeableUrlsFromFiles } from "./instructions-file.js";
     const fileContent = await fs.readFile("./config/tests.yaml", "utf8");
     const testsConfig = yaml.load(fileContent);
     let urlsToTest;
+    let howToFiles;
 
     console.log("Generating instruction files...");
 
     if (args.urls) {
       urlsToTest = Array.isArray(args.urls) ? args.urls : [args.urls];
     } else {
-      urlsToTest = await testeableUrlsFromFiles(testsConfig);
+      if (args.files) {
+        howToFiles = Array.isArray(args.files) ? args.files : [args.files];
+      } else {
+        howToFiles = await fastGlob("../../app/_how-tos/**/*");
+      }
+      urlsToTest = await testeableUrlsFromFiles(testsConfig, howToFiles);
     }
     await generateInstructionFiles(urlsToTest, testsConfig);
 

@@ -2,11 +2,10 @@ import fastGlob from "fast-glob";
 import matter from "gray-matter";
 import path from "path";
 
-export async function testeableUrlsFromFiles(config) {
+export async function testeableUrlsFromFiles(config, files) {
   const howTosUrls = [];
-  const howToFiles = await fastGlob("../../app/_how-tos/**/*");
 
-  for (const file of howToFiles) {
+  for (const file of files) {
     const { data: frontmatter, content } = matter.read(file);
 
     const isTesteable =
