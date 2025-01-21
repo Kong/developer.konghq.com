@@ -45,7 +45,8 @@ function parseConfigFile(filePath) {
           config[currentParam].description += descriptionMatch[1]
             .trim()
             .slice(1)
-            .trimStart(); // Remove initial "#" and leading spaces
+            .trimStart() // Remove initial "#" and leading spaces
+            .concat("\n");
         }
         inDescription = true;
       } else {
@@ -53,7 +54,7 @@ function parseConfigFile(filePath) {
     } else {
       descriptionMatch = line.match(/^\s+\#(.*)/);
       if (descriptionMatch) {
-        config[currentParam].description += " " + line.trim().slice(2); // Remove initial "# "
+        config[currentParam].description += line.trim().slice(2).concat("\n"); // Remove initial "# "
       } else {
         inDescription = false;
       }
