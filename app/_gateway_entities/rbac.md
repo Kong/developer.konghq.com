@@ -148,7 +148,8 @@ features:
 {% navtabs %}
 {% navtab "Quickstart" %}
 
-This command sets the Kong super admin password to `kong` and sets up RBAC. This command assumes you have a [valid license in the environment variable `KONG_LICENSE_DATA`](/gateway/entities/license/):
+This command creates a {{site.base_gateway}} instance, sets the Kong super admin password to `kong`, and sets up RBAC.
+This command assumes you have a [valid license in the environment variable `KONG_LICENSE_DATA`](/gateway/entities/license/):
 ```
 curl -Ls get.konghq.com/quickstart | bash -s -- -e "KONG_LICENSE_DATA" \
    -e "KONG_ENFORCE_RBAC=on" \
@@ -158,42 +159,33 @@ curl -Ls get.konghq.com/quickstart | bash -s -- -e "KONG_LICENSE_DATA" \
 ```
 
 {% endnavtab %}
-{% navtab "Environment variables" %}
+{% navtab "Advanced" %}
 
-You can enable RBAC using environment variables.
+1. Before enforcing RBAC on your {{site.base_gateway}} instance, create a `super-admin` user: 
 
-In the location where {{site.base_gateway}} is running, enable RBAC with the auth method of your choice and reload {{site.base_gateway}}. 
-The following example uses basic auth:
+    ```sh
+    curl -i -X POST http://localhost:8001/rbac/users \
+      --data name=super-admin \
+      --data user_token=$SUPER_ADMIN_USER_TOKEN
+    ```
+    Creating the `super-admin` username automatically adds the user to the `super-admin` role.
 
-```sh
-export KONG_ENFORCE_RBAC=on && \
-export KONG_ADMIN_GUI_SESSION_CONF='{"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}' && \
-export KONG_ADMIN_GUI_AUTH=basic-auth && \
-kong reload
-```
+2. In the location where {{site.base_gateway}} is running, enable RBAC with the auth method of your choice. 
 
-{% endnavtab %}
-{% navtab "kong.conf" %}
+    Set the following parameters in `kong.conf`: 
 
-To enable RBAC, set the following parameters in `kong.conf`: 
+    * `enforce_rbac`: Set to `on` to enable RBAC.
+    * `admin_gui_auth`: Required for Kong Manager. Set this value to the desired authentication, for example `basic-auth`.
+    * `admin_gui_session_conf`: Required for Kong Manager. Adds a session secret.
 
-* Set `enforce_rbac` to `on`
-* Set `admin_gui_auth` to the desired authentication like `basic-auth`
-* Add a session secret to `admin_gui_session_conf`
+    For example:
+    ```sh
+    export KONG_ENFORCE_RBAC=on && \
+    export KONG_ADMIN_GUI_SESSION_CONF='{"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}' && \
+    export KONG_ADMIN_GUI_AUTH=basic-auth
+    ```
 
-For example:
-
-```
-enforce_rbac=on
-admin_gui_auth=basic-auth
-admin_gui_session_conf={"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}
-```
-
-Restart {{site.base_gateway}} to apply changes:
-
-```sh
-kong restart
-```
+3. Restart or reload {{site.base_gateway}}.
 
 {% endnavtab %}
 {% endnavtabs %}
