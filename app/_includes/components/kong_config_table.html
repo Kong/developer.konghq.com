@@ -2,7 +2,6 @@
     <thead>
         <tr>
           <th class="font-semibold text-primary">Parameter</th>
-          <th class="font-semibold text-primary">Default Value</th>
           <th class="font-semibold text-primary">Description</th>
         </tr>
     </thead>
@@ -11,17 +10,15 @@
         <tr>
             <td>
                 <span class="block text-primary">
-                    <a href="/gateway/configuration/#{{field.name}}"><code>{{ field.name | markdown }}</code></a>
+                    <code>{{ field.name | markdown }}</code>
                 </span>
-            </td>
-            <td>
                 {% if field.default_value != nil %}
-                    {% if field.array? %}
-                        <span class="text-primary"><code>{{ field.default_value | join: ', ' | markdown }}</code></span>
-                    {% else %}
-                        <span class="text-primary"><code>{{ field.default_value | markdown }}</code></span>
-                    {% endif %}
+                {% if field.array? %}
+                    <span class="text-secondary text-xs">Default: <code>{{ field.default_value | join: ', ' | markdown }}</code></span>
+                {% else %}
+                    <span class="text-primary text-xs">Default: <code>{{ field.default_value | markdown }}</code></span>
                 {% endif %}
+            {% endif %}
             </td>
             <td>
                 <span class="text-primary content">{{ field.description | markdownify }}</span>
