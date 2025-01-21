@@ -197,7 +197,7 @@ From here, you can use the `super-admin` user to manage your RBAC hierarchy. For
 {:.info}
 > The `super-admin` user only has permissions to manage RBAC. You must create other admins or users to be able to interact with other {{site.base_gateway}} entities, such as Gateway Services and Routes.
 
-You can also automate the creation of Admins. For more information, see [creating Admins using the Admin API](/how-to/programatically-create-rbac-admins/)
+You can also automate the creation of Admins. For more information, see [creating Admins using the Admin API](/how-to/programatically-create-rbac-admins/).
 
 ## Schema
 
