@@ -178,7 +178,7 @@ curl -Ls get.konghq.com/quickstart | bash -s -- -e "KONG_LICENSE_DATA" \
     * `admin_gui_auth`: Required for Kong Manager. Set this value to the desired authentication, for example `basic-auth`.
     * `admin_gui_session_conf`: Required for Kong Manager. Adds a session secret.
 
-    For example:
+    For example, to set these parameters using environment variables, run:
     ```sh
     export KONG_ENFORCE_RBAC=on && \
     export KONG_ADMIN_GUI_SESSION_CONF='{"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}' && \
