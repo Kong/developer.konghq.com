@@ -24,6 +24,8 @@ module Jekyll
     priority :lowest
 
     def generate(site)
+      return if ENV['JEKYLL_ENV'] == 'development'
+
       site.data['sitemap_pages'] = Sitemap::Generator.run(site)
 
       page = Page.new(site, 'default', site.config.dig('links', 'web'))
