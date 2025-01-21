@@ -31,8 +31,6 @@ tldr:
     a: Enable an authentication plugin and create a <a href="/gateway/entities/consumer/">Consumer</a> with credentials, then enable the <a href="/plugins/rate-limiting/">Rate Limiting plugin</a> on the new Consumer.
 
 
-prereq: 
-
 cleanup:
   inline:
     - title: Clean up Konnect environment
