@@ -38,6 +38,10 @@ schema:
 
 A CA certificate object represents a trusted certificate authority. These objects are used by {{site.base_gateway}} to verify the validity of a client or server certificate.
 
+In an on-prem {{site.base_gateway}}, CA certificates apply to all [Workspaces](/gateway/entities/workspace/), 
+because the SSL handshake takes place before receiving an HTTP request when the Workspace is unknown. When you create a CA Certificate, it will appear under 
+every Workspace.
+
 To verify server certificates, you can define your CA Certificate:
 - [Globally](/gateway/ssl-certificates/), to cover verification of all upstream server certificates
 - [On a specific Gateway service](/how-to/ca-cert-for-server-on-service/)

@@ -4,7 +4,7 @@ content_type: reference
 entities:
   - license
 
-description: A {{site.base_gateway}} License entity allows you manage Enterprise licenses.
+description: A {{site.base_gateway}} License entity allows you manage on-prem Enterprise licenses.
 
 tier: enterprise
 
@@ -31,9 +31,9 @@ faqs:
 
 ## What is a License?
 
-A License entity allows you configure a License in your {{site.base_gateway}} cluster, in both [traditional and hybrid mode deployments](/gateway/deployment-topologies/). {{site.base_gateway}} can be used with or without a License. A License is required to use [{{site.base_gateway}} Enterprise features](/gateway/enterprise-vs-oss/).
+A License entity allows you configure a License in your on-prem {{site.base_gateway}} cluster, in both [traditional and hybrid mode deployments](/gateway/deployment-topologies/). {{site.base_gateway}} can be used with or without a License. A License is required to use [{{site.base_gateway}} Enterprise features](/gateway/enterprise-vs-oss/).
 
-You receive a license file when you sign up for a {{site.konnect_product_name}} Enterprise subscription. If you purchased a subscription but haven’t received a license file, contact your sales representative.
+You receive a license file when you sign up for a {{site.base_gateway}} Enterprise subscription. If you purchased a subscription but haven’t received a license file, contact your sales representative.
 
 Kong checks for a license in the following order:
 
