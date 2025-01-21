@@ -32,7 +32,7 @@ faqs:
       There are certain entities that can't exist within a Workspace:
       * [CA Certificates](/gateway/entities/ca-certificate/) apply to all Workspaces. They're used to verify the client certificates in mTLS handshakes. 
       The SSL handshake takes place before receiving an HTTP request when the Workspace is unknown.
-      * RBAC entities - Users, Roles, Admins, Groups - exist outside of a Workspace. However, you must assign Workspace-specific Roles for any User, Admin, or Group to access entities in a specific Workspace.
+      * [RBAC](/gateway/entities/rbac/) entities - Users, Roles, Admins, Groups - exist outside of a Workspace. However, you must assign Workspace-specific Roles for any User, Admin, or Group to access entities in a specific Workspace.
       * Other Workspaces can't exist within a Workspace.
   - q: Can I use Workspaces in Konnect?
     a: |

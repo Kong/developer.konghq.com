@@ -189,6 +189,12 @@ admin_gui_auth=basic-auth
 admin_gui_session_conf={"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}
 ```
 
+Restart {{site.base_gateway}} to apply changes:
+
+```sh
+kong restart
+```
+
 {% endnavtab %}
 {% endnavtabs %}
 
