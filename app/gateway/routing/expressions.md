@@ -14,6 +14,8 @@ related_resources:
     url: /gateway/entities/route/
   - text: Expressions repository
     url: https://github.com/Kong/atc-router
+  - text: Traditional router
+    url: /gateway/routing/traditional/
 
 min_version:
   gateway: '3.0'
@@ -85,7 +87,7 @@ This section explains how to optimize the expressions you write to get the most 
 
 ### Number of routes
 
-#### Route matching priority order
+#### Priority Matching
 
 Expressions routes are always evaluated in the descending `priority` order they were defined.
 Therefore, it is helpful to put more likely matched routes before (as in, higher priority)
