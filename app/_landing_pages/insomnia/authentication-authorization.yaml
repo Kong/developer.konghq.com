@@ -3,6 +3,7 @@ metadata:
   breadcrumbs:
     - /insomnia/
   description: Secure Insomnia with native or external authentication and authorization.
+  content_type: landing_page
   tags:
     - authentication
     - authorization

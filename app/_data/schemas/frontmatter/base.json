@@ -67,5 +67,6 @@
         "enum": ["on-prem", "konnect"]
       }
     }
-  }
+  },
+  "required": ["content_type"]
 }
