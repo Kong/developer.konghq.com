@@ -11,9 +11,9 @@ related_resources:
     url: /secrets-management/
   - text: Workspaces
     url: /gateway/entities/workspace/
-  - text: RBAC 
+  - text: RBAC
     url: /gateway/entities/rbac/
-  
+
 
 faqs:
   - q: What types of fields can be used in Vaults?
@@ -41,9 +41,11 @@ schema:
 ---
 
 ## What is a Vault?
-In {{site.base_gateway}}, the Vault object is used to store secrets. A secret is any sensitive piece of information required for API gateway
-operations. Secrets can be used as part of the core {{site.base_gateway}} configuration, in plugins, or in configuration associated
-with APIs serviced by the gateway.
+
+Vaults allow you to securely store and then reference secrets from within other entities. This ensures that secrets aren't visible in plaintext throughout the platform, in places such as `kong.conf`,
+declarative configuration files, logs, or the UI.
+
+For example, you could store a certificate and a key in a Vault, then reference them from a [Certificate entity](/gateway/entities/certificate/). This way, the certificate and key are not stored in the entity directly and are more secure.
 
 Some of the most common types of secrets used by {{site.base_gateway}} include:
 
@@ -52,19 +54,18 @@ Some of the most common types of secrets used by {{site.base_gateway}} include:
 * API keys
 * Sensitive configuration fields, generally used for authentication, hashing, signing, or encryption
 
-## Vault use cases
-
-Vaults allow you to securely store and then reference secrets from within other entities. This ensures that secrets aren't visible in plaintext throughout the platform, in places such as `kong.conf`,
-declarative configuration files, logs, or the UI.
-
-For example, you could store a certificate and a key in a Vault, then reference them from a [Certificate entity](/gateway/entities/certificate/). This way, the certificate and key are not stored in the entity directly and are more secure.
-
 ## How do I add secrets to a Vault?
 
-You can add secrets to Vaults in one of the following ways: 
+You can add secrets to Vaults in one of the following ways:
 * Environment variables
 * {{site.konnect_short_name}} Config Store
 * Supported third-party backend vault
+
+## How do I configure access to a Vault?
+
+Each vault has its own required configuration. You can provide this configuration by creating a Vault entity, or by configuring specific environment variables before starting {{ site.base_gateway }}.
+
+For more information, choose a Vault below to see the specific configuration required.
 
 ## Supported backends
 
@@ -79,8 +80,8 @@ columns:
     key: supports_konnect
 
 features:
-  - title: Environment variable<sup>1</sup>
-    url: /gateway/entities/vault/#store-secrets-as-environment-variables 
+  - title: Environment variable
+    url: /how-to/store-secrets-as-env-variables/
     oss: true
     enterprise: true
     supports_konnect: true
@@ -111,8 +112,6 @@ features:
     supports_konnect: true
 {% endfeature_table %}
 
-<sup>1</sup> You can use environment variables as a Vaults backend either with or without using the Vaults entity.
-
 ## How do I reference secrets stored in a Vault?
 
 When you want to use a secret stored in a Vault, you can reference the secret with a `vault` reference. You can use the `vault` reference in places such as `kong.conf`, declarative configuration files, logs, or in the UI.
@@ -138,17 +137,37 @@ Would point to a secret object called `pg` inside a HashiCorp Vault, which may r
 `{vault://hcv/pg/username}`.
 <!-- vale on -->
 
+Vault references must be used for the whole referenced value. Imagine that you're calling an upstream service with the authentication token `ABC123`
+
+{% feature_table %}
+item_title: Works
+columns:
+  - title: Configuration Value
+    key: config
+  - title: Vault Value
+    key: vault
+features:
+  - title: ❌
+    config: 'Bearer {vault://hcv/myservice-auth-token}'
+    vault: ABC123
+  - title: ✅
+    config: '{vault://hcv/myservice-auth-token}'
+    vault: Bearer ABC123
+{% endfeature_table %}
+
 ## Secret rotation in Vaults
 
-By default, {{site.base_gateway}} automatically rotates secrets *once every minute* in the background. You can also configure how often {{site.base_gateway}} rotates secrets using the Vault entity configuration. 
+By default, {{site.base_gateway}} automatically refreshes secrets *once every minute* in the background. You can also configure how often {{site.base_gateway}} refreshes secrets using the Vault entity configuration.
 
-There are two types of rotation configuration available: 
-* Rotate periodically using TTLs: For example, check for a new TLS certificate once per day.
-* Rotate on failure: For example, on a database authentication failure, check if the secrets were updated, and try again.
+There are two types of refresh configuration available:
+* Refresh periodically using TTLs: For example, check for a new TLS certificate once per day.
+* Refresh on failure: For example, on a database authentication failure, check if the secrets were updated, and try again.
 
 For more information, see [Secret management](/secrets-management/).
 
 ## Best practices for Vaults
+
+@TODO: Move this to deck docs when available
 
 ### General best practices
 
