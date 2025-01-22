@@ -4,7 +4,8 @@ content_type: how_to
 
 products:
     - gateway
-
+tier: enterprise
+rbac: true
 works_on:
     - on-prem
 
@@ -15,9 +16,9 @@ tldr:
 
 prereqs:
     inline:
-      - title: Kong Gateway running with RBAC enabled
-        include_content: prereqs/enable-rbac
-        icon_url: /assets/icons/file.svg
+    #   - title: Kong Gateway running with RBAC enabled
+    #     include_content: prereqs/enable-rbac
+    #     icon_url: /assets/icons/file.svg
       - title: Configure environment variables
         content: |
             Set the `kong-admin-token`, `admin_name`, and `admin-token`, for example: 
