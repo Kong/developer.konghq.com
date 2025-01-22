@@ -24,11 +24,15 @@ breadcrumbs:
   - /gateway/
 
 faqs:
-  - q: When should I use the expressions router in place of (or alongside) the traditional router?
-    a: We recommend using the expressions router if you are running {{site.base_gateway}} 3.0.x or later. After enabling expressions, traditional match fields on the Route object (such as `paths` and `methods`) remain configurable. You may specify Expressions in the new `expression` field. However, these cannot be configured simultaneously with traditional match fields. Additionally, a new `priority` field, used in conjunction with the expression field, allows you to specify the order of evaluation for Expression Routes.
+  - q: Is there a performance difference between the traditional router and expressions?
+    a: Both Traditional and Expressions use the same routing engine internally. Traditional mode configures routes with JSON, and Expressions uses a DSL.
+  - q: Why would I choose Expressions over the Traditional router?
+    a: The Expressions router provides more routing flexibility, including fast exact matching that is not available in the Traditional router.
+  - q: When should I keep using the traditional router over expressions?
+    a: If you are working with APIOps pipelines that manipulate the route using `deck file patch`, the JSON format used by the traditional router is recommended
 ---
 
-The expressions router is a collection of [Routes](/gateway/entities/route/) that are all evaluated against incoming requests until a match can be found. This allows for more complex routing logic than the traditional router and ensures good runtime matching performance. 
+The expressions router provides a Domain Specific Language (DSL) that allows for complex routing rule definition. The expressions router ensures good runtime matching performance by providing specific routing comparisons such as non-regex equality checks that are not available in the traditional router.
 
 You can do the following with the expressions router:
 * Prefix-based path matching
@@ -45,10 +49,9 @@ In your `kong.conf` file, set `router_flavor = expressions` and restart your {{s
 
 ## How requests are routed with the expressions router
 
-At runtime, {{site.base_gateway}} builds two separate routers for the HTTP and Stream (TCP, TLS, UDP) subsystem. When a request/connection comes in, {{site.base_gateway}} looks at which field your configured Routes require,
-and supplies the value of these fields to the router execution context.
-Routes are inserted into each router with the appropriate `priority` field set. The priority is a positive integer that defines the order of evaluation of the router. The bigger the priority, the sooner a Route will be evaluated. In the case of duplicate priority values between two Routes in the same router, their order of evaluation is undefined. The router is
-updated incrementally as configured Routes change.
+At runtime, {{site.base_gateway}} builds two separate routers for the HTTP and Stream (TCP, TLS, UDP) subsystem. When a request/connection comes in, {{site.base_gateway}} looks at which field your configured Routes require, and supplies the value of these fields to the router execution context.
+
+Routes are inserted into each router with the appropriate `priority` field set. The priority is a positive integer that defines the order of evaluation of the router. The bigger the priority, the sooner a Route will be evaluated. In the case of duplicate priority values between two Routes in the same router, their order of evaluation is undefined. The router is updated incrementally as configured Routes change.
 
 As soon as a Route yields a match, the router stops matching and the matched Route is used to process the current request/connection.
 
@@ -168,7 +171,7 @@ http.path == "/foo/bar" || http.path == "/foo/bar/"
 http.path ~ r#"^/foo/?$"#
 ```
 
-## Expressions router reference <!--edit all that is below to fit new page-->
+## Expressions router reference
 
 This reference explains the different configurable entities for the expressions router.
 

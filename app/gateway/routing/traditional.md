@@ -30,110 +30,6 @@ The traditional router is {{ site.base_gateway }}'s original routing configurati
 
 Routing based on JSON configuration is available when `router_flavor` is set to both `traditional_compat` _or_ `expressions` in `kong.conf`.
 
-## How routing works
-
-### Priority Matching
-
-In `traditional_compat` mode, the priority of a Route is determined as follows, by the order of descending significance:
-
-1. **Priority points:** A priority point is added for every `methods`, `host`, `headers`, and `snis` value that a Route has. Routes with higher priority point values will be considered before those with lower values.
-2. **Wildcard hosts:** Among Routes with the same priority point value, Routes without a wildcard host specified (or no host at all) are prioritized before those that have any wildcard host specification.
-3. **Header count:** The resulting groups are sorted so the Routes with a higher number of specified headers have higher priority than those with a lower number of headers.
-4. **Regular expressions and prefix paths:** Routes that have a regular expression path are considered first and are ordered by their `regex_priority` value. Routes that have no regular expression path are ordered by the length of their paths.
-5. **Creation date:** If all of the above are equal, the router chooses the Route that was created first using the Route's `created_at` value.
-
-
-For example, if two routes are configured like so:
-
-```json
-{
-    "hosts": ["example.com"],
-    "service": {
-        "id": "..."
-    }
-},
-{
-    "hosts": ["example.com"],
-    "methods": ["POST"],
-    "service": {
-        "id": "..."
-    }
-}
-```
-
-The second route has a `hosts` field **and** a `methods` field, so it is
-evaluated first by {{site.base_gateway}}. By doing so, we avoid the first route "shadowing"
-calls intended for the second one.
-
-Thus, this request matches the first route:
-
-```http
-GET / HTTP/1.1
-Host: example.com
-```
-
-And this request matches the second one:
-
-```http
-POST / HTTP/1.1
-Host: example.com
-```
-
-Following this logic, if a third route was to be configured with a `hosts`
-field, a `methods` field, and a `paths` field, it would be evaluated first by
-{{site.base_gateway}}.
-
-If the rule count for the given request is the same in two routes `A` and
-`B`, then the following tiebreaker rules will be applied in the order they
-are listed. Route `A` will be selected over `B` if:
-
-- `A` has only plain Host headers and `B` has one or more wildcard
-  host headers
-- `A` has more non-Host headers than `B`
-- `A` has at least one regex path and `B` has only plain paths
-- `A`'s longest path is longer than `B`'s longest path
-- `A.created_at < B.created_at`
-
-### Path matching
-
-Keep the following path matching criteria in mind when configuring paths:
-
-1. **Regex in paths:** For a path to be considered a regular expression, it must be prefixed with a `~`. You can avoid creating complex regular expressions using the [Router Expressions language](/gateway/routing/expressions/).
-1. **Capture groups:** [Regex capture groups](/gateway/routing/expressions/#example-expressions) are also supported, and the matched group will be extracted from the path and available for plugins consumption.
-1. **Escaping special characters:** When configuring Routes with regex paths via the Admin API, be sure to URL encode your payload if necessary according to [RFC 3986](https://tools.ietf.org/html/rfc3986).
-1. **Normalization behavior:** To prevent Route match bypasses, the incoming request URI from client is always normalized according to [RFC 3986](https://tools.ietf.org/html/rfc3986) before router matching occurs.
-
-### Normalization behavior
-
-To prevent trivial route match bypass, the incoming request URI from client
-is always normalized according to [RFC 3986](https://tools.ietf.org/html/rfc3986)
-before router matching occurs. Specifically, the following normalization techniques are
-used for incoming request URIs, which are selected because they generally do not change
-semantics of the request URI:
-
-1. Percent-encoded triplets are converted to uppercase.  For example: `/foo%3a` becomes `/foo%3A`.
-2. Percent-encoded triplets of unreserved characters are decoded. For example: `/fo%6F` becomes `/foo`.
-3. Dot segments are removed as necessary.  For example: `/foo/./bar/../baz` becomes `/foo/baz`.
-4. Duplicate slashes are merged. For example: `/foo//bar` becomes `/foo/bar`.
-
-The `paths` attribute of the Route object are also normalized. It is achieved by first determining
-if the path is a plain text or regex path. Based on the result, different normalization techniques
-are used.
-
-For plain text route path:
-
-Same normalization technique as above is used, that is, methods 1 through 4.
-
-For regex route path:
-
-Only methods 1 and 2 are used. In addition, if the decoded character becomes a regex
-meta character, it will be escaped with backslash.
-
-{{site.base_gateway}} normalizes any incoming request URI before performing router
-matches. As a result, any request URI sent over to the upstream services will also
-be in normalized form that preserves the original URI semantics.
-
-
 ## Routing criteria
 
 {{site.base_gateway}} supports native proxying of HTTP/HTTPS, TCP/TLS, and GRPC/GRPCS protocols.
@@ -207,7 +103,7 @@ the second request's HTTP method, and the third request's Host header.
 Now that we understand how the routing properties work together, let's explore
 each property individually.
 
-### Request header
+### Host header
 
 {{site.base_gateway}} supports routing by arbitrary HTTP headers. A special case of this
 feature is routing by the Host header.
@@ -283,7 +179,7 @@ GET / HTTP/1.1
 Host: service.com
 ```
 
-### Additional request headers
+### Headers
 
 It's possible to route requests by other headers besides `Host`.
 
@@ -321,7 +217,7 @@ version: v3
 
 **Note**: The `headers` keys are a logical `AND` and their values a logical `OR`.
 
-### Request path
+### Path
 
 Another way for a route to be matched is via request paths. To satisfy this
 routing condition, a client request's normalized path **must** be prefixed with one of the
@@ -376,7 +272,7 @@ Any path that isn't prefixed with a `~` will be considered plain text:
 
 For more information about how the router processes regular expressions, see [performance considerations when using Expressions](/gateway/latest/key-concepts/routes/expressions/#performance-considerations-when-using-expressions).
 
-##### Evaluation order
+##### Regex evaluation order
 
 The router evaluates routes using the `regex_priority` field of the
 `Route` where a route is configured. Higher `regex_priority` values
@@ -384,20 +280,20 @@ mean higher priority.
 
 ```json
 [
-    {
-        "paths": ["~/status/\d+"],
-        "regex_priority": 0
-    },
-    {
-        "paths": ["~/version/\d+/status/\d+"],
-        "regex_priority": 6
-    },
-    {
-        "paths": /version,
-    },
-    {
-        "paths": ["~/version/any/"],
-    }
+  {
+    "paths": ["~/status/d+"],
+    "regex_priority": 0
+  },
+  {
+    "paths": ["~/version/d+/status/d+"],
+    "regex_priority": 6
+  },
+  {
+    "paths": ["/version"]
+  },
+  {
+    "paths": ["~/version/any/"]
+  }
 ]
 ```
 
@@ -410,28 +306,21 @@ defined URIs, in this order:
 4. `/version`
 
 Routers with a large number of regexes can consume traffic intended for other rules. Regular expressions are much more expensive to build and execute and can't be optimized easily.
-You can avoid creating complex regular expressions using the [Router Expressions language](/gateway/latest/reference/router-expressions-language/).
+You can avoid creating complex regular expressions using the [Router Expressions language](/gateway/routing/expressions/).
 
-{% if_version lte:3.1.x %}
-If you see unexpected behavior, sending `Kong-Debug: 1` in your
-request headers will indicate the matched route ID in the response headers for
-{% endif_version %}
-
-{% if_version gte:3.2.x %}
 If you see unexpected behavior, use the Kong debug header to help track down the source:
 
-1. In `kong.conf`, set [`allow_debug_header: on`](/gateway/{{page.release}}/reference/configuration/#allow_debug_header).
+1. In `kong.conf`, set [`allow_debug_header: on`](/gateway/{{page.release}}/reference/configuration/#allow_debug_header). @TODO: Update URL
 1. Send `Kong-Debug: 1` in your request headers to indicate the matched route ID in the response headers for
    troubleshooting purposes.
-   {% endif_version %}
 
 As usual, a request must still match a route's `hosts` and `methods` properties
 as well, and {{site.base_gateway}} traverses your routes until it finds one that [matches
 the most rules](#matching-priorities).
 
-##### Capturing groups
+##### Capture groups
 
-Capturing groups are also supported, and the matched group will be extracted
+Capture groups are also supported, and the matched group will be extracted
 from the path and available for plugins consumption. If we consider the
 following regex:
 
@@ -446,7 +335,7 @@ And the following request path:
 ```
 
 {{site.base_gateway}} considers the request path a match, and if the overall route is
-matched (considering other routing attributes), the extracted capturing groups
+matched (considering other routing attributes), the extracted capture groups
 will be available from the plugins in the `ngx.ctx` variable:
 
 ```lua
@@ -456,21 +345,59 @@ local router_matches = ngx.ctx.router_matches
 -- { "1", "john", version = "1", user = "john" }
 ```
 
+#### Path matching
 
-### Request HTTP method
+Keep the following path matching criteria in mind when configuring paths:
+
+1. **Regex in paths:** For a path to be considered a regular expression, it must be prefixed with a `~`. You can avoid creating complex regular expressions using the [Router Expressions language](/gateway/routing/expressions/).
+1. **Capture groups:** [Regex capture groups](/gateway/routing/expressions/#example-expressions) are also supported, and the matched group will be extracted from the path and available for plugins consumption.
+1. **Escaping special characters:** When configuring Routes with regex paths via the Admin API, be sure to URL encode your payload if necessary according to [RFC 3986](https://tools.ietf.org/html/rfc3986).
+1. **Normalization behavior:** To prevent Route match bypasses, the incoming request URI from client is always normalized according to [RFC 3986](https://tools.ietf.org/html/rfc3986) before router matching occurs.
+
+#### Path normalization
+
+To prevent trivial route match bypass, the incoming request URI from client
+is always normalized according to [RFC 3986](https://tools.ietf.org/html/rfc3986)
+before router matching occurs. Specifically, the following normalization techniques are
+used for incoming request URIs, which are selected because they generally do not change
+semantics of the request URI:
+
+1. Percent-encoded triplets are converted to uppercase. For example: `/foo%3a` becomes `/foo%3A`.
+2. Percent-encoded triplets of unreserved characters are decoded. For example: `/fo%6F` becomes `/foo`.
+3. Dot segments are removed as necessary. For example: `/foo/./bar/../baz` becomes `/foo/baz`.
+4. Duplicate slashes are merged. For example: `/foo//bar` becomes `/foo/bar`.
+
+The `paths` attribute of the Route object are also normalized. It is achieved by first determining
+if the path is a plain text or regex path. Based on the result, different normalization techniques
+are used.
+
+For plain text route path:
+
+Same normalization technique as above is used, that is, methods 1 through 4.
+
+For regex route path:
+
+Only methods 1 and 2 are used. In addition, if the decoded character becomes a regex
+meta character, it will be escaped with backslash.
+
+{{site.base_gateway}} normalizes any incoming request URI before performing router
+matches. As a result, any request URI sent over to the upstream services will also
+be in normalized form that preserves the original URI semantics.
+
+### HTTP method
 
 The `methods` field allows matching the requests depending on their HTTP
-method.  It accepts multiple values. Its default value is empty (the HTTP
+method. It accepts multiple values. Its default value is empty (the HTTP
 method is not used for routing).
 
 The following route allows routing via `GET` and `HEAD`:
 
 ```json
 {
-    "methods": ["GET", "HEAD"],
-    "service": {
-        "id": "..."
-    }
+  "methods": ["GET", "HEAD"],
+  "service": {
+    "id": "..."
+  }
 }
 ```
 
@@ -493,9 +420,10 @@ two routes pointing to the same service: one with unlimited unauthenticated
 `POST` requests (by applying the authentication and rate limiting plugins to
 such requests).
 
-### Request source
+### Source
 
 {:.note}
+
 > **Note:** This section only applies to TCP and TLS routes.
 
 The `sources` routing attribute allows
@@ -505,25 +433,30 @@ The following route allows routing via a list of source IP/ports:
 
 ```json
 {
-    "protocols": ["tcp", "tls"],
-    "sources": [{"ip":"10.1.0.0/16", "port":1234}, {"ip":"10.2.2.2"}, {"port":9123}],
-    "id": "...",
+  "protocols": ["tcp", "tls"],
+  "sources": [
+    { "ip": "10.1.0.0/16", "port": 1234 },
+    { "ip": "10.2.2.2" },
+    { "port": 9123 }
+  ],
+  "id": "..."
 }
 ```
 
 TCP or TLS connections originating from IPs in CIDR range "10.1.0.0/16" or IP
 address "10.2.2.2" or Port "9123" would match such route.
 
-### Request destination
+### Destination
 
 {:.note}
+
 > **Note:** This section only applies to TCP and TLS routes.
 
 The `destinations` attribute, similarly to `sources`,
 allows matching a route by a list of incoming connection IP and/or port, but
 uses the destination of the TCP/TLS connection as routing attribute.
 
-### Request SNI
+### SNI
 
 When using secure protocols (`https`, `grpcs`, or `tls`), a [Server
 Name Indication][SNI] can be used as a routing attribute. The following route
@@ -551,3 +484,64 @@ will have the same SNI hostnames while performing router match
 
 Please note that creating a route with mismatched SNI and `Host` header matcher
 is possible, but generally discouraged.
+
+## Route Priority
+
+In `traditional_compat` mode, the priority of a Route is determined as follows, by the order of descending significance:
+
+1. **Priority points:** A priority point is added for every `methods`, `host`, `headers`, and `snis` value that a Route has. Routes with higher priority point values will be considered before those with lower values.
+2. **Wildcard hosts:** Among Routes with the same priority point value, Routes without a wildcard host specified (or no host at all) are prioritized before those that have any wildcard host specification.
+3. **Header count:** The resulting groups are sorted so the Routes with a higher number of specified headers have higher priority than those with a lower number of headers.
+4. **Regular expressions and prefix paths:** Routes that have a regular expression path are considered first and are ordered by their `regex_priority` value. Routes that have no regular expression path are ordered by the length of their paths.
+5. **Creation date:** If all of the above are equal, the router chooses the Route that was created first using the Route's `created_at` value.
+
+For example, if two routes are configured like so:
+
+```json
+{
+    "hosts": ["example.com"],
+    "service": {
+        "id": "..."
+    }
+},
+{
+    "hosts": ["example.com"],
+    "methods": ["POST"],
+    "service": {
+        "id": "..."
+    }
+}
+```
+
+The second route has a `hosts` field **and** a `methods` field, so it is
+evaluated first by {{site.base_gateway}}. By doing so, we avoid the first route "shadowing"
+calls intended for the second one.
+
+Thus, this request matches the first route:
+
+```http
+GET / HTTP/1.1
+Host: example.com
+```
+
+And this request matches the second one:
+
+```http
+POST / HTTP/1.1
+Host: example.com
+```
+
+Following this logic, if a third route was to be configured with a `hosts`
+field, a `methods` field, and a `paths` field, it would be evaluated first by
+{{site.base_gateway}}.
+
+If the rule count for the given request is the same in two routes `A` and
+`B`, then the following tiebreaker rules will be applied in the order they
+are listed. Route `A` will be selected over `B` if:
+
+- `A` has only plain Host headers and `B` has one or more wildcard
+  host headers
+- `A` has more non-Host headers than `B`
+- `A` has at least one regex path and `B` has only plain paths
+- `A`'s longest path is longer than `B`'s longest path
+- `A.created_at < B.created_at`

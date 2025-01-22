@@ -17,6 +17,12 @@ related_resources:
   - text: Upstream entity
     url: /gateway/entities/upstream/
 
+next_steps:
+  - text: Learn about the Expressions router
+    url: /gateway/routing/expressions/
+  - text: Learn about the Traditional router
+    url: /gateway/routing/traditional/
+
 tools:
   - admin-api
   - konnect-api
@@ -86,7 +92,6 @@ Common use cases for Routes:
 | Rate limiting | Use Routes to set different rate limits for clients accessing the upstream application via specific paths, for example `/internal` or `/external`. <br><br>[Enable a rate limiting plugin on Routes attached to the Service](/plugins/rate-limiting-advanced/) |
 | Perform a simple URL rewrite | Use the Routes entity to rename an endpoint. For example, you can rename your legacy `/api/old/` upstream endpoint to a publicly accessible API endpoint named `/new/api`. |
 | Perform a complex URL rewrite | Use the Routes entity to rewrite a group of paths, such as replacing `/api/<function>/old` with `/new/api/<function>`. <br><br> [Request Transformer Advanced plugin](/plugins/request-transformer-advanced/) |
-| Describe paths as patterns using regular expressions | [Expressions router](/gateway/routing/expressions/) |
 
 ## Configuration formats
 
@@ -116,24 +121,21 @@ For detailed examples of each, see the dedicated [expressions](/gateway/routing/
 
 ## How routing works
 
-For each incoming request, {{site.base_gateway}} must determine which Service gets to handle it based on the Routes that are defined. 
+For each incoming request, {{site.base_gateway}} must determine which Service will handle it based on the Routes that are defined. 
 
-{{site.base_gateway}} handles routing in the following order:
-
-1. {{site.base_gateway}} finds Routes that match the request by comparing the defined routing attributes with the attributes in the request. 
-1. If multiple Routes match, the {{site.base_gateway}} router orders all defined Routes by their [priority](#priority-matching) and uses the highest priority matching Route to handle a request. 
-
-Once all routing rules have been evaluated, {{ site.base_gateway }} uses the matched Route to [proxy the current request](/gateway/traffic-control/proxying/).
+The {{site.base_gateway}} router orders all defined Routes by their [priority](#priority-matching) and uses the highest priority matching Route to [proxy the request](/gateway/traffic-control/proxying/).
 
 ### Priority matching
 
-If multiple Routes match, the {{site.base_gateway}} router then orders all defined Routes by their priority and uses the highest priority matching Route to handle a request. How Routes are prioritized depends on the router mode you're using.
+To maximise performance, the {{site.base_gateway}} router orders all defined Routes by their priority and uses the highest priority matching Route to handle a request. How Routes are prioritized depends on the router mode you're using.
 
-For more information, see the detailed [expressions](/gateway/routing/expressions/#priority-matching) or [traditional](/gateway/routing/traditional/#priority-matching) sections.
+For more information, see the detailed [expressions](/gateway/routing/expressions/#priority-matching) or [traditional](/gateway/routing/traditional/#route-priority) sections.
 
 ### Route behavior
 
 The Route entity allows you to configure proxy behaviour on a per route basis by setting the `strip_path`, `preserve_host` and `path_handling` values.
+
+In most cases, `strip_path` and `preserve_host` should be `false` (this is the default value), and `path_handling` should be set to `v0`.
 
 #### strip_path
 
@@ -260,9 +262,9 @@ Host: service.com
 
 The `path_handling` parameter accepts `v0` or `v1`.
 
-`"v0"` is the behavior used in Kong 0.x, 2.x and 3.x. It treats `service.path`, `route.path` and request path as *segments* of a URL. It will always join them via slashes. Given a service path `/s`, route path `/r` and request path `/re`, the concatenated path will be `/s/re`. If the resulting path is a single slash, no further transformation is done to it. If it's longer, then the trailing slash is removed.
+`v0` is the behavior used in Kong 0.x, 2.x and 3.x. It treats `service.path`, `route.path` and request path as *segments* of a URL. It will always join them via slashes. Given a service path `/s`, route path `/r` and request path `/re`, the concatenated path will be `/s/re`. If the resulting path is a single slash, no further transformation is done to it. If it's longer, then the trailing slash is removed.
 
-`"v1"` is the behavior used in Kong 1.x. It treats `service.path` as a *prefix*, and ignores the initial slashes of the request and route paths. Given service path `/s`, route path `/r` and request path `/re`, the concatenated path will be `/sre`.
+`v1` is the behavior used in Kong 1.x. It treats `service.path` as a *prefix*, and ignores the initial slashes of the request and route paths. Given service path `/s`, route path `/r` and request path `/re`, the concatenated path will be `/sre`.
 
 {:.warning}
 > `path_handling` v1 is not supported in the `expressions` router and may be removed in a future version of {{ site.base_gateway }}. We **strongly** recommend using `v0`.
@@ -272,10 +274,10 @@ slashes.
 
 <details>
 <summary>
-Expand to see a table showing detailed <code>v0</code> and <code>v1</code> examples
+Expand this block to see a table showing detailed <code>v0</code> and <code>v1</code> examples
 </summary>
 
-<table border="1">
+<table>
   <thead>
     <tr>
       <th>service.path</th>
