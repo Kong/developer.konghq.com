@@ -1,5 +1,5 @@
 ---
-title: Create a super-admin with the Admin API
+title: Create a Super Admin with the Admin API
 content_type: how_to
 
 products:
@@ -15,7 +15,7 @@ tldr:
 
 prereqs:
     inline:
-      - title: Enable RBAC
+      - title: Kong Gateway running with RBAC enabled
         include_content: prereqs/enable-rbac
         icon_url: /assets/icons/file.svg
       - title: Configure environment variables
@@ -37,7 +37,7 @@ min_version:
 
 1. Create an [RBAC](/gateway/entities/rbac/) user
 
-            {% validation request-check %}
+            {% control_plane_request %}
             url: /rbac/users
             status_code: 201
             method: POST
@@ -49,12 +49,12 @@ min_version:
                 name: $ADMIN_NAME
                 user_token: $USER_TOKEN
 
-            {% endvalidation %}
+            {% endcontrol_plane_request %}
 2. Associate the user to the `super-admin` role.
         
 
             
-        {% validation request-check %}
+        {% control_plane_request %}
         url: /rbac/users/$ADMIN_NAME/roles
         status_code: 201
         method: POST
@@ -65,18 +65,18 @@ min_version:
         body:
             roles: "super-admin"
 
-        {% endvalidation %}
+        {% endcontrol_plane_request %}
 
 ## Validate
 
 You can validate that the RBAC user was correctly assigned to the `super-admin` Role using the [`/rbac/users/{user}/roles`](/api/gateway/admin-ee/#/operations/get-rbac-users-name_or_id-roles) endpoint: 
 
-{% validation request-check %}
+{% control_plane_request %}
 url: /rbac/users/$ADMIN_NAME/roles
 headers:
   - 'Kong-Admin-Token:$KONG_ADMIN_TOKEN'
 status_code: 200
-{% endvalidation %}
+{% endcontrol_plane_request %}
 
 If this was configured correctly the response body will look like this: 
 
