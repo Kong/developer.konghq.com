@@ -68,12 +68,12 @@ features:
   - title: License File
     url: /gateway/entities/license/#deploy-a-license-with-a-file-on-the-node-filesystem-licensejson
     traditional: true
-    hybrid: false
+    hybrid: true
     dbless: true
   - title: Environment variable
     url: /gateway/entities/license/#deploy-a-license-with-an-environment-variable
     traditional: true
-    hybrid: false
+    hybrid: true
     dbless: true
 {% endfeature_table %}
 
@@ -91,17 +91,17 @@ data:
   payload: "{\"license\":{\"payload\":{\"admin_seats\":\"1\",\"customer\":\"Example Company, Inc\",\"dataplanes\":\"1\",\"license_creation_date\":\"2017-07-20\",\"license_expiration_date\":\"2017-07-20\",\"license_key\":\"00141000017ODj3AAG_a1V41000004wT0OEAU\",\"product_subscription\":\"Konnect Enterprise\",\"support_plan\":\"None\"},\"signature\":\"6985968131533a967fcc721244a979948b1066967f1e9cd65dbd8eeabe060fc32d894a2945f5e4a03c1cd2198c74e058ac63d28b045c2f1fcec95877bd790e1b\",\"version\":\"1\"}}"
 {% endentity_example %}
 
-[Reload](/how-to/restart-kong-gateway-container/) the {{site.base_gateway}} nodes after adding or updating a License.
-
 {% endnavtab %}
 {% navtab "license.json" %}
 ### Deploy a License with `license.json`
 
 The license data must contain straight quotes to be considered valid JSON (`'` and `"`, not `’` or `“`). Kong searches for the License by default in `/etc/kong/license.json`.
 
+The control plane **does not** propagate the License to data plane nodes. You **must** add the License to each data plane node, and each node **must** start with the License. The License can't be added after starting the node.
+
 1. Save your License to a file named `license.json`.  
 1. Copy the license file to the `/etc/kong`.
-1. [Reload](/how-to/restart-kong-gateway-container/) the {{site.base_gateway}} nodes to apply the license by running `kong reload` from within the container.
+1. [Restart](/how-to/restart-kong-gateway-container/) the {{site.base_gateway}} nodes to apply the license by running `kong restart` from within the container.
 {% endnavtab %}
 {% navtab "Environment variable" %}
 ### Deploy a License as an environment variable 

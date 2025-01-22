@@ -8,9 +8,6 @@ description: Workspaces provide a way to segment {{site.base_gateway}} entities.
 
 tools:
     - admin-api
-    - kic
-    - deck
-    - terraform
 
 tier: enterprise
 schema:
@@ -46,7 +43,6 @@ faqs:
     a: If you don't specify a target Workspace, the entity will be created in the `default` workspace.
   
 ---
-
 
 ## What is a Workspace?
 
@@ -88,13 +84,12 @@ To route traffic to the appropriate Workspace, {{site.base_gateway}} uses a conf
 
 When a Service or Route is **created** or **modified**, the {{site.base_gateway}} Router checks for the existence of that object before allowing the operation to proceed in this order:
 
-1. If the Service or Route created is totally unique and does not match an existing entity, the new entity is created. 
-2. If an existing Service or Route object that matches the one being created is found, a `409 Conflict` error is returned. 
-3. If an equivalent Service or a Route is found in a different Workspace, the new entity is created.
-4. If an equivalent Service or Route is found in a different Workspace, and the host is a wildcard: 
-  a. If the host field matches in both Workspaces, a `409 Conflict` error is returned.
-  b. If the host field does not match, the new entity can be created.
-  c. If the host is an absolute value, a `409 Conflict` error is returned.
+1. If the Service or Route created is unique across all Workspaces, the new entity is created. 
+2. If an existing Service or Route object that matches the one being created is found in the current workspace, a `409 Conflict` error is returned. 
+4. If an equivalent Service or Route is found in a different Workspace, and the host is provided:
+    1. If the host field matches in both workspaces, a `409 Conflict` error is returned.
+    1. If the host field does not match, the new entity can be created.
+    1. If the host is an absolute value, a `409 Conflict` error is returned.
 
 ## Roles, groups, and permissions
 

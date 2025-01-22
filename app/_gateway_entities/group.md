@@ -47,7 +47,7 @@ The Group resource can also be used to integrate identity providers like Okta wi
 
 ## Service directory mapping
 
-With service directory mapping, Groups can be mapped to [RBAC Roles](/gateway/entities/rbac/#role-configuration). When a user logs in to Kong Manager, they are identified with their Admin username and authenticated with user credentials from a service directory, like [LDAP](/plugins/ldap-auth/). The service directory creates a relationship with the associated RBAC Roles that are defined in {{site.base_gateway}}. 
+With service directory mapping, Groups can be mapped to [RBAC Roles](/gateway/entities/rbac/#role-configuration). When a user logs in to Kong Manager, they are identified with their Admin username and authenticated with user credentials from a service directory, like [LDAP](https://docs.konghq.com/gateway/latest/kong-manager/auth/ldap/service-directory-mapping/). The service directory creates a relationship with the associated RBAC Roles that are defined in {{site.base_gateway}}. 
 This happens in the following order: 
 
 
@@ -56,7 +56,7 @@ This happens in the following order:
 3. Groups are associated with an external directory.
 4. Permissions are assigned to {{site.base_gateway}} users based on Group assignment.
 
-For more information, read the [LDAP](/plugins/ldap-auth/) documentation.
+For more information, read the [Mapping LDAP Service Directory Groups to Kong Roles](https://docs.konghq.com/gateway/latest/kong-manager/auth/ldap/service-directory-mapping/) documentation.
 
 
 ## Schema

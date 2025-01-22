@@ -3,8 +3,7 @@ title: RBAC
 content_type: reference
 products:
   - gateway
-tiers: 
-  - enterprise
+tier: enterprise
 tools:
     - admin-api
 entities:
@@ -34,11 +33,9 @@ RBAC in {{site.base_gateway}} conforms to the following core principles:
 * In {{site.base_gateway}} there are Users
 * Every user has a Role
 * Roles are assigned Permissions
-* Every Role belongs to a [Group](/gateway/entities/group/)
 * A Group is a collection of Roles
 
-{{site.base_gateway}} uses a precedence model, from most specificity to least specificity, to determine if a user has access to an endpoint.
-
+{{site.base_gateway}} uses a [precedence model](#rbac-precedence-order), from most specificity to least specificity, to determine if a user has access to an endpoint.
 
 ## What are Permissions?
 
@@ -200,17 +197,3 @@ You can also automate the creation of Admins. For more information, see [creatin
 ## Schema
 
 {% entity_schema %}
-
-## Create an RBAC user
-
-Creating an RBAC User requires [RBAC to be enabled](#enable-rbac) for {{site.base_gateway}}.
-
-{% entity_example %}
-type: rbac
-data:
-  name: my-user
-  user_token: exampletoken
-headers:
-  admin-api:
-    - "Kong-Admin-Token: $ADMIN_TOKEN"
-{% endentity_example %}
