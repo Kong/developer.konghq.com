@@ -38,7 +38,7 @@ min_version:
 ## Create the RBAC user and assign it the `super-admin` role: 
 
 1. Create an [RBAC](/gateway/entities/rbac/) user
-
+<!-- vale off -->
 {% capture request %}
 {% control_plane_request %}
   url: /rbac/users
@@ -74,7 +74,7 @@ min_version:
 
 {{request | indent: 3}}
 
-
+<!--vale on -->
 
 ## Validate
 
