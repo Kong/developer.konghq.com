@@ -10,18 +10,19 @@ works_on:
     - on-prem
 
 tldr: 
-  q: How do I create a {{site.base_gateway}} Super-Admin using the Admin API
+  q: How do I create a {{site.base_gateway}} Super Admin using the Admin API
   a: |
     After enabling [RBAC](/gateway/entities/rbac/#enable-rbac), you can create a Super-Admin user by issuing a `POST` request to the [`/rbac/users/`](/api/gateway/admin-ee/#/operations/post-rbac-users) endpoint. Then associate the user to the `super-admin` role.
 
 prereqs:
     inline:
-    #   - title: Kong Gateway running with RBAC enabled
-    #     include_content: prereqs/enable-rbac
-    #     icon_url: /assets/icons/file.svg
       - title: Configure environment variables
         content: |
-            Set the `kong-admin-token`, `admin_name`, and `admin-token`, for example: 
+            Set the `kong-admin-token`, `name`, and `user_token`: 
+            * `KONG_ADMIN_TOKEN`: The `kong_password` variable set when configuring {{site.base_gateway}}
+            * `ADMIN_NAME`: The name of the RBAC user that will be associated with the Super Admin Role.
+            * `USER_TOKEN`: The authentication token to be presented to the Admin API.
+            For example: 
             ```sh
             export KONG_ADMIN_TOKEN=kong
             export ADMIN_NAME=tim
@@ -38,35 +39,32 @@ min_version:
 
 1. Create an [RBAC](/gateway/entities/rbac/) user
 
-            {% control_plane_request %}
-            url: /rbac/users
-            status_code: 201
-            method: POST
-            headers:
-                - 'Accept: application/json'
-                - 'Content-Type: application/json'
-                - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
-            body:
-                name: $ADMIN_NAME
-                user_token: $USER_TOKEN
+		{% control_plane_request %}
+			url: /rbac/users
+			status_code: 201
+			method: POST
+			headers:
+					- 'Accept: application/json'
+					- 'Content-Type: application/json'
+					- 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
+			body:
+					name: $ADMIN_NAME
+					user_token: $USER_TOKEN
+		{% endcontrol_plane_request %}
 
-            {% endcontrol_plane_request %}
-2. Associate the user to the `super-admin` role.
-        
-
-            
-        {% control_plane_request %}
-        url: /rbac/users/$ADMIN_NAME/roles
-        status_code: 201
-        method: POST
-        headers:
-            - 'Accept: application/json'
-            - 'Content-Type: application/json'
-            - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
-        body:
-            roles: "super-admin"
-
-        {% endcontrol_plane_request %}
+1. Associate the user to the `super-admin` role.
+					
+	{% control_plane_request %}
+	url: /rbac/users/$ADMIN_NAME/roles
+	status_code: 201
+	method: POST
+	headers:
+			- 'Accept: application/json'
+			- 'Content-Type: application/json'
+			- 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
+	body:
+			roles: "super-admin"
+	{% endcontrol_plane_request %}
 
 ## Validate
 
