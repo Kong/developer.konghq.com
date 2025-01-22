@@ -61,6 +61,7 @@ min_version:
 
 Before you can configure a {{site.konnect_short_name}} Vault, you must first create a Config Store by sending a `POST` request to the `/v2/control-planes/{controlPlaneId}/config-stores` endpoint:
 
+<!--vale off-->
 {% control_plane_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores
 status_code: 201
@@ -72,6 +73,7 @@ headers:
 body:
     name: my-config-store
 {% endcontrol_plane_request %}
+<!--vale on-->
 
 Export your Config Store ID as an environment variable so you can use it later:
 
@@ -85,6 +87,7 @@ To enable {{site.konnect_short_name}} as your vault, you can use the [Vault enti
 
 Send a `POST` request to the [`/v2/control-planes/{controlPlaneId}/core-entities/vaults/` endpoint](/api/konnect/control-planes-config/v2/#/operations/create-vault):
 
+<!--vale off-->
 {% control_plane_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/vaults/
 status_code: 201
@@ -100,6 +103,7 @@ body:
     name: konnect
     prefix: mysecretvault
 {% endcontrol_plane_request %}
+<!--vale on-->
 
 ## 3. Store the Mistral AI key as a secret
 
@@ -107,6 +111,7 @@ In this how-to, you're storing the Mistral AI API key you copied earlier as a se
 
 Store your secret by sending a `POST` request to the `/v2/control-planes/{controlPlaneId}/config-stores/{configStoreId}/secrets` endpoint:
 
+<!--vale off-->
 {% control_plane_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$CONFIG_STORE_ID/secrets/
 status_code: 201
@@ -119,6 +124,7 @@ body:
     key: mistral-key
     value: Bearer <mistral-key-here>
 {% endcontrol_plane_request %}
+<!--vale on-->
 
 ## 4. Reference your stored secret
 
@@ -126,6 +132,7 @@ Now that {{site.konnect_short_name}} is configured as your Vault, you can refere
 
 Enable the AI Proxy plugin on your route by sending a `POST` request to the [`/control-planes/{controlPlaneId}/core-entities/routes/{RouteId}/plugins` endpoint](/api/konnect/control-planes-config/v2/#/operations/create-plugin-with-route):
 
+<!--vale off-->
 {% control_plane_request %}
 url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/plugins
 status_code: 201
@@ -151,11 +158,13 @@ body:
     route:
       id: $ROUTE_ID
 {% endcontrol_plane_request %}
+<!--vale on-->
 
 ## 5. Validate
 
 To verify that {{site.base_gateway}} can pull the secrets from {{site.konnect_short_name}} Config Store, you can use the AI Proxy plugin to confirm that the plugin is using the correct API key when a request is made:
 
+<!--vale off-->
 {% validation request-check %}
 url: /anything
 status_code: 200
@@ -169,5 +178,5 @@ body:
           content: "You are a mathematician"
         - role: "user"
           content: "What is 1+1?"
-
 {% endvalidation %}
+<!--vale on-->
