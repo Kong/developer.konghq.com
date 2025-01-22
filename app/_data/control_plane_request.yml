@@ -1,0 +1,3 @@
+url_origin:
+  konnect: $KONNECT_CONTROL_PLANE_URL
+  on_prem: http://localhost:8001
