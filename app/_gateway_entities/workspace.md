@@ -26,18 +26,24 @@ related_resources:
 faqs:
   - q: Do I have to enable Workspaces? 
     a: |
-     No, {{site.base_gateway}} Enterprise ships with the `default` Workspace. You can create additional workspaces, but the default Workspace will always remain, and can't be deleted.
+     No, {{site.base_gateway}} Enterprise ships with the `default` Workspace. You can create additional Workspaces, but the default Workspace will always remain, and can't be deleted.
   - q: Are there entities that can't exist in a Workspace?
     a: |
-      No, all entities must exist inside a Workspace.
+      There are certain entities that can't exist within a Workspace:
+      * [CA Certificates](/gateway/entities/ca-certificate/) apply to all Workspaces. They're used to verify the client certificates in mTLS handshakes. 
+      The SSL handshake takes place before receiving an HTTP request when the Workspace is unknown.
+      * [RBAC](/gateway/entities/rbac/) entities - Users, Roles, Admins, Groups - exist outside of a Workspace. However, you must assign Workspace-specific Roles for any User, Admin, or Group to access entities in a specific Workspace.
+      * Other Workspaces can't exist within a Workspace.
   - q: Can I use Workspaces in Konnect?
     a: |
       No. Instead, {{site.konnect_short_name}} offers the more powerful Control Planes and Control Plane Groups to manage entities within an API ecosystem.
 
   - q: Can a Workspace share a name with another Workspace?
     a: |
-      Two Workspaces can't share the same name. However, workspace names are case sensitive - for example, “Payments” and “payments” are not equal and would be accepted as two different Workspaces. 
+      Two Workspaces can't share the same name. However, Workspace names are case sensitive - for example, “Payments” and “payments” are not equal and would be accepted as two different Workspaces. 
       We recommend giving Workspaces unique names regardless of letter case to prevent confusion.
+  - q: What happens if I create an entity without specifying a Workspace?
+    a: If you don't specify a target Workspace, the entity will be created in the `default` workspace.
   
 ---
 
@@ -86,7 +92,7 @@ When a Service or Route is **created** or **modified**, the {{site.base_gateway}
 2. If an existing Service or Route object that matches the one being created is found, a `409 Conflict` error is returned. 
 3. If an equivalent Service or a Route is found in a different Workspace, the new entity is created.
 4. If an equivalent Service or Route is found in a different Workspace, and the host is a wildcard: 
-  a. If the host field matches in both workspaces, a `409 Conflict` error is returned.
+  a. If the host field matches in both Workspaces, a `409 Conflict` error is returned.
   b. If the host field does not match, the new entity can be created.
   c. If the host is an absolute value, a `409 Conflict` error is returned.
 

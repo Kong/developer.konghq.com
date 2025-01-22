@@ -21,10 +21,13 @@
   {% endif %}
 
   {% for tool in prereqs.tools %}
+  {% assign tool_include = 'prereqs/tools/' | append: tool | append: '.md' %}
+  {% capture tool_include_exists %}{% include_exists tool_include %}{% endcapture %}
+  {% if tool_include_exists == 'true' %}
     <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
-{% assign tool_include = 'prereqs/tools/' | append: tool | append: '.md' %}
 {% include {{ tool_include }} %}
     </div>
+  {% endif %}
   {% endfor %}
 
   {% if prereqs.entities? %}

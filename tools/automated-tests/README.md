@@ -43,15 +43,15 @@ From the root of the repo run:
 
 1. `cd tools/automated-tests`
 1. `npm ci` - installs dependencies
-1. `npm run generate-instructions-files`
+1. `npm run generate-instruction-files`
 
 By default, it will iterate over all the how-tos, but it also supports generating instruction files for a subset of how-tos by passing their urls, i.e.
 
-`npm run generate-instructions-files -- --urls='http://localhost:8888/how-to/x/' --urls='http://localhost:8888/how-to/y/'`
+`npm run generate-instruction-files -- --urls='http://localhost:8888/how-to/x/' --urls='http://localhost:8888/how-to/y/'`
 
 or by passing the corresponding files, i.e.
 
-`npm run generate-instructions-files -- --files='../../app/_how-tos/x.md' --files='../../app/_how-tos/y.md'`.
+`npm run generate-instruction-files -- --files='../../app/_how-tos/x.md' --files='../../app/_how-tos/y.md'`.
 
 ### Running the tests
 
