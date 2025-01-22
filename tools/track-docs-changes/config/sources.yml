@@ -76,6 +76,7 @@ app/_gateway_entities/vault.md:
   - app/_src/gateway/kong-enterprise/secrets-management/advanced-usage.md
   - app/_src/deck/guides/vaults.md
   - app/_src/gateway/kong-enterprise/secrets-management/index.md
+  - app/_src/gateway/kong-enterprise/secrets-management/backends/env.md
 
 app/_gateway_entities/license.md:
   - app/_src/gateway/licenses/index.md
