@@ -15,6 +15,7 @@ module Jekyll
         Data::Breadcrumbs.new(site:, page:).process
         Data::APISpecs.new(site:, page:).process
         Data::Seo.new(site:, page:).process
+        Data::SearchTags::Base.make_for(site:, page:).process
       end
     end
 
@@ -25,6 +26,7 @@ module Jekyll
         Data::Breadcrumbs.new(site:, page: doc).process
         Data::APISpecs.new(site:, page: doc).process
         Data::Seo.new(site:, page: doc).process
+        Data::SearchTags::Base.make_for(site:, page: doc).process
       end
     end
   end
