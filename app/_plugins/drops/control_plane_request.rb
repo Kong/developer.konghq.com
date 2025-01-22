@@ -8,11 +8,8 @@ module Jekyll
     class ControlPlaneRequest < Liquid::Drop # rubocop:disable Style/Documentation
       include Jekyll::SiteAccessor
 
-      attr_reader :name
-
       def initialize(yaml:) # rubocop:disable Lint/MissingSuper
         @yaml = yaml
-        @name = 'request-check'
 
         validate_yaml!
       end
@@ -40,21 +37,12 @@ module Jekyll
         ).to_s
       end
 
-      def data_validate_konnect
-        JSON.dump({ name: name, config: config.merge(url: konnect_url) })
-      end
-
-      def data_validate_on_prem
-        JSON.dump({ name: name, config: config.merge(url: on_prem_url) })
-      end
-
       def config
         @config ||= @yaml.except('url')
       end
 
       def template_file
-        # re-use request-check so that the data-attributes are rendered
-        @template_file ||= 'app/_includes/how-tos/validations/request-check/index.html'
+        @template_file ||= 'app/_includes/control_plane_request.html'
       end
 
       def method
@@ -69,8 +57,6 @@ module Jekyll
 
       def validate_yaml!
         raise ArgumentError, 'Missing `url` in {% control_plane_request %}.' unless @yaml.key?('url')
-
-        raise ArgumentError, 'Missing `status_code` in {% control_plane_request %}.' unless @yaml.key?('status_code')
       end
     end
   end
