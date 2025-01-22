@@ -39,44 +39,52 @@ min_version:
 
 1. Create an [RBAC](/gateway/entities/rbac/) user
 
-		{% control_plane_request %}
-			url: /rbac/users
-			status_code: 201
-			method: POST
-			headers:
-					- 'Accept: application/json'
-					- 'Content-Type: application/json'
-					- 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
-			body:
-					name: $ADMIN_NAME
-					user_token: $USER_TOKEN
-		{% endcontrol_plane_request %}
+{% capture request %}
+{% control_plane_request %}
+  url: /rbac/users
+  method: POST
+  headers:
+      - 'Accept: application/json'
+      - 'Content-Type: application/json'
+      - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
+  body:
+      name: $ADMIN_NAME
+      user_token: $USER_TOKEN
+{% endcontrol_plane_request %}
+{% endcapture %}
+
+{{request | indent: 3}}
+
 
 1. Associate the user to the `super-admin` role.
-					
-	{% control_plane_request %}
-	url: /rbac/users/$ADMIN_NAME/roles
-	status_code: 201
-	method: POST
-	headers:
-			- 'Accept: application/json'
-			- 'Content-Type: application/json'
-			- 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
-	body:
-			roles: "super-admin"
-	{% endcontrol_plane_request %}
+
+{% capture request %}
+{% control_plane_request %}
+  url: /rbac/users/$ADMIN_NAME/role
+  method: POST
+  headers:
+      - 'Accept: application/json'
+      - 'Content-Type: application/json'
+      - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
+  body:
+      roles: super-admin
+
+{% endcontrol_plane_request %}
+{% endcapture %}
+
+{{request | indent: 3}}
+
+
 
 ## Validate
 
 You can validate that the RBAC user was correctly assigned to the `super-admin` Role using the [`/rbac/users/{user}/roles`](/api/gateway/admin-ee/#/operations/get-rbac-users-name_or_id-roles) endpoint: 
 
 {% control_plane_request %}
-url: /rbac/users/$ADMIN_NAME/roles
-headers:
-  - 'Kong-Admin-Token:$KONG_ADMIN_TOKEN'
-status_code: 200
+  url: /rbac/users/$ADMIN_NAME/roles
+  headers:
+      - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
 {% endcontrol_plane_request %}
-
 If this was configured correctly the response body will look like this: 
 
 ```sh
