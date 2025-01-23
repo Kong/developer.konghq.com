@@ -20,6 +20,8 @@ related_resources:
       url: /how-to/add-rate-limiting-tiers-with-kong-gateway/
     - text: Consumer entity
       url: /gateway/entities/consumer/
+    - text: Plugins that can be enabled on Consumer Groups
+      url: /gateway/entities/plugin/#supported-scopes-by-plugin
 
 api_specs:
     - gateway/admin-ee
@@ -33,13 +35,13 @@ faqs:
       Before 3.4, Consumer Groups were limited to rate limiting plugins, where they were configured through overrides. This is no longer necessary. Instead, you can enable any rate limiting plugin directly on a consumer group without worrying about extra configuration.
   - q: How do I enable a plugin on a Consumer Group?
     a: |
-      First, [find out](/plugins/scopes/) if the plugin you want supports Consumer Groups. 
+      First, [find out](/gateway/entities/plugin/#supported-scopes-by-plugin) if the plugin you want supports Consumer Groups. 
       
       If it does, head over to the plugin's documentation, open the "Get Started" tab, and choose "Consumer Groups" from the dropdown for any available example.
 
   - q: When a Consumer is part of multiple Consumer Groups, how is precedence determined?
     a: |
-      Currently, this is determined by the Group name, in alphabetical order. For more details, see [Plugin precedence](/plugins/scopes/#plugin-precedence).
+      Currently, this is determined by the Group name, in alphabetical order. For more details, see [Plugin precedence](/gateway/entities/plugin/#plugin-precedence).
 
 schema:
     api: gateway/admin-ee
@@ -51,7 +53,7 @@ schema:
 Consumer Groups enable the organization and categorization of [Consumers](/gateway/entities/consumer/) (users or applications) within an API ecosystem. By grouping Consumers together, you eliminate the need to manage them individually, providing a scalable, efficient approach to managing configurations.
 
 With Consumer Groups, you can scope plugins to specifically defined Consumer Groups and a new plugin instance will be created for each individual Consumer Group, making configurations and customizations more flexible and convenient.
-For all plugins available on the consumer groups scope, see the [Plugin Scopes Reference](/plugins/scopes/).
+For all plugins available on the consumer groups scope, see the [Plugin Scopes Reference](/gateway/entities/plugin/#supported-scopes-by-plugin).
 
 For example, you could define two groups, Gold and Silver, assign different rate limits to them, then process each group using a different plugin:
 

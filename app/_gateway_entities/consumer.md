@@ -12,7 +12,7 @@ related_resources:
   - text: Consumer Groups entity
     url: /gateway/entities/consumer-group/
   - text: Plugins that can be enabled on Consumers
-    url: /plugins/scopes/
+    url: /gateway/entities/plugin/#supported-scopes-by-plugin
 
 faqs:
   - q: What are credentials, and why do I need them?
@@ -42,7 +42,7 @@ faqs:
     a: |
       Most plugins can be scoped to Consumers, with the exception of authentication plugins and plugins that control routing.
 
-      You can see the full list in the [plugin scopes compatibility reference](/plugins/scopes/).
+      You can see the full list in the [plugin scopes compatibility reference](/gateway/entities/plugin/#supported-scopes-by-plugin).
 
   - q: Can you scope authentication plugins to Consumers?
     a: |

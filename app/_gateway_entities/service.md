@@ -12,7 +12,7 @@ related_resources:
   - text: Enable rate limiting on a Gateway Service
     url: /how-to/add-rate-limiting-to-a-service-with-kong-gateway/
   - text: Plugins that can be enabled on Gateway Services
-    url: /plugins/scopes/
+    url: /gateway/entities/plugin/#supported-scopes-by-plugin
 
 tools:
     - admin-api
