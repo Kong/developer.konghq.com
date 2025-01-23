@@ -81,7 +81,7 @@ columns:
 
 features:
   - title: Environment variable
-    url: /how-to/store-secrets-as-env-variables/
+    url: /gateway/entities/vault/#store-secrets-as-environment-variables
     oss: true
     enterprise: true
     supports_konnect: true
