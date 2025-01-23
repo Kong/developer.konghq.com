@@ -1,5 +1,5 @@
 ---
-title: Replace certificates used in Kong Gateway data plane nodes with a secret stored in Konnect Config Store
+title: Replace certificates used in {{site.base_gateway}} data plane nodes with a secret stored in Konnect Config Store
 content_type: how_to
 related_resources:
   - text: Secrets management
