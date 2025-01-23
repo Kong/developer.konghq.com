@@ -1,0 +1,53 @@
+---
+title: Replace certificates used in Kong Gateway data plane nodes with a secret stored in Konnect Config Store
+content_type: how_to
+related_resources:
+  - text: Secrets management
+    url: /secrets-management 
+  - text: Vault entity
+    url: /gateway/entities/vault
+  - text: Store and use your Mistral API key as a secret in Konnect Config Store
+    url: /how-to/store-and-use-your-mistral-api-key-as-a-secret-in-konnect-config-store
+  - text: Configure the Konnect Config Store
+    url: /how-to/configure-the-konnect-config-store
+  - text: Reference secrets stored in the Konnect Config Store
+    url: /how-to/reference-secrets-stored-in-the-konnect-config-store
+
+products:
+    - gateway
+
+works_on:
+    - konnect
+
+entities: 
+  - vault
+
+tags:
+    - security
+    - secrets-management
+
+tldr:
+    q: How do I securely replace my {{site.base_gateway}} data plane node certificates with a secret reference instead?
+    a: placeholder
+
+prereqs:
+  inline:
+    - title: Konnect API
+      include_content: prereqs/konnect-api-for-curl
+
+tools:
+  - konnect-api
+ 
+cleanup:
+  inline:
+    - title: Clean up Konnect environment
+      include_content: cleanup/platform/konnect
+      icon_url: /assets/icons/gateway.svg
+
+min_version:
+    gateway: '3.4'
+---
+
+@todo
+
+Use content from https://docs.konghq.com/konnect/gateway-manager/configuration/vaults/how-to/ 
