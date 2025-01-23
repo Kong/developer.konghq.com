@@ -259,8 +259,8 @@ one of the routes' `paths` values. By default, {{site.base_gateway}} would then 
 request upstream without changing the URL path.
 
 When proxying with path prefixes, **the longest paths get evaluated first**.
-This allow you to define two routes with two paths: `/service` and
-`/service/resource`, and ensure that the former doesn't get overshadowed by the latter.
+This allow you to define two routes with two paths, such as `/service` and
+`/service/resource`, and ensure that the former doesn't overshadow the latter.
 
 #### Using regex in paths
 
