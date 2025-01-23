@@ -23,7 +23,7 @@ tags:
 tldr:
     q: How do I use {{site.konnect_short_name}} as a Vault backend and store secrets in it?
     a: |
-      Use the {{site.konnect_short_name}} API to create a Config Store using the `/v2/control-planes/{controlPlaneId}/config-stores` endpoint, create a {{site.konnect_short_name}} Vault using the [`/v2/control-planes/{controlPlaneId}/core-entities/vaults/` endpoint](/api/konnect/control-planes-config/v2/#/operations/create-vault), and then store your secret as a key/value pair using the `/v2/control-planes/{controlPlaneId}/config-stores/{configStoreId}/secrets` endpoint. To reference the secret in configuration, use the Vault prefix and the key name, for example: `{vault://mysecretvault/mistral-key}`
+      Use the {{site.konnect_short_name}} API to create a Config Store using the `config-stores` endpoint, create a {{site.konnect_short_name}} Vault using the [`/vaults/` endpoint](/api/konnect/control-planes-config/v2/#/operations/create-vault), and then store your secret as a key/value pair using the `/config-stores/{configStoreId}/secrets` endpoint. Then the secret will be refrenceable using the Vault prefix and the key name, for example: `{vault://mysecretvault/mistral-key}`
 
 prereqs:
   entities:
@@ -59,7 +59,7 @@ min_version:
 
 ## 1. Configure a {{site.konnect_short_name}} Config Store
 
-Before you can configure a {{site.konnect_short_name}} Vault, you must first create a Config Store by sending a `POST` request to the `/v2/control-planes/{controlPlaneId}/config-stores` endpoint:
+Before you can configure a {{site.konnect_short_name}} Vault, you must first create a Config Store using the [Control Planes Configuration API](link) by sending a `POST` request to the `/config-stores` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -83,9 +83,9 @@ export CONFIG_STORE_ID=config-store-uuid
 
 ## 2. Configure {{site.konnect_short_name}} as your Vault
 
-To enable {{site.konnect_short_name}} as your vault, you can use the [Vault entity](/gateway/entities/vault).
+To enable {{site.konnect_short_name}} as your vault with the [Vault entity](/gateway/entities/vault) send a `POST` request to the [`/v2/control-planes/{controlPlaneId}/core-entities/vaults/` endpoint](/api/konnect/control-planes-config/v2/#/operations/create-vault):
 
-Send a `POST` request to the [`/v2/control-planes/{controlPlaneId}/core-entities/vaults/` endpoint](/api/konnect/control-planes-config/v2/#/operations/create-vault):
+
 
 <!--vale off-->
 {% control_plane_request %}
@@ -107,9 +107,9 @@ body:
 
 ## 3. Store the Mistral AI key as a secret
 
-In this how-to, you're storing the Mistral AI API key you copied earlier as a secret in your Vault. This will allow you to reference this later in a plugin configuration. 
+Storing the Mistral AI API key you copied earlier as a secret in your Vault will allow you to reference this later in a plugin configuration. 
 
-Store your secret by sending a `POST` request to the `/v2/control-planes/{controlPlaneId}/config-stores/{configStoreId}/secrets` endpoint:
+Store your Mistral key as a secret by sending a `POST` request to the `/v2/control-planes/{controlPlaneId}/config-stores/{configStoreId}/secrets` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -128,9 +128,9 @@ body:
 
 ## 4. Reference your stored secret
 
-Now that {{site.konnect_short_name}} is configured as your Vault, you can reference secrets stored in that Vault in configuration. In this tutorial, you'll be referencing the API key you set previously and using it to generate an answer to a question using the [AI Proxy plugin](/plugins/ai-proxy/). To reference a secret, you use the prefix from your Vault config, the name of the secret, and optionally the property in the secret you want to use.
+To reference a secret, you use the prefix from your Vault config, the name of the secret, and optionally the property in the secret you want to use. Now that the {{site.konnect_short_name}} Konnect vault is configured, you can reference secrets stored in that Vault in configurations. In this tutorial, you'll be referencing the API key you set previously and using it to generate an answer to a question using the [AI Proxy plugin](/plugins/ai-proxy/). 
 
-Enable the AI Proxy plugin on your route by sending a `POST` request to the [`/control-planes/{controlPlaneId}/core-entities/routes/{RouteId}/plugins` endpoint](/api/konnect/control-planes-config/v2/#/operations/create-plugin-with-route):
+Enable the AI Proxy plugin on your route by sending a `POST` request to the [`/routes/{RouteId}/plugins` endpoint](/api/konnect/control-planes-config/v2/#/operations/create-plugin-with-route):
 
 <!--vale off-->
 {% control_plane_request %}
