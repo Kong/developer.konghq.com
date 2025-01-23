@@ -4,7 +4,7 @@ content_type: reference
 entities:
   - service
 
-description: A Gateway Service is an abstraction of an upstream application that services requests.
+description: A Gateway Service represents your actual backend API or microservice.
 
 related_resources:
   - text: Routes entity
@@ -34,17 +34,15 @@ api_specs:
 
 ## What is a Gateway Service?
 
-A Gateway Service is an abstraction of an upstream application that services requests.
-Services can store collections of objects like plugin configurations, and policies, and they can be associated with routes.
+A Gateway Service represents your actual backend API or microservice.
 
-When defining a Service, the administrator provides a name and the upstream application connection information. 
-The connection details can be provided in the URL field as a single string, or by providing individual values for protocol, host, port, and path individually.
+For simple deployments, the upstream URL can be provided directly in the Service. For sophisticated traffic management needs, a Service can point at an [Upstream](/gateway/entities/upstream/).
 
-Gateway Services have a one-to-many relationship with upstream applications, which allows administrators to create sophisticated traffic management behaviors.
+Gateway Services, in conjunction with [Routes](/gateway/entities/route/), let you expose your services to clients with {{site.base_gateway}}.
 
-Gateway Services, in conjunction with [Routes](/gateway/entities/route/), let you expose your services to clients with {{site.base_gateway}}. 
-{{site.base_gateway}} abstracts the service from the clients by using Routes. 
-Since the client always calls the Route, changes to the Services (like versioning) don't impact how clients make the call. 
+[Plugins](/gateway/entities/plugin/) can be attached to a Service, and will run against every request that triggers a request to the Service that they're attached to.
+
+<!--vale off -->
 
 {% mermaid %}
 flowchart LR
@@ -69,6 +67,8 @@ flowchart LR
   style id1 rx:10,ry:10
   
 {% endmermaid %}
+
+<!--vale on -->
 
 ## Schema
 

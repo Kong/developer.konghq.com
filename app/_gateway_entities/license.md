@@ -68,20 +68,24 @@ features:
   - title: License File
     url: /gateway/entities/license/#deploy-a-license-with-a-file-on-the-node-filesystem-licensejson
     traditional: true
-    hybrid: false
+    hybrid: true
     dbless: true
   - title: Environment variable
     url: /gateway/entities/license/#deploy-a-license-with-an-environment-variable
     traditional: true
-    hybrid: false
+    hybrid: true
     dbless: true
 {% endfeature_table %}
 
 <!--vale on-->
 
+
+## Deploy a License
+
 {% navtabs %}
 {% navtab "Admin API" %}
-### Deploy a License using the Admin API
+
+You can deploy a License using the Admin API.
 
 The control plane sends Licenses configured through the [`/licenses` endpoint](/api/gateway/admin-ee/#/operations/post-licenses) to all data planes in the cluster. The data planes use the most recent `updated_at` License. This is the only method that automatically applies the License to data planes.
 
@@ -91,22 +95,30 @@ data:
   payload: "{\"license\":{\"payload\":{\"admin_seats\":\"1\",\"customer\":\"Example Company, Inc\",\"dataplanes\":\"1\",\"license_creation_date\":\"2017-07-20\",\"license_expiration_date\":\"2017-07-20\",\"license_key\":\"00141000017ODj3AAG_a1V41000004wT0OEAU\",\"product_subscription\":\"Konnect Enterprise\",\"support_plan\":\"None\"},\"signature\":\"6985968131533a967fcc721244a979948b1066967f1e9cd65dbd8eeabe060fc32d894a2945f5e4a03c1cd2198c74e058ac63d28b045c2f1fcec95877bd790e1b\",\"version\":\"1\"}}"
 {% endentity_example %}
 
-[Reload](/how-to/restart-kong-gateway-container/) the {{site.base_gateway}} nodes after adding or updating a License.
-
 {% endnavtab %}
 {% navtab "license.json" %}
-### Deploy a License with `license.json`
+
+You can deploy a License with a `license.json` file.
 
 The license data must contain straight quotes to be considered valid JSON (`'` and `"`, not `’` or `“`). Kong searches for the License by default in `/etc/kong/license.json`.
 
+{:.info}
+> The control plane **does not** propagate the License to data plane nodes. 
+You **must** add the License to each data plane node, and each node **must** start with the License. 
+The License can't be added after starting the node.
+
 1. Save your License to a file named `license.json`.  
 1. Copy the license file to the `/etc/kong`.
-1. [Reload](/how-to/restart-kong-gateway-container/) the {{site.base_gateway}} nodes to apply the license by running `kong reload` from within the container.
+1. [Restart](/how-to/restart-kong-gateway-container/) the {{site.base_gateway}} nodes to apply the license by running `kong restart` from within the container.
 {% endnavtab %}
 {% navtab "Environment variable" %}
-### Deploy a License as an environment variable 
 
-If you deploy a License using a `KONG_LICENSE_DATA` or `KONG_LICENSE_PATH` environment variable, the control plane **does not** propagate the License to data plane nodes. You **must** add the License to each data plane node, and each node **must** start with the License. The License can't be added after starting the node.
+You can deploy a License as an environment variable.
+
+{:.info}
+> If you deploy a License using a `KONG_LICENSE_DATA` or `KONG_LICENSE_PATH` environment variable, the control plane **does not** propagate the License to data plane nodes. 
+You **must** add the License to each data plane node, and each node **must** start with the License. 
+The License can't be added after starting the node.
 
 Unlike other `KONG_*` environmental variables, the `KONG_LICENSE_DATA` and `KONG_LICENSE_PATH` can't be defined in-line as part of any `kong` CLI commands. License file environmental variables must be exported to the shell where the Nginx process runs, ahead of the `kong` CLI tool.
 

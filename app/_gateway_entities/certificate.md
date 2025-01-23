@@ -34,7 +34,7 @@ schema:
 
 faqs:
   - q: What's the difference between the Certificate entity and the CA Certificate entity?
-    a: Certificates handle [SSL/TLS termination](/kic/tls-termination-passthrough) for encrypted requests and [CA Certificates](/gateway/entities/ca-certificate/) validate client or server certificates.
+    a: Certificates handle SSL/TLS termination for encrypted requests and [CA Certificates](/gateway/entities/ca-certificate/) validate client or server certificates.
   - q: Is the Certificate entity used in {{site.konnect_short_name}} for data plane nodes as well?
     a: No, the data plane nodes use a [different certificate](/api/konnect/control-planes-config/).
 ---
@@ -44,9 +44,8 @@ faqs:
 A Certificate object represents a public certificate, which is used to validate the sender's authorization and name. It can optionally be paired with the corresponding private key to initiate secure connections and encrypt sensitive data. 
 
 {{site.base_gateway}} can use Certificates in the following ways:
-* Handle [SSL/TLS termination](/kic/tls-termination-passthrough) for encrypted requests
+* Handle SSL/TLS termination for one or more hostnames using the associated [SNI object](/gateway/entities/sni/)
 * Use as a trusted CA store when validating the peer certificate of a client or Service 
-* Tie a certificate and key pair to one or more hostnames using the associated [SNI object](/gateway/entities/sni/)
 
 ## Schema
 

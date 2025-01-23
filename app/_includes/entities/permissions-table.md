@@ -4,7 +4,7 @@ By default, when {{site.base_gateway}} is configured, the starting user is confi
 
 | Role      | Description |
 | ----------- | ----------- |
-| Admin | Full access to all endpoints, across all Workspaces, except the RBAC Admin API  |
+| `admin` | Full access to all endpoints, across all Workspaces, except the RBAC Admin API  |
 | `super-admin`   | Full access to all endpoints, across all Workspaces, ability to assign and modify RBAC permissions.     |
 |`read-only`| Read access to all endpoints, across all Workspaces|
 

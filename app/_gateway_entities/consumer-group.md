@@ -53,9 +53,6 @@ Consumer Groups enable the organization and categorization of [Consumers](/gatew
 With Consumer Groups, you can scope plugins to specifically defined Consumer Groups and a new plugin instance will be created for each individual Consumer Group, making configurations and customizations more flexible and convenient.
 For all plugins available on the consumer groups scope, see the [Plugin Scopes Reference](/plugins/scopes/).
 
-{:.info}
-> **Note**: Consumer Groups plugin scoping is a feature that was added in {{site.base_gateway}} version 3.4. Running a mixed-version {{site.base_gateway}} cluster (3.4 control plane, and <=3.3 data planes) is not supported when using plugins scoped to Consumer Groups. 
-
 For example, you could define two groups, Gold and Silver, assign different rate limits to them, then process each group using a different plugin:
 
 <!-- vale off -->
@@ -64,45 +61,39 @@ flowchart LR
     A((fa:fa-user Consumers 1-5))
 
     B(<b>Consumer Group Gold</b>
-    10 requests/second
 
     fa:fa-user Consumer 1, fa:fa-user Consumer 2, 
     fa:fa-user Consumer 5 )
     
     C(<b>Consumer Group Silver</b>
-    5 requests/minute
 
     fa:fa-user Consumer 3, fa:fa-user Consumer 4)
 
-    D(Rate Limiting Advanced)
-    E(Request Transformer Advanced)
+    D(Rate Limiting Advanced
+    10 requests/second)
+    E(Rate Limiting Advanced
+    2 requests/second)
     F(<b>Gateway Service</b>
     QR Code Generation)
-    G(<b>Gateway Service</b>
-    OCR)
     H(QR Code Generation 
     service)
-    I(OCR service)
 
     A--> B & C
     subgraph id1 [Kong Gateway]
     direction LR
     B --> D --> F
-        subgraph id2 [Gold route]
-        direction LR
-        D
-        end
-    C --> E --> G
-        subgraph id3 [Silver route]
-        direction LR
-        E
-        end
+    C --> E --> F
     end
 
     F --> H
-    G --> I
 {% endmermaid %}
 <!--vale on -->
+
+Without Consumer Groups, you would have to use five Rate Limiting Advanced plugins, once for each consumer. 
+Any time you change the rate limit, you would need to update every consumer individually.
+
+Consumer Groups allow you to manage your plugin configuration centrally, and reduce the size of your {{ site.base_gateway }} configuration at the same time. 
+In this example, it's the difference between using two plugins or five plugins. In your production environment, it could be the difference between two plugins and five _million_ plugins.
 
 ## Use cases
 
