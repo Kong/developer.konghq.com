@@ -5,7 +5,7 @@ require_relative 'base'
 module Jekyll
   module Data
     module SearchTags
-      class HowTo < Base
+      class PluginExample < Base
       end
     end
   end
