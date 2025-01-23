@@ -7,4 +7,4 @@ Allow: *
 User-agent: *
 Disallow: /
 
-Sitemap: {{ site.links.web }}/sitemap-index/default.xml
+Sitemap: {{ site.links.web }}/sitemap.xml
