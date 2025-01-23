@@ -5,7 +5,7 @@ related_resources:
   - text: Configure Hashicorp Vault as a vault backend
     url: /how-to/configure-hashicorp-vault-as-a-vault-backend
   - text: Secret management
-    url: /secret-management/
+    url: /gateway/secrets-management/
 
 products:
     - gateway

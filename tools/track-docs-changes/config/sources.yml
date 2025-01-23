@@ -181,6 +181,10 @@ app/_landing_pages/deck.yaml:
   - app/_src/deck/faqs.md
 app/_landing_pages/gateway.yaml:
   - app/_src/gateway/index.md
+app/_landing_pages/gateway/secrets-management.yaml:
+  - app/_src/gateway/kong-enterprise/secrets-management/index.md
+  - app/_src/gateway/kong-enterprise/secrets-management/getting-started.md
+  - app/_src/gateway/kong-enterprise/secrets-management/secrets-rotation.md
 
 # references 
 app/deck/distributed-config.md:

@@ -164,7 +164,7 @@ There are two types of refresh configuration available:
 * Refresh periodically using TTLs: For example, check for a new TLS certificate once per day.
 * Refresh on failure: For example, on a database authentication failure, check if the secrets were updated, and try again.
 
-For more information, see [Secret management](/secrets-management/).
+For more information, see [Secret management](/gateway/secrets-management/).
 
 ## Best practices for Vaults
 
