@@ -14,4 +14,4 @@ description: |
 @todo
 
 Use https://docs.konghq.com/gateway/latest/how-kong-works/health-checks/
-Probably need a separate how-to as well - how do you actually enable and use a health check? What entities are involved (Upstream, Targets)? Does any of this info actully belong in the Upstream or Target entity docs?
+Probably need a separate how-to as well - how do you actually enable and use a health check? What entities are involved (Upstream, Targets)? Does any of this info actually belong in the Upstream or Target entity docs?
