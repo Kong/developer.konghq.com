@@ -21,7 +21,7 @@ module Jekyll
               'example?' => true,
               'example' => example,
               'examples' => @plugin.examples,
-              'content_type' => 'reference',
+              'content_type' => 'plugin_example',
               'no_version' => true
             )
         end
