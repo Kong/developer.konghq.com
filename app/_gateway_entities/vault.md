@@ -137,7 +137,7 @@ Would point to a secret object called `pg` inside a HashiCorp Vault, which may r
 `{vault://hcv/pg/username}`.
 <!-- vale on -->
 
-Vault references must be used for the whole referenced value. Imagine that you're calling an upstream service with the authentication token `ABC123`
+Vault references must be used for the whole referenced value. Imagine that you're calling an upstream service with the authentication token `ABC123`:
 
 {% feature_table %}
 item_title: Works
@@ -157,7 +157,8 @@ features:
 
 ## Secret rotation in Vaults
 
-By default, {{site.base_gateway}} automatically refreshes secrets *once every minute* in the background. You can also configure how often {{site.base_gateway}} refreshes secrets using the Vault entity configuration.
+By default, {{site.base_gateway}} automatically refreshes secrets *once every minute* in the background. 
+You can also configure how often {{site.base_gateway}} refreshes secrets using the Vault entity configuration.
 
 There are two types of refresh configuration available:
 * Refresh periodically using TTLs: For example, check for a new TLS certificate once per day.

@@ -36,11 +36,13 @@ api_specs:
 
 A Gateway Service represents your actual backend API or microservice.
 
-For simple deployments, the upstream URL can be provided directly in the Service. For so phisticated traffic management needs, a Service can point at an [Upstream](/gateway/entities/upstream/).
+For simple deployments, the upstream URL can be provided directly in the Service. For sophisticated traffic management needs, a Service can point at an [Upstream](/gateway/entities/upstream/).
 
 Gateway Services, in conjunction with [Routes](/gateway/entities/route/), let you expose your services to clients with {{site.base_gateway}}.
 
 [Plugins](/gateway/entities/plugin/) can be attached to a Service, and will run against every request that triggers a request to the Service that they're attached to.
+
+<!--vale off -->
 
 {% mermaid %}
 flowchart LR
@@ -65,6 +67,8 @@ flowchart LR
   style id1 rx:10,ry:10
   
 {% endmermaid %}
+
+<!--vale on -->
 
 ## Schema
 

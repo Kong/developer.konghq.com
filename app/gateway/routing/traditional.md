@@ -12,6 +12,8 @@ products:
 related_resources:
   - text: Route entity
     url: /gateway/entities/route/
+  - text: SNI entity
+    url: /gateway/entities/sni/
   - text: Expressions router
     url: /gateway/routing/expressions/
 
@@ -23,12 +25,15 @@ breadcrumbs:
 
 faqs:
   - q: When should I use the traditional router?
-    a: "@TODO: When using APIOps transforms"
+    a: | 
+      If you are working with APIOps pipelines that manipulate the route using `deck file patch`, we recommend using the JSON format used by the traditional router. 
+      
+      @TODO: When using APIOps transforms
 ---
 
-The traditional router is {{ site.base_gateway }}'s original routing configuration format. It uses JSON to provide a list of routing criteria, including `host`, `path` and `headers`.
+The traditional router is {{ site.base_gateway }}'s original routing configuration format. It uses JSON to provide a list of routing criteria, including `host`, `path`, and `headers`.
 
-Routing based on JSON configuration is available when `router_flavor` is set to both `traditional_compat` _or_ `expressions` in `kong.conf`.
+Routing based on JSON configuration is available when [`router_flavor`](/gateway/configuration/#router_flavor) is set to `traditional_compat` _or_ `expressions` in `kong.conf`.
 
 ## Routing criteria
 
@@ -118,8 +123,8 @@ them via the Admin API:
 
 ```bash
 curl -i -X POST http://localhost:8001/routes/ \
-  -H 'Content-Type: application/json' \
-  -d '{"hosts":["example.com", "foo-service.com"]}'
+  --header 'Content-Type: application/json' \
+  --data '{"hosts":["example.com", "foo-service.com"]}'
 ```
 
 To satisfy the `hosts` condition of this route, any incoming request from a
@@ -139,7 +144,7 @@ Similarly, any other header can be used for routing:
 
 ```sh
 curl -i -X POST http://localhost:8001/routes/ \
-  -d 'headers.region=north'
+  --data 'headers.region=north'
 ```
 
 Incoming requests containing a `Region` header set to `North` are routed to
@@ -201,21 +206,22 @@ GET / HTTP/1.1
 version: v1
 ```
 
-This request will be routed through to the service. The same happens with this one:
+This request will be routed through to the Service. The same happens with this one:
 
 ```http
 GET / HTTP/1.1
 version: v2
 ```
 
-But this request isn't routed to the service:
+This request isn't routed to the Service:
 
 ```http
 GET / HTTP/1.1
 version: v3
 ```
 
-**Note**: The `headers` keys are a logical `AND` and their values a logical `OR`.
+{:.info}
+> **Note**: The `headers` keys are a logical `AND` and their values a logical `OR`.
 
 ### Path
 
@@ -254,9 +260,9 @@ request upstream without changing the URL path.
 
 When proxying with path prefixes, **the longest paths get evaluated first**.
 This allow you to define two routes with two paths: `/service` and
-`/service/resource`, and ensure that the former does not "shadow" the latter.
+`/service/resource`, and ensure that the former doesn't get overshadowed by the latter.
 
-#### Using Regex in paths
+#### Using regex in paths
 
 For a path to be considered a regular expression, it must be prefixed with a `~`:
 
@@ -270,7 +276,7 @@ Any path that isn't prefixed with a `~` will be considered plain text:
 "paths": ["/users/\d+/profile", "/following"]
 ```
 
-For more information about how the router processes regular expressions, see [performance considerations when using Expressions](/gateway/latest/key-concepts/routes/expressions/#performance-considerations-when-using-expressions).
+For more information about how the router processes regular expressions, see the [routing performance considerations](/gateway/entities/route/#routing-performance-recommendations).
 
 ##### Regex evaluation order
 
@@ -305,23 +311,24 @@ defined URIs, in this order:
 3. `/version/any/`
 4. `/version`
 
-Routers with a large number of regexes can consume traffic intended for other rules. Regular expressions are much more expensive to build and execute and can't be optimized easily.
+Routers with a large number of regexes can consume traffic intended for other rules. 
+Regular expressions are much more expensive to build and execute and can't be optimized easily.
 You can avoid creating complex regular expressions using the [Router Expressions language](/gateway/routing/expressions/).
 
 If you see unexpected behavior, use the Kong debug header to help track down the source:
 
-1. In `kong.conf`, set [`allow_debug_header: on`](/gateway/{{page.release}}/reference/configuration/#allow_debug_header). @TODO: Update URL
+1. In `kong.conf`, set [`allow_debug_header=on`](/gateway/configuration/#allow_debug_header).
 1. Send `Kong-Debug: 1` in your request headers to indicate the matched route ID in the response headers for
    troubleshooting purposes.
 
-As usual, a request must still match a route's `hosts` and `methods` properties
-as well, and {{site.base_gateway}} traverses your routes until it finds one that [matches
-the most rules](#matching-priorities).
+As usual, a request must still match a Route's `hosts` and `methods` properties
+as well, and {{site.base_gateway}} traverses your Routes until it finds one that [matches
+the most rules](#route-priority).
 
 ##### Capture groups
 
 Capture groups are also supported, and the matched group will be extracted
-from the path and available for plugins consumption. If we consider the
+from the path and available for plugins consumption. Consider the
 following regex:
 
 ```
@@ -334,7 +341,7 @@ And the following request path:
 /version/1/users/john
 ```
 
-{{site.base_gateway}} considers the request path a match, and if the overall route is
+{{site.base_gateway}} considers the request path a match, and if the overall Route is
 matched (considering other routing attributes), the extracted capture groups
 will be available from the plugins in the `ngx.ctx` variable:
 
@@ -349,17 +356,18 @@ local router_matches = ngx.ctx.router_matches
 
 Keep the following path matching criteria in mind when configuring paths:
 
-1. **Regex in paths:** For a path to be considered a regular expression, it must be prefixed with a `~`. You can avoid creating complex regular expressions using the [Router Expressions language](/gateway/routing/expressions/).
+1. **Regex in paths:** For a path to be considered a regular expression, it must be prefixed with a `~`. 
+You can avoid creating complex regular expressions using the [Router Expressions language](/gateway/routing/expressions/).
 1. **Capture groups:** [Regex capture groups](/gateway/routing/expressions/#example-expressions) are also supported, and the matched group will be extracted from the path and available for plugins consumption.
 1. **Escaping special characters:** When configuring Routes with regex paths via the Admin API, be sure to URL encode your payload if necessary according to [RFC 3986](https://tools.ietf.org/html/rfc3986).
-1. **Normalization behavior:** To prevent Route match bypasses, the incoming request URI from client is always normalized according to [RFC 3986](https://tools.ietf.org/html/rfc3986) before router matching occurs.
+1. **Normalization behavior:** To prevent Route match bypasses, the incoming request URI from the client is always normalized according to [RFC 3986](https://tools.ietf.org/html/rfc3986) before router matching occurs.
 
 #### Path normalization
 
-To prevent trivial route match bypass, the incoming request URI from client
+To prevent trivial route match bypass, the incoming request URI from the client
 is always normalized according to [RFC 3986](https://tools.ietf.org/html/rfc3986)
 before router matching occurs. Specifically, the following normalization techniques are
-used for incoming request URIs, which are selected because they generally do not change
+used for incoming request URIs, which are selected because they generally don't change
 semantics of the request URI:
 
 1. Percent-encoded triplets are converted to uppercase. For example: `/foo%3a` becomes `/foo%3A`.
@@ -367,28 +375,22 @@ semantics of the request URI:
 3. Dot segments are removed as necessary. For example: `/foo/./bar/../baz` becomes `/foo/baz`.
 4. Duplicate slashes are merged. For example: `/foo//bar` becomes `/foo/bar`.
 
-The `paths` attribute of the Route object are also normalized. It is achieved by first determining
+The values in the `paths` attribute of the Route object are also normalized. This is achieved by first determining
 if the path is a plain text or regex path. Based on the result, different normalization techniques
-are used.
-
-For plain text route path:
-
-Same normalization technique as above is used, that is, methods 1 through 4.
-
-For regex route path:
-
-Only methods 1 and 2 are used. In addition, if the decoded character becomes a regex
-meta character, it will be escaped with backslash.
+are used:
+* Plain text route path: Uses the same normalization technique as above, that is, methods 1 through 4.
+* Regex route path: Only uses methods 1 and 2. In addition, if the decoded character becomes a regex
+meta character, it will be escaped with a backslash.
 
 {{site.base_gateway}} normalizes any incoming request URI before performing router
 matches. As a result, any request URI sent over to the upstream services will also
-be in normalized form that preserves the original URI semantics.
+be in normalized form, which preserves the original URI semantics.
 
 ### HTTP method
 
 The `methods` field allows matching the requests depending on their HTTP
-method. It accepts multiple values. Its default value is empty (the HTTP
-method is not used for routing).
+method. It accepts multiple values. Its default value is empty, where the HTTP
+method is not used for routing.
 
 The following route allows routing via `GET` and `HEAD`:
 
@@ -401,7 +403,7 @@ The following route allows routing via `GET` and `HEAD`:
 }
 ```
 
-Such a route would be matched with the following requests:
+This route would be matched with the following requests:
 
 ```http
 GET / HTTP/1.1
@@ -413,17 +415,15 @@ HEAD /resource HTTP/1.1
 Host: ...
 ```
 
-But it would not match a `POST` or `DELETE` request. This allows for much more
-granularity when configuring plugins on routes. For example, one could imagine
-two routes pointing to the same service: one with unlimited unauthenticated
-`GET` requests, and a second one allowing only authenticated and rate-limited
+This route wouldn't match a `POST` or `DELETE` request. This allows for much more
+granularity when configuring plugins on Routes. For example, you might have two routes pointing to the same service: 
+one with unlimited unauthenticated `GET` requests, and a second one allowing only authenticated and rate-limited
 `POST` requests (by applying the authentication and rate limiting plugins to
-such requests).
+those requests).
 
 ### Source
 
-{:.note}
-
+{:.info}
 > **Note:** This section only applies to TCP and TLS routes.
 
 The `sources` routing attribute allows
@@ -448,8 +448,7 @@ address "10.2.2.2" or Port "9123" would match such route.
 
 ### Destination
 
-{:.note}
-
+{:.info}
 > **Note:** This section only applies to TCP and TLS routes.
 
 The `destinations` attribute, similarly to `sources`,
@@ -459,8 +458,8 @@ uses the destination of the TCP/TLS connection as routing attribute.
 ### SNI
 
 When using secure protocols (`https`, `grpcs`, or `tls`), a [Server
-Name Indication][SNI] can be used as a routing attribute. The following route
-allows routing via SNIs:
+Name Indication](/gateway/entities/sni/) can be used as a routing attribute. 
+The following route allows routing via SNIs:
 
 ```json
 {
@@ -470,22 +469,15 @@ allows routing via SNIs:
 ```
 
 Incoming requests with a matching hostname set in the TLS connection's SNI
-extension would be routed to this route. As mentioned, SNI routing applies not
-only to TLS, but also to other protocols carried over TLS - such as HTTPS and
-If multiple SNIs are specified in the route, any of them can match with the incoming request's SNI.
-with the incoming request (OR relationship between the names).
+extension would be routed to this route. 
+SNI routing also applies to other protocols carried over TLS, such as HTTPS.
+If multiple SNIs are specified in the route, any of them can match the incoming request's SNI.
 
-The SNI is indicated at TLS handshake time and cannot be modified after the TLS connection has
+The SNI is indicated at TLS handshake time and can't be modified after the TLS connection has
 been established. This means, for example, that multiple requests reusing the same keepalive connection
-will have the same SNI hostname while performing router match, regardless of the `Host` header.
-has been established. This means keepalive connections that send multiple requests
-will have the same SNI hostnames while performing router match
-(regardless of the `Host` header).
+will have the same SNI hostname while performing router matches, regardless of the value in the `Host` header.
 
-Please note that creating a route with mismatched SNI and `Host` header matcher
-is possible, but generally discouraged.
-
-## Route Priority
+## Route priority
 
 In `traditional_compat` mode, the priority of a Route is determined as follows, by the order of descending significance:
 
@@ -495,7 +487,7 @@ In `traditional_compat` mode, the priority of a Route is determined as follows, 
 4. **Regular expressions and prefix paths:** Routes that have a regular expression path are considered first and are ordered by their `regex_priority` value. Routes that have no regular expression path are ordered by the length of their paths.
 5. **Creation date:** If all of the above are equal, the router chooses the Route that was created first using the Route's `created_at` value.
 
-For example, if two routes are configured like so:
+For example, if two Routes are configured like so:
 
 ```json
 {

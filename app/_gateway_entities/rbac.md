@@ -11,7 +11,7 @@ entities:
 description: The RBAC entity is what allows for the RBAC system to be administered.
 schema:
     api: gateway/admin-ee
-    path: /schemas/rbac
+    path: /schemas/RBAC
 
 related_resources:
   - text: Gateway Workspace entity
@@ -60,6 +60,8 @@ If {{site.base_gateway}} finds a matching permission for the current user, endpo
 
 This diagram helps explain how individual workspace roles and cross-workspace roles interact:
 
+<!--vale off -->
+
 {% mermaid %}
 flowchart LR
     subgraph team-a-roles [Team A Roles]
@@ -105,6 +107,7 @@ flowchart LR
 
 {% endmermaid %}
 
+<!--vale on -->
 
 ## RBAC Entities
 

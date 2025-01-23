@@ -36,13 +36,16 @@ The following diagram illustrates how Targets are used by Upstreams for load bal
 
 ## Using hostnames
 
-A `target` can also have a hostname instead of an IP address. In that case the name will be resolved and all entries found will individually be added to the load balancer, e.g., adding `api.host.com:123` with `weight=100`.
+A `target` can also have a hostname instead of an IP address. 
+In that case, the name is resolved and all entries found are individually added to the load balancer.
 
-If the hostname `api.host.com` resolves to an A record with 2 IP addresses, both IP addresses are added as target, each with `weight=100` and port 123.
+For example, let's say you add `api.host.com:123` with `weight=100`:
 
-If the hostname resolves to an SRV record, then the `port` and `weight` fields from the DNS record are used, and override the port and weight set in the Target.
+* If the hostname `api.host.com` resolves to an A record with 2 IP addresses, both IP addresses are added as a target, each with `weight=100` and port 123.
+* If the hostname resolves to an SRV record, then the `port` and `weight` fields from the DNS record are used, and override the port and weight set in the Target.
 
-The balancer will honor the DNS record's `ttl` setting. Upon expiry it queries the nameserver and updates the balancer. When a DNS record has `ttl=0`, the hostname will be added as a single target, with the specified weight. The nameserver will be queried for every request, adding latency to the request.
+The balancer honors the DNS record's `ttl` setting. Upon expiry, it queries the nameserver and updates the balancer. 
+When a DNS record has `ttl=0`, the hostname is added as a single target, with the specified weight. The nameserver is queried for every request, adding latency to the request.
 
 ## Schema
 

@@ -25,11 +25,11 @@ breadcrumbs:
 
 faqs:
   - q: Is there a performance difference between the traditional router and expressions?
-    a: Both Traditional and Expressions use the same routing engine internally. Traditional mode configures routes with JSON, and Expressions uses a DSL.
-  - q: Why would I choose Expressions over the Traditional router?
-    a: The Expressions router provides more routing flexibility, including fast exact matching that is not available in the Traditional router.
+    a: Both traditional and expressions modes use the same routing engine internally. Traditional mode configures routes with JSON, and expressions uses a DSL.
+  - q: Why would I choose expressions over the traditional router?
+    a: The expressions router provides more routing flexibility, including fast exact matching that is not available in the traditional router.
   - q: When should I keep using the traditional router over expressions?
-    a: If you are working with APIOps pipelines that manipulate the route using `deck file patch`, the JSON format used by the traditional router is recommended
+    a: If you are working with APIOps pipelines that manipulate the route using `deck file patch`, we recommend using the JSON format used by the traditional router.
 ---
 
 The expressions router provides a Domain Specific Language (DSL) that allows for complex routing rule definition. The expressions router ensures good runtime matching performance by providing specific routing comparisons such as non-regex equality checks that are not available in the traditional router.
@@ -90,7 +90,7 @@ This section explains how to optimize the expressions you write to get the most 
 
 ### Number of routes
 
-#### Priority Matching
+#### Priority matching
 
 Expressions routes are always evaluated in the descending `priority` order they were defined.
 Therefore, it is helpful to put more likely matched routes before (as in, higher priority)
@@ -262,13 +262,13 @@ features:
 <!--vale on-->
 
 
-In addition, expressions also supports one composite type, `Array`. Array types are written as `Type[]`.
+In addition, the expressions router also supports one composite type, `Array`. Array types are written as `Type[]`.
 For example: `String[]`, `Int[]`. Currently, arrays can only be present in field values. They are used in
 case one field could contain multiple values. For example, `http.headers.x` or `http.queries.x`.
 
 #### Matching fields
 
-The following table describes the available matching fields, as well as their associated type when using an expressions based router.
+The following table describes the available matching fields, as well as their associated type when using an expressions-based router.
 
 <!--vale off-->
 

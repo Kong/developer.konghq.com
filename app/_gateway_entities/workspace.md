@@ -50,6 +50,7 @@ Workspaces are a way of namespacing {{site.base_gateway}} entities so they can b
 
 Workspaces support [multi-tenancy](/gateway/multi-tenancy/) by isolating {{site.base_gateway}} configuration objects. When paired with RBAC, {{site.base_gateway}} administrators can effectively create tenants within the control plane. The Workspace administrators have segregated and secure access to only their portion of the {{site.base_gateway}} configuration in Kong Manager, the Admin API, and the declarative configuration tool decK.
 
+<!--vale off -->
 
 {% mermaid %}
 flowchart LR
@@ -76,6 +77,8 @@ flowchart LR
  
 {% endmermaid %}
 
+<!--vale on -->
+
 ### How does {{site.base_gateway}} resolve entity conflicts between Workspaces?
 
 Routing rules are configured at the data plane level. The data plane routes client traffic based on the configuration applied across all Workspaces. Configuring entities related to routing, such as [Gateway Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/), alter the client traffic routing behavior of the data plane, but {{site.base_gateway}} will always attempt to ensure that routing rules don't contain conflicts. 
@@ -85,9 +88,9 @@ To route traffic to the appropriate Workspace, {{site.base_gateway}} uses a conf
 When a Service or Route is **created** or **modified**, the {{site.base_gateway}} Router checks for the existence of that object before allowing the operation to proceed in this order:
 
 1. If the Service or Route created is unique across all Workspaces, the new entity is created. 
-2. If an existing Service or Route object that matches the one being created is found in the current workspace, a `409 Conflict` error is returned. 
-4. If an equivalent Service or Route is found in a different Workspace, and the host is provided:
-    1. If the host field matches in both workspaces, a `409 Conflict` error is returned.
+1. If an existing Service or Route object that matches the one being created is found in the current Workspace, a `409 Conflict` error is returned. 
+2. If an equivalent Service or Route is found in a different Workspace, and the host is provided:
+    1. If the host field matches in both Workspaces, a `409 Conflict` error is returned.
     1. If the host field does not match, the new entity can be created.
     1. If the host is an absolute value, a `409 Conflict` error is returned.
 

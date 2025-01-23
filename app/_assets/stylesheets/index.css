@@ -354,6 +354,10 @@
 
   .tabcolumn {
     @apply list-none flex text-sm ml-0  w-full gap-0;
+
+    ul, li {
+      @apply list-none;
+    }
   }
 
   .tab-button {

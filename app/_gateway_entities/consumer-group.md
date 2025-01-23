@@ -89,9 +89,11 @@ flowchart LR
 {% endmermaid %}
 <!--vale on -->
 
-Without Consumer Groups there are five Rate Limiting Advanced plugins, once for each consumer. Any time you change the rate limit, you need to update every consumer individually.
+Without Consumer Groups, you would have to use five Rate Limiting Advanced plugins, once for each consumer. 
+Any time you change the rate limit, you would need to update every consumer individually.
 
-Consumer Groups allow you to manage your plugin configuration centrally, and reduce the size of your {{ site.base_gateway }} configuration at the same time. In this example, it's the difference between using two plugins or five plugins. In your production environment, it could be the difference between two plugins and five _million_ plugins.
+Consumer Groups allow you to manage your plugin configuration centrally, and reduce the size of your {{ site.base_gateway }} configuration at the same time. 
+In this example, it's the difference between using two plugins or five plugins. In your production environment, it could be the difference between two plugins and five _million_ plugins.
 
 ## Use cases
 

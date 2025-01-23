@@ -46,13 +46,13 @@ faqs:
 
   - q: Can you scope authentication plugins to Consumers?
     a: |
-      No. Authentication plugins must be scoped to either a Route, Service, or globally
+      No. Authentication plugins must be scoped to either a Route, Service, or globally.
 
   - q: Can you manage Consumers with decK?
     a: |
       Yes, you can manage Consumers using decK, but take caution if you have a large number of Consumers as the sync time will be high.
 
-      To manage a large number of consumers using decK, we recommend a federated configuration management approach where consumers are placed in to Consumer Groups and managed separately to the rest of your configuration.
+      To manage a large number of consumers using decK, we recommend a federated configuration management approach where consumers are placed in to Consumer Groups and managed separately from the rest of your configuration.
 
 tools:
     - admin-api
@@ -84,6 +84,8 @@ For example, adding a Basic Auth plugin to a Gateway Service or Route allows it 
 
 By attaching a plugin directly to a Consumer, you can manage specific controls at the Consumer level, such as rate limits.
 
+<!--vale off -->
+
 {% mermaid %}
 flowchart LR
 
@@ -105,6 +107,8 @@ RL --> Upstream
 
 {% endmermaid %}
 
+<!--vale on -->
+
 ## Use cases for Consumers
 
 Common use cases for Consumers:
@@ -113,7 +117,7 @@ Common use cases for Consumers:
 |---------|------------|
 | Authentication | Client authentication is the most common reason for setting up a Consumer. If you're using an authentication plugin, you'll need a Consumer with credentials. |
 | Rate limiting | Rate limit specific Consumers based on tiers. |
-| Transformation | Add or remove values from response bodies based on the Consumer |
+| Transformation | Add or remove values from response bodies based on the Consumer. |
 
 ## Schema
 
