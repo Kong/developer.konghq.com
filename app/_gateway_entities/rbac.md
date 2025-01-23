@@ -3,8 +3,7 @@ title: RBAC
 content_type: reference
 products:
   - gateway
-tiers: 
-  - enterprise
+tier: enterprise
 tools:
     - admin-api
 entities:
@@ -12,7 +11,7 @@ entities:
 description: The RBAC entity is what allows for the RBAC system to be administered.
 schema:
     api: gateway/admin-ee
-    path: /schemas/rbac
+    path: /schemas/RBAC
 
 related_resources:
   - text: Gateway Workspace entity
@@ -36,11 +35,9 @@ RBAC in {{site.base_gateway}} conforms to the following core principles:
 * In {{site.base_gateway}} there are Users
 * Every user has a Role
 * Roles are assigned Permissions
-* Every Role belongs to a [Group](/gateway/entities/group/)
 * A Group is a collection of Roles
 
-{{site.base_gateway}} uses a precedence model, from most specificity to least specificity, to determine if a user has access to an endpoint.
-
+{{site.base_gateway}} uses a [precedence model](#rbac-precedence-order), from most specificity to least specificity, to determine if a user has access to an endpoint.
 
 ## What are Permissions?
 
@@ -64,6 +61,8 @@ If {{site.base_gateway}} finds a matching permission for the current user, endpo
 ## Role configuration
 
 This diagram helps explain how individual workspace roles and cross-workspace roles interact:
+
+<!--vale off -->
 
 {% mermaid %}
 flowchart LR
@@ -110,6 +109,7 @@ flowchart LR
 
 {% endmermaid %}
 
+<!--vale on -->
 
 ## RBAC Entities
 
@@ -202,17 +202,3 @@ You can also automate the creation of Admins. For more information, see [creatin
 ## Schema
 
 {% entity_schema %}
-
-## Create an RBAC user
-
-Creating an RBAC User requires [RBAC to be enabled](#enable-rbac) for {{site.base_gateway}}.
-
-{% entity_example %}
-type: rbac
-data:
-  name: my-user
-  user_token: exampletoken
-headers:
-  admin-api:
-    - "Kong-Admin-Token: $ADMIN_TOKEN"
-{% endentity_example %}

@@ -1,0 +1,3 @@
+{% for tag in page.search %}
+<meta name="algolia:{{tag[0]}}" content="{{tag[1]}}">
+{% endfor %}

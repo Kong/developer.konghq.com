@@ -1,8 +1,10 @@
 ---
 title: Keyring
 content_type: reference
-entities:
-  - keyring
+layout: reference
+
+products:
+    - gateway
 
 description: |
   A Keyring is a mechanism that encrypts sensitive data fields, such as consumer secrets, before storing them in the database.

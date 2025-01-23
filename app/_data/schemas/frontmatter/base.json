@@ -18,7 +18,7 @@
     },
     "content_type": {
       "type": "string",
-      "enum": ["landing_page", "how_to", "reference", "concept", "plugin"]
+      "enum": ["landing_page", "how_to", "reference", "concept", "plugin", "plugin_example", "api"]
     },
     "description": {
       "type": "string"

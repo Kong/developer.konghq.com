@@ -3,7 +3,7 @@
 curl -i -X {{include.method}} {{include.url}} {% if include.headers %}\{%- endif -%}{% for header in include.headers %}
      -H "{{header}}" {%- unless forloop.last -%}\{% endunless %}{%- endfor %}{% if include.body %}\
      --data-raw '
-{{ include.body | json_prettify | indent: 4 }}
+{{ include.body | json_prettify | escape_env_variables | indent: 4 }}
     '{% endif %}
 ```
 {% else %}

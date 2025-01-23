@@ -66,11 +66,11 @@ rows:
       - type: entity_card
         config:
           entity: ca_certificate
+  - columns:
     - blocks:
       - type: entity_card
         config:
           entity: vault
-  - columns:
     - blocks:
       - type: entity_card
         config:
@@ -79,11 +79,6 @@ rows:
       - type: entity_card
         config:
           entity: key-set
-    - blocks:
-      - type: entity_card
-        config:
-          entity: keyring
-
   
   - header:
       type: h2
