@@ -27,8 +27,7 @@ faqs:
   - q: When should I use the traditional router?
     a: | 
       If you are working with APIOps pipelines that manipulate the route using `deck file patch`, we recommend using the JSON format used by the traditional router. 
-      
-      @TODO: When using APIOps transforms
+
 ---
 
 The traditional router is {{ site.base_gateway }}'s original routing configuration format. It uses JSON to provide a list of routing criteria, including `host`, `path`, and `headers`.
@@ -51,8 +50,8 @@ For a request to match a route:
 
 - The request **must** include **all** of the configured fields
 - The values of the fields in the request **must** match at least one of the
-  configured values (While the field configurations accepts one or more values,
-  a request needs only one of the values to be considered a match)
+  configured values. While the field configurations accept one or more values,
+  a request needs only one of the values to be considered a match.
 
 Let's go through a few examples. Consider a route configured like the following:
 
@@ -259,7 +258,7 @@ one of the routes' `paths` values. By default, {{site.base_gateway}} would then 
 request upstream without changing the URL path.
 
 When proxying with path prefixes, **the longest paths get evaluated first**.
-This allow you to define two routes with two paths, such as `/service` and
+This allows you to define two routes with two paths, such as `/service` and
 `/service/resource`, and ensure that the former doesn't overshadow the latter.
 
 #### Using regex in paths
@@ -270,7 +269,7 @@ For a path to be considered a regular expression, it must be prefixed with a `~`
 paths: ["~/foo/bar$"]
 ```
 
-Any path that isn't prefixed with a `~` will be considered plain text:
+Any path that isn't prefixed with a `~` is considered plain text:
 
 ```
 "paths": ["/users/\d+/profile", "/following"]
@@ -358,7 +357,7 @@ Keep the following path matching criteria in mind when configuring paths:
 
 1. **Regex in paths:** For a path to be considered a regular expression, it must be prefixed with a `~`. 
 You can avoid creating complex regular expressions using the [Router Expressions language](/gateway/routing/expressions/).
-1. **Capture groups:** [Regex capture groups](/gateway/routing/expressions/#example-expressions) are also supported, and the matched group will be extracted from the path and available for plugins consumption.
+1. **Capture groups:** [Regex capture groups](/gateway/routing/expressions/#example-expressions) are also supported, and the matched group is extracted from the path and available for plugin consumption.
 1. **Escaping special characters:** When configuring Routes with regex paths via the Admin API, be sure to URL encode your payload if necessary according to [RFC 3986](https://tools.ietf.org/html/rfc3986).
 1. **Normalization behavior:** To prevent Route match bypasses, the incoming request URI from the client is always normalized according to [RFC 3986](https://tools.ietf.org/html/rfc3986) before router matching occurs.
 
@@ -457,8 +456,8 @@ uses the destination of the TCP/TLS connection as routing attribute.
 
 ### SNI
 
-When using secure protocols (`https`, `grpcs`, or `tls`), a [Server
-Name Indication](/gateway/entities/sni/) can be used as a routing attribute. 
+When using secure protocols (`https`, `grpcs`, or `tls`), a 
+[Server Name Indication](/gateway/entities/sni/) can be used as a routing attribute. 
 The following route allows routing via SNIs:
 
 ```json
@@ -481,10 +480,12 @@ will have the same SNI hostname while performing router matches, regardless of t
 
 In `traditional_compat` mode, the priority of a Route is determined as follows, by the order of descending significance:
 
-1. **Priority points:** A priority point is added for every `methods`, `host`, `headers`, and `snis` value that a Route has. Routes with higher priority point values will be considered before those with lower values.
+1. **Priority points:** A priority point is added for every `methods`, `host`, `headers`, and `snis` value that a Route has. 
+Routes with higher priority point values are considered before those with lower values.
 2. **Wildcard hosts:** Among Routes with the same priority point value, Routes without a wildcard host specified (or no host at all) are prioritized before those that have any wildcard host specification.
 3. **Header count:** The resulting groups are sorted so the Routes with a higher number of specified headers have higher priority than those with a lower number of headers.
-4. **Regular expressions and prefix paths:** Routes that have a regular expression path are considered first and are ordered by their `regex_priority` value. Routes that have no regular expression path are ordered by the length of their paths.
+4. **Regular expressions and prefix paths:** Routes that have a regular expression path are considered first and are ordered by their `regex_priority` value. 
+Routes that have no regular expression path are ordered by the length of their paths.
 5. **Creation date:** If all of the above are equal, the router chooses the Route that was created first using the Route's `created_at` value.
 
 For example, if two Routes are configured like so:
