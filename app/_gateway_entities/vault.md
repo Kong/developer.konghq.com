@@ -8,7 +8,7 @@ description: A Vault is used to store secrets.
 
 related_resources:
   - text: Secrets Management
-    url: /secrets-management/
+    url: /gateway/secrets-management/
   - text: Workspaces
     url: /gateway/entities/workspace/
   - text: RBAC
