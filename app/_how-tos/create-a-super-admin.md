@@ -18,7 +18,7 @@ prereqs:
     inline:
       - title: Configure environment variables
         content: |
-            Set the `kong-admin-token`, `name`, and `user_token`: 
+            Set the following variables: 
             * `KONG_ADMIN_TOKEN`: The `kong_password` variable set when configuring {{site.base_gateway}}
             * `ADMIN_NAME`: The name of the RBAC user that will be associated with the Super Admin Role.
             * `USER_TOKEN`: The authentication token to be presented to the Admin API.
@@ -78,7 +78,7 @@ min_version:
 
 ## 2. Validate
 
-You can validate that the RBAC user was correctly assigned to the `super-admin` Role using the [`/rbac/users/{user}/roles`](/api/gateway/admin-ee/#/operations/get-rbac-users-name_or_id-roles) endpoint: 
+You can validate that the `super-admin` role was correctly assigned to the RBAC user using the [`/rbac/users/{user}/roles`](/api/gateway/admin-ee/#/operations/get-rbac-users-name_or_id-roles) endpoint: 
 
 {% control_plane_request %}
   url: /rbac/users/$ADMIN_NAME/roles
