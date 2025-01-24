@@ -95,7 +95,7 @@ cleanup:
 
 ## 1. Configure the Vault entity
 
-Create a Vault entity with the required parameters for AWS:
+Using decK, create a Vault entity with the required parameters for AWS:
 
 {% entity_example %}
 type: vault
@@ -109,10 +109,10 @@ data:
 
 ## 2. Validate
 
-To validate, you can call your secret using the `kong vault get` command in your Data Plane container. If the Docker container is named `kong-quickstart-gateway`, you can use the following command:
+To validate that the secret was stored correctly in AWS you can use the `kong vault get` command within the Data Plane container. If the Docker container is named `kong-quickstart-gateway`, you can use the following command:
 
 ```sh
 docker exec kong-quickstart-gateway kong vault get {vault://aws-vault/my-aws-secret/token}
 ```
 
-If the vault was configured correctly, this command should return the value of the secret. You can use `{vault://aws-vault/my-aws-secret/token}` to reference the secret in any referenceable field.
+If the vault was configured correctly, this command should return the value of the secret. Then, you can use `{vault://aws-vault/my-aws-secret/token}` to reference the secret in any referenceable field.
