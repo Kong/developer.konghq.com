@@ -39,7 +39,7 @@ prereqs:
 
 ## 1. Create an RBAC Super Admin
 
-In {{site.base_gateway}} A Super Admin has the ability to manage [Roles and permissions](/gateway/entities/rbac/#what-is-rbac) across Workspaces. Because the username `super-admin` matches the `super-admin` RBAC Role, the new user is automatically added to the `super-admin` Role. 
+In {{site.base_gateway}}, a Super Admin has the ability to manage [Roles and permissions](/gateway/entities/rbac/#what-is-rbac) across Workspaces. Because the username `super-admin` matches the `super-admin` RBAC Role, the new user is automatically added to the `super-admin` Role. 
 
 1. Create an [RBAC](/gateway/entities/rbac/) Super Admin by sending a `POST` request to the [`/rbac/users`](/api/gateway/admin-ee/3.9/#/operations/post-rbac-users) endpoint:
 <!-- vale off -->
@@ -99,7 +99,7 @@ The response body contains information about the `super-admin` user including a 
 
 ## 2. Enable RBAC
 
-With a `super-admin` created, you can proceed to enable RBAC. The `super-admin` User is a requirement because after enabling RBAC you will be required to pass the `user_token` value as a header in all requests. Enabling RBAC requires restarting or reloading {{site.base_gateway}}, if you are using the deploy script, this is done from within the {{site.base_gateway}} Docker container. 
+With a `super-admin` created, you can proceed to enable RBAC. The `super-admin` User is a requirement because after enabling RBAC, you will be required to pass the `user_token` value as a header in all requests. Enabling RBAC requires restarting or reloading {{site.base_gateway}}. If you are using the deploy script, this is done from within the {{site.base_gateway}} Docker container. 
 
 ```sh
 export KONG_ENFORCE_RBAC=on && kong reload
@@ -119,7 +119,7 @@ You can validate that RBAC is enabled by attempting to create a user like you di
 
 <!-- vale on -->
 
-If RBAC was enabled correctly this request will return: 
+If RBAC was enabled correctly, this request will return: 
 ```
 {
 	"message": "Invalid RBAC credentials"
