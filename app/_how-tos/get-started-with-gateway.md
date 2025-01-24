@@ -224,15 +224,17 @@ entities:
           weight: 100
 {% endentity_examples %}
 
-Update the `example_service` Service to point to this Upstream, instead of pointing directly to a URL. 
-Remove its `url` field and add the Upstream as a host:
+Let's create a new Service and Route, and point the Service to this Upstream, instead of pointing directly to a URL. 
   
 {% entity_examples %}
 entities:
   services:
-    - name: example_service
+    - name: load_balancing_service
       host: example_upstream
-
+      routes:
+        - name: load_balancing_route
+          paths:
+            - /load-balance
 {% endentity_examples %}
 
 You now have an Upstream with two Targets, `httpbin.konghq.com` and `httpbun.com`, and a service pointing to that Upstream.
@@ -248,13 +250,13 @@ waiting a few seconds between each time.
 You will see the hostname change between `httpbin` and `httpbun`:
 
 ```sh
-curl -s http://localhost:8000/mock/headers \
+curl -s http://localhost:8000/load-balance/headers \
   -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
 ```
 {: data-deployment-topology="on-prem" }
 
 ```sh
-curl -s $KONNECT_PROXY_URL/mock/headers \
+curl -s $KONNECT_PROXY_URL/load-balance/headers \
   -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
 ```
 {: data-deployment-topology="konnect" }
