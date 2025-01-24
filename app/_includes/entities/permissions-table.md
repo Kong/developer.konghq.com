@@ -1,4 +1,4 @@
-## Default {{site.base_gateway}}  roles
+## Default {{site.base_gateway}} roles
 
 By default, when {{site.base_gateway}} is configured, the starting user is configured as a **Super Admin** in the `default` Workspace. Workspaces, by default, contain the following roles: 
 
