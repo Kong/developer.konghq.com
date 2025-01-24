@@ -11,7 +11,7 @@ breadcrumbs:
   - /gateway/security/
 
 related_resources:
-  - text: Security in Kong Gateway
+  - text: Security in {{site.base_gateway}}
     url: /gateway/security/
   - text: Common Vulnerability Scoring System
     url: https://www.first.org/cvss/
