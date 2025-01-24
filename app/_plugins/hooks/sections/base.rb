@@ -2,7 +2,6 @@ require 'nokogiri'
 
 module SectionWrapper
   class Base
-
     def self.make_for(page)
       if page.is_a?(Jekyll::Document) && page.collection.label == 'how-tos'
         HowTo.new(page)
@@ -30,9 +29,7 @@ module SectionWrapper
         # Wrap content before the first h2
         content = wrap_content(doc, doc.children.take_while { |node| node != first_h2 })
 
-        if content && content.children.any?
-          doc.children.first.add_previous_sibling(content)
-        end
+        doc.children.first.add_previous_sibling(content) if content && content.children.any?
 
         doc.css('h2').each do |h2|
           slug = h2['id']
@@ -65,7 +62,7 @@ module SectionWrapper
 
     def build_wrapper(section_title = '')
       Nokogiri::HTML::DocumentFragment.parse <<-HTML
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-4 heading-section">
             #{section_title}
             <div class="content"></div>
         </div>
