@@ -78,8 +78,7 @@ desired traffic management policies. Two important objects in that model are
 Services and Routes define the path that requests and responses will take 
 through the system.
 
-Add the following content to `kong.yaml` to create a 
-Service mapped to the upstream URL `https://httpbin.konghq.com`:
+Run the following command to create a Service mapped to the upstream URL `https://httpbin.konghq.com`:
 
 {% entity_examples %}
 entities:
@@ -114,129 +113,19 @@ entities:
 ### Validate the Service and Route by proxying a request
 
 Using the Service and Route, you can now 
-access `https://httpbin.konghq.com/` using `http://localhost:8000/mock`.
-{: data-deployment-topology="on-prem" }
-
-Using the Service and Route, you can now 
-access `https://httpbin.konghq.com/` using `$KONNECT_PROXY_URL/mock`.
-{: data-deployment-topology="konnect" }
+access `https://httpbin.konghq.com/` using the `/mock` path.
 
 Httpbin provides an `/anything` resource which will return information about requests made to it.
 Proxy a request through {{site.base_gateway}} to the `/anything` resource:
 
-```sh
-curl -i -X GET http://localhost:8000/mock/anything
-```
-{: data-deployment-topology="on-prem" }
+{% validation request-check %}
+url: /mock/anything
+status_code: 200
+{% endvalidation %}
 
-```sh
-curl -i -X GET $KONNECT_PROXY_URL/mock/anything
-```
-{: data-deployment-topology="konnect" }
+You should get a `200` response back.
 
-
-## 4. Enable rate limiting
-
-[Rate limiting](/rate-limiting/) is used to control the rate of requests sent to an upstream Service. 
-It can be used to prevent DoS attacks, limit web scraping, and other forms of overuse. 
-Without rate limiting, clients have unlimited access to your upstream Services, which
-may negatively impact availability.
-
-In this example, we'll use the [Rate Limiting plugin](/plugins/rate-limiting/).
-Installing the plugin globally means that *every* proxy request to {{site.base_gateway}}
-will be subject to rate limit enforcement:
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: rate-limiting
-      config:
-        minute: 5
-        policy: local
-{% endentity_examples %}
-
-In this example, you configured a limit of 5 requests per minute for all Routes, Services, and Consumers.
-
-We'll validate that this worked in the next step, but first let's set up caching.
-
-## 5. Enable caching
-
-One of the ways Kong delivers performance is through caching.
-The [Proxy Cache plugin](/plugins/proxy-cache/) accelerates performance by caching
-responses based on configurable response codes, content types, and request methods.
-When caching is enabled, upstream services are not bogged down with repetitive requests,
-because {{site.base_gateway}} responds on their behalf with cached results.
-
-Let's enable the Proxy Cache plugin globally:
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: proxy-cache
-      config:
-        request_method: 
-          - GET
-        response_code: 
-          - 200
-        content_type: 
-          - application/json
-        cache_ttl: 30
-        strategy: memory
-{% endentity_examples %}
-
-This configures a Proxy Cache plugin with the following attributes:
-* {{site.base_gateway}} will cache all `GET` requests that result in response codes of `200`
-* It will also cache responses with the `Content-Type` headers that *equal* `application/json`
-* `cache_ttl` instructs the plugin to flush values after 30 seconds
-* `config.strategy=memory` specifies the backing data store for cached responses. More
-information on `strategy` can be found in the [parameter reference](/plugins/proxy-cache/reference/)
-for the Proxy Cache plugin.
-
-### Validate caching and rate limiting
-
-You can check that the Rate Limiting and Proxy Cache plugins are working by sending `GET` requests and examining
-the returned headers.
-
-Run the following command to send 6 mock requests. 
-The Proxy Cache plugin returns status information headers prefixed with `X-Cache`, so you can use `grep` to filter for that information:
-
-```sh
-for _ in {1..6}; do curl -s -i http://localhost:8000/mock/anything; echo; sleep 1; done | grep -E 'X-Cache|HTTP/1.1'
-```
-{: data-deployment-topology="on-prem" }
-
-```sh
-for _ in {1..6}; do curl -s -i $KONNECT_PROXY_URL/mock/anything; echo; sleep 1; done | grep -E 'X-Cache|HTTP/1.1'
-```
-{: data-deployment-topology="konnect" }
-
-
-On the initial request, there should be no cached responses, and the headers will indicate this with
-`X-Cache-Status: Miss`:
-
-```
-HTTP/1.1 200 OK
-X-Cache-Key: c9e1d4c8e5fd8209a5969eb3b0e85bc6
-X-Cache-Status: Miss
-```
-{:.no-copy-code}
-
-Subsequent responses will be cached and show `X-Cache-Status: Hit`:
-
-```
-HTTP/1.1 200 OK
-X-Cache-Key: c9e1d4c8e5fd8209a5969eb3b0e85bc6
-X-Cache-Status: Hit
-```
-{:.no-copy-code}
-
-After the 6th request, you should receive a 429 error, which means your requests were rate limited according to the policy:
-```
-HTTP/1.1 429 Too Many Requests
-```
-{:.no-copy-code}
-
-## 6. Enable authentication
+## 4. Enable authentication
 
 Authentication is the process of verifying that the requester has permissions to access a resource. 
 As its name implies, API gateway authentication authenticates the flow of data to and from your upstream services. 
@@ -312,7 +201,7 @@ status_code: 200
 
 You will receive a `200 OK` response.
 
-## 7. Enable load balancing
+## 5. Enable load balancing
 
 Load balancing is a method of distributing API request traffic across
 multiple upstream services. Load balancing improves overall system responsiveness
@@ -343,6 +232,7 @@ entities:
   services:
     - name: example_service
       host: example_upstream
+
 {% endentity_examples %}
 
 You now have an Upstream with two Targets, `httpbin.konghq.com` and `httpbun.com`, and a service pointing to that Upstream.
@@ -358,15 +248,131 @@ waiting a few seconds between each time.
 You will see the hostname change between `httpbin` and `httpbun`:
 
 ```sh
-curl -s http://localhost:8000/mock/headers -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
+curl -s http://localhost:8000/mock/headers \
+  -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
 ```
 {: data-deployment-topology="on-prem" }
 
 ```sh
-curl -s $KONNECT_PROXY_URL/mock/headers -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
+curl -s $KONNECT_PROXY_URL/mock/headers \
+  -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
 ```
 {: data-deployment-topology="konnect" }
 
-Since the Proxy Cache plugin is configured with a time-to-live of 5 seconds, 
-the host will take at least 5 seconds to change.
+## 6. Enable caching
 
+One of the ways Kong delivers performance is through caching.
+The [Proxy Cache plugin](/plugins/proxy-cache/) accelerates performance by caching
+responses based on configurable response codes, content types, and request methods.
+When caching is enabled, upstream services are not bogged down with repetitive requests,
+because {{site.base_gateway}} responds on their behalf with cached results.
+
+Let's enable the Proxy Cache plugin globally:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: proxy-cache
+      config:
+        request_method: 
+          - GET
+        response_code: 
+          - 200
+        content_type: 
+          - application/json
+        cache_ttl: 30
+        strategy: memory
+{% endentity_examples %}
+
+This configures a Proxy Cache plugin with the following attributes:
+* {{site.base_gateway}} will cache all `GET` requests that result in response codes of `200`
+* It will also cache responses with the `Content-Type` headers that *equal* `application/json`
+* `cache_ttl` instructs the plugin to flush values after 30 seconds
+* `config.strategy=memory` specifies the backing data store for cached responses. More
+information on `strategy` can be found in the [parameter reference](/plugins/proxy-cache/reference/)
+for the Proxy Cache plugin.
+
+### Validate caching
+
+You can check that the Proxy Cache plugin is working by sending `GET` requests and examining
+the returned headers.
+
+Run the following command to send 2 mock requests. 
+The Proxy Cache plugin returns status information headers prefixed with `X-Cache`, so you can use `grep` to filter for that information:
+
+```sh
+for _ in {1..2}; do \
+  curl -s -i http://localhost:8000/mock/anything \
+    -H 'apikey:top-secret-key'; \
+  echo; sleep 1; \
+done | grep -E 'X-Cache'
+```
+{: data-deployment-topology="on-prem" }
+
+```sh
+for _ in {1..2}; do \
+  curl -s -i $KONNECT_PROXY_URL/mock/anything \
+    -H 'apikey:top-secret-key'; \
+  echo; sleep 1; \
+done | grep -E 'X-Cache'
+```
+{: data-deployment-topology="konnect" }
+
+On the initial request, there should be no cached responses, and the headers will indicate this with
+`X-Cache-Status: Miss`:
+
+```
+X-Cache-Key: c9e1d4c8e5fd8209a5969eb3b0e85bc6
+X-Cache-Status: Miss
+```
+{:.no-copy-code}
+
+The following response will be cached and show `X-Cache-Status: Hit`:
+
+```
+X-Cache-Key: c9e1d4c8e5fd8209a5969eb3b0e85bc6
+X-Cache-Status: Hit
+```
+{:.no-copy-code}
+
+## 7. Enable rate limiting
+
+[Rate limiting](/rate-limiting/) is used to control the rate of requests sent to an upstream service. 
+It can be used to prevent DoS attacks, limit web scraping, and other forms of overuse. 
+Without rate limiting, clients have unlimited access to your upstream services, which
+may negatively impact availability.
+
+In this example, we'll use the [Rate Limiting plugin](/plugins/rate-limiting/).
+Installing the plugin globally means that *every* proxy request to {{site.base_gateway}}
+will be subject to rate limit enforcement:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: rate-limiting
+      config:
+        minute: 5
+        policy: local
+{% endentity_examples %}
+
+In this example, you configured a limit of 5 requests per minute for all Routes, Services, and Consumers.
+
+### Validate rate limiting 
+
+You can check that the Rate Limiting plugin is working by sending `GET` requests and examining
+the returned headers.
+
+Run the following command to send 6 mock requests:
+
+{% validation rate-limit-check %}
+iterations: 6
+url: '/mock/anything'
+headers:
+  - 'apikey:top-secret-key'
+{% endvalidation %}
+
+After the 6th request, you should receive a 429 error, which means your requests were rate limited according to the policy:
+```
+HTTP/1.1 429 Too Many Requests
+```
+{:.no-copy-code}
