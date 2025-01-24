@@ -25,7 +25,7 @@ tags:
 tldr:
     q: How can I access Azure Key Vaults secrets in {{site.base_gateway}}?
     a: |
-      Set the `AZURE_CLIENT_SECRET` environment variables, then start {{site.base_gateway}} with the environment variable. Create a Vault entity and add the required Azure parameters: `vault_uri`, `location`, `tenant_id`, and `client_id`.
+      Set the `AZURE_CLIENT_SECRET` environment variable, then start {{site.base_gateway}} with this environment variable. Create a Vault entity and add the required Azure parameters: `vault_uri`, `location`, `tenant_id`, and `client_id`.
 
 tools:
     - deck
