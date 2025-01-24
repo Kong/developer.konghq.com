@@ -109,7 +109,7 @@ data:
 
 ## 2. Validate
 
-To validate, you can call a variable from your vault using the `kong vault get` command in your Data Plane container. If the Docker container is named `kong-quickstart-gateway`, you can use the following command:
+To validate, you can call your secret using the `kong vault get` command in your Data Plane container. If the Docker container is named `kong-quickstart-gateway`, you can use the following command:
 
 ```sh
 docker exec kong-quickstart-gateway kong vault get {vault://aws-vault/my-aws-secret/token}
