@@ -70,7 +70,7 @@ entities:
 ## 2. Create a Consumer
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.
-The Consumer needs an API key to access any {{site.base_gateway}} Services.
+he Consumer needs an API key to access any {{site.base_gateway}} Services.
 
 {% entity_examples %}
 entities:
@@ -80,42 +80,23 @@ entities:
         - key: hello_world
 {% endentity_examples %}
 
-## 3. Apply the configuration
-
-{% include how-tos/steps/apply_config.md %}
-
-## 4. Validate
+## 3. Validate
 
 After configuring the Key Authentication plugin, you can verify that it was configured correctly and is working, by sending requests with and without the API key you created for your Consumer.
 
 This request should be successful:
 
-```bash
-curl --request GET \
- --url http://localhost:8000/example-route/anything \
- --header 'apikey: hello_world'
-```
-{: data-deployment-topology="on-prem" }
+{% validation request-check %}
+url: /anything
+headers:
+  - 'apikey:hello_world'
+status_code: 200
+{% endvalidation %}
 
-```bash
-curl --request GET \
- --url $KONNECT_PROXY_URL/example-route/anything \
- --header 'apikey: hello_world'
-```
-{: data-deployment-topology="konnect" }
+Sending the wrong API key:
 
-This request should return a `401 Unauthorized` error:
-
-```bash
-curl --request GET \
- --url http://localhost:8000/example-route/anything \
- --header 'apikey: another_key'
-```
-{: data-deployment-topology="on-prem" }
-
-```bash
-curl --request GET \
- --url $KONNECT_PROXY_URL/example-route/anything \
- --header 'apikey: another_key'
-```
-{: data-deployment-topology="konnect" }
+{% validation unauthorized-check %}
+url: /anything
+headers:
+  - 'apikey:another_key'
+{% endvalidation %}

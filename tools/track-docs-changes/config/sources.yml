@@ -76,6 +76,7 @@ app/_gateway_entities/vault.md:
   - app/_src/gateway/kong-enterprise/secrets-management/advanced-usage.md
   - app/_src/deck/guides/vaults.md
   - app/_src/gateway/kong-enterprise/secrets-management/index.md
+  - app/_src/gateway/kong-enterprise/secrets-management/backends/env.md
 
 app/_gateway_entities/license.md:
   - app/_src/gateway/licenses/index.md
@@ -100,6 +101,9 @@ app/_how-tos/create-a-key-set-with-a-jwk.md:
   - app/_src/gateway/reference/key-management.md
 app/_how-tos/create-a-key-set-with-a-pem-key.md:
   - app/_src/gateway/reference/key-management.md
+app/_how-tos/create-a-super-admin.md:
+  - app/_src/gateway/kong-manager/auth/super-admin.md
+  - app/_src/gateway/latest/production/access-control/enable-rbac.md
 
 app/_gateway_entities/admin.md:
   - app/_src/gateway/production/access-control/start-securely.md
@@ -129,6 +133,18 @@ app/_how-tos/proxy-tls-passthrough-traffic-using-sni.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_how-tos/configure-google-cloud-secret-as-a-vault-backend.md:
   - app/_src/gateway/kong-enterprise/secrets-management/backends/gcp-sm.md
+app/_how-tos/configure-azure-key-vaults-as-a-vault-backend-with-vault-entity.md:
+  - app/_src/gateway/kong-enterprise/secrets-management/backends/azure-key-vaults.md
+app/_how-tos/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity.md:
+  - app/_src/gateway/kong-enterprise/secrets-management/backends/aws-sm.md
+app/_how-tos/enable-rbac-with-admin-api.md:
+  - app/_src/gateway/production/access-control/enable-rbac.md
+  - app/_src/gateway/production/access-control/start-securely.md
+  - app/_src/gateway/production/access-control/register-admin-api.md
+  - app/_src/gateway/kong-manager/auth/rbac.md
+  - app/konnect/dev-portal/access-and-approval/manage-teams.md
+app/_how-tos/store-secrets-in-konnect-config-store.md:
+  - app/konnect/gateway-manager/configuration/config-store.md
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:

@@ -33,3 +33,8 @@ protocols:
       key: "ws"
     - title: "wss"
       key: "wss"
+
+referenceable_fields:
+  columns:
+    - title: Referenceable Plugin Fields
+      key: referenceable_fields

@@ -19,8 +19,11 @@ faqs:
     a: |
       `kong restart` kills the `pid` which will kill the container.
 
+
 min_version:
     gateway: '3.4'
+
+automated_tests: false
 ---
 
 

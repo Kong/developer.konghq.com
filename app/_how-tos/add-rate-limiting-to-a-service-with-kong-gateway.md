@@ -59,7 +59,7 @@ cleanup:
 ## 1. Enable rate limiting
 
 Enable the [Rate Limiting plugin](/plugins/rate-limiting/) for the Service. 
-In this example, the limit is 5 requests per second and 1000 requests per hour.
+In this example, the limit is 5 requests per minute and 1000 requests per hour.
 
 {% entity_examples %}
 entities:
@@ -67,36 +67,15 @@ entities:
     - name: rate-limiting
       service: example-service
       config:
-        second: 5
+        minute: 5
         hour: 1000
 {% endentity_examples %}
 
-## 2. Apply configuration
-
-{% include how-tos/steps/apply_config.md %}
-
-## 3. Validate
+## 2. Validate
 
 After configuring the Rate Limiting plugin, you can verify that it was configured correctly and is working, by sending more requests than allowed in the configured time limit.
 
-```bash
-for _ in {1..6}
-do
-  curl -i http://localhost:8000/anything
-done
-```
-{: data-deployment-topology="on-prem" }
-
-```bash
-for _ in {1..6}
-do
-  curl $KONNECT_PROXY_URL/example-route/anything/
-done
-```
-{: data-deployment-topology="konnect" }
-
-After the 5th request, you should receive the following `429` error:
-
-```bash
-{ "message": "API rate limit exceeded" }
-```
+{% validation rate-limit-check %}
+iterations: 6
+url: '/anything'
+{% endvalidation %}

@@ -1,15 +1,17 @@
-{%- assign render_format_version = true %}
-{%- if page.content_type == 'how_to' and example_index != 1 %}
-{% assign render_format_version = false %}
-{%- endif %}
-{% if entity_examples.append_to_existing_section %}
-Add the following to your existing `{{ entity_examples.append_to }}` section in `kong.yaml`:
-{% endif %}
 ```yaml
-{%- if render_format_version %}
-_format_version: '3.0'
-{%- endif %}
+echo '
+_format_version: "3.0"
 {{ entity_examples.data }}
+' | deck gateway apply - \
+  --konnect-token $KONNECT_TOKEN \
+  --konnect-control-plane-name $KONNECT_CP_NAME
 ```
-{: data-file="kong.yaml" }
+{: data-file="kong.yaml" data-deployment-topology="konnect" data-test-step="block" }
 
+```yaml
+echo '
+_format_version: "3.0"
+{{ entity_examples.data }}
+' | deck gateway apply -
+```
+{: data-file="kong.yaml" data-deployment-topology="on-prem" data-test-step="block" }

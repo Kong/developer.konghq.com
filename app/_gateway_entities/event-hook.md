@@ -10,6 +10,14 @@ related_resources:
     url: /gateway/entities/service/
   - text: Routing in {{site.base_gateway}}
     url: /gateway/routing/
+  - text: Create a Web Hook with {{site.base_gateway}}
+    url: /how-to/create-a-webhook-with-kong-gateway/
+  - text: Push Event Hook information to Slack with {{site.base_gateway}}
+    url: /how-to/create-a-custom-webhook-slack-with-kong-gateway/
+  - text: How to create a log Event Hook with {{site.base_gateway}}
+    url: /how-to/create-a-log-event-hook-with-kong-gateway/
+  - text: Configure an Event Hook to log events with {{site.base_gateway}}
+    url: /how-to/create-a-lambda-event-hook-with-kong-gateway/
 products:
     - gateway
 tools:
@@ -21,9 +29,9 @@ schema:
 
 ---
 
-## What is an Event Hook
+## What is an Event Hook?
 
-An Event Hook is a {{site.base_gateway}} entity that can be configured to listen for specific events from Kong entities. An Event Hook can be configured to send information to logs, or web hooks as well as third-party applications. 
+An Event Hook is a {{site.base_gateway}} entity that can be configured to listen for specific events from Kong entities. An Event Hook can be configured to send information to logs, webhooks, or third-party applications. 
 
 ## How do Event Hooks work?
 
@@ -74,7 +82,7 @@ There are four types of handlers that can be used with Event Hooks:
 * **`webhook-custom`**: Fully configurable request. Supports templating, configurable body, payload, and headers. 
 * **`lambda`**: This handler runs Lua code after an event is triggered.
 
-By default, the `lambda` handler is "Sandboxed". Sandboxing means that {{site.base_gateway}} restricts the types of Lua functions that can be loaded as well as the level of access to {{site.base_gateway}} that is available for these custom functions. For example, in `sandbox` mode, a `lambda` Event Hook will not have access to global values such as `kong.configuration.pg_password`, or OS level functions like `os.execute(rm -rf /*)`, but can still run Lua code like `local foo = 1 + 1`. Removing `sandbox` requires editing the `kong.conf` value `untrusted_lua`, for more information see the [kong.conf documentation](https://docs.konghq.com/gateway/3.9.x/reference/configuration/#untrusted_lua).
+By default, the `lambda` handler is "Sandboxed". Sandboxing means that {{site.base_gateway}} restricts the types of Lua functions that can be loaded as well as the level of access to {{site.base_gateway}} that is available for these custom functions. For example, in `sandbox` mode, a `lambda` Event Hook will not have access to global values such as `kong.configuration.pg_password`, or OS level functions like `os.execute(rm -rf /*)`, but can still run Lua code like `local foo = 1 + 1`. Removing `sandbox` requires editing the `kong.conf` value `untrusted_lua`, for more information see the [kong.conf documentation](/gateway/configuration/#untrusted_lua).
 
 ### Sources
 
@@ -134,7 +142,8 @@ These parameters can be used to issue notifications any time an upstream in your
 - `crud`: Create, read, and update events from {{site.base_gateway}} entities such as Consumers.
 - `oas-validation`: Runs an event when [OAS validation Plugin](/plugins/oas-validation/) fails.
 
-For information about specific events related to a source issue a `GET` request to the `/event-hooks/sources/{source}` endpoint. Doing so will return a list of all of the events associated to a source like: `balancer: health`. 
+For information about specific events related to a source, issue a `GET` request to the `/event-hooks/sources/{source}` endpoint. 
+The API returns a list of all of the events associated to a source in the following format: `balancer: health`. 
 
 ## Schema
 
@@ -152,15 +161,3 @@ data:
   config:
       "url": "$WEBHOOK_URL"
 {% endentity_example %}
-
-
-## Configure an Event Hook
-
-
-For step-by-step guides on configuring Event Hooks see the following docs: 
-
-* [Create a Web Hook with {{site.base_gateway}}](/how-to/create-a-webhook-with-kong-gateway/)
-* [Push Event Hook information to Slack with {{site.base_gateway}}](/how-to/create-a-custom-webhook-slack-with-kong-gateway/)
-* [How to create a log Event Hook with {{site.base_gateway}}](/how-to/create-a-log-event-hook-with-kong-gateway/)
-* [Configure an Event Hook to log events with {{site.base_gateway}}](/how-to/create-a-lambda-event-hook-with-kong-gateway/)
-

@@ -516,6 +516,69 @@ paths:
           $ref: '#/components/responses/NotFound'
       tags:
         - Resource Quotas
+  /cloud-gateways/default-resource-configurations:
+    get:
+      operationId: list-default-resource-configurations
+      summary: List Default Resource Configurations
+      description: |
+        Returns a paginated collection of default resource configurations for cloud-gateways, along with
+        organizationally-defined overrides for those resource configurations.
+        Resource configurations are settings that are applied to all cloud gateway resources in an organization.
+        For example, the "data-plane-group-idle-timeout-minutes" resource configuration sets the idle timeout for all data plane groups in an organization.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListDefaultResourceConfigurationsResponse'
+        '400':
+          $ref: '#/components/responses/CloudGatewaysBadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Resource Configurations
+  /cloud-gateways/resource-configurations:
+    get:
+      operationId: list-resource-configurations
+      summary: List Resource Configurations
+      description: |
+        Returns a paginated collection of resource configurations for an organization.
+        Resource configurations are settings that are applied to all cloud gateway resources in an organization.
+        For example, the "data-plane-group-idle-timeout-minutes" resource configuration sets the idle timeout for all data plane groups in an organization.
+      parameters:
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/PageNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListResourceConfigurationsResponse'
+        '400':
+          $ref: '#/components/responses/CloudGatewaysBadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      tags:
+        - Resource Configurations
+  '/cloud-gateways/resource-configurations/{resourceConfigurationId}':
+    get:
+      operationId: get-resource-configuration
+      summary: Get Resource Configuration
+      description: Retrieves a resource configuration by ID.
+      parameters:
+        - $ref: '#/components/parameters/ResourceConfigurationId'
+      responses:
+        '200':
+          $ref: '#/components/responses/RetrieveResourceConfigurationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      tags:
+        - Resource Configurations
 components:
   parameters:
     ConfigurationId:
@@ -596,6 +659,13 @@ components:
       schema:
         $ref: '#/components/schemas/ProviderAccountsFilterParameters'
       style: deepObject
+    ResourceConfigurationId:
+      name: resourceConfigurationId
+      in: path
+      description: The ID of the resource configuration to operate on.
+      required: true
+      schema:
+        $ref: '#/components/schemas/ResourceConfigurationId'
     ResourceQuotaId:
       name: resourceQuotaId
       in: path
@@ -658,6 +728,16 @@ components:
       example: 9678f205-49a1-47bb-82d9-d01cafa42a0d
       readOnly: true
     DefaultResourceQuotaId:
+      type: string
+      format: uuid
+      example: cc504063-f3bb-4e09-8e32-bbcdbc5cd618
+      readOnly: true
+    ResourceConfigurationId:
+      type: string
+      format: uuid
+      example: 9678f205-49a1-47bb-82d9-d01cafa42a0d
+      readOnly: true
+    DefaultResourceConfigurationId:
       type: string
       format: uuid
       example: cc504063-f3bb-4e09-8e32-bbcdbc5cd618
@@ -1770,6 +1850,25 @@ components:
         - created_at
         - updated_at
       title: Default Resource Quota
+    ResourceConfigurationQualifier:
+      description: Enumeration of configuration qualifiers available for organization-wide configuration.
+      type: string
+      enum:
+        - data-plane-group-idle-timeout-minutes
+    ResourceConfigurationValue:
+      description: The value of this resource configuration.
+      type: integer
+      example: 45
+    ResourceConfigurationName:
+      description: The human-readable name of this resource configuration.
+      type: string
+      example: Data Plane Group Idle Timeout Minutes
+      readOnly: true
+    ResourceConfigurationDescription:
+      description: A more verbose description of what this resource configuration enforces.
+      type: string
+      example: The number of minutes that a data plane group can be idle before it is automatically scaled down to zero instances.
+      readOnly: true
     ConfigurationsFilterParameters:
       type: object
       properties:
@@ -2036,6 +2135,62 @@ components:
       x-examples:
         example-1:
           oeq: 'us,eu'
+    ResourceConfiguration:
+      description: Object containing information about a resource configuration.
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ResourceConfigurationId'
+        qualifier:
+          $ref: '#/components/schemas/ResourceConfigurationQualifier'
+        value:
+          $ref: '#/components/schemas/ResourceConfigurationValue'
+      required:
+        - id
+        - qualifier
+        - value
+      title: Resource Configuration
+    DefaultResourceConfiguration:
+      description: 'Object containing information about a default resource configurations, and any organizational overrides.'
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/DefaultResourceConfigurationId'
+        qualifier:
+          $ref: '#/components/schemas/ResourceConfigurationQualifier'
+        name:
+          $ref: '#/components/schemas/ResourceConfigurationName'
+        description:
+          $ref: '#/components/schemas/ResourceConfigurationDescription'
+        value:
+          $ref: '#/components/schemas/ResourceConfigurationValue'
+        overrides:
+          description: Organizational overrides for this default resource configuration.
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceConfiguration'
+        created_at:
+          description: An RFC-3339 timestamp representation of default resource configuration creation date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+        updated_at:
+          description: An RFC-3339 timestamp representation of default resource configuration update date.
+          type: string
+          format: date-time
+          example: '2022-11-04T20:10:06.927Z'
+          readOnly: true
+      required:
+        - id
+        - qualifier
+        - name
+        - description
+        - value
+        - overrides
+        - created_at
+        - updated_at
+      title: Default Resource Configuration
     StringFieldEqualsFilter:
       description: Filter a string value by exact match.
       type: string
@@ -2778,6 +2933,46 @@ components:
           examples:
             Configuration Conflict:
               $ref: '#/components/examples/ConfigurationConflictExample'
+    ListDefaultResourceConfigurationsResponse:
+      description: A paginated list for a collection of default resource configurations.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DefaultResourceConfiguration'
+            required:
+              - meta
+              - data
+            title: ListDefaultResourceConfigurationsResponse
+    ListResourceConfigurationsResponse:
+      description: A paginated list for a collection of resource configurations.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginatedMeta'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResourceConfiguration'
+            required:
+              - meta
+              - data
+            title: ListResourceConfigurationsResponse
+    RetrieveResourceConfigurationResponse:
+      description: Response format for retrieving a resource configuration for an organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResourceConfiguration'
     Unauthorized:
       description: Unauthorized
       content:
@@ -2843,6 +3038,7 @@ tags:
   - name: Provider Accounts
   - name: Custom Domains
   - name: Resource Quotas
+  - name: Resource Configurations
   - name: Resource Availability
 security:
   - konnectAccessToken: []

@@ -327,6 +327,7 @@ conntrack
 consumer_group
 consumer_id
 cors
+cosocket
 crds
 created_at
 creationTimestamp
@@ -659,6 +660,7 @@ sso
 stapxx
 start_cmd
 statsd
+status_code
 stderr
 stdin
 stdout

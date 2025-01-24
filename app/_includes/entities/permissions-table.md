@@ -1,10 +1,10 @@
-## Default {{site.base_gateway}}  roles
+## Default {{site.base_gateway}} roles
 
 By default, when {{site.base_gateway}} is configured, the starting user is configured as a **Super Admin** in the `default` Workspace. Workspaces, by default, contain the following roles: 
 
 | Role      | Description |
 | ----------- | ----------- |
-| Admin | Full access to all endpoints, across all Workspaces, except the RBAC Admin API  |
+| `admin` | Full access to all endpoints, across all Workspaces, except the RBAC Admin API  |
 | `super-admin`   | Full access to all endpoints, across all Workspaces, ability to assign and modify RBAC permissions.     |
 |`read-only`| Read access to all endpoints, across all Workspaces|
 

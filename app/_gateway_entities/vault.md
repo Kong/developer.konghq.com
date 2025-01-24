@@ -8,23 +8,16 @@ description: A Vault is used to store secrets.
 
 related_resources:
   - text: Secrets Management
-    url: /secrets-management
+    url: /secrets-management/
   - text: Workspaces
-    url: /gateway/entities/workspace 
-  - text: RBAC 
-    url: /gateway/entities/rbac
-  
+    url: /gateway/entities/workspace/
+  - text: RBAC
+    url: /gateway/entities/rbac/
+
 
 faqs:
-  - q: What are general best practices for managing Vaults?
-    a: |
-        To keep your environment secure and avoid taking down your proxies by accident, make sure to:
-        * Manage Vaults with distributed configuration via tags.
-        * Use a separate [RBAC role, user, and token](/gateway/entities/rbac/)
-        to manage Vaults. Don't use a generic admin user.
-        * Set up a separate CI pipeline for Vaults.
   - q: What types of fields can be used in Vaults?
-    a: Vault works with "referenceable" fields. All fields in `kong.conf` are referenceable and some fields within entities (ex. plugins, certificates) are also. Refer to the appropriate entity documentation to learn more.
+    a: Vaults work with "referenceable" fields. All fields in `kong.conf` are referenceable and some fields within entities (for example, plugins, certificates) are also. Refer to the appropriate entity documentation to learn more.
   - q: Can Vaults be referenced during custom plugin development?
     a: Yes. The plugin development kit (PDK) offers a Vaults module (`kong.vault`) that can be used to resolve, parse, and verify Vault references.
   - q: What data types can I use when referencing a secret in a Vault?
@@ -48,9 +41,11 @@ schema:
 ---
 
 ## What is a Vault?
-In {{site.base_gateway}}, the Vault object is used to store secrets. A secret is any sensitive piece of information required for API gateway
-operations. Secrets can be used as part of the core {{site.base_gateway}} configuration, in plugins, or in configuration associated
-with APIs serviced by the gateway.
+
+Vaults allow you to securely store and then reference secrets from within other entities. This ensures that secrets aren't visible in plaintext throughout the platform, in places such as `kong.conf`,
+declarative configuration files, logs, or the UI.
+
+For example, you could store a certificate and a key in a Vault, then reference them from a [Certificate entity](/gateway/entities/certificate/). This way, the certificate and key are not stored in the entity directly and are more secure.
 
 Some of the most common types of secrets used by {{site.base_gateway}} include:
 
@@ -59,19 +54,18 @@ Some of the most common types of secrets used by {{site.base_gateway}} include:
 * API keys
 * Sensitive configuration fields, generally used for authentication, hashing, signing, or encryption
 
-## Vault use cases
-
-Vaults allow you to securely store and then reference secrets from within other entities. This ensures that secrets aren't visible in plaintext throughout the platform, in places such as `kong.conf`,
-declarative configuration files, logs, or the UI.
-
-For example, you could store a certificate and a key in a Vault, then reference them from a [Certificate entity](/gateway/entities/certificate/). This way, the certificate and key are not stored in the entity directly and are more secure.
-
 ## How do I add secrets to a Vault?
 
-You can add secrets to Vaults in one of the following ways: 
+You can add secrets to Vaults in one of the following ways:
 * Environment variables
 * {{site.konnect_short_name}} Config Store
 * Supported third-party backend vault
+
+## How do I configure access to a Vault?
+
+Each vault has its own required configuration. You can provide this configuration by creating a Vault entity, or by configuring specific environment variables before starting {{ site.base_gateway }}.
+
+For more information, choose a Vault below to see the specific configuration required.
 
 ## Supported backends
 
@@ -86,23 +80,23 @@ columns:
     key: supports_konnect
 
 features:
-  - title: Environment variable<sup>1</sup>
-    url: /how-to/store-secrets-as-env-variables/
+  - title: Environment variable
+    url: /gateway/entities/vault/#store-secrets-as-environment-variables
     oss: true
     enterprise: true
     supports_konnect: true
   - title: Konnect Config Store
-    url: /how-to/store-secrets-in-konnect-config-store/
+    url: /how-to/configure-the-konnect-config-store/
     oss: false
     enterprise: false
     supports_konnect: true
   - title: AWS Secrets Manager
-    url: /how-to/configure-aws-secrets-manager-as-a-vault-backend/
+    url: /how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/
     oss: false
     enterprise: true
     supports_konnect: true
   - title: Azure Key Vaults
-    url: /how-to/configure-azure-key-vaults-as-a-vault-backend/
+    url: /how-to/configure-azure-key-vaults-as-a-vault-backend-with-vault-entity/
     oss: false
     enterprise: true
     supports_konnect: true
@@ -118,9 +112,7 @@ features:
     supports_konnect: true
 {% endfeature_table %}
 
-<sup>1</sup> You can use environment variables as a Vaults backend either with or without using the Vaults entity.
-
-## How do I reference secrets stored in a Vault
+## How do I reference secrets stored in a Vault?
 
 When you want to use a secret stored in a Vault, you can reference the secret with a `vault` reference. You can use the `vault` reference in places such as `kong.conf`, declarative configuration files, logs, or in the UI.
 
@@ -145,19 +137,50 @@ Would point to a secret object called `pg` inside a HashiCorp Vault, which may r
 `{vault://hcv/pg/username}`.
 <!-- vale on -->
 
-## Secret rotation in Vault
+Vault references must be used for the whole referenced value. Imagine that you're calling an upstream service with the authentication token `ABC123`:
 
-By default, {{site.base_gateway}} automatically rotates secrets *once every minute* in the background. You can also configure how often {{site.base_gateway}} rotates secrets using the Vault entity configuration. 
+{% feature_table %}
+item_title: Works
+columns:
+  - title: Configuration Value
+    key: config
+  - title: Vault Value
+    key: vault
+features:
+  - title: ❌
+    config: 'Bearer {vault://hcv/myservice-auth-token}'
+    vault: ABC123
+  - title: ✅
+    config: '{vault://hcv/myservice-auth-token}'
+    vault: Bearer ABC123
+{% endfeature_table %}
 
-There are two types of rotation configuration available: 
-* Rotate periodically using TTLs (for example: check for a new TLS certificate once per day)
-* Rotate on failure (for example: on a database authentication failure, check if the secrets were updated, and try again)
+## Secret rotation in Vaults
+
+By default, {{site.base_gateway}} automatically refreshes secrets *once every minute* in the background. 
+You can also configure how often {{site.base_gateway}} refreshes secrets using the Vault entity configuration.
+
+There are two types of refresh configuration available:
+* Refresh periodically using TTLs: For example, check for a new TLS certificate once per day.
+* Refresh on failure: For example, on a database authentication failure, check if the secrets were updated, and try again.
 
 For more information, see [Secret management](/secrets-management/).
 
-## Declarative configuration (decK) best practices for Vaults
+## Best practices for Vaults
 
-For larger teams with many contributors, or organizations with multiple teams, we recommend splitting Vault configurations into separate files and managing them isolated from other [entities's](/gateway/entities/) configuration using tags. We recommend splitting the configuration for the following reasons:
+@TODO: Move this to deck docs when available
+
+### General best practices
+
+To keep your environment secure and avoid taking down your proxies by accident, make sure to:
+* Manage Vaults with distributed configuration via tags.
+* Use a separate [RBAC role, user, and token](/gateway/entities/rbac/).
+to manage Vaults. Don't use a generic admin user.
+* Set up a separate CI pipeline for Vaults.
+
+### Best practices for managing Vaults using decK
+
+For larger teams with many contributors, or organizations with multiple teams, we recommend splitting Vault configurations into separate files and managing them isolated from other [entities'](/gateway/entities/) configuration using tags. We recommend splitting the configuration for the following reasons:
 * Vaults are closer to infrastructure than other {{site.base_gateway}} configurations. Separation of routing policies from infrastructure-specific configurations helps keep configuration organized.
 * Vaults may be shared across teams. In this case, one specific team shouldn't control the Vault's configuration. One team changing the Vault a can have a negative impact on another team.
 * If a Vault is deleted while in use -- that is, if there are still references to secrets in a Vault in configuration -- it can lead to total loss of proxy capabilities. Those secrets would be unrecoverable.
@@ -179,6 +202,19 @@ data:
   config:
     prefix: MY_SECRET_
 {% endentity_example %}
+
+## Store secrets as environment variables
+
+You can store secrets as environment variables instead of configuring a Vault entity or third-party backend vault. 
+
+<!--vale off-->
+
+| Use case | Environment variable example | Secret reference example |
+|-------|-------------|-------------|
+| Single secret value | `export MY_SECRET_VALUE=example-secret` | `{vault://env/my-secret-value}` |
+| Multiple secrets (flat JSON string) | `export PG_CREDS='{"username":"user", "password":"pass"}'` | `{vault://env/pg-creds/username}`<br><br>`{vault://env/pg-creds/password}` | 
+
+<!--vale on-->
 
 
 

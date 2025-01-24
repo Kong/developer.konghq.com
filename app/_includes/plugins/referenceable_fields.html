@@ -1,0 +1,32 @@
+<div class="max-h-[50vh] overflow-y-auto rounded-lg">
+    <table class="table__sticky">
+        <thead>
+            <tr>
+                <th>Plugin</th>
+                {% for column in columns %}
+                <th>
+                    <span class="font-semibold text-primary">{{ column.title | liquify }}</span>
+                </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+                <tr>
+                    <td>
+                        <span class="block text-primary">
+                            <a href="{{row.url}}">{{ row.title | liquify | markdown }}</a>
+                        </span>
+                    </td>
+                    <td>
+                        <ul>
+                        {% for field in row.referenceable_fields %}
+                            <li><code>{{field}}</code></li>
+                        {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

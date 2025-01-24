@@ -14,6 +14,8 @@ related_resources:
     url: /gateway/entities/route/
   - text: Expressions repository
     url: https://github.com/Kong/atc-router
+  - text: Traditional router
+    url: /gateway/routing/traditional/
 
 min_version:
   gateway: '3.0'
@@ -22,11 +24,15 @@ breadcrumbs:
   - /gateway/
 
 faqs:
-  - q: When should I use the expressions router in place of (or alongside) the traditional router?
-    a: We recommend using the expressions router if you are running {{site.base_gateway}} 3.0.x or later. After enabling expressions, traditional match fields on the Route object (such as `paths` and `methods`) remain configurable. You may specify Expressions in the new `expression` field. However, these cannot be configured simultaneously with traditional match fields. Additionally, a new `priority` field, used in conjunction with the expression field, allows you to specify the order of evaluation for Expression Routes.
+  - q: Is there a performance difference between the traditional router and expressions?
+    a: Both traditional and expressions modes use the same routing engine internally. Traditional mode configures routes with JSON, and expressions uses a DSL.
+  - q: Why would I choose expressions over the traditional router?
+    a: The expressions router provides more routing flexibility, including fast exact matching that is not available in the traditional router.
+  - q: When should I keep using the traditional router over expressions?
+    a: If you are working with APIOps pipelines that manipulate the route using `deck file patch`, we recommend using the JSON format used by the traditional router.
 ---
 
-The expressions router is a collection of [Routes](/gateway/entities/route/) that are all evaluated against incoming requests until a match can be found. This allows for more complex routing logic than the traditional router and ensures good runtime matching performance. 
+The expressions router provides a Domain Specific Language (DSL) that allows for complex routing rule definition. The expressions router ensures good runtime matching performance by providing specific routing comparisons such as non-regex equality checks that are not available in the traditional router.
 
 You can do the following with the expressions router:
 * Prefix-based path matching
@@ -43,10 +49,9 @@ In your `kong.conf` file, set `router_flavor = expressions` and restart your {{s
 
 ## How requests are routed with the expressions router
 
-At runtime, {{site.base_gateway}} builds two separate routers for the HTTP and Stream (TCP, TLS, UDP) subsystem. When a request/connection comes in, {{site.base_gateway}} looks at which field your configured Routes require,
-and supplies the value of these fields to the router execution context.
-Routes are inserted into each router with the appropriate `priority` field set. The priority is a positive integer that defines the order of evaluation of the router. The bigger the priority, the sooner a Route will be evaluated. In the case of duplicate priority values between two Routes in the same router, their order of evaluation is undefined. The router is
-updated incrementally as configured Routes change.
+At runtime, {{site.base_gateway}} builds two separate routers for the HTTP and Stream (TCP, TLS, UDP) subsystem. When a request/connection comes in, {{site.base_gateway}} looks at which field your configured Routes require, and supplies the value of these fields to the router execution context.
+
+Routes are inserted into each router with the appropriate `priority` field set. The priority is a positive integer that defines the order of evaluation of the router. The bigger the priority, the sooner a Route is evaluated. In the case of duplicate priority values between two Routes in the same router, their order of evaluation is undefined. The router is updated incrementally as configured Routes change.
 
 As soon as a Route yields a match, the router stops matching and the matched Route is used to process the current request/connection.
 
@@ -85,7 +90,7 @@ This section explains how to optimize the expressions you write to get the most 
 
 ### Number of routes
 
-#### Route matching priority order
+#### Priority matching
 
 Expressions routes are always evaluated in the descending `priority` order they were defined.
 Therefore, it is helpful to put more likely matched routes before (as in, higher priority)
@@ -166,7 +171,7 @@ http.path == "/foo/bar" || http.path == "/foo/bar/"
 http.path ~ r#"^/foo/?$"#
 ```
 
-## Expressions router reference <!--edit all that is below to fit new page-->
+## Expressions router reference
 
 This reference explains the different configurable entities for the expressions router.
 
@@ -257,13 +262,13 @@ features:
 <!--vale on-->
 
 
-In addition, expressions also supports one composite type, `Array`. Array types are written as `Type[]`.
+In addition, the expressions router also supports one composite type, `Array`. Array types are written as `Type[]`.
 For example: `String[]`, `Int[]`. Currently, arrays can only be present in field values. They are used in
 case one field could contain multiple values. For example, `http.headers.x` or `http.queries.x`.
 
 #### Matching fields
 
-The following table describes the available matching fields, as well as their associated type when using an expressions based router.
+The following table describes the available matching fields, as well as their associated type when using an expressions-based router.
 
 <!--vale off-->
 
@@ -398,9 +403,9 @@ The expressions language supports a rich set of operators that can be performed 
 | `>`            | Greater than          | Field value is greater than the constant value                                                                                                                                                               |
 | `<=`           | Less than or equal    | Field value is less than or equal to the constant value                                                                                                                                                      |
 | `<`            | Less than             | Field value is less than the constant value                                                                                                                                                                  |
-| `in`           | In                    | Field value is inside the constant value. This operator is used with `IpAddr` and `IpCidr` types to perform an efficient IP list check. For example, `net.src.ip in 192.168.0.0/24` will only return `true` if the value of `net.src.ip` is within `192.168.0.0/24`.                                                                                                                                                                    |
-| `not in`       | Not in                | Field value is not inside the constant value. This operator is used with `IpAddr` and `IpCidr` types to perform an efficient IP list check. For example, `net.src.ip in 192.168.0.0/24` will only return `true` if the value of `net.src.ip` is within `192.168.0.0/24`.                                                                                                                                                                |
-| `contains`     | Contains              | Field value contains the constant value. This operator is used to check the existence of a string inside another string. For example, `http.path contains "foo"` will return `true` if `foo` can be found anywhere inside `http.path`. This will match a `http.path` that looks like `/foo`, `/abc/foo`, or `/xfooy`, for example.                            |
+| `in`           | In                    | Field value is inside the constant value. This operator is used with `IpAddr` and `IpCidr` types to perform an efficient IP list check. For example, `net.src.ip in 192.168.0.0/24` only returns `true` if the value of `net.src.ip` is within `192.168.0.0/24`.                                                                                                                                                                    |
+| `not in`       | Not in                | Field value is not inside the constant value. This operator is used with `IpAddr` and `IpCidr` types to perform an efficient IP list check. For example, `net.src.ip in 192.168.0.0/24` only returns `true` if the value of `net.src.ip` is within `192.168.0.0/24`.                                                                                                                                                                |
+| `contains`     | Contains              | Field value contains the constant value. This operator is used to check the existence of a string inside another string. For example, `http.path contains "foo"` returns `true` if `foo` can be found anywhere inside `http.path`. This will match a `http.path` that looks like `/foo`, `/abc/foo`, or `/xfooy`, for example.                            |
 | `&&`           | And                   | Returns `true` if **both** expressions on the left and right side evaluates to `true`                                                                                                                        |
 | `||` | Or | Returns `true` if **any** expressions on the left and right side evaluates to `true` |                                                                                                                    |
 | `(Expression)` | Parenthesis           | Groups expressions together to be evaluated first                                                                                                                                                            |
@@ -442,9 +447,9 @@ Depending on the field type, only certain content types and operators are suppor
 | Prefix based path matching | `http.path ^= "/foo/bar"` | Matches HTTP requests that have a path starting with `/foo/bar` |
 | Regex based path matching | `http.path ~ r#"/foo/bar/\d+"#` | N/A |
 | Case insensitive path matching | `lower(http.path) == "/foo/bar"` | Ignores case when performing the path match. |
-| Match by header value ("all" style matching) | `http.headers.x_foo ~ r#"bar\d"#` | If there are multiple header values for `X-Foo` and the client sends more than one `X-Foo` header with different values, the above example will ensure **each** instance of the value will match the regex `r#"bar\d"#`. This is called "all" style matching. |
+| Match by header value ("all" style matching) | `http.headers.x_foo ~ r#"bar\d"#` | If there are multiple header values for `X-Foo` and the client sends more than one `X-Foo` header with different values, the above example ensures that **each** instance of the value matches the regex `r#"bar\d"#`. This is called "all" style matching. |
 | Match by header value ("any" style matching) | `any(http.headers.x_foo) ~ r#"bar\d"#` | Returns `true` for the predicate as soon as any of the values pass the comparison. Can be combined with other transformations, like `lower()`. |
-| Regex captures | `http.path ~ r#"/foo/(?P<component>.+)"#` | You can define regex capture groups in any regex operation which will be made available later for plugins to use. Currently, this is only supported with the `http.path` field. The matched value of `component` will be made available later to plugins such as [Request Transformer Advanced](/plugins/request-transformer-advanced/). |
+| Regex captures | `http.path ~ r#"/foo/(?P<component>.+)"#` | You can define regex capture groups in any regex operation, which will be made available later for plugins to use. Currently, this is only supported with the `http.path` field. The matched value of `component` will be made available later to plugins such as [Request Transformer Advanced](/plugins/request-transformer-advanced/). |
 
 ### TCP, TLS, and UDP examples
 

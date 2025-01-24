@@ -8,9 +8,6 @@ description: Workspaces provide a way to segment {{site.base_gateway}} entities.
 
 tools:
     - admin-api
-    - kic
-    - deck
-    - terraform
 
 tier: enterprise
 schema:
@@ -19,32 +16,41 @@ schema:
 related_resources:
   - text: Gateway RBAC entity
     url: /gateway/entities/rbac/
-  - text: Gateway Vault entity
-    url: /gateway/entities/vault/
+  - text: Gateway Group entity
+    url: /gateway/entities/group/
   - text: Gateway Admin entity
     url: /gateway/entities/admin/
 faqs:
   - q: Do I have to enable Workspaces? 
     a: |
-     No, {{site.base_gateway}} Enterprise ships with the `default` Workspace, which contains any global {{site.base_gateway}} configuration. 
+     No, {{site.base_gateway}} Enterprise ships with the `default` Workspace. You can create additional Workspaces, but the default Workspace will always remain, and can't be deleted.
   - q: Are there entities that can't exist in a Workspace?
     a: |
-      Yes, some entities are global meaning they don't exist in any individual Workspace. For example `ca_certificates`.
+      There are certain entities that can't exist within a Workspace:
+      * [CA Certificates](/gateway/entities/ca-certificate/) apply to all Workspaces. They're used to verify the client certificates in mTLS handshakes. 
+      The SSL handshake takes place before receiving an HTTP request when the Workspace is unknown.
+      * [RBAC](/gateway/entities/rbac/) entities - Users, Roles, Admins, Groups - exist outside of a Workspace. However, you must assign Workspace-specific Roles for any User, Admin, or Group to access entities in a specific Workspace.
+      * Other Workspaces can't exist within a Workspace.
   - q: Can I use Workspaces in Konnect?
     a: |
-      No. Instead, {{site.konnect_short_name}} offers the more powerful [Consumer Groups](/gateway/entities/consumer-group/) to organize and categorize of Consumers (users or applications) within an API ecosystem 
+      No. Instead, {{site.konnect_short_name}} offers the more powerful Control Planes and Control Plane Groups to manage entities within an API ecosystem.
 
   - q: Can a Workspace share a name with another Workspace?
     a: |
-      Yes
+      Two Workspaces can't share the same name. However, Workspace names are case sensitive - for example, “Payments” and “payments” are not equal and would be accepted as two different Workspaces. 
+      We recommend giving Workspaces unique names regardless of letter case to prevent confusion.
+  - q: What happens if I create an entity without specifying a Workspace?
+    a: If you don't specify a target Workspace, the entity will be created in the `default` workspace.
   
 ---
 
-
 ## What is a Workspace?
 
-Workspaces are a way of namespacing {{site.base_gateway}} entities so they can be managed independently. Workspaces work in combination with RBAC to create isolated environments for teams to operate independently of each other. Workspaces can't share entities, like Services, between them, and only Workspace Admins with the correct permissions, in the Workspace, can manage them. Workspaces support [multi-tenancy](/gateway/multi-tenancy) by isolating {{site.base_gateway}} configuration objects and when paired with RBAC, {{site.base_gateway}} administrators can effectively create tenants within the control plane. The Workspace administrators have segregated and secure access to only their portion of the {{site.base_gateway}} configuration in Kong Manager, the Admin API, and the declarative configuration tool decK.
+Workspaces are a way of namespacing {{site.base_gateway}} entities so they can be managed independently. Workspaces work in combination with RBAC to create isolated environments for teams to operate independently of each other. Workspaces can't share entities, like Services, between them, and only Workspace Admins with the correct permissions, in the Workspace, can manage them. 
 
+Workspaces support [multi-tenancy](/gateway/multi-tenancy/) by isolating {{site.base_gateway}} configuration objects. When paired with RBAC, {{site.base_gateway}} administrators can effectively create tenants within the control plane. The Workspace administrators have segregated and secure access to only their portion of the {{site.base_gateway}} configuration in Kong Manager, the Admin API, and the declarative configuration tool decK.
+
+<!--vale off -->
 
 {% mermaid %}
 flowchart LR
@@ -71,7 +77,7 @@ flowchart LR
  
 {% endmermaid %}
 
-
+<!--vale on -->
 
 ### How does {{site.base_gateway}} resolve entity conflicts between Workspaces?
 
@@ -81,15 +87,12 @@ To route traffic to the appropriate Workspace, {{site.base_gateway}} uses a conf
 
 When a Service or Route is **created** or **modified**, the {{site.base_gateway}} Router checks for the existence of that object before allowing the operation to proceed in this order:
 
-* If the Service or Route created is totally unique and does not match an existing entity, the new entity is created. 
-* If an existing Service or Route object that matches the one being created is found, a `409 Conflict` error is returned. 
-* If an equivalent Service or a Route is found in a different Workspace, the new entity is created.
-* If an equivalent Service or Route is found in a different Workspace, and the host is a wildcard: 
-  * If the host field matches in both workspaces, a `409 Conflict` error is returned.
-  * If the host field does not match, the new entity can be created.
-  * If the host is an absolute value, a `409 Conflict` error is returned.
-
- 
+1. If the Service or Route created is unique across all Workspaces, the new entity is created. 
+1. If an existing Service or Route object that matches the one being created is found in the current Workspace, a `409 Conflict` error is returned. 
+2. If an equivalent Service or Route is found in a different Workspace, and the host is provided:
+    1. If the host field matches in both Workspaces, a `409 Conflict` error is returned.
+    1. If the host field does not match, the new entity can be created.
+    1. If the host is an absolute value, a `409 Conflict` error is returned.
 
 ## Roles, groups, and permissions
 
@@ -124,9 +127,13 @@ features:
 For more information, see [Roles and permissions](/gateway/entities/rbac/).
 
 
-### Manage multiple Workspaces with decK 
+## Manage Workspaces with decK 
 
-The following decK flags must be used when interfacing with Workspaces using decK. 
+The following decK flag must be used when interfacing with Workspaces using decK. 
+
+### Manage multiple Workspaces
+
+To manage all Workspaces at once, use the `--all-workspaces` flag with decK:
 
 ```sh
 deck gateway dump --all-workspaces
@@ -145,8 +152,9 @@ services:
 
 decK configurations must be deployed on a per-Workspace basis, individually. This is achieved using the `--workspace` flag: 
 
-`deck gateway sync default.yaml --workspace default`
-
+```sh
+deck gateway sync default.yaml --workspace default
+```
 
 ### Delete a Workspace configuration
 

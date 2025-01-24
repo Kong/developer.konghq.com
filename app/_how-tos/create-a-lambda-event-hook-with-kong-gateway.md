@@ -56,21 +56,19 @@ end
 
 Create a `lambda` Event Hook on the `consumers` event, with the `crud` source by creating a `POST` request to the Admin API and passing the code in the request body as an array of strings.
 
-```sh
-curl -i -X POST http://localhost:8001/event-hooks \
--H "Content-Type: application/json" \
--d '{
-  "source": "crud",
-  "event": "consumers",
-  "handler": "lambda",
-  "config": {
-    "functions": [
-      "return function (data, event, source, pid) local user = data.entity.username error(\"Event Hook on consumer \" .. user .. \"\") end"
-    ]
-  }
-}'
-```
-
+{% entity_example %}
+type: event_hook
+data:
+  source: "crud"
+  event: "consumers"
+  handler: "lambda"
+  config:
+    functions:
+      - |-
+        return function (data, event, source, pid) local user = data.entity.username error("Event Hook on consumer " .. user .. "") end
+formats:
+  - admin-api
+{% endentity_example %}
 
 
 ## 2. Validate the webhook
@@ -80,10 +78,13 @@ curl -i -X POST http://localhost:8001/event-hooks \
 
 Using the Admin API create a new Consumer: 
 
-```sh
-curl -i -X POST http://localhost:8001/consumers \
-    -d username="my-consumer"
-```
+{% entity_example %}
+type: consumer
+data:
+  username: my-consumer
+formats:
+  - admin-api
+{% endentity_example %}
 
 Review the logs at `/usr/local/kong/logs/error.log` for an update about the creation of this Consumer. The log will look similar to this: 
     

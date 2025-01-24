@@ -27,11 +27,25 @@ schema:
 
 ## What is a Target?
 
-{{page.description | liquify}} Each [Upstream](/gateway/entities/upstream/) can have many Targets. Targets are used by Upstreams for [load balancing](https://docs.konghq.com/gateway/latest/how-kong-works/load-balancing/). For example, if you have an `example_upstream` Upstream, you can point it to two different Targets: `httpbin.konghq.com` and `httpbun.com`. This is so that if one of the servers (like `httpbin.konghq.com`) is unavailable, it automatically detects the problem and routes all traffic to the working server (`httpbun.com`).
+A Target is an IP address/hostname with a port that identifies an instance of a backend service.
+Each [Upstream](/gateway/entities/upstream/) can have many Targets. Targets are used by Upstreams for [load balancing](/gateway/entities/upstream/#load-balancing-algorithms). For example, if you have an `example_upstream` Upstream, you can point it to two different Targets: `httpbin.konghq.com` and `httpbun.com`. This is so that if one of the servers (like `httpbin.konghq.com`) is unavailable, it automatically detects the problem and routes all traffic to the working server (`httpbun.com`).
 
 The following diagram illustrates how Targets are used by Upstreams for load balancing:
 
 {% include entities/upstreams-targets-diagram.md %}
+
+## Using hostnames
+
+A `target` can also have a hostname instead of an IP address. 
+In that case, the name is resolved and all entries found are individually added to the load balancer.
+
+For example, let's say you add `api.host.com:123` with `weight=100`:
+
+* If the hostname `api.host.com` resolves to an A record with 2 IP addresses, both IP addresses are added as a target, each with `weight=100` and port 123.
+* If the hostname resolves to an SRV record, then the `port` and `weight` fields from the DNS record are used, and override the port and weight set in the Target.
+
+The balancer honors the DNS record's `ttl` setting. Upon expiry, it queries the nameserver and updates the balancer. 
+When a DNS record has `ttl=0`, the hostname is added as a single target, with the specified weight. The nameserver is queried for every request, adding latency to the request.
 
 ## Schema
 

@@ -9,11 +9,15 @@
 {% when 'service' %}
   The following creates a new Gateway Service called **{{ include.presenter.data['name'] }}** with basic configuration:
 {% when 'target' %}
-  To create a Target, call the [Admin API’s /targets endpoint](/api/gateway/admin-ee/#/operations/create-target-with-upstream).
+  The following creates a new Target called **{{ include.presenter.data['name'] }}**:
 {% when 'upstream' %}
   The following creates a new Upstream called **{{ include.presenter.data['name'] }}**:
 {% when workspace %}
   The following creates a new Workspace called **{{ include.presenter.data['name'] }}**:
+{% when certificate %}
+  The following creates a new Certificate:
+{% when ca_certificate %}
+  The following creates a new CA Certificate:
 {% when 'plugin' %}
   Add this section to your declarative configuration file:
 {% else %}

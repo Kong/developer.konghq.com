@@ -1,5 +1,5 @@
 ---
-title: Deployment Models
+title: "{{site.base_gateway}} Deployment Models"
 description: 'There are more multiple ways to deploy your APIs, this doc explains the various advantages and trade-offs across the deployment strategies.'
 content_type: reference
 layout: reference
@@ -21,7 +21,6 @@ related_resources:
 ---
 
 
-# {{site.base_gateway}} Deployment Models
 
 {{site.base_gateway}} provides multiple solutions to address your API gateway platform requirements. {{site.base_gateway}} Enterprise and Konnect make up the on-premises and SaaS hosted products respectively. This document explains all of the options you have in deploying the components of both products, and discusses trade-offs across various deployment strategies.
 

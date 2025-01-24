@@ -1,0 +1,15 @@
+url_origin:
+  konnect: $KONNECT_PROXY_URL
+  on_prem: http://localhost:8000
+
+validations:
+  - name: rate-limit-check
+    message: API rate limit exceeded
+    status_code: 429
+
+  - name: unauthorized-check
+    message: Unauthorized
+    status_code: 401
+
+  - name: request
+    status_code: 200

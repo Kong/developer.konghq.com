@@ -1,14 +1,14 @@
-<div class="flex flex-col accordion prerequisites" data-default="0" data-multiple="false">
+<div class="flex flex-col accordion prerequisites" data-default="0" data-multiple="false" data-test-id="prereqs">
   {% if page.products %}
 
     {% if page.products contains 'gateway' %}
       {% if page.works_on contains 'konnect' %}
-      <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="konnect">
+      <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
         {% include prereqs/products/konnect.md tier=include.tier %}
       </div>
       {% endif %}
-      <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="on-prem">
-        {% include prereqs/products/gateway.md tier=include.tier %}
+      <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" }'>
+        {% include prereqs/products/gateway.md tier=include.tier rbac=page.rbac %}
       </div>
     {% endif %}
 
@@ -21,10 +21,13 @@
   {% endif %}
 
   {% for tool in prereqs.tools %}
+  {% assign tool_include = 'prereqs/tools/' | append: tool | append: '.md' %}
+  {% capture tool_include_exists %}{% include_exists tool_include %}{% endcapture %}
+  {% if tool_include_exists == 'true' %}
     <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
-{% assign tool_include = 'prereqs/tools/' | append: tool | append: '.md' %}
 {% include {{ tool_include }} %}
     </div>
+  {% endif %}
   {% endfor %}
 
   {% if prereqs.entities? %}

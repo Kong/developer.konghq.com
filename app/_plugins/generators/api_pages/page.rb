@@ -22,7 +22,7 @@ module Jekyll
           'api_spec' => api_spec,
           'description' => api_spec.description,
           'layout' => 'api/spec',
-          'content_type' => 'reference',
+          'content_type' => 'api',
           'canonical_url' => canonical_url,
           'canonical?' => canonical?,
           'seo_noindex' => seo_noindex,
