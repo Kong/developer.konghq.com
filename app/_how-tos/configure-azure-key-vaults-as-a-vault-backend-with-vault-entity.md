@@ -135,7 +135,7 @@ variables:
 
 ## 2. Validate
 
-To validate, you can call a variable from your vault using the `kong vault get` command in your Data Plane container. If the Docker container is named `kong-quickstart-gateway`, you can use the following command:
+To validate, you can call a secret from your vault using the `kong vault get` command in your Data Plane container. If the Docker container is named `kong-quickstart-gateway`, you can use the following command:
 
 ```sh
 docker exec kong-quickstart-gateway kong vault get {vault://azure-vault/token}
