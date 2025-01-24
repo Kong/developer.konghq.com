@@ -99,10 +99,10 @@ The response body contains information about the `super-admin` user including a 
 
 ## 2. Enable RBAC
 
-With a `super-admin` created, you can proceed to enable RBAC. This requires restarting or reloading {{site.base_gateway}}, if you are using the deploy script, this is done from within the {{site.base_gateway}} Docker container:
+With a `super-admin` created, you can proceed to enable RBAC. The `super-admin` User is a requirement because after enabling RBAC you will be required to pass the `user_token` value as a header in all requests. Enabling RBAC requires restarting or reloading {{site.base_gateway}}, if you are using the deploy script, this is done from within the {{site.base_gateway}} Docker container. 
 
 ```sh
-export KONG_ENFORCE_RBAC=on && kong restart
+export KONG_ENFORCE_RBAC=on && kong reload
 ```
 
 ## 3. Validate 
