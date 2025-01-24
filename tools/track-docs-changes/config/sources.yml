@@ -133,6 +133,9 @@ app/_how-tos/proxy-tls-passthrough-traffic-using-sni.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_how-tos/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity.md:
   - app/_src/gateway/kong-enterprise/secrets-management/backends/aws-sm.md
+app/_how-tos/store-secrets-in-konnect-config-store.md:
+  - app/konnect/gateway-manager/configuration/config-store.md
+
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
