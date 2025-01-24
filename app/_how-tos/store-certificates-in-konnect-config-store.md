@@ -1,17 +1,17 @@
 ---
-title: Replace certificates used in {{site.base_gateway}} data plane nodes with a secret stored in Konnect Config Store
+title: Store certificates in Konnect Config Store
 content_type: how_to
 related_resources:
   - text: Secrets management
-    url: /secrets-management 
+    url: /secrets-management/
   - text: Vault entity
-    url: /gateway/entities/vault
-  - text: Store and use your Mistral API key as a secret in Konnect Config Store
-    url: /how-to/store-and-use-your-mistral-api-key-as-a-secret-in-konnect-config-store
+    url: /gateway/entities/vault/
   - text: Configure the Konnect Config Store
-    url: /how-to/configure-the-konnect-config-store
+    url: /how-to/configure-the-konnect-config-store/
+  - text: Store a Mistral API key as a secret in Konnect Config Store
+    url: /how-to/store-a-mistral-api-key-as-a-secret-in-konnect-config-store/
   - text: Reference secrets stored in the Konnect Config Store
-    url: /how-to/reference-secrets-stored-in-the-konnect-config-store
+    url: /how-to/reference-secrets-from-konnect-config-store/
 
 products:
     - gateway

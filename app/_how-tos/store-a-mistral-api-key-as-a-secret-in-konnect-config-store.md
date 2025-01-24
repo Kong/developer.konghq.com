@@ -8,6 +8,10 @@ related_resources:
     url: /gateway/entities/vault/
   - text: Configure the Konnect Config Store
     url: /how-to/configure-the-konnect-config-store/
+  - text: Reference secrets stored in the Konnect Config Store
+    url: /how-to/reference-secrets-from-konnect-config-store/
+  - text: Store certificates in Konnect Config Store
+    url: /how-to/store-certificates-in-konnect-config-store/
   - text: AI Proxy plugin
     url: /plugins/ai-proxy/
   - text: Mistral AI documentation
@@ -29,9 +33,9 @@ tags:
 tldr:
     q: How do I store my Mistral API key as a secret in a {{site.konnect_short_name}} Vault and then use it with the AI Proxy plugin?
     a: |
-      1. Use the {{site.konnect_short_name}} API to create a Config Store using the `config-stores` endpoint.
+      1. Use the {{site.konnect_short_name}} API to create a Config Store using the `/config-stores` endpoint.
       2. Create a {{site.konnect_short_name}} Vault using the [`/vaults/` endpoint](/api/konnect/control-planes-config/v2/#/operations/create-vault).
-      3. Store your Mistral API key as a key/value pair using the `/config-stores/{configStoreId}/secrets` endpoint. 
+      3. Store your Mistral API key as a key/value pair using the `/secrets` endpoint. 
       4. Reference the secret using the Vault prefix and key (for example: `{vault://mysecretvault/mistral-key}`) in the [AI Proxy plugin](/plugins/ai-proxy/) `header_value`. 
 
 prereqs:
@@ -118,7 +122,7 @@ body:
 
 In this tutorial, you'll be storing the Mistral API key you set previously and using it to generate an answer to a question using the [AI Proxy plugin](/plugins/ai-proxy/). By storing it as a secret in a {{site.konnect_short_name}} Vault, you can reference it during plugin configuration in the next step.
 
-Store your Mistral key as a secret by sending a `POST` request to the `/v2/control-planes/{controlPlaneId}/config-stores/{configStoreId}/secrets` endpoint:
+Store your Mistral key as a secret by sending a `POST` request to the `/secrets` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -139,7 +143,7 @@ body:
 
 To reference your stored Mistral API key, you use the prefix from your Vault config, the name of the secret, and optionally the property in the secret you want to use. Now, you'll reference the Mistral API key as a secret in the authorization header of the AI Proxy plugin configuration.
 
-Enable the AI Proxy plugin on your route by sending a `POST` request to the [`/routes/{RouteId}/plugins` endpoint](/api/konnect/control-planes-config/v2/#/operations/create-plugin-with-route):
+Enable the AI Proxy plugin on your route by sending a `POST` request to the [`/plugins` endpoint](/api/konnect/control-planes-config/v2/#/operations/create-plugin-with-route):
 
 <!--vale off-->
 {% control_plane_request %}
