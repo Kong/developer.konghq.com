@@ -22,7 +22,7 @@ related_resources:
 tldr: 
   q: How do I configure RBAC?
   a: |
-     To configure RBAC, create a Super Admin user, then enable RBAC on {{site.base_gateway}} by setting the `enable_rbac` setting to `on`.
+     To configure RBAC, create a [Super Admin user](/gateway/entities/rbac/#default-kong-gateway-roles) using the [`/rbac/users` endpoint](/api/gateway/admin-ee/3.9/#/operations/post-rbac-users), then enable RBAC on {{site.base_gateway}} by setting the `enable_rbac` setting to `on` in `kong.conf`.
 
 min_version:
     gateway: '3.4'
@@ -30,9 +30,7 @@ prereqs:
     inline:
       - title: Configure environment variables
         content: |
-            Set the `user_token`: 
-            * `USER_TOKEN`: The authentication token to be presented to the Admin API.
-            For example: 
+            Set the `user_token`, which is the authentication token that's presented to the Admin API. For example: 
             ```sh
             export USER_TOKEN=my-admin-token
             ```
@@ -41,9 +39,9 @@ prereqs:
 
 ## 1. Create an RBAC Super Admin
 
-In {{site.base_gateway}} A Super Admin has the ability to manage Roles and permissions across Workspaces. Because the username `super-admin` matches the `super-admin` RBAC Role, the new user is automatically added to the `super-admin` Role. 
+In {{site.base_gateway}} A Super Admin has the ability to manage [Roles and permissions](/gateway/entities/rbac/#what-is-rbac) across Workspaces. Because the username `super-admin` matches the `super-admin` RBAC Role, the new user is automatically added to the `super-admin` Role. 
 
-1. Create an [RBAC](/gateway/entities/rbac/) Super Admin
+1. Create an [RBAC](/gateway/entities/rbac/) Super Admin by sending a `POST` request to the [`/rbac/users`](/api/gateway/admin-ee/3.9/#/operations/post-rbac-users) endpoint:
 <!-- vale off -->
 {% capture request %}
 {% control_plane_request %}
@@ -62,7 +60,7 @@ In {{site.base_gateway}} A Super Admin has the ability to manage Roles and permi
 <!-- vale on -->
     
 
-2. Validate the user was created correctly:  
+2. Validate the user was created correctly by sending a `GET` request to the [`/rbac/users/{name_or_id}/roles`](/api/gateway/admin-ee/3.9/#/operations/get-rbac-users-name_or_id-roles) endpoint:  
 
 {% capture request %}
 {% control_plane_request %}
@@ -71,7 +69,7 @@ In {{site.base_gateway}} A Super Admin has the ability to manage Roles and permi
 {% endcapture %}
 {{request | indent: 3}}
 
-The response body contains information about the `super-admin` user including, a comment field which expresses what permissions the `super-admin` role contains, and hashed a `user_token`. 
+The response body contains information about the `super-admin` user including a comment field that details what permissions the `super-admin` role contains and a hashed `user_token`. 
 
 ```json
     {
@@ -101,7 +99,7 @@ The response body contains information about the `super-admin` user including, a
 
 ## 2. Enable RBAC
 
-With a `super-admin` created, you can proceed to enable RBAC. This requires restarting or reloading {{site.base_gateway}}.
+With a `super-admin` created, you can proceed to enable RBAC. This requires restarting or reloading {{site.base_gateway}}, if you are using the deploy script, this is done from within the {{site.base_gateway}} Docker container:
 
 ```sh
 export KONG_ENFORCE_RBAC=on && kong restart
@@ -109,9 +107,9 @@ export KONG_ENFORCE_RBAC=on && kong restart
 
 ## 3. Validate 
 
-After the Super Admin is created, the `user_token` has to be passed with Admin API requests otherwise the API will return a `401 Unauthorized` error.
+After the Super Admin is created and RBAC is enabled, the `user_token` must be passed with Admin API requests otherwise the API will return a `401 Unauthorized` error.
 
-You can validate that RBAC is enabled by attempting to create a user like you did in the first step without passing the `user_token`. 
+You can validate that RBAC is enabled by attempting to create a user like you did in the first step without passing the `user_token`:
 
 <!-- vale off -->
 
