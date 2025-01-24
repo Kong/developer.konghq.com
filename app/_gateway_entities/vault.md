@@ -86,7 +86,7 @@ features:
     enterprise: true
     supports_konnect: true
   - title: Konnect Config Store
-    url: /how-to/store-secrets-in-konnect-config-store/
+    url: /how-to/configure-the-konnect-config-store/
     oss: false
     enterprise: false
     supports_konnect: true
