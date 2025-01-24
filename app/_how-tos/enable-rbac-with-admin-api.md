@@ -52,6 +52,9 @@ In {{site.base_gateway}} A Super Admin has the ability to manage Roles and permi
   body:
       name: super-admin
       user_token: $USER_TOKEN
+  headers:
+      - 'Accept: application/json'
+      - 'Content-Type: application/json'
 {% endcontrol_plane_request %}
 {% endcapture %}
 
