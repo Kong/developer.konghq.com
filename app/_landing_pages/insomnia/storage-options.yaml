@@ -45,7 +45,7 @@ rows:
             icon:  /assets/icons/edit.svg
             cta:
               text: Learn more
-              url: insomnia/scratch-pad/
+              url: /insomnia/scratch-pad/
               align: end
       - blocks:
         - type: card
@@ -89,7 +89,7 @@ rows:
                             - "Users working on sensitive projects that require enhanced security."
                             - "Environments with limited or restricted internet access."
                 - text: |
-                    [Scratch pad](insomnia/scratch-pad/)
+                    [Scratch pad](/insomnia/scratch-pad/)
                   action:
                     type: structured_text
                     config:

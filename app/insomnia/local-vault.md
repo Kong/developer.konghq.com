@@ -17,7 +17,7 @@ related_resources:
   - text: Cloud sync
     url: /insomnia/cloud-sync/
   - text: Scratch pad
-    url: insomnia/scratch-pad/
+    url: /insomnia/scratch-pad/
   - text: API specs
     url: /insomnia/api-specs/
   - text: Write tests for HTTP status codes

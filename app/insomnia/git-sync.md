@@ -21,7 +21,7 @@ related_resources:
   - text: Cloud sync
     url: /insomnia/cloud-sync/
   - text: Scratch pad
-    url: insomnia/scratch-pad/
+    url: /insomnia/scratch-pad/
   - text: Local vault
     url: /insomnia/local-vault/
   - text: SSO
