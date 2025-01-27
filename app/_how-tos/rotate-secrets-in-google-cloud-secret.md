@@ -5,7 +5,7 @@ related_resources:
   - text: Configure Google Cloud Secret as a vault backend
     url: /how-to/configure-google-cloud-secret-as-a-vault-backend
   - text: Secret management
-    url: /secret-management/
+    url: /gateway/secrets-management/
 
 products:
     - gateway
@@ -26,6 +26,7 @@ entities:
 
 tags:
     - security
+    - secrets-management
 
 tldr:
     q: How do I 
