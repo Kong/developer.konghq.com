@@ -45,6 +45,7 @@ module Jekyll
 
           data.merge!('products' => products) if products
           data.merge!('works_on' => works_on) if works_on
+          data.merge!('tags' => tags) if tags
           data.merge!('tools' => tools) if tools
 
           data
@@ -68,6 +69,12 @@ module Jekyll
           return unless @page.data['tools']
 
           @page.data.fetch('tools', []).join(',')
+        end
+
+        def tags
+          return unless @page.data['tags']
+
+          @page.data.fetch('tags', []).join(',')
         end
       end
     end
