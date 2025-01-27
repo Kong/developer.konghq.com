@@ -4,11 +4,9 @@ title: Kong Security Update Process
 description: Learn how Kong handles vulnerabilities or potential vulnerabilities in Kong or third-party code, and how to report any security issues.
 
 content_type: concept
-layout: concept
+layout: reference
 
-breadcrumbs:
-  - /gateway/
-  - /gateway/security/
+no_version: true
 
 related_resources:
   - text: Security in {{site.base_gateway}}
@@ -31,4 +29,4 @@ If a discovered vulnerability with a CVSS score above 4.0 (medium severity or hi
 
 Discovered vulnerabilities with a CVSS score below 4.0 (low severity) will follow the same fix development and release process but with a less urgent timeline.
 
-Vulnerabilities affecting upstream projects (for example, NGINX, OpenResty, OpenSSL) will receive fixes as per the upstream project’s disclosure timeline.
+Vulnerabilities affecting upstream projects (for example, NGINX, OpenResty, OpenSSL, and others) will receive fixes as per the upstream project’s disclosure timeline.
