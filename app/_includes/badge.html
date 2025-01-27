@@ -1,4 +1,4 @@
-{%- assign cssClasses = "rounded px-1.5 py-0.5 text-primary text-xs bg-brand-saturated/40 badge " | append: include.css_class -%}
+{%- assign cssClasses = "badge " | append: include.css_class -%}
 {%- if include.url -%}
 <a class="{{ cssClasses }}" href="{{ include.url }}">{{ include.text }}</a>
 {%- else -%}

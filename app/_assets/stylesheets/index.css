@@ -344,6 +344,10 @@
     }
   }
 
+  .badge {
+    @apply rounded px-1.5 py-0.5 text-primary text-xs bg-brand-saturated/40;
+  }
+
   .badge.deprecated {
     @apply bg-semantic-red-secondary;
   }
