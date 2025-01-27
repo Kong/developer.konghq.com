@@ -21,6 +21,7 @@ entities:
 
 tags:
   - security
+  - secrets-management
 
 tldr:
     q: How can I access Azure Key Vaults secrets in {{site.base_gateway}}?

@@ -26,6 +26,7 @@ entities:
 
 tags:
     - security
+    - secrets-management
 
 tldr:
     q: How do I 
