@@ -4,6 +4,9 @@ layout: none
 User-agent: Algolia Crawler
 Allow: *
 
+User-agent: Screaming Frog SEO Spider
+Allow: *
+
 User-agent: *
 Disallow: /
 
