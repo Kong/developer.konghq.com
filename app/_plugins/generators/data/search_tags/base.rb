@@ -39,10 +39,10 @@ module Jekyll
           data = {
             'title' => @page.data['title'],
             'description' => @page.data['description'],
-            'content_type' => @page.data['content_type'],
-            'tier' => @page.data['tier']
+            'content_type' => @page.data['content_type']
           }
 
+          data.merge!('tier' => tier) if tier
           data.merge!('products' => products) if products
           data.merge!('works_on' => works_on) if works_on
           data.merge!('tags' => tags) if tags
@@ -75,6 +75,14 @@ module Jekyll
           return unless @page.data['tags']
 
           @page.data.fetch('tags', []).join(',')
+        end
+
+        def tier
+          return unless @page.data['tier']
+          return unless @page.data['products']
+
+          product = @page.data['products'].first
+          @site.data.dig('products', product, 'tiers', @page.data['tier'], 'text')
         end
       end
     end
