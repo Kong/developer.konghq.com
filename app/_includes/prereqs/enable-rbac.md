@@ -19,7 +19,7 @@ This tutorial requires {{site.ee_product_name}}.
     ```bash
     Kong Gateway Ready
     ```
-    For more information about the values see the [Bootstrap RBAC](/how-to/bootstrap-rbac/) guide.
+    For more information about the values see the [Bootstrap RBAC](/how-to/enable-rbac-with-admin-api/) guide.
     {:.no-copy-code}
 
 
