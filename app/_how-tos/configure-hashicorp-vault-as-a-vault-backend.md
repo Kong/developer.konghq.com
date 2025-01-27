@@ -49,7 +49,7 @@ prereqs:
           vault server -dev -dev-root-token-id root -dev-tls
           ```
         1. In the output from the previous command, copy where it lists the `VAULT_ADDR` and `VAULT_CACERT` to export.
-        1. In a new termnial window, export your `VAULT_ADDR` and `VAULT_CACERT`, for example:
+        1. In a new terminal window, export your `VAULT_ADDR` and `VAULT_CACERT`, for example:
           ```
           export VAULT_ADDR='https://127.0.0.1:8200'
           export VAULT_CACERT='/var/folders/qr/zgztx0sj6n1dxy86sl36ntnw0000gn/T/vault-tls3037226588/vault-ca.pem'
