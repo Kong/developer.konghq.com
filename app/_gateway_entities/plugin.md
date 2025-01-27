@@ -75,7 +75,7 @@ A global plugin is not associated to any Service, Route, Consumer, or Consumer G
 considered global, and will be run on every request, regardless of any other configuration.
 
 * In self-managed {{site.ee_product_name}}, the plugin applies to every entity in a given Workspace.
-* In self-managed {{site.ce_product_name}}, the plugin applies to your entire environment.
+* In self-managed open-source {{site.base_gateway}}, the plugin applies to your entire environment.
 * In {{site.konnect_short_name}}, the plugin applies to every entity in a given Control Plane.
 
 Every plugin supports a subset of these scopes.
@@ -106,9 +106,13 @@ The complete order of precedence for plugins configured to multiple entities is:
 12. **Globally configured plugins**: Lowest precedence, applies to all requests across all Services and Routes regardless of Consumer status.
 
 {:.info}
-> **Note on precedence for Consumer Groups**:
-When a Consumer is a member of two Consumer Groups, each with a scoped plugin, {{site.base_gateway}} ensures deterministic behavior by executing only one of these plugins. Currently, this is determined by the Group name, in alphabetical order. 
-However, the specific rules that govern this behavior are not defined and are subject to change in future releases.
+> **Note on precedence for Consumer Groups**
+> <br><br>
+> When a Consumer is a member of two Consumer Groups, each with a scoped instance of the same plugin, {{site.base_gateway}} ensures deterministic behavior by executing only one of these plugin instances. 
+> Currently, this is determined by the Consumer Group name, in alphabetical order. 
+> For example, if you have two Consumer Groups, A and B, each with an instance of the Rate Limiting Advanced plugin, the plugin in Consumer Group A will be applied.
+> <br><br>
+> The specific rules that govern this behavior are not defined and are subject to change in future releases.
 
 ### Supported scopes by plugin
 
