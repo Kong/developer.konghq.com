@@ -11,7 +11,7 @@ related_resources:
     url: /authentication/
   - text: Consumer Groups entity
     url: /gateway/entities/consumer-group/
-  - text: Plugins that can be enabled on Consumers
+  - text: Plugins that can be scoped to Consumers
     url: /gateway/entities/plugin/#supported-scopes-by-plugin
 
 faqs:

@@ -20,7 +20,7 @@ related_resources:
       url: /how-to/add-rate-limiting-tiers-with-kong-gateway/
     - text: Consumer entity
       url: /gateway/entities/consumer/
-    - text: Plugins that can be enabled on Consumer Groups
+    - text: Plugins that can be scoped to Consumer Groups
       url: /gateway/entities/plugin/#supported-scopes-by-plugin
 
 api_specs:

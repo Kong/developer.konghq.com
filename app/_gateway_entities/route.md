@@ -16,7 +16,7 @@ related_resources:
     url: /gateway/routing/traditional/
   - text: Upstream entity
     url: /gateway/entities/upstream/
-  - text: Plugins that can be enabled on Routes
+  - text: Plugins that can be scoped to Routes
     url: /gateway/entities/plugin/#supported-scopes-by-plugin
 
 next_steps:

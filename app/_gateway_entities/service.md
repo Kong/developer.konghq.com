@@ -11,7 +11,7 @@ related_resources:
     url: /gateway/entities/route/
   - text: Enable rate limiting on a Gateway Service
     url: /how-to/add-rate-limiting-to-a-service-with-kong-gateway/
-  - text: Plugins that can be enabled on Gateway Services
+  - text: Plugins that can be scoped to Gateway Services
     url: /gateway/entities/plugin/#supported-scopes-by-plugin
 
 tools:
