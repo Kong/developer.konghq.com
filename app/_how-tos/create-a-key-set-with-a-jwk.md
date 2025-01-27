@@ -8,9 +8,9 @@ entities:
 
 related_resources:
   - text: Key entity
-    url: /gateway/entities/key
+    url: /gateway/entities/key/
   - text: Key Set entity
-    url: /gateway/entities/key-set
+    url: /gateway/entities/key-set/
 
 products:
     - gateway

@@ -17,7 +17,7 @@ related_resources:
   - text: Routing in {{site.base_gateway}}
     url: /gateway/routing/
   - text: Workspaces
-    url: /gateway/entities/workspace
+    url: /gateway/entities/workspace/
 ---
 
 

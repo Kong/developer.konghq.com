@@ -42,7 +42,7 @@ The first option simplifies configuration in kong.conf, but requires an HTTP pro
 
 Kong Manager operate by issuing requests to the Admin API using JavaScript. These requests may be cross-origin depending on your environment. The Admin API obtains its `ACAO header` value from the `admin_gui_url` in kong.conf.
 
-You can configure your environment such that these requests are not cross-origin by accessing both the Kong Manager and its associated API via the same hostname, like: https://admin.kong.example/ and the Admin API at https://admin.kong.example/_api/. This option requires placing a proxy in front of both Kong Manager and the Admin API to handle path-based routing. You can use Kong’s proxy for this purpose. Kong Manager must be served at the root of the domains and you cannot place the APIs at the root and Kong Manager under a path. You can manage CORS in {{site.base_gateway}} using the [CORS plugin](/plugins/cors)
+You can configure your environment such that these requests are not cross-origin by accessing both the Kong Manager and its associated API via the same hostname, like: https://admin.kong.example/ and the Admin API at https://admin.kong.example/_api/. This option requires placing a proxy in front of both Kong Manager and the Admin API to handle path-based routing. You can use Kong’s proxy for this purpose. Kong Manager must be served at the root of the domains and you cannot place the APIs at the root and Kong Manager under a path. You can manage CORS in {{site.base_gateway}} using the [CORS plugin](/plugins/cors/)
 
 
 ### Troubleshooting CORS

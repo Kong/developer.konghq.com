@@ -16,7 +16,7 @@ related_resources:
   - text: Gateway Admin entity
     url: /gateway/entities/admin/
   - text: Workspaces entity
-    url: /gateway/entities/workspace
+    url: /gateway/entities/workspace/
 
 
 tldr: 

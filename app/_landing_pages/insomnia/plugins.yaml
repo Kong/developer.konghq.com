@@ -35,7 +35,7 @@ rows:
             icon: /assets/icons/insomnia/design.svg
             cta:
               text: Learn more
-              url: /how-to/create-an-insomnia-plugin
+              url: /how-to/create-an-insomnia-plugin/
   
   - header:
       text: "How to use plugins"

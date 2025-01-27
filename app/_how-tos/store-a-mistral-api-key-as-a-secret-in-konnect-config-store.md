@@ -96,7 +96,7 @@ export CONFIG_STORE_ID=config-store-uuid
 
 ## 2. Configure {{site.konnect_short_name}} as your Vault
 
-To enable {{site.konnect_short_name}} as your vault with the [Vault entity](/gateway/entities/vault) send a `POST` request to the [`/vaults/`](/api/konnect/control-planes-config/v2/#/operations/create-vault) endpoint:
+To enable {{site.konnect_short_name}} as your vault with the [Vault entity](/gateway/entities/vault/) send a `POST` request to the [`/vaults/`](/api/konnect/control-planes-config/v2/#/operations/create-vault) endpoint:
 
 
 

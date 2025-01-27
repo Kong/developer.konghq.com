@@ -13,11 +13,11 @@ related_resources:
   - text: Storage options
     url: /insomnia/storage-options
   - text: Git sync
-    url: /insomnia/git-sync
+    url: /insomnia/git-sync/
   - text: Cloud sync
-    url: /insomnia/cloud-sync
+    url: /insomnia/cloud-sync/
   - text: Scratch pad
-    url: /insomnia/scratch-pad
+    url: insomnia/scratch-pad/
   - text: API specs
     url: /insomnia/api-specs/
   - text: Write tests for HTTP status codes
@@ -39,6 +39,6 @@ Key features:
 * **No cloud interaction:** No data is sent to or stored in the cloud.
 * **Security:** Enhanced security as data remains within your local environment.
 * **Work offline:** Access and work on your projects without needing an internet connection.
-* **Collaborate:** With local vault, you still have the option to use [Git sync](/insomnia/git-sync).
+* **Collaborate:** With local vault, you still have the option to use [Git sync](/insomnia/git-sync/).
 
 You can create a local vault project when you create a new project in Insomnia and select the **Local vault** option.

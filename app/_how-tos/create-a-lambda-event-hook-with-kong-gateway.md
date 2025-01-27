@@ -74,7 +74,7 @@ formats:
 ## 2. Validate the webhook
 
 {:.warning}
-> **Important**:  Before you can use Event Hooks for the first time, {{site.base_gateway}} needs to be [reloaded](/how-to/restart-kong-gateway-container).
+> **Important**:  Before you can use Event Hooks for the first time, {{site.base_gateway}} needs to be [reloaded](/how-to/restart-kong-gateway-container/).
 
 Using the Admin API create a new Consumer: 
 

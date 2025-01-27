@@ -14,7 +14,7 @@ tools:
 
 related_resources:
   - text: decK object defaults reference
-    url:  /deck/object-defaults
+    url:  /deck/object-defaults/
 
 tldr:
   q: |
@@ -54,7 +54,7 @@ configuration would overwrite the value in your environment.
 ## 1. Define default properties
 
 Define the properties you want to customize for {{site.base_gateway}} objects.
-See the [object defaults reference](/deck/object-defaults) for all configurable objects and default values.
+See the [object defaults reference](/deck/object-defaults/) for all configurable objects and default values.
 
 In the `deck_files` directory you created in the prerequisites, create a `defaults.yaml` file
 and add an `_info` section with `defaults`. 

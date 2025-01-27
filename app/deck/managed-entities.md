@@ -28,7 +28,7 @@ It does not manage {{site.base_gateway}} configuration parameters in `kong.conf`
 
 decK can create Workspaces and manage entities in a given Workspace. 
 However, decK can't delete Workspaces, and it can't update multiple Workspaces simultaneously.
-See the [Workspace](/gateway/entities/workspace) documentation for more information. 
+See the [Workspace](/gateway/entities/workspace/) documentation for more information. 
 
 
 ## Managed entities

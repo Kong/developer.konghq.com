@@ -22,7 +22,7 @@ prereqs:
       icon_url: /assets/icons/git.svg
     - title: Insomnia workspace
       content: |
-        Create a workspace in Insomnia. A workspace can be a [design document](/how-to/create-a-design-document), a [collection](), a [mock server](), or an [environment]().
+        Create a workspace in Insomnia. A workspace can be a [design document](/how-to/create-a-design-document/), a [collection](), a [mock server](), or an [environment]().
       icon_url: /assets/icons/git.svg
 
 tldr:

@@ -33,7 +33,7 @@ rows:
             icon:  /assets/icons/insomnia/data-security.svg
             cta:
               text: Learn more
-              url: /insomnia/data-security
+              url: /insomnia/data-security/
               align: end
       - blocks:
         - type: card
@@ -43,7 +43,7 @@ rows:
             icon: /assets/icons/insomnia/infrastructure-security.svg
             cta:
               text: Learn more
-              url: /insomnia/infrastructure-security
+              url: /insomnia/infrastructure-security/
               align: end
       - blocks:
         - type: card
@@ -53,7 +53,7 @@ rows:
             icon: /assets/icons/insomnia/data-collected.svg
             cta:
               text: Learn more
-              url: /insomnia/collected-data
+              url: /insomnia/collected-data/
               align: end
       - blocks:
         - type: card
@@ -63,5 +63,5 @@ rows:
             icon: /assets/icons/insomnia/incident-response.svg
             cta:
               text: Learn more
-              url: /insomnia/incident-response
+              url: /insomnia/incident-response/
               align: end

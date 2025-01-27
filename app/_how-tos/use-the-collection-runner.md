@@ -26,7 +26,7 @@ tldr:
 
 In this example, we want to get a list of KongAir flights and then get more information about a specific flight. 
 
-In the _Fetch more details about a flight_ request, we need to replace the `flightNumber` variable with an actual value. We can either [get this value from a response](/how-to/chain-requests), or click the variable and enter a value (_KA0284_ for example).
+In the _Fetch more details about a flight_ request, we need to replace the `flightNumber` variable with an actual value. We can either [get this value from a response](/how-to/chain-requests/), or click the variable and enter a value (_KA0284_ for example).
 
 ## 2. Order and select the requests
 

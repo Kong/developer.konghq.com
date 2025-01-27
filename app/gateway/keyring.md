@@ -31,7 +31,7 @@ schema:
 faqs:
   - q: What is the difference between a Vault and a Keyring?
     a: |
-      A Keyring and a [Vault](/gateway/entities/vault) are both used to secure secrets, but they use different approaches. The Keyring contains encryption keys used to encrypt sensitive data fields before they're written to the database. The same key is then used to decrypt the data when reading from the database. A Vault is a container that securely stores secrets. You can then reference these secrets in other {{site.base_gateway}} entities. 
+      A Keyring and a [Vault](/gateway/entities/vault/) are both used to secure secrets, but they use different approaches. The Keyring contains encryption keys used to encrypt sensitive data fields before they're written to the database. The same key is then used to decrypt the data when reading from the database. A Vault is a container that securely stores secrets. You can then reference these secrets in other {{site.base_gateway}} entities. 
       
       The Keyring is configured for the whole {{site.base_gateway}} instance and will automatically encrypt a [list of fields](#encrypted-fields) defined by Kong. In a Vault, each secret needs to be added and then referenced. However, a Vault supports storing some fields not supported by the Keyring.
       

@@ -60,7 +60,7 @@ rows:
             title: Requests reference
             cta:
               text: Learn more
-              url: /insomnia/requests
+              url: /insomnia/requests/
               align: end
       - blocks:
         - type: card

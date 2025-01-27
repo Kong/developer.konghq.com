@@ -43,7 +43,7 @@ rows:
             icon:  /assets/icons/insomnia/design.svg
             cta:
               text: Learn more
-              url: /insomnia/design
+              url: /insomnia/design/
               align: end
       - blocks:
         - type: card
@@ -53,7 +53,7 @@ rows:
             icon: /assets/icons/insomnia/checkbox-active.svg
             cta:
               text: Learn more
-              url: /insomnia/test
+              url: /insomnia/test/
               align: end
       
       - blocks:
@@ -64,7 +64,7 @@ rows:
             icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-api-plugins-color.svg
             cta:
               text: Learn more
-              url: /insomnia/plugins
+              url: /insomnia/plugins/
               align: end
   - header:
       type: h2
