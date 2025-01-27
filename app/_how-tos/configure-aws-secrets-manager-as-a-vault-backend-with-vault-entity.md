@@ -37,6 +37,7 @@ tools:
 prereqs:
   inline:
     - title: AWS configuration
+      position: before
       content: |
         This tutorial requires at least one [secret](https://docs.aws.amazon.com/secretsmanager/latest/userguide/create_secret.html) in AWS Secrets Manager. In this example, the secret is named `my-aws-secret` and contains a key/value pair in which the key is `token`.
         
@@ -48,6 +49,7 @@ prereqs:
       icon_url: /assets/icons/aws.svg
 
     - title: Environment variables
+      position: before
       content: |
           Set the environment variables needed to authenticate to AWS:
           ```sh
