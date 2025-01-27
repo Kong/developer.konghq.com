@@ -36,8 +36,11 @@ faqs:
     a: You can only reference secrets. Azure Key Vaults keys and certificates are not supported.
 
 prereqs:
+  gateway:
+    - name: AZURE_CLIENT_SECRET
   inline:
     - title: Azure resources
+      position: before
       content: |
         This example requires a few Azure resources. You need an Azure subscription and permissions to create or access these resources:
         - A [registered application](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate) to use for authentication.
@@ -54,6 +57,7 @@ prereqs:
       icon_url: /assets/icons/azure.svg
       
     - title: Environment variables
+      position: before
       content: |
           Set the environment variables needed to authenticate to Azure:
           ```sh
@@ -66,33 +70,6 @@ prereqs:
 
           Note that the `AZURE_CLIENT_SECRET` variable needs to be passed when creating your Data Plane container.
       icon_url: /assets/icons/file.svg
-    - title: Kong Gateway running
-      content: |
-        @TODO - Temporary prereq, to be removed when custom parameter option is implemented
-
-        This tutorial requires {{site.ee_product_name}}.
-        If you don't have {{site.base_gateway}} set up yet, you can use the
-        [quickstart script](https://get.konghq.com/quickstart) with an enterprise license
-        to get an instance of {{site.base_gateway}} running almost instantly.
-
-        1. Export your license to an environment variable:
-
-            ```
-            export KONG_LICENSE_DATA='<license-contents-go-here>'
-            ```
-
-        2. Run the quickstart script:
-
-            ```bash
-            curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA \
-            -e AZURE_CLIENT_SECRET
-            ```
-
-            Once {{site.base_gateway}} is ready, you will see the following message:
-            ```bash
-            Kong Gateway Ready
-            ```
-            {:.no-copy-code}
 cleanup:
   inline:
     - title: Clean up Azure resources
