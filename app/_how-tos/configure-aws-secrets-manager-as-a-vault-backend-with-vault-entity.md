@@ -25,6 +25,7 @@ entities:
 
 tags:
   - security
+  - secrets-management
 
 tldr:
     q: How can I access AWS Secrets Manager secrets in {{site.base_gateway}}?
@@ -35,8 +36,13 @@ tools:
   - deck
 
 prereqs:
+  gateway:
+    - name: AWS_ACCESS_KEY_ID
+    - name: AWS_SECRET_ACCESS_KEY
+    - name: AWS_SESSION_TOKEN
   inline:
     - title: AWS configuration
+      position: before
       content: |
         This tutorial requires at least one [secret](https://docs.aws.amazon.com/secretsmanager/latest/userguide/create_secret.html) in AWS Secrets Manager. In this example, the secret is named `my-aws-secret` and contains a key/value pair in which the key is `token`.
         
@@ -48,6 +54,7 @@ prereqs:
       icon_url: /assets/icons/aws.svg
 
     - title: Environment variables
+      position: before
       content: |
           Set the environment variables needed to authenticate to AWS:
           ```sh
@@ -57,29 +64,7 @@ prereqs:
           ```
           Note that these variables need to be passed when creating your Data Plane container.
       icon_url: /assets/icons/file.svg
-    - title: Kong Gateway running
-      content: |
-        @TODO - Temporary prereq, to be removed when custom parameter option is implemented
-        This tutorial requires {{site.ee_product_name}}.
-        If you don't have {{site.base_gateway}} set up yet, you can use the
-        [quickstart script](https://get.konghq.com/quickstart) with an enterprise license
-        to get an instance of {{site.base_gateway}} running almost instantly.
-        1. Export your license to an environment variable:
-            ```
-            export KONG_LICENSE_DATA='<license-contents-go-here>'
-            ```
-        2. Run the quickstart script:
-            ```bash
-            curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA \
-              -e AWS_ACCESS_KEY_ID \
-              -e AWS_SECRET_ACCESS_KEY \
-              -e AWS_SESSION_TOKEN
-            ```
-            Once {{site.base_gateway}} is ready, you will see the following message:
-            ```bash
-            Kong Gateway Ready
-            ```
-            {:.no-copy-code}
+
 cleanup:
   inline:
     - title: Clean up AWS resources

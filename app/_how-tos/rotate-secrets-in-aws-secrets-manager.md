@@ -5,7 +5,7 @@ related_resources:
   - text: Configure AWS Secrets Manager as a vault backend
     url: /how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity
   - text: Secret management
-    url: /secret-management/ 
+    url: /gateway/secrets-management/ 
 
 products:
     - gateway
@@ -26,6 +26,7 @@ entities:
 
 tags:
     - security
+    - secrets-management
 
 tldr:
     q: How do I 

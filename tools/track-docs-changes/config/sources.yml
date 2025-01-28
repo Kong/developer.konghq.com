@@ -39,6 +39,7 @@ app/_gateway_entities/consumer.md:
   - app/_src/gateway/key-concepts/consumers.md
 app/_gateway_entities/plugin.md:
   - app/hub/plugins/overview/index.md
+  - app/hub/plugins/compatibility/index.md
 app/_gateway_entities/route.md:
   - app/_src/gateway/key-concepts/routes.md
   - app/_src/gateway/how-kong-works/routing-traffic.md
@@ -183,6 +184,10 @@ app/_landing_pages/deck.yaml:
   - app/_src/deck/faqs.md
 app/_landing_pages/gateway.yaml:
   - app/_src/gateway/index.md
+app/_landing_pages/gateway/secrets-management.yaml:
+  - app/_src/gateway/kong-enterprise/secrets-management/index.md
+  - app/_src/gateway/kong-enterprise/secrets-management/getting-started.md
+  - app/_src/gateway/kong-enterprise/secrets-management/secrets-rotation.md
 
 # references 
 app/deck/distributed-config.md:
@@ -201,12 +206,6 @@ app/gateway/rate-limiting/window-types.md:
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
 app/gateway/routing/index.md:
   - app/_src/gateway/key-concepts/routes/index.md
-app/plugins/deployment-options.md:
-  - app/hub/plugins/compatibility/index.md
-app/plugins/protocols.md:
-  - app/hub/plugins/compatibility/index.md
-app/plugins/scopes.md:
-  - app/hub/plugins/compatibility/index.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:

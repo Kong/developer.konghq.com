@@ -24,7 +24,7 @@ class PruneNextStepsAndRelatedResources
     url = url.gsub(/\{\{\s*page\.release\s*\}\}/, release)
 
     # TODO: consider redirects in the future
-    site.data['pages_urls'].include?(url)
+    site.data['pages_urls'].include?(URI(url).path)
   end
 
   def site

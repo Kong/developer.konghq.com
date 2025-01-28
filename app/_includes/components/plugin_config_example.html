@@ -34,7 +34,7 @@
      {% assign target = entity_example.target.key %}
 
      {% assign formatted_examples = entity_example.formatted_examples %}
-      <div tabindex="0" class="entity-example-target-panel hidden overflow-auto content" aria-labelledby="select-target-{{ entity_example.id }}" data-target="{{ target }}">
+      <div tabindex="0" class="entity-example-target-panel hidden content" aria-labelledby="select-target-{{ entity_example.id }}" data-target="{{ target }}">
         {% if target == 'global' %}
           {% capture global_context %}{% include components/plugin_config_example/global.md %}{% endcapture %}
           {{ global_context | markdownify }}
@@ -42,7 +42,7 @@
 
         {% for formatted_example in formatted_examples %}
           {% assign format = formatted_example.format %}
-          <div tabindex="0" class="entity-example-format-panel hidden overflow-auto content" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ format }}">
+          <div tabindex="0" class="entity-example-format-panel hidden content" aria-labelledby="select-format-{{ entity_example.id }}" data-format="{{ format }}">
             {% capture markdown_template %}{% include {{ formatted_example.template_file }} presenter=formatted_example.presenter render_context=true %}{% endcapture %}
             {{ markdown_template | markdownify }}
           </div>

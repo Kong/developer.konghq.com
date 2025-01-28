@@ -15,10 +15,10 @@ This tutorial requires {{site.ee_product_name}}.
 
     ```bash
     curl -Ls get.konghq.com/quickstart | bash -s -- -e "KONG_LICENSE_DATA" \
-    -e "KONG_ENFORCE_RBAC=on" \
-    -e "KONG_ADMIN_GUI_AUTH=basic-auth" \
-    -e "KONG_PASSWORD=kong" \
-    -e 'KONG_ADMIN_GUI_SESSION_CONF={"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}'
+         -e "KONG_ENFORCE_RBAC=on" \
+         -e "KONG_ADMIN_GUI_AUTH=basic-auth" \
+         -e "KONG_PASSWORD=kong" \
+         -e 'KONG_ADMIN_GUI_SESSION_CONF={"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}'
     ```
     For more information about the values see the [Bootstrap RBAC](/how-to/bootstrap-rbac/) guide.
     Once {{site.base_gateway}} is ready, you will see the following message:
@@ -44,7 +44,8 @@ to get an instance of {{site.base_gateway}} running almost instantly.
 2. Run the quickstart script:
 
     ```bash
-    curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA
+    curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA {% if include.env_variables %}\{% endif %}{% for variable in include.env_variables %}
+         -e {{variable.name}}{% if variable.value %}={{variable.value}}{% endif %}{% unless forloop.last %} \{% endunless %}{% endfor %}
     ```
 
     Once {{site.base_gateway}} is ready, you will see the following message:
@@ -59,7 +60,8 @@ This tutorial requires {{site.base_gateway}}.
 If you don't have it set up yet, you can use the [quickstart script](https://get.konghq.com/quickstart) to get an instance of {{site.base_gateway}} running almost instantly:
 
 ```bash
-curl -Ls https://get.konghq.com/quickstart | bash -s
+curl -Ls https://get.konghq.com/quickstart | bash -s {% if include.env_variables %}-- \{% endif %}{% for variable in include.env_variables %}
+     -e {{variable.name}}{% if variable.value %}={{variable.value}}{% endif %}{% unless forloop.last %} \{% endunless %}{% endfor %}
 ```
 Once {{site.base_gateway}} is ready, you will see the following message:
 ```bash

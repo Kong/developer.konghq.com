@@ -4,10 +4,19 @@ require 'yaml'
 
 module Jekyll
   module Drops
-    class Prereqs < Liquid::Drop
-      def initialize(page:, site:)
+    class Prereqs < Liquid::Drop # rubocop:disable Style/Documentation
+      def initialize(page:, site:) # rubocop:disable Lint/MissingSuper
         @page = page
         @site = site
+      end
+
+      def [](key)
+        key = key.to_s
+        if respond_to?(key)
+          public_send(key)
+        else
+          prereqs[key]
+        end
       end
 
       def any?
@@ -43,8 +52,8 @@ module Jekyll
 
       def products
         @products ||= @page.data.fetch('products', [])
-          .reject { |p| p == 'gateway' }
-          .select { |p| File.exist?(product_include_file_path(p)) }
+                           .reject { |p| p == 'gateway' }
+                           .select { |p| File.exist?(product_include_file_path(p)) }
       end
 
       def tools

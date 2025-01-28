@@ -5,7 +5,7 @@ require 'yaml'
 module Jekyll
   module PluginPages
     module Pages
-      class Example < Base
+      class Example < Base # rubocop:disable Style/Documentation
         def url
           @url ||= example.url
         end
@@ -14,7 +14,7 @@ module Jekyll
           @content ||= File.read('app/_includes/plugins/example.md')
         end
 
-        def data
+        def data # rubocop:disable Metrics/MethodLength
           super
             .except('faqs')
             .merge(
@@ -22,7 +22,9 @@ module Jekyll
               'example' => example,
               'examples' => @plugin.examples,
               'content_type' => 'plugin_example',
-              'no_version' => true
+              'no_version' => true,
+              'example_title' => example_config['title'],
+              'description' => example_config['description']
             )
         end
 
@@ -32,6 +34,12 @@ module Jekyll
 
         def example
           @example ||= @plugin.examples.detect { |e| e.file == @file }
+        end
+
+        private
+
+        def example_config
+          @example_config ||= YAML.load(File.read(file))
         end
       end
     end

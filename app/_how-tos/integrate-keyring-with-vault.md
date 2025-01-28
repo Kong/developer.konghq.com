@@ -3,7 +3,7 @@ title: Integrate a Keyring with a Vault
 content_type: how_to
 related_resources:
   - text: Keyring
-    url: /gateway/entities/keyring
+    url: /gateway/entities/keyring/
 
 products:
     - gateway

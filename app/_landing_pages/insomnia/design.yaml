@@ -64,7 +64,7 @@ rows:
             icon: /assets/icons/insomnia/local-git-cloud-storage.svg
             cta:
               text: Learn more
-              url: https://docs.insomnia.rest/insomnia/git-sync
+              url: /insomnia/git-sync/
               align: end 
       - blocks:
         - type: card

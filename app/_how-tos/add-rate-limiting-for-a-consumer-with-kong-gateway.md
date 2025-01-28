@@ -75,7 +75,7 @@ entities:
 ## 2. Enable authentication
 
 Authentication lets you identify a Consumer so that you can apply rate limiting.
-This example uses the [Key Authentication](/plugins/key-auth) plugin, but you can use any authentication plugin that you prefer.
+This example uses the [Key Authentication](/plugins/key-auth/) plugin, but you can use any authentication plugin that you prefer.
 
 Enable the plugin globally, which means it applies to all {{site.base_gateway}} Services and Routes:
 

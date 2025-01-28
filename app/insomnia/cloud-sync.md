@@ -1,7 +1,7 @@
 ---
 title: Cloud sync 
 
-description: Cloud sync enables users to store and synchronize their project data in the cloud securely as well as use [version control](/insomnia/version-control).
+description: Cloud sync enables users to store and synchronize their project data in the cloud securely as well as use [version control](/insomnia/version-control/).
 
 content_type: concept
 layout: concept
@@ -15,15 +15,15 @@ related_resources:
   - text: Security at Insomnia
     url: /insomnia/security
   - text: Git sync
-    url: /insomnia/git-sync
+    url: /insomnia/git-sync/
   - text: Scratch pad
-    url: /insomnia/scratch-pad
+    url: /insomnia/scratch-pad/
   - text: Local vault
-    url: /insomnia/local-vault
+    url: /insomnia/local-vault/
   - text: SSO
     url: /insomnia/sso
   - text: About version control in Insomnia
-    url: /insomnia/version-control
+    url: /insomnia/version-control/
 
 faqs:
   - q: Should I use Git sync or cloud sync?

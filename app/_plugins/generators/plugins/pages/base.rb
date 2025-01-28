@@ -5,7 +5,7 @@ require_relative '../../../lib/site_accessor'
 module Jekyll
   module PluginPages
     module Pages
-      class Base
+      class Base # rubocop:disable Style/Documentation
         include Jekyll::SiteAccessor
 
         attr_reader :file
@@ -23,7 +23,7 @@ module Jekyll
           url
         end
 
-        def data
+        def data # rubocop:disable Metrics/MethodLength
           @plugin.metadata.merge(
             'slug' => @plugin.slug,
             'plugin?' => true,

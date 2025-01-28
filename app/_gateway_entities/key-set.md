@@ -27,7 +27,7 @@ schema:
 
 ## What is a Key Set?
 
-A Key Set is a collection of {{site.base_gateway}} [Keys](/gateway/entities/key).
+A Key Set is a collection of {{site.base_gateway}} [Keys](/gateway/entities/key/).
 
 You can assign one or many Keys to a Key Set. This can be useful to logically group multiple Keys to use for a specific application or service. Key Sets allow you to give a plugin access to a specific list of Keys.
 

@@ -5,7 +5,7 @@ related_resources:
   - text: Rotate secrets in Google Cloud Secret with {{site.base_gateway}}
     url: /how-to/rotate-secrets-in-google-cloud-secret 
   - text: Secrets management
-    url: /secrets-management
+    url: /gateway/secrets-management
   - text: Configure Google Cloud Secret Manager with Workload Identity in {{site.base_gateway}}
     url: /how-to/configure-google-cloud-secret-manager-with-workload-identity
 
@@ -26,6 +26,7 @@ entities:
 
 tags:
     - security
+    - secrets-management
 
 tldr:
     q: How do I use Google Cloud Secret Manager as a Vault in {{site.base_gateway}}?

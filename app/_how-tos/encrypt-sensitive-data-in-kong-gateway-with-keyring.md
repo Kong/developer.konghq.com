@@ -3,7 +3,7 @@ title: Encrypt sensitive data in {{site.base_gateway}} with a Keyring
 content_type: how_to
 related_resources:
   - text: Keyring
-    url: /gateway/entities/keyring
+    url: /gateway/entities/keyring/
 
 products:
     - gateway

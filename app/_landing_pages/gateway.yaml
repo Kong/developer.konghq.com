@@ -128,7 +128,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    See the full [Enterprise vs Open Source page feature comparison &rarr;](/gateway/enterprise-vs-oss)
+                    See the full [Enterprise vs Open Source page feature comparison &rarr;](/gateway/enterprise-vs-oss/)
   - header:
       type: h2
       text: Learn
@@ -158,7 +158,7 @@ rows:
             icon: /assets/icons/lock.svg
             cta:
               text: Learn about {{ site.base_gateway }} authentication methods
-              url: /authentication
+              url: /authentication/
               align: end
       - blocks:
         - type: card
@@ -198,7 +198,7 @@ rows:
               icon: /assets/icons/plug.svg
               cta:
                 text: View all available plugins
-                url: /plugins
+                url: /plugins/
                 align: end
       - blocks:
           - type: card

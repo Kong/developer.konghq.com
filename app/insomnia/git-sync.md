@@ -15,19 +15,19 @@ related_resources:
   - text: Security at Insomnia
     url: /insomnia/security
   - text: Configure git sync
-    url: /how-to/synchronize-with-git
+    url: /how-to/synchronize-with-git/
   - text: Storage options
     url: /insomnia/storage-options
   - text: Cloud sync
-    url: /insomnia/cloud-sync
+    url: /insomnia/cloud-sync/
   - text: Scratch pad
-    url: /insomnia/scratch-pad
+    url: /insomnia/scratch-pad/
   - text: Local vault
-    url: /insomnia/local-vault
+    url: /insomnia/local-vault/
   - text: SSO
     url: /insomnia/sso
   - text: About version control in Insomnia
-    url: /insomnia/version-control
+    url: /insomnia/version-control/
 
 faqs:
   - q: Should I use Git sync or cloud sync?
@@ -43,7 +43,7 @@ faqs:
 This option is independent of cloud access and is suitable for users familiar with Git workflows.
 
 Key features:
-* **Version control:** Leverage Git’s [version control](/insomnia/version-control) capabilities for your projects.
+* **Version control:** Leverage Git’s [version control](/insomnia/version-control/) capabilities for your projects.
 * **Independence from Insomnia’s Cloud:** Uses external Git repositories for storage.
 * **Provider flexibility:** Choose any Git service provider, like GitHub, GitLab, or Bitbucket.
 * **Collaboration via Git:** Collaborate with others using standard Git practices.

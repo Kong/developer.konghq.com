@@ -13,9 +13,9 @@ related_resources:
   - text: Security at Insomnia
     url: /insomnia/security
   - text: Git sync
-    url: /insomnia/git-sync
+    url: /insomnia/git-sync/
   - text: Scratch pad
-    url: /insomnia/scratch-pad
+    url: /insomnia/scratch-pad/
   - text: SSO
     url: /insomnia/sso
 

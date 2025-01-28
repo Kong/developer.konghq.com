@@ -1,5 +1,11 @@
 <div class="flex flex-col accordion prerequisites" data-default="0" data-multiple="false" data-test-id="prereqs">
   {% if page.products %}
+    {% assign inline_before = prereqs.inline | where: "position", "before" %}
+    {% for prereq in inline_before %}
+    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+  {% include prereqs/inline.md prereq=prereq %}
+    </div>
+    {% endfor %}
 
     {% if page.products contains 'gateway' %}
       {% if page.works_on contains 'konnect' %}
@@ -8,7 +14,8 @@
       </div>
       {% endif %}
       <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" }'>
-        {% include prereqs/products/gateway.md tier=include.tier rbac=page.rbac %}
+        {% assign variables=prereqs['gateway'] %}
+        {% include prereqs/products/gateway.md tier=include.tier rbac=page.rbac env_variables=variables %}
       </div>
     {% endif %}
 
@@ -36,7 +43,8 @@
     </div>
   {% endif %}
 
-  {% for prereq in prereqs.inline %}
+  {% assign inline = prereqs.inline | where: "position", empty %}
+  {% for prereq in inline %}
   <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
 {% include prereqs/inline.md prereq=prereq %}
   </div>

@@ -28,7 +28,7 @@ related_resources:
 
 ## What is RBAC?
 
-Roles and permissions are administered using the {{site.base_gateway}} RBAC entity, which stands for Role-Based Access Control. Roles are sets of permissions that can be assigned to admins and users and can be specific to a [Workspace](/gateway/entities/workspace). Permissions are types of rules that affect {{site.base_gateway}} resources, which are the core components of an API. 
+Roles and permissions are administered using the {{site.base_gateway}} RBAC entity, which stands for Role-Based Access Control. Roles are sets of permissions that can be assigned to admins and users and can be specific to a [Workspace](/gateway/entities/workspace/). Permissions are types of rules that affect {{site.base_gateway}} resources, which are the core components of an API. 
 
 RBAC in {{site.base_gateway}} conforms to the following core principles: 
 

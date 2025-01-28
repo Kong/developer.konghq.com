@@ -12,11 +12,11 @@ related_resources:
   - text: Storage options
     url: /insomnia/storage-options
   - text: Git sync
-    url: /insomnia/git-sync
+    url: /insomnia/git-sync/
   - text: Cloud sync
-    url: /insomnia/cloud-sync
+    url: /insomnia/cloud-sync/
   - text: Local vault
-    url: /insomnia/local-vault
+    url: /insomnia/local-vault/
   - text: API specs
     url: /insomnia/api-specs/
   - text: Write tests for HTTP status codes

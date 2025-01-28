@@ -5,7 +5,7 @@ related_resources:
   - text: Secrets management
     url: /secrets-management/
   - text: Vault entity
-    url: /gateway/entities/vault
+    url: /gateway/entities/vault/
   - text: Store certificates in Konnect Config Store
     url: /how-to/store-certificates-in-konnect-config-store/
   - text: Reference secrets stored in the Konnect Config Store
