@@ -28,6 +28,7 @@ tldr:
         - `KONG_PG_USER` and ``, where the values are references to your AWS secret
       
 prereqs:
+  skip_product: true
   inline:
     - title: AWS configuration
       content: |
