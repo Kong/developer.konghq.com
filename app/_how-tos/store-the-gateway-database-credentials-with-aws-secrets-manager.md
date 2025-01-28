@@ -25,7 +25,7 @@ tldr:
     a: |
       Create a secret in AWS Secrets Manager with your PostgreSQL credentials, and start {{site.base_gateway}} with the required environment variables:
         - `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN`, and `AWS_REGION` to connect to AWS
-        - `KONG_PG_USER` and ``, where the values are references to your AWS secret
+        - `KONG_PG_USER` and `KONG_PG_PASSWORD`, where the values are references to your AWS secret
       
 prereqs:
   skip_product: true
