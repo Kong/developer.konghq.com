@@ -112,7 +112,7 @@ docker exec -it kong-database psql -U admin -c "CREATE DATABASE kong OWNER ${KON
 Use AWS CLI to create a new secret named `kong-gateway-database` containing the username and password you defined:
 ```sh
 aws secretsmanager create-secret --name kong-gateway-database \
- --description "Kong GW Database credentials"
+ --description "Kong GW Database credentials" \
  --secret-string '{"pg_user":"'${KONG_PG_USER}'","pg_password":"'${KONG_PG_PASSWORD}'"}'
 ```
 
