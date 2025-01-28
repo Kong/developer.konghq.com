@@ -14,7 +14,6 @@ tier: enterprise
 
 works_on:
     - on-prem
-    - konnect
 
 min_version:
   gateway: '3.4'
@@ -46,14 +45,10 @@ prereqs:
         1. [Install HashiCorp Vault](https://developer.hashicorp.com/vault/tutorials/get-started/install-binary#install-vault).
         1. In a terminal, start your Vault dev server with `root` as your token, and enable TLS.
           ```
-          vault server -dev -dev-root-token-id root -dev-tls
+          vault server -dev -dev-root-token-id root
           ```
         1. In the output from the previous command, copy where it lists the `VAULT_ADDR` and `VAULT_CACERT` to export.
-        1. In a new terminal window, export your `VAULT_ADDR` and `VAULT_CACERT`, for example:
-          ```
-          export VAULT_ADDR='https://127.0.0.1:8200'
-          export VAULT_CACERT='/var/folders/qr/zgztx0sj6n1dxy86sl36ntnw0000gn/T/vault-tls3037226588/vault-ca.pem'
-          ```
+        1. In a new terminal window, export your `VAULT_ADDR` and `VAULT_CACERT` as environment variables.
         1. Verify that your Vault is running correctly:
           ```
           vault status
@@ -62,59 +57,7 @@ prereqs:
           ```
           vault login root
           ```
-        1. [Create the `admin-policy.hcl` policy file](https://developer.hashicorp.com/vault/tutorials/policies/policies#write-a-policy). This contains the [permissions you need to create and use secrets](https://developer.hashicorp.com/vault/tutorials/secrets-management/versioned-kv#policy-requirements):
-          ```
-          tee admin-policy.hcl <<EOF
-          # Read system health check
-          path "sys/health"
-          {
-            capabilities = ["read", "sudo"]
-          }
-          # Create and manage ACL policies broadly across Vault
-          # List existing policies
-          path "sys/policies/acl"
-          {
-            capabilities = ["list"]
-          }
-          # Create and manage ACL policies
-          path "sys/policies/acl/*"
-          {
-            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-          }
-          # Enable and manage authentication methods broadly across Vault
-          # Manage auth methods broadly across Vault
-          path "auth/*"
-          {
-            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-          }
-          # Create, update, and delete auth methods
-          path "sys/auth/*"
-          {
-            capabilities = ["create", "update", "delete", "sudo"]
-          }
-          # List auth methods
-          path "sys/auth"
-          {
-            capabilities = ["read"]
-          }
-          # Enable and manage the key/value secrets engine at `secret/` path
-          # List, create, update, and delete key/value secrets
-          path "secret/*"
-          {
-            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-          }
-          # Manage secrets engines
-          path "sys/mounts/*"
-          {
-            capabilities = ["create", "read", "update", "delete", "list", "sudo"]
-          }
-          # List existing secrets engines.
-          path "sys/mounts"
-          {
-            capabilities = ["read"]
-          }
-          EOF
-          ```
+        1. [Create the `admin-policy.hcl` policy file](https://developer.hashicorp.com/vault/tutorials/policies/policies#write-a-policy). This contains the [permissions you need to create and use secrets](https://developer.hashicorp.com/vault/tutorials/secrets-management/versioned-kv#policy-requirements).
         1. Upload the policy you just created:
           ```
           vault policy write admin admin-policy.hcl
@@ -132,9 +75,9 @@ prereqs:
 
 cleanup:
   inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
+    - title: Clean up HashiCorp Vault
+      include_content: cleanup/third-party/hashicorp
+      icon_url: /assets/icons/hashicorp.svg
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
