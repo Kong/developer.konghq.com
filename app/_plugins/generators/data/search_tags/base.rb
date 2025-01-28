@@ -35,7 +35,7 @@ module Jekyll
           @page.data['search'] = search_data.compact
         end
 
-        def search_data # rubocop:disable Metrics/AbcSize
+        def search_data # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
           data = {
             'title' => @page.data['title'],
             'description' => @page.data['description'],
@@ -56,7 +56,9 @@ module Jekyll
         def products
           return unless @page.data['products']
 
-          @page.data.fetch('products', []).join(',')
+          @page.data.fetch('products', []).map do |p|
+            @site.data.dig('products', p, 'name')
+          end.join(',')
         end
 
         def works_on
@@ -68,7 +70,9 @@ module Jekyll
         def tools
           return unless @page.data['tools']
 
-          @page.data.fetch('tools', []).join(',')
+          @page.data.fetch('tools', []).map do |t|
+            @site.data.dig('tools', t, 'name')
+          end.join(',')
         end
 
         def tags
