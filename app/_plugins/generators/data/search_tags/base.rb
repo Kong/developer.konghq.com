@@ -11,7 +11,8 @@ module Jekyll
           'landing_page' => 'LandingPage',
           'plugin' => 'Plugin',
           'plugin_example' => 'PluginExample',
-          'reference' => 'Reference'
+          'reference' => 'Reference',
+          'policy' => 'Policy'
         }.freeze
 
         def self.make_for(site:, page:)

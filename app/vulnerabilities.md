@@ -3,7 +3,7 @@ title: Kong Security Update Process
 
 description: Learn how Kong handles vulnerabilities or potential vulnerabilities in Kong or third-party code, and how to report any security issues.
 
-content_type: concept
+content_type: policy
 layout: reference
 
 no_version: true
