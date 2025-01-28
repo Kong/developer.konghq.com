@@ -3,11 +3,11 @@ title: Configure Google Cloud Secret Manager as a Vault entity in {{site.base_ga
 content_type: how_to
 related_resources:
   - text: Rotate secrets in Google Cloud Secret with {{site.base_gateway}}
-    url: /how-to/rotate-secrets-in-google-cloud-secret 
+    url: /how-to/rotate-secrets-in-google-cloud-secret/
   - text: Secrets management
-    url: /gateway/secrets-management
+    url: /gateway/secrets-management/
   - text: Configure Google Cloud Secret Manager with Workload Identity in {{site.base_gateway}}
-    url: /how-to/configure-google-cloud-secret-manager-with-workload-identity
+    url: /how-to/configure-google-cloud-secret-manager-with-workload-identity/
 
 products:
     - gateway
@@ -16,7 +16,6 @@ tier: enterprise
 
 works_on:
     - on-prem
-    - konnect
 
 min_version:
   gateway: '3.4'
@@ -31,105 +30,74 @@ tags:
 tldr:
     q: How do I use Google Cloud Secret Manager as a Vault in {{site.base_gateway}}?
     a: |
-      Export your service account key JSON as an environment variable (`GCP_SERVICE_ACCOUNT`), set `lua_ssl_trusted_certificate=system` in your `kong.conf` file, then configure a Vault entity with your Secret Manager configuration. Reference secrets from your Secret Manager vault like the following: `{vault://gcp-sm-vault/test-secret/key}`
+      Save a secret in [Google Cloud Secret Manager](https://console.cloud.google.com/security/secret-manager) and create a service account with the `Secret Manager Secret Accessor` role. Export your service account key JSON as an environment variable (`GCP_SERVICE_ACCOUNT`), set `lua_ssl_trusted_certificate=system` in your `kong.conf` file, then configure a Vault entity with your Secret Manager configuration. Reference secrets from your Secret Manager vault like the following: `{vault://gcp-sm-vault/test-secret}`
 
 tools:
     - deck
 
 prereqs:
-  entities:
-    services:
-        - example-service
-    routes:
-        - example-route
+  gateway:
+    - name: GCP_SERVICE_ACCOUNT
+    - name: KONG_LUA_SSL_TRUSTED_CERTIFICATE
   inline:
-    - title: Mistral AI API key
-      include_content: prereqs/vault-backends/mistral-env-var
     - title: Google Cloud Secret Manager
-      include_content: prereqs/vault-backends/google-secret-manager
+      position: before
+      content: |
+        To add Secret Manager as a Vault backend to {{site.base_gateway}}, you must configure the following:
 
+        1. In the [Google Cloud console](https://console.cloud.google.com/), create a project and name it `test-gateway-vault`.
+        1. On the [Secret Manager page](https://console.cloud.google.com/security/secret-manager), create a secret called `test-secret` with the following JSON content:
+            ```json
+            secret
+            ```
+        1. Create a service account key:
+            1. In the [Google Cloud console](https://console.cloud.google.com/), click the `test-gateway-vault` project.
+            1. Click the email address of the service account that you want to create a key for.
+            1. From the Keys tab, create a new key from the add key menu and select JSON for the key type.
+            1. Save the JSON file you downloaded.
+            1. From the [IAM page](https://console.cloud.google.com/iam-admin/iam?supportedpurview=project), grant access to the [`Secret Manager Secret Accessor` role for your service account](https://cloud.google.com/secret-manager/docs/access-secret-version#required_roles).
+      icon_url: /assets/icons/google-cloud.svg
+    - title: Environment variables
+      position: before
+      content: |
+          Set the environment variables needed to authenticate to Google Cloud:
+          ```sh
+          export GCP_SERVICE_ACCOUNT=$(cat /path/to/file/service-account.json)
+          export KONG_LUA_SSL_TRUSTED_CERTIFICATE='system'
+          ```
+
+          Note that the both variables need to be passed when creating your Data Plane container.
+      icon_url: /assets/icons/file.svg
 cleanup:
   inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Set your Secret Manager credentials with an environment variable
-
-You can set your JSON Google Cloud service account key with the `GCP_SERVICE_ACCOUNT` environment variable. {{site.base_gateway}} uses the key to automatically authenticate with the Google Cloud API so that it can pull secret values as they are referenced.
-
-Add your service account JSON file to your Docker container and export it as an environment variable:
-
-```sh
-export GCP_SERVICE_ACCOUNT=$(cat gcp-project-c61f2411f321.json)
-```
-
-## 2. Configure {{site.base_gateway}} to trust Google Cloud API SSL certificates
-
-Configure `lua_ssl_trusted_certificate=system` in your `kong.conf` file [LINK!!!]. This ensures that the SSL certificates that the Google Cloud API uses can be trusted by {{site.base_gateway}}. You can configure this directly in your `kong.conf`, or use [environment variables](/deck/environment-variables/):
-
-```sh
-export KONG_LUA_SSL_TRUSTED_CERTIFICATE='system'
-```
-
-## 3. Configure Secret Manager as a vault with the Vault entity
+## 1. Configure Secret Manager as a vault with the Vault entity
 
 To enable Secret Manager as your vault in {{site.base_gateway}}, you can use the [Vault entity](/gateway/entities/vault).
-
-For the sake of the tutorial, we aren't separating the Vault decK configuration from the other entities, like Consumers and Services. However, if you're implementing a Vault configuration in production and have a large organization with many teams, we recommend splitting the Vault configuration from other entities with decK. For more information, see [Declarative configuration (decK) best practices for Vaults](/gateway/entities/vault/#declarative-configuration-deck-best-practices-for-vaults).
-
-Add the following content to `kong.yaml` to create a Secret Manager Vault:
 
 {% entity_examples %}
 entities:
   vaults:
-    - config:
-        project_id: test-gateway-vault
+    - name: gcp
       description: Stored secrets in Secret Manager
-      name: gcp
-{% endentity_examples %}
-
-## 4. Reference the secret from your Vault in {{site.base_gateway}} configuration
-
-Now that Secret Manager is configured as your vault, you can reference secrets stored in that vault in configuration. In this tutorial, you'll be referencing the API key you set previously and using it to generate an answer to a question using the [AI Proxy plugin](/plugins/ai-proxy/). To reference a secret, you use the provider name from your Vault config, the name of the secret, and the property in the secret you want to use.
-
-Add the following content to `kong.yaml` to reference the Vault secret as your bearer token:
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: ai-proxy
-      route: example-route
+      prefix: gcp-sm-vault
       config:
-        route_type: llm/v1/chat
-        auth:
-          header_name: Authorization
-          header_value: '{vault://gcp-sm-vault/test-secret/key}'
-        model:
-          provider: mistral
-          name: mistral-tiny
-          options:
-            mistral_format: openai
-            upstream_url: https://api.mistral.ai/v1/chat/completions
+        project_id: test-gateway-vault
 {% endentity_examples %}
 
-## 5. Apply configuration
+## 2. Validate
 
-{% include how-tos/steps/apply_config.md %}
+To validate that the secret was stored correctly in Google Cloud, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. If the Docker container is named `kong-quickstart-gateway`, you can use the following command:
 
-## 6. Validate
-
-To verify that {{site.base_gateway}} can pull the secrets from Secret Manager, you can use the AI Proxy plugin to confirm that the plugin is using the correct API key when a request is made:
-
+```sh
+docker exec kong-quickstart-gateway kong vault get {vault://gcp-sm-vault/test-secret}
 ```
-curl -X POST http://localhost:8000/anything \
- -H 'Content-Type: application/json' \
- --data-raw '{ "messages": [ { "role": "system", "content": "You are a mathematician" }, { "role": "user", "content": "What is 1+1?"} ] }'
-```
+
+If the vault was configured correctly, this command should return the value of the secret. You can use `{vault://gcp-sm-vault/test-secret}` to reference the secret in any referenceable field.
 
 
     

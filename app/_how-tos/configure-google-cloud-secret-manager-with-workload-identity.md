@@ -35,14 +35,11 @@ tools:
     - deck
 
 prereqs:
-  entities:
-    services:
-        - example-service
-    routes:
-        - example-route
   inline:
     - title: Google Cloud Secret Manager
-      include_content: prereqs/vault-backends/google-secret-manager
+      position: before
+      content: |
+        placeholder
 
 cleanup:
   inline:
