@@ -8,7 +8,7 @@ tools:
     - admin-api
 entities:
   - rbac
-description: The RBAC entity is what allows for the RBAC system to be administered.
+description: RBAC manages {{site.base_gateway}} roles and permissions for Kong Manager and the Admin API.
 schema:
     api: gateway/admin-ee
     path: /schemas/RBAC
