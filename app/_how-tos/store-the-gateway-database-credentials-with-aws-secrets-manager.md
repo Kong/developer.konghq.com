@@ -44,18 +44,15 @@ prereqs:
         - Your secret access key
         - Your session token
         - Your AWS region, `us-east-1` in this example
-      icon_url: /assets/icons/aws.svg
 
-    - title: Environment variables
-      content: |
-          Set the environment variables needed to authenticate to AWS:
-          ```sh
-          export AWS_ACCESS_KEY_ID=your-aws-access-key-id
-          export AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key
-          export AWS_SESSION_TOKEN=your-aws-session-token
-          export AWS_REGION="us-east-1"
-          ```
-      icon_url: /assets/icons/file.svg
+        Create environment variables to store these credentials:
+        ```sh
+        export AWS_ACCESS_KEY_ID=your-aws-access-key-id
+        export AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key
+        export AWS_SESSION_TOKEN=your-aws-session-token
+        export AWS_REGION="us-east-1"
+        ```
+      icon_url: /assets/icons/aws.svg
 
 cleanup:
   inline:
