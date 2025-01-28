@@ -59,6 +59,7 @@ export default ({ command, mode }) => {
       }
     },
     server: {
+      cors: { origin: 'http://localhost:8888' },
       proxy: {
         '^/api': {
           changeOrigin: true,
