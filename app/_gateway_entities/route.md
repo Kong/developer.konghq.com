@@ -59,7 +59,7 @@ If you apply a rate limit policy to the Gateway Service and the *internal* clien
 
 In this example, you can create two Routes with different hosts to handle the two clients, say `internal.example.com` and `external.example.com`, and point both of them to `example_service`. 
 You can configure a policy to limit how often the external Route is used. 
-When the external cleint tries to access the Gateway Service via {{site.base_gateway}} using `external.example.com`, it's rate limited. 
+When the external client tries to access the Gateway Service via {{site.base_gateway}} using `external.example.com`, it's rate limited. 
 But when the internal client accesses the Gateway Service using {{site.base_gateway}} using `internal.example.com`, the internal client isn't limited.
 
 The following diagram illustrates this example:
