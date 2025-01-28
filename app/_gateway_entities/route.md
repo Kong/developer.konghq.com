@@ -5,7 +5,8 @@ entities:
   - route
 
 description: |
-  A Route is a path which defines how (and if) requests are passed to Gateway Services and their respective upstream applications based on a set of configured rules.
+  A Route uses specific URL patterns and HTTP verbs to match incoming requests and pass them to a Gateway Service. 
+  This determines which service applications will process a given request.
 
 related_resources:
   - text: Gateway Service entity
@@ -45,18 +46,21 @@ Routes fulfill two responsibilities in {{ site.base_gateway }}:
 1. Match incoming requests and route them to the correct [Gateway Service](/gateway/entities/service/)
 2. Use plugins to transform the request/response proxied using this Route
 
-A Route must be attached to a [Service](/gateway/entities/service/), and _may_ have one or more [Plugin](/gateway/entities/plugin/) entities attached.
+A Route must be attached to a [Gateway Service](/gateway/entities/service/), and _may_ have one or more [Plugin](/gateway/entities/plugin/) entities attached.
 
-## Route and Service interaction
+## Route and Gateway Service interaction
 
-Routes, in conjunction with [Services](/gateway/entities/service/), let you expose your services to applications with {{site.base_gateway}}. Routes also allow the same service to be used by multiple applications and apply different policies based on the route used.
+Routes, in conjunction with [Gateway Services](/gateway/entities/service/), let you expose service applications to clients with {{site.base_gateway}}. 
+Routes also allow the same client to access multiple applications and apply different policies based on the Route used.
 
-For example, say you have an external application and an internal application that need to access the `example_service` Service, but the *external* application should be limited in how often it can query the Service to avoid a denial of service. If you apply a rate limit policy to the Service and the *internal* application calls it, the internal application is also limited. Routes can solve this problem.
+For example, say you have two client applications that need to access the `example_service` Gateway Service: an internal client and an external client.
+The *external* client should be limited in how often it can query the Gateway Service to avoid a denial of service. 
+If you apply a rate limit policy to the Gateway Service and the *internal* client calls it, the internal client is also limited. Routes can solve this problem.
 
-In this example, you can create two Routes with different hosts to handle the two applications, say `internal.example.com` and `external.example.com`, and point both of them to `example_service`. 
+In this example, you can create two Routes with different hosts to handle the two clients, say `internal.example.com` and `external.example.com`, and point both of them to `example_service`. 
 You can configure a policy to limit how often the external Route is used. 
-When the external application tries to access the Service via {{site.base_gateway}} using `external.example.com`, it's rate limited. 
-But when the internal application accesses the Service using {{site.base_gateway}} using `internal.example.com`, the internal application isn't limited.
+When the external cleint tries to access the Gateway Service via {{site.base_gateway}} using `external.example.com`, it's rate limited. 
+But when the internal client accesses the Gateway Service using {{site.base_gateway}} using `internal.example.com`, the internal client isn't limited.
 
 The following diagram illustrates this example:
 
@@ -64,12 +68,14 @@ The following diagram illustrates this example:
 
 {% mermaid %}
 flowchart LR
-  A(External application)
+  A(External client
+  application)
   B("`Route (external.example.com)`")
   B2(Rate Limiting plugin)
   C("`Service (example-service)`")
-  D(Upstream application)
-  E(Internal application)
+  D(Service application)
+  E(Internal client 
+  application)
   F("`Route (internal.example.com)`")
 
   A --request--> B
@@ -95,7 +101,7 @@ Common use cases for Routes:
 
 | Use Case | Description |
 |--------|----------|
-| Rate limiting | Use Routes to set different rate limits for clients accessing the upstream application via specific paths, for example `/internal` or `/external`. <br><br>[Enable a rate limiting plugin on Routes attached to the Service](/plugins/rate-limiting-advanced/) |
+| Rate limiting | Use Routes to set different rate limits for clients accessing the service application via specific paths, for example `/internal` or `/external`. <br><br>[Enable a rate limiting plugin on Routes attached to the Service](/plugins/rate-limiting-advanced/) |
 | Perform a simple URL rewrite | Use the Routes entity to rename an endpoint. For example, you can rename your legacy `/api/old/` upstream endpoint to a publicly accessible API endpoint named `/new/api`. |
 | Perform a complex URL rewrite | Use the Routes entity to rewrite a group of paths, such as replacing `/api/<function>/old` with `/new/api/<function>`. <br><br> [Request Transformer Advanced plugin](/plugins/request-transformer-advanced/) |
 
@@ -116,9 +122,9 @@ To disable the DSL-based format, set `router_flavor` to `traditional_compat`. On
 
 You can match incoming requests against the following routing criteria:
 
-- Protocols: The protocol used to communicate with the upstream application.
-- Hosts: Lists of domains that match a route
-- Methods: HTTP methods that match a route
+- Protocols: The protocol used to communicate with the service application
+- Hosts: Lists of domains that match a Route
+- Methods: HTTP methods that match a Route
 - Headers: Lists of values that are expected in the header of a request
 - Port: The request's source/destination port
 - SNI: The server name indicated in a TLS request
@@ -127,7 +133,7 @@ For detailed examples of each, see the dedicated [expressions](/gateway/routing/
 
 ## How routing works
 
-For each incoming request, {{site.base_gateway}} must determine which Service will handle it based on the Routes that are defined. 
+For each incoming request, {{site.base_gateway}} must determine which Gateway Service will handle it based on the Routes that are defined. 
 
 The {{site.base_gateway}} router orders all defined Routes by their [priority](#priority-matching) and uses the highest priority matching Route to [proxy the request](/gateway/traffic-control/proxying/).
 

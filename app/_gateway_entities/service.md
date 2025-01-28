@@ -4,7 +4,7 @@ content_type: reference
 entities:
   - service
 
-description: A Gateway Service represents your actual backend API or microservice.
+description: A Gateway Service represents a service application in your system.
 
 related_resources:
   - text: Routes entity
@@ -34,11 +34,12 @@ api_specs:
 
 ## What is a Gateway Service?
 
-A Gateway Service represents your actual backend API or microservice.
+A Gateway Service represents a service application in your system. 
+The configuration of a Gateway Service defines the connectivity details between the {{site.base_gateway}} and the application, along with other metadata.
 
-For simple deployments, the upstream URL can be provided directly in the Service. For sophisticated traffic management needs, a Service can point at an [Upstream](/gateway/entities/upstream/).
+For simple deployments, the upstream URL can be provided directly in the Gateway Service. For sophisticated traffic management needs, a Gateway Service can point at an [Upstream](/gateway/entities/upstream/).
 
-Gateway Services, in conjunction with [Routes](/gateway/entities/route/), let you expose your services to clients with {{site.base_gateway}}.
+Gateway Services, in conjunction with [Routes](/gateway/entities/route/), let you expose your service applications to clients with {{site.base_gateway}}.
 
 [Plugins](/gateway/entities/plugin/) can be attached to a Service, and will run against every request that triggers a request to the Service that they're attached to.
 
