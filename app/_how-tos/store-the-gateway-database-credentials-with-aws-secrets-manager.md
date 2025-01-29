@@ -3,7 +3,9 @@ title: Store the {{site.base_gateway}} database credentials with AWS Secrets Man
 content_type: how_to
 related_resources:
   - text: Secrets management
-    url: /gateway/secrets-management
+    url: /gateway/secrets-management/
+ - text: Configure AWS Secrets Manager as a vault backend using the Vault entity
+   url: /how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/
 
 products:
   - gateway
@@ -89,7 +91,7 @@ The username and password specified in this command are the PostgreSQL master cr
 Define the username and password to use to connect {{site.base_gateway}} to the database and store them in environment variables.
 ```sh
 export KONG_PG_USER=kong
-export KONG_PG_PASSWORD=KongFTW
+export KONG_PG_PASSWORD=KongPassword
 ```
 
 ## 4. Create a database user
@@ -106,7 +108,7 @@ docker exec -it kong-database psql -U admin -c "CREATE DATABASE kong OWNER ${KON
 ```
 
 ## 6. Create a secret in AWS Secrets Manager
-Use AWS CLI to create a new secret named `kong-gateway-database` containing the username and password you defined:
+Use the AWS CLI to create a new secret named `kong-gateway-database` containing the username and password you defined:
 ```sh
 aws secretsmanager create-secret --name kong-gateway-database \
  --description "Kong GW Database credentials" \
