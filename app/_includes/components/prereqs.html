@@ -1,31 +1,35 @@
 <div class="flex flex-col accordion prerequisites" data-default="0" data-multiple="false" data-test-id="prereqs">
-  {% if page.products %}
-    {% assign inline_before = prereqs.inline | where: "position", "before" %}
-    {% for prereq in inline_before %}
-    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-  {% include prereqs/inline.md prereq=prereq %}
-    </div>
-    {% endfor %}
+    {% unless prereqs.skip_product == true %}
+  
+    {% if page.products %}
+      {% assign inline_before = prereqs.inline | where: "position", "before" %}
+      {% for prereq in inline_before %}
+      <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+    {% include prereqs/inline.md prereq=prereq %}
+      </div>
+      {% endfor %}
 
-    {% if page.products contains 'gateway' %}
-      {% if page.works_on contains 'konnect' %}
-      <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
-        {% include prereqs/products/konnect.md tier=include.tier %}
-      </div>
+      {% if page.products contains 'gateway' %}
+        {% if page.works_on contains 'konnect' %}
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
+          {% include prereqs/products/konnect.md tier=include.tier %}
+        </div>
+        {% endif %}
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" }'>
+          {% assign variables=prereqs['gateway'] %}
+          {% include prereqs/products/gateway.md tier=include.tier rbac=page.rbac env_variables=variables %}
+        </div>
       {% endif %}
-      <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" }'>
-        {% assign variables=prereqs['gateway'] %}
-        {% include prereqs/products/gateway.md tier=include.tier rbac=page.rbac env_variables=variables %}
-      </div>
+
+      {% for product in prereqs.products %}
+          <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
+  {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
+  {% include {{ product_include }} tier=include.tier %}
+          </div>
+      {% endfor %}
     {% endif %}
 
-    {% for product in prereqs.products %}
-        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
-{% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
-{% include {{ product_include }} tier=include.tier %}
-        </div>
-    {% endfor %}
-  {% endif %}
+  {% endunless %}
 
   {% for tool in prereqs.tools %}
   {% assign tool_include = 'prereqs/tools/' | append: tool | append: '.md' %}

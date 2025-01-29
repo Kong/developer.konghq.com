@@ -1,0 +1,1 @@
+If you created new Google Cloud resources for this tutorial, make sure to delete them to avoid unnecessary charges.

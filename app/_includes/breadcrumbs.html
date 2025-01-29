@@ -1,3 +1,4 @@
+{% if page.breadcrumbs %}
 <div class="flex gap-1 justify-start text-xs items-center xl:basis-3/4">
   <a class="text-terciary" href="/">Home</a>
   <span>/</span>
@@ -6,3 +7,6 @@
     {% unless forloop.last %}<span>/</span>{% endunless %}
   {% endfor %}
 </div>
+{% else %}
+<div class="flex xl:basis-3/4"></div>
+{% endif %}

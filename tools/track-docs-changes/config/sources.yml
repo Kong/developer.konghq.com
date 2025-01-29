@@ -132,6 +132,8 @@ app/_how-tos/set-up-ai-proxy-with-anthropic.md:
   - app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_anthropic.md
 app/_how-tos/proxy-tls-passthrough-traffic-using-sni.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
+app/_how-tos/configure-google-cloud-secret-as-a-vault-backend.md:
+  - app/_src/gateway/kong-enterprise/secrets-management/backends/gcp-sm.md
 app/_how-tos/configure-azure-key-vaults-as-a-vault-backend-with-vault-entity.md:
   - app/_src/gateway/kong-enterprise/secrets-management/backends/azure-key-vaults.md
 app/_how-tos/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity.md:
@@ -144,6 +146,8 @@ app/_how-tos/enable-rbac-with-admin-api.md:
   - app/konnect/dev-portal/access-and-approval/manage-teams.md
 app/_how-tos/store-secrets-in-konnect-config-store.md:
   - app/konnect/gateway-manager/configuration/config-store.md
+app/_how-tos/store-the-gateway-database-credentials-with-aws-secrets-manager.md:
+  - app/_src/gateway/kong-enterprise/secrets-management/how-to/aws-secrets-manager.md
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
@@ -219,3 +223,6 @@ app/gateway/routing/expressions-router-examples.md:
 app/gateway/networking/dns-config-reference.md:
   - app/_src/gateway/production/networking/dns-considerations.md
 
+# concepts
+app/gateway/security-update-process.md:
+  - app/_src/gateway/production/security-update-process.md

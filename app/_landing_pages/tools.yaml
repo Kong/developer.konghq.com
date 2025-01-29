@@ -1,0 +1,66 @@
+metadata:
+  title: "Tools for managing {{site.konnect_short_name}} and {{site.base_gateway}}"
+  content_type: landing_page
+  description: An introduction to the common tools for managing {{site.base_gateway}} and {{site.konnect_short_name}}.
+
+rows:
+  - header:
+      type: h1
+      text: "Tools for managing {{site.konnect_short_name}} and {{site.base_gateway}}"
+
+  - header:
+      type: h2
+      text: Tools
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: decK
+            description: |
+              decK is a command line tool that facilitates API Lifecycle Automation (APIOps) by offering a comprehensive toolkit of 
+              commands designed to orchestrate and automate the entire process of API delivery.
+            cta:
+              text: 
+              url: /deck/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.konnect_short_name}} APIs"
+            description: |
+              Use the {{site.konnect_short_name}} APIs to manage your ecosystem, including {{site.base_gateway}} configuration management, Analytics, Dev Portal, and more.
+            cta:
+              text: 
+              url: /konnect-api/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Kong Admin API
+            description: |
+              {{site.base_gateway}} comes with an internal RESTful API for administration purposes. 
+              This API comes in two options: open-source and Enterprise.
+            cta:
+              text: 
+              url: /admin-api/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.kic_product_name}}"
+            description: |
+              {{site.kic_product_name}} allows you to run {{site.base_gateway}} as a Kubernetes Ingress to handle inbound requests for a Kubernetes cluster.
+            cta:
+              text: 
+              url: /kic/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: "Terraform providers for Kong"
+            description: |
+              Kong offers two Terraform providers: one for managing {{site.base_gateway}} in {{site.konnect_short_name}}, and one for managing {{site.base_gateway}} on-prem.
+            cta:
+              text: 
+              url: /terraform/
+              align: end

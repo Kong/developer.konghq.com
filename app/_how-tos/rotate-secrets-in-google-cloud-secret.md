@@ -3,7 +3,7 @@ title: Rotate secrets in Google Cloud Secret with {{site.base_gateway}}
 content_type: how_to
 related_resources:
   - text: Configure Google Cloud Secret as a vault backend
-    url: /how-to/configure-google-cloud-secret-as-a-vault-backend
+    url: /how-to/configure-google-cloud-secret-as-a-vault-backend/
   - text: Secret management
     url: /gateway/secrets-management/
 

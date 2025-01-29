@@ -1,0 +1,18 @@
+metadata:
+  title: Kong Admin API
+  content_type: landing_page
+  description: This page is an introduction to the {{site.base_gateway}} Admin API.
+
+rows:
+  - header:
+      type: h1
+      text: "Kong Admin API"
+
+  - header:
+      type: h2
+      text: What is the Kong Admin API?
+    columns:
+    - blocks:
+        - type: text
+          config: |
+            @todo
