@@ -52,7 +52,7 @@ rows:
               {{site.kic_product_name}} allows you to run {{site.base_gateway}} as a Kubernetes Ingress to handle inbound requests for a Kubernetes cluster.
             cta:
               text: 
-              url: /konnect-api/
+              url: /kic/
               align: end
       - blocks:
         - type: card
@@ -62,5 +62,5 @@ rows:
               Kong offers two Terraform providers: one for managing {{site.base_gateway}} in {{site.konnect_short_name}}, and one for managing {{site.base_gateway}} on-prem.
             cta:
               text: 
-              url: /konnect-api/
+              url: /terraform/
               align: end
