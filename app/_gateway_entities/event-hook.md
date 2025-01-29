@@ -26,7 +26,8 @@ schema:
     api: gateway/admin-ee
     path: /schemas/Event-Hooks
 
-
+api_specs:
+    - gateway/admin-ee
 ---
 
 ## What is an Event Hook?
