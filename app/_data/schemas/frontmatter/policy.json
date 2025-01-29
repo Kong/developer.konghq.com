@@ -1,0 +1,4 @@
+{
+    "$id": "schema:policy",
+    "allOf": [{ "$ref": "schema:base" }]
+  }

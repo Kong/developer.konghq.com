@@ -221,3 +221,6 @@ app/gateway/routing/expressions-router-examples.md:
 app/gateway/networking/dns-config-reference.md:
   - app/_src/gateway/production/networking/dns-considerations.md
 
+# concepts
+app/gateway/security-update-process.md:
+  - app/_src/gateway/production/security-update-process.md
