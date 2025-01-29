@@ -21,6 +21,15 @@ topologies:
     - db-less
     - traditional
 
+topologies:
+  on_prem:
+    - hybrid
+    - db-less
+    - traditional
+  konnect_deployments:
+    - hybrid
+    - cloud-gateways
+    - serverless
 
 related_resources:
   - text: DNS configuration reference

@@ -18,6 +18,15 @@ works_on:
     - on-prem
     - konnect
 
+topologies:
+  on_prem:
+    - hybrid
+    - db-less
+    - traditional
+  konnect_deployments:
+    - hybrid
+    - cloud-gateways
+
 icon: graphql-rate-limiting-advanced.png
 
 categories:
