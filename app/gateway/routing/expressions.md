@@ -434,9 +434,11 @@ Depending on the field type, only certain content types and operators are suppor
   Meaning `http.path ~ r#"/foo/\d"#` could match a path like `/foo/1` or `/some/thing/foo/1`.
   If you want to match from the beginning of the string (anchoring the regex), then you must
   manually specify it with the `^` meta-character. For example, `http.path ~ r#"^/foo/\d"#`.
-  * When performing IP address-related comparisons with `==`, `in`, or `not in`, different families of
-  address types for the field and constant value will always cause the predicate to return `false` at
-  runtime.
+  * Operator behavior differs when performing IP address-related comparisons.
+    Different families of address types for the field and constant value will
+    cause the predicate to return the following values:
+    * Using `==` or `in`: Returns `false` at runtime.
+    * Using `not in`: Returns `true` at runtime.
 
 ## Example expressions
 
