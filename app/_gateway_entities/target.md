@@ -23,6 +23,11 @@ schema:
     api: gateway/admin-ee
     path: /schemas/Target
 
+api_specs:
+    - gateway/admin-oss
+    - gateway/admin-ee
+    - konnect/control-planes-config
+
 ---
 
 ## What is a Target?

@@ -32,6 +32,11 @@ related_resources:
 schema:
     api: gateway/admin-ee
     path: /schemas/Upstream
+
+api_specs:
+    - gateway/admin-oss
+    - gateway/admin-ee
+    - konnect/control-planes-config
 ---
 
 ## What is an Upstream?
