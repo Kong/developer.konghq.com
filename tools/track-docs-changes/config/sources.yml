@@ -132,6 +132,8 @@ app/_how-tos/set-up-ai-proxy-with-anthropic.md:
   - app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_anthropic.md
 app/_how-tos/proxy-tls-passthrough-traffic-using-sni.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
+app/_how-tos/configure-google-cloud-secret-as-a-vault-backend.md:
+  - app/_src/gateway/kong-enterprise/secrets-management/backends/gcp-sm.md
 app/_how-tos/configure-azure-key-vaults-as-a-vault-backend-with-vault-entity.md:
   - app/_src/gateway/kong-enterprise/secrets-management/backends/azure-key-vaults.md
 app/_how-tos/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity.md:
