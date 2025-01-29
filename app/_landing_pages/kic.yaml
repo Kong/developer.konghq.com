@@ -1,0 +1,18 @@
+metadata:
+  title: "{{site.kic_product_name}}"
+  content_type: landing_page
+  description: This page is an introduction to the {{site.kic_product_name}}.
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.kic_product_name}} (KIC)"
+
+  - header:
+      type: h2
+      text: What is the {{site.kic_product_name}}?
+    columns:
+    - blocks:
+        - type: text
+          config: |
+            @todo
