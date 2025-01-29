@@ -9,6 +9,7 @@ insomnia_link
 konnect_deployments
 min_version
 next_steps
+on_prem
 prereqs
 related_resources
 tier
