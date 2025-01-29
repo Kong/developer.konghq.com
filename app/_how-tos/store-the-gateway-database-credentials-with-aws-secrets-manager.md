@@ -4,8 +4,8 @@ content_type: how_to
 related_resources:
   - text: Secrets management
     url: /gateway/secrets-management/
- - text: Configure AWS Secrets Manager as a vault backend using the Vault entity
-   url: /how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/
+  - text: Configure AWS Secrets Manager as a vault backend using the Vault entity
+    url: /how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/
 
 products:
   - gateway
