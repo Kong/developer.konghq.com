@@ -12,15 +12,19 @@ description: 'The CORS plugin lets you add Cross-Origin Resource Sharing (CORS) 
 products:
     - gateway
 
-
 works_on:
     - on-prem
     - konnect
+
 topologies:
+  on_prem:
     - hybrid
     - db-less
     - traditional
-
+  konnect_deployments:
+    - hybrid
+    - cloud-gateways
+    - serverless
 
 related_resources:
   - text: DNS configuration reference
