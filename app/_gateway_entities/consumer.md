@@ -102,13 +102,15 @@ plugin"]
 
 Client --pass
 credentials--> Service
-subgraph Kong Gateway
+subgraph id1 ["`**KONG GATEWAY**`"]
+    subgraph padding[ ]
 
 subgraph Authenticate ["Consumer Identity Added"]
     direction LR
     Service --> Auth
     Auth--identify 
     consumer-->Consumer
+    end
 end
 
 Consumer--> RL
@@ -118,6 +120,7 @@ per-consumer
 rate limiting--> Upstream
 
 style Authenticate stroke-dasharray: 5 5
+style padding stroke:none!important,fill:none!important
 
 {% endmermaid %}
 
