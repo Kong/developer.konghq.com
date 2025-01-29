@@ -16,6 +16,7 @@ import "@/javascripts/how_to";
 import "@/javascripts/mode";
 import "@/javascripts/releases_dropdown";
 import "@/javascripts/toc";
+import "@/javascripts/docsearch";
 
 document.addEventListener("DOMContentLoaded", function () {
   new EntityExample();

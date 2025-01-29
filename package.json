@@ -14,6 +14,7 @@
     "wait-on": "^8.0.1"
   },
   "dependencies": {
+    "@docsearch/js": "^3.8.3",
     "@kong/kongponents": "^9.14.24",
     "@kong/sdk-portal-js": "^2.15.2",
     "@kong/spec-renderer-dev": "^1.79.14",
