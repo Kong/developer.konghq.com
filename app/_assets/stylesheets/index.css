@@ -387,4 +387,8 @@
       @apply tab-button--active !important;
     }
   }
+
+  .DocSearch-Commands {
+    @apply flex-row;
+  }
 }

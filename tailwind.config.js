@@ -20,6 +20,7 @@ module.exports = {
     "self-start",
     "self-center",
     "self-end",
+    "DocSearch-Commands",
   ],
   theme: {
     extend: {
