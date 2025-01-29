@@ -41,11 +41,13 @@ prereqs:
           - `secretsmanager:GetSecretValue`
         - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) installed
         
-        You will also need the following authentication information to connect your AWS Secrets Manager with {{site.base_gateway}}:
+        You'll also need the following authentication information to connect your AWS Secrets Manager with {{site.base_gateway}}:
         - Your access key ID
         - Your secret access key
         - Your session token
         - Your AWS region, `us-east-1` in this example
+
+        For this example, you can get [temporary credentials](https://docs.aws.amazon.com/singlesignon/latest/userguide/howtogetcredentials.html) from the AWS portal.
 
         Create environment variables to store these credentials:
         ```sh
@@ -115,7 +117,8 @@ aws secretsmanager create-secret --name kong-gateway-database \
  --secret-string '{"pg_user":"'${KONG_PG_USER}'","pg_password":"'${KONG_PG_PASSWORD}'"}'
 ```
 
-## 7. Run the Kong migrations
+## 7. Initialize the database
+Use the `kong migrations bootstrap` command to initialize the database:
 ```sh
 docker run --rm \
  --network=kong-net \
@@ -144,3 +147,11 @@ docker run -d --name kong-gateway \
  -e KONG_LICENSE_DATA \
  kong/kong-gateway:latest
 ```
+This command returns the ID of the {{site.base_gateway}} container.
+
+## 9. Validate
+To verify that everything worked as expected, you can check its status with this command:
+```sh
+docker container ls
+```
+If the `kong-gateway` container is running, that means it successfully connected to the database using the credentials in the vault.
