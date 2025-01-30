@@ -80,24 +80,7 @@ rows:
         config:
           entity: key-set
   
-  - header:
-      type: h2
-      text: "Admin"
 
-  - columns:
-    - blocks:
-      - type: entity_card
-        config:
-          entity: rbac
-    - blocks:
-      - type: entity_card
-        config:
-          entity: admin
-    - blocks:
-      - type: entity_card
-        config:
-          entity: group
-  
   - columns:
     - blocks:
       - type: entity_card
