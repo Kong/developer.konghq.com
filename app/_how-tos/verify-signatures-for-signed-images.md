@@ -70,6 +70,8 @@ cosign verify \
   -a workflow='Package & Release'
 ```
 
+Make sure that you've set the `COSIGN_REPOSITORY` in the [prerequisites](#prerequisites), or Cosign won't be able to find the image signature.
+
 If verification is successful, the response will contain a summary of the checks that were performed:
 ```
 Verification for index.docker.io/kong/kong-gateway@sha256:cb838b4090cfbfb9186be6e95fbeceabc8fdbf604400eaaca1561b1f510128eb --
