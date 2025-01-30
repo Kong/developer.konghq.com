@@ -49,6 +49,10 @@ rows:
       - type: entity_card
         config:
           entity: plugin
+    - blocks:
+      - type: entity_card
+        config:
+          entity: workspace
 
   - header:
       type: h2
@@ -79,41 +83,3 @@ rows:
       - type: entity_card
         config:
           entity: key-set
-  
-  - header:
-      type: h2
-      text: "Admin"
-
-  - columns:
-    - blocks:
-      - type: entity_card
-        config:
-          entity: rbac
-    - blocks:
-      - type: entity_card
-        config:
-          entity: admin
-    - blocks:
-      - type: entity_card
-        config:
-          entity: group
-  
-  - columns:
-    - blocks:
-      - type: entity_card
-        config:
-          entity: workspace
-    - blocks:
-      - type: entity_card
-        config:
-          entity: license
-
-  - header:
-      type: h2
-      text: "Misc"
-  - columns:
-    - blocks:
-      - type: entity_card
-        config:
-          entity: event-hook
-

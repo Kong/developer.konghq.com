@@ -5,7 +5,7 @@ entities:
   - group
 
 description: |
-  Groups of RBAC users in {{site.base_gateway}}.
+  Groups are a resource for RBAC and can be used to assign Roles across sets of users.
   
 related_resources:
   - text: RBAC entity
