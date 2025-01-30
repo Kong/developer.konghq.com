@@ -11,6 +11,7 @@ products:
 
 works_on:
     - on-prem
+    - konnect
 
 entities: 
   - certificate
@@ -69,8 +70,8 @@ Associate the Certificate created as a prerequisite with an SNI. If the SNI does
 {% endcapture %}
 
 {{request | indent: 3}}
-<!-- vale on -->
 
+<!-- vale on -->
 
 ## 2. Validate 
 
