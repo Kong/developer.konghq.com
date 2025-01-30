@@ -1,5 +1,5 @@
 ---
-title: Kong Gateway Enterprise Version Support
+title: "{{site.ee_product_name}} Version Support"
 content_type: reference
 layout: reference
 
