@@ -2,15 +2,12 @@
 title: Associate a Certificate with an SNI
 content_type: how_to
 related_resources:
-  - text: SNI entity
-    url: /gateway/entities/snis/
-  - text: Certificates
-    url: /gateway/entities/certificate/
+  - text: Secure your API with TLS using SNIs
+    url: /how-to/secure-api-with-tls/
 
 
 products:
     - gateway
-tier: enterprise
 
 works_on:
     - on-prem
@@ -22,8 +19,8 @@ entities:
   - service
 
 tldr:
-    q: How do you validate that a Certificate is attached to an SNI and working?
-    a: After creating the Certificate and associating it to the desired SNI, then using `openssl` you can verify that {{site.base_gateway}} is returning the expected certificate for the SNI. 
+    q: How do you associate a Certificate with an SNI and make sure it works?
+    a: After creating a Certificate, you can associate it to a the desired SNI, and use `openssl` to verify that {{site.base_gateway}} is returning the expected certificate for the SNI. 
 tools:
     - deck
 
@@ -77,10 +74,12 @@ Associate the Certificate created as a prerequisite with an SNI. If the SNI does
 
 ## 2. Validate 
 
-Using `openssl` open a connection with {{site.base_gateway}} and check that {{site.base_gateway}} returns the correct certificate for the SNI:
+Using `openssl`, open a connection with {{site.base_gateway}} and check that {{site.base_gateway}} returns the correct certificate for the SNI:
 
 ```
-echo "" | openssl s_client -connect 127.0.0.1 -port 8443 -servername $MY_SNI_NAME 2>/dev/null | openssl x509 -text -noout | head -10
+echo "" | openssl s_client -connect 127.0.0.1 -port 8443 -servername $SNI_NAME 2>/dev/null | openssl x509 -text -noout | head -10
 ```
 
-The response will contain the certificate you created and attached to the SNI in the first step, along with the `CN` and any other information you used when creating the certificate. Because TLS passthrough is not enabled, {{site.base_gateway}} is returning its own Certificate. For instructions on configuring TLS passthrough review our [Proxy TLS traffic](/how-to/proxy-tls-passthrough-traffic-using-sni/)
+The response will contain the certificate you created and attached to the SNI in the first step, along with the `CN` and any other information you used when creating the certificate. 
+Because TLS passthrough is not enabled, {{site.base_gateway}} is returning its own Certificate. 
+For instructions on configuring TLS passthrough, review our [Proxy TLS traffic](/how-to/proxy-tls-passthrough-traffic-using-sni/)
