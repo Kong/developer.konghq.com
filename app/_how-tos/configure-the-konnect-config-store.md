@@ -1,5 +1,5 @@
 ---
-title: Configure the Konnect Config Store
+title: Configure the Konnect Config Store vault
 content_type: how_to
 related_resources:
   - text: Secrets management
@@ -8,8 +8,6 @@ related_resources:
     url: /gateway/entities/vault/
   - text: Store certificates in Konnect Config Store
     url: /how-to/store-certificates-in-konnect-config-store/
-  - text: Reference secrets stored in the Konnect Config Store
-    url: /how-to/reference-secrets-from-konnect-config-store/
   - text: Store a Mistral API key as a secret in Konnect Config Store
     url: /how-to/store-a-mistral-api-key-as-a-secret-in-konnect-config-store/
 
@@ -29,13 +27,25 @@ tags:
 tldr:
     q: How do I use a {{site.konnect_short_name}}-native Vault?
     a: |
-      1. Use the {{site.konnect_short_name}} API to create a Config Store using the `config-stores` endpoint.
+      1. Use the {{site.konnect_short_name}} API to create a Config Store using the `/config-stores` endpoint.
       2. Create a {{site.konnect_short_name}} Vault using the [`/vaults/` endpoint](/api/konnect/control-planes-config/v2/#/operations/create-vault).
+      3. Store your secret as a key/value pair using the `/secrets` endpoint. 
+      4. Reference the secret using the Vault prefix and key (for example: `{vault://mysecretvault/secret-key}`).
 
 prereqs:
   inline:
-    - title: Konnect API
-      include_content: prereqs/konnect-api-for-curl
+    - title: Environment variables
+      content: |
+        To use the copy, paste, and run the instructions in this how-to, you must export these additional environmental variables:
+
+        ```sh
+        export KONNECT_CONTROL_PLANE_URL=https://{region}.api.konghq.com
+        export CONTROL_PLANE_ID=your-control-plane-uuid
+        ```
+
+        * `{region}`: Replace with the [{{site.konnect_short_name}} region](/konnect/geos/) you're using.
+        * `CONTROL_PLANE_ID`: You can find your control plane UUID by navigating to the control plane in the {{site.konnect_short_name}} UI or by sending a `GET` request to the [`/control-planes` endpoint](/api/konnect/control-planes/v2/#/operations/list-control-planes).
+      icon_url: /assets/icons/file.svg
 
 tools:
   - konnect-api
@@ -50,8 +60,89 @@ min_version:
     gateway: '3.4'
 ---
 
-@todo
+## 1. Configure a {{site.konnect_short_name}} Config Store
 
-Use some of the content from https://docs.konghq.com/konnect/gateway-manager/configuration/config-store/#main 
+Before you can configure a {{site.konnect_short_name}} Vault, you must first create a Config Store using the [Control Planes Configuration API](/api/konnect/control-planes-config/v2/#/) by sending a `POST` request to the `/config-stores` endpoint:
 
-This is important I think because documenting that you have to enable it with the API before you use it is a pattern that a user won't be able to figure out on their own.
+<!--vale off-->
+{% control_plane_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores
+status_code: 201
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+    - 'Authorization: Bearer $KONNECT_TOKEN'
+body:
+    name: my-config-store
+{% endcontrol_plane_request %}
+<!--vale on-->
+
+Export your Config Store ID as an environment variable so you can use it later:
+
+```sh
+export CONFIG_STORE_ID=config-store-uuid
+```
+
+## 2. Configure {{site.konnect_short_name}} as your Vault
+
+To enable {{site.konnect_short_name}} as your vault with the [Vault entity](/gateway/entities/vault/) send a `POST` request to the [`/vaults/`](/api/konnect/control-planes-config/v2/#/operations/create-vault) endpoint:
+
+<!--vale off-->
+{% control_plane_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/vaults/
+status_code: 201
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+    - 'Authorization: Bearer $KONNECT_TOKEN'
+body:
+    config:
+      config_store_id: $CONFIG_STORE_ID
+    description: Storing secrets in Konnect
+    name: konnect
+    prefix: mysecretvault
+{% endcontrol_plane_request %}
+<!--vale on-->
+
+## 3. Store the a secret in your {{site.konnect_short_name}} Vault
+
+By storing a secret in a {{site.konnect_short_name}} Vault, you can reference it in `kong.conf` or referenceable plugin fields without using the plain text of the secret.
+
+Store your secret by sending a `POST` request to the `/secrets` endpoint:
+
+<!--vale off-->
+{% control_plane_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$CONFIG_STORE_ID/secrets/
+status_code: 201
+method: POST
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+    - 'Authorization: Bearer $KONNECT_TOKEN'
+body:
+    key: secret-key
+    value: my-secret-value
+{% endcontrol_plane_request %}
+<!--vale on-->
+
+## 4. Validate
+
+You can validate that your secret was stored correctly by sending a `GET` request to the `/secrets` endpoint:
+
+<!--vale off-->
+{% control_plane_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$CONFIG_STORE_ID/secrets/
+status_code: 201
+method: GET
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+    - 'Authorization: Bearer $KONNECT_TOKEN'
+{% endcontrol_plane_request %}
+<!--vale on-->
+
+If your secret was successfully stored in {{site.konnect_short_name}}, you should get a `201` status code and your `secret-key` key in the output.
+
+You can now reference your {{site.konnect_short_name}} secret as `{vault://mysecretvault/secret-key}`.
