@@ -14,12 +14,16 @@
     "wait-on": "^8.0.1"
   },
   "dependencies": {
+    "@docsearch/js": "^3.8.3",
     "@kong/kongponents": "^9.14.24",
     "@kong/sdk-portal-js": "^2.15.2",
     "@kong/spec-renderer-dev": "^1.79.14",
     "@vitejs/plugin-vue": "^5.1.2",
+    "algoliasearch": "^5.20.0",
     "axios": "^1.7.4",
-    "vue": "^3.4.38"
+    "instantsearch.css": "^8.5.1",
+    "vue": "^3.4.38",
+    "vue-instantsearch": "^4.20.2"
   },
   "overrides": {
     "vite": {

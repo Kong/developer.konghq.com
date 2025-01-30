@@ -89,21 +89,38 @@ By attaching a plugin directly to a Consumer, you can manage specific controls a
 {% mermaid %}
 flowchart LR
 
-Consumer(Consumer entity)
-Service(Gateway Service)
-Auth(Auth plugin)
-Upstream[Upstream service]
-RL["Per-consumer
-Rate Limiting Plugin applied"]
+Consumer(Consumer 
+entity)
+Service(Gateway 
+Service)
+Auth(Auth
+plugin)
+Upstream[Service 
+application]
+RL["Rate Limiting 
+plugin"]
 
-Client --> Authenticate
+Client --pass
+credentials--> Service
+subgraph id1 ["`**KONG GATEWAY**`"]
+    subgraph padding[ ]
+
 subgraph Authenticate ["Consumer Identity Added"]
-    direction TB
+    direction LR
     Service --> Auth
-    Auth-->Consumer
+    Auth--identify 
+    consumer-->Consumer
+    end
 end
-Authenticate --> RL
-RL --> Upstream
+
+Consumer--> RL
+end
+RL --apply 
+per-consumer
+rate limiting--> Upstream
+
+style Authenticate stroke-dasharray: 5 5
+style padding stroke:none!important,fill:none!important
 
 {% endmermaid %}
 

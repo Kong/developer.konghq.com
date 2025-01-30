@@ -5,15 +5,17 @@
                 <h3>Did this doc help?</h3>
                 <div class="flex gap-2">
                     <a class="rounded-md border border-brand py-2 px-3 text-primary hover:no-underline" href="#yes">Yes</a>
-                    <a class="rounded-md border border-brand py-2 px-3 text-primary hover:no-underline" href="#no">No</a>
+                    <a class="rounded-md border border-brand py-2 px-3 text-primary hover:no-underline" href="{{ site.repos.developer }}/issues/new" target="_blank" rel="noopener noreferrer">No</a>
                 </div>
             </div>
             <div class="flex gap-1">
                 <span>Something wrong?</span>
                 <div class="flex gap-2">
                     <a class="text-brand" href="{{ site.repos.developer }}/issues/">Report an Issue</a>
-                    <span class="text-secondary">|</span>
-                    <a class="text-brand" href="{{ page.edit_link }}">Edit this Page</a>
+                    {% if page.edit_link %}
+                        <span class="text-secondary">|</span>
+                        <a class="text-brand" href="{{ page.edit_link }}">Edit this Page</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

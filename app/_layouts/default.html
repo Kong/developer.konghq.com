@@ -51,6 +51,10 @@
     {% if page.hub %}
       {% vite_javascript_tag hub %}
     {% endif %}
+
+    {% if page.search %}
+      {% vite_javascript_tag search %}
+    {% endif %}
   </head>
 
   <body class="bg-primary leading-6 h-full">

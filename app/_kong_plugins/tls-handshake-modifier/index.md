@@ -19,10 +19,14 @@ works_on:
 min_version:
     gateway: '3.1'
 
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
+topologies:
+  on_prem:
+    - hybrid
+    - db-less
+    - traditional
+  konnect_deployments:
+    - hybrid
+    - cloud-gateways
 
 icon: tls-handshake-modifier.png
 

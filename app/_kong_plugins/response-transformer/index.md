@@ -16,11 +16,15 @@ works_on:
     - konnect
 
 
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
-
+topologies:
+  on_prem:
+    - hybrid
+    - db-less
+    - traditional
+  konnect_deployments:
+    - hybrid
+    - cloud-gateways
+    - serverless
 icon: response-transformer.png
 
 categories:

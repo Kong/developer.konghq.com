@@ -41,7 +41,9 @@ faqs:
       We recommend giving Workspaces unique names regardless of letter case to prevent confusion.
   - q: What happens if I create an entity without specifying a Workspace?
     a: If you don't specify a target Workspace, the entity will be created in the `default` workspace.
-  
+
+api_specs:
+    - gateway/admin-ee
 ---
 
 ## What is a Workspace?

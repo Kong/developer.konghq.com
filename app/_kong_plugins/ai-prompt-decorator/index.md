@@ -19,11 +19,15 @@ works_on:
 min_version:
     gateway: '3.6'
 
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
-
+topologies:
+  on_prem:
+    - hybrid
+    - db-less
+    - traditional
+  konnect_deployments:
+    - hybrid
+    - cloud-gateways
+    - serverless
 icon: ai-prompt-decorator.png
 
 categories:

@@ -1,0 +1,18 @@
+metadata:
+  title: "{{site.konnect_short_name}} APIs"
+  content_type: landing_page
+  description: This page is an introduction to the {{site.konnect_short_name}} APIs.
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.konnect_short_name}} APIs"
+
+  - header:
+      type: h2
+      text: What are the {{site.konnect_short_name}} APIs?
+    columns:
+    - blocks:
+        - type: text
+          config: |
+            @todo

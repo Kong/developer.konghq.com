@@ -3,7 +3,7 @@ title: Rotate secrets in Hashicorp Vault with {{site.base_gateway}}
 content_type: how_to
 related_resources:
   - text: Configure Hashicorp Vault as a vault backend
-    url: /how-to/configure-hashicorp-vault-as-a-vault-backend
+    url: /how-to/configure-hashicorp-vault-as-a-vault-backend/
   - text: Secret management
     url: /gateway/secrets-management/
 

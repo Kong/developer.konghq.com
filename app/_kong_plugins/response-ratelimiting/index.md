@@ -17,6 +17,16 @@ works_on:
     - on-prem
     - konnect
 
+topologies:
+  on_prem:
+    - hybrid
+    - db-less
+    - traditional
+  konnect_deployments:
+    - hybrid
+    - cloud-gateways
+    - serverless
+
 icon: response-ratelimiting.png
 
 categories:

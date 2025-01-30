@@ -1,0 +1,18 @@
+metadata:
+  title: Terraform providers for Kong
+  content_type: landing_page
+  description: This page is an introduction to the Terraform providers for {{site.base_gateway}} and {{site.konnect_short_name}}.
+
+rows:
+  - header:
+      type: h1
+      text: "Terraform providers for Kong"
+
+  - header:
+      type: h2
+      text: What is Terraform?
+    columns:
+    - blocks:
+        - type: text
+          config: |
+            @todo

@@ -1,7 +1,7 @@
 ---
 title: Targets
 content_type: reference
-description: A Target is an IP address/hostname with a port that identifies an instance of a backend service.
+description: A Target identifies an instance of a service application using an IP address or hostname with a port.
 
 entities:
   - target
@@ -23,11 +23,16 @@ schema:
     api: gateway/admin-ee
     path: /schemas/Target
 
+api_specs:
+    - gateway/admin-oss
+    - gateway/admin-ee
+    - konnect/control-planes-config
+
 ---
 
 ## What is a Target?
 
-A Target is an IP address/hostname with a port that identifies an instance of a backend service.
+A Target identifies an instance of a service application using an IP address or hostname with a port.
 Each [Upstream](/gateway/entities/upstream/) can have many Targets. Targets are used by Upstreams for [load balancing](/gateway/entities/upstream/#load-balancing-algorithms). For example, if you have an `example_upstream` Upstream, you can point it to two different Targets: `httpbin.konghq.com` and `httpbun.com`. This is so that if one of the servers (like `httpbin.konghq.com`) is unavailable, it automatically detects the problem and routes all traffic to the working server (`httpbun.com`).
 
 The following diagram illustrates how Targets are used by Upstreams for load balancing:
