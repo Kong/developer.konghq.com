@@ -34,7 +34,8 @@ tier: enterprise
 tldr:
     q: How do I verify {{site.ee_product_name}} Docker image signatures?
     a: |
-      {{site.base_gateway}} Docker container images are signed using [`cosign`](https://github.com/sigstore/cosign), with signatures published to the Docker Hub repository `kong/notary`.
+      {{site.base_gateway}} Docker container images are signed using [Cosign](https://github.com/sigstore/cosign), 
+      with signatures published to the Docker Hub repository `kong/notary`.
 
       Because Kong uses Github Actions to build and release, Kong also uses Github’s OIDC identity to sign images.
       You can verify these signatures using the `cosign verify` command.
