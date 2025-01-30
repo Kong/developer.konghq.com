@@ -5,72 +5,88 @@ Create an SSL certificate
     ```sh
     openssl genpkey -algorithm RSA -out my-key.pem
     ```
-2. Generate a certificate
+2. Generate a certificate signing request
 
     ```
     openssl req -new -key my-key.pem -out my-csr.pem
     ```
-3. Associate your Certificate with an SNI
+3. Create a self-signed certificate 
 
-<!-- vale off -->
-{% capture request %}
-{% entity_example %}
-type: certificate
-data:
-  cert: |
+    ```
+    openssl x509 -req -in my-csr.pem -signkey my-key.pem -out my-cert.pem -days 365
+    ```
+
+4. Create a UUID using the shell: 
+
+    ```
+    uuidgen
+    ```
+4. Add the Certificate to {{site.base_gateway}} using decK and the contents of `my-key.pem` and `my-cert.pem`:
+
+```sh
+echo '
+  _format_version: "3.0"
+  certificates:
+  - cert: |-
       -----BEGIN CERTIFICATE-----
-      MIID0DCCArigAwIBAgIBATANBgkqhkiG9w0BAQUFADB/MQswCQYDVQQGEwJGUjET
-      MBEGA1UECAwKU29tZS1TdGF0ZTEOMAwGA1UEBwwFUGFyaXMxDTALBgNVBAoMBERp
-      bWkxDTALBgNVBAsMBE5TQlUxEDAOBgNVBAMMB0RpbWkgQ0ExGzAZBgkqhkiG9w0B
-      CQEWDGRpbWlAZGltaS5mcjAeFw0xNDAxMjgyMDM2NTVaFw0yNDAxMjYyMDM2NTVa
-      MFsxCzAJBgNVBAYTAkZSMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJ
-      bnRlcm5ldCBXaWRnaXRzIFB0eSBMdGQxFDASBgNVBAMMC3d3dy5kaW1pLmZyMIIB
-      IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvpnaPKLIKdvx98KW68lz8pGa
-      RRcYersNGqPjpifMVjjE8LuCoXgPU0HePnNTUjpShBnynKCvrtWhN+haKbSp+QWX
-      SxiTrW99HBfAl1MDQyWcukoEb9Cw6INctVUN4iRvkn9T8E6q174RbcnwA/7yTc7p
-      1NCvw+6B/aAN9l1G2pQXgRdYC/+G6o1IZEHtWhqzE97nY5QKNuUVD0V09dc5CDYB
-      aKjqetwwv6DFk/GRdOSEd/6bW+20z0qSHpa3YNW6qSp+x5pyYmDrzRIR03os6Dau
-      ZkChSRyc/Whvurx6o85D6qpzywo8xwNaLZHxTQPgcIA5su9ZIytv9LH2E+lSwwID
-      AQABo3sweTAJBgNVHRMEAjAAMCwGCWCGSAGG+EIBDQQfFh1PcGVuU1NMIEdlbmVy
-      YXRlZCBDZXJ0aWZpY2F0ZTAdBgNVHQ4EFgQU+tugFtyN+cXe1wxUqeA7X+yS3bgw
-      HwYDVR0jBBgwFoAUhMwqkbBrGp87HxfvwgPnlGgVR64wDQYJKoZIhvcNAQEFBQAD
-      ggEBAIEEmqqhEzeXZ4CKhE5UM9vCKzkj5Iv9TFs/a9CcQuepzplt7YVmevBFNOc0
-      +1ZyR4tXgi4+5MHGzhYCIVvHo4hKqYm+J+o5mwQInf1qoAHuO7CLD3WNa1sKcVUV
-      vepIxc/1aHZrG+dPeEHt0MdFfOw13YdUc2FH6AqEdcEL4aV5PXq2eYR8hR4zKbc1
-      fBtuqUsvA8NWSIyzQ16fyGve+ANf6vXvUizyvwDrPRv/kfvLNa3ZPnLMMxU98Mvh
-      PXy3PkB8++6U4Y3vdk2Ni2WYYlIls8yqbM4327IKmkDc2TimS8u60CT47mKU7aDY
-      cbTV5RDkrlaYwm5yqlTIglvCv7o=
+      MIIDRTCCAi2gAwIBAgIUMJERhwxue4l6zF2if4gcCjdzXKwwDQYJKoZIhvcNAQEL
+      BQAwSzELMAkGA1UEBhMCVVMxCzAJBgNVBAgMAk5DMQ8wDQYDVQQHDAZCb3N0b24x
+      DTALBgNVBAoMBEtvbmcxDzANBgNVBAMMBm15LXNuaTAeFw0yNTAxMjgxOTQ3MTRa
+      Fw0yNjAxMjgxOTQ3MTRaMEsxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJOQzEPMA0G
+      A1UEBwwGQm9zdG9uMQ0wCwYDVQQKDARLb25nMQ8wDQYDVQQDDAZteS1zbmkwggEi
+      MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC10bdAm7LZZCq3TAVVvwkKufS1
+      1UQ9EsYhnz3isYxxv4zrRaK9jh4GGi8aLJO1/GllCU0oASo9ZWLFLQpjlPsIP9v8
+      LeJ9M7B8Kt55+0uxOsv5XmuX1zposGy6Z0lpY9If032bfHhztTQWmIqpuCgmh6r4
+      k4x+lArN3T/v6OensmtC6iDEaSHzOo2moAtpD5KFyIIiuOmdWNxcraFNbuWjdOPP
+      pv/OUC8ktdGeYoBHzYNNlWXkDufbt0ADC/wzpbvDHT6f2RGZelJttCYm1xm3qDWp
+      NTeejEYXevP6Z6zoEeJsCEEju0xInOHWHiAPIze2GdQZ6U0H/4zKtMyDyJdvAgMB
+      AAGjITAfMB0GA1UdDgQWBBRI8YKbENL6XqNmRv0MQjNvLzK3GDANBgkqhkiG9w0B
+      AQsFAAOCAQEAsIVPxHb1Ll+2KyyftiCKH/dmaeG14MOIp1sVPFbt5DolhBdriFLr
+      EVaefttPd4Z3uq11pyhKdhVmjDJ1a9mUJjD5CVrnp5+7D2qw1QNzU8Y9H9Io1LOI
+      Uofs1OXoIQI5c+oYUZM7PoD+/hcUKKl2vZ44dcPMYBnhn1qZPn95IqDTMPBcbSm+
+      CFiyJ8sF6mF26qaT6gTIbKjOSA9b+XWWJUPpwtUxAd5KjdzbTEmemy3dkeNPQJNM
+      HnWQz/VRQEC2md43lRU6KUxhUamXf+boOOMT4k1b8pj3tEcEqY2cW4CZ8qGgEvyr
+      4/t5YSkmXGTbbC8QwdK+MxjlPbfVqp9nUg==
       -----END CERTIFICATE-----
-  key: |
-      -----BEGIN RSA PRIVATE KEY-----
-      MIIEowIBAAKCAQEAvpnaPKLIKdvx98KW68lz8pGaRRcYersNGqPjpifMVjjE8LuC
-      oXgPU0HePnNTUjpShBnynKCvrtWhN+haKbSp+QWXSxiTrW99HBfAl1MDQyWcukoE
-      b9Cw6INctVUN4iRvkn9T8E6q174RbcnwA/7yTc7p1NCvw+6B/aAN9l1G2pQXgRdY
-      C/+G6o1IZEHtWhqzE97nY5QKNuUVD0V09dc5CDYBaKjqetwwv6DFk/GRdOSEd/6b
-      W+20z0qSHpa3YNW6qSp+x5pyYmDrzRIR03os6DauZkChSRyc/Whvurx6o85D6qpz
-      ywo8xwNaLZHxTQPgcIA5su9ZIytv9LH2E+lSwwIDAQABAoIBAFml8cD9a5pMqlW3
-      f9btTQz1sRL4Fvp7CmHSXhvjsjeHwhHckEe0ObkWTRsgkTsm1XLu5W8IITnhn0+1
-      iNr+78eB+rRGngdAXh8diOdkEy+8/Cee8tFI3jyutKdRlxMbwiKsouVviumoq3fx
-      OGQYwQ0Z2l/PvCwy/Y82ffq3ysC5gAJsbBYsCrg14bQo44ulrELe4SDWs5HCjKYb
-      EI2b8cOMucqZSOtxg9niLN/je2bo/I2HGSawibgcOdBms8k6TvsSrZMr3kJ5O6J+
-      77LGwKH37brVgbVYvbq6nWPL0xLG7dUv+7LWEo5qQaPy6aXb/zbckqLqu6/EjOVe
-      ydG5JQECgYEA9kKfTZD/WEVAreA0dzfeJRu8vlnwoagL7cJaoDxqXos4mcr5mPDT
-      kbWgFkLFFH/AyUnPBlK6BcJp1XK67B13ETUa3i9Q5t1WuZEobiKKBLFm9DDQJt43
-      uKZWJxBKFGSvFrYPtGZst719mZVcPct2CzPjEgN3Hlpt6fyw3eOrnoECgYEAxiOu
-      jwXCOmuGaB7+OW2tR0PGEzbvVlEGdkAJ6TC/HoKM1A8r2u4hLTEJJCrLLTfw++4I
-      ddHE2dLeR4Q7O58SfLphwgPmLDezN7WRLGr7Vyfuv7VmaHjGuC3Gv9agnhWDlA2Q
-      gBG9/R9oVfL0Dc7CgJgLeUtItCYC31bGT3yhV0MCgYEA4k3DG4L+RN4PXDpHvK9I
-      pA1jXAJHEifeHnaW1d3vWkbSkvJmgVf+9U5VeV+OwRHN1qzPZV4suRI6M/8lK8rA
-      Gr4UnM4aqK4K/qkY4G05LKrik9Ev2CgqSLQDRA7CJQ+Jn3Nb50qg6hFnFPafN+J7		
-      7juWln08wFYV4Atpdd+9XQECgYBxizkZFL+9IqkfOcONvWAzGo+Dq1N0L3J4iTIk
-      w56CKWXyj88d4qB4eUU3yJ4uB4S9miaW/eLEwKZIbWpUPFAn0db7i6h3ZmP5ZL8Q
-      qS3nQCb9DULmU2/tU641eRUKAmIoka1g9sndKAZuWo+o6fdkIb1RgObk9XNn8R4r
-      psv+aQKBgB+CIcExR30vycv5bnZN9EFlIXNKaeMJUrYCXcRQNvrnUIUBvAO8+jAe
-      CdLygS5RtgOLZib0IVErqWsP3EI1ACGuLts0vQ9GFLQGaN1SaMS40C9kvns1mlDu
-      LhIhYpJ8UsCVt5snWo2N+M+6ANh5tpWdQnEK6zILh4tRbuzaiHgb
-      -----END RSA PRIVATE KEY-----
-{% endentity_example %}
-{% endcapture %}
+    id: 2D22E0CD-55D8-4901-8500-986C6B515CFC
+    key: |-
+      -----BEGIN PRIVATE KEY-----
+      MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC10bdAm7LZZCq3
+      TAVVvwkKufS11UQ9EsYhnz3isYxxv4zrRaK9jh4GGi8aLJO1/GllCU0oASo9ZWLF
+      LQpjlPsIP9v8LeJ9M7B8Kt55+0uxOsv5XmuX1zposGy6Z0lpY9If032bfHhztTQW
+      mIqpuCgmh6r4k4x+lArN3T/v6OensmtC6iDEaSHzOo2moAtpD5KFyIIiuOmdWNxc
+      raFNbuWjdOPPpv/OUC8ktdGeYoBHzYNNlWXkDufbt0ADC/wzpbvDHT6f2RGZelJt
+      tCYm1xm3qDWpNTeejEYXevP6Z6zoEeJsCEEju0xInOHWHiAPIze2GdQZ6U0H/4zK
+      tMyDyJdvAgMBAAECggEAKP2BueAgPyB0/OP3o/AwoqlvwPq2qqor3vKeqhfrGM3d
+      gEEvwlpi7G9ExTrdhj7EqBGjwmwY0MSlstxHplG1EpQLDVxu3lkj5apog8mis+8U
+      g0DFMvND6Mw1hwS4KTlm6uPsQnyaT0O/3YRAZqjs7FrTsbzaBMNteCH0QysX5tdR
+      LNNViuOjfBvqtlNqoMGkxwHxou52xo+Er6vFAlv9+dHUbQfnxwbPQJrDTB/jZDru
+      SN7En2bDv9EyWNofahAiy9xFhb9PtclhktdiHQWIhD5ZlxKatoU4YAGe6Qyh2nl9
+      3sh7vTfioOwNjE9POzPUxUyCB3ihN9QP+ErR7/gocQKBgQD7N+5zPKcjpNzzZ5Nn
+      YK9D55UxFBC6r44iShgYomYvl8spfPfrW4+IFuJDncdB2KezffEJRK1kwp6jHJf+
+      2skMpNhjlU7f5ShoxYF3BnGIcKVlXCep++TkezCUHZBmtZgN7FYyvx+rISfYJXCY
+      7BH3I0TmJF4NzGBCKNDN1lAX2QKBgQC5R6J0/WbrIUZjVY3qQRlCSZmDzxWE3kMf
+      94Mam4bXu05GIinttQ0Xr9RaeaEXYMdE4+Do3GGLTP16BV9z+piTZVLz6/qIHDnO
+      I3osnagXmMcBWF0jTNG2PzHpKgEIbRXvuz2ltggu3xbySwIOCGImgxyalYapLUnO
+      RgLvpE2khwKBgEGAk+v4JJxmoDXXC9gonYpXF890K+iBXc4TA7VoorxGF/L5Yqs7
+      dHFHhjebLBk/JHrom7CO96cOF87v5bHN2h4x3ToZ9DbsyVyIIvml9HRe6sFDBhSM
+      WWI5vLDiBITDVKJMvSz+KIO2YW06VeGJrCWETLK1SNDQOUkG22rQNpIBAoGAOjC0
+      Zjfb5gcaW0JYgvUVIMuKymn0oTlJLbYH2Ah2rjSmncJHFuAhD4pqkEvY+0Wq8Aj9
+      70Sf4ic5COS9GOjgmJJfHjrEAZGT2hksWuzdCSQzhEmjXt3Wk31/iHJnxqS0Ggnd
+      j7j/EvF//HLwX0XkxaGyDx7dHy8ZGg7FB0y8EesCgYA1Py0mm6WLMUP6xlXnrlhj
+      hzg8ZZ+GB5MZRc2oeKlYPkaRIC3WRd6iXgX58no60ByAzmjimXWvwd9DMJgeAvyW
+      ei+z5QAXvWnkAjatMRedOlf26KkKdAax5QDqNbN3DIk+SIbAPWN0ecYag9YQt/m8
+      mFmxfVBnyBFNNIj1RMmQrg==
+      -----END PRIVATE KEY-----
+' | deck gateway apply -
 
-{{request | indent: 3}}
-<!-- vale on -->
+```
+
+  
+4. Retrieve the UUID of the Certificate and set it as an environment variable for this guide: 
+
+```sh
+curl -s http://localhost:8001/certificates/ | jq -r '.data[].id'
+```
+Then export the value to be used throughout the guide:
+ `export CERT_ID=2D22E0CD-55D8-4901-8500-986C6B515CFC`

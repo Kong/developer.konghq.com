@@ -10,10 +10,10 @@ related_resources:
 
 products:
     - gateway
+tier: enterprise
 
 works_on:
     - on-prem
-    - konnect
 
 entities: 
   - certificate
@@ -31,6 +31,16 @@ prereqs:
   inline:
     - title: Certificate
       include_content: prereqs/certificate
+      icon_url: /assets/icons/file.svg
+    - title: Configure environment variables
+      content: |
+        Set the following variables: 
+        * `CERT_ID`: The UUID set when you associated a Certificate with {{site.base_gateway}}.
+        For example: 
+        ```sh
+        export CERT_ID=3f19b7d1-705f-422a-a116-7dc8282efe21
+        ```
+        icon_url: /assets/icons/file.svg
     
 cleanup:
   inline:
@@ -40,12 +50,13 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+    
 
 min_version:
     gateway: '3.4'
 ---
 
-
+@TODO
 
 {{site.base_gateway}} can proxy TLS requests using the client's TLS SNI extension as a forwarding mechanism. This allows a TLS request to be accepted without needing to decrypt it. 
 
@@ -63,10 +74,10 @@ Copy the UUID in the response body to use in the next step.
 
 {% capture request %}
 {% control_plane_request %}
-  url: certificates/{YOUR_CERT_ID}/snis
+  url: certificates/$YOUR_CERT_ID/snis
   method: POST
   body:
-      name: "bob2.example.com"
+      name: "$SNI_NAME"
 {% endcontrol_plane_request %}
 {% endcapture %}
 
@@ -77,5 +88,5 @@ Copy the UUID in the response body to use in the next step.
 ## 3. Validate 
 
 ```
-echo "" | openssl s_client -connect 127.0.0.1 -port 8443 -servername bob2.example.com 2>/dev/null | openssl x509 -text -noout | head -10
+echo "" | openssl s_client -connect 127.0.0.1 -port 8443 -servername $SNI_NAME 2>/dev/null | openssl x509 -text -noout | head -10
 ```

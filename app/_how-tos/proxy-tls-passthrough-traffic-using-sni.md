@@ -47,6 +47,3 @@ min_version:
 
 @TODO
 {{site.base_gateway}} can proxy TLS requests using the client's TLS SNI extension as a forwarding mechanism. This allows a TLS request to be accepted without needing to decrypt it. 
-
-
-## 1. 
