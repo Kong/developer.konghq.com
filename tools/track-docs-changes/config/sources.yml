@@ -148,6 +148,9 @@ app/_how-tos/store-secrets-in-konnect-config-store.md:
   - app/konnect/gateway-manager/configuration/config-store.md
 app/_how-tos/store-the-gateway-database-credentials-with-aws-secrets-manager.md:
   - app/_src/gateway/kong-enterprise/secrets-management/how-to/aws-secrets-manager.md
+app/_how-tos/configure-hashicorp-vault-as-a-vault-backend.md:
+  - app/_src/gateway/kong-enterprise/secrets-management/backends/hashicorp-vault.md
+
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
