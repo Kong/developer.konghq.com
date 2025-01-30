@@ -1,9 +1,10 @@
 ---
-title: Proxy TLS passthrough traffic using an SNI in {{site.base_gateway}}
+title: Proxy TLS passthrough traffic
 content_type: how_to
 related_resources:
   - text: SNI entity
     url: /gateway/entities/snis
+
 
 products:
     - gateway
@@ -24,6 +25,13 @@ tldr:
 tools:
     - deck
 
+prereqs:
+  entities:
+      services:
+        - example-service
+      routes:
+        - example-route
+    
 cleanup:
   inline:
     - title: Clean up Konnect environment
@@ -37,10 +45,8 @@ min_version:
     gateway: '3.4'
 ---
 
-@todo
+@TODO
+{{site.base_gateway}} can proxy TLS requests using the client's TLS SNI extension as a forwarding mechanism. This allows a TLS request to be accepted without needing to decrypt it. 
 
-<!--content notes:
-- Based on this section: https://docs.konghq.com/gateway/latest/how-kong-works/routing-traffic/#proxy-tls-passthrough-traffic
-- Add certificate and SNI prereqs
 
--->
+## 1. 
