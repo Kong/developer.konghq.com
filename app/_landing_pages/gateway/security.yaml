@@ -22,139 +22,69 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.base_gateway}} provides features such as authorization, sensitive data encryption, and logs that you can use to secure your {{site.base_gateway}} deployments.
+                    {{site.base_gateway}} provides security features such as authorization, sensitive data encryption, and logs that you can use to secure your {{site.base_gateway}} deployments.
 
   - columns:
       - blocks:
-        - type: structured_text
+        - type: x_with_y
           config:
-            header:
-              text: "Secure the {{site.base_gateway}} infrastructure"
-  - columns:
-      - blocks:
-        - type: card
-          config:
-            title: Securing the Admin API
-            description: |
-              The Admin API provides a RESTful interface for configuring {{site.base_gateway}} entities. 
-              Because this API allows full control of Kong, it is important to secure this API against unwanted access.
-              
-            icon: /assets/icons/code.svg
-            cta:
-              url: "https://docs.konghq.com/gateway/latest/production/running-kong/secure-admin-api/"
-      - blocks:
-        - type: card
-          config:
-            title: Exclude sensitive log data
-            description: |
-              Customize the data {{site.base_gateway}} logs to protect private data for GDPR.
-              
-            icon: /assets/icons/code.svg
-            cta:
-              url: "https://docs.konghq.com/gateway/3.9.x/production/logging/customize-gateway-logs/"
-      - blocks:
-        - type: card
-          config:
-            title: Network, firewall, and ports
-            description: |
-              Recommended network and firewall settings for {{site.base_gateway}}.
-              
-            icon: /assets/icons/code.svg
-            cta:
-              url: "https://docs.konghq.com/gateway/3.9.x/production/networking/firewall/"
+              border: true
+              type: h2
+              headers:
+                - Security features
+              items:
+                - text: "Secure the {{site.base_gateway}} infrastructure"
+                  action:
+                    type: structured_text
+                    config:
+                      blocks:
+                        - type: unordered_list
+                          items:
+                            - "[Secure the Admin API](https://docs.konghq.com/gateway/latest/production/running-kong/secure-admin-api/): The Admin API provides a RESTful interface for configuring {{site.base_gateway}} entities. Because this API allows full control of Kong, it is important to secure this API against unwanted access."
+                            - "[Exclude sensitive log data](https://docs.konghq.com/gateway/3.9.x/production/logging/customize-gateway-logs/): Customize the data {{site.base_gateway}} logs to protect private data for GDPR."
+                            - "[Network, firewall, and ports](https://docs.konghq.com/gateway/3.9.x/production/networking/firewall/): Recommended network and firewall settings for {{site.base_gateway}}."
+                - text: "Authentication and authorization"
+                  action:
+                    type: structured_text
+                    config:
+                      blocks:
+                        - type: unordered_list
+                          items:
+                            - "[{{site.konnect_short_name}} SSO](/): Configure single sign-on for {{site.konnect_short_name}}."
+                            - "[{{site.konnect_short_name}} teams and roles](https://docs.konghq.com/konnect/org-management/teams-and-roles/): Use the least priviledge model to by managing authorization with teams and roles."
+                            - "[{{site.base_gateway}} RBAC](/gateway/entities/rbac/): Manage {{site.base_gateway}} user permissions with role based access control."
+                - text: "Data encryption"
+                  action:
+                    type: structured_text
+                    config:
+                      blocks:
+                        - type: unordered_list
+                          items:
+                            - "[Secrets management](/gateway/secrets-management/#secrets-management/): Store and use sensitive data (like public and private keys, API keys, and certificates) as secrets in environment variables or in a Vault and configure secret rotation."
+                            - "[Keys](/gateway/entities/key/): Use the least priviledge model to by managing authorization with teams and roles."
+                            - "[Key Sets](/gateway/entities/key-set/): Group Keys to use as a Key Set."
+                            - "[Keyring](/gateway/keyring/): Encrypt sensitive {{site.base_gateway}} fields before storing them in a database."
+                - text: "Monitoring and logging"
+                  action:
+                    type: structured_text
+                    config:
+                      blocks:
+                        - type: unordered_list
+                          items:
+                            - "[{{site.base_gateway}} logs](https://docs.konghq.com/gateway/latest/production/logging/log-reference/): Learn how to configure and use {{site.base_gateway}} logs to detect security concerns."
+                            - "[{{site.konnect_short_name}} audit logs](https://docs.konghq.com/konnect/org-management/audit-logging/): Audit logs can help you detect and respond to potential security incidents when they occur."
+                            - "[Logging and monitoring plugins](/plugins/?category=analytics-monitoring%2Clogging): Log and monitor {{site.base_gateway}} activity with plugins."
 
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Authentication and authorization"
-  - columns:
-      - blocks:
-        - type: card
-          config:
-            title: "{{site.konnect_short_name}} SSO"
-            description: |
-              Configure single sign-on for {{site.konnect_short_name}}.
-              
-            icon: /assets/icons/code.svg
-            cta:
-              url: "/gateway/entities/vault/#store-secrets-as-environment-variables"
-      - blocks:
-        - type: card
-          config:
-            title: "{{site.konnect_short_name}} teams and roles"
-            description: |
-              Use the least priviledge model to by managing authorization with teams and roles.
-            icon: /assets/icons/gateway.svg
-            cta:
-              url: "https://docs.konghq.com/konnect/org-management/teams-and-roles/"
-      - blocks:
-        - type: card
-          config:
-            title: RBAC
-            description: |
-              Manage {{site.base_gateway}} user permissions with role based access control.
-              
-            icon: /assets/icons/code.svg
-            cta:
-              url: "/gateway/entities/rbac/"
-  
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Data encryption"
-            blocks:
-              - type: text
-                text: |
-                  Store sensitive data (like public and private keys, API keys, and certificates) as secrets or encrypt them with Keys and Keyring.
-  - columns:
-      - blocks:
-        - type: card
-          config:
-            title: Secrets management
-            description: |
-              Store and use sensitive data as secrets in environment variables or in a Vault and configure secret rotation.
-              
-            icon: /assets/icons/code.svg
-            cta:
-              url: "/gateway/secrets-management/#secrets-management"
-      - blocks:
-        - type: card
-          config:
-            title: "Keys"
-            description: |
-              Configure Keys as a representation of asymmetric public or private keys.
-            icon: /assets/icons/gateway.svg
-            cta:
-              url: "/gateway/entities/key/"
-      - blocks:
-        - type: card
-          config:
-            title: "Key Sets"
-            description: |
-              Group Keys to use as a Key Set.
-            icon: /assets/icons/gateway.svg
-            cta:
-              url: "/gateway/entities/key-set/"
-      - blocks:
-        - type: card
-          config:
-            title: "Keyring"
-            description: |
-              Encrypt sensitive {{site.base_gateway}} fields before storing them in a database.
-            icon: /assets/icons/gateway.svg
-            cta:
-              url: "/gateway/keyring/"
-  
   - columns:
       - blocks:
         - type: structured_text
           config:
             header:
               text: "Vulnerability management"
+            blocks:
+              - type: text
+                text: |
+                  If you suspect that you've found a security vulnerability or bug, you can report them to Kong.
   - columns:
       - blocks:
         - type: card
@@ -175,29 +105,3 @@ rows:
             icon: /assets/icons/gateway.svg
             cta:
               url: "/gateway/latest/support-policy/#bug-fix-guidelines"
-  
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Monitoring and logging"
-  - columns:
-      - blocks:
-        - type: card
-          config:
-            title: "{{site.base_gateway}} logs"
-            description: |
-              Learn how to configure and use {{site.base_gateway}} logs to detect security concerns.
-            icon: /assets/icons/code.svg
-            cta:
-              url: "/gateway/entities/vault/#store-secrets-as-environment-variables"
-      - blocks:
-        - type: card
-          config:
-            title: Logging and monitoring plugins
-            description: |
-              Log and monitor {{site.base_gateway}} activity with plugins.
-            icon: /assets/icons/gateway.svg
-            cta:
-              url: "/plugins/?category=analytics-monitoring%2Clogging"
