@@ -43,12 +43,12 @@ prereqs:
         > **Important:** This tutorial uses the literal `root` string as your token, which should only be used in testing and development environments.
 
         1. [Install HashiCorp Vault](https://developer.hashicorp.com/vault/tutorials/get-started/install-binary#install-vault).
-        1. In a terminal, start your Vault dev server with `root` as your token, and enable TLS.
+        1. In a terminal, start your Vault dev server with `root` as your token.
           ```
           vault server -dev -dev-root-token-id root
           ```
-        1. In the output from the previous command, copy where it lists the `VAULT_ADDR` and `VAULT_CACERT` to export.
-        1. In a new terminal window, export your `VAULT_ADDR` and `VAULT_CACERT` as environment variables.
+        1. In the output from the previous command, copy the `VAULT_ADDR` to export.
+        1. In a new terminal window, export your `VAULT_ADDR` as an environment variable.
         1. Verify that your Vault is running correctly:
           ```
           vault status

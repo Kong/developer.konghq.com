@@ -5,5 +5,5 @@ pkill vault
 
 Unset environment variables:
 ```
-unset VAULT_ADDR VAULT_CACERT
+unset VAULT_ADDR
 ```
