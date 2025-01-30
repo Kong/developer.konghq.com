@@ -50,4 +50,37 @@ min_version:
 
 @todo
 
-Use content from https://docs.konghq.com/konnect/gateway-manager/configuration/vaults/how-to/ 
+Use content from https://docs.konghq.com/konnect/gateway-manager/configuration/vaults/how-to/
+
+1. Prereqs: Create a cert: (OR! https://docs.konghq.com/konnect/gateway-manager/data-plane-nodes/secure-communications/#generate-certificates-in-konnect)
+  Create an SSL certificate
+
+  1. Generate a private key
+
+      ```sh
+      openssl genpkey -algorithm RSA -out my-key.pem
+      ```
+  2. Generate a certificate signing request
+
+      ```
+      openssl req -new -key my-key.pem -out my-csr.pem
+      ```
+  3. Create a self-signed certificate 
+
+      ```
+      openssl x509 -req -in my-csr.pem -signkey my-key.pem -out my-cert.pem -days 365
+      ```
+
+  4. Create a UUID using the shell: 
+
+      ```
+      uuidgen
+      ```
+
+1. Enable Config Store
+1. Create a Config Store vault
+1. Configure cert and key as secrets in the vault
+1. Reference the secrets in the Certificate entity
+1. Validate ideas:
+  * https://docs.konghq.com/konnect/gateway-manager/data-plane-nodes/verify-node/#access-services-using-the-proxy-url
+  If you can hit the proxy, it's configured correctly.
