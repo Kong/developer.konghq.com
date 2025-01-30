@@ -40,9 +40,9 @@ rows:
                       blocks:
                         - type: unordered_list
                           items:
-                            - "[Secure the Admin API](https://docs.konghq.com/gateway/latest/production/running-kong/secure-admin-api/): The Admin API provides a RESTful interface for configuring {{site.base_gateway}} entities. Because this API allows full control of Kong, it is important to secure this API against unwanted access."
-                            - "[Exclude sensitive log data](https://docs.konghq.com/gateway/3.9.x/production/logging/customize-gateway-logs/): Customize the data {{site.base_gateway}} logs to protect private data for GDPR."
-                            - "[Network, firewall, and ports](https://docs.konghq.com/gateway/3.9.x/production/networking/firewall/): Recommended network and firewall settings for {{site.base_gateway}}."
+                            - "[Secure the Admin API](/gateway/secure-the-admin-api/): The Admin API provides a RESTful interface for configuring {{site.base_gateway}} entities. Because this API allows full control of Kong, it is important to secure this API against unwanted access."
+                            - "[Exclude sensitive log data](/gateway/customize-gateway-logs/): Customize the data {{site.base_gateway}} logs to protect private data for GDPR."
+                            - "[Network, firewall, and ports](/gateway/network-ports-firewall/): Recommended network and firewall settings for {{site.base_gateway}}."
                 - text: "Authentication and authorization"
                   action:
                     type: structured_text
@@ -50,8 +50,8 @@ rows:
                       blocks:
                         - type: unordered_list
                           items:
-                            - "[{{site.konnect_short_name}} SSO](/): Configure single sign-on for {{site.konnect_short_name}}."
-                            - "[{{site.konnect_short_name}} teams and roles](https://docs.konghq.com/konnect/org-management/teams-and-roles/): Use the least priviledge model to by managing authorization with teams and roles."
+                            - "[{{site.konnect_short_name}} SSO](/konnect/sso/): Configure single sign-on for {{site.konnect_short_name}}."
+                            - "[{{site.konnect_short_name}} teams and roles](/konnect/teams-and-roles/): Use the least priviledge model to by managing authorization with teams and roles."
                             - "[{{site.base_gateway}} RBAC](/gateway/entities/rbac/): Manage {{site.base_gateway}} user permissions with role based access control."
                 - text: "Data encryption"
                   action:
@@ -71,8 +71,8 @@ rows:
                       blocks:
                         - type: unordered_list
                           items:
-                            - "[{{site.base_gateway}} logs](https://docs.konghq.com/gateway/latest/production/logging/log-reference/): Learn how to configure and use {{site.base_gateway}} logs to detect security concerns."
-                            - "[{{site.konnect_short_name}} audit logs](https://docs.konghq.com/konnect/org-management/audit-logging/): Audit logs can help you detect and respond to potential security incidents when they occur."
+                            - "[{{site.base_gateway}} logs](/gateway/logs/): Learn how to configure and use {{site.base_gateway}} logs to detect security concerns."
+                            - "[{{site.konnect_short_name}} audit logs](/konnect/audit-logs/): Audit logs can help you detect and respond to potential security incidents when they occur."
                             - "[Logging and monitoring plugins](/plugins/?category=analytics-monitoring%2Clogging): Log and monitor {{site.base_gateway}} activity with plugins."
 
   - columns:
@@ -104,4 +104,4 @@ rows:
               See Kong's bug fix policy.
             icon: /assets/icons/gateway.svg
             cta:
-              url: "/gateway/latest/support-policy/#bug-fix-guidelines"
+              url: "/gateway/version-support-policy/"
