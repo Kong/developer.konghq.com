@@ -56,7 +56,8 @@
           "kic",
           "terraform",
           "admin-api",
-          "konnect-api"
+          "konnect-api",
+          "kong-cli"
         ]
       }
     },

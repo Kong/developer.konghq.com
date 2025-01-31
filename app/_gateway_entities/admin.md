@@ -5,7 +5,7 @@ entities:
   - admin
 
 description: |
-  Admins can manage entities inside Workspaces, including Users and their Roles.
+  Admins can manage {{site.base_gateway}} entities inside Workspaces, including Users and their Roles.
 
 
 related_resources:

@@ -152,6 +152,10 @@ app/_how-tos/configure-hashicorp-vault-as-a-vault-backend.md:
   - app/_src/gateway/kong-enterprise/secrets-management/backends/hashicorp-vault.md
 app/_how-tos/configure-the-konnect-config-store.md:
   - app/konnect/gateway-manager/configuration/config-store.md
+app/_how-tos/verify-signatures-for-signed-images.md:
+  - app/_src/gateway/kong-enterprise/signed-images.md
+app/_how-tos/verify-build-provenance-for-signed-images.md:
+  - app/_src/gateway/kong-enterprise/provenance-verification.md
 
 
 # plugins
@@ -213,6 +217,8 @@ app/gateway/rate-limiting/window-types.md:
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
 app/gateway/routing/index.md:
   - app/_src/gateway/key-concepts/routes/index.md
+app/gateway/manage-kong-conf.md:
+  - app/_src/gateway/production/kong-conf.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
@@ -228,6 +234,6 @@ app/gateway/routing/expressions-router-examples.md:
 app/gateway/networking/dns-config-reference.md:
   - app/_src/gateway/production/networking/dns-considerations.md
 
-# concepts
+# policies
 app/gateway/security-update-process.md:
   - app/_src/gateway/production/security-update-process.md
