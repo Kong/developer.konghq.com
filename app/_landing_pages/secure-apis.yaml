@@ -1,0 +1,19 @@
+metadata:
+  title: Secure APIs
+  content_type: landing_page
+  description: placeholder
+  tags:
+    - security
+
+rows:
+  - header:
+      type: h1
+      text: "@TODO"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    @todo

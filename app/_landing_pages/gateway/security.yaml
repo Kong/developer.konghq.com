@@ -1,6 +1,219 @@
 metadata:
-  title: Security in Kong Gateway
+  title: Securing Kong Gateway
   content_type: landing_page
-  description: todo
+  description: Introduces ways you can secure Kong Gateway
+  tags:
+    - security
+    - secrets-management
   breadcrumbs:
     - /gateway/
+  related_links:
+    - text: Securing APIs
+      url: /secure-apis/
+
+rows:
+  - header:
+      type: h1
+      text: "Securing Kong Gateway"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {{site.base_gateway}} provides security features such as authorization, sensitive data encryption, and monitoring and logging abilities that 
+                    you can use to secure your {{site.base_gateway}} deployments.
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Secure the {{site.base_gateway}} infrastructure"
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Secure the Admin API
+            description: |
+              The Admin API provides a RESTful interface for configuring {{site.base_gateway}} entities. 
+              Because this API allows full control of {{site.base_gateway}}, it is important to secure this API against unwanted access.
+              
+            icon: /assets/icons/admin-api.svg
+            cta:
+              url: "/gateway/secure-the-admin-api/"
+      - blocks:
+        - type: card
+          config:
+            title: Exclude sensitive log data
+            description: |
+              Customize the data {{site.base_gateway}} logs to protect private data for GDPR.
+              
+            icon: /assets/icons/logs.svg
+            cta:
+              url: "/gateway/customize-gateway-logs/"
+      - blocks:
+        - type: card
+          config:
+            title: Network, firewall, and ports
+            description: |
+              Recommended network and firewall settings for {{site.base_gateway}}.
+              
+            icon: /assets/icons/firewall.svg
+            cta:
+              url: "/gateway/network-ports-firewall/"
+    
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Authentication and authorization"
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.konnect_short_name}} SSO"
+            description: |
+              Configure single sign-on for {{site.konnect_short_name}} and see SSO IdP options.
+              
+            icon: /assets/icons/login.svg
+            cta:
+              url: "/konnect/sso/"
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.konnect_short_name}} teams and roles"
+            description: |
+             Manage authorization with teams and roles using the least privilege model.
+              
+            icon: /assets/icons/team.svg
+            cta:
+              url: "/konnect/teams-and-roles/"
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.base_gateway}} RBAC"
+            description: |
+              Manage {{site.base_gateway}} user permissions with role-based access control (RBAC).
+              
+            icon: /assets/icons/rbac.svg
+            cta:
+              url: "/gateway/entities/rbac/"
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Data encryption"
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Secrets management
+            description: |
+              Store and use sensitive data (like public and private keys, API keys, and certificates) as secrets in environment variables or in a Vault, and configure secret rotation.
+              
+            icon: /assets/icons/vault.svg
+            cta:
+              url: "/gateway/secrets-management/#secrets-management/"
+      - blocks:
+        - type: card
+          config:
+            title: Keys
+            description: |
+              Configure Keys as a representation of asymmetric public or private keys.
+              
+            icon: /assets/icons/key.svg
+            cta:
+              url: "/gateway/entities/key/"
+      - blocks:
+        - type: card
+          config:
+            title: Key Sets
+            description: |
+              Group Keys to use as a Key Set.
+              
+            icon: /assets/icons/group.svg
+            cta:
+              url: "/gateway/entities/key-set/"
+      - blocks:
+        - type: card
+          config:
+            title: Keyring
+            description: |
+              Encrypt sensitive {{site.base_gateway}} fields before storing them in a database.
+              
+            icon: /assets/icons/keyring.svg
+            cta:
+              url: "/gateway/keyring/"
+  
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Monitoring and logging"
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.base_gateway}} logs"
+            description: |
+              Learn how to configure and use {{site.base_gateway}} logs to detect security concerns.
+              
+            icon: /assets/icons/logs.svg
+            cta:
+              url: "/gateway/logs/"
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.konnect_short_name}} audit logs"
+            description: |
+               Use audit logs to help you detect and respond to potential security incidents when they occur.
+              
+            icon: /assets/icons/audit.svg
+            cta:
+              url: "/konnect/audit-logs/"
+      - blocks:
+        - type: card
+          config:
+            title: Logging and monitoring plugins
+            description: |
+              Log and monitor {{site.base_gateway}} activity with plugins.
+              
+            icon: /assets/icons/monitor.svg
+            cta:
+              url: "/plugins/?category=analytics-monitoring%2Clogging"
+
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Vulnerability management"
+            blocks:
+              - type: text
+                text: |
+                  If you suspect that you've found a security vulnerability or bug, you can report it to Kong.
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Vulnerability policy
+            description: |
+              Report security vulnerabilities and see Kong's vulnerability management policy.
+            icon: /assets/icons/file.svg
+            cta:
+              url: "/vulnerabilities/"
+      - blocks:
+        - type: card
+          config:
+            title: Bug fix policy
+            description: |
+              See Kong's bug fix policy.
+            icon: /assets/icons/insomnia/bug.svg
+            cta:
+              url: "/gateway/version-support-policy/"
