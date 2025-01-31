@@ -152,12 +152,10 @@ rows:
             description: |
               Authentication is the process of verifying that a requester has permissions to access a resource. 
               {{ site.base_gateway }} has a library of plugins that support the most widely used methods of API gateway authentication.
-
-              
             icon: /assets/icons/lock.svg
             cta:
               text: Learn about {{ site.base_gateway }} authentication methods
-              url: /authentication/
+              url: /gateway/authentication/
               align: end
       - blocks:
         - type: card
@@ -171,6 +169,8 @@ rows:
             cta:
               text: Add Rate Limiting with {{ site.base_gateway }}
               url: "/gateway/rate-limiting/"
+  
+  - columns:
       - blocks:
         - type: card
           config:

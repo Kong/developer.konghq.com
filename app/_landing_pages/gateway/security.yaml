@@ -22,7 +22,8 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    {{site.base_gateway}} provides security features such as authorization, sensitive data encryption, and logs that you can use to secure your {{site.base_gateway}} deployments.
+                    {{site.base_gateway}} provides security features such as authorization, sensitive data encryption, and monitoring and logging abilities that 
+                    you can use to secure your {{site.base_gateway}} deployments.
 
   - columns:
       - blocks:
@@ -36,7 +37,8 @@ rows:
           config:
             title: Secure the Admin API
             description: |
-              The Admin API provides a RESTful interface for configuring {{site.base_gateway}} entities. Because this API allows full control of Kong, it is important to secure this API against unwanted access.
+              The Admin API provides a RESTful interface for configuring {{site.base_gateway}} entities. 
+              Because this API allows full control of {{site.base_gateway}}, it is important to secure this API against unwanted access.
               
             icon: /assets/icons/admin-api.svg
             cta:
@@ -84,7 +86,7 @@ rows:
           config:
             title: "{{site.konnect_short_name}} teams and roles"
             description: |
-              Use the least priviledge model to by managing authorization with teams and roles.
+             Manage authorization with teams and roles using the least privilege model.
               
             icon: /assets/icons/team.svg
             cta:
@@ -94,7 +96,7 @@ rows:
           config:
             title: "{{site.base_gateway}} RBAC"
             description: |
-              Manage {{site.base_gateway}} user permissions with role based access control.
+              Manage {{site.base_gateway}} user permissions with role-based access control (RBAC).
               
             icon: /assets/icons/rbac.svg
             cta:
@@ -112,7 +114,7 @@ rows:
           config:
             title: Secrets management
             description: |
-              Store and use sensitive data (like public and private keys, API keys, and certificates) as secrets in environment variables or in a Vault and configure secret rotation.
+              Store and use sensitive data (like public and private keys, API keys, and certificates) as secrets in environment variables or in a Vault, and configure secret rotation.
               
             icon: /assets/icons/vault.svg
             cta:
@@ -170,7 +172,7 @@ rows:
           config:
             title: "{{site.konnect_short_name}} audit logs"
             description: |
-              Audit logs can help you detect and respond to potential security incidents when they occur.
+               Use audit logs to help you detect and respond to potential security incidents when they occur.
               
             icon: /assets/icons/audit.svg
             cta:
@@ -195,7 +197,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  If you suspect that you've found a security vulnerability or bug, you can report them to Kong.
+                  If you suspect that you've found a security vulnerability or bug, you can report it to Kong.
   - columns:
       - blocks:
         - type: card
@@ -203,7 +205,6 @@ rows:
             title: Vulnerability policy
             description: |
               Report security vulnerabilities and see Kong's vulnerability management policy.
-              
             icon: /assets/icons/file.svg
             cta:
               url: "/vulnerabilities/"
