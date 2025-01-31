@@ -154,10 +154,6 @@ app/_how-tos/verify-signatures-for-signed-images.md:
   - app/_src/gateway/kong-enterprise/signed-images.md
 app/_how-tos/verify-build-provenance-for-signed-images.md:
   - app/_src/gateway/kong-enterprise/provenance-verification.md
-app/_how-tos/configure-and-apply-kong-conf.md:
-  - app/_src/gateway/production/kong-conf.md
-  - app/_src/gateway/production/environment-variables.md
-
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:

@@ -2,7 +2,7 @@
 title: "Managing {{site.base_gateway}} configuration"
 
 description: |
-  The {{site.base_gateway}} configuration file `kong.conf` can be used to configure individual properties of your Kong instance.
+  The {{site.base_gateway}} configuration file `kong.conf` can be used to configure individual properties of your {{site.base_gateway}} instance.
 content_type: reference
 layout: reference
 no_version: true
@@ -21,9 +21,12 @@ works_on:
    - konnect
 ---
 
-{{site.base_gateway}} comes with the configuration file `kong.conf`. You can use this file to configure individual properties of a {{site.base_gateway}} instance. By default, this file is located at `/etc/kong/kong.conf.default`.
+{{site.base_gateway}} comes with the configuration file `kong.conf`. 
+You can use this file to configure individual properties of a {{site.base_gateway}} instance. 
+By default, this file is located at `/etc/kong/kong.conf.default`.
 
-In {{site.konnect_short_name}}, you can use `kong.conf` to manage the configuration of each data place instance, however, you can't edit the properties of the control plane.
+In {{site.konnect_short_name}}, you can use `kong.conf` to manage the configuration of each data place instance, 
+however, you can't edit the properties of the control plane.
 
 For all available parameters in `kong.conf`, see the [Configuration Parameter reference](/gateway/configuration/). 
 
@@ -57,6 +60,16 @@ You can set boolean values as `on`/`off` or `true`/`false`. For example:
 dns_no_sync = off
 ```
 
+## Applying configuration
+
+Apply changes to configuration by running the [Kong CLI](/gateway/cli/) `kong restart` command. 
+This restarts the {{site.base_gateway}} instance and applies configuration.
+
+{:.info}
+> If you're running {{site.base_gateway}} in a quickstart Docker container for testing, update 
+{{site.base_gateway}} configuration using [environment variables](#environment-variables)
+and use `kong reload` instead of `kong restart`.
+
 ## Environment variables
 
 {{site.base_gateway}} can be fully configured with environment variables. 
@@ -81,25 +94,9 @@ Set `KONG_LOG_LEVEL` as an environment variable:
 export KONG_LOG_LEVEL=error
 ```
 
-## Using the Kong CLI to manage kong.conf
+## Verifying configuration
 
-There are a few useful [Kong CLI](/gateway/cli/) commands for managing `kong.conf` files:
-* `kong prepare`: Prepare the Kong prefix folder with all of its subfolders and files, including `kong.conf`.
-* `kong check`: Check if a Kong configuration file is valid.
-* `kong start`: Start Kong in the configured prefix directory.
-* `kong reload` and `kong restart`: Reload a container, or restart an instance of Kong, and apply configuration.
-
-### Updating Kong configuration
-
-{{site.base_gateway}} reads the Kong configuration file when you run `kong start` or `kong prepare`.
-Load the configuration file using one of these CLI commands:
-
-1. Run `kong prepare` to prepare the Kong prefix folder with all of its subfolders and files. 
-2. Run either `kong reload` or `kong restart` to reboot the {{site.base_gateway}} instance and apply configuration.
-
-### Verifying configuration
-
-To verify that your configuration is valid, use the `kong check` command. 
+To verify that your configuration is valid, use the Kong CLI `kong check` command. 
 The `kong check` command evaluates all parameters you currently have set, 
 including any set as [environment variables](#environment-variables).
 
@@ -114,9 +111,9 @@ If your configuration is valid, you will see the following response:
 configuration at /etc/kong/kong.conf is valid
 ```
 
-### Debug mode
+## Running the Kong CLI in debug mode
 
-You can use the {{site.base_gateway}} CLI in debug mode to output all configuration properties, 
+You can use the Kong CLI in debug mode to output all configuration properties, 
 including all properties set using environment variables.
 
 Pass the `--vv` flag to any Kong CLI command to enable verbose debug mode:
@@ -126,8 +123,8 @@ kong prepare --conf /etc/kong/kong.conf --vv
 ```
 
 This will output your entire Kong configuration to the terminal. 
-For example, here's a snippet:
-```
+For example, here's a snippet of the output you get when running `kong prepare` with the `--vv` flag:
+```sh
 2025/01/31 06:52:01 [debug] reading environment variables
 2025/01/31 06:52:01 [debug] KONG_DATABASE ENV found with "off"
 2025/01/31 06:52:01 [debug] KONG_PREFIX ENV found with "/usr/local/kong"
@@ -145,6 +142,6 @@ You can override this behavior by specifying a custom path for your
 configuration file using the `-c / --conf` argument with most Kong CLI commands:
 
 ```bash
-kong prepare --conf /path/to/kong.conf
+kong start --conf /path/to/kong.conf
 ```
 
