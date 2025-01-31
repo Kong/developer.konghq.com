@@ -32,7 +32,7 @@ prereqs:
       icon_url: /assets/icons/file.svg
     - title: Configure environment variables
       content: |
-        Set the following variables: 
+        Set the following variable: 
         * `SNI_NAME`: The name of the [SNI](/gateway/entities/sni/) that you intend to associate the Certificate to.
         For example: 
         ```sh
