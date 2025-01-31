@@ -24,8 +24,8 @@ Create an SSL certificate
 
 4. Add the Certificate to {{site.base_gateway}} using decK and the contents of `my-key.pem`, `my-cert.pem`, and the `CERT_ID`:
 
-
-<!-- {% if page.works_on contains 'konnect' %}
+{% navtabs %}
+{% navtab "Konnect" %}
 ```sh
 echo '
   _format_version: "3.0"
@@ -84,9 +84,8 @@ echo '
 ' | deck gateway apply - \
   --konnect-token $KONNECT_TOKEN \
   --konnect-control-plane-name $KONNECT_CP_NAME
-{% if page.works_on contains 'on-prem' %}
-{% endif %} -->
-
+{% endnavtab %}
+{% navtab "On-prem" %}
 ```sh
 echo '
   _format_version: "3.0"
@@ -144,8 +143,8 @@ echo '
       -----END PRIVATE KEY-----
 ' | deck gateway apply - 
 ```
-
-{% endif %}
+{% endnavtab %}
+{% endnavtabs %}
 
 4. Retrieve the UUID of the Certificate and set it as an environment variable for this guide: 
 

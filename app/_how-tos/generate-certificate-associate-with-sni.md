@@ -33,11 +33,9 @@ prereqs:
     - title: Configure environment variables
       content: |
         Set the following variables: 
-        * `CERT_ID`: The UUID set when you associated a Certificate with {{site.base_gateway}}.
-        * `SNI_NAME`: The name of the [SNI](/gateway/entities/sni/)
+        * `SNI_NAME`: The name of the [SNI](/gateway/entities/sni/) that you intend to associate the Certificate to.
         For example: 
         ```sh
-        export CERT_ID=3f19b7d1-705f-422a-a116-7dc8282efe21
         export SNI_NAME=my.sni.example.com
         ```
     
