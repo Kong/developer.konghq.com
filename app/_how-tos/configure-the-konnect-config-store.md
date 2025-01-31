@@ -78,7 +78,7 @@ body:
 {% endcontrol_plane_request %}
 <!--vale on-->
 
-Export the Config Store ID in the resposne body as an environment variable so you can use it later:
+Export the Config Store ID in the response body as an environment variable so you can use it later:
 
 ```sh
 export CONFIG_STORE_ID=config-store-uuid
