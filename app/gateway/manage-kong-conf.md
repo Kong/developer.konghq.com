@@ -32,7 +32,7 @@ For all available configuration parameters in `kong.conf`, see the [Configuratio
 
 ## Configuring {{site.base_gateway}}
 
-To configure {{site.base_gateway}}, make a rename the default configuration file: 
+To configure {{site.base_gateway}}, copy and rename the default configuration file: 
 
 ```bash
 cp /etc/kong/kong.conf.default /etc/kong/kong.conf
