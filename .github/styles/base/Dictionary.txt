@@ -672,6 +672,8 @@ subcommands
 subcomponent
 subcomponent
 subcomponents
+subfolder
+subfolders
 subgraph
 subgraphs
 submodule
