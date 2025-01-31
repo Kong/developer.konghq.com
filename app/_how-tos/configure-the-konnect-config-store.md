@@ -78,7 +78,7 @@ body:
 {% endcontrol_plane_request %}
 <!--vale on-->
 
-Export your Config Store ID as an environment variable so you can use it later:
+Export the Config Store ID in the resposne body as an environment variable so you can use it later:
 
 ```sh
 export CONFIG_STORE_ID=config-store-uuid
@@ -86,7 +86,7 @@ export CONFIG_STORE_ID=config-store-uuid
 
 ## 2. Configure {{site.konnect_short_name}} as your Vault
 
-To enable {{site.konnect_short_name}} as your vault with the [Vault entity](/gateway/entities/vault/) send a `POST` request to the [`/vaults/`](/api/konnect/control-planes-config/v2/#/operations/create-vault) endpoint:
+Enable {{site.konnect_short_name}} as your vault with the [Vault entity](/gateway/entities/vault/). Send a `POST` request to the [`/vaults/`](/api/konnect/control-planes-config/v2/#/operations/create-vault) endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -106,9 +106,9 @@ body:
 {% endcontrol_plane_request %}
 <!--vale on-->
 
-## 3. Store the a secret in your {{site.konnect_short_name}} Vault
+## 3. Store a secret in your {{site.konnect_short_name}} Vault
 
-By storing a secret in a {{site.konnect_short_name}} Vault, you can reference it in `kong.conf` or referenceable plugin fields without using the plain text of the secret.
+By storing a secret in a {{site.konnect_short_name}} Vault, you can reference it within [`kong.conf`](/gateway/manage-kong-conf) or as a referenceable plugin fields without having to store any values in plain-text.
 
 Store your secret by sending a `POST` request to the `/secrets` endpoint:
 
@@ -143,6 +143,6 @@ headers:
 {% endcontrol_plane_request %}
 <!--vale on-->
 
-If your secret was successfully stored in {{site.konnect_short_name}}, you should get a `201` status code and your `secret-key` key in the output.
+If your secret was successfully stored in {{site.konnect_short_name}}, the endpoint should return a `201` status code and your `secret-key` key in the output.
 
-You can now reference your {{site.konnect_short_name}} secret as `{vault://mysecretvault/secret-key}`.
+You can now reference your {{site.konnect_short_name}} secret in configurations as `{vault://mysecretvault/secret-key}`.
