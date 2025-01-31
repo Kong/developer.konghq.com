@@ -724,6 +724,7 @@ unassign
 uncheck
 unchecking
 uncomment
+uncommented
 uncommenting
 unencrypted
 unescaped
