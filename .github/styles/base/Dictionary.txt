@@ -672,6 +672,8 @@ subcommands
 subcomponent
 subcomponent
 subcomponents
+subfolder
+subfolders
 subgraph
 subgraphs
 submodule
@@ -722,6 +724,7 @@ unassign
 uncheck
 unchecking
 uncomment
+uncommented
 uncommenting
 unencrypted
 unescaped
