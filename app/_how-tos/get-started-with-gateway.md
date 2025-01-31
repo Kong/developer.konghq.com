@@ -69,11 +69,11 @@ automated_tests: false
 
 {% include how-tos/steps/ping-gateway.md %}
 
-## 2. Create a Service
+## 2. Create a Gateway Service
 
 {{site.base_gateway}} administrators work with an object model to define their
 desired traffic management policies. Two important objects in that model are 
-[Services](/gateway/entities/service/) and 
+[Gateway Services](/gateway/entities/service/) and 
 [Routes](/gateway/entities/route/). Together, 
 Services and Routes define the path that requests and responses will take 
 through the system.
@@ -105,12 +105,12 @@ entities:
   routes:
     - name: example_route
       service:
-        id: example_service
+        name: example_service
       paths:
         - /mock
 {% endentity_examples %}
 
-### Validate the Service and Route by proxying a request
+### Validate the Gateway Service and Route by proxying a request
 
 Using the Service and Route, you can now 
 access `https://httpbin.konghq.com/` using the `/mock` path.
@@ -224,24 +224,20 @@ entities:
           weight: 100
 {% endentity_examples %}
 
-Let's create a new Service and Route, and point the Service to this Upstream, instead of pointing directly to a URL. 
+Let's update the `example_service` Service to point to this Upstream, instead of pointing directly to a URL:
   
 {% entity_examples %}
 entities:
   services:
-    - name: load_balancing_service
+    - name: example_service
       host: example_upstream
-      routes:
-        - name: load_balancing_route
-          paths:
-            - /load-balance
 {% endentity_examples %}
 
-You now have an Upstream with two Targets, `httpbin.konghq.com` and `httpbun.com`, and a service pointing to that Upstream.
+You now have an Upstream with two Targets, `httpbin.konghq.com` and `httpbun.com`, and a Gateway Service pointing to that Upstream.
 
 {:.info}
 > For the purposes of our example, the Upstream is pointing to two different Targets. 
-More commonly, Targets will be instances of the same backend service running on different host systems.
+More commonly, Targets will be instances of the same service application running on different host systems.
 
 ### Validate load balancing
 
@@ -250,13 +246,13 @@ waiting a few seconds between each time.
 You will see the hostname change between `httpbin` and `httpbun`:
 
 ```sh
-curl -s http://localhost:8000/load-balance/headers \
+curl -s http://localhost:8000/mock/headers \
   -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
 ```
 {: data-deployment-topology="on-prem" }
 
 ```sh
-curl -s $KONNECT_PROXY_URL/load-balance/headers \
+curl -s $KONNECT_PROXY_URL/mock/headers \
   -H 'apikey:top-secret-key' | grep -i -A1 '"host"'
 ```
 {: data-deployment-topology="konnect" }
