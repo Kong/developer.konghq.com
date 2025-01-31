@@ -10,8 +10,6 @@ related_resources:
     url: /how-to/configure-the-konnect-config-store/
   - text: Store a Mistral API key as a secret in Konnect Config Store
     url: /how-to/store-a-mistral-api-key-as-a-secret-in-konnect-config-store/
-  - text: Reference secrets stored in the Konnect Config Store
-    url: /how-to/reference-secrets-from-konnect-config-store/
 
 products:
     - gateway
