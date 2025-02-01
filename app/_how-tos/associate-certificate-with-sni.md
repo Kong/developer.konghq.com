@@ -33,7 +33,7 @@ prereqs:
   inline:
     - title: Create an SSL certificate
       include_content: prereqs/certificate
-      icon_url: /assets/icons/file.svg
+      icon_url: /assets/icons/key.svg
     - title: Configure environment variables
       content: |
         Set the `SNI_NAME` as an environment variable. 
