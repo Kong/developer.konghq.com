@@ -8,7 +8,7 @@
     ```sh
     openssl req -new -key my-key.pem -out my-csr.pem
     ```
-3. Create a self-signed certificate :
+3. Create a self-signed certificate:
 
     ```sh
     openssl x509 -req -in my-csr.pem -signkey my-key.pem -out my-cert.pem -days 365
