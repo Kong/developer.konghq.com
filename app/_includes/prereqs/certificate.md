@@ -1,33 +1,32 @@
-Create an SSL certificate
-
-1. Generate a private key
+1. Generate a private key:
 
     ```sh
     openssl genpkey -algorithm RSA -out my-key.pem
     ```
-2. Generate a certificate signing request
+2. Generate a certificate signing request:
 
-    ```
+    ```sh
     openssl req -new -key my-key.pem -out my-csr.pem
     ```
-3. Create a self-signed certificate 
+3. Create a self-signed certificate :
 
-    ```
+    ```sh
     openssl x509 -req -in my-csr.pem -signkey my-key.pem -out my-cert.pem -days 365
     ```
 
 4. Create a UUID and export it so the value can be used through the rest of the guide:
 
-    ```
+    ```sh
     export CERT_ID=$(uuidgen) && echo "CERT_ID=$CERT_ID"
     ```
 
-4. Add the Certificate to {{site.base_gateway}} using decK and the contents of `my-key.pem`, `my-cert.pem`, and the `CERT_ID`:
+4. Using the contents of `my-key.pem`, `my-cert.pem`, and the `CERT_ID`, add the 
+Certificate to {{site.base_gateway}} using decK:
 
 ```sh
 echo '
-  _format_version: "3.0"
-  certificates:
+_format_version: "3.0"
+certificates:
   - cert: |-
       -----BEGIN CERTIFICATE-----
       MIIDRTCCAi2gAwIBAgIUMJERhwxue4l6zF2if4gcCjdzXKwwDQYJKoZIhvcNAQEL
