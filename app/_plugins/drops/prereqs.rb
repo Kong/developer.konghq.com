@@ -32,14 +32,19 @@ module Jekyll
       end
 
       def data
-        yaml = { '_format_version' => '3.0' }
+        product = @page.data.fetch('products', [])[0]
 
-        prereqs.fetch('entities', []).each do |k, files|
+        yaml = {}
+        yaml = { '_format_version' => '3.0' } if product == 'gateway'
+
+
+        prereqs.fetch('entities', []) .each do |k, files|
           entities = files.map do |f|
-            example = @site.data.dig('entity_examples', k, f)
+
+            example = @site.data.dig('entity_examples', product, k, f)
 
             unless example
-              raise ArgumentError, "Missing entity_example file in app/_data/entity_examples/#{k}/#{f}.{yml,yaml}"
+              raise ArgumentError, "Missing entity_example file in app/_data/entity_examples/#{product}/#{k}/#{f}.{yml,yaml}"
             end
 
             example
@@ -47,7 +52,8 @@ module Jekyll
           yaml.merge!(k => entities) if entities
         end
 
-        Jekyll::Utils::HashToYAML.new(yaml).convert.gsub("'3.0'", '"3.0"')
+        Jekyll::Utils::HashToYAML.new(yaml).convert.gsub("'3.0'", '"3.0"') if product == 'gateway'
+        yaml
       end
 
       def products
