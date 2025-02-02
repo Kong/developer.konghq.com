@@ -43,7 +43,8 @@
 
   {% if prereqs.entities? %}
     <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
-{% include prereqs/entities.md data=prereqs.data %}
+      {% assign prereq_path = "prereqs/entities/" | append: page.products[0] | append: ".md" %}
+{% include {{ prereq_path }} data=prereqs.data %}
     </div>
   {% endif %}
 

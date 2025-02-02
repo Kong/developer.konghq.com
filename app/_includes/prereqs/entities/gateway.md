@@ -1,4 +1,3 @@
-
 {% assign summary = 'Pre-configured entities' %}
 {% assign konnect_token = site.data.entity_examples.config.konnect_variables.pat.placeholder %}
 
@@ -12,9 +11,10 @@ For this tutorial, you'll need {{site.base_gateway}} entities, like Gateway Serv
 echo '
 {{ include.data }}
 ' | deck gateway apply - \
-  --konnect-token $KONNECT_TOKEN \
-  --konnect-control-plane-name $KONNECT_CP_NAME
+--konnect-token $KONNECT_TOKEN \
+--konnect-control-plane-name $KONNECT_CP_NAME
 ```
+
 {: data-file="prereqs.yaml" data-deployment-topology="konnect" data-test-prereqs="block"}
 
 ```yaml
@@ -22,12 +22,12 @@ echo '
 {{ include.data }}
 ' | deck gateway apply -
 ```
-{: data-file="prereqs.yaml" data-deployment-topology="on-prem" data-test-prereqs="block"}
 
+{: data-file="prereqs.yaml" data-deployment-topology="on-prem" data-test-prereqs="block"}
 {% endcapture %}
 {{ entities | indent: 3 }}
 
-To learn more about entities, you can read our [entities documentation](/gateway/entities/). 
+To learn more about entities, you can read our [entities documentation](/gateway/entities/).
 {% endcapture %}
 
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/widgets.svg' %}
