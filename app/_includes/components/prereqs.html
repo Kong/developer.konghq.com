@@ -1,4 +1,11 @@
 <div class="flex flex-col accordion prerequisites" data-default="0" data-multiple="false" data-test-id="prereqs">
+
+  {% if prereqs.kubernetes.gateway_api %}
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
+{% include prereqs/kubernetes/gateway-api.md config=prereqs. %}
+  </div>
+{% endif %}
+
     {% unless prereqs.skip_product == true %}
   
     {% if page.products %}

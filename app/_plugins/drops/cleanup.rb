@@ -15,6 +15,10 @@ module Jekyll
       def inline
         @inline ||= @cleanup.fetch('inline', [])
       end
+
+      def k8s
+        @k8s ||= @cleanup.fetch('k8s', '')
+      end
     end
   end
 end

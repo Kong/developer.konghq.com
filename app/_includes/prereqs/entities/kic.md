@@ -1,17 +1,14 @@
-{% assign summary = 'Pre-configured entities' %}
+{% assign summary = 'Required Kubernetes resources' %}
 {% assign konnect_token = site.data.entity_examples.config.konnect_variables.pat.placeholder %}
 
 {% capture details_content %}
 
-{% for service in include.data.services %}
+This how-to requires some additional resources to be created in your cluster.
 
-Create the `{{ service.name }}` service:
-
-```bash
+```bash{% for service in include.data.services %}
 kubectl apply -f {{ site.links.web }}/manifests/kic/{{ service.name }}-service.yaml
+{%- endfor %}
 ```
-
-{% endfor %}
 
 {% endcapture %}
 

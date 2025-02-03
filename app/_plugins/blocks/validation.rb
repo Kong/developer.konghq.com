@@ -16,7 +16,9 @@ module Jekyll
 
       contents = super
 
-      unless @page.fetch('products', []).include?('gateway')
+      products = @page.fetch('products', [])
+
+      unless products.include?('gateway') || products.include?('kic')
         raise ArgumentError,
               "Unsupported product for {% validation #{@name} %}"
       end

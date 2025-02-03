@@ -26,14 +26,18 @@ module Jekyll
       end
 
       def konnect_url
+        base_url = configuration.dig('url_origin', 'konnect')
+        base_url = @yaml['konnect_url'] if @yaml['konnect_url']
         @konnect_url ||= File.join(
-          configuration.dig('url_origin', 'konnect'), @yaml['url']
+          base_url, @yaml['url']
         ).to_s
       end
 
       def on_prem_url
-        @on_prem_url ||= URI.join(
-          configuration.dig('url_origin', 'on_prem'), @yaml['url']
+        base_url = configuration.dig('url_origin', 'on_prem')
+        base_url = @yaml['on_prem'] if @yaml['on_prem_url']
+        @on_prem_url ||= File.join(
+          base_url, @yaml['url']
         ).to_s
       end
 
