@@ -154,7 +154,7 @@ features:
     gcp: true
     aws: true
     azure: true
-  - title: Kong Gateway license<sup>2</sup>
+  - title: {{site.base_gateway}} license<sup>2</sup>
     url: /gateway/entities/license/
     konnect: false
     env: true
