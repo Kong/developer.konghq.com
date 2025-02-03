@@ -1,1 +1,3 @@
-This is how you clean up KIC
+```bash
+kubectl delete -n kong-docs-demo
+```
