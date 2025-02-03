@@ -116,6 +116,9 @@ features:
 
 When you want to use a secret stored in a Vault, you can reference the secret with a `vault` reference. You can use the `vault` reference in places such as `kong.conf`, declarative configuration files, logs, or in the UI.
 
+{:.info}
+> **Note:** You can't reference secrets stored in a [{{site.konnect_short_name}} Config Store](/how-to/configure-the-konnect-config-store/) Vault in `kong.conf` because {{site.konnect_short_name}} resolves the secret before connecting to {{site.base_gateway}}. 
+
 The Vault backend may store multiple related secrets inside an object, but the reference
 should always point to a key that resolves to a string value. For example, the following reference:
 
