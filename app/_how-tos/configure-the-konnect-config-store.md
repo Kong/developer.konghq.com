@@ -34,7 +34,7 @@ tldr:
 
 faqs:
   - q: Can I reference {{site.konnect_short_name}} Config Store Vault secrets in `kong.conf`?
-    a: No. You can't reference secrets stored in a {{site.konnect_short_name}} Config Store Vault in `kong.conf` because {{site.konnect_short_name}} resolves the secret before connecting to {{site.base_gateway}}.
+    a: No. You can't reference secrets stored in a {{site.konnect_short_name}} Config Store Vault in `kong.conf` because {{site.konnect_short_name}} resolves the secret after {{site.base_gateway}} connects to the control plane. For more information about the fields you can reference as secrets, see [What can be stored as a secret?](/gateway/entities/vault/#what-can-be-stored-as-a-secret).
 
 prereqs:
   inline:

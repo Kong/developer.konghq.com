@@ -112,12 +112,77 @@ features:
     supports_konnect: true
 {% endfeature_table %}
 
+## What can be stored as a secret?
+
+You can store and reference the following fields as secrets in a Vault:
+
+{% feature_table %}
+item_title: Field type
+columns:
+  - title: {{site.konnect_short_name}} Config Store
+    key: konnect
+  - title: Env variable vault
+    key: env
+  - title: HashiCorp Vault
+    key: hcv
+  - title: Google Cloud
+    key: gcp
+  - title: AWS
+    key: aws
+  - title: Azure
+    key: azure
+
+features:
+  - title: |
+      All `kong.conf` values<sup>1</sup>
+
+      For example:
+      * Data store usernames and passwords, used with PostgreSQL and Redis
+      * Private X.509 certificates
+    url: /gateway/manage-kong-conf/
+    konnect: false
+    env: true
+    hcv: true
+    gcp: true
+    aws: true
+    azure: true
+  - title: Certificates and keys stored in the Certificate Gateway entity
+    url: /gateway/entities/certificate/
+    konnect: true
+    env: true
+    hcv: true
+    gcp: true
+    aws: true
+    azure: true
+  - title: Kong Gateway license<sup>2</sup>
+    url: /gateway/entities/license/
+    konnect: false
+    env: true
+    hcv: true
+    gcp: true
+    aws: true
+    azure: true
+  - title: Referenceable plugin fields, such as third-party API keys (see table below for all values)
+    konnect: true
+    env: true
+    hcv: true
+    gcp: true
+    aws: true
+    azure: true
+{% endfeature_table %}
+
+{:.info}
+> **Notes:**
+> * <sup>1</sup>: You can't reference secrets stored in a [{{site.konnect_short_name}} Config Store](/how-to/configure-the-konnect-config-store/) Vault in `kong.conf` because {{site.konnect_short_name}} resolves the secret after {{site.base_gateway}} connects to the control plane.
+> * <sup>2</sup>: In Konnect, the {{site.base_gateway}} license is managed and stored by {{site.konnect_short_name}}, and doesn't need to be stored manually in any Vault.
+
+The following plugin fields can be stored and referenced as secrets:
+
+{% referenceable_fields %}
+
 ## How do I reference secrets stored in a Vault?
 
 When you want to use a secret stored in a Vault, you can reference the secret with a `vault` reference. You can use the `vault` reference in places such as `kong.conf`, declarative configuration files, logs, or in the UI.
-
-{:.info}
-> **Note:** You can't reference secrets stored in a [{{site.konnect_short_name}} Config Store](/how-to/configure-the-konnect-config-store/) Vault in `kong.conf` because {{site.konnect_short_name}} resolves the secret before connecting to {{site.base_gateway}}. 
 
 The Vault backend may store multiple related secrets inside an object, but the reference
 should always point to a key that resolves to a string value. For example, the following reference:
