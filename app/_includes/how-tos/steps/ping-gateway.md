@@ -5,13 +5,6 @@ We'll be using decK for this tutorial, so let's check that {{site.base_gateway}}
 ```sh
 deck gateway ping
 ```
-{: data-deployment-topology="on-prem" }
-```bash
-deck gateway ping \
-  --konnect-token ${{konnect_token}} \
-  --konnect-control-plane-name $KONNECT_CP_NAME
-```
-{: data-deployment-topology="konnect" }
 
 If everything is running, then you should get the following response:
 

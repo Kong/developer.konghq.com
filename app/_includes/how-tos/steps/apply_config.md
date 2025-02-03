@@ -7,14 +7,6 @@ First, compare the decK file or files to the state of the {{site.base_gateway}}:
 ```bash
 deck gateway diff deck_files
 ```
-{: data-deployment-topology="on-prem" data-test-step="block" }
-
-```bash
-deck gateway diff deck_files \
-  --konnect-token ${{konnect_token}} \
-  --konnect-control-plane-name $KONNECT_CP_NAME
-```
-{: data-deployment-topology="konnect" data-test-step="block" }
 
 The output shows you which entities will change if you sync the state files.
 
@@ -23,10 +15,3 @@ If everything looks right, synchronize them to update your Gateway configuration
 ```bash
 deck gateway sync deck_files
 ```
-{: data-deployment-topology="on-prem"  data-test-step="block" }
-```bash
-deck gateway sync deck_files \
-  --konnect-token ${{konnect_token}} \
-  --konnect-control-plane-name $KONNECT_CP_NAME
-```
-{: data-deployment-topology="konnect" data-test-step="block" }
