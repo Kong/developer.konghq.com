@@ -394,6 +394,7 @@ firstTimestamp
 flamegraph
 foogineer
 full_name
+gcp
 geo
 geos
 getter
@@ -416,6 +417,7 @@ hackathons
 hardcoded
 hardcoding
 hashicorp
+hcv
 header_filter
 headmatter
 healthcheck
