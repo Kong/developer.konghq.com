@@ -1,0 +1,15 @@
+title: 'Allow anonymous consumers'
+description: 'An optional string (Consumer UUID or username) value to use as an “anonymous” consumer if authentication fails. If empty (default null), the request will fail with an authentication failure 4xx. Please note that this value must refer to the Consumer id or username attribute, and not its custom_id.'
+
+weight: 900
+
+requirements: 
+- "A Consumer with a username and password"
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config:
+  anonymous: "anonymous"
