@@ -5,7 +5,7 @@
 {% capture details_content %}
 For this tutorial, you'll need {{site.base_gateway}} entities, like Gateway Services and Routes, pre-configured. These entities are essential for {{site.base_gateway}} to function but installing them isn't the focus of this guide. Follow these steps to pre-configure them:
 
-1. Create a `prereqs.yaml` file within your `deck_files` directory, and add the following content to it:
+1. Run the following command:
 
 {% capture entities %}
 ```yaml
