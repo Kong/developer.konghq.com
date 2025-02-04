@@ -109,7 +109,7 @@ if incoming HTTP requests match no other existing Routes, they will match this R
 
 ## 3. Validate the fallback Route
 
-Try acessing the `/` path again:
+Try accessing the `/` path again:
 
 {% validation request-check %}
 url: /
