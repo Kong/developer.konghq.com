@@ -1,0 +1,10 @@
+metadata:
+  title: Installation options
+  content_type: landing_page
+  description: Installation options 
+
+rows:
+  - header:
+      type: h1
+      text: "@todo"
+
