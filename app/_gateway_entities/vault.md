@@ -47,13 +47,6 @@ declarative configuration files, logs, or the UI.
 
 For example, you could store a certificate and a key in a Vault, then reference them from a [Certificate entity](/gateway/entities/certificate/). This way, the certificate and key are not stored in the entity directly and are more secure.
 
-Some of the most common types of secrets used by {{site.base_gateway}} include:
-
-* Data store usernames and passwords, used with PostgreSQL and Redis
-* Private X.509 certificates
-* API keys
-* Sensitive configuration fields, generally used for authentication, hashing, signing, or encryption
-
 ## How do I add secrets to a Vault?
 
 You can add secrets to Vaults in one of the following ways:
@@ -63,7 +56,7 @@ You can add secrets to Vaults in one of the following ways:
 
 ## What can be stored as a secret?
 
-You can store and reference the following fields as secrets in a Vault:
+You can store and reference the following as secrets in a Vault:
 
 * All [`kong.conf` values](/gateway/manage-kong-conf/)<sup>1</sup>. For example:
   * Data store usernames and passwords, used with PostgreSQL and Redis
