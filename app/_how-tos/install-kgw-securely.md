@@ -54,7 +54,7 @@ cleanup:
 ## 1. Create a Consumer
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.
-We're going to use key [authentication](/authentication/) in this tutorial, so the Consumer needs an API key to access any {{site.base_gateway}} Services.
+We're going to use key [authentication](/gateway/authentication/) in this tutorial, so the Consumer needs an API key to access any {{site.base_gateway}} Services.
 
 Add the following content to `kong.yaml` to create a Consumer:
 
