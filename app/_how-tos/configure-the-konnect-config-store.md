@@ -32,6 +32,10 @@ tldr:
       3. Store your secret as a key/value pair using the `/secrets` endpoint. 
       4. Reference the secret using the Vault prefix and key (for example: `{vault://mysecretvault/secret-key}`).
 
+faqs:
+  - q: Can I reference {{site.konnect_short_name}} Config Store Vault secrets in `kong.conf`?
+    a: No. You can't reference secrets stored in a {{site.konnect_short_name}} Config Store Vault in `kong.conf` because {{site.konnect_short_name}} resolves the secret after {{site.base_gateway}} connects to the control plane. For more information about the fields you can reference as secrets, see [What can be stored as a secret?](/gateway/entities/vault/#what-can-be-stored-as-a-secret).
+
 prereqs:
   inline:
     - title: Environment variables

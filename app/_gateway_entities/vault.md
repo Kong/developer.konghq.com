@@ -47,13 +47,6 @@ declarative configuration files, logs, or the UI.
 
 For example, you could store a certificate and a key in a Vault, then reference them from a [Certificate entity](/gateway/entities/certificate/). This way, the certificate and key are not stored in the entity directly and are more secure.
 
-Some of the most common types of secrets used by {{site.base_gateway}} include:
-
-* Data store usernames and passwords, used with PostgreSQL and Redis
-* Private X.509 certificates
-* API keys
-* Sensitive configuration fields, generally used for authentication, hashing, signing, or encryption
-
 ## How do I add secrets to a Vault?
 
 You can add secrets to Vaults in one of the following ways:
@@ -61,13 +54,33 @@ You can add secrets to Vaults in one of the following ways:
 * {{site.konnect_short_name}} Config Store
 * Supported third-party backend vault
 
-## How do I configure access to a Vault?
+## What can be stored as a secret?
+
+You can store and reference the following as secrets in a Vault:
+
+* All [`kong.conf` values](/gateway/manage-kong-conf/)<sup>1</sup>. For example:
+  * Data store usernames and passwords, used with PostgreSQL and Redis
+  * Private X.509 certificates
+* Certificates and keys stored in the [Certificate {{site.base_gateway}} entity](/gateway/entities/certificate/)
+* [{{site.base_gateway}} license](/gateway/entities/license/)<sup>2</sup>
+* Referenceable plugin fields, such as third-party API keys (see table below for all values)
+
+{:.info}
+> **{{site.konnect_short_name}} Config Store limitations:**
+> * <sup>1</sup>: You can't reference secrets stored in a [{{site.konnect_short_name}} Config Store](/how-to/configure-the-konnect-config-store/) Vault in `kong.conf` because {{site.konnect_short_name}} resolves the secret after {{site.base_gateway}} connects to the control plane.
+> * <sup>2</sup>: In Konnect, the {{site.base_gateway}} license is managed and stored by {{site.konnect_short_name}}, and doesn't need to be stored manually in any Vault.
+
+### Referenceable plugin fields
+
+The following plugin fields can be stored and referenced as secrets:
+
+{% referenceable_fields %}
+
+## Supported Vault backends
 
 Each vault has its own required configuration. You can provide this configuration by creating a Vault entity, or by configuring specific environment variables before starting {{ site.base_gateway }}.
 
 For more information, choose a Vault below to see the specific configuration required.
-
-## Supported backends
 
 {% feature_table %}
 item_title: Backend

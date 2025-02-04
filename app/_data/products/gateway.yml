@@ -1,9 +1,14 @@
 name: Kong Gateway
 
 topologies:
-  - traditional
-  - hybrid
-  - db-less
+  on_prem:
+    - traditional
+    - hybrid
+    - db-less
+  konnect_deployments:
+    - hybrid
+    - cloud-gateways
+    - serverless
 
 tiers:
   enterprise:

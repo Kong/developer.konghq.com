@@ -14,8 +14,8 @@ If you don't have a Konnect account, you can get started quickly with our [onboa
 2. Set the personal access token, the Control Plane Name and the Konnect proxy URL as environment variables:
 
     ```sh
-    export KONNECT_TOKEN=your-token
-    export KONNECT_CP_NAME=your-control-plane-name
+    export DECK_KONNECT_TOKEN=your-token
+    export DECK_KONNECT_CONTROL_PLANE_NAME=your-control-plane-name
     export KONNECT_PROXY_URL=konnect-proxy-url
     ```
 
