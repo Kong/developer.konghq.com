@@ -44,7 +44,10 @@ tags:
 
 tldr:
   q: How do I rate limit different tiers of users, such as free vs. premium subscribers, in my API using {{site.base_gateway}}?
-  a: To manage API traffic for various user tiers (such as free, basic, and premium subscribers), you can create <a href="/gateway/entities/consumer-group/">Consumer Groups</a> for each tier and assign individual <a href="/gateway/entities/consumer/">Consumers</a> to these groups. Then, configure the <a href="/plugins/rate-limiting-advanced/">Rate Limiting Advanced plugin</a> to apply specific rate limits based on these groups. This setup allows you to enforce customized request limits for each tier, ensuring fair usage and optimizing performance for high-value users.
+  a: |
+    To manage API traffic for various user tiers (such as free, basic, and premium subscribers), you can create [Consumer Groups](/gateway/entities/consumer-group/) for each tier and assign individual [Consumers](/gateway/entities/consumer/) to these groups. 
+    Then, configure the [Rate Limiting Advanced plugin](/plugins/rate-limiting-advanced/) to apply specific rate limits based on these groups. 
+    This setup allows you to enforce customized request limits for each tier, ensuring fair usage and optimizing performance for high-value users.
 
 faqs:
   - q: Why can't I use the regular Rate Limiting plugin to rate limit tiers of Consumers?
@@ -62,7 +65,7 @@ cleanup:
 
 ## 1. Set up Consumer authentication
 
-We need to set up [authentication](/authentication/) to identify the Consumer and apply rate limiting. In this guide, we'll be using the [Key Auth plugin](/plugins/key-auth/) plugin, but you can use any Kong authentication plugin. 
+We need to set up [authentication](/gateway/authentication/) to identify the Consumer and apply rate limiting. In this guide, we'll be using the [Key Auth plugin](/plugins/key-auth/) plugin, but you can use any Kong authentication plugin. 
 
 Run the following command to configure the Key Auth plugin:
 

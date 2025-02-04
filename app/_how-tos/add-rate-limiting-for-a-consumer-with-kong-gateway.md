@@ -35,7 +35,7 @@ tags:
 
 tldr:
     q: How do I rate limit a Consumer with {{site.base_gateway}}?
-    a: Enable an authentication plugin and create a <a href="/gateway/entities/consumer/">Consumer</a> with credentials, then enable the <a href="/plugins/rate-limiting/">Rate Limiting plugin</a> on the new Consumer.
+    a: Enable an authentication plugin and create a [Consumer](/gateway/entities/consumer/) with credentials, then enable the [Rate Limiting plugin](/plugins/rate-limiting/) on the new Consumer.
 
 tools:
     - deck
@@ -60,7 +60,7 @@ cleanup:
 ## 1. Create a Consumer
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.
-We're going to use key [authentication](/authentication/) in this tutorial, so the Consumer needs an API key to access any {{site.base_gateway}} Services.
+We're going to use key [authentication](/gateway/authentication/) in this tutorial, so the Consumer needs an API key to access any {{site.base_gateway}} Services.
 
 Add the following content to `kong.yaml` to create a Consumer:
 
