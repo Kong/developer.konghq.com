@@ -27,7 +27,7 @@ tags:
     - traffic-control
 
 tldr:
-    q: How do I make sure that my Gateway Services redirect to a root page instead of failing with a 404 if they hit the wrong Route?
+    q: How do I redirect my Gateway Services to a root page instead of failing with a 404 if they hit the wrong Route?
     a: Configure a fallback Route using the `/` wildcard path to catch any potential 404s and redirect to a specific upstream service.
 
 faqs:
@@ -62,10 +62,10 @@ cleanup:
 ## 1. Validate existing routing rules
 
 In the [prerequisites](#prerequisites), you configured a Gateway Service and a Route. 
-Let's check that the Route works by accessing httpbin's `/anything` service, which will echo back the request:
+Let's check that the Route works by accessing httpbin's `/anything` Service, which will echo back the request:
 
 {% validation request-check %}
-url: /example-route/anything
+url: /anything
 status_code: 200
 {% endvalidation %}
 
@@ -84,12 +84,11 @@ The request will fail with the message `no Route matched with those values`.
 
 ## 2. Create a fallback Gateway Service and Route
 
-To avoid 404 errors, create a fallback Service and a Route with the path `/`. 
-Together, they'll catch any paths that don't match other routing rules and redirect them to the Service URL.
+To avoid 404 errors, create a fallback Gateway Service and a Route with the path `/`. 
+Together, they'll catch any paths that don't match other routing rules and redirect them to the Gateway Service URL.
 
 Based on [routing priority rules](/gateway/entities/route/#priority-matching), 
-since this Route is the shortest and covers the broadest range of possible paths, 
-it has the lowest priority and will be evaluated after all other Routes.
+this Route has the lowest priority and is evaluated after all other Routes because it's the shortest and covers the broadest range of possible paths.
 
 {% entity_examples %}
 entities:
@@ -105,7 +104,7 @@ entities:
 {% endentity_examples %}
 
 Since all URIs are prefixed by the root character `/`, 
-if incoming HTTP requests match no other existing Routes, they will match this Route and redirect to the `http://httpbun.com` Service URL.
+if incoming HTTP requests match no other existing Routes, they will match this Route and redirect to the `http://httpbun.com` Gateway Service URL.
 
 ## 3. Validate the fallback Route
 
