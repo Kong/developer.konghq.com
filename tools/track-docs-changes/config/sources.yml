@@ -158,6 +158,9 @@ app/_how-tos/verify-build-provenance-for-signed-images.md:
   - app/_src/gateway/kong-enterprise/provenance-verification.md
 app/_how-tos/proxy-tls-passthrough.md: 
   - app/_src/gateway/how-kong-works/routing-traffic.md
+app/_how-tos/configure-fallback-route.md:
+  - app/_src/gateway/how-kong-works/routing-traffic/
+
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
