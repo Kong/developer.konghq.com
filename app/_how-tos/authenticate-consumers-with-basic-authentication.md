@@ -87,11 +87,13 @@ When a Consumer authenticates with basic auth, the authorization header must be 
 
 First, run the following to verify that unauthorized requests get an error:
 
+<!--vale off-->
 {% validation unauthorized-check %}
 url: /anything
 headers:
   - 'authorization: Basic wrongpassword'
 {% endvalidation %}
+<!--vale on-->
 
 Then, run the following command to test Consumer authentication:
 
