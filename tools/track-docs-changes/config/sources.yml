@@ -186,7 +186,8 @@ app/_how-tos/get-started-with-ai-gateway.md:
   - app/_src/gateway/get-started/ai-gateway.md
 app/_how-tos/configure-confluent-data-streaming.md:
   - app/_hub/kong-inc/confluent/overview/_index.md
-
+app/_how-tos/nonroot.md:
+  - app/_src/gateway/production/running-kong/kong-user.md
 ## KIC
 app/_how-tos/proxy-http-traffic-kic.md:
   - app/_src/kubernetes-ingress-controller/guides/services/http.md
