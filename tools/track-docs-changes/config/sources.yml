@@ -167,6 +167,8 @@ app/_kong_plugins/ai-rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/ai-rate-limiting-advanced/overview/_index.md
 app/_kong_plugins/basic-auth/index.md:
   - app/_hub/kong-inc/basic-auth/overview/_index.md
+  - app/_hub/kong-inc/basic-auth/_changelog.md
+  - app/_src/gateway/kong-plugins/authentication/reference.md
 app/_kong_plugins/graphql-rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/graphql-rate-limiting-advanced/overview/_index.md
 app/_kong_plugins/jwt/index.md:
@@ -185,8 +187,6 @@ app/_kong_plugins/cors/index.md:
   - app/_hub/kong-inc/cors/overview/_index.md
 app/_kong_plugins/mocking/index.md:
   - /app/_hub/kong-inc/mocking/overview/_index.md
-app/_kong_plugins/basic-auth/changelog.md:
-  - app/_hub/kong-inc/basic-auth/_changelog.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
