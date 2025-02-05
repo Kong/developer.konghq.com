@@ -42,7 +42,11 @@ tools:
 prereqs:
   inline:
     - title: Install {{site.base_gateway}}
+<<<<<<< HEAD
       include_content: prereqs/install/gateway/red-hat
+=======
+      include_content: prereqs/install/ee/red-hat
+>>>>>>> dc5052b9 (non-root)
 
 cleanup:
   inline:
