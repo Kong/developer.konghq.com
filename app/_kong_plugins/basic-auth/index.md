@@ -46,7 +46,7 @@ faqs:
 
 ## Overview
 
-The [Basic Authentication](https://datatracker.ietf.org/doc/html/rfc7617 ) plugin enforces username and password authentication for Consumers when making a request to a Gateway Service or Route. Consumers represent a developer or an application consuming the service application. 
+The [Basic Authentication](https://datatracker.ietf.org/doc/html/rfc7617 ) plugin enforces username and password authentication for [Consumers](/gateway/entities/consumer/) when making a request to a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/). Consumers represent a developer or an application consuming the service application. 
 
 Basic Authentication can be used with both HTTP and HTTPS requests and is an effective way to add simple password protection to web applications.
 
@@ -60,7 +60,7 @@ Then, you can enable the plugin on a Gateway Service, Route, or globally. When a
 
 You can use the Basic Authentication plugin along with other authentication plugins. This allows clients  to use different authentication methods to access a given Gateway Service or Route. 
 
-The authentication plugins can be configured to always require authentication or only perform authentication if it wasn't already authenticated. For more information, see [multi auth section](LINK!).
+The authentication plugins can be configured to always require authentication or only perform authentication if the Consumer wasn't already authenticated. For more information, see [Using multiple authentication methods](/gateway/authentication/#using-multiple-authentication-methods).
 
 ## Use cases
 
@@ -68,16 +68,12 @@ Common use cases for the Basic Authentication plugin:
 
 |Use case | Description|
 |---------|------------|
-| [Allow or deny requests on a Gateway Service or Route](/how-to/allow-or-deny-requests-on-a-service-or-route/) | more description about what it's doing. Configure both the ACL and Basic Authentication plugins. |
+| [Allow or deny requests on a Gateway Service or Route](/how-to/allow-or-deny-requests-on-a-service-or-route/) | Configure both the [ACL](/plugins/acl/) and Basic Authentication plugins to restrict access to a Service or a Route by adding Consumers to allowed or denied lists using arbitrary ACL groups. |
 | [Authenticate on the upstream service](/how-to/authenticate-on-the-upstream-service/) | Configure the Basic Authentication plugin on a Route and then configure the Consumer credential in the `config.add.headers` property for the Request Transformer plugin. |
 | [Allow clients to choose their authentication method](/how-to/allow-multiple-authentication/) | Enable the Basic Authentication plugin and any other authentication plugins. Use the `config.anonymous` property on the plugins to determine if authentication is alway performed or only when the Consumer wasn't already authenticated. |
-| [Check credentials per session](/how-to/check-credentials-per-session/) | When the Session plugin is enabled in conjunction with an authentication plugin, it runs before credential verification. If no session is found, then the authentication plugin runs again and credentials are checked normally. If the credential verification is successful, then the Session plugin creates a new session for usage with subsequent requests. |
-| [Prevent anonymous access](/how-to/prevent-anonymous-access/) | When multiple authentication plugins are enabled to only perform authentication if it didn't already occur on a given Service and you want anonymous access to be forbidden, then the Request Termination plugin should be configured on the anonymous Consumer. If this isn't configured, it will allow unauthorized requests. |
-| [Rate limit unauthenticated and authenticated users differently](/how-to/rate-limit-authenticated-and-unauthenticated-consumers/) | You can configure a given Service to allow both authenticated and anonymous access. You might use this configuration to grant access to anonymous users with a low rate limit, and grant access to authenticated users with a higher rate limit. |
+| [Check credentials per session](/how-to/check-credentials-per-session/) | When the [Session](/plugins/session/) plugin is enabled in conjunction with an authentication plugin, it runs before credential verification. If no session is found, then the authentication plugin runs again and credentials are checked normally. If the credential verification is successful, then the Session plugin creates a new session for usage with subsequent requests. |
+| [Prevent anonymous access](/how-to/prevent-anonymous-access/) | If you enable anonymous access so that authentication isn't always performed but you don't want unauthorized users to access the Gateway Service or Route, you can configure the [Request Termination](/plugins/request-termination/) plugin on the anonymous Consumer. If this isn't configured, it will allow unauthorized requests. |
+| [Rate limit unauthenticated and authenticated users differently](/how-to/rate-limit-authenticated-and-unauthenticated-consumers/) | You can configure a given Service to allow both authenticated and anonymous access. You might use this configuration to grant access to anonymous users with a low rate limit and grant access to authenticated users with a higher rate limit. |
 | [Use basic authentication for Kong Manager](/how-to/enable-basic-auth-on-kong-manager/) | If you want users to authenticate before logging in to Kong Manager, you can configure basic authentication for the GUI. | 
-
-## Related how tos
-
-DO: https://docs.konghq.com/hub/kong-inc/basic-auth/
 
 
