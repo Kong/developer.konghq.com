@@ -48,3 +48,5 @@ cleanup:
 @todo
 
 pull content from https://docs.konghq.com/gateway/latest/kong-plugins/authentication/allowing-multiple-authentication-methods/
+
+Add a bit about "Prevent anonymous access with the Request Termination plugin" (Information will need to be extrapolated from https://docs.konghq.com/gateway/latest/kong-plugins/authentication/reference/#multiple-authentication (in particular, look at the note))- maybe as an FAQ?
