@@ -19,6 +19,7 @@ weight: 900
 #     value: us
 
 config:
+  injection_types: []
   locations: 
     - path_and_query
   custom_injections:
