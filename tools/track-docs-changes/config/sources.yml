@@ -159,7 +159,9 @@ app/_how-tos/verify-build-provenance-for-signed-images.md:
 app/_how-tos/proxy-tls-passthrough.md: 
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_how-tos/configure-fallback-route.md:
-  - app/_src/gateway/how-kong-works/routing-traffic/
+  - app/_src/gateway/how-kong-works/routing-traffic.md
+app/_how-tos/configure-oidc-with-client-credentials-grant.md:
+  - /app/_hub/kong-inc/openid-connect/how-to/authentication/_client-credentials.md
 
 
 # plugins
