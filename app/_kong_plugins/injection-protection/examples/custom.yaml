@@ -1,7 +1,7 @@
 title: 'Custom regex injection'
 
 description: |
-  You can specify a custom regex for matching by using the [`custom_injections`](/plugins/injection-protection/configuration/#config-custom_injections) parameter in the Injection Protection plugin config. 
+  You can specify a custom regex for matching by using the `custom_injections` parameter in the Injection Protection plugin config. 
   To create a custom regex, you must define the following:
 
   * The name of the regex (used in {{site.base_gateway}} logs)
