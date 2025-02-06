@@ -194,7 +194,7 @@ rows:
                   * **When `config.anonymous` is not set:** Authentication is always performed and a `4xx` error is returned if the Consumer isn't validated. With this method, the last plugin executed will be the one setting the credentials passed to the upstream service.
                   * **When `config.anonymous` is set to a valid Consumer:** Authentication is only performed if the Consumer isn't already authenticated. When authentication fails, it won't return a `40x` response. Instead, it sets the anonymous Consumer as the Consumer. With this method, the first plugin that successfully authenticates the Consumer sets the credentials passed to the upstream service or the last plugin that sets its configured anonymous Consumer.
 
-                  If you enable anonymous access so that authentication isn't always performed but you don't want unauthorized users to access the Gateway Service or Route, you can configure the Request Termination plugin on the anonymous Consumer. For more information, see [Prevent anonymous access with the Request Termination plugin](/how-to/prevent-anonymous-access/).
+                  If you enable anonymous access so that authentication isn't always performed but you don't want unauthorized users to access the Gateway Service or Route, you can configure the [Request Termination](/plugins/request-termination/) plugin on the anonymous Consumer.
 
                   {:.info}
                   > **Note:** If you configure the OAuth2 plugin and don't set `config.anonymous`, then the OAuth2 endpoints for requesting tokens and so forth will require authentication by the other configured auth plugins.
