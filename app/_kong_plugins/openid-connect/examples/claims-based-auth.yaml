@@ -1,0 +1,28 @@
+title: Claims-based authorization
+description: |
+  Configure the OpenID Connect plugin for claims-based authorization.
+
+weight: 850
+
+requirements:
+  - A configured identity provider (IdP)
+
+config:
+  issuer: $ISSUER
+  client_id:
+    - $CLIENT_ID
+  client_auth:
+    - private_key_jwt
+  auth_methods:
+    - password
+  scopes_claim:
+    - scope
+  scopes_required:
+    - openid
+    - email
+
+variables:
+  issuer:
+    value: "http://keycloak.test:8080/realms/master"
+  client_id:
+    value: kong

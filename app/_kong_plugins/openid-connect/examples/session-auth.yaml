@@ -1,0 +1,23 @@
+title: Session authentication
+description: |
+  Configure the OpenID Connect plugin to issue session cookies that can be used for further session authentication.
+
+weight: 893
+
+requirements:
+  - A configured identity provider (IdP)
+
+config:
+  issuer: $ISSUER
+  client_id:
+    - $CLIENT_ID
+  client_auth:
+    - private_key_jwt
+  auth_methods:
+    - session
+
+variables:
+  issuer:
+    value: "http://keycloak.test:8080/realms/master"
+  client_id:
+    value: kong

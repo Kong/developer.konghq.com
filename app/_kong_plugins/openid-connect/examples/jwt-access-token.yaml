@@ -1,0 +1,27 @@
+title: JWT access token authentication
+description: |
+  Configure the OpenID Connect plugin with JWT access token authentication.
+
+  In this example, the plugin will only accept a bearer token sent in a header, 
+  but you can also set the `client_credentials_param_type` parameter to `body`, `query`, or any combination of these values.
+
+weight: 897
+requirements:
+  - A configured identity provider (IdP)
+
+config:
+  issuer: $ISSUER
+  client_id:
+    - $CLIENT_ID
+  client_auth:
+    - private_key_jwt
+  auth_methods:
+    - bearer
+  client_credentials_param_type:
+    - header
+
+variables:
+  issuer:
+    value: "http://keycloak.test:8080/realms/master"
+  client_id:
+    value: kong

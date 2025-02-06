@@ -1,0 +1,28 @@
+title: Authorization code flow
+description: |
+  Configure the OpenID Connect plugin with an authorization code flow.
+
+weight: 900
+
+requirements:
+  - A configured identity provider (IdP)
+
+config:
+  issuer: $ISSUER
+  client_id:
+    - $CLIENT_ID
+  client_auth:
+    - private_key_jwt
+  auth_methods:
+    - authorization_code
+    - session
+  response_mode: form_post
+  preserve_query_args: true
+  login_action: redirect
+  login_tokens: null
+
+variables:
+  issuer:
+    value: "http://keycloak.test:8080/realms/master"
+  client_id:
+    value: kong

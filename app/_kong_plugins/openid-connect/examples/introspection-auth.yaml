@@ -1,0 +1,25 @@
+title: Introspection authentication
+description: |
+  Configure the OpenID Connect plugin with introspection authentication.
+
+weight: 898
+
+requirements:
+  - A configured identity provider (IdP)
+
+config:
+  issuer: $ISSUER
+  client_id:
+    - $CLIENT_ID
+  client_auth:
+    - private_key_jwt
+  auth_methods:
+    - introspection
+  bearer_token_param_type:
+    - header
+
+variables:
+  issuer:
+    value: "http://keycloak.test:8080/realms/master"
+  client_id:
+    value: kong

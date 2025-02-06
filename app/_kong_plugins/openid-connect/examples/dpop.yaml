@@ -1,0 +1,27 @@
+title: Demonstrating Proof-of-Possession (DPoP)
+description: |
+  Configure the OpenID Connect plugin for Demonstrating Proof-of-Possession by using the `proof_of_possession_dpop` configuration option. 
+
+weight: 820
+
+requirements:
+  - A configured identity provider (IdP)
+
+config:
+  issuer: $ISSUER
+  client_id:
+    - $CLIENT_ID
+  client_secret:
+    - $CLIENT_SECRET
+  auth_methods:
+    - bearer
+  proof_of_possession_dpop: strict
+
+variables:
+  issuer:
+    value: "http://keycloak.test:8080/realms/master"
+  client_id:
+    value: cert_bound
+  client_secret:
+    value: $CLIENT_SECRET
+
