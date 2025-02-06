@@ -185,6 +185,8 @@ app/_kong_plugins/cors/index.md:
   - app/_hub/kong-inc/cors/overview/_index.md
 app/_kong_plugins/mocking/index.md:
   - /app/_hub/kong-inc/mocking/overview/_index.md
+app/_kong_plugins/injection-protection/index.md:
+  - app/_hub/kong-inc/injection-protection/overview/_index.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:

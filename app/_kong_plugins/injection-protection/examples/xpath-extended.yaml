@@ -1,0 +1,22 @@
+description: 'Detects intentionally malformed information that is sent to a website with the intention of constructing an XPath query for XML data, specifically in the full syntax. Uses the following regex for matching: `/?(ancestor(-or-self)?|descendant(-or-self)?|following(-sibling))`'
+
+title: 'XPath extended injection'
+
+weight: 900
+
+# requirements: <- not required
+# - "some req"
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config: 
+  injection_types: 
+    - xpath_extended
+  locations: 
+    - path_and_query
+  enforcement_mode: block
+  error_status_code: 400
+  error_message: Bad Request
