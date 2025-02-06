@@ -332,6 +332,7 @@ crds
 created_at
 creationTimestamp
 cronjob
+cyberattack
 dao
 daos
 dashboarding
