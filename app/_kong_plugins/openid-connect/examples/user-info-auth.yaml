@@ -1,0 +1,28 @@
+title: User info authentication
+description: |
+  Configure the OpenID Connect plugin to use user info authentication.
+
+  In this example, the OpenID Connect plugin will only accept bearer tokens sent in a header, 
+  but you can also set the `refresh_token_param_type` parameter to `body`, `query`, or any combination of these values.
+
+weight: 892
+
+requirements:
+  - A configured identity provider (IdP)
+
+config:
+  issuer: $ISSUER
+  client_id:
+    - $CLIENT_ID
+  client_auth:
+    - private_key_jwt
+  auth_methods:
+    - userinfo
+  bearer_token_param_type:
+    - header
+
+variables:
+  issuer:
+    value: "http://keycloak.test:8080/realms/master"
+  client_id:
+    value: kong

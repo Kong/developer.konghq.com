@@ -1,0 +1,30 @@
+title: Refresh token grant
+description: |
+  Configure the OpenID Connect plugin to use the refresh token grant.
+
+  In this example, the OpenID Connect plugin will only accept refresh tokens sent in a header, 
+  but you can also set the `refresh_token_param_type` parameter to `body`, `query`, or any combination of these values.
+
+weight: 894
+
+requirements:
+  - A configured identity provider (IdP)
+
+config:
+  issuer: $ISSUER
+  client_id:
+    - $CLIENT_ID
+  client_auth:
+    - private_key_jwt
+  auth_methods:
+    - refresh_token
+  refresh_token_param_type:
+    - header
+  refresh_token_param_name: refresh_token
+  upstream_refresh_token_header: refresh_token
+
+variables:
+  issuer:
+    value: "http://keycloak.test:8080/realms/master"
+  client_id:
+    value: kong

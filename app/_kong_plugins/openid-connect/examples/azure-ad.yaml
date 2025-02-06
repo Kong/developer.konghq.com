@@ -1,0 +1,37 @@
+title: OpenID Connect with Azure AD
+description: |
+  Authenticate browser clients using an Azure AD identity provider.
+
+weight: 798
+requirements:
+  - A Gateway Service and Route secured with HTTPS.
+  - In Azure AD, configure a redirect URI that is handled by your Route.
+  - In Azure AD, register an app and add a client secret credential that this plugin will use to access it.
+
+config:
+  issuer: $ISSUER
+  client_id:
+    - $CLIENT_ID
+  client_secret:
+    - $CLIENT_SECRET
+  redirect_uri:
+    - $REDIRECT_URI
+  scopes:
+    - openid
+    - email
+    - profile
+    - "$CLIENT_ID/.default"
+  verify_parameters: false
+
+variables: 
+  issuer:
+    value: "https://login.microsoftonline.com/$DIRECTORY_ID/v2.0/.well-known/openid-configuration"
+  client_id: 
+    value: $CLIENT_ID
+    description: Replace with the client ID of your IdP. The OpenID Connect plugin uses this value when it calls authenticated endpoints on the identity provider.
+  client_secret: 
+    value: $CLIENT_SECRET
+    description: Replace with your IdP client secret.
+  redirect_uri:
+    value: "https://example.com/api"
+

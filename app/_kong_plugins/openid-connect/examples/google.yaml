@@ -1,0 +1,34 @@
+title: OpenID Connect with Google
+description: |
+  Authenticate browser clients using Google's identity provider.
+
+weight: 796
+
+requirements:
+  - A Gateway Service and Route secured with HTTPS.
+  - Set up a Google API project and create a set of OAuth client ID credentials with the Web application class. 
+  - An authorized redirect URI for the part of the API you want to protect.
+
+config:
+  issuer: $ISSUER
+  client_id: 
+    - $CLIENT_ID
+  client_secret: 
+    - $CLIENT_SECRET
+  redirect_uri:
+    - $REDIRECT_URI
+  scopes:
+    - openid
+    - email
+
+variables: 
+  issuer:
+    value: "https://accounts.google.com/.well-known/openid-configuration"
+  client_id: 
+    value: $CLIENT_ID
+    description: Replace with the client ID of your IdP. The OpenID Connect plugin uses this value when it calls authenticated endpoints on the identity provider.
+  client_secret: 
+    value: $CLIENT_SECRET
+    description: Replace with your IdP client secret.
+  redirect_uri:
+    value: "https://example.com/api"

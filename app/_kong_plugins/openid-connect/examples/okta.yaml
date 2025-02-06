@@ -1,0 +1,39 @@
+title: OpenID Connect with Okta
+description: |
+  Authenticate browser clients using Okta.
+
+weight: 795
+
+requirements:
+  - A Gateway Service and Route secured with HTTPS.
+  - A registered application in Okta pointing to the Kong Route.
+  - Any network access control to your Kong node must allow traffic to and from Okta, the upstream service, and the client.
+
+config:
+  issuer: $ISSUER
+  client_id: 
+    - $CLIENT_ID
+  client_secret: 
+    - $CLIENT_SECRET
+  redirect_uri:
+    - $REDIRECT_URI
+  scopes_claim:
+    - scp
+  scopes:
+    - openid
+    - email
+    - profile
+  auth_methods:
+    - authorization_code
+
+variables: 
+  issuer: 
+    value: "https://$OKTA_DOMAIN/oauth2/$AUTH_SERVER/.well-known/openid-configuration"
+  client_id: 
+    value: $CLIENT_ID
+    description: Replace with the client ID of your IdP. The OpenID Connect plugin uses this value when it calls authenticated endpoints on the identity provider.
+  client_secret: 
+    value: $CLIENT_SECRET
+    description: Replace with your IdP client secret.
+  redirect_uri:
+    value: "https://example.com/api"

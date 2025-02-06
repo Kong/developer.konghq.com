@@ -1,0 +1,27 @@
+title: Consumer authorization
+description: |
+  Configure the OpenID Connect plugin for integration with the [ACL plugin](/plugins/acl/) to perform consumer-based authorization. 
+
+weight: 849
+
+requirements:
+  - A configured identity provider (IdP)
+
+config:
+  issuer: $ISSUER
+  client_id:
+    - $CLIENT_ID
+  client_auth:
+    - private_key_jwt
+  auth_methods:
+    - password
+  consumer_claim:
+    - preferred_username
+  consumer_by:
+    - username
+
+variables:
+  issuer:
+    value: "http://keycloak.test:8080/realms/master"
+  client_id:
+    value: kong

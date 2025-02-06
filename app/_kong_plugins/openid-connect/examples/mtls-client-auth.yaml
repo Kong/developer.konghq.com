@@ -1,0 +1,29 @@
+title: Mutual TLS client authentication
+description: |
+  Configure the OpenID Connect plugin to use mutual TLS (mTLS) client authentication.
+
+  The following uses the password grant, but you can use any supported OpenID Connect auth method.
+
+weight: 819
+
+requirements:
+  - A configured identity provider (IdP) configured with mTLS and X.509 client certificate authentication
+  - A client certificate and key pair stored in a [Certificate object](/gateway/entities/certificate/)
+
+config:
+  issuer: $ISSUER
+  client_id:
+    - $CLIENT_ID
+  client_auth:
+    - tls_client_auth
+  auth_methods:
+    - password
+  tls_client_auth_cert_id: $CERTIFICATE_ID
+
+variables:
+  issuer:
+    value: "http://keycloak.test:8080/realms/master"
+  client_id:
+    value: tls-client
+  tls_client_auth_cert_id:
+    value: $CERTIFICATE_ID
