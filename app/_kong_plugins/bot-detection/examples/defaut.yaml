@@ -1,0 +1,17 @@
+title: 'Block common bots'
+
+description: 'This configuration blocks [common bots](https://github.com/Kong/kong/blob/master/kong/plugins/bot-detection/rules.lua) with built-in regex. `User_Agent` headers in requests that match are blocked with a `403` error.'
+
+weight: 900
+
+# requirements: <- not required
+# - "some req"
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config: 
+  allow: []
+  deny: []
