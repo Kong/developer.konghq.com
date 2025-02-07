@@ -70,20 +70,6 @@ Instead, you can offload the task to a trusted identity provider of your choice.
 While the OpenID Connect plugin suits many different use cases and extends other plugins 
 such as [JWT](/plugins/jwt/) (JSON Web Token), [ACL](/plugins/acl/), and [0Auth 2.0](/plugins/oauth2/), the most common use case is the [authorization code flow](#authorization-code-flow).
 
-## Important configuration parameters
-
-In most cases, you will need to use some combination of the following configuration parameters in the OpenID Connect plugin. 
-Review them before implementing any flows or grants:
-
-1. [`config.issuer`](/plugins/openid-connect/reference/#config-issuer)
-2. [`config.auth_methods`](/plugins/openid-connect/reference/#config-auth_methods)
-3. [`config.client_id`](/plugins/openid-connect/reference/#config-client_id)
-4. [`config.audience_required`](/plugins/openid-connect/reference/#config-audience_required): Relevant if using a public identity provider
-5. [`config.session_secret`](/plugins/openid-connect/reference/#config-session_secret): Relevant if running {{site.base_gateway}} in DB-less mode
-
-For all available configuration parameters, see the 
-[OpenID Connect configuration reference](/plugins/openid-connect/reference/).
-
 ## Authentication flows and grants
 
 The plugin supports several types of credentials and grants.
