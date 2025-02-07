@@ -202,18 +202,18 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Vulnerability policy
+            title: Vulnerability and patching policy
             description: |
               Report security vulnerabilities and see Kong's vulnerability management policy.
             icon: /assets/icons/file.svg
             cta:
-              url: "/vulnerabilities/"
+              url: "/gateway/vulnerabilities/"
       - blocks:
         - type: card
           config:
-            title: Bug fix policy
+            title: Version support policy
             description: |
-              See Kong's bug fix policy.
+              See Kong's version support policy
             icon: /assets/icons/insomnia/bug.svg
             cta:
               url: "/gateway/version-support-policy/"
