@@ -195,6 +195,8 @@ app/_kong_plugins/openid-connect/index.md:
   - app/_hub/kong-inc/openid-connect/overview/_support.md
 app/_kong_plugins/openid-connect/changelog.md:
   - app/_hub/kong-inc/openid-connect/_changelog.md
+app/_kong_plugins/bot-detection/index.md:
+  - app/_hub/kong-inc/bot-detection/overview/_index.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
