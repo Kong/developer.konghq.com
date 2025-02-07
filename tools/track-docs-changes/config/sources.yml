@@ -167,6 +167,8 @@ app/_kong_plugins/ai-rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/ai-rate-limiting-advanced/overview/_index.md
 app/_kong_plugins/basic-auth/index.md:
   - app/_hub/kong-inc/basic-auth/overview/_index.md
+  - app/_hub/kong-inc/basic-auth/_changelog.md
+  - app/_src/gateway/kong-plugins/authentication/reference.md
 app/_kong_plugins/graphql-rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/graphql-rate-limiting-advanced/overview/_index.md
 app/_kong_plugins/jwt/index.md:
@@ -203,6 +205,8 @@ app/_landing_pages/gateway/secrets-management.yaml:
   - app/_src/gateway/kong-enterprise/secrets-management/index.md
   - app/_src/gateway/kong-enterprise/secrets-management/getting-started.md
   - app/_src/gateway/kong-enterprise/secrets-management/secrets-rotation.md
+app/_landing_pages/gateway/authentication.yaml:
+  - app/_src/gateway/kong-plugins/authentication/reference.md
 
 # references 
 app/deck/distributed-config.md:
