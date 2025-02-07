@@ -36,7 +36,7 @@ categories:
 
 You can use the Injection Protection plugin to detect and block known injection patterns consistent with SQL injection, server-side include injection, and more. This plugin can complement your existing firewall solution by adding a layer of customizable protection to prevent injection attacks, or it can eliminate some content-based attacks if you don't have an existing firewall.
 
-The Injection Protection plugin makes it easier to protect your APIs from SQL injection or other injection attacks by providing out-of-the box regex matching for common injection attacks. 
+The Injection Protection plugin makes it easier to protect your APIs from SQL injection or other injection attacks by providing out-of-the-box regex matching for common injection attacks. 
 You can also configure custom regex matching.
 
 The Injection Protection plugin helps you detect and block known injection patterns by doing the following: 
@@ -49,11 +49,11 @@ The Injection Protection plugin helps you detect and block known injection patte
 Depending on what you have configured in the plugin's config, the Injection Protection plugin functions in the following manner, in order of execution:
 
 1. The plugin extracts the specified content (headers, path/query parameters, payload body) from a client request.
-1. The plugin checks the extracted content for matches against the specified predefined or custom regex expressions. 
-The regex expressions define patterns that match well-known injection attacks.
+1. The plugin checks the extracted content for matches against the specified predefined or custom regexes. 
+The regexes define patterns that match well-known injection attacks.
 1. Depending on if the content matches, the plugin does one of the following:
     * **Regex doesn't match:** The plugin allows the request and sends a `200` status code to the client.
-    * **Regex match:** The plugin blocks the request by sending a `400` status code to the client and sends 
+    * **Regex matches:** The plugin blocks the request by sending a `400` status code to the client and sends 
     {{site.base_gateway}} an error log that contains the name of the injection type, the content that matched the pattern, and the regex that matched the content. 
     You can also configure the plugin to only log matches and allow requests that match to still be proxied.
 

@@ -1,4 +1,4 @@
-description: 'Detects abritrarily injected JavaScript that is part of a cross site scripting attack and will execute in the browser. Uses the following regex for matching: `<\s*script\b[^>]*>[^<]+<\s*/\s*script\s*>`'
+description: 'Detects arbitrarily injected JavaScript that is part of a cross site scripting attack and will execute in the browser. Uses the following regex for matching: `<\s*script\b[^>]*>[^<]+<\s*/\s*script\s*>`'
 
 title: 'JavaScript injection'
 
