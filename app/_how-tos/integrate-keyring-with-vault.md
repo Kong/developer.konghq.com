@@ -24,7 +24,6 @@ prereqs:
   skip_product: true
   inline: 
     - title: HashiCorp Vault
-      position: before
       content: |
         This how-to requires you to have a dev mode or self-managed HashiCorp Vault. The following instructions will guide you through configuring a HashiCorp Vault in dev mode with the resources you need to integrate it with {{site.base_gateway}}.
 
