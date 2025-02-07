@@ -25,7 +25,7 @@ tags:
 tldr: 
   q: How do I authenticate users in Kong Manager using my own identity provider?
   a: |
-    Kong Gateway offers the ability to bind authentication for Kong Manager admins to an organization’s OpenID Connect Identity Provider using the OpenID Connect Plugin.
+    {{site.base_gateway}} offers the ability to bind authentication for Kong Manager admins to an organization’s OpenID Connect Identity Provider using the OpenID Connect Plugin.
 
 cleanup:
   inline:
