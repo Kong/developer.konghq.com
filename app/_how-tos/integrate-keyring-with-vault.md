@@ -73,7 +73,7 @@ min_version:
 
 ## 1. Create a key in the HashiCorp vault
 
-When integrating Keyring with a HashiCorp vault, we need add a key and key ID in the vault before syncing it with they Keyring in {{site.base_gateway}}. Let's create a secret named `keyring`:
+When integrating Keyring with a HashiCorp vault, we need to add a key and key ID to the vault before syncing it with the Keyring in {{site.base_gateway}}. Let's create a secret named `keyring`:
 ```sh
 vault kv put -mount secret keyring id="8zgITLQh" key="t6NWgbj3g9cbNVC3/D6oZ2Md1Br5gWtRrqb1T2FZy44="
 ```
