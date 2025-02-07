@@ -8,6 +8,12 @@ layout: reference
 
 no_version: true
 
+products:
+  - gateway
+
+breadcrumbs:
+  - /gateway/
+
 related_resources:
   - text: Security in {{site.base_gateway}}
     url: /gateway/security/
@@ -29,7 +35,7 @@ Generally, there may be three types of vulnerabilities:
 * In third-party code that {{site.base_gateway}} directly links (such as OpenSSL, glibc, libxml2)
 * In third-party code that is part of the convenience Docker image (such as Python, Perl, cURL, etc). This code is not part of {{site.base_gateway}}.
 
-Vulnerabilities reported in {{site.base_gateway}} code will be assessed by Kong and if the vulnerability is validated, a CVSS3.0 score will be assigned. 
+Vulnerabilities reported in {{site.base_gateway}} code will be assessed by Kong and if the vulnerability is validated, a [CVSS 3.0](https://www.first.org/cvss/) score will be assigned. 
 Based on the CVSS score, Kong will aim to produce patches for all applicable {{site.base_gateway}} versions currently under support within the SLAs below. 
 The SLA clock starts from the day the CVSS score is assigned.
 
@@ -38,7 +44,7 @@ This will take the shape of a configuration change recommendation, if available.
 If there is no workaround/recommendation readily available, Kong will use continuous efforts to develop one.
 For a CVSS <9.0, Kong will use commercially-reasonable efforts to provide a workaround or patch within the applicable SLA period.
 
-| CVSS 3.0 Criticality | CVSS 3.0 Score | SLA |
+| CVSS 3.0 Criticality for Kong code | CVSS 3.0 Score | SLA |
 |---|---|---|
 | Critical  | 9.0 - 10.0  |  15 days |
 | High  |  7.0 - 8.9 |  30 days |
@@ -49,7 +55,7 @@ Vulnerabilities reported in third party-code that {{site.base_gateway}} links di
 Kong will aim to produce patches for all applicable {{site.base_gateway}} versions currently under support within the SLA reproduced in the table below. 
 The SLA clock for these vulnerabilities starts from the day the upstream (third party) announces availability of patches.  
 
-| CVSS 3.0 Criticality | CVSS 3.0 Score | SLA |
+| CVSS 3.0 Criticality for third-party code | CVSS 3.0 Score | SLA |
 |---|---|---|
 | Critical  | 9.0 - 10.0  |  15 days |
 | High  |  7.0 - 8.9 |  30 days |
