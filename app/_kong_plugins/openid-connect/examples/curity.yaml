@@ -1,0 +1,37 @@
+title: OpenID Connect with Curity
+description: |
+  Integrate Kong Gateway and the Curity Identity Server for introspection using the
+  Phantom Token pattern.
+
+weight: 797
+
+requirements:
+  - Curity Identity Server installed.
+  - An introspection endpoint configured with the Token Procedure Approach.
+
+config:
+  issuer: $ISSUER
+  client_id: 
+    - $CLIENT_ID
+  client_secret: 
+    - $CLIENT_SECRET
+  scopes_required:
+    - openid
+  hide_credentials: true
+  upstream_access_token_header: nil
+  upstream_headers_claims:
+    - phantom_token
+  upstream_headers_names: 
+    - phantom_token
+  auth_methods:
+    - introspection
+
+variables: 
+  issuer: 
+    value: "https://idsvr.example.com/oauth/v2/oauth-anonymous"
+  client_id: 
+    value: $CLIENT_ID
+    description: Replace with the client ID of your IdP. The OpenID Connect plugin uses this value when it calls authenticated endpoints on the identity provider.
+  client_secret: 
+    value: $CLIENT_SECRET
+    description: Replace with your IdP client secret.
