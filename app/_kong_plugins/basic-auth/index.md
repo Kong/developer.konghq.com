@@ -37,7 +37,7 @@ faqs:
   - q: I updated my Consumer's username, why doesn't their password or basic authentication work anymore?
     a: The basic auth password credential is encrypted in the database. {{site.base_gateway}} can only get the encrypted value of the password from the database. When you update the username or tag, {{site.base_gateway}} overwrites the password with its encrypted value. To fix this, enter the original password when you update the username or tag of the basic auth credential.
   - q: How do I delete a Consumer credential?
-    a: You can delete a specific credential by sending a `DELETE` request to `http(s)://<kong-host>:<admin-port>/consumers/<workspace>/<consumer_id_or_name>/<type of credentials>/<credentials_id_or_name>`.
+    a: You can delete a specific credential by sending a `DELETE` request to `http(s)://<kong-host>:<admin-port>/<workspace_id_or_name>/consumers/<consumer_id_or_name>/<type_of_credentials>/<credentials_id_or_name>`.
   - q: I'm migrating from {{site.base_gateway}} to {{site.konnect_short_name}} and using `deck gateway dump`, will this also dump my basic auth credentials?
     a: No. The basic auth credentials are stored in the database as hashed values. When you dump the configuration with deck, it will retrieve these hashed values, not the original plain-text passwords. Since there is currently no way to extract the initial plain-text values of the basic auth credentials due to how they are stored, you will need to manually set the passwords for basic auth after dumping the configuration or by directly setting up the password in {{site.konnect_short_name}}. There is an ongoing feature request to change the behavior of how basic auth credentials are handled during migrations to make this process more seamless in the future.
   - q: Why should I use the Basic Authentication plugin instead of other authentication plugins, like Key Authentication?
@@ -52,7 +52,7 @@ Basic Authentication can be used with both HTTP and HTTPS requests and is an eff
 
 ## How it works
 
-The Basic Authentication plugin requires at least one Consumer to work. When you create the Consumer, you must specify a username and password, for example: `Ariel:Password`. The Consumer's password must be base64 encoded when it's used in the Authentication header. For example, `Ariel:Password` would become `QXJpZWw6UGFzc3dvcmQ=`.
+The Basic Authentication plugin requires at least one Consumer to work. When you create the Consumer, you must specify a username and password, for example: `Ariel:Password`. The Consumer's password must be base64-encoded when it's used in the Authentication header. For example, `Ariel:Password` would become `QXJpZWw6UGFzc3dvcmQ=`.
 
 Then, you can enable the plugin on a Gateway Service, Route, or globally. When a Consumer makes a request to the associated Gateway Service or Route, the plugin checks for valid credentials in the `Proxy-Authorization` and `Authorization` headers (in that order).
 

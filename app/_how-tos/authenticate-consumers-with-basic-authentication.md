@@ -29,7 +29,7 @@ tags:
 
 tldr:
     q: How do I authenticate Consumers with basic authentication?
-    a: Create a Consumer with a username and password in the `basicauth_credentials` configuration. Enable the Basic Authentication plugin globally, and authenticate with the base64 encoded Consumer credentials.
+    a: Create a Consumer with a username and password in the `basicauth_credentials` configuration. Enable the Basic Authentication plugin globally, and authenticate with the base64-encoded Consumer credentials.
 
 tools:
     - deck
@@ -69,7 +69,7 @@ entities:
 
 ## 2. Enable authentication
 
-Authentication lets you identify a Consumer. In this how to, we'll be using the [Basic Authentication plugin](/plugins/basic-auth/) for authentication, which allows users to authenticate with a username and password when they make a request.
+Authentication lets you identify a Consumer. In this how-to, we'll be using the [Basic Authentication plugin](/plugins/basic-auth/) for authentication, which allows users to authenticate with a username and password when they make a request.
 
 Enable the plugin globally, which means it applies to all {{site.base_gateway}} Services and Routes:
 
@@ -83,9 +83,9 @@ entities:
 
 ## 3. Validate
 
-When a Consumer authenticates with basic auth, the authorization header must be base64 encoded. For example, since we are using `jsmith` as the username and `my-password` as the password, then the field’s value is the base64-encoding of `jsmith:my-password`, or `anNtaXRoOm15LXBhc3N3b3Jk`.
+When a Consumer authenticates with basic auth, the authorization header must be base64-encoded. For example, since we are using `jsmith` as the username and `my-password` as the password, then the field’s value is the base64 encoding of `jsmith:my-password`, or `anNtaXRoOm15LXBhc3N3b3Jk`.
 
-First, run the following to verify that unauthorized requests get an error:
+First, run the following to verify that unauthorized requests return an error:
 
 <!--vale off-->
 {% validation unauthorized-check %}
