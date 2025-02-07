@@ -21,7 +21,7 @@ tldr:
     a: Create a vault and add a key and ID, then set the `kong_keyring_strategy` parameter to `vault` and the required `keyring_vault_*` parameters in your configuration. Use the `/keyring/vault/sync` API to synchronize.
 
 prereqs:
-  skip_products: true
+  skip_product: true
   inline: 
     - title: HashiCorp Vault
       position: before
