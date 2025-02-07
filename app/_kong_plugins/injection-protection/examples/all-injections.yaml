@@ -1,0 +1,27 @@
+title: 'All injections'
+
+description: 'This configuration detects all the built-in injection attacks supported by the Injection Protection plugin.'
+
+weight: 900
+
+# requirements: <- not required
+# - "some req"
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config: 
+  injection_types: 
+    - sql
+    - java_exception
+    - js
+    - ssi
+    - xpath_abbreviated
+    - xpath_extended
+  locations: 
+    - path_and_query
+  enforcement_mode: block
+  error_status_code: 400
+  error_message: Bad Request
