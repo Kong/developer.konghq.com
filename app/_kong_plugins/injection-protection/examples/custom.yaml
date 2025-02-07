@@ -4,7 +4,7 @@ description: |
   You can specify a custom regex for matching by using the `custom_injections` parameter in the Injection Protection plugin config. 
   To create a custom regex, you must define the following:
 
-  * The name of the regex (used in {{site.base_gateway}} logs)
+  * The name of the regex (used in Gateway logs)
   * The regex string you want to check for a match
   * The content you want to check for a regex match (such as headers, path and query, and body)
 
