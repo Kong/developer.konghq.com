@@ -2,7 +2,7 @@ title: 'Deny bots based on custom regex'
 
 description: 'This configuration blocks bots in the `User_Agent` header that match the custom regex you configure. `User_Agent` headers in requests that match are blocked with a `403` error.'
 
-weight: 900
+weight: 700
 
 # requirements: <- not required
 # - "some req"
