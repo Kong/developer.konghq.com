@@ -53,46 +53,35 @@ Kong as a proxying [OAuth 2.0](https://tools.ietf.org/html/rfc6749) resource ser
 
 OpenID Connect provides a way to form a **federation** with **identity providers (IdPs)**. 
 Identity providers are third parties that store account credentials. 
-If the identity provider authenticates a user, the application trusts that provider and allows access to the user. 
-The identity provider bears some responsibility for protecting the user’s credentials and ensuring authenticity, 
-so applications no longer need to on their own.
+If an identity provider authenticates a user to an application, the application trusts that provider and allows access to the user. This shifts the responsibility of authentication from the application to the identity provider. 
 
-Besides delegating responsibility to an identity provider, OpenID Connect also makes single sign-on possible 
-without storing any credentials on a user’s local machine.
+Besides delegating responsibility to an identity provider, OpenID Connect also makes single sign-on possible without storing any credentials on a user’s local machine.
 
-Enterprises may want to manage access control for many applications from one central system of record. 
-For example, they may want employees to be able to access many different applications using their email address and password. 
-They may want to also change access (for example, if an employee leaves or changes roles) from one central point. 
-OpenID Connect addresses this challenge by providing a way for many different applications to authenticate users through the 
-same third-party identity provider.
 
 ## What does Kong’s OpenID Connect plugin do?
 
-Just as OpenID Connect enables developers to offload authentication to another party, {{site.base_gateway}} enables developers to 
-separate entire processes from their applications. Instead of needing to manually write the code for OpenID Connect 
-within a service, developers can place {{site.base_gateway}} in front of the upstream service and have {{site.base_gateway}} handle authentication. 
+The Open ID Connect plugin enables you to integrate Open ID Connect with {{site.base_gateway}} without having to write custom integrations. 
+{{site.base_gateway}} enables developers to  separate entire processes from their applications. 
+Instead of needing to manually write the code for OpenID Connect within a service, developers can place {{site.base_gateway}} in front of the upstream service and have {{site.base_gateway}} handle authentication. 
 This separation allows developers to focus on the business logic within their application, easily swap out services while preserving authentication at the front door, and effortlessly spread the same authentication to new services.
 
-You may prefer OpenID Connect over other authentication types, such as Key Auth and Basic Auth, 
-because you don't need to manage a database for storing passwords. Instead, you can offload the 
-task to a trusted identity provider of your choice.
+Unlike other authentication types like Key Auth and Basic Auth, with Open ID Connect you don't need to manage user credentials directly. 
+Instead, you can offload the task to a trusted identity provider of your choice.
 
 While the OpenID Connect plugin suits many different use cases and extends other plugins 
-such as [JWT](/plugins/jwt/) (JSON Web Token), [ACL](/plugins/acl/), and [0Auth 2.0](/plugins/oauth2/), 
-the most common use case is the [authorization code flow](#authorization-code-flow).
+such as [JWT](/plugins/jwt/) (JSON Web Token), [ACL](/plugins/acl/), and [0Auth 2.0](/plugins/oauth2/), the most common use case is the [authorization code flow](#authorization-code-flow).
 
-## Where do I begin?
+## Important configuration parameters
 
-This plugin includes many configuration parameters that allow finely grained customization.
 Review the following important configuration parameters before implementing any flows or grants:
 
 Parameter | Purpose
 ----------|--------
-`config.issuer` <br> *required* | This parameter tells the plugin where to find discovery information, and it is the only required parameter. You should set the value `realm` or `iss` on this parameter if you don't have a discovery endpoint. <br><br>This parameter doesn't have to match the URL of the `iss` claim in the access tokens being validated. To set URLs supported in the `iss` claim, use `config.issuers_allowed`.
-`config.auth_methods` | Decide what authentication grants to use with this plugin and configure the `config.auth_methods` field accordingly. To restrict the scope of potential attacks, the parameter should only contain the grants that you want to use. 
-`config.client_id` | In many cases, you need to specify `config.client_id`. Also, if your identity provider requires authentication, such as on a token endpoint, you will need to specify the client authentication credentials, for example `config.client_secret`.
-`config.audience_required` | If you are using a public identity provider, such as Google, you should limit the audience with `config.audience_required` to contain only your `config.client_id`. You may also need to adjust `config.audience_claim` in case your identity provider uses a non-standard claim (other than `aud`, as specified in JWT standard). This is important because some identity providers share public keys with different clients.
-`config.session_secret` | If you are running {{site.base_gateway}} in DB-less mode with declarative configuration and session cookie authentication, set `config.session_secret`. Leaving this parameter unset will result in every Nginx worker across your nodes encrypting and signing the cookies with their own secrets.
+`config.issuer` <br> *required* | This parameter tells the plugin where to find discovery information. Set the value `realm` or `iss` on this parameter if you don't have a discovery endpoint. <br><br>This parameter doesn't have to match the URL of the `iss` claim in the access tokens being validated. To set URLs supported in the `iss` claim, use `config.issuers_allowed`.
+`config.auth_methods` | Sets which authentication grants to use with this plugin. To restrict the scope of potential attacks, the parameter should only contain the grants that you want to use. 
+`config.client_id` | The client ID(s) that the plugin uses when it calls authenticated endpoints on the identity provider.
+`config.audience_required` | If you are using a public identity provider, such as Google, this parameter limits the audience along with `config.audience_required` to contain only your `config.client_id`. This is important because some identity providers share public keys with different clients.
+`config.session_secret` | If you are running {{site.base_gateway}} in DB-less mode with declarative configuration and session cookie authentication, set a `config.session_secret`. Leaving this parameter unset will result in every Nginx worker across your nodes encrypting and signing the cookies with their own secrets.
 
 For all available configuration parameters, see the 
 [OpenID Connect configuration reference](/plugins/openid-connect/reference/).
@@ -260,11 +249,9 @@ sequenceDiagram
 
 ### JWT access token authentication flow
 
-For legacy reasons, the stateless `JWT Access Token` authentication is named `bearer` 
-(see [`config.auth_methods`](/plugins/openid-connect/reference/)). Stateless authentication means
-that the signature verification uses the identity provider to publish public keys and the standard
-claims verification (such as `exp` or expiry). The client may receive the token directly
-from the identity provider or by other means.
+For legacy reasons, the stateless `JWT Access Token` authentication is named `bearer` (see [`config.auth_methods`](/plugins/openid-connect/reference/)). 
+Stateless authentication means that the signature verification uses the identity provider to publish public keys and the standard claims verification (such as `exp` or expiry). 
+The client may receive the token directly from the identity provider or by other means.
 
 <!--vale off-->
 {% mermaid %}
@@ -294,8 +281,7 @@ sequenceDiagram
 ### Kong OAuth token auth flow
 
 The OpenID Connect plugin can verify the tokens issued by the [OAuth 2.0 plugin](/plugins/oauth2/).
-This is very similar to third party identity provider issued [JWT access token authentication](#jwt-access-token-authentication-flow)
-or [introspection authentication](#introspection-authentication-flow):
+This is very similar to third party identity provider issued [JWT access token authentication](#jwt-access-token-authentication-flow) or [introspection authentication](#introspection-authentication-flow):
 
 <!--vale off-->
 {% mermaid %}
@@ -324,9 +310,8 @@ sequenceDiagram
 
 ### Password grant workflow
 
-Password grant is a **legacy** authentication grant. This is a less secure way of
-authenticating end users than the authorization code flow, because, for example,
-the passwords are shared with third parties.
+Password grant is a **legacy** authentication grant. 
+This is a less secure way of authenticating end users than the authorization code flow, because, for example, the passwords are shared with third parties.
 
 <!--vale off-->
 {% mermaid %}
@@ -362,11 +347,9 @@ sequenceDiagram
 
 ### Refresh token grant workflow
 
-The refresh token grant can be used when the client has a refresh token available. There is a caveat
-with this: in general, identity providers only allow the refresh token grant to be executed with the same
-client that originally got the refresh token, and if there is a mismatch, it may not work. The mismatch
-is likely when the OpenID Connect plugin is configured to use one client, and the refresh token is retrieved
-with another. 
+The refresh token grant can be used when the client has a refresh token available. 
+There is a caveat with this: in general, identity providers only allow the refresh token grant to be executed with the same client that originally got the refresh token, and if there is a mismatch, it may not work. 
+The mismatch is likely when the OpenID Connect plugin is configured to use one client, and the refresh token is retrieved with another. 
 
 The grant itself is very similar to the [password grant](#password-grant-workflow) and
 the [client credentials grant](#client-credentials-grant-workflow):
@@ -405,11 +388,9 @@ sequenceDiagram
 
 ### Session authentication workflow
 
-The OpenID Connect plugin can issue a session cookie that can be used for further
-session authentication. To make OpenID Connect issue a session cookie, you need
-to first authenticate with one of the other grants or flows that this plugin supports. 
-For example, the [authorization code flow](#authorization-code-flow)
-demonstrates session authentication when it uses the redirect login action.s
+The OpenID Connect plugin can issue a session cookie that can be used for further session authentication. 
+To make OpenID Connect issue a session cookie, you need to first authenticate with one of the other grants or flows that this plugin supports. 
+For example, the [authorization code flow](#authorization-code-flow) demonstrates session authentication when it uses the redirect login action.
 
 The session authentication portion of the flow works like this:
 
@@ -440,9 +421,8 @@ sequenceDiagram
 ### User info authentication flow
 
 The user info authentication uses OpenID Connect standard user info endpoint to verify the access token.
-In most cases, you would use [introspection authentication](#introspection-authentication-flow) instead of user info,
-as introspection is meant for retrieving information from the token itself, whereas the user info endpoint is
-meant for retrieving information about the user to whom the token was given. The flow is almost identical to introspection authentication:
+In most cases, you would use [introspection authentication](#introspection-authentication-flow) instead of user info, as introspection is meant for retrieving information from the token itself, whereas the user info endpoint is meant for retrieving information about the user to whom the token was given. 
+The flow is almost identical to introspection authentication:
 
 <!--vale off-->
 {% mermaid %}
@@ -493,31 +473,26 @@ The following option pairs can be configured to manage claims verification durin
 3. `config.groups_claim` and `config.groups_required`
 4. `config.roles_claim` and `config.roles_required`
 
-For example, the first configuration option, `config.scopes_claim`, points to a source, from which the value is
-retrieved and checked against the value of the second configuration option, `config.scopes_required`.
+For example, the first configuration option, `config.scopes_claim`, points to a source, from which the value is retrieved and checked against the value of the second configuration option, `config.scopes_required`.
 
 ### ACL plugin authorization
 
-The OpenID Connect plugin can be integrated with the [ACL plugin](/plugins/acl/), which provides
-access control functionality in the form of allow and deny lists.
+The OpenID Connect plugin can be integrated with the [ACL plugin](/plugins/acl/), which provides access control functionality in the form of allow and deny lists.
 
 You can also pair ACL-based authorization with Kong Consumer authorization.
 
 ### Consumer authorization
 
-You can use Kong Consumers for authorization and dynamically map
-claim values to Consumers. This means that we restrict the access to
-only those that do have a matching Consumer. Consumers can have ACL
-groups attached to them and be further authorized with the
-[ACL plugin](/plugins/acl/).
+You can use Kong [Consumers](/gateway/entities/consumer/) for authorization and dynamically map claim values to Consumers. 
+This means that we restrict the access to only those that do have a matching Consumer. 
+Consumers can have ACL groups attached to them and be further authorized with the [ACL plugin](/plugins/acl/).
 
 ## Client authentication
 
 ### Mutual TLS client authentication
 
 The OpenID Connect plugin supports mutual TLS (mTLS) client authentication with the IdP. 
-When mTLS authentication is enabled, Kong establishes mTLS connections with the IdP using the configured client certificate.
-
+When mTLS authentication is enabled, {{site.base_gateway}} establishes mTLS connections with the IdP using the configured client certificate.
 You can use mTLS client authentication with the following IdP endpoints and corresponding flows:
 
 * `token`
@@ -534,14 +509,12 @@ For all these endpoints and for the flows supported, the plugin uses mTLS client
 ## OIDC authentication in Kong Manager
 
 {{site.base_gateway}} can use OpenID Connect to secure Kong Manager.
-It offers the ability to bind authentication for Kong
-Manager admins to an organization's OpenID Connect Identity
-Provider, using the OpenID Connect plugin in the background.
+It offers the ability to bind authentication for Kong Manager admins to an organization's OpenID Connect Identity Provider, using the OpenID Connect plugin in the background.
 
 You don't need to set up the plugin directly. 
 Instead, {{site.base_gateway}} accesses the OIDC plugin through settings in `kong.conf`.
 
-To set up RBAC in Kong Manager with OIDC, see:
+To set up [RBAC](/gateway/entities/rbac/) in Kong Manager with OIDC, see:
 
 * [Enable OIDC for Kong Manager](/how-to/enable-oidc-for-kong-manager/)
 * [OIDC Authenticated Group Mapping](/how-to/oidc-authenticated-group-mapping/)
