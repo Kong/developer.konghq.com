@@ -48,7 +48,7 @@ If the `User-Agent` header doesn't match any common or denied bots, the request 
 
 ## Use case
 
-If you suspect a cyberattack involving bots, you can temporarily use the [File Log](/plugins/file-log/) plugin on the affected Gateway Service. This will help you analyze any unusual `User-Agent` headers in incoming requests. 
+If you suspect bot traffic you can use a logging plugin like [File Log](/plugins/file-log/) on a Gateway Service to track down unusual `User-Agent` headers in incoming requests. 
 
 Once you've identified the offending `User-Agent` header, you can block it using the Bot Detection plugin.
 
