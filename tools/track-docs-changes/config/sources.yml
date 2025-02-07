@@ -185,6 +185,12 @@ app/_kong_plugins/cors/index.md:
   - app/_hub/kong-inc/cors/overview/_index.md
 app/_kong_plugins/mocking/index.md:
   - /app/_hub/kong-inc/mocking/overview/_index.md
+app/_kong_plugins/openid-connect/index.md:
+  - app/_hub/kong-inc/openid-connect/overview/_index.md
+  - app/_hub/kong-inc/openid-connect/overview/_primary-config-params.md
+  - app/_hub/kong-inc/openid-connect/overview/_support.md
+app/_kong_plugins/openid-connect/changelog.md:
+  - app/_hub/kong-inc/openid-connect/_changelog.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
