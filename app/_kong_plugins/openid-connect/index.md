@@ -559,9 +559,9 @@ The plugin has been tested with several OpenID Connect providers:
 - [OneLogin](https://developers.onelogin.com/openid-connect)
 - [OpenAM](https://backstage.forgerock.com/docs/openam/13.5/admin-guide/#chap-openid-connect)
 - [PayPal](https://developer.paypal.com/docs/log-in-with-paypal/integrate/)
-- [PingFederate](https://docs.pingidentity.com/r/en-us/pingfederate-112/pf_pingfederate_landing_page)
+- [PingFederate](https://www.pingidentity.com/en/platform/capabilities/authentication-authority/pingfederate.html)
 - [Salesforce](https://help.salesforce.com/articleView?id=sf.sso_provider_openid_connect.htm&type=5)
-- [WSO2](https://is.docs.wso2.com/en/latest/guides/identity-federation/configure-oauth2-openid-connect/)
+- [WSO2](https://is.docs.wso2.com/en/latest/guides/authentication/standard-based-login/add-oidc-idp-login/)
 - [Yahoo!](https://developer.yahoo.com/oauth2/guide/openid_connect/)
 
 As long as your provider supports OpenID Connect standards, the plugin should
