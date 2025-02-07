@@ -48,9 +48,9 @@ If the `User-Agent` header doesn't match any common or denied bots, the request 
 
 ## Use case
 
-If you suspect bot traffic you can use a logging plugin like [File Log](/plugins/file-log/) on a Gateway Service to track down unusual `User-Agent` headers in incoming requests. 
+If you suspect bot traffic you can use a [logging plugin](/plugins/?category=logging) on a Gateway Service to track down unusual `User-Agent` headers in incoming requests. 
 
-Once you've identified the offending `User-Agent` header, you can block it using the Bot Detection plugin.
+Once you've identified the offending `User-Agent` header, you can [block it using the Bot Detection plugin](/plugins/bot-detection/examples/deny/).
 
 
 
