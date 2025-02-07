@@ -57,7 +57,6 @@ If an identity provider authenticates a user to an application, the application 
 
 Besides delegating responsibility to an identity provider, OpenID Connect also makes single sign-on possible without storing any credentials on a user’s local machine.
 
-
 ## What does Kong’s OpenID Connect plugin do?
 
 The Open ID Connect plugin enables you to integrate Open ID Connect with {{site.base_gateway}} without having to write custom integrations. 
@@ -73,15 +72,14 @@ such as [JWT](/plugins/jwt/) (JSON Web Token), [ACL](/plugins/acl/), and [0Auth 
 
 ## Important configuration parameters
 
-Review the following important configuration parameters before implementing any flows or grants:
+In most cases, you will need to use some combination of the following configuration parameters in the OpenID Connect plugin. 
+Review them before implementing any flows or grants:
 
-Parameter | Purpose
-----------|--------
-`config.issuer` <br> *required* | This parameter tells the plugin where to find discovery information. Set the value `realm` or `iss` on this parameter if you don't have a discovery endpoint. <br><br>This parameter doesn't have to match the URL of the `iss` claim in the access tokens being validated. To set URLs supported in the `iss` claim, use `config.issuers_allowed`.
-`config.auth_methods` | Sets which authentication grants to use with this plugin. To restrict the scope of potential attacks, the parameter should only contain the grants that you want to use. 
-`config.client_id` | The client ID(s) that the plugin uses when it calls authenticated endpoints on the identity provider.
-`config.audience_required` | If you are using a public identity provider, such as Google, this parameter limits the audience along with `config.audience_required` to contain only your `config.client_id`. This is important because some identity providers share public keys with different clients.
-`config.session_secret` | If you are running {{site.base_gateway}} in DB-less mode with declarative configuration and session cookie authentication, set a `config.session_secret`. Leaving this parameter unset will result in every Nginx worker across your nodes encrypting and signing the cookies with their own secrets.
+1. [`config.issuer`](/plugins/openid-connect/reference/#config-issuer)
+2. [`config.auth_methods`](/plugins/openid-connect/reference/#config-auth_methods)
+3. [`config.client_id`](/plugins/openid-connect/reference/#config-client_id)
+4. [`config.audience_required`](/plugins/openid-connect/reference/#config-audience_required): Relevant if using a public identity provider
+5. [`config.session_secret`](/plugins/openid-connect/reference/#config-session_secret): Relevant if running {{site.base_gateway}} in DB-less mode
 
 For all available configuration parameters, see the 
 [OpenID Connect configuration reference](/plugins/openid-connect/reference/).
