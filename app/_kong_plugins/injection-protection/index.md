@@ -62,16 +62,20 @@ The following diagram shows how the Injection Protection plugin detects injectio
 <!--vale off-->
 {% mermaid %}
 sequenceDiagram
-    actor Consumer
-    participant Injection Protection plugin
-    participant {{site.base_gateway}}
-    Consumer->>Injection Protection plugin: Sends a request
+    actor Client
+    participant Kong as {{site.base_gateway}}
+    participant Plugin as Injection Protection plugin
+    participant Upstream as Upstream service
+
+    Client->>Kong: Sends a request
+    Kong->>Plugin: Evaluates for regex match
 
     alt No regex match
-        Injection Protection plugin->>Consumer: 200 OK
+        Plugin->>Client: 200 OK
+        Plugin->>Upstream: Proxies request
     else Regex match
-        Injection Protection plugin->>Consumer: 400 Bad Request
-        Injection Protection plugin->>{{site.base_gateway}}: Logs injection 
+        Plugin->>Client: 400 Bad Request
+        Plugin->>Kong: Logs injection 
     end
 {% endmermaid %}
 <!--vale on-->
