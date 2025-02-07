@@ -1,0 +1,30 @@
+title: Kong OAuth token authentication
+description: |
+  Configure the OpenID Connect plugin to verify the tokens issued by [Kong OAuth 2.0](/plugins/oauth2/) plugin. 
+
+  In this example, the OpenID Connect plugin will only accept a bearer token sent in a header, 
+  but you can also set the `bearer_token_param_type` parameter to `body`, `query`, `cookie`, or any combination of these values.
+
+weight: 896
+
+requirements:
+  - A configured identity provider (IdP)
+  - A Kong Consumer
+  - The Kong OAuth2 plugin configured on a Route
+
+config:
+  issuer: $ISSUER
+  client_id:
+    - $CLIENT_ID
+  client_auth:
+    - private_key_jwt
+  auth_methods:
+    - kong_oauth2
+  bearer_token_param_type:
+    - header
+
+variables:
+  issuer:
+    value: "http://keycloak.test:8080/realms/master"
+  client_id:
+    value: kong
