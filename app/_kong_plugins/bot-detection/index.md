@@ -44,7 +44,7 @@ You can also configure custom regex patterns to either allow or deny additional 
 
 Once the Bot Detection plugin is enabled on a Gateway Service or Route, it checks the `User-Agent` header of incoming requests. If the header matches a default common bot or any custom denied bot regex you've configured, the request is immediately blocked with a `403` response.
 
-If the `User-Agent` header doesn't match any common or denied bots, the request is processed. This also applies when a configured allowed bot matches.
+If the `User-Agent` header doesn't match any common or specifically denied bots, the request is processed. This also applies when a configured allowed bot matches.
 
 ## Use case
 
