@@ -22,6 +22,7 @@ tldr:
       * Run a database migration.
 
 prereqs:
+  skip_product: true
   inline:
     - title: Install {{site.base_gateway}} on Ubuntu
       include_content: prereqs/install/ubuntu
