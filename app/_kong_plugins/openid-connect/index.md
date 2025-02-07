@@ -35,6 +35,13 @@ search_aliases:
   - openid-connect
   - idp
   - identity provider
+
+tags:
+  - authentication
+
+related_resources:
+  - text: Authentication in {{site.base_gateway}}
+    url: /gateway/authentication/
 ---
 
 The OpenID Connect (OIDC) plugin lets you integrate {{site.base_gateway}} with an
