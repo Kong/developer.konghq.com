@@ -123,7 +123,7 @@ parameters.
 * The `client_id`, `client_secret`, `session_secret`, `session_redis_username`,
 and `session_redis_password` configuration fields are now marked as
 referenceable, which means they can be securely stored as
-[secrets](/gateway/entities/vaults/) in a Vault.
+[secrets](/gateway/entities/vault/) in a Vault.
 
 ### {{site.base_gateway}} 2.7.x
 

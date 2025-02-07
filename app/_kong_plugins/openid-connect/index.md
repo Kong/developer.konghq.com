@@ -254,7 +254,7 @@ sequenceDiagram
 ### JWT access token authentication flow
 
 For legacy reasons, the stateless `JWT Access Token` authentication is named `bearer` 
-(see [`config.auth_methods`](/plugin/openid-connect/reference/)). Stateless authentication means
+(see [`config.auth_methods`](/plugins/openid-connect/reference/)). Stateless authentication means
 that the signature verification uses the identity provider to publish public keys and the standard
 claims verification (such as `exp` or expiry). The client may receive the token directly
 from the identity provider or by other means.
@@ -286,9 +286,9 @@ sequenceDiagram
 
 ### Kong OAuth token auth flow
 
-The OpenID Connect plugin can verify the tokens issued by the [OAuth 2.0 plugin](/hub/kong-inc/oauth2/).
-This is very similar to third party identity provider issued [JWT access token authentication](/hub/kong-inc/openid-connect/how-to/authentication/jwt-access-token/)
-or [introspection authentication](/hub/kong-inc/openid-connect/how-to/authentication/introspection/):
+The OpenID Connect plugin can verify the tokens issued by the [OAuth 2.0 plugin](/plugins/oauth2/).
+This is very similar to third party identity provider issued [JWT access token authentication](#jwt-access-token-authentication-flow)
+or [introspection authentication](#introspection-authentication-flow):
 
 <!--vale off-->
 {% mermaid %}
@@ -536,8 +536,8 @@ Instead, {{site.base_gateway}} accesses the OIDC plugin through settings in `kon
 
 To set up RBAC in Kong Manager with OIDC, see:
 
-* [Enable OIDC for Kong Manager](/)
-* [OIDC Authenticated Group Mapping](/)
+* [Enable OIDC for Kong Manager](/how-to/enable-oidc-for-kong-manager/)
+* [OIDC Authenticated Group Mapping](/how-to/oidc-authenticated-group-mapping/)
 
 ## Supported identity providers
 
