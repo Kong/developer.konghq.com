@@ -24,7 +24,24 @@ min_version:
 
 tldr:
   q: How do I create a JWK and add it to a Key Set?
-  a: Create a Key Set with the `/key-sets` endpoint, then create a Key and configure the `set.id` or `set.name` parameter to point to the Key Set. 
+  a: Create a Key Set with the `/key-sets` endpoint, then create a Key and configure the `set.id` or `set.name` parameter to point to the Key Set.
+
+prereqs:
+  inline:
+    - title: JSON Web Key
+      content: |
+        This tutorial requires a JSON Web Key. You can generate your own or use this one:
+        ```json
+        {
+            "kty": "RSA",
+            "e": "AQAB",
+            "use": "enc",
+            "kid": "my-key",
+            "alg": "RSA1_5",
+            "n": "n_03K8g2O_rarMBqBpbDKtRzrKede24g8UQ8Jc_x4-vsBnCFJw_xUcy-j4Ub9hYQZtyBZ5bWuEWC1crsorFgDbzoO1fF237XtCUCb0G6a8-3fbeSQZGwglK_vIy8-pHzZnOC2kgHp-rrNo9xZHnaOkrqqW4CI8izDuxboi_BlGqiNjKqGimj6fCPkiIEFlIrAtQCM9bUJDXv_iIs9blv9StqrfWnwxPIeIuoeruY_eC76twMweH5JHEAx_7BJdTdOXo9lrwmoUYwLAPp9w4E9Dc1lW1gQXh8aK4UUaJcsTjEztPtKsPHkQGSuP5WxM5uNH9Jo3-4wwuoA6BDxBS4sw"
+        }
+        ```
+      icon_url: /assets/icons/key.svg
 
 cleanup:
   inline:
@@ -36,6 +53,34 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-@todo
+## 1. Create a Key Set
 
-based on: https://docs.konghq.com/gateway/latest/reference/key-management/#create-a-key-using-the-jwk-format-and-associate-it-with-a-key-set
+{% control_plane_request %}
+  url: /key-sets
+  method: POST
+  headers:
+      - 'Accept: application/json'
+      - 'Content-Type: application/json'
+      - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
+  body:
+      name: my-key-set
+{% endcontrol_plane_request %}
+
+## 2. Create a Key
+
+Create a Key and use either the `set.id` or `set.name` parameter to add it to the Key Set.
+
+{% control_plane_request %}
+  url: /keys
+  method: POST
+  headers:
+      - 'Accept: application/json'
+      - 'Content-Type: application/json'
+      - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
+  body:
+      name: my-key
+      kid: my-key
+      set:
+        name: my-key-set
+      jwk: "{\"kty\":\"RSA\",\"e\":\"AQAB\",\"use\":\"enc\",\"kid\":\"my-key\",\"alg\":\"RSA1_5\",\"n\":\"n_03K8g2O_rarMBqBpbDKtRzrKede24g8UQ8Jc_x4-vsBnCFJw_xUcy-j4Ub9hYQZtyBZ5bWuEWC1crsorFgDbzoO1fF237XtCUCb0G6a8-3fbeSQZGwglK_vIy8-pHzZnOC2kgHp-rrNo9xZHnaOkrqqW4CI8izDuxboi_BlGqiNjKqGimj6fCPkiIEFlIrAtQCM9bUJDXv_iIs9blv9StqrfWnwxPIeIuoeruY_eC76twMweH5JHEAx_7BJdTdOXo9lrwmoUYwLAPp9w4E9Dc1lW1gQXh8aK4UUaJcsTjEztPtKsPHkQGSuP5WxM5uNH9Jo3-4wwuoA6BDxBS4sw\"}"
+{% endcontrol_plane_request %}
