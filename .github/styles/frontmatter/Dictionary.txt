@@ -10,5 +10,3 @@ dynatrace
 ratelimiting
 collectd
 ca_certificate
-private_key
-public_key
