@@ -24,8 +24,32 @@ rows:
 
                     Rate limits can be applied to a [Gateway Service](/gateway/entities/service/) or individual [Routes](/gateway/entities/route/) to protect the upstream API, or to a [Consumer](/gateway/entities/consumer/) to restrict how many times a user can call the API in the specified period.
 
-                    Kong offers two standard HTTP rate limiting plugins: [Rate Limiting](/plugins/rate-limiting/) or [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) plugins in addition to a series [specialized](#specialized-rate-limiting-plugins) AI, GraphQL and dynamic rate limiting plugins.
-  - columns:
+                    Kong offers two standard HTTP rate limiting plugins: [Rate Limiting](/plugins/rate-limiting/) or [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) plugins in addition to a series [specialized](#specialized-rate-limiting-plugins) AI, Gateway Service, GraphQL, and dynamic rate limiting plugins.
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TD
+                A{What entity do you want to rate limit?}  
+                A -->|Only Services| B[Service Protection plugin]
+                A -->|Routes, Consumers, or Global| C{Do you want to apply multiple limits or sliding windows?}
+                A -->|"Consumers (developer requests)"| D[Response Rate Limiting]
+                C --> |Yes| E{What are you trying to rate limit?}
+                C --> |No| F[Rate Limiting]
+                E --> |LLMs| G[AI Rate Limiting Advanced]
+                E --> |GraphQL queries| I[GraphQL Rate Limiting Advanced]
+                E --> |Gateway entities| H[Rate Limiting Advanced]
+
+                click B "/plugins/service-protection/"
+                click D "/plugins/response-ratelimiting/"
+                click F "/plugins/rate-limiting/"
+                click G "/plugins/ai-rate-limiting-advanced/"
+                click I "/plugins/graphql-rate-limiting-advanced/"
+                click H "/plugins/rate-limiting-advanced/"
+  - header:
+      type: h2
+      text: "Comparing Rate Limiting with Rate Limiting Advanced"
+    columns:
       - blocks:
           - type: feature_table
             config:
@@ -123,6 +147,19 @@ rows:
             config:
               tags:
                 - response-ratelimiting
+              products:
+                - gateway
+              quantity: 3
+              allow_empty: true
+      
+      - blocks:
+          - type: plugin
+            config:
+              slug: service-protection
+          - type: how_to_list
+            config:
+              tags:
+                - service-protection
               products:
                 - gateway
               quantity: 3

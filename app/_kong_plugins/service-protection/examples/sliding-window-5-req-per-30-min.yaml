@@ -1,6 +1,5 @@
+title: 'Sliding window 5 reqs per 30 mins'
 description: ''
-
-title: ''
 
 weight: 900
 
@@ -12,4 +11,8 @@ weight: 900
 #     description: ''
 #     value: us
 
-config: # plugin config in yaml format goes here
+config: 
+  window_size: 30
+  window_type: sliding
+  limit: 5
+  namespace: example_namespace
