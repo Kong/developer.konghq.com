@@ -253,5 +253,5 @@ app/gateway/networking/dns-config-reference.md:
   - app/_src/gateway/production/networking/dns-considerations.md
 
 # policies
-app/gateway/security-update-process.md:
-  - app/_src/gateway/production/security-update-process.md
+app/gateway/vulnerabilities.md:
+  - app/_src/gateway/support/vulnerability-patching-process.md
