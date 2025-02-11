@@ -33,7 +33,7 @@ app/_api/konnect/ksearch/_index.md:
  - app/_api/konnect/search/_index.md
 
 # entities
- app/_gateway_entities/consumer_group.md:
+app/_gateway_entities/consumer_group.md:
   - app/_src/gateway/key-concepts/consumer-groups.md
 app/_gateway_entities/consumer.md:
   - app/_src/gateway/key-concepts/consumers.md
@@ -197,6 +197,10 @@ app/_kong_plugins/openid-connect/changelog.md:
   - app/_hub/kong-inc/openid-connect/_changelog.md
 app/_kong_plugins/bot-detection/index.md:
   - app/_hub/kong-inc/bot-detection/overview/_index.md
+app/_kong_plugins/acme/index.md:
+  - app/_hub/kong-inc/acme/overview/_index.md
+app/_kong_plugins/acme/changelog.md:
+  - app/_hub/kong-inc/acme/_changelog.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
