@@ -92,7 +92,7 @@ app/_gateway_entities/keyring.md:
   - app/_src/gateway/kong-enterprise/db-encryption.md
 app/_how-tos/encrypt-sensitive-data-in-kong-gateway-with-keyring.md:
   - app/_src/gateway/kong-enterprise/db-encryption.md
-app/_how-tos/integrate-keyring-with-vault.md:
+app/_how-tos/store-keyring-in-hashicorp-vault.md:
   - app/_src/gateway/kong-enterprise/db-encryption.md
 app/_gateway_entities/key.md:
   - app/_src/gateway/reference/key-management.md
