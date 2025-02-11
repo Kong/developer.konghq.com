@@ -1,5 +1,5 @@
 ---
-title: Store a Keyring value in a HashiCorp Vault
+title: Store Keyring data in a HashiCorp Vault
 content_type: how_to
 related_resources:
   - text: Keyring
@@ -18,7 +18,7 @@ works_on:
 
 tldr:
     q: How do I store Keyring data in a HashiCorp vault?
-    a: Create a HashiCorp Vault and add a key and ID, then set the `kong_keyring_strategy` kong.conf parameter to `vault` and the required `keyring_vault_*` parameters in your configuration. Use the `/keyring/vault/sync` API to synchronize.
+    a: Create a HashiCorp Vault and add a key and ID, then set the `kong_keyring_strategy` kong.conf parameter to `vault` and the required `keyring_vault_*` parameters in your configuration, either in `kong.conf` or with environment variables. Use the `/keyring/vault/sync` API to synchronize.
 
 prereqs:
   skip_product: true
@@ -72,14 +72,16 @@ min_version:
 
 ## 1. Create a key in the HashiCorp vault
 
-When integrating Keyring with a HashiCorp vault, we need to add a key and key ID to the vault before syncing it with the Keyring in {{site.base_gateway}}. Let's create a secret named `keyring`:
+The Keyring integration with HashiCorp Vaults allows you to store and version Keyring data. {{site.base_gateway}} nodes can read the keys directly from the vault to encrypt and decrypt sensitive data. 
+
+First, we need to add a key and key ID to the vault. Let's create a secret named `keyring`:
 ```sh
 vault kv put -mount secret keyring id="8zgITLQh" key="t6NWgbj3g9cbNVC3/D6oZ2Md1Br5gWtRrqb1T2FZy44="
 ```
 
 ## 2. Set environment variables
 
-Set the environment variables that will be used by {{site.base_gateway}} to enable the Keyring and connect it to the HashiCorp vault. Since the Keyring feature requires a {{site.ee_product_name}} license, make sure to include it in the environment too.
+Set the environment variables that will be used by {{site.base_gateway}} to enable the Keyring and connect it to the HashiCorp Vault. Since the Keyring feature requires a {{site.ee_product_name}} license, make sure to include it in the environment too.
 ```sh
 export KONG_LICENSE_DATA="<license-contents-go-here>"
 export KONG_KEYRING_ENABLED="on"
