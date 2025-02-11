@@ -58,9 +58,9 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create priviledged Consumers
+## 1. Create privileged Consumers
 
-In this how to, we'll be creating two Consumers that have different rate limits from the limits applied to the Service. These Consumers act as a type of "priviledged" Consumer in this scenario that have higher rate limits, but they will still be prevented from exceeding the Service rate limits. The reason for this is to prevent DDoS type attacks on your APIs. 
+In this how to, we'll be creating two Consumers that have different rate limits from the limits applied to the Service. These Consumers act as a type of "privileged" Consumer in this scenario that have higher rate limits, but they will still be prevented from exceeding the Service rate limits. The reason for this is to prevent DDoS type attacks on your APIs. 
 
 {% entity_examples %}
 entities:
