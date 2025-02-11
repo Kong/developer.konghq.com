@@ -8,6 +8,10 @@ publisher: kong-inc
 description: Let's Encrypt and ACMEv2 integration with {{site.base_gateway}}
 tier: enterprise
 
+related_resources:
+  - text: Test certificate generation locally with ngrok and the ACME plugin
+    url: /how-to/test-certificate-generation-locally-with-ngrok-and-acme/
+
 
 products:
     - gateway
