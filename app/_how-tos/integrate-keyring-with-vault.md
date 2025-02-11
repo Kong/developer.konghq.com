@@ -18,7 +18,7 @@ works_on:
 
 tldr:
     q: How do I store Keyring data in a HashiCorp vault?
-    a: Create a vault and add a key and ID, then set the `kong_keyring_strategy` parameter to `vault` and the required `keyring_vault_*` parameters in your configuration. Use the `/keyring/vault/sync` API to synchronize.
+    a: Create a HashiCorp Vault and add a key and ID, then set the `kong_keyring_strategy` kong.conf parameter to `vault` and the required `keyring_vault_*` parameters in your configuration. Use the `/keyring/vault/sync` API to synchronize.
 
 prereqs:
   skip_product: true
@@ -93,7 +93,7 @@ export KONG_KEYRING_VAULT_TOKEN="root"
 
 ## 3. Start {{site.base_gateway}}
 
-Create the {{site.base_gateway}} container with the environment variables we created. In this example, we can use the quickstart:
+Create the {{site.base_gateway}} container with the environment variables. In this example, we can use the quickstart:
 ```sh
 curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA \
     -e KONG_KEYRING_ENABLED \
@@ -107,14 +107,14 @@ curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA \
 
 ## 4. Synchronize the vault with the Keyring
 
-Once the container is created, use the following command to sync the keyring data from the HashiCorp vault to the {{site.base_gateway}} Keyring.
+Once the container is created, use the following command to sync the keyring data from the HashiCorp Vault to the {{site.base_gateway}} Keyring.
 ```sh
 curl -i -X POST http://localhost:8001/keyring/vault/sync
 ```
 
 ## 5. Validate
 
-Check that the Keyring contains the key that we created in the HashiCorp vault:
+Check that the Keyring contains the key that we created in the HashiCorp Vault:
 ```sh
 curl -i http://localhost:8001/keyring
 ```
