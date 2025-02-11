@@ -53,4 +53,4 @@ You can use this plugin together with other rate limiting plugins to apply granu
 
 If you want to apply global rate limits or apply rate limits to routes and consumers, see the [Rate Limiting with {{site.base_gateway}}](/gateway/rate-limiting/) page for additional rate limiting plugins.
 
-The Service Protection plugin uses the same [Rate Limiting Library](/gateway/latest/reference/rate-limiting/) as the other rate limiting plugins.
+The Service Protection plugin uses the same [Rate Limiting Library](/gateway/rate-limiting-library/) as the other rate limiting plugins.
