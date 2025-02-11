@@ -36,7 +36,7 @@ tags:
 
 tldr:
     q: How do I throttle APIs to protect them from DDoS attacks while allowing multiple privileged consumers to access the Service with higher rate limits?
-    a: Configure the [Rate Limiting](/plugins/rate-limiting/) plugin on two consumers with `config.minute` set to 6. Configure the [Service Protection](/plugins/service-protection/) plugin with `config.window_size` set to 60 and `config.limit` set to 10. This setup will limit all requests on the Service to 10 per minute, even if the Consumers are sending requests simutaneously. 
+    a: Configure the [Rate Limiting](/plugins/rate-limiting/) plugin on two consumers with `config.minute` set to 6. Configure the [Service Protection](/plugins/service-protection/) plugin with `config.window_size` set to 60 and `config.limit` set to 10. This setup will limit all requests on the Service to 10 per minute, even if the Consumers are sending requests simultaneously. 
 
 tools:
     - deck
