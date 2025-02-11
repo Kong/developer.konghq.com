@@ -1,0 +1,39 @@
+
+title: ACME with shm storage
+description: |
+  Configure the ACME plugin with a Lua shared dict as the storage backend. 
+  This option doesn't persist between Nginx restarts.
+
+  {:.info}
+  > Note: This option is not supported in {{site.konnect_short_name}} or on-prem hybrid mode.
+
+weight: 890
+
+requirements:
+- A public IP and a resolvable DNS
+- '{{site.base_gateway}} accepts proxy traffic on port 80'
+
+config:
+  account_email: $EMAIL
+  account_key:
+    key_id: "$KEY_ID"
+    key_set: "$KEY_SET"
+  domains:
+    - "$DOMAIN"
+  tos_accepted: true
+  storage: shm
+  storage_config:
+    shm:
+      shm_name: 'kong'
+  
+# variables:
+#   account_email:
+#     value: example@example.com
+#   account_key:
+#     key_id:
+#       value: $KEY_ID
+#     key_set:
+#       value: $KEY_SET
+#   domains:
+#     value:
+#       - example.com

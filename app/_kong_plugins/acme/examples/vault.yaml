@@ -1,0 +1,55 @@
+
+title: ACME with HashiCorp Vault storage
+description: |
+  Configure the ACME plugin with HashiCorp Vault as the storage backend.
+
+  {:.info}
+  > Note: Only the KV v2 backend is supported.
+weight: 870
+
+requirements:
+- A public IP and a resolvable DNS
+- '{{site.base_gateway}} accepts proxy traffic on port 80'
+
+config:
+  account_email: $EMAIL
+  account_key:
+    key_id: "$KEY_ID"
+    key_set: "$KEY_SET"
+  domains:
+    - "$DOMAIN"
+  tos_accepted: true
+  storage: vault
+  storage_config:
+    host: $HCV_HOST
+    port: $HCV_PORT
+    kv_path: "acme"
+    timeout: 2000
+    https: false
+    tls_verify: true
+    tls_server_name: nil
+    auth_method: "token"
+    token: nil
+    auth_path: "kubernetes"
+    auth_role: nil
+    jwt_path: $JWT_PATH
+    namespace: nil
+
+# variables:
+#   account_email:
+#     value: example@example.com
+#   account_key:
+#     key_id:
+#       value: $KEY_ID
+#     key_set:
+#       value: $KEY_SET
+#   domains:
+#     value:
+#       - example.com
+#   storage_config:
+#     vault:
+#       host:
+#         value: example.vault.host
+#       port:
+#         value: 1234
+  
