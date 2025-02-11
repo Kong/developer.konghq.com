@@ -1,5 +1,5 @@
 ---
-title: Integrate a Keyring with a HashiCorp Vault
+title: Store a Keyring value in a HashiCorp Vault
 content_type: how_to
 related_resources:
   - text: Keyring
