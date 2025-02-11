@@ -66,6 +66,19 @@ Using the Admin API, create a Key Set to hold JSON Web keys:
       name: my-key-set
 {% endcontrol_plane_request %}
 
+You will get a `201 Created` response with details about the new Key Set. For example:
+
+```json
+{
+    "name":"my-key-set",
+    "id":"539c3c53-b3ff-43f2-a500-2f812d1d3e09",
+    "created_at":1739270324,
+    "updated_at":1739270324,
+    "tags":null
+}
+```
+{:.no-copy-code}
+
 ## 2. Create a Key
 
 Create a Key and use either the `set.id` or `set.name` parameter to add it to the Key Set:
@@ -84,3 +97,23 @@ Create a Key and use either the `set.id` or `set.name` parameter to add it to th
         name: my-key-set
       jwk: "{\"kty\":\"RSA\",\"e\":\"AQAB\",\"use\":\"enc\",\"kid\":\"my-key\",\"alg\":\"RSA1_5\",\"n\":\"n_03K8g2O_rarMBqBpbDKtRzrKede24g8UQ8Jc_x4-vsBnCFJw_xUcy-j4Ub9hYQZtyBZ5bWuEWC1crsorFgDbzoO1fF237XtCUCb0G6a8-3fbeSQZGwglK_vIy8-pHzZnOC2kgHp-rrNo9xZHnaOkrqqW4CI8izDuxboi_BlGqiNjKqGimj6fCPkiIEFlIrAtQCM9bUJDXv_iIs9blv9StqrfWnwxPIeIuoeruY_eC76twMweH5JHEAx_7BJdTdOXo9lrwmoUYwLAPp9w4E9Dc1lW1gQXh8aK4UUaJcsTjEztPtKsPHkQGSuP5WxM5uNH9Jo3-4wwuoA6BDxBS4sw\"}"
 {% endcontrol_plane_request %}
+
+You will get a `201 Created` response with details about the new Key, including the Key Set ID. For example:
+
+```json
+{
+  "tags":null,
+  "jwk":"{\"kty\":\"RSA\",\"e\":\"AQAB\",\"use\":\"enc\",\"kid\":\"my-key\",\"alg\":\"RSA1_5\",\"n\":\"n_03K8g2O_rarMBqBpbDKtRzrKede24g8UQ8Jc_x4-vsBnCFJw_xUcy-j4Ub9hYQZtyBZ5bWuEWC1crsorFgDbzoO1fF237XtCUCb0G6a8-3fbeSQZGwglK_vIy8-pHzZnOC2kgHp-rrNo9xZHnaOkrqqW4CI8izDuxboi_BlGqiNjKqGimj6fCPkiIEFlIrAtQCM9bUJDXv_iIs9blv9StqrfWnwxPIeIuoeruY_eC76twMweH5JHEAx_7BJdTdOXo9lrwmoUYwLAPp9w4E9Dc1lW1gQXh8aK4UUaJcsTjEztPtKsPHkQGSuP5WxM5uNH9Jo3-4wwuoA6BDxBS4sw\"}",
+  "pem":null,
+  "name":"my-key",
+  "kid":"my-key",
+  "id":"03cc15ef-f157-42dd-a43b-9959550ca466",
+  "created_at":1739270335,
+  "updated_at":1739270335,
+  "set":
+  {
+    "id":"539c3c53-b3ff-43f2-a500-2f812d1d3e09"
+  }
+}
+```
+{:.no-copy-code}
