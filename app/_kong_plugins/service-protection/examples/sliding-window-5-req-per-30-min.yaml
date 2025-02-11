@@ -1,4 +1,4 @@
-title: 'Sliding window 5 reqs per 30 mins'
+title: 'Sliding window 5 requests per minute'
 description: ''
 
 weight: 900
@@ -12,7 +12,7 @@ weight: 900
 #     value: us
 
 config: 
-  window_size: 30
+  window_size: [60]
   window_type: sliding
-  limit: 5
+  limit: [5]
   namespace: example_namespace

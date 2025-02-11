@@ -160,6 +160,8 @@ app/_how-tos/proxy-tls-passthrough.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_how-tos/configure-fallback-route.md:
   - app/_src/gateway/how-kong-works/routing-traffic/
+app/_how-tos/throttle-apis-with-services-and-consumers.md:
+  - app/_hub/kong-inc/service-protection/how-to/_index.md
 
 
 # plugins

@@ -7,6 +7,8 @@ content_type: plugin
 related_links:
   - text: Rate Limiting with {{site.base_gateway}}
     url: /gateway/rate-limiting/
+  - text: Throttle APIs with different rate limits for Services and Consumers
+    url: /how-to/throttle-apis-with-services-and-consumers/
 
 publisher: kong-inc
 description: 'Prevent abuse and protect services with absolute limits on the number of requests reaching the service'
