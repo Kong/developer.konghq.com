@@ -30,7 +30,7 @@ prereqs:
   inline:
     - title: JSON Web Key
       content: |
-        This tutorial requires a JSON Web Key. You can generate your own or use this one:
+        This tutorial requires a JSON Web Key. You can generate your own or use this one for testing:
         ```json
         {
             "kty": "RSA",
@@ -54,7 +54,7 @@ cleanup:
 ---
 
 ## 1. Create a Key Set
-
+Using the Admin API, create a Key Set to hold JSON Web keys:
 {% control_plane_request %}
   url: /key-sets
   method: POST
@@ -68,7 +68,7 @@ cleanup:
 
 ## 2. Create a Key
 
-Create a Key and use either the `set.id` or `set.name` parameter to add it to the Key Set.
+Create a Key and use either the `set.id` or `set.name` parameter to add it to the Key Set:
 
 {% control_plane_request %}
   url: /keys
