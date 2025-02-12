@@ -72,13 +72,51 @@ The ACME plugin needs a backend storage to store certificates, challenge tokens,
 You can set the backend storage for the plugin using the [`config.storage`](/plugins/acme/reference/#config-storage) parameter.
 The backend storage available depends on the [topology](/gateway/deployment-models/) of your {{site.base_gateway}} environment: 
 
-Storage type | Description   | Traditional mode | Hybrid mode | DB-less | {{site.konnect_short_name}}
--------------|---------------|------------------|-------------|---------|----------------------------
-`shm` | Lua shared dict storage. <br> This storage is volatile between Nginx restarts (not reloads). | ✅ | ❌ | ✅ | ❌
-`kong`| {{site.base_gateway}} database storage. | ✅ | ✅ <sup>1</sup> | ❌ | ❌
-`redis` | [Redis-based](https://redis.io/docs/latest/) storage.  | ✅ | ✅ | ✅ | ✅
-`consul` | [HashiCorp Consul](https://www.consul.io/) storage. | ✅ | ✅ | ✅ | ✅
-`vault` | [HashiCorp Vault](https://www.vaultproject.io/) storage. <br> _Only the [KV V2](https://www.vaultproject.io/api/secret/kv/kv-v2.html) backend is supported._ | ✅ | ✅ | ✅ | ✅
+{% feature_table %}
+item_title: Storage type
+columns:
+  - title: Description
+    key: description
+  - title: Traditional mode
+    key: traditional
+  - title: Hybrid mode
+    key: hybrid
+  - title: DB-less
+    key: dbless
+  - title: "{{site.konnect_short_name}}"
+    key: konnect
+features:
+  - title: "`shm`"
+    description: "Lua shared dict storage. This storage is volatile between Nginx restarts (not reloads)."
+    traditional: true
+    hybrid: false
+    dbless: true
+    konnect: false
+  - title: "`kong` <sup>1</sup>"
+    description: "{{site.base_gateway}} database storage."
+    traditional: true
+    hybrid: true
+    dbless: false
+    konnect: false
+  - title: "`redis`"
+    description: "[Redis-based](https://redis.io/docs/latest/) storage."
+    traditional: true
+    hybrid: true
+    dbless: true
+    konnect: true
+  - title: "`consul`"
+    description: "[HashiCorp Consul](https://www.consul.io/) storage."
+    traditional: true
+    hybrid: true
+    dbless: true
+    konnect: true
+  - title: "`vault`"
+    description: "[HashiCorp Vault](https://www.vaultproject.io/) storage. Only the [KV V2](https://www.vaultproject.io/api/secret/kv/kv-v2.html) backend is supported."
+    traditional: true
+    hybrid: true
+    dbless: true
+    konnect: true
+{% endfeature_table %}
 
 {:.info}
 > **\[1\]**: Due to the current limitations of hybrid mode, `kong` storage only supports certificate generation from
@@ -87,17 +125,18 @@ See the [hybrid mode workflow](#hybrid-mode-workflow) for details.
 
 To configure a storage type other than `kong` (default), see the [ACME plugin example configurations](/plugins/acme/examples/).
 
-
-### Traditional and DB-less mode workflow
+### Workflow
 
 An HTTP-01 challenge workflow between the {{site.base_gateway}} and the ACME server looks like this:
 
 1. The client sends a proxy or Admin API request that triggers certificate generation for `example-domain.com`.
 2. {{site.base_gateway}} sends a request to the ACME server to start the validation process.
-3. If `example-domain.com` is publicly resolvable to the {{site.base_gateway}} instance that serves the challenge response, then the ACME server returns the challenge response detail to {{site.base_gateway}}.
-4. The ACME server checks if the previous challenge has a response at `example-domain.com`.
-5. {{site.base_gateway}} checks the challenge status and, if passed, downloads the certificate from the ACME server.
-6. {{site.base_gateway}} uses the new certificate to serve TLS requests.
+3. If `example-domain.com` is publicly resolvable to the {{site.base_gateway}} instance that serves the challenge response, 
+then the ACME server returns challenge instructions to {{site.base_gateway}}.
+4. {{site.base_gateway}} executes the challenge against the `example-domain.com`, validates the results against the ACME server,
+5. If the challenge passes, {{site.base_gateway}} downloads the SSL certificate from the ACME server and it to serve TLS requests.
+
+See the following diagram, which breaks down the process in more detail:
 
 <!--vale off-->
 
@@ -107,102 +146,26 @@ sequenceDiagram
     participant client as Client
     participant kong as {{site.base_gateway}}
     participant acme as ACME Server
+    participant domain as example-domain.com
+    participant storage as Storage <br>(internal or external)
 
     client->>kong: Proxy or Admin API request <br> for example-domain.com
     kong->>acme: Start validation for example-domain.com
     note left of acme: example-domain.com is <br> publicly resolvable to {{site.base_gateway}}
-    acme->>kong: Return challenge response detail
-    acme-->>kong: Check challenge response at example-domain.com
+    acme->>kong: Return challenge instructions
+    kong->>domain: Use challenge against example-domain.com
+    domain->>kong: Execute challenge and send response
     kong-->>acme: Check challenge status
     acme->>kong: Download SSL certificate
-    kong-->>kong: Use new SSL certificate for TLS requests
+    kong-->>storage: Place certificate in storage
+    storage-->>kong: Use new SSL certificate for TLS requests
 {% endmermaid %}
 
 <!--vale on-->
 
-### Hybrid mode workflow
-
-#### Kong database storage
-
-This storage option is available in on-prem hybrid mode, but it isn't available in {{site.konnect_short_name}}.
-Setting the storage strategy to `kong` tells the plugin to store challenge tokens and keys in the {{site.base_gateway}} datastore.
-
-`kong` storage in hybrid mode works in following way:
-
-1. The client sends a proxy or Admin API request that triggers certificate generation for `example-domain.com`.
-2. The Kong control plane requests the ACME server to start the validation process.
-3. If `example-domain.com` is publicly resolvable to the data plane that serves the challenge response, 
-then the ACME server returns a challenge response detail to the control plane.
-4. The control plane propagates the challenge response detail to the data plane.
-6. The ACME server checks if the previous challenge has a response at `example-domain.com`.
-7. The control plane checks the challenge status and, if passed, downloads the certificate from the ACME server.
-8. The control plane propagates the new certificates to the data plane.
-9. (For proxy requests) The data plane uses the new certificate to serve TLS requests.
-
-<!--vale off-->
-
-{% mermaid %}
-sequenceDiagram
-    autonumber
-    participant client as Client
-    participant kongdp as {{site.base_gateway}} <br> data plane
-    participant kongcp as {{site.base_gateway}} <br> control plane
-    participant acme as ACME Server
-
-    client->>kongcp: Proxy or Admin API request <br> for example-domain.com
-    kongcp->>acme: Start validation for example-domain.com
-    note left of acme: example-domain.com is <br> publicly resolvable to {{site.base_gateway}}
-    acme->>kongcp: Return challenge response detail
-    kongcp->>kongdp: Propagate challenge response detail
-    acme-->>kongcp: Check challenge response at example-domain.com
-    kongcp-->>acme: Check challenge status
-    acme->>kongcp: Download SSL certificate
-    kongcp->>kongdp: Propagate new SSL certificates
-    kongdp-->>kongdp: Use new SSL certificate for TLS requests
-{% endmermaid %}
-
-<!--vale on-->
-
-All external storage types work as usual in hybrid mode. 
-Both the control plane and data planes need to connect to the same external storage cluster. 
-We also recommend setting up replicas to avoid connecting to same node directly for external storage.
-
-#### External storage 
-
-External storage in hybrid mode (`redis`, `consul`, or `vault`) works in the following way:
-
-1. The client sends a proxy or Admin API request that triggers certificate generation for `example-domain.com`.
-2. The Kong control plane or data plane requests the ACME server to start the validation process.
-3. The ACME server returns the challenge response detail to the control or data plane.
-4. If `example-domain.com` is publicly resolvable to the data plane that reads and serves the challenge response from external storage, the control plane or data plane stores the challenge response detail in external storage.
-5. The ACME server checks if the previous challenge has a response at `example-domain.com`.
-6. The control plane or data plane checks the challenge status and, if passed, downloads the certificate from the ACME server.
-7. The control plane or data plane stores the new certificates in external storage.
-8. (For proxy requests) The data plane reads from external storage and uses the new certificate to serve TLS requests.
-
-<!--vale off-->
-
-{% mermaid %}
-sequenceDiagram
-    autonumber
-    participant client as Client
-    participant kong as {{site.base_gateway}} <br> control plane <br> or data plane
-    participant acme as ACME Server
-    participant storage as External storage
-
-    client->>kong: Proxy or Admin API request <br> for example-domain.com
-    kong->>acme: Start validation for example-domain.com
-    note left of acme: example-domain.com is <br> publicly resolvable to {{site.base_gateway}}
-    acme->>kong: Return challenge response detail
-    acme-->>kong: Check challenge response at example-domain.com
-    kong->>storage: Store challenge response
-    kong-->>acme: Check challenge status
-    acme->>kong: Download SSL certificate
-    kong->>storage: Stores new SSL certificates
-    storage-->>kong: Read from external storage for TLS requests
-{% endmermaid %}
-
-<!--vale on-->
+In hybrid mode, the process is essentially the same, but both the control plane and data planes need access to the same storage. 
+If the storage is external, they both need to connect to the same external storage cluster.
+We also recommend setting up replicas to avoid having the data planes and control planes connect to same node directly for external storage.
 
 ## Renewing certificates
 
