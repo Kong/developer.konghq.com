@@ -13,13 +13,7 @@ related_resources:
     url: /gateway/security/
 ---
 
-@todo
+<!--Original doc:
+http://docs.konghq.com/gateway/latest/production/networking/firewall/
+https://docs.konghq.com/gateway/latest/production/networking/default-ports/-->
 
-I don't know if reference is the correct format. Maybe a landing page with separate reference pages?
-
-Possible content:
-* https://docs.konghq.com/gateway/3.9.x/production/networking/firewall/
-* https://docs.konghq.com/gateway/3.9.x/production/networking/dns-considerations/
-* https://docs.konghq.com/gateway/3.9.x/production/networking/cp-dp-proxy/
-* https://docs.konghq.com/konnect/network/
-* https://docs.konghq.com/gateway/latest/production/networking/default-ports/
