@@ -3,7 +3,7 @@ title: Store Keyring data in a HashiCorp Vault
 content_type: how_to
 related_resources:
   - text: Keyring
-    url: /gateway/entities/keyring/
+    url: /gateway/keyring/
   - text: Configure HashiCorp Vault as a vault backend
     url: /how-to/configure-hashicorp-vault-as-a-vault-backend/
 
