@@ -5,7 +5,7 @@ related_resources:
   - text: Keyring
     url: /gateway/entities/keyring/
   - text: Configure HashiCorp Vault as a vault backend
-    url: /how-to/configure-hashicorp-vault-as-a-vault-backend
+    url: /how-to/configure-hashicorp-vault-as-a-vault-backend/
 
 products:
     - gateway
