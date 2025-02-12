@@ -43,9 +43,8 @@ prereqs:
         ngrok http localhost:8000
         ```
         1. Copy the Forwarding URL from the output and strip the `https://`.
-        1. In a new terminal window, export it as an environment variable as well as a decK environment variable:
+        1. In a new terminal window, export it as a decK environment variable:
         ```sh
-        export NGROK_HOST=<your-forwarding-url>
         export DECK_NGROK_HOST=<your-forwarding-url>
         ```
       icon_url: /assets/icons/ngrok.png
@@ -110,7 +109,7 @@ variables:
 Trigger certificate creation:
 
 ```sh
-curl https://$NGROK_HOST:8443 --resolve $NGROK_HOST:8443:127.0.0.1 -vk
+curl https://$DECK_NGROK_HOST:8443 --resolve $DECK_NGROK_HOST:8443:127.0.0.1 -vk
 ```
 
 This might take a few seconds.
@@ -120,7 +119,7 @@ This might take a few seconds.
 Validate that the certificate was correctly created:
 
 ```sh
-echo q |openssl s_client -connect localhost -port 8443 -servername $NGROK_HOST 2>/dev/null |openssl x509 -text -noout
+echo q |openssl s_client -connect localhost -port 8443 -servername $DECK_NGROK_HOST 2>/dev/null |openssl x509 -text -noout
 ```
 
 You should see the certificate in the output.
