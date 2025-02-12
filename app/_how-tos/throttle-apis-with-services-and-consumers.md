@@ -36,7 +36,7 @@ tags:
 
 tldr:
     q: How do I throttle APIs to protect them from DDoS attacks while allowing multiple privileged consumers to access the Service with higher rate limits?
-    a: Configure the [Rate Limiting](/plugins/rate-limiting/) plugin on two consumers with `config.minute` set to 6. Configure the [Service Protection](/plugins/service-protection/) plugin with `config.window_size` set to 60 and `config.limit` set to 10. This setup will limit all requests on the Service to 10 per minute, even if the Consumers are sending requests simultaneously. 
+    a: Configure the [Rate Limiting](/plugins/rate-limiting/) plugin on two consumers with `config.minute` set to a specific limit, then configure the [Service Protection](/plugins/service-protection/) plugin with `config.window_size` and `config.limit` set to a different limit. This setup will limit all requests on the Service to your configured limit, even if the Consumers are sending requests simultaneously. 
 
 tools:
     - deck
@@ -60,7 +60,9 @@ cleanup:
 
 ## 1. Create privileged Consumers
 
-In this how to, we'll be creating two Consumers that have different rate limits from the limits applied to the Service. These Consumers act as a type of "privileged" Consumer in this scenario that have higher rate limits, but they will still be prevented from exceeding the Service rate limits. The reason for this is to prevent DDoS type attacks on your APIs. 
+In this tutorial, we'll be creating two Consumers that have different rate limits from the limits applied to the Gateway Service. 
+These Consumers act as a type of "privileged" Consumer in this scenario that have higher rate limits, but they will still be prevented from exceeding the Service rate limits. 
+The reason for this is to prevent DDoS type attacks on your APIs. 
 
 {% entity_examples %}
 entities:
@@ -113,7 +115,10 @@ entities:
 
 ## 4. Enable rate limits on the Service with the Service Protection plugin
 
-Now we can apply a rate limit on the Service itself using the [Service Protection](/plugins/service-protection/) plugin. In this example, we are setting the limit to 10 requests per minute. Due to [plugin execution order](/gateway/plugin-execution-order/), the Service Protection plugin is applied *before* the Rate Limiting plugin. This means that if multiple Consumers are making requests at the same time, together they cannot make more than 10 requests per minute, even if the Consumer rate limit is 6 requests per minute. 
+Now we can apply a rate limit on the Service itself using the [Service Protection](/plugins/service-protection/) plugin. 
+In this example, we are setting the limit to 10 requests per minute. 
+Due to [plugin execution order](/gateway/plugin-execution-order/), the Service Protection plugin is applied *before* the Rate Limiting plugin. 
+This means that if multiple Consumers are making requests at the same time, together they can't make more than 10 requests per minute, even if the individual Consumer rate limit is 6 requests per minute. 
 
 {% entity_examples %}
 entities:
