@@ -30,17 +30,20 @@ rows:
             config:
               diagram: |
                 flowchart TD
-                A{What are you trying to rate limit?}  
+                A{What are you trying 
+                to rate limit?}  
                 A -->|Only Services| B[Service Protection 
                 plugin]
                 A -->|LLMs| G[AI Rate Limiting 
                 Advanced plugin]
                 A -->|GraphQL queries| I[GraphQL Rate Limiting 
                 Advanced plugin]
-                A -->|Routes, Consumers, or global| C{Do you want to 
+                A -->|Routes, Consumers, 
+                or global| C{Do you want to 
                 apply multiple limits 
                 or sliding windows?}
-                A -->|"Consumers (developer requests)"| D[Response Rate 
+                A -->|"Consumers 
+                (developer requests)"| D[Response Rate 
                 Limiting plugin]
                 C --> |Yes| H[Rate Limiting 
                 Advanced plugin]

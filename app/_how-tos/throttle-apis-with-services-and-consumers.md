@@ -143,6 +143,7 @@ url: '/anything'
 headers:
   - 'apikey:jsmith-key'
 status_code: 200
+message: OK
 {% endvalidation %}
 
 This doesn't exceed the rate limit per Consumer or per Service.
@@ -150,12 +151,12 @@ This doesn't exceed the rate limit per Consumer or per Service.
 Now, quickly run the following command to test the rate limiting as the `tsmith` Consumer:
 
 {% validation rate-limit-check %}
-iterations: 6
+iterations: 5
 url: '/anything'
 headers:
   - 'apikey:tsmith-key'
 status_code: 429
 {% endvalidation %}
 
-You get this error after the fourth request because the Consumer has now exceeded the rate limit of 10 requests per minute on the Service.
+You get this error because the Consumer has now exceeded the rate limit of 10 requests per minute on the Service.
 
