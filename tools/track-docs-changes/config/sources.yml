@@ -160,6 +160,8 @@ app/_how-tos/proxy-tls-passthrough.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_how-tos/configure-fallback-route.md:
   - app/_src/gateway/how-kong-works/routing-traffic/
+app/_how-tos/throttle-apis-with-services-and-consumers.md:
+  - app/_hub/kong-inc/service-protection/how-to/_index.md
 app/_how-tos/test-certificate-generation-locally-with-ngrok-and-acme.md:
   - app/_hub/kong-inc/acme/how-to/_index.md
   - app/_hub/kong-inc/acme/how-to/_local-testing-development.md
@@ -200,6 +202,8 @@ app/_kong_plugins/openid-connect/changelog.md:
   - app/_hub/kong-inc/openid-connect/_changelog.md
 app/_kong_plugins/bot-detection/index.md:
   - app/_hub/kong-inc/bot-detection/overview/_index.md
+app/_kong_plugins/service-protection/index.md:
+  - app/_hub/kong-inc/service-protection/overview/_index.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
