@@ -23,7 +23,7 @@ tldr:
         ```
         keyring_enabled = on
         keyring_strategy = cluster
-        keyring_recovery_public_key = /path/to/cert.pem
+        keyring_recovery_public_key = /path/to/public.pem
         ```
 
 prereqs:
@@ -44,10 +44,10 @@ min_version:
 
 ## 1. Generate an RSA key pair
 
-The key pair is needed for [disaster recovery](/gateway/keyring/#disaster-recovery). You can generate them using OpenSSL:
+These keys are needed for [disaster recovery](/gateway/keyring/#disaster-recovery). You can generate them using OpenSSL:
 ```sh
-openssl genrsa -out key.pem 2048
-openssl rsa -in key.pem -pubout -out cert.pem
+openssl genrsa -out private.pem 2048
+openssl rsa -in private.pem -pubout -out public.pem
 ```
 
 ## 2. Set environment variables
@@ -56,14 +56,14 @@ Set the variables needed to start {{site.base_gateway}} with Keyring enabled:
 ```sh
 export KONG_KEYRING_ENABLED=on
 export KONG_KEYRING_STRATEGY=cluster
-export KONG_KEYRING_RECOVERY_PUBLIC_KEY=$(cat cert.pem | base64)
+export KONG_KEYRING_RECOVERY_PUBLIC_KEY=$(cat public.pem | base64)
 ```
 
 {:.info}
 > **Note:** `KONG_KEYRING_RECOVERY_PUBLIC_KEY` can be:
-* The absolute path to the generated `cert.pem` file
-* The content of the `cert.pem` file
-* The base64-encoded content of the `cert.pem` file
+* The absolute path to the generated public key file
+* The public key content
+* The base64-encoded public key content
 
 ## 3. Start {{site.base_gateway}}
 
