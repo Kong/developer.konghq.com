@@ -160,6 +160,9 @@ app/_how-tos/proxy-tls-passthrough.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_how-tos/configure-fallback-route.md:
   - app/_src/gateway/how-kong-works/routing-traffic/
+app/gateway/installation.md:
+  - app/_src/gateway/production/running-kong/kong-user.md
+
 
 
 # plugins
