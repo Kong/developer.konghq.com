@@ -81,7 +81,7 @@ You will get a `201 Created` response with details about the new Key Set. For ex
 
 ## 2. Create a Key
 
-Create a Key and use either the `set.id` or `set.name` parameter to add it to the Key Set:
+Create a Key and use either the `set.id` from the response in the previous step, or the `set.name` parameter to add it to the Key Set:
 
 {% control_plane_request %}
   url: /keys
