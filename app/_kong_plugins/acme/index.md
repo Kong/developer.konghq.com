@@ -155,10 +155,10 @@ sequenceDiagram
     acme->>kong: Return challenge instructions
     kong->>domain: Use challenge against example-domain.com
     domain->>kong: Execute challenge and send response
-    kong-->>acme: Check challenge status
+    kong->>acme: Check challenge status
     acme->>kong: Download SSL certificate
-    kong-->>storage: Place certificate in storage
-    storage-->>kong: Use new SSL certificate for TLS requests
+    kong->>storage: Place certificate in storage
+    storage->>kong: Use new SSL certificate for TLS requests
 {% endmermaid %}
 
 <!--vale on-->
