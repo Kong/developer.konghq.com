@@ -48,6 +48,7 @@ cleanup:
 ---
 
 ## 1. Create a Key Set
+Using the Admin API, create a Key Set to hold PEM keys:
 
 {% control_plane_request %}
   url: /key-sets
@@ -60,9 +61,17 @@ cleanup:
       name: my-pem-key-set
 {% endcontrol_plane_request %}
 
+You will get a `201 Created` response with details about the new Key Set. For example:
+
+```json
+
+```
+{:.no-copy-code}
+
 ## 2. Create a Key
 
-Create a Key and use either the `set.id` or `set.name` parameter to add it to the Key Set.
+Create a Key and use either the `set.id` from the response in the previous step, or the `set.name` parameter to add it to the Key Set.
+To avoid errors, the private and public keys should be strings, and newlines should replaced with `\n`:
 
 {% control_plane_request %}
   url: /keys
@@ -80,3 +89,10 @@ Create a Key and use either the `set.id` or `set.name` parameter to add it to th
         private_key: "-----BEGIN PRIVATE KEY-----\nprivate-key-content\n-----END PRIVATE KEY-----"
         public_key: "-----BEGIN PUBLIC KEY-----\npublic-key-content\n-----END PUBLIC KEY-----"
 {% endcontrol_plane_request %}
+
+You will get a `201 Created` response with details about the new Key, including the Key Set ID. For example:
+
+```json
+
+```
+{:.no-copy-code}
