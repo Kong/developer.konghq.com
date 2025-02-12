@@ -137,7 +137,7 @@ To test that the Service Protection plugin correctly applies rate limits to the 
 
 First, run the following command to test the rate limiting as the `jsmith` Consumer:
 
-{% validation request-check %}
+{% validation rate-limit-check %}
 iterations: 6
 url: '/anything'
 headers:
@@ -145,11 +145,11 @@ headers:
 status_code: 200
 {% endvalidation %}
 
-You should get `200` responses since this doesn't exceed the rate limit per Consumer or per Service.
+This doesn't exceed the rate limit per Consumer or per Service.
 
 Now, quickly run the following command to test the rate limiting as the `tsmith` Consumer:
 
-{% validation request-check %}
+{% validation rate-limit-check %}
 iterations: 6
 url: '/anything'
 headers:
@@ -157,5 +157,5 @@ headers:
 status_code: 429
 {% endvalidation %}
 
-After the fourth request, you should get a `429` error. This is because the Consumer has now exceeded the rate limit of 10 requests per minute on the Service.
+You get this error after the fourth request because the Consumer has now exceeded the rate limit of 10 requests per minute on the Service.
 
