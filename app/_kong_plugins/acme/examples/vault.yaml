@@ -10,19 +10,21 @@ weight: 870
 requirements:
 - A public IP and a resolvable DNS
 - '{{site.base_gateway}} accepts proxy traffic on port 80'
+- A HashiCorp Vault instance
 
 config:
-  account_email: $EMAIL
+  account_email: ${email}
   account_key:
-    key_id: "$KEY_ID"
-    key_set: "$KEY_SET"
+    key_id: ${key_id}
+    key_set: ${key_set}
   domains:
-    - "$DOMAIN"
+    - ${domain}
   tos_accepted: true
+  storage: redis
   storage: vault
   storage_config:
-    host: $HCV_HOST
-    port: $HCV_PORT
+    host: ${hcv_host}
+    port: ${hcv_port}
     kv_path: "acme"
     timeout: 2000
     https: false
@@ -32,24 +34,21 @@ config:
     token: nil
     auth_path: "kubernetes"
     auth_role: nil
-    jwt_path: $JWT_PATH
+    jwt_path: ${jwt_path}
     namespace: nil
 
-# variables:
-#   account_email:
-#     value: example@example.com
-#   account_key:
-#     key_id:
-#       value: $KEY_ID
-#     key_set:
-#       value: $KEY_SET
-#   domains:
-#     value:
-#       - example.com
-#   storage_config:
-#     vault:
-#       host:
-#         value: example.vault.host
-#       port:
-#         value: 1234
-  
+variables:
+  email:
+    value: $EMAIL
+  key_id:
+    value: $KEY_ID
+  key_set:
+    value: $KEY_SET
+  domain:
+    value: $DOMAIN
+  hcv_host:
+    value: $HCV_HOST
+  hcv_port:
+    value: $HCV_PORT
+  jwt_path:
+    value: $JWT_PATH
