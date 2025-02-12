@@ -160,6 +160,9 @@ app/_how-tos/proxy-tls-passthrough.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_how-tos/configure-fallback-route.md:
   - app/_src/gateway/how-kong-works/routing-traffic/
+app/_how-tos/test-certificate-generation-locally-with-ngrok-and-acme.md:
+  - app/_hub/kong-inc/acme/how-to/_index.md
+  - app/_hub/kong-inc/acme/how-to/_local-testing-development.md
 
 
 # plugins
