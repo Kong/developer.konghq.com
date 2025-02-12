@@ -36,7 +36,7 @@ search_aliases:
   - certificates
 ---
 
-The ACME plugin allows {{site.base_gateway}} to apply certificates from Let's Encrypt or any other ACMEv2 service and serve them dynamically. 
+The ACME plugin allows {{site.base_gateway}} to apply SSL certificates from Let's Encrypt or any other ACMEv2 service and serve them dynamically for TLS requests.
 You can also configure a threshold time for automatic renewal. 
 
 ## How it works
@@ -46,18 +46,15 @@ The plugin generates a challenge token and key thumbprint, then presents them to
 
 To use this plugin, you need:
 * A public IP and a resolvable DNS
-* This challenge can only be done on port 80, so {{site.base_gateway}} needs to accept proxy traffic this port
+* This challenge can only be done on port 80, so {{site.base_gateway}} needs to accept proxy traffic this port. You can configure this with `proxy_listen` in kong.conf.
 
-Wildcard or star (`*`) certificates are not supported. Each domain must have its
+Wildcard (`*`) certificates are not supported. Each domain must have its
 own certificate.
 
 **This plugin can only be configured as a global plugin.** 
 The plugin terminates the `/.well-known/acme-challenge/` path for matching domains. 
 To create certificates and terminate challenges only for certain domains, refer to the [configuration reference](/plugins/acme/reference/).
 
-{:.info}
-> **Serverless Gateways**: This plugin is not supported in serverless gateways because the
- TLS handshake doesn't occur at the {{site.base_gateway}} layer in this setup. 
 
 ### Running with or without a database
 
@@ -65,9 +62,8 @@ In a database-backed deployment, the plugin creates an SNI and certificate entit
 serve the certificate. If the SNI or certificate for the current request is already set
 in the database, it will be overwritten.
 
-In DB-less mode, the plugin takes over certificate handling. If the SNI or
-certificate entity is already defined in {{site.base_gateway}}, it will be overridden by the
-response.
+In DB-less mode, the plugin takes over certificate handling. The plugin overrides the SNI or
+certificate entity if they are already defined in {{site.base_gateway}}.
 
 ### Supported storage types
 
@@ -85,7 +81,7 @@ Storage type | Description   | Traditional mode | Hybrid mode | DB-less | {{site
 `vault` | [HashiCorp Vault](https://www.vaultproject.io/) storage. <br> _Only the [KV V2](https://www.vaultproject.io/api/secret/kv/kv-v2.html) backend is supported._ | ✅ | ✅ | ✅ | ✅
 
 {:.info}
-> **\[1\]**: Due to current the limitations of hybrid mode, `kong` storage only supports certificate generation from
+> **\[1\]**: Due to the current limitations of hybrid mode, `kong` storage only supports certificate generation from
 the Admin API but not the proxy side, as the data planes don't have access to the {{site.base_gateway}} database. 
 See the [hybrid mode workflow](#hybrid-mode-workflow) for details. 
 
@@ -219,8 +215,7 @@ failed, once per day.
 Renewal configuration is stored in the configured storage backend.
 If the storage is cleared or modified outside of {{site.base_gateway}}, renewal might not complete properly.
 
-You can also actively trigger the renewal. The following request
-schedules a renewal in the background and returns immediately:
+You can also actively trigger the renewal by sending the following request that schedules a renewal in the background:
 
 ```bash
 curl http://localhost:8001/acme -XPATCH
@@ -242,4 +237,4 @@ You can see what certificates {{site.base_gateway}} is currently is aware of usi
 
 The ACME plugin supports external account binding (EAB) with the `config.eab_kid` and `config.eab_hmac_key` values.
 
-If using [ZeroSSL](https://zerossl.com/), the provider's external account can be registered automatically, without specifying the KID or HMAC key.
+If you're using [ZeroSSL](https://zerossl.com/), the provider's external account can be registered automatically, without specifying the KID or HMAC key.
