@@ -30,7 +30,7 @@ prereqs:
   inline:
     - title: ngrok
       content: |
-        In this how to, we use [ngrok](https://ngrok.com/) to expose a local URL to the internet for local testing and development purposes. This isn't a requirement for the ACME plugin itself.
+        In this tutorial, we use [ngrok](https://ngrok.com/) to expose a local URL to the internet for local testing and development purposes. This isn't a requirement for the ACME plugin itself.
 
         1. [Install ngrok](https://ngrok.com/docs/getting-started/#step-1-install).
         1. [Sign up for an ngrok account](https://dashboard.ngrok.com/) and find your [ngrok authtoken](https://dashboard.ngrok.com/get-started/your-authtoken). 
@@ -47,7 +47,7 @@ prereqs:
         ```sh
         export DECK_NGROK_HOST=<your-forwarding-url>
         ```
-      icon_url: /assets/icons/ngrok.png
+      icon_url: /assets/icons/code.png
 
 tools:
   - deck
