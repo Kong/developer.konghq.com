@@ -71,7 +71,7 @@ response.
 
 ### Supported storage types
 
-The ACME plugin needs a backend storage to store certificates.
+The ACME plugin needs a backend storage to store certificates, challenge tokens, and key thumbprints.
 
 You can set the backend storage for the plugin using the [`config.storage`](/plugins/acme/reference/#config-storage) parameter.
 The backend storage available depends on the [topology](/gateway/deployment-models/) of your {{site.base_gateway}} environment: 
