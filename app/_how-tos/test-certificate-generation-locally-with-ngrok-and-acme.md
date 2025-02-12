@@ -65,7 +65,9 @@ min_version:
 
 ## 1. Configure a Service and Route
 
-The [ACME](/plugins/acme/) plugin requires a Route to trigger certificate generation, so we must create a [Gateway Service](/gateway/entities/service/) as well as a corresponding [Route](/gateway/entities/route/) that points to our ngrok host:
+The [ACME](/plugins/acme/) plugin requires a Route to access the proxy to trigger certificate generation.
+
+Create a [Gateway Service](/gateway/entities/service/) as well as a corresponding [Route](/gateway/entities/route/) that points to your ngrok host:
 
 {% entity_examples %}
 entities:
