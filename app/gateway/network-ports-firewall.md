@@ -27,7 +27,7 @@ https://docs.konghq.com/gateway/latest/production/networking/default-ports/
 
 {{site.base_gateway}} uses ports for the following:
 * **[Proxying](/gateway/traffic-control/proxying/) incoming traffic**
-  * In general, the proxy ports are the *only* ports that should be made available to your clients. See [`proxy_listen` in the Kong configuration reference](/gateway/configuration/) for more details on HTTP/HTTPS proxy listen options. 
+  * In general, the proxy ports are the *only* ports that should be made available to your clients. Upstream services are accessible via the proxy interface and ports, so make sure that these values only grant the access level you require. See [`proxy_listen` in the Kong configuration reference](/gateway/configuration/) for more details on HTTP/HTTPS proxy listen options. 
   * You can also proxy TCP/TLS streams, which is disabled by default. If you want to proxy this traffic, see [`stream_listen` in the Kong configuration reference](/gateway/configuration/) for more information about stream proxy listen options and how to enable it.
   * Your proxy will need have rules added for any HTTP/HTTPS and TCP/TLS stream listeners that you configure. For example, if you want {{site.base_gateway}} to manage traffic on port `4242`, your firewall must allow traffic on that port.
 * **Exposing the [Admin API](/api/gateway/admin-ee/)**: This is used to manage {{site.base_gateway}}. You should [prevent unauthorized access](/gateway/secure-the-admin-api/) to these ports in production. See [`admin_listen` in the Kong configuration reference](/gateway/configuration/) for more information about the configuration.
@@ -38,8 +38,8 @@ By default, {{site.base_gateway}} listens on the following ports:
 
 | Port                                                                               | Protocol | Description | 
 |-----------------------------------------------------------------------------------|---------|------------|
-| `8000` | HTTP     | Takes incoming HTTP traffic from [Consumers](/gateway/entities/consumer/), and forwards it to upstream [Gateway Services](/gateway/entities/service/). | 
-| `8443` | HTTPS    | Takes incoming HTTPS traffic from [Consumers](/gateway/entities/consumer/), and forwards it to upstream [Gateway Services](/gateway/entities/service/). | 
+| `8000` | HTTP     | Takes incoming HTTP traffic from [Consumers](/gateway/entities/consumer/), and forwards it to upstream services. | 
+| `8443` | HTTPS    | Takes incoming HTTPS traffic from [Consumers](/gateway/entities/consumer/), and forwards it to upstream services. | 
 | `8001` | HTTP     | Admin API. Listens for calls from the command line over HTTP. | 
 | `8444` | HTTPS    | Admin API. Listens for calls from the command line over HTTPS. | 
 | `8002` | HTTP     | Kong Manager (GUI). Listens for HTTP traffic. | 
