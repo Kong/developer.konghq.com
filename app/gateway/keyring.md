@@ -127,4 +127,4 @@ curl -X POST localhost:8001/keyring/generate
 ```
 
 This key will then be used to encrypt sensitive fields in the database. 
-To validate that it's' working, you can create a plugin with data in an encrypted field, and then check the database to make sure the data is encrypted.
+To validate that it's working, you can create a plugin with data in an encrypted field, and then check the database to make sure the data is encrypted.
