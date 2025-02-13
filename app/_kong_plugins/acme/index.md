@@ -76,6 +76,8 @@ The ACME plugin needs a backend storage to store certificates, challenge tokens,
 You can set the backend storage for the plugin using the [`config.storage`](/plugins/acme/reference/#config-storage) parameter.
 The backend storage available depends on the [topology](/gateway/deployment-models/) of your {{site.base_gateway}} environment: 
 
+<!--vale off-->
+
 {% feature_table %}
 item_title: Storage type
 columns:
@@ -121,6 +123,8 @@ features:
     dbless: true
     konnect: true
 {% endfeature_table %}
+
+<!--vale on-->
 
 {:.info}
 > **\[1\]**: Due to the current limitations of hybrid mode, `kong` storage only supports certificate generation from
