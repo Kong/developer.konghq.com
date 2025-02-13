@@ -1,0 +1,38 @@
+
+title: ACME with Redis storage
+description: |
+  Configure the ACME plugin with Redis as a storage backend.
+
+weight: 860
+
+requirements:
+- A public IP and a resolvable DNS
+- '{{site.base_gateway}} accepts proxy traffic on port 80'
+- A running Redis instance
+
+config:
+  account_email: ${email}
+  account_key:
+    key_id: ${key_id}
+    key_set: ${key_set}
+  domains:
+    - ${domain}
+  tos_accepted: true
+  storage: redis
+  storage_config:
+    redis:
+      host: ${redis_host}
+      port: ${redis_port}
+variables:
+  email:
+    value: $EMAIL
+  key_id:
+    value: $KEY_ID
+  key_set:
+    value: $KEY_SET
+  domain:
+    value: $DOMAIN
+  redis_host:
+    value: $REDIS_HOST
+  redis_port:
+    value: $REDIS_PORT
