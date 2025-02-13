@@ -61,7 +61,6 @@ Using the Admin API, create a Key Set to hold JSON Web keys:
   headers:
       - 'Accept: application/json'
       - 'Content-Type: application/json'
-      - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
   body:
       name: my-key-set
 {% endcontrol_plane_request %}
