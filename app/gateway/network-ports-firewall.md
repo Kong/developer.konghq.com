@@ -1,5 +1,5 @@
 ---
-title: Network, ports, and firewall for {{site.base_gateway}}
+title: "{{site.base_gateway}} ports"
 content_type: reference
 layout: reference
 
@@ -16,6 +16,8 @@ related_resources:
     url: /gateway/security/
   - text: Proxying with {{site.base_gateway}}
     url: /gateway/traffic-control/proxying/
+  - text: "{{site.base_gateway}} network, ports, and firewall"
+    url: /gateway/network/
 ---
 
 <!--Original doc:
