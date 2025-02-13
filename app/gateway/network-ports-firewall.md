@@ -14,23 +14,21 @@ description: placeholder
 related_resources:
   - text: "Secure {{site.base_gateway}}"
     url: /gateway/security/
+  - text: Proxying with {{site.base_gateway}}
+    url: /gateway/traffic-control/proxying/
 ---
 
 <!--Original doc:
 http://docs.konghq.com/gateway/latest/production/networking/firewall/
-https://docs.konghq.com/gateway/latest/production/networking/default-ports/-->
+https://docs.konghq.com/gateway/latest/production/networking/default-ports/
+-->
 
-Intro sentence.
-
-what are the ports used for?
-
-5 W + 1 H
-
-Want something more than the defaults or want to change a default?
-
-- proxy_listen: https://docs.konghq.com/gateway/3.9.x/reference/configuration/#proxy_listen
-- admin_listen: https://docs.konghq.com/gateway/3.9.x/reference/configuration/#admin_listen
-- stream_listen: https://docs.konghq.com/gateway/3.9.x/reference/configuration/#stream_listen
+{{site.base_gateway}} uses ports for the following:
+* **[Proxying](/gateway/traffic-control/proxying/) incoming traffic**
+  * In general, the proxy ports are the *only* ports that should be made available to your clients. See [`proxy_listen` in the Kong configuration reference](/gateway/configuration/) for more details on HTTP/HTTPS proxy listen options. 
+  * You can also proxy TCP/TLS streams, which is disabled by default. If you want to proxy this traffic, see [`stream_listen` in the Kong configuration reference](/gateway/configuration/) for more information about stream proxy listen options and how to enable it.
+  * Your proxy will need have rules added for any HTTP/HTTPS and TCP/TLS stream listeners that you configure. For example, if you want {{site.base_gateway}} to manage traffic on port `4242`, your firewall must allow traffic on that port.
+* **Exposing the [Admin API](/api/gateway/admin-ee/)**: This is used to manage {{site.base_gateway}}. You should [prevent unauthorized access](/gateway/secure-the-admin-api/) to these ports in production. See [`admin_listen` in the Kong configuration reference](/gateway/configuration/) for more information about the configuration.
 
 ## Default ports
 
@@ -44,6 +42,7 @@ By default, {{site.base_gateway}} listens on the following ports:
 | `8444` | HTTPS    | Admin API. Listens for calls from the command line over HTTPS. | 
 | `8002` | HTTP     | Kong Manager (GUI). Listens for HTTP traffic. | 
 | `8445` | HTTPS    | Kong Manager (GUI). Listens for HTTPS traffic. | 
-| `8005` | TCP     | Hybrid mode only. Control Plane listens for traffic from Data Planes. | 
-| `8006` | TCP     | Hybrid mode only. Control Plane listens for Vitals telemetry data from Data Planes. | 
+| `8005` | TCP     | Hybrid mode only. Control plane listens for traffic from data plane nodes. | 
+| `8006` | TCP     | Hybrid mode only. Control plane listens for Vitals telemetry data from data plane nodes. | 
 | `8007` | HTTP     | Status listener. Listens for calls from monitoring clients over HTTP. | 
+
