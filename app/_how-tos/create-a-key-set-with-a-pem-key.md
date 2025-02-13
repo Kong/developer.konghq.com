@@ -56,13 +56,11 @@ Using the Admin API, create a Key Set to hold PEM keys:
   headers:
       - 'Accept: application/json'
       - 'Content-Type: application/json'
-      - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
   body:
       name: my-pem-key-set
 {% endcontrol_plane_request %}
 
 You will get a `201 Created` response with details about the new Key Set.
-{:.no-copy-code}
 
 ## 2. Create a Key
 
@@ -86,6 +84,4 @@ To avoid errors, the private and public keys should be strings, and newlines sho
         public_key: "-----BEGIN PUBLIC KEY-----\npublic-key-content\n-----END PUBLIC KEY-----"
 {% endcontrol_plane_request %}
 
-You will get a `201 Created` response with details about the new Key, including the Key Set ID. 
-
-{:.no-copy-code}
+You will get a `201 Created` response with details about the new Key, including the Key Set ID.
