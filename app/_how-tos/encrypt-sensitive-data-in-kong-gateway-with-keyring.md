@@ -31,9 +31,6 @@ prereqs:
 
 cleanup:
   inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
@@ -83,11 +80,14 @@ Using the Admin API, generate a new key in the Keyring:
   method: POST
   headers:
       - 'Accept: application/json'
+      - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
 {% endcontrol_plane_request %}
 
 You will get a `201 Created` response with the key and key ID. The generated key will now be used to encrypt sensitive fields in the database.
 
 ## 5. Validate
+
+### Create a plugin
 
 To validate that it’s working, you can create a plugin with data in an encrypted field, and then check the database to make sure the data is encrypted. 
 
@@ -109,58 +109,23 @@ entities:
             temperature: 1.0
 {% endentity_examples %}
 
-When you create this plugin while Keyring is enabled, the value of `config.auth.header_value` will be encrypted in the database. You can check the `plugins` table in the Kong database to make sure it's encrypted. 
+When you create this plugin while Keyring is enabled, the value of `config.auth.header_value` will be encrypted in the database. You can check the `plugins` table in the Kong database to make sure it's encrypted.
 
-In this example, the `config` column for the AI Proxy contains the following data, where the value `Bearer my-openai-token` is encoded:
-```json
-{
-   "auth":{
-      "param_name":null,
-      "header_name":"Authorization",
-      "param_value":null,
-      "header_value":"$ke$1$-jFoDw5l9-2ed38633f83b49482c39477d-2c4e73a404092e3b2874ecb7eb88f2fb89728816261b",
-      "allow_override":false,
-      "param_location":null,
-      "azure_client_id":null,
-      "azure_tenant_id":null,
-      "aws_access_key_id":null,
-      "azure_client_secret":null,
-      "aws_secret_access_key":null,
-      "gcp_use_service_account":false,
-      "gcp_service_account_json":null,
-      "azure_use_managed_identity":false
-   },
-   "model":{
-      "name":"gpt-4",
-      "options":{
-         "top_k":null,
-         "top_p":null,
-         "gemini":null,
-         "bedrock":null,
-         "input_cost":null,
-         "max_tokens":512,
-         "huggingface":null,
-         "output_cost":null,
-         "temperature":1,
-         "upstream_url":null,
-         "llama2_format":null,
-         "upstream_path":null,
-         "azure_instance":null,
-         "mistral_format":null,
-         "anthropic_version":null,
-         "azure_api_version":"2023-05-15",
-         "azure_deployment_id":null
-      },
-      "provider":"openai"
-   },
-   "logging":{
-      "log_payloads":false,
-      "log_statistics":false
-   },
-   "route_type":"llm/v1/chat",
-   "model_name_header":true,
-   "response_streaming":"allow",
-   "max_request_body_size":8192
-}
+### Query the database
+
+1. Open an interactive shell in the database container:
+```sh
+docker exec -it kong-quickstart-database sh
 ```
-{: .no-copy-code }
+
+1. Connect to the database. With the quickstart, you only need to specify the username `kong`:
+```sh
+psql -U kong
+```
+
+1. Query the `plugins` table. With this query, we'll look for the value of `config.auth.header_value` for the `ai-proxy` plugin:
+```sql
+SELECT "config" -> "auth" -> "header_value" FROM public.plugins WHERE "name" = "ai-proxy";
+```
+
+The value returned should be encrypted.
