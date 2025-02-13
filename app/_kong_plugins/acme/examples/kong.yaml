@@ -1,5 +1,5 @@
 
-title: ACME with kong storage
+title: ACME with Kong storage
 description: |
   Configure the ACME plugin with {{site.base_gateway}} as the storage backend.
 

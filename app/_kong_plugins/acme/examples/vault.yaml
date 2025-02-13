@@ -23,19 +23,19 @@ config:
   storage: redis
   storage: vault
   storage_config:
-    host: ${hcv_host}
-    port: ${hcv_port}
-    kv_path: "acme"
-    timeout: 2000
-    https: false
-    tls_verify: true
-    tls_server_name: nil
-    auth_method: "token"
-    token: nil
-    auth_path: "kubernetes"
-    auth_role: nil
-    jwt_path: ${jwt_path}
-    namespace: nil
+    vault:
+      host: ${hcv_host}
+      port: ${hcv_port}
+      kv_path: "acme"
+      timeout: 2000
+      https: false
+      tls_verify: true
+      tls_server_name: nil
+      auth_method: "token"
+      token: nil
+      auth_path: "kubernetes"
+      auth_role: nil
+      jwt_path: ${jwt_path}
 
 variables:
   email:
