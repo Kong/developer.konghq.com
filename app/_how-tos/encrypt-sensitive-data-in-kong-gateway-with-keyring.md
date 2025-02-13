@@ -125,7 +125,7 @@ psql -U kong
 
 1. Query the `plugins` table. With this query, we'll look for the value of `config.auth.header_value` for the `ai-proxy` plugin:
 ```sql
-SELECT "config" -> "auth" -> "header_value" FROM public.plugins WHERE "name" = "ai-proxy";
+SELECT "config" -> 'auth' -> 'header_value' FROM public.plugins WHERE "name" = 'ai-proxy';
 ```
 
 The value returned should be encrypted.
