@@ -83,7 +83,6 @@ Using the Admin API, generate a new key in the Keyring:
   method: POST
   headers:
       - 'Accept: application/json'
-      - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
 {% endcontrol_plane_request %}
 
 You will get a `201 Created` response with the key and key ID. The generated key will now be used to encrypt sensitive fields in the database.
