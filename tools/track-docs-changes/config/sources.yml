@@ -251,6 +251,9 @@ app/gateway/routing/index.md:
   - app/_src/gateway/key-concepts/routes/index.md
 app/gateway/manage-kong-conf.md:
   - app/_src/gateway/production/kong-conf.md
+app/gateway/logs.md:
+  - app/_src/gateway/production/logging/log-reference.md
+  - app/_src/gateway/production/logging/update-log-level-dynamically.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
