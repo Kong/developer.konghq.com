@@ -77,7 +77,11 @@ entities:
 Authentication lets you identify a Consumer so that you can apply rate limiting.
 This example uses the [Key Authentication](/plugins/key-auth/) plugin, but you can use any authentication plugin that you prefer.
 
+sometypo 2
+
 Enable the plugin globally, which means it applies to all {{site.base_gateway}} Services and Routes:
+
+andtypo 2
 
 {% entity_examples %}
 entities:

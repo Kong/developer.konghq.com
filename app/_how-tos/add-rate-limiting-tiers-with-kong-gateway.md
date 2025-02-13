@@ -155,6 +155,9 @@ entities:
        namespace: premium
 {% endentity_examples %}
    
+
+typo in another fiel
+
 This configures the different tiers like the following:
 * **Free:** This configuration sets the rate limit to three requests for every 30 seconds.
 * **Basic:** This configuration sets the rate limit to five requests for every 30 seconds.
