@@ -134,7 +134,7 @@ An HTTP-01 challenge workflow between the {{site.base_gateway}} and the ACME ser
 3. If `example-domain.com` is publicly resolvable to the {{site.base_gateway}} instance that serves the challenge response, 
 then the ACME server returns challenge instructions to {{site.base_gateway}}.
 4. {{site.base_gateway}} executes the challenge against the `example-domain.com`, validates the results against the ACME server,
-5. If the challenge passes, {{site.base_gateway}} downloads the SSL certificate from the ACME server and it to serve TLS requests.
+5. If the challenge passes, {{site.base_gateway}} downloads the SSL certificate from the ACME server and uses it to serve TLS requests.
 
 See the following diagram, which breaks down the process in more detail:
 
