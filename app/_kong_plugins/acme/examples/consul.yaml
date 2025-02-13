@@ -1,0 +1,42 @@
+
+title: ACME with HashiCorp Consul storage
+description: |
+  Configure the ACME plugin with HashiCorp Consul as the storage backend.
+weight: 880
+
+requirements:
+- A public IP and a resolvable DNS
+- '{{site.base_gateway}} accepts proxy traffic on port 80'
+- A HashiCorp Consule instance
+
+config:
+  account_email: ${email}
+  account_key:
+    key_id: ${key_id}
+    key_set: ${key_set}
+  domains:
+    - ${domain}
+  tos_accepted: true
+  storage: consul
+  storage_config:
+    consul:
+      host: ${consul_host}
+      port: ${consul_port}
+      kv_path: "acme"
+      token: nil
+      timeout: 2000
+
+variables:
+  email:
+    value: $EMAIL
+  key_id:
+    value: $KEY_ID
+  key_set:
+    value: $KEY_SET
+  domain:
+    value: $DOMAIN
+  consul_host:
+    value: $CONSUL_HOST
+  consul_port:
+    value: $CONSUL_PORT
+

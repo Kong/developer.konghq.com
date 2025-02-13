@@ -1,0 +1,33 @@
+
+title: ACME with Kong storage
+description: |
+  Configure the ACME plugin with {{site.base_gateway}} as the storage backend.
+
+  {:.info}
+  > Note: This option is not supported in {{site.konnect_short_name}} or DB-less mode.
+
+weight: 900
+
+requirements:
+- A public IP and a resolvable DNS
+- '{{site.base_gateway}} accepts proxy traffic on port 80'
+
+config:
+  account_email: ${email}
+  account_key:
+    key_id: ${key_id}
+    key_set: ${key_set}
+  domains:
+    - ${domain}
+  tos_accepted: true
+  storage: kong
+
+variables:
+  email:
+    value: $EMAIL
+  key_id:
+    value: $KEY_ID
+  key_set:
+    value: $KEY_SET
+  domain:
+    value: $DOMAIN

@@ -42,9 +42,7 @@ categories:
 
 The CORS plugin lets you add Cross-Origin Resource Sharing (CORS) to a Service or a Route. This allows you to automate the configuration of CORS rules, ensuring that your upstreams only accept and share resources with approved sources.
 
-
 {% include sections/cors-and-kong-gateway.md %}
-
 
 ## CORS limitations
 
@@ -55,5 +53,3 @@ limitation of the [CORS specification](https://developer.mozilla.org/en-US/docs/
 Because of this limitation, this plugin only works for routes that have been
 configured with a `paths` setting. The CORS plugin does not work for routes that
 are being resolved using a custom DNS (the `hosts` property).
-
-

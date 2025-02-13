@@ -92,7 +92,7 @@ app/_gateway_entities/keyring.md:
   - app/_src/gateway/kong-enterprise/db-encryption.md
 app/_how-tos/encrypt-sensitive-data-in-kong-gateway-with-keyring.md:
   - app/_src/gateway/kong-enterprise/db-encryption.md
-app/_how-tos/integrate-keyring-with-vault.md:
+app/_how-tos/store-keyring-in-hashicorp-vault.md:
   - app/_src/gateway/kong-enterprise/db-encryption.md
 app/_gateway_entities/key.md:
   - app/_src/gateway/reference/key-management.md
@@ -160,6 +160,11 @@ app/_how-tos/proxy-tls-passthrough.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_how-tos/configure-fallback-route.md:
   - app/_src/gateway/how-kong-works/routing-traffic/
+app/_how-tos/throttle-apis-with-services-and-consumers.md:
+  - app/_hub/kong-inc/service-protection/how-to/_index.md
+app/_how-tos/test-certificate-generation-locally-with-ngrok-and-acme.md:
+  - app/_hub/kong-inc/acme/how-to/_index.md
+  - app/_hub/kong-inc/acme/how-to/_local-testing-development.md
 
 
 # plugins
@@ -201,6 +206,11 @@ app/_kong_plugins/acme/index.md:
   - app/_hub/kong-inc/acme/overview/_index.md
 app/_kong_plugins/acme/changelog.md:
   - app/_hub/kong-inc/acme/_changelog.md
+app/_kong_plugins/acme/examples/redis.yaml:
+  - app/_hub/kong-inc/acme/how-to/_redis.md
+app/_kong_plugins/service-protection/index.md:
+  - app/_hub/kong-inc/service-protection/overview/_index.md
+
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:

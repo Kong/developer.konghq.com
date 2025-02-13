@@ -7,6 +7,10 @@ validations:
     message: API rate limit exceeded
     status_code: 429
 
+  - name: rate-limit-check
+    message: OK
+    status_code: 200
+
   - name: unauthorized-check
     message: Unauthorized
     status_code: 401
