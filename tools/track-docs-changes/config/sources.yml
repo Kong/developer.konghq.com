@@ -158,6 +158,10 @@ app/_how-tos/verify-build-provenance-for-signed-images.md:
   - app/_src/gateway/kong-enterprise/provenance-verification.md
 app/_how-tos/proxy-tls-passthrough.md: 
   - app/_src/gateway/how-kong-works/routing-traffic.md
+
+app/_how-tos/configure-datastore.md:
+  - app/_src/gateway/install/post-install/set-up-data-store.md
+
 app/_how-tos/configure-fallback-route.md:
   - app/_src/gateway/how-kong-works/routing-traffic/
 app/_how-tos/throttle-apis-with-services-and-consumers.md:
@@ -165,7 +169,6 @@ app/_how-tos/throttle-apis-with-services-and-consumers.md:
 app/_how-tos/test-certificate-generation-locally-with-ngrok-and-acme.md:
   - app/_hub/kong-inc/acme/how-to/_index.md
   - app/_hub/kong-inc/acme/how-to/_local-testing-development.md
-
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
