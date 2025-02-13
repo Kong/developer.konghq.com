@@ -49,8 +49,9 @@ openssl rsa -in private.pem -pubout -out public.pem
 
 ## 2. Set environment variables
 
-Set the variables needed to start {{site.base_gateway}} with Keyring enabled:
+Set the variables needed to start {{site.base_gateway}} with Keyring enabled. Since the Keyring feature requires a {{site.ee_product_name}} license, make sure to include it in the environment too.
 ```sh
+export KONG_LICENSE_DATA="<license-contents-go-here>"
 export KONG_KEYRING_ENABLED=on
 export KONG_KEYRING_STRATEGY=cluster
 export KONG_KEYRING_RECOVERY_PUBLIC_KEY=$(cat public.pem | base64)
@@ -80,7 +81,6 @@ Using the Admin API, generate a new key in the Keyring:
   method: POST
   headers:
       - 'Accept: application/json'
-      - 'Kong-Admin-Token: $KONG_ADMIN_TOKEN'
 {% endcontrol_plane_request %}
 
 You will get a `201 Created` response with the key and key ID. The generated key will now be used to encrypt sensitive fields in the database.
