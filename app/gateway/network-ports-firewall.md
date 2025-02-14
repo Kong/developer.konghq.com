@@ -16,7 +16,7 @@ related_resources:
     url: /gateway/security/
   - text: Proxying with {{site.base_gateway}}
     url: /gateway/traffic-control/proxying/
-  - text: "{{site.base_gateway}} network, ports, and firewall"
+  - text: "{{site.base_gateway}} networking"
     url: /gateway/network/
 ---
 
