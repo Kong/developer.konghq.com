@@ -12,15 +12,13 @@
 1. Install {{ site.kic_product_name }} using Helm:
 
     ```bash
-    cd ~/development/kong/charts
-    helm install kong ./charts/ingress/ -n kong-docs-demo --create-namespace
-    cd -
+    helm install kong kong/ingress -n kong-docs-demo --create-namespace
     ```
 
 1. Populate `$PROXY_IP` for future commands:
 
     ```bash
-    export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+    export PROXY_IP=$(kubectl get svc --namespace kong-docs-demo kong-gateway-proxy -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
     echo $PROXY_IP
     ```
 

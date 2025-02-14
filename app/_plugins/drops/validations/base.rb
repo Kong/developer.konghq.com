@@ -28,6 +28,10 @@ module Jekyll
           @name = name
           @yaml = yaml
 
+          puts "===================="
+          puts how_tos_config.to_json
+          puts "===================="
+
           validate_yaml!
         end
 
@@ -43,7 +47,7 @@ module Jekyll
         end
 
         def konnect_url
-          base_url = configuration.dig('url_origin', 'konnect')
+          base_url = how_tos_config.dig('url_origin', 'konnect')
           base_url = @yaml['konnect_url'] if @yaml['konnect_url']
           @konnect_url ||= File.join(
             base_url, @yaml['url']
@@ -51,7 +55,7 @@ module Jekyll
         end
 
         def on_prem_url
-          base_url = configuration.dig('url_origin', 'on_prem')
+          base_url = how_tos_config.dig('url_origin', 'on_prem')
           base_url = @yaml['on_prem_url'] if @yaml['on_prem_url']
           @on_prem_url ||= File.join(
             base_url, @yaml['url']

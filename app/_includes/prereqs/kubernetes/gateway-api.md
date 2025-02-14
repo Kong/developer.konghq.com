@@ -5,7 +5,7 @@
 
 {% capture details_content %}
 
-{% assign gw_api_crd_version = "v1.1.0" %}
+{% assign gw_api_crd_version = "v1.2.0" %}
 
 ### Install the Gateway APIs
 
@@ -24,7 +24,7 @@
    <!-- kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ gw_api_crd_version}}/standard-install.yaml -->
 
    ```bash
-   kubectl apply -f ~/gwapi.yaml
+   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ gw_api_crd_version}}/standard-install.yaml
    ```
 
    {% endif %}
@@ -35,6 +35,10 @@
 
 ```bash
 echo "
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kong-docs-demo
 ---
 apiVersion: gateway.networking.k8s.io/{{ gwapi_version }}
 kind: GatewayClass
@@ -59,7 +63,7 @@ spec:
     allowedRoutes:
       namespaces:
          from: All
-" | kubectl apply -f -
+" | kubectl apply -n kong-docs-demo -f -
 ```
 
 {% endcapture %}

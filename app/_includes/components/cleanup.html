@@ -5,7 +5,7 @@
   >
 {% capture details_content %}
 ```bash{% for service in page.prereqs.entities.services %}
-kubectl delete -f {{ site.links.web }}/manifests/kic/{{ service }}.yaml
+kubectl delete -n kong-docs-demo -f {{ site.links.web }}/manifests/kic/{{ service }}.yaml
 {%- endfor %}
 ```
 {% endcapture %}
