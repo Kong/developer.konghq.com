@@ -27,7 +27,7 @@ related_resources:
   - text: Expressions router
     url: /gateway/routing/expressions/
   - text: Health checks and circuit breakers
-    url: /gateway/health-checks-circuit-breakers/
+    url: /gateway/traffic-control/health-checks-circuit-breakers/
 
 schema:
     api: gateway/admin-ee
@@ -43,7 +43,7 @@ api_specs:
 
 An Upstream enables load balancing by providing a virtual hostname and collection of [Targets](/gateway/entities/target/), or service application instances, to which client requests are forwarded.
 
-You can use Upstreams to [health check](/gateway/health-checks-circuit-breakers/), [circuit break](/gateway/health-checks-circuit-breakers/), and [load balance](#load-balancing-algorithms) incoming requests over multiple [Gateway Services](/gateway/entities/service/). In addition, the Upstream entity has more advanced functionality algorithms like least-connections, consistent-hashing, and lowest-latency.
+You can use Upstreams to [health check](/gateway/traffic-control/health-checks-circuit-breakers/#active-health-checks), [circuit break](/gateway/traffic-control/health-checks-circuit-breakers/#passive-health-checks-circuit-breakers), and [load balance](#load-balancing-algorithms) incoming requests over multiple [Gateway Services](/gateway/entities/service/). In addition, the Upstream entity has more advanced functionality algorithms like least-connections, consistent-hashing, and lowest-latency.
 
 ## Upstream and Gateway Service interaction
 
@@ -66,9 +66,9 @@ The following are examples of common use cases for Upstreams:
 
 | Use case      | Description                                                                                                                                                                                                                                                                                                                 |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Load balance  | When an Upstream points to multiple upstream targets, you can configure the Upstream entity to load balance traffic between the targets. If you don't need to load balance, we recommend using the `host` header on a [Route](/gateway/entities/route/) as the preferred method for routing a request and proxying traffic. |
-| Health check  | Configure Upstreams to dynamically mark a target as healthy or unhealthy. This is an active check where a specific HTTP or HTTPS endpoint in the target is periodically requested and the health of the target is determined based on its response.                                                                         |
-| Circuit break | Configure Upstreams to allow {{site.base_gateway}} to passively analyze the ongoing traffic being proxied and determine the health of targets based on their behavior responding to requests. <br><br>**Note:** This feature is not supported in hybrid mode.                                                               |
+| [Load balance](#load-balancing-algorithms)  | When an Upstream points to multiple upstream targets, you can configure the Upstream entity to load balance traffic between the targets. If you don't need to load balance, we recommend using the `host` header on a [Route](/gateway/entities/route/) as the preferred method for routing a request and proxying traffic. |
+| [Health check](/gateway/traffic-control/health-checks-circuit-breakers/#active-health-checks)  | Configure Upstreams to dynamically mark a target as healthy or unhealthy. This is an active check where a specific HTTP or HTTPS endpoint in the target is periodically requested and the health of the target is determined based on its response.                                                                         |
+| [Circuit break](/gateway/traffic-control/health-checks-circuit-breakers/#passive-health-checks-circuit-breakers) | Configure Upstreams to allow {{site.base_gateway}} to passively analyze the ongoing traffic being proxied and determine the health of targets based on their behavior responding to requests. <br><br>**Note:** This feature is not supported in {{site.konnect_short_name}} or hybrid mode.                                                               |
 
 ## Load balancing algorithms
 
@@ -78,6 +78,10 @@ The load balancer supports the following load-balancing algorithms:
 - `consistent-hashing`
 - `least-connections`
 - `latency`
+
+{:.info}
+> **Note**: If using [health checks](/gateway/traffic-control/health-checks-circuit-breakers/), unhealthy targets won't be removed from the load balancer, and won't have any impact on the balancer layout when using a hashing algorithm. 
+Instead, unhealthy Targets will just be skipped.
 
 ### Round-Robin
 
