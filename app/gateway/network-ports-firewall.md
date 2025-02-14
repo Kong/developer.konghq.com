@@ -9,7 +9,7 @@ products:
 min_version:
   gateway: '3.6'
 
-description: placeholder
+description: Learn which ports {{site.base_gateway}} uses and how to configure them.
 
 related_resources:
   - text: "Secure {{site.base_gateway}}"
