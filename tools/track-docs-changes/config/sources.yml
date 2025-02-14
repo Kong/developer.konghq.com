@@ -265,6 +265,8 @@ app/gateway/routing/expressions-router-examples.md:
   - app/_src/gateway/reference/expressions-language/index.md 
 app/gateway/networking/dns-config-reference.md:
   - app/_src/gateway/production/networking/dns-considerations.md
+app/gateway/traffic-control/health-checks-circuit-breakers.md:
+  - /app/_src/gateway/how-kong-works/health-checks.md
 
 # policies
 app/gateway/vulnerabilities.md:
