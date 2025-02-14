@@ -51,9 +51,12 @@ faqs:
 
 ---
 
-Using a combination of [Targets](/gateway/entities/target/) and [Upstreams](/gateway/entities/upstream/), you can proxy requests to an upstream service through a ring balancer, which distributes the traffic load among Targets, and manages active Targets based on their health.
+Using a combination of [Targets](/gateway/entities/target/) and [Upstreams](/gateway/entities/upstream/), you can proxy requests to an upstream service through a ring balancer. 
+The ring balancer is a {{site.base_gateway}} load balancer that distributes the traffic load among Targets, and manages active Targets based on their health.
 
-The Upstream entity typically points to one or more Target entities, and each Target points to a different IP address (or hostname) and port. Based on the Upstream configuration, the ring balancer performs health checks on the Targets, marking Targets healthy or unhealthy based on whether they are responsive or not. The ring balancer then routes traffic only to healthy Targets.
+An Upstream entity typically points to one or more Target entities, and each Target points to a different IP address (or hostname) and port. 
+Based on the Upstream configuration, the ring balancer performs health checks on the Targets, marking Targets healthy or unhealthy based on whether they are responsive or not. 
+The ring balancer then routes traffic only to healthy Targets.
 
 {{site.base_gateway}} supports two types of health checks:
 
@@ -162,6 +165,9 @@ under `healthchecks.active` in the [Upstream object configuration](/gateway/enti
 | `healthchecks.active.unhealthy.tcp_failures` | Number of TCP failures or TLS verification failures in active probes to consider a Target unhealthy. |
 | `healthchecks.active.unhealthy.timeouts` | Number of timeouts in active probes to consider a Target unhealthy. |
 | `healthchecks.active.unhealthy.http_failures` | Number of HTTP failures in active probes (as defined by `healthchecks.active.unhealthy.http_statuses`) to consider a Target unhealthy. |
+| `healthchecks.active.healthy.http_statuses` | An array of HTTP statuses to consider a success, indicating healthiness, when returned by a probe in active health checks. |
+| `healthchecks.active.unhealthy.http_statuses` | An array of HTTP statuses to consider a failure, indicating unhealthiness, when returned by a probe in active health checks. |
+
 
 ### Disable active health checks
 
@@ -187,6 +193,8 @@ To enable passive checks, you only need to configure the Upstream's counter thre
 | `healthchecks.passive.unhealthy.tcp_failures` | Number of TCP failures in proxied traffic to consider a Target unhealthy, as observed by passive health checks. |
 | `healthchecks.passive.unhealthy.timeouts` | Number of timeouts in proxied traffic to consider a Target unhealthy, as observed by passive health checks. |
 | `healthchecks.passive.unhealthy.http_failures` | Number of HTTP failures in proxied traffic (as defined by `healthchecks.passive.unhealthy.http_statuses`) to consider a Target unhealthy, as observed by passive health checks. |
+| `healthchecks.passive.healthy.http_statuses` | An array of HTTP statuses which represent healthiness when produced by proxied traffic, as observed by passive health checks. |
+| `healthchecks.passive.unhealthy.http_statuses` | An array of HTTP statuses which represent unhealthiness when produced by proxied traffic, as observed by passive health checks. |
 
 ### Re-enable a Target disabled by a passive health check
 
