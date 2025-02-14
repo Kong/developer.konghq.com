@@ -32,8 +32,8 @@ The following are the default proxy ports:
 
 | Port | Protocol | `kong.conf` setting | Description | 
 |---------|---------|------------|------------|
-| `8000` | HTTP     | [`proxy_listen`](/gateway/configuration/) | Takes incoming HTTP traffic from [Consumers](/gateway/entities/consumer/), and forwards it to upstream services. | 
-| `8443` | HTTPS    | [`proxy_listen`](/gateway/configuration/) | Takes incoming HTTPS traffic from [Consumers](/gateway/entities/consumer/), and forwards it to upstream services. |
+| `8000` | HTTP     | [`proxy_listen`](/gateway/configuration/#proxy_listen) | Takes incoming HTTP traffic from [Consumers](/gateway/entities/consumer/), and forwards it to upstream services. | 
+| `8443` | HTTPS    | [`proxy_listen`](/gateway/configuration/#proxy_listen) | Takes incoming HTTPS traffic from [Consumers](/gateway/entities/consumer/), and forwards it to upstream services. |
 
 You can also proxy TCP/TLS streams, which is disabled by default. If you want to proxy this traffic, see [`stream_listen` in the Kong configuration reference](/gateway/configuration/) for more information about stream proxy listen options and how to enable it.
 
@@ -45,8 +45,8 @@ The following are the default ports used by the Admin API:
 
 | Port | Protocol | `kong.conf` setting | Description | 
 |---------|---------|------------|------------|
-| `8001` | HTTP     | [`admin_listen`](/gateway/configuration/) | Listens for Admin API calls from the command line over HTTP. | 
-| `8444` | HTTPS    | [`admin_listen`](/gateway/configuration/) | Listens for Admin API calls from the command line over HTTPS. | 
+| `8001` | HTTP     | [`admin_listen`](/gateway/configuration/#admin_listen) | Listens for Admin API calls from the command line over HTTP. | 
+| `8444` | HTTPS    | [`admin_listen`](/gateway/configuration/#admin_listen) | Listens for Admin API calls from the command line over HTTPS. | 
 
 ## Other default ports
 
@@ -54,9 +54,9 @@ In addition to the proxy and Admin API ports, {{site.base_gateway}} listens on t
 
 | Port | Protocol | `kong.conf` setting | Description | 
 |---------|---------|------------|------------|
-| `8002` | HTTP     | [`admin_gui_listen`](/gateway/configuration/) | Kong Manager (GUI). Listens for HTTP traffic. | 
-| `8445` | HTTPS    | [`admin_gui_listen`](/gateway/configuration/) | Kong Manager (GUI). Listens for HTTPS traffic. | 
-| `8005` | TCP     | [`cluster_listen`](/gateway/configuration/) | Hybrid mode only. Control plane listens for traffic from data plane nodes. | 
-| `8006` | TCP     | [`cluster_telemetry_listen`](/gateway/configuration/) | Hybrid mode only. Control plane listens for Vitals telemetry data from data plane nodes. | 
-| `8007` | HTTP     | [`status_listen`](/gateway/configuration/) | Status listener. Listens for calls from monitoring clients over HTTP. | 
+| `8002` | HTTP     | [`admin_gui_listen`](/gateway/configuration/#admin_gui_listen) | Kong Manager (GUI). Listens for HTTP traffic. | 
+| `8445` | HTTPS    | [`admin_gui_listen`](/gateway/configuration/#admin_gui_listen) | Kong Manager (GUI). Listens for HTTPS traffic. | 
+| `8005` | TCP     | [`cluster_listen`](/gateway/configuration/#cluster_listen) | Hybrid mode only. Control plane listens for traffic from data plane nodes. | 
+| `8006` | TCP     | [`cluster_telemetry_listen`](/gateway/configuration/#cluster_telemetry_listen) | Hybrid mode only. Control plane listens for Vitals telemetry data from data plane nodes. | 
+| `8007` | HTTP     | [`status_listen`](/gateway/configuration/#status_listen) | Status listener. Listens for calls from monitoring clients over HTTP. | 
 
