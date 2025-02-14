@@ -18,7 +18,9 @@ related_resources:
     url: /gateway/security/
 ---
 
-Logging in {{site.base_gateway}} allows you to 
+Logging in {{site.base_gateway}} allows you to see information, warnings, and errors about requests that are proxied by {{site.base_gateway}}.
+
+The information in this reference doc explains helps you understand and modify {{site.base_gateway}} logs. You can also use [logging plugins](/plugins/?category=logging) to extend these capabilities by logging additional information or sending logs to another application.
 
 ## Log levels
 
@@ -34,15 +36,19 @@ By default, logs are set to the recommended `notice` level. If logs are too chat
 
 ## Configure log levels
 
-You can configure log levels and settings using the Admin API.
+You can change log levels dynamically, without restarting {{site.base_gateway}}, using the Admin API. Alternatively, you can configure log levels using the `log_level` parameter in the [kong.conf file](), but this requires you to [restart {{site.base_gateway}}]().
 
-| Use case | API endpoint | Description |
-|----------|--------------|-------------|
-| View current log level |  |  |
-| Modify the log level for an individual Kong Gateway node |  |  |
-| Change the log level of the Kong Gateway cluster |  |  |
-| Manage new nodes in the cluster |  |  |
-| Change the log level of all control plane Kong Gateway nodes |  |  |
+| Use case | How to configure |
+|----------|--------------|
+| View current log level<sup>1</sup> | [`/debug/node/log-level/`](/api/gateway/admin-ee/3.9/#/get-debug-node-log-level) |
+| Modify the log level for an individual Kong Gateway node | [`/debug/node/log-level/notice`](/api/gateway/admin-ee/3.9/#/get-debug-node-log-level-log_level/) |
+| Change the log level of the Kong Gateway cluster | [`/debug/cluster/log-level/notice`](/api/gateway/admin-ee/3.9/#/put-debug-cluster-log-level-log_level/) |
+| Keep the log level of new nodes added to the cluster in sync other nodes in the cluster | Change the `log_level` entry in [`kong.conf`](/gateway/configuration/) to `KONG_LOG_LEVEL` |
+| Change the log level of all control plane Kong Gateway nodes | [`/debug/cluster/control-planes-nodes/log-level/notice`](/api/gateway/admin-ee/3.9/#/put-debug-cluster-control-planes-nodes-log-level-log_level/) |
+
+{:.info}
+> <sup>1</sup>: You can't change the log level of the data plane or DB-less nodes.
+
 
 ## Log the client request identifier
 
@@ -50,4 +56,8 @@ The `X-Kong-Request-Id` header contains a unique identifier for each client requ
 
 The log line produced by the debug header as well as the debug response header contains the request ID. You can use this to search for the debug header output using a log viewer UI. This is especially useful when the debug output is too long to fit in the response header.
 
-This feature can be customized for upstreams and downstreams using the [`headers`](/gateway/latest/reference/configuration/#headers) and [`headers_upstream`](/gateway/latest/reference/configuration/#headers_upstream) configuration options.
+This feature can be customized for upstreams and downstreams using the `headers` and `headers_upstream` configuration options in [`kong.conf`](/gateway/configuration/).
+
+## Customize what {{site.base_gateway}} logs
+
+You might need to customize what {{site.base_gateway}} logs to protect private information and comply with GDPR. For example, if you wanted to remove instances of an email address from your logs. For more information about how to customize your logs, see [Customize Gateway Logs](/gateway/customize-gateway-logs/).
