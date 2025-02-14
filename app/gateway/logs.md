@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}} Logs"
+title: "{{site.base_gateway}} logs"
 content_type: reference
 layout: reference
 
@@ -7,20 +7,28 @@ products:
     - gateway
 
 min_version:
-  - gateway: '3.5'
+  gateway: '3.5'
 
-description: placeholder
+description: See where {{site.base_gateway}} logs are located, the different log levels, and how to configure logs and log levels.
 
 related_resources:
   - text: Customize Gateway Logs
     url: /gateway/customize-gateway-logs/
   - text: "Secure {{site.base_gateway}}"
     url: /gateway/security/
+  - text: "{{site.base_gateway}} debugging"
+    url: /gateway/debug/
+  - text: "{{site.base_gateway}} audit logs"
+    url: /gateway/audit-logs/
 ---
 
 Logging in {{site.base_gateway}} allows you to see information, warnings, and errors about requests that are proxied by {{site.base_gateway}}.
 
 The information in this reference doc explains helps you understand and modify {{site.base_gateway}} logs. You can also use [logging plugins](/plugins/?category=logging) to extend these capabilities by logging additional information or sending logs to another application.
+
+## Where are {{site.base_gateway}} logs located?
+
+By default, you can view {{site.base_gateway}} logs at `/usr/local/kong/logs/error.log`. If you are running {{site.base_gateway}} on Docker, you can also view them from your Docker container.
 
 ## Log levels
 
@@ -28,11 +36,11 @@ By default, logs are set to the recommended `notice` level. If logs are too chat
 
 | Level | Description |
 |-------|-------------|
-| `debug` | It provides debug information about the plugin’s run loop and each individual plugin or other components. This should only be used during debugging, the debug option, if left on for extended periods of time, can result in excess disk space consumption. |
-| `info` and `notice` | Kong does not make a big difference between both these levels. Provides information about normal behavior most of which can be ignored. |
-| `warn` | To log any abnormal behavior that doesn't result in dropped transactions but requires further investigation, `warn` level should be used. |
-| `error` | Used for logging errors that result in a request being dropped (for example getting  an HTTP 500 error). The rate of such logs need to be monitored. |
-| `crit` | This level is used when Kong is working under critical conditions and not working properly thereby affecting several clients. Nginx also provides `alert` and `emerg` levels but currently Kong doesn't make use of these levels making `crit` the highest severity log level. |
+| `debug` | Provides debug information about the plugin’s run loop and each individual plugin or other components. This should only be used during debugging. If this is enabled for extended periods of time, it can result in excess disk space consumption. |
+| `info` and `notice` | Provides information about normal behavior, most of which can be ignored. |
+| `warn` | Logs any abnormal behavior that doesn't result in dropped transactions but requires further investigation. |
+| `error` | Used for logging errors that result in a request being dropped. For example, getting a `500` error. The rate of these logs must be monitored. |
+| `crit` | Used when {{site.base_gateway}} is working under critical conditions and not working properly thereby affecting several clients. Nginx also provides `alert` and `emerg` levels, but currently {{site.base_gateway}} doesn't use these levels making `crit` the highest severity log level. |
 
 ## Configure log levels
 
@@ -40,24 +48,65 @@ You can change log levels dynamically, without restarting {{site.base_gateway}},
 
 | Use case | How to configure |
 |----------|--------------|
-| View current log level<sup>1</sup> | [`/debug/node/log-level/`](/api/gateway/admin-ee/3.9/#/get-debug-node-log-level) |
-| Modify the log level for an individual Kong Gateway node | [`/debug/node/log-level/notice`](/api/gateway/admin-ee/3.9/#/get-debug-node-log-level-log_level/) |
-| Change the log level of the Kong Gateway cluster | [`/debug/cluster/log-level/notice`](/api/gateway/admin-ee/3.9/#/put-debug-cluster-log-level-log_level/) |
+| View current log level<sup>1</sup> | [`/debug/node/log-level/`](/api/gateway/admin-ee/3.9/#/operations/get-debug-node-log-level) |
+| Modify the log level for an individual Kong Gateway node | [`/debug/node/log-level/notice`](/api/gateway/admin-ee/3.9/#/operations/get-debug-node-log-level-log_level/) |
+| Change the log level of the Kong Gateway cluster | [`/debug/cluster/log-level/notice`](/api/gateway/admin-ee/3.9/#/operations/put-debug-cluster-log-level-log_level/) |
 | Keep the log level of new nodes added to the cluster in sync other nodes in the cluster | Change the `log_level` entry in [`kong.conf`](/gateway/configuration/) to `KONG_LOG_LEVEL` |
-| Change the log level of all control plane Kong Gateway nodes | [`/debug/cluster/control-planes-nodes/log-level/notice`](/api/gateway/admin-ee/3.9/#/put-debug-cluster-control-planes-nodes-log-level-log_level/) |
+| Change the log level of all control plane Kong Gateway nodes | [`/debug/cluster/control-planes-nodes/log-level/notice`](/api/gateway/admin-ee/3.9/#/operations/put-debug-cluster-control-planes-nodes-log-level-log_level/) |
 
 {:.info}
 > <sup>1</sup>: You can't change the log level of the data plane or DB-less nodes.
 
 
-## Log the client request identifier
+## Find specific client requests in logs
 
-The `X-Kong-Request-Id` header contains a unique identifier for each client request. This is enabled by default both upstream and downstream. This unique ID helps in matching specific requests to their corresponding error logs, which is useful for debugging. If {{site.base_gateway}} returns an error by calling the PDK `kong.response.error`, the request ID will also be included in the response body generated by {{site.base_gateway}}. In addition, any {{site.base_gateway}} error log generated will contain the same request ID, with the format: `request_id: xxx`.
+You can use the `X-Kong-Request-Id` header (which contains a unique identifier for each client request) to match specific requests to their corresponding error logs. 
 
-The log line produced by the debug header as well as the debug response header contains the request ID. You can use this to search for the debug header output using a log viewer UI. This is especially useful when the debug output is too long to fit in the response header.
+If {{site.base_gateway}} returns an error by calling the PDK `kong.response.error`, the request ID will also be included in the response body generated by {{site.base_gateway}}. In addition, any generated {{site.base_gateway}} error log contains the same request ID with the format `request_id: xxx`. This can help with debugging because you can search for the header when the debug output is too long to fit in the response header.
 
 This feature can be customized for upstreams and downstreams using the `headers` and `headers_upstream` configuration options in [`kong.conf`](/gateway/configuration/).
 
 ## Customize what {{site.base_gateway}} logs
 
 You might need to customize what {{site.base_gateway}} logs to protect private information and comply with GDPR. For example, if you wanted to remove instances of an email address from your logs. For more information about how to customize your logs, see [Customize Gateway Logs](/gateway/customize-gateway-logs/).
+
+## AI Gateway logs
+
+{{site.base_gateway}} collects logs for the [AI Gateway plugins](/plugins/?category=ai). This allows you to aggregate AI usage analytics across various providers. 
+
+Each log entry includes the following details:
+
+<!--vale off-->
+
+| Property | Description |
+| --------- | ------------- |
+| `ai.payload.request` | The request payload. |
+| `ai.[$plugin_name].payload.response` | The response payload. |
+| `ai.[$plugin_name].usage.prompt_token` | Number of tokens used for prompting. |
+| `ai.[$plugin_name].usage.completion_token` | Number of tokens used for completion. |
+| `ai.[$plugin_name].usage.total_tokens` | Total number of tokens used. |
+| `ai.[$plugin_name].usage.cost` | The total cost of the request (input and output cost). |
+
+{% if_version gte:3.8.x %}
+| `ai.[$plugin_name].usage.time_per_token` | The average time to generate an output token, in milliseconds. |
+{% endif_version %}
+
+| `ai.[$plugin_name].meta.request_model` | Model used for the AI request. |
+| `ai.[$plugin_name].meta.provider_name` | Name of the AI service provider. |
+| `ai.[$plugin_name].meta.response_model` | Model used for the AI response. |
+| `ai.[$plugin_name].meta.plugin_id` | Unique identifier of the plugin. |
+
+{% if_version gte:3.8.x %}
+| `ai.[$plugin_name].meta.llm_latency` | The time, in milliseconds, it took the LLM provider to generate the full response. |
+| `ai.[$plugin_name].cache.cache_status` | The cache status. This can be Hit, Miss, Bypass or Refresh. |
+| `ai.[$plugin_name].cache.fetch_latency` | The time, in milliseconds, it took to return a cache response. |
+| `ai.[$plugin_name].cache.embeddings_provider` | For semantic caching, the provider used to generate the embeddings. |
+| `ai.[$plugin_name].cache.embeddings_model` | For semantic caching, the model used to generate the embeddings. |
+| `ai.[$plugin_name].cache.embeddings_latency` | For semantic caching, the time taken to generate the embeddings. |
+{% endif_version %}
+
+<!--vale on-->
+
+## Next steps
+* [Customize Gateway Logs](/gateway/customize-gateway-logs/)
+* [Debug {{site.base_gateway}} with logs](/gateway/debug/)
