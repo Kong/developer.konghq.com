@@ -60,3 +60,5 @@ In addition to the proxy and Admin API ports, {{site.base_gateway}} listens on t
 | `8006` | TCP     | [`cluster_telemetry_listen`](/gateway/configuration/#cluster_telemetry_listen) | Hybrid mode only. Control plane listens for Vitals telemetry data from data plane nodes. | 
 | `8007` | HTTP     | [`status_listen`](/gateway/configuration/#status_listen) | Status listener. Listens for calls from monitoring clients over HTTP. | 
 
+<!-- port 8007 in the table needs to be marked as if_version gte:3.6.x -->
+
