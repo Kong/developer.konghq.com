@@ -7,7 +7,7 @@ products:
     - gateway
 
 min_version:
-  gateway: '3.6'
+  gateway: '3.4'
 
 description: Learn which ports {{site.base_gateway}} uses and how to configure them.
 
