@@ -1,0 +1,33 @@
+metadata:
+  title: "{{site.base_gateway}} networking"
+  content_type: landing_page
+  description: Details {{site.base_gateway}} network, ports, and firewall settings and how to manage them.
+  tags:
+    - security
+    - traffic-control
+  breadcrumbs:
+    - /gateway/
+  related_links:
+    - text: "{{site.base_gateway}} ports"
+      url: /gateway/network-ports-firewall/
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.base_gateway}} network"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    @todo
+
+                    This is a landing page for all things networks, ports, and firewall for probably both Kong Gateway and Konnect
+                    Can have some conceptual info, but mostly be a collection of cards/links to reference pages and how tos
+
+                    Source pages:
+                    * https://docs.konghq.com/gateway/3.9.x/production/networking/dns-considerations/
+                    * https://docs.konghq.com/gateway/3.9.x/production/networking/cp-dp-proxy/
+                    * https://docs.konghq.com/konnect/network/

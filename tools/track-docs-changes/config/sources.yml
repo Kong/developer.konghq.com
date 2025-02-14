@@ -255,6 +255,9 @@ app/gateway/logs.md:
   - app/_src/gateway/production/logging/log-reference.md
   - app/_src/gateway/production/logging/update-log-level-dynamically.md
   - app/_src/gateway/production/logging/ai-analytics.md
+app/gateway/network-ports-firewall.md:
+  - app/_src/gateway/production/networking/default-ports.md
+  - app/_src/gateway/production/networking/firewall.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
@@ -269,6 +272,8 @@ app/gateway/routing/expressions-router-examples.md:
   - app/_src/gateway/reference/expressions-language/index.md 
 app/gateway/networking/dns-config-reference.md:
   - app/_src/gateway/production/networking/dns-considerations.md
+app/gateway/traffic-control/health-checks-circuit-breakers.md:
+  - /app/_src/gateway/how-kong-works/health-checks.md
 
 # policies
 app/gateway/vulnerabilities.md:
