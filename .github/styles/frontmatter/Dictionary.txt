@@ -10,3 +10,4 @@ dynatrace
 ratelimiting
 collectd
 ca_certificate
+gateway_api
