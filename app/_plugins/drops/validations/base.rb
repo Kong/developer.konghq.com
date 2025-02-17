@@ -17,6 +17,8 @@ module Jekyll
             UnauthorizedCheck.new(name:, yaml:)
           when 'request-check'
             RequestCheck.new(name:, yaml:)
+          when 'vault-secret'
+            VaultSecret.new(name:, yaml:)
           else
             raise ArgumentError, "Missing Drop for `#{name}`"
           end
