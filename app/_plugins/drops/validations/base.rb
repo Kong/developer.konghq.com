@@ -28,10 +28,6 @@ module Jekyll
           @name = name
           @yaml = yaml
 
-          puts "===================="
-          puts how_tos_config.to_json
-          puts "===================="
-
           validate_yaml!
         end
 
