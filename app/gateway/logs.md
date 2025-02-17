@@ -24,7 +24,7 @@ related_resources:
 
 Logging in {{site.base_gateway}} allows you to see information, warnings, and errors about requests that are proxied by {{site.base_gateway}}.
 
-The information in this reference doc explains helps you understand and modify {{site.base_gateway}} logs. You can also use [logging plugins](/plugins/?category=logging) to extend these capabilities by logging additional information or sending logs to another application.
+The information in this reference doc helps you understand and modify {{site.base_gateway}} logs. You can also use [logging plugins](/plugins/?category=logging) to extend these capabilities by logging additional information or sending logs to another application.
 
 ## Where are {{site.base_gateway}} logs located?
 
@@ -49,10 +49,10 @@ You can change log levels dynamically, without restarting {{site.base_gateway}},
 | Use case | How to configure |
 |----------|--------------|
 | View current log level<sup>1</sup> | [`/debug/node/log-level/`](/api/gateway/admin-ee/3.9/#/operations/get-debug-node-log-level) |
-| Modify the log level for an individual {{site.base_gateway}} node | [`/debug/node/log-level/notice`](/api/gateway/admin-ee/3.9/#/operations/get-debug-node-log-level-log_level/) |
-| Change the log level of the {{site.base_gateway}} cluster | [`/debug/cluster/log-level/notice`](/api/gateway/admin-ee/3.9/#/operations/put-debug-cluster-log-level-log_level/) |
+| Modify the log level for an individual {{site.base_gateway}} node | [`/debug/node/log-level/{log_level}`](/api/gateway/admin-ee/3.9/#/operations/get-debug-node-log-level-log_level/) |
+| Change the log level of the {{site.base_gateway}} cluster | [`/debug/cluster/log-level/{log_level}`](/api/gateway/admin-ee/3.9/#/operations/put-debug-cluster-log-level-log_level/) |
 | Keep the log level of new nodes added to the cluster in sync other nodes in the cluster | Change the `log_level` entry in [`kong.conf`](/gateway/configuration/) to `KONG_LOG_LEVEL` |
-| Change the log level of all control plane {{site.base_gateway}} nodes | [`/debug/cluster/control-planes-nodes/log-level/notice`](/api/gateway/admin-ee/3.9/#/operations/put-debug-cluster-control-planes-nodes-log-level-log_level/) |
+| Change the log level of all control plane {{site.base_gateway}} nodes | [`/debug/cluster/control-planes-nodes/log-level/{log_level}`](/api/gateway/admin-ee/3.9/#/operations/put-debug-cluster-control-planes-nodes-log-level-log_level/) |
 
 {:.info}
 > <sup>1</sup>: You can't change the log level of the data plane or DB-less nodes.
