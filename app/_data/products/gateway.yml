@@ -23,6 +23,9 @@ deployment_topologies:
 
 
 releases:
+  - release: "3.4"
+    ee-version: "3.4.3.16"
+    ce-version: "3.4.2"
   - release: "3.7"
     ee-version: "3.7.1.2"
     ce-version: "3.7.1"
