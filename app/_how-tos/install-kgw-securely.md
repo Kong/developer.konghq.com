@@ -42,7 +42,7 @@ tools:
 prereqs:
   inline:
     - title: Install {{site.base_gateway}}
-      include_content: prereqs/install/red-hat
+      include_content: prereqs/install/gateway/red-hat
 
 cleanup:
   inline:
