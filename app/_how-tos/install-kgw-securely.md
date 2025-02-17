@@ -1,5 +1,5 @@
 ---
-title: Install securely
+title: Install {{site.base_gateway}} securely
 content_type: how_to
 related_resources:
   - text: Rate Limiting
