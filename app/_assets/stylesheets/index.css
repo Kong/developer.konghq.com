@@ -155,7 +155,7 @@
   }
 
   ol, ul {
-    @apply list-outside ml-4 flex flex-col gap-1;
+    @apply list-outside ml-4 flex flex-col gap-[0.4rem];
   }
 
   ol {
