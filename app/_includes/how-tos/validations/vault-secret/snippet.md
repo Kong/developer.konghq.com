@@ -1,3 +1,3 @@
 ```bash
-docker exec {{include.container}} kong vault get {{include.secret}} 
+docker exec {{include.container}} kong vault get {{include.secret}}
 ```

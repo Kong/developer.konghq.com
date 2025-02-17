@@ -131,9 +131,8 @@ variables:
 To validate that the secret was stored correctly in HashiCorp Vault, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. 
 
 {% validation vault-secret %}
-on-prem_container: 'kong-quickstart-gateway'
-konnect_container: 'dp-container'
 secret: '{vault://hashicorp-vault/customer/acme/name}'
+value: 'ACME Inc.'
 {% endvalidation %}
 
 If the vault was configured correctly, this command should return the value of the secret. You can use `{vault://hashicorp-vault/customer/acme/name}` to reference the secret in any referenceable field.
