@@ -36,7 +36,10 @@ To route HTTP traffic, you need to create a `HTTPRoute` or an `Ingress` resource
 
 {% include /k8s/httproute.md release=page.release path='/echo' name='echo' service='echo' port='1027' skip_host=true %}
 
+## Validate your configuration
+
 Once the resource has been reconciled, you'll be able to call the `/echo` endpoint and {{ site.base_gateway }} will route the request to the `echo` service.
+
 
 {% validation request-check %}
 url: /echo
