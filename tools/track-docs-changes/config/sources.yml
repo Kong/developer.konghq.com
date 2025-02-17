@@ -113,6 +113,7 @@ app/_gateway_entities/admin.md:
 
 
 # how-tos
+## gateway
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
   - /app/_hub/kong-inc/rate-limiting-advanced/how-to/_index.md
 app/_how-tos/custom-deck-object-defaults.md:
@@ -166,6 +167,10 @@ app/_how-tos/test-certificate-generation-locally-with-ngrok-and-acme.md:
   - app/_hub/kong-inc/acme/how-to/_index.md
   - app/_hub/kong-inc/acme/how-to/_local-testing-development.md
 
+
+## KIC
+app/_how-tos/proxy-http-traffic-kic.md:
+  - app/_src/kubernetes-ingress-controller/guides/services/http.md
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
