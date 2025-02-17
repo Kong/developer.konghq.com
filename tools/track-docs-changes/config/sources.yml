@@ -215,6 +215,10 @@ app/_kong_plugins/acme/examples/redis.yaml:
   - app/_hub/kong-inc/acme/how-to/_redis.md
 app/_kong_plugins/service-protection/index.md:
   - app/_hub/kong-inc/service-protection/overview/_index.md
+app/_kong_plugins/json-threat-protection/index.md:
+  - app/_hub/kong-inc/json-threat-protection/overview/_index.md
+app/_kong_plugins/json-threat-protection/changelog.md:
+  - app/_hub/kong-inc/json-threat-protection/_changelog.md
 
 
 # landing pages
