@@ -40,7 +40,7 @@ By default, logs are set to the recommended `notice` level. If logs are too chat
 | `info` and `notice` | Provides information about normal behavior, most of which can be ignored. |
 | `warn` | Logs any abnormal behavior that doesn't result in dropped transactions but requires further investigation. |
 | `error` | Used for logging errors that result in a request being dropped. For example, getting a `500` error. The rate of these logs must be monitored. |
-| `crit` | Used when {{site.base_gateway}} is working under critical conditions and not working properly thereby affecting several clients. Nginx also provides `alert` and `emerg` levels, but currently {{site.base_gateway}} doesn't use these levels making `crit` the highest severity log level. |
+| `crit` | Used when {{site.base_gateway}} is working under critical conditions, affecting several clients. `crit` is the highest severity log level. |
 
 ## Configure log levels
 
