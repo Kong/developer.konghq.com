@@ -6,3 +6,4 @@ filters:
 ignore:
  - .github/styles/base/Dictionary.txt
  - .github/styles/landing_pages/Components.txt
+ - .github/styles/how_tos/Validations.txt
