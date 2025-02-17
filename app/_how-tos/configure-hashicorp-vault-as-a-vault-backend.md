@@ -91,7 +91,7 @@ We'll use decK environment variables for the `host` and `token` in the {{site.ba
 
 In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` that HashiCorp Vault is using because {{site.base_gateway}} is running in a container that has a different `localhost` to you.
 
-As stated in the prerequistes, we're using `root` for our `token` in this tutorial since we are running HashiCorp Vault in dev mode.
+As stated in the prerequisites, we're using `root` for our `token` in this tutorial since we are running HashiCorp Vault in dev mode.
 
 ```
 export DECK_HCV_HOST=host.docker.internal
@@ -105,26 +105,26 @@ In this tutorial, we're using `host.docker.internal` as our host instead of the 
 
 Using decK, create a Vault entity in the `kong.yaml` file with the required parameters for HashiCorp Vault:
 
-{% entity_example %}
-type: vault
-data:
-  name: hcv
-  prefix: hashicorp-vault
-  description: Storing secrets in HashiCorp Vault
-  config:
-    host: ${hcv_host}
-    token: ${hcv_token}
-    kv: v2
-    mount: secret
-    port: 8200
-    protocol: http
+{% entity_examples %}
+entities:
+  vaults:
+    - name: hcv
+      prefix: hashicorp-vault
+      description: Storing secrets in HashiCorp Vault
+      config:
+        host: ${hcv_host}
+        token: ${hcv_token}
+        kv: v2
+        mount: secret
+        port: 8200
+        protocol: http
 
 variables:
   hcv_host:
     value: $HCV_HOST
   hcv_token:
     value: $HCV_TOKEN
-{% endentity_example %}
+{% endentity_examples %}
 
 ## 4. Validate
 
