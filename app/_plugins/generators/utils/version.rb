@@ -2,12 +2,21 @@
 
 module Jekyll
   module Utils
-    class Version
-      def self.in_range?(input, min: nil, max: nil)
+    class Version # rubocop:disable Style/Documentation
+      def self.in_range?(input, min: nil, max: nil) # rubocop:disable Metrics/MethodLength
         version = Gem::Version.new(input)
 
-        lower_limit = min ? ">= #{min['release']}" : nil
-        upper_limit = max ? "<= #{max['release']}" : nil
+        lower_limit = nil
+        if min
+          min = min.is_a?(Drops::Release) ? min['release'] : min
+          lower_limit = ">= #{min}"
+        end
+
+        upper_limit = nil
+        if max
+          max = max.is_a?(Drops::Release) ? max['release'] : max
+          upper_limit = "<= #{max}"
+        end
 
         Gem::Requirement
           .new([lower_limit, upper_limit])

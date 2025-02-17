@@ -1,4 +1,20 @@
 <div class="flex flex-col accordion cleanup" data-default="0" data-multiple="false">
+  {% if page.products[0] == "kic" %}
+  <div
+    class="flex flex-col gap-1.5 accordion-item border-b border-primary/5" 
+  >
+{% capture details_content %}
+```bash{% for service in page.prereqs.entities.services %}
+kubectl delete -n kong-docs-demo -f {{ site.links.web }}/manifests/kic/{{ service }}.yaml
+{%- endfor %}
+```
+{% endcapture %}
+
+{% include how-tos/prereq_cleanup_item.html summary="Delete created Kubernetes resources" details_content=details_content icon_url='/assets/icons/widgets.svg' %}
+  </div>
+
+  {% endif %}
+
   {% for step in cleanup.inline %}
     {% if step.include_content == 'cleanup/products/gateway' %}
       {% assign deployment_topology = 'on-prem' %}

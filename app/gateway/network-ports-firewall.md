@@ -58,7 +58,7 @@ In addition to the proxy and Admin API ports, {{site.base_gateway}} listens on t
 | `8445` | HTTPS    | [`admin_gui_listen`](/gateway/configuration/#admin_gui_listen) | Kong Manager (GUI). Listens for HTTPS traffic. | 
 | `8005` | TCP     | [`cluster_listen`](/gateway/configuration/#cluster_listen) | Hybrid mode only. Control plane listens for traffic from data plane nodes. | 
 | `8006` | TCP     | [`cluster_telemetry_listen`](/gateway/configuration/#cluster_telemetry_listen) | Hybrid mode only. Control plane listens for Vitals telemetry data from data plane nodes. | 
+
+{% if_version gte: 3.6 %}
 | `8007` | HTTP     | [`status_listen`](/gateway/configuration/#status_listen) | Status listener. Listens for calls from monitoring clients over HTTP. | 
-
-<!-- port 8007 in the table needs to be marked as if_version gte:3.6.x -->
-
+{% endif_version %}
