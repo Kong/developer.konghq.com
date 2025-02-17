@@ -5,7 +5,7 @@ module Jekyll
     module Releasable
       def releases
         @releases ||= available_releases.select do |r|
-          Utils::Version.in_range?(r['release'], min: min_release, max: max_release)
+          Utils::Version.in_range?(r['release'], min: min_version, max: max_version)
         end
       end
 
