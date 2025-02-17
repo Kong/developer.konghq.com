@@ -19,7 +19,7 @@ no_version: true
 * Introduced the new **JSON Threat Protection** plugin.
 
 **Known issues**:
-*  In the [JSON Threat Protection plugin](/hub/kong-inc/json-threat-protection/configuration/), the default value of `-1`
+*  In the [JSON Threat Protection plugin](/plugins/json-threat-protection/reference/), the default value of `-1`
 for any of the `max_*` parameters indicates unlimited.
 In some environments (such as ARM64-based environments), the default value is interpreted incorrectly.
 The plugin can erroneously block valid requests if any of the parameters continue with the default values.
