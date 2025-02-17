@@ -37,7 +37,10 @@ module Jekyll
       end
 
       def formats
-        @formats ||= site.data.dig('entity_examples', 'config', 'formats').except('ui').keys
+        @formats ||= site.data.dig('entity_examples', 'config', 'formats')
+                         .except('ui')
+                         .tap { |h| h.delete('konnect-api') unless works_on.include?('konnect') }
+                         .keys
       end
 
       def example_files
@@ -67,6 +70,10 @@ module Jekyll
 
       def name
         @name ||= metadata.fetch('name')
+      end
+
+      def works_on
+        @works_on ||= metadata['works_on']
       end
 
       private
