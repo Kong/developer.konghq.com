@@ -33,7 +33,7 @@ releases:
     ee-version: "3.8.0.0"
     ce-version: "3.8.0"
   - release: "3.9"
-    ee-version: "3.9.0.0"
+    ee-version: "3.9.0.1"
     ce-version: "3.9.0"
     latest: true
   - release: "3.10"
