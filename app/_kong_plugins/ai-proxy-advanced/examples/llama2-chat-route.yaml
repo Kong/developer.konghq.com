@@ -21,3 +21,10 @@ config:
         options:
           llama2_format: ollama
           upstream_url: http://llama2-server.local:11434/api/chat
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

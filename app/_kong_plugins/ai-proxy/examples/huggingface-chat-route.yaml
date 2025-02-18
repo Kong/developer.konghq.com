@@ -20,3 +20,10 @@ config:
   model:
     provider: huggingface
     name: HuggingFaceTB/SmolVLM-Base
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

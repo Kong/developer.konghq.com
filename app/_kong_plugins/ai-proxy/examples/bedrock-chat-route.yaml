@@ -23,3 +23,10 @@ config:
     name: meta.llama3-70b-instruct-v1:0
     options:
       aws_region: us-east-1
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

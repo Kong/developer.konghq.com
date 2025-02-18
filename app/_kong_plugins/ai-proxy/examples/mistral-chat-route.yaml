@@ -23,3 +23,10 @@ config:
     options:
       mistral_format: openai
       upstream_url: https://api.mistral.ai/v1/chat/completions
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

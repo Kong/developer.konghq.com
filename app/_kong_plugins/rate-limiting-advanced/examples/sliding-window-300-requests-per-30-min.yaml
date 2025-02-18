@@ -11,3 +11,10 @@ config:
   window_size: 
     - 1800
   window_type: sliding
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

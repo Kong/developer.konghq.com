@@ -21,3 +21,10 @@ config:
   model:
     provider: gemini
     name: gemini-1.5-flash
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
