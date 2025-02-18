@@ -101,8 +101,6 @@ export DECK_HCV_TOKEN='root'
 
 ## 3. Create a Vault entity for HashiCorp Vault 
 
-In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` that HashiCorp Vault is using because {{site.base_gateway}} is running in a container that has a different `localhost` to you.
-
 Using decK, create a Vault entity in the `kong.yaml` file with the required parameters for HashiCorp Vault:
 
 {% entity_examples %}
