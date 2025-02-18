@@ -2,7 +2,7 @@
 ```bash
 curl -i -X {{include.method}} {{include.url}} {% if include.headers %}\{%- endif -%}{% for header in include.headers %}
      -H "{{header}}" {%- unless forloop.last -%}\{% endunless %}{%- endfor %}{% if include.user %}\
-     --user {{include.user}}{%- endif -%}{% if include.body %}\
+     -u {{include.user}}{%- endif %}{% if include.body %}\
      --data-raw '
 {{ include.body | json_prettify | escape_env_variables | indent: 4 }}
     '{% endif %}
@@ -11,6 +11,6 @@ curl -i -X {{include.method}} {{include.url}} {% if include.headers %}\{%- endif
 ```bash
 curl -i {{include.url}} {% if include.headers %}\{%- endif -%}{% for header in include.headers %}
      -H "{{header}}" {%- unless forloop.last -%}\{% endunless %}{%- endfor %}{% if include.user %}\
-     --user {{include.user}}{%- endif -%}
+     -u {{include.user}}{%- endif %}
 ```
 {% endif %}
