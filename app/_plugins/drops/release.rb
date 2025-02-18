@@ -27,6 +27,14 @@ module Jekyll
         @number ||= @release_hash['release']
       end
 
+      def ee_version
+        @ee_version ||= @release_hash['ee-version']
+      end
+
+      def major_minor_version
+        @major_minor_version ||= number.gsub('.', '')
+      end
+
       def to_str
         if @release_hash.key?('label')
           @release_hash['label']

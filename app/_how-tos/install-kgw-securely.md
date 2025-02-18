@@ -1,5 +1,5 @@
 ---
-title: Install securely
+title: Install {{site.base_gateway}} securely
 content_type: how_to
 related_resources:
   - text: Rate Limiting
@@ -42,7 +42,7 @@ tools:
 prereqs:
   inline:
     - title: Install {{site.base_gateway}}
-      include_content: prereqs/install/red-hat
+      include_content: prereqs/install/gateway/red-hat
 
 cleanup:
   inline:
