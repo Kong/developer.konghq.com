@@ -32,6 +32,10 @@ categories:
 
 search_aliases:
   - ip-restriction
+
+related_resources:
+  - text: Restrict access to {{site.base_gateway}} resources by allowing specific IPs
+    url: /how-to/restrict-access-to-resources-by-allowing-ips/
 ---
 
 ## Overview
