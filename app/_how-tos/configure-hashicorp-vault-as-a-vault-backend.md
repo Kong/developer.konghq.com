@@ -126,6 +126,13 @@ variables:
 
 ## 4. Validate
 
+Since {{site.konnect_short_name}} data plane container names can vary, set your container name as an environment variable:
+{: data-deployment-topology="konnect" }
+```sh
+export KONNECT_DP_CONTAINER='your-dp-container-name'
+```
+{: data-deployment-topology="konnect" }
+
 To validate that the secret was stored correctly in HashiCorp Vault, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. 
 
 {% validation vault-secret %}

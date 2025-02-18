@@ -3,7 +3,7 @@ url_origin:
   on_prem: http://localhost:8000
 
 container:
-  konnect: dp-container
+  konnect: $KONNECT_DP_CONTAINER
   on_prem: kong-quickstart-gateway
 
 validations:
