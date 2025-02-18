@@ -95,9 +95,12 @@ The `anonymous` Consumer doesn't correspond to any real user, and will only serv
 entities:
   consumers:
     - username: anonymous
-      id: {% raw %}${{ env "DECK_ANONYMOUS_CONSUMER" }}{% endraw %}
+      id: ${anonymous_consumer}
     - username: Dana
     - username: Mahan
+variables:
+  anonymous_consumer:
+    value: $ANONYMOUS_CONSUMER
 {% endentity_examples %}
 
 We're going to assign a different authentication type to each Consumer later.
@@ -113,12 +116,15 @@ entities:
       service: example-service
       config:
         hide_credentials: true
-        anonymous: {% raw %}${{ env "DECK_ANONYMOUS_CONSUMER" }}{% endraw %}
+        anonymous: ${anonymous_consumer}
     - name: basic-auth
       service: example-service
       config:
         hide_credentials: true
-        anonymous: {% raw %}${{ env "DECK_ANONYMOUS_CONSUMER" }}{% endraw %}
+        anonymous: ${anonymous_consumer}
+variables:
+  anonymous_consumer:
+    value: $ANONYMOUS_CONSUMER
 {% endentity_examples %}
 
 ## 4. Test with anonymous Consumer
