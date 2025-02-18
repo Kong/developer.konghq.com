@@ -14,6 +14,7 @@ tier: enterprise
 
 works_on:
     - on-prem
+    - konnect
 
 min_version:
   gateway: '3.4'
@@ -57,20 +58,11 @@ prereqs:
           ```
           vault login root
           ```
-        1. [Create the `admin-policy.hcl` policy file](https://developer.hashicorp.com/vault/tutorials/policies/policies#write-a-policy). This contains the [permissions you need to create and use secrets](https://developer.hashicorp.com/vault/tutorials/secrets-management/versioned-kv#policy-requirements).
-        1. Upload the policy you just created:
-          ```
-          vault policy write admin admin-policy.hcl
-          ```
-        1. [Verify that you are using the `v2` secrets engine](https://developer.hashicorp.com/vault/tutorials/secrets-management/versioned-kv?variants=vault-deploy%3Aselfhosted#check-the-kv-secrets-engine-version):
+        1. Verify that you are using the `v2` secrets engine:
           ```
           vault read sys/mounts/secret
           ```
           The `options` key should have the `map[version:2]` value.
-        1. [Write the secret](https://developer.hashicorp.com/vault/tutorials/secrets-management/versioned-kv?variants=vault-deploy%3Aselfhosted#write-secrets):
-          ```
-          vault kv put secret/customer/acme name="ACME Inc."
-          ```
       icon_url: /assets/icons/hashicorp.svg
 
 cleanup:
@@ -81,35 +73,71 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+    - title: Clean up Konnect environment
+      include_content: cleanup/platform/konnect
+      icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create a Vault entity for HashiCorp Vault 
+## 1. Create a secret in HashiCorp Vault
+
+Write a secret to HashiCorp Vault:
+```
+vault kv put secret/customer/acme name="ACME Inc."
+```
+
+## 2. Create decK environment variables 
+
+We'll use decK environment variables for the `host` and `token` in the {{site.base_gateway}} Vault configuration. This is because these values typically can vary between environments. 
 
 In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` that HashiCorp Vault is using because {{site.base_gateway}} is running in a container that has a different `localhost` to you.
 
+As stated in the prerequisites, we're using `root` for our `token` in this tutorial since we are running HashiCorp Vault in dev mode.
+
+```
+export DECK_HCV_HOST=host.docker.internal
+export DECK_HCV_TOKEN='root'
+```
+
+
+## 3. Create a Vault entity for HashiCorp Vault 
+
 Using decK, create a Vault entity in the `kong.yaml` file with the required parameters for HashiCorp Vault:
 
-{% entity_example %}
-type: vault
-data:
-  name: hcv
-  prefix: hashicorp-vault
-  description: Storing secrets in HashiCorp Vault
-  config:
-    host: host.docker.internal
-    kv: v2
-    mount: secret
-    port: 8200
-    protocol: http
-    token: 'root'
-{% endentity_example %}
+{% entity_examples %}
+entities:
+  vaults:
+    - name: hcv
+      prefix: hashicorp-vault
+      description: Storing secrets in HashiCorp Vault
+      config:
+        host: ${hcv_host}
+        token: ${hcv_token}
+        kv: v2
+        mount: secret
+        port: 8200
+        protocol: http
 
-## 2. Validate
+variables:
+  hcv_host:
+    value: $HCV_HOST
+  hcv_token:
+    value: $HCV_TOKEN
+{% endentity_examples %}
 
-To validate that the secret was stored correctly in HashiCorp Vault, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. If the Docker container is named `kong-quickstart-gateway`, you can use the following command:
+## 4. Validate
 
+Since {{site.konnect_short_name}} data plane container names can vary, set your container name as an environment variable:
+{: data-deployment-topology="konnect" }
 ```sh
-docker exec kong-quickstart-gateway kong vault get {vault://hashicorp-vault/customer/acme/name}
+export KONNECT_DP_CONTAINER='your-dp-container-name'
 ```
+{: data-deployment-topology="konnect" }
+
+To validate that the secret was stored correctly in HashiCorp Vault, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. 
+
+{% validation vault-secret %}
+secret: '{vault://hashicorp-vault/customer/acme/name}'
+value: 'ACME Inc.'
+{% endvalidation %}
 
 If the vault was configured correctly, this command should return the value of the secret. You can use `{vault://hashicorp-vault/customer/acme/name}` to reference the secret in any referenceable field.
