@@ -171,7 +171,7 @@ entities:
         - name: request-termination
           config:
             status_code: 401
-            message: '"Error Authentication required"'
+            message: '"Error - Authentication required"'
 {% endentity_examples %}
 
 ## 7. Validate authentication
