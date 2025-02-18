@@ -58,7 +58,7 @@ module Jekyll
       end
 
       def formats
-        @formats ||= @plugin.formats
+        @formats ||= example.fetch('tools')
       end
 
       def url

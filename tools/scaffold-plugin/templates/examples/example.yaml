@@ -13,3 +13,10 @@ weight: 900
 #     value: us
 
 config: # plugin config in yaml format goes here
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
