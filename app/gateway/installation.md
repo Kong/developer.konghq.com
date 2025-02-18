@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}} Installation Reference"
+title: "Install {{site.base_gateway}} on Linux"
 
 description: |
   {{site.base_gate}} installation reference
@@ -53,7 +53,7 @@ works_on:
 
 ### FIPS install
 
-{{site.base_gateway}} provides a FIPS 140-2 compliant package for Ubuntu 20.04 , Ubuntu 22.04 , Red Hat Enterprise 9 , and Red Hat Enterprise 8 . This package provides compliance for the core {{site.base_gateway}} product and all out of the box plugins. For more information see the [FIPS reference page](/gateway/fips/)
+{{site.base_gateway}} provides a FIPS 140-2 compliant package for Ubuntu 20.04, Ubuntu 22.04, Red Hat Enterprise 9, and Red Hat Enterprise 8. This package provides compliance for the core {{site.base_gateway}} product and all out of the box plugins. For more information, see the [FIPS reference page](/gateway/fips/).
 
 
 {% navtabs %}
@@ -67,7 +67,12 @@ works_on:
 
 ## Running {{site.base_gateway}} as a non-root user
 
-When {{site.base_gateway}} is installed, the installation process creates the user group `kong`, users that belong to the `kong` can perform {{site.base_gateway}} actions. Adding your user to that user group will allow you to execute {{site.base_gateway}} commands on the system.
+When {{site.base_gateway}} is installed, the installation process creates the user group `kong`. Users that belong to the `kong` group can perform {{site.base_gateway}} actions. Adding your user to that user group will allow you to execute {{site.base_gateway}} commands on the system.
+
+{:.warning}
+> **Warning:** The Nginx master process needs to run as `root` for Nginx to execute certain actions (for example, to listen on the privileged port 80).
+> <br><br>
+> Although running Kong as the `kong` user and group does provide more security, we advise that a system and network administration evaluation be performed before making this decision. Otherwise, Kong nodes might become unavailable due to insufficient permissions to execute privileged system calls in the operating system.
 
 
 
@@ -80,16 +85,16 @@ Which will return a list of subdirectories that contain a prefix like this:
 
 The two `kong` values mean that the directory is owned by the user `kong` and the group `kong`. 
 
-In Linux to make an existing user part of the Kong group you can run this command: 
+To make an existing user part of the `kong` group, you can run this command: 
 
 `usermod -aG kong $USER`
 
-To view existing groups associated with the user: 
+To view existing groups associated with the user, run: 
 
-`groups $USER`. 
+`groups $USER`
 
 
 ### Nginx
 
-In {{site.base_gateway}} the Nginx master process runs at the `root` level so that Nginx can execute actions even if {{site.base_gateway}} is running as a non-root user. This is important when building containers.
+In {{site.base_gateway}}, the Nginx master process runs at the `root` level so that Nginx can execute actions even if {{site.base_gateway}} is running as a non-root user. This is important when building containers.
 

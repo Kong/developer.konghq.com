@@ -32,7 +32,7 @@ tags:
 ## 1. Add the existing user to the `kong` group
 
 ```sh
- sudo usermod -aG kong your-user
+sudo usermod -aG kong your-user
 ```
 
 ## 2. Validate

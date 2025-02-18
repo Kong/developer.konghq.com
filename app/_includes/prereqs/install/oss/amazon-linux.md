@@ -1,5 +1,5 @@
 {% navtabs %}
-{% navtab "Manually installation" %}
+{% navtab "Manual installation" %}
 1. Download {{site.base_gateway}}:
     ```sh
     curl -Lo kong-3.9.0.rpm $(rpm --eval https://packages.konghq.com/public/gateway-39/rpm/amzn/%{amzn}/%{_arch}/kong-3.9.0.aws.%{_arch}.rpm)

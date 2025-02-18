@@ -1,5 +1,5 @@
 {% navtabs %}
-{% navtab "Manual Installation" %}
+{% navtab "Manual installation" %}
 1. Download {{site.base_gateway}}:
     ```sh
      curl -Lo kong-enterprise-edition-fips-3.9.0.1.rpm $(rpm --eval https://packages.konghq.com/public/gateway-39/rpm/el/%{rhel}/x86_64/kong-enterprise-edition-fips-3.9.0.1.el%{rhel}.x86_64.rpm)
@@ -26,7 +26,7 @@
 {% endnavtab %}
 {% endnavtabs %}
 
-3. Enable FIPS
+3. Enable FIPS:
 
 ```sh
 export KONG_FIPS=on && kong reload
