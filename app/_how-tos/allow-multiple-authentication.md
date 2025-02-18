@@ -1,5 +1,5 @@
 ---
-title: Allow clients to choose their authentication method with multiple authentication
+title: Allow clients to choose their authentication methods and prevent unauthorized access
 content_type: how_to
 related_resources:
   - text: Authentication
@@ -11,10 +11,11 @@ products:
 plugins:
   - basic-auth
   - key-auth
+  - request-termination
 
 works_on:
-    - on-prem
-    - konnect
+  - on-prem
+  - konnect
 
 min_version:
   gateway: '3.4'
@@ -26,14 +27,41 @@ entities:
   - consumer
 
 tags:
-    - authentication
+  - authentication
 
 tldr:
-    q: Placeholder
-    a: Placeholder
+  q: How do I allow different clients to access an upstream service with different authentication types, and forbid access to any unauthenticated clients?
+  a: |
+    You can use multiple authentication plugins with an anonymous Consumer to give clients multiple options for authentication. 
+    The anonymous Consumer acts as a fallback to catch all other unauthorized requests.
 
+    For example, you can configure Key Auth and Basic Auth, apply them to specific Consumers, and set `anonymous` in those plugins to catch access attempts from anyone else.
+    Then, apply the Request Termination plugin to requests made with the anonymous Consumer to terminate the requests and send back a specific message.
+
+faqs:
+  - q: What happens if I configure multiple authentication methods but don't use an anonymous Consumer?
+    a: |
+      If `config.anonymous` isn't set, then all configured authentication plugins will attempt to authenticate every request. 
+      For example, if you have Key Auth and Basic Auth configured on a Gateway Service, then every request will have to contain **both** types of authentication. 
+      In this case, the last plugin executed will be the one setting the credentials passed to the upstream service. 
+
+  - q: What if I configure an anonymous Consumer but don't add request termination?
+    a: |
+      When multiple authentication plugins are enabled on Gateway Service and `config.anonymous` is set without any request termination, unauthorized requests will be allowed through. 
+      If you want anonymous access to be forbidden, you **must** configure the Request Termination plugin on the anonymous Consumer.
+  - q: Can I use the anonymous Consumer with OpenID Connect?
+    a: |
+      If you are using the OpenID Connect plugin for handling Consumer authentication, you must set both [`config.anonymous`](/plugins/openid-connect/reference/#config-anonymous) and [`config.consumer_claim`](/plugins/openid-connect/reference/#config-consumer_claim) in the plugin's configuration, as setting `config.anonymous` alone won't map that Consumer.
+  
 tools:
-    - deck
+  - deck
+
+prereqs:
+  entities:
+    services:
+      - example-service
+    routes:
+      - example-route
 
 cleanup:
   inline:
@@ -45,8 +73,133 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-@todo
+## 1. Create an ID
 
-pull content from https://docs.konghq.com/gateway/latest/kong-plugins/authentication/allowing-multiple-authentication-methods/
+Create a UUID:
 
-Add a bit about "Prevent anonymous access with the Request Termination plugin" (Information will need to be extrapolated from https://docs.konghq.com/gateway/latest/kong-plugins/authentication/reference/#multiple-authentication (in particular, look at the note))- maybe as an FAQ?
+```
+uuidgen
+```
+
+Export the ID to an environment variable:
+```sh
+export DECK_ANONYMOUS_CONSUMER=434772ef-af0c-4227-a33b-76e33b9fd7df
+```
+
+## 2. Create Consumers
+
+Create three Consumers, including an `anonymous` Consumer.
+The `anonymous` Consumer doesn't correspond to any real user, and will only serve as a fallback:
+
+{% entity_examples %}
+entities:
+  consumers:
+    - username: anonymous
+      id: {% raw %}${{ env "DECK_ANONYMOUS_CONSUMER" }}{% endraw %}
+    - username: Dana
+    - username: Mahan
+{% endentity_examples %}
+
+We're going to assign a different authentication type to each Consumer later.
+
+## 3. Set up authentication
+
+Add the Key Auth and Basic Auth plugins to the `example-service` Gateway Service, and set the `anonymous` fallback to the Consumer we created earlier:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: key-auth
+      service: example-service
+      config:
+        hide_credentials: true
+        anonymous: {% raw %}${{ env "DECK_ANONYMOUS_CONSUMER" }}{% endraw %}
+    - name: basic-auth
+      service: example-service
+      config:
+        hide_credentials: true
+        anonymous: {% raw %}${{ env "DECK_ANONYMOUS_CONSUMER" }}{% endraw %}
+{% endentity_examples %}
+
+## 4. Test with anonymous Consumer
+
+You now have authentication enabled on the Gateway Service, but the `anonymous` Consumer also allows requests from unauthenticated clients.
+
+Check without credentials:
+
+{% validation request-check %}
+url: '/anything'
+status_code: 200
+{% endvalidation %}
+
+Check with nonsense credentials:
+
+{% validation request-check %}
+url: '/anything?apikey=nonsense'
+status_code: 200
+{% endvalidation %}
+
+In both cases, you should get a 200 response, as the `anonymous` Consumer is allowed.
+
+## 5. Configure credentials
+
+Configure different credentials for the two named users: basic auth for `Dana`, and key auth for `Mahan`:
+
+{% entity_examples %}
+entities:
+  consumers:
+    - username: Dana
+      basicauth_credentials:
+        - username: Dana
+          password: dana
+    - username: Mahan
+      keyauth_credentials:
+        - key: mahan
+{% endentity_examples %}
+
+
+## 6. Add Request Termination to the anonymous Consumer
+
+The anonymous Consumer gets no credentials, as we don't want unauthenticated users accessing our Gateway Service.
+Instead, you can configure the Request Termination plugin to handle anonymous Consumers and redirect their requests with a `401`:
+
+{% entity_examples %}
+entities:
+  consumers:
+    - username: anonymous
+      plugins:
+        - name: request-termination
+          config:
+            status_code: 401
+            message: '"Error Authentication required"'
+{% endentity_examples %}
+
+## 7. Validate authentication
+
+Let's check that authentication works.
+
+Try to access the Gateway Service via the `/anything` Route using a nonsense API key:
+
+{% validation request-check %}
+url: '/anything?apikey=nonsense'
+status_code: 401
+{% endvalidation %}
+
+The request should now fail with a `401` response and your configured error message, as this Consumer is considered anonymous.
+
+You should get the same result if you try to access the Route without any API key:
+
+{% validation request-check %}
+url: '/anything'
+status_code: 401
+{% endvalidation %}
+
+Finally, try accessing the Route with the configured basic auth credentials:
+
+{% validation request-check %}
+url: '/anything'
+user: "Dana:dana"
+status_code: 200
+{% endvalidation %}
+
+This time, authentication should succeed with a `200`.
