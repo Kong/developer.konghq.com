@@ -35,3 +35,17 @@ search_aliases:
 ---
 
 ## Overview
+
+The IP Restriction plugin restricts access to a service or a route by either allowing or denying IP addresses. Single IPs, multiple IPs, or ranges in [CIDR notation](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation) like 10.10.10.0/24 can be used. The plugin supports IPv4 and IPv6 addresses.
+
+## Usage
+
+An `allow` list provides a positive security model, in which the configured CIDR ranges are allowed access to the resource, and all others are inherently rejected. A `deny` list configuration provides a negative security model, in which certain CIDRS are explicitly denied access to the resource, and all others are inherently allowed.
+
+You can configure the plugin with both allow and deny configurations, to allow a CIDR range but deny an IP address on that CIDR range, for example.
+
+## How is the IP address determined?
+
+The IP address is determined by the request header sent to Kong from downstream. In most cases, the header has a name of `X-Real-IP` or `X-Forwarded-For`.
+
+By default, Kong uses the header name `X-Real-IP`. If a different header name is required, it needs to be defined using the `real_ip_header` property in `kong.conf`. Depending on the network setup, the `trusted_ips` property may also need to be configured to include the load balancer IP address.
