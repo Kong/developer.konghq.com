@@ -221,6 +221,10 @@ app/_kong_plugins/json-threat-protection/index.md:
 app/_kong_plugins/json-threat-protection/changelog.md:
   - app/_hub/kong-inc/json-threat-protection/_changelog.md
 
+app/_kong_plugins/ip-restriction/index.md:
+  - app/_hub/kong-inc/ip-restriction/overview/_index.md
+app/_kong_plugins/ip-restriction/changelog.md:
+  - app/_hub/kong-inc/ip-restriction/_changelog.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
