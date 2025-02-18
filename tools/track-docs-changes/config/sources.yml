@@ -215,7 +215,10 @@ app/_kong_plugins/acme/examples/redis.yaml:
   - app/_hub/kong-inc/acme/how-to/_redis.md
 app/_kong_plugins/service-protection/index.md:
   - app/_hub/kong-inc/service-protection/overview/_index.md
-
+app/_kong_plugins/ip-restriction/index.md:
+  - app/_hub/kong-inc/ip-restriction/overview/_index.md
+app/_kong_plugins/ip-restriction/changelog.md:
+  - app/_hub/kong-inc/ip-restriction/_changelog.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
