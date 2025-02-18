@@ -32,3 +32,11 @@ variables:
     description: Replace with your IdP client secret.
   redirect_uri:
     value: "https://example.com/api"
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

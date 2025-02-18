@@ -25,3 +25,10 @@ config:
       azure_instance: $AZURE_INSTANCE_NAME
       azure_deployment_id: $AZURE_DEPLOYMENT_ID
       azure_api_version: "2023-01-01"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

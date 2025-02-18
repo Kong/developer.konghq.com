@@ -36,3 +36,11 @@ variables:
     value: $REDIS_HOST
   redis_port:
     value: $REDIS_PORT
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

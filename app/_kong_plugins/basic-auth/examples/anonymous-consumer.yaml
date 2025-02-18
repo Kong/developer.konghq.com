@@ -13,3 +13,10 @@ requirements:
 
 config:
   anonymous: "anonymous"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
