@@ -27,6 +27,7 @@ module Jekyll
         Data::APISpecs.new(site:, page: doc).process
         Data::Seo.new(site:, page: doc).process
         Data::SearchTags::Base.make_for(site:, page: doc).process
+        Data::HowTo.new(site:, page: doc).process if doc.data['content_type'] == 'how_to'
       end
     end
   end

@@ -8,6 +8,7 @@ module Jekyll
 
     def generate(site)
       site.data['referenceable_fields'] = referenceable_fields(site)
+      site.data['gateway_latest'] = site.data.dig('products', 'gateway', 'releases').detect { |r| r['latest'] }
     end
 
     def referenceable_fields(site)
