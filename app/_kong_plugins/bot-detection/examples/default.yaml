@@ -15,3 +15,11 @@ weight: 900
 config: 
   allow: []
   deny: []
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

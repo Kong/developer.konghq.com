@@ -31,3 +31,10 @@ variables:
     value: $KEY_SET
   domain:
     value: $DOMAIN
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

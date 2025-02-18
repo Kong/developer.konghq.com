@@ -35,3 +35,11 @@ variables:
   client_secret: 
     value: $CLIENT_SECRET
     description: Replace with your IdP client secret.
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
