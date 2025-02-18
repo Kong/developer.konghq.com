@@ -112,7 +112,7 @@ body:
 
 ## 3. Store a secret in your {{site.konnect_short_name}} Vault
 
-By storing a secret in a {{site.konnect_short_name}} Vault, you can reference it within [`kong.conf`](/gateway/manage-kong-conf) or as a referenceable plugin fields without having to store any values in plain-text.
+By storing a secret in a {{site.konnect_short_name}} Vault, you can reference it within [`kong.conf`](/gateway/manage-kong-conf/) or as a referenceable plugin fields without having to store any values in plain-text.
 
 Store your secret by sending a `POST` request to the `/secrets` endpoint:
 

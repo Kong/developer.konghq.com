@@ -187,7 +187,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  You can configure multiple authentication plugins, such as [Basic Authentication](/plugins/basic-auth/) and [Key Authentication](/plugins/key-auth), on a Gateway Service. This allows clients to use different authentication methods to access the associated Gateway Service or Route.
+                  You can configure multiple authentication plugins, such as [Basic Authentication](/plugins/basic-auth/) and [Key Authentication](/plugins/key-auth/), on a Gateway Service. This allows clients to use different authentication methods to access the associated Gateway Service or Route.
                   When multiple authentication plugins are configured, they must *all* either be configured to always perform authentication or to only perform authentication if the [Consumer](/gateway/entities/consumer/) wasn't already authenticated. 
                   This configuration is controlled by the `config.anonymous` property in the plugin schema:
 

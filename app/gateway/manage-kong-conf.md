@@ -55,7 +55,7 @@ log_level = warn
 
 ## Applying configuration
 
-Apply changes to a configuration using the `kong restart` command, available from the [Kong CLI](/gateway/cli).
+Apply changes to a configuration using the `kong restart` command, available from the [Kong CLI](/gateway/cli/).
 This restarts the {{site.base_gateway}} instance and applies configuration.
 
 {:.info}

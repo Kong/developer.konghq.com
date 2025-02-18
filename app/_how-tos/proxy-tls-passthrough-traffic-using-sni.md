@@ -3,7 +3,7 @@ title: Proxy TLS passthrough traffic
 content_type: how_to
 related_resources:
   - text: SNI entity
-    url: /gateway/entities/snis
+    url: /gateway/entities/sni/
 
 
 products:

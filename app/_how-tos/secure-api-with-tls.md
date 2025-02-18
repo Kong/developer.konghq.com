@@ -3,7 +3,7 @@ title: Secure your API with TLS using SNIs
 content_type: how_to
 related_resources:
   - text: SNI entity
-    url: /gateway/entities/snis/
+    url: /gateway/entities/sni/
   - text: Certificates
     url: /gateway/entities/certificate/
 
@@ -23,7 +23,7 @@ entities:
 
 tldr:
     q: How do I set up {{site.base_gateway}} with TLS?
-    a: By creating an SSL [Certificate](/gateway/entities/certificate), and associating it with an [SNI](/gateway/entities/sni), you can force {{site.base_gateway}} to handle encrypted traffic.
+    a: By creating an SSL [Certificate](/gateway/entities/certificate/), and associating it with an [SNI](/gateway/entities/sni/), you can force {{site.base_gateway}} to handle encrypted traffic.
 tools:
     - deck
 

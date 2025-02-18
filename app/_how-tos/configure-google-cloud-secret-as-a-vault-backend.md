@@ -84,7 +84,7 @@ cleanup:
 
 ## 1. Configure Secret Manager as a vault with the Vault entity
 
-To enable Secret Manager as your vault in {{site.base_gateway}}, you can use the [Vault entity](/gateway/entities/vault).
+To enable Secret Manager as your vault in {{site.base_gateway}}, you can use the [Vault entity](/gateway/entities/vault/).
 
 {% entity_examples %}
 entities:
