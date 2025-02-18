@@ -1,0 +1,11 @@
+description: 'Configure the plugin to allow access to a range of IPs, but deny a specific IP address in that range.'
+
+title: 'Allow a range of IPs and deny an IP address'
+
+weight: 800
+
+config:
+  allow:
+  - 203.0.113.0/24
+  deny:
+  - 203.0.113.5
