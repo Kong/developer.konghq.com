@@ -17,7 +17,6 @@ apt install -y kong-enterprise-edition-fips=3.9.1.0
 ```
 
 4. Enable FIPS
-
 ```sh
 export KONG_FIPS=on && kong reload
 ```
