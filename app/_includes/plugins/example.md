@@ -1,6 +1,6 @@
 ## Description
 
-{{ page.example.description | markdoownify }}
+{{ page.example.description | liquify | markdoownify }}
 
 ## Set up the plugin
 
