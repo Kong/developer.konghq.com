@@ -9,7 +9,7 @@ no_version: true
 * This plugin can now be scoped to consumer groups.
 
 ### {{site.base_gateway}} 3.4.x
-* Added support for the tcp, tls, grpc, and grpcs protocols.
+* Added support for the TCP, TLS, GRPC, and GRPCS protocols.
 
 ### {{site.base_gateway}} 3.0.x
 * Removed the deprecated whitelist and blacklist parameters. They are no longer supported.
