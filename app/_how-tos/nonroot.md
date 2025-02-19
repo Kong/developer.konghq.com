@@ -21,7 +21,7 @@ tldr:
 prereqs:
   inline:
     - title: Install {{site.base_gateway}} on Ubuntu
-      include_content: prereqs/install/ee/ubuntu
+      include_content: prereqs/install/gateway/ubuntu
 min_version:
     gateway: '3.4'
 
