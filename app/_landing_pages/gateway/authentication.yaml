@@ -28,13 +28,11 @@ rows:
                   is a savings in compute time and development effort.
 
                   {{site.base_gateway}} has a library of plugins that support the most widely used methods of API gateway authentication.
-  - columns:
-    - blocks:
-      - type: structured_text
-        config:
-          header:
-            text: "Admin API Authentication"
-  - columns:
+
+  - header:
+      type: h2
+      text: "Admin API Authentication"
+    columns:
     - blocks:
       - type: entity_card
         config:

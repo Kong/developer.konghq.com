@@ -120,9 +120,6 @@ rows:
                 - title: Enterprise Support and Services
                   oss: false
                   enterprise: true
-
-  - columns:
-      - blocks:
           - type: structured_text
             config:
               blocks:
