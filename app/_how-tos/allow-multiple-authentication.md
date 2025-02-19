@@ -88,7 +88,7 @@ entities:
 
 We're going to assign a different authentication type to each Consumer later.
 
-## 3. Set up authentication
+## 2. Set up authentication
 
 Add the Key Auth and Basic Auth plugins to the `example-service` Gateway Service, and set the `anonymous` fallback to the Consumer we created earlier:
 
@@ -107,7 +107,7 @@ entities:
         anonymous: anonymous
 {% endentity_examples %}
 
-## 4. Test with anonymous Consumer
+## 3. Test with anonymous Consumer
 
 You now have authentication enabled on the Gateway Service, but the `anonymous` Consumer also allows requests from unauthenticated clients.
 
@@ -121,13 +121,15 @@ status_code: 200
 Check with nonsense credentials:
 
 {% validation request-check %}
-url: '/anything?apikey=nonsense'
+url: '/anything'
 status_code: 200
+headers:
+  - apikey:nonsense
 {% endvalidation %}
 
 In both cases, you should get a 200 response, as the `anonymous` Consumer is allowed.
 
-## 5. Configure credentials
+## 4. Configure credentials
 
 Configure different credentials for the two named users: basic auth for `Dana`, and key auth for `Mahan`:
 
@@ -144,7 +146,7 @@ entities:
 {% endentity_examples %}
 
 
-## 6. Add Request Termination to the anonymous Consumer
+## 5. Add Request Termination to the anonymous Consumer
 
 The anonymous Consumer gets no credentials, as we don't want unauthenticated users accessing our Gateway Service.
 Instead, you can configure the Request Termination plugin to handle anonymous Consumers and redirect their requests with a `401`:
@@ -160,15 +162,17 @@ entities:
             message: '"Error - Authentication required"'
 {% endentity_examples %}
 
-## 7. Validate authentication
+## 6. Validate authentication
 
 Let's check that authentication works.
 
 Try to access the Gateway Service via the `/anything` Route using a nonsense API key:
 
 {% validation request-check %}
-url: '/anything?apikey=nonsense'
+url: '/anything'
 status_code: 401
+headers:
+  - apikey:nonsense
 {% endvalidation %}
 
 The request should now fail with a `401` response and your configured error message, as this Consumer is considered anonymous.
