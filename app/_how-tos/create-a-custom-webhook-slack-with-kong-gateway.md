@@ -15,7 +15,7 @@ tags:
 
 tldr:
   q: How can I create a custom webhook to push information to Slack using Event Hooks?
-  a: With an application URL from Slack, you can configure an <a href="/gateway/entities/event-hook/>Event Hook</a> using the `webhook-custom` handler that can `POST` event information to Slack.
+  a: With an application URL from Slack, you can configure an [Event Hook](/gateway/entities/event-hook/) using the `webhook-custom` handler that can `POST` event information to Slack.
 prereqs:
   inline:
     - title: A Slack webhook application
