@@ -32,11 +32,8 @@ tags:
 tldr:
   q: How do I allow different clients to access an upstream service with different authentication types, and forbid access to any unauthenticated clients?
   a: |
-    You can use multiple authentication plugins with an anonymous Consumer to give clients multiple options for authentication. 
-    The anonymous Consumer acts as a fallback to catch all other unauthorized requests.
-
-    For example, you can configure Key Auth and Basic Auth, apply them to specific Consumers, and set `anonymous` in those plugins to catch access attempts from anyone else.
-    Then, apply the Request Termination plugin to requests made with the anonymous Consumer to terminate the requests and send back a specific message.
+    Configure multiple authentication plugins, like [Key Auth](/plugins/key-auth/) and [Basic Auth](/plugins/basic-auth/), and apply them to specific [Consumers](/gateway/entities/consumer/). Set `config.anonymous` in those plugins to the ID of the anonymous Consumer to catch access attempts from anyone else.
+    Then, apply the [Request Termination](/plugins/request-termination/) plugin to requests made with the anonymous Consumer to terminate the requests and send back a specific message.
 
 faqs:
   - q: What happens if I configure multiple authentication methods but don't use an anonymous Consumer?
@@ -51,7 +48,7 @@ faqs:
       If you want anonymous access to be forbidden, you **must** configure the Request Termination plugin on the anonymous Consumer.
   - q: Can I use the anonymous Consumer with OpenID Connect?
     a: |
-      If you are using the OpenID Connect plugin for handling Consumer authentication, you must set both [`config.anonymous`](/plugins/openid-connect/reference/#config-anonymous) and [`config.consumer_claim`](/plugins/openid-connect/reference/#config-consumer_claim) in the plugin's configuration, as setting `config.anonymous` alone won't map that Consumer.
+      If you are using the [OpenID Connect](/plugins/openid-connect/) plugin for handling Consumer authentication, you must set both [`config.anonymous`](/plugins/openid-connect/reference/#config-anonymous) and [`config.consumer_claim`](/plugins/openid-connect/reference/#config-consumer_claim) in the plugin's configuration, as setting `config.anonymous` alone won't map that Consumer.
   
 tools:
   - deck
@@ -111,14 +108,14 @@ entities:
 
 You now have authentication enabled on the Gateway Service, but the `anonymous` Consumer also allows requests from unauthenticated clients.
 
-Check without credentials:
+The following validation works because the unauthenticated request falls back to the anonymous Consumer, which allows it through:
 
 {% validation request-check %}
 url: '/anything'
 status_code: 200
 {% endvalidation %}
 
-Check with nonsense credentials:
+The following validation with fake credentials also works because an incorrect API key is treated as anonymous:
 
 {% validation request-check %}
 url: '/anything'
@@ -131,7 +128,7 @@ In both cases, you should get a 200 response, as the `anonymous` Consumer is all
 
 ## 4. Configure credentials
 
-Configure different credentials for the two named users: basic auth for `Dana`, and key auth for `Mahan`:
+Now, let's configure Consumers with different auth credentials and prevent unauthenticated access. Configure different credentials for the two named users: basic auth for `Dana`, and key auth for `Mahan`:
 
 {% entity_examples %}
 entities:
