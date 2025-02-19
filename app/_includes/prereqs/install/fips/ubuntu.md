@@ -20,3 +20,7 @@ apt install -y kong-enterprise-edition-fips=3.9.1.0
 ```sh
 export KONG_FIPS=on && kong reload
 ```
+
+## Configure the Datastore
+
+{% include how-tos/steps/datastore.md %}
