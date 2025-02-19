@@ -73,20 +73,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create an ID
-
-Create a UUID:
-
-```
-uuidgen
-```
-
-Export the ID to an environment variable:
-```sh
-export DECK_ANONYMOUS_CONSUMER=434772ef-af0c-4227-a33b-76e33b9fd7df
-```
-
-## 2. Create Consumers
+## 1. Create Consumers
 
 Create three Consumers, including an `anonymous` Consumer.
 The `anonymous` Consumer doesn't correspond to any real user, and will only serve as a fallback:
@@ -95,12 +82,8 @@ The `anonymous` Consumer doesn't correspond to any real user, and will only serv
 entities:
   consumers:
     - username: anonymous
-      id: ${anonymous_consumer}
     - username: Dana
     - username: Mahan
-variables:
-  anonymous_consumer:
-    value: $ANONYMOUS_CONSUMER
 {% endentity_examples %}
 
 We're going to assign a different authentication type to each Consumer later.
@@ -116,15 +99,12 @@ entities:
       service: example-service
       config:
         hide_credentials: true
-        anonymous: ${anonymous_consumer}
+        anonymous: anonymous
     - name: basic-auth
       service: example-service
       config:
         hide_credentials: true
-        anonymous: ${anonymous_consumer}
-variables:
-  anonymous_consumer:
-    value: $ANONYMOUS_CONSUMER
+        anonymous: anonymous
 {% endentity_examples %}
 
 ## 4. Test with anonymous Consumer
