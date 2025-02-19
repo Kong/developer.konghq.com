@@ -38,6 +38,12 @@ api_specs:
 schema:
     api: gateway/admin-ee
     path: /schemas/Vault
+
+next_steps:
+  - text: Set up a {{site.konnect_short_name}} Config Store
+    url: /how-to/configure-the-konnect-config-store/
+  - text: Set up HashiCorp Vault as a vault backend
+    url: /how-to/configure-hashicorp-vault-as-a-vault-backend/
 ---
 
 ## What is a Vault?
@@ -118,7 +124,7 @@ features:
     oss: false
     enterprise: true
     supports_konnect: true
-  - title: Hashicorp Vault
+  - title: HashiCorp Vault
     url: /how-to/configure-hashicorp-vault-as-a-vault-backend/
     oss: false
     enterprise: true
