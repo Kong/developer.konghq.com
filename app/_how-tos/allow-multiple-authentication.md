@@ -72,8 +72,10 @@ cleanup:
 
 ## 1. Create Consumers
 
-Create three Consumers, including an `anonymous` Consumer.
-The `anonymous` Consumer doesn't correspond to any real user, and will only serve as a fallback:
+You can use multiple authentication plugins with an anonymous Consumer to give clients multiple options for authentication. 
+The anonymous Consumer doesn't correspond to any real user, and acts as a fallback to catch all other unauthorized requests.
+
+Create three Consumers, including the `anonymous` Consumer:
 
 {% entity_examples %}
 entities:
