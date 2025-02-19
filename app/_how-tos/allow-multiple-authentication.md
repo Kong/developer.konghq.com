@@ -39,16 +39,16 @@ faqs:
   - q: What happens if I configure multiple authentication methods but don't use an anonymous Consumer?
     a: |
       If `config.anonymous` isn't set, then all configured authentication plugins will attempt to authenticate every request. 
-      For example, if you have Key Auth and Basic Auth configured on a Gateway Service, then every request will have to contain **both** types of authentication. 
-      In this case, the last plugin executed will be the one setting the credentials passed to the upstream service. 
+      For example, if you have Key Auth and Basic Auth configured on a Gateway Service, then every request has to contain **both** types of authentication. 
+      In this case, the last plugin executed is the one setting the credentials passed to the upstream service. 
 
   - q: What if I configure an anonymous Consumer but don't add request termination?
     a: |
-      When multiple authentication plugins are enabled on Gateway Service and `config.anonymous` is set without any request termination, unauthorized requests will be allowed through. 
+      When multiple authentication plugins are enabled on a Gateway Service and `config.anonymous` is set without any request termination, unauthorized requests will be allowed through. 
       If you want anonymous access to be forbidden, you **must** configure the Request Termination plugin on the anonymous Consumer.
   - q: Can I use the anonymous Consumer with OpenID Connect?
     a: |
-      If you are using the [OpenID Connect](/plugins/openid-connect/) plugin for handling Consumer authentication, you must set both [`config.anonymous`](/plugins/openid-connect/reference/#config-anonymous) and [`config.consumer_claim`](/plugins/openid-connect/reference/#config-consumer_claim) in the plugin's configuration, as setting `config.anonymous` alone won't map that Consumer.
+      If you are using the [OpenID Connect](/plugins/openid-connect/) plugin for handling Consumer authentication, you must set both [`config.anonymous`](/plugins/openid-connect/reference/#config-anonymous) and [`config.consumer_claim`](/plugins/openid-connect/reference/#config-consumer_claim) in the plugin's configuration, as setting `config.anonymous` alone doesn't map that Consumer.
   
 tools:
   - deck
