@@ -1,0 +1,31 @@
+<table class="table-auto">
+    <thead>
+        <tr>
+          <th class="font-semibold text-primary">Parameter</th>
+          <th class="font-semibold text-primary">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for field in config.fields %}
+        <tr>
+            <td>
+                <span class="block text-primary">
+                    <code>{{ field.name | markdown }}</code>
+                </span>
+                {% if field.default_value != nil %}
+                {% assign default_value = field.default_value %}
+                {% if field.array? %}
+                    {% assign default_value = field.default_value | join: ', ' %}
+                {% endif %}
+                <span class="block mt-2">
+                    <span class="text-secondary text-xs">Default: <code>{{ default_value| markdown }}</code></span>
+                </span>
+            {% endif %}
+            </td>
+            <td>
+                <span class="content">{{ field.description | markdownify }}</span>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

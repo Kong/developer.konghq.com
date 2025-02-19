@@ -36,21 +36,6 @@ faqs:
   - q: Can I reference {{site.konnect_short_name}} Config Store Vault secrets in `kong.conf`?
     a: No. You can't reference secrets stored in a {{site.konnect_short_name}} Config Store Vault in `kong.conf` because {{site.konnect_short_name}} resolves the secret after {{site.base_gateway}} connects to the control plane. For more information about the fields you can reference as secrets, see [What can be stored as a secret?](/gateway/entities/vault/#what-can-be-stored-as-a-secret).
 
-prereqs:
-  inline:
-    - title: Environment variables
-      content: |
-        To use the copy, paste, and run the instructions in this how-to, you must export these additional environmental variables:
-
-        ```sh
-        export KONNECT_CONTROL_PLANE_URL=https://{region}.api.konghq.com
-        export CONTROL_PLANE_ID=your-control-plane-uuid
-        ```
-
-        * `{region}`: Replace with the [{{site.konnect_short_name}} region](/konnect/geos/) you're using.
-        * `CONTROL_PLANE_ID`: You can find your control plane UUID by navigating to the control plane in the {{site.konnect_short_name}} UI or by sending a `GET` request to the [`/control-planes` endpoint](/api/konnect/control-planes/v2/#/operations/list-control-planes).
-      icon_url: /assets/icons/file.svg
-
 tools:
   - konnect-api
  
@@ -62,6 +47,10 @@ cleanup:
 
 min_version:
     gateway: '3.4'
+
+next_steps:
+  - text: Review the Vaults entity
+    url: /gateway/entities/vault/
 ---
 
 ## 1. Configure a {{site.konnect_short_name}} Config Store

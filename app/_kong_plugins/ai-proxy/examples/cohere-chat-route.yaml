@@ -23,3 +23,10 @@ config:
     options:
       max_tokens: 512
       temperature: 1.0
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -123,14 +123,11 @@ rows:
                   individual: false
                   team: false
                   ee: true
-
-  - columns:
-      - blocks:
           - type: structured_text
             config:
               blocks:
                 - type: text
-                  text: | 
+                  text: |
                     See the full feature comparison on our [pricing page&rarr;](https://insomnia.rest/pricing)
 
   - header:

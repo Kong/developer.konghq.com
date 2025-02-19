@@ -68,6 +68,10 @@ cleanup:
 
 min_version:
     gateway: '3.4'
+
+next_steps:
+  - text: Review the Vaults entity
+    url: /gateway/entities/vault/
 ---
 
 ## 1. Create a key in the HashiCorp vault

@@ -8,17 +8,12 @@ rows:
   -  header:
         type: h1
         text: "{{site.base_gateway}} Entities"
-
-  - columns:
-    - blocks:
-        - type: text
-          config:
-            Kong entities refer to the various components and objects that make up the Kong API Gateway and its ecosystem.
+        sub_text: Kong entities refer to the various components and objects that make up the Kong API Gateway and its ecosystem.
 
   - header:
       type: h2
       text: "Core Entities"
-  
+
   - columns:
     - blocks:
       - type: entity_card

@@ -18,3 +18,10 @@ variables:
     value: "https://$AUTH0_API_NAME.auth0.com/.well-known/openid-configuration"
   audience:
     value: $AUTH0_API_IDENTIFIER
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

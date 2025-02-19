@@ -80,6 +80,10 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+next_steps:
+  - text: Review the Vaults entity
+    url: /gateway/entities/vault/
 ---
 
 ## 1. Configure Secret Manager as a vault with the Vault entity

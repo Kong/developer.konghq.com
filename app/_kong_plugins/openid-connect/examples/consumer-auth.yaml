@@ -25,3 +25,10 @@ variables:
     value: "http://keycloak.test:8080/realms/master"
   client_id:
     value: kong
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

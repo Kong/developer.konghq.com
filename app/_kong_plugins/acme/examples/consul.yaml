@@ -40,3 +40,11 @@ variables:
   consul_port:
     value: $CONSUL_PORT
 
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

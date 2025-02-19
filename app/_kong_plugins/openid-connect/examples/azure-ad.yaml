@@ -35,3 +35,11 @@ variables:
   redirect_uri:
     value: "https://example.com/api"
 
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

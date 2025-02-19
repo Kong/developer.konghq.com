@@ -13,3 +13,10 @@ config:
     - 3600
   window_type: sliding
   disable_penalty: false
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

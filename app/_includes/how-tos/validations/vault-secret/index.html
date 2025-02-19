@@ -1,0 +1,11 @@
+{% if page.works_on contains 'konnect' %}
+<div data-deployment-topology="konnect" markdown="1" data-test-step="{{ config.data_validate_konnect | escape }}">
+  {% include how-tos/validations/vault-secret/snippet.md container=config.container.konnect secret=config.secret %}
+</div>
+{% endif %}
+
+{% if page.works_on contains 'on-prem' %}
+<div data-deployment-topology="on-prem"  markdown="1" data-test-step="{{ config.data_validate_on_prem | escape }}">
+  {% include how-tos/validations/vault-secret/snippet.md container=config.container.on_prem secret=config.secret %}
+</div>
+{% endif %}

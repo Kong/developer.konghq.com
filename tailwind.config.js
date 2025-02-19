@@ -55,7 +55,7 @@ module.exports = {
       },
       boxShadow: {
         primary: '0 4px 12px 0 rgb(var(--color-shadow-primary))',
-        'hover-card': '0 4px 20px 0 rgb(var(--color-shadow-hover-cardp))'
+        'hover-card': '0 4px 20px 0 rgb(var(--color-shadow-hover-card))'
       }
     },
   },
