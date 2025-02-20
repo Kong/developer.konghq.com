@@ -42,7 +42,7 @@ prereqs:
   inline: 
     - title: OPA server
       content: |
-        This tutorial requires an OPA server:
+        This tutorial requires an OPA server. You can run a local server for testing:
         1. [Install OPA](https://www.openpolicyagent.org/docs/latest/#1-download-opa).
         1. Run a local server:
            ```sh
@@ -129,6 +129,9 @@ variables:
   path:
     value: $OPA_PATH
 {% endentity_examples %}
+
+{:.note}
+> Note: If your OPA server doesn't use the default `8181` port, you'll need to specify the `config.opa_port` too.
 
 ## 4. Validate
 
