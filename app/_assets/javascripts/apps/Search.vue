@@ -89,7 +89,7 @@
 
         <ais-hits>
             <template v-slot:item="{ item }">
-                <div class="flex rounded-md border border-primary/5 bg-secondary shadow-primary h-full hover:border hover:border-brand-saturated/40 hover:shadow-hover-card min-h-[260px]">
+                <div class="card card__bordered min-h-[260px]">
                     <a :href="getPath(item.url)" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
                         <div class="flex flex-col gap-3 flex-grow">
                             <h4>{{ item.title }}</h4>

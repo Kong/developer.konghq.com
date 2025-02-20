@@ -388,6 +388,14 @@
     }
   }
 
+  .card {
+    @apply flex rounded-md bg-secondary shadow-primary h-full;
+  }
+
+  .card__bordered {
+    @apply border border-primary/5 hover:border hover:border-brand-saturated/40 hover:shadow-hover-card;
+  }
+
   .DocSearch-Commands {
     @apply flex-row;
   }
