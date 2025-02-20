@@ -62,10 +62,6 @@ cleanup:
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
-
-next_steps:
-  - text: Review the Vaults entity
-    url: /gateway/entities/vault/
 ---
 
 ## 1. Create a policy file
