@@ -33,7 +33,7 @@ An SNI (Server Name Indication) is used to map multiple hostnames to a [Certific
 
 ## SNI routing
 
-When configuring a route with a secure protocol like HTTPS, gRPC, or TLS, an SNI can be used for routing. The SNI is determined during the TLS handshake process and will remain unchanged for the duration of the connection, so all requests will contain the same SNI regardless of the defined `Header` in the Route configuration. For more information on how routing priorities are assigned read the [Expressions Router](/gateway/routing/expressions/#performance-considerations) documentation.
+When configuring a Route with a secure protocol, like HTTPS, gRPC, or TLS, you can use an SNI for routing. The SNI is determined during the TLS handshake process and will remain unchanged for the duration of the connection, so all requests will contain the same SNI regardless of the defined `Header` in the Route configuration. For more information on how routing priorities are assigned read the [Expressions Router](/gateway/routing/expressions/#performance-considerations) documentation.
 
 ### Wildcards 
 
@@ -44,9 +44,10 @@ Valid wildcard positions for configuring SNIs are:
 * `*.www.mydomain.com`
 
 This is especially useful when configuring [TLS Routes](/gateway/entities/#tls-route-configuration). 
+
 ### Prioritization matching
 
-The prioritization for matching `snis` follows this order:
+The prioritization for matching SNIs follows this order:
 
  1. Exact SNI matching certificate
  2. Search for a certificate by prefix wildcard

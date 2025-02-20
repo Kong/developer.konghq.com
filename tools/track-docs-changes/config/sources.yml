@@ -82,6 +82,8 @@ app/_gateway_entities/sni.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_gateway/entities/certificate.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
+app/_gateway_entities/route.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
 
 app/_gateway_entities/license.md:
   - app/_src/gateway/licenses/index.md
