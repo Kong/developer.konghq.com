@@ -220,7 +220,8 @@ app/_kong_plugins/json-threat-protection/index.md:
   - app/_hub/kong-inc/json-threat-protection/overview/_index.md
 app/_kong_plugins/json-threat-protection/changelog.md:
   - app/_hub/kong-inc/json-threat-protection/_changelog.md
-
+app/_how-tos/block-unauthorized-requests-with-opa.md:
+  - app/_hub/kong-inc/opa/overview/_index.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
