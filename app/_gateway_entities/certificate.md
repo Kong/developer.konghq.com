@@ -49,7 +49,7 @@ A Certificate object represents a public certificate, which is used to validate 
 
 ## SNI association
 
-Certificates can be [associated with an SNI](how-to/associate-certificate-with-sni). Then an SNI can be used when configuring a [Service](/gateway/entities/service) or a [Route](/gateway/entities/route) to assign Certificates to a Route.
+Certificates can be [associated with an SNI](/how-to/associate-certificate-with-sni). Then an SNI can be used when configuring a [Service](/gateway/entities/service) or a [Route](/gateway/entities/route) to assign Certificates to a Route.
 Certificate assignment can be done dynamically across all SNIs, using an [SNI Wildcard](/gateway/entities/sni/#sni-routing), for example: 
 
 {% entity_example %}
