@@ -7,3 +7,10 @@ weight: 900
 config:
   deny:
   - 198.51.100.0/24
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

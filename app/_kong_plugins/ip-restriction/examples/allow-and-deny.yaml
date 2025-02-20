@@ -9,3 +9,10 @@ config:
   - 203.0.113.0/24
   deny:
   - 203.0.113.5
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -8,3 +8,10 @@ config:
   allow:
   - 203.0.113.1
   - 192.0.2.0/24
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
