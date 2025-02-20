@@ -25,7 +25,7 @@ tags:
 
 tldr:
     q: How do I configure {{site.base_gateway}} to only accept requests from specific IP addresses?
-    a: Enable the IP Restriction plugin list the IPs to allow in `config.allow`.
+    a: Enable the IP Restriction plugin and list the IPs to allow in `config.allow`.
 
 tools:
     - deck
