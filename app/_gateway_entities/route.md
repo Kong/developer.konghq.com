@@ -499,7 +499,7 @@ data:
     - "my-sni"
 {% endentity_example %}
 
-Alternatively you can use an [SNI Wildcard](/gateway/entities/sni/#sni-routing) with the Certificate to automatically apply it to the existing Route.
+In this case, the Certificate is already associated with the SNI, so by default it will apply to the Route. Alternatively you can use an [SNI Wildcard](/gateway/entities/sni/#sni-routing) with the Certificate to automatically apply it to the existing Route.
 
 ### Proxying TLS passthrough traffic
 

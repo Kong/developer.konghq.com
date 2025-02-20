@@ -47,11 +47,11 @@ This is especially useful when configuring [TLS Routes](/gateway/entities/#tls-r
 
 ### Prioritization matching
 
-The prioritization for matching SNIs follows this order:
+The prioritization for matching SNIs to Certificates follows this order:
 
  1. Exact SNI matching certificate
- 2. Search for a certificate by prefix wildcard
- 3. Search for a certificate by suffix wildcard
+ 2. Search for a certificate by an SNI prefix wildcard
+ 3. Search for a certificate by an SNI suffix wildcard
  4. Search for a certificate associated with the SNI `*`
  5. The default certificate on the file system
 
