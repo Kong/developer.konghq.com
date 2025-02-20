@@ -47,6 +47,23 @@ A Certificate object represents a public certificate, which is used to validate 
 * Handle SSL/TLS termination for one or more hostnames using the associated [SNI object](/gateway/entities/sni/)
 * Use as a trusted CA store when validating the peer certificate of a client or Service 
 
+## SNI association
+
+Certificates can be [associated with an SNI](how-to/associate-certificate-with-sni). Then an SNI can be used when configuring a [Service](/gateway/entities/service) or a [Route](/gateway/entities/route) to assign Certificates to a Route.
+Certificate assignment can be done dynamically across all SNIs, using an [SNI Wildcard](/gateway/entities/sni/#sni-routing), for example: 
+
+{% entity_example %}
+type: certificate
+data:
+  cert: |
+      -----BEGIN CERTIFICATE-----
+      -----END CERTIFICATE-----
+  key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      -----END RSA PRIVATE KEY-----
+  snis: ["*"]
+{% endentity_example %}
+
 ## Schema
 
 {% entity_schema %}

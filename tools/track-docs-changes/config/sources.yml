@@ -78,6 +78,10 @@ app/_gateway_entities/vault.md:
   - app/_src/deck/guides/vaults.md
   - app/_src/gateway/kong-enterprise/secrets-management/index.md
   - app/_src/gateway/kong-enterprise/secrets-management/backends/env.md
+app/_gateway_entities/sni.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
+app/_gateway/entities/certificate.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
 
 app/_gateway_entities/license.md:
   - app/_src/gateway/licenses/index.md

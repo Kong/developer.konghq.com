@@ -148,6 +148,7 @@ To maximise performance, the {{site.base_gateway}} router orders all defined Rou
 
 For more information, see the detailed [expressions](/gateway/routing/expressions/#priority-matching) or [traditional](/gateway/routing/traditional/#route-priority) sections.
 
+
 ### Route behavior
 
 The Route entity allows you to configure proxy behaviour on a per route basis by setting the `strip_path`, `preserve_host`, and `path_handling` values.
@@ -474,6 +475,39 @@ You can use the following recommendations to increase routing performance:
 
 * In `expressions` mode, we recommend putting more likely matched Routes before (as in, higher priority) those that are less frequently matched.
 * Regular expressions in Routes use more resources to evaluate than simple prefixes. In installations with thousands of Routes, replacing a regular expression with simple prefix can improve throughput and latency of {{site.base_gateway}}. If a regex must be used because an exact path match must be performed, using the [expressions router](/gateway/routing/expressions/) will significantly improve {{site.base_gateway}}’s performance in this case.
+
+## TLS Route Configuration
+
+The Routes entity can dynamically serve TLS certificates on a per-connection basis. TLS certifcates are managed by two resources: 
+
+* [Certificates](/gateway/entities/certificate)
+* [SNIs](/gateway/entities/sni)
+
+This is done by creating a Certificate [associated to an SNI](/how-to/associate-certificate-with-sni), and then creating secure Route that uses the Certificate:
+
+{% entity_example %}
+type: route
+data:
+  name: example-route
+  host: "*.tls-example.com"
+  protocol: 
+    - https
+    - tls
+  paths:
+    - "/mock"
+  snis: 
+    - "my-sni"
+{% endentity_example %}
+
+Alternatively you can use an [SNI Wildcard](/gateway/entities/sni/#sni-routing) with the Certificate to automatically apply it to the existing route.
+
+### Proxying TLS Passthrough Traffic
+
+{{site.base_gateway}} supports **TLS passthrough**. {{site.base_gateawy}} uses the connecting SNI extension to find the matching Route and Service when forwarding a TLS request upstream.
+Creating a Route to proxy TLS traffic is unique to every deployment, but the two main configuration variables are: 
+
+* Create a **Route** with `tls_passthrough` protocol and assign an SNI. 
+* Create a **Service** with the protocol set to `tcp`.
 
 ## Schema
 
