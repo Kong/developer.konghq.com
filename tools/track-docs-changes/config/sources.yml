@@ -222,6 +222,10 @@ app/_kong_plugins/json-threat-protection/index.md:
   - app/_hub/kong-inc/json-threat-protection/overview/_index.md
 app/_kong_plugins/json-threat-protection/changelog.md:
   - app/_hub/kong-inc/json-threat-protection/_changelog.md
+app/_kong_plugins/tls-metadata-headers/changelog.md:
+  - app/_hub/kong-inc/tls-metadata-headers/_changelog.md
+app/_kong_plugins/tls-metadata-headers/index.md:
+  - app/_hub/kong-inc/tls-metadata-headers/overview/_index.md
 
 
 # landing pages
