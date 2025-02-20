@@ -1,7 +1,7 @@
 description: |
   Run the JSON Threat Protection plugin in tap mode. 
   
-  Define a JSON threat protection policy and log any invalid requests as warnings, but still allow {{site.base_gateway}} to proxy non-conforming requests to the upstream service.
+  In tap mode, you define a JSON threat protection policy and the plugin logs any invalid requests as warnings. It still allows {{site.base_gateway}} to proxy non-conforming requests to the upstream service.
 
 title: 'Log invalid requests without blocking'
 
