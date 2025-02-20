@@ -478,7 +478,7 @@ You can use the following recommendations to increase routing performance:
 
 ## TLS Route Configuration
 
-The Routes entity can dynamically serve TLS certificates on a per-connection basis. TLS certifcates are managed by two resources: 
+The Routes entity can dynamically serve TLS certificates on a per-connection basis. TLS certificates are managed by two resources: 
 
 * [Certificates](/gateway/entities/certificate)
 * [SNIs](/gateway/entities/sni)
