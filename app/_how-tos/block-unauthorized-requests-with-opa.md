@@ -131,7 +131,7 @@ variables:
 {% endentity_examples %}
 
 {:.note}
-> Note: If your OPA server doesn't use the default `8181` port, you'll need to specify the `config.opa_port` too.
+> Note: If your OPA server doesn't use the default `8181` port, you'll need to specify the `config.opa_port` parameter too.
 
 ## 4. Validate
 
