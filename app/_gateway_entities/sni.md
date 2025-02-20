@@ -31,9 +31,6 @@ schema:
 
 An SNI (Server Name Indication) is used to map multiple hostnames to a [Certificate](/gateway/entities/certificate/). It allows {{site.base_gateway}} to select which SSL/TLS Certificate to use based on the hostname in the client request. This feature ensures that multiple domains can be securely served through the same gateway.
 
-
- 5. The default certificate on the file system
-
 ## SNI routing
 
 When configuring a route with a secure protocol like HTTPS, gRPC, or TLS, an SNI can be used for routing. The SNI is determined during the TLS handshake process and will remain unchanged for the duration of the connection, so all requests will contain the same SNI regardless of the defined `Header` in the Route configuration. For more information on how routing priorities are assigned read the [Expressions Router](/gateway/routing/expressions/#performance-considerations) documentation.
@@ -55,6 +52,7 @@ The prioritization for matching `snis` follows this order:
  2. Search for a certificate by prefix wildcard
  3. Search for a certificate by suffix wildcard
  4. Search for a certificate associated with the SNI `*`
+ 5. The default certificate on the file system
 
 ## Schema
 
