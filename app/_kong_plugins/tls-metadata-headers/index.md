@@ -51,31 +51,13 @@ Here are some use cases where the TLS Metadata Header plugin can be helpful:
 
 ## How it works
 
-The following explains how the TLS Metadata Headers plugin works:
+The TLS Metadata Header plugin accesses the client certificate and extracts the following metadata:
+* The certificate itself
+* Serial number
+* Issuer Distinguished Name (DN)
+* Subject DN
+* SHA1 fingerprint
+* Full client certificate chain
 
-1. A client sends a request with a TLS certificate.
-2. The Gateway Service that proxies the client request has either the mTLS Authentication or TLS Handshake Modifier plugin enabled, making the client certificate available to other plugins.
-3. The TLS Metadata Header plugin, configured on the same Gateway Service, accesses the client certificate and extracts metadata such as the certificate itself, serial number, issuer Distinguished Name (DN), subject DN, and SHA1 fingerprint. It also retrieves the full client certificate chain.
-4. If `inject_client_cert_details` is enabled, the TLS Metadata Header plugin injects the extracted TLS client certificate metadata into HTTP headers.
-
-<!--vale off-->
-{% mermaid %}
-sequenceDiagram
-    actor C as Client
-    participant M as mTLS Authentication <br> or TLS Handshake Modifier plugin
-    participant T as TLS Metadata Header <br> plugin
-    participant H as Upstream <br> service
-
-    C->>M: Sends request with <br>TLS certificate
-    M->>M: Makes client certificate <br>available to other plugins
-    M->>T: Extracts metadata
-    T->>T: Checks if inject_client_cert_details <br>is enabled
-    alt inject_client_cert_details is enabled
-        T->>H: Injects metadata into HTTP headers
-    else inject_client_cert_details is disabled
-        T->>T: Does nothing
-    end
-{% endmermaid %}
-
-<!--vale on-->
+If `inject_client_cert_details` is enabled, the TLS Metadata Header plugin injects the extracted TLS client certificate metadata into HTTP headers.
 
