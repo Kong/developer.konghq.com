@@ -1,0 +1,25 @@
+description: 'Configure the OPA plugin to connect to an OPA server with a custom host and port and get the `/my_policies/header` policy.'
+
+title: 'Custom OPA host and port'
+
+weight: 900
+
+requirements:
+ - "OPA server running"
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config: 
+  opa_host: my-host.com
+  opa_port: 8182
+  opa_path: /v1/data/my_policies/header
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
