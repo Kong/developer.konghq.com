@@ -34,7 +34,7 @@ search_aliases:
   - open policy agent
 
 related_resources:
-  - text: Block unauthorized requests in Kong Gateway with the OPA plugin
+  - text: Block unauthorized requests in {{site.base_gateway}} with the OPA plugin
     url: /how-to/block-unauthorized-requests-with-opa/
 ---
 
