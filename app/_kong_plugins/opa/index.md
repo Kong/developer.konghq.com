@@ -46,7 +46,9 @@ For example, if a request comes in, the OPA plugin sends the relevant details to
 
 ## OPA input
 
-When the OPA plugin is enabled, {{site.base_gateway}} uses the following JSON structure to forward request data to OPA:
+When the OPA plugin is enabled, {{site.base_gateway}} uses the following JSON structure to forward request data to OPA.
+It includes request data, headers, and regex capture groups, along with the information about the related [Gateway Service](/gateway/entities/service/#schema), [Route](/gateway/entities/route/#schema), and [Consumer](/gateway/entities/consumer/#schema).
+For definitions of each entity parameter appearing in the example below, see each entity's schema.
 
 ```json
 {
