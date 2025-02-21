@@ -1,0 +1,12 @@
+description: 'Enable the TLS Handshake Modifier plugin with the default configuration.'
+
+title: 'Default configuration'
+
+weight: 900
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
