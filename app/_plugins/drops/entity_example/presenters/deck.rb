@@ -9,7 +9,7 @@ module Jekyll
     module EntityExample
       module Presenters
         module Deck
-          class Base < Presenters::Base
+          class Base < Presenters::Base # rubocop:disable Style/Documentation
             def entity
               @entity ||= if @example_drop.entity_type == 'target'
                             'upstreams'
@@ -50,11 +50,12 @@ module Jekyll
             end
           end
 
-          class Plugin < Base
-            def config
+          class Plugin < Base # rubocop:disable Style/Documentation
+            def config # rubocop:disable Metrics/AbcSize
               plugin = { 'name' => @example_drop.data.fetch('name') }
               plugin.merge!(target.key => target_value) if target.key != 'global'
-              plugin.merge!('config' => @example_drop.data.fetch('config'))
+              config_field = @example_drop.data.fetch('config')
+              plugin.merge!('config' => config_field) if config_field && !config_field.empty?
 
               plugin = Utils::VariableReplacer::DeckData.run(
                 data: plugin,
