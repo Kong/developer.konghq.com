@@ -16,7 +16,7 @@
 {% endif %}
 {% endcapture %}
 
-<div class="flex rounded-md border border-primary/5 bg-secondary shadow-primary h-full hover:border hover:border-brand-saturated/40 hover:shadow-hover-card {{ include.css_class}}">
+<div class="card card__bordered {{ include.css_class}}">
 
     {% if include.cta_url %}
         <a href="{{include.cta_url}}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">

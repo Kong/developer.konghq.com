@@ -1,0 +1,17 @@
+description: 'Configure the plugin to allow access to a specific IP address and to an IP range, and deny all other IPs.'
+
+title: 'Allow an IP and a range'
+
+weight: 900
+
+config: 
+  allow:
+  - 203.0.113.1
+  - 192.0.2.0/24
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
