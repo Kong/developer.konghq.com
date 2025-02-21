@@ -233,6 +233,10 @@ app/_kong_plugins/tls-metadata-headers/changelog.md:
 app/_kong_plugins/tls-metadata-headers/index.md:
   - app/_hub/kong-inc/tls-metadata-headers/overview/_index.md
 
+app/_kong_plugins/ip-restriction/index.md:
+  - app/_hub/kong-inc/ip-restriction/overview/_index.md
+app/_kong_plugins/ip-restriction/changelog.md:
+  - app/_hub/kong-inc/ip-restriction/_changelog.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:

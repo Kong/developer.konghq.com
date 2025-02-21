@@ -1,0 +1,16 @@
+description: 'Configure the plugin to deny access to an IP range and allow access to all other IPs.'
+
+title: 'Deny an IP range'
+
+weight: 900
+
+config:
+  deny:
+  - 198.51.100.0/24
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
