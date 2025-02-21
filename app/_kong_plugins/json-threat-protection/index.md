@@ -35,6 +35,8 @@ related_resources:
     url: /plugins/xml-threat-protection/
   - text: Injection Protection plugin
     url: /plugins/injection-protection/
+  - text: Validate incoming JSON request bodies with JSON Threat Protection
+    url: /how-to/validate-incoming-json-request-bodies/
 
 categories:
   - security

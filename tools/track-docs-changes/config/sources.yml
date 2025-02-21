@@ -78,6 +78,12 @@ app/_gateway_entities/vault.md:
   - app/_src/deck/guides/vaults.md
   - app/_src/gateway/kong-enterprise/secrets-management/index.md
   - app/_src/gateway/kong-enterprise/secrets-management/backends/env.md
+app/_gateway_entities/sni.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
+app/_gateway/entities/certificate.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
+app/_gateway_entities/route.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
 
 app/_gateway_entities/license.md:
   - app/_src/gateway/licenses/index.md
@@ -168,6 +174,8 @@ app/_how-tos/test-certificate-generation-locally-with-ngrok-and-acme.md:
   - app/_hub/kong-inc/acme/how-to/_local-testing-development.md
 app/_how-tos/allow-multiple-authentication.md:
   - app/_src/gateway/kong-plugins/authentication/allowing-multiple-authentication-methods.md
+app/_how-tos/validate-incoming-json-request-bodies.md:
+  - app/_hub/kong-inc/json-threat-protection/overview/_index.md
 
 ## KIC
 app/_how-tos/proxy-http-traffic-kic.md:
@@ -222,7 +230,15 @@ app/_kong_plugins/json-threat-protection/changelog.md:
   - app/_hub/kong-inc/json-threat-protection/_changelog.md
 app/_kong_plugins/opa/index.md:
   - app/_hub/kong-inc/opa/overview/_index.md
+app/_kong_plugins/tls-metadata-headers/changelog.md:
+  - app/_hub/kong-inc/tls-metadata-headers/_changelog.md
+app/_kong_plugins/tls-metadata-headers/index.md:
+  - app/_hub/kong-inc/tls-metadata-headers/overview/_index.md
 
+app/_kong_plugins/ip-restriction/index.md:
+  - app/_hub/kong-inc/ip-restriction/overview/_index.md
+app/_kong_plugins/ip-restriction/changelog.md:
+  - app/_hub/kong-inc/ip-restriction/_changelog.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:

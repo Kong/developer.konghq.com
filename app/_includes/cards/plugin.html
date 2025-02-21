@@ -1,7 +1,7 @@
 {% assign plugin = include.plugin %}
 
 <div
-  class="flex rounded-md border border-primary/5 bg-secondary shadow-primary h-full hover:border hover:border-brand-saturated/40 hover:shadow-hover-card min-h-[260px]"
+  class="card card__bordered min-h-[260px]"
   data-card="plugin"
   data-category="{{plugin.categories | join: ','}}"
   data-deployment-topology="{{plugin.works_on | join: ','}}"

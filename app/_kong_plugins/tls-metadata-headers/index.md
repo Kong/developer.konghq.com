@@ -38,4 +38,26 @@ search_aliases:
   - certificates
 ---
 
-## Overview
+The TLS Metadata Header plugin detects client certificates in requests, extracts the TLS metadata (such as the URL-encoded client certificate), and injects this metadata into HTTP headers. It does not validate client certificates.
+
+Here are some use cases where the TLS Metadata Header plugin can be helpful:
+* Pass TLS client certificate metadata to an upstream service, enabling it to perform validation of the proxied certificate
+* Use the extracted metadata to route requests differently based on the client’s certificate metadata (for example, different routes for different departments or services)
+* Enforce access control based on certain attributes of the client certificate, like the client’s organization (extracted from the certificate's subject DN)
+* Log or audit extracted metadata from client certificates
+
+{:.warning}
+> **Important:** This plugin **must** be used in conjunction with another plugin that requests a client certificate, such as the [mTLS Authentication](/plugins/mtls-auth/) or [TLS Handshake Modifier](/plugins/tls-handshake-modifier/) plugins. 
+
+## How it works
+
+The TLS Metadata Header plugin accesses the client certificate and extracts the following metadata:
+* The certificate itself
+* Serial number
+* Issuer Distinguished Name (DN)
+* Subject DN
+* SHA1 fingerprint
+* Full client certificate chain
+
+If `inject_client_cert_details` is enabled, the TLS Metadata Header plugin injects the extracted TLS client certificate metadata into HTTP headers.
+
