@@ -1,7 +1,10 @@
 ---
 title: "Load balancing in {{site.base_gateway}}"
-description: 
+
+description: "Learn how to load balance requests to upstream services with {{site.base_gateway}}"
+
 content_type: reference
+
 layout: reference
 
 products:
