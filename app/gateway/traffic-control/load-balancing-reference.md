@@ -73,8 +73,8 @@ This means that information retrieved via a DNS query has higher precedence than
 This mostly relates to SRV records which carry `port` and `weight` information.
 
 * Whenever the DNS record is refreshed, a list is generated to handle the weighting properly. 
-Try to keep the weights as multiples of each other to keep the algorithm performant. 
-For example, 2 weights of 17 and 31 would result in a structure with 527 entries, whereas weights 16 and 32 (or their smallest relative counterparts 1 and 2) would result in a structure with merely 3 entries. 
+Try to keep the weights as multiples of each other to keep the algorithm performant.
+For example, the weights 16 and 32 have the lowest common denominators of 1 and 2, which results in a structure of only 3 entries.
 This is especially relevant with a very small (or even 0) `ttl` value.
 
 * DNS is carried over UDP with a default limit of 512 Bytes. 
@@ -89,7 +89,7 @@ to be under 512 byte UDP size.
 * When the nameserver returns a `3 name error`, then that is a valid response for {{site.base_gateway}}. 
 If this is unexpected, validate the correct name is being queried for, then check your nameserver configuration.
 
-* The initial pick of an IP address from a DNS record (A or SRV) is not randomized. 
+* The initial pick of an IP address from a DNS record (A or SRV) is based on the order in which they were originally returned by the DNS server. 
 When using records with a `ttl` of 0, the nameserver is expected to randomize the record entries.
 
 ## Load balancing using Upstreams and Targets
