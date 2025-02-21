@@ -46,7 +46,7 @@ For example, if a request comes in, the OPA plugin sends the relevant details to
 
 ## OPA input
 
-When {{site.base_gateway}} forwards a request to OPA, the request data is sent with the following structure:
+When the OPA plugin is enabled, {{site.base_gateway}} uses the following JSON structure to forward request data to OPA:
 
 ```json
 {
