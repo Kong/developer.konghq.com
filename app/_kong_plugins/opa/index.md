@@ -40,7 +40,9 @@ related_resources:
 
 ## Overview
 
-The OPA plugin allows you to forward requests to [Open Policy Agent](https://openpolicyagent.org/) and process the requests only if the authorization policy allows it.
+The OPA plugin allows you to forward requests to [Open Policy Agent](https://openpolicyagent.org/) and process the requests only if the authorization policy allows it. 
+
+For example, if a request comes in, the OPA plugin sends the relevant details to the OPA host (`config.opa_host`) specified in the plugin configuration. If OPA approves the request, the request is allowed to proceed. If OPA denies the request, the request is rejected.
 
 ## OPA input
 
@@ -73,7 +75,7 @@ When {{site.base_gateway}} forwards a request to OPA, the request data is sent w
      }
    },
    "client_ip": "127.0.0.1",# client IP address as interpreted by Kong
-   "service": {             # The Kong service resource to which this request will be forwarded to if OPA allows. Injected only if `include_service_in_opa_input` is set to `true`.
+   "service": {             # The Kong service resource that this request is forwarded to if OPA allows. Injected only if `include_service_in_opa_input` is set to `true`.
      "host": "httpbin.konghq.com",
      "created_at": 1612819937,
      "connect_timeout": 60000,
@@ -126,20 +128,7 @@ Once OPA is done executing policies, the plugin expects the policy evaluation re
 
 ### Boolean response
 
-OPA can return a `true` or `false` result after a policy evaluation. If the input request meets the defined policies, OPA should send the following response:
-```json
-{
- "result": true
-}
-```
-
-If the request violates the policy, OPA should send the following response:
-```json
-{
- "result": false
-}
-```
-In this case, any other fields in the response are ignored.
+OPA can return a `true` or `false` result after a policy evaluation. If the input request meets the defined policies, OPA should send a `"result": true` response.  If the request violates the policy, OPA should send a `"result": false` response. In this case, any other fields in the response are ignored.
 
 
 ### Object response
