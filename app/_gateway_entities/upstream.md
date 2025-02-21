@@ -28,6 +28,8 @@ related_resources:
     url: /gateway/routing/expressions/
   - text: Health checks and circuit breakers
     url: /gateway/traffic-control/health-checks-circuit-breakers/
+  - text: Load balancing in {{site.base_gateway}}
+    url: /gateway/traffic-control/load-balancing/
 
 schema:
     api: gateway/admin-ee
@@ -72,7 +74,7 @@ The following are examples of common use cases for Upstreams:
 
 ## Load balancing algorithms
 
-The load balancer supports the following load-balancing algorithms:
+The load balancer supports the following load balancing algorithms:
 
 - `round-robin`
 - `consistent-hashing`
@@ -80,22 +82,22 @@ The load balancer supports the following load-balancing algorithms:
 - `latency`
 
 {:.info}
-> **Note**: If using [health checks](/gateway/traffic-control/health-checks-circuit-breakers/), unhealthy targets won't be removed from the load balancer, and won't have any impact on the balancer layout when using a hashing algorithm. 
+> **Note**: If using [health checks](/gateway/traffic-control/health-checks-circuit-breakers/), unhealthy Targets won't be removed from the load balancer, and won't have any impact on the balancer layout when using a hashing algorithm. 
 Instead, unhealthy Targets will just be skipped.
 
-### Round-Robin
+### Round-robin
 
 The round-robin algorithm is done in a weighted manner. It provides identical
-results to the default DNS based load-balancing, but due to it being an `upstream`,
-the additional features for health-checks and circuit-breakers are also available.
+results to the default DNS based load balancing, but due to it being an `upstream`,
+the additional features for health checks and circuit breakers are also available.
 
 When choosing this algorithm, consider the following:
 
 - Provides good distribution of requests.
-- Remains fairly static, as only DNS updates or `target` updates can influence the distribution of traffic.
+- Remains fairly static, as only DNS updates or Target updates can influence the distribution of traffic.
 - Doesn't improve cache-hit ratios.
 
-### Consistent-Hashing
+### Consistent-hashing
 
 With the consistent-hashing algorithm, a configurable client input is used to
 calculate a hash value. This hash value is then tied to a specific backend
@@ -111,7 +113,8 @@ This algorithm implements the [ketama principle](https://github.com/RJ/ketama) t
 maximize hashing stability and minimize consistency loss upon changes to the list
 of known backends.
 
-The input for the consistent-hashing algorithm can be one of the following options:
+The input for the consistent-hashing algorithm can be one of the following options, 
+determined by the value set in the `hash_on` parameter:
 
 | Option | Description |
 |--------|-------------|
@@ -133,12 +136,12 @@ When choosing this algorithm, consider the following:
 - Improves backend cache-hit ratios.
 - Requires enough cardinality in the hash inputs to distribute evenly. For example, hashing on a header that only has 2 possible values doesn't make sense.
 - The cookie-based approach works well for browser-based requests, but less so for machine-to-machine (M2M) clients, which will often omit the cookie.
-- When using the hashing approach in a Kong cluster, add `target` entities by their IP address, and avoid using hostnames in the balancer.
+- When using the hashing approach in a {{site.base_gateway}} cluster, add Target entities by their IP address, and avoid using hostnames in the balancer.
   The balancers will slowly diverge, as the DNS TTL only has second precision, and renewal is determined by when a name is actually requested. 
   Additionally, some nameservers don't return all entries, which makes the problem worse.
   This problem can be mitigated by balancer rebuilds and higher TTL settings.
 
-### Least-Connections
+### Least-connections
 
 The `least-connections` algorithm keeps track of the number of in-flight requests for each backend.
 The weights are used to calculate the connection capacity of a backend. Requests are

@@ -22,6 +22,8 @@ related_resources:
   url: /gateway/entities/upstream/
 - text: Target entity
   url: /gateway/entities/target/
+- text: Load balancing in {{site.base_gateway}}
+  url: /gateway/traffic-control/load-balancing/
 
 description: |
   {{site.base_gateway}} supports two kinds of health checks, which can be used separately or in conjunction: active and passive (also known as circuit breakers).
