@@ -51,11 +51,11 @@ module Jekyll
           end
 
           class Plugin < Base # rubocop:disable Style/Documentation
-            def config # rubocop:disable Metrics/AbcSize
+            def config
               plugin = { 'name' => @example_drop.data.fetch('name') }
               plugin.merge!(target.key => target_value) if target.key != 'global'
-              config_field = @example_drop.data.fetch('config')
-              plugin.merge!('config' => config_field) if config_field && !config_field.empty?
+              config_field = @example_drop.data.fetch('config', {})
+              plugin.merge!('config' => config_field) unless config_field.empty?
 
               plugin = Utils::VariableReplacer::DeckData.run(
                 data: plugin,
