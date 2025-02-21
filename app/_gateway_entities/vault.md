@@ -188,7 +188,7 @@ For more information, see [Secret management](/gateway/secrets-management/).
 
 ## Best practices for Vaults
 
-@TODO: Move this to deck docs when available
+<!--@TODO: Move this to deck docs when available-->
 
 ### General best practices
 
