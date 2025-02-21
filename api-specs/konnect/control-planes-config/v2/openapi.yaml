@@ -23,6 +23,8 @@ servers:
     description: Australia Production region
   - url: 'https://me.api.konghq.com/v2'
     description: Middle-East Production region
+  - url: 'https://in.api.konghq.com/v2'
+    description: India Production region
 paths:
   '/control-planes/{controlPlaneId}/expected-config-hash':
     get:
