@@ -207,7 +207,7 @@ rows:
             icon: /assets/icons/load-balance.svg
             cta:
               text: Choose your load balancing methods
-              url: /gateway/traffic-control/load-balancing/
+              url: /gateway/load-balancing/
               align: end
   - header:
       type: h2

@@ -23,7 +23,7 @@ related_resources:
 - text: Target entity
   url: /gateway/entities/target/
 - text: Load balancing in {{site.base_gateway}}
-  url: /gateway/traffic-control/load-balancing/
+  url: /gateway/load-balancing/
 
 description: |
   {{site.base_gateway}} supports two kinds of health checks, which can be used separately or in conjunction: active and passive (also known as circuit breakers).
@@ -111,7 +111,7 @@ You can find all of the default values for an Upstream in the [Upstream schema](
 > **Notes**:
 > * Unhealthy Targets won't be removed from the [load balancer](/gateway/entities/upstream/#load-balancing-algorithms), and won't have any impact on the balancer layout when using a hashing algorithm. Instead, they will just be skipped.
 > * Health checks operate only on [*enabled* Targets](/gateway/entities/target/) and don't modify the status of a Target in the {{site.base_gateway}} database.
-> * The [DNS caveats](/gateway/traffic-control/load-balancing/) also apply to health checks. 
+> * The [DNS caveats](/gateway/traffic-control/load-balancing-reference/#dns-load-balancing-caveats) also apply to health checks. 
 > If using hostnames for the Targets, then make sure the DNS server always returns the full set of IP addresses for a name, and does not limit the response. 
 
 ### Determining health for Upstreams

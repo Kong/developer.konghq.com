@@ -19,7 +19,7 @@ related_resources:
   - text: Route entity
     url: /gateway/entities/route/
   - text: Load balancing in {{site.base_gateway}}
-    url: /gateway/traffic-control/load-balancing/
+    url: /gateway/load-balancing/
 
 schema:
     api: gateway/admin-ee

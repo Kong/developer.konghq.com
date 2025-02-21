@@ -29,7 +29,7 @@ related_resources:
   - text: Health checks and circuit breakers
     url: /gateway/traffic-control/health-checks-circuit-breakers/
   - text: Load balancing in {{site.base_gateway}}
-    url: /gateway/traffic-control/load-balancing/
+    url: /gateway/load-balancing/
 
 schema:
     api: gateway/admin-ee
