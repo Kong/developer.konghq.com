@@ -27,7 +27,7 @@ tags:
 
 tldr:
     q: How can I set up a policy with OPA in {{site.base_gateway}}?
-    a: Run an OPA server and create a policy, then enable the OPA plugin and specify the `config.opa_host` and `config.opa_path` parameters.
+    a: Run an OPA server and create a policy, then enable the [OPA plugin](/plugins/opa/) and specify the `config.opa_host` and `config.opa_path` parameters.
       
 
 tools:
@@ -126,8 +126,8 @@ variables:
     value: $OPA_PATH
 {% endentity_examples %}
 
-{:.note}
-> Note: If your OPA server doesn't use the default `8181` port, you'll need to specify the `config.opa_port` parameter too.
+{:.info}
+> **Note:** If your OPA server doesn't use the default `8181` port, you'll need to specify the `config.opa_port` parameter too.
 
 ## 4. Validate
 
@@ -154,7 +154,7 @@ headers:
 
 In both cases, you should get a `403 Forbidden` response.
 
-Now send the request with the correct header value:
+Now, send the request with the correct header value:
 
 <!--vale off-->
 {% validation request-check %}
