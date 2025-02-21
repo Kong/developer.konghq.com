@@ -141,7 +141,7 @@ method: GET
 {% endvalidation %}
 <!--vale on-->
 
-Then try using the header with a different value:
+Then try using the correct header with an incorrect value:
 <!--vale off-->
 {% validation request-check %}
 url: /anything
