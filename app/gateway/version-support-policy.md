@@ -19,4 +19,18 @@ related_resources:
 
 Content from https://docs.konghq.com/gateway/latest/support-policy/#bug-fix-guidelines
 
+## Marketplaces
 
+Kong Gateway Enterprise is available through the following marketplaces:
+
+{% for marketplace in site.data.products.gateway.marketplaces %}
+* {{ marketplace }}
+{% endfor %}
+
+## Supported public cloud deployment platforms
+
+Kong Gateway Enterprise supports the following public cloud deployment platforms:
+
+{% for platform in site.data.products.gateway.cloud_deployment_platforms %}
+* {{ platform }}
+{% endfor %}
