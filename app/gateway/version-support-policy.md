@@ -19,8 +19,17 @@ related_resources:
 
 Content from https://docs.konghq.com/gateway/latest/support-policy/#bug-fix-guidelines
 
-{% assign release = site.data.products.gateway.releases | find: "release", "3.4" %}
-{% include support/gateway.html release=release %}
+{% assign releases = site.data.products.gateway.releases | reverse %}
+
+{% navtabs %}
+{% for release in releases %}
+{% assign tab_name = release.release %}
+{% if release.lts %}{% assign tab_name = tab_name | append: ' LTS' %}{% endif %}
+{% navtab {{tab_name}} %}
+  {% include support/gateway.html release=release %}
+{% endnavtab %}
+{% endfor %}
+{% endnavtabs %}
 
 ## Marketplaces
 
