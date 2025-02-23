@@ -19,6 +19,9 @@ related_resources:
 
 Content from https://docs.konghq.com/gateway/latest/support-policy/#bug-fix-guidelines
 
+{% assign release = site.data.products.gateway.releases | find: "release", "3.4" %}
+{% include support/gateway.html release=release %}
+
 ## Marketplaces
 
 Kong Gateway Enterprise is available through the following marketplaces:
