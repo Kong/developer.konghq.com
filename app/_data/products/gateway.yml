@@ -27,6 +27,70 @@ releases:
     ce-version: "3.4.2"
     eol: August 2026
     lts: true
+    distributions:
+      - amazonlinux2:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: June 2025
+      - amazonlinux2023:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - debian10:
+          package: true
+          arm: false
+          fips: false
+          graviton: false
+          eol: June 2024
+      - debian11:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: June 2026
+      - debian12:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - rhel7:
+          package: true
+          arm: false
+          fips: false
+          graviton: false
+          eol: June 2024
+      - rhel8:
+          package: true
+          arm: false
+          graviton: false
+          docker: false
+          fips: true
+      - rhel9:
+          package: true
+          graviton: false
+          docker: true
+          arm: true
+          fips: true
+      - ubuntu2004:
+          package: true
+          graviton: false
+          arm: false
+          docker: false
+          fips: true
+          eol: April 2025
+      - ubuntu2204:
+          package: true
+          arm: true
+          graviton: true
+          docker: true
+          fips: true
     third_party_support:
       s3_api:
         - s3
@@ -111,6 +175,67 @@ releases:
     ee-version: "3.7.1.2"
     ce-version: "3.7.1"
     eol: May 2025
+    distributions:
+      - amazonlinux2:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - amazonlinux2023:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - debian10:
+          package: true
+          arm: false
+          fips: false
+          graviton: false
+          eol: June 2024
+      - debian11:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - debian12:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - rhel7:
+          package: true
+          arm: false
+          fips: false
+          graviton: false
+          eol: June 2024
+      - rhel8:
+          package: true
+          arm: false
+          graviton: false
+          docker: false
+          fips: true
+      - rhel9:
+          package: true
+          graviton: false
+          docker: true
+          arm: true
+          fips: true
+      - ubuntu2004:
+          package: true
+          graviton: false
+          arm: false
+          docker: false
+          fips: true
+      - ubuntu2204:
+          package: true
+          arm: true
+          graviton: true
+          docker: true
+          fips: true
     third_party_support:
       ai_providers:
         - openai:
@@ -204,6 +329,56 @@ releases:
     ee-version: "3.8.0.0"
     ce-version: "3.8.0"
     eol: Sept 2025
+    distributions:
+      - amazonlinux2:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - amazonlinux2023:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - debian11:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - debian12:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - rhel8:
+          package: true
+          arm: false
+          graviton: false
+          docker: false
+          fips: true
+      - rhel9:
+          package: true
+          graviton: false
+          docker: true
+          arm: true
+          fips: true
+      - ubuntu2004:
+          package: true
+          graviton: false
+          arm: false
+          docker: false
+          fips: true
+          eol: April 2025
+      - ubuntu2204:
+          package: true
+          arm: true
+          graviton: true
+          docker: true
+          fips: true
     third_party_support:
       ai_providers:
         - openai:
@@ -300,6 +475,62 @@ releases:
     ce-version: "3.9.0"
     latest: true
     eol: Dec 2025
+    distributions:
+      - amazonlinux2:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - amazonlinux2023:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - debian11:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - debian12:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - rhel8:
+          package: true
+          arm: false
+          graviton: false
+          docker: false
+          fips: true
+      - rhel9:
+          package: true
+          graviton: false
+          docker: true
+          arm: true
+          fips: true
+      - ubuntu2004:
+          package: true
+          graviton: false
+          arm: false
+          docker: false
+          fips: true
+          eol: April 2025
+      - ubuntu2204:
+          package: true
+          arm: true
+          graviton: true
+          docker: true
+          fips: true
+      - ubuntu2404:
+          package: true
+          arm: true
+          graviton: true
+          docker: true
+          fips: true
     third_party_support:
       ai_providers:
         - openai:
@@ -395,6 +626,62 @@ releases:
     ee-version: "3.10.0.0"
     ce-version: "3.10.0"
     label: unreleased
+    distributions:
+      - amazonlinux2:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - amazonlinux2023:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - debian11:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - debian12:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - rhel8:
+          package: true
+          arm: false
+          graviton: false
+          docker: false
+          fips: true
+      - rhel9:
+          package: true
+          graviton: false
+          docker: true
+          arm: true
+          fips: true
+      - ubuntu2004:
+          package: true
+          graviton: false
+          arm: false
+          docker: false
+          fips: true
+          eol: April 2025
+      - ubuntu2204:
+          package: true
+          arm: true
+          graviton: true
+          docker: true
+          fips: true
+      - ubuntu2404:
+          package: true
+          arm: true
+          graviton: true
+          docker: true
+          fips: true
     third_party_support:
       ai_providers:
         - openai:
