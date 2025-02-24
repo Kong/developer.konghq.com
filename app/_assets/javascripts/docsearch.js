@@ -15,7 +15,19 @@ docsearch({
       const path = `${urlObj.pathname}${urlObj.hash}`;
 
       const content = item.content || item.description;
-      return { ...item, url: path, content };
+      let type;
+      if (item.content) {
+        type = "content";
+      } else if (hierarchy.lvl4 !== null) {
+        type = "lvl4";
+      } else if (hierarchy.lvl3 !== null) {
+        type = "lvl3";
+      } else if (hierarchy.lvl2 !== null) {
+        type = "lvl2";
+      } else if (hierarchy.lvl1 !== null) {
+        type = "lvl1";
+      }
+      return { ...item, url: path, content, type };
     });
   },
   searchParameters: {
