@@ -1,0 +1,132 @@
+postgres:
+  name: Postgres
+  icon: postgresql.svg
+redis:
+  name: Redis
+  icon: redis.svg
+influxdb:
+  name: InfluxDB
+  icon: influxdb.svg
+kafka:
+  name: Kafka
+  icon: kafka.svg
+
+# Metrics
+prometheus:
+  name: Prometheus
+  icon: prometheus.svg
+statsd:
+  name: statsd
+  icon: statsd.svg
+opentelemetry:
+  name: OpenTelemetry
+  icon: opentelemetry.svg
+zipkin:
+  name: Zipkin
+  icon: zipkin.svg
+
+# Vaults
+vaultproject:
+  name: HashiCorp Vault
+  icon: vaultproject.svg
+aws-sm:
+  name: AWS Secrets Manager
+  icon: aws.svg
+azure-key-vaults:
+  name: Microsoft Azure Key Vault
+  icon: azure.svg
+gcp-sm:
+  name: Google Cloud Secret Manager
+  icon: gcp.svg
+
+# IDP
+auth0:
+  name: Auth0
+azure:
+  name: Azure
+cognito:
+  name: AWS Cognito
+connect2id:
+  name: Connect2id
+curity:
+  name: Curity
+dex:
+  name: Dex
+gluu:
+  name: Gluu
+google:
+  name: Google
+identityserver:
+  name: IdentityServer
+keycloak:
+  name: Keycloak
+azure-ad:
+  name: Microsoft Azure Active Directory
+microsoft-adfs:
+  name: Microsoft Active Directory Federation Services
+microsoft-live-connect:
+  name: Microsoft Live Connect
+okta:
+  name: Okta
+onelogin:
+  name: OneLogin
+openam:
+  name: OpenAM
+paypal:
+  name: PayPal
+pingfederate:
+  name: PingFederate
+salesforce:
+  name: Salesforce
+wso2:
+  name: WSO2
+yahoo:
+  name: Yahoo!
+
+# Mesh
+kongmesh:
+  name: Kong Mesh
+  icon: kong.svg
+istio:
+  name: Istio
+  icon: istio.svg
+
+# Log provider
+splunk:
+  name: Splunk
+  icon: splunk.svg
+datadog:
+  name: Datadog
+  icon: datadog.svg
+loggly:
+  name: Loggly
+  icon: loggly.svg
+
+# S3 Compatible APIs
+s3:
+  name: AWS S3
+  icon: aws.svg
+minio:
+  name: MinIO
+  icon: minio.svg
+
+# AI providers
+openai:
+  name: OpenAI
+cohere:
+  name: Cohere
+azureai:
+  name: Microsoft Azure AI
+anthropic:
+  name: Anthropic
+mistral:
+  name: Mistral
+  format:
+    - Raw
+    - OLLAMA
+llama2:
+  name: Llama2
+bedrock:
+  name: Amazon Bedrock
+gemini:
+  name: Gemini

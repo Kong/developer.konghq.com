@@ -13,7 +13,7 @@ topologies:
 tiers:
   enterprise:
     text: Enterprise only
-    url: '/gateway/enterprise/'
+    url: "/gateway/enterprise/"
 
 deployment_topologies:
   - slug: on-prem
@@ -21,22 +21,809 @@ deployment_topologies:
   - slug: konnect
     text: Konnect
 
-
 releases:
   - release: "3.4"
     ee-version: "3.4.3.16"
     ce-version: "3.4.2"
+    eol: August 2026
+    lts: true
+    distributions:
+      - amazonlinux2:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: June 2025
+      - amazonlinux2023:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: August 2026
+      - debian10:
+          package: true
+          arm: false
+          fips: false
+          graviton: false
+          eol: June 2024
+      - debian11:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: June 2026
+      - debian12:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: August 2026
+      - rhel7:
+          package: true
+          arm: false
+          fips: false
+          graviton: false
+          eol: June 2024
+      - rhel8:
+          package: true
+          arm: false
+          graviton: false
+          docker: false
+          fips: true
+          eol: August 2026
+      - rhel9:
+          package: true
+          graviton: false
+          docker: true
+          arm: true
+          fips: true
+          eol: August 2026
+      - ubuntu2004:
+          package: true
+          graviton: false
+          arm: false
+          docker: false
+          fips: true
+          eol: April 2025
+      - ubuntu2204:
+          package: true
+          arm: true
+          graviton: true
+          docker: true
+          fips: true
+          eol: August 2026
+    third_party_support:
+      s3_api:
+        - s3
+        - minio
+      log_provider:
+        - splunk
+        - datadog
+        - loggly
+      service_mesh:
+        - kongmesh:
+            versions:
+              - 2.0
+        - istio:
+            versions:
+              - 1.16
+              - 1.15
+              - 1.14
+      identity_provider:
+        - auth0
+        - cognito
+        - connect2id
+        - curity
+        - dex
+        - gluu
+        - google
+        - identityserver
+        - keycloak
+        - azure-ad
+        - microsoft-adfs
+        - microsoft-live-connect
+        - okta
+        - onelogin
+        - openam
+        - paypal
+        - pingfederate
+        - salesforce
+        - wso2
+        - yahoo
+      vault:
+        - vaultproject:
+            versions:
+              - 1.12
+        - aws-sm:
+        - gcp-sm:
+      metrics:
+        - prometheus:
+            versions:
+              - 2.40
+              - 2.37
+        - statsd:
+            versions:
+              - 0.9
+        - opentelemetry:
+        - zipkin:
+            versions:
+              - 2.23
+              - 2.22
+      datastore:
+        - postgres:
+            versions:
+              - 16
+              - 15
+              - 14
+              - 13
+              - 12
+              - Amazon RDS
+              - Amazon Aurora
+        - redis:
+            versions:
+              - 6
+              - 7
+              - AWS Elasticache
+        - influxdb:
+            versions:
+              - 1
+        - kafka:
+            versions:
+              - 3.3
+              - 3.2
+              - Confluent Cloud
   - release: "3.7"
     ee-version: "3.7.1.2"
     ce-version: "3.7.1"
+    eol: May 2025
+    distributions:
+      - amazonlinux2:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: May 2025
+      - amazonlinux2023:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: May 2025
+      - debian10:
+          package: true
+          arm: false
+          fips: false
+          graviton: false
+          eol: June 2024
+      - debian11:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: May 2025
+      - debian12:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: May 2025
+      - rhel7:
+          package: true
+          arm: false
+          fips: false
+          graviton: false
+          eol: June 2024
+      - rhel8:
+          package: true
+          arm: false
+          graviton: false
+          docker: false
+          fips: true
+          eol: May 2025
+      - rhel9:
+          package: true
+          graviton: false
+          docker: true
+          arm: true
+          fips: true
+          eol: May 2025
+      - ubuntu2004:
+          package: true
+          graviton: false
+          arm: false
+          docker: false
+          fips: true
+          eol: May 2025
+      - ubuntu2204:
+          package: true
+          arm: true
+          graviton: true
+          docker: true
+          fips: true
+          eol: May 2025
+    third_party_support:
+      ai_providers:
+        - openai:
+        - cohere:
+        - azure_ai:
+        - anthropic:
+        - mistral:
+        - llama2:
+            format:
+              - Raw
+              - OLLAMA
+              - OpenAI
+      s3_api:
+        - s3
+        - minio
+      log_provider:
+        - splunk
+        - datadog
+        - loggly
+      service_mesh:
+        - kongmesh:
+            versions:
+              - 2.0
+        - istio:
+            versions:
+              - 1.16
+              - 1.15
+              - 1.14
+      identity_provider:
+        - auth0
+        - cognito
+        - connect2id
+        - curity
+        - dex
+        - gluu
+        - google
+        - identityserver
+        - keycloak
+        - azure-ad
+        - microsoft-adfs
+        - microsoft-live-connect
+        - okta
+        - onelogin
+        - openam
+        - paypal
+        - pingfederate
+        - salesforce
+        - wso2
+        - yahoo
+      vault:
+        - vaultproject:
+            versions:
+              - 1.12
+        - aws-sm:
+        - azure-key-vaults:
+        - gcp-sm:
+      metrics:
+        - prometheus:
+            versions:
+              - 2.40
+              - 2.37
+        - statsd:
+            versions:
+              - 0.9
+        - opentelemetry:
+        - zipkin:
+            versions:
+              - 2.23
+              - 2.22
+      datastore:
+        - postgres:
+            versions:
+              - 16
+              - 15
+              - 14
+              - 13
+              - 12
+              - Amazon RDS
+              - Amazon Aurora
+        - redis:
+            versions:
+              - 6
+              - 7
+              - AWS Elasticache
+        - kafka:
+            versions:
+              - 3.3
+              - 3.2
+              - Confluent Cloud
   - release: "3.8"
     ee-version: "3.8.0.0"
     ce-version: "3.8.0"
+    eol: Sept 2025
+    distributions:
+      - amazonlinux2:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: Sept 2025
+      - amazonlinux2023:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: Sept 2025
+      - debian11:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: Sept 2025
+      - debian12:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: Sept 2025
+      - rhel8:
+          package: true
+          arm: false
+          graviton: false
+          docker: false
+          fips: true
+          eol: Sept 2025
+      - rhel9:
+          package: true
+          graviton: false
+          docker: true
+          arm: true
+          fips: true
+          eol: Sept 2025
+      - ubuntu2004:
+          package: true
+          graviton: false
+          arm: false
+          docker: false
+          fips: true
+          eol: April 2025
+      - ubuntu2204:
+          package: true
+          arm: true
+          graviton: true
+          docker: true
+          fips: true
+          eol: Sept 2025
+    third_party_support:
+      ai_providers:
+        - openai:
+        - cohere:
+        - azure_ai:
+        - anthropic:
+        - mistral:
+        - llama2:
+            format:
+              - Raw
+              - OLLAMA
+              - OpenAI
+        - bedrock:
+        - gemini:
+      s3_api:
+        - s3
+        - minio
+      log_provider:
+        - splunk
+        - datadog
+        - loggly
+      service_mesh:
+        - kongmesh:
+          versions:
+            - 2.0
+        - istio:
+            versions:
+              - 1.16
+              - 1.15
+              - 1.14
+      identity_provider:
+        - auth0
+        - cognito
+        - connect2id
+        - curity
+        - dex
+        - gluu
+        - google
+        - identityserver
+        - keycloak
+        - azure-ad
+        - microsoft-adfs
+        - microsoft-live-connect
+        - okta
+        - onelogin
+        - openam
+        - paypal
+        - pingfederate
+        - salesforce
+        - wso2
+        - yahoo
+      vault:
+        - vaultproject:
+            versions:
+              - 1.12
+        - aws-sm:
+        - azure-key-vaults:
+        - gcp-sm:
+      metrics:
+        - prometheus:
+            versions:
+              - 2.40
+              - 2.37
+        - statsd:
+            versions:
+              - 0.9
+        - opentelemetry:
+        - zipkin:
+            versions:
+              - 2.23
+              - 2.22
+      datastore:
+        - postgres:
+            versions:
+              - 16
+              - 15
+              - 14
+              - 13
+              - 12
+              - Amazon RDS
+              - Amazon Aurora
+        - redis:
+            versions:
+              - 6
+              - 7
+              - AWS Elasticache
+        - kafka:
+            versions:
+              - 3.3
+              - 3.2
+              - Confluent Cloud
   - release: "3.9"
     ee-version: "3.9.0.1"
     ce-version: "3.9.0"
     latest: true
+    eol: Dec 2025
+    distributions:
+      - amazonlinux2:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: Dec 2025
+      - amazonlinux2023:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: Dec 2025
+      - debian11:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: Dec 2025
+      - debian12:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+          eol: Dec 2025
+      - rhel8:
+          package: true
+          arm: false
+          graviton: false
+          docker: false
+          fips: true
+          eol: Dec 2025
+      - rhel9:
+          package: true
+          graviton: false
+          docker: true
+          arm: true
+          fips: true
+          eol: Dec 2025
+      - ubuntu2004:
+          package: true
+          graviton: false
+          arm: false
+          docker: false
+          fips: true
+          eol: April 2025
+      - ubuntu2204:
+          package: true
+          arm: true
+          graviton: true
+          docker: true
+          fips: true
+          eol: Dec 2025
+      - ubuntu2404:
+          package: true
+          arm: true
+          graviton: true
+          docker: true
+          fips: true
+          eol: Dec 2025
+    third_party_support:
+      ai_providers:
+        - openai:
+        - cohere:
+        - azure_ai:
+        - anthropic:
+        - mistral:
+        - llama2:
+            format:
+              - Raw
+              - OLLAMA
+              - OpenAI
+        - bedrock:
+        - gemini:
+      s3_api:
+        - s3
+        - minio
+      log_provider:
+        - splunk
+        - datadog
+        - loggly
+      service_mesh:
+        - kongmesh:
+            versions:
+              - 2.0
+        - istio:
+            versions:
+              - 1.16
+              - 1.15
+              - 1.14
+      identity_provider:
+        - auth0
+        - cognito
+        - connect2id
+        - curity
+        - dex
+        - gluu
+        - google
+        - identityserver
+        - keycloak
+        - azure-ad
+        - microsoft-adfs
+        - microsoft-live-connect
+        - okta
+        - onelogin
+        - openam
+        - paypal
+        - pingfederate
+        - salesforce
+        - wso2
+        - yahoo
+      vault:
+        - vaultproject:
+          versions:
+            - 1.12
+        - aws-sm:
+        - azure-key-vaults:
+        - gcp-sm:
+      metrics:
+        - prometheus:
+            versions:
+              - 2.40
+              - 2.37
+        - statsd:
+            versions:
+              - 0.9
+        - opentelemetry:
+        - zipkin:
+            versions:
+              - 2.23
+              - 2.22
+      datastore:
+        - postgres:
+            versions:
+              - 16
+              - 15
+              - 14
+              - 13
+              - 12
+              - Amazon RDS
+              - Amazon Aurora
+        - redis:
+            versions:
+              - 6
+              - 7
+              - AWS Elasticache
+        - kafka:
+            versions:
+              - 3.3
+              - 3.2
+              - Confluent Cloud
   - release: "3.10"
     ee-version: "3.10.0.0"
     ce-version: "3.10.0"
     label: unreleased
+    lts: true
+    distributions:
+      - amazonlinux2:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - amazonlinux2023:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - debian11:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - debian12:
+          package: true
+          fips: false
+          docker: true
+          arm: true
+          graviton: true
+      - rhel8:
+          package: true
+          arm: false
+          graviton: false
+          docker: false
+          fips: true
+      - rhel9:
+          package: true
+          graviton: false
+          docker: true
+          arm: true
+          fips: true
+      - ubuntu2004:
+          package: true
+          graviton: false
+          arm: false
+          docker: false
+          fips: true
+          eol: April 2025
+      - ubuntu2204:
+          package: true
+          arm: true
+          graviton: true
+          docker: true
+          fips: true
+      - ubuntu2404:
+          package: true
+          arm: true
+          graviton: true
+          docker: true
+          fips: true
+    third_party_support:
+      ai_providers:
+        - openai:
+        - cohere:
+        - azure_ai:
+        - anthropic:
+        - mistral:
+        - llama2:
+            format:
+              - Raw
+              - OLLAMA
+              - OpenAI
+        - bedrock:
+        - gemini:
+
+      s3_api:
+        - s3
+        - minio
+
+      log_provider:
+        - splunk
+        - datadog
+        - loggly
+
+      service_mesh:
+        - kongmesh:
+            versions:
+              - 2.0
+        - istio:
+            versions:
+              - 1.16
+              - 1.15
+              - 1.14
+
+      identity_provider:
+        - auth0
+        - cognito
+        - connect2id
+        - curity
+        - dex
+        - gluu
+        - google
+        - identityserver
+        - keycloak
+        - azure-ad
+        - microsoft-adfs
+        - microsoft-live-connect
+        - okta
+        - onelogin
+        - openam
+        - paypal
+        - pingfederate
+        - salesforce
+        - wso2
+        - yahoo
+
+      vault:
+        - vaultproject:
+          versions:
+            - 1.12
+        - aws-sm:
+        - azure-key-vaults:
+        - gcp-sm:
+
+      metrics:
+        - prometheus:
+            versions:
+              - 2.40
+              - 2.37
+        - statsd:
+            versions:
+              - 0.9
+        - opentelemetry:
+        - zipkin:
+            versions:
+              - 2.23
+              - 2.22
+
+      datastore:
+        - postgres:
+            versions:
+              - 16
+              - 15
+              - 14
+              - 13
+              - 12
+              - Amazon RDS
+              - Amazon Aurora
+        - redis:
+            versions:
+              - 6
+              - 7
+              - AWS Elasticache
+        - kafka:
+            versions:
+              - 3.3
+              - 3.2
+              - Confluent Cloud
+
+
+cloud_deployment_platforms:
+  - AWS EKS
+  - AWS EKS Fargate
+  - AWS ECS
+  - AWS ECS Fargate
+  - Azure AKS
+  - Azure Container Instances
+  - Azure Container Apps
+  - Google Cloud GKE
+  - Google Cloud GKE Autopilot
+  - Google Cloud Run
+
+marketplaces:
+  - Azure Marketplace
+  - AWS Marketplace
+  - Google Cloud Marketplace

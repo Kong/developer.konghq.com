@@ -16,15 +16,15 @@
         {% assign chat_streaming = provider.chat.streaming %}
         {% assign completions_streaming = provider.completions.streaming %}
         <tr id="{{ provider.name }}">
-            <td>{{ provider.name }}     
+            <td>{{ provider.name }}
                 {% if provider.formats %}
                     ({{ provider.formats }})
                 {% endif %}
             </td>
-            <td>{% if chat %}{% include icon_true.html %}{% else %}{% include icon_false.html %}{% endif %}</td>
-            <td>{% if completions %}{% include icon_true.html %}{% else %}{% include icon_false.html %}{% endif %}</td>
-            <td>{% if chat_streaming %}{% include icon_true.html %}{% else %}{% include icon_false.html %}{% endif %}</td>
-            <td>{% if completions_streaming %}{% include icon_true.html %}{% else %}{% include icon_false.html %}{% endif %}</td>
+            <td>{{ chat | to_check }}</td>
+            <td>{{ completions | to_check }}</td>
+            <td>{{ chat_streaming | to_check }}</td>
+            <td>{{ completions_streaming }}</td>
             <td>
                 {% if provider.min_version < page.min_version.gateway %}
                     {{ page.min_version.gateway }}

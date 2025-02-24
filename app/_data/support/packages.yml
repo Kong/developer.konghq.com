@@ -1,0 +1,60 @@
+alpine:
+  os: Alpine
+  version: 3
+amazonlinux1:
+  os: Amazon Linux
+  version: 1
+amazonlinux2:
+  os: Amazon Linux
+  version: 2
+amazonlinux2023:
+  os: Amazon Linux
+  version: 2023
+centos7:
+  os: CentOS
+  version: 7
+centos8:
+  os: CentOS
+  version: 8
+debian8:
+  os: Debian
+  version: 8
+debian9:
+  os: Debian
+  version: 9
+debian10:
+  os: Debian
+  version: 10
+debian11:
+  os: Debian
+  version: 11
+debian12:
+  os: Debian
+  version: 12
+debian-stable:
+  os: Debian
+  version: stable
+rhel7:
+  os: RHEL
+  version: 7.x
+rhel8:
+  os: RHEL
+  version: 8.x
+rhel9:
+  os: RHEL
+  version: 9.x
+ubuntu1604:
+  os: Ubuntu
+  version: 16.04
+ubuntu1804:
+  os: Ubuntu
+  version: 18.04
+ubuntu2004:
+  os: Ubuntu
+  version: 20.04
+ubuntu2204:
+  os: Ubuntu
+  version: 22.04
+ubuntu2404:
+  os: Ubuntu
+  version: 24.04
