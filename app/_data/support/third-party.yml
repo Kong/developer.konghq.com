@@ -28,7 +28,7 @@ zipkin:
 # Vaults
 vaultproject:
   name: HashiCorp Vault
-  icon: vaultproject.svg
+  icon: hashicorp.svg
 aws-sm:
   name: AWS Secrets Manager
   icon: aws.svg
@@ -37,7 +37,7 @@ azure-key-vaults:
   icon: azure.svg
 gcp-sm:
   name: Google Cloud Secret Manager
-  icon: gcp.svg
+  icon: google-cloud.svg
 
 # IDP
 auth0:
@@ -86,7 +86,7 @@ yahoo:
 # Mesh
 kongmesh:
   name: Kong Mesh
-  icon: kong.svg
+  icon: mesh.svg
 istio:
   name: Istio
   icon: istio.svg
@@ -113,20 +113,28 @@ minio:
 # AI providers
 openai:
   name: OpenAI
+  icon: openai.svg
 cohere:
   name: Cohere
+  icon: cohere.svg
 azureai:
   name: Microsoft Azure AI
+  icon: azure.svg
 anthropic:
   name: Anthropic
+  icon: anthropic.svg
 mistral:
   name: Mistral
+  icon: mistral.svg
   format:
     - Raw
     - OLLAMA
 llama2:
   name: Llama2
+  icon: metaai.svg
 bedrock:
   name: Amazon Bedrock
+  icon: bedrock.svg
 gemini:
   name: Gemini
+  icon: gemini.svg
