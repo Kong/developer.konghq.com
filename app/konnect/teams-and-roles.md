@@ -24,30 +24,40 @@ Pull content from:
 
 ## API Products
 
+<!-- vale off -->
 {% konnect_roles_table %}
 schema: api_products
 {% endkonnect_roles_table %}
+<!-- vale on -->
 
 ## Control Planes
 
+<!-- vale off -->
 {% konnect_roles_table %}
 schema: control_planes
 {% endkonnect_roles_table %}
+<!-- vale on -->
 
 ## Audit Logs
 
+<!-- vale off -->
 {% konnect_roles_table %}
 schema: audit_logs
 {% endkonnect_roles_table %}
+<!-- vale on -->
 
 ## Identity
 
+<!-- vale off -->
 {% konnect_roles_table %}
 schema: identity
 {% endkonnect_roles_table %}
+<!-- vale on -->
 
 ## Mesh control planes
 
+<!-- vale off -->
 {% konnect_roles_table %}
 schema: mesh_control_planes
 {% endkonnect_roles_table %}
+<!-- vale on -->
