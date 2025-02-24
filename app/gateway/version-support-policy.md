@@ -19,7 +19,7 @@ related_resources:
 
 Content from https://docs.konghq.com/gateway/latest/support-policy/#bug-fix-guidelines
 
-{% assign releases = site.data.products.gateway.releases | reverse %}
+{% assign releases = site.data.products.gateway.releases | reverse | where: "label", empty %}
 
 {% navtabs %}
 {% for release in releases %}
