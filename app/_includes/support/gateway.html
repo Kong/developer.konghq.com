@@ -1,0 +1,38 @@
+<div class="rounded-lg">
+    <table>
+        <thead>
+            <tr class="uppercase">
+                <th class="text-center"><span class="font-semibold text-primary">os</span></th>
+                <th class="text-center"><span class="font-semibold text-primary">version</span></th>
+                <th class="text-center"><span class="font-semibold text-primary">artifacts</span></th>
+                <th class="text-center"><span class="font-semibold text-primary">arm support</span></th>
+                <th class="text-center"><span class="font-semibold text-primary">fips compliant</span></th>
+                <th class="text-center"><span class="font-semibold text-primary">aws graviton support</span></th>
+                <th class="text-center"><span class="font-semibold text-primary">eol</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in include.release.distributions %}
+            {% assign key = d | first | first %}
+            {% assign distro = d | first | last %}
+            {% assign package = site.data.support.packages[key] %}
+            <tr>
+                <td>{{ package.os }}</td>
+                <td>{{ package.version }}</td>
+                <td class="flex gap-1 capitalize">
+                    {% if distro.package %}
+                    <span class='badge'>package</span>
+                    {% endif %}
+                    {% if distro.docker %}
+                    <span class='badge'>docker</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">{{ distro.arm | to_check }}</td>
+                <td class="text-center">{{ distro.fips | to_check }}</td>
+                <td class="text-center">{{ distro.graviton | to_check }}</td>
+                <td>{{ distro.eol }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
