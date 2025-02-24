@@ -38,17 +38,17 @@ To use a forward proxy for control plane and data plane communication, you need 
 {% navtabs %}
 {% navtab "HTTP example" %}
 ```
-export KONG_PROXY_SERVER='http://<username>:<password>@<proxy-host>:<proxy-port>'
-export KONG_PROXY_SERVER_SSL_VERIFY=off
-export KONG_CLUSTER_USE_PROXY=on
+proxy_server = 'http://<username>:<password>@<proxy-host>:<proxy-port>'
+proxy_server_ssl_verify = off
+cluster_use_proxy = on
 ```
 {% endnavtab %}
 {% navtab "HTTPS example" %}
 ```
-export KONG_PROXY_SERVER='https://<username>:<password>@<proxy-host>:<proxy-port>'
-export KONG_PROXY_SERVER_SSL_VERIFY=on
-export KONG_CLUSTER_USE_PROXY=on
-export KONG_LUA_SSL_TRUSTED_CERTIFICATE=system #or <certificate> or <path-to-cert>
+proxy_server = 'https://<username>:<password>@<proxy-host>:<proxy-port>'
+proxy_server_ssl_verify = on
+cluster_use_proxy = on
+lua_ssl_trusted_certificate = system  # or <certificate> or <path-to-cert>
 ```
 {% endnavtab %}
 {% endnavtabs %}
