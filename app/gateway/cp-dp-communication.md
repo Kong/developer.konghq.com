@@ -6,14 +6,22 @@ layout: reference
 products:
     - gateway
 
+works_on:
+   - on-prem
+   - konnect
+
 min_version:
     gateway: '3.5'
 
 description: placeholder
 
 related_resources:
-  - text: "Secure {{site.base_gateway}}"
-    url: /gateway/security/
+  - text: Proxying with {{site.base_gateway}}
+    url: /gateway/traffic-control/proxying/
+  - text: "{{site.base_gateway}} networking"
+    url: /gateway/network/
+  - text: "{{site.base_gateway}} ports"
+    url: /gateway/network-ports-firewall/
 ---
 
 @todo
@@ -45,6 +53,10 @@ lua_ssl_trusted_certificate = system | <certificate> | <path-to-cert>
 {% endnavtab %}
 {% endnavtabs %}
 
+[Reload {{site.base_gateway}}](/how-to/restart-kong-gateway-container/) for the connection to take effect.
+
+The following table explains what each forward proxy parameter does:
+
 <!--vale off-->
 {% kong_config_table %}
 config:
@@ -54,6 +66,4 @@ config:
   - name: lua_ssl_trusted_certificate
 {% endkong_config_table %}
 <!--vale on-->
-
-[Reload {{site.base_gateway}}](/how-to/restart-kong-gateway-container/) for the connection to take effect.
 

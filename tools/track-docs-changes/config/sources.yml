@@ -287,6 +287,8 @@ app/gateway/logs.md:
 app/gateway/network-ports-firewall.md:
   - app/_src/gateway/production/networking/default-ports.md
   - app/_src/gateway/production/networking/firewall.md
+app/gateway/cp-dp-communication.md:
+  - app/_src/gateway/production/networking/cp-dp-proxy.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
