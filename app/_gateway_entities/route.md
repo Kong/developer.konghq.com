@@ -480,10 +480,10 @@ You can use the following recommendations to increase routing performance:
 
 The Routes entity can dynamically serve TLS certificates on a per-connection basis. TLS certificates are managed by two resources: 
 
-* [Certificates](/gateway/entities/certificate)
-* [SNIs](/gateway/entities/sni)
+* [Certificates](/gateway/entities/certificate/)
+* [SNIs](/gateway/entities/sni/)
 
-To do this, create a Certificate [associated with an SNI](/how-to/associate-certificate-with-sni), and then create a secure Route that uses the Certificate:
+To do this, create a Certificate [associated with an SNI](/how-to/associate-certificate-with-sni/), and then create a secure Route that uses the Certificate:
 
 {% entity_example %}
 type: route
