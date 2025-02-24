@@ -193,7 +193,22 @@ rows:
               text: Secure your {{site.base_gateway}} deployment
               url: /gateway/security/
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: Load Balancing
+            description: |
+                Load balancing traffic across your upstream services is vital for ensuring 
+                high availability, scalability, and reliability of your ecosystem. 
+                
+                {{site.base_gateway}} provides multiple ways to load balance across upstream services,
+                along with health checks and circuit breakers to ensure target health.
 
+            icon: /assets/icons/load-balance.svg
+            cta:
+              text: Choose your load balancing methods
+              url: /gateway/load-balancing/
+              align: end
   - header:
       type: h2
       text: Key References

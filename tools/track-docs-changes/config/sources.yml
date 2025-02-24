@@ -303,6 +303,8 @@ app/gateway/networking/dns-config-reference.md:
   - app/_src/gateway/production/networking/dns-considerations.md
 app/gateway/traffic-control/health-checks-circuit-breakers.md:
   - /app/_src/gateway/how-kong-works/health-checks.md
+app/gateway/traffic-control/load-balancing.md:
+  - app/_src/gateway/how-kong-works/load-balancing.md
 
 # policies
 app/gateway/vulnerabilities.md:

@@ -1,0 +1,21 @@
+
+title: 'Round-robin load balancing'
+description: 'Configure round-robin load balancing for AI Proxy Advanced'
+
+weight: 900
+
+# requirements:
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config:
+  
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

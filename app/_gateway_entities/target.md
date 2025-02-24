@@ -18,6 +18,8 @@ related_resources:
     url: /gateway/entities/upstream/
   - text: Route entity
     url: /gateway/entities/route/
+  - text: Load balancing in {{site.base_gateway}}
+    url: /gateway/load-balancing/
 
 schema:
     api: gateway/admin-ee
@@ -41,7 +43,7 @@ The following diagram illustrates how Targets are used by Upstreams for load bal
 
 ## Using hostnames
 
-A `target` can also have a hostname instead of an IP address. 
+A Target can also have a hostname instead of an IP address. 
 In that case, the name is resolved and all entries found are individually added to the load balancer.
 
 For example, let's say you add `api.host.com:123` with `weight=100`:
