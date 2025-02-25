@@ -47,16 +47,12 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
+## 1. Create the blue Upstream
+
 Blue-green deployments work by having two identical environments, allowing you to completely switch from one environment to another. 
 {{site.base_gateway}} makes this simple by letting you point a Gateway Service at any Upstream entity as a host, where the Upstream entity can have any number of Targets that it can load-balance requests over.
 
-Most commonly, this method is used for running environments in staging and production. 
-When a release is ready in staging, the roles of the two environments switch.
-The staging environment becomes production, and the production environment becomes staging.
-
-## 1. Create the blue Upstream
-
-Create an Upstream with two Targets:
+Create the first Upstream, `blue`, with two Targets:
 
 {% entity_examples %}
 entities:
@@ -86,7 +82,7 @@ entities:
         name: example-service
 {% endentity_examples %}
 
-This activates the environment. The Service and Route can now proxy requests to the Upstream, and it will load balance those requests over its Targets. 
+The Service and Route can now proxy requests to the Upstream, and it will load balance those requests over its Targets. 
 
 In this case, we're using the default [round-robin load balancing](/gateway/entities/upstream/#round-robin), so the Targets will be queued up in the order they were originally accessed, with weighting applied.
 
@@ -129,12 +125,15 @@ entities:
 
 ## 4. Validate
 
+Run the following command to check that requests are being routed to the `green` Upstream:
+
 {% validation request-check %}
 url: /anything
 status_code: 200
 method: GET
 {% endvalidation %}
 
-Incoming requests with host header set to address.mydomain.com are now proxied by Kong to the new targets. Half of the requests will go to `any.httpbun.com:80` (`weight: 100`), and the other half will go to `httpbun.com:80` (`weight: 100`).
+Incoming requests are now proxied by {{site.base_gateway}} to the new targets. 
+Half of the requests will go to `any.httpbun.com:80` (`weight: 100`), and the other half will go to `httpbun.com:80` (`weight: 100`).
 
 You can switch back and forth between the `blue` and the `green` Upstreams at any time, and the switch will be immediate.
