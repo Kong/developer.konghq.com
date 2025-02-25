@@ -5,7 +5,7 @@ name: 'ACL'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Control which consumers can access services'
+description: Control which Consumers can access Services and Routes
 tier: enterprise
 
 
@@ -25,33 +25,24 @@ topologies:
     - hybrid
     - cloud-gateways
     - serverless
+
 icon: acl.png
 
 categories:
   - traffic-control
+
+search_aliases:
+  - access control list
 ---
 
 ## Overview
 
-Restrict access to a service or a route by adding consumers to allowed or
-denied lists using arbitrary ACL groups. This plugin requires an [authentication plugin](/hub/#authentication)
-(such as [Basic Authentication](/hub/kong-inc/basic-auth/), [Key Authentication](/hub/kong-inc/key-auth/),
-[OAuth 2.0](/hub/kong-inc/oauth2/) or [OpenID Connect](/hub/kong-inc/openid-connect/)) to have been already
-enabled on the service or route.
+The ACL (access control list) plugin allows you to restrict [Consumer](/gateway/entities/consumer/) access to a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/). You do this by configuring **either** an allow list or a deny list with certain Consumers<!-- if_version gte:3.7 --> or [Consumer Groups](/gateway/entities/consumer-group/)<!-- endif_version -->.
 
-{% if_version gte:3.6.x %}
-You can also enable the usage of consumer groups by setting the config option [`include_consumer_groups`](/hub/kong-inc/acl/configuration/#include_consumer_groups) to `true`.
-This option lets {{site.base_gateway}} take both ACL groups and consumer groups into consideration when evaluating the `allow` and `deny` fields.
-{% endif_version %}
+This plugin uses authenticated Consumers to identify who can and can't access the Service or Route. Because of this, you must also configure an [authentication plugin](/plugins/?category=authentication)
+(such as [Basic Authentication](/plugins/basic-auth/), [Key Authentication](/plugins/key-auth/),
+[OAuth 2.0](/plugins/oauth2/) or [OpenID Connect](/plugins/openid-connect/)) on the Service or Route **before** configuring the ACL plugin.
 
-You can't configure an ACL with both `allow` and `deny` configurations. An ACL with an `allow` provides a positive security model, in which the configured groups are allowed access to the resources, and all others are inherently rejected. By contrast, a `deny` configuration provides a negative security model, in which certain groups are explicitly denied access to the resource (and all others are allowed).
+## Upstream Consumer Groups header
 
-## Upstream headers
-
-When a consumer has been validated, the plugin appends a `X-Consumer-Groups`
-header to the request before proxying it to the Upstream service, so that you can
-identify the groups associated with the consumer. The value of the header is a
-comma-separated list of groups that belong to the consumer, like `admin, pro_user`.
-
-This header will not be injected in the request to the upstream service if
-the `hide_groups_header` config flag is set to `true`.
+If `hide_groups_header` is set to `false` and a Consumer is validated, the plugin appends a `X-Consumer-Groups` header to the request before proxying it to the upstream service. The header contains a comma separated list of groups that belong to the Consumer, for example `admin, pro_user`. This allows you to identify the groups associated with the Consumer. 

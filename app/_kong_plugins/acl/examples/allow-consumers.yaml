@@ -1,0 +1,26 @@
+description: 'Allows the `dev` and `admin` Consumers on the Service or Route that the ACL plugin is enabled on.'
+
+title: 'Allow Consumers without apphending the `X-Consumer-Groups` header'
+
+weight: 900
+
+# requirements: <- not required
+# - "some req"
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config:
+  allow:
+  - dev
+  - admin
+  hide_groups_header: true
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -1,6 +1,6 @@
-description: ''
+description: 'Denies the `dev` and `admin` Consumers on the Service or Route that the ACL plugin is enabled on.'
 
-title: ''
+title: 'Deny Consumers'
 
 weight: 900
 
@@ -12,7 +12,10 @@ weight: 900
 #     description: ''
 #     value: us
 
-config: # plugin config in yaml format goes here
+config:
+  deny:
+  - dev
+  - admin
 
 tools:
   - deck

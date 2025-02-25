@@ -1,0 +1,18 @@
+description: 'Allows the `dev` and `admin` Consumer Groups on the Service or Route that the ACL plugin is enabled on.'
+
+title: 'Allow Consumer Groups'
+
+weight: 900
+
+config: 
+  include_consumer_groups: true
+  allow:
+  - dev
+  - admin
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
