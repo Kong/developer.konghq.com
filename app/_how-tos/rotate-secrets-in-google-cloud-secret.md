@@ -33,7 +33,8 @@ tags:
 
 tldr:
     q: How do I rotate secrets in Google Cloud Secret with {{site.base_gateway}}?
-    a: placeholder
+    a: |
+      Create a secret in [Google Cloud Secret Manager](https://console.cloud.google.com/security/secret-manager) and create a service account with the `Secret Manager Secret Accessor` role. Export your service account key JSON as an environment variable (`GCP_SERVICE_ACCOUNT`). Then configure a [Vault entity](/gateway/entities/vault/) with your Secret Manager configuration and `ttl` set to how many seconds {{site.base_gateway}} should wait before picking up the rotated secret. Reference secrets from your Secret Manager vault like the following in a referenceable field: `{vault://gcp-sm-vault/test-secret}`. Rotate your secret by creating a new secret version in Google Cloud.
 
 tools:
     - deck
