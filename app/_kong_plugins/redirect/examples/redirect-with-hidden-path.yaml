@@ -1,0 +1,19 @@
+description: 'Redirect incoming requests to a target location, but use the incoming request path and query string in the redirect URL.'
+
+title: 'Redirect with hidden URL'
+
+weight: 900
+
+variables:
+  location:
+    value: $YOUR_REDIRECT_URL
+
+config:
+  location: ${location}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
