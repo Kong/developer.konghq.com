@@ -5,7 +5,7 @@ name: 'Upstream Timeout'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Set timeouts on routes and override service-level timeouts'
+description: 'Set timeouts on Routes and override Gateway Service-level timeouts'
 tier: enterprise
 
 
@@ -34,4 +34,5 @@ search_aliases:
   - upstream-timeout
 ---
 
-## Overview
+Use the Upstream Timeout plugin to configure Route-specific timeouts. 
+This plugin overrides any Gateway Service-level timeout settings.
