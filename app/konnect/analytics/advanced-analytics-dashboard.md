@@ -1,5 +1,5 @@
 ---
-title: "{{site.konnect_short_name}} Advanced Analytics"
+title: "{{site.konnect_short_name}} Advanced Analytics Dashboard"
 content_type: reference
 layout: reference
 

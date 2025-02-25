@@ -1,0 +1,261 @@
+metadata:
+  title: Advanced Analytics
+  product: konnect
+  content_type: landing_page
+  description: Konnect Advanced Analytics is a real-time, highly contextual analytics platform that offers deep insights into API health, performance, and usage. 
+rows:
+  - header:
+      type: h1
+      text: "Advanced Analytics"
+  - columns:
+    - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Konnect Advanced Analytics"
+            blocks:
+              - type: text
+                text: | 
+                  Konnect Advanced Analytics is a real-time, highly contextual analytics platform that offers deep insights into API health, performance, and usage. It has been designed to help businesses optimize their API strategies and improve operational efficiency and is offered as a premium service within Konnect.
+    - blocks:
+        - type: image
+          config:
+            url: /assets/images/konnect/konnect-api-usage-summary.png
+            alt_text: Konnect Analytics Dashboard
+  - header:
+      type: h2
+      text: "Features"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Dashboard
+            description: The summary dashboard shows performance and health statistics of all your APIs across your organization on a single page and provides greater insights into your service usage.
+            icon: /assets/icons/insomnia/icon-transfer-light-02.svg
+            cta:
+              text: Learn more
+              url: /how-to/chain-requests/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Explorer
+            description: Explorer is an intuitive web-based interface that displays API usage data gathered by {{site.konnect_short_name}} Analytics from your data plane nodes. 
+            icon: /assets/icons/insomnia/icon-omnichannel-light-02.svg
+            cta:
+              text: Learn more
+              url: /how-to/automate-tests/
+              align: end 
+      - blocks:
+        - type: card
+          config:
+            title: Use Collection Runner 
+            description: Automatically test multiple requests in your collections, with unlimited collection runs.
+            icon: /assets/icons/insomnia/icon-innovation-light-02.svg
+            cta:
+              text: Learn more
+              url: /how-to/use-the-collection-runner/
+              align: end  
+  
+
+  - header:
+      type: h2
+      text: "Capabilities"
+    columns:
+      - blocks:
+          - type: feature_table
+            config:
+              columns:
+                - title: Free
+                  key: oss
+                - title: Individual
+                  key: individual
+                - title: Team
+                  key: team
+                - title: Enterprise
+                  key: ee
+              features:
+                - title: Local storage
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: API Testing tools
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Cloud-hosted mock server
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Automated API testing
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Cloud Sync
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
+                - title: Git Sync
+                  oss: false
+                  individual: false
+                  team: true
+                  ee: true
+                - title: Enterprise SSO (SAML, OIDC)
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+                - title: Enterprise support
+                  oss: false
+                  individual: false
+                  team: false
+                  ee: true
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    See the full feature comparison on our [pricing page&rarr;](https://insomnia.rest/pricing)
+
+  - header:
+      text: "What can decK do?"
+      type: h2
+    columns:
+      - blocks:
+        - type: x_with_y
+          config:
+              border: true
+              type: h2
+              headers:
+                - Commonly used decK Gateway commands
+
+              items:
+                - text: |
+                    Export your current settings from {{site.base_gateway}}
+                  action:
+                    type: command
+                    config:
+                      cmd: deck
+                      args:
+                        - gateway
+                        - dump
+                        - -o
+                        - kong.yaml
+
+                - text: |
+                    Diff a state file with the configuration in {{site.base_gateway}}
+                  action:
+                    type: command
+                    config:
+                      cmd: deck
+                      args:
+                        - gateway
+                        - diff
+                        - kong.yaml
+
+                - text: |
+                    Sync a state file with the configuration in {{site.base_gateway}}
+                  action:
+                    type: command
+                    config:
+                      cmd: deck
+                      args:
+                        - gateway
+                        - sync
+                        - kong.yaml
+
+                - text: |
+                    Check the connection to {{site.base_gateway}}
+                  action:
+                    type: command
+                    config:
+                      cmd: deck
+                      args:
+                        - gateway
+                        - ping
+                - text: |
+                    Self-validate its own configuration
+                  action:
+                    type: command
+                    config:
+                      cmd: deck
+                      args:
+                        - gateway
+                        - validate
+                - text: |
+                    Sync Gateway configs to {{site.konnect_short_name}}
+
+                    _Tip: You can add {{site.konnect_short_name}} flags to any deck command
+                    to target a {{site.konnect_short_name}} control plane instead of a self-managed {{site.base_gateway}}._
+
+                  action:
+                    type: command
+                    config:
+                      cmd: deck
+                      args:
+                        - gateway
+                        - sync
+                        - kong.yaml
+                        - --konnect-control-plane-name
+                        - staging
+
+  - header:
+      type: h2
+      text: Features
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Storage
+              description: |
+                Insomnia offers various storage options to cater to different user needs and preferences as well as to ensure data compliance requirements. 
+                Understanding these options is crucial for efficient and secure management of your API projects.
+              icon: /assets/icons/data-object.svg
+              cta:
+                text: Learn more about storage
+                url: /insomnia/storage-options/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Security
+              description: |
+                Learn how Insomnia prioritizes data protection through encryption, product and application security, and organizational measures.
+              icon: /assets/icons/lock.svg
+              cta:
+                text: Learn about security
+                url: /insomnia/security/
+                align: end
+      
+
+
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              products:
+                  - insomnia
+              quantity: 5
+              allow_empty: true
+              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
+
+  - header:
+      type: h2
+      text: References & Tools
+    columns:
+      - blocks:
+          - type: reference_list
+            config:
+              products:
+                - insomnia
+              quantity: 5
+              allow_empty: true
+              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
