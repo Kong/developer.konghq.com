@@ -240,6 +240,10 @@ app/_kong_plugins/ip-restriction/index.md:
   - app/_hub/kong-inc/ip-restriction/overview/_index.md
 app/_kong_plugins/ip-restriction/changelog.md:
   - app/_hub/kong-inc/ip-restriction/_changelog.md
+app/_kong_plugins/standard-webhooks/index.md:
+  - app/_hub/kong-inc/standard-webhooks/overview/_index.md
+app/_kong_plugins/standard-webhooks/changelog.md:
+  - app/_hub/kong-inc/standard-webhooks/_changelog.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:

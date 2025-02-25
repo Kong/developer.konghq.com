@@ -1,0 +1,22 @@
+description: |
+  Validate an incoming webhook against the Standard Webhooks specification.
+  Learn more about the required secret key format in the 
+  [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks/blob/main/spec/standard-webhooks.md#verifying-webhook-authenticity) specification.
+
+title: 'Validate webhook'
+
+weight: 900
+
+config:
+  secret_v1: ${secret_v1}
+
+variables:
+  secret_v1:
+    value: $YOUR_WEBHOOK_SECRET_KEY
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
