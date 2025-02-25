@@ -21,6 +21,8 @@ related_resources:
     url: /gateway/entities/target/
   - text: Health checks and circuit breakers
     url: /gateway/traffic-control/health-checks-circuit-breakers/
+  - text: Configure blue-green deployments
+    url: /how-to/blue-green-deployments/
 
 breadcrumbs:
   - /gateway/

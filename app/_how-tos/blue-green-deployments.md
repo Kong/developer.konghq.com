@@ -4,7 +4,7 @@ title: Configure blue-green deployments
 content_type: how_to
 related_resources:
   - text: Load balancing
-    url: /gateway/traffic-control/load-balancing/
+    url: /gateway/load-balancing/
 
 products:
     - gateway
