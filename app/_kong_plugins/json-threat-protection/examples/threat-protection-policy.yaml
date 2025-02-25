@@ -1,0 +1,29 @@
+description: |
+  Run the JSON Threat Protection plugin in block mode. 
+  
+  Define a JSON threat protection policy and block any invalid requests. 
+  If a request doesn't conform to the configured policy, the plugin blocks it from being proxied and instead returns the configured status code and error message.
+
+  For a tutorial on setting up and validating this plugin, see [Validate incoming JSON request bodies with JSON Threat Protection](/how-to/validate-incoming-json-request-bodies/).
+
+title: 'Block invalid requests'
+
+weight: 900
+
+config:
+  max_body_size: 1024
+  max_container_depth: 2
+  max_object_entry_count: 4
+  max_object_entry_name_length: 7
+  max_array_element_count: 2
+  max_string_value_length: 6
+  enforcement_mode: block
+  error_status_code: 400
+  error_message: "Incorrect request format"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

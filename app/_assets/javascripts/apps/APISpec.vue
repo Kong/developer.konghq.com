@@ -140,3 +140,9 @@ const openSlideoutToc = async () => {
   slideoutTocVisible.value = true
 }
 </script>
+
+<style scoped>
+.table-of-contents {
+  height: 100%;
+}
+</style>

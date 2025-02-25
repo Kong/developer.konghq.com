@@ -9,13 +9,14 @@ rows:
       type: h1
       text: "Rate Limiting"
 
-  - columns:
-      -
-        blocks:
+  - header:
+      type: h2
+      text: "What is Rate Limiting?"
+    columns:
+      - blocks:
           - type: structured_text
             config:
-              header:
-                text: "What is Rate Limiting?"
+
               blocks:
                 - type: text
                   text:
@@ -24,13 +25,13 @@ rows:
                     the performance and availability of web
                     services and APIs by controlling the request traffic.
 
-
-  - columns:
+  - header:
+      type: h2
+      text: "Why is Rate Limiting important?"
+    columns:
       - blocks:
         - type: structured_text
           config:
-            header:
-              text: "Why is Rate Limiting important?"
             blocks:
               - type: text
                 text: "Rate Limiting is necessary when using an API gateway for the following reasons:"

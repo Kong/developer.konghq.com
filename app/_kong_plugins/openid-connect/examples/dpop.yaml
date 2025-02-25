@@ -25,3 +25,11 @@ variables:
   client_secret:
     value: $CLIENT_SECRET
 
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

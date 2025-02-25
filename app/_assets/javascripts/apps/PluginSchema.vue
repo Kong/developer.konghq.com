@@ -5,6 +5,7 @@
         :schema="schema"
         :exampleVisible="false"
         :headerVisible="false"
+        :enablePropertyLinks="true"
       />
     </div>
   </template>

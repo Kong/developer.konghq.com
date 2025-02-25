@@ -1,0 +1,23 @@
+<table class="table-auto">
+    <thead>
+        <tr>
+          <th class="font-semibold text-primary">Role</th>
+          <th class="font-semibold text-primary">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for role_hash in config.roles %}
+        {% assign role = role_hash[1] %}
+        <tr>
+            <td>
+                <span class="block text-primary">
+                    <code>{{ role.properties.name.enum | first | markdown }}</code>
+                </span>
+            </td>
+            <td>
+                <span class="content">{{ role.properties.description.enum | first | markdownify }}</span>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

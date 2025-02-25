@@ -10,3 +10,10 @@ config:
   window_size: 
     - 3600
   window_type: fixed
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

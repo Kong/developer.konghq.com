@@ -6,6 +6,7 @@
         :schema="schema.data"
         :exampleVisible="false"
         :headerVisible="false"
+        :enablePropertyLinks="true"
       />
     </main>
   </div>

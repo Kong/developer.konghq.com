@@ -22,6 +22,8 @@ related_resources:
   url: /gateway/entities/upstream/
 - text: Target entity
   url: /gateway/entities/target/
+- text: Load balancing in {{site.base_gateway}}
+  url: /gateway/load-balancing/
 
 description: |
   {{site.base_gateway}} supports two kinds of health checks, which can be used separately or in conjunction: active and passive (also known as circuit breakers).
@@ -109,7 +111,7 @@ You can find all of the default values for an Upstream in the [Upstream schema](
 > **Notes**:
 > * Unhealthy Targets won't be removed from the [load balancer](/gateway/entities/upstream/#load-balancing-algorithms), and won't have any impact on the balancer layout when using a hashing algorithm. Instead, they will just be skipped.
 > * Health checks operate only on [*enabled* Targets](/gateway/entities/target/) and don't modify the status of a Target in the {{site.base_gateway}} database.
-> * The [DNS caveats](/gateway/traffic-control/load-balancing/) also apply to health checks. 
+> * The [DNS caveats](/gateway/traffic-control/load-balancing-reference/#dns-load-balancing-caveats) also apply to health checks. 
 > If using hostnames for the Targets, then make sure the DNS server always returns the full set of IP addresses for a name, and does not limit the response. 
 
 ### Determining health for Upstreams
@@ -151,23 +153,38 @@ don't apply to Upstreams assigned to services with the protocol attribute set to
 To enable active health checks, you need to configure the parameters
 under `healthchecks.active` in the [Upstream object configuration](/gateway/entities/upstream/#schema).
 
-| Parameter | Description |
-|-----------|-------------|
-| `healthchecks.active.type` | Specify whether to perform `http` or `https` probes, or set this field to `tcp` to test the connection to a given host and port. |
-| `healthchecks.active.healthy.interval` | Interval between active health checks for healthy Targets (in seconds). Set this to a positive value to enable active healthchecks for healthy Targets. |
-| `healthchecks.active.unhealthy.interval` | Interval between active health checks for unhealthy Targets (in seconds). Set this to a positive value to enable active healthchecks for unhealthy Targets. |
-| `healthchecks.active.http_path` | The path that should be used when issuing the HTTP GET request to the Target. The default value is `"/"`. |
-| `healthchecks.active.timeout` | The connection timeout limit for the HTTP GET request of the probe. The default value is 1 second. |
-| `healthchecks.active.concurrency` | Number of Targets to check concurrently in active health checks. |
-| `healthchecks.active.https_verify_certificate` | (*Only used for HTTPS*) Whether to check the validity of the SSL certificate of the remote host when performing active health checks using HTTPS. <br><br> Failed TLS verifications will increment the `TCP failures` counter. `HTTP failures` refer only to HTTP status codes, whether probes are done through HTTP or HTTPS. |
-| `healthchecks.active.https_sni` | (*Only used for HTTPS*) The hostname to use as an SNI (Server Name Identification) when performing active health checks using HTTPS. This is particularly useful when Targets are configured using IPs, so that the Target host's certificate can be verified with the proper SNI. |
-| `healthchecks.active.healthy.successes` | Number of successes in active probes (as defined by `healthchecks.active.healthy.http_statuses`) to consider a Target healthy. |
-| `healthchecks.active.unhealthy.tcp_failures` | Number of TCP failures or TLS verification failures in active probes to consider a Target unhealthy. |
-| `healthchecks.active.unhealthy.timeouts` | Number of timeouts in active probes to consider a Target unhealthy. |
-| `healthchecks.active.unhealthy.http_failures` | Number of HTTP failures in active probes (as defined by `healthchecks.active.unhealthy.http_statuses`) to consider a Target unhealthy. |
-| `healthchecks.active.healthy.http_statuses` | An array of HTTP statuses to consider a success, indicating healthiness, when returned by a probe in active health checks. |
-| `healthchecks.active.unhealthy.http_statuses` | An array of HTTP statuses to consider a failure, indicating unhealthiness, when returned by a probe in active health checks. |
-
+{% entity_params_table %}
+entity: Upstream
+config:
+  - name: healthchecks.active.type
+    description: Specify whether to perform `http` or `https` probes, or set this field to `tcp` to test the connection to a given host and port.
+  - name: healthchecks.active.healthy.interval
+    description: Interval between active health checks for healthy Targets (in seconds). Set this to a positive value to enable active healthchecks for healthy Targets.
+  - name: healthchecks.active.unhealthy.interval
+    description: Interval between active health checks for unhealthy Targets (in seconds). Set this to a positive value to enable active healthchecks for unhealthy Targets.
+  - name: healthchecks.active.http_path
+    description: The path that should be used when issuing the HTTP GET request to the Target. The default value is `"/"`.
+  - name: healthchecks.active.timeout
+    description: The connection timeout limit for the HTTP GET request of the probe. The default value is 1 second.
+  - name: healthchecks.active.concurrency
+    description: Number of Targets to check concurrently in active health checks.
+  - name: healthchecks.active.https_verify_certificate
+    description: (*Only used for HTTPS*) Whether to check the validity of the SSL certificate of the remote host when performing active health checks using HTTPS. <br><br> Failed TLS verifications will increment the `TCP failures` counter. `HTTP failures` refer only to HTTP status codes, whether probes are done through HTTP or HTTPS.
+  - name: healthchecks.active.https_sni
+    description: (*Only used for HTTPS*) The hostname to use as an SNI (Server Name Identification) when performing active health checks using HTTPS. This is particularly useful when Targets are configured using IPs, so that the Target host's certificate can be verified with the proper SNI.
+  - name: healthchecks.active.healthy.successes
+    description: Number of successes in active probes (as defined by `healthchecks.active.healthy.http_statuses`) to consider a Target healthy.
+  - name: healthchecks.active.unhealthy.tcp_failures
+    description: Number of TCP failures or TLS verification failures in active probes to consider a Target unhealthy.
+  - name: healthchecks.active.unhealthy.timeouts
+    description: Number of timeouts in active probes to consider a Target unhealthy.
+  - name: healthchecks.active.unhealthy.http_failures
+    description: Number of HTTP failures in active probes (as defined by `healthchecks.active.unhealthy.http_statuses`) to consider a Target unhealthy.
+  - name: healthchecks.active.healthy.http_statuses
+    description: An array of HTTP statuses to consider a success, indicating healthiness, when returned by a probe in active health checks.
+  - name: healthchecks.active.unhealthy.http_statuses
+    description: An array of HTTP statuses to consider a failure, indicating unhealthiness, when returned by a probe in active health checks.
+{% endentity_params_table %}
 
 ### Disable active health checks
 
@@ -187,14 +204,22 @@ The ring balancer starts skipping this Target and doesn't route any more traffic
 Passive health checks don't have a probe, as they work by interpreting the ongoing traffic that flows from a Target. 
 To enable passive checks, you only need to configure the Upstream's counter thresholds, which you can find under `healthchecks.passive` in the [Upstream object configuration](/gateway/entities/upstream/#schema):
 
-| Parameter | Description |
-|-----------|-------------|
-| `healthchecks.passive.healthy.successes` | Number of successes in proxied traffic (as defined by `healthchecks.passive.healthy.http_statuses`) to consider a Target healthy, as observed by passive health checks. This needs to be positive when passive checks are enabled so that healthy traffic resets the unhealthy counters. |
-| `healthchecks.passive.unhealthy.tcp_failures` | Number of TCP failures in proxied traffic to consider a Target unhealthy, as observed by passive health checks. |
-| `healthchecks.passive.unhealthy.timeouts` | Number of timeouts in proxied traffic to consider a Target unhealthy, as observed by passive health checks. |
-| `healthchecks.passive.unhealthy.http_failures` | Number of HTTP failures in proxied traffic (as defined by `healthchecks.passive.unhealthy.http_statuses`) to consider a Target unhealthy, as observed by passive health checks. |
-| `healthchecks.passive.healthy.http_statuses` | An array of HTTP statuses which represent healthiness when produced by proxied traffic, as observed by passive health checks. |
-| `healthchecks.passive.unhealthy.http_statuses` | An array of HTTP statuses which represent unhealthiness when produced by proxied traffic, as observed by passive health checks. |
+{% entity_params_table %}
+entity: Upstream
+config:
+  - name: healthchecks.passive.healthy.successes
+    description: Number of successes in proxied traffic (as defined by `healthchecks.passive.healthy.http_statuses`) to consider a Target healthy, as observed by passive health checks. This needs to be positive when passive checks are enabled so that healthy traffic resets the unhealthy counters.
+  - name: healthchecks.passive.unhealthy.tcp_failures
+    description: Number of TCP failures in proxied traffic to consider a Target unhealthy, as observed by passive health checks.
+  - name: healthchecks.passive.unhealthy.timeouts
+    description: Number of timeouts in proxied traffic to consider a Target unhealthy, as observed by passive health checks.
+  - name: healthchecks.passive.unhealthy.http_failures
+    description: Number of HTTP failures in proxied traffic (as defined by `healthchecks.passive.unhealthy.http_statuses`) to consider a Target unhealthy, as observed by passive health checks.
+  - name: healthchecks.passive.healthy.http_statuses
+    description: An array of HTTP statuses which represent healthiness when produced by proxied traffic, as observed by passive health checks.
+  - name: healthchecks.passive.unhealthy.http_statuses
+    description: An array of HTTP statuses which represent unhealthiness when produced by proxied traffic, as observed by passive health checks.
+{% endentity_params_table %}
 
 ### Re-enable a Target disabled by a passive health check
 

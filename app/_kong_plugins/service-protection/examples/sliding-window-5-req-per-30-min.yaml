@@ -16,3 +16,10 @@ config:
   window_type: sliding
   limit: [5]
   namespace: example_namespace
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

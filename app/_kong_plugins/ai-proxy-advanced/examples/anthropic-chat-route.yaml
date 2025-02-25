@@ -25,3 +25,10 @@ config:
           anthropic_version: "2023-06-01"
           max_tokens: 512
           temperature: 1.0
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

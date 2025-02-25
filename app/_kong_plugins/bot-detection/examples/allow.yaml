@@ -15,3 +15,10 @@ weight: 800
 config: 
   allow:
   - "[^a-zA-Z0-9]"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

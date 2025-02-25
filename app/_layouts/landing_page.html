@@ -6,7 +6,8 @@ layout: default
   <div class="flex flex-col gap-12">
     {% for row in page.rows %}
 
-        <div class="grid gap-4">
+        {% assign h2_col = row.columns | find_exp: "col", "col.header and col.header.type =='h2'" %}
+        <div class="grid gap-4 {% unless h2_col %}heading-section{% endunless %}">
           {% if row.header %}
               {% include landing_pages/header.md config = row.header %}
           {% endif %}
@@ -14,7 +15,7 @@ layout: default
           {% if row.columns %}
             <div class="grid grid-cols-1 lg:grid-cols-{{ row.columns | size }} gap-8">
               {% for column in row.columns %}
-                <div class="flex flex-col gap-3">
+                <div class="flex flex-col gap-3 {% if column.header and column.header.type == 'h2' %} heading-section {% endif %}">
                   {% if column.header %}
                   {% include landing_pages/header.md config = column.header %}
                   {% endif %}

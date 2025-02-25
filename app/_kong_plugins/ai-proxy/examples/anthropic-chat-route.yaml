@@ -23,3 +23,10 @@ config:
 variables:
   header_value:
     value: $ANTHROPIC_API_KEY
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

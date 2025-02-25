@@ -25,13 +25,10 @@ rows:
                     {{site.base_gateway}} provides security features such as authorization, sensitive data encryption, and monitoring and logging abilities that 
                     you can use to secure your {{site.base_gateway}} deployments.
 
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Secure the {{site.base_gateway}} infrastructure"
-  - columns:
+  - header:
+      type: h2
+      text: "Secure the {{site.base_gateway}} infrastructure"
+    columns:
       - blocks:
         - type: card
           config:
@@ -63,14 +60,11 @@ rows:
             icon: /assets/icons/firewall.svg
             cta:
               url: "/gateway/network-ports-firewall/"
-    
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Authentication and authorization"
-  - columns:
+
+  - header:
+      type: h2
+      text: "Authentication and authorization"
+    columns:
       - blocks:
         - type: card
           config:
@@ -102,13 +96,10 @@ rows:
             cta:
               url: "/gateway/entities/rbac/"
 
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Data encryption"
-  - columns:
+  - header:
+      type: h2
+      text: "Data encryption"
+    columns:
       - blocks:
         - type: card
           config:
@@ -149,14 +140,11 @@ rows:
             icon: /assets/icons/keyring.svg
             cta:
               url: "/gateway/keyring/"
-  
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Monitoring and logging"
-  - columns:
+
+  - header:
+      type: h2
+      text: "Monitoring and logging"
+    columns:
       - blocks:
         - type: card
           config:

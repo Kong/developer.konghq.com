@@ -9,7 +9,7 @@ module Jekyll
       class Base < Liquid::Drop
         extend Forwardable
 
-        def_delegators :@example, :data, :variables, :headers
+        def_delegators :@example, :variables, :headers
 
         def initialize(example:)
           @example = example
@@ -25,6 +25,10 @@ module Jekyll
 
         def id
           @id ||= SecureRandom.hex(10)
+        end
+
+        def data
+          @data ||= @example.data
         end
 
         def formatted_examples
