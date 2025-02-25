@@ -34,5 +34,5 @@ search_aliases:
   - upstream-timeout
 ---
 
-Use the Upstream Timeout plugin to configure Route-specific timeouts. 
+Use the Upstream Timeout plugin to configure Route-specific timeouts for the connection between {{site.base_gateway}} and an upstream service.
 This plugin overrides any Gateway Service-level timeout settings.
