@@ -1,0 +1,23 @@
+description: 'Set up the Forward Proxy plugin to forward requests through a transparent proxy without authentication or CA certificate validation.'
+
+title: 'Forward HTTP requests without auth or CA validation'
+
+weight: 900
+
+config:
+  http_proxy_host: ${http_proxy_host}
+  http_proxy_port: 80
+  proxy_scheme: http
+  https_verify: false
+  x_headers: transparent
+
+variables:
+  http_proxy_host:
+    value: $PROXY_HOST_NAME
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
