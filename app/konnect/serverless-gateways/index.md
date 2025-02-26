@@ -18,11 +18,11 @@ faqs:
   - q: What {{site.base_gateway}} version do Serverless Gateways run?
     a: The {{site.base_gateway}} version can't be configured. The default is always `latest` and will be automatically upgraded.
   - q: Can Control Planes contain both Serverless Gateway Data Planes and self-managed Data Planes?
-    a: No. Control Planes that utilize Serverless Gateways can't mix types of Data Planes.
+    a: No. Control Planes that use Serverless Gateways can't mix types of Data Planes.
   - q: Can I configure the size of the Data Planes?
-    a: No, configuration is handled automatically during the provisoning of the Serverless Gateway Control Plane.
+    a: No, configuration is handled automatically during the provisioning of the Serverless Gateway Control Plane.
   - q: Does Serverless Gateway support private networking?
-    a: No, Serverless Gateways only supports public networking. There are currently no capabilities for private networking between your data centers and hosted Kong data planes. For use cases where private networking is required, [Dedicated Cloud Gateways](/konnect/dedicated-cloud-gateway/) configured with AWS is a better choice.
+    a: No, Serverless Gateways only supports public networking. There are currently no capabilities for private networking between your data centers and hosted Kong data planes. For use cases where private networking is required, [Dedicated Cloud Gateways](/konnect/dedicated-cloud-gateways/) configured with AWS is a better choice.
   - q: Do all plugins work on Serverless Gateway?
     a: |
       * Any plugins that depend on a local agent will not work with serverless gateways.
