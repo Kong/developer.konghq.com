@@ -43,8 +43,7 @@ tags:
 ---
 
 The Standard Webhooks plugin lets you validate incoming webhooks using the [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks) specification. 
-Kong contributes to this specification.
 
 This plugin only supports HMAC-SHA256 secrets for webhook validation.
 
-The Standard Webhooks specification is a package of open source tools and guidelines for sending webhooks easily, securely, and reliably.
+The Standard Webhooks specification is a package of open source tools and guidelines for sending webhooks easily, securely, and reliably. Kong contributes to this specification.
