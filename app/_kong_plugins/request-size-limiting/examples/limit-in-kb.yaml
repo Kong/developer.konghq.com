@@ -1,0 +1,19 @@
+description: 'Limit the size of incoming request payloads to a specific number of kilobytes.'
+
+title: 'Limit request size in kilobytes'
+
+weight: 900
+
+config:
+  allowed_payload_size: 256000
+  size_unit: kilobytes
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+
+
