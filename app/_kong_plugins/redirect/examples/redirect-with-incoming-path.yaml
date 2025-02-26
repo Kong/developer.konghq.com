@@ -1,0 +1,26 @@
+description: |
+  Redirect incoming requests to a target location, using the request path and query string from the incoming request in the redirect URL.
+
+  | Incoming Request | `config.location` | `config.keep_incoming_path` | New URL |
+  |------------------|------------------|----------------------------|---------|
+  | https://example.com/demo?foo=bar | https://new.example.com | `true` | https://new.example.com/demo?foo=bar |
+  | https://example.com/demo?foo=bar | https://new.example.com/some-path | `true` | https://new.example.com/demo?foo=ba |
+
+title: "Keep the incoming request path"
+
+weight: 900
+
+variables:
+  location:
+    value: $YOUR_REDIRECT_URL
+
+config:
+  location: ${location}
+  keep_incoming_path: true
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
