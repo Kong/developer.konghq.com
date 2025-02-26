@@ -1,0 +1,21 @@
+description: 'Denies the `dev` and `admin` Consumers and Consumer Groups on the Service or Route that the ACL plugin is enabled on.'
+
+title: 'Deny Consumer Groups'
+
+min_version:
+    gateway: '3.6'
+
+weight: 900
+
+config: 
+  include_consumer_groups: true
+  deny:
+  - dev
+  - admin
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
