@@ -240,6 +240,7 @@ app/_kong_plugins/ip-restriction/index.md:
   - app/_hub/kong-inc/ip-restriction/overview/_index.md
 app/_kong_plugins/ip-restriction/changelog.md:
   - app/_hub/kong-inc/ip-restriction/_changelog.md
+
 app/_kong_plugins/acl/index.md:
   - app/_hub/kong-inc/acl/how-to/_index.md
   - app/_hub/kong-inc/acl/overview/_index.md
@@ -253,7 +254,12 @@ app/_kong_plugins/redirect/index.md:
   - app/_hub/kong-inc/redirect/overview/_index.md
 app/_kong_plugins/redirect/changelog.md:
   - app/_hub/kong-inc/redirect/_changelog.md
+# Konnect
 
+app/konnect/advanced-analytics/explorer.md:
+  - app/konnect/advanced-analytics/explorer.md
+app/konnect/advanced-analytics/llm-reporting.md:
+  - app/konnect/advanced-analytics/explorer.md
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
   - app/_src/gateway/index.md
