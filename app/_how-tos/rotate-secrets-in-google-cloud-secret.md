@@ -1,5 +1,5 @@
 ---
-title: Store and rotate Mistral API keys as secrets in Google Cloud Secret with {{site.base_gateway}} and the AI Proxy plugin
+title: Store and rotate Mistral API keys as secrets in Google Cloud with {{site.base_gateway}} and the AI Proxy plugin
 content_type: how_to
 related_resources:
   - text: Configure Google Cloud Secret as a vault backend

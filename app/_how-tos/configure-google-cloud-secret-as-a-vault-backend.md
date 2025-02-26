@@ -71,6 +71,8 @@ prereqs:
 faqs:
   - q: "How do I fix the `Error: could not get value from external vault (no value found (unable to retrieve secret from gcp secret manager (code : 403, status: PERMISSION_DENIED)))` error when I try to use my secret from the Google Cloud vault?"
     a: Verify that your [Google Cloud service account has the `Secret Manager Secret Accessor` role](https://console.cloud.google.com/iam-admin/iam?supportedpurview=project). This role is required for {{site.base_gateway}} to access secrets in the vault.
+  - q: How do I rotate my secrets in Google Cloud and how does {{site.base_gateway}} pick up the new secret values?
+    a: You can rotate your secret in Google Cloud by creating a new secret version with the updated value. You'll also want to configure the `ttl` settings in your {{site.base_gateway}} Vault entity so that {{site.base_gateway}} pulls the rotated secret periodically. For more information, see [Store and rotate Mistral API keys as secrets in Google Cloud with {{site.base_gateway}} and the AI Proxy plugin](/how-to/rotate-secrets-in-google-cloud-secret/).
 
 cleanup:
   inline:
