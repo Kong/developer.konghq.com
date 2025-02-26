@@ -40,7 +40,7 @@ search_aliases:
 
 ## Overview
 
-The TLS Handshake Modifier plugin allows you to request a client certificate and make it available to other plugins acting on a request. it must be used in conjunction with the [TLS Metadata Headers](/plugins/tls-metadata-headers/) plugins, which is used to detect client certificates in requests.
+The TLS Handshake Modifier plugin allows you to request a client certificate and make it available to other plugins acting on a request. It must be used in conjunction with the [TLS Metadata Headers](/plugins/tls-metadata-headers/) plugins, which is used to detect client certificates in requests.
 
 This plugin requests a client certificate, but does not require it. It doesn’t perform any validation of the client certificate.
 
