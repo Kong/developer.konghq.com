@@ -49,7 +49,9 @@ faqs:
 
       This is useful because while one {{site.base_gateway}} node may be able to connect to a Target successfully, another node could fail to reach the same Target.
       The first node would consider the Target healthy, while the second would mark it as unhealthy and start routing traffic to other Targets of the Upstream.
-  
+
+tags:
+    - load-balancing
 
 ---
 

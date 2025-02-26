@@ -26,6 +26,11 @@ related_resources:
 
 breadcrumbs:
   - /gateway/
+
+no_version: true
+
+tags:
+    - load-balancing
 ---
 
 {{site.base_gateway}} provides multiple ways of load balancing requests to upstream services:
