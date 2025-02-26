@@ -244,6 +244,14 @@ app/_kong_plugins/standard-webhooks/index.md:
   - app/_hub/kong-inc/standard-webhooks/overview/_index.md
 app/_kong_plugins/standard-webhooks/changelog.md:
   - app/_hub/kong-inc/standard-webhooks/_changelog.md
+app/_kong_plugins/forward-proxy/index.md:
+  - app/_hub/kong-inc/forward-proxy/overview/_index.md
+app/_kong_plugins/forward-proxy/changelog.md:
+  - app/_hub/kong-inc/forward-proxy/_changelog.md
+app/_kong_plugins/redirect/index.md:
+  - app/_hub/kong-inc/redirect/overview/_index.md
+app/_kong_plugins/redirect/changelog.md:
+  - app/_hub/kong-inc/redirect/_changelog.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
