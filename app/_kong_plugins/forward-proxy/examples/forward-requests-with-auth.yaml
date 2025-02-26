@@ -1,0 +1,29 @@
+description: 'Set up the Forward Proxy plugin to forward requests through a transparent proxy with authentication.'
+
+title: 'Forward HTTP requests with auth'
+
+weight: 900
+
+config:
+  http_proxy_host: ${http_proxy_host}
+  http_proxy_port: 80
+  proxy_scheme: http
+  https_verify: false
+  x_headers: transparent
+  auth_username: ${auth_username}
+  auth_password: ${auth_password}
+
+variables:
+  http_proxy_host:
+    value: $PROXY_HOST_NAME
+  auth_username:
+    value: $YOUR_PROXY_USERNAME
+  auth_password:
+    value: $YOUR_PROXY_PASS
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
