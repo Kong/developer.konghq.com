@@ -302,6 +302,8 @@ app/gateway/network-ports-firewall.md:
   - app/_src/gateway/production/networking/firewall.md
 app/gateway/cp-dp-communication.md:
   - app/_src/gateway/production/networking/cp-dp-proxy.md
+app/konnect/network.md:
+  - app/konnect/network.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
