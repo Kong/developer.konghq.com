@@ -1,0 +1,25 @@
+description: |
+  Redirect incoming requests to a target location, using the request path and query string from the configuration in the redirect URL.
+
+  | Incoming Request | `config.location` | `config.keep_incoming_path` | New URL |
+  |------------------|------------------|----------------------------|---------|
+  | https://example.com/demo?foo=bar | https://new.example.com | `false` | https://new.example.com/ |
+  | https://example.com/demo?foo=bar | https://new.example.com/some-path | `false` | https://new.example.com/some-path |
+
+title: "Use a static URL"
+
+weight: 900
+
+variables:
+  location:
+    value: $YOUR_REDIRECT_URL
+
+config:
+  location: ${location}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
