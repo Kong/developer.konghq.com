@@ -315,3 +315,9 @@ app/gateway/traffic-control/load-balancing.md:
 # policies
 app/gateway/vulnerabilities.md:
   - app/_src/gateway/support/vulnerability-patching-process.md
+
+
+# Serverless GW
+
+app/konnect/serverless-gateway/custom-domain.md:
+  - app/konnect/gateway-manager/serverless-gateways/custom-dns.md
