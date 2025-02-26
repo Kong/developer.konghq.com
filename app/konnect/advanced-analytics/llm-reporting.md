@@ -6,6 +6,8 @@ description: |
     Advanced Analytics allows you to monitor and optimize your LLM usage by providing detailed insights into objects such as token consumption, costs, and latency.
 
 no_version: true
+products:
+    - gateway
 works_on:
     - konnect
 api_specs:
@@ -15,6 +17,8 @@ related_resources:
     url: /konnect/advanced-analytics/
   - text: Explorer Reference
     url: /konnect/advanced-analytics/explorer
+schema:
+    api: konnect/analytics-requests
 faqs:
   - q: What data can I collect LLM data from?
     a: |
