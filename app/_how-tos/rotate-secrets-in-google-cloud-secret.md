@@ -6,6 +6,10 @@ related_resources:
     url: /how-to/configure-google-cloud-secret-as-a-vault-backend/
   - text: Secret management
     url: /gateway/secrets-management/
+  - text: Google Secret Manager documentation
+    url: https://cloud.google.com/secret-manager/docs
+  - text: Mistral AI documentation
+    url: https://docs.mistral.ai/
 
 products:
     - gateway
@@ -54,7 +58,7 @@ prereqs:
       content: |
         To add Secret Manager as a Vault backend to {{site.base_gateway}}, you must create a project, service account key, and grant IAM permissions. This tutorial also uses gcloud, so you need to install and configure that.
           1. In the [Google Cloud console](https://console.cloud.google.com/), create a project and name it `test-gateway-vault`.
-          1. In the [Service Account settings](https://console.cloud.google.com/iam-admin/serviceaccounts), click the `test-gateway-vault` project and then click the email address of the service account that you want to create a key for.
+          1. In the <!--vale off-->[Service Account settings](https://console.cloud.google.com/iam-admin/serviceaccounts)<!--vale on-->, click the `test-gateway-vault` project and then click the email address of the service account that you want to create a key for.
           1. From the Keys tab, create a new key from the add key menu and select JSON for the key type.
           1. Save the JSON file you downloaded.
           1. From the [IAM & Admin settings](https://console.cloud.google.com/iam-admin/), click the edit icon next to the service account to grant access to the [`Secret Manager Secret Accessor` role for your service account](https://cloud.google.com/secret-manager/docs/access-secret-version#required_roles).
@@ -81,7 +85,7 @@ prereqs:
           export MISTRAL_API_KEY="Bearer <Mistral-API-key>"
           ```
 
-          Note that both variables need to be passed when creating your data plane container.
+          Note that the `GCP_SERVICE_ACCOUNT` variables **must** be passed when creating your data plane container.
       icon_url: /assets/icons/file.svg
 
 faqs:
@@ -189,6 +193,8 @@ body:
           content: "What is 1+1?"
 {% endvalidation %}
 
+You should get a `401` error with the message `Unauthorized` because we're currently using an invalid API key.
+
 ## 5. Rotate the secret in Secret Manager
 
 We can now rotate the secret with the correct API key from Mistral. You can rotate a secret by creating a new secret version with the new secret value. {{site.base_gateway}} will fetch the new secret value based on the `ttl` setting we configured in the Vault entity.
@@ -219,3 +225,5 @@ body:
         - role: "user"
           content: "What is 1+1?"
 {% endvalidation %}
+
+You should get a `200` error with an answer to the chat response because {{site.base_gateway}} picked up the rotated secret with the valid API key.
