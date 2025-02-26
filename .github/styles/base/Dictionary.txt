@@ -653,6 +653,7 @@ secret_id
 sequenceDiagram
 serializer
 serverless
+serviceaccounts
 serviceless
 shm
 slas
