@@ -22,3 +22,5 @@ schema:
 
 ---
 @todo
+
+Pull content from https://docs.konghq.com/konnect/analytics/dashboard/

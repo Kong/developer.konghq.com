@@ -46,7 +46,12 @@ related_resources:
     url: /konnect/advanced-analytics/llm-reporting
 ---
 
+The Explorer interface displays API usage data gathered by {{site.konnect_short_name}} Analytics from your data plane nodes. You can use this tool to:
+* Diagnose performance issues
+* [Monitor LLM token consumption and costs](/konnect/advanced-analytics/llm-reporting/)
+* Capture essential usage metrics
 
+Explorer also allows you to save the output as custom reports.
 ## Metrics
 
 
@@ -78,27 +83,27 @@ the time frame selector. For example:
     Jan 26, 2023 12:00 AM - Feb 01, 2023 12:00 AM (PST)
     
 
-Interval | Description  
----------|-------------
-Last 15 minutes | Data is aggregated in one minute increments.
-Last hour| Data is aggregated in one minute increments.
-Last six hours | Data is aggregated in one minute increments.
-Last 12 hours| Data is aggregated in one hour increments.
-Last 24 hours| Data is aggregated in one hour increments.
-Last seven days | Data is aggregated in one hour increments.
-Last 30 days | Data is aggregated in daily increments.
-Current week | Data is aggregated in one hour increments. Logs any traffic in the current calendar week. 
-Current month | Data is aggregated in one hour increments. Logs any traffic in the current calendar month. 
-Previous week | Data is aggregated in one hour increments. Logs any traffic in the previous calendar week.
-Previous month | Data is aggregated in daily increments. Logs any traffic in the previous calendar month. 
+The following table describes the time intervals you can select:
+
+| Interval | Aggregation increment frequency | Notes |    
+| ---------|-------------|----------|
+| Last 15 minutes | 1 minute | Data is aggregated in one minute increments. |
+| Last hour| 1 minute | Data is aggregated in one minute increments. |
+| Last six hours | 1 minute | Data is aggregated in one minute increments. |
+| Last 12 hours| 1 hour | Data is aggregated in one hour increments. |
+| Last 24 hours| 1 hour | Data is aggregated in one hour increments. |
+| Last seven days | 1 hour | Data is aggregated in one hour increments. |
+| Last 30 days | Daily | Data is aggregated in daily increments. |
+| Current week | 1 hour | Logs any traffic in the current calendar week. |
+| Current month | 1 hour | Logs any traffic in the current calendar month. |
+| Previous week | 1 hour | Logs any traffic in the previous calendar week. |
+| Previous month | Daily | Logs any traffic in the previous calendar month. |
 
 
 ## System defined groups
 
-* **Empty** - Empty is a system-defined group that indicates that API calls do not have an entity like consumers or routes, selected for grouping. Empty allows you to group API calls that don't match specific groupings so you can gain more comprehensive insights. 
+Empty is an optional, system-defined group that indicates that API calls don't have an entity like [Consumers](/gateway/entities/consumer/) or [Routes](/gateway/entities/route), selected for grouping. Empty allows you to group API calls that don't match specific groupings so you can gain more comprehensive insights. You can filter by `Is Empty` or `Is Not Empty`. 
 
 Empty can be used in cases like this: 
-* Identify the number of API calls that don't match a route.
-* Identify API calls without an associated consumer to keep track of any security holes.
-
-**Empty** is displayed in italics in Konnect, and it is not mandatory, using `Is Empty` or `Is Not Empty`, you can filter results in Explorer. 
+* Identify the number of API calls that don't match a Route.
+* Identify API calls without an associated Consumer to keep track of any security holes.
