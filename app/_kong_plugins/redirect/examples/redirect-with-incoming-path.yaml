@@ -4,7 +4,7 @@ description: |
   | Incoming Request | `config.location` | `config.keep_incoming_path` | New URL |
   |------------------|------------------|----------------------------|---------|
   | https://example.com/demo?foo=bar | https://new.example.com | `true` | https://new.example.com/demo?foo=bar |
-  | https://example.com/demo?foo=bar | https://new.example.com/some-path | `true` | https://new.example.com/demo?foo=ba |
+  | https://example.com/demo?foo=bar | https://new.example.com/some-path | `true` | https://new.example.com/demo?foo=bar |
 
 title: "Keep the incoming request path"
 
