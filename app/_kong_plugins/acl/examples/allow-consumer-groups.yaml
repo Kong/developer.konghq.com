@@ -1,6 +1,9 @@
-description: 'Allows the `dev` and `admin` Consumer Groups on the Service or Route that the ACL plugin is enabled on.'
+description: 'Allows the `dev` and `admin` Consumers and Consumer Groups on the Service or Route that the ACL plugin is enabled on.'
 
 title: 'Allow Consumer Groups'
+
+min_version:
+    gateway: '3.6'
 
 weight: 900
 
