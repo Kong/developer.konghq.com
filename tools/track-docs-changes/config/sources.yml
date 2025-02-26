@@ -245,6 +245,14 @@ app/_kong_plugins/acl/index.md:
   - app/_hub/kong-inc/acl/overview/_index.md
 app/_kong_plugins/acl/changelog.md:
   - app/_hub/kong-inc/acl/_changelog.md
+app/_kong_plugins/forward-proxy/index.md:
+  - app/_hub/kong-inc/forward-proxy/overview/_index.md
+app/_kong_plugins/forward-proxy/changelog.md:
+  - app/_hub/kong-inc/forward-proxy/_changelog.md
+app/_kong_plugins/redirect/index.md:
+  - app/_hub/kong-inc/redirect/overview/_index.md
+app/_kong_plugins/redirect/changelog.md:
+  - app/_hub/kong-inc/redirect/_changelog.md
 
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
@@ -292,6 +300,8 @@ app/gateway/logs.md:
 app/gateway/network-ports-firewall.md:
   - app/_src/gateway/production/networking/default-ports.md
   - app/_src/gateway/production/networking/firewall.md
+app/gateway/cp-dp-communication.md:
+  - app/_src/gateway/production/networking/cp-dp-proxy.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
