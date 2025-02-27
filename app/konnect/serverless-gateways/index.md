@@ -22,13 +22,24 @@ faqs:
   - q: Can I configure the size of the Data Planes?
     a: No, configuration is handled automatically during the provisioning of the Serverless Gateway Control Plane.
   - q: Does Serverless Gateway support private networking?
-    a: No, Serverless Gateways only supports public networking. There are currently no capabilities for private networking between your data centers and hosted Kong data planes. For use cases where private networking is required, [Dedicated Cloud Gateways](/konnect/dedicated-cloud-gateways/) configured with AWS is a better choice.
+    a: |
+        No, Serverless Gateways only supports public networking. There are currently no capabilities for private networking between your data centers and hosted Kong data planes. For use cases where private networking is required, [Dedicated Cloud Gateways](/konnect/dedicated-cloud-gateways/) configured with AWS is a better choice.
   - q: Does plugin functionality change with Serverless Gateways?
     a: |
       * Any plugins that depend on a local agent will not work with serverless gateways.
       * Any plugins that depend on the Status API or on Admin API endpoints will not work with serverless gateways.
       * Any plugins or functionality that depend on AWS IAM AssumeRole will have to be configured differently. 
+  - q: My serverless custom domain attachment failed, how do I troubleshoot it?
+    a: |
+      If your custom domain attachment fails, check if your domain has a Certificate Authority Authorization (CAA) record restricting certificate issuance. Serverless Gateways use Let's Encrypt CA to provision SSL/TLS certificates. If your CAA record doesn't include the required CA, certificate issuance will fail.
+      You can resolve this issue by doing the following:
 
+        1. Check existing CAA records by running `dig CAA yourdomain.com +short`.
+          If a CAA record exists but doesn't allow Let's Encrypt (`letsencrypt.org`), update it.   
+        2. Update the CAA record, if needed. For example: `yourdomain.com.    CAA    0 issue "letsencrypt.org"`
+        3. Wait for DNS propagation and retry attaching your domain.
+
+        If no CAA record exists, no changes are needed. For more information, see the [Let's Encrypt CAA Guide](https://letsencrypt.org/docs/caa/).
 related_resources:
   - text: Dedicated Cloud Gateways
     url: /konnect/dedicated-cloud-gateways/
