@@ -9,7 +9,7 @@
   {
     "@type": "ListItem",
     "position": {{ forloop.index }},
-    "name": "{{ breadcrumb.title }}",
+    "name": "{{ breadcrumb.title | liquify }}",
     "item": "{{ site.links.web | append: breadcrumb.url }}"
   },
 {%- endfor -%}
@@ -17,7 +17,7 @@
   {
     "@type": "ListItem",
     "position": {{ breadcrumbs_length | plus: 1 }},
-    "name": "{{ page.title }}",
+    "name": "{{ page.title | liquify }}",
     "item": "{{ site.links.web | append: current_page_url }}"
   }
   ]
