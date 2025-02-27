@@ -120,6 +120,21 @@ See the following table for plugins and their compatible scopes:
 
 {% plugin_scopes %}
 
+## Plugin priority
+
+All of the plugins bundled with Kong Gateway have a static priority. 
+This can be [adjusted dynamically](#dynamic-plugin-ordering) using the plugin's `ordering` configuration parameter.
+
+<!-- @todo: migrate table from https://docs.konghq.com/gateway/latest/kong-enterprise/plugin-ordering/ -->
+
+## Dynamic plugin ordering
+
+You can override the [priority](#plugin-priority) for any {{site.base_gateway}} plugin using each plugin’s `ordering` configuration parameter. 
+This determines plugin ordering during the `access` phase, and lets you create dynamic dependencies between plugins.
+
+<!-- @todo: migrate https://docs.konghq.com/gateway/latest/kong-enterprise/plugin-ordering/ -->
+
+
 ## Protocols
 
 ### Supported protocols by plugin

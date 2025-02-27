@@ -1,0 +1,26 @@
+description: |
+  Block requests and echo the response back to the client. This is especially useful for debugging.
+
+  By combining the `config.echo` parameter with a header name specified in `config.trigger`, 
+  you can make the plugin trigger only on specific requests and avoid disturbing real traffic.
+
+title: 'Echo response back to client'
+
+weight: 900
+
+config:
+  status_code: 401
+  message: '"Error - Authentication required"'
+  echo: true
+  trigger: ${trigger}
+
+variables:
+  trigger:
+    value: $X_MY_HEADER
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
