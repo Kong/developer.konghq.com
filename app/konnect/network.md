@@ -1,10 +1,12 @@
 ---
-title: "{{site.konnect_short_name}} ports and network requirments"
+title: "{{site.konnect_short_name}} ports and network requirements"
 description: 'See which ports and hostnames {{site.konnect_short_name}} uses.'
 content_type: reference
 layout: reference
 products:
     - gateway
+works_on:
+  - konnect
 tools:
     - admin-api
     - konnect-api
@@ -50,7 +52,7 @@ want to use port `3001` for the proxy, map `3001:8000`.
 Data plane nodes initiate the connection to the {{site.konnect_short_name}} control plane.
 They require access through firewalls to communicate with the control plane. To let a data plane node request and receive configuration, and send telemetry data, add the applicable hostnames in this section to the firewall allowlist.
 
-{{site.kic_product_name}} also uses these hostnames to initiate the connection to the {{site.konnect_short_name}} [Control Planes Configuration API](/konnect/api/control-plane-configuration/latest/) to:
+{{site.kic_product_name}} also uses these hostnames to initiate the connection to the {{site.konnect_short_name}} [Control Planes Configuration API](/api/konnect/control-planes-config/) to:
 
 * Synchronize the configuration of the {{site.base_gateway}} instances with {{site.konnect_short_name}}
 * Register data plane nodes
