@@ -1,6 +1,6 @@
 ---
-title: Apply a partial configuration to Gateway
-description: "@TODO"
+title: deck gateway apply
+description: Apply configuration to Kong without deleting existing entities.
 
 content_type: reference
 layout: reference

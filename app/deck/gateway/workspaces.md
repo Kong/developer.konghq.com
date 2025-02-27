@@ -1,6 +1,6 @@
 ---
-title: Working with Workspaces
-description: "@TODO"
+title: Workspaces
+description: Manage configuration in multiple workspaces, isolated using RBAC
 
 content_type: reference
 layout: reference

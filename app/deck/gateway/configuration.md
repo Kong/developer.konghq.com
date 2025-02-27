@@ -1,6 +1,6 @@
 ---
-title: Configuring Authentication
-description: "@TODO"
+title: Configuring On-Prem Authentication
+description: Configure decK for use with an on-prem Kong Gateway
 
 content_type: reference
 layout: reference

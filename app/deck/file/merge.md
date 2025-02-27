@@ -1,6 +1,6 @@
 ---
-title: Merge
-description: "@TODO"
+title: deck file merge
+description: Merge multiple files in to a single file, leaving env variables in place.
 
 content_type: reference
 layout: reference

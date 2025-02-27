@@ -1,6 +1,6 @@
 ---
-title: Synchronize your local and remote state
-description: "@TODO"
+title: deck gateway sync
+description: Update Kong Gateway to match the state defined in the provided configuration
 
 content_type: reference
 layout: reference

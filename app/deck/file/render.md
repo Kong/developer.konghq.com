@@ -1,6 +1,6 @@
 ---
-title: Render
-description: "@TODO"
+title: deck file render
+description: Render the final configuration sent to the Admin API in a single file.
 
 content_type: reference
 layout: reference

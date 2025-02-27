@@ -1,6 +1,6 @@
 ---
-title: Tags
-description: "@TODO"
+title: Select Tags & Lookup Tags
+description: Segment your configuration in to multiple files using Tags
 
 content_type: reference
 layout: reference
@@ -63,7 +63,7 @@ The `--select-tag` flag _can_ be used with `deck gateway sync` for situations wh
 
 **Important**: It is not possible to sync a subset of content from a single file using `select_tags`. `--select-tag` must be provided when running `deck gateway dump` and the same file must be synced to the Admin API using the exact same `select_tags`.
 
-## Default select tags
+## Default lookup tags
 
 decK lets you specify entity relationships using foreign keys. For example, look at the following files that manage Consumers and Consumer Groups:
 

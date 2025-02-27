@@ -1,6 +1,6 @@
 ---
-title: Validate configuration against the Admin API
-description: "@TODO"
+title: deck gateway validate
+description: Validate the data in the provided state file against a live Admin API
 
 content_type: reference
 layout: reference

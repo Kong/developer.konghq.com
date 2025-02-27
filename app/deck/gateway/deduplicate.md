@@ -1,6 +1,6 @@
 ---
 title: De-duplicate Plugin Configuration
-description: "@TODO"
+description: Reference predefined plugin configurations in your declaraive configuration
 
 content_type: reference
 layout: reference

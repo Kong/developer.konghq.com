@@ -1,6 +1,7 @@
 ---
 title: Tags
-description: "@TODO"
+short_title: deck file *-tags
+description: Manage tags in Kong declarative configuration file.
 
 content_type: reference
 layout: reference

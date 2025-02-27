@@ -1,6 +1,6 @@
 ---
-title: Konnect Configuration
-description: "@TODO"
+title: Configuring Konnect
+description: Configure decK for use with Konnect
 
 content_type: reference
 layout: reference

@@ -1,6 +1,6 @@
 ---
 title: Managing Sensitive Data
-description: "@TODO"
+description: Keep your secrets safe using Kong Gateway Vaults with decK
 
 content_type: reference
 layout: reference

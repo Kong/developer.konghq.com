@@ -1,6 +1,6 @@
 ---
-title: Show differences in configuration
-description: "@TODO"
+title: deck gateway diff
+description: Diff the current state of Kong Gateway against the provided configuration.
 
 content_type: reference
 layout: reference

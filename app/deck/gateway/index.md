@@ -1,5 +1,6 @@
 ---
 title: Managing Kong Gateway
+short_title: Overview
 description: Manage {{ site.base_gateway }} declaratively
 
 content_type: reference
