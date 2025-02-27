@@ -30,6 +30,7 @@ module Jekyll
       end
 
       def set_release_info!
+        page.data['no_version'] = true if releases.empty?
         return if page.data['no_version']
 
         raise ArgumentError, "Missing release for page: #{page.url}" unless latest_release_in_range
