@@ -30,7 +30,7 @@ The {{site.konnect_short_name}} control plane uses the following ports:
 
 | Port      | Protocol  | Description |
 |:----------|:----------|:------------|
-| `443`    | TCP <br>HTTPS | Cluster communication port for configuration and telemetry data. The {{site.konnect_saas}} control plane uses this port to listen for connections and communicate with data plane nodes. <br> The cluster communication port must be accessible to data plane nodes within the same cluster. This port is protected by mTLS to ensure end-to-end security and integrity. |
+| `443`    | TCP <br>HTTPS | Cluster communication port for configuration and telemetry data. The {{site.konnect_saas}} control plane uses this port to listen for connections and to communicate with data plane nodes. <br> The cluster communication port must be accessible to data plane nodes within the same cluster. This port is protected by mTLS to ensure end-to-end security and integrity. |
 | `8071`   | TCP <br> UDP | Port used for audit logging. |
 
 {{site.base_gateway}}'s hosted control plane expects traffic on these ports, so they can't be customized. 
@@ -40,25 +40,12 @@ The {{site.konnect_short_name}} control plane uses the following ports:
 
 ## Data plane node ports
 
-{{site.base_gateway}} uses data plane node ports to proxy communication.
 
 {% include_cached /sections/data-plane-node-ports.md %}
 
-For Kubernetes or Docker deployments, map ports as needed. For example, if you
-want to use port `3001` for the proxy, map `3001:8000`.
 
 ## Hostnames
 
-Data plane nodes initiate the connection to the {{site.konnect_short_name}} control plane.
-They require access through firewalls to communicate with the control plane. To let a data plane node request and receive configuration, and send telemetry data, add the applicable hostnames in this section to the firewall allowlist.
-
-{{site.kic_product_name}} also uses these hostnames to initiate the connection to the {{site.konnect_short_name}} [Control Planes Configuration API](/api/konnect/control-planes-config/) to:
-
-* Synchronize the configuration of the {{site.base_gateway}} instances with {{site.konnect_short_name}}
-* Register data plane nodes
-* Fetch license information
-
-Data plane nodes initiate the connection to {{site.konnect_short_name}} APIs to report Analytics data.
 
 The following [geographic regions](/konnect/geos/) and their hostname region identifiers are supported:
 * AU (Australia): `au`
@@ -80,4 +67,4 @@ Depending on the regions your organization uses, you'll need to allowlist the ho
 
 ## Mesh Manager hostnames
 
-If you plan to use [Mesh Manager](/konnect/mesh-manager/) to manage your Kong service mesh, you must add the `{geo}.mesh.sync.konghq.com:443` hostname to your firewall allowlist. The geo can be `au`, `eu`, `us`, or `global`.
+If you use [Mesh Manager](/konnect/mesh-manager/) to manage your Kong service mesh, you must add the `{geo}.mesh.sync.konghq.com:443` hostname to your firewall allowlist. The geo can be `au`, `eu`, `us`, or `global`.
