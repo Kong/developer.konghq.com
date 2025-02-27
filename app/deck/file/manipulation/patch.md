@@ -1,6 +1,6 @@
 ---
 title: deck file patch
-description: "@TODO"
+description: Update values in a Kong declarative configuration file.
 
 content_type: reference
 layout: reference

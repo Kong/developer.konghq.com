@@ -1,6 +1,6 @@
 ---
-title: Reset a running Gateway
-description: "@TODO"
+title: deck gateway reset
+description: Delete all entities in Kong Gateway
 
 content_type: reference
 layout: reference

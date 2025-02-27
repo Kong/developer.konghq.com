@@ -19,6 +19,8 @@ breadcrumbs:
 related_resources:
   - text: All decK documentation
     url: /index/deck/
+
+skip_index: true
 ---
 
 `deck file` provides multiple commands to manipulate an existing declarative configuration file. They can be used to update values in the configuration, add new plugins and more.

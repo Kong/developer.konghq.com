@@ -1,6 +1,6 @@
 ---
 title: Object Defaults
-description: "@TODO"
+description: Set custom defaults for Kong Gateway entities
 
 content_type: reference
 layout: reference

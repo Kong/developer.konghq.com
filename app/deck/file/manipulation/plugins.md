@@ -1,6 +1,7 @@
 ---
 title: Plugins
-description: "@TODO"
+short_title: deck file add-plugins
+description: Manage plugin configurations in Kong declarative configuration file.
 
 content_type: reference
 layout: reference

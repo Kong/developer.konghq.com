@@ -1,6 +1,6 @@
 ---
-title: openapi2kong
-description: "@TODO"
+title: deck file openapi2kong
+description: Convert an OpenAPI specification to Kong services and routes.
 
 content_type: reference
 layout: reference

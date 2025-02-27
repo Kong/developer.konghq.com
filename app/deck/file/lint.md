@@ -1,6 +1,6 @@
 ---
-title: Linting
-description: "@TODO"
+title: deck file lint
+description: Validate your decK configuration file against predefined rules
 
 content_type: reference
 layout: reference

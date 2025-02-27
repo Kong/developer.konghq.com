@@ -1,6 +1,6 @@
 ---
-title: Namespace
-description: "@TODO"
+title: deck file namespace
+description: Apply a namespace to routes in a decK file by path or hostname.
 
 content_type: reference
 layout: reference

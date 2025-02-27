@@ -1,6 +1,6 @@
 ---
-title: kong2tf
-description: "@TODO"
+title: deck file kong2tf
+description: Convert a Kong declarative configuration file to Terraform manifests (Konnect only).
 
 content_type: reference
 layout: reference

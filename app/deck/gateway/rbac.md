@@ -1,6 +1,6 @@
 ---
 title: Manage RBAC roles
-description: "@TODO"
+description: Configure your RBAC configuraton declaratively with decK
 
 content_type: reference
 layout: reference

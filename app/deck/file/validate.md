@@ -1,6 +1,6 @@
 ---
-title: Validate
-description: "@TODO"
+title: deck file validate
+description: Validate your declarative configuration locally against predefined schemas
 
 content_type: reference
 layout: reference

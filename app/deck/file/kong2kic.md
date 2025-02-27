@@ -1,6 +1,6 @@
 ---
-title: kong2kic
-description: "@TODO"
+title: deck file kong2kic
+description: Convert a Kong declarative configuration file to Kong Ingress Controller compatible CRDs. Supports both Gateway API and Ingress resources.
 
 content_type: reference
 layout: reference

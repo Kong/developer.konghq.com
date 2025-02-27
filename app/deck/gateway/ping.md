@@ -1,6 +1,6 @@
 ---
-title: Check decK connectivity
-description: "@TODO"
+title: deck gateway ping
+description: Verify that decK can talk to the configured Admin API
 
 content_type: reference
 layout: reference

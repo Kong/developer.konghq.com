@@ -1,6 +1,8 @@
 ---
 title: decK File
-description: "@TODO"
+short_title: Overview
+description: Manipulate a decK configuration file programatically. Layer in additional configuration and lint against your governance rules
+weight: 1000
 
 content_type: reference
 layout: reference
