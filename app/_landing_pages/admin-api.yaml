@@ -15,4 +15,203 @@ rows:
     - blocks:
         - type: text
           config: |
-            @todo
+            The Admin API is an internal RESTful API designed for administration purposes. It provides full control over {{site.base_gateway}}.
+
+            Requests to the Admin API can be sent to any node in the cluster, and Kong will keep the configuration consistent across all nodes.
+
+            By default, the Admin API is exposed on the following ports:
+            * 8001 for HTTP
+            * 8444 for HTTPS
+
+            This can be customized with the `admin_listen` parameter in in the [{{site.base_gateway}} configuration](/gateway/configuration/).
+  
+  - header:
+      text: "Specification"
+      type: h2
+    columns:
+    - blocks:
+      - type: card
+        config:
+          title: Reference documentation
+          description: Learn how to use the Admin API.
+          icon: /assets/icons/service-document.svg
+          cta:
+            url: /api/gateway/admin-ee/3.9/
+            align: end
+    - blocks:
+      - type: card
+        config:
+          title: Run in Insomnia
+          description: Open the Admin API specification in Insomnia.
+          icon: /assets/icons/insomnia/insomnia.svg
+          cta:
+            url: https://insomnia.rest/run/?uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2Fgateway%2Fadmin-ee%2F3.9%2Fopenapi.yaml&label=Gateway+Admin+-+EE
+            align: end
+
+  - header:
+      text: "Security"
+      type: h2
+    columns:
+    - blocks:
+      - type: card
+        config:
+          title: Secure the Admin API
+          description: Learn how to secure the Admin API against unwanted access.
+          icon: /assets/icons/security.svg
+          cta:
+            url: /gateway/secure-the-admin-api/
+            align: end
+    - blocks:
+      - type: card
+        config:
+          title: Enable RBAC
+          description: Use the Admin API to secure {{site.base_gateway}} with Role-Based Access Control.
+          icon: /assets/icons/lock.svg
+          cta:
+            url: /how-to/enable-rbac-with-admin-api/
+            align: end
+
+  - header:
+      type: h2
+      text: "Supported content types"
+    columns:
+      - blocks:
+          - type: text
+            config: |
+                The Admin API accepts three content types on every endpoint:
+          - type: feature_table
+            config:
+              columns:
+                - title: Description
+                  key: desc
+                - title: Example
+                  key: example
+              features:
+                - title: |
+                    `application/json`
+                  desc: JSON representation of the data to send. This content type is useful for complex request bodies.
+                  example: |
+                    ```sh
+                    curl -i -X POST http://localhost:8001/routes \
+                    -H "Content-Type: application/json" \
+                    -d '{"name": "test-route", "paths": [ "/path/one", "/path/two" ], "service": {"name": "test-service"}}'
+                    ```
+                - title: |
+                    `application/x-www-form-urlencoded`
+                  desc: |
+                    Form representation of the data to send. This content type can be used in most cases. 
+                    * To specify nested objects, use dotted keys.
+                    * To specify array values, you can either send the values in order, or add an index in square brackets.
+                  example: |
+                    ```sh
+                    curl -i -X POST http://localhost:8001/routes \
+                        -d "name=test-route" \
+                        -d "paths[]=/path/one" \
+                        -d "paths[]=/path/two" \
+                        -d "service.name=test-service"
+                    ```
+                - title: |
+                    `multipart/form-data`
+                  desc: |
+                    For representation of the data to send. This content type is useful if you need to send binary data. 
+                    
+                    It's similar to `application/x-www-form-urlencoded`, however:
+                    * References to arrays must have indices.
+                    * You can reference files using the `@` prefix.
+                  example: |
+                    ```sh
+                    curl -i -X POST http://localhost:8001/services/plugin-testing/plugins \
+                        -F "name=pre-function" \
+                        -F "config.access=@custom-auth.lua"
+                    ```                 
+
+  - header:
+      type: h2
+      text: "HTTP status codes"
+    columns:
+    - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  The following status codes can be returned in HTTP responses:
+        - type: feature_table
+          config:
+            columns:
+              - title: Description
+                key: desc
+            features:
+              - title: |
+                  `200 OK`
+                desc: |
+                  The request succeeded.
+              - title: |
+                  `201 Created`
+                desc: |
+                  The request succeeded and a new resource was created.
+              - title: |
+                  `204 No Content`
+                desc: |
+                  There is no content in the request to send.
+              - title: |
+                  `400 Bad Request`
+                desc: |
+                  The server can’t or send the request because of an error by the client.
+              - title: |
+                  `401 Unauthorized`
+                desc: |
+                  The client is unauthenticated.
+              - title: |
+                  `404 Not Found`
+                desc: |
+                  The server can’t find the resource you requested. With an API, this can mean that the endpoint is valid but the resource doesn’t exist.
+              - title: |
+                  `405 Method Not Allowed`
+                desc: |
+                  The server knows the request method, but it isn’t supported by the resource.
+              - title: |
+                  `409 Conflict`
+                desc: |
+                  A request conflicts with the current state of the server.
+
+  - header:
+      text: "Frequently Asked Questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: Can I use the Admin API in DB-less mode?
+              a: |
+                In DB-less mode, you configure {{site.base_gateway}} declaratively. The Admin API for each {{site.base_gateway}} node functions independently, reflecting the memory state of that particular node. 
+                This is the case because there is no database coordination between nodes. Therefore, the Admin API is mostly read-only.
+
+                When running {{site.base_gateway}} in DB-less mode, the Admin API can only perform tasks related to handling the declarative config:
+                * [Validating configurations against schemas](/api/gateway/admin-ee/3.9/#/operations/post-schemas-entity-validate)
+                * [Validating plugin configurations against schemas](/api/gateway/admin-ee/3.9/#/operations/post-schemas-plugins-validate)
+                * [Reloading the declarative configuration](/api/gateway/admin-ee/3.9/#/operations/post-config)
+            
+            - q: How can I send a request for a specific Workspace?
+              a: |
+                You can target a specific Workspace by prefixing any endpoint with the Workspace name or ID. For example, you can use the following command to get all services from a Workspace named `SRE`:
+                ```sh
+                curl -i -X GET http://localhost:8001/SRE/services
+                ```
+
+                If no Workspace is specified, the request applies to the `default` Workspace.
+
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              products:
+                - "api-ops"
+              tools:
+                - admin-api
+              quantity: 5
+              allow_empty: true
+              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}"
