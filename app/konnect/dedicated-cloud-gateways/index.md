@@ -42,3 +42,9 @@ related_resources:
 @TODO
 
 pull content from https://docs.konghq.com/konnect/gateway-manager/dedicated-cloud-gateways/
+
+## Supported geographic regions
+
+{{site.konnect_short_name}} Dedicated Cloud Gateways support the following geos:
+
+{% include_cached /sections/dcg-regions.md %}

@@ -270,6 +270,10 @@ app/konnect/advanced-analytics/explorer.md:
   - app/konnect/advanced-analytics/explorer.md
 app/konnect/advanced-analytics/llm-reporting.md:
   - app/konnect/advanced-analytics/explorer.md
+app/konnect/geos.md:
+  - app/konnect/geo.md
+
+
 # landing pages
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
   - app/_src/gateway/index.md
