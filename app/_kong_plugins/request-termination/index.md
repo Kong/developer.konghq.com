@@ -37,7 +37,7 @@ related_resources:
 ---
 
 This plugin terminates incoming requests with a specified status code and message.
-This can be used to temporarily stop traffic on a Gateway Service or a Route, or even block a Consumer. 
+This can be used to temporarily stop traffic on a [Gateway Service](/gateway/entities/service/) or a [Route](/gateway/entities/route/), or even block a [Consumer](/gateway/entities/consumer/). 
 
 This plugin can also be used for debugging, as described in the [`config.echo` parameter](/plugins/request-termination/reference/#schema--config-echo).
 
@@ -45,7 +45,7 @@ Once this plugin is enabled, every request within the configured scope will be i
 
 ## Request termination priority
 
-This plugin has a priority of `2`, which is the lowest priority of all plugins except Post-Function. This means it will execute after all other plugins have been applied. 
+This plugin has a priority of `2`, which is the lowest [priority of all plugins](/gateway/entities/plugin/#plugin-priority) except Post-Function. This means it will execute after all other plugins have been applied. 
 
 The Request Termination plugin will not execute if the [Forward Proxy plugin](/plugins/forward-proxy/) is enabled. 
 This is because the Forward Proxy plugin has a higher priority, and when it executes, the request is forwarded according to that plugin's configuration. 
