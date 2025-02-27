@@ -1,0 +1,55 @@
+metadata:
+  title: "The Konnect Service Catalog"
+  content_type: landing_page
+  description: Learn how to track and manage services across your organization with the Konnect Service Catalog.
+  tags:
+    - service-catalog
+    - governance
+
+rows:
+  - header:
+      type: h1
+      text: "The Konnect Service Catalog"
+  
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "What is the Konnect Service Catalog?"
+              blocks:
+                - type: text
+                  text: |
+                    {{site.konnect_saas}}'s Service Catalog provides a centralized catalog of all services running in your organization. 
+                    By integrating with internal applications (like Gateway Manager and Mesh Manager) and external tools (like GitHub and PagerDuty), 
+                    it offers a 360-degree overview of your services, including:
+                - type: unordered_list
+                  items:
+                    - Service ownership details
+                    - Upstream and downstream dependencies
+                    - Associated code repositories and CI/CD pipelines
+                    - API gateway and service mesh mappings
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/insomnia/graphic-api-design-hero.png
+              alt_text: Diagram of Konnect Service Catalog integrations.
+
+
+  - header:
+      type: h2
+      text: "Frequently Asked Questions"
+    columns:
+      - blocks:
+          - type: faqs
+            config:
+              - q: "How do Service Catalog services map to API products?"
+                a: "Service Catalog services do not directly map to API products. However, a Gateway service can be linked to a Service Catalog service, which can then be associated with an API product."
+              - q: "How do I view service health and status?"
+                a: "Go to **Services** in the Service Catalog and select a service to view detailed health and status information."
+              - q: "How can I identify available resources for mapping?"
+                a: "Visit the **Resources** page in the Service Catalog to see all available ingested resources."
+              - q: "What if I notice discrepancies in Service Catalog data?"
+                a: "Check integration settings, verify connected tools, and ensure data synchronization is working correctly."
+              - q: "Can I control access to specific Service Catalog data?"
+                a: "Yes, access can be managed through [teams](/konnect/org-management/teams-and-roles/manage/) and [roles](/konnect/org-management/teams-and-roles/roles-reference/)."
