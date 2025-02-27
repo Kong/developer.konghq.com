@@ -11,6 +11,11 @@ tools:
     - deck
     - kic
     - terraform
+tags:
+  - regions
+  - geos
+  - network
+  
 related_resources:
   - text: "{{site.konnect_short_name}} ports and network requirements"
     url: /konnect/network/
