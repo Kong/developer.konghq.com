@@ -23,10 +23,10 @@ faqs:
     a: No, configuration is handled automatically during the provisioning of the Serverless Gateway Control Plane.
   - q: Does Serverless Gateway support private networking?
     a: No, Serverless Gateways only supports public networking. There are currently no capabilities for private networking between your data centers and hosted Kong data planes. For use cases where private networking is required, [Dedicated Cloud Gateways](/konnect/dedicated-cloud-gateways/) configured with AWS is a better choice.
-  - q: Do all plugins work on Serverless Gateway?
+  - q: Does plugin functionality change with Serverless Gateways?
     a: |
       * Any plugins that depend on a local agent will not work with serverless gateways.
-      * Any plugins that depend on the Status API or on Admin API endpoints will not work.
+      * Any plugins that depend on the Status API or on Admin API endpoints will not work with serverless gateways.
       * Any plugins or functionality that depend on AWS IAM AssumeRole will have to be configured differently. 
 
 related_resources:
@@ -52,8 +52,9 @@ When you create a serverless gateway, {{site.konnect_short_name}} creates a Cont
 
 ## How do I provision a serverless gateway?
 
-You can provision a Serverless Gateway by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/v2/#/operations/create-control-plane). 
-1. First create a Serverless Control Plane
+Provisioning a serverless gateway includes creating the serverless control plane and hosted data plane.
+	
+	1. Create a serverless gateway control plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/v2/#/operations/create-control-plane).
 <!-- vale off -->
 {% capture request %}
   {% control_plane_request %}
