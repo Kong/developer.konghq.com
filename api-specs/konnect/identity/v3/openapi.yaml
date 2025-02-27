@@ -2447,10 +2447,26 @@ components:
         updated_at: '2022-09-25T13:00:00.00Z'
     team-mapping-collection:
       value:
-        mappings:
+        meta:
+          page:
+            number: 1
+            size: 1
+            total: 10
+        data:
           - group: Service Developers
             team_ids:
               - 6801e673-cc10-498a-94cd-4271de07a0d3
+    team-group-mapping-collection:
+      value:
+        meta:
+          page:
+            number: 1
+            size: 1
+            total: 10
+        data:
+          - groups:
+              - Service Developers
+            team_id: 6801e673-cc10-498a-94cd-4271de07a0d3
     401-unauthenticated:
       value:
         status: 401
@@ -3259,7 +3275,7 @@ components:
             title: Team Group Mapping Collection Response
           examples:
             Team Mapping Collection:
-              $ref: '#/components/examples/team-mapping-collection'
+              $ref: '#/components/examples/team-group-mapping-collection'
     AssignedRoleSingle:
       description: A get action response of a single assigned role.
       content:
