@@ -1,8 +1,9 @@
 description: |
-  Block requests and echo the response back to the client. This is especially useful for debugging.
+  Block requests and echo the response back to the client with debugging information about the {{site.base_gateway}} instance, 
+  such as the matched Route and Gateway Service.
 
-  By combining the `config.echo` parameter with a header name specified in `config.trigger`, 
-  you can make the plugin trigger only on specific requests and avoid disturbing real traffic.
+  You can also combine the `config.echo` parameter with a [header name specified in `config.trigger`](/plugins/request-termination/examples/trigger-on-header/)
+  to make the plugin trigger only on specific requests and avoid disturbing real traffic.
 
 title: 'Echo response back to client'
 
@@ -12,11 +13,6 @@ config:
   status_code: 401
   message: '"Error - Authentication required"'
   echo: true
-  trigger: ${trigger}
-
-variables:
-  trigger:
-    value: $X_MY_HEADER
 
 tools:
   - deck

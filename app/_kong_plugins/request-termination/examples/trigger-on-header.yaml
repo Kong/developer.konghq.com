@@ -1,4 +1,8 @@
-description: 'Block requests if a specific header exists in the request.'
+description: |
+  Block requests if a specific header exists in the request.
+
+  You can also combine `config.trigger` with the [`config.echo` debugging parameter](/plugins/request-termination/examples/echo-response-to-client/)
+  to avoid disturbing real traffic while debugging. 
 
 title: 'Trigger plugin on header'
 
