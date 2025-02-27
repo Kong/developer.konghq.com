@@ -1,0 +1,15 @@
+description: 'Limit the size of incoming request payloads to a specific number of megabytes (default size unit).'
+
+title: 'Limit request size in megabytes'
+
+weight: 900
+
+config:
+  allowed_payload_size: 256
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

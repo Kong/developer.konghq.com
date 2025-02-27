@@ -1,0 +1,16 @@
+description: 'Limit the size of incoming request payloads to a specific number of bytes.'
+
+title: 'Limit request size in bytes'
+
+weight: 900
+
+config:
+  allowed_payload_size: 256000000
+  size_unit: bytes
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

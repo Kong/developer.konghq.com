@@ -242,7 +242,6 @@ app/_kong_plugins/ip-restriction/changelog.md:
   - app/_hub/kong-inc/ip-restriction/_changelog.md
 app/_kong_plugins/tls-handshake-modifier/index.md:
   - app/_hub/kong-inc/tls-handshake-modifier/overview/_index.md
-
 app/_kong_plugins/acl/index.md:
   - app/_hub/kong-inc/acl/how-to/_index.md
   - app/_hub/kong-inc/acl/overview/_index.md
@@ -256,6 +255,11 @@ app/_kong_plugins/redirect/index.md:
   - app/_hub/kong-inc/redirect/overview/_index.md
 app/_kong_plugins/redirect/changelog.md:
   - app/_hub/kong-inc/redirect/_changelog.md
+app/_kong_plugins/request-size-limiting/index.md:
+  - app/_hub/kong-inc/request-size-limiting/overview/_index.md
+app/_kong_plugins/request-size-limiting/changelog.md:
+  - app/_hub/kong-inc/request-size-limiting/_changelog.md
+
 # Konnect
 
 app/konnect/advanced-analytics/explorer.md:
