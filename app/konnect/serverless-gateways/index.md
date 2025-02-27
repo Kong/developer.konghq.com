@@ -43,7 +43,7 @@ faqs:
 related_resources:
   - text: Dedicated Cloud Gateways
     url: /konnect/dedicated-cloud-gateways/
-  - text: Kong Gateway control plane and data plane communication
+  - text: {{site.base_gateway}} control plane and data plane communication
     url: /gateway/cp-dp-communication/
 ---
 Serverless gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned. Serverless gateways are ideal for developers who want to test or experiment in a pre-production environment.
