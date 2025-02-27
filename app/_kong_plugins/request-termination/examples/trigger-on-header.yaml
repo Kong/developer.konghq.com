@@ -1,0 +1,25 @@
+description: |
+  Block requests if a specific header exists in the request.
+
+  You can also combine `config.trigger` with the [`config.echo` debugging parameter](/plugins/request-termination/examples/echo-response-to-client/)
+  to avoid disturbing real traffic while debugging. 
+
+title: 'Trigger plugin on header'
+
+weight: 900
+
+config:
+  status_code: 401
+  message: '"Error - Authentication required"'
+  trigger: ${trigger}
+
+variables:
+  trigger:
+    value: $X-MY-HEADER
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
