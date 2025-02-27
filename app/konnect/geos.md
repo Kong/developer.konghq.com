@@ -15,6 +15,10 @@ tags:
   - regions
   - geos
   - network
+
+works_on:
+  - konnect
+
   
 related_resources:
   - text: "{{site.konnect_short_name}} ports and network requirements"
