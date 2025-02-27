@@ -1,0 +1,18 @@
+title: Gateway Documentation Index
+sections:
+  - title: Overview
+    match:
+      - /gateway/**/*
+    auto_exclude: true
+  - title: Secrets Management
+    match:
+      - /gateway/secrets-management/
+      - /gateway/entities/vault/
+      - /how-to/configure-the-konnect-config-store/
+      - /how-to/configure-hashicorp-vault-as-a-vault-backend/
+      - /how-to/configure-azure-key-vaults-as-a-vault-backend-with-vault-entity/
+      - /how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/
+      - /how-to/configure-google-cloud-secret-as-a-vault-backend/
+      - /how-to/rotate-secrets-in-aws-secrets-manager/
+      - /how-to/rotate-secrets-in-google-cloud-secret/
+      - /how-to/rotate-secrets-in-hashicorp-vault/
