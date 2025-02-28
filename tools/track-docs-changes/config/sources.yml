@@ -176,6 +176,8 @@ app/_how-tos/allow-multiple-authentication.md:
   - app/_src/gateway/kong-plugins/authentication/allowing-multiple-authentication-methods.md
 app/_how-tos/validate-incoming-json-request-bodies.md:
   - app/_hub/kong-inc/json-threat-protection/overview/_index.md
+app/_how-tos/use-acl-with-consumer-groups.md:
+  - app/_hub/kong-inc/acl/how-to/_consumer-groups.md.md
 
 ## KIC
 app/_how-tos/proxy-http-traffic-kic.md:
