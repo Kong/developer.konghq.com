@@ -150,7 +150,7 @@ module Jekyll
         end
 
         # Remove the match index
-        @sections[title]['pages'] = @sections[title]['pages'].map { |p| p['page'] }.uniq
+        @sections[title]['pages'] = @sections[title]['pages'].map { |p| p['page'] ? p['page'] : p }.uniq
       end
     end
 
