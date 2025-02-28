@@ -1,0 +1,24 @@
+<h1>{{ index.title }}</h1>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+{% for group in groups %}
+<div class="card card__bordered">
+  <div class="flex flex-col gap-5 p-6">
+    <h3>{{ group.title }}</h3>
+    <ul class="list-none ml-0">
+      {% for page in group.pages %}
+        {% assign title = page.title %}
+        {% if page.short_title %}
+        {% assign title = page.short_title %}
+        {% endif %}
+        <li class="mb-2">
+          <a class="font-bold" href="{{ page.url }}">{{ title }}</a>
+          <p class="text-sm text-gray-400">
+            <a class="hover:no-underline" href="{{ page.url }}">{{ page.description }}</a>
+          </p>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endfor %}
+</div>

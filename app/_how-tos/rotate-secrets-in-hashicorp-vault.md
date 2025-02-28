@@ -19,8 +19,6 @@ works_on:
 min_version:
   gateway: '3.4'
 
-plugins:
-
 entities: 
   - vault
 

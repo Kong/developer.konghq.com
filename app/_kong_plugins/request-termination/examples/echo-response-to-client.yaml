@@ -1,0 +1,22 @@
+description: |
+  Block requests and echo the response back to the client with debugging information about the {{site.base_gateway}} instance, 
+  such as the matched Route and Gateway Service.
+
+  You can also combine the `config.echo` parameter with a [header name specified in `config.trigger`](/plugins/request-termination/examples/trigger-on-header/)
+  to make the plugin trigger only on specific requests and avoid disturbing real traffic.
+
+title: 'Echo response back to client'
+
+weight: 900
+
+config:
+  status_code: 401
+  message: '"Error - Authentication required"'
+  echo: true
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

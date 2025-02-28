@@ -65,6 +65,10 @@ module Jekyll
         @url ||= "/plugins/#{@plugin.slug}/examples/#{slug}/"
       end
 
+      def id
+        @id ||= SecureRandom.hex(10)
+      end
+
       private
 
       def example

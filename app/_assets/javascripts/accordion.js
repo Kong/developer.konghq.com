@@ -40,9 +40,9 @@ class Accordion {
         }
 
         this.items.forEach((item, index) => {
-            if (hashItemIndex && hashItemIndex === index) {
+            if (hashItemIndex !== undefined && hashItemIndex === index) {
                 this.openItem(index);
-            } else if (this.allExpanded || !hashItemIndex && this.defaultItem && parseInt(this.defaultItem) === index) {
+            } else if (this.allExpanded || hashItemIndex === undefined && this.defaultItem && parseInt(this.defaultItem) === index) {
                 this.openItem(index);
             } else {
                 this.closeItem(index);
