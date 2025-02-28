@@ -1,0 +1,17 @@
+description: |
+  Block requests with a 401 status code and a custom message.
+
+title: 'Block requests with an error message'
+
+weight: 900
+
+config:
+  status_code: 401
+  message: '"Error - Authentication required"'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -34,4 +34,10 @@ search_aliases:
   - request-size-limiting
 ---
 
-## Overview
+Block incoming requests where the body is greater than a specific size.
+You can limit the payload size in bytes, kilobytes, or megabytes (default).
+
+{:.warning}
+> For security reasons, we suggest enabling this plugin for any [Gateway Service](/gateway/entities/service/) you add
+to {{site.base_gateway}} to prevent a DOS (Denial of Service) attack.
+

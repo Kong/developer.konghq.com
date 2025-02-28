@@ -1,5 +1,6 @@
 ---
 title: How to restart {{site.base_gateway}} in a Docker Container
+description: Placeholder
 content_type: how_to
 
 works_on:
