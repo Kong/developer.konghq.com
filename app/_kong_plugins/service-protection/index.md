@@ -52,5 +52,3 @@ Set absolute maximum rate limits for Gateway Services using the Service Protecti
 You can use this plugin together with other rate limiting plugins to apply granular rate limits based on different entities.
 
 If you want to apply global rate limits or apply rate limits to Routes and Consumers, see the [Rate Limiting with {{site.base_gateway}}](/gateway/rate-limiting/) page for additional rate limiting plugins.
-
-The Service Protection plugin uses the same [Rate Limiting Library](/gateway/rate-limiting-library/) as the other rate limiting plugins.
