@@ -83,50 +83,17 @@ For the OAS Validation plugin, Event Hook events can be enabled when a validatio
 * All request parameters, including: URI, header, query parameters, and request body
 * The response body from the upstream service
 
-For example, to configure an Event Hook for the OAS Validation plugin:
-```sh
-curl -i -X POST http://localhost:8001/event-hooks/ \
-  --header "Accept: application/json" \
-  --header "Content-Type: application/json" \
-  --data '
-    {
-      "source": "oas-validation",
-      "event": "validation-failed",
-      "handler": "webhook",
-      "on_change": true,
-      "config": {
-        "url": "$WEBHOOK_URL"
-      }
-    }
-    '
-```
+To configure an Event Hook for the OAS Validation plugin, you'll need to pass the following parameters:
+
+| Event Hook Parameter | Value       |
+|--------------|---------------------|
+| `source`     | `oas-validation`    |
+| `event`      | `validation-failed` |
+| `handler`    | `webhook`           |
+| `on_change`  | `true`              |
+| `config.url` | Your webhook URL    |
 
 If validation fails, the webhook URL receives a response with JSON payload, which includes the forwarded IP address, Gateway Service and Consumer information, and the error message.
 
-Here's a sample response:
-```json
-{
-"ip": "10.0.2.2",
-"source": "oas-validation",
-"err": "query 'status' validation failed with error: 'required parameter value not found in request'",
-"event": "validation-failed",
-"service": {
-    "ws_id": "7eebecc0-064e-4890-99cf-0c816280a68e",
-    "enabled": true,
-    "retries": 5,
-    "read_timeout": 60000,
-    "protocol": "https",
-    "id": "6792ec72-67b2-4960-96b1-e7564dda3178",
-    "connect_timeout": 60000,
-    "name": "petstore-service",
-    "port": 443,
-    "host": "petstore.swagger.io",
-    "updated_at": 1649391578,
-    "path": "/v2/",
-    "write_timeout": 60000,
-    "created_at": 1647993371
-},
-"consumer": {}
-}
-```
-{:.no-copy-code}
+See the [Event Hooks](/gateway/entities/event-hook/) reference for details on how to configure an Event Hook.
+
