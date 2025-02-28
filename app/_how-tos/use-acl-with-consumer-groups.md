@@ -40,7 +40,7 @@ tags:
 tldr:
   q: How can I use the ACL plugin to restrict access to a Consumer Group?
   a: |
-    Enable an authentication plugin, create Consumer Groups and Consumers, then enable the ACL plugin and use the `config.allow` to allow access to the Consumer Groups.
+    Enable an [authentication plugin](/plugins/?category=authentication), create [Consumer Groups](/gateway/entities/consumer-group/) and [Consumers](/gateway/entities/consumer/), then enable the [ACL plugin](/plugins/acl/) and use the `config.allow` to allow access to the Consumer Groups.
     
 
 cleanup:
@@ -145,13 +145,6 @@ With the API key `dana`, we can't send `DELETE` requests:
 url: '/anything'
 status_code: 403
 method: DELETE
-headers:
-  - 'apikey:dana'
-{% endvalidation %}
-
-{% validation request-check %}
-url: '/anything'
-status_code: 200
 headers:
   - 'apikey:dana'
 {% endvalidation %}
