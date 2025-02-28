@@ -1,0 +1,24 @@
+title: Demo Index File
+sections:
+  - title: Some Gateway Pages
+    items:
+      - path: /gateway/
+      - path: /gateway/entities/**/*
+    auto_exclude: true
+  - title: Top Entities
+    items:
+      - path: /gateway/entities/service/
+      - path: /gateway/entities/route/
+  - title: Some specific URLs
+    items:
+      - title: Demo 1
+        url: /
+        description: This is an explicit link
+      - title: Demo 2
+        url: /#another
+        description: This is an explicit link
+  - title: How-tos
+    items:
+      - type: how-to
+        tools:
+          - deck

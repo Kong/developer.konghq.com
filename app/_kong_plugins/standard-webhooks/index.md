@@ -29,8 +29,21 @@ topologies:
     - serverless
 icon: standard-webhooks.png
 
+related_resources:
+  - text: 'Create a webhook with {{site.base_gateway}}'
+    url: /how-to/create-a-webhook-with-kong-gateway/
+
 categories:
+  - traffic-control
+
+tags:
+  - webhook
+  - event-hook
   - traffic-control
 ---
 
-## Overview
+The Standard Webhooks plugin lets you validate incoming webhooks using the [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks) specification. 
+
+This plugin only supports HMAC-SHA256 secrets for webhook validation.
+
+The Standard Webhooks specification is a package of open source tools and guidelines for sending webhooks easily, securely, and reliably. Kong contributes to this specification.

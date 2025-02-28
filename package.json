@@ -14,7 +14,9 @@
     "wait-on": "^8.0.1"
   },
   "dependencies": {
-    "@docsearch/js": "^3.8.3",
+    "@algolia/autocomplete-core": "^1.18.1",
+    "@algolia/autocomplete-plugin-tags": "^1.18.1",
+    "@algolia/autocomplete-preset-algolia": "^1.18.1",
     "@kong/kongponents": "^9.14.24",
     "@kong/sdk-portal-js": "^2.15.2",
     "@kong/spec-renderer-dev": "^1.87.3",
@@ -23,7 +25,7 @@
     "axios": "^1.7.4",
     "instantsearch.css": "^8.5.1",
     "vue": "^3.4.38",
-    "vue-instantsearch": "^4.20.2"
+    "vue-instantsearch": "^4.20.4"
   },
   "overrides": {
     "vite": {
