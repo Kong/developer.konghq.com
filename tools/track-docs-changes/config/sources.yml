@@ -273,6 +273,10 @@ app/_kong_plugins/request-size-limiting/index.md:
   - app/_hub/kong-inc/request-size-limiting/overview/_index.md
 app/_kong_plugins/request-size-limiting/changelog.md:
   - app/_hub/kong-inc/request-size-limiting/_changelog.md
+app/_kong_plugins/oas-validation/index.md:
+  - app/_hub/kong-inc/oas-validation/overview/_index.md
+app/_kong_plugins/oas-validation/changelog.md:
+  - app/_hub/kong-inc/oas-validation/_changelog.md
 
 # Konnect
 
