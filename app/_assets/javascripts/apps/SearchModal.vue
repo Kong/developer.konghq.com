@@ -40,6 +40,7 @@
                 <button
                   class="flex items-center w-fit text-secondary pr-2 self-stretch rounded-r-3xl hover:bg-brand-saturated/40"
                   title="Remove this filter"
+                  type="button"
                   @click="onRemoveFilter"
                 >
                 <svg width="8" height="8" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -126,6 +127,19 @@ import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
 import { createTagsPlugin } from '@algolia/autocomplete-plugin-tags';
 import SearchModalResultItem from './components/SearchModalResultItem.vue';
 
+const hasPermanentScrollbars = () => {
+  const div = document.createElement('div');
+  div.style.width = '100px';
+  div.style.height = '100px';
+  div.style.overflow = 'scroll';
+  div.style.visibility = 'hidden';
+  document.body.appendChild(div);
+
+  const alwaysVisible = div.offsetWidth > div.clientWidth;
+  document.body.removeChild(div);
+
+  return alwaysVisible;
+}
 
 export default {
   name: "Autocomplete",
@@ -136,6 +150,7 @@ export default {
     return {
       activeTab: 'docs',
       showModal: false,
+      permanentScrollbars: hasPermanentScrollbars()
     }
   },
   mounted() {
@@ -350,7 +365,12 @@ export default {
     },
     openModal() {
       this.showModal = true;
-      document.body.style.overflow = "hidden";
+      document.body.style.setProperty("overflow", "hidden");
+      document.body.style.setProperty("overscroll-behavior", "contain");
+      if (this.permanentScrollbars) {
+        document.body.style.setProperty("margin-right", "var(--removed-body-scroll-bar-size)");
+      }
+
       nextTick(() => {
         document.activeElement?.blur();
         setTimeout(() => { this.inputElement.focus()}, 100);
@@ -359,6 +379,10 @@ export default {
     closeModal() {
       this.showModal = false;
       document.body.style.overflow = "";
+      document.body.style.removeProperty("overscoll-behavior");
+      if (this.permanentScrollbars) {
+        document.body.style.removeProperty("margin-right");
+      }
     },
   },
 };

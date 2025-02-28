@@ -1,11 +1,11 @@
 {% if page.works_on contains 'konnect' %}
 <div data-deployment-topology="konnect" markdown="1" data-test-step="{{ config.data_validate_konnect | escape }}">
-  {% include how-tos/validations/request-check/snippet.md url=config.konnect_url headers=config.headers body=config.body method=config.method user=config.user %}
+  {% include how-tos/validations/request-check/snippet.md url=config.konnect_url headers=config.headers body=config.body method=config.method user=config.user sleep=config.sleep %}
 </div>
 {% endif %}
 
 {% if page.works_on contains 'on-prem' %}
 <div data-deployment-topology="on-prem"  markdown="1" data-test-step="{{ config.data_validate_on_prem | escape }}">
-  {% include how-tos/validations/request-check/snippet.md url=config.on_prem_url headers=config.headers body=config.body method=config.method user=config.user %}
+  {% include how-tos/validations/request-check/snippet.md url=config.on_prem_url headers=config.headers body=config.body method=config.method user=config.user sleep=config.sleep %}
 </div>
 {% endif %}

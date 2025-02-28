@@ -1,8 +1,8 @@
 ---
-title: Configure Hashicorp Vault as a vault backend
+title: Configure HashiCorp Vault as a vault backend
 content_type: how_to
 related_resources:
-  - text: Rotate secrets in Hashicorp Vault with {{site.base_gateway}}
+  - text: Rotate secrets in HashiCorp Vault with {{site.base_gateway}}
     url: /how-to/rotate-secrets-in-hashicorp-vault/
   - text: Secrets management
     url: /gateway/secrets-management/
@@ -76,6 +76,10 @@ cleanup:
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
+
+faqs:
+  - q: How do I rotate my secrets in HashiCorp Vault and how does {{site.base_gateway}} pick up the new secret values?
+    a: You can rotate your secret in HashiCorp Vault by creating a new secret version with the updated value. You'll also want to configure the `ttl` settings in your {{site.base_gateway}} Vault entity so that {{site.base_gateway}} pulls the rotated secret periodically.
 
 next_steps:
   - text: Review the Vaults entity

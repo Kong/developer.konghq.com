@@ -24,6 +24,10 @@ module Jekyll
         @description ||= example.fetch('description')
       end
 
+      def requirements
+        @requirements ||= example.fetch('requirements', [])
+      end
+
       def plugin_slug
         @plugin_slug ||= @plugin.slug
       end

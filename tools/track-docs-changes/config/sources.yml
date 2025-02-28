@@ -141,10 +141,12 @@ app/_how-tos/proxy-tls-passthrough-traffic-using-sni.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_how-tos/configure-google-cloud-secret-as-a-vault-backend.md:
   - app/_src/gateway/kong-enterprise/secrets-management/backends/gcp-sm.md
+  - app/_src/gateway/kong-enterprise/secrets-management/secrets-rotation.md
 app/_how-tos/configure-azure-key-vaults-as-a-vault-backend-with-vault-entity.md:
   - app/_src/gateway/kong-enterprise/secrets-management/backends/azure-key-vaults.md
 app/_how-tos/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity.md:
   - app/_src/gateway/kong-enterprise/secrets-management/backends/aws-sm.md
+  - app/_src/gateway/kong-enterprise/secrets-management/secrets-rotation.md
 app/_how-tos/enable-rbac-with-admin-api.md:
   - app/_src/gateway/production/access-control/enable-rbac.md
   - app/_src/gateway/production/access-control/start-securely.md
@@ -157,6 +159,7 @@ app/_how-tos/store-the-gateway-database-credentials-with-aws-secrets-manager.md:
   - app/_src/gateway/kong-enterprise/secrets-management/how-to/aws-secrets-manager.md
 app/_how-tos/configure-hashicorp-vault-as-a-vault-backend.md:
   - app/_src/gateway/kong-enterprise/secrets-management/backends/hashicorp-vault.md
+  - app/_src/gateway/kong-enterprise/secrets-management/secrets-rotation.md
 app/_how-tos/configure-the-konnect-config-store.md:
   - app/konnect/gateway-manager/configuration/config-store.md
 app/_how-tos/verify-signatures-for-signed-images.md:
@@ -176,6 +179,10 @@ app/_how-tos/allow-multiple-authentication.md:
   - app/_src/gateway/kong-plugins/authentication/allowing-multiple-authentication-methods.md
 app/_how-tos/validate-incoming-json-request-bodies.md:
   - app/_hub/kong-inc/json-threat-protection/overview/_index.md
+app/_how-tos/rotate-secrets-in-google-cloud-secret.md:
+  - app/_src/gateway/kong-enterprise/secrets-management/secrets-rotation.md
+app/_how-tos/use-acl-with-consumer-groups.md:
+  - app/_hub/kong-inc/acl/how-to/_consumer-groups.md.md
 
 ## KIC
 app/_how-tos/proxy-http-traffic-kic.md:
@@ -271,6 +278,10 @@ app/_kong_plugins/request-size-limiting/index.md:
   - app/_hub/kong-inc/request-size-limiting/overview/_index.md
 app/_kong_plugins/request-size-limiting/changelog.md:
   - app/_hub/kong-inc/request-size-limiting/_changelog.md
+app/_kong_plugins/oas-validation/index.md:
+  - app/_hub/kong-inc/oas-validation/overview/_index.md
+app/_kong_plugins/oas-validation/changelog.md:
+  - app/_hub/kong-inc/oas-validation/_changelog.md
 
 # Konnect
 
@@ -278,6 +289,10 @@ app/konnect/advanced-analytics/explorer.md:
   - app/konnect/advanced-analytics/explorer.md
 app/konnect/advanced-analytics/llm-reporting.md:
   - app/konnect/advanced-analytics/explorer.md
+app/konnect/geos.md:
+  - app/konnect/geo.md
+
+
 # landing pages
 app/_landing_pages/konnect/service-catalog.yaml:
   - app/_src/konnect/service-catalog/
@@ -299,6 +314,8 @@ app/_landing_pages/gateway/secrets-management.yaml:
   - app/_src/gateway/kong-enterprise/secrets-management/secrets-rotation.md
 app/_landing_pages/gateway/authentication.yaml:
   - app/_src/gateway/kong-plugins/authentication/reference.md
+app/_landing_pages/admin-api.yaml:
+  - app/_src/gateway/admin-api/index_latest.md
 
 # references 
 app/deck/distributed-config.md:
@@ -332,6 +349,8 @@ app/konnect/network.md:
   - app/konnect/network.md
 app/gateway/resource-sizing-guidelines.md:
   - app/_src/gateway/production/sizing-guidelines.md
+app/gateway/secure-the-admin-api.md:
+  - app/_src/gateway/production/running-kong/secure-admin-api.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
