@@ -40,6 +40,7 @@
                 <button
                   class="flex items-center w-fit text-secondary pr-2 self-stretch rounded-r-3xl hover:bg-brand-saturated/40"
                   title="Remove this filter"
+                  type="button"
                   @click="onRemoveFilter"
                 >
                 <svg width="8" height="8" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
