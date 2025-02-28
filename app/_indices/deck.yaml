@@ -1,0 +1,58 @@
+title: decK Documentation Index
+sections:
+  - title: Overview
+    items:
+      - path: /deck/
+      - title: Install decK
+        description: Install decK as a binary, using Docker or in GitHub Actions
+        url: /deck/#install-deck
+      - path: /deck/**/*
+    auto_exclude: true
+  - title: Install & Configure
+    items:
+      - path: /deck/install/**/*
+      - path: /deck/gateway/configuration/
+      - path: /deck/gateway/konnect-configuration/
+  - title: Gateway
+    items:
+      - path: /deck/gateway/
+      - path: /deck/gateway/diff/
+      - path: /deck/gateway/sync/
+      - path: /deck/gateway/dump/
+      - path: /deck/gateway/apply/
+      - path: /deck/gateway/validate/
+      - path: /deck/gateway/ping/
+      - path: /deck/gateway/reset/
+      - path: /deck/gateway/**/*
+    auto_exclude: true
+    auto_exclude_except:
+      - path: /deck/**/*
+  - title: Advanced Gateway Configuration
+    items:
+      - path: /deck/gateway/tags/
+      - path: /deck/gateway/workspaces/
+      - path: /deck/gateway/rbac/
+      - path: /deck/gateway/deduplicate/
+      - path: /deck/gateway/defaults/
+      - path: /deck/gateway/sensitive-data/
+  - title: File Manipulation
+    items:
+      - path: /deck/file/
+      - path: /deck/file/validate/
+      - path: /deck/file/lint/
+      - path: /deck/file/openapi2kong/
+      - path: /deck/file/kong2kic/
+      - path: /deck/file/kong2tf/
+      - path: /deck/file/manipulation/patch/
+      - path: /deck/file/manipulation/plugins/
+      - path: /deck/file/manipulation/tags/
+      - path: /deck/file/manipulation/namespace/
+      - path: /deck/file/render/
+      - path: /deck/file/merge/
+      - path: /deck/file/**/*
+  - title: APIOps
+    items:
+      - path: /deck/apiops/**/*
+  - title: Reference
+    items:
+      - path: /deck/reference/**/*
