@@ -1,5 +1,0 @@
-name: other-example-route
-paths:
-  - /anything/else
-service: 
-  name: example-service

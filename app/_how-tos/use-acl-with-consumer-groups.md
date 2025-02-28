@@ -17,8 +17,8 @@ prereqs:
     services:
         - example-service
     routes:
-        - example-route
-        - other-example-route
+        - delete-route
+        - no-delete-route
 
 min_version:
   gateway: '3.4'
@@ -98,19 +98,19 @@ entities:
 
 ## 4. Enable the ACL plugin
 
-Enable the ACL plugin for each Route and use the `config.allow` parameter to allow access to the Consumer Groups. We'll give the `admin` Consumer Group access to both Routes, but the `dev` group will only have access to `other-example-route`.
+Enable the ACL plugin for each Route and use the `config.allow` parameter to allow access to the Consumer Groups. We'll give the `admin` Consumer Group access to both Routes, but the `dev` group will only have access to `no-delete-route`. This means that only the `admin` group will be able to use the `DELETE` method on the `/anything` endpoint.
 
 {% entity_examples %}
 entities:
   plugins:
     - name: acl
-      route: example-route
+      route: delete-route
       config:
         include_consumer_groups: true
         allow:
         - admin
     - name: acl
-      route: other-example-route
+      route: no-delete-route
       config:
         include_consumer_groups: true
         allow:
@@ -122,33 +122,35 @@ entities:
 
 Send requests to both Routes with the two API keys to validate that the access restrictions work as expected.
 
-With the API key `amal`, we can access both Routes:
+With the API key `amal`, we can send `GET`, `POST`, `PUT`, and `DELETE` requests to the `/anything` endpoint:
 
 {% validation request-check %}
 url: '/anything'
 status_code: 200
+method: POST
 headers:
   - 'apikey:amal'
 {% endvalidation %}
 
 {% validation request-check %}
-url: '/anything/else'
+url: '/anything'
 status_code: 200
+method: DELETE
 headers:
   - 'apikey:amal'
 {% endvalidation %}
 
-With the API key `dana`, we can only access `/anything/else`:
-
+With the API key `dana`, we can't send `DELETE` requests:
 {% validation request-check %}
 url: '/anything'
 status_code: 403
+method: DELETE
 headers:
   - 'apikey:dana'
 {% endvalidation %}
 
 {% validation request-check %}
-url: '/anything/else'
+url: '/anything'
 status_code: 200
 headers:
   - 'apikey:dana'
