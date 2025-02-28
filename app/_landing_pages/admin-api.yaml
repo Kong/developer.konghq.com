@@ -32,7 +32,7 @@ rows:
     - blocks:
       - type: card
         config:
-          title: Reference documentation
+          title: API Specification
           description: Learn how to use the Admin API.
           icon: /assets/icons/service-document.svg
           cta:
@@ -100,7 +100,7 @@ rows:
                     `application/x-www-form-urlencoded`
                   desc: |
                     Form representation of the data to send. This content type can be used in most cases. 
-                    * To specify nested objects, use dotted keys.
+                    * To specify nested objects us the `.` character.
                     * To specify array values, you can either send the values in order, or add an index in square brackets.
                   example: |
                     ```sh
@@ -124,56 +124,6 @@ rows:
                         -F "name=pre-function" \
                         -F "config.access=@custom-auth.lua"
                     ```                 
-
-  - header:
-      type: h2
-      text: "HTTP status codes"
-    columns:
-    - blocks:
-        - type: structured_text
-          config:
-            blocks:
-              - type: text
-                text: |
-                  The following status codes can be returned in HTTP responses:
-        - type: feature_table
-          config:
-            columns:
-              - title: Description
-                key: desc
-            features:
-              - title: |
-                  `200 OK`
-                desc: |
-                  The request succeeded.
-              - title: |
-                  `201 Created`
-                desc: |
-                  The request succeeded and a new resource was created.
-              - title: |
-                  `204 No Content`
-                desc: |
-                  There is no content in the request to send.
-              - title: |
-                  `400 Bad Request`
-                desc: |
-                  The server can’t or send the request because of an error by the client.
-              - title: |
-                  `401 Unauthorized`
-                desc: |
-                  The client is unauthenticated.
-              - title: |
-                  `404 Not Found`
-                desc: |
-                  The server can’t find the resource you requested. With an API, this can mean that the endpoint is valid but the resource doesn’t exist.
-              - title: |
-                  `405 Method Not Allowed`
-                desc: |
-                  The server knows the request method, but it isn’t supported by the resource.
-              - title: |
-                  `409 Conflict`
-                desc: |
-                  A request conflicts with the current state of the server.
 
   - header:
       text: "Frequently Asked Questions"
@@ -200,18 +150,3 @@ rows:
                 ```
 
                 If no Workspace is specified, the request applies to the `default` Workspace.
-
-  - header:
-      type: h2
-      text: How-to Guides
-    columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              products:
-                - "api-ops"
-              tools:
-                - admin-api
-              quantity: 5
-              allow_empty: true
-              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}"
