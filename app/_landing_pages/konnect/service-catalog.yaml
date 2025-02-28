@@ -29,13 +29,31 @@ rows:
                     - Upstream and downstream dependencies
                     - Associated code repositories and CI/CD pipelines
                     - API gateway and service mesh mappings
+
+  - header:
+        type: h2
+        text: "Explore Key Features"
+    columns:
       - blocks:
-          - type: image
+          - type: card
             config:
-              url: /assets/images/insomnia/graphic-api-design-hero.png
-              alt_text: Diagram of Konnect Service Catalog integrations.
-
-
+              title: Integrations
+              description: |
+                Connect external tools like GitHub, PagerDuty, and CI/CD pipelines to map services, dependencies, and metadata.
+              icon: /assets/icons/plug.svg
+              cta:
+                text: View Integrations
+                url: /konnect/service-catalog/integrations/
+      - blocks:
+          - type: card
+            config:
+              title: Scorecards
+              description: |
+                Monitor compliance, security, and best practices across services using automated Scorecards.
+              icon: /assets/icons/data-object.svg
+              cta:
+                text: View Scorecards
+                url: /konnect/service-catalog/scorecards/
   - header:
       type: h2
       text: "Frequently Asked Questions"
