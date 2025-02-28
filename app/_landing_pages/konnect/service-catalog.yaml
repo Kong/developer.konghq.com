@@ -62,7 +62,7 @@ rows:
           - type: faqs
             config:
               - q: "How do Service Catalog services map to API products?"
-                a: "Service Catalog services do not directly map to API products. However, a Gateway service can be linked to a Service Catalog service, which can then be associated with an API product."
+                a: "Service Catalog services do not directly map to API products. However, a Gateway Service can be linked to a Service Catalog service, which can then be associated with an API product."
               - q: "How do I view service health and status?"
                 a: "Go to **Services** in the Service Catalog and select a service to view detailed health and status information."
               - q: "How can I identify available resources for mapping?"
