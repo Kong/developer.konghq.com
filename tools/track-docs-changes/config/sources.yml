@@ -347,6 +347,8 @@ app/gateway/cp-dp-communication.md:
   - app/_src/gateway/production/networking/cp-dp-proxy.md
 app/konnect/network.md:
   - app/konnect/network.md
+app/gateway/resource-sizing-guidelines.md:
+  - app/_src/gateway/production/sizing-guidelines.md
 app/gateway/secure-the-admin-api.md:
   - app/_src/gateway/production/running-kong/secure-admin-api.md
 

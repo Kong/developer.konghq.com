@@ -135,6 +135,12 @@ This determines plugin ordering during the `access` phase, and lets you create d
 <!-- @todo: migrate https://docs.konghq.com/gateway/latest/kong-enterprise/plugin-ordering/ -->
 
 
+## Plugin queuing
+
+You can set queuing parameters for several plugins.
+
+<!-- @todo: migrate https://docs.konghq.com/gateway/latest/kong-plugins/queue/reference/#plugin-queuing-parameters -->
+
 ## Protocols
 
 ### Supported protocols by plugin
