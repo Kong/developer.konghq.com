@@ -1,43 +1,44 @@
 title: Gateway Documentation Index
 sections:
   - title: Overview
-    match:
-      - /gateway/**/*
+    items:
+      - path: /gateway/
+      - path: /gateway/**/*
     auto_exclude: true
   - title: Secrets Management
-    match:
-      - /gateway/secrets-management/
-      - /gateway/entities/vault/
+    items:
+      - path: /gateway/secrets-management/
+      - path: /gateway/entities/vault/
       - type: how-to
         products:
           - gateway
         tags:
           - secrets-management
   - title: Routing
-    match:
-      - /gateway/entities/route/
-      - /gateway/routing/**/*
+    items:
+      - path: /gateway/entities/route/
+      - path: /gateway/routing/**/*
       - type: how-to
         products:
           - gateway
         tags:
           - routing
   - title: Kong Manager
-    match:
+    items:
       - type: how-to
         products:
           - gateway
         tags:
           - kong-manager
   - title: Certificates
-    match:
+    items:
       - type: how-to
         products:
           - gateway
         tags:
           - certificates
   - title: Authentication
-    match:
+    items:
       - type: how-to
         products:
           - gateway
@@ -47,7 +48,7 @@ sections:
           - jwt
 
   - title: Other How-Tos
-    match:
+    items:
       - type: how-to
         products:
           - gateway

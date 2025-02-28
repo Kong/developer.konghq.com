@@ -6,6 +6,7 @@ module Jekyll
 
     def generate(site)
       @seen = {}
+      @sections = {}
       Dir.glob(File.join(site.source, '_indices/**/*.yaml')).each do |file|
         site.pages << build_page(site, file)
       end
@@ -29,7 +30,7 @@ module Jekyll
 
     def process_auto_exclude(index)
       index['sections'].each do |section|
-        section['match'] ||= []
+        section['items'] ||= []
         section['not_match'] ||= []
 
         next unless section['auto_exclude']
@@ -40,7 +41,7 @@ module Jekyll
           # If we have a block containing /foo/**/*
           # And use auto_exclude on a sub-path, nothing will be included
           # so we have to add a negative matcher here too
-          not_match = other['match'].reject do |match|
+          not_match = other['items'].reject do |match|
             section['auto_exclude_except']&.any? do |a|
               a == match
             end
@@ -53,109 +54,118 @@ module Jekyll
       index
     end
 
-    def config_to_grouped_pages(site, index)
-      sections = {}
+    def add_entry(title, page, match_index)
+      url = page.respond_to?(:url) ? page.url : page['url']
 
+      return if @seen[url]
+
+      @sections[title]['pages'] << {
+        'page' => page,
+        'match_index' => match_index
+      }
+
+      @seen[url] = true
+    end
+
+    def config_to_grouped_pages(site, index)
+      # Initialize the sections
       index['sections'].each do |section|
-        sections[section['title']] = {
+        @sections[section['title']] = {
           'title' => section['title'],
           'pages' => []
         }
       end
 
-      site.pages.each do |page|
+      all = [].concat(site.pages, site.documents)
+      all.each do |page|
+        # Some pages are not meant to be in the index
+        # These are usually the /index.md page for folders that serve as an index themselves
         next if page.data['skip_index']
 
         # Take only the latest versioned page
-        next if page.data['releases'] && !page.data['releases'].empty? && !page.data['canonical?']
+        next if page_is_versioned(page)
 
         index['sections'].each do |section|
-          section['match'].each_with_index do |match, i|
-            # Add support for arbitrary pages in an index file
-            if match.is_a?(Hash)
+          section['items'].each_with_index do |match, i|
+            # It's a path
+            next add_path(page, section['title'], match, section['not_match'], i) if match['path']
 
-              # How-To Lookup
-              if match['type'] == 'how-to'
-                how_tos = site.collections['how-tos'].docs.each_with_object([]) do |t, result|
-                  has_match = (!match.key?('tags') || t.data.fetch('tags', []).intersect?(match['tags'])) &&
-                          (!match.key?('products') || t.data.fetch('products', []).intersect?(match['products'])) &&
-                          (!match.key?('tools') || t.data.fetch('tools', []).intersect?(match['tools'])) &&
-                          (!match.key?('plugins') || t.data.fetch('plugins', []).intersect?(match['plugins']))
-                  result << t if has_match
-                end
+            # How-To Lookup
+            next add_how_to(site, section['title'], match, i) if match['type'] == 'how-to'
 
-                how_tos.each do |how_to|
-                  next if @seen[how_to.url]
-                  sections[section['title']]['pages'] << {
-                    'page' => how_to,
-                    'match_index' => i
-                  }
-                  @seen[how_to.url] = true
-                end
-              else
-                # Or a hardcoded page
-                next if @seen[match.url]
-                sections[section['title']]['pages'] << {
-                  'page' => match,
-                  'match_index' => i
-                }
-                @seen[match.url] = true
-              end
-              next
-            else
-              next unless File.fnmatch(match, page.url, ::File::FNM_PATHNAME)
+            # Or a hardcoded page
+            next add_entry(section['title'], match, i) if match['url']
 
-              should_match = !section['not_match']&.any? do |not_match|
-                next unless not_match.is_a?(String)
-                File.fnmatch(not_match, page.url, ::File::FNM_PATHNAME)
-              end
-
-
-              next unless should_match
-
-              next if @seen[page.url]
-              sections[section['title']]['pages'] << {
-                'page' => page,
-                'match_index' => i
-              }
-              @seen[page.url] = true
-            end
+            raise "Unknown match type: #{match}"
           end
         end
       end
 
-      sections.each_key do |title|
-        sections[title]['pages'] = sections[title]['pages'].sort do |a, b|
-          # Sort by position in section map
-          if a['match_index'] != b['match_index']
-            next a['match_index'] <=> b['match_index']
-          end
+      sort_sections!
 
-          page_a = a['page']
-          page_b = b['page']
+      @sections.values
+    end
 
-          # If there are no weights
-          page_a_weight = page_a.respond_to?(:data) && page_a.data['weight'] || nil
-          page_b_weight = page_b.respond_to?(:data) && page_b.data['weight'] || nil
-          unless page_a_weight.nil? && page_b_weight.nil?
-            next 1 if page_a_weight.nil?
-            next -1 if page_b_weight.nil?
+    def page_is_versioned(page)
+      page.data['releases'] && !page.data['releases'].empty? && !page.data['canonical?']
+    end
 
-            next page_b_weight <=> page_a_weight
-          end
+    def add_path(page, section, match, not_match, match_index)
+      return unless File.fnmatch(match['path'], page.url, ::File::FNM_PATHNAME)
 
-          # Then by alphabetical
-          page_a_title = page_a.respond_to?(:data) && page_a.data['weight'] || page_a['title']
-          page_b_title = page_b.respond_to?(:data) && page_b.data['weight'] || page_b['title']
-          next page_a_title.downcase <=> page_b_title.downcase
+      should_match = not_match&.none? do |nm|
+        next unless nm['path']
+
+        File.fnmatch(nm['path'], page.url, ::File::FNM_PATHNAME)
+      end
+
+      return unless should_match
+
+      add_entry(section, page, match_index)
+    end
+
+    def add_how_to(site, section, match, match_index)
+      how_tos = fetch_how_tos(site, match)
+
+      how_tos.each do |how_to|
+        add_entry(section, how_to, match_index)
+      end
+    end
+
+    def sort_sections!
+      @sections.each_key do |title|
+        @sections[title]['pages'] = @sections[title]['pages'].sort_by! do |p|
+          entry = p['page']
+
+          # Handle explicit page definitions where there is no `page` key
+          entry = {} if entry.nil?
+          [
+            # Sort by position in section map
+            p['match_index'],
+            # By explicit weight
+            entry.respond_to?(:data) ? entry.data['weight'] : entry['weight'],
+            # By title
+            entry.respond_to?(:data) ? entry.data['title'].downcase : entry['title']&.downcase
+          ]
         end
 
         # Remove the match index
-        sections[title]['pages'] = sections[title]['pages'].map { |p| p['page'] }.uniq
+        @sections[title]['pages'] = @sections[title]['pages'].map { |p| p['page'] }.uniq
       end
+    end
 
+    def fetch_how_tos(site, match)
+      site.collections['how-tos'].docs.select do |t|
+        match_criteria(t.data, match)
+      end
+    end
 
-      sections.values
+    private
+
+    def match_criteria(data, match)
+      %w[tags products tools plugins].all? do |key|
+        !match.key?(key) || data.fetch(key, []).intersect?(match[key])
+      end
     end
 
     def template
