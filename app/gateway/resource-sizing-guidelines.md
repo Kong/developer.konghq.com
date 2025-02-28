@@ -18,28 +18,31 @@ tags:
 breadcrumbs:
     - /gateway
 
-description: "See Kong's recommended resource allocation sizing guidelines for {{site.base_gateway}} based on configuration and traffic patterns."
+description: "Review Kong's recommended resource allocation sizing guidelines for {{site.base_gateway}} based on configuration and traffic patterns."
 
 related_resources:
   - text: Performance benchmark
-    url: /
-  - text: Performance benchmark how to
-    url: /
+    url: /gateway/performance/performance-benchmarks/
+  - text: Guidelines for establishing a performance benchmark
+    url: /gateway/performance/establish-performance-benchmark/
   - text: Cluster reference
-    url: /
+    url: /gateway/cluster/
 ---
 
 {{site.base_gateway}} is designed to handle large volumes of request
-traffic and proxying requests with minimal latency. This reference offers recommendations on sizing for
+traffic and to proxy requests with minimal latency. This reference offers recommendations on sizing for
 resource allocation based on expected {{site.base_gateway}} configuration and
 traffic patterns.
+
+
+## Scaling dimensions
 
 {{site.base_gateway}} measures performance in the following dimensions:
 
 | Performance dimension | Measured in | Performance limited by... | Description |
 |-----------------------|-------------|-------------|
-| Latency | Microseconds or milliseconds | *Memory-bound*<br>Add more database caching memory to increase | The delay between the downstream client sending a request and receiving a response. Increasing the number of Routes and Plugins in a {{site.base_gateway}} cluster increases the amount of latency that's added to each request. |
-| Throughput | Seconds or minutes |*CPU-bound*<br>Scale {{site.base_gateway}} vertically or horizontally to increase | The number of requests that {{site.base_gateway}} can process in a given time span |
+| Latency | Microseconds or milliseconds | *Memory-bound*<br>Add more database caching memory to decrease latency | The delay between the downstream client sending a request and receiving a response. Increasing the number of Routes and Plugins in a {{site.base_gateway}} cluster increases the amount of latency that's added to each request. |
+| Throughput | Seconds or minutes |*CPU-bound*<br>Scale {{site.base_gateway}} vertically or horizontally to increase throughput | The number of requests that {{site.base_gateway}} can process in a given time span |
 
 When all other factors remain the same, decreasing the latency for
 each request increases the maximum throughput in {{site.base_gateway}}. This is because there is less CPU time spent handling each request, and more
@@ -95,6 +98,7 @@ depends on your particular setup. Sizing varies based on:
 * Traffic
 * Number of nodes
 * Enabled features
+  
   *For example: [Rate limiting](/gateway/rate-limiting/) uses a database or Redis*
 * Number and rate of change of entities
 * The rate at which {{site.base_gateway}} processes are started and restarted within the cluster
