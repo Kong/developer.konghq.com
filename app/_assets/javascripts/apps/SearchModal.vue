@@ -60,7 +60,7 @@
             </form>
           </div>
 
-          <div class="px-4 flex-grow flex-shrink overflow-y-auto">
+          <div class="px-4 flex-grow flex-shrink overflow-y-auto" tabIndex="-1">
             <div class="flex w-full" v-bind="autocomplete.getPanelProps({})">
               <template v-if="state.isOpen">
                 <div v-if="state.query" class="tabs flex flex-col w-full gap-4" ref="tabsElement">
