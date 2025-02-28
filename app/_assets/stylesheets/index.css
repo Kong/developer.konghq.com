@@ -185,7 +185,7 @@
   }
 
   code {
-    @apply text-primary bg-secondary rounded border border-brand-saturated/40 text-xs;
+    @apply text-primary bg-secondary rounded border border-brand-saturated/40 text-sm;
   }
 
   code span {
