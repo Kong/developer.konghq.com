@@ -6,6 +6,9 @@ layout: reference
 products:
     - gateway
 
+tools:
+  - deck
+
 description: placeholder
 
 related_resources:
@@ -59,16 +62,19 @@ Additional controls, such as similar ACLs applied at a network device level, are
 For example, let’s assume that {{site.base_gateway}}'s `admin_listen` parameter is set to `127.0.0.1:8001`, so it is only available from localhost. The port `8000` is serving proxy traffic, exposed via `myhost.dev:8000`.
 
 We want to expose Admin API via the url `:8000/admin-api`, in a controlled way. We can do so by creating a Service and Route for it inside `127.0.0.1`:
-```yaml
-_format_version: "3.0"
-services:
-- name: admin-api
-  url: http://127.0.0.1:8001
+
+{% entity_examples %}
+entities:
+  services:
+  - name: admin-api
+    url: http://127.0.0.1:8001
   routes:
   - name: admin-api
+    service: 
+      name: admin-api
     paths:
     - /admin-api
-```
+{% endentity_examples %}
 
 We can now reach the Admin API through the proxy server:
 ```sh
@@ -77,22 +83,17 @@ curl myhost.dev:8000/admin-api/services
 
 Once the Service and Route are set up, you can apply security plugins as you would for any API. You can configure [authentication](/plugins/?category=authentication), [IP restriction](/plugins/ip-restriction/), or [access control lists](/plugins/acl/). For example:
 
-```yaml
-_format_version: "3.0"
-services:
-- name: admin-api
-  url: http://127.0.0.1:8001
-  routes:
-  - name: admin-api
-    paths:
-    - /admin-api
+{% entity_examples %}
+entities:
   plugins:
   - name: key-auth
-consumers:
-- username: admin
-  keyauth_credentials:
-  - key: secret
-```
+    service: admin-api
+  consumers:
+  - username: admin
+    keyauth_credentials:
+    - key: secret
+{% endentity_examples %}
+
 With this configuration, the Admin API will be available through `/admin-api`, but only for requests containing the `?apikey=secret` query parameter.
 
 ## Custom Nginx configuration
