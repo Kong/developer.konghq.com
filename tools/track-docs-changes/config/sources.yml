@@ -271,6 +271,8 @@ app/konnect/advanced-analytics/explorer.md:
 app/konnect/advanced-analytics/llm-reporting.md:
   - app/konnect/advanced-analytics/explorer.md
 # landing pages
+app/_landing_pages/konnect/service-catalog.yaml:
+  - app/_src/konnect/service-catalog/
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
   - app/_src/gateway/index.md
   - app/_data/tables/features/gateway.yml
@@ -340,3 +342,4 @@ app/gateway/traffic-control/load-balancing.md:
 # policies
 app/gateway/vulnerabilities.md:
   - app/_src/gateway/support/vulnerability-patching-process.md
+
