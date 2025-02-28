@@ -4,10 +4,24 @@ require 'yaml'
 
 module Jekyll
   module Drops
-    class PluginConfigExample < Liquid::Drop
+    class PluginConfigExample < Liquid::Drop # rubocop:disable Style/Documentation
+      class EnvVariable < Liquid::Drop # rubocop:disable Style/Documentation
+        def initialize(variable) # rubocop:disable Lint/MissingSuper
+          @variable = variable
+        end
+
+        def value
+          @value ||= @variable.fetch('value').gsub(/^\$/, '')
+        end
+
+        def description
+          @description ||= @variable['description']
+        end
+      end
+
       attr_reader :file
 
-      def initialize(file:, plugin:)
+      def initialize(file:, plugin:) # rubocop:disable Lint/MissingSuper
         @file   = file
         @plugin = plugin
       end
@@ -26,6 +40,12 @@ module Jekyll
 
       def requirements
         @requirements ||= example.fetch('requirements', [])
+      end
+
+      def variables
+        @variables ||= example.fetch('variables', {}).map do |k, v|
+          EnvVariable.new(v)
+        end
       end
 
       def plugin_slug
