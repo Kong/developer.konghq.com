@@ -1,5 +1,4 @@
-{% navtabs %}
-{% navtab "AWS" %}
+#### AWS
 
 * North America:
     * Ohio (`us-east-2`)
@@ -23,8 +22,7 @@
 * Middle East, and Africa
     * United Arab Emirates (`me-central-1`)
 
-{% endnavtab %}
-{% navtab "Azure" %}
+#### Azure
 
 * North America:
     * Virginia (`eastus2`)
@@ -33,6 +31,3 @@
     * Frankfurt (`germanywestcentral`)
     * Ireland (`northeurope`)
     * UK South (`uksouth`)
-
-{% endnavtab %}
-{% endnavtabs %}
