@@ -75,6 +75,10 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg 
 
+faqs:
+  - q: How do I rotate my secrets in AWS Secrets Manager and how does {{site.base_gateway}} pick up the new secret values?
+    a: You can rotate your secret in AWS Secrets Manager by creating a new secret version with the updated value. You'll also want to configure the `ttl` settings in your {{site.base_gateway}} Vault entity so that {{site.base_gateway}} pulls the rotated secret periodically.
+
 next_steps:
   - text: Review the Vaults entity
     url: /gateway/entities/vault/

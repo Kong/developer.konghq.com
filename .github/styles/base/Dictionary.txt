@@ -398,6 +398,7 @@ firstTimestamp
 flamegraph
 foogineer
 full_name
+gcloud
 gcp
 geo
 geos
@@ -653,6 +654,7 @@ secret_id
 sequenceDiagram
 serializer
 serverless
+serviceaccounts
 serviceless
 shm
 slas
