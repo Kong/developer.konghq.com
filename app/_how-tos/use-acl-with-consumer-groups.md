@@ -55,7 +55,7 @@ cleanup:
 
 ## 1. Enable key authentication
 
-The ACL plugin requires an authentication plugin. In this example, we'll use the [Key Auth plugin](/plugins/key-auth/) plugin, but you can use any Kong authentication plugin.
+The ACL plugin requires an authentication plugin. In this example, we'll use the [Key Auth plugin](/plugins/key-auth/) plugin, but you can use any authentication plugin.
 
 {% entity_examples %}
 entities:
@@ -79,7 +79,7 @@ entities:
 
 ## 3. Create Consumers
 
-Create Consumers with credentials and assign each of them to a Consumer Group. For this example we'll create one Consumer for each Consumer Group.
+Create Consumers with credentials and assign each of them to a Consumer Group.
 
 {% entity_examples %}
 entities:
