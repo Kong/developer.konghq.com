@@ -1,0 +1,7 @@
+name: delete-route
+paths:
+  - /anything
+methods:
+  - DELETE
+service: 
+  name: example-service

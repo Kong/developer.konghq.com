@@ -6,6 +6,8 @@ metadata:
     - authentication
   breadcrumbs:
     - /gateway/
+  products:
+    - gateway
 rows:
   - header:
       type: h1

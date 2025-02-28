@@ -21,9 +21,16 @@ related_resources:
     url: /gateway/entities/target/
   - text: Health checks and circuit breakers
     url: /gateway/traffic-control/health-checks-circuit-breakers/
+  - text: Configure blue-green deployments
+    url: /gateway/traffic-control/blue-green-deployments/
 
 breadcrumbs:
   - /gateway/
+
+no_version: true
+
+tags:
+    - load-balancing
 ---
 
 {{site.base_gateway}} provides multiple ways of load balancing requests to upstream services:

@@ -146,6 +146,45 @@ components:
         type: integer
         example: 10
   schemas:
+    MeshControlPlaneFeatures:
+      type: array
+      items:
+        $ref: '#/components/schemas/MeshControlPlaneFeature'
+      default:
+        - type: MeshCreation
+          meshCreation:
+            enabled: false
+        - type: HostnameGeneratorCreation
+          hostnameGeneratorCreation:
+            enabled: false
+    MeshControlPlaneFeatureHostnameGenerationCreation:
+      properties:
+        enabled:
+          type: boolean
+      required:
+        - enabled
+    MeshControlPlaneFeatureMeshCreation:
+      properties:
+        enabled:
+          type: boolean
+      required:
+        - enabled
+    MeshControlPlaneFeature:
+      description: |
+        Features to be enabled in the control plane. Currently only defaults are supported.
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - MeshCreation
+            - HostnameGeneratorCreation
+        hostnameGeneratorCreation:
+          $ref: '#/components/schemas/MeshControlPlaneFeatureHostnameGenerationCreation'
+        meshCreation:
+          $ref: '#/components/schemas/MeshControlPlaneFeatureMeshCreation'
+      required:
+        - type
     MeshControlPlaneLabels:
       description: Labels to facilitate tagged search on control planes. Keys must be of length 1-63 characters.
       type: object
@@ -211,6 +250,8 @@ components:
           type: string
           example: A control plane to handle traffic on development environment.
           maxLength: 250
+        features:
+          $ref: '#/components/schemas/MeshControlPlaneFeatures'
         labels:
           $ref: '#/components/schemas/MeshControlPlaneLabels'
       additionalProperties: false

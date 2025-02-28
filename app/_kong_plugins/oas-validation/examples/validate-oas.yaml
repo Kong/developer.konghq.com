@@ -1,0 +1,20 @@
+description: |
+  Upload an API spec to validate requests against.
+
+  The `config.api_spec` field accepts JSON or URL-encoded YAML. 
+  You must provide the entire contents of the OpenAPI spec. The parameter doesn't accept file paths or URLs.
+
+title: 'Upload spec for validation'
+
+weight: 900
+
+config:
+  api_spec: |-
+    contents of entire API spec go here
+  verbose_response: true
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

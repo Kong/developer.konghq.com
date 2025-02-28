@@ -183,14 +183,12 @@ rows:
               text: Semantic load balancing in AI Gateway &rarr;
               url: /plugins/ai-proxy-advanced/examples/semantic/
 
-
-
   - header:
       type: h2
-      text: How-to Guides
+      text: References
     columns:
       - blocks:
-          - type: how_to_list
+          - type: reference_list
             config:
               tags:
                 - load-balancing

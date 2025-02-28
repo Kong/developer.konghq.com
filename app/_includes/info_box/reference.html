@@ -3,7 +3,7 @@
   <div class="text-primary font-medium">OpenAPI Specifications</div>
   <div class="flex gap-1.5 flex-col">
     {% for api_spec in page.api_specs %}
-    <div class="flex justify-between">
+    <div class="flex justify-between items-center">
       <a href="{{ api_spec.url }}">{{ api_spec.text }}</a>
       {% if api_spec.insomnia_link.exist? %}
       <a class="flex-shrink-0" href="{{ api_spec.insomnia_link.url }}"><img src="/assets/logos/brand/Insomnia.svg">

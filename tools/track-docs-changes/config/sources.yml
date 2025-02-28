@@ -181,6 +181,8 @@ app/_how-tos/validate-incoming-json-request-bodies.md:
   - app/_hub/kong-inc/json-threat-protection/overview/_index.md
 app/_how-tos/rotate-secrets-in-google-cloud-secret.md:
   - app/_src/gateway/kong-enterprise/secrets-management/secrets-rotation.md
+app/_how-tos/use-acl-with-consumer-groups.md:
+  - app/_hub/kong-inc/acl/how-to/_consumer-groups.md.md
 
 ## KIC
 app/_how-tos/proxy-http-traffic-kic.md:
@@ -245,8 +247,55 @@ app/_kong_plugins/ip-restriction/index.md:
   - app/_hub/kong-inc/ip-restriction/overview/_index.md
 app/_kong_plugins/ip-restriction/changelog.md:
   - app/_hub/kong-inc/ip-restriction/_changelog.md
+app/_kong_plugins/standard-webhooks/index.md:
+  - app/_hub/kong-inc/standard-webhooks/overview/_index.md
+app/_kong_plugins/standard-webhooks/changelog.md:
+  - app/_hub/kong-inc/standard-webhooks/_changelog.md
+app/_kong_plugins/upstream-timeout/index.md:
+  - app/_hub/kong-inc/upstream-timeout/overview/_index.md
+app/_kong_plugins/upstream-timeout/changelog.md:
+  - app/_hub/kong-inc/upstream-timeout/_changelog.md
+app/_kong_plugins/tls-handshake-modifier/index.md:
+  - app/_hub/kong-inc/tls-handshake-modifier/overview/_index.md
+app/_kong_plugins/acl/index.md:
+  - app/_hub/kong-inc/acl/how-to/_index.md
+  - app/_hub/kong-inc/acl/overview/_index.md
+app/_kong_plugins/acl/changelog.md:
+  - app/_hub/kong-inc/acl/_changelog.md
+app/_kong_plugins/forward-proxy/index.md:
+  - app/_hub/kong-inc/forward-proxy/overview/_index.md
+app/_kong_plugins/forward-proxy/changelog.md:
+  - app/_hub/kong-inc/forward-proxy/_changelog.md
+app/_kong_plugins/redirect/index.md:
+  - app/_hub/kong-inc/redirect/overview/_index.md
+app/_kong_plugins/redirect/changelog.md:
+  - app/_hub/kong-inc/redirect/_changelog.md
+app/_kong_plugins/request-termination/index.md:
+  - app/_hub/kong-inc/request-termination/overview/_index.md
+app/_kong_plugins/request-termination/changelog.md:
+  - app/_hub/kong-inc/request-termination/_changelog.md
+app/_kong_plugins/request-size-limiting/index.md:
+  - app/_hub/kong-inc/request-size-limiting/overview/_index.md
+app/_kong_plugins/request-size-limiting/changelog.md:
+  - app/_hub/kong-inc/request-size-limiting/_changelog.md
+app/_kong_plugins/oas-validation/index.md:
+  - app/_hub/kong-inc/oas-validation/overview/_index.md
+app/_kong_plugins/oas-validation/changelog.md:
+  - app/_hub/kong-inc/oas-validation/_changelog.md
+
+# Konnect
+
+app/konnect/advanced-analytics/explorer.md:
+  - app/konnect/advanced-analytics/explorer.md
+app/konnect/advanced-analytics/llm-reporting.md:
+  - app/konnect/advanced-analytics/explorer.md
+app/konnect/geos.md:
+  - app/konnect/geo.md
+
 
 # landing pages
+app/_landing_pages/konnect/service-catalog.yaml:
+  - app/_src/konnect/service-catalog/
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
   - app/_src/gateway/index.md
   - app/_data/tables/features/gateway.yml
@@ -265,6 +314,8 @@ app/_landing_pages/gateway/secrets-management.yaml:
   - app/_src/gateway/kong-enterprise/secrets-management/secrets-rotation.md
 app/_landing_pages/gateway/authentication.yaml:
   - app/_src/gateway/kong-plugins/authentication/reference.md
+app/_landing_pages/admin-api.yaml:
+  - app/_src/gateway/admin-api/index_latest.md
 
 # references 
 app/deck/distributed-config.md:
@@ -294,6 +345,10 @@ app/gateway/network-ports-firewall.md:
   - app/_src/gateway/production/networking/firewall.md
 app/gateway/cp-dp-communication.md:
   - app/_src/gateway/production/networking/cp-dp-proxy.md
+app/konnect/network.md:
+  - app/konnect/network.md
+app/gateway/secure-the-admin-api.md:
+  - app/_src/gateway/production/running-kong/secure-admin-api.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
@@ -312,7 +367,18 @@ app/gateway/traffic-control/health-checks-circuit-breakers.md:
   - /app/_src/gateway/how-kong-works/health-checks.md
 app/gateway/traffic-control/load-balancing.md:
   - app/_src/gateway/how-kong-works/load-balancing.md
+app/gateway/traffic-control/blue-green-deployments.md:
+  - app/_src/gateway/production/blue-green.md
 
 # policies
 app/gateway/vulnerabilities.md:
   - app/_src/gateway/support/vulnerability-patching-process.md
+
+
+# Serverless GW
+
+app/konnect/serverless-gateways/index.md:
+  - app/konnect/gateway-manager/serverless-gateways/custom-dns.md
+  - app/konnect/gateway-manager/serverless-gateways/provision-serverless-gateway.md
+  - app/konnect/gateway-manager/serverless-gateways/custom-dns.md
+

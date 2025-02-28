@@ -4,7 +4,8 @@ metadata:
   description: This page is an introduction to rate limiting with {{site.base_gateway}}.
   breadcrumbs:
     - /rate-limiting/
-
+  products:
+    - gateway
 rows:
   - header:
       type: h1

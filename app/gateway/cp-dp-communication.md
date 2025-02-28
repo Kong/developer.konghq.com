@@ -28,6 +28,7 @@ related_resources:
 
 Contains info from:
 * https://docs.konghq.com/konnect/gateway-manager/data-plane-nodes/secure-communications/
+* https://docs.konghq.com/konnect/network-resiliency/ (FAQ?)
 
 ## Use a forward proxy to secure communication across a firewall
 

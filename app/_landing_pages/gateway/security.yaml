@@ -10,7 +10,8 @@ metadata:
   related_links:
     - text: Securing APIs
       url: /secure-apis/
-
+  products:
+    - gateway
 rows:
   - header:
       type: h1

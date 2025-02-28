@@ -51,9 +51,14 @@ document.addEventListener("DOMContentLoaded", function () {
       const successInfo = document.createElement("div");
       successInfo.className = "copy-code-success-info";
       successInfo.textContent = "Copied to clipboard!";
+      successInfo.classList.add("scale-0");
 
       snippet.appendChild(successInfo);
 
+      successInfo.addEventListener("transitionend", function () {
+        successInfo.classList.remove("opacity-100", "scale-1");
+        successInfo.classList.add("scale-0");
+      });
       action.addEventListener("click", function (event) {
         const successInfo = event.currentTarget.parentElement.querySelector(
           ".copy-code-success-info"
@@ -66,11 +71,8 @@ document.addEventListener("DOMContentLoaded", function () {
             .replace(/^\s*\$\s*/gim, "");
         copyInput.select();
         document.execCommand("copy");
-
-        successInfo.classList.add("opacity-100");
-        successInfo.addEventListener("transitionend", function () {
-          successInfo.classList.remove("opacity-100");
-        });
+        successInfo.classList.remove("scale-0");
+        successInfo.classList.add("scale-1", "opacity-100");
       });
     });
 });

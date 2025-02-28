@@ -1,0 +1,17 @@
+description: 'Set a connect, read, and send upstream timeout of 5000 milliseconds. These settings will override any Gateway Service-level timeout settings.'
+
+title: 'Set upstream timeouts'
+
+weight: 900
+
+config:
+  connect_timeout: 5000
+  read_timeout: 5000
+  send_timeout: 5000
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

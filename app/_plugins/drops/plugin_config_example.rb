@@ -24,6 +24,10 @@ module Jekyll
         @description ||= example.fetch('description')
       end
 
+      def requirements
+        @requirements ||= example.fetch('requirements', [])
+      end
+
       def plugin_slug
         @plugin_slug ||= @plugin.slug
       end
@@ -63,6 +67,10 @@ module Jekyll
 
       def url
         @url ||= "/plugins/#{@plugin.slug}/examples/#{slug}/"
+      end
+
+      def id
+        @id ||= SecureRandom.hex(10)
       end
 
       private
