@@ -271,6 +271,8 @@ app/konnect/advanced-analytics/explorer.md:
 app/konnect/advanced-analytics/llm-reporting.md:
   - app/konnect/advanced-analytics/explorer.md
 # landing pages
+app/_landing_pages/konnect/service-catalog.yaml:
+  - app/_src/konnect/service-catalog/
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
   - app/_src/gateway/index.md
   - app/_data/tables/features/gateway.yml
@@ -350,3 +352,4 @@ app/konnect/serverless-gateways/index.md:
   - app/konnect/gateway-manager/serverless-gateways/custom-dns.md
   - app/konnect/gateway-manager/serverless-gateways/provision-serverless-gateway.md
   - app/konnect/gateway-manager/serverless-gateways/custom-dns.md
+
