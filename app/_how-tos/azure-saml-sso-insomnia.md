@@ -8,7 +8,7 @@ products:
 
 related_resources:
   - text: Authentication & Authorization in Insomnia
-    url: /insomnia/authentication-authorization
+    url: /insomnia/authentication-authorization/
   - text: Configure Okta SAML SSO in Insomnia
     url: /how-to/okta-saml-sso-insomnia/
 

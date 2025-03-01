@@ -18,7 +18,7 @@ tools:
 
 related_resources:
   - text: Customize decK object defaults
-    url:  /how-to/custom-deck-object-defaults
+    url:  /how-to/custom-deck-object-defaults/
 
 breadcrumbs:
   - /deck/

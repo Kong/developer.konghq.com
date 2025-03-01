@@ -13,11 +13,11 @@ tier: team
 
 related_resources:
   - text: Security at Insomnia
-    url: /insomnia/security
+    url: /insomnia/security/
   - text: Configure git sync
     url: /how-to/synchronize-with-git/
   - text: Storage options
-    url: /insomnia/storage-options
+    url: /insomnia/storage-options/
   - text: Cloud sync
     url: /insomnia/cloud-sync/
   - text: Scratch pad
@@ -25,7 +25,7 @@ related_resources:
   - text: Local vault
     url: /insomnia/local-vault/
   - text: SSO
-    url: /insomnia/sso
+    url: /insomnia/sso/
   - text: About version control in Insomnia
     url: /insomnia/version-control/
 

@@ -4,7 +4,7 @@ content_type: how_to
 
 related_resources:
   - text: Authentication
-    url: /authentication
+    url: /authentication/
 
 products:
   - gateway

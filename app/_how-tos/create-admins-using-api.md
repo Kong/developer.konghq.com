@@ -5,7 +5,7 @@ related_resources:
   - text: RBAC
     url: /gateway/entities/rbac/
   - text: Admins
-    url:  /gateway/entities/admins
+    url:  /gateway/entities/admins/
 products:
     - gateway
 

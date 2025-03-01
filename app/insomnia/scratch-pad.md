@@ -10,7 +10,7 @@ products:
 
 related_resources:
   - text: Storage options
-    url: /insomnia/storage-options
+    url: /insomnia/storage-options/
   - text: Git sync
     url: /insomnia/git-sync/
   - text: Cloud sync
@@ -22,7 +22,7 @@ related_resources:
   - text: Write tests for HTTP status codes
     url: /how-to/write-http-status-tests/
   - text: Security at Insomnia
-    url: /insomnia/security
+    url: /insomnia/security/
 
 faqs:
   - q: What is the difference between local vault and scratch pad?

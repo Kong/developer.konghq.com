@@ -8,19 +8,19 @@ layout: concept
 
 related_resources:
   - text: About storage options in Insomnia
-    url: /insomnia/storage-options
+    url: /insomnia/storage-options/
   - text: About cloud sync
     url: /insomnia/cloud-sync/
   - text: About git sync
     url: /how-to/create-a-design-document/
   - text: About documents
-    url: /insomnia/documents
+    url: /insomnia/documents/
   - text: Generate a collection
     url: /how-to/generate-a-collection-from-a-design-document/
   - text: Create a design document
     url: /how-to/create-a-design-document/
   - text: Create HTTP status tests
-    url: /how-to/write-http-status-tests
+    url: /how-to/write-http-status-tests/
 
 tags:
     - git

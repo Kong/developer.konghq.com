@@ -8,7 +8,7 @@ description: Learn what request authentication is and how to authenticate reques
 
 related_resources:
   - text: Authentication & Authorization in Insomnia
-    url: /insomnia/authentication-authorization
+    url: /insomnia/authentication-authorization/
 
 tags:
     - requests

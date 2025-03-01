@@ -8,7 +8,7 @@ description: See a list of domains to allowlist to ensure full functionality of 
 
 related_resources:
   - text: Authentication & Authorization in Insomnia
-    url: /insomnia/authentication-authorization
+    url: /insomnia/authentication-authorization/
 
 tags:
     - allowlist

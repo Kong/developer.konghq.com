@@ -16,7 +16,7 @@ related_resources:
   - text: Konnect Advanced Analytics
     url: /konnect/advanced-analytics/
   - text: Explorer Reference
-    url: /konnect/advanced-analytics/explorer
+    url: /konnect/advanced-analytics/explorer/
 schema:
     api: konnect/analytics-requests
 

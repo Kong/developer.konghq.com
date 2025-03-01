@@ -3,11 +3,11 @@ title: Configure Google Cloud Secret Manager with Workload Identity in {{site.ba
 content_type: how_to
 related_resources:
   - text: Rotate secrets in Google Cloud Secret with {{site.base_gateway}}
-    url: /how-to/rotate-secrets-in-google-cloud-secret 
+    url: /how-to/rotate-secrets-in-google-cloud-secret/
   - text: Secrets management
-    url: /secrets-management
+    url: /secrets-management/
   - text: Configure Google Cloud Secret Manager as a Vault entity in {{site.base_gateway}}
-    url: /how-to/configure-google-cloud-secret-as-a-vault-backend
+    url: /how-to/configure-google-cloud-secret-as-a-vault-backend/
 
 products:
     - gateway
