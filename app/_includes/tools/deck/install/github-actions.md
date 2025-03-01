@@ -1,29 +1,3 @@
----
-title: decK in GitHub Actions
-description: Use kong/setup-deck to run decK in GitHub Actions
-
-content_type: reference
-layout: reference
-
-works_on:
-  - on-prem
-  - konnect
-
-tools:
-  - deck
-
-breadcrumbs:
-  - /deck/
-
-related_resources:
-  - text: Install as a binary
-    url: /deck/install/binary/
-  - text: Install using Docker
-    url: /deck/install/docker/
-  - text: All decK documentation
-    url: /index/deck/
----
-
 If you use GitHub Actions to apply your declarative configuration to a running Gateway, you should use [Kong/setup-deck](https://github.com/kong/setup-deck).
 
 This GitHub Action installs decK on to the GitHub Actions runner using the GitHub tools cache:

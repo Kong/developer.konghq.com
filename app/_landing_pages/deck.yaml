@@ -32,12 +32,18 @@ rows:
       - blocks:
         - type: tabs
           config:
-            - title: OSX
+            - title: MacOS
               include_content: tools/deck/install/osx
             - title: Windows
               include_content: tools/deck/install/windows
             - title: Linux
               include_content: tools/deck/install/linux
+            - title: Docker
+              include_content: tools/deck/install/docker
+            - title: GitHub Actions
+              include_content: tools/deck/install/github-actions
+            - title: Mise
+              include_content: tools/deck/install/mise
 
   - header:
     columns:
@@ -199,16 +205,16 @@ rows:
           description: decK manages entity configuration for {{site.base_gateway}}, including all core proxy entities
           cta:
             text: decK entities &rarr;
-            url: /deck/managed-entities/
+            url: /deck/reference/entities/
             align: end
     - blocks:
       - type: card
         config:
-          title: Best practices
-          description: Learn about recommended approaches for using decK and avoid common pitfalls
+          title: APIOps
+          description: Learn how to manage {{ site.base_gateway }} configuration in a federated environment.
           cta:
-            text: Best practices &rarr;
-            url: https://docs.konghq.com/deck/1.38.x/guides/best-practices/
+            text: Manage {{ site.base_gateway }} declaratively &rarr;
+            url: /deck/apiops/
             align: end
     - blocks:
       - type: card

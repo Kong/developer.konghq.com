@@ -1,29 +1,3 @@
----
-title: decK in Docker
-description: Run decK using Docker
-
-content_type: reference
-layout: reference
-
-works_on:
-  - on-prem
-  - konnect
-
-tools:
-  - deck
-
-breadcrumbs:
-  - /deck/
-
-related_resources:
-  - text: Install as a binary
-    url: /deck/install/binary/
-  - text: Install on GitHub Actions
-    url: /deck/install/github-actions/
-  - text: All decK documentation
-    url: /index/deck/
----
-
 decK is provided as a Docker image for those that do not want to install decK locally.
 
 To run decK using a Docker image, add the following alias to your shell:
