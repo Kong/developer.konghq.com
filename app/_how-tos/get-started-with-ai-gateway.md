@@ -48,8 +48,6 @@ prereqs:
         export OPENAI_KEY=<api-key>
         ```
 
-        If you want to use another one of the [supported LLMs](/plugins/ai-proxy/), make sure to adapt the plugin configuration, since some LLMs have different required parameters. For more information, see the [AI Proxy examples](/plugins/ai-proxy/examples/).
-
 cleanup:
   inline:
     - title: Clean up Konnect environment
@@ -112,7 +110,7 @@ entities:
 
 ## 4. Enable the AI Proxy plugin
 
-Enable the AI Proxy plugin to create a chat route. Specify the LLM model and provider, and add the API key to connect to OpenAI:
+Enable the AI Proxy plugin to create a chat route:
 
 {% entity_examples %}
 entities:
@@ -122,9 +120,6 @@ entities:
         route_type: "llm/v1/chat"
         model:
           provider: "openai"
-variables:
-  openai_key:
-    value: $OPENAI_KEY
 {% endentity_examples %}
 
 In this example, we're setting up the plugin with minimal configuration, which means:
