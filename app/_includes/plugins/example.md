@@ -14,7 +14,7 @@
 
 {% if page.example.variables %}
 
-## ENV Variables
+## Environment variables
 
 {% for variable in page.example.variables %}
 * `{{ variable.value }}` {%- if variable.description -%}: {{variable.description | liquify }}{% endif%}
