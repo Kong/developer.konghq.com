@@ -966,6 +966,12 @@ components:
       type: object
       discriminator:
         propertyName: provider_type
+        mapping:
+          auth0: '#/components/schemas/CreateDcrProviderRequestAuth0'
+          azureAd: '#/components/schemas/CreateDcrProviderRequestAzureAd'
+          curity: '#/components/schemas/CreateDcrProviderRequestCurity'
+          okta: '#/components/schemas/CreateDcrProviderRequestOkta'
+          http: '#/components/schemas/CreateDcrProviderRequestHttp'
       oneOf:
         - $ref: '#/components/schemas/CreateDcrProviderRequestAuth0'
         - $ref: '#/components/schemas/CreateDcrProviderRequestAzureAd'
