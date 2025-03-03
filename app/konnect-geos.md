@@ -62,6 +62,6 @@ The following objects are geo-specific:
 
 ### Dedicated Cloud Gateways
 
-{{site.konnect_short_name}} [Dedicated Cloud Gateways](/konnect/dedicated-cloud-gateways/) support the following geos:
+{{site.konnect_short_name}} [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) support the following geos:
 
 {% include_cached /sections/dcg-regions.md %}

@@ -47,7 +47,7 @@ The {{site.konnect_short_name}} control plane uses the following ports:
 ## Hostnames
 
 
-The following [geographic regions](/konnect/geos/) and their hostname region identifiers are supported:
+The following [geographic regions](/geos/) and their hostname region identifiers are supported:
 * AU (Australia): `au`
 * EU (Europe): `eu`
 * ME (Middle East): `me`
@@ -67,4 +67,4 @@ Depending on the regions your organization uses, you'll need to allowlist the ho
 
 ## Mesh Manager hostnames
 
-If you use [Mesh Manager](/konnect/mesh-manager/) to manage your Kong service mesh, you must add the `{geo}.mesh.sync.konghq.com:443` hostname to your firewall allowlist. The geo can be `au`, `eu`, `us`, or `global`.
+If you use [Mesh Manager](/mesh-manager/) to manage your Kong service mesh, you must add the `{geo}.mesh.sync.konghq.com:443` hostname to your firewall allowlist. The geo can be `au`, `eu`, `us`, or `global`.
