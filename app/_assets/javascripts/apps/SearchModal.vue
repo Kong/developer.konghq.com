@@ -66,7 +66,10 @@
               <template v-if="state.isOpen">
                 <div v-if="state.query" class="tabs flex flex-col w-full gap-4" ref="tabsElement">
                   <div class="tablist" role="tablist">
-                      <button tabIndex = "0" id="docs" class="tab-button__horizontal" :class="{ 'tab-button__horizontal--active': activeTab === 'docs' }" aria-controls="navtab-tabpanel-docs" role="tab" :aria-selected="activeTab === 'docs'" @click="onTabClick('docs', $event)" @keydown="onKeyDown('docs', $event)">
+                    <button tabIndex = "0" id="all" class="tab-button__horizontal" :class="{ 'tab-button__horizontal--active': activeTab === 'all' }" aria-controls="navtab-tabpanel-all" role="tab" :aria-selected="activeTab === 'all'" @click="onTabClick('all', $event)" @keydown="onKeyDown('all', $event)">
+                        All
+                      </button>
+                      <button tabIndex = "-1" id="docs" class="tab-button__horizontal" :class="{ 'tab-button__horizontal--active': activeTab === 'docs' }" aria-controls="navtab-tabpanel-docs" role="tab" :aria-selected="activeTab === 'docs'" @click="onTabClick('docs', $event)" @keydown="onKeyDown('docs', $event)">
                         Docs
                       </button>
                       <button tabIndex = "-1" id="how_tos" class="tab-button__horizontal" :class="{ 'tab-button__horizontal--active': activeTab === 'how_tos' }" aria-controls="navtab-tabpanel-how_tos" role="tab" :aria-selected="activeTab === 'how_tos'" @click="onTabClick('how_tos', $event)" @keydown="onKeyDown('how_tos', $event)">
@@ -148,7 +151,7 @@ export default {
   },
   data() {
     return {
-      activeTab: 'docs',
+      activeTab: 'all',
       showModal: false,
       permanentScrollbars: hasPermanentScrollbars()
     }
@@ -227,13 +230,40 @@ export default {
             let query = existingQuery;
             if (state.context.tagsPlugin.tags) {
               state.context.tagsPlugin.tags.forEach(tag => {
-                query += ` AND products:'${tag.label}'`;
+                if (query === '') {
+                  query += `products:'${tag.label}'`;
+                } else {
+                  query += ` AND products:'${tag.label}'`;
+                }
               });
             }
             return query;
           }
 
           return [
+            {
+              sourceId: "all",
+              getItems() {
+                return getAlgoliaResults({
+                  searchClient,
+                  queries: [
+                    {
+                      indexName: indexName,
+                      params: {
+                        query,
+                        hitsPerPage: hitsPerPage,
+                        filters: applyProductFilter('')
+                      },
+                    },
+                  ]
+                })
+              },
+
+              onSelect({ item, setQuery }) {
+                setQuery('');
+                inputElement.value = '';
+              },
+            },
             {
               sourceId: "docs",
               getItems() {
@@ -251,7 +281,6 @@ export default {
                   ]
                 })
               },
-
               onSelect({ item, setQuery }) {
                 setQuery('');
                 inputElement.value = '';
