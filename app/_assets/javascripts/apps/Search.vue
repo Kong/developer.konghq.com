@@ -98,7 +98,7 @@
                             </p>
                         </div>
 
-                        <div class="flex flex-wrap gap-2" v-if="item.tier.length > 0">
+                        <div class="flex flex-wrap gap-2" v-if="item.tier && item.tier.length > 0">
                             <span class="badge">{{ item.tier }}</span>
                         </div>
                     </a>
