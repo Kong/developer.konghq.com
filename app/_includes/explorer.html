@@ -1,0 +1,37 @@
+<h1>{{ index.title }}</h1>
+
+<h2>{{ group_by }}</h2>
+<ul>
+  {% for group in groups %}
+  <li><a href="#{{ group.title | slugify }}">{{ group.title }} ({{ group.pages | size }})</a></li>
+  {% endfor %}
+</ul>
+
+<h2>Details</h2>
+{% for group in groups %}
+<h3 id="{{ group.title | slugify }}" class="mt-8 mb-2">{{ group.title }} ({{ group.pages | size }})</h3>
+<table>
+  <tr>
+    <th>Page</th>
+    <th>Content Type</th>
+    {% for col in columns %}
+    <th>{{ col | capitalize }}</th>
+    {% endfor %}
+  </tr>
+<ul class="list-none ml-0">
+  {% for page in group.pages %}
+    <tr>
+      <td class="w-2/3">
+        <a class="font-bold" href="{{ page.url }}">{{ page.title }}</a>
+        <p class="text-sm text-gray-400">
+          <a class="hover:no-underline" href="{{ page.url }}">{{ page.description }}</a>
+        </p>
+      </td>
+      <td class="w-1/6">{{ page.content_type }}</td>
+      {% for col in columns %}
+      <td class="w-1/6">{{ page[col] | join: "<br />" }}</td>
+      {% endfor %}
+    </tr>
+  {% endfor %}
+</table>
+{% endfor %}
