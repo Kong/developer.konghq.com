@@ -1,0 +1,26 @@
+title: 'Engineer a prompt with prepending'
+
+description: 'Prepends a prompt with information, such as to always respond in French, to engineer how a prompt responds.'
+
+weight: 900
+
+# requirements: <- not required
+# - "some req"
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config: 
+  prompts:
+    prepend:
+      - role: "system"
+        content: "You will always respond in the French (France) language."
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -282,6 +282,10 @@ app/_kong_plugins/oas-validation/index.md:
   - app/_hub/kong-inc/oas-validation/overview/_index.md
 app/_kong_plugins/oas-validation/changelog.md:
   - app/_hub/kong-inc/oas-validation/_changelog.md
+app/_kong_plugins/ai-prompt-decorator/changelog.md:
+  - app/_hub/kong-inc/ai-prompt-decorator/_changelog.md
+app/_kong_plugins/ai-prompt-decorator/index.md:
+  - app/_hub/kong-inc/ai-prompt-decorator/overview/_index.md
 
 # Konnect
 
