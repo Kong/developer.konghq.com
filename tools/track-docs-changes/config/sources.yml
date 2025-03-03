@@ -384,3 +384,5 @@ app/konnect/serverless-gateways/index.md:
   - app/konnect/gateway-manager/serverless-gateways/provision-serverless-gateway.md
   - app/konnect/gateway-manager/serverless-gateways/custom-dns.md
 
+app/deactivate-org.md:
+  - app/konnect/org-management/deactivation.md
