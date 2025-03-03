@@ -150,13 +150,6 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/MeshControlPlaneFeature'
-      default:
-        - type: MeshCreation
-          meshCreation:
-            enabled: false
-        - type: HostnameGeneratorCreation
-          hostnameGeneratorCreation:
-            enabled: false
     MeshControlPlaneFeatureHostnameGenerationCreation:
       properties:
         enabled:
