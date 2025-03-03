@@ -14,9 +14,9 @@ api_specs:
     - konnect/analytics-requests
 related_resources:
   - text: Konnect Advanced Analytics
-    url: /konnect/advanced-analytics/
+    url: /advanced-analytics/
   - text: Explorer Reference
-    url: /konnect/advanced-analytics/explorer/
+    url: /advanced-analytics/explorer/
 schema:
     api: konnect/analytics-requests
 

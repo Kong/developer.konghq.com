@@ -23,7 +23,7 @@ faqs:
     a: No, configuration is handled automatically during the provisioning of the Serverless Gateway Control Plane.
   - q: Does Serverless Gateway support private networking?
     a: |
-        No, serverless gateways only supports public networking. There are currently no capabilities for private networking between your data centers and hosted Kong data planes. For use cases where private networking is required, [Dedicated Cloud Gateways](/konnect/dedicated-cloud-gateways/) configured with AWS is a better choice.
+        No, serverless gateways only supports public networking. There are currently no capabilities for private networking between your data centers and hosted Kong data planes. For use cases where private networking is required, [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) configured with AWS is a better choice.
   - q: Does plugin functionality change with serverless gateways?
     a: |
       * Any plugins that depend on a local agent will not work with serverless gateways.
@@ -42,7 +42,7 @@ faqs:
         If no CAA record exists, no changes are needed. For more information, see the [Let's Encrypt CAA Guide](https://letsencrypt.org/docs/caa/).
 related_resources:
   - text: Dedicated Cloud Gateways
-    url: /konnect/dedicated-cloud-gateways/
+    url: /dedicated-cloud-gateways/
   - text: Control plane and data plane communication
     url: /gateway/cp-dp-communication/
 
