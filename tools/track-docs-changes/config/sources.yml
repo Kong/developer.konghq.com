@@ -285,16 +285,16 @@ app/_kong_plugins/oas-validation/changelog.md:
 
 # Konnect
 
-app/konnect/advanced-analytics/explorer.md:
+app/advanced-analytics/explorer.md:
   - app/konnect/advanced-analytics/explorer.md
-app/konnect/advanced-analytics/llm-reporting.md:
+app/advanced-analytics/llm-reporting.md:
   - app/konnect/advanced-analytics/explorer.md
-app/konnect/geos.md:
+app/konnect-geos.md:
   - app/konnect/geo.md
 
 
 # landing pages
-app/_landing_pages/konnect/service-catalog.yaml:
+app/_landing_pages/service-catalog.yaml:
   - app/_src/konnect/service-catalog/
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
   - app/_src/gateway/index.md
@@ -345,7 +345,7 @@ app/gateway/network-ports-firewall.md:
   - app/_src/gateway/production/networking/firewall.md
 app/gateway/cp-dp-communication.md:
   - app/_src/gateway/production/networking/cp-dp-proxy.md
-app/konnect/network.md:
+app/konnect-network.md:
   - app/konnect/network.md
 app/gateway/resource-sizing-guidelines.md:
   - app/_src/gateway/production/sizing-guidelines.md
@@ -379,7 +379,7 @@ app/gateway/vulnerabilities.md:
 
 # Serverless GW
 
-app/konnect/serverless-gateways/index.md:
+app/serverless-gateways/index.md:
   - app/konnect/gateway-manager/serverless-gateways/custom-dns.md
   - app/konnect/gateway-manager/serverless-gateways/provision-serverless-gateway.md
   - app/konnect/gateway-manager/serverless-gateways/custom-dns.md
