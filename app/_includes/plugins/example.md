@@ -2,7 +2,7 @@
 
 {{ page.example.description | liquify | markdoownify }}
 
-{% if page.example.requirements %}
+{% unless page.example.requirements == empty %}
 
 ## Prerequisites
 
@@ -10,9 +10,9 @@
 * {{ requirement | liquify }}
 {% endfor %}
 
-{% endif %}
+{% endunless %}
 
-{% if page.example.variables %}
+{% unless page.example.variables == empty %}
 
 ## Environment variables
 
@@ -20,7 +20,7 @@
 * `{{ variable.value }}` {%- if variable.description -%}: {{variable.description | liquify }}{% endif%}
 {% endfor %}
 
-{% endif %}
+{% endunless %}
 
 ## Set up the plugin
 
