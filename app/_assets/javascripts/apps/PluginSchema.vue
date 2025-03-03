@@ -10,8 +10,14 @@
     </div>
   </template>
 
-  <script setup>
-  import { SchemaRenderer } from '@kong/spec-renderer-dev'
+<script setup>
+import { SchemaRenderer } from '@kong/spec-renderer-dev'
 
-  const schema = window.schema;
-  </script>
+const schema = window.schema;
+</script>
+
+<style scoped>
+:deep(.kui-icon.link-icon) {
+  @apply w-5 h-5 !important;
+}
+</style>

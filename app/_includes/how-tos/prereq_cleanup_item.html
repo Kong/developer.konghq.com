@@ -1,12 +1,17 @@
-<a class="px-5 py-4 flex gap-2 items-center hover:no-underline accordion-trigger" href="#{{ include.summary | liquify | slugify }}">
+{% assign slug = include.summary | liquify | slugify %}
+<a class="px-5 py-4 flex gap-2 items-center hover:no-underline accordion-trigger" href="#{{ slug }}" id="{{slug}}">
     <div class="flex p-[3px] w-6 h-6 justify-center items-center rounded-[3px]  {% if include.icon_url %}bg-brand-saturated/40{% endif %}">
         {% if include.icon_url %}
         <div class="flex w-[18px] h-[18px] bg-white" style="mask:url('{{include.icon_url}}'); mask-size: cover;"></div>
         {% endif %}
     </div>
     <div class="flex items-center justify-between w-full">
-        <h3>{{ include.summary | liquify }}</h3>
-
+        <div class="flex items-center gap-2 w-full link-anchor group">
+            <h3 id="{{slug}}">{{ include.summary | liquify }}</h3>
+            <span class="text-brand hidden link-anchor-icon group-hover:flex">
+                {% include_svg 'assets/icons/link.svg' %}
+            </span>
+        </div>
         <span class="inline-flex chevron-icon rotate-180" aria-hidden="true">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
     </div>
 </a>

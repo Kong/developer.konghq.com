@@ -65,4 +65,8 @@ async function fetchSpec() {
 :deep(.property-field-default-value) {
   @apply bg-secondary rounded border border-brand-saturated/40 text-xs py-0 px-1 shadow-none !important;
 }
+
+:deep(.kui-icon.link-icon) {
+  @apply w-5 h-5 !important;
+}
 </style>
