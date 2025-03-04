@@ -53,9 +53,6 @@ This plugin also sanitizes string inputs to ensure that JSON control characters 
 
 ## How it works
 
-When calling a template, simply replace the `messages` (`llm/v1/chat`) or `prompt` (`llm/v1/completions`) with a template reference, in the
-following format: `{template://TEMPLATE_NAME}`
-
 When activated, the template restricts an LLM usage to just those pre-defined templates. They are defined in the following format:
 
 ```yaml
@@ -71,8 +68,9 @@ When activated, the template restricts an LLM usage to just those pre-defined te
     }
 ```
 
-The templates are then called in the following example format:
+When calling a template, simply replace the content of `messages` (`llm/v1/chat`) or `prompt` (`llm/v1/completions`) with a template reference, using the following format:
 
+For example:
 ```json
 {
   "message": "{template://sample-template}",
