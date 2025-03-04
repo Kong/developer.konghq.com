@@ -183,6 +183,8 @@ app/_how-tos/rotate-secrets-in-google-cloud-secret.md:
   - app/_src/gateway/kong-enterprise/secrets-management/secrets-rotation.md
 app/_how-tos/use-acl-with-consumer-groups.md:
   - app/_hub/kong-inc/acl/how-to/_consumer-groups.md.md
+app/_how-tos/get-started-with-ai-gateway.md:
+  - app/_src/gateway/get-started/ai-gateway.md
 
 ## KIC
 app/_how-tos/proxy-http-traffic-kic.md:
