@@ -1573,7 +1573,7 @@ components:
         - entity_version
         - created_at
         - updated_at
-      title: AWS Transit Gateway
+      title: AWS VPC Peering Gateway
     AzureTransitGatewayResponse:
       type: object
       properties:
@@ -1652,7 +1652,7 @@ components:
         - name
         - cidr_blocks
         - transit_gateway_attachment_config
-      title: AWS Transit Gateway
+      title: AWS VPC Peering Gateway
     CreateAzureTransitGateway:
       type: object
       properties:
