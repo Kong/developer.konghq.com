@@ -1,5 +1,5 @@
 ---
-title: "Monitoring AI LLM metrics"
+title: "Monitor AI LLM metrics"
 content_type: reference
 layout: reference
 
