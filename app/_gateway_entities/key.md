@@ -13,7 +13,6 @@ related_resources:
 api_specs:
   - gateway/admin-ee
   - konnect/control-planes-config 
-  - gateway/admin-oss
 
 tools:
   - admin-api

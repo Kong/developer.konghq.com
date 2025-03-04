@@ -38,7 +38,6 @@ schema:
   path: /schemas/Route
 
 api_specs:
-    - gateway/admin-oss
     - gateway/admin-ee
     - konnect/control-planes-config
 

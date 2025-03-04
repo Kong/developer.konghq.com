@@ -13,7 +13,6 @@ works_on:
 no_version: true
 
 api_specs:
-    - gateway/admin-oss
     - gateway/admin-ee
     - konnect/control-planes-config
 
