@@ -10,6 +10,7 @@ weight: 900
 variables:
   header_value:
     value: $OPENAI_API_KEY
+    description: Your OpenAI API key
 
 config: 
   embeddings:

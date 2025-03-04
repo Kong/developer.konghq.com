@@ -10,6 +10,7 @@ weight: 900
 variables:
   header_value:
     value: $MISTRAL_API_KEY
+    description: Your Mistral API key
 
 config:
   embeddings:
