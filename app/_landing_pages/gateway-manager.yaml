@@ -28,7 +28,7 @@ rows:
                     With Gateway Manager, you can:
                     - Manage control planes and their configurations
                     - Deploy and monitor data plane nodes
-                    - Use fully managed cloud gateways or self-hosted infrastructure
+                    - Use fully-managed cloud gateways or self-hosted infrastructure
                     - Ensure high availability, security, and scalability for your API traffic
                     
                     For more information, read the [Gateway Manager Reference](/gateway-manager/reference)
@@ -49,7 +49,7 @@ rows:
                   - type: text
                     text: |
                       **Kong Gateway Control Planes**  
-                      Every region in every organization starts with one default control plane. 
+                      Every [region](/konnect-geos/) in every organization starts with one default control plane. 
                       With {{site.konnect_short_name}}, you can configure additional Kong Gateway control planes, 
                       each of which will have isolated configuration. Use multiple control planes in one 
                       {{site.konnect_short_name}} organization to manage data plane nodes and their configuration 
@@ -182,3 +182,13 @@ rows:
               cta:
                 text: Learn more
                 url: /gateway-manager/data-plane-nodes/
+           - blocks:
+          - type: card
+            config:
+              title: {{site.base_gateway}} control plane and data plane communication
+              description: |
+                Learn about how control planes and data plane nodes communicate with each other.
+              icon: /assets/icons/gateway.svg
+              cta:
+                text: Learn more
+                url: /gateway/cp-dp-communication/
