@@ -125,3 +125,5 @@ You can use [Kong's public test suite repo](https://github.com/Kong/kong-gateway
 Once the cluster is generated, you can apply the [provided YAML](https://github.com/Kong/kong-gateway-performance-benchmark/tree/main/deploy-k8s-resources/kong_helm) to configure {{site.base_gateway}} for the included test cases, and the observability plugins for metrics scraping by the Prometheus instance already provisioned in the cluster. If you’d rather define your own test scenarios, you can also define the {{site.base_gateway}} configuration you want to test and apply it to the cluster.
 
 From there, you can use the [included bash scripts to run K6 tests](https://github.com/Kong/kong-gateway-performance-benchmark/tree/main/deploy-k8s-resources/k6_tests). After the tests complete, you can `port-forward` into the cluster and view the Grafana dashboard with the performance results.
+
+For more information about how to conduct your own performance benchmark of {{site.base_gateway}}, see [Establish a {{site.base_gateway}} performance benchmark](/gateway/performance/establish-performance-benchmark).
