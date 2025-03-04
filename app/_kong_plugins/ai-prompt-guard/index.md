@@ -40,6 +40,10 @@ search_aliases:
   - intelligence
   - language
   - model
+
+related_resources:
+  - text: AI Semantic Prompt Guard plugin
+    url: /plugins/ai-semantic-prompt-guard/
 ---
 
 The AI Prompt Guard plugin lets you to configure a series of [PCRE-compatible](https://www.pcre.org/) regular expressions as allow or deny lists,
