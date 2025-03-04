@@ -9,8 +9,7 @@ export function routingConfig(indexName) {
     router: history({
       cleanUrlOnDispose: false,
       createURL({ qsModule, routeState, location }) {
-        const urlParts = location.href.match(/^(.*?)\/search/);
-        const baseUrl = `${urlParts ? urlParts[1] : ""}/`;
+        const { origin, pathname } = location;
 
         const queryParameters = {};
 
@@ -44,7 +43,7 @@ export function routingConfig(indexName) {
           arrayFormat: "repeat",
         });
 
-        return `${baseUrl}search/${queryString}`;
+        return `${origin}${pathname}${queryString}`;
       },
 
       parseURL({ qsModule, location }) {

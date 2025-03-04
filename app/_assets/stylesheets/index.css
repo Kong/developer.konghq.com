@@ -397,8 +397,24 @@
   .card__bordered {
     @apply border border-primary/5 hover:border hover:border-brand-saturated/40 hover:shadow-hover-card;
   }
+}
 
-  .DocSearch-Commands {
-    @apply flex-row;
-  }
+.ais-Pagination {
+  @apply flex flex-col col-span-3 w-full gap-16 col-start-2;
+}
+
+.ais-Pagination-list {
+  @apply flex-row justify-center gap-4;
+}
+
+.ais-RefinementList-label {
+  @apply flex gap-2 py-0.5 w-full text-sm text-primary;
+}
+
+.ais-RefinementList-count {
+  @apply hidden;
+}
+
+.ais-Panel--noRefinement {
+  @apply hidden;
 }
