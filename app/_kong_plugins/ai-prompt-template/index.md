@@ -53,8 +53,7 @@ This plugin also sanitizes string inputs to ensure that JSON control characters 
 
 ## How it works
 
-When activated, the template restricts an LLM usage to just those pre-defined templates. They are defined in the following format:
-
+When activated, the template restricts LLM usage to just those pre-defined templates. They are defined in the following format:
 ```yaml
 - name: sample-template
   template: |-
@@ -69,8 +68,6 @@ When activated, the template restricts an LLM usage to just those pre-defined te
 ```
 
 When calling a template, simply replace the content of `messages` (`llm/v1/chat`) or `prompt` (`llm/v1/completions`) with a template reference, using the following format:
-
-For example:
 ```json
 {
   "message": "{template://sample-template}",
@@ -80,4 +77,4 @@ For example:
 }
 ```
 
-By default, requests that don't use a template will still be passed to the LLM. However, this can be configured using the [`config.allow_untemplated_requests`](/plugins/ai-prompt-template/reference/#schema--config-allow-untemplated-requests) parameter. If this parameter is set to `false`, requests that don't use a template will return a `400 Bad Request` response.
+By default, requests that don't use a template are still be passed to the LLM. However, this can be configured using the [`config.allow_untemplated_requests`](/plugins/ai-prompt-template/reference/#schema--config-allow-untemplated-requests) parameter. If this parameter is set to `false`, requests that don't use a template will return a `400 Bad Request` response.
