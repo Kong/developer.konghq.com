@@ -391,6 +391,8 @@ app/gateway/traffic-control/blue-green-deployments.md:
 # policies
 app/gateway/vulnerabilities.md:
   - app/_src/gateway/support/vulnerability-patching-process.md
+app/stages-of-software-availability.md:
+  - app/_src/gateway/stability.md
 
 
 # Serverless GW
