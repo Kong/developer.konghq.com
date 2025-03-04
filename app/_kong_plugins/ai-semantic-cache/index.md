@@ -57,7 +57,7 @@ For example, if a user asks, "how to integrate our API with a mobile app" and la
 The AI Semantic Cache plugin may not be ideal if the following are true:
 
 * You have limited hardware or budget. Storing semantic vectors and running similarity searches require a lot of storage and computing power, which could be an issue.
-* Your data doesn’t rely on semantics, or exact matches work fine, then semantic caching may offer little benefit. Traditional or keyword-based caching might be more efficient.
+* Your data doesn’t rely on semantics, or exact matches work fine. In this case, semantic caching may offer little benefit. Traditional or keyword-based caching might be more efficient.
 
 ## How it works
 
@@ -107,13 +107,13 @@ sequenceDiagram
 
 A vector database can be used to store vector embeddings, or numerical representations, of data items. For example, a response would be converted to a numerical representation and stored in the vector database so that it can compare new requests against the stored vectors to find relevant cached items.
 
-Currently, the AI Semantic Cache plugin supports Redis as a vector database.
+The AI Semantic Cache plugin supports Redis as a vector database.
 
 ### Cache management
 
 With the AI Semantic Cache plugin, you can configure a cache of your choice to store the responses from the LLM.
 
-Currently, the AI Semantic Cache plugin supports Redis as a cache.
+The AI Semantic Cache plugin supports Redis as a cache.
 
 #### Caching mechanisms
 
@@ -126,7 +126,7 @@ Together, these caching methods enhance the efficiency and relevance of AI respo
 
 ### Headers sent to the client
 
-When the AI Semantic Cache plugin is active, Kong sends additional headers 
+When the AI Semantic Cache plugin is active, {{site.base_gateway}} sends additional headers 
 indicating the cache status and other relevant information:
 
 ```plaintext

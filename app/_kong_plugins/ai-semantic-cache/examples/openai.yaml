@@ -4,8 +4,6 @@ description: 'Enable the plugin with OpenAI as your LLM and a Redis vector datab
 
 weight: 900
 
-requirements:
-  - "[AI Proxy plugin](/plugins/ai-proxy/) configured with an LLM service"
 
 variables:
   header_value:

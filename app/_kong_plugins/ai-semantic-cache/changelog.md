@@ -8,7 +8,7 @@ no_version: true
 ### {{site.base_gateway}} 3.9.0.0
 * Added the `ignore_tool` configuration option to discard tool role prompts from the input text.
 * This plugin can now be enabled on consumer groups.
-* Made the `embeddings.model.name` config field a free text entry, enabling use of a self-hosted (or otherwise compatible) model.
+* Made the `config.embeddings.model.name` config field a free text entry, enabling use of a self-hosted (or otherwise compatible) model.
 * Fixed an issue where the plugin couldn't use the request-provided models.
 * Fixed the exact matching to catch everything, including embeddings.
 * Fixed an issue where the AI Semantic Cache plugin would abort in stream mode when another plugin enabled the buffering proxy mode.
