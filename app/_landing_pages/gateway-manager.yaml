@@ -103,7 +103,7 @@ rows:
               icon: /assets/icons/menu.svg
               cta:
                 text: Learn more
-                url: /gateway-manager/serverless-gateways/
+                url: /serverless-gateways/
       - blocks:
           - type: card
             config:
@@ -114,7 +114,7 @@ rows:
               icon: /assets/icons/gateway.svg
               cta:
                 text: Learn more
-                url: /gateway-manager/dedicated-cloud-gateways/
+                url: /dedicated-cloud-gateways/
 
   - header:
       type: h2
