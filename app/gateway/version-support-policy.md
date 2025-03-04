@@ -3,8 +3,6 @@ title: "{{site.base_gateway}} Version Support"
 content_type: reference
 layout: reference
 
-tier: enterprise
-
 products:
     - gateway
 

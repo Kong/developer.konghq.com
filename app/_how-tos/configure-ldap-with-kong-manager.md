@@ -10,7 +10,7 @@ products:
     - gateway
 min_version:
   gateway: '3.4'
-tier: enterprise
+
 
 works_on:
     - on-prem

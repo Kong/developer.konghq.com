@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: '(Deprecated) Send metrics to StatsD with more flexible options'
-tier: enterprise
 
 
 products:

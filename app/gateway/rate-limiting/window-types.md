@@ -18,8 +18,6 @@ plugins:
 products:
   - gateway
 
-tier: enterprise
-
 breadcrumbs:
   - /gateway/
   - /gateway/rate-limiting/

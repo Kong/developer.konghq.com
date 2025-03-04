@@ -6,8 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Apply structural and size checks on XML payloads'
-tier: enterprise
-
 
 products:
     - gateway

@@ -9,7 +9,6 @@ description: Workspaces provide a way to segment {{site.base_gateway}} entities.
 tools:
     - admin-api
 
-tier: enterprise
 schema:
     api: gateway/admin-ee
     path: /schemas/Workspace

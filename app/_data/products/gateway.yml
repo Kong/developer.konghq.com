@@ -10,11 +10,6 @@ topologies:
     - cloud-gateways
     - serverless
 
-tiers:
-  enterprise:
-    text: Enterprise only
-    url: "/gateway/enterprise/"
-
 deployment_topologies:
   - slug: on-prem
     text: on-prem

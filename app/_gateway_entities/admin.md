@@ -17,8 +17,6 @@ related_resources:
     url: /gateway/entities/workspace/
   - text: Sending Email with Kong Manager
     url: /how-to/configure-kong-manager-email/
-    
-tier: enterprise
 
 api_specs:
   - gateway/admin-ee
