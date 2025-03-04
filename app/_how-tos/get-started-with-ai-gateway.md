@@ -25,8 +25,8 @@ tldr:
   q: What is AI Gateway, and how can I get started with it?
   a: |
     With Kong's AI Gateway, you can deploy AI infrastructure for traffic 
-    being sent to one or more LLMs, which lets you semantically route, secure, observe, accelerate, 
-    and govern using a special set of AI plugins that are bundled with {{site.base_gateway}} distributions.
+    that is sent to one or more LLMs. This lets you semantically route, secure, observe, accelerate, 
+    and govern traffic using a special set of AI plugins that are bundled with {{site.base_gateway}} distributions.
 
     This tutorial will help you get started with AI Gateway by setting up the AI Proxy plugin with OpenAI. 
 
@@ -45,7 +45,7 @@ prereqs:
         This tutorial uses the AI Proxy plugin with OpenAI. You'll need to [create an OpenAI account](https://auth.openai.com/create-account) and [get an API key](https://platform.openai.com/api-keys). Once you have your API key, create an environment variable:
 
         ```sh
-        export OPENAI_KEY=<api-key>
+        export OPENAI_KEY='<api-key>'
         ```
 
 cleanup:
@@ -147,7 +147,7 @@ body:
   model: gpt-4
   messages:
   - role: "user"
-    content: "What is Kong AI Gateway?"
+    content: "Say this is a test!"
 {% endvalidation %}
 
 You should get a `200 OK` response with a description of AI Gateway.
