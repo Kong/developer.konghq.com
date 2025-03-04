@@ -31,7 +31,7 @@ rows:
                     - Use fully managed cloud gateways or self-hosted infrastructure
                     - Ensure high availability, security, and scalability for your API traffic
                     
-                    For more information, read the [Gateway Manager Reference](/gateway-manager/reference.md)
+                    For more information, read the [Gateway Manager Reference](/gateway-manager/reference)
       - blocks:
           - type: image
             config:
