@@ -24,3 +24,20 @@ related_resources:
 The `deck file ping` command checks that decK can contact the Admin API. This could be either the {{site.konnect_short_name}} API, or an on-prem installation.
 
 `deck file ping` validates both network connectivity and authentication details.
+
+## Example usage
+
+### On Prem
+
+```bash
+deck gateway ping --kong-addr https://example.com:8001
+```
+
+### Konnect
+
+```bash
+deck gateway ping \
+  --konnect-token $KONNECT_TOKEN \
+  --konnect-addr https://us.api.konghq.com \
+  --konnect-control-plane-name default
+```

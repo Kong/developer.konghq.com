@@ -37,35 +37,32 @@ decK _does not_ support publishing content to the Dev Portal or managing applica
 
 To use decK with {{ site.konnect_short_name }}, you must provide a {{ site.konnect_short_name }} authentication method and the name of a control plane to target.
 
-```bash
-# This is missing an authentication method
-# See below for token/OIDC authentication examples
-deck gateway ping --konnect-addr https://us.api.konghq.com --konnect-control-plane-name default
-```
-
-`--konnect-addr` is optional. If any `--konnect` flag is set, the Admin API URL will default to `https://us.api.konghq.com`.
-
-```bash
-deck gateway ping --konnect-control-plane-name default
-```
-
-### Token authentication
-
 If you are using personal access tokens or system access tokens, you can provide them using the `--konnect-token` flag:
 
 ```bash
-deck gateway ping --konnect-token $KONNECT_TOKEN --konnect-addr https://us.api.konghq.com --konnect-control-plane-name default
+deck gateway ping \
+  --konnect-token $KONNECT_TOKEN \
+  --konnect-control-plane-name default
 ```
 
 You can provide the Konnect token in a file on disk rather than as an environment variable using the `--konnect-token-file` flag:
 
 ```bash
-deck gateway ping --konnect-token-file /path/to/file --konnect-addr https://us.api.konghq.com --konnect-control-plane-name default
+deck gateway ping \
+  --konnect-token-file /path/to/file  \
+  --konnect-control-plane-name default
 ```
 
 ### Region selection
 
 Use `--konnect-addr` to select the API to connect to.
+
+```bash
+deck gateway ping \
+  --konnect-token $KONNECT_TOKEN \
+  --konnect-addr https://us.api.konghq.com \
+  --konnect-control-plane-name default
+```
 
 The default API decK uses is `https://us.api.konghq.com`.
 

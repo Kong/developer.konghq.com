@@ -56,89 +56,62 @@ Create a sample `kong.yaml` file with a service, route, and plugin, push it to
 {{site.base_gateway}}, and then pull {{site.base_gateway}}'s configuration down
 again to see how decK interprets default values.
 
-1. Create a `kong.yaml` configuration file with the following
-   sample service, route, and plugin:
+1.  Create a `kong.yaml` configuration file with the following
+    sample service, route, and plugin:
 
-   ```yaml
-   _format_version: "3.0"
-   services:
-     - host: httpbin.konghq.com
-       name: example_service
-       routes:
-         - name: mockpath
-           paths:
-             - /mock
-   plugins:
-     - name: basic-auth
-       config:
-         hide_credentials: true
-   ```
+    ```yaml
+    _format_version: "3.0"
+    services:
+      - host: httpbin.konghq.com
+        name: example_service
+        routes:
+          - name: mockpath
+            paths:
+              - /mock
+    plugins:
+      - name: basic-auth
+        config:
+          hide_credentials: true
+    ```
 
-1. Compare this file with the object configuration in {{site.base_gateway}}:
-   {% capture deck_diff1 %}
-   {% navtabs codeblock %}
-   {% navtab "Command" %}
+1.  Compare this file with the object configuration in {{site.base_gateway}}:
 
-```sh
-deck gateway diff kong.yaml
-```
+    ```sh
+    deck gateway diff kong.yaml
+    ```
 
-{% endnavtab %}
-{% navtab "Response" %}
+    If you're using a completely empty instance, you will only see the service, route, and `basic-auth` plugin creation messages with no extra data.
 
-```sh
-creating service example_service
-creating route mockpath
-creating plugin basic-auth (global)
-Summary:
-  Created: 3
-  Updated: 0
-  Deleted: 0
-```
+    ```sh
+    creating service example_service
+    creating route mockpath
+    creating plugin basic-auth (global)
+    Summary:
+      Created: 3
+      Updated: 0
+      Deleted: 0
+    ```
 
-{% endnavtab %}
-{% endnavtabs %}
-{% endcapture %}
-{{ deck_diff1 | indent: 4 | replace: " </code>", "</code>" }}
+1.  Sync your changes with {{site.base_gateway}}:
 
-    If you're using a completely empty instance, you should only see the
-    service, route, and `basic-auth` plugin creation messages with no extra
-    JSON data.
+    ```sh
+    deck gateway sync kong.yaml
+    ```
 
-1. Sync your changes with {{site.base_gateway}}:
+1.  Now, run another diff and note the response:
 
-   ```sh
-   deck gateway sync kong.yaml
-   ```
+    ```sh
+    deck gateway diff kong.yaml
+    ```
 
-1. Now, run another diff and note the response:
+    Notice that the diff doesn't show any changes. This is because decK checked the values against the service and route schemas and didn't find any differences.
 
-{% capture deck_diff2 %}
-{% navtabs codeblock %}
-{% navtab "Command" %}
-
-```sh
-deck gateway diff kong.yaml
-```
-
-{% endnavtab %}
-{% navtab "Response" %}
-
-```sh
-Summary:
-  Created: 0
-  Updated: 0
-  Deleted: 0
-```
-
-{% endnavtab %}
-{% endnavtabs %}
-{% endcapture %}
-{{ deck_diff2 | indent: 4 | replace: " </code>", "</code>" }}
-
-    Notice that the diff doesn't show any changes. This is because decK checked
-    the values against the service and route schemas and didn't find any
-    differences.
+    ```sh
+    Summary:
+      Created: 0
+      Updated: 0
+      Deleted: 0
+    ```
 
 1.  You can check that any missing default values were set by exporting
     {{site.base_gateway}}'s object configuration into a file. If you want to avoid
@@ -148,8 +121,7 @@ Summary:
     deck gateway dump -o kong-test.yaml
     ```
 
-        Even though `diff` didn't show any changes, the result now has
-        default values populated for the service, route, and Basic Auth plugin:
+    Even though `diff` didn't show any changes, the result now has default values populated for the service, route, and Basic Auth plugin:
 
     ```yaml
     _format_version: "3.0"
@@ -227,20 +199,18 @@ decK supports setting custom object defaults both in self-managed
     _format_version: "3.0"
     _info:
       defaults:
-    services:
-      - host: httpbin.konghq.com
-        name: example_service
-        routes:
-          - name: mockpath
-            paths:
-              - /mock
+        services:
+          - host: httpbin.konghq.com
+            name: example_service
+            routes:
+              - name: mockpath
+                paths:
+                  - /mock
     ```
 
-        {:.note}
-        > For production use in larger systems, we recommend that you break out
-        your defaults into a [separate `defaults.yaml` file](/deck/{{page.release}}/guides/multi-file-state/)
-        or use [tags](/deck/{{page.release}}/guides/distributed-configuration/)
-        to apply the defaults wherever they are needed.
+{:.info}
+
+> For production use in larger systems, we recommend that you break out your defaults into a [separate `defaults.yaml` file](/deck/gateway/sync/) or use [tags](/deck/gateway/tags/) to apply the defaults wherever they are needed.
 
 1.  Define the properties you want to set for {{site.base_gateway}} objects.
 
@@ -308,7 +278,7 @@ decK supports setting custom object defaults both in self-managed
 
 1.  Run a diff and note the response:
 
-{{ deck_diff2 | indent: 4 | replace: "    </code>", "</code>" }}
+{{ deck_diff2 | replace: "    </code>", "</code>" }}
 
 Whether you choose to define a subset of custom defaults or all available options, the result is the same: the diff doesn't show any changes.
 
@@ -322,7 +292,7 @@ the {{site.base_gateway}}, set all possible default values for an object in your
 `kong.yaml` file.
 
 {% navtabs %}
-{% navtab "(Route)" %}
+{% navtab "Route" %}
 
 Use the Kong Admin API `/schemas` endpoint to find default values:
 
@@ -359,7 +329,7 @@ For documentation on all available properties, see the
 [Route object](/gateway/api/admin-ee/latest/#/Routes/list-route/) documentation.
 
 {% endnavtab %}
-{% navtab "(Service)" %}
+{% navtab "Service" %}
 
 Use the Kong Admin API `/schemas` endpoint to find default values:
 
@@ -386,7 +356,7 @@ For documentation on all available properties, see the
 [Service object](/gateway/api/admin-ee/latest/#/Services) documentation.
 
 {% endnavtab %}
-{% navtab "(Upstream)" %}
+{% navtab "Upstream" %}
 
 Use the Kong Admin API `/schemas` endpoint to find default values:
 
@@ -472,7 +442,7 @@ For documentation on all available properties, see the
 [Upstream object](/gateway/api/admin-ee/latest/#/Upstreams/list-upstream/) documentation.
 
 {% endnavtab %}
-{% navtab "(Target)" %}
+{% navtab "Target" %}
 
 Use the Kong Admin API `/schemas` endpoint to find default values:
 
@@ -494,7 +464,7 @@ For all available properties, see the
 [Target object](/gateway/api/admin-ee/latest/#/Targets/list-target-with-upstream/) documentation.
 
 {% endnavtab %}
-{% navtab "(Plugins)" %}
+{% navtab "Plugins" %}
 
 Use the Kong Admin API `/schemas` endpoint to find default values:
 
@@ -506,9 +476,3 @@ decK doesn't support setting custom default values for the plugin object.
 
 {% endnavtab %}
 {% endnavtabs %}
-
-## See also
-
-- [Deduplicate plugin configuration](/deck/gateway/deduplicate/)
-- [Using multiple files to store configuration](/deck/gateway/tags/)
-- {{site.base_gateway}} admin API: [`/schemas` endpoint](/gateway/latest/admin-api/#retrieve-entity-schema)

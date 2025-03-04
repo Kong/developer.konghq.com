@@ -58,7 +58,9 @@ deck file remove-tags -s /path/to/config.yaml --keep-only env-prod team-one
 Finally, to remove tags from specific entities you can pass a `--selector`. This can be combined with `--keep-only` as needed:
 
 ```bash
-deck file remove-tags -s /path/to/config.yaml --selector "$..services[*]" --keep-only env-prod team-one
+deck file remove-tags -s /path/to/config.yaml \
+  --selector "$..services[*]" \
+  --keep-only env-prod team-one
 ```
 
 ## list-tags

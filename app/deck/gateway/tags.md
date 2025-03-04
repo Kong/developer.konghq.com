@@ -31,7 +31,7 @@ Common use cases for splitting your configuration across multiple files include:
 
 When multiple tags are specified in decK, decK `AND`s those tags together, meaning only entities containing all the tags will be managed by decK. You can specify a combination of up to 5 tags, but we recommend using fewer or only one tag for performance reasons.
 
-## Select tags
+## Manage part of your configuration
 
 To specify a tag to manage, you can use the `--select-tag` command line flag. This flag may be provided multiple times to specify multiple tags:
 
@@ -63,7 +63,7 @@ The `--select-tag` flag _can_ be used with `deck gateway sync` for situations wh
 
 **Important**: It is not possible to sync a subset of content from a single file using `select_tags`. `--select-tag` must be provided when running `deck gateway dump` and the same file must be synced to the Admin API using the exact same `select_tags`.
 
-## Default lookup tags
+## Partial configuration and foreign keys
 
 decK lets you specify entity relationships using foreign keys. For example, look at the following files that manage Consumers and Consumer Groups:
 

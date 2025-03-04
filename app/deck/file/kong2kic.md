@@ -33,18 +33,18 @@ deck file kong2kic -s kong.yaml -o k8s.yaml
 
 The following table details how Kong configuration entities will be mapped to Kubernetes manifests:
 
-| decK entity                                                                                   | K8s entity                                                        |
-| --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| Service                                                                                       | Service with annotations and KongIngress for upstream section     |
-| Route                                                                                         | Ingress (Ingress API) or HTTPRoute (Gateway API) with annotations |
-| Global Plugin                                                                                 | KongClusterPlugin                                                 |
-| Plugin                                                                                        | KongPlugin                                                        |
-| Auth Plugins <br>(`key-auth`, `hmac-auth`, `jwt`, `basic-auth`, `oauth2`, `acl`, `mtls-auth`) | KongPlugin and Secret with credentials section in KongConsumer    |
-| Upstream                                                                                      | KongIngress or kongUpstreamPolicy                                 |
-| Consumer                                                                                      | KongConsumer                                                      |
-| ConsumerGroup                                                                                 | KongConsumerGroup                                                 |
-| Certificate                                                                                   | kubernetes.io/tls Secret                                          |
-| CA Certificate                                                                                | generic Secret                                                    |
+| decK entity                                                                                       | K8s entity                                                        |
+| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Service                                                                                           | Service with annotations and KongIngress for upstream section     |
+| Route                                                                                             | Ingress (Ingress API) or HTTPRoute (Gateway API) with annotations |
+| Global Plugin                                                                                     | KongClusterPlugin                                                 |
+| Plugin                                                                                            | KongPlugin                                                        |
+| Auth Plugins <br>(`key-auth`, `hmac-auth`, `jwt`,<br> `basic-auth`, `oauth2`, `acl`, `mtls-auth`) | KongPlugin and Secret with credentials section in KongConsumer    |
+| Upstream                                                                                          | KongIngress or kongUpstreamPolicy                                 |
+| Consumer                                                                                          | KongConsumer                                                      |
+| ConsumerGroup                                                                                     | KongConsumerGroup                                                 |
+| Certificate                                                                                       | kubernetes.io/tls Secret                                          |
+| CA Certificate                                                                                    | generic Secret                                                    |
 
 ## Configuration options
 
@@ -179,75 +179,9 @@ consumer_groups:
 ```
 
 {% endnavtab %}
-{% navtab "Convert to Gateway API "%}
+{% navtab "Converted to Gateway API "%}
 
 ```yaml
-apiVersion: configuration.konghq.com/v1
-config:
-  hide_client_headers: false
-  identifier: consumer
-  limit:
-    - 5
-  namespace: example_namespace
-  strategy: local
-  sync_rate: -1
-  window_size:
-    - 30
-kind: KongPlugin
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: kong
-  name: example-service-rate-limiting-advanced
-plugin: rate-limiting-advanced
----
-apiVersion: configuration.konghq.com/v1
-config:
-  credentials: true
-  exposed_headers:
-    - X-My-Header
-  headers:
-    - Authorization
-  max_age: 3600
-  methods:
-    - GET
-    - POST
-  origins:
-    - example.com
-kind: KongPlugin
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: kong
-  name: example-service-example-route-cors
-plugin: cors
----
-apiVersion: configuration.konghq.com/v1
-config:
-  hide_credentials: false
-kind: KongPlugin
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: kong
-  name: example-service-example-route-basic-auth
-plugin: basic-auth
----
-apiVersion: configuration.konghq.com/v1
-config:
-  hide_client_headers: false
-  identifier: consumer
-  limit:
-    - 5
-  namespace: example_namespace
-  strategy: local
-  sync_rate: -1
-  window_size:
-    - 30
-kind: KongPlugin
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: kong
-  name: example-user-rate-limiting-advanced
-plugin: rate-limiting-advanced
----
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -423,65 +357,6 @@ spec:
             type: PathPrefix
             value: /v1/yet-another-example
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    konghq.com/connect-timeout: "5000"
-    konghq.com/path: /v1
-    konghq.com/plugins: example-service-rate-limiting-advanced
-    konghq.com/protocol: http
-    konghq.com/read-timeout: "60000"
-    konghq.com/retries: "5"
-    konghq.com/write-timeout: "60000"
-  name: example-service
-spec:
-  ports:
-    - port: 80
-      protocol: TCP
-      targetPort: 80
-  selector:
-    app: example-service
----
-apiVersion: v1
-kind: Secret
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: kong
-  labels:
-    konghq.com/credential: basic-auth
-  name: basic-auth-example-user
-stringData:
-  password: my_basic_password
-  username: my_basic_user
----
-apiVersion: configuration.konghq.com/v1
-consumerGroups:
-  - example-consumer-group
-credentials:
-  - basic-auth-example-user
-custom_id: "1234567890"
-kind: KongConsumer
-metadata:
-  annotations:
-    konghq.com/plugins: example-user-rate-limiting-advanced
-    kubernetes.io/ingress.class: kong
-  name: example-user
-username: example-user
----
-apiVersion: configuration.konghq.com/v1beta1
-kind: KongConsumerGroup
-metadata:
-  annotations:
-    kubernetes.io/ingress.class: kong
-  name: example-consumer-group
----
-```
-
-{% endnavtab %}
-{% navtab "Converted to Ingress API "%}
-
-```yaml
 apiVersion: configuration.konghq.com/v1
 config:
   hide_client_headers: false
@@ -548,6 +423,65 @@ metadata:
   name: example-user-rate-limiting-advanced
 plugin: rate-limiting-advanced
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    konghq.com/connect-timeout: "5000"
+    konghq.com/path: /v1
+    konghq.com/plugins: example-service-rate-limiting-advanced
+    konghq.com/protocol: http
+    konghq.com/read-timeout: "60000"
+    konghq.com/retries: "5"
+    konghq.com/write-timeout: "60000"
+  name: example-service
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: example-service
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: kong
+  labels:
+    konghq.com/credential: basic-auth
+  name: basic-auth-example-user
+stringData:
+  password: my_basic_password
+  username: my_basic_user
+---
+apiVersion: configuration.konghq.com/v1
+consumerGroups:
+  - example-consumer-group
+credentials:
+  - basic-auth-example-user
+custom_id: "1234567890"
+kind: KongConsumer
+metadata:
+  annotations:
+    konghq.com/plugins: example-user-rate-limiting-advanced
+    kubernetes.io/ingress.class: kong
+  name: example-user
+username: example-user
+---
+apiVersion: configuration.konghq.com/v1beta1
+kind: KongConsumerGroup
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: kong
+  name: example-consumer-group
+---
+```
+
+{% endnavtab %}
+{% navtab "Converted to Ingress API "%}
+
+```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -638,6 +572,72 @@ spec:
                   number: 80
             path: /v1/yet-another-example
             pathType: ImplementationSpecific
+---
+apiVersion: configuration.konghq.com/v1
+config:
+  hide_client_headers: false
+  identifier: consumer
+  limit:
+    - 5
+  namespace: example_namespace
+  strategy: local
+  sync_rate: -1
+  window_size:
+    - 30
+kind: KongPlugin
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: kong
+  name: example-service-rate-limiting-advanced
+plugin: rate-limiting-advanced
+---
+apiVersion: configuration.konghq.com/v1
+config:
+  credentials: true
+  exposed_headers:
+    - X-My-Header
+  headers:
+    - Authorization
+  max_age: 3600
+  methods:
+    - GET
+    - POST
+  origins:
+    - example.com
+kind: KongPlugin
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: kong
+  name: example-service-example-route-cors
+plugin: cors
+---
+apiVersion: configuration.konghq.com/v1
+config:
+  hide_credentials: false
+kind: KongPlugin
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: kong
+  name: example-service-example-route-basic-auth
+plugin: basic-auth
+---
+apiVersion: configuration.konghq.com/v1
+config:
+  hide_client_headers: false
+  identifier: consumer
+  limit:
+    - 5
+  namespace: example_namespace
+  strategy: local
+  sync_rate: -1
+  window_size:
+    - 30
+kind: KongPlugin
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: kong
+  name: example-user-rate-limiting-advanced
+plugin: rate-limiting-advanced
 ---
 apiVersion: v1
 kind: Service
