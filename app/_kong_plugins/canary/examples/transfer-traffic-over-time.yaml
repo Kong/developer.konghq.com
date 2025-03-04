@@ -22,5 +22,4 @@ tools:
   - deck
   - admin-api
   - konnect-api
-  - kic
   - terraform
