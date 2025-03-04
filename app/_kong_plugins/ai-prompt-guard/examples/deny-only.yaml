@@ -1,0 +1,19 @@
+description: |
+  Configure the plugin to deny messages following a specific pattern. 
+  For requests to pass through in this example, 
+  the user messages in the prompt must not be a card number field that starts with 5.
+
+title: 'Deny only'
+
+weight: 900
+
+config: 
+  deny_patterns:
+  - '\"card\".*\"5[0-9]{12}(?:[0-9]{3})?\"'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

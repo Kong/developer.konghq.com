@@ -13,8 +13,6 @@ tools:
     - deck
     - terraform
 
-tier: enterprise
-
 related_resources:
     - text: Create rate limiting tiers with {{site.base_gateway}}
       url: /how-to/add-rate-limiting-tiers-with-kong-gateway/

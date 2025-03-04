@@ -12,8 +12,6 @@ works_on:
     - on-prem
     - konnect
 
-tier: enterprise
-
 entities: 
   - plugin
   - service

@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Detect and block injection attacks using regular expressions'
-tier: enterprise
 
 
 products:
@@ -91,7 +90,7 @@ Logs are automatically collected when you enable the Injection Protection plugin
     * [Kafka Log](/plugins/kafka-log/)
     * [TCP Log](/plugins/tcp-log/)
     * [UDP Log](/plugins/udp-log/)
-* [{{site.konnect_short_name}} Advanced Analytics](/konnect/advanced-analytics/)
+* [{{site.konnect_short_name}} Advanced Analytics](/advanced-analytics/)
 
 Here's a sample log entry created by the Injection Protection plugin. 
 

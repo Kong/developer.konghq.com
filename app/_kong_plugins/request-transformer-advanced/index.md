@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Use powerful regular expressions, variables, and templates to transform API requests'
-tier: enterprise
 
 
 products:

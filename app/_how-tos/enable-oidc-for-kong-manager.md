@@ -16,7 +16,6 @@ entities:
 works_on:
   - on-prem
 
-tier: enterprise
 
 tags:
   - authentication

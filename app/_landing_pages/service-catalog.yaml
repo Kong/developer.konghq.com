@@ -43,7 +43,7 @@ rows:
               icon: /assets/icons/plug.svg
               cta:
                 text: View Integrations
-                url: /konnect/service-catalog/integrations/
+                url: /service-catalog/integrations/
       - blocks:
           - type: card
             config:
@@ -53,7 +53,7 @@ rows:
               icon: /assets/icons/data-object.svg
               cta:
                 text: View Scorecards
-                url: /konnect/service-catalog/scorecards/
+                url: /service-catalog/scorecards/
   - header:
       type: h2
       text: "Frequently Asked Questions"

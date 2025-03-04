@@ -7,7 +7,7 @@ products:
     - gateway
 entities:
   - event-hook
-tier: enterprise
+
 tags:
   - eventhooks
   - webhook

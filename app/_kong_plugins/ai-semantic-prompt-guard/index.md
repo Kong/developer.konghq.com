@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Semantically and intelligently create allow and deny lists of topics that can be requested across every LLM.'
-tier: enterprise
 
 
 products:

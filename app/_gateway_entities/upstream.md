@@ -36,7 +36,6 @@ schema:
     path: /schemas/Upstream
 
 api_specs:
-    - gateway/admin-oss
     - gateway/admin-ee
     - konnect/control-planes-config
 ---

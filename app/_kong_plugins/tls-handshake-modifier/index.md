@@ -6,8 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Requests a client to present its client certificate'
-tier: enterprise
-
 
 products:
     - gateway

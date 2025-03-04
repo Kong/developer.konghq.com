@@ -6,8 +6,6 @@ entities:
 
 description: A {{site.base_gateway}} License entity allows you manage on-prem Enterprise licenses.
 
-tier: enterprise
-
 tools:
   - admin-api
 
@@ -18,9 +16,6 @@ schema:
   api: gateway/admin-ee
   path: /schemas/License
 
-related_resources:
-  - text: Enterprise features
-    url: /gateway/enterprise-vs-oss/
 
 faqs: 
   - q: How do I make sure the License is deployed to data plane nodes correctly in hybrid mode?
@@ -31,7 +26,7 @@ faqs:
 
 ## What is a License?
 
-A License entity allows you configure a License in your on-prem {{site.base_gateway}} cluster, in both [traditional and hybrid mode deployments](/gateway/deployment-topologies/). {{site.base_gateway}} can be used with or without a License. A License is required to use [{{site.base_gateway}} Enterprise features](/gateway/enterprise-vs-oss/).
+A License entity allows you configure a License in your on-prem {{site.base_gateway}} cluster, in both [traditional and hybrid mode deployments](/gateway/deployment-topologies/). {{site.base_gateway}} can be used with or without a License. 
 
 You receive a license file when you sign up for a {{site.base_gateway}} Enterprise subscription. If you purchased a subscription but haven’t received a license file, contact your sales representative.
 

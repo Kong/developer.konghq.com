@@ -14,7 +14,6 @@ products:
 works_on:
     - on-prem
 
-tier: enterprise
 
 tldr:
     q: How do I configure a Keyring to encrypt data?

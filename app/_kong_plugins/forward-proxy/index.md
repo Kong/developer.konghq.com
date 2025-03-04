@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Allows {{site.base_gateway}} to connect to intermediary transparent HTTP proxies'
-tier: enterprise
 
 
 products:

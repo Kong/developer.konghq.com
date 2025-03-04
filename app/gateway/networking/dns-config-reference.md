@@ -4,7 +4,6 @@ title: DNS Config Reference
 description: This reference explains DNS clients, CORS, and cookie management in {{site.base_gateway}}
 content_type: reference
 layout: reference
-tier: enterprise
 products:
    - gateway
    

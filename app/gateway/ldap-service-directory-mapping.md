@@ -9,7 +9,6 @@ products:
 description: |
   Service directory mapping allows organizations to use their LDAP Directory for authentication and authorization in {{site.base_gateway}}.
 
-tier: enterprise
 
 ---
 
