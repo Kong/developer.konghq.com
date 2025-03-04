@@ -282,6 +282,16 @@ app/_kong_plugins/oas-validation/index.md:
   - app/_hub/kong-inc/oas-validation/overview/_index.md
 app/_kong_plugins/oas-validation/changelog.md:
   - app/_hub/kong-inc/oas-validation/_changelog.md
+app/_kong_plugins/ai-prompt-guard/index.md:
+  - app/_hub/kong-inc/ai-prompt-guard/overview/_index.md
+app/_kong_plugins/ai-prompt-guard/changelog.md:
+  - app/_hub/kong-inc/ai-prompt-guard/_changelog.md
+app/_kong_plugins/ai-prompt-guard/examples/allow-and-deny.yaml:
+ - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
+app/_kong_plugins/ai-prompt-guard/examples/allow-only.yaml:
+ - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
+app/_kong_plugins/ai-prompt-guard/examples/deny-only.yaml:
+ - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
 
 # Konnect
 
