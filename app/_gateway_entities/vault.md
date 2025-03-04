@@ -31,7 +31,6 @@ tools:
     - terraform
 
 api_specs:
-    - gateway/admin-oss
     - gateway/admin-ee
     - konnect/control-planes-config
 
