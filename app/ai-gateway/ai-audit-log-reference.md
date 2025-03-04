@@ -20,6 +20,8 @@ related_resources:
     url: /ai-gateway/
   - text: Kong AI Gateway plugins
     url: /plugins/?category=ai
+  - text: "{{site.base_gateway}} logs"
+    url: /gateway/logs/
 
 ---
 
