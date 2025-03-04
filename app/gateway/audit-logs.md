@@ -6,8 +6,12 @@ layout: reference
 products:
     - gateway
 
+tags:
+  - logging
+  - audit-logging
+
 min_version:
-    gateway: '3.5'
+    gateway: '3.4'
 
 description: placeholder
 
@@ -23,6 +27,8 @@ related_resources:
 ---
 
 You can generate {{site.base_gateway}} audit logs using the Admin API and the data is written to {{site.base_gateway}}'s database. Audit logs provide details about HTTP requests handled by the Admin API as well as database changes. This allows cluster administrators to keep track of changes made to the cluster configuration throughout its lifetime, aiding in compliance efforts and providing valuable data points during forensic investigations. 
+
+Because every audit log entry is made available via {{site.base_gateway}}’s Admin API, you can send audit log entries into existing logging warehouses, SIEM solutions, or other remote services for duplication and inspection.
 
 ## What type of events are included in audit logs?
 
