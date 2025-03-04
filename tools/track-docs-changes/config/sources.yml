@@ -284,6 +284,10 @@ app/_kong_plugins/oas-validation/index.md:
   - app/_hub/kong-inc/oas-validation/overview/_index.md
 app/_kong_plugins/oas-validation/changelog.md:
   - app/_hub/kong-inc/oas-validation/_changelog.md
+app/_kong_plugins/xml-threat-protection/index.md:
+  - app/_hub/kong-inc/xml-threat-protection/overview/_index.md
+app/_kong_plugins/xml-threat-protection/changelog.md:
+  - app/_hub/kong-inc/xml-threat-protection/_changelog.md
 app/_kong_plugins/ai-prompt-guard/index.md:
   - app/_hub/kong-inc/ai-prompt-guard/overview/_index.md
 app/_kong_plugins/ai-prompt-guard/changelog.md:
