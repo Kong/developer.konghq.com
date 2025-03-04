@@ -25,7 +25,7 @@ min_version:
   gateway: '3.4'
 
 tags:
-    - ui
+    - UI
 
 tldr:
     q: How do I enable Kong Manager for {{site.base_gateway}}?

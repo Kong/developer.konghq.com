@@ -374,6 +374,8 @@ app/gateway/performance/performance-benchmarks.md:
   - app/_src/gateway/production/performance/performance-testing.md
 app/ai-gateway/ai-audit-log-reference.md:
   - app/_src/gateway/production/logging/ai-analytics.md
+app/gateway/kong-manager.md:
+  - app/_src/gateway/kong-manager/enable.md 
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
