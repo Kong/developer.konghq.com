@@ -10,8 +10,6 @@ related_resources:
 products:
     - gateway
 
-tier: enterprise
-
 works_on:
     - on-prem
     - konnect
@@ -31,26 +29,26 @@ prereqs:
         > **Important:** This tutorial uses the literal `root` string as your token, which should only be used in testing and development environments.
 
         1. [Install HashiCorp Vault](https://developer.hashicorp.com/vault/tutorials/get-started/install-binary#install-vault).
-        1. In a terminal, start your Vault dev server with `root` as your token.
+        2. In a terminal, start your Vault dev server with `root` as your token.
           ```
           vault server -dev -dev-root-token-id root
           ```
-        1. In the output from the previous command, copy the `VAULT_ADDR` to export.
-        1. In a new terminal window, export your `VAULT_ADDR` as an environment variable.
-        1. Verify that your Vault is running correctly:
+        3. In the output from the previous command, copy the `VAULT_ADDR` to export.
+        4. In a new terminal window, export your `VAULT_ADDR` as an environment variable.
+        5. Verify that your Vault is running correctly:
           ```
           vault status
           ```
-        1. Authenticate with Vault:
+        6. Authenticate with Vault:
           ```
           vault login root
           ```
-        1. [Create the `admin-policy.hcl` policy file](https://developer.hashicorp.com/vault/tutorials/policies/policies#write-a-policy). This contains the [permissions you need to create and use secrets](https://developer.hashicorp.com/vault/tutorials/secrets-management/versioned-kv#policy-requirements).
-        1. Upload the policy you just created:
+        7. [Create the `admin-policy.hcl` policy file](https://developer.hashicorp.com/vault/tutorials/policies/policies#write-a-policy). This contains the [permissions you need to create and use secrets](https://developer.hashicorp.com/vault/tutorials/secrets-management/versioned-kv#policy-requirements).
+        8. Upload the policy you just created:
           ```
           vault policy write admin admin-policy.hcl
           ```
-        1. [Verify that you are using the `v2` secrets engine](https://developer.hashicorp.com/vault/tutorials/secrets-management/versioned-kv?variants=vault-deploy%3Aselfhosted#check-the-kv-secrets-engine-version):
+        9. [Verify that you are using the `v2` secrets engine](https://developer.hashicorp.com/vault/tutorials/secrets-management/versioned-kv?variants=vault-deploy%3Aselfhosted#check-the-kv-secrets-engine-version):
           ```
           vault read sys/mounts/secret
           ```

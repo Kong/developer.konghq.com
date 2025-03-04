@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: Control which Consumers can access Services and Routes
-tier: enterprise
 
 related_resources:
   - text: Use the ACL plugin with Consumer Groups

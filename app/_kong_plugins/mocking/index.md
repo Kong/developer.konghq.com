@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Provide mock endpoints to test your APIs against your services'
-tier: enterprise
 
 
 products:

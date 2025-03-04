@@ -31,8 +31,6 @@ entities:
   - consumer
   - consumer-group
 
-tier: enterprise
-
 tags:
   - security
   - traffic-control

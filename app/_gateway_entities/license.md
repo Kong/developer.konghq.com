@@ -6,8 +6,6 @@ entities:
 
 description: A {{site.base_gateway}} License entity allows you manage on-prem Enterprise licenses.
 
-tier: enterprise
-
 tools:
   - admin-api
 

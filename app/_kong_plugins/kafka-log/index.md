@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Publish logs to a Kafka topic'
-tier: enterprise
 
 
 products:

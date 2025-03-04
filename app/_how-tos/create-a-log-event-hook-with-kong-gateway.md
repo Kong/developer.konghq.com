@@ -8,7 +8,6 @@ works_on:
     - on-prem
 products:
     - gateway
-tier: enterprise
 
 tags:
   - eventhooks

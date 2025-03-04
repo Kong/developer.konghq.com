@@ -25,7 +25,6 @@ min_version:
 tags:
     - docker
 
-tier: enterprise
 
 tldr:
     q: How do I verify {{site.ee_product_name}} Docker build provenance?

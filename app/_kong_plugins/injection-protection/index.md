@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Detect and block injection attacks using regular expressions'
-tier: enterprise
 
 
 products:

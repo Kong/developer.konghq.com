@@ -10,8 +10,6 @@ related_resources:
 products:
     - gateway
 
-tier: enterprise
-
 works_on:
     - on-prem
     - konnect

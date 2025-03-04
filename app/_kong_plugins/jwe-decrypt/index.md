@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Decrypt a JWE token in a request'
-tier: enterprise
 
 
 products:

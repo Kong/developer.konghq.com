@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Authorize requests against Open Policy Agent'
-tier: enterprise
 
 
 products:

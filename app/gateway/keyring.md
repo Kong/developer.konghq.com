@@ -16,8 +16,6 @@ related_resources:
 - text: Certificate entity
   url: /gateway/entities/certificate/
 
-tier: enterprise
-
 api_specs:
   - gateway/admin-ee
 
