@@ -26,7 +26,7 @@ related_resources:
 Kong AI Gateway provides a standardized logging format for [AI plugins](/plugins/?category=ai), enabling the emission of analytics events and facilitating the aggregation of AI usage analytics across various providers.
 
 
-## Log format details
+## Log details
 
 Each AI plugin returns a set of tokens. Log entries include the following details:
 
@@ -61,8 +61,86 @@ Each AI plugin returns a set of tokens. Log entries include the following detail
 
 <!--vale on-->
 
+See the following AI plugin log format example:
+{% if_version lte:3.7 %}
+```json
+"ai": {
+    "payload": { "request": "[$optional_payload_request_]" },
+    "[$plugin_name_1]": {
+      "payload": { "response": "[$optional_payload_response]" },
+      "usage": {
+        "prompt_token": 28,
+        "total_tokens": 48,
+        "completion_token": 20,
+        "cost": 0.0038
+      },
+      "meta": {
+        "request_model": "command",
+        "provider_name": "cohere",
+        "response_model": "command",
+        "plugin_id": "546c3856-24b3-469a-bd6c-f6083babd2cd"
+      }
+    },
+    "[$plugin_name_2]": {
+      "payload": { "response": "[$optional_payload_response]" },
+      "usage": {
+        "prompt_token": 89,
+        "total_tokens": 145,
+        "completion_token": 56,
+        "cost": 0.0012
+      },
+      "meta": {
+        "request_model": "gpt-35-turbo",
+        "provider_name": "azure",
+        "response_model": "gpt-35-turbo",
+        "plugin_id": "5df193be-47a3-4f1b-8c37-37e31af0568b"
+      }
+    }
+  }
+```
+{% endif_version %}
 {% if_version gte:3.8 %}
-### Cache logging
+```json
+"ai": {
+    "payload": { "request": "[$optional_payload_request_]" },
+    "[$plugin_name_1]": {
+      "payload": { "response": "[$optional_payload_response]" },
+      "usage": {
+        "prompt_token": 28,
+        "total_tokens": 48,
+        "completion_token": 20,
+        "cost": 0.0038,
+        "time_per_token": 133
+      },
+      "meta": {
+        "request_model": "command",
+        "provider_name": "cohere",
+        "response_model": "command",
+        "plugin_id": "546c3856-24b3-469a-bd6c-f6083babd2cd",
+        "llm_latency": 2670
+      }
+    },
+    "[$plugin_name_2]": {
+      "payload": { "response": "[$optional_payload_response]" },
+      "usage": {
+        "prompt_token": 89,
+        "total_tokens": 145,
+        "completion_token": 56,
+        "cost": 0.0012,
+        "time_per_token": 87
+      },
+      "meta": {
+        "request_model": "gpt-35-turbo",
+        "provider_name": "azure",
+        "response_model": "gpt-35-turbo",
+        "plugin_id": "5df193be-47a3-4f1b-8c37-37e31af0568b",
+        "llm_latency": 4927
+      }
+    }
+  }
+```
+
+## Cache logging
 
 If you're using the [AI Semantic Cache plugin](/plugins/ai-semantic-cache), logging will include some additional details about caching:
 
