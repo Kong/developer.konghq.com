@@ -1,0 +1,23 @@
+description: |
+  Configure the plugin to allow messages following a specific pattern. 
+  For requests to pass through in this example, 
+  any of the user role messages in the prompt must have all card fields adhering to this standard:
+  starts with the integer 4, then 3 integers, then 12 asterisks.
+
+  This plugin would prevent accidental processing and/or subsequent model training when full card numbers are sent in.
+
+title: 'Allow only'
+
+weight: 900
+
+config: 
+  allow_patterns:
+  - '.*\"card\".*\"4[0-9]{3}\*{12}\"'
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
