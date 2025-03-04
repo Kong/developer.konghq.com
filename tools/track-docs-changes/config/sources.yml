@@ -408,3 +408,6 @@ app/serverless-gateways/index.md:
 
 app/konnect-account.md:
   - app/konnect/org-management/deactivation.md
+
+app/service-catalog-integrations.yaml:
+  - app/konnect/service-catalog/integrations/index.md
