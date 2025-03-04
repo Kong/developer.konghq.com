@@ -150,4 +150,4 @@ body:
     content: "Say this is a test!"
 {% endvalidation %}
 
-You should get a `200 OK` response with a description of AI Gateway.
+You should get a `200 OK` response, and the response body should contain `This is a test`.
