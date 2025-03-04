@@ -844,9 +844,6 @@ resource "konnect_gateway_vault" "env" {
 
   control_plane_id = var.control_plane_id
 }
-
-
-
 ```
 
 {% endnavtab %}

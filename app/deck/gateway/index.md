@@ -1,5 +1,5 @@
 ---
-title: Managing Kong Gateway
+title: deck gateway
 short_title: Overview
 description: Manage {{ site.base_gateway }} declaratively
 

@@ -36,7 +36,10 @@ The exact command that you need to run changes if you're using workspaces (on-pr
 decK can export one control plane at a time from {{ site.konnect_short_name }}. To choose which control plane is backed up, specify the `--konnect-control-plane-name` flag:
 
 ```bash
-deck gateway dump -o $YOUR_CP_NAME.yaml --konnect-control-plane-name $YOUR_CP_NAME --konnect-token $KONNECT_TOKEN
+deck gateway dump \
+  -o $YOUR_CP_NAME.yaml \
+  --konnect-control-plane-name $YOUR_CP_NAME \
+  --konnect-token $KONNECT_TOKEN
 ```
 
 ## Single workspace

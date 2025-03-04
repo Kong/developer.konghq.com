@@ -43,10 +43,13 @@ cat kong.yaml | yq 'del(.services[] | select(.name == "example-service"))' | dec
 
 ## Syncing multiple files
 
+{:.warning}
+
+> Syncing multiple files at once causes decK to merge all of the provided files in to a single configuration before syncing. To split your configuration in to indepenent units, [use tags](/deck/gateway/tags/).
+
 decK can construct a state by combining multiple JSON or YAML files inside a directory instead of a single file.
 
-In most use cases, a single file will suffice, but you might want to use
-multiple files if:
+In most use cases, a single file will suffice, but you might want to use multiple files if:
 
 - You want to organize the files for each service. In this case, you
   can have one file per service, and keep the service, its associated routes, plugins, and other entities in that file.
@@ -61,6 +64,3 @@ deck gateway sync services.yaml consumers.yaml
 # Sync a whole directory
 deck gateway sync directory/*.yaml
 ```
-
-Note that having the state split across different files is not same
-as [distributed configuration](/deck/gateway/tags/) using tags.
