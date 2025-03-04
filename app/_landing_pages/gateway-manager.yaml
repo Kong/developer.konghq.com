@@ -2,7 +2,8 @@ metadata:
   title: Gateway Manager
   content_type: landing_page
   description: TODO
-  breadcrumbs: /gateway-manager/
+  breadcrumbs: 
+    - /gateway-manager/
 rows:
   - header:
       type: h1
