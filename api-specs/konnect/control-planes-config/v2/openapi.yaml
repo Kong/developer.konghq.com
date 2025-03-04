@@ -4093,21 +4093,18 @@ components:
     DataPlaneClientCertificate:
       type: object
       properties:
-        item:
-          type: object
-          properties:
-            id:
-              description: Unique ID of the certificate entity.
-              type: string
-            created_at:
-              description: Date certificate was created.
-              type: integer
-            updated_at:
-              description: Date certificate was last updated.
-              type: integer
-            cert:
-              description: JSON escaped string of the certificate.
-              type: string
+        id:
+          description: Unique ID of the certificate entity.
+          type: string
+        created_at:
+          description: Date certificate was created.
+          type: integer
+        updated_at:
+          description: Date certificate was last updated.
+          type: integer
+        cert:
+          description: JSON escaped string of the certificate.
+          type: string
     ConfigStore:
       type: object
       properties:
@@ -6813,7 +6810,10 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/DataPlaneClientCertificate'
+            type: object
+            properties:
+              item:
+                $ref: '#/components/schemas/DataPlaneClientCertificate'
     GetExpectedConfigHashResponse:
       description: Response body for retrieving the expected config hash of the control plane.
       content:
