@@ -26,9 +26,9 @@ related_resources:
   - text: Kong AI Gateway plugins
     url: /plugins/?category=ai
   - text: Status API
-    url: /api/gateway/status/v1/
+    url: /api/gateway/status/
   - text: Admin API
-    url: /api/gateway/admin-ee/3.9/
+    url: /api/gateway/admin-ee/
 ---
 
 Kong AI Gateway calls LLM-based services according to the settings of the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins.
