@@ -35,6 +35,10 @@ categories:
 
 search_aliases:
   - xml-threat-protection
+
+related_resources:
+  - text: JSON Threat Protection plugin
+    url: /plugins/json-threat-protection/
 ---
 
 The XML Threat Protection plugin reduces the risk of XML attacks by validating the structure of XML payloads.
