@@ -195,7 +195,7 @@ If you're using the [AI Semantic Cache plugin](/plugins/ai-semantic-cache), logg
   }
 ```
 
-{:.note}
+{:.info}
 > **Note:** 
 > When returning a cache response, `time_per_token` and `llm_latency` are omitted.
 > The cache response can be returned either as a semantic cache or an exact cache. If it's returned as a semantic cache, it will include additional details such as the embeddings provider, embeddings model, and embeddings latency.
