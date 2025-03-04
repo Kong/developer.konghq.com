@@ -38,10 +38,10 @@ The metrics details also expose whether the requests have been cached by {{site.
 
 Kong AI Gateway exposes metrics related to Kong and proxied upstream services in 
 [Prometheus](https://prometheus.io/docs/introduction/overview/) 
-exposition format, which can be scraped by a Prometheus Server.
+exposition format, which can be scraped by a Prometheus server.
 
 The metrics are available on both the [Admin API](/api/gateway/admin-ee/) and the 
-[Status API](/api/gateway/status/)  at the `http://<host>:<port>/metrics` endpoint. 
+[Status API](/api/gateway/status/)  at the `http://{host}:{port}/metrics` endpoint. 
 Note that the URL to those APIs is specific to your
 installation. See [Accessing the metrics](#accessing-the-metrics) for more information.
 
@@ -78,8 +78,8 @@ These metrics are available per provider, model, cache, database name (if cached
 AI metrics are disabled by default as it may create high cardinality of metrics and may
 cause performance issues. To enable them:
 
-* Set `config.ai_metrics` to `true` in the Prometheus plugin configuration.
-* Set `config.logging.log_statistics` to `true` in the AI Proxy or AI Proxy Advanced plugin.
+* Set `config.ai_metrics` to `true` in the [Prometheus plugin configuration](/plugins/prometheus/reference/).
+* Set `config.logging.log_statistics` to `true` in the [AI Proxy](/plugins/ai-proxy/reference/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/reference/).
 
 Here is an example of output you could expect from the `/metrics` endpoint:
 
@@ -87,29 +87,35 @@ Here is an example of output you could expect from the `/metrics` endpoint:
 # HELP ai_llm_requests_total AI requests total per ai_provider in Kong
 # TYPE ai_llm_requests_total counter
 ai_llm_requests_total{ai_provider="provider1",ai_model="model1",cache_status="hit",vector_db="redis",embeddings_provider="openai",embeddings_model="text-embedding-3-large",Workspace="workspace1"} 100
+
 # HELP ai_llm_cost_total AI requests cost per ai_provider/cache in Kong
 # TYPE ai_llm_cost_total counter
 ai_llm_cost_total{ai_provider="provider1",ai_model="model1",cache_status="hit",vector_db="redis",embeddings_provider="openai",embeddings_model="text-embedding-3-large",Workspace="workspace1"} 50
+
 # HELP ai_llm_provider_latency AI latencies per ai_provider in Kong
 # TYPE ai_llm_provider_latency bucket
 ai_llm_provider_latency_ms_bucket{ai_provider="provider1",ai_model="model1",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",Workspace="workspace1",le="+Inf"} 2
+
 # HELP ai_llm_tokens_total AI tokens total per ai_provider/cache in Kong
 # TYPE ai_llm_tokens_total counter
 ai_llm_tokens_total{ai_provider="provider1",ai_model="model1",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",token_type="prompt_tokens",Workspace="workspace1"} 1000
 ai_llm_tokens_total{ai_provider="provider1",ai_model="model1",cache_status="",vector_db="",embeddings_provider="",embeddings_model="",token_type="completion_tokens",Workspace="workspace1"} 2000
 ai_llm_tokens_total{ai_provider="provider1",ai_model="model1",cache_status="hit",vector_db="redis",embeddings_provider="openai",embeddings_model="text-embedding-3-large",token_type="total_tokens",Workspace="workspace1"} 3000
+
 # HELP ai_cache_fetch_latency AI cache latencies per ai_provider/database in Kong
 # TYPE ai_cache_fetch_latency bucket
 ai_cache_fetch_latency{ai_provider="provider1",ai_model="model1",cache_status="hit",vector_db="redis",embeddings_provider="openai",embeddings_model="text-embedding-3-large",Workspace="workspace1",le="+Inf"} 2
+
 # HELP ai_cache_embeddings_latency AI cache latencies per ai_provider/database in Kong
 # TYPE ai_cache_embeddings_latency bucket
 ai_cache_embeddings_latency{ai_provider="provider1",ai_model="model1",cache_status="hit",vector_db="redis",embeddings_provider="openai",embeddings_model="text-embedding-3-large",Workspace="workspace1",le="+Inf"} 2
+
 # HELP ai_llm_provider_latency AI cache latencies per ai_provider/database in Kong
 # TYPE ai_llm_provider_latency bucket
 ai_llm_provider_latency{ai_provider="provider1",ai_model="model1",cache_status="hit",vector_db="redis",embeddings_provider="openai",embeddings_model="text-embedding-3-large",Workspace="workspace1",le="+Inf"} 2
 ```
 
-{:.note}
+{:.info}
 > **Note:** If you don't use any cache plugins, then `cache_status`, `vector_db`,
 `embeddings_provider`, and `embeddings_model` values will be empty. 
 
@@ -120,12 +126,12 @@ need to be set up to require authentication. Here are a couple of options to
 allow access to the `/metrics` endpoint to Prometheus:
 
 
-* If the Status API is enabled with the `status_listen` parameter in the [{{site.base_gateway}} configuration](/gateway/configuration/), 
+* If the Status API is enabled with the `status_listen` parameter in the [{{site.base_gateway}} configuration](/gateway/configuration/#status_listen), 
 then its `/metrics` endpoint can be used. This is the preferred method.
 
 * The `/metrics` endpoint is also available on the Admin API, which can be used
 if the Status API is not enabled. Note that this endpoint is unavailable
-when [RBAC](/api/gateway/admin-ee/3.9/#/operations/get-rbac-users) is enabled on the
-Admin API (Prometheus does not support key authentication to pass the token).
+when [RBAC](/api/gateway/admin-ee/#/operations/get-rbac-users) is enabled on the
+Admin API, as Prometheus doesn't support key authentication to pass the RBAC token.
 
 
