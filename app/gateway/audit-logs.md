@@ -20,10 +20,24 @@ related_resources:
     url: /gateway/logs/
   - text: "{{site.base_gateway}} debugging"
     url: /gateway/debug/
+  - text: "{{site.konnect_short_name}} audit logs"
+    url: /audit-logs/
 ---
 
-@todo
+{{site.base_gateway}} provides a granular logging facility through its Admin API. This
+allows cluster administrators to keep detailed track of changes made to the
+cluster configuration throughout its lifetime, aiding in compliance efforts and
+providing valuable data points during forensic investigations. Generated audit
+log trails are [Workspace](/gateway/api/admin-ee/latest/#/Workspaces) and [RBAC](/gateway/api/admin-ee/latest/#/rbac)-aware,
+providing Kong operators a deep and wide look into changes happening within
+the cluster.
 
-Pull content from https://docs.konghq.com/gateway/latest/kong-enterprise/audit-log/
+## What type of things are audited?
+ljlkj
 
-Be sure to add card for this to Gateway Security landing page
+## Enable audit logging
+blah
+
+
+
+
