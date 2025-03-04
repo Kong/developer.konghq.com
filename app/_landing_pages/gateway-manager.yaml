@@ -182,10 +182,10 @@ rows:
               cta:
                 text: Learn more
                 url: /gateway-manager/data-plane-nodes/
-           - blocks:
+      - blocks:
           - type: card
             config:
-              title: {{site.base_gateway}} control plane and data plane communication
+              title: "{{site.base_gateway}} control plane and data plane communication"
               description: |
                 Learn about how control planes and data plane nodes communicate with each other.
               icon: /assets/icons/gateway.svg
