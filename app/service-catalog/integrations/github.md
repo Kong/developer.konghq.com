@@ -1,5 +1,5 @@
 ---
-title: "github"
+title: "Github"
 content_type: reference
 layout: reference
 
