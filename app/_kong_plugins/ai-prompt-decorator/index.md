@@ -43,7 +43,7 @@ search_aliases:
 ---
 
 The AI Prompt Decorator plugin adds an array of `llm/v1/chat` messages to either the start or end of an LLM consumer's chat history.
-This allows you to pre-engineer complex prompts, or steer (and guard) prompts so that it isn't visible to users. 
+This allows you to pre-engineer complex prompts, or steer (and guard) prompts so that they aren't visible to users. 
 
 You can use this plugin to pre-set a system prompt, set up specific prompt history, add words and phrases, or otherwise have more
 control over how an LLM service is used when called via {{site.base_gateway}}.

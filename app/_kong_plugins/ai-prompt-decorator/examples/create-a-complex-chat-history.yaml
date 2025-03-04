@@ -4,13 +4,8 @@ description: 'Creates a complex chat history that can be continued by any user b
 
 weight: 900
 
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
+requirements:
+  - "[AI Proxy plugin](/plugins/ai-proxy/) configured with an LLM service"
 
 config: 
   prompts:
