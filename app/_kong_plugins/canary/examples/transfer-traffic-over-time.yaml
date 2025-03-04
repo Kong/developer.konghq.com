@@ -1,0 +1,26 @@
+description: |
+  Schedule a canary release to start at a specific time, in UNIX timestamp seconds since epoch, and finish migrating 100% of traffic in a specified length of time, in seconds.
+
+  Setting `config.start` to `null` sets the start time to the current time, and starts the canary release immediately.
+
+title: 'Transfer traffic over time'
+
+weight: 900
+
+variables:
+  upstream_host:
+    value: $UPSTREAM_HOST
+    description: The hostname of your upstream service without the the `http` or `https` prefix. For example, `example.com`.
+
+config:
+  upstream_host: ${upstream_host}
+  upstream_port: 80
+  start: null
+  duration: 3600
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

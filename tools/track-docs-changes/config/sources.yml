@@ -298,6 +298,10 @@ app/_kong_plugins/ai-prompt-guard/examples/allow-only.yaml:
  - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
 app/_kong_plugins/ai-prompt-guard/examples/deny-only.yaml:
  - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
+app/_kong_plugins/canary/index.md:
+  - app/_hub/kong-inc/canary/overview/_index.md
+app/_kong_plugins/canary/changelog.md:
+  - app/_hub/kong-inc/canary/_changelog.md
 
 # Konnect
 
