@@ -27,7 +27,7 @@ rows:
 
   - header:
       type: h2
-      text: "Available Integrations"
+      text: "Available integrations"
   - columns:
       - blocks:
           - type: card
