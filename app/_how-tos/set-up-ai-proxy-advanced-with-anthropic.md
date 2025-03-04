@@ -15,7 +15,6 @@ works_on:
 min_version:
   gateway: '3.8'
 
-tier: enterprise
 
 plugins:
   - ai-proxy-advanced

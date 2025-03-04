@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Transform a GraphQL upstream into a REST API'
-tier: enterprise
 
 
 products:

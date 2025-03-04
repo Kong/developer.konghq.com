@@ -3,7 +3,7 @@ title: RBAC
 content_type: reference
 products:
   - gateway
-tier: enterprise
+
 tools:
     - admin-api
 entities:

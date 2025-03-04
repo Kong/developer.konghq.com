@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Slowly roll out software changes to a subset of users'
-tier: enterprise
 
 
 products:

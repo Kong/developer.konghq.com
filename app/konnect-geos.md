@@ -22,7 +22,7 @@ works_on:
   
 related_resources:
   - text: "{{site.konnect_short_name}} ports and network requirements"
-    url: /konnect/network/
+    url: /konnect-network/
 ---
 
 {{site.konnect_short_name}} allows you to host and operate your cloud instance in a geographic region that you specify. This is important for data privacy and regulatory compliance for you organization. 
@@ -41,11 +41,11 @@ The following objects are geo-specific:
 * [Gateway Services](/gateway/entities/service/)
 * [Routes](/gateway/entities/route/)
 * [Consumers](/gateway/entities/consumer/)
-* [API products](/konnect/api-products/)
-* [Application registration](/konnect/dev-portal/app-reg/)
-* [Dev portals](/konnect/dev-portal/)
-* [Service meshes and mesh zones](/konnect/mesh-manager/)
-* [Custom teams and roles](/konnect/teams-and-roles/)
+* [API products](/api-products/)
+* [Application registration](/dev-portal/app-reg/)
+* [Dev portals](/dev-portal/)
+* [Service meshes and mesh zones](/mesh-manager/)
+* [Custom teams and roles](/teams-and-roles/)
 
 ## Supported geos 
 
@@ -62,6 +62,6 @@ The following objects are geo-specific:
 
 ### Dedicated Cloud Gateways
 
-{{site.konnect_short_name}} [Dedicated Cloud Gateways](/konnect/dedicated-cloud-gateways/) support the following geos:
+{{site.konnect_short_name}} [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) support the following geos:
 
 {% include_cached /sections/dcg-regions.md %}

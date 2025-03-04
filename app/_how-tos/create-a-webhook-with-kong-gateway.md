@@ -6,7 +6,7 @@ products:
     - gateway
 entities:
   - event-hook
-tier: enterprise
+
 works_on:
     - on-prem
 tags:

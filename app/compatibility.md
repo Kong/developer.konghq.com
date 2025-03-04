@@ -3,8 +3,6 @@ title: "{{site.konnect_short_name}} compatibility"
 content_type: reference
 layout: reference
 
-tier: enterprise
-
 products:
     - gateway
 

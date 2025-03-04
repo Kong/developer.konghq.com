@@ -4,7 +4,7 @@ content_type: how_to
 
 products:
     - gateway
-tier: enterprise
+
 rbac: true
 works_on:
     - on-prem

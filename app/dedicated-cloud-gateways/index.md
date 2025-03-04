@@ -20,7 +20,7 @@ faqs:
   - q: Can Control Planes contain both serverless gateway Data Planes and self-managed Data Planes?
     a: No. Control Planes that use serverless gateways can't mix types of Data Planes.
   - q: Does Serverless Gateway support private networking?
-    a: No, serverless gateways only supports public networking. There are currently no capabilities for private networking between your data centers and Kong-hosted data planes. For use cases where private networking is required, [Dedicated Cloud Gateways](/konnect/dedicated-cloud-gateways/) configured with AWS is a better choice.
+    a: No, serverless gateways only supports public networking. There are currently no capabilities for private networking between your data centers and Kong-hosted data planes. For use cases where private networking is required, [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) configured with AWS is a better choice.
   - q: My serverless custom domain attachment failed, how do I troubleshoot it?
     a: |
       If your custom domain attachment fails, check if your domain has a Certificate Authority Authorization (CAA) record restricting certificate issuance. Serverless Gateways use Let's Encrypt CA to provision SSL/TLS certificates. If your CAA record doesn't include the required CA, certificate issuance will fail.
@@ -36,7 +36,7 @@ faqs:
 
 related_resources:
   - text: Konnect Advanced Analytics
-    url: /konnect/advanced-analytics/
+    url: /advanced-analytics/
 ---
 
 @TODO

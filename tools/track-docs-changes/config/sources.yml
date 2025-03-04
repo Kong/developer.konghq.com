@@ -183,6 +183,8 @@ app/_how-tos/rotate-secrets-in-google-cloud-secret.md:
   - app/_src/gateway/kong-enterprise/secrets-management/secrets-rotation.md
 app/_how-tos/use-acl-with-consumer-groups.md:
   - app/_hub/kong-inc/acl/how-to/_consumer-groups.md.md
+app/_how-tos/get-started-with-ai-gateway.md:
+  - app/_src/gateway/get-started/ai-gateway.md
 
 ## KIC
 app/_how-tos/proxy-http-traffic-kic.md:
@@ -286,19 +288,29 @@ app/_kong_plugins/xml-threat-protection/index.md:
   - app/_hub/kong-inc/xml-threat-protection/overview/_index.md
 app/_kong_plugins/xml-threat-protection/changelog.md:
   - app/_hub/kong-inc/xml-threat-protection/_changelog.md
+app/_kong_plugins/ai-prompt-guard/index.md:
+  - app/_hub/kong-inc/ai-prompt-guard/overview/_index.md
+app/_kong_plugins/ai-prompt-guard/changelog.md:
+  - app/_hub/kong-inc/ai-prompt-guard/_changelog.md
+app/_kong_plugins/ai-prompt-guard/examples/allow-and-deny.yaml:
+ - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
+app/_kong_plugins/ai-prompt-guard/examples/allow-only.yaml:
+ - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
+app/_kong_plugins/ai-prompt-guard/examples/deny-only.yaml:
+ - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
 
 # Konnect
 
-app/konnect/advanced-analytics/explorer.md:
+app/advanced-analytics/explorer.md:
   - app/konnect/advanced-analytics/explorer.md
-app/konnect/advanced-analytics/llm-reporting.md:
+app/advanced-analytics/llm-reporting.md:
   - app/konnect/advanced-analytics/explorer.md
-app/konnect/geos.md:
+app/konnect-geos.md:
   - app/konnect/geo.md
 
 
 # landing pages
-app/_landing_pages/konnect/service-catalog.yaml:
+app/_landing_pages/service-catalog.yaml:
   - app/_src/konnect/service-catalog/
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
   - app/_src/gateway/index.md
@@ -349,12 +361,16 @@ app/gateway/network-ports-firewall.md:
   - app/_src/gateway/production/networking/firewall.md
 app/gateway/cp-dp-communication.md:
   - app/_src/gateway/production/networking/cp-dp-proxy.md
-app/konnect/network.md:
+app/konnect-network.md:
   - app/konnect/network.md
 app/gateway/resource-sizing-guidelines.md:
   - app/_src/gateway/production/sizing-guidelines.md
 app/gateway/secure-the-admin-api.md:
   - app/_src/gateway/production/running-kong/secure-admin-api.md
+app/gateway/performance/performance-benchmarks.md:
+  - app/_src/gateway/production/performance/performance-testing.md
+app/ai-gateway/ai-audit-log-reference.md:
+  - app/_src/gateway/production/logging/ai-analytics.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
@@ -379,11 +395,13 @@ app/gateway/traffic-control/blue-green-deployments.md:
 # policies
 app/gateway/vulnerabilities.md:
   - app/_src/gateway/support/vulnerability-patching-process.md
+app/stages-of-software-availability.md:
+  - app/_src/gateway/stability.md
 
 
 # Serverless GW
 
-app/konnect/serverless-gateways/index.md:
+app/serverless-gateways/index.md:
   - app/konnect/gateway-manager/serverless-gateways/custom-dns.md
   - app/konnect/gateway-manager/serverless-gateways/provision-serverless-gateway.md
   - app/konnect/gateway-manager/serverless-gateways/custom-dns.md

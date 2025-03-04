@@ -6,8 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Cache and serve commonly requested responses in Kong'
-tier: enterprise
-
 
 products:
     - gateway

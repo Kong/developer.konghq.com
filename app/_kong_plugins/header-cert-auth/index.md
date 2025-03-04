@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Authenticate clients with mTLS certificates passed in headers by a WAF or load balancer'
-tier: enterprise
 
 
 products:

@@ -12,7 +12,6 @@ related_resources:
 
 publisher: kong-inc
 description: 'Prevent abuse and protect services with absolute limits on the number of requests reaching the service'
-tier: enterprise
 
 
 products:

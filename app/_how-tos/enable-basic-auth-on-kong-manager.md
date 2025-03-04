@@ -5,7 +5,6 @@ related_resources:
   - text: Authentication
     url: /gateway/authentication/
 
-tier: enterprise
 
 products:
     - gateway

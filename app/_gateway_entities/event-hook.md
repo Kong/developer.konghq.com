@@ -3,7 +3,7 @@ title: Event Hooks
 content_type: reference
 entities:
   - event-hook
-tier: enterprise
+
 description: Event Hooks allow {{site.base_gateway}} monitor to communicate with target services or resources, notifying the target resource that an event was triggered. 
 related_resources:
   - text: Gateway Services

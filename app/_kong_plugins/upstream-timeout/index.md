@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Set custom timeouts on connections to upstream services to override Gateway Service-level timeouts'
-tier: enterprise
 
 
 products:
