@@ -75,26 +75,15 @@ The plugin supports several types of credentials and grants.
 When this plugin is configured with multiple grants or flows, there is a hardcoded search
 order for the credentials:
 
-- [What does OpenID Connect do?](#what-does-openid-connect-do)
-- [What does Kong’s OpenID Connect plugin do?](#what-does-kongs-openid-connect-plugin-do)
-- [Authentication flows and grants](#authentication-flows-and-grants)
-  - [Authorization code flow](#authorization-code-flow)
-  - [Client credentials grant workflow](#client-credentials-grant-workflow)
-  - [Introspection authentication flow](#introspection-authentication-flow)
-  - [JWT access token authentication flow](#jwt-access-token-authentication-flow)
-  - [Kong OAuth token auth flow](#kong-oauth-token-auth-flow)
-  - [Refresh token grant workflow](#refresh-token-grant-workflow)
-  - [Session authentication workflow](#session-authentication-workflow)
-  - [User info authentication flow](#user-info-authentication-flow)
-  - [Password grant workflow](#password-grant-workflow)
-- [Authorization](#authorization)
-  - [Claims-based authorization](#claims-based-authorization)
-  - [ACL plugin authorization](#acl-plugin-authorization)
-  - [Consumer authorization](#consumer-authorization)
-- [Client authentication](#client-authentication)
-  - [Mutual TLS client authentication](#mutual-tls-client-authentication)
-- [OIDC authentication in Kong Manager](#oidc-authentication-in-kong-manager)
-- [Supported identity providers](#supported-identity-providers)
+1. [Session authentication](#session-auth-workflow)
+2. [JWT access token authentication](#jwt-access-token-auth-flow)
+3. [Kong OAuth token authentication](#kong-oauth-token-auth-flow)
+4. [Introspection authentication](#introspection-authentication-flow)
+5. [User info authentication](#user-info-auth-flow)
+6. [Refresh token grant](#refresh-token-grant-workflow)
+7. [Password grant](#password-grant-workflow) (username and password)
+8. [Client credentials grant](#client-credentials-grant-workflow)
+9. [Authorization code flow](#authorization-code-flow) (with client secret or PKCE)
 
 Once it finds a set of credentials, the plugin stops searching, and won't look for any further credential types.
 
