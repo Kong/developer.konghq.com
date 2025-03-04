@@ -41,4 +41,45 @@ search_aliases:
   - model
 ---
 
-## Overview
+The AI Prompt Template plugin lets you provide tuned AI prompts to users. 
+Users only need to fill in the blanks with variable placeholders in the following format: `{% raw %}{{variable}}{% endraw %}`. 
+
+This lets admins set up templates, which can then be used by anyone in the organization. It also allows admins to present an LLM
+as an API in its own right - for example, a bot that can provide software class examples and/or suggestions.
+
+This plugin also sanitizes string inputs to ensure that JSON control characters are escaped, preventing arbitrary prompt injection.
+
+{% include plugins/ai-plugins-note.md %}
+
+## How it works
+
+When calling a template, simply replace the `messages` (`llm/v1/chat`) or `prompt` (`llm/v1/completions`) with a template reference, in the
+following format: `{template://TEMPLATE_NAME}`
+
+When activated, the template restricts an LLM usage to just those pre-defined templates. They are defined in the following format:
+
+```yaml
+- name: sample-template
+  template: |-
+    {
+      "messages": [
+        {
+          "role": "user",
+          "content": "Explain to me what {% raw %}{{thing}}{% endraw %} is."
+        }
+      ]
+    }
+```
+
+The templates are then called in the following example format:
+
+```json
+{
+  "message": "{template://sample-template}",
+  "properties": {
+    "thing": "gravity"
+  }
+}
+```
+
+By default, requests that don't use a template will still be passed to the LLM. However, this can be configured using the [`config.allow_untemplated_requests`](/plugins/ai-prompt-template/reference/#schema--config-allow-untemplated-requests) parameter. If this parameter is set to `false`, requests that don't use a template will return a `400 Bad Request` response.

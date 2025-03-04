@@ -1,0 +1,32 @@
+description: |
+  Configure the plugin with a template and block any requests that don't include a template.
+
+title: 'Block un-templated requests'
+
+weight: 900
+
+config: 
+  allow_untemplated_requests: false  
+  templates:
+    - name: "developer-chat"
+      template:  |-
+        {
+            "messages": [
+            {
+                "role": "system",
+                "content": "You are a {{program}} expert, in {{language}} programming language."
+            },
+            {
+                "role": "user",
+                "content": "Write me a {{program}} program."
+            }
+          ]
+        }
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -1,0 +1,44 @@
+description: |
+  Configure the plugin with two templates to use for chat routes.
+
+title: 'Chat route templates'
+
+weight: 900
+
+config:
+  templates:
+    - name: "developer-chat"
+      template:  |-
+        {
+            "messages": [
+            {
+                "role": "system",
+                "content": "You are a {{program}} expert, in {{language}} programming language."
+            },
+            {
+                "role": "user",
+                "content": "Write me a {{program}} program."
+            }
+          ]
+        }
+    - name: "teacher-chat"
+      template:  |-
+        {
+            "messages": [
+            {
+                "role": "system",
+                "content": "You are a {{subject}} teacher."
+            },
+            {
+                "role": "user",
+                "content": "Explain to me what {{concept}} is."
+            }
+          ]
+        }
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

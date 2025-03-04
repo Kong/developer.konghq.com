@@ -314,6 +314,16 @@ app/_kong_plugins/graphql-proxy-cache-advanced/index.md:
   - app/_hub/kong-inc/graphql-proxy-cache-advanced/overview/_index.md
 app/_kong_plugins/graphql-proxy-cache-advanced/changelog.md:
   - app/_hub/kong-inc/graphql-proxy-cache-advanced/_changelog.md
+app/_kong_plugins/ai-prompt-template/index.md:
+  - app/_hub/kong-inc/ai-prompt-template/overview/_index.md
+app/_kong_plugins/ai-prompt-template/changelog.md:
+  - app/_hub/kong-inc/ai-prompt-template/_changelog.md
+app/_kong_plugins/ai-prompt-template/examples/block-un-templated-requests.yaml:
+  - app/_hub/kong-inc/ai-prompt-template/how-to/_index.md
+app/_kong_plugins/ai-prompt-template/examples/chat-route-templates.yaml:
+  - app/_hub/kong-inc/ai-prompt-template/how-to/_index.md
+app/_kong_plugins/ai-prompt-template/examples/completions-route-template.yaml:
+  - app/_hub/kong-inc/ai-prompt-template/how-to/_index.md
 
 # Konnect
 
