@@ -8,7 +8,7 @@ products:
 
 tags:
   - ai-gateway
-  - metrics
+  - monitoring
 
 plugins:
   - prometheus
