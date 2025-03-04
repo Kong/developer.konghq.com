@@ -34,8 +34,8 @@ related_resources:
     url: /plugins/acl/
 ---
 
-The Canary Release plugin lets you reduce the risk of introducing a new software version in production by slowly rolling out changes to a small subset of users. 
-This plugin also enables rolling back to your original upstream service, or shifting  all traffic to the new version.
+The Canary Release plugin helps minimize risk when deploying a new software version by gradually rolling out changes to a limited group of users. 
+It also allows you to either roll back to the original upstream service or shift all traffic to the new version.
 
 {:.warning}
 > **Important**: The Canary plugin is not designed for a Kubernetes-native framework, and shouldn't be used with the {{site.kic_product_name}}. 
@@ -58,10 +58,9 @@ The Canary Release plugin supports the following modes of operation:
 
 ### Determining where to route a request
 
-{:.info}
-> This does not apply to allowing or denying groups with ACL.
 
-The Canary Release plugin defines a number of buckets (`config.steps`).
+The Canary Release plugin decides how to route requests to the canary based on a hash attribute. 
+The plugin defines a number of buckets (`config.steps`).
 Each of these buckets can be routed to primary upstream service A or secondary upstream service B.
 
 For example, if you set `config.steps` to 100 steps and `config.percentage` to 10%, the Canary Release plugin creates 100 buckets.
@@ -78,11 +77,12 @@ For example, if the canary fixed percentage is 50%, then 50% of either the Consu
 When `config.hash` is set to `none`, the requests will be evenly distributed. 
 Each bucket will get the same number of requests, but a Consumer or IP might be routed to either upstream service A or B on consecutive requests.
 
-The Canary Release plugin provides an automatic fallback if a Consumer, IP, or header can't be identified, in the following order:
+If Consumer, IP, or header can't be identified, the Canary Release plugin automatically falls back to another option, in the following order:
 1. Fall back to Consumer
 2. Fall back to IP
 3. Fall back to `none`, evenly distributing requests across buckets
-
+{:.info}
+> This method does not apply to allowing or denying groups with ACL.
 ## Overriding the canary
 
 In some cases, you may want to allow clients to pick either upstream service A or B instead of applying the configured canary rules. 
@@ -104,11 +104,10 @@ Removing or disabling the Canary Release plugin before the canary is complete wi
 
 ## Upstream health checks
 
-You can enable [Upstream health checks](/gateway/traffic-control/health-checks-circuit-breakers/) using the `config.upstream_fallback` parameter.
+This plugin works with both active and passive health checks. You can enable [Upstream health checks](/gateway/traffic-control/health-checks-circuit-breakers/) using the `config.upstream_fallback` parameter.
 This configuration will skip applying the canary upstream if it doesn't have at least one healthy target. 
 For this configuration to take effect, the following conditions must be met:
 
 * Point the Canary Release plugin's `config.upstream_host` to an [Upstream entity](/gateway/entities/upstream)
 * [Enable health checks in the Upstream](/gateway/traffic-control/health-checks-circuit-breakers/)
 
-This plugin works with both active and passive health checks.
