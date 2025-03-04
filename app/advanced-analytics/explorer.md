@@ -41,14 +41,14 @@ faqs:
         * **Export as CSV**: If you prefer to analyze your data using other tools, you can download the current view as a CSV file, making it portable and ready for further analysis elsewhere.    
 related_resources:
   - text: Konnect Advanced Analytics
-    url: /konnect/advanced-analytics/
+    url: /advanced-analytics/
   - text: LLM Reporting
-    url: /konnect/advanced-analytics/llm-reporting/
+    url: /advanced-analytics/llm-reporting/
 ---
 
 The Explorer interface displays API usage data gathered by {{site.konnect_short_name}} Analytics from your data plane nodes. You can use this tool to:
 * Diagnose performance issues
-* [Monitor LLM token consumption and costs](/konnect/advanced-analytics/llm-reporting/)
+* [Monitor LLM token consumption and costs](/advanced-analytics/llm-reporting/)
 * Capture essential usage metrics
 
 Explorer also allows you to save the output as custom reports.

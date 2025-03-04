@@ -5,8 +5,6 @@ content_type: how_to
 products:
     - gateway
 
-tier: enterprise
-
 works_on:
     - on-prem
     - konnect
@@ -44,11 +42,11 @@ prereqs:
       content: |
         This tutorial requires an OPA server. You can run a local server for testing:
         1. [Install OPA](https://www.openpolicyagent.org/docs/latest/#1-download-opa).
-        1. Run a local server:
+        2. Run a local server:
            ```sh
            opa run -s
            ```
-        1. In a new terminal window, check that the server is running properly:
+        3. In a new terminal window, check that the server is running properly:
            ```sh
            curl -i http://localhost:8181
            ```

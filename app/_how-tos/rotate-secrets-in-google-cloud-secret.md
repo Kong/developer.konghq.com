@@ -14,8 +14,6 @@ related_resources:
 products:
     - gateway
 
-tier: enterprise
-
 works_on:
     - on-prem
     - konnect
@@ -58,12 +56,12 @@ prereqs:
       content: |
         To add Secret Manager as a Vault backend to {{site.base_gateway}}, you must create a project, service account key, and grant IAM permissions. This tutorial also uses gcloud, so you need to install and configure that.
           1. In the [Google Cloud console](https://console.cloud.google.com/), create a project and name it `test-gateway-vault`.
-          1. In the <!--vale off-->[Service Account settings](https://console.cloud.google.com/iam-admin/serviceaccounts)<!--vale on-->, click the `test-gateway-vault` project and then click the email address of the service account that you want to create a key for.
-          1. From the Keys tab, create a new key from the add key menu and select JSON for the key type.
-          1. Save the JSON file you downloaded.
-          1. From the [IAM & Admin settings](https://console.cloud.google.com/iam-admin/), click the edit icon next to the service account to grant access to the [`Secret Manager Secret Accessor` role for your service account](https://cloud.google.com/secret-manager/docs/access-secret-version#required_roles).
-          1. [Install gcloud](https://cloud.google.com/sdk/docs/install).
-          1. Authenticate with gcloud and set your project to `test-gateway-vault`:
+          2. In the <!--vale off-->[Service Account settings](https://console.cloud.google.com/iam-admin/serviceaccounts)<!--vale on-->, click the `test-gateway-vault` project and then click the email address of the service account that you want to create a key for.
+          3. From the Keys tab, create a new key from the add key menu and select JSON for the key type.
+          4. Save the JSON file you downloaded.
+          5. From the [IAM & Admin settings](https://console.cloud.google.com/iam-admin/), click the edit icon next to the service account to grant access to the [`Secret Manager Secret Accessor` role for your service account](https://cloud.google.com/secret-manager/docs/access-secret-version#required_roles).
+          6. [Install gcloud](https://cloud.google.com/sdk/docs/install).
+          7. Authenticate with gcloud and set your project to `test-gateway-vault`:
              ```
              gcloud auth login
              gcloud config set project test-gateway-vault

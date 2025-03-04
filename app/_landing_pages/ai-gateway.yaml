@@ -1,0 +1,10 @@
+metadata:
+  title: "{{site.base_gateway}}"
+  content_type: landing_page
+  description: This page is an introduction to {{site.base_gateway}}.
+  products:
+    - gateway
+
+# @todo: AI Gateway landing page
+# https://docs.konghq.com/gateway/latest/ai-gateway/
+# https://docs.konghq.com/gateway/latest/get-started/ai-gateway/ (include the parts of this not used in the get started how-to)

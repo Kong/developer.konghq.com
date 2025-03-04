@@ -1,0 +1,18 @@
+description: 'Configure an XML Threat Protection policy to catch XML requests that exceed configured limits.'
+
+title: 'Limit XML complexity and attribute sizes'
+
+weight: 900
+
+config:
+  max_depth: 50
+  localname: 512
+  prefix: 512
+  namespaceuri: 1024
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Customize Kong exit responses sent downstream'
-tier: enterprise
 
 
 products:

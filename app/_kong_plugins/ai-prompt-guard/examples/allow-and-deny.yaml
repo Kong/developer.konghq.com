@@ -1,0 +1,25 @@
+description: |
+  Configure the plugin with a combination of `allow` and `deny` rules. 
+  For requests to pass through in this example, the messages from the callers:
+
+  * Must contain at least one of the product names in the allow list
+  * Must not contain any of the product names in the deny list
+
+title: 'Allow and deny'
+
+weight: 900
+
+config: 
+  allow_patterns:
+  - ".*(P|p)ears.*"
+  - ".*(P|p)eaches.*"
+  deny_patterns:
+  - ".*(A|a)pples.*"
+  - ".*(O|o)ranges.*"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

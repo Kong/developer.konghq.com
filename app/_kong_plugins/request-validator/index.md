@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Validates requests before they reach the upstream service'
-tier: enterprise
 
 
 products:

@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Integrate Kong with a third-party OAuth 2.0 Authorization Server'
-tier: enterprise
 
 
 products:

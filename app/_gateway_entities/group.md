@@ -17,7 +17,6 @@ related_resources:
   - text: LDAP Service Directory Mapping
     url: /gateway/ldap-service-directory-mapping/
 
-tier: enterprise
 
 api_specs:
   - gateway/admin-ee

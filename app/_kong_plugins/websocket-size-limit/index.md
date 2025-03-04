@@ -6,8 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Block incoming WebSocket messages greater than a specified size'
-tier: enterprise
-
 
 products:
     - gateway

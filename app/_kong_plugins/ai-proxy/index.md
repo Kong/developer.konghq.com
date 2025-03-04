@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: The AI Proxy plugin lets you transform and proxy requests to a number of AI providers and models.
-tier: enterprise
 
 
 products:

@@ -75,57 +75,6 @@ rows:
               text: 
               url: https://docs.konghq.com/gateway/latest/install/
               align: end
-
-  - header:
-        type: h2
-        text: "Capabilities"
-    columns:
-      - blocks:
-          - type: feature_table
-            config:
-              columns:
-                - title: Open Source
-                  key: oss
-                - title: Enterprise
-                  key: enterprise
-              features:
-                - title: Fast, Lightweight, Cloud-Native API Gateway
-                  oss: true
-                  enterprise: true
-                - title: End-to-End Automation
-                  subtitle: Drive a GitOps flow of API design and execution
-                  oss: true
-                  enterprise: true
-                - title: "{{site.kic_product_name}}"
-                  subtitle: Deploy APIs to Kubernetes
-                  oss: true
-                  enterprise: true
-                - title: Gateway Mocking
-                  subtitle: Mock API responses directly on the API gateway
-                  oss: false
-                  enterprise: true
-                - title: "Kong Manager: Admin GUI"
-                  subtitle: Visually manage Kong Gateway on-prem, plugins, APIs, and Consumers
-                  oss: true
-                  enterprise: true
-                - title: Traffic Management and Transformations
-                  oss: true
-                  enterprise: true
-                - title: Security and Governance
-                  oss: true
-                  enterprise: true
-                - title: AI Gateway
-                  oss: true
-                  enterprise: true
-                - title: Enterprise Support and Services
-                  oss: false
-                  enterprise: true
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: | 
-                    See the full [Enterprise vs Open Source page feature comparison &rarr;](/gateway/enterprise-vs-oss/)
   - header:
       type: h2
       text: Learn

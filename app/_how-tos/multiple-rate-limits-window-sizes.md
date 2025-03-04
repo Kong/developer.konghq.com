@@ -24,7 +24,6 @@ entities:
 tools:
   - deck
 
-tier: enterprise
 
 tags:
   - rate-limiting

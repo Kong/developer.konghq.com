@@ -10,7 +10,6 @@ related_resources:
   - text: How to create rate limiting tiers with {{site.base_gateway}}
     url:  /how-to/add-rate-limiting-tiers-with-kong-gateway/
 
-tier: enterprise
 
 products:
     - gateway

@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Validate WebSocket messages before they are proxied'
-tier: enterprise
 
 
 products:
