@@ -58,9 +58,7 @@ The Canary Release plugin supports the following modes of operation:
 
 ### Determining where to route a request
 
-
-The Canary Release plugin decides how to route requests to the canary based on a hash attribute. 
-The plugin defines a number of buckets (`config.steps`).
+The Canary Release plugin decides how to route requests to the canary based on a hash attribute (`config.hash`) and a given number of buckets (`config.steps`).
 Each of these buckets can be routed to primary upstream service A or secondary upstream service B.
 
 For example, if you set `config.steps` to 100 steps and `config.percentage` to 10%, the Canary Release plugin creates 100 buckets.
@@ -81,8 +79,10 @@ If Consumer, IP, or header can't be identified, the Canary Release plugin automa
 1. Fall back to Consumer
 2. Fall back to IP
 3. Fall back to `none`, evenly distributing requests across buckets
+
 {:.info}
 > This method does not apply to allowing or denying groups with ACL.
+
 ## Overriding the canary
 
 In some cases, you may want to allow clients to pick either upstream service A or B instead of applying the configured canary rules. 
@@ -104,10 +104,11 @@ Removing or disabling the Canary Release plugin before the canary is complete wi
 
 ## Upstream health checks
 
-This plugin works with both active and passive health checks. You can enable [Upstream health checks](/gateway/traffic-control/health-checks-circuit-breakers/) using the `config.upstream_fallback` parameter.
+This plugin works with both active and passive health checks. 
+You can enable [Upstream health checks](/gateway/traffic-control/health-checks-circuit-breakers/) using the `config.upstream_fallback` parameter.
 This configuration will skip applying the canary upstream if it doesn't have at least one healthy target. 
-For this configuration to take effect, the following conditions must be met:
 
+For this configuration to take effect, the following conditions must be met:
 * Point the Canary Release plugin's `config.upstream_host` to an [Upstream entity](/gateway/entities/upstream)
 * [Enable health checks in the Upstream](/gateway/traffic-control/health-checks-circuit-breakers/)
 
