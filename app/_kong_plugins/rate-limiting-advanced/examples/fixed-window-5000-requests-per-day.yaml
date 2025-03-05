@@ -6,7 +6,7 @@ weight: 700
 
 config:
   limit: 
-    - 500
+    - 5000
   window_size: 
     - 86400
   window_type: fixed

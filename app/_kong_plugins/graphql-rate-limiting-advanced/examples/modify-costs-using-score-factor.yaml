@@ -1,0 +1,30 @@
+description: |
+  GraphQL query cost depends on multiple factors, based on {{site.base_gateway}}'s resolvers and the implementation of the schema. 
+  Depending on the cost strategy, individual query costs could become high when using quantifiers, or very low with no quantifiers at all. 
+  By using `config.score_factor`, the cost can be divided or multiplied to a certain order of magnitude.
+
+  In this example, a score factor of 0.01 divides the costs by 100, meaning every cost unit represents 100 nodes.
+
+title: 'Modify costs by score factor'
+
+weight: 900
+
+requirements: 
+  - You have an existing a GraphQL upstream service.
+
+config:
+  limit:
+    - 100
+  window_size:
+    - 60
+  window_type: fixed
+  cost_strategy: node_quantifier
+  max_cost: 5000
+  score_factor: 0.01
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

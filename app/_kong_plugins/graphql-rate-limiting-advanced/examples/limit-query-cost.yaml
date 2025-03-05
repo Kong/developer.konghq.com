@@ -1,0 +1,27 @@
+title: Limit query cost
+description: |
+  Define a maximum cost applied to any query, regardless of whether or not the call is within the rate limits for a consumer.
+
+  By defining a `max_cost` on the upstream service, you ensure that no query will run with a cost higher than the set `max_cost`. 
+  By default it's set to 0, which means no limit.
+
+requirements: 
+  - You have an existing a GraphQL upstream service.
+
+weight: 900
+
+config:
+  limit:
+    - 100
+  window_size:
+    - 60
+  window_type: fixed
+  cost_strategy: node_quantifier
+  max_cost: 5000
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

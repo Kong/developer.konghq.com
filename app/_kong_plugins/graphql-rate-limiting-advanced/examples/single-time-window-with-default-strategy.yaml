@@ -1,0 +1,24 @@
+title: Fixed window with default cost strategy
+description: |
+  A strict limit of 100 requests per minute using the `default` cost strategy.
+weight: 900
+
+requirements: 
+  - You have an existing a GraphQL upstream service.
+
+config:
+  limit:
+    - 100
+  window_size:
+    - 60
+  sync_rate:
+    - 10
+  window_type: fixed
+  cost_strategy: default
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
