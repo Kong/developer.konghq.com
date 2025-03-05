@@ -310,6 +310,10 @@ app/_kong_plugins/canary/index.md:
   - app/_hub/kong-inc/canary/overview/_index.md
 app/_kong_plugins/canary/changelog.md:
   - app/_hub/kong-inc/canary/_changelog.md
+app/_kong_plugins/graphql-proxy-cache-advanced/index.md:
+  - app/_hub/kong-inc/graphql-proxy-cache-advanced/overview/_index.md
+app/_kong_plugins/graphql-proxy-cache-advanced/changelog.md:
+  - app/_hub/kong-inc/graphql-proxy-cache-advanced/_changelog.md
 
 # Konnect
 

@@ -1,0 +1,31 @@
+description: 'Store GraphQL proxy cache data in a Redis database.'
+
+title: 'GraphQL proxy cache with Redis storage'
+
+weight: 900
+
+requirements:
+  - You have an existing a GraphQL upstream service.
+  - You have a Redis instance running.
+
+config:
+  strategy: redis
+  cache_ttl: 500
+  redis:
+    host: ${redis_host}
+    port: ${redis_port}
+
+variables:
+  redis_host:
+    value: $REDIS_HOST
+    description: The hostname of your Redis instance, such as `example.com`.
+  redis_port:
+    value: $REDIS_PORT
+    description: The port of your Redis instance.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
