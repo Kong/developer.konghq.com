@@ -23,7 +23,7 @@ related_resources:
     url: /gateway/entities/
 ---
 
-The {{site.base_gateway}} maintains a list of reserved entity names which can't be used when naming [Workspaces](/gateway/entities/workspace/) or [other entities](/gateway/entities/).
+{{site.base_gateway}} maintains a list of reserved entity names which can't be used when naming [Gateway entities](/gateway/entities/).
 
 For example, a Workspace can't be named `consumers` or `vaults`. Doing so will yield a `schema violation` error response.
 
