@@ -30,6 +30,8 @@ related_resources:
     url: /gateway/traffic-control/health-checks-circuit-breakers/
   - text: Load balancing in {{site.base_gateway}}
     url: /gateway/load-balancing/
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
 
 schema:
     api: gateway/admin-ee

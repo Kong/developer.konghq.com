@@ -9,6 +9,8 @@ description: A Key Set is a collection of {{site.base_gateway}} Keys.
 related_resources:
   - text: Key entity
     url: /gateway/entities/key/
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
 
 tools:
   - admin-api

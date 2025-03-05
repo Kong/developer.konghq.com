@@ -401,6 +401,8 @@ app/ai-gateway/ai-audit-log-reference.md:
   - app/_src/gateway/production/logging/ai-analytics.md
 app/ai-gateway/monitor-ai-llm-metrics.md:
   - app/_src/gateway/production/monitoring/ai-metrics.md
+app/gateway/reserved-entity-names.md:
+  - app/_src/gateway/reference/reserved-entity-names.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:

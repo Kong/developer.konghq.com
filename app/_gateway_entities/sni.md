@@ -9,6 +9,8 @@ description: An SNI object represents a many-to-one mapping of hostnames to a ce
 related_resources:
   - text: Certificates
     url: /gateway/entities/certificate/
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
       
 tools:
     - admin-api
