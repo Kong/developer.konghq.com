@@ -157,7 +157,7 @@ rows:
               icon: /assets/icons/domain.svg
               cta:
                 text: Learn more
-                url: /gateway-manager/dedicated-cloud-gateways/data-plane-reference/
+                url: /gateway-manager/data-plane-reference/
       - blocks:
           - type: card
             config:
