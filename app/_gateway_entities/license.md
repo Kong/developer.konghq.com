@@ -12,6 +12,10 @@ tools:
 api_specs:
   - gateway/admin-ee
 
+related_resources:
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
+
 schema:
   api: gateway/admin-ee
   path: /schemas/License

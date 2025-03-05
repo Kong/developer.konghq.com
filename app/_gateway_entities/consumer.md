@@ -13,6 +13,8 @@ related_resources:
     url: /gateway/entities/consumer-group/
   - text: Plugins that can be scoped to Consumers
     url: /gateway/entities/plugin/#supported-scopes-by-plugin
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
 
 faqs:
   - q: What are credentials, and why do I need them?

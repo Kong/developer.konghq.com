@@ -16,6 +16,8 @@ related_resources:
     url: /gateway/entities/workspace/
   - text: LDAP Service Directory Mapping
     url: /gateway/ldap-service-directory-mapping/
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
 
 
 api_specs:

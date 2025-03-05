@@ -17,6 +17,8 @@ related_resources:
     url: /gateway/entities/workspace/
   - text: Sending Email with Kong Manager
     url: /how-to/configure-kong-manager-email/
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
 
 api_specs:
   - gateway/admin-ee

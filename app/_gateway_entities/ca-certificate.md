@@ -17,6 +17,8 @@ related_resources:
     url: /how-to/ca-cert-for-server-on-service/
   - text: SSL certificates reference
     url: /gateway/ssl-certificates/
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
 
 tools:
     - admin-api
