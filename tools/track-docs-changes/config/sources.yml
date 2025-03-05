@@ -185,9 +185,6 @@ app/_how-tos/use-acl-with-consumer-groups.md:
   - app/_hub/kong-inc/acl/how-to/_consumer-groups.md.md
 app/_how-tos/get-started-with-ai-gateway.md:
   - app/_src/gateway/get-started/ai-gateway.md
-app/_how-tos/enable-kong-manager.md:
-  - app/_src/gateway/kong-manager/troubleshoot.md
-  - app/_src/gateway/kong-manager/enable.md
 
 ## KIC
 app/_how-tos/proxy-http-traffic-kic.md:
@@ -376,6 +373,7 @@ app/ai-gateway/ai-audit-log-reference.md:
   - app/_src/gateway/production/logging/ai-analytics.md
 app/gateway/kong-manager.md:
   - app/_src/gateway/kong-manager/enable.md 
+  - app/_src/gateway/kong-manager/troubleshoot.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:

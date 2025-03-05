@@ -5,6 +5,8 @@ content_type: how_to
 related_resources:
   - text: Authentication in {{site.base_gateway}}
     url: /gateway/authentication/
+  - text: Enable Kong Manager
+    url: /gateway/kong-manager/#enable-kong-manager
     
 products:
   - gateway
