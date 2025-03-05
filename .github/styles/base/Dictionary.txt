@@ -756,6 +756,7 @@ unregistering
 unshorten
 unshortened
 unstash
+untemplated
 untyped
 unvetted
 updated_at

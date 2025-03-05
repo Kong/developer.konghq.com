@@ -1,0 +1,24 @@
+description: |
+  Configure the plugin with a template to use for completions routes.
+
+title: 'Completion route template'
+
+weight: 900
+
+requirements:
+  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
+
+config:     
+  templates:
+    - name: "developer-prompt"
+      template:  |-
+        {
+            "prompt": "You are a {{language}} programming language expert. Write me a {{program}} program."
+        }
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
