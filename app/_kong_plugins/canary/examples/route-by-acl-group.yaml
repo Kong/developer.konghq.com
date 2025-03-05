@@ -1,0 +1,33 @@
+description: |
+  Route all traffic for a specific group of Consumers to a secondary upstream service.
+
+title: 'Route traffic by ACL group'
+
+weight: 900
+
+requirements:
+  - "[ACL plugin](/plugins/acl/) configured with allowed groups"
+
+variables:
+  upstream_host:
+    value: $UPSTREAM_HOST
+    description: The hostname of your upstream service without the the `http` or `https` prefix. For example, `example.com`.
+  group_name:
+    value: $ACL_GROUP_NAME
+    description: |
+      Groups that are allowed to access the canary service. 
+      Takes a group name that corresponds to a group created via the [ACL plugin](/plugins/acl/). 
+      You can specify multiple group names.
+
+config:
+  groups:
+    - ${group_name}
+  upstream_host: ${upstream_host}
+  upstream_port: 80
+  hash: allow
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - terraform

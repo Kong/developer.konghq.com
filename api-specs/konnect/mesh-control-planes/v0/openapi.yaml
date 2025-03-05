@@ -220,10 +220,12 @@ components:
           type: string
           format: date-time
           example: '2023-01-11T02:30:42.227Z'
+          readOnly: true
         updated_at:
           type: string
           format: date-time
           example: '2023-01-11T02:30:42.227Z'
+          readOnly: true
       required:
         - id
         - name

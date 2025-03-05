@@ -1,0 +1,27 @@
+description: |
+  Use Upstream health checks to skip applying the canary upstream if it doesn't have at least one healthy target.
+  If the canary is unhealthy, traffic falls back to the primary upstream service.
+
+title: 'Use health checks'
+
+weight: 900
+
+requirements:
+  - An [Upstream entity](/gateway/entities/upstream/) configured with [active or passive health checks](/gateway/traffic-control/health-checks-circuit-breakers/)
+
+variables:
+  upstream_host:
+    value: $UPSTREAM_ENTITY_NAME
+    description: The name of an [Upstream entity](/gateway/entities/upstream/) to route the canary to.
+
+config:
+  percentage: 50
+  upstream_host: ${upstream_host}
+  upstream_port: 80
+  upstream_fallback: true
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - terraform
