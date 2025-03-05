@@ -31,9 +31,6 @@ tldr:
     q: How do I enable Kong Manager for {{site.base_gateway}}?
     a: Set the [`KONG_ADMIN_GUI_PATH`](/gateway/configuration/#admin_gui_path) and [`KONG_ADMIN_GUI_URL`](/gateway/configuration/#admin_gui_url) properties in the [`kong.conf`](/gateway/manage-kong-conf/) configuration file to the DNS or IP address of your system, then [restart {{site.base_gateway}}]().
 
-tools:
-    - deck
-
 faqs:
     - q: I can't access Kong Manager. How do I fix a Kong Manager URL that doesn’t resolve?
       a: |
