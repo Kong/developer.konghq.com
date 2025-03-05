@@ -66,7 +66,7 @@ For example, when using KIC, if the query and introspection endpoints are at the
 
 ## Managing costs in GraphQL queries
 
-{{site.base_gateway}} evalues GraphQL query costs by introspecting the endpoint's GraphQL schema and applying cost decoration to parts of the schema tree.
+{{site.base_gateway}} evaluates GraphQL query costs by introspecting the endpoint's GraphQL schema and applying cost decoration to parts of the schema tree.
 
 Initially all nodes start with zero cost, with any operation at cost 1.
 You can add rate limiting constraints on any subtree. 
