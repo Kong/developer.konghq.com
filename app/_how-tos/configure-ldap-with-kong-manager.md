@@ -3,8 +3,10 @@ title: Configure LDAP with Kong Manager
 content_type: how_to
 
 related_resources:
-  - text: Write tests for headers in the response in Insomnia
-    url: /how-to/write-headers-in-response-test/ 
+  - text: Authentication in {{site.base_gateway}}
+    url: /gateway/authentication/
+  - text: Enable Kong Manager
+    url: /gateway/kong-manager/#enable-kong-manager
 
 products:
     - gateway
