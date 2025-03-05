@@ -186,4 +186,9 @@
             {% capture jekyll_toc %}<{{ listModifier }}{{ rootAttributes }}>{{ nodes | shift | join: '>' }}>{% endcapture %}
         {% endif %}
     {% endif %}
+
+    {% capture new_header %}id="toc"><li>
+        <a href="#main" class="tab-button__vertical scroll-to">{{ include.page_title }}</a>
+        </li>{% endcapture %}
+    {% capture jekyll_toc %}{{ jekyll_toc | split: 'id="toc">'  | join: new_header}}{% endcapture %}
 {% endcapture %}{% assign tocWorkspace = '' %}{{ deprecation_warnings }}{{ jekyll_toc -}}
