@@ -418,8 +418,15 @@ app/serverless-gateways/index.md:
   - app/konnect/gateway-manager/serverless-gateways/provision-serverless-gateway.md
   - app/konnect/gateway-manager/serverless-gateways/custom-dns.md
 
+
+
+app/_landing_pages/gateway-manager.yaml:
+  - app/konnect/gateway-manager/index.md
+
 app/konnect-account.md:
   - app/konnect/org-management/deactivation.md
 
+
 app/service-catalog-integrations.yaml:
   - app/konnect/service-catalog/integrations/index.md
+
