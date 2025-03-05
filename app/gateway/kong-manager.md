@@ -16,7 +16,7 @@ faqs:
     a: |
       Most likely, the port wasn't exposed during installation. Install a new instance and map port `8002` during installation.
       
-      For example, with a [Docker install](/gateway/{{page.release}}/install/docker/?install=oss):
+      For example, with a Docker install:
 
       ```
       -p 127.0.0.1:8002:8002
