@@ -38,8 +38,8 @@ Because every audit log entry is made available via {{site.base_gateway}}’s Ad
 |-------|------------------|--------------------|-------------|
 | [RBAC](/gateway/entities/rbac/) | `rbac_user_id`<br>`rbac_user_name` | [`/audit/requests`](/api/gateway/admin-ee/#/operations/get-audit-requests) | When RBAC is enforced, the RBAC user’s UUID will be written to the `rbac_user_id` field in the audit log entry, and the username will be written to the `rbac_user_name` field. |
 | [Workspace](/gateway/entities/workspace/) | `workspace` | [`/audit/requests`](/api/gateway/admin-ee/#/operations/get-audit-requests) | The `workspace` field is the UUID of the Workspace with which the request is associated. |
-| [Kong Manager login](/gateway/kong-manager/) | `"request_source": "kong-manager"`<br>`"method": "GET", "path": "/auth"` | [`/audit/requests`](/api/gateway/admin-ee/#/operations/get-audit-requests) |  |
-| [Kong Manager logout](/gateway/kong-manager/) | `"request_source": "kong-manager"`<br>`"method": "DELETE", "path": "/auth?session_logout=true"` | [`/audit/requests`](/api/gateway/admin-ee/#/operations/get-audit-requests) |  |
+| [Kong Manager login](/gateway/kong-manager/) | `"request_source": "kong-manager"`<br>`"method": "GET", "path": "/auth"` | [`/audit/requests`](/api/gateway/admin-ee/#/operations/get-audit-requests) | The `request_source` field tells you that the action occurred in Kong Manager, and the `GET` method and `/auth` path indicate a login event. |
+| [Kong Manager logout](/gateway/kong-manager/) | `"request_source": "kong-manager"`<br>`"method": "DELETE", "path": "/auth?session_logout=true"` | [`/audit/requests`](/api/gateway/admin-ee/#/operations/get-audit-requests) | The `DELETE` method and `/auth?session_logout=true` path indicate a logout event. |
 | Database entity changes | `payload`<br>`request_id` | [`/audit/objects`](/api/gateway/admin-ee/#/operations/get-audit-objects) | Entries for all insertions, updates, and deletions to the cluster database. Database update audit logs are also associated with Admin API request unique IDs. Object audit entries contain information about the entity updated, including the entity body itself, its database primary key, and the type of operation performed (create, update, or delete). It's also associated with the `request_id` field. |
 
 ## Enable audit logging
@@ -125,7 +125,7 @@ if no new records are inserted to the audit table following the expiration times
 
 ## Sign audit logs with a private RSA key
 
-To provide non-repudiation, audit logs may be signed with a private RSA key by using [`audit_log_signing_key](/gateway/configuration/#audit_log_signing_key). When
+To provide non-repudiation, audit logs may be signed with a private RSA key by using [`audit_log_signing_key`](/gateway/configuration/#audit_log_signing_key). When
 enabled, a lexically sorted representation of each audit log entry is signed by
 the defined private key; the signature is stored in an additional field within
 the record itself. The public key should be stored elsewhere and can be used
