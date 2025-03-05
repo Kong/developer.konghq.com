@@ -436,3 +436,5 @@ app/konnect-account.md:
 app/service-catalog-integrations.yaml:
   - app/konnect/service-catalog/integrations/index.md
 
+app/service-catalog/integrations/datadog.md:
+  - app/konnect/service-catalog/integrations/datadog.md
