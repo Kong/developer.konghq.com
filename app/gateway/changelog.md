@@ -11,6 +11,8 @@ products:
 related_resources:
   - text: "{{site.base_gateway}}"
     url: /gateway/
+  - text: "{{site.base_gateway}} breaking changes"
+    url: /gateway/breaking-changes/
 
 ---
 
