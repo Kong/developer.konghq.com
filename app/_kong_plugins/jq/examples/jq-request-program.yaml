@@ -1,0 +1,16 @@
+description: |
+  Write a jq request program. In this example, this simple jq program takes the name `James Dean` in the request and rewrites it to `John Doe`.
+
+title: 'Write a jq request program'
+
+weight: 900
+
+config:
+  request_jq_program: |
+    select(.name == "James Dean").name = "John Doe"
+
+tools:
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
