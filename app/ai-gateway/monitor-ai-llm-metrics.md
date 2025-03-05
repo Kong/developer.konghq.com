@@ -126,8 +126,7 @@ need to be set up to require authentication. Here are a couple of options to
 allow access to the `/metrics` endpoint to Prometheus:
 
 
-* If the Status API is enabled with the `status_listen` parameter in the [{{site.base_gateway}} configuration](/gateway/configuration/#status_listen), 
-then its `/metrics` endpoint can be used. This is the preferred method.
+* If the Status API is enabled with the `status_listen` parameter in the [{{site.base_gateway}} configuration](/gateway/configuration/#status_listen), then its `/metrics` endpoint can be used. This is the preferred method, and this is also the only method compatible with {{site.konnect_short_name}}, since Data Planes can't use the Admin API.
 
 * The `/metrics` endpoint is also available on the Admin API, which can be used
 if the Status API is not enabled. Note that this endpoint is unavailable
