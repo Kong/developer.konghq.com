@@ -111,7 +111,7 @@ As part of your upgrade to 3.7, remove the following tracing-related parameters 
 * `tracing_debug_header`
 * `generate_trace_details`
 
-We recommend transitioning to [OpenTelemetry Instrumentation](/plugins/otel/) instead.
+We recommend transitioning to [OpenTelemetry Instrumentation](/plugins/opentelemetry/) instead.
 
 ### Vaults
 
@@ -125,7 +125,7 @@ entity when using the AppRole authentication method.
 ### Plugin changes
 
 [**AI Proxy**](/plugins/ai-proxy/) (`ai-proxy`): To support the new messages API of `Anthropic`, the upstream 
-path of the `anthropic` setting for the `llm/v1/chat` route type has changed from `/v1/complete` to `/v1/messages`.
+path of the `anthropic` setting for the `llm/v1/chat` Route type has changed from `/v1/complete` to `/v1/messages`.
 
 
 ## 3.6.x breaking changes
@@ -143,7 +143,7 @@ To avoid ambiguity with other Wasm-related `nginx.conf` directives, the prefix f
 
 ### Admin API
 
-The listing endpoints for consumer groups (`/consumer_groups`) and consumers (`/consumers`) now respond
+The listing endpoints for Consumer Groups (`/consumer_groups`) and Consumers (`/consumers`) now respond
 with paginated results. The JSON key for the list has been changed to `data` instead of `consumer_groups`
 or `consumers`.
 
@@ -197,7 +197,7 @@ configuration field to construct the request path when requesting the Azure API.
     This is a breaking change only if you are upgrading from a {{site.base_gateway}} version between `0.3.5` and `0.5.0`.
 
 * [**SAML**](/plugins/saml) (`saml`)
-  * Adjusted the priority of the SAML plugin to 1010 to correct the integration between the SAML plugin and other consumer-based plugins.
+  * Adjusted the priority of the SAML plugin to 1010 to correct the integration between the SAML plugin and other Consumer-based plugins.
  
 ### Known issues
 
@@ -314,7 +314,7 @@ The `database` parameter no longer accepts `cassandra` as an option. <br><br> Al
 ### Admin API changes
 
 The `/consumer_groups/:id/overrides` endpoint is deprecated in favor of a more generic plugin scoping mechanism. 
-See the new [consumer groups](/api/gateway/admin-ee/3.4/#/operations/get-consumer_groups) entity.
+See the new [Consumer Groups](/api/gateway/admin-ee/3.4/#/operations/get-consumer_groups) entity.
 
 ### Plugin changes
 
@@ -331,7 +331,7 @@ This affects the following plugins:
 
 #### Rate Limiting Advanced
 
-The `/consumer_groups/:id/overrides` endpoint has been deprecated. While this endpoint will still function, we strongly recommend transitioning to the new and improved method for managing consumer groups, as documented in the [Enforcing rate limiting tiers with the Rate Limiting Advanced plugin](/how-to/add-rate-limiting-tiers-with-kong-gateway/) guide. 
+The `/consumer_groups/:id/overrides` endpoint has been deprecated. While this endpoint will still function, we strongly recommend transitioning to the new and improved method for managing Consumer Groups, as documented in the [Enforcing rate limiting tiers with the Rate Limiting Advanced plugin](/how-to/add-rate-limiting-tiers-with-kong-gateway/) guide. 
 
 ### Known issues
 
@@ -362,7 +362,7 @@ For more information about how plugin queuing works and the plugin queuing param
 
 ### Traditional compatibility router
 
-The `traditional_compat` router mode has been made more compatible with the behavior of `traditional` mode by splitting routes with multiple paths into multiple `atc` routes with separate priorities. Since the introduction of the new router in {{site.base_gateway}} 3.0, `traditional_compat` mode assigned only one priority to each route, even if different prefix path lengths and regular expressions were mixed in a route. This was not how multiple paths were handled in the `traditional` router and the behavior has now been changed so that a separate priority value is assigned to each path in a route.
+The `traditional_compat` router mode has been made more compatible with the behavior of `traditional` mode by splitting Routes with multiple paths into multiple `atc` Routes with separate priorities. Since the introduction of the new router in {{site.base_gateway}} 3.0, `traditional_compat` mode assigned only one priority to each Route, even if different prefix path lengths and regular expressions were mixed in a Route. This was not how multiple paths were handled in the `traditional` router and the behavior has now been changed so that a separate priority value is assigned to each path in a Route.
 
 ### Upgrading {{site.base_gateway}} after adopting PostgreSQL 15
 
@@ -604,7 +604,7 @@ for both PostgreSQL and Cassandra.
 
 #### Deprecations and changed parameters
 
-The [StatsD Advanced](/hub/kong-inc/statsd-advanced/) plugin
+The [StatsD Advanced](/plugins/statsd-advanced/) plugin
 has been deprecated and will be removed in 4.0.
 All capabilities are now available in the [StatsD](/plugins/statsd/) plugin.
 
@@ -655,7 +655,7 @@ instead (`kong.ctx.shared.authenticated_jwt_token`) before upgrading to 3.0.
 `post-function` and `pre-function` plugins' schemas. Use the `config.access` phase instead.
 
 **[StatsD](/plugins/statsd/)**
-* Any metric name that is related to a service now has a `service.` prefix: `kong.service.<service_identifier>.request.count`.
+* Any metric name that is related to a Gateway Service now has a `service.` prefix: `kong.service.<service_identifier>.request.count`.
   * The metric `kong.<service_identifier>.request.status.<status>` has been renamed to `kong.service.<service_identifier>.status.<status>`.
   * The metric `kong.<service_identifier>.user.<consumer_identifier>.request.status.<status>` has been renamed to `kong.service.<service_identifier>.user.<consumer_identifier>.status.<status>`.
 
