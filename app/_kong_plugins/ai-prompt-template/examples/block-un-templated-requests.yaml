@@ -1,9 +1,12 @@
 description: |
   Configure the plugin with a template and block any requests that don't include a template.
 
-title: 'Block un-templated requests'
+title: 'Block untemplated requests'
 
 weight: 900
+
+requirements:
+  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
 
 config: 
   allow_untemplated_requests: false  

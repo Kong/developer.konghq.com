@@ -5,6 +5,9 @@ title: 'Completion route template'
 
 weight: 900
 
+requirements:
+  - "[AI Proxy plugin](/plugins/ai-proxy/) or [AI Proxy Advanced plugin](/plugins/ai-proxy-advanced/) configured with an LLM service"
+
 config:     
   templates:
     - name: "developer-prompt"
