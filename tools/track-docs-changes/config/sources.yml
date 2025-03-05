@@ -310,6 +310,7 @@ app/_kong_plugins/canary/index.md:
   - app/_hub/kong-inc/canary/overview/_index.md
 app/_kong_plugins/canary/changelog.md:
   - app/_hub/kong-inc/canary/_changelog.md
+<<<<<<< HEAD
 app/_kong_plugins/graphql-proxy-cache-advanced/index.md:
   - app/_hub/kong-inc/graphql-proxy-cache-advanced/overview/_index.md
 app/_kong_plugins/graphql-proxy-cache-advanced/changelog.md:
@@ -324,6 +325,15 @@ app/_kong_plugins/ai-prompt-template/examples/chat-route-templates.yaml:
   - app/_hub/kong-inc/ai-prompt-template/how-to/_index.md
 app/_kong_plugins/ai-prompt-template/examples/completions-route-template.yaml:
   - app/_hub/kong-inc/ai-prompt-template/how-to/_index.md
+=======
+app/_kong_plugins/graphql-rate-limiting-advanced/index.md:
+  - app/_hub/kong-inc/graphql-rate-limiting-advanced/overview/_index.md
+  - app/_hub/kong-inc/graphql-rate-limiting-advanced/how-to/_index.md
+  - app/_hub/kong-inc/graphql-rate-limiting-advanced/_api.md
+  - app/_hub/kong-inc/graphql-rate-limiting-advanced/how-to/_costs.md
+app/_kong_plugins/graphql-rate-limiting-advanced/changelog.md:
+  - app/_hub/kong-inc/graphql-rate-limiting-advanced/_changelog.md
+>>>>>>> 23b9ed2e (migrate graphql rate limiting advanced plugin)
 
 # Konnect
 

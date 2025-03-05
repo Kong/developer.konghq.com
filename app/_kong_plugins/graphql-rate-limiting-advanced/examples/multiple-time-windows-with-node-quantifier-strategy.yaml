@@ -1,0 +1,27 @@
+title: Sliding window with node quantifier cost strategy
+description: |
+  Each consumer can make up to 300 requests in any rolling 30 minute period, 
+  with the plugin continuously adjusting the count as new requests are made.
+  Costs are calculated using the `node_quantifier` cost strategy.
+
+weight: 900
+
+requirements: 
+  - You have an existing a GraphQL upstream service.
+
+config:
+  limit: 
+    - 300
+  window_size: 
+    - 1800
+  sync_rate:
+    - 10
+  window_type: sliding
+  cost_strategy: node_quantifier
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
