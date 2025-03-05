@@ -1,0 +1,19 @@
+description: 'Store GraphQL proxy cache data in memory.'
+
+title: 'GraphQL proxy cache with memory storage'
+
+weight: 900
+
+requirements:
+  - You have an existing a GraphQL upstream service.
+
+config:
+  strategy: memory
+  cache_ttl: 500
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
