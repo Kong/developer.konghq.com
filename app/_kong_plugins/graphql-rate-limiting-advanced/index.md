@@ -39,7 +39,7 @@ related_resources:
     url: /plugins/graphql-proxy-cache-advanced/
 ---
 
-The GraphQL Rate Limiting Advanced plugin provides rate limiting for GraphQL queries.
+The GraphQL Rate Limiting Advanced plugin provides rate limiting for [GraphQL queries](https://graphql.org/learn/queries/).
 
 Due to the nature of client-specified GraphQL queries, the same HTTP request to the same URL with the same method can vary greatly in cost depending on the semantics of the GraphQL operation in the body.
 To protect your GraphQL API, this plugin lets you analyze and assign costs to incoming GraphQL queries, then rate limit the consumer’s cost for a given time window.
@@ -55,7 +55,7 @@ This is different from the cost strategy ([`config.cost_strategy`](/plugins/grap
 
 ## Introspection endpoint
 
-The introspection endpoint is generated based on the [Gateway Service path](/gateway/entities/service/), so you must define a path in the Gateway Service itself, 
+The [introspection](https://graphql.org/learn/introspection/) endpoint is generated based on the [Gateway Service path](/gateway/entities/service/), so you must define a path in the Gateway Service itself, 
 instead of appending from the Route path.
   
 The query and introspection endpoints _cannot_ have separate paths.
@@ -103,6 +103,7 @@ Default node costs can be defined by decorating the schema:
 | `Person.vehicleConnection` | ["first"]         | 1                 | []                | 1              |
 
 
+In this example, `vehicleConnection` weight (4) is applied 10 times, and the total weight of it (40) 20 times, which gives us a rough 800:
 ```
 query { # + 1
   allPeople(first:20) { # * 20 + 1
@@ -121,7 +122,6 @@ query { # + 1
 # total cost: ((((4 * 10 + 1) + 1) + 1) * 20 + 1) + 1 = 862
 ```
 
-In this example, `vehicleConnection` weight (4) is applied 10 times, and the total weight of it (40) 20 times, which gives us a rough 800.
 
 Cost constants can be atomically defined as:
 
@@ -159,7 +159,16 @@ any connection, providing a good approximation on the number of nodes visited fo
 Any query without decorated quantifiers has a cost of 1.
 This strategy is roughly based on [GitHub's GraphQL resource limits](https://developer.github.com/v4/guides/resource-limitations/).
 
-For example:
+Let's use the following example configuration: 
+
+| `type_path`                | `mul_arguments` | `mul_constant`    | `add_arguments`   | `add_constant` |
+|----------------------------|-----------------|-------------------|-------------------|----------------|
+| `Query.allPeople`          | ["first"]       | 1                 | []                | 1              |
+| `Person.vehicleConnection` | ["first"]       | 1                 | []                | 1              |
+| `Vehicle.filmConnection`   | ["first"]       | 1                 | []                | 1              |
+| `Film.characterConnection` | ["first"]       | 1                 | []                | 1              |
+
+Here's what it looks like in a query:
 ```
 query {
   allPeople(first:100) { # 1
@@ -186,19 +195,13 @@ query {
 # total cost: 1 + 100 + 10 * 100 + 5 * 10 * 100 = 6101
 ```
 
-| `type_path`                | `mul_arguments` | `mul_constant`    | `add_arguments`   | `add_constant` |
-|----------------------------|-----------------|-------------------|-------------------|----------------|
-| `Query.allPeople`          | ["first"]       | 1                 | []                | 1              |
-| `Person.vehicleConnection` | ["first"]       | 1                 | []                | 1              |
-| `Vehicle.filmConnection`   | ["first"]       | 1                 | []                | 1              |
-| `Film.characterConnection` | ["first"]       | 1                 | []                | 1              |
 
 In the example above:
 
-* `allPeople` returns 100 nodes, and has been called once
-* `vehicleConnection` returns 10 nodes, and has been called 100 times
-* `filmConnection` returns 5 nodes, and has been called 10 * 100 times
-* `characterConnection` returns 50 nodes, and has been called 5 * 10 * 100 times
+* `allPeople` returns 100 nodes and has been called once
+* `vehicleConnection` returns 10 nodes and has been called 100 times
+* `filmConnection` returns 5 nodes and has been called 10 * 100 times
+* `characterConnection` returns 50 nodes and has been called 5 * 10 * 100 times
 
 
 Specific costs per node can be specified by adding a constant:
@@ -210,7 +213,7 @@ Specific costs per node can be specified by adding a constant:
 | `Vehicle.filmConnection`   | ["first"]         | 1                 | []                | 1              |
 | `Film.characterConnection` | ["first"]         | 1                 | []                | 1              |
 
-
+For example: 
 ```
 query {
   allPeople(first:100) { # 1
