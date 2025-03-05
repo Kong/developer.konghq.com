@@ -17,6 +17,8 @@ related_resources:
     url: /gateway/security/
   - text: Kong vulnerability patching process
     url: /gateway/vulnerabilities/
+  - text: "{{site.base_gateway}} breaking changes"
+    url: /gateway/breaking-changes/
 ---
 
 Kong adopts a structured approach to versioning its products.
