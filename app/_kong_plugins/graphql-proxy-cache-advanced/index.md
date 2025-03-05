@@ -48,7 +48,7 @@ It caches response entities by GraphQL query or Vary headers.
 
 ## How it works
 
-The GraphQL Proxy Caching Advanced Plugin stores cache data in a one of two ways, defined via the [`config.strategy`](/plugins/graphql-proxy-cache-advanced/reference/#schema--config-strategy) parameter:
+The GraphQL Proxy Caching Advanced plugin stores cache data in one of two ways, defined via the [`config.strategy`](/plugins/graphql-proxy-cache-advanced/reference/#schema--config-strategy) parameter:
 
 * `redis`: A Redis database.
 * `memory`: A shared dictionary defined in [`config.memory.dictionary_name`](/plugins/graphql-proxy-cache-advanced/reference/#schema--config-memory-dictionary_name).
