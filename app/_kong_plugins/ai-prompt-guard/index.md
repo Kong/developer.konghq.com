@@ -58,8 +58,7 @@ You can use a combination of `allow` and `deny` rules to preserve integrity and 
 * **For `llm/v1/chat` type models**: You can optionally configure the plugin to ignore existing chat history, wherein it will only scan the trailing `user` message.
 * **For `llm/v1/completions` type models**: There is only one `prompt` field, thus the whole prompt is scanned on every request.
 
-{:.info}
-> This plugin extends the functionality of the [AI Proxy plugin](/plugins/ai-proxy/), and requires AI Proxy to be configured first.
+{% include plugins/ai-plugins-note.md %}
 
 ## How it works
 

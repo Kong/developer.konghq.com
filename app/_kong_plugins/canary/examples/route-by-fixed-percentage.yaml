@@ -1,0 +1,21 @@
+description: 'Set a fixed percentage of traffic to be routed to a secondary upstream service.'
+
+title: 'Route traffic by fixed percentage'
+
+weight: 900
+
+variables:
+  upstream_host:
+    value: $UPSTREAM_HOST
+    description: The hostname of your upstream service without the the `http` or `https` prefix. For example, `example.com`.
+
+config:
+  percentage: 50
+  upstream_host: ${upstream_host}
+  upstream_port: 80
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - terraform

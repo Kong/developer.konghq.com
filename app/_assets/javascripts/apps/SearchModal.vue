@@ -275,7 +275,7 @@ export default {
                       params: {
                         query,
                         hitsPerPage: hitsPerPage,
-                        filters: applyProductFilter('NOT content_type:how_to AND NOT content_type:plugin')
+                        filters: applyProductFilter('NOT content_type:how_to AND NOT content_type:plugin AND NOT content_type:plugin_example')
                       },
                     },
                   ]
@@ -315,7 +315,7 @@ export default {
                       params: {
                         query,
                         hitsPerPage: hitsPerPage,
-                        filters: applyProductFilter('content_type:plugin')
+                        filters: applyProductFilter('content_type:plugin OR content_type:plugin_example')
                       },
                     },
                   ]

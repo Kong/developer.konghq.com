@@ -1,0 +1,28 @@
+title: 'Create a complex chat history'
+
+description: 'Creates a complex chat history that can be continued by any user by configuring the plugin to both prepend and append multiple messages.'
+
+weight: 900
+
+requirements:
+  - "[AI Proxy plugin](/plugins/ai-proxy/) configured with an LLM service"
+
+config: 
+  prompts:
+    prepend:
+    - role: system
+      content: You are data scientist, specialising in survey analytics.
+    - role: user
+      content: Classify this test result set as positive, negative, or neutral.
+    - role: assistant
+      content: These tests are NEUTRAL.
+    append:
+    - role: user
+      content: Do not mention any real participant names in your justification.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

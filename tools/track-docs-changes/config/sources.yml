@@ -284,6 +284,14 @@ app/_kong_plugins/oas-validation/index.md:
   - app/_hub/kong-inc/oas-validation/overview/_index.md
 app/_kong_plugins/oas-validation/changelog.md:
   - app/_hub/kong-inc/oas-validation/_changelog.md
+app/_kong_plugins/ai-prompt-decorator/changelog.md:
+  - app/_hub/kong-inc/ai-prompt-decorator/_changelog.md
+app/_kong_plugins/ai-prompt-decorator/index.md:
+  - app/_hub/kong-inc/ai-prompt-decorator/overview/_index.md
+app/_kong_plugins/ai-semantic-cache/changelog.md:
+  - app/_hub/kong-inc/ai-semantic-cache/_changelog.md
+app/_kong_plugins/ai-semantic-cache/index.md:
+  - app/_hub/kong-inc/ai-semantic-cache/overview/_index.md
 app/_kong_plugins/xml-threat-protection/index.md:
   - app/_hub/kong-inc/xml-threat-protection/overview/_index.md
 app/_kong_plugins/xml-threat-protection/changelog.md:
@@ -298,6 +306,24 @@ app/_kong_plugins/ai-prompt-guard/examples/allow-only.yaml:
  - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
 app/_kong_plugins/ai-prompt-guard/examples/deny-only.yaml:
  - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
+app/_kong_plugins/canary/index.md:
+  - app/_hub/kong-inc/canary/overview/_index.md
+app/_kong_plugins/canary/changelog.md:
+  - app/_hub/kong-inc/canary/_changelog.md
+app/_kong_plugins/graphql-proxy-cache-advanced/index.md:
+  - app/_hub/kong-inc/graphql-proxy-cache-advanced/overview/_index.md
+app/_kong_plugins/graphql-proxy-cache-advanced/changelog.md:
+  - app/_hub/kong-inc/graphql-proxy-cache-advanced/_changelog.md
+app/_kong_plugins/ai-prompt-template/index.md:
+  - app/_hub/kong-inc/ai-prompt-template/overview/_index.md
+app/_kong_plugins/ai-prompt-template/changelog.md:
+  - app/_hub/kong-inc/ai-prompt-template/_changelog.md
+app/_kong_plugins/ai-prompt-template/examples/block-untemplated-requests.yaml:
+  - app/_hub/kong-inc/ai-prompt-template/how-to/_index.md
+app/_kong_plugins/ai-prompt-template/examples/chat-route-templates.yaml:
+  - app/_hub/kong-inc/ai-prompt-template/how-to/_index.md
+app/_kong_plugins/ai-prompt-template/examples/completions-route-template.yaml:
+  - app/_hub/kong-inc/ai-prompt-template/how-to/_index.md
 
 # Konnect
 
@@ -367,6 +393,8 @@ app/gateway/resource-sizing-guidelines.md:
   - app/_src/gateway/production/sizing-guidelines.md
 app/gateway/secure-the-admin-api.md:
   - app/_src/gateway/production/running-kong/secure-admin-api.md
+app/gateway/audit-logs.md:
+  - app/_src/gateway/kong-enterprise/audit-log.md
 app/gateway/performance/performance-benchmarks.md:
   - app/_src/gateway/production/performance/performance-testing.md
 app/ai-gateway/ai-audit-log-reference.md:
@@ -374,6 +402,8 @@ app/ai-gateway/ai-audit-log-reference.md:
 app/gateway/kong-manager.md:
   - app/_src/gateway/kong-manager/enable.md 
   - app/_src/gateway/kong-manager/troubleshoot.md
+app/ai-gateway/monitor-ai-llm-metrics.md:
+  - app/_src/gateway/production/monitoring/ai-metrics.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
@@ -409,5 +439,15 @@ app/serverless-gateways/index.md:
   - app/konnect/gateway-manager/serverless-gateways/provision-serverless-gateway.md
   - app/konnect/gateway-manager/serverless-gateways/custom-dns.md
 
+
+
+app/_landing_pages/gateway-manager.yaml:
+  - app/konnect/gateway-manager/index.md
+
 app/konnect-account.md:
   - app/konnect/org-management/deactivation.md
+
+
+app/service-catalog-integrations.yaml:
+  - app/konnect/service-catalog/integrations/index.md
+
