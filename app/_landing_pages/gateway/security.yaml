@@ -85,7 +85,7 @@ rows:
               
             icon: /assets/icons/team.svg
             cta:
-              url: "/konnect/teams-and-roles/"
+              url: "/teams-and-roles/"
       - blocks:
         - type: card
           config:
@@ -159,13 +159,23 @@ rows:
       - blocks:
         - type: card
           config:
+            title: "{{site.base_gateway}} audit logs"
+            description: |
+               Audit logs provides details for HTTP requests handled by the Admin API as well as database changes.
+              
+            icon: /assets/icons/audit.svg
+            cta:
+              url: "/gateway/audit-logs/"
+      - blocks:
+        - type: card
+          config:
             title: "{{site.konnect_short_name}} audit logs"
             description: |
                Use audit logs to help you detect and respond to potential security incidents when they occur.
               
             icon: /assets/icons/audit.svg
             cta:
-              url: "/konnect/audit-logs/"
+              url: "/audit-logs/"
       - blocks:
         - type: card
           config:
