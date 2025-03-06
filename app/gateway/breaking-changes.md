@@ -312,7 +312,7 @@ Item | Recommended action
 -----|-------------------
 LMDB encryption has been disabled. <br><br> The parameter `declarative_config_encryption_mode` has been removed from `kong.conf`. | No action needed.
 Renamed the configuration property `admin_api_uri` to `admin_gui_api_url`. The old `admin_api_uri` property is considered deprecated and will be fully removed in a future version of {{site.base_gateway}}. |  Update your configuration to use `admin_gui_api_url`.
-The `database` parameter no longer accepts `cassandra` as an option. <br><br> All Cassandra options have been removed. | If you use Cassandra DB, either [migrate to PostgreSQL](/gateway/upgrade/cassandra-migration/) (`postgres`) or DB-less mode (`off`).
+The `database` parameter no longer accepts `cassandra` as an option. <br><br> All Cassandra options have been removed. | If you use Cassandra DB, either [migrate to PostgreSQL](https://legacy-gateway--kongdocs.netlify.app/) (`postgres`) or DB-less mode (`off`).
 
 **Admin API changes**
 
