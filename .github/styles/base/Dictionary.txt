@@ -14,6 +14,7 @@ Autonegotiation
 Backfilling
 Bagdi
 Bagdi
+bindable_entities
 Bintray
 Bintray
 Bitnami
@@ -50,6 +51,7 @@ Datadog
 Datadog
 Dex
 Dex
+discovery_support
 Dynatrace
 ElastiCache
 ElastiCache
