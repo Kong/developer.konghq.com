@@ -1,0 +1,45 @@
+description: |
+  Configure the plugin to use OpenAI GPT-4 to add a header to the response before returning it to the client.
+  See [Transform a response using OpenAI](/how-to/transform-a-response-with-ai) for a full how-to guide with this example.
+
+title: Add a header to a response body
+
+weight: 900
+
+requirements:
+  - You have an OpenAI subscription.
+
+variables:
+  openai_key:
+    value: $OPENAI_API_KEY
+    description: An API key to connect to the OpenAI API.
+
+config:
+  prompt: |
+    Add a new header named "new-header" with the value "header-value" to the response. Format the JSON response as follows:
+    {
+      "headers":
+        {
+          "new-header": "header-value"
+        },
+      "status": 201,
+      "body": "new response body"
+    }
+  transformation_extract_pattern: '{((.|\n)*)}'
+  parse_llm_response_json_instructions: true
+  llm:
+    route_type: llm/v1/chat
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${openai_key}
+    model:
+      provider: openai
+      name: gpt-4
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

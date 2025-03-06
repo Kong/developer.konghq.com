@@ -335,6 +335,12 @@ app/_kong_plugins/jq/index.md:
   - app/_hub/kong-inc/jq/overview/_index.md
 app/_kong_plugins/jq/changelog.md:
   - app/_hub/kong-inc/jq/_changelog.md
+app/_kong_plugins/ai-response-transformer/index.md:
+  - app/_hub/kong-inc/ai-response-transformer/overview/_index.md
+app/_kong_plugins/ai-response-transformer/changelog.md:
+  - app/_hub/kong-inc/ai-response-transformer/_changelog.md
+app/_how-tos/transform-a-response-with-ai.md:
+  - app/_hub/kong-inc/ai-response-transformer/how-to/_index.md
 
 # Konnect
 
