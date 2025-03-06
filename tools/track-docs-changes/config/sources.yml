@@ -40,6 +40,8 @@ app/_gateway_entities/consumer.md:
 app/_gateway_entities/plugin.md:
   - app/hub/plugins/overview/index.md
   - app/hub/plugins/compatibility/index.md
+  - app/_src/gateway/kong-enterprise/plugin-ordering/index.md
+  - app/_src/gateway/kong-enterprise/plugin-ordering/get-started.md
 app/_gateway_entities/route.md:
   - app/_src/gateway/key-concepts/routes.md
   - app/_src/gateway/how-kong-works/routing-traffic.md
@@ -476,8 +478,13 @@ app/konnect-account.md:
 app/service-catalog-integrations.yaml:
   - app/konnect/service-catalog/integrations/index.md
 
+
+app/_landing_pages/dedicated-cloud-gateways.yaml:
+  - app/konnect/gateway-manager/dedicated-cloud-gateways/
+
 app/service-catalog/integrations/datadog.md:
   - app/konnect/service-catalog/integrations/datadog.md
+
 
 app/service-catalog/integrations/github.md:
   - app/konnect/service-catalog/integrations/github.md
@@ -489,3 +496,4 @@ app/service-catalog/integrations/swaggerhub.md:
   - app/konnect/service-catalog/integrations/swaggerhub.md
 app/service-catalog/integrations/pagerduty.md:
   - app/konnect/service-catalog/integrations/pagerduty.md
+
