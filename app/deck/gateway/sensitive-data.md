@@ -23,7 +23,7 @@ related_resources:
 
 Hardcoding sensitive information in your declarative configuration files is not recommended. decK provides two options to avoid this anti-pattern:
 
-1. Configure and use [vaults](/gateway/latest/kong-enterprise/secrets-management/) with {{ site.base_gateway }}.
+1. Configure and use [vaults](/gateway/entities/vault/) with {{ site.base_gateway }}.
 1. Read environment variables when running decK commands.
 
 ## Configuring Kong vaults

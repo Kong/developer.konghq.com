@@ -26,19 +26,19 @@ It does not manage {{site.base_gateway}} configuration parameters in `kong.conf`
 
 | Entity                               | Managed by decK? |
 | ------------------------------------ | ---------------- |
-| Services                             | ✅<sup>1</sup>   |
+| Services                             | ✅               |
 | Routes                               | ✅               |
 | Consumers                            | ✅               |
 | Plugins                              | ✅               |
-| Certificates                         | ✅               |
-| CA Certificates                      | ✅               |
+| Certificates                          | ✅               |
+| CA Certificates                       | ✅               |
 | SNIs                                 | ✅               |
 | Upstreams                            | ✅               |
 | Targets                              | ✅               |
 | Vaults                               | ✅               |
 | Keys and key sets                    | ❌               |
 | Licenses                             | ❌               |
-| Workspaces                           | ✅ <sup>2</sup>  |
+| Workspaces                           | ✅ <sup>1</sup>  |
 | RBAC: roles and endpoint permissions | ✅               |
 | RBAC: groups and admins              | ❌               |
 | Developers                           | ❌               |
@@ -46,12 +46,8 @@ It does not manage {{site.base_gateway}} configuration parameters in `kong.conf`
 | Event hooks                          | ❌               |
 | Keyring and data encryption          | ❌               |
 
-**\[1\]**: decK doesn't manage documents (`document_objects`) related to services, which means they are not included in dump/sync actions.
-If you attempt to delete a service that has an associated document via decK, it will fail.
-[Manage service documents directly](/gateway/latest/kong-enterprise/dev-portal/applications/managing-applications/#add-a-document-to-your-service) through Kong Manager.
-
-**\[2\]**: decK can create workspaces and manage entities in a given workspace.
+**\[1\]**: decK can create workspaces and manage entities in a given workspace.
 However, decK can't delete workspaces, and it can't update multiple workspaces simultaneously.
-See [Manage multiple workspaces](/deck/{{page.release}}/guides/kong-enterprise/#manage-multiple-workspaces) for more information.
+See [Manage multiple workspaces](/deck/gateway/workspaces/) for more information.
 
 While deck can manage a majority of {{site.base_gateway}}'s configuration, we recommend additional arrangements for deployment, backup, and restoring unmanaged entities for a more comprehensive approach.

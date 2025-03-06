@@ -81,7 +81,7 @@ status_code: 200
 
 ## Add rate limiting
 
-At this point, {{ site.base_gateway }} is a transparent layer that proxies requests to the upstream httpbin instance. Let's add the [Rate Limiting](/hub/kong-inc/rate-limiting/) plugin to make sure that people only make five requests per minute:
+At this point, {{ site.base_gateway }} is a transparent layer that proxies requests to the upstream httpbin instance. Let's add the [Rate Limiting](/plugins/rate-limiting/) plugin to make sure that people only make five requests per minute:
 
 {% entity_examples %}
 entities:
@@ -104,7 +104,7 @@ url: '/anything'
 
 You may have noticed that the rate limiting plugin used the `limit_by: consumer` configuration option. This means that each uniquely identified consumer is allowed 5 requests per minute.
 
-To identify a consumer, let's add the [Key Auth plugin](/hub/kong-inc/key-auth/) and create a test user named `alice`:
+To identify a consumer, let's add the [Key Auth plugin](/plugins/key-auth/) and create a test user named `alice`:
 
 {% entity_examples %}
 entities:

@@ -21,7 +21,7 @@ related_resources:
     url: /index/deck/
 ---
 
-The `kong2kic` command converts a {{ site.base_gateway }} declarative configuration file in to Kubernetes CRDs that can be used with the [{{ site.kic_product_name }}](/kubernetes-ingress-controller/latest/).
+The `kong2kic` command converts a {{ site.base_gateway }} declarative configuration file in to Kubernetes CRDs that can be used with the [{{ site.kic_product_name }}](/kubernetes-ingress-controller/).
 
 `kong2kic` generates Gateway API `HTTPRoute` resources by default. If you're using `ingress` resources, you can specify the `--ingress` flag.
 
