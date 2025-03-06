@@ -31,7 +31,7 @@ rows:
                     - Support for AWS and Azure in multiple [regions](/konnect-geos/).
 
                     You can manage your Dedicated Cloud Gateway nodes in [Gateway Manager](https://cloud.konghq.com/gateway-manager/).
-             - type: button
+          - type: button
             config:
               align: left
               text: Create a Dedicated Cloud Gateway
