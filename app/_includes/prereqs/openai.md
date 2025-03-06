@@ -4,5 +4,5 @@ This tutorial uses the AI Proxy plugin with OpenAI:
 1. Create a decK variable with the API key:
 
 ```sh
-export DECK_OPENAI_KEY='<api-key>'
+export DECK_OPENAI_API_KEY='<api-key>'
 ```

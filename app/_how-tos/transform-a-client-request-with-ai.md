@@ -61,13 +61,18 @@ cleanup:
 
 In this example, we expect the client to send requests with a JSON body containing a `city` element. We want to transform this request to add the corresponding `country` before proxying the request to the upstream.
 
-Configure the [AI Request Transformer](/plugins/ai-request-transformer) plugin with the required LLM details and the transformation prompt:
+We also want to make sure that the LLM only returns the JSON content, and doesn't add any extra text. There are two ways to do this:
+* Include this in the prompt, by adding "Return only the JSON message, no extra text" for example.
+* Specify a regex in the `config.transformation_extract_pattern` parameter to extract only the data we need. This is the option we'll use in this example.
+
+Configure the [AI Request Transformer](/plugins/ai-request-transformer) plugin with the required LLM details, the transformation prompt, and the expected request body pattern to extract:
 {% entity_examples %}
 entities:
   plugins:
     - name: ai-request-transformer
       config:
-        prompt: In my JSON message, anywhere there is a JSON tag for a city, also add a country tag with the name of the country that city is in. Return only the JSON message, no extra text.
+        prompt: In my JSON message, anywhere there is a JSON tag for a city, also add a country tag with the name of the country that city is in.
+        transformation_extract_pattern: '{((.|\n)*)}'
         llm:
           route_type: llm/v1/chat
           auth:
@@ -78,7 +83,7 @@ entities:
             name: gpt-4
 variables:
   openai_key:
-    value: $OPENAI_KEY
+    value: $OPENAI_API_KEY
 {% endentity_examples %}
 
 

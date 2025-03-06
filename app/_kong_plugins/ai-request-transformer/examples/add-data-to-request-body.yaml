@@ -15,7 +15,8 @@ variables:
     description: An API key to connect to the OpenAI API.
 
 config:
-  prompt: In my JSON message, anywhere there is a JSON tag for a city, also add a country tag with the name of the country that city is in. Return only the JSON message, no extra text.
+  prompt: In my JSON message, anywhere there is a JSON tag for a city, also add a country tag with the name of the country that city is in.
+  transformation_extract_pattern: '{((.|\n)*)}'
   llm:
     route_type: llm/v1/chat
     auth:
