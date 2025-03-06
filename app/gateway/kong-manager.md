@@ -33,11 +33,10 @@ related_resources:
     url: /how-to/configure-ldap-with-kong-manager/
   - text: Configuring Kong Manager to Send Email
     url: /how-to/configure-kong-manager-email/
+tags:
+  - kong-manager
 ---
 
-@todo
-
-Pull content from https://docs.konghq.com/gateway/latest/kong-manager/
 
 If you're running {{site.base_gateway}} on-prem with a database (either in traditional
 or hybrid mode), you can enable {{site.base_gateway}}'s graphical user interface
