@@ -1,4 +1,4 @@
-<div class="bg-secondary shadow-primary rounded-md flex flex-col text-sm accordion">
+<div id="faqs" class="bg-secondary shadow-primary rounded-md flex flex-col text-sm accordion">
 {% for faq in faqs %}
   {% assign slug = faq.q | liquify | slugify %}
   <div class="flex-col hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md {% unless forloop.last %} border-b border-primary/5 {% endunless %} accordion-item faq">

@@ -15,6 +15,7 @@ Autonegotiation
 Backfilling
 Bagdi
 Bagdi
+bindable_entities
 Bintray
 Bintray
 Bitnami
@@ -51,6 +52,7 @@ Datadog
 Datadog
 Dex
 Dex
+discovery_support
 Dynatrace
 ElastiCache
 ElastiCache
@@ -554,6 +556,7 @@ ngrok
 ngx
 ngx_stream_proxy_module
 ngx_wasm_module
+node_quantifier
 nopp
 nopped
 nopping

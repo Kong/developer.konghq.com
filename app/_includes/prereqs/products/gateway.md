@@ -1,7 +1,6 @@
 {% assign summary='{{site.base_gateway}} running' %}
 
 {% capture details_content %}
-{% if include.tier=='enterprise' %}
 {% if include.rbac %}
 {% assign summary='{{site.base_gateway}} running with RBAC enabled' %}
 This tutorial requires {{site.ee_product_name}}.
@@ -53,21 +52,6 @@ to get an instance of {{site.base_gateway}} running almost instantly.
     Kong Gateway Ready
     ```
     {:.no-copy-code}
-
-{% endif %}
-{% else %}
-This tutorial requires {{site.base_gateway}}.
-If you don't have it set up yet, you can use the [quickstart script](https://get.konghq.com/quickstart) to get an instance of {{site.base_gateway}} running almost instantly:
-
-```bash
-curl -Ls https://get.konghq.com/quickstart | bash -s {% if include.env_variables %}-- \{% endif %}{% for variable in include.env_variables %}
-     -e {{variable.name}}{% if variable.value %}={{variable.value}}{% endif %}{% unless forloop.last %} \{% endunless %}{% endfor %}
-```
-Once {{site.base_gateway}} is ready, you will see the following message:
-```bash
-Kong Gateway Ready
-```
-{:.no-copy-code}
 
 {% endif %}
 {% endcapture %}

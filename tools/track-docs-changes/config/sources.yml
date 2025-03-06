@@ -321,6 +321,17 @@ app/_kong_plugins/ai-prompt-template/examples/chat-route-templates.yaml:
   - app/_hub/kong-inc/ai-prompt-template/how-to/_index.md
 app/_kong_plugins/ai-prompt-template/examples/completions-route-template.yaml:
   - app/_hub/kong-inc/ai-prompt-template/how-to/_index.md
+app/_kong_plugins/graphql-rate-limiting-advanced/index.md:
+  - app/_hub/kong-inc/graphql-rate-limiting-advanced/overview/_index.md
+  - app/_hub/kong-inc/graphql-rate-limiting-advanced/how-to/_index.md
+  - app/_hub/kong-inc/graphql-rate-limiting-advanced/_api.md
+  - app/_hub/kong-inc/graphql-rate-limiting-advanced/how-to/_costs.md
+app/_kong_plugins/graphql-rate-limiting-advanced/changelog.md:
+  - app/_hub/kong-inc/graphql-rate-limiting-advanced/_changelog.md
+app/_kong_plugins/jq/index.md:
+  - app/_hub/kong-inc/jq/overview/_index.md
+app/_kong_plugins/jq/changelog.md:
+  - app/_hub/kong-inc/jq/_changelog.md
 
 # Konnect
 
@@ -384,10 +395,25 @@ app/gateway/performance/performance-benchmarks.md:
   - app/_src/gateway/production/performance/performance-testing.md
 app/ai-gateway/ai-audit-log-reference.md:
   - app/_src/gateway/production/logging/ai-analytics.md
+app/gateway/kong-manager.md:
+  - app/_src/gateway/kong-manager/enable.md 
+  - app/_src/gateway/kong-manager/troubleshoot.md
 app/ai-gateway/monitor-ai-llm-metrics.md:
   - app/_src/gateway/production/monitoring/ai-metrics.md
 app/gateway/reserved-entity-names.md:
   - app/_src/gateway/reference/reserved-entity-names.md
+app/gateway/breaking-changes.md:
+  - app/_src/gateway/breaking-changes/39x.md
+  - app/_src/gateway/breaking-changes/28x.md
+  - app/_src/gateway/breaking-changes/30x.md
+  - app/_src/gateway/breaking-changes/31x.md
+  - app/_src/gateway/breaking-changes/32x.md
+  - app/_src/gateway/breaking-changes/33x.md
+  - app/_src/gateway/breaking-changes/34x.md
+  - app/_src/gateway/breaking-changes/35x.md
+  - app/_src/gateway/breaking-changes/36x.md
+  - app/_src/gateway/breaking-changes/37x.md
+  - app/_src/gateway/breaking-changes/38x.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
@@ -434,6 +460,8 @@ app/konnect-account.md:
 
 app/service-catalog-integrations.yaml:
   - app/konnect/service-catalog/integrations/index.md
+app/service-catalog/integrations/datadog.md:
+  - app/konnect/service-catalog/integrations/datadog.md
 
 # deck
 app/_landing_pages/deck.yaml:
@@ -520,3 +548,4 @@ app/deck/gateway/deduplicate.md:
   - app/deck/gateway/deduplicate.md
 app/deck/gateway/reset.md:
   - app/deck/gateway/reset.md
+

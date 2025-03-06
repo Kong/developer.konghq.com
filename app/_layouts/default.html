@@ -78,5 +78,8 @@
 
     {% include_cached footer.html %}
   </div>
+  <script>
+    window.searchFilters = {{site.data.searchFilters | jsonify }}
+  </script>
 </body>
 </html>

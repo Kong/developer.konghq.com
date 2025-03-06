@@ -202,10 +202,14 @@ export default {
     );
 
     const initialTags = [];
+    const searchFilters = window.searchFilters;
     const productMeta = document.querySelector('meta[name="algolia:products"]');
     if (productMeta !== null) {
       const product = productMeta.getAttribute('content').trim();
-      initialTags.push({ label: product, facet: 'products' });
+      const productFilter = searchFilters.products.find((f) => f.value === product);
+      if (productFilter) {
+        initialTags.push({ label: productFilter.label, value: productFilter.value, facet: 'products' });
+      }
     }
 
     const tagsPlugin = createTagsPlugin({
@@ -231,9 +235,9 @@ export default {
             if (state.context.tagsPlugin.tags) {
               state.context.tagsPlugin.tags.forEach(tag => {
                 if (query === '') {
-                  query += `products:'${tag.label}'`;
+                  query += `products:${tag.value}`;
                 } else {
-                  query += ` AND products:'${tag.label}'`;
+                  query += ` AND products:${tag.value}`;
                 }
               });
             }
