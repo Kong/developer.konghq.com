@@ -20,6 +20,8 @@ related_resources:
       url: /gateway/entities/consumer/
     - text: Plugins that can be scoped to Consumer Groups
       url: /gateway/entities/plugin/#supported-scopes-by-plugin
+    - text: Reserved entity names
+      url: /gateway/reserved-entity-names/
 
 api_specs:
     - gateway/admin-ee

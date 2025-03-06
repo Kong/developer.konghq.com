@@ -1,0 +1,2 @@
+{:.info}
+> This plugin extends the functionality of the [AI Proxy plugin](/plugins/ai-proxy/), and requires either AI Proxy or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) to be configured first. To set up AI Proxy quickly, see [Get started with AI Gateway](/how-to/get-started-with-ai-gateway/).

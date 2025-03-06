@@ -20,6 +20,8 @@ related_resources:
     url: /gateway/entities/route/
   - text: Load balancing in {{site.base_gateway}}
     url: /gateway/load-balancing/
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
 
 schema:
     api: gateway/admin-ee

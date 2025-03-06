@@ -57,9 +57,7 @@ module Jekyll
         def products
           return unless @page.data['products']
 
-          @page.data.fetch('products', []).map do |p|
-            @site.data.dig('products', p, 'name')
-          end.join(',')
+          @page.data.fetch('products', []).join(',')
         end
 
         def works_on
@@ -71,9 +69,7 @@ module Jekyll
         def tools
           return unless @page.data['tools']
 
-          @page.data.fetch('tools', []).map do |t|
-            @site.data.dig('tools', t, 'name')
-          end.join(',')
+          @page.data.fetch('tools', []).join(',')
         end
 
         def tags
@@ -86,8 +82,7 @@ module Jekyll
           return unless @page.data['tier']
           return unless @page.data['products']
 
-          product = @page.data['products'].first
-          @site.data.dig('products', product, 'tiers', @page.data['tier'], 'text')
+          @page.data['tier']
         end
       end
     end

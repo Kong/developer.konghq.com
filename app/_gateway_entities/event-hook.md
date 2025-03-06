@@ -18,6 +18,9 @@ related_resources:
     url: /how-to/create-a-log-event-hook-with-kong-gateway/
   - text: Configure an Event Hook to log events with {{site.base_gateway}}
     url: /how-to/create-a-lambda-event-hook-with-kong-gateway/
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
+    
 products:
     - gateway
 tools:

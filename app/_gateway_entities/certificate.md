@@ -15,6 +15,8 @@ related_resources:
     url: /gateway/ssl-certificates/
   - text: Define a client certificate on a Service
     url: /how-to/client-cert-for-service/
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
 
 tools:
     - admin-api

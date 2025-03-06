@@ -15,6 +15,8 @@ related_resources:
     url: /how-to/add-rate-limiting-to-a-service-with-kong-gateway/
   - text: Plugins that can be scoped to Gateway Services
     url: /gateway/entities/plugin/#supported-scopes-by-plugin
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
 
 tools:
     - admin-api

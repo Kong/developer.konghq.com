@@ -19,6 +19,8 @@ related_resources:
     url: /gateway/entities/upstream/
   - text: Plugins that can be scoped to Routes
     url: /gateway/entities/plugin/#supported-scopes-by-plugin
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
 
 next_steps:
   - text: Learn about the Expressions router
