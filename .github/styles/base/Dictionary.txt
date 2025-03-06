@@ -6,6 +6,7 @@ Alertmanager
 Amal
 Amberflo
 AppRole
+APIm
 Arya
 Arya
 Atlassian
@@ -66,6 +67,7 @@ Gateway
 GatewayClass
 Github
 Github
+gitops
 Gluu
 Gluu
 Golang
@@ -641,6 +643,7 @@ rollouts
 routable
 route_type
 ruleset
+rulesets
 runloop
 runtime
 runtime_groups

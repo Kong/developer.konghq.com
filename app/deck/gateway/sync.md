@@ -45,7 +45,7 @@ cat kong.yaml | yq 'del(.services[] | select(.name == "example-service"))' | dec
 
 {:.warning}
 
-> Syncing multiple files at once causes decK to merge all of the provided files in to a single configuration before syncing. To split your configuration in to indepenent units, [use tags](/deck/gateway/tags/).
+> Syncing multiple files at once causes decK to merge all of the provided files in to a single configuration before syncing. To split your configuration in to independent units, [use tags](/deck/gateway/tags/).
 
 decK can construct a state by combining multiple JSON or YAML files inside a directory instead of a single file.
 
