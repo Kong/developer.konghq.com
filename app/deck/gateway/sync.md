@@ -23,7 +23,7 @@ related_resources:
 
 The `deck gateway sync` command configures the target {{ site.base_gateway }} to match the values specified in your declarative configuration.
 
-{:.info}
+{:.warning}
 > Any configuration in {{ site.base_gateway }} that isn't present in the provided declarative configuration file **will be deleted** using `deck gateway sync`.
 
 The `deck gateway sync` command can accept one or more files as positional arguments:
@@ -42,7 +42,7 @@ cat kong.yaml | yq 'del(.services[] | select(.name == "example-service"))' | dec
 
 ## Syncing multiple files
 
-{:.info}
+{:.warning}
 > Syncing multiple files at once causes decK to merge all of the provided files in to a single configuration before syncing. To split your configuration in to independent units, [use tags](/deck/gateway/tags/).
 
 decK can construct a state by combining multiple JSON or YAML files inside a directory instead of a single file.

@@ -23,7 +23,7 @@ related_resources:
 
 decK can manage {{ site.ee_product_name }} RBAC configuration using the `diff`, `sync`, and `dump` commands.
 
-{:.info}
+{:.warning}
 > decK can't manage {{ site.konnect_short_name }} permissions as they are set at the organization level, rather than the control plane level. We recommend [terraform-provider-konnect](https://github.com/Kong/terraform-provider-konnect) for your {{ site.konnect_short_name }} RBAC needs.
 
 RBAC configuration is usually stored separately from all other configuration, and decK provides the `--rbac-resources-only` flag to ensure that only RBAC resources are in scope when running commands.

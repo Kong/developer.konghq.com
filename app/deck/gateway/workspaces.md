@@ -60,7 +60,7 @@ deck gateway dump --all-workspaces
 
 This creates one configuration file per Workspace.
 
-{:.info}
+{:.warning}
 > Be careful when using the `--all-workspaces` flag to avoid overwriting the wrong Workspace. We recommend using the singular `--workspace` flag in most situations.
 
 However, since a `workspace` is an isolated unit of configuration, decK doesn't allow the deployment of multiple workspaces at a time. Therefore, each Workspace configuration file must be deployed individually:

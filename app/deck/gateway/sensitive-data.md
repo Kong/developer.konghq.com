@@ -90,7 +90,7 @@ In the example above, the token used to unseal the HashiCorp Vault is stored in 
 
 decK can read environment variables at runtime, allowing you to pass sensitive information when the `sync` is being executed.
 
-{:.info}
+{:.warning}
 > The token will still be visible in plain text to anyone that can read the `/vaults` entity on the Admin API.
 
 To allow decK to read environment variables, reference them as
