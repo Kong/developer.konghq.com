@@ -7,7 +7,7 @@ products:
     - gateway
 breadcrumbs:
   - /service-catalog/
-  - /service-catalog/service-catalog-integrations/
+  - /service-catalog/integrations/
 
 works_on:
     - konnect
