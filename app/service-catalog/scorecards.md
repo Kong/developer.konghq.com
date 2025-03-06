@@ -60,6 +60,6 @@ The service documentation template supports the following Spectral recipes:
 
 To enable a scorecard on a service:
      
-1. From [Service Catalog](https://cloud.konghq.com/us/service-catalog/) click **Scorecard** in the sidebar.
-2. Select **New Scorecard**
+1. From [Service Catalog](https://cloud.konghq.com/us/service-catalog/), click **Scorecard** in the sidebar.
+2. Select **New Scorecard**.
 3. Name the scorecard, enable or disable scorecard criteria, and select which services you want the scorecard to apply to.
