@@ -75,7 +75,6 @@ app/_gateway_entities/group.md:
 
 app/_gateway_entities/vault.md:
   - app/_src/gateway/kong-enterprise/secrets-management/advanced-usage.md
-  - app/_src/deck/guides/vaults.md
   - app/_src/gateway/kong-enterprise/secrets-management/index.md
   - app/_src/gateway/kong-enterprise/secrets-management/backends/env.md
 app/_gateway_entities/sni.md:
@@ -344,10 +343,6 @@ app/_landing_pages/gateway/enterprise-vs-oss.yaml:
 app/_landing_pages/gateway/rate-limiting.yaml:
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
-app/_landing_pages/deck.yaml:
-  - app/_src/deck/index.md
-  - app/_src/deck/installation.md
-  - app/_src/deck/faqs.md
 app/_landing_pages/gateway.yaml:
   - app/_src/gateway/index.md
 app/_landing_pages/gateway/secrets-management.yaml:
@@ -360,14 +355,6 @@ app/_landing_pages/admin-api.yaml:
   - app/_src/gateway/admin-api/index_latest.md
 
 # references 
-app/deck/distributed-config.md:
-  - app/_src/deck/guides/distributed-configuration.md
-app/deck/environment-variables.md:
-  - app/_src/deck/guides/environment-variables.md
-app/deck/manage-deck-with-docker.md:
-  - app/_src/deck/guides/run-with-docker-1.28.md
-app/deck/object-defaults.md:
-  - app/_src/deck/guides/defaults-v2.md
 app/gateway/rate-limiting/strategies.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
@@ -450,3 +437,88 @@ app/konnect-account.md:
 app/service-catalog-integrations.yaml:
   - app/konnect/service-catalog/integrations/index.md
 
+# deck
+app/_landing_pages/deck.yaml:
+  - app/_src/deck/index.md
+  - app/_src/deck/installation.md
+  - app/_src/deck/faqs.md
+app/_how-tos/deck-get-started.md:
+  - app/deck/get-started.md
+app/deck/file/validate.md:
+  - app/deck/file/validate.md
+app/deck/file/manipulation/namespace.md:
+  - app/deck/file/manipulation/namespace.md
+app/deck/file/manipulation/index.md:
+  - app/deck/file/manipulation/index.md
+app/deck/file/manipulation/plugins.md:
+  - app/deck/file/manipulation/plugins.md
+app/deck/file/manipulation/tags.md:
+  - app/deck/file/manipulation/tags.md
+app/deck/file/manipulation/patch.md:
+  - app/deck/file/manipulation/patch.md
+app/deck/file/lint.md:
+  - app/deck/file/lint.md
+app/deck/file/kong2kic.md:
+  - app/deck/file/kong2kic.md
+app/deck/file/render.md:
+  - app/deck/file/render.md
+app/deck/file/index.md:
+  - app/deck/file/index.md
+app/deck/file/merge.md:
+  - app/deck/file/merge.md
+app/deck/file/openapi2kong.md:
+  - app/deck/file/openapi2kong.md
+app/deck/file/convert.md:
+  - app/deck/file/convert.md
+app/deck/file/kong2tf.md:
+  - app/deck/file/kong2tf.md
+app/deck/apiops/federated-configuration.md:
+  - app/deck/apiops/federated-configuration.md
+app/deck/apiops/index.md:
+  - app/deck/apiops/index.md
+app/deck/apiops/continuous-integration.md:
+  - app/deck/apiops/continuous-integration.md
+app/deck/support.md:
+  - app/deck/support.md
+app/deck/configuration.md:
+  - app/deck/configuration.md
+app/deck/reference/entities.md:
+  - app/deck/reference/entities.md
+app/deck/reference/3.0-upgrade.md:
+  - app/deck/reference/3.0-upgrade.md
+app/deck/reference/env-variables.md:
+  - app/deck/reference/env-variables.md
+app/deck/security.md:
+  - app/deck/security.md
+app/deck/gateway/defaults.md:
+  - app/deck/gateway/defaults.md
+app/deck/gateway/diff.md:
+  - app/deck/gateway/diff.md
+app/deck/gateway/validate.md:
+  - app/deck/gateway/validate.md
+app/deck/gateway/dump.md:
+  - app/deck/gateway/dump.md
+app/deck/gateway/workspaces.md:
+  - app/deck/gateway/workspaces.md
+app/deck/gateway/ping.md:
+  - app/deck/gateway/ping.md
+app/deck/gateway/apply.md:
+  - app/deck/gateway/apply.md
+app/deck/gateway/konnect-configuration.md:
+  - app/deck/gateway/konnect-configuration.md
+app/deck/gateway/index.md:
+  - app/deck/gateway/index.md
+app/deck/gateway/configuration.md:
+  - app/deck/gateway/configuration.md
+app/deck/gateway/tags.md:
+  - app/deck/gateway/tags.md
+app/deck/gateway/sync.md:
+  - app/deck/gateway/sync.md
+app/deck/gateway/rbac.md:
+  - app/deck/gateway/rbac.md
+app/deck/gateway/sensitive-data.md:
+  - app/deck/gateway/sensitive-data.md
+app/deck/gateway/deduplicate.md:
+  - app/deck/gateway/deduplicate.md
+app/deck/gateway/reset.md:
+  - app/deck/gateway/reset.md
