@@ -56,6 +56,15 @@ To start creating your own plugins, review the Getting Started documentation, or
 * Plugin Development Kit reference
 * Other Language Support
 
+## How do plugins work?
+
+A {{site.base_gateway}} plugin allows you to inject custom logic at several entrypoints in the lifecycle of a request, 
+response, or TCP stream connection as it is proxied by {{site.base_gateway}}.
+
+### Plugin contexts
+
+<!-- @todo - add info from https://docs.konghq.com/gateway/latest/plugin-development/custom-logic/#available-contexts -->
+
 ## Scoping plugins
 
 You can run plugins in various contexts, depending on your environment needs.
@@ -131,10 +140,76 @@ This can be [adjusted dynamically](#dynamic-plugin-ordering) using the plugin's 
 ### Dynamic plugin ordering
 
 You can override the [priority](#plugin-priority) for any {{site.base_gateway}} plugin using each plugin’s `ordering` configuration parameter. 
-This determines plugin ordering during the `access` phase, and lets you create dynamic dependencies between plugins.
+This determines plugin ordering during the [`access` phase](#plugin-contexts), and lets you create dynamic dependencies between plugins.
 
-<!-- @todo: migrate https://docs.konghq.com/gateway/latest/kong-enterprise/plugin-ordering/ -->
+You can choose to run a particular plugin `before` or `after` a specified plugin or list of plugins.
 
+The configuration looks like this:
+
+```yaml
+pluginA:
+  ordering:
+    before|after:
+      access:
+        - pluginB
+        - pluginC
+```
+
+#### Example with before token
+
+For example, let’s say you want to limit the amount of requests against your Gateway Service and Route **before** Kong requests authentication.
+The following example uses the Rate Limiting Advanced plugin with the Key Auth plugin as the authentication method:
+
+{% entity_example %}
+type: plugin
+data:
+  name: rate-limiting
+  config:
+    minute: 5
+    policy: local
+    limit_by: ip
+  ordering:
+    before:
+      access:
+        - key-auth
+{% endentity_example %}
+
+#### Example with after token
+
+For example, you may want to first transform a request with the Request Transformer plugin, then request authentication.
+You can change the order of the authentication plugin (Basic Auth, in this example) so that it always runs **after** transformation:
+
+{% entity_example %}
+type: plugin
+data:
+  name: basic-auth
+  ordering:
+    after:
+      access:
+        - request-transformer
+{% endentity_example %}
+
+
+#### Known limitations of dynamic plugin ordering
+
+If using dynamic ordering, manually test all configurations, and handle this feature with care. 
+There are a number of considerations that can affect your environment:
+
+* **Consumer scoping**: If you have [Consumer-scoped plugins](#scoping-plugins) anywhere in your Workspace or Control Plane, you can't use dynamic plugin ordering.
+
+  Consumer mapping and dynamic plugin ordering both run in the `access` phase, but the order of the  plugins must be determined after Consumer mapping has happened.
+  {{site.base_gateway}} can't reliably change the order of the plugins in relation to mapped Consumers.
+
+* **Cascading deletes**: Detecting if a plugin has a dependency to a deleted plugin isn't supported, so handle your configuration with care.
+
+* **Performance**: Dynamic plugin ordering requires sorting plugins during a request, which adds latency to the request. 
+In some cases, this might be compensated for when you run rate limiting before an expensive authentication plugin.
+    
+  Re-ordering _any_ plugin in a Workspace or Control Plane has performance implications to all other plugins within the same environment. 
+  If possible, consider offloading plugin ordering to a separate environment.
+
+* **Validation**: Validating dynamic plugin ordering is a non-trivial task and would require insight into the user's business logic. 
+{{site.base_gateway}} tries to catch basic mistakes, but it can't detect all potentially dangerous configurations.
 
 ## Plugin queuing
 
