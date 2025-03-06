@@ -162,7 +162,8 @@ data:
     limit_by: ip
   ordering:
     before:
-      - key-auth
+      access:
+        - key-auth
 formats:
   - deck
 {% endentity_example %}
@@ -178,7 +179,8 @@ data:
   name: basic-auth
   ordering:
     after:
-      - request-transformer
+      access:
+        - request-transformer
 formats:
   - deck
 {% endentity_example %}
