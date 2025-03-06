@@ -40,6 +40,8 @@ app/_gateway_entities/consumer.md:
 app/_gateway_entities/plugin.md:
   - app/hub/plugins/overview/index.md
   - app/hub/plugins/compatibility/index.md
+  - app/_src/gateway/kong-enterprise/plugin-ordering/index.md
+  - app/_src/gateway/kong-enterprise/plugin-ordering/get-started.md
 app/_gateway_entities/route.md:
   - app/_src/gateway/key-concepts/routes.md
   - app/_src/gateway/how-kong-works/routing-traffic.md
