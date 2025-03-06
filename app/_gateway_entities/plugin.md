@@ -56,6 +56,15 @@ To start creating your own plugins, review the Getting Started documentation, or
 * Plugin Development Kit reference
 * Other Language Support
 
+## How do plugins work?
+
+A {{site.base_gateway}} plugin allows you to inject custom logic at several entrypoints in the lifecycle of a request, 
+response, or TCP stream connection as it is proxied by {{site.base_gateway}}.
+
+### Plugin contexts
+
+<!-- @todo - add info from https://docs.konghq.com/gateway/latest/plugin-development/custom-logic/#available-contexts -->
+
 ## Scoping plugins
 
 You can run plugins in various contexts, depending on your environment needs.
@@ -131,7 +140,7 @@ This can be [adjusted dynamically](#dynamic-plugin-ordering) using the plugin's 
 ### Dynamic plugin ordering
 
 You can override the [priority](#plugin-priority) for any {{site.base_gateway}} plugin using each plugin’s `ordering` configuration parameter. 
-This determines plugin ordering during the `access` phase, and lets you create dynamic dependencies between plugins.
+This determines plugin ordering during the [`access` phase](#plugin-contexts), and lets you create dynamic dependencies between plugins.
 
 You can choose to run a particular plugin `before` or `after` a specified plugin or list of plugins.
 
