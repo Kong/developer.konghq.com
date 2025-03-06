@@ -61,9 +61,9 @@ cleanup:
 
 In this example, we expect the client to send requests with a JSON body containing a `city` element. We want to transform this request to add the corresponding `country` before proxying the request to the upstream.
 
-We also want to make sure that the LLM only returns the JSON content, and doesn't add any extra text. There are two ways to do this:
+We also want to make sure that the LLM only returns the JSON content and doesn't add extra text around it. There are two ways to do this:
 * Include this in the prompt, by adding "Return only the JSON message, no extra text" for example.
-* Specify a regex in the `config.transformation_extract_pattern` parameter to extract only the data we need. This is the option we'll use in this example.
+* Specify a regex in the [`config.transformation_extract_pattern`](/plugins/ai-request-transformer/reference/#schema--config-transformation-extract-pattern) parameter to extract only the data we need. This is the option we'll use in this example.
 
 Configure the [AI Request Transformer](/plugins/ai-request-transformer) plugin with the required LLM details, the transformation prompt, and the expected request body pattern to extract:
 {% entity_examples %}
