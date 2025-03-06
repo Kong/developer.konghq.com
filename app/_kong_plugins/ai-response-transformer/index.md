@@ -73,7 +73,7 @@ instructions to the LLM for the returning upstream response body.
 1. After proxying the client's request to the backend, {{site.base_gateway}} sets the entire response body as the 
 `user` message in the LLM chat request, then sends it to the configured LLM service.
 1. The LLM service returns a response `assistant` message, which is subsequently set as the upstream response body.
-1. The plugin returns early (`kong.response.exit`) and can handle gzip or chunked requests, similarly to the [Forward Proxy](plugins/forward-proxy/) plugin.
+1. The plugin returns early (`kong.response.exit`) and can handle gzip or chunked requests, similarly to the [Forward Proxy](/plugins/forward-proxy/) plugin.
 
 ### Adjusting response headers, status codes, and body
 
