@@ -39,25 +39,30 @@ related_resources:
 
 Pull content from https://docs.konghq.com/gateway/latest/kong-manager/
 
-If you're running {{site.base_gateway}} with a database (either in traditional
+If you're running {{site.base_gateway}} on-prem with a database (either in traditional
 or hybrid mode), you can enable {{site.base_gateway}}'s graphical user interface
 (GUI), Kong Manager.
 
 ## Enable Kong Manager
 
-To enable Kong Manager, set the [`KONG_ADMIN_GUI_PATH`](/gateway/configuration/#admin_gui_path) and [`KONG_ADMIN_GUI_URL`](/gateway/configuration/#admin_gui_url) properties in the ([`kong.conf`](/gateway/configuration/)) configuration file to the DNS or IP address of your system, then reload {{site.base_gateway}} with `kong reload` for the setting to take effect.
+To enable Kong Manager, set the following parameters in `kong.conf`, then restart {{site.base_gateway}}:
+{% kong_config_table %}
+config:
+  - name: admin_gui_path
+  - name: admin_gui_url
+{% endkong_config_table %}
 
-If you're running {{site.base_gateway}} in Docker, you'd use the following:
+If you're running {{site.base_gateway}} in Docker, you can use the following example, making sure to replace the `KONG_CONTAINER_ID` with your own container:
 
 ```bash
-docker exec -i $KONG_CONTAINER_ID /bin/sh -c "export KONG_ADMIN_GUI_PATH='/'; export KONG_ADMIN_GUI_URL='http://localhost:8002/manager'; kong reload; exit"
+docker exec -i $KONG_CONTAINER_ID /bin/sh -c \
+"export KONG_ADMIN_GUI_PATH='/'; \
+export KONG_ADMIN_GUI_URL='http://localhost:8002/manager'; \
+kong reload; \
+exit"
 ```
 This example uses the default Kong Manager path and URL.
 
-If you're enabling Kong Manager in production, you may need to change the following:
-* `$KONG_CONTAINER_ID`: The Docker container for {{site.base_gateway}}. The {{site.base_gateway}} quickstart script we used in the prerequisites uses this container by default.
-* `KONG_ADMIN_GUI_PATH`: The path to the GUI.
-* `KONG_ADMIN_GUI_URL`: The URL of Kong Manager.
 
 {:.info}
 > **Note:** If you run the [{{site.base_gateway}} quickstart script](https://get.konghq.com/quickstart), Kong Manager is automatically enabled.
@@ -78,7 +83,7 @@ admin_gui_path = /manager
 ```
 Make sure that each domain has proper DNS records and that the {{site.base_gateway}} instance is accessible from all specified domains.
 
-If your setup involves multiple domains or subdomains, it’s generally recommended to remove the `cookie_domain` setting in the [`admin_gui_session_conf`](/gateway/configuration/#admin_gui_session_conf) or [`admin_gui_auth_conf`](/gateway/configuration/#admin_gui_auth_conf).
+If your setup involves multiple domains or subdomains, we recommend removing the `cookie_domain` setting in the [`admin_gui_session_conf`](/gateway/configuration/#admin_gui_session_conf) or [`admin_gui_auth_conf`](/gateway/configuration/#admin_gui_auth_conf).
 When `cookie_domain` is not specified, cookies are set for the domain initiated in the request if [`admin_gui_api_url`](/gateway/configuration/#admin_gui_api_url) is not specified. This allows the browser to manage cookies correctly for each domain independently, avoiding conflicts or scope issues. 
 
 For example, a request to `gui.konghq.com` and `other-gui.example.com` will produce cookies for `gui.konghq.com` and `other-gui.example.com` respectively, instead of the root-level `konghq.com` domain when `cookie_domain` isn't specified:
