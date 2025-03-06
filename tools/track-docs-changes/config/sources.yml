@@ -485,3 +485,6 @@ app/_landing_pages/dedicated-cloud-gateways.yaml:
 app/service-catalog/integrations/datadog.md:
   - app/konnect/service-catalog/integrations/datadog.md
 
+app/service-catalog/scorecards.md:
+  - app/konnect/service-catalog/scorecards.md
+
