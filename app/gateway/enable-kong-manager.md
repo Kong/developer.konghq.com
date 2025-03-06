@@ -23,6 +23,8 @@ faqs:
       ```
 
 related_resources:
+  - text: Kong Manager
+    url: /gateway/kong-manager/
   - text: Enable Basic Auth for Kong Manager
     url: /how-to/enable-basic-auth-on-kong-manager/
   - text: Enable OIDC for Kong Manager

@@ -4,8 +4,10 @@ content_type: how_to
 related_resources:
   - text: Authentication
     url: /gateway/authentication/
+  - text: Kong Manager
+    url: /gateway/kong-manager/
   - text: Enable Kong Manager
-    url: /gateway/kong-manager/#enable-kong-manager
+    url: /gateway/enable-kong-manager/
 
 
 products:
