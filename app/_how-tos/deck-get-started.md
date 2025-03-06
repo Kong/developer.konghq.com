@@ -2,6 +2,7 @@
 title: Get Started with decK
 description: Learn how to install decK and use it to configure {{site.base_gateway}}
 content_type: how_to
+permalink: /deck/get-started/
 
 related_resources: []
 

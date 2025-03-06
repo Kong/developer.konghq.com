@@ -3,6 +3,7 @@ sections:
   - title: Overview
     items:
       - path: /deck/
+      - path: /deck/get-started/
       - path: /deck/**/*
     auto_exclude: true
   - title: Install & Configure

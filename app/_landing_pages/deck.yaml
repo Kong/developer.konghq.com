@@ -201,11 +201,11 @@ rows:
     - blocks:
       - type: card
         config:
-          title: Entities managed by decK
-          description: decK manages entity configuration for {{site.base_gateway}}, including all core proxy entities
+          title: Get Started
+          description: Learn how to install decK and use it to configure Kong Gateway
           cta:
-            text: decK entities &rarr;
-            url: /deck/reference/entities/
+            text: Get started &rarr;
+            url: /deck/get-started/
             align: end
     - blocks:
       - type: card
@@ -334,20 +334,6 @@ rows:
 
                 To find out which endpoints your instance of decK is hitting, execute any decK command with the `--verbose 1` flag.
                 This outputs all of the queries being made. For example, here's a snippet from `deck gateway dump --verbose 1`:
-
-  - header:
-      type: h2
-      text: How-to Guides
-    columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              products:
-                - "api-ops"
-              tools:
-                - deck
-              quantity: 5
-              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}"
 
   - header:
       type: h2
