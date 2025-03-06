@@ -21,7 +21,7 @@ rows:
                   text: |
                     Dedicated Cloud Gateways are data plane nodes that are fully managed by Kong in {{site.konnect_short_name}}.
                     
-                    You don't need to host any data planes, while maintaining control over the size and location of the gateway infrastructure. 
+                    You don't need to host any data planes, and you maintain control over the size and location of the gateway infrastructure. 
                     This allows Kong to autoscale your nodes for you and reduces your operational complexity.
 
                     **Benefits of Dedicated Cloud Gateways:**
@@ -31,6 +31,11 @@ rows:
                     - Support for AWS and Azure in multiple [regions](/konnect-geos/).
 
                     You can manage your Dedicated Cloud Gateway nodes in [Gateway Manager](https://cloud.konghq.com/gateway-manager/).
+             - type: button
+            config:
+              align: left
+              text: Create a Dedicated Cloud Gateway
+              url: https://cloud.konghq.com/gateway-manager/create-control-plane
       - blocks:
           - type: mermaid
             config:
@@ -70,7 +75,7 @@ rows:
                     You can then deploy data planes in different regions.
 
                     **Dedicated Cloud Gateway configuration modes:**
-                    - **Autopilot Mode:** Configure expected requests per second, and {{site.konnect_short_name}} pre-warms and autoscales** the data plane nodes automatically.
+                    - **Autopilot Mode:** Configure expected requests per second, and {{site.konnect_short_name}} pre-warms and autoscales the data plane nodes automatically.
                     - **Custom Mode:** Manually specify the instance size, type, and number of nodes per cluster.
       
 
@@ -92,7 +97,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Azure Vnet Peering
+              title: Azure VNet Peering
               description: |
                 Konnect can leverage Azure Virtual Network Peering to create virtual networks, and ingest data from your Azure services and expose them to the internet via Konnect.
               icon: /assets/icons/azure.svg
