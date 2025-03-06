@@ -485,6 +485,20 @@ app/_landing_pages/dedicated-cloud-gateways.yaml:
 app/service-catalog/integrations/datadog.md:
   - app/konnect/service-catalog/integrations/datadog.md
 
+
+
+app/service-catalog/integrations/github.md:
+  - app/konnect/service-catalog/integrations/github.md
+app/service-catalog/integrations/gitlab.md:
+  - app/konnect/service-catalog/integrations/gitlab.md
+app/service-catalog/integrations/traceable.md:
+  - app/konnect/service-catalog/integrations/traceable.md
+app/service-catalog/integrations/swaggerhub.md:
+  - app/konnect/service-catalog/integrations/swaggerhub.md
+app/service-catalog/integrations/pagerduty.md:
+  - app/konnect/service-catalog/integrations/pagerduty.md
+
 app/service-catalog/scorecards.md:
   - app/konnect/service-catalog/scorecards.md
+
 
