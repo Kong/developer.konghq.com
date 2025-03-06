@@ -7,10 +7,12 @@ products:
     - gateway
 
 description: placeholder
+discovery_support: true
+bindable_entities: "Datadog Monitor, Datadog Dashboard"
 
 related_resources:
-  - text: "Secure {{site.base_gateway}}"
-    url: /gateway/security/
+  - text: "Service Catalog"
+    url: /service-catalog/
 ---
 
 The Datadog integration lets you connect Datadog entities directly to your Service Catalog services.
@@ -23,6 +25,8 @@ The Datadog integration lets you connect Datadog entities directly to your Servi
 1. Select **Authorize**. 
 
 ## Resources
+
+Available Datadog entities:
 
 | Entity | Description |
 |-------|-------------|
