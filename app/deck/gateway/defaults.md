@@ -183,8 +183,7 @@ order of precedence.
 decK supports setting custom object defaults both in self-managed
 {{site.base_gateway}} and with {{site.konnect_saas}}.
 
-{:.important}
-
+{:.info}
 > **Important:** This feature has the following limitations:
 
 - Custom plugin object defaults are not supported.
@@ -319,8 +318,7 @@ _info:
       strip_path: true
 ```
 
-{:.note}
-
+{:.info}
 > **Note:** If the Route protocols include `grpc` and `grpcs`, the `strip_path`
 > schema value must be `false`. If set to `true`, deck returns a schema
 > violation error.
