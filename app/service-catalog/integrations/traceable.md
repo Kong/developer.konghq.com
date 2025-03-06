@@ -5,9 +5,13 @@ layout: reference
 
 products:
     - gateway
+breadcrumbs:
+  - /service-catalog/
+  - /service-catalog/service-catalog-integrations/
+
 works_on:
     - konnect
-description: The Traceable integration lets you connect Traceable entities directly to your Service Catalog services.
+description: The Traceable integration lets you connect Traceable entities directly to your Service Catalog Services.
 
 related_resources:
   - text: "Service Catalog"
@@ -15,6 +19,8 @@ related_resources:
 discovery_support: true
 bindable_entities: "Traceable Service"
 ---
+
+The Traceable integration lets you connect Traceable Services directly to your Service Catalog services.
 
 ## Authenticate the Traceable integration
 

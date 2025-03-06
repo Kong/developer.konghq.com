@@ -5,9 +5,13 @@ layout: reference
 
 products:
     - gateway
+breadcrumbs:
+  - /service-catalog/
+  - /service-catalog/service-catalog-integrations/
+
 works_on:
     - konnect
-description: The Datadog integration lets you connect Datadog entities directly to your Service Catalog services.
+description: The Datadog integration lets you connect Datadog entities directly to your Service Catalog Services.
 discovery_support: true
 bindable_entities: "Datadog Monitor, Datadog Dashboard"
 

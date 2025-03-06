@@ -60,7 +60,7 @@ rows:
           - type: card
             config:
               title: GitLab
-              description: Associate a service to one or more GitLab projects
+              description: Associate a Service Catalog Service to one or more GitLab projects
               icon: /assets/icons/third-party/gitlab.svg
               cta:
                 text: Learn more

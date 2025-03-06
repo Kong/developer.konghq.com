@@ -5,9 +5,13 @@ layout: reference
 
 products:
     - gateway
+breadcrumbs:
+  - /service-catalog/
+  - /service-catalog/service-catalog-integrations/
+
 works_on:
     - konnect
-description: The GitHub integration allows you to associate your Service Catalog service to one or more GitHub repositories. 
+description: The GitHub integration allows you to associate your Service Catalog Service to one or more GitHub repositories. 
 
 related_resources:
   - text: "Service Catalog"
@@ -16,8 +20,9 @@ discovery_support: true
 bindable_entities: "Repositories"
 ---
 
+The GitHub integration allows you to associate your Service Catalog service to one or more GitHub repositories.
 
-For each linked Repository, the UI can show a **Repository Summary** with simple data pulled from the GitHub API, such as the number of open issues, open pull requests, most recently closed pull requests, languages, and more.
+For each linked repository, the UI can show a **Repository Summary** with simple data pulled from the GitHub API, such as the number of open issues, open pull requests, most recently closed pull requests, languages, and more.
 
 ## Authorize the GitHub integration
 
@@ -26,7 +31,7 @@ For each linked Repository, the UI can show a **Repository Summary** with simple
 3. Select **Authorize**. 
 
 
-This will take you to GitHub where you can grant {{site.konnect_short_name}} access to either **All Repositories** or **Select repositories**. 
+This will take you to GitHub, where you can grant {{site.konnect_short_name}} access to either **All Repositories** or **Select repositories**. 
 
 The {{site.konnect_short_name}} application can be managed from GitHub as a [GitHub Application](https://docs.github.com/en/apps/using-github-apps/authorizing-github-apps).
 
@@ -37,7 +42,7 @@ Available GitHub entities:
 
 Entity  | Description
 -------|-------------
-Repository | A GitHub repository relating to the service
+Repository | A GitHub repository relating to the Service Catalog Service
 
 ## Events
 

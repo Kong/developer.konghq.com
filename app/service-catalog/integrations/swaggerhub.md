@@ -5,15 +5,21 @@ layout: reference
 
 products:
     - gateway
+breadcrumbs:
+  - /service-catalog/
+  - /service-catalog/service-catalog-integrations/
+
 works_on:
     - konnect
-description: The SwaggerHub integration lets you connect SwaggerHub API specs directly to your Service Catalog services.
+description: The SwaggerHub integration lets you connect SwaggerHub API specs directly to your Service Catalog Services.
 related_resources:
   - text: "Service Catalog"
     url: /service-catalog/
 discovery_support: true
 bindable_entities: "SwaggerHub API version"
 ---
+
+The SwaggerHub integration lets you connect SwaggerHub API specs directly to your Service Catalog services.
 
 ## Prerequisites
 

@@ -5,9 +5,13 @@ layout: reference
 
 products:
     - gateway
+breadcrumbs:
+  - /service-catalog/
+  - /service-catalog/service-catalog-integrations/
+
 works_on:
     - konnect
-description: The GitLab integration allows you to associate your Service Catalog service to one or more [GitLab projects](https://docs.gitlab.com/ee/user/get_started/get_started_projects.html). 
+description: The GitLab integration allows you to associate your Service Catalog Service to one or more [GitLab projects](https://docs.gitlab.com/ee/user/get_started/get_started_projects.html). 
 
 related_resources:
   - text: "Service Catalog"
@@ -15,13 +19,14 @@ related_resources:
 discovery_support: true
 bindable_entities: "Projects"
 ---
+The GitLab integration allows you to associate your Service Catalog service to one or more [GitLab projects](https://docs.gitlab.com/ee/user/get_started/get_started_projects.html).
 
 For each linked project, the UI can show a **Project Summary** with simple data pulled from the GitLab API, such as the number of open issues, open merge requests, contributors, languages, and latest releases.
 
 ## Prerequisites
 
 * You need the [Owner GitLab role](https://docs.gitlab.com/ee/user/permissions.html) to authorize the integration. This is required for event ingestion.
-* Only [GitLab.com subscriptions](https://docs.gitlab.com/ee/subscriptions/gitlab_com/) are supported at this time
+* Only [GitLab.com subscriptions](https://docs.gitlab.com/ee/subscriptions/gitlab_com/) are supported at this time.
 
 ## Authorize the GitLab integration
 

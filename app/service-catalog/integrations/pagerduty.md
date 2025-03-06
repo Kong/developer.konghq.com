@@ -5,6 +5,10 @@ layout: reference
 
 products:
     - gateway
+breadcrumbs:
+  - /service-catalog/
+  - /service-catalog/service-catalog-integrations/
+
 works_on:
     - konnect
 description: The PagerDuty integration allows you to provide a way to alert on information about current open incidents to consumers of the service directory.
@@ -15,9 +19,9 @@ discovery_support: true
 bindable_entities: "PagerDuty Service"
 ---
 
-The PagerDuty integration allows you to provide a way to alert the service team (via PagerDuty services) as well as provide information on current open incidents to consumers of the service directory. 
+The PagerDuty integration allows you to provide a way to alert the service team (via PagerDuty services), as well as provide information on current open incidents to consumers of the service directory. 
 
-For each linked PagerDuty service, a summary will be provided on the Service Catalog service's details page, showing current unresolved incidents and the current on-call user.
+For each linked PagerDuty service, a summary will be provided on the Service Catalog Service's details page, showing current unresolved incidents and the current on-call user.
 
 ## Authenticate the PagerDuty integration
 
