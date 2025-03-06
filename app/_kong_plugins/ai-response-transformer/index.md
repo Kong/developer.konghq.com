@@ -44,6 +44,10 @@ search_aliases:
   - intelligence
   - language
   - model
+
+related_resources:
+  - text: Transform a response using OpenAI
+    url: /how-to/transform-a-response-with-ai/
 ---
 
 The AI Response Transformer plugin uses a configured LLM service transform the upstream's HTTP(S) response before returning it back to the client.
