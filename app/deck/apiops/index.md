@@ -30,7 +30,7 @@ APIOps is the practice of managing your API management configuration declarative
 Let's explore how [KongAir](https://github.com/Kong/KongAir), an imaginary airline, leverages decK to streamline its API management processes. The KongAir API Community of Practice has established a set of governance rules to ensure uniformity and efficiency across all API teams:
 
 - Every API team within KongAir, including those responsible for the Flights and Routes APIs, adopts OpenAPI specifications to define their API contracts.
-- These teams maintain the flexibility to employ Kong's Transformation and Validation plugins to enhance their APIs. They manage these plugins' configurations through modular decK state files, promoting autonomy and customization.
+- These teams maintain the flexibility to employ Kong's Transformation and Validation plugins to enhance their APIs. They manage these Plugins' configurations through modular decK state files, promoting autonomy and customization.
 - The KongAir API Community of Practice has also embraced a comprehensive set of API Design Guidelines to standardize API development. These guidelines are implemented and monitored through a linting file overseen by the dedicated API Platform Team, ensuring adherence to best practices.
 - The API Platform Team assumes a pivotal role in configuring critical plugins related to observability, security, and traffic control within Kong, centralizing expertise and governance for these essential aspects.
 - Furthermore, this team is tasked with the management of environment-specific variables, ensuring seamless deployment and operation across different stages of the development lifecycle.
@@ -44,7 +44,7 @@ The diagram below delineates KongAir's structured approach to deploying decK, st
 3. To track the configuration's creation time, they apply relevant tags using [`deck file add-tags`](/deck/file/manipulation/tags/).
 4. The state file undergoes a quality check against a predefined linting ruleset with [`deck file lint`](/deck/file/lint/), ensuring adherence to best practices.
 5. Environment-specific adjustments, including upstream API URLs, are made using the [`deck file patch`](/deck/file/manipulation/patch/) command.
-6. The Platform Team then merges global plugins for observability, authentication, authorization, and traffic control into the main state file with [`deck file merge`](/deck/file/merge/).
+6. The Platform Team then merges global Plugins for observability, authentication, authorization, and traffic control into the main state file with [`deck file merge`](/deck/file/merge/).
 7. At this stage, a comprehensive state file for the Flights API is ready. This file is combined with the Routes API's state file using [`deck file render`](/deck/file/render/), creating a unified configuration.
 8. The final state file is subjected to an offline validation through [`deck file validate`](/deck/file/validate/).
 9. The state file is deployed to the chosen runtime

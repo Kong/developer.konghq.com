@@ -24,11 +24,11 @@ related_resources:
 
 decK's declarative configuration format is the canonical representation of a {{ site.base_gateway }} configuration in text form.
 
-decK provides multiple tools for interacting with this declarative configuration (referred to as `kong` in the commands below).
+decK provides multiple tools for interacting with this declarative configuration.
 
 | Command                                  | Description                                                                                                                                                                     |
 | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [openapi2kong](/deck/file/openapi2kong/) | Convert an OpenAPI specification to Kong services and routes.                                                                                                                   |
+| [openapi2kong](/deck/file/openapi2kong/) | Convert an OpenAPI specification to {{ site.base_gateway }} Services and Routes.                                                                                                                   |
 | [kong2kic](/deck/file/kong2kic/)         | Convert a Kong declarative configuration file to [{{site.kic_product_name}}](/kubernetes-ingress-controller/) compatible CRDs. Supports both Gateway API and Ingress resources. |
 | [kong2tf](/deck/file/kong2tf/)           | Convert a Kong declarative configuration file to Terraform manifests (Konnect only).                                                                                            |
 

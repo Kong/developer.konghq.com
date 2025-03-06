@@ -41,7 +41,7 @@ deck gateway ping --kong-addr https://my-kong-gateway.example.com:8001 --ca-cert
 
 If you don't want to verify the TLS certificate (we do not recommend this), you can use the `--tls-skip-verify` flag.
 
-### Token authentication
+## Token authentication
 
 If your Admin API is secured using RBAC, you will need to send the `Kong-Admin-Token` header in your requests. This is done using the `--headers` flag:
 
@@ -49,7 +49,7 @@ If your Admin API is secured using RBAC, you will need to send the `Kong-Admin-T
 deck gateway ping --headers "Kong-Admin-Token:$MY_TOKEN_HERE"
 ```
 
-### Certificate authentication
+## Certificate authentication
 
 If your Admin API is secured using mutual TLS, you need to send a TLS client certificate and key:
 
@@ -59,7 +59,7 @@ deck gateway ping --tls-client-cert-file /path/to/tls.crt --tls-client-cert-key 
 
 You may also specify the raw contents of these files as `--tls-client-cert $CERT` and `--tls-client-key $KEY`
 
-### OpenID Connect authentication
+## OpenID Connect authentication
 
 If your Admin API is secured using OpenID Connect, you will need to call the Kong Manager `/auth` endpoint and save the cookies to use with `--kong-cookie-jar-path`.
 

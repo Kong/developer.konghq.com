@@ -1,7 +1,7 @@
 ---
 title: Plugins
 short_title: deck file add-plugins
-description: Manage plugin configurations in Kong declarative configuration file.
+description: Manage Plugin configurations in Kong declarative configuration file.
 
 content_type: reference
 layout: reference
@@ -23,17 +23,17 @@ related_resources:
     url: /index/deck/
 ---
 
-Adding or managing plugins is a common use case for platform teams. The `deck file` command allows you to add or update a plugin configuration programmatically.
+Adding or managing Plugins is a common use case for platform teams. The `deck file` command allows you to add or update a Plugin configuration programmatically.
 
-If the plugin being added already exists, the `add-plugin` command won't edit the plugin unless the `--overwrite` flag is provided or `overwrite: true` is specified in the plugin configuration file.
+If the Plugin being added already exists, the `add-plugin` command won't edit the Plugin unless the `--overwrite` flag is provided or `overwrite: true` is specified in the Plugin configuration file.
 
 The `deck file add-plugins` command outputs the patched file to `stdout` by default. You can provide `-o /path/to/config.yaml` to write the updated configuration to a file on disk.
 
-## Add a new plugin
+## Add a new Plugin
 
 You can run the following examples using `deck file add-plugins -s /path/to/kong.yaml plugin1.yaml`.
 
-Multiple plugin definition files can be passed to the command e.g. `deck file add-plugins -s /path/to/kong.yaml  plugin1.yaml plugin1.yaml`.
+Multiple Plugin definition files can be passed to the command e.g. `deck file add-plugins -s /path/to/kong.yaml  plugin1.yaml plugin1.yaml`.
 
 ```yaml
 # plugin.yaml
@@ -50,9 +50,9 @@ add-plugins:
 
 ## Update specific configuration values
 
-The `deck file add-plugins` command configures a complete set of plugin configuration. To edit specific values, you can use the `deck file patch` command.
+The `deck file add-plugins` command configures a complete set of Plugin configuration. To edit specific values, you can use the `deck file patch` command.
 
-To update the `request-termination` plugin above to return a different message:
+To update the `request-termination` Plugin above to return a different message:
 
 ```yaml
 patches:

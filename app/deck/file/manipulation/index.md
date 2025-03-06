@@ -1,6 +1,6 @@
 ---
 title: Configuration Transformation
-description: "@TODO"
+description: "Provides multiple commands to manipulate an existing declarative configuration file"
 
 content_type: reference
 layout: reference

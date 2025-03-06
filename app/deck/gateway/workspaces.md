@@ -7,7 +7,6 @@ layout: reference
 
 works_on:
   - on-prem
-  - konnect
 
 tools:
   - deck
@@ -21,25 +20,24 @@ related_resources:
     url: /index/deck/
 ---
 
-decK is workspace-aware, meaning it can interact with multiple workspaces.
+decK is Workspace-aware, meaning it can interact with multiple workspaces.
 
-{:.note}
-
+{:.info}
 > Workspaces are a {{ site.ee_product_name }} concept, and are not applicable to {{ site.konnect_short_name }}.
 
-## Manage one workspace at a time
+## Manage one Workspace at a time
 
-To manage the configuration of a specific workspace, use the `--workspace` flag with [`sync`](/deck/gateway/sync/), [`diff`](/deck/gateway/diff/), [`dump`](/deck/gateway/dump/), or [`reset`](/deck/gateway/reset/).
+To manage the configuration of a specific Workspace, use the `--workspace` flag with [`sync`](/deck/gateway/sync/), [`diff`](/deck/gateway/diff/), [`dump`](/deck/gateway/dump/), or [`reset`](/deck/gateway/reset/).
 
-For example, to export the configuration of the workspace `my-workspace`:
+For example, to export the configuration of the Workspace `my-workspace`:
 
 ```sh
 deck gateway dump --workspace my-workspace
 ```
 
-If you don't specify a `--workspace` flag, decK uses the `default` workspace.
+If you don't specify a `--workspace` flag, decK uses the `default` Workspace.
 
-To set a workspace directly in the state file, use the `_workspace` parameter. For example:
+To set a Workspace directly in the state file, use the `_workspace` parameter. For example:
 
 ```yaml
 _format_version: "3.0"
@@ -48,10 +46,9 @@ services:
   - name: example_service
 ```
 
-{:.note}
-
+{:.info}
 > **Note:** decK can't delete workspaces. If you use `--workspace` or
-> `--all-workspaces` with `deck gateway reset`, decK deletes the entire configuration inside the workspace, but not the workspace itself.
+> `--all-workspaces` with `deck gateway reset`, decK deletes the entire configuration inside the Workspace, but not the Workspace itself.
 
 ## Manage multiple workspaces
 
@@ -61,13 +58,12 @@ You can manage the configurations of all workspaces in {{site.ee_product_name}} 
 deck gateway dump --all-workspaces
 ```
 
-This creates one configuration file per workspace.
+This creates one configuration file per Workspace.
 
-{:.important}
+{:.info}
+> Be careful when using the `--all-workspaces` flag to avoid overwriting the wrong Workspace. We recommend using the singular `--workspace` flag in most situations.
 
-> Be careful when using the `--all-workspaces` flag to avoid overwriting the wrong workspace. We recommend using the singular `--workspace` flag in most situations.
-
-However, since a `workspace` is an isolated unit of configuration, decK doesn't allow the deployment of multiple workspaces at a time. Therefore, each workspace configuration file must be deployed individually:
+However, since a `workspace` is an isolated unit of configuration, decK doesn't allow the deployment of multiple workspaces at a time. Therefore, each Workspace configuration file must be deployed individually:
 
 ```sh
 deck gateway sync workspace1.yaml --workspace workspace1

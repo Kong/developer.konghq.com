@@ -23,8 +23,7 @@ related_resources:
 
 The `deck gateway sync` command configures the target {{ site.base_gateway }} to match the values specified in your declarative configuration.
 
-{:.important}
-
+{:.info}
 > Any configuration in {{ site.base_gateway }} that isn't present in the provided declarative configuration file **will be deleted** using `deck gateway sync`.
 
 The `deck gateway sync` command can accept one or more files as positional arguments:
@@ -43,16 +42,15 @@ cat kong.yaml | yq 'del(.services[] | select(.name == "example-service"))' | dec
 
 ## Syncing multiple files
 
-{:.warning}
-
+{:.info}
 > Syncing multiple files at once causes decK to merge all of the provided files in to a single configuration before syncing. To split your configuration in to independent units, [use tags](/deck/gateway/tags/).
 
 decK can construct a state by combining multiple JSON or YAML files inside a directory instead of a single file.
 
 In most use cases, a single file will suffice, but you might want to use multiple files if:
 
-- You want to organize the files for each service. In this case, you
-  can have one file per service, and keep the service, its associated routes, plugins, and other entities in that file.
+- You want to organize the files for each Service. In this case, you
+  can have one file per Service, and keep the Service, its associated Routes, Plugins, and other entities in that file.
 - You have a large configuration file and want to break it down into smaller digestible chunks.
 
 ```bash

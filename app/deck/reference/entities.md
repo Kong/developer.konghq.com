@@ -24,27 +24,53 @@ decK manages entity configuration for {{site.base_gateway}}, including all core 
 
 It does not manage {{site.base_gateway}} configuration parameters in `kong.conf`, or content and configuration for the Dev Portal.
 
-| Entity                               | Managed by decK? |
-| ------------------------------------ | ---------------- |
-| Services                             | ✅               |
-| Routes                               | ✅               |
-| Consumers                            | ✅               |
-| Plugins                              | ✅               |
-| Certificates                          | ✅               |
-| CA Certificates                       | ✅               |
-| SNIs                                 | ✅               |
-| Upstreams                            | ✅               |
-| Targets                              | ✅               |
-| Vaults                               | ✅               |
-| Keys and key sets                    | ❌               |
-| Licenses                             | ❌               |
-| Workspaces                           | ✅ <sup>1</sup>  |
-| RBAC: roles and endpoint permissions | ✅               |
-| RBAC: groups and admins              | ❌               |
-| Developers                           | ❌               |
-| Consumer groups                      | ✅               |
-| Event hooks                          | ❌               |
-| Keyring and data encryption          | ❌               |
+{% feature_table %}
+item_title: Entity
+columns:
+  - title: Managed by decK?
+    key: managed
+
+features:
+  - title: Services
+    managed: true
+  - title: Routes
+    managed: true
+  - title: Consumers
+    managed: true
+  - title: Plugins
+    managed: true
+  - title: Certificates
+    managed: true
+  - title: CA Certificates
+    managed: true
+  - title: SNIs
+    managed: true
+  - title: Upstreams
+    managed: true
+  - title: Targets
+    managed: true
+  - title: Vaults
+    managed: true
+  - title: Keys and key sets
+    managed: false
+  - title: Licenses
+    managed: false
+  - title: Workspaces <sup>1</sup>
+    managed: true
+  - title: RBAC roles and endpoint permissions
+    managed: true
+  - title: RBAC groups and admins
+    managed: false
+  - title: Developers
+    managed: false
+  - title: Consumer groups
+    managed: true
+  - title: Event hooks
+    managed: false
+  - title: Keyring and data encryption
+    managed: false
+
+{% endfeature_table %}
 
 **\[1\]**: decK can create workspaces and manage entities in a given workspace.
 However, decK can't delete workspaces, and it can't update multiple workspaces simultaneously.

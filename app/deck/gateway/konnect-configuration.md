@@ -21,9 +21,8 @@ related_resources:
     url: /index/deck/
 ---
 
-{:.important}
-
-> {{site.konnect_short_name}} requires decK v1.40.0 or above. Versions below this will see inconsistent `deck gateway diff` results.
+{:.info}
+> **Note**: {{site.konnect_short_name}} requires decK v1.40.0 or above. Versions below this will see inconsistent `deck gateway diff` results.
 
 You can manage {{site.base_gateway}} core entity configuration in your {{site.konnect_short_name}} organization using decK.
 
@@ -31,7 +30,7 @@ decK can only target one control plane at a time.
 
 Managing multiple control planes requires a separate state file per control plane.
 
-decK _does not_ support publishing content to the Dev Portal or managing application registrations. Custom plugins can only be configured if the plugin schema has been uploaded to Konnect. Please note that creating or managing schemas via decK is not supported.
+decK _does not_ support publishing content to the Dev Portal or managing application registrations. Custom plugins can only be configured if the Plugin schema has been uploaded to Konnect. Please note that creating or managing schemas via decK is not supported.
 
 ## Using decK with Konnect
 

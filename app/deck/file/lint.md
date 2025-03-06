@@ -34,7 +34,7 @@ For a complete list of available rules, see the [vacuum](https://quobix.com/vacu
 
 ## Example
 
-{{ site.base_gateway }} services are defined in the `services` block in the decK file. Services support a number of configuration values including a protocol field which specifies the communication protocol used between the gateway and the upstream service. To ensure this traffic is secure, you may want to validate that only `https` protocols are used. Here is a sample Ruleset file containing a single Rule that accomplishes this.
+{{ site.base_gateway }} Services are defined in the `services` block in the decK file. Services support a number of configuration values including a protocol field which specifies the communication protocol used between the gateway and the upstream Service. To ensure this traffic is secure, you may want to validate that only `https` protocols are used. Here is a sample Ruleset file containing a single Rule that accomplishes this.
 
 ```yaml
 rules:
@@ -48,9 +48,9 @@ rules:
         match: "^https$"
 ```
 
-The [JSONPath](http://jsonpath.com/) selector specified in `given` reads the `protocol` field in every service under the `services` key from the incoming file. With each of those values, the `pattern` function is applied which evaluates the value against a regular expression pattern specified in the `match` field. In this example, we assert that the string value in the `protocol` field must match the string `https` exactly.
+The [JSONPath](http://jsonpath.com/) selector specified in `given` reads the `protocol` field in every Service under the `services` key from the incoming file. With each of those values, the `pattern` function is applied which evaluates the value against a regular expression pattern specified in the `match` field. In this example, we assert that the string value in the `protocol` field must match the string `https` exactly.
 
-Assume you have the following decK declarative configuration file (`kong.yaml`) that defines a service and a route for a simple task tracking system:
+Assume you have the following decK declarative configuration file (`kong.yaml`) that defines a Service and a route for a simple task tracking system:
 
 ```yaml
 _format_version: "3.0"
@@ -107,7 +107,7 @@ Result:
 0
 ```
 
-Notice that the command results in a `0` (Success) return code. In situations where violations are detected, a non-zero return code is emitted allowing you to abort automated processes and help prevent problematic configurations from leaking into your production codebase and systems.
+The command results in a `0` (Success) return code. In situations where violations are detected, a non-zero return code is emitted allowing you to abort automated processes and help prevent problematic configurations from leaking into your production codebase and systems.
 
 ## Common patterns
 
@@ -141,7 +141,7 @@ rules:
             type: "string"
 ```
 
-### Enforce HTTPS only on routes
+### Enforce HTTPS only on Routes
 
 To force {{ site.base_gateway }} to listen on HTTPs only, ensure that `protocols` is set on every route and it contains a single `https` entry:
 

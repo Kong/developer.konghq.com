@@ -46,7 +46,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-This page teaches you how to use decK to create a service, route, plugins, and consumers. It uses the `deck gateway apply` command to build the configuration up incrementally. At any point, you can run `deck gateway dump` to see the entire configuration of {{ site.base_gateway }} at once.
+This page teaches you how to use decK to create a Service, Route, Plugins, and Consumers. It uses the `deck gateway apply` command to build the configuration up incrementally. At any point, you can run `deck gateway dump` to see the entire configuration of {{ site.base_gateway }} at once.
 
 ## Create a Service
 

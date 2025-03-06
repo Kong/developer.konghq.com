@@ -24,9 +24,9 @@ related_resources:
 As shown in the [APIOps example](/deck/apiops/), decK enables a completely federated API management process.
 
 - Application teams can work with OpenAPI files as the source of truth
-- If they _want_ to add Kong specific configuration, they can patch it in
+- If they want to add Kong specific configuration, they can patch it in
 - Platform teams can layer on required policies
-- State files can be linted for unwanted configuration, for example, non-HTTPS routes
+- State files can be linted for unwanted configuration, for example, non-HTTPS Routes
 
 ## Federated management example
 
@@ -35,7 +35,7 @@ AcmeCorp is building their new SaaS platform on top of {{ site.base_gateway }}. 
 To meet their needs, they split their configuration into multiple files:
 
 - `team-a.yaml`
-- `team-b.yaml` (all the way to `team-z.yaml`)
+- `team-b.yaml` through`team-z.yaml`
 - `consumers.yaml`
 - `platform-security-plugins.yaml`
 - `platform-rate-limiting-plugins.yaml`
@@ -103,7 +103,7 @@ consumers:
 
 ### Platform security
 
-To ensure that the APIs are only accessed by authorized users, the platform team applies a global `key-auth` plugin:
+To ensure that the APIs are only accessed by authorized users, the platform team applies a global `key-auth` Plugin:
 
 ```yaml
 _format_version: "3.0"
@@ -116,9 +116,9 @@ plugins:
 
 ### Rate Limiting
 
-Finally, the platform team wants to add a rate limiting plugin to the `users` service to protect the underlying database.
+Finally, the platform team wants to add a rate limiting plugin to the `users` Service to protect the underlying database.
 
-They _could_ work with `team-a` to add the plugin in the team's configuration file, but the platform team want to be able to change values rapidly based on monitoring data. To enable this, the platform team chooses to layer on the rate limiting configuration independently of `team-a`'s configuration.
+They could work with `team-a` to add the plugin in the team's configuration file, but the platform team want to be able to change values rapidly based on monitoring data. To enable this, the platform team chooses to layer on the rate limiting configuration independently of `team-a`'s configuration.
 
 ```yaml
 _format_version: "3.0"
@@ -135,8 +135,7 @@ plugins:
       minute: 10
 ```
 
-As this configuration uses a different `select_tags` value, it will not be edited by `team-a` when they run `deck gateway sync`. The use of `default_lookup_tags` allows the platform team to reference the `users` service even though it has different tags.
+As this configuration uses a different `select_tags` value, it will not be edited by `team-a` when they run `deck gateway sync`. The use of `default_lookup_tags` allows the platform team to reference the `users` Service even though it has different tags.
 
-## Federated management is easy!
 
-The example above shows how multiple application and platform teams can manage their configuration independently. Each application team can focus on routing requests to their service while the platform team handles security and stability concerns.
+The example above shows how multiple application and platform teams can manage their configuration independently. Each application team can focus on routing requests to their Service while the platform team handles security and stability concerns.

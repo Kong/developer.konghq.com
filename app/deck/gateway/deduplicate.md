@@ -1,6 +1,6 @@
 ---
 title: De-duplicate Plugin Configuration
-description: Reference predefined plugin configurations in your declarative configuration
+description: Reference predefined Plugin configurations in your declarative configuration
 
 content_type: reference
 layout: reference
@@ -23,16 +23,16 @@ related_resources:
 
 In some use cases, you might want to create a number of plugins associated with
 different entities in Kong but with the same configuration. In such a case,
-if you change anything in the configuration of the plugin, you will have to
-repeat it for each instance of the plugin.
+if you change anything in the configuration of the Plugin, you will have to
+repeat it for each instance of the Plugin.
 
-In other use cases, the plugin configuration could be decided by a different
+In other use cases, the Plugin configuration could be decided by a different
 team, while the main {{site.base_gateway}}
 configuration is directly used by an API owner.
 
 decK supports both of these use cases.
 
-## Set up de-deduplicated plugin configuration
+## Set up de-deduplicated Plugin configuration
 
 Let's take an example configuration file:
 
@@ -151,9 +151,9 @@ Here, we have two groups of consumers:
 
 Now, if we want to increase the rate limits or change the host of the Redis
 server, then we have to edit the configuration of each and every instance of
-the plugin.
+the Plugin.
 
-To reduce this repetition, you can de-duplicate plugin configuration and
+To reduce this repetition, you can de-duplicate Plugin configuration and
 reference it where we you need to use it. This works across multiple files as well.
 
 The above file now becomes:
@@ -235,13 +235,13 @@ consumers:
           - https
 ```
 
-Now, you can edit plugin configuration in a single place and you can see its
+Now, you can edit Plugin configuration in a single place and you can see its
 effect across multiple entities. Under the hood, decK takes the change and
-applies it to each entity which references the plugin configuration that has
+applies it to each entity which references the Plugin configuration that has
 been changed. As always, use `diff` to inspect the changes before you
 apply those to your Kong clusters.
 
-## Overriding fields in plugin configs
+## Overriding fields in Plugin configs
 
 Settings configured in `_plugin_configs` are applied to all plugins with the same tag.
 While those settings provide the baseline configuration, you can change specific

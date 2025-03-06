@@ -25,8 +25,8 @@ decK can be configured using CLI flags, environment variables, and a configurati
 
 decK reads these configuration sources in the following priority order:
 
-1. CLI flags override all other values.
-2. Environment variables override the configuration file.
+1. CLI flags overrides environment variables and configuration file values
+2. Environment variables override the configuration file
 3. Configuration file values are treated as defaults.
 
 ## CLI flags
