@@ -460,6 +460,13 @@ app/konnect-account.md:
 
 app/service-catalog-integrations.yaml:
   - app/konnect/service-catalog/integrations/index.md
+
+app/_landing_pages/dedicated-cloud-gateways.yaml:
+  - app/konnect/gateway-manager/dedicated-cloud-gateways/
+
+app/service-catalog/integrations/datadog.md:
+  - app/konnect/service-catalog/integrations/datadog.md
+
 app/service-catalog/integrations/datadog.md:
   - app/konnect/service-catalog/integrations/datadog.md
 
@@ -548,4 +555,3 @@ app/deck/gateway/deduplicate.md:
   - app/deck/gateway/deduplicate.md
 app/deck/gateway/reset.md:
   - app/deck/gateway/reset.md
-
