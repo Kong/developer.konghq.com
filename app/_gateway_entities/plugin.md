@@ -9,6 +9,8 @@ description: Plugins are modules that extend the functionality of {{site.base_ga
 related_resources:
   - text: Plugin Hub
     url: /plugins/
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
 
 tools:
     - admin-api

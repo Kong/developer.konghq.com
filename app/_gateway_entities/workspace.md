@@ -19,6 +19,9 @@ related_resources:
     url: /gateway/entities/group/
   - text: Gateway Admin entity
     url: /gateway/entities/admin/
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
+
 faqs:
   - q: Do I have to enable Workspaces? 
     a: |

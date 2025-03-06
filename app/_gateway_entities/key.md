@@ -9,6 +9,8 @@ description: A Key object holds a representation of asymmetric keys in various f
 related_resources:
   - text: Key-set entity
     url: /gateway/entities/key-set/
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
 
 api_specs:
   - gateway/admin-ee

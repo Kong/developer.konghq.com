@@ -13,6 +13,8 @@ related_resources:
     url: /gateway/entities/workspace/
   - text: RBAC
     url: /gateway/entities/rbac/
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
 
 
 faqs:

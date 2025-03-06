@@ -40,3 +40,5 @@ min_version:
 @todo
 
 Source: https://docs.konghq.com/gateway/latest/kong-manager/auth/oidc/configure/
+
+FAQ of https://docs.konghq.com/gateway/latest/kong-manager/auth/oidc/migrate/ (I think we just need the tables under the h2 headers, the rest of the info in h3 just references what the table's already said and is content that should be in the kong.conf ref)

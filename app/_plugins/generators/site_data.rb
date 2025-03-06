@@ -9,6 +9,7 @@ module Jekyll
     def generate(site)
       site.data['referenceable_fields'] = referenceable_fields(site)
       site.data['gateway_latest'] = site.data.dig('products', 'gateway', 'releases').detect { |r| r['latest'] }
+      site.data['searchFilters'] = search_filters(site)
     end
 
     def referenceable_fields(site)
@@ -24,6 +25,16 @@ module Jekyll
 
     def file_path_to_release(file)
       File.basename(file).gsub('.x.json', '')
+    end
+
+    def search_filters(site)
+      {
+        products: site.data.fetch('products').map { |k, v| { label: v['name'], value: k } },
+        tools: site.data.fetch('tools').map { |k, v| { label: v['name'], value: k } },
+        works_on: site.data.dig('products', 'gateway', 'deployment_topologies').map do |t|
+          { label: t['text'], value: t['slug'] }
+        end
+      }
     end
   end
 end

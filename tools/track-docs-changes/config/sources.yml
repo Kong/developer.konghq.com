@@ -331,6 +331,10 @@ app/_kong_plugins/graphql-rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/graphql-rate-limiting-advanced/how-to/_costs.md
 app/_kong_plugins/graphql-rate-limiting-advanced/changelog.md:
   - app/_hub/kong-inc/graphql-rate-limiting-advanced/_changelog.md
+app/_kong_plugins/jq/index.md:
+  - app/_hub/kong-inc/jq/overview/_index.md
+app/_kong_plugins/jq/changelog.md:
+  - app/_hub/kong-inc/jq/_changelog.md
 
 # Konnect
 
@@ -408,6 +412,20 @@ app/ai-gateway/ai-audit-log-reference.md:
   - app/_src/gateway/production/logging/ai-analytics.md
 app/ai-gateway/monitor-ai-llm-metrics.md:
   - app/_src/gateway/production/monitoring/ai-metrics.md
+app/gateway/reserved-entity-names.md:
+  - app/_src/gateway/reference/reserved-entity-names.md
+app/gateway/breaking-changes.md:
+  - app/_src/gateway/breaking-changes/39x.md
+  - app/_src/gateway/breaking-changes/28x.md
+  - app/_src/gateway/breaking-changes/30x.md
+  - app/_src/gateway/breaking-changes/31x.md
+  - app/_src/gateway/breaking-changes/32x.md
+  - app/_src/gateway/breaking-changes/33x.md
+  - app/_src/gateway/breaking-changes/34x.md
+  - app/_src/gateway/breaking-changes/35x.md
+  - app/_src/gateway/breaking-changes/36x.md
+  - app/_src/gateway/breaking-changes/37x.md
+  - app/_src/gateway/breaking-changes/38x.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:

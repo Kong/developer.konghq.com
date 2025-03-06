@@ -24,6 +24,8 @@ related_resources:
     url: /gateway/entities/admin/
   - text: Create a Super Admin
     url: /how-to/create-a-super-admin/
+  - text: Reserved entity names
+    url: /gateway/reserved-entity-names/
 
 api_specs:
     - gateway/admin-ee
