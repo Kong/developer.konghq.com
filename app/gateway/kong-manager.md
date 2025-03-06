@@ -46,11 +46,13 @@ or hybrid mode), you can enable {{site.base_gateway}}'s graphical user interface
 ## Enable Kong Manager
 
 To enable Kong Manager, set the following parameters in `kong.conf`, then restart {{site.base_gateway}}:
+<!--vale off-->
 {% kong_config_table %}
 config:
   - name: admin_gui_path
   - name: admin_gui_url
 {% endkong_config_table %}
+<!--vale on-->
 
 If you're running {{site.base_gateway}} in Docker, you can use the following example, making sure to replace the `KONG_CONTAINER_ID` with your own container:
 
