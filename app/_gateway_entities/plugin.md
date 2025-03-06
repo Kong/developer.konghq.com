@@ -163,8 +163,6 @@ data:
     before:
       access:
         - key-auth
-formats:
-  - deck
 {% endentity_example %}
 
 #### Example with after token
@@ -180,8 +178,6 @@ data:
     after:
       access:
         - request-transformer
-formats:
-  - deck
 {% endentity_example %}
 
 
