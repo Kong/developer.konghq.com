@@ -156,8 +156,7 @@ type: plugin
 data:
   name: rate-limiting
   config:
-    minute:
-    - 5
+    minute: 5
     policy: local
     limit_by: ip
   ordering:
