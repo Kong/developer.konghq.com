@@ -26,8 +26,8 @@ The Datadog integration lets you connect Datadog entities directly to your Servi
 
 | Entity | Description |
 |-------|-------------|
-| Datadog Monitor | A [Datadog Monitor](https://docs.datadoghq.com/monitors/), which provides visibility into performance issues and outages. |
-| Datadog Dashboard | A [Datadog Dashboard](https://docs.datadoghq.com/dashboards/), which provides visibility into the performance and health of systems and applications in your org. |
+| [Datadog Monitor](https://docs.datadoghq.com/monitors/) | Provides visibility into performance issues and outages. |
+| [Datadog Dashboard](https://docs.datadoghq.com/dashboards/) | Provides visibility into the performance and health of systems and applications in your org. |
 
 ## Discovery information
 
