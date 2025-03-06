@@ -5,6 +5,9 @@ layout: reference
 
 products:
     - gateway
+
+no_version: true
+
 breadcrumbs:
   - /service-catalog/
   - /service-catalog/integrations/
