@@ -84,9 +84,7 @@ You can additionally instruct the LLM to respond in the following format, which 
   "headers":
     {
       "new-header": "new-value"
-    },
-  "status": 201,
-  "body": "new response body"
+    }
 }
 ```
 
