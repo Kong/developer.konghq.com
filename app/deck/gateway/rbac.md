@@ -72,7 +72,7 @@ Here are some common endpoints hit by decK for normal operations:
 - `GET /{workspace}/kong`: Get entities in a workspace.
 - `GET /{workspace}/workspaces/{entityType}`: Check whether the workspace or other entity exists or not.
 - `GET /{workspace}/schemas/{entityType}`: Retrieves the schema for a specified entity type within a workspace and applies default settings.
-- `GET /{workspace}/schemas/plugins/{pluginName}`: Retrieves the schema for a specified plugin within a workspace and applies default settings.
+- `GET /{workspace}/schemas/plugins/{pluginName}`: Retrieves the schema for a specified Plugin within a workspace and applies default settings.
 - `POST /workspaces`: Create missing workspaces.
 
 To find out which endpoints your instance of decK is hitting, execute any decK command with the `--verbose 1` flag. This outputs all of the queries being made. For example, here's a snippet from `deck gateway dump --verbose 1`:

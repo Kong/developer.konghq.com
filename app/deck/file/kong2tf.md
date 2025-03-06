@@ -70,7 +70,7 @@ If `terraform plan` shows unexpected credential changes, it is due to credential
 
 If you are using custom plugins, `kong2tf` will generate Terraform resources that don't exist.
 
-For example, if you have a plugin named `demo-functionality`, `kong2tf` will generate `konnect_plugin_demo_functionality` resources. This resource does not exist in the Terraform provider. To use the `demo-functionality` plugin, use the `konnect_gateway_custom_plugin` and specify `demo-functionality` in the `name` property:
+For example, if you have a Plugin named `demo-functionality`, `kong2tf` will generate `konnect_plugin_demo_functionality` resources. This resource does not exist in the Terraform provider. To use the `demo-functionality` Plugin, use the `konnect_gateway_custom_plugin` and specify `demo-functionality` in the `name` property:
 
 ```hcl
 resource "konnect_gateway_custom_plugin" "demo_functionality_global" {

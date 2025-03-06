@@ -43,7 +43,7 @@ enforce a set of standard values and avoid repetition in your configuration.
 decK assigns values in the following order of precedence, from highest to lowest:
 
 1. Values set for a specific instance of an object in the state file
-   (for example, for a service named `example_service` defined in `kong.yml`).
+   (for example, for a Service named `example_service` defined in `kong.yml`).
 2. Values set in the `{_info: defaults:}` object in the state file.
 3. Self-managed {{site.base_gateway}} only: Values are checked against the Kong
    Admin API schemas.
@@ -52,12 +52,12 @@ decK assigns values in the following order of precedence, from highest to lowest
 
 ## Test default value handling
 
-Create a sample `kong.yaml` file with a service, route, and plugin, push it to
+Create a sample `kong.yaml` file with a Service, Route, and Plugin, push it to
 {{site.base_gateway}}, and then pull {{site.base_gateway}}'s configuration down
 again to see how decK interprets default values.
 
 1.  Create a `kong.yaml` configuration file with the following
-    sample service, route, and plugin:
+    sample Service, Route, and Plugin:
 
     ```yaml
     _format_version: "3.0"
@@ -80,7 +80,7 @@ again to see how decK interprets default values.
     deck gateway diff kong.yaml
     ```
 
-    If you're using a completely empty instance, you will only see the service, route, and `basic-auth` plugin creation messages with no extra data.
+    If you're using a completely empty instance, you will only see the Service, Route, and `basic-auth` Plugin creation messages with no extra data.
 
     ```sh
     creating service example_service
@@ -104,7 +104,7 @@ again to see how decK interprets default values.
     deck gateway diff kong.yaml
     ```
 
-    Notice that the diff doesn't show any changes. This is because decK checked the values against the service and route schemas and didn't find any differences.
+    Notice that the diff doesn't show any changes. This is because decK checked the values against the Service and Route schemas and didn't find any differences.
 
     ```sh
     Summary:
@@ -121,7 +121,7 @@ again to see how decK interprets default values.
     deck gateway dump -o kong-test.yaml
     ```
 
-    Even though `diff` didn't show any changes, the result now has default values populated for the service, route, and Basic Auth plugin:
+    Even though `diff` didn't show any changes, the result now has default values populated for the Service, Route, and Basic Auth Plugin:
 
     ```yaml
     _format_version: "3.0"
@@ -186,7 +186,7 @@ decK supports setting custom object defaults both in self-managed
 {:.info}
 > **Important:** This feature has the following limitations:
 
-- Custom plugin object defaults are not supported.
+- Custom Plugin object defaults are not supported.
 - If an existing property's default value changes in a future {{site.base_gateway}} release,
   decK has no way of knowing that this change has occurred, as its `defaults`
   configuration would overwrite the value in your environment.
@@ -470,7 +470,7 @@ Use the Kong Admin API `/schemas` endpoint to find default values:
 curl -i http://localhost:8001/schemas/plugins/<plugin-name>
 ```
 
-decK doesn't support setting custom default values for the plugin object.
+decK doesn't support setting custom default values for the Plugin object.
 
 {% endnavtab %}
 {% endnavtabs %}

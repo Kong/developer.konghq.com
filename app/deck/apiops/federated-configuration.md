@@ -80,7 +80,7 @@ services:
 
 ### Consumer management
 
-The users and systems that consume AcmeCorp's APIs are independent of any team. To ensure that consumers can call the AcmeCorp APIs, decK is used to create consumers and credentials:
+The users and systems that consume AcmeCorp's APIs are independent of any team. To ensure that Consumers can call the AcmeCorp APIs, decK is used to create Consumers and credentials:
 
 ```yaml
 # consumers.yaml
@@ -116,9 +116,9 @@ plugins:
 
 ### Rate Limiting
 
-Finally, the platform team wants to add a rate limiting plugin to the `users` Service to protect the underlying database.
+Finally, the platform team wants to add a rate limiting Plugin to the `users` Service to protect the underlying database.
 
-They could work with `team-a` to add the plugin in the team's configuration file, but the platform team want to be able to change values rapidly based on monitoring data. To enable this, the platform team chooses to layer on the rate limiting configuration independently of `team-a`'s configuration.
+They could work with `team-a` to add the Plugin in the team's configuration file, but the platform team want to be able to change values rapidly based on monitoring data. To enable this, the platform team chooses to layer on the rate limiting configuration independently of `team-a`'s configuration.
 
 ```yaml
 _format_version: "3.0"

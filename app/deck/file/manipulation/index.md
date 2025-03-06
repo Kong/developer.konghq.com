@@ -30,4 +30,4 @@ skip_index: true
 | [patch](/deck/file/manipulation/patch/)                  | Update existing values                                                 |
 | [add-tags](/deck/file/manipulation/tags/#add-tags)       | Add tags to specific entities                                          |
 | [remove-tags](/deck/file/manipulation/tags/#remove-tags) | Remove tags from specific entities                                     |
-| [namespace](/deck/file/manipulation/namespace/)          | Add a prefix to routes that is stripped before sending to the upstream |
+| [namespace](/deck/file/manipulation/namespace/)          | Add a prefix to Routes that is stripped before sending to the upstream |

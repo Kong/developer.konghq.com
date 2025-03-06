@@ -97,7 +97,7 @@ consumer_groups:
           policy: local
 ```
 
-The `consumer-groups.yaml` file syncs as expected as it doesn't contain any foreign key references. However, you will get an error when syncing `consumers.yaml` as the `finance` consumer group won't be available:
+The `consumer-groups.yaml` file syncs as expected as it doesn't contain any foreign key references. However, you will get an error when syncing `consumers.yaml` as the `finance` Consumer Group won't be available:
 
 ```bash
 deck gateway sync consumers.yaml

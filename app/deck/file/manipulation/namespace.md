@@ -36,7 +36,7 @@ The simplest way to prevent collisions is to prefix each API Route with a static
 deck file namespace --path-prefix=/billing -s /path/to/config.yaml
 ```
 
-To remain transparent to the backend Services, the added path prefix must be removed from the path before the request is Routed to the Service. To remove the prefix, the following approaches are used (in order):
+To remain transparent to the backend Services, the added path prefix must be removed from the path before the request is routed to the Service. To remove the prefix, the following approaches are used (in order):
 
 1. If the Route has `strip_path=true`, then the added prefix will already be stripped.
 1. If the related Service has a `path` property that matches the prefix, then the `service.path` property is updated to remove the prefix.

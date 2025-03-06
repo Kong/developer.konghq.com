@@ -144,10 +144,10 @@ consumers:
           - https
 ```
 
-Here, we have two groups of consumers:
+Here, we have two groups of Consumers:
 
-- `silver-tier` consumers who can access our APIs at 10 requests per minute
-- `gold-tier` consumers who can access our APIs at 20 requests per minute
+- `silver-tier` Consumers who can access our APIs at 10 requests per minute
+- `gold-tier` Consumers who can access our APIs at 20 requests per minute
 
 Now, if we want to increase the rate limits or change the host of the Redis
 server, then we have to edit the configuration of each and every instance of
@@ -249,9 +249,9 @@ fields as needed for the entities that consume them.
 
 Specific values set for entities take precedence over values defined in `_plugin_configs`.
 
-For example, say that consumer `fub` in the previous example is still in the
+For example, say that Consumer `fub` in the previous example is still in the
 `gold-tier-limit`, but needs a rate limit of `50` minutes instead of `20`.
-You can change this value just for that specific consumer:
+You can change this value just for that specific Consumer:
 
 ```yaml
 - username: fub
@@ -268,7 +268,7 @@ You can change this value just for that specific consumer:
         - https
 ```
 
-Now compare the two gold tier consumers, `baz` and `fub`.
+Now compare the two gold tier Consumers, `baz` and `fub`.
 
 First check `baz`:
 
@@ -276,7 +276,7 @@ First check `baz`:
 curl -i -X http://localhost:8001/consumers/baz/plugins
 ```
 
-Find the `minute` configuration in the result. This consumer picks up the
+Find the `minute` configuration in the result. This Consumer picks up the
 setting of the `gold-tier-limit`, which is `minute: 20`.
 
 Now check `fub`:
@@ -286,4 +286,4 @@ curl -i -X http://localhost:8001/consumers/fub/plugins
 ```
 
 Find the `minute` configuration in the result.
-This consumer has its own rate limit, `minute: 50`.
+This Consumer has its own rate limit, `minute: 50`.

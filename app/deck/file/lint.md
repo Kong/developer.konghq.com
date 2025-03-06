@@ -50,7 +50,7 @@ rules:
 
 The [JSONPath](http://jsonpath.com/) selector specified in `given` reads the `protocol` field in every Service under the `services` key from the incoming file. With each of those values, the `pattern` function is applied which evaluates the value against a regular expression pattern specified in the `match` field. In this example, we assert that the string value in the `protocol` field must match the string `https` exactly.
 
-Assume you have the following decK declarative configuration file (`kong.yaml`) that defines a Service and a route for a simple task tracking system:
+Assume you have the following decK declarative configuration file (`kong.yaml`) that defines a Service and a Route for a simple task tracking system:
 
 ```yaml
 _format_version: "3.0"
