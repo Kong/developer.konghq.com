@@ -1,6 +1,6 @@
 ---
 title: De-duplicate Plugin Configuration
-description: Reference predefined plugin configurations in your declaraive configuration
+description: Reference predefined plugin configurations in your declarative configuration
 
 content_type: reference
 layout: reference

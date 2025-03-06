@@ -1,6 +1,6 @@
 ---
 title: deck gateway sync
-description: Update Kong Gateway to match the state defined in the provided configuration
+description: Update {{ site.base_gateway }} to match the state defined in the provided configuration
 
 content_type: reference
 layout: reference

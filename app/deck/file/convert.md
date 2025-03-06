@@ -1,6 +1,6 @@
 ---
 title: deck file convert
-description: Convert decK files from one format to another e.g. Kong Gateway 2.x to 3.x
+description: Convert decK files from one format to another e.g. {{ site.base_gateway }} 2.x to 3.x
 
 content_type: reference
 layout: reference

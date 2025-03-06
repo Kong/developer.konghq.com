@@ -1,6 +1,6 @@
 ---
 title: Object Defaults
-description: Set custom defaults for Kong Gateway entities
+description: Set custom defaults for {{ site.base_gateway }} entities
 
 content_type: reference
 layout: reference

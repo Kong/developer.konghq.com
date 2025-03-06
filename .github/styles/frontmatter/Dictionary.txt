@@ -11,3 +11,5 @@ ratelimiting
 collectd
 ca_certificate
 gateway_api
+short_title
+skip_index

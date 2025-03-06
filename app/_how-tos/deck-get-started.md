@@ -1,6 +1,6 @@
 ---
 title: Get Started with decK
-description: Learn how to install decK and use it to configure Kong Gateway
+description: Learn how to install decK and use it to configure {{site.base_gateway}}
 content_type: how_to
 
 related_resources: []

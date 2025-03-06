@@ -1,6 +1,6 @@
 ---
 title: deck gateway dump
-description: Export the current state of Kong Gateway to a file
+description: Export the current state of {{ site.base_gateway }} to a file
 
 content_type: reference
 layout: reference

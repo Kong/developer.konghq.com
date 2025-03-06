@@ -1,6 +1,6 @@
 ---
 title: deck gateway reset
-description: Delete all entities in Kong Gateway
+description: Delete all entities in {{ site.base_gateway }}
 
 content_type: reference
 layout: reference

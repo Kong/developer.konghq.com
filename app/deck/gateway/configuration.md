@@ -1,6 +1,6 @@
 ---
 title: Configuring On-Prem Authentication
-description: Configure decK for use with an on-prem Kong Gateway
+description: Configure decK for use with an on-prem {{ site.base_gateway }}
 
 content_type: reference
 layout: reference

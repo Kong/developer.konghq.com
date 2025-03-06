@@ -1,6 +1,6 @@
 ---
 title: Managing Sensitive Data
-description: Keep your secrets safe using Kong Gateway Vaults with decK
+description: Keep your secrets safe using {{ site.base_gateway }} Vaults with decK
 
 content_type: reference
 layout: reference

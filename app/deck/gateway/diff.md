@@ -1,6 +1,6 @@
 ---
 title: deck gateway diff
-description: Diff the current state of Kong Gateway against the provided configuration.
+description: Diff the current state of {{ site.base_gateway }} against the provided configuration.
 
 content_type: reference
 layout: reference

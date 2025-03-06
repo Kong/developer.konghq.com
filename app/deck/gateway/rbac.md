@@ -1,6 +1,6 @@
 ---
 title: Manage RBAC roles
-description: Configure your RBAC configuraton declaratively with decK
+description: Configure your RBAC configuration declaratively with decK
 
 content_type: reference
 layout: reference
