@@ -191,16 +191,16 @@ There are a number of considerations that can affect your environment:
   Consumer mapping and dynamic plugin ordering both run in the `access` phase, but the order of the  plugins must be determined after Consumer mapping has happened.
   {{site.base_gateway}} can't reliably change the order of the plugins in relation to mapped Consumers.
 
-* **Cascading deletes**: There is no support to detect if a plugin has a dependency to a deleted plugin, so handle your configuration with care.
+* **Cascading deletes**: Detecting if a plugin has a dependency to a deleted plugin isn't supported, so handle your configuration with care.
 
 * **Performance**: Dynamic plugin ordering requires sorting plugins during a request, which adds latency to the request. 
 In some cases, this might be compensated for when you run rate limiting before an expensive authentication plugin.
     
-  Re-ordering _any_ plugin in Workspace or Control Plan has performance implications to all other plugins within the same environment. 
+  Re-ordering _any_ plugin in a Workspace or Control Plane has performance implications to all other plugins within the same environment. 
   If possible, consider offloading plugin ordering to a separate environment.
 
 * **Validation**: Validating dynamic plugin ordering is a non-trivial task and would require insight into the user's business logic. 
-{{site.base_gateway}} tries to catch basic mistakes but it can't detect all potentially dangerous configurations.
+{{site.base_gateway}} tries to catch basic mistakes, but it can't detect all potentially dangerous configurations.
 
 ## Plugin queuing
 
