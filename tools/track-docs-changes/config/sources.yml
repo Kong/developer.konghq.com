@@ -121,8 +121,6 @@ app/_gateway_entities/admin.md:
 ## gateway
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
   - /app/_hub/kong-inc/rate-limiting-advanced/how-to/_index.md
-app/_how-tos/custom-deck-object-defaults.md:
-  - app/_src/deck/guides/defaults.md
 app/_how-tos/multiple-rate-limits-window-sizes.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
 app/_how-tos/get-started-with-gateway.md:
