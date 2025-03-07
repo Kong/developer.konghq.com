@@ -211,4 +211,8 @@ export default {
 .ais-Hits {
     @apply flex flex-col bg-secondary shadow-primary rounded-md text-sm ml-0 gap-0;
 }
+
+:deep(.ais-Hits-list) {
+    @apply gap-0;
+}
 </style>
