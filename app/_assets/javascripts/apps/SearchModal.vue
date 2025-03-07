@@ -167,7 +167,7 @@ export default {
     const tabsElement = ref(null);
 
     const hitsPerPage = 20;
-    const indexName = 'kongdeveloper';
+    const indexName = import.meta.env.VITE_ALGOLIA_INDEX_NAME;
 
     const state = ref({
       collections: [],
@@ -197,8 +197,8 @@ export default {
     });
 
     const searchClient = algoliasearch(
-      'Z2JDSBZWKU',
-      '7eaf59d4529f8b3bb44e5a8556aac227',
+      import.meta.env.VITE_ALGOLIA_APPLICATION_ID,
+      import.meta.env.VITE_ALGOLIA_API_KEY
     );
 
     const initialTags = [];

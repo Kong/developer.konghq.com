@@ -172,7 +172,7 @@ import AisStaticFilter from './components/AisStaticFilter.vue';
 import 'instantsearch.css/themes/reset.css';
 
 const filters = window.searchFilters;
-const indexName = "kongdeveloper";
+const indexName = import.meta.env.VITE_ALGOLIA_INDEX_NAME;
 
 export default {
   components: {
@@ -189,8 +189,8 @@ export default {
   data() {
     return {
       searchClient: algoliasearch(
-        'Z2JDSBZWKU',
-        '7eaf59d4529f8b3bb44e5a8556aac227'
+        import.meta.env.VITE_ALGOLIA_APPLICATION_ID,
+        import.meta.env.VITE_ALGOLIA_API_KEY
       ),
       indexName: indexName,
       routing: routingConfig(indexName),
