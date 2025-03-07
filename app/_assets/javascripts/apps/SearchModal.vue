@@ -205,7 +205,7 @@ export default {
     const searchFilters = window.searchFilters;
     const productMeta = document.querySelector('meta[name="algolia:products"]');
     if (productMeta !== null) {
-      const product = productMeta.getAttribute('content').trim();
+      const product = productMeta.getAttribute('content').trim().split(',')[0];
       const productFilter = searchFilters.products.find((f) => f.value === product);
       if (productFilter) {
         initialTags.push({ label: productFilter.label, value: productFilter.value, facet: 'products' });
