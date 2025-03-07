@@ -64,6 +64,7 @@ ee_product_name: Kong Gateway Enterprise
 konnect_short_name: Konnect
 mesh_product_name: Kong Mesh
 kic_product_name: Kong Ingress Controller
+konnect_saas: Kong Konnect
 
 repos:
   developer: https://github.com/Kong/developer.konghq.com
