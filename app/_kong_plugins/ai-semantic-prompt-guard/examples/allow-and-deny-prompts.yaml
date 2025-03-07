@@ -1,4 +1,4 @@
-description: 'Allows messages about a topic as long as they don't contain information about another topic. For example, only allow questions about cats that aren't related to dogs. Topics on the deny list take precedence over the allowed topics.'
+description: Allows messages about a topic as long as they don't contain information about another topic. For example, only allow questions about cats that aren't related to dogs. Topics on the deny list take precedence over the allowed topics.
 
 title: 'Allow and deny messages'
 
