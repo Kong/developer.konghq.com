@@ -8,11 +8,13 @@
             }"
         >
             <ul class="ais-RefinementList-list flex max-h-64" :class="dynamicClasses">
-                <li class="ais-RefinementList-item flex" v-for="(item, index) in items" :key="item.value">
-                    <a class="badge" :href="createURL(item.value)" :class="{ 'font-bold': item.isRefined  }" @click.prevent="refine(item.value)" >
+                <template v-for="(item, index) in items" :key="item.value">
+                <li class="ais-RefinementList-item flex" :class="{ hidden: index >= 5 && !showMore }">
+                    <a class="badge" :href="createURL(item.value)" :class="{ 'font-bold': item.isRefined }" @click.prevent="refine(item.value)" >
                         #{{ item.value }}
                     </a>
                 </li>
+                </template>
             </ul>
             <button class="text-xs text-brand" @click="showMore = !showMore">
                 {{ !showMore ? 'Show more' : 'Show less'}}
@@ -37,9 +39,9 @@ export default {
     computed: {
         dynamicClasses() {
             if (this.showMore) {
-                return ['overflow-y-scroll', 'h-full'];
+                return ['overflow-auto', 'h-full'];
             } else {
-                return ['overflow-y-hidden', 'h-32'];
+                return ['overflow-hidden', 'h-32'];
             }
         }
     },
