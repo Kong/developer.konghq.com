@@ -48,14 +48,16 @@ search_aliases:
 related_resources:
   - text: Transform a response using OpenAI
     url: /how-to/transform-a-response-with-ai/
+  - text: AI Request Transformer plugin
+    url: /plugins/ai-request-transformer/
 ---
 
 The AI Response Transformer plugin uses a configured LLM service to transform the upstream's HTTP(S) response before returning it to the client.
-It can also be configured to terminate or otherwise nullify the response, if it fails a compliance or formatting check from the configured LLM service, for example.
+It can also terminate or otherwise nullify the response if it fails a compliance or formatting check from the configured LLM service, for example.
 
 This plugin supports `llm/v1/chat` requests for the same providers as the [AI Proxy plugin](/plugins/ai-proxy/).
 
-It also uses the same configuration and tuning parameters as the AI Proxy plugin, under the [`config.llm`](/plugins/ai-request-transformer/reference/#schema--config-llm) block.
+It also uses the same configuration and tuning parameters as the AI Proxy plugin, in the [`config.llm`](/plugins/ai-request-transformer/reference/#schema--config-llm) block.
 
 The AI Response Transformer plugin runs **after** the AI Proxy plugin, and **after** proxying to the upstream service, allowing it to also transform responses coming from a different LLM.
 
@@ -63,9 +65,7 @@ The AI Response Transformer plugin runs **after** the AI Proxy plugin, and **aft
 
 {% include plugins/ai-transformer-diagram.md %}
 
-1. The {{site.base_gateway}} admin sets up an `llm` configuration block, following the same 
-[configuration format](/plugins/ai-proxy/reference/) as the AI Proxy plugin, 
-and the same `driver` capabilities.
+1. The {{site.base_gateway}} admin sets up an [`llm` configuration block](/plugins/ai-request-transformer/reference/#schema--config-llm).
 1. The {{site.base_gateway}} admin sets up a `prompt`. 
 The prompt becomes the `system` message in the LLM chat request, and provides transformation
 instructions to the LLM for the returning upstream response body.
@@ -73,7 +73,7 @@ instructions to the LLM for the returning upstream response body.
 1. After proxying the client's request to the backend, {{site.base_gateway}} sets the entire response body as the 
 `user` message in the LLM chat request, then sends it to the configured LLM service.
 1. The LLM service returns a response `assistant` message, which is subsequently set as the upstream response body.
-1. The plugin returns early (`kong.response.exit`) and can handle gzip or chunked requests, similarly to the [Forward Proxy](/plugins/forward-proxy/) plugin.
+1. The plugin returns early (`kong.response.exit`) and can handle gzip or chunked requests, similar to the [Forward Proxy](/plugins/forward-proxy/) plugin.
 
 ### Adjusting response headers, status codes, and body
 

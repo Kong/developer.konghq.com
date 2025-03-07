@@ -30,7 +30,7 @@ tags:
 
 tldr:
     q: How can I use AI to transform a response before returning it to the client?
-    a: Enable the AI Response Transformer plugin, configure the parameters under `config.llm` to access your LLM and describe the transformation to perform with the `config.prompt` parameter.
+    a: Enable the [AI Response Transformer](/how-to/transform-a-response-with-ai/) plugin, configure the parameters under `config.llm` to access your LLM and describe the transformation to perform with the `config.prompt` parameter.
 
 tools:
     - deck
@@ -59,7 +59,7 @@ cleanup:
 
 ## 1. Enable the AI Response Transformer plugin
 
-In this example, we want to inject a new header in the response, after it's proxied and before it's returned to the client. To add a new header, we need to:
+In this example, we want to inject a new header in the response after it's proxied and before it's returned to the client. To add a new header, we need to:
 * Specify the response format to use in the prompt.
 * Set the [`config.parse_llm_response_json_instructions`](/plugins/ai-response-transformer/reference/#schema--config-parse_llm_response_json_instructions) parameter to `true`.
 
