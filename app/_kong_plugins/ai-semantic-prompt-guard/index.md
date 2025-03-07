@@ -48,7 +48,7 @@ related_resources:
   - text: AI Prompt Guard plugin
     url: /plugins/ai-prompt-guard/
   - text: AI Proxy plugin
-    url: 
+    url: /plugins/ai-proxy/
   - text: AI Semantic Cache plugin
     url: /plugins/ai-semantic-cache/
 ---
