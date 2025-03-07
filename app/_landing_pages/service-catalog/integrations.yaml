@@ -18,7 +18,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    **Integrations** are applications—either {{site.konnect_short_name}}-internal or external—that extend the functionality of the {{site.service_catalog_name}}.
+                    **Integrations** are applications—either {{site.konnect_short_name}}-internal or external—that extend the functionality of the Service Catalog.
 
                     When enabled, an integration allows you to:
                     - **Discover new resources** from connected systems
@@ -56,6 +56,10 @@ rows:
               cta:
                 text: Learn more
                 url: /service-catalog/integrations/traceable/
+     
+      
+
+  - columns:
       - blocks:
           - type: card
             config:
@@ -65,9 +69,6 @@ rows:
               cta:
                 text: Learn more
                 url: /service-catalog/integrations/gitlab
-      
-
-  - columns:
       - blocks:
           - type: card
             config:
