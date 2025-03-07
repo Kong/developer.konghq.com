@@ -9,6 +9,10 @@ module Jekyll
       def target
         @target ||= PluginTarget.new(data: data)
       end
+
+      def ordering
+        @ordering ||= @example.dig('data', 'ordering')
+      end
     end
   end
 end

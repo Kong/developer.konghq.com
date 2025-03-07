@@ -15,6 +15,10 @@ module Jekyll
             data
           end
         end
+
+        def ordering
+          @ordering ||= @example.ordering
+        end
       end
     end
   end
