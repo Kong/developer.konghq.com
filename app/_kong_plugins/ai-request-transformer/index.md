@@ -47,11 +47,13 @@ search_aliases:
 related_resources:
   - text: Transform a request body using OpenAI
     url: /how-to/transform-a-client-request-with-ai/
+  - text: AI Response Transformer plugin
+    url: /plugins/ai-response-transformer/
 ---
 
 The AI Request Transformer plugin uses a configured LLM service to transform a client request body before proxying the request upstream.
 
-This plugin supports `llm/v1/chat` requests for the same providers as the [AI Proxy plugin](/plugins/ai-proxy/).
+This plugin supports the same `llm/v1/chat` requests and providers as the [AI Proxy plugin](/plugins/ai-proxy/).
 
 It also uses the same configuration and tuning parameters as the AI Proxy plugin, under the [`config.llm`](/plugins/ai-request-transformer/reference/#schema--config-llm) block.
 
@@ -62,9 +64,7 @@ AI Proxy plugin, allowing it to also transform requests before sending them to a
 
 {% include plugins/ai-transformer-diagram.md %}
 
-1. The {{site.base_gateway}} admin sets up an `llm` configuration block, following the same 
-[configuration format](/plugins/ai-proxy/reference/) as the AI Proxy plugin, 
-and the same `driver` capabilities.
+1. The {{site.base_gateway}} admin sets up an [`llm` configuration block](/plugins/ai-request-transformer/reference/#schema--config-llm).
 1. The {{site.base_gateway}} admin sets up a `prompt`. 
 The prompt becomes the `system` message in the LLM chat request, and prepares the LLM with transformation
 instructions for the incoming client request body.

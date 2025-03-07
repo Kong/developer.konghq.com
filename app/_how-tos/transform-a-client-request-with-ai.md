@@ -30,7 +30,7 @@ tags:
 
 tldr:
     q: How can I use AI to transform a client request before proxying it?
-    a: Enable the AI Request Transformer plugin, configure the parameters under `config.llm` to access your LLM and describe the transformation to perform with the `config.prompt` parameter.
+    a: Enable the [AI Request Transformer](/plugins/ai-request-transformer/) plugin, configure the parameters in `config.llm` to access your LLM and describe the transformation to perform with the `config.prompt` parameter.
 
 tools:
     - deck
