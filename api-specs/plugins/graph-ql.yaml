@@ -1,0 +1,154 @@
+openapi: 3.0.2
+info:
+  title: GraphQL Proxy Cache API
+  version: 1.0.0
+  description: API for managing cached GraphQL queries in Kong via the GraphQL Proxy Cache Advanced plugin.
+  contact:
+    email: docs@konghq.com
+    name: Kong Inc
+    url: 'https://konghq.com'
+externalDocs:
+  description: Kong Gateway Enterprise Admin API
+  url: 'https://docs.konghq.com'
+servers:
+  - description: Default Admin API URL
+    url: '{protocol}://{hostname}:{port}{path}'
+    variables:
+      hostname:
+        default: localhost
+        description: Hostname for Kong's Admin API
+      path:
+        default: /
+        description: Base path for Kong's Admin API
+      port:
+        default: '8001'
+        description: Port for Kong's Admin API
+      protocol:
+        default: http
+        description: Protocol for requests to Kong's Admin API
+        enum:
+          - http
+          - https
+security:
+  - personalAccessToken: []
+
+paths:
+  /graphql-proxy-cache-advanced:
+    delete:
+      operationId: purgeAllGraphQLCache
+      summary: Purge All GraphQL Cache Entities
+      description: Deletes all cached GraphQL query responses across all GraphQL Proxy Cache plugins.
+      responses:
+        '204':
+          description: Cache successfully purged.
+        '500':
+          description: Internal server error.
+      tags:
+        - GraphQL Proxy Cache
+
+  /graphql-proxy-cache-advanced/{cache_key}:
+    get:
+      operationId: getGraphQLCacheEntity
+      summary: Retrieve a Cached GraphQL Query
+      description: Retrieves a cached GraphQL query response by its cache key.
+      parameters:
+        - name: cache_key
+          in: path
+          required: true
+          description: The cache key of the GraphQL query response to retrieve.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cache entry found.
+        '404':
+          description: Cache entry not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - GraphQL Proxy Cache
+    delete:
+      operationId: deleteGraphQLCacheEntity
+      summary: Delete a Cached GraphQL Query
+      description: Deletes a cached GraphQL query response by its cache key.
+      parameters:
+        - name: cache_key
+          in: path
+          required: true
+          description: The cache key of the GraphQL query response to delete.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Cache entry successfully deleted.
+        '404':
+          description: Cache entry not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - GraphQL Proxy Cache
+
+  /graphql-proxy-cache-advanced/{plugin_id}/caches/{cache_key}:
+    get:
+      operationId: getGraphQLCacheEntityByPlugin
+      summary: Retrieve a Cached GraphQL Query for a Specific Plugin
+      description: Retrieves a cached GraphQL query response within a specific GraphQL Proxy Cache plugin.
+      parameters:
+        - name: plugin_id
+          in: path
+          required: true
+          description: The ID of the GraphQL Proxy Cache plugin instance.
+          schema:
+            type: string
+        - name: cache_key
+          in: path
+          required: true
+          description: The cache key of the GraphQL query response to retrieve.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cache entry found.
+        '404':
+          description: Cache entry not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - GraphQL Proxy Cache
+    delete:
+      operationId: deleteGraphQLCacheEntityByPlugin
+      summary: Delete a Cached GraphQL Query for a Specific Plugin
+      description: Deletes a cached GraphQL query response within a specific GraphQL Proxy Cache plugin.
+      parameters:
+        - name: plugin_id
+          in: path
+          required: true
+          description: The ID of the GraphQL Proxy Cache plugin instance.
+          schema:
+            type: string
+        - name: cache_key
+          in: path
+          required: true
+          description: The cache key of the GraphQL query response to delete.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Cache entry successfully deleted.
+        '404':
+          description: Cache entry not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - GraphQL Proxy Cache
+
+tags:
+  - name: GraphQL Proxy Cache
+    description: API endpoints for managing GraphQL query cache entities in Kong.
+
+components:
+  securitySchemes:
+    personalAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
