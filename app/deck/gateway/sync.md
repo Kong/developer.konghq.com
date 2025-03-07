@@ -23,8 +23,8 @@ related_resources:
 
 The `deck gateway sync` command configures the target {{ site.base_gateway }} to match the values specified in your declarative configuration.
 
-{:.warning}
-> Any configuration in {{ site.base_gateway }} that isn't present in the provided declarative configuration file **will be deleted** using `deck gateway sync`.
+{:.danger}
+> Any configuration in {{ site.base_gateway }} that isn't present in the provided declarative configuration file **will be deleted** using `deck gateway sync`. To apply a partial configuration [use tags](/deck/gateway/tags/).
 
 The `deck gateway sync` command can accept one or more files as positional arguments:
 
