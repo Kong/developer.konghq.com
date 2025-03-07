@@ -1,0 +1,45 @@
+description: 'Allows messages about a topic as long as they don't contain information about another topic. For example, only allow questions about cats that aren't related to dogs. Topics on the deny list take precedence over the allowed topics.'
+
+title: 'Allow and deny messages'
+
+weight: 900
+
+requirements: 
+  - "A [Redis](https://redis.io/docs/latest/) instance"
+
+variables:
+  header_value:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key
+
+config: 
+  embeddings:
+    auth:
+      header_name: Authorization
+      header_value: ${header_value}
+    model:
+      name: text-embedding-3-small
+      provider: openai
+  search:
+    threshold: 0.7
+  vectordb:
+    strategy: redis
+    distance_metric: cosine
+    threshold: 0.5
+    dimensions: 1024
+    redis:
+      host: localhost
+      port: 6379
+  rules:
+    match_all_conversation_history: true
+    allow_prompts:
+    - "Questions about cats"
+    deny_prompts:
+    - "Anything related to dogs"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

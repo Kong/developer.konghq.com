@@ -334,6 +334,10 @@ app/_kong_plugins/jq/index.md:
   - app/_hub/kong-inc/jq/overview/_index.md
 app/_kong_plugins/jq/changelog.md:
   - app/_hub/kong-inc/jq/_changelog.md
+app/_kong_plugins/ai-semantic-prompt-guard/index.md:
+  - app/_hub/kong-inc/ai-semantic-prompt-guard/overview/_index.md
+app/_kong_plugins/ai-semantic-prompt-guard/changelog.md:
+  - app/_hub/kong-inc/ai-semantic-prompt-guard/_changelog.md
 
 # Konnect
 
