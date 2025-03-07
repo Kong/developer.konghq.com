@@ -20,9 +20,9 @@ min_version:
 description: Configure Data Plane resilience in case of a Control Plane outage.
 
 related_resources:
-  - text: "{{site.konnect_short_name}} data plane nodes"
+  - text: "{{site.konnect_short_name}} Data Plane nodes"
     url: /gateway-manager/data-plane-nodes/
-  - text: "{{site.base_gateway}} control plane and data plane communication"
+  - text: "{{site.base_gateway}} Control Plane and Data Plane communication"
     url: /gateway/cp-dp-communication/
 ---
 
@@ -66,7 +66,7 @@ The following table provides details about these parameters:
 {% kong_config_table %}
 config:
   - name: cluster_fallback_config_import
-    description: Fetches the fallback configuration from the URL passed in `cluster_fallback_config_storage` if the CP is unreachable. This should only be enabled on the data plane.
+    description: Fetches the fallback configuration from the URL passed in `cluster_fallback_config_storage` if the CP is unreachable. This should only be enabled on the Data Plane.
   - name: cluster_fallback_config_storage
   - name: cluster_fallback_config_export
     description: This parameter allows you to upload the configuration to the storage volume. This should only be enabled on the backup node.
@@ -79,15 +79,15 @@ In addition, you'll also need to configure settings based on the S3-compatible s
 
 In this setup, you need to designate one backup node. 
 The backup node must have read and write access to the S3 bucket, and the Data Plane nodes that are provisioned must have read access to the same S3 bucket.
-The backup node is responsible for communicating the state of the {{site.base_gateway}} `kong.conf` configuration file from the control plane to the S3 bucket.
+The backup node is responsible for communicating the state of the {{site.base_gateway}} `kong.conf` configuration file from the Control Plane to the S3 bucket.
 
 Nodes are initialized with fallback configs via environment variables, including `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_DEFAULT_REGION`. 
 If you're associating this with an IAM role and if the backup node doesn't reside on the AWS platform, you may also need to use the `AWS_SESSION_TOKEN` environment variable. 
 
 
 {:.warning}
-> We don't recommend using backup nodes to proxy traffic. The backup job enlarges the attack surface of a proxying data plane and contributes significantly to the P99 delay. You need to know the risk if you want to deploy a node this way, 
-{% if_version lte:3.5.x %} and a data plane acting as a backup node cannot be provisioned with backup configurations.{% endif_version %}{% if_version gte:3.6.x %}and the data plane needs to be at least `3.6.0.0` to be provisioned with backup configuration when it's configured as a backup node. 
+> We don't recommend using backup nodes to proxy traffic. The backup job enlarges the attack surface of a proxying Data Plane and contributes significantly to the P99 delay. You need to know the risk if you want to deploy a node this way, 
+{% if_version lte:3.5.x %} and a Data Plane acting as a backup node cannot be provisioned with backup configurations.{% endif_version %}{% if_version gte:3.6.x %}and the Data Plane needs to be at least `3.6.0.0` to be provisioned with backup configuration when it's configured as a backup node. 
 Although a single backup node is sufficient for all deployments, you can also configure additional backup nodes. A leader election algorithm selects one node from the group of designated backup nodes to do the backup job.
 {% endif_version %}
 
@@ -124,7 +124,7 @@ The selected node is responsible for writing to the S3 bucket when it receives n
 
 {% endif_version %}
 
-Both the control plane and Data Plane can be configured to export configurations.
+Both the Control Plane and Data Plane can be configured to export configurations.
 
 You can configure new Data Planes to load a configuration from the S3 bucket if the Control Plane is unreachable using the following environment variables: 
 
@@ -146,8 +146,8 @@ kong-dp-importer:
 ## Google Cloud storage
 
 In this setup, you need to designate one backup node. 
-The backup node must have read and write access to the GCP cloud storage bucket and the provisioned data plane nodes must have read access to the same GCP cloud storage bucket. 
-This node is responsible for communicating the state of the {{site.base_gateway}} `kong.conf` configuration file from the control plane to the GCP cloud storage bucket.
+The backup node must have read and write access to the GCP cloud storage bucket and the provisioned Data Plane nodes must have read access to the same GCP cloud storage bucket. 
+This node is responsible for communicating the state of the {{site.base_gateway}} `kong.conf` configuration file from the Control Plane to the GCP cloud storage bucket.
 
 Credentials are passed via the `GCP_SERVICE_ACCOUNT` environment variable . For more information about credentials, see the [GCP credentials documentation](https://developers.google.com/workspace/guides/create-credentials).
 
@@ -171,10 +171,10 @@ kong-dp-exporter:
 This node is responsible for writing to the GCP bucket when it receives a new configuration. 
 The file structure is automatically created inside of the bucket and should not be created manually. If the node version is `3.2.0.0`, using the example above, the key name will be `test-prefix/3.2.0.0/config.json`. 
 
-Both the control plane and data plane can be configured to export configurations.
+Both the Control Plane and Data Plane can be configured to export configurations.
 
 
-You can configure new data planes to load a configuration from the GCP cloud storage bucket if the control plane is unreachable using the following environment variables: 
+You can configure new Data Planes to load a configuration from the GCP cloud storage bucket if the Control Plane is unreachable using the following environment variables: 
 
 ```yaml
   kong-dp-importer:
