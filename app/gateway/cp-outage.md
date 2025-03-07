@@ -1,5 +1,5 @@
 ---
-title: "Control plane outage management"
+title: "Control Plane outage management"
 content_type: reference
 layout: reference
 
@@ -17,7 +17,7 @@ tags:
 min_version:
     gateway: '3.4'
 
-description: Configure data plane resilience in case of a control plane outage.
+description: Configure Data Plane resilience in case of a Control Plane outage.
 
 related_resources:
   - text: "{{site.konnect_short_name}} data plane nodes"
@@ -26,28 +26,31 @@ related_resources:
     url: /gateway/cp-dp-communication/
 ---
 
-{{site.base_gateway}} can be set up to support configuring new data planes in the event of a control plane outage. Data plane resilience works by designating one or more backup nodes and allowing it read/write access to a data store. This backup node will automatically push valid {{site.base_gateway}} configurations to the data store. In the event of a control plane outage, when a new node is created, it will pull the latest {{site.base_gateway}} configuration from the data store, configure itself, and start proxying requests. 
+{{site.base_gateway}} can be set up to support configuring new Data Planes in the event of a Control Plane outage. Data Plane resilience works by designating one or more backup nodes and allowing it read/write access to a data store. This backup node will automatically push valid {{site.base_gateway}} configurations to the data store. In the event of a Control Plane outage, when a new node is created, it will pull the latest {{site.base_gateway}} configuration from the data store, configure itself, and start proxying requests. 
 
-This option is only recommended for users who have to adhere to strict high-availability SLAs because it requires a larger maintenance load.
+{:.info}
+>This option is only recommended for users who have to adhere to strict high-availability SLAs because it requires a larger maintenance load.
 
-## How data plane resilience works
+## How Data Plane resilience works
 
-When the cluster adds new data plane nodes, the control plane uses a configuration file to provision those nodes. If the control plane experiences an outage, the data plane can't be provisioned and it will silently fail until it can establish a connection with the control plane. 
+When the cluster adds new Data Plane nodes, the nodes are configured by the Control Plane using a configuration file. 
 
-When a control plane outage occurs, a new data plane node added to the cluster behaves like the following:  
+If the Control Plane experiences an outage, the Data Plane can't be provisioned and it will silently fail until it can establish a connection with the Control Plane. 
 
-1. The new data plane node determines that the control plane is unreachable. 
-1. The new data plane node reads the configuration file from the S3-compatible storage volume, configures itself, caches the fetched configuration file, and begins proxying requests.
-1. The new data plane node continuously tries to establish a connection with the control plane. 
+When a Control Plane outage occurs, a new Data Plane node added to the cluster behaves like the following:  
 
-The S3 compatible storage volume is only accessed when the data plane node is created. The configuration will never be pulled from the storage after creation. The data plane will fail if it depends on any other functionality from the control plane. 
+1. The new Data Plane node determines that the Control Plane is unreachable. 
+1. The new Data Plane node reads the configuration file from the S3-compatible storage volume, configures itself, caches the fetched configuration file, and begins proxying requests.
+1. The new Data Plane node continuously tries to establish a connection with the Control Plane. 
+
+The S3 compatible storage volume is only accessed when the Data Plane node is created. The configuration will never be pulled from the storage after creation. The Data Plane will fail if it depends on any other functionality from the Control Plane. 
 
 {:.warning}
 > **Important:** Storage volume write access is only granted to the backup node. It is your responsibility to apply any encryption modules your storage provider recommends to encrypt the configuration in the storage volume. 
 
-## Configure data plane resilience 
+## Configure Data Plane resilience 
 
-Data plane resilience is managed in the [`kong.conf`](/gateway/manage-kong-conf/) configuration file by the following parameters: 
+Data Plane resilience is managed by [`kong.conf`](/gateway/manage-kong-conf/) with the following parameters: 
 
 ```
 cluster_fallback_config_import: on
@@ -55,7 +58,7 @@ cluster_fallback_config_storage: $STORAGE_ENDPOINT
 cluster_fallback_config_export = off
 ```
 
-Avoid configuring both the data plane and control plane to `export` a configuration. Assuming that they are both configured with the correct level of authentication, the data plane will write to the storage volume first, and then the control plane will overwrite the configuration.
+Avoid configuring both the Data Plane and Control Plane to `export` a configuration. Assuming that they are both configured with the correct level of authentication, the Data Plane will write to the storage volume first, and then the Control Plane will overwrite the configuration.
 
 The following table provides details about these parameters:
 
@@ -72,17 +75,17 @@ config:
 
 In addition, you'll also need to configure settings based on the S3-compatible storage type you're using.
 
-### Amazon S3 storage
+## Amazon S3 storage
 
 In this setup, you need to designate one backup node. 
-The backup node must have read and write access to the S3 bucket, and the data plane nodes that are provisioned must have read access to the same S3 bucket.
+The backup node must have read and write access to the S3 bucket, and the Data Plane nodes that are provisioned must have read access to the same S3 bucket.
 The backup node is responsible for communicating the state of the {{site.base_gateway}} `kong.conf` configuration file from the control plane to the S3 bucket.
 
 Nodes are initialized with fallback configs via environment variables, including `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, and `AWS_DEFAULT_REGION`. 
 If you're associating this with an IAM role and if the backup node doesn't reside on the AWS platform, you may also need to use the `AWS_SESSION_TOKEN` environment variable. 
 
 
-{:.important}
+{:.warning}
 > We don't recommend using backup nodes to proxy traffic. The backup job enlarges the attack surface of a proxying data plane and contributes significantly to the P99 delay. You need to know the risk if you want to deploy a node this way, 
 {% if_version lte:3.5.x %} and a data plane acting as a backup node cannot be provisioned with backup configurations.{% endif_version %}{% if_version gte:3.6.x %}and the data plane needs to be at least `3.6.0.0` to be provisioned with backup configuration when it's configured as a backup node. 
 Although a single backup node is sufficient for all deployments, you can also configure additional backup nodes. A leader election algorithm selects one node from the group of designated backup nodes to do the backup job.
@@ -121,9 +124,9 @@ The selected node is responsible for writing to the S3 bucket when it receives n
 
 {% endif_version %}
 
-Both the control plane and data plane can be configured to export configurations.
+Both the control plane and Data Plane can be configured to export configurations.
 
-You can configure new data planes to load a configuration from the S3 bucket if the control plane is unreachable using the following environment variables: 
+You can configure new Data Planes to load a configuration from the S3 bucket if the Control Plane is unreachable using the following environment variables: 
 
 ```yaml
 kong-dp-importer:
@@ -140,7 +143,7 @@ kong-dp-importer:
       KONG_CLUSTER_FALLBACK_CONFIG_IMPORT: "on"
 ```
 
-### Google Cloud storage
+## Google Cloud storage
 
 In this setup, you need to designate one backup node. 
 The backup node must have read and write access to the GCP cloud storage bucket and the provisioned data plane nodes must have read access to the same GCP cloud storage bucket. 
@@ -186,7 +189,7 @@ You can configure new data planes to load a configuration from the GCP cloud sto
       KONG_CLUSTER_FALLBACK_CONFIG_IMPORT: "on"
 ```
 
-### Other S3-compatible storage
+## Other S3-compatible storage
 
 You can configure non-AWS S3-compatible object storage. The process is similar to the AWS S3 process, but requires an additional parameter: `AWS_CONFIG_STORAGE_ENDPOINT`. This is set to the endpoint of your object storage provider. 
 
