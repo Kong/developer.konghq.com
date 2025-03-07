@@ -33,7 +33,7 @@ config:
   rules:
     match_all_conversation_history: true
     allow_prompts:
-    - Questions about cats
+      - "Questions about cats"
 
 tools:
   - deck

@@ -33,7 +33,7 @@ config:
   rules:
     match_all_conversation_history: true
     deny_prompts:
-    - Questions about dogs
+      - "Questions about dogs"
 
 tools:
   - deck

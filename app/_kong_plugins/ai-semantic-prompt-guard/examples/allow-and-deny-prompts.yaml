@@ -12,7 +12,7 @@ variables:
     value: $OPENAI_API_KEY
     description: Your OpenAI API key
 
-config: 
+config:
   embeddings:
     auth:
       header_name: Authorization
@@ -33,9 +33,9 @@ config:
   rules:
     match_all_conversation_history: true
     allow_prompts:
-    - "Questions about cats"
+      - "Questions about cats"
     deny_prompts:
-    - "Anything related to dogs"
+      - "Anything related to dogs"
 
 tools:
   - deck
