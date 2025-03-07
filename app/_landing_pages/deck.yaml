@@ -32,12 +32,18 @@ rows:
       - blocks:
         - type: tabs
           config:
-            - title: OSX
+            - title: MacOS
               include_content: tools/deck/install/osx
             - title: Windows
               include_content: tools/deck/install/windows
             - title: Linux
               include_content: tools/deck/install/linux
+            - title: Docker
+              include_content: tools/deck/install/docker
+            - title: GitHub Actions
+              include_content: tools/deck/install/github-actions
+            - title: Mise
+              include_content: tools/deck/install/mise
 
   - header:
     columns:
@@ -195,20 +201,20 @@ rows:
     - blocks:
       - type: card
         config:
-          title: Entities managed by decK
-          description: decK manages entity configuration for {{site.base_gateway}}, including all core proxy entities
+          title: Get Started
+          description: Learn how to install decK and use it to configure Kong Gateway
           cta:
-            text: decK entities &rarr;
-            url: /deck/managed-entities/
+            text: Get started &rarr;
+            url: /deck/get-started/
             align: end
     - blocks:
       - type: card
         config:
-          title: Best practices
-          description: Learn about recommended approaches for using decK and avoid common pitfalls
+          title: APIOps
+          description: Learn how to manage {{ site.base_gateway }} configuration in a federated environment.
           cta:
-            text: Best practices &rarr;
-            url: https://docs.konghq.com/deck/1.38.x/guides/best-practices/
+            text: Manage {{ site.base_gateway }} declaratively &rarr;
+            url: /deck/apiops/
             align: end
     - blocks:
       - type: card
@@ -316,7 +322,7 @@ rows:
                 * `GET, POST, PATCH, PUT, DELETE /{entityType}` or `GET, POST, PATCH, PUT, DELETE /{workspace}/{entityType}`: Perform read and write operations on entities.
 
                   If you are running {{site.ee_product_name}}, then decK interacts with entities inside workspaces.
-                  See the [Entities managed by decK](/deck/managed-entities/) reference for the full list.
+                  See the [Entities managed by decK](/deck/reference/entities/) reference for the full list.
 
                   Note that decK also performs operations on entities enabled by plugins, such as `/basic-auths`, `/jwts`, and so on.
                 * `GET /`: Get the {{site.base_gateway}} version.
@@ -328,20 +334,6 @@ rows:
 
                 To find out which endpoints your instance of decK is hitting, execute any decK command with the `--verbose 1` flag.
                 This outputs all of the queries being made. For example, here's a snippet from `deck gateway dump --verbose 1`:
-
-  - header:
-      type: h2
-      text: How-to Guides
-    columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              products:
-                - "api-ops"
-              tools:
-                - deck
-              quantity: 5
-              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}"
 
   - header:
       type: h2

@@ -1,0 +1,9 @@
+metadata:
+  title: Kubernetes Ingress Controller
+  content_type: landing_page
+  description: "@TODO: Build this page"
+
+rows:
+  - header:
+      type: h1
+      text: "Kubernetes Ingress Controller"
