@@ -1,6 +1,8 @@
 metadata:
   title: "Service Catalog Integrations"
   content_type: landing_page
+  products:
+    - service-catalog
   description: Integrate third-party applications into your {{site.konnect_short_name}} organization.
   tags:
     - service-catalog

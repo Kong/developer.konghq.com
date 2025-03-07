@@ -4,6 +4,7 @@ content_type: reference
 layout: reference
 
 products:
+    - service-catalog
     - gateway
 
 no_version: true

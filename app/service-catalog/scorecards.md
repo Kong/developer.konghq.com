@@ -5,6 +5,7 @@ layout: reference
 
 products:
     - gateway
+    - service-catalog
 works_on:
   - konnect
 
