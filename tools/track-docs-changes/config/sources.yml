@@ -428,6 +428,9 @@ app/gateway/breaking-changes.md:
   - app/_src/gateway/breaking-changes/36x.md
   - app/_src/gateway/breaking-changes/37x.md
   - app/_src/gateway/breaking-changes/38x.md
+app/gateway/cp-outage.md:
+  - app/_src/gateway/kong-enterprise/cp-outage-handling-faq.md
+  - app/_src/gateway/kong-enterprise/cp-outage-handling.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
