@@ -22,7 +22,7 @@
                     <div class="flex flex-col gap-3" v-if="hasRefinements">
                         <div class="text-sm text-brand font-semibold">Products</div>
                         <div class="flex flex-col gap-3">
-                            <ais-refinement-list attribute="products" :sort-by="['name']" />
+                            <ais-static-filter attribute="products" :sort-by="['name']" :values="this.filters.products" />
                         </div>
                     </div>
                 </template>
@@ -34,7 +34,7 @@
                     <div class="flex flex-col gap-3" v-if="hasRefinements">
                         <div class="text-sm text-brand font-semibold">Tools</div>
                         <div class="flex flex-col gap-3">
-                            <ais-refinement-list attribute="tools" :sort-by="['name']" />
+                            <ais-static-filter attribute="tools" :sort-by="['name']" :values="this.filters.tools" />
                         </div>
                     </div>
                 </template>
@@ -69,7 +69,7 @@
                     <div class="flex flex-col gap-3" v-if="hasRefinements">
                         <div class="text-sm text-brand font-semibold">Works on</div>
                         <div class="flex flex-col gap-3">
-                            <ais-refinement-list attribute="works_on" :sort-by="['name']" />
+                            <ais-static-filter attribute="works_on" :sort-by="['name']" :values="this.filters.works_on" />
                         </div>
                     </div>
                 </template>
@@ -77,10 +77,63 @@
 
             <ais-panel>
                 <template v-slot:default="{ hasRefinements }">
-                    <div class="flex flex-col gap-3" v-if="hasRefinements">
+                    <div class="flex flex-col gap-3">
                         <div class="text-sm text-brand font-semibold">Tags</div>
                         <div class="flex flex-col gap-3">
-                            <ais-refinement-list attribute="tags" :sort-by="['name']" />
+                            <ais-refinement-list class="flex flex-col gap-1" attribute="tags" :sort-by="['name']" searchable searchable-placeholder="Search tags" :limit="5">
+                                <template
+                                    v-slot="{
+                                    items,
+                                    isFromSearch,
+                                    refine,
+                                    createURL,
+                                    searchForItems,
+                                    }"
+                                >
+                                    <div class="flex gap-2 bg-secondary rounded-md border border-brand-saturated/40 py-1 px-1 items-center w-full">
+                                        <input class="w-full text-sm" @input="searchForItems($event.currentTarget.value)" placeholder="Search tags..." v-model="searchTagsQuery">
+                                    </div>
+                                    <div class="flex flex-col gap-1" v-if="searchTagsQuery">
+                                        <div class="flex text-sm" v-if="isFromSearch && !items.length">No results.</div>
+                                        <div class="flex" v-for="item in items" :key="item.value" :class="item.isRefined ? 'hidden' : ''">
+                                            <a class="badge"
+                                            :href="createURL(item)"
+                                            @click.prevent="handleRefine(item.value, refine)"
+                                            >
+                                                #{{ item.label }}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </template>
+                            </ais-refinement-list>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <ais-current-refinements  :included-attributes="['tags']">
+                                <template v-slot="{ items, createURL }">
+                                    <div class="flex">
+                                        <div v-for="item in items" :key="item.attribute">
+                                            <div class="flex flex-col gap-1 w-full">
+                                                <div
+                                                    v-for="refinement in item.refinements"
+                                                    :key="[
+                                                    refinement.attribute,
+                                                    refinement.type,
+                                                    refinement.value,
+                                                    refinement.operator
+                                                    ].join(':')"
+                                                >
+                                                    <a class="badge"
+                                                    :href="createURL(refinement)"
+                                                    @click.prevent="item.refine(refinement)"
+                                                    >
+                                                        #{{ refinement.label }} x
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </ais-current-refinements>
                         </div>
                     </div>
                 </template>
@@ -113,30 +166,36 @@
 <script>
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
 import { routingConfig } from './search/routing.js';
-import { AisInstantSearch, AisConfigure, AisSearchBox, AisRefinementList, AisHits, AisPagination, AisPanel } from 'vue-instantsearch/vue3/es';
+import { AisInstantSearch, AisConfigure, AisCurrentRefinements, AisSearchBox, AisRefinementList, AisHits, AisPagination, AisPanel } from 'vue-instantsearch/vue3/es';
+import AisStaticFilter from './components/AisStaticFilter.vue';
 
 import 'instantsearch.css/themes/reset.css';
 
-const indexName = "kongdeveloper";
+const filters = window.searchFilters;
+const indexName = import.meta.env.VITE_ALGOLIA_INDEX_NAME;
 
 export default {
   components: {
     AisInstantSearch,
     AisConfigure,
+    AisCurrentRefinements,
     AisSearchBox,
     AisRefinementList,
     AisHits,
     AisPagination,
-    AisPanel
+    AisPanel,
+    AisStaticFilter
   },
   data() {
     return {
       searchClient: algoliasearch(
-        'Z2JDSBZWKU',
-        '7eaf59d4529f8b3bb44e5a8556aac227'
+        import.meta.env.VITE_ALGOLIA_APPLICATION_ID,
+        import.meta.env.VITE_ALGOLIA_API_KEY
       ),
       indexName: indexName,
-      routing: routingConfig(indexName)
+      routing: routingConfig(indexName),
+      searchTagsQuery: '',
+      filters
     };
   },
   methods: {
@@ -144,37 +203,21 @@ export default {
         const urlObj = new URL(url);
 
         return `${urlObj.pathname}${urlObj.hash}`;
-    }
+    },
+    handleRefine(value, refine) {
+      refine(value);
+      this.searchTagsQuery = '';
+    },
   }
 };
 </script>
 
-<style>
+<style scoped>
 .ais-Hits {
     @apply flex flex-col col-span-3 w-full gap-16;
 }
 
-.ais-Hits-list {
+:deep(.ais-Hits-list) {
     @apply grid auto-rows-fr grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
-}
-
-.ais-Pagination {
-    @apply flex flex-col col-span-3 w-full gap-16 col-start-2;
-}
-
-.ais-Pagination-list {
-    @apply flex-row justify-center gap-4;
-}
-
-.ais-RefinementList-label {
-    @apply flex gap-2 py-0.5 w-full text-sm text-primary;
-}
-
-.ais-RefinementList-count {
-    @apply hidden;
-}
-
-.ais-Panel--noRefinement {
-    @apply hidden;
 }
 </style>
