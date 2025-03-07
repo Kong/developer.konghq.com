@@ -1,0 +1,33 @@
+description: |
+  Configure the plugin to use OpenAI GPT-4 to translate the client request to a different language. 
+  In this example, we'll translate the client's question to French.
+
+title: Translate a request body
+
+weight: 900
+
+requirements:
+  - You have an OpenAI subscription.
+
+variables:
+  openai_key:
+    value: $OPENAI_API_KEY
+    description: An API key to connect to the OpenAI API.
+
+config:
+  prompt: You are a translator. Translate the question to French.
+  llm:
+    route_type: llm/v1/chat
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${openai_key}
+    model:
+      provider: openai
+      name: gpt-4
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

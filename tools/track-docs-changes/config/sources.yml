@@ -338,6 +338,18 @@ app/_kong_plugins/ai-semantic-prompt-guard/index.md:
   - app/_hub/kong-inc/ai-semantic-prompt-guard/overview/_index.md
 app/_kong_plugins/ai-semantic-prompt-guard/changelog.md:
   - app/_hub/kong-inc/ai-semantic-prompt-guard/_changelog.md
+app/_kong_plugins/ai-response-transformer/index.md:
+  - app/_hub/kong-inc/ai-response-transformer/overview/_index.md
+app/_kong_plugins/ai-response-transformer/changelog.md:
+  - app/_hub/kong-inc/ai-response-transformer/_changelog.md
+app/_how-tos/transform-a-response-with-ai.md:
+  - app/_hub/kong-inc/ai-response-transformer/how-to/_index.md
+app/_kong_plugins/ai-request-transformer/index.md:
+  - app/_hub/kong-inc/ai-request-transformer/overview/_index.md
+app/_kong_plugins/ai-request-transformer/changelog.md:
+  - app/_hub/kong-inc/ai-request-transformer/_changelog.md
+app/_how-tos/transform-a-client-request-with-ai.md:
+  - app/_hub/kong-inc/ai-request-transformer/how-to/_index.md
 
 # Konnect
 
