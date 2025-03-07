@@ -20,7 +20,7 @@ module Jekyll
       end
 
       def any?
-        [tools, prereqs, products].any?(&:any?)
+        [tools, prereqs, @page.data.fetch('products', [])].any?(&:any?)
       end
 
       def entities?

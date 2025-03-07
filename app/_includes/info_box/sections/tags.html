@@ -4,7 +4,8 @@
   <div class="flex gap-1.5 flex-col items-start md:flex-row flex-wrap">
     {% for tag in include.tags %}
       {% capture text %}#{{ tag }}{% endcapture %}
-      {% include badge.html url="https://docs.devsite.com/search/{topic}+{other stuff}" text=text %}
+      {% capture tag_url %}/search/?tags={{tag}}{% endcapture %}
+      {% include badge.html url=tag_url text=text %}
     {% endfor %}
   </div>
 </div>

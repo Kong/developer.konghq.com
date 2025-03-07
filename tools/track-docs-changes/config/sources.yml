@@ -40,6 +40,8 @@ app/_gateway_entities/consumer.md:
 app/_gateway_entities/plugin.md:
   - app/hub/plugins/overview/index.md
   - app/hub/plugins/compatibility/index.md
+  - app/_src/gateway/kong-enterprise/plugin-ordering/index.md
+  - app/_src/gateway/kong-enterprise/plugin-ordering/get-started.md
 app/_gateway_entities/route.md:
   - app/_src/gateway/key-concepts/routes.md
   - app/_src/gateway/how-kong-works/routing-traffic.md
@@ -75,7 +77,6 @@ app/_gateway_entities/group.md:
 
 app/_gateway_entities/vault.md:
   - app/_src/gateway/kong-enterprise/secrets-management/advanced-usage.md
-  - app/_src/deck/guides/vaults.md
   - app/_src/gateway/kong-enterprise/secrets-management/index.md
   - app/_src/gateway/kong-enterprise/secrets-management/backends/env.md
 app/_gateway_entities/sni.md:
@@ -122,8 +123,6 @@ app/_gateway_entities/admin.md:
 ## gateway
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
   - /app/_hub/kong-inc/rate-limiting-advanced/how-to/_index.md
-app/_how-tos/custom-deck-object-defaults.md:
-  - app/_src/deck/guides/defaults.md
 app/_how-tos/multiple-rate-limits-window-sizes.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
 app/_how-tos/get-started-with-gateway.md:
@@ -341,6 +340,12 @@ app/_kong_plugins/ai-response-transformer/changelog.md:
   - app/_hub/kong-inc/ai-response-transformer/_changelog.md
 app/_how-tos/transform-a-response-with-ai.md:
   - app/_hub/kong-inc/ai-response-transformer/how-to/_index.md
+app/_kong_plugins/ai-request-transformer/index.md:
+  - app/_hub/kong-inc/ai-request-transformer/overview/_index.md
+app/_kong_plugins/ai-request-transformer/changelog.md:
+  - app/_hub/kong-inc/ai-request-transformer/_changelog.md
+app/_how-tos/transform-a-client-request-with-ai.md:
+  - app/_hub/kong-inc/ai-request-transformer/how-to/_index.md
 
 # Konnect
 
@@ -361,10 +366,6 @@ app/_landing_pages/gateway/enterprise-vs-oss.yaml:
 app/_landing_pages/gateway/rate-limiting.yaml:
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
-app/_landing_pages/deck.yaml:
-  - app/_src/deck/index.md
-  - app/_src/deck/installation.md
-  - app/_src/deck/faqs.md
 app/_landing_pages/gateway.yaml:
   - app/_src/gateway/index.md
 app/_landing_pages/gateway/secrets-management.yaml:
@@ -377,14 +378,6 @@ app/_landing_pages/admin-api.yaml:
   - app/_src/gateway/admin-api/index_latest.md
 
 # references 
-app/deck/distributed-config.md:
-  - app/_src/deck/guides/distributed-configuration.md
-app/deck/environment-variables.md:
-  - app/_src/deck/guides/environment-variables.md
-app/deck/manage-deck-with-docker.md:
-  - app/_src/deck/guides/run-with-docker-1.28.md
-app/deck/object-defaults.md:
-  - app/_src/deck/guides/defaults-v2.md
 app/gateway/rate-limiting/strategies.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
@@ -416,6 +409,9 @@ app/gateway/performance/performance-benchmarks.md:
   - app/_src/gateway/production/performance/performance-testing.md
 app/ai-gateway/ai-audit-log-reference.md:
   - app/_src/gateway/production/logging/ai-analytics.md
+app/gateway/kong-manager.md:
+  - app/_src/gateway/kong-manager/enable.md 
+  - app/_src/gateway/kong-manager/troubleshoot.md
 app/ai-gateway/monitor-ai-llm-metrics.md:
   - app/_src/gateway/production/monitoring/ai-metrics.md
 app/gateway/reserved-entity-names.md:
@@ -479,3 +475,109 @@ app/konnect-account.md:
 app/service-catalog-integrations.yaml:
   - app/konnect/service-catalog/integrations/index.md
 
+app/_landing_pages/dedicated-cloud-gateways.yaml:
+  - app/konnect/gateway-manager/dedicated-cloud-gateways/
+
+app/service-catalog/integrations/datadog.md:
+  - app/konnect/service-catalog/integrations/datadog.md
+app/service-catalog/integrations/github.md:
+  - app/konnect/service-catalog/integrations/github.md
+app/service-catalog/integrations/gitlab.md:
+  - app/konnect/service-catalog/integrations/gitlab.md
+app/service-catalog/integrations/traceable.md:
+  - app/konnect/service-catalog/integrations/traceable.md
+app/service-catalog/integrations/swaggerhub.md:
+  - app/konnect/service-catalog/integrations/swaggerhub.md
+app/service-catalog/integrations/pagerduty.md:
+  - app/konnect/service-catalog/integrations/pagerduty.md
+
+app/service-catalog/scorecards.md:
+  - app/konnect/service-catalog/scorecards.md
+
+
+
+# deck
+app/_landing_pages/deck.yaml:
+  - app/_src/deck/index.md
+  - app/_src/deck/installation.md
+  - app/_src/deck/faqs.md
+app/_how-tos/deck-get-started.md:
+  - app/deck/get-started.md
+app/deck/file/validate.md:
+  - app/deck/file/validate.md
+app/deck/file/manipulation/namespace.md:
+  - app/deck/file/manipulation/namespace.md
+app/deck/file/manipulation/index.md:
+  - app/deck/file/manipulation/index.md
+app/deck/file/manipulation/plugins.md:
+  - app/deck/file/manipulation/plugins.md
+app/deck/file/manipulation/tags.md:
+  - app/deck/file/manipulation/tags.md
+app/deck/file/manipulation/patch.md:
+  - app/deck/file/manipulation/patch.md
+app/deck/file/lint.md:
+  - app/deck/file/lint.md
+app/deck/file/kong2kic.md:
+  - app/deck/file/kong2kic.md
+app/deck/file/render.md:
+  - app/deck/file/render.md
+app/deck/file/index.md:
+  - app/deck/file/index.md
+app/deck/file/merge.md:
+  - app/deck/file/merge.md
+app/deck/file/openapi2kong.md:
+  - app/deck/file/openapi2kong.md
+app/deck/file/convert.md:
+  - app/deck/file/convert.md
+app/deck/file/kong2tf.md:
+  - app/deck/file/kong2tf.md
+app/deck/apiops/federated-configuration.md:
+  - app/deck/apiops/federated-configuration.md
+app/deck/apiops/index.md:
+  - app/deck/apiops/index.md
+app/deck/apiops/continuous-integration.md:
+  - app/deck/apiops/continuous-integration.md
+app/deck/support.md:
+  - app/deck/support.md
+app/deck/configuration.md:
+  - app/deck/configuration.md
+app/deck/reference/entities.md:
+  - app/deck/reference/entities.md
+app/deck/reference/3.0-upgrade.md:
+  - app/deck/reference/3.0-upgrade.md
+app/deck/reference/env-variables.md:
+  - app/deck/reference/env-variables.md
+app/deck/security.md:
+  - app/deck/security.md
+app/deck/gateway/defaults.md:
+  - app/deck/gateway/defaults.md
+app/deck/gateway/diff.md:
+  - app/deck/gateway/diff.md
+app/deck/gateway/validate.md:
+  - app/deck/gateway/validate.md
+app/deck/gateway/dump.md:
+  - app/deck/gateway/dump.md
+app/deck/gateway/workspaces.md:
+  - app/deck/gateway/workspaces.md
+app/deck/gateway/ping.md:
+  - app/deck/gateway/ping.md
+app/deck/gateway/apply.md:
+  - app/deck/gateway/apply.md
+app/deck/gateway/konnect-configuration.md:
+  - app/deck/gateway/konnect-configuration.md
+app/deck/gateway/index.md:
+  - app/deck/gateway/index.md
+app/deck/gateway/configuration.md:
+  - app/deck/gateway/configuration.md
+app/deck/gateway/tags.md:
+  - app/deck/gateway/tags.md
+app/deck/gateway/sync.md:
+  - app/deck/gateway/sync.md
+app/deck/gateway/rbac.md:
+  - app/deck/gateway/rbac.md
+app/deck/gateway/sensitive-data.md:
+  - app/deck/gateway/sensitive-data.md
+app/deck/gateway/deduplicate.md:
+  - app/deck/gateway/deduplicate.md
+app/deck/gateway/reset.md:
+  - app/deck/gateway/reset.md

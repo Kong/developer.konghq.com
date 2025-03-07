@@ -56,6 +56,7 @@ module Jekyll
               plugin.merge!(target.key => target_value) if target.key != 'global'
               config_field = @example_drop.data.fetch('config', {})
               plugin.merge!('config' => config_field) unless config_field.empty?
+              plugin.merge!('ordering' => ordering) unless ordering.nil?
 
               plugin = Utils::VariableReplacer::DeckData.run(
                 data: plugin,
@@ -77,6 +78,12 @@ module Jekyll
               return [] if @example_drop.target.key == 'global'
 
               @missing_variables ||= [formats['deck']['variables'][target.key]]
+            end
+
+            def ordering
+              return nil unless @example_drop.ordering
+
+              @example_drop.ordering
             end
 
             def target_value

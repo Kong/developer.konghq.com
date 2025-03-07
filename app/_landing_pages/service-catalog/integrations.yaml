@@ -1,6 +1,8 @@
 metadata:
   title: "Service Catalog Integrations"
   content_type: landing_page
+  products:
+    - service-catalog
   description: Integrate third-party applications into your {{site.konnect_short_name}} organization.
   tags:
     - service-catalog
@@ -18,7 +20,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    **Integrations** are applications—either {{site.konnect_short_name}}-internal or external—that extend the functionality of the {{site.service_catalog_name}}.
+                    **Integrations** are applications—either {{site.konnect_short_name}}-internal or external—that extend the functionality of the Service Catalog.
 
                     When enabled, an integration allows you to:
                     - **Discover new resources** from connected systems
@@ -56,8 +58,19 @@ rows:
               cta:
                 text: Learn more
                 url: /service-catalog/integrations/traceable/
+     
+      
 
   - columns:
+      - blocks:
+          - type: card
+            config:
+              title: GitLab
+              description: Associate a Service Catalog Service to one or more GitLab projects
+              icon: /assets/icons/third-party/gitlab.svg
+              cta:
+                text: Learn more
+                url: /service-catalog/integrations/gitlab
       - blocks:
           - type: card
             config:

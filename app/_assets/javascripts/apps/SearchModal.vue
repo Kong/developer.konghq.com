@@ -167,7 +167,7 @@ export default {
     const tabsElement = ref(null);
 
     const hitsPerPage = 20;
-    const indexName = 'kongdeveloper';
+    const indexName = import.meta.env.VITE_ALGOLIA_INDEX_NAME;
 
     const state = ref({
       collections: [],
@@ -197,15 +197,15 @@ export default {
     });
 
     const searchClient = algoliasearch(
-      'Z2JDSBZWKU',
-      '7eaf59d4529f8b3bb44e5a8556aac227',
+      import.meta.env.VITE_ALGOLIA_APPLICATION_ID,
+      import.meta.env.VITE_ALGOLIA_API_KEY
     );
 
     const initialTags = [];
     const searchFilters = window.searchFilters;
     const productMeta = document.querySelector('meta[name="algolia:products"]');
     if (productMeta !== null) {
-      const product = productMeta.getAttribute('content').trim();
+      const product = productMeta.getAttribute('content').trim().split(',')[0];
       const productFilter = searchFilters.products.find((f) => f.value === product);
       if (productFilter) {
         initialTags.push({ label: productFilter.label, value: productFilter.value, facet: 'products' });

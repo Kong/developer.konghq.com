@@ -1,10 +1,13 @@
 metadata:
   title: "The Konnect Service Catalog"
   content_type: landing_page
+  products:
+    - service-catalog
   description: Learn how to track and manage services across your organization with the Konnect Service Catalog.
   tags:
     - service-catalog
     - governance
+  breadcrumb: /service-catalog/
 
 rows:
   - header:
