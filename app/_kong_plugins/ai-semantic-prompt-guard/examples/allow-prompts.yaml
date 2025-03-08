@@ -1,0 +1,43 @@
+description: Only allows messages about a specific topic. For example, only allow messages about cats.
+
+title: 'Only allow messages related to a topic'
+
+weight: 900
+
+requirements: 
+  - "A [Redis](https://redis.io/docs/latest/) instance"
+
+variables:
+  header_value:
+    value: $OPENAI_API_KEY
+    description: Your OpenAI API key
+
+config: 
+  embeddings:
+    auth:
+      header_name: Authorization
+      header_value: ${header_value}
+    model:
+      name: text-embedding-3-small
+      provider: openai
+  search:
+    threshold: 0.7
+  vectordb:
+    strategy: redis
+    distance_metric: cosine
+    threshold: 0.5
+    dimensions: 1024
+    redis:
+      host: localhost
+      port: 6379
+  rules:
+    match_all_conversation_history: true
+    allow_prompts:
+      - "Questions about cats"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
