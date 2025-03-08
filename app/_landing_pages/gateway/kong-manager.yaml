@@ -1,0 +1,147 @@
+metadata:
+  title: Kong Manager
+  product: gateway
+  content_type: landing_page
+  description: Kong Manager is the graphical user interface (GUI) for {{site.base_gateway}}.
+rows:
+  - header:
+      type: h1
+      text: "Kong Manager"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "What is Kong Manager?"
+              blocks:
+                - type: text
+                  text: | 
+                    Kong Manager is the graphical user interface (GUI) for {{site.base_gateway}}.
+                    It uses the [Admin API](/api/gateway/admin-ee/) under the hood to administer and control {{site.base_gateway}}. 
+                    If you're running {{site.base_gateway}} on-prem with a database (either in traditional or hybrid mode), you can enable Kong Manager.
+
+                    You can do the following with Kong Manager:
+                - type: unordered_list
+                  items:
+                    - Manage all Workspaces in one place
+                    - Create and manage Routes and Gateway Services
+                    - Activate or deactivate plugins
+                    - Manage Certificates
+                    - Manage users and roles for {{site.base_gateway}}
+                    - Centrally store and easily access Key Sets and Keys
+                    - Manage Vaults
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/gateway/kong-manager-ui.png
+              alt_text: Image of the Kong Manager UI
+  
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Access Kong Manager"
+            blocks:
+              - type: text
+                text: |
+                  If you're running {{site.base_gateway}} on-prem with a database (either in traditional
+                  or hybrid mode), you can [enable Kong Manager](/gateway/enable-kong-manager/). If you run the [{{site.base_gateway}} quickstart script](https://get.konghq.com/quickstart), Kong Manager is automatically enabled.
+
+                  If you want to enable Kong Manager for multiple domains in {{site.base_gateway}} 3.9.x or later, see [Multiple domains](/gateway/enable-kong-manager/#multiple-domains).
+                  
+                  To access Kong Manager, go to the following URL: [http://localhost:8002](http://localhost:8002)
+  
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Kong Manager authentication"
+            blocks:
+              - type: text
+                text: |
+                  {{site.base_gateway}} comes packaged with authentication plugins that can be used to secure Kong Manager.
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Enable OIDC for Kong Manager
+            description: |
+              Kong Gateway offers the ability to bind authentication for Kong Manager admins to an organization’s OpenID Connect Identity Provider using the OpenID Connect Plugin.
+              
+            icon: /assets/icons/plugins/openid-connect.png
+            cta:
+              url: "/how-to/enable-oidc-for-kong-manager/"
+      - blocks:
+        - type: card
+          config:
+            title: Enable Basic Auth for Kong Manager
+            description: |
+              Configure Basic Auth authentication with Kong Manager.
+              
+            icon: /assets/icons/plugins/basic-auth.png
+            cta:
+              url: "/how-to/enable-basic-auth-on-kong-manager/"
+      - blocks:
+        - type: card
+          config:
+            title: Configure LDAP with Kong Manager
+            description: |
+              placeholder
+              
+            icon: /assets/icons/plugins/ldap-auth.png
+            cta:
+              url: "/how-to/configure-ldap-with-kong-manager/"
+  
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Access control with roles and Workspaces"
+            blocks:
+              - type: text
+                text: |
+                  In Kong Manager, limiting permissions also restricts the visibility of the application interface and navigation. 
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Workspaces
+            description: |
+              Workspaces enable an organization to segment objects and admins into namespaces. 
+              The segmentation allows teams of admins sharing the same {{site.base_gateway}} cluster to adopt roles for interacting with specific objects. 
+              
+            cta:
+              url: "/how-to/enable-oidc-for-kong-manager/"
+      - blocks:
+        - type: card
+          config:
+            title: Super Admins
+            description: |
+              Super Admins have full access to all endpoints, across all Workspaces, and the ability to assign and modify RBAC permissions.
+              
+            cta:
+              url: "/how-to/create-a-super-admin/"
+      - blocks:
+        - type: card
+          config:
+            title: Admins
+            description: |
+              Admins have full access to all endpoints, across all Workspaces, except the RBAC Admin API.
+              
+            cta:
+              url: "/gateway/entities/admin/"
+      - blocks:
+        - type: card
+          config:
+            title: RBAC users
+            description: |
+              RBAC users don't have administrator permissions.
+              They have access to manage {{site.base_gateway}}, but can't adjust teams, groups, or
+              user permissions.
+              
+            cta:
+              url: "/gateway/entities/rbac/"
