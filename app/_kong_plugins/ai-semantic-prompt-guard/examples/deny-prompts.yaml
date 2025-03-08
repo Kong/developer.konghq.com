@@ -1,4 +1,4 @@
-description: Only denies messages about a specific topic. For example, only allow messages about cats.
+description: Only denies messages about a specific topic. For example, only deny messages about dogs.
 
 title: 'Only deny messages related to a topic'
 
