@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jekyll
-  class RenderReferenceListt < Liquid::Tag
+  class RenderReferenceListt < Liquid::Tag # rubocop:disable Style/Documentation
     def initialize(tag_name, param, _tokens)
       super
 
@@ -11,7 +11,7 @@ module Jekyll
       raise ArgumentError, 'Missing param for {% reference_list %}'
     end
 
-    def render(context)
+    def render(context) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity,Metrics/MethodLength
       @context = context
       @site = context.registers[:site]
       keys = @param.split('.')
@@ -36,6 +36,7 @@ module Jekyll
 
       context.stack do
         context['references'] = references
+        context['view_more_url'] = view_more_url(config)
         context['config'] = config
         Liquid::Template.parse(template).render(context)
       end
@@ -45,6 +46,12 @@ module Jekyll
 
     def template
       @template ||= File.read(File.expand_path('app/_includes/components/reference_list.html'))
+    end
+
+    def view_more_url(config)
+      query_string = URI.encode_www_form(config.slice('products', 'tags', 'tools').merge(content_type: 'reference'))
+      url_segment = '/search'
+      query_string.empty? ? url_segment : "#{url_segment}?#{query_string}"
     end
   end
 end

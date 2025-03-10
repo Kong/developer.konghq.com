@@ -73,11 +73,7 @@ rows:
                 product: insomnia 
             quantity: 5
             allow_empty: true
-          - type: cta
-            config:
-              text: "Learn more &raquo;"
-              url: "https://docs.devsite.com/search/{concept.topic}+{other stuff}" ## Takes you to search with terms that match this.
-              align: end
+
   - header:
       type: h2
       text: References & Tools
@@ -89,4 +85,3 @@ rows:
                   - insomnia
               quantity: 5
               allow_empty: true
-              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
