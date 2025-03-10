@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require 'uri'
+
 module Jekyll
-  class RenderHowToList < Liquid::Tag
+  class RenderHowToList < Liquid::Tag # rubocop:disable Style/Documentation
     def initialize(tag_name, param, _tokens)
       super
 
@@ -11,7 +13,7 @@ module Jekyll
       raise ArgumentError, 'Missing param for {% how_to_list %}'
     end
 
-    def render(context)
+    def render(context) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
       @context = context
       @site = context.registers[:site]
       keys = @param.split('.')
@@ -34,6 +36,7 @@ module Jekyll
 
       context.stack do
         context['how_tos'] = how_tos
+        context['view_more_url'] = view_more_url(config)
         context['config'] = config
         Liquid::Template.parse(template).render(context)
       end
@@ -43,6 +46,12 @@ module Jekyll
 
     def template
       @template ||= File.read(File.expand_path('app/_includes/components/how_to_list.html'))
+    end
+
+    def view_more_url(config)
+      query_string = URI.encode_www_form(config.slice('products', 'tags', 'tools'))
+      url_segment = '/how-to'
+      query_string.empty? ? url_segment : "#{url_segment}?#{query_string}"
     end
   end
 end

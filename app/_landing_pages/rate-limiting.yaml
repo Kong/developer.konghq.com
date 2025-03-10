@@ -99,7 +99,6 @@ rows:
               tags:
                 - rate-limiting
               quantity: 5
-              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
 
   - header:
       text: "Related Resources"

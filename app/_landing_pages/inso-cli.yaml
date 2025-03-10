@@ -132,5 +132,4 @@ rows:
               tools:
                 - inso-cli
               quantity: 5
-              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}"
               allow_empty: true

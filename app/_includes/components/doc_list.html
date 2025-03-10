@@ -6,10 +6,8 @@
       <a class="py-4 px-5 w-full text-primary flex justify-between hover:no-underline" href="{{ doc.url }}">{{ doc.title | liquify }}<span class="text-terciary inline">View &rarr;</span></a>
     </li>
   {% endfor %}
-  {% if include.view_more %}
   <li class="flex hover:bg-hover-component/100 hover:last:rounded-b-md">
     <a class="py-4 px-5 w-full hover:no-underline" href="{{ include.view_more }}">View More &rarr;</a>
   </li>
-  {% endif %}
 </ul>
 {% endif %}
