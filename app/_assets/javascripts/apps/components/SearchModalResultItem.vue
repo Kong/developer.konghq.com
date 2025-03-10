@@ -31,8 +31,12 @@ export default {
       if (this.item.content_type === 'plugin_example') {
         return this.item.title;
       }
+      if (this.item.content_type === 'plugin') {
+        return `${this.item.hierarchy.lvl1} Plugin`;
+      }
       const levels = Object.entries(this.item.hierarchy)
         .filter(([key, value]) => key !== 'lvl0' && value !== null);
+
       if (levels.length > 0) {
         return levels[levels.length - 1][1];
       }

@@ -94,7 +94,8 @@
                         <div class="card card__bordered min-h-[260px]">
                             <a :href="getPath(item.url)" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
                                 <div class="flex flex-col gap-3 flex-grow">
-                                    <h4>{{ item.title }}</h4>
+                                    <h4 v-if="item.content_type === 'plugin'"> {{ item.title }} Plugin</h4>
+                                    <h4 v-else>{{ item.title }}</h4>
                                     <p class="text-sm line-clamp-3">
                                         {{ item.description }}
                                     </p>
