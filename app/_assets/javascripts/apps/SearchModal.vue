@@ -152,7 +152,6 @@ export default {
   data() {
     return {
       activeTab: 'all',
-      showModal: false,
       permanentScrollbars: hasPermanentScrollbars()
     }
   },
@@ -165,6 +164,7 @@ export default {
   setup(props) {
     const inputElement = ref(null);
     const tabsElement = ref(null);
+    const showModal = ref(false);
 
     const hitsPerPage = 20;
     const indexName = import.meta.env.VITE_ALGOLIA_INDEX_NAME;
@@ -229,7 +229,7 @@ export default {
             state.value = params.state;
           }
         },
-        getSources({ query, state, setContext }) {
+        getSources({ query, state }) {
           const applyProductFilter = (existingQuery) => {
             let query = existingQuery;
             if (state.context.tagsPlugin.tags) {
@@ -262,10 +262,10 @@ export default {
                   ]
                 })
               },
-
-              onSelect({ item, setQuery }) {
+              onSelect({ setQuery }) {
                 setQuery('');
                 inputElement.value = '';
+                showModal.value = false;
               },
             },
             {
@@ -285,9 +285,10 @@ export default {
                   ]
                 })
               },
-              onSelect({ item, setQuery }) {
+              onSelect({ setQuery }) {
                 setQuery('');
                 inputElement.value = '';
+                showModal.value = false;
               },
             },
             {
@@ -306,7 +307,12 @@ export default {
                     },
                   ]
                 })
-              }
+              },
+              onSelect({ setQuery }) {
+                setQuery('');
+                inputElement.value = '';
+                showModal.value = false;
+              },
             },
             {
               sourceId: 'plugins',
@@ -324,7 +330,12 @@ export default {
                     },
                   ]
                 })
-              }
+              },
+              onSelect({ setQuery }) {
+                setQuery('');
+                inputElement.value = '';
+                showModal.value = false;
+              },
             }
           ];
         },
@@ -338,7 +349,8 @@ export default {
       formProps,
       inputProps,
       autocomplete,
-      tagsPlugin
+      tagsPlugin,
+      showModal
     };
   },
   methods: {
