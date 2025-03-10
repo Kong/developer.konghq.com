@@ -87,24 +87,31 @@
             </ais-panel>
         </div>
 
-        <ais-hits>
-            <template v-slot:item="{ item }">
-                <div class="card card__bordered min-h-[260px]">
-                    <a :href="getPath(item.url)" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
-                        <div class="flex flex-col gap-3 flex-grow">
-                            <h4>{{ item.title }}</h4>
-                            <p class="text-sm line-clamp-3">
-                                {{ item.description }}
-                            </p>
-                        </div>
+        <ais-state-results>
+            <template v-slot="{ results: { hits } }">
+                <ais-hits v-show="hits.length > 0">
+                    <template v-slot:item="{ item }">
+                        <div class="card card__bordered min-h-[260px]">
+                            <a :href="getPath(item.url)" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
+                                <div class="flex flex-col gap-3 flex-grow">
+                                    <h4>{{ item.title }}</h4>
+                                    <p class="text-sm line-clamp-3">
+                                        {{ item.description }}
+                                    </p>
+                                </div>
 
-                        <div class="flex flex-wrap gap-2" v-if="item.tier && item.tier.length > 0">
-                            <span class="badge">{{ item.tier }}</span>
+                                <div class="flex flex-wrap gap-2" v-if="item.tier && item.tier.length > 0">
+                                    <span class="badge">{{ item.tier }}</span>
+                                </div>
+                            </a>
                         </div>
-                    </a>
+                    </template>
+                </ais-hits>
+                <div v-show="hits.length === 0">
+                    No results found.
                 </div>
             </template>
-        </ais-hits>
+        </ais-state-results>
         <ais-pagination />
     </div>
   </ais-instant-search>
@@ -113,7 +120,7 @@
 <script>
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
 import { routingConfig } from './search/routing.js';
-import { AisInstantSearch, AisConfigure, AisCurrentRefinements, AisSearchBox, AisRefinementList, AisHits, AisPagination, AisPanel } from 'vue-instantsearch/vue3/es';
+import { AisInstantSearch, AisConfigure, AisCurrentRefinements, AisSearchBox, AisRefinementList, AisHits, AisPagination, AisPanel, AisStateResults } from 'vue-instantsearch/vue3/es';
 import AisStaticFilter from './components/AisStaticFilter.vue';
 import AisStaticTagsFilter from './components/AisStaticTagsFilter.vue';
 
@@ -132,6 +139,7 @@ export default {
     AisHits,
     AisPagination,
     AisPanel,
+    AisStateResults,
     AisStaticFilter,
     AisStaticTagsFilter
   },

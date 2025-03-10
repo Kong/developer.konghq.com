@@ -11,7 +11,7 @@
                 <template v-for="(item, index) in items" :key="item.value">
                 <li class="ais-RefinementList-item flex" :class="{ hidden: index >= 5 && !showMore }">
                     <a class="badge" :href="createURL(item.value)" :class="{ 'font-bold': item.isRefined }" @click.prevent="refine(item.value)" >
-                        #{{ item.value }}
+                        #{{ item.label }}
                     </a>
                 </li>
                 </template>
@@ -52,16 +52,27 @@ export default {
             }
             return a.label > b.label ? 1 : -1;
         },
-        getStaticValues(items) {
+        getStaticValues(items, { results }) {
             return this.tags.map(staticTag => {
-                const item = items.find(item => item.label === staticTag);
+                const item = items.find(item => item.value === staticTag.value);
+                let selected = false;
 
+                if (item) {
+                    item.highlighted = staticTag.label;
+                    staticTag.isRefined = item.isRefined;
+                }
+
+                const facet = results._state.disjunctiveFacetsRefinements.tags;
+
+                if (facet) {
+                    selected = facet.includes(staticTag.value)
+                }
                 return item || {
-                    label: staticTag,
-                    value: staticTag,
+                    label: staticTag.label,
+                    value: staticTag.value,
                     count: 0,
-                    isRefined: false,
-                    highlighted: staticTag,
+                    isRefined: selected || staticTag.isRefined,
+                    highlighted: staticTag.value,
                 };
             }).sort(this.sortTags)
         }

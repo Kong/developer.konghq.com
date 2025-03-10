@@ -418,3 +418,7 @@
 .ais-Panel--noRefinement {
   @apply hidden;
 }
+
+.ais-StateResults {
+  @apply flex flex-col col-span-3 w-full gap-16;
+}

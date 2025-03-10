@@ -27,6 +27,7 @@
                       </div>
                   </template>
               </ais-panel>
+
               <ais-panel>
                   <template v-slot:default="{ hasRefinements }">
                       <div class="flex flex-col gap-3" v-if="hasRefinements">
@@ -146,10 +147,6 @@ export default {
 </script>
 
 <style scoped>
-.ais-StateResults {
-    @apply flex flex-col col-span-3 w-full gap-16;
-}
-
 .ais-Hits {
     @apply flex flex-col bg-secondary shadow-primary rounded-md text-sm ml-0 gap-0;
 }

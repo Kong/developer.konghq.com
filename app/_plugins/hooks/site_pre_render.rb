@@ -14,5 +14,5 @@ Jekyll::Hooks.register :site, :pre_render do |site|
     site.data['tags'].merge(doc.data['tags']) if doc.data['tags']
   end
 
-  site.data['searchFilters'][:tags] = site.data['tags'].to_a.sort
+  site.data['searchFilters'][:tags] = site.data['tags'].to_a.sort.map { |t| { label: t, value: t } }
 end
