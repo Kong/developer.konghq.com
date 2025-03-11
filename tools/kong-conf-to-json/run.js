@@ -1,21 +1,26 @@
 import fs from "fs";
 import minimist from "minimist";
 
-function parseConfigFile(filePath) {
+function parseConfigFile(filePath, sections) {
   const config = {};
   const lines = fs.readFileSync(filePath, "utf-8").split("\n");
 
   let currentParam = null;
   let inDescription = false;
 
-  lines.forEach((line) => {
+  lines.forEach((line, index) => {
     // Check if the line starts a new parameter definition
     const paramMatch = line.match(/^\#(\w+)\s\=/);
     if (paramMatch) {
       currentParam = paramMatch[1]; // Remove the leading "#"
+      const sectionIndex = sections.findIndex((section) => {
+        return section.start <= index && index <= section.end;
+      });
+
       config[currentParam] = {
         defaultValue: null,
         description: "",
+        sectionIndex,
       };
       inDescription = false;
     }
@@ -64,6 +69,39 @@ function parseConfigFile(filePath) {
   return config;
 }
 
+function parseSections(filePath) {
+  const content = fs.readFileSync(filePath, "utf8");
+  const lines = content.split("\n");
+
+  const regex = /#-{78,79}\n# (.*?)\n#\s?-{78,79}\n\n?((#\s.*\n|#\n)*)\n*?#\w/g;
+
+  const sections = [];
+  let match;
+  while ((match = regex.exec(content)) !== null) {
+    const title = match[1].trim();
+    const matchStart = content.lastIndexOf(
+      match[0],
+      regex.lastIndex - match[0].length
+    );
+    const start = content.slice(0, matchStart).split("\n").length;
+    if (sections.length > 0) {
+      sections[sections.length - 1].end = start - 1;
+    }
+    const descriptionString = match[2];
+    let description = "";
+    if (descriptionString) {
+      description = descriptionString
+        .split("\n")
+        .map((line) => line.slice(1).trim())
+        .join("\n");
+    }
+    sections.push({ title, start, end: null, description });
+  }
+  sections[sections.length - 1].end = lines.length;
+
+  return sections;
+}
+
 (function main() {
   const args = minimist(process.argv.slice(2));
 
@@ -84,7 +122,8 @@ function parseConfigFile(filePath) {
 
     const configFilePath = args.file;
     const version = args.version;
-    const jsonConfig = parseConfigFile(configFilePath);
+    const sections = parseSections(configFilePath);
+    const jsonConfig = parseConfigFile(configFilePath, sections);
     const destinationPath = `../../app/_data/kong-conf/${version}.json`;
 
     fs.writeFileSync(
