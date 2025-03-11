@@ -8,7 +8,7 @@
     <tbody>
         {% for field in config.fields %}
         <tr>
-            <td>
+            <td class="flex flex-col items-baseline">
                 <span class="block text-primary">
                     <code>{{ field.name | markdown }}</code>
                 </span>
@@ -18,7 +18,7 @@
                     {% assign default_value = field.default_value | join: ', ' %}
                 {% endif %}
                 <span class="block mt-2">
-                    <span class="text-secondary text-xs">Default: <code>{{ default_value| markdown }}</code></span>
+                    <span class="text-secondary text-xs">Default: <code class="text-xs">{{ default_value| markdown }}</code></span>
                 </span>
             {% endif %}
             </td>
