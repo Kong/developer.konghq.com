@@ -397,6 +397,18 @@
   .card__bordered {
     @apply border border-primary/5 hover:border hover:border-brand-saturated/40 hover:shadow-hover-card;
   }
+
+  .kong-conf-param h3 > a {
+    @apply text-brand-saturated;
+  }
+
+  .kong-conf-param code {
+    @apply text-sm;
+  }
+
+  #toc .tab-button__vertical {
+    @apply [overflow-wrap:anywhere];
+  }
 }
 
 .ais-Pagination {

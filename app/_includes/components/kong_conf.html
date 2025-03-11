@@ -1,0 +1,41 @@
+{% for section in config.sections %}
+<h2 id="{{ section.title | slugify }}">{{section.title}}</h2>
+
+{% if section.description != empty %}
+<div class="flex flex-col text-secondary content">
+{{section.description | markdownify}}
+</div>
+{% endif %}
+
+<div class="flex flex-col gap-6">
+    {% for param in section.parameters %}
+    <div class="flex flex-col bg-primary border border-primary/5 rounded-md kong-conf-param">
+        <div class="flex px-4 border-b border-primary/5">
+            <h3 id="{{param.name}}" class="py-3 text-brand-saturated text-sm font-bold">{{param.name}}</h3>
+        </div>
+        <div class="flex flex-col gap-4 p-4">
+            <div class="text-secondary text-sm content">
+                {{param.description | markdownify}}
+            </div>
+
+            {% if param.defaultValue %}
+                <div class="flex gap-2">
+                    <span class="text-secondary text-sm">Default: <code class="text-sm px-1"> {{param.defaultValue | escape}}</code></span>
+                </div>
+            {% endif %}
+
+            {% if param.min_version %}
+            <div class="flex gap-2">
+                <span class="text-secondary text-sm">Minimum Version: {{site.base_gateway}} - {{param.min_version.gateway}}</span>
+            </div>
+            {% endif %}
+            {% if param.max_version %}
+            <div class="flex gap-2">
+                <span class="text-secondary text-sm">Maximum Version: {{site.base_gateway}} - {{param.max_version.gateway}}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}

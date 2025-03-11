@@ -15,6 +15,14 @@ related_resources:
 works_on:
    - on-prem
    - konnect
+
+no_version: true
 ---
 
-@todo - generate this reference
+Reference for Kong Gateway configuration parameters. Set these parameters in `kong.conf`.
+
+To learn more about the `kong.conf` file, see the guide on [Managing {{site.base_gateway}} configuration](/gateway/manage-kong-conf/).
+
+You can also manage all Kong Gateway configuration parameters using [environment variables](/gateway/manage-kong-conf/#environment-variables).
+
+{% kong_conf %}
