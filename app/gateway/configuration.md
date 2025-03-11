@@ -19,10 +19,10 @@ works_on:
 no_version: true
 ---
 
-Reference for Kong Gateway configuration parameters. Set these parameters in `kong.conf`.
+Reference for {{site.base_gateway}} configuration parameters. Set these parameters in `kong.conf`.
 
 To learn more about the `kong.conf` file, see the guide on [Managing {{site.base_gateway}} configuration](/gateway/manage-kong-conf/).
 
-You can also manage all Kong Gateway configuration parameters using [environment variables](/gateway/manage-kong-conf/#environment-variables).
+You can also manage all {{site.base_gateway}} configuration parameters using [environment variables](/gateway/manage-kong-conf/#environment-variables).
 
 {% kong_conf %}
