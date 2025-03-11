@@ -406,6 +406,10 @@
     @apply text-sm;
   }
 
+  #toc {
+    @apply max-h-screen overflow-y-auto;
+  }
+
   #toc .tab-button__vertical {
     @apply [overflow-wrap:anywhere];
   }
