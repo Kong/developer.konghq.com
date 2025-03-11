@@ -7,8 +7,8 @@ related_resources:
     url: /gateway/authentication/
   - text: Kong Manager
     url: /gateway/kong-manager/
-  - text: Enable Kong Manager
-    url: /gateway/enable-kong-manager/
+  - text: Kong Manager Configuration
+    url: /gateway/kong-manager-configuration/
 
 products:
     - gateway
@@ -22,6 +22,7 @@ works_on:
 
 tags:
     - authentication
+    - kong-manager
 
 tldr:
     q: How do I automate tests in Insomnia?

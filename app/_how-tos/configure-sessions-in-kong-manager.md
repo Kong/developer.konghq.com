@@ -1,6 +1,7 @@
 ---
 title: Configuring Kong Manager to Send Email
 content_type: how_to
+description: placeholder
 
 related_resources:
   - text: Authentication
@@ -14,10 +15,11 @@ products:
   - gateway
 
 works_on:
-    - konnect
+    - on-prem
 
 tags:
   - authentication
+  - kong-manager
 min_version:
   gateway: '3.4'
 tldr: 
@@ -35,4 +37,4 @@ prereqs:
 
 @TODO
 
-https://docs.konghq.com/gateway/latest/kong-manager/configuring-to-send-email/
+https://docs.konghq.com/gateway/latest/kong-manager/auth/sessions

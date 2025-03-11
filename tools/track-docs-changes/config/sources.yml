@@ -413,7 +413,7 @@ app/gateway/performance/performance-benchmarks.md:
   - app/_src/gateway/production/performance/performance-testing.md
 app/ai-gateway/ai-audit-log-reference.md:
   - app/_src/gateway/production/logging/ai-analytics.md
-app/gateway/enable-kong-manager.md:
+app/gateway/kong-manager-configuration.md:
   - app/_src/gateway/kong-manager/enable.md 
   - app/_src/gateway/kong-manager/troubleshoot.md
 app/ai-gateway/monitor-ai-llm-metrics.md:

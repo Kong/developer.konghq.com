@@ -6,8 +6,8 @@ related_resources:
     url: /gateway/authentication/
   - text: Kong Manager
     url: /gateway/kong-manager/
-  - text: Enable Kong Manager
-    url: /gateway/enable-kong-manager/
+  - text: Kong Manager Configuration
+    url: /gateway/kong-manager-configuration/
 
 
 products:

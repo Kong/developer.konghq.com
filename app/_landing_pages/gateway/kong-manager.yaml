@@ -3,6 +3,9 @@ metadata:
   product: gateway
   content_type: landing_page
   description: Kong Manager is the graphical user interface (GUI) for {{site.base_gateway}}.
+  breadcrumbs:
+    - /gateway/
+
 rows:
   - header:
       type: h1
@@ -28,7 +31,7 @@ rows:
                     - Create and manage Routes and Gateway Services
                     - Activate or deactivate plugins
                     - Manage Certificates
-                    - Manage RBAC for {{site.base_gateway}}:  users, admins, roles, permissions, and teams
+                    - "Manage RBAC for {{site.base_gateway}}: users, admins, roles, permissions, and teams"
                     - Centrally store and easily access Key Sets and Keys
                     - Manage Vaults
                     - Customize the header and footer for your own organization
@@ -43,16 +46,16 @@ rows:
         - type: structured_text
           config:
             header:
-              text: "Access Kong Manager"
+              text: "Configure Kong Manager"
             blocks:
               - type: text
                 text: |
                   If you're running {{site.base_gateway}} on-prem with a database (either in traditional
-                  or hybrid mode), you can [enable Kong Manager](/gateway/enable-kong-manager/). If you run the [{{site.base_gateway}} quickstart script](https://get.konghq.com/quickstart), Kong Manager is automatically enabled.
+                  or hybrid mode), you can [enable Kong Manager](/gateway/kong-manager-configuration/#enable-kong-manager/). If you run the [{{site.base_gateway}} quickstart script](https://get.konghq.com/quickstart), Kong Manager is automatically enabled.
 
-                  If you want to enable Kong Manager for multiple domains in {{site.base_gateway}} 3.9.x or later, see [multiple domains](/gateway/enable-kong-manager/#multiple-domains).
-                  
-                  To access Kong Manager, go to the following URL: [http://localhost:8002](http://localhost:8002)
+                  Access Kong Manager at its default URL: [http://localhost:8002](http://localhost:8002)
+
+                  You can configure Kong Manager settings (like URL and path) and [customization (like header and footer colors)](/gateway/kong-manager-configuration/#customize-kong-manager) using [parameters in `kong.conf`](/gateway/configuration/#kong-manager-section). If you want to enable Kong Manager for multiple domains in {{site.base_gateway}} 3.9.x or later, see [multiple domains](/gateway/kong-manager-configuration/#multiple-domains).
   
   - columns:
       - blocks:
@@ -90,11 +93,21 @@ rows:
           config:
             title: Configure LDAP with Kong Manager
             description: |
-              placeholder
+              {{site.base_gateway}} offers the ability to bind authentication for Kong Manager Admins to your Active Directory.
               
             icon: /assets/icons/plugins/ldap-auth.png
             cta:
               url: "/how-to/configure-ldap-with-kong-manager/"
+      - blocks:
+        - type: card
+          config:
+            title: Configure sessions in Kong Manager
+            description: |
+              When a user logs in to Kong Manager with their credentials and sessions are enabled, a session cookie is created. The cookie is used for all subsequent requests and is valid to authenticate the user. 
+              
+            icon: /assets/icons/plugins/session.png
+            cta:
+              url: "/how-to/configure-sessions-in-kong-manager/"
   
   - columns:
       - blocks:
@@ -146,3 +159,31 @@ rows:
               
             cta:
               url: "/gateway/entities/rbac/"
+  
+  - header:
+      text: How-to Guides
+      type: h2
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tags:
+                - kong-manager
+              products:
+                - gateway
+              quantity: 5
+              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
+  - header:
+      type: h2
+      text: References & Tools
+    columns:
+      - blocks:
+          - type: reference_list
+            config:
+              tags:
+                - kong-manager
+              products:
+                - gateway 
+              quantity: 5
+              allow_empty: true
+              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
