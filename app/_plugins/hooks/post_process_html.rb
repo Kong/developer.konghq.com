@@ -20,7 +20,8 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
       anchor['href'] = "##{heading['id']}"
       anchor['aria-label'] = 'Anchor'
       anchor['title'] = heading.text
-      anchor['class'] = 'flex items-center gap-2 link-anchor group w-full hover:no-underline text-primary'
+      anchor['class'] =
+        'flex items-center gap-2 link-anchor group w-full hover:no-underline text-primary'
 
       heading.children.each do |child|
         anchor.add_child(child)
