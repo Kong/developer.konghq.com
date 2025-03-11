@@ -24,7 +24,7 @@ module Jekyll
         end
 
         def data # rubocop:disable Metrics/MethodLength
-          @plugin.metadata.merge(
+          @plugin.metadata.except('search_aliases').merge(
             'slug' => @plugin.slug,
             'plugin?' => true,
             'layout' => layout,

@@ -3,7 +3,7 @@
 module Jekyll
   module PluginPages
     module Pages
-      class Overview < Base
+      class Overview < Base # rubocop:disable Style/Documentation
         def self.url(slug)
           "/plugins/#{slug}/"
         end
@@ -17,7 +17,7 @@ module Jekyll
         end
 
         def data
-          super.merge('overview?' => true)
+          super.merge('overview?' => true, 'search_aliases' => @plugin.metadata['search_aliases'])
         end
 
         private
