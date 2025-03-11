@@ -44,11 +44,13 @@ module Jekyll
       end
 
       def params
-        @params ||= @config.fetch('config', []).map { |c| KongConfigField.new(c, kong_conf[c['name']]) }
+        @params ||= @config.fetch('config', []).map { |c| KongConfigField.new(c, kong_conf['params'][c['name']]) }
       end
 
       def directives
-        @directives ||= @config.fetch('directives', []).map { |c| KongConfigField.new(c, kong_conf[c['name']]) }
+        @directives ||= @config.fetch('directives', []).map do |c|
+          KongConfigField.new(c, kong_conf['params'][c['name']])
+        end
       end
 
       def kong_conf
