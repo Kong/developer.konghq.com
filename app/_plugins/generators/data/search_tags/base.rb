@@ -89,7 +89,7 @@ module Jekyll
         def search_aliases
           return unless @page.data['search_aliases']
 
-          @page.data.fetch('search_aliases', []).join(', ')
+          @page.data.fetch('search_aliases', []).join(',')
         end
       end
     end
