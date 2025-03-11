@@ -1,0 +1,77 @@
+import fs from "fs";
+import fg from "fast-glob";
+
+function generateIndexFile() {
+  let reference = {};
+  let previousVersion;
+  const files = fg.sync("../../app/_data/kong-conf/*", {
+    ignore: ["../../app/_data/kong-conf/index.json"],
+  });
+
+  files.forEach((file, index) => {
+    const newConf = fs.readFileSync(file, "utf-8");
+    const newConfJson = JSON.parse(newConf);
+    const match = file.match(/(\d+\.\d+)\.json/);
+
+    if (!match) {
+      console.error(
+        `Could not extract the version from the file path: ${file}`
+      );
+      process.exit(1);
+    }
+    const version = match[1];
+
+    if (index === 0) {
+      reference = newConfJson;
+      previousVersion = version;
+    } else {
+      const currentParams = new Set(Object.keys(reference.params));
+      const newParams = new Set(Object.keys(newConfJson.params));
+
+      const onlyInCurrentParams = [...currentParams].filter(
+        (key) => !newParams.has(key)
+      );
+      const onlyInNewParams = [...newParams].filter(
+        (key) => !currentParams.has(key)
+      );
+      const intersection = [...currentParams].filter((key) =>
+        newParams.has(key)
+      );
+
+      // everything that is in next that IS NOT in prev => min: next
+      onlyInNewParams.forEach((param) => {
+        reference.params[param] = {
+          ...newConfJson.params[param],
+          min_version: { gateway: version },
+        };
+      });
+
+      // everything that is in prev that IS NOT in next => max: prev
+      onlyInCurrentParams.forEach((param) => {
+        reference.params[param] = {
+          ...reference.params[param],
+          max_version: { gateway: previousVersion },
+        };
+      });
+      // everything that is in prev AND next goes in
+      intersection.forEach((param) => {
+        reference.params[param] = { ...newConfJson.params[param] };
+      });
+
+      // copy sections
+      reference.sections = newConfJson.sections;
+      previousVersion = version;
+    }
+  });
+  return reference;
+}
+
+(function main() {
+  const indexFile = generateIndexFile();
+  const destinationPath = "../../app/_data/kong-conf/index.json";
+
+  fs.writeFileSync(destinationPath, JSON.stringify(indexFile, null, 2), "utf8");
+  console.log(
+    `Index kong.conf file in json format written to ${destinationPath}.`
+  );
+})();

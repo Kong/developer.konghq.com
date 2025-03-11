@@ -1,6 +1,7 @@
 # kong-conf-to-json
 
 Parse kong.conf and stores a json representation in `app/_data/kong-conf/<version>.json`.
+Generate a json representation of kong.conf in `app/_data/kong-conf/index.json` with the version information of each field.
 
 ## How it works
 
@@ -19,3 +20,12 @@ Transform a `kong.conf` file to `json` format by passing the relative path to th
 `node run --file=../../../kong.conf.default --version=3.9`
 
 will parse the file and write it to `app/_data/kong-conf/3.9.json`.
+
+
+### Index file generation
+
+After generating the fiels for each version in the previous step, the `index.json` file can be generated.
+
+`node index-file`
+
+will generate a json file containing the version information for each param and store it in `app/_data/kong-conf/index.json`.

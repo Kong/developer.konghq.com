@@ -128,7 +128,7 @@ function parseSections(filePath) {
 
     fs.writeFileSync(
       destinationPath,
-      JSON.stringify(jsonConfig, null, 2),
+      JSON.stringify({ sections, params: jsonConfig }, null, 2),
       "utf8"
     );
     console.log(`kong.conf file in json format written to ${destinationPath}.`);
