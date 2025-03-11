@@ -4,8 +4,8 @@ module SectionWrapper
   class HowTo < Base
     def section_title(h2, slug, title)
       Nokogiri::HTML::DocumentFragment.parse <<-HTML
-        <a aria-label="Anchor" href="##{slug}" title="#{title}" class="header-link flex items-center justify-between hover:no-underline accordion-trigger">
-          <div class="flex items-center gap-2 link-anchor group w-full">
+        <a aria-label="Anchor" href="##{slug}" title="#{title}" class="link-anchor flex items-center justify-between hover:no-underline accordion-trigger">
+          <div class="flex items-center gap-2 group w-full">
           #{h2.to_html}
             <span class="text-brand hidden link-anchor-icon group-hover:flex">
               #{File.read('app/assets/icons/link.svg')}
