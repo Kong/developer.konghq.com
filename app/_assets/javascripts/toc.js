@@ -8,7 +8,7 @@ function toggleTocLinkClasses(link, isActive, activeClass) {
 
 window.addEventListener("scroll", () => {
   const activeClass = "tab-button__vertical--active";
-  const anchors = document.querySelectorAll("a.header-link");
+  const anchors = document.querySelectorAll("a.link-anchor");
   const scrollToLinks = document.querySelectorAll("a.scroll-to");
   const navHeight = document.getElementById("header-nav").offsetHeight;
 
@@ -27,7 +27,7 @@ window.addEventListener("scroll", () => {
     const elementTop = element.getBoundingClientRect().top + window.scrollY;
 
     // window top + header section + extra padding
-    if (window.scrollY + navHeight + 20 >= elementTop) {
+    if (window.scrollY + navHeight + 30 >= elementTop) {
       const matchingLink = document.querySelector(
         `a.scroll-to[href$="${element.getAttribute("href")}"]`
       );
