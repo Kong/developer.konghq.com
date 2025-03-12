@@ -2,7 +2,7 @@
 title: "{{site.konnect_short_name}} compatibility"
 description: 'Details which browsers, software, and versions {{site.konnect_short_name}} is compatible with.'
 content_type: reference
-layout: reference
+layout: policy
 products:
     - gateway
 
@@ -142,7 +142,7 @@ columns:
     key: beginning
 
 features:
-  - title: 2.4.x
+  - title: 2.4.x or later
     supported: true
     beginning: 2.4.1
   - title: 2.3.x or earlier
@@ -159,7 +159,7 @@ Versions below this will see inconsistent `deck gateway diff` results and other 
 ## Plugin compatibility
 
 Most {{site.base_gateway}} plugins are compatible with {{site.konnect_short_name}}.
-See the [Kong Plugin Hub](/plugins/) for all compatible plugins.
+See the [Kong Plugin Hub](/plugins/?deployment-topology=konnect) for all compatible plugins.
 
 ### Considerations for Dedicated Cloud Gateways
 
