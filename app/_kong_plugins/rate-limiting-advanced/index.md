@@ -49,6 +49,9 @@ search_aliases:
 Rate limit how many HTTP requests can be made in a given time frame using multiple rate limits and window sizes, and applying sliding windows.
 This plugin is a more advanced version of the [Rate Limiting plugin](/plugins/rate-limiting/), which only allows one fixed rate limiting window.
 
+If the underlying Gateway Service or Route has no authentication layer, the [client IP address](#limit-by-ip-address) is used for identifying clients. 
+Otherwise, the Consumer is used if an authentication plugin has been configured.
+
 Advanced features of this plugin include:
 * [Sliding window support](#window-types), which provides better performance than fixed rate limiting
 * [Multiple limits and window sizes](#multiple-limits-and-window-sizes)

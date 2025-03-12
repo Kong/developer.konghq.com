@@ -10,8 +10,6 @@ tags:
     - traffic-control
 
 faqs:
-  - q: What is the Rate Limiting plugin used for?
-    a: The Rate Limiting plugin is used to control the rate of requests that clients can make to your services. It helps prevent abuse and ensures fair usage by limiting the number of requests a client can make in a given time period.
   - q: Can I set different rate limits for different endpoints or services?
     a: Yes, you can configure rate limits on a per-service or per-route basis by applying the Rate Limiting plugin to specific services or routes in Kong.
   - q: "How does the `policy` option affect rate limiting?"
@@ -57,9 +55,8 @@ search_aliases:
 ---
 
 Rate limit how many HTTP requests can be made in a given period of seconds, minutes, hours, days, months, or years.
-If the underlying service or route has no authentication layer,
-the **Client IP** address is used. Otherwise, the consumer is used if an
-authentication plugin has been configured.
+If the underlying Gateway Service or Route has no authentication layer, the [client IP address](#limit-by-ip-address) is used for identifying clients. 
+Otherwise, the Consumer is used if an authentication plugin has been configured.
 
 The advanced version of this plugin, [Rate Limiting Advanced](/plugins/rate-limiting-advanced/), provides the ability to apply
 multiple limits in sliding or fixed windows, and includes Redis Sentinel and Redis Cluster support.
