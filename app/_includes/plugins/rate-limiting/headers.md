@@ -30,7 +30,7 @@ X-RateLimit-Limit-Minute: 10
 X-RateLimit-Remaining-Minute: 9
 ```
 
-If any of the limits is reached, the plugin returns an `HTTP/1.1 429` status
+If any of the limits are reached, the plugin returns an `HTTP/1.1 429` status
 code to the client with the following JSON body:
 
 ```json

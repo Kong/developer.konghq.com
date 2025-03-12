@@ -1,9 +1,9 @@
 
 The {{page.name}} plugin supports three rate limiting strategies: `local`, `cluster`, and `redis`. 
 {% if page.name == "Rate Limiting Advanced" %}
-This is controlled by the `config.strategy` parameter.
+This is controlled by the [`config.strategy`](/plugins/rate-limiting-advanced/reference/#schema--config-strategy) parameter.
 {% elsif page.name == "Rate Limiting" %}
-This is controlled by the `config.policy` parameter.
+This is controlled by the [`config.policy`](/plugins/rate-limiting/reference/#schema--config-policy) parameter.
 {% endif %}
 
 | Strategy    | Pros | Cons   |
