@@ -34,9 +34,6 @@ support_url: https://support.traceable.ai
 
 icon: traceableai.svg
 
-categories:
-    - security
-
 search_aliases:
   - traceable ai
   - traceableai

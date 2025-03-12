@@ -38,9 +38,6 @@ source_code_url: https://github.com/LEGO/kong-aws-request-signing
 
 icon: aws-request-signing.png
 
-categories:
-    - security
-
 search_aliases:
   - the lego group
   - aws-request-signing
