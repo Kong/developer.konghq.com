@@ -76,7 +76,7 @@ Before you configure the plugin, you must enable it:
 
 * **Package install:** Set `plugins=bundled,app-dynamics` in [`kong.conf`](/gateway/configuration/) before starting {{site.base_gateway}}
 * **Docker:** Set `export KONG_PLUGINS=bundled,app-dynamics` in the environment
-* **Kubernetes:** Set KONG_PLUGINS=bundled,app-dynamics using these instructions
+* **Kubernetes:** Set `KONG_PLUGINS=bundled,app-dynamics` using these instructions
 
 ## Plugin configuration
 
@@ -109,20 +109,11 @@ variables:
 | `KONG_APPD_CONTROLLER_HTTP_PROXY_PORT` | Port number of controller proxy. | Integer |  |
 | `KONG_APPD_CONTROLLER_HTTP_PROXY_USERNAME` | Username to use to identify to proxy. This value is a string that is never shown in logs. This value can be specified as a vault reference.| String |  |
 | `KONG_APPD_CONTROLLER_HTTP_PROXY_PASSWORD` | Password to use to identify to proxy. This value is a string that is never shown in logs. This value can be specified as a vault reference.| String |  |
-
-<!-- if_version eq:3.4.x -->
 | `KONG_APPD_CONTROLLER_CERTIFICATE_FILE` | Path to a self-signed certificate file. For example, `/etc/kong/certs/ca-certs.pem`. <br><br>_Available starting in {{site.base_gateway}} 3.4.3.3_ | String | | 
 | `KONG_APPD_CONTROLLER_CERTIFICATE_DIR` | Path to a certificate directory. For example, `/etc/kong/certs/`. <br><br> _Available starting in {{site.base_gateway}} 3.4.3.3_ | String | | 
-<!-- endif_version -->
-
-<!-- if_version gte:3.6.x -->
-| `KONG_APPD_CONTROLLER_CERTIFICATE_FILE` | Path to a self-signed certificate file. For example, `/etc/kong/certs/ca-certs.pem`. | String | | 
-| `KONG_APPD_CONTROLLER_CERTIFICATE_DIR` | Path to a certificate directory. For example, `/etc/kong/certs/`. | String | | 
-<!-- endif_version -->
-
-<!-- if_version gte:3.8.x -->
-| `KONG_APPD_ANALYTICS_ENABLE` | Enable or disable Analytics Agent reporting. When disabled (default), Analytics-related logging messages are suppressed. | Boolean | `false` | 
-<!-- endif_version -->
+| `KONG_APPD_CONTROLLER_CERTIFICATE_FILE` | Path to a self-signed certificate file. For example, `/etc/kong/certs/ca-certs.pem`. <br><br>_Available starting in {{site.base_gateway}} 3.6.x_ | String | | 
+| `KONG_APPD_CONTROLLER_CERTIFICATE_DIR` | Path to a certificate directory. For example, `/etc/kong/certs/`. <br><br>_Available starting in {{site.base_gateway}} 3.6.x_ | String | | 
+| `KONG_APPD_ANALYTICS_ENABLE` | Enable or disable Analytics Agent reporting. When disabled (default), Analytics-related logging messages are suppressed. <br><br>_Available starting in {{site.base_gateway}} 3.8.x_ | Boolean | `false` | 
 
 ### Possible values for the `KONG_APPD_LOGGING_LEVEL` parameter
 

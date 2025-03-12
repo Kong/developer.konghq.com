@@ -6,6 +6,7 @@ weight: 900
 
 requirements: 
 - "Before using the plugin, download and install the AppDynamics C/C++ Application Agent and SDK on [Linux](https://docs.appdynamics.com/appd/23.x/latest/en/application-monitoring/install-app-server-agents/c-c++-sdk/install-the-c-c++-sdk-on-linux) or [Windows](https://docs.appdynamics.com/appd/23.x/latest/en/application-monitoring/install-app-server-agents/c-c++-sdk/install-the-c-c++-sdk-on-windows) on the machine or within the container running {{site.base_gateway}}."
+- "Set `plugins=bundled,app-dynamics` in [`kong.conf`](/gateway/configuration/) before starting {{site.base_gateway}}"
 - "Configure the AppDynamic plugin [environment variables](/plugins/app-dynamics/#plugin-configuration)"
 
 config:
