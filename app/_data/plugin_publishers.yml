@@ -3,3 +3,6 @@ kong-inc:
 
 optum:
   name: Optum
+
+traceable-ai:
+  name: Traceable.ai
