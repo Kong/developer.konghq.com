@@ -21,3 +21,6 @@ datadome:
 
 impart-security:
   name: Impart Security
+
+inigo:
+  name: Inigo
