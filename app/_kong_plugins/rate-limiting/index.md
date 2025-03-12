@@ -19,9 +19,15 @@ faqs:
       The `policy` option determines how rate limits are stored and enforced. The `local` policy uses Kong’s in-memory storage, while the `redis` policy uses Redis, which is useful for distributed setups where rate limiting needs to be consistent across multiple Kong data plane nodes.
 
 related_resources:
-  - text: How to create rate limiting tiers with Rate Limiting Advanced
-    url: /how-to/add-rate-limiting-tiers-with-kong-gateway/
-  - text: Rate Limiting Advanced Plugin
+  - text: Rate limiting in {{site.base_gateway}}
+    url: /gateway/rate-limiting/
+  - text: Rate limit a Gateway Service with {{site.base_gateway}}
+    url: /how-to/add-rate-limiting-to-a-service-with-kong-gateway/
+  - text: Rate limit a Consumer with {{site.base_gateway}}
+    url: /how-to/add-rate-limiting-for-a-consumer-with-kong-gateway/
+  - text: Throttle APIs with different rate limits for Services and Consumers
+    url: /how-to/throttle-apis-with-services-and-consumers/
+  - text: Rate Limiting Advanced plugin
     url: /plugins/rate-limiting-advanced/
 
 products:
@@ -50,60 +56,25 @@ search_aliases:
   - rate-limiting
 ---
 
-## Overview
-
 Rate limit how many HTTP requests can be made in a given period of seconds, minutes, hours, days, months, or years.
 If the underlying service or route has no authentication layer,
 the **Client IP** address is used. Otherwise, the consumer is used if an
 authentication plugin has been configured.
 
 The advanced version of this plugin, [Rate Limiting Advanced](/plugins/rate-limiting-advanced/), provides the ability to apply
-[multiple limits in sliding or fixed windows](/plugins/rate-limiting-advanced/#multi-limits-windows).
+multiple limits in sliding or fixed windows, and includes Redis Sentinel and Redis Cluster support.
 
+Kong also provides multiple specialized rate limiting plugins, including rate limiting across LLMs and GraphQL queries. 
+See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose the plugin that is most useful in your use case.
 
+## Strategies
 
-## IP Address limitations 
+{% include_cached /plugins/rate-limiting/strategies.md %}
 
-When configuring IP address-based limitations, it's essential to understand how Kong determines the IP address of incoming requests. The IP address is extracted from the request headers sent to Kong by downstream clients. Typically, these headers are named` X-Real-IP` or `X-Forwarded-For`, which contain the client’s IP address.
+## Limit by IP address
 
-By default, Kong uses the` X-Real-IP` header to identify the client's IP address. However, if your environment requires the use of a different header, you can specify this by setting the real_ip_header property in Nginx. Additionally, depending on your network setup, you may need to configure the trusted_ips Nginx property to include the IP addresses of any load balancers or proxies that are part of your infrastructure. This ensures that Kong correctly interprets the client’s IP address, even when the request passes through multiple network layers.
-
+{% include_cached /plugins/rate-limiting/limit-by-ip.md %}
 
 ## Headers sent to the client
 
-When this plugin is enabled, Kong sends additional headers
-to show the allowed limits, number of available requests,
-and the time remaining (in seconds) until the quota is reset. Here's an example header:
-
-```
-RateLimit-Limit: 6
-RateLimit-Remaining: 4
-RateLimit-Reset: 47
-```
-
-The plugin also sends headers to show the time limit and the minutes still available:
-
-```
-X-RateLimit-Limit-Minute: 10
-X-RateLimit-Remaining-Minute: 9
-```
-
-If more than one time limit is set, the header contains all of these:
-
-```
-X-RateLimit-Limit-Second: 5
-X-RateLimit-Remaining-Second: 4
-X-RateLimit-Limit-Minute: 10
-X-RateLimit-Remaining-Minute: 9
-```
-
-When a limit is reached, the plugin returns an `HTTP/1.1 429` status code, with the following JSON body:
-
-```json
-{ "message": "API rate limit exceeded" }
-```
-
-{:.warning}
-> The headers `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset` are based on the Internet-Draft [RateLimit Header Fields for HTTP](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/) and may change in the future to respect specification updates.
-
-
+{% include_cached /plugins/rate-limiting/headers.md %}

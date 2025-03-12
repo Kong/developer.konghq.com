@@ -204,8 +204,12 @@ app/_kong_plugins/key-auth/index.md:
   - app/_hub/kong-inc/key-auth/overview/_index.md
 app/_kong_plugins/rate-limiting/index.md:
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
+app/_kong_plugins/rate-limiting/changelog.md:
+  - app/_hub/kong-inc/rate-limiting/_changelog.md
 app/_kong_plugins/rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
+app/_kong_plugins/rate-limiting-advanced/changelog.md:
+  - app/_hub/kong-inc/rate-limiting-advanced/_changelog.md
 app/_kong_plugins/ai-proxy-advanced/index.md:
   - app/_hub/kong-inc/ai-proxy-advanced/overview/_index.md
 app/_kong_plugins/ai-proxy/index.md:

@@ -4,14 +4,20 @@ title: Rate Limiting Advanced
 name: Rate Limiting Advanced
 publisher: kong-inc
 content_type: plugin
-description: Enhanced Rate Limiting capabilities such as sliding window, Redis Sentinel support and increased performance.
+description: Enhanced rate limiting capabilities such as sliding window support, Redis Sentinel support, and increased performance
 tags:
   - rate-limiting
   - rate-limiting-advanced
   - traffic-control
 related_resources:
-  - text: How to create rate limiting tiers with Rate Limiting Advanced
+  - text: Rate limiting in {{site.base_gateway}}
+    url: /gateway/rate-limiting/
+  - text: Create rate limiting tiers with Rate Limiting Advanced
     url: /how-to/add-rate-limiting-tiers-with-kong-gateway/
+  - text: Apply multiple rate limits and window sizes
+    url: /how-to/multiple-rate-limits-window-sizes/
+  - text: Rate Limiting plugin
+    url: /plugins/rate-limiting-advanced/
 
 products:
     - gateway
@@ -37,78 +43,76 @@ categories:
 
 search_aliases:
   - rate-limiting-advanced
+
 ---
 
-## Overview
+Rate limit how many HTTP requests can be made in a given time frame using multiple rate limits and window sizes, and applying sliding windows.
+This plugin is a more advanced version of the [Rate Limiting plugin](/plugins/rate-limiting/), which only allows one fixed rate limiting window.
 
-Rate limit how many HTTP requests can be made in a given time frame.
-
-[to do: write this section in a better way]
-
-The Rate Limiting Advanced plugin offers more functionality than the {{site.base_gateway}} (OSS) [Rate Limiting plugin](../rate-limiting/), such as:
-* Enhanced capabilities to tune the rate limiter, provided by the parameters `limit` and `window_size`. Learn more in [Multiple Limits and Window Sizes](#multi-limits-windows)
+Advanced features of this plugin include:
+* [Sliding window support](#window-types), which provides better performance than fixed rate limiting
+* [Multiple limits and window sizes](#multiple-limits-and-window-sizes)
 * Support for Redis Sentinel, Redis cluster, and Redis SSL
-* Increased performance: Rate Limiting Advanced has better throughput performance with better accuracy. The plugin allows you to tune performance and accuracy via a configurable synchronization of counter data with the backend storage. This can be controlled by setting the desired value on the `sync_rate` parameter.
-* More limiting algorithms to choose from: These algorithms are more accurate and they enable configuration with more specificity. Learn more about our algorithms in [How to Design a Scalable Rate Limiting Algorithm](https://konghq.com/blog/how-to-design-a-scalable-rate-limiting-algorithm).
-* More control over which requests contribute to incrementing the rate limiting counters via the `disable_penalty` parameter
-* Consumer groups support: Apply different rate limiting configurations to select groups of consumers.
+* Control over which requests contribute to incrementing the rate limiting counters via the [`config.disable_penalty`](/plugins/rate-limiting-advanced/) parameter
 
-## Headers sent to the client
+Kong also provides multiple specialized rate limiting plugins, including rate limiting across LLMs and GraphQL queries. 
+See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose the plugin that is most useful in your use case.
 
-When this plugin is enabled, Kong sends some additional headers back to the client
-indicating the allowed limits, how many requests are available, and how long it will take
-until the quota will be restored.
+## Window types
 
-For example:
+The Rate Limiting Advanced plugin supports the following window types:
+
+* **Fixed window**: Fixed windows consist of buckets that are statically assigned to a definitive time range. Each request is mapped to only one fixed window based on its timestamp and will affect only that window’s counters.
+* **Sliding window** (default): A sliding window tracks the number of hits assigned to a specific key (such as an IP address, consumer, credential) within a given time window, taking into account previous hit rates to create a dynamically calculated rate.
+The default (and recommended) sliding window type ensures a resource is not consumed at a higher rate than what is configured.
+
+Learn more about how the different [window types](/gateway/rate-limiting/window-types/) work for rate limiting plugins.
+
+## Multiple limits and window sizes
+
+An arbitrary number of limits or window sizes can be applied per plugin instance. This allows you to create multiple rate limiting windows (for example, rate limit per minute and per hour, and per any arbitrary window size). Because of limitations with {{site.base_gateway}}’s plugin configuration interface, each nth limit will apply to each nth window size. For example:
+
+```yaml
+config:
+  limit:
+    - 10
+    - 100
+  window_size:
+    - 60
+    - 3600
+```
+This example applies two rate limiting policies, one of which will trip when 10 hits have been counted in 60 seconds, or the other when 100 hits have been counted in 3600 seconds.
+
+The number of configured window sizes and limits parameters must be equal, otherwise you will get the following error:
 
 ```plaintext
-RateLimit-Limit: 6
-RateLimit-Remaining: 4
-RateLimit-Reset: 47
+You must provide the same number of windows and limits
 ```
+{:.no-copy-code}
 
-The plugin also sends headers indicating the limits in the time frame and the number
-of remaining minutes:
+## Strategies
 
-```plaintext
-X-RateLimit-Limit-Minute: 10
-X-RateLimit-Remaining-Minute: 9
-```
+{% include_cached /plugins/rate-limiting/strategies.md %}
 
-You can optionally hide the limit and remaining headers with the `hide_client_headers` option.
+### Fallback from Redis
 
-If more than one limit is being set, the plugin returns a combination of more time limits:
-
-```plaintext
-X-RateLimit-Limit-Second: 5
-X-RateLimit-Remaining-Second: 4
-X-RateLimit-Limit-Minute: 10
-X-RateLimit-Remaining-Minute: 9
-```
-
-If any of the limits configured has been reached, the plugin returns an `HTTP/1.1 429` status
-code to the client with the following JSON body:
-
-```plaintext
-{ "message": "API rate limit exceeded" }
-```
-
-The [`Retry-After`] header will be present on `429` errors to indicate how long the service is
-expected to be unavailable to the client. When using `window_type=sliding` and `RateLimit-Reset`, `Retry-After`
-may increase due to the rate calculation for the sliding window.
-
-{:.warning}
-> The headers `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset` are based on the Internet-Draft [RateLimit Header Fields for HTTP](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers) and may change in the future to respect specification updates.
+When the `redis` strategy is used and a {{site.base_gateway}} node is disconnected from Redis, the `rate-limiting-advanced` plugin will fall back to `local`. 
+This can happen when the Redis server is down or the connection to Redis broken.
+{{site.base_gateway}} keeps the local counters for rate limiting and syncs with Redis once the connection is re-established.
+{{site.base_gateway}} will still rate limit, but the {{site.base_gateway}} nodes can't sync the counters. As a result, users will be able
+to perform more requests than the limit, but there will still be a limit per node.
 
 ## Limit by IP address
 
-If limiting by IP address, it's important to understand how the IP address is determined. The IP address is determined by the request header sent to Kong from downstream. In most cases, the header has a name of `X-Real-IP` or `X-Forwarded-For`. 
+{% include_cached /plugins/rate-limiting/limit-by-ip.md %}
 
-By default, Kong uses the header name `X-Real-IP`. If a different header name is required, it needs to be defined using the [real_ip_header](https://docs.konghq.com/gateway/latest/reference/configuration/#real_ip_header) Nginx property. Depending on the environmental network setup, the [trusted_ips](https://docs.konghq.com/gateway/latest/reference/configuration/#trusted_ips) Nginx property may also need to be configured to include the load balancer IP address.
+## Headers sent to the client
+
+{% include_cached /plugins/rate-limiting/headers.md %}
 
 ## Rate limiting for consumer groups
 
-You can use the [consumer groups entity](/api/gateway/admin-ee/#/operations/get-consumer_groups) to manage custom rate limiting configurations for
-subsets of consumers. This is enabled by default **without** using the `/consumer_groups/:id/overrides` endpoint.
+You can use the [Consumer Groups entity](/entities/gateway/consumer-group/) to manage custom rate limiting configurations for
+subsets of Consumers.
 
-You can see an example of this in the [Enforcing rate limiting tiers with the Rate Limiting Advanced plugin](/how-to/add-rate-limiting-tiers-with-kong-gateway/) guide.
+You can see an example of this in the guide on [enforcing rate limiting tiers with the Rate Limiting Advanced plugin](/how-to/add-rate-limiting-tiers-with-kong-gateway/).
