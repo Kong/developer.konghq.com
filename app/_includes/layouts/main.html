@@ -8,6 +8,10 @@
             {% if layout.tier_inline == true and page.tier %}
                 {% include tier.html products=page.products tier=page.tier %}
             {% endif %}
+
+            {%- if page.premium_partner -%}
+            {%- include badges/premium_partner.html -%}
+            {%- endif -%}
         </div>
 
         {% if layout.uses != false %}

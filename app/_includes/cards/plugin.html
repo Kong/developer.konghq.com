@@ -19,10 +19,10 @@
             </p>
         </div>
 
-        {% if plugin.tier %}
+        {% if plugin.premium_partner %}
             <div class="flex flex-wrap gap-2">
-                {%- if plugin.tier -%}
-                {%- include tier.html products=plugin.products tier=plugin.tier url=false-%}
+                {%- if plugin.premium_partner -%}
+                {%- include badges/premium_partner.html -%}
                 {%- endif -%}
             </div>
         {% endif %}

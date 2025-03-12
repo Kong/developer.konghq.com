@@ -35,6 +35,8 @@ categories:
 
 search_aliases:
   - confluent
+
+premium_partner: true
 ---
 
 ## Overview
