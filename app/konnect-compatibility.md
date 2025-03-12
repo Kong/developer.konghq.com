@@ -1,8 +1,8 @@
 ---
 title: "{{site.konnect_short_name}} compatibility"
 description: 'Details which browsers, software, and versions {{site.konnect_short_name}} is compatible with.'
-content_type: reference
-layout: policy
+content_type: policy
+layout: reference
 products:
     - gateway
 
