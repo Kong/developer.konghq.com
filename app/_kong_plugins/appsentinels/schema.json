@@ -1,0 +1,261 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "authz": {
+          "default": false,
+          "description": "Enable authz/enforcement mode",
+          "type": "boolean"
+        },
+        "authz_fail_allow": {
+          "default": true,
+          "description": "Enable authz fail open for authz/enforcement mode",
+          "type": "boolean"
+        },
+        "authz_fail_msg": {
+          "default": "Unauthorized by Appsentinels",
+          "description": "Custom authz fail message sent to client in authz/enforcement mode",
+          "type": "string"
+        },
+        "compress_logs": {
+          "default": true,
+          "description": "Enable gzip compression for logs",
+          "type": "boolean"
+        },
+        "connect_timeout": {
+          "default": 1000,
+          "description": "HTTP Connect timeout to AppSentinels edge controller",
+          "type": "number"
+        },
+        "console_error_supp_rate": {
+          "default": 10,
+          "description": "Console error logging suppression rate",
+          "type": "number"
+        },
+        "content_regex": {
+          "default": "(json|form|xml|graphql)",
+          "description": "Regular expression to match content type for logging",
+          "type": "string"
+        },
+        "content_type": {
+          "default": "application/json",
+          "description": "Content-Type for HTTP logging request to AppSentinels edge controllr",
+          "enum": ["application/json"],
+          "type": "string"
+        },
+        "early_payload_threshold": {
+          "default": 32768,
+          "description": "Payloads greater then this will be logged during access phase without holding in the memory",
+          "type": "number"
+        },
+        "flush_timeout": {
+          "default": 1,
+          "description": "Flush timeout for batched queue in seconds",
+          "type": "number"
+        },
+        "force_read_client_payload": {
+          "default": false,
+          "description": "Force read client payload to determine the size if content length isnt available in request headers",
+          "type": "boolean"
+        },
+        "http_endpoint": {
+          "description": "URL of AppSentinels edge controller",
+          "type": "string"
+        },
+        "instance_name": {
+          "default": "NA",
+          "description": "Configure to identify Kong deployment instances",
+          "type": "string"
+        },
+        "keepalive": {
+          "default": 60000,
+          "description": "HTTP Keepalive timeout for connections to AppSentinels edge controller",
+          "type": "number"
+        },
+        "log_timeout": {
+          "default": 150,
+          "description": "Logging request timeout for response and transparent mode",
+          "type": "number"
+        },
+        "max_payload": {
+          "default": 131072,
+          "description": "Maximum payload size in bytes, beyond which payload wont be logged",
+          "type": "number"
+        },
+        "method": {
+          "default": "POST",
+          "description": "Method for HTTP logging request to AppSentinels edge controllr",
+          "enum": ["PATCH", "POST", "PUT"],
+          "type": "string"
+        },
+        "no_self_signed": {
+          "default": false,
+          "description": "Enable server (AppSentinels edge controller) cert verification",
+          "type": "boolean"
+        },
+        "normalize_factor": {
+          "default": 0,
+          "description": "Normalize factor for shaper",
+          "type": "number"
+        },
+        "path_mergedlog": {
+          "default": "/mergedlog",
+          "description": "Set merged log path in transparent mode",
+          "type": "string"
+        },
+        "path_requestlog": {
+          "default": "/auth",
+          "description": "Set request log path in authz/enforcement mode",
+          "type": "string"
+        },
+        "path_responselog": {
+          "default": "/nginxlog",
+          "description": "Set response log path in authz/enforcement mode",
+          "type": "string"
+        },
+        "path_stats": {
+          "default": "/nginxstats",
+          "description": "Set stats request path",
+          "type": "string"
+        },
+        "queue_max_entries": {
+          "default": 10000,
+          "description": "Maximum number of entries in the batched queue",
+          "type": "integer"
+        },
+        "queue_num": {
+          "default": 5,
+          "description": "Number of batched queues",
+          "type": "integer"
+        },
+        "queue_size": {
+          "default": 5,
+          "description": "Number of entries in the batched queue",
+          "type": "integer"
+        },
+        "retry_count": {
+          "default": 0,
+          "description": "Number of retries for HTTP logging request in case of failure",
+          "type": "integer"
+        },
+        "shaper_base": {
+          "default": 3,
+          "description": "Base for shaper steps, in number of logs",
+          "type": "number"
+        },
+        "shaper_fallback_rate": {
+          "default": 1.25,
+          "description": "Shaper fallback rate in case of failures",
+          "type": "number"
+        },
+        "shaper_idle_timeout": {
+          "default": 60000,
+          "description": "Shaper idle timeout in milliseconds",
+          "type": "number"
+        },
+        "shaper_max_stages": {
+          "default": 180,
+          "description": "Maximum number of stages in shaper algorithm",
+          "type": "number"
+        },
+        "shaper_multiplier": {
+          "default": 1,
+          "description": "Multiplier for shaper steps",
+          "type": "number"
+        },
+        "shaper_step_duration": {
+          "default": 1000,
+          "description": "Duration of each shaper step in milliseconds",
+          "type": "number"
+        },
+        "shaper_type": {
+          "default": "linear",
+          "description": "Shaping algorithm to use",
+          "type": "string"
+        },
+        "stats_send_timeout": {
+          "default": 4000,
+          "description": "Stats send timeout in milliseconds",
+          "type": "number"
+        },
+        "stats_timeout": {
+          "default": 5,
+          "description": "Stats message frequency in seconds to AppSentinels edge controller",
+          "type": "number"
+        },
+        "timeout": {
+          "default": 100,
+          "description": "Authz request timeout",
+          "type": "number"
+        },
+        "trace": {
+          "default": false,
+          "description": "Enable plugin logging on console",
+          "type": "boolean"
+        },
+        "unhealthy_threshold": {
+          "default": 3,
+          "description": "Number of failures to consider before declaring connection to AppSentinels edge controller as unhealthy",
+          "type": "integer"
+        }
+      },
+      "required": ["http_endpoint"],
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "consumer_group": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified consumer group has been authenticated. (Note that some plugins can not be restricted to consumers groups this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer Groups",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "protocols": {
+      "default": ["http", "https"],
+      "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
+      "items": {
+        "enum": ["http", "https"],
+        "required": [],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    }
+  },
+  "required": []
+}
