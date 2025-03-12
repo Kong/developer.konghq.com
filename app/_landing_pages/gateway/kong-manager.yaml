@@ -55,7 +55,7 @@ rows:
 
                   Access Kong Manager at its default URL: [http://localhost:8002](http://localhost:8002)
 
-                  You can configure Kong Manager settings (like URL and path) and [customization (like header and footer colors)](/gateway/kong-manager-configuration/#customize-kong-manager) using [parameters in `kong.conf`](/gateway/configuration/#kong-manager-section). If you want to enable Kong Manager for multiple domains in {{site.base_gateway}} 3.9.x or later, see [multiple domains](/gateway/kong-manager-configuration/#multiple-domains).
+                  You can configure Kong Manager settings (like URL and path) and customization (like header and footer colors) using [parameters in `kong.conf`](/gateway/configuration/#kong-manager-section). If you want to enable Kong Manager for multiple domains, see [multiple domains](/gateway/kong-manager-configuration/#multiple-domains).
   
   - columns:
       - blocks:
