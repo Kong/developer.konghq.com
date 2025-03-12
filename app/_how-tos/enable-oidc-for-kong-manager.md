@@ -5,8 +5,10 @@ content_type: how_to
 related_resources:
   - text: Authentication in {{site.base_gateway}}
     url: /gateway/authentication/
-  - text: Enable Kong Manager
-    url: /gateway/kong-manager/#enable-kong-manager
+  - text: Kong Manager
+    url: /gateway/kong-manager/
+  - text: Kong Manager Configuration
+    url: /gateway/kong-manager-configuration/
     
 products:
   - gateway

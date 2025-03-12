@@ -1,5 +1,5 @@
 ---
-title: "Kong Manager"
+title: "Kong Manager Configuration"
 content_type: reference
 layout: reference
 
@@ -23,6 +23,8 @@ faqs:
       ```
 
 related_resources:
+  - text: Kong Manager
+    url: /gateway/kong-manager/
   - text: Enable Basic Auth for Kong Manager
     url: /how-to/enable-basic-auth-on-kong-manager/
   - text: Enable OIDC for Kong Manager
@@ -44,7 +46,7 @@ or hybrid mode), you can enable {{site.base_gateway}}'s graphical user interface
 
 ## Enable Kong Manager
 
-To enable Kong Manager, set the following parameters in `kong.conf`, then restart {{site.base_gateway}}:
+To enable Kong Manager, set the following [Kong Manager parameters in `kong.conf`](/gateway/configuration/#kong-manager-section), then restart {{site.base_gateway}}:
 <!--vale off-->
 {% kong_config_table %}
 config:
@@ -102,3 +104,21 @@ admin_gui_session_conf = {"secret":"Y29vbGJlYW5z","storage":"kong","cookie_secur
 ```
 {:.no-copy-code}
 {% endif_version %}
+
+## Customize Kong Manager
+
+You can customize various visual aspects of Kong Manager, like header and footer text and colors. Use the following [`kong.conf` parameters to customize Kong Manager](/gateway/configuration/#kong-manager-section):
+
+<!--vale off-->
+{% kong_config_table %}
+config:
+  - name: admin_gui_header_txt
+  - name: admin_gui_header_bg_color
+  - name: admin_gui_header_txt_color
+  - name: admin_gui_footer_txt
+  - name: admin_gui_footer_bg_color
+  - name: admin_gui_footer_txt_color
+  - name: admin_gui_login_banner_title
+  - name: admin_gui_login_banner_body
+{% endkong_config_table %}
+<!--vale on-->

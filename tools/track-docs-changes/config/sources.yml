@@ -380,6 +380,9 @@ app/_landing_pages/gateway/authentication.yaml:
   - app/_src/gateway/kong-plugins/authentication/reference.md
 app/_landing_pages/admin-api.yaml:
   - app/_src/gateway/admin-api/index_latest.md
+app/_landing_pages/gateway/kong-manager.yaml:
+  - app/_src/gateway/kong-manager/index.md
+  - app/_src/gateway/kong-manager/auth/index.md
 
 # references 
 app/gateway/rate-limiting/strategies.md:
@@ -413,7 +416,7 @@ app/gateway/performance/performance-benchmarks.md:
   - app/_src/gateway/production/performance/performance-testing.md
 app/ai-gateway/ai-audit-log-reference.md:
   - app/_src/gateway/production/logging/ai-analytics.md
-app/gateway/kong-manager.md:
+app/gateway/kong-manager-configuration.md:
   - app/_src/gateway/kong-manager/enable.md 
   - app/_src/gateway/kong-manager/troubleshoot.md
 app/ai-gateway/monitor-ai-llm-metrics.md:
