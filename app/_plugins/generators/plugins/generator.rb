@@ -48,6 +48,8 @@ module Jekyll
       end
 
       def generate_changelog_page(plugin)
+        return unless plugin.changelog_exists?
+
         changelog = Jekyll::PluginPages::Pages::Changelog
                     .new(plugin:, file: File.join(plugin.folder, 'changelog.md'))
                     .to_jekyll_page

@@ -19,10 +19,13 @@
             </p>
         </div>
 
-        {% if plugin.premium_partner %}
+        {% if plugin.premium_partner or plugin.third_party %}
             <div class="flex flex-wrap gap-2">
                 {%- if plugin.premium_partner -%}
                 {%- include badges/premium_partner.html -%}
+                {%- endif -%}
+                {%- if plugin.third_party -%}
+                {%- include badges/third_party.html -%}
                 {%- endif -%}
             </div>
         {% endif %}

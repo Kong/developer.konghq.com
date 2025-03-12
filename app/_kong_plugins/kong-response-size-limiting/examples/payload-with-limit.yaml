@@ -1,0 +1,14 @@
+description: 'Block upstream responses whose body is greater than 128 megabytes.'
+
+title: Payload with a 128Mb limit
+
+weight: 900
+
+config:
+  allowed_payload_size: 128
+
+tools:
+  - deck
+  - admin-api
+  - kic
+  - terraform

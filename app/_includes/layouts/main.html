@@ -12,6 +12,9 @@
             {%- if page.premium_partner -%}
             {%- include badges/premium_partner.html -%}
             {%- endif -%}
+            {%- if page.third_party -%}
+            {%- include badges/third_party.html -%}
+            {%- endif -%}
         </div>
 
         {% if layout.uses != false %}

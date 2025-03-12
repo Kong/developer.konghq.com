@@ -277,7 +277,7 @@
     @apply flex flex-col gap-3;
   }
 
-  .success, .warning, .danger, .info, .neutral {
+  .success, .warning, .danger, .info, .neutral, .decorative {
     @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-10 relative text-sm;
 
     &:not(.no-icon)::before {
@@ -329,6 +329,14 @@
     }
   }
 
+  .decorative {
+    @apply bg-semantic-purple-secondary border-semantic-purple-primary;
+
+    &:not(.no-icon)::before {
+      @apply bg-semantic-purple-primary;
+    }
+  }
+
   .mermaid svg {
     @apply m-auto;
 
@@ -359,6 +367,14 @@
 
   .badge.deprecated {
     @apply bg-semantic-red-secondary;
+  }
+
+  .badge.premium-partner {
+    @apply bg-semantic-green-secondary;
+  }
+
+  .badge.third-party {
+    @apply bg-semantic-purple-secondary;
   }
 
   .tablist {

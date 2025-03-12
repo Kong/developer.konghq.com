@@ -8,6 +8,15 @@ tier_inline: true
   {% include layouts/plugins/nav_header.html %}
 {% endcontentfor %}
 
+
+{% if page.overview? and page.third_party %}
+<blockquote class="decorative w-full -my-4">
+  <span>
+    This plugin is developed, tested, and maintained by <a href="{{page.support_url}}">{{site.data.plugin_publishers[page.publisher].name}}</a>.
+  </span>
+</blockquote>
+{% endif %}
+
 {{ content }}
 
 {% include layouts/plugins/sections.html %}
