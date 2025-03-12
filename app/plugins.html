@@ -101,14 +101,14 @@ edit_and_issue_links: false
           </div>
         {% endif %}
       {% endfor %}
-      
-      {% assign plugins_without_category = kong_plugins | where: "categories", nil %}
-      {% if plugins_without_category.size > 0 %}
+
+      {% assign third_party_plugins = kong_plugins | where: "third_party", true %}
+      {% if third_party_plugins.size > 0 %}
         <div class="flex flex-col gap-4">
-          <h2>Without category</h2>
+          <h2>3rd Party Plugins</h2>
 
           <div class="grid auto-rows-fr grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {% for plugin in plugins_without_category %}
+            {% for plugin in third_party_plugins %}
               {% include cards/plugin.html plugin=plugin %}
             {% endfor %}
           </div>
