@@ -34,7 +34,7 @@ source_code_url: https://github.com/Optum/kong-service-virtualization
 
 license_type: Apache-2.0
 
-icon: kong-service-virtualization.png
+icon: optum.png
 
 search_aliases:
   - optum

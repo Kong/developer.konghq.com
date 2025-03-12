@@ -34,5 +34,5 @@ source_code_url: https://github.com/Optum/kong-spec-expose/
 
 license_type: Apache-2.0
 
-icon: kong-spec-expose.png
+icon: optum.png
 ---
