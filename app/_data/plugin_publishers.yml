@@ -30,3 +30,6 @@ moesif:
 
 noname-security:
   name: Noname Security
+
+salt:
+  name: Salt Security
