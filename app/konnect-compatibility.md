@@ -14,8 +14,14 @@ works_on:
 
   
 related_resources:
-  - text: "{{site.konnect_short_name}} ports and network requirements"
-    url: /konnect-network/
+  - text: "{{site.base_gateway}}"
+    url: /gateway/
+  - text: "Mesh Manager"
+    url: /mesh-manager/
+  - text: "decK"
+    url: /deck/
+  - text: "Plugins"
+    url: /plugins/
 ---
 
 This reference explains which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with.
@@ -24,52 +30,136 @@ This reference explains which browsers, software versions, tools, and applicatio
 
 {{site.konnect_short_name}} is compatible with the following browsers:
 
-|                                  | IE | Edge | Firefox | Chrome | Safari |
-|----------------------------------|:--:|:----:|:-------:|:------:|:------:|
-| {{site.konnect_saas}} |  <i class="fa fa-times"></i> | <i class="fa fa-check"></i> |  <i class="fa fa-check"></i> |  <i class="fa fa-check"></i> | <i class="fa fa-check"></i> |
+{% feature_table %}
+item_title: Browser
+columns:
+  - title: Supported?
+    key: supported
+
+features:
+  - title: IE
+    supported: false
+  - title: Edge
+    supported: true
+  - title: Firefox
+    supported: true
+  - title: Chrome
+    supported: true
+  - title: Safari
+    supported: true
+  
+{% endfeature_table %}
 
 ## {{site.base_gateway}} version compatibility
 
-{{site.konnect_short_name}} is compatible with the following versions of {{site.base_gateway}}:
+{{site.konnect_short_name}} is compatible with the following versions of [{{site.base_gateway}}](/gateway/):
 
+{% feature_table %}
+item_title: "{{site.base_gateway}} version"
+columns:
+  - title: Supported?
+    key: supported
+  - title: Beginning with version
+    key: beginning
+  - title: End of support
+    key: end
 
-|                                | {{site.konnect_saas}} | Beginning with version | End of support |
-|--------------------------------|:---------------------:|-------------------------------|----------------|
-| {{site.ee_product_name}} 3.9.x | <i class="fa fa-check"></i>    | 3.9.0.0 | Dec 2025
-| {{site.ee_product_name}} 3.8.x | <i class="fa fa-check"></i>    | 3.8.0.0 | Oct 2025
-| {{site.ee_product_name}} 3.7.x | <i class="fa fa-check"></i>    | 3.7.0.0 | Jun 2025
-| {{site.ee_product_name}} 3.6.x | <i class="fa fa-check"></i>    | 3.6.0.0 | Feb 2025
-| {{site.ee_product_name}} 3.5.x | <i class="fa fa-check"></i>    | 3.5.0.0 | Nov 2024
-| {{site.ee_product_name}} 3.4.x (LTS)| <i class="fa fa-check"></i>    | 3.4.0.0 | Aug 2026
-| {{site.ee_product_name}} 3.3.x | <i class="fa fa-check"></i>    | 3.3.0.0 | May 2024
-| {{site.ee_product_name}} 3.2.x | <i class="fa fa-check"></i>    | 3.2.1.0 | Feb 2024
-| {{site.ee_product_name}} 3.1.x | <i class="fa fa-check"></i>    | 3.1.0.0 | Dec 2023
-| {{site.ee_product_name}} 3.0.x | <i class="fa fa-check"></i>    | 3.0.0.0 | Sep 2023
-| {{site.ee_product_name}} 2.8.x (LTS)| <i class="fa fa-check"></i>    | 2.8.0.0 | Mar 2025
-| {{site.ee_product_name}} 2.7.x | <i class="fa fa-check"></i>    | 2.7.0.0 | Feb 2023
-| {{site.ee_product_name}} 2.6.x | <i class="fa fa-check"></i>    | 2.6.0.0 | Feb 2023
-| {{site.ee_product_name}} 2.5.x | <i class="fa fa-check"></i>    | 2.5.0.1 | Aug 2022
-| {{site.ee_product_name}} 2.4.x or earlier | <i class="fa fa-times"></i>    | -- | --
+features:
+  - title: 3.9.x
+    supported: true
+    beginning: 3.9.0.0
+    end: Dec 2025
+  - title: 3.8.x
+    supported: true
+    beginning: 3.8.0.0
+    end: Oct 2025
+  - title: 3.7.x
+    supported: true
+    beginning: 3.7.0.0
+    end: Jun 2025
+  - title: 3.6.x
+    supported: true
+    beginning: 3.6.0.0
+    end: Feb 2025
+  - title: 3.5.x
+    supported: true
+    beginning: 3.5.0.0
+    end: Nov 2024
+  - title: 3.4.x (LTS)
+    supported: true
+    beginning: 3.4.0.0
+    end: Aug 2026
+  - title: 3.3.x
+    supported: true
+    beginning: 3.3.0.0
+    end: May 2024
+  - title: 3.2.x
+    supported: true
+    beginning: 3.2.1.0
+    end: Feb 2024
+  - title: 3.1.x
+    supported: true
+    beginning: 3.1.0.0
+    end: Dec 2023
+  - title: 3.0.x
+    supported: true
+    beginning: 3.0.0.0
+    end: Sep 2023
+  - title: 2.8.x (LTS)
+    supported: true
+    beginning: 2.8.0.0
+    end: Mar 2025
+  - title: 2.7.x
+    supported: true
+    beginning: 2.7.0.0
+    end: Feb 2023
+  - title: 2.6.x
+    supported: true
+    beginning: 2.6.0.0
+    end: Feb 2023
+  - title: 2.5.x
+    supported: true
+    beginning: 2.5.0.1
+    end: Aug 2022
+  - title: 2.4.x or earlier
+    supported: false
+    beginning: "-"
+    end: "-"
+  
+{% endfeature_table %}
 
 
 ## {{site.mesh_product_name}} compatibility
 
-To use [Mesh Manager](/konnect/mesh-manager/), you must also use a compatible version of {{site.mesh_product_name}}:
+To use [Mesh Manager](/mesh-manager/), you must also use a compatible version of {{site.mesh_product_name}}:
 
-|                                  | {{site.konnect_saas}} | First supported patch version
-|--------------------------------|:---------------------:|-----------------------------
-| {{site.mesh_product_name}} 2.4.x | <i class="fa fa-check"></i> | 2.4.1
-| {{site.mesh_product_name}} 2.3.x or earlier | <i class="fa fa-times"></i> | -
+{% feature_table %}
+item_title: "{{site.mesh_product_name}} version"
+columns:
+  - title: Supported?
+    key: supported
+  - title: First supported patch
+    key: beginning
+
+features:
+  - title: 2.4.x
+    supported: true
+    beginning: 2.4.1
+  - title: 2.3.x or earlier
+    supported: false
+    beginning: "-"
+
+{% endfeature_table %}
 
 ## decK version compatibility
 
-{{site.konnect_short_name}} requires decK v1.40.0 or above. 
+{{site.konnect_short_name}} requires [decK](/deck/) v1.40.0 or above. 
 Versions below this will see inconsistent `deck gateway diff` results and other potential issues.
 
 ## Plugin compatibility
 
 Most {{site.base_gateway}} plugins are compatible with {{site.konnect_short_name}}.
-See the [Kong Plugin Hub](/hub/?compatibility=konnect) for all compatible plugins.
+See the [Kong Plugin Hub](/plugins/) for all compatible plugins.
 
 ### Considerations for Dedicated Cloud Gateways
 
@@ -77,5 +167,5 @@ There are some limitations for plugins with [Dedicated Cloud Gateways](/dedicate
 
 * Any plugins that depend on a local agent will not work with Dedicated Cloud Gateways.
 * Any plugins that depend on the Status API or on Admin API endpoints will not work.
-* Any plugins or functionality that depend on AWS IAM `AssumeRole` need to be configured differently.
-This includes [Data Plane Resilience](/gateway/latest/kong-enterprise/cp-outage-handling/).
+* Any plugins or functionality that depend on the AWS IAM `AssumeRole` must be configured differently.
+This includes [Data Plane Resilience](/gateway/cp-outage/).

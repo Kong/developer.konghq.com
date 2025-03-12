@@ -455,6 +455,8 @@ app/gateway/traffic-control/load-balancing.md:
   - app/_src/gateway/how-kong-works/load-balancing.md
 app/gateway/traffic-control/blue-green-deployments.md:
   - app/_src/gateway/production/blue-green.md
+app/konnect-compatibility.md:
+  - app/konnect/compatibility.md
 
 # policies
 app/gateway/vulnerabilities.md:
