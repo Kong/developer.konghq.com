@@ -39,4 +39,3 @@ search_aliases:
 premium_partner: true
 ---
 
-## Overview
