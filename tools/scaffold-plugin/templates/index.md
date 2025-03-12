@@ -18,15 +18,22 @@ products:
 # min_version:
 #     gateway: '3.4'
 
-# topologies:
-#    - hybrid
-#    - db-less
-#    - traditional
+# on_prem:
+#   - hybrid
+#   - db-less
+#   - traditional
+# konnect_deployments:
+#   - hybrid
+#   - cloud-gateways
+#   - serverless
+
+# third_party: true
+# premium_partner: true
+# source_url: ''
+# support_url: ''
 
 icon: plugin-slug.ext
 
 categories:
     - traffic-control
 ---
-
-## Overview
