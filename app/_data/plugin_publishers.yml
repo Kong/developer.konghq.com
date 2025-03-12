@@ -24,3 +24,6 @@ impart-security:
 
 inigo:
   name: Inigo
+
+moesif:
+  name: Moesif
