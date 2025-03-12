@@ -29,7 +29,7 @@ products:
 
 # third_party: true
 # premium_partner: true
-# source_url: ''
+# source_code_url: ''
 # support_url: ''
 
 icon: plugin-slug.ext
