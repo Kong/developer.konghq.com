@@ -24,9 +24,6 @@ topologies:
 
 icon: optum.png
 
-categories:
-    - traffic-control
-
 search_aliases:
     - optum
 
