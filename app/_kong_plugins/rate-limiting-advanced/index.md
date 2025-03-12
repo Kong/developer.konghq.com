@@ -112,7 +112,7 @@ to perform more requests than the limit, but there will still be a limit per nod
 
 ## Rate limiting for consumer groups
 
-You can use the [Consumer Groups entity](/entities/gateway/consumer-group/) to manage custom rate limiting configurations for
+You can use the [Consumer Groups entity](/gateway/entities/consumer-group/) to manage custom rate limiting configurations for
 subsets of Consumers.
 
 You can see an example of this in the guide on [enforcing rate limiting tiers with the Rate Limiting Advanced plugin](/how-to/add-rate-limiting-tiers-with-kong-gateway/).
