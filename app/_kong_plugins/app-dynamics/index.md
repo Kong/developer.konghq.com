@@ -5,7 +5,7 @@ name: 'AppDynamics'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Integrate Kong with the AppDynamics APM Platform'
+description: 'Integrate {{site.base_gateway}} with the AppDynamics APM Platform'
 
 
 products:
@@ -46,6 +46,9 @@ The plugin reports request and response timestamps and error information to
 the AppDynamics platform to be analyzed in the AppDynamics flow map and correlated 
 with other systems participating in handling application API requests.
 
+{:.warning}
+> **Important:** Unlike other {{site.base_gateway}} plugins, you must configure the AppDynamics plugin via environment variables. You must also install AppDynamics before using the plugin.
+
 ## AppDynamics installation prerequisites
 
 Before using the plugin, download and install the AppDynamics C/C++ Application Agent and SDK on [Linux](https://docs.appdynamics.com/appd/23.x/latest/en/application-monitoring/install-app-server-agents/c-c++-sdk/install-the-c-c++-sdk-on-linux) or [Windows](https://docs.appdynamics.com/appd/23.x/latest/en/application-monitoring/install-app-server-agents/c-c++-sdk/install-the-c-c++-sdk-on-windows) on the machine or within the container running {{site.base_gateway}}. To use the AppDynamics plugin in {{site.base_gateway}}, the AppDynamics C/C++
@@ -68,21 +71,27 @@ If you are using an older version of {{site.base_gateway}}, or if you prefer to 
 - If above options are not available, the `libappdynamics.so` file can be in one of the locations configured by the [system's shared library loader](https://tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html).
 - Alternatively, the `LD_LIBRARY_PATH` environment variable can be set to the directory containing the `libappdynamics.so` file when starting {{site.base_gateway}}.
 
-## Configuration
+## Enable the AppDynamics plugin
+
+Before you configure the plugin, you must enable it:
+
+* **Package install:** Set `plugins=bundled,app-dynamics` in [`kong.conf`](/gateway/configuration/) before starting {{site.base_gateway}}
+* **Docker:** Set `export KONG_PLUGINS=bundled,app-dynamics` in the environment
+* **Kubernetes:** Set KONG_PLUGINS=bundled,app-dynamics using these instructions
+
+## Plugin configuration
 
 The AppDynamics plugin is configured through environment variables
-that need to be set when {{site.base_gateway}} is started. The environment
-variables used by the plugin are shown in the table below.
-
-{:.note}
-> If an environment variable listed in the table does not have a `default` value, you must set the value for that variable, or the plugin may not operate correctly.
-
-The AppDynamics plugin makes use of the AppDynamics C/C++ SDK to send
-information to the AppDynamics controller. Refer to the
-[AppDynamics C/C++ SDK documentation](https://docs.appdynamics.com/appd/21.x/21.12/en/application-monitoring/install-app-server-agents/c-c++-sdk/use-the-c-c++-sdk)
+that must be set when {{site.base_gateway}} is started. The AppDynamics plugin makes use of the AppDynamics C/C++ SDK to send
+information to the AppDynamics controller. See the
+[AppDynamics C/C++ SDK documentation](https://docs.appdynamics.com/appd/23.x/latest/en/application-monitoring/install-app-server-agents/c-c++-sdk/use-the-c-c++-sdk)
 for more information about the configuration parameters.
 
-### Environment variables
+{:.info}
+> All non-default environment variables in the table **must** be set.
+
+The plugin uses the following environment
+variables:
 
 | Variable | Description | Type | Default |
 |--|--|--|--|
@@ -101,19 +110,22 @@ for more information about the configuration parameters.
 | `KONG_APPD_CONTROLLER_HTTP_PROXY_PORT` | Port number of controller proxy. | Integer |  |
 | `KONG_APPD_CONTROLLER_HTTP_PROXY_USERNAME` | Username to use to identify to proxy. This value is a string that is never shown in logs. This value can be specified as a vault reference.| String |  |
 | `KONG_APPD_CONTROLLER_HTTP_PROXY_PASSWORD` | Password to use to identify to proxy. This value is a string that is never shown in logs. This value can be specified as a vault reference.| String |  |
-{% if_version eq:3.4.x %}
+
+<!-- if_version eq:3.4.x -->
 | `KONG_APPD_CONTROLLER_CERTIFICATE_FILE` | Path to a self-signed certificate file. For example, `/etc/kong/certs/ca-certs.pem`. <br><br>_Available starting in {{site.base_gateway}} 3.4.3.3_ | String | | 
 | `KONG_APPD_CONTROLLER_CERTIFICATE_DIR` | Path to a certificate directory. For example, `/etc/kong/certs/`. <br><br> _Available starting in {{site.base_gateway}} 3.4.3.3_ | String | | 
-{% endif_version %}
-{% if_version gte:3.6.x %}
+<!-- endif_version -->
+
+<!-- if_version gte:3.6.x -->
 | `KONG_APPD_CONTROLLER_CERTIFICATE_FILE` | Path to a self-signed certificate file. For example, `/etc/kong/certs/ca-certs.pem`. | String | | 
 | `KONG_APPD_CONTROLLER_CERTIFICATE_DIR` | Path to a certificate directory. For example, `/etc/kong/certs/`. | String | | 
-{% endif_version %}
-{% if_version gte:3.8.x %}
-| `KONG_APPD_ANALYTICS_ENABLE` | Enable or disable Analytics Agent reporting. When disabled (default), Analytics-related logging messages are suppressed. | Boolean | `false` | 
-{% endif_version %}
+<!-- endif_version -->
 
-#### Possible values for the `KONG_APPD_LOGGING_LEVEL` parameter
+<!-- if_version gte:3.8.x -->
+| `KONG_APPD_ANALYTICS_ENABLE` | Enable or disable Analytics Agent reporting. When disabled (default), Analytics-related logging messages are suppressed. | Boolean | `false` | 
+<!-- endif_version -->
+
+### Possible values for the `KONG_APPD_LOGGING_LEVEL` parameter
 
 The `KONG_APPD_LOGGING_LEVEL` environment variable is a numeric value that controls the desired logging level.
 Each value corresponds to a specific level:
@@ -129,17 +141,16 @@ Each value corresponds to a specific level:
 
 ## Agent logging
 
-The AppDynamics agent sorts log information into separate, independent of Kong, log files.
+The AppDynamics agent sorts log information into separate log files, independent of {{site.base_gateway}}.
 By default, log files are written to the `/tmp/appd` directory.
 This location can be changed by setting the `KONG_APPD_LOGGING_LOG_DIR` environment variable.
 
-If problems occur with the AppDynamics integration, inspect the AppDynamics agent's log files in addition to the Kong
-Gateway logs.
+If problems occur with the AppDynamics integration, inspect the AppDynamics agent's log files in addition to the {{site.base_gateway}} logs.
 
 ## AppDynamics node name considerations
 
-The AppDynamics plugin defaults the `KONG_APPD_NODE_NAME` to the local
-host name, which typically reflects the container ID of the containerized
+The AppDynamics plugin sets the `KONG_APPD_NODE_NAME` to the local
+host name by default, which typically reflects the container ID of the containerized
 application. Multiple instances of the AppDynamics agent must use
 different node names, and one agent must exists for each of {{site.base_gateway}}'s
 worker processes, the node name is suffixed by the worker ID. This
