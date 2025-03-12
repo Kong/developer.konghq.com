@@ -7,12 +7,22 @@ weight: 900
 # requirements: <- not required
 # - "some req"
 
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
+variables:
+  cluster_api_key:
+    value: $CONFLUENT_CLUSTER_API_KEY
+    description: Your Confluent cluster API key
+  cluster_api_secret:
+    value: $CONFLUENT_CLUSTER_API_SECRET
+    description: Your Confluent cluster API key
 
-config: # plugin config in yaml format goes here
+config: 
+  bootstrap_servers:
+    - host: example.com
+      port: 80
+    producer_async: false
+    topic: kong-test
+    cluster_api_key: ${cluster_api_key}
+    cluster_api_secret: ${cluster_api_secret}
 
 tools:
   - deck
