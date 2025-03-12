@@ -95,7 +95,7 @@ You must provide the same number of windows and limits
 
 ## Strategies
 
-{% include_cached /plugins/rate-limiting/strategies.md %}
+{% include_cached /plugins/rate-limiting/strategies.md name=page.name %}
 
 ### Fallback from Redis
 
@@ -111,7 +111,7 @@ to perform more requests than the limit, but there will still be a limit per nod
 
 ## Headers sent to the client
 
-{% include_cached /plugins/rate-limiting/headers.md %}
+{% include_cached /plugins/rate-limiting/headers.md name=page.name %}
 
 ## Rate limiting for consumer groups
 

@@ -16,7 +16,7 @@ When this plugin is enabled, {{site.base_gateway}} sends some additional headers
 | X-RateLimit-Remaining-Day | The number of days still left in the time frame. |
 | X-RateLimit-Remaining-Month | The number of months still left in the time frame. |
 | X-RateLimit-Remaining-Year | The number of years still left in the time frame. |
-| Retry-After |  This header appears on `429` errors, indicating how long the upstream service is expected to be unavailable to the client. <br> When using `window_type: sliding` and `RateLimit-Reset`, `Retry-After` may increase due to the rate calculation for the sliding window. |
+| Retry-After |  This header appears on `429` errors, indicating how long the upstream service is expected to be unavailable to the client. <br> {% if include.name == "Rate Limiting Advanced" %} When using `window_type: sliding` and `RateLimit-Reset`, `Retry-After` may increase due to the rate calculation for the sliding window.{% endif %} |
 
 You can optionally hide the limit and remaining headers with the [`config.hide_client_headers`](./reference/#schema--config-hide_client_headers) option.
 

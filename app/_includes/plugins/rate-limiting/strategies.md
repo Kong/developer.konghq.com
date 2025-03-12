@@ -1,8 +1,8 @@
 
-The {{page.name}} plugin supports three rate limiting strategies: `local`, `cluster`, and `redis`. 
-{% if page.name == "Rate Limiting Advanced" %}
+The {{include.name}} plugin supports three rate limiting strategies: `local`, `cluster`, and `redis`. 
+{% if include.name == "Rate Limiting Advanced" %}
 This is controlled by the [`config.strategy`](/plugins/rate-limiting-advanced/reference/#schema--config-strategy) parameter.
-{% elsif page.name == "Rate Limiting" %}
+{% elsif include.name == "Rate Limiting" %}
 This is controlled by the [`config.policy`](/plugins/rate-limiting/reference/#schema--config-policy) parameter.
 {% endif %}
 
@@ -10,7 +10,7 @@ This is controlled by the [`config.policy`](/plugins/rate-limiting/reference/#sc
 | --------- |-------------| ---- | ------ |
 | `local`   | Counters are stored in-memory on the node. | Minimal performance impact. | Less accurate. Unless there's a consistent-hashing load balancer in front of Kong, it diverges when scaling the number of nodes.
 | `cluster` | Counters are stored in the {{site.base_gateway}} data store and shared across nodes. | Accurate<sup>1</sup>, no extra components to support. | Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact. <br>Not supported in hybrid mode or {{site.konnect_short_name}} deployments. |
-| `redis`   | Counters are stored on a Redis server and shared across nodes | Accurate<sup>1</sup>, less performance impact than a `cluster` policy. | Needs a Redis installation. Bigger performance impact than a `local` policy. |
+| `redis`   | Counters are stored on a Redis server and shared across nodes. | Accurate<sup>1</sup>, less performance impact than a `cluster` policy. | Needs a Redis installation. Bigger performance impact than a `local` policy. |
 
 {:.info}
 > **\[1\]**: Only when [`config.sync_rate`](./reference/#schema--config-sync_rate) option is set to `0` (synchronous behavior). 

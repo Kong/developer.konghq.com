@@ -66,7 +66,7 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 ## Strategies
 
-{% include_cached /plugins/rate-limiting/strategies.md %}
+{% include_cached /plugins/rate-limiting/strategies.md name=page.name %}
 
 ## Limit by IP address
 
@@ -74,4 +74,4 @@ See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose 
 
 ## Headers sent to the client
 
-{% include_cached /plugins/rate-limiting/headers.md %}
+{% include_cached /plugins/rate-limiting/headers.md name=page.name %}
