@@ -10,7 +10,9 @@
 {% include_cached info_box/sections/topologies.html topologies=page.topologies %}
 {% endif %}
 
+{% if page.compatible_protocols %}
 {% include_cached info_box/sections/compatible_protocols.html protocols=page.compatible_protocols %}
+{% endif %}
 
 {% if page.min_version %}
 {% include_cached info_box/sections/min_version.html min_version=page.min_version %}

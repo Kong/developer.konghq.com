@@ -82,6 +82,10 @@ module Jekyll
         @changelog_exists = File.exist?(File.join(folder, 'changelog.md'))
       end
 
+      def third_party?
+        metadata['third_party']
+      end
+
       private
 
       def release_info
