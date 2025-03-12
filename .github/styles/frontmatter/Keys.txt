@@ -19,3 +19,8 @@ konnect_product_id
 no_version
 search_aliases
 skip_product
+source_code_url
+premium_partner
+license_type
+support_url
+third_party
