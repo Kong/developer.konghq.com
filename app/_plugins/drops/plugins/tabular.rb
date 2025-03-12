@@ -5,7 +5,7 @@ require_relative '../../lib/site_accessor'
 module Jekyll
   module Drops
     module Plugins
-      module Tabular
+      module Tabular # rubocop:disable Style/Documentation
         include Jekyll::SiteAccessor
 
         def self.included(base)
@@ -13,11 +13,11 @@ module Jekyll
           base.extend(Jekyll::SiteAccessor)
         end
 
-        module ClassMethods
+        module ClassMethods # rubocop:disable Style/Documentation
           def all(release:)
-            site.data.fetch('kong_plugins').map do |_slug, plugin|
-              new(release:, plugin:)
-            end
+            site.data
+                .fetch('kong_plugins')
+                .reject { |_, p| p.data['third_party'] }.map { |_, plugin| new(release:, plugin:) }
           end
         end
 
