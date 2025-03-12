@@ -477,7 +477,7 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
       tags:
-        - Resource Quotas
+        - Cloud Gateways Resource Quotas
   /cloud-gateways/resource-quotas:
     get:
       operationId: list-resource-quotas
@@ -497,7 +497,7 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
       tags:
-        - Resource Quotas
+        - Cloud Gateways Resource Quotas
   '/cloud-gateways/resource-quotas/{resourceQuotaId}':
     get:
       operationId: get-resource-quota
@@ -515,7 +515,7 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
       tags:
-        - Resource Quotas
+        - Cloud Gateways Resource Quotas
   /cloud-gateways/default-resource-configurations:
     get:
       operationId: list-default-resource-configurations
@@ -3120,7 +3120,7 @@ tags:
   - name: Transit Gateways
   - name: Provider Accounts
   - name: Custom Domains
-  - name: Resource Quotas
+  - name: Cloud Gateways Resource Quotas
   - name: Resource Configurations
   - name: Resource Availability
 security:
