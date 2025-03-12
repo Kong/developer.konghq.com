@@ -11,7 +11,7 @@
   </template>
 
 <script setup>
-import { SchemaRenderer } from '@kong/spec-renderer-dev'
+import { SchemaRenderer } from '@kong/spec-renderer'
 
 const schema = window.schema;
 </script>
