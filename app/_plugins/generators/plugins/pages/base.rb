@@ -23,7 +23,7 @@ module Jekyll
           url
         end
 
-        def data # rubocop:disable Metrics/MethodLength
+        def data # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
           @plugin.metadata.except('search_aliases').merge(
             'slug' => @plugin.slug,
             'plugin?' => true,
@@ -34,6 +34,7 @@ module Jekyll
             'schema' => schema,
             'plugin' => @plugin,
             'overview_url' => Overview.url(@plugin.slug),
+            'changelog_exists?' => @plugin.changelog_exists?,
             'changelog_url' => Changelog.url(@plugin.slug),
             'get_started_url' => @plugin.examples.first.url,
             'reference_url' => reference_url,

@@ -76,6 +76,12 @@ module Jekyll
         @works_on ||= metadata['works_on']
       end
 
+      def changelog_exists?
+        return @changelog_exists if defined?(@changelog_exists)
+
+        @changelog_exists = File.exist?(File.join(folder, 'changelog.md'))
+      end
+
       private
 
       def release_info
