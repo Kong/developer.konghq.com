@@ -38,7 +38,9 @@ module Jekyll
             'changelog_url' => Changelog.url(@plugin.slug),
             'get_started_url' => @plugin.examples.first.url,
             'reference_url' => reference_url,
-            'icon' => icon
+            'icon' => icon,
+            'api_spec_exists?' => @plugin.api_spec_exists?,
+            'api_reference_url' => ApiReference.url(@plugin.slug)
           )
         end
 
