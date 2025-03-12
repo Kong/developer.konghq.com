@@ -2,7 +2,7 @@
 <h2 id="{{ section.title | slugify }}">{{section.title}}</h2>
 
 {% if section.description != empty %}
-<div class="flex flex-col text-secondary content">
+<div class="flex flex-col text-secondary content kong-conf-section-description">
 {{section.description | markdownify}}
 </div>
 {% endif %}
@@ -11,10 +11,10 @@
     {% for param in section.parameters %}
     <div class="flex flex-col bg-primary border border-primary/5 rounded-md kong-conf-param">
         <div class="flex px-4 border-b border-primary/5">
-            <h3 id="{{param.name}}" class="py-3 text-brand-saturated text-sm font-bold">{{param.name}}</h3>
+            <h3 id="{{param.name}}" class="py-3 text-brand-saturated text-sm font-bold kong-conf-param-name">{{param.name}}</h3>
         </div>
         <div class="flex flex-col gap-4 p-4">
-            <div class="text-secondary text-sm content">
+            <div class="text-secondary text-sm content kong-conf-param-description">
                 {{param.description | markdownify}}
             </div>
 
