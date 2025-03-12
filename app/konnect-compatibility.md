@@ -26,30 +26,6 @@ related_resources:
 
 This reference explains which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with.
 
-## Supported browsers
-
-{{site.konnect_short_name}} is compatible with the following browsers:
-
-{% feature_table %}
-item_title: Browser
-columns:
-  - title: Supported?
-    key: supported
-
-features:
-  - title: IE
-    supported: false
-  - title: Edge
-    supported: true
-  - title: Firefox
-    supported: true
-  - title: Chrome
-    supported: true
-  - title: Safari
-    supported: true
-  
-{% endfeature_table %}
-
 ## {{site.base_gateway}} version compatibility
 
 {{site.konnect_short_name}} is compatible with the following versions of [{{site.base_gateway}}](/gateway/):
@@ -155,6 +131,30 @@ features:
 
 {{site.konnect_short_name}} requires [decK](/deck/) v1.40.0 or above. 
 Versions below this will see inconsistent `deck gateway diff` results and other potential issues.
+
+## Supported browsers
+
+{{site.konnect_short_name}} is compatible with the following browsers:
+
+{% feature_table %}
+item_title: Browser
+columns:
+  - title: Supported?
+    key: supported
+
+features:
+  - title: IE
+    supported: false
+  - title: Edge
+    supported: true
+  - title: Firefox
+    supported: true
+  - title: Chrome
+    supported: true
+  - title: Safari
+    supported: true
+  
+{% endfeature_table %}
 
 ## Plugin compatibility
 
