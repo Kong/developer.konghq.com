@@ -59,7 +59,6 @@ export default {
 
                 if (item) {
                     item.highlighted = staticTag.label;
-                    staticTag.isRefined = item.isRefined;
                 }
 
                 const facet = results._state.disjunctiveFacetsRefinements.tags;

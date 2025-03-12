@@ -22,7 +22,6 @@ export default {
         if (item) {
           item.highlighted = staticItem.label;
           item.label = staticItem.label;
-          staticItem.isRefined = item.isRefined;
         }
 
         const facet = results._state.disjunctiveFacetsRefinements[this.attribute];
