@@ -31,7 +31,6 @@ icon: app-dynamics.png
 categories:
   - analytics
   - monitoring
-  - apm
 
 search_aliases:
   - app dynamics
