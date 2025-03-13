@@ -1,5 +1,5 @@
 ---
-title: Configure Google Cloud Secret Manager with Workload Identity in {{site.base_gateway}}
+title: Configure data streaming with the Confluent plugin
 content_type: how_to
 related_resources:
   - text: Rotate secrets in Google Cloud Secret with {{site.base_gateway}}

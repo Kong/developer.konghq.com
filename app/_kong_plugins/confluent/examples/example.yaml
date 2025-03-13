@@ -4,8 +4,8 @@ title: ''
 
 weight: 900
 
-# requirements: <- not required
-# - "some req"
+requirements: 
+- "[Create a Kafka cluster in Confluent Cloud](https://docs.confluent.io/cloud/current/get-started/index.html#step-1-create-a-ak-cluster-in-ccloud)"
 
 variables:
   cluster_api_key:
