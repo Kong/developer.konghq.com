@@ -10,6 +10,7 @@ module Jekyll
       site.data['referenceable_fields'] = referenceable_fields(site)
       site.data['gateway_latest'] = site.data.dig('products', 'gateway', 'releases').detect { |r| r['latest'] }
       site.data['searchFilters'] = search_filters(site)
+      site.data['searchSources'] = site.data.dig('search', 'sources')
     end
 
     def referenceable_fields(site)
