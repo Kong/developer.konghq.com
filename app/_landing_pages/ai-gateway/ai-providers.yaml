@@ -305,7 +305,7 @@ rows:
             description:
               Configure the AI Proxy plugin to proxy requests to a Llama model
             cta:
-              url: /plugins/ai-proxy/examples/llama-chat-route/
+              url: /plugins/ai-proxy/examples/llama2-chat-route/
               align: end
               text: Configuration example
       - blocks:
@@ -315,7 +315,7 @@ rows:
             description:
               Configure the AI Proxy Advanced plugin to proxy requests to a Llama model
             cta:
-              url: /plugins/ai-proxy-advanced/examples/llama-chat-route/
+              url: /plugins/ai-proxy-advanced/examples/llama2-chat-route/
               align: end
               text: Configuration example
   - columns:
