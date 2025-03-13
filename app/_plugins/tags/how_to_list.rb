@@ -50,7 +50,7 @@ module Jekyll
     end
 
     def view_more_url(config)
-      query_string = URI.encode_www_form(config.slice('products', 'tags', 'tools', 'plugins'))
+      query_string = URI.encode_www_form(config.slice('products', 'tags', 'tools'))
       url_segment = '/how-to'
       query_string.empty? ? url_segment : "#{url_segment}?#{query_string}"
     end
