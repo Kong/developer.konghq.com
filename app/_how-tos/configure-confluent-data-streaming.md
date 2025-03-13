@@ -45,9 +45,7 @@ prereqs:
       content: |
         Follow the links to Confluent's documentation site to:
         1. [Create a Kafka cluster in Confluent Cloud](https://docs.confluent.io/cloud/current/get-started/index.html#step-1-create-a-ak-cluster-in-ccloud)
-        2. [Create a Kafka topic in the cluster](https://docs.confluent.io/cloud/current/get-started/index.html#step-2-create-a-ak-topic) `kong-test`
-
-        Confluent env var:
+        2. [Create a Kafka topic in the cluster](https://docs.confluent.io/cloud/current/get-started/index.html#step-2-create-a-ak-topic) called `kong-test`.
 
 
 cleanup:
@@ -60,37 +58,75 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
+@TODO - Validation step isn't working
 
-## Generate API Key
+## Generate a API key in Confluent Cloud
 
 To authorize access from the plugin to your cluster, you need to generate an API Key and secret.
-In the **Kafka credentials** pane, leave **Global access** selected, and click **Generate API key & download**. This creates an API key and secret that allows the plugin to access your cluster, and downloads the key and secret to your computer.
+From your cluster in Confluent Cloud, click API keys in the sidebar and create a new key. Copy the API key and secret values.
+
+## Create decK environment variables 
+
+We'll use decK environment variables for several of the Confluent Cloud values in the {{site.base_gateway}} plugin configuration. This is because these values typically can vary between environments. 
+
+You can find your cluster bootstrap server in your Cluster settings in Confluent Cloud. 
+
+```
+export DECK_CONFLUENT_HOST='<cluster-bootstrap-server>'
+export DECK_CONFLUENT_TOPIC='kong-test'
+export DECK_CONFLUENT_API_KEY='<cluster-api-key>'
+export DECK_CONFLUENT_API_SECRET='<cluster-api-secret>'
+```
+
 
 ## Enable the Confluent plugin
 
-Enable the Confluent plugin on the route with the following command:
+Enable the Confluent plugin on the Route:
 
 {% entity_examples %}
 entities:
   plugins:
     - name: confluent
-    route: example-route
-    config:
+      route: example-route
+      config:
         bootstrap_servers:
-        - host: my-bootstrap-server
-          port: my-bootstrap-port
-        topic: kong-test
-        cluster_api_key: my-api-key
-        cluster_api_secret: my-api-secret
+        - host: ${confluent_host}
+          port: 9092
+        topic: ${confluent_topic}
+        cluster_api_key: ${confluent_api_key}
+        cluster_api_secret: ${confluent_api_secret}
+
+variables:
+  confluent_host:
+    value: $CONFLUENT_HOST
+  confluent_port:
+    value: $CONFLUENT_PORT
+  confluent_topic:
+    value: $CONFLUENT_TOPIC
+  confluent_api_key:
+    value: $CONFLUENT_API_KEY
+  confluent_api_secret:
+    value: $CONFLUENT_API_SECRET
 {% endentity_examples %}
+
+Clusters use port `9092` by default.
 
 ## Validate
 
-You can make a sample request with:
+<!--fix!-->
 
-``` bash
-curl -X POST http://localhost:8000 --header 'Host: test-confluent' foo=bar
-```
+Send a request to the Route to validate.
+
+{% validation request-check %}
+url: /anything
+status_code: 201
+method: POST
+headers:
+    - 'Host: example-route'
+    - 'Content-Type: application/json'
+body:
+    foo: bar
+{% endvalidation %}
 
 You should receive a `200 { message: "message sent" }` response.
 

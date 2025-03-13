@@ -37,7 +37,7 @@ icon: confluent.png
 categories:
   - transformations
 
-related_links:
+related_resources:
   - text: Kafka Log
     url: /plugins/kafka-log/
   - text: Kafka Upstream
