@@ -29,8 +29,6 @@ export function routingConfig(indexName) {
         }
         if (routeState.content) {
           queryParameters.content = encodeURIComponent(routeState.content);
-        } else {
-          queryParameters.content = "all";
         }
         if (routeState.works_on) {
           queryParameters.works_on =
@@ -54,7 +52,7 @@ export function routingConfig(indexName) {
           page,
           products = [],
           tools = [],
-          content = undefined,
+          content = "",
           works_on = [],
           tags = [],
         } = qsModule.parse(location.search.slice(1));
@@ -75,13 +73,15 @@ export function routingConfig(indexName) {
     }),
     stateMapping: {
       stateToRoute(uiState) {
-        let content = "all";
+        let content = "";
         const indexUiState = uiState[indexName] || {};
 
         if (indexUiState.configure) {
-          content = Object.entries(sources).find(
-            ([, value]) => value.filters === indexUiState.configure.filters
-          )[0];
+          if (indexUiState.configure.filters !== "") {
+            content = Object.entries(sources).find(
+              ([, value]) => value.filters === indexUiState.configure.filters
+            )[0];
+          }
         }
 
         return {
@@ -100,7 +100,7 @@ export function routingConfig(indexName) {
 
       routeToState(routeState) {
         let filters = "";
-        if (routeState.content !== undefined) {
+        if (routeState.content !== "") {
           filters = sources[routeState.content].filters;
         }
         return {
