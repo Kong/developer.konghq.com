@@ -96,8 +96,10 @@
                                 <div class="flex flex-col gap-3 flex-grow">
                                     <h4 v-if="item.content_type === 'plugin'"> {{ item.title }} Plugin</h4>
                                     <h4 v-else>{{ item.title }}</h4>
+
+                                    <span class="text-sm">{{getLowestHierarchyLevel(item.hierarchy)}}</span>
                                     <p class="text-sm line-clamp-3">
-                                        {{ item.description }}
+                                        {{ item.content }}
                                     </p>
                                 </div>
 
@@ -161,6 +163,15 @@ export default {
 
         return `${urlObj.pathname}${urlObj.hash}`;
     },
+    getLowestHierarchyLevel(hierarchy) {
+        const levels = Object.entries(hierarchy)
+            .filter(([key, value]) => key !== 'lvl0' & key !== 'lvl1' && value !== null);
+
+      if (levels.length > 0) {
+        return levels[levels.length - 1][1];
+      }
+      return '';
+    }
   }
 };
 </script>
