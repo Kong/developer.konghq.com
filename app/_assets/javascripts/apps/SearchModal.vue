@@ -99,22 +99,25 @@
             </div>
           </div>
 
-          <div class="hidden md:flex w-full gap-2 p-4 items-center flex-grow-0 flex-shrink-0">
-            <span class="sr-only">Tab key</span>
-            <span aria-hidden="true" class="badge h-5 flex items-center text-primary">
-              <span>Tab</span>
-            </span>
-            <span class="text_root__r0DFB hds-typography-body-100 hds-font-weight-regular">to navigate,</span>
-            <span class="sr-only">Enter key</span>
-            <span aria-hidden="true" class="badge h-5 flex items-center text-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M13.5 2.75a.75.75 0 00-1.5 0v4.5A1.75 1.75 0 0110.25 9H4.56l2.22-2.22a.75.75 0 00-1.06-1.06l-3.5 3.5a.748.748 0 000 1.06l3.5 3.5a.75.75 0 001.06-1.06L4.56 10.5h5.69a3.25 3.25 0 003.25-3.25v-4.5z"></path></svg>
-            </span>
-            <span class="text_root__r0DFB hds-typography-body-100 hds-font-weight-regular">to select,</span>
-            <span class="sr-only">Escape key</span>
-            <span aria-hidden="true" class="badge h-5 flex items-center text-primary">
-              <span>Esc</span>
-            </span>
-            <span class="text_root__r0DFB hds-typography-body-100 hds-font-weight-regular">to exit</span>
+          <div class="hidden md:flex w-full p-4 items-center flex-grow-0 flex-shrink-0 border-t border-brand-saturated/40 justify-between">
+            <div class="flex gap-2 items-center">
+              <span class="sr-only">Tab key</span>
+              <span aria-hidden="true" class="badge h-5 flex items-center text-primary">
+                <span>Tab</span>
+              </span>
+              <span class="text_root__r0DFB hds-typography-body-100 hds-font-weight-regular">to navigate,</span>
+              <span class="sr-only">Enter key</span>
+              <span aria-hidden="true" class="badge h-5 flex items-center text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M13.5 2.75a.75.75 0 00-1.5 0v4.5A1.75 1.75 0 0110.25 9H4.56l2.22-2.22a.75.75 0 00-1.06-1.06l-3.5 3.5a.748.748 0 000 1.06l3.5 3.5a.75.75 0 001.06-1.06L4.56 10.5h5.69a3.25 3.25 0 003.25-3.25v-4.5z"></path></svg>
+              </span>
+              <span class="text_root__r0DFB hds-typography-body-100 hds-font-weight-regular">to select,</span>
+              <span class="sr-only">Escape key</span>
+              <span aria-hidden="true" class="badge h-5 flex items-center text-primary">
+                <span>Esc</span>
+              </span>
+              <span class="text_root__r0DFB hds-typography-body-100 hds-font-weight-regular">to exit</span>
+           </div>
+            <a href="/search" class="text-brand">Advanced search</a>
           </div>
         </div>
       </div>
