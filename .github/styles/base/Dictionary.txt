@@ -571,6 +571,7 @@ onboard
 onboarding
 onwards
 opa
+openai
 openid
 openresty
 opentelemetry
