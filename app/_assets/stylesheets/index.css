@@ -175,6 +175,10 @@
     @apply list-disc;
   }
 
+  li {
+    @apply leading-[1.6rem];
+  }
+
   li > *:not(:last-child) {
     @apply mb-2;
   }
