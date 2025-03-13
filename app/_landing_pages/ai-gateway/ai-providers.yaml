@@ -4,3 +4,374 @@ metadata:
   description: This page is an introduction to the AI providers available in {{site.base_gateway}}.
   products:
     - gateway
+
+rows:
+  - header:
+      type: h1
+      text: "AI Gateway providers"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    The core of the AI Gateway is the ability to route AI requests to various providers exposed via a provider-agnostic API. This normalized API layer affords developers and organizations multiple benefits:
+      
+                - type: unordered_list
+                  items: 
+                    - Client applications are shielded from AI provider API specifics, promoting code reusability
+                    - Centralized AI provider credential management
+                    - The AI Gateway gives the developers and organizations a central point of governance and observability over AI data and usage
+                    - Request routing can be dynamic, allowing AI usage to be optimized based on various metrics
+                    - AI services can be used by other {{site.base_gateway}} plugins to augment non-AI API traffic
+
+
+
+  - header:
+      type: h2
+      text: "Supported providers"
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    The following providers are supported by the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins. 
+                    Note that some providers may not be available depending on your {{site.base_gateway}} version, and some providers don't support all route types. 
+                    See the plugin documentation for more details.
+  - header:
+      type: h3
+      text: "OpenAI"
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy with OpenAI
+            description:
+              Configure the AI Proxy plugin to proxy requests to an OpenAI model
+            cta:
+              url: /plugins/ai-proxy/examples/openai-chat-route/
+              align: end
+              text: Configuration example
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy Advanced with OpenAI
+            description:
+              Configure the AI Proxy Advanced plugin to proxy requests to an OpenAI model
+            cta:
+              url: /plugins/ai-proxy-advanced/examples/openai-chat-route/
+              align: end
+              text: Configuration example
+  - columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              plugins:
+                - ai-proxy
+                - ai-proxy-advanced
+              tags: 
+                - openai
+              quantity: 3
+              view_more: /search/?query=ai%2520proxy%2520openai&content_type=how_to
+              allow_empty: true
+
+  - header:
+      type: h3
+      text: "Azure AI"
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy with Azure AI
+            description:
+              Configure the AI Proxy plugin to proxy requests to an Azure AI model
+            cta:
+              url: /plugins/ai-proxy/examples/azure-chat-route/
+              align: end
+              text: Configuration example
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy Advanced with Azure AI
+            description:
+              Configure the AI Proxy Advanced plugin to proxy requests to an Azure AI model
+            cta:
+              url: /plugins/ai-proxy-advanced/examples/azure-chat-route/
+              align: end
+              text: Configuration example
+  - columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              plugins:
+                - ai-proxy
+                - ai-proxy-advanced
+              tags: 
+                - azure-ai
+              quantity: 3
+              view_more: /search/?query=ai%2520proxy%2520azure&content_type=how_to
+              allow_empty: true
+
+  - header:
+      type: h3
+      text: "Amazon Bedrock"
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy with Amazon Bedrock
+            description:
+              Configure the AI Proxy plugin to proxy requests to an Amazon Bedrock model
+            cta:
+              url: /plugins/ai-proxy/examples/bedrock-chat-route/
+              align: end
+              text: Configuration example
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy Advanced with Amazon Bedrock
+            description:
+              Configure the AI Proxy Advanced plugin to proxy requests to an Amazon Bedrock model
+            cta:
+              url: /plugins/ai-proxy-advanced/examples/bedrock-chat-route/
+              align: end
+              text: Configuration example
+  - columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              plugins:
+                - ai-proxy
+                - ai-proxy-advanced
+              tags: 
+                - bedrock
+              quantity: 3
+              view_more: /search/?query=ai%2520proxy%2520bedrock&content_type=how_to
+              allow_empty: true
+
+  - header:
+      type: h3
+      text: "Gemini"
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy with Gemini
+            description:
+              Configure the AI Proxy plugin to proxy requests to a Gemini model
+            cta:
+              url: /plugins/ai-proxy/examples/gemini-chat-route/
+              align: end
+              text: Configuration example
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy Advanced with Amazon Bedrock
+            description:
+              Configure the AI Proxy Advanced plugin to proxy requests to a Gemini model
+            cta:
+              url: /plugins/ai-proxy-advanced/examples/gemini-chat-route/
+              align: end
+              text: Configuration example
+  - columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              plugins:
+                - ai-proxy
+                - ai-proxy-advanced
+              tags: 
+                - gemini
+              quantity: 3
+              view_more: /search/?query=ai%2520proxy%2520gemini&content_type=how_to
+              allow_empty: true
+
+  - header:
+      type: h3
+      text: "Anthropic"
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy with Anthropic
+            description:
+              Configure the AI Proxy plugin to proxy requests to an Anthropic model
+            cta:
+              url: /plugins/ai-proxy/examples/anthropic-chat-route/
+              align: end
+              text: Configuration example
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy Advanced with Anthropic
+            description:
+              Configure the AI Proxy Advanced plugin to proxy requests to an Anthropic model
+            cta:
+              url: /plugins/ai-proxy-advanced/examples/anthropic-chat-route/
+              align: end
+              text: Configuration example
+  - columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              plugins:
+                - ai-proxy
+                - ai-proxy-advanced
+              tags: 
+                - anthropic
+              quantity: 3
+              view_more: /search/?query=ai%2520proxy%2520anthropic&content_type=how_to
+              allow_empty: true
+
+  - header:
+      type: h3
+      text: "Cohere"
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy with Cohere
+            description:
+              Configure the AI Proxy plugin to proxy requests to a Cohere model
+            cta:
+              url: /plugins/ai-proxy/examples/cohere-chat-route/
+              align: end
+              text: Configuration example
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy Advanced with Cohere
+            description:
+              Configure the AI Proxy Advanced plugin to proxy requests to a Cohere model
+            cta:
+              url: /plugins/ai-proxy-advanced/examples/cohere-chat-route/
+              align: end
+              text: Configuration example
+  - columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              plugins:
+                - ai-proxy
+                - ai-proxy-advanced
+              tags: 
+                - cohere
+              quantity: 3
+              view_more: /search/?query=ai%2520proxy%2520cohere&content_type=how_to
+              allow_empty: true
+
+  - header:
+      type: h3
+      text: "Hugging Face"
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy with Hugging Face
+            description:
+              Configure the AI Proxy plugin to proxy requests to a Hugging Face model
+            cta:
+              url: /plugins/ai-proxy/examples/huggingface-chat-route/
+              align: end
+              text: Configuration example
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy Advanced with Hugging Face
+            description:
+              Configure the AI Proxy Advanced plugin to proxy requests to a Hugging Face model
+            cta:
+              url: /plugins/ai-proxy-advanced/examples/huggingface-chat-route/
+              align: end
+              text: Configuration example
+  - columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              plugins:
+                - ai-proxy
+                - ai-proxy-advanced
+              tags: 
+                - hugging-face
+              quantity: 3
+              view_more: /search/?query=ai%2520proxy%2520hugging%2520face&content_type=how_to
+              allow_empty: true
+
+  - header:
+      type: h3
+      text: "Llama"
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy with Llama
+            description:
+              Configure the AI Proxy plugin to proxy requests to a Llama model
+            cta:
+              url: /plugins/ai-proxy/examples/llama-chat-route/
+              align: end
+              text: Configuration example
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy Advanced with Llama
+            description:
+              Configure the AI Proxy Advanced plugin to proxy requests to a Llama model
+            cta:
+              url: /plugins/ai-proxy-advanced/examples/llama-chat-route/
+              align: end
+              text: Configuration example
+  - columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              plugins:
+                - ai-proxy
+                - ai-proxy-advanced
+              tags: 
+                - llama
+              quantity: 3
+              view_more: /search/?query=ai%2520proxy%2520llama&content_type=how_to
+              allow_empty: true
+
+  - header:
+      type: h3
+      text: "Mistral"
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy with Mistral
+            description:
+              Configure the AI Proxy plugin to proxy requests to a Mistral model
+            cta:
+              url: /plugins/ai-proxy/examples/mistral-chat-route/
+              align: end
+              text: Configuration example
+      - blocks:
+        - type: card
+          config:
+            title: AI Proxy Advanced with Mistral
+            description:
+              Configure the AI Proxy Advanced plugin to proxy requests to a Mistral model
+            cta:
+              url: /plugins/ai-proxy-advanced/examples/mistral-chat-route/
+              align: end
+              text: Configuration example
+  - columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              plugins:
+                - ai-proxy
+                - ai-proxy-advanced
+              tags: 
+                - mistral
+              quantity: 3
+              view_more: /search/?query=ai%2520proxy%2520mistral&content_type=how_to
+              allow_empty: true
+
