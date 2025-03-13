@@ -24,7 +24,8 @@ module Jekyll
       how_tos = @site.collections['how-tos'].docs.each_with_object([]) do |t, result|
         match = (!config.key?('tags') || t.data.fetch('tags', []).intersect?(config['tags'])) &&
                 (!config.key?('products') || t.data.fetch('products', []).intersect?(config['products'])) &&
-                (!config.key?('tools') || t.data.fetch('tools', []).intersect?(config['tools']))
+                (!config.key?('tools') || t.data.fetch('tools', []).intersect?(config['tools'])) &&
+                (!config.key?('plugins') || t.data.fetch('plugins', []).intersect?(config['plugins']))
 
         result << t if match
         break result if result.size == quantity
