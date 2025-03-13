@@ -5,7 +5,7 @@ name: 'Kong Service Virtualization'
 content_type: plugin
 
 publisher: optum
-description: "Mock virtual API request and response pairs through Kong Gateway"
+description: "Mock virtual API request and response pairs through {{site.base_gateway}}"
 
 
 products:

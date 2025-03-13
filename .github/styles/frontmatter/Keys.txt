@@ -24,3 +24,7 @@ premium_partner
 license_type
 support_url
 third_party
+max_version
+license_url
+privacy_policy_url
+terms_of_service_url
