@@ -5,10 +5,6 @@ metadata:
   products:
     - gateway
 
-# @todo: {{site.ai_gateway_short_name}} landing page
-# https://docs.konghq.com/gateway/latest/ai-gateway/
-# https://docs.konghq.com/gateway/latest/get-started/ai-gateway/ (include the parts of this not used in the get started how-to)
-
 rows:
   - header:
       type: h1
