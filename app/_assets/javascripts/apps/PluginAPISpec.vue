@@ -13,7 +13,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { SpecRenderer } from '@kong/spec-renderer-dev';
+import { SpecRenderer } from '@kong/spec-renderer';
 
 const specText = ref(JSON.stringify(window.apiSpec));
 const basePath = window.location.pathname;
