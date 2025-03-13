@@ -20,6 +20,7 @@ entities:
 tags:
     - get-started
     - ai-gateway
+    - openai
 
 tldr: 
   q: What is AI Gateway, and how can I get started with it?
