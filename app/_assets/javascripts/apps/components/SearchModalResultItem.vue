@@ -29,7 +29,7 @@ export default {
   },
   computed: {
     highlighetContent() {
-      return this.item._highlightResult.content.matchLevel !== 'none';
+      return this.item._highlightResult?.content?.matchLevel !== 'none';
     },
     heading() {
       if (this.item.content_type === 'plugin_example') {
