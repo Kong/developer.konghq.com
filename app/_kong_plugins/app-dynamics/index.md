@@ -110,8 +110,6 @@ variables:
 | `KONG_APPD_CONTROLLER_HTTP_PROXY_PASSWORD` | Password to use to identify to proxy. This value is a string that is never shown in logs. This value can be specified as a vault reference.| String |  |
 | `KONG_APPD_CONTROLLER_CERTIFICATE_FILE` | Path to a self-signed certificate file. For example, `/etc/kong/certs/ca-certs.pem`. <br><br>_Available starting in {{site.base_gateway}} 3.4.3.3_ | String | | 
 | `KONG_APPD_CONTROLLER_CERTIFICATE_DIR` | Path to a certificate directory. For example, `/etc/kong/certs/`. <br><br> _Available starting in {{site.base_gateway}} 3.4.3.3_ | String | | 
-| `KONG_APPD_CONTROLLER_CERTIFICATE_FILE` | Path to a self-signed certificate file. For example, `/etc/kong/certs/ca-certs.pem`. <br><br>_Available starting in {{site.base_gateway}} 3.6.x_ | String | | 
-| `KONG_APPD_CONTROLLER_CERTIFICATE_DIR` | Path to a certificate directory. For example, `/etc/kong/certs/`. <br><br>_Available starting in {{site.base_gateway}} 3.6.x_ | String | | 
 | `KONG_APPD_ANALYTICS_ENABLE` | Enable or disable Analytics Agent reporting. When disabled (default), Analytics-related logging messages are suppressed. <br><br>_Available starting in {{site.base_gateway}} 3.8.x_ | Boolean | `false` | 
 
 ### Possible values for the `KONG_APPD_LOGGING_LEVEL` parameter
@@ -130,7 +128,7 @@ Each value corresponds to a specific level:
 
 ## Agent logging
 
-The AppDynamics agent sorts log information into separate log files, independent of {{site.base_gateway}}.
+The AppDynamics agent sorts log information into separate log files, independent of {{site.base_gateway}} logs.
 By default, log files are written to the `/tmp/appd` directory.
 This location can be changed by setting the `KONG_APPD_LOGGING_LOG_DIR` environment variable.
 
@@ -139,9 +137,9 @@ If problems occur with the AppDynamics integration, inspect the AppDynamics agen
 ## AppDynamics node name considerations
 
 The AppDynamics plugin sets the `KONG_APPD_NODE_NAME` to the local
-host name by default, which typically reflects the container ID of the containerized
+hostname by default, which typically reflects the container ID of the containerized
 application. Multiple instances of the AppDynamics agent must use
-different node names, and one agent must exists for each of {{site.base_gateway}}'s
+different node names, and one agent must exist for each of {{site.base_gateway}}'s
 worker processes, the node name is suffixed by the worker ID. This
 results in multiple nodes being created for each {{site.base_gateway}}
 instance, one for each worker process.
