@@ -490,6 +490,8 @@ app/gateway/breaking-changes.md:
 app/gateway/cp-outage.md:
   - app/_src/gateway/kong-enterprise/cp-outage-handling-faq.md
   - app/_src/gateway/kong-enterprise/cp-outage-handling.md
+app/ai-gateway/ai-quickstart-reference.md:
+  - app/_src/gateway/ai-gateway/index.md
 app/gateway/upgrade/in-place.md:
   - app/_src/gateway/upgrade/in-place.md
 app/_includes/gateway/migration-finish-warning.md:
