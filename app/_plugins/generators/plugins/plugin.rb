@@ -76,7 +76,6 @@ module Jekyll
         @works_on ||= metadata['works_on']
       end
 
-
       def changelog_exists?
         return @changelog_exists if defined?(@changelog_exists)
 
@@ -85,6 +84,7 @@ module Jekyll
 
       def third_party?
         metadata['third_party']
+      end
 
       def api_spec_exists?
         File.exist?(api_spec_file_path)
