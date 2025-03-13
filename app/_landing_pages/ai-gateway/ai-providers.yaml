@@ -41,7 +41,7 @@ rows:
                   text: | 
                     The following providers are supported by the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins. 
                     Note that some providers may not be available depending on your {{site.base_gateway}} version, and some providers don't support all route types. 
-                    See the plugin documentation for more details.
+                    See the plugins documentation for more details.
   - header:
       type: h3
       text: "OpenAI"
@@ -167,7 +167,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: AI Proxy Advanced with Amazon Bedrock
+            title: AI Proxy Advanced with Gemini
             description:
               Configure the AI Proxy Advanced plugin to proxy requests to a Gemini model
             cta:
