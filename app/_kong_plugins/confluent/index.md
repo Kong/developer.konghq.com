@@ -58,7 +58,7 @@ With Kafka at its core, [Confluent](https://confluent.io) offers complete, fully
 * See [Kafka Log](/plugins/kafka-log/)
 * See [Kafka Upstream](/plugins/kafka-upstream/)
 
-{:.note} 
+{:.info} 
 > **Note**: This plugin has the following known limitations:
 > * Message compression is not supported.
 > * The message format is not customizable.
