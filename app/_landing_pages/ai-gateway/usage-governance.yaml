@@ -37,13 +37,13 @@ rows:
                     Denied prompts result in 4xx HTTP code responses to clients preventing the egress of offending requests.
   - columns:
       - blocks:       
-        - type: plugin_card
+        - type: plugin
           config:
-            plugin: AI Prompt Guard
+            slug: ai-prompt-guard
       - blocks:
-        - type: plugin_card
+        - type: plugin
           config:
-            plugin: AI Semantic Prompt Guard
+            slug: ai-semantic-prompt-guard
 
   - header:
       type: h2
@@ -58,9 +58,9 @@ rows:
                     AI Gateway provides features that allow you to moderate content and ensure content safety.
   - columns:
       - blocks:       
-        - type: plugin_card
+        - type: plugin
           config:
-            plugin: AI Azure Content Safety
+            slug: ai-azure-content-safety
       - blocks:
         - type: card
           config:
@@ -86,13 +86,13 @@ rows:
                     Kong AI Gateway supports a set of plugins that allow you to create a simplified and enhanced experience by setting default prompts or manipulating prompts from clients as they pass through the gateway.
   - columns:
       - blocks:       
-        - type: plugin_card
+        - type: plugin
           config:
-            plugin: AI Prompt Template
+            slug: ai-prompt-template
       - blocks:
-        - type: plugin_card
+        - type: plugin
           config:
-            plugin: AI Prompt Decorator
+            slug: ai-prompt-decorator
 
   - header:
       type: h2
@@ -110,10 +110,10 @@ rows:
                     These plugins can be configured independently of the AI Proxy plugin.
   - columns:
       - blocks:       
-        - type: plugin_card
+        - type: plugin
           config:
-            plugin: AI Request Transformer
+            slug: ai-request-transformer
       - blocks:
-        - type: plugin_card
+        - type: plugin
           config:
-            plugin: AI Response Transformer
+            slug: ai-response-transformer
