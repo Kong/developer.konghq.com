@@ -76,7 +76,6 @@ rows:
               tags: 
                 - openai
               quantity: 3
-              view_more: /search/?query=ai%2520proxy%2520openai&content_type=how_to
               allow_empty: true
 
   - header:
@@ -113,7 +112,6 @@ rows:
               tags: 
                 - azure-ai
               quantity: 3
-              view_more: /search/?query=ai%2520proxy%2520azure&content_type=how_to
               allow_empty: true
 
   - header:
@@ -150,7 +148,6 @@ rows:
               tags: 
                 - bedrock
               quantity: 3
-              view_more: /search/?query=ai%2520proxy%2520bedrock&content_type=how_to
               allow_empty: true
 
   - header:
@@ -187,7 +184,6 @@ rows:
               tags: 
                 - gemini
               quantity: 3
-              view_more: /search/?query=ai%2520proxy%2520gemini&content_type=how_to
               allow_empty: true
 
   - header:
@@ -224,7 +220,6 @@ rows:
               tags: 
                 - anthropic
               quantity: 3
-              view_more: /search/?query=ai%2520proxy%2520anthropic&content_type=how_to
               allow_empty: true
 
   - header:
@@ -261,7 +256,6 @@ rows:
               tags: 
                 - cohere
               quantity: 3
-              view_more: /search/?query=ai%2520proxy%2520cohere&content_type=how_to
               allow_empty: true
 
   - header:
@@ -298,7 +292,6 @@ rows:
               tags: 
                 - hugging-face
               quantity: 3
-              view_more: /search/?query=ai%2520proxy%2520hugging%2520face&content_type=how_to
               allow_empty: true
 
   - header:
@@ -335,7 +328,6 @@ rows:
               tags: 
                 - llama
               quantity: 3
-              view_more: /search/?query=ai%2520proxy%2520llama&content_type=how_to
               allow_empty: true
 
   - header:
@@ -372,6 +364,5 @@ rows:
               tags: 
                 - mistral
               quantity: 3
-              view_more: /search/?query=ai%2520proxy%2520mistral&content_type=how_to
               allow_empty: true
 
