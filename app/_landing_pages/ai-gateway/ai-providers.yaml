@@ -1,0 +1,6 @@
+metadata:
+  title: "AI Gateway providers"
+  content_type: landing_page
+  description: This page is an introduction to the AI providers available in {{site.base_gateway}}.
+  products:
+    - gateway
