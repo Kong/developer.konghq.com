@@ -428,6 +428,13 @@ app/_landing_pages/admin-api.yaml:
 app/_landing_pages/gateway/kong-manager.yaml:
   - app/_src/gateway/kong-manager/index.md
   - app/_src/gateway/kong-manager/auth/index.md
+app/_landing_pages/ai-gateway.yaml:
+  - app/_src/gateway/ai-gateway/index.md
+app/_landing_pages/ai-gateway/ai-providers.yaml:
+  - app/_src/gateway/ai-gateway/index.md
+app/_landing_pages/ai-gateway/usage-governance.yaml:
+  - app/_src/gateway/ai-gateway/index.md
+
 
 # references 
 app/gateway/rate-limiting/strategies.md:
