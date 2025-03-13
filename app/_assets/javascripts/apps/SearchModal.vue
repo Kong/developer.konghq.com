@@ -24,7 +24,7 @@
     </span>
   </button>
 
-  <div v-if="showModal" class="modal-overlay" @click="closeModal">
+  <div v-if="showModal" class="modal-overlay" @click="showModal = false">
     <div class="modal-content-wrapper">
       <div class="modal-content" aria-modal="true" role="dialog" @click.stop>
         <div class="modal-content-inner" v-bind="autocomplete.getRootProps({})">
@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import { ref, computed, nextTick } from 'vue';
+import { ref, computed, nextTick, watch } from 'vue';
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
 import { createAutocomplete } from '@algolia/autocomplete-core';
 import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
@@ -356,13 +356,20 @@ export default {
       showModal
     };
   },
+  watch: {
+    showModal(newValue) {
+      if (newValue === false) {
+        this.closeModal();
+      }
+    }
+  },
   methods: {
     handleKeyPress(event) {
       if ((event.metaKey && event.key === 'k') || (event.ctrlKey && event.key === 'k')) {
         event.preventDefault();
         this.openModal();
       } else if (event.key === 'Escape' && this.showModal) {
-        this.closeModal();
+        this.showModal = false;
       }
     },
     onTabClick(tabId, event) {
@@ -425,7 +432,6 @@ export default {
       });
     },
     closeModal() {
-      this.showModal = false;
       document.body.style.overflow = "";
       document.body.style.removeProperty("overscoll-behavior");
       if (this.permanentScrollbars) {
