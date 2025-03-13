@@ -16,10 +16,10 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    With the growing adoption of AI technologies, developers and their organizations are exposed to a set of new risk vectors. 
-                    In particular, the risk of having sensitive data leaked to AI Providers, exposing organizations and their customers to data breaches and other security risks.
+                    With the growing adoption of AI technologies, developers and their organizations are exposed to a set of new risks. 
+                    In particular, the risk of having sensitive data leaked to AI providers, exposing organizations and their customers to data breaches and other security risks.
 
-                    Kong’s AI Gateway provides additional plugins to aid the developers in controlling AI data and usage. 
+                    Kong AI Gateway provides additional plugins to aid the developers in controlling AI data and usage. 
                     These plugins are used in combination with the AI Proxy plugin, allowing you to build secure and specialized AI experiences for your users.
  
 
@@ -83,7 +83,7 @@ rows:
                   text: | 
                     AI systems are built around prompts, and manipulating those prompts is important for successful adoption of the technologies. 
                     Prompt engineering is the methodology of manipulating the linguistic inputs that guide the AI system. 
-                    The AI Gateway supports a set of plugins that allow you to create a simplified and enhanced experience by setting default prompts or manipulating prompts from clients as they pass through the gateway.
+                    Kong AI Gateway supports a set of plugins that allow you to create a simplified and enhanced experience by setting default prompts or manipulating prompts from clients as they pass through the gateway.
   - columns:
       - blocks:       
         - type: plugin_card
@@ -104,7 +104,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    AI Gateway also allows you to use AI technology to augment other API traffic. 
+                    AI Gateway allows you to use AI technology to augment other API traffic. 
                     One example may be routing API responses through an AI language translation prompt before returning it to the client. 
                     Kong AI Gateway provides two plugins that can be used in conjunction with other upstream API services to weave AI capabilities into API request processing. 
                     These plugins can be configured independently of the AI Proxy plugin.
