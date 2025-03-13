@@ -45,7 +45,7 @@ the AppDynamics platform to be analyzed in the AppDynamics flow map and correlat
 with other systems participating in handling application API requests.
 
 {:.warning}
-> **Important:** Unlike other {{site.base_gateway}} plugins, you must configure the AppDynamics plugin via environment variables. You must also install AppDynamics before using the plugin.
+> **Important:** Unlike other {{site.base_gateway}} plugins, you must configure the AppDynamics plugin via environment variables. You must also install AppDynamics before using the plugin, and you must enable the plugin in your environment.
 
 ## AppDynamics installation prerequisites
 
@@ -71,6 +71,7 @@ If you are using an older version of {{site.base_gateway}}, or if you prefer to 
 
 ## Enable the AppDynamics plugin
 
+The AppDynamics plugin is not bundled in {{site.base_gateway}} packages by default. 
 Before you configure the plugin, you must enable it:
 
 * **Package install:** Set `plugins=bundled,app-dynamics` in [`kong.conf`](/gateway/configuration/) before starting {{site.base_gateway}}
