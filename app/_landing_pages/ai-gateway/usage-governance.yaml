@@ -66,6 +66,7 @@ rows:
           config:
             title: Amazon Bedrock guardrails
             description: Include your Amazon Bedrock guardrails configuration in AI Proxy requests
+            icon: /assets/icons/bedrock.svg
             cta:
               url: /plugins/ai-proxy/#input-formats
               align: end
