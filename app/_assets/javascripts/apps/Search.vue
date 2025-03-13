@@ -51,19 +51,6 @@
                 </template>
             </ais-panel>
 
-
-            <ais-panel>
-                <template v-slot:default="{ hasRefinements }">
-                    <div class="flex flex-col gap-3" v-if="hasRefinements">
-                        <div class="text-sm text-brand font-semibold">Tier</div>
-                        <div class="flex flex-col gap-3">
-                            <ais-refinement-list attribute="tier" :sort-by="['name']" />
-                        </div>
-                    </div>
-                </template>
-            </ais-panel>
-
-
             <ais-panel>
                 <template v-slot:default="{ hasRefinements }">
                     <div class="flex flex-col gap-3" v-if="hasRefinements">
