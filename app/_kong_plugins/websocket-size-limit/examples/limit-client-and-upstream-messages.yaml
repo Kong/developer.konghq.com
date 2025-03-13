@@ -1,0 +1,25 @@
+description: |
+  Limit both client and upstream messages.
+
+  You can also use these setting to raise the default limits.
+  {{site.base_gateway}} applies the following default limits to incoming messages for all WebSocket services:
+
+  | Sender   | Default Limit        |
+  |----------|----------------------|
+  | client   | `1048576` (`1MiB`)   |
+  | upstream | `16777216` (`16MiB`) |
+
+title: 'Limit client and upstream messages'
+
+weight: 900
+
+config:
+  client_max_payload: 4096
+  upstream_max_payload: 1048576
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
