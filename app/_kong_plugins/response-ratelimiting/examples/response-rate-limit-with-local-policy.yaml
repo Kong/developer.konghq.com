@@ -1,0 +1,19 @@
+description: |
+  Configure a custom response limit named `example_limit_name` with 10 responses allowed per minute.
+
+title: 'Response rate limit with local policy'
+
+weight: 900
+
+config:
+  limits:
+    example_limit_name:
+      minute: 10
+  policy: local
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
