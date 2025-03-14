@@ -8,7 +8,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "AI usage governance AI Gateway"
+      text: "AI usage governance"
   - columns:
       - blocks:
           - type: structured_text
