@@ -365,6 +365,33 @@
     }
   }
 
+  .mermaid svg[aria-roledescription="sequence"] {
+    .actor {
+      @apply fill-[rgb(var(--color-bg-secondary))] !important;
+    }
+
+    .activation0 {
+      @apply fill-[rgb(var(--color-bg-secondary))] !important;
+    }
+
+    text {
+      @apply fill-[rgb(var(--color-text-primary))] !important;
+
+    }
+
+    text > tspan {
+      @apply fill-[rgb(var(--color-text-primary))] !important;
+    }
+
+    .messageLine0 {
+      @apply stroke-[rgb(var(--color-brand))] !important;
+    }
+
+    circle {
+      @apply fill-[rgb(var(--color-bg-secondary))] !important;
+    }
+  }
+
   .badge {
     @apply rounded px-1.5 py-0.5 text-primary text-xs bg-brand-saturated/40;
   }
