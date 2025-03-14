@@ -7,4 +7,4 @@ no_version: true
 
 ### {{site.base_gateway}} 3.8.x
 
-Added plugin
+* Introduced the Confluent plugin.

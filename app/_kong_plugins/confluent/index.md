@@ -11,6 +11,7 @@ tags:
   - kafka
   - data-streaming
   - confluent
+  - transformations
 
 products:
     - gateway
@@ -44,7 +45,7 @@ related_resources:
     url: /plugins/kafka-upstream/
 
 search_aliases:
-  - confluent
+  - kafka
 
 premium_partner: true
 ---
