@@ -36,8 +36,12 @@ search_aliases:
   - response-ratelimiting
 ---
 
-This plugin allows you to limit the number of requests a client can make based on a custom response header returned by the upstream service. 
+This plugin allows you to impose rate limits based on custom response headers returned by the upstream service.
 You can arbitrarily set as many rate limiting objects (or quotas) as you want and instruct {{site.base_gateway}} to increase or decrease them by any number of units. 
+
+For example, if there are different costs associated with specific upstream services, they can be returned as headers to 
+{{site.base_gateway}}, and {{site.base_gateway}} will increment the rate limit counters based on these costs.
+
 Each custom rate limiting object can limit the inbound requests in number of seconds, minutes, hours, days, months, or years.
 
 If the underlying Gateway Service or Route has no authentication layer, the [client IP address](#limit-by-ip-address) is used for identifying clients. 
@@ -62,7 +66,7 @@ Header-Name: Limit=Value [,Limit=Value]
 With the default header name, `X-Kong-Limit`, the request looks like this:
 
 ```bash
-curl -v -H 'X-Kong-Limit: limitname1=2, limitname2=4'
+curl http://localhost:8000/example-route -v -H 'X-Kong-Limit: limitname1=2, limitname2=4'
 ```
 
 The above example increments the limit `limitname1` by 2 units, and `limitname2` by 4 units.
