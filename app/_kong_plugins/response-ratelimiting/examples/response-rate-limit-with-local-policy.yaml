@@ -7,7 +7,7 @@ weight: 900
 
 config:
   limits:
-    example_limit_name:
+    example-limit-name:
       minute: 10
   policy: local
 

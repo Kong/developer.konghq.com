@@ -36,7 +36,7 @@ search_aliases:
   - response-ratelimiting
 ---
 
-This plugin allows you to limit the number of requests a developer can make based on a custom response header returned by the upstream service. 
+This plugin allows you to limit the number of requests a client can make based on a custom response header returned by the upstream service. 
 You can arbitrarily set as many rate limiting objects (or quotas) as you want and instruct {{site.base_gateway}} to increase or decrease them by any number of units. 
 Each custom rate limiting object can limit the inbound requests in number of seconds, minutes, hours, days, months, or years.
 
