@@ -87,6 +87,7 @@ rows:
           config:
             title: AI provider proxy
             description: Route client requests to various AI providers.
+            icon: /assets/icons/ai.svg
             cta:
               url: /ai-gateway/ai-providers/
               align: end
@@ -95,6 +96,7 @@ rows:
           config:
             title: Data governance
             description: Use AI plugins to control AI data and usage.
+            icon: /assets/icons/security.svg
             cta:
               url: ./#data-governance
               align: end
@@ -103,6 +105,7 @@ rows:
           config:
             title: Rate limiting
             description: Manage traffic to your LLM API.
+            icon: /assets/icons/plugins/ai-rate-limiting-advanced.png
             cta:
               url: /plugins/ai-rate-limiting-advanced/
               align: end
@@ -112,6 +115,7 @@ rows:
           config:
             title: Load balancing
             description: Learn about the load balancing algorithms available for AI Gateway.
+            icon: /assets/icons/load-balance.svg
             cta:
               url: /gateway/load-balancing/#load-balancing-algorithms-for-ai-gateway
               align: end
@@ -120,6 +124,7 @@ rows:
           config:
             title: Prompt engineering
             description: Create prompt templates and manipulate client prompts.
+            icon: /assets/icons/code.svg
             cta:
               url: ./#prompt-engineering
               align: end
@@ -128,6 +133,7 @@ rows:
           config:
             title: Guardrails
             description: Inspect requests and configure content safety and moderation.
+            icon: /assets/icons/lock.svg
             cta:
               url: ./#guardrails-and-content-safety
               align: end
@@ -137,6 +143,7 @@ rows:
           config:
             title: Semantic caching
             description: Semantically cache responses from LLMs.
+            icon: /assets/icons/plugins/ai-semantic-cache.png
             cta:
               url: /plugins/ai-semantic-cache/
               align: end
@@ -145,6 +152,7 @@ rows:
           config:
             title: Semantic routing
             description: Semantically distribute requests to different LLM models.
+            icon: /assets/icons/plugins/ai-proxy-advanced.png
             cta:
               url: /plugins/ai-proxy-advanced/examples/semantic/
               align: end
@@ -153,6 +161,7 @@ rows:
           config:
             title: Request transformations
             description: Use AI to transform requests and responses.
+            icon: /assets/icons/plugins/ai-request-transformer.png
             cta:
               url: ./#request-transformations
               align: end
@@ -162,6 +171,7 @@ rows:
           config:
             title: Audit log
             description: Learn about AI Gateway logging capabilities.
+            icon: /assets/icons/audit.svg
             cta:
               url: /ai-gateway/ai-audit-log-reference/
               align: end
@@ -170,6 +180,7 @@ rows:
           config:
             title: LLM metrics
             description: Expose and visualize LLM metrics.
+            icon: /assets/icons/monitor.svg
             cta:
               url: /ai-gateway/monitor-ai-llm-metrics/
               align: end
@@ -178,6 +189,7 @@ rows:
           config:
             title: '{{site.konnect_short_name}} Advanced Analytics'
             description: Visualize LLM metrics in {{site.konnect_short_name}}.
+            icon: /assets/icons/analytics.svg
             cta:
               url: /advanced-analytics/
               align: end
