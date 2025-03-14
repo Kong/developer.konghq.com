@@ -36,7 +36,7 @@ search_aliases:
   - websocket-validator
 ---
 
-Validate individual WebSocket messages against to a user-specified schema before proxying them.
+Validate individual WebSocket messages against a user-specified schema before proxying them.
 
 The message schema can be configured by type (text or binary) and sender (client or upstream).
 
