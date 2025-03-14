@@ -46,10 +46,10 @@ The following diagram shows what {{site.base_gateway}} looks like in self-manage
 flowchart TD
 
 A[(Database)]
-B(<img src="/assets/images/logos/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> Control plane \n #40;{{site.base_gateway}} instance#41;)
-C(<img src="/assets/images/logos/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 3\n #40;{{site.base_gateway}} instance#41;)
-D(<img src="/assets/images/logos/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 1\n #40;{{site.base_gateway}} instance#41;)
-E(<img src="/assets/images/logos/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 2\n #40;{{site.base_gateway}} instance#41;)
+B(<img src="/assets/icons/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> Control plane \n #40;{{site.base_gateway}} instance#41;)
+C(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 3\n #40;{{site.base_gateway}} instance#41;)
+D(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 1\n #40;{{site.base_gateway}} instance#41;)
+E(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 2\n #40;{{site.base_gateway}} instance#41;)
 
 subgraph id1 [Self-managed control plane node]
 A---B
@@ -274,6 +274,6 @@ endpoints.
 
 ## Keyring encryption in hybrid mode
 
-Because the [Keyring](/gateway/entities/keyring/) module encrypts data in the database, it can't encrypt
+Because the [Keyring](/gateway/keyring/) module encrypts data in the database, it can't encrypt
 data on data plane nodes, since these nodes run without a database and get
 data from the control plane.
