@@ -1,0 +1,34 @@
+description: 'Streams data to Confluent Cloud, but disables [asynchronous events](https://developer.confluent.io/courses/microservices/asynchronous-events/).'
+
+title: 'Disable asynchronous events'
+
+weight: 900
+
+requirements: 
+- "[Create a Kafka cluster in Confluent Cloud](https://docs.confluent.io/cloud/current/get-started/index.html#step-1-create-a-ak-cluster-in-ccloud)"
+- "[Create a Kafka topic in the cluster](https://docs.confluent.io/cloud/current/get-started/index.html#step-2-create-a-ak-topic)"
+- "Create an API key and secret in the cluster"
+
+variables:
+  cluster_api_key:
+    value: $CONFLUENT_CLUSTER_API_KEY
+    description: Your Confluent cluster API key
+  cluster_api_secret:
+    value: $CONFLUENT_CLUSTER_API_SECRET
+    description: Your Confluent cluster API key
+
+config: 
+  bootstrap_servers:
+  - host: example.com
+    port: 9092
+  producer_async: false
+  topic: kong-test
+  cluster_api_key: ${cluster_api_key}
+  cluster_api_secret: ${cluster_api_secret}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
