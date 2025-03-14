@@ -1,0 +1,16 @@
+sources:
+  all:
+    label: All
+    filters: ''
+
+  docs:
+    label: Docs
+    filters: 'NOT content_type:how_to AND NOT content_type:plugin AND NOT content_type:plugin_example'
+
+  how_tos:
+    label: How-to Guides
+    filters: content_type:how_to
+
+  plugins:
+    label: Plugins
+    filters: 'content_type:plugin OR content_type:plugin_example'

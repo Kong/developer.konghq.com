@@ -356,6 +356,10 @@ app/_how-tos/transform-a-client-request-with-ai.md:
   - app/_hub/kong-inc/ai-request-transformer/how-to/_index.md
 app/_kong_plugins/websocket-validator/index.md:
   - app/_hub/kong-inc/websocket-validator/overview/_index.md
+app/_kong_plugins/ai-azure-content-safety/index.md:
+  - app/_hub/kong-inc/ai-azure-content-safety/overview/_index.md
+app/_kong_plugins/ai-azure-content-safety/changelog.md:
+  - app/_hub/kong-inc/ai-azure-content-safety/_changelog.md
 
 # Konnect
 

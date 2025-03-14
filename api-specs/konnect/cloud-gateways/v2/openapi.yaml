@@ -1359,6 +1359,7 @@ components:
       enum:
         - created
         - initializing
+        - pending-acceptance
         - ready
         - terminating
         - terminated
