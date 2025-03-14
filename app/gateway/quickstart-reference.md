@@ -1,5 +1,5 @@
 ---
-title: "AI Gateway quickstart script reference"
+title: "{{site.base_gateway}} quickstart script reference"
 content_type: reference
 layout: reference
 
@@ -9,19 +9,23 @@ products:
 tags:
   - ai-gateway
 
-plugins:
-  - ai-proxy
-
 min_version:
   gateway: '3.6'
 
-description: "Kong offers an interactive AI quickstart script that launches a demo instance of {{site.base_gateway}} running AI Proxy"
+description: "Kong offers an interactive quickstart script that launches a demo instance of {{site.base_gateway}}"
 
 related_resources:
+  - text: "{{site.base_gateway}}"
+    url: /gateway/
+  - text: Gte started with {{site.base_gateway}}
+    url: /how-to/get-started-with-gateway/
   - text: Kong AI Gateway
     url: /ai-gateway/
 ---
 
+@todo: add info about the generic gateway quickstart + the different options available
+
+## AI Gateway quickstart
 Kong offers an interactive AI quickstart script that launches a demo instance of {{site.base_gateway}} running AI Proxy:
 
 ```sh

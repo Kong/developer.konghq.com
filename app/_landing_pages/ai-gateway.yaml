@@ -28,7 +28,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    Launch a [demo instance](/ai-gateway/ai-quickstart-reference) of {{site.base_gateway}} running AI Proxy:
+                    Launch a [demo instance](/gateway/quickstart-reference/#ai-gateway-quickstart) of {{site.base_gateway}} running AI Proxy:
                     ```sh
                     curl -Ls https://get.konghq.com/ai | bash
                     ```
@@ -96,7 +96,7 @@ rows:
             title: Data governance
             description: Use AI plugins to control AI data and usage.
             cta:
-              url: /ai-gateway/usage-governance/#data-governance
+              url: ./#data-governance
               align: end
       - blocks:
         - type: card
@@ -121,7 +121,7 @@ rows:
             title: Prompt engineering
             description: Create prompt templates and manipulate client prompts.
             cta:
-              url: /ai-gateway/usage-governance/#prompt-engineering
+              url: ./#prompt-engineering
               align: end
       - blocks:
         - type: card
@@ -129,7 +129,7 @@ rows:
             title: Guardrails
             description: Inspect requests and configure content safety and moderation.
             cta:
-              url: /ai-gateway/usage-governance/#guardrails-and-content-safety
+              url: ./#guardrails-and-content-safety
               align: end
   - columns:
       - blocks:
@@ -154,7 +154,7 @@ rows:
             title: Request transformations
             description: Use AI to transform requests and responses.
             cta:
-              url: /ai-gateway/usage-governance/#request-transformations
+              url: ./#request-transformations
               align: end
   - columns:
       - blocks:
@@ -182,6 +182,131 @@ rows:
               url: /advanced-analytics/
               align: end
 
+  - header:
+      type: h2
+      text: "AI usage governance"
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    With the growing adoption of AI technologies, developers and their organizations are exposed to a set of new risks. 
+                    In particular, the risk of having sensitive data leaked to AI providers, exposing organizations and their customers to data breaches and other security risks.
+
+                    Kong AI Gateway provides additional plugins to help developers control AI data and usage. 
+                    These plugins are used in combination with the AI Proxy plugin, allowing you to build secure and specialized AI experiences for your users.
+ 
+
+  - header:
+      type: h3
+      text: "Data governance" 
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    AI Gateway provides the ability to govern outgoing AI prompts via an allow/deny list configuration. 
+                    Denied prompts result in 4xx HTTP code responses to clients preventing the egress of offending requests.
+  - columns:
+      - blocks:       
+        - type: plugin
+          config:
+            slug: ai-prompt-guard
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-semantic-prompt-guard
+
+  - header:
+      type: h3
+      text: "Prompt engineering" 
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    AI systems are built around prompts, and manipulating those prompts is important for successful adoption of the technologies. 
+                    Prompt engineering is the methodology of manipulating the linguistic inputs that guide the AI system. 
+                    Kong AI Gateway supports a set of plugins that allow you to create a simplified and enhanced experience by setting default prompts or manipulating prompts from clients as they pass through the gateway.
+  - columns:
+      - blocks:       
+        - type: plugin
+          config:
+            slug: ai-prompt-template
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-prompt-decorator
+
+  - header:
+      type: h3
+      text: "Guardrails and content safety" 
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    AI Gateway provides features that allow you to moderate content and ensure content safety.
+  - columns:
+      - blocks:       
+        - type: plugin
+          config:
+            slug: ai-azure-content-safety
+      - blocks:
+        - type: card
+          config:
+            title: Amazon Bedrock guardrails
+            description: Include your Amazon Bedrock guardrails configuration in AI Proxy requests
+            icon: /assets/icons/bedrock.svg
+            cta:
+              url: /plugins/ai-proxy/#input-formats
+              align: end
+
+  - header:
+      type: h3
+      text: "Request transformations" 
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    AI Gateway allows you to use AI technology to augment other API traffic. 
+                    One example is routing API responses through an AI language translation prompt before returning it to the client. 
+                    Kong AI Gateway provides two plugins that can be used in conjunction with other upstream API services to weave AI capabilities into API request processing. 
+                    These plugins can be configured independently of the AI Proxy plugin.
+  - columns:
+      - blocks:       
+        - type: plugin
+          config:
+            slug: ai-request-transformer
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-response-transformer
+
+  - header:
+      type: h2
+      text: How-to Guides
+
+  - columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tags: 
+                - ai-gateway
+              quantity: 5
+              allow_empty: true
+              
   - header:
       text: "Frequently Asked Questions"
       type: h2
