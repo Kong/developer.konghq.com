@@ -3,6 +3,8 @@ content_type: reference
 no_version: true
 ---
 
+## Changelog
+
 ### {{site.base_gateway}} 3.8.x
 * Fixed an issue where the Data Plane would report that deprecated config fields were used when configuration was pushed from the Control Plane.
 
