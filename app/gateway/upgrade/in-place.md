@@ -64,7 +64,7 @@ You must carefully review the [upgrade considerations](/gateway/upgrade/#prepara
 
 {:.warning}
 > **Important**: We do not recommend using this strategy unless {{site.base_gateway}} is deployed under 
-an extremely resource-constrained environment, or unless you are not able to obtain new resources in a 
+an extremely resource-constrained environment, or unless you can't obtain new resources in a 
 timely manner for a dual-cluster upgrade.
 > <br><br>
 > The current cluster X can be substituted in place with the new cluster Y.
@@ -82,7 +82,7 @@ The exact execution of these steps will vary depending on your environment.
 * You have a traditional deployment or you need to upgrade the control planes (CPs) in a hybrid mode deployment.
 * You can't perform [dual-cluster upgrades](/gateway/upgrade/dual-cluster/) due to resource limitations.
 
-### 1. Prepare the upgrade
+### Prepare the upgrade
 
 1. Stop any {{site.base_gateway}} configuration updates (e.g. Admin API calls). 
 This is critical to guarantee data consistency between cluster X and cluster Y.
@@ -97,7 +97,7 @@ You may have to consider customization of both `kong.conf` and {{site.base_gatew
     * [Breaking changes](/gateway/breaking-changes/)
     * [Full changelog](/gateway/changelog/)
 
-### 2. Switch the cluster
+### Switch the cluster
 
 1. Stop the {{site.base_gateway}} nodes of the old cluster X but keep the database running. 
 This will create a period of downtime until the upgrade completes.
