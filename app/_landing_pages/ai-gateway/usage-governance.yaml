@@ -19,7 +19,7 @@ rows:
                     With the growing adoption of AI technologies, developers and their organizations are exposed to a set of new risks. 
                     In particular, the risk of having sensitive data leaked to AI providers, exposing organizations and their customers to data breaches and other security risks.
 
-                    Kong AI Gateway provides additional plugins to aid the developers in controlling AI data and usage. 
+                    Kong AI Gateway provides additional plugins to help developers control AI data and usage. 
                     These plugins are used in combination with the AI Proxy plugin, allowing you to build secure and specialized AI experiences for your users.
  
 
@@ -106,7 +106,7 @@ rows:
                 - type: text
                   text: | 
                     AI Gateway allows you to use AI technology to augment other API traffic. 
-                    One example may be routing API responses through an AI language translation prompt before returning it to the client. 
+                    One example is routing API responses through an AI language translation prompt before returning it to the client. 
                     Kong AI Gateway provides two plugins that can be used in conjunction with other upstream API services to weave AI capabilities into API request processing. 
                     These plugins can be configured independently of the AI Proxy plugin.
   - columns:
