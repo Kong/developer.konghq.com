@@ -1,5 +1,5 @@
 ---
-title: "Dual cluster upgrade for {{site.base_gateway}}"
+title: "Dual-cluster upgrade for {{site.base_gateway}}"
 description: Learn how to perform a dual-cluster upgrade for {{site.base_gateway}}.
 content_type: reference
 layout: reference
@@ -22,7 +22,9 @@ related_resources:
   - text: "{{site.base_gateway}} breaking changes"
     url: /gateway/breaking-changes/
   - text: "Backing up and restoring {{site.base_gateway}}"
-    url: /gateway/backup-and-restore/
+    url: /gateway/upgrade/backup-and-restore/
+  - text: "In-place upgrade"
+    url: /gateway/upgrade/in-place/
 ---
 
 The dual-cluster upgrade strategy is a {{site.base_gateway}} upgrade option used primarily for traditional 
