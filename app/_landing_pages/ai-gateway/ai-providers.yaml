@@ -17,7 +17,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    The core of the AI Gateway is the ability to route AI requests to various providers exposed via a provider-agnostic API. This normalized API layer affords developers and organizations multiple benefits:
+                    The core of [AI Gateway](/ai-gateway/) is the ability to route AI requests to various providers exposed via a provider-agnostic API. This normalized API layer affords developers and organizations multiple benefits:
       
                 - type: unordered_list
                   items: 
@@ -26,22 +26,82 @@ rows:
                     - The AI Gateway gives developers and organizations a central point of governance and observability over AI data and usage
                     - Request routing can be dynamic, allowing AI usage to be optimized based on various metrics
                     - AI services can be used by other {{site.base_gateway}} plugins to augment non-AI API traffic
-                - type: text
-                  text: | 
-                    You can use the following LLM providers:
-      
-                - type: unordered_list
-                  items: 
-                    - OpenAI
-                    - Azure AI
-                    - Amazon Bedrock
-                    - Gemini
-                    - Anthropic
-                    - Cohere
-                    - Hugging Face
-                    - Llama
-                    - Mistral
 
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: OpenAI
+            icon: /assets/icons/openai.svg
+            cta:
+              url: ./#openai
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Azure AI
+            icon: /assets/icons/azure.svg
+            cta:
+              url: ./#azure-ai
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Amazon Bedrock
+            icon: /assets/icons/bedrock.svg
+            cta:
+              url: ./#amazon-bedrock
+              align: end
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Gemini
+            icon: /assets/icons/gemini.svg
+            cta:
+              url: ./#gemini
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Anthropic
+            icon: /assets/icons/anthropic.svg
+            cta:
+              url: ./#anthropic
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Cohere
+            icon: /assets/icons/cohere.svg
+            cta:
+              url: ./#cohere
+              align: end
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Hugging Face
+            icon: /assets/icons/huggingface.svg
+            cta:
+              url: ./#hugging-face
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Llama
+            icon: /assets/icons/meta.svg
+            cta:
+              url: ./#llama
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Mistral
+            icon: /assets/icons/mistral.svg
+            cta:
+              url: ./#mistral
+              align: end
 
 
   - header:
