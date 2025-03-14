@@ -86,7 +86,7 @@ rows:
         - type: card
           config:
             title: AI provider proxy
-            description: Learn about the AI providers supported by the AI plugins.
+            description: Route client requests to various AI providers.
             cta:
               url: /ai-gateway/ai-providers/
               align: end
