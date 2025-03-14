@@ -87,7 +87,7 @@ rows:
     - blocks:
       - type: plugin
         config:
-          slug: confluent
+          slug: confluent-consume
 
 
   - header:
@@ -171,7 +171,7 @@ rows:
           icon: /assets/icons/third-party/dynatrace.png
           cta:
             text: Set up Dynatrace with OpenTelemetry &rarr;
-            url: "/"
+            url: "/how-to/set-up-dynatrace-with-otel/"
     - blocks:
       - type: plugin
         config:
