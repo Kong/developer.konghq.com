@@ -76,6 +76,24 @@ module Jekyll
         @works_on ||= metadata['works_on']
       end
 
+      def changelog_exists?
+        return @changelog_exists if defined?(@changelog_exists)
+
+        @changelog_exists = File.exist?(File.join(folder, 'changelog.md'))
+      end
+
+      def third_party?
+        metadata['third_party']
+      end
+
+      def api_spec_exists?
+        File.exist?(api_spec_file_path)
+      end
+
+      def api_spec_file_path
+        @api_spec_file_path ||= File.join('api-specs', 'plugins', slug, 'openapi.yaml')
+      end
+
       private
 
       def release_info

@@ -1,2 +1,35 @@
 kong-inc:
   name: Kong Inc.
+
+optum:
+  name: Optum
+
+traceable-ai:
+  name: Traceable.ai
+
+the-lego-group:
+  name: The LEGO Group
+
+amberflo:
+  name: Amberflo.io Inc.
+
+appsentinels:
+  name: Appsentinels
+
+datadome:
+  name: DataDome
+
+impart-security:
+  name: Impart Security
+
+inigo:
+  name: Inigo
+
+moesif:
+  name: Moesif
+
+noname-security:
+  name: Noname Security
+
+salt:
+  name: Salt Security

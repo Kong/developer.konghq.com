@@ -3,6 +3,15 @@
 <div class="flex flex-col gap-2  w-full">
   <div class="text-primary font-medium">Made by</div>
   <div class="flex gap-1.5 flex-col md:flex-row">
-    <span> {{ publisher.name }}</span>
+    {% if include.third_party %}
+      <span><a href="{{include.support_url}}">{{ publisher.name }}</a></span>
+    {% else %}
+      <span> {{ publisher.name }}</span>
+    {% endif %}
+  </div>
+  <div class="flex gap-1.5 flex-col md:flex-row">
+    {% if include.source_code_url %}
+      <span><a href="{{include.source_code_url}}">Source code</a></span>
+    {% endif %}
   </div>
 </div>

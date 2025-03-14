@@ -35,6 +35,8 @@
     --color-semantic-green-secondary: 236, 255, 251;
     --color-semantic-grey-primary: 86, 86, 86;
     --color-semantic-grey-secondary: 242, 242, 242;
+    --color-semantic-purple-primary: 151, 71, 255;
+    --color-semantic-purple-secondary: 240, 229, 255;
 
     --color-shadow-hover-card: 24, 128, 240, 0.16;
 
@@ -62,13 +64,18 @@
     --color-border-primary: 255, 255, 255;
     --color-shadow-primary: 2, 20, 40, 0.08;
 
+    --color-semantic-red-primary: 214, 67, 67;
     --color-semantic-red-secondary: 79, 28, 28;
+    --color-semantic-yellow-primary: 255, 198, 115;;
     --color-semantic-yellow-secondary: 64, 42, 10;
     --color-semantic-blue-primary: 66, 140, 220;
     --color-semantic-blue-secondary: 4, 40, 79;
+    --color-semantic-green-primary: 134, 226, 204;
     --color-semantic-green-secondary: 18, 51, 43;
     --color-semantic-grey-primary: 176, 176, 176;
     --color-semantic-grey-secondary: 21, 31, 43;
+    --color-semantic-purple-primary: 220, 193, 255;
+    --color-semantic-purple-secondary: 65, 37, 102;
 
     --color-shadow-hover-card: 24, 128, 240, 0.4;
   }
@@ -166,6 +173,10 @@
 
   ul {
     @apply list-disc;
+  }
+
+  li {
+    @apply leading-[1.6rem];
   }
 
   li > *:not(:last-child) {
@@ -270,7 +281,7 @@
     @apply flex flex-col gap-3;
   }
 
-  .success, .warning, .danger, .info, .neutral {
+  .success, .warning, .danger, .info, .neutral, .decorative {
     @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-10 relative text-sm;
 
     &:not(.no-icon)::before {
@@ -322,6 +333,14 @@
     }
   }
 
+  .decorative {
+    @apply bg-semantic-purple-secondary border-semantic-purple-primary;
+
+    &:not(.no-icon)::before {
+      @apply bg-semantic-purple-primary;
+    }
+  }
+
   .mermaid svg {
     @apply m-auto;
 
@@ -346,12 +365,47 @@
     }
   }
 
+  .mermaid svg[aria-roledescription="sequence"] {
+    .actor {
+      @apply fill-[rgb(var(--color-bg-secondary))] !important;
+    }
+
+    .activation0 {
+      @apply fill-[rgb(var(--color-bg-secondary))] !important;
+    }
+
+    text {
+      @apply fill-[rgb(var(--color-text-primary))] !important;
+
+    }
+
+    text > tspan {
+      @apply fill-[rgb(var(--color-text-primary))] !important;
+    }
+
+    .messageLine0 {
+      @apply stroke-[rgb(var(--color-brand))] !important;
+    }
+
+    circle {
+      @apply fill-[rgb(var(--color-bg-secondary))] !important;
+    }
+  }
+
   .badge {
     @apply rounded px-1.5 py-0.5 text-primary text-xs bg-brand-saturated/40;
   }
 
   .badge.deprecated {
     @apply bg-semantic-red-secondary;
+  }
+
+  .badge.premium-partner {
+    @apply bg-semantic-purple-secondary;
+  }
+
+  .badge.third-party {
+    @apply bg-semantic-green-secondary;
   }
 
   .tablist {

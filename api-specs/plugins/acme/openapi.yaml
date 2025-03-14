@@ -1,0 +1,155 @@
+openapi: 3.0.2
+info:
+  title: ACME Plugin API
+  version: 1.0.0
+  description: API for managing ACME certificates in Kong.
+  contact:
+    email: docs@konghq.com
+    name: Kong Inc
+    url: 'https://konghq.com'
+externalDocs:
+  description: Kong Gateway Enterprise Admin API
+  url: 'https://docs.konghq.com'
+servers:
+  - description: Default Admin API URL
+    url: '{protocol}://{hostname}:{port}{path}'
+    variables:
+      hostname:
+        default: localhost
+        description: Hostname for Kong's Admin API
+      path:
+        default: /
+        description: Base path for Kong's Admin API
+      port:
+        default: '8001'
+        description: Port for Kong's Admin API
+      protocol:
+        default: http
+        description: Protocol for requests to Kong's Admin API
+        enum:
+          - http
+          - https
+security:
+  - personalAccessToken: []
+paths:
+  /acme:
+    post:
+      operationId: applyCertificate
+      summary: Apply or Renew Certificate
+      description: Applies or renews the certificate and returns the result.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - host
+              properties:
+                host:
+                  type: string
+                  description: The domain where the certificate should be created.
+                  example: example.com
+                test_http_challenge_flow:
+                  type: boolean
+                  description: Only checks if the configuration is valid without applying the certificate.
+      responses:
+        '201':
+          description: Certificate successfully applied.
+        '400':
+          description: Bad request, invalid parameters.
+        '500':
+          description: Internal server error.
+      tags:
+        - ACME
+    patch:
+      operationId: updateCertificate
+      summary: Update Certificate
+      description: Apply or renew a certificate in the background.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - host
+              properties:
+                host:
+                  type: string
+                  description: The domain where the certificate should be created.
+                  example: example.com
+                test_http_challenge_flow:
+                  type: boolean
+                  description: Only checks if the configuration is valid without applying the certificate.
+      responses:
+        '202':
+          description: Renewal process started successfully.
+      tags:
+        - ACME
+  /acme/certificates:
+    get:
+      operationId: listCertificates
+      summary: Get ACME Certificates
+      description: Lists all certificates created by the ACME plugin.
+      parameters:
+        - name: invalid_only
+          in: query
+          description: Filter to show only invalid certificates.
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List of certificates.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        host:
+                          type: string
+                        issuer_cn:
+                          type: string
+                        not_before:
+                          type: string
+                          format: date-time
+                        not_after:
+                          type: string
+                          format: date-time
+                        valid:
+                          type: boolean
+      tags:
+        - ACME
+  /acme/certificates/{host}:
+    get:
+      operationId: getCertificateByHost
+      summary: Get Certificate by Host
+      description: Retrieves certificate information for a specific host.
+      parameters:
+        - name: host
+          in: path
+          required: true
+          description: The hostname of the certificate to retrieve.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Certificate details.
+        '404':
+          description: Certificate not found.
+      tags:
+        - ACME
+components:
+  securitySchemes:
+    personalAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+tags:
+  - name: ACME
+    description: ACME Plugin API Endpoints

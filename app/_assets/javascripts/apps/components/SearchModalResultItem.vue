@@ -9,7 +9,8 @@
           {{ heading }}
         </div>
         <div class="text-secondary text-sm">
-          <SearchResultSnippet :item="item" attribute="content" />
+          <SearchResultSnippet v-if="highlighetContent" :item="item" attribute="content" />
+          <span v-else>{{ item.content }}</span>
         </div>
       </div>
     </a>
@@ -27,6 +28,9 @@ export default {
     SearchResultSnippet
   },
   computed: {
+    highlighetContent() {
+      return this.item._highlightResult?.content?.matchLevel !== 'none';
+    },
     heading() {
       if (this.item.content_type === 'plugin_example') {
         return this.item.title;

@@ -3,11 +3,18 @@
         <div class="flex gap-3 items-center">
             {% if page.icon %}<img src="{{ page.icon }}" class="w-8 h-8"/>{% endif %}
 
-            <h1 id="{{page.title | slugify}}">{{ page.title | liquify }}</h1>
+            <h1 id="{{page.title | slugify}}" class="link-anchor">{{ page.title | liquify }}</h1>
 
             {% if layout.tier_inline == true and page.tier %}
                 {% include tier.html products=page.products tier=page.tier %}
             {% endif %}
+
+            {%- if page.premium_partner -%}
+            {%- include badges/premium_partner.html -%}
+            {%- endif -%}
+            {%- if page.third_party -%}
+            {%- include badges/third_party.html -%}
+            {%- endif -%}
         </div>
 
         {% if layout.uses != false %}

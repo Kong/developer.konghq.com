@@ -1,0 +1,203 @@
+openapi: 3.0.2
+info:
+  title: Vault Auth API
+  version: 1.0.0
+  description: API for managing Vault-based authentication credentials in Kong.
+  contact:
+    email: docs@konghq.com
+    name: Kong Inc
+    url: 'https://konghq.com'
+externalDocs:
+  description: Kong Gateway Enterprise Admin API
+  url: 'https://docs.konghq.com'
+servers:
+  - description: Default Admin API URL
+    url: '{protocol}://{hostname}:{port}{path}'
+    variables:
+      hostname:
+        default: localhost
+        description: Hostname for Kong's Admin API
+      path:
+        default: /
+        description: Base path for Kong's Admin API
+      port:
+        default: '8001'
+        description: Port for Kong's Admin API
+      protocol:
+        default: http
+        description: Protocol for requests to Kong's Admin API
+        enum:
+          - http
+          - https
+security:
+  - personalAccessToken: []
+
+paths:
+  /vault-auth/{vault}/credentials:
+    get:
+      operationId: listVaultCredentials
+      summary: List Vault Credentials
+      description: Retrieves all stored credentials for a given Vault instance.
+      parameters:
+        - name: vault
+          in: path
+          required: true
+          description: The ID or name of the Vault instance.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of stored credentials.
+        '404':
+          description: Vault instance not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - Vault Auth
+    post:
+      operationId: createVaultCredential
+      summary: Create Vault Credential
+      description: Creates a new Vault credential for a consumer.
+      parameters:
+        - name: vault
+          in: path
+          required: true
+          description: The ID or name of the Vault instance.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: Vault credential details.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                consumer:
+                  type: string
+                  description: The username or ID of the consumer.
+                access_token:
+                  type: string
+                  description: The access token for the Vault credential.
+              required:
+                - consumer
+                - access_token
+      responses:
+        '201':
+          description: Credential successfully created.
+        '400':
+          description: Invalid request (e.g., missing consumer).
+        '404':
+          description: Vault instance or consumer not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - Vault Auth
+
+  /vault-auth/{vault}/credentials/{consumer}:
+    post:
+      operationId: upsertVaultCredential
+      summary: Upsert Vault Credential for a Consumer
+      description: Creates or updates a Vault credential for a specific consumer.
+      parameters:
+        - name: vault
+          in: path
+          required: true
+          description: The ID or name of the Vault instance.
+          schema:
+            type: string
+        - name: consumer
+          in: path
+          required: true
+          description: The username or ID of the consumer.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: Vault credential details.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                access_token:
+                  type: string
+                  description: The access token for the Vault credential.
+              required:
+                - access_token
+      responses:
+        '201':
+          description: Credential successfully created or updated.
+        '400':
+          description: Invalid request (e.g., missing consumer).
+        '404':
+          description: Vault instance or consumer not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - Vault Auth
+
+  /vault-auth/{vault}/credentials/token/{access_token}:
+    get:
+      operationId: getVaultCredential
+      summary: Retrieve a Vault Credential by Access Token
+      description: Fetches a Vault credential using the access token.
+      parameters:
+        - name: vault
+          in: path
+          required: true
+          description: The ID or name of the Vault instance.
+          schema:
+            type: string
+        - name: access_token
+          in: path
+          required: true
+          description: The access token of the Vault credential.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Credential found.
+        '404':
+          description: Credential not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - Vault Auth
+    delete:
+      operationId: deleteVaultCredential
+      summary: Delete a Vault Credential by Access Token
+      description: Deletes a Vault credential associated with a given access token.
+      parameters:
+        - name: vault
+          in: path
+          required: true
+          description: The ID or name of the Vault instance.
+          schema:
+            type: string
+        - name: access_token
+          in: path
+          required: true
+          description: The access token of the Vault credential.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Credential successfully deleted.
+        '404':
+          description: Credential not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - Vault Auth
+
+tags:
+  - name: Vault Auth
+    description: API endpoints for managing Vault-based authentication credentials in Kong.
+
+components:
+  securitySchemes:
+    personalAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token

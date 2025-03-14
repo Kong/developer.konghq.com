@@ -1,0 +1,18 @@
+title: Rate limiting with local policy
+description: |
+  Users are allowed either 5 requests per second, or 1000 requests per hour.
+  The `local` policy stores counters in-memory on the node.
+
+weight: 900
+
+config:
+  second: 5
+  hour: 1000
+  policy: local
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

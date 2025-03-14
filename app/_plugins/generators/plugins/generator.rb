@@ -28,6 +28,7 @@ module Jekyll
         generate_reference_page(plugin)
         generate_changelog_page(plugin)
         generate_example_pages(plugin)
+        generate_api_reference_page(plugin)
       end
 
       def generate_overview_page(plugin)
@@ -48,6 +49,8 @@ module Jekyll
       end
 
       def generate_changelog_page(plugin)
+        return unless plugin.changelog_exists?
+
         changelog = Jekyll::PluginPages::Pages::Changelog
                     .new(plugin:, file: File.join(plugin.folder, 'changelog.md'))
                     .to_jekyll_page
@@ -63,6 +66,16 @@ module Jekyll
 
           site.pages << example
         end
+      end
+
+      def generate_api_reference_page(plugin)
+        return unless plugin.api_spec_exists?
+
+        api_reference = Jekyll::PluginPages::Pages::ApiReference
+                        .new(plugin:, file: plugin.api_spec_file_path)
+                        .to_jekyll_page
+
+        site.pages << api_reference
       end
     end
   end

@@ -1,0 +1,137 @@
+openapi: 3.0.2
+info:
+  title: OpenID Connect API
+  version: 1.0.0
+  description: API for managing discovery caches and JWKs in Kong via the OpenID Connect plugin.
+  contact:
+    email: docs@konghq.com
+    name: Kong Inc
+    url: 'https://konghq.com'
+externalDocs:
+  description: Kong Gateway Enterprise Admin API
+  url: 'https://docs.konghq.com'
+servers:
+  - description: Default Admin API URL
+    url: '{protocol}://{hostname}:{port}{path}'
+    variables:
+      hostname:
+        default: localhost
+        description: Hostname for Kong's Admin API
+      path:
+        default: /
+        description: Base path for Kong's Admin API
+      port:
+        default: '8001'
+        description: Port for Kong's Admin API
+      protocol:
+        default: http
+        description: Protocol for requests to Kong's Admin API
+        enum:
+          - http
+          - https
+security:
+  - personalAccessToken: []
+paths:
+  /openid-connect/issuers:
+    get:
+      operationId: listDiscoveryCache
+      summary: List All Discovery Cache Objects
+      description: Retrieves a list of all discovery cache objects stored in Kong.
+      responses:
+        '200':
+          description: List of discovery cache objects.
+        '500':
+          description: Internal server error.
+      tags:
+        - OpenID Connect
+    delete:
+      operationId: deleteAllDiscoveryCache
+      summary: Delete All Discovery Cache Objects
+      description: Deletes all stored discovery cache objects.
+      responses:
+        '204':
+          description: All discovery cache objects successfully deleted.
+        '500':
+          description: Internal server error.
+      tags:
+        - OpenID Connect
+  /openid-connect/issuers/{issuer_or_id}:
+    get:
+      operationId: getDiscoveryCache
+      summary: Retrieve a Discovery Cache Object
+      description: Retrieves a specific discovery cache object using the issuer URL or ID.
+      parameters:
+        - name: issuer_or_id
+          in: path
+          required: true
+          description: The unique identifier or the `config.issuer` value.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Discovery cache object found.
+        '404':
+          description: Discovery cache object not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - OpenID Connect
+    delete:
+      operationId: deleteDiscoveryCache
+      summary: Delete a Discovery Cache Object
+      description: Deletes a specific discovery cache object using the issuer URL or ID.
+      parameters:
+        - name: issuer_or_id
+          in: path
+          required: true
+          description: The unique identifier or the `config.issuer` value.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Discovery cache object successfully deleted.
+        '404':
+          description: Discovery cache object not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - OpenID Connect
+  /openid-connect/jwks:
+    get:
+      operationId: getJWKS
+      summary: Retrieve JWKS
+      description: Retrieves the JSON Web Key Set (JWKS) used by the OpenID Connect plugin.
+      responses:
+        '200':
+          description: JSON Web Key Set found.
+          content:
+            application/jwk-set+json:
+              schema:
+                type: object
+                
+        '404':
+          description: JWKS not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - OpenID Connect
+    delete:
+      operationId: rotateJWKS
+      summary: Rotate JWKS
+      description: Deletes the current JSON Web Key Set, triggering an automatic key rotation.
+      responses:
+        '204':
+          description: JWKS successfully rotated.
+        '500':
+          description: Internal server error.
+      tags:
+        - OpenID Connect
+tags:
+  - name: OpenID Connect
+    description: API endpoints for managing OpenID Connect discovery caches and JSON Web Keys (JWKS) in Kong.
+components:
+  securitySchemes:
+    personalAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token

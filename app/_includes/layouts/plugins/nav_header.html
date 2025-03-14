@@ -5,7 +5,12 @@
         <a class="tab-button__horizontal{% if page.overview? %} tab-button__horizontal--active{% endif %}" href="{{page.overview_url}}">Overview</a>
         <a class="tab-button__horizontal{% if page.example? %} tab-button__horizontal--active{% endif %}" href="{{page.get_started_url}}">Get started</a>
         <a class="tab-button__horizontal{% if page.reference? %} tab-button__horizontal--active{% endif %}" href="{{page.reference_url}}">Configuration reference</a>
-        <a class="tab-button__horizontal{% if page.changelog? %} tab-button__horizontal--active{% endif %}" href="{{page.changelog_url}}">Changelog</a>
+        {% if page.changelog_exists? %}
+          <a class="tab-button__horizontal{% if page.changelog? %} tab-button__horizontal--active{% endif %}" href="{{page.changelog_url}}">Changelog</a>
+        {% endif %}
+        {% if page.api_spec_exists? %}
+          <a class="tab-button__horizontal{% if page.api_reference? %} tab-button__horizontal--active{% endif %}" href="{{page.api_reference_url}}">API reference</a>
+        {% endif %}
       </div>
     </div>
   </div>

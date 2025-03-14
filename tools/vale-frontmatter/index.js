@@ -66,6 +66,9 @@ async function prepareMarkdownFilesForVale() {
           frontmatter = frontmatter.replaceAll(word, "");
         }
 
+        // Remove comments
+        frontmatter = frontmatter.replaceAll(new RegExp("^#.*$", "gm"), "");
+
         await fs.writeFile(`../../${path}`, frontmatter, "utf-8");
       }
     }

@@ -6,20 +6,20 @@ require_relative '../../lib/site_accessor'
 module Jekyll
   module Drops
     module Plugins
-      class Schema < Liquid::Drop
+      class Schema < Liquid::Drop # rubocop:disable Style/Documentation
         include Jekyll::SiteAccessor
 
         def self.all(plugin:)
           plugin.releases.map do |release|
-            new(release:, plugin_slug: plugin.slug)
+            new(release:, plugin: plugin)
           end
         end
 
         attr_reader :release
 
-        def initialize(release:, plugin_slug:)
+        def initialize(release:, plugin:) # rubocop:disable Lint/MissingSuper
           @release = release
-          @plugin_slug = plugin_slug
+          @plugin = plugin
         end
 
         def as_json
@@ -32,16 +32,39 @@ module Jekyll
 
         private
 
+        def plugin_slug
+          @plugin_slug ||= @plugin.slug
+        end
+
         def schema
           @schema ||= JSON.parse(File.read(file_path))
         end
 
         def file_path
-          @file_path ||= File.join(
+          @file_path ||= if @plugin.third_party?
+                           third_party_file_path
+                         else
+                           kong_schema_file_path
+                         end
+        end
+
+        def kong_schema_file_path
+          @kong_schema_file_path ||= File.join(
             site.config['plugin_schemas_path'],
-            @plugin_slug,
+            plugin_slug,
             "#{@release.number}.json"
           )
+        end
+
+        def third_party_file_path
+          path = File.join(@plugin.folder, 'schema.json')
+
+          unless File.exist?(path)
+            raise ArgumentError,
+                  "Missing `schema.json` file in #{@plugin.folder} for third-party plugin `#{plugin_slug}.`"
+          end
+
+          path
         end
       end
     end

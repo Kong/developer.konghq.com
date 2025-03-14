@@ -24,7 +24,7 @@
     </span>
   </button>
 
-  <div v-if="showModal" class="modal-overlay" @click="closeModal">
+  <div v-if="showModal" class="modal-overlay" @click="showModal = false">
     <div class="modal-content-wrapper">
       <div class="modal-content" aria-modal="true" role="dialog" @click.stop>
         <div class="modal-content-inner" v-bind="autocomplete.getRootProps({})">
@@ -66,18 +66,9 @@
               <template v-if="state.isOpen">
                 <div v-if="state.query" class="tabs flex flex-col w-full gap-4" ref="tabsElement">
                   <div class="tablist" role="tablist">
-                    <button tabIndex = "0" id="all" class="tab-button__horizontal" :class="{ 'tab-button__horizontal--active': activeTab === 'all' }" aria-controls="navtab-tabpanel-all" role="tab" :aria-selected="activeTab === 'all'" @click="onTabClick('all', $event)" @keydown="onKeyDown('all', $event)">
-                        All
-                      </button>
-                      <button tabIndex = "-1" id="docs" class="tab-button__horizontal" :class="{ 'tab-button__horizontal--active': activeTab === 'docs' }" aria-controls="navtab-tabpanel-docs" role="tab" :aria-selected="activeTab === 'docs'" @click="onTabClick('docs', $event)" @keydown="onKeyDown('docs', $event)">
-                        Docs
-                      </button>
-                      <button tabIndex = "-1" id="how_tos" class="tab-button__horizontal" :class="{ 'tab-button__horizontal--active': activeTab === 'how_tos' }" aria-controls="navtab-tabpanel-how_tos" role="tab" :aria-selected="activeTab === 'how_tos'" @click="onTabClick('how_tos', $event)" @keydown="onKeyDown('how_tos', $event)">
-                        How-to Guides
-                      </button>
-                      <button tabIndex = "-1" id="plugins" class="tab-button__horizontal" :class="{ 'tab-button__horizontal--active': activeTab === 'plugins' }" aria-controls="navtab-tabpanel-plugins" role="tab" :aria-selected="activeTab === 'plugins'" @click="onTabClick('plugins', $event)" @keydown="onKeyDown('plugins', $event)">
-                        Plugins
-                      </button>
+                    <button v-for="(source, key, index) in sources" :key="key" :id="key" :tabIndex="index === 0 ? 0 : -1" class="tab-button__horizontal" :class="{ 'tab-button__horizontal--active': activeTab === key }" :aria-controls="`navtab-tabpanel-${key}`" role="tab" :aria-selected="activeTab === key" @click="onTabClick(key, $event)" @keydown="onKeyDown(key, $event)">
+                      {{ source.label }}
+                    </button>
                   </div>
                   <div class="navtab-contents flex flex-col">
                     <div v-for="{ source, items } in state.collections" :key="`source-${source.sourceId}`" >
@@ -99,22 +90,25 @@
             </div>
           </div>
 
-          <div class="hidden md:flex w-full gap-2 p-4 items-center flex-grow-0 flex-shrink-0">
-            <span class="sr-only">Tab key</span>
-            <span aria-hidden="true" class="badge h-5 flex items-center text-primary">
-              <span>Tab</span>
-            </span>
-            <span class="text_root__r0DFB hds-typography-body-100 hds-font-weight-regular">to navigate,</span>
-            <span class="sr-only">Enter key</span>
-            <span aria-hidden="true" class="badge h-5 flex items-center text-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M13.5 2.75a.75.75 0 00-1.5 0v4.5A1.75 1.75 0 0110.25 9H4.56l2.22-2.22a.75.75 0 00-1.06-1.06l-3.5 3.5a.748.748 0 000 1.06l3.5 3.5a.75.75 0 001.06-1.06L4.56 10.5h5.69a3.25 3.25 0 003.25-3.25v-4.5z"></path></svg>
-            </span>
-            <span class="text_root__r0DFB hds-typography-body-100 hds-font-weight-regular">to select,</span>
-            <span class="sr-only">Escape key</span>
-            <span aria-hidden="true" class="badge h-5 flex items-center text-primary">
-              <span>Esc</span>
-            </span>
-            <span class="text_root__r0DFB hds-typography-body-100 hds-font-weight-regular">to exit</span>
+          <div class="hidden md:flex w-full p-4 items-center flex-grow-0 flex-shrink-0 border-t border-brand-saturated/40 justify-between">
+            <div class="flex gap-2 items-center">
+              <span class="sr-only">Tab key</span>
+              <span aria-hidden="true" class="badge h-5 flex items-center text-primary">
+                <span>Tab</span>
+              </span>
+              <span class="text_root__r0DFB hds-typography-body-100 hds-font-weight-regular">to navigate,</span>
+              <span class="sr-only">Enter key</span>
+              <span aria-hidden="true" class="badge h-5 flex items-center text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M13.5 2.75a.75.75 0 00-1.5 0v4.5A1.75 1.75 0 0110.25 9H4.56l2.22-2.22a.75.75 0 00-1.06-1.06l-3.5 3.5a.748.748 0 000 1.06l3.5 3.5a.75.75 0 001.06-1.06L4.56 10.5h5.69a3.25 3.25 0 003.25-3.25v-4.5z"></path></svg>
+              </span>
+              <span class="text_root__r0DFB hds-typography-body-100 hds-font-weight-regular">to select,</span>
+              <span class="sr-only">Escape key</span>
+              <span aria-hidden="true" class="badge h-5 flex items-center text-primary">
+                <span>Esc</span>
+              </span>
+              <span class="text_root__r0DFB hds-typography-body-100 hds-font-weight-regular">to exit</span>
+           </div>
+            <a href="/search" class="text-brand">Advanced search</a>
           </div>
         </div>
       </div>
@@ -165,6 +159,7 @@ export default {
     const inputElement = ref(null);
     const tabsElement = ref(null);
     const showModal = ref(false);
+    const sources = ref(window.searchSources);
 
     const hitsPerPage = 20;
     const indexName = import.meta.env.VITE_ALGOLIA_INDEX_NAME;
@@ -244,100 +239,29 @@ export default {
             return query;
           }
 
-          return [
-            {
-              sourceId: "all",
-              getItems() {
-                return getAlgoliaResults({
-                  searchClient,
-                  queries: [
-                    {
-                      indexName: indexName,
-                      params: {
-                        query,
-                        hitsPerPage: hitsPerPage,
-                        filters: applyProductFilter('')
-                      },
+          return Object.entries(sources.value).map(([sourceId, { filters }]) => ({
+            sourceId,
+            getItems() {
+              return getAlgoliaResults({
+                searchClient,
+                queries: [
+                  {
+                    indexName,
+                    params: {
+                      query,
+                      hitsPerPage,
+                      filters: applyProductFilter(filters),
                     },
-                  ]
-                })
-              },
-              onSelect({ setQuery }) {
-                setQuery('');
-                inputElement.value = '';
-                showModal.value = false;
-              },
+                  },
+                ],
+              });
             },
-            {
-              sourceId: "docs",
-              getItems() {
-                return getAlgoliaResults({
-                  searchClient,
-                  queries: [
-                    {
-                      indexName: indexName,
-                      params: {
-                        query,
-                        hitsPerPage: hitsPerPage,
-                        filters: applyProductFilter('NOT content_type:how_to AND NOT content_type:plugin AND NOT content_type:plugin_example')
-                      },
-                    },
-                  ]
-                })
-              },
-              onSelect({ setQuery }) {
-                setQuery('');
-                inputElement.value = '';
-                showModal.value = false;
-              },
+            onSelect({ setQuery }) {
+              setQuery('');
+              inputElement.value = '';
+              showModal.value = false;
             },
-            {
-              sourceId: 'how_tos',
-              getItems() {
-                return getAlgoliaResults({
-                  searchClient,
-                  queries: [
-                    {
-                      indexName: indexName,
-                      params: {
-                        query,
-                        hitsPerPage: hitsPerPage,
-                        filters: applyProductFilter('content_type:how_to')
-                      },
-                    },
-                  ]
-                })
-              },
-              onSelect({ setQuery }) {
-                setQuery('');
-                inputElement.value = '';
-                showModal.value = false;
-              },
-            },
-            {
-              sourceId: 'plugins',
-              getItems() {
-                return getAlgoliaResults({
-                  searchClient,
-                  queries: [
-                    {
-                      indexName: indexName,
-                      params: {
-                        query,
-                        hitsPerPage: hitsPerPage,
-                        filters: applyProductFilter('content_type:plugin OR content_type:plugin_example')
-                      },
-                    },
-                  ]
-                })
-              },
-              onSelect({ setQuery }) {
-                setQuery('');
-                inputElement.value = '';
-                showModal.value = false;
-              },
-            }
-          ];
+          }));
         },
       })
     );
@@ -350,8 +274,16 @@ export default {
       inputProps,
       autocomplete,
       tagsPlugin,
-      showModal
+      showModal,
+      sources
     };
+  },
+  watch: {
+    showModal(newValue) {
+      if (newValue === false) {
+        this.closeModal();
+      }
+    }
   },
   methods: {
     handleKeyPress(event) {
@@ -359,7 +291,7 @@ export default {
         event.preventDefault();
         this.openModal();
       } else if (event.key === 'Escape' && this.showModal) {
-        this.closeModal();
+        this.showModal = false;
       }
     },
     onTabClick(tabId, event) {
@@ -422,7 +354,6 @@ export default {
       });
     },
     closeModal() {
-      this.showModal = false;
       document.body.style.overflow = "";
       document.body.style.removeProperty("overscoll-behavior");
       if (this.permanentScrollbars) {

@@ -5,7 +5,7 @@ require 'yaml'
 module Jekyll
   module PluginPages
     module Pages
-      class Reference < Base
+      class Reference < Base # rubocop:disable Style/Documentation
         def self.url(slug)
           "/plugins/#{slug}/reference/"
         end
@@ -19,6 +19,7 @@ module Jekyll
             .except('faqs')
             .merge(metadata)
             .merge('reference?' => true, 'toc' => false)
+            .merge(versions_info)
         end
 
         def metadata
@@ -27,6 +28,14 @@ module Jekyll
 
         def layout
           'plugins/reference'
+        end
+
+        def versions_info
+          if @plugin.third_party?
+            { 'no_version' => true }
+          else
+            {}
+          end
         end
       end
     end

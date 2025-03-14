@@ -1,0 +1,149 @@
+openapi: 3.0.2
+info:
+  title: Proxy Cache API
+  version: 1.0.0
+  description: API for managing cached entities in Kong via the Proxy Cache plugin.
+  contact:
+    email: docs@konghq.com
+    name: Kong Inc
+    url: 'https://konghq.com'
+externalDocs:
+  description: Kong Gateway Enterprise Admin API
+  url: 'https://docs.konghq.com'
+servers:
+  - description: Default Admin API URL
+    url: '{protocol}://{hostname}:{port}{path}'
+    variables:
+      hostname:
+        default: localhost
+        description: Hostname for Kong's Admin API
+      path:
+        default: /
+        description: Base path for Kong's Admin API
+      port:
+        default: '8001'
+        description: Port for Kong's Admin API
+      protocol:
+        default: http
+        description: Protocol for requests to Kong's Admin API
+        enum:
+          - http
+          - https
+security:
+  - personalAccessToken: []
+paths:
+  /proxy-cache:
+    delete:
+      operationId: purgeAllCache
+      summary: Purge All Cache Entities
+      description: Deletes all cached entities across all Proxy Cache plugins.
+      responses:
+        '204':
+          description: Cache successfully purged.
+        '500':
+          description: Internal server error.
+      tags:
+        - Proxy Cache
+  /proxy-cache/{cache_key}:
+    get:
+      operationId: getCacheEntity
+      summary: Retrieve a Cache Entity
+      description: Retrieves a cached entity by its cache key.
+      parameters:
+        - name: cache_key
+          in: path
+          required: true
+          description: The cache key to retrieve.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cache entry found.
+        '404':
+          description: Cache entry not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - Proxy Cache
+    delete:
+      operationId: deleteCacheEntity
+      summary: Delete a Cache Entity
+      description: Deletes a cached entity by its cache key.
+      parameters:
+        - name: cache_key
+          in: path
+          required: true
+          description: The cache key to delete.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Cache entry successfully deleted.
+        '404':
+          description: Cache entry not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - Proxy Cache
+  /proxy-cache/{plugin_id}/caches/{cache_key}:
+    get:
+      operationId: getCacheEntityByPlugin
+      summary: Retrieve a Cache Entity for a Specific Plugin
+      description: Retrieves a cached entity within a specific Proxy Cache plugin.
+      parameters:
+        - name: plugin_id
+          in: path
+          required: true
+          description: The ID of the Proxy Cache plugin instance.
+          schema:
+            type: string
+        - name: cache_key
+          in: path
+          required: true
+          description: The cache key to retrieve.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cache entry found.
+        '404':
+          description: Cache entry not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - Proxy Cache
+    delete:
+      operationId: deleteCacheEntityByPlugin
+      summary: Delete a Cache Entity for a Specific Plugin
+      description: Deletes a cached entity within a specific Proxy Cache plugin.
+      parameters:
+        - name: plugin_id
+          in: path
+          required: true
+          description: The ID of the Proxy Cache plugin instance.
+          schema:
+            type: string
+        - name: cache_key
+          in: path
+          required: true
+          description: The cache key to delete.
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Cache entry successfully deleted.
+        '404':
+          description: Cache entry not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - Proxy Cache
+tags:
+  - name: Proxy Cache
+    description: API endpoints for managing proxy cache entities in Kong.
+components:
+  securitySchemes:
+    personalAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token

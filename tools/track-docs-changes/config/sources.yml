@@ -204,8 +204,12 @@ app/_kong_plugins/key-auth/index.md:
   - app/_hub/kong-inc/key-auth/overview/_index.md
 app/_kong_plugins/rate-limiting/index.md:
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
+app/_kong_plugins/rate-limiting/changelog.md:
+  - app/_hub/kong-inc/rate-limiting/_changelog.md
 app/_kong_plugins/rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
+app/_kong_plugins/rate-limiting-advanced/changelog.md:
+  - app/_hub/kong-inc/rate-limiting-advanced/_changelog.md
 app/_kong_plugins/ai-proxy-advanced/index.md:
   - app/_hub/kong-inc/ai-proxy-advanced/overview/_index.md
 app/_kong_plugins/ai-proxy/index.md:
@@ -354,7 +358,10 @@ app/_kong_plugins/app-dynamics/changelog.md:
   - app/_hub/kong-inc/app-dynamics/changelog.md
 app/_kong_plugins/app-dynamics/index.md:
   - app/_hub/kong-inc/app-dynamics/overview/_index.md
-
+app/_kong_plugins/ai-azure-content-safety/index.md:
+  - app/_hub/kong-inc/ai-azure-content-safety/overview/_index.md
+app/_kong_plugins/ai-azure-content-safety/changelog.md:
+  - app/_hub/kong-inc/ai-azure-content-safety/_changelog.md
 
 # Konnect
 
@@ -463,6 +470,8 @@ app/gateway/traffic-control/load-balancing.md:
   - app/_src/gateway/how-kong-works/load-balancing.md
 app/gateway/traffic-control/blue-green-deployments.md:
   - app/_src/gateway/production/blue-green.md
+app/konnect-compatibility.md:
+  - app/konnect/compatibility.md
 
 # policies
 app/gateway/vulnerabilities.md:

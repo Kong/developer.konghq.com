@@ -1,0 +1,206 @@
+{
+  "properties": {
+    "config": {
+      "properties": {
+        "api_endpoint": {
+          "default": "https://api.moesif.net",
+          "description": "URL for the Moesif Collection API (Change to your secure proxy hostname if client-side encryption is used).",
+          "type": "string"
+        },
+        "api_version": {
+          "default": "1.0",
+          "description": "API Version you want to tag this request with in Moesif.",
+          "type": "string"
+        },
+        "application_id": {
+          "description": "Your Moesif Application Id from your [Moesif](http://www.moesif.com) dashboard. Go to Bottom Left Menu -> Installation.",
+          "type": "string"
+        },
+        "authorization_company_id_field": {
+          "default": null,
+          "description": "Field name in JWT/OpenId token’s payload for identifying companies. Only applicable if `authorization_header_name` is set and is a Bearer token. [See identifying companies](https://www.moesif.com/docs/server-integration/kong-api-gateway/#identifying-companies).",
+          "type": "string"
+        },
+        "authorization_header_name": {
+          "default": "authorization",
+          "description": "Request header containing a Bearer or basic token to extract user id. See identifying users. Also, supports a comma-separated string. The plugin will check headers in order \"X-Api-Key, Authorization\". [See identifying users](https://www.moesif.com/docs/server-integration/kong-api-gateway/#identifying-users).",
+          "type": "string"
+        },
+        "authorization_user_id_field": {
+          "default": "sub",
+          "description": "Field name in JWT/OpenId token’s payload for identifying users. Only applicable if `authorization_header_name` is set and is a Bearer token. [See identifying users](https://www.moesif.com/docs/server-integration/kong-api-gateway/#identifying-users).",
+          "type": "string"
+        },
+        "batch_size": {
+          "default": 200,
+          "description": "Maximum batch size when sending to Moesif.",
+          "type": "number"
+        },
+        "company_id_header": {
+          "default": null,
+          "description": "Request or response header used to identify the Company (Account) in Moesif. [See identifying companies](https://www.moesif.com/docs/server-integration/kong-api-gateway/#identifying-companies).",
+          "type": "string"
+        },
+        "connect_timeout": {
+          "default": 1000,
+          "description": "Timeout in milliseconds when connecting to Moesif.",
+          "type": "number"
+        },
+        "debug": {
+          "default": false,
+          "description": "An option if set to true, prints internal log messages for debugging integration issues.",
+          "type": "boolean"
+        },
+        "disable_capture_request_body": {
+          "default": false,
+          "description": "Disable logging of request body.",
+          "type": "boolean"
+        },
+        "disable_capture_response_body": {
+          "default": false,
+          "description": "Disable logging of response body.",
+          "type": "boolean"
+        },
+        "disable_gzip_payload_decompression": {
+          "default": false,
+          "description": "If set to `true`, disables decompressing body in Kong.",
+          "type": "boolean"
+        },
+        "disable_transaction_id": {
+          "default": false,
+          "description": "Disable adding the `X-Moesif-Transaction-Id` response header for debugging.",
+          "type": "boolean"
+        },
+        "event_queue_size": {
+          "default": 1000,
+          "description": "Maximum number of events to hold in the queue before sending to Moesif. In case of network issues where the plugin is unable to connect or send an event to Moesif, skips adding new events to the queue to prevent memory overflow.",
+          "type": "number"
+        },
+        "keepalive": {
+          "default": 5000,
+          "description": "Value in milliseconds that defines for how long an idle connection will live before being closed.",
+          "type": "number"
+        },
+        "max_callback_time_spent": {
+          "default": 750,
+          "description": "Limits the amount of time in milliseconds to send events to Moesif per worker cycle.",
+          "type": "number"
+        },
+        "request_body_masks": {
+          "default": "{}",
+          "description": "An array of request body fields to mask.",
+          "type": "object"
+        },
+        "request_header_masks": {
+          "default": "{}",
+          "description": "An array of request header fields to mask.",
+          "type": "object"
+        },
+        "request_max_body_size_limit": {
+          "default": 100000,
+          "description": "Maximum request body size in bytes to log in Moesif.",
+          "type": "number"
+        },
+        "request_query_masks": {
+          "default": "{}",
+          "description": "An array of query string parameter fields to mask.",
+          "type": "object"
+        },
+        "response_body_masks": {
+          "default": "{}",
+          "description": "An array of response body fields to mask.",
+          "type": "object"
+        },
+        "response_header_masks": {
+          "default": "{}",
+          "description": "An array of response header fields to mask.",
+          "type": "object"
+        },
+        "response_max_body_size_limit": {
+          "default": 100000,
+          "description": "Maximum response body size in bytes to log in Moesif.",
+          "type": "number"
+        },
+        "send_timeout": {
+          "default": 2000,
+          "description": "Timeout in milliseconds when sending data to Moesif.",
+          "type": "number"
+        },
+        "timeout": {
+          "default": 1000,
+          "description": "(Deprecated) timeout in milliseconds when connecting/sending to Moesif.",
+          "type": "number"
+        },
+        "user_id_header": {
+          "default": "X-Consumer-Custom-Id",
+          "description": "Request or response header used to identify the User in Moesif. [See identifying users](https://www.moesif.com/docs/server-integration/kong-api-gateway/#identifying-users).",
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "consumer": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "protocols": {
+      "default": [
+        "grpc",
+        "grpcs",
+        "http",
+        "https",
+        "tcp",
+        "tls",
+        "tls_passthrough",
+        "udp"
+      ],
+      "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
+      "items": {
+        "enum": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "tcp",
+          "tls",
+          "tls_passthrough",
+          "udp"
+        ],
+        "required": [],
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "route": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the route being used.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    },
+    "service": {
+      "additionalProperties": false,
+      "description": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched.",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "type": "object"
+    }
+  },
+  "required": []
+}

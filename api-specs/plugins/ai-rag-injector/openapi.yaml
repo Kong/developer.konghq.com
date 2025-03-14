@@ -1,0 +1,149 @@
+openapi: 3.0.2
+info:
+  title: AI RAG Injector API
+  version: 1.0.0
+  description: API for managing chunk ingestion and retrieval in Kong via the AI RAG Injector plugin.
+  contact:
+    email: docs@konghq.com
+    name: Kong Inc
+    url: 'https://konghq.com'
+externalDocs:
+  description: Kong Gateway Enterprise Admin API
+  url: 'https://docs.konghq.com'
+servers:
+  - description: Default Admin API URL
+    url: '{protocol}://{hostname}:{port}{path}'
+    variables:
+      hostname:
+        default: localhost
+        description: Hostname for Kong's Admin API
+      path:
+        default: /
+        description: Base path for Kong's Admin API
+      port:
+        default: '8001'
+        description: Port for Kong's Admin API
+      protocol:
+        default: http
+        description: Protocol for requests to Kong's Admin API
+        enum:
+          - http
+          - https
+security:
+  - personalAccessToken: []
+paths:
+  /ai-rag-injector/{plugin_id}/lookup_chunks:
+    post:
+      operationId: lookupChunks
+      summary: Retrieve Relevant Chunks for a Prompt
+      description: Looks up relevant chunks in the AI RAG Injector plugin based on the provided prompt.
+      parameters:
+        - name: plugin_id
+          in: path
+          required: true
+          description: The ID of the AI RAG Injector plugin instance.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                  description: The prompt used to retrieve relevant chunks.
+                exclude_contents:
+                  type: boolean
+                  description: Whether to exclude chunk contents in the response.
+      responses:
+        '200':
+          description: Relevant chunks found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contents:
+                    type: array
+                    description: List of relevant chunks.
+                    items:
+                      type: string
+                  metadata:
+                    type: object
+                    description: Metadata related to the retrieved chunks.
+                    properties:
+                      chunk_ids:
+                        type: array
+                        items:
+                          type: string
+                        description: Identifiers of retrieved chunks.
+        '400':
+          description: Invalid request, missing or incorrect parameters.
+        '404':
+          description: Plugin not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - AI RAG Injector
+  /ai-rag-injector/{plugin_id}/ingest_chunk:
+    post:
+      operationId: ingestChunk
+      summary: Ingest a Chunk into the AI RAG System
+      description: Ingests a chunk of content into the AI RAG Injector plugin for retrieval in future queries.
+      parameters:
+        - name: plugin_id
+          in: path
+          required: true
+          description: The ID of the AI RAG Injector plugin instance.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                  description: The content to be ingested into the AI RAG system.
+      responses:
+        '200':
+          description: Chunk successfully ingested.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    description: Metadata related to the ingested chunk.
+                    properties:
+                      chunk_id:
+                        type: string
+                        description: Unique identifier of the ingested chunk.
+                      ingest_duration:
+                        type: integer
+                        description: Time taken to ingest the chunk in milliseconds.
+                      embeddings_tokens_count:
+                        type: integer
+                        description: Number of tokens used in embeddings.
+        '400':
+          description: Invalid request, missing or incorrect parameters.
+        '404':
+          description: Plugin not found.
+        '500':
+          description: Internal server error.
+      tags:
+        - AI RAG Injector
+tags:
+  - name: AI RAG Injector
+    description: API endpoints for managing chunk ingestion and retrieval in Kong via the AI RAG Injector plugin.
+components:
+  securitySchemes:
+    personalAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
