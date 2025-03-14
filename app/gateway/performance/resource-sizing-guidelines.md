@@ -22,7 +22,7 @@ traffic patterns."
 
 related_resources:
   - text: "{{site.base_gateway}} performance testing benchmarks"
-    url: /gateway/performance/performance-benchmarks/
+    url: /gateway/performance/benchmarks/
 ---
 
 @todo
