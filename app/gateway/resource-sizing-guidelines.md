@@ -22,7 +22,7 @@ description: "Review Kong's recommended resource allocation sizing guidelines fo
 
 related_resources:
   - text: Performance benchmark
-    url: /gateway/performance/performance-benchmarks/
+    url: /gateway/performance/benchmarks/
   - text: Guidelines for establishing a performance benchmark
     url: /gateway/performance/establish-performance-benchmark/
   - text: Cluster reference
@@ -179,4 +179,4 @@ For more information about {{site.base_gateway}}'s internal plugin queueing syst
 ## Next steps
 
 * [Conduct performance benchmark tuning tests](/gateway/performance/establish-performance-benchmark/)
-* See {{site.base_gateway}}'s [performance testing benchmark results](/gateway/performance/performance-benchmarks/)
+* See {{site.base_gateway}}'s [performance testing benchmark results](/gateway/performance/benchmarks/)

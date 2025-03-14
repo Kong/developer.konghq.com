@@ -7,6 +7,11 @@ content_type: plugin
 publisher: kong-inc
 description: 'Transform requests into Kafka messages in a Confluent topic.'
 
+tags:
+  - kafka
+  - data-streaming
+  - confluent
+  - transformations
 
 products:
     - gateway
@@ -33,10 +38,26 @@ icon: confluent.png
 categories:
   - transformations
 
+related_resources:
+  - text: Kafka Log
+    url: /plugins/kafka-log/
+  - text: Kafka Upstream
+    url: /plugins/kafka-upstream/
+
 search_aliases:
-  - confluent
+  - kafka
 
 premium_partner: true
 ---
 
-## Overview
+With Kafka at its core, [Confluent](https://confluent.io) offers complete, fully managed, cloud-native data streaming that's available everywhere your data and applications reside. Using the Confluent plugin, you can send HTTP request data to Apache Kafka by constructing Kafka messages from incoming {{site.base_gateway}} HTTP requests.
+
+{{site.base_gateway}} also provides Kafka Log and Kafka Upstream plugins for publishing logs and messages to an Apache Kafka topic:
+
+* See [Kafka Log](/plugins/kafka-log/)
+* See [Kafka Upstream](/plugins/kafka-upstream/)
+
+{:.info} 
+> **Note**: This plugin has the following known limitations:
+> * Message compression is not supported.
+> * The message format is not customizable.

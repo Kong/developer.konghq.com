@@ -184,6 +184,8 @@ app/_how-tos/use-acl-with-consumer-groups.md:
   - app/_hub/kong-inc/acl/how-to/_consumer-groups.md.md
 app/_how-tos/get-started-with-ai-gateway.md:
   - app/_src/gateway/get-started/ai-gateway.md
+app/_how-tos/configure-confluent-data-streaming.md:
+  - app/_hub/kong-inc/confluent/overview/_index.md
 
 ## KIC
 app/_how-tos/proxy-http-traffic-kic.md:
@@ -354,6 +356,18 @@ app/_kong_plugins/ai-request-transformer/changelog.md:
   - app/_hub/kong-inc/ai-request-transformer/_changelog.md
 app/_how-tos/transform-a-client-request-with-ai.md:
   - app/_hub/kong-inc/ai-request-transformer/how-to/_index.md
+app/_kong_plugins/confluent/changelog.md:
+  - app/_hub/kong-inc/confluent/_changelog.md
+app/_kong_plugins/confluent/index.md:
+  - app/_hub/kong-inc/confluent/overview/_index.md
+app/_kong_plugins/websocket-size-limit/index.md:
+  - app/_hub/kong-inc/websocket-size-limit/overview/_index.md
+app/_kong_plugins/websocket-validator/index.md:
+  - app/_hub/kong-inc/websocket-validator/overview/_index.md
+app/_kong_plugins/app-dynamics/changelog.md:
+  - app/_hub/kong-inc/app-dynamics/changelog.md
+app/_kong_plugins/app-dynamics/index.md:
+  - app/_hub/kong-inc/app-dynamics/overview/_index.md
 app/_kong_plugins/ai-azure-content-safety/index.md:
   - app/_hub/kong-inc/ai-azure-content-safety/overview/_index.md
 app/_kong_plugins/ai-azure-content-safety/changelog.md:
@@ -420,7 +434,7 @@ app/gateway/secure-the-admin-api.md:
   - app/_src/gateway/production/running-kong/secure-admin-api.md
 app/gateway/audit-logs.md:
   - app/_src/gateway/kong-enterprise/audit-log.md
-app/gateway/performance/performance-benchmarks.md:
+app/gateway/performance/benchmarks.md:
   - app/_src/gateway/production/performance/performance-testing.md
 app/ai-gateway/ai-audit-log-reference.md:
   - app/_src/gateway/production/logging/ai-analytics.md
@@ -450,6 +464,10 @@ app/gateway/upgrade/in-place.md:
   - app/_src/gateway/upgrade/in-place.md
 app/_includes/gateway/migration-finish-warning.md:
   - app/_includes/md/enterprise/migration-finish-warning.md
+app/gateway/upgrade/dual-cluster.md:
+  - app/_src/gateway/upgrade/dual-cluster.md
+app/gateway/upgrade/backup-and-restore.md:
+  - app/_src/gateway/upgrade/backup-and-restore.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
