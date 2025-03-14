@@ -14,8 +14,7 @@ tags:
     - hybrid-mode
     - deployment-topologies
 
-min_version:
-  gateway: '3.4'
+no_version: true
 
 breadcrumbs:
     - /gateway
@@ -38,7 +37,7 @@ plane (DP), which serves traffic for the proxy. Each DP node is connected to one
 of the CP nodes, and in the case of {{site.base_gateway}} only the CP nodes are directly connected to a database. Instead of accessing the database contents directly, the DP nodes maintain a 
 connection with CP nodes to receive the latest configuration.
 
-In {{site.konnect_short_name}} hybrid mode, Kong manages the database for you, so it can't be directly accessed. This means {{site.konnect_short_name}} doesn't manage configuration via [`kong.conf`](/gateway/configuration/) like {{site.base_gateway}} does. Additionally, {{site.konnect_short_name}} uses the [Control Plane Config API](/api/konnect/control-planes-config/v2/) to manage control planes while {{site.base_gateway}} uses the [Admin API](/api/gateway/admin-ee/latest/).
+In {{site.konnect_short_name}} hybrid mode, Kong manages the database for you, so it can't be directly accessed. This means {{site.konnect_short_name}} doesn't manage configuration via [`kong.conf`](/gateway/configuration/) like {{site.base_gateway}} does. Additionally, {{site.konnect_short_name}} uses the [Control Plane Config API](/api/konnect/control-planes-config/v2/) to manage control planes while {{site.base_gateway}} uses the [Admin API](/api/gateway/admin-ee/).
 
 The following diagram shows what {{site.base_gateway}} looks like in self-managed hybrid mode:
 
@@ -163,7 +162,7 @@ unable to send updated configuration to DP node with hostname: localhost.localdo
 unable to send updated configuration to DP node with hostname: localhost.localdomain ip: 127.0.0.1 reason: CP and DP does not have same set of plugins installed or their versions might differ
 ```
 
-In addition, the [`/clustering/data-planes` Admin API](/api/gateway/admin-ee/latest/#/operations/getDataPlanes) and [`/expected-config-hash` Control Plane Config API](/api/konnect/control-planes-config/v2/#/operations/get-expected-config-hash) endpoints return
+In addition, the [`/clustering/data-planes` Admin API](/api/gateway/admin-ee/#/operations/getDataPlanes) and [`/expected-config-hash` Control Plane Config API](/api/konnect/control-planes-config/v2/#/operations/get-expected-config-hash) endpoints return
 the version of the data plane node and the latest config hash the node is
 using. This data helps detect version incompatibilities from the
 control plane side.
@@ -221,7 +220,7 @@ In {{site.base_gateway}} 3.9.x or earlier, whenever you make changes to {{site.b
 You can enable **incremental configuration sync** for improved performance in {{site.base_gateway}} 3.10.x or later. 
 When a configuration changes, instead of sending the entire configuration set for each change, {{site.base_gateway}} only sends the parts of the configuration that have changed. 
 
-See the [incremental configuration sync](/gateway/{{page.release}}/production/deployment-topologies/hybrid-mode/incremental-config-sync/) documentation to learn more.
+See the [incremental configuration sync](/gateway/incremental-config-sync/) documentation to learn more.
 
 ### Plugin incompatibility
 
@@ -231,16 +230,16 @@ control plane, all plugin configuration has to occur from the CP. Due to this
 setup, and the configuration sync format between the CP and the DP, some plugins
 have limitations in hybrid mode:
 
-* [**Key Auth Encrypted**](/hub/kong-inc/key-auth-enc/): The time-to-live setting
+* [**Key Auth Encrypted**](/plugins/key-auth-enc/): The time-to-live setting
 (`ttl`), which determines the length of time a credential remains valid, does
 not work in hybrid mode.
-* [**Rate Limiting**](/hub/kong-inc/rate-limiting/), [**Rate Limiting Advanced**](/hub/kong-inc/rate-limiting-advanced/), and [**Response Rate Limiting**](/hub/kong-inc/response-ratelimiting/):
+* [**Rate Limiting**](/plugins/rate-limiting/), [**Rate Limiting Advanced**](/plugins/rate-limiting-advanced/), and [**Response Rate Limiting**](/plugins/response-ratelimiting/):
 These plugins don't support the `cluster` strategy/policy in hybrid mode. One of 
 the `local` or `redis` strategies/policies must be used instead.
-* [**GraphQL Rate Limiting Advanced**](/hub/kong-inc/graphql-rate-limiting-advanced/):
+* [**GraphQL Rate Limiting Advanced**](/plugins/graphql-rate-limiting-advanced/):
 This plugins doesn't support the `cluster` strategy in hybrid mode. The `redis` 
 strategy must be used instead.
-* [**OAuth 2.0 Authentication**](/hub/kong-inc/oauth2/): This plugin is not
+* [**OAuth 2.0 Authentication**](/plugins/oauth2/): This plugin is not
 compatible with hybrid mode. For its regular workflow, the plugin needs to both
 generate and delete tokens, and commit those changes to the database, which is
 not possible with CP/DP separation.
@@ -262,7 +261,7 @@ multiple control planes and redirecting the traffic using a TCP proxy.
 
 ## Readonly Status API endpoints on data plane
 
-Several readonly endpoints from the [Admin API](/gateway/{{page.release}}/admin-api/)
+Several readonly endpoints from the Admin API
 are exposed to the [Status API](/gateway/configuration/#status_listen) on data planes, including the following:
 
 - `GET /upstreams/{upstream}/targets/`
@@ -270,7 +269,7 @@ are exposed to the [Status API](/gateway/configuration/#status_listen) on data p
 - `GET /upstreams/{upstream}/targets/all/`
 - `GET /upstreams/{upstream}/targets/{target}`
 
-See [Upstream objects](/api/gateway/admin-ee/latest/#/operations/list-upstream) in the Admin API documentation for more information about the
+See [Upstream objects](/api/gateway/admin-ee/#/operations/list-upstream) in the Admin API documentation for more information about the
 endpoints.
 
 ## Keyring encryption in hybrid mode
