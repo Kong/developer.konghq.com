@@ -1,6 +1,6 @@
 <template>
   <ais-instant-search :search-client="searchClient" :index-name="indexName" :routing="routing" :future="{ preserveSharedStateOnUnmount: true }">
-    <ais-configure :hits-per-page.camel="12" />
+    <ais-configure :hits-per-page.camel="12" :filters="contentTypeFilters" />
     <div class="grid grid-cols-4 gap-16">
         <div id="filters" class="w-full flex flex-col gap-8 sticky top-24 self-start">
             <div class="flex flex-col gap-3">
@@ -16,6 +16,27 @@
                     </template>
                 </ais-search-box>
             </div>
+
+            <ais-panel>
+                <template  v-slot:default>
+                    <div class="flex flex-col gap-3">
+                        <div class="text-sm text-brand font-semibold">Content</div>
+                        <div class="flex flex-col gap-3">
+                            <div class="ais-RefinementList">
+                                <ul class="ais-RefinementList-list">
+                                    <li v-for="(source, key) in sources" :key="key" class="tab-ais-RefinementList-item">
+                                        <label class="ais-RefinementList-label">
+                                            <input type="radio" name="content_type" :checked="selectedContentType === key" :value="key" @change="handleContentTypeSelection(key)">
+                                            <span class="ais-RefinementList-labelText">{{ source.label }}</span>
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </ais-panel>
+
 
             <ais-panel>
                   <template v-slot:default="{ hasRefinements }">
@@ -46,30 +67,6 @@
                         <div class="text-sm text-brand font-semibold">Tools</div>
                         <div class="flex flex-col gap-3">
                             <ais-static-filter attribute="tools" :sort-by="['name']" :values="this.filters.tools" />
-                        </div>
-                    </div>
-                </template>
-            </ais-panel>
-
-
-            <ais-panel>
-                <template v-slot:default="{ hasRefinements }">
-                    <div class="flex flex-col gap-3" v-if="hasRefinements">
-                        <div class="text-sm text-brand font-semibold">Tier</div>
-                        <div class="flex flex-col gap-3">
-                            <ais-refinement-list attribute="tier" :sort-by="['name']" />
-                        </div>
-                    </div>
-                </template>
-            </ais-panel>
-
-
-            <ais-panel>
-                <template v-slot:default="{ hasRefinements }">
-                    <div class="flex flex-col gap-3" v-if="hasRefinements">
-                        <div class="text-sm text-brand font-semibold">Content Type</div>
-                        <div class="flex flex-col gap-3">
-                            <ais-refinement-list attribute="content_type" :sort-by="['name']" />
                         </div>
                     </div>
                 </template>
@@ -121,6 +118,7 @@
 </template>
 
 <script>
+import { ref } from 'vue';
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
 import { routingConfig } from './search/routing.js';
 import { AisInstantSearch, AisConfigure, AisCurrentRefinements, AisSearchBox, AisRefinementList, AisHits, AisPagination, AisPanel, AisStateResults } from 'vue-instantsearch/vue3/es';
@@ -154,8 +152,27 @@ export default {
       ),
       indexName: indexName,
       routing: routingConfig(indexName),
-      filters
+      filters,
+      selectedContentType: null
     };
+  },
+  setup() {
+    const sources = ref(window.searchSources);
+
+
+    return { sources };
+  },
+  mounted() {
+    this.setInitialFilters();
+  },
+  computed: {
+    contentTypeFilters() {
+        if (this.selectedContentType === null) {
+            return '';
+        } else {
+            return this.sources[this.selectedContentType].filters;
+        }
+    }
   },
   methods: {
     getPath(url) {
@@ -167,10 +184,22 @@ export default {
         const levels = Object.entries(hierarchy)
             .filter(([key, value]) => key !== 'lvl0' & key !== 'lvl1' && value !== null);
 
-      if (levels.length > 0) {
-        return levels[levels.length - 1][1];
-      }
-      return '';
+        if (levels.length > 0) {
+            return levels[levels.length - 1][1];
+        } else {
+            return '';
+        }
+    },
+    handleContentTypeSelection(value) {
+        this.selectedContentType = value;
+    },
+    setInitialFilters() {
+        const urlParams = new URLSearchParams(window.location.search)
+        if (urlParams.size > 0 && urlParams.get('content')) {
+            this.selectedContentType = urlParams.get('content');
+        } else {
+            this.selectedContentType = 'all';
+        }
     }
   }
 };

@@ -1,0 +1,18 @@
+description: |
+  Limit upstream messages to 1 MiB.
+
+  {{site.base_gateway}} applies a default limit of `116777216` (16MiB) to all upstream messages. You can also use the `upstream_max_payload` parameter to raise the default limit.
+
+title: 'Limit upstream messages'
+
+weight: 900
+
+config:
+  upstream_max_payload: 1048576
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

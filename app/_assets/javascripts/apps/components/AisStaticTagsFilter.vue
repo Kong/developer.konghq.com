@@ -7,10 +7,10 @@
             createURL,
             }"
         >
-            <ul class="ais-RefinementList-list flex max-h-64" :class="dynamicClasses">
+            <ul class="ais-RefinementList-list flex flex-row flex-wrap max-h-64" :class="dynamicClasses">
                 <template v-for="(item, index) in items" :key="item.value">
-                <li class="ais-RefinementList-item flex" :class="{ hidden: index >= 5 && !showMore }">
-                    <a class="badge" :href="createURL(item.value)" :class="{ 'font-bold': item.isRefined }" @click.prevent="refine(item.value)" >
+                <li class="ais-RefinementList-item flex" :class="{ hidden: index >= 10 && !showMore }">
+                    <a class="badge" :href="createURL(item.value)" :class="{ 'font-bold bg-brand': item.isRefined }" @click.prevent="refine(item.value)" >
                         #{{ item.label }}
                     </a>
                 </li>
