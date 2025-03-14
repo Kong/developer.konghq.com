@@ -7,6 +7,7 @@ weight: 900
 
 requirements:
   - You have an Azure subscription and access to Azure AI Content Safety.
+  - You have enabled an [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin.
 
 variables:
   content_safety_url:
