@@ -446,6 +446,10 @@ app/gateway/breaking-changes.md:
 app/gateway/cp-outage.md:
   - app/_src/gateway/kong-enterprise/cp-outage-handling-faq.md
   - app/_src/gateway/kong-enterprise/cp-outage-handling.md
+app/gateway/upgrade/in-place.md:
+  - app/_src/gateway/upgrade/in-place.md
+app/_includes/gateway/migration-finish-warning.md:
+  - app/_includes/md/enterprise/migration-finish-warning.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
