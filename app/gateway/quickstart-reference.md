@@ -17,7 +17,7 @@ description: "Kong offers an interactive quickstart script that launches a demo 
 related_resources:
   - text: "{{site.base_gateway}}"
     url: /gateway/
-  - text: Gte started with {{site.base_gateway}}
+  - text: Get started with {{site.base_gateway}}
     url: /how-to/get-started-with-gateway/
   - text: Kong AI Gateway
     url: /ai-gateway/
