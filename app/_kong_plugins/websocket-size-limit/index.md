@@ -79,7 +79,7 @@ so it's generally better to maintain a lower limit for client messages.
 
 For limits of 125 bytes or less, the message length is checked after reading and decoding the entire message into memory.
 
-For limits of 125 bytes or more, the message length is checked from the frame header _before_ the entire message is read from the socket buffer,
+For limits of 126 bytes or more, the message length is checked from the frame header _before_ the entire message is read from the socket buffer,
 allowing {{site.base_gateway}} to close the connection without having to read, and potentially unmask, the entire message into memory.
 
 ### Continuation data frames
