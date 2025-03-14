@@ -5,6 +5,7 @@ function getParamValue(param) {
 }
 
 export function routingConfig(indexName) {
+  const sources = window.searchSources;
   return {
     router: history({
       cleanUrlOnDispose: false,
@@ -26,9 +27,8 @@ export function routingConfig(indexName) {
         if (routeState.tools) {
           queryParameters.tools = routeState.tools.map(encodeURIComponent);
         }
-        if (routeState.content_type) {
-          queryParameters.content_type =
-            routeState.content_type.map(encodeURIComponent);
+        if (routeState.content) {
+          queryParameters.content = encodeURIComponent(routeState.content);
         }
         if (routeState.works_on) {
           queryParameters.works_on =
@@ -52,28 +52,37 @@ export function routingConfig(indexName) {
           page,
           products = [],
           tools = [],
-          tier,
-          content_type = [],
+          content = "",
           works_on = [],
           tags = [],
         } = qsModule.parse(location.search.slice(1));
 
         // `qs` does not return an array when there's a single value.
-        return {
+        const test = {
           query: decodeURIComponent(query),
           page,
           products: getParamValue(products).map(decodeURIComponent),
           tools: getParamValue(tools).map(decodeURIComponent),
-          tier: getParamValue(tier).map(decodeURIComponent),
-          content_type: getParamValue(content_type).map(decodeURIComponent),
+          content: content,
           works_on: getParamValue(works_on).map(decodeURIComponent),
           tags: getParamValue(tags).map(decodeURIComponent),
         };
+
+        return test;
       },
     }),
     stateMapping: {
       stateToRoute(uiState) {
+        let content = "";
         const indexUiState = uiState[indexName] || {};
+
+        if (indexUiState.configure) {
+          if (indexUiState.configure.filters !== "") {
+            content = Object.entries(sources).find(
+              ([, value]) => value.filters === indexUiState.configure.filters
+            )[0];
+          }
+        }
 
         return {
           query: indexUiState.query,
@@ -82,26 +91,26 @@ export function routingConfig(indexName) {
             indexUiState.refinementList && indexUiState.refinementList.products,
           tools:
             indexUiState.refinementList && indexUiState.refinementList.tools,
-          tier: indexUiState.refinementList && indexUiState.refinementList.tier,
-          content_type:
-            indexUiState.refinementList &&
-            indexUiState.refinementList.content_type,
           works_on:
             indexUiState.refinementList && indexUiState.refinementList.works_on,
           tags: indexUiState.refinementList && indexUiState.refinementList.tags,
+          content,
         };
       },
 
       routeToState(routeState) {
+        let filters = "";
+        if (routeState.content !== "") {
+          filters = sources[routeState.content].filters;
+        }
         return {
           [indexName]: {
+            configure: { filters },
             query: routeState.query,
             page: routeState.page,
             refinementList: {
               products: routeState.products,
               tools: routeState.tools,
-              tier: routeState.tier,
-              content_type: routeState.content_type,
               works_on: routeState.works_on,
               tags: routeState.tags,
             },
