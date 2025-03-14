@@ -10,8 +10,14 @@
 <div class="flex flex-col gap-6">
     {% for param in section.parameters %}
     <div class="flex flex-col bg-primary border border-primary/5 rounded-md kong-conf-param">
-        <div class="flex px-4 border-b border-primary/5">
+        <div class="flex px-4 border-b border-primary/5 justify-between items-center">
             <h3 id="{{param.name}}" class="py-3 text-brand-saturated text-sm font-bold kong-conf-param-name">{{param.name}}</h3>
+            {% if param.min_version %}
+                <div class="flex text-secondary text-xs gap-0.5"><span>Min Version: </span><span class="font-semibold">{{param.min_version.gateway}}</span></div>
+            {% endif %}
+            {% if param.max_version %}
+                <div class="flex text-secondary text-xs gap-0.5"><span>Deprecated in: </span><span class="font-semibold">{{param.max_version.gateway}}</span></div>
+            {% endif %}
         </div>
         <div class="flex flex-col gap-4 p-4">
             <div class="text-secondary text-sm content kong-conf-param-description">
@@ -22,17 +28,6 @@
                 <div class="flex gap-2">
                     <span class="text-secondary text-sm">Default: <code class="text-sm px-1"> {{param.defaultValue | escape}}</code></span>
                 </div>
-            {% endif %}
-
-            {% if param.min_version %}
-            <div class="flex gap-2">
-                <span class="text-secondary text-sm">Minimum Version: {{site.base_gateway}} - {{param.min_version.gateway}}</span>
-            </div>
-            {% endif %}
-            {% if param.max_version %}
-            <div class="flex gap-2">
-                <span class="text-secondary text-sm">Maximum Version: {{site.base_gateway}} - {{param.max_version.gateway}}</span>
-            </div>
             {% endif %}
         </div>
     </div>
