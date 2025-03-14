@@ -90,7 +90,7 @@ rows:
         - type: card
           config:
             title: Llama
-            icon: /assets/icons/meta.svg
+            icon: /assets/icons/metaai.svg
             cta:
               url: ./#llama
               align: end
