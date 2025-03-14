@@ -58,7 +58,7 @@ However, decK also has its limitations:
   or [`deck gateway diff`](/deck/gateway/diff/), or use decK’s
   [federated configuration](/deck/apiops/federated-configuration/) feature.
 
-* **Entities managed by decK**: decK does not manage Enterprise-only entities, like RBAC roles, credentials, keyring, licence, etc. Configure these security related entities separately using Admin API or Kong Manager.
+* **Entities managed by decK**: decK does not manage Enterprise-only entities, like [RBAC roles](/gateway/entities/rbac/#default-kong-gateway-roles), credentials, [Keyring](/gateway/keyring/), [license](/gateway/entities/license/), etc. Configure these security related entities separately using the Admin API or Kong Manager.
 See the reference for [Entities managed by decK](/deck/reference/entities/) for a full list.
 
 Due to these limitations, we recommend prioritizing the [database-native method](#database-native-backup) in deployments using a database.
@@ -95,7 +95,7 @@ For a database-backed deployment, we recommend using decK as a secondary backup 
     deck gateway ping
     ```
 
-    If you have RBAC enabled, use the CLI option `--headers` to
+    If you have [RBAC enabled](/how-to/enable-rbac-with-admin-api/), use the CLI option `--headers` to
     specify the admin token. You can specify this token with any decK command:
 
     ```sh
@@ -103,7 +103,7 @@ For a database-backed deployment, we recommend using decK as a secondary backup 
     ```
 
 2. Use decK to dump the configuration.
-You can back up a particular workspace or all workspaces at once:
+You can back up a particular Workspace or all Workspaces at once:
 
     ```sh
     deck gateway dump --all-workspaces -o /path/to/kong_backup.yaml
@@ -269,7 +269,7 @@ In DB-less mode, use the kong config CLI to restore your configuration from a de
 
 ## Keyring materials backup and restore
 
-If you have enabled keyring and data encryption, you must separately back up and restore keyring materials.
+If you have enabled Keyring and data encryption, you must separately back up and restore Keyring materials.
 
 {:.warning}
 > **Caution**: Make sure to store the encryption key in a safe place.
@@ -283,7 +283,7 @@ For technical details, refer to the [disaster recovery documentation](/gateway/k
 Manually back up the following files:
 
 * {{site.base_gateway}} configuration file `kong.conf`.
-* Files in the {{site.base_gateway}} prefix, such as keys, certificates, `nginx-kong.conf`, and any others you may have.
+* Files in the {{site.base_gateway}} prefix, such as [Keys](/gateway/entities/key/), [Certificates](/gateway/entities/certificate/), `nginx-kong.conf`, and any others you may have.
 * Any other files you have created for your {{site.base_gateway}} deployment.
 
 Although these files don't contain {{site.base_gateway}} entities, without them, you won't be able to launch {{site.base_gateway}}.
