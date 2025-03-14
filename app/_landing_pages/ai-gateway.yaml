@@ -34,10 +34,54 @@ rows:
                     ```
 
       - blocks:
-          - type: image
+          - type: mermaid
             config:
-              url: /assets/images/gateway/ai-gateway.png
-              alt_text: ""
+              diagram: |
+                flowchart LR
+                A(Application)
+                B(Application)
+                C(Application)
+
+                D(AI Logging)
+                E(AI Credentials)
+                F(AI Security)
+                G(Multi-LLM Endpoint)
+                H(Prompt Firewall)
+
+                I(Retries)
+                J(Rate Limiting)
+                K(AI Metrics)
+                L(Caching)
+                M(Non-code AI Injection)
+
+                N(Prompt Templates)
+                O(AI Context Management)
+                P(AuthN/Z)
+                Q(AI Orchestration)
+                R(+100 more)
+
+                S(LLM)
+                T(LLM)
+                U(LLM)
+                V(LLM)
+
+                A --> KAG
+                B --> KAG
+                C --> KAG
+
+                KAG --> S
+                KAG --> T
+                KAG --> U
+                KAG --> V
+
+                subgraph KAG ["`**Kong AI Gateway**`"]
+                direction LR
+                D ~~~ I ~~~ N
+                E ~~~ J ~~~ O
+                F ~~~ K ~~~ P
+                G ~~~ L ~~~ Q
+                H ~~~ M ~~~ R
+                end
 
   - columns:
       - blocks:
