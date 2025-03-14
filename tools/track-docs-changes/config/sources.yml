@@ -424,7 +424,7 @@ app/gateway/secure-the-admin-api.md:
   - app/_src/gateway/production/running-kong/secure-admin-api.md
 app/gateway/audit-logs.md:
   - app/_src/gateway/kong-enterprise/audit-log.md
-app/gateway/performance/performance-benchmarks.md:
+app/gateway/performance/benchmarks.md:
   - app/_src/gateway/production/performance/performance-testing.md
 app/ai-gateway/ai-audit-log-reference.md:
   - app/_src/gateway/production/logging/ai-analytics.md
