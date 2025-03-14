@@ -1,7 +1,7 @@
 description: |
   Limit both client and upstream messages.
 
-  You can also use these setting to raise the default limits.
+  You can also use these settings to raise the default limits.
   {{site.base_gateway}} applies the following default limits to incoming messages for all WebSocket services:
 
   | Sender   | Default Limit        |
