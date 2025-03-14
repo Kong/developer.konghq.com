@@ -42,8 +42,6 @@ related_resources:
     url: /plugins/kafka-log/
   - text: Kafka Upstream
     url: /plugins/kafka-upstream/
-  - text: Configure data streaming with the Confluent plugin
-    url: /how-to/configure-confluent-data-streaming/
 
 search_aliases:
   - confluent
