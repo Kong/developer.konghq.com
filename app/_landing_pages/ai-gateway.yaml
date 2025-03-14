@@ -111,6 +111,15 @@ rows:
             cta:
               url: /plugins/?category=ai
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: AI providers
+            description: Learn about the various providers supported by AI Gateway.
+            icon: /assets/icons/ai.svg
+            cta:
+              url: /ai-gateway/ai-providers/
+              align: end
 
 
   - header:
@@ -131,9 +140,9 @@ rows:
           config:
             title: AI provider proxy
             description: Route client requests to various AI providers.
-            icon: /assets/icons/ai.svg
+            icon: /assets/icons/plugins/ai-proxy.png
             cta:
-              url: /ai-gateway/ai-providers/
+              url: /plugins/ai-proxy/
               align: end
       - blocks:
         - type: card
