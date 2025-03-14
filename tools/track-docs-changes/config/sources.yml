@@ -354,6 +354,8 @@ app/_kong_plugins/ai-request-transformer/changelog.md:
   - app/_hub/kong-inc/ai-request-transformer/_changelog.md
 app/_how-tos/transform-a-client-request-with-ai.md:
   - app/_hub/kong-inc/ai-request-transformer/how-to/_index.md
+app/_kong_plugins/websocket-size-limit/index.md:
+  - app/_hub/kong-inc/websocket-size-limit/overview/_index.md
 app/_kong_plugins/websocket-validator/index.md:
   - app/_hub/kong-inc/websocket-validator/overview/_index.md
 app/_kong_plugins/app-dynamics/changelog.md:
