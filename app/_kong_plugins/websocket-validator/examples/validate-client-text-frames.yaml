@@ -1,0 +1,22 @@
+description: |
+  This example validates that client text frames:
+  * Are valid JSON
+  * Are a JSON object (`{}`)
+  * Have a `name` attribute (of any type)
+
+title: 'Validate client text frames'
+
+weight: 900
+
+config:
+  client:
+    text:
+      schema: '{ "type": "object", "required": ["name"] }'
+      type: draft4
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

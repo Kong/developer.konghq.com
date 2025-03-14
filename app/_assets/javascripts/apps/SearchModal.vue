@@ -66,18 +66,9 @@
               <template v-if="state.isOpen">
                 <div v-if="state.query" class="tabs flex flex-col w-full gap-4" ref="tabsElement">
                   <div class="tablist" role="tablist">
-                    <button tabIndex = "0" id="all" class="tab-button__horizontal" :class="{ 'tab-button__horizontal--active': activeTab === 'all' }" aria-controls="navtab-tabpanel-all" role="tab" :aria-selected="activeTab === 'all'" @click="onTabClick('all', $event)" @keydown="onKeyDown('all', $event)">
-                        All
-                      </button>
-                      <button tabIndex = "-1" id="docs" class="tab-button__horizontal" :class="{ 'tab-button__horizontal--active': activeTab === 'docs' }" aria-controls="navtab-tabpanel-docs" role="tab" :aria-selected="activeTab === 'docs'" @click="onTabClick('docs', $event)" @keydown="onKeyDown('docs', $event)">
-                        Docs
-                      </button>
-                      <button tabIndex = "-1" id="how_tos" class="tab-button__horizontal" :class="{ 'tab-button__horizontal--active': activeTab === 'how_tos' }" aria-controls="navtab-tabpanel-how_tos" role="tab" :aria-selected="activeTab === 'how_tos'" @click="onTabClick('how_tos', $event)" @keydown="onKeyDown('how_tos', $event)">
-                        How-to Guides
-                      </button>
-                      <button tabIndex = "-1" id="plugins" class="tab-button__horizontal" :class="{ 'tab-button__horizontal--active': activeTab === 'plugins' }" aria-controls="navtab-tabpanel-plugins" role="tab" :aria-selected="activeTab === 'plugins'" @click="onTabClick('plugins', $event)" @keydown="onKeyDown('plugins', $event)">
-                        Plugins
-                      </button>
+                    <button v-for="(source, key, index) in sources" :key="key" :id="key" :tabIndex="index === 0 ? 0 : -1" class="tab-button__horizontal" :class="{ 'tab-button__horizontal--active': activeTab === key }" :aria-controls="`navtab-tabpanel-${key}`" role="tab" :aria-selected="activeTab === key" @click="onTabClick(key, $event)" @keydown="onKeyDown(key, $event)">
+                      {{ source.label }}
+                    </button>
                   </div>
                   <div class="navtab-contents flex flex-col">
                     <div v-for="{ source, items } in state.collections" :key="`source-${source.sourceId}`" >
@@ -126,7 +117,7 @@
 </template>
 
 <script>
-import { ref, computed, nextTick, watch } from 'vue';
+import { ref, computed, nextTick } from 'vue';
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
 import { createAutocomplete } from '@algolia/autocomplete-core';
 import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
@@ -168,6 +159,7 @@ export default {
     const inputElement = ref(null);
     const tabsElement = ref(null);
     const showModal = ref(false);
+    const sources = ref(window.searchSources);
 
     const hitsPerPage = 20;
     const indexName = import.meta.env.VITE_ALGOLIA_INDEX_NAME;
@@ -247,100 +239,29 @@ export default {
             return query;
           }
 
-          return [
-            {
-              sourceId: "all",
-              getItems() {
-                return getAlgoliaResults({
-                  searchClient,
-                  queries: [
-                    {
-                      indexName: indexName,
-                      params: {
-                        query,
-                        hitsPerPage: hitsPerPage,
-                        filters: applyProductFilter('')
-                      },
+          return Object.entries(sources.value).map(([sourceId, { filters }]) => ({
+            sourceId,
+            getItems() {
+              return getAlgoliaResults({
+                searchClient,
+                queries: [
+                  {
+                    indexName,
+                    params: {
+                      query,
+                      hitsPerPage,
+                      filters: applyProductFilter(filters),
                     },
-                  ]
-                })
-              },
-              onSelect({ setQuery }) {
-                setQuery('');
-                inputElement.value = '';
-                showModal.value = false;
-              },
+                  },
+                ],
+              });
             },
-            {
-              sourceId: "docs",
-              getItems() {
-                return getAlgoliaResults({
-                  searchClient,
-                  queries: [
-                    {
-                      indexName: indexName,
-                      params: {
-                        query,
-                        hitsPerPage: hitsPerPage,
-                        filters: applyProductFilter('NOT content_type:how_to AND NOT content_type:plugin AND NOT content_type:plugin_example')
-                      },
-                    },
-                  ]
-                })
-              },
-              onSelect({ setQuery }) {
-                setQuery('');
-                inputElement.value = '';
-                showModal.value = false;
-              },
+            onSelect({ setQuery }) {
+              setQuery('');
+              inputElement.value = '';
+              showModal.value = false;
             },
-            {
-              sourceId: 'how_tos',
-              getItems() {
-                return getAlgoliaResults({
-                  searchClient,
-                  queries: [
-                    {
-                      indexName: indexName,
-                      params: {
-                        query,
-                        hitsPerPage: hitsPerPage,
-                        filters: applyProductFilter('content_type:how_to')
-                      },
-                    },
-                  ]
-                })
-              },
-              onSelect({ setQuery }) {
-                setQuery('');
-                inputElement.value = '';
-                showModal.value = false;
-              },
-            },
-            {
-              sourceId: 'plugins',
-              getItems() {
-                return getAlgoliaResults({
-                  searchClient,
-                  queries: [
-                    {
-                      indexName: indexName,
-                      params: {
-                        query,
-                        hitsPerPage: hitsPerPage,
-                        filters: applyProductFilter('content_type:plugin OR content_type:plugin_example')
-                      },
-                    },
-                  ]
-                })
-              },
-              onSelect({ setQuery }) {
-                setQuery('');
-                inputElement.value = '';
-                showModal.value = false;
-              },
-            }
-          ];
+          }));
         },
       })
     );
@@ -353,7 +274,8 @@ export default {
       inputProps,
       autocomplete,
       tagsPlugin,
-      showModal
+      showModal,
+      sources
     };
   },
   watch: {

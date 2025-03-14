@@ -11,7 +11,7 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
     doc = Nokogiri::HTML(@page_or_doc.output)
     changes = false
 
-    doc.css('h1, h2, h3, h4, h5, h6').each do |heading|
+    doc.css('h2, h3, h4, h5, h6').each do |heading|
       next if heading.ancestors('.card').any?
       next if heading.ancestors('.accordion-trigger').any?
       next unless heading['id']

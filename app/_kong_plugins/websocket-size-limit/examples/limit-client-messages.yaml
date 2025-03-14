@@ -1,0 +1,18 @@
+description: |
+  Limit client messages to 4 KiB.
+
+  {{site.base_gateway}} applies a default limit of `1048576` (1MiB) to all client messages. You can also use the `client_max_payload` parameter to raise the default limit.
+
+title: 'Limit client messages'
+
+weight: 900
+
+config:
+  client_max_payload: 4096
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
