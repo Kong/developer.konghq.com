@@ -16,28 +16,26 @@ rows:
 
   - columns:
     - blocks:
-      - type: card
+      - type: icon_card
         config:
           title: Confluent
           icon: /assets/icons/plugins/confluent.png
           cta:
             url: "#confluent"
     - blocks:
-      - type: card
+      - type: icon_card
         config:
           title: Traceable.ai
           icon: /assets/icons/plugins/traceableai.svg
           cta:
             url: "#traceable-ai"
     - blocks:
-      - type: card
+      - type: icon_card
         config:
           title: Dynatrace
           icon: /assets/icons/third-party/dynatrace.png
           cta:
             url: "#dynatrace"
-          align: end
-
 
   - header:
       type: h2
