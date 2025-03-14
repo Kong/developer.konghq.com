@@ -9,10 +9,35 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Premium technology partners"
+      text: "Kong's premium technology partners"
       sub_text: |
         An ecosystem of premium technology partners that collaborate with Kong on
-        fully-validated integrations for {{site.base_gateway}} and the {{site.konnect_short_name}} platform
+        fully-validated integrations for {{site.base_gateway}} and the {{site.konnect_short_name}} platform.
+
+  - columns:
+    - blocks:
+      - type: card
+        config:
+          title: Confluent
+          icon: /assets/icons/plugins/confluent.png
+          cta:
+            url: "#confluent"
+    - blocks:
+      - type: card
+        config:
+          title: Traceable.ai
+          icon: /assets/icons/plugins/traceableai.svg
+          cta:
+            url: "#traceable-ai"
+    - blocks:
+      - type: card
+        config:
+          title: Dynatrace
+          icon: /assets/icons/third-party/dynatrace.png
+          cta:
+            url: "#dynatrace"
+          align: end
+
 
   - header:
       type: h2
@@ -30,27 +55,42 @@ rows:
                     Kong provides integrations with Confluent through two plugins: Confluent and Confluent Consume. 
   - columns:
     - blocks:
-      - type: card
+      - type: plugin
         config:
-          title: Confluent plugin
-          icon: /assets/icons/plugins/confluent.png
-          description: |
-            Transform requests into Kafka messages in a Confluent topic.
-          cta:
-            text: Explore and set up the Confluent plugin &rarr;
-            url: /plugins/confluent/
-            align: end
+          slug: confluent
     - blocks:
-      - type: card
+      - type: structured_text
         config:
-          title: Confluent Consume plugin
-          icon: /assets/icons/plugins/confluent.png
-          description: |
-            Consume messages from Confluent Cloud Kafka topics and makes them available through HTTP endpoints. 
-          cta:
-            text: Explore and set up the Confluent Consume plugin &rarr;
-            url: /plugins/confluent/
-            align: end
+          blocks:
+            - type: text
+              text: | 
+                Using the Confluent plugin, you can send HTTP request data to Apache Kafka by constructing Kafka messages from incoming {{site.base_gateway}} HTTP requests.
+
+                With this plugin, you can:
+                * Publish messages to Confluent topics
+                * Set custom timeouts
+                * Use SASL authentication
+                * Choose to include or exclude the headers, body, URI, and method of the request in the message
+
+  - columns:
+    - blocks:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: | 
+                Using the Confluent Consume plugin, {{site.base_gateway}} can consume messages from Confluent Cloud Kafka topics and make them available through HTTP endpoints.
+
+                With this plugin, you can:
+                * Consume messages from Confluent topics via HTTP GET requests
+                * Stream messages using Server-Sent Events
+                * Set custom timeouts
+                * Use SASL authentication
+    - blocks:
+      - type: plugin
+        config:
+          slug: confluent
+
 
   - header:
       type: h2
@@ -74,53 +114,75 @@ rows:
 
   - columns:
     - blocks:
-      - type: card
+      - type: plugin
         config:
-          title: Traceable plugin
-          description: |
-           Traceable's Kong plugin lets Traceable capture a copy of the API traffic that is flowing through Kong Gateway. 
-           Using this data, Traceable is able to create a security posture profile of APIs hosted on Kong. 
+          slug: traceableai
+    - blocks:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: | 
+                Traceable's Kong plugin lets Traceable capture a copy of the API traffic that is flowing through {{site.base_gateway}}. 
+                Using this data, Traceable is able to create a security posture profile of APIs hosted on Kong. 
 
-           Based on its findings, the Traceable plugin can also block traffic coming from malicious actors and IPs into Kong Gateway.
-      
-          icon: /assets/icons/plugins/traceableai.svg
-          cta:
-            text: Explore and set up the Traceable plugin &rarr;
-            url: "/plugins/traceableai/"
+                Based on its findings, the Traceable plugin can also block traffic coming from malicious actors and IPs into {{site.base_gateway}}.
+
+  - columns:
+    - blocks:
+      - type: structured_text
+        config:
+          blocks:
+            - type: text
+              text: | 
+                With the Service Catalog, you gain visibility into all your Traceable services, including unrecognized or undiscovered APIs in your organization.
+
+                Using Traceable through the {{site.konnect_short_name}} Service Catalog, you can 
+                manage and secure services that Traceable discovers by analyzing API traffic across your entire application landscape.
     - blocks:
       - type: card
         config:
           title: Traceable integration in Service Catalog
-          description: |
-            The Traceable integration lets you connect Traceable entities directly to your Service Catalog Services.
       
           icon: /assets/icons/plugins/traceableai.svg
           cta:
             text: Set up Traceable in the Service Catalog &rarr;
             url: "/service-catalog/integrations/traceable/"
+
   - header:
       type: h2
       text: "Dynatrace"
-    columns:
+  - columns:
       - blocks:
           - type: structured_text
             config:
               blocks:
                 - type: text
                   text: |
-                    Kong Gateway integrates with Dynatrace through Kong's OpenTelemetry, Prometheus, and logging plugins. 
+                    Dynatrace provides deep observability, AIOps, and application security in one open, unified platform to continuously deliver 
+                    precise answers and intelligent automation from data.
+                    
+                    {{site.base_gateway}} integrates with Dynatrace through Kong's OpenTelemetry, Prometheus, and logging plugins. 
+                    {{site.base_gateway}}'s plugins send signals to the Dynatrace Collector which is responsible for updating the Dynatrace tenant with {{site.base_gateway}} traces, metrics, and logs.
 
-                    Kong Gateway's plugins send signals to the Dynatrace Collector which is responsible for updating the Dynatrace tenant with Kong Gateway traces, metrics, and logs.
-
-      - blocks:
-          - type: card
-            config:
-              title: Dynatrace with OpenTelemetry
-              description: |
-                
-              icon: /assets/icons/third-party/dynatrace.png
-              cta:
-                text: Set up Dynatrace with OpenTelemetry &rarr;
-                url: "/"
+  - columns:
+    - blocks:
+      - type: card
+        config:
+          title: Dynatrace with OpenTelemetry
+          description: |
+            
+          icon: /assets/icons/third-party/dynatrace.png
+          cta:
+            text: Set up Dynatrace with OpenTelemetry &rarr;
+            url: "/"
+    - blocks:
+      - type: plugin
+        config:
+          slug: opentelemetry
+    - blocks:
+      - type: plugin
+        config:
+          slug: prometheus
 
 
