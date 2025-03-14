@@ -83,7 +83,7 @@ This method has limitations on automatically generated runtime metrics that rely
 During the upgrade, some runtime metrics (for example, the number of requests) are sent to two databases separately.
 Since the metrics between the databases are not synced, metrics will not be accurate for the duration of the upgrade.
 
-For example, if the Rate Limiting Advanced plugin is configured to store request counters in 
+For example, if the [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) plugin is configured to store request counters in 
 the database, the counters between database X and database Y are not synchronized. 
 The impact scope depends on the `window_size` parameter of the plugin and the duration of the upgrade process.
 
@@ -102,7 +102,7 @@ The exact execution of these steps will vary depending on your environment.
 * You have a traditional deployment or you need to upgrade the control planes (CPs) in a hybrid mode deployment.
 * You have enough resources to temporarily run an additional {{site.base_gateway}} cluster alongside your existing cluster.
 
-### 1. Prepare the upgrade
+### Prepare the upgrade
 
 1. Stop any {{site.base_gateway}} configuration updates (e.g. Admin API calls). 
    This is critical to guarantee data consistency between cluster X and cluster Y.
@@ -118,7 +118,7 @@ You may have to consider customization of both `kong.conf` and {{site.base_gatew
     * [Breaking changes](/gateway/breaking-changes/)
     * [Full changelog](/gateway/changelog/)
 
-### 2. Deploy a new {{site.base_gateway}} cluster of version Y
+### Deploy a new {{site.base_gateway}} cluster of version Y
 
 1. Install a new {{site.base_gateway}} cluster running version Y as instructed in the 
 [{{site.base_gateway}} Installation Options](/gateway/install/).
@@ -144,7 +144,7 @@ to the new database.
     [breaking changes](/gateway/breaking-changes/)
     again to see if you missed anything.
 
-### 3. Divert traffic from old cluster X to new cluster Y
+### Divert traffic from old cluster X to new cluster Y
     
 This is usually done gradually and incrementally, depending on the risk profile of the deployment. 
 Any load balancers that support traffic splitting will work here, such as DNS, Nginx, Kubernetes rollout mechanisms, and so on.
