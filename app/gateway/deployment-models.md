@@ -27,7 +27,7 @@ related_resources:
 
 ## Deployment Topologies 
 
-{{site.base_gateway}} supports a variety of deployment topologies. In some cases, control and Data Planes are run as a single process, but often they are run independently, in **Hybrid Mode**. Hybrid Mode decouples the control and Data Planes, allowing for scale, resiliency, security, and optimized resource usage. How you choose to deploy these components will depend on your specific organization’s priorities and capabilities.
+{{site.base_gateway}} supports a variety of deployment topologies. In some cases, control and Data Planes are run as a single process, but often they are run independently, in [**Hybrid Mode**](/gateway/hybrid-mode/). Hybrid Mode decouples the control and Data Planes, allowing for scale, resiliency, security, and optimized resource usage. How you choose to deploy these components will depend on your specific organization’s priorities and capabilities.
 
 ## {{site.base_gateway}} Configuration
 

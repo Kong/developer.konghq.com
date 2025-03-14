@@ -27,53 +27,20 @@ related_resources:
     url: /
 ---
 
-Traditionally, Kong has always required a database, to store configured 
+Traditionally, {{site.base_gateway}} has always required a database, to store configured 
 entities such as routes, services, and plugins. Hybrid mode,
-also known as control plane / data plane separation (CP/DP), removes the
-need for a database on every node.
+also known as control plane/data plane separation (CP/DP), removes the
+need for a database on every node. {{site.konnect_short_name}} also runs in hybrid mode.
 
-In this mode, Kong nodes in a cluster are split into two roles: control plane
+In this mode, {{site.base_gateway}} nodes in a cluster are split into two roles: control plane
 (CP), where configuration is managed and the Admin API is served from; and data
 plane (DP), which serves traffic for the proxy. Each DP node is connected to one
-of the CP nodes, and only the CP nodes are directly connected to a database.
-
-Instead of accessing the database contents directly, the DP nodes maintain a 
+of the CP nodes, and in the case of {{site.base_gateway}} only the CP nodes are directly connected to a database. Instead of accessing the database contents directly, the DP nodes maintain a 
 connection with CP nodes to receive the latest configuration.
 
-<!--vale off -->
-{% mermaid %}
-flowchart TD
-A(Dev Portal &bull; Gateway Manager &bull; Analytics &bull; {{site.service_catalog_name}})
-B(<img src="/assets/images/logos/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> Control plane \n #40;{{site.base_gateway}} instance#41;)
-B2(<img src="/assets/images/logos/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> Control plane \n #40;{{site.base_gateway}} instance#41;)
-C(<img src="/assets/images/logos/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 3\n #40;{{site.base_gateway}} instance#41;)
-D(<img src="/assets/images/logos/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 1\n #40;{{site.base_gateway}} instance#41;)
-E(<img src="/assets/images/logos/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 2\n #40;{{site.base_gateway}} instance#41;)
+In {{site.konnect_short_name}} hybrid mode, Kong manages the database for you, so it can't be directly accessed. This means {{site.konnect_short_name}} doesn't manage configuration via [`kong.conf`](/gateway/configuration/) like {{site.base_gateway}} does. Additionally, {{site.konnect_short_name}} uses the [Control Plane Config API](/api/konnect/control-planes-config/v2/) to manage control planes while {{site.base_gateway}} uses the [Admin API](/api/gateway/admin-ee/latest/).
 
-subgraph id1 [Konnect]
-A --- B & B2
-end
-
-id1 --Kong proxy 
-configuration---> id2 & id3
-
-subgraph id2 [Kong-managed cloud node]
-C
-end
-
-subgraph id3 [Self-managed local and cloud nodes]
-D
-E
-end
-
-style id1 stroke-dasharray:3,rx:10,ry:10
-style id2 stroke-dasharray:3,rx:10,ry:10
-style id3 stroke-dasharray:3,rx:10,ry:10
-style B stroke:none,fill:#0E44A2,color:#fff
-style B2 stroke:none,fill:#0E44A2,color:#fff
-
-{% endmermaid %}
-<!-- vale on-->
+The following diagram shows what {{site.base_gateway}} looks like in self-managed hybrid mode:
 
 <!--vale off -->
 {% mermaid %}
@@ -109,14 +76,14 @@ style B stroke:none,fill:#0E44A2,color:#fff
 {% endmermaid %}
 <!-- vale on-->
 
-> _Figure 2: In self-managed hybrid mode, the control plane and data planes are hosted on different nodes. 
+> _Figure 1: In self-managed hybrid mode, the control plane and data planes are hosted on different nodes. 
 The control plane connects to the database, and the data planes receive configuration from the control plane._
 
 When you create a new data plane node, it establishes a connection to the
-control plane. The control plane listens on port `8005` for connections and
+control plane. The control plane listens on port [`8005` ({{site.base_gateway}})](/gateway/network-ports-firewall/) or [`443` ({{site.konnect_short_name}})](/konnect-network/) for connections and
 tracks any incoming data from its data planes.
 
-Once connected, every Admin API or Kong Manager action on the control plane
+Once connected, every API or Kong Manager/{{site.konnect_short_name}} UI action on the control plane
 triggers an update to the data planes in the cluster.
 
 ## Benefits
@@ -126,9 +93,9 @@ Hybrid mode deployments have the following benefits:
 * **Deployment flexibility:** Users can deploy groups of data planes in
 different data centers, geographies, or zones without needing a local clustered
 database for each DP group.
-* **Increased reliability:** The availability of the database does not affect
+* **Increased reliability:** The availability of the database doesn't affect
 the availability of the data planes. Each DP caches the latest configuration it
-received from the control plane on local disk storage, so if CP nodes are down,
+received from the control plane on local disk storage, so if [CP nodes are down](/gateway/cp-outage/),
 the DP nodes keep functioning.  
     * While the CP is down, DP nodes constantly try to reestablish communication.
     * DP nodes can be restarted while the CP is down, and still proxy traffic
@@ -136,19 +103,16 @@ the DP nodes keep functioning.
 * **Traffic reduction:** Drastically reduces the amount of traffic to and from
 the database, since only CP nodes need a direct connection to the database.
 * **Increased security:** If one of the DP nodes is compromised, an attacker
-won’t be able to affect other nodes in the Kong cluster.
+won’t be able to affect other nodes in the {{site.base_gateway}} cluster.
 * **Ease of management:** Admins only need to interact with the CP nodes to
-control and monitor the status of the entire Kong cluster.
+control and monitor the status of the entire {{site.base_gateway}} cluster.
 
 ## Platform Compatibility
 
 You can run {{site.base_gateway}} in hybrid mode on any platform where
-{{site.base_gateway}} is [supported](/gateway/{{page.release}}/install/).
+{{site.base_gateway}} is [supported](/install/).
 
-### Kubernetes Support and Additional Documentation
-
-[{{site.base_gateway}} on Kubernetes](/gateway/{{page.release}}/install/kubernetes/helm-quickstart)
-fully supports hybrid mode deployments, with or without the {{site.kic_product_name}}.
+You can run {{site.base_gateway}} on Kubernetes in hybrid mode with or without the [{{site.kic_product_name}}](/kic/).
 
 For the full Kubernetes hybrid mode documentation, see
 [hybrid mode](https://github.com/Kong/charts/blob/main/charts/kong/README.md#hybrid-mode)
@@ -156,9 +120,10 @@ in the `kong/charts` repository.
 
 ## Version Compatibility
 
-{{site.base_gateway}} control planes only allow connections from data planes with the
-same major version.
-Control planes won't allow connections from data planes with newer minor versions.
+Depending on where you're running hybrid mode, the following CP/DP versioning compatibility applies:
+
+* **Kong-managed in {{site.konnect_short_name}}:** Control planes only allow connections from data planes with the exact same version of the control plane.
+* **Self-managed in {{site.base_gateway}}:** Control planes only allow connections from data planes with the same major version. Control planes won't allow connections from data planes with newer minor versions.
 
 For example, a {{site.base_gateway}} v2.5.2 control plane:
 
@@ -168,43 +133,20 @@ For example, a {{site.base_gateway}} v2.5.2 control plane:
 - Rejects a {{site.base_gateway}} 1.0.0 data plane (major version differs).
 - Rejects a {{site.base_gateway}} 2.6.0 data plane (minor version on data plane is newer).
 
-Furthermore, for every plugin that is configured on the {{site.base_gateway}}
+### Plugin version compatibility
+
+For every plugin that is configured on the
 control plane, new configs are only pushed to data planes that have those configured
 plugins installed and loaded. The major version of those configured plugins must
 be the same on both the control planes and data planes. Also, the minor versions
-of the plugins on the data planes can not be newer than versions installed on the
+of the plugins on the data planes can't be newer than versions installed on the
 control planes. Similar to {{site.base_gateway}} version checks,
 plugin patch versions are also ignored when determining compatibility.
-
-{:.important}
-> Configured plugins means any plugin that is either enabled globally or
-configured by services, routes, or consumers.
-
-For example, if a {{site.base_gateway}} control plane has `plugin1` v1.1.1
-and `plugin2` v2.1.0 installed, and `plugin1` is configured by a `Route` object:
-
-- It accepts {{site.base_gateway}} data planes with `plugin1` v1.1.2,
-`plugin2` not installed.
-- It accepts {{site.base_gateway}} data planes with `plugin1` v1.1.2,
-`plugin2` v2.1.0, and  `plugin3` v9.8.1 installed.
-- It accepts {{site.base_gateway}} data planes with `plugin1` v1.1.1
-and `plugin3` v9.8.1 installed.
-- It rejects {{site.base_gateway}} data planes with `plugin1` v1.2.0,
-`plugin2` v2.1.0 installed (minor version of plugin on data plane is newer).
-- It rejects {{site.base_gateway}} data planes with `plugin1` not installed
-(plugin configured on control plane but not installed on data plane).
-
-Version compatibility checks between the control plane and data plane
-occur at configuration read time. As each data plane proxy receives
-configuration updates, it checks to see if it can enable the requested
-features. If the control plane has a newer version of {{site.base_gateway}}
-than the data plane proxy, but the configuration doesn’t include any new features
-from that newer version, the data plane proxy reads and applies it as expected.
 
 For instance, a new version of {{site.base_gateway}} includes a new
 plugin offering, and you update your control plane with that version. You can
 still send configurations to your data planes that are on a less recent version
-as long as you have not added the new plugin offering to your configuration.
+as long as you haven't added the new plugin offering to your configuration.
 If you add the new plugin to your configuration, you will need to update your
 data planes to the newer version for the data planes to continue to read from
 the control plane.
@@ -221,7 +163,7 @@ unable to send updated configuration to DP node with hostname: localhost.localdo
 unable to send updated configuration to DP node with hostname: localhost.localdomain ip: 127.0.0.1 reason: CP and DP does not have same set of plugins installed or their versions might differ
 ```
 
-In addition, the `/clustering/data-planes` Admin API endpoint returns
+In addition, the [`/clustering/data-planes` Admin API](/api/gateway/admin-ee/latest/#/operations/getDataPlanes) and [`/expected-config-hash` Control Plane Config API](/api/konnect/control-planes-config/v2/#/operations/get-expected-config-hash) endpoints return
 the version of the data plane node and the latest config hash the node is
 using. This data helps detect version incompatibilities from the
 control plane side.
@@ -240,6 +182,8 @@ nodes can be restarted while in disconnected mode, and will load the last
 configuration in the cache to start working. When the control plane is brought
 up again, the data plane nodes will contact them and resume connected mode.
 
+You can also [configure data plane resiliency](/gateway/cp-outage/) in case of control plane outages. 
+
 ### Disconnected Mode
 
 The viability of the data plane while disconnected means that control plane
@@ -254,34 +198,34 @@ data plane node, or using a declarative configuration. In either case, if it
 has the role of `"data_plane"`, it will also keep trying to contact the control
 plane until it's up again.
 
-To change a disconnected data plane node's configuration, you have to remove
-the LMDB directory (`dbless.lmdb`), ensure the `declarative_config`
-parameter or the `KONG_DECLARATIVE_CONFIG` environment variable is set, and set
-the whole configuration in the referenced YAML file.
+To change a disconnected data plane node's configuration in self-managed hybrid mode, you must:
+* Remove the LMDB directory (`dbless.lmdb`)
+* Ensure the [`declarative_config`](/gateway/configuration/#declarative_config) parameter or the `KONG_DECLARATIVE_CONFIG` environment variable is set
+* Set the whole configuration in the referenced YAML file
 
 ### Data plane cache configuration
-{:.badge .enterprise}
 
 By default, data planes store their configuration to the file system
 in an unencrypted LMDB database, `dbless.lmdb`, in {{site.base_gateway}}'s
-`prefix` path. You can also choose to encrypt this database.
+[`prefix` path](/gateway/configuration/#prefix). You can also choose to encrypt this database.
 
 If encrypted, the data plane uses the cluster certificate key to decrypt the
 LMDB database on startup.
 
 ## Limitations
 
-### Configuration Inflexibility
+### Configuration inflexibility
 
-When a configuration change is made at the control plane level via the Admin
-API, it immediately triggers a cluster-wide update of all data plane
-configurations. This means that the same configuration is synced from the CP to
-all DPs, and the update cannot be scheduled or batched. For different DPs to
-have different configurations, they will need their own CP instances.
+In {{site.base_gateway}} 3.9.x or earlier, whenever you make changes to {{site.base_gateway}} entity configuration on the Control Plane, it immediately triggers a cluster-wide update of all Data Plane configurations. This can cause performance issues.
 
-### Plugin Incompatibility
+You can enable **incremental configuration sync** for improved performance in {{site.base_gateway}} 3.10.x or later. 
+When a configuration changes, instead of sending the entire configuration set for each change, {{site.base_gateway}} only sends the parts of the configuration that have changed. 
 
-When plugins are running on a data plane in hybrid mode, there is no Admin API
+See the [incremental configuration sync](/gateway/{{page.release}}/production/deployment-topologies/hybrid-mode/incremental-config-sync/) documentation to learn more.
+
+### Plugin incompatibility
+
+When plugins are running on a data plane in hybrid mode, there is no API
 exposed directly from that DP. Since the Admin API is only exposed from the
 control plane, all plugin configuration has to occur from the CP. Due to this
 setup, and the configuration sync format between the CP and the DP, some plugins
@@ -301,18 +245,16 @@ compatible with hybrid mode. For its regular workflow, the plugin needs to both
 generate and delete tokens, and commit those changes to the database, which is
 not possible with CP/DP separation.
 
-### Custom Plugins
+### Custom plugins
 
 Custom plugins (either your own plugins or third-party plugins that are not
-shipped with Kong) need to be installed on both the control plane and the data
+shipped with {{site.base_gateway}}) need to be installed on both the control plane and the data
 plane in hybrid mode.
 
-{% if_version gte:3.4.x %}
 ### Consumer groups
-The ability to scope plugins to consumer groups was added in {{site.base_gateway}} version 3.4. Running a mixed-version {{site.base_gateway}} cluster (3.4 control plane, and <=3.3 data planes) is not supported when using consumer-group scoped plugins. 
+The ability to scope plugins to consumer groups was added in {{site.base_gateway}} version 3.4. Running a mixed-version {{site.base_gateway}} cluster (3.4 control plane, and <=3.3 data planes) is not supported when using consumer group scoped plugins. 
 
-{% endif_version %}
-### Load Balancing
+### Load balancing
 
 Currently, there is no automated load balancing for connections between the
 control plane and the data plane. You can load balance manually by using
@@ -321,29 +263,18 @@ multiple control planes and redirecting the traffic using a TCP proxy.
 ## Readonly Status API endpoints on data plane
 
 Several readonly endpoints from the [Admin API](/gateway/{{page.release}}/admin-api/)
-are exposed to the [Status API](/gateway/{{page.release}}/reference/configuration/#status_listen) on data planes, including the following:
+are exposed to the [Status API](/gateway/configuration/#status_listen) on data planes, including the following:
 
-- [GET /upstreams/{upstream}/targets/](/gateway/{{page.release}}/admin-api/#list-targets)
-- [GET /upstreams/{upstream}/health/](/gateway/{{page.release}}/admin-api/#show-upstream-health-for-node)
-- [GET /upstreams/{upstream}/targets/all/](/gateway/{{page.release}}/admin-api/#list-all-targets)
-- GET /upstreams/{upstream}/targets/{target}
+- `GET /upstreams/{upstream}/targets/`
+- `GET /upstreams/{upstream}/health/`
+- `GET /upstreams/{upstream}/targets/all/`
+- `GET /upstreams/{upstream}/targets/{target}`
 
-Please refer to [Upstream objects](/gateway/{{page.release}}/admin-api/#upstream-object) in the Admin API documentation for more information about the
+See [Upstream objects](/api/gateway/admin-ee/latest/#/operations/list-upstream) in the Admin API documentation for more information about the
 endpoints.
 
 ## Keyring encryption in hybrid mode
 
-Because the keyring module encrypts data in the database, it can't encrypt
+Because the [Keyring](/gateway/entities/keyring/) module encrypts data in the database, it can't encrypt
 data on data plane nodes, since these nodes run without a database and get
 data from the control plane.
-
-{% if_version gte:3.10.x %}
-## Incremental configuration sync
-
-In hybrid mode, whenever you make changes to {{site.base_gateway}} entity configuration on the Control Plane, it immediately triggers a cluster-wide update of all Data Plane configurations. This can cause performance issues.
-
-You can enable **incremental configuration sync** for improved performance. 
-When a configuration changes, instead of sending the entire configuration set for each change, {{site.base_gateway}} only sends the parts of the configuration that have changed. 
-
-See the [incremental configuration sync](/gateway/{{page.release}}/production/deployment-topologies/hybrid-mode/incremental-config-sync/) documentation to learn more.
-{% endif_version %}
