@@ -3,7 +3,6 @@ title: "Incremental config sync"
 description: 'placeholder'
 content_type: reference
 layout: reference
-description: placeholder
 products:
     - gateway
 tools:
