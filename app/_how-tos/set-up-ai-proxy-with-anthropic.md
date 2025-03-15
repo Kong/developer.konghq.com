@@ -25,6 +25,7 @@ entities:
 
 tags:
     - ai-gateway
+    - anthropic
 
 tldr:
     q: How do I use the AI Proxy plugin with Anthropic?
