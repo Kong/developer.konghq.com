@@ -437,7 +437,7 @@
   }
 
   .tab-button__vertical {
-    @apply tab-button py-2 px-5 text-terciary hover:no-underline border-l-2 border-transparent flex-wrap block;
+    @apply tab-button py-2 px-5 text-terciary hover:no-underline border-l-2 border-transparent flex-wrap flex items-center gap-1;
 
     &.tab-button__vertical--active {
       @apply tab-button--active !important;
