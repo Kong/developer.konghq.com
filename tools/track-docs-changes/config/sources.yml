@@ -356,6 +356,10 @@ app/_kong_plugins/ai-request-transformer/changelog.md:
   - app/_hub/kong-inc/ai-request-transformer/_changelog.md
 app/_how-tos/transform-a-client-request-with-ai.md:
   - app/_hub/kong-inc/ai-request-transformer/how-to/_index.md
+app/_kong_plugins/response-ratelimiting/index.md:
+  - app/_hub/kong-inc/response-ratelimiting/overview/_index.md
+app/_kong_plugins/response-ratelimiting/changelog.md:
+  - app/_hub/kong-inc/response-ratelimiting/_changelog.md
 app/_kong_plugins/confluent/changelog.md:
   - app/_hub/kong-inc/confluent/_changelog.md
 app/_kong_plugins/confluent/index.md:
