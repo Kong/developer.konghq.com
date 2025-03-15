@@ -12,4 +12,4 @@ jobs:
         uses: zgosalvez/github-actions-ensure-sha-pinned-actions@25ed13d0628a1601b4b44048e63cc4328ed03633 # v3
         with:
           allowlist: |
-            kong/
+            Kong/
