@@ -1,0 +1,16 @@
+on: push
+
+name: Ensure Pinned Actions
+
+jobs:
+  harden_security:
+    name: Harden Security
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Ensure SHA pinned actions
+        uses: zgosalvez/github-actions-ensure-sha-pinned-actions@99589360fda82ecfac331cc6bfc9d7d74487359c # v2
+        with:
+          allowlist: |
+            kong/
