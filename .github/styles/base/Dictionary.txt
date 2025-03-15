@@ -573,6 +573,7 @@ onwards
 opa
 openid
 openresty
+opentelemetry
 oss
 outbounds
 pagerduty
