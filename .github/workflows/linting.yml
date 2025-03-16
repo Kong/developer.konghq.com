@@ -36,7 +36,7 @@ jobs:
           fetch-depth: 2
       - name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@4edd678ac3f81e2dc578756871e4d00c19191daf # 4edd678ac3f81e2dc578756871e4d00c19191daf
+        uses: tj-actions/changed-files@4cd184a1dd542b79cca1d4d7938e4154a6520ca7 # 46edd678ac3f81e2dc578756871e4d00c19191daf
         with:
           sha: ${{ github.sha }}
           files: |
