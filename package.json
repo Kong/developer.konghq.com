@@ -20,6 +20,7 @@
     "@kong/kongponents": "^9.14.24",
     "@kong/sdk-portal-js": "^2.15.2",
     "@kong/spec-renderer": "^1.89.0",
+    "@tailwindcss/forms": "^0.5.10",
     "@vitejs/plugin-vue": "^5.1.2",
     "algoliasearch": "^5.20.0",
     "axios": "^1.7.4",
