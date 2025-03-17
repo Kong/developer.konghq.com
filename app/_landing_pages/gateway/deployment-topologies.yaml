@@ -8,12 +8,297 @@ rows:
   - header:
       type: h1
       text: "Deployment Topologies"
-  - columns:
+    columns:
       - blocks:
           - type: structured_text
             config:
               blocks:
                 - type: text
                   text: |
-                    @todo
-                    pull content from https://docs.konghq.com/gateway/latest/production/deployment-topologies/, cover what a deployment topology is along with links to more info about each topology
+                    Kong provides different modes for you to deploy {{site.konnect_short_name}} and {{site.base_gateway}} in. 
+                    Each mode has benefits and limitations, so it is important to consider them carefully when deciding which mode to use to in production installations.
+  - header:
+      type: h2
+      text: "Deployment topology support"
+    columns:
+      - blocks:
+          - type: feature_table
+            config:
+              columns:
+                - title: "{{site.konnect_short_name}}"
+                  key: konnect
+                - title: "{{site.base_gateway}}"
+                  key: gateway
+                - title: Kubernetes
+                  key: k8s
+              features:
+                - title: "[Hybrid](#hybrid-mode)"
+                  konnect: true
+                  gateway: true
+                  k8s: true
+                - title: "[Serverless gateways](#serverless-gateways)"
+                  konnect: true
+                  gateway: false
+                  k8s: false
+                - title: "[Dedicated Cloud Gateways](#dedicated-cloud-gateways)"
+                  konnect: true
+                  gateway: false
+                  k8s: false
+                - title: "[Traditional](#traditional-mode)"
+                  konnect: false
+                  gateway: true
+                  k8s: false
+                - title: "[DB-less](#db-less-mode)"
+                  konnect: false
+                  gateway: true
+                  k8s: true
+          
+  - header:
+      type: h2
+      text: "Hybrid mode"
+    columns:
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TD
+                A(Dev Portal &bull; Gateway Manager &bull; Analytics &bull; Service Catalog)
+                B(<img src="/assets/icons/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> Control plane \n #40;{{site.base_gateway}} instance#41;)
+                B2(<img src="/assets/icons/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> Control plane \n #40;{{site.base_gateway}} instance#41;)
+                C(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 3\n #40;{{site.base_gateway}} instance#41;)
+                D(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 1\n #40;{{site.base_gateway}} instance#41;)
+                E(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 2\n #40;{{site.base_gateway}} instance#41;)
+                subgraph id1 [Konnect]
+                A --- B & B2
+                end
+                id1 --Kong proxy 
+                configuration---> id2 & id3
+                subgraph id2 [Kong-managed cloud node]
+                C
+                end
+                subgraph id3 [Self-managed local and cloud nodes]
+                D
+                E
+                end
+                style id1 stroke-dasharray:3,rx:10,ry:10
+                style id2 stroke-dasharray:3,rx:10,ry:10
+                style id3 stroke-dasharray:3,rx:10,ry:10
+                style B stroke:none,fill:#0E44A2,color:#fff
+                style B2 stroke:none,fill:#0E44A2,color:#fff
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {{site.konnect_short_name}} allows you to deploy your own data plane nodes (DP) to handle customer traffic without needing to deploy your own control plane (CP) or database. 
+                  
+                    In hybrid mode, {{site.base_gateway}} nodes in a cluster are split into two roles: control plane
+                    (CP), where configuration is managed, and data
+                    plane (DP), which serves traffic for the proxy. Many DP nodes are connected to a single CP node.
+
+                    Hybrid mode deployments have the following benefits:
+
+                    * Users can deploy groups of data planes in different data centers, geographies, or zones without needing a local clustered database for each DP group.
+                    * The availability of the database does not affect the availability of the data planes. If a control plane is offline, data planes will run using their last known configuration.
+                    * Drastically reduces the amount of traffic to and from the database, since only CP nodes need a direct connection to the database.
+                    * If one of the DP nodes is compromised, an attacker won’t be able to affect other nodes in the {{site.base_gateway}} cluster.
+          - type: button
+            config:
+              align: left
+              text: Learn more about hybrid mode
+              url: /
+    
+  - header:
+      type: h2
+      text: "Serverless gateways"
+    columns:
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TD
+                  A(Dev Portal &bull; Gateway Manager &bull; Advanced Analytics {{site.service_catalog_name}})
+                  B(<img src="/assets/logos/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> Kong-managed control plane \n #40;{{site.base_gateway}} instance#41;)
+                  C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 1\n #40;{{site.base_gateway}} instance#41;)
+                  D(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 2\n #40;{{site.base_gateway}} instance#41;)
+
+                  subgraph id1 [Konnect]
+                  A --- B
+                  end
+
+                  B --Kong proxy 
+                  configuration---> id2
+
+                  subgraph id2 [Fully-managed cloud nodes]
+                  C
+                  D
+                  end
+
+                  style id1 stroke-dasharray:3,rx:10,ry:10
+                  style id2 stroke-dasharray:3,rx:10,ry:10
+                  style B stroke:none,fill:#0E44A2,color:#fff
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Serverless gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned. Serverless gateways are ideal for developers who want to test or experiment in a pre-production environment.
+
+                    Serverless gateways offer the following benefits:
+
+                    * {{site.konnect_short_name}} manages provisioning and placement.
+                    * Can be deployed in under 30 seconds.
+                    * Access to Kong Gateway plugins.
+          - type: button
+            config:
+              align: left
+              text: Learn more about serverless gateways
+              url: /serverless-gateways/
+  - header:
+      type: h2
+      text: "Dedicated Cloud Gateways"
+    columns:
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TD
+                A(Dedicated Cloud Gateway Control Plane)
+                B(Managed Data Plane Node \n Region 1)
+                C(Managed Data Plane Node \n Region 2)
+                D(Self-Managed Data Plane Nodes)
+
+                subgraph id1 [Konnect]
+                A
+                end
+
+                A --auto-scale configuration---> B
+                A --auto-scale configuration---> C
+                A -.- D
+
+                style id1 stroke-dasharray:3,rx:10,ry:10
+                style A stroke:none,fill:#0E44A2,color:#fff
+                style B stroke:none,fill:#0E44A2,color:#fff
+                style C stroke:none,fill:#0E44A2,color:#fff
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Dedicated Cloud Gateways are data plane nodes that are fully managed by Kong in {{site.konnect_short_name}}.
+                    
+                    You don't need to host any data planes, and you maintain control over the size and location of the gateway infrastructure. 
+                    This allows Kong to autoscale your nodes for you and reduces your operational complexity.
+
+                    **Benefits of Dedicated Cloud Gateways:**
+                    - {{site.konnect_short_name}} handles gateway upgrades for you.
+                    - Choose between public and private networking modes.
+                    - Automatic scaling with Autopilot mode.
+                    - Support for AWS and Azure in multiple [regions](/konnect-geos/).
+          - type: button
+            config:
+              align: left
+              text: Learn more about Dedicated Cloud Gateways
+              url: /dedicated-cloud-gateways/
+      
+  - header:
+      type: h2
+      text: "Traditional mode"
+    columns:
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TD
+
+                A[(Database)]
+                B(<img src="/assets/icons/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
+                C(<img src="/assets/icons/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
+                D(<img src="/assets/icons/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
+
+                A <---> B & C & D
+
+                style B stroke:none,fill:#0E44A2,color:#fff
+                style C stroke:none,fill:#0E44A2,color:#fff
+                style D stroke:none,fill:#0E44A2,color:#fff
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    In [traditional mode](/gateway/{{page.release}}/production/deployment-topologies/traditional/), {{site.base_gateway}} requires a database to store configured entities such as routes, services, and plugins.
+                    See [supported databases](/gateway/{{page.release}}/support/third-party/#data-stores).
+
+                    In a traditional deployment, all {{site.base_gateway}} nodes connect to the database. Each node manages its own configuration. 
+                    It is the only deployment topology that supports plugins that require a database, like rate-limiting with the cluster strategy, or OAuth2. However, there are some downsides too.
+                    When running in traditional mode, every {{ site.base_gateway }} node runs as both a Control Plane (CP) and Data Plane (DP). This means that if **any** of your nodes are compromised, the entire running gateway configuration is compromised. In contrast, [hybrid mode](/gateway/{{page.release}}/production/deployment-topologies/hybrid-mode/) has distinct CP and DP nodes reducing the attack surface.
+
+                    In addition, if you're running {{site.ee_product_name}} with Kong Manager, request throughput may be reduced on nodes running Kong Manager due to expensive calculations being run to render analytics data and graphs.
+
+                    You can use the [Admin API](/gateway/{{page.release}}/admin-api/) or declarative configuration files [(decK)](/deck/latest/) to configure the {{site.base_gateway}} in traditional mode.
+          - type: button
+            config:
+              align: left
+              text: Learn more about traditional mode
+              url: /
+      
+  - header:
+      type: h2
+      text: "DB-less mode"
+    columns:
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TD
+                  A(<img src="/assets/icons/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
+                  B(<img src="/assets/icons/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
+                  C(<img src="/assets/icons/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
+
+                  A2(fa:fa-file kong1.yml)
+                  B2(fa:fa-file kong2.yml)
+                  C2(fa:fa-file kong3.yml)
+
+                  A2 --> A
+                  B2 --> B
+                  C2 --> C
+
+                  style A stroke:none,fill:#0E44A2,color:#fff
+                  style B stroke:none,fill:#0E44A2,color:#fff
+                  style C stroke:none,fill:#0E44A2,color:#fff
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    You can enable [DB-less mode](/gateway/{{page.release}}/production/deployment-topologies/db-less-and-declarative-config/) to reduce complexity of and create more flexible deployment patterns. In this mode, configured entities such as routes, services and plugins are stored in-memory on the node.
+                    When running in DB-less mode, configuration is provided to {{ site.base_gateway }} using a second file. This file contains your configuration in YAML or JSON format using Kong's declarative configuration syntax.
+
+                    DB-less mode is also used by the {{site.kic_product_name}}, where the Kubernetes API server uses Kong's `/config` endpoint to update the running configuration in memory any time a change is made.
+
+                    The combination of DB-less mode and declarative configuration has a number
+                    of benefits:
+
+                    * Reduced number of dependencies: no need to manage a database installation
+                      if the entire setup for your use-case fits in memory.
+                    * Your configuration is always in a known state. There is no intermediate 
+                      state between creating a service and a route using the Admin API.
+                    * It is a good fit for automation in CI/CD scenarios. Configuration for
+                      entities can be kept in a single source of truth managed via a Git
+                      repository.
+
+                    Here are a few limitations of this mode:
+
+                    * The [Admin API](/gateway/{{page.release}}/admin-api/) is read only.
+                    * Any plugin that stores information in the database, like rate limiting (cluster mode), do not fully function.
+          - type: button
+            config:
+              align: left
+              text: Learn more about DB-less mode
+              url: /
+      
