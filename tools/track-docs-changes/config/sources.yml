@@ -186,6 +186,8 @@ app/_how-tos/get-started-with-ai-gateway.md:
   - app/_src/gateway/get-started/ai-gateway.md
 app/_how-tos/configure-confluent-data-streaming.md:
   - app/_hub/kong-inc/confluent/overview/_index.md
+app/_how-tos/set-up-dynatrace-with-otel.md:
+  - app/_hub/kong-inc/opentelemetry/how-to/_dynatrace.md
 
 ## KIC
 app/_how-tos/proxy-http-traffic-kic.md:
@@ -372,6 +374,12 @@ app/_kong_plugins/ai-azure-content-safety/index.md:
   - app/_hub/kong-inc/ai-azure-content-safety/overview/_index.md
 app/_kong_plugins/ai-azure-content-safety/changelog.md:
   - app/_hub/kong-inc/ai-azure-content-safety/_changelog.md
+app/_kong_plugins/traceableai/index.md:
+  - app/_hub/traceableai/traceableai/_index.md
+app/_kong_plugins/confluent-consume/changelog.md:
+  - app/_hub/kong-inc/confluent-consume/changelog.md
+app/_kong_plugins/confluent-consume/index.md:
+  - app/_hub/kong-inc/confluent-consume/overview/_index.md
 
 # Konnect
 

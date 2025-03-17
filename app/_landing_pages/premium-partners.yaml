@@ -148,7 +148,7 @@ rows:
   - header:
       type: h2
       text: "Dynatrace"
-  - columns:
+    columns:
       - blocks:
           - type: structured_text
             config:
@@ -157,10 +157,9 @@ rows:
                   text: |
                     Dynatrace provides deep observability, AIOps, and application security in one open, unified platform to continuously deliver 
                     precise answers and intelligent automation from data.
-                    
-                    {{site.base_gateway}} integrates with Dynatrace through Kong's OpenTelemetry, Prometheus, and logging plugins. 
-                    {{site.base_gateway}}'s plugins send signals to the Dynatrace Collector which is responsible for updating the Dynatrace tenant with {{site.base_gateway}} traces, metrics, and logs.
 
+                    {{site.base_gateway}} integrates with Dynatrace through Kong's OpenTelemetry, Prometheus, and logging plugins. 
+  
   - columns:
     - blocks:
       - type: card
@@ -173,12 +172,12 @@ rows:
             text: Set up Dynatrace with OpenTelemetry &rarr;
             url: "/how-to/set-up-dynatrace-with-otel/"
     - blocks:
-      - type: plugin
-        config:
-          slug: opentelemetry
-    - blocks:
-      - type: plugin
-        config:
-          slug: prometheus
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    Use {{site.base_gateway}}'s OpenTelemetry plugin to send signals to the Dynatrace Collector, which is responsible for updating the Dynatrace 
+                    tenant with {{site.base_gateway}} traces, metrics, and logs.
 
 
