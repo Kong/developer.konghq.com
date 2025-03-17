@@ -432,8 +432,6 @@ app/_landing_pages/ai-gateway.yaml:
   - app/_src/gateway/ai-gateway/index.md
 app/_landing_pages/ai-gateway/ai-providers.yaml:
   - app/_src/gateway/ai-gateway/index.md
-app/_landing_pages/ai-gateway/usage-governance.yaml:
-  - app/_src/gateway/ai-gateway/index.md
 
 
 # references 
@@ -490,7 +488,7 @@ app/gateway/breaking-changes.md:
 app/gateway/cp-outage.md:
   - app/_src/gateway/kong-enterprise/cp-outage-handling-faq.md
   - app/_src/gateway/kong-enterprise/cp-outage-handling.md
-app/ai-gateway/ai-quickstart-reference.md:
+app/gateway/quickstart-reference.md:
   - app/_src/gateway/ai-gateway/index.md
 app/gateway/upgrade/in-place.md:
   - app/_src/gateway/upgrade/in-place.md
