@@ -1,0 +1,82 @@
+metadata:
+  title: "Konnect Advanced Analytics"
+  content_type: landing_page
+  products: 
+    - advanced-analytics
+  description: Gain real-time insights into API health, performance, and usage with Konnect Advanced Analytics.
+  tags:
+    - advanced-analytics
+  breadcrumb: /advanced-analytics/
+rows:
+  - header:
+      type: h1
+      text: "Konnect Advanced Analytics"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "What is Konnect Advanced Analytics?"
+              blocks:
+                - type: text
+                  text: |
+                    {{site.konnect_short_name}} Advanced Analytics is a real-time, highly contextual analytics platform 
+                    that provides deep insights into API health, performance, and usage. It helps businesses optimize their API strategies 
+                    and improve operational efficiency. This feature is offered as a premium service within {{site.konnect_short_name}}.
+
+                    **Key benefits:**
+                    - **Centralized visibility:** Gain insights across all APIs, services, and data planes.
+                    - **Contextual API analytics:** Analyze API requests, routes, consumers, and services.
+                    - **Democratized data insights:** Generate reports based on your needs.
+                    - **Fast time to insight:** Retrieve critical API metrics in less than a second.
+                    - **Reduced cost of ownership:** A turn-key analytics solution without third-party dependencies.
+      - blocks:
+        - type: image
+          config:
+            url: /assets/images/analytics/konnect-api-usage-summary.png
+            alt_text: "Summary dashboard of Konnect Advanced Analytics"
+  - header:
+      type: h2
+      text: "Features"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Summary Dashboard
+              description: |
+                Get a high-level overview of API usage and performance metrics.
+              icon: /assets/icons/monitor.svg
+              cta:
+                text: Learn more
+                url: /advanced-analytics/dashboard/
+      - blocks:
+          - type: card
+            config:
+              title: API Explorer
+              description: |
+                Explore API usage data with key statistics and visualizations/
+              icon: /assets/icons/menu.svg
+              cta:
+                text: Learn more
+                url: /advanced-analytics/explorer/
+      - blocks:
+          - type: card
+            config:
+              title: Custom Reports
+              description: |
+                Share insights across teams and track important KPIs.
+              icon: /assets/icons/file.svg
+              cta:
+                text: Learn more
+                url: /advanced-analytics/reports/
+      - blocks:
+          - type: card
+            config:
+              title: LLM Reporting
+              description: |
+                Understand LLM usage, tokens, and costs.
+              icon: /assets/icons/logs.svg
+              cta:
+                text: Learn more
+                url: /advanced-analytics/llm-reporting/
