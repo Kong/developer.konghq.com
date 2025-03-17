@@ -32,8 +32,7 @@ rows:
               url: /assets/images/insomnia/entry-page.png
               alt_text: Image of the Insomnia UI
   
-  - header:
-      type: h2
+  -
     columns:
       - blocks:
         - type: card
