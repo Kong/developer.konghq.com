@@ -42,6 +42,7 @@ min_version:
 
 Create a Dedicated Cloud Gateway control plane:
 
+<!-- vale off -->
 {% control_plane_request %}
 url: /v2/control-planes
 status_code: 201
@@ -59,7 +60,7 @@ body:
           port: 443
           protocol: https
 {% endcontrol_plane_request %}
-
+<!-- vale on -->
 The response body will contain a `control_plane_id`, export it as an environment variable:
 ```sh
 export KONNECT_CONTROL_PLANE_ID=9c595711-84a7-4fad-b444-d089174cebe1
@@ -70,7 +71,7 @@ export KONNECT_CONTROL_PLANE_ID=9c595711-84a7-4fad-b444-d089174cebe1
 ## 2. Validate Control Plane
 
 Verify that the cloud gateway network is available by sending a `GET` request to the `/cloud-gateways/network` endpoint:
-
+<!-- vale off -->
 {% control_plane_request %}
 url: /v2/cloud-gateways/networks
 status_code: 200
@@ -78,7 +79,7 @@ method: GET
 headers:
     - 'Authorization: Bearer $KONNECT_TOKEN'
 {% endcontrol_plane_request %}
-
+<!-- vale on -->
 This response will output a `cloud_gateway_network_id` variable, export it as an environment variable: 
 
 ```sh
@@ -88,7 +89,7 @@ export KONNECT_CLOUD_GATEWAY_NETWORK_ID=9c595711-84a7-4fad-b444-d089174cebe1
 
 
 ## 3. Create a Dedicated Cloud Gateway data plane:
-
+<!-- vale off -->
 {% control_plane_request %}
 url: /v2/cloud-gateways/configurations
 status_code: 201
@@ -108,18 +109,18 @@ body:
               kind: autopilot
               base_rps: 100
 {% endcontrol_plane_request %}
-
+<!-- vale on -->
 Your cloud gateway is now provisioned.
 
 
 ## 3. Validate
 
 Ensure your Dedicated Cloud Gateway is active:
-
+<!-- vale off -->
 {% validation request-check %}
 url:  /v2/control-planes/$KONNECT_CONTROL_PLANE_ID
 headers:
     - 'Authorization: Bearer $KONNECT_TOKEN'
 {% endvalidation %}
-
+<!-- vale on -->
 You will receive a `200` with information about your Dedicated Cloud Gateway.
