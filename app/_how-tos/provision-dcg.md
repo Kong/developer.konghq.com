@@ -113,7 +113,7 @@ body:
 Your cloud gateway is now provisioned.
 
 
-## 3. Validate
+## 4. Validate
 
 Ensure your Dedicated Cloud Gateway is active:
 <!-- vale off -->
