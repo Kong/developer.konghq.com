@@ -34,6 +34,10 @@ search_aliases:
   - graphql proxy cache advanced
   - graphql-proxy-cache-advanced
 
+tags:
+  - graphql
+  - traffic-control
+
 related_resources:
   - text: GraphQL endpoints in the Kong Admin API # @todo make sure these endpoints get generated
     url: /api/gateway/admin-ee/
