@@ -16,10 +16,17 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
       next if heading.ancestors('.accordion-trigger').any?
       next unless heading['id']
 
+      # handle new-in badge
+      text = heading.children.find(&:text?).text.strip
+      old_id = heading['id']
+      heading['id'] = Jekyll::Utils.slugify(text)
+      toc_item = doc.at_css("#toc a[href='##{old_id}']")
+      toc_item['href'] = "##{heading['id']}" if toc_item
+
       anchor = Nokogiri::XML::Node.new('a', doc)
       anchor['href'] = "##{heading['id']}"
       anchor['aria-label'] = 'Anchor'
-      anchor['title'] = heading.text
+      anchor['title'] = text
       anchor['class'] =
         'flex items-center gap-2 link-anchor group w-full hover:no-underline text-primary'
 
