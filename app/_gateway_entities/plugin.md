@@ -135,7 +135,7 @@ See the following table for plugins and their compatible scopes:
 All of the plugins bundled with {{site.base_gateway}} have a static priority. 
 This can be [adjusted dynamically](#dynamic-plugin-ordering) using the plugin's `ordering` configuration parameter.
 
-<!-- @todo: migrate table from https://docs.konghq.com/gateway/latest/kong-enterprise/plugin-ordering/ -->
+{% plugin_priorities %}
 
 ### Dynamic plugin ordering
 
