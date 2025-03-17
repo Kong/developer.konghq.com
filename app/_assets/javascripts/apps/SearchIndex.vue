@@ -84,7 +84,7 @@
                 </div>
             </template>
         </ais-state-results>
-        <ais-pagination />
+        <ais-pagination :padding="2" />
       </div>
     </ais-instant-search>
 </template>

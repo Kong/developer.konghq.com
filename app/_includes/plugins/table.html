@@ -1,3 +1,38 @@
 <div class="max-h-[50vh] overflow-y-auto rounded-lg">
-    {% include components/feature_table.html columns=columns rows=rows sticky=true item_title="Plugin" %}
+    <table class="table__sticky">
+        <thead>
+            <tr>
+                <th>Plugin</th>
+                {% for column in columns %}
+                <th>
+                    <span class="font-semibold text-primary">{{ column.title | liquify }}</span>
+                </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+                <tr>
+                    {% if row.url %}
+                    <td class="flex flex-col items-baseline">
+                        <span class="block text-primary">
+                            <a href="{{row.url}}">{{ row.title | liquify | markdown }}</a>
+                        </span>
+                    </td>
+                    {% endif %}
+                    <td>
+                        {% if type == 'referenceable_fields' %}
+                            <ul>
+                            {% for value in row.values %}
+                                <li><code class="text-secondary px-1">{{value}}</code></li>
+                            {% endfor %}
+                            </ul>
+                        {% else %}
+                            <code class="text-secondary px-1">{{row.values[0]}}</code>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>

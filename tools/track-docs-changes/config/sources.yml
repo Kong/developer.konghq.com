@@ -462,7 +462,14 @@ app/gateway/cp-outage.md:
   - app/_src/gateway/kong-enterprise/cp-outage-handling.md
 app/gateway/traditional-mode.md:
   - app/_src/gateway/production/deployment-topologies/traditional/index.md
-  - 
+app/gateway/upgrade/in-place.md:
+  - app/_src/gateway/upgrade/in-place.md
+app/_includes/gateway/migration-finish-warning.md:
+  - app/_includes/md/enterprise/migration-finish-warning.md
+app/gateway/upgrade/dual-cluster.md:
+  - app/_src/gateway/upgrade/dual-cluster.md
+app/gateway/upgrade/backup-and-restore.md:
+  - app/_src/gateway/upgrade/backup-and-restore.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:

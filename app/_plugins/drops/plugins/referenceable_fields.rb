@@ -9,14 +9,8 @@ module Jekyll
       class ReferenceableFields < Liquid::Drop # rubocop:disable Style/Documentation
         include Tabular
 
-        def all(release:)
-          site.data.fetch('kong_plugins').map do |_slug, plugin|
-            new(release:, plugin:)
-          end
-        end
-
-        def referenceable_fields
-          @referenceable_fields ||= site.data.dig(
+        def values
+          @values ||= site.data.dig(
             'referenceable_fields',
             @release.number,
             @plugin['slug']
@@ -24,7 +18,7 @@ module Jekyll
         end
 
         def any?
-          referenceable_fields&.any?
+          values&.any?
         end
       end
     end

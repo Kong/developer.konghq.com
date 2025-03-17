@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Check if manual review has been performed
-        uses: actions/github-script@v7
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
         id: labels
         with:
           result-encoding: string
@@ -31,12 +31,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 2
       - name: Get changed files
         id: changed-files
-        uses: tj-actions/changed-files@v45
+        uses: tj-actions/changed-files@4edd678ac3f81e2dc578756871e4d00c19191daf # 4edd678ac3f81e2dc578756871e4d00c19191daf
         with:
           sha: ${{ github.sha }}
           files: |
@@ -47,7 +47,7 @@ jobs:
           json: true
           quotepath: false
           escape_json: false
-      - uses: errata-ai/vale-action@v2.1.1
+      - uses: errata-ai/vale-action@d89dee975228ae261d22c15adcd03578634d429c # v2.1.1
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           fail_on_error: true
@@ -63,7 +63,7 @@ jobs:
           cd tools/vale-frontmatter
           npm ci
           node index.js $CHANGED_FILES
-      - uses: errata-ai/vale-action@v2.1.1
+      - uses: errata-ai/vale-action@d89dee975228ae261d22c15adcd03578634d429c # v2.1.1
         if: steps.changed-files.outputs.any_changed == 'true'
         with:
           fail_on_error: true

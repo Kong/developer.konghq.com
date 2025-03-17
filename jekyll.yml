@@ -73,6 +73,7 @@ repos:
 
 plugin_schemas_path: app/.repos/kong-plugins/json_schemas
 plugin_referenceable_fields_path: app/.repos/kong-plugins/data/referenceable_fields
+plugin_priorities_path: app/.repos/kong-plugins/data/priorities/ee
 
 sitemap:
   exclude:

@@ -474,15 +474,43 @@
 }
 
 .ais-Pagination-list {
-  @apply flex-row justify-center gap-4;
+  @apply flex-row justify-center gap-2;
+}
+
+.ais-Pagination-item {
+  @apply bg-primary px-2 py-[6px] border border-primary/5 rounded-md w-[38px] h-[34px] flex items-center;
+}
+
+.ais-Pagination-item:hover {
+  @apply bg-secondary;
+}
+
+.ais-Pagination-link {
+  @apply h-5 w-full flex items-center justify-center text-primary;
+}
+
+.ais-Pagination-item--selected {
+  @apply bg-secondary border-brand-saturated font-bold;
+}
+
+.ais-Pagination-link {
+  @apply no-underline !important;
 }
 
 .ais-RefinementList-label {
-  @apply flex gap-2 py-0.5 w-full text-sm text-primary;
+  @apply flex gap-2 py-0.5 w-full text-sm text-primary items-center;
 }
 
 .ais-RefinementList-count {
   @apply hidden;
+}
+
+.ais-RefinementList-checkbox {
+  @apply form-checkbox bg-secondary rounded border border-primary/[.08] dark:border-primary/5;
+}
+
+.ais-RefinementList-checkbox:checked {
+  @apply bg-brand-saturated;
 }
 
 .ais-Panel--noRefinement {
