@@ -377,7 +377,7 @@ app/_kong_plugins/ai-azure-content-safety/changelog.md:
 app/_kong_plugins/traceableai/index.md:
   - app/_hub/traceableai/traceableai/_index.md
 app/_kong_plugins/confluent-consume/changelog.md:
-  - app/_hub/kong-inc/confluent-consume/changelog.md
+  - app/_hub/kong-inc/confluent-consume/_changelog.md
 app/_kong_plugins/confluent-consume/index.md:
   - app/_hub/kong-inc/confluent-consume/overview/_index.md
 

@@ -39,9 +39,9 @@ search_aliases:
   - traceableai
 ---
 
-Traceable's Kong plugin lets Traceable capture a copy of the API traffic, both request and response data, that is flowing through {{site.base_gateway}}. The plugin then forwards the data to a locally running Traceable Module Extension (TME).
+Traceable's Kong plugin lets Traceable capture a copy of the API traffic, both request and response data, that is flowing through {{site.base_gateway}}. The plugin then forwards the data to a locally running [Traceable module extension (TME)](https://docs.traceable.ai/docs/kong).
 
-Using this data, Traceable is able to create a security posture profile of APIs hosted on Kong.
+Using this data, Traceable is able to create a security posture profile of APIs hosted on {{site.base_gateway}}.
 Based on its findings, the Traceable plugin can also block traffic coming from malicious actors and IPs into {{site.base_gateway}}.
 
 ## Install the Traceable plugin
@@ -63,7 +63,7 @@ Once you have deployed a Traceable Platform Agent, you are ready to install the 
 
 2. Update your loaded plugins list in {{site.base_gateway}}.
 
-   In your `kong.conf`, append `traceable` to the `plugins` field. Make sure the field is not commented out.
+   In your [`kong.conf`](/gateway/configuration/), append `traceable` to the `plugins` field. Make sure the field isn't commented out.
 
    ```yaml
    plugins = bundled,traceable

@@ -1,7 +1,9 @@
 metadata:
   title: "Kong Premium Technology Partners"
   content_type: landing_page
-  description: ''
+  description: |
+    Kong's premium partners are an ecosystem of premium technology partners that collaborate with Kong on 
+    fully-validated integrations for {{site.base_gateway}} and the {{site.konnect_short_name}} platform.
   tags:
     - premium
     - plugins
@@ -12,7 +14,7 @@ rows:
       text: "Kong's premium technology partners"
       sub_text: |
         An ecosystem of premium technology partners that collaborate with Kong on
-        fully-validated integrations for {{site.base_gateway}} and the {{site.konnect_short_name}} platform.
+        fully-validated integrations for {{site.base_gateway}} and the {{site.konnect_short_name}} platform
 
   - columns:
     - blocks:
@@ -47,7 +49,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    With Kafka at its core, Confluent offers complete, fully managed, cloud-native data streaming that's available 
+                    With Kafka at its core, [Confluent](https://www.confluent.io/) offers complete, fully-managed, cloud-native data streaming that's available 
                     everywhere your data and applications reside.
 
                     Kong provides integrations with Confluent through two plugins: Confluent and Confluent Consume. 
@@ -101,11 +103,11 @@ rows:
                 - type: text
                   icon: /assets/icons/plugins/traceableai.svg
                   text: |
-                    Traceable is the industry's leading API Security company that helps organizations achieve API protection in a cloud-first, 
+                    [Traceable](https://www.traceable.ai/) is the industry's leading API Security company that helps organizations achieve API protection in a cloud-first, 
                     API-driven world. 
 
-                    Traceable is the only contextually-informed solution that powers complete API security - security posture management, 
-                    threat protection and threat management across the entire Software Development Lifecycle - enabling organizations to 
+                    Traceable is the only contextually-informed solution that powers complete API security— security posture management, 
+                    threat protection and threat management across the entire Software Development Lifecycle— enabling organizations to 
                     minimize risk and maximize the value that APIs bring to their customers. 
 
   - columns:
@@ -131,7 +133,7 @@ rows:
           blocks:
             - type: text
               text: | 
-                With the Service Catalog, you gain visibility into all your Traceable services, including unrecognized or undiscovered APIs in your organization.
+                With [Service Catalog](/service-catalog/), you gain visibility into all your Traceable services, including unrecognized or undiscovered APIs in your organization.
 
                 Using Traceable through the {{site.konnect_short_name}} Service Catalog, you can 
                 manage and secure services that Traceable discovers by analyzing API traffic across your entire application landscape.
@@ -155,7 +157,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Dynatrace provides deep observability, AIOps, and application security in one open, unified platform to continuously deliver 
+                    [Dynatrace](https://www.dynatrace.com/) provides deep observability, AIOps, and application security in one open, unified platform to continuously deliver 
                     precise answers and intelligent automation from data.
 
                     {{site.base_gateway}} integrates with Dynatrace through Kong's OpenTelemetry, Prometheus, and logging plugins. 
