@@ -21,7 +21,10 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
       old_id = heading['id']
       heading['id'] = Jekyll::Utils.slugify(text)
       toc_item = doc.at_css("#toc a[href='##{old_id}']")
-      toc_item['href'] = "##{heading['id']}" if toc_item
+      if toc_item
+        toc_item['href'] = "##{heading['id']}"
+        toc_item.content = text
+      end
 
       anchor = Nokogiri::XML::Node.new('a', doc)
       anchor['href'] = "##{heading['id']}"
