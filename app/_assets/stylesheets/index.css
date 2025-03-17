@@ -408,6 +408,10 @@
     @apply bg-semantic-green-secondary;
   }
 
+  .badge.new-in {
+    @apply align-middle;
+  }
+
   .tablist {
     @apply list-none flex gap-4 text-sm ml-0 flex-row border-b border-primary/5 w-full items-center overflow-x-auto;
   }
