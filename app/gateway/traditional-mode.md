@@ -17,9 +17,7 @@ tags:
 
 no_version: true
 
-description: "This document describes how those cached entities are being invalidated and how
-to configure your {{site.base_gateway}} nodes for your use case, which lies somewhere between
-performance and consistency."
+description: "Explains how {{site.base_gateway}} clustering and caching works in traditional mode."
 
 related_resources:
   - text: Load balancing
