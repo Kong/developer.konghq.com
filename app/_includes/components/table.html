@@ -2,8 +2,8 @@
     <thead>
         <tr>
         {% for column in include.columns %}
-            <th class="text-center">
-            <span class="font-semibold text-primary">{{ column.title | liquify }}</span>
+            <th>
+            <span class="font-semibold text-primary">{{ column.title | liquify | markdownify }}</span>
             </th>
         {% endfor %}
         </tr>
@@ -13,7 +13,7 @@
         <tr>
             {% for column in include.columns %}
                 {% assign v = row[column.key] %}
-                <td{% if v == true or v == false %} class="text-center"{% endif %}>
+                <td{% if v == true or v == false %}{% endif %}>
                 {% if v == true %}
                     {% include icon_true.html %}
                 {% elsif v == false %}
