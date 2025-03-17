@@ -55,25 +55,16 @@ dashboard](https://grafana.com/grafana/dashboards/21162-kong-cx-ai/).
 ## Available metrics
 
 When the `config.ai_metrics` parameter is set to `true` in the Prometheus plugin, you can get the following AI LLM metrics:
-{% if_version lte: 3.7 %}
-- **AI Requests**: AI requests sent to LLM providers.
-  These are available per provider, model, cache, database name (if cached), and Workspace.
-- **AI Cost**: AI costs charged by LLM providers.
-  These are available per provider, model, cache, database name (if cached), and Workspace.
-- **AI Tokens**: AI tokens counted by LLM providers.
-  These are available per provider, model, cache, database name (if cached), token type, and Workspace.
-{% endif_version %}
 
-{% if_version gte: 3.8 %}
 - **AI Requests**: AI request sent to LLM providers.
 - **AI Cost**: AI cost charged by LLM providers.
 - **AI Tokens**: AI tokens counted by LLM providers.
-- **AI LLM Latency**: Time taken to return a response by LLM providers.
-- **AI Cache Fetch Latency**: Time taken to return a response from the cache.
-- **AI Cache Embeddings Latency**: Time taken to generate embedding during the cache.
+- **AI LLM Latency**: {% new_in 3.8 %} Time taken to return a response by LLM providers.
+- **AI Cache Fetch Latency**: {% new_in 3.8 %} Time taken to return a response from the cache.
+- **AI Cache Embeddings Latency**: {% new_in 3.8 %} Time taken to generate embedding during the cache.
 
 These metrics are available per provider, model, cache, database name (if cached), embeddings provider (if cached), embeddings model (if cached), and Workspace. The AI Tokens metrics are also available per token type.
-{% endif_version %}
+
 
 AI metrics are disabled by default as it may create high cardinality of metrics and may
 cause performance issues. To enable them:
