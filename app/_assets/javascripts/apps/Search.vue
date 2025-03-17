@@ -20,13 +20,13 @@
             <ais-panel>
                 <template  v-slot:default>
                     <div class="flex flex-col gap-3">
-                        <div class="text-sm text-brand font-semibold">Content</div>
+                        <div class="text-sm text-brand font-semibold">Filter by type</div>
                         <div class="flex flex-col gap-3">
                             <div class="ais-RefinementList">
-                                <ul class="ais-RefinementList-list">
+                                <ul class="ais-RefinementList-list tabcolumn">
                                     <li v-for="(source, key) in sources" :key="key" class="tab-ais-RefinementList-item">
-                                        <label class="ais-RefinementList-label">
-                                            <input type="radio" name="content_type" :checked="selectedContentType === key" :value="key" @change="handleContentTypeSelection(key)">
+                                        <label class="tab-button__vertical py-2" :class="{ 'tab-button__vertical--active': selectedContentType === key }" :for="key">
+                                            <input :id="key" type="radio" name="content_type" :checked="selectedContentType === key" :value="key" @change="handleContentTypeSelection(key)" class="sr-only">
                                             <span class="ais-RefinementList-labelText">{{ source.label }}</span>
                                         </label>
                                     </li>
