@@ -72,8 +72,8 @@ This example uses the default Kong Manager path and URL.
 
 To verify that Kong Manager is running, access it on port `8002` at the default URL: [http://localhost:8002/workspaces](http://localhost:8002/workspaces)
 
-{% if_version gte:3.9.x %}
-## Multiple domains 
+
+## Multiple domains {% new_in 3.9 %}
 To configure Kong Manager to be accessible from multiple domains, you can list the domains as comma-separated values in the [`admin_gui_url`](/gateway/configuration/#admin_gui_url) parameter in your Kong configuration. For example:
 ```
 admin_gui_url = http://localhost:8002, http://127.0.0.1:8002
@@ -103,7 +103,6 @@ admin_gui_url = http://gui.konghq.com, http://other-gui.konghq.com
 admin_gui_session_conf = {"secret":"Y29vbGJlYW5z","storage":"kong","cookie_secure":false,"cookie_domain":"konghq.com"}
 ```
 {:.no-copy-code}
-{% endif_version %}
 
 ## Customize Kong Manager
 
