@@ -63,13 +63,6 @@ After adding the plugin, you can increment the configured limits by adding the f
 Header-Name: Limit=Value [,Limit=Value]
 ```
 
-With the default header name, `X-Kong-Limit`, the request looks like this:
-
-```bash
-curl http://localhost:8000/example-route -v -H 'X-Kong-Limit: limitname1=2, limitname2=4'
-```
-
-The above example increments the limit `limitname1` by 2 units, and `limitname2` by 4 units.
 You can change the default header name using [`config.header_name`](/plugins/response-ratelimiting/reference/#schema--config-header_name).
 
 You can optionally increment more than one limit with comma-separated entries.
