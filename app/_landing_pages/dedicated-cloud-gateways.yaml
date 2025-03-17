@@ -173,3 +173,13 @@ rows:
               cta:
                 text: Learn more
                 url: /api/konnect/cloud-gateways/v2/
+  - header:
+        text: "Related Resources"
+        type: h2
+    columns:
+      - blocks:
+          - type: related_resources
+            config:
+              - text: Deployed Dedicated Cloud Gateways with the API
+                type: docs
+                url: /how-to/provision-dcg/
