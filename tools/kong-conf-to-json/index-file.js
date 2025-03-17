@@ -50,8 +50,14 @@ function generateIndexFile() {
       onlyInCurrentParams.forEach((param) => {
         reference.params[param] = {
           ...reference.params[param],
-          max_version: { gateway: previousVersion },
         };
+
+        // portal and vitals are still valid even though they were removed
+        if (!/portal|vitals_.*/.test(param)) {
+          if (reference.params[param]["removed_in"] === undefined) {
+            reference.params[param]["removed_in"] = { gateway: version };
+          }
+        }
       });
       // everything that is in prev AND next goes in
       intersection.forEach((param) => {
