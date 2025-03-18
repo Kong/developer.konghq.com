@@ -28,5 +28,9 @@
         {% endifhascontent %}
     </div>
 
+    <div class="flex flex-col gap-3 md:hidden">
+        {% include layouts/aside.html %}
+    </div>
+
     {{ content }}
 </main>
