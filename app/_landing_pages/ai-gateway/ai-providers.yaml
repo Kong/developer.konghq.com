@@ -29,79 +29,70 @@ rows:
 
   - columns:
       - blocks:
-        - type: card
+        - type: icon_card
           config:
             title: OpenAI
             icon: /assets/icons/openai.svg
             cta:
               url: ./#openai
-              align: end
       - blocks:
-        - type: card
+        - type:  icon_card
           config:
             title: Azure AI
             icon: /assets/icons/azure.svg
             cta:
               url: ./#azure-ai
-              align: end
       - blocks:
-        - type: card
+        - type: icon_card
           config:
             title: Amazon Bedrock
             icon: /assets/icons/bedrock.svg
             cta:
               url: ./#amazon-bedrock
-              align: end
   - columns:
       - blocks:
-        - type: card
+        - type: icon_card
           config:
             title: Gemini
             icon: /assets/icons/gemini.svg
             cta:
               url: ./#gemini
-              align: end
       - blocks:
-        - type: card
+        - type: icon_card
           config:
             title: Anthropic
             icon: /assets/icons/anthropic.svg
             cta:
               url: ./#anthropic
-              align: end
       - blocks:
-        - type: card
+        - type: icon_card
           config:
             title: Cohere
             icon: /assets/icons/cohere.svg
             cta:
               url: ./#cohere
-              align: end
   - columns:
       - blocks:
-        - type: card
+        - type: icon_card
           config:
             title: Hugging Face
             icon: /assets/icons/huggingface.svg
             cta:
               url: ./#hugging-face
-              align: end
       - blocks:
-        - type: card
+        - type: icon_card
           config:
             title: Llama
             icon: /assets/icons/metaai.svg
             cta:
               url: ./#llama
-              align: end
       - blocks:
-        - type: card
+        - type: icon_card
           config:
             title: Mistral
             icon: /assets/icons/mistral.svg
             cta:
               url: ./#mistral
-              align: end
 
 
   - header:
