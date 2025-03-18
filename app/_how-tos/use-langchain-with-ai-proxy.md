@@ -82,7 +82,7 @@ variables:
 
 ## 2. Add authentication
 
-To secure the access to your Route, create a consumer and set up an authentication plugin.
+To secure the access to your Route, create a Consumer and set up an authentication plugin.
 
 {:.info}
 > Note that LangChain expects authentication as an `Authorization` header with a value starting with `Bearer`. 
