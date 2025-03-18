@@ -65,9 +65,9 @@ rows:
                 A(Dev Portal &bull; Gateway Manager &bull; Analytics &bull; Service Catalog)
                 B(<img src="/assets/logos/kogo-white.svg" style="max-height:20px"> Control plane \n #40;Kong Gateway instance#41;)
                 B2(<img src="/assets/logos/kogo-white.svg" style="max-height:20px"> Control plane \n #40;Kong Gateway instance#41;)
-                C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data plane 3\n #40;Kong Gateway instance#41;)
-                D(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data plane 1\n #40;Kong Gateway instance#41;)
-                E(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data plane 2\n #40;Kong Gateway instance#41;)
+                C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data plane 1\n #40;Kong Gateway instance#41;)
+                D(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data plane 2\n #40;Kong Gateway instance#41;)
+                E(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data plane 3\n #40;Kong Gateway instance#41;)
                 subgraph id1 [Konnect]
                 A --- B & B2
                 end
@@ -257,8 +257,8 @@ rows:
                   C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong Gateway instance)
 
                   A2(fa:fa-file kong1.yml)
-                  B2(fa:fa-file kong2.yml)
-                  C2(fa:fa-file kong3.yml)
+                  B2(fa:fa-file kong1.yml)
+                  C2(fa:fa-file kong1.yml)
 
                   A2 --> A
                   B2 --> B
