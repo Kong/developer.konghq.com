@@ -24,6 +24,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: "480px",
+      },
       colors: {
         brand: "rgb(var(--color-brand), <alpha-value>)",
         "brand-saturated": "rgb(var(--color-brand-saturated), <alpha-value>)",
