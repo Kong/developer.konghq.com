@@ -15,7 +15,7 @@ tags:
     - backup
     - restore
 
-no_version: true
+
 
 related_resources:
   - text: "Upgrading {{site.base_gateway}}"

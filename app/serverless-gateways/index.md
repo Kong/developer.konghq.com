@@ -5,7 +5,7 @@ layout: reference
 description: | 
     Serverless gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned.
 
-no_version: true
+
 products:
     - gateway
 works_on:
