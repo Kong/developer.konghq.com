@@ -132,7 +132,10 @@ rows:
               url: /plugins/ai-proxy-advanced/examples/openai-chat-route/
               align: end
               text: Configuration example
-  - columns:
+  - header:
+      type: h4
+      text: How-to Guides
+    columns:
       - blocks:
           - type: how_to_list
             config:
@@ -168,17 +171,20 @@ rows:
               url: /plugins/ai-proxy-advanced/examples/azure-chat-route/
               align: end
               text: Configuration example
-  - columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              plugins:
-                - ai-proxy
-                - ai-proxy-advanced
-              tags: 
-                - azure-ai
-              quantity: 3
-              allow_empty: true
+  # - header:
+  #     type: h4
+  #     text: How-to Guides
+  #   columns:
+  #     - blocks:
+  #         - type: how_to_list
+  #           config:
+  #             plugins:
+  #               - ai-proxy
+  #               - ai-proxy-advanced
+  #             tags: 
+  #               - azure-ai
+  #             quantity: 3
+  #             allow_empty: true
 
   - header:
       type: h3
@@ -204,17 +210,20 @@ rows:
               url: /plugins/ai-proxy-advanced/examples/bedrock-chat-route/
               align: end
               text: Configuration example
-  - columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              plugins:
-                - ai-proxy
-                - ai-proxy-advanced
-              tags: 
-                - bedrock
-              quantity: 3
-              allow_empty: true
+  # - header:
+  #     type: h4
+  #     text: How-to Guides
+  #   columns:
+  #     - blocks:
+  #         - type: how_to_list
+  #           config:
+  #             plugins:
+  #               - ai-proxy
+  #               - ai-proxy-advanced
+  #             tags: 
+  #               - bedrock
+  #             quantity: 3
+  #             allow_empty: true
 
   - header:
       type: h3
@@ -240,17 +249,20 @@ rows:
               url: /plugins/ai-proxy-advanced/examples/gemini-chat-route/
               align: end
               text: Configuration example
-  - columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              plugins:
-                - ai-proxy
-                - ai-proxy-advanced
-              tags: 
-                - gemini
-              quantity: 3
-              allow_empty: true
+  # - header:
+  #     type: h4
+  #     text: How-to Guides
+  #   columns:
+  #     - blocks:
+  #         - type: how_to_list
+  #           config:
+  #             plugins:
+  #               - ai-proxy
+  #               - ai-proxy-advanced
+  #             tags: 
+  #               - gemini
+  #             quantity: 3
+  #             allow_empty: true
 
   - header:
       type: h3
@@ -276,7 +288,10 @@ rows:
               url: /plugins/ai-proxy-advanced/examples/anthropic-chat-route/
               align: end
               text: Configuration example
-  - columns:
+  - header:
+      type: h4
+      text: How-to Guides
+    columns:
       - blocks:
           - type: how_to_list
             config:
@@ -312,17 +327,20 @@ rows:
               url: /plugins/ai-proxy-advanced/examples/cohere-chat-route/
               align: end
               text: Configuration example
-  - columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              plugins:
-                - ai-proxy
-                - ai-proxy-advanced
-              tags: 
-                - cohere
-              quantity: 3
-              allow_empty: true
+  # - header:
+  #     type: h4
+  #     text: How-to Guides
+  #   columns:
+  #     - blocks:
+  #         - type: how_to_list
+  #           config:
+  #             plugins:
+  #               - ai-proxy
+  #               - ai-proxy-advanced
+  #             tags: 
+  #               - cohere
+  #             quantity: 3
+  #             allow_empty: true
 
   - header:
       type: h3
@@ -348,17 +366,20 @@ rows:
               url: /plugins/ai-proxy-advanced/examples/huggingface-chat-route/
               align: end
               text: Configuration example
-  - columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              plugins:
-                - ai-proxy
-                - ai-proxy-advanced
-              tags: 
-                - hugging-face
-              quantity: 3
-              allow_empty: true
+  # - header:
+  #     type: h4
+  #     text: How-to Guides
+  #   columns:
+  #     - blocks:
+  #         - type: how_to_list
+  #           config:
+  #             plugins:
+  #               - ai-proxy
+  #               - ai-proxy-advanced
+  #             tags: 
+  #               - hugging-face
+  #             quantity: 3
+  #             allow_empty: true
 
   - header:
       type: h3
@@ -384,17 +405,20 @@ rows:
               url: /plugins/ai-proxy-advanced/examples/llama2-chat-route/
               align: end
               text: Configuration example
-  - columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              plugins:
-                - ai-proxy
-                - ai-proxy-advanced
-              tags: 
-                - llama
-              quantity: 3
-              allow_empty: true
+  # - header:
+  #     type: h4
+  #     text: How-to Guides
+  #   columns:
+  #     - blocks:
+  #         - type: how_to_list
+  #           config:
+  #             plugins:
+  #               - ai-proxy
+  #               - ai-proxy-advanced
+  #             tags: 
+  #               - llama
+  #             quantity: 3
+  #             allow_empty: true
 
   - header:
       type: h3
@@ -420,15 +444,18 @@ rows:
               url: /plugins/ai-proxy-advanced/examples/mistral-chat-route/
               align: end
               text: Configuration example
-  - columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              plugins:
-                - ai-proxy
-                - ai-proxy-advanced
-              tags: 
-                - mistral
-              quantity: 3
-              allow_empty: true
+  # - header:
+  #     type: h4
+  #     text: How-to Guides
+  #   columns:
+  #     - blocks:
+  #         - type: how_to_list
+  #           config:
+  #             plugins:
+  #               - ai-proxy
+  #               - ai-proxy-advanced
+  #             tags: 
+  #               - mistral
+  #             quantity: 3
+  #             allow_empty: true
 
