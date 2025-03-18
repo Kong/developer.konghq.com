@@ -502,6 +502,8 @@ app/gateway/upgrade/dual-cluster.md:
   - app/_src/gateway/upgrade/dual-cluster.md
 app/gateway/upgrade/backup-and-restore.md:
   - app/_src/gateway/upgrade/backup-and-restore.md
+app/gateway/db-less-mode.md:
+  - app/_src/gateway/production/deployment-topologies/db-less-and-declarative-config.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
