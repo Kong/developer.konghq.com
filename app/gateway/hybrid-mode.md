@@ -26,18 +26,18 @@ related_resources:
     url: /
 ---
 
-Traditionally, {{site.base_gateway}} has always required a database, to store configured 
-entities such as routes, services, and plugins. Hybrid mode,
-also known as control plane/data plane separation (CP/DP), removes the
-need for a database on every node. {{site.konnect_short_name}} also runs in hybrid mode.
+Hybrid mode, also known as Control Plane/Data Plane separation (CP/DP), is a deployment model that splits all {{site.base_gateway}} nodes in a cluster into one of two roles: 
+* Control Plane (CP) nodes, where configuration is managed and the Admin API is served from
+* Data Plane (DP) nodes, which serve traffic for the proxy
 
-In this mode, {{site.base_gateway}} nodes in a cluster are split into two roles: control plane
-(CP), where configuration is managed and the Admin API is served from; and data
-plane (DP), which serves traffic for the proxy. Each DP node is connected to one
-of the CP nodes, and in the case of {{site.base_gateway}} only the CP nodes are directly connected to a database. Instead of accessing the database contents directly, the DP nodes maintain a 
-connection with CP nodes to receive the latest configuration.
+In hybrid mode, the database only needs to exist on Control Plane nodes. 
 
-In {{site.konnect_short_name}} hybrid mode, Kong manages the database for you, so it can't be directly accessed. This means {{site.konnect_short_name}} doesn't manage configuration via [`kong.conf`](/gateway/configuration/) like {{site.base_gateway}} does. Additionally, {{site.konnect_short_name}} uses the [Control Plane Config API](/api/konnect/control-planes-config/v2/) to manage control planes while {{site.base_gateway}} uses the [Admin API](/api/gateway/admin-ee/).
+Each DP node is connected to one of the CP nodes, and only the CP nodes are directly connected to a database. 
+Instead of accessing the database contents directly, the DP nodes maintain a connection with CP nodes to receive the latest configuration.
+
+{{site.konnect_short_name}} runs in hybrid mode. In this case, Kong manages the database for you, so you can't access it directly.
+This means you can't manage {{site.konnect_short_name}} configuration via [`kong.conf`](/gateway/configuration/) like you can for {{site.base_gateway}}, as Kong handles that configuration. 
+Additionally, {{site.konnect_short_name}} uses the [Control Plane Config API](/api/konnect/control-planes-config/v2/) to manage control planes while {{site.base_gateway}} uses the [Admin API](/api/gateway/admin-ee/).
 
 The following diagram shows what {{site.base_gateway}} looks like in self-managed hybrid mode:
 
@@ -106,10 +106,10 @@ won’t be able to affect other nodes in the {{site.base_gateway}} cluster.
 * **Ease of management:** Admins only need to interact with the CP nodes to
 control and monitor the status of the entire {{site.base_gateway}} cluster.
 
-## Platform Compatibility
+## Platform compatibility
 
 You can run {{site.base_gateway}} in hybrid mode on any platform where
-{{site.base_gateway}} is [supported](/install/).
+{{site.base_gateway}} is [supported](/install/), including [{{site.konnect_short_name}}](https://cloud.konghq.com/).
 
 You can run {{site.base_gateway}} on Kubernetes in hybrid mode with or without the [{{site.kic_product_name}}](/kic/).
 
@@ -117,20 +117,20 @@ For the full Kubernetes hybrid mode documentation, see
 [hybrid mode](https://github.com/Kong/charts/blob/main/charts/kong/README.md#hybrid-mode)
 in the `kong/charts` repository.
 
-## Version Compatibility
+## Version compatibility
 
 Depending on where you're running hybrid mode, the following CP/DP versioning compatibility applies:
 
 * **Kong-managed in {{site.konnect_short_name}}:** Control planes only allow connections from data planes with the exact same version of the control plane.
 * **Self-managed in {{site.base_gateway}}:** Control planes only allow connections from data planes with the same major version. Control planes won't allow connections from data planes with newer minor versions.
 
-For example, a {{site.base_gateway}} v2.5.2 control plane:
+For example, a {{site.base_gateway}} v3.9.0.1 control plane:
 
-- Accepts a {{site.base_gateway}} 2.5.0, 2.5.1 and 2.5.2 data plane.
-- Accepts a {{site.base_gateway}} 2.3.8, 2.2.1 and 2.2.0 data plane.
-- Accepts a {{site.base_gateway}} 2.5.3 data plane (newer patch version on the data plane is accepted).
-- Rejects a {{site.base_gateway}} 1.0.0 data plane (major version differs).
-- Rejects a {{site.base_gateway}} 2.6.0 data plane (minor version on data plane is newer).
+- Accepts a {{site.base_gateway}} 3.9.0.0 and 3.9.0.1 data plane.
+- Accepts a {{site.base_gateway}} 3.8.1.0, 3.7.1.4, and 3.7.0.0 data plane.
+- Accepts a {{site.base_gateway}} 3.9.1.0 data plane (newer patch version on the data plane is accepted).
+- Rejects a {{site.base_gateway}} 2.8.0.0 data plane (major version differs).
+- Rejects a {{site.base_gateway}} 3.10.0.0 data plane (minor version on data plane is newer).
 
 ### Plugin version compatibility
 
@@ -162,10 +162,10 @@ unable to send updated configuration to DP node with hostname: localhost.localdo
 unable to send updated configuration to DP node with hostname: localhost.localdomain ip: 127.0.0.1 reason: CP and DP does not have same set of plugins installed or their versions might differ
 ```
 
-In addition, the [`/clustering/data-planes` Admin API](/api/gateway/admin-ee/#/operations/getDataPlanes) and [`/expected-config-hash` Control Plane Config API](/api/konnect/control-planes-config/v2/#/operations/get-expected-config-hash) endpoints return
-the version of the data plane node and the latest config hash the node is
-using. This data helps detect version incompatibilities from the
-control plane side.
+The following API endpoints return the version of the data plane node and the latest config hash the node is using:
+* On-prem {{site.base_gateway}}: [`/clustering/data-planes` Admin API](/api/gateway/admin-ee/#/operations/getDataPlanes)
+* {{site.konnect_short_name}}:  [`/expected-config-hash` Control Plane Config API](/api/konnect/control-planes-config/v2/#/operations/get-expected-config-hash) 
+This data helps detect version incompatibilities from the control plane side.
 
 ## Fault tolerance
 
@@ -183,7 +183,7 @@ up again, the data plane nodes will contact them and resume connected mode.
 
 You can also [configure data plane resiliency](/gateway/cp-outage/) in case of control plane outages. 
 
-### Disconnected Mode
+### Disconnected mode in on-prem deployments
 
 The viability of the data plane while disconnected means that control plane
 updates or database restores can be done with peace of mind. First bring down
@@ -237,7 +237,7 @@ not work in hybrid mode.
 These plugins don't support the `cluster` strategy/policy in hybrid mode. One of 
 the `local` or `redis` strategies/policies must be used instead.
 * [**GraphQL Rate Limiting Advanced**](/plugins/graphql-rate-limiting-advanced/):
-This plugins doesn't support the `cluster` strategy in hybrid mode. The `redis` 
+This plugin doesn't support the `cluster` strategy in hybrid mode. The `redis` 
 strategy must be used instead.
 * [**OAuth 2.0 Authentication**](/plugins/oauth2/): This plugin is not
 compatible with hybrid mode. For its regular workflow, the plugin needs to both
@@ -255,13 +255,13 @@ The ability to scope plugins to consumer groups was added in {{site.base_gateway
 
 ### Load balancing
 
-Currently, there is no automated load balancing for connections between the
+There is no automated load balancing for connections between the
 control plane and the data plane. You can load balance manually by using
 multiple control planes and redirecting the traffic using a TCP proxy.
 
-## Readonly Status API endpoints on data plane
+## Read-only Status API endpoints on data plane
 
-Several readonly endpoints from the Admin API
+Several read-only endpoints from the Admin API
 are exposed to the [Status API](/gateway/configuration/#status_listen) on data planes, including the following:
 
 - `GET /upstreams/{upstream}/targets/`
