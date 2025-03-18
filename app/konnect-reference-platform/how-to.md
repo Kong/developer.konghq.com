@@ -4,7 +4,7 @@ content_type: reference
 layout: reference
 
 products:
-    - konnect
+    - api-ops
 works_on:
   - konnect
 
