@@ -85,7 +85,7 @@ variables:
 To secure the access to your Route, create a consumer and set up an authentication plugin.
 
 {:.info}
-> Note that in this example, LangChain expects authentication as an `Authorization` header with a value starting with `Bearer`. 
+> Note that LangChain expects authentication as an `Authorization` header with a value starting with `Bearer`. 
 You can use plugins like [OAuth 2.0 Authentication](/plugins/oauth2/) or [OpenID Connect](/plugins/openid-connect/) to generate Bearer tokens. 
 In this example, for testing purposes, we'll recreate this pattern using the [Key Authentication](/plugins/key-auth/) plugin.
 
@@ -93,6 +93,7 @@ In this example, for testing purposes, we'll recreate this pattern using the [Ke
 entities:
     plugins:
     - name: key-auth
+      route: example-route
       config:
         key_names:
         - Authorization
@@ -103,7 +104,7 @@ entities:
 {% endentity_examples %}
 
 
-## 2. Install LangChain
+## 3. Install LangChain
 
 Load the LangChain SDK into your Python dependencies:
 
@@ -114,7 +115,7 @@ pip3 install -U langchain-openai
 ```
 {% endnavtab %}
 
-{% navtab "macOS, if installed with Homebrew" %}
+{% navtab "macOS, with Python installed via Homebrew" %}
 ```sh
 python3 -m venv .venv
 source .venv/bin/activate
@@ -123,7 +124,7 @@ pip install -U langchain-openai
 {% endnavtab %}
 {% endnavtabs %}
 
-## 3. Create a LangChain script
+## 4. Create a LangChain script
 
 Use the following command to create a file named `app.py` containing a LangChain Python script:
 
@@ -163,14 +164,15 @@ print(f"$ ChainAnswer:> {response.content}")' > app.py
 {: data-deployment-topology="konnect" }
 
 With the `base_url` parameter, we can override the OpenAI base URL that LangChain uses by default with the URL to our {{site.base_gateway}} Route. This way, we can proxy requests and apply {{site.base_gateway}} plugins, while also using LangChain integrations and tools.
-In this `api_key` parameter, we'll add the API key we created, without the `Bearer` prefix, which is added automatically by LangChain.
 
-## 4. Validate
+In the `api_key` parameter, we'll add the API key we created, without the `Bearer` prefix, which is added automatically by LangChain.
 
-Run your script to check
+## 5. Validate
+
+Run your script to validate that LangChain can access the Route:
 
 ```sh
-python3 python3 ./app.py
+python3 ./app.py
 ```
 
 The response should look like this:
