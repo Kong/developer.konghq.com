@@ -9,7 +9,7 @@ class StripReleaseFromLinks
 
   def process # rubocop:disable Metrics/AbcSize,Metrics/MethodLength,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
     return unless @page_or_doc.data['content_type'] == 'reference' && @page_or_doc.url == @page_or_doc.data['base_url']
-    return if @page_or_doc.data['no_version']
+    return unless @page_or_doc.data['versioned']
 
     doc = Nokogiri::HTML(@page_or_doc.output)
     changes = false

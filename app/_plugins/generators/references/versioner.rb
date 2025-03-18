@@ -29,11 +29,11 @@ module Jekyll
         page.data.merge!('base_url' => page.url)
       end
 
-      def set_release_info!
-        page.data['no_version'] = true if releases.empty?
-        return if page.data['no_version']
-
-        raise ArgumentError, "Missing release for page: #{page.url}" unless latest_release_in_range
+      def set_release_info! # rubocop:disable Metrics/AbcSize
+        if page.data['versioned'] && !latest_release_in_range
+          raise ArgumentError,
+                "Missing release for page: #{page.url}"
+        end
 
         page.data.merge!(
           'release' => latest_release_in_range,
@@ -43,7 +43,7 @@ module Jekyll
       end
 
       def handle_canonicals! # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-        if page.data['no_version']
+        if page.data['versioned']
           page.data.merge!('canonical_url' => page.url, 'canonical?' => true)
         elsif min_release && min_release > latest_available_release
           # Setting published: false prevents Jekyll from rendering the page.
@@ -59,7 +59,10 @@ module Jekyll
       end
 
       def generate_pages!
-        return [] if @page.data['no_version']
+        unless page.data['versioned']
+          return [] unless min_release && min_release > latest_available_release
+          return [] if ENV['JEKYLL_ENV'] == 'production'
+        end
 
         releases.map do |release|
           Page::Base.make_for(site:, page:, release:).to_jekyll_page

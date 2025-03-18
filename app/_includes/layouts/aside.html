@@ -1,4 +1,4 @@
-{% if page.releases_dropdown %}
+{% if page.versioned and page.releases_dropdown %}
     {% include releases_dropdown.html releases_dropdown=page.releases_dropdown release=page.release mobile=include.mobile %}
 {% endif %}
 
