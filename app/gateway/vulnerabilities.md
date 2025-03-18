@@ -6,7 +6,7 @@ description: Learn how Kong handles vulnerabilities or potential vulnerabilities
 content_type: policy
 layout: reference
 
-no_version: true
+
 
 products:
   - gateway

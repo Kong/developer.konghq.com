@@ -6,8 +6,6 @@ description: Learn how to cancel and deactivate an account in {{site.konnect_sho
 content_type: policy
 layout: reference
 
-no_version: true
-
 products:
   - gateway
 works_on:

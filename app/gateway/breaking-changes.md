@@ -13,7 +13,7 @@ tags:
     - upgrades
     - versioning
 
-no_version: true
+
 
 description: "Review {{site.base_gateway}} version breaking changes before upgrading."
 

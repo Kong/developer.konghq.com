@@ -5,7 +5,7 @@ layout: reference
 description: | 
     Advanced Analytics allows you to monitor and optimize your LLM usage by providing detailed insights into objects such as token consumption, costs, and latency.
 
-no_version: true
+
 products:
     - gateway
 works_on:

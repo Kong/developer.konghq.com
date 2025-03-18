@@ -5,7 +5,7 @@ layout: reference
 description: | 
     Serverless Gateways are lightweight data plane nodes that are fully managed by {{site.konnect_short_name}}.
 
-no_version: true
+
 products:
     - gateway
 works_on:
