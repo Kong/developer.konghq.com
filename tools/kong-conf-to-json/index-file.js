@@ -1,6 +1,23 @@
 import fs from "fs";
 import fg from "fast-glob";
 
+function mergeSections(obj1, obj2) {
+  const normalizeTitle = (title) =>
+    title === "WEBASSEMBLY (WASM)" ? "WASM" : title;
+
+  const mergedMap = new Map();
+
+  obj1.forEach((section) => {
+    mergedMap.set(normalizeTitle(section.title), section);
+  });
+
+  obj2.forEach((section) => {
+    mergedMap.set(normalizeTitle(section.title), section);
+  });
+
+  return Array.from(mergedMap.values());
+}
+
 function generateIndexFile() {
   let reference = {};
   let previousVersion;
@@ -53,7 +70,7 @@ function generateIndexFile() {
         };
 
         // portal and vitals are still valid even though they were removed
-        if (!/portal|vitals_.*/.test(param)) {
+        if (!/portal|vitals_?.*/.test(param)) {
           if (reference.params[param]["removed_in"] === undefined) {
             reference.params[param]["removed_in"] = { gateway: version };
           }
@@ -65,7 +82,10 @@ function generateIndexFile() {
       });
 
       // copy sections
-      reference.sections = newConfJson.sections;
+      reference.sections = mergeSections(
+        reference.sections,
+        newConfJson.sections
+      );
       previousVersion = version;
     }
   });
