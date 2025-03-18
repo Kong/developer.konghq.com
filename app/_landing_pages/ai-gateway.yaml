@@ -10,7 +10,7 @@ rows:
       type: h1
       text: "Kong AI Gateway"
 
-  - columns:
+    columns:
       - blocks:
           - type: structured_text
             config:
@@ -75,7 +75,7 @@ rows:
   - header:
       type: h2
       text: "AI Gateway capabilities"
-  - columns:
+    columns:
       - blocks:
           - type: structured_text
             config:
@@ -200,7 +200,7 @@ rows:
   - header:
       type: h2
       text: "AI usage governance"
-  - columns:
+    columns:
       - blocks:
           - type: structured_text
             config:
@@ -217,7 +217,7 @@ rows:
   - header:
       type: h3
       text: "Data governance" 
-  - columns:
+    columns:
       - blocks:
           - type: structured_text
             config:
@@ -239,7 +239,7 @@ rows:
   - header:
       type: h3
       text: "Prompt engineering" 
-  - columns:
+    columns:
       - blocks:
           - type: structured_text
             config:
@@ -262,7 +262,7 @@ rows:
   - header:
       type: h3
       text: "Guardrails and content safety" 
-  - columns:
+    columns:
       - blocks:
           - type: structured_text
             config:
@@ -288,7 +288,7 @@ rows:
   - header:
       type: h3
       text: "Request transformations" 
-  - columns:
+    columns:
       - blocks:
           - type: structured_text
             config:
@@ -313,7 +313,7 @@ rows:
       type: h2
       text: How-to Guides
 
-  - columns:
+    columns:
       - blocks:
           - type: how_to_list
             config:

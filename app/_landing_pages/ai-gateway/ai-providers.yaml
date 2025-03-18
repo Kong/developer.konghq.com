@@ -10,7 +10,7 @@ rows:
       type: h1
       text: "AI Gateway providers"
 
-  - columns:
+    columns:
       - blocks:
           - type: structured_text
             config:
@@ -98,7 +98,7 @@ rows:
   - header:
       type: h2
       text: "Supported providers"
-  - columns:
+    columns:
       - blocks:
           - type: structured_text
             config:
@@ -111,7 +111,7 @@ rows:
   - header:
       type: h3
       text: "OpenAI"
-  - columns:
+    columns:
       - blocks:
         - type: card
           config:
@@ -147,7 +147,7 @@ rows:
   - header:
       type: h3
       text: "Azure AI"
-  - columns:
+    columns:
       - blocks:
         - type: card
           config:
@@ -183,7 +183,7 @@ rows:
   - header:
       type: h3
       text: "Amazon Bedrock"
-  - columns:
+    columns:
       - blocks:
         - type: card
           config:
@@ -219,7 +219,7 @@ rows:
   - header:
       type: h3
       text: "Gemini"
-  - columns:
+    columns:
       - blocks:
         - type: card
           config:
@@ -255,7 +255,7 @@ rows:
   - header:
       type: h3
       text: "Anthropic"
-  - columns:
+    columns:
       - blocks:
         - type: card
           config:
@@ -291,7 +291,7 @@ rows:
   - header:
       type: h3
       text: "Cohere"
-  - columns:
+    columns:
       - blocks:
         - type: card
           config:
@@ -327,7 +327,7 @@ rows:
   - header:
       type: h3
       text: "Hugging Face"
-  - columns:
+    columns:
       - blocks:
         - type: card
           config:
@@ -363,7 +363,7 @@ rows:
   - header:
       type: h3
       text: "Llama"
-  - columns:
+    columns:
       - blocks:
         - type: card
           config:
@@ -399,7 +399,7 @@ rows:
   - header:
       type: h3
       text: "Mistral"
-  - columns:
+    columns:
       - blocks:
         - type: card
           config:
