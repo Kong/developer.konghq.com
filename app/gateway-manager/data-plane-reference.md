@@ -19,6 +19,10 @@ faqs:
 related_resources:
   - text: Konnect Advanced Analytics
     url: /advanced-analytics/
+  - text: Dedicated Cloud Gateways
+    url: /dedicated-cloud-gateways/
+  - text: Serverless Gateways
+    url: /serverless-gateways/
 ---
 
 @TODO
