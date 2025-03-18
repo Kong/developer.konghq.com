@@ -1,6 +1,6 @@
 <div class="bg-secondary rounded-md flex justify-between py-2 px-4 gap-2 w-full shadow-primary items-center text-sm">
-    <label for="releases-dropdown" class="text-primary">Version:</label>
-    <select id="releases-dropdown" class="bg-secondary grow">
+    <label for="releases-dropdown{% if include.mobile %}-mobile{% endif %}" class="text-primary">Version:</label>
+    <select id="releases-dropdown{% if include.mobile %}-mobile{% endif %}" class="releases-dropdown bg-secondary grow">
         {% for option in include.releases_dropdown.options %}
             <option value="{{option.url}}" {% if option.release == include.release %}selected{% endif %}>
                 {{option.value}} {% if option.latest? %}(latest){% endif %} {% if option.lts? %} (LTS) {% endif %}

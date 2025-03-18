@@ -30,7 +30,7 @@
 
     {% if page.layout == 'with_aside' or layout.layout == 'with_aside' %}
     <div class="flex flex-col gap-3 md:hidden">
-        {% include layouts/aside.html %}
+        {% include layouts/aside.html mobile=true %}
     </div>
     {% endif %}
 
