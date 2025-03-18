@@ -24,7 +24,7 @@ related_resources:
     url: /gateway/traffic-control/load-balancing-reference/
 ---
 
-A {{site.base_gateway}} cluster allows you to scale the system horizontally by adding more
+In a traditional deployment, you run {{site.base_gateway}} nodes in clusters. A {{site.base_gateway}} cluster allows you to scale the system horizontally by adding more
 machines to handle more incoming requests. They will all share the same
 configuration since they point to the same database. {{site.base_gateway}} nodes pointing to the
 **same datastore** will be part of the same {{site.base_gateway}} cluster.
@@ -85,7 +85,7 @@ This makes {{site.base_gateway}} clusters **eventually consistent**.
 
 ## Using read-only replicas when deploying {{site.base_gateway}} clusters with PostgresSQL
 
-When using Postgres as the backend storage, you can optionally enable
+When using PostgreSQL as the backend storage, you can optionally enable
 {{site.base_gateway}} to serve read queries from a separate database instance.
 
 Enabling the read-only connection support in {{site.base_gateway}}
@@ -93,21 +93,15 @@ greatly reduces the load on the main database instance since read-only
 queries are no longer sent to it.
 
 To learn more about how to configure this feature, refer to the
-[Datastore section](/gateway/configuration/#datastore-section)
+[Datastore section](/gateway/configuration/#datastore)
 of the {{site.base_gateway}} configuration reference.
 
 ## What information is cached?
 
 For performance reasons, {{site.base_gateway}} avoids database connections when proxying
-requests, and caches the contents of your database in memory. The following entities are cached:
+requests, and caches the contents of your database in memory. All [Gateway entities](/gateway/entities/) are cached.
 
-* [Gateway Services](/gateway/entities/service/)
-* [Routes](/gateway/entities/route/)
-* [Consumers](/gateway/entities/consumer/)
-* [Plugins](/gateway/entities/plugin/)
-* Credentials, and so on 
-
-Since these values are in memory, any change made via the [Admin API](/api/gateway/admin-ee/#/operations/) of one of the nodes must be propagated to the other nodes.
+Since these values are stored in memory, any change made via the [Admin API](/api/gateway/admin-ee/#/operations/) of one of the nodes must be propagated to the other nodes.
 
 Additionally, {{site.base_gateway}} also caches **database misses**. This means that if you
 configure a Service with no plugin, {{site.base_gateway}} will cache this information. 
@@ -118,9 +112,7 @@ All CRUD operations trigger cache invalidations. Creation
 
 ## Configure database caching
 
-You can configure three properties in the {{site.base_gateway}} configuration file, the most
-important one being `db_update_frequency`, which determine where your {{site.base_gateway}}
-nodes stand on the performance versus consistency trade-off.
+Using parameters in `kong.conf`, you can configure where {{site.base_gateway}} nodes stand on the performance versus consistency trade-off.
 
 {{site.base_gateway}} comes with default values tuned for consistency so that you can
 experiment with its clustering capabilities while avoiding surprises. As you
@@ -142,10 +134,6 @@ If you want to investigate the cached values, or manually
 invalidate a value cached by {{site.base_gateway}} (a cached hit or miss), you can do so via the
 Admin API `/cache` endpoint.
 
-{:.info}
-> **Note**: Retrieving the `cache_key` for each entity being cached by {{site.base_gateway}} is
-currently an undocumented process. Future versions of the Admin API will make
-this process easier.
 
 * Inspect a cached value: [`/cache/{key}`](/api/gateway/admin-ee/#/operations/getCacheByKey)
 * Purge a cached value: [`/cache/{cache_key}`](/api/gateway/admin-ee/#/operations/deleteCacheByKey)
