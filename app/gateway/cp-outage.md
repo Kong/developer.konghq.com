@@ -87,8 +87,8 @@ If you're associating this with an IAM role and if the backup node doesn't resid
 
 {:.warning}
 > We don't recommend using backup nodes to proxy traffic. The backup job enlarges the attack surface of a proxying Data Plane and contributes significantly to the P99 delay. You need to know the risk if you want to deploy a node this way:
+> * The Data Plane needs to be at least `3.6.0.0` to be provisioned with backup configuration when it's configured as a backup node. Although a single backup node is sufficient for all deployments, you can also configure additional backup nodes. A leader election algorithm selects one node from the group of designated backup nodes to do the backup job.
 > * In {{site.base_gateway}} 3.5.x or earlier, a Data Plane acting as a backup node cannot be provisioned with backup configurations.
-> * In {{site.base_gateway}} 3.6.x or later, the Data Plane needs to be at least `3.6.0.0` to be provisioned with backup configuration when it's configured as a backup node. Although a single backup node is sufficient for all deployments, you can also configure additional backup nodes. A leader election algorithm selects one node from the group of designated backup nodes to do the backup job.
 
 For more information about the data that is set in the environment variables, see the [AWS environment variable configuration documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html).
 
@@ -108,11 +108,11 @@ kong-exporter:
       KONG_CLUSTER_FALLBACK_CONFIG_STORAGE: s3://test-bucket/test-prefix
       KONG_CLUSTER_FALLBACK_CONFIG_EXPORT: "on"
 
-```
+``` 
 
-In {{site.base_gateway}} 3.5.x or earlier, this node is responsible for writing to the S3 bucket when it receives new configuration. The file structure is automatically created inside of the bucket and should not be created manually. If the node version is `3.2.0.0`, using the example above, the key name will be `test-prefix/3.2.0.0/config.json`. 
+All the object keynames/prefixes mentioned in the following paragraphs are parameterized with the prefix given in the config and the {{site.base_gateway}} version. For example, let's say the node has a version of `3.6.0.0`. The backup nodes will create registering files to run the leader election with a prefix `test-prefix/3.6.0.0/election/`. You can set up a lifecycle rule to delete objects with this prefix if it's not updated for days. The selected node is responsible for writing to the S3 bucket when it receives new configuration. The file structure is automatically created inside of the bucket and shouldn't be created manually. The key name is `test-prefix/3.6.0.0/config.json`.
 
-In {{site.base_gateway}} 3.6.x or later, all the object keynames/prefixes mentioned in the following paragraphs are parameterized with the prefix given in the config and the {{site.base_gateway}} version. For example, let's say the node has a version of `3.6.0.0`. The backup nodes will create registering files to run the leader election with a prefix `test-prefix/3.6.0.0/election/`. You can set up a lifecycle rule to delete objects with this prefix if it's not updated for days.The selected node is responsible for writing to the S3 bucket when it receives new configuration. The file structure is automatically created inside of the bucket and shouldn't be created manually. The key name is `test-prefix/3.6.0.0/config.json`.
+In {{site.base_gateway}} 3.5.x or earlier, this node is responsible for writing to the S3 bucket when it receives new configuration. The file structure is automatically created inside of the bucket and should not be created manually. If the node version is `3.2.0.0`, using the example above, the key name will be `test-prefix/3.2.0.0/config.json`.
 
 Both the Control Plane and Data Plane can be configured to export configurations.
 
