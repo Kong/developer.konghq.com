@@ -390,6 +390,10 @@ app/_kong_plugins/azure-functions/index.md:
   - app/_hub/kong-inc/azure-functions/overview/_index.md
 app/_kong_plugins/azure-functions/changelog.md:
   - app/_hub/kong-inc/azure-functions/_changelog.md
+app/_kong_plugins/aws-lambda/index.md:
+  - app/_hub/kong-inc/aws-lambda/overview/_index.md
+app/_kong_plugins/aws-lambda/changelog.md:
+  - app/_hub/kong-inc/aws-lambda/_changelog.md
 
 # Konnect
 
