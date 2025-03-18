@@ -63,11 +63,11 @@ rows:
               diagram: |
                 flowchart TD
                 A(Dev Portal &bull; Gateway Manager &bull; Analytics &bull; Service Catalog)
-                B(<img src="/assets/logos/kogo-white.svg" style="max-height:20px"> Control plane \n #40;Kong Gateway instance#41;)
-                B2(<img src="/assets/logos/kogo-white.svg" style="max-height:20px"> Control plane \n #40;Kong Gateway instance#41;)
-                C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data plane 1\n #40;Kong Gateway instance#41;)
-                D(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data plane 2\n #40;Kong Gateway instance#41;)
-                E(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data plane 3\n #40;Kong Gateway instance#41;)
+                B(<img src="/assets/logos/kogo-white.svg" style="max-height:20px"> Control Plane \n #40;Kong Gateway instance#41;)
+                B2(<img src="/assets/logos/kogo-white.svg" style="max-height:20px"> Control Plane \n #40;Kong Gateway instance#41;)
+                C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane 1\n #40;Kong Gateway instance#41;)
+                D(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane 2\n #40;Kong Gateway instance#41;)
+                E(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane 3\n #40;Kong Gateway instance#41;)
                 subgraph id1 [Konnect]
                 A --- B & B2
                 end
@@ -91,14 +91,14 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    In hybrid mode, {{site.base_gateway}} nodes in a cluster are split into two roles: control plane
+                    In hybrid mode, {{site.base_gateway}} nodes in a cluster are split into two roles: Control Plane
                     (CP), where configuration is managed, and data
                     plane (DP), which serves traffic for the proxy.
 
                     Hybrid mode deployments have the following benefits:
 
-                    * Users can deploy groups of data planes in different data centers, geographies, or zones without needing a local clustered database for each DP group.
-                    * The availability of the database does not affect the availability of the data planes. If a control plane is offline, data planes will run using their last known configuration.
+                    * Users can deploy groups of Data Planes in different data centers, geographies, or zones without needing a local clustered database for each DP group.
+                    * The availability of the database does not affect the availability of the Data Planes. If a Control Plane is offline, Data Planes will run using their last known configuration.
                     * Drastically reduces the amount of traffic to and from the database, since only CP nodes need a direct connection to the database.
                     * If one of the DP nodes is compromised, an attacker won’t be able to affect other nodes in the {{site.base_gateway}} cluster.
           - type: button
@@ -117,9 +117,9 @@ rows:
               diagram: |
                 flowchart TD
                   A(Dev Portal &bull; Gateway Manager &bull; Advanced Analytics &bull; Service Catalog)
-                  B(<img src="/assets/logos/kogo-white.svg" style="max-height:20px"> Kong-managed control plane \n #40;Kong Gateway instance#41;)
-                  C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data plane 1\n #40;Kong Gateway instance#41;)
-                  D(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data plane 2\n #40;Kong Gateway instance#41;)
+                  B(<img src="/assets/logos/kogo-white.svg" style="max-height:20px"> Kong-managed Control Plane \n #40;Kong Gateway instance#41;)
+                  C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane 1\n #40;Kong Gateway instance#41;)
+                  D(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane 2\n #40;Kong Gateway instance#41;)
 
                   subgraph id1 [Konnect]
                   A --- B
@@ -142,7 +142,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Serverless gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned. Serverless gateways are ideal for developers who want to test or experiment in a pre-production environment.
+                    Serverless gateways are lightweight API gateways. Their Control Plane is hosted by {{site.konnect_short_name}} and Data Plane nodes are automatically provisioned. Serverless gateways are ideal for developers who want to test or experiment in a pre-production environment.
 
                     Serverless gateways offer the following benefits:
 
@@ -186,9 +186,9 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Dedicated Cloud Gateways are data plane nodes that are fully-managed by Kong in {{site.konnect_short_name}}.
+                    Dedicated Cloud Gateways are Data Plane nodes that are fully-managed by Kong in {{site.konnect_short_name}}.
                     
-                    You don't need to host any data planes, and you maintain control over the size and location of the gateway infrastructure. 
+                    You don't need to host any Data Planes, and you maintain control over the size and location of the gateway infrastructure. 
                     This allows Kong to autoscale your nodes for you and reduces your operational complexity.
 
                     Benefits of Dedicated Cloud Gateways:
@@ -228,7 +228,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    In traditional mode, {{site.base_gateway}} requires a database to store configured entities such as routes, services, and plugins.
+                    In traditional mode, {{site.base_gateway}} requires a database to store configured entities such as Routes, Services, and plugins.
                     In a traditional deployment, all {{site.base_gateway}} nodes connect to the database. Each node manages its own configuration. 
 
                     It is the only deployment topology that supports plugins that require a database, like rate-limiting with the cluster strategy, or OAuth2. 
@@ -273,7 +273,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    You can enable DB-less mode to reduce complexity of and create more flexible deployment patterns. In this mode, configured entities such as routes, services and plugins are stored in-memory on the node.
+                    You can enable DB-less mode to reduce complexity of and create more flexible deployment patterns. In this mode, configured entities such as Routes, Services and plugins are stored in-memory on the node.
                     When running in DB-less mode, configuration is provided to {{ site.base_gateway }} using a second file. This file contains your configuration in YAML or JSON format using {{site.base_gateway}}'s declarative configuration syntax.
 
                     The combination of DB-less mode and declarative configuration has a number
@@ -282,7 +282,7 @@ rows:
                     * Reduced number of dependencies: no need to manage a database installation
                       if the entire setup for your use-case fits in memory.
                     * Your configuration is always in a known state. There is no intermediate 
-                      state between creating a service and a route using the Admin API.
+                      state between creating a Service and a Route using the Admin API.
                     * It is a good fit for automation in CI/CD scenarios. Configuration for
                       entities can be kept in a single source of truth managed via a Git
                       repository.
