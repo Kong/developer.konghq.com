@@ -409,7 +409,7 @@
   }
 
   .tablist {
-    @apply list-none flex gap-4 text-sm ml-0 flex-row border-b border-primary/5 w-full items-center;
+    @apply list-none flex gap-4 text-sm ml-0 flex-row border-b border-primary/5 w-full items-center overflow-x-auto;
   }
 
   .tabcolumn {
@@ -429,7 +429,7 @@
   }
 
   .tab-button__horizontal {
-    @apply tab-button py-3 text-terciary hover:no-underline items-center max-h-11;
+    @apply tab-button py-3 text-terciary hover:no-underline items-center max-h-11 flex-shrink-0;
 
     &.tab-button__horizontal--active {
       @apply tab-button--active border-b-2 -mb-0.5 !important;
