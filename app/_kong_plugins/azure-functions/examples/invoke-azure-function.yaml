@@ -16,7 +16,7 @@ variables:
     description: Your Azure API key.
     value: AZURE_API_KEY
   app:
-    description: The name of your Azure app
+    description: The name of your Azure app.
     value: AZURE_APP_NAME
 
 config:
