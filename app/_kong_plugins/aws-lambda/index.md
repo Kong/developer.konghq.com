@@ -6,7 +6,8 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Invoke and manage AWS Lambda functions from {{site.base_gateway}}'
-
+tags:
+  - serverless
 
 products:
     - gateway
@@ -46,7 +47,7 @@ Any form parameter sent along with the request is also sent as an argument to th
 
 The AWS Lambda plugin will automatically fetch the IAM role credential according to the following
 precedence order:
-- Fetch from the credentials defined in the `config.aws_key` and `config.aws_secret` parameters in the plugin configuration.
+1. Fetch from the credentials defined in the [`config.aws_key`](./reference/#schema--config-aws_key) and [`config.aws_secret`](./reference/#schema--config-aws_secret) parameters in the plugin configuration.
 
   {:.info}
   > By default, cURL sends payloads with an
@@ -57,16 +58,16 @@ precedence order:
   Alternatives to this approach would be to send your payload with a
   different MIME type (like `application/json`), or to use a different HTTP client.
 
-- Fetch from the credentials defined in the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
-- Fetch from the profile and credential file, defined by `AWS_PROFILE` and `AWS_SHARED_CREDENTIALS_FILE`.
-- Fetch from the ECS [container credential provider](https://docs.aws.amazon.com/sdkref/latest/guide/feature-container-credentials.html).
-- Fetch from the EKS [IAM roles for the service account](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html).
-- Fetch from the EC2 IMDS metadata. Both v1 and v2 are supported.
+1. Fetch from the credentials defined in the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
+1. Fetch from the profile and credential file, defined by `AWS_PROFILE` and `AWS_SHARED_CREDENTIALS_FILE`.
+1. Fetch from the ECS [container credential provider](https://docs.aws.amazon.com/sdkref/latest/guide/feature-container-credentials.html).
+1. Fetch from the EKS [IAM roles for the service account](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html).
+1. Fetch from the EC2 IMDS metadata. Both v1 and v2 are supported.
 
 {:.info}
 > **Note:** IAM Identity Center credential provider and Process credential provider are not supported.
 
-If you also specify the `config.aws_assume_role_arn` parameter, the plugin will try to perform
+If you also specify the [`config.aws_assume_role_arn`](./reference/#schema--config-aws_assume_role_arn) parameter, the plugin will try to perform
 an additional [AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html)
 action. This requires the {{site.base_gateway}} process to make a HTTPS request to the AWS STS service API after
 configuring the AWS access key/secret or fetching credentials automatically from EC2/ECS/EKS IAM roles.
@@ -74,7 +75,7 @@ If it succeeds, the plugin will fetch temporary security credentials that give t
 
 ## AWS region
 
-If the `config.aws_region` parameter isn't specified, the plugin attempts to get the
+If the [`config.aws_region`](./reference/#schema--config-aws_region) parameter isn't specified, the plugin attempts to get the
 AWS region through the environment variables `AWS_REGION` and `AWS_DEFAULT_REGION`,
 in that order. If none of these are set, a runtime error `no region or host specified`
 will be thrown.

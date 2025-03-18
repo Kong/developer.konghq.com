@@ -5,7 +5,7 @@ no_version: true
 
 ## Changelog
 
-**{{site.base_gateway}} 3.9.x**
+### {{site.base_gateway}} 3.9.x
 * Fixed an issue in proxy integration mode that caused an internal server error when the `multiValueHeaders` was null.
 
 **{{site.base_gateway}} 3.8.x**
@@ -24,7 +24,7 @@ no_version: true
  [#12835](https://github.com/Kong/kong/issues/12835)
 
 **{{site.base_gateway}} 3.5.x**
-* The AWS-Lambda plugin has been refactored by using `lua-resty-aws` as an underlying AWS library.
+* The AWS Lambda plugin has been refactored by using `lua-resty-aws` as an underlying AWS library.
 The refactor simplifies the AWS Lambda plugin code base and adds support for multiple IAM
 authenticating scenarios. [#11350](https://github.com/Kong/kong/pull/11350)
 
