@@ -188,6 +188,8 @@ app/_how-tos/configure-confluent-data-streaming.md:
   - app/_hub/kong-inc/confluent/overview/_index.md
 app/_how-tos/set-up-dynatrace-with-otel.md:
   - app/_hub/kong-inc/opentelemetry/how-to/_dynatrace.md
+app/_how-tos/use-langchain-with-ai-proxy.md:
+  - app/_src/gateway/ai-gateway/llm-library-integration-guides/langchain.md
 
 ## KIC
 app/_how-tos/proxy-http-traffic-kic.md:
