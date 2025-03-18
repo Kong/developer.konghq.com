@@ -2,8 +2,8 @@
 layout: plugins/without_aside
 ---
 
-<div class="flex gap-16 w-full">
-  <nav class="flex gap-8 basis-1/4">
+<div class="flex gap-16 w-full flex-col md:flex-row">
+  <nav class="hidden md:flex gap-8 basis-1/4">
     <div class="flex gap-3 flex-col">
       <div class="text-sm text-brand font-semibold">Basic use cases</div>
       <ul class="tabcolumn">
@@ -15,7 +15,14 @@ layout: plugins/without_aside
       </ul>
     </div>
   </nav>
-  <article class="flex flex-col basis-3/4 gap-12">
+  <div class="flex md:hidden bg-secondary rounded-md justify-between py-2 px-4 gap-2 w-full shadow-primary items-center">
+    <select id="plugin-example-dropdown" class="bg-secondary grow">
+      {% for example in page.examples %}
+          <option value="{{ example.url }}" {% if example == page.url %}selected{% endif %}>{{ example.title }}</option>
+      {% endfor %}
+  </select>
+  </div>
+  <article class="flex flex-col md:basis-3/4 gap-12">
     {{content}}
   </article>
 </div>

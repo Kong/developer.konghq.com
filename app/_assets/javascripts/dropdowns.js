@@ -1,8 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const select = document.getElementById("releases-dropdown");
-  if (select) {
-    select.addEventListener("change", function () {
-      const url = select.value;
+  const releasesDropdown = document.getElementById("releases-dropdown");
+  if (releasesDropdown) {
+    releasesDropdown.addEventListener("change", function () {
+      const url = releasesDropdown.value;
+      if (url) {
+        window.location.href = url;
+      }
+    });
+  }
+
+  const pluginExampleDropdown = document.getElementById(
+    "plugin-example-dropdown"
+  );
+  if (pluginExampleDropdown) {
+    pluginExampleDropdown.addEventListener("change", function () {
+      const url = pluginExampleDropdown.value;
       if (url) {
         window.location.href = url;
       }
