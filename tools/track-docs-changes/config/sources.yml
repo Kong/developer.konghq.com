@@ -430,6 +430,9 @@ app/_landing_pages/gateway/kong-manager.yaml:
   - app/_src/gateway/kong-manager/auth/index.md
 app/_landing_pages/gateway/deployment-topologies.yaml:
   - app/_src/gateway/production/deployment-topologies/index.md
+app/_landing_pages/gateway/topology-hosting-options.yaml:
+  - app/konnect/gateway-manager/serverless-gateways/index.md
+  - app/konnect/gateway-manager/dedicated-cloud-gateways/index.md
 app/_landing_pages/ai-gateway.yaml:
   - app/_src/gateway/ai-gateway/index.md
 app/_landing_pages/ai-gateway/ai-providers.yaml:
