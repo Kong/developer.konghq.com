@@ -71,7 +71,7 @@ rows:
       {{base_cmd}} \
           -e KONG_ENFORCE_RBAC=on
       ```
-  - desc: Add third-party credentials
+  - desc: Pass environment variables
     cmd: |
       ```sh
       {{base_cmd}} \
