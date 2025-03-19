@@ -80,6 +80,8 @@ rows:
               description: |
                 Learn how to set up Kong Mesh in {{site.konnect_short_name}}
               icon: /assets/icons/mesh.svg
+              cta:
+                url: /mesh/create-mesh/
       - blocks:
           - type: card
             config:
@@ -87,6 +89,8 @@ rows:
               description: |
                 Learn how roles work in Mesh Manager.
               icon: /assets/icons/security.svg
+              cta:
+                url: /mesh/mesh-roles/
       - blocks:
           - type: card
             config:
@@ -94,3 +98,5 @@ rows:
               description: |
                 Find detailed information about Service Meshes and Configuration.
               icon: /assets/icons/code.svg
+              cta:
+                url: /mesh/reference/
