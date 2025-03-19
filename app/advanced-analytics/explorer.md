@@ -5,7 +5,7 @@ layout: reference
 description: | 
     Explorer is an intuitive web-based interface that displays API usage data gathered by Konnect Analytics from your data plane nodes. You can use this tool to promptly diagnose performance issues, monitor LLM token consumption and costs, or capture essential usage metrics. 
 
-no_version: true
+
 products:
     - gateway
 works_on:

@@ -1,3 +1,14 @@
+{% if include.name == "Response Rate Limiting" %}
+The {{include.name}} plugin supports three rate limiting strategies: `local`, `cluster`, and `redis`. 
+This is controlled by the [`config.policy`](/plugins/rate-limiting/reference/#schema--config-policy) parameter.
+
+| Strategy  | Description | Pros | Cons   |
+| --------- |-------------| ---- | ------ |
+| `local`   | Counters are stored in-memory on the node. | Minimal performance impact. | Less accurate. Unless there's a consistent-hashing load balancer in front of Kong, it diverges when scaling the number of nodes.
+| `cluster` | Counters are stored in the {{site.base_gateway}} data store and shared across nodes. | Accurate, no extra components to support. | Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact. <br>Not supported in hybrid mode or {{site.konnect_short_name}} deployments. |
+| `redis`   | Counters are stored on a Redis server and shared across nodes. | Accurate, less performance impact than a `cluster` policy. | Needs a Redis installation. Bigger performance impact than a `local` policy. |
+
+{% else %}
 
 The {{include.name}} plugin supports three rate limiting strategies: `local`, `cluster`, and `redis`. 
 {% if include.name == "Rate Limiting Advanced" %}
@@ -45,3 +56,5 @@ If you see too many false negatives, increase the limit.
 
 To minimize inaccuracies, consider using a [consistent-hashing load balancer](/gateway/entities/upstream/#consistent-hashing) in front of {{site.base_gateway}}. 
 The load balancer ensures that a user is always directed to the same  {{site.base_gateway}} node, which reduces inaccuracies and prevents scaling problems.
+
+{% endif %}

@@ -61,8 +61,7 @@ of the underlying hardware on which {{site.base_gateway}} is running.
 These recommendations are a baseline guide only. 
 For performance-critical environments, you should conduct specific [tuning or benchmarking efforts](/gateway/performance/establish-performance-benchmark/).
 
-{% if_version gte:3.5.x %}
-### Hybrid mode with large number of entities
+### Hybrid mode with large number of entities {% new_in 3.5 %}
 
 When {{site.base_gateway}} is operating in hybrid mode with a large number of
 [entities](/gateway/entities/) (like Routes and Gateway Services), it can benefit from enabling [`dedicated_config_processing`](/gateway/configuration/#dedicated_config_processing).
@@ -71,7 +70,7 @@ When enabled, certain CPU-intensive steps of the data plane reconfiguration oper
 to a dedicated worker process. This reduces proxy latency during reconfigurations at the cost of a
 slight increase in memory usage. The benefits of this are most apparent with configurations
 of more than 1,000 entities. 
-{% endif_version %}
+
 
 ### {{site.base_gateway}} resources
 

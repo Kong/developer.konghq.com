@@ -6,8 +6,6 @@ description: This document describes the different stages of software availabili
 content_type: policy
 layout: reference
 
-no_version: true
-
 products:
  - gateway
  - api-ops

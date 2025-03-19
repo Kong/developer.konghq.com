@@ -14,7 +14,7 @@ import "@/javascripts/accordion";
 import "@/javascripts/copy_code_snippet";
 import "@/javascripts/how_to";
 import "@/javascripts/mode";
-import "@/javascripts/releases_dropdown";
+import "@/javascripts/dropdowns";
 import "@/javascripts/toc";
 import "@/javascripts/search_modal";
 

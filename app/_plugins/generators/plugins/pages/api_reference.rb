@@ -18,7 +18,7 @@ module Jekyll
         def data
           super
             .except('faqs')
-            .merge('api_reference?' => true, 'toc' => false, 'no_version' => true)
+            .merge('api_reference?' => true, 'toc' => false)
             .merge('api_spec' => api_spec)
         end
 

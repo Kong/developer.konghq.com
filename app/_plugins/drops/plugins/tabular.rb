@@ -17,7 +17,9 @@ module Jekyll
           def all(release:)
             site.data
                 .fetch('kong_plugins')
-                .reject { |_, p| p.data['third_party'] }.map { |_, plugin| new(release:, plugin:) }
+                .reject { |_, p| p.data['third_party'] }
+                .map { |_, plugin| new(release:, plugin:) }
+                .reject { |p| p.json_schema.nil? }
           end
         end
 
@@ -52,8 +54,6 @@ module Jekyll
             values[key]
           end
         end
-
-        private
 
         def schema
           @schema ||= @plugin.data.fetch('plugin').schemas.detect do |s|

@@ -1,11 +1,13 @@
 {% if include.edit_link %}
 <a class="text-brand flex gap-1 px-1 py-0.5 items-center text-xs" href="{{ include.edit_link }}">
     <div class="flex w-4 h-4 text-brand">{% include_svg '/assets/icons/social/github.svg' %}</div>
-    Edit this Page
+    <span class="hidden md:flex">Edit this Page</span>
+    <span class="flex md:hidden">Edit</span>
 </a>
 {% endif %}
 
 <a class="text-brand flex gap-1 px-1 py-0.5 items-center text-xs" href="{{ site.repos.developer }}/issues/">
     <div class="flex w-4 h-4 text-brand">{% include_svg '/assets/icons/warning.svg' %}</div>
-    Report an Issue
+    <span class="hidden md:flex">Report an Issue</span>
+    <span class="flex md:hidden">Report</span>
 </a>

@@ -1,7 +1,7 @@
 {% if include.tags != empty %}
 <div class="flex flex-col gap-2  w-full">
   <div class="text-primary font-medium">Tags</div>
-  <div class="flex gap-1.5 flex-col items-start md:flex-row flex-wrap">
+  <div class="flex gap-1.5 items-start flex-wrap">
     {% for tag in include.tags %}
       {% capture text %}#{{ tag }}{% endcapture %}
       {% capture tag_url %}/search/?tags={{tag}}{% endcapture %}

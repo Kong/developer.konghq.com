@@ -571,8 +571,10 @@ onboard
 onboarding
 onwards
 opa
+openai
 openid
 openresty
+opentelemetry
 oss
 outbounds
 pagerduty

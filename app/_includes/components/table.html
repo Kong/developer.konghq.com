@@ -1,0 +1,29 @@
+<table class="{% if include.sticky %}table__sticky{% endif %}">
+    <thead>
+        <tr>
+        {% for column in include.columns %}
+            <th>
+            <span class="font-semibold text-primary">{{ column.title | liquify | markdownify }}</span>
+            </th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in include.rows %}
+        <tr>
+            {% for column in include.columns %}
+                {% assign v = row[column.key] %}
+                <td{% if v == true or v == false %}{% endif %}>
+                {% if v == true %}
+                    {% include icon_true.html %}
+                {% elsif v == false %}
+                    {% include icon_false.html %}
+                {% else %}
+                    {{v | liquify | markdownify | markdown}}
+                {% endif %}
+                </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
