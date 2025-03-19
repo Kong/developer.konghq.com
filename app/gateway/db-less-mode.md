@@ -40,7 +40,7 @@ of benefits:
   repository.
 * Enables more deployment options for {{site.base_gateway}}.
 
-{:.important}
+{:.warning}
 > **Important**: [decK](/deck/) also manages configuration declaratively, but it requires
 a database to perform any of its sync, dump, or similar operations. Therefore, decK 
 can't be used in DB-less mode.
@@ -104,6 +104,8 @@ To use {{site.base_gateway}} in DB-less mode, set the [`database` directive of `
 There are two ways to load a declarative configuration file into {{site.base_gateway}}: using
 `kong.conf` or the using the [`/config` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-config).
 
+You can use the following `kong.conf` parameters to load the declarative config file:
+
 <!--vale off-->
 {% kong_config_table %}
 config:
@@ -118,48 +120,54 @@ You can run DB-less mode with Kubernetes both with and without {{ site.kic_produ
 
 ### DB-less mode with {{ site.kic_product_name }}
 
-{{ site.kic_product_name }} provides a Kubernetes native way to configure {{ site.base_gateway }} using custom resource definitions (CRDs). In this deployment pattern, {{ site.base_gateway }} is deployed in DB-less mode, where the data plane configuration is held in memory.
+{{ site.kic_product_name }} provides a Kubernetes native way to configure {{ site.base_gateway }} using custom resource definitions (CRDs). In this deployment pattern, {{ site.base_gateway }} is deployed in DB-less mode, where the Data Plane configuration is held in memory.
 
-Operators configure {{ site.base_gateway }} using standard CRDs such as `Ingress` and `HTTPRoute`, and {{ site.kic_product_name }} translates those resources in to Kong entities before sending a request to update the running data plane configurations.
+Operators configure {{ site.base_gateway }} using standard CRDs such as `Ingress` and `HTTPRoute`, and {{ site.kic_product_name }} translates those resources in to {{site.base_gateway}} entities before sending a request to update the running Data Plane configurations.
 
-In this topology, the Kubernetes API server is your source of truth. {{ site.kic_product_name }} reads resources stored on the API server and translates them in to a valid Kong configuration object. You can think of {{ site.kic_product_name }} as the control plane for your DB-less data planes.
+In this topology, the Kubernetes API server is your source of truth. {{ site.kic_product_name }} reads resources stored on the API server and translates them in to a valid {{site.base_gateway}} configuration object. You can think of {{ site.kic_product_name }} as the Control Plane for your DB-less Data Planes.
 
-For more information about {{ site.base_gateway }} and {{ site.kic_product_name }}, see the {{ site.kic_product_name }} [getting started guide](/kubernetes-ingress-controller/latest/get-started/). This guide walks you through installing {{ site.base_gateway }}, configuring a service and route, then adding a rate limiting and caching plugin to your deployment.
+For more information about {{ site.base_gateway }} and {{ site.kic_product_name }}, see the {{ site.kic_product_name }} [getting started guide](/kic/install/). This guide walks you through installing {{ site.base_gateway }}, configuring a Service and Route, then adding a rate limiting and caching plugin to your deployment.
 
 ### DB-less with Helm ({{ site.kic_product_name }} disabled)
 
-When deploying {{site.base_gateway}} on Kubernetes in DB-less mode (`env.database: "off"`) and without the Ingress Controller (`ingressController.enabled: false`), you have to provide a declarative configuration for {{site.base_gateway}} to run. You can provide an existing ConfigMap (`dblessConfig.configMap`) or place the whole configuration into a `values.yaml` (`dblessConfig.config`) parameter. See the example configuration in the [default `values.yaml`](https://github.com/kong/charts/blob/main/charts/kong/values.yaml) for more detail.
+When deploying {{site.base_gateway}} on Kubernetes in DB-less mode (`env.database: "off"`) and without the {{ site.kic_product_name }} (`ingressController.enabled: false`), you have to provide a declarative configuration for {{site.base_gateway}} to run. You can provide an existing ConfigMap (`dblessConfig.configMap`) or place the whole configuration into a `values.yaml` (`dblessConfig.config`) parameter. See the example configuration in the [default `values.yaml`](https://github.com/kong/charts/blob/main/charts/kong/values.yaml) for more detail.
 
 Use `--set-file dblessConfig.config=/path/to/declarative-config.yaml` in Helm commands to substitute in a complete declarative config file.
 
-Externally supplied ConfigMaps are not hashed or tracked in deployment annotations. Subsequent ConfigMap updates require user-initiated deployment rollouts to apply the new configuration. Run `kubectl rollout restart deploy` after updating externally supplied ConfigMap content.
+Externally supplied ConfigMaps aren't hashed or tracked in deployment annotations. Subsequent ConfigMap updates require user-initiated deployment rollouts to apply the new configuration. Run `kubectl rollout restart deploy` after updating externally supplied ConfigMap content.
 
 ## DB-less mode limitations
 
-There are a number of things to be aware of when using {{site.base_gateway}} in DB-less
+There are a number of limitations you should be aware of when using {{site.base_gateway}} in DB-less
 mode.
 
 ### Memory cache requirements
 
 The entire configuration of entities must fit inside the {{site.base_gateway}}
-cache. Make sure that the in-memory cache is configured appropriately:
-see the `mem_cache_size` directive in `kong.conf`.
+cache. Make sure that the in-memory cache is configured appropriately in [`kong.conf`](/gateway/manage-kong-conf/):
+
+<!--vale off-->
+{% kong_config_table %}
+config:
+  - name: mem_cache_size
+{% endkong_config_table %}
+<!--vale on-->
 
 ### No central database coordination
 
 Since there is no central database, multiple {{site.base_gateway}} nodes have no
-central coordination point and no cluster propagation of data:
-nodes are completely independent of each other.
+central coordination point and no cluster propagation of data.
+Nodes are completely independent of each other.
 
 This means that the declarative configuration should be loaded into each node
-independently. Using the `/config` endpoint does not affect other {{site.base_gateway}}
+independently. Using the [`/config` endpoint](/api/gateway/admin-ee/#/operations/get-config) doesn't affect other {{site.base_gateway}}
 nodes, since they have no knowledge of each other.
 
 ### Read-only Admin API
 
 Since the only way to configure entities is via declarative configuration,
 the endpoints for CRUD operations on entities are effectively read-only
-in the Admin API when running {{site.base_gateway}} in DB-less mode. `GET` operations
+in the [Admin API](/api/gateway/admin-ee/) when running {{site.base_gateway}} in DB-less mode. `GET` operations
 for inspecting entities work as usual, but attempts to `POST`, `PATCH`
 `PUT` or `DELETE` in endpoints such as `/services` or `/plugins` will return
 `HTTP 405 Not Allowed`.
@@ -168,17 +176,14 @@ This restriction is limited to what would be otherwise database operations. In
 particular, using `POST` to set the health state of targets is still enabled,
 since this is a node-specific in-memory operation.
 
-#### Kong Manager compatibility
+### Kong Manager compatibility
 
-Kong Manager cannot guarantee compatibility with {{site.base_gateway}} operating in DB-less mode. You cannot create, update, or delete entities with Kong Manager when {{site.base_gateway}} is running in this mode. Entity counters in the "Summary" section on the global and workspace overview pages will not function correctly as well.
+[Kong Manager](/gateway/kong-manager/) cannot guarantee compatibility with {{site.base_gateway}} operating in DB-less mode. You cannot create, update, or delete entities with Kong Manager when {{site.base_gateway}} is running in this mode. Entity counters in the **Summary** section on the global and workspace overview pages will not function correctly as well.
 
-#### Plugin compatibility
+### Plugin compatibility
 
 Not all {{site.base_gateway}} plugins are compatible with DB-less mode. By design, some plugins
 require central database coordination or dynamic creation of
 entities.
 
-For current plugin compatibility, see [Plugin compatibility](/hub/plugins/compatibility/).
-
-## See also
-* [Declarative configuration schema](https://github.com/Kong/go-database-reconciler/blob/main/pkg/file/kong_json_schema.json)
+For current plugin compatibility, see [Plugins](/gateway/entities/plugin/).
