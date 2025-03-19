@@ -1,127 +1,117 @@
+<b>Data stores</b>
+<br>
+Kong interacts with multiple data stores during normal operation. 
+<br>The following stores have been tested by Kong.
+
 <div class="rounded-lg">
     <table>
-        <thead>
-            <tr class="uppercase">
-                <th class="text-center"><span class="font-semibold text-primary">Third-party tool or dependency</span></th>
-                <th class="text-center"><span class="font-semibold text-primary">Supported versions</span></th>
-            </tr>
-        </thead>
         <tbody>
-            <tr>
-                <td><b>Data stores</b>
-                    <br>
-                    Kong interacts with multiple data stores during normal operation. 
-                    <br>The following stores have been tested by Kong.
-                </td>
-            </tr>
             {% for d in include.release.third_party_support.datastore %}
             {% assign key = d | first | first %}
             {% assign db-item = d | first | last %}
             {% assign db = site.data.support.third-party[key] %}
-        
             <tr>
-                <td class="align-top"><img src="/assets/icons/{{db.icon}}" class="w-6 m-2 inline-block"> {{ db.name }}</td>
-                <td>
-                <ul>{% for i in db-item.versions %}
-                <li>{{ i }}</li>
-                {% endfor %}
-                </ul>
-                </td>
+                <td class="align-top"><img src="/assets/icons/{{db.icon}}" class="w-8 m-2 inline-block">
+                    {{ db.name }}{% if db-item.versions %}: 
+                    {% for i in db-item.versions %}{{ i }}{% unless forloop.last %}, {% endunless %}{% endfor %}{% endif %}</td>
             </tr>
             {% endfor %}
-            <tr>
-                <td><b>Vaults</b>
-                    <br>
-                    Kong allows you to store secret values in external vaults. 
-                    <br>The following versions have been tested by Kong.
-                </td>
-            </tr>
+        </tbody>
+    </table>
+</div>
+
+<b>Vaults</b>
+<br>
+Kong allows you to store secret values in external vaults. 
+<br>The following vaults and versions have been tested by Kong.
+
+<div class="rounded-lg">
+    <table>
+        <tbody>
             {% for va in include.release.third_party_support.vault %}
             {% assign key = va | first | first %}
             {% assign vault-item = va | first | last %}
             {% assign vault-provider = site.data.support.third-party[key] %}
-        
             <tr>
-                <td class="align-top"><img src="/assets/icons/{{vault-provider.icon}}" class="w-6 m-2 inline-block"> {{ vault-provider.name }}</td>
-                <td>
-                <ul>
-                {% for i in vault-item.versions %}
-                <li>{{ i }}</li>
-                {% endfor %}
-                </ul>
-                </td>
+                <td class="align-top"><img src="/assets/icons/{{vault-provider.icon}}" class="w-6 m-2 inline-block">
+                    {{ vault-provider.name }}{% if vault-item.versions %}:
+                    {% for i in vault-item.versions %}{{ i }}{% unless forloop.last %}, {% endunless %}{% endfor %}{% endif %}</td>
             </tr>
             {% endfor %}
-            <tr>
-                <td><b>Log Providers</b>
-                    <br>
-                    Kong has been tested against the following log providers.
-                </td>
-            </tr>
+        </tbody>
+    </table>
+</div>
+
+<b>Log Providers</b>
+<br>
+Kong has been tested against the following log providers.
+
+<div class="rounded-lg">
+    <table>
+        <tbody>
             {% for l in include.release.third_party_support.log_provider %}
-            {% assign key = l | first | first %}
+            {% assign key = l %}
             {% assign log-provider-item = site.data.support.third-party[key] %}
             <tr>
                 <td class="align-top"><img src="/assets/icons/{{log-provider-item.icon}}" class="w-6 m-2 inline-block"> {{ log-provider-item.name }}</td>
-                <td>-</td>
             </tr>
             {% endfor %}
-            <tr>
-                <td><b>Metrics</b>
-                    <br>Kong Gateway has been tested against the following metrics providers.
-                </td>
-            </tr>
+        </tbody>
+    </table>
+</div>
+
+<b>Metrics</b>
+<br>Kong Gateway has been tested against the following metrics providers.
+
+<div class="rounded-lg">
+    <table>
+        <tbody>
             {% for m in include.release.third_party_support.metrics %}
             {% assign key = m | first | first %}
             {% assign metric-item = m | first | last %}
             {% assign metric-provider = site.data.support.third-party[key] %}
-        
             <tr>
-                <td class="align-top"><img src="/assets/icons/{{metric-provider.icon}}" class="w-6 m-2 inline-block"> {{ metric-provider.name }}</td>
-                <td>
-                <ul>
-                {% for i in metric-item.versions %}
-                <li>{{ i }}</li>
-                {% endfor %}
-                </ul>
-                </td>
+                <td class="align-top"><img src="/assets/icons/{{metric-provider.icon}}" class="w-6 m-2 inline-block">
+                    {{ metric-provider.name }}{% if metric-item.versions %}:
+                    {% for i in metric-item.versions %}{{ i }}{% unless forloop.last %}, {% endunless %}{% endfor %}{% endif %}</td>
             </tr>
             {% endfor %}
-            <tr>
-                <td><b>S3 Compatible APIs</b>
-                    <br>Any S3 compatible API is available for use when working with remote file storage.
-                    <br>The following have been tested by Kong.
-                </td>
-            </tr>
+        </tbody>
+    </table>
+</div>
+
+<b>S3 Compatible APIs</b>
+<br>Any S3 compatible API is available for use when working with remote file storage.
+<br>The following have been tested by Kong.
+
+<div class="rounded-lg">
+    <table>
+        <tbody>
             {% for s3 in include.release.third_party_support.s3_api %}
-            {% assign key = s3 | first | first %}
+            {% assign key = s3 %}
             {% assign s3-provider = site.data.support.third-party[key] %}
-        
             <tr>
-                <td class="align-top"><img src="/assets/icons/{{s3-provider.icon}}" class="w-6 m-2 inline-block"> {{ s3-provider.name }}</td>
-                <td>-</td>
+                <td class="align-top"><img src="/assets/icons/{{s3-provider.icon}}" class="w-6 m-2 inline-block">{{ s3-provider.name }}</td>
             </tr>
             {% endfor %}
-            <tr>
-                <td><b>Service Mesh</b>
-                    <br>Kong Gateway has been tested against the following Service Mesh versions.
-                </td>
-            </tr>
+        </tbody>
+    </table>
+</div>
+
+<b>Service Mesh</b>
+<br>Kong Gateway has been tested against the following Service Mesh versions.
+
+<div class="rounded-lg">
+    <table>
+        <tbody>
             {% for me in include.release.third_party_support.service_mesh %}
             {% assign key = me | first | first %}
             {% assign mesh-item = me | first | last %}
             {% assign mesh-provider = site.data.support.third-party[key] %}
             <tr>
                 <td class="align-top"><img src="/assets/icons/{{mesh-provider.icon}}" class="w-6 m-2 inline-block"> 
-                    {{ mesh-provider.name }}
-                </td>
-                <td>
-                    <ul>
-                    {% for i in mesh-item.versions %}
-                    <li>{{ i }}</li>
-                    {% endfor %}
-                    </ul>
-                </td>
+                    {{ mesh-provider.name }}{% if mesh-item.versions %}: 
+                    {% for i in mesh-item.versions %}{{ i }}{% unless forloop.last %}, {% endunless %}{% endfor %}{% endif %}</td>
             </tr>
             {% endfor %}
         </tbody>
