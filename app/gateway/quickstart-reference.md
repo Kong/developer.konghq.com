@@ -26,7 +26,7 @@ related_resources:
 Kong offers a quickstart script that allows you to easily run a local instance of {{site.base_gateway}} for testing purposes.
 You can view the 
 
-To run this quickstart you just need to start Docker and store your Kong license data in the `KONG_LICENSE_DATA` environment variable. Once this is done, run this command to create the Docker containers for {{site.base_gateway}} and its database:
+To run this quickstart you just need to start Docker and store your Kong license in the `KONG_LICENSE_DATA` environment variable. Once this is done, run this command to create the Docker containers for {{site.base_gateway}} and its database:
 
 {% capture base_cmd %}curl -Ls https://get.konghq.com/quickstart | bash -s --  \
           -e KONG_LICENSE_DATA{% endcapture %}
@@ -35,7 +35,7 @@ To run this quickstart you just need to start Docker and store your Kong license
 {{base_cmd}}
 ```
 
-For more information about the default parameters used in the quickstart, check out the [full script](https://get.konghq.com/quickstart). 
+For more information about the configuration used for the quickstart, check out the [full script](https://get.konghq.com/quickstart). 
 
 ## Quickstart script parameters
 
