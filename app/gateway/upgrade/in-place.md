@@ -21,6 +21,8 @@ related_resources:
     url: /gateway/upgrade/
   - text: "Dual-cluster upgrade"
     url: /gateway/upgrade/dual-cluster/
+  - text: Rolling upgrade
+    url: /gateway/upgrade/rolling/
   - text: "{{site.base_gateway}} breaking changes"
     url: /gateway/breaking-changes/
   - text: "Backing up and restoring {{site.base_gateway}}"
