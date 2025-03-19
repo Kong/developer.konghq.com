@@ -398,6 +398,10 @@ app/_kong_plugins/ai-rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/ai-rate-limiting-advanced/overview/_index.md
 app/_kong_plugins/ai-rate-limiting-advanced/changelog.md:
   - app/_hub/kong-inc/ai-rate-limiting-advanced/_changelog.md
+app/_kong_plugins/degraphql/index.md:
+  - app/_hub/kong-inc/degraphql/overview/_index.md
+app/_kong_plugins/degraphql/changelog.md:
+  - app/_hub/kong-inc/degraphql/_changelog.md
 
 # Konnect
 
