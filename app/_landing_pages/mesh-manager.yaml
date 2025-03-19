@@ -1,0 +1,105 @@
+metadata:
+  title: "Mesh Manager"
+  content_type: landing_page
+  description: Learn about managing service meshes and control planes with Mesh Manager.
+  tags:
+    - mesh
+  breadcrumb: /mesh-manager/
+
+rows:
+  - header:
+      type: h1
+      text: "Mesh Manager"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "What is Mesh Manager?"
+              blocks:
+                - type: text
+                  text: |
+                    [Mesh Manager](https://cloud.konghq.com/mesh-manager) in {{site.konnect_short_name}} 
+                    allows you to create, manage, and view your {{site.mesh_product_name}} **Service Meshes** 
+                    using the {{site.konnect_short_name}} platform.
+
+                    **Key benefits of Mesh Manager:**
+                    - **Kong-managed Global Control Plane**: Kong handles the management of your **Global Control Plane**.
+                    - **Centralized view**: See all your **Services**, **Control Planes**, and **Data Plane Proxies** in one place.
+                    - **Multi-zone support**: Deploy across Kubernetes, Universal environments, and multiple clouds.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/mesh-manager/konnect-mesh-control-plane-dashboard.png
+              alt_text: "Mesh Manager Dashboard"
+  - header:
+      type: h2
+      text: "Mesh Architecture"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    **Mesh Manager** follows a hierarchical control plane model to manage **Service Mesh Deployments** across zones.
+
+                    - **Global Control Plane**: Stores configuration and policies for all meshes.
+                    - **Zone Control Planes**: Manage mesh networking and service traffic in their respective zones.
+                    - **Services**: Connect to the **Zone Control Plane** for inbound and outbound traffic control.
+
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                graph TD
+                  subgraph Konnect
+                      CP1[Global Control Plane]
+                  end
+                  subgraph Kong Mesh US Control Plane
+                      CP2[Control Plane]
+                  end
+
+                  S1[Service A]
+                  S2[Service B]
+                  S3[Service C]
+
+                  CP2 <--> CP1
+                  S1 <-->|Inbound/Outbound Traffic| CP2
+                  S2 <-->|Inbound/Outbound Traffic| CP2
+                  S3 <-->|Inbound/Outbound Traffic| CP2
+  - header:
+      type: h2
+      text: "Get Started"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Create a Mesh
+              description: |
+                Learn how to set up a Kong Mesh
+              icon: /assets/icons/mesh.svg
+              cta:
+                text: Get Started
+                url: /mesh/create-mesh/
+      - blocks:
+          - type: card
+            config:
+              title: Mesh Roles
+              description: |
+                Learn how roles work in Mesh Manager.
+              icon: /assets/icons/security.svg
+              cta:
+                text: Configure RBAC
+                url: /mesh/mesh-roles/
+      - blocks:
+          - type: card
+            config:
+              title: Mesh Reference Guide
+              description: |
+                Find detailed information about Service Meshes and Configuration.
+              icon: /assets/icons/code.svg
+              cta:
+                text: Read the Docs
+                url: /mesh/reference/

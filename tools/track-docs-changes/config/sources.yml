@@ -569,7 +569,8 @@ app/service-catalog/integrations/pagerduty.md:
 app/service-catalog/scorecards.md:
   - app/konnect/service-catalog/scorecards.md
 
-
+app/_landing_pages/mesh-manager.yaml:
+  - app/konnect/mesh-manager/index.md
 
 # deck
 app/_landing_pages/deck.yaml:
@@ -656,3 +657,5 @@ app/deck/gateway/deduplicate.md:
   - app/deck/gateway/deduplicate.md
 app/deck/gateway/reset.md:
   - app/deck/gateway/reset.md
+
+
