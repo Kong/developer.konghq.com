@@ -1,5 +1,5 @@
 ---
-title: "Kong Mesh"
+title: "{{site.mesh_product_name}}"
 description: 'placeholder'
 content_type: reference
 layout: reference
