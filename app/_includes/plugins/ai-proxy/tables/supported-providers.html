@@ -24,7 +24,7 @@
             <td>{{ chat | to_check }}</td>
             <td>{{ completions | to_check }}</td>
             <td>{{ chat_streaming | to_check }}</td>
-            <td>{{ completions_streaming }}</td>
+            <td>{{ completions_streaming | to_check  }}</td>
             <td>
                 {% if provider.min_version < page.min_version.gateway %}
                     {{ page.min_version.gateway }}
