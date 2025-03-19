@@ -1,0 +1,5 @@
+<ul>
+    {% for b in site.data.support.browsers.browsers %}
+        <li><img src="/assets/icons/{{b.icon}}" class="w-6 m-2 inline-block"> {{ b.name }}</li>
+    {% endfor %}
+</ul>

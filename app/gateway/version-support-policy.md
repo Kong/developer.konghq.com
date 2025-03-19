@@ -4,7 +4,7 @@ content_type: reference
 layout: reference
 
 products:
-    - gateway
+  - gateway
 
 breadcrumbs:
   - /gateway/
@@ -19,6 +19,8 @@ related_resources:
     url: /gateway/vulnerabilities/
   - text: "{{site.base_gateway}} breaking changes"
     url: /gateway/breaking-changes/
+  - text: "Supported third-party dependencies for {{site.base_gateway}}"
+    url: /gateway/third-party-support/
 ---
 
 Kong adopts a structured approach to versioning its products.
