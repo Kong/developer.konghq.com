@@ -31,8 +31,8 @@ module Jekyll
       include Jekyll::SiteAccessor
 
       def sections
-        @sections ||= kong_conf_index.fetch('sections', []).map.with_index do |section, index|
-          Section.new(section:, params: section_params(index))
+        @sections ||= kong_conf_index.fetch('sections', []).map do |section|
+          Section.new(section:, params: section_params(section))
         end
       end
 
@@ -42,9 +42,9 @@ module Jekyll
         @kong_conf_index ||= site.data.dig('kong-conf', 'index')
       end
 
-      def section_params(index)
+      def section_params(section)
         kong_conf_index.fetch('params', {}).select do |_k, v|
-          v['sectionIndex'] == index
+          v['sectionTitle'] == section['title']
         end
       end
     end

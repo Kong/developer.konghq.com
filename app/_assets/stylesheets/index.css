@@ -408,8 +408,12 @@
     @apply bg-semantic-green-secondary;
   }
 
+  .badge.new-in {
+    @apply align-middle;
+  }
+
   .tablist {
-    @apply list-none flex gap-4 text-sm ml-0 flex-row border-b border-primary/5 w-full items-center;
+    @apply list-none flex gap-4 text-sm ml-0 flex-row border-b border-primary/5 w-full items-center overflow-x-auto;
   }
 
   .tabcolumn {
@@ -429,15 +433,15 @@
   }
 
   .tab-button__horizontal {
-    @apply tab-button py-3 text-terciary hover:no-underline items-center max-h-11;
+    @apply tab-button py-3 text-terciary hover:no-underline items-center max-h-11 flex-shrink-0;
 
     &.tab-button__horizontal--active {
-      @apply tab-button--active border-b-2 -mb-0.5 !important;
+      @apply tab-button--active border-b-2 !important;
     }
   }
 
   .tab-button__vertical {
-    @apply tab-button py-2 px-5 text-terciary hover:no-underline border-l-2 border-transparent flex-wrap block;
+    @apply tab-button py-2 px-5 text-terciary hover:no-underline border-l-2 border-transparent flex-wrap flex items-center gap-1;
 
     &.tab-button__vertical--active {
       @apply tab-button--active !important;

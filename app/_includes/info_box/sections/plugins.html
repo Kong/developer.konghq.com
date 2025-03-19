@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-2  w-full">
   <div class="text-primary font-medium">Plugins</div>
-  <div class="flex gap-1.5 flex-col md:flex-row flex-wrap">
+  <div class="flex gap-1.5 flex-wrap">
     {% for plugin_slug in include.plugins %}
     {% assign plugin = site.data['kong_plugins'][plugin_slug] %}
     {% include badge.html url=plugin.url text=plugin.name %}

@@ -557,6 +557,7 @@ ngrok
 ngx
 ngx_stream_proxy_module
 ngx_wasm_module
+no_version
 node_quantifier
 nopp
 nopped
@@ -571,6 +572,7 @@ onboard
 onboarding
 onwards
 opa
+openai
 openid
 openresty
 opentelemetry

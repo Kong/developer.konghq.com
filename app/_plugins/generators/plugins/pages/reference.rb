@@ -32,9 +32,9 @@ module Jekyll
 
         def versions_info
           if @plugin.third_party?
-            { 'no_version' => true }
-          else
             {}
+          else
+            { 'versioned' => true }
           end
         end
       end

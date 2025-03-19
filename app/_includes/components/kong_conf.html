@@ -15,8 +15,8 @@
             {% if param.min_version %}
                 <div class="flex text-secondary text-xs gap-0.5"><span>Min Version: </span><span class="font-semibold">{{param.min_version.gateway}}</span></div>
             {% endif %}
-            {% if param.max_version %}
-                <div class="flex text-secondary text-xs gap-0.5"><span>Deprecated in: </span><span class="font-semibold">{{param.max_version.gateway}}</span></div>
+            {% if param.removed_in %}
+                <div class="flex text-secondary text-xs gap-0.5"><span>Removed in: </span><span class="font-semibold">{{param.removed_in.gateway}}</span></div>
             {% endif %}
         </div>
         <div class="flex flex-col gap-4 p-4">

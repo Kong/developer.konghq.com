@@ -14,7 +14,7 @@ tags:
     - upgrades
     - versioning
 
-no_version: true
+
 
 related_resources:
   - text: "Upgrading {{site.base_gateway}}"
@@ -63,12 +63,12 @@ flowchart TD
     CPY --pg_restore--> DBY
 
     style API stroke:none
-    style DBX stroke-dasharray:3
-    style CPX stroke-dasharray:3
-    style Admin fill:none,stroke:none,color:#d44324
-    style Admin2 fill:none,stroke:none,color:#d44324
-    linkStyle 4,7 stroke:#d44324,color:#d44324
-    linkStyle 3,6,9 stroke:#b6d7a8
+    style DBX stroke-dasharray:3 !important
+    style CPX stroke-dasharray:3 !important
+    style Admin fill:none,stroke:none,color:#d44324 !important
+    style Admin2 fill:none,stroke:none,color:#d44324 !important
+    linkStyle 4,7 stroke:#d44324 !important,color:#d44324 !important
+    linkStyle 3,6,9 stroke:#b6d7a8 !important
 {% endmermaid %}
 
 > _Figure 1: The diagram shows a {{site.base_gateway}} upgrade using the dual-cluster strategy._

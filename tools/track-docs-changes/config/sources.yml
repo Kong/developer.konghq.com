@@ -188,6 +188,8 @@ app/_how-tos/configure-confluent-data-streaming.md:
   - app/_hub/kong-inc/confluent/overview/_index.md
 app/_how-tos/set-up-dynatrace-with-otel.md:
   - app/_hub/kong-inc/opentelemetry/how-to/_dynatrace.md
+app/_how-tos/use-langchain-with-ai-proxy.md:
+  - app/_src/gateway/ai-gateway/llm-library-integration-guides/langchain.md
 
 ## KIC
 app/_how-tos/proxy-http-traffic-kic.md:
@@ -384,6 +386,14 @@ app/_kong_plugins/confluent-consume/changelog.md:
   - app/_hub/kong-inc/confluent-consume/_changelog.md
 app/_kong_plugins/confluent-consume/index.md:
   - app/_hub/kong-inc/confluent-consume/overview/_index.md
+app/_kong_plugins/azure-functions/index.md:
+  - app/_hub/kong-inc/azure-functions/overview/_index.md
+app/_kong_plugins/azure-functions/changelog.md:
+  - app/_hub/kong-inc/azure-functions/_changelog.md
+app/_kong_plugins/aws-lambda/index.md:
+  - app/_hub/kong-inc/aws-lambda/overview/_index.md
+app/_kong_plugins/aws-lambda/changelog.md:
+  - app/_hub/kong-inc/aws-lambda/_changelog.md
 
 # Konnect
 
@@ -393,7 +403,8 @@ app/advanced-analytics/llm-reporting.md:
   - app/konnect/advanced-analytics/explorer.md
 app/konnect-geos.md:
   - app/konnect/geo.md
-
+app/_landing_pages/advanced-analytics.md:
+  - app/konnect/advanced-analytics/index.md
 
 # landing pages
 app/_landing_pages/service-catalog.yaml:
@@ -419,6 +430,11 @@ app/_landing_pages/gateway/kong-manager.yaml:
   - app/_src/gateway/kong-manager/auth/index.md
 app/_landing_pages/gateway/deployment-topologies.yaml:
   - app/_src/gateway/production/deployment-topologies/index.md
+app/_landing_pages/ai-gateway.yaml:
+  - app/_src/gateway/ai-gateway/index.md
+app/_landing_pages/ai-gateway/ai-providers.yaml:
+  - app/_src/gateway/ai-gateway/index.md
+
 
 # references 
 app/gateway/rate-limiting/strategies.md:
@@ -474,6 +490,11 @@ app/gateway/breaking-changes.md:
 app/gateway/cp-outage.md:
   - app/_src/gateway/kong-enterprise/cp-outage-handling-faq.md
   - app/_src/gateway/kong-enterprise/cp-outage-handling.md
+app/gateway/traditional-mode.md:
+  - app/_src/gateway/production/deployment-topologies/traditional/index.md
+  - app/_src/gateway/production/clustering.md
+app/gateway/quickstart-reference.md:
+  - app/_src/gateway/ai-gateway/index.md
 app/gateway/upgrade/in-place.md:
   - app/_src/gateway/upgrade/in-place.md
 app/_includes/gateway/migration-finish-warning.md:

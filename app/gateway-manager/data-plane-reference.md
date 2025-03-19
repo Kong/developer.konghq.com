@@ -5,7 +5,7 @@ layout: reference
 description: | 
     Serverless Gateways are lightweight data plane nodes that are fully managed by {{site.konnect_short_name}}.
 
-no_version: true
+
 products:
     - gateway
 works_on:
@@ -19,6 +19,10 @@ faqs:
 related_resources:
   - text: Konnect Advanced Analytics
     url: /advanced-analytics/
+  - text: Dedicated Cloud Gateways
+    url: /dedicated-cloud-gateways/
+  - text: Serverless Gateways
+    url: /serverless-gateways/
 ---
 
 @TODO
