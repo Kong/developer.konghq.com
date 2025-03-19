@@ -81,7 +81,7 @@ rows:
                 Learn how to set up Kong Mesh in {{site.konnect_short_name}}
               icon: /assets/icons/mesh.svg
               cta:
-                url: /mesh/create-mesh/
+                url: /how-to/mesh/create-mesh/
       - blocks:
           - type: card
             config:
