@@ -259,7 +259,7 @@ have limitations in hybrid mode:
 * [**Key Auth Encrypted**](/plugins/key-auth-enc/): The time-to-live setting
 (`ttl`), which determines the length of time a credential remains valid, does
 not work in hybrid mode.
-* [**Rate Limiting**](/plugins/rate-limiting/), [**Rate Limiting Advanced**](/plugins/rate-limiting-advanced/), and [**Response Rate Limiting**](/plugins/response-ratelimiting/):
+* [**Rate Limiting**](/plugins/rate-limiting/), [**Rate Limiting Advanced**](/plugins/rate-limiting-advanced/), [**Response Rate Limiting**](/plugins/response-ratelimiting/), [AI Rate Limiting Advanced](/plugins/ai-rate-limiting-advanced/), and [Service Protection](/plugins/service-protection/):
 These plugins don't support the `cluster` strategy/policy in hybrid mode. One of 
 the `local` or `redis` strategies/policies must be used instead.
 * [**GraphQL Rate Limiting Advanced**](/plugins/graphql-rate-limiting-advanced/):
