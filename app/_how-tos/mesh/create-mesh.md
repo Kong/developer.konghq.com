@@ -1,5 +1,5 @@
 ---
-title: Create a Mesh
+title: Create a service mesh in {{site.konnect_short_name}}
 
 content_type: how_to
 

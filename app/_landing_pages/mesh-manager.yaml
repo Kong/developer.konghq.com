@@ -21,12 +21,12 @@ rows:
                 - type: text
                   text: |
                     [Mesh Manager](https://cloud.konghq.com/mesh-manager) in {{site.konnect_short_name}} 
-                    allows you to create, manage, and view your {{site.mesh_product_name}} **Service Meshes** 
+                    allows you to create, manage, and view your {{site.mesh_product_name}} service meshes
                     using the {{site.konnect_short_name}} platform.
 
                     **Key benefits of Mesh Manager:**
-                    - **Kong-managed Global Control Plane**: Kong handles the management of your **Global Control Plane**.
-                    - **Centralized view**: See all your **Services**, **Control Planes**, and **Data Plane Proxies** in one place.
+                    - **Kong-managed Global Control Plane**: Kong handles the management of your Global Control Plane.
+                    - **Centralized view**: See all your Services, Control Planes, and Data Plane Proxies in one place.
                     - **Multi-zone support**: Deploy across Kubernetes, Universal environments, and multiple clouds.
       - blocks:
           - type: image
@@ -43,11 +43,11 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    **Mesh Manager** follows a hierarchical control plane model to manage **Service Mesh Deployments** across zones.
+                    Mesh Manager follows a hierarchical control plane model to manage service mesh deployments across zones.
 
                     - **Global Control Plane**: Stores configuration and policies for all meshes.
                     - **Zone Control Planes**: Manage mesh networking and service traffic in their respective zones.
-                    - **Services**: Connect to the **Zone Control Plane** for inbound and outbound traffic control.
+                    - **Services**: Connect to the zone Control Plane for inbound and outbound traffic control.
 
       - blocks:
           - type: mermaid
@@ -76,13 +76,10 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Create a Mesh
+              title: Create a service mesh
               description: |
-                Learn how to set up a Kong Mesh
+                Learn how to set up Kong Mesh in {{site.konnect_short_name}}
               icon: /assets/icons/mesh.svg
-              cta:
-                text: Get Started
-                url: /mesh/create-mesh/
       - blocks:
           - type: card
             config:
@@ -90,9 +87,6 @@ rows:
               description: |
                 Learn how roles work in Mesh Manager.
               icon: /assets/icons/security.svg
-              cta:
-                text: Configure RBAC
-                url: /mesh/mesh-roles/
       - blocks:
           - type: card
             config:
@@ -100,6 +94,3 @@ rows:
               description: |
                 Find detailed information about Service Meshes and Configuration.
               icon: /assets/icons/code.svg
-              cta:
-                text: Read the Docs
-                url: /mesh/reference/
