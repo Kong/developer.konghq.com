@@ -152,20 +152,12 @@ rows:
               diagram: |
                 flowchart TD
                   A(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong Gateway instance)
-                  B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong Gateway instance)
-                  C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong Gateway instance)
 
                   A2(fa:fa-file kong1.yml)
-                  B2(fa:fa-file kong1.yml)
-                  C2(fa:fa-file kong1.yml)
 
                   A2 --> A
-                  B2 --> B
-                  C2 --> C
 
                   style A stroke:none,fill:#0E44A2,color:#fff
-                  style B stroke:none,fill:#0E44A2,color:#fff
-                  style C stroke:none,fill:#0E44A2,color:#fff
       - blocks:
           - type: structured_text
             config:
