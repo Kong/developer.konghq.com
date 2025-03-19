@@ -27,7 +27,7 @@ prereqs:
 ---
 @TODO 
 
-Add stteps from here
+Add steps from here
 
 
 https://docs.konghq.com/konnect/mesh-manager/
