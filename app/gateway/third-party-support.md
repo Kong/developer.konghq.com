@@ -10,7 +10,7 @@ breadcrumbs:
   - /gateway/
 
 description: |
-  This reference lists all of the tested and supported versions of {{site.base_gateway}}'s third-party depedencies.
+  This reference lists all of the tested and supported versions of {{site.base_gateway}}'s third-party dependencies.
 
 related_resources:
   - text: "{{site.base_gateway}} version support policy"
