@@ -493,6 +493,7 @@ app/gateway/traditional-mode.md:
   - app/_src/gateway/production/clustering.md
 app/gateway/quickstart-reference.md:
   - app/_src/gateway/ai-gateway/index.md
+  - app/_src/gateway/get-started/index.md
 app/gateway/upgrade/in-place.md:
   - app/_src/gateway/upgrade/in-place.md
 app/_includes/gateway/migration-finish-warning.md:
