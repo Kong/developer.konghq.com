@@ -488,6 +488,9 @@ app/gateway/breaking-changes.md:
 app/gateway/cp-outage.md:
   - app/_src/gateway/kong-enterprise/cp-outage-handling-faq.md
   - app/_src/gateway/kong-enterprise/cp-outage-handling.md
+app/gateway/traditional-mode.md:
+  - app/_src/gateway/production/deployment-topologies/traditional/index.md
+  - app/_src/gateway/production/clustering.md
 app/gateway/quickstart-reference.md:
   - app/_src/gateway/ai-gateway/index.md
 app/gateway/upgrade/in-place.md:
