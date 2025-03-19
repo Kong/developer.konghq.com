@@ -23,8 +23,7 @@ related_resources:
     url: /ai-gateway/
 ---
 
-Kong offers a quickstart script that allows you to easily run a local instance of {{site.base_gateway}} for testing purposes.
-You can view the 
+Kong offers a quickstart script that allows you to easily run a local instance of the latest version of {{site.base_gateway}} for testing purposes.
 
 To run this quickstart you just need to start Docker and store your Kong license in the `KONG_LICENSE_DATA` environment variable. Once this is done, run this command to create the Docker containers for {{site.base_gateway}} and its database:
 
