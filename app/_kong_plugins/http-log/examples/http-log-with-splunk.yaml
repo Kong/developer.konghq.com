@@ -1,0 +1,38 @@
+description: |
+  Use the HTTP Log plugin to send {{site.base_gateway}} raw text logs to Splunk.
+
+  {:.info}
+  > **Note**: The following example uses Splunk 9.0.2. If you are using a different version of Splunk,
+  check the [Splunk documentation](https://docs.splunk.com/Documentation/Splunk/latest/RESTREF/RESTinput)
+  for the appropriate method.
+
+  To send raw text, use the [`/services/collector/raw`](https://docs.splunk.com/Documentation/Splunk/latest/RESTREF/RESTinput#services.2Fcollector.2Fraw) Splunk endpoint.
+
+  Logs are sent as JSON objects. See the [Log Format](/hub/kong-inc/http-log/#log-format) reference for details.
+
+title: ''
+
+weight: 900
+
+requirements:
+  - You have a Splunk authorization token.
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config:
+  headers:
+    Authorization: "Splunk 123456"
+  http_endpoint: "https://example.splunkcloud.com:8088/services/collector/raw"
+  method: POST
+  timeout: 3000
+  retry_count: 1
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
