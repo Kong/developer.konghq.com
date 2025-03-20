@@ -16,6 +16,8 @@ related_resources:
     url: /gateway/routing/expressions/
   - text: Expressions repository
     url: https://github.com/Kong/atc-router
+  - text: Traffic control and routing
+    url: /gateway/traffic-control-and-routing/
 
 breadcrumbs:
   - /gateway/
@@ -31,3 +33,9 @@ breadcrumbs:
 - Errors and retries during proxying
 - Response streaming
 -->
+
+## Proxying and upstream timeouts
+
+## Response
+
+## Errors and retries

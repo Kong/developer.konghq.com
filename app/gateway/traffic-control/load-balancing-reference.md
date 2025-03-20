@@ -23,6 +23,8 @@ related_resources:
     url: /gateway/traffic-control/health-checks-circuit-breakers/
   - text: Configure blue-green deployments
     url: /gateway/traffic-control/blue-green-deployments/
+  - text: Traffic control and routing
+    url: /gateway/traffic-control-and-routing/
 
 breadcrumbs:
   - /gateway/
