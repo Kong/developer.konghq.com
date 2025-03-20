@@ -5,7 +5,6 @@ module Jekyll
     priority :low
 
     def generate(site)
-      return
       @seen = {}
       @sections = {}
       Dir.glob(File.join(site.source, '_indices/**/*.yaml')).each do |file|
