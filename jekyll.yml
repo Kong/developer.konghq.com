@@ -23,6 +23,7 @@ title: Kong Developer
 links:
   #web: https://developer.konghq.com
   web: https://kongdeveloper.netlify.app # for now, so that we can generate the sitemap
+  direct: https://packages.konghq.com/public
 
 plugins:
   - jekyll-include-cache

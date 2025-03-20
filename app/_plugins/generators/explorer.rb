@@ -5,6 +5,7 @@ module Jekyll
   class TagExplorer < Jekyll::Generator
     priority :lowest
     def generate(site)
+      return
       return if Jekyll.env == 'production'
 
       jobs = [
@@ -83,7 +84,7 @@ module Jekyll
     def render(item, groups, job)
       context = {
         'index' => {
-          'title' => "Exploring the '#{item}' #{job['type']}",
+          'title' => "Exploring the '#{item}' #{job['type']}"
         },
         'type' => job['type'],
         'groups' => groups,

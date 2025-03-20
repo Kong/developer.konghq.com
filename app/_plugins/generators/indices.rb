@@ -5,12 +5,12 @@ module Jekyll
     priority :low
 
     def generate(site)
+      return
       @seen = {}
       @sections = {}
       Dir.glob(File.join(site.source, '_indices/**/*.yaml')).each do |file|
         site.pages << build_page(site, file)
       end
-      
     end
 
     def build_page(site, file)
@@ -150,7 +150,7 @@ module Jekyll
         end
 
         # Remove the match index
-        @sections[title]['pages'] = @sections[title]['pages'].map { |p| p['page'] ? p['page'] : p }.uniq
+        @sections[title]['pages'] = @sections[title]['pages'].map { |p| p['page'] || p }.uniq
       end
     end
 
@@ -175,7 +175,7 @@ module Jekyll
     def render(index, groups)
       context = {
         'index' => index,
-        'groups' => groups,
+        'groups' => groups
       }
       Liquid::Template.parse(template).render(context)
     end

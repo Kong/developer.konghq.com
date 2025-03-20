@@ -19,30 +19,38 @@ centos8:
 debian8:
   os: Debian
   version: 8
+  codename: jessie
 debian9:
   os: Debian
   version: 9
+  codename: strech
 debian10:
   os: Debian
   version: 10
+  codename: buster
 debian11:
   os: Debian
   version: 11
+  codename: bullseye
 debian12:
   os: Debian
   version: 12
+  codename: bookworm
 debian-stable:
   os: Debian
   version: stable
 rhel7:
   os: RHEL
   version: 7.x
+  codename: el7
 rhel8:
   os: RHEL
   version: 8.x
+  codename: el8
 rhel9:
   os: RHEL
   version: 9.x
+  codename: el9
 ubuntu1604:
   os: Ubuntu
   version: 16.04
@@ -52,9 +60,12 @@ ubuntu1804:
 ubuntu2004:
   os: Ubuntu
   version: 20.04
+  codename: focals
 ubuntu2204:
   os: Ubuntu
   version: 22.04
+  codename: jammy
 ubuntu2404:
   os: Ubuntu
   version: 24.04
+  codename: noble

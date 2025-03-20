@@ -1,0 +1,26 @@
+{%- assign gpg_key = site.data.products.gateway.public_keys[page.release.major_minor_version].gpg_key  -%}
+{%- unless gpg_key -%}
+{%- assign gpg_key = site.data.products.gateway.public_keys.legacy.gpg_key  -%}
+{%- endunless -%}
+
+<div class="flex flex-col gap-5">
+    <div class="flex flex-col gap-4">
+        <h3 class="font-semibold text-base leading-6">Package manager</h3>
+
+{%- assign include_path =  "install/gateway/linux/packages/" | append: include.os | append: ".html" -%}
+{% include {{include_path}} gpg_key=gpg_key %}
+    </div>
+
+    <div class="border-t border-primary/5"></div>
+
+    <div class="flex flex-col gap-2">
+        <h3 class="font-semibold text-base leading-6">Binary Download</h3>
+
+        <div class="grid md:grid-cols-2 gap-4">
+            {% assign distro = page.release.distros_by_os[include.os] | find: "default", true %}
+
+            {%- assign include_os_path = "install/gateway/linux/binaries/" | append: include.os | append: ".html" -%}
+            {% include {{include_os_path}} distro=distro release=page.release os=include.os %}
+        </div>
+    </div>
+</div>
