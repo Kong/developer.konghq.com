@@ -136,7 +136,7 @@ Versions below this will see inconsistent `deck gateway diff` results and other 
 
 {{site.konnect_short_name}} is compatible with the following browsers:
 
-{% include support/browsers.html release=release %}
+{% include_cached support/browsers.html %}
 
 ## Plugin compatibility
 

@@ -46,7 +46,7 @@ These tools are managed services and Kong provides compatibility with the curren
 {% assign tab_name = release.release %}
 {% if release.lts %}{% assign tab_name = tab_name | append: ' LTS' %}{% endif %}
 {% navtab {{ tab_name }} %}
-  {% include support/gateway-third-party.html release=release %}
+  {% include_cached support/gateway-third-party.html release=release %}
 {% endnavtab %}
 {% endfor %}
 {% endnavtabs %}
@@ -55,7 +55,7 @@ These tools are managed services and Kong provides compatibility with the curren
 
 Kong supports the two latest stable versions and any extended support versions of the following “evergreen” desktop browsers:
 
-{% include support/browsers.html release=release %}
+{% include_cached support/browsers.html %}
 
 [Chrome](https://www.chromium.org/chrome-release-channels/), 
 [Firefox](https://support.mozilla.org/en-US/kb/switch-to-firefox-extended-support-release-esr), and 
