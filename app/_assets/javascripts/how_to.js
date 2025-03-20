@@ -19,8 +19,8 @@ class HowTo {
   }
 
   init() {
-    if (this.deploymentTopologySwitch) {
-      this.toggleTopology(this.deploymentTopologySwitch.value, false);
+    if (this.deploymentTopologySwitchs.length) {
+      this.toggleTopology(this.deploymentTopologySwitchs[0].value, false);
     }
   }
 
