@@ -49,7 +49,7 @@ The same HTTP request can vary greatly in cost depending on the calculation of t
 LLM providers.
 
 A common pattern to protect your AI API is to analyze and assign costs to incoming queries, then rate limit the consumer's
-cost for a given time window and providers.
+cost for a given time window and provider.
 You can also create a generic prompt rate limit using the [request prompt provider](#request-prompt-function).
 
 Kong also provides multiple specialized rate limiting plugins, including rate limiting for service protection and on GraphQL queries. 
@@ -135,7 +135,7 @@ rows:
     description: |
       {% new_in 3.8 %} Represents the financial or computational cost incurred based on the tokens used by the LLM during the request. Using this strategy can help you limit API usage based on the actual costs of processing the request, ensuring that expensive requests (in terms of token usage) are managed more carefully. 
       <br><br>
-      This cost is calculated by taking the sum of multiplying the number of prompt tokens by the cost per prompt token (input cost) and by multiplying the number of completion tokens by the cost per completion token (output cost): `cost = prompt_tokens * input_cost + completion_tokens * output_cost`. 
+      This cost is the sum of the number of prompt tokens multiplied by the cost per prompt token (input cost) and the number of completion tokens multiplied by the cost per completion token (output cost): `cost = prompt_tokens * input_cost + completion_tokens * output_cost`. 
       <br><br>
 
       {:.warning}
