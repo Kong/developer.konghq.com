@@ -533,6 +533,7 @@ app/gateway/traffic-control/blue-green-deployments.md:
 app/konnect-compatibility.md:
   - app/konnect/compatibility.md
 
+
 # policies
 app/gateway/vulnerabilities.md:
   - app/_src/gateway/support/vulnerability-patching-process.md
@@ -556,8 +557,10 @@ app/serverless-gateways/index.md:
 app/_landing_pages/gateway-manager.yaml:
   - app/konnect/gateway-manager/index.md
 
-app/konnect-account.md:
+app/konnect-platform/konnect-account.md:
   - app/konnect/org-management/deactivation.md
+app/konnect-platform/teams-reference.md:
+  - app/konnect/org-management/teams-and-roles/teams-reference.md
 
 
 app/service-catalog-integrations.yaml:
