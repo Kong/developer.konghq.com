@@ -85,7 +85,8 @@ For a complete tutorial, see [Map URIs into GraphQL queries with DeGraphQL](/how
 The following sections define some common patterns for DeGraphQL routes.
 
 {:.info}
-> Don’t include the GraphQL server path prefix in the URI parameter (`/graphql` by default).
+> Don’t include the GraphQL server path prefix in the `uri` configuration parameter (`/graphql` by default). 
+Only include the custom portion of the path that you want to configure. For example: `uri: /my-path`, but not `uri: /graphql/my-path`.
 
 ### GraphQL query variables on URIs
 
@@ -93,23 +94,28 @@ GraphQL query variables can be applied on URIs.
 
 Here's an example query that retrieves GitHub repository info from the GitHub GraphQL API:
 
-```bash
-curl -X POST http://localhost:8001/services/github/degraphql/routes \
-  --data uri='/:owner/:name' \
-  --data query='query ($owner:String! $name:String!){
-                  repository(owner:$owner, name:$name) {
-                    name
-                    forkCount
-                    description
-                 }
-               }'
-
+```yaml
+_format_version: "3.0"
+custom_entities:
+  - type: degraphql_routes
+    fields:
+      service:
+        name: "github"
+      uri: /me
+      query: |-
+        query ($owner:String! $name:String!){
+                        repository(owner:$owner, name:$name) {
+                          name
+                          forkCount
+                          description
+                        }
+                      }
 ```
-You can access it via `org-name/repo-name`:
+You can access the new route via `org-name/repo-name`:
 
 ```sh
 curl http://localhost:8000/api/kong/kong \
-  --header "Authorization: Bearer $GITHUB_TOKEN"
+  --header "Authorization: Bearer ${GITHUB_TOKEN}"
 ```
 
 Response:
@@ -131,23 +137,29 @@ GraphQL query variables can be provided as `GET` arguments.
 
 Here's an example query that retrieves GitHub repository info from the GitHub GraphQL API:
 
-```bash
-curl -X POST http://localhost:8001/services/github/degraphql/routes \
-  --data uri='/repo' \
-  --data query='query ($owner:String! $name:String!){
+```yaml
+_format_version: "3.0"
+custom_entities:
+  - type: degraphql_routes
+    fields:
+      service:
+        name: "github"
+      uri: /me
+      query: |-
+        query ($owner:String! $name:String!){
                   repository(owner:$owner, name:$name) {
                     name
                     forkCount
                     description
                   }
-                }'
+                }
 ```
 
-You can access it via the URL query `repo?owner=owner-name&name=repo-name`:
+You can access the new route by appending `repo?owner={owner-name}&name={repo-name}` to the request URL:
 
 ```sh
 curl "http://localhost:8000/api/repo?owner=kong&name=kuma" \
-  --header "Authorization: Bearer some-token"
+  --header "Authorization: Bearer ${GITHUB_TOKEN}"
 ```
 
 Response:
