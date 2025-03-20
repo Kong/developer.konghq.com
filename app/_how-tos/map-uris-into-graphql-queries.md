@@ -72,6 +72,8 @@ Create a Gateway Service and Route in {{site.base_gateway}}, with the Service po
 entities:
   services:
     - name: github
+      tags:
+        - graphql
       url: "https://api.github.com"
       routes:
         - name: github-api
@@ -103,16 +105,24 @@ by defining URIs and associating them to GraphQL queries.
 
 Let's add a DeGraphQL route to retrieve the username of the logged in user:
 
-{% entity_examples %}
-entities:
-  custom_entities:
-    - type: degraphql_routes
-      fields:
-        service:
-          name: "github"
-        uri: /me
-        query: "query { viewer { login } }"
-{% endentity_examples %}
+<!-- @todo: turn this into an entity example and remove default_lookup_tags after the command is fixed deck-side -->
+
+```yaml
+echo '
+_format_version: "3.0"
+_info:
+  default_lookup_tags:
+    services:
+      - graphql
+custom_entities:
+  - type: degraphql_routes
+    fields:
+      service:
+        name: "github"
+      uri: /me
+      query: "query { viewer { login } }"
+' | deck gateway apply -
+```
 
 You don’t need to include the GraphQL server path prefix in the URI parameter (`/graphql` by default), so the URI is just `/me`.
 
