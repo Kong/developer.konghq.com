@@ -28,3 +28,4 @@ max_version
 license_url
 privacy_policy_url
 terms_of_service_url
+no_wrap

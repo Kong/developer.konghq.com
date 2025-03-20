@@ -394,6 +394,10 @@ app/_kong_plugins/aws-lambda/index.md:
   - app/_hub/kong-inc/aws-lambda/overview/_index.md
 app/_kong_plugins/aws-lambda/changelog.md:
   - app/_hub/kong-inc/aws-lambda/_changelog.md
+app/_kong_plugins/ai-rate-limiting-advanced/index.md:
+  - app/_hub/kong-inc/ai-rate-limiting-advanced/overview/_index.md
+app/_kong_plugins/ai-rate-limiting-advanced/changelog.md:
+  - app/_hub/kong-inc/ai-rate-limiting-advanced/_changelog.md
 
 # Konnect
 
@@ -498,14 +502,19 @@ app/gateway/traditional-mode.md:
   - app/_src/gateway/production/clustering.md
 app/gateway/quickstart-reference.md:
   - app/_src/gateway/ai-gateway/index.md
+  - app/_src/gateway/get-started/index.md
 app/gateway/upgrade/in-place.md:
   - app/_src/gateway/upgrade/in-place.md
+app/gateway/upgrade/rolling.md:
+  - app/_src/gateway/upgrade/rolling-upgrade.md
 app/_includes/gateway/migration-finish-warning.md:
   - app/_includes/md/enterprise/migration-finish-warning.md
 app/gateway/upgrade/dual-cluster.md:
   - app/_src/gateway/upgrade/dual-cluster.md
 app/gateway/upgrade/backup-and-restore.md:
   - app/_src/gateway/upgrade/backup-and-restore.md
+app/gateway/db-less-mode.md:
+  - app/_src/gateway/production/deployment-topologies/db-less-and-declarative-config.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
@@ -534,7 +543,11 @@ app/gateway/vulnerabilities.md:
   - app/_src/gateway/support/vulnerability-patching-process.md
 app/stages-of-software-availability.md:
   - app/_src/gateway/stability.md
-
+app/gateway/third-party-support.md:
+  - app/_src/gateway/support/browser.md
+  - app/_src/gateway/support/third-party.md
+app/gateway/version-support-policy.md:
+  - app/_src/gateway/support/index.md
 
 # Serverless GW
 
@@ -574,7 +587,8 @@ app/service-catalog/integrations/pagerduty.md:
 app/service-catalog/scorecards.md:
   - app/konnect/service-catalog/scorecards.md
 
-
+app/_landing_pages/mesh-manager.yaml:
+  - app/konnect/mesh-manager/index.md
 
 # deck
 app/_landing_pages/deck.yaml:
@@ -661,3 +675,5 @@ app/deck/gateway/deduplicate.md:
   - app/deck/gateway/deduplicate.md
 app/deck/gateway/reset.md:
   - app/deck/gateway/reset.md
+
+

@@ -1,0 +1,1 @@
+{%- capture download_url -%}{{ site.links.direct }}/gateway-{{ include.release.major_minor_version }}/deb/ubuntu/pool/{{ include.distro.codename }}/main/k/ko/kong-enterprise-edition{%-if include.fips-%}-fips{%-endif-%}_{{include.release.ee_version}}/kong-enterprise-edition{%-if include.fips-%}-fips{%-endif-%}_{{include.release.ee_version}}_{{include.arch}}.deb{%- endcapture -%}

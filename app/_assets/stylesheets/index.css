@@ -11,6 +11,7 @@
 
     --color-bg-primary: 247, 251, 255;
     --color-bg-secondary: 255, 255, 255;
+    --color-bg-terciary: 7, 53, 103;
     --color-bg-code-block: 7, 53, 103;
     --color-bg-code-block-header: 28, 85, 146;
     --color-bg-hover-component: 235, 244, 254;
@@ -53,6 +54,7 @@
   .dark {
     --color-bg-primary: 2, 20, 40;
     --color-bg-secondary: 4, 40, 79;
+    --color-bg-terciary: 28, 85, 146;
     --color-bg-code-block: 28, 85, 146;
     --color-bg-code-block-header: 7, 53, 103;
     --color-bg-hover-component: 7, 53, 103;
@@ -470,6 +472,11 @@
 
   #toc .tab-button__vertical {
     @apply [overflow-wrap:anywhere];
+  }
+
+  .background-gradient {
+    background: linear-gradient(transparent, transparent) padding-box,
+    linear-gradient(227.59deg, #E9EEF7 6.43%, #3CB087 30.81%, #11A06B 36.89%, #286FEB 65.64%, #E9EEF7 100%) border-box;
   }
 }
 

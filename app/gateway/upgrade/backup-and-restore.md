@@ -20,6 +20,14 @@ tags:
 related_resources:
   - text: "Upgrading {{site.base_gateway}}"
     url: /gateway/upgrade/
+  - text: Rolling upgrade
+    url: /gateway/upgrade/rolling/
+  - text: "Dual-cluster upgrade"
+    url: /gateway/upgrade/dual-cluster/
+  - text: In-place upgrade
+    url: /gateway/upgrade/in-place/
+  - text: "{{site.base_gateway}} breaking changes"
+    url: /gateway/breaking-changes/
 ---
 
 Before you start any upgrade, back up your {{site.base_gateway}} data.

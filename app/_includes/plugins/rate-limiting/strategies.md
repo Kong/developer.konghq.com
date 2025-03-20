@@ -24,7 +24,7 @@ This is controlled by the [`config.policy`](/plugins/rate-limiting/reference/#sc
 | `redis`   | Counters are stored on a Redis server and shared across nodes. | Accurate<sup>1</sup>, less performance impact than a `cluster` policy. | Needs a Redis installation. Bigger performance impact than a `local` policy. |
 
 {:.info}
-> **\[1\]**: Only when [`config.sync_rate`](./reference/#schema--config-sync_rate) option is set to `0` (synchronous behavior). 
+> **\[1\]**: Only when [`config.sync_rate`](./reference/#schema--config-sync-rate) option is set to `0` (synchronous behavior). 
 
 Two common use cases for rate limiting are:
 
