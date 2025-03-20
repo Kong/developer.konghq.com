@@ -145,9 +145,11 @@ rows:
 ### Request prompt function
 
 You can decide to use a custom function to count the tokens for a requests. 
-Configure it using [`config.request_prompt_count_function`](./reference/#schema--config-request-prompt-count-function).
+To configure it, you must set the [`config.llm_providers.name`](./reference/#schema--config-llm-providers-name) to `requestPrompt` and specify the function in [`config.request_prompt_count_function`](./reference/#schema--config-request-prompt-count-function).
 
 When using the request prompt provider, it will call the function to get the token count at the request level and implement a limit.
+
+See the following [example configuration](/plugins/ai-rate-limiting-advanced/examples/request-prompt-count-function/) for more detail.
 
 ## Known limitations of AI Rate Limiting Advanced
 
