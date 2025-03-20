@@ -36,4 +36,28 @@ search_aliases:
   - jwe-decrypt
 ---
 
-## Overview
+The Kong JWE Decrypt plugin makes it possible to decrypt an inbound token (JWE) in a request.
+
+## Supported Content Encryption Algorithms
+This plugin supports the following encryption algorithms:
+
+* A128GCM
+* A192GCM
+* A256GCM
+* A128CBC-HS256
+* A192CBC-HS384
+* A256CBC-HS512
+
+## Failure modes
+
+The table below outlines how the plugin behaves when encountering errors: 
+
+| Condition                | Proxied to upstream service? | Response code |
+| --------                       | ---------------------------- |--------------------- |
+| Has no JWE with `strict=true`   | No                           | 403                  |
+| Has no JWE with `strict=false`   | Yes                          | x                    |
+| Failed to decode JWE           | No                           | 400                  |
+| Failed to decode JWE           | No                           | 400                  |
+| Missing mandatory header values| No                           | 400                  |
+| References key-set not found   | No                           | 403                  |
+| Failed to decrypt              | No                           | 403                  |
