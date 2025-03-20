@@ -66,6 +66,7 @@ module.exports = {
       backgroundColor: {
         primary: "rgb(var(--color-bg-primary), <alpha-value>)",
         secondary: "rgb(var(--color-bg-secondary), <alpha-value>)",
+        terciary: "rgb(var(--color-bg-terciary), <alpha-value>)",
         "code-block": "rgb(var(--color-bg-code-block), <alpha-value>)",
         "code-block-header":
           "rgb(var(--color-bg-code-block-header), <alpha-value>)",

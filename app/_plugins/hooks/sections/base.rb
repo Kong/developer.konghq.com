@@ -15,7 +15,7 @@ module SectionWrapper
     end
 
     def process
-      @page.content = wrap_sections(@page.content)
+      @page.content = wrap_sections(@page.content) unless @page.data['no_wrap']
     end
 
     private

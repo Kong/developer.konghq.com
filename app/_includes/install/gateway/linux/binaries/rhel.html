@@ -1,0 +1,9 @@
+{%- capture aarch_download_url -%}{%- include install/gateway/linux/binaries/urls/rhel.html release=include.release distro=include.distro arch="aarch64" -%}{%- endcapture -%}
+{% include install/gateway/linux/download_card.html arch='aarch64' distro=include.distro release=include.release os=include.os download_url=aarch_download_url %}
+{%- capture x86_download_url -%}{%- include install/gateway/linux/binaries/urls/rhel.html release=include.release distro=include.distro arch="x86_64" -%}{%- endcapture -%}
+
+{% include install/gateway/linux/download_card.html arch='x86_64' distro=include.distro release=include.release os=include.os download_url=x86_download_url %}
+{% if include.distro.fips %}
+    {%- capture fips_download_url -%}{%- include install/gateway/linux/binaries/urls/rhel.html release=include.release distro=include.distro arch="x86_64" fips=true -%}{%- endcapture -%}
+    {% include install/gateway/linux/download_card.html arch='x86_64' distro=include.distro release=include.release os=include.os fips=true download_url=fips_download_url %}
+{% endif %}

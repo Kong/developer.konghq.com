@@ -25,6 +25,7 @@ module Jekyll
 
       def generate_pages(plugin)
         generate_overview_page(plugin)
+        return
         generate_reference_page(plugin)
         generate_changelog_page(plugin)
         generate_example_pages(plugin)

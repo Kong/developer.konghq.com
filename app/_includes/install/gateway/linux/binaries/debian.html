@@ -1,0 +1,11 @@
+{%- capture amd_download_url -%}{%- include install/gateway/linux/binaries/urls/debian.html release=include.release distro=include.distro arch="amd64" -%}{%- endcapture -%}
+
+{% include install/gateway/linux/download_card.html arch='amd64' distro=include.distro release=include.release os=include.os download_url=amd_download_url %}
+{% if include.distro.arm %}
+    {%- capture arm_download_url -%}{%- include install/gateway/linux/binaries/urls/debian.html release=include.release distro=include.distro arch="arm64" -%}{%- endcapture -%}
+    {% include install/gateway/linux/download_card.html arch='arm64' distro=include.distro release=include.release os=include.os download_url=arm_download_url %}
+{% endif %}
+{% if include.distro.fips %}
+    {%- capture fips_download_url -%}{%- include install/gateway/linux/binaries/urls/debian.html release=include.release distro=include.distro arch="amd64" fips=true -%}{%- endcapture -%}
+    {% include install/gateway/linux/download_card.html arch='amd64' distro=include.distro release=include.release os=include.os fips=true download_url=fips_download_url %}
+{% endif %}
