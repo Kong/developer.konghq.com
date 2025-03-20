@@ -3,7 +3,7 @@ description: |
   The AI Rate Limiting Advanced plugin will analyze query costs and token response 
   to provide an enterprise-grade rate limiting strategy.
 
-  The following example uses OpenAI, but you can apply the same strategies to any [supported LLM provider](./reference/#schema--config-llm-providers-name).
+  The following example uses OpenAI, but you can apply the same strategies to any [supported LLM provider](/plugins/ai-rate-limiting-advanced/reference/#schema--config-llm-providers-name).
 
 title: 'Enable LLM provider rate limiting'
 
