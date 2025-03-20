@@ -5,7 +5,7 @@ title: 'Inspect specific Key Set'
 weight: 900
 
 requirements:
- - "[Key Set](/gateway_entities/key-set)"
+ - "[Key Set](/gateway/entities/key-set)"
 
 
 config: 
