@@ -607,8 +607,8 @@ releases:
         - yahoo
       vault:
         - vaultproject:
-          versions:
-            - 1.12
+            versions:
+              - 1.12
         - aws-sm:
         - azure-key-vaults:
         - gcp-sm:

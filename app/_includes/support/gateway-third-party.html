@@ -1,0 +1,105 @@
+<p><b>Data stores</b></p>
+<p>{{site.base_gateway}} interacts with multiple data stores during normal operation. </p>
+<p>The following stores have been tested by Kong.</p>
+
+<div class="grid grid-cols-3 gap-3">
+{% for d in include.release.third_party_support.datastore %}
+{% assign key = d | first | first %}
+{% assign db-item = d | first | last %}
+{% assign db = site.data.support.third-party[key] %}
+<div class="card flex-col gap-5 p-6 pb-4">
+    <div class="flex items-center">
+        <img src="/assets/icons/{{db.icon}}" class="w-10 m-3 inline-block">
+        {{ db.name }}{% if db-item.versions %}: {{ db-item.versions | join: ', '}}{% endif %}
+    </div>
+</div>
+{% endfor %}
+</div>
+
+<p><b>Vaults</b></p>
+<p>{{site.base_gateway}} allows you to store secret values in external vaults.</p>
+<p>The following vaults and versions have been tested by Kong.</p>
+
+<div class="grid grid-cols-3 gap-3">
+{% for va in include.release.third_party_support.vault %}
+{% assign key = va | first | first %}
+{% assign vault-item = va | first | last %}
+{% assign vault-provider = site.data.support.third-party[key] %}
+<div class="card flex-col gap-5 p-6 pb-4">
+    <div class="flex items-center">
+        <img src="/assets/icons/{{vault-provider.icon}}" class="w-10 m-3 inline-block">
+        {{ vault-provider.name }}{% if vault-item.versions %}: {{ vault-item.versions | join: ', '}}{% endif %}
+    </div>
+</div>
+{% endfor %}
+</div>
+
+
+<p><b>Log Providers</b></p>
+<p>{{site.base_gateway}} has been tested against the following log providers.</p>
+
+<div class="grid grid-cols-3 gap-3">
+
+{% for l in include.release.third_party_support.log_provider %}
+{% assign key = l %}
+{% assign log-provider-item = site.data.support.third-party[key] %}
+<div class="card flex-col gap-5 p-6 pb-4">
+    <div class="flex items-center">
+        <img src="/assets/icons/{{log-provider-item.icon}}" class="w-10 m-3 inline-block"> {{ log-provider-item.name }}
+    </div>
+</div>
+{% endfor %}
+</div>
+
+<p><b>Metrics</b></p>
+<p>{{site.base_gateway}} has been tested against the following metrics providers.</p>
+
+<div class="grid grid-cols-3 gap-3">
+
+{% for m in include.release.third_party_support.metrics %}
+{% assign key = m | first | first %}
+{% assign metric-item = m | first | last %}
+{% assign metric-provider = site.data.support.third-party[key] %}
+<div class="card flex-col gap-5 p-6 pb-4">
+    <div class="flex items-center">
+        <img src="/assets/icons/{{metric-provider.icon}}" class="w-10 m-3 inline-block">
+        {{ metric-provider.name }}{% if metric-item.versions %}: {{ metric-item.versions | join: ', '}}{% endif %}
+    </div>
+</div>
+{% endfor %}
+</div>
+
+<p><b>S3 Compatible APIs</b></p>
+<p>Any S3 compatible API is available for use when working with remote file storage.</p>
+<p>The following have been tested by Kong.</p>
+
+<div class="grid grid-cols-3 gap-3">
+
+{% for s3 in include.release.third_party_support.s3_api %}
+{% assign key = s3 %}
+{% assign s3-provider = site.data.support.third-party[key] %}
+<div class="card flex-col gap-5 p-6 pb-4">
+    <div class="flex items-center">
+        <img src="/assets/icons/{{s3-provider.icon}}" class="w-10 m-3 inline-block"> {{ s3-provider.name }}
+    </div>
+</div>
+{% endfor %}
+</div>
+
+<p><b>Service Mesh</b></p>
+<p>{{site.base_gateway}} has been tested against the following Service Mesh versions.</p>
+
+<div class="grid grid-cols-3 gap-3">
+
+{% for me in include.release.third_party_support.service_mesh %}
+{% assign key = me | first | first %}
+{% assign mesh-item = me | first | last %}
+{% assign mesh-provider = site.data.support.third-party[key] %}
+<div class="card flex-col gap-5 p-6 pb-4">
+    <div class="flex items-center">
+        <img src="/assets/icons/{{mesh-provider.icon}}" class="w-10 m-3 inline-block">
+        {{ mesh-provider.name }}{% if mesh-item.versions %}: {{ mesh-item.versions | join: ', '}}{% endif %}
+    </div>
+</div>
+{% endfor %}
+</div>

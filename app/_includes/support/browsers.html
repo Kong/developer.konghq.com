@@ -1,0 +1,16 @@
+{% feature_table %}
+item_title: Browser
+columns:
+  - title: Supported?
+    key: supported
+
+features:
+{% for b in site.data.support.browsers.browsers %}
+  - title: |
+      <img src="/assets/icons/{{b.icon}}" class="w-6 m-2 inline-block"> {{ b.name }}
+    supported: true
+{% endfor %}
+  - title: <img src="/assets/icons/ie.svg" class="w-6 m-2 inline-block"> IE
+    supported: false
+  
+{% endfeature_table %}
