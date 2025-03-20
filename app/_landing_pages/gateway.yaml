@@ -49,7 +49,7 @@ rows:
                   Pass the `-- -h` option to the script to see all possible configuration options, including how to pass a license
                   to the script, switch to an open-source Gateway image, [enable RBAC](/gateway/entities/rbac/#enable-rbac), and more.
 
-                  Visit the [Gateway install page](https://docs.konghq.com/gateway/latest/install/) for all other installation options.
+                  Visit the [Gateway install page](/gateway/install/) for all other installation options.
 
   - header:
       type: h2
@@ -73,7 +73,7 @@ rows:
             icon: /assets/icons/deployment.svg
             cta:
               text: 
-              url: https://docs.konghq.com/gateway/latest/install/
+              url: /gateway/install/
               align: end
   - header:
       type: h2
