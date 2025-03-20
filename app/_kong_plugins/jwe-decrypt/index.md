@@ -50,7 +50,7 @@ This plugin supports the following encryption algorithms:
 
 ## Failure modes
 
-The table below outlines how the plugin behaves when encountering errors: 
+The following tables outlines how the JWE plugin behaves when encountering errors: 
 
 {% table %}
 columns:
