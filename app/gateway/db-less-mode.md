@@ -82,7 +82,7 @@ final state of the configuration is attained through a sequence of API calls:
 one call to create a Service, another call to create a Route, another call to
 add a Plugin, and so on.
 
-Performing the configuration incrementally like this has the undesirable
+Incremental configuration like this has the undesirable
 side-effect that *intermediate states* happen. In the above example, there is
 a window of time in between creating a Route and adding the plugin in which
 the Route didn't have the plugin applied.
@@ -122,9 +122,9 @@ You can run DB-less mode with Kubernetes both with and without {{ site.kic_produ
 
 {{ site.kic_product_name }} provides a Kubernetes native way to configure {{ site.base_gateway }} using custom resource definitions (CRDs). In this deployment pattern, {{ site.base_gateway }} is deployed in DB-less mode, where the Data Plane configuration is held in memory.
 
-Operators configure {{ site.base_gateway }} using standard CRDs such as `Ingress` and `HTTPRoute`, and {{ site.kic_product_name }} translates those resources in to {{site.base_gateway}} entities before sending a request to update the running Data Plane configurations.
+Operators configure {{ site.base_gateway }} using standard CRDs such as `Ingress` and `HTTPRoute`, and {{ site.kic_product_name }} translates those resources into {{site.base_gateway}} entities before sending a request to update the running Data Plane configurations.
 
-In this topology, the Kubernetes API server is your source of truth. {{ site.kic_product_name }} reads resources stored on the API server and translates them in to a valid {{site.base_gateway}} configuration object. You can think of {{ site.kic_product_name }} as the Control Plane for your DB-less Data Planes.
+In this topology, the Kubernetes API server is your source of truth. {{ site.kic_product_name }} reads resources stored on the API server and translates them into a valid {{site.base_gateway}} configuration object. You can think of {{ site.kic_product_name }} as the Control Plane for your DB-less Data Planes.
 
 For more information about {{ site.base_gateway }} and {{ site.kic_product_name }}, see the {{ site.kic_product_name }} [getting started guide](/kic/install/). This guide walks you through installing {{ site.base_gateway }}, configuring a Service and Route, then adding a rate limiting and caching plugin to your deployment.
 
@@ -155,7 +155,7 @@ config:
 
 ### No central database coordination
 
-Since there is no central database, multiple {{site.base_gateway}} nodes have no
+Since there is no central database, {{site.base_gateway}} nodes have no
 central coordination point and no cluster propagation of data.
 Nodes are completely independent of each other.
 
@@ -172,13 +172,13 @@ for inspecting entities work as usual, but attempts to `POST`, `PATCH`
 `PUT` or `DELETE` in endpoints such as `/services` or `/plugins` will return
 `HTTP 405 Not Allowed`.
 
-This restriction is limited to what would be otherwise database operations. In
+This restriction is limited to what would otherwise be database operations. In
 particular, using `POST` to set the health state of targets is still enabled,
 since this is a node-specific in-memory operation.
 
 ### Kong Manager compatibility
 
-[Kong Manager](/gateway/kong-manager/) cannot guarantee compatibility with {{site.base_gateway}} operating in DB-less mode. You cannot create, update, or delete entities with Kong Manager when {{site.base_gateway}} is running in this mode. Entity counters in the **Summary** section on the global and workspace overview pages will not function correctly as well.
+[Kong Manager](/gateway/kong-manager/) cannot guarantee compatibility with {{site.base_gateway}} operating in DB-less mode. You cannot create, update, or delete entities with Kong Manager when {{site.base_gateway}} is running in this mode. Entity counters in the **Summary** section on the global and workspace overview pages will not function correctly either.
 
 ### Plugin compatibility
 
