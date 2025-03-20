@@ -394,6 +394,10 @@ app/_kong_plugins/aws-lambda/index.md:
   - app/_hub/kong-inc/aws-lambda/overview/_index.md
 app/_kong_plugins/aws-lambda/changelog.md:
   - app/_hub/kong-inc/aws-lambda/_changelog.md
+app/_kong_plugins/ai-rate-limiting-advanced/index.md:
+  - app/_hub/kong-inc/ai-rate-limiting-advanced/overview/_index.md
+app/_kong_plugins/ai-rate-limiting-advanced/changelog.md:
+  - app/_hub/kong-inc/ai-rate-limiting-advanced/_changelog.md
 
 # Konnect
 
@@ -496,6 +500,8 @@ app/gateway/quickstart-reference.md:
   - app/_src/gateway/get-started/index.md
 app/gateway/upgrade/in-place.md:
   - app/_src/gateway/upgrade/in-place.md
+app/gateway/upgrade/rolling.md:
+  - app/_src/gateway/upgrade/rolling-upgrade.md
 app/_includes/gateway/migration-finish-warning.md:
   - app/_includes/md/enterprise/migration-finish-warning.md
 app/gateway/upgrade/dual-cluster.md:
@@ -532,7 +538,11 @@ app/gateway/vulnerabilities.md:
   - app/_src/gateway/support/vulnerability-patching-process.md
 app/stages-of-software-availability.md:
   - app/_src/gateway/stability.md
-
+app/gateway/third-party-support.md:
+  - app/_src/gateway/support/browser.md
+  - app/_src/gateway/support/third-party.md
+app/gateway/version-support-policy.md:
+  - app/_src/gateway/support/index.md
 
 # Serverless GW
 

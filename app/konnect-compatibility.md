@@ -136,25 +136,7 @@ Versions below this will see inconsistent `deck gateway diff` results and other 
 
 {{site.konnect_short_name}} is compatible with the following browsers:
 
-{% feature_table %}
-item_title: Browser
-columns:
-  - title: Supported?
-    key: supported
-
-features:
-  - title: IE
-    supported: false
-  - title: Edge
-    supported: true
-  - title: Firefox
-    supported: true
-  - title: Chrome
-    supported: true
-  - title: Safari
-    supported: true
-  
-{% endfeature_table %}
+{% include_cached support/browsers.html %}
 
 ## Plugin compatibility
 

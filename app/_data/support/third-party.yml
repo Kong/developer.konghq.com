@@ -1,5 +1,5 @@
 postgres:
-  name: Postgres
+  name: PostgreSQL
   icon: postgresql.svg
 redis:
   name: Redis
