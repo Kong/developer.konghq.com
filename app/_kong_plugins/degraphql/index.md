@@ -118,18 +118,6 @@ curl http://localhost:8000/api/kong/kong \
   --header "Authorization: Bearer ${GITHUB_TOKEN}"
 ```
 
-Response:
-```json
-{
-  "data": {
-      "repository": {
-          "description": "🦍 The Cloud-Native API Gateway ",
-          "forkCount": 2997,
-          "name": "kong"
-      }
-  }
-}
-```
 
 ### GraphQL query variables as GET arguments
 
@@ -162,15 +150,3 @@ curl "http://localhost:8000/api/repo?owner=kong&name=kuma" \
   --header "Authorization: Bearer ${GITHUB_TOKEN}"
 ```
 
-Response:
-```json
-{
-  "data": {
-      "repository": {
-          "description": "🐻 The Universal Service Mesh",
-          "forkCount": 48,
-          "name": "kuma"
-      }
-  }
-}
-```
