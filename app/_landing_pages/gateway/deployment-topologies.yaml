@@ -67,7 +67,7 @@ rows:
                     * Drastically reduces the amount of traffic to and from the database, since only CP nodes need a direct connection to the database.
                     * If one of the DP nodes is compromised, an attacker won’t be able to affect other nodes in the {{site.base_gateway}} cluster.
 
-                    **Works on:** {{site.konnect_short_name}}, {{site.base_gateway}}
+                    **Works on:** {{site.konnect_short_name}}, Self-hosted
           - type: button
             config:
               align: left
@@ -176,7 +176,7 @@ rows:
                 flowchart TD
                   A(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong Gateway instance)
 
-                  A2(fa:fa-file kong1.yml)
+                  A2(fa:fa-file kong.yml)
 
                   A2 --> A
 
