@@ -70,11 +70,11 @@ flowchart TD
     CPY2 -.- yml
     CPY3 -.- yml
 
-    style API stroke:none
+    style API stroke:none!important
     style CPX stroke-dasharray:3
     style CPX2 stroke-dasharray:3
     style CPX3 stroke-dasharray:3
-    linkStyle 3,7,8,9,13,14,15 stroke:#b6d7a8
+    linkStyle 3,7,8,9,13,14,15 stroke:#b6d7a8!important
 {% endmermaid %}
 
 > _Figure 1: The diagram shows a {{site.base_gateway}} upgrade using the rolling strategy with no database._
