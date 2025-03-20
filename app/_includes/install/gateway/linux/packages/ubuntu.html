@@ -17,5 +17,5 @@ sudo apt-get update && sudo apt-get install -y kong-enterprise-edition={{page.re
 </div>
 
 <p class="text-secondary text-sm">
-    <strong>Note:</strong> {{site.base_gateway}} is packaged for {{available_flavors | join: ", "}}. The snippet above assumes you are running {{default_flavor.codename | capitalize}}. Replace it with your release name <code class="language-plaintext highlighter-rouge">$(lsb_release -sc)</code> if needed. To check your release name, run <code class="language-plaintext highlighter-rouge">lsb_release -sc</code>.
+    <strong>Note:</strong> {{site.base_gateway}} is packaged for {{available_flavors | join: ", "}}. The snippet above assumes you are running {{default_flavor.codename | capitalize}}. Replace it with your release. To check the name of your release, run <code class="language-plaintext highlighter-rouge">lsb_release -sc</code>.
 </p>
