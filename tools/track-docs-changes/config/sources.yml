@@ -529,7 +529,11 @@ app/gateway/vulnerabilities.md:
   - app/_src/gateway/support/vulnerability-patching-process.md
 app/stages-of-software-availability.md:
   - app/_src/gateway/stability.md
-
+app/gateway/third-party-support.md:
+  - app/_src/gateway/support/browser.md
+  - app/_src/gateway/support/third-party.md
+app/gateway/version-support-policy.md:
+  - app/_src/gateway/support/index.md
 
 # Serverless GW
 
