@@ -1,5 +1,5 @@
 ---
-title: "Supported Third-Party Dependencies for {{site.base_gateway}}"
+title: "Supported third-party dependencies for {{site.base_gateway}}"
 content_type: policy
 layout: reference
 
