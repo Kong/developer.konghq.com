@@ -44,7 +44,6 @@ rows:
                 A(Dedicated Cloud Gateway Control Plane)
                 B(Managed Data Plane Node \n Region 1)
                 C(Managed Data Plane Node \n Region 2)
-                D(Self-Managed Data Plane Nodes)
 
                 subgraph id1 [Konnect]
                 A
@@ -52,7 +51,6 @@ rows:
 
                 A --auto-scale configuration---> B
                 A --auto-scale configuration---> C
-                A -.- D
 
                 style id1 stroke-dasharray:3,rx:10,ry:10
                 style A stroke:none,fill:#0E44A2,color:#fff

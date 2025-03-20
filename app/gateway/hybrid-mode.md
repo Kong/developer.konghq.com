@@ -8,11 +8,18 @@ products:
 
 works_on:
     - on-prem
+    - konnect
 
 tags:
-    - deployment-topologies
+    - tracing
+
+no_version: true
 
 description: "placeholder"
+
+related_resources:
+  - text: placeholder
+    url: /
 ---
 
-placeholder
+@todo
