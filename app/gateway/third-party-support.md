@@ -26,16 +26,18 @@ related_resources:
 This page lists services used in day-to-day operation of {{site.base_gateway}} and the versions of these services that have been tested by Kong.
 Using these services may be optional, or they may be required by {{site.base_gateway}} or certain plugins.
 
-Unless otherwise noted, Kong supports the last 2 versions any third party tool, plus the current managed version if available.
+Unless otherwise noted, Kong supports the last 2 versions any third-party tool, plus the current managed version if available.
 
-Other third-party tools:
+Other supported third-party tools:
 * For identity providers supported by the OpenID Connect plugin, see the [OIDC plugin's documentation](/plugins/openid-connect/#supported-identity-providers).
 * For supported AI providers, see the [AI Gateway providers documentation](/ai-gateway/ai-providers/).
 
 ## Third-party tools
 
+Kong supports the following third-party tools for each given {{site.base_gateway}} release version.
+
 {:.info}
-> Some third party tools on this page don't have a version number. 
+> Some third-party tools on this page don't have a version number. 
 These tools are managed services and Kong provides compatibility with the currently released version.
 
 {% assign releases = site.data.products.gateway.releases | reverse | where: "label", empty %}

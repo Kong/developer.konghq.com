@@ -197,6 +197,42 @@ rows:
                 align: end
   - header:
       type: h2
+      text: Support policies
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.base_gateway}} version support policy"
+              description: |
+                "The {{site.base_gateway}} version support policy outlines the {{site.base_gateway}} 
+                versioning scheme and version lifecycle, from release to sunset support."
+              cta:
+                text: View the version support policy &rarr;
+                url: /gateway/version-support-policy/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.base_gateway}} third-party dependencies"
+              description: |
+                "This reference lists all of the tested and supported versions of {{site.base_gateway}}'s third-party dependencies."
+              cta:
+                text: View the supported third-party dependencies &rarr;
+                url: /gateway/third-party-support/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "Kong vulnerability patching process"
+              description: |
+                "Learn how Kong handles vulnerabilities or potential vulnerabilities in {{site.base_gateway}} or 
+                third-party code, and how to report any security issues."
+              cta:
+                text: View the vulnerability policy &rarr;
+                url: /gateway/vulnerabilities/
+                align: end
+  - header:
+      type: h2
       text: How-to Guides
     columns:
       - blocks:
