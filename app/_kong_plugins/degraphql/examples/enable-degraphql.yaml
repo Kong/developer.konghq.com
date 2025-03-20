@@ -1,0 +1,24 @@
+description: |
+  Enable the DeGraphQL plugin to disable regular Gateway Service function. 
+  
+  Once the plugin is enabled, it builds the path and GraphQL query to hit the GraphQL service with. 
+  Any connected Gateway Services represent your REST API and not the GraphQL endpoint itself. 
+  {{site.base_gateway}} will return a `404 Not Found` status code if no DeGraphQL routes have been configured.
+
+  For a complete tutorial which shows you how to create a service and GraphQL routes, see [Map URIs into GraphQL queries with DeGraphQL](/how-to/map-uris-into-graphql-queries/).
+
+title: 'Enable DeGraphQL'
+
+weight: 900
+
+requirements:
+  - You have an upstream service with a GraphQL endpoint
+
+config:
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
