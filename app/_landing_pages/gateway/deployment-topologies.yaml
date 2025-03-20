@@ -8,12 +8,226 @@ rows:
   - header:
       type: h1
       text: "Deployment Topologies"
-  - columns:
+    columns:
       - blocks:
           - type: structured_text
             config:
               blocks:
                 - type: text
                   text: |
-                    @todo
-                    pull content from https://docs.konghq.com/gateway/latest/production/deployment-topologies/, cover what a deployment topology is along with links to more info about each topology
+                    Kong provides different modes for you to deploy {{site.konnect_short_name}} and {{site.base_gateway}} in. 
+                    Each mode has benefits and limitations, so it is important to consider them carefully when deciding which mode to use to in production installations.
+
+                    Looking for ways to host your Data Plane? See the [Supported Data Plane hosting options](/gateway/topology-hosting-options/).
+          
+  - header:
+      type: h2
+      text: "Hybrid mode"
+    columns:
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TD
+                A(Dev Portal &bull; Gateway Manager &bull; Analytics &bull; Service Catalog)
+                B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Control Plane \n #40;Kong Gateway instance#41;)
+                B2(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Control Plane \n #40;Kong Gateway instance#41;)
+                C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane 1\n #40;Kong Gateway instance#41;)
+                D(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane 2\n #40;Kong Gateway instance#41;)
+                E(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane 3\n #40;Kong Gateway instance#41;)
+                subgraph id1 [Konnect]
+                A --- B & B2
+                end
+                id1 --Kong proxy 
+                configuration---> id2 & id3
+                subgraph id2 [Kong-managed cloud node]
+                C
+                end
+                subgraph id3 [Self-managed local and cloud nodes]
+                D
+                E
+                end
+                style id1 stroke-dasharray:3,rx:10,ry:10
+                style id2 stroke-dasharray:3,rx:10,ry:10
+                style id3 stroke-dasharray:3,rx:10,ry:10
+                style B stroke:none,fill:#0E44A2,color:#fff
+                style B2 stroke:none,fill:#0E44A2,color:#fff
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    In hybrid mode, {{site.base_gateway}} nodes in a cluster are split into two roles: Control Plane
+                    (CP), where configuration is managed, and data
+                    plane (DP), which serves traffic for the proxy.
+
+                    Hybrid mode deployments have the following benefits:
+
+                    * Users can deploy groups of Data Planes in different data centers, geographies, or zones without needing a local clustered database for each DP group.
+                    * The availability of the database does not affect the availability of the Data Planes. If a Control Plane is offline, Data Planes will run using their last known configuration.
+                    * Drastically reduces the amount of traffic to and from the database, since only CP nodes need a direct connection to the database.
+                    * If one of the DP nodes is compromised, an attacker won’t be able to affect other nodes in the {{site.base_gateway}} cluster.
+
+                    **Works on:** {{site.konnect_short_name}}, Self-hosted
+          - type: button
+            config:
+              align: left
+              text: Learn more about hybrid mode
+              url: /gateway/hybrid-mode/
+  - header:
+      type: h3
+      text: "Supported Data Plane hosting options"
+    columns: 
+      - blocks:
+        - type: card
+          config:
+            title: Serverless gateways 
+            description: |
+              Learn about serverless gateways hosting for Data Planes.
+              
+            icon: /assets/icons/serverless-gateway.svg
+            cta:
+              url: "/gateway/topology-hosting-options/#serverless-gateways"
+      - blocks: 
+        - type: card
+          config:
+            title: Dedicated Cloud Gateways
+            description: |
+              Learn about Dedicated Cloud Gateways hosting for Data Planes.
+              
+            icon: /assets/icons/dedicated-cloud-gateway.svg
+            cta:
+              url: "/gateway/topology-hosting-options/#dedicated-cloud-gateways"
+      - blocks:
+        - type: card
+          config:
+            title: Self-hosted Data Plane nodes
+            description: |
+              Learn about self-hosting Data Plane nodes.
+              
+            icon: /assets/icons/self-hosted.svg
+            cta:
+              url: "/gateway/topology-hosting-options/#self-hosted"
+    
+  - header:
+      type: h2
+      text: "Traditional mode"
+    columns:
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TD
+
+                A[(Database)]
+                B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong Gateway instance)
+                C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong Gateway instance)
+                D(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong Gateway instance)
+
+                A <---> B & C & D
+
+                style B stroke:none,fill:#0E44A2,color:#fff
+                style C stroke:none,fill:#0E44A2,color:#fff
+                style D stroke:none,fill:#0E44A2,color:#fff
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    In traditional mode, {{site.base_gateway}} requires a database to store configured entities such as Routes, Services, and plugins.
+                    In a traditional deployment, all {{site.base_gateway}} nodes connect to the database. Each node manages its own configuration. 
+
+                    It is the only deployment topology that supports plugins that require a database, like rate-limiting with the cluster strategy, or OAuth2. 
+                    However, there are some downsides too.
+                    When running in traditional mode, every {{ site.base_gateway }} node runs as both a Control Plane (CP) and Data Plane (DP). This means that if **any** of your nodes are compromised, the entire running gateway configuration is compromised. 
+
+                    In addition, if you're running {{site.ee_product_name}} with [Kong Manager](/gateway/kong-manager/), request throughput may be reduced on nodes running Kong Manager due to expensive calculations being run to render analytics data and graphs.
+
+                    **Works on:** {{site.base_gateway}}
+
+          - type: button
+            config:
+              align: left
+              text: Learn more about traditional mode
+              url: /gateway/traditional-mode/
+  - header:
+      type: h3
+      text: "Supported Data Plane hosting options"
+    columns: 
+      - blocks:
+        - type: card
+          config:
+            title: Self-hosted Data Plane nodes
+            description: |
+              Learn about self-hosting Data Plane nodes.
+              
+            icon: /assets/icons/self-hosted.svg
+            cta:
+              url: "/gateway/topology-hosting-options/#self-hosted"
+      
+  - header:
+      type: h2
+      text: "DB-less mode"
+    columns:
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TD
+                  A(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong Gateway instance)
+
+                  A2(fa:fa-file kong.yml)
+
+                  A2 --> A
+
+                  style A stroke:none,fill:#0E44A2,color:#fff
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    You can enable DB-less mode to reduce complexity of and create more flexible deployment patterns. In this mode, configured entities such as Routes, Services and plugins are stored in-memory on the node.
+                    When running in DB-less mode, configuration is provided to {{ site.base_gateway }} using a second file. This file contains your configuration in YAML or JSON format using {{site.base_gateway}}'s declarative configuration syntax.
+
+                    The combination of DB-less mode and declarative configuration has a number
+                    of benefits:
+
+                    * Reduced number of dependencies: no need to manage a database installation
+                      if the entire setup for your use-case fits in memory.
+                    * Your configuration is always in a known state. There is no intermediate 
+                      state between creating a Service and a Route using the Admin API.
+                    * It is a good fit for automation in CI/CD scenarios. Configuration for
+                      entities can be kept in a single source of truth managed via a Git
+                      repository.
+
+                    Here are a few limitations of this mode:
+
+                    * The [Admin API](/api/gateway/admin-ee/) is read only.
+                    * Any plugin that stores information in the database, like rate limiting (cluster mode), don't fully function.
+
+                    **Works on:** {{site.base_gateway}}
+          - type: button
+            config:
+              align: left
+              text: Learn more about DB-less mode
+              url: /gateway/db-less-mode/
+  - header:
+      type: h3
+      text: "Supported Data Plane hosting options"
+    columns: 
+      - blocks:
+        - type: card
+          config:
+            title: Self-hosted Data Plane nodes
+            description: |
+              Learn about self-hosting Data Plane nodes.
+              
+            icon: /assets/icons/self-hosted.svg
+            cta:
+              url: "/gateway/topology-hosting-options/#self-hosted"
+  
+  
+  
