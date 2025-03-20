@@ -6,8 +6,8 @@
 * `response`: Properties about the response sent to the client.
 * `latencies`: Latency data.
   * `kong`: The internal {{site.base_gateway}} latency, in milliseconds, that it takes to process the request.
-    * For requests that are proxied to an upstream, it is equivalent to the `X-Kong-Proxy-Latency` [response header](/gateway/latest/reference/configuration/#headers).
-    * For requests that generate a response within {{ site.base_gateway }} (typically the result of an error or a plugin-generated response), it is equivalent to the `X-Kong-Response-Latency` [response header](/gateway/latest/reference/configuration/#headers).
+    * For requests that are proxied to an upstream, it is equivalent to the `X-Kong-Proxy-Latency` [response header](/gateway/configuration/#headers).
+    * For requests that generate a response within {{ site.base_gateway }} (typically the result of an error or a plugin-generated response), it is equivalent to the `X-Kong-Response-Latency` [response header](/gateway/configuration/#headers).
     * In {{site.base_gateway}} 3.6 or earlier, it only consists of the time it took to find the right upstream, receive the whole response from upstream, and run all plugins executed before the log phase.
   * `request`: The time in milliseconds that has elapsed between when the first bytes were read from the client and the last byte was sent to the client. This is useful for detecting slow clients.
   * `proxy`: The time in milliseconds that it took for the upstream to process the request. In other words, it's the time elapsed between transferring the 
