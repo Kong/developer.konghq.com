@@ -21,6 +21,8 @@ related_resources:
     url: /gateway/breaking-changes/
   - text: "Supported third-party dependencies for {{site.base_gateway}}"
     url: /gateway/third-party-support/
+  - text: "{{site.konnect_short_name}} compatibility"
+    url: /konnect-compatibility/
 ---
 
 Kong adopts a structured approach to versioning its products.
