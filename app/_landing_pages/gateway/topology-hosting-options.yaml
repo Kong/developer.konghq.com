@@ -16,68 +16,7 @@ rows:
                 - type: text
                   text: |
                     When you deploy {{site.base_gateway}}, you can choose how your Data Plane nodes are hosted based on the [deployment topology](/gateway/deployment-topologies/) you're using.
-  
-  - header:
-      type: h2
-      text: "Serverless gateways"
-    columns:
-      - blocks:
-          - type: mermaid
-            config:
-              diagram: |
-                flowchart TD
-                  A(Dev Portal &bull; Gateway Manager &bull; Advanced Analytics &bull; Service Catalog)
-                  B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong-managed Control Plane \n #40;Kong Gateway instance#41;)
-                  C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane \n #40;Kong Gateway instance#41;)
 
-                  subgraph id1 [Konnect]
-                  A --- B
-                  end
-
-                  B --Kong proxy 
-                  configuration---> id2
-
-                  subgraph id2 [Fully-managed cloud nodes]
-                  C
-                  D
-                  end
-
-                  style id1 stroke-dasharray:3,rx:10,ry:10
-                  style id2 stroke-dasharray:3,rx:10,ry:10
-                  style B stroke:none,fill:#0E44A2,color:#fff
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    Serverless gateways are lightweight API gateways. Their Control Plane is hosted by {{site.konnect_short_name}} and Data Plane nodes are automatically provisioned. 
-                    Serverless gateways are ideal for developers who want to test or experiment in a pre-production environment.
-
-                    Serverless gateways offer the following benefits:
-
-                    * {{site.konnect_short_name}} manages provisioning and placement
-                    * Can be deployed in under 30 seconds
-                    * Access to Kong Gateway plugins
-          - type: button
-            config:
-              align: left
-              text: Learn more about serverless gateways
-              url: /serverless-gateways/
-  - header:
-      type: h3
-      text: "Supported deployment topologies"
-    columns: 
-      - blocks:
-        - type: card
-          config:
-            title: "{{site.konnect_short_name}} hybrid mode"
-            description: |
-              Learn about {{site.konnect_short_name}} hybrid mode for Kong-hosted Control Planes.
-              
-            icon: /assets/icons/deployment.svg
-            cta:
-              url: "/gateway/hybrid-mode/"
   - header:
       type: h2
       text: "Dedicated Cloud Gateways"
@@ -90,7 +29,6 @@ rows:
                 A(Dedicated Cloud Gateway Control Plane)
                 B(Managed Data Plane Node \n Region 1)
                 C(Managed Data Plane Node \n Region 2)
-                D(Self-Managed Data Plane Nodes)
 
                 subgraph id1 [Konnect]
                 A
@@ -98,7 +36,6 @@ rows:
 
                 A --auto-scale configuration---> B
                 A --auto-scale configuration---> C
-                A -.- D
 
                 style id1 stroke-dasharray:3,rx:10,ry:10
                 style A stroke:none,fill:#0E44A2,color:#fff
@@ -126,6 +63,67 @@ rows:
               align: left
               text: Learn more about Dedicated Cloud Gateways
               url: /dedicated-cloud-gateways/
+  - header:
+      type: h3
+      text: "Supported deployment topologies"
+    columns: 
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.konnect_short_name}} hybrid mode"
+            description: |
+              Learn about {{site.konnect_short_name}} hybrid mode for Kong-hosted Control Planes.
+              
+            icon: /assets/icons/deployment.svg
+            cta:
+              url: "/gateway/hybrid-mode/"
+  
+  - header:
+      type: h2
+      text: "Serverless gateways"
+    columns:
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TD
+                  A(Dev Portal &bull; Gateway Manager &bull; Advanced Analytics &bull; Service Catalog)
+                  B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong-managed Control Plane \n #40;Kong Gateway instance#41;)
+                  C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane \n #40;Kong Gateway instance#41;)
+
+                  subgraph id1 [Konnect]
+                  A --- B
+                  end
+
+                  B --Kong proxy 
+                  configuration---> id2
+
+                  subgraph id2 [Fully-managed cloud nodes]
+                  C
+                  end
+
+                  style id1 stroke-dasharray:3,rx:10,ry:10
+                  style id2 stroke-dasharray:3,rx:10,ry:10
+                  style B stroke:none,fill:#0E44A2,color:#fff
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Serverless gateways are lightweight API gateways. Their Control Plane is hosted by {{site.konnect_short_name}} and Data Plane nodes are automatically provisioned. 
+                    Serverless gateways are ideal for developers who want to test or experiment in a pre-production environment.
+
+                    Serverless gateways offer the following benefits:
+
+                    * {{site.konnect_short_name}} manages provisioning and placement
+                    * Can be deployed in under 30 seconds
+                    * Access to Kong Gateway plugins
+          - type: button
+            config:
+              align: left
+              text: Learn more about serverless gateways
+              url: /serverless-gateways/
   - header:
       type: h3
       text: "Supported deployment topologies"

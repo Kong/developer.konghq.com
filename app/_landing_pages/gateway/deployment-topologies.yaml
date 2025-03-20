@@ -17,6 +17,8 @@ rows:
                   text: |
                     Kong provides different modes for you to deploy {{site.konnect_short_name}} and {{site.base_gateway}} in. 
                     Each mode has benefits and limitations, so it is important to consider them carefully when deciding which mode to use to in production installations.
+
+                    Looking for ways to host your Data Plane? See the [Supported Data Plane hosting options](/gateway/topology-hosting-options/).
           
   - header:
       type: h2
