@@ -49,9 +49,9 @@ can't be used in DB-less mode.
 {% mermaid %}
 flowchart TD
 
-A(<img src="/assets/logos/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
-B(<img src="/assets/logos/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
-C(<img src="/assets/logos/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
+A(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
+B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
+C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
 
 A2(fa:fa-file kong1.yml)
 B2(fa:fa-file kong1.yml)
