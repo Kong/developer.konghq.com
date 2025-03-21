@@ -34,32 +34,32 @@ rows:
       - blocks:
           - type: card
             config:
-              title: "`proxy_listen`"
+              title: "proxy_listen"
               description: |
                 Defines a list of addresses/ports on which {{site.base_gateway}} will accept public HTTP (gRPC, WebSocket, etc) traffic from clients and proxy it to your upstream services (`8000` by default).
               cta:
-                text: Learn more about `proxy_listen` &rarr;
+                text: Learn more about proxy_listen &rarr;
                 url: /gateway/configuration/#proxy-listen
   - columns:
       - blocks:
           - type: card
             config:
-              title: "`admin_listen`"
+              title: "admin_listen"
               description: |
                 Defines a list of addresses and ports, but those
                 should be restricted to only be accessed by administrators, as they expose
-                {{site.base_gateway}}'s configuration capabilities via the Admin API (`8001` by default).
+                {{site.base_gateway}}'s configuration capabilities via the Admin API.
               cta:
-                text: Learn more about `admin_listen` &rarr;
+                text: Learn more about admin_listen &rarr;
                 url: /gateway/configuration/#stream-listen 
       - blocks:
           - type: card
             config:
-              title: "`stream_listen`"
+              title: "stream_listen"
               description: |
-                Similar to `proxy_listen`, but for Layer 4 (TCP, TLS) generic proxy. This is disabled by default.
+                Similar to proxy_listen, but for Layer 4 (TCP, TLS) generic proxy. This is disabled by default.
               cta:
-                text: Learn more about `stream_listen` &rarr;
+                text: Learn more about stream_listen &rarr;
                 url: /gateway/configuration/#stream-listen
   - columns:
       - blocks:
@@ -70,7 +70,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    Once the listeners pick up a request, {{site.base_gateway}} searches for a matching [Route](/gateway/entities/route/).
+                    Learn how {{site.base_gateway}} searches for a matching [Routes](/gateway/entities/route/).
   
   - columns:
       - blocks:
@@ -78,7 +78,7 @@ rows:
             config:
               title: Routing
               description: |
-                Routing is the process of {{site.base_gateway}} routers using various criteria to determine which Routes match a request.
+                Routes determine how requests are sent to their Services after they reach {{site.base_gateway}}. 
               cta:
                 text: Learn more about routing &rarr;
                 url: /gateway/entities/route/#how-routing-works
@@ -88,7 +88,7 @@ rows:
               title: Expressions router
               description: |
                 The expressions router provides a Domain Specific Language (DSL) that allows for complex routing rule definition. 
-                The expressions router ensures good runtime matching performance by providing specific routing comparisons such as non-regex equality checks that are not available in the traditional router.
+             
               cta:
                 text: Learn more about the expressions router &rarr;
                 url: /gateway/routing/expressions/
@@ -97,7 +97,7 @@ rows:
             config:
               title: Traditional router
               description: |
-                {{ site.base_gateway }}'s original routing configuration format. It uses JSON to provide a list of routing criteria, including `host`, `path`, and `headers`.
+                A {{ site.base_gateway }} routing configuration format. It uses JSON to provide a list of routing criteria.
               cta:
                 text: Learn more about the traditional router &rarr;
                 url: /gateway/routing/traditional/#routing-criteria
@@ -112,7 +112,6 @@ rows:
                 - type: text
                   text: | 
                     Once a request is matched to a Route, {{site.base_gateway}} then proxies the request.
-                    How the request is handled depends on the load balancer you're using as well as the plugins you've configured.
   
   - columns:
       - blocks:
@@ -150,19 +149,10 @@ rows:
               title: Response
               description: |
                 {{site.base_gateway}} receives the response from the upstream service and sends it back to the downstream client in a streaming fashion. 
-                At this point, {{site.base_gateway}} executes subsequent plugins added to the Route and/or Service that implement a hook in the `header_filter` phase.
               cta:
                 text: Learn more about the response phase &rarr;
                 url: /gateway/traffic-control/proxying/#response
-      - blocks:
-          - type: card
-            config:
-              title: Errors and retries
-              description: |
-                Whenever an error occurs during proxying, {{site.base_gateway}} uses the underlying Nginx retries mechanism to pass the request on to the next upstream.  
-              cta:
-                text: Learn more about the retries mechanism &rarr;
-                url: /gateway/traffic-control/proxying/#errors-and-retries
+    
 
 
 
