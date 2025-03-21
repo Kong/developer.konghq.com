@@ -23,7 +23,7 @@ related_resources:
     url: /gateway/logs/
 ---
 
-Audit logs can help you detect and respond to potential security incidents when they occur. Monitoring audit logs proactively can reduce the risk of outages and ensure continuous service for your users. No system can ever be completely secure, but audit logs can be a key part of your incident prevention infrastructure.
+Audit logs can help you detect and respond to potential security incidents when they occur. 
 
 Audit logging provides the following benefits:
 * **Security**: System events can be used to show abnormalities to be investigated, forensic information related to breaches, or provide evidence for compliance and regulatory purposes.
@@ -31,26 +31,23 @@ Audit logging provides the following benefits:
 * **Debugging**: Audit logs can help determine the root causes of efficiency or performance issues.
 * **Risk management**: Prevent issues or catch them early.
 
-{:.warning}
-> Org-wide {{site.konnect_short_name}} audit logs are set up and managed separately from Dev Portal audit logs.
 
 ## Configure audit logging
 
-Audit logging is configured via a webhook with a SIEM provider of your choice. For more information, see [Set up an audit log webhook for a {{site.konnect_short_name}} org](/how-to/set-up-konnect-org-audit-log-webhook/) and [Set up an audit log webhook for Dev Portal](/how-to/set-up-dev-portal-audit-log-webhook/).
-
+Audit logging is configured via a webhook with a SIEM provider of your choice. For more information, see [Set up an audit log webhook for a {{site.konnect_short_name}} org](/how-to/set-up-konnect-org-audit-log-webhook/).
 {{site.konnect_short_name}} captures three types of events:
 
-| Event type | Org audit logs | Dev Portal audit logs |
-| ---------- | ---------- | ---------- |
-| Authentication | This is triggered when a user attempts to log into the {{site.konnect_short_name}} web application or use the {{site.konnect_short_name}} API via a personal access token. Also triggered when a system account access token is used. | Triggered when a user logs in to the Dev Portal. |
-| Authorization | Triggered when a permission check is made for a user or system account against a resource. | Not currently supported |
-| Access logs | Triggered when a request is made to the {{site.konnect_short_name}} API. | Not currently supported |
+| Event type | Org audit logs |
+| ---------- | ---------- | 
+| Authentication | This is triggered when a user attempts to log into the {{site.konnect_short_name}} web application or use the {{site.konnect_short_name}} API via a personal access token. Also triggered when a system account access token is used. |
+| Authorization | Triggered when a permission check is made for a user or system account against a resource. | 
+| Access logs | Triggered when a request is made to the {{site.konnect_short_name}} API. | 
 
 {{site.konnect_short_name}} retains audit logs for 7 days. 
 
 ## Audit log webhook status
 
-You can view the webhook status in the UI or via the API for the [{{site.konnect_short_name}} org audit logs](/api/konnect/audit-logs/v2/#/operations/get-audit-log-webhook-status) and [Dev Portal audit logs](/api/konnect/portal-management/v2/#/operations/get-portal-audit-log-webhook-status).
+You can view the webhook status in the UI or via the API for the [{{site.konnect_short_name}} org audit logs](/api/konnect/audit-logs/v2/#/operations/get-audit-log-webhook-status).
 
 The following table describes the webhook statuses:
 
@@ -142,51 +139,6 @@ Example JSON log entry:
 {:.no-copy-code}
 
 {% endnavtab %}
-{% navtab "Dev Portal audit logs" %}
-Example CEF log entry:
-
-```
-2023-05-19T00:03:39Z
-konghq.com CEF:0|KongInc|Dev-Portal|1.0|AUTHENTICATION_OUTCOME_SUCCESS|0|rt=3958q3097698 
-src=127.0.0.1 
-request=/api/v1/authenticate 
-success=true
-org_id=b065b594-6afc-4658-9101-5d9cf3f36b7b
-portal_id=22771e88-e364-45d2-93f1-db18770599b0
-principal_id=87655c36-8d63-48fe-9a1e-53b28dfbc19b 
-trace_id=3895213347334635099 
-user_agent=grpc-go/1.51.0
-sig=N_4q2pCgeg0Fg4oGJSfUWKScnTCiC79vq8PIX6Sc_rwaxdWKpVfPwkW45yK_oOFV9gHOmnJBffcB1NmTSwRRDg
-```
-{:.no-copy-code}
-
-Example JSON log entry:
-
-```json
-{
-    "action": "list",
-    "cef_version": 0,
-    "event_class_id": "Dev-Portal",
-    "event_product": "Dev-Portal",
-    "event_ts": "2023-05-16T00:28:01Z",
-    "event_vendor": "KongInc",
-    "event_version": "1.0",
-    "granted": true,
-    "name": "Authz.applications",
-    "org_id": "b065b594-6afc-4658-9101-5d9cf3f36b7b",
-    "portal_id": "22771e88-e364-45d2-93f1-db18770599b0",
-    "principal_id": "87655c36-8d63-48fe-9a1e-53b28dfbc19b",
-    "rt": "1684196881193",
-    "severity": 1,
-    "sig": "N_4q2pCgeg0Fg4oGJSfUWKScnTCiC79vq8PIX6Sc_rwaxdWKpVfPwkW45yK_oOFV9gHOmnJBffcB1NmTSwRRDg",
-    "src": "127.0.0.6",
-    "trace_id": 6891110586028963295,
-    "user_agent": "grpc-node-js/1.8.10"
-}
-```
-{:.no-copy-code}
-
-{% endnavtab %}
 {% endnavtabs %}
 
 In addition to the defaults, each authentication log entry also contains the following attributes:
@@ -259,11 +211,6 @@ Property | Description
 `granted` | Boolean indicating whether the authorization was granted or not.
 
 
-{:.info}
-> **Note:**
-> As of Sept 15, 2023, the authorization logs have been renamed. This change has no effects on the traceability of the resources by id. These renames include:
->  - From `Authz.runtimegroups` to `Authz.control-planes`
->  - From `Authz.services` to `Authz.api-products`
 
 ### Access logs
 
@@ -277,7 +224,7 @@ Example log entry:
 {% navtabs codeblock %}
 {% navtab "CEF" %}
 ```
-2023-05-16T20:09:54Z 
+2025-05-16T20:09:54Z 
 konghq.com CEF:0|KongInc|Konnect|1.0|KongGateway|Ingress|1|rt=1684267794226 
 src=127.0.0.6
 request=/konnect-api/api/vitals/v1/explore 
@@ -300,7 +247,7 @@ sig=JxJaQG3Bozrb5WdHE_Y0HaOsim2F1Xsq_bCfk71VgsfldkLAD_SF234cnKNS
     "cef_version": 0,
     "event_class_id": "KongGateway",
     "event_product": "Konnect",
-    "event_ts": "2023-05-16T00:28:01Z",
+    "event_ts": "2025-05-16T00:28:01Z",
     "event_vendor": "KongInc",
     "event_version": "1.0",
     "name": "Ingress",
