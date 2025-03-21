@@ -19,11 +19,19 @@ no_version: true
 breadcrumbs:
     - /gateway
 
-description: "placeholder"
+description: "Hybrid mode is a deployment model that splits all {{site.base_gateway}} nodes in a cluster into Control Planes and Data Plane nodes."
 
 related_resources:
-  - text: placeholder
-    url: /
+  - text: Deployment Topologies
+    url: /gateway/deployment-topologies/
+  - text: Data Plane hosting options
+    url: /gateway/topology-hosting-options/
+  - text: "{{site.base_gateway}} deployment models"
+    url: /gateway/deployment-models/
+  - text: DB-less mode
+    url: /gateway/db-less-mode/
+  - text: Traditional mode
+    url: /gateway/traditional-mode/
 ---
 
 Hybrid mode, also known as Control Plane/Data Plane separation (CP/DP), is a deployment model that splits all {{site.base_gateway}} nodes in a cluster into one of two roles: 
