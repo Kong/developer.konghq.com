@@ -1,4 +1,9 @@
 {% assign summary='{{site.kic_product_name}} running' %}
+{% assign additional_flags = '' %}
+{% if prereqs.kubernetes.gateway_api %}
+{% assign additional_flags = additional_flags | append:' --set controller.ingressController.env.feature_gates="GatewayAlpha=true"' %}
+{% endif %}
+
 
 {% capture details_content %}
 
@@ -12,7 +17,7 @@
 1. Install {{ site.kic_product_name }} using Helm:
 
    ```bash
-   helm install kong kong/ingress -n kong --create-namespace
+   helm install kong kong/ingress -n kong --create-namespace{{ additional_flags }}
    ```
 
 1. Populate `$PROXY_IP` for future commands:
