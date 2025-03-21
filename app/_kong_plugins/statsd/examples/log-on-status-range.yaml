@@ -1,0 +1,26 @@
+description: 'Log requests in a status range '
+
+title: 'Enable Metrics'
+
+weight: 900
+
+requirements:
+ - "[Service](/gateway/entities/service)"
+
+
+config: 
+  host: $MY_HOST
+  port: $MY_PORT
+  allow_status_codes:
+  - 200-205
+  - 400-499
+  flush_timeout: 2
+  retry_count: 10
+
+
+variables:
+  key-sets:
+    value: $MY_KEY-SET
+tools:
+  - admin-api
+  - konnect-api
