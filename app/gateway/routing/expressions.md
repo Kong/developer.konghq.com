@@ -16,6 +16,8 @@ related_resources:
     url: https://github.com/Kong/atc-router
   - text: Traditional router
     url: /gateway/routing/traditional/
+  - text: Traffic control and routing
+    url: /gateway/traffic-control-and-routing/
 
 min_version:
   gateway: '3.0'

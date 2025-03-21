@@ -108,6 +108,10 @@
     @apply font-bold text-xl tracking-[-.01em];
   }
 
+  not-card, not-prerequisites, not-cleanup h3 {
+    @apply pt-4;
+  }
+
   h3 {
     @apply font-bold text-lg tracking-[-.01em];
   }

@@ -6,9 +6,10 @@
 This how-to requires some additional resources to be created in your cluster.
 
 ```bash{% for service in include.data.services %}
-kubectl apply -f {{ site.links.web }}/manifests/kic/{{ service.name }}-service.yaml -n kong-docs-demo
+kubectl apply -f {{ site.links.web }}/manifests/kic/{{ service.name }}-service.yaml -n kong
 {%- endfor %}
 ```
+{: data-test-prereqs="block" }
 
 {% endcapture %}
 

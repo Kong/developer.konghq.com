@@ -1,0 +1,15 @@
+description: 'Enables the plugin and specifies the path to the output log file. The plugin creates the log file if it doesn’t exist yet.'
+
+title: 'Specify output log file path'
+
+weight: 900
+
+config:
+    path: "/tmp/file.log"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

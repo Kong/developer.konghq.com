@@ -13,7 +13,11 @@ layout: default
           {% endif %}
 
           {% if row.columns %}
-            <div class="grid grid-cols-1 lg:grid-cols-{{ row.columns | size }} gap-8">
+            {% assign col_span =  row.columns | size %}
+            {% if row.col_span %}
+              {% assign col_span = row.col_span %}
+            {% endif %}
+            <div class="grid grid-cols-1 lg:grid-cols-{{ col_span }} gap-8">
               {% for column in row.columns %}
                 <div class="flex flex-col gap-3 {% if column.header and column.header.type == 'h2' %} heading-section {% endif %}">
                   {% if column.header %}

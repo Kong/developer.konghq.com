@@ -12,6 +12,7 @@ echo '
 {{ include.data }}
 ' | deck gateway apply -
 ```
+{: data-test-prereqs="block" }
 {% endcapture %}
 {{ entities | indent: 3 }}
 

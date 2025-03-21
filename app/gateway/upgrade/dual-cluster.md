@@ -27,6 +27,8 @@ related_resources:
     url: /gateway/upgrade/in-place/
   - text: Rolling upgrade
     url: /gateway/upgrade/rolling/
+  - text: "Blue-green upgrade"
+    url: /gateway/upgrade/blue-green/
 ---
 
 The dual-cluster upgrade strategy is a {{site.base_gateway}} upgrade option used primarily for traditional 

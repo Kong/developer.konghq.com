@@ -125,6 +125,7 @@ rows:
   - header:
       type: h2
       text: "Version control"
+    col_span: 3
     columns:
       - blocks:
         - type: card

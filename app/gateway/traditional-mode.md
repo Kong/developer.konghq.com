@@ -22,6 +22,16 @@ description: "Explains how {{site.base_gateway}} clustering and caching works in
 related_resources:
   - text: Load balancing
     url: /gateway/traffic-control/load-balancing-reference/
+  - text: Deployment topologies
+    url: /gateway/deployment-topologies/
+  - text: "{{site.base_gateway}} deployment models"
+    url: /gateway/deployment-models/
+  - text: Data Plane hosting options
+    url: /gateway/topology-hosting-options/
+  - text: Hybrid mode
+    url: /gateway/hybrid-mode/
+  - text: DB-less mode
+    url: /gateway/db-less-mode/
 ---
 
 In a traditional deployment, you run {{site.base_gateway}} nodes in clusters. A {{site.base_gateway}} cluster allows you to scale the system horizontally by adding more

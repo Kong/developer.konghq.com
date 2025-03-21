@@ -25,6 +25,12 @@ related_resources:
     url: /gateway/deployment-topologies/
   - text: "{{site.base_gateway}} deployment models"
     url: /gateway/deployment-models/
+  - text: Data Plane hosting options
+    url: /gateway/topology-hosting-options/
+  - text: Hybrid mode
+    url: /gateway/hybrid-mode/
+  - text: Traditional mode
+    url: /gateway/traditional-mode/
 ---
 
 {{site.base_gateway}} can be run without a database using only in-memory storage for entities. 
