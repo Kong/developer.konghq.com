@@ -406,6 +406,12 @@ app/_kong_plugins/file-log/index.md:
   - app/_hub/kong-inc/file-log/overview/_index.md
 app/_kong_plugins/file-log/changelog.md:
   - app/_hub/kong-inc/file-log/_changelog.md
+app/_kong_plugins/exit-transformer/index.md:
+  - app/_hub/kong-inc/exit-transformer/overview/_index.md
+app/_kong_plugins/exit-transformer/changelog.md:
+  - app/_hub/kong-inc/exit-transformer/_changelog.md
+app/_how-tos/transform-a-404-response-message.md:
+  - app/_hub/kong-inc/exit-transformer/overview/_index.md
 
 # Konnect
 
