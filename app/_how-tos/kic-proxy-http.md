@@ -1,7 +1,15 @@
 ---
-title: Proxy HTTP Traffic with KIC
+title: Proxy HTTP Traffic
+description: "Route HTTP requests to services in your cluster using HTTPRoute or Ingress"
 content_type: how_to
-related_resources: []
+related_resources:
+  - text: All KIC documentation
+    url: /index/kubernetes-ingress-controller/
+
+permalink: /kubernetes-ingress-controller/routing/http/
+breadcrumbs:
+  - /kubernetes-ingress-controller/
+  - /kubernetes-ingress-controller/routing/
 
 products:
   - kic
@@ -13,8 +21,8 @@ works_on:
 entities: []
 
 tldr:
-  q: Question
-  a: Answer
+  q: How do I route HTTP traffic with Kong Ingress Controller?
+  a: Create a `HTTPRoute` or `Ingress` resource, which will then be converted in to a {{ site.base_gateway }} Service and Route
 
 prereqs:
   kubernetes:
