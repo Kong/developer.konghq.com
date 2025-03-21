@@ -62,3 +62,9 @@ cleanup:
 pull content from:
 * https://docs.konghq.com/hub/kong-inc/correlation-id/#can-i-see-my-correlation-ids-in-my-kong-logs 
 * https://support.konghq.com/support/s/article/Is-it-possible-to-use-a-custom-log-format-without-using-a-custom-nginx-template
+
+
+Notes:
+- convert the Nginx stuff to env variables like in the linked support article
+- you'll also need to add the Correlation ID plugin as part of the steps
+- maybe logging will need to be enabled?
