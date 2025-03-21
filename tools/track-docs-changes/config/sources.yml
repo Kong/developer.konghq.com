@@ -519,6 +519,8 @@ app/gateway/upgrade/backup-and-restore.md:
   - app/_src/gateway/upgrade/backup-and-restore.md
 app/gateway/db-less-mode.md:
   - app/_src/gateway/production/deployment-topologies/db-less-and-declarative-config.md
+app/gateway/upgrade/blue-green.md:
+  - app/_src/gateway/upgrade/blue-green.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
@@ -682,5 +684,6 @@ app/deck/gateway/deduplicate.md:
   - app/deck/gateway/deduplicate.md
 app/deck/gateway/reset.md:
   - app/deck/gateway/reset.md
+
 
 
