@@ -1,6 +1,9 @@
-{% if include.gateway_api != false %}
+{% if include.config.gateway_api != false %}
 
 {% assign summary = "Enable the Gateway API" %}
+  {% if include.config.gateway_api_optional == true %}
+  {% assign summary = summary | append: " (Optional)" %}
+  {% endif %}
 {% assign icon_url = "/assets/icons/code.svg" %}
 
 {% capture details_content %}
