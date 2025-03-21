@@ -1,6 +1,6 @@
-description: ''
+description: 'Generates a single UUID on a per-worker basis and the requests append a counter to the UUID after a `#` character.'
 
-title: ''
+title: 'Generate a single UUID on a per-worker basis'
 
 weight: 900
 
@@ -12,7 +12,11 @@ weight: 900
 #     description: ''
 #     value: us
 
-config: # plugin config in yaml format goes here
+config: 
+  header_name: Kong-Request-ID
+  generator: uuid#counter
+  echo_downstream: false
+
 
 tools:
   - deck
