@@ -53,10 +53,7 @@ made to the upstream server under high load situations and provides
 buffering during temporary network or upstream outages.
 
 You can set several parameters to configure the behavior and capacity
-of the queues used by the plugin. For more information about how to
-use these parameters, see
-[Plugin Queuing Reference](/gateway/latest/kong-plugins/queue/reference/)
-in the {{site.base_gateway}} documentation.
+of the queues used by the plugin.
 
 The queue parameters all reside in a record under the key `queue` in
 the `config` parameter section of the plugin.
@@ -119,7 +116,7 @@ rows:
   - metric: "`shdict_usage`"
     description: >-
       The usage of a shared dict, sent once every minute.<br><br>
-      Monitors any `lua_shared_dict` used by {{site.base_gateway}}. You can find all the shared dicts {{site.base_gateway}} has configured using the [`/status`](/gateway/api/admin-ee/latest/#/operations/get-status) endpoint of the Admin API.<br><br>
+      Monitors any `lua_shared_dict` used by {{site.base_gateway}}. You can find all the shared dicts {{site.base_gateway}} has configured using the [Status API](/api/gateway/status/).<br><br>
       For example, the metric might report on `shdict.kong_locks` or `shdict.kong_counters`.
     namespace: "`kong.node.<node_hostname>.shdict.<lua_shared_dict>.free_space`<br><br>`kong.node.<node_hostname>.shdict.<lua_shared_dict>.capacity`"
   - metric: "`cache_datastore_hits_total`"
