@@ -1,6 +1,6 @@
 <!---shared with logging plugins: file-log, http-log, loggly, syslog, tcp-log, udp-log --->
 
-{% new_in 3.7 %}Every request is logged separately in a JSON object, separated by a new line `\n`, with the following format:
+{% new_in 3.7 %} Every request is logged separately in a JSON object, separated by a new line `\n`, with the following format:
 
 ```json
 {

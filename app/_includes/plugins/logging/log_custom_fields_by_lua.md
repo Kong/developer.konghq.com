@@ -59,8 +59,7 @@ See the [plugin execution order reference](/gateway/entities/plugin/#plugin-cont
 ### Limitations
 
 Lua code runs in a restricted sandbox environment, whose behavior is governed
-by the `untrusted_lua` [configuration properties](/gateway/configuration/) configuration
-properties.
+by the `untrusted_lua` [configuration properties](/gateway/configuration/).
 
 {% include /plugins/sandbox.md %}
 
