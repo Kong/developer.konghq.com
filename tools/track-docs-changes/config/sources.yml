@@ -423,6 +423,8 @@ app/konnect-geos.md:
   - app/konnect/geo.md
 app/_landing_pages/advanced-analytics.md:
   - app/konnect/advanced-analytics/index.md
+app/konnect-labels.md:
+  - app/konnect/reference/labels.md
 
 # landing pages
 app/_landing_pages/service-catalog.yaml:
