@@ -70,7 +70,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    Learn how {{site.base_gateway}} searches for a matching [Routes](/gateway/entities/route/).
+                    Learn how {{site.base_gateway}} searches for matching [Routes](/gateway/entities/route/).
   
   - columns:
       - blocks:
@@ -87,7 +87,7 @@ rows:
             config:
               title: Expressions router
               description: |
-                The expressions router provides a Domain Specific Language (DSL) that allows for complex routing rule definition. 
+                The expressions router provides a Domain Specific Language (DSL) that allows for complex routing rule definitions. 
              
               cta:
                 text: Learn more about the expressions router &rarr;
@@ -132,6 +132,7 @@ rows:
               cta:
                 text: Learn more about plugin phases &rarr;
                 url: /gateway/entities/plugin/#plugin-contexts
+  - columns:
       - blocks:
           - type: card
             config:
@@ -142,7 +143,6 @@ rows:
               cta:
                 text: Learn more about upstream timeouts &rarr;
                 url: /gateway/traffic-control/proxying/#proxying-and-upstream-timeouts
-  - columns:
       - blocks:
           - type: card
             config:
