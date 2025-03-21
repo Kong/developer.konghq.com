@@ -18,7 +18,8 @@ products:
 works_on:
     - konnect
 
-no_version: true
+min_version:
+  gateway: '3.4'
 
 tags:
     - docker
