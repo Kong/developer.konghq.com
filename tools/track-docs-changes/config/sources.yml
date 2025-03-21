@@ -410,6 +410,12 @@ app/_kong_plugins/correlation-id/index.md:
   - app/_hub/kong-inc/correlation-id/overview/_index.md
 app/_kong_plugins/correlation-id/changelog.md:
   - app/_hub/kong-inc/correlation-id/_changelog.md
+app/_kong_plugins/exit-transformer/index.md:
+  - app/_hub/kong-inc/exit-transformer/overview/_index.md
+app/_kong_plugins/exit-transformer/changelog.md:
+  - app/_hub/kong-inc/exit-transformer/_changelog.md
+app/_how-tos/transform-a-404-response-message.md:
+  - app/_hub/kong-inc/exit-transformer/overview/_index.md
 
 # Konnect
 
@@ -421,6 +427,12 @@ app/konnect-geos.md:
   - app/konnect/geo.md
 app/_landing_pages/advanced-analytics.md:
   - app/konnect/advanced-analytics/index.md
+app/konnect-audit-logs.md:
+  - app/konnect/org-management/audit-logging/index.md
+  - app/konnect/reference/audit-logs.md
+app/konnect-labels.md:
+  - app/konnect/reference/labels.md
+
 
 # landing pages
 app/_landing_pages/service-catalog.yaml:

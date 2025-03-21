@@ -134,7 +134,7 @@ export async function extractInstructionsFromURL(uri, config, browser) {
 
     const platforms = await page.evaluate(() => {
       const dropdown = document.querySelector(
-        "select#deployment-topology-switch"
+        "select.deployment-topology-switch"
       );
       if (!dropdown) return [];
 
@@ -142,7 +142,7 @@ export async function extractInstructionsFromURL(uri, config, browser) {
     });
 
     for (const platform of platforms) {
-      await page.select("select#deployment-topology-switch", platform);
+      await page.select("select.deployment-topology-switch", platform);
 
       const setup = await extractSetup(page);
       const prereqs = await extractPrereqs(page);

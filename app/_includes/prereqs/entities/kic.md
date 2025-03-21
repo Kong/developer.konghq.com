@@ -9,6 +9,7 @@ This how-to requires some additional resources to be created in your cluster.
 kubectl apply -f {{ site.links.web }}/manifests/kic/{{ service.name }}-service.yaml -n kong
 {%- endfor %}
 ```
+{: data-test-prereqs="block" }
 
 {% endcapture %}
 
