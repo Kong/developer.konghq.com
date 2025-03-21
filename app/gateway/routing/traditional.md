@@ -16,6 +16,8 @@ related_resources:
     url: /gateway/entities/sni/
   - text: Expressions router
     url: /gateway/routing/expressions/
+  - text: Traffic control and routing
+    url: /gateway/traffic-control-and-routing/
 
 min_version:
   gateway: "3.0"

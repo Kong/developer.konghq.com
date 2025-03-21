@@ -21,6 +21,8 @@ related_resources:
     url: /gateway/entities/plugin/#supported-scopes-by-plugin
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
+  - text: Traffic control and routing
+    url: /gateway/traffic-control-and-routing/
 
 next_steps:
   - text: Learn about the Expressions router

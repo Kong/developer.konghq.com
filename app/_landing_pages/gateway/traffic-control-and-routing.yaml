@@ -1,0 +1,160 @@
+metadata:
+  title: "{{site.base_gateway}} traffic control and routing"
+  product: gateway
+  content_type: landing_page
+  description: Learn how {{site.base_gateway}} listens for, routes, and proxies traffic.
+  breadcrumbs:
+    - /gateway/
+rows:
+  - header:
+      type: h1
+      text: "{{site.base_gateway}} traffic control and routing"
+      sub_text: "As an API gateway, one of {{site.base_gateway}}'s main roles is to listen for, route, and proxy traffic."
+    
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Listeners"
+              blocks:
+                - type: text
+                  text: | 
+                    From a high-level perspective, {{site.base_gateway}} listens for L4 and L7 traffic.
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.base_gateway}} proxy ports"
+              description: |
+                {{site.base_gateway}} has several default ports it uses to listen to traffic.
+              cta:
+                text: Learn more about proxy ports &rarr;
+                url: /gateway/network-ports-firewall/#proxy-ports
+      - blocks:
+          - type: card
+            config:
+              title: "proxy_listen"
+              description: |
+                Defines a list of addresses/ports on which {{site.base_gateway}} will accept public HTTP (gRPC, WebSocket, etc) traffic from clients and proxy it to your upstream services (`8000` by default).
+              cta:
+                text: Learn more about proxy_listen &rarr;
+                url: /gateway/configuration/#proxy-listen
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: "admin_listen"
+              description: |
+                Defines a list of addresses and ports, but those
+                should be restricted to only be accessed by administrators, as they expose
+                {{site.base_gateway}}'s configuration capabilities via the Admin API.
+              cta:
+                text: Learn more about admin_listen &rarr;
+                url: /gateway/configuration/#stream-listen 
+      - blocks:
+          - type: card
+            config:
+              title: "stream_listen"
+              description: |
+                Similar to proxy_listen, but for Layer 4 (TCP, TLS) generic proxy. This is disabled by default.
+              cta:
+                text: Learn more about stream_listen &rarr;
+                url: /gateway/configuration/#stream-listen
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Routing traffic"
+              blocks:
+                - type: text
+                  text: | 
+                    Learn how {{site.base_gateway}} searches for matching [Routes](/gateway/entities/route/).
+  
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Routing
+              description: |
+                Routes determine how requests are sent to their Services after they reach {{site.base_gateway}}. 
+              cta:
+                text: Learn more about routing &rarr;
+                url: /gateway/entities/route/#how-routing-works
+      - blocks:
+          - type: card
+            config:
+              title: Expressions router
+              description: |
+                The expressions router provides a Domain Specific Language (DSL) that allows for complex routing rule definitions. 
+             
+              cta:
+                text: Learn more about the expressions router &rarr;
+                url: /gateway/routing/expressions/
+      - blocks:
+          - type: card
+            config:
+              title: Traditional router
+              description: |
+                A {{ site.base_gateway }} routing configuration format. It uses JSON to provide a list of routing criteria.
+              cta:
+                text: Learn more about the traditional router &rarr;
+                url: /gateway/routing/traditional/#routing-criteria
+  
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Proxying"
+              blocks:
+                - type: text
+                  text: | 
+                    Once a request is matched to a Route, {{site.base_gateway}} then proxies the request.
+  
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Load balancing
+              description: |
+                {{site.base_gateway}} implements load balancing capabilities to distribute proxied requests across a pool of instances of an upstream service.
+              cta:
+                text: Learn more about load balancing options &rarr;
+                url: /gateway/traffic-control/load-balancing-reference/
+      - blocks:
+          - type: card
+            config:
+              title: Plugin execution phases
+              description: |
+                Plugins can execute during several phases of the request lifecycle. 
+              cta:
+                text: Learn more about plugin phases &rarr;
+                url: /gateway/entities/plugin/#plugin-contexts
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Upstream timeouts
+              description: |
+                Once {{site.base_gateway}} has executed all the necessary logic (including plugins), it is ready
+                to forward the request to your upstream service. 
+              cta:
+                text: Learn more about upstream timeouts &rarr;
+                url: /gateway/traffic-control/proxying/#proxying-and-upstream-timeouts
+      - blocks:
+          - type: card
+            config:
+              title: Response
+              description: |
+                {{site.base_gateway}} receives the response from the upstream service and sends it back to the downstream client in a streaming fashion. 
+              cta:
+                text: Learn more about the response phase &rarr;
+                url: /gateway/traffic-control/proxying/#response
+    
+
+
+
+  
+  

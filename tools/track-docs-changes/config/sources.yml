@@ -550,6 +550,8 @@ app/gateway/traffic-control/blue-green-deployments.md:
   - app/_src/gateway/production/blue-green.md
 app/konnect-compatibility.md:
   - app/konnect/compatibility.md
+app/_landing_pages/gateway/traffic-control-and-routing.yaml:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
 
 
 # policies
