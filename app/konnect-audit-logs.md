@@ -11,12 +11,8 @@ description: Use {{site.konnect_short_name}} audit logs to help you detect and r
 related_resources:
   - text: "Set up an audit log webhook for a {{site.konnect_short_name}} org"
     url: /how-to/set-up-konnect-org-audit-log-webhook/
-  - text: "Set up an audit log webhook for Dev Portal"
-    url: /how-to/set-up-dev-portal-audit-log-webhook/
   - text: "{{site.konnect_short_name}} Org audit log API"
     url: /api/konnect/audit-logs/v2/
-  - text: "Dev Portal audit log API"
-    url: /api/konnect/portal-management/v2/#/operations/update-portal-audit-log-replay-job
   - text: "{{site.base_gateway}} audit logs"
     url: /gateway/audit-logs/
   - text: "{{site.base_gateway}} logs"
@@ -35,6 +31,7 @@ Audit logging provides the following benefits:
 ## Configure audit logging
 
 Audit logging is configured via a webhook with a SIEM provider of your choice. For more information, see [Set up an audit log webhook for a {{site.konnect_short_name}} org](/how-to/set-up-konnect-org-audit-log-webhook/).
+
 {{site.konnect_short_name}} captures three types of events:
 
 | Event type | Org audit logs |
@@ -94,13 +91,12 @@ Timestamp | Time and date of the event in UTC.
 
 Authentication attempts and their outcomes are logged whenever a user logs in to the {{site.konnect_short_name}} application or the Dev Portal either through the UI or the Konnect API.
 
-{% navtabs %}
-{% navtab "Konnect audit logs" %}
+Example log entry:
 
-Example CEF log entry:
-
+{% navtabs codeblock %}
+{% navtab "CEF" %}
 ```
-2023-05-19T00:03:39Z
+2025-05-19T00:03:39Z
 konghq.com CEF:0|ExampleOrg|Konnect|1.0|AUTHENTICATION_TYPE_PAT|AUTHENTICATION_OUTCOME_SUCCESS|0|rt=3958q3097698 
 src=127.0.0.1 
 request=/api/v1/personal-access-tokens/introspect 
@@ -113,14 +109,14 @@ sig=N_4q2pCgeg0Fg4oGJSfUWKScnTCiC79vq8PIX6Sc_rwaxdWKpVfPwkW45yK_oOFV9gHOmnJBffcB
 ```
 {:.no-copy-code}
 
-Example JSON log entry:
-
+{% endnavtab %}
+{% navtab "JSON" %}
 ```json
 {
     "cef_version": 0,
     "event_class_id": "AUTHENTICATION_TYPE_BASIC",
     "event_product": "Konnect",
-    "event_ts": "2023-05-16T00:28:01Z",
+    "event_ts": "2025-05-16T00:28:01Z",
     "event_vendor": "KongInc",
     "event_version": "1.0",
     "name": "AUTHENTICATION_OUTCOME_SUCCESS",
@@ -153,15 +149,12 @@ Property | Description
 
 Authorization log entries are created for every permission check in {{site.konnect_short_name}}.
 
-{:.info}
-> **Note:** This is not currently supported for Dev Portal audit logs.
-
 Example log entry:
 
 {% navtabs codeblock %}
 {% navtab "CEF" %}
 ```
-2023-05-19T00:03:39Z
+2025-05-19T00:03:39Z
 konghq.com CEF:0|ExampleOrg|Konnect|1.0|konnect|Authz.portals|1|rt=16738287345642 
 src=127.0.0.6 
 action=retrieve 
@@ -183,7 +176,7 @@ sig=N_4q2pCgeg0Fg4oGJSfUWKScnTCiC79vq8PIX6Sc_rwaxdWKpVfPwkW45yK_oOFV9gHOmnJBffcB
     "cef_version": 0,
     "event_class_id": "konnect",
     "event_product": "Konnect",
-    "event_ts": "2023-05-16T00:28:01Z",
+    "event_ts": "2025-05-16T00:28:01Z",
     "event_vendor": "KongInc",
     "event_version": "1.0",
     "granted": true,
@@ -215,9 +208,6 @@ Property | Description
 ### Access logs
 
 Access logs include information about create, update, and delete requests to the {{site.konnect_short_name}} API.
-
-{:.info}
-> **Note:** This is not currently supported for Dev Portal audit logs.
 
 Example log entry:
 
