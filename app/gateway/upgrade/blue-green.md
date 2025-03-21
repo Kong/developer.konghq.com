@@ -65,10 +65,10 @@ flowchart TD
     CPY --"kong migrations up \n (NO kong migrations finish)"--> DB
 
     style CPX stroke-dasharray:3
-    style Admin fill:none,stroke:none,color:#d44324
-    style Admin2 fill:none,stroke:none,color:#d44324
-    linkStyle 4,7 stroke:#d44324,color:#d44324
-    linkStyle 3,6,9 stroke:#b6d7a8
+    style Admin fill:none!important,stroke:none!important,color:#d44324!important
+    style Admin2 fill:none!important,stroke:none!important,color:#d44324!important
+    linkStyle 4,7 stroke:#d44324!important,color:#d44324!important
+    linkStyle 3,6,9 stroke:#b6d7a8!important
 {% endmermaid %}
 
 > _Figure 1: The diagram shows a {{site.base_gateway}} upgrade using the blue-green strategy._
