@@ -249,7 +249,7 @@ rows:
 - The `status_count_per_workspace` metric requires a `workspace_identifier`.
 
 
-## Kong Process Errors
+## {{site.base_gateway}} process errors
 
 This logging plugin logs HTTP request and response data, and also supports stream data (TCP, TLS, and UDP).
 The {{site.base_gateway}} process error file is the Nginx error file. You can find it at the following path:
