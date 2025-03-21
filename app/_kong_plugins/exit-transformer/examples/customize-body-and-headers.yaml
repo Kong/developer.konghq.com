@@ -4,6 +4,9 @@ title: 'Customize the response body and headers'
 
 weight: 900
 
+requirements: 
+ - "[`untrusted_lua`](/gateway/configuration/#untrusted-lua) must be set to either `on` or `sandbox` in your `kong.conf` file for this plugin to work."
+ 
 config: 
   functions:
   - 'return function(status, body, headers)

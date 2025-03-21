@@ -45,10 +45,10 @@ to completely transforming the structure of {{site.base_gateway}} responses.
 > [`untrusted_lua`](/gateway/configuration/#untrusted-lua)
 must be set to either `on` or `sandbox` in your `kong.conf` file for this plugin 
 to work. The default value is `sandbox`, which means that Lua functions are allowed,
-but will be executed in a sandbox which has limited access to the Kong global
+but will be executed in a sandbox which has limited access to the {{site.base_gateway}} global
 environment.
 
-### Handling unmatched 400 and 404 responses
+## Handling unmatched 400 and 404 responses
 
 You can configure the Exit Transformer plugin to handle `400` and `404` responses by enabling the 
 following parameters:
@@ -67,7 +67,7 @@ return function(status, body, headers)
 end
 ```
 
-Any Kong exit call exposed on the proxy side gets reduced through these
+Any {{site.base_gateway}} exit call exposed on the proxy side gets reduced through these
 functions.
 
 {:.warning}
