@@ -413,6 +413,9 @@ app/konnect-geos.md:
   - app/konnect/geo.md
 app/_landing_pages/advanced-analytics.md:
   - app/konnect/advanced-analytics/index.md
+app/konnect-audit-logs.md:
+  - app/konnect/org-management/audit-logging/index.md
+  - app/konnect/reference/audit-logs.md
 
 # landing pages
 app/_landing_pages/service-catalog.yaml:
