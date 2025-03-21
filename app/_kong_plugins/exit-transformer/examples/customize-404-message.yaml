@@ -1,0 +1,34 @@
+description: |
+  Configure the plugin to transform 404 responses and add a custom error message.
+  See [Transform a 404 response message](/how-to/transform-a-404-response-message/) for a full how-to guide with this example.
+
+title: 'Customize the 404 error message'
+
+targets:
+  - global
+
+weight: 900
+
+config: 
+  handle_unknown: true
+  functions:
+  - 'return function(status, body, headers)
+       if status == 404 then
+         local new_body = {
+           error = true,
+           status = status,
+           message = "This is not the Route you are looking for",
+         }
+         return status, new_body, headers
+        else
+          return status, body, headers
+       end
+     end'
+     
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
