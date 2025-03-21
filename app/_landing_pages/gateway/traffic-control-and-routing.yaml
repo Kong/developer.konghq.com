@@ -8,46 +8,8 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "How does {{site.base_gateway}} proxy traffic?"
+      text: "{{site.base_gateway}} traffic control and routing"
       sub_text: "As an API gateway, one of {{site.base_gateway}}'s main roles is to listen for, route, and proxy traffic."
-
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    {{site.base_gateway}} handles traffic in the following order:
-
-                    1. {{site.base_gateway}} listens for HTTP traffic on its configured
-                    proxy ports.
-                    1. {{site.base_gateway}} evaluates any incoming HTTP request or L4 connection against the Routes you have configured and tries to find a matching one. 
-                    1. If multiple Routes match, the {{site.base_gateway}} router then orders all defined Routes by their priority and uses the highest priority matching Route to handle a request.
-                    1. {{site.base_gateway}} implements load balancing capabilities to distribute proxied
-                    requests across a pool of instances of an upstream service.
-                    1. Once {{site.base_gateway}} has executed all the necessary logic (including plugins), it is ready to forward the request to your upstream service. 
-                    1. {{site.base_gateway}} receives the response from the upstream service and sends it back to the
-                    downstream client in a streaming fashion. 
-
-                    {{site.base_gateway}} runs [plugins](/gateway/entities/plugin/) between several of these phases.
-      - blocks:
-          - type: mermaid
-            config:
-              diagram: |
-                sequenceDiagram
-                participant Gateway as Kong Gateway
-                participant Router
-                participant LoadBalancer as Load balancer
-                participant UpstreamService as Upstream service
-
-                Gateway->>Router: Evaluates incoming request against Routes
-                Router->>Router: Orders Routes by priority
-                Router->>Gateway: Returns highest priority matching Route
-                Gateway->>LoadBalancer: Implements load balancing capabilities
-                LoadBalancer->>LoadBalancer: Distributes request across upstream service instances
-                LoadBalancer->>UpstreamService: Forwards request to selected instance
-                UpstreamService->>Gateway: Sends response
     
   - columns:
       - blocks:
@@ -58,12 +20,17 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    From a high-level perspective, {{site.base_gateway}} listens for HTTP traffic on its [configured
-                    proxy ports](/gateway/network-ports-firewall/#proxy-ports) (`8000` and `8443` by default) and L4 traffic on explicitly configured
-                    [`stream_listen`](/gateway/configuration/#stream-listen) ports. {{site.base_gateway}} will evaluate any incoming
-                    HTTP request or L4 connection against the routes you have configured and try to find a matching
-                    one. {{site.base_gateway}} also listens for L7 traffic. 
+                    From a high-level perspective, {{site.base_gateway}} listens for L4 and L7 traffic.
   - columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.base_gateway}} proxy ports"
+              description: |
+                {{site.base_gateway}} has several default ports it uses to listen to traffic.
+              cta:
+                text: Learn more about proxy ports &rarr;
+                url: /gateway/network-ports-firewall/#proxy-ports
       - blocks:
           - type: card
             config:
@@ -73,6 +40,7 @@ rows:
               cta:
                 text: Learn more about `proxy_listen` &rarr;
                 url: /gateway/configuration/#proxy-listen
+  - columns:
       - blocks:
           - type: card
             config:
@@ -83,7 +51,7 @@ rows:
                 {{site.base_gateway}}'s configuration capabilities via the Admin API (`8001` by default).
               cta:
                 text: Learn more about `admin_listen` &rarr;
-                url: /gateway/configuration/#stream-listen
+                url: /gateway/configuration/#stream-listen 
       - blocks:
           - type: card
             config:
@@ -98,20 +66,11 @@ rows:
           - type: structured_text
             config:
               header:
-                text: "Routing"
+                text: "Routing traffic"
               blocks:
                 - type: text
                   text: | 
                     Once the listeners pick up a request, {{site.base_gateway}} searches for a matching [Route](/gateway/entities/route/).
-
-                    For a request to match a Route:
-
-                    - The request **must** include **all** of the configured fields
-                    - The values of the fields in the request **must** match at least one of the
-                      configured values (While the field configurations accepts one or more values,
-                      a request needs only one of the values to be considered a match) 
-
-                    Routing criteria depend on the type of router that you're using: traditional or expressions.
   
   - columns:
       - blocks:

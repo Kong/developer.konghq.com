@@ -36,6 +36,12 @@ breadcrumbs:
 
 ## Proxying and upstream timeouts
 
+<!--I'm using this header for a link in the Traffic Control landing page (app/_landing_pages/gateway/traffic-control-and-routing.yaml), so just remember to fix those links if these headers change-->
+
 ## Response
 
+<!--I'm using this header for a link in the Traffic Control landing page (app/_landing_pages/gateway/traffic-control-and-routing.yaml), so just remember to fix those links if these headers change-->
+
 ## Errors and retries
+
+<!--I'm using this header for a link in the Traffic Control landing page (app/_landing_pages/gateway/traffic-control-and-routing.yaml), so just remember to fix those links if these headers change-->
