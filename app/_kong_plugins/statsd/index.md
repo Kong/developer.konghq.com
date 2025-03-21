@@ -80,52 +80,52 @@ columns:
   - title: Namespace syntax
     key: namespace
 rows:
-  - metric: request_count
+  - metric: "`request_count`"
     description: The number of requests.
     namespace: "`kong.service.<service_identifier>.request.count`"
-  - metric: request_size
+  - metric: "`request_size`"
     description: The request's body size in bytes.
     namespace: "`kong.service.<service_identifier>.request.size`"
-  - metric: response_size
+  - metric: "`response_size`"
     description: The response's body size in bytes.
     namespace: "`kong.service.<service_identifier>.response.size`"
-  - metric: latency
+  - metric: "`latency`"
     description: The time interval in milliseconds between the request and response.
     namespace: "`kong.service.<service_identifier>.latency`"
-  - metric: status_count
+  - metric: "`status_count`"
     description: Tracks each status code returned in a response.
     namespace: "`kong.service.<service_identifier>.status.<status>`"
-  - metric: unique_users
+  - metric: "`unique_users`"
     description: Tracks unique users who made requests to the underlying Service or Route.
     namespace: "`kong.service.<service_identifier>.user.uniques`"
-  - metric: request_per_user
+  - metric: "`request_per_user`"
     description: Tracks the request count per Consumer.
     namespace: "`kong.service.<service_identifier>.user.<consumer_identifier>.request.count`"
-  - metric: upstream_latency
+  - metric: "`upstream_latency`"
     description: Tracks the time in milliseconds it took for the final Service to process the request.
     namespace: "`kong.service.<service_identifier>.upstream_latency`"
-  - metric: kong_latency
+  - metric: "`kong_latency`"
     description: Tracks the internal {{site.base_gateway}} latency in milliseconds that it took to run all the plugins.
     namespace: "`kong.service.<service_identifier>.kong_latency`"
-  - metric: status_count_per_user
+  - metric: "`status_count_per_user`"
     description: Tracks the status code per Consumer per Service.
     namespace: "`kong.service.<service_identifier>.user.<consumer_identifier>.status.<status>`"
-  - metric: status_count_per_workspace
+  - metric: "`status_count_per_workspace`"
     description: The status code per Workspace.
     namespace: "`kong.service.<service_identifier>.workspace.<workspace_identifier>.status.<status>`"
-  - metric: status_count_per_user_per_route
+  - metric: "`status_count_per_user_per_route`"
     description: The status code per consumer per Route.
     namespace: "`kong.route.<route_id>.user.<consumer_identifier>.status.<status>`"
-  - metric: shdict_usage
+  - metric: "`shdict_usage`"
     description: >-
       The usage of a shared dict, sent once every minute.<br><br>
       Monitors any `lua_shared_dict` used by {{site.base_gateway}}. You can find all the shared dicts {{site.base_gateway}} has configured using the [`/status`](/gateway/api/admin-ee/latest/#/operations/get-status) endpoint of the Admin API.<br><br>
       For example, the metric might report on `shdict.kong_locks` or `shdict.kong_counters`.
     namespace: "`kong.node.<node_hostname>.shdict.<lua_shared_dict>.free_space`<br><br>`kong.node.<node_hostname>.shdict.<lua_shared_dict>.capacity`"
-  - metric: cache_datastore_hits_total
+  - metric: "`cache_datastore_hits_total`"
     description: The total number of cache hits. ({{site.ee_product_name}} only)
     namespace: "`kong.service.<service_identifier>.cache_datastore_hits_total`"
-  - metric: cache_datastore_misses_total
+  - metric: "`cache_datastore_misses_total`"
     description: The total number of cache misses. ({{site.ee_product_name}} only)
     namespace: "`kong.service.<service_identifier>.cache_datastore_misses_total`"
 {% endtable %}
@@ -133,29 +133,74 @@ rows:
 <!-- vale on -->
 If a request URI doesn't match any Routes, the following metrics are sent instead:
 <!-- vale off -->
-| Metric                     | Description | Namespace |
-| ---                        | ---         | --- |
-| `request_count`            | The request count. | `kong.global.unmatched.request.count` |
-| `request_size`             | The request's body size in bytes. | `kong.global.unmatched.request.size` |
-| `response_size`            | The response's body size in bytes. | `kong.global.unmatched.response.size` |
-| `latency`                  | The time interval between when the request started and when the response is received from the upstream server. | `kong.global.unmatched.latency` |
-| `status_count`             | The status count. | `kong.global.unmatched.status.<status>.count` |
-| `kong_latency`             | The internal {{site.base_gateway}} latency in milliseconds that it took to run all the plugins. | `kong.global.unmatched.kong_latency` |
-<!-- vale on -->
+{% table %}
+columns:
+  - title: Metric
+    key: metric
+  - title: Description
+    key: description
+  - title: Namespace
+    key: namespace
+rows:
+  - metric: request_count
+    description: The request count.
+    namespace: "`kong.global.unmatched.request.count`"
+  - metric: request_size
+    description: The request's body size in bytes.
+    namespace: "`kong.global.unmatched.request.size`"
+  - metric: response_size
+    description: The response's body size in bytes.
+    namespace: "`kong.global.unmatched.response.size`"
+  - metric: latency
+    description: The time interval between when the request started and when the response is received from the upstream server.
+    namespace: "`kong.global.unmatched.latency`"
+  - metric: status_count
+    description: The status count.
+    namespace: "`kong.global.unmatched.status.<status>.count`"
+  - metric: kong_latency
+    description: The internal {{site.base_gateway}} latency in milliseconds that it took to run all the plugins.
+    namespace: "`kong.global.unmatched.kong_latency`"
+{% endtable %}
+
 If you enable the `tag_style` configuration for the StatsD Plugin, the following metrics are sent instead:
-<!-- vale off -->
-| Metric                     | Description | Namespace |
-| ---                        | ---         | --- |
-| `request_count`            | The number of requests. | `kong.request.count` |
-| `request_size`             | The request's body size in bytes. | `kong.request.size` |
-| `response_size`            | The response's body size in bytes. | `kong.response.size` |
-| `latency`                  | The time interval in milliseconds between the request and response. | `kong.latency` |
-| `request_per_user`         | Tracks the request count per consumer. | `kong.request.count` |
-| `upstream_latency`         | Tracks the time in milliseconds it took for the final Service to process the request. | `kong.upstream_latency` |
-| `shdict_usage`             | The usage of shared dict, sent once every minute. | `kong.shdict.free_space` and `kong.shdict.capacity` |
-| `cache_datastore_hits_total`            | The total number of cache hits. ({{site.base_gateway}} only) | `kong.cache_datastore_hits_total` |
-| `cache_datastore_misses_total`            | The total number of cache misses. ({{site.base_gateway}} only) | `kong.cache_datastore_misses_total` |
-<!-- vale on -->
+
+{% table %}
+columns:
+  - title: Metric
+    key: metric
+  - title: Description
+    key: description
+  - title: Namespace
+    key: namespace
+rows:
+  - metric: "`request_count`"
+    description: The number of requests.
+    namespace: "`kong.request.count`"
+  - metric: "`request_size`"
+    description: The request's body size in bytes.
+    namespace: "`kong.request.size`"
+  - metric: "`response_size`"
+    description: The response's body size in bytes.
+    namespace: "`kong.response.size`"
+  - metric: "`latency`"
+    description: The time interval in milliseconds between the request and response.
+    namespace: "`kong.latency`"
+  - metric: "`request_per_user`"
+    description: Tracks the request count per consumer.
+    namespace: "`kong.request.count`"
+  - metric: "`upstream_latency`"
+    description: Tracks the time in milliseconds it took for the final Service to process the request.
+    namespace: "`kong.upstream_latency`"
+  - metric: "`shdict_usage`"
+    description: The usage of shared dict, sent once every minute.
+    namespace: "`kong.shdict.free_space` and `kong.shdict.capacity`"
+  - metric: "`cache_datastore_hits_total`"
+    description: The total number of cache hits. ({{site.base_gateway}} only)
+    namespace: "`kong.cache_datastore_hits_total`"
+  - metric: "`cache_datastore_misses_total`"
+    description: The total number of cache misses. ({{site.base_gateway}} only)
+    namespace: "`kong.cache_datastore_misses_total`"
+{% endtable %}
 
 
 The StatsD Plugin supports Librato, InfluxDB, DogStatsD, and SignalFX-style tags, which are used like Prometheus labels.

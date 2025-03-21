@@ -5,7 +5,7 @@ title: 'Enable Metrics'
 weight: 900
 
 requirements:
- - "[Service](/gateway/entities/service)"
+ - "A [Gateway Service](/gateway/entities/service/) and [Route](/gateway/entities/route/) to log metrics from"
 
 
 config: 
