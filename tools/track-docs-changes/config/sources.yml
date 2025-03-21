@@ -402,6 +402,10 @@ app/_kong_plugins/degraphql/index.md:
   - app/_hub/kong-inc/degraphql/overview/_index.md
 app/_kong_plugins/degraphql/changelog.md:
   - app/_hub/kong-inc/degraphql/_changelog.md
+app/_kong_plugins/file-log/index.md:
+  - app/_hub/kong-inc/file-log/overview/_index.md
+app/_kong_plugins/file-log/changelog.md:
+  - app/_hub/kong-inc/file-log/_changelog.md
 
 # Konnect
 
