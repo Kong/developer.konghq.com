@@ -30,6 +30,9 @@ icon: exit-transformer.png
 categories:
   - transformations
 
+tags:
+  - transformations
+
 search_aliases:
   - exit-transformer
 ---
