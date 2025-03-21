@@ -1,3 +1,3 @@
 ```bash
-helm uninstall kong -n kong-docs-demo
+helm uninstall kong -n kong
 ```
