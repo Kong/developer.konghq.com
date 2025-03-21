@@ -10,7 +10,7 @@ works_on:
   - on-prem
   - konnect
 
-no_version: true
+
 
 api_specs:
     - gateway/admin-ee

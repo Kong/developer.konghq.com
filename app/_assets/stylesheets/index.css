@@ -11,6 +11,7 @@
 
     --color-bg-primary: 247, 251, 255;
     --color-bg-secondary: 255, 255, 255;
+    --color-bg-terciary: 7, 53, 103;
     --color-bg-code-block: 7, 53, 103;
     --color-bg-code-block-header: 28, 85, 146;
     --color-bg-hover-component: 235, 244, 254;
@@ -53,6 +54,7 @@
   .dark {
     --color-bg-primary: 2, 20, 40;
     --color-bg-secondary: 4, 40, 79;
+    --color-bg-terciary: 28, 85, 146;
     --color-bg-code-block: 28, 85, 146;
     --color-bg-code-block-header: 7, 53, 103;
     --color-bg-hover-component: 7, 53, 103;
@@ -104,6 +106,10 @@
 
   h2 {
     @apply font-bold text-xl tracking-[-.01em];
+  }
+
+  not-card, not-prerequisites, not-cleanup h3 {
+    @apply pt-4;
   }
 
   h3 {
@@ -408,8 +414,12 @@
     @apply bg-semantic-green-secondary;
   }
 
+  .badge.new-in {
+    @apply align-middle;
+  }
+
   .tablist {
-    @apply list-none flex gap-4 text-sm ml-0 flex-row border-b border-primary/5 w-full items-center;
+    @apply list-none flex gap-4 text-sm ml-0 flex-row border-b border-primary/5 w-full items-center overflow-x-auto;
   }
 
   .tabcolumn {
@@ -429,15 +439,15 @@
   }
 
   .tab-button__horizontal {
-    @apply tab-button py-3 text-terciary hover:no-underline items-center max-h-11;
+    @apply tab-button py-3 text-terciary hover:no-underline items-center max-h-11 flex-shrink-0;
 
     &.tab-button__horizontal--active {
-      @apply tab-button--active border-b-2 -mb-0.5 !important;
+      @apply tab-button--active border-b-2 !important;
     }
   }
 
   .tab-button__vertical {
-    @apply tab-button py-2 px-5 text-terciary hover:no-underline border-l-2 border-transparent flex-wrap block;
+    @apply tab-button py-2 px-5 text-terciary hover:no-underline border-l-2 border-transparent flex-wrap flex items-center gap-1;
 
     &.tab-button__vertical--active {
       @apply tab-button--active !important;
@@ -467,6 +477,11 @@
   #toc .tab-button__vertical {
     @apply [overflow-wrap:anywhere];
   }
+
+  .background-gradient {
+    background: linear-gradient(transparent, transparent) padding-box,
+    linear-gradient(227.59deg, #E9EEF7 6.43%, #3CB087 30.81%, #11A06B 36.89%, #286FEB 65.64%, #E9EEF7 100%) border-box;
+  }
 }
 
 .ais-Pagination {
@@ -474,15 +489,43 @@
 }
 
 .ais-Pagination-list {
-  @apply flex-row justify-center gap-4;
+  @apply flex-row justify-center gap-2;
+}
+
+.ais-Pagination-item {
+  @apply bg-primary px-2 py-[6px] border border-primary/5 rounded-md w-[38px] h-[34px] flex items-center;
+}
+
+.ais-Pagination-item:hover {
+  @apply bg-secondary;
+}
+
+.ais-Pagination-link {
+  @apply h-5 w-full flex items-center justify-center text-primary;
+}
+
+.ais-Pagination-item--selected {
+  @apply bg-secondary border-brand-saturated font-bold;
+}
+
+.ais-Pagination-link {
+  @apply no-underline !important;
 }
 
 .ais-RefinementList-label {
-  @apply flex gap-2 py-0.5 w-full text-sm text-primary;
+  @apply flex gap-2 py-0.5 w-full text-sm text-primary items-center;
 }
 
 .ais-RefinementList-count {
   @apply hidden;
+}
+
+.ais-RefinementList-checkbox {
+  @apply form-checkbox bg-secondary rounded border border-primary/[.08] dark:border-primary/5;
+}
+
+.ais-RefinementList-checkbox:checked {
+  @apply bg-brand-saturated;
 }
 
 .ais-Panel--noRefinement {

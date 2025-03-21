@@ -14,7 +14,7 @@ module Jekyll
           @content ||= File.read('app/_includes/plugins/example.md')
         end
 
-        def data # rubocop:disable Metrics/MethodLength
+        def data
           super
             .except('faqs')
             .merge(
@@ -22,7 +22,6 @@ module Jekyll
               'example' => example,
               'examples' => @plugin.examples,
               'content_type' => 'plugin_example',
-              'no_version' => true,
               'example_title' => example_config['title'],
               'description' => example_config['description']
             )

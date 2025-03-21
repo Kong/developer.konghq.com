@@ -1,6 +1,9 @@
 ---
 content_type: reference
-no_version: true
+
 ---
 
 ## Changelog
+
+### {{site.base_gateway}} 3.9.x
+  * Fixed an issue where an unnecessary warn log was printed.

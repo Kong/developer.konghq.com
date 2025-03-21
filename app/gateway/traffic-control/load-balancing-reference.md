@@ -27,7 +27,7 @@ related_resources:
 breadcrumbs:
   - /gateway/
 
-no_version: true
+
 
 tags:
     - load-balancing

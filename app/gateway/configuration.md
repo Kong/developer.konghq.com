@@ -16,7 +16,7 @@ works_on:
    - on-prem
    - konnect
 
-no_version: true
+
 ---
 
 Reference for {{site.base_gateway}} configuration parameters. Set these parameters in `kong.conf`.

@@ -38,3 +38,8 @@ referenceable_fields:
   columns:
     - title: Referenceable Plugin Fields
       key: referenceable_fields
+
+priorities:
+  columns:
+    - title: Priority
+      key: priority

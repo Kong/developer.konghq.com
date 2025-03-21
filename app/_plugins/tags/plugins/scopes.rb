@@ -1,27 +1,18 @@
 # frozen_string_literal: true
 
+require_relative 'tabbed_tables'
+
 module Jekyll
   module RenderPlugins
-    class Scopes < Liquid::Tag
-      def render(context)
-        @context = context
-        @page = context.environments.first['page']
-        site = context.registers[:site]
+    class Scopes < Liquid::Tag # rubocop:disable Style/Documentation
+      include TabbedTables
 
-        release = @page['release']
-        table = site.data.dig('plugins', 'tables', 'scopes')
-
-        context.stack do
-          context['columns'] = table['columns']
-          context['rows'] = Drops::Plugins::Scope.all(release:)
-          Liquid::Template.parse(template).render(context)
-        end
+      def rows(release)
+        Drops::Plugins::Scope.all(release:)
       end
 
-      private
-
-      def template
-        @template ||= File.read(File.expand_path('app/_includes/plugins/table.html'))
+      def table
+        'scopes'
       end
     end
   end

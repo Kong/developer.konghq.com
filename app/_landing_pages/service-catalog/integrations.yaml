@@ -30,7 +30,8 @@ rows:
   - header:
       type: h2
       text: "Available integrations"
-  - columns:
+    col_span: 3
+    columns:
       - blocks:
           - type: card
             config:
@@ -58,10 +59,6 @@ rows:
               cta:
                 text: Learn more
                 url: /service-catalog/integrations/traceable/
-     
-      
-
-  - columns:
       - blocks:
           - type: card
             config:

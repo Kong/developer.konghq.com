@@ -1,7 +1,7 @@
 class HowTo {
   constructor() {
-    this.deploymentTopologySwitch = document.getElementById(
-      "deployment-topology-switch"
+    this.deploymentTopologySwitchs = document.querySelectorAll(
+      ".deployment-topology-switch"
     );
     this.prerequisites = document.querySelector(".prerequisites");
     this.cleanup = document.querySelector(".cleanup");
@@ -11,17 +11,16 @@ class HowTo {
   }
 
   addEventListeners() {
-    if (this.deploymentTopologySwitch) {
-      this.deploymentTopologySwitch.addEventListener(
-        "change",
-        this.onChange.bind(this)
-      );
+    if (this.deploymentTopologySwitchs) {
+      this.deploymentTopologySwitchs.forEach((s) => {
+        s.addEventListener("change", this.onChange.bind(this));
+      });
     }
   }
 
   init() {
-    if (this.deploymentTopologySwitch) {
-      this.toggleTopology(this.deploymentTopologySwitch.value, false);
+    if (this.deploymentTopologySwitchs.length) {
+      this.toggleTopology(this.deploymentTopologySwitchs[0].value, false);
     }
   }
 

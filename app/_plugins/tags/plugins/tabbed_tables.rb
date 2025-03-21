@@ -1,0 +1,41 @@
+# frozen_string_literal: true
+
+module Jekyll
+  module RenderPlugins
+    module TabbedTables # rubocop:disable Style/Documentation
+      def render(context)
+        @context = context
+        @page = context.environments.first['page']
+        site = context.registers[:site]
+
+        context.stack do
+          context['type'] = table
+          context['tables'] = tables(site)
+          Liquid::Template.parse(template).render(context)
+        end
+      end
+
+      private
+
+      def template
+        @template ||= File.read(File.expand_path('app/_includes/plugins/tabbed_tables.html'))
+      end
+
+      def tables(site)
+        columns = site.data.dig('plugins', 'tables', table, 'columns')
+
+        releases(site).each_with_object({}) do |r, h|
+          h[r.number] = { 'columns' => columns, 'rows' => rows(r) }
+        end
+      end
+
+      def releases(site)
+        site.data
+            .dig('products', 'gateway', 'releases')
+            .reject { |r| r.key?('label') }
+            .map { |r| Drops::Release.new(r) }
+            .sort.reverse
+      end
+    end
+  end
+end

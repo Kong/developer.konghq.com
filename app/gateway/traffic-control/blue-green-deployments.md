@@ -15,7 +15,7 @@ related_resources:
   - text: Route entity
     url: /gateway/entities/route/
 
-no_version: true
+
 
 description: |
   You can set up blue-green deployments for {{site.base_gateway}} using Upstreams and Targets, and switching the Gateway Service to point to one Upstream or the other.

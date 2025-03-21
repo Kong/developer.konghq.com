@@ -1,10 +1,340 @@
 metadata:
-  title: "{{site.base_gateway}}"
+  title: "Kong AI Gateway"
   content_type: landing_page
   description: This page is an introduction to {{site.base_gateway}}.
   products:
     - gateway
 
-# @todo: AI Gateway landing page
-# https://docs.konghq.com/gateway/latest/ai-gateway/
-# https://docs.konghq.com/gateway/latest/get-started/ai-gateway/ (include the parts of this not used in the get started how-to)
+rows:
+  - header:
+      type: h1
+      text: "Kong AI Gateway"
+
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Introducing Kong AI Gateway"
+              blocks:
+                - type: text
+                  text: | 
+                    Kong AI Gateway is a powerful set of features built on top of {{site.base_gateway}}, designed to help developers and organizations effectively adopt AI capabilities quickly and securely.
+
+          - type: structured_text
+            config:
+              header:
+                text: "Quickstart"
+              blocks:
+                - type: text
+                  text: | 
+                    Launch a [demo instance](/gateway/quickstart-reference/#ai-gateway-quickstart) of {{site.base_gateway}} running AI Proxy:
+                    ```sh
+                    curl -Ls https://get.konghq.com/ai | bash
+                    ```
+
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Get started
+            description: Run the {{site.base_gateway}} quickstart and enable the AI Proxy plugin.
+            icon: /assets/icons/rocket.svg
+            cta:
+              url: /how-to/get-started-with-ai-gateway/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Video tutorials
+            description: Learn how to use AI plugins with video tutorials.
+            icon: /assets/icons/graduation.svg
+            cta:
+              url: https://konghq.com/products/kong-ai-gateway#videos
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: AI plugins
+            description: Learn about all the AI plugins. 
+            icon: /assets/icons/plug.svg
+            cta:
+              url: /plugins/?category=ai
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: AI providers
+            description: Learn about the various providers supported by AI Gateway.
+            icon: /assets/icons/ai.svg
+            cta:
+              url: /ai-gateway/ai-providers/
+              align: end
+
+
+  - header:
+      type: h2
+      text: "AI Gateway capabilities"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    You can enable the AI Gateway features through a set of modern and specialized plugins, using the same model you use for any other {{site.base_gateway}} plugin. 
+                    When deployed alongside existing {{site.base_gateway}} plugins, {{site.base_gateway}} users can quickly assemble a sophisticated AI management platform without custom code or deploying new and unfamiliar tools.
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: AI provider proxy
+            description: Route client requests to various AI providers.
+            icon: /assets/icons/plugins/ai-proxy.png
+            cta:
+              url: /plugins/ai-proxy/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Data governance
+            description: Use AI plugins to control AI data and usage.
+            icon: /assets/icons/security.svg
+            cta:
+              url: ./#data-governance
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Rate limiting
+            description: Manage traffic to your LLM API.
+            icon: /assets/icons/plugins/ai-rate-limiting-advanced.png
+            cta:
+              url: /plugins/ai-rate-limiting-advanced/
+              align: end
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Load balancing
+            description: Learn about the load balancing algorithms available for AI Gateway.
+            icon: /assets/icons/load-balance.svg
+            cta:
+              url: /gateway/load-balancing/#load-balancing-algorithms-for-ai-gateway
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Prompt engineering
+            description: Create prompt templates and manipulate client prompts.
+            icon: /assets/icons/code.svg
+            cta:
+              url: ./#prompt-engineering
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Guardrails
+            description: Inspect requests and configure content safety and moderation.
+            icon: /assets/icons/lock.svg
+            cta:
+              url: ./#guardrails-and-content-safety
+              align: end
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Semantic caching
+            description: Semantically cache responses from LLMs.
+            icon: /assets/icons/plugins/ai-semantic-cache.png
+            cta:
+              url: /plugins/ai-semantic-cache/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Semantic routing
+            description: Semantically distribute requests to different LLM models.
+            icon: /assets/icons/plugins/ai-proxy-advanced.png
+            cta:
+              url: /plugins/ai-proxy-advanced/examples/semantic/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Request transformations
+            description: Use AI to transform requests and responses.
+            icon: /assets/icons/plugins/ai-request-transformer.png
+            cta:
+              url: ./#request-transformations
+              align: end
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Audit log
+            description: Learn about AI Gateway logging capabilities.
+            icon: /assets/icons/audit.svg
+            cta:
+              url: /ai-gateway/ai-audit-log-reference/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: LLM metrics
+            description: Expose and visualize LLM metrics.
+            icon: /assets/icons/monitor.svg
+            cta:
+              url: /ai-gateway/monitor-ai-llm-metrics/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: '{{site.konnect_short_name}} Advanced Analytics'
+            description: Visualize LLM metrics in {{site.konnect_short_name}}.
+            icon: /assets/icons/analytics.svg
+            cta:
+              url: /advanced-analytics/
+              align: end
+
+  - header:
+      type: h2
+      text: "AI usage governance"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    With the growing adoption of AI technologies, developers and their organizations are exposed to a set of new risks. 
+                    In particular, the risk of having sensitive data leaked to AI providers, exposing organizations and their customers to data breaches and other security risks.
+
+                    Kong AI Gateway provides additional plugins to help developers control AI data and usage. 
+                    These plugins are used in combination with the AI Proxy plugin, allowing you to build secure and specialized AI experiences for your users.
+ 
+
+  - header:
+      type: h3
+      text: "Data governance" 
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    AI Gateway provides the ability to govern outgoing AI prompts via an allow/deny list configuration. 
+                    Denied prompts result in 4xx HTTP code responses to clients preventing the egress of offending requests.
+  - columns:
+      - blocks:       
+        - type: plugin
+          config:
+            slug: ai-prompt-guard
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-semantic-prompt-guard
+
+  - header:
+      type: h3
+      text: "Prompt engineering" 
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    AI systems are built around prompts, and manipulating those prompts is important for successful adoption of the technologies. 
+                    Prompt engineering is the methodology of manipulating the linguistic inputs that guide the AI system. 
+                    Kong AI Gateway supports a set of plugins that allow you to create a simplified and enhanced experience by setting default prompts or manipulating prompts from clients as they pass through the gateway.
+  - columns:
+      - blocks:       
+        - type: plugin
+          config:
+            slug: ai-prompt-template
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-prompt-decorator
+
+  - header:
+      type: h3
+      text: "Guardrails and content safety" 
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    AI Gateway provides features that allow you to moderate content and ensure content safety.
+  - columns:
+      - blocks:       
+        - type: plugin
+          config:
+            slug: ai-azure-content-safety
+      - blocks:
+        - type: card
+          config:
+            title: Amazon Bedrock guardrails
+            description: Include your Amazon Bedrock guardrails configuration in AI Proxy requests
+            icon: /assets/icons/bedrock.svg
+            cta:
+              url: /plugins/ai-proxy/#input-formats
+              align: end
+
+  - header:
+      type: h3
+      text: "Request transformations" 
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: | 
+                    AI Gateway allows you to use AI technology to augment other API traffic. 
+                    One example is routing API responses through an AI language translation prompt before returning it to the client. 
+                    Kong AI Gateway provides two plugins that can be used in conjunction with other upstream API services to weave AI capabilities into API request processing. 
+                    These plugins can be configured independently of the AI Proxy plugin.
+  - columns:
+      - blocks:       
+        - type: plugin
+          config:
+            slug: ai-request-transformer
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-response-transformer
+
+  - header:
+      type: h2
+      text: How-to Guides
+
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tags: 
+                - ai-gateway
+              quantity: 5
+              allow_empty: true
+              
+  - header:
+      text: "Frequently Asked Questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: Is AI Gateway available for all deployment modes?
+              a: |
+                Yes, AI plugins are supported in all [deployment modes](/gateway/deployment-topologies/), including {{site.konnect_short_name}}, self-hosted traditional, hybrid, and DB-less, and on Kubernetes via the [{{site.kic_product_name}}](/kic/).
+            
+            - q: Why should I use AI Gateway instead of adding the LLM's API behind {{site.base_gateway}}?
+              a: |
+                If you just add an LLM's API behind {{site.base_gateway}}, you can only interact at the API level with internal traffic. 
+                With AI plugins, {{site.base_gateway}} can understand the prompts that are being sent through the gateway. 
+                The plugins can inspect the body and provide more specific AI capabilities to your traffic.

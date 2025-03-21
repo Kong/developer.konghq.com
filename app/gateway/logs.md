@@ -77,34 +77,55 @@ You might need to customize what {{site.base_gateway}} logs to protect private i
 Each log entry includes the following details:
 
 <!--vale off-->
-
-| Property | Description |
-| --------- | ------------- |
-| `ai.payload.request` | The request payload. |
-| `ai.[$plugin_name].payload.response` | The response payload. |
-| `ai.[$plugin_name].usage.prompt_token` | Number of tokens used for prompting. |
-| `ai.[$plugin_name].usage.completion_token` | Number of tokens used for completion. |
-| `ai.[$plugin_name].usage.total_tokens` | Total number of tokens used. |
-| `ai.[$plugin_name].usage.cost` | The total cost of the request (input and output cost). |
-
-{% if_version gte:3.8.x %}
-| `ai.[$plugin_name].usage.time_per_token` | The average time to generate an output token, in milliseconds. |
-{% endif_version %}
-
-| `ai.[$plugin_name].meta.request_model` | Model used for the AI request. |
-| `ai.[$plugin_name].meta.provider_name` | Name of the AI service provider. |
-| `ai.[$plugin_name].meta.response_model` | Model used for the AI response. |
-| `ai.[$plugin_name].meta.plugin_id` | Unique identifier of the plugin. |
-
-{% if_version gte:3.8.x %}
-| `ai.[$plugin_name].meta.llm_latency` | The time, in milliseconds, it took the LLM provider to generate the full response. |
-| `ai.[$plugin_name].cache.cache_status` | The cache status. This can be Hit, Miss, Bypass or Refresh. |
-| `ai.[$plugin_name].cache.fetch_latency` | The time, in milliseconds, it took to return a cache response. |
-| `ai.[$plugin_name].cache.embeddings_provider` | For semantic caching, the provider used to generate the embeddings. |
-| `ai.[$plugin_name].cache.embeddings_model` | For semantic caching, the model used to generate the embeddings. |
-| `ai.[$plugin_name].cache.embeddings_latency` | For semantic caching, the time taken to generate the embeddings. |
-{% endif_version %}
-
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "`ai.payload.request`"
+    description: The request payload.
+  - property: "`ai.[$plugin_name].payload.response`"
+    description: The response payload.
+  - property: "`ai.[$plugin_name].usage.prompt_token`"
+    description: The number of tokens used for prompting.
+  - property: "`ai.[$plugin_name].usage.completion_token`"
+    description: The number of tokens used for completion.
+  - property: "`ai.[$plugin_name].usage.total_tokens`"
+    description: The total number of tokens used.
+  - property: "`ai.[$plugin_name].usage.cost`"
+    description: The total cost of the request (input and output cost).
+  - property: "`ai.[$plugin_name].usage.time_per_token`"
+    description: |
+      {% new_in 3.8 %} The average time to generate an output token, in milliseconds.
+  - property: "`ai.[$plugin_name].meta.request_model`"
+    description:  The model used for the AI request.
+  - property: "`ai.[$plugin_name].meta.provider_name`"
+    description:  The name of the AI service provider.
+  - property: "`ai.[$plugin_name].meta.response_model`"
+    description:  The model used for the AI response.
+  - property: "`ai.[$plugin_name].meta.plugin_id`"
+    description:  The unique identifier of the plugin.
+  - property: "`ai.[$plugin_name].meta.llm_latency`"
+    description: |
+      {% new_in 3.8 %} The time, in milliseconds, it took the LLM provider to generate the full response.
+  - property: "`ai.[$plugin_name].cache.cache_status`"
+    description: |
+      {% new_in 3.8 %} The cache status. This can be `Hit`, `Miss`, `Bypass` or `Refresh`.
+  - property: "`ai.[$plugin_name].cache.fetch_latency`"
+    description: |
+      {% new_in 3.8 %} The time, in milliseconds, it took to return a cache response.
+  - property: "`ai.[$plugin_name].cache.embeddings_provider`"
+    description: |
+      {% new_in 3.8 %} For semantic caching, the provider used to generate the embeddings.
+  - property: "`ai.[$plugin_name].cache.embeddings_model`"
+    description: |
+      {% new_in 3.8 %} For semantic caching, the model used to generate the embeddings.
+  - property: "`ai.[$plugin_name].cache.embeddings_latency`"
+    description: |
+      {% new_in 3.8 %} For semantic caching, the time taken to generate the embeddings.
+{% endtable %}
 <!--vale on-->
 
 ## Next steps

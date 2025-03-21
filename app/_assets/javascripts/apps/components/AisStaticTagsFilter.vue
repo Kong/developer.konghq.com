@@ -1,5 +1,5 @@
 <template>
-    <ais-refinement-list class="flex flex-col gap-1" attribute="tags" :transformItems="getStaticValues" >
+    <ais-refinement-list class="flex flex-col" attribute="tags" :transformItems="getStaticValues" >
         <template
             v-slot="{
             items,
@@ -7,7 +7,7 @@
             createURL,
             }"
         >
-            <ul class="ais-RefinementList-list flex flex-row flex-wrap max-h-64" :class="dynamicClasses">
+            <ul class="ais-RefinementList-list flex flex-row flex-wrap max-h-64 gap-y-3" :class="dynamicClasses">
                 <template v-for="(item, index) in items" :key="item.value">
                 <li class="ais-RefinementList-item flex" :class="{ hidden: index >= 10 && !showMore }">
                     <a class="badge" :href="createURL(item.value)" :class="{ 'font-bold bg-brand': item.isRefined }" @click.prevent="refine(item.value)" >
@@ -16,7 +16,7 @@
                 </li>
                 </template>
             </ul>
-            <button class="text-xs text-brand" @click="showMore = !showMore">
+            <button class="text-xs text-terciary flex" @click="showMore = !showMore">
                 {{ !showMore ? 'Show more' : 'Show less'}}
             </button>
         </template>

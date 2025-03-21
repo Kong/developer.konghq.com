@@ -4,6 +4,7 @@ module Jekyll
   module Drops
     class Release < Liquid::Drop
       include Comparable
+      include Jekyll::SiteAccessor
 
       attr_reader :release_hash
 
@@ -33,6 +34,20 @@ module Jekyll
 
       def major_minor_version
         @major_minor_version ||= number.gsub('.', '')
+      end
+
+      def distros_by_os
+        @distros_by_os ||= @release_hash
+                           .fetch('distributions', [])
+                           .each_with_object(Hash.new { |h, k| h[k] = [] }) do |distro, h|
+          key = distro.keys.first
+          os = key[/^\D+/]
+
+          h[os] << {
+            'codename' => site.data.dig('support', 'packages', key, 'codename'),
+            'version_number' => site.data.dig('support', 'packages', key, 'version').to_s[/\d+(\.\d+)?/]
+          }.merge(distro.values.first)
+        end
       end
 
       def to_str

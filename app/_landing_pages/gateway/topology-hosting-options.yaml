@@ -1,0 +1,226 @@
+metadata:
+  title: Data Plane hosting options
+  content_type: landing_page
+  description: This page lists the different Data Plane hosting options for different {{site.base_gateway}} deployment topologies.
+  breadcrumbs:
+    - /gateway/
+rows:
+  - header:
+      type: h1
+      text: "Data Plane hosting options"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    When you deploy {{site.base_gateway}}, you can choose how your Data Plane nodes are hosted based on the [deployment topology](/gateway/deployment-topologies/) you're using.
+
+  - header:
+      type: h2
+      text: "Dedicated Cloud Gateways"
+    columns:
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TD
+                A(Dedicated Cloud Gateway Control Plane)
+                B(Managed Data Plane Node \n Region 1)
+                C(Managed Data Plane Node \n Region 2)
+
+                subgraph id1 [Konnect]
+                A
+                end
+
+                A --auto-scale configuration---> B
+                A --auto-scale configuration---> C
+
+                style id1 stroke-dasharray:3,rx:10,ry:10
+                style A stroke:none,fill:#0E44A2,color:#fff
+                style B stroke:none,fill:#0E44A2,color:#fff
+                style C stroke:none,fill:#0E44A2,color:#fff
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Dedicated Cloud Gateways are Data Plane nodes that are fully-managed by Kong in {{site.konnect_short_name}}.
+                    
+                    You don't need to host any Data Planes, and you maintain control over the size and location of the gateway infrastructure. 
+                    This allows Kong to autoscale your nodes for you and reduces your operational complexity.
+
+                    Benefits of Dedicated Cloud Gateways:
+                    - {{site.konnect_short_name}} handles gateway upgrades for you.
+                    - Choose between public and private networking modes.
+                    - Automatic scaling with Autopilot mode.
+                    - Support for AWS and Azure in multiple [regions](/konnect-geos/).
+
+          - type: button
+            config:
+              align: left
+              text: Learn more about Dedicated Cloud Gateways
+              url: /dedicated-cloud-gateways/
+  - header:
+      type: h3
+      text: "Supported deployment topologies"
+    col_span: 3
+    columns: 
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.konnect_short_name}} hybrid mode"
+            description: |
+              Learn about {{site.konnect_short_name}} hybrid mode for Kong-hosted Control Planes.
+              
+            icon: /assets/icons/deployment.svg
+            cta:
+              url: "/gateway/hybrid-mode/"
+  
+  - header:
+      type: h2
+      text: "Serverless gateways"
+    columns:
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TD
+                  A(Dev Portal &bull; Gateway Manager &bull; Advanced Analytics &bull; Service Catalog)
+                  B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong-managed Control Plane \n #40;Kong Gateway instance#41;)
+                  C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane \n #40;Kong Gateway instance#41;)
+
+                  subgraph id1 [Konnect]
+                  A --- B
+                  end
+
+                  B --Kong proxy 
+                  configuration---> id2
+
+                  subgraph id2 [Fully-managed cloud nodes]
+                  C
+                  end
+
+                  style id1 stroke-dasharray:3,rx:10,ry:10
+                  style id2 stroke-dasharray:3,rx:10,ry:10
+                  style B stroke:none,fill:#0E44A2,color:#fff
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Serverless gateways are lightweight API gateways. Their Control Plane is hosted by {{site.konnect_short_name}} and Data Plane nodes are automatically provisioned. 
+                    Serverless gateways are ideal for developers who want to test or experiment in a pre-production environment.
+
+                    Serverless gateways offer the following benefits:
+
+                    * {{site.konnect_short_name}} manages provisioning and placement
+                    * Can be deployed in under 30 seconds
+                    * Access to Kong Gateway plugins
+          - type: button
+            config:
+              align: left
+              text: Learn more about serverless gateways
+              url: /serverless-gateways/
+  - header:
+      type: h3
+      text: "Supported deployment topologies"
+    col_span: 3
+    columns: 
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.konnect_short_name}} hybrid mode"
+            description: |
+              Learn about {{site.konnect_short_name}} hybrid mode for Kong-hosted Control Planes.
+              
+            icon: /assets/icons/deployment.svg
+            cta:
+              url: "/gateway/hybrid-mode/"
+  
+  - header:
+      type: h2
+      text: "Self-hosted"
+    columns:
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TD
+                  A[(Database)]
+                  B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Control plane \n #40;Kong Gateway instance#41;)
+                  C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data plane 3\n #40;Kong Gateway instance#41;)
+                  D(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data plane 1\n #40;Kong Gateway instance#41;)
+                  E(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"/> Data plane 2\n #40;Kong Gateway instance#41;)
+
+                  subgraph id1 [Self-managed control plane node]
+                  A---B
+                  end
+
+                  B --Kong proxy 
+                  configuration---> id2
+
+                  subgraph id2 [Self-hosted on-premise node]
+                  C
+                  D
+                  E
+                  end
+
+                  style id1 stroke-dasharray:3,rx:10,ry:10
+                  style id2 stroke-dasharray:3,rx:10,ry:10
+                  style B stroke:none,fill:#0E44A2,color:#fff
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    With self-hosted, you must host your own Data Plane nodes on the supported system of your choice.
+                    The diagram shows a self-hosted {{site.base_gateway}} instance in hybrid mode.
+
+                    **Supported on:** {{site.konnect_short_name}} hybrid, {{site.base_gateway}} hybrid, traditional, and DB-less modes
+          - type: button
+            config:
+              align: left
+              text: Learn more about self-hosted options
+              url: https://docs.konghq.com/gateway/latest/install/
+  - header:
+      type: h3
+      text: "Supported deployment topologies"
+    columns: 
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.konnect_short_name}} and {{site.base_gateway}} hybrid mode"
+            description: |
+              Learn about the hybrid mode deployment topology.
+              
+            icon: /assets/icons/deployment.svg
+            cta:
+              url: "/gateway/hybrid-mode/"
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.base_gateway}} traditional mode"
+            description: |
+              Learn about the traditional mode deployment topology.
+              
+            icon: /assets/icons/deployment.svg
+            cta:
+              url: "/gateway/traditional-mode/"
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.base_gateway}} DB-less mode"
+            description: |
+              Learn about the DB-less mode deployment topology.
+              
+            icon: /assets/icons/deployment.svg
+            cta:
+              url: "/gateway/db-less-mode/"
+      
+  
+      

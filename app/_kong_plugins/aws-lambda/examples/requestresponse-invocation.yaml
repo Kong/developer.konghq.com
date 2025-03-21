@@ -1,0 +1,39 @@
+description: |
+  Set up the plugin to invoke a Lambda function with the `RequestResponse` invocation type.
+
+title: RequestResponse invocation
+
+weight: 900
+
+requirements: 
+  - You have an AWS account with access to Lambda.
+  - You have created a Lambda function.
+
+variables: 
+  key:
+    description: Your AWS access key ID.
+    value: AWS_KEY
+  secret:
+    description: Your AWS secret access key.
+    value: AWS_SECRET
+  region:
+    description: Your AWS region.
+    value: AWS_REGION
+  function:
+    description: The name or ARN of the Lambda function to invoke.
+    value: LAMBDA_FUNCTION
+
+config: 
+  aws_key: ${key}
+  aws_secret: ${secret}
+  aws_region: ${region}
+  function_name: ${function}
+  invocation_type: RequestResponse
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

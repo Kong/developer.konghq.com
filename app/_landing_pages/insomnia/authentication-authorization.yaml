@@ -70,7 +70,8 @@ rows:
                     Authorization controls who can do what in Insomnia. 
                     Authorization ensures users have the correct permissions and that you can access the Insomnia app through allowlisting domains.
   
-  - columns:
+  - col_span: 3
+    columns:
       - blocks:
         - type: card
           config:

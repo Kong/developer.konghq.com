@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Check out docs repo
-        uses: actions/checkout@master
+        uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # master
         with:
           repository: Kong/docs.konghq.com
           token: ${{ secrets.PAT }}

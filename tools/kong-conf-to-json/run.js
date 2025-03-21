@@ -20,7 +20,7 @@ function parseConfigFile(filePath, sections) {
       config[currentParam] = {
         defaultValue: null,
         description: "",
-        sectionIndex,
+        sectionTitle: sections.at(sectionIndex).title,
       };
       inDescription = false;
     }

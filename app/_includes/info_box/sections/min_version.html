@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-2  w-full">
   <div class="text-primary font-medium">Minimum Version</div>
-  <div class="flex gap-1.5 flex-col md:flex-row">
+  <div class="flex gap-1.5">
     {% for min_version in include.min_version %}
     {% assign product = min_version[0] %}
     {% assign version = min_version[1] %}

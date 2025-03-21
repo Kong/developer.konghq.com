@@ -33,6 +33,7 @@ window.addEventListener("scroll", () => {
         `a.scroll-to[href$="${matchingId}"]`
       );
       if (matchingLink) {
+        //        console.log(matchingLink);
         toggleTocLinkClasses(matchingLink, true, activeClass);
         scrollToLinks.forEach(
           (link) =>

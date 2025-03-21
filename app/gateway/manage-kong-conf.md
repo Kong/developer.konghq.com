@@ -5,7 +5,7 @@ description: |
   The {{site.base_gateway}} configuration file `kong.conf` can be used to configure individual properties of your {{site.base_gateway}} instance.
 content_type: reference
 layout: reference
-no_version: true
+
 
 products:
    - gateway

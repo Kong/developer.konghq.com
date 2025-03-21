@@ -16,7 +16,7 @@ tier
 tldr
 works_on
 konnect_product_id
-no_version
+versioned
 search_aliases
 skip_product
 source_code_url
@@ -28,3 +28,4 @@ max_version
 license_url
 privacy_policy_url
 terms_of_service_url
+no_wrap

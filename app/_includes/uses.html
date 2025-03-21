@@ -1,5 +1,5 @@
 {% if include.products or include.tools or include.tier %}
-<div class="flex gap-2 items-center">
+<div class="flex gap-2 items-center flex-wrap">
     {% if include.tier %}
         {% include tier.html products=include.products tier=include.tier %}
     {% endif %}
@@ -23,7 +23,7 @@
     {% if include.products and include.tools %}
         {% assign tool = include.tools | find_exp: "tool", "site.data.tools[tool]" %}
         {% if tool %}
-            <span class="bg-brand-saturated/40 w-[1px] h-3/4"></span>
+            <span class="text-brand-saturated/40">|</span>
         {% endif %}
     {% endif %}
 

@@ -15,7 +15,7 @@ module SectionWrapper
     end
 
     def process
-      @page.content = wrap_sections(@page.content)
+      @page.content = wrap_sections(@page.content) unless @page.data['no_wrap']
     end
 
     private
@@ -32,10 +32,12 @@ module SectionWrapper
         doc.children.first.add_previous_sibling(content) if content && content.children.any?
 
         doc.css('h2').each do |h2|
-          slug = h2['id']
-          title = h2.text
+          h2_text = h2.children.find(&:text?).text.strip
+          slug = Jekyll::Utils.slugify(h2_text)
+          # extract the text, removing any html tags...
+          title = h2_text
 
-          wrapper = build_wrapper(section_title(h2, slug, title))
+          wrapper = build_wrapper(section_title(h2, slug, title), h2['data-deployment-topology'])
 
           # Move content between this h2 and the next one into the wrapper
           move_sibling_content_into_wrapper(h2, wrapper)
@@ -60,7 +62,7 @@ module SectionWrapper
       wrapper
     end
 
-    def build_wrapper(section_title = '')
+    def build_wrapper(section_title = '', _ = '')
       Nokogiri::HTML::DocumentFragment.parse <<-HTML
         <div class="flex flex-col gap-4 heading-section">
             #{section_title}

@@ -1,0 +1,11 @@
+title: KIC Index File
+sections:
+  - title: Some KIC Pages
+    items:
+      - path: /kubernetes-ingress-controller/**/*
+    auto_exclude: true
+  - title: How-tos
+    items:
+      - type: how-to
+        products:
+          - kic

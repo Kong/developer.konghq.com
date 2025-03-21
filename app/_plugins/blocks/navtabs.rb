@@ -54,8 +54,9 @@ module Jekyll
       def parse_markup(markup)
         match = markup.match(/\s*(?:"([^"]+)"|\{\{\s*([^}]+)\s*\}\})\s*(.*)/)
         raise "Unable to parse markup: #{markup}" unless match
+
         # Extract the title
-        title = match[1] ? match[1] : "{{#{match[2]}}}"
+        title = match[1] || "{{#{match[2]}}}"
 
         # Extract the attributes string
         attributes_string = match[3]

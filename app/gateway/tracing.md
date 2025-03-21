@@ -13,7 +13,7 @@ works_on:
 tags:
     - tracing
 
-no_version: true
+
 
 description: "placeholder"
 

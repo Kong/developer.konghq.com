@@ -24,6 +24,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: "480px",
+      },
       colors: {
         brand: "rgb(var(--color-brand), <alpha-value>)",
         "brand-saturated": "rgb(var(--color-brand-saturated), <alpha-value>)",
@@ -63,6 +66,7 @@ module.exports = {
       backgroundColor: {
         primary: "rgb(var(--color-bg-primary), <alpha-value>)",
         secondary: "rgb(var(--color-bg-secondary), <alpha-value>)",
+        terciary: "rgb(var(--color-bg-terciary), <alpha-value>)",
         "code-block": "rgb(var(--color-bg-code-block), <alpha-value>)",
         "code-block-header":
           "rgb(var(--color-bg-code-block-header), <alpha-value>)",
@@ -75,5 +79,10 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("@tailwindcss/forms")({
+      strategy: "class", // only generate classes
+    }),
+  ],
 };

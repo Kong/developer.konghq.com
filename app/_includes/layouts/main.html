@@ -1,4 +1,4 @@
-<main id="main" class="flex flex-col pb-12 gap-12 {{ page.content_type | slugify }} {{include.class}}">
+<main id="main" class="flex flex-col pb-12 gap-12 w-full {{ page.content_type | slugify }} {{include.class}}">
     <div class="flex flex-col gap-3">
         <div class="flex gap-3 items-center">
             {% if page.icon %}<img src="{{ page.icon }}" class="w-8 h-8"/>{% endif %}
@@ -17,6 +17,10 @@
             {%- endif -%}
         </div>
 
+        {% if page.subtitle %}
+            <span class="text-xl font-light">{{page.subtitle | liquify }}</span>
+        {% endif %}
+
         {% if layout.uses != false %}
         {% include uses.html products=page.products tools=page.tools tier=page.tier %}
         {% endif %}
@@ -27,6 +31,12 @@
             </section>
         {% endifhascontent %}
     </div>
+
+    {% if page.layout == 'with_aside' or layout.layout == 'with_aside' %}
+    <div class="flex flex-col gap-3 md:hidden">
+        {% include layouts/aside.html mobile=true %}
+    </div>
+    {% endif %}
 
     {{ content }}
 </main>

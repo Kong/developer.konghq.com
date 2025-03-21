@@ -5,7 +5,7 @@ name: 'Azure Functions'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Invoke and manage Azure functions from Kong'
+description: 'Invoke and manage Azure functions from {{site.base_gateway}}'
 
 
 products:
@@ -35,4 +35,6 @@ search_aliases:
   - azure-functions
 ---
 
-## Overview
+This plugin invokes [Azure Functions](https://azure.microsoft.com/en-us/services/functions/).
+It can be used in combination with other [request plugins](/plugins/?terms=request) 
+to secure, manage, or extend the function.
