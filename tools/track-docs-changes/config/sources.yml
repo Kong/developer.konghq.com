@@ -505,6 +505,9 @@ app/gateway/breaking-changes.md:
 app/gateway/cp-outage.md:
   - app/_src/gateway/kong-enterprise/cp-outage-handling-faq.md
   - app/_src/gateway/kong-enterprise/cp-outage-handling.md
+app/gateway/hybrid-mode.md:
+  - app/_src/gateway/production/deployment-topologies/hybrid-mode/index.md
+  - app/_src/gateway/production/deployment-topologies/kubernetes.md
 app/gateway/traditional-mode.md:
   - app/_src/gateway/production/deployment-topologies/traditional/index.md
   - app/_src/gateway/production/clustering.md
