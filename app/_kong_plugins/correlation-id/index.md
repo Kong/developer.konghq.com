@@ -38,12 +38,11 @@ faqs:
       Yes, if you edit your Nginx logging parameters you can see your correlation ID in the Nginx access log. For complete instructions, see [Add Correlation IDs to {{site.base_gateway}} logs](/how-to/add-correlation-ids-to-gateway-logs/).
 ---
 
-The Correlation ID plugin lets you correlate requests and responses using a unique 
-ID transmitted over an HTTP header.
+The Correlation ID plugin lets you correlate requests and responses using a unique ID transmitted over an HTTP header.
 
 ## How it works
 
-When you enable this plugin, it adds a new header to all of the requests processed by {{site.base_gateway}}. This header bears the name configured in `config.header_name`, and a unique value is generated according to `config.generator`.
+When you enable this plugin, it adds a new header to all of the requests processed by {{site.base_gateway}}. This header bears the name configured in the `config.header_name` variable, and a unique value is generated according to `config.generator`.
 
 This header is always added in calls to your upstream services, and optionally echoed back to your clients according to the `config.echo_downstream` setting.
 
