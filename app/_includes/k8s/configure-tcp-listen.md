@@ -49,13 +49,23 @@
             "name": "stream9000",
             "port": 9000,
             "protocol": "TCP",
-            "targetPort": 9000
+            "targetPort": 9000,
+            "allowedRoutes": {
+                "namespaces": {
+                  "from": "All"
+                }
+            }
           }{% endif %}{% if include.plaintext and include.tls %},{% endif %}{% if include.tls %}
           {
             "name": "stream9443",
             "port": 9443,
             "protocol": "TCP",
-            "targetPort": 9443
+            "targetPort": 9443,
+            "allowedRoutes": {
+                "namespaces": {
+                  "from": "All"
+                }
+            }
           }{% endif %}
         ]
       }

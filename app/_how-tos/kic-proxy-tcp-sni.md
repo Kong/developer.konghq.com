@@ -1,12 +1,13 @@
 ---
-title: Proxy TCP traffic by port
-description: "Route TCP requests to services in your cluster based on the incoming port using TCPRoute or TCPIngress"
+title: Proxy TCP traffic by SNI
+published: false
+description: "Route TCP requests to services in your cluster based on SNI using TCPRoute or TCPIngress"
 content_type: how_to
 related_resources:
   - text: All KIC documentation
     url: /index/kubernetes-ingress-controller/
 
-permalink: /kubernetes-ingress-controller/routing/tcp-by-port/
+permalink: /kubernetes-ingress-controller/routing/tcp-by-sni/
 breadcrumbs:
   - /kubernetes-ingress-controller/
   - /kubernetes-ingress-controller/routing/
@@ -38,7 +39,11 @@ cleanup:
       icon_url: /assets/icons/kic.svg
 ---
 
-{% include /k8s/configure-tcp-listen.md plaintext=true tls=false %}
+{% include /k8s/configure-tcp-listen.md plaintext=false tls=true %}
+
+## Generate a TLS certificate
+
+{% include /k8s/create-certificate.md namespace='kong' hostname='tls9443.kong.example' cert_required=true %}
 
 ## Route TCP traffic
 
@@ -55,9 +60,17 @@ kubectl patch -n kong --type=json gateway kong -p='[
         "op":"add",
         "path":"/spec/listeners/-",
         "value":{
-            "name":"stream9000",
-            "port":9000,
-            "protocol":"TCP"
+            "name":"stream9443",
+            "port":9443,
+            "protocol":"TLS",
+            "hostname":"tls9443.kong.example",
+            "tls": {
+                "certificateRefs":[{
+                    "group":"",
+                    "kind":"Secret",
+                    "name":"tls9443.kong.example"
+                  }]
+            }
         }
     }
 ]'
@@ -65,18 +78,20 @@ kubectl patch -n kong --type=json gateway kong -p='[
 
 ```bash
 echo "apiVersion: gateway.networking.k8s.io/v1alpha2
-kind: TCPRoute
+kind: TLSRoute
 metadata:
-  name: echo-plaintext
+  name: echo-tls
   namespace: kong
 spec:
   parentRefs:
-  - name: kong
-    sectionName: stream9000
+    - name: kong
+      sectionName: stream9443
+  hostnames:
+    - tls9443.kong.example
   rules:
-  - backendRefs:
-    - name: echo
-      port: 1025
+    - backendRefs:
+      - name: echo
+        port: 1025
 " | kubectl apply -f -
 ```
 
@@ -87,21 +102,26 @@ spec:
 
 {% endnavtab %}
 {% navtab "Ingress" %}
-
 ```bash
 echo "apiVersion: configuration.konghq.com/v1beta1
 kind: TCPIngress
 metadata:
-  name: echo-plaintext
+  name: echo-tls
   namespace: kong
   annotations:
     kubernetes.io/ingress.class: kong
 spec:
+  tls:
+  - secretName: tls9443.kong.example
+    hosts:
+      - tls9443.kong.example
   rules:
-  - port: 9000
+  - host: tls9443.kong.example
+    port: 9443
     backend:
       serviceName: echo
       servicePort: 1025
+" | kubectl apply -f -
 " | kubectl apply -f -
 ```
 
@@ -113,26 +133,20 @@ receives on port 9000 to `echo` service on port 1025.
 
 ## Validate your configuration
 
-You can now test your route using `telnet`.
+You can now access the `echo` service on port 9443 with SNI `tls9443.kong.example`.
 
-```shell
-$ telnet $PROXY_IP 9000
+In real-world usage, you would create a DNS record for `tls9443.kong.example`pointing to your proxy Service's public IP address, which causes TLS clients to add SNI automatically. For this demo, add it manually using the OpenSSL CLI.
+
+```bash
+echo "hello" | openssl s_client -connect $PROXY_IP:9443 -servername tls9443.kong.example -quiet 2>/dev/null
 ```
+Press Ctrl+C to exit.
 
-After you connect, type some text that you want as a response from the echo Service.
-
-```
-Trying 192.0.2.3...
-Connected to 192.0.2.3.
-Escape character is '^]'.
-Welcome, you are connected to node gke-harry-k8s-dev-pool-1-e9ebab5e-c4gw.
-Running on Pod echo-844545646c-gvmkd.
+The results should look like this:
+```text
+Welcome, you are connected to node kind-control-plane.
+Running on Pod echo-5f44d4c6f9-krnhk.
 In namespace default.
-With IP address 192.0.2.7.
-This text will be echoed back.
-This text will be echoed back.
-^]
-telnet> Connection closed.
+With IP address 10.244.0.26.
+hello
 ```
-
-To exit, press `ctrl+]` then `ctrl+d`.
