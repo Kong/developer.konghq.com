@@ -5,9 +5,9 @@ module Jekyll
     priority :low
 
     def generate(site)
-      @seen = {}
-      @sections = {}
       Dir.glob(File.join(site.source, '_indices/**/*.yaml')).each do |file|
+        @seen = {}
+        @sections = {}
         site.pages << build_page(site, file)
       end
     end

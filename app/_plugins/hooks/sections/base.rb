@@ -37,7 +37,7 @@ module SectionWrapper
           # extract the text, removing any html tags...
           title = h2_text
 
-          wrapper = build_wrapper(section_title(h2, slug, title))
+          wrapper = build_wrapper(section_title(h2, slug, title), h2['data-deployment-topology'])
 
           # Move content between this h2 and the next one into the wrapper
           move_sibling_content_into_wrapper(h2, wrapper)
@@ -62,7 +62,7 @@ module SectionWrapper
       wrapper
     end
 
-    def build_wrapper(section_title = '')
+    def build_wrapper(section_title = '', _ = '')
       Nokogiri::HTML::DocumentFragment.parse <<-HTML
         <div class="flex flex-col gap-4 heading-section">
             #{section_title}

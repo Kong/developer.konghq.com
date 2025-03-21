@@ -1,7 +1,7 @@
 {%- assign path = include.path | default: '/echo' %}
 {%- assign hostname = include.hostname | default: 'kong.example' %}
 {%- assign name = include.name | default: 'echo' %}
-{%- assign namespace = include.namespace | default: 'kong-docs-demo' %}
+{%- assign namespace = include.namespace | default: 'kong' %}
 {%- assign service = include.service | default: 'echo' %}
 {%- assign port = include.port | default: '1027' %}
 {%- assign ingress_class = include.ingress_class | default: 'kong' %}

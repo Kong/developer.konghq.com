@@ -1,6 +1,9 @@
-{% if include.gateway_api != false %}
+{% if include.config.gateway_api != false %}
 
 {% assign summary = "Enable the Gateway API" %}
+{% if include.config.gateway_api_optional == true %}
+{% assign summary = summary | append: " (Optional)" %}
+{% endif %}
 {% assign icon_url = "/assets/icons/code.svg" %}
 
 {% capture details_content %}
@@ -38,7 +41,7 @@ echo "
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: kong-docs-demo
+  name: kong
 ---
 apiVersion: gateway.networking.k8s.io/{{ gwapi_version }}
 kind: GatewayClass
@@ -63,7 +66,7 @@ spec:
     allowedRoutes:
       namespaces:
          from: All
-" | kubectl apply -n kong-docs-demo -f -
+" | kubectl apply -n kong -f -
 ```
 
 {% endcapture %}
