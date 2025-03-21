@@ -1,0 +1,32 @@
+description: Configure the plugin to replace or add messages and headers in responses.
+
+title: 'Customize the response body and headers'
+
+weight: 900
+
+requirements: 
+ - "[`untrusted_lua`](/gateway/configuration/#untrusted-lua) must be set to either `on` or `sandbox` in your `kong.conf` file for this plugin to work."
+ 
+config: 
+  functions:
+  - 'return function(status, body, headers)
+      if not body then
+        body = { message = "This replaces a formerly empty body" }
+      else
+        body.message = "This replaces a formerly non-empty body"
+      end
+      if not headers then
+        headers = { ["X-Message"] = "This adds X-Message to an empty set of headers" }
+      else
+        headers["X-Message"] = "This adds X-Message to an existing set of headers"
+      end
+      return status, body, headers
+    end'
+     
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
