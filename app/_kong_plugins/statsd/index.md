@@ -68,7 +68,7 @@ of workers need to be considered when setting queue parameters.
 
 
 ## Metrics
-
+<!-- vale off -->
 {% table %}
 columns:
   - title: Metric
@@ -128,9 +128,9 @@ rows:
     namespace: "`kong.service.<service_identifier>.cache_datastore_misses_total`"
 {% endtable %}
 
-
+<!-- vale on -->
 If a request URI doesn't match any Routes, the following metrics are sent instead:
-
+<!-- vale off -->
 Metric                     | Description | Namespace
 ---                        | ---         | ---
 `request_count`            | The request count. | `kong.global.unmatched.request.count`
@@ -139,10 +139,9 @@ Metric                     | Description | Namespace
 `latency`                  | The time interval between when the request started and when the response is received from the upstream server. | `kong.global.unmatched.latency`
 `status_count`             | The status count. | `kong.global.unmatched.status.<status>.count`
 `kong_latency`             | The internal Kong latency in milliseconds that it took to run all the plugins. | `kong.global.unmatched.kong_latency`
-
-
+<!-- vale on -->
 If you enable the `tag_style` configuration for the StatsD Plugin, the following metrics are sent instead:
-
+<!-- vale off -->
 Metric                     | Description | Namespace
 ---                        | ---         | ---
 `request_count`            | The number of requests. | `kong.request.count`
@@ -154,7 +153,7 @@ Metric                     | Description | Namespace
 `shdict_usage`             | The usage of shared dict, sent once every minute. | `kong.shdict.free_space` and `kong.shdict.capacity`
 `cache_datastore_hits_total`            | The total number of cache hits. ({{site.ee_product_name}} only) | `kong.cache_datastore_hits_total`
 `cache_datastore_misses_total`            | The total number of cache misses. ({{site.ee_product_name}} only) | `kong.cache_datastore_misses_total`
-
+<!-- vale on -->
 
 
 The StatsD Plugin supports Librato, InfluxDB, DogStatsD, and SignalFX-style tags, which are used like Prometheus labels.
@@ -189,7 +188,7 @@ kong.request.size,workspace=default,route=d02485d7-8a28-4ec2-bc0b-caabed82b499,s
 ### Metric Fields
 
 The Plugin can be configured with any combination of [Metrics](#metrics), with each entry containing the following fields:
-
+<!-- vale off -->
 {% table %}
 columns:
   - title: Field
@@ -227,8 +226,8 @@ rows:
     allowed: "One of the following options: `workspace_id`, `workspace_name`, `null`"
 {% endtable %}
 
-
-### Metric behavior2
+<!-- vale on -->
+### Metric behavior
 
 - All metrics are logged by default.
 - Metrics with a `stat_type` of `counter` or `gauge` **require** the `sample_rate` field.
