@@ -1,0 +1,33 @@
+description: 'Log requests in a status range '
+
+title: 'Enable Metrics'
+
+weight: 900
+
+requirements:
+ - "A [Gateway Service](/gateway/entities/service/) and [Route](/gateway/entities/route/) to log metrics from"
+
+
+config: 
+  host: ${host}
+  port: ${port}
+  allow_status_codes:
+  - 200-205
+  - 400-499
+  flush_timeout: 2
+  retry_count: 10
+
+
+variables:
+  host:
+    value: $HOST
+    description: The IP address or hostname of StatsD server to send data to.
+  port:
+    value: $PORT
+    description: The port of StatsD server to send data to.
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
