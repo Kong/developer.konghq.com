@@ -11,6 +11,7 @@ dynatrace
 ratelimiting
 collectd
 ca_certificate
+gateway_api_optional
 gateway_api
 short_title
 skip_index
@@ -20,3 +21,4 @@ lego
 datadome
 moesif
 traceableai
+expand_accordion
