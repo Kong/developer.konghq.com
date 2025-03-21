@@ -61,7 +61,7 @@ module Jekyll
       end
 
       def entity_examples # rubocop:disable Metrics/MethodLength
-        @entity_examples ||= @plugin.targets.map do |target|
+        @entity_examples ||= targets.map do |target|
           EntityExampleBlock::Plugin.new(
             example: {
               'type' => 'plugin',
@@ -78,7 +78,15 @@ module Jekyll
       end
 
       def targets
-        @targets ||= @plugin.targets
+        @targets ||= if example.key?('targets')
+                       unless example['targets'].all? { |t| @plugin.targets.include?(t) }
+                         raise ArgumentError,
+                               "Invalid `targets` in #{@file}, supported targets: #{@plugin.targets.join(', ')}"
+                       end
+                       example.fetch('targets')
+                     else
+                       @plugin.targets
+                     end
       end
 
       def formats
