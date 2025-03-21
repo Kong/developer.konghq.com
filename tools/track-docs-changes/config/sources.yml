@@ -192,6 +192,8 @@ app/_how-tos/use-langchain-with-ai-proxy.md:
   - app/_src/gateway/ai-gateway/llm-library-integration-guides/langchain.md
 
 ## KIC
+app/_how-tos/kic-install.md:
+  - app/_src/kubernetes-ingress-controller/get-started/index.md
 app/_how-tos/proxy-http-traffic-kic.md:
   - app/_src/kubernetes-ingress-controller/guides/services/http.md
 
