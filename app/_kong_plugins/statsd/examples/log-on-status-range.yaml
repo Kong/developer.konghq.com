@@ -9,8 +9,8 @@ requirements:
 
 
 config: 
-  host: $MY_HOST
-  port: $MY_PORT
+  host: ${host}
+  port: ${port}
   allow_status_codes:
   - 200-205
   - 400-499
@@ -19,8 +19,12 @@ config:
 
 
 variables:
-  key-sets:
-    value: $MY_KEY-SET
+  host:
+    value: $HOST
+    description: The IP address or hostname of StatsD server to send data to.
+  port:
+    value: $PORT
+    description: The port of StatsD server to send data to.
 tools:
   - deck
   - admin-api
