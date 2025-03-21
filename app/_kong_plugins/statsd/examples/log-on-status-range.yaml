@@ -22,5 +22,8 @@ variables:
   key-sets:
     value: $MY_KEY-SET
 tools:
+  - deck
   - admin-api
   - konnect-api
+  - kic
+  - terraform

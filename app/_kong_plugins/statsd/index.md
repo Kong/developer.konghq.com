@@ -35,8 +35,8 @@ search_aliases:
 ---
 
 
-Log [metrics](#metrics) for a Service or Route to a StatsD server.
-It can also be used to log metrics on [Collectd](https://collectd.org/)
+The StatsD plugin logs [metrics](#metrics) for a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/) to a StatsD server.
+It can also be used to log metrics on the [Collectd](https://collectd.org/)
 daemon by enabling its
 [StatsD plugin](https://collectd.org/wiki/index.php/Plugin:StatsD).
 
@@ -68,6 +68,8 @@ of workers need to be considered when setting queue parameters.
 
 
 ## Metrics
+
+The following configure the metrics that will be logged:
 <!-- vale off -->
 {% table %}
 columns:
@@ -97,16 +99,16 @@ rows:
     description: Tracks unique users who made requests to the underlying Service or Route.
     namespace: "`kong.service.<service_identifier>.user.uniques`"
   - metric: request_per_user
-    description: Tracks the request count per consumer.
+    description: Tracks the request count per Consumer.
     namespace: "`kong.service.<service_identifier>.user.<consumer_identifier>.request.count`"
   - metric: upstream_latency
     description: Tracks the time in milliseconds it took for the final Service to process the request.
     namespace: "`kong.service.<service_identifier>.upstream_latency`"
   - metric: kong_latency
-    description: Tracks the internal Kong latency in milliseconds that it took to run all the plugins.
+    description: Tracks the internal {{site.base_gateway}} latency in milliseconds that it took to run all the plugins.
     namespace: "`kong.service.<service_identifier>.kong_latency`"
   - metric: status_count_per_user
-    description: Tracks the status code per consumer per Service.
+    description: Tracks the status code per Consumer per Service.
     namespace: "`kong.service.<service_identifier>.user.<consumer_identifier>.status.<status>`"
   - metric: status_count_per_workspace
     description: The status code per workspace.
@@ -131,34 +133,34 @@ rows:
 <!-- vale on -->
 If a request URI doesn't match any Routes, the following metrics are sent instead:
 <!-- vale off -->
-Metric                     | Description | Namespace
----                        | ---         | ---
-`request_count`            | The request count. | `kong.global.unmatched.request.count`
-`request_size`             | The request's body size in bytes. | `kong.global.unmatched.request.size`
-`response_size`            | The response's body size in bytes. | `kong.global.unmatched.response.size`
-`latency`                  | The time interval between when the request started and when the response is received from the upstream server. | `kong.global.unmatched.latency`
-`status_count`             | The status count. | `kong.global.unmatched.status.<status>.count`
-`kong_latency`             | The internal Kong latency in milliseconds that it took to run all the plugins. | `kong.global.unmatched.kong_latency`
+| Metric                     | Description | Namespace |
+| ---                        | ---         | --- |
+| `request_count`            | The request count. | `kong.global.unmatched.request.count` |
+| `request_size`             | The request's body size in bytes. | `kong.global.unmatched.request.size` |
+| `response_size`            | The response's body size in bytes. | `kong.global.unmatched.response.size` |
+| `latency`                  | The time interval between when the request started and when the response is received from the upstream server. | `kong.global.unmatched.latency` |
+| `status_count`             | The status count. | `kong.global.unmatched.status.<status>.count` |
+| `kong_latency`             | The internal {{site.base_gateway}} latency in milliseconds that it took to run all the plugins. | `kong.global.unmatched.kong_latency` |
 <!-- vale on -->
 If you enable the `tag_style` configuration for the StatsD Plugin, the following metrics are sent instead:
 <!-- vale off -->
-Metric                     | Description | Namespace
----                        | ---         | ---
-`request_count`            | The number of requests. | `kong.request.count`
-`request_size`             | The request's body size in bytes. | `kong.request.size`
-`response_size`            | The response's body size in bytes. | `kong.response.size`
-`latency`                  | The time interval in milliseconds between the request and response. | `kong.latency`
-`request_per_user`         | Tracks the request count per consumer. | `kong.request.count`
-`upstream_latency`         | Tracks the time in milliseconds it took for the final Service to process the request. | `kong.upstream_latency`
-`shdict_usage`             | The usage of shared dict, sent once every minute. | `kong.shdict.free_space` and `kong.shdict.capacity`
-`cache_datastore_hits_total`            | The total number of cache hits. ({{site.ee_product_name}} only) | `kong.cache_datastore_hits_total`
-`cache_datastore_misses_total`            | The total number of cache misses. ({{site.ee_product_name}} only) | `kong.cache_datastore_misses_total`
+| Metric                     | Description | Namespace |
+| ---                        | ---         | --- |
+| `request_count`            | The number of requests. | `kong.request.count` |
+| `request_size`             | The request's body size in bytes. | `kong.request.size` |
+| `response_size`            | The response's body size in bytes. | `kong.response.size` |
+| `latency`                  | The time interval in milliseconds between the request and response. | `kong.latency` |
+| `request_per_user`         | Tracks the request count per consumer. | `kong.request.count` |
+| `upstream_latency`         | Tracks the time in milliseconds it took for the final Service to process the request. | `kong.upstream_latency` |
+| `shdict_usage`             | The usage of shared dict, sent once every minute. | `kong.shdict.free_space` and `kong.shdict.capacity` |
+| `cache_datastore_hits_total`            | The total number of cache hits. ({{site.base_gateway}} only) | `kong.cache_datastore_hits_total` |
+| `cache_datastore_misses_total`            | The total number of cache misses. ({{site.base_gateway}} only) | `kong.cache_datastore_misses_total` |
 <!-- vale on -->
 
 
 The StatsD Plugin supports Librato, InfluxDB, DogStatsD, and SignalFX-style tags, which are used like Prometheus labels.
 
-* **Librato-style tags**: Must be appended to the metric name with a delimiting #, for example:
+* **Librato-style tags**: Must be appended to the metric name with a delimiting `#`, for example:
 `metric.name#tagName=val,tag2Name=val2:0|c`
 See the [Librato StatsD](https://github.com/librato/statsd-librato-backend#tags) documentation for more information.
 
@@ -166,7 +168,7 @@ See the [Librato StatsD](https://github.com/librato/statsd-librato-backend#tags)
 `metric.name,tagName=val,tag2Name=val2:0|c`
 See the [InfluxDB StatsD](https://www.influxdata.com/blog/getting-started-with-sending-statsd-metrics-to-telegraf-influxdb/#introducing-influx-statsd) documentation for more information.
 
-* **DogStatsD-style tags**: Appended as a |# delimited section at the end of the metric, for example:
+* **DogStatsD-style tags**: Appended as a `|#` delimited section at the end of the metric, for example:
 `metric.name:0|c|#tagName:val,tag2Name:val2`
 See the [Datadog StatsD Tags](https://docs.datadoghq.com/developers/dogstatsd/data_types/#tagging) documentation for more information about the concept description and Datagram Format.
 [AWS CloudWatch](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Agent-custom-metrics-statsd.html) also uses the DogStatsD protocol.
@@ -249,8 +251,8 @@ rows:
 
 ## Kong Process Errors
 
-This logging Plugin logs HTTP request and response data, and also supports stream data (TCP, TLS, and UDP).
-The Kong process error file is the Nginx error file. You can find it at the following path:
+This logging plugin logs HTTP request and response data, and also supports stream data (TCP, TLS, and UDP).
+The {{site.base_gateway}} process error file is the Nginx error file. You can find it at the following path:
 `{prefix}/logs/error.log`
 
 
