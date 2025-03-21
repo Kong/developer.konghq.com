@@ -25,6 +25,8 @@ related_resources:
     url: /gateway/upgrade/in-place/
   - text: "Dual-cluster upgrade"
     url: /gateway/upgrade/dual-cluster/
+  - text: Rolling upgrade
+    url: /gateway/upgrade/rolling/
 ---
 
 The blue-green upgrade strategy is a {{site.base_gateway}} upgrade option used primarily for traditional mode deployments 
