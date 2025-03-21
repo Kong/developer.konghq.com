@@ -64,7 +64,6 @@ flowchart TD
     CPX -.-> DB
     CPY --"kong migrations up \n (NO kong migrations finish)"--> DB
 
-    style API stroke:none
     style CPX stroke-dasharray:3
     style Admin fill:none,stroke:none,color:#d44324
     style Admin2 fill:none,stroke:none,color:#d44324
