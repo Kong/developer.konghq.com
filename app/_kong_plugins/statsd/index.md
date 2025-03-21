@@ -111,7 +111,7 @@ rows:
     description: Tracks the status code per Consumer per Service.
     namespace: "`kong.service.<service_identifier>.user.<consumer_identifier>.status.<status>`"
   - metric: status_count_per_workspace
-    description: The status code per workspace.
+    description: The status code per Workspace.
     namespace: "`kong.service.<service_identifier>.workspace.<workspace_identifier>.status.<status>`"
   - metric: status_count_per_user_per_route
     description: The status code per consumer per Route.
