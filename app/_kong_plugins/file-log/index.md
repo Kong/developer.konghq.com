@@ -56,4 +56,4 @@ to physical files on slow (spinning) disks.
 
 ## Custom fields by Lua
 
-{% include /plugins/logging/log_custom_fields_by_lua.md %}
+{% include /plugins/logging/log-custom-fields-by-lua.md %}
