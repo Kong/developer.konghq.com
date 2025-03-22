@@ -1,0 +1,180 @@
+---
+title: Proxy UDP traffic by port
+description: "Route UDP requests to services in your cluster based on the incoming port using UDPRoute or UDPIngress"
+content_type: how_to
+related_resources:
+  - text: All KIC documentation
+    url: /index/kubernetes-ingress-controller/
+
+permalink: /kubernetes-ingress-controller/routing/udp-by-port/
+breadcrumbs:
+  - /kubernetes-ingress-controller/
+  - /kubernetes-ingress-controller/routing/
+
+products:
+  - kic
+
+works_on:
+  - on-prem
+  - konnect
+
+entities: []
+
+tldr:
+  q: How do I route UDO traffic with Kong Ingress Controller?
+  a: Create a `UDPRoute` or `UDPIngress` resource, which will then be converted in to a {{ site.base_gateway }} Service and Route
+
+prereqs:
+  kubernetes:
+    gateway_api: experimental
+  entities:
+    services:
+      - udp-service
+
+cleanup:
+  inline:
+    - title: Uninstall KIC from your cluster
+      include_content: cleanup/products/kic
+      icon_url: /assets/icons/kic.svg
+---
+
+## Add UDP listens
+
+To expose UDP listens, set the `KONG_STREAM_LISTEN` environment variable and expose port `9999` in the Deployment:
+
+```bash
+kubectl patch deploy -n kong kong-gateway --patch '{
+  "spec": {
+    "template": {
+      "spec": {
+        "containers": [
+          {
+            "name": "proxy",
+            "env": [
+              {
+                "name": "KONG_STREAM_LISTEN",
+                "value": "0.0.0.0:9999 udp"
+              }
+            ],
+            "ports": [
+              {
+                "containerPort": 9999,
+                "name": "stream9999",
+                "protocol": "UDP"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}'
+```
+
+1.  Update the proxy Service to indicate the new ports.
+
+    ```bash
+    kubectl patch service -n kong kong-gateway-proxy --patch '{
+      "spec": {
+        "ports": [
+          {
+            "name": "stream9999",
+            "port": 9999,
+            "protocol": "UDP",
+            "targetPort": 9999
+          }
+        ]
+      }
+    }'
+    ```
+
+## Route UDP traffic
+
+To expose the service to the outside world, create a UDPRoute resource for Gateway APIs or a UDPIngress resource for Ingress.
+
+{% navtabs api %}
+{% navtab "Gateway API" %}
+
+> If you are using the Gateway APIs (UDPRoute), your Gateway needs additional configuration under `listeners`.
+
+```bash
+kubectl patch -n kong --type=json gateway kong -p='[
+    {
+        "op":"add",
+        "path":"/spec/listeners/-",
+        "value":{
+            "name":"stream9999",
+            "port":9999,
+            "protocol":"UDP",
+            "allowedRoutes": {
+                "namespaces": {
+                  "from": "All"
+                }
+            }
+        }
+    }
+]'
+```
+
+```bash
+echo "apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: UDPRoute
+metadata:
+  name: tftp
+  namespace: kong
+spec:
+  parentRefs:
+  - name: kong
+    namespace: kong
+  rules:
+  - backendRefs:
+    - name: tftp
+      port: 9999
+" | kubectl apply -f -
+```
+
+{% endnavtab %}
+{% navtab "Ingress" %}
+
+```bash
+echo "apiVersion: configuration.konghq.com/v1beta1
+kind: UDPIngress
+metadata:
+  name: tftp
+  namespace: kong
+  annotations:
+    kubernetes.io/ingress.class: kong
+spec:
+  rules:
+  - backend:
+      serviceName: tftp
+      servicePort: 9999
+    port: 9999
+" | kubectl apply -f -
+```
+
+{% endnavtab %}
+{% endnavtabs %}
+
+This configuration routes traffic to UDP port `9999` on the
+{{site.base_gateway}} proxy to port `9999` on the TFTP test server.
+
+## Validate your configuration
+
+Send a TFTP request through the proxy.
+
+```bash
+curl -s tftp://$PROXY_IP:9999/hello
+```
+
+The results should look like this:
+
+```text
+Hostname: tftp-5849bfd46f-nqk9x
+
+Request Information:
+  client_address=10.244.0.1
+  client_port=39364
+  real path=/hello
+  request_scheme=tftp
+```
