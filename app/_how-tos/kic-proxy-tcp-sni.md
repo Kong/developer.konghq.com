@@ -99,12 +99,6 @@ spec:
 > v1alpha2 TCPRoutes do not support separate proxy and upstream ports. Traffic
 > is redirected to `1025` upstream via Service configuration.
 
-The results should look like this:
-
-```text
-tcproute.gateway.networking.k8s.io/echo-plaintext created
-```
-
 {% endnavtab %}
 {% navtab "Ingress" %}
 ```bash
@@ -128,12 +122,6 @@ spec:
       servicePort: 1025
 " | kubectl apply -f -
 " | kubectl apply -f -
-```
-
-The results should look like this:
-
-```text
-tcpingress.configuration.konghq.com/echo-plaintext created
 ```
 
 {% endnavtab %}
