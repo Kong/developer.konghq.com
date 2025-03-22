@@ -3,7 +3,7 @@
 {% if prereqs.kubernetes.gateway_api %}
 {% assign additional_flags = additional_flags | append:' --set controller.ingressController.env.feature_gates="GatewayAlpha=true"' %}
 {% endif %}
-
+{% assign additional_flags = additional_flags | append:' --set controller.ingressController.env.log_level="debug"' %}
 
 {% capture details_content %}
 
