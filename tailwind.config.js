@@ -17,6 +17,10 @@ module.exports = {
       pattern: /grid-cols-[1-6]/,
       variants: ["md", "lg"],
     },
+    {
+      pattern: /col-span-[1-6]/,
+      variants: ["md", "lg"],
+    },
     "self-start",
     "self-center",
     "self-end",

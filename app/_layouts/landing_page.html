@@ -19,7 +19,7 @@ layout: default
             {% endif %}
             <div class="grid grid-cols-1 lg:grid-cols-{{ column_count }} gap-8">
               {% for column in row.columns %}
-                <div class="flex flex-col gap-3 {% if column.header and column.header.type == 'h2' %} heading-section {% endif %}">
+                <div class="flex flex-col gap-3 {% if column.col_span %}col-span-{{ column.col_span }} {% endif %}{% if column.header and column.header.type == 'h2' %} heading-section {% endif %}">
                   {% if column.header %}
                   {% include landing_pages/header.md config = column.header %}
                   {% endif %}
