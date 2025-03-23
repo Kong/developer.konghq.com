@@ -30,7 +30,7 @@ rows:
   - header:
       type: h2
       text: "Available integrations"
-    col_span: 3
+    column_count: 3
     columns:
       - blocks:
           - type: card

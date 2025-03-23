@@ -66,7 +66,7 @@ rows:
   - header:
       type: h3
       text: "Supported deployment topologies"
-    col_span: 3
+    column_count: 3
     columns: 
       - blocks:
         - type: card
@@ -128,7 +128,7 @@ rows:
   - header:
       type: h3
       text: "Supported deployment topologies"
-    col_span: 3
+    column_count: 3
     columns: 
       - blocks:
         - type: card
