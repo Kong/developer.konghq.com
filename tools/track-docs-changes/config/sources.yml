@@ -592,7 +592,9 @@ app/serverless-gateways/index.md:
 
 app/_landing_pages/gateway-manager.yaml:
   - app/konnect/gateway-manager/index.md
-
+app/gateway-manager/custom-dns.md:
+  - app/konnect/gateway-manger/serverless-gateways/custom-dns.md
+  - app/konnect/gateway-manager/dedicated-cloud-gateways/custom-dns.md
 app/konnect-platform/konnect-account.md:
   - app/konnect/org-management/deactivation.md
 app/konnect-platform/teams-reference.md:
