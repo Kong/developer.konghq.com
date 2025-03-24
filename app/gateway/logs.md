@@ -18,6 +18,8 @@ related_resources:
     url: /gateway/debug/
   - text: "{{site.base_gateway}} audit logs"
     url: /gateway/audit-logs/
+  - text: "{{site.konnect_short_name}} audit logs"
+    url: /konnect-audit-logs/
 ---
 
 Logging in {{site.base_gateway}} allows you to see information, warnings, and errors about requests that are proxied by {{site.base_gateway}}.
@@ -189,5 +191,4 @@ rows:
 <!--vale on-->
 
 ## Next steps
-* [Customize Gateway Logs](/gateway/customize-gateway-logs/)
 * [Debug {{site.base_gateway}} with logs](/gateway/debug/)
