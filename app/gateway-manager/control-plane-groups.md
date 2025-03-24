@@ -11,7 +11,8 @@ works_on:
 min_version:
     gateway: '3.5'
 
-description: placeholder
+description: A Control Plane Group is a read-only Control Plane that combines configuration from its members, which are standard Control Planes.
+
 
 faqs:
   - q: How is a Control Plane Group different from a standard Control Plane?
