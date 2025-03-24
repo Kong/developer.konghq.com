@@ -107,43 +107,6 @@ flowchart LR
 * The Control Plane Group also contains Control Plane Purple, which is managed by a central platform team.
 * The central platform team manages global plugin configuration in Control Plane Purple, which is added to any configuration that teams Blue and Green provide.
 
-The Data Plane nodes in the cluster use the combined configuration from all three groups.
-
-<!--vale off-->
-{% mermaid %}
-flowchart LR
-  A(Team Blue)
-  B(Team Green)
-  C(Control plane Blue)
-  D(Control plane Purple
-    global config)
-  E(Control plane Green)
-  F(Data plane nodes)
-  G(Data plane nodes)
-
-  A -- deck gateway sync --> C
-  B -- deck gateway sync --> E
-
-  subgraph id1 ["`**KONNECT ORG**`"]
-    subgraph id2 [<br>Control plane group Steel]
-    C
-    D
-    E
-    end
-  end
-
-  id2 -- Get config from 
-  Control Plane Group
-  Steel--> F & G
-
-  subgraph id3 [Data centers]
-  F
-  G
-  end
-{% endmermaid %}
-<!--vale on-->
-
-
 ## Configuring core entities
 
 There are some special cases and behaviors to note for [core entities](/gateway/entities/) in a Control Plane Group.
@@ -198,7 +161,7 @@ rows:
     type: By ID
   - entity: Vault
     associated: Control plane
-    type: By control plane
+    type: By Control Plane
   - entity: deGraphQL Route
     associated: Service
     type: By ID
@@ -251,7 +214,7 @@ rows:
 When combining configurations from individual Control Planes into a Control Plane Group you may receive conflict errors in {{site.konnect_short_name}}, for example: 
 
 ```sh
-Conflicts have been detected between these control planes: 
+Conflicts have been detected between these Control Planes: 
 <control plane name>
 <control plane name>
 ```
@@ -269,7 +232,7 @@ columns:
     key: action
 rows:
   - conflict: Duplicate names across Control Plane Group members
-    description: Same entity name exists in multiple member control planes.
+    description: Same entity name exists in multiple member Control Planes.
     action: Remove or rename one of the conflicting entities.
   - conflict: Shared credentials across Control Plane Group members
     description: Credentials from one member can authenticate across the group.
@@ -284,7 +247,7 @@ rows:
     description: "`deck gateway dump` fails on duplicate names."
     action: Remove or rename duplicate entities.
   - conflict: Reference by name vs reference by ID
-    description: ID-based references don’t work across control planes, string-based ones do.
+    description: ID-based references don’t work across Control Planes, string-based ones do.
     action: Use string references, or remove conflicting entities.
   - conflict: Multiple instances of the same global plugin
     description: Only one global plugin instance is allowed in the group.
