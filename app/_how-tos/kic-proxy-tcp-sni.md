@@ -64,6 +64,11 @@ kubectl patch -n kong --type=json gateway kong -p='[
             "port":9443,
             "protocol":"TLS",
             "hostname":"tls9443.kong.example",
+            "allowedRoutes": {
+              "namespaces": {
+                "from": "All"
+              }
+            },
             "tls": {
                 "certificateRefs":[{
                     "group":"",
