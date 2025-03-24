@@ -175,7 +175,7 @@ rows:
               
             icon: /assets/icons/audit.svg
             cta:
-              url: "/audit-logs/"
+              url: "/konnect-audit-logs/"
       - blocks:
         - type: card
           config:
