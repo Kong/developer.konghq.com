@@ -1,7 +1,7 @@
 ---
 title: Proxy TCP traffic by SNI
 published: false
-description: "Route TCP requests to services in your cluster based on SNI using TCPRoute or TCPIngress"
+description: "Use `TLSRoute` or `TCPIngress` to route TCP traffic secured by TLS"
 content_type: how_to
 related_resources:
   - text: All KIC documentation
@@ -53,7 +53,7 @@ To expose the service to the outside world, create a TCPRoute resource for Gatew
 {% navtabs api %}
 {% navtab "Gateway API" %}
 
-> If you are using the Gateway APIs (TCPRoute), your Gateway needs additional configuration under `listeners`.
+To reconcile the `TCPRoute`, configure an additional TLS listener on your `Gateway` resource:
 
 ```bash
 kubectl patch -n kong --type=json gateway kong -p='[
@@ -82,6 +82,8 @@ kubectl patch -n kong --type=json gateway kong -p='[
 ]'
 ```
 
+Next, create a `TLSRoute`:
+
 ```bash
 echo "apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TLSRoute
@@ -100,12 +102,6 @@ spec:
         port: 1025
 " | kubectl apply -f -
 ```
-
-{:.note}
-
-> v1alpha2 TCPRoutes do not support separate proxy and upstream ports. Traffic
-> is redirected to `1025` upstream via Service configuration.
-
 {% endnavtab %}
 {% navtab "Ingress" %}
 ```bash

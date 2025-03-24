@@ -9,7 +9,7 @@ with routing configuration is typical.
 
 {% capture the_code %}
 {% navtabs codeblock %}
-{% navtab "OpenSSL 1.1.1" %}
+{% navtab "OpenSSL 1.1.1+" %}
 ```bash
 openssl req -subj '/CN={{ include.hostname }}' -new -newkey rsa:2048 -sha256 \
   -days 365 -nodes -x509 -keyout server.key -out server.crt \

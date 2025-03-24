@@ -1,11 +1,11 @@
 {% if page.works_on contains 'konnect' %}
-<div data-deployment-topology="konnect" markdown="1" data-test-step="{{ config.data_validate_konnect | escape }}">
+<div data-deployment-topology="konnect" markdown="1" data-test-step="{{ config.data_validate_konnect | escape }}" class="flex flex-col gap-3">
   {% include how-tos/validations/grpc-check/snippet.md url=config.konnect_url method=config.method payload=config.payload response=config.response authority=config.authority port=config.port plaintext=config.plaintext %}
 </div>
 {% endif %}
 
 {% if page.works_on contains 'on-prem' %}
-<div data-deployment-topology="on-prem"  markdown="1" data-test-step="{{ config.data_validate_on_prem | escape }}">
+<div data-deployment-topology="on-prem"  markdown="1" data-test-step="{{ config.data_validate_on_prem | escape }}" class="flex flex-col gap-3">
   {% include how-tos/validations/grpc-check/snippet.md url=config.on_prem_url method=config.method payload=config.payload response=config.response authority=config.authority port=config.port plaintext=config.plaintext %}
 </div>
 {% endif %}

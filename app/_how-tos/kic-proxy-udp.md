@@ -41,36 +41,38 @@ cleanup:
 
 ## Add UDP listens
 
-To expose UDP listens, set the `KONG_STREAM_LISTEN` environment variable and expose port `9999` in the Deployment:
+{{site.base_gateway}} does not include any UDP listen configuration by default. To expose UDP listens, update the Deployment’s environment variables and port configuration.
 
-```bash
-kubectl patch deploy -n kong kong-gateway --patch '{
-  "spec": {
-    "template": {
+1. Set the `KONG_STREAM_LISTEN` environment variable and expose port `9999` in the Deployment:
+
+    ```bash
+    kubectl patch deploy -n kong kong-gateway --patch '{
       "spec": {
-        "containers": [
-          {
-            "name": "proxy",
-            "env": [
+        "template": {
+          "spec": {
+            "containers": [
               {
-                "name": "KONG_STREAM_LISTEN",
-                "value": "0.0.0.0:9999 udp"
-              }
-            ],
-            "ports": [
-              {
-                "containerPort": 9999,
-                "name": "stream9999",
-                "protocol": "UDP"
+                "name": "proxy",
+                "env": [
+                  {
+                    "name": "KONG_STREAM_LISTEN",
+                    "value": "0.0.0.0:9999 udp"
+                  }
+                ],
+                "ports": [
+                  {
+                    "containerPort": 9999,
+                    "name": "stream9999",
+                    "protocol": "UDP"
+                  }
+                ]
               }
             ]
           }
-        ]
+        }
       }
-    }
-  }
-}'
-```
+    }'
+    ```
 
 1.  Update the proxy Service to indicate the new ports.
 
@@ -96,7 +98,7 @@ To expose the service to the outside world, create a UDPRoute resource for Gatew
 {% navtabs api %}
 {% navtab "Gateway API" %}
 
-> If you are using the Gateway APIs (UDPRoute), your Gateway needs additional configuration under `listeners`.
+To reconcile the `UDPRoute`, configure an additional UDP listener on your `Gateway` resource:
 
 ```bash
 kubectl patch -n kong --type=json gateway kong -p='[
@@ -116,6 +118,8 @@ kubectl patch -n kong --type=json gateway kong -p='[
     }
 ]'
 ```
+
+Next, create a `UDPRoute`:
 
 ```bash
 echo "apiVersion: gateway.networking.k8s.io/v1alpha2

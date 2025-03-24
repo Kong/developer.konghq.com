@@ -60,7 +60,7 @@ proxies traffic to the application:
 
 {% navtabs api %}
 {% navtab "Gateway API" %}
-If you are using the Gateway APIs (GRPCRoute), your Gateway needs additional configuration under `listeners`.
+To reconcile the `GRPCRoute`, configure an additional TLS listener configured on your `Gateway` resource:
 
 ```bash
 kubectl patch -n kong --type=json gateway kong -p='[
