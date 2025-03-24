@@ -1,9 +1,9 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   document
     .querySelectorAll(".releases-dropdown")
-    .forEach(function (releasesDropdown) {
+    .forEach((releasesDropdown) => {
       if (releasesDropdown) {
-        releasesDropdown.addEventListener("change", function () {
+        releasesDropdown.addEventListener("change", () => {
           const url = releasesDropdown.value;
           if (url) {
             window.location.href = url;
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "plugin-example-dropdown"
   );
   if (pluginExampleDropdown) {
-    pluginExampleDropdown.addEventListener("change", function () {
+    pluginExampleDropdown.addEventListener("change", () => {
       const url = pluginExampleDropdown.value;
       if (url) {
         window.location.href = url;
