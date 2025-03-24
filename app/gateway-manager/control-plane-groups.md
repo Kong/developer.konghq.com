@@ -2,7 +2,7 @@
 title: "Control Plane Groups"
 content_type: reference
 layout: reference
-breadcrumbb: 
+breadcrumb: 
   - /control-plane-groups/
 products:
     - gateway
