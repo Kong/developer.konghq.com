@@ -1,7 +1,7 @@
 <h1>{{ index.title }}</h1>
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 {% for group in groups %}
-<div class="card card__bordered">
+<div id="{{ group.title | slugify }}" class="card card__bordered">
   <div class="flex flex-col gap-5 p-6">
     <h3>{{ group.title }}</h3>
     <ul class="list-none ml-0">
