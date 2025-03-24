@@ -113,7 +113,7 @@ flowchart LR
 
 ## Configuring core entities
 
-There are some special cases and behaviors to note for core entities in a Control Plane Group.
+There are some special cases and behaviors to note for [core entities](/gateway/entities/) in a Control Plane Group.
 
 All entities in a Control Plane Group must have unique names and IDs. 
 For example, if two members of a Control Plane Group both have a Service named `example_service`, 
@@ -121,8 +121,8 @@ it will cause a [conflict](/gateway-manager/control-plane-groups/#control-plane-
 
 A number of {{site.base_gateway}} entities can be associated with each other.
 Based on the type of association, the behavior of these associated entities in a Control Plane Group follows one of these patterns:
-* If the entity relationship is referenced by ID, associations remain constrained to the behavior of the individual control plane.
-* If the entity relationship is referenced by a string, then associations across one or more member control planes are possible.
+* If the entity relationship is referenced by ID, associations remain constrained to the behavior of the individual Control Plane.
+* If the entity relationship is referenced by a string, then associations across one or more member Control Planes are possible.
 
 {% table %}
 columns:
@@ -158,8 +158,8 @@ rows:
     associated: Service, Route, Consumer
     type: By ID
   - entity: Global plugin
-    associated: Control plane
-    type: By control plane
+    associated: Control Plane
+    type: By Control Plane
   - entity: Key
     associated: Key set
     type: By ID
@@ -174,9 +174,11 @@ rows:
     type: By ID
 {% endtable %}
 
-The {{site.base_gateway}} resource associated with an entity must be part of the same standard control plane as the entity.
+The {{site.base_gateway}} resource associated with an entity must be part of the same standard Control Plane as the entity.
 
-## Entity-specific behavior exceptions
+### Entity-specific behavior exceptions
+
+The following are exceptions to the entity behavior:
 
 {% table %}
 columns:
@@ -187,32 +189,33 @@ columns:
 rows:
   - entity: Consumers
     behavior: >-
-      A Consumer from a standard Control Plane becomes a Consumer of the Control Plane group once the Control Plane joins the group.<br><br>
-      The Consumer's authentication credentials also become valid for the Control Plane group.<br><br>
+      A Consumer from a standard Control Plane becomes a Consumer of the Control Plane Group once the Control Plane joins the group.<br><br>
+      The Consumer's authentication credentials also become valid for the Control Plane Group.<br><br>
       However, a Consumer ID from one member cannot be used for authorization in another member.
-  - entity: Consumer groups
+  - entity: Consumer Groups
     behavior: >-
-      Only Consumers from the same Control Plane can be added to a Consumer group.<br><br>
-      In the Rate Limiting Advanced plugin, Consumer group names can reference groups from other Control Plane group members.
+      Only Consumers from the same Control Plane can be added to a Consumer Group.<br><br>
+      In the Rate Limiting Advanced plugin, Consumer Group names can reference groups from other Control Plane Group members.
   - entity: Vaults
     behavior: >-
       Vault prefixes must be unique.<br><br>
-      When a Vault from a standard Control Plane joins a Control Plane group, it becomes available to the whole group.<br><br>
-      Entity fields can reference secrets in Vaults from other members of the Control Plane group.
+      When a Vault from a standard Control Plane joins a Control Plane Group, it becomes available to the whole group.<br><br>
+      Entity fields can reference secrets in Vaults from other members of the Control Plane Group.
   - entity: Global plugins
-    behavior: >-
-      A globally scoped plugin in a standard Control Plane remains globally scoped within the Control Plane group.<br><br>
-      It affects the entire group. For example, you cannot install two instances of the Rate Limiting plugin in the same Control Plane group.<br><br>
+    behavior: |
+      A globally scoped plugin in a standard Control Plane remains globally scoped within the Control Plane Group.<br><br>
+      It affects the entire group. For example, you cannot install two instances of the Rate Limiting plugin in the same Control Plane Group.<br><br>
+      
+      {:.info}
+       > **Note:** If you want to limit which users can apply global plugins, add all global plugins into a single Control Plane, and then grant access to only your limited set of users. If any other member Control Planes add a global plugin to their configuration, a conflict will result and prevent the changed configuration from being applied.
 
 {% endtable %}
 
-{:.note}
-> **Note:** If you want to limit which users can apply global plugins, add all global plugins into a single Control Plane, and then grant access to only your limited set of users. If any other member Control Planes add a global plugin to their configuration, a conflict will result and prevent the changed configuration from being applied.
 
 
 ## Control Plane conflicts
 
-When combining configurations from individual control planes into a Control Plane Group you may receive conflict errors in {{site.konnect_short_name}}, for example: 
+When combining configurations from individual Control Planes into a Control Plane Group you may receive conflict errors in {{site.konnect_short_name}}, for example: 
 
 ```sh
 Conflicts have been detected between these control planes: 
