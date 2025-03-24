@@ -67,11 +67,10 @@ its members, which are standard Control Planes. All of the standard Control Plan
 Control Plane Group share the same cluster of Data Plane nodes. 
 
 
-## How does a Control Plane Group work?
-The following diagram illustrates using a control plane group for a federated platform administrator model:
+The following diagram illustrates using a Control Plane Group for a federated platform administrator model:
 
 * Team Blue configures Control Plane Blue, which is then combined with the configuration from Team Green.
-* The control plane group also contains Control Plane Purple, which is managed by a central platform team.
+* The Control Plane Group also contains Control Plane Purple, which is managed by a central platform team.
 * The central platform team manages global plugin configuration in Control Plane Purple, which is added to any configuration that teams Blue and Green provide.
 
 The Data Plane nodes in the cluster use the combined configuration from all three groups.
@@ -100,7 +99,7 @@ flowchart LR
   end
 
   id2 -- Get config from 
-  control plane group
+  Control Plane Group
   Steel--> F & G
 
   subgraph id3 [Data centers]
@@ -113,14 +112,14 @@ flowchart LR
 
 ## Configuring core entities
 
-There are some special cases and behaviors to note for core entities in a control plane group.
+There are some special cases and behaviors to note for core entities in a Control Plane Group.
 
-All entities in a control plane group must have unique names and IDs. 
-For example, if two members of a control plane group both have a Service named `example_service`, 
+All entities in a Control Plane Group must have unique names and IDs. 
+For example, if two members of a Control Plane Group both have a Service named `example_service`, 
 it will cause a [conflict](/gateway-manager/control-plane-groups/#control-plane-conflicts/) which must be resolved to restore function.
 
 A number of {{site.base_gateway}} entities can be associated with each other.
-Based on the type of association, the behavior of these associated entities in a control plane group follows one of these patterns:
+Based on the type of association, the behavior of these associated entities in a Control Plane Group follows one of these patterns:
 * If the entity relationship is referenced by ID, associations remain constrained to the behavior of the individual control plane.
 * If the entity relationship is referenced by a string, then associations across one or more member control planes are possible.
 
@@ -212,7 +211,7 @@ rows:
 
 ## Control Plane conflicts
 
-When combining configurations from individual control planes into a control plane group you may receive conflict errors in {{site.konnect_short_name}}, for example: 
+When combining configurations from individual control planes into a Control Plane Group you may receive conflict errors in {{site.konnect_short_name}}, for example: 
 
 ```sh
 Conflicts have been detected between these control planes: 
@@ -232,16 +231,16 @@ columns:
   - title: Action
     key: action
 rows:
-  - conflict: Duplicate names across control plane group members
+  - conflict: Duplicate names across Control Plane Group members
     description: Same entity name exists in multiple member control planes.
     action: Remove or rename one of the conflicting entities.
-  - conflict: Shared credentials across control plane group members
+  - conflict: Shared credentials across Control Plane Group members
     description: Credentials from one member can authenticate across the group.
     action: Remove shared credentials if cross-access is not desired.
-  - conflict: ACL group names across control plane group members
+  - conflict: ACL group names across Control Plane Group members
     description: ACL group names are shared across members.
     action: Remove or rename duplicate ACL groups if isolation is needed.
-  - conflict: Consumer groups across control plane group members
+  - conflict: Consumer groups across Control Plane Group members
     description: Consumer group names are shared across members.
     action: Remove or rename duplicates if isolation is needed.
   - conflict: decK dump with duplicate names found
