@@ -10,7 +10,8 @@ related_resources:
 permalink: /kubernetes-ingress-controller/routing/tcp-by-sni/
 breadcrumbs:
   - /kubernetes-ingress-controller/
-  - /kubernetes-ingress-controller/routing/
+  - index: kubernetes-ingress-controller
+    section: Routing
 
 products:
   - kic

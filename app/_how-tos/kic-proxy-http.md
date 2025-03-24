@@ -9,7 +9,9 @@ related_resources:
 permalink: /kubernetes-ingress-controller/routing/http/
 breadcrumbs:
   - /kubernetes-ingress-controller/
-  - /kubernetes-ingress-controller/routing/
+  - index: kubernetes-ingress-controller
+    section: Routing
+
 
 products:
   - kic
