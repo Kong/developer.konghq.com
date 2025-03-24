@@ -78,38 +78,21 @@ rows:
   - header:
       type: h3
       text: "Supported Data Plane hosting options"
-    columns: 
+    columns:
       - blocks:
-        - type: card
+        - type: gateway_hosting
           config:
-            title: Serverless gateways 
-            description: |
-              Learn about serverless gateways hosting for Data Planes.
-              
-            icon: /assets/icons/serverless-gateway.svg
-            cta:
-              url: "/gateway/topology-hosting-options/#serverless-gateways"
-      - blocks: 
-        - type: card
-          config:
-            title: Dedicated Cloud Gateways
-            description: |
-              Learn about Dedicated Cloud Gateways hosting for Data Planes.
-              
-            icon: /assets/icons/dedicated-cloud-gateway.svg
-            cta:
-              url: "/gateway/topology-hosting-options/#dedicated-cloud-gateways"
+            name: serverless
+
       - blocks:
-        - type: card
+        - type: gateway_hosting
           config:
-            title: Self-hosted Data Plane nodes
-            description: |
-              Learn about self-hosting Data Plane nodes.
-              
-            icon: /assets/icons/self-hosted.svg
-            cta:
-              url: "/gateway/topology-hosting-options/#self-hosted"
-    
+            name: dedicated_cloud_gateways
+
+      - blocks:
+        - type: gateway_hosting
+          config:
+            name: self_hosted_data_plane
   - header:
       type: h2
       text: "Traditional mode"

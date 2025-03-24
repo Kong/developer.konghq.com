@@ -1,0 +1,17 @@
+serverless:
+  title: 'Serverless gateways'
+  description: 'Learn about serverless gateways hosting for Data Planes.'
+  icon: '/assets/icons/serverless-gateway.svg'
+  url: '/gateway/topology-hosting-options/#serverless-gateways'
+
+dedicated_cloud_gateways:
+  title: 'Dedicated Cloud Gateways'
+  description: 'Learn about Dedicated Cloud Gateways hosting for Data Planes.'
+  icon: '/assets/icons/dedicated-cloud-gateway.svg'
+  url: '/gateway/topology-hosting-options/#dedicated-cloud-gateways'
+
+self_hosted_data_plane:
+  title: 'Self-hosted Data Plane nodes'
+  description: 'Learn about self-hosting Data Plane nodes.'
+  icon: '/assets/icons/self-hosted.svg'
+  url: '/gateway/topology-hosting-options/#self-hosted'
