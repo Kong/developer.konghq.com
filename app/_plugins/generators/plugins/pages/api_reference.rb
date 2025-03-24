@@ -7,8 +7,12 @@ module Jekyll
   module PluginPages
     module Pages
       class ApiReference < Base # rubocop:disable Style/Documentation
-        def self.url(slug)
-          "/plugins/#{slug}/api/"
+        def self.url(plugin)
+          if plugin.unreleased?
+            "/plugins/#{plugin.slug}/api/#{plugin.min_release}/"
+          else
+            "/plugins/#{plugin.slug}/api/"
+          end
         end
 
         def content

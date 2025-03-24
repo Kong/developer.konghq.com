@@ -94,7 +94,11 @@ module Jekyll
       end
 
       def url
-        @url ||= "/plugins/#{@plugin.slug}/examples/#{slug}/"
+        @url ||= if @plugin.unreleased?
+                   "/plugins/#{@plugin.slug}/examples/#{slug}/#{@plugin.min_release}"
+                 else
+                   "/plugins/#{@plugin.slug}/examples/#{slug}/"
+                 end
       end
 
       def id

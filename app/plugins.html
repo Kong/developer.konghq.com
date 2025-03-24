@@ -52,7 +52,7 @@ edit_and_issue_links: false
 
 
   {% assign categories = site.data.plugin_categories | sort: "text" %}
-  {% assign kong_plugins = site.data.kong_plugins %}
+  {% assign kong_plugins = site.data.kong_plugins | where_exp: "plugin", "plugin.published != false" %}
 
   <div class="grid grid-cols-4 gap-16">
     <div id="filters" class="w-full flex flex-col gap-8 sticky top-24 self-start">

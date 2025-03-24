@@ -24,24 +24,26 @@ module Jekyll
         end
 
         def data # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
-          @plugin.metadata.except('search_aliases').merge(
-            'slug' => @plugin.slug,
-            'plugin?' => true,
-            'layout' => layout,
-            'tools' => @plugin.formats,
-            'breadcrumbs' => ['/plugins/'],
-            'compatible_protocols' => compatible_protocols,
-            'schema' => schema,
-            'plugin' => @plugin,
-            'overview_url' => Overview.url(@plugin.slug),
-            'changelog_exists?' => @plugin.changelog_exists?,
-            'changelog_url' => Changelog.url(@plugin.slug),
-            'get_started_url' => @plugin.examples.first.url,
-            'reference_url' => reference_url,
-            'icon' => icon,
-            'api_spec_exists?' => @plugin.api_spec_exists?,
-            'api_reference_url' => ApiReference.url(@plugin.slug)
-          )
+          @plugin.metadata
+                 .except('search_aliases')
+                 .merge(
+                   'slug' => @plugin.slug,
+                   'plugin?' => true,
+                   'layout' => layout,
+                   'tools' => @plugin.formats,
+                   'breadcrumbs' => ['/plugins/'],
+                   'compatible_protocols' => compatible_protocols,
+                   'schema' => schema,
+                   'plugin' => @plugin,
+                   'overview_url' => Overview.url(@plugin),
+                   'changelog_exists?' => @plugin.changelog_exists?,
+                   'changelog_url' => Changelog.url(@plugin),
+                   'get_started_url' => @plugin.examples.first.url,
+                   'reference_url' => Reference.url(@plugin),
+                   'icon' => icon,
+                   'api_spec_exists?' => @plugin.api_spec_exists?,
+                   'api_reference_url' => ApiReference.url(@plugin)
+                 ).merge(publication_info)
         end
 
         def relative_path
@@ -53,7 +55,7 @@ module Jekyll
         end
 
         def url
-          @url ||= self.class.url(@plugin.slug)
+          @url ||= self.class.url(@plugin)
         end
 
         private
@@ -62,15 +64,14 @@ module Jekyll
           @icon ||= "/assets/icons/plugins/#{@plugin.icon}"
         end
 
-        def reference_url
-          base_url = Reference.url(@plugin.slug)
-          return base_url unless @plugin.unreleased?
-
-          "#{base_url}#{@plugin.latest_release_in_range}/"
-        end
-
         def schema
           @schema ||= @plugin.schema
+        end
+
+        def publication_info
+          return {} if @plugin.publish?
+
+          { 'published' => false }
         end
       end
     end

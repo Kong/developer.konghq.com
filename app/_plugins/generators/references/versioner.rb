@@ -42,12 +42,15 @@ module Jekyll
         )
       end
 
-      def handle_canonicals! # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      def handle_canonicals! # rubocop:disable Metrics/AbcSize, Metrics/MethodLength,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
         if page.data['versioned']
           page.data.merge!('canonical_url' => page.url, 'canonical?' => true)
         elsif min_release && min_release > latest_available_release
-          # Setting published: false prevents Jekyll from rendering the page.
-          page.data.merge!('published' => false)
+          if !page.data.key?('published') && !(page.data['plugin?'] && page.data['changelog?'])
+            # Setting published: false prevents Jekyll from rendering the page.
+            page.data.merge!('published' => false)
+          end
+
         elsif max_release && max_release < latest_available_release
           page.data.merge!(
             'published' => false,
@@ -58,7 +61,9 @@ module Jekyll
         end
       end
 
-      def generate_pages!
+      def generate_pages! # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity
+        return [] if page.data['plugin?'] && page.data['changelog?']
+
         unless page.data['versioned']
           return [] unless min_release && min_release > latest_available_release
           return [] if ENV['JEKYLL_ENV'] == 'production'

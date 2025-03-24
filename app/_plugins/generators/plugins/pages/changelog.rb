@@ -6,8 +6,12 @@ module Jekyll
   module PluginPages
     module Pages
       class Changelog < Base
-        def self.url(slug)
-          "/plugins/#{slug}/changelog/"
+        def self.url(plugin)
+          if plugin.unreleased?
+            "/plugins/#{plugin.slug}/changelog/#{plugin.min_release}/"
+          else
+            "/plugins/#{plugin.slug}/changelog/"
+          end
         end
 
         def content

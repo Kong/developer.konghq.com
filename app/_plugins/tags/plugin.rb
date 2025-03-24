@@ -17,7 +17,12 @@ module Jekyll
 
       plugin = @site.data['kong_plugins'][@plugin_slug]
 
-      raise ArgumentError, "Error rendering {% plugin %} on page: #{@page['path']}. The plugin `#{@plugin_slug}` doesn't exist." unless plugin
+      unless plugin
+        raise ArgumentError,
+              "Error rendering {% plugin %} on page: #{@page['path']}. The plugin `#{@plugin_slug}` doesn't exist."
+      end
+
+      return '' if plugin.data['published'] == false
 
       context.stack do
         context['plugin'] = plugin

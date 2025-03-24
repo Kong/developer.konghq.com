@@ -94,6 +94,14 @@ module Jekyll
         @api_spec_file_path ||= File.join('api-specs', 'plugins', slug, 'openapi.yaml')
       end
 
+      def min_release
+        @min_release ||= release_info.min_release
+      end
+
+      def publish?
+        !(unreleased? && ENV['JEKYLL_ENV'] == 'production')
+      end
+
       private
 
       def release_info

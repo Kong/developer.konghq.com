@@ -4,8 +4,12 @@ module Jekyll
   module PluginPages
     module Pages
       class Overview < Base # rubocop:disable Style/Documentation
-        def self.url(slug)
-          "/plugins/#{slug}/"
+        def self.url(plugin)
+          if plugin.unreleased?
+            "/plugins/#{plugin.slug}/#{plugin.min_release}/"
+          else
+            "/plugins/#{plugin.slug}/"
+          end
         end
 
         def content
