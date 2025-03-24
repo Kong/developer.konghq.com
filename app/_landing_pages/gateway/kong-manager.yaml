@@ -172,7 +172,6 @@ rows:
               products:
                 - gateway
               quantity: 5
-              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
   - header:
       type: h2
       text: References & Tools
@@ -186,4 +185,3 @@ rows:
                 - gateway 
               quantity: 5
               allow_empty: true
-              view_more: "https://docs.devsite.com/search/{topic}+{other stuff}" ## Takes you to search with terms that match this.
