@@ -1,9 +1,8 @@
 {% assign summary='{{site.kic_product_name}} running' %}
 {% assign additional_flags = '' %}
-{% if prereqs.kubernetes.gateway_api %}
+{% if prereqs.kubernetes.gateway_api == 'experimental' %}
 {% assign additional_flags = additional_flags | append:' --set controller.ingressController.env.feature_gates="GatewayAlpha=true"' %}
 {% endif %}
-{% assign additional_flags = additional_flags | append:' --set controller.ingressController.env.log_level="debug"' %}
 
 {% capture details_content %}
 
