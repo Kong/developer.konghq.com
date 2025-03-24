@@ -155,6 +155,7 @@ rows:
   - header:
       type: h3
       text: "Supported Data Plane hosting options"
+    col_span: 3
     columns: 
       - blocks:
         - type: card
