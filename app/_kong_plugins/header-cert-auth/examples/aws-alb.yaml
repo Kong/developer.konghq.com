@@ -1,0 +1,28 @@
+description: ''
+
+title: ''
+
+weight: 900
+
+requirements:
+ - "Add [certificate authority (CA) certificates](/gateway/entities/ca-certificate/) before configuring the plugin."
+ - ALB requirements
+
+variables: 
+   ca_certificates:
+     description: ''
+     value: $CA-CERT
+
+config:
+  ca_certificates:
+  - 0D769DE8-7CC0-4541-989B-F9C23E20054C
+  certificate_header_name: ssl-client-cert
+  certificate_header_format: base64_encoded
+  secure_source: false
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -416,6 +416,11 @@ app/_kong_plugins/exit-transformer/changelog.md:
   - app/_hub/kong-inc/exit-transformer/_changelog.md
 app/_how-tos/transform-a-404-response-message.md:
   - app/_hub/kong-inc/exit-transformer/overview/_index.md
+app/_kong_plugins/header-cert-auth/changelog.md:
+  - app/_hub/kong-inc/header-cert-auth/_changelog.md
+app/_kong_plugins/header-cert-auth/index.md:
+  - app/_hub/kong-inc/header-cert-auth/how-to/_manual-mapping-cert-consumers.md
+  - app/_hub/kong-inc/header-cert-auth/overview/_index.md
 
 # Konnect
 

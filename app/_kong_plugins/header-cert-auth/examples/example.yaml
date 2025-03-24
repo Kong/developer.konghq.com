@@ -4,8 +4,8 @@ title: ''
 
 weight: 900
 
-# requirements: <- not required
-# - "some req"
+requirements:
+ - "Add [certificate authority (CA) certificates](/gateway/entities/ca-certificate/) before configuring the plugin."
 
 # variables: <- not required
 #   my-region:
