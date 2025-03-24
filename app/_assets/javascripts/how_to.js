@@ -1,30 +1,51 @@
 class HowTo {
   constructor() {
-    this.deploymentTopologySwitchs = document.querySelectorAll(
-      ".deployment-topology-switch"
+    this.deploymentTopologySwitch = Array.from(
+      document.querySelectorAll(".deployment-topology-switch")
+    ).find(
+      (e) => !!(e.offsetWidth || e.offsetHeight || e.getClientRects().length)
     );
     this.prerequisites = document.querySelector(".prerequisites");
     this.cleanup = document.querySelector(".cleanup");
+    this.deploymentToplogyKey = "deployment-topology-switch";
 
     this.init();
     this.addEventListeners();
   }
 
   addEventListeners() {
-    if (this.deploymentTopologySwitchs) {
-      this.deploymentTopologySwitchs.forEach((s) => {
-        s.addEventListener("change", this.onChange.bind(this));
-      });
+    if (this.deploymentTopologySwitch) {
+      this.deploymentTopologySwitch.addEventListener(
+        "change",
+        this.onChange.bind(this)
+      );
     }
   }
 
   init() {
-    if (this.deploymentTopologySwitchs.length) {
-      this.toggleTopology(this.deploymentTopologySwitchs[0].value, false);
+    if (this.deploymentTopologySwitch.length) {
+      try {
+        if (localStorage.getItem(this.deploymentToplogyKey) !== null) {
+          const storedOption = localStorage.getItem(this.deploymentToplogyKey);
+          if (
+            storedOption &&
+            [...this.deploymentTopologySwitch.options].some(
+              (opt) => opt.value === storedOption
+            )
+          ) {
+            this.deploymentTopologySwitch.value = storedOption;
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      this.toggleTopology(this.deploymentTopologySwitch.value, true);
     }
   }
 
   onChange(event) {
+    localStorage.setItem(this.deploymentToplogyKey, event.target.value);
     this.toggleTopology(event.target.value, true);
   }
 
@@ -32,7 +53,11 @@ class HowTo {
     this.prerequisites
       .querySelectorAll("[data-deployment-topology]")
       .forEach((item) => {
-        this.toggleItem(item, topology, trigger);
+        let shouldTrigger = trigger;
+        if (shouldTrigger && item.ariaExpanded === "true") {
+          shouldTrigger = false;
+        }
+        this.toggleItem(item, topology, shouldTrigger);
       });
 
     document
