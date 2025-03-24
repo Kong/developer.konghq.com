@@ -13,7 +13,7 @@
         <li class="mb-2">
           <a class="font-bold" href="{{ page.url }}">{{ title }}</a>
           <p class="text-sm text-gray-400">
-            <a class="hover:no-underline" href="{{ page.url }}">{{ page.description }}</a>
+            <a class="hover:no-underline" href="{{ page.url }}">{{ page.description | markdown }}</a>
           </p>
         </li>
       {% endfor %}

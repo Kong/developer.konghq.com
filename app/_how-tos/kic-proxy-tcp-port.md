@@ -1,6 +1,6 @@
 ---
 title: Proxy TCP traffic by port
-description: "Route TCP requests to services in your cluster based on the incoming port using TCPRoute or TCPIngress"
+description: "Route TCP requests to services in your cluster based on the incoming port using `TCPRoute` or `TCPIngress`"
 content_type: how_to
 related_resources:
   - text: All KIC documentation

@@ -1,6 +1,6 @@
 ---
 title: Proxy GRPC Traffic over TLS
-description: "Route GRPC requests over TLS to services in your cluster using GRPCRoute"
+description: "Use `GRPCRoute` to route traffic to a service secured with TLS"
 content_type: how_to
 related_resources:
   - text: All KIC documentation

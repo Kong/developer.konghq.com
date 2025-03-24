@@ -1,6 +1,6 @@
 ---
 title: Proxy UDP traffic by port
-description: "Route UDP requests to services in your cluster based on the incoming port using UDPRoute or UDPIngress"
+description: "Route UDP requests to services in your cluster using UDPRoute or UDPIngress"
 content_type: how_to
 related_resources:
   - text: All KIC documentation
