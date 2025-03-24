@@ -166,7 +166,7 @@ helm install kong kong/ingress -n kong --create-namespace
 Ensure that you can call the proxy IP:
 
 ```bash
-export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
 curl -i $PROXY_IP
 ```
 
