@@ -21,7 +21,7 @@ works_on:
 entities: []
 
 tldr:
-  q: How do I route UDO traffic with Kong Ingress Controller?
+  q: How do I route UDP traffic with {{ site.kic_product_name }}?
   a: Create a `UDPRoute` or `UDPIngress` resource, which will then be converted in to a {{ site.base_gateway }} Service and Route
 
 prereqs:

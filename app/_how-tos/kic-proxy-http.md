@@ -21,7 +21,7 @@ works_on:
 entities: []
 
 tldr:
-  q: How do I route HTTP traffic with Kong Ingress Controller?
+  q: How do I route HTTP traffic with {{ site.kic_product_name }}?
   a: Create a `HTTPRoute` or `Ingress` resource, which will then be converted in to a {{ site.base_gateway }} Service and Route
 
 prereqs:
