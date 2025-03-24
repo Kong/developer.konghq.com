@@ -2,7 +2,7 @@
 
 module Jekyll
   module Data
-    class HowTo
+    class MinVersion # rubocop:disable Style/Documentation
       attr_reader :site, :page
 
       def initialize(site:, page:)
@@ -10,11 +10,14 @@ module Jekyll
         @page = page
       end
 
-      def process
+      def process # rubocop:disable Metrics/AbcSize
+        return unless %w[how_to landing_page].include?(@page.data['content_type'])
+        return unless @page.data['min_version']
+
         @page.data['latest_release'] = release_info.latest_available_release
         return unless unreleased?
 
-        @page.instance_variable_set(:@url, "#{@page.url}/#{release_info.min_release}/")
+        @page.instance_variable_set(:@url, "#{@page.url}#{release_info.min_release}/")
 
         return unless ENV['JEKYLL_ENV'] == 'production'
 
@@ -22,17 +25,10 @@ module Jekyll
       end
 
       def release_info
-        @release_info ||= ReleaseInfo::Product.new(
-          site:,
-          product: @page.data['products'].first,
-          min_version: @page.data.fetch('min_version', {}),
-          max_version: @page.data.fetch('max_version', {})
-        )
+        @release_info ||= ReleaseInfo::Builder.run(@page)
       end
 
       def unreleased?
-        return false unless @page.data['min_version']
-
         @release_info.unreleased?
       end
     end

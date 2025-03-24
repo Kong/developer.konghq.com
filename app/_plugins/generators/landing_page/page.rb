@@ -2,8 +2,8 @@
 
 module Jekyll
   module LandingPages
-    class Page < Jekyll::Page
-      def initialize(site, file)
+    class Page < Jekyll::Page # rubocop:disable Style/Documentation
+      def initialize(site, file) # rubocop:disable Lint/MissingSuper
         @site = site
         data = load_file(file)
 
@@ -25,7 +25,7 @@ module Jekyll
       end
 
       def url
-        @dir.sub(@site.dest, '')
+        @url ||= @dir.sub(@site.dest, '')
       end
 
       private

@@ -75,27 +75,7 @@ module Jekyll
       end
 
       def release_info
-        @release_info ||= if product && product == 'api-ops'
-                            ReleaseInfo::Tool.new(site:, tool:, min_version:, max_version:)
-                          else
-                            ReleaseInfo::Product.new(site:, product:, min_version:, max_version:)
-                          end
-      end
-
-      def product
-        @product ||= page.data.fetch('products', []).first
-      end
-
-      def tool
-        @tool ||= page.data.fetch('tools', []).first
-      end
-
-      def min_version
-        @min_version ||= @page.data.fetch('min_version', {})
-      end
-
-      def max_version
-        @max_version ||= @page.data.fetch('max_version', {})
+        @release_info ||= ReleaseInfo::Builder.run(@page)
       end
     end
   end
