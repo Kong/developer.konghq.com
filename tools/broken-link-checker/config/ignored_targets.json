@@ -53,5 +53,8 @@
     "https://updates.insomnia.rest/*",
     "https://insomnia.rest/run/*",
     "https://www.linkedin.com/company/konghq",
-    "https://console.mistral.ai/api-keys/"
+    "https://console.mistral.ai/api-keys/",
+    "https://azure.microsoft.com/en-us/services/functions/",
+    "https://dashboard.ngrok.com/",
+    "https://dashboard.ngrok.com/*"
   ]
