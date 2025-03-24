@@ -1,0 +1,37 @@
+
+title: 'Authenticate to Azure OpenAI Service with an Azure Managed Identity'
+description: 'Configure a chat route using Azure OpenAI Service with the latest GPT-3.5 Turbo model, and authenticate using an Azure Managed Identity.'
+
+weight: 900
+
+requirements:
+- Azure OpenAI instance
+- Azure OpenAI model deployment
+
+plugins:
+- name: ai-proxy
+ config:
+   route_type: llm/v1/chat
+   auth:
+     azure_use_managed_identity: true
+   model:
+     provider: azure
+     name: gpt-35-turbo
+     options:
+       azure_instance: ${instance}
+       azure_deployment_id: ${deployment}
+
+variables:
+  instance:
+    value: $AZURE_INSTANCE_NAME
+    description: The name of the Azure OpenAI instance.
+  deployment:
+    value: $AZURE_DEPLOYMENT_ID
+    description: The ID of the Azure OpenAI deployment.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
