@@ -12,8 +12,6 @@ min_version:
 description: See where {{site.base_gateway}} logs are located, the different log levels, and how to configure logs and log levels.
 
 related_resources:
-  - text: Customize Gateway Logs
-    url: /gateway/customize-gateway-logs/
   - text: "Secure {{site.base_gateway}}"
     url: /gateway/security/
   - text: "{{site.base_gateway}} debugging"
@@ -68,7 +66,69 @@ This feature can be customized for upstreams and downstreams using the `headers`
 
 ## Customize what {{site.base_gateway}} logs
 
-You might need to customize what {{site.base_gateway}} logs to protect private information and comply with GDPR. For example, if you wanted to remove instances of an email address from your logs. For more information about how to customize your logs, see [Customize Gateway Logs](/gateway/customize-gateway-logs/).
+You might need to customize what {{site.base_gateway}} logs to protect private information and comply with GDPR. For example, if you wanted to remove instances of an email address from your logs. These changes can be made to {{site.base_gateway}}'s Nginx template and only affect the output of the Nginx access logs. This doesn't have any effect on {{site.base_gateway}}'s [logging plugins](/plugins/?category=logging).
+
+For this example, let’s say you want to remove any instances of an email address from your {{site.base_gateway}} logs. The email addresses may come through in different ways, for example `/servicename/v2/verify/alice@example.com` or `/v3/verify?alice@example.com`. To keep all of these formats from being added to the logs, you need to use a custom Nginx template by making a copy of {{site.base_gateway}}'s Nginx template.
+
+The following template shows an example configuration to remove email addresses from logs, but you can use this logic to remove anything you want from the logs in a conditional manner:
+
+```nginx
+# ---------------------
+# custom_nginx.template
+# ---------------------
+
+worker_processes ${{NGINX_WORKER_PROCESSES}}; # can be set by kong.conf
+daemon ${{NGINX_DAEMON}};                     # can be set by kong.conf
+
+pid pids/nginx.pid;                      # this setting is mandatory
+error_log stderr ${{LOG_LEVEL}}; # can be set by kong.conf
+
+
+
+events {
+    use epoll; # custom setting
+    multi_accept on;
+}
+
+http {
+
+
+    map $request_uri $keeplog {
+        ~.+\@.+\..+ 0;
+        ~/v1/invitation/ 0;
+        ~/reset/v1/customer/password/token 0;
+        ~/v2/verify 0;
+
+        default 1;
+    }
+    log_format show_everything '$remote_addr - $remote_user [$time_local] '
+        '$request_uri $status $body_bytes_sent '
+        '"$http_referer" "$http_user_agent"';
+
+    include 'nginx-kong.conf';
+}
+```
+
+For this example, we're using the following:
+
+* `map $request_uri $keeplog`: Maps a new variable called `keeplog`, which is dependent on values appearing in the `$request_uri`. Each line in the example starts with a `~` because this is what tells Nginx to use regex when evaluating the line. This example looks for the following:
+  - The first line uses regex to look for any email address in the `x@y.z` format
+  - The second line looks for any part of the URI that contains `/servicename/v2/verify`
+  - The third line looks at any part of the URI that contains `/v3/verify`
+  Because all of these patterns have a value of something other than `0`, if a request has any of those elements, it will not be added to the log.
+* `log_format`: Sets the log format for what {{site.base_gateway}} keeps in the logs. The contents of the log can be customized for your needs. For the purpose of this example, you can assign the new logs with the name `show_everything` and  simply set everything to the {{site.base_gateway}} default standards. To see the full list of options, refer to the [Nginx core module variables reference](https://nginx.org/en/docs/http/ngx_http_core_module.html#variables).
+
+Once you've adjusted the Nginx template for your environment, the last thing you must do is tell {{site.base_gateway}} to use the newly created log, `show_everything`. 
+
+To do this, alter the {{site.base_gateway}} variable `proxy_access_log` by either editing `etc/kong/kong.conf` or using the environmental variable `KONG_PROXY_ACCESS_LOG` adjust the default location:
+
+```sh
+proxy_access_log=logs/access.log show_everything if=$keeplog
+```
+
+Restart {{site.base_gateway}} to make all the changes take effect with the `kong restart` command.
+
+Now, any request made with an email address in it will no longer be logged. 
 
 ## AI Gateway logs
 
