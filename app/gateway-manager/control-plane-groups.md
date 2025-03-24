@@ -69,6 +69,39 @@ Control Plane Group share the same cluster of Data Plane nodes.
 
 
 The following diagram illustrates using a Control Plane Group for a federated platform administrator model:
+<!--vale off-->
+{% mermaid %}
+flowchart LR
+  A(Team Blue)
+  B(Team Green)
+  C(Control Plane Blue)
+  D(Control Plane Purple
+    global config)
+  E(Control Plane Green)
+  F(Data Plane nodes)
+  G(Data Plane nodes)
+
+  A -- deck gateway sync --> C
+  B -- deck gateway sync --> E
+
+  subgraph id1 ["`**KONNECT ORG**`"]
+    subgraph id2 [<br>Control Plane Group Steel]
+    C
+    D
+    E
+    end
+  end
+
+  id2 -- Get config from 
+  Control Plane Group
+  Steel--> F & G
+
+  subgraph id3 [Data centers]
+  F
+  G
+  end
+{% endmermaid %}
+<!--vale on-->
 
 * Team Blue configures Control Plane Blue, which is then combined with the configuration from Team Green.
 * The Control Plane Group also contains Control Plane Purple, which is managed by a central platform team.
