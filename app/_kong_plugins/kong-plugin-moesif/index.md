@@ -15,9 +15,6 @@ works_on:
     - on-prem
     - konnect
 
-max_version:
-    gateway: '3.5'
-
 # on_prem:
 #   - hybrid
 #   - db-less

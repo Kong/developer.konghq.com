@@ -15,8 +15,6 @@ works_on:
     - on-prem
     - konnect
 
-max_version:
-    gateway: '3.4'
 
 # on_prem:
 #   - hybrid
