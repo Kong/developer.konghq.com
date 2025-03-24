@@ -40,7 +40,7 @@ Validate individual WebSocket messages against a user-specified schema before pr
 
 The message schema can be configured by type (text or binary) and sender (client or upstream).
 
-This plugin supports validation against [JSON schema draft4](https://json-schema.org/specification-links.html#draft-4).
+This plugin supports validation against [JSON schema draft4](https://json-schema.org/specification-links#draft-4).
 
 ## How it works 
 

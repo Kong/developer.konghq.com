@@ -116,7 +116,7 @@ features:
     dbless: true
     konnect: true
   - title: "`vault`"
-    description: "[HashiCorp Vault](https://www.vaultproject.io/) storage. Only the [KV V2](https://www.vaultproject.io/api/secret/kv/kv-v2.html) backend is supported."
+    description: "[HashiCorp Vault](https://www.vaultproject.io/) storage. Only the [KV V2](https://developer.hashicorp.com/vault/api-docs/secret/kv/kv-v2) backend is supported."
     traditional: true
     hybrid: true
     dbless: true
