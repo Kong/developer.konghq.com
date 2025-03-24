@@ -8,18 +8,17 @@ requirements:
 - Azure OpenAI instance
 - Azure OpenAI model deployment
 
-plugins:
-- name: ai-proxy
- config:
-   route_type: llm/v1/chat
-   auth:
-     azure_use_managed_identity: true
-   model:
-     provider: azure
-     name: gpt-35-turbo
-     options:
-       azure_instance: ${instance}
-       azure_deployment_id: ${deployment}
+
+config:
+  route_type: llm/v1/chat
+  auth:
+    azure_use_managed_identity: true
+  model:
+    provider: azure
+    name: gpt-35-turbo
+    options:
+      azure_instance: ${instance}
+      azure_deployment_id: ${deployment}
 
 variables:
   instance:
