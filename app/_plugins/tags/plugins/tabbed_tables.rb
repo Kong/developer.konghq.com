@@ -25,7 +25,8 @@ module Jekyll
         columns = site.data.dig('plugins', 'tables', table, 'columns')
 
         releases(site).each_with_object({}) do |r, h|
-          h[r.number] = { 'columns' => columns, 'rows' => rows(r) }
+          key = r.lts ? "#{r.number} LTS" : r.number
+          h[key] = { 'columns' => columns, 'rows' => rows(r) }
         end
       end
 
