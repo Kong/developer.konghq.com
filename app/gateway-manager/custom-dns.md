@@ -34,9 +34,6 @@ faqs:
   - q: How often is DNS validation refreshed for Dedicated Cloud Gateways?
     a: |
       DNS validation statuses for Dedicated Cloud Gateways are refreshed every 5 minutes.
-  - q: How often is DNS validation refreshed for Serverless Gateways?
-    a: |
-      DNS validation statuses for Dedicated Cloud Gateways are refreshed every 5 minutes.
   
   - q: How do I delete a custom domain in {{site.konnect_short_name}}?
     a: |
@@ -61,9 +58,17 @@ related_resources:
 ---
 
 
-
 {{site.konnect_short_name}} integrates domain name management and configuration with [Dedicated Cloud Gateways](/konnect/gateway-manager/dedicated-cloud-gateways/).
 
+## {{site.konnect_short_name}} configuration
+
+1. Open **Gateway Manager**, choose a control plane to open the **Overview** dashboard, then click **Connect**.
+    
+    The **Connect** menu will open and display the URL for the **Public Edge DNS**. Save this URL.
+
+1. Select **Custom Domains** from the side navigation, then **New Custom Domain**, and enter your domain name.
+
+    Save the value that appears under **CNAME**. 
 
 ## Dedicated Cloud Gateways domain registrar configuration
 
@@ -98,33 +103,5 @@ rows:
     alias: No
     health: No
     value: "`9e454bcfec.gateways.konghq.com`"
-    ttl: 300
-{% endtable %}
-
-## Serverless domain registrar configuration
-
-{% table %}
-columns:
-  - title: Host Name
-    key: host
-  - title: Record Type
-    key: type
-  - title: Routing Policy
-    key: routing
-  - title: Alias
-    key: alias
-  - title: Evaluate Target Health
-    key: health
-  - title: Value
-    key: value
-  - title: TTL
-    key: ttl
-rows:
-  - host: "`my.example.com`"
-    type: CNAME
-    routing: Simple
-    alias: No
-    health: No
-    value: "`9e454bcfec.kongcloud.dev`"
     ttl: 300
 {% endtable %}
