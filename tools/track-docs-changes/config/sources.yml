@@ -486,6 +486,7 @@ app/gateway/logs.md:
   - app/_src/gateway/production/logging/log-reference.md
   - app/_src/gateway/production/logging/update-log-level-dynamically.md
   - app/_src/gateway/production/logging/ai-analytics.md
+  - app/_src/gateway/production/logging/customize-gateway-logs.md
 app/gateway/network-ports-firewall.md:
   - app/_src/gateway/production/networking/default-ports.md
   - app/_src/gateway/production/networking/firewall.md
