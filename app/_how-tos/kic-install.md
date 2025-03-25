@@ -52,9 +52,9 @@ To create a {{ site.kic_product_name }} in {{ site.konnect_short_name }} deploym
 1. A {{ site.kic_product_name }} Control Plane, including the CP URL
 1. An mTLS certificate for {{ site.kic_product_name }} to talk to {{ site.konnect_short_name }}
 
-### Create a KIC in {{ site.konnect_short_name }} control plane
+### 1. Create a KIC in {{ site.konnect_short_name }} Control Plane
 
-Use the {{ site.konnect_short_name }} API to create a new `CLUSTER_TYPE_K8S_INGRESS_CONTROLLER` control plane:
+Use the {{ site.konnect_short_name }} API to create a new `CLUSTER_TYPE_K8S_INGRESS_CONTROLLER` Control Plane:
 
 ```bash
 curl -H "Authorization: Bearer $KONNECT_TOKEN" \
@@ -96,9 +96,9 @@ kubectl create namespace kong
 kubectl create secret tls konnect-client-tls -n kong --cert=./tls.crt --key=./tls.key
 ```
 
-### Create a values.yaml
+### 4. Create a values.yaml
 
-{{ site.kic_product_name }} needs configuring to send it's configuration to {{ site.konnect_short_name }}. Create a `values.yaml` file by copying and pasting the following command:
+{{ site.kic_product_name }} must be configured to send it's configuration to {{ site.konnect_short_name }}. Create a `values.yaml` file by copying and pasting the following command into your terminal:
 
 ```bash
 echo 'controller:
@@ -147,7 +147,7 @@ helm repo add kong https://charts.konghq.com
 helm repo update
 ```
 
-The default values file installs {{ site.kic_product_name }} in [Gateway Discovery](#) mode with a DB-less {{ site.base_gateway }}. This is our recommended deployment topology.
+The default values file installs {{ site.kic_product_name }} in [Gateway Discovery](#) mode with a DB-less {{ site.base_gateway }}. This is the recommended deployment topology.
 
 Run `helm upgrade --install` to install {{ site.kic_product_name }}:
 
@@ -163,7 +163,7 @@ helm install kong kong/ingress -n kong --create-namespace
 
 ## Test connectivity to Kong
 
-Ensure that you can call the proxy IP:
+Call the proxy IP:
 
 ```bash
 export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
