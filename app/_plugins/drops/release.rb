@@ -2,13 +2,13 @@
 
 module Jekyll
   module Drops
-    class Release < Liquid::Drop
+    class Release < Liquid::Drop # rubocop:disable Style/Documentation
       include Comparable
       include Jekyll::SiteAccessor
 
       attr_reader :release_hash
 
-      def initialize(release_hash)
+      def initialize(release_hash) # rubocop:disable Lint/MissingSuper
         @release_hash = release_hash
       end
 
@@ -36,7 +36,7 @@ module Jekyll
         @major_minor_version ||= number.gsub('.', '')
       end
 
-      def distros_by_os
+      def distros_by_os # rubocop:disable Metrics/AbcSize
         @distros_by_os ||= @release_hash
                            .fetch('distributions', [])
                            .each_with_object(Hash.new { |h, k| h[k] = [] }) do |distro, h|
@@ -48,6 +48,10 @@ module Jekyll
             'version_number' => site.data.dig('support', 'packages', key, 'version').to_s[/\d+(\.\d+)?/]
           }.merge(distro.values.first)
         end
+      end
+
+      def lts
+        @release_hash['lts']
       end
 
       def to_str
