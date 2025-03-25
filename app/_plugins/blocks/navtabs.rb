@@ -8,7 +8,8 @@ module Jekyll
     class NavTabsBlock < Liquid::Block
       def initialize(tag_name, markup, tokens)
         super
-        @class = markup.strip
+
+        @tab_group = markup.strip
       end
 
       def render(context)
@@ -31,7 +32,7 @@ module Jekyll
             {
               'site' => @site.config,
               'page' => context['page'],
-              'class' => @class,
+              'tab_group' => @tab_group,
               'environment' => environment,
               'navtabs_id' => navtabs_id
             },

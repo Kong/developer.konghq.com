@@ -875,7 +875,7 @@ version of {{site.base_gateway}} starting with 2.0.x.
 In 3.0.x, the deprecated alias of `Kong.serve_admin_api` was removed.
 If your custom Nginx templates still use it, change it to `Kong.admin_content`.
 
-{% navtabs %}
+{% navtabs gateway-flavour %}
 {% navtab "OSS" %}
 To view all of the configuration changes between versions, clone the
 [Kong repository](https://github.com/kong/kong) and run `git diff`

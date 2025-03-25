@@ -32,7 +32,7 @@ tldr:
 
 ## 1. Select the workspace to synchronize
 
-{% navtabs %}
+{% navtabs workspace-sync %}
 
 {% navtab "Cloud Sync project" %}
 1. Click **master** at the bottom of the left pane. 
@@ -54,7 +54,7 @@ Select whether you want to clone the repository from GitHub, GitLab, or Git.
 1. Click **Sync**.
 {% endcapture %}
 
-{% navtabs %}
+{% navtabs repo %}
 
 {% navtab "GitHub" %}
 {% include how-tos/steps/insomnia-github.md %}

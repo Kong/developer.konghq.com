@@ -1,6 +1,6 @@
 {% assign tabs = 'navtabs-' | append: navtabs_id %}
 
-<div class="tabs flex flex-col {{ class }} {{ environment['additional_classes'] }}">
+<div class="tabs flex flex-col {{ class }} {{ environment['additional_classes'] }}" data-tab-group="{{ tab_group }}">
   <ul class="tablist" role="tablist">
     {% for tab in environment[tabs] %}
       {% assign slug = tab[1].attributes.slug %}

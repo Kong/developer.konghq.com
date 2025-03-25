@@ -89,7 +89,7 @@ Use the CLI option `-d` to specify the database (for example, `kong`) to export,
 
 ### Declarative backup
 
-{% navtabs %}
+{% navtabs declarative-mode %}
 {% navtab "Traditional or hybrid mode - decK" %}
 
 For a database-backed deployment, we recommend using decK as a secondary backup method.
@@ -185,7 +185,7 @@ for more information.
 If you need to roll back, change the {{site.base_gateway}} instance back to the original version,
 validate the declarative config, then apply it to your {{site.base_gateway}} instance.
 
-{% navtabs %}
+{% navtabs declarative-mode %}
 {% navtab "Traditional or hybrid mode - decK" %}
 
 In traditional or hybrid mode, use decK to restore your configuration from a backup state file.
