@@ -36,7 +36,7 @@ In your Insomnia project, click **Create** > **Git Clone**, and select whether y
 1. Click **Clone**.
 {% endcapture %}
 
-{% navtabs %}
+{% navtabs repo %}
 
 {% navtab "GitHub" %}
 {% include how-tos/steps/insomnia-github.md %}

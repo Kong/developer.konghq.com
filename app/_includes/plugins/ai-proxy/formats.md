@@ -1,4 +1,4 @@
-{% assign plugin = include.plugin %}
+    {% assign plugin = include.plugin %}
 {% assign id = plugin | slugify %}
 
 {% assign provider = include.params.provider %}
@@ -32,7 +32,7 @@ Kong will mediate the request and response format based on the selected [`{{ pro
 
 The Kong AI Proxy accepts the following inputs formats, standardized across all providers. The `{{ route_type }}` must be configured respective to the required request and response format examples:
 
-{% navtabs %}
+{% navtabs ai-proxy-route-type %}
 {% navtab "llm/v1/chat" %}
 ```json
 {
@@ -89,7 +89,7 @@ With Amazon Bedrock, you can include your [guardrail](https://docs.aws.amazon.co
 
 Conversely, the response formats are also transformed to a standard format across all providers:
 
-{% navtabs %}
+{% navtabs ai-proxy-route-type %}
 {% navtab "llm/v1/chat" %}
 ```json
 {

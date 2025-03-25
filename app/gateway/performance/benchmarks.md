@@ -52,7 +52,7 @@ The performance tests cover a number of baseline configurations and common use c
 
 ### {{site.base_gateway}} performance benchmark results
 
-{% navtabs %}
+{% navtabs gateway-version %}
 
 {% navtab "3.9" %}
 | Test type                   | Number of Routes/Consumers  | Requests per second (RPS) | P99 (ms) | P95 (ms) |
