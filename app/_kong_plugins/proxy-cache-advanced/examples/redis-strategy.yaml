@@ -1,8 +1,8 @@
 description: |
   Cache responses to GET requests with a 200 response code in Redis. 
-  The `keepalive_pool_size` setting will keep a maximum of 50 concurrent connections open.'
+  The `keepalive_pool_size` setting will keep a maximum of 50 concurrent connections open.
 
-title: 'Cache responses to successful GET requests'
+title: 'Cache responses with Redis'
 
 weight: 900
 
