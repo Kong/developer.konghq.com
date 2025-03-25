@@ -51,7 +51,7 @@ To create a {{ site.kic_product_name }} in {{ site.konnect_short_name }} deploym
 1. A {{ site.kic_product_name }} Control Plane, including the CP URL
 1. An mTLS certificate for {{ site.kic_product_name }} to talk to {{ site.konnect_short_name }}
 
-### 1. Create a KIC in {{ site.konnect_short_name }} Control Plane
+### Create a KIC in {{ site.konnect_short_name }} Control Plane
 
 Use the {{ site.konnect_short_name }} API to create a new `CLUSTER_TYPE_K8S_INGRESS_CONTROLLER` Control Plane:
 
@@ -73,7 +73,7 @@ export CONTROL_PLANE_ID='...';
 export CONTROL_PLANE_TELEMETRY='...';
 ```
 
-### 2. Create mTLS certificates
+### Create mTLS certificates
 
 {{ site.kic_product_name }} talks to {{ site.konnect_short_name }} over a connected secured with TLS certificates.
 
@@ -108,7 +108,7 @@ kubectl create namespace kong
 kubectl create secret tls konnect-client-tls -n kong --cert=./tls.crt --key=./tls.key
 ```
 
-### 3. Create a values.yaml
+### Create a values.yaml
 
 {{ site.kic_product_name }} must be configured to send it's configuration to {{ site.konnect_short_name }}. Create a `values.yaml` file by copying and pasting the following command into your terminal:
 
