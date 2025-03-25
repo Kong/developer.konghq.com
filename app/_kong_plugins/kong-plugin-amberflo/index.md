@@ -4,7 +4,7 @@ name: 'Amberflo.io API Metering'
 
 content_type: plugin
 
-publisher: kong-inc
+publisher: amberflo
 description: 'API usage metering and usage-based billing.'
 
 
