@@ -1,0 +1,29 @@
+description: |
+  Cache responses to GET requests with a 200 response code in Redis. 
+  The `keepalive_pool_size` setting will keep a maximum of 50 concurrent connections open.'
+
+title: 'Cache responses to successful GET requests'
+
+weight: 900
+
+config:
+  response_code:
+  - 200
+  request_method:
+  - GET
+  content_type:
+  - text/plain
+  - application/json
+  cache_ttl: 300
+  strategy: redis
+  redis:
+    host: redis
+    port: 6379
+    keepalive_pool_size: 50
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
