@@ -37,7 +37,7 @@ privacy_policy_url: https://www.moesif.com/privacy?utm_medium=docs&utm_campaign=
 terms_of_service_url: https://www.moesif.com/terms?utm_medium=docs&utm_campaign=partners&utm_source=kong
 
 
-icon: kong-plugin-moesif.png
+icon: moesif.png
 
 search_aliases:
   - kong-plugin-moesif
