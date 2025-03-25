@@ -35,7 +35,7 @@ This is a breaking change only if you are upgrading from a {{site.base_gateway}}
 parameters.
 * The `config.redis.password`, `config.redis.sentinel_username`, and `config.redis.sentinel_password`
 configuration fields are now marked as referenceable, 
-hich means they can be securely stored as [secrets in a Vault](/gateway/entities/vault/). 
+which means they can be securely stored as [secrets in a Vault](/gateway/entities/vault/). 
 References must follow a specific format.
 * Fixed the error `function cannot be called in access phase (only in: log)`, 
 which was preventing the plugin from working consistently.
