@@ -77,7 +77,7 @@ These changes can be made to {{site.base_gateway}}'s Nginx template and only aff
 
 For this example, let’s say you want to remove any instances of an email address from your {{site.base_gateway}} logs. The email addresses may come through in different formats, for example `/servicename/v2/verify/alice@example.com` or `/v3/verify?alice@example.com`. To keep all of these formats from being added to the logs, you need to use a custom Nginx template.
 
-Make a copy of {{site.base_gateway}}'s Nginx template, then edit it to add or remove the data you need. The following template shows an example configuration for removing email addresses from logs:
+Make a copy of [{{site.base_gateway}}'s Nginx template](/gateway/nginx-directives/#custom-nginx-templates-and-embedding-kong-gateway), then edit it to add or remove the data you need. The following template shows an example configuration for removing email addresses from logs:
 
 ```nginx
 # ---------------------
