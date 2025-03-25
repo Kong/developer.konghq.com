@@ -134,9 +134,61 @@ Provisioning a serverless gateway includes creating the serverless control plane
 1. Navigate to the DNS settings section. This area might be labeled differently depending on your registrar.
 1. Locate the option to add a new CNAME record and create the following record using the CNAME value from {{site.konnect_short_name}} that you saved previously. For example, in AWS Route 53, it would look like this: 
 
-| Host Name                       | Record Type | Routing Policy | Alias | Evaluate Target Health | Value                                                | TTL |
-|---------------------------------|-------------|----------------|-------|------------------------|------------------------------------------------------|-----|
-| `my.example.com`             | CNAME       | Simple         | No    | No                     | `9e454bcfec.kongcloud.dev`                     | 300 |
+{% table %}
+columns:
+  - title: Host Name
+    key: host
+  - title: Record Type
+    key: type
+  - title: Routing Policy
+    key: routing
+  - title: Alias
+    key: alias
+  - title: Evaluate Target Health
+    key: health
+  - title: Value
+    key: value
+  - title: TTL
+    key: ttl
+rows:
+  - host: "`my.example.com`"
+    type: CNAME
+    routing: Simple
+    alias: No
+    health: No
+    value: "`9e454bcfec.kongcloud.dev`"
+    ttl: 300
+{% endtable %}
 
 Once a Serverless Gateway custom DNS record has been validated, it will _not_ be refreshed or re-validated. Remove and re-add the custom domain in {{site.konnect_short_name}} to force a re-validation.
+
+## Securing backend communication
+
+Serverless gateways only support public networking. If your use case requires private connectivity, consider using [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) with AWS Transit Gateways.
+
+To securely connect a serverless gateway to your backend, you can inject a shared secret into each request using the [request-transformer](/plugins/request-transformer).
+
+1. Ensure the backend accepts a known token like an Authorization header.
+2. Attach a new plugin to the control plane and service that you want to secure:
+
+<!--vale off-->
+{% capture request %}
+{% control_plane_request %}
+url: /v2/control-planes/{controlPlaneId}/core-entities/services/{serviceId}/plugins
+method: POST
+status_code: 201
+headers:
+  - 'accept: application/json'
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer {PAT}'
+body:
+  name: request-transformer
+  config:
+    add:
+      headers:
+        - 'Authorization:Bearer {secretTokenValue}'
+{% endcontrol_plane_request %}
+{% endcapture %}
+{{request | indent: 3}}
+<!--vale on-->
 
