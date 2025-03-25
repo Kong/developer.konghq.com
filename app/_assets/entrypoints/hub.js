@@ -9,9 +9,11 @@ class Hub {
       'input[name="deployment-topology"]'
     );
     this.categories = this.filters.querySelectorAll('input[name="category"]');
+    this.support = this.filters.querySelectorAll('input[name="support"]');
 
     this.deploymentValues = [];
     this.categoryValues = [];
+    this.supportValues = [];
 
     this.typingTimer;
     this.typeInterval = 400;
@@ -21,7 +23,11 @@ class Hub {
   }
 
   addEventListeners() {
-    const checkboxes = [...this.deploymentTopologies, ...this.categories];
+    const checkboxes = [
+      ...this.deploymentTopologies,
+      ...this.categories,
+      ...this.support,
+    ];
     checkboxes.forEach((checkbox) => {
       checkbox.addEventListener("change", () => this.onChange());
     });
@@ -38,6 +44,7 @@ class Hub {
   onChange() {
     this.deploymentValues = this.getValues(this.deploymentTopologies);
     this.categoryValues = this.getValues(this.categories);
+    this.supportValues = this.getValues(this.support);
 
     this.updateURL();
     this.scrollCardsIntoView();
@@ -70,15 +77,25 @@ class Hub {
         "category"
       );
 
+      const matchesSupport = this.matchesFilter(
+        plugin,
+        this.support,
+        "support"
+      );
+
       const matchesText = this.matchesQuery(plugin);
 
       const showPlugin =
-        matchesDeploymentTopology && matchesCategory && matchesText;
+        matchesDeploymentTopology &&
+        matchesCategory &&
+        matchesSupport &&
+        matchesText;
 
       plugin.classList.toggle("hidden", !showPlugin);
     });
 
     this.toggleCategoriesIfEmpty();
+    this.toggleThirdPartyIfEmpty();
   }
 
   toggleCategoriesIfEmpty() {
@@ -90,6 +107,15 @@ class Hub {
 
       category.classList.toggle("hidden", !showCategory);
     });
+  }
+
+  toggleThirdPartyIfEmpty() {
+    const thirdParty = document.getElementById("third-party");
+    const showThirdParty = thirdParty.querySelectorAll(
+      '[data-card="plugin"]:not(.hidden)'
+    ).length;
+
+    thirdParty.classList.toggle("hidden", !showThirdParty);
   }
 
   matchesFilter(plugin, filterGroup, dataAttribute) {
@@ -119,16 +145,21 @@ class Hub {
   updateURL() {
     const params = new URLSearchParams(window.location.search);
 
+    params.delete("deployment-topology");
     if (this.deploymentValues.length > 0) {
-      params.set("deployment-topology", this.deploymentValues.join(","));
-    } else {
-      params.delete("deployment-topology");
+      this.deploymentValues.forEach((value) =>
+        params.append("deployment-topology", value)
+      );
     }
 
+    params.delete("category");
     if (this.categoryValues.length > 0) {
-      params.set("category", this.categoryValues.join(","));
-    } else {
-      params.delete("category");
+      this.categoryValues.forEach((value) => params.append("category", value));
+    }
+
+    params.delete("support");
+    if (this.supportValues.length > 0) {
+      this.supportValues.forEach((value) => params.append("support", value));
     }
 
     if (this.textInput.value) {
@@ -147,15 +178,19 @@ class Hub {
   updateFiltersFromURL() {
     const params = new URLSearchParams(window.location.search);
 
-    const deploymentValues =
-      params.get("deployment-topology")?.split(",") || [];
+    const deploymentValues = params.getAll("deployment-topology") || [];
     this.deploymentTopologies.forEach((checkbox) => {
       checkbox.checked = deploymentValues.includes(checkbox.value);
     });
 
-    const categoryValues = params.get("category")?.split(",") || [];
+    const categoryValues = params.getAll("category") || [];
     this.categories.forEach((checkbox) => {
       checkbox.checked = categoryValues.includes(checkbox.value);
+    });
+
+    const supportValues = params.getAll("support") || [];
+    this.support.forEach((checkbox) => {
+      checkbox.checked = supportValues.includes(checkbox.value);
     });
 
     const termsValue = params.get("terms") || "";
