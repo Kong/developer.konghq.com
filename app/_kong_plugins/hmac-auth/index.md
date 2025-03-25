@@ -5,7 +5,7 @@ name: 'HMAC Auth'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Add HMAC Authentication to your services'
+description: 'Add HMAC Authentication to your Gateway Services'
 
 
 products:
@@ -34,7 +34,7 @@ search_aliases:
   - hmac-auth
 ---
 
-Add HMAC Signature authentication to a service or a route
+This plugin adds HMAC Signature authentication to a Gateway Service or a Route
 to establish the integrity of incoming requests. The plugin validates the
 digital signature sent in the `Proxy-Authorization` or `Authorization` header
 (in that order). This plugin implementation is based off the
@@ -42,7 +42,7 @@ digital signature sent in the `Proxy-Authorization` or `Authorization` header
 draft with a slightly different signature scheme.
 
 {:.important}
-> **Important**: Once the plugin is enabled, any user with a valid credential can access the service or route.
+> **Important**: Once the plugin is enabled, any user with a valid credential can access the Service or Route.
 To restrict usage to only some of the authenticated users, also add the
 [ACL](/plugins/acl/) plugin (not covered here) and create allowed or
 denied groups of users.
