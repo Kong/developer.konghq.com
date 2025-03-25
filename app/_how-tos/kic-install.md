@@ -55,11 +55,16 @@ To create a {{ site.kic_product_name }} in {{ site.konnect_short_name }} deploym
 
 Use the {{ site.konnect_short_name }} API to create a new `CLUSTER_TYPE_K8S_INGRESS_CONTROLLER` Control Plane:
 
-```bash
-curl -H "Authorization: Bearer $KONNECT_TOKEN" \
-    https://us.api.konghq.com/v2/control-planes \
-    --json '{"name": "My KIC CP", "cluster_type": "CLUSTER_TYPE_K8S_INGRESS_CONTROLLER"}'
-```
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/control-planes
+status_code: 201
+method: POST
+body:
+    name: My KIC CP
+    cluster_type: "CLUSTER_TYPE_K8S_INGRESS_CONTROLLER"
+{% endkonnect_api_request %}
+<!--vale on-->
 
 We'll need the `id` and `telemetry_endpoint` for the `values.yaml` file later. Save them as environment variables, replacing the `...` with the values from the API response in your terminal.
 
@@ -78,15 +83,23 @@ Generate a new certificate using `openssl`:
 openssl req -new -x509 -nodes -newkey rsa:2048 -subj "/CN=kongdp/C=US" -keyout ./tls.key -out ./tls.crt
 ```
 
-Next, upload the certificate to Konnect:
+The certificate needs to be a single line string to send it to the Konnect API with curl. Use `awk` to format the certificate:
 
 ```bash
 export CERT=$(awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}' tls.crt);
-
-curl -H "Authorization: Bearer $KONNECT_TOKEN" \
-  https://us.api.konghq.com/v2/control-planes/$CONTROL_PLANE_ID/dp-client-certificates \
-  --json '{"cert":"'"$CERT"'"}' \
 ```
+
+Next, upload the certificate to Konnect:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/control-planes/$CONTROL_PLANE_ID/dp-client-certificates
+status_code: 201
+method: POST
+body:
+    cert: $CERT
+{% endkonnect_api_request %}
+<!--vale on-->
 
 Finally, store the certificate in a Kubernetes secret so that {{ site.kic_product_name }} can read it:
 
