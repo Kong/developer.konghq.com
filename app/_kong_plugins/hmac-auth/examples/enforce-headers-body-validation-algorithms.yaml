@@ -1,0 +1,31 @@
+description: 'Enforces headers that the client should at least use for HTTP signature creation, as well as body validation. Specifies that the `hmac-sha1` and `hmac-sha256` algorithms should be used to hash the digest.'
+
+title: 'Enforce headers, body validation, and HMAC digest algorithms'
+
+weight: 900
+
+requirements: 
+ - |
+  Consumers are required for HMAC authentication. Once you [create a Consumer](/gateway/entities/consumer/#set-up-a-consumer), you can configure the Consumer's credentials using one of the following methods:
+    * **With a database:** Send a `POST` request to the `/consumers/{consumer}/hmac-auth` endpoint.
+    * **Without a database:** Add a username and secret for authentication in your declarative config file in a `hmacauth_credentials` entry.
+
+  For both methods, you'll add a username and optionally a secret used for authentication. If you don't add a secret, {{site.base_gateway}} will generate one for you.
+
+
+config:
+  enforce_headers:
+  - date 
+  - '@request-target'
+  algorithms:
+  - hmac-sha1
+  - hmac-sha256
+  validate_request_body: true
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
