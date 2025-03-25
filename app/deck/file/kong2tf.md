@@ -94,7 +94,7 @@ The table below shows the most commonly used configuration options. For a comple
 
 ## Example
 
-{% navtabs deck-kong2tf %}
+{% navtabs "deck-kong2tf" %}
 {% navtab "decK state file "%}
 
 ```yaml

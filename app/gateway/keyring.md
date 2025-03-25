@@ -98,7 +98,7 @@ openssl rsa -in key.pem -pubout -out cert.pem
 ### 2. Configure Kong
 To enable data encryption, you must modify the Kong configuration. You can either update `kong.conf` or use environment variables:
 
-{% navtabs update-kong-configuration %}
+{% navtabs "update-kong-configuration" %}
 {% navtab "kong.conf" %}
 Set the following values in `kong.conf`:
 ```sh
