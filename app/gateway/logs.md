@@ -75,7 +75,7 @@ You may need to customize what {{site.base_gateway}} logs. For instance, you may
 
 These changes can be made to {{site.base_gateway}}'s Nginx template and only affect the output of the Nginx access logs. This doesn't have any effect on {{site.base_gateway}}'s [logging plugins](/plugins/?category=logging).
 
-For this example, let’s say you want to remove any instances of an email address from your {{site.base_gateway}} logs. The email addresses may come through in different formats, for example `/servicename/v2/verify/alice@example.com` or `/v3/verify?alice@example.com`. To keep all of these formats from being added to the logs, you need to use a custom Nginx template.
+Let's look at an example where you want to remove any instances of an email address from your {{site.base_gateway}} logs. The email addresses may come through in different formats, for example `/servicename/v2/verify/alice@example.com` or `/v3/verify?alice@example.com`. To keep all of these formats from being added to the logs, you need to use a custom Nginx template.
 
 Make a copy of [{{site.base_gateway}}'s Nginx template](/gateway/nginx-directives/#custom-nginx-templates-and-embedding-kong-gateway), then edit it to add or remove the data you need. The following template shows an example configuration for removing email addresses from logs:
 
@@ -122,10 +122,11 @@ For this example, we're using the following:
   - The first line uses a regex to look for any email address in the `x@y.z` format
   - The second line looks for any part of the URI that contains `/servicename/v2/verify`
   - The third line looks at any part of the URI that contains `/v3/verify`
-  Because all of these patterns have a value of something other than `0`, if a request has any of those elements, it will not be added to the log.
+    
+    Because all of these patterns have a value of something other than `0`, if a request has any of those elements, it will not be added to the log.
 * `log_format`: Sets the log format for what {{site.base_gateway}} keeps in the logs. The contents of the log can be customized for your needs. For the purpose of this example, you can assign the new logs with the name `show_everything` and set everything to the {{site.base_gateway}} default standards. To see the full list of options, refer to the [Nginx core module variables reference](https://nginx.org/en/docs/http/ngx_http_core_module.html#variables).
 
-Once you've adjusted the Nginx template for your environment, the last thing you must do is tell {{site.base_gateway}} to use the newly created log, `show_everything`. 
+Once you've adjusted the Nginx template for your environment, you need to tell {{site.base_gateway}} to use the newly created log, `show_everything`. 
 
 To do this, alter the {{site.base_gateway}} variable `proxy_access_log` by either editing `etc/kong/kong.conf` or using the environmental variable `KONG_PROXY_ACCESS_LOG` adjust the default location:
 
@@ -133,7 +134,7 @@ To do this, alter the {{site.base_gateway}} variable `proxy_access_log` by eithe
 proxy_access_log=logs/access.log show_everything if=$keeplog
 ```
 
-Restart {{site.base_gateway}} to make all the changes take effect with the `kong restart` command.
+Restart {{site.base_gateway}} to apply changes with the `kong restart` command.
 
 Now, any request made with an email address in it will no longer be logged. 
 
