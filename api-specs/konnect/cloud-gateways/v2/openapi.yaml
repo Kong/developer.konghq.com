@@ -756,7 +756,6 @@ components:
       description: Supported gateway version.
       type: string
       example: '3.2'
-      pattern: ^(\d)+(\.(\d)+)?$
       title: Gateway Version
     VersionList:
       description: List of supported gateway versions for cloud gateways.
