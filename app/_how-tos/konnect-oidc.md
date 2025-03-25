@@ -37,7 +37,7 @@ automated_tests: false
 
 ## 1. Set up SSO in {{site.konnect_short_name}}
 
-{% navtabs sso %}
+{% navtabs "sso" %}
 {% navtab "OIDC" %}
 
 1. In [{{site.konnect_saas}}](https://cloud.konghq.com/login), click **Organization**, and then **Auth Settings**.
@@ -95,7 +95,7 @@ The {{site.konnect_short_name}} SAML integration allows you to configure various
 
 ## 2. Test and apply the configuration
 
-{% navtabs sso %}
+{% navtabs "sso" %}
 {% navtab "OIDC" %}
 
 {:.warning}
@@ -127,7 +127,7 @@ If the configuration is correct, you will see the IdP sign-in page. You can now 
 
 The following section contains provider specific information and attribute mapping tables necessary for configuring SSO. 
 
-{% navtabs oss-providers %}
+{% navtabs "oss-providers" %}
 {% navtab "Azure" %}
 
 * When adding an enterprise application, note that OIDC uses app registration.

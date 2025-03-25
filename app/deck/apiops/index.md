@@ -50,7 +50,7 @@ The diagram below delineates KongAir's structured approach to deploying decK, st
 9. The state file is deployed to the chosen runtime
 
 {% capture validate %}
-{% navtabs apiops-deck %}
+{% navtabs "apiops-deck" %}
 {% navtab "Konnect or Gateway" %}
 For {{site.konnect_product_name}} or {{site.base_gateway}} deployments, the process involves:
 

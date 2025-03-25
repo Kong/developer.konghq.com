@@ -62,7 +62,7 @@ The table below shows the most commonly used configuration options. For a comple
 Let's see an example of how the following decK state file is converted to Ingress API Kubernetes
 manifests and Gateway API Kubernetes manifests.
 
-{% navtabs deck-kong2kic %}
+{% navtabs "deck-kong2kic" %}
 {% navtab "decK state file "%}
 
 ```yaml

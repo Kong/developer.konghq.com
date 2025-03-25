@@ -93,7 +93,7 @@ Authentication attempts and their outcomes are logged whenever a user logs in to
 
 Example log entry:
 
-{% navtabs logs %}
+{% navtabs "logs" %}
 {% navtab "CEF" %}
 ```
 2025-05-19T00:03:39Z
@@ -151,7 +151,7 @@ Authorization log entries are created for every permission check in {{site.konne
 
 Example log entry:
 
-{% navtabs logs %}
+{% navtabs "logs" %}
 {% navtab "CEF" %}
 ```
 2025-05-19T00:03:39Z
@@ -211,7 +211,7 @@ Access logs include information about create, update, and delete requests to the
 
 Example log entry:
 
-{% navtabs logs %}
+{% navtabs "logs" %}
 {% navtab "CEF" %}
 ```
 2025-05-16T20:09:54Z 

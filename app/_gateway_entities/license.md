@@ -81,7 +81,7 @@ features:
 
 ## Deploy a License
 
-{% navtabs deploy-a-license %}
+{% navtabs "deploy-a-license" %}
 {% navtab "Admin API" %}
 
 You can deploy a License using the Admin API.

@@ -1,4 +1,4 @@
-{% navtabs {{include.tab_group}} %}
+{% navtabs include.tab_group %}
 {% for item in include.config %}
 {% navtab "{{ item.title }}" %}
 {% if item.content %}

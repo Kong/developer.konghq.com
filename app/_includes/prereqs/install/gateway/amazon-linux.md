@@ -1,4 +1,4 @@
-{% navtabs gateway-install-type %}
+{% navtabs "gateway-install-type" %}
 {% navtab "Manually installation" %}
 1. Download {{site.base_gateway}}:
    ```sh

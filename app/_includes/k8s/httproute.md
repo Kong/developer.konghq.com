@@ -8,7 +8,7 @@
 {%- assign route_type = include.route_type | default: 'PathPrefix' %}
 
 {% capture the_code %}
-{% navtabs http-route %}
+{% navtabs "http-route" %}
 {% navtab "Gateway API" %}
 {% assign gwapi_version = "v1" %}
 
