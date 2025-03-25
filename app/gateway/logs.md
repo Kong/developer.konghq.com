@@ -68,11 +68,16 @@ This feature can be customized for upstreams and downstreams using the `headers`
 
 ## Customize what {{site.base_gateway}} logs
 
-You might need to customize what {{site.base_gateway}} logs to protect private information and comply with GDPR. For example, if you wanted to remove instances of an email address from your logs. These changes can be made to {{site.base_gateway}}'s Nginx template and only affect the output of the Nginx access logs. This doesn't have any effect on {{site.base_gateway}}'s [logging plugins](/plugins/?category=logging).
+You may need to customize what {{site.base_gateway}} logs. For instance, you may want to:
+* Protect private information
+* Comply with GDPR or other data protection regulations
+* Remove instances of a specific piece of data from your logs, such as an email address
 
-For this example, let’s say you want to remove any instances of an email address from your {{site.base_gateway}} logs. The email addresses may come through in different ways, for example `/servicename/v2/verify/alice@example.com` or `/v3/verify?alice@example.com`. To keep all of these formats from being added to the logs, you need to use a custom Nginx template by making a copy of {{site.base_gateway}}'s Nginx template.
+These changes can be made to {{site.base_gateway}}'s Nginx template and only affect the output of the Nginx access logs. This doesn't have any effect on {{site.base_gateway}}'s [logging plugins](/plugins/?category=logging).
 
-The following template shows an example configuration to remove email addresses from logs, but you can use this logic to remove anything you want from the logs in a conditional manner:
+For this example, let’s say you want to remove any instances of an email address from your {{site.base_gateway}} logs. The email addresses may come through in different formats, for example `/servicename/v2/verify/alice@example.com` or `/v3/verify?alice@example.com`. To keep all of these formats from being added to the logs, you need to use a custom Nginx template.
+
+Make a copy of {{site.base_gateway}}'s Nginx template, then edit it to add or remove the data you need. The following template shows an example configuration for removing email addresses from logs:
 
 ```nginx
 # ---------------------
@@ -113,12 +118,12 @@ http {
 
 For this example, we're using the following:
 
-* `map $request_uri $keeplog`: Maps a new variable called `keeplog`, which is dependent on values appearing in the `$request_uri`. Each line in the example starts with a `~` because this is what tells Nginx to use regex when evaluating the line. This example looks for the following:
-  - The first line uses regex to look for any email address in the `x@y.z` format
+* `map $request_uri $keeplog`: Maps a new variable called `keeplog`, which is dependent on values appearing in the `$request_uri`. Each line in the example starts with a `~` because this is what tells Nginx to use a regex when evaluating the line. This example looks for the following:
+  - The first line uses a regex to look for any email address in the `x@y.z` format
   - The second line looks for any part of the URI that contains `/servicename/v2/verify`
   - The third line looks at any part of the URI that contains `/v3/verify`
   Because all of these patterns have a value of something other than `0`, if a request has any of those elements, it will not be added to the log.
-* `log_format`: Sets the log format for what {{site.base_gateway}} keeps in the logs. The contents of the log can be customized for your needs. For the purpose of this example, you can assign the new logs with the name `show_everything` and  simply set everything to the {{site.base_gateway}} default standards. To see the full list of options, refer to the [Nginx core module variables reference](https://nginx.org/en/docs/http/ngx_http_core_module.html#variables).
+* `log_format`: Sets the log format for what {{site.base_gateway}} keeps in the logs. The contents of the log can be customized for your needs. For the purpose of this example, you can assign the new logs with the name `show_everything` and set everything to the {{site.base_gateway}} default standards. To see the full list of options, refer to the [Nginx core module variables reference](https://nginx.org/en/docs/http/ngx_http_core_module.html#variables).
 
 Once you've adjusted the Nginx template for your environment, the last thing you must do is tell {{site.base_gateway}} to use the newly created log, `show_everything`. 
 
