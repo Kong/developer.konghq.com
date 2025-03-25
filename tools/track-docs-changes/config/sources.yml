@@ -416,6 +416,10 @@ app/_kong_plugins/exit-transformer/changelog.md:
   - app/_hub/kong-inc/exit-transformer/_changelog.md
 app/_how-tos/transform-a-404-response-message.md:
   - app/_hub/kong-inc/exit-transformer/overview/_index.md
+app/_kong_plugins/proxy-cache/index.md:
+  - app/_hub/kong-inc/proxy-cache/overview/_index.md
+app/_kong_plugins/proxy-cache/changelog.md:
+  - app/_hub/kong-inc/proxy-cache/_changelog.md
 
 # Konnect
 
