@@ -1,5 +1,5 @@
 ---
-title: "Custom Domains"
+title: "Custom domains"
 content_type: reference
 layout: reference
 description: "{{site.konnect_short_name}} integrates domain name management and configuration with [Dedicated Cloud Gateways](/dedicated-cloud-gateways/)."
@@ -25,11 +25,6 @@ faqs:
       In {{site.konnect_short_name}}, go to [**Gateway Manager**](https://cloud.konghq.com/us/gateway-manager/), select a Control Plane, open the **Overview** dashboard, click **Connect**, and save the **Public Edge DNS** URL. 
       Then, navigate to **Custom Domains**, click **New Custom Domain**, enter your domain name, and save the CNAME and Content values.
 
-  - q: What DNS records do I need to add at my domain registrar for a custom domain?
-    a: |
-      You need to create CNAME records using the values provided in {{site.konnect_short_name}}.
-      * `_acme-challenge.example.com` → `_acme-challenge.9e454bcfec.acme.gateways.konghq.com`
-      * `example.com` → `9e454bcfec.gateways.konghq.com`
 
   - q: How often is DNS validation refreshed for Dedicated Cloud Gateways?
     a: |
@@ -45,12 +40,6 @@ faqs:
       {{site.konnect_short_name}} uses Google Cloud Public CA (`pki.goog`) to issue certificates. 
       If your domain's CAA record does not authorize this CA, attachment will fail.
 
-  - q: How can I fix CAA record issues for a custom domain?
-    a: |
-      Use `dig CAA yourdomain.com +short` to check for existing CAA records. 
-      If needed, update the record to allow `pki.goog`, like this,
-      `yourdomain.com.    CAA    0 issue "pki.goog"`  
-      Then, wait for DNS propagation and retry the domain attachment.
 
 related_resources:
   - text: Konnect Advanced Analytics
