@@ -166,13 +166,12 @@ Once a Serverless Gateway custom DNS record has been validated, it will _not_ be
 
 Serverless gateways only support public networking. If your use case requires private connectivity, consider using [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) with AWS Transit Gateways.
 
-To securely connect a serverless gateway to your backend, you can inject a shared secret into each request using the [request-transformer](/plugins/request-transformer).
+To securely connect a serverless gateway to your backend, you can inject a shared secret into each request using the [Request Transformer plugin](/plugins/request-transformer).
 
 1. Ensure the backend accepts a known token like an Authorization header.
-2. Attach a new plugin to the control plane and service that you want to secure:
+2. Attach a new plugin to the Control Plane and Gateway Service that you want to secure:
 
 <!--vale off-->
-{% capture request %}
 {% control_plane_request %}
 url: /v2/control-planes/{controlPlaneId}/core-entities/services/{serviceId}/plugins
 method: POST
@@ -180,15 +179,13 @@ status_code: 201
 headers:
   - 'accept: application/json'
   - 'Content-Type: application/json'
-  - 'Authorization: Bearer {PAT}'
+  - 'Authorization: Bearer ${PAT}'
 body:
   name: request-transformer
   config:
     add:
       headers:
-        - 'Authorization:Bearer {secretTokenValue}'
+        - 'Authorization:Bearer ${secretTokenValue}'
 {% endcontrol_plane_request %}
-{% endcapture %}
-{{request | indent: 3}}
 <!--vale on-->
 
