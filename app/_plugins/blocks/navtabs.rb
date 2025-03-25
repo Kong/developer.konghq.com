@@ -16,6 +16,12 @@ module Jekyll
         navtabs_id = SecureRandom.uuid
         environment = context.environments.first
         @site = context.registers[:site]
+        @page = context.environments.first['page']
+
+        if @tab_group.empty?
+          raise ArgumentError,
+                "Missing `tab_group` for {% navtabs %} in #{@page['path']}. Syntax is: {% navtabs tab_group %}"
+        end
 
         environment["navtabs-#{navtabs_id}"] = {}
         environment['navtabs-stack'] ||= []
