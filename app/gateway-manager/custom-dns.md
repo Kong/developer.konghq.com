@@ -58,7 +58,7 @@ related_resources:
 ---
 
 
-{{site.konnect_short_name}} integrates domain name management and configuration with [Dedicated Cloud Gateways](/konnect/gateway-manager/dedicated-cloud-gateways/).
+{{site.konnect_short_name}} integrates domain name management and configuration with [Dedicated Cloud Gateways](/dedicated-cloud-gateways/).
 
 ## {{site.konnect_short_name}} configuration
 
