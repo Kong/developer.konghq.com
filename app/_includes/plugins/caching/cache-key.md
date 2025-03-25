@@ -25,8 +25,8 @@ key = sha256(UUID | method | request | query_params | headers | consumer_groups)
 Where:
 * `method` is defined in the OpenResty `ngx.req.get_method()` call
 * `request` is defined via the Nginx `$request` variable
-* `query_params` are defined via the plugin's [`config.vary_query_params`](.reference/#schema--config-vary-query-params) parameter
-* `headers` are defined in the plugin's [`config.vary_headers`](/.reference/#schema--config-vary-headers) parameter
+* `query_params` are defined via the plugin's [`config.vary_query_params`](./reference/#schema--config-vary-query-params) parameter
+* `headers` are defined in the plugin's [`config.vary_headers`](./reference/#schema--config-vary-headers) parameter
 * `consumer_groups` are defined based on the [Consumer Groups](/gateway/entities/consumer-group/) this plugin is applied to
 
 {{site.base_gateway}} will return the cache key associated with a given request as the `X-Cache-Key` response header. 
