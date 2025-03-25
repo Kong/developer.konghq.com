@@ -1,22 +1,36 @@
-description: ''
+description: 'Allows you to integrate Amazon Application Load Balancer (ALB) with the Header Cert Authentication plugin.'
 
-title: ''
+title: 'Application Load Balancer (ALB) integration'
 
 weight: 900
 
 requirements:
  - "Add [certificate authority (CA) certificates](/gateway/entities/ca-certificate/) before configuring the plugin."
- - ALB requirements
+ - "Generated certificates for ALB"
+ - |
+  Configure ALB by adding an HTTPS listener:
+
+  | Setting | Mapping |
+  |---------|-------|
+  | Protocol | HTTPS |
+  | Port | 443 |
+  | Routing actions | Forward to target groups |
+  | Certificate source | From AWS Certificate Manager (ACM) |
+  | Certificate (from ACM) | Select the certificate that you want to use | 
+  | Client certificate handling | Select Mutual authentication (mTLS) with Passthrough |
 
 variables: 
-   ca_certificates:
-     description: ''
-     value: $CA-CERT
+  ca_certificates:
+    description: 'List of CA Certificates strings to use as Certificate Authorities (CA) when validating a client certificate.'
+    value: $CA_CERT
+  certificate_header_name:
+    description: 'Name of the header that contains the certificate, received from the WAF or other L7 downstream proxy.'
+    value: $HEADER_NAME
 
 config:
   ca_certificates:
-  - 0D769DE8-7CC0-4541-989B-F9C23E20054C
-  certificate_header_name: ssl-client-cert
+  - '${ca_certificates}'
+  certificate_header_name: ${certificate_header_name}
   certificate_header_format: base64_encoded
   secure_source: false
 
