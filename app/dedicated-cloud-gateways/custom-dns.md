@@ -61,7 +61,6 @@ related_resources:
 
 ## Dedicated Cloud Gateways domain registrar configuration
 
-To configure 
 {% table %}
 columns:
   - title: Host Name
