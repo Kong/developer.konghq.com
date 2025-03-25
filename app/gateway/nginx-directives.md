@@ -1,5 +1,5 @@
 ---
-title: "Managing {{site.base_gateway}} configuration"
+title: "Nginx Directives"
 
 description: placeholder
 content_type: reference
