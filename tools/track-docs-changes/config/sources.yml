@@ -612,6 +612,10 @@ app/service-catalog-integrations.yaml:
 app/_landing_pages/dedicated-cloud-gateways.yaml:
   - app/konnect/gateway-manager/dedicated-cloud-gateways/
 
+
+
+app/dedicated-cloud-gateways/azure-peering.md:
+  - app/konnect/gateway-manager/dedicated-cloud-gateways/azure-peering.md
 app/service-catalog/integrations/datadog.md:
   - app/konnect/service-catalog/integrations/datadog.md
 app/service-catalog/integrations/github.md:
