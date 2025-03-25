@@ -73,7 +73,7 @@ export CONTROL_PLANE_ID='...';
 export CONTROL_PLANE_TELEMETRY='...';
 ```
 
-### Create mTLS certificates
+### 2. Create mTLS certificates
 
 {{ site.kic_product_name }} talks to {{ site.konnect_short_name }} over a connected secured with TLS certificates.
 
@@ -108,7 +108,7 @@ kubectl create namespace kong
 kubectl create secret tls konnect-client-tls -n kong --cert=./tls.crt --key=./tls.key
 ```
 
-### 4. Create a values.yaml
+### 3. Create a values.yaml
 
 {{ site.kic_product_name }} must be configured to send it's configuration to {{ site.konnect_short_name }}. Create a `values.yaml` file by copying and pasting the following command into your terminal:
 
@@ -182,7 +182,7 @@ export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpat
 curl -i $PROXY_IP
 ```
 
-The results should look like this:
+You will receive a `HTTP 404` response as there are no routes configured:
 
 ```
 HTTP/1.1 404 Not Found
