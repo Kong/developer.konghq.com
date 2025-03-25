@@ -50,8 +50,11 @@ faqs:
       No, the plugin does not update the cache if _only_ the request body changes.
       See the [cache key](#cache-key) section for details on what the plugin uses to calculate the cache key.
 
-      If you need to cache requests based on the request body, you can use the [Pre-Function serverless plugin](/plugins/pre-function/).
+      If you need to cache requests based on the request body, you can use the serverless [Pre-Function plugin](/plugins/pre-function/).
       Create a header with the MD5 hash of the body, then add this header to the [`config.vary_headers`] parameter.
+  - q: Can I hide the `X-Cache-Key` header in the response when using the Proxy Cache Advanced plugin? 
+    a: |
+      You can remove the `X-Cache-Key` header from the response by applying a serverless [Post-Function plugin](/plugins/post-function/) in the `header_filter` phase.
 ---
 
 The Proxy Cache Advanced plugin provides a reverse proxy cache implementation for {{site.base_gateway}}. 
