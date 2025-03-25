@@ -592,6 +592,9 @@ app/serverless-gateways/index.md:
 
 app/_landing_pages/gateway-manager.yaml:
   - app/konnect/gateway-manager/index.md
+app/gateway-manager/control-plane-groups.md:
+  - app/konnect/gateway-manager/control-plane-groups/index.md
+  - app/konnect/gateway-manager/control-plane-groups/conflicts.md
 
 app/konnect-platform/konnect-account.md:
   - app/konnect/org-management/deactivation.md
