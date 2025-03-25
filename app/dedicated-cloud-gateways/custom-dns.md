@@ -1,8 +1,8 @@
 ---
-title: "Custom Custom Domains"
+title: "Custom Domains"
 content_type: reference
 layout: reference
-description: "{{site.konnect_short_name}} integrates domain name management and configuration with [managed Data Planes](/dedicated-cloud-gateways/)."
+description: "{{site.konnect_short_name}} integrates domain name management and configuration with [Dedicated Cloud Gateways](/dedicated-cloud-gateways/)."
 
 products:
     - gateway
