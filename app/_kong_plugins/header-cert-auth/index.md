@@ -72,7 +72,7 @@ This approach is particularly useful in scenarios where TLS traffic is terminate
 This plugin addresses the inability of the {{site.base_gateway}} to authenticate API calls using client certificates received in HTTP headers, rather than through traditional TLS termination. 
 This occurs in scenarios where TLS traffic is not terminated at the {{site.base_gateway}}, but rather at an external CDN or load balancer, and the client certificate is preserved in an HTTP header for further validation.
 
-The Header Cert Authentication plugin is similar to the [mTLS Auth plugin](/hub/kong-inc/mtls-auth).
+The Header Cert Authentication plugin is similar to the [mTLS Auth plugin](/plugins/mtls-auth).
 However, the mTLS plugin is only designed for traditional TLS termination, while the Header Cert Auth plugin also provides support for client certificates in headers. 
 
 The Header Cert Auth plugin extracts the client certificate from the HTTP header and validates it against the configured CA list. 
