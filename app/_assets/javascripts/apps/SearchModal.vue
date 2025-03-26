@@ -38,7 +38,7 @@
               <div class="flex items-center border border-brand-saturated/40 rounded-3xl h-full gap-1 pl-2 w-fit" v-for="tag in state.context.tagsPlugin.tags">
                 <span class="flex w-fit whitespace-nowrap text-secondary">{{ tag.label }}</span>
                 <button
-                  class="flex items-center w-fit text-secondary pr-2 self-stretch rounded-r-3xl hover:bg-brand-saturated/40"
+                  class="flex items-center w-fit text-secondary pr-1 self-stretch rounded-r-3xl hover:bg-brand-saturated/40"
                   title="Remove this filter"
                   type="button"
                   @click="onRemoveFilter"
