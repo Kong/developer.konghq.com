@@ -10,10 +10,14 @@ class Hub {
     );
     this.categories = this.filters.querySelectorAll('input[name="category"]');
     this.support = this.filters.querySelectorAll('input[name="support"]');
+    this.trustedContent = this.filters.querySelectorAll(
+      'input[name="trusted-content"]'
+    );
 
     this.deploymentValues = [];
     this.categoryValues = [];
     this.supportValues = [];
+    this.trustedContentValues = [];
 
     this.typingTimer;
     this.typeInterval = 400;
@@ -27,6 +31,7 @@ class Hub {
       ...this.deploymentTopologies,
       ...this.categories,
       ...this.support,
+      ...this.trustedContent,
     ];
     checkboxes.forEach((checkbox) => {
       checkbox.addEventListener("change", () => this.onChange());
@@ -45,6 +50,7 @@ class Hub {
     this.deploymentValues = this.getValues(this.deploymentTopologies);
     this.categoryValues = this.getValues(this.categories);
     this.supportValues = this.getValues(this.support);
+    this.trustedContentValues = this.getValues(this.trustedContent);
 
     this.updateURL();
     this.scrollCardsIntoView();
@@ -83,12 +89,19 @@ class Hub {
         "support"
       );
 
+      const matchesTrustedContent = this.matchesFilter(
+        plugin,
+        this.trustedContent,
+        "trustedContent"
+      );
+
       const matchesText = this.matchesQuery(plugin);
 
       const showPlugin =
         matchesDeploymentTopology &&
         matchesCategory &&
         matchesSupport &&
+        matchesTrustedContent &&
         matchesText;
 
       plugin.classList.toggle("hidden", !showPlugin);
@@ -162,6 +175,13 @@ class Hub {
       this.supportValues.forEach((value) => params.append("support", value));
     }
 
+    params.delete("trusted-content");
+    if (this.trustedContentValues.length > 0) {
+      this.trustedContentValues.forEach((value) =>
+        params.append("trusted-content", value)
+      );
+    }
+
     if (this.textInput.value) {
       params.set("terms", encodeURIComponent(this.textInput.value));
     } else {
@@ -193,10 +213,21 @@ class Hub {
       checkbox.checked = supportValues.includes(checkbox.value);
     });
 
+    const trustedContentValues = params.getAll("trusted-content") || [];
+    this.trustedContent.forEach((checkbox) => {
+      checkbox.checked = trustedContentValues.includes(checkbox.value);
+    });
+
     const termsValue = params.get("terms") || "";
     this.textInput.value = decodeURIComponent(termsValue);
 
-    if (deploymentValues.length || categoryValues.length || termsValue) {
+    if (
+      deploymentValues.length ||
+      categoryValues.length ||
+      supportValues.length ||
+      trustedContentValues.length ||
+      termsValue
+    ) {
       this.onChange();
     }
   }

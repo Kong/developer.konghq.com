@@ -88,8 +88,17 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
         <div class="text-sm text-brand font-semibold">Support By</div>
         <div class="flex flex-col gap-3">
 
-          {% for support in site.data.plugins_support %}
+          {% for support in site.data.plugin_support.support_by %}
             {% include checkbox.html value=support.slug name="support" label=support.text %}
+          {% endfor %}
+        </div>
+      </div>
+      <div class="flex flex-col gap-3">
+        <div class="text-sm text-brand font-semibold">Trusted Content</div>
+        <div class="flex flex-col gap-3">
+
+          {% for trust in site.data.plugin_support.trusted_content %}
+            {% include checkbox.html value=trust.slug name="trusted-content" label=trust.text %}
           {% endfor %}
         </div>
       </div>

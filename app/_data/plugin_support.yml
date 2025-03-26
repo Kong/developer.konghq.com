@@ -1,0 +1,10 @@
+support_by:
+  - text: Kong Inc.
+    slug: kong-inc
+  - text: Third Party
+    slug: third-party
+
+trusted_content:
+  - text: Premium Partner
+    slug: premium-partner
+
