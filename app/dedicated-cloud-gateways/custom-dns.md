@@ -20,10 +20,6 @@ faqs:
 
       If no CAA record exists, no changes are needed. For more details, see the [Let's Encrypt CAA Guide](https://letsencrypt.org/docs/caa/).
 
-  - q: How do I configure a custom domain in {{site.konnect_short_name}}?
-    a: |
-      In {{site.konnect_short_name}}, go to [**Gateway Manager**](https://cloud.konghq.com/us/gateway-manager/), select a Control Plane, open the **Overview** dashboard, click **Connect**, and save the **Public Edge DNS** URL. 
-      Then, navigate to **Custom Domains**, click **New Custom Domain**, enter your domain name, and save the CNAME and Content values.
 
 
   - q: How often is DNS validation refreshed for Dedicated Cloud Gateways?
