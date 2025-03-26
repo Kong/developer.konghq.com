@@ -33,7 +33,7 @@ This plugin lets you log metrics for a Gateway Service or Route to a local [Data
 
 ## Queueing
 
-The Datadog uses a queue to decouple the production and
+The Datadog plugin uses a queue to decouple the production and
 consumption of data. This reduces the number of concurrent requests
 made to the upstream server under high load situations and provides
 buffering during temporary network or upstream outages.
@@ -48,8 +48,6 @@ You can find the queue parameters under [`config.queue`](./reference/#schema--co
 Queues are not shared between workers; queueing parameters are
 scoped to one worker. For whole-system capacity planning, the number
 of workers needs to be considered when setting queue parameters.
-
----
 
 ## Metrics
 The Datadog plugin currently logs the following metrics to the Datadog server about a Service or Route:
@@ -81,9 +79,9 @@ would need to change to:
 avg:kong.latency.avg{name:sample-service}
 ```
 
-## Setting host and port per Kong node basis
+## Setting host and port per Kong node
 
-When installing a multi-data center setup, you might want to set Datadog's agent host and port on a per Kong node basis. This configuration is possible by setting the host and port properties using environment variables.
+When installing a multi-data center setup, you might want to set Datadog's agent host and port for each Kong node. This configuration is possible by setting the host and port properties with environment variables.
 
 Field           | Description                                           | Data types
 ---             | ---                                                   | ---

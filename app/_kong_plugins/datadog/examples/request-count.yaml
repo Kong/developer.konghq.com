@@ -6,7 +6,7 @@ title: Log request count
 weight: 900
 
 requirements:
-  - You have a local Datadog instance
+  - You have a local Datadog instance running
 
 config:
   host: 127.0.0.1
