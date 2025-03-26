@@ -446,6 +446,10 @@ app/_includes/plugins/ldap/usage.md:
   - app/_hub/kong-inc/ldap-auth/overview/_index.md
 app/_includes/plugins/upstream-headers.md:
   - app/_includes/md/plugins-hub/upstream-headers.md
+app/_kong_plugins/datadog/changelog.md:
+  - app/_hub/kong-inc/datadog/_changelog.md
+app/_kong_plugins/datadog/index.md:
+  - app/_hub/kong-inc/datadog/overview/_index.md
 
 # Konnect
 
