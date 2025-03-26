@@ -12,7 +12,9 @@ weight: 900
 #     description: ''
 #     value: us
 
-config: # plugin config in yaml format goes here
+config:
+  access_token_introspection_scopes_claim:
+  - scope
 
 tools:
   - deck

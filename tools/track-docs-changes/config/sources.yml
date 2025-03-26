@@ -424,6 +424,10 @@ app/_kong_plugins/proxy-cache-advanced/index.md:
   - app/_hub/kong-inc/proxy-cache-advanced/overview/_index.md
 app/_kong_plugins/proxy-cache-advanced/changelog.md:
   - app/_hub/kong-inc/proxy-cache-advanced/_changelog.md
+app/_kong_plugins/jwt-signer/changelog.md:
+  - app/_hub/kong-inc/jwt-signer/_changelog.md
+app/_kong_plugins/jwt-signer/index.md:
+  - 
 
 # Konnect
 
