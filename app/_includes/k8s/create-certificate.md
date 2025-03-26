@@ -5,7 +5,7 @@ certificate if it cannot find another, but including TLS configuration along
 with routing configuration is typical.
 {% endunless %}
 
-1. Create a test certificate for the `{{ include.hostname }}` hostname.
+1. Create a test certificate for the `{{ include.hostname }}` hostname. This will be used to secure TLS traffic.
 
 {% capture the_code %}
 {% navtabs codeblock %}
