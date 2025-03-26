@@ -33,4 +33,19 @@ search_aliases:
   - ldap-auth
 ---
 
-## Overview
+{% include /plugins/ldap/description.md %}
+
+For more advanced features, see the [LDAP Authentication Advanced plugin](/plugins/ldap-auth-advanced).
+
+## Usage
+
+{% include /plugins/ldap/usage.md %}
+
+### Upstream Headers
+
+{% include_cached /plugins/upstream-headers.md %}
+
+### Using Service Directory Mapping on the CLI
+
+{% include /plugins/ldap/service-directory-mapping.md %}
+
