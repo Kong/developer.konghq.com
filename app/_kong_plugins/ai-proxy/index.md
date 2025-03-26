@@ -39,11 +39,19 @@ search_aliases:
   - intelligence
   - language
   - model
+
+related_resources:
+  - text: AI Gateway
+    url: /ai-gateway/
+  - text: AI Gateway providers
+    url: /ai-gateway/ai-providers/
+  - text: AI Proxy Advanced
+    url: /plugins/ai-proxy-advanced/
 ---
 
 {% include plugins/ai-proxy/overview.md plugin=page.name params=site.data.plugins.ai-proxy.parameters %}
 {% include plugins/ai-proxy/formats.md plugin=page.name params=site.data.plugins.ai-proxy.parameters %}
 
-<!-- {:.note}
-> Check out the [AI Gateway quickstart](/gateway/latest/get-started/ai-gateway/) to get an AI proxy up and running within minutes! -->
+{:.info}
+> Check out the [AI Gateway quickstart](/how-to/get-started-with-ai-gateway/) to get an AI proxy up and running within minutes!
 
