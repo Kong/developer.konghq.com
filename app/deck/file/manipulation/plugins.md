@@ -1,5 +1,5 @@
 ---
-title: Plugins
+title: Managing Plugins with decK
 short_title: deck file add-plugins
 description: Manage Plugin configurations in Kong declarative configuration file.
 

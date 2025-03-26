@@ -24,8 +24,9 @@ rows:
     columns:
       - blocks:
         - type: tabs
+          tab_group: install-on-os
           config:
-            - title: OSX
+            - title: MacOS
               include_content: tools/inso-cli/install/osx
             - title: Windows
               include_content: tools/inso-cli/install/windows

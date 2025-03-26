@@ -108,7 +108,7 @@ Kong supports the following versions of {{site.base_gateway}}:
 
 {% assign releases = site.data.products.gateway.releases | reverse | where: "label", empty %}
 
-{% navtabs %}
+{% navtabs "gateway-version" %}
 {% for release in releases %}
 {% assign tab_name = release.release %}
 {% if release.lts %}{% assign tab_name = tab_name | append: ' LTS' %}{% endif %}

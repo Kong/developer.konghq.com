@@ -8,13 +8,20 @@ module Jekyll
     class NavTabsBlock < Liquid::Block
       def initialize(tag_name, markup, tokens)
         super
-        @class = markup.strip
+
+        @tab_group = markup.strip.delete('"')
       end
 
       def render(context)
         navtabs_id = SecureRandom.uuid
         environment = context.environments.first
         @site = context.registers[:site]
+        @page = context.environments.first['page']
+
+        if @tab_group.empty?
+          raise ArgumentError,
+                "Missing `tab_group` for {% navtabs %} in #{@page['path']}. Syntax is: {% navtabs \"tab_group\" %}"
+        end
 
         environment["navtabs-#{navtabs_id}"] = {}
         environment['navtabs-stack'] ||= []
@@ -25,13 +32,16 @@ module Jekyll
         environment['navtabs-stack'].pop
         environment['additional_classes'] = ''
 
+        keys = @tab_group.split('.')
+        group = keys.reduce(context) { |c, key| c[key] } || @tab_group
+
         Liquid::Template
           .parse(File.read(File.join(@site.source, '_includes/components/tabs.html')))
           .render(
             {
               'site' => @site.config,
               'page' => context['page'],
-              'class' => @class,
+              'tab_group' => group,
               'environment' => environment,
               'navtabs_id' => navtabs_id
             },

@@ -6,6 +6,8 @@ metadata:
     - gateway-manager
     - control-planes
     - data-plane-nodes
+  breadcrumbs: 
+    - /gateway-manager/
 
 
 rows:

@@ -152,7 +152,7 @@ features:
 
 ## Enable RBAC
 
-{% navtabs %}
+{% navtabs "enable-rbac" %}
 {% navtab "Quickstart" %}
 
 This command creates a {{site.base_gateway}} instance, sets the Kong super admin password to `kong`, and sets up RBAC.
