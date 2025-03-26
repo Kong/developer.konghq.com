@@ -4,7 +4,7 @@ description: Use Docker Compose to install {{site.base_gateway}}
 content_type: how_to
 permalink: /gateway/install/docker
 related_resources:
-  - text: Installation documentation
+  - text: Install {{site.base_gateway}} on a supported platform
     url: /gateway/install/
 
 products:
@@ -16,8 +16,8 @@ min_version:
   gateway: '3.4'
 
 tldr:
-  q: How do I install {{site.base_gateway}} using Docker Compose
-  a: "Copy the Docker Compose file and run `docker compose up -d`"
+  q: How do I install {{site.base_gateway}} using Docker Compose?
+  a: "Copy the Docker Compose file and run `docker compose up -d`."
 prereqs:
   skip_product: true
   inline: 
@@ -32,7 +32,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Copy the Docker Compose File
+## 1. Set up the Docker Compose file
 
 Copy the Docker Compose file to `docker-compose.yml`:
 <!-- vale off -->
@@ -122,15 +122,17 @@ EOF
 Start {{site.base_gateway}} with the Docker compose file: 
 
 ```sh
-docker compose up -d kong
+docker compose up -d
 ```
 
 ## 3. Validate
 
 You can validate {{site.base_gateway}} is running using cURL against the {{site.base_gateway}} Admin API:
 
-```sh
-curl -i http://localhost:8001
-```
+{% control_plane_request %}
+url: ''
+method: GET
+status_code: 200
+{% endcontrol_plane_request %}
 
-This will return an `HTTP/1.1 200 OK` response
+This will return an `HTTP/1.1 200 OK` response.
