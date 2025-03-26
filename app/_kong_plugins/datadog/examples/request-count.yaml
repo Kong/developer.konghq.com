@@ -1,0 +1,27 @@
+description: |
+  Configure the plugin to log the `request_count` metric and identify the consumers with their ID.
+
+title: Log request count
+
+weight: 900
+
+requirements:
+  - You have a local Datadog instance
+
+config:
+  host: 127.0.0.1
+  port: 8125
+  flush_timeout: 2
+  retry_count: 10
+  metrics:
+    - name: request_count
+      stat_type: counter
+      consumer_identifier: consumer_id
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
