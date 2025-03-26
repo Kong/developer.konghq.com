@@ -25,13 +25,12 @@ A software bill of materials (SBOM) is an inventory of all software components (
 
 Starting in {{site.ee_product_name}} 3.3, we generate SBOMs for our artifact images.
 
-See the following links to directly download the SBOM for your {{site.ee_product_name}} version:
 
 {% table %}
 columns:
   - title: {{site.base_gateway}} Version
     key: version
-  - title: Download link
+  - title: Direct Download link
     key: download
 rows:
   - version: 3.9.0.0
