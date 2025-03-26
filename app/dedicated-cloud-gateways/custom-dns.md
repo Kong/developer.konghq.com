@@ -57,7 +57,7 @@ related_resources:
 
 ## Dedicated Cloud Gateways domain registrar configuration
 
-The following settins must be configured in your domain registrar using the values in {{site.konnect_short_name}}.
+The following settings must be configured in your domain registrar using the values in {{site.konnect_short_name}}.
 For example, in AWS Route 53, it would look like this:
 
 {% table %}
