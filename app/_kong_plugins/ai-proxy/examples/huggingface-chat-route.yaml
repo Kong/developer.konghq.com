@@ -7,19 +7,19 @@ weight: 900
 requirements:
 - Hugging Face account
 
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
-
 config:
   route_type: llm/v1/chat
   auth:
     header_name: Authorization
-    header_value: Bearer $HUGGINGFACE_TOKEN
+    header_value: Bearer ${token}
   model:
     provider: huggingface
     name: HuggingFaceTB/SmolVLM-Base
+    
+variables:
+  key:
+    value: $HUGGINGFACE_TOKEN
+    description: The token to use to connect to Hugging Face.
 
 tools:
   - deck

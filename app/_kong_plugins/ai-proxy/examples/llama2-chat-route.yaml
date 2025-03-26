@@ -1,16 +1,11 @@
 
-title: 'Chat route with Llama2'
-description: 'Configure a chat route using a local Llama2 model with the OLLAMA format.'
+title: 'Chat route with Llama 2'
+description: 'Configure a chat route using a local Llama 2 model with the OLLAMA format.'
 
 weight: 900
 
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
+requirements:
+- A local Llama 2 instance
 
 config:
   route_type: llm/v1/chat

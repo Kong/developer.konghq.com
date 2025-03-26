@@ -1,18 +1,58 @@
 
 title: 'Round-robin load balancing'
-description: 'Configure round-robin load balancing for AI Proxy Advanced'
+description: |
+  Configure the plugin to use three OpenAI models and route requests based on their respective weights.
+
+  In this example, the GPT-4 model will receive 70% of requests, the GPT-4o-mini model will receive 25%, and the GPT-3 model 5%.
 
 weight: 900
 
-# requirements:
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
+requirements:
+  - An OpenAI account
 
 config:
-  
+  balancer:
+    algorithm: round-robin
+  targets:
+  - model:
+      name: gpt-4
+      provider: openai
+      options:
+        max_tokens: 512
+        temperature: 1.0
+    route_type: llm/v1/chat
+    auth: 
+      header_name: Authorization
+      header_value: Bearer ${key}
+    weight: 70
+  - model:
+      name: gpt-4o-mini
+      provider: openai
+      options:
+        max_tokens: 512
+        temperature: 1.0
+    route_type: llm/v1/chat
+    auth: 
+      header_name: Authorization
+      header_value: Bearer ${key}
+    weight: 25
+  - model:
+      name: gpt-3
+      provider: openai
+      options:
+        max_tokens: 512
+        temperature: 1.0
+    route_type: llm/v1/chat
+    auth: 
+      header_name: Authorization
+      header_value: Bearer ${key}
+    weight: 5
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+
 tools:
   - deck
   - admin-api
