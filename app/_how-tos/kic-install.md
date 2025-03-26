@@ -48,7 +48,7 @@ cleanup:
 
 To create a {{ site.kic_product_name }} in {{ site.konnect_short_name }} deployment, you need the following items:
 
-1. A {{ site.kic_product_name }} Control Plane, including the CP URL
+1. A {{ site.kic_product_name }} Control Plane, including the Control Plane URL
 1. An mTLS certificate for {{ site.kic_product_name }} to talk to {{ site.konnect_short_name }}
 
 ### Create a KIC in {{ site.konnect_short_name }} Control Plane
