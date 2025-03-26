@@ -589,6 +589,8 @@ app/gateway/third-party-support.md:
   - app/_src/gateway/support/third-party.md
 app/gateway/version-support-policy.md:
   - app/_src/gateway/support/index.md
+/app/gateway/sbom.md:
+  - app/_src/gateway/support/sbom.md
 
 # Serverless GW
 
