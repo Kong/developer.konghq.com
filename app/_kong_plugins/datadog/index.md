@@ -29,7 +29,7 @@ categories:
   - analytics-monitoring
 ---
 
-This plugin lets you log metrics for a Gateway Service or Route to a local [Datadog agent](http://docs.datadoghq.com/guides/basic_agent_usage/).
+This plugin lets you log metrics for a Gateway Service or Route to a local [Datadog agent](https://docs.datadoghq.com/agent/basic_agent_usage/).
 
 ## Queueing
 
@@ -41,48 +41,31 @@ buffering during temporary network or upstream outages.
 You can set several parameters to configure the behavior and capacity
 of the queues used by the plugin. For more information about how to
 use these parameters, see
-[Plugin Queuing Reference](/gateway/plugin-queuing-reference/)
-in the {{site.base_gateway}} documentation.
+[Plugin queuing reference](/gateway/plugin-queuing-reference/).
 
-The queue parameters all reside in a record under the key `queue` in
-the `config` parameter section of the plugin.
+You can find the queue parameters under [`config.queue`](./reference/#schema--config-queue) in the plugin configuration.
 
-Queues are not shared between workers and queueing parameters are
-scoped to one worker.  For whole-system capacity planning, the number
-of workers need to be considered when setting queue parameters.
+Queues are not shared between workers; queueing parameters are
+scoped to one worker. For whole-system capacity planning, the number
+of workers needs to be considered when setting queue parameters.
 
 ---
 
 ## Metrics
-The Datadog plugin currently logs the following metrics to the Datadog server about a service or route.
+The Datadog plugin currently logs the following metrics to the Datadog server about a Service or Route:
 
 Metric                     | Description | Namespace
 ---                        | ---         | ---
-`request_count`            | tracks the request | `kong.request.count`
-`request_size`             | tracks the request's body size in bytes | `kong.request.size`
-`response_size`            | tracks the response's body size in bytes | `kong.response.size`
-`latency`                  | tracks the time interval between the request started and response received from the upstream server | `kong.latency`
-`upstream_latency`         | tracks the time it took for the final service to process the request | `kong.upstream_latency`
-`kong_latency`             | tracks the internal Kong latency that it took to run all the plugins | `kong.kong_latency`
+`request_count`            | Tracks the request | `kong.request.count`
+`request_size`             | Tracks the request body size in bytes | `kong.request.size`
+`response_size`            | Tracks the response body size in bytes | `kong.response.size`
+`latency`                  | Tracks the interval between the time the request started and the time the response was received from the upstream server | `kong.latency`
+`upstream_latency`         | Tracks the time it took for the final service to process the request | `kong.upstream_latency`
+`kong_latency`             | Tracks the internal Kong latency that it took to run all the plugins | `kong.kong_latency`
 
-The metrics will be sent with the tags `name` and `status` carrying the API name and HTTP status code respectively. If you specify `consumer_identifier` with the metric, a tag `consumer` will be added.
+The metrics will be sent with the tags `name` and `status` carrying the API name and HTTP status code respectively. If you specify `consumer_identifier` with the metric, a `consumer` tag will be added.
 
-### Metric fields
-
-Plugin can be configured with any combination of metrics, with each entry containing the following fields:
-
-Field           | Description                                           | Data types   | Allowed values
----             | ---                                                   | ---         | ---
-`name`          | Datadog metric's name                                 | String      | [Metric name](#metrics)
-`stat_type`     | Determines what sort of event the metric represents   | String      | `gauge`, `timer`, `counter`, `histogram`, `meter`, `set`, `distribution` 
-`sample_rate` *conditional*   | Sampling rate                        | Number      | `number`
-`consumer_identifier` *conditional* | Authenticated user detail       | String      | `consumer_id`, `custom_id`, `username`
-`tags` *optional* | List of tags                                      | Array of strings    | `key[:value]`
-
-### Metric requirements
-
-- All metrics get logged by default.
-- Metrics with `stat_type` as `counter` or `gauge` must have `sample_rate` defined as well.
+All metrics get logged by default. You can customize the metrics logged with the [`config.metrics`](./reference/#schema--config-metrics) parameter. Note that metrics with `stat_type` set to `counter` or `gauge` must have `sample_rate` defined as well.
 
 ## Migrating Datadog queries
 The plugin updates replace the API, status, and consumer-specific metrics with a generic metric name.
@@ -102,17 +85,16 @@ avg:kong.latency.avg{name:sample-service}
 
 When installing a multi-data center setup, you might want to set Datadog's agent host and port on a per Kong node basis. This configuration is possible by setting the host and port properties using environment variables.
 
+Field           | Description                                           | Data types
+---             | ---                                                   | ---
+`KONG_DATADOG_AGENT_HOST` | The IP address or hostname to send data to | string
+`KONG_DATADOG_AGENT_PORT` | The port to send data to on the upstream server | integer
+
 {:.info}
-> **Note:** `host` and `port` fields in the plugin config take precedence over environment variables.
+> **Note:** The `host` and `port` fields in the plugin configuration take precedence over environment variables.
 > For Kubernetes, there is a known limitation that you can't set `host` to null to use the environment variable. 
 > You can work around this by using a vault reference, for example: `{vault://env/kong-datadog-agent-host}`. 
 > Refer to [Configure with Kubernetes](#configure-with-kubernetes).
-
-
-Field           | Description                                           | Data types
----             | ---                                                   | ---
-`KONG_DATADOG_AGENT_HOST` | The IP address or hostname to send data to. | string
-`KONG_DATADOG_AGENT_PORT` | The port to send data to on the upstream server. | integer
 
 ## Kong process errors
 
@@ -124,11 +106,10 @@ Field           | Description                                           | Data t
 In most Kubernetes setups, `datadog-agent` runs as a daemon set. 
 This means that a `datadog-agent` runs on each node in the Kubernetes cluster, and {{site.base_gateway}} must forward metrics to the `datadog-agent` running on the same node as {{site.base_gateway}}. 
 
-This can be accomplished by providing the IP address of the Kubernetes worker node to {{site.base_gateway}}, then configuring the plugin to use that IP address. 
-This is achieved using environment variables.
+This can be accomplished by providing the IP address of the Kubernetes worker node to {{site.base_gateway}}, then configuring the plugin to use that IP address using environment variables.
 
-{% navtabs %}
-{% navtab Helm %}
+{% navtabs "Kubernetes" %}
+{% navtab "Helm" %}
 
 1. Modify the `env` section in `values.yaml`:
 
@@ -163,7 +144,7 @@ This is achieved using environment variables.
     ```
 
 {% endnavtab %}
-{% navtab Kubernetes YAML %}
+{% navtab "Kubernetes YAML" %}
 
 1. Modify the `env` section in `values.yaml`:
 
