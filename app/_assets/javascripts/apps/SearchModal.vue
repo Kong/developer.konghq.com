@@ -218,6 +218,7 @@ export default {
         initialTags.push({ label: productFilter.label, value: productFilter.value, facet: 'products' });
       }
     }
+    const originalTags = initialTags.slice();
 
     const tagsPlugin = createTagsPlugin({
       initialTags: initialTags,
@@ -287,7 +288,9 @@ export default {
       autocomplete,
       tagsPlugin,
       showModal,
-      sources
+      sources,
+      originalTags,
+      tagsPlugin
     };
   },
   watch: {
@@ -359,6 +362,7 @@ export default {
       if (this.permanentScrollbars) {
         document.body.style.setProperty("margin-right", "var(--removed-body-scroll-bar-size)");
       }
+      this.tagsPlugin.data.setTags(this.originalTags);
 
       nextTick(() => {
         document.activeElement?.blur();
