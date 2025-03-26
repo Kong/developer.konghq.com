@@ -11,23 +11,19 @@ H(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32p
 J(Internet)
 
 subgraph 1 [User Azure Cloud]
-    subgraph 2 [Region]
-        subgraph 3 [Virtual Network #40;VNET#41;]
-        A
-        B
-        C
-        end
-    end
+      subgraph 3 [Virtual Network #40;VNET#41;]
+      A
+      B
+      C
+      end
 end
 3 <--VNET Peering \n Private API Access--> 6
 
 subgraph 4 [Kong Azure Cloud]
-    subgraph 5 [Region]
-        subgraph 6 [Virtual Network #40;VNET#41;]
-        G
-        H
-        end
-    end
+      subgraph 6 [Virtual Network #40;VNET#41;]
+      G
+      H
+      end
 end
 
 G & H <--public API \n access--> J

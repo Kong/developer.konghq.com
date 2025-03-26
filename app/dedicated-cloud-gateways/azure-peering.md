@@ -12,11 +12,6 @@ works_on:
     - konnect
 api_specs:
     - konnect/control-planes-config
-faqs:
-  - q: What is Azure VNET Peering and how does it work with {{site.konnect_short_name}}?
-    a: |
-      Azure Virtual Network Peering allows you to securely connect your Azure environment to {{site.konnect_short_name}}'s Dedicated Cloud Gateways. 
-      {{site.konnect_short_name}} hosts the Data Plane Nodes on Azure, and peering enables low-latency, secure communication between your Azure-hosted services and your {{site.konnect_short_name}} infrastructure.
 
 related_resources:
   - text: Dedicated Cloud Gateways
@@ -24,7 +19,6 @@ related_resources:
 ---
 
 
-### How Azure VNET Peering Works with {{site.konnect_short_name}}
 
 When you deploy Dedicated Cloud Gateway in {{site.konnect_short_name}}, {{site.konnect_short_name}} hosts the Data Plane Nodes on Azure. Then, you can use [Azure Virtual Network Peering](https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview) to establish a secure, low-latency connection between your Azure environment and the {{site.konnect_short_name}} platform.
 
@@ -54,7 +48,7 @@ This process includes three main steps:
     * Read and write access to Virtual Network peering configurations
     * Permission to perform peering actions
 
-    With the Azure CLI use this command to define the role, replacing `$SUBSCRIPTION-ID` with your Azure subscription ID:
+    Use the Azure CLI to define the role, replacing `$SUBSCRIPTION-ID` with your Azure subscription ID:
 
     ```bash
     az role definition create --output none --role-definition '{
@@ -87,7 +81,7 @@ This process includes three main steps:
 
 ### Konnect Configuration for VNET Peering
 
-To configure peering in {{site.konnect_short_name}} you need to input the following values from Azure into the {{site.konnect_short_name}} UI:
+To configure peering in {{site.konnect_short_name}} you need to input the following values from Azure into the {{site.konnect_short_name}} [Gateway Manager](https://cloud.konghq.com/gateway-manager/) UI for your Dedicated Cloud Gateway:
 
 * Azure Tenant ID  
 * Azure VNET Subscription ID  
@@ -96,6 +90,8 @@ To configure peering in {{site.konnect_short_name}} you need to input the follow
 
 ### DNS Mappings
 
+
+The following table describes how DNS is mapped in Azure VNET peering:
 
 {% table %}
 columns:
