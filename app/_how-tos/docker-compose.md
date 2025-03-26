@@ -1,6 +1,6 @@
 ---
 title: Install {{site.base_gateway}} using Docker Compose
-description: Use Docker Compose to install Kong Gateway
+description: Use Docker Compose to install {{site.base_gateway}}
 content_type: how_to
 permalink: /gateway/install/docker
 related_resources:
@@ -35,7 +35,7 @@ cleanup:
 ## 1. Copy the Docker Compose File
 
 Copy the Docker Compose file to `docker-compose.yml`:
-
+<!-- vale off -->
 ```bash
 cat <<EOF > docker-compose.yml
 
@@ -115,7 +115,7 @@ services:
       - "8445:8445"  # Kong Manager HTTPS
 EOF
 ```
-
+<!-- vale on -->
 
 ## 2. Start {{site.base_gateway}}
 
