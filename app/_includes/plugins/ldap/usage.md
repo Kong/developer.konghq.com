@@ -3,7 +3,7 @@ To authenticate a user, the client must set credentials in either the
 ```
 credentials := [ldap | LDAP] base64(username:password)
 ```
-The `Authorization` header would look something like:
+The `Authorization` header would look like this:
 ```
 Authorization:  ldap dGxibGVzc2luZzpLMG5nU3RyMG5n
 ```
