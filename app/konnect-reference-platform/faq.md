@@ -16,9 +16,13 @@ breadcrumbs:
   - /konnect-reference-platform/
 
 related_resources:
-- text: Reference Platform Home
+- text: Reference Platform - Home
   url: /konnect-reference-platform/
-- text: Reference Platform How-To
+- text: Reference Platform - FAQ
+  url: /konnect-reference-platform/faq/
+- text: Reference Platform - Kong Air
+  url: /konnect-reference-platform/kong-air/
+- text: Reference Platform - How-To
   url: /konnect-reference-platform/how-to/
 ---
 
