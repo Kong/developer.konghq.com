@@ -1,5 +1,5 @@
 ---
-title: "Konnect Reference Platform FAQ"
+title: Konnect Reference Platform - FAQ
 content_type: reference
 layout: reference
 
@@ -197,6 +197,9 @@ The Konnect Orchestrator installs APIOps workflows in your platform repository w
 API delivery. The Kong [decK](https://docs.konghq.com/deck/) tool is used to apply declarative configurations to your Konnect organizations
 following a PR based workflow.
 
-## What are the specific steps implemented in the API Delivery process?
-TODO: Add steps
-TODO: Add diagram
+## What are the specific GitHub workflow steps implemented in the API Delivery process?
+`TODO`: Add steps
+`TODO`: Add diagram
+
+## Why do I see the warning message "Found 0 serivces for API ... Cannot create API implementation relation..."
+`TODO`: Add explanation , Explain the gw service tagging and the orchestrator lookup process

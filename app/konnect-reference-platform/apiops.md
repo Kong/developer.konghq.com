@@ -1,5 +1,5 @@
 ---
-title: "Konnect Reference Platform - APIOps"
+title: Konnect Reference Platform - APIOps
 content_type: reference
 layout: reference
 
