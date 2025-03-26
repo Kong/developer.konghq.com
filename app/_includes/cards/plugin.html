@@ -1,8 +1,9 @@
 {% assign plugin = include.plugin %}
 {% assign support = "" %}
 {% if plugin.third_party %}{% assign support = support | append: "third-party" %}{% endif %}
-{% if plugin.premium_partner %}{% assign support = support | append: ",premium-partner" %}{% endif %}
 {% if plugin.publisher == 'kong-inc' %}{% assign support = support | append: ",kong-inc" %}{% endif %}
+{% assign trusted_content = "" %}
+{% if plugin.premium_partner %}{% assign trusted_content =  "premium-partner" %}{% endif %}
 <div
   class="card card__bordered min-h-[260px]"
   data-card="plugin"
@@ -10,6 +11,7 @@
   data-deployment-topology="{{plugin.works_on | join: ','}}"
   data-search="{{plugin.search_aliases | join: ','}}"
   data-support="{{support}}"
+  data-trusted-content="{{trusted_content}}"
   {% if plugin.tier %}data-tier="{{plugin.tier}}"{% endif %}
 >
     <a href="{{plugin.url}}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
