@@ -17,6 +17,7 @@ config:
     - name: request_count
       stat_type: counter
       consumer_identifier: consumer_id
+      sample_rate: 1
 
 
 tools:
