@@ -17,4 +17,4 @@ $ curl -c /tmp/cookie -b /tmp/cookie http://localhost:8001/consumers \
 -H 'Kong-Admin-User: <LDAP_USERNAME>'
 ```
 
-Because Kong Manager is a browser application, if any HTTP responses see the `Set-Cookie` header, then it will automatically attach it to future requests. This is why it's helpful to use [cURL's cookie engine](https://ec.haxx.se/http/cookies/index.html) or [HTTPie sessions](https://httpie.org/docs/0.9.7#sessions). If syou don't want to store the session, then the `Set-Cookie` header value can be copied directly from the `/auth` response and used with subsequent requests.
+Because Kong Manager is a browser application, if any HTTP responses see the `Set-Cookie` header, then it will automatically attach it to future requests. This is why it's helpful to use [cURL's cookie engine](https://ec.haxx.se/http/cookies/index.html) or [HTTPie sessions](https://httpie.org/docs/0.9.7#sessions). If you don't want to store the session, then the `Set-Cookie` header value can be copied directly from the `/auth` response and used with subsequent requests.
