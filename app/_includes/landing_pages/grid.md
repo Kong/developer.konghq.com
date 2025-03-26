@@ -13,7 +13,7 @@
 {% assign rows = include.config.rows %}
 {% endif %}
 
-<{{ tag }} class="flex flex-col gap-3 w-full">
+<{{ tag }} class="flex flex-col gap-3 w-full {{page.content_type | slugify}}">
   <div class="flex flex-col gap-{{ gap }}">
     {% for row in rows %}
 
