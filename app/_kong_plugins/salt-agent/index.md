@@ -29,7 +29,7 @@ third_party: true
 
 support_url: https://salt.security/contact-us
 
-icon: salt.png
+icon: salt-agent.png
 
 search_aliases:
   - salt-agent

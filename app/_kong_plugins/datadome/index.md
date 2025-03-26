@@ -27,5 +27,5 @@ works_on:
 third_party: true
 support_url: https://docs.datadome.co/docs/support
 
-icon: kong-plugin-datadome.png
+icon: datadome.png
 ---
