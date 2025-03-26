@@ -119,7 +119,7 @@ EOF
 
 ## 2. Start {{site.base_gateway}}
 
-Start {{site.base_gateway}} with the Docker compose file: 
+Start {{site.base_gateway}} with the Docker Compose file: 
 
 ```sh
 docker compose up -d
