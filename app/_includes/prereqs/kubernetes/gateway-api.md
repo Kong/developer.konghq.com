@@ -14,7 +14,7 @@
 
 {% if include.config.gateway_api == "experimental" %}
 
-1. Install the **experimental** Gateway API CRDs before installing {{ site.kic_product_name }}.
+1. Install the **experimental** Gateway API CRDs before installing {{ site.kic_product_name }}:
 
    ```bash
    kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ gw_api_crd_version}}/experimental-install.yaml

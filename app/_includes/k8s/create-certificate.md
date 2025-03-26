@@ -32,9 +32,9 @@ openssl req -subj '/CN={{ include.hostname }}' -new -newkey rsa:2048 -sha256 \
 {% endcapture %}
 {{ the_code | indent: 4 }}
 
-    Older OpenSSL versions, including the version provided with OS X Monterey, require using the alternative version of this command.
+    Older OpenSSL versions, including the version provided with macOS Monterey, require using the alternative version of this command.
 
-1. Create a Secret containing the certificate.
+1. Create a Secret containing the certificate:
     ```bash
     kubectl create secret{% if include.namespace %} -n {{ include.namespace }}{% endif %} tls {{ include.hostname }} --cert=./server.crt --key=./server.key
     ```

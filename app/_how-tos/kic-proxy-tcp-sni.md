@@ -24,7 +24,7 @@ entities: []
 
 tldr:
   q: How do I route TCP traffic with {{ site.kic_product_name }}?
-  a: Create a `TCPRoute` or `TCPIngress` resource, which will then be converted in to a {{ site.base_gateway }} Service and Route
+  a: Create a `TCPRoute` or `TCPIngress` resource, which will then be converted in to a [{{ site.base_gateway }} Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
 
 prereqs:
   kubernetes:
@@ -48,7 +48,7 @@ cleanup:
 
 ## Route TCP traffic
 
-To expose the service to the outside world, create a TCPRoute resource for Gateway APIs or a TCPIngress resource for Ingress.
+To publicly expose the service, create a `TCPRoute` resource for Gateway APIs or a `TCPIngress` resource for Ingress.
 
 {% navtabs api %}
 {% navtab "Gateway API" %}
@@ -131,13 +131,13 @@ spec:
 {% endnavtabs %}
 
 This configuration instructs {{site.base_gateway}} to forward all traffic it
-receives on port 9000 to `echo` service on port 1025.
+receives on port 9000 to the `echo` service on port 1025.
 
 ## Validate your configuration
 
 You can now access the `echo` service on port 9443 with SNI `tls9443.kong.example`.
 
-In real-world usage, you would create a DNS record for `tls9443.kong.example`pointing to your proxy Service's public IP address, which causes TLS clients to add SNI automatically. For this demo, add it manually using the OpenSSL CLI.
+In real-world usage, you would create a DNS record for `tls9443.kong.example` pointing to your proxy Service's public IP address, which causes TLS clients to add a SNI automatically. For this demo, add it manually using the OpenSSL CLI.
 
 ```bash
 echo "hello" | openssl s_client -connect $PROXY_IP:9443 -servername tls9443.kong.example -quiet 2>/dev/null

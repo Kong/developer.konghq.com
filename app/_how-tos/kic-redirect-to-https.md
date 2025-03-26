@@ -53,7 +53,7 @@ To route HTTP traffic, you need to create a `HTTPRoute` or an `Ingress` resource
 
 ## Configure a HTTPS redirect
 
-Kong handles HTTPS redirects by automatically issuing redirects to requests whose characteristics match a HTTPS-only route except for the protocol. For example, with a Kong route such as this:
+{{site.base_gateway}} handles HTTPS redirects by automatically issuing redirects to requests whose characteristics match a HTTPS-only route except for the protocol. For example, with a {{site.base_gateway}} Route like the following:
 
 ```json
 { "protocols": ["https"], "hosts": ["{{ demo_domain }}"],
@@ -100,14 +100,14 @@ kubectl annotate -n kong ingress echo konghq.com/https-redirect-status-code="301
 {{ the_code | indent: 4 }}
 
 {:.info}
-> **Note**: {{ site.kic_product_name }} _does not_ use a [HTTPRequestRedirectFilter](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.HTTPRequestRedirectFilter) to configure the redirect. Using the filter to redirect HTTP to HTTPS requires a separate HTTPRoute to handle redirected HTTPS traffic, which does not align well with Kong's single route redirect model.
+> **Note**: {{ site.kic_product_name }} _does not_ use a [HTTPRequestRedirectFilter](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.HTTPRequestRedirectFilter) to configure the redirect. Using the filter to redirect HTTP to HTTPS requires a separate `HTTPRoute` to handle redirected HTTPS traffic, which doesn't align well with {{site.base_gateway}}'s single Route redirect model.
 > 
-> Work to support the standard filter-based configuration is ongoing. Until then, the annotations allow you to configure HTTPS-only HTTPRoutes.
+> Work to support the standard filter-based configuration is ongoing. Until then, the annotations allow you to configure HTTPS-only `HTTPRoutes`.
 
 ## Validate your configuration
 
 With the redirect configuration in place, HTTP requests now receive a redirect rather than being proxied upstream:
-1. Send a HTTP request.
+1. Send a HTTP request:
     ```bash
     curl -ksvo /dev/null http://{{ demo_domain }}/echo --resolve {{ demo_domain }}:80:$PROXY_IP 2>&1 | grep -i http
     ```
@@ -120,8 +120,8 @@ With the redirect configuration in place, HTTP requests now receive a redirect r
     < Location: https://{{ demo_domain }}/echo
     ```
 
-1. Send a curl request to follow redirects using the `-L` flag navigates
-to the HTTPS URL and receive a proxied response from upstream.
+1. Send a curl request to follow redirects using the `-L` flag. This navigates
+to the HTTPS URL and receives a proxied response from the upstream.
 
     ```bash
     curl -Lksv http://{{ demo_domain }}/echo --resolve {{ demo_domain }}:80:$PROXY_IP --resolve {{ demo_domain }}:443:$PROXY_IP 2>&1
@@ -154,8 +154,8 @@ to the HTTPS URL and receive a proxied response from upstream.
     With IP address 10.244.0.7.
     ```
 
-Kong correctly serves the request only on HTTPS protocol and redirects the user
+{{site.base_gateway}} correctly serves the request only on the HTTPS protocol and redirects the user
 if the HTTP protocol is used. The `-k` flag in cURL skips certificate
-validation as the certificate served by Kong is a self-signed one. If you are
+validation as the certificate is served by {{site.base_gateway}} is a self-signed one. If you are
 serving this traffic through a domain that you control and have configured TLS
 properties for it, then the flag won't be necessary.

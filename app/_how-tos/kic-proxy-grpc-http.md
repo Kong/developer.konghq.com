@@ -23,7 +23,7 @@ entities: []
 
 tldr:
   q: How do I route gRPC traffic with {{ site.kic_product_name }}?
-  a: Create a `GRPCRoute` resource, which will then be converted in to a {{ site.base_gateway }} Service and Route
+  a: Create a `GRPCRoute` resource, which will then be converted in to a [{{ site.base_gateway }} Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
 
 prereqs:
   kubernetes:
@@ -41,9 +41,9 @@ cleanup:
 
 ## gRPC over HTTP
 
-All services are assumed to be either HTTP or HTTPS by default. We need to update the service to specify gRPC as the protocol by adding a `konghq.com/protocol` annotation.
+All Gateway Services are assumed to be either HTTP or HTTPS by default. We need to update the Service to specify gRPC as the protocol by adding a `konghq.com/protocol` annotation.
 
-The annotation `grpc` informs Kong that this service is a gRPC (with TLS) service and not a HTTP service.
+The annotation `grpc` informs {{site.base_gateway}} that this service is a gRPC (with TLS) service and not a HTTP service.
 
 ```bash
 kubectl annotate service -n kong grpcbin 'konghq.com/protocol=grpc'
@@ -62,8 +62,8 @@ kubectl set env deployment/kong-gateway -n kong 'KONG_PROXY_LISTEN=0.0.0.0:8000 
 
 ## Route gRPC traffic
 
-Now that the test application is running, you can create GRPC routing configuration that
-proxies traffic to the application:
+Now that the test application is running, you can create a GRPC routing configuration that
+proxies traffic to the application.
 
 {% navtabs api %}
 {% navtab "Gateway API" %}
@@ -92,7 +92,7 @@ spec:
 
 All Ingresses are assumed to be either HTTP or HTTPS by default. We need to update the `Ingress` to specify gRPC as the protocol by adding a `konghq.com/protocols` annotation.
 
-This annotation informs Kong that this Ingress routes gRPC (with TLS) traffic and not a HTTP traffic.
+This annotation informs {{site.base_gateway}} that this Ingress routes gRPC (with TLS) traffic and not HTTP traffic.
 
 ```bash
 echo "apiVersion: networking.k8s.io/v1

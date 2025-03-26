@@ -23,7 +23,7 @@ entities: []
 
 tldr:
   q: How do I route gRPC traffic with {{ site.kic_product_name }}?
-  a: Create a `GRPCRoute` resource, which will then be converted in to a {{ site.base_gateway }} Service and Route
+  a: Create a `GRPCRoute` resource, which will then be converted in to a [{{ site.base_gateway }} Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
 
 prereqs:
   kubernetes:
@@ -43,7 +43,7 @@ cleanup:
 
 All services are assumed to be either HTTP or HTTPS by default. We need to update the service to specify gRPC over TLS as the protocol by adding a `konghq.com/protocol` annotation.
 
-The annotation `grpcs` informs Kong that this service is a gRPC (with TLS) service and not a HTTP service.
+The annotation `grpcs` informs {{site.base_gateway}} that this service is a gRPC (with TLS) service and not a HTTP service.
 
 ```bash
 kubectl annotate service -n kong grpcbin 'konghq.com/protocol=grpcs'
@@ -56,7 +56,7 @@ kubectl annotate service -n kong grpcbin 'konghq.com/protocol=grpcs'
 ## Route gRPC traffic
 
 Now that the test application is running, you can create GRPC routing configuration that
-proxies traffic to the application:
+proxies traffic to the application.
 
 {% navtabs api %}
 {% navtab "Gateway API" %}
@@ -109,7 +109,7 @@ spec:
 
 All routes and services are assumed to be either HTTP or HTTPS by default. We need to update the service to specify gRPC as the protocol by adding a `konghq.com/protocols` annotation.
 
-This annotation informs Kong that this Ingress routes gRPC (with TLS) traffic and not a HTTP traffic.
+This annotation informs {{site.base_gateway}} that this Ingress routes gRPC (with TLS) traffic and not HTTP traffic.
 
 ```bash
 echo "apiVersion: networking.k8s.io/v1

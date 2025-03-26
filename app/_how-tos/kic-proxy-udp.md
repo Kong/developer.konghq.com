@@ -23,7 +23,7 @@ entities: []
 
 tldr:
   q: How do I route UDP traffic with {{ site.kic_product_name }}?
-  a: Create a `UDPRoute` or `UDPIngress` resource, which will then be converted in to a {{ site.base_gateway }} Service and Route
+  a: Create a `UDPRoute` or `UDPIngress` resource, which will then be converted in to a [{{ site.base_gateway }} Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
 
 prereqs:
   kubernetes:
@@ -41,7 +41,7 @@ cleanup:
 
 ## Add UDP listens
 
-{{site.base_gateway}} does not include any UDP listen configuration by default. To expose UDP listens, update the Deployment’s environment variables and port configuration.
+{{site.base_gateway}} doesn't include any UDP listen configuration by default. To expose UDP listens, update the Deployment’s environment variables and port configuration.
 
 1. Set the `KONG_STREAM_LISTEN` environment variable and expose port `9999` in the Deployment:
 
@@ -74,7 +74,7 @@ cleanup:
     }'
     ```
 
-1.  Update the proxy Service to indicate the new ports.
+1.  Update the proxy Service to indicate the new ports:
 
     ```bash
     kubectl patch service -n kong kong-gateway-proxy --patch '{
@@ -166,7 +166,7 @@ This configuration routes traffic to UDP port `9999` on the
 
 ## Validate your configuration
 
-Send a TFTP request through the proxy.
+Send a TFTP request through the proxy:
 
 ```bash
 curl -s tftp://$PROXY_IP:9999/hello

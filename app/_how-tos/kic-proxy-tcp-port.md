@@ -23,7 +23,7 @@ entities: []
 
 tldr:
   q: How do I route TCP traffic with {{ site.kic_product_name }}?
-  a: Create a `TCPRoute` or `TCPIngress` resource, which will then be converted in to a {{ site.base_gateway }} Service and Route
+  a: Create a `TCPRoute` or `TCPIngress` resource, which will then be converted in to a [{{ site.base_gateway }} Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
 
 prereqs:
   kubernetes:
@@ -43,7 +43,7 @@ cleanup:
 
 ## Route TCP traffic
 
-To expose the service to the outside world, create a TCPRoute resource for Gateway APIs or a TCPIngress resource for Ingress.
+To publicly expose the service, create a `TCPRoute` resource for Gateway APIs or a `TCPIngress` resource for Ingress.
 
 {% navtabs api %}
 {% navtab "Gateway API" %}
@@ -107,7 +107,7 @@ spec:
 {% endnavtabs %}
 
 This configuration instructs {{site.base_gateway}} to forward all traffic it
-receives on port 9000 to `echo` service on port 1025.
+receives on port 9000 to the `echo` service on port 1025.
 
 ## Validate your configuration
 
