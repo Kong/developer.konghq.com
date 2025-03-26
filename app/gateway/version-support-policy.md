@@ -1,6 +1,6 @@
 ---
-title: "{{site.base_gateway}} Version Support"
-content_type: reference
+title: "{{site.base_gateway}} version support"
+content_type: policy
 layout: reference
 
 products:
