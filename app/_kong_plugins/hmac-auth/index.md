@@ -85,22 +85,13 @@ To generate the string that is signed with a key, the client
 must take the values of each HTTP header specified by `headers` in
 the order they appear.
 
-1. If the header name is not `request-line` or `@request-target`,
-  append the lowercase header name followed with an ASCII colon `:` and an
-  ASCII space ` `.
+1. If the header name is not `request-line` or `@request-target`, append the lowercase header name followed with an ASCII colon `:` and an ASCII space.
 
-2. If the header name is `request-line`, append the HTTP
-  request line (in ASCII format).
+2. If the header name is `request-line`, append the HTTP request line (in ASCII format). We recommend using `@request-target` instead of `request-line`.
 
-3. If the header name is `@request-target`, append the lowercase request method,
- followed by a ASCII space ` ` and the request URI including any query strings;
- otherwise append the header value.
+3. If the header name is `@request-target`, append the lowercase request method, followed by a ASCII space and the request URI including any query strings. Otherwise append the header value.
 
-3. If value isn't the last value, then append an ASCII newline `\n`.
-  The string **must not** include a trailing ASCII newline.
-
-{:.info}
-> **Note:** The `@request-target` pseudo header was added in the 2.5.0 version of the plugin release. It is similar to the `request-line` pseudo header except that the HTTP version was removed from the signature calculation. Otherwise, semantically equivalent requests that uses HTTP/1.x and HTTP/2 will generate different signature value. It is strongly recommended to use `@request-target` instead of `request-line` with releases of this plugin after 2.5.0.
+3. If value isn't the last value, then append an ASCII newline `\n`. The string **must not** include a trailing ASCII newline.
 
 ## Clock skew
 
@@ -150,6 +141,6 @@ The following table describes how you can send `GET` requests to the API endpoin
 
 | Use | Endpoint |
 |----|-----------|
-| Paginate through the `hmac-auth` credentials for all Consumers | ``curl -X GET http://localhost:8001`/hmac-auths` |
-| Filter the list by Consumer | `/consumers/{username or id}/hmac-auth` |
+| Paginate through the `hmac-auth` credentials for all Consumers | `/hmac-auths` |
+| Filter the list by Consumer | `/consumers/{usernameOrId}/hmac-auth` |
 | Retrieve a Consumer associated with an HMAC credential | `/hmac-auths/{hmacUsernameOrId}/consumer` |
