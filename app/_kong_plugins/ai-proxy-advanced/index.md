@@ -39,6 +39,14 @@ search_aliases:
   - intelligence
   - language
   - model
+
+related_resources:
+  - text: AI Gateway
+    url: /ai-gateway/
+  - text: AI Gateway providers
+    url: /ai-gateway/ai-providers/
+  - text: AI Proxy
+    url: /plugins/ai-proxy/
 ---
 
 {% include plugins/ai-proxy/overview.md plugin=page.name params=site.data.plugins.ai-proxy-advanced.parameters %}
