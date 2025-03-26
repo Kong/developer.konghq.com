@@ -31,6 +31,10 @@ categories:
 
 search_aliases:
   - ldap-auth
+
+related_resources:
+  - text: LDAP Authentication Advanced
+    url: /plugins/ldap-auth-advanced/
 ---
 
 {% include /plugins/ldap/description.md %}
@@ -41,11 +45,11 @@ For more advanced features, see the [LDAP Authentication Advanced plugin](/plugi
 
 {% include /plugins/ldap/usage.md %}
 
-### Upstream Headers
+### Upstream headers
 
 {% include_cached /plugins/upstream-headers.md %}
 
-### Using Service Directory Mapping on the CLI
+### Using service directory mapping on the CLI
 
 {% include /plugins/ldap/service-directory-mapping.md %}
 

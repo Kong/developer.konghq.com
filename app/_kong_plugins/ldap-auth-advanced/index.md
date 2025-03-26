@@ -32,10 +32,10 @@ categories:
 search_aliases:
   - ldap-auth-advanced
   - ldap auth advanced
----
 
----
-nav_title: Overview
+related_resources:
+  - text: LDAP Authentication
+    url: /plugins/ldap-auth/
 ---
 
 {% include /plugins/ldap/description.md %}
@@ -43,24 +43,22 @@ nav_title: Overview
 The LDAP Authentication Advanced plugin
 provides features not available in the [LDAP Authentication plugin](/plugins/ldap-auth/), including:
 * LDAP searches for group and consumer mapping
-* Ability to authenticate based on username or custom ID
-* The ability to bind to an enterprise LDAP directory with a password
-* The ability to authenticate/authorize using a group base DN and specific group member or group name attributes
-* The ability to obtain LDAP groups and set them in a header to the request before proxying to the upstream. 
-This is useful for Kong Manager role mapping.
+* Authentication of Consumers based on username or custom ID
+* Binding to an enterprise LDAP directory with a password
+* Authentication/authorization using a group base DN and specific group member or group name attributes
+* Obtaining LDAP groups and setting them in a request header before proxying to the upstream. This is useful for Kong Manager role mapping.
 
 ## Usage
 
 {% include /plugins/ldap/usage.md %}
 
-### Upstream Headers
+### Upstream headers
 
 {% include_cached /plugins/upstream-headers.md %}
 
+### LDAP search and `config.bind_dn`
 
-### LDAP Search and `config.bind_dn`
-
-LDAP directory searching is performed during the request/plugin lifecycle. It is
+LDAP directory searching is performed during the request/plugin lifecycle. It's
 used to retrieve the fully qualified DN of the user so a bind
 request can be performed with a user's given LDAP username and password. The
 search for the user being authenticated uses the `config.bind_dn` property. The
@@ -76,29 +74,27 @@ ldapsearch -x \
   -w "<config.ldap_password>"
 ```
 
-### Using Service Directory Mapping on the CLI
+### Using service directory mapping on the CLI
 
-{% include /md/gateway/ldap-service-directory-mapping.md %}
+{% include /plugins/ldap/service-directory-mapping.md %}
 
-## Notes
+## LDAP groups
 
-`config.group_base_dn` and `config.base_dn` do not accept an array and
-it has to fully match the full DN the group is in - it won’t work if it
-is specified a more generic DN, therefore it needs to be specific. For
-example, considering a case where there are nested `"OU's"`. If a
+The plugin obtains LDAP groups and sets them in the `x-authenticated-groups` request header before proxying to the upstream. 
+This is useful for Kong Manager role mapping.
+
+{:.info}
+> The plugin doesn’t authenticate users based on group membership. If the user is not a member of an LDAP group, the request is still allowed.
+
+## Limitations
+
+* The `config.group_base_dn` and `config.base_dn` parameters have to fully match the exact DN of the group; 
+a generic DN won’t work. 
+For example, consider a case where there are nested organizational units: if a
 top-level DN such as `"ou=dev,o=company"` is specified instead of
 `"ou=role,ou=groups,ou=dev,o=company"`, the authentication will fail.
 
-Referrals are not supported in the plugin. A workaround is
+* Referrals are not supported in the plugin. A workaround is
 to hit the LDAP Global Catalog instead, which is usually listening on a
 different port than the default `389`. That way, referrals don't get sent
 back to the plugin.
-
-The plugin doesn’t authenticate users (allow/deny requests) based on group
-membership. For example:
-- If the user is a member of an LDAP group, the request is allowed.
-- if the user is not a member of an LDAP group, the request is still allowed.
-
-The plugin obtains LDAP groups and sets them in a header, `x-authenticated-groups`,
-to the request before proxying to the upstream. This is useful for Kong Manager role
-mapping.
