@@ -25,74 +25,85 @@ releases:
     distributions:
       - amazonlinux2:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
+          docker_support:
           eol: June 2025
       - amazonlinux2023:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           eol: August 2026
           default: true
       - debian10:
           package: true
-          arm: false
-          fips: false
-          graviton: false
+          package_support:
+            arm: false
+            fips: false
+            graviton: false
           eol: June 2024
       - debian11:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           eol: June 2026
       - debian12:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           eol: August 2026
           default: true
       - rhel7:
           package: true
-          arm: false
-          fips: false
-          graviton: false
+          package_support:
+            arm: false
+            fips: false
+            graviton: false
           eol: June 2024
       - rhel8:
           package: true
-          arm: false
-          graviton: false
+          package_support:
+            arm: false
+            graviton: false
+            fips: true
           docker: false
-          fips: true
           eol: August 2026
       - rhel9:
           package: true
-          graviton: false
+          package_support:
+            graviton: false
+            arm: true
+            fips: true
           docker: true
-          arm: true
-          fips: true
           eol: August 2026
           default: true
       - ubuntu2004:
           package: true
-          graviton: false
-          arm: false
+          package_support:
+            graviton: false
+            arm: false
+            fips: true
           docker: false
-          fips: true
           eol: April 2025
       - ubuntu2204:
           package: true
-          arm: true
-          graviton: true
+          package_support:
+            arm: true
+            graviton: true
+            fips: true
           docker: true
-          fips: true
           eol: August 2026
           default: true
     third_party_support:
@@ -182,74 +193,84 @@ releases:
     distributions:
       - amazonlinux2:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           eol: May 2025
       - amazonlinux2023:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           eol: May 2025
           default: true
       - debian10:
           package: true
-          arm: false
-          fips: false
-          graviton: false
+          package_support:
+            arm: false
+            fips: false
+            graviton: false
           eol: June 2024
       - debian11:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           eol: May 2025
       - debian12:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           eol: May 2025
           default: true
       - rhel7:
           package: true
-          arm: false
-          fips: false
-          graviton: false
+          package_support:
+            arm: false
+            fips: false
+            graviton: false
           eol: June 2024
       - rhel8:
           package: true
-          arm: false
-          graviton: false
+          package_support:
+            arm: false
+            graviton: false
+            fips: true
           docker: false
-          fips: true
           eol: May 2025
       - rhel9:
           package: true
-          graviton: false
+          package_support:
+            graviton: false
+            arm: true
+            fips: true
           docker: true
-          arm: true
-          fips: true
           eol: May 2025
           default: true
       - ubuntu2004:
           package: true
-          graviton: false
-          arm: false
+          package_support:
+            graviton: false
+            arm: false
+            fips: true
           docker: false
-          fips: true
           eol: May 2025
       - ubuntu2204:
           package: true
-          arm: true
-          graviton: true
+          package_support:
+            arm: true
+            graviton: true
+            fips: true
           docker: true
-          fips: true
           eol: May 2025
           default: true
     third_party_support:
@@ -348,62 +369,70 @@ releases:
     distributions:
       - amazonlinux2:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           eol: Sept 2025
       - amazonlinux2023:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           eol: Sept 2025
           default: true
       - debian11:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           eol: Sept 2025
       - debian12:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           eol: Sept 2025
           default: true
       - rhel8:
           package: true
-          arm: false
-          graviton: false
+          package_support:
+            arm: false
+            graviton: false
+            fips: true
           docker: false
-          fips: true
           eol: Sept 2025
       - rhel9:
           package: true
-          graviton: false
+          package_support:
+            graviton: false
+            arm: true
+            fips: true
           docker: true
-          arm: true
-          fips: true
           eol: Sept 2025
           default: true
       - ubuntu2004:
           package: true
-          graviton: false
-          arm: false
+          package_support:
+            graviton: false
+            arm: false
           docker: false
           fips: true
           eol: April 2025
       - ubuntu2204:
           package: true
-          arm: true
-          graviton: true
+          package_support:
+            arm: true
+            graviton: true
+            fips: true
           docker: true
-          fips: true
           eol: Sept 2025
           default: true
     third_party_support:
@@ -505,69 +534,78 @@ releases:
     distributions:
       - amazonlinux2:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           eol: Dec 2025
       - amazonlinux2023:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           eol: Dec 2025
           default: true
       - debian11:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           eol: Dec 2025
       - debian12:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           eol: Dec 2025
           default: true
       - rhel8:
           package: true
-          arm: false
-          graviton: false
+          package_support:
+            arm: false
+            graviton: false
+            fips: true
           docker: false
-          fips: true
           eol: Dec 2025
       - rhel9:
           package: true
-          graviton: false
+          package_support:
+            graviton: false
+            arm: true
+            fips: true
           docker: true
-          arm: true
-          fips: true
           eol: Dec 2025
           default: true
       - ubuntu2004:
           package: true
-          graviton: false
-          arm: false
+          package_support:
+            graviton: false
+            arm: false
+            fips: true
           docker: false
-          fips: true
           eol: April 2025
       - ubuntu2204:
           package: true
-          arm: true
-          graviton: true
+          package_support:
+            arm: true
+            graviton: true
+            fips: true
           docker: true
-          fips: true
           eol: Dec 2025
       - ubuntu2404:
           package: true
-          arm: true
-          graviton: true
+          package_support:
+            arm: true
+            graviton: true
+            fips: true
           docker: true
-          fips: true
           eol: Dec 2025
           default: true
     third_party_support:
@@ -669,62 +707,71 @@ releases:
     distributions:
       - amazonlinux2:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
       - amazonlinux2023:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           default: true
       - debian11:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
       - debian12:
           package: true
-          fips: false
+          package_support:
+            fips: false
+            arm: true
+            graviton: true
           docker: true
-          arm: true
-          graviton: true
           default: true
       - rhel8:
           package: true
-          arm: false
-          graviton: false
+          package_support:
+            arm: false
+            graviton: false
+            fips: true
           docker: false
-          fips: true
       - rhel9:
           package: true
-          graviton: false
+          package_support:
+            graviton: false
+            arm: true
+            fips: true
           docker: true
-          arm: true
-          fips: true
           default: true
       - ubuntu2004:
           package: true
-          graviton: false
-          arm: false
+          package_support:
+            graviton: false
+            arm: false
+            fips: true
           docker: false
-          fips: true
           eol: April 2025
       - ubuntu2204:
           package: true
-          arm: true
-          graviton: true
+          package_support:
+            arm: true
+            graviton: true
+            fips: true
           docker: true
-          fips: true
       - ubuntu2404:
           package: true
-          arm: true
-          graviton: true
+          package_support:
+            arm: true
+            graviton: true
+            fips: true
           docker: true
-          fips: true
           default: true
     third_party_support:
       ai_providers:
