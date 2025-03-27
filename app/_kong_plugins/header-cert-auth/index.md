@@ -100,7 +100,7 @@ The `send_ca_dn` option is not supported in this plugin. This is used in mutual 
 
 The same applies to SNI functionality. The plugin can verify the certificate without needing to know the specific hostname or domain being accessed. The plugin's authentication logic is decoupled from the TLS handshake and SNI, so it doesn't need to rely on SNI to function correctly.
 
-How a client certificate should be passed in a request depends on the format specified in the [`config.certificate_header_format`](./reference/#schema--config-certificate-header-format) parameter. 
+The format specified in the [`config.certificate_header_format`](./reference/#schema--config-certificate-header-format) parameter defines how a certificate should be passed in a request.
   * When set to `base64_encoded`, only the base64-encoded body of the certificate should be sent (excluding the `BEGIN CERTIFICATE` and `END CERTIFICATE` delimiters). 
   * When using `url_encoded`, the entire certificate, including the `BEGIN CERTIFICATE` and `END CERTIFICATE` delimiters, should be provided.
 
@@ -179,7 +179,7 @@ After a client certificate has been verified as valid, the Consumer object is de
 ### Upstream headers
 {% include_cached /plugins/upstream-headers.md %}
 
-When `skip_consumer_lookup` is set to `true`, Consumer lookup is skipped and instead of appending aforementioned headers, the plugin appends the following two headers
+When `config.skip_consumer_lookup` is set to `true`, Consumer lookup is skipped and instead of appending aforementioned headers, the plugin appends the following two headers:
 
 * `X-Client-Cert-Dn`: The distinguished name of the client certificate
 * `X-Client-Cert-San`: The SAN of the client certificate
