@@ -46,10 +46,6 @@ interfaces that talk to a gRPC service.
 
 This plugin's implementation is similar to [gRPC-gateway](https://grpc-ecosystem.github.io/grpc-gateway/).
 
-![grpc-gateway](https://grpc-ecosystem.github.io/grpc-gateway/assets/images/architecture_introduction_diagram.svg)
-
-Image credit: [grpc-gateway](https://grpc-ecosystem.github.io/grpc-gateway/)
-
 ## Why gRPC?
 
 {% include /plugins/grpc.md %}
