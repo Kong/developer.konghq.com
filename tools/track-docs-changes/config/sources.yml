@@ -427,7 +427,7 @@ app/_kong_plugins/proxy-cache-advanced/changelog.md:
 app/_kong_plugins/jwt-signer/changelog.md:
   - app/_hub/kong-inc/jwt-signer/_changelog.md
 app/_kong_plugins/jwt-signer/index.md:
-  - 
+  - app/_hub/kong-inc/jwt-signer/overview/_index.md
 
 # Konnect
 

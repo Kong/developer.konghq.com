@@ -106,7 +106,7 @@ This plugin provides a few Admin API endpoints.
 
 The plugin caches JWKS specified with [`config.access_token_jwks_uri`](/plugins/jwt-signer/reference/#schema--config-access-token-jwks-uri) and
 [`config.channel_token_jwks_uri`](/plugins/jwt-signer/reference/#schema--config-channel-token-jwks-uri) to the {{site.base_gateway}} database for quicker access to them. The plugin
-further caches JWKS in {{site.base_gateway}} node's shared memory, and on process a level memory for
+further caches JWKS in {{site.base_gateway}} nodes' shared memory, and on process a level memory for
 even quicker access. When the plugin is responsible for signing the tokens, it
 also stores its own keys in the database.
 
@@ -137,7 +137,7 @@ A particular key set can be accessed in another endpoint:
 GET localhost:8001/jwt-signer/jwks/<name-or-id>
 ```
 
-You can give your upstream service the `http://localhost:8001/jwt-signer/jwks/kong` URL for them to verify {{site.base_gateway}}-issued tokens. The response is a standard
+You can give your upstream service the `http://localhost:8001/jwt-signer/jwks/kong` URL for it to verify {{site.base_gateway}}-issued tokens. The response is a standard
 JWKS endpoint response. The `kong` suffix in the URI is the one that you can specify
 with [`config.access_token_issuer`](/plugins/jwt-signer/reference/#schema--config-access-token-issuer) or [`config.channel_token_issuer`](/plugins/jwt-signer/reference/#schema--config-channel-token-issuer).
 
