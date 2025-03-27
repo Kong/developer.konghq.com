@@ -40,7 +40,7 @@ faqs:
 
 
 related_resources:
-  - text: Konnect Advanced Analytics
+  - text: Dedicated Cloud Gateways 
     url: /dedicated-cloud-gateways/
   - text: Serverless Gateways
     url: /serverless-gateways/
