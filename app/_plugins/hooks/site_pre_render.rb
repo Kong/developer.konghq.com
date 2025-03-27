@@ -3,10 +3,16 @@
 Jekyll::Hooks.register :site, :pre_render do |site|
   site.data['pages_urls'] = Set.new
   site.data['tags'] = Set.new
+  site.data['act_as_plugins'] = {}
 
   site.pages.each do |page|
     site.data['pages_urls'] << page.url if page.data['published'].nil? || page.data['published'] == true
     site.data['tags'].merge(page.data['tags']) if page.data['tags']
+
+    next unless page.data['act_as_plugin']
+
+    slug = page.dir.split('/').last
+    site.data['act_as_plugins'][slug] = page
   end
 
   site.documents.each do |doc|
