@@ -43,7 +43,9 @@ faqs:
       No, the client only needs to send the target's certificate encoded in a header. {{site.base_gateway}} will validate the certificate, but it requires a high level of trust that the WAF/LB is the only entrypoint to the {{site.base_gateway}} proxy. The Header Cert Auth plugin will provide an option to secure the source, but additional layers of security are always preferable. Network level security (so that {{site.base_gateway}} only accepts requests from WAF - IP allow/deny mechanisms) and application-level security (Basic Auth or Key Auth plugins to authenticate the source first) are examples of multiple layers of security that can be applied.
   - q: How should the certificate be passed in a client request?
     a: |
-      This depends on the format specified in the `certificate_header_format` parameter. When using `base64_encoded`, only the base64-encoded body of the certificate should be sent (excluding the `BEGIN CERTIFICATE` and `END CERTIFICATE` delimiters).  When using `url_encoded`, the entire certificate, including the `BEGIN CERTIFICATE` and `END CERTIFICATE` delimiters, should be provided.
+      This depends on the format specified in the [`config.certificate_header_format`](./reference/#schema--config-certificate-header-format) parameter. 
+        * When set to `base64_encoded`, only the base64-encoded body of the certificate should be sent (excluding the `BEGIN CERTIFICATE` and `END CERTIFICATE` delimiters). 
+        * When using `url_encoded`, the entire certificate, including the `BEGIN CERTIFICATE` and `END CERTIFICATE` delimiters, should be provided.
 
       For example, given the `certificate_header_name` of x-client-cert:
 
@@ -69,14 +71,14 @@ This approach is particularly useful in scenarios where TLS traffic is terminate
 
 ## How it works
 
-This plugin addresses the inability of the {{site.base_gateway}} to authenticate API calls using client certificates received in HTTP headers, rather than through traditional TLS termination. 
-This occurs in scenarios where TLS traffic is not terminated at the {{site.base_gateway}}, but rather at an external CDN or load balancer, and the client certificate is preserved in an HTTP header for further validation.
+This plugin lets {{site.base_gateway}} authenticate API calls using client certificates received in HTTP headers, rather than through traditional TLS termination. 
+This occurs in scenarios where TLS traffic is not terminated at {{site.base_gateway}}, but rather at an external CDN or load balancer, and the client certificate is preserved in an HTTP header for further validation.
 
-The Header Cert Authentication plugin is similar to the [mTLS Auth plugin](/plugins/mtls-auth).
+The Header Cert Authentication plugin is similar to the [mTLS Auth plugin](/plugins/mtls-auth/).
 However, the mTLS plugin is only designed for traditional TLS termination, while the Header Cert Auth plugin also provides support for client certificates in headers. 
 
 The Header Cert Auth plugin extracts the client certificate from the HTTP header and validates it against the configured CA list. 
-If the certificate is valid, the plugin maps the certificate to a Consumer based on the common name field.
+If the certificate is valid, the plugin maps the certificate to a Consumer based on the common name (CN) field.
 
 The plugin validates the certificate provided against the configured CA list based on the
 requested Route or Gateway Service:
@@ -87,13 +89,13 @@ requested Route or Gateway Service:
 * However, if the `config.anonymous` option is configured on the plugin,
   an [anonymous Consumer](/gateway/authentication/#using-multiple-authentication-methods) is used, and the request is allowed to proceed.
 
-The plugin can be configured to only accept certificates from trusted IP addresses, as specified by the [`trusted_ips`](/gateway/configuration/#trusted-ips) config option. This ensures that {{site.base_gateway}} can trust the header sent from the source and provides L4 level of security.
+The plugin can be configured to only accept certificates from trusted IP addresses, as specified by the [`trusted_ips`](/gateway/configuration/#trusted-ips) {{site.base_gateway}} config option. This ensures that {{site.base_gateway}} can trust the header sent from the source and provides L4 level of security.
 
 {:.warning}
-> **Important:** Incomplete or improper configuration of the Header Cert Authentication plugin can compromise the security of your API.
-> <br><br>For instance, enabling the option to bypass origin verification can allow malicious actors to inject fake certificates, as {{site.base_gateway}} will not be able to verify the authenticity of the header. This can downgrade the security level of the plugin, making your API vulnerable to attacks. Ensure you carefully evaluate and configure the plugin according to your specific use case and security requirements.
+> **Important:** Incomplete or improper configuration of the Header Cert Authentication plugin can compromise the security of your upstream service.
+> <br><br>For instance, enabling the option to bypass origin verification can allow malicious actors to inject fake certificates, as {{site.base_gateway}} won't be able to verify the authenticity of the header. This can downgrade the security level of the plugin, making your upstream service vulnerable to attacks. Before using this plugin in production, carefully evaluate and configure the plugin according to your specific use case and security requirements.
 
-Additionally, the plugin has a [static priority](/gateway/entities/plugin/#plugin-priority) so that it runs after all authentication plugins, allowing other auth plugins (for example, [Basic Auth](/plugins/basic-auth/)) to secure the source first. This ensures that the source is secured by multiple layers of authentication by providing L7 level of security.
+This plugin's [static priority](/gateway/entities/plugin/#plugin-priority) is lower than all other authentication plugins, allowing other auth plugins (for example, [Basic Auth](/plugins/basic-auth/)) to secure the source first. This ensures that the source is secured by multiple layers of authentication by providing L7 level of security.
 
 ## Header size
 
@@ -114,13 +116,13 @@ KONG_NGINX_PROXY_LARGE_CLIENT_HEADER_BUFFERS=8 24k
 
 The `send_ca_dn` option is not supported in this plugin. This is used in mutual TLS authentication, where the server sends the list of trusted CAs to the client, and the client then uses this list to select the appropriate certificate to present. In this case, since the plugin doesn't do TLS handshakes and only parses the client certificate from the header, it isn't applicable.
 
-The same applies to SNI functionality. The plugin can verify the certificate without needing to know the specific hostname or domain being accessed. The plugin's authentication logic is decoupled from the TLS handshake and SNI, so it doesn't need to rely on SNI to function correctly (pretty much anything that deals with the actual TLS handshake is not needed for the plugin to work).
+The same applies to SNI functionality. The plugin can verify the certificate without needing to know the specific hostname or domain being accessed. The plugin's authentication logic is decoupled from the TLS handshake and SNI, so it doesn't need to rely on SNI to function correctly.
 
 ## Manual mappings between Certificate and Consumer objects
 
 Sometimes, you might not want to use automatic Consumer lookup, or you have certificates
 that contain a field value not directly associated with Consumer objects. In those
-situations, you may manually assign one or more subject names to the [Consumer entity](/gateway/entities/consumer/) for
+situations, you can manually assign one or more subject names to the [Consumer entity](/gateway/entities/consumer/) for
 identifying the correct Consumer.
 
 {:.info}
@@ -140,7 +142,7 @@ You can create a Consumer mapping with either of the following:
         subject_name: test@example.com
     ```
 
-The following table describes how the mapping parameters work:
+The following table describes how Consumer mapping parameters work for the Header Cert Auth plugin:
 
 | Form Parameter                            | Default | Description |
 | ---                                       | ---     | --- |
@@ -150,16 +152,17 @@ The following table describes how the mapping parameters work:
 
 ### Matching behaviors
 
-After a client certificate has been verified as valid, the Consumer object is determined in the following order, unless `skip_consumer_lookup` is set to `true`:
+After a client certificate has been verified as valid, the Consumer object is determined in the following order, unless [`config.skip_consumer_lookup`](./reference/#schema--config-skip-consumer-lookup) is set to `true`:
 
-1. Manual mappings with `subject_name` matching the certificate's SAN or CN (in that order) and `ca_certificate = <issuing authority of the client certificate>`
+1. Manual mappings with `subject_name` matching the certificate's SAN or CN (in that order) and `ca_certificate = {issuing authority of the client certificate}`
 2. Manual mappings with `subject_name` matching the certificate's SAN or CN (in that order) and `ca_certificate = NULL`
-3. If `config.consumer_by` is not null, Consumer with `username` and/or `id` matching the certificate's SAN or CN (in that order)
-4. The `config.anonymous` Consumer (if set)
+3. If [`config.consumer_by`](./reference/#schema--config.consumer_by) is not null, Consumer with `username` and/or `id` matching the certificate's SAN or CN (in that order)
+4. The [`config.anonymous`](./reference/#schema--config-anonymous) Consumer (if set)
 
 {:.info}
 > **Note**: Matching stops as soon as the first successful match is found.
 
+### Upstream headers
 {% include_cached /plugins/upstream-headers.md %}
 
 When `skip_consumer_lookup` is set to `true`, Consumer lookup is skipped and instead of appending aforementioned headers, the plugin appends the following two headers
@@ -167,10 +170,10 @@ When `skip_consumer_lookup` is set to `true`, Consumer lookup is skipped and ins
 * `X-Client-Cert-Dn`: The distinguished name of the client certificate
 * `X-Client-Cert-San`: The SAN of the client certificate
 
-Once `skip_consumer_lookup` is applied, any client with a valid certificate can access the Service/API.
-To restrict usage to only some of the authenticated users, also add the ACL plugin and create
+Once `config.skip_consumer_lookup` is applied, any client with a valid certificate can access the Service/API.
+To restrict usage to only some of the authenticated users, also add the [ACL plugin](/plugins/acl/) and create
 allowed or denied groups of users using the same
-certificate property being set in `authenticated_group_by`.
+certificate property being set in `config.authenticated_group_by`.
 
 ## Troubleshooting authentication failure
 
