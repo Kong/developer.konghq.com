@@ -1,0 +1,20 @@
+description: 'This example disables using a key in a query parameter.'
+
+title: 'Disable a key location'
+
+weight: 900
+
+requirements: 
+ - "Before configuring this plugin, you must [enable {{site.base_gateway}}'s encryption Keyring](/gateway/keyring/#enable-keyring). "
+
+config: 
+  key_names: 
+  - apikey
+  key_in_query: false
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
