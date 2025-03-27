@@ -71,6 +71,9 @@ module.exports = {
       borderColor: {
         primary: "rgb(var(--color-border-primary), <alpha-value>)",
       },
+      divideColor: {
+        primary: "rgb(var(--color-border-primary), <alpha-value>)",
+      },
       backgroundColor: {
         primary: "rgb(var(--color-bg-primary), <alpha-value>)",
         secondary: "rgb(var(--color-bg-secondary), <alpha-value>)",
