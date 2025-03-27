@@ -1,6 +1,4 @@
-<!---used in key-auth and key-auth-enc plugins, also shared with non-hub docs on-prem app reg key-auth --->
-
-When authenticating, Consumers must specify their key either in the query, body, or a header. 
+<!---used in key-auth and key-auth-enc plugins, also shared with non-hub docs on-prem app reg key-auth ---> 
 
 Use the following recommendations for each key locations:
 

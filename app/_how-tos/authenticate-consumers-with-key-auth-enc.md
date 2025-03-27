@@ -35,15 +35,38 @@ prereqs:
         - example-service
     routes:
         - example-route
+  gateway:
+    - name: KONG_KEYRING_ENABLED
+    - name: KONG_KEYRING_STRATEGY
+    - name: KONG_KEYRING_RECOVERY_PUBLIC_KEY
+  inline: 
+    - title: Enable Keyring
+      position: before
+      content: |
+          Before configuring this plugin, you must enable {{site.base_gateway}}'s encryption [Keyring](/gateway/keyring).
+
+          Use the `openssl` CLI to generate an RSA key pair that can be used to export and recover Keyring material:
+          ```sh
+          openssl genrsa -out key.pem 2048
+          openssl rsa -in key.pem -pubout -out cert.pem
+          ```
+
+          To enable data encryption, you must modify the {{site.base_gateway}} configuration.
+
+          Create the following environment variables:
+          ```sh
+          export KONG_KEYRING_ENABLED=on
+          export KONG_KEYRING_STRATEGY=cluster
+          export KONG_KEYRING_RECOVERY_PUBLIC_KEY=/path/to/generated/cert.pem
+          ```
+      icon_url: /assets/icons/keyring.svg
+
 tldr:
     q: How do I secure a service with encrypted key authentication?
     a: First, [enable {{site.base_gateway}}'s encryption Keyring](/gateway/keyring/#enable-keyring). Then enable the [Key Authentication Encrypted](/plugins/key-auth-enc/) plugin on the [Gateway Service](/gateway/entities/service/). This plugin will require all requests made to this Service to have a valid API key.
 
 cleanup:
   inline:
-    - title: Clean up Konnect environment
-      include_content: cleanup/platform/konnect
-      icon_url: /assets/icons/gateway.svg
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
@@ -52,32 +75,17 @@ min_version:
     gateway: '3.4'
 ---
 
-## 1. Enable Keyring encryption
+## 1. Generate a Keyring key
 
-Before configuring this plugin, you must enable {{site.base_gateway}}'s encryption [Keyring](/gateway/keyring).
+Using the [Admin API](/api/gateway/admin-ee/#/operations/post-keyring-generate), generate a new key in the Keyring:
+{% control_plane_request %}
+  url: /keyring/generate
+  method: POST
+  headers:
+      - 'Accept: application/json'
+{% endcontrol_plane_request %}
 
-Use the `openssl` CLI to generate an RSA key pair that can be used to export and recover Keyring material:
-```sh
-openssl genrsa -out key.pem 2048
-openssl rsa -in key.pem -pubout -out cert.pem
-```
-
-To enable data encryption, you must modify the {{site.base_gateway}} configuration.
-
-Create the following environment variables:
-```sh
-export KONG_KEYRING_ENABLED=on
-export KONG_KEYRING_STRATEGY=cluster
-export KONG_KEYRING_RECOVERY_PUBLIC_KEY=/path/to/generated/cert.pem
-```
-
-Once the configuration is updated, you can start your {{site.base_gateway}} instance and use the following request to make create a new key in the Keyring:
-
-```sh
-curl -X POST localhost:8001/keyring/generate
-```
-
-This key will then be used to encrypt sensitive fields in the database.
+You will get a `201 Created` response with the key and key ID. The generated key will now be used to encrypt sensitive fields in the database.
 
 ## 2. Enable the Key Authentication Encrypted plugin on the Service:
 
@@ -95,18 +103,30 @@ entities:
         - apikey
 {% endentity_examples %}
 
-## 3. Create a Consumer
+## 3. Create a Consumer and key
 
-[Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.
-The Consumer needs an API key to access any {{site.base_gateway}} Services.
+[Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. First, you need to create a Consumer:
 
 {% entity_examples %}
 entities:
   consumers:
-    - username: alex
-      keyauth_credentials:
-        - key: hello_world
+    - username: jsmith
 {% endentity_examples %}
+
+The Consumer needs an API key to access any {{site.base_gateway}} Services. We recommend not specifying the key as {{site.base_gateway}} will autogenerate one for you in the response. Only specify a key if you are migrating an existing system to {{site.base_gateway}}.
+
+{% control_plane_request %}
+  url: /consumers/jsmith/key-auth-enc
+  method: POST
+  headers:
+      - 'Accept: application/json'
+{% endcontrol_plane_request %}
+
+Copy the key in the response and export it as an environment variable:
+
+```bash
+export CONSUMER_KEY=<consumer-key>
+```
 
 ## 4. Validate
 
@@ -126,5 +146,5 @@ Sending the wrong API key:
 {% validation unauthorized-check %}
 url: /anything
 headers:
-  - 'apikey:another_key'
+  - 'apikey: "$CONSUMER_KEY"'
 {% endvalidation %}
