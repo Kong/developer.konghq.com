@@ -42,7 +42,7 @@ This plugin lets you add API key authentication to a [Gateway Service](/gateway/
 header to authenticate their requests. 
 
 This plugin provides more functionality than the 
-[Key Authentication](/hub/kong-inc/key-auth/) plugin, 
+[Key Authentication](/plugins/key-auth/) plugin, 
 letting you store API keys in an encrypted format in the {{site.base_gateway}} datastore.
 
 {:.warning}
