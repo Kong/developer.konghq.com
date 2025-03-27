@@ -31,9 +31,15 @@ categories:
 
 search_aliases:
   - grpc gateway
+
+related_resources:
+  - text: gRPC-Web plugin
+    url: /plugins/grpc-web/
+  - text: Use the gRPC-Gateway plugin to proxy HTTP requests to a gRPC service
+    url: /how-to/use-grpc-gateway/
 ---
 
-The gRPC-Gateway plugin allows you to send JSON requests to a gRPC service. A
+The gRPC-Gateway plugin allows you to send JSON requests to a [gRPC](https://grpc.io/) service. A
 specially configured `.proto` file handles the conversion of the JSON request
 into one that the gRPC service can handle. This allows you to expose RESTful-style
 interfaces that talk to a gRPC service.

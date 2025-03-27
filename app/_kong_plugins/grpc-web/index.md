@@ -31,9 +31,15 @@ categories:
 
 search_aliases:
   - grpc web
+
+related_resources:
+  - text: gRPC-Gateway plugin
+    url: /plugins/grpc-gateway/
+  - text: Use the gRPC-Web plugin to proxy HTTP requests to a gRPC service
+    url: /how-to/use-grpc-web/
 ---
 
-The gRPC-Web plugins allows access to a gRPC service via the [gRPC-Web protocol](https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-WEB.md#protocol-differences-vs-grpc-over-http2).
+The gRPC-Web plugins allows access to a [gRPC](https://grpc.io/) service via the [gRPC-Web protocol](https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-WEB.md#protocol-differences-vs-grpc-over-http2).
 Primarily, this means JavaScript browser applications using the [gRPC-Web](https://github.com/grpc/grpc-web) library.
 
 A service that presents a gRPC API can be used by clients written in many languages,
