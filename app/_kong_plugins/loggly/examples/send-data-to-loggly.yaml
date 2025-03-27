@@ -1,0 +1,23 @@
+description: Configure the plugin to connect to Loggly with the default host and port.
+
+title: Send data to Loggly
+
+weight: 900
+
+requirements:
+ - You have a Loggly account
+
+variables: 
+  key:
+    description: The token to use to connect to your Loggly account.
+    value: $LOGGLY_SERVICE_TOKEN
+
+config:
+  key: ${key}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

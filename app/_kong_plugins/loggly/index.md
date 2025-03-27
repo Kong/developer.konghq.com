@@ -30,4 +30,20 @@ categories:
   - logging
 ---
 
-## Overview
+Log request and response data over UDP to [Loggly](https://www.loggly.com).
+
+## Log format
+
+{% include /plugins/logging/log-format.md %}
+
+### Log format definitions 
+
+{% include /plugins/logging/json-object-log.md %}
+
+## Kong process errors
+
+{% include /plugins/logging/kong-process-errors.md %}
+
+## Custom fields by Lua
+
+{% include /plugins/logging/log-custom-fields-by-lua.md %}
