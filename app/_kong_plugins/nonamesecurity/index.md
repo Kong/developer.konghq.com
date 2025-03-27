@@ -28,7 +28,7 @@ third_party: true
 
 support_url: https://success.nonamesecurity.com/
 
-icon: nonamesecurity-kongtrafficsource.png
+icon: nonamesecurity.png
 
 search_aliases:
   - nonamesecurity-kongtrafficsource

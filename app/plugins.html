@@ -1,21 +1,21 @@
 ---
-title: Plugins
+title: Kong Plugin Hub
 hub: true
 layout: default
 edit_and_issue_links: false
+description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy integrations.
 ---
 
 <div class="flex flex-col gap-12 w-full">
   <div class="flex justify-between gap-[60px]">
       <div class="flex flex-col gap-6 py-24 self-center">
           <div class="flex flex-col gap-2">
-              <h1 class="font-extrabold text-[40px] leading-[60px]">Kong Plugins</h1>
-              <span class="leading-7">Extend Kong Gateway and Kong Konnect with powerful plugins and easy integrations.</span>
+              <h1 class="font-extrabold text-[40px] leading-[60px]">Kong Plugin Hub</h1>
+              <span class="leading-7">Extend Kong Gateway and Kong Konnect with powerful plugins and easy integrations</span>
           </div>
           <div class="flex gap-3 items-center lg:w-3/5">
               <a class="text-xs px-1 text-terciary leading-5" href="/gateway/entities/plugin/">Plugins Overview</a><span class="border-l border-primary/5 h-full"></span>
-              <a class="text-xs px-1 text-terciary leading-5" href="https://docs.konghq.com/hub/plugins/compatibility/">Compatibility</a><span class="border-l border-primary/5 h-full"></span>
-              <a class="text-xs px-1 text-terciary leading-5" href="https://docs.konghq.com/hub/plugins/license-tiers/">License Tiers</a>
+              <a class="text-xs px-1 text-terciary leading-5" href="/gateway/entities/plugin/#custom-plugins">Custom Plugin Development</a><span class="border-l border-primary/5 h-full"></span>
           </div>
       </div>
       <div class="hidden lg:flex pt-9 pr-9 ">
@@ -53,6 +53,8 @@ edit_and_issue_links: false
 
   {% assign categories = site.data.plugin_categories | sort: "text" %}
   {% assign kong_plugins = site.data.kong_plugins | where_exp: "plugin", "plugin.published != false" %}
+  {% assign act_as_plugins = site.data.act_as_plugins | where_exp: "plugin", "plugin.published != false" %}
+  {% assign plugins = kong_plugins | concat: act_as_plugins %}
 
   <div class="grid grid-cols-4 gap-16">
     <div id="filters" class="w-full flex flex-col gap-8 sticky top-24 self-start">
@@ -84,11 +86,29 @@ edit_and_issue_links: false
           {% endfor %}
         </div>
       </div>
+      <div class="flex flex-col gap-3">
+        <div class="text-sm text-brand font-semibold">Support By</div>
+        <div class="flex flex-col gap-3">
+
+          {% for support in site.data.plugin_support.support_by %}
+            {% include checkbox.html value=support.slug name="support" label=support.text %}
+          {% endfor %}
+        </div>
+      </div>
+      <div class="flex flex-col gap-3">
+        <div class="text-sm text-brand font-semibold">Trusted Content</div>
+        <div class="flex flex-col gap-3">
+
+          {% for trust in site.data.plugin_support.trusted_content %}
+            {% include checkbox.html value=trust.slug name="trusted-content" label=trust.text %}
+          {% endfor %}
+        </div>
+      </div>
     </div>
 
     <div class="flex flex-col col-span-3 w-full gap-16" id="plugin-cards">
       {% for cat in categories %}
-        {% assign plugins_for_category = kong_plugins | where_exp: "plugin", "plugin.categories contains cat.slug" | sort: "text" %}
+        {% assign plugins_for_category = plugins | where_exp: "plugin", "plugin.categories contains cat.slug" | sort: "name" %}
         {% if plugins_for_category.size > 0 %}
           <div class="flex flex-col gap-4" id="{{cat.slug}}">
             <h2>{{ cat.text }}</h2>
@@ -102,9 +122,9 @@ edit_and_issue_links: false
         {% endif %}
       {% endfor %}
 
-      {% assign third_party_plugins = kong_plugins | where: "third_party", true %}
+      {% assign third_party_plugins = plugins | where: "third_party", true %}
       {% if third_party_plugins.size > 0 %}
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-4" id="third-party">
           <h2>3rd Party Plugins</h2>
 
           <div class="grid auto-rows-fr grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

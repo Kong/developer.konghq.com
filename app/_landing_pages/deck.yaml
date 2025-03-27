@@ -31,6 +31,7 @@ rows:
     columns:
       - blocks:
         - type: tabs
+          tab_group: install-on-os
           config:
             - title: MacOS
               include_content: tools/deck/install/osx

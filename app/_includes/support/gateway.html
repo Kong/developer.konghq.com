@@ -1,4 +1,4 @@
-<div class="rounded-lg">
+<div class="rounded-lg overflow-x-auto">
     <table>
         <thead>
             <tr class="uppercase">
@@ -19,17 +19,38 @@
             <tr>
                 <td>{{ package.os }}</td>
                 <td>{{ package.version }}</td>
-                <td class="flex gap-1 capitalize">
-                    {% if distro.package %}
-                    <span class='badge'>package</span>
-                    {% endif %}
-                    {% if distro.docker %}
-                    <span class='badge'>docker</span>
-                    {% endif %}
+                <td class="capitalize px-0">
+                    <div class="flex flex-col items-center divide-y divide-primary/5 *:py-4 first:*:pt-0 last:*:pb-0">
+                        {% if distro.package %}
+                        <div class="flex w-full items-center justify-center">
+                            <span class='badge'>package</span>
+                        </div>
+                        {% endif %}
+                        {% if distro.docker %}
+                        <div class="flex w-full items-center justify-center">
+                            <span class='badge'>docker</span>
+                        </div>
+                        {% endif %}
+                    </div>
                 </td>
-                <td class="text-center">{{ distro.arm | to_check }}</td>
-                <td class="text-center">{{ distro.fips | to_check }}</td>
-                <td class="text-center">{{ distro.graviton | to_check }}</td>
+                <td class="text-center px-0">
+                    <div class="flex flex-col divide-y divide-primary/5 *:py-4 first:*:pt-0 last:*:pb-0">
+                        <span class="flex justify-center">{{ distro.package_support.arm | to_check }}</span>
+                        {% if distro.docker %}<span class="flex justify-center">{{ distro.docker_support.arm | to_check }}</span>{% endif %}
+                    </div>
+                </td>
+                <td class="text-center px-0">
+                    <div class="flex flex-col divide-y divide-primary/5 *:py-4 first:*:pt-0 last:*:pb-0">
+                        <span class="flex justify-center">{{ distro.package_support.fips | to_check }}</span>
+                        {% if distro.docker %}<span class="flex justify-center">{{ distro.docker_support.fips | to_check }}</span>{% endif %}
+                    </div>
+                </td>
+                <td class="text-center px-0">
+                    <div class="flex flex-col divide-y divide-primary/5 *:py-4 first:*:pt-0 last:*:pb-0">
+                        <span class="flex justify-center">{{ distro.package_support.graviton | to_check }}</span>
+                        {% if distro.docker %}<span class="flex justify-center">{{ distro.docker_support.graviton | to_check }}</span>{% endif %}
+                    </div>
+                </td>
                 <td>{{ distro.eol }}</td>
             </tr>
             {% endfor %}

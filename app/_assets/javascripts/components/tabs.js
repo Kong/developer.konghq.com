@@ -3,6 +3,7 @@ class TabsComponent {
     this.elem = elem;
     this.tablistNode = this.elem.querySelector("[role=tablist]");
     this.activeTabClasses = ["tab-button__horizontal--active"];
+    this.tabGroupKey = `selected-tab-${this.elem.dataset.tabGroup}`;
 
     this.tabs = Array.from(this.tablistNode.querySelectorAll("[role=tab]"));
     this.firstTab = this.tabs[0];
@@ -15,7 +16,25 @@ class TabsComponent {
     // Listen for the custom event to update tabs
     document.addEventListener("tabSelected", this.onTabSelected.bind(this));
 
-    this.setSelectedTab(this.firstTab, false);
+    this.init();
+  }
+
+  init() {
+    let selectedTab = this.firstTab;
+    try {
+      if (localStorage.getItem(this.tabGroupKey) !== null) {
+        const storedTab = localStorage.getItem(this.tabGroupKey);
+        if (storedTab) {
+          const tab = [...this.tabs].find((t) => t.dataset.slug === storedTab);
+          if (tab) {
+            selectedTab = tab;
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    this.setSelectedTab(selectedTab, false);
   }
 
   onKeydown(event) {
@@ -88,6 +107,8 @@ class TabsComponent {
         tabPanel.classList.add("hidden");
       }
     });
+
+    localStorage.setItem(this.tabGroupKey, currentTab.dataset.slug);
   }
 
   getPreviousTab(currentTab) {

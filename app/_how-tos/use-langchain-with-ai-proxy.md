@@ -108,7 +108,7 @@ entities:
 
 Load the LangChain SDK into your Python dependencies:
 
-{% navtabs %}
+{% navtabs "langchain" %}
 {% navtab "WSL2, Linux, macOS native" %}
 ```sh
 pip3 install -U langchain-openai

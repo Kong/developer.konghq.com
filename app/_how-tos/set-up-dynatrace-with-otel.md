@@ -5,6 +5,20 @@ related_resources:
   - text: Kong Premium Partners
     url: /premium-partners/
 
+breadcrumbs:
+  - /premium-partners/
+
+act_as_plugin: true
+name: Dynatrace
+publisher: dynatrace
+premium_partner: true
+icon: /assets/icons/third-party/dynatrace.png
+categories:
+  - analytics-monitoring
+
+description: Use Dynatrace's OpenTelemetry Collector to send analytics and monitoring data to Dynatrace dashboards.
+
+
 products:
     - gateway
 
@@ -26,6 +40,9 @@ entities:
 tags:
     - analytics
     - monitoring
+    - premium
+    - plugins
+    - partnership
 
 tldr:
     q: How do I send {{site.base_gateway}} traces, metrics, and logs to Dynatrace?

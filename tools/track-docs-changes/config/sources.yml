@@ -421,6 +421,36 @@ app/_kong_plugins/header-cert-auth/changelog.md:
 app/_kong_plugins/header-cert-auth/index.md:
   - app/_hub/kong-inc/header-cert-auth/how-to/_manual-mapping-cert-consumers.md
   - app/_hub/kong-inc/header-cert-auth/overview/_index.md
+app/_kong_plugins/proxy-cache/index.md:
+  - app/_hub/kong-inc/proxy-cache/overview/_index.md
+app/_kong_plugins/proxy-cache/changelog.md:
+  - app/_hub/kong-inc/proxy-cache/_changelog.md
+app/_kong_plugins/hmac-auth/changelog.md:
+  - app/_hub/kong-inc/hmac-auth/_changelog.md
+app/_kong_plugins/hmac-auth/index.md:
+  - app/_hub/kong-inc/hmac-auth/overview/_index.md
+app/_kong_plugins/proxy-cache-advanced/index.md:
+  - app/_hub/kong-inc/proxy-cache-advanced/overview/_index.md
+app/_kong_plugins/proxy-cache-advanced/changelog.md:
+  - app/_hub/kong-inc/proxy-cache-advanced/_changelog.md
+app/_kong_plugins/ldap-auth/index.md:
+  - app/_hub/kong-inc/ldap-auth/overview/_index.md
+app/_kong_plugins/ldap-auth/changelog.md:
+  - app/_hub/kong-inc/ldap-auth/_changelog.md
+app/_kong_plugins/ldap-auth-advanced/index.md:
+  - app/_hub/kong-inc/ldap-auth-advanced/overview/_index.md
+app/_kong_plugins/ldap-auth-advanced/changelog.md:
+  - app/_hub/kong-inc/ldap-auth-advanced/_changelog.md
+app/_includes/plugins/ldap/description.md:
+  - app/_hub/kong-inc/ldap-auth-advanced/overview/_index.md
+  - app/_hub/kong-inc/ldap-auth/overview/_index.md
+app/_includes/plugins/ldap/service-directory-mapping.md:
+  - app/_includes/md/gateway/ldap-service-directory-mapping.md
+app/_includes/plugins/ldap/usage.md:
+  - app/_hub/kong-inc/ldap-auth-advanced/overview/_index.md
+  - app/_hub/kong-inc/ldap-auth/overview/_index.md
+app/_includes/plugins/upstream-headers.md:
+  - app/_includes/md/plugins-hub/upstream-headers.md
 
 # Konnect
 
@@ -487,6 +517,7 @@ app/gateway/logs.md:
   - app/_src/gateway/production/logging/log-reference.md
   - app/_src/gateway/production/logging/update-log-level-dynamically.md
   - app/_src/gateway/production/logging/ai-analytics.md
+  - app/_src/gateway/production/logging/customize-gateway-logs.md
 app/gateway/network-ports-firewall.md:
   - app/_src/gateway/production/networking/default-ports.md
   - app/_src/gateway/production/networking/firewall.md
@@ -585,6 +616,8 @@ app/gateway/third-party-support.md:
   - app/_src/gateway/support/third-party.md
 app/gateway/version-support-policy.md:
   - app/_src/gateway/support/index.md
+/app/gateway/sbom.md:
+  - app/_src/gateway/support/sbom.md
 
 # Serverless GW
 
@@ -592,11 +625,21 @@ app/serverless-gateways/index.md:
   - app/konnect/gateway-manager/serverless-gateways/custom-dns.md
   - app/konnect/gateway-manager/serverless-gateways/provision-serverless-gateway.md
   - app/konnect/gateway-manager/serverless-gateways/custom-dns.md
+  - app/konnect/gateway-manager/serverless-gateways/securing-backend-traffic.md
 
 
 
 app/_landing_pages/gateway-manager.yaml:
   - app/konnect/gateway-manager/index.md
+
+app/dedicated-cloud-gateways/custom-dns.md:
+  - app/konnect/gateway-manger/serverless-gateways/custom-dns.md
+  - app/konnect/gateway-manager/dedicated-cloud-gateways/custom-dns.md
+
+app/gateway-manager/control-plane-groups.md:
+  - app/konnect/gateway-manager/control-plane-groups/index.md
+  - app/konnect/gateway-manager/control-plane-groups/conflicts.md
+
 
 app/konnect-platform/konnect-account.md:
   - app/konnect/org-management/deactivation.md
