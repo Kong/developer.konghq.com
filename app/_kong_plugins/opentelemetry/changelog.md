@@ -7,7 +7,7 @@ content_type: reference
 
 ### {{site.base_gateway}} 3.10.x
 * This plugin now supports variable resource attributes.
-* This plugin now supports instana headers in propagation.
+* This plugin now supports Instana headers in propagation.
 
 ### {{site.base_gateway}} 3.8.x
 * Added support for OpenTelemetry-formatted logs.
