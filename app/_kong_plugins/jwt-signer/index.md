@@ -112,7 +112,7 @@ directly. Private parts in JWKS include
 properties such as `d`, `p`, `q`, `dp`, `dq`, `qi`, and `oth`. 
 
 For public keys using a symmetric algorithm (such as `HS256`) that include the `k` parameter,
-that isn't hidden from the Admin API because that is used both to verify and
+the parameter isn't hidden from the Admin API because it is used both to verify and
 to sign. This makes it a bit problematic to use, and we strongly suggest using
 asymmetric (or public key) algorithms. Doing so also makes rotating the keys
 easier because the public keys can be shared between parties
