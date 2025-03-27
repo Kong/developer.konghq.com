@@ -41,25 +41,7 @@ faqs:
   - q: Will the client need to encrypt the message with a private key and certificate when passing the certificate in the header?
     a: |
       No, the client only needs to send the target's certificate encoded in a header. {{site.base_gateway}} will validate the certificate, but it requires a high level of trust that the WAF/LB is the only entrypoint to the {{site.base_gateway}} proxy. The Header Cert Auth plugin will provide an option to secure the source, but additional layers of security are always preferable. Network level security (so that {{site.base_gateway}} only accepts requests from WAF - IP allow/deny mechanisms) and application-level security (Basic Auth or Key Auth plugins to authenticate the source first) are examples of multiple layers of security that can be applied.
-  - q: How should the certificate be passed in a client request?
-    a: |
-      This depends on the format specified in the [`config.certificate_header_format`](./reference/#schema--config-certificate-header-format) parameter. 
-        * When set to `base64_encoded`, only the base64-encoded body of the certificate should be sent (excluding the `BEGIN CERTIFICATE` and `END CERTIFICATE` delimiters). 
-        * When using `url_encoded`, the entire certificate, including the `BEGIN CERTIFICATE` and `END CERTIFICATE` delimiters, should be provided.
-
-      For example, given the `certificate_header_name` of x-client-cert:
-
-      `base64_encoded`
-
-      ```bash
-      x-client-cert: MIIDbDCCAdSgAwIBAgIUa...
-      ```
-
-      `url_encoded`
-
-      ```bash
-      x-client-cert: -----BEGIN%20CERTIFICATE-----%0AMIIDbDCCAdSgAwIBAgIUa...-----END%20CERTIFICATE-----
-      ```
+      
 ---
 
 The Header Cert Authentication plugin authenticates API calls by using client certificates provided in HTTP headers,
@@ -118,6 +100,24 @@ The `send_ca_dn` option is not supported in this plugin. This is used in mutual 
 
 The same applies to SNI functionality. The plugin can verify the certificate without needing to know the specific hostname or domain being accessed. The plugin's authentication logic is decoupled from the TLS handshake and SNI, so it doesn't need to rely on SNI to function correctly.
 
+How a client certificate should be passed in a request depends on the format specified in the [`config.certificate_header_format`](./reference/#schema--config-certificate-header-format) parameter. 
+  * When set to `base64_encoded`, only the base64-encoded body of the certificate should be sent (excluding the `BEGIN CERTIFICATE` and `END CERTIFICATE` delimiters). 
+  * When using `url_encoded`, the entire certificate, including the `BEGIN CERTIFICATE` and `END CERTIFICATE` delimiters, should be provided.
+
+For example, given the `certificate_header_name` of x-client-cert:
+
+`base64_encoded`
+
+```bash
+x-client-cert: MIIDbDCCAdSgAwIBAgIUa...
+```
+
+`url_encoded`
+
+```bash
+x-client-cert: -----BEGIN%20CERTIFICATE-----%0AMIIDbDCCAdSgAwIBAgIUa...-----END%20CERTIFICATE-----
+```
+
 ## Manual mappings between Certificate and Consumer objects
 
 Sometimes, you might not want to use automatic Consumer lookup, or you have certificates
@@ -144,11 +144,25 @@ You can create a Consumer mapping with either of the following:
 
 The following table describes how Consumer mapping parameters work for the Header Cert Auth plugin:
 
-| Form Parameter                            | Default | Description |
-| ---                                       | ---     | --- |
-| `id`<br>*required for declarative config* |  none   | UUID of the Consumer mapping. Required if adding mapping using declarative configuration, otherwise generated automatically by {{site.base_gateway}}'s Admin API. |
-| `subject_name`<br>*required*              |  none   | The Subject Alternative Name (SAN) or Common Name (CN) that should be mapped to `consumer` (in order of lookup). |
-| `ca_certificate`<br>*optional*            |  none   | **If using the Admin API:** UUID of the Certificate Authority (CA). <br><br> **If using declarative configuration:** Full PEM-encoded CA certificate. <br><br>The provided CA UUID or full certificate has to be verifiable by the issuing certificate authority for the mapping to succeed. This is to help distinguish multiple certificates with the same subject name that are issued under different CAs. <br><br>If empty, the subject name matches certificates issued by any CA under the corresponding `config.ca_certificates`. |
+{% table %}
+columns:
+  - title: Form Parameter
+    key: parameter
+  - title: Default
+    key: default
+  - title: Description
+    key: description
+rows:
+  - parameter: "`id`<br>*required for declarative config*"
+    default: none
+    description: "UUID of the Consumer mapping. Required if adding mapping using declarative configuration, otherwise generated automatically by {{site.base_gateway}}'s Admin API."
+  - parameter: "`subject_name`<br>*required*"
+    default: none
+    description: "The Subject Alternative Name (SAN) or Common Name (CN) that should be mapped to `consumer` (in order of lookup)."
+  - parameter: "`ca_certificate`<br>*optional*"
+    default: none
+    description: "**If using the Admin API:** UUID of the Certificate Authority (CA). <br><br> **If using declarative configuration:** Full PEM-encoded CA certificate. <br><br>The provided CA UUID or full certificate has to be verifiable by the issuing certificate authority for the mapping to succeed. This is to help distinguish multiple certificates with the same subject name that are issued under different CAs. <br><br>If empty, the subject name matches certificates issued by any CA under the corresponding `config.ca_certificates`."
+{% endtable %}
 
 ### Matching behaviors
 

@@ -20,16 +20,13 @@ requirements:
   | Client certificate handling | Select Mutual authentication (mTLS) with Passthrough |
 
 variables: 
-  ca_certificates:
-    description: 'List of CA Certificates strings to use as Certificate Authorities (CA) when validating a client certificate.'
-    value: $CA_CERT
   certificate_header_name:
     description: 'Name of the header that contains the certificate, received from the WAF or other L7 downstream proxy.'
     value: $HEADER_NAME
 
 config:
   ca_certificates:
-  - '${ca_certificates}'
+  - 322dce96-d434-4e0d-9038-311b3520f0a3
   certificate_header_name: ${certificate_header_name}
   certificate_header_format: base64_encoded
   secure_source: false
