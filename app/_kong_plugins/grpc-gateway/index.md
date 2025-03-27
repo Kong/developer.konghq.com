@@ -1,6 +1,6 @@
 ---
-title: 'gRPC-gateway'
-name: 'gRPC-gateway'
+title: 'gRPC-Gateway'
+name: 'gRPC-Gateway'
 
 content_type: plugin
 
