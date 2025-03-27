@@ -420,6 +420,10 @@ app/_kong_plugins/proxy-cache/index.md:
   - app/_hub/kong-inc/proxy-cache/overview/_index.md
 app/_kong_plugins/proxy-cache/changelog.md:
   - app/_hub/kong-inc/proxy-cache/_changelog.md
+app/_kong_plugins/hmac-auth/changelog.md:
+  - app/_hub/kong-inc/hmac-auth/_changelog.md
+app/_kong_plugins/hmac-auth/index.md:
+  - app/_hub/kong-inc/hmac-auth/overview/_index.md
 app/_kong_plugins/proxy-cache-advanced/index.md:
   - app/_hub/kong-inc/proxy-cache-advanced/overview/_index.md
 app/_kong_plugins/proxy-cache-advanced/changelog.md:
