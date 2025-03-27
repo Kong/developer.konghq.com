@@ -55,7 +55,7 @@ This Control Plane, like other {{site.konnect_short_name}} Control Planes, is ho
 Dedicated Cloud Gateway configuration modes:
 * Autopilot Mode: Configure expected requests per second, and {{site.konnect_short_name}} pre-warms and autoscales the Data Plane nodes automatically.
 * Custom Mode: Manually specify the instance size, type, and number of nodes per cluster.
-
+<!-- vale off -->
 {% mermaid %}
 flowchart TD
 A(Dedicated Cloud Gateway Control Plane)
@@ -71,7 +71,7 @@ A --auto-scale configuration---> C
 
 
 {% endmermaid %}
-
+<!--vale on -->
 ## How do I provision a Control Plane?
 
 1. Create a Dedicated Cloud Gateway Control Plane using by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/v2/#/operations/create-control-plane).
@@ -99,7 +99,7 @@ body:
 <!--vale on -->
 
 2. Create a Dedicated Cloud Gateway Data Plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/v2/#/operations/create-configuration):
-
+<!--vale off -->
 {% capture request %}
   {% control_plane_request %}
   url: /v2/cloud-gateways/configurations
@@ -122,7 +122,7 @@ body:
           - base_rps: 100
   {% endcontrol_plane_request %}
 {% endcapture %}
-
+<!--vale on -->
 ## Custom DNS
 {{site.konnect_short_name}} integrates domain name management and configuration with [Dedicated Cloud Gateways](/dedicated-cloud-gateways/).
 
@@ -140,7 +140,7 @@ body:
 
 The following settings must be configured in your domain registrar using the values in {{site.konnect_short_name}}.
 For example, in AWS Route 53, it would look like this:
-
+<!--vale off -->
 {% table %}
 columns:
   - title: Host Name
@@ -173,7 +173,7 @@ rows:
     value: "`9e454bcfec.gateways.konghq.com`"
     ttl: 300
 {% endtable %}
-
+<!--vale on -->
 
 
 ## Securing backend communication
