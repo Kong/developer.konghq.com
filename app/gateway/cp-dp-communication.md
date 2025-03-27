@@ -36,7 +36,7 @@ If your control plane and data planes are separated by a firewall that routes ex
 
 To use a forward proxy for control plane and data plane communication, you need to configure the following parameters in [`kong.conf`](/gateway/manage-kong-conf/):
 
-{% navtabs %}
+{% navtabs "http-protocol-example" %}
 {% navtab "HTTP example" %}
 ```
 proxy_server = 'http://<username>:<password>@<proxy-host>:<proxy-port>'

@@ -76,11 +76,13 @@ export function routingConfig(indexName) {
         let content = "";
         const indexUiState = uiState[indexName] || {};
 
-        if (indexUiState.configure) {
-          if (indexUiState.configure.filters !== "") {
-            content = Object.entries(sources).find(
-              ([, value]) => value.filters === indexUiState.configure.filters
-            )[0];
+        if (window.location.pathname === "/search/") {
+          if (indexUiState.configure) {
+            if (indexUiState.configure.filters !== "") {
+              content = Object.entries(sources).find(
+                ([, value]) => value.filters === indexUiState.configure.filters
+              )[0];
+            }
           }
         }
 

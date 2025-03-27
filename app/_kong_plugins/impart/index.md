@@ -28,7 +28,7 @@ third_party: true
 
 support_url: https://www.impart.security/get-started
 
-icon: kong-plugin-impart.png
+icon: impart.png
 
 search_aliases:
   - kong-plugin-impart

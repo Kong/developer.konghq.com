@@ -17,6 +17,7 @@ breadcrumbs:
     - /gateway/
 
 no_wrap: true
+versioned: true
 ---
 
 {% include install/gateway.html %}

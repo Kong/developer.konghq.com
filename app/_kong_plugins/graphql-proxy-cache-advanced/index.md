@@ -36,11 +36,10 @@ search_aliases:
 
 tags:
   - graphql
+  - caching
   - traffic-control
 
 related_resources:
-  - text: GraphQL endpoints in the Kong Admin API # @todo make sure these endpoints get generated
-    url: /api/gateway/admin-ee/
   - text: GraphQL Rate Limiting Advanced plugin
     url: /plugins/graphql-rate-limiting-advanced/
   - text: DeGraphQL plugin
@@ -52,18 +51,7 @@ It caches response entities by GraphQL query or Vary headers.
 
 ## How it works
 
-The GraphQL Proxy Caching Advanced plugin stores cache data in one of two ways, defined via the [`config.strategy`](/plugins/graphql-proxy-cache-advanced/reference/#schema--config-strategy) parameter:
-
-* `redis`: A Redis database.
-* `memory`: A shared dictionary defined in [`config.memory.dictionary_name`](/plugins/graphql-proxy-cache-advanced/reference/#schema--config-memory-dictionary-name).
-
-  The default dictionary, `kong_db_cache`, is also used by other plugins and elements of {{site.base_gateway}} to store unrelated database cache entities.
-  Using this dictionary is an easy way to bootstrap and test the plugin, but we don't recommend using it for large-scale installations as significant usage will put pressure on other facets of {{site.base_gateway}}'s database caching operations. 
-  In production, we recommend defining a custom `lua_shared_dict` via a custom Nginx template.
-
-Cache entities are stored for a [configurable period of time](/plugins/graphql-proxy-cache-advanced/reference/#schema--config-cache-ttl), after which subsequent requests to the same resource will fetch and store the resource again. 
-
-In traditional mode, cache entities can also be [forcefully purged via the Admin API](#managing-cache-entities) prior to their expiration time.
+{% include_cached /plugins/caching/strategies.md name=page.name %}
 
 ### Cache key
 

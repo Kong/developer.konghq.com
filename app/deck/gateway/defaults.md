@@ -290,7 +290,7 @@ If you want to completely avoid differences between the configuration file and
 the {{site.base_gateway}}, set all possible default values for an object in your
 `kong.yaml` file.
 
-{% navtabs %}
+{% navtabs "entity-target" %}
 {% navtab "Route" %}
 
 Use the Kong Admin API `/schemas` endpoint to find default values:
