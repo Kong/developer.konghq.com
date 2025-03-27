@@ -98,15 +98,11 @@ to map a channel token to that Consumer anymore, and won't throw any errors.
 
 A general rule is to map either the access token or the channel token, not both.
 
-## {{site.base_gateway}} Admin API endpoints
-
-This plugin provides a few Admin API endpoints.
-
-### Cached JWKS Admin API endpoint
+## Cached JWKS
 
 The plugin caches JWKS specified with [`config.access_token_jwks_uri`](/plugins/jwt-signer/reference/#schema--config-access-token-jwks-uri) and
 [`config.channel_token_jwks_uri`](/plugins/jwt-signer/reference/#schema--config-channel-token-jwks-uri) to the {{site.base_gateway}} database for quicker access to them. The plugin
-further caches JWKS in {{site.base_gateway}} nodes' shared memory, and on process a level memory for
+further caches JWKS in {{site.base_gateway}} nodes' shared memory, and on a per-process level in memory for
 even quicker access. When the plugin is responsible for signing the tokens, it
 also stores its own keys in the database.
 
@@ -115,27 +111,14 @@ Private keys that the plugin autogenerates can only be accessed from the databas
 directly. Private parts in JWKS include
 properties such as `d`, `p`, `q`, `dp`, `dq`, `qi`, and `oth`. 
 
-For public keys
-that are using a symmetric algorithm (such as `HS256`) and include `k` parameter,
+For public keys using a symmetric algorithm (such as `HS256`) that include the `k` parameter,
 that isn't hidden from the Admin API because that is used both to verify and
 to sign. This makes it a bit problematic to use, and we strongly suggest using
 asymmetric (or public key) algorithms. Doing so also makes rotating the keys
 easier because the public keys can be shared between parties
 and published without revealing their secrets.
 
-View all of the public keys that {{site.base_gateway}} has loaded or generated:
-
-```http
-GET localhost:8001/jwt-signer/jwks
-```
-
-### Cached JWKS Admin API endpoint for a Key Set
-
-A particular key set can be accessed in another endpoint:
-
-```http
-GET localhost:8001/jwt-signer/jwks/<name-or-id>
-```
+## Allow your upstream service to verify {{site.base_gateway}}-issued tokens
 
 You can give your upstream service the `http://localhost:8001/jwt-signer/jwks/kong` URL for it to verify {{site.base_gateway}}-issued tokens. The response is a standard
 JWKS endpoint response. The `kong` suffix in the URI is the one that you can specify
@@ -145,21 +128,15 @@ You can also make a loopback to this endpoint by routing the {{site.base_gateway
 Then, you can use an authentication plugin to protect access to this endpoint,
 if needed.
 
-You can also `DELETE` a key set by issuing following:
-
-```http
-DELETE localhost:8001/jwt-signer/jwks/<name-or-id>
-```
-
 The plugin automatically reloads or regenerates missing JWKS if it can't
 find cached ones. The plugin also tries to reload JWKS if it can't verify
 the signature of the original access token or channel token, such as when
 the original issuer has rotated its keys and signed with the new one that is not
 found in {{site.base_gateway}} cache.
 
-### Cached JWKS Admin API endpoint for Key Set rotation
+## Rotate signing token Keys
 
-If you want to rotate the Keys {{site.base_gateway}} uses for signing tokens specified in
+Sometimes you might want to rotate the keys {{site.base_gateway}} uses for signing tokens specified in
 [`config.access_token_keyset`](/plugins/jwt-signer/reference/#schema--config-access-token-keyset) and [`config.channel_token_keyset`](/plugins/jwt-signer/reference/#schema--config-channel-token-keyset), or perhaps
 reload tokens specified in [`config.access_token_jwks_uri`](/plugins/jwt-signer/reference/#schema--config-access-token-jwks-uri) and
 [`config.channel_token_jwks_uri`](/plugins/jwt-signer/reference/#schema--config-channel-token-jwks-uri). {{site.base_gateway}} stores and uses at most two set of Keys:
@@ -167,9 +144,3 @@ reload tokens specified in [`config.access_token_jwks_uri`](/plugins/jwt-signer/
 rotate Keys **twice**, as it effectively replaces both current and previous Key Sets
 with newly generated tokens or reloaded tokens if the Keys were loaded from
 an external URI.
-
-To rotate keys, send a `POST` request:
-
-```http
-POST localhost:8001/jwt-signer/jwks/<name-or-id>/rotate
-```
