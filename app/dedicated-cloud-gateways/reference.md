@@ -7,6 +7,11 @@ description: "Dedicated Cloud Gateways are Data Plane nodes that are fully manag
 products:
     - gateway
 faqs:
+    - q: Why is my custom domain attachment failing in {{site.konnect_short_name}}?
+    a: |
+      A common reason is a missing or misconfigured Certificate Authority Authorization (CAA) record. 
+      {{site.konnect_short_name}} uses Google Cloud Public CA (`pki.goog`) to issue certificates. 
+      If your domain's CAA record does not authorize this CA, attachment will fail.
   - q: What should I do if my custom domain fails to attach in {{site.konnect_short_name}}?
     a: |
       If your custom domain fails to attach, check whether your domain has a Certificate Authority Authorization (CAA) record that restricts certificate issuance. 
@@ -15,7 +20,9 @@ faqs:
       To resolve the issue:
       1. Run `dig CAA yourdomain.com +short` to check for existing CAA records.
       2. If a record exists but doesn’t allow `pki.goog`, update it.
-         `yourdomain.com.    CAA    0 issue "pki.goog"`
+         ```
+         yourdomain.com.    CAA    0 issue "pki.goog"
+         ```
       3. Wait for DNS propagation and try attaching your domain again.
 
       If no CAA record exists, no changes are needed. For more details, see the [Let's Encrypt CAA Guide](https://letsencrypt.org/docs/caa/).
@@ -26,17 +33,12 @@ faqs:
     a: |
       In {{site.konnect_short_name}}, go to [**Gateway Manager**](https://cloud.konghq.com/us/gateway-manager/), choose a Control Plane, click **Custom Domains**, and use the action menu to delete the domain.
 
-  - q: Why is my custom domain attachment failing in {{site.konnect_short_name}}?
-    a: |
-      A common reason is a missing or misconfigured Certificate Authority Authorization (CAA) record. 
-      {{site.konnect_short_name}} uses Google Cloud Public CA (`pki.goog`) to issue certificates. 
-      If your domain's CAA record does not authorize this CA, attachment will fail.
-  - q: Why isn’t AWS PrivateLink recommended for connecting Dedicated Cloud Gateway to my upstream Services?
+  - q: Why isn’t AWS PrivateLink recommended for connecting Dedicated Cloud Gateway to my upstream services?
     a: |
       AWS PrivateLink offers secure and private connectivity by routing traffic through an endpoint, but it only supports unidirectional communication. 
-      This means that Dedicated Cloud Gateway can send requests to your upstream Services, but your upstream Services cannot initiate communication back to the gateway. 
-      For many use cases requiring bidirectional communication—such as callbacks or dynamic interactions between the gateway and your upstream Services—this limitation is a blocker. 
-      For this reason, PrivateLink is not generally recommended for secure connectivity to your upstream Services.
+      This means that Dedicated Cloud Gateway can send requests to your upstream services, but your upstream services cannot initiate communication back to the gateway. 
+      For many use cases requiring bidirectional communication—such as callbacks or dynamic interactions between the gateway and your upstream services—this limitation is a blocker. 
+      For this reason, PrivateLink is not generally recommended for secure connectivity to your upstream services.
 
 
 related_resources:
@@ -50,11 +52,11 @@ related_resources:
 ## How do Dedicated Cloud Gateways work?
 
 When you create a Dedicated Cloud Gateway, {{site.konnect_short_name}} creates a **Control Plane**. 
-This Control Plane, like other {{site.konnect_short_name}} Control Planes, is hosted by {{site.konnect_short_name}}. You can then deploy Data Planes in different regions.
+This Control Plane, like other {{site.konnect_short_name}} Control Planes, is hosted by {{site.konnect_short_name}}. You can then deploy Data Planes in different [regions](/konnect-geos/#dedicated-cloud-gateways).
 
-Dedicated Cloud Gateway configuration modes:
-* Autopilot Mode: Configure expected requests per second, and {{site.konnect_short_name}} pre-warms and autoscales the Data Plane nodes automatically.
-* Custom Mode: Manually specify the instance size, type, and number of nodes per cluster.
+Dedicated Cloud Gateways support two different configuration modes:
+* **Autopilot Mode:** Configure expected requests per second, and {{site.konnect_short_name}} pre-warms and autoscales the Data Plane nodes automatically.
+* **Custom Mode:** Manually specify the instance size, type, and number of nodes per cluster.
 <!-- vale off -->
 {% mermaid %}
 flowchart TD
@@ -74,7 +76,7 @@ A --auto-scale configuration---> C
 <!--vale on -->
 ## How do I provision a Control Plane?
 
-1. Create a Dedicated Cloud Gateway Control Plane using by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/v2/#/operations/create-control-plane).
+1. Create a Dedicated Cloud Gateway Control Plane using by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/v2/#/operations/create-control-plane):
 <!-- vale off -->
 {% capture request %}
 {% control_plane_request %}
@@ -128,13 +130,13 @@ body:
 
 ### {{site.konnect_short_name}} configuration
 
-1. Open **Gateway Manager**, choose a Control Plane to open the **Overview** dashboard, then click **Connect**.
+1. Open **Gateway Manager**, choose a Control Plane to open the Overview dashboard, then click **Connect**.
     
-    The **Connect** menu will open and display the URL for the **Public Edge DNS**. Save this URL.
+    The Connect menu will open and display the URL for the Public Edge DNS. Save this URL.
 
 1. Select **Custom Domains** from the side navigation, then **New Custom Domain**, and enter your domain name.
 
-    Save the value that appears under **CNAME**. 
+    Save the value that appears under CNAME. 
 
 ### Dedicated Cloud Gateways domain registrar configuration
 
@@ -180,10 +182,10 @@ rows:
 
 Dedicated Cloud Gateways only support public networking. If your use case requires private connectivity, consider using [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) with AWS Transit Gateways.
 
-To securely connect a serverless gateway to your backend, you can inject a shared secret into each request using the [Request Transformer plugin](/plugins/request-transformer).
+To securely connect a Dedicated Cloud Gateway to your backend, you can inject a shared secret into each request using the [Request Transformer plugin](/plugins/request-transformer).
 
 1. Ensure the backend accepts a known token like an Authorization header.
-1. Attach a new plugin to the Control Plane and Gateway Service that you want to secure:
+1. Attach the Request Transformer plugin to the Control Plane and Gateway Service that you want to secure:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -205,12 +207,12 @@ body:
 
 
 ### AWS Transit Gateway
-If you are using Dedicated Cloud Gateways and your Upstream Services are hosted in AWS, AWS Transit Gateway is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, please refer to the [Transit Gateways](/dedicated-cloud-gateways/transit-gateways/) documentation.
+If you are using Dedicated Cloud Gateways and your upstream services are hosted in AWS, AWS Transit Gateway is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, see the [Transit Gateways](/dedicated-cloud-gateways/transit-gateways/) documentation.
 
 
 ### Azure VNet Peering
-If you are using Dedicated Cloud Gateways and your Upstream Services are hosted in Azure, VNet Peering is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, please refer to the [Azure Peering](/dedicated-cloud-gateways/azure-peering/) documentation.
+If you are using Dedicated Cloud Gateways and your upstream services are hosted in Azure, VNet Peering is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, see the [Azure Peering](/dedicated-cloud-gateways/azure-peering/) documentation.
 
 
-### Using a Shared Secret
+### Using a shared secret
 In this method, your upstream API is configured to only authorize traffic that contains a known shared API token or secret. We will configure {{site.base_gateway}} to inject the shared secret as a header into every request sent to the backend. Then {{site.base_gateway}} and the ecosystem of plugins can be leveraged to implement additional or alternative security measures, rate limiting, or other functionality on top of the web app, while ensuring that no unproxied traffic is authorized. 
