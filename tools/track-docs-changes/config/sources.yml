@@ -455,6 +455,11 @@ app/_kong_plugins/loggly/index.md:
   - app/_hub/kong-inc/loggly/overview/_index.md
 app/_kong_plugins/loggly/changelog.md:
   - app/_hub/kong-inc/loggly/_changelog.md
+app/_kong_plugins/opentelemetry/index.md:
+  - app/_hub/kong-inc/opentelemetry/overview/_index.md
+  - app/_hub/kong-inc/opentelemetry/how-to/_spans.md
+app/_kong_plugins/opentelemetry/changelog.md:
+  - 
 
 # Konnect
 

@@ -1,0 +1,37 @@
+description:  |
+  This plugin configuration does the following:
+  - No tracing context extraction
+  - Injects the tracing context using the formats: `b3`, `datadog`
+
+  {:.info}
+  > **Note:** Some header formats specify different trace and span ID sizes. When the tracing context is extracted and injected from/to headers with different ID sizes, the IDs are truncated or left-padded to align with the target format.
+
+title: 'Ignore incoming headers'
+
+weight: 900
+
+requirements: 
+  - "An OpenTelemetry backend"
+  - "`tracing_instrumentations = all` and `tracing_sampling_rate = 1.0` set in the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/)."
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config: 
+  traces_endpoint: http://localhost:4318/v1/traces
+  propagation:	
+    default_format: ot
+    extract: 
+    - "[]"
+    inject: 
+    - b3
+    - datadog
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
