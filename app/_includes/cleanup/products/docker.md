@@ -1,0 +1,3 @@
+```sh
+docker compose down
+```

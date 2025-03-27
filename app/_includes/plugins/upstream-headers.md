@@ -1,3 +1,4 @@
+<!--used in: HMAC and LDAP auth, and key-auth-enc -->
 When a client has been authenticated, the plugin appends some headers to
 the request before proxying it to the upstream service, so that you
 can identify the Consumer in your code:
