@@ -26,8 +26,8 @@ categories:
   - authentication
 
 related_resources:
-  - text: Enable key authentication on a Gateway Service with {{site.base_gateway}}
-    url: /how-to/authenticate-consumers-with-key-auth-enc/
+  - text: Key Authentication plugin
+    url: /plugins/key-auth/
 
 search_aliases:
   - key auth encrypted
@@ -64,7 +64,7 @@ denied groups of users.
 
 ## Consumer key management
 
-When you [create a Consumer](/gateway/entities/consumer/#set-up-a-consumer), you can specify a `key` with `keyauth_credentials` (declarative configuration) or the `/consumers/{usernameOrId}/key-auth-enc` endpoint. For an end-to-end how to guide for this, see [Enable key authentication on a Gateway Service with {{site.base_gateway}}](/how-to/authenticate-consumers-with-key-auth-enc/).
+When you [create a Consumer](/gateway/entities/consumer/#set-up-a-consumer), you can specify a `key` with `keyauth_credentials` (declarative configuration) or the `/consumers/{usernameOrId}/key-auth-enc` endpoint.
 
 When authenticating, Consumers must specify their key either in the query, body, or a header:
 
