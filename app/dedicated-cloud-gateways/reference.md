@@ -7,7 +7,7 @@ description: "Dedicated Cloud Gateways are Data Plane nodes that are fully manag
 products:
     - gateway
 faqs:
-    - q: Why is my custom domain attachment failing in {{site.konnect_short_name}}?
+  - q: Why is my custom domain attachment failing in {{site.konnect_short_name}}?
     a: |
       A common reason is a missing or misconfigured Certificate Authority Authorization (CAA) record. 
       {{site.konnect_short_name}} uses Google Cloud Public CA (`pki.goog`) to issue certificates. 
@@ -213,6 +213,3 @@ If you are using Dedicated Cloud Gateways and your upstream services are hosted 
 ### Azure VNet Peering
 If you are using Dedicated Cloud Gateways and your upstream services are hosted in Azure, VNet Peering is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, see the [Azure Peering](/dedicated-cloud-gateways/azure-peering/) documentation.
 
-
-### Using a shared secret
-In this method, your upstream API is configured to only authorize traffic that contains a known shared API token or secret. We will configure {{site.base_gateway}} to inject the shared secret as a header into every request sent to the backend. Then {{site.base_gateway}} and the ecosystem of plugins can be leveraged to implement additional or alternative security measures, rate limiting, or other functionality on top of the web app, while ensuring that no unproxied traffic is authorized. 
