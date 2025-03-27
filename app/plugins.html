@@ -53,6 +53,8 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
 
   {% assign categories = site.data.plugin_categories | sort: "text" %}
   {% assign kong_plugins = site.data.kong_plugins | where_exp: "plugin", "plugin.published != false" %}
+  {% assign act_as_plugins = site.data.act_as_plugins | where_exp: "plugin", "plugin.published != false" %}
+  {% assign plugins = kong_plugins | concat: act_as_plugins %}
 
   <div class="grid grid-cols-4 gap-16">
     <div id="filters" class="w-full flex flex-col gap-8 sticky top-24 self-start">
@@ -106,7 +108,7 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
 
     <div class="flex flex-col col-span-3 w-full gap-16" id="plugin-cards">
       {% for cat in categories %}
-        {% assign plugins_for_category = kong_plugins | where_exp: "plugin", "plugin.categories contains cat.slug" | sort: "text" %}
+        {% assign plugins_for_category = plugins | where_exp: "plugin", "plugin.categories contains cat.slug" | sort: "name" %}
         {% if plugins_for_category.size > 0 %}
           <div class="flex flex-col gap-4" id="{{cat.slug}}">
             <h2>{{ cat.text }}</h2>
@@ -120,7 +122,7 @@ description: Extend Kong Gateway and Kong Konnect with powerful plugins and easy
         {% endif %}
       {% endfor %}
 
-      {% assign third_party_plugins = kong_plugins | where: "third_party", true %}
+      {% assign third_party_plugins = plugins | where: "third_party", true %}
       {% if third_party_plugins.size > 0 %}
         <div class="flex flex-col gap-4" id="third-party">
           <h2>3rd Party Plugins</h2>
