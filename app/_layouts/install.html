@@ -6,6 +6,8 @@ layout: default
     {% include layouts/main.html class="md:basis-3/4 grow-0 min-w-0" %}
 
     <aside class="hidden md:flex flex-col md:basis-1/4 pt-5 gap-8 text-sm grow-0">
+        {% include releases_dropdown.html releases_dropdown=page.releases_dropdown release=page.release mobile=include.mobile %}
+
             <div class="hidden md:flex flex-col w-full sticky top-[96px] items-baseline">
                 {% include toc.html page_title=page.title html=content h_min=2 h_max=2 id='toc' anchor_class='tab-button__vertical scroll-to' class="tabcolumn" %}
             </div>
