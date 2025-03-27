@@ -428,6 +428,24 @@ app/_kong_plugins/proxy-cache-advanced/index.md:
   - app/_hub/kong-inc/proxy-cache-advanced/overview/_index.md
 app/_kong_plugins/proxy-cache-advanced/changelog.md:
   - app/_hub/kong-inc/proxy-cache-advanced/_changelog.md
+app/_kong_plugins/ldap-auth/index.md:
+  - app/_hub/kong-inc/ldap-auth/overview/_index.md
+app/_kong_plugins/ldap-auth/changelog.md:
+  - app/_hub/kong-inc/ldap-auth/_changelog.md
+app/_kong_plugins/ldap-auth-advanced/index.md:
+  - app/_hub/kong-inc/ldap-auth-advanced/overview/_index.md
+app/_kong_plugins/ldap-auth-advanced/changelog.md:
+  - app/_hub/kong-inc/ldap-auth-advanced/_changelog.md
+app/_includes/plugins/ldap/description.md:
+  - app/_hub/kong-inc/ldap-auth-advanced/overview/_index.md
+  - app/_hub/kong-inc/ldap-auth/overview/_index.md
+app/_includes/plugins/ldap/service-directory-mapping.md:
+  - app/_includes/md/gateway/ldap-service-directory-mapping.md
+app/_includes/plugins/ldap/usage.md:
+  - app/_hub/kong-inc/ldap-auth-advanced/overview/_index.md
+  - app/_hub/kong-inc/ldap-auth/overview/_index.md
+app/_includes/plugins/upstream-headers.md:
+  - app/_includes/md/plugins-hub/upstream-headers.md
 
 # Konnect
 
