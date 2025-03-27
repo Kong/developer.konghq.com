@@ -28,7 +28,7 @@ content_type: reference
 * The `ldap_password` and `bind_dn` configuration fields are now marked as
 referenceable, which means they can be securely stored as
 [secrets](/gateway/secrets-management/)
-in a vault. References must follow a specific format.
+in a Vault. References must follow a specific format.
 
 ### {{site.base_gateway}} 2.7.x
 

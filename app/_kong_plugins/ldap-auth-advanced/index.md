@@ -42,11 +42,11 @@ related_resources:
 
 The LDAP Authentication Advanced plugin
 provides features not available in the [LDAP Authentication plugin](/plugins/ldap-auth/), including:
-* LDAP searches for group and consumer mapping
+* LDAP searches for group and Consumer mapping
 * Authentication of Consumers based on username or custom ID
 * Binding to an enterprise LDAP directory with a password
 * Authentication/authorization using a group base DN and specific group member or group name attributes
-* Obtaining LDAP groups and setting them in a request header before proxying to the upstream. This is useful for Kong Manager role mapping.
+* Obtaining LDAP groups and setting them in a request header before proxying to the upstream. This is useful for [Kong Manager](/gateway/kong-manager/) role mapping.
 
 ## Usage
 
@@ -60,8 +60,7 @@ provides features not available in the [LDAP Authentication plugin](/plugins/lda
 
 LDAP directory searching is performed during the request/plugin lifecycle. It's
 used to retrieve the fully qualified DN of the user so a bind
-request can be performed with a user's given LDAP username and password. The
-search for the user being authenticated uses the `config.bind_dn` property. The
+request can be performed with a user's given LDAP username and password. The authenticated user search uses the `config.bind_dn` property. The
 search uses `scope="sub"`, `filter="<config.attribute>=<username>"`, and
 `base_dn=<config.base_dn>`. Here is an example of how it performs the search
 using the `ldapsearch` command line utility:
@@ -88,13 +87,13 @@ This is useful for Kong Manager role mapping.
 
 ## Limitations
 
-* The `config.group_base_dn` and `config.base_dn` parameters have to fully match the exact DN of the group; 
+* The `config.group_base_dn` and `config.base_dn` parameters have to fully match the exact DN of the group, 
 a generic DN won’t work. 
-For example, consider a case where there are nested organizational units: if a
+For example, consider a case where there are nested organizational units. If a
 top-level DN such as `"ou=dev,o=company"` is specified instead of
 `"ou=role,ou=groups,ou=dev,o=company"`, the authentication will fail.
 
-* Referrals are not supported in the plugin. A workaround is
+* Referrals aren't supported in the plugin. A workaround is
 to hit the LDAP Global Catalog instead, which is usually listening on a
 different port than the default `389`. That way, referrals don't get sent
 back to the plugin.
