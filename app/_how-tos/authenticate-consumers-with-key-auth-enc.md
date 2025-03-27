@@ -17,7 +17,7 @@ entities:
   - route
 
 plugins:
-    - key-auth
+    - key-auth-enc
 
 tags:
   - authentication

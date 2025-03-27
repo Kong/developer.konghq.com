@@ -25,7 +25,7 @@ icon: key-auth-enc.png
 categories:
   - authentication
 
-related_links:
+related_resources:
   - text: Enable key authentication on a Gateway Service with {{site.base_gateway}}
     url: /how-to/authenticate-consumers-with-key-auth-enc/
 
