@@ -57,7 +57,7 @@ configuration values are treated differently when searching the request header f
 searching the query string. As a best practice, administrators are advised against defining
 case-sensitive [`config.key_names`](/plugins/key-auth-enc/reference/#schema--config-key-names) values when expecting the authorization keys to be sent in the request headers.
 
-Once applied, any user with a valid credential can access the service.
+Once applied, any user with a valid credential can access the Service or Route.
 To restrict usage to certain authenticated users, also add the
 [ACL](/plugins/acl/) plugin (not covered here) and create allowed or
 denied groups of users.

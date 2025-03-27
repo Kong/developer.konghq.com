@@ -88,7 +88,7 @@ Enable the plugin for the Service:
 {% entity_examples %}
 entities:
   plugins:
-    - name: key-auth
+    - name: key-auth-enc
       service: example-service
       config:
         key_names:
