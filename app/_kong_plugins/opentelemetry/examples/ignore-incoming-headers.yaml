@@ -23,6 +23,8 @@ config:
   traces_endpoint: http://localhost:4318/v1/traces
   propagation:	
     default_format: ot
+    extract: 
+    - "[]"
     inject: 
     - b3
     - datadog
