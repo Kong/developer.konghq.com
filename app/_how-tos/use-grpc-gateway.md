@@ -2,6 +2,7 @@
 title: Use the gRPC-Gateway plugin to proxy HTTP requests to a gRPC service
 content_type: how_to
 
+description: Set up the gRPC-Gateway plugin to proxy requests using a Protobuf definition.
 products:
     - gateway
 
@@ -21,8 +22,8 @@ tags:
     - transformations
 
 tldr:
-    q: ""
-    a: ""
+    q: "How can I apply a Protobuf definition to a Service?"
+    a: "Create a Gateway Service with the `grpc` protocol, then create a Route and enable the gRPC-Gateway plugin. Specify the path to your Protobuf file in the `config.proto` parameter."
 
 tools:
   - deck
@@ -75,13 +76,28 @@ message HelloResponse {
 }' > hello-gateway.proto
 ```
 
+This sample definition modifies the `SayHello` method available on [grpcb.in](https://grpcb.in/) and will return a message containing "Hello" followed by a name that can be specified either in the URL for GET requests or in the request body for POST requests.
+
 ## 2. Add the Protobuf definition to your Docker container
+
+Since {{site.konnect_short_name}} data plane container names can vary, set your container name as an environment variable:
+{: data-deployment-topology="konnect" }
+```sh
+export KONNECT_DP_CONTAINER='your-dp-container-name'
+```
+{: data-deployment-topology="konnect" }
 
 Use the following command to add `hello-gateway.proto` to the `/usr/local/kong` directory in your {{site.base_gateway}} Docker container:
 
 ```sh
 docker cp hello-gateway.proto kong-quickstart-gateway:/usr/local/kong
 ```
+{: data-deployment-topology="on-prem" }
+
+```sh
+docker cp hello-gateway.proto $KONNECT_DP_CONTAINER:/usr/local/kong
+```
+{: data-deployment-topology="konnect" }
 
 ## 3. Create a Gateway Service and a Route
 
@@ -119,4 +135,3 @@ body:
   name: MyName
 status_code: 200
 {% endvalidation %}
-
