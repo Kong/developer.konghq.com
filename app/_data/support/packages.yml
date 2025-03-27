@@ -42,15 +42,15 @@ debian-stable:
 rhel7:
   os: RHEL
   version: 7.x
-  codename: el7
+  codename: 7
 rhel8:
   os: RHEL
   version: 8.x
-  codename: el8
+  codename: 8
 rhel9:
   os: RHEL
   version: 9.x
-  codename: el9
+  codename: 9
 ubuntu1604:
   os: Ubuntu
   version: 16.04
