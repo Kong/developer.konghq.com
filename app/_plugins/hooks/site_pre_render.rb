@@ -18,6 +18,11 @@ Jekyll::Hooks.register :site, :pre_render do |site|
   site.documents.each do |doc|
     site.data['pages_urls'] << doc.url if doc.data['published'].nil? || doc.data['published'] == true
     site.data['tags'].merge(doc.data['tags']) if doc.data['tags']
+
+    next unless doc.data['act_as_plugin']
+
+    slug = doc.basename_without_ext
+    site.data['act_as_plugins'][slug] = doc
   end
 
   site.data['searchFilters'][:tags] = site.data['tags'].to_a.sort.map { |t| { label: t, value: t } }
