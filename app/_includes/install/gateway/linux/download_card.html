@@ -1,9 +1,13 @@
-<div class="flex gap-4 p-5 shadow-primary border border-primary/5 rounded-md justify-between">
-    <div class="flex flex-col gap-1">
-        <p class="text-primary text-sm">{{include.arch | upcase}} {% if include.fips %} - FIPS{% endif %}</p>
-        <p class="text-secondary text-xs">{{include.release.ee_version}}</p>
-    </div>
-    <div class="flex items-center">
-        {% include install/gateway/linux/download_link.html download_url=include.download_url %}
-    </div>
+<div class="card card__bordered">
+    <a href="{{include.download_url | strip}}" class="flex w-full gap-4 p-5 justify-between">
+        <div class="flex flex-col gap-1">
+            <p class="text-primary text-sm">{{include.arch | upcase}} {% if include.fips %} - FIPS{% endif %}</p>
+            <p class="text-secondary text-xs">{{include.release.ee_version}}</p>
+        </div>
+        <div class="flex items-center">
+            <div class="h-5 w-5">
+                {% include_svg '/assets/icons/download.svg' %}
+            </div>
+        </div>
+    </a>
 </div>
