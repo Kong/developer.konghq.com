@@ -115,12 +115,8 @@ paths:
       - $ref: '#/components/parameters/controlPlaneId'
   '/control-planes/{controlPlaneId}/nodes/{nodeId}':
     parameters:
-      - name: nodeId
-        in: path
-        required: true
-        schema:
-          type: string
       - $ref: '#/components/parameters/controlPlaneId'
+      - $ref: '#/components/parameters/nodeId'
     get:
       operationId: get-nodes-node_id
       summary: Fetch Data Plane Node Record
@@ -4212,6 +4208,15 @@ components:
         format: uuid
         example: 9524ec7d-36d9-465d-a8c5-83a3c9390458
       description: The UUID of your control plane. This variable is available in the Konnect manager.
+    nodeId:
+      schema:
+        type: string
+        format: uuid
+        example: d32d905a-ed33-46a3-a093-d8f536af9a8a
+      name: nodeId
+      in: path
+      required: true
+      description: Node identifier
     pagination-size:
       description: Number of resources to be returned.
       in: query
@@ -5256,7 +5261,6 @@ components:
       additionalProperties: false
       required:
         - name
-        - config
     PluginWithoutParents:
       description: 'A Plugin entity represents a plugin configuration that will be executed during the HTTP request/response lifecycle. It is how you can add functionalities to Services that run behind Kong, like Authentication or Rate Limiting for example. You can find more information about how to install and what values each plugin takes by visiting the [Kong Hub](https://docs.konghq.com/hub/). When adding a Plugin Configuration to a Service, every request made by a client to that Service will run said Plugin. If a Plugin needs to be tuned to different values for some specific Consumers, you can do so by creating a separate plugin instance that specifies both the Service and the Consumer, through the `service` and `consumer` fields.'
       type: object
@@ -5403,7 +5407,6 @@ components:
       additionalProperties: false
       required:
         - name
-        - config
     Route:
       oneOf:
         - $ref: '#/components/schemas/RouteJson'
@@ -6599,21 +6602,6 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Forbidden
-    ConflictError:
-      allOf:
-        - $ref: '#/components/schemas/BaseError'
-        - type: object
-          properties:
-            status:
-              example: 409
-            title:
-              example: Conflict
-            type:
-              example: 'https://httpstatuses.com/409'
-            instance:
-              example: 'kong:trace:1234567890'
-            detail:
-              example: Conflict
     NotFoundError:
       allOf:
         - $ref: '#/components/schemas/BaseError'
@@ -6629,6 +6617,21 @@ components:
               example: 'kong:trace:1234567890'
             detail:
               example: Not found
+    ConflictError:
+      allOf:
+        - $ref: '#/components/schemas/BaseError'
+        - type: object
+          properties:
+            status:
+              example: 409
+            title:
+              example: Conflict
+            type:
+              example: 'https://httpstatuses.com/409'
+            instance:
+              example: 'kong:trace:1234567890'
+            detail:
+              example: Conflict
     CursorMetaPage:
       type: object
       properties:
@@ -7208,12 +7211,6 @@ components:
           examples:
             UnauthorizedExample:
               $ref: '#/components/examples/ForbiddenExample'
-    Conflict:
-      description: Conflict
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/ConflictError'
     NotFound:
       description: Not Found
       content:
@@ -7223,6 +7220,12 @@ components:
           examples:
             NotFoundExample:
               $ref: '#/components/examples/NotFoundExample'
+    Conflict:
+      description: Conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ConflictError'
     UnsupportedMediaType:
       description: Unsupported Media Type
       content:
