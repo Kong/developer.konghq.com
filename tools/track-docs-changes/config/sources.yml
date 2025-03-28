@@ -459,7 +459,7 @@ app/_kong_plugins/opentelemetry/index.md:
   - app/_hub/kong-inc/opentelemetry/overview/_index.md
   - app/_hub/kong-inc/opentelemetry/how-to/_spans.md
 app/_kong_plugins/opentelemetry/changelog.md:
-  - 
+  - app/_hub/kong-inc/opentelemetry/_changelog.md
 
 # Konnect
 
