@@ -27,17 +27,18 @@ related_resources:
 
 ## Data Plane logs
 
-Data plane logs provide users with the ability to view, filter, search, and download logs for the Data Plane nodes associated with a Dedicated Cloud Gateway. This feature is essential for debugging, monitoring, and understanding the behavior of Data Plane nodes.
+Data Plane logs provide users with the ability to view, filter, search, and download logs for the Data Plane nodes associated with a Dedicated Cloud Gateway. 
+Reviewing logs is essential for debugging, monitoring, and understanding the behavior of Data Plane nodes.
 
 
 ## Log management in Gateway Manager
 
-You can access Data Plane logs from the Data Plane Dashboard in [Gateway Manager](https://cloud.konghq.com/us/gateway-manager/).
+You can access Data Plane logs from the Data Plane dashboard in [Gateway Manager](https://cloud.konghq.com/us/gateway-manager/).
 
-From here, you can perform the following actions:
+From the Data Plane dashboard, you can perform the following actions:
 {% table %}
 columns:
-  - title: Feature
+  - title: Use Case
     key: feature
   - title: Description
     key: description
@@ -45,13 +46,13 @@ rows:
   - feature: View Logs
     description: Access detailed logs for all Data Plane nodes in your gateway.
   - feature: Filter Logs
-    description: Type keywords or phrases in the Filter Log Messages box to refine log content.
+    description: Type keywords or phrases in the **Filter Log Messages** box to refine log content.
   - feature: Download Logs
-    description: Click the Download Icon near the log table to save logs locally.
+    description: Click the download icon near the log table to save logs locally.
   - feature: Data Plane Node Selection
-    description: Use the Node ID input box to view logs from a specific Data Plane node.
+    description: Use the **Node ID** input box to view logs from a specific Data Plane node.
   - feature: Date Range Selection
-    description: Use the **Date Picker tool to specify a date range for logs.
+    description: Use the date picker tool to specify a date range for logs.
   - feature: Group-Specific Logs
     description: Navigate to a specific Data Plane group within the Gateway Manager to view logs limited to that group.
 {% endtable %}
