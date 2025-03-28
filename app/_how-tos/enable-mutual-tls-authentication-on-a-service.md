@@ -1,6 +1,7 @@
 ---
 title: Enable mutual TLS authentication on a Gateway Service with {{site.base_gateway}}
 content_type: how_to
+description: Use the Mutual TLS Authentication plugin to enable authentication on a Service.
 
 related_resources:
   - text: Authentication
