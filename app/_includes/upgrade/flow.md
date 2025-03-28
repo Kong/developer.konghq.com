@@ -14,7 +14,7 @@ flowchart TD
     F ---Yes--->I([Dual-cluster upgrade])
     F ---No--->J([In-place upgrade])
     H ---> K
-    click K "/gateway/upgrade/rolling-upgrade/"
+    click K "/gateway/upgrade/rolling/"
     click I "/gateway/upgrade/dual-cluster/"
     click J "/gateway/upgrade/in-place/"
 {% endmermaid %}

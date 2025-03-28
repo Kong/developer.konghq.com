@@ -8,19 +8,31 @@ products:
 
 works_on:
     - on-prem
+    - konnect
 
 description: This guide walks you through upgrade paths for {{site.base_gateway}} and helps you prepare for an upgrade.
 
 related_resources:
   - text: "{{site.base_gateway}} breaking changes"
     url: /gateway/breaking-changes/
+  - text: "Backing up and restoring {{site.base_gateway}}"
+    url: /gateway/upgrade/backup-and-restore/
+  - text: "Dual-cluster upgrade"
+    url: /gateway/upgrade/dual-cluster/
+  - text: "In-place upgrade"
+    url: /gateway/upgrade/in-place/
+  - text: "Rolling upgrade"
+    url: /gateway/upgrade/rolling/
+  - text: "Blue-green upgrade"
+    url: /gateway/upgrade/blue-green/
+  - text: "2.8 to 3.4 LTS upgrade"
+    url: /gateway/upgrade/lts-upgrade/
 
 ---
 
-Using this guide, prepare for a {{site.base_gateway}} upgrade and determine which {{site.base_gateway}} upgrade paths to use.
+This guide walks you through preparing for a {{site.base_gateway}} upgrade, helps you determine which upgrade path to use, and helps you decide on the best strategy for each {{site.base_gateway}} deployment mode.
 
-This guide walks you through four available upgrade strategies and recommends the best strategy for each {{site.base_gateway}} deployment mode. 
-Additionally, it lists some fundamental factors that play important roles in the upgrade process, and explains how to back up and recover data.
+Additionally, this guide lists some fundamental factors that play important roles in the upgrade process, and explains how to back up and recover data.
 
 This guide uses the following terms in the context of {{site.base_gateway}}:
 * **Upgrade**: The overall process of switching from an older to a newer version of {{site.base_gateway}}. 
@@ -82,7 +94,7 @@ Factors include, but are not limited to:
 * Hardware capacities
 * SLA
 
-You should discuss the upgrade process thoroughly and carefully with our engineers before you take any action.
+You should discuss the upgrade process thoroughly and carefully with Kong's support engineers before you take any action.
 
 We encourage you to stay updated with {{site.base_gateway}} releases, as that helps maintain a smooth upgrade path. 
 The smaller the version gap is, the less complex the upgrade process becomes.
@@ -106,7 +118,7 @@ By default, {{site.base_gateway}} has migration tests between adjacent versions,
 
 ## Preparation: Choose an upgrade strategy based on deployment mode
 
-Though you could define your own upgrade procedures, we recommend using one of the nominated strategies in this section. 
+Though you could define your own upgrade procedures, we recommend using one of the strategies in this section.
 Any custom upgrade requirements may require a well-tailored upgrade strategy. 
 For example, if you only want a small group of objects to be directed to the new version, use the 
 [Canary plugin](/plugins/canary/) and a load balancer that supports traffic interception.
@@ -118,12 +130,12 @@ Based on your deployment type, we recommend one of the following upgrade strateg
 Carefully read the descriptions for each option to choose the upgrade strategy that works best for your situation.
 
 * [Traditional](#traditional-mode) or [Hybrid mode Control Planes](#control-planes):
-    * [Dual-cluster upgrade](/gateway/{{page.release}}/upgrade/dual-cluster/)
-    * [In-place upgrade](/gateway/{{page.release}}/upgrade/in-place/)
-    * [Blue-green upgrade](/gateway/{{page.release}}/upgrade/blue-green/) (not recommended)
+    * [Dual-cluster upgrade](/gateway/upgrade/dual-cluster/)
+    * [In-place upgrade](/gateway/upgrade/in-place/)
+    * [Blue-green upgrade](/gateway/upgrade/blue-green/) (not recommended)
 
 * [DB-less mode](#db-less-mode) or [Hybrid mode Data Planes](#data-planes):
-    * [Rolling upgrade](/gateway/{{page.release}}/upgrade/rolling-upgrade/)
+    * [Rolling upgrade](/gateway/upgrade/rolling/)
 
 Here's a flowchart that breaks down how the decision process works:
 
@@ -135,8 +147,8 @@ See the following sections for breakdowns and links to each upgrade strategy gui
 
 {% include_cached /upgrade/traditional.md %}
 
-{:.important}
-> **Important**: While the [blue-green upgrade strategy](/gateway/{{page.release}}/upgrade/blue-green/) is an option,
+{:.warning}
+> **Important**: While the [blue-green upgrade strategy](/gateway/upgrade/blue-green/) is an option,
 we do not recommend it. Support from Kong for upgrades using this strategy is limited. 
 It is nearly impossible to fully cover all migration tests, because we have to cover all 
 combinations, given the number of {{site.base_gateway}} versions, upgrade strategies, features adopted, and deployment modes. 
@@ -152,7 +164,7 @@ If you must use this strategy, only use it to upgrade between patch versions.
 
 #### Upgrades from 3.1.0.0 or 3.1.1.1
 
-There is a special case if you deployed {{site.base_gateway}} in hybrid mode and the version you are using is 3.1.0.0 or 3.1.1.1.
+There is a special case if you deployed {{site.base_gateway}} in Hybrid mode and the version you are using is 3.1.0.0 or 3.1.1.1.
 Kong removed the legacy WebSocket protocol between the CP and DP, replaced it with a new WebSocket protocol in 3.1.0.0,
 and added back the legacy one in 3.1.1.2. 
 So, upgrade to 3.1.1.2 first before moving forward to later versions. 
@@ -160,12 +172,34 @@ So, upgrade to 3.1.1.2 first before moving forward to later versions.
 Additionally, the new WebSocket protocol has been completely removed since 3.2.0.0.
 See the following table for the version breakdown:
 
-{{site.base_gateway}} Version | Legacy WebSocket (JSON) | New WebSocket (RPC)
----------------------|-------------------------|--------------------
-3.0.0.0 | Y | Y
-3.1.0.0 and 3.1.1.1 | N | Y
-3.1.1.2 | Y | Y
-3.2.0.0 | Y | N
+<!--vale off-->
+{% feature_table %}
+item_title: {{site.base_gateway}} Version
+columns:
+  - title: Legacy WebSocket (JSON)
+    key: legacy
+  - title: New WebSocket (RPC)
+    key: new
+
+features:
+  - title: 3.0.0.0
+    legacy: true
+    new: true
+  - title: 3.1.0.0
+    legacy: false
+    new: true
+  - title: 3.1.1.1
+    legacy: false
+    new: true
+  - title: 3.1.1.2
+    legacy: true
+    new: true
+  - title: 3.2.0.0
+    legacy: true
+    new: false
+    
+{% endfeature_table %}
+<!--vale on-->
 
 ## Preparation: Review breaking changes and changelogs
 
@@ -208,7 +242,7 @@ Refer to [Nginx Directives](/gateway/nginx-directives/) for a detailed customiza
 * If you're using {{site.ee_product_name}}, make sure to [apply the enterprise license](/gateway/entities/license/) to the new Gateway cluster.
 * Always remember to take a [backup](/gateway/upgrade/backup-and-restore/).
 * Cassandra DB support has been removed from {{site.base_gateway}} with 3.4.0.0.
-Migrate to PostgreSQL according to the [Cassandra to PostgreSQL Migration Guidelines](/how-to/migrate-cassandra-to-postgres/).
+Work with the Kong support team to migrate from Cassandra to PostgreSQL.
 
 ## Perform the upgrade
 
@@ -218,4 +252,4 @@ using your chosen strategy:
 * [Dual-cluster upgrade](/gateway/upgrade/dual-cluster/)
 * [In-place upgrade](/gateway/upgrade/in-place/)
 * [Blue-green upgrade](/gateway/upgrade/blue-green/)
-* [Rolling upgrade](/gateway/upgrade/rolling-upgrade/)
+* [Rolling upgrade](/gateway/upgrade/rolling/)

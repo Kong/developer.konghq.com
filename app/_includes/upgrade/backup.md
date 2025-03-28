@@ -1,8 +1,8 @@
-The `kong migrations` commands used during upgrade and database migration are not reversible.
 Always back up your database or declarative configuration files before an upgrade.
+The `kong migrations` commands used during upgrade and database migration are not reversible.
 
 There are two main types of backup for {{site.base_gateway}} entities:
-* **Database backup**: PostgreSQL has native exporting and importing tools that are reliable and performant, and that ensure consistency when backing up or restoring data. If you're running {{site.base_gateway}} in traditional or hybrid mode, you should always take a database-native backup.
+* **Database backup**: PostgreSQL has native exporting and importing tools that are reliable and performant, and that ensure consistency when backing up or restoring data. If you're running {{site.base_gateway}} in Traditional or Hybrid mode, you should always take a database-native backup.
 * **Declarative backup**: Kong ships two declarative backup tools: [decK](/deck/) and the [Kong CLI](/gateway/cli/), which support managing {{site.base_gateway}} entities in the declarative format.
 For Traditional and Hybrid mode deployments, use these tools to create secondary backups. For DB-less mode deployments, use the Kong CLI and manually manage declarative configuration files.
 

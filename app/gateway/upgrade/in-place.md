@@ -54,10 +54,9 @@ flowchart TD
     CPY --kong migrations up \n kong migrations finish--> DB
     Admin -.X.- CPX & CPY
 
-    style API stroke:none
     style CPX stroke-dasharray:3
-    style Admin fill:none,stroke:none,color:#d44324
-    linkStyle 0,3,4 stroke:#d44324,color:#d44324
+    style Admin fill:none!important,stroke:none!important,color:#d44324!important
+    linkStyle 0,3,4 stroke:#d44324!important,color:#d44324!important
 {% endmermaid %}
 
 > _Figure 1: The diagram shows an in-place upgrade workflow, where the current cluster X is directly replaced by a new cluster Y._
