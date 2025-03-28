@@ -1,0 +1,19 @@
+description: 'This example enables the plugin and uses `apikey` for the key name.'
+
+title: 'Enable Key Auth Encrypted'
+
+weight: 900
+
+requirements: 
+ - "Before configuring this plugin, you must [enable {{site.base_gateway}}'s encryption Keyring](/gateway/keyring/#enable-keyring). "
+
+config: 
+  key_names: 
+  - apikey
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
