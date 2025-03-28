@@ -190,6 +190,10 @@ app/_how-tos/set-up-dynatrace-with-otel.md:
   - app/_hub/kong-inc/opentelemetry/how-to/_dynatrace.md
 app/_how-tos/use-langchain-with-ai-proxy.md:
   - app/_src/gateway/ai-gateway/llm-library-integration-guides/langchain.md
+app/_how-tos/use-grpc-gateway.md:
+  - app/_hub/kong-inc/grpc-gateway/how-to/_index.md
+app/_how-tos/use-grpc-web.md:
+  - app/_hub/kong-inc/grpc-web/how-to/_index.md
 
 ## KIC
 app/_how-tos/proxy-http-traffic-kic.md:
@@ -416,6 +420,11 @@ app/_kong_plugins/exit-transformer/changelog.md:
   - app/_hub/kong-inc/exit-transformer/_changelog.md
 app/_how-tos/transform-a-404-response-message.md:
   - app/_hub/kong-inc/exit-transformer/overview/_index.md
+app/_kong_plugins/header-cert-auth/changelog.md:
+  - app/_hub/kong-inc/header-cert-auth/_changelog.md
+app/_kong_plugins/header-cert-auth/index.md:
+  - app/_hub/kong-inc/header-cert-auth/how-to/_manual-mapping-cert-consumers.md
+  - app/_hub/kong-inc/header-cert-auth/overview/_index.md
 app/_kong_plugins/proxy-cache/index.md:
   - app/_hub/kong-inc/proxy-cache/overview/_index.md
 app/_kong_plugins/proxy-cache/changelog.md:
@@ -450,6 +459,19 @@ app/_kong_plugins/datadog/changelog.md:
   - app/_hub/kong-inc/datadog/_changelog.md
 app/_kong_plugins/datadog/index.md:
   - app/_hub/kong-inc/datadog/overview/_index.md
+app/_kong_plugins/loggly/index.md:
+  - app/_hub/kong-inc/loggly/overview/_index.md
+app/_kong_plugins/loggly/changelog.md:
+  - app/_hub/kong-inc/loggly/_changelog.md
+app/_kong_plugins/grpc-gateway/index.md:
+  - app/_hub/kong-inc/grpc-gateway/overview/_index.md
+app/_kong_plugins/grpc-web/index.md:
+  - app/_hub/kong-inc/grpc-web/overview/_index.md
+app/_kong_plugins/grpc-gateway/changelog.md:
+  - app/_hub/kong-inc/grpc-gateway/_changelog.md
+app/_kong_plugins/grpc-web/changelog.md:
+  - app/_hub/kong-inc/grpc-web/_changelog.md
+
 
 # Konnect
 
@@ -631,8 +653,9 @@ app/serverless-gateways/index.md:
 app/_landing_pages/gateway-manager.yaml:
   - app/konnect/gateway-manager/index.md
 
-app/dedicated-cloud-gateways/custom-dns.md:
-  - app/konnect/gateway-manger/serverless-gateways/custom-dns.md
+app/dedicated-cloud-gateways/reference.md:
+  - app/konnect/gateway-manager/dedicated-cloud-gateways/provision-cloud-gateway.md
+  - app/konnect/gateway-manager/dedicated-cloud-gateways/securing-backend-traffic.md
   - app/konnect/gateway-manager/dedicated-cloud-gateways/custom-dns.md
 
 app/gateway-manager/control-plane-groups.md:
