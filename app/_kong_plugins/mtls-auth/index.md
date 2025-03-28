@@ -74,7 +74,7 @@ Certificate request behavior based on plugin scope:
   * If all Routes have SNIs, mTLS is enforced only for matching SNI requests.
 
 
-SNIs must be set for all routes that mutual TLS authentication uses.
+SNIs must be set for all Routes that mutual TLS authentication uses.
 
 ### Sending the CA DNs during TLS handshake
 
