@@ -42,7 +42,7 @@ related_resources:
 The gRPC-Gateway plugin allows you to send JSON requests to a [gRPC](https://grpc.io/) service. A
 specially configured `.proto` file handles the conversion of the JSON request
 into one that the gRPC service can handle. This allows you to expose RESTful-style
-interfaces that talk to a gRPC service.
+interfaces that communicate with a gRPC service.
 
 This plugin's implementation is similar to [gRPC-gateway](https://grpc-ecosystem.github.io/grpc-gateway/).
 

@@ -24,7 +24,7 @@ tags:
 
 tldr:
     q: "How can I apply a Protobuf definition to a Service?"
-    a: "Create a Gateway Service with the `grpc` protocol, then create a Route and enable the gRPC-Web plugin. Specify the path to your Protobuf file in the `config.proto` parameter."
+    a: "Create a [Gateway Service](/gateway/entities/service/) with the `grpc` protocol, then create a [Route](/gateway/entities/route/) and enable the [gRPC-Web](/plugins/grpc-web/) plugin. Specify the path to your Protobuf file in the `config.proto` parameter."
 
 tools:
   - deck
@@ -111,7 +111,7 @@ entities:
 
 ## 5. Validate
 
-To validate that the configuration is working as expected, send a POST request to one of the RPC methods used in the Protobuf definition.
+To validate that the configuration is working as expected, send a `POST` request to one of the RPC methods used in the Protobuf definition.
 
 For example:
 {% validation request-check %}

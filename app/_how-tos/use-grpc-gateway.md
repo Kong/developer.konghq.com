@@ -23,7 +23,7 @@ tags:
 
 tldr:
     q: "How can I apply a Protobuf definition to a Service?"
-    a: "Create a Gateway Service with the `grpc` protocol, then create a Route and enable the gRPC-Gateway plugin. Specify the path to your Protobuf file in the `config.proto` parameter."
+    a: "Create a [Gateway Service](/gateway/entities/service/) with the `grpc` protocol, then create a [Route](/gateway/entities/route/) and enable the [gRPC-Gateway](/plugins/grpc-gateway/) plugin. Specify the path to your Protobuf file in the `config.proto` parameter."
 
 tools:
   - deck
@@ -76,7 +76,7 @@ message HelloResponse {
 }' > hello-gateway.proto
 ```
 
-This sample definition modifies the `SayHello` method available on [grpcb.in](https://grpcb.in/) and will return a message containing "Hello" followed by a name that can be specified either in the URL for GET requests or in the request body for POST requests.
+This sample definition modifies the `SayHello` method available on [grpcb.in](https://grpcb.in/) and will return a message containing "Hello" followed by a name that can be specified either in the URL for `GET` requests or in the request body for `POST` requests.
 
 ## 2. Add the Protobuf definition to your Docker container
 
@@ -119,19 +119,21 @@ entities:
 ## 5. Validate
 
 To validate that the configuration is working as expected, you can:
-* Send an GET request to `/v1/messages/` or `/v1/messages/legacy/`, with a name in the URL
-* Send a POST request to `/v1/messages/` with a name in the request body
+* Send a `GET` request to `/v1/messages/` or `/v1/messages/legacy/`, with a name in the URL
+   
+   For example:
+   {% validation request-check %}
+   url: '/v1/messages/MyName'
+   status_code: 200
+   {% endvalidation %}
+* Send a `POST` request to `/v1/messages/` with a name in the request body
+   
+   For example:
+   {% validation request-check %}
+   method: POST
+   url: '/v1/messages/'
+   body:
+     name: MyName
+   status_code: 200
+   {% endvalidation %}
 
-For example:
-{% validation request-check %}
-url: '/v1/messages/MyName'
-status_code: 200
-{% endvalidation %}
-
-{% validation request-check %}
-method: POST
-url: '/v1/messages/'
-body:
-  name: MyName
-status_code: 200
-{% endvalidation %}

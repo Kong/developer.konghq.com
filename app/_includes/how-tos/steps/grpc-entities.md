@@ -1,4 +1,4 @@
-In this example, we want a Route that serves the HTTP protocol but proxies to a Gateway Service with the gRPC protocol.
+In this example, we want a [Route](/gateway/entities/route/) that serves the HTTP protocol but proxies to a [Gateway Service](/gateway/entities/service/) with the gRPC protocol.
 For testing purposes, we'll use [grpcb.in](https://grpcb.in/) as the upstream service.
 {% entity_examples %}
 entities:
