@@ -490,6 +490,10 @@ app/_kong_plugins/oauth2-introspection/index.md:
   - app/_hub/kong-inc/oauth2/overview/_index.md
 app/_kong_plugins/oauth2-introspection/changelog.md:
   - app/_hub/kong-inc/oauth2/_changelog.md
+app/_kong_plugins/mtls-auth/index.md:
+  - app/_hub/kong-inc/mtls-auth/overview/_index.md
+app/_kong_plugins/mtls-auth/changelog.md:
+  - app/_hub/kong-inc/mtls-auth/_changelog.md
 
 # Konnect
 
@@ -501,9 +505,10 @@ app/konnect-geos.md:
   - app/konnect/geo.md
 app/_landing_pages/advanced-analytics.md:
   - app/konnect/advanced-analytics/index.md
-app/konnect-audit-logs.md:
+app/konnect-logs.md:
   - app/konnect/org-management/audit-logging/index.md
   - app/konnect/reference/audit-logs.md
+  - app/konnect/gateway-manager/dedicated-cloud-gateways/data-plane-logs.md
 app/konnect-labels.md:
   - app/konnect/reference/labels.md
 
