@@ -33,6 +33,10 @@ categories:
 
 search_aliases:
   - http-log
+
+faqs:
+  - q: When does the HTTP Log plugin record log entries in a request/response timeline?
+    a: The log is executed after {{site.base_gateway}} sends the last response byte to the client. 
 ---
 
 The HTTP Log plugin lets you send request and response logs to an HTTP server.
