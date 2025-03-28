@@ -8,23 +8,23 @@ description: |
 
   To send raw text, use the [`/services/collector/raw`](https://docs.splunk.com/Documentation/Splunk/latest/RESTREF/RESTinput#services.2Fcollector.2Fraw) Splunk endpoint.
 
-  Logs are sent as JSON objects. See the [Log Format](/hub/kong-inc/http-log/#log-format) reference for details.
+  Logs are sent as JSON objects. See the [log format](/plugins/http-log/#log-format) reference for details.
 
-title: ''
+title: 'Send HTTP logs to Splunk'
 
 weight: 900
 
 requirements:
   - You have a Splunk authorization token.
 
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
+variables:
+  token:
+    description: The Splunk authorization token.
+    value: $SPLUNK_AUTH_TOKEN
 
 config:
   headers:
-    Authorization: "Splunk 123456"
+    Authorization: "Splunk ${token}"
   http_endpoint: "https://example.splunkcloud.com:8088/services/collector/raw"
   method: POST
   timeout: 3000

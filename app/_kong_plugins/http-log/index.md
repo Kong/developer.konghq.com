@@ -14,6 +14,8 @@ works_on:
     - on-prem
     - konnect
 
+tags:
+  - logging
 
 topologies:
   on_prem:
@@ -37,48 +39,36 @@ The HTTP Log plugin lets you send request and response logs to an HTTP server.
 
 It also supports stream data (TCP, TLS, and UDP).
 
-## Queueing
+## Queuing
 
-The HTTP Log plugin uses internal queues to decouple the production of
-log entries from their transmission to the upstream log server.  In
-contrast to other plugins that use queues, it shares one queue
-between all plugin instances that use the same log server parameter.
-The equivalence of the log server is determined by the parameters
-`http_endpoint`, `method`, `content_type`, `timeout`, and `keepalive`.
-All plugin instances that have the same values for these parameters
-share one queue.
+The HTTP Log plugin uses internal queues to decouple the production of log entries from their transmission to the upstream log server. 
+You can find the queue parameters under [`config.queue`](./reference/#schema--config-queue) in the plugin configuration. 
+For more information about how to use these parameters, see the [plugin queuing reference](/gateway/entities/plugin/#plugin-queuing).
 
-Queues are not shared between workers and queueing parameters are
-scoped to one worker.  For whole-system capacity planning, the number
-of workers need to be considered when setting queue parameters.
+In contrast to other plugins that use queues, all plugin instances that have the same values for the following parameters share one queue:
+
+* [`config.http_endpoint`](./reference/#schema--config-http-endpoint)
+* [`config.method`](./reference/#schema--config-method)
+* [`config.content_type`](./reference/#schema--config-content-type)
+* [`config.timeout`](./reference/#schema--config-timeout)
+* [`config.keepalive`](./reference/#schema--config-keepalive)
+
+Queues are not shared between workers and queuing parameters are scoped to one worker. 
+For whole-system capacity planning, the number of workers needs to be considered when setting queue parameters.
 
 ## Kong process errors
 
-{% include /md/plugins-hub/kong-process-errors.md %}
+{% include plugins/logging/kong-process-errors.md %}
 
-{:.note}
+{:.info}
 > **Note:** If the `max_batch_size` argument > 1, a request is logged as an array of JSON objects.
 
 ## Log format
 
-{% include /md/plugins-hub/log-format.md %}
+{% include /plugins/logging/log-format.md %}
 
-### JSON object descriptions
-
-{% include /md/plugins-hub/json-object-log.md %}
-
-
-## Custom headers
-
-The log server that receives these messages might require extra headers, such as for authorization purposes.
-
-```yaml
-- name: http-log
-  config:
-    headers:
-      Authorization: "Bearer <token>"
-```
+{% include /plugins/logging/json-object-log.md %}
 
 ## Custom fields by Lua
 
-{% include /md/plugins-hub/log_custom_fields_by_lua.md %}
+{% include /plugins/logging/log-custom-fields-by-lua.md %}

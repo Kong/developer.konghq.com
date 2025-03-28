@@ -1,18 +1,29 @@
-description: ''
+description: |
+  Send HTTP logs to a log server while specifying a custom header. 
+  Custom headers are often used for authorization.
 
-title: ''
+title: 'Send HTTP logs with custom header'
 
 weight: 900
 
-# requirements: <- not required
-# - "some req"
+requirements:
+- You have a log server that you want to send {{site.base_gateway}} logs to.
 
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
+variables:
+  log-server-url:
+    description: 'The endpoint of the log server that will receive {{site.base_gateway}} logs.'
+    value: $LOG_SERVER_URL
+  token:
+    description: The token for your custom authorization header.
+    value: $AUTH_TOKEN
 
-config: # plugin config in yaml format goes here
+config:
+  http_endpoint: ${log-server-url}
+  headers:
+    Authorization: "Bearer ${token}"
+  method: POST
+  timeout: 3000
+  retry_count: 1
 
 tools:
   - deck
