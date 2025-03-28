@@ -66,11 +66,10 @@ flowchart TD
     CPX -.-> DBX
     CPY --pg_restore--> DBY
 
-    style API stroke:none
     style DBX stroke-dasharray:3 !important
     style CPX stroke-dasharray:3 !important
-    style Admin fill:none,stroke:none,color:#d44324 !important
-    style Admin2 fill:none,stroke:none,color:#d44324 !important
+    style Admin fill:none!important,stroke:none!important,color:#d44324 !important
+    style Admin2 fill:none!important,stroke:none!important,color:#d44324 !important
     linkStyle 4,7 stroke:#d44324 !important,color:#d44324 !important
     linkStyle 3,6,9 stroke:#b6d7a8 !important
 {% endmermaid %}
