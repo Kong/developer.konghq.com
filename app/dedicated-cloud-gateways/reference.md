@@ -6,6 +6,10 @@ description: "Dedicated Cloud Gateways are Data Plane nodes that are fully manag
 
 products:
     - gateway
+
+works_on:
+  - konnect
+
 faqs:
   - q: Why is my custom domain attachment failing in {{site.konnect_short_name}}?
     a: |
