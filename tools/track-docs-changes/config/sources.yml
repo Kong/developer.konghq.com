@@ -455,6 +455,10 @@ app/_includes/plugins/ldap/usage.md:
   - app/_hub/kong-inc/ldap-auth/overview/_index.md
 app/_includes/plugins/upstream-headers.md:
   - app/_includes/md/plugins-hub/upstream-headers.md
+app/_kong_plugins/datadog/changelog.md:
+  - app/_hub/kong-inc/datadog/_changelog.md
+app/_kong_plugins/datadog/index.md:
+  - app/_hub/kong-inc/datadog/overview/_index.md
 app/_kong_plugins/loggly/index.md:
   - app/_hub/kong-inc/loggly/overview/_index.md
 app/_kong_plugins/loggly/changelog.md:
@@ -467,6 +471,7 @@ app/_kong_plugins/grpc-gateway/changelog.md:
   - app/_hub/kong-inc/grpc-gateway/_changelog.md
 app/_kong_plugins/grpc-web/changelog.md:
   - app/_hub/kong-inc/grpc-web/_changelog.md
+
 
 # Konnect
 
