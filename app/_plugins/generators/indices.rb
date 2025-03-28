@@ -5,10 +5,15 @@ module Jekyll
     priority :low
 
     def generate(site)
+      site.data['indices'] = {}
       Dir.glob(File.join(site.source, '_indices/**/*.yaml')).each do |file|
         @seen = {}
         @sections = {}
-        site.pages << build_page(site, file)
+        page = build_page(site, file)
+
+        site.pages << page
+        slug = File.basename(file, File.extname(file))
+        site.data['indices'][slug] = page
       end
     end
 
