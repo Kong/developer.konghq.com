@@ -451,11 +451,16 @@ app/_includes/plugins/ldap/usage.md:
   - app/_hub/kong-inc/ldap-auth/overview/_index.md
 app/_includes/plugins/upstream-headers.md:
   - app/_includes/md/plugins-hub/upstream-headers.md
+app/_kong_plugins/loggly/index.md:
+  - app/_hub/kong-inc/loggly/overview/_index.md
+app/_kong_plugins/loggly/changelog.md:
+  - app/_hub/kong-inc/loggly/_changelog.md
 app/_kong_plugins/opentelemetry/index.md:
   - app/_hub/kong-inc/opentelemetry/overview/_index.md
   - app/_hub/kong-inc/opentelemetry/how-to/_spans.md
 app/_kong_plugins/opentelemetry/changelog.md:
-  - 
+  - app/_hub/kong-inc/opentelemetry/_changelog.md
+  
 
 # Konnect
 
