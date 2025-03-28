@@ -38,7 +38,7 @@ privacy_policy_url: https://www.amberflo.io/privacy-policy
 
 terms_of_service_url: https://www.amberflo.io/terms-of-use
 
-icon: kong-plugin-amberflo.png
+icon: amberflo.png
 
 search_aliases:
   - amberflo.io inc.

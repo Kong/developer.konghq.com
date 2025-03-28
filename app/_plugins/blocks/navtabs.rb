@@ -9,7 +9,7 @@ module Jekyll
       def initialize(tag_name, markup, tokens)
         super
 
-        @tab_group = markup.strip.delete('"')
+        @tab_group = markup.strip
       end
 
       def render(context)
@@ -32,8 +32,12 @@ module Jekyll
         environment['navtabs-stack'].pop
         environment['additional_classes'] = ''
 
-        keys = @tab_group.split('.')
-        group = keys.reduce(context) { |c, key| c[key] } || @tab_group
+        if @tab_group.include?('"')
+          group = @tab_group.delete('"')
+        else
+          keys = @tab_group.split('.')
+          group = keys.reduce(context) { |c, key| c[key] } || @tab_group
+        end
 
         Liquid::Template
           .parse(File.read(File.join(@site.source, '_includes/components/tabs.html')))

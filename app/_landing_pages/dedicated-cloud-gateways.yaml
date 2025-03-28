@@ -160,7 +160,7 @@ rows:
               icon: /assets/icons/domain.svg
               cta:
                 text: Learn more
-                url: /gateway-manager/data-plane-reference/
+                url: /dedicated-cloud-gateways/custom-dns/
       - blocks:
           - type: card
             config:
