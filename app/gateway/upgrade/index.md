@@ -216,9 +216,9 @@ You must also account for the following factors:
 
 * During the upgrade process, no changes can be made to the database. 
 Until the upgrade is completed:
-  * Don't write to the database via the [Admin API](/gateway/admin-api).
+  * Don't write to the database via the [Admin API](/admin-api/).
   * Don't operate on the database directly.
-  * Don't update configuration through [Kong Manager](/kong-manager/), 
+  * Don't update configuration through [Kong Manager](/gateway/kong-manager/), 
   [decK](/deck/), or the [kong config CLI](/gateway/cli/#kong-config).
 * Review the compatibility between the new version Y and your existing platform. 
 Factors may include, but are not limited to:
