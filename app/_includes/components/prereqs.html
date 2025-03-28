@@ -4,6 +4,14 @@
 {% endif %}
 <div class="flex flex-col accordion prerequisites" {{ default_accordion }}data-multiple="false" data-test-id="prereqs">
 
+    {% if page.works_on contains 'konnect' %}
+      {% unless page.products contains 'gateway' %}
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
+          {% include prereqs/products/konnect-auth-only.md tier=include.tier %}
+        </div>
+      {% endunless %}
+    {% endif %}
+
     {% if prereqs.kubernetes.gateway_api %}
     <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
       {% include prereqs/kubernetes/gateway-api.md config=prereqs.kubernetes %}
