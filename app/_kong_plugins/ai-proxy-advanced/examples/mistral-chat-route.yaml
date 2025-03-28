@@ -5,25 +5,25 @@ description: 'Configure a chat route using the Mistral Tiny model with the OpenA
 weight: 900
 
 requirements:
-- Hugging Face account
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
+- Mistral account
 
 config:
   targets:
     - route_type: llm/v1/chat
       auth:
         header_name: Authorization
-        header_value: Bearer $MISTRAL_AI_KEY
+        header_value: Bearer ${key}
       model:
         provider: mistral
         name: mistral-tiny
         options:
           mistral_format: openai
           upstream_url: https://api.mistral.ai/v1/chat/completions
+
+variables:
+  key:
+    value: $MISTRAL_API_KEY
+    description: The API key to use to connect to Mistral.
 
 tools:
   - deck
