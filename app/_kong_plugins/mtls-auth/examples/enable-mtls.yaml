@@ -1,0 +1,24 @@
+description: Configure the plugin with a CA Certificate to enable mutual TLS authentication.
+
+title: Enable MTLS authentication
+
+weight: 900
+
+requirements:
+- You have created a [CA Certificate](/gateway/entities/ca-certificate/) and retrieved its ID.
+
+config:
+  ca_certificates:
+  - ${id}
+
+variables:
+  id:
+    value: $CA_CERTIFICATE_ID
+    description: The ID of the CA Certificate to use.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
