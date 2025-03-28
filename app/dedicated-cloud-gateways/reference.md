@@ -44,7 +44,6 @@ faqs:
       For many use cases requiring bidirectional communication—such as callbacks or dynamic interactions between the gateway and your upstream services—this limitation is a blocker. 
       For this reason, PrivateLink is not generally recommended for secure connectivity to your upstream services.
 
-
 related_resources:
   - text: Dedicated Cloud Gateways 
     url: /dedicated-cloud-gateways/
@@ -128,7 +127,9 @@ body:
           - base_rps: 100
   {% endcontrol_plane_request %}
 {% endcapture %}
+{{request | indent: 3}}
 <!--vale on -->
+
 ## Custom DNS
 {{site.konnect_short_name}} integrates domain name management and configuration with [Dedicated Cloud Gateways](/dedicated-cloud-gateways/).
 
@@ -190,8 +191,8 @@ To securely connect a Dedicated Cloud Gateway to your backend, you can inject a 
 
 1. Ensure the backend accepts a known token like an Authorization header.
 1. Attach the Request Transformer plugin to the Control Plane and Gateway Service that you want to secure:
-
 <!--vale off-->
+{% capture request %}
 {% control_plane_request %}
 url: /v2/control-planes/{controlPlaneId}/core-entities/services/{serviceId}/plugins
 method: POST
@@ -207,6 +208,8 @@ body:
       headers:
         - 'Authorization:Bearer ${secretTokenValue}'
 {% endcontrol_plane_request %}
+{% endcapture %}
+{{ request | indent:3 }}
 <!--vale on-->
 
 
