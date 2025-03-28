@@ -59,13 +59,13 @@ sequenceDiagram
     participant upstream as Upstream service
     activate client
     activate oauth
-    client->>oauth: request <br>access token
-    oauth->>client: generate <br> access token
+    client->>oauth: request access token
+    oauth->>client: generate access token
     activate kong
     client->>kong: send request with<br>access token
     deactivate client
     kong->>oauth: send access token <br>for verification
-    oauth->>kong: verify <br> access token
+    oauth->>kong: verify access token
     activate upstream
     kong->>upstream: send request with<br>access token
     upstream->>kong: response
