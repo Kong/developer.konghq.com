@@ -33,3 +33,6 @@ noname-security:
 
 salt:
   name: Salt Security
+
+dynatrace:
+  name: Dynatrace
