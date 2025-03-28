@@ -48,7 +48,7 @@ complete a mutual TLS handshake with {{site.base_gateway}}.
 
 The plugin validates the certificate provided against the configured CA list based on the
 requested Route or Service:
-* If the certificate is untrusted or expired, the response is `HTTP 401 TLS certificate failed verification`.
+* If the certificate is not trusted, or expired, the response is `HTTP 401 TLS certificate failed verification`.
 * If no valid certificate is provided (including HTTP requests), the response is `HTTP 401 No required TLS certificate was sent`.  
   However, if `config.anonymous` is set, the request is allowed using the anonymous consumer.
 
