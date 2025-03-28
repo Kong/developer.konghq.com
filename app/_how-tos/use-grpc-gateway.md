@@ -119,21 +119,17 @@ entities:
 ## 5. Validate
 
 To validate that the configuration is working as expected, you can:
-* Send a `GET` request to `/v1/messages/` or `/v1/messages/legacy/`, with a name in the URL
-   
-   For example:
-   {% validation request-check %}
-   url: '/v1/messages/MyName'
-   status_code: 200
-   {% endvalidation %}
-* Send a `POST` request to `/v1/messages/` with a name in the request body
-   
-   For example:
-   {% validation request-check %}
-   method: POST
-   url: '/v1/messages/'
-   body:
-     name: MyName
-   status_code: 200
-   {% endvalidation %}
+* Send a `GET` request to `/v1/messages/` or `/v1/messages/legacy/`, with a name in the URL:
+  {% validation request-check %}
+  url: '/v1/messages/MyName'
+  status_code: 200
+  {% endvalidation %}
+* Send a `POST` request to `/v1/messages/` with a name in the request body:
+  {% validation request-check %}
+  method: POST
+  url: '/v1/messages/'
+  body:
+    name: MyName
+  status_code: 200
+  {% endvalidation %}
 
