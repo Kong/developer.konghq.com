@@ -190,6 +190,12 @@ app/_how-tos/set-up-dynatrace-with-otel.md:
   - app/_hub/kong-inc/opentelemetry/how-to/_dynatrace.md
 app/_how-tos/use-langchain-with-ai-proxy.md:
   - app/_src/gateway/ai-gateway/llm-library-integration-guides/langchain.md
+app/_how-tos/authenticate-consumers-with-key-auth-enc.md:
+  - app/_hub/kong-inc/key-auth-enc/overview/_index.md
+app/_how-tos/use-grpc-gateway.md:
+  - app/_hub/kong-inc/grpc-gateway/how-to/_index.md
+app/_how-tos/use-grpc-web.md:
+  - app/_hub/kong-inc/grpc-web/how-to/_index.md
 
 ## KIC
 app/_how-tos/proxy-http-traffic-kic.md:
@@ -437,6 +443,10 @@ app/_kong_plugins/jwt-signer/changelog.md:
   - app/_hub/kong-inc/jwt-signer/_changelog.md
 app/_kong_plugins/jwt-signer/index.md:
   - app/_hub/kong-inc/jwt-signer/overview/_index.md
+app/_kong_plugins/key-auth-enc/index.md:
+  - app/_hub/kong-inc/key-auth-enc/overview/_index.md
+app/_kong_plugins/key-auth-enc/changelog.md:
+  - app/_hub/kong-inc/key-auth-enc/_changelog.md
 app/_kong_plugins/ldap-auth/index.md:
   - app/_hub/kong-inc/ldap-auth/overview/_index.md
 app/_kong_plugins/ldap-auth/changelog.md:
@@ -455,10 +465,23 @@ app/_includes/plugins/ldap/usage.md:
   - app/_hub/kong-inc/ldap-auth/overview/_index.md
 app/_includes/plugins/upstream-headers.md:
   - app/_includes/md/plugins-hub/upstream-headers.md
+app/_kong_plugins/datadog/changelog.md:
+  - app/_hub/kong-inc/datadog/_changelog.md
+app/_kong_plugins/datadog/index.md:
+  - app/_hub/kong-inc/datadog/overview/_index.md
 app/_kong_plugins/loggly/index.md:
   - app/_hub/kong-inc/loggly/overview/_index.md
 app/_kong_plugins/loggly/changelog.md:
   - app/_hub/kong-inc/loggly/_changelog.md
+app/_kong_plugins/grpc-gateway/index.md:
+  - app/_hub/kong-inc/grpc-gateway/overview/_index.md
+app/_kong_plugins/grpc-web/index.md:
+  - app/_hub/kong-inc/grpc-web/overview/_index.md
+app/_kong_plugins/grpc-gateway/changelog.md:
+  - app/_hub/kong-inc/grpc-gateway/_changelog.md
+app/_kong_plugins/grpc-web/changelog.md:
+  - app/_hub/kong-inc/grpc-web/_changelog.md
+
 
 # Konnect
 
@@ -640,8 +663,9 @@ app/serverless-gateways/index.md:
 app/_landing_pages/gateway-manager.yaml:
   - app/konnect/gateway-manager/index.md
 
-app/dedicated-cloud-gateways/custom-dns.md:
-  - app/konnect/gateway-manger/serverless-gateways/custom-dns.md
+app/dedicated-cloud-gateways/reference.md:
+  - app/konnect/gateway-manager/dedicated-cloud-gateways/provision-cloud-gateway.md
+  - app/konnect/gateway-manager/dedicated-cloud-gateways/securing-backend-traffic.md
   - app/konnect/gateway-manager/dedicated-cloud-gateways/custom-dns.md
 
 app/gateway-manager/control-plane-groups.md:
@@ -661,6 +685,10 @@ app/service-catalog-integrations.yaml:
 app/_landing_pages/dedicated-cloud-gateways.yaml:
   - app/konnect/gateway-manager/dedicated-cloud-gateways/
 
+
+
+app/dedicated-cloud-gateways/azure-peering.md:
+  - app/konnect/gateway-manager/dedicated-cloud-gateways/azure-peering.md
 app/service-catalog/integrations/datadog.md:
   - app/konnect/service-catalog/integrations/datadog.md
 app/service-catalog/integrations/github.md:

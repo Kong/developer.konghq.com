@@ -1,0 +1,20 @@
+description: |
+  Configure the plugin to call a Protobuf definition named `hello-gateway.proto`.
+  For a full how-to guide, see [Use the gRPC-Gateway plugin to proxy HTTP requests to a gRPC service](/how-to/use-grpc-gateway).
+
+title: Use a Protobuf definition
+
+weight: 900
+
+requirements: 
+  - You have created a Protobuf definition
+
+config: 
+  proto: path/to/hello-gateway.proto
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
