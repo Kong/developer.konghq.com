@@ -1,5 +1,3 @@
-## Overview
-
 {% assign plugin = include.plugin %}
 {% assign provider = include.params.provider %}
 {% assign route_type = include.params.route_type %}
