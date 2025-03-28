@@ -9,7 +9,7 @@ The upgrade must be carried out in two phases:
 
 1. Upgrade the CP according to the recommendations in the section [Traditional Mode](#traditional-mode), 
 while DP nodes are still serving API requests.
-2. Uupgrade DP nodes using the recommendations from the section [DB-less Mode](#db-less-mode). 
+2. Upgrade DP nodes using the recommendations from the section [DB-less Mode](#db-less-mode). 
 Point the new DP nodes to the new CP to avoid version conflicts.
 
 The role decoupling feature between CP and DP enables DP nodes to serve API requests while upgrading CP. 
