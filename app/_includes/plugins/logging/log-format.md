@@ -2,6 +2,13 @@
 
 {% new_in 3.7 %} Every request is logged separately in a JSON object, separated by a new line `\n`, with the following format:
 
+<details>
+<summary>
+<b>Expand this block to see a sample log object</b>
+</summary>
+
+{% capture log %}
+
 ```json
 {
     "response": {
@@ -101,3 +108,11 @@
     }
 }
 ```
+{:.no-copy-code}
+{% endcapture %}
+
+
+{{ log | markdownify }}
+
+</details>
+

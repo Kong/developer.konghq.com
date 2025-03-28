@@ -31,7 +31,7 @@ categories:
 
 This plugin lets you log metrics for a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/) to a local [Datadog agent](https://docs.datadoghq.com/agent/basic_agent_usage/).
 
-## Queueing
+## Queuing
 
 The Datadog plugin uses a queue to decouple the production and
 consumption of data. This reduces the number of concurrent requests

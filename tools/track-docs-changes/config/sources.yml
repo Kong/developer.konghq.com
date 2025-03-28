@@ -494,6 +494,10 @@ app/_kong_plugins/mtls-auth/index.md:
   - app/_hub/kong-inc/mtls-auth/overview/_index.md
 app/_kong_plugins/mtls-auth/changelog.md:
   - app/_hub/kong-inc/mtls-auth/_changelog.md
+app/_kong_plugins/http-log/index.md:
+  - app/_hub/kong-inc/http-log/overview/_index.md
+app/_kong_plugins/http-log/changelog.md:
+  - app/_hub/kong-inc/http-log/_changelog.md
 
 # Konnect
 
