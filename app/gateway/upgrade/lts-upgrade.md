@@ -16,3 +16,7 @@ related_resources:
     url: /gateway/breaking-changes/
 
 ---
+
+
+@TODO: LTS Upgrade content
+pull content from https://docs.konghq.com/gateway/latest/lts-upgrade/

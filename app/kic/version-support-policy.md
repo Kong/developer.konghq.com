@@ -16,3 +16,7 @@ related_resources:
   - text: "{{site.base_gateway}} version support"
     url: /gateway/version-support-policy/
 ---
+
+
+@TODO:
+pull content from https://docs.konghq.com/kubernetes-ingress-controller/latest/reference/version-compatibility/

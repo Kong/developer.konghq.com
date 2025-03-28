@@ -580,6 +580,8 @@ app/gateway/db-less-mode.md:
   - app/_src/gateway/production/deployment-topologies/db-less-and-declarative-config.md
 app/gateway/upgrade/blue-green.md:
   - app/_src/gateway/upgrade/blue-green.md
+app/gateway/upgrade/index.md:
+  - app/_src/gateway/upgrade/index.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
