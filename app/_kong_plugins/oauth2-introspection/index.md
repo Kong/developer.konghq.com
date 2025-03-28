@@ -49,10 +49,36 @@ this plugin, such as restricting access by scope.
 1. The client uses the third-party OAuth 2.0 server to generate an access token, and uses it to make a request through {{site.base_gateway}}.
 1. The third-party OAuth 2.0 server leverages the OAuth 2.0 Introspection plugin to validate the client's access token.
 1. If the token is valid, {{site.base_gateway}} proxies the request to the upstream service, which sends the response back to the client through {{site.base_gateway}}.
-
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+    autonumber
+    participant client as Client
+    participant oauth as OAuth 2.0 server
+    participant kong as {{site.base_gateway}} with <br> Introspection plugin
+    participant upstream as Upstream service
+    activate client
+    activate oauth
+    client->>oauth: request <br>access token
+    oauth->>client: generate <br> access token
+    activate kong
+    client->>kong: send request with<br>access token
+    deactivate client
+    kong->>oauth: send access token <br>for verification
+    oauth->>kong: verify <br> access token
+    activate upstream
+    kong->>upstream: send request with<br>access token
+    upstream->>kong: response
+    deactivate upstream
+    activate client
+    kong->>client: response
+    deactivate kong
+    deactivate client
+{% endmermaid %}
+<!--vale on-->
 ## Associate the response with a Consumer
 
-To associate the introspection response resolution with a {{site.base_gateway}} Consumer, provision the Consumer with the same `username` returned by the introspection endpoint response.
+To associate the introspection response resolution with a {{site.base_gateway}} Consumer, provision the Consumer with the same `username` as the one returned by the introspection endpoint response.
 
 ## Upstream headers
 
@@ -79,6 +105,6 @@ Additionally, any claims specified in `config.custom_claims_forward` are also fo
 
 {:.info}
 > **Note:** If authentication fails, the plugin doesn't set any `X-Credential-*` headers.
-It appends `X-Anonymous-Consumer: true` and sets the `anonymous` consumer instead.
+It appends `X-Anonymous-Consumer: true` and sets the `anonymous` Consumer instead.
 
 
