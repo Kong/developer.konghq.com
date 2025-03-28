@@ -473,6 +473,11 @@ app/_kong_plugins/loggly/index.md:
   - app/_hub/kong-inc/loggly/overview/_index.md
 app/_kong_plugins/loggly/changelog.md:
   - app/_hub/kong-inc/loggly/_changelog.md
+app/_kong_plugins/opentelemetry/index.md:
+  - app/_hub/kong-inc/opentelemetry/overview/_index.md
+  - app/_hub/kong-inc/opentelemetry/how-to/_spans.md
+app/_kong_plugins/opentelemetry/changelog.md:
+  - app/_hub/kong-inc/opentelemetry/_changelog.md
 app/_kong_plugins/grpc-gateway/index.md:
   - app/_hub/kong-inc/grpc-gateway/overview/_index.md
 app/_kong_plugins/grpc-web/index.md:
@@ -481,7 +486,6 @@ app/_kong_plugins/grpc-gateway/changelog.md:
   - app/_hub/kong-inc/grpc-gateway/_changelog.md
 app/_kong_plugins/grpc-web/changelog.md:
   - app/_hub/kong-inc/grpc-web/_changelog.md
-
 
 # Konnect
 
