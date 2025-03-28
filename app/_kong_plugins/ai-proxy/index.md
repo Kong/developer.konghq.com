@@ -52,6 +52,10 @@ related_resources:
 {% include plugins/ai-proxy/overview.md plugin=page.name params=site.data.plugins.ai-proxy.parameters %}
 {% include plugins/ai-proxy/formats.md plugin=page.name params=site.data.plugins.ai-proxy.parameters %}
 
+## Templating {% new_in 3.7 %}
+
+{% include plugins/ai-proxy/templating.md plugin=page.name params=site.data.plugins.ai-proxy.parameters %}
+
 {:.info}
 > Check out the [AI Gateway quickstart](/how-to/get-started-with-ai-gateway/) to get an AI proxy up and running within minutes!
 

@@ -1,21 +1,20 @@
-    {% assign plugin = include.plugin %}
-{% assign id = plugin | slugify %}
+{% assign plugin = include.plugin %}
 
 {% assign provider = include.params.provider %}
-{% assign provider_slug = provider | slugify %}
+{% assign provider_slug = provider | slugify | prepend: 'schema--' %}
 
 {% assign route_type = include.params.route_type %}
-{% assign route_type_slug = route_type | replace: '.', '-' %}
+{% assign route_type_slug = route_type | slugify | prepend: 'schema--' %}
 
 {% assign upstream_url = include.params.upstream_url %}
-{% assign upstream_url_slug = upstream_url | replace: '.', '-' %}
+{% assign upstream_url_slug = upstream_url | slugify | prepend: 'schema--' %}
 
 {% assign providers = site.data.plugins.ai-proxy.providers %}
 
 
 ## Request and response formats
 
-The plugin's [`{{ route_type }}`](/plugins/{{ id }}/reference/#{{ route_type_slug }}) should be set based on the target upstream endpoint and model, based on this capability matrix:
+The plugin's [`{{ route_type }}`](./reference/#{{ route_type_slug }}) should be set based on the target upstream endpoint and model, based on this capability matrix:
 
 {% include plugins/ai-proxy/tables/upstream-paths.html providers=providers %}
 
@@ -25,10 +24,10 @@ The following upstream URL patterns are used:
 
 {:.important}
 > While only the **Llama2** and **Mistral** models are classed as self-hosted, the target URL can be overridden for any of the supported providers.
-> For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same [`{{ upstream_url }}`](/plugins/{{ id }}/reference/#{{ upstream_url_slug }}) plugin option.
+> For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same [`{{ upstream_url }}`](./reference/#{{ upstream_url_slug }}) plugin option.
 
 ### Input formats
-Kong will mediate the request and response format based on the selected [`{{ provider }}`](/plugins/{{ id }}/reference/#{{ provider_slug }}) and [`{{ route_type }}`](/plugins/{{ id }}/reference/#{{ route_type_slug }}), as outlined in the table above.
+Kong will mediate the request and response format based on the selected [`{{ provider }}`](./reference/#{{ provider_slug }}) and [`{{ route_type }}`](./reference/#{{ route_type_slug }}), as outlined in the table above.
 
 The Kong AI Proxy accepts the following inputs formats, standardized across all providers. The `{{ route_type }}` must be configured respective to the required request and response format examples:
 

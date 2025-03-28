@@ -1,7 +1,6 @@
 ## Overview
 
 {% assign plugin = include.plugin %}
-{% assign id = plugin | slugify %}
 {% assign provider = include.params.provider %}
 {% assign route_type = include.params.route_type %}
 {% assign options = include.params.options %}
