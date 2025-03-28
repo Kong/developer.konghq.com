@@ -1,8 +1,8 @@
 {% capture code %}
 ```bash
-curl -1sLf "{{ site.links.direct }}/gateway-{{ page.release.major_minor_version }}/gpg.{{ include.gpg_key }}.key" |  gpg --dearmor | sudo tee /usr/share/keyrings/kong-gateway-{{ page.release.major_minor_version }}-archive-keyring.gpg > /dev/null
-curl -1sLf "{{ site.links.direct }}/gateway-{{ page.release.major_minor_version }}/config.deb.txt?distro=debian&codename=$(lsb_release -sc)" | sudo tee /etc/apt/sources.list.d/kong-gateway-{{ page.release.major_minor_version }}.list > /dev/null
-sudo apt-get update && sudo apt install -y kong-enterprise-edition={{page.release.ee_version}}
+curl -1sLf "{{ site.links.direct }}/gateway-{{ include.release.major_minor_version }}/gpg.{{ include.gpg_key }}.key" |  gpg --dearmor | sudo tee /usr/share/keyrings/kong-gateway-{{ include.release.major_minor_version }}-archive-keyring.gpg > /dev/null
+curl -1sLf "{{ site.links.direct }}/gateway-{{ include.release.major_minor_version }}/config.deb.txt?distro=debian&codename=$(lsb_release -sc)" | sudo tee /etc/apt/sources.list.d/kong-gateway-{{ include.release.major_minor_version }}.list > /dev/null
+sudo apt-get update && sudo apt install -y kong-enterprise-edition={{include.release.ee_version}}
 ```
 {% endcapture %}
 {{ code | markdownify }}

@@ -1,8 +1,8 @@
 {% capture code %}
 ```bash
-curl -1sLf "{{ site.links.direct }}/gateway-{{ page.release.major_minor_version }}/config.rpm.txt?distro=amzn&codename=$(rpm --eval '%{amzn}')" | sudo tee /etc/yum.repos.d/kong-gateway-{{ page.release.major_minor_version }}.repo > /dev/null
-sudo yum -q makecache -y --disablerepo='*' --enablerepo='kong-gateway-{{ page.release.major_minor_version }}'
-sudo yum install -y kong-enterprise-edition-{{page.release.ee_version}}
+curl -1sLf "{{ site.links.direct }}/gateway-{{ include.release.major_minor_version }}/config.rpm.txt?distro=amzn&codename=$(rpm --eval '%{amzn}')" | sudo tee /etc/yum.repos.d/kong-gateway-{{ include.release.major_minor_version }}.repo > /dev/null
+sudo yum -q makecache -y --disablerepo='*' --enablerepo='kong-gateway-{{ include.release.major_minor_version }}'
+sudo yum install -y kong-enterprise-edition-{{include.release.ee_version}}
 ```
 {% endcapture %}
 {{ code | markdownify }}
