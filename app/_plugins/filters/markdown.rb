@@ -3,6 +3,8 @@
 module Jekyll
   module CustomFilters
     def markdown(input)
+      raise 'Could not find converter instance' unless @context.registers[:site]
+
       r = @context.registers[:site].find_converter_instance(
         Jekyll::Converters::Markdown
       ).convert(input.to_s)

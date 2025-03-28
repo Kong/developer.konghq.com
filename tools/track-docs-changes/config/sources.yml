@@ -192,8 +192,22 @@ app/_how-tos/use-langchain-with-ai-proxy.md:
   - app/_src/gateway/ai-gateway/llm-library-integration-guides/langchain.md
 
 ## KIC
-app/_how-tos/proxy-http-traffic-kic.md:
+app/_how-tos/kic-proxy-http.md:
   - app/_src/kubernetes-ingress-controller/guides/services/http.md
+app/_how-tos/kic-proxy-grpc.md:
+  - app/_src/kubernetes-ingress-controller/guides/services/grpc.md
+app/_how-tos/kic-proxy-grpc-http.md:
+  - app/_src/kubernetes-ingress-controller/guides/services/grpc.md
+app/_how-tos/kic-proxy-tcp-port.md:
+  - app/_src/kubernetes-ingress-controller/guides/services/tcp.md
+app/_how-tos/kic-proxy-tcp-sni.md:
+  - app/_src/kubernetes-ingress-controller/guides/services/tcp.md
+app/_how-tos/kic-proxy-udp.md:
+  - app/_src/kubernetes-ingress-controller/guides/services/udp.md
+app/_how-tos/kic-external-service.md:
+  - app/_src/kubernetes-ingress-controller/guides/services/external.md
+app/_how-tos/kic-redirect-to-https.md:
+  - app/_src/kubernetes-ingress-controller/guides/services/https-redirect.md
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:

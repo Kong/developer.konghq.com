@@ -3,7 +3,7 @@
 
 {% capture details_content %}
 
-This how-to requires some additional resources to be created in your cluster.
+This how-to requires some Kubernetes services to be available in your cluster. These services will be used by the resources created in this how-to.
 
 ```bash{% for service in include.data.services %}
 kubectl apply -f {{ site.links.web }}/manifests/kic/{{ service.name }}-service.yaml -n kong
