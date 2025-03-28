@@ -486,6 +486,10 @@ app/_kong_plugins/grpc-gateway/changelog.md:
   - app/_hub/kong-inc/grpc-gateway/_changelog.md
 app/_kong_plugins/grpc-web/changelog.md:
   - app/_hub/kong-inc/grpc-web/_changelog.md
+app/_kong_plugins/oauth2-introspection/index.md:
+  - app/_hub/kong-inc/oauth2/overview/_index.md
+app/_kong_plugins/oauth2-introspection/changelog.md:
+  - app/_hub/kong-inc/oauth2/_changelog.md
 app/_kong_plugins/mtls-auth/index.md:
   - app/_hub/kong-inc/mtls-auth/overview/_index.md
 app/_kong_plugins/mtls-auth/changelog.md:
