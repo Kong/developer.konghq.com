@@ -4872,6 +4872,9 @@ components:
           description: Unix epoch when the resource was last updated.
           type: integer
           nullable: true
+        x5t:
+          type: string
+          nullable: true
       example:
         id: d958f66b-8e99-44d2-b0b4-edd5bbf24658
         jwk: '{"alg":"RSA",  "kid": "42",  ...}'
@@ -5020,6 +5023,9 @@ components:
           description: Unix epoch when the resource was last updated.
           type: integer
           nullable: true
+        x5t:
+          type: string
+          nullable: true
       example:
         id: d958f66b-8e99-44d2-b0b4-edd5bbf24658
         jwk: '{"alg":"RSA",  "kid": "42",  ...}'
@@ -5123,6 +5129,7 @@ components:
           description: 'The configuration properties for the Plugin which can be found on the plugins documentation page in the [Kong Hub](https://docs.konghq.com/hub/).'
           type: object
           additionalProperties: true
+          nullable: true
         consumer:
           description: 'If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.'
           type: object
@@ -5269,6 +5276,7 @@ components:
           description: 'The configuration properties for the Plugin which can be found on the plugins documentation page in the [Kong Hub](https://docs.konghq.com/hub/).'
           type: object
           additionalProperties: true
+          nullable: true
         consumer:
           description: 'If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.'
           type: object
@@ -5802,6 +5810,7 @@ components:
           description: The upstream server port.
           type: integer
           default: 80
+          nullable: true
         protocol:
           description: The protocol used to communicate with the upstream.
           type: string
@@ -5817,6 +5826,7 @@ components:
             - udp
             - ws
             - wss
+          nullable: true
         read_timeout:
           description: The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server.
           type: integer
