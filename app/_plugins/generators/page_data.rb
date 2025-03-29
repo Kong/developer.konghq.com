@@ -17,7 +17,7 @@ module Jekyll
         Data::Seo.new(site:, page:).process
         Data::SearchTags::Base.make_for(site:, page:).process
         Data::MinVersion.new(site:, page:).process
-        Data::AddIndexToRelatedResources.new(site:, page:).process
+        Data::AddAllDocIndices.new(site:, page:).process
       end
     end
 
@@ -30,7 +30,7 @@ module Jekyll
         Data::Seo.new(site:, page:).process
         Data::SearchTags::Base.make_for(site:, page:).process
         Data::MinVersion.new(site:, page:).process
-        Data::AddIndexToRelatedResources.new(site:, page:).process
+        Data::AddAllDocIndices.new(site:, page:).process
       end
     end
   end
