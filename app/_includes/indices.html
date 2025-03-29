@@ -1,16 +1,16 @@
 
 {% for group in groups %}
-  <div class="flex flex-col gap-4 heading-section">
+  <div class="flex flex-col gap-4 heading-section  card p-5 rounded-md">
       <h2 id="{{group.title | slugify }}">{{ group.title }}</h2>
 
       <div class="content">
-        <ul class="list-none ml-0 grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <ul class="list-none ml-0 grid grid-cols-1 md:grid-cols-3 gap-4">
           {% for page in group.pages %}
             {% assign title = page.title %}
             {% if page.short_title %}{% assign title = page.short_title %}{% endif %}
             <li class="flex flex-col gap-1">
               <a class="text-brand-saturated !mb-0 text-base tracking-[-.01em]" href="{{ page.url }}">{{ title }}</a>
-              <p class="text-xs text-terciary line-clamp-3">
+              <p class="text-xs text-terciary">
                 {{ page.description }}
               </p>
             </li>
