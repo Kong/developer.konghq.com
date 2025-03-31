@@ -49,7 +49,7 @@ A {{site.base_gateway}} upgrade requires two phases of work: preparing for the u
 
 ### Preparation phase
 
-1. Review version compatibility between your platform version and the version of {{site.kong_gateway}} that you are upgrading to:
+1. Review version compatibility between your platform version and the version of {{site.base_gateway}} that you are upgrading to:
     * [OS version](/gateway/version-support-policy/)
     * [Kubernetes version and Helm prerequisites](/kic/version-support-policy/)
     * [Database and dependency versions](/gateway/third-party-support/)
@@ -96,7 +96,7 @@ Factors include, but are not limited to:
 
 You should discuss the upgrade process thoroughly and carefully with Kong's support engineers before you take any action.
 
-We encourage you to stay updated with {{site.base_gateway}} releases, as that helps maintain a smooth upgrade path. 
+We encourage you to stay up-to-date with {{site.base_gateway}} releases, as that helps maintain a smooth upgrade path. 
 The smaller the version gap is, the less complex the upgrade process becomes.
 
 ### Guaranteed upgrade paths
@@ -223,7 +223,7 @@ Until the upgrade is completed:
 * Review the compatibility between the new version Y and your existing platform. 
 Factors may include, but are not limited to:
   * [OS version](/gateway/version-support-policy/#supported-versions)
-  * [Kubernetes version and Helm prerequisites](/kic/version-support-polic/)
+  * [Kubernetes version and Helm prerequisites](/kic/version-support-policy/)
   * [Hardware resources](/gateway/performance/resource-sizing-guidelines/)
   * [Database and dependency versions](/gateway/third-party-support/)
 * Carefully review all [changelogs](/gateway/changelog/) starting from your current version X,

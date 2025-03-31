@@ -12,6 +12,6 @@ The database-native tools are robust and can restore data instantly compared to 
 In case of data corruption, try to do a database-level restore first. 
 Otherwise, bootstrap a new database and use declarative tools to restore configuration from backup files.
 
-Review the [Backup and Restore](/gateway/upgrade/backup-and-restore/) guide to 
+Review the [Backup and restore](/gateway/upgrade/backup-and-restore/) guide to 
 prepare backups of your configuration.
 If you run into any issues and need to roll back, you can also reference that guide to restore your old data store.

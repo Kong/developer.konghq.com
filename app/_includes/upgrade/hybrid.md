@@ -7,9 +7,9 @@ As Hybrid mode requires the minor version of the CP to be no less than that of t
 
 The upgrade must be carried out in two phases:
 
-1. Upgrade the CP according to the recommendations in the section [Traditional Mode](#traditional-mode), 
+1. Upgrade the CP according to the recommendations in the section [Traditional mode](#traditional-mode), 
 while DP nodes are still serving API requests.
-2. Upgrade DP nodes using the recommendations from the section [DB-less Mode](#db-less-mode). 
+2. Upgrade DP nodes using the recommendations from the section [DB-less mode](#db-less-mode). 
 Point the new DP nodes to the new CP to avoid version conflicts.
 
 The role decoupling feature between CP and DP enables DP nodes to serve API requests while upgrading CP. 
@@ -24,7 +24,7 @@ See the following sections for a breakdown of the options for Hybrid mode deploy
 #### Control Planes
 
 CP nodes must be upgraded before DP nodes. CP nodes serve an admin-only role and require database support. 
-So, you can select from the same upgrade strategies nominated for Traditional mode (dual-cluster or in-place), 
+You can select from the same upgrade strategies nominated for Traditional mode (dual-cluster or in-place), 
 as described in figure 2 and figure 3 respectively.
 
 Upgrading the CP nodes using the [dual-cluster strategy](/gateway/upgrade/dual-cluster/):
