@@ -1,6 +1,6 @@
 ---
 title: Build a custom Docker image
-description: "How to build and customize a custom Docker image "
+description: "How to build a custom Docker image "
 
 products:
     - gateway
@@ -23,9 +23,9 @@ prereqs:
   inline:
     - title: Download the {{site.base_gateway}} entry-point script.
       content: |
-        1. Download the {{site.base_gateway}} entry-point [script](https://raw.githubusercontent.com/Kong/docker-kong/master/docker-entrypoint.sh):
+        1. Download the {{site.base_gateway}} [entry-point script](https://raw.githubusercontent.com/Kong/docker-kong/master/docker-entrypoint.sh):
             ```sh
-            wget https://raw.githubusercontent.com/Kong/docker-kong/master/docker-entrypoint.sh
+            curl -O https://raw.githubusercontent.com/Kong/docker-kong/master/docker-entrypoint.sh
             ```
         2. Make the script exectuable
             ```sh
@@ -33,31 +33,24 @@ prereqs:
             ```
     - title: Download the {{site.base_gateway}} base image
       content: |
-        1. [Download](/gateway/install/#linux) the image for your desired operating system
-        2. Rename the file to `kong.deb` or `kong.rpm`
-    - title: Create a Dockerfile
-      content: | 
-        Create a Dockerfile in the working directory
-          ```
-          touch Dockerfile
-          ```
+        1. [Download](/gateway/install/#linux) the image for your desired operating system.
+        2. Rename the file to either `kong.deb` or `kong.rpm` depending on the pacakge.
 ---
 
 
 ## 1. Create a Dockerfile
 
+Create a Dockerfile using any of the following templates:
 
-{% navtabs %}
+{% navtabs "Dockerfile" %}
 {% navtab "Debian" %}
 ```
-FROM debian:latest
+cat <<EOF > Dockerfile
 
-ARG KONG_IMAGE
-ARG KONG_DEB_PATH="/tmp/kong.deb"
-
+FROM debian:bullseye-slim
+   
 COPY kong.deb /tmp/kong.deb
-
-# Install Kong from the .deb package and set up required permissions and symlinks
+   
 RUN set -ex; \
     apt-get update \
     && apt-get install --yes /tmp/kong.deb \
@@ -69,39 +62,30 @@ RUN set -ex; \
     && ln -s /usr/local/openresty/luajit/bin/luajit /usr/local/bin/lua \
     && ln -s /usr/local/openresty/nginx/sbin/nginx /usr/local/bin/nginx \
     && kong version
-
-# Copy the container entrypoint script into the image
+   
 COPY docker-entrypoint.sh /docker-entrypoint.sh
-# Set the user to run the container process
+   
 USER kong
-
-# Set the entrypoint script to run on container start
+   
 ENTRYPOINT ["/docker-entrypoint.sh"]
-
-# Expose ports used by Kong (Proxy, Admin API, Dev Portal, etc.)
+   
 EXPOSE 8000 8443 8001 8444 8002 8445 8003 8446 8004 8447
-
-# Define the system call signal used to stop the container
-
+   
 STOPSIGNAL SIGQUIT
-
-# Define a health check to determine container health
-
+   
 HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD kong health
-
-# Default command to run when the container starts
+   
 CMD ["kong", "docker-start"]
+EOF
 ```
 {% endnavtab %}
 {% navtab "RHEL" %}
 ```
-# Use the official Red Hat UBI 9.5 base image
+cat <<EOF > Dockerfile
 FROM registry.access.redhat.com/ubi9/ubi:9.5
-
-# Copy the Kong RPM package into the image
+   
 COPY kong.rpm /tmp/kong.rpm
-
-# Install Kong from the RPM package and set up required permissions and symlinks
+   
 RUN set -ex; \
     yum install -y /tmp/kong.rpm \
     && rm /tmp/kong.rpm \
@@ -111,29 +95,26 @@ RUN set -ex; \
     && ln -s /usr/local/openresty/luajit/bin/luajit /usr/local/bin/lua \
     && ln -s /usr/local/openresty/nginx/sbin/nginx /usr/local/bin/nginx \
     && kong version
-
-# Copy the container entrypoint script into the image
+   
 COPY docker-entrypoint.sh /docker-entrypoint.sh
-
-# Set the user to run the container process
+   
 USER kong
-
-# Set the entrypoint script to run on container start
+   
 ENTRYPOINT ["/docker-entrypoint.sh"]
-
-# Expose ports used by Kong (Proxy, Admin API, Dev Portal, etc.)
+   
 EXPOSE 8000 8443 8001 8444 8002 8445 8003 8446 8004 8447
-
-# Define the system call signal used to stop the container
+   
 STOPSIGNAL SIGQUIT
-
-# Define a health check to determine container health
-HEALTHCHECK --interval=10s --timeout
-
+   
+HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD kong health
+   
+CMD ["kong", "docker-start"]
+EOF
 ```
 {% endnavtab %}
 {% navtab "Ubuntu" %}
 ```
+cat <<EOF > Dockerfile
 FROM ubuntu:24.04
    
 COPY kong.deb /tmp/kong.deb
@@ -163,6 +144,7 @@ STOPSIGNAL SIGQUIT
 HEALTHCHECK --interval=10s --timeout=10s --retries=10 CMD kong health
    
 CMD ["kong", "docker-start"]
+EOF
 ```
 {% endnavtab %}
 {% endnavtabs %}
