@@ -9,7 +9,7 @@ content_type: how_to
 
 tldr: 
   q: How do I build a custom {{site.base_gateway}} Docker image?
-  a: Create a Docker file and use [`docker build`](/how-to/docker-run) to build the image.
+  a: Create a Docker file
 
 works_on:
     - on-prem
