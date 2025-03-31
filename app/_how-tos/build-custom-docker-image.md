@@ -27,14 +27,14 @@ prereqs:
             ```sh
             curl -O https://raw.githubusercontent.com/Kong/docker-kong/master/docker-entrypoint.sh
             ```
-        2. Make the script exectuable
+        2. Make the script executable
             ```sh
             chmod +x docker-entrypoint.sh
             ```
     - title: Download the {{site.base_gateway}} base image
       content: |
         1. [Download](/gateway/install/#linux) the image for your desired operating system.
-        2. Rename the file to either `kong.deb` or `kong.rpm` depending on the pacakge.
+        2. Rename the file to either `kong.deb` or `kong.rpm` depending on the package.
 ---
 
 
