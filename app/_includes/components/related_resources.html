@@ -12,7 +12,7 @@
   {% elsif related_resources.layout.style == "list" %}
   <div class="flex gap-3 flex-col text-sm">
     {% for related_resource in related_resources.items %}
-      <div class="flex gap-2">
+      <div class="flex gap-2 items-center">
         <div class="flex w-5 h-5 text-brand shrink-0">{% include_svg related_resource.icon %}</div>
         <a href="{{ related_resource.url | liquify }}">{{ related_resource.text | liquify }}</a>
       </div>
