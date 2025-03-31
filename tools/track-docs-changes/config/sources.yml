@@ -527,6 +527,10 @@ app/konnect-logs.md:
   - app/konnect/gateway-manager/dedicated-cloud-gateways/data-plane-logs.md
 app/konnect-labels.md:
   - app/konnect/reference/labels.md
+app/gateway/konnect-sso.md:
+  - app/konnect/org-management/okta-idp.md
+  - app/dev-portal/access-and-approvals/sso.md
+  - app/konnect/org-management/sso.md
 
 
 # landing pages
