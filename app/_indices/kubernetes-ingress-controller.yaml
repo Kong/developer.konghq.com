@@ -2,6 +2,7 @@ title: KIC Index File
 sections:
   - title: Some KIC Pages
     items:
+      - path: /kubernetes-ingress-controller/
       - path: /kubernetes-ingress-controller/**/*
     auto_exclude: true
   - title: Routing
