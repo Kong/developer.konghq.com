@@ -19,6 +19,10 @@ plugins:
 breadcrumbs:
   - /gateway/
   - /gateway/rate-limiting/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 All rate limiting plugins support some subset of the following strategies:

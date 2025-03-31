@@ -4,7 +4,9 @@ metadata:
   description: This page is an introduction to the AI providers available in {{site.base_gateway}}.
   products:
     - gateway
-
+  works_on:
+    - on-prem
+    - konnect
 rows:
   - header:
       type: h1

@@ -12,6 +12,10 @@ metadata:
       url: /secure-apis/
   products:
     - gateway
+
+  works_on:
+  - on-prem
+  - konnect
 rows:
   - header:
       type: h1

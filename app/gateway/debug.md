@@ -18,6 +18,10 @@ related_resources:
     url: /gateway/logs/
   - text: "{{site.base_gateway}} audit logs"
     url: /gateway/audit-logs/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 @todo

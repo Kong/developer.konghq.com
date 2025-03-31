@@ -12,6 +12,10 @@ products:
 related_resources:
   - text: Certificate entity
     url: /gateway/entities/certificate/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 @TODO 

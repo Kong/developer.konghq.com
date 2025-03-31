@@ -18,6 +18,9 @@ plugins:
 
 breadcrumbs:
   - /gateway/networking/dns-config-reference/
+
+works_on:
+  - on-prem
 ---
 
 {{site.base_gateway}} provides Kong Manager, which must be able to interact with the Admin API. This application is subject to security restrictions enforced by browsers, and Kong must send appropriate information to browsers in order for it to function properly.

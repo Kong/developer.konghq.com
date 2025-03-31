@@ -11,6 +11,10 @@ description: placeholder
 related_resources:
   - text: Plugins
     url: /plugins/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 @todo

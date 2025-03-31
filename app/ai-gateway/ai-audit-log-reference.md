@@ -23,6 +23,9 @@ related_resources:
   - text: "{{site.base_gateway}} logs"
     url: /gateway/logs/
 
+works_on:
+  - on-prem
+  - konnect
 ---
 
 Kong AI Gateway provides a standardized logging format for [AI plugins](/plugins/?category=ai), enabling the emission of analytics events and facilitating the aggregation of AI usage analytics across various providers.

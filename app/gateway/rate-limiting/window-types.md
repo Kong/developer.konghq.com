@@ -21,6 +21,10 @@ products:
 breadcrumbs:
   - /gateway/
   - /gateway/rate-limiting/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 The Rate Limiting Advanced, AI Rate Limiting Advanced, and GraphQL Rate Limiting Advanced plugins support the following window types:

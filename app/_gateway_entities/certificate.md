@@ -38,6 +38,11 @@ faqs:
     a: Certificates handle SSL/TLS termination for encrypted requests and [CA Certificates](/gateway/entities/ca-certificate/) validate client or server certificates.
   - q: Is the Certificate entity used in {{site.konnect_short_name}} for data plane nodes as well?
     a: No, the data plane nodes use a [different certificate](/api/konnect/control-planes-config/).
+
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 ## What is a Certificate?

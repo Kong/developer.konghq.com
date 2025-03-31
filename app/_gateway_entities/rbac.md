@@ -29,6 +29,9 @@ related_resources:
 
 api_specs:
     - gateway/admin-ee
+
+works_on:
+  - on-prem
 ---
 
 ## What is RBAC?

@@ -11,6 +11,9 @@ min_version:
 
 description: placeholder
 
+works_on:
+  - on-prem
+  - konnect
 ---
 
 @todo

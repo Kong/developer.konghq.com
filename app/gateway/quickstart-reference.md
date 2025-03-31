@@ -21,6 +21,10 @@ related_resources:
     url: /how-to/get-started-with-gateway/
   - text: Kong AI Gateway
     url: /ai-gateway/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 Kong offers a quickstart script that allows you to easily run a local instance of the latest version of {{site.base_gateway}} for testing purposes.

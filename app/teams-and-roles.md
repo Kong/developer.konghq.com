@@ -6,6 +6,9 @@ layout: reference
 products:
     - gateway
 
+works_on:
+  - konnect
+
 description: placeholder
 
 related_resources:

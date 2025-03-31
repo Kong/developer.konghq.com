@@ -26,6 +26,9 @@ faqs:
     a: In hybrid mode, the license file must be deployed to each control plane and data plane node. As long as you deploy the License with the [`/licenses` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-licenses), the control plane automatically applies the License to its data plane nodes. 
   - q: What happens to the license file in traditional mode when there are no separate control planes? 
     a: The license file must be manually deployed to each node running {{site.base_gateway}}.
+
+works_on:
+  - on-prem
 ---
 
 ## What is a License?

@@ -22,6 +22,9 @@ related_resources:
   - text: Common Vulnerability Scoring System
     url: https://www.first.org/cvss/
 
+works_on:
+  - on-prem
+  - konnect
 ---
 
 {{site.base_gateway}} is primarily delivered as [DEB, RPM, and APK](/gateway/version-support-policy/#supported-versions) installable artifacts. 

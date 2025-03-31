@@ -16,6 +16,10 @@ related_resources:
     url: /gateway/hybrid-mode/
   - text: Deployment topologies
     url: /gateway/deployment-topologies/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 @todo

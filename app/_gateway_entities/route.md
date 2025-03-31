@@ -45,6 +45,9 @@ api_specs:
     - gateway/admin-ee
     - konnect/control-planes-config
 
+works_on:
+  - on-prem
+  - konnect
 ---
 
 ## What is a Route? 

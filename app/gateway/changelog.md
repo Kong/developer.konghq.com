@@ -14,6 +14,9 @@ related_resources:
   - text: "{{site.base_gateway}} breaking changes"
     url: /gateway/breaking-changes/
 
+works_on:
+  - on-prem
+  - konnect
 ---
 
 @todo
