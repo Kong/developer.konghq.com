@@ -61,6 +61,7 @@ Before you configure SSO in {{site.konnect_short_name}}, you must configure the 
 
 You can configure {{site.konnect_short_name}} SSO in the following ways:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Feature
@@ -78,6 +79,7 @@ rows:
     api: "[`/portals/{portalId}/identity-providers`](/api/konnect/portal-management/v2/#/operations/create-portal-identity-provider)"
 
 {% endtable %}
+<!--vale on-->
 
 {:.info}
 > **1:** When you configure the organization login path, enter a unique string that will be used in the URL your users use to log in. For example: `examplepath`.
@@ -114,6 +116,7 @@ When you configure SSO for the {{site.konnect_short_name}} platform and Dev Port
 
 After you configure {{site.konnect_short_name}} SSO settings in your IdP, you can configure team mappings with the following:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Feature
@@ -131,6 +134,7 @@ rows:
     api: "[`/portals/{portalId}/identity-provider/team-group-mappings`](/api/konnect/portal-management/v2/#/operations/update-portal-team-group-mappings)"
 
 {% endtable %}
+<!--vale on-->
 
 When you configure team mappings for the {{site.konnect_short_name}} org, keep the following in mind:
 * Each {{site.konnect_short_name}} team can be mapped to **one** IdP group. You must have at least one group mapped to save configuration changes.
