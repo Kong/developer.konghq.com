@@ -46,6 +46,11 @@ faqs:
 schema:
     api: gateway/admin-ee
     path: /schemas/Consumer-Group
+
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 ## What is a Consumer Group?

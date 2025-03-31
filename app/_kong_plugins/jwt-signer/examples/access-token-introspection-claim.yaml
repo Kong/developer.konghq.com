@@ -1,0 +1,16 @@
+description: 'Specifies the claim/property in access token introspection results (JSON) to be verified against values of [`config.access_token_introspection_scopes_required`](/plugins/jwt-signer/reference/#schema--config-access-token-introspection-scopes-required).'
+
+title: 'Specify access token introspection claim/property'
+
+weight: 900
+
+config:
+  access_token_introspection_scopes_claim:
+  - scope
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

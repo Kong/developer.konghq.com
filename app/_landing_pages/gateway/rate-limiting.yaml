@@ -6,6 +6,9 @@ metadata:
     - /rate-limiting/
   products:
     - gateway
+  works_on:
+  - on-prem
+  - konnect
 rows:
   - header:
       type: h1

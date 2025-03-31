@@ -103,7 +103,7 @@ Provisioning a serverless gateway includes creating the serverless control plane
       - 'Content-Type: application/json'
       - 'Authorization: Bearer $KONNECT_TOKEN'
   body:
-      control_plane_id: $CONTROL_PLANE_OD
+      control_plane_id: $CONTROL_PLANE_ID
       control_plane_geo: us
       dataplane_groups: 
         - region: na

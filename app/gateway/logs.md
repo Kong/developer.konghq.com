@@ -18,8 +18,12 @@ related_resources:
     url: /gateway/debug/
   - text: "{{site.base_gateway}} audit logs"
     url: /gateway/audit-logs/
-  - text: "{{site.konnect_short_name}} audit logs"
-    url: /konnect-audit-logs/
+  - text: "{{site.konnect_short_name}} logs"
+    url: /konnect-logs/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 Logging in {{site.base_gateway}} allows you to see information, warnings, and errors about requests that are proxied by {{site.base_gateway}}.

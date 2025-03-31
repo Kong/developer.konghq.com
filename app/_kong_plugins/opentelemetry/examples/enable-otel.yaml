@@ -1,0 +1,22 @@
+description: "Enables the OTEL plugin with an endpoint for tracing and logs. It also adds the `X-Auth-Token` header in the HTTP request sent to the OTLP server."
+
+title: 'Enable the OTEL plugin'
+
+weight: 900
+
+requirements: 
+  - "An OpenTelemetry backend"
+  - "`tracing_instrumentations = all` and `tracing_sampling_rate = 1.0` set in the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/)."
+
+config:
+  traces_endpoint: http://localhost:4318/v1/traces
+  logs_endpoint: http://localhost:4318/v1/logs
+  headers:
+    X-Auth-Token: secret-token
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

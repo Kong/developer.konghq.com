@@ -37,6 +37,9 @@ related_resources:
     url: /how-to/configure-kong-manager-email/
 tags:
   - kong-manager
+
+works_on:
+  - on-prem
 ---
 
 

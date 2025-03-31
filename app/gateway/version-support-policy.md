@@ -23,6 +23,10 @@ related_resources:
     url: /gateway/third-party-support/
   - text: "{{site.konnect_short_name}} compatibility"
     url: /konnect-compatibility/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 Kong adopts a structured approach to versioning its products.

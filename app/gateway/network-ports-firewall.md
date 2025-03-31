@@ -18,6 +18,9 @@ related_resources:
     url: /gateway/traffic-control/proxying/
   - text: "{{site.base_gateway}} networking"
     url: /gateway/network/
+
+works_on:
+  - on-prem
 ---
 
 {{site.base_gateway}} needs port access for two main types of connections: traffic passing through the proxy and managing the {{site.base_gateway}} via the Admin API.

@@ -46,6 +46,9 @@ faqs:
 
 api_specs:
     - gateway/admin-ee
+
+works_on:
+  - on-prem
 ---
 
 ## What is a Workspace?

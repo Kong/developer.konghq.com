@@ -5,10 +5,15 @@ module Jekyll
     priority :low
 
     def generate(site)
+      site.data['indices'] = {}
       Dir.glob(File.join(site.source, '_indices/**/*.yaml')).each do |file|
         @seen = {}
         @sections = {}
-        site.pages << build_page(site, file)
+        page = build_page(site, file)
+
+        site.pages << page
+        slug = File.basename(file, File.extname(file))
+        site.data['indices'][slug] = page
       end
     end
 
@@ -23,7 +28,7 @@ module Jekyll
 
       page.data['title'] = index['title']
       page.data['layout'] = 'indices'
-      page.content = render(index, config_to_grouped_pages(site, index))
+      page.content = render(index, config_to_grouped_pages(site, index), site)
       page
     end
 
@@ -171,12 +176,12 @@ module Jekyll
       @template ||= File.read(File.expand_path('app/_includes/indices.html'))
     end
 
-    def render(index, groups)
+    def render(index, groups, site)
       context = {
         'index' => index,
         'groups' => groups
       }
-      Liquid::Template.parse(template).render(context)
+      Liquid::Template.parse(template).render(context, registers: { site: site })
     end
   end
 end

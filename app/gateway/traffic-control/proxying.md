@@ -21,6 +21,10 @@ related_resources:
 
 breadcrumbs:
   - /gateway/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 @todo

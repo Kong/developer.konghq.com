@@ -12,6 +12,10 @@ metadata:
       url: /secure-apis/
   products:
     - gateway
+
+  works_on:
+  - on-prem
+  - konnect
 rows:
   - header:
       type: h1
@@ -169,13 +173,13 @@ rows:
       - blocks:
         - type: card
           config:
-            title: "{{site.konnect_short_name}} audit logs"
+            title: "{{site.konnect_short_name}} logs"
             description: |
                Use audit logs to help you detect and respond to potential security incidents when they occur.
               
             icon: /assets/icons/audit.svg
             cta:
-              url: "/konnect-audit-logs/"
+              url: "/konnect-logs/"
       - blocks:
         - type: card
           config:

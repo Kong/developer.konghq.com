@@ -70,6 +70,10 @@ api_specs:
 schema:
     api: gateway/admin-ee
     path: /schemas/Consumer
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 ## What is a Consumer?

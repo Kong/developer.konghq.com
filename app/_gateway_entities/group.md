@@ -36,6 +36,10 @@ faqs:
       The Group entity works with the following authentication protocols: [Basic authentication](/plugins/basic-auth/), [LDAP authentication](/plugins/ldap-auth-advanced/), and [OpenID Connect (OIDC)](/plugins/openid-connect/). 
       
       Configuring an auth protocol to work with {{site.base_gateway}} and Kong Manager is done using `kong.conf`. For more information, review our guide on [Configuring LDAP with Kong Manager](/how-to/configure-ldap-with-kong-manager/).
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 ## What is a Group?

@@ -8,7 +8,7 @@
         <h3 class="font-semibold text-base leading-6">Package manager</h3>
 
 {%- assign include_path =  "install/gateway/linux/packages/" | append: include.os | append: ".html" -%}
-{% include {{include_path}} gpg_key=gpg_key %}
+{% include {{include_path}} gpg_key=gpg_key release=page.release %}
     </div>
 
     <div class="border-t border-primary/5"></div>

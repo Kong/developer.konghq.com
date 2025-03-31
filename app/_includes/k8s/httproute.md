@@ -48,7 +48,8 @@ echo "
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ name }}
+  name: {{ name }}{% unless namespace == '' %}
+  namespace: {{ namespace }}{% endunless %}
   annotations:{% if include.annotation_rewrite %}
     konghq.com/rewrite: '{{ include.annotation_rewrite }}'{% endif %}
     konghq.com/strip-path: 'true'

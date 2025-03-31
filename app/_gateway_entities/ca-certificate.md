@@ -33,6 +33,9 @@ schema:
     api: gateway/admin-ee
     path: /schemas/CA-Certificate
 
+works_on:
+  - on-prem
+  - konnect
 ---
 
 ## What is a CA Certificate?

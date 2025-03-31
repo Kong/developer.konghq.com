@@ -1,0 +1,39 @@
+description:  |
+  This plugin configuration does the following:
+  - Extracts the tracing context from: `b3`
+  - Injects the tracing context using the formats: `w3c`, `b3`, `jaeger`, `ot`, `aws`, `datadog`, `gcp`
+
+title: 'Multiple injection'
+
+weight: 900
+
+requirements: 
+  - "An OpenTelemetry backend"
+  - "`tracing_instrumentations = all` and `tracing_sampling_rate = 1.0` set in the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/)."
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config: 
+  traces_endpoint: http://localhost:4318/v1/traces
+  propagation:	
+    default_format: ot
+    extract: 
+    - b3
+    inject: 
+    - w3c
+    - b3
+    - jaeger
+    - ot
+    - aws
+    - datadog
+    - gcp
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

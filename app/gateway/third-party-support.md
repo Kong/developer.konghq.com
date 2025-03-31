@@ -21,6 +21,10 @@ related_resources:
     url: /gateway/breaking-changes/
   - text: "{{site.konnect_short_name}} compatibility"
     url: /konnect-compatibility/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 This page lists services used in day-to-day operation of {{site.base_gateway}} and the versions of these services that have been tested by Kong.

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tftp
+  labels:
+    app: tftp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tftp
+  template:
+    metadata:
+      labels:
+        app: tftp
+    spec:
+      containers:
+      - name: tftp
+        image: cilium/echoserver-udp:latest
+        args:
+        - --listen
+        - :9999
+        ports:
+        - containerPort: 9999
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tftp
+spec:
+  ports:
+  - port: 9999
+    name: tftp
+    protocol: UDP
+    targetPort: 9999
+  selector:
+    app: tftp
+  type: ClusterIP
