@@ -58,7 +58,7 @@ Create a [Dockerfile](https://docs.docker.com/reference/dockerfile/) using any o
 ```
 cat <<EOF > Dockerfile
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
    
 COPY kong.deb /tmp/kong.deb
    
@@ -73,6 +73,7 @@ RUN set -ex; \
     && ln -s /usr/local/openresty/luajit/bin/luajit /usr/local/bin/lua \
     && ln -s /usr/local/openresty/nginx/sbin/nginx /usr/local/bin/nginx \
     && kong version
+   
    
 COPY docker-entrypoint.sh /docker-entrypoint.sh
    
