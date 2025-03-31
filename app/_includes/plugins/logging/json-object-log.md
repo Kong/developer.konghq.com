@@ -1,5 +1,7 @@
 <!---shared with logging plugins: file-log, http-log, loggly, syslog, tcp-log, udp-log DOCS-1617 --->
 
+The following table describes each object in the log:
+
 {% table %}
 columns:
   - title: Log item

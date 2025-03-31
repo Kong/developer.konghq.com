@@ -1,7 +1,8 @@
 <!---shared with logging plugins: file-log, http-log, loggly, syslog, tcp-log, udp-log --->
 
-{% new_in 3.7 %} Every request is logged separately in a JSON object, separated by a new line `\n`, with the following format:
+Every request is logged separately in a JSON object, separated by a new line `\n`.
 
+<blockquote class="info">
 <details>
 <summary>
 <b>Expand this block to see a sample log object</b>
@@ -115,4 +116,5 @@
 {{ log | markdownify }}
 
 </details>
+</blockquote>
 
