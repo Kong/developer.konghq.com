@@ -15,7 +15,7 @@ works_on:
     - on-prem
 faqs:
   - q: What can I do with a {{site.base_gateway}} custom image?
-     a: You can use a custom image to specify certain settings, like custom [ports](/gateway/network-ports-firewall/) or [`kong.conf`](/gateway/manage-kong-conf/) parameters. This can be useful if your organization has certain requirements or other software that they use in conjunction with their API gateway. You can also use custom images in automation pipelines.
+    a: You can use a custom image to specify certain settings, like custom [ports](/gateway/network-ports-firewall/) or [`kong.conf`](/gateway/manage-kong-conf/) parameters. This can be useful if your organization has certain requirements or other software that they use in conjunction with their API gateway. You can also use custom images in automation pipelines.
 breadcrumbs:
     - /gateway/
 min_version:
@@ -41,6 +41,8 @@ prereqs:
 related_resources:
   - text: Run Docker images
     url: /how-to/run-docker-images/
+  - text: Install {{site.base_gateway}} using Docker Compose
+    url: /gateway/install/docker/
 next_steps:
   - text: Learn how to run custom images 
     url: /how-to/run-docker-images/
@@ -176,3 +178,4 @@ Validate that the image was built correctly using `docker run`:
 docker run -it --rm kong-image kong version
 ```
 
+If the image was built correctly, a Docker container will start and output the {{site.base_gateway}} enterprise version to the console. 
