@@ -2,10 +2,16 @@ title: KIC Index File
 sections:
   - title: Some KIC Pages
     items:
+      - path: /kubernetes-ingress-controller/
       - path: /kubernetes-ingress-controller/**/*
     auto_exclude: true
-  - title: How-tos
+  - title: Routing
     items:
-      - type: how-to
-        products:
-          - kic
+      - path: /kubernetes-ingress-controller/routing/http/
+      - path: /kubernetes-ingress-controller/routing/grpc/
+      - path: /kubernetes-ingress-controller/routing/grpc-over-http/
+      - path: /kubernetes-ingress-controller/routing/tcp-by-port/
+      - path: /kubernetes-ingress-controller/routing/tcp-by-sni/
+      - path: /kubernetes-ingress-controller/routing/udp-by-port/
+      - path: /kubernetes-ingress-controller/routing/external-service/
+      - path: /kubernetes-ingress-controller/routing/http-to-https/

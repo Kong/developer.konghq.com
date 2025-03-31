@@ -43,7 +43,7 @@
       {% for product in prereqs.products %}
         <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
   {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
-  {% include {{ product_include }} tier=include.tier %}
+  {% include {{ product_include }} tier=include.tier prereqs=prereqs %}
         </div>
       {% endfor %}
     {% endif %}
