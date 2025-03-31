@@ -1,6 +1,6 @@
 ---
 title: Build a custom Docker image
-description: "How to build a custom Docker image "
+description: "Learn how to build a custom Docker image"
 
 products:
     - gateway
@@ -13,7 +13,9 @@ tldr:
 
 works_on:
     - on-prem
-
+faqs:
+  - q: What can I do with a {{site.base_gateway}} custom image?
+     a: You can use a custom image to specify certain settings, like custom [ports](/gateway/network-ports-firewall/) or [`kong.conf`](/gateway/manage-kong-conf/) parameters. This can be useful if your organization has certain requirements or other software that they use in conjunction with their API gateway. You can also use custom images in automation pipelines.
 breadcrumbs:
     - /gateway/
 min_version:
@@ -27,7 +29,7 @@ prereqs:
             ```sh
             curl -O https://raw.githubusercontent.com/Kong/docker-kong/master/docker-entrypoint.sh
             ```
-        2. Make the script executable
+        2. Make the script executable:
             ```sh
             chmod +x docker-entrypoint.sh
             ```
@@ -35,12 +37,19 @@ prereqs:
       content: |
         1. [Download](/gateway/install/#linux) the image for your desired operating system.
         2. Rename the file to either `kong.deb` or `kong.rpm` depending on the package.
+
+related_resources:
+  - text: Run Docker images
+    url: /how-to/run-docker-images/
+next_steps:
+  - text: Learn how to run custom images 
+    url: /how-to/run-docker-images/
 ---
 
 
 ## 1. Create a Dockerfile
 
-Create a Dockerfile using any of the following templates:
+Create a [Dockerfile](https://docs.docker.com/reference/dockerfile/) using any of the following templates:
 
 {% navtabs "Dockerfile" %}
 {% navtab "Debian" %}
@@ -151,7 +160,7 @@ EOF
 
 ## 2. Build the image
 
-Using the [`docker build`](/how-to/run-docker-images/) command, you can build the image: 
+Using the `docker build` command, you can build the image: 
 
 ```
 docker build --platform linux/amd64 --no-cache -t kong-image .
@@ -161,7 +170,7 @@ Docker will build the image according to the parameters set in the Dockerfile.
 
 ## 3. Validate the image
 
-Validate that the image was built correctly using [`docker run`](/how-to/run-docker-images/): 
+Validate that the image was built correctly using `docker run`: 
 
 ```
 docker run -it --rm kong-image kong version

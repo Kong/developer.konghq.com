@@ -1,5 +1,5 @@
 ---
-title: Run Docker images
+title: Run {{site.base_gateway}} from a custom Docker image
 description: "Run docker images"
 
 products:
@@ -38,3 +38,7 @@ prereqs:
 ---
 
 @TODO https://docs.konghq.com/gateway/latest/install/docker/
+
+Include:
+- how to optionally start the database
+- how to install Kong from the image
