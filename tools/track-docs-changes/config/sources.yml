@@ -198,6 +198,8 @@ app/_how-tos/use-grpc-web.md:
   - app/_hub/kong-inc/grpc-web/how-to/_index.md
 
 ## KIC
+app/_how-tos/kic-install.md:
+  - app/_src/kubernetes-ingress-controller/get-started/index.md
 app/_how-tos/proxy-http-traffic-kic.md:
   - app/_src/kubernetes-ingress-controller/guides/services/http.md
 
