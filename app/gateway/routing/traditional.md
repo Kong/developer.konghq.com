@@ -30,6 +30,10 @@ faqs:
     a: | 
       If you are working with APIOps pipelines that manipulate the route using `deck file patch`, we recommend using the JSON format used by the traditional router. 
 
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 The traditional router is {{ site.base_gateway }}'s original routing configuration format. It uses JSON to provide a list of routing criteria, including `host`, `path`, and `headers`.

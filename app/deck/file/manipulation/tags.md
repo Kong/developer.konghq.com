@@ -1,5 +1,5 @@
 ---
-title: Tags
+title: Manage tags with decK
 short_title: deck file *-tags
 description: Manage tags in Kong declarative configuration file.
 
@@ -19,6 +19,8 @@ breadcrumbs:
   - /deck/file/manipulation/
 
 related_resources:
+  - text: Gateway tags
+    url: /gateway/tags/
   - text: All decK documentation
     url: /index/deck/
 ---

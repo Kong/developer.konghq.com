@@ -22,7 +22,7 @@
 1. Set `$PROXY_IP` as an environment variable for future commands:
 
    ```bash
-   export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+   export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}'')
    echo $PROXY_IP
    ```
 

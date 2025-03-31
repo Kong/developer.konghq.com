@@ -4,6 +4,9 @@ metadata:
   description: This page is an introduction to {{site.base_gateway}}.
   products:
     - gateway
+  works_on:
+    - on-prem
+    - konnect
 
 rows:
   - header:

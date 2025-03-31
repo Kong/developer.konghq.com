@@ -23,19 +23,5 @@
     },
     "min_version": { "$ref": "schema:base#/definitions/min_version" }
   },
-  "if": {
-    "properties": {
-      "products": {
-        "contains": {
-          "const": "gateway"
-        }
-      }
-    }
-  },
-  "then": {
-    "required": [
-      "works_on", "min_version"
-    ]
-  },
   "required": ["tldr", "content_type", "title", "products"]
 }

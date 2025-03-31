@@ -108,12 +108,12 @@
     @apply font-bold text-xl tracking-[-.01em];
   }
 
-  not-card, not-prerequisites, not-cleanup h3 {
-    @apply pt-4;
-  }
-
   h3 {
     @apply font-bold text-lg tracking-[-.01em];
+  }
+
+  main h3:not(.card h3, .prerequisites h3, .cleanup h3, .landing-page h3) {
+    @apply pt-4;
   }
 
   h4 {
@@ -442,7 +442,7 @@
     @apply tab-button py-3 text-terciary hover:no-underline items-center max-h-11 flex-shrink-0;
 
     &.tab-button__horizontal--active {
-      @apply tab-button--active border-b-2 !important;
+      @apply tab-button--active border-b-2 pb-[10px] !important;
     }
   }
 

@@ -19,6 +19,10 @@ related_resources:
     url: /gateway/entities/workspace/
   - text: Gateway Vault entity
     url: /gateway/entities/vault/
+
+
+works_on:
+  - on-prem
 ---
 
 @TODO

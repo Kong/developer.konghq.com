@@ -29,6 +29,10 @@ related_resources:
     url: /api/gateway/status/
   - text: Admin API
     url: /api/gateway/admin-ee/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 Kong AI Gateway calls LLM-based services according to the settings of the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins.

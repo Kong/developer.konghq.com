@@ -1,0 +1,24 @@
+description: Configure the plugin to use an OAuth 2.0 server's introspection endpoint to validate an access token.
+
+title: Validate an access token
+
+weight: 900
+
+config:
+  introspection_url: ${url}
+  authorization_value: ${authorization}
+
+variables:
+  authorization:
+    value: $AUTHORIZATION_HEADER_VALUE
+    description: The value to set for the `Authorization` header to access the introspection endpoint.
+  url:
+    value: $INTROSPECTION_URL
+    description: The full URL to the introspection endpoint.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

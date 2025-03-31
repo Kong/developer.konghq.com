@@ -22,8 +22,11 @@ related_resources:
     url: /gateway/logs/
   - text: "{{site.base_gateway}} debugging"
     url: /gateway/debug/
-  - text: "{{site.konnect_short_name}} audit logs"
-    url: /konnect-audit-logs/
+  - text: "{{site.konnect_short_name}} logs"
+    url: /konnect-logs/
+
+works_on:
+  - on-prem
 ---
 
 You can generate {{site.base_gateway}} audit logs using the Admin API and the data is written to {{site.base_gateway}}'s database. Audit logs provide details about HTTP requests handled by the Admin API as well as database changes. This allows cluster administrators to keep track of changes made to the cluster configuration throughout its lifetime, aiding in compliance efforts and providing valuable data points during forensic investigations. 

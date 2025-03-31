@@ -1,0 +1,37 @@
+description: |
+  This plugin configuration does the following:
+    - Extract the tracing context using order of precedence: `w3c` > `b3` > `jaeger` > `ot` > `aws` > `datadog`
+    - Clear `b3` and `uber-trace-id` headers after extraction, if present in the request
+    - Inject the tracing context using the format: `w3c`
+
+title: 'Extract, clear, and inject'
+
+weight: 900
+
+requirements: 
+  - "An OpenTelemetry backend"
+  - "`tracing_instrumentations = all` and `tracing_sampling_rate = 1.0` set in the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/)."
+
+config:
+  traces_endpoint: http://localhost:4318/v1/traces
+  propagation:	
+    default_format: ot
+    extract: 
+    - w3c 
+    - b3 
+    - jaeger
+    - ot
+    - aws
+    - datadog 
+    clear: 
+    - b3
+    - uber-trace-id
+    inject: 
+    - w3c 
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -9,6 +9,10 @@ layout: reference
 
 products:
   - gateway
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 @TODO 

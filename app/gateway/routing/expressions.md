@@ -32,6 +32,10 @@ faqs:
     a: The expressions router provides more routing flexibility, including fast exact matching that is not available in the traditional router.
   - q: When should I keep using the traditional router over expressions?
     a: If you are working with APIOps pipelines that manipulate the route using `deck file patch`, we recommend using the JSON format used by the traditional router.
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 The expressions router provides a Domain Specific Language (DSL) that allows for complex routing rule definition. The expressions router ensures good runtime matching performance by providing specific routing comparisons such as non-regex equality checks that are not available in the traditional router.

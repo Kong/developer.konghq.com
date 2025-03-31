@@ -17,6 +17,8 @@ related_resources:
   - text: Kong Manager Configuration
     url: /gateway/kong-manager-configuration/
 
+works_on:
+  - on-prem
 ---
 
 @todo

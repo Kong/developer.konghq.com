@@ -13,7 +13,7 @@
 {% assign rows = include.config.rows %}
 {% endif %}
 
-<{{ tag }} class="flex flex-col gap-3 w-full">
+<{{ tag }} class="flex flex-col gap-3 w-full {{page.content_type | slugify}}">
   <div class="flex flex-col gap-{{ gap }}">
     {% for row in rows %}
 
@@ -37,7 +37,7 @@
 
                   {% for entry in column.blocks %}
                       {% assign include_path = "landing_pages/" | append: entry.type | append : ".md" %}
-                      {% capture include_template %}{% include {{ include_path }} type=entry.type config=entry.config %}{% endcapture %}
+                      {% capture include_template %}{% include {{ include_path }} type=entry.type config=entry.config tab_group=entry.tab_group %}{% endcapture %}
                       {{ include_template | markdownify }}
                   {% endfor %}
                 </div>

@@ -27,6 +27,9 @@ related_resources:
 
 api_specs:
     - gateway/admin-ee
+
+works_on:
+  - on-prem
 ---
 
 @todo

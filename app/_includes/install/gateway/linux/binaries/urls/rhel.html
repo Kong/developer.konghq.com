@@ -1,1 +1,5 @@
-{%- capture download_url -%}{{ site.links.direct }}/gateway-{{ include.release.major_minor_version }}/rpm/el/{{include.distro.version_number}}/{{ include.arch }}/kong-enterprise-edition{%-if include.fips-%}-fips{%-endif-%}-{{include.release.ee_version}}.{{include.distro.codename}}.{{include.arch}}.rpm{%- endcapture -%}
+{%- assign distro_version_number = include.distro.version_number-%}
+{% if include.distro_version_number %}{%-assign distro_version_number = include.distro_version_number-%}{%- endif -%}
+{%- assign distro_codename = include.distro.codename -%}
+{% if include.distro_codename %}{%-assign distro_codename = include.distro_codename-%}{%- endif -%}
+{{ site.links.direct }}/gateway-{{ include.release.major_minor_version }}/rpm/el/{{distro_version_number | strip}}/{{ include.arch }}/kong-enterprise-edition{%-if include.fips-%}-fips{%-endif-%}-{{include.release.ee_version}}.el{{distro_codename | strip}}.{{include.arch}}.rpm

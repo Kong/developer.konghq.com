@@ -21,6 +21,10 @@ related_resources:
     url: /gateway/breaking-changes/
   - text: "{{site.konnect_short_name}} compatibility"
     url: /konnect-compatibility/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 This page lists services used in day-to-day operation of {{site.base_gateway}} and the versions of these services that have been tested by Kong.
@@ -41,7 +45,7 @@ Kong supports the following third-party tools for each given {{site.base_gateway
 These tools are managed services and Kong provides compatibility with the currently released version.
 
 {% assign releases = site.data.products.gateway.releases | reverse | where: "label", empty %}
-{% navtabs %}
+{% navtabs "gateway-version" %}
 {% for release in releases %}
 {% assign tab_name = release.release %}
 {% if release.lts %}{% assign tab_name = tab_name | append: ' LTS' %}{% endif %}

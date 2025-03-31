@@ -15,6 +15,7 @@ module Jekyll
         return unless @page.data['min_version']
 
         @page.data['latest_release'] = release_info.latest_available_release
+
         return unless unreleased?
 
         @page.instance_variable_set(:@url, "#{@page.url}#{release_info.min_release}/")

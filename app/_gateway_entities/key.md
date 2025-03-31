@@ -23,6 +23,10 @@ tools:
 schema:
   api: gateway/admin-ee
   path: /schemas/Key
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 ## What is a Key?

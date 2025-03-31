@@ -1,6 +1,6 @@
 ---
-title: "{{site.base_gateway}} Version Support"
-content_type: reference
+title: "{{site.base_gateway}} version support"
+content_type: policy
 layout: reference
 
 products:
@@ -23,6 +23,10 @@ related_resources:
     url: /gateway/third-party-support/
   - text: "{{site.konnect_short_name}} compatibility"
     url: /konnect-compatibility/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 Kong adopts a structured approach to versioning its products.
@@ -108,7 +112,7 @@ Kong supports the following versions of {{site.base_gateway}}:
 
 {% assign releases = site.data.products.gateway.releases | reverse | where: "label", empty %}
 
-{% navtabs %}
+{% navtabs "gateway-version" %}
 {% for release in releases %}
 {% assign tab_name = release.release %}
 {% if release.lts %}{% assign tab_name = tab_name | append: ' LTS' %}{% endif %}

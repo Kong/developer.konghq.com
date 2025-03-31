@@ -18,6 +18,10 @@ related_resources:
     url: /gateway/logs/
   - text: "{{site.base_gateway}} debugging"
     url: /gateway/debug/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 @todo

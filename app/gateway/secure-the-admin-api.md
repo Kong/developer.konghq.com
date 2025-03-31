@@ -18,6 +18,9 @@ related_resources:
     url: /admin-api/
   - text: "Enable RBAC with the Admin API"
     url: /how-to/enable-rbac-with-admin-api/
+
+works_on:
+  - on-prem
 ---
 
 {{site.base_gateway}}’s Admin API provides a RESTful interface for administration and configuration of Gateway Services, Routes, Plugins, Consumers, and credentials. Because this API allows full control of {{site.base_gateway}}, it's important to secure it against unwanted access. This document describes a few possible approaches to securing the Admin API.

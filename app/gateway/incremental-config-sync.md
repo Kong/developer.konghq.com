@@ -18,6 +18,10 @@ related_resources:
     url: /gateway/routing/
   - text: Workspaces
     url: /gateway/entities/workspace/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 @todo

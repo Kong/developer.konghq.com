@@ -69,5 +69,19 @@
       }
     }
   },
+  "if": {
+    "properties": {
+      "products": {
+        "type": "array",
+        "enum": [["gateway"]]
+      }
+    },
+    "required": ["products"]
+  },
+  "then": {
+    "required": [
+      "works_on"
+    ]
+  },
   "required": ["content_type"]
 }

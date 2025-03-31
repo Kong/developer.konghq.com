@@ -38,6 +38,9 @@ faqs:
     a: Kong stores Keyring material in a shared memory zone that all Kong worker processes access. To prevent keys from being written to disk as part of memory paging operations, we recommend disabling memory swapping on systems running Kong.
   - q: What happens to the keys if a Kong node fails?
     a: In cluster mode, the contents of the Keyring propagate automatically among all nodes in the Kong cluster. One node failing does not impact the Keyring. However, at least one node must be running at all times within the cluster; a failure of all nodes requires manually re-importing the Keyring to one node during an outage recovery.
+
+works_on:
+  - on-prem
 ---
 
 ## What is a Keyring?
@@ -98,7 +101,7 @@ openssl rsa -in key.pem -pubout -out cert.pem
 ### 2. Configure Kong
 To enable data encryption, you must modify the Kong configuration. You can either update `kong.conf` or use environment variables:
 
-{% navtabs %}
+{% navtabs "update-kong-configuration" %}
 {% navtab "kong.conf" %}
 Set the following values in `kong.conf`:
 ```sh

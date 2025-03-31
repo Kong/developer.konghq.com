@@ -32,8 +32,10 @@ schema:
 faqs:
   - q: What happens when an Admin doesn't have a Role assigned?
     a: If an Admin is in a Workspace without a Role, they can’t see or interact with anything. Admins can manage entities inside Workspaces, including Users and their Roles.
-    
 
+works_on:
+  - on-prem
+  - konnect
 ---
 
 ## What is an Admin?

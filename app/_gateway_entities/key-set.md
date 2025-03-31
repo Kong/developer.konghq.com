@@ -24,6 +24,9 @@ schema:
   api: gateway/admin-ee
   path: /schemas/Key-set
 
+works_on:
+  - on-prem
+  - konnect
 ---
 
 ## What is a Key Set?

@@ -15,6 +15,10 @@
 </div>
 {% endif %}
 
+{% if page.works_on %}
+{% include_cached info_box/sections/works_on.html works_on=page.works_on %}
+{% endif %}
+
 {% if page.plugins %}
 {% include info_box/sections/plugins.html plugins=page.plugins %}
 {% endif %}

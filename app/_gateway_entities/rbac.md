@@ -29,6 +29,9 @@ related_resources:
 
 api_specs:
     - gateway/admin-ee
+
+works_on:
+  - on-prem
 ---
 
 ## What is RBAC?
@@ -152,7 +155,7 @@ features:
 
 ## Enable RBAC
 
-{% navtabs %}
+{% navtabs "enable-rbac" %}
 {% navtab "Quickstart" %}
 
 This command creates a {{site.base_gateway}} instance, sets the Kong super admin password to `kong`, and sets up RBAC.

@@ -1,0 +1,26 @@
+description: 'Enforces headers that the client should at least use for HTTP signature creation, as well as body validation. Specifies that the `hmac-sha1` and `hmac-sha256` algorithms should be used to hash the digest.'
+
+title: 'Enforce headers, body validation, and HMAC digest algorithms'
+
+weight: 900
+
+requirements: 
+ - You have created a [Consumer with HMAC credentials](/plugins/hmac-auth/#consumer-authentication)
+
+
+config:
+  enforce_headers:
+  - date 
+  - '@request-target'
+  algorithms:
+  - hmac-sha1
+  - hmac-sha256
+  validate_request_body: true
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
