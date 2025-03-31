@@ -536,6 +536,6 @@
   @apply flex flex-col col-span-3 w-full gap-16;
 }
 
-.card__bordered:target {
+.card:target {
   @apply border-brand-saturated border-2;
 }
