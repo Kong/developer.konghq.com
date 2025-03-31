@@ -15,6 +15,10 @@ description: |
 related_resources:
   - text: "{{site.base_gateway}} version support"
     url: /gateway/version-support-policy/
+
+works_on:
+  - on-prem
+  - konnect
 ---
 
 
