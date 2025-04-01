@@ -1,0 +1,68 @@
+metadata:
+  title: "Dev Portal"
+  content_type: landing_page
+  description: Manage API publishing, developer self-service, and documentation with Konnect Dev Portal.
+  tags:
+    - dev-portal
+    - beta
+    - app-reg
+
+rows:
+
+  - header:
+      type: h1
+      text: "Dev Portal"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    The {{site.konnect_short_name}} Dev Portal is a customizable website for developers to locate, access, and consume API services. It enables developers to browse and search API documentation, try API operations, and manage their own credentials. The portal supports both internal and external APIs through flexible deployment options.
+
+                    Dev Portal APIs allow you to publish APIs using OpenAPI specifications and Markdown documentation. You can provide highly customizable content at both the site and API level to offer additional context to developers.
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/dev-portal/create-portal.png
+              alt_text: "KongAir Dev Portal"
+
+  - header:
+      type: h2
+      text: "Get started"
+
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Create a Dev Portal
+            description: |
+              {{site.konnect_short_name}} allows you to publish, document, and secure APIs to drive adoption for any developer audience. 
+              You can create multiple Dev Portals based on selected APIs with appropriate visibility and access control settings.
+            
+            cta:
+              url: "/dev-portal/portals/"
+      - blocks:
+        - type: card
+          config:
+            title: Add APIs to Dev Portal
+            description: |
+              Dev Portal APIs serve as a repository for your API specifications and documentation. 
+              You can optionally version your APIs and publish them to one or more portals. 
+              This supports maintaining a central source of truth while offering developer-specific visibility.
+            
+            cta:
+              url: "/dev-portal/apis/"
+      - blocks:
+        - type: card
+          config:
+            title: Allow developers to register apps
+            description: |
+              Configure application registration and role-based access for developers.
+              Grant or revoke access for developers to register applications and acquire credentials.
+            
+            cta:
+              url: "/dev-portal/app-reg/"
+
