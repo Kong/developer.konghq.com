@@ -1,0 +1,77 @@
+metadata:
+  title: "Dev Portal"
+  content_type: landing_page
+  description: Manage API publishing, developer self-service, and documentation with Konnect Dev Portal.
+  tags:
+    - dev-portal
+    - beta
+    - app-reg
+
+rows:
+
+  - header:
+      type: h1
+      text: "Dev Portal"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    The {{site.konnect_short_name}} Dev Portal is a customizable website for developers to locate, access, and consume API services. It enables developers to browse and search API documentation, try API operations, and manage their own credentials. The portal supports both internal and external APIs through flexible deployment options.
+
+                    Dev Portal APIs allow you to publish APIs using OpenAPI specifications and Markdown documentation. You can provide highly customizable content at both the site and API level to offer additional context to developers.
+
+                    {:.note}
+                    > This is documentation for Konnect's new **Dev Portal BETA**. Be aware of potential instability compared to the [classic Dev Portal](/konnect/dev-portal).
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/dev-portal/kongair-example.png
+              alt_text: "KongAir Dev Portal"
+
+  - header:
+      type: h2
+      text: "Portals"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    {{site.konnect_short_name}} allows you to publish, document, and secure APIs to drive adoption for any developer audience. You can create multiple Dev Portals based on selected APIs with appropriate visibility and access control settings.
+
+                    [Get started](/dev-portal/portals) creating your first Dev Portal.
+
+  - header:
+      type: h2
+      text: "APIs"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Dev Portal APIs serve as a repository for your API specifications and documentation. You can optionally version your APIs and publish them to one or more portals. This supports maintaining a central source of truth while offering developer-specific visibility.
+
+                    [Get started](/dev-portal/apis) creating your APIs.
+
+  - header:
+      type: h2
+      text: "Developer Self-Service"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Configure application registration and role-based access for developers.
+                    * [Enabling and disabling application registration](/dev-portal/app-reg/): Grant or revoke access for developers to register applications and acquire credentials.
