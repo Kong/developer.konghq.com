@@ -529,6 +529,8 @@ app/konnect-labels.md:
   - app/konnect/reference/labels.md
 app/gateway/konnect-sso.md:
   - app/konnect/org-management/okta-idp.md
+  - app/konnect/dev-portal/access-and-approval/add-teams/
+  - app/konnect/dev-portal/access-and-approval/sso/
   - app/dev-portal/access-and-approvals/sso.md
   - app/konnect/org-management/sso.md
 

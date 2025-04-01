@@ -9,7 +9,7 @@ products:
 min_version:
   gateway: '3.4'
 
-description: ""
+description: "{{site.konnect_short_name}} supports multiple SSO options"
 
 related_resources:
   - text: "Authentication"
@@ -38,14 +38,12 @@ faqs:
 SSO for each of these is configured through different settings, so enabling one doesn't automatically enable the other. Both methods support OIDC and SAML-based SSO.
 
 {:.warning}
-> We recommend using a single authentication method, however, {{site.konnect_short_name}} supports the ability to
-combine built-in authentication with _either_ OIDC or SAML based SSO. Combining both OIDC and SAML based SSO is not supported.
-Keep built-in authentication enabled while you are testing IdP authentication. Only disable built-in authentication after
-successfully testing the configurations in these guides.
+> We recommend using a single authentication method, however, {{site.konnect_short_name}} supports the ability to combine built-in authentication with _either_ OIDC or SAML based SSO. Combining both OIDC and SAML based SSO is not supported.
+Keep built-in authentication enabled while you are testing IdP authentication. Only disable built-in authentication after successfully testing the configurations in these guides.
 
 ## Supported IdP providers
 
-While technically any OIDC or SAML-compliant provider can be used, the following have been verified:
+{{site.konnect_short_name}} supports any OIDC or SAML-compliant provider. The following have been verified to work out-of-the-box:
 
 * Okta 
 * Azure Active Directory
@@ -54,10 +52,10 @@ While technically any OIDC or SAML-compliant provider can be used, the following
 
 ## SSO configuration
 
-Before you configure SSO in {{site.konnect_short_name}}, you must configure the following in your IdP:
-* {{site.konnect_short_name}} must be added to your IdP as an application
-* Users that need to use SSO are added to your IdP tenant
-* Claims are set up in your IdP
+To configure SSO in {{site.konnect_short_name}}, you must configure the following in your IdP:
+* Add {{site.konnect_short_name}} to your IdP as an application
+* Add users that need to use SSO to the IdP tenant.
+* Set claims in your IdP
 
 You can configure {{site.konnect_short_name}} SSO in the following ways:
 
@@ -87,7 +85,7 @@ rows:
 > * The path can be any alphanumeric string.
 > * The path does not require a slash (`/`).
 
-Keep the following in mind when configuring SSO for Dev Portal:
+When configuring SSO for Dev Portal, it's important to consider the following points:
 
 * Developers are auto-approved by {{site.konnect_short_name}} when they use SSO to log in to the Dev Portal.
 This is because {{site.konnect_short_name}} outsources the approval process to the IdP instance when using SSO. Therefore, you must restrict
@@ -102,7 +100,7 @@ You can use the same IdP for multiple Dev Portals or different IdPs per Dev Port
 {:.warning}
 > **Important:** Keep built-in authentication enabled while you are testing IdP authentication. Only disable built-in authentication after successfully testing IdP authentication.
 
-To test the configuration, do one of the following, depending on what you configured SSO for:
+Depending on your IdP, choose one of the following to test the configuration:
 * **{{site.konnect_short_name}} Org:** Test the SSO configuration by navigating to the login URI based on the organization login path you set earlier. For example: `https://cloud.konghq.com/login/examplepath`, where `examplepath` is the unique login path string set in the previous steps.
 * **Dev Portal:** Test the SSO configuration by navigating to the callback URL for your Dev Portal. For example: `https://{portalId}.{region}.portal.konghq.com/login`.
 
