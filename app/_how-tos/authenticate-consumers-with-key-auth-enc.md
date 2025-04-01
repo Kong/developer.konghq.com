@@ -78,12 +78,15 @@ min_version:
 ## 1. Generate a Keyring key
 
 Using the [Admin API](/api/gateway/admin-ee/#/operations/post-keyring-generate), generate a new key in the Keyring:
+
+<!--vale off-->
 {% control_plane_request %}
   url: /keyring/generate
   method: POST
   headers:
       - 'Accept: application/json'
 {% endcontrol_plane_request %}
+<!--vale on-->
 
 You will get a `201 Created` response with the key and key ID. The generated key will now be used to encrypt sensitive fields in the database.
 
@@ -93,6 +96,7 @@ Authentication lets you identify a Consumer. In this how-to, we'll be using the 
 
 Enable the plugin for the Service:
 
+<!--vale off-->
 {% entity_examples %}
 entities:
   plugins:
@@ -102,25 +106,30 @@ entities:
         key_names:
         - apikey
 {% endentity_examples %}
+<!--vale on-->
 
 ## 3. Create a Consumer and key
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. First, you need to create a Consumer:
 
+<!--vale off-->
 {% entity_examples %}
 entities:
   consumers:
     - username: jsmith
 {% endentity_examples %}
+<!--vale on-->
 
 The Consumer needs an API key to access any {{site.base_gateway}} Services. We recommend not specifying the key as {{site.base_gateway}} will autogenerate one for you in the response. Only specify a key if you are migrating an existing system to {{site.base_gateway}}.
 
+<!--vale off-->
 {% control_plane_request %}
   url: /consumers/jsmith/key-auth-enc
   method: POST
   headers:
       - 'Accept: application/json'
 {% endcontrol_plane_request %}
+<!--vale on-->
 
 Copy the key in the response and export it as an environment variable:
 
@@ -134,14 +143,17 @@ After configuring the Key Authentication Encryption plugin, you can verify that 
 
 First, run the following to verify that unauthorized requests return an error:
 
+<!--vale off-->
 {% validation request-check %}
 url: /anything
 headers:
   - 'apikey:hello_world'
 {% endvalidation %}
+<!--vale on-->
 
 Then, run the following command to test Consumer authentication:
 
+<!--vale off-->
 {% validation unauthorized-check %}
 url: /anything
 headers:
@@ -149,5 +161,6 @@ headers:
 message: OK
 status_code: 200
 {% endvalidation %}
+<!--vale on-->
 
 
