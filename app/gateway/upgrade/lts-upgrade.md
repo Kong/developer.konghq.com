@@ -49,9 +49,6 @@ To make sure your upgrade is successful, carefully review all the steps in this 
 
 Read this document thoroughly to successfully complete the upgrade process, as it includes all the necessary operational knowledge for the upgrade.
 
-* Starting from 3.4, Cassandra is not supported. 
-If you're using Cassandra as your data store, migrate off of Cassandra first and upgrade second.
-Work with the Kong support team to migrate from Cassandra to PostgreSQL.
 * Review version compatibility between your platform version and the version of {{site.kong_gateway}} that you are upgrading to:
   * [OS version](/gateway/version-support-policy/#supported-versions)
   * [Kubernetes version and Helm prerequisites](/kic/version-support-policy/)
@@ -59,6 +56,10 @@ Work with the Kong support team to migrate from Cassandra to PostgreSQL.
   * [Database and dependency versions](/gateway/third-party-support/)
 * If you're using decK, [upgrade it to the latest version](/deck/).
 
+{:.warning}
+> Starting from {{site.base_gateway}} 3.4, Cassandra is not supported. 
+> If you're using Cassandra as your data store, migrate off of Cassandra first and upgrade second.
+> Work with the Kong support team to migrate from Cassandra to PostgreSQL.
 ## Upgrade journey overview
 
 ### Preparation phase
@@ -80,7 +81,7 @@ In this part of the upgrade journey, you will use the strategy you determined du
 1. Execute your chosen upgrade strategy on dev.
 2. Move from dev to prod.
 3. Smoke test.
-4. Wrap up the upgrade or roll back and try again.
+4. Finish the upgrade or roll back and try again.
 
 Now, let's move on to preparation, starting with your backup options.
 
@@ -90,7 +91,6 @@ Now, let's move on to preparation, starting with your backup options.
 
 ## Preparation: Choose an upgrade strategy based on deployment mode
 
-Upgrade strategies introduced in this section are generic and may or may not fit in with your deployment environment. 
 
 Choose your deployment mode:
 * [Traditional](#traditional-mode)
@@ -116,15 +116,15 @@ At a high level, the process typically involves the following steps:
 
 1. **Provisioning a same-size deployment**: You need to ensure that the new cluster, which will run the upgraded version of {{site.base_gateway}}, has the same capacity and resources as the existing cluster. This ensures that both clusters can handle the same amount of traffic and workload.
 
-2. **Setting up dual-cluster deployment**: Once the new cluster is provisioned, you can start deploying your APIs and configurations to both clusters simultaneously. The dual cluster deployment allows both the old and new clusters to coexist and process requests in parallel.
+1. **Setting up dual-cluster deployment**: Once the new cluster is provisioned, you can start deploying your APIs and configurations to both clusters simultaneously. The dual cluster deployment allows both the old and new clusters to coexist and process requests in parallel.
 
-3. **Data synchronization**:  During the dual cluster deployment, data synchronization is crucial to ensure that both clusters have the same data. This can involve migrating data from the old cluster to the new one or setting up a shared data storage solution to keep both clusters in sync. Import the database from the old cluster to the new cluster by using a snapshot or `pg_restore`.
+1. **Data synchronization**:  During the dual cluster deployment, data synchronization is crucial to ensure that both clusters have the same data. This can involve migrating data from the old cluster to the new one or setting up a shared data storage solution to keep both clusters in sync. Import the database from the old cluster to the new cluster by using a snapshot or `pg_restore`.
 
-4. **Traffic rerouting**: As the new cluster is running alongside the old one, you can start gradually routing incoming traffic to the new cluster. This process can be done gradually or through a controlled switchover mechanism to minimize any impact on users. This can be achieved by any load balancer, like DNS, Nginx, F5, or even a {{site.base_gateway}} node with Canary plugin enabled.
+1. **Traffic rerouting**: As the new cluster is running alongside the old one, you can start gradually routing incoming traffic to the new cluster. This process can be done gradually or through a controlled switchover mechanism to minimize any impact on users. This can be achieved by any load balancer, like DNS, Nginx, F5, or even a {{site.base_gateway}} node with Canary plugin enabled.
 
-5. **Testing and validation**: Before performing a complete switchover to the new cluster, it is essential to thoroughly test and validate the functionality of the upgraded version. This includes testing APIs, plugins, authentication mechanisms, and other functionalities to ensure they are working as expected.
+1. **Testing and validation**: Before performing a complete switchover to the new cluster, it is essential to thoroughly test and validate the functionality of the upgraded version. This includes testing APIs, plugins, authentication mechanisms, and other functionalities to ensure they are working as expected.
 
-6. **Complete switchover**: Once you are confident that the upgraded cluster is fully functional and stable, you can redirect all incoming traffic to the new cluster. This step completes the upgrade process and decommissions the old cluster.
+1. **Complete switchover**: Once you are confident that the upgraded cluster is fully functional and stable, you can redirect all incoming traffic to the new cluster. This step completes the upgrade process and decommissions the old cluster.
 
 By following this dual cluster deployment strategy, you can achieve a smooth and zero-downtime upgrade from one LTS version of {{site.base_gateway}} to another. This approach helps ensure high availability and uninterrupted service for your users throughout the upgrade process.
 
