@@ -1,12 +1,12 @@
 ---
 title: Enable key authentication on a Gateway Service with {{site.base_gateway}}
 content_type: how_to
-
+description: Secure a Gateway Service with the Key Auth Encrypted plugin.
 related_resources:
   - text: Authentication
     url: /authentication/
-  - text: Key Auth plugin
-    url: /plugins/key-auth/
+  - text: Keyring
+    url: /gateway/keyring/
 
 products:
     - gateway
@@ -90,11 +90,11 @@ Using the [Admin API](/api/gateway/admin-ee/#/operations/post-keyring-generate),
 
 You will get a `201 Created` response with the key and key ID. The generated key will now be used to encrypt sensitive fields in the database.
 
-## 2. Enable the Key Authentication Encrypted plugin on the Service:
+## 2. Enable the Key Authentication Encrypted plugin
 
 Authentication lets you identify a Consumer. In this how-to, we'll be using the [Key Auth Encrypted](/plugins/key-auth-enc/) for authentication, which allows users to authenticate with a key when they make a request.
 
-Enable the plugin for the Service:
+Enable the plugin for the Gateway Service you created in the [prerequisites](#pre-configured-entities):
 
 <!--vale off-->
 {% entity_examples %}
@@ -120,7 +120,7 @@ entities:
 {% endentity_examples %}
 <!--vale on-->
 
-The Consumer needs an API key to access any {{site.base_gateway}} Services. We recommend not specifying the key as {{site.base_gateway}} will autogenerate one for you in the response. Only specify a key if you are migrating an existing system to {{site.base_gateway}}.
+The Consumer needs an API key to access any Gateway Services. We recommend not specifying the key, as {{site.base_gateway}} will autogenerate one for you in the response. Only specify a key if you are migrating an existing system to {{site.base_gateway}}.
 
 <!--vale off-->
 {% control_plane_request %}
@@ -131,7 +131,7 @@ The Consumer needs an API key to access any {{site.base_gateway}} Services. We r
 {% endcontrol_plane_request %}
 <!--vale on-->
 
-Copy the key in the response and export it as an environment variable:
+Copy the `key` in the response and export it as an environment variable:
 
 ```bash
 export CONSUMER_KEY=<consumer-key>
@@ -148,6 +148,8 @@ First, run the following to verify that unauthorized requests return an error:
 url: /anything
 headers:
   - 'apikey:hello_world'
+status_code: 401
+message: 'Unauthorized'
 {% endvalidation %}
 <!--vale on-->
 
