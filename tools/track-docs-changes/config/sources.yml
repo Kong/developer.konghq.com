@@ -675,6 +675,9 @@ app/konnect-compatibility.md:
   - app/konnect/compatibility.md
 app/_landing_pages/gateway/traffic-control-and-routing.yaml:
   - app/_src/gateway/how-kong-works/routing-traffic.md
+app/gateway/incremental-config-sync.md:
+  - app/_src/gateway/production/deployment-topologies/hybrid-mode/incremental-config-sync.md
+
 
 
 # policies
