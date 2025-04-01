@@ -190,12 +190,15 @@ app/_how-tos/set-up-dynatrace-with-otel.md:
   - app/_hub/kong-inc/opentelemetry/how-to/_dynatrace.md
 app/_how-tos/use-langchain-with-ai-proxy.md:
   - app/_src/gateway/ai-gateway/llm-library-integration-guides/langchain.md
+app/_how-tos/build-custom-docker-image.md:
+  - app/_src/gateway/install/docker/build-custom-images.md
 app/_how-tos/authenticate-consumers-with-key-auth-enc.md:
   - app/_hub/kong-inc/key-auth-enc/overview/_index.md
 app/_how-tos/use-grpc-gateway.md:
   - app/_hub/kong-inc/grpc-gateway/how-to/_index.md
 app/_how-tos/use-grpc-web.md:
   - app/_hub/kong-inc/grpc-web/how-to/_index.md
+
 
 ## KIC
 app/_how-tos/kic-install.md:
@@ -510,6 +513,10 @@ app/_kong_plugins/mtls-auth/index.md:
   - app/_hub/kong-inc/mtls-auth/overview/_index.md
 app/_kong_plugins/mtls-auth/changelog.md:
   - app/_hub/kong-inc/mtls-auth/_changelog.md
+app/_kong_plugins/http-log/index.md:
+  - app/_hub/kong-inc/http-log/overview/_index.md
+app/_kong_plugins/http-log/changelog.md:
+  - app/_hub/kong-inc/http-log/_changelog.md
 
 # Konnect
 
@@ -646,6 +653,10 @@ app/gateway/db-less-mode.md:
   - app/_src/gateway/production/deployment-topologies/db-less-and-declarative-config.md
 app/gateway/upgrade/blue-green.md:
   - app/_src/gateway/upgrade/blue-green.md
+app/gateway/upgrade/index.md:
+  - app/_src/gateway/upgrade/index.md
+app/gateway/upgrade/lts-upgrade.md:
+  - app/_src/gateway/upgrade/lts-upgrade.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
