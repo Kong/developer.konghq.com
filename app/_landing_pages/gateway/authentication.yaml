@@ -180,6 +180,17 @@ rows:
             cta:
               text: Add authentication using KIC
               url: "https://docs.konghq.com/kubernetes-ingress-controller/latest/plugins/authentication/"
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.konnect_short_name}} SSO"
+            description: |
+              {{site.konnect_short_name}} supports external single sign-on authentication using an OIDC or SAML-compliant Identity Provider (IdP). 
+              You can enable authentication for the {{site.konnect_short_name}} platform as well as Dev Portal.
+            icon: /assets/icons/gateway.svg
+            cta:
+              text: Add SSO to {{site.konnect_short_name}}
+              url: "/konnect-sso/"
 
   - columns:
       - blocks:
