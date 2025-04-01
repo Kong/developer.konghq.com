@@ -74,8 +74,6 @@ H(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"/> Kong Data Plan
 
 style id1 stroke-dasharray:3,rx:10,ry:10
 style id2 stroke-dasharray:3,rx:10,ry:10
-linkStyle 0,1,2,3 stroke:#2e8e05,color:#2e8e05
-linkStyle 4,5 stroke:#d44324,color:#d44324
 
 {% endmermaid %}
 <!--vale on-->
