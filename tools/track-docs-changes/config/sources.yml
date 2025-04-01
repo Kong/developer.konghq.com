@@ -645,6 +645,8 @@ app/gateway/upgrade/blue-green.md:
   - app/_src/gateway/upgrade/blue-green.md
 app/gateway/upgrade/index.md:
   - app/_src/gateway/upgrade/index.md
+app/gateway/upgrade/lts-upgrade.md:
+  - app/_src/gateway/upgrade/lts-upgrade.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:
