@@ -80,7 +80,7 @@ rows:
 <!--vale on-->
 
 {:.info}
-> **1:** When you configure the organization login path, enter a unique string that will be used in the URL your users use to log in. For example: `examplepath`.
+> **Note:** When you configure the organization login path, enter a unique string that will be used in the URL your users use to log in. For example: `examplepath`.
 > * The path must be unique *across all {{site.konnect_short_name}} organizations*. If your desired path is already taken, you must to choose another one.
 > * The path can be any alphanumeric string.
 > * The path does not require a slash (`/`).
