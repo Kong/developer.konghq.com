@@ -60,6 +60,7 @@ Read this document thoroughly to successfully complete the upgrade process, as i
 > Starting from {{site.base_gateway}} 3.4, Cassandra is not supported. 
 > If you're using Cassandra as your data store, migrate off of Cassandra first and upgrade second.
 > Work with the Kong support team to migrate from Cassandra to PostgreSQL.
+
 ## Upgrade journey overview
 
 ### Preparation phase
