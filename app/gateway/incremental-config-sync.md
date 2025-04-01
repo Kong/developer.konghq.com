@@ -20,6 +20,9 @@ related_resources:
     url: /gateway/deployment-topologies/
   - text: Data Plane hosting options
     url: /gateway/topology-hosting-options/
+  - text: Incremental config sync blog
+    url: https://konghq.com/blog/product-releases/incremental-config-sync-tech-preview
+  
 
 tags:
   - hybrid-mode
@@ -29,7 +32,7 @@ works_on:
   - konnect
 ---
 
-In [hybrid mode](/gateway/hybrid-mode/), whenever you make changes to [{{site.base_gateway}} entity](/gateway/entities/) configuration on the Control Plane, it immediately triggers a cluster-wide update of all Data Plane configurations. 
+In [Hybrid Mode](/gateway/hybrid-mode/), whenever you make changes to [{{site.base_gateway}} entity](/gateway/entities/) configuration on the Control Plane, it immediately triggers a cluster-wide update of all Data Plane configurations. 
 In these updates, {{site.base_gateway}} sends the entire configuration set to the Data Planes. The bigger your configuration set is, the more time it takes to send and process, and the more memory is consumed proportional to the configuration size. This can result in latency spikes and loss in throughput for high-traffic Data Planes under certain conditions.
 
 You can enable incremental configuration sync to address this issue. 
