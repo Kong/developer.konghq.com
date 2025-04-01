@@ -99,23 +99,7 @@ To finish setup in {{site.konnect_short_name}}:
   * One or more CIDR blocks (must not overlap with your {{site.konnect_short_name}} network)
   * RAM Share ARN
   * Transit Gateway ID
-
-## Accept Transit Gateway Attachment in AWS
-
-To accept the Transit Gateway Attachement in AWS, do the following:
-
-1. In the AWS Console, go to **VPC > Transit Gateway Attachments**.
-1. Wait for an attachment request from the Konnect AWS Account ID.
-1. Accept the request.
-
-Ensure that each AWS VPC requiring traffic forwarding has its own Transit Gateway attachment.
-
-After the attachment is active, create a route in your AWS VPC to forward traffic to the {{site.konnect_short_name}} managed VPC through the Transit Gateway. This ensures proper traffic flow from {{site.konnect_short_name}} to your Services and back.
-
-## DNS Mappings
-
-Add IP addresses of DNS servers and the corresponding domains. Supported mapping types include:
-
+1. Add the IP addresses of DNS servers that will resolve to your private domains, along with any domains you want associated with your DNS. {{site.konnect_short_name}} supports the following mappings:
 {% table %}
 columns:
   - title: Mapping Type
@@ -139,3 +123,15 @@ rows:
       `example3.com` → `192.168.1.1`
 {% endtable %}
 
+
+## Accept Transit Gateway Attachment in AWS
+
+To accept the Transit Gateway Attachement in AWS, do the following:
+
+1. In the AWS Console, go to **VPC > Transit Gateway Attachments**.
+1. Wait for an attachment request from the Konnect AWS Account ID.
+1. Accept the request.
+
+Ensure that each AWS VPC requiring traffic forwarding has its own Transit Gateway attachment.
+
+After the attachment is active, create a route in your AWS VPC to forward traffic to the {{site.konnect_short_name}} managed VPC through the Transit Gateway. This ensures proper traffic flow from {{site.konnect_short_name}} to your Services and back.
