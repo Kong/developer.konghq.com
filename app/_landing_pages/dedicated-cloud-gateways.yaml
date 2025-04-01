@@ -77,7 +77,7 @@ rows:
             config:
               title: AWS Private Link
               description: |
-                Connect your data plane to your Konnect control plane with a private connection to stay compliant and save data transfer costs
+                Connect your Data Plane to your {{site.konnect_short_name}} Control Plane with a private connection to stay compliant and save data transfer costs.
               icon: /assets/icons/aws.svg
               cta:
                 text: Learn more

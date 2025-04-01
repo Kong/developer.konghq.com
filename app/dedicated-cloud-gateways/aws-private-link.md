@@ -22,6 +22,8 @@ related_resources:
 
 You can establish a private connection between {{site.konnect_short_name}} and your AWS environment using AWS PrivateLink. This provides secure communication between your Data Plane and the Control Plane, reducing data transfer costs and ensuring compliance.
 
+You can configure this instead of AWS Transit Gateways to secure your connection.
+
 PrivateLink support is currently available in the following AWS regions:
 
 * `eu-central-1`
@@ -34,29 +36,29 @@ If your desired AWS region is not listed, contact [Kong Support](https://support
 
 ## AWS configuration for PrivateLink
 
-Before creating a PrivateLink connection, ensure that you have a VPC, subnets, and a security group configured in your AWS account. For guidance, refer to [Amazon VPC documentation](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html).
+Before creating a PrivateLink connection, ensure that you have a VPC, subnets, and a security group configured in your AWS account. For instructions, see the [Amazon VPC documentation](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html).
 
-To configure PrivateLink:
 
 1. Navigate to **VPC > Endpoints** in the AWS Console.
 1. Select **Create Endpoint**.
 1. Choose the service category **Endpoint services that use Network Load Balancers and Gateway Load Balancers**.
 1. Enter a name tag for the endpoint (e.g., `konnect-us-geo`) indicating the {{site.konnect_short_name}} geo.
-1. Locate the appropriate PrivateLink service name from the tables below based on your AWS region and {{site.konnect_short_name}} geo.
-1. Select your VPC, subnets, and security group for the endpoint. Ensure:
+1. Locate the appropriate PrivateLink [service name from the tables](#regional-privatelink-service-names) in the following section based on your AWS region and {{site.konnect_short_name}} geo.
+1. Select your VPC, subnets, and security group for the endpoint. Ensure the following settings are configured:
    * The security group allows inbound TCP traffic on port 443.
    * Private DNS is enabled in the additional settings.
-1. Create the endpoint and wait until the status is **available**. We recommend waiting 10 minutes before using the endpoint.
-1. After your PrivateLink endpoint is available, update your Data Plane configuration to connect to the {{site.konnect_short_name}} Control Plane using the private DNS name for your region.
+1. Create the endpoint and wait until the status is available. We recommend waiting 10 minutes before using the endpoint.
+1. After your PrivateLink endpoint is available, update your Data Plane configuration in the [`kong.conf` file](/gateway/manage-kong-conf/) to connect to the {{site.konnect_short_name}} Control Plane using the private DNS name for your region.
 
-Example `kong.conf` for the US region:
+   Here's an example `kong.conf` configuration for the US region:
 
-```sh
-cluster_control_plane = us.svc.konghq.com/cp/{cluster_prefix}
-cluster_server_name = us.svc.konghq.com
-cluster_telemetry_endpoint = us.svc.konghq.com:443/tp/{cluster_prefix}
-cluster_telemetry_server_name = us.svc.konghq.com
-```
+   ```sh
+   cluster_control_plane = us.svc.konghq.com/cp/{cluster_prefix}
+   cluster_server_name = us.svc.konghq.com
+   cluster_telemetry_endpoint = us.svc.konghq.com:443/tp/{cluster_prefix}
+   cluster_telemetry_server_name = us.svc.konghq.com
+   ```
+
 
 
 ## Regional PrivateLink service names
