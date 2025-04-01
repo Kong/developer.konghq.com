@@ -40,7 +40,7 @@ To configure PrivateLink:
 
 1. Navigate to **VPC > Endpoints** in the AWS Console.
 1. Select **Create Endpoint**.
-1. Choose the service category **Endpoint services that use NLBs and GWLBs**.
+1. Choose the service category **Endpoint services that use Network Load Balancers and Gateway Load Balancers**.
 1. Enter a name tag for the endpoint (e.g., `konnect-us-geo`) indicating the {{site.konnect_short_name}} geo.
 1. Locate the appropriate PrivateLink service name from the tables below based on your AWS region and {{site.konnect_short_name}} geo.
 1. Select your VPC, subnets, and security group for the endpoint. Ensure:
@@ -62,7 +62,7 @@ cluster_telemetry_server_name = us.svc.konghq.com
 ## Regional PrivateLink service names
 
 The following tables show the PrivateLink service name and DNS name for each supported AWS region and {{site.konnect_short_name}} geo:
-
+<!--vale off-->
 {% navtabs "service names" %}
 
 {% navtab "eu-central-1" %}
@@ -195,5 +195,5 @@ rows:
 {% endnavtab %}
 
 {% endnavtabs %}
-
+<!--vale on-->
 
