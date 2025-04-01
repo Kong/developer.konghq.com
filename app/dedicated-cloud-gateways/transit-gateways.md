@@ -18,7 +18,7 @@ related_resources:
     url: https://docs.aws.amazon.com/vpc/latest/tgw/tgw-getting-started.html
 ---
 
-When you deploy Dedicated Cloud Gateways in {{site.konnect_short_name}}, you can use AWS Transit Gateway to establish private connectivity between your AWS-hosted services and the {{site.konnect_short_name}} platform. This creates a secure and scalable network path that avoids exposing internal APIs to the public internet.
+When you host your Data Plane nodes on [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) in {{site.konnect_short_name}}, you can use AWS Transit Gateway to establish private connectivity between your AWS-hosted services and the {{site.konnect_short_name}} platform. This creates a secure and scalable network path that avoids exposing internal APIs to the public internet.
 
 <!--vale off -->
 {% mermaid %}
@@ -69,22 +69,22 @@ G & H & I <--public API \n access--> J
 
 This process includes three main steps: 
 
-1. Create and Share the Transit Gateway in AWS
+1. Create and share the [Transit Gateway in AWS](https://docs.aws.amazon.com/vpc/latest/tgw/tgw-getting-started.html):
 
-    * Navigate to **VPC > Transit Gateways** in the AWS Console.
-    * Select **Create transit gateway**, provide a name, and create the gateway.
-    * Save the **Transit Gateway ID**.
-    * Open the **Resource Access Manager**, and select **Create Resource Share**.
-    * Choose **Transit Gateways** as the resource type and select the newly created gateway.
-    * Name the resource share and retain default managed permission settings.
-    * Enable **Allow external accounts**, choose **AWS Account**, and enter the **AWS ID** from the {{site.konnect_short_name}} UI (**Gateway Manager > Networks**).
-    * Create the resource share and save the resulting **RAM Share ARN**.
+    1. Navigate to **VPC > Transit Gateways** in the AWS Console.
+    1. Select **Create transit gateway**, provide a name, and create the gateway.
+    1. Save the Transit Gateway ID.
+    1. Open the **Resource Access Manager**, and select **Create Resource Share**.
+    1. Choose **Transit Gateways** as the resource type and select the newly created gateway.
+    1. Name the resource share and retain default managed permission settings.
+    1. Enable **Allow external accounts**, choose **AWS Account**, and enter the **AWS ID** from the {{site.konnect_short_name}} UI (**Gateway Manager > Networks**).
+    1. Create the resource share and save the resulting **RAM Share ARN**.
 
-2. Accept the Transit Gateway Attachment in AWS
+2. Accept the Transit Gateway Attachment in AWS:
 
-    * Go to **VPC > Transit Gateway Attachments** in the AWS Console.
-    * Locate the incoming attachment request from the {{site.konnect_short_name}} AWS Account ID.
-    * Accept the request to establish the connection.
+    1. Go to **VPC > Transit Gateway Attachments** in the AWS Console.
+    1. Locate the incoming attachment request from the {{site.konnect_short_name}} AWS Account ID.
+    1. Accept the request to establish the connection.
 
     Each AWS VPC that needs to send or receive traffic must have its own Transit Gateway attachment.
 
@@ -92,9 +92,9 @@ This process includes three main steps:
 
 To finish setup in {{site.konnect_short_name}}:
 
-* Go to **Gateway Manager > Networks**.
-* Select your network and click **Attach Transit Gateway**.
-* Provide the following information:
+1. Go to **[Gateway Manager](https://cloud.konghq.com/gateway-manager/), select your Dedicated Cloud Gateway, and click **Networks** in the sidebar.
+1. Select your network and click **Attach Transit Gateway**.
+1. Provide the following information:
   * Transit Gateway Name
   * One or more CIDR blocks (must not overlap with your {{site.konnect_short_name}} network)
   * RAM Share ARN
@@ -102,11 +102,11 @@ To finish setup in {{site.konnect_short_name}}:
 
 ## Accept Transit Gateway Attachment in AWS
 
-In the AWS Console:
+To accept the Transit Gateway Attachement in AWS, do the following:
 
-* Go to **VPC > Transit Gateway Attachments**
-* Wait for an attachment request from the Konnect AWS Account ID
-* Accept the request
+1. In the AWS Console, go to **VPC > Transit Gateway Attachments**.
+1. Wait for an attachment request from the Konnect AWS Account ID.
+1. Accept the request.
 
 Ensure that each AWS VPC requiring traffic forwarding has its own Transit Gateway attachment.
 
