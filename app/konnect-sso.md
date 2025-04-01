@@ -136,5 +136,5 @@ rows:
 
 When you configure team mappings for the {{site.konnect_short_name}} org, keep the following in mind:
 * Each {{site.konnect_short_name}} team can be mapped to **one** IdP group. You must have at least one group mapped to save configuration changes.
-* To manage user and team memberships in {{site.konnect_short_name}} from the Organization settings, select the **Konnect Mapping Enabled** checkbox. If you enable this, approving new users is a two step process. New users logging in to {{site.konnect_short_name}} with their IdP credentials will get an access error and {{site.konnect_short_name}} administrators will need to map the new user to a valid team before the user is granted accesss.
+* To manage user and team memberships in {{site.konnect_short_name}} from the Organization settings, select the **Konnect Mapping Enabled** checkbox. If you enable this, approving new users is a two step process. New users logging in to {{site.konnect_short_name}} with their IdP credentials will get an access error and {{site.konnect_short_name}} administrators will need to map the new user to a valid team before the user is granted access.
 * To assign team memberships by the IdP during SSO login via group claims mapped to {{site.konnect_short_name}} teams, select the **IdP Mapping Enabled** checkbox and enter your IdP groups in the relevant fields.
