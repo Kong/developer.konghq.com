@@ -514,7 +514,7 @@ rows:
 
         * `kong_bandwidth` to `kong_bandwidth_bytes`.
         * `nginx_http_current_connections` and `nginx_stream_current_connections` were merged into to `nginx_hconnections_total`
-        *  `request_count` and `consumer_status` were merged into http_requests_total.
+        *  `request_count` and `consumer_status` were merged into `http_requests_total`.
 
             If the `per_consumer` config is set to `false`, the `consumer` label will be empty. If the `per_consumer` config is `true`, the `consumer` label will be filled.
             
