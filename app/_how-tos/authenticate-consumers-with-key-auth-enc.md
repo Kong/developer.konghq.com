@@ -62,8 +62,9 @@ prereqs:
       icon_url: /assets/icons/keyring.svg
 
 tldr:
-    q: How do I secure a service with encrypted key authentication?
-    a: First, [enable {{site.base_gateway}}'s encryption Keyring](/gateway/keyring/#enable-keyring). Then enable the [Key Authentication Encrypted](/plugins/key-auth-enc/) plugin on the [Gateway Service](/gateway/entities/service/). This plugin will require all requests made to this Service to have a valid API key.
+    q: How do I secure a Service with encrypted key authentication?
+    a: |
+      Enable {{site.base_gateway}}'s encryption Keyring and [generate a new key](#1-generate-a-keyring-key) in the Keyring with a `POST` request to the `/keyring/generate` endpoint. Then, [enable the Key Authentication Encrypted](#2-enable-the-key-authentication-encrypted-plugin) plugin on the Gateway Service and [create a Consumer with a valid key](#3-create-a-consumer-and-key). This plugin will require all requests made to this Gateway Service to have a valid API key.
 
 cleanup:
   inline:
