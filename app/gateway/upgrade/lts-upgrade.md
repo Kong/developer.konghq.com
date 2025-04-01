@@ -151,7 +151,7 @@ keeping in mind the additional resources and complexities.
 The following tables categorize all relevant changelog entries from {{site.ee_product_name}} 2.8.0.0-2.8.4.1 up to 3.4.0.0.
 Carefully review each entry and make changes to your configuration accordingly.
 
-{% include /upgrade/lts-changes.md %}
+{% include_cached /upgrade/lts-changes.md %}
 
 ### kong.conf changes
 
