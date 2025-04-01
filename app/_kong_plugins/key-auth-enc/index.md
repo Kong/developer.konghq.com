@@ -28,6 +28,8 @@ categories:
 related_resources:
   - text: Key Authentication plugin
     url: /plugins/key-auth/
+  - text: Enable key authentication on a Gateway Service with {{site.base_gateway}}
+    url: /how-to/authenticate-consumers-with-key-auth-enc/
 
 search_aliases:
   - key auth encrypted
