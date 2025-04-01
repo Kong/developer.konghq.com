@@ -31,44 +31,38 @@ rows:
 
   - header:
       type: h2
-      text: "Portals"
+      text: "Get started"
 
   - columns:
       - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    {{site.konnect_short_name}} allows you to publish, document, and secure APIs to drive adoption for any developer audience. You can create multiple Dev Portals based on selected APIs with appropriate visibility and access control settings.
-
-                    [Get started](/dev-portal/portals) creating your first Dev Portal.
-
-  - header:
-      type: h2
-      text: "APIs"
-
-  - columns:
+        - type: card
+          config:
+            title: Create a Dev Portal
+            description: |
+              {{site.konnect_short_name}} allows you to publish, document, and secure APIs to drive adoption for any developer audience. 
+              You can create multiple Dev Portals based on selected APIs with appropriate visibility and access control settings.
+            
+            cta:
+              url: "/dev-portal/portals/"
       - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    Dev Portal APIs serve as a repository for your API specifications and documentation. You can optionally version your APIs and publish them to one or more portals. This supports maintaining a central source of truth while offering developer-specific visibility.
-
-                    [Get started](/dev-portal/apis) creating your APIs.
-
-  - header:
-      type: h2
-      text: "Developer Self-Service"
-
-  - columns:
+        - type: card
+          config:
+            title: Add APIs to Dev Portal
+            description: |
+              Dev Portal APIs serve as a repository for your API specifications and documentation. 
+              You can optionally version your APIs and publish them to one or more portals. 
+              This supports maintaining a central source of truth while offering developer-specific visibility.
+            
+            cta:
+              url: "/dev-portal/apis/"
       - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    Configure application registration and role-based access for developers.
-                    * [Enabling and disabling application registration](/dev-portal/app-reg/): Grant or revoke access for developers to register applications and acquire credentials.
+        - type: card
+          config:
+            title: Allow developers to register apps
+            description: |
+              Configure application registration and role-based access for developers.
+              Grant or revoke access for developers to register applications and acquire credentials.
+            
+            cta:
+              url: "/dev-portal/app-reg/"
+
