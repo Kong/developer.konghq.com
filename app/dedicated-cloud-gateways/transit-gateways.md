@@ -126,7 +126,7 @@ rows:
 
 ## Accept Transit Gateway Attachment in AWS
 
-To accept the Transit Gateway Attachement in AWS, do the following:
+To accept the Transit Gateway attachment in AWS, do the following:
 
 1. In the AWS Console, go to **VPC > Transit Gateway Attachments**.
 1. Wait for an attachment request from the Konnect AWS Account ID.
