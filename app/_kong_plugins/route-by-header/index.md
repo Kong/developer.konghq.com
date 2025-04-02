@@ -34,4 +34,14 @@ search_aliases:
   - route by request header
 ---
 
-## Overview
+This plugin allows you to route a request to a new Upstream if it matches one of the
+configured rules. Each rule consists of a `condition` object and an
+`upstream_name` object. For each request coming into {{site.base_gateway}}, the plugin will try to find a rule in which
+all the headers defined in the `condition` field have the same value as in the incoming request.
+The first match dictates the Upstream to which the request is forwarded.
+
+If more than one header is provided in a rule, the plugin looks for all of these headers
+in the request. A request must contain all of the specified headers with the specified
+values for a match to occur.
+
+
