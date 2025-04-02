@@ -38,4 +38,4 @@ The substitutions can be configured via flexible templates.
 
 ## Templates
 
-{% include /plugins/transformer-templates.md %}
+{% include /plugins/request-response-transformer/templates.md %}
