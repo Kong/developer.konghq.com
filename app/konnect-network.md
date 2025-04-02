@@ -20,6 +20,34 @@ related_resources:
     url: /gateway/network/
   - text: " {{site.base_gateway}} control plane and data plane communication"
     url: /gateway/cp-dp-communication/
+faqs:
+  - q: What types of data travel between the {{site.konnect_saas}} control plane and the data plane nodes, and how?
+    a: |
+      Two types of data travel between planes using secure TCP port `443`:
+      * **Configuration** – The control plane sends config data to the data plane nodes.
+      * **Telemetry** – Data plane nodes send usage data to the control plane for Analytics and billing.
+
+      Telemetry includes traffic metrics by service, route, and consuming application. It does not include any customer data. 
+      All telemetry is encrypted using mTLS.
+  - q: How frequently do data planes send telemetry data to the control plane?
+    a: |
+      Telemetry data is sent at different intervals depending on the data plane version:
+      * **2.x** – Every 10 seconds by default
+      * **3.x** – Every 1 second by default
+
+      You can customize this interval using the [`analytics_flush_interval`](/gateway/latest/reference/configuration/#analytics_flush_interval) setting.
+  - q: How long can data plane nodes remain disconnected from the control plane?
+    a: |
+      Data plane nodes continue pinging the control plane until reconnected or stopped. 
+      They use cached config and function normally, unless:
+      * The license expires
+      * The cached config file (`config.json.gz` or `dbless.lmdb`) is deleted
+  - q: What happens if the control plane and data plane nodes disconnect?
+    a: |
+      Data plane nodes use the cached configuration until they can reconnect. 
+      Once reconnected, the control plane sends the latest configuration. 
+      It does not queue or replay any older configuration changes.
+
 ---
 
 {{site.konnect_short_name}} control planes and data plane nodes rely on specific ports and hostnames for secure communication and configuration. The following tables detail the required ports for cluster communication, audit logging, and the hostnames for connecting to regional control plane and telemetry endpoints.

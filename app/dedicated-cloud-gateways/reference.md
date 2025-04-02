@@ -36,6 +36,14 @@ faqs:
   - q: How do I delete a custom domain in {{site.konnect_short_name}}?
     a: |
       In {{site.konnect_short_name}}, go to [**Gateway Manager**](https://cloud.konghq.com/us/gateway-manager/), choose a Control Plane, click **Custom Domains**, and use the action menu to delete the domain.
+  - q: How does network peering work with Dedicated Cloud Gateway nodes?
+    a: |
+      Each Cloud Gateway node is part of a dedicated network for its region (e.g., `us-east-1`). 
+      You can securely peer this network with your AWS network using [AWS Transit Gateway](https://aws.amazon.com/transit-gateway/).
+  - q: What happens if {{site.konnect_saas}} goes down?
+    a: |
+      If the Kong-hosted control plane goes down, you won’t be able to access it or update configuration. 
+      However, connected data plane nodes continue to route traffic normally using the last cached configuration.
 
   - q: Why isn’t AWS PrivateLink recommended for connecting Dedicated Cloud Gateway to my upstream services?
     a: |
@@ -220,3 +228,4 @@ If you are using Dedicated Cloud Gateways and your upstream services are hosted 
 ### Azure VNet Peering
 If you are using Dedicated Cloud Gateways and your upstream services are hosted in Azure, VNet Peering is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, see the [Azure Peering](/dedicated-cloud-gateways/azure-peering/) documentation.
 
+## 
