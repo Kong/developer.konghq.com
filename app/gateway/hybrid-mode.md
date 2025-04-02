@@ -311,3 +311,33 @@ endpoints.
 Because the [Keyring](/gateway/keyring/) module encrypts data in the database, it can't encrypt
 data on Data Plane nodes, since these nodes run without a database and get
 data from the Control Plane.
+
+## Hybrid mode configuration settings
+
+Use the following configuration properties to configure {{site.base_gateway}}
+in hybrid mode:
+
+<!--vale off-->
+{% kong_config_table %}
+config:
+  - name: role
+  - name: cluster_listen
+  - name: proxy_listen
+  - name: cluster_telemetry_listen
+  - name: cluster_telemetry_endpoint
+  - name: cluster_control_plane
+  - name: cluster_mtls
+{% endkong_config_table %}
+<!--vale on-->
+
+The following properties are used differently between [shared and PKI modes](/gateway/cp-dp-communication/#generate-a-certificate-key-pair-in-kong-gateway-on-prem):
+
+<!--vale off-->
+{% kong_config_table %}
+config:
+  - name: cluster_cert
+  - name: cluster_ca_cert
+  - name: cluster_server_name
+  - name: cluster_telemetry_server_name
+{% endkong_config_table %}
+<!--vale on-->
