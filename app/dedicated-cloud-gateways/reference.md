@@ -42,8 +42,8 @@ faqs:
       You can securely peer this network with your AWS network using [AWS Transit Gateway](https://aws.amazon.com/transit-gateway/).
   - q: What happens if {{site.konnect_saas}} goes down?
     a: |
-      If the Kong-hosted control plane goes down, you won’t be able to access it or update configuration. 
-      However, connected data plane nodes continue to route traffic normally using the last cached configuration.
+      If the Kong-hosted Control Plane goes down, you won’t be able to access it or update configuration. 
+      However, connected Data Plane nodes continue to route traffic normally using the last cached configuration.
 
   - q: Why isn’t AWS PrivateLink recommended for connecting Dedicated Cloud Gateway to my upstream services?
     a: |
