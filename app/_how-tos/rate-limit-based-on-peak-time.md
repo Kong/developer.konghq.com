@@ -40,7 +40,7 @@ tldr:
 
     This tutorial shows you how to handle traffic with two different Routes: one for peak traffic, and one for off-peak traffic. Then, you apply two plugins:
     * The Rate Limiting Advanced plugin applies a different rate limit to each Route.
-    * The Pre-function plugin runs a Lua function in the rewrite phase, sending traffic to one of these Routes based on the defined peak and off-peak settings.
+    * The Pre-function plugin runs a Lua function in the rewrite phase, sending traffic to one of these Routes based on the defined peak and off-peak settings in the headers.
 
 cleanup:
   inline:

@@ -39,7 +39,7 @@ tldr:
   a: |
    You can use the serverless Pre-Function plugin to detect headers in a request, and either let the request through or terminate it. 
    
-   In this tutorial, we'll enable the Pre-Function plugin in the access phase, where it will look for a request with the header `X-Custom-Auth`.
+   In this tutorial, we'll enable the Pre-Function plugin in the `access` phase, where it will look for a request with the header `X-Custom-Auth`.
    If the header exists in the request, it lets the request through. If the header doesn’t exist, it terminates the request early.
 
 cleanup:

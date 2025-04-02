@@ -28,7 +28,7 @@ decK doesn't support the file syntax directly. If you want to pass Lua files to 
 {% endnavtab %}
 {% navtab "Using an API" %}
 
-If using the Kong Admin API or {{site.konnect_short_name}} Control Plane Config API, 
+If you're using the [Admin API](/api/gateway/admin-ee/) or [{{site.konnect_short_name}} Control Plane Config API](/api/konnect/control-planes-config/v2/), 
 you can pass each chunk of Lua code as a form parameter and a filename.
 
 For example:

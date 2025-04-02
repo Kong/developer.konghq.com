@@ -13,7 +13,7 @@ description: |
   >    export DECK_ACCESS_FUNCTION=$(cat access-function.lua)
   >    ```
 
-  If using the API, you can also pass each Lua file as a form parameter and a filename, for example:
+  If you're using the API, you can also pass each Lua file as a form parameter and a filename, for example:
   ```
     --form "config.access=@access-function.lua" \
   ```
