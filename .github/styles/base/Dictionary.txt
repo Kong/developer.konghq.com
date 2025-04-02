@@ -541,6 +541,8 @@ metatable
 metatables
 middleware
 mimetype
+minify
+minifying
 minifier
 minikube
 minio
