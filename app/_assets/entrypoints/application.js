@@ -6,6 +6,7 @@
 // Example: Import a stylesheet in <sourceCodeDir>/index.css
 import "~/stylesheets/index.css";
 
+import mermaid from "mermaid";
 import EntityExample from "@/javascripts/components/entity_example";
 import Tabs from "@/javascripts/components/tabs";
 import "@/javascripts/anchor_links";
