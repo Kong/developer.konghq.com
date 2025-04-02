@@ -32,6 +32,10 @@ categories:
 search_aliases:
   - route-by-header
   - route by request header
+
+related_resources:
+  - text: Route requests to different Upstreams based on headers
+    url: /how-to/route-requests-to-different-upstreams-based-on-headers/
 ---
 
 This plugin allows you to route a request to a new Upstream if it matches one of the
