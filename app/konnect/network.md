@@ -14,9 +14,7 @@ tools:
     - kic
     - terraform
 related_resources:
-  - text: "{{site.base_gateway}} ports"
-    url: /gateway/network-ports-firewall/
-  - text: Networking in {{site.base_gateway}}
+  - text: "{{site.base_gateway}} network"
     url: /gateway/network/
   - text: " {{site.base_gateway}} control plane and data plane communication"
     url: /gateway/cp-dp-communication/

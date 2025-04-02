@@ -58,13 +58,13 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Network, firewall, and ports
+            title: "{{site.base_gateway}} network"
             description: |
               Recommended network and firewall settings for {{site.base_gateway}}.
               
             icon: /assets/icons/firewall.svg
             cta:
-              url: "/gateway/network-ports-firewall/"
+              url: "/gateway/network/"
 
   - header:
       type: h2
