@@ -114,7 +114,7 @@ based on the operating system’s time, then sets a request header based on the 
 
 You can set the hours based on your own preferred peak times.
 
-Thw following command applies the Pre-Function globally and runs it in the rewrite phase:
+The following command applies the Pre-Function globally and runs it in the rewrite phase:
 
 ```yaml
 echo '
@@ -145,5 +145,5 @@ iterations: 11
 url: '/anything'
 {% endvalidation %}
 
-Depeding on your OS time, you will see either the `X-Peak` or `X-Off-Peak` header in the request, 
+Depending on your OS time, you will see either the `X-Peak` or `X-Off-Peak` header in the request, 
 and you will hit the rate limit at either 6 or 11 requests.
