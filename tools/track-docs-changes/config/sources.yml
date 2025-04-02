@@ -575,6 +575,10 @@ app/_kong_plugins/ai-proxy-advanced/examples/round-robin.yaml:
   - app/_hub/kong-inc/ai-proxy-advanced/how-to/_load-balancing.md
 app/_kong_plugins/ai-proxy-advanced/examples/semantic.yaml:
   - app/_hub/kong-inc/ai-proxy-advanced/how-to/_load-balancing.md
+app/_kong_plugins/route-by-header/index.md:
+  - app/_hub/kong-inc/route-by-header/overview/_index.md
+app/_how-tos/route-requests-to-different-upstreams-based-on-headers.md:
+  - app/_hub/kong-inc/route-by-header/overview/_index.md
 
 # Konnect
 
