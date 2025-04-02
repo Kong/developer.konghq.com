@@ -703,6 +703,7 @@ subgraphs
 submodule
 submodule's
 subnet
+subnets
 substring
 subtable
 subtables

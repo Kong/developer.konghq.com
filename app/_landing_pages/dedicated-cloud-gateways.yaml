@@ -64,7 +64,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Private vs Public Networks
+              title: Transit Gateway
               description: |
                 Dedicated Cloud Gateways support both public and private networking on AWS.
                 Private networking provides enhanced security by restricting API exposure.
@@ -72,6 +72,16 @@ rows:
               cta:
                 text: Learn more
                 url: /dedicated-cloud-gateways/transit-gateways/
+      - blocks:
+          - type: card
+            config:
+              title: AWS Private Link
+              description: |
+                Connect your Data Plane to your {{site.konnect_short_name}} Control Plane with a private connection to stay compliant and save data transfer costs.
+              icon: /assets/icons/aws.svg
+              cta:
+                text: Learn more
+                url: /dedicated-cloud-gateways/aws-private-link/
       - blocks:
           - type: card
             config:
