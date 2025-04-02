@@ -14,6 +14,8 @@ description: "{{site.konnect_short_name}} supports multiple SSO options"
 related_resources:
   - text: "Authentication"
     url: /gateway/authentication/
+  - text: "SAML IdP mapping"
+    url: /konnect-platform/saml-idp-mapping/
 
 works_on:
   - konnect
