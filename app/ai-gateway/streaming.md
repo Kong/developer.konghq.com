@@ -20,7 +20,7 @@ min_version:
 description: This guide walks you through setting up the AI Proxy and AI Proxy Advanced plugin with streaming.
 ---
 
-## What is request streaming
+## What is request streaming?
 
 In an LLM (Large Language Model) inference request, {{site.base_gateway}} uses the upstream provider's REST API to generate the next chat message from the caller. 
 Normally, this request is processed and completely buffered by the LLM before being sent back to {{site.base_gateway}} and then to the caller in a single large JSON block. This process can be time-consuming, depending on the `max_tokens`, other request parameters, and the complexity of the request sent to the LLM model.
@@ -51,7 +51,7 @@ for chunk in stream:
 The client won't have to wait for the entire response. Instead, tokens will appear as they come in, for example:
 
 ```sh
-$ python3 long-streaming-request.py
+python3 long-streaming-request.py
 > Kong Inc. is a software company providing cloud-native connectivity solutions for APIs and....
 ```
 
@@ -110,7 +110,7 @@ end
   style main color:#fff,stroke:#fff
 {% endmermaid %}
 
-The new streaming framework captures each event, sends the chunk back to the client, and then exits early. 
+The streaming framework captures each event, sends the chunk back to the client, and then exits early. 
 
 It also estimates tokens for LLM services that decided to not stream back the token use counts when the message is completed.
 
@@ -142,8 +142,20 @@ You should receive each batch of tokens as HTTP chunks, each containing one or m
 
 In the AI Proxy and AI Proxy Advanced plugin configuration, you can set an optional field `config.response_streaming` to one of three values:
 
-| Value  | Effect                                                                                    |
-|--------|------------------------------------------------------------------------------------------------------|
-| `allow`  | Allows the caller to optionally specify a streaming response in their request (default is not-stream) |
-| `deny`   | Prevents the caller from setting `stream=true` in their request                                           |
-| `always` | Always returns streaming responses, even if the caller hasn't specified it in their request       |
+{% table %}
+columns:
+  - title: Value
+    key: value
+  - title: Effect
+    key: effect
+rows:
+  - value: "`allow`"
+    effect: |
+      Allows the caller to optionally specify a streaming response in their request (default is not-stream). 
+  - value: "`deny`"
+    effect: |
+      Prevents the caller from setting `stream=true` in their request.
+  - value: "`always`"
+    effect: |
+      Always returns streaming responses, even if the caller hasn't specified it in their request.
+{% endtable %}

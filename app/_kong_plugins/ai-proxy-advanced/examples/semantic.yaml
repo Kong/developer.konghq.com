@@ -5,9 +5,9 @@ description: |
 
   To set up semantic routing, you need to configure the following parameters:
 
-  `config.embeddings` to define the model to use to match the model description and the prompts.
-  `config.vectordb` to define the vector database parameters. Only Redis is supported, so you need a Redis instance running in your environment.
-  `config.targets[].description` to define the description to be matched with the prompts.
+  * `config.embeddings` to define the model to use to match the model description and the prompts.
+  * `config.vectordb` to define the vector database parameters. Only Redis is supported, so you need a Redis instance running in your environment.
+  * `config.targets[].description` to define the description to be matched with the prompts.
 
 weight: 900
 
