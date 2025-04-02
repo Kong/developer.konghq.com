@@ -40,7 +40,7 @@ faqs:
     a: |
       Each Cloud Gateway node is part of a dedicated network for its region (e.g., `us-east-1`). 
       You can securely peer this network with your AWS network using [AWS Transit Gateway](https://aws.amazon.com/transit-gateway/).
-  - q: What happens if {{site.konnect_saas}} goes down?
+  - q: What happens if {{site.konnect_short_name}} goes down?
     a: |
       If the Kong-hosted Control Plane goes down, you won’t be able to access it or update configuration. 
       However, connected Data Plane nodes continue to route traffic normally using the last cached configuration.

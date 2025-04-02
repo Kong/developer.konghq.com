@@ -59,7 +59,7 @@ faqs:
       Yes. Restarting a Data Plane node will load its cached configuration and resume normal function.
   - q: Can I change a Data Plane node's configuration when it's disconnected from the Control Plane?
     a: |
-      Yes 
+      Yes:
       * Copy the configuration cache file or directory from a working node
       * Remove the cache and use [`declarative_config`](/gateway/configuration/#declarative-config)
   - q: If the Data Plane loses communication with the Control Plane, what happens to telemetry data?
