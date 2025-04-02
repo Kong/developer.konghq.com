@@ -5,7 +5,7 @@
 <div class="flex flex-col accordion prerequisites" {{ default_accordion }}data-multiple="false" data-test-id="prereqs">
 
     {% if page.works_on contains 'konnect' %}
-      {% unless page.products contains 'gateway' %}
+      {% unless page.products contains 'gateway' or page.products contains 'ai-gateway' %}
         <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
           {% include prereqs/products/konnect-auth-only.md tier=include.tier %}
         </div>
@@ -28,7 +28,7 @@
       </div>
       {% endfor %}
 
-      {% if page.products contains 'gateway' %}
+      {% if page.products contains 'gateway' or page.products contains 'ai-gateway' %}
         {% if page.works_on contains 'konnect' %}
         <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
           {% include prereqs/products/konnect.md tier=include.tier %}

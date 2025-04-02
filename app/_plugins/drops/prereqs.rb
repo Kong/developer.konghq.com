@@ -60,7 +60,7 @@ module Jekyll
 
       def products
         @products ||= @page.data.fetch('products', [])
-                           .reject { |p| p == 'gateway' }
+                           .reject { |p| %w[gateway ai-gateway].include?(p) }
                            .select { |p| File.exist?(product_include_file_path(p)) }
       end
 
