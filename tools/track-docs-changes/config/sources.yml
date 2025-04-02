@@ -198,7 +198,10 @@ app/_how-tos/use-grpc-gateway.md:
   - app/_hub/kong-inc/grpc-gateway/how-to/_index.md
 app/_how-tos/use-grpc-web.md:
   - app/_hub/kong-inc/grpc-web/how-to/_index.md
-
+app/_how-tos/filter-requests-based-on-header-names.md:
+  - app/_hub/kong-inc/pre-function/how-to/_index.md
+app/_how-tos/rate-limit-based-on-peak-time.md:
+  - app/_hub/kong-inc/pre-function/how-to/_ratelimit.md
 
 ## KIC
 app/_how-tos/kic-install.md:
@@ -517,6 +520,11 @@ app/_kong_plugins/http-log/index.md:
   - app/_hub/kong-inc/http-log/overview/_index.md
 app/_kong_plugins/http-log/changelog.md:
   - app/_hub/kong-inc/http-log/_changelog.md
+app/_kong_plugins/pre-function/index.md:
+  - app/_hub/kong-inc/pre-function/overview/_index.md
+  - app/_hub/kong-inc/pre-function/how-to/_phases.md
+app/_kong_plugins/pre-function/changelog.md:
+  - app/_hub/kong-inc/pre-function/_changelog.md
 
 # Konnect
 

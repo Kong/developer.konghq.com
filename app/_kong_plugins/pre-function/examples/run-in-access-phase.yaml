@@ -1,0 +1,19 @@
+description: |
+  You can pass Lua code as a string to the Pre-Function plugin.
+
+  In this example, the plugin will run in the access phase to overwrite the connect timeout to the upstream service.
+  
+title: 'Pass Lua code as string'
+
+weight: 900
+
+config:
+  access:
+    - "ngx.ctx.balancer_data.connect_timeout = 100"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
