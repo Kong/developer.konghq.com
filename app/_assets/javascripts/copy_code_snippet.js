@@ -68,7 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
           snippet
             .querySelector("code")
             .textContent.replace(/^ /gim, "")
-            .replace(/^\s*\$\s*/gim, "");
         copyInput.select();
         document.execCommand("copy");
         successInfo.classList.remove("scale-0");
