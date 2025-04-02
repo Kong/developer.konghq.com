@@ -25,7 +25,7 @@ related_resources:
 
 faqs:
   - q: How does network peering work with Dedicated Cloud Gateway nodes?
-    a: Each Cloud Gateway node is part of a dedicated Cloud Gateway network that corresponds to a specific cloud region, such as `us-east-1` or `us-west-2`. For enhanced security and seamless connectivity between your cloud network and the {{site.konnect_short_name}} environment, you can peer your Cloud Gateway network with your own network in AWS. This integration is facilitated by using AWS's [TransitGateway](https://aws.amazon.com/transit-gateway/) feature, enabling secure network connections across both platforms.
+    a: Each Cloud Gateway node is part of a dedicated Cloud Gateway network that corresponds to a specific cloud region, such as `us-east-1` or `us-west-2`. For enhanced security and seamless connectivity between your cloud network and the {{site.konnect_short_name}} environment, you can peer your Cloud Gateway network with your own network in AWS. This integration is facilitated by using AWS's [Transit Gateway](/dedicated-cloud-gateways/transit-gateways/) feature, enabling secure network connections across both platforms.
   - q: What types of data travel between the {{site.konnect_saas}} Control Plane and the Data Plane nodes, and how?
     a: |
       There are two types of data that travel between the planes: configuration
@@ -45,7 +45,7 @@ faqs:
     a: When you make a configuration change on the Control Plane, that change is immediately pushed to any connected Data Plane nodes.
   - q: How frequently do Data Planes send telemetry data to the Control Plane?
     a: |
-      Data planes send messages every 1 second by default. You can configure this interval using the [`analytics_flush_interval`](/gateway/latest/reference/configuration/#analytics_flush_interval) setting.
+      Data planes send messages every 1 second by default. You can configure this interval using the [`analytics_flush_interval`](/gateway/configuration/#analytics-flush-interval) setting.
   - q: What happens if {{site.konnect_saas}} goes down?
     a: |
       If the {{site.base_gateway}}-hosted Control Plane goes down, the Control Plane/Data Plane
@@ -73,7 +73,7 @@ faqs:
       The faster your requests come in, the faster the buffer fills up.
 
       By default, the buffer limit is 100000 requests. You can configure a custom buffer amount using the 
-      [`analytics_buffer_size_limit`](/gateway/latest/reference/configuration/#analytics_buffer_size_limit) setting.
+      [`analytics_buffer_size_limit`](/gateway/configuration/#analytics_buffer_size_limit) setting.
   - q: How long can Data Plane nodes remain disconnected from the Control Plane?
     a: |
       A Data Plane node will keep pinging the
@@ -96,7 +96,7 @@ faqs:
   - q: Can I create a new Data Plane node when the connection is down?
     a: Yes. {{site.base_gateway}} can support configuring new Data Plane nodes in the event of a Control Plane outage. For more information, see [Control Plane outage management](/gateway/cp-outage/). 
   - q: Can I create a backup configuration to use in case the cache fails?
-    a: You can set the [`declarative_config`](/gateway/latest/reference/configuration/#declarative_config) foption to load a fallback YAML config.
+    a: You can set the [`declarative_config`](/gateway/configuration/#declarative_config) option to load a fallback YAML config.
   - q: Can I change a Data Plane node's configuration when it's disconnected from the Control Plane?
     a: |
       Yes, if necessary, though any manual configuration will be overwritten the next
@@ -107,7 +107,7 @@ faqs:
       plane node with a working connection and overwrite the cache file on disk
       for the disconnected node.
       * Remove the cache file, then start the Data Plane node with
-      [`declarative_config`](/gateway/latest/reference/configuration/#declarative_config)
+      [`declarative_config`](/gateway/configuration/#declarative_config)
       to load a fallback YAML config.
   - q: "I receive the following error when starting {{site.base_gateway}}: `2022/04/11 12:01:07 [crit] 32790#0: *7 [lua] init.lua:648: init_worker(): worker initialization error: failed to create and open LMDB database: MDB_CORRUPTED: Located page was wrong type; this node must be restarted, context: init_worker_by_lua*`"
     a: Your local configuration cache is corrupt. Remove your LMDB cache (located at `<prefix>/dbless.lmdb`, which is located at  [`/usr/local/kong/dbless.lmdb` by default](/gateway/configuration/#prefix)) and restart {{site.base_gateway}}. This forces the {{site.base_gateway}} node to reload the configuration from the Control Plane because the corrupted cache was deleted.
