@@ -52,12 +52,7 @@ for chunk in stream:
     print(chunk.choices[0].delta.content or "", end="", flush=True)
 ```
 
-The client won't have to wait for the entire response. Instead, tokens will appear as they come in, for example:
-
-```sh
-python3 long-streaming-request.py
-> Kong Inc. is a software company providing cloud-native connectivity solutions for APIs and....
-```
+The client won't have to wait for the entire response. Instead, tokens will appear as they come in.
 
 ## How AI Proxy streaming works
 
@@ -120,7 +115,7 @@ It also estimates tokens for LLM services that decided to not stream back the to
 
 ## Streaming limitations
 
-Keep the following limitations in mind when you configure streaming for the AI Proxy Advanced plugin: 
+Keep the following limitations in mind when you configure streaming for the AI Gateway plugin: 
 
 * Multiple AI features shouldn’t be expected to be applied and work simultaneously.
 * You can't use the [Response Transformer plugin](/plugins/response-transformer/) or any other response phase plugin when streaming is configured.
