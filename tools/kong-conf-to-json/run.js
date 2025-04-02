@@ -103,7 +103,7 @@ function parseSections(filePath) {
 }
 
 (function main() {
-  const args = minimist(process.argv.slice(2));
+  const args = minimist(process.argv.slice(2), { string: ["version"] });
 
   try {
     if (!args.file) {
