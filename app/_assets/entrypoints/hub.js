@@ -4,6 +4,11 @@ class Hub {
     this.textInput = document.getElementById("plugins-search");
     this.plugins = document.querySelectorAll("[data-card='plugin']");
     this.pluginCards = document.getElementById("plugin-cards");
+    this.clearFilters = document.getElementById("clear-filters");
+    this.seeResults = document.getElementById("see-results");
+    this.toggleFiltersDrawer = document.getElementById("toggle-filters-drawer");
+    this.mobilesDrawer = document.querySelector(".mobile-drawer");
+    this.areFiltersOpen = false;
 
     this.deploymentTopologies = this.filters.querySelectorAll(
       'input[name="deployment-topology"]'
@@ -44,6 +49,27 @@ class Hub {
         this.onChange();
       }, this.typeInterval);
     });
+
+    this.clearFilters.addEventListener("click", () => {
+      checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+          checkbox.checked = false;
+          checkbox.dispatchEvent(new Event("change", { bubbles: false }));
+        }
+      });
+      this.toggleDrawer();
+    });
+    this.seeResults.addEventListener("click", () => this.toggleDrawer());
+
+    this.toggleFiltersDrawer.addEventListener("click", () =>
+      this.toggleDrawer()
+    );
+  }
+
+  toggleDrawer() {
+    this.areFiltersOpen = !this.areFiltersOpen;
+    this.mobilesDrawer.classList.toggle("hidden");
+    document.body.classList.toggle("modal-overflow");
   }
 
   onChange() {

@@ -482,10 +482,34 @@
     background: linear-gradient(transparent, transparent) padding-box,
     linear-gradient(227.59deg, #E9EEF7 6.43%, #3CB087 30.81%, #11A06B 36.89%, #286FEB 65.64%, #E9EEF7 100%) border-box;
   }
+
+  .filters {
+    @apply w-full h-full md:sticky flex flex-col md:flex left-0 self-start md:top-24 md:self-start md:h-auto;
+  }
+
+  .mobile-drawer {
+    @apply fixed inset-0 md:relative md:inset-auto flex items-end z-50;
+  }
+
+  .mobile-drawer__panel {
+    @apply w-full bg-secondary md:bg-transparent transition-transform duration-300 transform h-[75vh] flex flex-col rounded-t-md md:translate-y-0;
+  }
+
+  .mobile-drawer__content {
+    @apply flex flex-col flex-1 overflow-y-auto p-6 md:p-0 gap-8;
+  }
+  
+  .mobile-drawer__footer {
+    @apply flex w-full gap-3 p-6 bg-secondary border-t border-primary/5 md:hidden;
+  }
+}
+
+.ais-InstantSearch {
+  @apply flex flex-col md:gap-8;
 }
 
 .ais-Pagination {
-  @apply flex flex-col col-span-3 w-full gap-16 col-start-2;
+  @apply flex flex-col md:col-span-3 md:col-start-2 w-full gap-16;
 }
 
 .ais-Pagination-list {
@@ -513,7 +537,7 @@
 }
 
 .ais-RefinementList-label {
-  @apply flex gap-2 py-0.5 w-full text-sm text-primary items-center;
+  @apply flex gap-2 py-0.5 w-full text-sm text-primary items-center md:pl-1;
 }
 
 .ais-RefinementList-count {
@@ -533,7 +557,11 @@
 }
 
 .ais-StateResults {
-  @apply flex flex-col col-span-3 w-full gap-16;
+  @apply flex flex-col md:col-span-3 w-full gap-16;
+}
+
+.modal-overflow {
+  @apply overflow-hidden overscroll-contain;
 }
 
 .card:target {
