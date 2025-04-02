@@ -21,8 +21,20 @@ function mergeSections(obj1, obj2) {
 function generateIndexFile() {
   let reference = {};
   let previousVersion;
-  const files = fg.sync("../../app/_data/kong-conf/*", {
+  let files = fg.sync("../../app/_data/kong-conf/*", {
     ignore: ["../../app/_data/kong-conf/index.json"],
+  });
+
+  files = files.sort((a, b) => {
+    const versionA = a
+      .match(/(\d+\.\d+)/)[0]
+      .split(".")
+      .map(Number);
+    const versionB = b
+      .match(/(\d+\.\d+)/)[0]
+      .split(".")
+      .map(Number);
+    return versionA[0] - versionB[0] || versionA[1] - versionB[1];
   });
 
   files.forEach((file, index) => {
