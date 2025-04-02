@@ -10,15 +10,15 @@ api_specs:
     - konnect/control-planes-config
 
 description: Attribute mapping tables necessary for configuring SSO with SAML
-schema:
-    api: gateway/admin-ee
-    path: /schemas/RBAC
+
 
 related_resources:
-  - text: Authentication
+  - text: "Authentication"
     url: /gateway/authentication/
-  - text: {{site.konnect_short_name}} SSO
+  - text: "{{site.konnect_short_name}} SSO"
     url: /konnect-platform/konnect-sso/
+  - text: "{{site.konnect_short_name}} ports and network requirements"
+    url: /konnect-network/
 
 ---
 This reference doc contains provider specific information and attribute mapping tables necessary for configuring SSO with SAML.
