@@ -498,7 +498,7 @@
   .mobile-drawer__content {
     @apply flex flex-col flex-1 overflow-y-auto p-6 md:p-0 gap-8;
   }
-  
+
   .mobile-drawer__footer {
     @apply flex w-full gap-3 p-6 bg-secondary border-t border-primary/5 md:hidden;
   }
@@ -544,11 +544,11 @@
   @apply hidden;
 }
 
-.ais-RefinementList-checkbox {
+.checkbox, .ais-RefinementList-checkbox {
   @apply form-checkbox bg-secondary rounded border border-primary/[.08] dark:border-primary/5;
 }
 
-.ais-RefinementList-checkbox:checked {
+.checkbox--checked, .ais-RefinementList-checkbox:checked {
   @apply bg-brand-saturated;
 }
 
