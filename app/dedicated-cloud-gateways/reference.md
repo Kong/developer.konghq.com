@@ -227,5 +227,3 @@ If you are using Dedicated Cloud Gateways and your upstream services are hosted 
 
 ### Azure VNet Peering
 If you are using Dedicated Cloud Gateways and your upstream services are hosted in Azure, VNet Peering is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, see the [Azure Peering](/dedicated-cloud-gateways/azure-peering/) documentation.
-
-## 
