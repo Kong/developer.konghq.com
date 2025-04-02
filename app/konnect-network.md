@@ -35,7 +35,7 @@ faqs:
       * **2.x** – Every 10 seconds by default
       * **3.x** – Every 1 second by default
 
-      You can customize this interval using the [`analytics_flush_interval`](/gateway/latest/reference/configuration/#analytics_flush_interval) setting.
+      You can customize this interval using the [`analytics_flush_interval`](/gateway/configuration/#analytics-flush-interval) setting.
   - q: How long can data plane nodes remain disconnected from the control plane?
     a: |
       Data plane nodes continue pinging the control plane until reconnected or stopped. 

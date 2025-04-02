@@ -65,7 +65,7 @@ https://docs.konghq.com/konnect/gateway-manager/data-plane-nodes/
 
 
 still to-do but this text can go here. 
-{{site.konnect_saas}} deployments run either in either [managed](/konnect/gateway-manager/dedicated-cloud-gateways) or hybrid mode, which means that there is
+{{site.konnect_saas}} deployments run either in either [managed](/dedicated-cloud-gateways/) or hybrid mode, which means that there is
 a separate control plane attached to a data plane consisting of one or more 
 data plane nodes. Control planes and data plane nodes must communicate with 
 each other to receive and send configurations. If communication is interrupted 
