@@ -2,6 +2,8 @@
 title: Adjust header names in a request
 content_type: how_to
 
+description: Change the names of headers sent in a request using the Post-Function plugin.
+
 products:
     - gateway
 
