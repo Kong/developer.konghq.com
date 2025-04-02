@@ -24,4 +24,8 @@ related_resources:
 This reference doc contains provider specific information and attribute mapping tables necessary for configuring SSO with SAML.
 
 
+## Attribute mapping parameters
+
+The following tables describe the SSO attribute mapping parameters for each supported IdP.
+
 {% include_cached /konnect/saml-idp.md %}

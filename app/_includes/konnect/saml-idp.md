@@ -29,6 +29,9 @@ rows:
     konnect: Unique user identifier
 {% endtable %}
 <!-- vale on -->
+
+**Notes and best practices**
+
 * When adding an enterprise application, note that OIDC uses app registration.
 * Remove the namespace from the claim name in Azure. You can do this by checking **Customize** on the group claim.
 * Using groups maps to the Group ID by default.
@@ -54,6 +57,9 @@ rows:
     konnect: "`idp_metadata_url`"
 {% endtable %}
 <!-- vale on -->
+
+**Notes and best practices**
+
 * When configuring the Name ID format in Oracle Cloud, make sure to set it to `transient`.
 * You will need to manually upload the signing certificate from `sp_metadata_url`.
    - `cert.pem` must use the `X509Certificate` value for signing.
@@ -79,6 +85,9 @@ rows:
     konnect: "`idp_metadata_url`"
 {% endtable %}
 <!-- vale on -->
+
+
+**Notes and best practices**
 
 * You will need to manually upload the signing certificate from `sp_metadata_url`.
    - `cert.pem` must use the `X509Certificate` value for signing.
