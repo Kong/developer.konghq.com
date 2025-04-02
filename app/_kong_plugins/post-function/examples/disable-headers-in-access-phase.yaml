@@ -1,0 +1,20 @@
+description: |
+  You can pass Lua code as a string to the Post-Function plugin.
+
+  In this example, the plugin runs in the access phase to disable the `X-Forwarded-Host` header
+  so that it doesn't get sent to the upstream service.
+  
+title: 'Disable headers from being passed to upstream service'
+
+weight: 900
+
+config:
+  access:
+    - "ngx.var.upstream_x_forwarded_host=nil"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
