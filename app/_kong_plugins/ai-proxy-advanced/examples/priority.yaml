@@ -10,6 +10,9 @@ description: |
 
 weight: 900
 
+min_version:
+    gateway: '3.10'
+
 requirements:
   - An OpenAI account
 
