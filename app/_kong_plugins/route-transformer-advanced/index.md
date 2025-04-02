@@ -33,4 +33,9 @@ search_aliases:
   - route-transformer-advanced
 ---
 
-## Overview
+This plugin transforms routing on the fly in {{site.base_gateway}}, changing the host, port, or path of the request. 
+The substitutions can be configured via flexible templates.
+
+## Templates
+
+{% include /plugins/transformer-templates.md %}

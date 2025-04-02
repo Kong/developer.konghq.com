@@ -1,0 +1,16 @@
+description: |
+  Configure the plugin to replace the path with a custom values that the client can provide using the `Custom-Path` header.
+
+title: Replace a path with a template
+
+weight: 900
+
+config: 
+  path: /$(headers["Custom-Path"])
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
