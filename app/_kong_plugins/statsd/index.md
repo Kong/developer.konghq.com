@@ -44,26 +44,6 @@ By default, the plugin sends a packet for each metric it observes. The `udp_pack
 configures the greatest datagram size the plugin can combine. It should be less than
 65507 according to UDP protocol. Consider the MTU of the network when setting this parameter.
 
-
-## Queueing
-
-The StatsD plugin uses a queue to decouple the production and
-consumption of data. This reduces the number of concurrent requests
-made to the upstream server under high load situations and provides
-buffering during temporary network or upstream outages.
-
-You can set several parameters to configure the behavior and capacity
-of the queues used by the plugin.
-
-The queue parameters all reside in a record under the key `queue` in
-the `config` parameter section of the plugin.
-
-Queues are not shared between workers and queueing parameters are
-scoped to one worker.  For whole-system capacity planning, the number
-of workers need to be considered when setting queue parameters.
-
-
-
 ## Metrics
 
 The following configure the metrics that will be logged:
@@ -298,5 +278,6 @@ The {{site.base_gateway}} process error file is the Nginx error file. You can fi
 `{prefix}/logs/error.log`
 
 
+## Queuing
 
-
+{% include_cached /plugins/queues.md name=page.name %}
