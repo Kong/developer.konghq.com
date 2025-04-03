@@ -202,6 +202,10 @@ app/_how-tos/filter-requests-based-on-header-names.md:
   - app/_hub/kong-inc/pre-function/how-to/_index.md
 app/_how-tos/rate-limit-based-on-peak-time.md:
   - app/_hub/kong-inc/pre-function/how-to/_ratelimit.md
+app/_how-tos/authenticate-consumers-jwt.md:
+  - app/_hub/kong-inc/jwt/overview/_index.md
+app/_how-tos/authenticate-consumers-jwt-auth0.md:
+  - app/_hub/kong-inc/jwt/overview/_index.md
 
 ## KIC
 app/_how-tos/kic-install.md:
@@ -595,6 +599,10 @@ app/_kong_plugins/response-transformer-advanced/examples/replace-json-body.yaml:
   - app/_hub/kong-inc/response-transformer-advanced/overview/_index.md
 app/_kong_plugins/response-transformer-advanced/examples/transform-json-body-with-lua-function.yaml:
   - app/_hub/kong-inc/response-transformer-advanced/overview/_index.md
+app/_kong_plugins/jwt/changelog.md:
+  - app/_hub/kong-inc/jwt/_changelog.md
+app/_kong_plugins/jwt/index.md:
+  - app/_hub/kong-inc/jwt/overview/_index.md
 
 # Konnect
 
