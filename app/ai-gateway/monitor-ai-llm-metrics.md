@@ -5,6 +5,7 @@ layout: reference
 
 products:
   - ai-gateway
+  - gateway
 
 tags:
   - ai-gateway

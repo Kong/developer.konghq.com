@@ -4,6 +4,7 @@ metadata:
   description: This page is an introduction to {{site.base_gateway}}.
   products:
     - ai-gateway
+    - gateway
   works_on:
     - on-prem
     - konnect
