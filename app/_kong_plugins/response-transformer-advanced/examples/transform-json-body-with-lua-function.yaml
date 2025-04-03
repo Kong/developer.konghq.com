@@ -1,0 +1,35 @@
+description: Configure the plugin to use a Lua function to transform the response body.
+
+title: Transform the JSON body with a Lua function
+
+weight: 900
+
+config:
+  transform:
+    functions: 
+      - |
+        -- this function transforms
+        -- { "foo": "something", "something": "else" }
+        -- into
+        -- { "foobar": "hello world", "something": "else" }
+        return function (data)
+        if type(data) ~= "table" then
+          return data
+        end
+
+        -- remove foo key
+        data["foo"] = nil
+
+        -- add a new key
+        data["foobar"] = "hello world"
+
+        return data
+        end
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

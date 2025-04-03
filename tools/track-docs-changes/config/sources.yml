@@ -579,6 +579,22 @@ app/_kong_plugins/route-by-header/index.md:
   - app/_hub/kong-inc/route-by-header/overview/_index.md
 app/_how-tos/route-requests-to-different-upstreams-based-on-headers.md:
   - app/_hub/kong-inc/route-by-header/overview/_index.md
+app/_kong_plugins/response-transformer/index.md:
+  - app/_hub/kong-inc/response-transformer/overview/_index.md
+app/_kong_plugins/response-transformer/changelog.md:
+  - app/_hub/kong-inc/response-transformer/_changelog.md
+app/_kong_plugins/response-transformer/examples/add-header.yaml:
+  - app/_hub/kong-inc/response-transformer/overview/_index.md
+app/_kong_plugins/response-transformer/examples/remove-json-properties.yaml:
+  - app/_hub/kong-inc/response-transformer/overview/_index.md
+app/_kong_plugins/response-transformer-advanced/index.md:
+  - app/_hub/kong-inc/response-transformer-advanced/overview/_index.md
+app/_kong_plugins/response-transformer-advanced/examples/remove-nested-json.yaml:
+  - app/_hub/kong-inc/response-transformer-advanced/overview/_index.md
+app/_kong_plugins/response-transformer-advanced/examples/replace-json-body.yaml:
+  - app/_hub/kong-inc/response-transformer-advanced/overview/_index.md
+app/_kong_plugins/response-transformer-advanced/examples/transform-json-body-with-lua-function.yaml:
+  - app/_hub/kong-inc/response-transformer-advanced/overview/_index.md
 
 # Konnect
 

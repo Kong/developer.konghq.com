@@ -1,0 +1,1 @@
+This plugin allows you to transform the response sent by the upstream server on the fly before returning it to the client.
