@@ -49,9 +49,9 @@ rows:
       <br><br>
       [`config.queue.initial_retry_delay`](./reference/#schema--config-queue-initial-retry-delay)
       <br>
-      [`config.queue.max_coalescing_delay`](./reference/#schema--config-queue-max-entries)
+      [`config.queue.max_coalescing_delay`](./reference/#schema--config-queue-max-coalescing-delay)
       <br>
-      [`config.queue.max_retry_delay`](./reference/#schema--config-queue-coalescing-delay)
+      [`config.queue.max_retry_delay`](./reference/#schema--config-queue-max-retry-delay)
       <br>
       [`config.queue.max_retry_time`](./reference/#schema--config-queue-max-retry-time)
     description: |
