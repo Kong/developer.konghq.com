@@ -28,11 +28,11 @@ module Jekyll
 
       def targets
         @targets ||= begin
-          targets = %w[consumer consumer_group service route].select do |t|
+          targets = %w[service route consumer consumer_group].select do |t|
             schema.as_json.dig('properties', t)
           end
-          targets << 'global'
-          targets.sort
+          targets.unshift('global')
+          targets
         end
       end
 

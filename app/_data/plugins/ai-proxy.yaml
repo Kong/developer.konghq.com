@@ -133,7 +133,8 @@ providers:
       model_example: '<a href="https://huggingface.co/models?inference=warm&pipeline_tag=text-generation&sort=trending">Use the model name for the specific LLM provider</a>'
 
 parameters:
-  provider: 'config.provider'
+  provider: 'config.model.provider'
   route_type: 'config.route_type'
   options: 'config.model.options'
   upstream_url: 'config.model.options.upstream_url'
+  model_name: 'config.model.name'

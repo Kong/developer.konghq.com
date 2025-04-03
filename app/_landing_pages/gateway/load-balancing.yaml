@@ -183,6 +183,17 @@ rows:
               text: Semantic load balancing in AI Gateway &rarr;
               url: /plugins/ai-proxy-advanced/examples/semantic/
 
+      - blocks:
+        - type: card
+          config:
+            title: Priority
+            description: |
+              The priority algorithm allows you to define groups of targets with different priority levels 
+              and distribute traffic between targets in a group. 
+            cta:
+              text: Priority load balancing in AI Gateway &rarr;
+              url: /plugins/ai-proxy-advanced/examples/priority/
+
   - header:
       type: h2
       text: References

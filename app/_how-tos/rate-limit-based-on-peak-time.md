@@ -116,23 +116,21 @@ You can set the hours based on your own preferred peak times.
 
 The following command applies the Pre-Function globally and runs it in the rewrite phase:
 
-```yaml
-echo '
-_format_version: "3.0"
-plugins:
-  - name: pre-function
-    config:
-      rewrite:
-      - |
-          local hour = os.date("*t").hour 
-          if hour >= 8 and hour <= 17 
-          then
-            kong.service.request.set_header("X-Peak","active") 
-          else
-            kong.service.request.set_header("X-Off-Peak","active") 
-          end
-' | deck gateway apply -
-```
+{% entity_examples %}
+entities:
+  plugins:
+    - name: pre-function
+      config:
+        rewrite:
+          - |
+              local hour = os.date("*t").hour
+              if hour >= 8 and hour <= 17
+              then
+                kong.service.request.set_header("X-Peak","active")
+              else
+                kong.service.request.set_header("X-Off-Peak","active")
+              end
+{% endentity_examples %}
 
 ## 4. Validate
 

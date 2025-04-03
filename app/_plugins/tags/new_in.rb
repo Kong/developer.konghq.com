@@ -14,8 +14,10 @@ module Jekyll
 
       raise ArgumentError, 'Missing required parameter `version` for {% new_in %} ' unless @param
 
+      version = Gem::Version.correct?(@param) ? @param : context[@param]
+
       context.stack do
-        context['version'] = @param
+        context['version'] = version
         Liquid::Template.parse(template).render(context)
       end
     end

@@ -123,7 +123,7 @@ You can run {{site.base_gateway}} in hybrid mode on any platform where
 
 ## Hybrid mode with Kubernetes 
 
-You can run {{site.base_gateway}} on Kubernetes in hybrid mode with or without the [{{site.kic_product_name}}](/kic/). This uses Kubernetes as a runtime for your data planes. 
+You can run {{site.base_gateway}} on Kubernetes in hybrid mode with or without the [{{site.kic_product_name}}]((/kubernetes-ingress-controller/). This uses Kubernetes as a runtime for your data planes.
 
 Running {{site.base_gateway}} in hybrid mode is commonly referred to as "Kong _on_ Kubernetes". Running {{site.base_gateway}} with {{ site.kic_product_name }} is commonly referred to as "Kong _for_ Kubernetes", as it provides a Kubernetes native way of configuring Kong entities using {{ site.kic_product_name }}. Configuring Kong on Kubernetes is identical to deploying {{site.base_gateway}} running on a virtual machine or bare metal.
 

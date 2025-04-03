@@ -1,17 +1,66 @@
 
 title: 'Sematic load balancing'
-description: 'Configure semantic load balancing for AI Proxy Advanced'
+description: |
+  Configure the plugin to use two OpenAI models: one for questions related to Kong, and another for questions related to Microsoft.
+
+  To set up semantic routing, you need to configure the following parameters:
+
+  * `config.embeddings` to define the model to use to match the model description and the prompts.
+  * `config.vectordb` to define the vector database parameters. Only Redis is supported, so you need a Redis instance running in your environment.
+  * `config.targets[].description` to define the description to be matched with the prompts.
 
 weight: 900
 
-# requirements:
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
-
+requirements:
+  - An OpenAI account
+  - A Redis instance running
+ 
 config:
+  embeddings:
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    model:
+      name: text-embedding-3-small
+      provider: openai
+  vectordb:
+    dimensions: 1024
+    distance_metric: cosine
+    strategy: redis
+    threshold: 0.7
+    redis:
+      host: redis-stack-server
+      port: 6379
+  balancer:
+    algorithm: semantic
+  targets:
+  - model:
+      name: gpt-4
+      provider: openai
+      options:
+        max_tokens: 512
+        temperature: 1.0
+    route_type: llm/v1/chat
+    auth: 
+      header_name: Authorization
+      header_value: Bearer ${key}
+    description: "What is Kong?"
+  - model:
+      name: gpt-4o-mini
+      provider: openai
+      options:
+        max_tokens: 512
+        temperature: 1.0
+    route_type: llm/v1/chat
+    auth: 
+      header_name: Authorization
+      header_value: Bearer ${key}
+    description: "What is Microsoft?"
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
   
 tools:
   - deck

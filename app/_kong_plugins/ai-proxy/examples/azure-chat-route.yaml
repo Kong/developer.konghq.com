@@ -8,23 +8,29 @@ requirements:
 - Azure OpenAI instance
 - Azure OpenAI model deployment
 
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
-
 config:
   route_type: llm/v1/chat
   auth:
     header_name: api-key
-    header_value: $AZURE_OPENAI_API_KEY
+    header_value: ${key}
   model:
     provider: azure
     name: gpt-35-turbo
     options:
-      azure_instance: $AZURE_INSTANCE_NAME
-      azure_deployment_id: $AZURE_DEPLOYMENT_ID
       azure_api_version: "2023-01-01"
+      azure_instance: ${instance}
+      azure_deployment_id: ${deployment}
+
+variables:
+  instance:
+    value: $AZURE_INSTANCE_NAME
+    description: The name of the Azure OpenAI instance.
+  deployment:
+    value: $AZURE_DEPLOYMENT_ID
+    description: The ID of the Azure OpenAI deployment.
+  key:
+    value: $AZURE_OPENAI_API_KEY
+    description: The API key to use to connect to Azure OpenAI.
 
 tools:
   - deck

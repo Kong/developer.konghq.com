@@ -2,6 +2,11 @@
 
 {{ page.example.description | liquify | markdoownify }}
 
+{% if page.min_version %}
+{% new_in page.min_version.gateway %}
+{% endif %}
+
+
 {% unless page.example.requirements == empty %}
 
 ## Prerequisites
