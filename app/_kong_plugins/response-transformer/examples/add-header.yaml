@@ -1,0 +1,17 @@
+description: Configure the plugin to add a new header to the response before returning it to the client.
+
+title: Add a new header
+
+weight: 900
+
+config:
+  add:
+    headers:
+      - "New-Header:Header Value"      
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

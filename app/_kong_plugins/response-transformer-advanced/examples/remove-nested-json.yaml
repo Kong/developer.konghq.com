@@ -1,0 +1,18 @@
+description: Configure the plugin to remove a nested `customers.info.phone` JSON property
+
+title: Remove nested JSON content
+
+weight: 900
+
+config: 
+  remove:
+    json: 
+      - customers.info.phone
+  dots_in_keys: false
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

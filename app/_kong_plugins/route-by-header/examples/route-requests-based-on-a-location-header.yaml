@@ -1,0 +1,26 @@
+description: |
+  Configure the plugin to route request to different Upstreams based on the value of the `location` header.
+  See [Route requests to different Upstreams based on headers](/how-to/route-requests-to-different-upstreams-based-on-headers/) for a full how-to guide with this example.
+
+title: Route requests based on a location header
+
+weight: 900
+
+requirements:
+  - You have created two [Upstreams](/gateway/entities/upstream/)
+
+config:
+  rules:
+      - upstream_name: east-upstream
+        condition:
+          location: us-east
+      - upstream_name: west-upstream
+        condition:
+          location: us-west
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

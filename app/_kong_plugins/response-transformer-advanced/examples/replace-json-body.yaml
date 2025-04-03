@@ -1,0 +1,18 @@
+description: Configure the plugin to replace the entire JSON body for `500` responses.
+
+title: Replace the JSON body
+
+weight: 900
+
+config: 
+  replace:
+    body: "{\"error\": \"internal server error\"}"
+    if_status: 
+      - "500"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

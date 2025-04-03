@@ -32,6 +32,16 @@ categories:
 
 search_aliases:
   - response-transformer
+
+related_resources:
+  - text: Response Transformer Advanced plugin
+    url: /plugins/response-transformer-advanced/
 ---
 
-## Overview
+{% include plugins/request-response-transformer/response-transformer-description.md %}
+
+For more advanced features, see the [Response Transformer Advanced plugin](/plugins/response-transformer-advanced/).
+
+## Order of execution
+
+{% include plugins/request-response-transformer/response-transformer-order.md %}

@@ -4,6 +4,7 @@ class EntityExampleComponent {
     this.formatSelect = this.elem.querySelector(".select-format");
     this.targetSelect = this.elem.querySelector(".select-target");
     this.formatSelectKey = "entity-example-select-format";
+    this.targetSelectKey = "entity-example-select-target";
 
     this.addEventListeners();
     this.initializeSelects();
@@ -20,6 +21,21 @@ class EntityExampleComponent {
 
   initializeSelects() {
     if (this.targetSelect) {
+      try {
+        if (localStorage.getItem(this.targetSelectKey) !== null) {
+          const storedOption = localStorage.getItem(this.targetSelectKey);
+          if (
+            storedOption &&
+            [...this.targetSelect.options].some(
+              (opt) => opt.value === storedOption
+            )
+          ) {
+            this.targetSelect.value = storedOption;
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
       this.targetSelect.dispatchEvent(new Event("change"));
     } else {
       const targetPanel = this.elem.querySelector(
@@ -96,6 +112,7 @@ class EntityExampleComponent {
           panel.classList.add("hidden");
         }
       });
+    localStorage.setItem(this.targetSelectKey, select.value);
   }
 
   onFormatSelected(event) {
