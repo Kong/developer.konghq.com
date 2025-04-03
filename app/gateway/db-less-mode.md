@@ -133,7 +133,7 @@ Operators configure {{ site.base_gateway }} using standard CRDs such as `Ingress
 
 In this topology, the Kubernetes API server is your source of truth. {{ site.kic_product_name }} reads resources stored on the API server and translates them into a valid {{site.base_gateway}} configuration object. You can think of {{ site.kic_product_name }} as the Control Plane for your DB-less Data Planes.
 
-For more information about {{ site.base_gateway }} and {{ site.kic_product_name }}, see the {{ site.kic_product_name }} [getting started guide](/kic/install/). This guide walks you through installing {{ site.base_gateway }}, configuring a Service and Route, then adding a rate limiting and caching plugin to your deployment.
+For more information about {{ site.base_gateway }} and {{ site.kic_product_name }}, see the {{ site.kic_product_name }} [getting started guide](/kubernetes-ingress-controller/install/). This guide walks you through installing {{ site.base_gateway }}, configuring a Service and Route, then adding a rate limiting and caching plugin to your deployment.
 
 ### DB-less with Helm ({{ site.kic_product_name }} disabled)
 
