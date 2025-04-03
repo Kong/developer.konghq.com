@@ -1,2 +1,2 @@
-{%- capture text -%}v{{version}}+{%- endcapture -%}
+{%- capture text -%}v{{version | liquify }}+{%- endcapture -%}
 {%- include badge.html text=text css_class="new-in" -%}

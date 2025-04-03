@@ -11,7 +11,7 @@ config:
   route_type: llm/v1/chat
   auth:
     header_name: x-api-key
-    header_value: ${header_value}
+    header_value: ${key}
   model:
     provider: anthropic
     name: claude-3-5-sonnet-latest
@@ -21,8 +21,9 @@ config:
       temperature: 1.0
 
 variables:
-  header_value:
+  key:
     value: $ANTHROPIC_API_KEY
+    description: The API key to use to connect to Anthropic.
 
 tools:
   - deck

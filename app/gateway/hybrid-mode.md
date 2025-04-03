@@ -87,7 +87,7 @@ style B stroke:none,fill:#0E44A2,color:#fff
 The Control Plane connects to the database, and the Data Planes receive configuration from the Control Plane._
 
 When you create a new Data Plane node, it establishes a connection to the
-Control Plane. The Control Plane listens on port [`8005` ({{site.base_gateway}})](/gateway/network-ports-firewall/) or [`443` ({{site.konnect_short_name}})](/konnect-network/) for connections and
+Control Plane. The Control Plane listens on port [`8005` ({{site.base_gateway}})](/gateway/network-ports-firewall/) or [`443` ({{site.konnect_short_name}})](/konnect-platform/network/) for connections and
 tracks any incoming data from its Data Planes.
 
 Once connected, every API or Kong Manager/{{site.konnect_short_name}} UI action on the Control Plane
@@ -121,7 +121,7 @@ You can run {{site.base_gateway}} in hybrid mode on any platform where
 
 ## Hybrid mode with Kubernetes 
 
-You can run {{site.base_gateway}} on Kubernetes in hybrid mode with or without the [{{site.kic_product_name}}](/kic/). This uses Kubernetes as a runtime for your data planes. 
+You can run {{site.base_gateway}} on Kubernetes in hybrid mode with or without the [{{site.kic_product_name}}]((/kubernetes-ingress-controller/). This uses Kubernetes as a runtime for your data planes.
 
 Running {{site.base_gateway}} in hybrid mode is commonly referred to as "Kong _on_ Kubernetes". Running {{site.base_gateway}} with {{ site.kic_product_name }} is commonly referred to as "Kong _for_ Kubernetes", as it provides a Kubernetes native way of configuring Kong entities using {{ site.kic_product_name }}. Configuring Kong on Kubernetes is identical to deploying {{site.base_gateway}} running on a virtual machine or bare metal.
 

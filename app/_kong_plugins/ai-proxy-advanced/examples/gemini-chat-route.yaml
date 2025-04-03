@@ -7,21 +7,21 @@ weight: 900
 requirements:
 - Google Cloud account with access to Gemini
 
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
-
 config:
   targets:
     - route_type: llm/v1/chat
       auth:
         param_name: key
-        param_value: $GEMINI_API_TOKEN
+        param_value: ${key}
         param_location: query
       model:
         provider: gemini
         name: gemini-1.5-flash
+    
+variables:
+  key:
+    value: $GEMINI_API_KEY
+    description: The API key to use to connect to Gemini.
 
 tools:
   - deck

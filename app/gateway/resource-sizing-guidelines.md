@@ -155,15 +155,20 @@ For example, on a machine with 4 CPU cores and 8 GB of RAM available, we recomme
 
 ### Plugin queues
 
-Several {{site.base_gateway}} plugins
-use internal, in-memory queues to reduce the
-number of concurrent requests to an upstream server
-under high load conditions and provide buffering during temporary
-network and upstream outages. The [`queue.max_entries`](/gateway/entities/plugin/#plugin-queuing) plugin configuration parameter determines how many entries can be waiting in a given plugin queue. The default value of 10,000 for `queue.max_entries` should
-provide for enough buffering in many installations while keeping the
-maximum memory usage of queues at reasonable levels. Once this
-limit is reached, the oldest entry is removed when a new entry is
-queued.
+Several {{site.base_gateway}} plugins use internal, in-memory queues to reduce the number of concurrent requests to an upstream server
+under high load conditions and provide buffering during temporary network and upstream outages. 
+
+These plugins include:
+* [HTTP Log](/plugins/http-log/)
+* [OpenTelemetry](/plugins/opentelemetry/)
+* [Datadog](/plugins/datadog/)
+* [StatsD](/plugins/statsd/)
+* [Zipkin](/plugins/zipkin/)
+
+The `queue.max_entries` plugin configuration parameter determines how many entries can be waiting in a given plugin queue. 
+The default value of 10,000 for `queue.max_entries` should provide for enough buffering in many installations while keeping 
+the maximum memory usage of queues at reasonable levels. 
+Once this limit is reached, the oldest entry is removed when a new entry is queued.
 
 For larger configurations, we recommend experimentally determining
 the memory requirements of queues by running {{site.base_gateway}} in
@@ -171,9 +176,6 @@ a test environment. You can force plugin queues to reach configured limits by ob
 upstream servers are unavailable. Most plugins use one queue per plugin instance, with the exception of
 the [HTTP Log](/plugins/http-log/) plugin, which uses one queue per log server upstream
 configuration. 
-
-
-For more information about {{site.base_gateway}}'s internal plugin queueing system, see [Plugin queuing](/gateway/entities/plugin/#plugin-queuing).
 
 ## Next steps
 

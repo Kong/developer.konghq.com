@@ -7,23 +7,26 @@ weight: 900
 requirements:
 - AWS account with access to Bedrock
 
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
-
 config:
   targets:
     - route_type: llm/v1/chat
       auth:
         allow_override: false
-        aws_access_key_id: $AWS_ACCESS_KEY_ID
-        aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
+        aws_access_key_id: ${key}
+        aws_secret_access_key: ${secret}
       model:
         provider: bedrock
         name: meta.llama3-70b-instruct-v1:0
         options:
           aws_region: us-east-1
+        
+variables:
+  key:
+    value: $AWS_ACCESS_KEY_ID
+    description: The AWS access key ID to use to connect to Bedrock.
+  secret:
+    value: $AWS_SECRET_ACCESS_KEY
+    description: The AWS secret access key to use to connect to Bedrock.
 
 tools:
   - deck

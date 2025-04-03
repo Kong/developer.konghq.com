@@ -1,0 +1,17 @@
+description: Configure the plugin to remove a `custom_property` JSON property from the response before returning it to the client.
+
+title: Remove a JSON property
+
+weight: 900
+
+config:
+  remove:
+    json:
+      - custom_property
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

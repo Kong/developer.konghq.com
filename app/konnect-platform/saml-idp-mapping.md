@@ -18,7 +18,7 @@ related_resources:
   - text: "{{site.konnect_short_name}} SSO"
     url: /konnect-platform/konnect-sso/
   - text: "{{site.konnect_short_name}} ports and network requirements"
-    url: /konnect-network/
+    url: /network/
 
 ---
 This reference doc contains provider specific information and attribute mapping tables necessary for configuring SSO with SAML.
