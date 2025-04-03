@@ -334,7 +334,7 @@ rows:
           config:
             - q: Is AI Gateway available for all deployment modes?
               a: |
-                Yes, AI plugins are supported in all [deployment modes](/gateway/deployment-topologies/), including {{site.konnect_short_name}}, self-hosted traditional, hybrid, and DB-less, and on Kubernetes via the [{{site.kic_product_name}}](/kic/).
+                Yes, AI plugins are supported in all [deployment modes](/gateway/deployment-topologies/), including {{site.konnect_short_name}}, self-hosted traditional, hybrid, and DB-less, and on Kubernetes via the [{{site.kic_product_name}}](/kubernetes-ingress-controller/).
             
             - q: Why should I use AI Gateway instead of adding the LLM's API behind {{site.base_gateway}}?
               a: |
