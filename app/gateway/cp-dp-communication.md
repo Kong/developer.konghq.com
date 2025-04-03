@@ -209,7 +209,7 @@ updated certificates.
 
 If your Data Plane nodes are running on Linux or Kubernetes, or if you have a
 Docker container that was _not_ created using the quick setup script, you must
-generate new certificates and replace them on the existing nodes. For more information, see [Renew Data Plane certificates in {{site.konnect_short_name}}](/how-to/renew-data-plane-certs/).
+generate new certificates and replace them on the existing nodes. For more information, see the [Data Plane reference](/gateway-manager/data-plane-reference/).
 
 ## Generate a certificate/key pair in {{site.base_gateway}} on-prem
 
