@@ -123,6 +123,7 @@ Kong supports the following versions of {{site.base_gateway}}:
 {% endfor %}
 {% endnavtabs %}
 
+For information about FIPS please see the [compliance page](https://konghq.com/compliance).
 ## Marketplaces
 
 {{site.base_gateway}} is available through the following marketplaces:

@@ -702,6 +702,7 @@ releases:
     ee-version: "3.10.0.0"
     lts: true
     latest: true
+    eol: Mar 2028
     distributions:
       - amazonlinux2:
           package: true

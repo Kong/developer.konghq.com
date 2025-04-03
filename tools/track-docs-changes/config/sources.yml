@@ -660,8 +660,6 @@ app/_landing_pages/dev-portal.yaml:
 app/gateway/rate-limiting/strategies.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
-app/gateway/fips.md:
-  - /app/_src/gateway/kong-enterprise/fips-support/index.md
 app/gateway/rate-limiting/window-types.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
@@ -779,6 +777,7 @@ app/gateway/third-party-support.md:
   - app/_src/gateway/support/third-party.md
 app/gateway/version-support-policy.md:
   - app/_src/gateway/support/index.md
+  - /app/_src/gateway/kong-enterprise/fips-support/index.md
 /app/gateway/sbom.md:
   - app/_src/gateway/support/sbom.md
 
