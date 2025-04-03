@@ -40,10 +40,10 @@ related_resources:
 
 {% include plugins/request-response-transformer/response-transformer-description.md %}
 
-The Response Transformer Advanced plugin provides features not available in the [Response Transformer plugin](/plugins/response-transformer/), including:
+The Response Transformer Advanced plugin provides features that aren't available in the [Response Transformer plugin](/plugins/response-transformer/), including:
 * When transforming a JSON payload, transformations are applied to nested JSON objects and
-  arrays. This can be turned off and on using the [`config.dots_in_keys`](./reference/#schema--config-dots-in-keys) configuration parameter.
-  See [Arrays and nested objects](#arrays-and-nested-objects).
+  arrays. This can be turned enabled and disabled using the [`config.dots_in_keys`](./reference/#schema--config-dots-in-keys) configuration parameter.
+  See [Arrays and nested objects](#arrays-and-nested-objects) for more information.
 * Transformations can be restricted to responses with specific status codes using various
   `config.*.if_status` configuration parameters.
 * JSON body contents can be restricted to a set of allowed properties with

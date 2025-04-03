@@ -1,5 +1,5 @@
 The plugin allows navigating complex JSON objects (arrays and nested objects)
-when `config.dots_in_keys` is set to `false` (the default is `true`).
+when `config.dots_in_keys` is set to `false` (the default is `true`):
 
 - `array[*]`: Loops through all elements of the array.
 - `array[N]`: Navigates to the nth element of the array (the index of the first element is `1`).
