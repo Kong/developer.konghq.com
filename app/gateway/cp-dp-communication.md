@@ -140,7 +140,7 @@ unencrypted LMDB database directory, `dbless.lmdb`, in {{site.base_gateway}}’s
 When set as a DP node, {{site.base_gateway}} processes configuration in the
 following order:
 
-1. **Config cache**: If the local config cache `dbless.lmdb` exists in the [`kong_prefix` path]((/gateway/configuration/#prefix)) (`/usr/local/kong` by default), the DP node loads it as configuration.
+1. **Config cache**: If the local config cache `dbless.lmdb` exists in the [`kong_prefix` path](/gateway/configuration/#prefix) (`/usr/local/kong` by default), the DP node loads it as configuration.
 2. **`declarative_config` exists**: If there is no config cache and the
 `declarative_config` parameter is set, the DP node loads the specified file.
 3. **Empty config**: If there is no config cache or declarative

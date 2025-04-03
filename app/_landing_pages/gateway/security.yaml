@@ -79,7 +79,7 @@ rows:
               
             icon: /assets/icons/login.svg
             cta:
-              url: "/konnect-sso/"
+              url: "/konnect-platform/konnect-sso/"
       - blocks:
         - type: card
           config:
