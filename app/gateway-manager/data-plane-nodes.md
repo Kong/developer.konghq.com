@@ -22,7 +22,11 @@ related_resources:
 works_on:
   - on-prem
   - konnect
+
 ---
 
 @todo
 https://docs.konghq.com/konnect/gateway-manager/data-plane-nodes/
+
+
+
