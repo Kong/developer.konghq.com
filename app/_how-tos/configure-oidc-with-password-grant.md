@@ -1,5 +1,5 @@
 ---
-title: Configure OpenID Connect with the client credentials grant
+title: Configure OpenID Connect with the password grant
 content_type: how_to
 
 related_resources:
@@ -7,6 +7,8 @@ related_resources:
     url: /gateway/authentication/
   - text: OpenID Connect authentication flows and grants
     url: /plugins/openid-connect/#authentication
+  - text: Password grant workflow
+    url: /plugins/openid-connect/#password-grant-workflow
 
 plugins:
   - openid-connect
@@ -20,11 +22,10 @@ products:
 
 works_on:
   - on-prem
+  - konnect
 
 min_version:
   gateway: '3.4'
-
-tier: enterprise
 
 tools:
   - deck
@@ -37,7 +38,7 @@ prereqs:
       - example-route
   inline:
     - title: Set up Keycloak
-      include_content: prereqs/auth/oidc/keycloak-jwks
+      include_content: prereqs/auth/oidc/keycloak-password
       icon_url: /assets/icons/keycloak.svg
 
 tags:
@@ -45,8 +46,8 @@ tags:
   - openid-connect
 
 tldr:
-  q: How do I use client credentials to authenticate with my identity provider?
-  a: Using the OpenID Connect plugin, set up the client credentials grant flow to connect to an identity provider (IdP) by passing a client ID and secret in a header.
+  q: How do I use a username and password to authenticate directly with my identity provider?
+  a: Using the OpenID Connect plugin, set up the [password grant flow](/plugins/openid-connect/#password-grant-workflow) to connect to an identity provider (IdP) by passing a username and password in a header.
 
 cleanup:
   inline:
@@ -56,17 +57,17 @@ cleanup:
 
 ---
 
-## 1. Enable the OpenID Connect plugin with client credentials
+## 1. Enable the OpenID Connect plugin with the password grant
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
-set up an instance of the OpenID Connect plugin with the client credentials grant.
+set up an instance of the OpenID Connect plugin with the password grant.
 
-For the client credentials grant, we need to configure the following:
-* Issuer, client ID, and client auth: settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
-* Auth method: client credentials grant.
+For the password grant, we need to configure the following:
+* Issuer, client ID, client secret, and client auth: settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
+* Auth method: password grant.
 * We want to search for client credentials in headers only.
 
-Using these settings, let’s test out the client credentials grant with Keycloak. 
+Using these settings, let’s test out the password grant with Keycloak. 
 Enable the OpenID Connect plugin on the `example-service` service:
 
 {% entity_examples %}
@@ -75,42 +76,39 @@ entities:
     - name: openid-connect
       service: example-service
       config:
-        issuer: $ISSUER
+        issuer: ${issuer}
         client_id:
-        - $CLIENT_ID
+        - ${client-id}
+        client_secret:
+        - ${client-secret}
         client_auth:
-        - private_key_jwt
+        - client_secret_post
         auth_methods:
-        - client_credentials
+        - password
         client_credentials_param_type:
         - header
+variables:
+  issuer:
+    value: $ISSUER
+  client-id:
+    value: $CLIENT_ID
+  client-secret:
+    value: $CLIENT_SECRET
 {% endentity_examples %}
 
-## 2. Check OpenID Connect discovery cache
-
-Check that the OpenID Connect plugin is able to connect to your IdP:
-
-{% control_plane_request %}
-url: /openid-connect/issuers
-status_code: 200
-method: GET
-{% endcontrol_plane_request %}
-
-The response should contain Keycloak OpenID Connect discovery document and the keys. 
-If there are no keys returned by the issuer, check your IdP configuration.
-
-## 3. Validate the client credentials grant
+## 2. Validate the password grant
 
 At this point you have created a Gateway Service, routed traffic to the Service, and enabled the OpenID Connect plugin.
-You can now test the client credentials grant.
+You can now test the password grant.
 
-Access the `example-route` Route using the client credentials created in the Keycloak configuration step:
+Access the `example-route` Route using the user credentials created in the Keycloak configuration step. 
+The following user has the username `john` and the password `doe`:
 
 {% validation request-check %}
-url: /example-route
+url: /anything
 method: GET
 status_code: 200
-user: "$CLIENT_ID:$CLIENT_SECRET"
+user: "john:doe"
 {% endvalidation %}
 
 If {{site.base_gateway}} successfully authenticates with Keycloak, you'll see a `200` response with your bearer token in the Authorization header.
