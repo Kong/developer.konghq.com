@@ -1,17 +1,42 @@
 
 title: 'Lowest-latency load balancing'
-description: 'Configure lowest-latency load balancing for AI Proxy Advanced'
+description: 'Configure the plugin to use two OpenAI models and route requests based on end-to-end response time.'
 
 weight: 900
 
-# requirements:
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
+requirements:
+  - An OpenAI account
 
 config:
+  balancer:
+    algorithm: lowest-latency
+    latency_strategy: e2e
+  targets:
+  - model:
+      name: gpt-4
+      provider: openai
+      options:
+        max_tokens: 512
+        temperature: 1.0
+    route_type: llm/v1/chat
+    auth: 
+      header_name: Authorization
+      header_value: Bearer ${key}
+  - model:
+      name: gpt-4o-mini
+      provider: openai
+      options:
+        max_tokens: 512
+        temperature: 1.0
+    route_type: llm/v1/chat
+    auth: 
+      header_name: Authorization
+      header_value: Bearer ${key}
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
   
 tools:
   - deck

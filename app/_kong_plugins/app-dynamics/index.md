@@ -76,7 +76,7 @@ Before you configure the plugin, you must enable it:
 
 * **Package install:** Set `plugins=bundled,app-dynamics` in [`kong.conf`](/gateway/configuration/) before starting {{site.base_gateway}}
 * **Docker:** Set `export KONG_PLUGINS=bundled,app-dynamics` in the environment
-* **Kubernetes:** Set `KONG_PLUGINS=bundled,app-dynamics` using the [Custom Plugin](/kic/custom-plugin/) instructions.
+* **Kubernetes:** Set `KONG_PLUGINS=bundled,app-dynamics` using the [Custom Plugin](/kubernetes-ingress-controller/custom-plugin/) instructions.
 
 ## Plugin configuration
 

@@ -57,24 +57,24 @@ cleanup:
 The Pre-Function plugin lets you execute Lua code. In this case, we're using the plugin to look for a specific header, `x-custom-auth`. 
 
 The following example applies the Pre-Function plugin globally, in the access phase:
-```yaml
-echo '
-_format_version: "3.0"
-plugins:
-  - name: pre-function
-    config:
-      access:
-        - |
-            -- Get list of request headers
-            local custom_auth = kong.request.get_header("x-custom-auth")
 
-            -- Terminate request early if the custom authentication header
-            -- does not exist
-            if not custom_auth then
-              return kong.response.exit(401, "Invalid Credentials")
-            end
-' | deck gateway apply -
-```
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: pre-function
+      config:
+        access:
+          - |
+              -- Get list of request headers
+              local custom_auth = kong.request.get_header("x-custom-auth")
+
+              -- Terminate request early if the custom authentication header
+              -- does not exist
+              if not custom_auth then
+                return kong.response.exit(401, "Invalid Credentials")
+              end
+{% endentity_examples %}
 
 ## 2. Validate
 
