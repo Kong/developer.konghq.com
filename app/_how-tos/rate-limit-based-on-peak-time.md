@@ -2,6 +2,8 @@
 title: Rate limit requests based on peak and off-peak time
 content_type: how_to
 
+description: Using the Pre-function and the Rate Limiting Advanced plugins, set the rate limit based on peak or non-peak time.
+
 products:
     - gateway
 

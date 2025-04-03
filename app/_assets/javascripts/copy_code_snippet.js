@@ -64,11 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
           ".copy-code-success-info"
         );
         copyInput.value =
-          snippet.dataset.copyCode ||
-          snippet
-            .querySelector("code")
-            .textContent.replace(/^ /gim, "")
-            .replace(/^\s*\$\s*/gim, "");
+          snippet.dataset.copyCode || snippet.querySelector("code").textContent;
         copyInput.select();
         document.execCommand("copy");
         successInfo.classList.remove("scale-0");

@@ -361,7 +361,7 @@ The plugin queuing system was reworked in {{site.base_gateway}} 3.3.x, so some p
 * [StatsD](/plugins/statsd/)
 * [Zipkin](/plugins/zipkin/)
 
-For more information about how plugin queuing works and the plugin queuing parameters you can configure, see [About Plugin Queuing](/gateway/entities/plugin/#plugin-queuing).
+For more information about how plugin queuing works and the plugin queuing parameters you can configure, see the documentation for each plugin.
 
 **Traditional compatibility router**
 
