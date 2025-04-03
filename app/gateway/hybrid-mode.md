@@ -26,6 +26,8 @@ related_resources:
     url: /gateway/deployment-topologies/
   - text: Data Plane hosting options
     url: /gateway/topology-hosting-options/
+  - text: "{{site.base_gateway}} control plane and data plane communication"
+    url: /gateway/cp-dp-communication/
   - text: "{{site.base_gateway}} deployment models"
     url: /gateway/deployment-models/
   - text: DB-less mode

@@ -611,6 +611,7 @@ app/gateway/cp-dp-communication.md:
   - app/konnect/network-resiliency.md
   - app/_src/gateway/reference/faq.md
   - app/_src/gateway/production/deployment-topologies/hybrid-mode/setup.md
+  - app/konnect/gateway-manager/data-plane-nodes/renew-certificates.md
 app/konnect/network.md:
   - app/konnect/network.md
 app/gateway/resource-sizing-guidelines.md:
