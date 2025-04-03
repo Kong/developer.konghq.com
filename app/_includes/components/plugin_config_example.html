@@ -35,10 +35,6 @@
 
      {% assign formatted_examples = entity_example.formatted_examples %}
       <div tabindex="0" class="entity-example-target-panel hidden content" aria-labelledby="select-target-{{ entity_example.id }}" data-target="{{ target }}">
-        {% if target == 'global' %}
-          {% capture global_context %}{% include components/plugin_config_example/global.md %}{% endcapture %}
-          {{ global_context | markdownify }}
-        {% endif %}
 
         {% for formatted_example in formatted_examples %}
           {% assign format = formatted_example.format %}
