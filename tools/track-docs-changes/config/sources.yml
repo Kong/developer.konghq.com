@@ -202,6 +202,8 @@ app/_how-tos/filter-requests-based-on-header-names.md:
   - app/_hub/kong-inc/pre-function/how-to/_index.md
 app/_how-tos/rate-limit-based-on-peak-time.md:
   - app/_hub/kong-inc/pre-function/how-to/_ratelimit.md
+app/_how-tos/adjust-header-names-in-request.md:
+  - app/_hub/kong-inc/post-function/how-to/_index.md
 
 ## KIC
 app/_how-tos/kic-install.md:
@@ -525,6 +527,11 @@ app/_kong_plugins/pre-function/index.md:
   - app/_hub/kong-inc/pre-function/how-to/_phases.md
 app/_kong_plugins/pre-function/changelog.md:
   - app/_hub/kong-inc/pre-function/_changelog.md
+app/_kong_plugins/post-function/index.md:
+  - app/_hub/kong-inc/post-function/overview/_index.md
+  - app/_hub/kong-inc/post-function/how-to/_phases.md
+app/_kong_plugins/post-function/changelog.md:
+  - app/_hub/kong-inc/post-function/_changelog.md
 app/_includes/plugins/queues.md:
   - app/_src/gateway/kong-plugins/queue/index.md
   - app/_src/gateway/kong-plugins/queue/reference.md

@@ -8,11 +8,20 @@ content_type: reference
 
 * Fixed an issue where a duplicate `protocols` field was accidentally added to the `pre-function` schema.
 
+### {{site.base_gateway}} 3.3.x
+* `kong.cache` now points to a cache instance that is dedicated to the Serverless Functions plugins. 
+It does not provide access to the global {{site.base_gateway}} cache. 
+Access to certain fields in `kong.conf` has also been restricted.
+
 ### {{site.base_gateway}} 3.0.x
 
 * The deprecated `config.functions` parameter has been removed from the plugin.
 Use `config.access` instead.
 * The pre-function plugin changed priority from `+inf` to `1000000`.
+
+### {{site.base_gateway}} 2.8.x
+
+* Added the missing `protocols` field to the plugin.
 
 ### {{site.base_gateway}} 2.3.x
 
