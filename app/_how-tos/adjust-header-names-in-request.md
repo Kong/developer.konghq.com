@@ -45,7 +45,7 @@ tldr:
 
    In this tutorial, we'll edit two types of headers: headers set by a plugin (in this case, Rate Limiting), and latency headers from {{site.base_gateway}}.
    
-   In this tutorial, we'll enable the Post-Function plugin in the `header_filter` phase, where it will look for a configured list of headers, then transform those headers into different names.
+   We'll enable the Post-Function plugin in the `header_filter` phase, where it will look for a configured list of headers, then transform those headers into different names.
    The upstream service then only sees the transformed header names.
   
 cleanup:
@@ -60,7 +60,7 @@ cleanup:
 
 ## 1. Enable the Rate Limiting plugin
 
-Add a Rate Limiting plugin to the `example-service` you created in the [prerequisites](#prerequisites):
+Add a [Rate Limiting](/plugins/rate-limiting/) plugin to the `example-service` you created in the [prerequisites](#prerequisites):
 
 {% entity_examples %}
 entities:
@@ -75,7 +75,7 @@ entities:
 
 ## 2. Create a header transformation Lua function
 
-The Post-Function plugin lets you execute Lua code. 
+The [Post-Function](/plugins/post-function/) plugin lets you execute Lua code. 
 We'll pass a function that renames the following headers:
 
 * **Rate limiting headers**: The Rate Limiting plugin returns headers such as `X-RateLimit-Remaining-{time}` and `X-RateLimit-Limit-{time}`, 
