@@ -548,6 +548,7 @@ minikube
 minio
 misconfigurations
 misconfigured
+multimodal
 mutex
 nameserver
 nameservers
