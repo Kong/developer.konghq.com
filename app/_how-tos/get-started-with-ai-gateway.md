@@ -4,6 +4,7 @@ content_type: how_to
 
 products:
     - ai-gateway
+    - gateway
 
 works_on:
     - on-prem
