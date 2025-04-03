@@ -22,7 +22,7 @@ works_on:
   
 related_resources:
   - text: "{{site.konnect_short_name}} ports and network requirements"
-    url: /konnect/network/
+    url: /konnect-platform/network/
 ---
 
 {{site.konnect_short_name}} allows you to host and operate your cloud instance in a geographic region that you specify. This is important for data privacy and regulatory compliance for you organization. 

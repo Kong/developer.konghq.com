@@ -34,6 +34,91 @@ related_resources:
     url: /gateway/db-less-mode/
   - text: Traditional mode
     url: /gateway/traditional-mode/
+
+faqs:
+  - q: What types of data travel between the {{site.konnect_saas}} Control Plane and the Data Plane nodes, and how?
+    a: |
+      There are two types of data that travel between the planes: configuration
+      and telemetry. Both use the secure TCP port `443`.
+
+      * **Configuration:** The Control Plane sends configuration data to any connected
+        Data Plane node in the cluster.
+
+      * **Telemetry:** Data plane nodes send usage information to the Control Plane
+        for Analytics and for account billing. Analytics tracks aggregate traffic by
+        Gateway Service, Route, and the consuming application. For billing, {{site.base_gateway}} tracks the
+        number of Gateway Services, API calls, and active dev portals.
+
+      Telemetry data does not include any customer information or any data processed
+      by the Data Plane. All telemetry data is encrypted using mTLS.
+  - q: How frequently does configuration data travel between the {{site.konnect_short_name}} Control Plane and Data Plane nodes?
+    a: When you make a configuration change on the Control Plane, that change is immediately pushed to any connected Data Plane nodes.
+  - q: How frequently do Data Planes send telemetry data to the Control Plane?
+    a: |
+      Data planes send messages every 1 second by default. You can configure this interval using the [`analytics_flush_interval`](/gateway/configuration/#analytics-flush-interval) setting.
+  - q: What happens if {{site.konnect_saas}} goes down?
+    a: |
+      If the {{site.base_gateway}}-hosted Control Plane goes down, the Control Plane/Data Plane
+      connection gets interrupted. You can't access the Control Plane or
+      change any configuration during this time.
+
+      A connection interruption has no negative effect on the function of your
+      Data Plane nodes. They continue to proxy and route traffic normally. 
+      For more information, see [Control Plane outage management](/gateway/cp-outage/).
+  - q: What happens if the Control Plane and Data Plane nodes disconnect?
+    a: |
+      If a Data Plane node becomes disconnected from its Control Plane, configuration can't
+      travel between them. In that situation, the Data Plane node continues to use cached
+      configuration until it reconnects to the Control Plane and receives new
+      configuration.
+
+      Whenever a connection is re-established with the Control Plane, it pushes the latest 
+      configuration to the Data Plane node. It doesn't queue up or try to apply older changes.
+
+      If your Control Plane is a {{site.mesh_product_name}} global Control Plane, see {{site.mesh_product_name}} failure modes for connectivity issues.
+  - q: If the Data Plane loses communication with the Control Plane, what happens to telemetry data?
+    a: |
+      If a Data Plane loses contact with the Control Plane, the Data Plane accumulates request data into a buffer.
+      Once the buffer fills up, the Data Plane starts dropping older data. 
+      The faster your requests come in, the faster the buffer fills up.
+
+      By default, the buffer limit is 100000 requests. You can configure a custom buffer amount using the 
+      [`analytics_buffer_size_limit`](/gateway/configuration/#analytics_buffer_size_limit) setting.
+  - q: How long can Data Plane nodes remain disconnected from the Control Plane?
+    a: |
+      A Data Plane node will keep pinging the
+      Control Plane, until the connection is re-established or the Data Plane node
+      is stopped.
+
+      The Data Plane node needs to connect to the Control Plane at least once.
+      The Control Plane pushes configuration to the Data Plane, and each Data Plane
+      node caches that configuration in-memory. It continues to use this cached
+      configuration until it receives new instructions from the Control Plane.
+
+      There are situations that can cause further problems:
+      * If the license that the Data Plane node received from the Control Plane expires,
+      the node stops working.
+      * If the Data Plane node's configuration cache file (`config.json.gz`) or directory (`dbless.lmdb`)
+      gets deleted, it loses access to the last known configuration and starts
+      up empty.
+  - q: Can I restart a Data Plane node if the Control Plane is down or disconnected?
+    a: Yes. If you restart a Data Plane node, it uses a cached configuration to continue functioning the same as before the restart.
+  - q: Can I create a new Data Plane node when the connection is down?
+    a: Yes. {{site.base_gateway}} can support configuring new Data Plane nodes in the event of a Control Plane outage. For more information, see [Control Plane outage management](/gateway/cp-outage/). 
+  - q: Can I create a backup configuration to use in case the cache fails?
+    a: You can set the [`declarative_config`](/gateway/configuration/#declarative_config) option to load a fallback YAML config.
+  - q: Can I change a Data Plane node's configuration when it's disconnected from the Control Plane?
+    a: |
+      Yes, if necessary, though any manual configuration will be overwritten the next
+      time the Control Plane connects to the node.
+
+      You can load configuration manually in one of the following ways:
+      * Copy the configuration cache file (`config.json.gz`) or directory (`dbless.lmdb`) from another data
+      plane node with a working connection and overwrite the cache file on disk
+      for the disconnected node.
+      * Remove the cache file, then start the Data Plane node with
+      [`declarative_config`](/gateway/configuration/#declarative_config)
+      to load a fallback YAML config.
 ---
 
 Hybrid mode, also known as Control Plane/Data Plane separation (CP/DP), is a deployment model that splits all {{site.base_gateway}} nodes in a cluster into one of two roles: 

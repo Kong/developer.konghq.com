@@ -24,8 +24,6 @@ related_resources:
     url: /gateway/hybrid-mode/
 
 faqs:
-  - q: How does network peering work with Dedicated Cloud Gateway nodes?
-    a: Each Cloud Gateway node is part of a dedicated Cloud Gateway network that corresponds to a specific cloud region, such as `us-east-1` or `us-west-2`. For enhanced security and seamless connectivity between your cloud network and the {{site.konnect_short_name}} environment, you can peer your Cloud Gateway network with your own network in AWS. This integration is facilitated by using AWS's [Transit Gateway](/dedicated-cloud-gateways/transit-gateways/) feature, enabling secure network connections across both platforms.
   - q: What types of data travel between the {{site.konnect_saas}} Control Plane and the Data Plane nodes, and how?
     a: |
       There are two types of data that travel between the planes: configuration
@@ -109,8 +107,6 @@ faqs:
       * Remove the cache file, then start the Data Plane node with
       [`declarative_config`](/gateway/configuration/#declarative_config)
       to load a fallback YAML config.
-  - q: "I receive the following error when starting {{site.base_gateway}}: `2022/04/11 12:01:07 [crit] 32790#0: *7 [lua] init.lua:648: init_worker(): worker initialization error: failed to create and open LMDB database: MDB_CORRUPTED: Located page was wrong type; this node must be restarted, context: init_worker_by_lua*`"
-    a: Your local configuration cache is corrupt. Remove your LMDB cache (located at `<prefix>/dbless.lmdb`, which is located at  [`/usr/local/kong/dbless.lmdb` by default](/gateway/configuration/#prefix)) and restart {{site.base_gateway}}. This forces the {{site.base_gateway}} node to reload the configuration from the Control Plane because the corrupted cache was deleted.
 ---
 
 
@@ -136,10 +132,10 @@ By default, Data Plane nodes store their configuration in an unencrypted LMDB da
 
 When operating as a Data Plane (DP) node, {{site.base_gateway}} loads configuration in the following order:
 
-1. **Local config cache**: If the `dbless.lmdb` file exists in the [`kong_prefix`](/gateway/configuration/#prefix) directory (default: `/usr/local/kong`), the DP node uses it as its configuration.
+1. **Local config cache**: If the `dbless.lmdb` file exists in the [`kong_prefix`](/gateway/configuration/#prefix) directory (default: `/usr/local/kong`), the Data Plane node uses it as its configuration.
 2. **Declarative config file**: If the cache is missing and `declarative_config` is set, the node loads the specified file.
 3. **No configuration**: If neither the cache nor a declarative config file is available, the node starts with an empty configuration and returns 404 for all requests.
-4. **Contact control plane**: In all cases, the DP node attempts to fetch the latest configuration from the control plane. If successful, the configuration is saved to the local cache (`dbless.lmdb`).
+4. **Contact control plane**: In all cases, the Data Plane node attempts to fetch the latest configuration from the control plane. If successful, the configuration is saved to the local cache (`dbless.lmdb`).
 
 ## Secure Control Plane and Data Plane communications
 
@@ -163,13 +159,13 @@ columns:
   - title: Issuer
     key: issuer
 rows:
-  - certificate: `cert1`
+  - certificate: "`cert1`"
     type: Service
     issuer: Issued by Intermediary
-  - certificate: `cert2`
+  - certificate: "`cert2`"
     type: Intermediary
     issuer: Issued by Root
-  - certificate: `cert3`
+  - certificate: "`cert3`"
     type: Root
     issuer: Issued by Root (Self-signed)
 {% endtable %}
@@ -223,21 +219,21 @@ generate new certificates and replace them on the existing nodes. For more infor
 
 In hybrid mode, a mutual TLS handshake (mTLS) is used for authentication so the
 actual private key is never transferred on the network, and communication
-between CP and DP nodes is secure.
+between Control Plane and Data Plane nodes is secure.
 
 Before using hybrid mode, you need a certificate/key pair.
 {{site.base_gateway}} provides two modes for handling certificate/key pairs:
 
 * **Shared mode:** (Default) Use the {{site.base_gateway}} CLI to generate a certificate/key
 pair, then distribute copies across nodes. The certificate/key pair is shared
-by both CP and DP nodes.
+by both Control Plane and Data Plane nodes.
 * **PKI mode:** Provide certificates signed by a central certificate authority
 (CA). {{site.base_gateway}} validates both sides by checking if they are from the same CA. This
 eliminates the risks associated with transporting private keys.
 
 {:.warning}
-> **Warning:** If you have a TLS-aware proxy between the DP and CP nodes, you
-must use PKI mode and set [`cluster_server_name`](/gateway/configuration/#cluster-server-name) to the CP hostname in
+> **Warning:** If you have a TLS-aware proxy between the Data Plane and Control Plane nodes, you
+must use PKI mode and set [`cluster_server_name`](/gateway/configuration/#cluster-server-name) to the Control Plane hostname in
 `kong.conf`. Do not use shared mode, as it uses a non-standard value for TLS server name
 indication, and this will confuse TLS-aware proxies that rely on SNI to route
 traffic.
@@ -245,7 +241,7 @@ traffic.
 ### Shared mode
 
 {:.warning}
-> **Warning:** Protect the Private Key. Ensure the private key file can only be accessed by {{site.base_gateway}} nodes that belong to the cluster. If the key is compromised, you must regenerate and replace certificates and keys on all CP and DP nodes.
+> **Warning:** Protect the Private Key. Ensure the private key file can only be accessed by {{site.base_gateway}} nodes that belong to the cluster. If the key is compromised, you must regenerate and replace certificates and keys on all Control Plane and Data Plane nodes.
 
 1. On an existing {{site.base_gateway}} instance, create a certificate/key pair:
     ```bash
@@ -257,7 +253,7 @@ traffic.
     for more usage information.
 
 2. Copy the `cluster.crt` and `cluster.key` files to the same directory
-on all {{site.base_gateway}} CP and DP nodes; e.g., `/cluster/cluster`.
+on all {{site.base_gateway}} Control Plane and Data Plane nodes; e.g., `/cluster/cluster`.
   Set appropriate permissions on the key file so it can only be read by {{site.base_gateway}}.
 
 ### PKI mode
@@ -267,10 +263,9 @@ certificate authority (CA).
 
 In this mode, the Control Plane and Data Plane don't need to use the same
 [`cluster_cert`](/gateway/configuration/#cluster-cert) and [`cluster_cert_key`](/gateway/configuration/#cluster-cert-key). Instead, {{site.base_gateway}} validates both sides by
-checking if they are from the same CA. Certificates on CP and DP must contain the `TLS Web Server Authentication` and `TLS Web Client Authentication` as X509v3 Extended Key Usage extension, respectively.
+checking if they are from the same CA. Certificates on the Control Plane and Data Plane must contain the `TLS Web Server Authentication` and `TLS Web Client Authentication` as X509v3 Extended Key Usage extension, respectively.
 
-{{site.base_gateway}} doesn't validate the CommonName (CN) in the DP certificate, it can take an arbitrary value.
-
+{{site.base_gateway}} doesn't validate the CommonName (CN) in the Data Plane certificate, it can take an arbitrary value.
 
 
 ## Use a forward proxy to secure communication across a firewall
