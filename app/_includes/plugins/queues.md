@@ -14,7 +14,7 @@ they only live in the main memory of each worker process and are not shared betw
 Therefore, queued content isn’t preserved under abnormal operational situations, 
 like power loss or unexpected worker process shutdown due to memory shortage or program errors.
 
-You can use several different configurable parameters for queuing:
+You can configure several parameters for queuing:
 
 {% table %}
 columns:

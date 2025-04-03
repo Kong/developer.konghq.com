@@ -525,6 +525,9 @@ app/_kong_plugins/pre-function/index.md:
   - app/_hub/kong-inc/pre-function/how-to/_phases.md
 app/_kong_plugins/pre-function/changelog.md:
   - app/_hub/kong-inc/pre-function/_changelog.md
+app/_includes/plugins/queues.md:
+  - app/_src/gateway/kong-plugins/queue/index.md
+  - app/_src/gateway/kong-plugins/queue/reference.md
 
 # Konnect
 
