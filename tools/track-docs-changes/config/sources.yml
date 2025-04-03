@@ -707,6 +707,7 @@ app/ai-gateway/monitor-ai-llm-metrics.md:
 app/gateway/reserved-entity-names.md:
   - app/_src/gateway/reference/reserved-entity-names.md
 app/gateway/breaking-changes.md:
+  - app/_src/gateway/breaking-changes/310x.md
   - app/_src/gateway/breaking-changes/39x.md
   - app/_src/gateway/breaking-changes/28x.md
   - app/_src/gateway/breaking-changes/30x.md
