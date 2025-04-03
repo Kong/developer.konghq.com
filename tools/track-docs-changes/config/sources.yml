@@ -204,6 +204,8 @@ app/_how-tos/rate-limit-based-on-peak-time.md:
   - app/_hub/kong-inc/pre-function/how-to/_ratelimit.md
 app/_how-tos/adjust-header-names-in-request.md:
   - app/_hub/kong-inc/post-function/how-to/_index.md
+app/_how-tos/configure-oidc-with-client-credentials-grant.md:
+  - /app/_hub/kong-inc/openid-connect/how-to/authentication/_client-credentials.md
 
 ## KIC
 app/_how-tos/kic-install.md:
