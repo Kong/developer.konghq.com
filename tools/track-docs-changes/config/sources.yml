@@ -224,6 +224,14 @@ app/_how-tos/kic-external-service.md:
   - app/_src/kubernetes-ingress-controller/guides/services/external.md
 app/_how-tos/kic-redirect-to-https.md:
   - app/_src/kubernetes-ingress-controller/guides/services/https-redirect.md
+app/kubernetes-ingress-controller/support.md:
+  - app/_src/kubernetes-ingress-controller/support-policy.md
+app/kubernetes-ingress-controller/architecture.md:
+  - app/_src/kubernetes-ingress-controller/concepts/architecture.md
+app/kubernetes-ingress-controller/gateway-api.md:
+  - app/_src/kubernetes-ingress-controller/concepts/gateway-api.md
+app/kubernetes-ingress-controller/ingress.md:
+  - app/_src/kubernetes-ingress-controller/concepts/ingress.md
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
