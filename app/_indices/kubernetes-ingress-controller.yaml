@@ -1,10 +1,14 @@
 title: KIC Index File
 sections:
-  - title: Some KIC Pages
+  - title: Uncategorized
     items:
-      - path: /kubernetes-ingress-controller/
       - path: /kubernetes-ingress-controller/**/*
     auto_exclude: true
+  - title: Get Started
+    items:
+      - path: /kubernetes-ingress-controller/
+      - path: /kubernetes-ingress-controller/install/
+      - path: /kubernetes-ingress-controller/support/
   - title: Routing
     items:
       - path: /kubernetes-ingress-controller/routing/http/
@@ -15,3 +19,11 @@ sections:
       - path: /kubernetes-ingress-controller/routing/udp-by-port/
       - path: /kubernetes-ingress-controller/routing/external-service/
       - path: /kubernetes-ingress-controller/routing/http-to-https/
+  - title: How KIC Works
+    items:
+      - path: /kubernetes-ingress-controller/architecture/
+      - path: /kubernetes-ingress-controller/gateway-api/
+      - path: /kubernetes-ingress-controller/ingress/
+  - title: Customization
+    items:
+      - path: /kubernetes-ingress-controller/custom-plugin/
