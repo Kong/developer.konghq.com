@@ -49,7 +49,7 @@ The parameter is strictly validated, which means a request with a parameter (for
 
 ## Parameter validation
 
-Only the JSON Schema Draft 4 compliant validator is supported for parameter validation.
+You can validate query parameters, path parameters, and headers in a request using the [`config.parameter_schema`](./reference/#schema--config-parameter-schema) configuration. Only the JSON Schema Draft 4 compliant validator is supported for parameter validation.
 
 {:.warning}
 > Even if `config.version` is set to `kong`, the parameter validation will still use the JSON Schema Draft 4 compliant validator.
