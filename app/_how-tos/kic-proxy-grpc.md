@@ -36,7 +36,7 @@ cleanup:
   inline:
     - title: Uninstall KIC from your cluster
       include_content: cleanup/products/kic
-      icon_url: /assets/icons/kic.svg
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 ## Annotate the Kubernetes service
