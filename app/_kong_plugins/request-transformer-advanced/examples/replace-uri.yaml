@@ -11,7 +11,7 @@ weight: 900
 config:
   replace:
     uri:
-      - "/status/\$(uri_captures['status'])"
+      - '/status/\$(uri_captures["status"])'
 
 tools:
   - deck
