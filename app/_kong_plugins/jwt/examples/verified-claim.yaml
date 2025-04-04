@@ -1,0 +1,41 @@
+description: |
+  {{site.base_gateway}} can perform verification on registered claims, as defined in [RFC 7519](https://tools.ietf.org/html/rfc7519). To perform verification on a claim, add it to the [`config.claims_to_verify`](/plugins/jwt/reference/#schema--config-claims-to-verify) property.
+
+  The following table shows the supported claims:
+
+  {% table %}
+  columns:
+    - title: Claim name
+      key: claim
+    - title: Verification
+      key: verification
+  rows:
+    - claim: `exp`
+      verification: Identifies the expiration time on or after which the JWT must not be accepted for processing.
+    - claim: `nbf`
+      verification: Identifies the time before which the JWT must not be accepted for processing.
+  {% endtable %}
+
+title: 'Verify registered claims'
+
+weight: 900
+
+requirements: 
+- "Because this is an auth plugin, you need to create a [Consumer](/gateway/entities/consumer/) and attach a credential to it in the `jwt_secrets` config."
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config: 
+  claims_to_verify:
+  - exp
+  - nbf
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

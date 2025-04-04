@@ -35,6 +35,8 @@ collections:
     output: true
   how-tos:
     output: true
+  references:
+    output: false
 
 defaults:
   - scope:
@@ -56,6 +58,22 @@ defaults:
       breadcrumbs:
         - "/gateway/"
         - "/gateway/entities/"
+  - scope:
+      path: "_references"
+      type: "references"
+    values:
+      layout: "reference"
+      auto_generated: true
+      content_type: "reference"
+      permalink: "/:path/"
+
+reference_metadata:
+  pdk:
+    products:
+      - gateway
+    works_on:
+      - on-prem
+      - konnect
 
 insomnia_run: https://insomnia.rest/run/
 
