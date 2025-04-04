@@ -46,7 +46,7 @@ faqs:
     a: No. Control Plane Groups are read-only. Configuration changes must be made through a member Control Plane. The only exceptions are generating or uploading Data Plane node certificates and connecting Data Plane nodes.
   - q: How do I migrate a Control Plane configuration into a Control Plane Group?
     a: |
-      Using decK you can export the configuration of the Control Plane and Sync it with the group: 
+      Using [decK](/deck/), you can export the configuration of the Control Plane and sync it with the group: 
       1. Export the configuration of the old Control Plane using `deck gateway dump`:
         ```
          deck gateway dump \
@@ -127,7 +127,7 @@ flowchart LR
 
 ## How do I create a Control Plane Group?
 
-In {{site.konnect_short_name}} Control Plane Groups can be created using the [Control Planes API](/api/konnect/control-planes/).
+In {{site.konnect_short_name}}, Control Plane Groups can be created using the [Control Planes API](/api/konnect/control-planes/).
 <!--vale off-->
 {% control_plane_request %}
 method: POST
@@ -138,12 +138,12 @@ headers:
   - 'Content-Type: application/json'
 body:
   name: CPG
-  cluster_type: CLUSTER_TYPE_COMPOSITE
+  cluster_type: CLUSTER_TYPE_CONTROL_PLANE_GROUP
 {% endcontrol_plane_request %}
 <!--vale on-->
 ## How do I attach Control Planes to a Control Plane Group?
 
-Once you have a Control Plane group,you can add Control Planes to the group using the {{site.onnect_short_name}} UI or [API](/api/konnect/control-planes/v2/#/operations/post-control-planes-id-group-memberships-add).
+Once you have a Control Plane Group, you can add Control Planes to the Group using the {{site.konnect_short_name}} UI or [API](/api/konnect/control-planes/v2/#/operations/post-control-planes-id-group-memberships-add).
 <!--vale off-->
 
 {% control_plane_request %}
