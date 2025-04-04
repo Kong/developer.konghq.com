@@ -9,13 +9,14 @@ requirements:
  - "[Create a Kafka topic](https://kafka.apache.org/quickstart#quickstart_createtopic)"
 
 variables: 
- topic:
+  topic:
     description: 'The name of your Kafka topic'
-    value: KAFKA_TOPIC
+    value: $KAFKA_TOPIC
 
 config:
   topic: ${topic}
   authentication:
+    strategy: sasl
     mechanism: PLAIN
     user: ariel
     password: my-password

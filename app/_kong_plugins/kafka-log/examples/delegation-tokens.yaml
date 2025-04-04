@@ -10,19 +10,20 @@ requirements:
  - "A [delegated token](https://docs.confluent.io/platform/current/security/authentication/delegation-tokens/overview.html#authentication-using-delegation-tokens)"
 
 variables: 
- topic:
+  topic:
     description: 'The name of your Kafka topic'
-    value: KAFKA_TOPIC
+    value: $KAFKA_TOPIC
   user:
     description: 'The`tokenID` for your delegated token.'
-    value: TOKEN_ID
+    value: $TOKEN_ID
   password: 
     description: 'The`token-hmac` for your delegated token.'
-    value: TOKEN_HMAC
+    value: $TOKEN_HMAC
 
 config:
   topic: ${topic}
   authentication:
+    strategy: sasl
     mechanism: SCRAM-SHA-256
     user: ${user}
     password: ${password}

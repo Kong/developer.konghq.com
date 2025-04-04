@@ -10,12 +10,12 @@ requirements:
  - "A [Certificate](/gateway/entities/certificate/) created"
 
 variables: 
- topic:
+  topic:
     description: 'The name of your Kafka topic'
-    value: KAFKA_TOPIC
+    value: $KAFKA_TOPIC
   certificate_id:
     description: 'The ID of your Certificate'
-    value: CERTIFICATE_ID
+    value: $CERTIFICATE_ID
 
 config:
   topic: ${topic}
