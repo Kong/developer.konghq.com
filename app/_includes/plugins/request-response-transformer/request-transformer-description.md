@@ -6,4 +6,4 @@ This plugin allows you to configure simple transformation of requests before the
 notation must be used instead.
 * The `X-Forwarded-*` fields are non-standard header fields written by Nginx to inform the upstream about
 client details and can't be overwritten by this plugin. If you need to overwrite these header fields, see the
-[Post-function plugin](/hub/kong-inc/post-function/how-to/).
+[Post-function plugin](/plugins/post-function/).
