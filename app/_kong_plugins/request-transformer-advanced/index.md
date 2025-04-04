@@ -43,7 +43,11 @@ The Response Transformer Advanced plugin provides features that aren't available
 
 ## Order of execution
 
-{% include plugins/request-response-transformer/transformation-order %}
+{% include plugins/request-response-transformer/transformation-order.md %}
+
+## Templates
+
+{% include /plugins/request-response-transformer/templates.md %}
 
 ## Arrays and nested objects
 

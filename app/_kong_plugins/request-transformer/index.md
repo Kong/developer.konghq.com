@@ -43,4 +43,8 @@ For more advanced features, see the [Request Transformer Advanced plugin](/plugi
 
 ## Order of execution
 
-{% include plugins/request-response-transformer/transformation-order %}
+{% include plugins/request-response-transformer/transformation-order.md %}
+
+## Templates
+
+{% include /plugins/request-response-transformer/templates.md %}
