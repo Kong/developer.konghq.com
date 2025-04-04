@@ -25,7 +25,7 @@ module Jekyll
           true
         when 'reference'
           # Reference pages have canonical? set already (in Versioner)
-          @page.data['no-version'] == true
+          @page.data['canonical?']
         else
           exclusions = @site.config.dig('sitemap', 'exclude')
           !exclusions.include?(@page.url)
