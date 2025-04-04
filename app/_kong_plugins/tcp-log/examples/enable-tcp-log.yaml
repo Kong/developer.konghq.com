@@ -1,0 +1,16 @@
+description: 'Enable the TCP Log plugin and send logs to a target server.'
+
+title: 'Enable TCP Log'
+
+weight: 900
+
+config:
+  host: 127.0.0.1
+  port: 8080
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
