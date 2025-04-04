@@ -1,0 +1,31 @@
+description: 'Encrypts Kafka traffic with mTLS.'
+
+title: 'Enable mTLS'
+
+weight: 900
+
+requirements: 
+ - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running" 
+ - "[Create a Kafka topic](https://kafka.apache.org/quickstart#quickstart_createtopic)"
+ - "A [Certificate](/gateway/entities/certificate/) created"
+
+variables: 
+ topic:
+    description: 'The name of your Kafka topic'
+    value: KAFKA_TOPIC
+  certificate_id:
+    description: 'The ID of your Certificate'
+    value: CERTIFICATE_ID
+
+config:
+  topic: ${topic}
+  security:
+    ssl: true
+    certificate_id: ${certificate_id}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
