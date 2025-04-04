@@ -1,4 +1,4 @@
-The plugin performs the response transformation in the following order:
+The plugin performs the transformations in the following order:
 1. [Remove](./reference/#schema--config-remove)
 1. [Rename](./reference/#schema--config-rename)
 1. [Replace](./reference/#schema--config-replace)

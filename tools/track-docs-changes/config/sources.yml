@@ -609,6 +609,14 @@ app/_kong_plugins/response-transformer-advanced/examples/replace-json-body.yaml:
   - app/_hub/kong-inc/response-transformer-advanced/overview/_index.md
 app/_kong_plugins/response-transformer-advanced/examples/transform-json-body-with-lua-function.yaml:
   - app/_hub/kong-inc/response-transformer-advanced/overview/_index.md
+app/_kong_plugins/request-transformer/index.md:
+  - app/_hub/kong-inc/request-transformer/overview/_index.md
+app/_kong_plugins/request-transformer/changelog.md:
+  - app/_hub/kong-inc/request-transformer/_changelog.md
+app/_kong_plugins/request-transformer-advanced/index.md:
+  - app/_hub/kong-inc/request-transformer-advanced/overview/_index.md
+app/_kong_plugins/request-transformer-advanced/changelog.md:
+  - app/_hub/kong-inc/request-transformer-advanced/_changelog.md
 app/_kong_plugins/request-validator/index.md:
   - app/_hub/kong-inc/request-validator/overview/_index.md
 app/_kong_plugins/request-validator/changelog.md:

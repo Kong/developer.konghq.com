@@ -1,0 +1,21 @@
+description: |
+  Configure the plugin to replace the request URI using a capture group in the original URI before proxying the request to the upstream server.
+
+title: Replace the URI using capturing groups
+
+requirements:
+  - You have configure a route with the path `~/(?<status>\d+)`
+
+weight: 900
+
+config:
+  replace:
+    uri:
+      - '/status/\$(uri_captures["status"])'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
