@@ -73,7 +73,7 @@ Either Kong's own schema validator (`config.version=kong`) or a JSON Schema Draf
 ### Body schema definition
 
 {:.info}
-> This section describes the schema definition for the `kong` validator. For more information about the the JSON Schema Draft 4-compliant validator, see the [JSON Schema website](https://json-schema.org/).
+> This section describes the schema definition for the `kong` validator. For more information about the JSON Schema Draft 4-compliant validator, see the [JSON Schema website](https://json-schema.org/).
 
 The [`config.body_schema`](./reference/#schema--config-body-schema) parameter expects a JSON array with the definition of each field expected to be in the request body.
 
