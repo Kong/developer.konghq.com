@@ -10,7 +10,7 @@ requirements:
 
 variables: 
   topic:
-    description: 'The name of your Kafka topic'
+    description: 'The name of your Kafka topic.'
     value: $KAFKA_TOPIC
 
 config:

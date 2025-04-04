@@ -11,7 +11,7 @@ requirements:
 variables: 
   topic:
     value: $KAFKA_TOPIC
-    description: 'The name of your Kafka topic'
+    description: 'The name of your Kafka topic.'
 
 config:
   topic: ${topic}

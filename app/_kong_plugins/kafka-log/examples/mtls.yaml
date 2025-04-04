@@ -13,15 +13,12 @@ variables:
   topic:
     description: 'The name of your Kafka topic'
     value: $KAFKA_TOPIC
-  certificate_id:
-    description: 'The ID of your Certificate'
-    value: $CERTIFICATE_ID
 
 config:
   topic: ${topic}
   security:
     ssl: true
-    certificate_id: ${certificate_id}
+    certificate_id: 38fbf6a1-1c58-4dea-a391-85abf1b92f13
 
 tools:
   - deck

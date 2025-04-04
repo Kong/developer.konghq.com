@@ -1,4 +1,4 @@
-description: 'Uses delegated tokens generated in Kafka to authenticate this plugin.'
+description: 'Use delegated tokens generated in Kafka to authenticate the Kafka Log plugin.'
 
 title: 'Delegated tokens authentication'
 
@@ -11,13 +11,13 @@ requirements:
 
 variables: 
   topic:
-    description: 'The name of your Kafka topic'
+    description: 'The name of your Kafka topic.'
     value: $KAFKA_TOPIC
   user:
-    description: 'The`tokenID` for your delegated token.'
+    description: 'The `tokenID` for your delegated token.'
     value: $TOKEN_ID
   password: 
-    description: 'The`token-hmac` for your delegated token.'
+    description: 'The `token-hmac` for your delegated token.'
     value: $TOKEN_HMAC
 
 config:

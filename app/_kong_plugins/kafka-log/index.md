@@ -53,10 +53,10 @@ When encoding request bodies, several things happen:
 
 * For requests with a content-type header of `application/x-www-form-urlencoded`, `multipart/form-data`,
   or `application/json`, this plugin passes the raw request body in the `body` attribute, and tries
-  to return a parsed version of those arguments in `body_args`. If this parsing fails, an error message is
-  returned and the message is not sent.
+  to return a parsed version of those arguments in `body_args`. 
+  If this parsing fails, the plugin returns an error message and the message isn't sent.
 * If the `content-type` is not `text/plain`, `text/html`, `application/xml`, `text/xml`, or `application/soap+xml`,
-  then the body will be base64-encoded to ensure that the message can be sent as JSON. In such a case,
+  then the body will be base64-encoded to ensure that the message can be sent as JSON. In that case,
   the message has an extra attribute called `body_base64` set to `true`.
 
 

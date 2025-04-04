@@ -610,7 +610,7 @@ app/_kong_plugins/response-transformer-advanced/examples/transform-json-body-wit
 app/_kong_plugins/kafka-log/changelog.md:
   - app/_hub/kong-inc/kafka-log/_changelog.md
 app/_kong_plugins/kafka-log/index.md:
-  - 
+  - app/_hub/kong-inc/kafka-log/overview/_index.md
 
 
 # Konnect
