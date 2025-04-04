@@ -218,23 +218,9 @@ In addition to the above, when **tracing** is enabled, request-scoped logs inclu
 The custom [plugin PDK](/gateway/pdk/) `kong.telemetry.log` module lets you configure OTLP logging for a custom plugin. 
 The module records a structured log entry, which is reported via the OpenTelemetry plugin.
 
-## Queueing
+## Queuing
 
-The OpenTelemetry plugin uses a queue to decouple the production and
-consumption of data. This reduces the number of concurrent requests
-made to the upstream server under high load situations and provides
-buffering during temporary network or upstream outages.
-
-You can set several parameters to configure the behavior and capacity
-of the queues used by the plugin. For more information about how to
-use these parameters, see
-[Plugin Queuing Reference](/gateway/entities/plugin/#plugin-queuing).
-
-The queue parameters all reside in a record under [`config.queue`](/plugins/opentelemetry/reference/#schema--config-queue) in the plugin configuration.
-
-Queues are not shared between workers and queueing parameters are
-scoped to one worker.  For whole-system capacity planning, the number
-of workers needs to be considered when setting queue parameters.
+{% include_cached /plugins/queues.md name=page.name %}
 
 ## Trace IDs in serialized logs {% new_in 3.5 %}
 

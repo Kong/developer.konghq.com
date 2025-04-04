@@ -214,12 +214,6 @@ In some cases, this might be compensated for when you run rate limiting before a
 * **Validation**: Validating dynamic plugin ordering is a non-trivial task and would require insight into the user's business logic. 
 {{site.base_gateway}} tries to catch basic mistakes, but it can't detect all potentially dangerous configurations.
 
-## Plugin queuing
-
-You can set queuing parameters for several plugins.
-
-<!-- @todo: migrate https://docs.konghq.com/gateway/latest/kong-plugins/queue/reference/#plugin-queuing-parameters -->
-
 ## Protocols
 
 ### Supported protocols by plugin

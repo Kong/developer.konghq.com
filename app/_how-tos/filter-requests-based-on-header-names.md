@@ -2,6 +2,8 @@
 title: Filter requests based on header names
 content_type: how_to
 
+description: Use the Pre-Function plugin to detect headers in a request, and either let the request through or terminate it. 
+
 products:
     - gateway
 

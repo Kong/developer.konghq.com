@@ -116,7 +116,7 @@ entities:
 
 Now we can apply a rate limit on the Service itself using the [Service Protection](/plugins/service-protection/) plugin. 
 In this example, we are setting the limit to 10 requests per minute. 
-Due to [plugin execution order](/gateway/plugin-execution-order/), the Service Protection plugin is applied *before* the Rate Limiting plugin. 
+Due to [plugin execution order](/gateway/entities/plugin/#plugin-priority), the Service Protection plugin is applied *before* the Rate Limiting plugin. 
 This means that if multiple Consumers are making requests at the same time, together they can't make more than 10 requests per minute, even if the individual Consumer rate limit is 6 requests per minute. 
 
 {% entity_examples %}
