@@ -1,0 +1,20 @@
+description: Configure the plugin to append a query parameter and remove a header from the request before proxying it to the upstream server.
+
+title: Append and remove
+
+weight: 900
+
+config:
+  append:
+    querystring:
+      - "client_id: abc123"
+  remove:
+    header:
+      - "Header-Name"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
