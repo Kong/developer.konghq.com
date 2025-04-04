@@ -36,9 +36,9 @@ faqs:
        The Syslog plugin doesn't set a limit on the message size.
 
        The max size that gets logged is determined by the protocol receiver's implementation of it, and limitations of the transport. 
-       * If the Syslog receiver is using the older [RFC3164](https://tools.ietf.org/html/rfc3164#section-4.1) standard, the max size will be 1024 octecs.
-       * If syslog receiver is using the modern [RFC 5424](https://tools.ietf.org/html/rfc5424#section-6.1) standard, the minimum max size is 480 octecs, and the recommended max size is 2048 octecs. 
-       Transport receivers MAY receive messages larger than 2048 octets, but could truncate or discard it if not supported by the implementation.
+       * If the Syslog receiver is using the older [RFC3164](https://tools.ietf.org/html/rfc3164#section-4.1) standard, the max size will be 1024 octets.
+       * If syslog receiver is using the modern [RFC 5424](https://tools.ietf.org/html/rfc5424#section-6.1) standard, the minimum max size is 480 octets, and the recommended max size is 2048 octets. 
+       Transport receivers may receive messages larger than 2048 octets, but could truncate or discard it if not supported by the implementation.
 ---
 
 Log request and response data to Syslog.
@@ -68,6 +68,7 @@ logging level severity the same as or lower than the set [`config.log_level`](./
 
 {{site.base_gateway}} system logs can be forwarded to a Syslog server by changing the {{site.base_gateway}} configuration:
 
+<!--vale off-->
 {% kong_config_table %}
 config:
   - name: proxy_access_log
@@ -79,6 +80,7 @@ config:
   - name: proxy_stream_access_log
   - name: proxy_stream_error_log
 {% endkong_config_table %}
+<!--vale on-->
 
 For example, to forward `proxy_access_log` to a remote Syslog server:
 ```
