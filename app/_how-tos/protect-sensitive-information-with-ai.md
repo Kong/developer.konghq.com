@@ -60,7 +60,7 @@ min_version:
 
 ## 1. Start the Kong AI PII Anonymizer service
 
-Make sure you have [access to the service](#ai-pii-anonymizer-service-access) and run the following command to start it:
+Make sure you have [access to the  AI PII service](#ai-pii-anonymizer-service-access), then run the following command to start it locally with Docker:
 
 ```sh
 docker run --platform linux/x86_64 -d --name pii-service -p 9000:8080 kong/ai-pii-service 
@@ -130,4 +130,8 @@ body:
           content: "My name is John Doe, my phone number is 123-456-7890."
 {% endvalidation %}
 
-The response should contain a randomized name and phone number.
+If the plugin was configured correctly, you will received a response with all PII information scrubbed, for example: 
+
+```
+Your name is Jesse Mason and your phone number is 001-204-028-1684x83574.
+```

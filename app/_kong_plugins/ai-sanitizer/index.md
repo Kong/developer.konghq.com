@@ -44,7 +44,7 @@ Additionally, AI Sanitizer offers an optional restoration feature, allowing the 
 
 {% include plugins/ai-plugins-note.md %}
 
-The AI Sanitizer plugin uses the AI PII Anonymizer Service, which can run in a Docker container, to detect and sanitize sensitive data.  See the [tutorial on configuring the AI Sanitizer plugin](/how-to/protect-sensitive-information-with-ai/) for more information on how to configure the plugin with the AI PII Anonymizer Service.
+The AI Sanitizer plugin uses the AI PII Anonymizer Service, which can run in a Docker container, to detect and sanitize sensitive data. See the [tutorial on configuring the AI Sanitizer plugin](/how-to/protect-sensitive-information-with-ai/) for more information on how to configure the plugin with the AI PII Anonymizer Service.
 
 ## How it works
 
