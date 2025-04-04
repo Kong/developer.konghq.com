@@ -7,7 +7,6 @@ content_type: plugin
 publisher: kong-inc
 description: 'Send request and response logs to a TCP server'
 
-
 products:
     - gateway
 
@@ -29,8 +28,27 @@ icon: tcp-log.png
 categories:
   - logging
 
+tags:
+  - logging
+
 search_aliases:
   - tcp-log
+  - tcp
+  - logging
 ---
 
-## Overview
+Log request and response data to a TCP server.
+
+## Log format
+
+{% include /plugins/logging/log-format.md %}
+
+{% include /plugins/logging/json-object-log.md %}
+
+## Kong process errors
+
+{% include plugins/logging/kong-process-errors.md %}
+
+## Custom fields by Lua
+
+{% include /plugins/logging/log-custom-fields-by-lua.md %}

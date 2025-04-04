@@ -1,18 +1,12 @@
-description: ''
+description: 'Enable the TCP Log plugin and send logs to a target server.'
 
-title: ''
+title: 'Enable TCP Log'
 
 weight: 900
 
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
-
-config: # plugin config in yaml format goes here
+config:
+  host: 127.0.0.1
+  port: 8080
 
 tools:
   - deck

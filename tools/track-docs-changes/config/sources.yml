@@ -607,6 +607,10 @@ app/_kong_plugins/response-transformer-advanced/examples/replace-json-body.yaml:
   - app/_hub/kong-inc/response-transformer-advanced/overview/_index.md
 app/_kong_plugins/response-transformer-advanced/examples/transform-json-body-with-lua-function.yaml:
   - app/_hub/kong-inc/response-transformer-advanced/overview/_index.md
+app/_kong_plugins/tcp-log/index.md:
+  - app/_hub/kong-inc/tcp-log/overview/_index.md
+app/_kong_plugins/tcp-log/changelog.md:
+  - app/_hub/kong-inc/tcp-log/_changelog.md
 
 # Konnect
 
