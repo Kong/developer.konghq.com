@@ -83,7 +83,7 @@ entities:
 
 ## 2. Validate
 
-To check that the request transformation is working, send a `POST` request with the `customer_id` as a query parameter and extra JSON properties:
+To check that the request transformation is working, send a `POST` request with the `customer_id` as a query parameter and extra JSON properties in the request body:
 
 <!--vale off-->
 {% validation request-check %}
