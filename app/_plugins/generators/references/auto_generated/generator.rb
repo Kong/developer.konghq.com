@@ -19,6 +19,7 @@ module Jekyll
           generate_canonicals!
           set_release_info!
           set_canonicals!
+          set_related_resources!
         end
 
         private
@@ -42,9 +43,7 @@ module Jekyll
 
         def set_canonicals!
           @references.each do |base_url, pages|
-            pages.map do |page|
-              page.data['canonical_url'] = @canonicals[base_url].url
-            end
+            pages.map { |page| page.data['canonical_url'] = @canonicals[base_url].url }
           end
         end
 
@@ -59,6 +58,41 @@ module Jekyll
                 'releases_dropdown' => releases_dropdown
               )
             end
+          end
+        end
+
+        def set_related_resources!
+          process_related_resources(@references, pages_by_product_and_version)
+          process_related_resources(@canonicals, canonicals_by_product_and_version)
+        end
+
+        def process_related_resources(resource_map, lookup_map)
+          resource_map.values.flatten.each do |page|
+            path = File.dirname(page.relative_path)
+            related = lookup_map.fetch(path, []).map do |related_page|
+              next if related_page.url == page.url
+
+              { 'text' => related_page.data['title'], 'url' => related_page.url }
+            end.compact
+            page.data['related_resources'] = related
+          end
+        end
+
+        def pages_by_product_and_version
+          @pages_by_product_and_version ||= @references.values.flatten.each_with_object({}) do |page, result|
+            root_path = File.dirname(page.relative_path)
+
+            result[root_path] ||= []
+            result[root_path] << page
+          end
+        end
+
+        def canonicals_by_product_and_version
+          @canonicals_by_product_and_version ||= @canonicals.values.flatten.each_with_object({}) do |page, result|
+            root_path = File.dirname(page.relative_path)
+
+            result[root_path] ||= []
+            result[root_path] << page
           end
         end
 
