@@ -5,7 +5,7 @@ title: RAG injection with OpenAI and Redis
 weight: 900
 
 requirements:
-  - You have enabled the AI Proxy or AI Proxy Advanced plugin
+  - "You have enabled the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin"
   - You have an OpenAI account
   - You have a Redis server running
 

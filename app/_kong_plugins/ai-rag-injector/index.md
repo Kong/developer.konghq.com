@@ -40,6 +40,8 @@ This plugin provides the following benefits:
 * Lets you lock down sensitive vector databases, so that developers don't have direct access. AI Gateway becomes the client, instead of the developer applications.
 * Enables building RAG pipelines in more places, even in places where connectivity to the vector database was originally not possible.
 
+{% include plugins/ai-plugins-note.md %}
+
 ## How it works
 
 1. You configure the AI RAG Injector plugin via the Admin API or decK, setting up the RAG content to send to the vector database.
