@@ -862,6 +862,7 @@ app/dedicated-cloud-gateways/transit-gateways.md:
 app/gateway-manager/control-plane-groups.md:
   - app/konnect/gateway-manager/control-plane-groups/index.md
   - app/konnect/gateway-manager/control-plane-groups/conflicts.md
+  - app/konnect/gateway-manager/control-plane-groups/migrate.md
 
 
 app/konnect-platform/konnect-account.md:

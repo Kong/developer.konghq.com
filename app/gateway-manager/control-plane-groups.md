@@ -8,6 +8,9 @@ products:
     - gateway
 works_on:
   - konnect
+tools:
+  - admin-api
+  - konnect-api
 min_version:
     gateway: '3.5'
 
@@ -41,7 +44,22 @@ faqs:
 
   - q: Can a Control Plane Group be configured directly?
     a: No. Control Plane Groups are read-only. Configuration changes must be made through a member Control Plane. The only exceptions are generating or uploading Data Plane node certificates and connecting Data Plane nodes.
-
+  - q: How do I migrate a Control Plane configuration into a Control Plane Group?
+    a: |
+      Using [decK](/deck/), you can export the configuration of the Control Plane and sync it with the group: 
+      1. Export the configuration of the old Control Plane using `deck gateway dump`:
+        ```
+         deck gateway dump \
+            -o old-group.yaml \
+            --konnect-token $KONNECT_TOKEN \
+            --konnect-control-plane-name old-group
+        ```
+      2. Sync the configuration to the Control Plane Group:
+        ```
+         deck gateway sync old-group.yaml \
+            --konnect-token $KONNECT_TOKEN \
+            --konnect-control-plane-name CP1
+        ```
   - q: Can a Control Plane Group contain another Control Plane Group?
     a: No. A Control Plane Group cannot be a member of another Control Plane Group.
 
@@ -106,6 +124,40 @@ flowchart LR
 * Team Blue configures Control Plane Blue, which is then combined with the configuration from Team Green.
 * The Control Plane Group also contains Control Plane Purple, which is managed by a central platform team.
 * The central platform team manages global plugin configuration in Control Plane Purple, which is added to any configuration that teams Blue and Green provide.
+
+## How do I create a Control Plane Group?
+
+In {{site.konnect_short_name}}, Control Plane Groups can be created using the [Control Planes API](/api/konnect/control-planes/).
+<!--vale off-->
+{% control_plane_request %}
+method: POST
+url: /v2/control-planes
+status_code: 201
+headers:
+  - 'Authorization: Bearer $KONNECT_TOKEN'
+  - 'Content-Type: application/json'
+body:
+  name: CPG
+  cluster_type: CLUSTER_TYPE_CONTROL_PLANE_GROUP
+{% endcontrol_plane_request %}
+<!--vale on-->
+## How do I attach Control Planes to a Control Plane Group?
+
+Once you have a Control Plane Group, you can add Control Planes to the Group using the {{site.konnect_short_name}} UI or [API](/api/konnect/control-planes/v2/#/operations/post-control-planes-id-group-memberships-add).
+<!--vale off-->
+
+{% control_plane_request %}
+method: POST
+url: /v2/control-planes/$CONTROL_PLANE_GROUP_ID/group-memberships/add
+status_code: 200
+headers:
+  - 'Authorization: Bearer $KONNECT_TOKEN'
+  - 'Content-Type: application/json'
+body:
+  members:
+    - id: 062e2f2c-0f42-4938-91b4-f73f399260f5
+{% endcontrol_plane_request %}
+<!--vale on-->
 
 ## Configuring core entities
 
