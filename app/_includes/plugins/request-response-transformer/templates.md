@@ -10,20 +10,20 @@ columns:
 rows:
   - type: Header
     template: |
-      * `$(headers.<header-name>)`
-      * `$(headers["<header-name>"])`
+      * `$(headers.{HEADER-NAME})`
+      * `$(headers["{HEADER-NAME}"])`
   - type: Query parameter
     template: |
-      * `$(query_params.<query-param-name>)`
-      * `$(query_params["<query-param-name>"])`
+      * `$(query_params.{QUERY-PARAM-NAME})`
+      * `$(query_params["{QUERY-PARAM-NAME}"])`
   - type: Captured URIs
     template: |
-      * `$(uri_captures.<group-name>)`
-      * `$(uri_captures["<group-name>"])`
+      * `$(uri_captures.{GROUP-NAME})`
+      * `$(uri_captures["{GROUP-NAME}"])`
   - type: Shared variables
     template: |
-      * `$(shared.<variable-name>)`
-      * `$(shared["<variable-name>"])`
+      * `$(shared.{VARIABLE-NAME})`
+      * `$(shared["{VARIABLE-NAME}"])`
     
 {% endtable %}
 
@@ -41,7 +41,7 @@ $('$(something_that_needs_to_escaped)')
 ```
 
 {:.info}
-> **Note:** The plugin creates a non-mutable table of request headers, query strings, and captured URIs before transformation. Therefore, any update or removal of parameters used in a template doesn't affect the rendered value of a template.
+> **Note:** The plugin creates a non-mutable table of request headers, query strings, and captured URIs before transformation. Therefore, removing or updating any parameters used in a template doesn't affect the rendered value of a template.
 
 ### Advanced templates
 
@@ -51,9 +51,10 @@ The content of the placeholder `$(...)` is evaluated as a Lua expression, so you
 $(uri_captures["user-id"] or query_params["user"] or "unknown")
 ```
 
-This will first look for the path parameter named `user-id` (in `uri_captures`). If not found, it will
-return the query parameter named `user`. If that also doesn't exist, it returns the default
-value '"unknown"'.
+This example will look for parameters in the following order:
+1. Looks for a path parameter named `user-id` in `uri_captures`.
+2. If not found, it will return the query parameter named `user`.
+3. If that also doesn't exist, it returns the default value `"unknown"`.
 
 Constant parts can be specified as part of the template outside the dynamic
 placeholders. For example, this creates a basic-auth header from a query parameter
@@ -69,7 +70,7 @@ Lambdas are also supported if wrapped as an expression like this:
 $((function() ... implementation here ... end)())
 ```
 
-A complete Lambda example for prefixing a header value with `Basic` if it's not
+Here's a complete Lambda example for prefixing a header value with `Basic` if it's not
 already included:
 
 ```
@@ -85,11 +86,9 @@ $((function()
   end)())
 ```
 
+The environment is sandboxed, meaning that Lambdas won't have access to any
+library functions, except for the string methods (like `sub()` in this example).
+
 {:.info}
-> **Note:** Especially in multi-line templates like the example above, make sure not
-to add any trailing white space or new lines. Because these would be outside the
-placeholders, they would be considered part of the template, and hence would be
-appended to the generated value.
-The environment is sandboxed, meaning that Lambdas will not have access to any
-library functions, except for the string methods (like `sub()` in the example
-above).
+> **Note:** Make sure not to add any trailing whitespace or newlines, especially in multi-line templates. 
+These would be outside the placeholders and would be considered part of the template, and hence would be appended to the generated value.
