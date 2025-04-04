@@ -478,6 +478,10 @@
     @apply [overflow-wrap:anywhere];
   }
 
+  #toc li > * {
+    @apply mb-0;
+  }
+
   .background-gradient {
     background: linear-gradient(transparent, transparent) padding-box,
     linear-gradient(227.59deg, #E9EEF7 6.43%, #3CB087 30.81%, #11A06B 36.89%, #286FEB 65.64%, #E9EEF7 100%) border-box;

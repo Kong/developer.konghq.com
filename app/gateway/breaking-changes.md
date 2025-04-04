@@ -32,11 +32,61 @@ affect your current installation.
 You may need to adopt different [upgrade paths](/gateway/upgrade/) depending on your 
 deployment methods, set of features in use, or custom plugins, for example.
 
+## 3.10.x breaking changes
+
+Review the [changelog](/gateway/changelog/#31000) for all the changes in this release.
+
+### 3.10.0.0
+
+Breaking changes in the 3.10.0.0 release.
+
+#### AI plugins: metrics key
+
+The serialized log key of AI metrics has changed from `ai.ai-proxy` to `ai.proxy` to avoid conflicts with metrics generated from plugins other than AI Proxy and AI Proxy Advanced. 
+If you are using any [logging plugins](/plugins/?category=logging) to log AI metrics (for example, File Log, HTTP Log, and so on), 
+you will have to update metrics pipeline configurations to reflect this change.
+
+#### AI plugins: deprecated settings
+
+The following settings have been deprecated in all [AI plugins](/plugins/?category=ai), and will be removed in a future release.
+Use the following replacement settings instead:
+
+{% table %}
+columns:
+  - title: Deprecated setting
+    key: deprecated
+  - title: New setting
+    key: new
+rows:
+  - deprecated: "`preserve` mode in `config.route_type`"
+    new: "`config.llm_format`"
+  - deprecated: "`config.model.options.upstream_path`"
+    new: "`config.model.options.upstream_url`"
+{% endtable %}
+
+#### AI Rate Limiting Advanced plugin: multiple providers and limits
+
+The plugin's `config.llm_providers.window_size` and `config.llm_providers.limit` parameters now require an array of numbers instead of a single number. 
+If you configured the plugin before 3.10 and [upgrade to 3.10 using `kong migrations`](/gateway/upgrade/), it will be automatically migrated to use an array.
+
+#### kong.service PDK module changes
+
+Changed the encoding of spaces in query arguments from `+` to `%20` in the `kong.service.request.clear_query_arg` PDK module.
+While the `+` character represents the correct encoding of space in query strings, Kong uses `%20` in many other APIs, which is inherited from Nginx/OpenResty.
+
+#### Free mode
+
+Free mode is no longer available. Running {{site.base_gateway}} without a license will now behave the same as running it with an expired license.
+
 ## 3.9.x breaking changes
 
 Review the [changelog](/gateway/changelog/#3900) for all the changes in this release.
 
-**Node ID deprecation in `kong.conf`**
+### 3.9.0.0
+
+Breaking changes in the 3.10.0.0 release.
+
+#### Node ID deprecation in `kong.conf`
 
 Manually specifying a `node_id` via Kong configuration (`kong.conf`) is deprecated. 
 The `node_id` parameter is planned to be removed in 4.x.
@@ -45,25 +95,29 @@ The `node_id` parameter is planned to be removed in 4.x.
 
 Review the [changelog](/gateway/changelog/#3800) for all the changes in this release.
 
-**`kong.logrotate` configuration file no longer overwritten during upgrade**
+### 3.8.0.0
+
+Breaking changes in the 3.10.0.0 release.
+
+#### `kong.logrotate` configuration file no longer overwritten during upgrade
 
 The `kong.logrotate` configuration file will no longer be overwritten during upgrade.
 When upgrading, set the environment variable `DEBIAN_FRONTEND=noninteractive` on Debian/Ubuntu to avoid any interactive prompts and enable fully automatic upgrades.
 
-**`log_statistics` defaults to `false` for AI Proxy**
+#### `log_statistics` defaults to `false` for AI Proxy
 
 A configuration validation was added to the [AI Proxy plugin](/plugins/ai-proxy/) to prevent users from enabling `log_statistics` for
 providers that don't support statistics. In addition, the default of `log_statistics` was changed from
 `true` to `false`, and a database migration is added as well for disabling `log_statistics` if it
 has already been enabled upon unsupported providers.
 
-**Custom plugins that used shared Redis config**
+#### Custom plugins that used shared Redis config
 
 In 3.8.0.0, Kong has changed and refactored the shared Redis configuration that previously was imported by `require "kong.enterprise_edition.redis"`. If you created a custom plugin that is using this shared configuration or if you have a forked version of a plugin, like `rate-limiting-advanced`, then you might need to do additional steps before you can upgrade to the new version of this Redis config.
 
 Out of the box, custom plugins should still work since the old shared configuration is still available. The new config adds the `cluster_max_redirections` option for Redis Cluster, and the `cluster_nodes` format and `sentinel_nodes` were changed. Other than that, the initialization step is no longer required.
 
-**Upgrade custom plugins using a shared Redis config**
+#### Upgrade custom plugins using a shared Redis config
 
 If your plugin is using a shared Redis config (for example, if you import `require "kong.enterprise_edition.redis"`) you must do the following:
 
@@ -71,16 +125,14 @@ If your plugin is using a shared Redis config (for example, if you import `requi
     Where `redis` is `local redis = require "kong.enterprise_edition.redis"`.
 1. Switch the imports of redis from `local redis = require "kong.enterprise_edition.redis"` to `local redis = require "kong.enterprise_edition.tools.redis.v2"`.
 
-**Upgrade custom plugins using the rate limiting library**
+#### Upgrade custom plugins using the rate limiting library
 
 If your plugin is using rate limiting library (as in you import `local ratelimiting = require("kong.tools.public.rate-limiting").new_instance("your-plugin-name")`) you must switch the imports of the following:
 
 * *Shared Redis config:* Change `local redis = require "kong.enterprise_edition.redis"` to `local redis = require "kong.enterprise_edition.tools.redis.v2"`
 * *Rate limiting library:* Change `local ratelimiting = require("kong.tools.public.rate-limiting").new_instance("your-plugin-name")` to `local ratelimiting = require("kong.tools.public.rate-limiting").new_instance("your-plugin-name", { redis_config_version = "v2" })`
 
-**Deprecations**
-
-**`sentinel_addresses` and `cluster_addresses` for Redis**
+#### Deprecated `sentinel_addresses` and `cluster_addresses` for Redis
 
 The following plugins switched `cluster_addresses` to `cluster_nodes` and `sentinel_addresses` to `sentinel_nodes` for Redis configuration:
 
@@ -99,7 +151,11 @@ Forked custom plugins aren't automatically migrated. For more information about 
 
 Review the [changelog](/gateway/changelog/#3700) for all the changes in this release.
 
-**Configuration**
+### 3.7.0.0
+
+Breaking changes in the 3.10.0.0 release.
+
+#### Configuration
 
 The Granular Tracing feature has been deprecated and removed from {{site.base_gateway}}.
 
@@ -115,7 +171,7 @@ As part of your upgrade to 3.7, remove the following tracing-related parameters 
 
 We recommend transitioning to [OpenTelemetry Instrumentation](/gateway/tracing/) instead.
 
-**Vaults**
+#### Vaults
 
 There are some changes to the configuration of the [HashiCorp Vault entity](/how-to/configure-hashicorp-vault-as-a-vault-backend/).
 Starting from this version, a string entirely made of spaces can't be specified as the `role_id` or `secret_id`
@@ -124,7 +180,7 @@ value in the HashiCorp Vault entity when using the AppRole authentication method
 Additionally, you must specify at least one of `secret_id` or `secret_id_file` in the HashiCorp Vault 
 entity when using the AppRole authentication method.
 
-**Plugin changes**
+#### Plugin changes
 
 [**AI Proxy**](/plugins/ai-proxy/) (`ai-proxy`): To support the new messages API of `Anthropic`, the upstream 
 path of the `anthropic` setting for the `llm/v1/chat` Route type has changed from `/v1/complete` to `/v1/messages`.
@@ -134,28 +190,38 @@ path of the `anthropic` setting for the `llm/v1/chat` Route type has changed fro
 
 Review the [changelog](/gateway/changelog/#3600) for all the changes in this release.
 
-**General**
+### 3.6.1.0
+
+Breaking changes in the 3.10.0.0 release.
+
+#### TLS changes
+
+TLSv1.1 and lower is now disabled by default in OpenSSL 3.x.
+
+### 3.6.0.0
+
+Breaking changes in the 3.10.0.0 release.
+
+#### General
 
 If you are using `ngx.var.http_*` in custom code to access HTTP headers, the behavior of that variable changed slightly when the same header is used multiple times in a single request. Previously, it would return the first value only; now it returns all the values, separated by commas. {{site.base_gateway}}'s PDK header getters and setters work as before.
 
-**Wasm**
+#### Wasm
 
 To avoid ambiguity with other Wasm-related `nginx.conf` directives, the prefix for Wasm `shm_kv` nginx.conf directives was changed from `nginx_wasm_shm_` to `nginx_wasm_shm_kv_`.
  [#11919](https://github.com/Kong/kong/issues/11919)
 
-**Admin API**
+#### Admin API
 
 The listing endpoints for Consumer Groups (`/consumer_groups`) and Consumers (`/consumers`) now respond
 with paginated results. The JSON key for the list has been changed to `data` instead of `consumer_groups`
 or `consumers`.
 
-**Configuration changes**
+#### Configuration changes
 
 The default value of the [`dns_no_sync`](/gateway/configuration/#dns_no_sync) option has been changed to `off`.
 
-**TLS changes**
-
-**3.6.0.0**
+#### TLS changes
 
 The recent OpenResty bump includes TLS 1.3 and deprecates TLS 1.1. 
 If you still need to support TLS 1.1, set the [`ssl_cipher_suite`](/gateway/configuration/#ssl_cipher_suite) setting to `old`.
@@ -169,11 +235,7 @@ As a result, the following are prohibited:
 * SSL version 3
 Additionally, compression is disabled.
 
-**3.6.1.0**
-
-TLSv1.1 and lower is now disabled by default in OpenSSL 3.x.
-
-**Kong Manager Enterprise**
+#### Kong Manager Enterprise
 
 As of {{site.base_gateway}} 3.6, Kong Manager uses the session management mechanism in the OpenID Connect plugin.
 `admin_gui_session_conf` is no longer required when authenticating with OIDC. Instead, session-related
@@ -181,7 +243,7 @@ configuration parameters are set in `admin_gui_auth_conf` (like `session_secret`
 
 See the [migration FAQ](/how-to/enable-oidc-for-kong-manager/) for more information.
 
-**Plugin changes**
+#### Plugin changes
 
 * [**ACME**](/plugins/acme/) (`acme`), [**Rate Limiting**](/plugins/rate-limiting/) (`rate-limiting`), and [**Response Rate Limiting**](/plugins/response-ratelimiting/) (`response-ratelimiting`)
   * Standardized Redis configuration across plugins. The Redis configuration now follows a common schema that is shared across other plugins.
@@ -201,42 +263,65 @@ configuration field to construct the request path when requesting the Azure API.
 * [**SAML**](/plugins/saml) (`saml`)
   * Adjusted the priority of the SAML plugin to 1010 to correct the integration between the SAML plugin and other Consumer-based plugins.
  
-**Known issues**
+#### Known issues
 
-The following is a list of known issues that may be fixed in a future release.
+The following is a list of known issues in 3.6.x that may be fixed in a future release.
 
-**Operating system requirements**
-
-{{site.base_gateway}} 3.6.0.0 requires a higher limit on the number of file descriptions to 
-function properly. It will not start properly with a limit set to 1024 or lower. We 
-recommend using `ulimit` on your operating system to set it to at least 4096 using 
-`ulimit -n 4096`.
-
-*Issue fixed in 3.6.1.0*:
-Although a higher limit on file descriptors (`uname -n`) is recommended in general for 
-{{site.base_gateway}}, you can upgrade to 3.6.1.0 to start with a default of 1024 again.
-
-**HTTP/2 requires Content-Length for plugins that read request body**
-
-Kong 3.6.x has introduced a regression for plugins that read the body of incoming requests. 
-Clients must specify a `Content-Length` header that represents the length of the request body. 
-Not including this header, or relying on `Transfer-Encoding: chunked` will result in an HTTP response with the error code 500.
-
-Currently known affected plugins: 
-* [jq](/plugins/jq/)
-* [Request Size Limiting](/plugins/request-size-limiting/)
-* [Request Validator](/plugins/request-validator/)
-* [AI Request Transformer](/plugins/ai-request-transformer/)
-* [Request Transformer](/plugins/request-transformer/)
-* [Request Transformer Advanced](/plugins/request-transformer-advanced/)
-
-*Issue fixed in 3.6.1.1*:
-Reverted the hard-coded limitation of the `ngx.read_body()` API in OpenResty upstreams’ new versions when downstream connections are in HTTP/2 or HTTP/3 stream modes.
-
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: Operating system requirements
+    description: |
+      {{site.base_gateway}} 3.6.0.0 requires a higher limit on the number of file descriptions to 
+      function properly. It will not start properly with a limit set to 1024 or lower. We 
+      recommend using `ulimit` on your operating system to set it to at least 4096 using 
+      `ulimit -n 4096`.
+    status: |
+      *Issue fixed in 3.6.1.0*:
+      <br><br>
+      Although a higher limit on file descriptors (`uname -n`) is recommended in general for 
+      {{site.base_gateway}}, you can upgrade to 3.6.1.0 to start with a default of 1024 again.
+  - issue: HTTP/2 requires Content-Length for plugins that read request body
+    description: |
+      Kong 3.6.x has introduced a regression for plugins that read the body of incoming requests. 
+      Clients must specify a `Content-Length` header that represents the length of the request body. 
+      Not including this header, or relying on `Transfer-Encoding: chunked` will result in an HTTP response with the error code 500.
+      <br><br>
+      Currently known affected plugins: 
+      <br><br>
+      * [jq](/plugins/jq/)
+      * [Request Size Limiting](/plugins/request-size-limiting/)
+      * [Request Validator](/plugins/request-validator/)
+      * [AI Request Transformer](/plugins/ai-request-transformer/)
+      * [Request Transformer](/plugins/request-transformer/)
+      * [Request Transformer Advanced](/plugins/request-transformer-advanced/)
+    status: |
+      *Issue fixed in 3.6.1.1*:
+      <br><br>
+      Reverted the hard-coded limitation of the `ngx.read_body()` API in OpenResty upstreams’ new versions when downstream connections are in HTTP/2 or HTTP/3 stream modes.
+{% endtable %}
 
 ## 3.5.x breaking changes
 
-**Dev Portal and Vitals**
+### 3.5.0.2
+
+Breaking changes in the 3.5.0.2 release.
+
+#### Configuration changes
+
+The default value of the [`dns_no_sync`](/gateway/configuration/#dns_no_sync) has been changed to `off`. 
+
+### 3.5.0.0
+
+Breaking changes in the 3.5.0.0 release.
+
+#### Dev Portal and Vitals
 
 <!--vale off-->
 As of this release, the product component known as Kong Enterprise Portal is no longer included in the {{site.ee_product_name}} (previously known as Kong Enterprise) software package. Existing customers who have purchased Kong Enterprise Portal can continue to use it and be supported via a dedicated mechanism. 
@@ -248,24 +333,29 @@ Existing customers who have purchased Kong Vitals can continue to use it and be 
 If you have purchased Kong Enterprise Portal or Vitals in the past and would like to continue to use it with this release or a future release of {{site.ee_product_name}}, contact [Kong Support](https://support.konghq.com/support/s/) for more information.
 <!--vale on-->
 
-**Plugin Changes**
+#### Plugin Changes
 
 {{site.base_gateway}} now requires an Enterprise license to use dynamic plugin ordering.
 
-**Session Plugin**
+#### Session Plugin
 
-{{site.base_gateway}} 3.5.x introduced the new configuration field `read_body_for_logout` with a default value of `false`. This change alters the behavior of `logout_post_arg` in such a way that it is no longer considered, unless `read_body_for_logout` is explicitly set to `true`. This adjustment prevents the Session plugin from automatically reading request bodies for logout detection, particularly on POST requests.
+{{site.base_gateway}} 3.5.x introduced the new configuration field `read_body_for_logout` with a default value of `false`. 
+This change alters the behavior of `logout_post_arg` in such a way that it is no longer considered, unless `read_body_for_logout` is explicitly set to `true`. 
+This adjustment prevents the Session plugin from automatically reading request bodies for logout detection, particularly on POST requests.
 
-**Configuration changes**
+#### Configuration changes
 
-The default value of the [`dns_no_sync`](/gateway/configuration/#dns_no_sync) option has been changed to `on` for 3.5.0.0 and 3.5.0.1. As of 3.5.0.2, the default value has been changed to `off`. 
+The default value of the [`dns_no_sync`](/gateway/configuration/#dns_no_sync) option has been changed to `on` for 3.5.0.0 and 3.5.0.1. 
+As of 3.5.0.2, the default value has been changed to `off`. 
 
 
 ## 3.4.x breaking changes
 
-**TLS changes**
+### 3.4.3.5
 
-**3.4.3.5**
+Breaking changes in the 3.4.3.5 release.
+
+#### TLS changes
 
 In OpenSSL 3.2, the default SSL/TLS security level has been changed from 1 to 2.
 This means the security level is set to 112 bits of security. 
@@ -276,18 +366,20 @@ As a result, the following are prohibited:
 * SSL version 3
 Additionally, compression is disabled.
 
-**Deployment**
+### 3.4.0.0
 
-**Amazon Linux 2022 to 2023 rename**
+Breaking changes in the 3.4.0.0 release.
+
+#### Amazon Linux 2022 to 2023 rename
 
 Amazon Linux 2022 artifacts are renamed to Amazon Linux 2023, based on AWS's own renaming.
 
-**Alpine support removed**
+#### Alpine support removed
 
 Alpine packages and Docker images based on Alpine are no longer supported.
 Starting with {{site.base_gateway}} 3.4.0.0, Kong is not building new Alpine images or packages.
 
-**Ubuntu 18.04 support removed** 
+#### Ubuntu 18.04 support removed
 
 Support for running {{site.base_gateway}} on Ubuntu 18.04 ("Bionic") is now deprecated,
 as [Standard Support for Ubuntu 18.04 has ended as of June 2023](https://wiki.ubuntu.com/Releases).
@@ -297,29 +389,48 @@ images or packages, and Kong will not test package installation on Ubuntu 18.04.
 If you need to install {{site.base_gateway}} on Ubuntu 18.04, see the documentation for
 previous versions.
 
-**Cassandra DB support removed**
+#### Cassandra DB support removed
 
 Cassandra DB support has been removed. It is no longer supported as a data store for {{site.base_gateway}}. 
 
 You can migrate from Cassandra DB to PostgreSQL by following the [migration guide](https://legacy-gateway--kongdocs.netlify.app/), 
 or reach out to your support representative for help.
 
-**Configuration changes**
+#### Configuration changes
 
 The following is a list of changes in `kong.conf` in this release.
 
-Item | Recommended action
------|-------------------
-LMDB encryption has been disabled. <br><br> The parameter `declarative_config_encryption_mode` has been removed from `kong.conf`. | No action needed.
-Renamed the configuration property `admin_api_uri` to `admin_gui_api_url`. The old `admin_api_uri` property is considered deprecated and will be fully removed in a future version of {{site.base_gateway}}. |  Update your configuration to use `admin_gui_api_url`.
-The `database` parameter no longer accepts `cassandra` as an option. <br><br> All Cassandra options have been removed. | If you use Cassandra DB, either [migrate to PostgreSQL](https://legacy-gateway--kongdocs.netlify.app/) (`postgres`) or DB-less mode (`off`).
+{% table %}
+columns:
+  - title: Item
+    key: item
+  - title: Recommended action
+    key: action
+rows:
+  - item: |
+      LMDB encryption has been disabled. 
+      <br><br> 
+      The parameter `declarative_config_encryption_mode` has been removed from `kong.conf`. 
+    action: No action needed.
+  - item: |
+      Renamed the configuration property `admin_api_uri` to `admin_gui_api_url`. 
+      The old `admin_api_uri` property is considered deprecated and will be fully removed in a future version of {{site.base_gateway}}. 
+    action: |
+      Update your configuration to use `admin_gui_api_url`.
+  - item: |
+      The `database` parameter no longer accepts `cassandra` as an option. 
+      <br><br> 
+      All Cassandra options have been removed.
+    action: |
+      If you use Cassandra DB, either migrate to PostgreSQL (`postgres`) or DB-less mode (`off`).
+{% endtable %}
 
-**Admin API changes**
+#### Admin API changes
 
 The `/consumer_groups/:id/overrides` endpoint is deprecated in favor of a more generic plugin scoping mechanism. 
-See the new [Consumer Groups](/api/gateway/admin-ee/3.4/#/operations/get-consumer_groups) entity.
+See the new [Consumer Groups](/gateway/entities/consumer-group/) entity.
 
-**Plugin changes**
+#### Plugin queues
 
 Validation for plugin queue related parameters has been improved. Certain parameters now have stricter requirements.
 * `max_batch_size`, `max_entries`, and `max_bytes` are now declared as `integer` instead of `number`. 
@@ -332,26 +443,44 @@ This affects the following plugins:
   * [Datadog](/plugins/datadog/)
   * [Zipkin](/plugins/zipkin/)
 
-**Rate Limiting Advanced**
+#### Rate Limiting Advanced plugin
 
 The `/consumer_groups/:id/overrides` endpoint has been deprecated. While this endpoint will still function, we strongly recommend transitioning to the new and improved method for managing Consumer Groups, as documented in the [Enforcing rate limiting tiers with the Rate Limiting Advanced plugin](/how-to/add-rate-limiting-tiers-with-kong-gateway/) guide. 
 
-**Known issues**
+#### Known issues
 
-Some referenceable configuration fields, such as the `http_endpoint` field
-of the `http-log` plugin and the `endpoint` field of the `opentelemetry` plugin,
-do not accept reference values due to incorrect field validation.
+The following is a list of known issues in 3.4.x that may be fixed in a future release.
 
-When adding new plugins to the existing installation (either manually or via the extension of `bundled` plugins), the `kong migrations finish` or `kong migrations up` must be run with the `-f` flag to forcefully upgrade the plugin schemas.
-
+{% table %}
+columns:
+  - title: Known issue
+    key: issue
+  - title: Description
+    key: description
+  - title: Status
+    key: status
+rows:
+  - issue: Referenceable fields
+    description: |
+      Some referenceable configuration fields, such as the `http_endpoint` field
+      of the `http-log` plugin and the `endpoint` field of the `opentelemetry` plugin,
+      do not accept reference values due to incorrect field validation.
+      <br><br>
+      When adding new plugins to the existing installation (either manually or via the extension of `bundled` plugins), the `kong migrations finish` or `kong migrations up` must be run with the `-f` flag to forcefully upgrade the plugin schemas.
+    status: Not fixed
+{% endtable %}
 
 ## 3.3.x breaking changes
 
-**Plugins**
+### 3.3.0.0
+
+Breaking changes in the 3.3.0.0 release.
+
+#### Plugins
 
 For breaking changes to plugins, see the [{{site.base_gateway}} Changelog](/gateway/changelog/) for your {{site.base_gateway}} version.
 
-**Plugin queuing**
+#### Plugin queuing
 
 The plugin queuing system was reworked in {{site.base_gateway}} 3.3.x, so some plugin parameters may not function as expected anymore. If you use queues in the following plugins, new parameters must be configured:
 
@@ -363,11 +492,11 @@ The plugin queuing system was reworked in {{site.base_gateway}} 3.3.x, so some p
 
 For more information about how plugin queuing works and the plugin queuing parameters you can configure, see the documentation for each plugin.
 
-**Traditional compatibility router**
+#### Traditional compatibility router
 
 The `traditional_compat` router mode has been made more compatible with the behavior of `traditional` mode by splitting Routes with multiple paths into multiple `atc` Routes with separate priorities. Since the introduction of the new router in {{site.base_gateway}} 3.0, `traditional_compat` mode assigned only one priority to each Route, even if different prefix path lengths and regular expressions were mixed in a Route. This was not how multiple paths were handled in the `traditional` router and the behavior has now been changed so that a separate priority value is assigned to each path in a Route.
 
-**Upgrading {{site.base_gateway}} after adopting PostgreSQL 15**
+#### Upgrading {{site.base_gateway}} after adopting PostgreSQL 15
 
 PostgreSQL 15 enforces different permissions on the public schema than prior versions of PostgreSQL. This requires an extra step to grant the correct permissions to the Kong user to make schema changes. 
 
@@ -380,11 +509,30 @@ You can grant the permissions in one of two ways:
 
 ## 3.2.x breaking changes
 
-**Plugins**
+### 3.2.2.4
+
+Breaking changes in the 3.2.2.4 release.
+
+#### Amazon Linux 2022 to 2023 rename
+
+Amazon Linux 2022 artifacts are renamed to Amazon Linux 2023, based on AWS's own renaming.
+
+#### Ubuntu 18.04 support removed
+
+Support for running {{site.base_gateway}} on Ubuntu 18.04 ("Bionic") is now deprecated,
+as [Standard Support for Ubuntu 18.04 has ended as of June 2023](https://wiki.ubuntu.com/Releases).
+Starting with {{site.base_gateway}} 3.2.2.4, Kong is not building new Ubuntu 18.04
+images or packages, and Kong will not test package installation on Ubuntu 18.04.
+
+### 3.2.0.0
+
+Breaking changes in the 3.2.0.0 release.
+
+#### Plugins
 
 For breaking changes to plugins, see the [{{site.base_gateway}} Changelog](/gateway/changelog/) for your {{site.base_gateway}} version.
 
-**PostgreSQL SSL version bump**
+#### PostgreSQL SSL version bump
 
 The default PostgreSQL SSL version has been bumped to TLS 1.2. 
 
@@ -400,18 +548,18 @@ To use the default setting in `kong.conf`, verify that your Postgres server supp
 
 TLS versions lower than `tlsv1_2` are already deprecated and are considered insecure from PostgreSQL 12.x onward.
   
-**Changes to the Kong-Debug header**
+#### Changes to the Kong-Debug header
 
 Added the [`allow_debug_header`](/gateway/configuration/#allow_debug_header) 
 configuration property to `kong.conf` to constrain the `Kong-Debug` header for debugging. This option defaults to `off`.
 
 If you were previously relying on the `Kong-Debug` header to provide debugging information, set `allow_debug_header: on` in `kong.conf` to continue doing so.
 
-**JWT plugin**
+#### JWT plugin
     
 The [JWT plugin](/plugins/jwt/) now denies any request that has different tokens in the JWT token search locations.
 
-**Session library upgrade**
+#### Session library upgrade
 
 The [`lua-resty-session`](https://github.com/bungle/lua-resty-session) library has been upgraded to v4.0.0. 
 This version includes a full rewrite of the session library.
@@ -435,7 +583,7 @@ You can expect the following behavior:
 * **After upgrading the control plane**: Existing Kong Manager and Dev Portal sessions will be invalidated and all users will be required to log back in.
 * **After upgrading the data planes**: Existing proxy sessions will be invalidated. If you have an IdP configured, users will be required to log back into the IdP.
 
-**Session configuration parameter changes**
+#### Session configuration parameter changes
 
 The session library upgrade includes new, changed, and removed parameters. Here's how they function:
 
@@ -455,7 +603,8 @@ After you have upgraded all of your CP and DP nodes to 3.2 and ensured that your
 recommend updating parameters to their new renamed versions, and cleaning out any removed parameters 
 from session configuration to avoid unpredictable behavior.
 
-**Session plugin**
+{% navtabs "session-params" %}
+{% navtab "Session plugin" %}
 
 The following parameters and the values that they accept have changed. 
 For details on the new accepted values, see the [Session plugin](/plugins/session/) documentation.
@@ -469,8 +618,8 @@ Old parameter name | New parameter name
 `cookie_discard` | `stale_ttl`
 `cookie_renew` | Removed, no replacement parameter. 
   
-
-**SAML plugin**
+{% endnavtab %}
+{% navtab "SAML plugin" %}
 
 The following parameters and the values that they accept have changed. 
 For details on the new accepted values, see the [SAML plugin](/plugins/saml/) documentation.
@@ -491,7 +640,8 @@ Old parameter name | New parameter name
 `session_strategy` | Removed, no replacement parameter. 
 `session_compressor` | Removed, no replacement parameter. 
 
-**OpenID Connect plugin**
+{% endnavtab %}
+{% navtab "OpenID Connect plugin" %}
 
 The following parameters and the values that they accept have changed. 
 For details on the new accepted values, see the [OpenID Connect plugin](/plugins/openid-connect/) documentation.
@@ -515,40 +665,29 @@ Old parameter name | New parameter name
 `session_strategy` | Removed, no replacement parameter. 
 `session_compressor` | Removed, no replacement parameter. 
 
-**Patches**
-
-**3.2.2.4**
-
-**Amazon Linux 2022 to 2023 rename**
-
-Amazon Linux 2022 artifacts are renamed to Amazon Linux 2023, based on AWS's own renaming.
-
-**Ubuntu 18.04 support removed** 
-
-Support for running {{site.base_gateway}} on Ubuntu 18.04 ("Bionic") is now deprecated,
-as [Standard Support for Ubuntu 18.04 has ended as of June 2023](https://wiki.ubuntu.com/Releases).
-Starting with {{site.base_gateway}} 3.2.2.4, Kong is not building new Ubuntu 18.04
-images or packages, and Kong will not test package installation on Ubuntu 18.04.
-
+{% endnavtab %}
+{% endnavtabs %}
 
 ## 3.1.x breaking changes
 
-**Plugins**
+### 3.1.0.0
 
-For breaking changes to plugins, see the [{{site.base_gateway}} Changelog](/gateway/changelog/) for your {{site.base_gateway}} version.
+Breaking changes in the 3.1.0.0 release.
 
-**Hybrid mode**
+#### Hybrid mode
 
-The legacy hybrid configuration protocol has been removed in favor of the wRPC protocol introduced in 3.0.0.0. Rolling upgrades from 2.8.x.y to 3.1.0.0 are not supported. Operators must upgrade to 3.0.x.x before they can perform a rolling upgrade to 3.1.0.0.
+The legacy hybrid configuration protocol has been removed in favor of the wRPC protocol introduced in 3.0.0.0. 
+Rolling upgrades from 2.8.x.y to 3.1.0.0 are not supported. 
+Operators must upgrade to 3.0.x.x before they can perform a rolling upgrade to 3.1.0.0.
 
 
 ## 3.0.x breaking changes
 
-**Plugins**
+### 3.0.0.0
 
-For breaking changes to plugins, see the [{{site.base_gateway}} Changelog](/gateway/changelog/) for your {{site.base_gateway}} version.
+Breaking changes in the 3.0.0.0 release.
 
-**Kong plugins**
+#### Kong plugins
 
 If you are adding a new plugin to your installation, you need to run
 `kong migrations up` with the plugin name specified. For example,
@@ -565,18 +704,18 @@ Kong plugins no longer support `CREDENTIAL_USERNAME` (`X-Credential-Username`).
 Use the constant `CREDENTIAL_IDENTIFIER` (`X-Credential-Identifier`) when
 setting the upstream headers for a credential.
 
-**Deployment**
+#### Deployment
 
 Amazon Linux 1 and Debian 8 (Jessie) containers and packages are deprecated and are no longer produced for new versions of {{site.base_gateway}}.
 
-**Blue-green deployments**
+#### Blue-green deployments
 
 *Traditional mode*: Blue-green upgrades from versions of 2.8.1 and below to 3.0.0 are not currently supported.
 This is a known issue planned to be fixed in the next 2.8 release. When that version is released, 2.x users should upgrade to that version before beginning a blue-green upgrade to 3.0.
 
 *Hybrid mode*: See the [upgrade instructions](#migrate-db) below.
 
-**Dependencies**
+#### Dependencies
 
 If you are using the provided binary packages (except Debian and RHEL), all necessary dependencies
 for the gateway are bundled and you can skip this section.
@@ -597,7 +736,7 @@ The [kong-build-tools](https://github.com/Kong/kong-build-tools)
 repository contains [openresty-build-tools](https://github.com/Kong/kong-build-tools/tree/master/openresty-build-tools),
 which allows you to more easily build OpenResty with the necessary patches and modules.
 
-**Migrations**
+#### Migrations
 
 The migration helper library (mostly used for Cassandra migrations) is no longer supplied with {{site.base_gateway}}.
 
@@ -606,7 +745,7 @@ migrations, designating a function to call. The `up_f` part is
 invoked after the `up` part has been executed against the database
 for both PostgreSQL and Cassandra.
 
-**Deprecations and changed parameters**
+#### Deprecations and changed parameters
 
 The [StatsD Advanced](/plugins/statsd-advanced/) plugin
 has been deprecated and will be removed in 4.0.
@@ -669,7 +808,7 @@ instead (`kong.ctx.shared.authenticated_jwt_token`) before upgrading to 3.0.
 * These plugins don't store response data in `ngx.ctx.proxy_cache_hit` anymore.
 * Logging plugins that need the response data must now read it from `kong.ctx.shared.proxy_cache_hit`.
 
-**Custom plugins and the PDK**
+#### Custom plugins and the PDK
 
 * DAOs in plugins must be listed in an array, so that their loading order is explicit. Loading them in a
   hash-like table is no longer supported.
@@ -744,7 +883,7 @@ If you are using
 
 * The Kong singletons module `kong.singletons` was removed in favor of the PDK `kong.*`.
 
-**New router**
+#### New router
 
 {{site.base_gateway}} no longer uses a heuristic to guess whether a `route.path` is a regex pattern. From 3.0 onward,
 all regex paths must start with the `"~"` prefix, and all paths that don't start with `"~"` will be considered plain text.
@@ -757,7 +896,7 @@ That is no longer supported. Except for the reserved characters defined in
 [rfc3986](https://datatracker.ietf.org/doc/html/rfc3986#section-2.2),
 write all other characters without percent-encoding.
 
-**Declarative and DB-less**
+#### Declarative and DB-less
 
 The version number (`_format_version`) of declarative configuration has been bumped to `3.0` for changes on `route.path`.
 Declarative configurations with older versions will be upgraded to `3.0` during migrations.
@@ -772,7 +911,7 @@ CLI tool. Only JSON and YAML formats are supported. If your update procedure wit
 executing `kong config db_import config.lua`, convert the `config.lua` file into a `config.json` or `config.yml` file
 before upgrading.
 
-**Admin API**
+#### Admin API
 
 The Admin API endpoint `/vitals/reports` has been removed.
 
@@ -784,7 +923,7 @@ requests to the appropriate endpoints before updating to Kong 3.0.
 The list of reported plugins available on the server now returns a table of
 metadata per plugin instead of a boolean `true`.
 
-**Configuration**
+#### Configuration
 
 The Kong constant `CREDENTIAL_USERNAME` with the value of `X-Credential-Username` has been
 removed.
@@ -796,7 +935,7 @@ The data plane config cache mechanism and its related configuration options
 
 `ngx.ctx.balancer_address` was removed in favor of `ngx.ctx.balancer_data`.
 
-**Kong for Kubernetes considerations**
+#### Kong for Kubernetes considerations
 
 The Helm chart automates the upgrade migration process. When running `helm upgrade`,
 the chart spawns an initial job to run `kong migrations up` and then spawns new
@@ -815,7 +954,7 @@ Kubernetes resources or changes in {{site.base_gateway}}.
 For specific Kong for Kubernetes version upgrade considerations, see
 [Upgrade considerations](https://github.com/Kong/charts/blob/main/charts/kong/UPGRADE.md)
 
-**Kong deployment split across multiple releases**
+#### Kong deployment split across multiple releases
 
 The standard chart upgrade automation process assumes that there is only a single {{site.base_gateway}} release
 in the {{site.base_gateway}} cluster, and runs both `migrations up` and `migrations finish` jobs.
@@ -851,7 +990,7 @@ To handle clusters split across multiple releases, you should:
 This ensures that all instances are using the new {{site.base_gateway}} package before running
 `kong migrations finish`.
 
-**Hybrid mode considerations**
+#### Hybrid mode considerations
 
 {:.important}
 > **Important:** If you are currently running in [hybrid mode](/gateway/deployment-topologies/),
@@ -867,7 +1006,7 @@ upgrade the control plane first, and then the data planes.
 * The [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) plugin does not
     support the `cluster` strategy in hybrid mode. The `redis` strategy must be used instead.
 
-**Template changes**
+#### Template changes
 
 There are changes in the Nginx configuration file between every minor and major
 version of {{site.base_gateway}} starting with 2.0.x.
@@ -912,26 +1051,26 @@ diff the files to identify any changes, and apply them as needed.
 {% endnavtab %}
 {% endnavtabs %}
 
-
 ## 2.8.x and earlier breaking changes
 
-**Deployment**
+### 2.8.4.3
 
-**Amazon Linux 2022 to 2023 rename**
+Breaking changes in the 2.8.4.3 release.
 
-Amazon Linux 2022 artifacts are renamed to Amazon Linux 2023, based on AWS's own renaming.
-
-**Ubuntu 18.04 support removed** 
-
-> Patch version: 2.8.4.3
+#### Ubuntu 18.04 support removed
 
 Support for running {{site.base_gateway}} on Ubuntu 18.04 ("Bionic") is now deprecated,
 as [Standard Support for Ubuntu 18.04 has ended as of June 2023](https://wiki.ubuntu.com/Releases).
 Starting with {{site.base_gateway}} 2.8.4.3, Kong is not building new Ubuntu 18.04
 images or packages, and Kong will not test package installation on Ubuntu 18.04.
 
-**Plugins**
+### 2.8.0.0
 
-For breaking changes to plugins, see the [{{site.base_gateway}} Changelog](/gateway/changelog/) for your {{site.base_gateway}} version.
+Breaking changes in the 2.8.0.0 release.
+
+#### Amazon Linux 2022 to 2023 rename
+
+Amazon Linux 2022 artifacts are renamed to Amazon Linux 2023, based on AWS's own renaming.
+
 
 
