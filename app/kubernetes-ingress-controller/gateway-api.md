@@ -21,7 +21,7 @@ related_resources:
 
 faqs:
   - q: |
-      One of publish services defined in Gateway's "konghq.com/publish-service" annotation didn't match controller manager's configuration
+      Error: `One of publish services defined in Gateway's "konghq.com/publish-service" annotation didn't match controller manager's configuration`
     a: |
       To resolve this error, manually change the `konghq.com/publish-service` annotation on the Gateway to the value of `--publish-service`.
 
@@ -43,7 +43,9 @@ A [Gateway resource](https://gateway-api.sigs.k8s.io/concepts/api-overview/#gate
 
 Typically, Gateway API implementations manage the resources associated with a Gateway on behalf of users for creating a Gateway resource triggers automatic provisioning of Deployments, Services, and others with configuration by matching the Gateway's listeners and addresses. Kong's implementation does _not_ automatically manage Gateway provisioning.
 
-Because the Kong Deployment and its configuration are not managed automatically, listeners and address configuration are not set for you. You must configure your Deployment and Service to match your Gateway's configuration.  For example, with this Gateway.
+Because the Kong Deployment and its configuration are not managed automatically, listeners and address configuration are not set for you. You must configure your Deployment and Service to match your Gateway's configuration.  
+
+For example, with the following Gateway:
 
 ```yaml
 apiVersion: gateway.networking.k8s.io/v1
@@ -76,7 +78,7 @@ spec:
     protocol: TLS
 ```
 
-It requires a proxy Service that includes all the requested listener ports.
+It requires a proxy Service that includes all the requested listener ports:
 
 ```yaml
 apiVersion: v1
@@ -102,7 +104,7 @@ spec:
     targetPort: 9903
 ```
 
-You must also configure Kong's `proxy_listen` configuration in the container environment.
+You must also configure {{site.base_gateway}}'s [`proxy_listen`](/gateway/configuration/#proxy-listen) and [`stream_listen`] (/gateway/configuration/#stream-listen) configuration parameters in the container environment:
 
 ```console
 KONG_PROXY_LISTEN="0.0.0.0:8000 reuseport backlog=16384, 0.0.0.0:8443 http2 ssl reuseport backlog=16384 http2"
@@ -146,22 +148,24 @@ reason: PortUnavailable
 
 ### Listener compatibility and handling multiple Gateways
 
-Each {{ site.kic_product_name }} can be provided with a controller name; if no controller name is provided through the `--gateway-api-controller-name` field (or `CONTROLLER_GATEWAY_API_CONTROLLER_NAME` environment variable) the default `konghq.com/kic-gateway-controller` is used. All the `GatewayClass`es referencing such a controller in the `controllerName` field are reconciled by the {{ site.kic_product_name }}. Similarly, all the `Gateway`s referencing a `GatewayClass` that specifies a matching `controllerName` are reconciled.
+Each {{ site.kic_product_name }} can be provided with a controller name. If no controller name is provided through the `--gateway-api-controller-name` field (or `CONTROLLER_GATEWAY_API_CONTROLLER_NAME` environment variable), the default `konghq.com/kic-gateway-controller` is used. 
+
+All the `GatewayClass`es referencing such a controller in the `controllerName` field are reconciled by the {{ site.kic_product_name }}. Similarly, all the `Gateway`s referencing a `GatewayClass` that specifies a matching `controllerName` are reconciled.
 
 ### Binding {{site.base_gateway}} to a Gateway resource
 
 To configure {{site.kic_product_name}} to reconcile the Gateway resource, you must set the `konghq.com/gatewayclass-unmanaged=true` annotation in your GatewayClass resource.
 
-In addition, the `spec.controllerName` in your GatewayClass needs to be properly configured, as explained in the section [above](#listener-compatibility-and-handling-multiple-gateways).
+In addition, the `spec.controllerName` in your GatewayClass needs to be properly configured, as explained in the section on [listener compatibility](#listener-compatibility-and-handling-multiple-gateways).
 
 Finally, the `spec.gatewayClassName` value in your Gateway resource should match the value in `metadata.name` from your `GatewayClass`.
 
-You can check to confirm if {{site.kic_product_name}} has updated the Gateway by inspecting the list of associated addresses. If an IP address is shown, the `Gateway` is being managed by Kong.
+You can confirm if {{site.kic_product_name}} has updated the Gateway by inspecting the list of associated addresses. 
 
 ```bash
 kubectl get gateway kong -o=jsonpath='{.status.addresses}' | jq
 ```
-
+If an IP address is shown, the `Gateway` is being managed by Kong:
 ```json
 [
   {

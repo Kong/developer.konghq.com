@@ -22,27 +22,30 @@ related_resources:
 {:.info}
 > Kong will continue to support the [Kubernetes Ingress resource](https://kubernetes.io/docs/concepts/services-networking/ingress/) to configure a {{site.base_gateway}} for the foreseeable future. However, as the [Kubernetes Gateway API resource](https://kubernetes.io/docs/concepts/services-networking/gateway/) is now the preferred mechanism for configuring inbound routing in Kubernetes clusters, we recommend that you use the Gateway API to configure a {{site.base_gateway}}.
 
-The {{site.kic_product_name}} uses ingress classes to filter Kubernetes Ingress objects and other resources before converting them into Kong configuration. This allows it to coexist with other ingress controllers and/or other deployments of the {{site.kic_product_name}} in the same cluster. A {{site.kic_product_name}} only processes configuration marked for its use.
+The {{site.kic_product_name}} uses ingress classes to filter Kubernetes Ingress objects and other resources before converting them into {{site.base_gateway}} configuration. This allows the Controller to coexist with other ingress controllers and other deployments of the {{site.kic_product_name}} in the same cluster. A {{site.kic_product_name}} instance only processes configuration marked for its use.
 
 ## Configure the controller ingress class
 
-The `--ingress-class` flag (or `CONTROLLER_INGRESS_CLASS` environment variable) specifies the ingress class expected by the {{site.kic_product_name}}. If you do not set a value, {{ site.kic_product_name }} will default to `--ingress-class=kong`.
+The `--ingress-class` flag (or `CONTROLLER_INGRESS_CLASS` environment variable) specifies the ingress class expected by the {{site.kic_product_name}}. If you don't set a value, {{ site.kic_product_name }} will default to `--ingress-class=kong`.
 
 ## Load resources by class
 
-The {{site.kic_product_name}} translates a number of Kubernetes resources into Kong configuration. These resources can be categorized into two categories:
+The {{site.kic_product_name}} translates a number of Kubernetes resources into {{site.base_gateway}} configuration. These resources can be sorted into two categories:
 
-- Resources that the controller translates directly into Kong configuration.
-- Resources referenced by some other resource, where the other resource is directly translated into Kong configuration.
+- Resources that the controller translates directly into {{site.base_gateway}} configuration.
 
-For example, an `Ingress` is translated directly into a Kong Route, and a `KongConsumer` is translated directly into a [Kong Consumer](/gateway/entities/consumer/). A Secret containing an authentication plugin credential is _not_ translated directly: it is only translated into Kong configuration if a `KongConsumer` resource references it.
+  For example, an `Ingress` is translated directly into a Kong Route, and a `KongConsumer` is translated directly into a [Kong Consumer](/gateway/entities/consumer/).
+- Resources referenced by some other resource, where the other resource is directly translated into {{site.base_gateway}} configuration.
+ 
+  For example, a Secret containing an authentication plugin credential is _not_ translated directly. It's only translated into {{site.base_gateway}} configuration if a `KongConsumer` resource references it.
 
-Because they create Kong configuration independent of any other resources, directly-translated resources require an ingress class, and their class must match the class configured for the controller. Referenced resources do not require a class, but must be referenced by a directly translated resource that matches the controller.
+
+Because they create {{site.base_gateway}} configuration independent of any other resources, directly-translated resources require an ingress class, and their class must match the class configured for the controller. Referenced resources do not require a class, but must be referenced by a directly translated resource that matches the controller.
 
 ### Add class information to resources
 
-Most resources use a [`kubernetes.io/ingress-class` annotation][class-annotation]
-to indicate their class. However, v1 Ingress resources have a [dedicated `ingressClassName` field][ingress-class-name] that should contain the `ingressClassName`.
+Most resources use a [`kubernetes.io/ingress-class` annotation](/kubernetes-ingress-controller/reference/annotations/#kubernetesioingressclass)
+to indicate their class. However, v1 Ingress resources have a [dedicated `ingressClassName` field](https://kubernetes.io/docs/concepts/services-networking/ingress/#deprecated-annotation) that should contain the `ingressClassName`.
 
 ## When to use a custom class
 
@@ -111,7 +114,5 @@ spec:
 
 ```
 
-The KongConsumer and Ingress resources both have class annotations, as they are resources that the controller uses as a basis for building Kong configuration.  The Secret and KongPlugin _do not_ have class annotations, as they are referenced by other resources that do.
+The KongConsumer and Ingress resources both have class annotations, as they are resources that the controller uses as a basis for building {{site.base_gateway}} configuration. The Secret and KongPlugin _do not_ have class annotations, as they are referenced by other resources that do.
 
-[class-annotation]:/kubernetes-ingress-controller/reference/annotations/#kubernetesioingressclass
-[ingress-class-name]:https://kubernetes.io/docs/concepts/services-networking/ingress/#deprecated-annotation
