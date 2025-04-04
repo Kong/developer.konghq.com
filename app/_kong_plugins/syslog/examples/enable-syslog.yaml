@@ -1,0 +1,15 @@
+description: 'Enable the Syslog plugin and set the log level.'
+
+title: 'Enable the Syslog plugin'
+
+weight: 900
+
+config:
+  log_level: info
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
