@@ -1,0 +1,24 @@
+description: "Allows you to include the JWT in a request to {{site.base_gateway}} in the `Authorization` header."
+
+title: 'Include in header'
+
+weight: 900
+
+requirements: 
+- "Because this is an auth plugin, you need to create a [Consumer](/gateway/entities/consumer/) and attach a credential to it in the `jwt_secrets` config."
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config: 
+  header_names:
+  - authorization
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
