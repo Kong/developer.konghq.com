@@ -30,7 +30,7 @@ rows:
                 {{site.base_gateway}} has several default ports it uses to listen to traffic.
               cta:
                 text: Learn more about proxy ports &rarr;
-                url: /gateway/network-ports-firewall/#proxy-ports
+                url: /gateway/network/#proxy-ports
       - blocks:
           - type: card
             config:

@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}} ports"
+title: "{{site.base_gateway}} network"
 content_type: reference
 layout: reference
 
@@ -16,8 +16,10 @@ related_resources:
     url: /gateway/security/
   - text: Proxying with {{site.base_gateway}}
     url: /gateway/traffic-control/proxying/
-  - text: "{{site.base_gateway}} networking"
-    url: /gateway/network/
+  - text: DNS configuration reference
+    url: /gateway/networking/dns-config-reference/
+  - text: "{{site.base_gateway}} control plane and data plane communication"
+    url: /gateway/cp-dp-communication/
 
 works_on:
   - on-prem
