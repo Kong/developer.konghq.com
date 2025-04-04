@@ -1,0 +1,22 @@
+description: Configure the plugin to use the `draft4` validator to check that the request path contains a `status_code` parameter with a number value.
+
+title: Validate a request body
+
+weight: 900
+
+config: 
+  version: draft4
+  parameter_schema:
+    name: status_code
+    in: path
+    required: true,
+    schema: "{\"type\": \"number\"}"
+    style: simple
+    explode: false
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
