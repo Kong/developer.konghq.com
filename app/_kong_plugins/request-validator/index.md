@@ -33,19 +33,18 @@ search_aliases:
   - request-validator
 ---
 
-This plugin allows you to validate requests before they reach the upstream server. This plugin supports validating
-the schema of the body and the parameters of the request using either Kong's own schema validator (body only) or a JSON Schema Draft 4 compliant validator.
+The Request Validator plugin allows you to validate requests before they reach the upstream server. This plugin supports validating the schema of the body and the parameters of the request using either Kong's own schema validator (body only) or a JSON Schema Draft 4 compliant validator.
 
-If the validation fails, a `400 Bad Request` response is returned.
+If a validation fails, a `400 Bad Request` response is returned.
 
 ## Content-Type validation
 
-The request `Content-Type` header is validated against the plugin's [`config.allowed_content_types`](./reference/#schema--config-allowed-content-types) setting. If the `Content-Type` is not listed, the request will be rejected with an HTTP/400 error: `{"message":"specified Content-Type is not allowed"}`
+The request `Content-Type` header is validated against the plugin's [`config.allowed_content_types`](./reference/#schema--config-allowed-content-types) setting. If the `Content-Type` is not listed, the request will be rejected, and return a `HTTP/400` error: `{"message":"specified Content-Type is not allowed"}`.
 
 The parameter is strictly validated, which means a request with a parameter (for example, `application/json; charset=UTF-8`) is NOT considered valid for one without the same parameter (for example, `application/json`). The type, subtype, parameter names, and the value of the charset parameter are not case sensitive based on the RFC explanation.
 
 {:.warning}
-> When setting this configuration, the `Content-Type` header only gets validated when `body_schema` is configured.
+> When setting this configuration, the `Content-Type` header only gets validated when the `body_schema` is configured.
 
 ## Parameter validation
 
@@ -64,7 +63,7 @@ For more information, see the [OpenAPI specification](https://github.com/OAI/Ope
 
 Request body validation is only performed for:
 * Requests in which the `Content-Type` header is set to `application/json`
-* {% new_in 3.6 %} Requests in which the `+json` suffix is added to the `Content-Type` subtype: `application/merge-patch+json` for example
+* {% new_in 3.6 %} Requests in which the `+json` suffix is added to the `Content-Type` For example: subtype: `application/merge-patch+json` 
 
 For requests with any other allowed `Content-Type`, body validation is skipped. In that case, the request is proxied to the upstream without validating the body.
 
