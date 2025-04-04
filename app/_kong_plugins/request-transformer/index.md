@@ -31,6 +31,16 @@ categories:
 
 search_aliases:
   - request-transformer
+
+related_resources:
+  - text: Request Transformer Advanced plugin
+    url: /plugins/request-transformer-advanced/
 ---
 
-## Overview
+{% include plugins/request-response-transformer/request-transformer-description.md %}
+
+For more advanced features, see the [Request Transformer Advanced plugin](/plugins/request-transformer-advanced/).
+
+## Order of execution
+
+{% include plugins/request-response-transformer/transformation-order %}

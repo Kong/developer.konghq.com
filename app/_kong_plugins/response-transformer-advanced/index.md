@@ -64,7 +64,7 @@ Array notation must be used instead.
 
 ## Order of execution
 
-{% include plugins/request-response-transformer/response-transformer-order.md %}
+{% include plugins/request-response-transformer/transformation-order %}
 
 ## Arrays and nested objects
 

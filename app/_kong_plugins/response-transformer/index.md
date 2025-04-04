@@ -44,4 +44,4 @@ For more advanced features, see the [Response Transformer Advanced plugin](/plug
 
 ## Order of execution
 
-{% include plugins/request-response-transformer/response-transformer-order.md %}
+{% include plugins/request-response-transformer/transformation-order %}
