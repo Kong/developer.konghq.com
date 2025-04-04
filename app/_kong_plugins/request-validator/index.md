@@ -90,21 +90,19 @@ columns:
 rows:
   - attribute: '`type`'
     required: yes
-    description: The expected type of the field
+    description: |
+      The expected type of the field. The following values are supported:
+      * `string`
+      * `number`
+      * `integer`
+      * `boolean`
+      * `map`
+      * `array`
+      * `record`
   - attribute: '`required`'
     required: no
     description: Whether the field is required
 {% endtable %}
-
-The `type` field supports the following values:
-
-* `string`
-* `number`
-* `integer`
-* `boolean`
-* `map`
-* `array`
-* `record`
 
 Additionally, specific types may have their own required fields:
 
