@@ -128,7 +128,7 @@ flowchart LR
 ## How do I create a Control Plane Group?
 
 In {{site.konnect_short_name}} Control Plane Groups can be created using the [Control Planes API](/api/konnect/control-planes/).
-
+<!--vale off-->
 {% control_plane_request %}
 method: POST
 url: /v2/control-planes
@@ -140,11 +140,11 @@ body:
   name: CPG
   cluster_type: CLUSTER_TYPE_COMPOSITE
 {% endcontrol_plane_request %}
-
+<!--vale on-->
 ## How do I attach Control Planes to a Control Plane Group?
 
 Once you have a Control Plane group,you can add Control Planes to the group using the {{site.onnect_short_name}} UI or [API](/api/konnect/control-planes/v2/#/operations/post-control-planes-id-group-memberships-add).
-
+<!--vale off-->
 
 {% control_plane_request %}
 method: POST
@@ -157,7 +157,7 @@ body:
   members:
     - id: 062e2f2c-0f42-4938-91b4-f73f399260f5
 {% endcontrol_plane_request %}
-
+<!--vale on-->
 
 ## Configuring core entities
 
