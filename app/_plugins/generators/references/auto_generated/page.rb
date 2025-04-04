@@ -29,7 +29,8 @@ module Jekyll
                       'base_url' => base_url,
                       'latest?' => page_release == @release_info.latest_available_release,
                       'release' => page_release,
-                      'seo_noindex' => true
+                      'seo_noindex' => true,
+                      'versioned' => true
                     ).merge!(metadata)
         end
 
