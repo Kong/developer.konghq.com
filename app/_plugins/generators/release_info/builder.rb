@@ -16,7 +16,7 @@ module Jekyll
       end
 
       def run
-        if product && product == 'api-ops'
+        if product.nil?
           ReleaseInfo::Tool.new(site:, tool:, min_version:, max_version:)
         else
           ReleaseInfo::Product.new(site:, product:, min_version:, max_version:)

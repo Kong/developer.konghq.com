@@ -1,0 +1,37 @@
+description: 'Use delegated tokens generated in Kafka to authenticate the Kafka Log plugin.'
+
+title: 'Delegated tokens authentication'
+
+weight: 900
+
+requirements: 
+ - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running" 
+ - "[Create a Kafka topic](https://kafka.apache.org/quickstart#quickstart_createtopic)"
+ - "A [delegated token](https://docs.confluent.io/platform/current/security/authentication/delegation-tokens/overview.html#authentication-using-delegation-tokens)"
+
+variables: 
+  topic:
+    description: 'The name of your Kafka topic.'
+    value: $KAFKA_TOPIC
+  user:
+    description: 'The `tokenID` for your delegated token.'
+    value: $TOKEN_ID
+  password: 
+    description: 'The `token-hmac` for your delegated token.'
+    value: $TOKEN_HMAC
+
+config:
+  topic: ${topic}
+  authentication:
+    strategy: sasl
+    mechanism: SCRAM-SHA-256
+    user: ${user}
+    password: ${password}
+    tokenauth: true
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

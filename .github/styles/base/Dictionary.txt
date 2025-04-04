@@ -746,6 +746,7 @@ truststore
 truthy
 ttl
 txt
+udp
 udpingress
 udpingresses
 uid
