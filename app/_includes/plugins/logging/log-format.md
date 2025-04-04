@@ -1,6 +1,11 @@
 <!---shared with logging plugins: file-log, http-log, loggly, syslog, tcp-log, udp-log --->
 
+{% if include.name == "Syslog" %}
+Every request is logged to the System log in [SYSLOG](https://en.wikipedia.org/wiki/Syslog) standard,
+with the with message component formatted as a JSON object, separated by a new line `\n`.
+{% else %}
 Every request is logged separately in a JSON object, separated by a new line `\n`.
+{% endif %}
 
 <blockquote class="info">
 <details>
