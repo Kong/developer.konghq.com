@@ -5,7 +5,7 @@ name: 'AI Sanitizer'
 content_type: plugin
 
 publisher: kong-inc
-description: ''
+description: Protect sensitive information in client request bodies before they reach upstream services
 
 
 products:
