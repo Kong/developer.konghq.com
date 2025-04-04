@@ -41,12 +41,11 @@ $('$(something_that_needs_to_escaped)')
 ```
 
 {:.info}
-> **Note:** The plugin creates a non-mutable table of request headers, query strings, and captured URIs before transformation. Therefore, any update or removal of parameters used in a template does not affect the rendered value of a template.
+> **Note:** The plugin creates a non-mutable table of request headers, query strings, and captured URIs before transformation. Therefore, any update or removal of parameters used in a template doesn't affect the rendered value of a template.
 
 ### Advanced templates
 
-The content of the placeholder `$(...)` is evaluated as a Lua expression, so
-logical operators may be used. For example:
+The content of the placeholder `$(...)` is evaluated as a Lua expression, so you can use logical operators. For example:
 
 ```
 $(uri_captures["user-id"] or query_params["user"] or "unknown")
@@ -57,7 +56,7 @@ return the query parameter named `user`. If that also doesn't exist, it returns 
 value '"unknown"'.
 
 Constant parts can be specified as part of the template outside the dynamic
-placeholders. For example, creating a basic-auth header from a query parameter
+placeholders. For example, this creates a basic-auth header from a query parameter
 called `auth` that only contains the base64-encoded part:
 
 ```
@@ -87,8 +86,7 @@ $((function()
 ```
 
 {:.info}
-> **Note:** Especially in multi-line templates like the example above, make sure not
-to add any trailing white space or new lines. Because these would be outside the
+> **Note:** Especially in multi-line templates like the example above, don't add any trailing white space or new lines. Because these would be outside the
 placeholders, they would be considered part of the template, and hence would be
 appended to the generated value.
 The environment is sandboxed, meaning that Lambdas will not have access to any

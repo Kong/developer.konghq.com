@@ -2,8 +2,7 @@ This plugin allows you to configure simple transformations of requests before th
 
 {:.info}
 > **Notes**:
-* If a value contains a `,` (comma), then the comma-separated format for lists cannot be used. The array
-notation must be used instead.
+* If a value contains a `,` (comma), you can't use the comma-separated format for lists. You must use the array notation instead.
 * The `X-Forwarded-*` fields are non-standard header fields written by Nginx to inform the upstream about
 client details and can't be overwritten by this plugin. If you need to overwrite these header fields, see the
 [Post-Function plugin](/plugins/post-function/).
