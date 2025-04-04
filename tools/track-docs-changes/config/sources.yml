@@ -613,10 +613,17 @@ app/_hub/kong-inc/ai-rag-injector/overview/_index.md:
   - app/_kong_plugins/ai-rag-injector/index.md
 app/_hub/kong-inc/ai-rag-injector/_changelog.md:
   - app/_kong_plugins/ai-rag-injector/changelog.md
+app/_kong_plugins/ai-sanitizer/index.md:
+  - app/_hub/kong-inc/ai-sanitizer/overview/_index.md
+app/_kong_plugins/ai-sanitizer/changelog.md:
+  - app/_hub/kong-inc/ai-sanitizer/_changelog.md
+app/_how-tos/protect-sensitive-information-with-ai.md:
+  - app/_hub/kong-inc/ai-sanitizer/how-to/_index.md
 app/_kong_plugins/jwt/changelog.md:
   - app/_hub/kong-inc/jwt/_changelog.md
 app/_kong_plugins/jwt/index.md:
   - app/_hub/kong-inc/jwt/overview/_index.md
+
 app/_kong_plugins/udp-log/index.md:
   - app/_hub/kong-inc/udp-log/overview/_index.md
 app/_kong_plugins/udp-log/changelog.md:
