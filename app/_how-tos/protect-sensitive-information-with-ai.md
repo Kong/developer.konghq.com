@@ -38,7 +38,7 @@ prereqs:
       icon_url: /assets/icons/openai.svg
     - title: AI PII Anonymizer service access
       content: |
-        In this tutorial, we'll use the [AI PII Anonymizer service](https://hub.docker.com/r/kong/ai-pii-service) provided by Kong. Since this Docker image is private, you need to reach out to [Kong Support](https://support.konghq.com/support/s/) to gte access.
+        In this tutorial, we'll use the [AI PII Anonymizer service](https://hub.docker.com/r/kong/ai-pii-service) provided by Kong. Since this Docker image is private, you need to reach out to [Kong Support](https://support.konghq.com/support/s/) to get access.
 
         You can also use your own service.
 
