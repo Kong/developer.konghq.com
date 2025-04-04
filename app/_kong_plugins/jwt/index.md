@@ -58,7 +58,7 @@ To use the plugin, you need to do the following:
 1. Enable the JWT plugin.
 1. The JWT can now be included in a request to {{site.base_gateway}}. {{site.base_gateway}} *only* proxies requests that include a valid signature, provided they don't include an invalid verified claim (optionally configured with [`config.claims_to_verify`](/plugins/jwt/reference/#schema--config-claims-to-verify)).
 
-For an end-to-end tutorial on this, see [Authenticate Consumers with JWT](/how-to/authenticate-consumers-jwt/). For an end-to-end tutorial for Auth0, see [Authenticate Consumers with JWT and Auth0](/how-to/authenticate-consumers-jwt-auth0/).
+For an end-to-end tutorial on this, see [Authenticate Consumers with JWT](/how-to/authenticate-consumers-jwt/).
 
 ## Craft a JWT with public/private keys (RS256 or ES256)
 

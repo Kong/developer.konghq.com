@@ -204,8 +204,6 @@ app/_how-tos/rate-limit-based-on-peak-time.md:
   - app/_hub/kong-inc/pre-function/how-to/_ratelimit.md
 app/_how-tos/authenticate-consumers-jwt.md:
   - app/_hub/kong-inc/jwt/overview/_index.md
-app/_how-tos/authenticate-consumers-jwt-auth0.md:
-  - app/_hub/kong-inc/jwt/overview/_index.md
 
 ## KIC
 app/_how-tos/kic-install.md:
