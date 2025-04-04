@@ -59,6 +59,8 @@ We want to transform the request to:
 * Remove the customer ID from the query string and add it to the JSON body instead
 
 Configure the [Request Transformer Advanced](/plugins/request-transformer-advanced) plugin with the transformations to perform:
+
+<!--vale off-->
 {% entity_examples %}
 entities:
   plugins:
@@ -76,12 +78,14 @@ entities:
           body:
             - 'customer_id:$(query_params["customer_id"])'         
 {% endentity_examples %}
+<!--vale on-->
 
 
 ## 2. Validate
 
 To check that the request transformation is working, send a `POST` request with the `customer_id` as a query parameter and extra JSON properties:
 
+<!--vale off-->
 {% validation request-check %}
 url: /anything?customer_id=abc123
 status_code: 200
@@ -94,6 +98,7 @@ body:
   customer_zipcode: '41563'
   customer_phone: 555-555-5555
 {% endvalidation %}
+<!--vale on-->
 
 In this example, we're using [httpbin.konghq.com/anything](https://httpbin.konghq.com/#/Anything/post_anything) as the upstream. It returns anything that is passed to the request, which means the response contains the transformed request body received by the upstream:
 ```json
