@@ -3,6 +3,7 @@ auto_generated
 automated_tests
 content_type
 faqs
+how_to
 icon_url
 include_content
 insomnia_link

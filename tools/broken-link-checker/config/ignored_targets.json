@@ -56,5 +56,6 @@
     "https://console.mistral.ai/api-keys/",
     "https://azure.microsoft.com/en-us/services/functions/",
     "https://dashboard.ngrok.com/",
-    "https://dashboard.ngrok.com/*"
+    "https://dashboard.ngrok.com/*",
+    "https://hub.docker.com/*"
   ]

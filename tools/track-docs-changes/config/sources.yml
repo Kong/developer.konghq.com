@@ -202,6 +202,12 @@ app/_how-tos/filter-requests-based-on-header-names.md:
   - app/_hub/kong-inc/pre-function/how-to/_index.md
 app/_how-tos/rate-limit-based-on-peak-time.md:
   - app/_hub/kong-inc/pre-function/how-to/_ratelimit.md
+app/_how-tos/authenticate-consumers-jwt.md:
+  - app/_hub/kong-inc/jwt/overview/_index.md
+app/_how-tos/adjust-header-names-in-request.md:
+  - app/_hub/kong-inc/post-function/how-to/_index.md
+app/_how-tos/configure-oidc-with-client-credentials-grant.md:
+  - /app/_hub/kong-inc/openid-connect/how-to/authentication/_client-credentials.md
 
 ## KIC
 app/_how-tos/kic-install.md:
@@ -525,6 +531,14 @@ app/_kong_plugins/pre-function/index.md:
   - app/_hub/kong-inc/pre-function/how-to/_phases.md
 app/_kong_plugins/pre-function/changelog.md:
   - app/_hub/kong-inc/pre-function/_changelog.md
+app/_kong_plugins/post-function/index.md:
+  - app/_hub/kong-inc/post-function/overview/_index.md
+  - app/_hub/kong-inc/post-function/how-to/_phases.md
+app/_kong_plugins/post-function/changelog.md:
+  - app/_hub/kong-inc/post-function/_changelog.md
+app/_includes/plugins/queues.md:
+  - app/_src/gateway/kong-plugins/queue/index.md
+  - app/_src/gateway/kong-plugins/queue/reference.md
 app/_includes/plugins/ai-proxy/templating.md:
   - app/_hub/kong-inc/ai-proxy/how-to/_streaming.md
 app/_kong_plugins/ai-proxy/examples/anthropic-chat-route.yaml:
@@ -603,6 +617,41 @@ app/_kong_plugins/request-transformer-advanced/index.md:
   - app/_hub/kong-inc/request-transformer-advanced/overview/_index.md
 app/_kong_plugins/request-transformer-advanced/changelog.md:
   - app/_hub/kong-inc/request-transformer-advanced/_changelog.md
+app/_kong_plugins/request-validator/index.md:
+  - app/_hub/kong-inc/request-validator/overview/_index.md
+app/_kong_plugins/request-validator/changelog.md:
+  - app/_hub/kong-inc/request-validator/_changelog.md
+app/_hub/kong-inc/ai-rag-injector/overview/_index.md:
+  - app/_kong_plugins/ai-rag-injector/index.md
+app/_hub/kong-inc/ai-rag-injector/_changelog.md:
+  - app/_kong_plugins/ai-rag-injector/changelog.md
+app/_kong_plugins/ai-sanitizer/index.md:
+  - app/_hub/kong-inc/ai-sanitizer/overview/_index.md
+app/_kong_plugins/ai-sanitizer/changelog.md:
+  - app/_hub/kong-inc/ai-sanitizer/_changelog.md
+app/_how-tos/protect-sensitive-information-with-ai.md:
+  - app/_hub/kong-inc/ai-sanitizer/how-to/_index.md
+app/_kong_plugins/jwt/changelog.md:
+  - app/_hub/kong-inc/jwt/_changelog.md
+app/_kong_plugins/jwt/index.md:
+  - app/_hub/kong-inc/jwt/overview/_index.md
+
+app/_kong_plugins/udp-log/index.md:
+  - app/_hub/kong-inc/udp-log/overview/_index.md
+app/_kong_plugins/udp-log/changelog.md:
+  - app/_hub/kong-inc/udp-log/_changelog.md
+app/_kong_plugins/kafka-log/changelog.md:
+  - app/_hub/kong-inc/kafka-log/_changelog.md
+app/_kong_plugins/kafka-log/index.md:
+  - app/_hub/kong-inc/kafka-log/overview/_index.md
+app/_kong_plugins/tcp-log/index.md:
+  - app/_hub/kong-inc/tcp-log/overview/_index.md
+app/_kong_plugins/tcp-log/changelog.md:
+  - app/_hub/kong-inc/tcp-log/_changelog.md
+app/_kong_plugins/syslog/index.md:
+  - app/_hub/kong-inc/syslog/overview/_index.md
+app/_kong_plugins/syslog/changelog.md:
+  - app/_hub/kong-inc/syslog/_changelog.md
 
 # Konnect
 
@@ -680,12 +729,17 @@ app/gateway/logs.md:
   - app/_src/gateway/production/logging/update-log-level-dynamically.md
   - app/_src/gateway/production/logging/ai-analytics.md
   - app/_src/gateway/production/logging/customize-gateway-logs.md
-app/gateway/network-ports-firewall.md:
+app/gateway/network.md:
   - app/_src/gateway/production/networking/default-ports.md
   - app/_src/gateway/production/networking/firewall.md
 app/gateway/cp-dp-communication.md:
   - app/_src/gateway/production/networking/cp-dp-proxy.md
-app/konnect-network.md:
+  - app/konnect/gateway-manager/data-plane-nodes/secure-communications.md
+  - app/konnect/network-resiliency.md
+  - app/_src/gateway/reference/faq.md
+  - app/_src/gateway/production/deployment-topologies/hybrid-mode/setup.md
+  - app/konnect/gateway-manager/data-plane-nodes/renew-certificates.md
+app/konnect-platform/network.md:
   - app/konnect/network.md
 app/gateway/resource-sizing-guidelines.md:
   - app/_src/gateway/production/sizing-guidelines.md
@@ -705,6 +759,7 @@ app/ai-gateway/monitor-ai-llm-metrics.md:
 app/gateway/reserved-entity-names.md:
   - app/_src/gateway/reference/reserved-entity-names.md
 app/gateway/breaking-changes.md:
+  - app/_src/gateway/breaking-changes/310x.md
   - app/_src/gateway/breaking-changes/39x.md
   - app/_src/gateway/breaking-changes/28x.md
   - app/_src/gateway/breaking-changes/30x.md
@@ -722,6 +777,7 @@ app/gateway/cp-outage.md:
 app/gateway/hybrid-mode.md:
   - app/_src/gateway/production/deployment-topologies/hybrid-mode/index.md
   - app/_src/gateway/production/deployment-topologies/kubernetes.md
+  - app/_src/gateway/production/deployment-topologies/hybrid-mode/setup.md
 app/gateway/traditional-mode.md:
   - app/_src/gateway/production/deployment-topologies/traditional/index.md
   - app/_src/gateway/production/clustering.md
@@ -785,6 +841,7 @@ app/gateway/third-party-support.md:
   - app/_src/gateway/support/third-party.md
 app/gateway/version-support-policy.md:
   - app/_src/gateway/support/index.md
+  - /app/_src/gateway/kong-enterprise/fips-support/index.md
 /app/gateway/sbom.md:
   - app/_src/gateway/support/sbom.md
 
@@ -813,6 +870,7 @@ app/dedicated-cloud-gateways/transit-gateways.md:
 app/gateway-manager/control-plane-groups.md:
   - app/konnect/gateway-manager/control-plane-groups/index.md
   - app/konnect/gateway-manager/control-plane-groups/conflicts.md
+  - app/konnect/gateway-manager/control-plane-groups/migrate.md
 
 
 app/konnect-platform/konnect-account.md:

@@ -1,0 +1,47 @@
+description: Configure the plugin to inject content to use Redis as vector database and the OpenAI `text-embedding-3-large` model for embedding.
+
+title: RAG injection with OpenAI and Redis
+
+weight: 900
+
+requirements:
+  - "You have enabled the [AI Proxy](/plugins/ai-proxy/) or [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugin"
+  - You have an OpenAI account
+  - You have a Redis server running
+
+variables:
+  key:
+    value: $OPENAI_API_KEY
+    description: The API key to use to connect to OpenAI.
+  redis:
+    value: $REDIS_HOST
+    description: The Redis server's host
+
+config:
+  inject_template: |
+    Only use the following information surrounded by <CONTEXT></CONTEXT> and your existing knowledge to provide the best possible answer to the user.
+    <CONTEXT><RAG RESPONSE></CONTEXT>
+    User's question: <PROMPT>
+  embeddings:
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    model:
+      provider: openai
+      name: text-embedding-3-large
+  vectordb:
+    strategy: redis
+    redis:
+      host: ${redis}
+      port: 6379
+    distance_metric: cosine
+    dimensions: 76
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+  

@@ -51,28 +51,11 @@ you dynamically run Lua code from {{site.base_gateway}} before other plugins in 
 This plugin is part of a pair of serverless plugins. 
 If you need to run Lua code _after_ other plugins in each phase, see the [Post-Function](/plugins/post-function/) plugin.
 
-{:.warning}
-> **Warning:** The Pre-function and Post-function serverless plugins allow anyone who can enable the plugin to execute arbitrary code.
-If your organization has security concerns about this, [disable the plugins](/gateway/configuration/#untrusted-lua) in your `kong.conf` file.
+{% include_cached /plugins/serverless/untrusted-lua.md %}
 
 ## Phases
 
-The Pre-Function plugin can run custom Lua code in any of the following [phases](/gateway/entities/plugin/#plugin-contexts) in {{site.base_gateway}}'s lifecycle:
-* `access`
-* `body_filter`
-* `certificate`
-* `header_filter`
-* `log`
-* `rewrite`
-* `ws_client_frame`
-* `ws_close`
-* `ws_handshake`
-* `ws_upstream_frame`
-
-To run the Pre-Function plugin in a specific phase, use a `config.{phase_name}` parameter.
-For example, to run the plugin in the `header_filter` phase, use `config.header_filter`. 
-
-You can also run the plugin in multiple phases. See [Running Pre-Function in multiple phases](./examples/run-in-multiple-phases/) for an example.
+{% include_cached /plugins/serverless/phases.md name=page.name %}
 
 ## Passing Lua code to the plugin
 
@@ -80,18 +63,7 @@ You can also run the plugin in multiple phases. See [Running Pre-Function in mul
 
 ## Upvalues
 
-You can return a function to run on each request, allowing for upvalues to keep state in between requests:
-
-```lua
--- this runs once on the first request
-local count = 0
-
-return function()
-  -- this runs on each request
-  count = count + 1
-  ngx.log(ngx.ERR, "hello world: ", count)
-end
-```
+{% include_cached /plugins/serverless/upvalues.md %}
 
 ## Sandboxing
 

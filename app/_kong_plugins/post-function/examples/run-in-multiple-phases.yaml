@@ -1,0 +1,45 @@
+description: |
+  You can run the Post-Function plugin in multiple phases.
+  For example, if you want to run code in the `access` and `header_filter` phases, configure both parameters,
+  pointing each parameter to your Lua code files or including the code directly. 
+  This example uses file syntax.
+
+  {:.info}
+  > **Using decK environment variables with Lua files**
+  > <br><br>
+  > To pass the contents of a file to decK, pass it to an environment variable:
+  > 1. Create your Lua script and save it in a file, for example, `access-function.lua`.
+  > 2. Load the content of the Lua script into an environment variable using the following command:
+  >    ```lua
+  >    export DECK_ACCESS_FUNCTION=$(cat access-function.lua)
+  >    ```
+
+  If you're using the API, you can also pass each Lua file as a form parameter and a filename, for example:
+  ```
+    --form "config.access=@access-function.lua" \
+  ```
+  
+title: 'Pass Lua code as files and run in multiple phase'
+
+weight: 900
+
+variables:
+  access:
+    description: 'Lua code to run in the access phase.'
+    value: $ACCESS_FUNCTION
+  header-filter:
+    description: 'Lua code to run in the header filter phase.'
+    value: $HEADER_FILTER_FUNCTION
+
+config:
+  access: 
+    - ${access}
+  header_filter: 
+    - ${header-filter}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

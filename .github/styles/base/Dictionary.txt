@@ -1,10 +1,12 @@
 
+Aadhaar
 ACLs
 APIOps
 APIOps
 Alertmanager
 Amal
 Amberflo
+Anonymizer
 AppRole
 APIm
 Arya
@@ -77,6 +79,7 @@ Goroutine
 Goroutine
 Grafana
 Grafana
+Gunicorn
 HTTPRoute
 HTTPRoutes
 HTTPie
@@ -275,6 +278,7 @@ allow_terminated
 allowlist
 allowlisting
 amberflo
+anonymization
 anonymized
 api
 apiVersion
@@ -346,6 +350,7 @@ crds
 created_at
 creationTimestamp
 cronjob
+cryptocurrency
 dao
 daos
 dashboarding
@@ -746,6 +751,7 @@ truststore
 truthy
 ttl
 txt
+udp
 udpingress
 udpingresses
 uid

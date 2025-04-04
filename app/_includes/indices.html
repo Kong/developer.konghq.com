@@ -1,10 +1,10 @@
 
 {% for group in groups %}
-  <div id="{{ group.title | slugify }}" class="flex flex-col gap-4 heading-section  card p-5 rounded-md">
+  <div id="{{ group.title | slugify }}" class="flex flex-col gap-5 heading-section card p-6 rounded-lg shadow-primary">
       <h2>{{ group.title }}</h2>
 
       <div class="content">
-        <ul class="list-none ml-0 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <ul class="list-none ml-0 grid grid-cols-1 md:grid-cols-3 gap-6">
           {% for page in group.pages %}
             {% assign title = page.title %}
             {% if page.short_title %}{% assign title = page.short_title %}{% endif %}
