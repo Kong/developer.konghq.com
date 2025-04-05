@@ -23,7 +23,7 @@ publisher: test
 icon: /assets/icons/plugins/openwhisk.png
 categories:
   - serverless
-source_code: https://github.com/Kong/kong-plugin-openwhisk
+source_code_url: https://github.com/Kong/kong-plugin-openwhisk
 
 description: Invoke and manage OpenWhisk actions from Kong
 
