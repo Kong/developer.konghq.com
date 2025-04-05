@@ -176,7 +176,7 @@ rows:
               
               Rather than attaching a configuration directly to a service or route, you create a KongPlugin definition and then annotate your 
               Kubernetes resource with the `konghq.com/plugins` annotation.
-            icon: /assets/icons/kic.svg
+            icon: /assets/icons/kubernetes.svg
             cta:
               text: Add authentication using KIC
               url: "https://docs.konghq.com/kubernetes-ingress-controller/latest/plugins/authentication/"
@@ -190,7 +190,7 @@ rows:
             icon: /assets/icons/gateway.svg
             cta:
               text: Add SSO to {{site.konnect_short_name}}
-              url: "/konnect-sso/"
+              url: "/konnect-platform/konnect-sso/"
 
   - columns:
       - blocks:

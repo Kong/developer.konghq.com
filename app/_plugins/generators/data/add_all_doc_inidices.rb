@@ -37,11 +37,17 @@ module Jekyll
       private
 
       def product
-        @product ||= @page.data.fetch('products', []).first
+        @product ||= product_expanded(@page.data.fetch('products', []).first)
       end
 
       def tools
         @tools ||= @page.data.fetch('tools', [])
+      end
+
+      def product_expanded(product)
+        return 'kubernetes-ingress-controller' if product == 'kic'
+
+        product
       end
     end
   end
