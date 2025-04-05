@@ -664,6 +664,8 @@ app/_kong_plugins/route-transformer-advanced/index.md:
   - app/_hub/kong-inc/route-transformer-advanced/overview/_index.md
 app/_includes/plugins/request-response-transformer/templates.md:
   - app/_hub/kong-inc/request-transformer-advanced/how-to/_templates.md
+app/_kong_plugins/openwhisk/index.md:
+  - app/_hub/kong-inc/openwhisk/overview/_index.md
 
 # Konnect
 
