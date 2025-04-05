@@ -34,7 +34,7 @@ The {{site.kic_product_name}} translates a number of Kubernetes resources into {
 
 - Resources that the controller translates directly into {{site.base_gateway}} configuration.
 
-  For example, an `Ingress` is translated directly into a Kong Route, and a `KongConsumer` is translated directly into a [Kong Consumer](/gateway/entities/consumer/).
+  For example, an `Ingress` is translated directly into a [Kong Route](/gateway/entities/route/), and a `KongConsumer` is translated directly into a [Kong Consumer](/gateway/entities/consumer/).
 - Resources referenced by some other resource, where the other resource is directly translated into {{site.base_gateway}} configuration.
  
   For example, a Secret containing an authentication plugin credential is _not_ translated directly. It's only translated into {{site.base_gateway}} configuration if a `KongConsumer` resource references it.

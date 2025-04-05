@@ -104,14 +104,14 @@ spec:
     targetPort: 9903
 ```
 
-You must also configure {{site.base_gateway}}'s [`proxy_listen`](/gateway/configuration/#proxy-listen) and [`stream_listen`] (/gateway/configuration/#stream-listen) configuration parameters in the container environment:
+You must also configure {{site.base_gateway}}'s [`proxy_listen`](/gateway/configuration/#proxy-listen) and [`stream_listen`](/gateway/configuration/#stream-listen) configuration parameters in the container environment:
 
 ```console
 KONG_PROXY_LISTEN="0.0.0.0:8000 reuseport backlog=16384, 0.0.0.0:8443 http2 ssl reuseport backlog=16384 http2"
 KONG_STREAM_LISTEN="0.0.0.0:9901 reuseport backlog=16384, 0.0.0.0:9902 reuseport backlog=16384 udp", 0.0.0.0:9903 reuseport backlog=16384 ssl"
 ```
 
-Both the Service and `proxy_listen` configuration are managed via [the Helm chart](https://github.com/Kong/charts/tree/main/charts/kong) using the `proxy` configuration block.
+The Service, `proxy_listen`, and `stream_listen` configurations are managed via [the Helm chart](https://github.com/Kong/charts/tree/main/charts/kong) using the `proxy` configuration block.
 
 ```yaml
 proxy:
@@ -150,15 +150,14 @@ reason: PortUnavailable
 
 Each {{ site.kic_product_name }} can be provided with a controller name. If no controller name is provided through the `--gateway-api-controller-name` field (or `CONTROLLER_GATEWAY_API_CONTROLLER_NAME` environment variable), the default `konghq.com/kic-gateway-controller` is used. 
 
-All the `GatewayClass`es referencing such a controller in the `controllerName` field are reconciled by the {{ site.kic_product_name }}. Similarly, all the `Gateway`s referencing a `GatewayClass` that specifies a matching `controllerName` are reconciled.
+Every `GatewayClass` referencing such a controller in the `controllerName` field is reconciled by the {{ site.kic_product_name }}. Similarly, every `Gateway` referencing a `GatewayClass` that specifies a matching `controllerName` is reconciled.
 
 ### Binding {{site.base_gateway}} to a Gateway resource
 
-To configure {{site.kic_product_name}} to reconcile the Gateway resource, you must set the `konghq.com/gatewayclass-unmanaged=true` annotation in your GatewayClass resource.
-
-In addition, the `spec.controllerName` in your GatewayClass needs to be properly configured, as explained in the section on [listener compatibility](#listener-compatibility-and-handling-multiple-gateways).
-
-Finally, the `spec.gatewayClassName` value in your Gateway resource should match the value in `metadata.name` from your `GatewayClass`.
+To configure {{site.kic_product_name}} to reconcile the Gateway resource, you must:
+* Set the `konghq.com/gatewayclass-unmanaged=true` annotation in your GatewayClass resource.
+* Configure `spec.controllerName` in your GatewayClass, as explained in the section on [listener compatibility](#listener-compatibility-and-handling-multiple-gateways).
+* Ensure the `spec.gatewayClassName` value in your Gateway resource matches the value in `metadata.name` from your `GatewayClass`.
 
 You can confirm if {{site.kic_product_name}} has updated the Gateway by inspecting the list of associated addresses. 
 
