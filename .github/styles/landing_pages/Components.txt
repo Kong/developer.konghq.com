@@ -1,5 +1,7 @@
 allow_empty
 alt_text
+compatible_versions
+compatible_product
 concept_list
 content_type
 cta
