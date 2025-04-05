@@ -21,7 +21,8 @@ related_resources:
     url: /index/deck/
 ---
 
-APIOps is the practice of managing your API management configuration declaratively. It follows gitops principles such as version control, CI/CD and pull request reviews and applies them to APIm.
+APIOps is the practice of applying DevOps and GitOps principles to the API delivery lifecycle. It follows common operational principles such as version control, 
+CI/CD and pull request reviews and applies them to API management.
 
 {{ site.base_gateway }} is 100% APIOps compatible thanks to decK, which enables APIOps by providing a tool with varied commands that can be coordinated to build API delivery automations.
 
