@@ -32,8 +32,8 @@ products:
 # source_code_url: ''
 # support_url: ''
 
-icon: plugin-slug.ext
+icon: plugin-slug.png
 
-categories:
-    - traffic-control
+# categories:
+#    - traffic-control
 ---
