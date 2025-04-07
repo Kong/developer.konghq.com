@@ -29,7 +29,7 @@ function generateChangelogsByVersion(folderPath, version) {
     });
   });
 
-  const destinationPath = `../../app/_data/changelog/gateway/${version}.json`;
+  const destinationPath = `./tmp/${version}.json`;
   fs.writeFileSync(destinationPath, JSON.stringify(changelog, null, 2), "utf8");
   console.log(`Changelog file written to ${destinationPath}.`);
 }
