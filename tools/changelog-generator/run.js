@@ -3,6 +3,7 @@ import path from "path";
 import fastGlob from "fast-glob";
 import minimist from "minimist";
 import yaml from "js-yaml";
+import { compareVersions } from "./compare-versions.js";
 
 function generateChangelogsByVersion(folderPath, version) {
   console.log(`Generating changelog files for version: ${version}.`);
@@ -31,26 +32,6 @@ function generateChangelogsByVersion(folderPath, version) {
   const destinationPath = `../../app/_data/changelog/gateway/${version}.json`;
   fs.writeFileSync(destinationPath, JSON.stringify(changelog, null, 2), "utf8");
   console.log(`Changelog file written to ${destinationPath}.`);
-}
-
-function compareVersions(a, b) {
-  const aParts = a.split(".").map(Number);
-  const bParts = b.split(".").map(Number);
-  const maxLength = Math.max(aParts.length, bParts.length);
-
-  for (let i = 0; i < maxLength; i++) {
-    const aVal = aParts[i] === undefined ? 0 : aParts[i];
-    const bVal = bParts[i] === undefined ? 0 : bParts[i];
-
-    if (aVal < bVal) {
-      return -1;
-    }
-    if (aVal > bVal) {
-      return 1;
-    }
-  }
-
-  return 0;
 }
 
 function fetchVersions(path) {
