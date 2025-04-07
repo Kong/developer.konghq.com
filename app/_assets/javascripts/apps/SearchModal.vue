@@ -212,6 +212,8 @@ export default {
     const initialTags = [];
     const searchFilters = window.searchFilters;
     const productMeta = document.querySelector('meta[name="algolia:products"]');
+    const toolMeta = document.querySelector('meta[name="algolia:tools"]');
+
     if (productMeta !== null) {
       const products = productMeta.getAttribute('content').trim().split(',');
       const productsFilter = searchFilters.products.filter((f) => products.includes(f.value));
@@ -220,7 +222,19 @@ export default {
           initialTags.push({ label: productFilter.label, value: productFilter.value, facet: 'products' });
         })
       }
+    } else  {
+      if (toolMeta !== null) {
+        const tools = toolMeta.getAttribute('content').trim().split(',');
+        const toolsFilter = searchFilters.tools.filter((f) => tools.includes(f.value));
+        if (toolsFilter && toolsFilter.length === 1) {
+          const tool = toolsFilter[0];
+          initialTags.push({ label: tool.label, value: tool.value, facet: 'tools' });
+        }
+      }
     }
+
+
+
     const originalTags = initialTags.slice();
 
     const tagsPlugin = createTagsPlugin({
@@ -246,7 +260,7 @@ export default {
               .map(([facet, items]) => items.map(item => `${facet}:${item.value}`).join(' OR '))
               .join(' OR ');
           }
-          const applyProductFilter = (existingQuery) => {
+          const applyFilter = (existingQuery) => {
             let query = existingQuery;
             const filtersByFacet = (items) => {
               return items.reduce((acc, item) => {
@@ -280,7 +294,7 @@ export default {
                     params: {
                       query,
                       hitsPerPage,
-                      filters: applyProductFilter(filters),
+                      filters: applyFilter(filters),
                     },
                   },
                 ],
