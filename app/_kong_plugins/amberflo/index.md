@@ -54,7 +54,7 @@ This plugin intercepts requests, detects which customer is making them, generate
 
 Customer detection occurs via inspection of the request headers. 
 You can configure {{site.base_gateway}} to inject the `customerId` as a header before this plugin runs. 
-For example, if you use the [Key Authentication](/hub/kong-inc/key-auth/) plugin, this occurs automatically.
+For example, if you use the [Key Authentication](/plugins/key-auth/) plugin, this occurs automatically.
 
 To avoid impacting the performance of your Gateway, the plugin batches the meter records and sends them asynchronously to Amberflo.
 
