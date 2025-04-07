@@ -1,19 +1,27 @@
 import fs from "fs";
 import path from "path";
 import fastGlob from "fast-glob";
+import merge from "lodash.merge";
 import { compareVersions } from "./compare-versions.js";
 
 function generateChangelog() {
   try {
     const changelogFilePath = `../../app/_data/changelogs/gateway.json`;
     let changelog = {};
-    const changelogByVersion = fastGlob.globSync(`./tmp/*`);
+    if (fs.existsSync(changelogFilePath)) {
+      changelog = JSON.parse(fs.readFileSync(changelogFilePath, "utf-8"));
+    }
 
+    const changelogByVersion = fastGlob.globSync(`./tmp/*`);
     const orderedFiles = changelogByVersion.sort(compareVersions).reverse();
     orderedFiles.forEach((file) => {
       const version = path.basename(file, ".json");
       const entries = JSON.parse(fs.readFileSync(file, "utf-8"));
-      changelog[version] = entries;
+      if (changelog["version"]) {
+        changelog["version"].merge(entries);
+      } else {
+        changelog[version] = entries;
+      }
     });
 
     fs.writeFileSync(
