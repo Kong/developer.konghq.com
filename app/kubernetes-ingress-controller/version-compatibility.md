@@ -13,12 +13,25 @@ products:
 works_on:
   - on-prem
   - konnect
+related_resources:
+  - text: "{{ site.kic_product_name }} Support Policy"
+    url: /kubernetes-ingress-controller/support/
+  - text: "{{site.base_gateway}} version support"
+    url: /gateway/version-support-policy/
+  - text: "{{site.konnect_short_name}} compatibility"
+    url: /konnect-compatibility/
+    
+tags:
+  - compatibility
+
 ---
 
 
-{{ site.kic_product_name }} is compatible with different flavors of {{ site.base_gateway }}.
+{{ site.kic_product_name }} is compatible with different versions of {{ site.base_gateway }}, Kubernetes, and Istio.
 
 ## {{ site.base_gateway }}
+
+The following table shows the compatibility of {{ site.kic_product_name }} with {{ site.base_gateway }} versions:
 
 {% version_compatibility_table %}
 product: "{{ site.kic_product_name }}"
@@ -43,10 +56,11 @@ compatible_versions:
 
 ## Kubernetes
 
+{{site.kic_product_name}} compatibility with Kubernetes depends on Kubernetes and Gateway API versions.
+
 ### General
 
 The following table presents the general compatibility of {{site.kic_product_name}} with specific Kubernetes versions.
-Users should expect all the combinations marked with <i class="fa fa-check"></i> to work and to be supported.
 
 {% version_compatibility_table %}
 product: "{{ site.kic_product_name }}"
@@ -90,13 +104,13 @@ compatible_versions:
   1.32: [2.12, 3.0, 3.1, 3.2, 3.3, 3.4]
 {% endversion_compatibility_table %}
 
-For specific Gateway API resources support, please refer to the [Gateway API](/kubernetes-ingress-controller/gateway-api/) page.
+For specific Gateway API resources support, see the [Gateway API](/kubernetes-ingress-controller/gateway-api/) page.
 
 ## Istio
 
 The {{site.kic_product_name}} can be integrated with an [Istio Service Mesh](https://istio.io) to use {{site.base_gateway}} as an ingress gateway for application traffic into the mesh network. 
 
-For each {{site.kic_product_name}} release, tests are run to verify this documentation with upcoming versions of KIC and Istio. The following table lists the tested combinations:
+We run tests for each {{site.kic_product_name}} release to verify this documentation with upcoming versions of KIC and Istio. The following table lists the tested combinations:
 
 {% version_compatibility_table %}
 product: "{{ site.kic_product_name }}"
