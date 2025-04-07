@@ -2,6 +2,8 @@ metadata:
   title: decK
   content_type: landing_page
   description: This page is an introduction to decK, a command line tool for API Lifecycle Automation.
+  tools:
+    - deck
 rows:
   - header:
       type: h1

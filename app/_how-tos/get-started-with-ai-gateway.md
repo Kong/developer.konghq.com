@@ -3,6 +3,7 @@ title: Get started with AI Gateway
 content_type: how_to
 
 products:
+    - ai-gateway
     - gateway
 
 works_on:
