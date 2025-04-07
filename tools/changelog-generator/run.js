@@ -71,10 +71,14 @@ function fetchVersions(path) {
       );
     }
 
-    const versions = fetchVersions(args.path);
-    versions.forEach((version) => {
-      generateChangelogsByVersion(args.path, version);
-    });
+    if (args.version) {
+      generateChangelogsByVersion(args.path, args.version);
+    } else {
+      const versions = fetchVersions(args.path);
+      versions.forEach((version) => {
+        generateChangelogsByVersion(args.path, version);
+      });
+    }
   } catch (error) {
     console.log(error);
     process.exit(1);
