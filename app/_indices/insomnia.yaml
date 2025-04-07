@@ -1,0 +1,12 @@
+title: All Insomnia Documentation
+sections:
+  - title: Uncategorized
+    items:
+      - path: /insomnia/
+      - path: /insomnia/**/*
+    auto_exclude: true
+  - title: How-tos
+    items:
+      - type: how-to
+        products:
+          - insomnia
