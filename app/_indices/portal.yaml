@@ -1,0 +1,12 @@
+title: All Portal Documentation
+sections:
+  - title: Uncategorized
+    items:
+      - path: /portal/
+      - path: /portal/**/*
+    auto_exclude: true
+  - title: How-tos
+    items:
+      - type: how-to
+        products:
+          - portal
