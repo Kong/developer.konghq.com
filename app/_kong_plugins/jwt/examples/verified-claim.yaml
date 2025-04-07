@@ -10,9 +10,9 @@ description: |
     - title: Verification
       key: verification
   rows:
-    - claim: `exp`
+    - claim: "`exp`"
       verification: Identifies the expiration time on or after which the JWT must not be accepted for processing.
-    - claim: `nbf`
+    - claim: "`nbf`"
       verification: Identifies the time before which the JWT must not be accepted for processing.
   {% endtable %}
 
