@@ -1,0 +1,29 @@
+description: 'In the custom function, users can return whatever data they want as the return value. The returned value must be JSON-serializable, otherwise it can’t be sent to Kafka.'
+
+title: 'Return a fixed table'
+
+weight: 900
+
+requirements: 
+ - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running"
+ - "[Create a Kafka topic](https://kafka.apache.org/quickstart#quickstart_createtopic)"
+
+variables: 
+  topic:
+    description: 'The name of your Kafka topic'
+    value: $KAFKA_TOPIC
+
+config:
+  topic: ${topic} 
+  bootstrap_servers:
+    - host: localhost
+      port: 9092
+  message_by_lua_functions:
+    - 'return function(message) return {a="1", b="2"} end'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

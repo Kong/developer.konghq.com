@@ -1,0 +1,34 @@
+description: 'This function inserts consumer info and redact a sensitive request header by calling the `get_consumer` PDK function and manipulating the request header information.'
+
+title: 'Insert consumer info and redact a sensitive request header'
+
+weight: 900
+
+requirements: 
+ - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running"
+ - "[Create a Kafka topic](https://kafka.apache.org/quickstart#quickstart_createtopic)"
+
+variables: 
+  topic:
+    description: 'The name of your Kafka topic'
+    value: $KAFKA_TOPIC
+
+config:
+  topic: ${topic} 
+  bootstrap_servers:
+    - host: localhost
+      port: 9092
+  forward_method: true
+  forward_uri: true
+  forward_headers: true
+  forward_body: true
+  message_by_lua_functions:
+    - "return function(message) message.consumer = kong.client.get_consumer() return message end"
+    - "return function(message) local headers = message and message.headers local apikey = headers and headers.apikey if apikey then headers.apikey = '[REDACTED]' end return message end"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
