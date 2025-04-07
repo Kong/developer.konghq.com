@@ -26,3 +26,5 @@ node_modules
 
 # vscode
 .vscode/*
+
+tools/changelog-generator/tmp/*
