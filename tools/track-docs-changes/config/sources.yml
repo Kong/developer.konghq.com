@@ -666,6 +666,8 @@ app/_kong_plugins/route-transformer-advanced/index.md:
   - app/_hub/kong-inc/route-transformer-advanced/overview/_index.md
 app/_includes/plugins/request-response-transformer/templates.md:
   - app/_hub/kong-inc/request-transformer-advanced/how-to/_templates.md
+app/_kong_plugins/aws-request-signing/index.md:
+  - /app/_hub/TheLEGOGroup/aws-request-signing/overview/_index.md
 
 # Konnect
 
