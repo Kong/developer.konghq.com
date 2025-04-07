@@ -236,6 +236,8 @@ app/kubernetes-ingress-controller/gateway-api.md:
   - app/_src/kubernetes-ingress-controller/concepts/gateway-api.md
 app/kubernetes-ingress-controller/ingress.md:
   - app/_src/kubernetes-ingress-controller/concepts/ingress.md
+app/kubernetes-ingress-controller/version-compatibility.md:
+  - app/_src/kubernetes-ingress-controller/reference/version-compatibility.md
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
