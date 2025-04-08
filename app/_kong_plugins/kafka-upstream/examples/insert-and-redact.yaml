@@ -23,8 +23,8 @@ config:
   forward_headers: true
   forward_body: true
   message_by_lua_functions:
-    - "return function(message) message.consumer = kong.client.get_consumer() return message end"
-    - "return function(message) local headers = message and message.headers local apikey = headers and headers.apikey if apikey then headers.apikey = '[REDACTED]' end return message end"
+    - "return function(message) message.consumer = kong.client.get_consumer(); return message end"
+    - "return function(message) local headers = message and message.headers; local apikey = headers and headers.apikey; if apikey then headers.apikey = '[REDACTED]' end; return message end"
 
 tools:
   - deck
