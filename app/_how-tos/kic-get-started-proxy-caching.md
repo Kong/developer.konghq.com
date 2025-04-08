@@ -80,7 +80,7 @@ grep: "(Status|< HTTP)"
 message: null
 output:
   explanation: |
-    The first request results in `X-Cache-Status: Miss`. This means that the request is sent to the upstream service. The next four responses return `X-Cache-Status: Hit` which indicates that the request was served from a cache.
+    The first request results in `X-Cache-Status: Miss`. This means that the request is sent to the upstream service. The next four responses return `X-Cache-Status: Hit` which indicates that the request was served from a cache. If you receive a `HTTP 429` from the first request, wait 60 seconds for the rate limit timer to reset.
   expected:
     - value:
       - "< HTTP/1.1 200 OK"
