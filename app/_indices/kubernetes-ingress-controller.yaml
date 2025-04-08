@@ -2,13 +2,17 @@ title: All KIC Documentation
 sections:
   - title: Uncategorized
     items:
+      - path: /kubernetes-ingress-controller/
+      - path: /kubernetes-ingress-controller/support/
       - path: /kubernetes-ingress-controller/**/*
     auto_exclude: true
   - title: Get Started
     items:
-      - path: /kubernetes-ingress-controller/
       - path: /kubernetes-ingress-controller/install/
-      - path: /kubernetes-ingress-controller/support/
+      - path: /kubernetes-ingress-controller/get-started/services-and-routes/
+      - path: /kubernetes-ingress-controller/get-started/rate-limiting/
+      - path: /kubernetes-ingress-controller/get-started/proxy-caching/
+      - path: /kubernetes-ingress-controller/get-started/key-authentication/
   - title: Routing
     items:
       - path: /kubernetes-ingress-controller/routing/http/
@@ -24,6 +28,19 @@ sections:
       - path: /kubernetes-ingress-controller/architecture/
       - path: /kubernetes-ingress-controller/gateway-api/
       - path: /kubernetes-ingress-controller/ingress/
+      - path: /kubernetes-ingress-controller/custom-resources/
+      - path: /kubernetes-ingress-controller/reference/annotations/
+      - path: /kubernetes-ingress-controller/admission-webhook/
+  - title: Deployment Topologies
+    items:
+      - path: /kubernetes-ingress-controller/deployment-topologies/gateway-discovery/
+      - path: /kubernetes-ingress-controller/deployment-topologies/db-backed/
+      - path: /kubernetes-ingress-controller/deployment-topologies/sidecar/
   - title: Customization
     items:
       - path: /kubernetes-ingress-controller/custom-plugin/
+  - title: Reference
+    allow_duplicates: true
+    items:
+      - path: /kubernetes-ingress-controller/reference/custom-resources/
+      - path: /kubernetes-ingress-controller/reference/annotations/

@@ -65,17 +65,24 @@ module Jekyll
       end
 
       def tools
-        @tools ||= @page.data.fetch('tools', [])
+        @tools ||= fetch_or_fail(@page, 'tools', [])
       end
 
       private
 
       def prereqs
-        @prereqs ||= @page.data.fetch('prereqs', {})
+        @prereqs ||= fetch_or_fail(@page, 'prereqs', {})
       end
 
       def product_include_file_path(product)
         File.join(@site.source, '_includes', 'prereqs', 'products', "#{product}.md")
+      end
+
+      def fetch_or_fail(page, key, default)
+        r = page.data.fetch(key, default)
+        raise "Prereqs is not a #{default.class} in '#{page.url}'" unless r.is_a?(default.class)
+
+        r
       end
     end
   end

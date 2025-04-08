@@ -8,8 +8,6 @@ module Jekyll
     module Validations
       class UnauthorizedCheck < Base # rubocop:disable Style/Documentation
         def validate_yaml!
-          raise ArgumentError, "Missing `headers` in {% validation #{name} %}." unless @yaml.key?('headers')
-
           return if @yaml.key?('url')
 
           raise ArgumentError, "Missing `url` in {% validation #{name} %}."

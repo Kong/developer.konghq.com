@@ -66,7 +66,7 @@ module Jekyll
           process_related_resources(@canonicals, canonicals_by_product_and_version)
         end
 
-        def process_related_resources(resource_map, lookup_map)
+        def process_related_resources(resource_map, lookup_map) # rubocop:disable Metrics/AbcSize
           resource_map.values.flatten.each do |page|
             path = File.dirname(page.relative_path)
             related = lookup_map.fetch(path, []).map do |related_page|
@@ -74,7 +74,8 @@ module Jekyll
 
               { 'text' => related_page.data['title'], 'url' => related_page.url }
             end.compact
-            page.data['related_resources'] = related
+
+            page.data['related_resources'] = related.sort_by { |r| r['url'] }
           end
         end
 

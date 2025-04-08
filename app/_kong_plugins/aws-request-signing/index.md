@@ -7,7 +7,6 @@ content_type: plugin
 publisher: the-lego-group
 description: 'Sign requests with AWS SIGV4 and temp credentials for secure use of AWS Lambdas in Kong'
 
-
 products:
     - gateway
 
@@ -42,3 +41,44 @@ search_aliases:
   - the lego group
   - aws-request-signing
 ---
+
+The AWS Request Signing plugin allows for secure communication with AWS Lambdas. 
+It signs requests with AWS SIGV4 and temporary credentials obtained from `sts.amazonaws.com` using an OAuth token.
+This eliminates the need for an AWS API Gateway and simplifies the use of Lambdas as upstreams in {{site.base_gateway}}. 
+
+## Install the AWS Request Signing plugin
+
+### Prerequisites
+
+To use this plugin, you have to prepare your AWS account.
+Add your token issuer to the **Identity Providers** in your AWS account so that the plugin can request temporary credentials. 
+
+For more information on the required AWS setup, visit the [plugin repo](https://github.com/LEGO/kong-aws-request-signing#aws-setup-required).
+
+Once your AWS account is set up, you can use the plugin to communicate with your Lambda HTTPS endpoint.
+
+### Install
+
+You can install the AWS Request Signing plugin via LuaRocks.
+
+1. Install the AWS Request Signing plugin:
+
+   ```sh
+   luarocks install https://github.com/LEGO/kong-aws-request-signing/raw/main/rocks/kong-aws-request-signing-$PLUGIN_VERSION.all.rock
+   ```
+
+   Substitute `$PLUGIN_VERSION` with one of [available plugin versions](https://github.com/LEGO/kong-aws-request-signing/tree/main/rocks).
+
+2. Update your loaded plugins list in {{site.base_gateway}}.
+
+   In your [`kong.conf`](/gateway/configuration/), append `aws-request-signing` to the `plugins` field. Make sure the field isn't commented out.
+
+   ```yaml
+   plugins = bundled,aws-request-signing
+   ```
+
+3. Restart {{site.base_gateway}}:
+
+   ```sh
+   kong restart
+   ```
