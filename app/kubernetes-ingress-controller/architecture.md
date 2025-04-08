@@ -123,18 +123,6 @@ flowchart LR
     D --> F
     D --> G
     H --> A
-
-    classDef lightBlue fill:#cce7ff;
-    classDef lightGreen fill:#c4e1c4;
-    classDef lightPurple fill:#e6d8eb;
-    classDef lightGrey fill:#f5f5f5;
-
-    class A,B lightGreen;
-    class C lightBlue;
-    class D lightPurple;
-    class E,F,G lightGrey;
-
-    linkStyle 6 stroke:#b6d7a8
 {% endmermaid %}
 <!--vale on-->
 

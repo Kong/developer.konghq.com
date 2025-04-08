@@ -64,15 +64,6 @@ flowchart TD
     B --> C
     D --> |execute the plugin for any request that is forwarded to the billing-api service in k8s|C
     E --> |Associated using konghq.com/plugins annotation|F
-
-    classDef left text-align:left;
-    classDef lightBlue fill:#1338be;
-    classDef lightGreen fill:#74B72E;
-    classDef lightPurple fill:#592693;
-
-    class B lightGreen;
-    class C lightBlue;
-    class F lightPurple;
 {% endmermaid %}
 <!--vale on-->
 
