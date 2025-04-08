@@ -46,7 +46,7 @@ Revise the methods as necessary to fit your infrastructure, deployment, and busi
 
 ## Declarative tools for backup and restore
 
-Kong ships two declarative backup tools: [decK](/deck/) and the [kong config CLI](/gateway/cli/), which support managing {{site.base_gateway}} entities in the declarative format.
+Kong ships two declarative backup tools: [decK](/deck/) and the [kong config CLI](/gateway/cli/reference/), which support managing {{site.base_gateway}} entities in the declarative format.
 
 * For **database-backed deployments** (traditional and hybrid mode), backups taken with either of these tools serve as an extra safeguard layer. If the database-native backup or restore corrupts the database, you can fall back to declarative files for restoring data.
 
@@ -75,7 +75,7 @@ Due to these limitations, we recommend prioritizing the [database-native method]
 
 ### Database-native backup
 
-When upgrading your {{site.base_gateway}} to a newer version, you have to perform a database migration using the [`kong migrations`](/gateway/cli/#kong-migrations) utility. The `kong migrations` commands are not reversible. We recommend backing up data before any starting any upgrade in case of any migration issues.
+When upgrading your {{site.base_gateway}} to a newer version, you have to perform a database migration using the [`kong migrations`](/gateway/cli/reference/#kong-migrations) utility. The `kong migrations` commands are not reversible. We recommend backing up data before any starting any upgrade in case of any migration issues.
 
 If you are running {{site.base_gateway}} with a database, run a database dump of raw data so that you can recover the database quickly in a database-native way. This is the recommended way to back up {{site.base_gateway}}.
 
@@ -127,7 +127,7 @@ You can back up a particular Workspace or all Workspaces at once:
 {% endnavtab %}
 {% navtab "Traditional or hybrid mode - kong config CLI" %}
 
-As a final fail-safe for a database-backed deployment, you can also back up the database using the [`kong config`](/gateway/cli/#kong-config) CLI.
+As a final fail-safe for a database-backed deployment, you can also back up the database using the [`kong config`](/gateway/cli/reference/#kong-config) CLI.
 
 {:.warning}
 > Never use this method as your primary backup, as it might not accurately represent the final state of your database.
@@ -167,7 +167,7 @@ For PostgreSQL:
     ```
 
 3. Bootstrap database entities using the `migrations` command.
-Refer to the [`kong migrations` CLI reference](/gateway/cli/#kong-migrations)
+Refer to the [`kong migrations` CLI reference](/gateway/cli/reference/#kong-migrations)
 for more information.
 
     ```sh
@@ -215,7 +215,7 @@ In traditional or hybrid mode, use decK to restore your configuration from a bac
 {% endnavtab %}
 {% navtab "Traditional or hybrid mode - kong config CLI" %}
 
-If you backed up {{site.base_gateway}} database using [`kong config db_export`](/gateway/cli/#kong-config),
+If you backed up {{site.base_gateway}} database using [`kong config db_export`](/gateway/cli/reference/#kong-config),
 use the kong config CLI to restore your configuration from the backup declarative config file.
 
 1. Validate the backup configuration file before restoring it:

@@ -1,0 +1,16 @@
+{% unless page.navigation == empty %}
+<div class="flex">
+    {% if page.navigation.prev %}
+    <a href="{{ page.navigation.prev.url }}" class="text-sm dark:text-gray-300">
+        &larr; {{ page.navigation.prev.title | liquify }}
+    </a>
+    {% endif %}
+
+    {% if page.navigation.next %}
+    <a href="{{ page.navigation.next.url }}" class="ml-auto text-sm dark:text-gray-300">
+        {{ page.navigation.next.title | liquify }} &rarr;
+    </a>
+    {% endif %}
+
+</div>
+{% endunless %}

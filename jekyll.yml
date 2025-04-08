@@ -68,12 +68,24 @@ defaults:
       permalink: "/:path/"
 
 reference_metadata:
-  pdk:
+  inso-cli:
     products:
-      - gateway
-    works_on:
-      - on-prem
-      - konnect
+      - insomnia
+    tools:
+      - inso-cli
+  gateway:
+    pdk:
+      products:
+        - gateway
+      works_on:
+        - on-prem
+        - konnect
+    cli:
+      products:
+        - gateway
+      works_on:
+        - on-prem
+        - konnect
 
 insomnia_run: https://insomnia.rest/run/
 

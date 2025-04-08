@@ -5,6 +5,8 @@ module Jekyll
     priority :lowest
 
     def generate(site)
+      Data::Series.new(site:).process
+
       process_pages(site)
       process_docs(site)
     end
