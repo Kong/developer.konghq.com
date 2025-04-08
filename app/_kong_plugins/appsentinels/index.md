@@ -45,7 +45,7 @@ A copy of the request and response transactions is made and asynchronously share
 Integrations can help provide enforcement, such as blocking of bad IPs and threat actors.
 * [**Enforcement mode**](/plugins/appsentinels/examples/authz-enforcement-mode/): 
 This mode provides transaction-level blocking. Incoming requests are held until the AppSentinels Edge Controller provides a verdict.
-If the Controller provides a negative enforcement response of enforcement, the request is dropped from further processing.
+If the Controller provides a negative enforcement response, the request is dropped from further processing.
 In case of higher latency of a verdict, the plugin performs a fail open to ensure business continuity.
 
 ## Install the AppSentinels plugin
