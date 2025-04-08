@@ -20,7 +20,7 @@ tldr:
   q: Question?
   a: Answer
 
-prereqs: []
+prereqs: {}
 
 cleanup: []
 ---
