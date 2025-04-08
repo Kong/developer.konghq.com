@@ -58,10 +58,10 @@ module Jekyll
       index
     end
 
-    def add_entry(title, page, match_index)
+    def add_entry(title, page, match_index, allow_duplicates)
       url = page.respond_to?(:url) ? page.url : page['url']
 
-      return if @seen[url]
+      return if @seen[url] unless allow_duplicates
 
       @sections[title]['pages'] << {
         'page' => page,
@@ -92,13 +92,13 @@ module Jekyll
         index['sections'].each do |section|
           section['items'].each_with_index do |match, i|
             # It's a path
-            next add_path(page, section['title'], match, section['not_match'], i) if match['path']
+            next add_path(page, section['title'], match, section['not_match'], i, section['allow_duplicates']) if match['path']
 
             # How-To Lookup
-            next add_how_to(site, section['title'], match, i) if match['type'] == 'how-to'
+            next add_how_to(site, section['title'], match, i, section['allow_duplicates']) if match['type'] == 'how-to'
 
             # Or a hardcoded page
-            next add_entry(section['title'], match, i) if match['url']
+            next add_entry(section['title'], match, i, section['allow_duplicates']) if match['url']
 
             raise "Unknown match type: #{match}"
           end
@@ -114,7 +114,7 @@ module Jekyll
       page.data['releases'] && !page.data['releases'].empty? && !page.data['canonical?']
     end
 
-    def add_path(page, section, match, not_match, match_index)
+    def add_path(page, section, match, not_match, match_index, allow_duplicates)
       return unless File.fnmatch(match['path'], page.url, ::File::FNM_PATHNAME)
 
       should_match = not_match&.none? do |nm|
@@ -125,14 +125,14 @@ module Jekyll
 
       return unless should_match
 
-      add_entry(section, page, match_index)
+      add_entry(section, page, match_index, allow_duplicates)
     end
 
-    def add_how_to(site, section, match, match_index)
+    def add_how_to(site, section, match, match_index, allow_duplicates)
       how_tos = fetch_how_tos(site, match)
 
       how_tos.each do |how_to|
-        add_entry(section, how_to, match_index)
+        add_entry(section, how_to, match_index, allow_duplicates)
       end
     end
 
