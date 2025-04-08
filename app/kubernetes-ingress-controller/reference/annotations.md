@@ -153,27 +153,52 @@ This annotation can be used to assign custom tags to [{{site.base_gateway}} enti
 
 The following annotations are supported on Ingress resources:
 
-| Annotation name                                                                      | Description                                                                                                                                                                                                |
-| ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`kubernetes.io/ingress.class`](#kubernetesioingressclass)                           | Restrict the Ingress rules that Kong should satisfy. This annotation is **required**, and its value should match the value of the `--ingress-class` controller argument (`kong` by default). |
-| [`konghq.com/plugins`](#konghq-com-plugins)                                          | Run plugins for specific Ingress                                                                                                                                                                           |
-| [`konghq.com/protocols`](#konghq-com-protocols)                                      | Set protocols to handle for each Ingress resource                                                                                                                                                          |
-| [`konghq.com/preserve-host`](#konghq-com-preserve-host)                              | Pass the `host` header as is to the upstream service                                                                                                                                                       |
-| [`konghq.com/strip-path`](#konghq-com-strip-path)                                    | Strip the path defined in Ingress resource and then forward the request to the upstream service                                                                                                            |
-| [`ingress.kubernetes.io/force-ssl-redirect`](#ingresskubernetesioforce-ssl-redirect) | Force non-SSL requests to be redirected to SSL.                                                                                                                                                            |
-| [`konghq.com/https-redirect-status-code`](#konghq-com-https-redirect-status-code)    | Set the HTTPS redirect status code to use when an HTTP request is received                                                                                                                                 |
-| [`konghq.com/regex-priority`](#konghq-com-regex-priority)                            | Set the route's regex priority                                                                                                                                                                             |
-| [`konghq.com/regex-prefix`](#konghq-com-regex-prefix)                                | Prefix of path to annotate that the path is a regex match, other than default `/~`                                                                                                                         |
-| [`konghq.com/methods`](#konghq-com-methods)                                          | Set methods matched by this Ingress                                                                                                                                                                        |
-| [`konghq.com/snis`](#konghq-com-snis)                                                | Set SNI criteria for routes created from this Ingress                                                                                                                                                      |
-| [`konghq.com/request-buffering`](#konghq-com-request-buffering)                      | Set request buffering on routes created from this Ingress                                                                                                                                                  |
-| [`konghq.com/response-buffering`](#konghq-com-response-buffering)                    | Set response buffering on routes created from this Ingress                                                                                                                                                 |
-| [`konghq.com/host-aliases`](#konghq-com-hostaliases)                                 | Additional hosts for routes created from this Ingress's rules                                                                                                                                              |
-| [`konghq.com/path-handling`](#konghq-com-pathhandling)                               | Set the path handling algorithm                                                                                                                                                                            |
-| [`konghq.com/headers.*`](#konghq-com-headers)                                        | Set header values required to match rules in this Ingress, default separator for multiple values is `,`                                                                                                    |
-| [`konghq.com/headers-separator`](#konghq-com-headers-separator)                      | Separator for header values, other than default `,`                                                                                                                                                        |
-| [`konghq.com/rewrite`](#konghq-com-rewrite)                                          | Rewrite the path of a URL                                                                                                                                                                                  |
-| [`konghq.com/tags`](#konghq-com-tags)                                                | Assign custom tags to Kong entities generated out of this Ingress                                                                                                                                          |
+{% table %}
+columns:
+  - title: Annotation name
+    key: name
+  - title: Description
+    key: description
+rows:
+  - name: "[`kubernetes.io/ingress.class`](#kubernetesioingressclass)"
+    description: "Restrict the Ingress rules that {{site.base_gateway}} should satisfy. This annotation is **required**, and its value should match the value of the `--ingress-class` controller argument (`kong` by default)."
+  - name: "[`konghq.com/plugins`](#konghq-com-plugins)"
+    description: "Run plugins for specific Ingress"
+  - name: "[`konghq.com/protocols`](#konghq-com-protocols)"
+    description: "Set protocols to handle for each Ingress resource"
+  - name: "[`konghq.com/preserve-host`](#konghq-com-preserve-host)"
+    description: "Pass the `host` header as is to the upstream service"
+  - name: "[`konghq.com/strip-path`](#konghq-com-strip-path)"
+    description: "Strip the path defined in Ingress resource and then forward the request to the upstream service"
+  - name: "[`ingress.kubernetes.io/force-ssl-redirect`](#ingresskubernetesioforce-ssl-redirect)"
+    description: "Force non-SSL requests to be redirected to SSL."
+  - name: "[`konghq.com/https-redirect-status-code`](#konghq-com-https-redirect-status-code)"
+    description: "Set the HTTPS redirect status code to use when an HTTP request is received"
+  - name: "[`konghq.com/regex-priority`](#konghq-com-regex-priority)"
+    description: "Set the Route's regex priority"
+  - name: "[`konghq.com/regex-prefix`](#konghq-com-regex-prefix)"
+    description: "Prefix of path to annotate that the path is a regex match, other than default `/~`"
+  - name: "[`konghq.com/methods`](#konghq-com-methods)"
+    description: "Set methods matched by this Ingress"
+  - name: "[`konghq.com/snis`](#konghq-com-snis)"
+    description: "Set SNI criteria for Routes created from this Ingress"
+  - name: "[`konghq.com/request-buffering`](#konghq-com-request-buffering)"
+    description: "Set request buffering on Routes created from this Ingress"
+  - name: "[`konghq.com/response-buffering`](#konghq-com-response-buffering)"
+    description: "Set response buffering on Routes created from this Ingress"
+  - name: "[`konghq.com/host-aliases`](#konghq-com-hostaliases)"
+    description: "Additional hosts for Routes created from this Ingress's rules"
+  - name: "[`konghq.com/path-handling`](#konghq-com-pathhandling)"
+    description: "Set the path handling algorithm"
+  - name: "[`konghq.com/headers.*`](#konghq-com-headers)"
+    description: "Set header values required to match rules in this Ingress, default separator for multiple values is `,`"
+  - name: "[`konghq.com/headers-separator`](#konghq-com-headers-separator)"
+    description: "Separator for header values, other than default `,`"
+  - name: "[`konghq.com/rewrite`](#konghq-com-rewrite)"
+    description: "Rewrite the path of a URL"
+  - name: "[`konghq.com/tags`](#konghq-com-tags)"
+    description: "Assign custom tags to {{site.base_gateway}} entities generated out of this Ingress"
+{% endtable %}
 
 ### konghq.com/protocols
 
@@ -418,24 +443,46 @@ Setting the `--process-classless-kong-consumer` controller flag removes that req
 
 These annotations are supported on Service resources.
 
-| Annotation name                                                                   | Description                                                                                                                            |
-| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| [`konghq.com/plugins`](#konghq-com-plugins)                                       | Run plugins for a specific Service                                                                                                     |
-| [`konghq.com/protocol`](#konghq-com-protocol)                                     | Set protocol Kong should use to talk to a Kubernetes service                                                                           |
-| [`konghq.com/path`](#konghq-com-path)                                             | HTTP Path that is always prepended to each request that is forwarded to a Kubernetes service                                           |
-| [`konghq.com/client-cert`](#konghq-com-client-cert)                               | Client certificate and key pair Kong should use to authenticate itself to a specific Kubernetes service                                |
-| [`konghq.com/host-header`](#konghq-com-host-header)                               | Set the value sent in the `Host` header when proxying requests upstream                                                                |
-| [`ingress.kubernetes.io/service-upstream`](#ingresskubernetesioservice-upstream)  | Offload load-balancing to kube-proxy or sidecar                                                                                        |
-| [`konghq.com/upstream-policy`](#konghq-com-upstream-policy)                       | Override Kong Upstream configuration with KongUpstreamPolicy resource                                                                  |
-| [`konghq.com/connect-timeout`](#konghq-com-connecttimeout)                        | Set the timeout for completing a TCP connection                                                                                        |
-| [`konghq.com/read-timeout`](#konghq-com-readtimeout)                              | Set the timeout for receiving an HTTP response after sending a request                                                                 |
-| [`konghq.com/write-timeout`](#konghq-com-writetimeout)                            | Set the timeout for writing data                                                                                                       |
-| [`konghq.com/retries`](#konghq-com-retries)                                       | Set the number of times to retry requests that failed                                                                                  |
-| [`konghq.com/tags`](#konghq-com-tags)                                             | Assign custom tags to Kong entities generated out of this Service                                                                      |
-| [`konghq.com/tls-verify`](#konghq-com-tls-verify)                                 | Enable or disable verification of the upstream service's TLS certificates                                                              |
-| [`konghq.com/tls-verify-depth`](#konghq-com-tls-verify-depth)                     | Set the maximal depth of a certificate chain when verifying the upstream service's TLS certificates                                    |
-| [`konghq.com/ca-certificates-secrets`](#konghq-com-ca-certificates-secrets)       | Assign CA certificates Secrets to be used for the upstream service's TLS certificates verification                                     |
-| [`konghq.com/ca-certificates-configmaps`](#konghq-com-ca-certificates-configmaps) | Assign CA certificates ConfigMaps to be used for the upstream service's TLS certificates verification                                  |
+{% table %}
+columns:
+  - title: Annotation name
+    key: name
+  - title: Description
+    key: description
+rows:
+  - name: "[`konghq.com/plugins`](#konghq-com-plugins)"
+    description: "Run plugins for a specific Service"
+  - name: "[`konghq.com/protocol`](#konghq-com-protocol)"
+    description: "Set protocol {{site.base_gateway}} should use to talk to a Kubernetes service"
+  - name: "[`konghq.com/path`](#konghq-com-path)"
+    description: "HTTP Path that is always prepended to each request that is forwarded to a Kubernetes service"
+  - name: "[`konghq.com/client-cert`](#konghq-com-client-cert)"
+    description: "Client certificate and key pair {{site.base_gateway}} should use to authenticate itself to a specific Kubernetes service"
+  - name: "[`konghq.com/host-header`](#konghq-com-host-header)"
+    description: "Set the value sent in the `Host` header when proxying requests upstream"
+  - name: "[`ingress.kubernetes.io/service-upstream`](#ingresskubernetesioservice-upstream)"
+    description: "Offload load-balancing to kube-proxy or sidecar"
+  - name: "[`konghq.com/upstream-policy`](#konghq-com-upstream-policy)"
+    description: "Override {{site.base_gateway}} Upstream configuration with KongUpstreamPolicy resource"
+  - name: "[`konghq.com/connect-timeout`](#konghq-com-connecttimeout)"
+    description: "Set the timeout for completing a TCP connection"
+  - name: "[`konghq.com/read-timeout`](#konghq-com-readtimeout)"
+    description: "Set the timeout for receiving an HTTP response after sending a request"
+  - name: "[`konghq.com/write-timeout`](#konghq-com-writetimeout)"
+    description: "Set the timeout for writing data"
+  - name: "[`konghq.com/retries`](#konghq-com-retries)"
+    description: "Set the number of times to retry requests that failed"
+  - name: "[`konghq.com/tags`](#konghq-com-tags)"
+    description: "Assign custom tags to {{site.base_gateway}} entities generated out of this Service"
+  - name: "[`konghq.com/tls-verify`](#konghq-com-tls-verify)"
+    description: "Enable or disable verification of the upstream service's TLS certificates"
+  - name: "[`konghq.com/tls-verify-depth`](#konghq-com-tls-verify-depth)"
+    description: "Set the maximal depth of a certificate chain when verifying the upstream service's TLS certificates"
+  - name: "[`konghq.com/ca-certificates-secrets`](#konghq-com-ca-certificates-secrets)"
+    description: "Assign CA certificates Secrets to be used for the upstream service's TLS certificates verification"
+  - name: "[`konghq.com/ca-certificates-configmaps`](#konghq-com-ca-certificates-configmaps)"
+    description: "Assign CA certificates ConfigMaps to be used for the upstream service's TLS certificates verification"
+{% endtable %}
 
 ### konghq.com/protocol
 
