@@ -41,7 +41,7 @@ All logging plugins use the same table for logging.
 If you set `custom_fields_by_lua` in one plugin, all logging plugins that execute after that plugin will also use the same configuration. 
 For example, if you configure fields via `custom_fields_by_lua` in [File Log](/plugins/file-log/), those same fields will appear in [Kafka Log](/plugins/kafka-log/), since File Log executes first.
 
-If you want all logging plugins to use the same configuration, we recommend using the [Pre-function](/plugins/pre-function/) plugin to call [kong.log.set_serialize_value](/gateway/pdk/) so that the function is applied predictably and is easier to manage.
+If you want all logging plugins to use the same configuration, we recommend using the [Pre-function](/plugins/pre-function/) plugin to call [kong.log.set_serialize_value](/pdk/reference/kong.log/#kong-log-set-serialize-value-key-value-options) so that the function is applied predictably and is easier to manage.
 
 If you **don't** want all logging plugins to use the same configuration, you need to manually disable the relevant fields in each plugin. 
 

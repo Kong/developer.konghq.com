@@ -215,7 +215,7 @@ In addition to the above, when **tracing** is enabled, request-scoped logs inclu
 
 ### Logging for custom plugins
 
-The custom [plugin PDK](/gateway/pdk/) `kong.telemetry.log` module lets you configure OTLP logging for a custom plugin. 
+The custom [plugin PDK](/pdk/reference/kong.plugin/) `kong.telemetry.log` module lets you configure OTLP logging for a custom plugin. 
 The module records a structured log entry, which is reported via the OpenTelemetry plugin.
 
 ## Queuing
@@ -225,7 +225,7 @@ The module records a structured log entry, which is reported via the OpenTelemet
 ## Trace IDs in serialized logs {% new_in 3.5 %}
 
 When the OpenTelemetry plugin is configured along with a plugin that uses the 
-[Log Serializer](/gateway/pdk/),
+[Log Serializer](/pdk/reference/kong.log/#kong-log-serialize),
 the trace ID of each request is added to the key `trace_id` in the serialized log output.
 
 The value of this field is an object that can contain different formats
