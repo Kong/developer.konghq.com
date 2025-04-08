@@ -2,13 +2,17 @@ title: All KIC Documentation
 sections:
   - title: Uncategorized
     items:
+      - path: /kubernetes-ingress-controller/
+      - path: /kubernetes-ingress-controller/support/
       - path: /kubernetes-ingress-controller/**/*
     auto_exclude: true
   - title: Get Started
     items:
-      - path: /kubernetes-ingress-controller/
       - path: /kubernetes-ingress-controller/install/
-      - path: /kubernetes-ingress-controller/support/
+      - path: /kubernetes-ingress-controller/get-started/services-and-routes/
+      - path: /kubernetes-ingress-controller/get-started/rate-limiting/
+      - path: /kubernetes-ingress-controller/get-started/proxy-caching/
+      - path: /kubernetes-ingress-controller/get-started/key-authentication/
   - title: Routing
     items:
       - path: /kubernetes-ingress-controller/routing/http/
