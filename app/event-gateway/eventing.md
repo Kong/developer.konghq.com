@@ -32,6 +32,7 @@ Some useful template blocks:
 
 This is a generic table; you can add as many columns and rows as you want.
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Item
@@ -49,12 +50,13 @@ rows:
     description: |
       This is a long description
 {% endtable %}
-
+<!--vale on-->
 
 ## Feature table
 
 This table takes a boolean key and will render checkmarks and Xes.
 
+<!--vale off-->
 {% feature_table %} 
 item_title: Mesh RBAC Role
 columns:
@@ -72,7 +74,7 @@ features:
       Assigns a set of `AccessRoles` to a set of objects (users and groups). 
     global_scope: true
 {% endfeature_table %}
-
+<!--vale on-->
 
 ## Tabs
 
@@ -81,7 +83,7 @@ Useful if you want to display something in different options.
 {% navtabs "tab-group-name" %}
 {% navtab "Admin API" %}
 
-text with a codeblock
+text with a code block
 
 ```
 hello i'm code

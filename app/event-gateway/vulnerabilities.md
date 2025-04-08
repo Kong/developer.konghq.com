@@ -1,7 +1,7 @@
 ---
 title: "{{site.base_gateway}} support policy"
 
-description: This is a support policy page replaceme
+description: This is a support policy page
 
 content_type: policy
 layout: reference
