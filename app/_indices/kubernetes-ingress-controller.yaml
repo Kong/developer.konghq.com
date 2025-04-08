@@ -28,6 +28,9 @@ sections:
       - path: /kubernetes-ingress-controller/architecture/
       - path: /kubernetes-ingress-controller/gateway-api/
       - path: /kubernetes-ingress-controller/ingress/
+      - path: /kubernetes-ingress-controller/custom-resources/
+      - path: /kubernetes-ingress-controller/reference/annotations/
+      - path: /kubernetes-ingress-controller/admission-webhook/
   - title: Deployment Topologies
     items:
       - path: /kubernetes-ingress-controller/deployment-topologies/gateway-discovery/
@@ -36,3 +39,8 @@ sections:
   - title: Customization
     items:
       - path: /kubernetes-ingress-controller/custom-plugin/
+  - title: Reference
+    allow_duplicates: true
+    items:
+      - path: /kubernetes-ingress-controller/reference/custom-resources/
+      - path: /kubernetes-ingress-controller/reference/annotations/
