@@ -9,13 +9,14 @@ related_resources:
 
 products:
   - gateway
+  - mesh
 
 works_on:
   - on-prem
 
 tldr:
   q: How do I install Mesh on Kubernetes
-  a: Install {{site.mesh_product_name}} to your Kubernetes cluster using Helm, and deploy the Mesh demo application.
+  a: Install {{site.mesh_product_name}} on your Kubernetes cluster using Helm, and deploy the {{site.mesh_product_name}} demo application.
 
 prereqs:
   skip_product: true 
@@ -41,7 +42,7 @@ cleanup:
 
 ## 1. Install {{site.mesh_product_name}}
 
-Install {{site.mesh_product_name}} control plane with Helm by executing:
+Install {{site.mesh_product_name}} control plane with Helm:
 
 ```sh
 helm repo add kong-mesh https://kong.github.io/kong-mesh-charts
@@ -53,8 +54,8 @@ helm install --create-namespace --namespace kong-mesh-system kong-mesh kong-mesh
 
 To start learning how {{site.mesh_product_name}} works, you can use our simple and secure a simple demo application that consists of two services:
 
-`demo-app`: a web application that lets you increment a numeric counter. It listens on port `5000`
-`redis`: data store for the counter
+* `demo-app`: A web application that lets you increment a numeric counter. It listens on port `5000`
+* `redis`: The data store for the counter
 
 Deploy the demo application: 
 
@@ -71,6 +72,6 @@ Port-forward the service to the namespace on port `5000`:
 kubectl port-forward svc/demo-app -n kuma-demo 5000:5000
 ```
 
-### Validate
+## 4. Validate
 
-The demo app consists of a web application called Kuma Counter. This application allows us to increment a counter. You can validate the installation was successful by visiting `http://127.0.0.1:5000/` and using the web application. When you press **Increment**, you will see the connection being managed from the terminal.
+The demo app consists of a web application called Kuma Counter. This application allows us to increment a counter. You can validate the installation was successful by visiting `http://127.0.0.1:5000/` and using the web application. When you click **Increment**, you will see the connection being managed from the terminal.

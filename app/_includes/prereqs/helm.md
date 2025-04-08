@@ -1,3 +1,1 @@
-You will need Helm
-
-- [Helm](https://helm.sh/) - a package manager for Kubernetes
+You will need [Helm](https://helm.sh/docs/intro/install/), a package manager for Kubernetes.
