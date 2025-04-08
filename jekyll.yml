@@ -80,6 +80,12 @@ reference_metadata:
       works_on:
         - on-prem
         - konnect
+    cli:
+      products:
+        - gateway
+      works_on:
+        - on-prem
+        - konnect
 
 insomnia_run: https://insomnia.rest/run/
 
