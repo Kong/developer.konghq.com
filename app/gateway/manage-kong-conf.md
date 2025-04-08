@@ -14,7 +14,7 @@ related_resources:
   - text: "{{site.base_gateway}} configuration reference"
     url: /gateway/configuration/
   - text: "{{site.base_gateway}} CLI"
-    url: /gateway/cli/
+    url: /gateway/cli/reference/
 
 works_on:
    - on-prem
@@ -55,7 +55,7 @@ log_level = warn
 
 ## Applying configuration
 
-Apply changes to a configuration using the `kong restart` command, available from the [Kong CLI](/gateway/cli/).
+Apply changes to a configuration using the `kong restart` command, available from the [Kong CLI](/gateway/cli/reference/).
 This restarts the {{site.base_gateway}} instance and applies configuration.
 
 {:.info}
