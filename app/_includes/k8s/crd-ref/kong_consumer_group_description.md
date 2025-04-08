@@ -1,1 +1,1 @@
-KongConsumerGroup resources create [consumer group](/gateway/entities/consumer-group/) resources.
+KongConsumerGroup resources create [Consumer Group](/gateway/entities/consumer-group/) resources.

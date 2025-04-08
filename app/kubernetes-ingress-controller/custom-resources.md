@@ -20,24 +20,24 @@ related_resources:
 ---
 
 
-[Custom Resources](https://kubernetes.io/docs/tasks/access-kubernetes-api/extend-api-custom-resource-definitions/) in Kubernetes allow controllers to extend Kubernetes-style declarative APIs that are specific to certain applications.
+[Custom Resources (CRDs)](https://kubernetes.io/docs/tasks/access-kubernetes-api/extend-api-custom-resource-definitions/) in Kubernetes allow controllers to extend Kubernetes-style declarative APIs that are specific to certain applications.
 
-A few custom resources are bundled with the {{site.kic_product_name}} to configure settings that are specific to Kong and provide fine-grained control over the proxying behavior.
+A few custom resources are bundled with the {{site.kic_product_name}} to configure settings that are specific to {{site.base_gateway}} and provide fine-grained control over the proxying behavior.
 
-The {{site.kic_product_name}} uses the `configuration.konghq.com` API group for storing configuration specific to Kong.
+The {{site.kic_product_name}} uses the `configuration.konghq.com` API group for storing configuration specific to {{site.base_gateway}}.
 
-These CRDs allow users to declaratively configure all aspects of Kong:
+These CRDs allow users to declaratively configure all aspects of {{site.base_gateway}}:
 
-- [**KongPlugin**](#kongplugin)
-- [**KongClusterPlugin**](#kongclusterplugin)
-- [**KongConsumer**](#kongconsumer)
-- [**KongConsumerGroup**](#kongconsumergroup)
-- [**TCPIngress**](#tcpingress)
-- [**UDPIngress**](#udpingress)
+- [KongPlugin](#kongplugin)
+- [KongClusterPlugin](#kongclusterplugin)
+- [KongConsumer](#kongconsumer)
+- [KongConsumerGroup](#kongconsumergroup)
+- [TCPIngress](#tcpingress)
+- [UDPIngress](#udpingress)
 
 ## KongPlugin
 
-Kong is designed around an extensible [plugin](/gateway/entities/plugin/) architecture and comes with a wide variety of plugins already bundled inside it.  These plugins can be used to modify the request or impose restrictions on the traffic.
+{{site.base_gateway}} is designed around an extensible [plugin](/gateway/entities/plugin/) architecture and comes with a wide variety of plugins already bundled inside it.  These plugins can be used to modify the request or impose restrictions on the traffic.
 
 Once this resource is created, the resource needs to be associated with an Ingress, Service, HTTPRoute, KongConsumer or KongConsumerGroup resource in Kubernetes.
 
@@ -66,9 +66,9 @@ flowchart TD
     E --> |Associated using konghq.com/plugins annotation|F
 
     classDef left text-align:left;
-    classDef lightBlue fill:#cce7ff;
-    classDef lightGreen fill:#c4e1c4;
-    classDef lightPurple fill:#e6d8eb;
+    classDef lightBlue fill:#1338be;
+    classDef lightGreen fill:#74B72E;
+    classDef lightPurple fill:#592693;
 
     class B lightGreen;
     class C lightBlue;
@@ -78,46 +78,46 @@ flowchart TD
 
 ## KongClusterPlugin
 
-_This resource requires the [`kubernetes.io/ingress.class` annotation](/kubernetes-ingress-controller/{{page.release}}/reference/annotations/)._
+_This resource requires the [`kubernetes.io/ingress.class` annotation](/kubernetes-ingress-controller/reference/annotations/)._
 
-KongClusterPlugin resource is exactly same as KongPlugin, except that it is a Kubernetes cluster-level resources rather than a namespaced resource.  This can help when the configuration of the plugin needs to be centralized and the permissions to add or update plugin configuration rests with a different persona other than the application owners.
+KongClusterPlugin resource is exactly same as KongPlugin, except that it is a Kubernetes cluster-level resource rather than a namespaced resource. This can help when the configuration of the plugin needs to be centralized and the permissions to add or update plugin configuration rests with a different persona other than the application owners.
 
-This resource can be associated with an Ingress, Service, or KongConsumer, and can be used in the exact same way as KongPlugin.
+This resource can be associated with an Ingress, [Service](/gateway/entities/service/), or KongConsumer, and can be used in the exact same way as KongPlugin.
 
 A namespaced KongPlugin resource takes priority over a KongClusterPlugin with the same name.
 
 ## KongConsumer
 
-_This resource requires the `kubernetes.io/ingress.class` annotation. Its value must match the value of the controller's `--ingress-class` argument, which is `kong` by default._
+_This resource requires the [`kubernetes.io/ingress.class` annotation](/kubernetes-ingress-controller/reference/annotations/). Its value must match the value of the controller's `--ingress-class` argument, which is `kong` by default._
 
-This custom resource configures consumers in Kong.  Every KongConsumer resource in Kubernetes directly translates to a [Consumer](/gateway/entities/consumer/) object in Kong.
+This custom resource configures Consumers in {{site.base_gateway}}.  Every KongConsumer resource in Kubernetes directly translates to a [Consumer](/gateway/entities/consumer/) object in {{site.base_gateway}}.
 
 ## TCPIngress
 
-_This resource requires the `kubernetes.io/ingress.class` annotation. Its value must match the value of the controller's `--ingress-class` argument, which is `kong` by default._
+_This resource requires the [`kubernetes.io/ingress.class` annotation](/kubernetes-ingress-controller/reference/annotations/). Its value must match the value of the controller's `--ingress-class` argument, which is `kong` by default._
 
-This Custom Resource is used for exposing non-HTTP and non-GRPC services running inside Kubernetes to the outside world through Kong. This proves to be useful when you want to use a single cloud LoadBalancer for all kinds of traffic into your Kubernetes cluster.
+This Custom Resource is used for exposing non-HTTP and non-GRPC services running inside Kubernetes to the outside world through {{site.base_gateway}}. This proves to be useful when you want to use a single cloud LoadBalancer for all kinds of traffic into your Kubernetes cluster.
 
 It is very similar to the Ingress resource that ships with Kubernetes.
 
 ## UDPIngress
 
-_This resource requires the `kubernetes.io/ingress.class` annotation. Its value
+_This resource requires the [`kubernetes.io/ingress.class` annotation](/kubernetes-ingress-controller/reference/annotations/). Its value
 must match the value of the controller's `--ingress-class` argument, which is
 `kong` by default._
 
 This Custom Resource is used for exposing [UDP](https://datatracker.ietf.org/doc/html/rfc768) services
-running inside Kubernetes to the outside world through Kong.
+running inside Kubernetes to the outside world through {{site.base_gateway}}.
 
-This is useful for services such as DNS servers, Game Servers,
+This is useful for services such as DNS servers, game servers,
 VPN software and a variety of other applications.
 
 ## KongConsumerGroup
 
-_This resource requires the `kubernetes.io/ingress.class` annotation. Its value must match the value of the controller's `--ingress-class` argument, which is `kong` by default._
+_This resource requires the [`kubernetes.io/ingress.class` annotation](/kubernetes-ingress-controller/reference/annotations/). Its value must match the value of the controller's `--ingress-class` argument, which is `kong` by default._
 
-KongConsumerGroup creates a [consumer group](/gateway/entities/consumer-group/), which associates KongPlugin resources with a collection of KongConsumers.
+KongConsumerGroup creates a [Consumer Group](/gateway/entities/consumer-group/), which associates KongPlugin resources with a collection of KongConsumers.
 
-KongConsumers have a `consumerGroups` array. Adding a KongConsumerGroup's name to that array adds that consumer to that consumer group.
+KongConsumers have a `consumerGroups` array. Adding a KongConsumerGroup's name to that array adds that Consumer to that Consumer Group.
 
 Applying a `konghq.com/plugins: <KongPlugin name>` annotation to a KongConsumerGroup then executes that plugin on every consumer in the consumer group.

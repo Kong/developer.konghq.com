@@ -15,7 +15,7 @@ works_on:
   - konnect
 ---
 
-The {{site.kic_product_name}} ships with an admission webhook for KongPlugin and KongConsumer resources in the `configuration.konghq.com` API group.  You can generate TLS certificate and key pair that you need for admission webhook.
+The {{site.kic_product_name}} ships with an admission webhook for KongPlugin and KongConsumer resources in the `configuration.konghq.com` API group.  You can generate TLS certificate and the key pair that you need for the admission webhook.
 
 The admission webhook is enabled by default when installing {{ site.kic_product_name }} via the Helm chart. To disable the webhook set `ingressController.admissionWebhook.enabled=false` in your `values.yaml`.
 
@@ -23,11 +23,11 @@ The admission webhook is enabled by default when installing {{ site.kic_product_
 > The admission webhook should not be disabled unless you are asked to do so by a member of the Kong team.
 
 ## Test the configuration
-You can test if the admission webhook is enabled for duplicate KongConsumers, incorrect KongPlugins, incorrect credential secrets, and incorrect routes.
+You can test if the admission webhook is enabled for duplicate KongConsumers, incorrect KongPlugins, incorrect credential secrets, and incorrect Routes.
 
 ### Verify duplicate KongConsumers
 
-1. Create a KongConsumer with username as `alice`:
+1. Create a KongConsumer with the username `alice`:
 
     ```bash
     echo "apiVersion: configuration.konghq.com/v1
@@ -59,11 +59,11 @@ You can test if the admission webhook is enabled for duplicate KongConsumers, in
     Error from server: error when creating "STDIN": admission webhook "validations.kong.konghq.com" denied the request: consumer already exists
     ```
 
-The validation webhook rejected the KongConsumer resource as there already exists a consumer in Kong with the same username.
+The validation webhook rejected the KongConsumer resource as there already exists a Consumer in {{site.base_gateway}} with the same username.
 
 ### Verify incorrect KongPlugins
 
-Invalid plugin configurations are rejected by the admission webhook. This example adds an additional `foo` parameter to the `correlation-id` plugin, which is not a valid configuration.  If you remove the `foo: bar` configuration line, the plugin will be created successfully.
+Invalid plugin configurations are rejected by the admission webhook. This example adds an additional `foo` parameter to the `correlation-id` plugin, which is not a valid configuration. If you remove the `foo: bar` configuration line, the plugin will be created successfully.
 
 ```bash
 echo "
@@ -103,7 +103,7 @@ The results should look like this:
 Error from server: "STDIN": error when creating "STDIN": admission webhook "validations.kong.konghq.com" denied the request: consumer credential failed validation: missing required field(s): password
 ```
 
-The admission webhook also validates the credential type.
+The admission webhook also validates the credential type:
 
 ```bash
 echo '

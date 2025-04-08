@@ -4,11 +4,11 @@ While this is sufficient in most cases, sometimes, users may want more control o
 Once a `KongIngress` resource is created, it needs to be associated with an Ingress or Service resource using the 
 `konghq.com/override` annotation.
 
-{:.note}
+{:.info}
 > KongIngress is not supported on Gateway APIs resources, such as HTTPRoute and
 > TCPRoute. These resources must use annotations.
 
-{:.note}
+{:.info}
 > As of version 2.8, KongIngress sections other than `upstream` are
 > [deprecated](https://github.com/Kong/kubernetes-ingress-controller/issues/3018).
 > All settings in the `proxy` and `route` sections are now available with
