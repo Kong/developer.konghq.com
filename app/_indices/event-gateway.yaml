@@ -1,0 +1,12 @@
+title: Event Gateway Documentation Index
+sections:
+  - title: Uncategorized
+    items:
+      - path: /event-gateway/
+      - path: /event-gateway/**/*
+    auto_exclude: true
+  - title: How-Tos
+    items:
+      - type: how-to
+        products:
+          - event-gateway

@@ -1,0 +1,832 @@
+openapi: 3.0.3
+info:
+  title: Kiburi API
+  description: Native Event Gateway API
+  version: 0.0.1
+  contact:
+    name: Kong
+    url: https://konghq.com
+servers: []
+paths: {}
+components:
+  schemas:
+    Config:
+      type: object
+      properties:
+        runtime:
+          $ref: "#/components/schemas/Runtime"
+        server_tls:
+          $ref: "#/components/schemas/ServerTls"
+        key_sources:
+          type: array
+          description: "Key sources for configuring encryption or decryption"
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/KeySource"
+        policies:
+          type: array
+          description: "Policy configurations that can be referred to in a virtual cluster configuration."
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/Policy"
+        virtual_clusters:
+          type: array
+          description: "A list of virtual clusters."
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/VirtualCluster"
+        backend_clusters:
+          type: array
+          minItems: 1
+          description: "A list of backend clusters."
+          items:
+            $ref: "#/components/schemas/BackendCluster"
+      required: [ virtual_clusters, backend_clusters ]
+    Policy:
+      type: object
+      description: "Policies are functionality used to alter traffic between clients and Kiburi or Kiburi and backend brokers."
+      oneOf:
+        - $ref: "#/components/schemas/ModifyHeadersPolicy"
+        - $ref: "#/components/schemas/EncryptPolicy"
+        - $ref: "#/components/schemas/DecryptPolicy"
+    Runtime:
+      type: object
+      properties:
+        drain_duration:
+          type: string
+          format: duration
+          description: "Duration for draining connections before shutdown. At least 1s."
+          default: "30s"
+        shutdown_timeout:
+          type: string
+          format: duration
+          description: "Timeout duration for the shutdown process. At least 1s."
+          default: "60s"
+        health_listener_address:
+          type: string
+          description: "Address and port where the health listener binds."
+          default: "127.0.0.1:8080"
+        virtual_broker_listen_address:
+          type: string
+          description: "IP address virtual brokers listen on."
+          example: "127.0.0.1"
+          default: "::"
+    ServerTls:
+      type: object
+      properties:
+        listen_port:
+          type: integer
+          format: int32
+          description: "Port on which the TLS server listens."
+          minimum: 1024
+          maximum: 65535
+        exposed_port:
+          type: integer
+          format: int32
+          description: "Port that is exposed for external communication."
+          minimum: 1024
+          maximum: 65535
+        sni_suffix:
+          type: string
+          description: |
+            Optional suffix for TLS SNI validation.
+            This suffix will be concatenated with the virtual cluster name to form the base name for the SNI.
+            If not provided, the virtual cluster name will be used as the base name for the SNI.
+            For example with sni_suffix: `.example.com` and virtual cluster name: `my-cluster`, the SNI will be `my-cluster.example.com`.
+              A bootstrap host will be `bootstrap.my-cluster.example.com` and then each brokers will be `broker0.my-cluster.example.com`, `broker1.my-cluster.example.com`, etc.
+            This means that your deployment will need to have a wildcard certificate for the domain and a DNS resolver that routes `*.my-cluster.example.com` to the proxy.
+        cert:
+          $ref: "#/components/schemas/DataSource"
+        key:
+          $ref: "#/components/schemas/Secret"
+      required: [ listen_port, exposed_port, cert, key ]
+    EntityName:
+      type: string
+      description: "A valid entity name following DNS label constraints."
+      minLength: 1
+      maxLength: 63
+      pattern: "^[a-z0-9]([a-z0-9\\-]{0,61}[a-z0-9])?$" # DNS label
+    VirtualCluster:
+      type: object
+      properties:
+        name:
+          $ref: "#/components/schemas/EntityName"
+        backend_cluster_name:
+          type: string
+          description: "The name of the BackendCluster."
+        route_by:
+          type: object
+          required: [type]
+          properties:
+            type:
+              type: string
+              description: "The type of routing. SNI is a recommended setup for production."
+              enum: [port, sni]
+            port:
+              type: object
+              description: |
+                Route by port. Every broker gets a canonical port that depends on the broker ID (`id`).
+                The port is calculated as listen_start + id - min_broker_id + 1.
+                For example, if there are 3 brokers (id=0, id=1, id=2) and we picked 9092 as listen_start then we open 4 ports, 9092 as a bootstrap port, and 9093, 9094, 9095.
+                This is less flexible when it comes to configuring load balancers, but it does not require TLS, so it might be easier to start.
+              properties:
+                listen_start:
+                  type: integer
+                  description: "The starting port for listening. It will open as many ports as there are brokers starting from this port."
+                min_broker_id:
+                  type: integer
+                  description: "The lowest broker ID in the cluster."
+                advertise_host:
+                  type: string
+                  description: "The advertised host (DNS name or IP) for the broker. Visible for the clients on Metadata and FindCoordinator requests."
+                  pattern: ""
+              required: [ listen_start, min_broker_id ]
+        rewrite_ids:
+          type: object
+          description: How to handle transaction and consumer group ids
+          required: [type]
+          properties:
+            type:
+              type: string
+              enum: [prefix, disabled]
+              default: prefix
+        topic_rewrite:
+          $ref: "#/components/schemas/TopicRewrite"
+        limits:
+          $ref: "#/components/schemas/VirtualClusterLimits"
+        consume_policies:
+          type: array
+          description: "Kiburi applies these policies when forwarding Fetch messages to clients. Entries are checked in sequential order and every entry where match evaluates to true is applied."
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/VirtualClusterConsumePolicyMatch"
+        produce_policies:
+          type: array
+          description: "Kiburi applies these policies when forwarding Produce messages to brokers. Entries are checked in sequential order and every entry where match evaluates to true is applied."
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/VirtualClusterProducePolicyMatch"
+        authentication:
+          type: array
+          description: |
+            How to handle authentication from clients to the Kiburi proxy.
+            It tries to authenticate with every rule sequentially one by one.
+            It succeeds on the first match, but fails if no rule matches.
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/VirtualClusterAuthentication"
+      required: [name, backend_cluster_name, route_by]
+    VirtualClusterConsumePolicyMatch:
+      type: object
+      description: "If match evaluates to true, all policies are applied."
+      required: [policies]
+      properties:
+        match:
+          description: "An ATC expression compatible with Kiburi. See https://docs.konghq.com/gateway/latest/reference/expressions-language/language-references for more information about ATC."
+          type: string
+          format: kong-atc@1.7
+        policies:
+          description: "Policies are applied in sequential order."
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/VirtualClusterConsumePolicy"
+    VirtualClusterConsumePolicy:
+      type: object
+      description: "A policy that is applied to Fetch messages."
+      properties:
+        type:
+          type: string
+          enum: [ref_name, policy]
+      required: [type]
+      oneOf:
+        - type: object
+          description: "Defines a policy inline where it's being applied"
+          required: [type, policy]
+          properties:
+            type:
+              type: string
+              enum: [policy]
+            policy:
+              $ref: "#/components/schemas/ConsumePolicy"
+        - type: object
+          description: "Refer to a previously defined top-level policy"
+          required: [type, ref_name]
+          properties:
+            type:
+              type: string
+              enum: [ref_name]
+            ref_name:
+              $ref: "#/components/schemas/EntityName"
+    VirtualClusterProducePolicyMatch:
+      type: object
+      description: "If match evaluates to true, all policies are applied."
+      required: [policies]
+      properties:
+        match:
+          description: "An ATC expression compatible with Kiburi. See https://docs.konghq.com/gateway/latest/reference/expressions-language/language-references for more information about ATC."
+          type: string
+          format: kong-atc@1.7
+        policies:
+          description: "Policies are applied in sequential order."
+          type: array
+          minItems: 1
+          items:
+           $ref: "#/components/schemas/VirtualClusterProducePolicy"
+    VirtualClusterProducePolicy:
+      type: object
+      description: "A policy that is applied to Produce messages."
+      properties:
+        type:
+          type: string
+          enum: [ref_name, policy]
+      required: [type]
+      oneOf:
+        - type: object
+          description: "Defines a policy inline where it's being applied"
+          required: [type, policy]
+          properties:
+            type:
+              type: string
+              enum: [policy]
+            policy:
+              $ref: "#/components/schemas/ProducePolicy"
+        - type: object
+          description: "Refer to a previously defined top-level policy"
+          required: [type, ref_name]
+          properties:
+            type:
+              type: string
+              enum: [ref_name]
+            ref_name:
+              $ref: "#/components/schemas/EntityName"
+    ConsumePolicy:
+      type: object
+      description: "A policy that is applied to Fetch messages."
+      oneOf:
+        - $ref: "#/components/schemas/ModifyHeadersPolicy"
+        - $ref: "#/components/schemas/DecryptPolicy"
+    ProducePolicy:
+      type: object
+      description: "A policy that is applied to Produce messages."
+      oneOf:
+        - $ref: "#/components/schemas/ModifyHeadersPolicy"
+        - $ref: "#/components/schemas/EncryptPolicy"
+    ModifyHeadersPolicy:
+      type: object
+      description: "Set or remove record headers"
+      required: [name, type, spec]
+      properties:
+        name:
+          $ref: "#/components/schemas/EntityName"
+        type:
+          type: string
+          enum: [modify_headers]
+        spec:
+          required: [actions]
+          type: object
+          properties:
+            actions:
+              description: "Actions are run in sequential order."
+              type: array
+              minItems: 1
+              items:
+                type: object
+                required: [type]
+                oneOf:
+                  - type: object
+                    description: "Headers to remove by key."
+                    properties:
+                      type:
+                        type: string
+                        enum: [remove]
+                      remove:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                          required: [key]
+                    required: [type, remove]
+                  - type: object
+                    description: "Add key and value to headers or overwrite if the key exists."
+                    properties:
+                      type:
+                        type: string
+                        enum: [set]
+                      set:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            value:
+                              type: string
+                          required: [key, value]
+                    required: [type, set]
+    KeySource:
+      type: object
+      description: "Describes how to find a symmetric key for encryption or decryption."
+      oneOf:
+        - type: object
+          description: "Use a static, user-provided key."
+          required: [name, type, static]
+          properties:
+            name:
+              $ref: "#/components/schemas/EntityName"
+            type:
+              type: string
+              enum: [static]
+            static:
+              type: array
+              description: "A list of keys"
+              minItems: 1
+              items:
+                type: object
+                required: [id, key]
+                properties:
+                  id:
+                    type: string
+                  key:
+                    $ref: "#/components/schemas/ByteSecret"
+        - type: object
+          description: "Configuration for using the AWS KMS API."
+          required: [name, type, aws]
+          properties:
+            name:
+              $ref: "#/components/schemas/EntityName"
+            type:
+              type: string
+              enum: [aws]
+            aws:
+              type: object
+              required: [credentials]
+              properties:
+                credentials:
+                  type: object
+                  description: "AWS API credentials"
+                  required: [iam_user]
+                  properties:
+                    iam_user:
+                      type: object
+                      required: [access_key_id, secret_access_key]
+                      description: "Authenticate as an IAM user"
+                      properties:
+                        access_key_id:
+                          type: string
+                        secret_access_key:
+                          type: string
+    VirtualClusterKeySource:
+      type: object
+      description: "Describes how to find a symmetric key for encryption or decryption."
+      oneOf:
+        - type: object
+          description: "Refers to a top-level configured key source."
+          required: [type, ref_name]
+          properties:
+            type:
+              type: string
+              enum: [ref_name]
+            ref_name:
+              $ref: "#/components/schemas/EntityName"
+        - $ref: "#/components/schemas/KeySource"
+    EncryptionRecordSelector:
+      type: object
+      description: "Defines how to select part of a record for encryption as well as what key to encrypt it with."
+      oneOf:
+        - type: object
+          description: "Encrypt the record key"
+          required: [type, id]
+          properties:
+            type:
+              type: string
+              enum: [key]
+            id:
+              type: string
+              format: uri
+        - type: object
+          description: "Encrypt the record value"
+          required: [type, id]
+          properties:
+            type:
+              type: string
+              enum: [value]
+            id:
+              type: string
+              format: uri
+    DecryptionRecordSelector:
+      type: object
+      description: "Defines how to select part of a record for decryption."
+      oneOf:
+        - type: object
+          description: "Decrypt the record key"
+          required: [type]
+          properties:
+            type:
+              type: string
+              enum: [key]
+        - type: object
+          description: "Decrypt the record value"
+          required: [type]
+          properties:
+            type:
+              type: string
+              enum: [value]
+    EncryptDecryptFailure:
+      type: object
+      description: "Describes how to handle failing encryption or decryption."
+      required: [mode]
+      properties:
+        mode:
+          type: string
+          description: |
+            Use `error` if the record should be rejected if encryption or decryption fails.
+            Use `passthrough` to ignore encryption or decryption failure and continue proxying the record.
+          enum: [error, passthrough]
+    EncryptPolicy:
+      type: object
+      description: "This policy can be used to encrypt portions of Kafka records"
+      required: [name, type, spec]
+      properties:
+        name:
+          $ref: "#/components/schemas/EntityName"
+        type:
+          type: string
+          enum: [encrypt]
+        spec:
+          required: [failure, key_sources, encrypt]
+          type: object
+          properties:
+            failure:
+              $ref: "#/components/schemas/EncryptDecryptFailure"
+            key_sources:
+              type: array
+              description: "Sources for finding keys to encrypt records."
+              minItems: 1
+              items:
+                $ref: "#/components/schemas/VirtualClusterKeySource"
+            encrypt:
+              type: array
+              description: "Describes what parts of a record to encrypt."
+              minItems: 1
+              items:
+                $ref: "#/components/schemas/EncryptionRecordSelector"
+    DecryptPolicy:
+      type: object
+      description: "This policy can be used to decrypt portions of Kafka records"
+      required: [name, type, spec]
+      properties:
+        name:
+          $ref: "#/components/schemas/EntityName"
+        type:
+          type: string
+          enum: [decrypt]
+        spec:
+          required: [failure, key_sources, decrypt]
+          type: object
+          properties:
+            failure:
+              $ref: "#/components/schemas/EncryptDecryptFailure"
+            key_sources:
+              type: array
+              description: "Sources for finding keys to decrypt records."
+              minItems: 1
+              items:
+                $ref: "#/components/schemas/VirtualClusterKeySource"
+            decrypt:
+              type: array
+              description: "Describes what parts of a record to decrypt."
+              minItems: 1
+              items:
+                $ref: "#/components/schemas/DecryptionRecordSelector"
+    VirtualClusterLimits:
+      type: object
+      description: "Limits on a virtual cluster. The limits are not shared between multiple instances of kiburi proxy."
+      properties:
+        connections:
+          type: integer
+          default: 1000
+          minimum: 1
+          description: "The number of connections that a virtual cluster can accept."
+    TopicRewrite:
+      type: object
+      description: Defines a strategy for rewriting names virtual topics.
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [prefix, cel]
+          description: Type of renaming rule.
+        prefix:
+          type: object
+          required: [value]
+          properties:
+            value:
+              type: string
+              minLength: 1
+              description: |
+                A prefix that is added to a backend topic name.
+                If a response contains a topic without a prefix, it's omitted from the response.
+        cel:
+          type: object
+          required: [virtual_to_backend_expression, backend_to_virtual_expression]
+          description: |
+            Common Expression Language expression for topic rewriting.
+            See docs for more https://github.com/google/cel-spec
+            The playground is available here https://playcel.undistro.io/
+            backend_to_virtual_expression has to be a reverse function to virtual_to_backend_expression.
+            Failure to implement it may result in undefined behaviour.
+          properties:
+            virtual_to_backend_expression:
+              type: string
+              minLength: 1
+              example: 'topic.name + "-suffix"'
+              description: |
+                The provided variable is topic object with name field that indicates virtual topic name.
+                It's expected that the expression evaluates to a string - a backend topic name.
+                If expression fails or evaluates to empty string, the request fails.
+            backend_to_virtual_expression:
+              type: string
+              minLength: 1
+              example: 'topic.name.endsWith("-suffix") ? topic.name.substring(0, size(topic.name) - size("-suffix")) : ""'
+              description: |
+                The provided variable is topic object with name field that indicates backend topic name.
+                It's expected that the expression evaluates to a string - a virtual topic name.
+                If expression evaluates to empty string, it's omitted from the response.
+    VirtualClusterAuthentication:
+      type: object
+      description: Configuration of authentication expected from clients that connects to a virtual cluster.
+      oneOf:
+        - $ref: "#/components/schemas/VirtualClusterAuthenticationAnonymous"
+        - $ref: "#/components/schemas/VirtualClusterAuthenticationSaslPlain"
+        - $ref: "#/components/schemas/VirtualClusterAuthenticationSaslScramSha256"
+        - $ref: "#/components/schemas/VirtualClusterAuthenticationSaslScramSha512"
+        - $ref: "#/components/schemas/VirtualClusterAuthenticationSaslOauthBearer"
+    VirtualClusterAuthenticationMediation:
+      type: object
+      required: [ type ]
+      description: Mediates authentication to the backend cluster
+      properties:
+        type:
+          type: string
+          description: |
+            Methods to mediate authentication:
+            * forward - pass authentication from the client through proxy to the backend cluster
+            * anonymous - terminate authentication at the proxy level and do not authenticate connection to the backend cluster
+            * use_backend_cluster - terminate authentication at the proxy level and originate authentication to the backend cluster
+              using the configuration defined at backend_cluster#authentication
+          enum: [ forward, anonymous, use_backend_cluster ]
+    VirtualClusterAuthenticationAnonymous:
+      type: object
+      description: |
+        Requires clients to not provide any authentication when connecting to the proxy.
+        You cannot use "forward" mediation type because there is nothing to forward.
+      required: [ type, mediation ]
+      properties:
+        type:
+          type: string
+          enum: [ anonymous ]
+        mediation:
+          $ref: "#/components/schemas/VirtualClusterAuthenticationMediation"
+    VirtualClusterAuthenticationSaslPlain:
+      type: object
+      description: |
+        Requires SASL PLAIN authentication from the clients connecting to the proxy.
+        You can only use "forward" mediation type because proxy on its own cannot terminate this authentication method.
+      required: [ type, mediation ]
+      properties:
+        type:
+          type: string
+          enum: [ sasl_plain ]
+        mediation:
+          $ref: "#/components/schemas/VirtualClusterAuthenticationMediation"
+    VirtualClusterAuthenticationSaslScramSha256:
+      type: object
+      description: |
+        Requires SASL SCRAM-SHA-256 authentication from the clients connecting to the proxy.
+        You can only use "forward" mediation type because proxy on its own cannot terminate this authentication method.
+      required: [ type, mediation ]
+      properties:
+        type:
+          type: string
+          enum: [ sasl_scram_sha256 ]
+        mediation:
+          $ref: "#/components/schemas/VirtualClusterAuthenticationMediation"
+    VirtualClusterAuthenticationSaslScramSha512:
+      type: object
+      description: |
+        Requires SASL SCRAM-SHA-512 authentication from the clients connecting to the proxy.
+        You can only use "forward" mediation type because proxy on its own cannot terminate this authentication method.
+      required: [ type, mediation ]
+      properties:
+        type:
+          type: string
+          enum: [ sasl_scram_sha512 ]
+        mediation:
+          $ref: "#/components/schemas/VirtualClusterAuthenticationMediation"
+    VirtualClusterAuthenticationSaslOauthBearer:
+      type: object
+      description: |
+        Requires SASL OAUTHBEARER authentication from the clients connecting to the proxy.
+        "sasl_oauth_bearer" is required depending on mediation type:
+        * forward - not required, but if provided then proxy will validate token before forwarding it to the backend cluster
+        * anonymous - required, because proxy terminates the authentication
+        * use_backend_cluster - required, because proxy terminates the authentication
+      required: [ type, mediation ]
+      properties:
+        type:
+          type: string
+          enum: [ sasl_oauth_bearer ]
+        sasl_oauth_bearer:
+          type: object
+          description: Configuration for OAUTHBEARER authentication.
+          required: [ jwks ]
+          properties:
+            claims_mapping:
+              type: object
+              description: Maps JWT claims in the case when sub and scope are presented as different claims in your JWT token.
+              properties:
+                sub:
+                  type: string
+                  description: Maps the subject claim.
+                  minLength: 1
+                scope:
+                  type: string
+                  description: Maps the scope claim.
+                  minLength: 1
+            jwks:
+              type: object
+              description: JSON Web Key Set configuration for verifying token signatures.
+              required: [ endpoint ]
+              properties:
+                endpoint:
+                  type: string
+                  format: uri
+                  description: URL for JWKS endpoint.
+                  minLength: 1
+                timeout:
+                  type: string
+                  format: duration
+                  default: "10s"
+                  description: Total time from establishing connection to receive a response from JWKS endpoint.
+                cache_expiration:
+                  type: string
+                  format: duration
+                  default: "1h"
+                  description: Duration after which the gateway will fetch and cache JWKS.
+            validate:
+              type: object
+              description: Validation rules.
+              properties:
+                audiences:
+                  type: array
+                  minLength: 1
+                  items:
+                    type: object
+                    required: [ name ]
+                    properties:
+                      name:
+                        type: string
+                        minLength: 1
+                  description: List of expected audience values. One of them has to match the audience claim in the token.
+                issuer:
+                  type: string
+                  description: Expected token issuer in the token.
+                  minLength: 1
+        mediation:
+          $ref: "#/components/schemas/VirtualClusterAuthenticationMediation"
+    BackendCluster:
+      type: object
+      required: [name, endpoints]
+      properties:
+        name:
+          $ref: "#/components/schemas/EntityName"
+        endpoints:
+          type: array
+          description: "A list of cluster endpoints in the format address:port."
+          minItems: 1
+          items:
+            type: string
+            description: "Endpoint in address:port format."
+            pattern: "^(([a-zA-Z0-9\\.\\-]+)|\\[([a-fA-F0-9:]+)\\]):\\d+$"
+            minLength: 1
+        authentication:
+          type: object
+          description: |
+            Configuration of authentication of proxy connecting to the backend cluster.
+            It is used in two cases:
+            * Proxy automatically discovering brokers by sending Metadata request to backend cluster
+            * Virtual cluster authentication mediation configured to use_backend_cluster
+          oneOf:
+            - $ref: "#/components/schemas/BackendClusterAuthenticationSaslPlain"
+        tls:
+          type: object
+          properties:
+            insecure_skip_verify:
+              type: boolean
+              description: "If true, skip certificate verification. It's not secure to use for production."
+              default: false
+            ca_bundle:
+              $ref: "#/components/schemas/DataSource"
+            tls_versions:
+              type: array
+              description: "List of supported TLS versions."
+              items:
+                type: string
+                enum: [tls12, tls13]
+              default: [tls12, tls13]
+          required: [insecure_skip_verify]
+        metadata_update_interval:
+          type: string
+          format: duration
+          description: "Interval for updating metadata. At least 1s."
+          default: "60s"
+    BackendClusterAuthenticationSaslPlain:
+      description: "Configuration of SASL with PLAIN mechanism"
+      required: [ type, sasl_plain ]
+      properties:
+        type:
+          type: string
+          enum: [ sasl_plain ]
+        sasl_plain:
+          type: object
+          required: [ username, password ]
+          properties:
+            username:
+              $ref: "#/components/schemas/DataSource"
+            password:
+              $ref: "#/components/schemas/Secret"
+    Secret:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          description: "The type of the secret."
+          enum: [string, file]
+        file:
+          type: object
+          required: [ "path" ]
+          properties:
+            path:
+              type: string
+              description: "The path to the file containing the secret."
+              minLength: 1
+        string:
+          type: object
+          required: [ "value" ]
+          properties:
+            value:
+              type: string
+              description: "The secret in a form of plaintext."
+              minLength: 1
+    ByteSecret:
+      type: object
+      description: "Holds raw bytes and is treated as a secret."
+      required: [type]
+      properties:
+        type:
+          type: string
+          description: "Use bytes for inline data and file to read bytes from disk."
+          enum: [bytes, file]
+        file:
+          type: object
+          required: [path]
+          properties:
+            path:
+              type: string
+              description: "The path to the file containing the data."
+              minLength: 1
+        bytes:
+          type: object
+          required: [value]
+          properties:
+            value:
+              type: string
+              format: byte
+    DataSource:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          description: "The type of the data source."
+          enum: [string, file]
+        file:
+          type: object
+          required: [ "path" ]
+          properties:
+            path:
+              type: string
+              description: "The path to the file containing the data."
+              minLength: 1
+        string:
+          type: object
+          required: [ "value" ]
+          properties:
+            value:
+              type: string
+              description: "The data in a form of plaintext."
+              minLength: 1

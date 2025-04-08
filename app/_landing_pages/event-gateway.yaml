@@ -1,0 +1,84 @@
+metadata:
+  title: "{{site.event_gateway}}"
+  content_type: landing_page
+  description: This page is an introduction to {{site.event_gateway}}.
+  products:
+    - event-gateway
+  works_on:
+    - on-prem # is there an on-prem for this, or konnect only?
+    - konnect
+
+  
+rows:
+  - header:
+      type: h1
+      text: "{{ site.event_gateway }}"
+      sub_text: "A native Kafka event gateway"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Introducing {{ site.event_gateway }}"
+              blocks:
+                - type: text
+                  text: | 
+                    An event gateway which takes Kafka protocol in and writes Kafka protocol out.
+
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart LR
+                KafkaClient1
+                KafkaClient2
+                Kiburi
+                KafkaCluster1
+                KafkaCluster2
+                KafkaCluster3
+                KafkaClient1 --> Kiburi
+                KafkaClient2 --> Kiburi
+                Kiburi --> KafkaCluster1
+                Kiburi --> KafkaCluster2
+                Kiburi --> KafkaCluster3
+
+  - header:
+      type: h2
+      text: Get started
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Get started with {{site.event_gateway}}
+            description: |
+              Install, configure, and start using {{site.event_gateway}} to do something
+            icon: /assets/icons/gateway.svg
+            cta:
+              text: Start using {{site.event_gateway}}
+              url: /how-to/get-started-with-event-gateway/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Configuration reference
+            description: |
+              You can configure {{site.event_gateway}} using something
+
+              We can link this to the API spec
+            icon: /assets/icons/lock.svg
+            cta:
+              text: Configure {{site.event_gateway}}
+              url: /api/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: How eventing works
+            description: |
+              This is a description of a reference
+            icon: /assets/icons/gateway.svg
+            cta:
+              text: Learn about eventing
+              url: "/event-gateway/eventing/"
+  
