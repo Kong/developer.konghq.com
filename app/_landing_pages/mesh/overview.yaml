@@ -1,0 +1,28 @@
+metadata:
+  title: Kong Mesh
+  content_type: landing_page
+  description: TODO
+  breadcrumbs:
+    - /rate-limiting/
+rows:
+  - header:
+      type: h1
+      text: "Rate Limiting with {{site.mesh_product_name}}"
+#TODO
+  - header:
+      type: h2
+      text: How-to Guides
+    columns:
+      - blocks:
+        - type: how_to_list
+          config:
+            tags:
+              - rate-limiting
+            products:
+              - mesh
+            quantity: 5
+            allow_empty: true
+
+  - header:
+      type: h2
+      text: "Related Resources"
