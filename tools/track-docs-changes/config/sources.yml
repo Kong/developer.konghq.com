@@ -1010,3 +1010,7 @@ app/deck/gateway/reset.md:
 
 
 
+## Mesh
+
+app/_how-tos/deploy-mesh-on-kubernetes.md: 
+  - /mesh/latest/quickstart/kubernetes-demo.md
