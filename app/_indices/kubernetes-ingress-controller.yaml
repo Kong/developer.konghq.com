@@ -24,6 +24,11 @@ sections:
       - path: /kubernetes-ingress-controller/architecture/
       - path: /kubernetes-ingress-controller/gateway-api/
       - path: /kubernetes-ingress-controller/ingress/
+  - title: Deployment Topologies
+    items:
+      - path: /kubernetes-ingress-controller/deployment-topologies/gateway-discovery/
+      - path: /kubernetes-ingress-controller/deployment-topologies/db-backed/
+      - path: /kubernetes-ingress-controller/deployment-topologies/sidecar/
   - title: Customization
     items:
       - path: /kubernetes-ingress-controller/custom-plugin/
