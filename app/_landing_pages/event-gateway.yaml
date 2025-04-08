@@ -5,7 +5,6 @@ metadata:
   products:
     - event-gateway
   works_on:
-    - on-prem # is there an on-prem for this, or konnect only?
     - konnect
 
   
@@ -13,7 +12,7 @@ rows:
   - header:
       type: h1
       text: "{{ site.event_gateway }}"
-      sub_text: "A native Kafka event gateway"
+      sub_text: "A Kafka native Gateway built for governance, security, and cost efficient use of Kafka "
 
   - columns:
       - blocks:
@@ -24,7 +23,14 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    An event gateway which takes Kafka protocol in and writes Kafka protocol out.
+                    The Kong Native Event Proxy (KNEP) is a proxy for Apache Kafka, which can run in front of any
+                    Kafka cluster. 
+
+                    Through it's extensible policy engine, users can augment, optimize, and secure 
+                    their Kafka deployments with customized business logic to transform, encrypt, and observe Kafka messages. 
+                    
+                    The Native Event Proxy supports many policies such as
+                    encryption, cluster virtualization, message filtering, and more. 
 
       - blocks:
           - type: mermaid
@@ -33,15 +39,15 @@ rows:
                 flowchart LR
                 KafkaClient1
                 KafkaClient2
-                Kiburi
+                KongNativeEventProxy
                 KafkaCluster1
                 KafkaCluster2
                 KafkaCluster3
-                KafkaClient1 --> Kiburi
-                KafkaClient2 --> Kiburi
-                Kiburi --> KafkaCluster1
-                Kiburi --> KafkaCluster2
-                Kiburi --> KafkaCluster3
+                KafkaClient1 --> KongNativeEventProxy
+                KafkaClient2 --> KongNativeEventProxy
+                KongNativeEventProxy --> KafkaCluster1
+                KongNativeEventProxy --> KafkaCluster2
+                KongNativeEventProxy --> KafkaCluster3
 
   - header:
       type: h2
