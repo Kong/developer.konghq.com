@@ -1,0 +1,24 @@
+description: 'Run the AppSentinels plugin in transparent logging mode.'
+
+title: 'Logging mode'
+
+weight: 900
+
+requirements:
+  - The AppSentinels plugin is [installed](/plugins/appsentinels/#install-the-appsentinels-plugin)
+
+variables:
+  http-endpoint:
+    value: $CONTROLLER_URL
+    description: The URL of the AppSentinels Edge Controller, for example `http://onprem-controller:9004`.
+
+config:
+  http_endpoint: ${http-endpoint}
+  authz: false
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

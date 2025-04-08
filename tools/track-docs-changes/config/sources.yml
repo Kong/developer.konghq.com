@@ -210,8 +210,6 @@ app/_how-tos/configure-oidc-with-client-credentials-grant.md:
   - /app/_hub/kong-inc/openid-connect/how-to/authentication/_client-credentials.md
 
 ## KIC
-app/_how-tos/kic-install.md:
-  - app/_src/kubernetes-ingress-controller/get-started/index.md
 app/_how-tos/kic-proxy-http.md:
   - app/_src/kubernetes-ingress-controller/guides/services/http.md
 app/_how-tos/kic-proxy-grpc.md:
@@ -238,6 +236,22 @@ app/kubernetes-ingress-controller/ingress.md:
   - app/_src/kubernetes-ingress-controller/concepts/ingress.md
 app/kubernetes-ingress-controller/version-compatibility.md:
   - app/_src/kubernetes-ingress-controller/reference/version-compatibility.md
+app/_how-tos/kic-install.md:
+  - app/_src/kubernetes-ingress-controller/get-started/index.md
+app/_how-tos/kic-get-started-services-routes.md:
+  - /app/_src/kubernetes-ingress-controller/get-started/services-and-routes.md
+app/_how-tos/kic-get-started-rate-limiting.md:
+  - /app/_src/kubernetes-ingress-controller/get-started/rate-limiting.md
+app/_how-tos/kic-get-started-proxy-caching.md:
+  - /app/_src/kubernetes-ingress-controller/get-started/proxy-caching.md
+app/_how-tos/kic-get-started-key-authentication.md:
+  - /app/_src/kubernetes-ingress-controller/get-started/key-authentication.md
+app/kubernetes-ingress-controller/deployment-topologies/sidecar.md:
+  - app/_src/kubernetes-ingress-controller/production/deployment-topologies/sidecar.md
+app/kubernetes-ingress-controller/deployment-topologies/db-backed.md:
+  - app/_src/kubernetes-ingress-controller/production/deployment-topologies/db-backed.md
+app/kubernetes-ingress-controller/deployment-topologies/gateway-discovery.md:
+  - app/_src/kubernetes-ingress-controller/production/deployment-topologies/gateway-discovery.md
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
@@ -668,6 +682,12 @@ app/_includes/plugins/request-response-transformer/templates.md:
   - app/_hub/kong-inc/request-transformer-advanced/how-to/_templates.md
 app/_kong_plugins/aws-request-signing/index.md:
   - /app/_hub/TheLEGOGroup/aws-request-signing/overview/_index.md
+app/gateway/plugins/openwhisk.md:
+  - app/_hub/kong-inc/openwhisk/overview/_index.md
+app/_kong_plugins/appsentinels/index.md:
+  - /app/_hub/appsentinels/appsentinels/overview/_index.md
+app/_kong_plugins/amberflo/index.md:
+  - /app/_hub/amberflo/kong-plugin-amberflo/overview/_index.md
 
 # Konnect
 

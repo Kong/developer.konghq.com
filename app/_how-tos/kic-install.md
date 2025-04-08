@@ -6,6 +6,10 @@ permalink: /kubernetes-ingress-controller/install/
 breadcrumbs:
   - /kubernetes-ingress-controller/
 
+series:
+  id: kic-get-started
+  position: 1
+
 related_resources:
   - text: All KIC documentation
     url: /index/kubernetes-ingress-controller/

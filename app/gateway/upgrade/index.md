@@ -219,7 +219,7 @@ Until the upgrade is completed:
   * Don't write to the database via the [Admin API](/admin-api/).
   * Don't operate on the database directly.
   * Don't update configuration through [Kong Manager](/gateway/kong-manager/), 
-  [decK](/deck/), or the [kong config CLI](/gateway/cli/#kong-config).
+  [decK](/deck/), or the [kong config CLI](/gateway/cli/reference/#kong-config).
 * Review the compatibility between the new version Y and your existing platform. 
 Factors may include, but are not limited to:
   * [OS version](/gateway/version-support-policy/#supported-versions)
