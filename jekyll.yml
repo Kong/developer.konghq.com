@@ -73,12 +73,13 @@ reference_metadata:
       - insomnia
     tools:
       - inso-cli
-  pdk:
-    products:
-      - gateway
-    works_on:
-      - on-prem
-      - konnect
+  gateway:
+    pdk:
+      products:
+        - gateway
+      works_on:
+        - on-prem
+        - konnect
 
 insomnia_run: https://insomnia.rest/run/
 
