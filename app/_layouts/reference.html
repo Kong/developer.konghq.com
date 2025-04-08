@@ -2,6 +2,14 @@
 layout: with_aside
 ---
 
+{% if page.auto_generated %}
+  {% unless page.canonical? or page.latest? %}
+    <blockquote class="warning block">
+    You are browsing documentation for an older version. See the <a href="{{page.canonical_url}}">latest documentation here</a>.
+    </blockquote>
+  {% endunless %}
+{% endif %}
+
 {{ content }}
 
 {% if page.faqs %}
