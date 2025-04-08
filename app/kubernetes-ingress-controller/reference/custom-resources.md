@@ -344,7 +344,8 @@ KongLicense stores a Kong enterprise license to apply to managed Kong gateway in
 
 KongVault is the schema for kongvaults API which defines a custom Kong vault.
 A Kong vault is a storage to store sensitive data, where the values can be referenced in configuration of plugins.
-See: https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/
+
+[Learn more about Secrets Management with {{ site.base_gateway }}](/gateway/secrets-management/)
 
 {% include k8s/crd-ref/kong_vault_description.md kong_version=page.kong_version %}
 
@@ -408,7 +409,7 @@ KongVaultSpec defines specification of a custom Kong vault.
 
 | Field                                                                                                                | Description                                                                                                                                                                                             |
 | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `backend` _string_                                                                                                   | Backend is the type of the backend storing the secrets in the vault. The supported backends of Kong is listed here: https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/backends/ |
+| `backend` _string_                                                                                                   | Backend is the type of the backend storing the secrets in the vault. The supported backends of Kong is [listed here](/gateway/secrets-management/) |
 | `prefix` _string_                                                                                                    | Prefix is the prefix of vault URI for referencing values in the vault. It is immutable after created.                                                                                                   |
 | `description` _string_                                                                                               | Description is the additional information about the vault.                                                                                                                                              |
 | `config` _[JSON](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#json-v1-apiextensions-k8s-io)_ | Config is the configuration of the vault. Varies for different backends.                                                                                                                                |

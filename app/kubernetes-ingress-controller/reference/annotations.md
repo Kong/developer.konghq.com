@@ -254,7 +254,7 @@ Please note the quotes (`"`) around the integer value.
 
 q.com/regex-priority
 
-Sets the `regex_priority` setting to this value on the Kong route associated with the Ingress resource. This controls the [matching evaluation order](/gateway/latest/reference/proxy/#evaluation-order) for regex-based routes. It accepts any integer value. Routes are evaluated in order of highest priority to lowest.
+Sets the `regex_priority` setting to this value on the Kong route associated with the Ingress resource. This controls the [matching evaluation order](/gateway/routing/traditional/#regex-evaluation-order) for regex-based routes. It accepts any integer value. Routes are evaluated in order of highest priority to lowest.
 
 Sample usage:
 
@@ -282,7 +282,7 @@ konghq.com/methods: "GET,POST"
 
 ### konghq.com/snis
 
-Sets the `snis` match criteria on the Kong route associated with this Ingress. When using route-attached plugins that execute during the certificate phase (for example, [Mutual TLS Authentication](/hub/kong-inc/mtls-auth/)), the `snis` annotation allows route matching based on the server name indication information sent in a client's TLS handshake.
+Sets the `snis` match criteria on the Kong route associated with this Ingress. When using route-attached plugins that execute during the certificate phase (for example, [Mutual TLS Authentication](/plugins/mtls-auth/)), the `snis` annotation allows route matching based on the server name indication information sent in a client's TLS handshake.
 
 Sample usage:
 
@@ -366,7 +366,7 @@ Results in two routes:
 
 ### konghq.com/path-handling
 
-Sets the [path handling algorithm](/gateway/latest/admin-api/#path-handling-algorithms), which controls how {{site.base_gateway}} combines the service and route `path` fields (the Service's [path annotation](#konghq-com-path) value and Ingress rule's `path` field) are combined into the path sent upstream.
+Sets the [path handling algorithm](/gateway/entities/route/#path-handling), which controls how {{site.base_gateway}} combines the service and route `path` fields (the Service's [path annotation](#konghq-com-path) value and Ingress rule's `path` field) are combined into the path sent upstream.
 
 ### konghq.com/headers.\*
 
@@ -383,7 +383,7 @@ Sets the separator for the `konghq.com/headers.*` annotation to be something oth
 
 ### konghq.com/rewrite
 
-Rewrite a URL path. This annotation is a shorthand method of applying a [request-transformer plugin](/hub/kong-inc/request-transformer/) with [a `replace.uri` action](/hub/kong-inc/request-transformer/configuration/#config-replace). It cannot be combined with a `konghq.com/plugins` annotation that applies a request-transformer plugin as such.
+Rewrite a URL path. This annotation is a shorthand method of applying a [request-transformer plugin](/plugins/request-transformer/) with [a `replace.uri` action](/plugins/request-transformer/reference/#schema--config-replace). It cannot be combined with a `konghq.com/plugins` annotation that applies a request-transformer plugin as such.
 
 The annotation can rebuild URLs using segments captured from a regular expression path. A `$n` in the annotation path represents the nth capture group in the Ingress rule path, starting from 1. For example, combining an Ingress rule with path `/~/v(.*)/(.*)` and a `konghq.com/rewrite: /api/$1/foo/svc_$2` would send an upstream request to `/api/2/foo/svc_pricing` upstream when an inbound request is made to `/v2/pricing` (the `/~` prefix instructs Kong to treat the path as a regular expression, and isn't used in the actual request).
 
@@ -430,7 +430,7 @@ These annotations are supported on Service resources.
 
 ### konghq.com/protocol
 
-This annotation can be set on a Kubernetes Service resource and indicates the protocol that should be used by Kong to communicate with the service. In other words, the protocol is used for communication between a [Kong Service](/gateway/api/admin-ee/latest/#/operations/list-service) and a Kubernetes Service, internally in the Kubernetes cluster.
+This annotation can be set on a Kubernetes Service resource and indicates the protocol that should be used by Kong to communicate with the service. In other words, the protocol is used for communication between a [Kong Service](/gateway/entities/service/) and a Kubernetes Service, internally in the Kubernetes cluster.
 
 Accepted values are:
 
@@ -453,7 +453,7 @@ This annotation sets the certificate and key-pair Kong should use to authenticat
 
 The value of this annotation should be the name of the Kubernetes TLS Secret resource which contains the TLS cert and key pair.
 
-Under the hood, the controller creates a Certificate in Kong and then sets the [`service.client_certificate`](/gateway/api/admin-ee/latest/#/operations/list-service) for the service.
+Under the hood, the controller creates a Certificate in Kong and then sets the [`service.client_certificate`](/api/konnect/control-planes-config/v2/#/operations/create-service) for the service.
 
 ### konghq.com/host-header
 
