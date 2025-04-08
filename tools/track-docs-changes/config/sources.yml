@@ -238,6 +238,12 @@ app/kubernetes-ingress-controller/ingress.md:
   - app/_src/kubernetes-ingress-controller/concepts/ingress.md
 app/kubernetes-ingress-controller/version-compatibility.md:
   - app/_src/kubernetes-ingress-controller/reference/version-compatibility.md
+app/kubernetes-ingress-controller/deployment-topologies/sidecar.md:
+  - app/_src/kubernetes-ingress-controller/production/deployment-topologies/sidecar.md
+app/kubernetes-ingress-controller/deployment-topologies/db-backed.md:
+  - app/_src/kubernetes-ingress-controller/production/deployment-topologies/db-backed.md
+app/kubernetes-ingress-controller/deployment-topologies/gateway-discovery.md:
+  - app/_src/kubernetes-ingress-controller/production/deployment-topologies/gateway-discovery.md
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
