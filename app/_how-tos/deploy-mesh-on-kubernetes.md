@@ -1,10 +1,10 @@
 ---
 title: Deploy Mesh on Kubernetes
-description: Learn how to install Mesh on an existing Kubernetes cluster, and deploy the Kong Mesh demo application.
+description: Learn how to install Mesh on an existing Kubernetes cluster, and deploy the {{site.mesh_product_name}} demo application.
 content_type: how_to
 
 related_resources:
-  - text: Kong Mesh
+  - text: {{site.mesh_product_name}}
     url: /mesh/overview/
 
 products:
@@ -15,7 +15,7 @@ works_on:
 
 tldr:
   q: How do I install Mesh on Kubernetes
-  a: Install Kong Mesh to your Kubernetes cluster using Helm, and deploy the Mesh demo application.
+  a: Install {{site.mesh_product_name}} to your Kubernetes cluster using Helm, and deploy the Mesh demo application.
 
 prereqs:
   skip_product: true 
@@ -39,9 +39,9 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Install Kong Mesh
+## 1. Install {{site.mesh_product_name}}
 
-Install Kong Mesh control plane with Helm by executing:
+Install {{site.mesh_product_name}} control plane with Helm by executing:
 
 ```sh
 helm repo add kong-mesh https://kong.github.io/kong-mesh-charts
@@ -51,7 +51,7 @@ helm install --create-namespace --namespace kong-mesh-system kong-mesh kong-mesh
 
 ## 2. Deploy the demo application
 
-To start learning how Kong Mesh works, you can use our simple and secure a simple demo application that consists of two services:
+To start learning how {{site.mesh_product_name}} works, you can use our simple and secure a simple demo application that consists of two services:
 
 `demo-app`: a web application that lets you increment a numeric counter. It listens on port `5000`
 `redis`: data store for the counter
@@ -73,4 +73,4 @@ kubectl port-forward svc/demo-app -n kuma-demo 5000:5000
 
 ### Validate
 
-The demo app consists of a web application called Kuma Counter. This application allows us to increment a counter. You can validate the installation was succesful by visiting `http://127.0.0.1:5000/` and using the web application. When you press **Increment**, you will see the connection being managed from the terminal.
+The demo app consists of a web application called Kuma Counter. This application allows us to increment a counter. You can validate the installation was successful by visiting `http://127.0.0.1:5000/` and using the web application. When you press **Increment**, you will see the connection being managed from the terminal.
