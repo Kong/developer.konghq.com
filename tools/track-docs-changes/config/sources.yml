@@ -236,6 +236,15 @@ app/kubernetes-ingress-controller/ingress.md:
   - app/_src/kubernetes-ingress-controller/concepts/ingress.md
 app/kubernetes-ingress-controller/version-compatibility.md:
   - app/_src/kubernetes-ingress-controller/reference/version-compatibility.md
+app/kubernetes-ingress-controller/custom-resources.md:
+  - app/_src/kubernetes-ingress-controller/concepts/custom-resources.md
+app/kubernetes-ingress-controller/reference/annotations.md:
+  - app/_src/kubernetes-ingress-controller/concepts/annotations.md
+  - app/_src/kubernetes-ingress-controller/reference/annotations.md
+app/kubernetes-ingress-controller/reference/custom-resources.md:
+  - app/_src/kubernetes-ingress-controller/reference/custom-resources-3.4.x.md
+app/kubernetes-ingress-controller/admission-webhook.md:
+  - app/_src/kubernetes-ingress-controller/concepts/admission-webhook.md
 app/_how-tos/kic-install.md:
   - app/_src/kubernetes-ingress-controller/get-started/index.md
 app/_how-tos/kic-get-started-services-routes.md:
