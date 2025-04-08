@@ -18,7 +18,7 @@ module Jekyll
 
       products = @page.fetch('products', [])
 
-      unless products.include?('gateway') || products.include?('kic')
+      unless products.include?('gateway') || products.include?('kic') || products.include?('ai-gateway')
         raise ArgumentError,
               "Unsupported product for {% validation #{@name} %}"
       end
@@ -26,10 +26,19 @@ module Jekyll
       config = YAML.load(contents)
       drop = Drops::Validations::Base.make_for(yaml: config, name: @name)
 
-      context.stack do
+      output = context.stack do
         context['config'] = drop
         Liquid::Template.parse(File.read(drop.template_file)).render(context)
       end
+
+      if config['indent']
+        # If the config has an indent key, we need to indent the output
+        # by that many spaces.
+        indent = ' ' * config['indent'].to_i
+        output = output.lines.map { |line| "#{indent}#{line}" }.join
+      end
+
+      output
     rescue Psych::SyntaxError => e
       message = <<~STRING
         On `#{@page['path']}`, the following {% validation %} block contains a malformed yaml:

@@ -1,0 +1,12 @@
+title: All Analytics Documentation
+sections:
+  - title: Uncategorized
+    items:
+      - path: /analytics/
+      - path: /analytics/**/*
+    auto_exclude: true
+  - title: How-tos
+    items:
+      - type: how-to
+        products:
+          - analytics

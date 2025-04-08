@@ -1,0 +1,28 @@
+description: 'Enable the Amberflo.io metering plugin.'
+
+title: 'Enable the Amberflo plugin'
+
+weight: 900
+
+requirements:
+  - You have an Amberflo.io [API key](https://docs.amberflo.io/page/how-to-access-your-api-key)
+  - The Amberflo metering plugin is [installed](/plugins/amberflo/#install-the-amberflo-plugin)
+
+config:
+  apiKey: ${api-key}
+  meterApiName: kong-api-calls
+  customerHeader: x-consumer-username
+  methodDimension: method
+  hostDimension: host
+  routeDimension: route
+  serviceDimension: service
+
+variables:
+  api-key:
+    value: $API_KEY
+    description: Your Amberflo API key
+
+tools:
+  - deck
+  - admin-api
+  - kic

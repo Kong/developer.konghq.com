@@ -16,9 +16,13 @@ module Jekyll
       module Presenters
         module KIC
           class Base < Presenters::Base
+            attr_reader :other_plugins, :foreign_key_names, :foreign_keys, :full_resource
+
             def initialize(example_drop:)
               super(example_drop:)
               @foreign_keys = []
+              @foreign_key_names = {}
+              @other_plugins = ''
             end
 
             def data
@@ -41,15 +45,14 @@ module Jekyll
               @k8s_entity_type ||= entity_type.split('_').map(&:capitalize).join
             end
 
-            attr_reader :foreign_keys
-
             def remove_foreign_keys(d)
               FOREIGN_KEYS.each do |key|
                 next unless d.key?(key)
 
-                d.delete(key)
                 camel_case_key = key.split('_').map(&:capitalize).join
+                @foreign_key_names[camel_case_key] = d[key]
                 @foreign_keys << camel_case_key if key != 'global'
+                d.delete(key)
               end
               @foreign_keys = @foreign_keys.uniq.compact
             end
@@ -57,7 +60,7 @@ module Jekyll
             def targets
               keys = foreign_keys.map do |key|
                 next '`service`' if key == 'Service'
-                next '`ingress`' if key == 'Route'
+                next '`httproute` or `ingress`' if key == 'Route'
 
                 "`Kong#{key}`"
               end
@@ -78,27 +81,46 @@ module Jekyll
               # Remove foreign keys
               remove_foreign_keys(d)
 
+              if d.key?('other_plugins')
+                @other_plugins = d['other_plugins']
+                @other_plugins += ',' if @other_plugins
+                d.delete('other_plugins')
+              end
+
               resource_type = k8s_entity_type
               resource_type = 'ClusterPlugin' if resource_type == 'Plugin' && foreign_keys.size == 0
 
-              d = {
+              r = {
                 'apiVersion' => 'configuration.konghq.com/v1',
                 'kind' => "Kong#{resource_type}",
                 'metadata' => {
-                  'name' => d['name'],
+                  'name' => d['name'] || d['username'],
+                  'namespace' => 'kong',
                   'annotations' => {
                     'kubernetes.io/ingress.class' => 'kong'
                   }
                 }
-              }.merge(d)
+              }
 
-              d['metadata']['annotations']['konghq.com/tags'] = tags.join(', ') if tags
+              if %w[Plugin ClusterPlugin].include?(resource_type)
+                d['plugin'] = d['name'] if d['name'] && !d['plugin']
+                d.delete('name')
+              end
 
-              d.to_yaml
+              r = r.merge(d)
+
+              r['metadata']['annotations']['konghq.com/tags'] = tags.join(', ') if tags
+              if resource_type == 'ClusterPlugin'
+                r['metadata']['labels'] = r['metadata']['labels'] || {}
+                r['metadata']['labels']['global'] = 'true'
+              end
+
+              @full_resource = r
+              @full_resource.to_yaml
             end
 
             def to_s
-              render.strip
+              render.split("\n").slice(1..-1).join("\n").strip
             end
           end
 

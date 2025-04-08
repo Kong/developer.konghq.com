@@ -22,3 +22,22 @@ document.addEventListener("DOMContentLoaded", function () {
   new EntityExample();
   new Tabs();
 });
+
+mermaid.initialize({
+  startOnLoad: true,
+  theme: "base",
+  themeVariables: {
+    primaryColor: "#fff",
+    primaryBorderColor: "#4a86e8",
+    primaryTextColor: "#495c64",
+    secondaryColor: "#fff",
+    secondaryTextColor: "#5096f2",
+    tertiaryBorderColor: "#AAB4BB",
+    edgeLabelBackground: "#fff",
+    fontFamily: '"Inter", system-ui, sans-serif',
+    fontSize: "15px",
+    lineColor: "#99b0c0",
+    activationBorderColor: "#c2d4e0",
+    sequenceNumberColor: "#fff",
+  },
+});

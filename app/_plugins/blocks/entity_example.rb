@@ -24,10 +24,18 @@ module Jekyll
 
       template = File.read(entity_example_drop.template)
 
-      context.stack do
+      output = context.stack do
         context['entity_example'] = entity_example_drop
         Liquid::Template.parse(template).render(context)
       end
+
+      if example['indent']
+        # Indent the output if specified in the example
+        indent = ' ' * example['indent'].to_i
+        output = output.split("\n").map { |line| "#{indent}#{line}" }.join("\n")
+      end
+
+      output
     rescue Psych::SyntaxError => e
       message = <<~STRING
         On `#{@page['path']}`, the following {% entity_example %} block contains a malformed yaml:

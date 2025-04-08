@@ -3,7 +3,7 @@ metadata:
   content_type: landing_page
   description: This page is an introduction to the AI providers available in {{site.base_gateway}}.
   products:
-    - gateway
+    - ai-gateway
   works_on:
     - on-prem
     - konnect

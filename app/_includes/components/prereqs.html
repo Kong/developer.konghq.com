@@ -4,8 +4,20 @@
 {% endif %}
 <div class="flex flex-col accordion prerequisites" {{ default_accordion }}data-multiple="false" data-test-id="prereqs">
 
-    {% if page.works_on contains 'konnect' %}
-      {% unless page.products contains 'gateway' %}
+  {% assign inline_before = prereqs.inline | where: "position", "before" %}
+  {% for prereq in inline_before %}
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+{% include prereqs/inline.md prereq=prereq %}
+  </div>
+  {% endfor %}
+
+    {% assign shouldRenderWorksOn = true %}
+    {% if page.series and page.series.position > 1 %}
+    {% assign shouldRenderWorksOn = false %}
+    {% endif %}
+
+    {% if page.works_on contains 'konnect' and shouldRenderWorksOn %}
+      {% unless page.products contains 'gateway' or page.products contains 'ai-gateway' %}
         <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
           {% include prereqs/products/konnect-auth-only.md tier=include.tier %}
         </div>
@@ -19,29 +31,21 @@
     {% endif %}
 
     {% unless prereqs.skip_product == true %}
-  
-    {% if page.products %}
-      {% assign inline_before = prereqs.inline | where: "position", "before" %}
-      {% for prereq in inline_before %}
-      <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-    {% include prereqs/inline.md prereq=prereq %}
-      </div>
-      {% endfor %}
-
-      {% if page.products contains 'gateway' %}
+    {% if page.products and shouldRenderWorksOn %}
+      {% if page.products contains 'gateway' or page.products contains 'ai-gateway' %}
         {% if page.works_on contains 'konnect' %}
-        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
           {% include prereqs/products/konnect.md tier=include.tier %}
         </div>
         {% endif %}
-        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" }'>
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" }'>
           {% assign variables=prereqs['gateway'] %}
           {% include prereqs/products/gateway.md rbac=page.rbac env_variables=variables %}
         </div>
       {% endif %}
 
       {% for product in prereqs.products %}
-        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
   {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
   {% include {{ product_include }} tier=include.tier prereqs=prereqs %}
         </div>
@@ -54,14 +58,14 @@
   {% assign tool_include = 'prereqs/tools/' | append: tool | append: '.md' %}
   {% capture tool_include_exists %}{% include_exists tool_include %}{% endcapture %}
   {% if tool_include_exists == 'true' %}
-    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
+    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
 {% include {{ tool_include }} %}
     </div>
   {% endif %}
   {% endfor %}
 
   {% if prereqs.entities? %}
-    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0">
+    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
       {% assign prereq_path = "prereqs/entities/" | append: page.products[0] | append: ".md" %}
 {% include {{ prereq_path }} data=prereqs.data %}
     </div>

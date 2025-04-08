@@ -3,20 +3,41 @@
 {% else %}
 
 ```yaml
+echo "
 {{ include.presenter }}
+" | kubectl apply -f -
 ```
 {% endif %}
 
 {% if include.presenter.entity_type == "plugin" and include.presenter.foreign_keys.size > 0 %}
 Next, apply the `KongPlugin` resource by annotating the {{ include.presenter.targets }}:
 
+
+{% if include.presenter.foreign_keys[0] != "Route" %}
 ```bash
 {% for key in include.presenter.foreign_keys -%}
-kubectl annotate {% if key == "Service" %}service{% elsif key == "Route" %}ingress{% else %}Kong{{ key }}{% endif %} {{ key | upcase}}_NAME konghq.com/plugins={{ include.presenter.data.name }}
+{% capture target_name %}{{ key | upcase }}_NAME{% endcapture -%}
+{% if include.presenter.foreign_key_names[key] %}{% assign target_name = include.presenter.foreign_key_names[key] %}{% endif -%}
+kubectl annotate -n kong {% if key == "Service" %}service{% else %}Kong{{ key }}{% endif %} {{ target_name }} konghq.com/plugins={{ include.presenter.other_plugins }}{{ include.presenter.full_resource.metadata.name }}{% if include.presenter.other_plugins %} --overwrite{% endif %}
 {% endfor -%}
 ```
+{% else %}
+{% navtabs api %}
+{% navtab "Gateway API" %}
 
-{:.note}
-> Note: The `KongPlugin` resource only needs to be defined once and can be applied to any service, consumer, consumer group, or route in the namespace. If you want the plugin to be available cluster-wide, create the resource as a `KongClusterPlugin` instead of `KongPlugin`.
+{:.info}
+> The Gateway API CRDs must be installed _before_ {{ site.kic_product_name }} to use an `HTTPRoute`
+
+```bash
+kubectl annotate -n kong httproute {{ include.presenter.foreign_key_names['Route'] }} konghq.com/plugins={{ include.presenter.other_plugins }}{{ include.presenter.full_resource.metadata.name }}
+```
+{% endnavtab %}
+{% navtab "Ingress" %}
+```bash
+kubectl annotate -n kong ingress {{ include.presenter.foreign_key_names['Route'] }} konghq.com/plugins={{ include.presenter.other_plugins }}{{ include.presenter.full_resource.metadata.name }}
+```
+{% endnavtab %}
+{% endnavtabs %}
+{% endif %}
 
 {% endif %}

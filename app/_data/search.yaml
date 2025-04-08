@@ -5,7 +5,7 @@ sources:
 
   docs:
     label: Docs
-    filters: 'NOT content_type:how_to AND NOT content_type:plugin AND NOT content_type:plugin_example'
+    filters: '(NOT content_type:how_to AND NOT content_type:plugin AND NOT content_type:plugin_example)'
 
   how_tos:
     label: How-to Guides
@@ -13,4 +13,4 @@ sources:
 
   plugins:
     label: Plugins
-    filters: 'content_type:plugin OR content_type:plugin_example'
+    filters: '(content_type:plugin OR content_type:plugin_example)'

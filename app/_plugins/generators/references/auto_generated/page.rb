@@ -49,7 +49,7 @@ module Jekyll
         private
 
         def metadata
-          @metadata ||= site.config.dig('reference_metadata', key)
+          @metadata ||= site.config.dig('reference_metadata', *key)
         end
 
         def releases
@@ -71,7 +71,7 @@ module Jekyll
         end
 
         def key
-          @key ||= @doc.url.split('/')[1]
+          @key ||= @doc.url.split('/').reject(&:empty?).take_while { |s| s != 'reference' }
         end
 
         def release_info

@@ -1,0 +1,22 @@
+title: All Konnect platform Documentation
+sections:
+  - title: Uncategorized
+    items:
+      - path: /konnect-platform/
+      - path: /konnect-platform/**/*
+    auto_exclude: true
+  - title: Org Management
+    items:
+      - path: /konnect-platform/org-management
+      - path: /konnect-platform/org-management/**/*
+    auto_exclude: true
+  - title: Auditing
+    items:
+      - path: /konnect-platform/auditing/
+      - path: /konnect-platform/auditing/**/*
+    auto_exclude: true
+  - title: How-tos
+    items:
+      - type: how-to
+        products:
+          - analytics

@@ -4,7 +4,7 @@ content_type: reference
 layout: reference
 
 products:
-  - gateway
+  - ai-gateway
 
 tags:
   - ai-gateway

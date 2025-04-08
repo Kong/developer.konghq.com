@@ -1,0 +1,12 @@
+title: All Mesh Documentation
+sections:
+  - title: Uncategorized
+    items:
+      - path: /mesh/
+      - path: /mesh/**/*
+    auto_exclude: true
+  - title: How-tos
+    items:
+      - type: how-to
+        products:
+          - mesh

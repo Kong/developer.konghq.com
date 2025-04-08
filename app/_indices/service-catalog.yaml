@@ -1,0 +1,12 @@
+title: All Service Catalog Documentation
+sections:
+  - title: Uncategorized
+    items:
+      - path: /service-catalog/
+      - path: /service-catalog/**/*
+    auto_exclude: true
+  - title: How-tos
+    items:
+      - type: how-to
+        products:
+          - service-catalog

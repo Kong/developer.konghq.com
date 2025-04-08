@@ -41,6 +41,7 @@
                   class="flex items-center w-fit text-secondary pr-1 self-stretch rounded-r-3xl hover:bg-brand-saturated/40"
                   title="Remove this filter"
                   type="button"
+                  :value="tag.value"
                   @click="onRemoveFilter"
                 >
                 <svg width="8" height="8" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -211,13 +212,29 @@ export default {
     const initialTags = [];
     const searchFilters = window.searchFilters;
     const productMeta = document.querySelector('meta[name="algolia:products"]');
+    const toolMeta = document.querySelector('meta[name="algolia:tools"]');
+
     if (productMeta !== null) {
-      const product = productMeta.getAttribute('content').trim().split(',')[0];
-      const productFilter = searchFilters.products.find((f) => f.value === product);
-      if (productFilter) {
-        initialTags.push({ label: productFilter.label, value: productFilter.value, facet: 'products' });
+      const products = productMeta.getAttribute('content').trim().split(',');
+      const productsFilter = searchFilters.products.filter((f) => products.includes(f.value));
+      if (productsFilter) {
+        productsFilter.forEach((productFilter) => {
+          initialTags.push({ label: productFilter.label, value: productFilter.value, facet: 'products' });
+        })
+      }
+    } else  {
+      if (toolMeta !== null) {
+        const tools = toolMeta.getAttribute('content').trim().split(',');
+        const toolsFilter = searchFilters.tools.filter((f) => tools.includes(f.value));
+        if (toolsFilter && toolsFilter.length === 1) {
+          const tool = toolsFilter[0];
+          initialTags.push({ label: tool.label, value: tool.value, facet: 'tools' });
+        }
       }
     }
+
+
+
     const originalTags = initialTags.slice();
 
     const tagsPlugin = createTagsPlugin({
@@ -238,16 +255,30 @@ export default {
           }
         },
         getSources({ query, state }) {
-          const applyProductFilter = (existingQuery) => {
+          function formatGroupedFilters(grouped) {
+            return Object.entries(grouped)
+              .map(([facet, items]) => items.map(item => `${facet}:${item.value}`).join(' OR '))
+              .join(' OR ');
+          }
+          const applyFilter = (existingQuery) => {
             let query = existingQuery;
+            const filtersByFacet = (items) => {
+              return items.reduce((acc, item) => {
+                (acc[item.facet] ||= []).push(item);
+                return acc;
+              }, {});
+            }
+
             if (state.context.tagsPlugin.tags) {
-              state.context.tagsPlugin.tags.forEach(tag => {
+              const filters = formatGroupedFilters(filtersByFacet(state.context.tagsPlugin.tags));
+
+              if (filters.length > 0) {
                 if (query === '') {
-                  query += `products:${tag.value}`;
+                  query += `(${filters})`;
                 } else {
-                  query += ` AND products:${tag.value}`;
+                  query += ` AND ${filters}`;
                 }
-              });
+              }
             }
             return query;
           }
@@ -263,7 +294,7 @@ export default {
                     params: {
                       query,
                       hitsPerPage,
-                      filters: applyProductFilter(filters),
+                      filters: applyFilter(filters),
                     },
                   },
                 ],
@@ -346,8 +377,11 @@ export default {
       }
     },
     onRemoveFilter(event) {
+      const button = event.target.closest('button')
       event.stopPropagation();
-      this.tagsPlugin.data.setTags([]);
+      this.tagsPlugin.data.setTags(
+        this.state.context.tagsPlugin.tags.filter((t) => t.value !== button.value)
+      );
     },
     onClearQuery(event) {
       event.preventDefault();
