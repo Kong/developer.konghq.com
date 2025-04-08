@@ -1,0 +1,40 @@
+description: 'Enable the AWS Request Signing plugin.'
+
+title: 'Enable AWS Request Signing'
+
+weight: 900
+
+requirements:
+  - "The AWS Request Signing plugin is [installed](/plugins/aws-request-signing/#install-the-aws-request-signing-plugin)."
+  - "The plugin needs to request temporary credentials, so [add your OAuth token issuer to the **Identity Providers** in your AWS account](https://github.com/LEGO/kong-aws-request-signing#aws-setup-required)."
+
+variables:
+  assume-role-arn:
+    value: $ASSUME_ROLE_ARN
+    description: |
+      The ARN of the AWS IAM Role to assume before making the request to the AWS service. For example, `"arn:aws:iam::123456789012:role/example-role"`.
+  assume-role-name:
+    value: $ASSUME_ROLE_NAME
+    description: |
+      The name of the AWS IAM Role to assume before making the request to the AWS service. For example, `example-role`.
+  host:
+    value: $TARGET_HOST
+    description: An optional hostname or IP to use instead of the one specified in the AWS service's endpoint.
+  region:
+    value: $AWS_REGION
+    description: The AWS region in which AWS service is running. For example, `us-east-1`.
+
+config:
+  aws_assume_role_arn: ${assume-role-arn}
+  aws_assume_role_name: ${assume-role-name}
+  aws_region: ${region}
+  aws_service: lambda
+  override_target_host: ${host}
+  override_target_port: 443
+  override_target_protocol: https
+
+tools:
+  - deck
+  - admin-api
+  - kic
+  - terraform
