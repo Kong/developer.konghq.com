@@ -68,6 +68,11 @@ defaults:
       permalink: "/:path/"
 
 reference_metadata:
+  inso-cli:
+    products:
+      - insomnia
+    tools:
+      - inso-cli
   pdk:
     products:
       - gateway
