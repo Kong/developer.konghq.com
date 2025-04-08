@@ -30,7 +30,7 @@ related_resources:
   - text: "Backing up and restoring {{site.base_gateway}}"
     url: /gateway/upgrade/backup-and-restore/
   - text: "{{site.base_gateway}} CLI reference"
-    url: /gateway/cli/
+    url: /gateway/cli/reference/
 ---
 
 The in-place upgrade strategy is a {{site.base_gateway}} upgrade option used primarily for traditional mode deployments and for control planes in hybrid mode. 
