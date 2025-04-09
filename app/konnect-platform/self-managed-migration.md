@@ -129,7 +129,7 @@ design during the migration.
 
 {{site.base_gateway}} Workspaces provide a way to share runtime infrastructure across isolated configurations.
 With {{site.konnect_short_name}}, this is achieved using 
-[Control Plane groups](/gateway/entities/control-plane-group/). Control Planes can be added to
+[Control Plane groups](/gateway-manager/control-plane-groups/). Control Planes can be added to
 and removed from Control Plane groups, and you can set them up to mirror your existing multi-tenant Workspace configuration. 
 
 With Control Plane groups set up, you can connect Data Plane instances to each group, creating
@@ -137,7 +137,7 @@ a shared Data Plane infrastructure among the constituent Control Planes.
 
 ### Control Plane management 
 
-You can manage Control Planes and Control Plane groups in {{site.konnect_short_name}} by using the [Konnect UI](/konnect-platform/gateway-manager/), the
+You can manage Control Planes and Control Plane groups in {{site.konnect_short_name}} by using the [Konnect UI](/gateway-manager/), the
 [Konnect Control Planes API](/api/konnect/control-planes-config/v2/), or the 
 [{{site.konnect_short_name}} Terraform Provider](https://registry.terraform.io/providers/Kong/konnect/latest).
 
