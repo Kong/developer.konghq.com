@@ -7,18 +7,15 @@ products:
     - mesh
 
 tags:
-  - mesh
-  - access-audit
-
-works_on:
-  - on-prem
+  - mesh-policy
+  - certificates
 
 related_resources:
   - text: "Mesh"
     url: /mesh/overview/
 ---
 
-## Supported mTLS Backends
+## Supported mTLS backends
 
 The default mTLS policy in {{site.mesh_product_name}} supports the following Certificate Authority (CA) backends:
 
@@ -28,7 +25,7 @@ The default mTLS policy in {{site.mesh_product_name}} supports the following Cer
 * `acmpca`: Uses [Amazon Certificate Manager Private CA](https://docs.aws.amazon.com/privateca/latest/userguide/PcaWelcome.html) to generate Data Plane certificates.
 * `certmanager`: Uses the Kubernetes [cert-manager](https://cert-manager.io) certificate controller.
 
-## How ACM Private CA Works
+## How ACM Private CA works
 
 In `acmpca` mTLS mode, {{site.mesh_product_name}} uses Amazon Certificate Manager to automatically generate Data Plane certificates. The private key of the CA is secured by AWS and never exposed.
 
@@ -36,7 +33,7 @@ You configure {{site.mesh_product_name}} to use the ACM resource and optionally 
 
 Certificates are issued and rotated by the Zone Control Plane for each Data Plane proxy.
 
-## Configuration Overview
+## Configuration
 
 To configure ACM Private CA in {{site.mesh_product_name}}:
 
@@ -44,7 +41,6 @@ To configure ACM Private CA in {{site.mesh_product_name}}:
 * Record the ARN and Root Certificate Chain of the CA.
 * Apply a `Mesh` resource with an `acmpca` mTLS backend using either Kubernetes or Universal mode.
 
-## Mesh Configuration
 
 The `acmpca` backend can authenticate via:
 
@@ -55,7 +51,6 @@ The `acmpca` backend can authenticate via:
 {% navtabs "mesh config"%}
 {% navtab "Kubernetes" %}
 
-```yaml
 ```yaml
 apiVersion: kuma.io/v1alpha1
 kind: Mesh
@@ -114,6 +109,6 @@ mtls:
 These configurations can be applied with `kumactl apply -f [..]`.
 
 
-## multi-zone and ACM Private CA
+## Multi-zone and ACM Private CA
 
 In a multi-zone environment, the global Control Plane provides the `Mesh` to the zone Control Planes. However, you must make sure that each zone Control Plane can communicate with ACM Private CA. This is because certificates for Data Plane proxies are requested from ACM Private CA by the zone Control Plane, not the global Control Plane.
