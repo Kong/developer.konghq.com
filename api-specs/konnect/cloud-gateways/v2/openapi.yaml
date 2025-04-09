@@ -1617,6 +1617,7 @@ components:
         - name
         - transit_gateway_attachment_config
         - id
+        - dns_config
         - state
         - entity_version
         - created_at

@@ -668,7 +668,6 @@ app/_kong_plugins/jwt/changelog.md:
   - app/_hub/kong-inc/jwt/_changelog.md
 app/_kong_plugins/jwt/index.md:
   - app/_hub/kong-inc/jwt/overview/_index.md
-
 app/_kong_plugins/udp-log/index.md:
   - app/_hub/kong-inc/udp-log/overview/_index.md
 app/_kong_plugins/udp-log/changelog.md:
@@ -689,6 +688,18 @@ app/_kong_plugins/route-transformer-advanced/index.md:
   - app/_hub/kong-inc/route-transformer-advanced/overview/_index.md
 app/_includes/plugins/request-response-transformer/templates.md:
   - app/_hub/kong-inc/request-transformer-advanced/how-to/_templates.md
+app/_kong_plugins/kafka-upstream/index.md:
+  - app/_hub/kong-inc/kafka-upstream/overview/_index.md
+app/_kong_plugins/kafka-upstream/changelog.md:
+  - app/_hub/kong-inc/kafka-upstream/_changelog.md
+app/_kong_plugins/kafka-upstream/examples/multiple-producer-topics.yaml:
+  - app/_hub/kong-inc/kafka-upstream/how-to/_multiple-topics-and-acl.md
+app/_kong_plugins/kafka-upstream/examples/unmodified-message.yaml:
+  - app/_hub/kong-inc/kafka-upstream/how-to/_custom-message-format.md
+app/_kong_plugins/kafka-upstream/examples/return-fixed-table.yaml:
+  - app/_hub/kong-inc/kafka-upstream/how-to/_custom-message-format.md
+app/_kong_plugins/kafka-upstream/examples/insert-and-redact.yaml:
+  - app/_hub/kong-inc/kafka-upstream/how-to/_custom-message-format.md
 app/_kong_plugins/aws-request-signing/index.md:
   - /app/_hub/TheLEGOGroup/aws-request-signing/overview/_index.md
 app/gateway/plugins/openwhisk.md:
@@ -1046,5 +1057,10 @@ app/deck/gateway/reset.md:
 app/_how-tos/deploy-mesh-on-kubernetes.md: 
   - /mesh/latest/quickstart/kubernetes-demo.md
 
+
 app/mesh/acm-private-ca-policy.md:
   - /app/_src/mesh/features/acmpca.md
+
+app/mesh/cert-manager.md:
+  - /app/_src/mesh/features/cert-manager.md
+
