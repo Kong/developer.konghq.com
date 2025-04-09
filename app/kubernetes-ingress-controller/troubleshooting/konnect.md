@@ -22,7 +22,7 @@ works_on:
 
 ---
 
-{{ site.kic_product_name }} needs to communicate with the {{ site.konnect_short_name }} cloud APIs to provide the [integration](/konnect/gateway-manager/kic).  If you encounter issues with KIC in {{ site.konnect_short_name }}, you should first inspect logs from {{ site.kic_product_name }} to identify the root cause.
+{{ site.kic_product_name }} needs to communicate with the {{ site.konnect_short_name }} cloud APIs to provide an integration with [Gateway Manager](/gateway-manager/).  If you encounter issues with KIC in {{ site.konnect_short_name }}, you should first inspect logs from {{ site.kic_product_name }} to identify the root cause.
 
 ## Prometheus Metrics
 

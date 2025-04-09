@@ -39,6 +39,9 @@ sections:
   - title: Customization
     items:
       - path: /kubernetes-ingress-controller/custom-plugin/
+  - title: Observability
+    items:
+      - path: /kubernetes-ingress-controller/observability/**/*
   - title: Troubleshooting
     items:
       - path: /kubernetes-ingress-controller/troubleshooting/failure-modes/
