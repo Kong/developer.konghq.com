@@ -1,5 +1,5 @@
 ---
-title: "Kubernetes cert-manager CA Policy"
+title: "Kubernetes cert-manager CA policy"
 description: "Use Kubernetes cert-manager as an mTLS backend for issuing Data Plane certificates in {{site.mesh_product_name}}"
 content_type: reference
 layout: reference
@@ -19,7 +19,7 @@ related_resources:
     url: /mesh/overview/
 ---
 
-## Supported mTLS Backends
+## Supported mTLS backends
 
 The default mTLS policy in {{site.mesh_product_name}} supports the following Certificate Authority (CA) backends:
 
@@ -29,23 +29,20 @@ The default mTLS policy in {{site.mesh_product_name}} supports the following Cer
 * `acmpca`: Uses [Amazon Certificate Manager Private CA](/mesh/{{page.release}}/features/acmpca/) to generate Data Plane certificates.
 * `certmanager`: Uses the Kubernetes [cert-manager](https://cert-manager.io) certificate controller.
 
-## How Kubernetes cert-manager Works
+## How Kubernetes cert-manager works
 
 In `certmanager` mTLS mode, {{site.mesh_product_name}} communicates with a locally installed cert-manager `Issuer` or `ClusterIssuer`, which issues and rotates Data Plane certificates. The CA private key is never exposed to {{site.mesh_product_name}}.
 
 You configure {{site.mesh_product_name}} to reference the `Issuer` using standard Kubernetes resources.
 The backend communicates with cert-manager within the Kubernetes cluster.
 
-
-## Configuration Overview
+## Configuration
 
 To configure cert-manager in {{site.mesh_product_name}}:
 
 * Install cert-manager and configure an `Issuer` or `ClusterIssuer`.
 * Ensure the issuer is accessible to the {{site.mesh_product_name}} system namespace (`kong-mesh-system` by default).
 * Apply a `Mesh` resource with an mTLS backend referencing the issuer.
-
-## Mesh Configuration
 
 
 Here's an example of mTLS configuration with `certmanager` backend which references an `Issuer` named `my-ca-issuer`:
@@ -76,11 +73,11 @@ spec:
 ```
 In `issuerRef`, only `name` is strictly required.
 `group` and `kind` will default to cert-manager default values. 
-See `issuerRef` in [cert-manager API](https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.CertificateRequestSpec) for more information.
+See `issuerRef` in the [cert-manager API](https://cert-manager.io/docs/reference/api-docs/#cert-manager.io/v1.CertificateRequestSpec) for more information.
 
 If `caCert` is not provided, {{site.mesh_product_name}} assumes that the issuer sets `status.CA` on `CertificateRequests`.
 
-Note that if `secret` is used, it must be [a {{site.mesh_product_name}} Secret](/mesh/secrets/).
+If `secret` is used, it must be [a {{site.mesh_product_name}} Secret](/mesh/secrets/).
 
 
 Apply the configuration with `kubectl apply -f [..]`.
