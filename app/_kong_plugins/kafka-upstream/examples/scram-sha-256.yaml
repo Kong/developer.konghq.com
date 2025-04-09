@@ -1,0 +1,29 @@
+description: 'Enables the SCRAM-SHA-256 SASL authentication mechanism.'
+
+title: 'SCRAM-SHA-256 authentication'
+
+weight: 900
+
+requirements: 
+ - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running" 
+ - "[Create a Kafka topic](https://kafka.apache.org/quickstart#quickstart_createtopic)"
+
+variables: 
+  topic:
+    description: 'The name of your Kafka topic.'
+    value: $KAFKA_TOPIC
+
+config:
+  topic: ${topic}
+  authentication:
+    strategy: sasl
+    mechanism: SCRAM-SHA-256
+    user: ariel
+    password: my-password
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

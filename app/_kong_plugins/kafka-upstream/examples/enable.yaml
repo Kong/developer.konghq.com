@@ -1,0 +1,24 @@
+description: 'Enables the Kafka Upstream plugin'
+
+title: 'Enable the Kafka Upstream plugin'
+
+weight: 900
+
+requirements: 
+ - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running"
+ - "[Create a Kafka topic](https://kafka.apache.org/quickstart#quickstart_createtopic)"
+
+variables: 
+  topic:
+    description: 'The name of your Kafka topic'
+    value: $KAFKA_TOPIC
+
+config:
+  topic: ${topic} 
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
