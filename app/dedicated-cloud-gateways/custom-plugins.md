@@ -1,5 +1,5 @@
 ---
-title: "Custom Plugins in Dedicated Cloud Gateways"
+title: "Custom Plugin Streaming"
 description: "Use the {{site.konnect_short_name}} Control Plane to distribute and manage custom Lua plugins across all Dedicated Cloud Gateways."
 content_type: reference
 layout: reference
@@ -29,9 +29,9 @@ related_resources:
 
 ## How does custom plugin streaming work? 
 
-The Control Plane becomes the single source of truth for plugin versions. You only need to upload the plugin once, and {{site.konnect_short_name}} handles distribution to all Data Planes in the same Control Plane.
+With Dedicated Cloud Gateways, {{site.konnect_short_name}} can stream custom plugins from the Control Plane to the Data Plane. The Control Plane becomes the single source of truth for plugin versions. You only need to upload the plugin once, and {{site.konnect_short_name}} handles distribution to all Data Planes in the same Control Plane.
 
-A [custom plugin](/custom-plugins/) that meets the following requirements:
+A [custom plugin](/custom-plugins/) must meet the following requirements: 
 
 * Unique name per plugin
 * One `handler.lua` and one `schema.lua` file
