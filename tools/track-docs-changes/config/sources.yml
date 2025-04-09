@@ -708,6 +708,10 @@ app/_kong_plugins/appsentinels/index.md:
   - /app/_hub/appsentinels/appsentinels/overview/_index.md
 app/_kong_plugins/amberflo/index.md:
   - /app/_hub/amberflo/kong-plugin-amberflo/overview/_index.md
+app/_kong_plugins/confluent-consume/index.md:
+  - app/_hub/kong-inc/confluent-consume/overview/_index.md
+app/_kong_plugins/confluent-consume/changelog.md:
+  - app/_hub/kong-inc/confluent-consume/_changelog.md
 
 # Konnect
 
