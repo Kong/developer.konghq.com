@@ -38,7 +38,7 @@ This plugin transforms requests into [Kafka](https://kafka.apache.org/) messages
 in an [Apache Kafka](https://kafka.apache.org/) topic. For more information, see
 [Kafka topics](https://kafka.apache.org/documentation/#intro_concepts_and_terms).
 
-Kong also provides a Kafka Log plugin for publishing logs to a Kafka topic.
+{{site.base_gateway}} also provides a Kafka Log plugin for publishing logs to a Kafka topic.
 See [Kafka Log](/plugins/kafka-log/).
 
 ## Implementation details
