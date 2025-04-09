@@ -1058,3 +1058,6 @@ app/_how-tos/deploy-mesh-on-kubernetes.md:
   - /mesh/latest/quickstart/kubernetes-demo.md
 app/mesh/cert-manager.md:
   - /app/_src/mesh/features/cert-manager.md
+
+app/mesh/multi-zone-authentication.md:
+  - /mesh/_src/mesh/features/kds-auth.md
