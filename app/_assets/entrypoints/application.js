@@ -17,6 +17,7 @@ import "@/javascripts/mode";
 import "@/javascripts/dropdowns";
 import "@/javascripts/toc";
 import "@/javascripts/search_modal";
+import "@/javascripts/mesh_service_switcher";
 
 document.addEventListener("DOMContentLoaded", function () {
   new EntityExample();
