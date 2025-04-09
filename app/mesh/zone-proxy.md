@@ -7,7 +7,7 @@ products:
   - mesh
 
 tags:
-  - multizone
+  - multi-zone
   - authentication
   - zone-tokens
 
