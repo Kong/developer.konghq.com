@@ -210,6 +210,8 @@ app/_how-tos/configure-oidc-with-client-credentials-grant.md:
   - /app/_hub/kong-inc/openid-connect/how-to/authentication/_client-credentials.md
 
 ## KIC
+app/_landing_pages/kubernetes-ingress-controller.yaml:
+  - app/_src/kubernetes-ingress-controller/index.md
 app/_how-tos/kic-proxy-http.md:
   - app/_src/kubernetes-ingress-controller/guides/services/http.md
 app/_how-tos/kic-proxy-grpc.md:
@@ -708,6 +710,8 @@ app/_kong_plugins/appsentinels/index.md:
   - /app/_hub/appsentinels/appsentinels/overview/_index.md
 app/_kong_plugins/amberflo/index.md:
   - /app/_hub/amberflo/kong-plugin-amberflo/overview/_index.md
+app/_kong_plugins/datadome/index.md:
+  - /app/_hub/datadome/kong-plugin-datadome/overview/_index.md
 
 # Konnect
 
@@ -1056,8 +1060,15 @@ app/deck/gateway/reset.md:
 
 app/_how-tos/deploy-mesh-on-kubernetes.md: 
   - /mesh/latest/quickstart/kubernetes-demo.md
+
+app/mesh/access-audit.md:
+  - app/_src/mesh/features/access-audit.md
+
+
 app/mesh/cert-manager.md:
   - /app/_src/mesh/features/cert-manager.md
 
+
 app/mesh/multi-zone-authentication.md:
   - /mesh/_src/mesh/features/kds-auth.md
+
