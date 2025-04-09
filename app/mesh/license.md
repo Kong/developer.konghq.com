@@ -47,7 +47,7 @@ A valid license file can be passed to {{site.mesh_product_name}} in a variety of
 {% navtab "kumactl" %}
 
 
-When installing the {{site.mesh_product_name}} control plane with `kumactl install control-plane`, provide a `--license-path` argument with a full path to a valid license file. For example:
+When installing the {{site.mesh_product_name}} Control Plane with `kumactl install control-plane`, provide a `--license-path` argument with a full path to a valid license file. For example:
 
 ```sh
 $ kumactl install control-plane --license-path=/path/to/license.json
@@ -66,7 +66,7 @@ To install a valid license via Helm:
    ```
 
    Where:
-   * `kong-mesh-system` is the namespace where {{site.mesh_product_name}} control plane is installed
+   * `kong-mesh-system` is the namespace where {{site.mesh_product_name}} Control Plane is installed
    * `/path/to/license.json` is the path to a valid license file. The filename should be `license.json` unless otherwise specified in `values.yaml`.
 
 1. Modify the `values.yaml` file to point to the secret. For example:
@@ -99,7 +99,7 @@ In Universal mode, configure a valid license by using the following environment 
   ```sh
   kubectl edit secrets -n kong-mesh-system kong-mesh-license
   ```
-1. Restart the control plane:
+1. Restart the Control Plane:
   ```sh
   kubectl rollout restart -n kong-mesh-system deployment kong-mesh-control-plane
   ```
@@ -110,14 +110,14 @@ In Universal mode, configure a valid license by using the following environment 
 1. Update the license by doing one of the following:
   - If you used `KMESH_LICENSE_PATH`, update the content of the file.
   - If you used `KMESH_LICENSE_INLINE`, update the value of the environment variable.
-1. Restart the control plane.
+1. Restart the Control Plane.
 {% endnavtab %}
 {% navtab "Multi-zone" %}
 ## Multi-zone
 
-In a multi-zone deployment of {{site.mesh_product_name}}, only the global control plane should be configured with a valid license. The global control plane automatically synchronizes the license to any remote control plane that is part of the cluster.
+In a multi-zone deployment of {{site.mesh_product_name}}, only the global Control Plane should be configured with a valid license. The global Control Plane automatically synchronizes the license to any remote Control Plane that is part of the cluster.
 
-In a multi-zone deployment, the DPPs count includes the total aggregate of every data plane proxy in every zone. For example, with a limit of 5 DPPs and 2 zones, you can connect 3 DPPs in one zone and 2 in another, but not 5 DPPs for each zone.
+In a multi-zone deployment, the DPPs count includes the total aggregate of every Data Plane proxy in every zone. For example, with a limit of 5 DPPs and 2 zones, you can connect 3 DPPs in one zone and 2 in another, but not 5 DPPs for each zone.
 {% endnavtab %}
 {% endnavtabs %}
 
@@ -133,9 +133,9 @@ Licenses are based on:
 
 
 
-In the context of the metric, a data plane proxy (DPP) is a standard data plane proxy that is deployed next to your services, either as a sidecar container or in a virtual machine. Gateway data plane proxies, zone ingresses, and zone egresses are not counted.
+In the context of the metric, a Data Plane proxy (DPP) is a standard Data Plane proxy that is deployed next to your services, either as a sidecar container or in a virtual machine. Gateway Data Plane proxies, zone ingresses, and zone egresses are not counted.
 
-You can measure the number of data plane proxies needed in {{site.mesh_product_name}} by the 
+You can measure the number of Data Plane proxies needed in {{site.mesh_product_name}} by the 
 number of services you want to include in your service meshes. Use the following formula:
 
 ```
@@ -149,7 +149,7 @@ With an expired license or invalid license the control-plane will fail to start.
 If the license expires while the control-plane is running it will keep running but a restart of the instance will fail. 
 The control-plane will issue a warning in the logs and the GUI when the license expires in less than 30 days.
 
-With a valid issued license, a data plane proxy will always be able to join the service mesh, even if you go above the allowed limit to prevent service disruptions.
-If the number of DPPs does go above the limit, you will see a warning in the GUI and in the control plane logs. 
+With a valid issued license, a Data Plane proxy will always be able to join the service mesh, even if you go above the allowed limit to prevent service disruptions.
+If the number of DPPs does go above the limit, you will see a warning in the GUI and in the Control Plane logs. 
 
 With the pre-bundled license, if you go over the maximum allowed number of DPPs, the system will automatically refuse their connections.
