@@ -260,7 +260,16 @@ app/kubernetes-ingress-controller/deployment-topologies/sidecar.md:
 app/kubernetes-ingress-controller/deployment-topologies/db-backed.md:
   - app/_src/kubernetes-ingress-controller/production/deployment-topologies/db-backed.md
 app/kubernetes-ingress-controller/deployment-topologies/gateway-discovery.md:
-  - app/_src/kubernetes-ingress-controller/production/deployment-topologies/gateway-discovery.md
+#app/kubernetes-ingress-controller/troubleshooting/kubernetes-api-server.md:
+#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
+#app/kubernetes-ingress-controller/troubleshooting/kong-gateway-configuration.md:
+#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
+#app/kubernetes-ingress-controller/troubleshooting/konnect.md:
+#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
+#app/kubernetes-ingress-controller/troubleshooting/debugging.md:
+#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
+app/kubernetes-ingress-controller/troubleshooting/failure-modes.md:
+  - app/_src/kubernetes-ingress-controller/reference/failure-modes.md
 
 # plugins
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:

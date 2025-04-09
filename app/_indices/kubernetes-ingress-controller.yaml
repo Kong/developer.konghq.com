@@ -39,6 +39,13 @@ sections:
   - title: Customization
     items:
       - path: /kubernetes-ingress-controller/custom-plugin/
+  - title: Troubleshooting
+    items:
+      - path: /kubernetes-ingress-controller/troubleshooting/failure-modes/
+      - path: /kubernetes-ingress-controller/troubleshooting/kong-gateway-configuration/
+      - path: /kubernetes-ingress-controller/troubleshooting/konnect/
+      - path: /kubernetes-ingress-controller/troubleshooting/debugging/
+      - path: /kubernetes-ingress-controller/troubleshooting/**/*
   - title: Reference
     allow_duplicates: true
     items:
