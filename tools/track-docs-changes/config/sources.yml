@@ -710,6 +710,8 @@ app/_kong_plugins/amberflo/index.md:
   - /app/_hub/amberflo/kong-plugin-amberflo/overview/_index.md
 app/_kong_plugins/datadome/index.md:
   - /app/_hub/datadome/kong-plugin-datadome/overview/_index.md
+app/_kong_plugins/inigo/index.md:
+  - /app/_hub/inigo/inigo/overview/_index.md
 
 # Konnect
 
