@@ -1,10 +1,10 @@
 ---
-title: "Access Audit"
+title: "Access audit"
 description: "Track all user and system actions in {{site.mesh_product_name}} using the AccessAudit resource and configurable backends"
 content_type: reference
 layout: reference
 products:
-    - gateway
+    - mesh
 
 tags:
   - regions
@@ -18,9 +18,9 @@ related_resources:
   - text: "Mesh"
     url: /mesh/overview/
 ---
-Access Audit allows you to track all actions executed in {{site.mesh_product_name}}, including actions performed by users and by the Control Plane.
+Access auditing allows you to track all actions executed in {{site.mesh_product_name}}, including actions performed by users and by the Control Plane.
 
-## AccessAudit Resource
+## AccessAudit resource
 
 The `AccessAudit` resource defines which actions and resource types should be audited. It is global-scoped, meaning it applies across all meshes.
 
@@ -30,10 +30,10 @@ The `AccessAudit` resource defines which actions and resource types should be au
 type: AccessAudit
 name: audit-1
 rules:
-- types: ["TrafficPermission", "TrafficRoute", "Mesh"] # list of types which should be audited. If empty, then default types are audited (see "Default types" below).
-  mesh: default # Mesh within which access to resources is granted. It can only be used with the Mesh-scoped resources and Mesh itself. If empty, resources from all meshes will be audited.
-  access: ["CREATE", "UPDATE", "DELETE"] # an action that is bound to a type.
-  accessAll: true # an equivalent of specifying all possible accesses. Either access or access all can be specified.
+- types: ["TrafficPermission", "TrafficRoute", "Mesh"] 
+  mesh: default 
+  access: ["CREATE", "UPDATE", "DELETE"] 
+  accessAll: true 
 ```
 {% endnavtab %} 
 {% navtab "Kubernetes" %}
@@ -45,20 +45,45 @@ metadata:
   name: role-1
 spec:
   rules:
-  - types: ["TrafficPermission", "TrafficRoute", "Mesh"] # list of types which should be audited. If empty, then all resources will be audited.
-    mesh: default # Mesh within which access to resources is granted. It can only be used with the Mesh-scoped resources and Mesh itself. If empty, resources from all meshes will be audited.
-    access: ["CREATE", "UPDATE", "DELETE"] # an action that is bound to a type.
-    accessAll: true # an equivalent of specifying all possible accesses. Either access or access all can be specified.
+  - types: ["TrafficPermission", "TrafficRoute", "Mesh"]
+    mesh: default
+    access: ["CREATE", "UPDATE", "DELETE"]
+    accessAll: true
 ```
 {% endnavtab %} 
 {% endnavtabs %} 
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Parameter
+    key: item
+  - title: Description
+    key: description
+rows:
+  - item: "`types`"
+    description: List of types which should be audited. If empty, then all resources will be audited.
+  - item: "`mesh`"
+    description: |
+      Mesh within which access to resources is granted. 
+      It can only be used with the Mesh-scoped resources and Mesh itself. 
+      If empty, resources from all meshes will be audited.
+  - item: "`access`"
+    description: An action that is bound to a type.
+  - item: "`accessAll`"
+    description: |
+      Equivalent to specifying all possible accesses. 
+      Either access or access all can be specified.
+{% endtable %}
+<!--vale on-->
+
 ## Default Behavior
 If `types` is not specified in an `AccessAudit` rule, all types are audited except those defined in the Control Plane config under `kmesh.access.audit.skipDefaultTypes`. These excluded types include status and insight resources that are managed solely by the Control Plane.
 
 
 #### Other actions
 
-Aside `CREATE`, `UPDATE`, `DELETE`, `AccessAudit` lets you audit all actions that are controllable with RBAC:
+Aside from `CREATE`, `UPDATE`, `DELETE`, `AccessAudit` also lets you audit all actions that are controllable with RBAC:
 * `GENERATE_DATAPLANE_TOKEN` (you can use `mesh` to audit only tokens generated for specific mesh)
 * `GENERATE_USER_TOKEN`
 * `GENERATE_ZONE_CP_TOKEN`
@@ -71,36 +96,56 @@ Aside `CREATE`, `UPDATE`, `DELETE`, `AccessAudit` lets you audit all actions tha
 
 ## Backends
 
-The backend is external storage that persists audit logs. Currently, there is one available backend which is a JSON file.
+The backend is external storage that persists audit logs. There is one available backend: a JSON file.
 
 ### JSON file
 
 The JSON file is a backend that persists audit logs to a single file in JSON format.
 You can configure the file backend with the Control Plane config.
-It can only be configured using YAML config, not environment variables.
+
+{:.info}
+> The file backend can only be configured using YAML config, not environment variables.
 
 ```yaml
 kmesh:
   access:
     audit:
-      # Types that are skipped by default when `types` list in AccessAudit resource is empty
       skipDefaultTypes: ["DataplaneInsight", "ZoneIngressInsight", "ZoneEgressInsight", "ZoneInsight", "ServiceInsight", "MeshInsight"]
       backends:
       - type: file
         file:
-          # Path to the file that will be filled with logs
           path: /tmp/audit.logs
           rotation:
-            # If true, rotation is enabled.
-            # Example: if we set path to /tmp/audit.log then after the file is rotated we will have /tmp/audit-2021-06-07T09-15-18.265.log
             enabled: true
-            # Maximum number of the old log files to retain
             maxRetainedFiles: 10
-            # Maximum size in megabytes of a log file before it gets rotated
             maxSizeMb: 100
-            # Maximum number of days to retain old log files based on the timestamp encoded in their filename
             maxAgeDays: 30
 ```
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Parameter
+    key: item
+  - title: Description
+    key: description
+rows:
+  - item: "`skipDefaultTypes`"
+    description: "Types that are skipped by default when `types` list in AccessAudit resource is empty."
+  - item: "`file.path`"
+    description: Path to the file that will be filled with logs.
+  - item: "`file.rotation.enabled`"
+    description: |
+      If true, rotation is enabled.
+      For example: If you set the path to `/tmp/audit.log`, then after the file is rotated, you will have `/tmp/audit-2021-06-07T09-15-18.265.log`.
+  - item: "`file.rotation.maxRetainedFiles`"
+    description: Maximum number of the old log files to retain.
+  - item: "`file.rotation.maxSizeMb`"
+    description: Maximum size in megabytes of a log file before it gets rotated.
+  - item: "`file.rotation.maxAgeDays`"
+    description: Maximum number of days to retain old log files based on the timestamp encoded in their filename.
+{% endtable %}
+<!--vale on-->
 
 ## Multi-zone
 
