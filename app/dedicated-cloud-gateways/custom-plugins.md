@@ -41,8 +41,8 @@ A [custom plugin](/custom-plugins/) must meet the following requirements:
 
 ## How do I add a custom plugin?
 
-You can use the following request with [jq](https://jqlang.org/) as a template for adding a custom plugin: 
-
+Plugins can be uploaded to {{site.konnect_short_name}} using the [{{site.konnect_short_name}} UI](https://cloud.konghq.com/gateway-manager/).
+You can also use [jq](https://jqlang.org/) with the following request template to add the plugin using the API:
 
 ```sh
 curl -X POST https://{region}.api.konghq.com/v2/control-planes/{control-plane-id}/core-entities/custom-plugins \
@@ -54,6 +54,9 @@ curl -X POST https://{region}.api.konghq.com/v2/control-planes/{control-plane-id
       '{"handler":$handler,"name":"streaming-headers","schema":$schema}')" \
     | jq
 ```
-You can also upload plugins using the Plugins menu in the [{{site.konnect_short_name}} UI](https://cloud.konghq.com/gateway-manager/).
-headers:
 
+Once uploaded, you can manage custom plugins using any of the following methods:
+
+* [decK](/deck/)
+* [Control Plane Config API](/api/konnect/control-planes-config/v2/)
+* [{{site.konnect_short_name}} UI](https://cloud.konghq.com/)
