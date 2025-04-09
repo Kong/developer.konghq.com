@@ -12,7 +12,7 @@ rows:
   - header:
       type: h1
       text: "{{ site.event_gateway }}"
-      sub_text: "A Kafka native Gateway built for governance, security, and cost efficient use of Kafka "
+      sub_text: "A Kafka-native Gateway built for governance, security, and cost efficient use of Kafka "
 
   - columns:
       - blocks:
@@ -23,13 +23,13 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    The Kong Native Event Proxy (KNEP) is a proxy for Apache Kafka, which can run in front of any
+                    The {{site.event_gateway}} ({{site.event_gateway_short}}) is a proxy for Apache Kafka, which can run in front of any
                     Kafka cluster. 
 
-                    Through it's extensible policy engine, users can augment, optimize, and secure 
+                    Through its extensible policy engine, users can augment, optimize, and secure 
                     their Kafka deployments with customized business logic to transform, encrypt, and observe Kafka messages. 
                     
-                    The Native Event Proxy supports many policies such as
+                    The {{site.event_gateway}} supports many policies such as
                     encryption, cluster virtualization, message filtering, and more. 
 
       - blocks:
