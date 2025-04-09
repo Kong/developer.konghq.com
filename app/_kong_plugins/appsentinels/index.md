@@ -50,22 +50,4 @@ In case of higher latency of a verdict, the plugin performs a fail open to ensur
 
 ## Install the AppSentinels plugin
 
-The AppSentinels plugin is provided as a set of Lua scripts.
-
-1. Obtain the plugin directly from AppSentinels or a distributor.
-
-2. Mount or copy the Lua files, or create a {{site.base_gateway}} container image with Lua files (usually at `/usr/local/share/lua/5.1/kong/plugins/appsentinels`).
-
-3. Update your loaded plugins list in {{site.base_gateway}}.
-
-    In your `kong.conf`, append `appsentinels` to the `plugins` field. Make sure the field is not commented out.
-
-    ```yaml
-    plugins = bundled,appsentinels
-    ```
-
-4. Restart {{site.base_gateway}}:
-
-    ```sh
-    kong restart
-    ```
+{% include_cached /plugins/install-third-party.md name=page.name slug=page.slug distributor='private' publisher="AppSentinels" %}

@@ -59,26 +59,4 @@ Once your AWS account is set up, you can use the plugin to communicate with your
 
 ### Install
 
-You can install the AWS Request Signing plugin via LuaRocks.
-
-1. Install the AWS Request Signing plugin:
-
-   ```sh
-   luarocks install https://github.com/LEGO/kong-aws-request-signing/raw/main/rocks/kong-aws-request-signing-$PLUGIN_VERSION.all.rock
-   ```
-
-   Substitute `$PLUGIN_VERSION` with one of [available plugin versions](https://github.com/LEGO/kong-aws-request-signing/tree/main/rocks).
-
-2. Update your loaded plugins list in {{site.base_gateway}}.
-
-   In your [`kong.conf`](/gateway/configuration/), append `aws-request-signing` to the `plugins` field. Make sure the field isn't commented out.
-
-   ```yaml
-   plugins = bundled,aws-request-signing
-   ```
-
-3. Restart {{site.base_gateway}}:
-
-   ```sh
-   kong restart
-   ```
+{% include_cached /plugins/install-third-party.md name=page.name slug=page.slug rock="https://github.com/LEGO/kong-aws-request-signing/raw/main/rocks/kong-aws-request-signing-$PLUGIN_VERSION.all.rock" explanation="Substitute `$PLUGIN_VERSION` with one of [available plugin versions](https://github.com/LEGO/kong-aws-request-signing/tree/main/rocks)." %}
