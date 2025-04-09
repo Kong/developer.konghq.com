@@ -26,7 +26,9 @@ async function validateFrontmatters() {
         "app/_kong_plugins/**/changelog.md",
         "app/_kong_plugins/**/reference.md",
         "app/_api/**/*.md",
-        "app/_references/**/*.md"
+        "app/_references/**/*.md",
+        "app/assets/**",
+        "app/mesh/latest_version.md",
       ],
       cwd: "../../",
     }

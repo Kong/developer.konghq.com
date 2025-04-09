@@ -208,6 +208,14 @@
   code span {
     @apply text-white;
   }
+
+  h3[id^="includes-kumahq-kuma-"][id$="-changelog"] {
+    @apply flex items-center gap-1;
+
+    > a {
+      @apply w-auto;
+    }
+  }
 }
 
 @layer components {
