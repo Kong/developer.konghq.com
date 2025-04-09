@@ -10,9 +10,6 @@ tags:
   - licensing
   - multi-zone
 
-works_on:
-  - on-prem
-
 related_resources:
   - text: "Access Audit"
     url: /mesh/access-audit/
