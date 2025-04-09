@@ -50,7 +50,7 @@ rows:
             config: |
               Kong is proud to be a driving force behind the Kubernetes Gateway API standard. With multiple contributors in maintainer and reviewer roles, Kong is all-in on Gateway API as the future of Kubernetes networking.
 
-              {{ site.kic_product_name }} was the first submitted conformance report, and is 100% compliant with the core conformance tests (in addition to many extended tests). Kong has implemented the Gateway API resources as first-class citizens, converting them directly in to {{ site.base_gateway }} configuration rather than using intermediate CRDs. This makes the Gateway API CRDs a native language for {{ site.kic_product_name }}.
+              {{ site.kic_product_name }} was the first submitted conformance report, and is 100% compliant with the core conformance tests, and many other additional extended tests. Kong has implemented the Gateway API resources as first-class citizens, converting them directly in to {{ site.base_gateway }} configuration rather than using intermediate CRDs. This makes the Gateway API CRDs a native language for {{ site.kic_product_name }}.
           - type: button
             config:
               text: Learn More &raquo;
@@ -88,7 +88,7 @@ rows:
             icon: /assets/icons/self-hosted.svg
             title:
             description: |
-              Deploy {{ site.kic_product_name }} and {{ site.base_gateway }} as containers in the same Pod. This topology is deprecated.
+              Deploy {{ site.kic_product_name }} and {{ site.base_gateway }} as containers within the same Pod. This topology is deprecated.
             cta:
               url: /kubernetes-ingress-controller/deployment-topologies/sidecar/
 
@@ -108,7 +108,7 @@ rows:
                   * How do I cache responses for a period of time to reduce load?
                   * How do I add authentication to my service?
 
-                  To do all of these in under 10 minutes, follow our [getting started guide](/kubernetes-ingress-controller/install/) which takes you through step-by-step. Each page contains copy/paste instructions and links to further information if you want to learn more.
+                  Follow our [getting started guide](/kubernetes-ingress-controller/install/) which takes you through all of these in under 10 minutes, step-by-step. Each page contains copy/paste instructions, and links to additional documentation if you want to learn more.
     - blocks:
         - type: structured_text
           config:
@@ -117,7 +117,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  The following pages may help if {{ site.kic_product_name }} is not working for you:
+                  If {{ site.kic_product_name }} is not working for you the following pages may help:
 
                   * [Troubleshooting](/index/kubernetes-ingress-controller/#troubleshooting): Common issues that people encounter when running {{ site.kic_product_name }}.
                   * [FAQ](#TODO): Specific questions about routing behavior, plugin compatibility and more.
