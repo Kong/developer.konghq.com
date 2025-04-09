@@ -26,7 +26,8 @@ related_resources:
     url: /dedicated-cloud-gateways/azure-peering/
 ---
 
-With Dedicated Cloud Gateways, {{site.konnect_short_name}} can stream custom plugins from the Control Plane to the Data Plane.
+
+## How does custom plugin streaming work? 
 
 The Control Plane becomes the single source of truth for plugin versions. You only need to upload the plugin once, and {{site.konnect_short_name}} handles distribution to all Data Planes in the same Control Plane.
 
