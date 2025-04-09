@@ -227,3 +227,8 @@ If you are using Dedicated Cloud Gateways and your upstream services are hosted 
 
 ### Azure VNet Peering
 If you are using Dedicated Cloud Gateways and your upstream services are hosted in Azure, VNet Peering is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, see the [Azure Peering](/dedicated-cloud-gateways/azure-peering/) documentation.
+
+## Custom Plugins
+
+With Dedicated Cloud Gateways, {{site.konnect_short_name}} can stream custom plugins from the Control Plane to the Data Plane. This means that the Control Plane becomes a single source of truth for plugin versions. You only need to upload a plugin once, to the Control Plane, and {{site.konnect_short_name}} handles distributing the plugin code to all Data Planes in that Control Plane. For more information on adding a custom plugin to a Dedicated Cloud Gateway deployment, see the [custom plugin reference](/dedicated-cloud-gateways/custom-plugins/) documentation.
+
