@@ -44,24 +44,14 @@ search_aliases:
 This plugin consumes messages from [Confluent Cloud](https://confluent.io/cloud) Kafka topics and makes them available through HTTP endpoints.
 For more information, see the [Confluent Cloud documentation](https://docs.confluent.io/).
 
-{:.info}
-> **Note**: This plugin has the following known limitations:
-> * Message compression is not supported.
-> * The message format is not customizable.
+{% include /plugins/confluent-kafka-consume/limitations.md %}
 
 Kong also provides a [plugin for publishing messages to Confluent Cloud](/plugins/confluent/).
 
 ## Implementation details
 
-The plugin supports two modes of operation:
-* `http-get`: Consume messages via HTTP GET requests (default)
-* `server-sent-events`: Stream messages using [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events)
+{% include /plugins/confluent-kafka-consume/implementation-details.md %}
 
 ## Message delivery guarantees
 
-When running multiple data plane nodes, there is no thread-safe behavior between nodes. In high-load scenarios, you may observe the same message being delivered multiple times across different data plane nodes
-
-To minimize duplicate message delivery in a multi-node setup, consider:
-* Using a single data plane node for consuming messages from specific topics
-* Implementing idempotency handling in your consuming application
-* Monitoring consumer group offsets across your data plane nodes
+{% include /plugins/confluent-kafka-consume/message-delivery.md %}

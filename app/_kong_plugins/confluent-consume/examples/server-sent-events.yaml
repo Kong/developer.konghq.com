@@ -18,7 +18,7 @@ variables:
   secret:
     description: The API secret to use for authentication.
     value: $API_SECRET
-  secret:
+  topic:
     description: The name of the Kafka topic to consume from.
     value: $KAFKA_TOPIC
 
@@ -29,8 +29,6 @@ config:
   topics:
   - name: ${topic}
   mode: server-sent-events
-  message_deserializer: json
-  auto_offset_reset: latest
   cluster_api_key: ${key}
   cluster_api_secret: ${secret}
 
