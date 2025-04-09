@@ -1,6 +1,6 @@
 ---
-title: "kds Auth"
-description: "Use control plane scoped tokens to authenticate zone control planes in a multi-zone {{site.mesh_product_name}} deployment."
+title: "kong mesh Auth"
+description: "Use Control Plane scoped tokens to authenticate zone Control Planes in a multi-zone {{site.mesh_product_name}} deployment."
 content_type: reference
 layout: reference
 products:
