@@ -31,6 +31,14 @@ icon: kafka-consume.png
 
 categories:
    - traffic-control
+
+related_resources:
+  - text: Kafka Log plugin
+    url: /plugins/kafka-log/
+  - text: Kafka Upstream plugin
+    url: /plugins/kafka-upstream/
+  - text: Confluent Consume plugin
+    url: /plugins/confluent-consume/
 ---
 
 This plugin consumes messages from [Apache Kafka](https://kafka.apache.org/) topics and makes them available through HTTP endpoints.

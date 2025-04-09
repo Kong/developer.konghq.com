@@ -39,6 +39,12 @@ search_aliases:
   - events
   - confluent cloud
   - kafka
+
+related_resources:
+  - text: Confluent plugin
+    url: /plugins/confluent/
+  - text: Kafka Consume plugin
+    url: /plugins/kafka-consume/
 ---
 
 This plugin consumes messages from [Confluent Cloud](https://confluent.io/cloud) Kafka topics and makes them available through HTTP endpoints.
