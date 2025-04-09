@@ -210,6 +210,8 @@ app/_how-tos/configure-oidc-with-client-credentials-grant.md:
   - /app/_hub/kong-inc/openid-connect/how-to/authentication/_client-credentials.md
 
 ## KIC
+app/_landing_pages/kubernetes-ingress-controller.yaml:
+  - app/_src/kubernetes-ingress-controller/index.md
 app/_how-tos/kic-proxy-http.md:
   - app/_src/kubernetes-ingress-controller/guides/services/http.md
 app/_how-tos/kic-proxy-grpc.md:
