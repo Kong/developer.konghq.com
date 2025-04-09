@@ -1,6 +1,6 @@
 ---
-title: 'Kong DataDome Plugin'
-name: 'Kong DataDome Plugin'
+title: 'DataDome'
+name: 'DataDome'
 
 content_type: plugin
 
