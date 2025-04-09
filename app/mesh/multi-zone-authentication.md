@@ -1,5 +1,5 @@
 ---
-title: "Multi-zone Authentication"
+title: "Multi-zone authentication"
 description: "Use Control Plane scoped tokens to authenticate zone Control Planes in a multi-zone {{site.mesh_product_name}} deployment."
 content_type: reference
 layout: reference
@@ -10,9 +10,6 @@ tags:
   - multi-zone
   - authentication
   - zone-tokens
-
-works_on:
-  - on-prem
 
 related_resources:
   - text: "Access Audit"
@@ -33,7 +30,7 @@ To enable authentication between Control Planes:
 
 ### Generate the token
 
-On the global Control Plane run the following command, this will store the token in `/tmp/token`.
+On the global Control Plane, run the following command to store the token in `/tmp/token`:
 
 ```sh
 kumactl generate zone-token --zone=west --scope=cp --valid-for=720h > /tmp/token
@@ -49,10 +46,10 @@ If you install the zone Control Plane with `kumactl install control-plane`, pass
 ```sh
 kumactl install control-plane \
   --mode=zone \
-  --zone=<zone name> \
+  --zone={ZONE-NAME} \
   --cp-token-path=/tmp/token \
   --ingress-enabled \
-  --kds-global-address grpcs://`<global-kds-address>`:5685 | kubectl apply -f -
+  --kds-global-address grpcs://{GLOBAL-KDS-ADDRESS}:5685 | kubectl apply -f -
 ```
 
 {% endnavtab %}
@@ -93,7 +90,7 @@ KMESH_MULTIZONE_ZONE_KDS_AUTH_CP_TOKEN_INLINE="eyJhbGciOiJSUzI1NiIsImtpZCI6IjEiL
 {% endnavtabs %}
 ### Enable authentication
 
-If you are starting from scratch and not securing existing {{site.mesh_product_name}} deployment, you can do this as a first step.
+If you are starting from scratch and not securing an existing {{site.mesh_product_name}} deployment, you can do this as a first step.
 
 {% navtabs "authentication" %}
 {% navtab "Kubernetes with kumactl" %}
