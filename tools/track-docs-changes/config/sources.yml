@@ -712,6 +712,10 @@ app/_kong_plugins/confluent-consume/index.md:
   - app/_hub/kong-inc/confluent-consume/overview/_index.md
 app/_kong_plugins/confluent-consume/changelog.md:
   - app/_hub/kong-inc/confluent-consume/_changelog.md
+app/_kong_plugins/kafka-consume/index.md:
+  - app/_hub/kong-inc/kafka-consume/overview/_index.md
+app/_kong_plugins/kafka-consume/changelog.md:
+  - app/_hub/kong-inc/kafka-consume/_changelog.md
 
 # Konnect
 
