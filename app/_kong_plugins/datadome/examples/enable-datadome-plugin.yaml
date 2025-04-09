@@ -5,7 +5,7 @@ title: 'Enable DataDome'
 weight: 900
 
 requirements:
-  - "The DataDome is [installed](/plugins/datadome/#install-the-datadome-plugin)."
+  - "The DataDome plugin is [installed](/plugins/datadome/#install-the-datadome-plugin)."
   - "You have a DataDome server-side key, which is available inside your dashboard in the [Integrations](https://app.datadome.co/dashboard/management/integrations) section."
 
 variables:
