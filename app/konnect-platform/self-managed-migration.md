@@ -260,7 +260,7 @@ including Control Planes, Control Plane groups, Data Plane configuration, and mo
 [{{site.konnect_short_name}} Terraform Provider](/terraform/) can be used independently
 or in conjunction with decK to manage your API deployment lifecycle.
 
-* **Kong Gateway Operator**: The Kong Gateway Operator (KGO) is available for teams 
+* **{{site.kgo_product_name}}**: The {{site.kgo_product_name}} (KGO) is available for teams 
 that want to use standardized Kubernetes APIs to manage their {{site.konnect_short_name}} deployments.
 
 ## Next steps
