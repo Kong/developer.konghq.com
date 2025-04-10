@@ -1,21 +1,30 @@
 {
   "properties": {
     "config": {
-      "additionalProperties": true,
-      "properties": {},
-      "required": [],
-      "type": "object"
-    },
-    "consumer": {
-      "additionalProperties": false,
-      "description": "If set, the plugin will activate only for requests where the specified has been authenticated. (Note that some plugins can not be restricted to consumers this way.). Leave unset for the plugin to activate regardless of the authenticated Consumer.",
       "properties": {
-        "id": {
+        "token": {
+          "description": "Inigo service token. Check out https://docs.inigo.io/ to setup a service and a token.",
+          "type": "string"
+        },
+        "schema": {
+          "description": "GraphQL schema of the endpoint. If not provided, Inigo Plugin will pull it from the cloud.",
           "type": "string"
         }
       },
-      "required": [],
+      "required": [
+        "token"
+      ],
       "type": "object"
+    },
+    "protocols": {
+      "default": ["http", "https"],
+      "description": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type. For example, plugins that only work in stream mode will only support tcp and tls.",
+      "items": {
+        "enum": ["http", "https"],
+        "required": [],
+        "type": "string"
+      },
+      "type": "array"
     },
     "route": {
       "additionalProperties": false,

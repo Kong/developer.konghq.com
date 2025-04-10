@@ -452,8 +452,10 @@ href
 http
 httpbin
 https
+idempotency
 if_version
 impactful
+imperva
 inbounds
 include_cached
 ingress_controller_configuration_push_broken_resource_count
@@ -476,6 +478,7 @@ ingress_controller_translation_broken_resource_count
 ingress_controller_translation_count
 ingress_controller_translation_duration_milliseconds
 ini
+inigo
 init_worker
 inlineString
 inso

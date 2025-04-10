@@ -31,6 +31,8 @@ a self-contained package that can be installed locally or from a remote server.
    plugins = bundled,{{include.slug}}
    ```
 
+{{ include.extra-steps }}
+
 1. Restart {{site.base_gateway}}:
 
    ```sh

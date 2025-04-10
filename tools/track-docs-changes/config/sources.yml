@@ -710,6 +710,14 @@ app/_kong_plugins/appsentinels/index.md:
   - /app/_hub/appsentinels/appsentinels/overview/_index.md
 app/_kong_plugins/amberflo/index.md:
   - /app/_hub/amberflo/kong-plugin-amberflo/overview/_index.md
+app/_kong_plugins/confluent-consume/index.md:
+  - app/_hub/kong-inc/confluent-consume/overview/_index.md
+app/_kong_plugins/confluent-consume/changelog.md:
+  - app/_hub/kong-inc/confluent-consume/_changelog.md
+app/_kong_plugins/kafka-consume/index.md:
+  - app/_hub/kong-inc/kafka-consume/overview/_index.md
+app/_kong_plugins/kafka-consume/changelog.md:
+  - app/_hub/kong-inc/kafka-consume/_changelog.md
 app/_kong_plugins/datadome/index.md:
   - /app/_hub/datadome/kong-plugin-datadome/overview/_index.md
 app/_kong_plugins/kong-response-size-limiting/index.md:
@@ -722,6 +730,12 @@ app/_kong_plugins/kong-splunk-log/index.md:
   - /app/_hub/optum/kong-splunk-log/overview/_index.md
 app/_kong_plugins/kong-upstream-jwt/index.md:
   - /app/_hub/optum/kong-upstream-jwt/overview/_index.md
+app/_kong_plugins/inigo/index.md:
+  - /app/_hub/inigo/inigo/overview/_index.md
+app/_kong_plugins/imp-appsec-connector/index.md:
+  - /app/_hub/imperva/imp-appsec-connector/overview/_index.md
+app/_kong_plugins/impart/index.md:
+  - /app/_hub/impart-security/kong-plugin-impart/overview/_index.md
 
 # Konnect
 
@@ -747,6 +761,8 @@ app/konnect-platform/konnect-sso.md:
   - app/konnect/org-management/sso.md
 app/konnect-platform/saml-idp-mapping.md:
   - app/konnect/reference/saml-idp-mappings.md
+app/konnect-platform/self-managed-migration.md:
+  - app/konnect/getting-started/migration.md
 
 
 # landing pages
@@ -932,6 +948,7 @@ app/dedicated-cloud-gateways/reference.md:
   - app/konnect/gateway-manager/dedicated-cloud-gateways/provision-cloud-gateway.md
   - app/konnect/gateway-manager/dedicated-cloud-gateways/securing-backend-traffic.md
   - app/konnect/gateway-manager/dedicated-cloud-gateways/custom-dns.md
+  - app/konnect/gateway-manager/dedicated-cloud-gateways/custom-plugins.md
 app/dedicated-cloud-gateways/aws-private-link.md:
   - app/konnect/private-connections/aws-privatelink.md
 
@@ -1077,4 +1094,12 @@ app/mesh/access-audit.md:
 
 app/mesh/cert-manager.md:
   - /app/_src/mesh/features/cert-manager.md
+
+
+app/mesh/multi-zone-authentication.md:
+  - /mesh/_src/mesh/features/kds-auth.md
+
+app/mesh/license.md:
+  - /app/_src/mesh/production/cp-deployment/license.md
+
 
