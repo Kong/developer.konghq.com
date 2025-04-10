@@ -2,8 +2,8 @@
 title: Publish request and response logs to an Apache Kafka topic with the Kafka Log plugin
 content_type: how_to
 related_resources:
-  - text: Authentication
-    url: /gateway/authentication/
+  - text: Apache Kafka documentation
+    url: https://kafka.apache.org/documentation/
 
 products:
     - gateway
@@ -28,8 +28,8 @@ tags:
     - authentication
 
 tldr:
-    q: How do I authenticate Consumers with basic authentication?
-    a: Create a Consumer with a username and password in the `basicauth_credentials` configuration. Enable the Basic Authentication plugin globally, and authenticate with the base64-encoded Consumer credentials.
+    q: How do I publish request and response logs to an Apache Kafka topic with the Kafka Log plugin?
+    a: Create a Kafka topic, and set your Kafka host as an environment variable. Enable the Kafka Log plugin and specify the Kafka host, port, and topic when you configure it.
 
 tools:
     - deck
@@ -40,16 +40,6 @@ prereqs:
         - example-service
     routes:
         - example-route
-  inline:
-    - title: Apache Kafka
-      content: |
-        In this tutorial, we'll be using Apache Kafka:
-        1. Install Apache Kafka.
-        2. Get the Kafka Docker image:
-        ```sh
-        docker pull apache/kafka-native:4.0.0
-        docker run -d --name kafka --network kong-quickstart-net -p 9092:9092 apache/kafka-native:4.0.0
-        ```
 
 cleanup:
   inline:
@@ -61,21 +51,30 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## Create Kafka topic
+## 1. Run the Kafka broker in Docker
 
-Save the path to `/bin/kafka-topics` as an environment variable:
+To run the broker, this will run Kafka 4.0 in [KRaft mode](https://kafka.apache.org/40/documentation/zk2kraft.html). This allows for connections from within the Docker network, from the host machine, and from the Docker bridge network:
 
 ```sh
-export KAFKA_HOME='</path/to/kafka/>'
+docker run -d --rm --name=kafka -h kafka -p 9092:9092 -p 39092:39092 \
+    -e KAFKA_NODE_ID=1 \
+    -e KAFKA_LISTENERS='DOCKER://kafka:29092,CONTROLLER://kafka:29093,HOST://0.0.0.0:9092,BRIDGE://0.0.0.0:39092' \
+    -e KAFKA_LISTENER_SECURITY_PROTOCOL_MAP='CONTROLLER:PLAINTEXT,DOCKER:PLAINTEXT,HOST:PLAINTEXT,BRIDGE:PLAINTEXT' \
+    -e KAFKA_ADVERTISED_LISTENERS='DOCKER://kafka:29092,HOST://localhost:9092,BRIDGE://host.docker.internal:39092' \
+    -e KAFKA_PROCESS_ROLES='broker,controller' \
+    -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 \
+    -e KAFKA_CONTROLLER_QUORUM_VOTERS='1@kafka:29093' \
+    -e KAFKA_INTER_BROKER_LISTENER_NAME='DOCKER' \
+    -e KAFKA_CONTROLLER_LISTENER_NAMES='CONTROLLER' \
+    -e CLUSTER_ID='MkU3OEVBNTcwNTJENDM2Qk' \
+    apache/kafka:4.0.0
 ```
 
-Create the `kong-log` Kafka topic:
-```bash
-$KAFKA_HOME/bin/kafka-topics --create \
-    --bootstrap-server localhost:9092 \
-    --replication-factor 1 \
-    --partitions 10 \
-    --topic kong-log
+## 2. Create Kafka topic
+
+Now that the broker is running, we can create the `kong-log` Kafka topic:
+```sh
+docker exec -it kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:29092 --create --topic kong-log
 ```
 
 Since the topic can vary in production instances, set the Kafka topic as an environment variable:
@@ -88,7 +87,7 @@ export DECK_KAFKA_TOPIC=kong-log
 Set the `host.docker.internal` as your host. We're using this as our host in this tutorial because {{site.base_gateway}} is using `localhost` and both {{site.base_gateway}} and Kafka are in Docker containers.
 
 ```sh
-export DECK_HOST=host.docker.internal
+export DECK_KAFKA_HOST=host.docker.internal
 ```
 
 Enable the plugin on the [`example-route` we created earlier](/how-to/publish-logs-to-kafka/#prerequisites):
@@ -101,7 +100,7 @@ entities:
       config:
         bootstrap_servers:
         - host: ${kafka_host}
-          port: 9092
+          port: 39092
         topic: ${kafka_topic}
 variables:
   kafka_host:
@@ -112,6 +111,8 @@ variables:
 
 ## Make sample requests
 
+Send the following request to generate logs:
+
 ```bash
 for i in {1..50} ; do curl http://localhost:8000/anything/$i ; done
 ```
@@ -121,10 +122,5 @@ for i in {1..50} ; do curl http://localhost:8000/anything/$i ; done
 Verify the contents of the Kafka `kong-log` topic:
 
 ```sh
-$KAFKA_HOME/bin/kafka-console-consumer \
-    --bootstrap-server localhost:9092 \
-    --topic kong-log \
-    --partition 0 \
-    --from-beginning \
-    --timeout-ms 1000
+docker exec -it kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server kafka:29092 --topic kong-log --from-beginning
 ```
