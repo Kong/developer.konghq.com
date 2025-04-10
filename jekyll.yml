@@ -115,6 +115,7 @@ sitemap:
     - /sources_urls_mapping.json
     - /sitemap.xml
 
+mesh_namespace: kong-mesh-system
 
 mesh:
   ignored_links_regex:

@@ -1,0 +1,66 @@
+# frozen_string_literal: true
+
+require_relative '../../lib/site_accessor'
+
+module Jekyll
+  module MeshPolicyPages
+    class Policy # rubocop:disable Style/Documentation
+      extend Forwardable
+      include Jekyll::SiteAccessor
+
+      def_delegators :@release_info, :releases, :latest_available_release,
+                     :latest_release_in_range, :unreleased?
+
+      attr_reader :folder, :slug
+
+      def initialize(folder:, slug:)
+        @folder = folder
+        @slug   = slug
+
+        @release_info = release_info
+      end
+
+      def metadata
+        @metadata ||= Jekyll::Utils::MarkdownParser.new(
+          File.read(File.join(@folder, 'index.md'))
+        ).frontmatter
+      end
+
+      def example_files
+        @example_files ||= Dir.glob(File.join(folder, 'examples', '*'))
+      end
+
+      def examples
+        @examples ||= example_files.map do |file|
+          Drops::MeshPolicyExample.new(
+            file: file,
+            policy: self
+          )
+        end.sort_by { |e| -e.weight } # rubocop:disable Style/MultilineBlockChain
+      end
+
+      private
+
+      def release_info
+        ReleaseInfo::Product.new(
+          site:,
+          product:,
+          min_version:,
+          max_version:
+        )
+      end
+
+      def product
+        @product ||= metadata.fetch('products', []).first
+      end
+
+      def min_version
+        @min_version ||= metadata.fetch('min_version', {})
+      end
+
+      def max_version
+        @max_version ||= metadata.fetch('maxs_version', {})
+      end
+    end
+  end
+end
