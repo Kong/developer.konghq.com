@@ -1,5 +1,5 @@
 ---
-title: "Kong Mesh on Amazon ECS"
+title: "{{site.mesh_product_name}} on Amazon ECS"
 description: "Learn how to deploy {{site.mesh_product_name}} on Amazon ECS with IAM-based authentication and Universal mode support for Fargate and EC2."
 content_type: reference
 layout: reference

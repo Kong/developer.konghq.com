@@ -1,5 +1,5 @@
 ---
-title: "Verify signatures for signed Kong Mesh images"
+title: "Verify signatures for signed {{site.mesh_product_name}} images"
 description: "Learn how to verify signed {{site.mesh_product_name}} Docker images using Cosign and GitHub OIDC identity for increased trust."
 content_type: reference
 layout: reference
