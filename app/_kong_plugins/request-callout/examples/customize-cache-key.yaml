@@ -21,12 +21,12 @@ config:
         store: true
         decode: true
       by_lua: kong.ctx.shared.callouts.call.caching.cache_key = 'some_key'
-  cache:
-    strategy: redis
-    redis:
-      host: localhost
-      port: 6379
-    cache_ttl: 360
+    cache:
+      strategy: redis
+      redis:
+        host: localhost
+        port: 6379
+      cache_ttl: 360
 
 tools:
   - deck
