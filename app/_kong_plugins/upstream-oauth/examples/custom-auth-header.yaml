@@ -8,9 +8,6 @@ weight: 900
 # - "some req"
 
 variables: 
-  token-endpoint:
-    description: 'The token endpoint URI.'
-    value: $TOKEN_ENDPOINT
   client-id:
     description: 'The client ID for the application registration in the IdP.'
     value: $CLIENT_CREDENTIALS_GRANT_POST_AUTH_CLIENT_ID
@@ -20,7 +17,7 @@ variables:
 
 config:
   oauth:
-    token_endpoint: ${token-endpoint}
+    token_endpoint: https://example.com/oauth2/token
     grant_type: client_credentials
     client_id: ${client-id}
     client_secret: ${client-secret}
