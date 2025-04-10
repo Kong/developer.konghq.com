@@ -12,8 +12,8 @@ works_on:
     - konnect
 
 related_resources:
-  - text: "About {{site.base_gateway}}"
-    url: /gateway/
+  - text: "About {{site.konnect_short_name}}}"
+    url: /konnect-platform/
   - text: Hybrid mode
     url: /gateway/hybrid-mode/
   - text: Control Plane and Data Plane communication
@@ -22,26 +22,22 @@ related_resources:
 
 As a {{site.base_gateway}} user, you can directly migrate to {{site.konnect_short_name}}, as {{site.konnect_short_name}} uses {{site.base_gateway}} in its foundation. 
 
-{{site.base_gateway}} deployments come in a wide variety of environments and topologies.
-{{site.konnect_short_name}} runs in hybrid mode, so migration from a self-managed Gateway hybrid deployment is the most straightforward. For this reason, this guide focuses on migrating a [hybrid](/gateway/hybrid-mode/) 
-or [traditional](/gateway/traditional-mode/)
-deployment to {{site.konnect_short_name}}.
 
 ## Why migrate to {{site.konnect_short_name}}?
 
 As organizations grow and scale, they need more advanced capabilities while lowering 
-operational complexity. This includes features such as strong [multi-tenancy](/gateway/deployment-models/#tenancy-tradeoffs), 
-federated API management, and advanced security integrations. With {{site.konnect_short_name}}, 
-you gain access to a full-featured API management platform built on API management best practices which provides managed components. 
+operational complexity. This includes features such as:
+* [Multi-tenancy](/gateway/deployment-models/#tenancy-tradeoffs)
+* Federated API management
+* Advanced security integrations
+
 
 At its core, migration to {{site.konnect_short_name}} is mostly a straightforward export and migration of proxy configuration. Depending on your environment, you may also need to move over:
-* Dev Portal files, developer accounts, and applications
-* Application registrations
 * Convert RBAC roles and permissions into {{site.konnect_short_name}} teams
-* Certificates
+* [Certificates](/gateway/entities/certificate/)
 * Custom plugins
 
-## Migration guide
+## How do I migrate to {{site.konnect_short_name}}?
 
 This guide provides key details for completing a successful migration from a self-managed {{site.base_gateway}} to
 {{site.konnect_short_name}}. It focuses on migrating a [hybrid](/gateway/hybrid-mode/) 
@@ -69,18 +65,11 @@ D --> G[<a href="https://cloud.konghq.com/gateway-manager/create-control-plane">
 {% endmermaid %}
 <!--vale on-->
 
-> _**Figure 1**: For traditional and hybrid deployments, you can migrate directly to {{site.konnect_short_name}} by following this guide. For DB-less deployments, migrate to hybrid first, then follow this guide. For {{site.kic_product_name}} deployments, migrate to a {{site.kic_product_name}}-based Control Plane._
+> _**Figure 1**: For traditional and hybrid deployments, you can migrate directly to {{site.konnect_short_name}}. DB-less deployments must migrate to hybrid first. For {{site.kic_product_name}} deployments, migrate to a {{site.kic_product_name}}-based Control Plane._
 
 ### Role Based Access Controls (RBAC)
 
-Both {{site.base_gateway}} and {{site.konnect_short_name}} provide frameworks for controlling security and
-data access. 
 
-{{site.base_gateway}} provides a traditional Role Based Access Control (RBAC) system
-to manage administrators and users of the API gateway system. {{site.konnect_short_name}} provides a robust 
-multi-layer Identity and Access Management (IAM) system including organizations, teams, and roles. 
-{{site.konnect_short_name}} also provides integrations with IdP providers via OIDC, allowing you to map centrally managed teams to 
-{{site.konnect_short_name}}-based roles.
 
 {{site.base_gateway}}'s RBAC system does not map directly to the IAM system provided by {{site.konnect_short_name}}. 
 When migrating from a self-managed {{site.base_gateway}} to {{site.konnect_short_name}}, 
@@ -102,7 +91,7 @@ The following are the general steps for setting up IAM in {{site.konnect_short_n
 5. Use the {{site.konnect_short_name}} IdP Team Mappings feature to 
   [map the {{site.konnect_short_name}} teams to your IdP provider groups](/konnect-platform/konnect-sso/#team-mapping-configuration).
 
-### Migrating from Workspaces to Control Planes
+## Migrating from Workspaces to Control Planes
 
 {{site.base_gateway}} supports configuration isolation using
 [Workspaces](/gateway/entities/workspace/).
@@ -113,7 +102,25 @@ components used to isolate configuration.
 When migrating to {{site.konnect_short_name}}, you will create a Control Plane design that 
 best fits your goals, which may or may not mirror the number of Workspaces you
 use in your self-managed deployment.
+### Example Workspace migration
 
+The following provides an example set of steps for migrating a small multi-Workspace setup to 
+{{site.konnect_short_name}}. Instructions on this page are not step-by-step guides. They are meant to illustrate the general steps 
+you can perform to migrate Workspaces. The examples use [decK](/deck/) and some well-known command line tools for 
+querying APIs and manipulating text output. See the [jq](https://jqlang.github.io/jq/) and [yq](https://github.com/mikefarah/yq) 
+tool pages for more information.
+
+1. Query the [Admin API](/api/gateway/admin-ee/) of your self-managed installation to get 
+a list of Workspaces for a particular {{site.base_gateway}} deployment by using the [`/workspace` endpoint](/api/gateway/admin-ee/#/operations/list-workspace):
+   You will receive a response with a name for each Workspace in the `name` field.
+
+   {:.info}
+   > **Note**: {{site.base_gateway}} provides a `default` Workspace, and similarly {{site.konnect_short_name}} provides a `default` Control Plane. Neither of these can be deleted, so migrating the `default` Workspace to the `default` Control Plane is a logical choice.
+
+1. Create a new Control Plane for each non-default Workspace using the {{site.konnect_short_name}} Control Plane API [`/control-planes` endpoint](/api/konnect/control-planes/v2/#/operations/create-control-plane). 
+   To use the {{site.konnect_short_name}} APIs, you must create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
+
+1. Log in into the [{{site.konnect_short_name}} UI](https://cloud.konghq.com/gateway-manager/) and validate the new Control Planes.
 ### Control Plane design
 
 If you currently use a single Workspace in your self-managed installation,
@@ -135,33 +142,9 @@ and removed from Control Plane groups, and you can set them up to mirror your ex
 With Control Plane groups set up, you can connect Data Plane instances to each group, creating
 a shared Data Plane infrastructure among the constituent Control Planes.
 
-### Control Plane management 
 
-You can manage Control Planes and Control Plane groups in {{site.konnect_short_name}} by using the [Konnect UI](/gateway-manager/), the
-[Konnect Control Planes API](/api/konnect/control-planes-config/v2/), or the 
-[{{site.konnect_short_name}} Terraform Provider](https://registry.terraform.io/providers/Kong/konnect/latest).
 
-### Example Workspace migration
-
-The following provides an example set of steps for migrating a small multi-Workspace setup to 
-{{site.konnect_short_name}}. Instructions on this page are not step-by-step guides. They are meant to illustrate the general steps 
-you can perform to migrate Workspaces. The examples use [decK](/deck/) and some well-known command line tools for 
-querying APIs and manipulating text output. See the [jq](https://jqlang.github.io/jq/) and [yq](https://github.com/mikefarah/yq) 
-tool pages for more information.
-
-1. Query the [Admin API](/api/gateway/admin-ee/) of your self-managed installation to get 
-a list of Workspaces for a particular {{site.base_gateway}} deployment by using the [`/workspace` endpoint](/api/gateway/admin-ee/#/operations/list-workspace):
-   You will receive a response with a name for each Workspace in the `name` field.
-
-   {:.info}
-   > **Note**: {{site.base_gateway}} provides a `default` Workspace, and similarly {{site.konnect_short_name}} provides a `default` Control Plane. Neither of these can be deleted, so migrating the `default` Workspace to the `default` Control Plane is a logical choice.
-
-1. Create a new Control Plane for each non-default Workspace using the {{site.konnect_short_name}} Control Plane API [`/control-planes` endpoint](/api/konnect/control-planes/v2/#/operations/create-control-plane). 
-   To use the {{site.konnect_short_name}} APIs, you must create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
-
-1. Log in into the [{{site.konnect_short_name}} UI](https://cloud.konghq.com/gateway-manager/) and validate the new Control Planes.
-
-### Plugin migration
+## Plugin migration
 
 {{site.konnect_short_name}} supports the majority of [plugins](https://kongdeveloper.netlify.app/gateway/entities/plugin/) available to {{site.base_gateway}}. Since {{site.konnect_short_name}} runs in hybrid mode, this limits support for plugins that require direct access
 to a database. See the [plugins page](/plugins/?deployment-topology=konnect) for those that are supported on {{site.konnect_short_name}}.
@@ -174,7 +157,7 @@ To migrate plugins from a self-managed deployment to {{site.konnect_short_name}}
 Also review any plugin configuration values, as certain values are unsupported in {{site.konnect_short_name}} and may require additional
 changes to your configuration.
 
-### Custom plugins
+## Custom plugins migration
 
 {{site.konnect_short_name}} supports custom plugins with similar restrictions to pre-built plugins. Since {{site.konnect_short_name}} runs in a hybrid deployment mode, custom plugins can't access a database directly
 and can't provide custom Admin API endpoints. See the {{site.konnect_short_name}} documentation for more details
@@ -211,13 +194,6 @@ deck gateway dump --workspace sales --output-file sales.yaml
 ```
 
 When using `deck` to dump the configuration, the output file will include the Workspace name in the configuration.
-To remove the `_workspace` key from the configuration, you can use the `yq` tool:
-
-```sh
-yq -i 'del(._workspace)' default.yaml
-yq -i 'del(._workspace)' inventory.yaml
-yq -i 'del(._workspace)' sales.yaml 
-```
 
 Synchronize the configuration to the Control Planes using decK configured with the 
 proper Control Plane name and the {{site.konnect_short_name}} access token:
@@ -246,22 +222,6 @@ See the [Data Plane hosting options](/gateway/topology-hosting-options/) for mor
 way to deploy new Data Planes is using the {{site.konnect_short_name}} Gateway Manager, which provides integrated 
 launchers for popular operating systems and compute platforms. 
 
-### APIOps
-
-In {{site.konnect_short_name}}, there are additional options for managing the API deployment lifecycle, as compared to {{site.base_gateway}}:
-
-* **decK**: If you're using [deck](/deck/) to manage your {{site.base_gateway}} configuration, you can continue to use
-the tool to managing your {{site.konnect_short_name}} configuration. The decK CLI 
-[supports {{site.konnect_short_name}} Control Plane configuration](/deck/gateway/konnect-configuration/)
-by providing additional flags that configure the tool to connect to a particular Control Plane using access tokens.
-
-* **Terraform**: Kong provides a Terraform provider for managing a full {{site.konnect_short_name}} deployment, 
-including Control Planes, Control Plane groups, Data Plane configuration, and more. The 
-[{{site.konnect_short_name}} Terraform Provider](/terraform/) can be used independently
-or in conjunction with decK to manage your API deployment lifecycle.
-
-* **{{site.kgo_product_name}}**: The {{site.kgo_product_name}} (KGO) is available for teams 
-that want to use standardized Kubernetes APIs to manage their {{site.konnect_short_name}} deployments.
 
 ## Next steps
 
