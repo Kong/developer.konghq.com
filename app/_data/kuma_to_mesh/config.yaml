@@ -1,0 +1,490 @@
+metadata:
+  products:
+    - mesh
+  content_type: 'reference'
+  layout: 'reference'
+
+pages:
+# Must for GA
+  -
+    path: app/_src/guides/consumer-producer-policies.md
+    title: 'Producer and Consumer policies'
+    description: ''
+    url: '/mesh/guides/consumer-producer-policies/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.9'
+  -
+    path: app/_src/guides/federate.md
+    title: 'Federate zone control plane'
+    description: ''
+    url: '/mesh/guides/federate/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.6'
+  -
+    path: app/_src/guides/gateway-api.md
+    title: 'Kubernetes Gateway API'
+    description: ''
+    url: '/mesh/latest/guides/gateway-api/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.9'
+  -
+    path: app/_src/guides/gateway-builtin.md
+    title: 'Add a builtin gateway'
+    description: ''
+    url: '/mesh/guides/gateway-builtin/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.6'
+  -
+    path: app/_src/guides/gateway-delegated.md
+    title: 'Use Kong as a delegated Gateway'
+    description: ''
+    url: '/mesh/guides/gateway-delegated/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.6'
+  -
+    path: app/_src/guides/migration-to-the-new-policies.md
+    title: 'Migration to the new policies'
+    description: ''
+    url: '/mesh/guides/migration-to-the-new-policies/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.7'
+  -
+    path: app/_src/guides/otel-metrics.md
+    title: 'Collect metrics with OpenTelemetry'
+    description: ''
+    url: '/mesh/guides/otel-metrics/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.7'
+
+  -
+    path: app/_src/guides/progressively-rolling-in-strict-mtls.md
+    title: 'Progressively rolling in strict mTLS'
+    description: ''
+    url: '/mesh/guides/progressively-rolling-in-strict-mtls/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.9'
+  -
+    path: app/_src/introduction/architecture.md
+    title: 'Architecture'
+    description: ''
+    url: '/mesh/introduction/architecture/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/introduction/concepts.md
+    title: 'Concepts'
+    description: ''
+    url: '/mesh/introduction/concepts/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.7'
+  -
+    path: app/_src/introduction/kuma-requirements.md
+    title: 'Requirements'
+    description: ''
+    url: '/mesh/introduction/kuma-requirements/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/networking/dns.md
+    title: 'DNS'
+    description: ''
+    url: '/mesh/networking/dns/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/networking/hostnamegenerator.md
+    title: 'HostnameGenerator'
+    description: ''
+    url: '/mesh/networking/hostnamegenerator/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.8'
+  -
+    path: app/_src/networking/meshexternalservice.md
+    title: 'MeshExternalService'
+    description: ''
+    url: '/mesh/networking/meshexternalservice/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.8'
+  -
+    path: app/_src/networking/meshmultizoneservice.md
+    title: 'MeshMultiZoneService'
+    description: ''
+    url: '/mesh/networking/meshmultizoneservice/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.9'
+  -
+    path: app/_src/networking/meshservice.md
+    title: 'MeshService'
+    description: ''
+    url: '/mesh/networking/meshservice/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.8'
+  -
+    path: app/_src/policies/introduction.md
+    title: 'Policies'
+    description: ''
+    url: '/mesh/policies/introduction/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/mesh/production/cp-deployment/license.md
+    title: 'License'
+    description: ''
+    url: '/mesh/production/cp-deployment/license/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/deployment/multi-zone.md
+    title: 'Multi-zone deployment'
+    description: ''
+    url: '/mesh/production/deployment/multi-zone/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/deployment/single-zone.md
+    title: 'Single-zone deployment'
+    description: ''
+    url: '/mesh/production/deployment/single-zone/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.6'
+  -
+    path: app/_src/production/dp-config/cni.md
+    title: 'Configure the Kong Mesh CNI'
+    description: ''
+    url: '/mesh/production/dp-config/cni/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/mesh.md
+    title: 'Configuring your Mesh and multi-tenancy'
+    description: ''
+    url: '/mesh/latest/production/mesh/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/secure-deployment/certificates.md
+    title: 'Secure access across services'
+    description: ''
+    url: '/mesh/production/secure-deployment/certificates/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/secure-deployment/dp-auth.md
+    title: 'Authentication with the data plane proxy'
+    description: ''
+    url: '/mesh/production/secure-deployment/dp-auth/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/upgrades-tuning/fine-tuning.md
+    title: 'Performance fine-tuning'
+    description: ''
+    url: '/mesh/production/upgrades-tuning/fine-tuning/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/upgrades-tuning/upgrade-notes.md
+    title: 'Version specific upgrade notes'
+    description: ''
+    url: '/mesh/production/upgrades-tuning/upgrade-notes/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.6'
+  -
+    path: app/_src/production/upgrades-tuning/upgrades.md
+    title: 'Upgrade Kong Mesh'
+    description: ''
+    url: '/mesh/latest/production/upgrades-tuning/upgrades/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/quickstart/kubernetes-demo.md
+    title: 'Deploy Kong Mesh on Kubernetes'
+    description: ''
+    url: '/mesh/quickstart/kubernetes-demo/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.6'
+  -
+    path: app/_src/quickstart/universal-docker-demo.md
+    title: 'Deploy Kong Mesh on Universal'
+    description: ''
+    url: '/mesh/quickstart/universal-docker-demo/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.9'
+  -
+    path: app/_src/reference/kubernetes-annotations.md
+    title: 'Kubernetes annotations and labels'
+    description: ''
+    url: '/mesh/reference/kubernetes-annotations/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/reference/kuma-cp.md
+    title: 'kuma-cp configuration reference'
+    description: ''
+    url: '/mesh/reference/kuma-cp/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/using-mesh/managing-ingress-traffic/builtin-k8s.md
+    title: 'Running built-in gateway pods on Kubernetes'
+    description: ''
+    url: '/mesh/using-mesh/managing-ingress-traffic/builtin-k8s/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.6'
+  -
+    path: app/_src/using-mesh/managing-ingress-traffic/builtin-listeners.md
+    title: 'Configuring built-in listeners'
+    description: ''
+    url: '/mesh/using-mesh/managing-ingress-traffic/builtin-listeners/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.6'
+  -
+    path: app/_src/using-mesh/managing-ingress-traffic/builtin-routes.md
+    title: 'Configuring built-in routes'
+    description: ''
+    url: '/mesh/using-mesh/managing-ingress-traffic/builtin-routes/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.6'
+  -
+    path: app/_src/using-mesh/managing-ingress-traffic/builtin.md
+    title: 'Configure a built-in gateway'
+    description: ''
+    url: '/mesh/using-mesh/managing-ingress-traffic/builtin/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.6'
+  -
+    path: app/_src/using-mesh/managing-ingress-traffic/delegated.md
+    title: 'Delegated gateways'
+    description: ''
+    url: '/mesh/using-mesh/managing-ingress-traffic/delegated/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.6'
+  -
+    path: app/_src/using-mesh/managing-ingress-traffic/gateway-api.md
+    title: 'Kubernetes Gateway API'
+    description: ''
+    url: '/mesh/using-mesh/managing-ingress-traffic/gateway-api/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.6'
+  -
+    path: app/_src/using-mesh/managing-ingress-traffic/overview.md
+    title: 'How ingress works'
+    description: ''
+    url: '/mesh/using-mesh/managing-ingress-traffic/overview/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.6'
+
+# Post GA
+#  -
+#    path: app/_src/mesh/availability-stages.md
+#    title: 'Stages of software availability'
+#    description: ''
+#    url: '/mesh/availability-stages/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/documentation/configuration.md
+#    title: 'Control Plane Configuration'
+#    description: ''
+#    url: '/mesh/documentation/configuration/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/documentation/health.md
+#    title: 'Dataplane Health'
+#    description: ''
+#    url: '/mesh/documentation/health/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/explore/cli.md
+#    title: 'CLI'
+#    description: ''
+#    url: '/mesh/explore/cli/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/explore/observability.md
+#    title: 'Observability'
+#    description: ''
+#    url: '/mesh/explore/observability/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/introduction/about-service-meshes.md
+#    title: 'About service meshes'
+#    description: ''
+#    url: '/mesh/introduction/about-service-meshes/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/introduction/install.md
+#    title: 'Install'
+#    description: ''
+#    url: '/mesh/introduction/install/'
+#    # related_resources:
+#    #   -
+#    min_version:
+#      mesh: '2.9'
+#  -
+#    path: app/_src/networking/service-discovery.md
+#    title: 'Service Discovery'
+#    description: ''
+#    url: '/mesh/networking/service-discovery/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/networking/transparent-proxying.md
+#    title: 'Transparent Proxying'
+#    description: ''
+#    url: '/mesh/networking/transparent-proxying/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/production/cp-deployment/zone-ingress.md
+#    title: 'Zone Ingress'
+#    description: ''
+#    url: '/mesh/latest/production/cp-deployment/zone-ingress/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/production/cp-deployment/zoneegress.md
+#    title: 'Zone Egress'
+#    description: ''
+#    url: '/mesh/production/cp-deployment/zoneegress/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/production/cp-deployment/zoneproxy-auth.md
+#    title: 'Configure zone proxy authentication'
+#    description: ''
+#    url: '/mesh/production/cp-deployment/zoneproxy-auth/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/production/dp-config/dpp-on-kubernetes.md
+#    title: 'Data plane on Kubernetes'
+#    description: ''
+#    url: '/mesh/production/dp-config/dpp-on-kubernetes/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/production/dp-config/dpp-on-universal.md
+#    title: 'Data plane on Universal'
+#    description: ''
+#    url: '/mesh/latest/production/dp-config/dpp-on-universal/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/production/dp-config/dpp.md
+#    title: 'Data plane proxy'
+#    description: ''
+#    url: '/mesh/production/dp-config/dpp/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/production/dp-config/ipv6.md
+#    title: 'IPv6 support'
+#    description: ''
+#    url: '/mesh/production/dp-config/ipv6/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/production/dp-config/transparent-proxying.md
+#    title: 'Configure transparent proxying'
+#    description: ''
+#    url: '/mesh/production/dp-config/transparent-proxying/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/production/gui.md
+#    title: 'Kong Mesh user interface (GUI)'
+#    description: ''
+#    url: '/mesh/latest/production/gui/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/production/secure-deployment/api-server-auth.md
+#    title: 'Authentication with the API server'
+#    description: ''
+#    url: '/mesh/production/secure-deployment/api-server-auth/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/production/secure-deployment/dp-membership.md
+#    title: 'Configure data plane proxy membership'
+#    description: ''
+#    url: '/mesh/production/secure-deployment/dp-membership/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/production/secure-deployment/secrets.md
+#    title: 'Manage secrets'
+#    description: ''
+#    url: '/mesh/production/secure-deployment/secrets/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/production/use-mesh.md
+#    title: 'Use Kong Mesh'
+#    description: ''
+#    url: '/mesh/latest/production/use-mesh/'
+#    # related_resources:
+#    #   -
+#  -
+#    path: app/_src/reference/data-collection.md
+#    title: 'Kong Mesh data collection'
+#    description: ''
+#    url: '/mesh/reference/data-collection/'
+#    # related_resources:
+#    #   -
+#
+#
