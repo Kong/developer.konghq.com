@@ -20,6 +20,15 @@ works_on:
   - on-prem
   - konnect
 
+related_resources:
+  - text: "Debugging {{site.kic_product_name}}"
+    url: /kubernetes-ingress-controller/troubleshooting/debugging/ 
+  - text: Debugging Kubernetes API Server connectivity
+    url: /kubernetes-ingress-controller/troubleshooting/kubernetes-api-server/
+  - text: "Debugging KIC in {{site.konnect_short_name}}"
+    url: /kubernetes-ingress-controller/troubleshooting/konnect/
+  - text: Failure Modes
+    url: /kubernetes-ingress-controller/troubleshooting/failure-modes/
 ---
 
 Kubernetes resources can request configuration that {{site.kic_product_name}} can't translate into a valid {{site.base_gateway}} configuration. While the [admission webhook](/kubernetes-ingress-controller//admission-webhook/) can reject some invalid configurations during creation and the controller can fix some invalid configurations on its own, some configuration issues require you to review and fix them. When such issues arise, {{site.kic_product_name}} creates Kubernetes Events to help you identify problem resources and understand how to fix them.
@@ -34,7 +43,7 @@ To determine if there are any translation failures that you might want to fix, y
 
 ### Finding problem resource Events
 
-{{ site.kic_product_name }} provides Kubernetes Events to help understand the state of your system. Events occur when an invalid configuration is rejected by {{ site.base_gateway }} (`KongConfigurationApplyFailed`) or when an invalid configuration such as an upstream service that does not exist is detected (`KongConfigurationTranslationFailed`)..
+{{ site.kic_product_name }} provides Kubernetes Events to help understand the state of your system. Events occur when an invalid configuration is rejected by {{ site.base_gateway }} (`KongConfigurationApplyFailed`) or when an invalid configuration such as an upstream service that doesn't exist is detected (`KongConfigurationTranslationFailed`).
 
 For more information, see [Events](/kubernetes-ingress-controller/observability/events/).
 
@@ -42,7 +51,7 @@ For more information, see [Events](/kubernetes-ingress-controller/observability/
 
 If the controller generates configuration that it cannot apply to Kong successfully, reviewing the generated configuration manually and/or applying it in a test environment can help locate potential causes.
 
-Under normal operation, the controller does not store generated configuration; it is only sent to Kong's Admin API.  The `--dump-config` flag enables a diagnostic mode where the controller also saves generated configuration and {{ site.base_gateway }} responses to memory. You can retrieve these via the web interface of the diagnostic server at `host:10256/debug/config`.
+Under normal operation, the controller doesn't store generated configuration; it is only sent to Kong's Admin API.  The `--dump-config` flag enables a diagnostic mode where the controller also saves generated configuration and {{ site.base_gateway }} responses to memory. You can retrieve these via the web interface of the diagnostic server at `host:10256/debug/config`.
 
 To use the diagnostic mode:
 
@@ -74,7 +83,7 @@ To use the diagnostic mode:
    kubectl port-forward -n kong deployments/kong-controller 10256:10256
    ```
 
-1. Retrieve successfully- and/or unsuccessfully-applied configuration:
+1. Retrieve successfully, or unsuccessfully, applied configurations:
 
    ```bash
    curl -s localhost:10256/debug/config/successful | jq .config > last_good.json
@@ -96,7 +105,7 @@ Once you have dumped configuration, take one of the following approaches to isol
   diff -u last_good.json last_bad.json
   ```
 
-- You can apply dumped configuration via the `/config` Admin API endpoint (DB-less mode) or using decK (DB-backed mode) to a test instance not managed by the ingress controller. This approach lets you review requests and responses (passing `--verbose 2` to decK will show all requests).
+- You can apply dumped configuration via the [`/config` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-config) (DB-less mode) or using decK (DB-backed mode) to a test instance not managed by the ingress controller. This approach lets you review requests and responses (passing `--verbose 2` to decK will show all requests).
 
 - To run a DB-less {{ site.base_gateway }} instance with Docker for testing purposes, run `curl https://get.konghq.com/quickstart | bash -s -- -D`.
 

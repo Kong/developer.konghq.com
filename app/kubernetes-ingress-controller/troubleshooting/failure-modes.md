@@ -19,6 +19,15 @@ works_on:
   - on-prem
   - konnect
 
+related_resources:
+  - text: "Debugging {{site.base_gateway}} Configuration"
+    url: /kubernetes-ingress-controller/troubleshooting/kong-gateway-configuration/
+  - text: Debugging Kubernetes API Server connectivity
+    url: /kubernetes-ingress-controller/troubleshooting/kubernetes-api-server/
+  - text: "Debugging KIC in {{site.konnect_short_name}}"
+    url: /kubernetes-ingress-controller/troubleshooting/konnect/
+  - text: "Debugging {{site.kic_product_name}}"
+    url: /kubernetes-ingress-controller/troubleshooting/debugging/
 ---
 
 This reference describes the different types of {{site.kic_product_name}} failure modes and how it processes them.
@@ -27,9 +36,9 @@ When you run {{site.kic_product_name}}, you can encounter the following failures
 
 {% table %}
 columns:
-  - title: Error Example
+  - title: Error example
     key: error
-  - title: Failure Mode
+  - title: Failure mode
     key: mode
 rows:
 - error: "`Reconciler error` in logs"
@@ -37,17 +46,17 @@ rows:
 - error: |
     Non-existent service referenced by an `Ingress`.
 
-    Example: `Ingress` with a non-existent backend service
+    *Example:* `Ingress` with a non-existent backend service
   mode: "[Failures in translating configuration](#failures-in-translating-configuration)"
 - error: |
     {{site.base_gateway}} rejected configuration 
     
-    Example: `Ingress` with invalid regex in the path
+    *Example:* `Ingress` with invalid regex in the path
   mode: "[Failures in applying configuration to {{site.base_gateway}}](#failures-in-applying-configuration-to-kong-gateway)"
 - error: |
     Errors when sending configuration to {{site.konnect_product_name}} 
 
-    Example: Failed request logs
+    *Example:* Failed request logs
   mode: "[Failures in uploading configuration to {{site.konnect_short_name}}](#failures-in-uploading-configuration-to-konnect)"
 {% endtable %}
 
@@ -58,16 +67,16 @@ rows:
 
 When the controllers reconciling a specific kind of Kubernetes resource run into errors in reconciling the resource, a `Reconciler error` log line is recorded and the resource is re-queued for another round of reconciliation. 
 
-Thee Prometheus metric `controller_runtime_reconcile_errors_total` stores the total number of reconcile errors per controller from the start of {{site.kic_product_name}}. Search for the `Reconciler error` keyword in the {{site.kic_product_name}} container logs to see detailed errors.
+The `controller_runtime_reconcile_errors_total` Prometheus metric stores the total number of reconcile errors per controller from the start of {{site.kic_product_name}}. Search for the `Reconciler error` keyword in the {{site.kic_product_name}} container logs to see detailed errors.
 
 ## Failures in translating configuration
 
 When {{site.kic_product_name}} finds Kubernetes resources that can't be correctly translated to {{site.base_gateway}} configuration (for example, an `Ingress` is using a non-existent `Service` as its backend), a translation failure is generated with the namespace and name of the objects causing the failure.
 
-The Kubernetes objects causing translation failures are not translated to {{site.base_gateway}} configuration in the translation process.  You can use Kubernetes events and Prometheus metrics to observe the translation failures.  If {{site.kic_product_name}} is integrated with {{site.konnect_product_name}}, it will report that a translation error happened in the uploading node status.
+The Kubernetes objects causing translation failures aren't translated to {{site.base_gateway}} configuration in the translation process. You can use Kubernetes events and Prometheus metrics to observe the translation failures.  If {{site.kic_product_name}} is integrated with {{site.konnect_short_name}}, it will report that a translation error happened in the uploading node status.
 
 {:.info}
-> Translation errors do not prevent {{ site.kic_product_name }} generating a configuration for {{ site.base_gateway }}. Once the resources can be translated, they will be added to the configuration.
+> Translation errors don't prevent {{ site.kic_product_name }} from generating a configuration for {{ site.base_gateway }}. Once the resources can be translated, they will be added to the configuration.
 
 {{site.kic_product_name}} collects all translation failures and generates a Kubernetes `Event` with the `Warning` type and the `KongConfigurationTranslationFailed` reason for each causing object in a translation failure. Prometheus metrics could also reflect the statistics of translation failures: 
 
@@ -97,7 +106,7 @@ You can observe failures in applying configuration from Kubernetes events and Pr
 
 * {{site.kic_product_name}} generates an event with the `Warning` type and the `KongConfigurationApplyFailed` reason attached to the pod itself when it fails to apply the configuration. 
 * For each object that causes the invalid configuration, {{site.kic_product_name}} generates a `Warning` event type and the `KongConfigurationApplyFailed` reason attached to the object. 
-* The Prometheus metric `ingress_controller_configuration_push_count` with the `success=false` label shows the total number of failures from applying the configuration by reason and URL of {{site.base_gateway}} admin API. 
+* The Prometheus metric `ingress_controller_configuration_push_count` with the `success=false` label shows the total number of failures from applying the configuration by reason and URL of {{site.base_gateway}} Admin API. 
 * The Prometheus metric `ingress_controller_configuration_push_broken_resource_count` reflects the number of Kubernetes resources that caused the error in the last configuration push.
 
 For example, let's say you create an `Ingress` with the `ImplementationSpecific` path type and an invalid regex in `Path` (which can only be only be done when the validating webhook is disabled, otherwise it will be rejected by the webhook):

@@ -20,9 +20,18 @@ works_on:
   - on-prem
   - konnect
 
+related_resources:
+  - text: "Debugging {{site.base_gateway}} Configuration"
+    url: /kubernetes-ingress-controller/troubleshooting/kong-gateway-configuration/
+  - text: Debugging Kubernetes API Server connectivity
+    url: /kubernetes-ingress-controller/troubleshooting/kubernetes-api-server/
+  - text: "Debugging KIC in {{site.konnect_short_name}}"
+    url: /kubernetes-ingress-controller/troubleshooting/konnect/
+  - text: Failure Modes
+    url: /kubernetes-ingress-controller/troubleshooting/failure-modes/
 ---
 
-{{ site.kic_product_name }} needs to communicate with the {{ site.konnect_short_name }} cloud APIs to provide an integration with [Gateway Manager](/gateway-manager/).  If you encounter issues with KIC in {{ site.konnect_short_name }}, you should first inspect logs from {{ site.kic_product_name }} to identify the root cause.
+{{ site.kic_product_name }} must communicate with the {{ site.konnect_short_name }} APIs to provide an integration with [Gateway Manager](/gateway-manager/). If you encounter issues with KIC in {{ site.konnect_short_name }}, you should first inspect logs from {{ site.kic_product_name }} to identify the root cause.
 
 ## Prometheus Metrics
 
@@ -30,7 +39,7 @@ The Prometheus metrics `ingress_controller_configuration_push_count` and `ingres
 
 ## Logging {{ site.konnect_short_name }} and {{ site.konnect_short_name }} traces {% new_in 3.3 %}
 
-KIC logs the details for every failed request and response (method, URL, status code) it receives from {{ site.konnect_short_name }} by default.
+{{ site.kic_product_name }} logs the details for every failed request and response (method, URL, status code) it receives from {{ site.konnect_short_name }} by default.
 
 If you set the `LOG_LEVEL` to `trace`, {{ site.kic_product_name }} will log the details for _every_ request and response it receives from {{ site.konnect_short_name }}.
 
