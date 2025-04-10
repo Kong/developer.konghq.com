@@ -4,6 +4,10 @@ content_type: how_to
 related_resources:
   - text: "{{site.base_gateway}} logs"
     url: /gateway/logs/
+  - text: "{{site.base_gateway}} audit logs"
+    url: /gateway/audit-logs/
+  - text: Validate {{site.base_gateway}} audit log signatures
+    url: /how-to/validate-gateway-audit-log-signatures/
 
 products:
     - gateway
@@ -44,12 +48,6 @@ prereqs:
       icon_url: /assets/icons/audit.svg
 
 next_steps:
-  - text: Validate {{site.base_gateway}} audit log signatures
-    url: /how-to/validate-gateway-audit-log-signatures/
-
-related_resources:
-  - text: "{{site.base_gateway}} audit logs"
-    url: /gateway/audit-logs/
   - text: Validate {{site.base_gateway}} audit log signatures
     url: /how-to/validate-gateway-audit-log-signatures/
 

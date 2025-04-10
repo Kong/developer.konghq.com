@@ -4,6 +4,10 @@ content_type: how_to
 related_resources:
   - text: "{{site.base_gateway}} logs"
     url: /gateway/logs/
+  - text: "{{site.base_gateway}} audit logs"
+    url: /gateway/audit-logs/
+  - text: Sign {{site.base_gateway}} audit logs with an RSA key
+    url: /how-to/sign-gateway-audit-logs/
 
 products:
     - gateway
@@ -23,12 +27,6 @@ tags:
 tldr:
     q: How do I validate audit log signatures?
     a: placeholder
-
-related_resources:
-  - text: "{{site.base_gateway}} audit logs"
-    url: /gateway/audit-logs/
-  - text: Sign {{site.base_gateway}} audit logs with an RSA key
-    url: /how-to/sign-gateway-audit-logs/
 
 
 prereqs:
