@@ -29,15 +29,15 @@ related_resources:
 ---
 
 The Noname Traffic Source plugin (also known as `nonamesecurity`) lets you tune
-how the Noname machine learning engine receives the {{site.base_gateway}} API traffic data to inspect.
+how the Noname machine learning engine receives {{site.base_gateway}} API traffic data to inspect.
 
 ## How it works
 
 All Noname integrations require you to create an integration profile in Noname. 
-Nearly all integrations require you to have administration access to the systems with which you want to integrate. 
+Nearly all integrations require you to have administration access to the systems you want to integrate. 
 The simplest integrations require you to record some kind of credentials or access key from the remote system to enter into Noname while creating the profile. 
 This enables Noname to receive information from, or perform actions on, the remote system. 
-For example, an action could be fetching a log file, or to initiating a block based on an incident created in Noname.
+For example, an action could be fetching a log file, or initiating a block based on an incident created in Noname.
 
 Prevention is enabled by default. To disable the prevention feature, review the [Noname documentation](https://docs.nonamesecurity.com/docs/kong-plugin#disabling-the-prevention-feature).
 
@@ -77,7 +77,7 @@ Choose your installation method:
 {% endnavtab %}
 {% navtab "Docker" %}
 
-If you have a Docker-based system, see the following example Dockerfile for 
+If you are using Docker, see the following example Dockerfile for 
 installing the Noname Security plugin:
 
 ```docker
