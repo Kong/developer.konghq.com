@@ -5,7 +5,7 @@ name: 'Prometheus'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Expose metrics related to {{site.base_gateway}} and proxied upstream Services in Prometheus exposition format'
+description: 'Expose metrics related to {{site.base_gateway}} and proxied upstream services in Prometheus exposition format'
 
 
 products:
@@ -41,9 +41,8 @@ This plugin records and exposes metrics at the node level. Your Prometheus
 server will need to discover all {{site.base_gateway}} nodes via a Service discovery mechanism,
 and consume data from each node's configured `/metrics` endpoint.
 
-## Grafana dashboard
-
-Metrics exported by the plugin can be graphed in Grafana using a drop-in
+{:.success}
+> **Grafana dashboard**: Metrics exported by the plugin can be graphed in Grafana using a drop-in
 dashboard: [https://grafana.com/grafana/dashboards/7424-kong-official/](https://grafana.com/grafana/dashboards/7424-kong-official/).
 
 ## Available metrics
@@ -51,25 +50,25 @@ dashboard: [https://grafana.com/grafana/dashboards/7424-kong-official/](https://
 You can expose the following metrics:
 
 - **DB reachability**: A gauge type with a value of 0 or 1, which represents
-  whether DB can be reached by a {{site.base_gateway}} node.
+  whether the database can be reached by a {{site.base_gateway}} node.
 - **Connections**: Various Nginx connection metrics like active, reading,
   writing, and number of accepted connections.
-- **Dataplane Status**: The last seen timestamp, config hash, config sync status and certificate expiration timestamp for
-data plane nodes is exported to control plane.
+- **Dataplane Status**: The last seen timestamp, config hash, config sync status, and certificate expiration timestamp for
+Data Plane nodes are exported to the Control Plane.
 - **Enterprise License Information**: The {{site.base_gateway}} license expiration date, features and
-license signature. Those metrics are only exported on {{site.base_gateway}}.
+license signature. Those metrics are only exported on self-managed {{site.base_gateway}}.
 - **DB Entity Count**: A gauge metric that
     measures the current number of database entities.
 - **Number of Nginx timers** : A gauge metric that measures the total number of Nginx
     timers in a Running or Pending state.
 - **[AI LLM metrics](#ai-llm-metrics)** {% new_in 3.8 %}: AI LLM metrics are available per provider, model, cache, database name (if cached), embeddings provider (if cached), embeddings model (if cached), and Workspace.
 
-### Metrics disabled by default
+### Optional metrics
 The following metrics are disabled by default as it may create high cardinality of metrics and may
 cause performance issues.
 
 #### Status code metrics
-When [`config.status_code_metrics`](/plugins/prometheus/reference/#schema--config-status-code-metrics) is set to true `http_requests_total`, `stream_sessions_total` metrics will be exported.
+When [`config.status_code_metrics`](/plugins/prometheus/reference/#schema--config-status-code-metrics) is set to true:
 - **Status codes**: HTTP status codes returned by {{site.base_gateway}}.
   - **`http_requests_total`**: HTTP status codes per Consumer/Service/Route at {{site.base_gateway}}.
   - **`stream_session_total`**: Stream status codes per Service/Route in {{site.base_gateway}}.
@@ -89,9 +88,14 @@ When [`config.bandwidth_metrics`](/plugins/prometheus/reference/#schema--config-
   This metric is available per Service and as a sum across all Services.
 
 #### Upstream health metrics
-When [`config.upstream_health_metrics`}(/plugins/prometheus/reference/#schema--config-upstream-health-metrics) is set to true:
-- **Target Health**: The healthiness status (`healthchecks_off`, `healthy`, `unhealthy`, or `dns_error`) of targets
-  belonging to a given upstream as well as their subsystem (`http` or `stream`).
+When [`config.upstream_health_metrics`](/plugins/prometheus/reference/#schema--config-upstream-health-metrics) is set to true:
+- **Target Health**: The healthiness status (`healthchecks_off`, `healthy`, `unhealthy`, or `dns_error`) of Targets
+  belonging to a given Upstream as well as their subsystem (`http` or `stream`).
+
+{:.info}
+> **Note:** Upstream targets' health information is exported once per subsystem. If both
+stream and HTTP listeners are enabled, targets' health will appear twice. Health metrics
+have a `subsystem` label to indicate which subsystem the metric refers to.
 
 #### AI LLM metrics {% new_in 3.8 %}
 
@@ -120,9 +124,9 @@ allow access to the `/metrics` endpoint to Prometheus:
    This is the preferred method.
 
 1. The `/metrics` endpoint is also available on the [Admin API](/api/gateway/admin-ee/#/), which can be used
-   if the Status API is not enabled. Note that this endpoint is unavailable
+   if the Status API is not enabled. This endpoint is unavailable
    when [RBAC](/gateway/entities/rbac/) is enabled on the
-   Admin API (Prometheus does not support Key-Auth to pass the token).
+   Admin API, as Prometheus doesn't support key authentication to pass the token.
 
 ## Metrics output example
 Here is an example of output you could expect from the `/metrics` endpoint:
@@ -341,9 +345,4 @@ kong_upstream_target_health{upstream="UPSTREAM_NAME",target="TARGET",address="IP
 kong_upstream_target_health{upstream="UPSTREAM_NAME",target="TARGET",address="IP:PORT",state="unhealthy",subsystem="http"} 0
 kong_upstream_target_health{upstream="UPSTREAM_NAME",target="TARGET",address="IP:PORT",state="dns_error",subsystem="http"} 0
 ```
-
-{:.info}
-> **Note:** Upstream targets' health information is exported once per subsystem. If both
-stream and HTTP listeners are enabled, targets' health will appear twice. Health metrics
-have a `subsystem` label to indicate which subsystem the metric refers to.
 

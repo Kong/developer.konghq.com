@@ -57,13 +57,6 @@ content_type: reference
 * Plugin version bumped to 3.0.0
 * The `node_id` label was added to memory metrics.
 
-### {{site.base_gateway}} (Enterprise) 2.8.3.2
-* Adds new directives in `kong.conf` to enable or disable high cardinality metrics.
-  * `prometheus_plugin_status_code_metrics`: Enables or disables reporting the HTTP/Stream status codes per Service/Route.
-  * `prometheus_plugin_latency_metrics`: Enables or disables reporting the latency added by {{site.base_gateway}}, request time and upstream latency.
-  * `prometheus_plugin_bandwidth_metrics`: Enables or disables reporting the bandwidth consumed by Service/Route.
-  * `prometheus_plugin_upstream_health_metrics`: Enables or disables reporting the upstream health status.
-
 ### {{site.base_gateway}} 2.8.x
 * Adds a new metric:
   * `kong_nginx_timers` (gauge): Total number of Nginx timers, in Running or Pending state.
@@ -72,6 +65,12 @@ content_type: reference
   * `kong_db_entity_count_errors` (counter): Measures the number of errors
       encountered during the measurement of `kong_db_entities_total`
 
+#### {{site.base_gateway}} 2.8.3.2
+* Adds new directives in `kong.conf` to enable or disable high cardinality metrics.
+  * `prometheus_plugin_status_code_metrics`: Enables or disables reporting the HTTP/Stream status codes per Service/Route.
+  * `prometheus_plugin_latency_metrics`: Enables or disables reporting the latency added by {{site.base_gateway}}, request time and upstream latency.
+  * `prometheus_plugin_bandwidth_metrics`: Enables or disables reporting the bandwidth consumed by Service/Route.
+  * `prometheus_plugin_upstream_health_metrics`: Enables or disables reporting the upstream health status.
 ### {{site.base_gateway}} 2.5.x
 * New `data_plane_cluster_cert_expiry_timestamp` metric
 * Added `subsystem` label to Upstream Target health metrics
