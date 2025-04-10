@@ -29,7 +29,8 @@ The default mTLS policy in {{site.mesh_product_name}} supports the following Cer
 
 In `acmpca` mTLS mode, {{site.mesh_product_name}} uses Amazon Certificate Manager to automatically generate Data Plane certificates. The private key of the CA is secured by AWS and never exposed.
 
-You configure {{site.mesh_product_name}} to use the ACM resource and optionally specify AWS authentication credentials. The system uses the AWS default credential chain (environment variables, config files, roles).
+You configure {{site.mesh_product_name}} to use the ACM resource and optionally specify AWS authentication credentials. 
+The system uses the AWS default credential chain (environment variables, config files, roles).
 
 Certificates are issued and rotated by the Zone Control Plane for each Data Plane proxy.
 
@@ -41,12 +42,13 @@ To configure ACM Private CA in {{site.mesh_product_name}}:
 * Record the ARN and Root Certificate Chain of the CA.
 * Apply a `Mesh` resource with an `acmpca` mTLS backend using either Kubernetes or Universal mode.
 
-
 The `acmpca` backend can authenticate via:
 
 * The default AWS credential chain (preferred)
 * Inline credentials (for testing only)
 * Mesh-scoped `secret` resources
+
+For example:
 
 {% navtabs "mesh config"%}
 {% navtab "Kubernetes" %}
@@ -108,7 +110,8 @@ mtls:
 
 These configurations can be applied with `kumactl apply -f [..]`.
 
-
 ## Multi-zone and ACM Private CA
 
-In a multi-zone environment, the global Control Plane provides the `Mesh` to the zone Control Planes. However, you must make sure that each zone Control Plane can communicate with ACM Private CA. This is because certificates for Data Plane proxies are requested from ACM Private CA by the zone Control Plane, not the global Control Plane.
+In a multi-zone environment, the global Control Plane provides the `Mesh` to the zone Control Planes. 
+However, you must make sure that each zone Control Plane can communicate with ACM Private CA. 
+This is because certificates for Data Plane proxies are requested from ACM Private CA by the zone Control Plane, not the global Control Plane.
