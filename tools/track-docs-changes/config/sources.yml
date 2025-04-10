@@ -1076,6 +1076,11 @@ app/mesh/access-audit.md:
 app/mesh/cert-manager.md:
   - /app/_src/mesh/features/cert-manager.md
 
+
+app/mesh/multi-zone-authentication.md:
+  - /mesh/_src/mesh/features/kds-auth.md
+
 app/mesh/license.md:
   - /app/_src/mesh/production/cp-deployment/license.md
+
 
