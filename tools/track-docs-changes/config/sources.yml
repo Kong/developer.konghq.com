@@ -267,6 +267,10 @@ app/kubernetes-ingress-controller/deployment-topologies/gateway-discovery.md:
   - app/_src/kubernetes-ingress-controller/production/deployment-topologies/gateway-discovery.md
 
 # plugins
+app/_kong_plugins/upstream-oauth/changelog.md:
+  - app/_hub/kong-inc/upstream-oauth/_changelog.md
+app/_kong_plugins/upstream-oauth/index.md:
+  - app/_hub/kong-inc/upstream-oauth/overview/_index.md
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/ai-rate-limiting-advanced/overview/_index.md
 app/_kong_plugins/basic-auth/index.md:
