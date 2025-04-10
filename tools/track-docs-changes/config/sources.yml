@@ -720,6 +720,16 @@ app/_kong_plugins/kafka-consume/changelog.md:
   - app/_hub/kong-inc/kafka-consume/_changelog.md
 app/_kong_plugins/datadome/index.md:
   - /app/_hub/datadome/kong-plugin-datadome/overview/_index.md
+app/_kong_plugins/kong-response-size-limiting/index.md:
+  - /app/_hub/optum/kong-response-size-limiting/overview/_index.md
+app/_kong_plugins/kong-spec-expose/index.md:
+  - /app/_hub/optum/kong-spec-expose/overview/_index.md
+app/_kong_plugins/kong-service-virtualization/index.md:
+  - /app/_hub/optum/kong-service-virtualization/overview/_index.md
+app/_kong_plugins/kong-splunk-log/index.md:
+  - /app/_hub/optum/kong-splunk-log/overview/_index.md
+app/_kong_plugins/kong-upstream-jwt/index.md:
+  - /app/_hub/optum/kong-upstream-jwt/overview/_index.md
 app/_kong_plugins/inigo/index.md:
   - /app/_hub/inigo/inigo/overview/_index.md
 app/_kong_plugins/imp-appsec-connector/index.md:
