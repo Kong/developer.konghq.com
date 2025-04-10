@@ -1,0 +1,25 @@
+description: 'Enable the the Moesif plugin by connecting to your Moesif application.'
+
+title: 'Enable Moesif'
+
+weight: 900
+
+requirements:
+  - "The Moesif plugin is [installed](/plugins/moesif/#install-the-moesif-plugin)."
+  - "You have created a Moesif application."
+
+
+variables:
+  app-id:
+    value: $MOESIF_APPLICATION_ID
+    description: Your Moesif Application Id from your [Moesif](http://www.moesif.com) dashboard.
+
+config:
+  application_id: ${app-id}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
