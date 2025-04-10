@@ -12,21 +12,22 @@ variables:
     value: $API_URL
 
 config:
-  - name: call
-    request:
-      url: ${url}
-      method: GET
-    response:
-      body:
-        store: true
-        decode: true
-      by_lua: kong.ctx.shared.callouts.call.caching.cache_key = 'some_key'
-    cache:
-      strategy: redis
-      redis:
-        host: localhost
-        port: 6379
-      cache_ttl: 360
+  callouts:
+    - name: call
+      request:
+        url: ${url}
+        method: GET
+      response:
+        body:
+          store: true
+          decode: true
+        by_lua: kong.ctx.shared.callouts.call.caching.cache_key = 'some_key'
+  cache:
+    strategy: redis
+    redis:
+      host: localhost
+      port: 6379
+    cache_ttl: 360
 
 tools:
   - deck

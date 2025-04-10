@@ -16,9 +16,9 @@ config:
   - name: call
     request:
       url: ${url}
-    cache:
-      strategy: memory
-      cache_ttl: 360
+  cache:
+    strategy: memory
+    cache_ttl: 360
 
 tools:
   - deck
