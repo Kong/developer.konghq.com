@@ -100,7 +100,7 @@ in the callout context.
 > Lua code must be thoroughly tested to ensure that it's correct and meets 
 > performance requirements.
 
-## `forward` flag
+## The forward flag
 
 Callout request and upstream request configuration blocks contain a `forward` 
 flag that controls whether specific request components are used to build the 
