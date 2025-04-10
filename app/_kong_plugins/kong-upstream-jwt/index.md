@@ -38,7 +38,7 @@ JWT validation accomplishes both as follows:
 1. **Authentication** & **Authorization**: Provided by means of JWT signature validation. 
 The JWT token is generated using {{site.base_gateway}}'s RSA x509 private key.
 Upstream services will then validate the signature of the generated JWT token using {{site.base_gateway}}'s public key. 
-This public key can be maintained in a keystore, or sent with the token - provided that upstream services validate the signature chain against their truststore.
+This public key can be maintained in a keystore, or sent with the token, provided that upstream services validate the signature chain against their truststore.
 
 2. **Non-Repudiation**: SHA256 is used to hash the body of the HTTP request body, and the resulting digest is included in the `payloadhash` element of the JWT body. 
 Upstream services will take the SHA256 hash of the HTTP request body and compare the digest to that found in the JWT. 
@@ -46,7 +46,7 @@ If the digests are identical, they can be certain that the request remained inta
 
 ## Set public and private keys
 
-The plugin requires that {{site.base_gateway}}'s private key be accessible in order to sign the JWT. 
+The plugin requires {{site.base_gateway}}'s private key is accessible in order to sign the JWT. 
 We also include the x509 cert in the `x5c` JWT Header for use by API providers to [validate the JWT](https://tools.ietf.org/html/rfc7515#section-4.1.6). 
 
 We access these via {{site.base_gateway}}'s overriding environment variables `KONG_SSL_CERT_KEY` for the private key as well as `KONG_SSL_CERT_DER` for the public key. 

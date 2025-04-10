@@ -38,7 +38,7 @@ We recommend enabling the Splunk Logging plugin at a global level.
 
 ## Configure the Splunk host
 
-The plugin requires an environment variable `SPLUNK_HOST`. 
+The plugin requires the `SPLUNK_HOST` environment variable. 
 This is how we define the `host=""` log field in Splunk:
 
 ```bash

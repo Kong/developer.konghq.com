@@ -31,10 +31,10 @@ The Kong Spec Expose plugin lets you expose the OpenAPI Spec (OAS), Swagger, or 
 
 ## How it works
 
-API providers need a means of exposing the specifications of their services while maintaining authentication on the service itself
+API providers need a means of exposing the specifications of their services while maintaining authentication on the service itself.
 The Kong Spec Expose plugin solves this problem by doing the following:
 
-1. The plugin enables Kong Admin to specify the endpoint of their API specification.
+1. The plugin enables a Kong Admin to specify the endpoint of their API specification.
 2. The plugin validates that the proxy request is a `GET` method, and will validate the proxy request ends with `/specz`. If these two requirements are met, the endpoint returns the specification of the upstream service with Content-Type header identical to what the upstream service exposes.
 
 ## Install the Kong Spec Expose plugin
