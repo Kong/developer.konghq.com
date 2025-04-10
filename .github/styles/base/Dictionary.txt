@@ -478,6 +478,7 @@ ingress_controller_translation_broken_resource_count
 ingress_controller_translation_count
 ingress_controller_translation_duration_milliseconds
 ini
+inigo
 init_worker
 inlineString
 inso
