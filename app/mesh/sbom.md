@@ -7,7 +7,7 @@ products:
   - mesh
 
 tags:
-  - sbom
+  - SBOM
   - security
 
 

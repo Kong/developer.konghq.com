@@ -8,7 +8,7 @@ products:
 
 tags:
   - OpenShift
-  - RedHat
+  - Red Hat
   - kubernetes
 
 

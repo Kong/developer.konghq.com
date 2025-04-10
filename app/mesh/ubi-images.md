@@ -8,7 +8,7 @@ products:
 
 tags:
   - UBI
-  - RedHat
+  - Red Hat
 
 related_resources:
   - text: "Enterprise Features"
