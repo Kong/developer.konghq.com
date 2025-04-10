@@ -59,7 +59,7 @@ prereqs:
         1. Make sure you have the appropriate permissions and follow the steps in the Microsoft docs to [set up a SAML application](https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/add-application-portal).
         1. [Enable SSO](https://learn.microsoft.com/en-us/entra/identity/app-proxy/conceptual-sso-apps#update-the-saml-configuration) for the application.
         1. Assign at least one user to the application. 
-        1. From the **Single sign-on** page of the application, get the the values of the following fields and add them to your environment:
+        1. From the **Single sign-on** page of the application, get the values of the following fields and add them to your environment:
             * **Identifier (Entity ID)**
             * **Login URL** 
             * **Certificate (Base64)** 
