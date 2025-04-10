@@ -1,0 +1,35 @@
+description: 'Specifies a custom header (`X-Custom-Auth`) to use when sending the access token (obtained from the IdP) to the upstream service.'
+
+title: 'Use a custom access token header'
+
+weight: 900
+
+# requirements: <- not required
+# - "some req"
+
+variables: 
+  client-id:
+    description: 'The client ID for the application registration in the IdP.'
+    value: $CLIENT_CREDENTIALS_GRANT_POST_AUTH_CLIENT_ID
+  client-secret:
+    description: 'The client secret for the application registration in the IdP.'
+    value: $CLIENT_CREDENTIALS_GRANT_POST_AUTH_CLIENT_SECRET
+
+config:
+  oauth:
+    token_endpoint: https://example.com/oauth2/token
+    grant_type: client_credentials
+    client_id: ${client-id}
+    client_secret: ${client-secret}
+    scopes:
+    - openid
+    - profile
+  behavior:
+    upstream_access_token_header_name: X-Custom-Auth
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
