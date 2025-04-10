@@ -79,6 +79,8 @@ app/_gateway_entities/vault.md:
   - app/_src/gateway/kong-enterprise/secrets-management/advanced-usage.md
   - app/_src/gateway/kong-enterprise/secrets-management/index.md
   - app/_src/gateway/kong-enterprise/secrets-management/backends/env.md
+  - app/konnect/gateway-manager/configuration/vaults/index.md
+  - app/konnect/gateway-manager/configuration/vaults/how-to.md
 app/_gateway_entities/sni.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_gateway/entities/certificate.md:
@@ -740,6 +742,10 @@ app/_kong_plugins/prometheus/changelog.md:
   - app/_hub/kong-inc/prometheus/_changelog.md
 app/_kong_plugins/prometheus/index.md:
   - app/_hub/kong-inc/prometheus/overview/_index.md
+app/_kong_plugins/moesif/index.md:
+  - /app/_hub/moesif/kong-plugin-moesif/overview/_index.md
+app/_kong_plugins/salt-agent/index.md:
+  - /app/_hub/salt/salt/overview/_index.md
 
 # Konnect
 
@@ -926,6 +932,7 @@ app/gateway/vulnerabilities.md:
   - app/_src/gateway/support/vulnerability-patching-process.md
 app/stages-of-software-availability.md:
   - app/_src/gateway/stability.md
+  - app/konnect/availability-stages.md
 app/gateway/third-party-support.md:
   - app/_src/gateway/support/browser.md
   - app/_src/gateway/support/third-party.md

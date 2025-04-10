@@ -560,6 +560,7 @@ minikube
 minio
 misconfigurations
 misconfigured
+moesif
 multimodal
 mutex
 nameserver
