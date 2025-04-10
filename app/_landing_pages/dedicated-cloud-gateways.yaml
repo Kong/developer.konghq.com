@@ -170,4 +170,4 @@ rows:
               icon: /assets/icons/gateway.svg
               cta:
                 text: Learn more
-                url: /dedicated-cloud-gateways/custom-plugins/
+                url: /dedicated-cloud-gateways/reference/#custom-plugins

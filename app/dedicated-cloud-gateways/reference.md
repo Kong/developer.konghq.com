@@ -51,6 +51,12 @@ faqs:
       This means that Dedicated Cloud Gateway can send requests to your upstream services, but your upstream services cannot initiate communication back to the gateway. 
       For many use cases requiring bidirectional communication—such as callbacks or dynamic interactions between the gateway and your upstream services—this limitation is a blocker. 
       For this reason, PrivateLink is not generally recommended for secure connectivity to your upstream services.
+  - q: How do I manage custom plugins after uploading them?
+    a: |
+      Once uploaded, you can manage custom plugins using any of the following methods:
+      * [decK](/deck/)
+      * [Control Plane Config API](/api/konnect/control-planes-config/v2/)
+      * [{{site.konnect_short_name}} UI](https://cloud.konghq.com/)
 
 related_resources:
   - text: Dedicated Cloud Gateways 
@@ -228,7 +234,38 @@ If you are using Dedicated Cloud Gateways and your upstream services are hosted 
 ### Azure VNet Peering
 If you are using Dedicated Cloud Gateways and your upstream services are hosted in Azure, VNet Peering is the preferred method for most users. For more information and a guide on how to attach your Dedicated Cloud Gateway, see the [Azure Peering](/dedicated-cloud-gateways/azure-peering/) documentation.
 
-## Custom Plugins
+## Custom plugins
 
-With Dedicated Cloud Gateways, {{site.konnect_short_name}} can stream custom plugins from the Control Plane to the Data Plane. This means that the Control Plane becomes a single source of truth for plugin versions. You only need to upload a plugin once, to the Control Plane, and {{site.konnect_short_name}} handles distributing the plugin code to all Data Planes in that Control Plane. For more information on adding a custom plugin to a Dedicated Cloud Gateway deployment, see the [custom plugin reference](/dedicated-cloud-gateways/custom-plugins/) documentation.
+With Dedicated Cloud Gateways, {{site.konnect_short_name}} can stream custom plugins from the Control Plane to the Data Plane. This means that the Control Plane becomes a single source of truth for plugin versions. You only need to upload a plugin once, to the Control Plane, and {{site.konnect_short_name}} handles distributing the plugin code to all Data Planes in that Control Plane. 
 
+### How does custom plugin streaming work? 
+
+With Dedicated Cloud Gateways, {{site.konnect_short_name}} can stream custom plugins from the Control Plane to the Data Plane. The Control Plane becomes the single source of truth for plugin versions. You only need to upload the plugin once, and {{site.konnect_short_name}} handles distribution to all Data Planes in the same Control Plane.
+
+A  custom pluginmust meet the following requirements: 
+* Unique name per plugin
+* One `handler.lua` and one `schema.lua` file
+* Cannot run in the `init_worker` phase or create timers
+* Must be written in Lua
+* A [personal or system access token](https://cloud.konghq.com/global/account/tokens) for the {{site.konnect_short_name}} API
+
+### How do I add a custom plugin?
+
+Plugins can be uploaded to {{site.konnect_short_name}} using the [{{site.konnect_short_name}} UI](https://cloud.konghq.com/gateway-manager/).
+You can also use [jq](https://jqlang.org/) with the following request template to add the plugin using the API:
+
+```sh
+curl -X POST https://{region}.api.konghq.com/v2/control-planes/{control-plane-id}/core-entities/custom-plugins \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer {your-access-token}" \
+  -d "$(jq -n \
+      --arg handler "$(cat handler.lua)" \
+      --arg schema "$(cat schema.lua)" \
+      '{"handler":$handler,"name":"streaming-headers","schema":$schema}')" \
+    | jq
+```
+Once uploaded, you can manage custom plugins using any of the following methods:
+
+* [decK](/deck/)
+* [Control Plane Config API](/api/konnect/control-planes-config/v2/)
+* [{{site.konnect_short_name}} UI](https://cloud.konghq.com/)
