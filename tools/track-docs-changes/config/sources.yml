@@ -720,6 +720,8 @@ app/_kong_plugins/kafka-consume/changelog.md:
   - app/_hub/kong-inc/kafka-consume/_changelog.md
 app/_kong_plugins/datadome/index.md:
   - /app/_hub/datadome/kong-plugin-datadome/overview/_index.md
+app/_kong_plugins/impart/index.md:
+  - /app/_hub/impart-security/kong-plugin-impart/overview/_index.md
 
 # Konnect
 
