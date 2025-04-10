@@ -1,5 +1,8 @@
 ---
 title: Sign {{site.base_gateway}} audit logs with an RSA key
+
+description: Use a key pair to sign audit logs in {{site.base_gateway}}.
+
 content_type: how_to
 related_resources:
   - text: "{{site.base_gateway}} logs"
