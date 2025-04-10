@@ -312,14 +312,14 @@ module Jekyll
         htmlContent += "
 {% navtab \"Kubernetes\" %}
 <div class=\"meshservice text-sm\">
-<label> <input type=\"checkbox\"> I am using <a href=\"/mesh/networking/meshservice/\">MeshService</a> </label>
+<label class=\"flex gap-1 items-center\"> <input type=\"checkbox\"> I am using <a href=\"/mesh/networking/meshservice/\">MeshService</a> </label>
 </div>
 #{contents[:kube_legacy]}
 #{contents[:kube]}
 {% endnavtab %}
 {% navtab \"Universal\" %}
 <div class=\"meshservice text-sm\">
-<label> <input type=\"checkbox\"> I am using <a href=\"/mesh/networking/meshservice/\">MeshService</a> </label>
+<label class=\"flex gap-1 items-center\"> <input type=\"checkbox\"> I am using <a href=\"/mesh/networking/meshservice/\">MeshService</a> </label>
 </div>
 #{contents[:uni_legacy]}
 #{contents[:uni]}
