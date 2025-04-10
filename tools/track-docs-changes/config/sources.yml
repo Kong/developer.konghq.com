@@ -738,7 +738,8 @@ app/_kong_plugins/impart/index.md:
   - /app/_hub/impart-security/kong-plugin-impart/overview/_index.md
 app/_kong_plugins/moesif/index.md:
   - /app/_hub/moesif/kong-plugin-moesif/overview/_index.md
-
+app/_kong_plugins/salt-agent/index.md:
+  - /app/_hub/salt/salt/overview/_index.md
 
 # Konnect
 
