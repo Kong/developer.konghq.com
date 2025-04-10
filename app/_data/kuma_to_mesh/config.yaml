@@ -153,13 +153,6 @@ pages:
     # related_resources:
     #   -
   -
-    path: app/_src/mesh/production/cp-deployment/license.md
-    title: 'License'
-    description: ''
-    url: '/mesh/production/cp-deployment/license/'
-    # related_resources:
-    #   -
-  -
     path: app/_src/production/deployment/multi-zone.md
     title: 'Multi-zone deployment'
     description: ''
