@@ -1,0 +1,18 @@
+description: 'Enable the Imperva plugin.'
+
+title: 'Enable Imperva'
+
+weight: 900
+
+requirements:
+  - "The Imperva plugin is [installed](/plugins/imp-appsec-connector/#install-the-imperva-plugin)."
+
+config:
+  destination_addr: 10.0.0.1
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

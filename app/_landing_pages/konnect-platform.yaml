@@ -1,0 +1,14 @@
+metadata:
+  title: "{{site.konnect_short_name}} Platform"
+  content_type: landing_page
+  description: |
+    placeholder
+  tags:
+    - konnect
+    
+rows:
+  - header:
+      type: h1
+      text: "{{site.konnect_short_name}} Platform"
+      sub_text: |
+        @todo create landing page

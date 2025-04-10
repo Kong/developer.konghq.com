@@ -36,3 +36,6 @@ salt:
 
 dynatrace:
   name: Dynatrace
+
+imperva:
+  name: Imperva
