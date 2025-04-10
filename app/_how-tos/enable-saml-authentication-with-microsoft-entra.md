@@ -96,7 +96,7 @@ entities:
 ## 2. Enable the SAML plugin
 
 Enable the [SAML plugin](/plugins/saml/) and provide the information to connect to your SAML application.
-We also need to provide a value for [`config.session_secret`](./reference/#schema--config-session-secret), which should be a random 32-character string.
+We also need to provide a value for [`config.session_secret`](/plugins/saml/reference/#schema--config-session-secret), which should be a random 32-character string.
 
 {:.warning}
 > For testing purposes, we are 
