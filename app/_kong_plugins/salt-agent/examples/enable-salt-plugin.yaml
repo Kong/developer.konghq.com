@@ -1,0 +1,32 @@
+description: 'Enable the Salt Security plugin by registering the Salt Security backend.'
+
+title: 'Enable Salt plugin'
+
+weight: 900
+
+requirements:
+  - The Salt plugin is [installed](/plugins/salt-agent/#install-the-salt-security-plugin/).
+  - You have a Salt token.
+
+variables:
+  salt-domain:
+    value: $SALT_DOMAIN
+    description: Salt domain address.
+  salt-port:
+    value: $SALT_BACKEND_PORT
+    description: Salt backend port.
+  salt-token:
+    value: $SALT_TOKEN
+    description: Salt-provided auth token.
+
+config:
+  salt_domain: "<salt_domain>"
+  salt_backend_port: "<salt_backend_port>"
+  salt_token: "<salt_token>"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

@@ -7,23 +7,12 @@ content_type: plugin
 publisher: salt
 description: "Integrate Kong API Gateway with Salt Security Discovery & Prevention for API-based apps"
 
-
 products:
     - gateway
 
 works_on:
     - on-prem
     - konnect
-
-
-# on_prem:
-#   - hybrid
-#   - db-less
-#   - traditional
-# konnect_deployments:
-#   - hybrid
-#   - cloud-gateways
-#   - serverless
 
 third_party: true
 
@@ -34,3 +23,17 @@ icon: salt-agent.png
 search_aliases:
   - salt-agent
 ---
+
+The Salt Security Kong deployment is used to capture a mirror of application traffic and send it to the Salt Security Service for analysis.
+This plugin has low CPU and memory consumption and adds no latency to the application since it doesn't sit in line with the production traffic.
+The plugin needs to see unencrypted traffic (after SSL termination) to enable the Salt Security service to perform analysis.
+
+## Install the Salt Security plugin
+
+### Prerequisites
+
+Obtain the plugin `.rock` file from your Salt Security distributor.
+
+### Install
+
+{% include_cached /plugins/install-third-party.md name=page.name slug=page.slug rock="kong-plugin-salt-agent-0.1.0-1.all.rock" %}
