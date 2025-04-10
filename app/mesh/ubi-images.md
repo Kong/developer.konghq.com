@@ -7,8 +7,8 @@ products:
   - mesh
 
 tags:
-  - ubi
-  - redhat
+  - UBI
+  - RedHat
 
 related_resources:
   - text: "Enterprise Features"

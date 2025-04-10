@@ -7,7 +7,7 @@ products:
   - mesh
 
 tags:
-  - fips
+  - FIPS
   - security
 
 related_resources:

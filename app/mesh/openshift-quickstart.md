@@ -7,8 +7,8 @@ products:
   - mesh
 
 tags:
-  - openshift
-  - redhat
+  - OpenShift
+  - RedHat
   - kubernetes
 
 
