@@ -745,6 +745,8 @@ app/konnect-platform/konnect-sso.md:
   - app/konnect/org-management/sso.md
 app/konnect-platform/saml-idp-mapping.md:
   - app/konnect/reference/saml-idp-mappings.md
+app/konnect-platform/self-managed-migration.md:
+  - app/konnect/getting-started/migration.md
 
 
 # landing pages
