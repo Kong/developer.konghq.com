@@ -455,6 +455,7 @@ https
 idempotency
 if_version
 impactful
+imperva
 inbounds
 include_cached
 ingress_controller_configuration_push_broken_resource_count
