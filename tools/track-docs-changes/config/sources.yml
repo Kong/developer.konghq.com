@@ -736,6 +736,10 @@ app/_kong_plugins/imp-appsec-connector/index.md:
   - /app/_hub/imperva/imp-appsec-connector/overview/_index.md
 app/_kong_plugins/impart/index.md:
   - /app/_hub/impart-security/kong-plugin-impart/overview/_index.md
+app/_kong_plugins/prometheus/changelog.md:
+  - app/_hub/kong-inc/prometheus/_changelog.md
+app/_kong_plugins/prometheus/index.md:
+  - app/_hub/kong-inc/prometheus/overview/_index.md
 
 # Konnect
 

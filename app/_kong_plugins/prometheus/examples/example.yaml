@@ -1,18 +1,11 @@
-description: ''
+description: 'Collects per-Consumer metrics. The `kong_http_requests_total` and `kong_bandwidth_bytes` metrics fill in the Consumer label when available.'
 
-title: ''
+title: 'Collect per-Consumer metrics'
 
 weight: 900
 
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
-
-config: # plugin config in yaml format goes here
+config:
+  per_consumer: true
 
 tools:
   - deck
