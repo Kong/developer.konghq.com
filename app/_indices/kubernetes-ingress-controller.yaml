@@ -29,6 +29,7 @@ sections:
       - path: /kubernetes-ingress-controller/gateway-api/
       - path: /kubernetes-ingress-controller/ingress/
       - path: /kubernetes-ingress-controller/custom-resources/
+      - path: /kubernetes-ingress-controller/class-annotations/
       - path: /kubernetes-ingress-controller/reference/annotations/
       - path: /kubernetes-ingress-controller/admission-webhook/
   - title: Deployment Topologies
@@ -44,3 +45,11 @@ sections:
     items:
       - path: /kubernetes-ingress-controller/reference/custom-resources/
       - path: /kubernetes-ingress-controller/reference/annotations/
+      - path: /kubernetes-ingress-controller/reference/feature-gates/
+      - path: /kubernetes-ingress-controller/reference/configuration-options/
+      - path: /kubernetes-ingress-controller/reference/required-permissions/
+  - title: FAQs
+    items:
+      - path: /kubernetes-ingress-controller/faq/custom-nginx-conf/
+      - path: /kubernetes-ingress-controller/faq/combining-httproutes/
+      - path: /kubernetes-ingress-controller/faq/migrate-ingress-to-gateway/
