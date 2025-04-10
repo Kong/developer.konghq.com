@@ -27,11 +27,11 @@ rows:
       - type: entity_card
         config:
           entity: consumer
+  - columns:
     - blocks:
       - type: entity_card
         config:
           entity: consumer-group
-  - columns:
     - blocks:
       - type: entity_card
         config:
@@ -40,6 +40,7 @@ rows:
       - type: entity_card
         config:
           entity: target
+  - columns:
     - blocks:
       - type: entity_card
         config:
@@ -48,6 +49,10 @@ rows:
       - type: entity_card
         config:
           entity: workspace
+    - blocks:
+      - type: entity_card
+        config:
+          entity: partial
 
   - header:
       type: h2
