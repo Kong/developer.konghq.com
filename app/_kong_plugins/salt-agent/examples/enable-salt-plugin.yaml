@@ -20,9 +20,9 @@ variables:
     description: Salt-provided auth token.
 
 config:
-  salt_domain: "<salt_domain>"
-  salt_backend_port: "<salt_backend_port>"
-  salt_token: "<salt_token>"
+  salt_domain: ${salt-domain}
+  salt_backend_port: ${salt-port}
+  salt_token: ${salt-token}
 
 tools:
   - deck
