@@ -80,6 +80,38 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
+faqs:
+  - q: How do I export application span metrics?
+    a: |
+      {{site.base_gateway}} relies on the OpenTelemetry Collector to calculate the metrics based on the traces the OpenTelemetry plugin generates.
+
+      To include span metrics for application traces, configure the collector exporters section of the OpenTelemetry Collector configuration file:
+
+      ```yaml
+      connectors:
+      spanmetrics:
+        dimensions:
+          - name: http.method
+            default: GET
+          - name: http.status_code
+          - name: http.route
+        exclude_dimensions:
+          - status.code
+        metrics_flush_interval: 15s
+        histogram:
+          disable: false
+
+      service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: []
+          exporters: [spanmetrics]
+        metrics:
+          receivers: [spanmetrics]
+          processors: []
+          exporters: [otlphttp]
+      ```
 ---
 
 ## 1. Set env var
@@ -96,28 +128,30 @@ export KONG_TRACING_SAMPLING_RATE=1.0
 Make a `otel-collector-config.yaml` file with the following configuration:
 
 ```yaml
+cat <<EOF > otel-collector-config.yaml
 receivers:
- otlp:
-   protocols:
-     http:
-       endpoint: 0.0.0.0:4318
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
 
 exporters:
- otlphttp:
-   endpoint: "https://{your-environment-id}.live.dynatrace.com/api/v2/otlp"
-   headers: 
-     "Authorization": "Api-Token <your-api-token>"
+  otlphttp:
+    endpoint: "https://{your-environment-id}.live.dynatrace.com/api/v2/otlp"
+    headers: 
+      "Authorization": "Api-Token <your-api-token>"
 
 service:
- pipelines:
-   traces:
-     receivers: [otlp]
-     processors: []
-     exporters: [otlphttp]
-   logs:
-     receivers: [otlp]
-     processors: []
-     exporters: [otlphttp]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: []
+      exporters: [otlphttp]
+    logs:
+      receivers: [otlp]
+      processors: []
+      exporters: [otlphttp]
+EOF
 ```
 
 Validate your configuration file:
