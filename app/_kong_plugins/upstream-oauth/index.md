@@ -67,7 +67,7 @@ sequenceDiagram
     idp->>kong: return access token
     deactivate idp
     activate api
-    kong->>api: request with access token <br>in Authorization header
+    kong->>api: request with access token <br>in authorization header
     deactivate kong
     activate kong
     api->>kong: response
