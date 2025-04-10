@@ -452,6 +452,7 @@ href
 http
 httpbin
 https
+idempotency
 if_version
 impactful
 imperva
