@@ -30,6 +30,8 @@ The plugin needs to see unencrypted traffic (after SSL termination) to enable th
 
 ## Install the Salt Security plugin
 
+You can install the Salt Security plugin for {{site.base_gateway}} via Luarocks.
+
 ### Prerequisites
 
 Obtain the plugin `.rock` file from your Salt Security distributor.
