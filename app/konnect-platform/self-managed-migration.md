@@ -12,7 +12,7 @@ works_on:
     - konnect
 
 related_resources:
-  - text: "About {{site.konnect_short_name}}}"
+  - text: "About {{site.konnect_short_name}}"
     url: /konnect-platform/
   - text: Hybrid mode
     url: /gateway/hybrid-mode/
@@ -67,9 +67,7 @@ D --> G[<a href="https://cloud.konghq.com/gateway-manager/create-control-plane">
 
 > _**Figure 1**: For traditional and hybrid deployments, you can migrate directly to {{site.konnect_short_name}}. DB-less deployments must migrate to hybrid first. For {{site.kic_product_name}} deployments, migrate to a {{site.kic_product_name}}-based Control Plane._
 
-### Role Based Access Controls (RBAC)
-
-
+## Role Based Access Controls (RBAC) migration
 
 {{site.base_gateway}}'s RBAC system does not map directly to the IAM system provided by {{site.konnect_short_name}}. 
 When migrating from a self-managed {{site.base_gateway}} to {{site.konnect_short_name}}, 
@@ -101,7 +99,12 @@ components used to isolate configuration.
 
 When migrating to {{site.konnect_short_name}}, you will create a Control Plane design that 
 best fits your goals, which may or may not mirror the number of Workspaces you
-use in your self-managed deployment.
+use in your self-managed deployment. Here's an example Workspace to Control Plane mapping strategy:
+* **Single Workspace:** Create a matching Control Plane with the same name as your Workspace. Alternatively, 
+you can re-organize your single Workspace configuration 
+into multiple Control Planes if there is a clear separation of concerns in your gateway configuration.
+* **Multiple Workspaces:** The most straightforward approach is to create a Control Plane for each Workspace, but you may choose to reorganize your design during the migration.
+
 ### Example Workspace migration
 
 The following provides an example set of steps for migrating a small multi-Workspace setup to 
@@ -121,18 +124,8 @@ a list of Workspaces for a particular {{site.base_gateway}} deployment by using 
    To use the {{site.konnect_short_name}} APIs, you must create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
 
 1. Log in into the [{{site.konnect_short_name}} UI](https://cloud.konghq.com/gateway-manager/) and validate the new Control Planes.
-### Control Plane design
 
-If you currently use a single Workspace in your self-managed installation,
-you can simply create a matching Control Plane with the same name. Alternatively, 
-you can re-organize your single Workspace configuration 
-into multiple Control Planes if there is a clear separation of concerns in your gateway configuration.
-
-If you're using multiple Workspaces in your self-managed installation, the most straightforward
-approach is to create a Control Plane for each Workspace, but you may choose to reorganize your 
-design during the migration.
-
-### Multi-tenancy
+## Multi-tenancy
 
 {{site.base_gateway}} Workspaces provide a way to share runtime infrastructure across isolated configurations.
 With {{site.konnect_short_name}}, this is achieved using 
@@ -141,8 +134,6 @@ and removed from Control Plane groups, and you can set them up to mirror your ex
 
 With Control Plane groups set up, you can connect Data Plane instances to each group, creating
 a shared Data Plane infrastructure among the constituent Control Planes.
-
-
 
 ## Plugin migration
 
@@ -175,7 +166,7 @@ Just like in self-managed deployments, the custom plugin code must be distribute
 but currently require a manual deployment process involving {{site.base_gateway}}'s support team. 
 Contact your Kong representative for more information.
 
-### {{site.base_gateway}} configuration
+## Migrating {{site.base_gateway}} configuration
 
 We recommend migrating {{site.base_gateway}} configuration to {{site.konnect_short_name}} 
 using [decK](/deck/gateway/konnect-configuration/), the declarative management tool for {{site.base_gateway}}
@@ -212,7 +203,7 @@ other tools that could be used for migrating your configuration. Each tool requi
 * [Konnect Control Planes Config API](/api/konnect/control-planes-config/v2/#/)
 * [{{site.konnect_short_name}} Terraform Provider](/terraform/)
 
-### Data planes
+## Migrating Data Planes
 
 The recommended approach for migrating your Data Plane instances to {{site.konnect_short_name}} is to
 create new Data Plane instances connected to your Control Plane, validate their configuration and connectivity,
@@ -221,7 +212,6 @@ and then decommission the self-managed Data Plane instances.
 See the [Data Plane hosting options](/gateway/topology-hosting-options/) for more information. The easiest
 way to deploy new Data Planes is using the {{site.konnect_short_name}} Gateway Manager, which provides integrated 
 launchers for popular operating systems and compute platforms. 
-
 
 ## Next steps
 
