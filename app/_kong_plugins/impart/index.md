@@ -45,7 +45,7 @@ Use the Impart plugin to:
 * Find and help you fix your API and web application vulnerabilities and misconfigurations with built-in API testing.
 * Reduce your API and web application risk profile.
 
-This plugin requires having an Impart Inspector installed. 
+You must install the Impart Inspector for this plugin to work. 
 Navigate to the Impart console for [step-by-step instructions](https://console.impartsecurity.net/orgs/_/integrations?q=kong).
 
 ## How it works
