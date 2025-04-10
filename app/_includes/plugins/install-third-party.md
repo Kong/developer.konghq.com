@@ -13,6 +13,8 @@ You can install the {{include.name}} plugin via LuaRocks.
 A Lua plugin is distributed in `.rock` format, which is
 a self-contained package that can be installed locally or from a remote server.
 
+{{ include.first-step }}
+
 1. Install the {{include.name}} plugin:
 
    ```sh
