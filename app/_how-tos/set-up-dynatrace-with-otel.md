@@ -50,7 +50,19 @@ prereqs:
         - example-service
     routes:
         - example-route
+  gateway:
+    - name: KONG_TRACING_INSTRUMENTATIONS
+    - name: KONG_TRACING_SAMPLING_RATE
   inline:
+  - title: Environment variables for Dynatrace
+    position: before
+    content: |
+      Set the following required {{site.base_gateway}} configuration that's required for Dynatrace:
+
+      ```sh
+      export KONG_TRACING_INSTRUMENTATIONS=all
+      export KONG_TRACING_SAMPLING_RATE=1.0
+      ```
   - title: Dynatrace
     content: |
       This tutorial requires you to have a Dynatrace SaaS account.
@@ -59,14 +71,14 @@ prereqs:
 
       Export those values as environment variables:
       ```sh
-      export DYNATRACE_ENVRIONMENT_ID=<environment-id-here>
-      export DYNATRACE_API_TOKEN=<token-here>
+      export DECK_DYNATRACE_ENVRIONMENT_ID=<environment-id-here>
+      export DECK_DYNATRACE_API_TOKEN=<token-here>
       ```
-    icon_url: /assets/icons/third-party/dynatrace.svg
+    icon_url: /assets/icons/third-party/dynatrace.png
 
 tldr:
     q: How do I send {{site.base_gateway}} traces, metrics, and logs to Dynatrace?
-    a: You can use the OpenTelemetry plugin with Dynatrace's OpenTelemetry Collector to send analytics and monitoring data to Dynatrace dashboards.
+    a: You can use the OpenTelemetry plugin with Dynatrace's OpenTelemetry Collector to send analytics and monitoring data to Dynatrace dashboards. Set `KONG_TRACING_INSTRUMENTATIONS=all` and `KONG_TRACING_SAMPLING_RATE=1.0`. Enable the OTEL plugin with your Dynatrace tracing and log endpoint, and specify the name you want to track the traces by in `resource_attributes.service.name`.
 
 tools:
     - deck
@@ -112,71 +124,51 @@ faqs:
           processors: []
           exporters: [otlphttp]
       ```
+  - q: If I want to use the Dynatrace Collector between {{site.base_gateway}} and Dynatrace, how do I configure that?
+    a: |
+      Make a `otel-collector-config.yaml` file with the following configuration:
+
+      ```yaml
+      receivers:
+        otlp:
+          protocols:
+            http:
+              endpoint: 0.0.0.0:4318
+
+      exporters:
+        otlphttp:
+          endpoint: "https://{yourEnvironmentId}.live.dynatrace.com/api/v2/otlp"
+          headers: 
+            "Authorization": "Api-Token <your-api-token>"
+
+      service:
+        pipelines:
+          traces:
+            receivers: [otlp]
+            processors: []
+            exporters: [otlphttp]
+          logs:
+            receivers: [otlp]
+            processors: []
+            exporters: [otlphttp]
+      ```
+
+
 ---
 
-## 1. Set env var
-
-Set the following required {{site.base_gateway}} configuration that's required for Dynatrace:
-
-```sh
-export KONG_TRACING_INSTRUMENTATIONS=all
-export KONG_TRACING_SAMPLING_RATE=1.0
-```
-
-## Dynatrace Collector
-
-Make a `otel-collector-config.yaml` file with the following configuration:
-
-```yaml
-cat <<EOF > otel-collector-config.yaml
-receivers:
-  otlp:
-    protocols:
-      http:
-        endpoint: 0.0.0.0:4318
-
-exporters:
-  otlphttp:
-    endpoint: "https://{your-environment-id}.live.dynatrace.com/api/v2/otlp"
-    headers: 
-      "Authorization": "Api-Token <your-api-token>"
-
-service:
-  pipelines:
-    traces:
-      receivers: [otlp]
-      processors: []
-      exporters: [otlphttp]
-    logs:
-      receivers: [otlp]
-      processors: []
-      exporters: [otlphttp]
-EOF
-```
-
-Validate your configuration file:
-```sh
-docker run -v $(pwd):$(pwd) -w $(pwd) ghcr.io/dynatrace/dynatrace-otel-collector/dynatrace-otel-collector:0.26.0 validate --config=$(pwd)/otel-collector-config.yaml
-```
-
-Create the Dynatrace Collector in a Docker container:
-```
-docker run -v $(pwd)/otel-collector-config.yaml:/etc/otelcol/otel-collector-config.yaml ghcr.io/dynatrace/dynatrace-otel-collector/dynatrace-otel-collector:0.26.0 --config=/etc/otelcol/otel-collector-config.yaml
-```
-
-## Enable the OTEL plugin
+## 1. Enable the OTEL plugin
 
 Enable the OTEL plugin with Dynatrace settings configured:
 
 {% entity_examples %}
 entities:
-    plugins:
-    - name: opentelemetry
-      config:
-        traces_endpoint: "https://${dynatrace_environment_id}.live.dynatrace.com/api/v2/otlp/v1/traces"
-        logs_endpoint: "https://${dynatrace_environment_id}.live.dynatrace.com/api/v2/otlp/v1/logs"
-        resource_attribute:
-          service.name: kong-dev
+  plugins:
+  - name: opentelemetry
+    config:
+      traces_endpoint: "https://${dynatrace_environment_id}.live.dynatrace.com/api/v2/otlp/v1/traces"
+      logs_endpoint: "https://${dynatrace_environment_id}.live.dynatrace.com/api/v2/otlp/v1/logs"
+      resource_attributes:
+        service.name: "kong-dev"
 
 variables:
   dynatrace_environment_id:
@@ -196,9 +188,4 @@ headers:
     - 'Content-Type: application/json'
 {% endvalidation %}
 
-for _ in {1..6}; do
-  curl -i http://localhost:8000/anything
-  echo
-done
-
-In Dynatrace, look for the traces.
+In the Dynatrace UI, navigate to Distributed Traces and search for `Service name` of `kong-dev`.
