@@ -7,24 +7,11 @@ content_type: plugin
 publisher: optum
 description: "Log API transactions to Splunk using the Splunk HTTP collector"
 
-
 products:
     - gateway
 
 works_on:
     - on-prem
-
-min_version:
-    gateway: '3.4'
-
-# on_prem:
-#   - hybrid
-#   - db-less
-#   - traditional
-# konnect_deployments:
-#   - hybrid
-#   - cloud-gateways
-#   - serverless
 
 third_party: true
 
@@ -39,3 +26,27 @@ icon: optum.png
 search_aliases:
   - optum
 ---
+
+The Kong Splunk Log plugin is a modified version of the [HTTP Log plugin](/plugins/http-log/) 
+that has been refactored and tailored to work with Splunk.
+
+We recommend enabling the Splunk Logging plugin at a global level.
+
+## Install the Kong Spec Expose plugin
+
+{% include_cached /plugins/install-third-party.md name=page.name slug=page.slug rock="kong-splunk-log" %}
+
+## Configure the Splunk host
+
+The plugin requires an environment variable `SPLUNK_HOST`. 
+This is how we define the `host=""` log field in Splunk:
+
+```bash
+export SPLUNK_HOST="example.company.com"
+```
+
+Make the environment variable accessible by an Nginx worker by adding this line to your `nginx.conf`:
+
+```
+env SPLUNK_HOST;
+```

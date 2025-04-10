@@ -2,6 +2,9 @@ description: 'Block upstream responses whose body is greater than 128 megabytes.
 
 title: Payload with a 128Mb limit
 
+requirements:
+  - "The Kong Response Size Limiting plugin is [installed](/plugins/kong-response-size-limiting/#install-the-kong-response-size-limiting-plugin)."
+
 weight: 900
 
 config:
