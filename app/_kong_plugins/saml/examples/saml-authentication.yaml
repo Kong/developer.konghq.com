@@ -1,0 +1,36 @@
+description: |
+  Configure the plugin to enable SAML authentication using an anonymous Consumer.
+
+  For a full how-to guide, see [Enable SAML authentication for {{site.base_gateway}} using Microsoft Entra](/how-to/enable-saml-authentication-with-microsoft-entra/).
+
+title: Set up SAML authentication
+
+weight: 900
+
+requirements:
+- You have a SAML application
+- You have an anonymous Consumer
+
+config:
+  anonymous: anonymous
+  issuer: ${identifier}
+  idp_sso_url: ${url}
+  assertion_consumer_path: /consume
+  validate_assertion_signature: false
+  session_secret: uwcLGoTJCWnHWZdVpbLYKlztNOyoGJ07
+  idp_certificate: ${certificate}
+
+variables:
+  identifier:
+    value: $IDENTIFIER
+  url:
+    value: $LOGIN_URL
+  certificate:
+    value: $CERTIFICATE
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
