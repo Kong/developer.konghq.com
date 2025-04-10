@@ -12,7 +12,6 @@ api_specs:
 
 tools:
   - admin-api
-  - konnect-api
   - kic
   - deck
   - terraform
