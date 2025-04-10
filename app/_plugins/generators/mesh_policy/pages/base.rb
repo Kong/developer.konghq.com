@@ -33,7 +33,7 @@ module Jekyll
               'overview_url' => Overview.url(@policy),
               'get_started_url' => @policy.examples.first.url,
               'reference_url' => Reference.url(@policy)
-            )
+            ).merge(publication_info)
         end
 
         def relative_path
@@ -42,6 +42,12 @@ module Jekyll
 
         def url
           @url ||= self.class.url(@policy)
+        end
+
+        def publication_info
+          return {} if @policy.publish?
+
+          { 'published' => false }
         end
       end
     end
