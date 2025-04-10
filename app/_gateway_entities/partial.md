@@ -23,7 +23,6 @@ schema:
 
 works_on:
   - on-prem
-  - konnect
 
 min_version:
   gateway: '3.10'
