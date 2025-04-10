@@ -113,3 +113,8 @@ sitemap:
     - /_redirects
     - /sources_urls_mapping.json
     - /sitemap.xml
+
+
+mesh:
+  ignored_links_regex:
+    - '\[.*\]\(https:\/\/github\.com\/[kK]ong\/kong-mesh.*\)'

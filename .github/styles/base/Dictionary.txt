@@ -356,6 +356,7 @@ dao
 daos
 dashboarding
 datadog
+datadome
 datagram
 datagrams
 dataplane
@@ -455,6 +456,7 @@ idempotency
 if_version
 impactful
 inbounds
+include_cached
 ingress_controller_configuration_push_broken_resource_count
 ingress_controller_configuration_push_count
 ingress_controller_configuration_push_duration_milliseconds

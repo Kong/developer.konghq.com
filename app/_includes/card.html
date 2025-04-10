@@ -16,7 +16,16 @@
 {% endif %}
 {% endcapture %}
 
-<div class="card card__bordered {{ include.css_class}}">
+<div class="card {% if include.featured %}card__featured{% else %}card__bordered{% endif %} {{ include.css_class}} ">
+    {% if include.featured %}
+    <div class="text-xs absolute transform rotate-45 bg-brand-saturated dark:bg-terciary text-center text-white font-semibold py-1 right-[-35px] top-[32px] w-[170px]">
+    {% if include.featured != true %}
+    {{ include.featured }}
+    {% else %}
+    Recommended
+    {% endif %}
+    </div>
+    {% endif %}
 
     {% if include.cta_url %}
         <a href="{{include.cta_url}}" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">

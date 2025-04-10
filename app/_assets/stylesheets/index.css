@@ -208,6 +208,14 @@
   code span {
     @apply text-white;
   }
+
+  h3[id^="includes-kumahq-kuma-"][id$="-changelog"] {
+    @apply flex items-center gap-1;
+
+    > a {
+      @apply w-auto;
+    }
+  }
 }
 
 @layer components {
@@ -460,6 +468,10 @@
 
   .card__bordered {
     @apply border border-primary/5 hover:border hover:border-brand-saturated/40 hover:shadow-hover-card;
+  }
+
+  .card__featured {
+    @apply border-brand-saturated/80 hover:border-brand-saturated border-2 relative overflow-hidden hover:shadow-hover-card;
   }
 
   .kong-conf-param h3 > a {
