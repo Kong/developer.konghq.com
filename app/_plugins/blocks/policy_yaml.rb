@@ -4,8 +4,8 @@
 
 module Jekyll
   class RenderPolicyYaml < Liquid::Block
-    TARGET_VERSION = Gem::Version.new('2.9.0')
-    TF_TARGET_VERSION = Gem::Version.new('2.10.0')
+    TARGET_VERSION = Gem::Version.new('2.9')
+    TF_TARGET_VERSION = Gem::Version.new('2.10')
 
     def has_path(path)
       ->(node_path, _, _) { node_path == path }
@@ -37,7 +37,8 @@ module Jekyll
 
     def initialize(tag_name, markup, options)
       super
-      @params = { 'raw' => false, 'apiVersion' => 'kuma.io/v1alpha1', 'use_meshservice' => 'false' }
+
+      @params = { 'raw' => false, 'apiVersion' => 'kuma.io/v1alpha1', 'use_meshservice' => false }
       markup.strip.split(' ').each do |item|
         sp = item.split('=')
         @params[sp[0]] = sp[1] unless sp[1] == ''
@@ -263,6 +264,13 @@ module Jekyll
       content = super
       return '' if content == ''
 
+      @params.each do |k, v|
+        next unless %w[use_meshservice namespace].include?(k)
+        next unless v.is_a?(String)
+
+        @params[k] = v.split('.').reduce(context) { |c, key| c[key] } || false
+      end
+
       has_raw = @body.nodelist.first { |x| x.has?('tag_name') and x.tag_name == 'raw' }
 
       release = context.registers[:page]['release']
@@ -270,8 +278,8 @@ module Jekyll
       content = content.gsub(/`{3}yaml\n/, '').gsub(/`{3}/, '')
       site_data = context.registers[:site].config
 
-      use_meshservice = @params['use_meshservice'] == 'true' && Gem::Version.new(release.number.dup.sub('x',
-                                                                                                        '0')) >= TARGET_VERSION
+      use_meshservice = @params['use_meshservice'] == true && Gem::Version.new(release.number.dup.sub('x',
+                                                                                                      '0')) >= TARGET_VERSION
       show_tf = Gem::Version.new(release.number.dup.sub('x', '0')) >= TF_TARGET_VERSION
 
       namespace = @params['namespace'] || site_data['mesh_namespace']
@@ -312,14 +320,14 @@ module Jekyll
         htmlContent += "
 {% navtab \"Kubernetes\" %}
 <div class=\"meshservice text-sm\">
-<label> <input type=\"checkbox\"> I am using <a href=\"/mesh/networking/meshservice/\">MeshService</a> </label>
+<label class=\"flex gap-2 py-0.5 w-full text-sm text-primary md:pl-1 items-center\"> <input class=\"checkbox\" type=\"checkbox\"> I am using <a href=\"/mesh/networking/meshservice/\">MeshService</a> </label>
 </div>
 #{contents[:kube_legacy]}
 #{contents[:kube]}
 {% endnavtab %}
 {% navtab \"Universal\" %}
 <div class=\"meshservice text-sm\">
-<label> <input type=\"checkbox\"> I am using <a href=\"/mesh/networking/meshservice/\">MeshService</a> </label>
+<label class=\"flex gap-2 py-0.5 w-full text-sm text-primary md:pl-1 items-center\"> <input class=\"checkbox\" type=\"checkbox\"> I am using <a href=\"/mesh/networking/meshservice/\">MeshService</a> </label>
 </div>
 #{contents[:uni_legacy]}
 #{contents[:uni]}

@@ -2,6 +2,5 @@
     "/mesh/install/",
     "/tools/",
     "/api-ops/",
-    "/terraform/",
-    "/mesh/"
+    "/terraform/"
 ]

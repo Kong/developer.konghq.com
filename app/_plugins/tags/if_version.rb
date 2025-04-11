@@ -106,7 +106,8 @@ module Jekyll
       end
 
       def to_version(input)
-        Gem::Version.new(input.to_s)
+        version = input.to_s.gsub(/\.x$/, '')
+        Gem::Version.new(version)
       end
     end
 

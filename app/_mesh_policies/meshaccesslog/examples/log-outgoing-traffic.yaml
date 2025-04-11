@@ -1,0 +1,21 @@
+title: 'Log all outgoing traffic'
+
+description: 'Log all outgoing traffic with MeshAccessLog.'
+
+weight: 900
+
+namespace: kuma-demo
+
+config:
+  type: MeshAccessLog
+  name: all-outgoing-traffic
+  mesh: default
+  spec:
+    to:
+      - targetRef:
+          kind: Mesh
+        default:
+          backends:
+            - type: File
+              file:
+                path: /dev/stdout

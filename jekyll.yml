@@ -107,6 +107,8 @@ plugin_schemas_path: app/.repos/kong-plugins/json_schemas
 plugin_referenceable_fields_path: app/.repos/kong-plugins/data/referenceable_fields
 plugin_priorities_path: app/.repos/kong-plugins/data/priorities/ee
 
+mesh_policy_schemas_path: app/.repos/kuma/app/assets/
+
 sitemap:
   exclude:
     - /robots.txt
@@ -115,6 +117,25 @@ sitemap:
     - /sources_urls_mapping.json
     - /sitemap.xml
 
+# Mesh specific config
+mesh_namespace: kong-mesh-system
+mesh_cp_name: kong-mesh-control-plane
+mesh_ignored_links_regex:
+  - '\[.*\]\(https:\/\/github\.com\/[kK]ong\/kong-mesh.*\)'
+mesh_raw_generated_paths:
+  - app/assets/mesh
+mesh_product_name_path: kong-mesh
+mesh_cp_zone_sync_name_prefix: kong-mesh-
+mesh_docker_org: kong
+# Helm commands
+set_flag_values_prefix: kuma.
+mesh_helm_repo_url: https://kong.github.io/kong-mesh-charts
+mesh_helm_repo_name: kong-mesh
+mesh_helm_repo: kong-mesh/kong-mesh
+mesh_helm_install_name: kong-mesh
+mesh_disabled_versions: []
+# binary options
+mesh_install_archive_name: kong-mesh
 
 mesh:
   ignored_links_regex:

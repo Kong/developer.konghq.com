@@ -10,6 +10,8 @@ module Jekyll
         end
 
         def process
+          return if @page.data['edit_link']
+
           @page.data['edit_link'] = edit_link
         end
 
@@ -18,7 +20,11 @@ module Jekyll
         def edit_link
           return if @page.data['content_type'] == 'policy'
 
-          "#{repo_edit_url}/#{@page.relative_path}"
+          if @page.data['source_url']
+            @page.data['source_url'].gsub('/tree/', '/edit/')
+          else
+            "#{repo_edit_url}/#{@page.relative_path}"
+          end
         end
 
         def repo_edit_url
