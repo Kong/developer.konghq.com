@@ -50,14 +50,16 @@ type.
 
 Callout request and response context is stored in `kong.ctx.shared.callouts.<name>`. 
 
-The request context contains:
-* `.<name>.request.params`: The full configuration for the callout request, including `url`, `method`, `query`, `headers`, `body`, `decode`, `ssl_verify`, `proxy`, `timeouts`, and others (as specified in the HTTP options plugin schema). The `headers` key is case sensitive.
-* `.<name>.request.retries`: The list of request retries, if `error` is set to `retry`. It contains:
-  * `reason`: The cause of the error, which can be `error` for TCP errors, or `code` if the retry was caused by an HTTP status code.
-  * `err`: The specific error.
-  * `http_code`: The specific HTTP status code that caused the retry.
-* `.<name>.request.n_retries`: The total number of retries.
-* `.<name>.caching`: The list of cache-related configurations, as specified in the plugin's schema. If a `cache_key` field is set, it overrides the cache key for the current callout (this is useful in dynamic customizations of cache  key, via `by_lua` Lua code).
+The request context includes:
+
+* `.<name>.request.params`: Full callout request config, including `url`, `method`, `query`, `headers` (case-sensitive), `body`, `decode`, `ssl_verify`, `proxy`, `timeouts`, and other HTTP options.
+* `.<name>.request.retries`: Retry attempts if `error = retry`, with:
+  * `reason`: `error` (TCP error) or `code` (HTTP status code).
+  * `err`: Specific error.
+  * `http_code`: Triggering status code.
+* `.<name>.request.n_retries`: Total retry count.
+* `.<name>.caching`: Cache config per plugin schema. If `cache_key` is set, it overrides the key for the current callout.
+
 
 The response context contains:
 * `status`
@@ -96,7 +98,7 @@ in the callout context.
 
 {:.warning}
 > Schema validation will detect syntax issues. Other errors, such as 
-> nil references, happen at runtime and lead to an `Internal Server Error`. 
+> nil references, happen at runtime and will lead to an `Internal Server Error`. 
 > Lua code must be thoroughly tested to ensure that it's correct and meets 
 > performance requirements.
 
