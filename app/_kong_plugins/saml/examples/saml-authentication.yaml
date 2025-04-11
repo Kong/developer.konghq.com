@@ -8,8 +8,8 @@ title: Set up SAML authentication
 weight: 900
 
 requirements:
-- You have a SAML application
-- You have an anonymous Consumer
+- A SAML application
+- An anonymous Consumer
 
 config:
   anonymous: anonymous
