@@ -71,7 +71,7 @@ The advanced version of this plugin, [Key Authentication Encrypted](/plugins/key
 You can authenticate [centrally-managed Consumers](/gateway/entities/consumer/#centralized-consumer-management) in {{site.konnect_short_name}} by configuring the [`config.identity_realms`](./reference/#schema--config-identity-realms) field.
 See [Realms for external Consumers in {{site.konnect_short_name}}](/plugins/key-auth/examples/identity-realms/) for an example configuration.
 
-Identity realms are scoped to the control plane by default (`scope: cp`). 
+Identity realms are scoped to the Control Plane by default (`scope: cp`). 
 The order in which you configure the identity realm dictates the priority in which the Data Plane attempts to authenticate the provided API keys:
 
 {% table %}

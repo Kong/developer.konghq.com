@@ -6,6 +6,6 @@ searching the query string. As a best practice, administrators are advised again
 case-sensitive [`config.key_names`](./reference/#schema--config-key-names) values when expecting the authorization keys to be sent in the request headers.
 
 Once applied, any user with a valid credential can access the Service or Route.
-To restrict usage to certain authenticated users, also add the
+To restrict usage to certain authenticated users, add the
 [ACL](/plugins/acl/) plugin and create allowed or
 denied groups of users.

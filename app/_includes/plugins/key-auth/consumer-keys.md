@@ -1,6 +1,6 @@
 When you [create a Consumer](/gateway/entities/consumer/#set-up-a-consumer), you can specify a `key` with `keyauth_credentials` (declarative configuration) or the `/consumers/{usernameOrId}/{{include.slug}}` endpoint.
 
-When authenticating, Consumers must specify their key either in the query, body, or a header:
+When authenticating, Consumers must specify their key in either the query, body, or header:
 
 {% table %}
 columns:
