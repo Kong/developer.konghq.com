@@ -47,6 +47,22 @@ module Jekyll
         !(unreleased? && ENV['JEKYLL_ENV'] == 'production')
       end
 
+      def schemas
+        @schemas ||= Drops::MeshPolicies::Schema.all(policy: self)
+      end
+
+      def schema
+        @schema ||= schemas.detect { |s| s.release == latest_release_in_range }
+      end
+
+      def type
+        @type ||= metadata.fetch('type', 'policy')
+      end
+
+      def name
+        @name ||= metadata.fetch('name')
+      end
+
       private
 
       def release_info

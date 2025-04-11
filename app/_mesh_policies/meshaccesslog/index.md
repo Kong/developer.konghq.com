@@ -1,5 +1,6 @@
 ---
 title: MeshAccessLog
+name: MeshAccessLogs
 products:
     - mesh
 

@@ -23,7 +23,7 @@ module Jekyll
           url
         end
 
-        def data
+        def data # rubocop:disable Metrics/MethodLength
           @policy
             .metadata
             .merge(
@@ -32,7 +32,9 @@ module Jekyll
               'breadcrumbs' => ['/mesh/', '/mesh/policies/'],
               'overview_url' => Overview.url(@policy),
               'get_started_url' => @policy.examples.first.url,
-              'reference_url' => Reference.url(@policy)
+              'reference_url' => Reference.url(@policy),
+              'plugin' => @policy,
+              'plugin?' => true
             ).merge(publication_info)
         end
 

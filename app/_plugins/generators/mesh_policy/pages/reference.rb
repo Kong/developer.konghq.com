@@ -19,20 +19,17 @@ module Jekyll
         def data
           super
             .except('faqs')
-            .merge(metadata)
             .merge(
+              'content_type' => 'reference',
               'reference?' => true,
               'toc' => false,
-              'versioned' => true
+              'versioned' => true,
+              'schema' => @policy.schema
             )
         end
 
-        def metadata
-          @metadata ||= {}
-        end
-
         def layout
-          'mesh_policies/with_aside'
+          'mesh_policies/reference'
         end
       end
     end

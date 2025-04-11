@@ -33,7 +33,7 @@ Liquid::Template.register_tag('danger', Jekyll::KumaSpecific::CustomBlock)
 module Jekyll
   class JsonSchema < Liquid::Tag
     def render(context)
-      ''
+      'TODO: Fix this'
     end
   end
 end
