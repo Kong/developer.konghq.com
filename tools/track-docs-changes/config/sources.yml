@@ -755,6 +755,12 @@ app/_kong_plugins/salt-agent/index.md:
 app/_kong_plugins/nonamesecurity/index.md:
   - /app/_hub/nonamesecurity/nonamesecurity-kongtrafficsource/overview/_index.md
 
+app/_kong_plugins/saml/index.md:
+  - app/_hub/kong-inc/saml/overview/_index.md
+app/_kong_plugins/saml/changelog.md:
+  - app/_hub/kong-inc/saml/_changelog.md
+app/_how-tos/enable-saml-authentication-with-microsoft-entra.md:
+  - app/_hub/kong-inc/saml/overview/_index.md
 # Konnect
 
 app/advanced-analytics/explorer.md:
