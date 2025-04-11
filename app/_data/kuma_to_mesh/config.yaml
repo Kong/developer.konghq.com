@@ -36,7 +36,7 @@ pages:
     path: app/_src/guides/gateway-api.md
     title: 'Kubernetes Gateway API'
     description: ''
-    url: '/mesh/latest/guides/gateway-api/'
+    url: '/mesh/guides/gateway-api/'
     # related_resources:
     #   -
     min_version:
@@ -187,7 +187,7 @@ pages:
     path: app/_src/production/mesh.md
     title: 'Configuring your Mesh and multi-tenancy'
     description: ''
-    url: '/mesh/latest/production/mesh/'
+    url: '/mesh/production/mesh/'
     # related_resources:
     #   -
   -
@@ -224,7 +224,7 @@ pages:
     path: app/_src/production/upgrades-tuning/upgrades.md
     title: 'Upgrade Kong Mesh'
     description: ''
-    url: '/mesh/latest/production/upgrades-tuning/upgrades/'
+    url: '/mesh/production/upgrades-tuning/upgrades/'
     # related_resources:
     #   -
   -
@@ -386,7 +386,7 @@ pages:
     path: app/_src/production/cp-deployment/zone-ingress.md
     title: 'Zone Ingress'
     description: ''
-    url: '/mesh/latest/production/cp-deployment/zone-ingress/'
+    url: '/mesh/production/cp-deployment/zone-ingress/'
     # related_resources:
     #   -
   -
@@ -414,7 +414,7 @@ pages:
     path: app/_src/production/dp-config/dpp-on-universal.md
     title: 'Data plane on Universal'
     description: ''
-    url: '/mesh/latest/production/dp-config/dpp-on-universal/'
+    url: '/mesh/production/dp-config/dpp-on-universal/'
     # related_resources:
     #   -
   -
@@ -442,7 +442,7 @@ pages:
     path: app/_src/production/gui.md
     title: 'Kong Mesh user interface (GUI)'
     description: ''
-    url: '/mesh/latest/production/gui/'
+    url: '/mesh/production/gui/'
     # related_resources:
     #   -
   -
