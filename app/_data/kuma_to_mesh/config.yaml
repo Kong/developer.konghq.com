@@ -25,8 +25,8 @@ pages:
       mesh: '2.9'
   -
     path: app/_src/guides/federate.md
-    title: 'Federate zone control plane'
-    description: 'Learn how to federate a {{site.base_product}} zone control plane into a multi-zone deployment. This guide walks through setting up a global control plane, copying resources, connecting zones, and verifying policy synchronization.'
+    title: 'Federate zone Control Plane'
+    description: 'Learn how to federate a {{site.base_product}} zone Control Plane into a multi-zone deployment. This guide walks through setting up a global Control Plane, copying resources, connecting zones, and verifying policy synchronization.'
     url: /mesh/federate/
     # related_resources:
     #   -
@@ -90,14 +90,14 @@ pages:
   -
     path: app/_src/introduction/architecture.md
     title: 'Architecture'
-    description: 'Understand the architecture of a {{site.mesh_product_name}} mesh, including control and data plane components, Kubernetes and Universal modes, and how services integrate into the mesh.'
+    description: 'Understand the architecture of a {{site.mesh_product_name}} mesh, including control and Data Plane components, Kubernetes and Universal modes, and how services integrate into the mesh.'
     url: '/mesh/architecture/'
     # related_resources:
     #   -
   -
     path: app/_src/introduction/concepts.md
     title: 'Concepts'
-    description: 'Understand the core concepts of {{ site.mesh_product_name }}, including the control plane, data plane proxies, inbounds and outbounds, and resources like policies.'
+    description: 'Understand the core concepts of {{ site.mesh_product_name }}, including the Control Plane, Data Plane proxies, inbounds and outbounds, and resources like policies.'
     url: '/mesh/concepts/'
     # related_resources:
     #   -
@@ -157,7 +157,7 @@ pages:
   -
     path: app/_src/policies/introduction.md
     title: 'Policies'
-    description: 'Learn how policies in Kong Mesh configure data plane proxies by defining rules for traffic behavior, proxy targeting, and merging strategies. This reference covers `targetRef`, directional policies, producer/consumer scopes, and shadow mode simulation.'
+    description: 'Learn how policies in Kong Mesh configure Data Plane proxies by defining rules for traffic behavior, proxy targeting, and merging strategies. This reference covers `targetRef`, directional policies, producer/consumer scopes, and shadow mode simulation.'
     url: '/mesh/policies-introduction/'
     # related_resources:
     #   -
@@ -171,7 +171,7 @@ pages:
   -
     path: app/_src/production/deployment/single-zone.md
     title: 'Single-zone deployment'
-    description: 'Run {{site.mesh_product_name}} in a single zone with a standalone control plane and interconnected data plane proxies.'
+    description: 'Run {{site.mesh_product_name}} in a single zone with a standalone Control Plane and interconnected Data Plane proxies.'
     url: '/mesh/single-zone/'
     # related_resources:
     #   -
@@ -194,14 +194,14 @@ pages:
   -
     path: app/_src/production/secure-deployment/certificates.md
     title: 'Secure access across services'
-    description: 'Learn how {{site.mesh_product_name}} secures communication between data plane proxies, control planes, and users, including TLS configuration and certificate management across deployments.'
+    description: 'Learn how {{site.mesh_product_name}} secures communication between Data Plane proxies, control planes, and users, including TLS configuration and certificate management across deployments.'
     url: '/mesh/secure-access/'
     # related_resources:
     #   -
   -
     path: app/_src/production/secure-deployment/dp-auth.md
-    title: 'Authentication with the data plane proxy'
-    description: 'Reference guide to authentication methods for data plane proxies in {{site.mesh_product_name}}, including Kubernetes service accounts, dataplane tokens, revocation, and offline token issuance.'
+    title: 'Authentication with the Data Plane proxy'
+    description: 'Reference guide to authentication methods for Data Plane proxies in {{site.mesh_product_name}}, including Kubernetes service accounts, dataplane tokens, revocation, and offline token issuance.'
     url: '/mesh/dp-auth/'
     # related_resources:
     #   -
@@ -240,7 +240,7 @@ pages:
   -
     path: app/_src/quickstart/universal-docker-demo.md
     title: 'Deploy Kong Mesh on Universal'
-    description: 'Guide to deploying {{site.mesh_product_name}} in Universal mode using Docker containers. Walks through installing the control plane, adding demo services, enabling mTLS, and configuring gateways.'
+    description: 'Guide to deploying {{site.mesh_product_name}} in Universal mode using Docker containers. Walks through installing the Control Plane, adding demo services, enabling mTLS, and configuring gateways.'
     url: '/mesh/universal'
     # related_resources:
     #   -
@@ -328,7 +328,7 @@ pages:
   -
     path: app/_src/documentation/configuration.md
     title: 'Control Plane Configuration'
-    description: 'Guide for configuring the {{site.mesh_product_name}} control plane using environment variables or YAML, with details on store types (memory, Kubernetes, PostgreSQL) and configuration inspection.'
+    description: 'Guide for configuring the {{site.mesh_product_name}} Control Plane using environment variables or YAML, with details on store types (memory, Kubernetes, PostgreSQL) and configuration inspection.'
     url: '/mesh/cp-config'
     # related_resources:
     #   -
@@ -356,7 +356,7 @@ pages:
   -
     path: app/_src/introduction/about-service-meshes.md
     title: 'About service meshes'
-    description: 'Overview of service mesh concepts and how {{site.mesh_product_name}} simplifies secure and reliable service-to-service communication using sidecar proxies and a control plane.'
+    description: 'Overview of service mesh concepts and how {{site.mesh_product_name}} simplifies secure and reliable service-to-service communication using sidecar proxies and a Control Plane.'
     url: '/mesh/about'
     # related_resources:
     #   -
@@ -372,7 +372,7 @@ pages:
   -
     path: app/_src/networking/service-discovery.md
     title: 'Service Discovery'
-    description: 'Explains how {{site.mesh_product_name}} handles service discovery and communication between data plane and control plane in single-zone and multi-zone deployments.'
+    description: 'Explains how {{site.mesh_product_name}} handles service discovery and communication between Data Plane and Control Plane in single-zone and multi-zone deployments.'
     url: '/mesh/service-discovery'
     # related_resources:
     #   -
@@ -409,21 +409,21 @@ pages:
   -
     path: app/_src/production/dp-config/dpp-on-kubernetes.md
     title: 'Data plane on Kubernetes'
-    description: 'How to configure and operate data plane proxies on Kubernetes using {{site.mesh_product_name}}.'
+    description: 'How to configure and operate Data Plane proxies on Kubernetes using {{site.mesh_product_name}}.'
     url: '/mesh/data-plane-kubernetes'
     # related_resources:
     #   -
   -
     path: app/_src/production/dp-config/dpp-on-universal.md
     title: 'Data plane on Universal'
-    description: 'How to run and configure data plane proxies on Universal mode with {{site.mesh_product_name}}.'
+    description: 'How to run and configure Data Plane proxies on Universal mode with {{site.mesh_product_name}}.'
     url: '/mesh/data-plane-universal'
     # related_resources:
     #   -
   -
     path: app/_src/production/dp-config/dpp.md
     title: 'Data plane proxy'
-    description: 'Explanation of the components, behavior, and configuration of data plane proxies in {{site.mesh_product_name}}.'
+    description: 'Explanation of the components, behavior, and configuration of Data Plane proxies in {{site.mesh_product_name}}.'
     url: '/mesh/data-plane-proxy'
     # related_resources:
     #   -
@@ -444,7 +444,7 @@ pages:
   -
     path: app/_src/production/gui.md
     title: 'Kong Mesh user interface (GUI)'
-    description: 'Visual overview of your meshes, data planes, and policies using the {{site.mesh_product_name}} web-based GUI.'
+    description: 'Visual overview of your meshes, Data Planes, and policies using the {{site.mesh_product_name}} web-based GUI.'
     url: '/mesh/kuma-user-interface-gui'
     # related_resources:
     #   -
@@ -457,8 +457,8 @@ pages:
     #   -
   -
     path: app/_src/production/secure-deployment/dp-membership.md
-    title: 'Configure data plane proxy membership'
-    description: 'Control which data plane proxies can join a mesh using requirements and restrictions. Useful for enforcing tag consistency, namespace control, and zone-based segmentation.'
+    title: 'Configure Data Plane proxy membership'
+    description: 'Control which Data Plane proxies can join a mesh using requirements and restrictions. Useful for enforcing tag consistency, namespace control, and zone-based segmentation.'
     url: '/mesh/configure-data-plane-proxy-membership'
     # related_resources:
     #   -
@@ -472,7 +472,7 @@ pages:
   -
     path: app/_src/production/use-mesh.md
     title: 'Use Kong Mesh'
-    description: 'Access {{site.mesh_product_name}} via GUI, HTTP API, kubectl, or kumactl in Kubernetes or Universal environments. Understand available permissions and control plane ports.'
+    description: 'Access {{site.mesh_product_name}} via GUI, HTTP API, kubectl, or kumactl in Kubernetes or Universal environments. Understand available permissions and Control Plane ports.'
     url: '/mesh/use-kuma'
     # related_resources:
     #   -
