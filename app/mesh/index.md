@@ -1,8 +1,8 @@
 ---
-title: Kong Mesh
+title: "{{site.mesh_product_name}}"
 content_type: reference
 layout: reference
-description: Kong Mesh reference
+description: "{{site.mesh_product_name}}"
 products:
     - mesh
 ---
