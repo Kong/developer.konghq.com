@@ -94,8 +94,8 @@ data:
 ### Check Partial usage
 
 To see which plugins use a specific Partial:
-1. Use `GET /partials/` to get the list of Partials, and get the ID of the Partial to check.
-1. Use `GET /partials/{PARTIAL_ID}` to get a list of plugins that use this Partial.
+1. Use [`GET /partials/`](/api/gateway/admin-ee/3.10/#/operations/listPartials) to get the list of Partials, and get the ID of the Partial to check.
+1. Use [`GET /partials/{PARTIAL_ID}`](/api/gateway/admin-ee/3.10/#/operations/getPartial) to get a list of plugins that use this Partial.
 
 ## Enable Partials support in custom plugins
 
