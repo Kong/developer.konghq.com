@@ -4,6 +4,11 @@ metadata:
   content_type: 'reference'
   layout: 'reference'
 
+links:
+  '/install/?': '/mesh/introduction/install/'
+  '/enterprise/?': '/mesh/'
+  '/community/?': 'https://konghq.com/community'
+
 pages:
 # Must for GA
   -
