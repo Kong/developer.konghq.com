@@ -462,7 +462,7 @@ pages:
     path: app/_src/production/use-mesh.md
     title: 'Use Kong Mesh'
     description: ''
-    url: '/mesh/latest/production/use-mesh/'
+    url: '/mesh/production/use-mesh/'
     # related_resources:
     #   -
   -
