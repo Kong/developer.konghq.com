@@ -1,0 +1,41 @@
+description: |
+  Configure the plugin to:
+  * Send a request to an API
+  * Retry the request if it fails
+  * Return a custom error message and status code
+
+  In this example, we'll retry three times if the request returns an error `500`, `502, or `503`.
+
+title: Retry failed requests
+
+weight: 900
+
+variables: 
+  url:
+    description: The API endpoint to use.
+    value: $API_URL
+
+config:
+  callouts:
+  - name: auth1
+    request:
+      url: ${url}
+      method: GET
+      query:
+        forward: true
+      error:
+        on_error: retry
+        http_statuses:
+        - 500
+        - 502
+        - 503
+        retries: 3
+        error_response_code: 500
+        error_response_msg: internal server error
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

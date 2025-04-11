@@ -1,0 +1,42 @@
+description: |
+  Configure the plugin to:
+  * Send a request to an API to get a token
+  * Use the token in the request to the upstream server
+
+  In this example, we expect the API request to return a response body containing a `token` field. We can then use the value of this field with `$(callouts.auth1.response.body.token)`. 
+
+title: Request a token and insert it in a request
+
+weight: 900
+
+# requirements: <- not required
+# - "some req"
+
+variables: 
+  url:
+    description: The API endpoint to use to request a token.
+    value: $API_URL
+
+config:
+  callouts:
+  - name: auth1
+    request:
+      url: ${url}
+      method: GET
+      query:
+        forward: true
+    response:
+      body:
+        store: true
+        decode: true
+  upstream:
+    headers:
+      custom:
+        Authorization: Bearer $(callouts.auth1.response.body.token)
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

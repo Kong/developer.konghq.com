@@ -1,0 +1,41 @@
+description: |
+  Configure the plugin to cache response results in Redis with a custom key.
+  
+
+title: Customize a cache key
+
+weight: 900
+
+variables: 
+  url:
+    description: The API endpoint to use to request a token.
+    value: $API_URL
+
+config:
+  callouts:
+    - name: call
+      request:
+        url: ${url}
+        method: GET
+      response:
+        body:
+          store: true
+          decode: true
+        by_lua: kong.ctx.shared.callouts.call.caching.cache_key = 'some_key'
+  cache:
+    strategy: redis
+    redis:
+      host: localhost
+      port: 6379
+    cache_ttl: 360
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+
+
+

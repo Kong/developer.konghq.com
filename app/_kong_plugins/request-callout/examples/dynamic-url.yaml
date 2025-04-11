@@ -1,0 +1,30 @@
+description: |
+  Configure the plugin to send a request to a different URL based on a header value.
+
+  In this example, we're expecting the client to provide a `x-custom-header` header with a value to append to the specified URL.
+  
+
+title: Dynamically change the request URL
+
+weight: 900
+
+variables: 
+  url:
+    description: The API endpoint to use to request a token.
+    value: $API_URL
+
+config:
+  callouts:
+  - name: call
+    request:
+      url: ${url}
+      method: GET
+      by_lua: >-
+        kong.ctx.shared.callouts.callout1.request.params.url = 'http://httpbin.org/' .. (kong.request.get_header('x-custom-header') or '')
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

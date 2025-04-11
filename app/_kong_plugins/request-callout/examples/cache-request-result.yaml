@@ -1,0 +1,29 @@
+description: |
+  Configure the plugin to cache the results of the request.
+  
+
+title: Cache the request results
+
+weight: 900
+
+variables: 
+  url:
+    description: The API endpoint to use to request a token.
+    value: $API_URL
+
+config:
+  callouts:
+  - name: call
+    request:
+      url: ${url}
+  cache:
+    strategy: memory
+    cache_ttl: 360
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
