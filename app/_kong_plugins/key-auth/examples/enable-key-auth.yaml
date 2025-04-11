@@ -1,0 +1,19 @@
+description: |
+  This example enables the plugin and uses `apikey` for the key name. 
+
+  For an end-to-end tutorial of this example, see [Enable key authentication on a Gateway Service with {{site.base_gateway}}](/how-to/enable-key-authentication-on-a-service-with-kong-gateway/).
+
+title: 'Enable Key Auth'
+
+weight: 901
+
+config: 
+  key_names: 
+  - apikey
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

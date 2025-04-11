@@ -1,0 +1,40 @@
+description: |
+  You can authenticate [consumers that are managed centrally](/konnect/centralized-consumer-management/) in {{site.konnect_short_name}} by configuring the `identity_realms` field in the Key Auth plugin. A data plane can only reach out to realms in the same region as they are deployed.
+  
+  `identity_realms` are scoped to the Control Plane by default (`scope: cp`). 
+  The order in which you configure the `identity_realms` dictates the priority in which the Data Plane attempts to authenticate the provided API keys.
+  See the [realm priority reference](/plugins/key-auth/#identity-realms) for details.
+
+title: 'Realms for external Consumers in Konnect'
+
+requirements:
+  - |
+    You have a realm configured with an associated Control Plane in {{site.konnect_short_name}}. 
+    You can do this with the [`/realms`](/api/konnect/consumers/v1/#/operations/list-realms) endpoint.
+weight: 899
+
+min_version:
+  gateway: '3.10'
+
+variables:
+  region:
+    value: $REGION
+    description: Region for your {{site.konnect_short_name}} instance.
+  realm-id:
+    value: $REALM_ID
+    description: The ID of the realm you created in the prerequisites. 
+
+config: 
+  key_names: 
+    - apikey
+  identity_realms:
+    - scope: realm
+      region: ${region}
+      id: ${realm-id}
+    - scope: cp
+
+tools:
+  - deck
+  - konnect-api
+  - kic
+  - terraform

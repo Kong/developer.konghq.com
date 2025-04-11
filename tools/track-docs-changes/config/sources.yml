@@ -283,6 +283,10 @@ app/_kong_plugins/jwt/index.md:
   - app/_hub/kong-inc/jwt/_index.md
 app/_kong_plugins/key-auth/index.md:
   - app/_hub/kong-inc/key-auth/overview/_index.md
+app/_kong_plugins/key-auth/examples/identity-realms.yaml:
+  - app/_hub/kong-inc/key-auth/how-to/_index.md
+app/_kong_plugins/key-auth/changelog.md:
+  - app/_hub/kong-inc/key-auth/_changelog.md
 app/_kong_plugins/rate-limiting/index.md:
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
 app/_kong_plugins/rate-limiting/changelog.md:
