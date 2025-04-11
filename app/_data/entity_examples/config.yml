@@ -70,6 +70,7 @@ formats:
       key-set:        '/key-sets/'
       keyring:        '/keyring/'
       event_hook:     '/event-hooks/'
+      partial:        '/partials/'
     plugin_endpoints:
       consumer:       '/consumers/{consumer}/plugins/'
       consumer_group: '/consumer_groups/{consumer_group}/plugins/'
