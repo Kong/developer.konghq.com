@@ -95,10 +95,10 @@ To route traffic to the appropriate Workspace, {{site.base_gateway}} uses a conf
 When a Service or Route is **created** or **modified**, the {{site.base_gateway}} Router checks for the existence of that object before allowing the operation to proceed in this order:
 
 1. If the Service or Route created is unique across all Workspaces, the new entity is created. 
-1. If an existing Service or Route object that matches the one being created is found in the current Workspace, a `409 Conflict` error is returned. 
+1. If an existing Service or Route object in the current Workspace has the same name as the one being created, a `409 Conflict` error is returned. 
 2. If an equivalent Service or Route is found in a different Workspace, and the host is provided:
     1. If the host field matches in both Workspaces, a `409 Conflict` error is returned.
-    1. If the host field does not match, the new entity can be created.
+    1. If the host field doesn't match, the new entity can be created.
     1. If the host is an absolute value, a `409 Conflict` error is returned.
 
 ## Roles, groups, and permissions

@@ -1,0 +1,18 @@
+description: 'Enable the Noname Security Kong Traffic Source plugin.'
+
+title: 'Enable Noname Security'
+
+weight: 900
+
+requirements:
+  - "You have created an [integration profile](/plugins/nonamesecurity/#create-an-integration-profile) in the Noname admin dashboard."
+  - "The Noname Security plugin is [installed](/plugins/nonamesecurity/#install-the-noname-security-plugin)."
+
+config: []
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
