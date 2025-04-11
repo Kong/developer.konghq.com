@@ -32,7 +32,7 @@ module SectionWrapper
         doc.children.first.add_previous_sibling(content) if content && content.children.any?
 
         doc.css('h2').each do |h2|
-          h2_text = h2.children.find(&:text?).text.strip
+          h2_text = h2.children.find(&:text?)&.text&.strip || h2.content
           slug = Jekyll::Utils.slugify(h2_text)
           # extract the text, removing any html tags...
           title = h2_text

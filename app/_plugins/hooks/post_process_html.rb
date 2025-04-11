@@ -21,7 +21,7 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
                # special case, it has links in the headings
                heading.content
              else
-               heading.children.find(&:text?).text.strip
+               heading.children.find(&:text?)&.text&.strip || heading.content
              end
       old_id = heading['id']
       heading['id'] = Jekyll::Utils.slugify(text)
