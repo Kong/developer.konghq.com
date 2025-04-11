@@ -120,6 +120,9 @@ app/_gateway_entities/admin.md:
   - app/_src/gateway/production/access-control/register-admin-api.md
   - app/_src/gateway/production/access-control/enable-rbac.md
 
+app/_gateway_entities/partial.md:
+  - app/_src/gateway/kong-enterprise/partials.md
+
 
 # how-tos
 ## gateway
