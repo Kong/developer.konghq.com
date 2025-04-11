@@ -9,6 +9,8 @@ links:
   '/install/?': '/mesh/introduction/install/'
   '/enterprise/?': '/mesh/'
   '/community/?': 'https://konghq.com/community'
+  '/policies/?': '/mesh/policies/'
+  '/features/?': '/mesh/features/'
 
 pages:
 # Must for GA
