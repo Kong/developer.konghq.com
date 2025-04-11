@@ -73,7 +73,7 @@ rows:
             icon: /assets/icons/kubernetes.svg
             cta:
               text: Add Rate Limiting with KIC
-              url: "/kic/rate-limiting/"
+              url: "/kubernetes-ingress-controller/rate-limiting/"
       - blocks:
         - type: card
           config:
