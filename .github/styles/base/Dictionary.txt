@@ -328,6 +328,8 @@ booleans
 brotli
 burstable
 callees
+callout
+callouts
 certificate_admin
 charset
 chatbot
