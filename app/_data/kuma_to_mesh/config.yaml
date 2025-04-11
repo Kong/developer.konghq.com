@@ -316,168 +316,160 @@ pages:
       mesh: '2.6'
 
 # Post GA
-#  -
-#    path: app/_src/mesh/availability-stages.md
-#    title: 'Stages of software availability'
-#    description: ''
-#    url: '/mesh/availability-stages/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/documentation/configuration.md
-#    title: 'Control Plane Configuration'
-#    description: ''
-#    url: '/mesh/documentation/configuration/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/documentation/health.md
-#    title: 'Dataplane Health'
-#    description: ''
-#    url: '/mesh/documentation/health/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/explore/cli.md
-#    title: 'CLI'
-#    description: ''
-#    url: '/mesh/explore/cli/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/explore/observability.md
-#    title: 'Observability'
-#    description: ''
-#    url: '/mesh/explore/observability/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/introduction/about-service-meshes.md
-#    title: 'About service meshes'
-#    description: ''
-#    url: '/mesh/introduction/about-service-meshes/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/introduction/install.md
-#    title: 'Install'
-#    description: ''
-#    url: '/mesh/introduction/install/'
-#    # related_resources:
-#    #   -
-#    min_version:
-#      mesh: '2.9'
-#  -
-#    path: app/_src/networking/service-discovery.md
-#    title: 'Service Discovery'
-#    description: ''
-#    url: '/mesh/networking/service-discovery/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/networking/transparent-proxying.md
-#    title: 'Transparent Proxying'
-#    description: ''
-#    url: '/mesh/networking/transparent-proxying/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/production/cp-deployment/zone-ingress.md
-#    title: 'Zone Ingress'
-#    description: ''
-#    url: '/mesh/latest/production/cp-deployment/zone-ingress/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/production/cp-deployment/zoneegress.md
-#    title: 'Zone Egress'
-#    description: ''
-#    url: '/mesh/production/cp-deployment/zoneegress/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/production/cp-deployment/zoneproxy-auth.md
-#    title: 'Configure zone proxy authentication'
-#    description: ''
-#    url: '/mesh/production/cp-deployment/zoneproxy-auth/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/production/dp-config/dpp-on-kubernetes.md
-#    title: 'Data plane on Kubernetes'
-#    description: ''
-#    url: '/mesh/production/dp-config/dpp-on-kubernetes/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/production/dp-config/dpp-on-universal.md
-#    title: 'Data plane on Universal'
-#    description: ''
-#    url: '/mesh/latest/production/dp-config/dpp-on-universal/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/production/dp-config/dpp.md
-#    title: 'Data plane proxy'
-#    description: ''
-#    url: '/mesh/production/dp-config/dpp/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/production/dp-config/ipv6.md
-#    title: 'IPv6 support'
-#    description: ''
-#    url: '/mesh/production/dp-config/ipv6/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/production/dp-config/transparent-proxying.md
-#    title: 'Configure transparent proxying'
-#    description: ''
-#    url: '/mesh/production/dp-config/transparent-proxying/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/production/gui.md
-#    title: 'Kong Mesh user interface (GUI)'
-#    description: ''
-#    url: '/mesh/latest/production/gui/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/production/secure-deployment/api-server-auth.md
-#    title: 'Authentication with the API server'
-#    description: ''
-#    url: '/mesh/production/secure-deployment/api-server-auth/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/production/secure-deployment/dp-membership.md
-#    title: 'Configure data plane proxy membership'
-#    description: ''
-#    url: '/mesh/production/secure-deployment/dp-membership/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/production/secure-deployment/secrets.md
-#    title: 'Manage secrets'
-#    description: ''
-#    url: '/mesh/production/secure-deployment/secrets/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/production/use-mesh.md
-#    title: 'Use Kong Mesh'
-#    description: ''
-#    url: '/mesh/latest/production/use-mesh/'
-#    # related_resources:
-#    #   -
-#  -
-#    path: app/_src/reference/data-collection.md
-#    title: 'Kong Mesh data collection'
-#    description: ''
-#    url: '/mesh/reference/data-collection/'
-#    # related_resources:
-#    #   -
-#
-#
+  -
+    path: app/_src/documentation/configuration.md
+    title: 'Control Plane Configuration'
+    description: ''
+    url: '/mesh/documentation/configuration/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/documentation/health.md
+    title: 'Dataplane Health'
+    description: ''
+    url: '/mesh/documentation/health/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/explore/cli.md
+    title: 'CLI'
+    description: ''
+    url: '/mesh/explore/cli/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/explore/observability.md
+    title: 'Observability'
+    description: ''
+    url: '/mesh/explore/observability/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/introduction/about-service-meshes.md
+    title: 'About service meshes'
+    description: ''
+    url: '/mesh/introduction/about-service-meshes/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/introduction/install.md
+    title: 'Install'
+    description: ''
+    url: '/mesh/introduction/install/'
+    # related_resources:
+    #   -
+    min_version:
+      mesh: '2.9'
+  -
+    path: app/_src/networking/service-discovery.md
+    title: 'Service Discovery'
+    description: ''
+    url: '/mesh/networking/service-discovery/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/networking/transparent-proxying.md
+    title: 'Transparent Proxying'
+    description: ''
+    url: '/mesh/networking/transparent-proxying/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/cp-deployment/zone-ingress.md
+    title: 'Zone Ingress'
+    description: ''
+    url: '/mesh/latest/production/cp-deployment/zone-ingress/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/cp-deployment/zoneegress.md
+    title: 'Zone Egress'
+    description: ''
+    url: '/mesh/production/cp-deployment/zoneegress/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/cp-deployment/zoneproxy-auth.md
+    title: 'Configure zone proxy authentication'
+    description: ''
+    url: '/mesh/production/cp-deployment/zoneproxy-auth/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/dp-config/dpp-on-kubernetes.md
+    title: 'Data plane on Kubernetes'
+    description: ''
+    url: '/mesh/production/dp-config/dpp-on-kubernetes/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/dp-config/dpp-on-universal.md
+    title: 'Data plane on Universal'
+    description: ''
+    url: '/mesh/latest/production/dp-config/dpp-on-universal/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/dp-config/dpp.md
+    title: 'Data plane proxy'
+    description: ''
+    url: '/mesh/production/dp-config/dpp/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/dp-config/ipv6.md
+    title: 'IPv6 support'
+    description: ''
+    url: '/mesh/production/dp-config/ipv6/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/dp-config/transparent-proxying.md
+    title: 'Configure transparent proxying'
+    description: ''
+    url: '/mesh/production/dp-config/transparent-proxying/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/gui.md
+    title: 'Kong Mesh user interface (GUI)'
+    description: ''
+    url: '/mesh/latest/production/gui/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/secure-deployment/api-server-auth.md
+    title: 'Authentication with the API server'
+    description: ''
+    url: '/mesh/production/secure-deployment/api-server-auth/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/secure-deployment/dp-membership.md
+    title: 'Configure data plane proxy membership'
+    description: ''
+    url: '/mesh/production/secure-deployment/dp-membership/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/secure-deployment/secrets.md
+    title: 'Manage secrets'
+    description: ''
+    url: '/mesh/production/secure-deployment/secrets/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/production/use-mesh.md
+    title: 'Use Kong Mesh'
+    description: ''
+    url: '/mesh/latest/production/use-mesh/'
+    # related_resources:
+    #   -
+  -
+    path: app/_src/reference/data-collection.md
+    title: 'Kong Mesh data collection'
+    description: ''
+    url: '/mesh/reference/data-collection/'
+    # related_resources:
+    #   -
+
