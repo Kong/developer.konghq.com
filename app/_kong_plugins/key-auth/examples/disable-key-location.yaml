@@ -1,0 +1,17 @@
+description: 'This example disables using a key in a query parameter for the Key Auth plugin.'
+
+title: 'Disable a key location'
+
+weight: 900
+
+config: 
+  key_names: 
+  - apikey
+  key_in_query: false
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
