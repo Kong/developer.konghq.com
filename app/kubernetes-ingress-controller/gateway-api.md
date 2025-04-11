@@ -35,7 +35,7 @@ faqs:
 [Gateway API](https://gateway-api.sigs.k8s.io/) is a set of resources for configuring networking in Kubernetes. It expands on [Ingress](/kubernetes-ingress-controller/ingress/) to configure additional types of routes such as TCP, UDP, and TLS in addition to HTTP/HTTPS, and to support backends other than Service, and manage the proxies that implement routes.
 
 {:.info}
-> Gateway API resources will only be reconciled when the Gateway API CRDs are installed in your cluster _before_ {{ site.kic_product_name }} is started. See the [getting started](/kubernetes-ingress-controller/get-started/) page for installation instructions.
+> Gateway API resources will only be reconciled when the Gateway API CRDs are installed in your cluster _before_ {{ site.kic_product_name }} is started. See the [getting started](/kubernetes-ingress-controller/install/) page for installation instructions.
 
 ## Gateway management
 

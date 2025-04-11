@@ -51,7 +51,7 @@ Read this document thoroughly to successfully complete the upgrade process, as i
 
 * Review version compatibility between your platform version and the version of {{site.kong_gateway}} that you are upgrading to:
   * [OS version](/gateway/version-support-policy/#supported-versions)
-  * [Kubernetes version and Helm prerequisites](/kubernetes-ingress-controller/version-support-policy/)
+  * [Kubernetes version and Helm prerequisites](/kubernetes-ingress-controller/support/)
   * [Hardware resources](/gateway/performance/resource-sizing-guidelines/)
   * [Database and dependency versions](/gateway/third-party-support/)
 * If you're using decK, [upgrade it to the latest version](/deck/).
