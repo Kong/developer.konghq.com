@@ -1,0 +1,15 @@
+description: 'Collects per-Consumer metrics. The `kong_http_requests_total` and `kong_bandwidth_bytes` metrics fill in the Consumer label when available.'
+
+title: 'Collect per-Consumer metrics'
+
+weight: 900
+
+config:
+  per_consumer: true
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
