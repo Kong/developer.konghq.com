@@ -3,4 +3,4 @@
 	url = https://github.com/Kong/docs-plugin-toolkit.git
 [submodule "app/.repos/kuma"]
 	path = app/.repos/kuma
-	url = git@github.com:kumahq/kuma-website.git
+	url = https://github.com/kumahq/kuma-website.git
