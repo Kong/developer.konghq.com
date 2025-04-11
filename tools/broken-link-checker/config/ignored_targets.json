@@ -17,8 +17,14 @@
     "http://127.0.0.1:8003/*",
     "http://127.0.0.1:8004/",
     "http://127.0.0.1:8004/*",
+    "http://127.0.0.1:9090/",
+    "http://127.0.0.1:9090/*",
     "http://127.0.0.1:25050/",
     "http://127.0.0.1:25050/*",
+    "http://127.0.0.1:25681/",
+    "http://127.0.0.1:25681/*",
+    "http://127.0.0.1:28080",
+    "http://127.0.0.1:28080/*",
     "http://localhost:3000/",
     "http://localhost:3000/*",
     "http://localhost:5000/",
@@ -59,5 +65,9 @@
     "https://azure.microsoft.com/en-us/services/functions/",
     "https://dashboard.ngrok.com/",
     "https://dashboard.ngrok.com/*",
-    "https://hub.docker.com/*"
+    "https://hub.docker.com/*",
+    "https://konghq.com/request-demo-kong-mesh/",
+    "https://linux.die.net/man/8/iptables",
+    "https://auth.openai.com/*",
+    "https://platform.openai.com/*"
   ]
