@@ -3,6 +3,7 @@ metadata:
     - mesh
   content_type: 'reference'
   layout: 'reference'
+  edition: 'mesh'
 
 links:
   '/install/?': '/mesh/introduction/install/'

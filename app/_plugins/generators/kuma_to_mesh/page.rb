@@ -44,7 +44,11 @@ module Jekyll
       end
 
       def release_metadata
-        { 'release' => release_info.latest_release_in_range }
+        release = release_info.latest_release_in_range
+        {
+          'release' => release,
+          'version_data' => release.release_hash
+        }
       end
 
       def file_path
