@@ -41,6 +41,7 @@ To install {{ site.kic_product_name }}, you need to have the permissions to **wr
 
 You need write access to the following resources to install {{ site.kic_product_name }}:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Resource Kind
@@ -112,11 +113,13 @@ rows:
     scope: cluster
     usage: configure validating webhooks
 {% endtable %}
+<!--vale on-->
 
 ### Optional resources
 
 The following resources may be required for specific use cases:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Resource Kind
@@ -143,3 +146,4 @@ rows:
     scope: namespaced
     usage: configure autoscaling
 {% endtable %}
+<!--vale on-->
