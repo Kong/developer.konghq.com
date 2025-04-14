@@ -225,14 +225,14 @@ pages:
     path: app/_src/production/upgrades-tuning/upgrades.md
     title: 'Upgrade Kong Mesh'
     description: 'Reference guide for upgrading {{site.mesh_product_name}} across versions. Covers compatibility rules, upgrade order, and considerations for single-zone and multizone deployments.'
-    url: '/mesh/upgrade'
+    url: '/mesh/upgrade/'
     # related_resources:
     #   -
   -
     path: app/_src/quickstart/kubernetes-demo.md
     title: 'Deploy Kong Mesh on Kubernetes'
     description: 'Step-by-step guide to deploy {{site.mesh_product_name}} on Kubernetes using Helm and Minikube. Includes demo app setup, GUI exploration, and enabling mTLS for zero-trust security.'
-    url: '/mesh/kubernetes'
+    url: '/mesh/kubernetes/'
     # related_resources:
     #   -
     min_version:
@@ -241,7 +241,7 @@ pages:
     path: app/_src/quickstart/universal-docker-demo.md
     title: 'Deploy Kong Mesh on Universal'
     description: 'Guide to deploying {{site.mesh_product_name}} in Universal mode using Docker containers. Walks through installing the Control Plane, adding demo services, enabling mTLS, and configuring gateways.'
-    url: '/mesh/universal'
+    url: '/mesh/universal/'
     # related_resources:
     #   -
     min_version:
@@ -250,7 +250,7 @@ pages:
     path: app/_src/reference/kubernetes-annotations.md
     title: 'Kubernetes annotations and labels'
     description: 'Reference for all Kubernetes annotations and labels available in {{site.mesh_product_name}}, including sidecar injection, mesh association, transparent proxy settings, and metrics configuration.'
-    url: '/mesh/annotations'
+    url: '/mesh/annotations/'
     # related_resources:
     #   -
   -
@@ -264,7 +264,7 @@ pages:
     path: app/_src/using-mesh/managing-ingress-traffic/builtin-k8s.md
     title: 'Running built-in gateway pods on Kubernetes'
     description: 'Guide to running builtin gateway pods with MeshGatewayInstance in Kubernetes and customizing deployments and services.'
-    url: '/mesh/gateway-pods-k8s'
+    url: '/mesh/gateway-pods-k8s/'
     # related_resources:
     #   -
     min_version:
@@ -273,7 +273,7 @@ pages:
     path: app/_src/using-mesh/managing-ingress-traffic/builtin-listeners.md
     title: 'Configuring built-in listeners'
     description: 'Reference for configuring built-in listeners using MeshGateway, including listener setup, TLS termination, hostnames, and cross-mesh support.'
-    url: '/mesh/gateway-listeners'
+    url: '/mesh/gateway-listeners/'
     # related_resources:
     #   -
     min_version:
@@ -282,7 +282,7 @@ pages:
     path: app/_src/using-mesh/managing-ingress-traffic/builtin-routes.md
     title: 'Configuring built-in routes'
     description: 'Reference for configuring HTTP and TCP routing through builtin gateways using MeshHTTPRoute and MeshTCPRoute, including hostname matching and weighted backends.'
-    url: '/mesh/gateway-routes'
+    url: '/mesh/gateway-routes/'
     # related_resources:
     #   - /mesh/progressively-rolling-in-strict-mtls/
     min_version:
@@ -291,7 +291,7 @@ pages:
     path: app/_src/using-mesh/managing-ingress-traffic/builtin.md
     title: 'Configure a built-in gateway'
     description: 'Overview and deployment guide for configuring a built-in gateway with {{site.mesh_product_name}} using MeshGateway, MeshGatewayInstance, and Dataplane resources in both Kubernetes and Universal environments.'
-    url: '/mesh/managing-ingress-traffic/gateway'
+    url: '/mesh/managing-ingress-traffic/gateway/'
     # related_resources:
     #   -
     min_version:
@@ -300,7 +300,7 @@ pages:
     path: app/_src/using-mesh/managing-ingress-traffic/delegated.md
     title: 'Delegated gateways'
     description: 'Guide to configuring delegated gateways in {{site.mesh_product_name}}, allowing external API gateways to handle ingress while {{site.mesh_product_name}} manages egress to the mesh.'
-    url: '/mesh/gateway-delegated'
+    url: '/mesh/gateway-delegated/'
     # related_resources:
     #   -
     min_version:
@@ -309,7 +309,7 @@ pages:
     path: app/_src/using-mesh/managing-ingress-traffic/gateway-api.md
     title: 'Kubernetes Gateway API'
     description: 'How to use Kubernetes Gateway API with {{site.mesh_product_name}}, including support for built-in gateways, HTTP/TCP routing, TLS, GAMMA, and multi-zone limitations.'
-    url: '/mesh/gateway-api'
+    url: '/mesh/gateway-api/'
     # related_resources:
     #   -
     min_version:
@@ -318,7 +318,7 @@ pages:
     path: app/_src/using-mesh/managing-ingress-traffic/overview.md
     title: 'How ingress works'
     description: 'Overview of how ingress (north/south) traffic flows through delegated and built-in gateways in {{site.mesh_product_name}}, with visuals and key differences.'
-    url: '/mesh/ingress'
+    url: '/mesh/ingress/'
     # related_resources:
     #   -
     min_version:
@@ -329,42 +329,42 @@ pages:
     path: app/_src/documentation/configuration.md
     title: 'Control Plane Configuration'
     description: 'Guide for configuring the {{site.mesh_product_name}} Control Plane using environment variables or YAML, with details on store types (memory, Kubernetes, PostgreSQL) and configuration inspection.'
-    url: '/mesh/cp-config'
+    url: '/mesh/cp-config/'
     # related_resources:
     #   -
   -
     path: app/_src/documentation/health.md
     title: 'Dataplane Health'
     description: 'Overview of dataplane health features in {{site.mesh_product_name}}, including circuit breaking, active health checks, and integration with Kubernetes and Universal service probes.'
-    url: '/mesh/dataplane-health'
+    url: '/mesh/dataplane-health/'
     # related_resources:
     #   -
   -
     path: app/_src/explore/cli.md
     title: 'CLI'
     description: 'Reference for the CLI tools included in {{site.mesh_product_name}}, including usage examples and commands for kumactl, kuma-cp, and kuma-dp.'
-    url: '/mesh/cli'
+    url: '/mesh/cli/'
     # related_resources:
     #   -
   -
     path: app/_src/explore/observability.md
     title: 'Observability'
     description: 'Learn how to configure observability in {{site.mesh_product_name}} using Prometheus, Grafana, Jaeger, Loki, and Datadog.'
-    url: '/mesh/observability'
+    url: '/mesh/observability/'
     # related_resources:
     #   -
   -
     path: app/_src/introduction/about-service-meshes.md
     title: 'About service meshes'
     description: 'Overview of service mesh concepts and how {{site.mesh_product_name}} simplifies secure and reliable service-to-service communication using sidecar proxies and a Control Plane.'
-    url: '/mesh/about'
+    url: '/mesh/about/'
     # related_resources:
     #   -
   -
     path: app/_src/introduction/install.md
     title: 'Install'
     description: 'Simple guide for installing {{site.mesh_product_name}} on Universal deployments, including downloading binaries and updating your PATH.'
-    url: '/mesh/install'
+    url: '/mesh/install/'
     # related_resources:
     #   -
     min_version:
@@ -373,114 +373,118 @@ pages:
     path: app/_src/networking/service-discovery.md
     title: 'Service Discovery'
     description: 'Explains how {{site.mesh_product_name}} handles service discovery and communication between Data Plane and Control Plane in single-zone and multi-zone deployments.'
-    url: '/mesh/service-discovery'
+    url: '/mesh/service-discovery/'
     # related_resources:
     #   -
   -
     path: app/_src/networking/transparent-proxying.md
     title: 'Transparent Proxying'
     description: 'Explains how Transparent Proxying in {{site.mesh_product_name}} works using iptables, including inbound and outbound traffic flow with Envoy.'
-    url: '/mesh/transparent-proxying'
+    url: '/mesh/transparent-proxying/'
     # related_resources:
     #   -
   -
     path: app/_src/production/cp-deployment/zone-ingress.md
     title: 'Zone Ingress'
     description: 'How to deploy and configure Zone Ingress for cross-zone communication in multi-zone mode.'
-    url: '/mesh/zone-ingress'
+    url: '/mesh/zone-ingress/'
     related_resources:
-      - /mesh/zone-egress
-      - /mesh/meshmultizoneservice/
+      - text: Zone Egress
+        url: /mesh/zone-egress/
+      - text: MeshMultiZoneService
+        url: /mesh/meshmultizoneservice/
   -
     path: app/_src/production/cp-deployment/zoneegress.md
     title: 'Zone Egress'
     description: 'How to configure Zone Egress to isolate cross-zone and external service traffic.'
-    url: '/mesh/zone-egress'
+    url: '/mesh/zone-egress/'
     related_resources:
-      - /mesh/zone-egress
-      - /mesh/meshmultizoneservice/
+      - text: Zone Infress
+        url: /mesh/zone-ingress/
+      - text: MeshMultiZoneService
+        url: /mesh/meshmultizoneservice/
   -
     path: app/_src/production/cp-deployment/zoneproxy-auth.md
     title: 'Configure zone proxy authentication'
     description: 'How to configure zone proxy authentication methods in multi-zone mode.'
-    url: '/mesh/zone-proxy-auth'
+    url: '/mesh/zone-proxy-auth/'
     # related_resources:
     #   -
   -
     path: app/_src/production/dp-config/dpp-on-kubernetes.md
     title: 'Data plane on Kubernetes'
     description: 'How to configure and operate Data Plane proxies on Kubernetes using {{site.mesh_product_name}}.'
-    url: '/mesh/data-plane-kubernetes'
+    url: '/mesh/data-plane-kubernetes/'
     # related_resources:
     #   -
   -
     path: app/_src/production/dp-config/dpp-on-universal.md
     title: 'Data plane on Universal'
     description: 'How to run and configure Data Plane proxies on Universal mode with {{site.mesh_product_name}}.'
-    url: '/mesh/data-plane-universal'
+    url: '/mesh/data-plane-universal/'
     # related_resources:
     #   -
   -
     path: app/_src/production/dp-config/dpp.md
     title: 'Data plane proxy'
     description: 'Explanation of the components, behavior, and configuration of Data Plane proxies in {{site.mesh_product_name}}.'
-    url: '/mesh/data-plane-proxy'
+    url: '/mesh/data-plane-proxy/'
     # related_resources:
     #   -
   -
     path: app/_src/production/dp-config/ipv6.md
     title: 'IPv6 support'
     description: 'Instructions for enabling or disabling IPv6 support in {{site.mesh_product_name}} across Universal and Kubernetes environments.'
-    url: '/mesh/ipv6-support'
+    url: '/mesh/ipv6-support/'
     # related_resources:
     #   -
   -
     path: app/_src/production/dp-config/transparent-proxying.md
     title: 'Configure transparent proxying'
     description: 'How to configure transparent proxying with iptables or eBPF in Kubernetes and Universal deployments of {{site.mesh_product_name}}.'
-    url: '/mesh/configure-transparent-proxying'
+    url: '/mesh/configure-transparent-proxying/'
     # related_resources:
     #   -
   -
     path: app/_src/production/gui.md
     title: 'Kong Mesh user interface (GUI)'
     description: 'Visual overview of your meshes, Data Planes, and policies using the {{site.mesh_product_name}} web-based GUI.'
-    url: '/mesh/kuma-user-interface-gui'
+    url: '/mesh/kuma-user-interface-gui/'
     # related_resources:
     #   -
   -
     path: app/_src/production/secure-deployment/api-server-auth.md
     title: 'Authentication with the API server'
     description: 'Authenticate to the {{site.mesh_product_name}} API server using user tokens. Learn about admin tokens, signing keys, token revocation, and configuration.'
-    url: '/mesh/authentication-with-the-api-server'
+    url: '/mesh/authentication-with-the-api-server/'
     # related_resources:
     #   -
   -
     path: app/_src/production/secure-deployment/dp-membership.md
     title: 'Configure Data Plane proxy membership'
     description: 'Control which Data Plane proxies can join a mesh using requirements and restrictions. Useful for enforcing tag consistency, namespace control, and zone-based segmentation.'
-    url: '/mesh/configure-data-plane-proxy-membership'
+    url: '/mesh/configure-data-plane-proxy-membership/'
     # related_resources:
     #   -
   -
     path: app/_src/production/secure-deployment/secrets.md
     title: 'Manage secrets'
     description: 'Store and manage secrets securely in {{site.mesh_product_name}}, including mesh-scoped and global-scoped secrets for use in mTLS, policies, and external services.'
-    url: '/mesh/manage-secrets'
+    url: '/mesh/manage-secrets/'
     # related_resources:
     #   -
   -
     path: app/_src/production/use-mesh.md
     title: 'Use Kong Mesh'
     description: 'Access {{site.mesh_product_name}} via GUI, HTTP API, kubectl, or kumactl in Kubernetes or Universal environments. Understand available permissions and Control Plane ports.'
-    url: '/mesh/use-kuma'
+    url: '/mesh/use-kuma/'
     # related_resources:
     #   -
   -
     path: app/_src/reference/data-collection.md
     title: 'Kong Mesh data collection'
     description: 'Enable or disable data collection in {{site.mesh_product_name}}. Understand what telemetry is collected and how to configure reporting.'
-    url: '/mesh/data-collection'
+    url: '/mesh/data-collection/'
     # related_resources:
     #   -
 
