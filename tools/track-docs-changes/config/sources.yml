@@ -213,6 +213,11 @@ app/_how-tos/adjust-header-names-in-request.md:
   - app/_hub/kong-inc/post-function/how-to/_index.md
 app/_how-tos/configure-oidc-with-client-credentials-grant.md:
   - /app/_hub/kong-inc/openid-connect/how-to/authentication/_client-credentials.md
+app/_how-tos/sign-gateway-audit-logs.md:
+  - app/_src/gateway/kong-enterprise/audit-log.md
+app/_how-tos/validate-gateway-audit-log-signatures.md:
+  - app/_src/gateway/kong-enterprise/audit-log.md
+
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
