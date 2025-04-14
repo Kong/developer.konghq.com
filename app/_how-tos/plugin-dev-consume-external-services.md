@@ -70,7 +70,7 @@ variable will contain the response.
 ## 3. Handle response errors
 
 The {{site.base_gateway}} 
-[Plugin Development Kit](/custom-plugins/pdk/) 
+[Plugin Development Kit](/gateway/pdk/reference/) 
 provides you with various functions to help you handle error conditions.
 
 In this example we're processing responses from the upstream service
