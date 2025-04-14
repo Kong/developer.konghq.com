@@ -37,22 +37,31 @@ module Jekyll
                       end
         end
 
-        def file_path # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
-          @file_path ||= begin
-            release = @release.label ? @release.to_s : "#{@release.number}.x"
-            case @type
-            when 'proto'
-              File.join(site.config['mesh_policy_schemas_path'], release, 'raw', 'protos', "#{@name}.json")
-            when 'crd'
-              File.join(site.config['mesh_policy_schemas_path'], release, 'raw', 'crds', "#{@name}.yaml")
-            when 'policy'
-              File.join(site.config['mesh_policy_schemas_path'], release, 'raw', 'crds',
-                        "kuma.io_#{@name.downcase}.yaml")
-            else
-              raise ArgumentError,
-                    "Invalid mesh_policy type: `#{@type}` for policy `#{@name}`."
-            end
-          end
+        def file_path # rubocop:disable Metrics/MethodLength
+          @file_path ||= case @type
+                         when 'proto'
+                           find_file_path(File.join('raw', 'protos', "#{@name}.json"))
+                         when 'crd'
+                           find_file_path(File.join('raw', 'crds', "#{@name}.yaml"))
+                         when 'policy'
+                           find_file_path(File.join('raw', 'crds', "kuma.io_#{@name.downcase}.yaml"))
+                         else
+                           raise ArgumentError,
+                                 "Invalid mesh_policy type: `#{@type}` for policy `#{@name}`."
+                         end
+        end
+
+        def find_file_path(path)
+          roots
+            .map { |root| File.join(root, path) }
+            .find { |full_path| File.exist?(full_path) }
+        end
+
+        def roots
+          [
+            File.join('app/assets/mesh', @release.label ? @release.to_s : @release.number.to_s),
+            File.join(site.config['mesh_policy_schemas_path'], @release.label ? @release.to_s : "#{@release.number}.x")
+          ]
         end
       end
     end
