@@ -139,6 +139,7 @@ With the plugin installed, we can now configure [{{site.base_gateway}} entities]
 > a `HTTP/1.1 201 Created` response from {{site.base_gateway}} indicating the successful creation of the entity.
 
 1. Still within the {{site.base_gateway}} container's shell, add a new service:
+   <!-- vale off -->
    {% control_plane_request %}
    url: /services
    status_code: 201
@@ -147,8 +148,10 @@ With the plugin installed, we can now configure [{{site.base_gateway}} entities]
        name: example_service
        url: https://httpbin.konghq.com
    {% endcontrol_plane_request %}
+   <!-- vale on -->
 
 2. Associate the custom plugin with the `example_service` service:
+   <!-- vale off -->
    {% control_plane_request %}
    url: /services/example_service/plugins
    status_code: 201
@@ -156,8 +159,10 @@ With the plugin installed, we can now configure [{{site.base_gateway}} entities]
    body:
        name: my-plugin
    {% endcontrol_plane_request %}
+   <!-- vale on -->
     
 3. Add a new route for sending requests through the `example_service`:
+   <!-- vale off -->
    {% control_plane_request %}
    url: /services/example_service/routes
    status_code: 201
@@ -167,6 +172,7 @@ With the plugin installed, we can now configure [{{site.base_gateway}} entities]
        paths:
          - /mock
    {% endcontrol_plane_request %}
+   <!-- vale on -->
 
    The plugin is now configured and will be invoked when {{site.base_gateway}} proxies
    requests via the `example_service`. 
@@ -174,11 +180,13 @@ With the plugin installed, we can now configure [{{site.base_gateway}} entities]
    upstream, the plugin should append the `X-MyPlugin` header to the list of response headers.
 
 4. Send a request to test the behavior and use the `-i` flag to display the response headers:
+   <!-- vale off -->
    {% validation request-check %}
    url: '/mock/anything'
    status_code: 200
    display_headers: true
    {% endvalidation %}
+   <!-- vale on -->
 
    You should see `X-MyPlugin: response` in the set of headers, indicating that the plugin's logic has been invoked.
 

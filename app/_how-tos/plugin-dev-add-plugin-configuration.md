@@ -98,6 +98,7 @@ Let's use Pongo to test the updated configuration.
   ```
 
 3. Add a test service:
+   <!-- vale off -->
    {% control_plane_request %}
    url: /services
    status_code: 201
@@ -106,8 +107,10 @@ Let's use Pongo to test the updated configuration.
        name: example_service
        url: https://httpbin.konghq.com
    {% endcontrol_plane_request %}
+   <!-- vale on -->
 
 4. Enable the plugin, this time with the configuration value:
+   <!-- vale off -->
    {% control_plane_request %}
    url: /services/example_service/plugins
    status_code: 201
@@ -117,8 +120,10 @@ Let's use Pongo to test the updated configuration.
        config:
          response_header_name: X-CustomHeaderName
    {% endcontrol_plane_request %}
+   <!-- vale on -->
 
 5. Add a route:
+   <!-- vale off -->
    {% control_plane_request %}
    url: /services/example_service/routes
    status_code: 201
@@ -128,13 +133,16 @@ Let's use Pongo to test the updated configuration.
        paths:
          - /mock
    {% endcontrol_plane_request %}
+   <!-- vale on -->
 
 6. Send a request to the route:
+   <!-- vale off -->
    {% validation request-check %}
    url: '/mock/anything'
    status_code: 200
    display_headers: true
    {% endvalidation %}
+   <!-- vale on -->
 
    This time we should see the `X-CustomHeaderName` in the response.
 

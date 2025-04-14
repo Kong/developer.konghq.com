@@ -94,6 +94,7 @@ Once the {{site.base_gateway}} is running with the custom image, you
 can manually test the plugin and validate the behavior.
 
 1. Add a test service:
+   <!-- vale off -->
    {% control_plane_request %}
    url: /services
    status_code: 201
@@ -102,8 +103,10 @@ can manually test the plugin and validate the behavior.
        name: example_service
        url: https://httpbin.konghq.com
    {% endcontrol_plane_request %}
+   <!-- vale on -->
 
 2. Enable the plugin, this time with the configuration value:
+   <!-- vale off -->
    {% control_plane_request %}
    url: /services/example_service/plugins
    status_code: 201
@@ -113,8 +116,10 @@ can manually test the plugin and validate the behavior.
        config:
          response_header_name: X-CustomHeaderName
    {% endcontrol_plane_request %}
+   <!-- vale on -->
 
 3. Add a route:
+   <!-- vale off -->
    {% control_plane_request %}
    url: /services/example_service/routes
    status_code: 201
@@ -124,13 +129,16 @@ can manually test the plugin and validate the behavior.
        paths:
          - /mock
    {% endcontrol_plane_request %}
+   <!-- vale on -->
 
 4. Send a request to the route:
+   <!-- vale off -->
    {% validation request-check %}
    url: '/mock/anything'
    status_code: 200
    display_headers: true
    {% endvalidation %}
+   <!-- vale on -->
 
 You should see the following response header:
 ```sh
