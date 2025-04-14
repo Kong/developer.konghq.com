@@ -214,6 +214,17 @@ app/_how-tos/adjust-header-names-in-request.md:
 app/_how-tos/configure-oidc-with-client-credentials-grant.md:
   - /app/_hub/kong-inc/openid-connect/how-to/authentication/_client-credentials.md
 
+app/_how-tos/plugin-dev-add-plugin-configuration.md:
+  - app/_src/gateway/plugin-development/get-started/config.md
+app/_how-tos/plugin-dev-add-plugin-testing.md:
+  - app/_src/gateway/plugin-development/get-started/testing.md
+app/_how-tos/plugin-dev-consume-external-services.md:
+  - app/_src/gateway/plugin-development/get-started/http.md
+app/_how-tos/plugin-dev-deploy-plugins.md:
+  - app/_src/gateway/plugin-development/get-started/deploy.md
+app/_how-tos/plugin-dev-set-up-plugin-project.md:
+  - app/_src/gateway/plugin-development/get-started/setup.md
+
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
   - app/_src/kubernetes-ingress-controller/index.md
