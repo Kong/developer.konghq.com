@@ -58,11 +58,19 @@ prereqs:
     position: before
     content: |
       Set the following {{site.base_gateway}} configuration that's required for Dynatrace:
-
+      {: data-deployment-topology="on-prem" }
       ```sh
       export KONG_TRACING_INSTRUMENTATIONS=all
       export KONG_TRACING_SAMPLING_RATE=1.0
       ```
+      {: data-deployment-topology="on-prem" }
+      When you create the Data Plane in {{site.konnect_short_name}}, append the following {{site.base_gateway}} configuration that's required for Dynatrace:
+      {: data-deployment-topology="konnect" }
+      ```sh
+      -e "KONG_TRACING_INSTRUMENTATIONS=all" \
+      -e "KONG_TRACING_SAMPLING_RATE=1.0" \
+      ```
+      {: data-deployment-topology="konnect" }
   - title: Dynatrace
     content: |
       This tutorial requires you to have a Dynatrace SaaS account.
