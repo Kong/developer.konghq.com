@@ -11,6 +11,7 @@ module Jekyll
       def process
         # TODO: consider redirects
         return if @page.data['canonical?']
+        return if @page.url.start_with?('/assets/mesh/')
 
         if !canonical?
           @page.data['seo_noindex'] = true
