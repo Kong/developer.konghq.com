@@ -29,13 +29,3 @@ end
 Liquid::Template.register_tag('tip', Jekyll::KumaSpecific::CustomBlock)
 Liquid::Template.register_tag('warning', Jekyll::KumaSpecific::CustomBlock)
 Liquid::Template.register_tag('danger', Jekyll::KumaSpecific::CustomBlock)
-
-module Jekyll
-  class JsonSchema < Liquid::Tag
-    def render(context)
-      'TODO: Fix this'
-    end
-  end
-end
-
-Liquid::Template.register_tag('json_schema', Jekyll::JsonSchema)

@@ -4,6 +4,7 @@ metadata:
   content_type: 'reference'
   layout: 'reference'
   edition: 'mesh'
+  plugin_schema: true
 
 links:
   '/install/?': '/mesh/introduction/install/'
