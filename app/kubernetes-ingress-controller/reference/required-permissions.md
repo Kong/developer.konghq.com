@@ -2,7 +2,7 @@
 title: Permissions required to install {{ site.kic_product_name }}
 
 description: |
-  What permissions are required to install Kong Ingress Controller if I am not a super admin of the cluster? What permissions are required to run Kong Ingress Controller?
+  What permissions are required to install {{site.kic_product_name}} if I'm not a super admin of the cluster? What permissions are required to run {{site.kic_product_name}}?
 
 breadcrumbs:
   - /kubernetes-ingress-controller/
@@ -20,21 +20,21 @@ works_on:
   - konnect
 ---
 
-To install {{ site.kic_product_name }}, you need to have the permissions to **write** (create, update, get, list, watch in Kubernetes's RBAC model) these resources.
+To install {{ site.kic_product_name }}, you need to have the permissions to **write** (create, update, get, list, watch in Kubernetes's RBAC model) the following resources:
 
-* `CustomResourceDefinition` to configure Kong specific entities (for example, `KongPlugin` to configure plugins).
+* `CustomResourceDefinition` to configure Kong-specific entities (for example, `KongPlugin` to configure plugins).
 
 * `ClusterRole`, `ClusterRoleBinding` (cluster scoped), `Role`,`RoleBinding` (namespace scoped) to create RBAC rules to enable {{ site.kic_product_name }} to access required resources.
 
 * `Deployment`, `Service`, `ServiceAccount`, `Secret`, and `ConfigMap` to create deployments, services, and to specify their configurations. 
 
-* `IngressClass` to install a ingress class managed by {{ site.kic_product_name }},
+* `IngressClass` to install an ingress class managed by {{ site.kic_product_name }}.
 
 * `ValidatingWebhookConfiguration` to create a webhook to validate managed resources.
 
-* (Optional) `HorizontalPodAutoscaler` if you want to enable auto scaling.
+* (Optional) `HorizontalPodAutoscaler` to enable autoscaling.
 
-* (Optional) `PersistentVolumeClaim` to set volumes used for the database, and `Job` to run migration jobs if you're using a [database backed](/kubernetes-ingress-controller/deployment-topologies/db-backed/) deployment.
+* (Optional) `PersistentVolumeClaim` to set volumes used for the database, and `Job` to run migration jobs if you're using a [database-backed](/kubernetes-ingress-controller/deployment-topologies/db-backed/) deployment.
 
 
 ## All required resources
@@ -49,7 +49,7 @@ columns:
     key: apiVersion
   - title: Resource Scope
     key: scope
-  - title: Usage
+  - title: Purpose
     key: usage
 rows:
   - kind: CustomResourceDefinition
@@ -125,7 +125,7 @@ columns:
     key: apiVersion
   - title: Resource Scope
     key: scope
-  - title: Usage
+  - title: Purpose
     key: usage
 rows:
   - kind: PersistentVolumeClaim
@@ -141,5 +141,5 @@ rows:
   - kind: HorizontalPodAutoscaler
     apiVersion: autoscaling/v2
     scope: namespaced
-    usage: configure auto scaling
+    usage: configure autoscaling
 {% endtable %}

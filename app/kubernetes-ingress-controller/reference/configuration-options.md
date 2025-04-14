@@ -1,5 +1,6 @@
 ---
-title: Configuration Options
+title: {{site.kic_product_name}} configuration options
+short_title: Configuration options
 
 description: |
   Learn about the various settings and configurations of the controller can be tweaked using CLI flags.
@@ -20,11 +21,13 @@ works_on:
   - konnect
 ---
 
-Configuration options allow you to customize the behavior of {{ site.kic_product_name }} to meet your needs. The default configuration will work for most users. These options are provided for advanced users.
+Configuration options allow you to customize the behavior of {{ site.kic_product_name }} to meet your needs. 
+
+The default configuration will work for most users. These options are provided for advanced users.
 
 ## Using environment variables
 
-Each flag defined in the table below can also be configured using an environment variable. The name of the environment variable is `CONTROLLER_` string followed by the name of flag in uppercase.
+Each flag defined in the following table can also be configured using an environment variable. The name of the environment variable is `CONTROLLER_` string followed by the name of flag in uppercase.
 
 For example, `--ingress-class` can be configured using the following environment variable:
 
@@ -32,7 +35,7 @@ For example, `--ingress-class` can be configured using the following environment
 CONTROLLER_INGRESS_CLASS=kong-foobar
 ```
 
-It is recommended that all the configuration is done through environment variables
+We recommend configuring all settings through environment variables
 and not CLI flags.
 
 ## Available options

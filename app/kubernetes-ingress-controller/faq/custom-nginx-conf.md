@@ -2,7 +2,7 @@
 title: Use a custom nginx.conf file
 
 description: |
-  How do I use a custom nginx.conf file using `ConfigMap` or `Secret`?
+  How do I use a custom nginx.conf file with `ConfigMap` or `Secret`?
 
 breadcrumbs:
   - /kubernetes-ingress-controller/
@@ -23,7 +23,9 @@ works_on:
 
 You can specify a custom `nginx.conf` file by creating a `ConfigMap` or `Secret` and mounting it inside your container that contains an `nginx_kong.lua` template.
 
-The `deployment.userDefinedVolumes` field in `values.yaml` takes an array of objects that get appended as-is to the existing `spec.template.spec.volumes` array in the {{ site.base_gateway }} deployment resource. The `deployment.userDefinedVolumeMounts` field is appended as-is to the existing `spec.template.spec.containers[].volumeMounts` and `spec.template.spec.initContainers[].volumeMounts` arrays.
+Use the following fields in `values.yaml`:
+* `deployment.userDefinedVolumes`: this field takes an array of objects that get appended as-is to the existing `spec.template.spec.volumes` array in the {{ site.base_gateway }} deployment resource. 
+* `deployment.userDefinedVolumeMounts`: this field is appended as-is to the existing `spec.template.spec.containers[].volumeMounts` and `spec.template.spec.initContainers[].volumeMounts` arrays.
 
 The volumes to mount are provided under the `deployment` key in your Helm `values.yaml` file. The structure of the configuration matches the Kubernetes [ConfigMapVolumeSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#configmapvolumesource-v1-core) or [SecretVolumeSource](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#secretvolumesource-v1-core) structure.
 

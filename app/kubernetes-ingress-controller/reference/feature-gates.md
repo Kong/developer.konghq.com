@@ -1,5 +1,5 @@
 ---
-title: Feature Gates
+title: Feature gates
 
 description: |
   Learn how to customize {{ site.kic_product_name }}'s behavior using feature flags
@@ -18,17 +18,23 @@ products:
 works_on:
   - on-prem
   - konnect
+related_resources:
+  - text: Stages of software availability
+    url: /stages-of-software-availability/
+  - text: Kubernetes
+    url: https://kubernetes.io
+  - text: Kubernetes feature gates
+    url: https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/
+  - text: Feature stages
+    url: https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/#feature-stages
 ---
 
 
-Feature gates enables contributors to add and manag`e new (and potentially experimental) functionality to the KIC in a controlled manner. The features will be "hidden" until generally available (GA) and the progress and maturity of features on their path to GA will be documented. Feature gates also create a clear path for deprecating features.
+Feature gates enable contributors to add and manage new (and potentially experimental) functionality to the {{site.kic_product_name}} in a controlled way. The features will be "hidden" until they are generally available (GA) and the progress and maturity of features on their path to GA will be documented. Feature gates also create a clear path for deprecating features.
 
 Upstream [Kubernetes](https://kubernetes.io) includes [feature gates](https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/), which enable or disable features with flags and track the maturity of a feature using [feature stages](https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/#feature-stages).
 The same definitions of `feature gates` and `feature stages` from upstream Kubernetes are used to define KIC's list of features.
 
-* [Kubernetes](https://kubernetes.io)
-* [Kubernetes feature gates](https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/)
-* [Feature stages](https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/#feature-stages)
 
 ## Available feature gates
 
@@ -134,9 +140,9 @@ kubectl set env -n kong deployment/kong-controller \
 
 ## Feature gate availability
 
-* The **since** and **until** rows in the table above refer to [KIC Releases](https://github.com/Kong/kubernetes-ingress-controller/releases).
+* The **since** and **until** rows in the [feature gates table](#available-feature-gates) refer to [KIC Releases](https://github.com/Kong/kubernetes-ingress-controller/releases).
 * Features that are currently in alpha or beta states may become deprecated at any time. Deprecated features are removed during the next minor release.
-* Until a feature becomes GA, there are no guarantees that will continue being available. For more information, see the [changelog](https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md).
+* Until a feature becomes GA, there are no guarantees that it will continue being available. For more information, see the [changelog](https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md).
 
 {:.warning}
 >**Important:** To avoid disrupting your services, consider not using features until they have reached GA status.
@@ -146,7 +152,7 @@ kubectl set env -n kong deployment/kong-controller \
 
 ### SanitizeKonnectConfigDumps
 
-The `SanitizeKonnectConfigDumps` feature enables the sanitization of configuration dumps that are sent to Konnect.
+The `SanitizeKonnectConfigDumps` feature enables the sanitization of configuration dumps that are sent to {{site.konnect_short_name}}.
 This means {{site.kic_product_name}} will obfuscate all sensitive information that your Kong config contains, such as
 private keys in `Certificate` entities and `Consumer` entities' credentials.
 
@@ -158,8 +164,8 @@ private keys in `Certificate` entities and `Consumer` entities' credentials.
 ### CombinedServicesFromDifferentHTTPRoutes
 
 The `CombinedServicesFromDifferentHTTPRoutes` feature enables translating `HTTPRoute` rules
-with the same set of backends (combination of namespace, name, port and weight) from different `HTTPRoute`s in the same namespace
-into a single {{site.base_gateway}} service. Enabling the feature gate can reduce the number of translated {{site.base_gateway}} services.
+with the same set of backends (combination of namespace, name, port, and weight) from different `HTTPRoute`s in the same namespace
+into a single {{site.base_gateway}} Service. Enabling the feature gate can reduce the number of translated {{site.base_gateway}} Services.
 
-The names of {{site.base_gateway}} services will change if the feature gate is enabled.
-You can refer to the [reference page](/kubernetes-ingress-controller/{{page.release}}/reference/combined-services-from-different-httproutes) for further details.
+The names of {{site.base_gateway}} Services will change if the feature gate is enabled.
+You can refer to the [`HTTRoutes` reference page](/kubernetes-ingress-controller/faq/combining-httproutes/) for further details.
