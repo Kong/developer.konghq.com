@@ -1,5 +1,5 @@
 ---
-title: {{site.kic_product_name}} configuration options
+title: "{{site.kic_product_name}} configuration options"
 short_title: Configuration options
 
 description: |
