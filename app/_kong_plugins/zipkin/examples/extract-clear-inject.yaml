@@ -1,0 +1,31 @@
+description: |
+  This configuration does the following:
+  * Extracts the tracing context using order of precedence: `w3c` > `b3` > `jaeger` > `ot` > `aws` > `datadog`
+  * Clears `b3` and `uber-trace-id` headers after extraction, if present in the request
+  * Inject the tracing context using the format: `w3c`
+
+title: 'Extract, clear, and inject'
+
+weight: 900
+
+# requirements: <- not required
+# - "some req"
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config:
+  propagation:	
+    extract: [ w3c, b3, jaeger, ot, aws, datadog ]
+    clear: [ b3, uber-trace-id ]
+    inject: [ w3c ]
+    default_format: "w3c"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

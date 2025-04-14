@@ -1,0 +1,30 @@
+description: |
+  This configuration does the following:
+  - Extracts the tracing context from: `b3`
+  - Injects the tracing context using the formats: `w3c`, `b3`, `jaeger`, `ot`, `aws`, `datadog`, `gcp`
+
+
+title: 'Multiple injection'
+
+weight: 900
+
+# requirements: <- not required
+# - "some req"
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config:
+  propagation:	
+    extract: [ b3 ]
+    inject: [ w3c, b3, jaeger, ot, aws, datadog, gcp ]
+    default_format: "w3c"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

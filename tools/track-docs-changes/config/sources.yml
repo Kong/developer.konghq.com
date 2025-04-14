@@ -270,6 +270,10 @@ app/kubernetes-ingress-controller/deployment-topologies/gateway-discovery.md:
   - app/_src/kubernetes-ingress-controller/production/deployment-topologies/gateway-discovery.md
 
 # plugins
+app/_kong_plugins/zipkin/changelog.md:
+  - app/_hub/kong-inc/zipkin/_changelog.md
+app/_kong_plugins/zipkin/index.md:
+  - app/_hub/kong-inc/zipkin/overview/_index.md
 app/_kong_plugins/upstream-oauth/changelog.md:
   - app/_hub/kong-inc/upstream-oauth/_changelog.md
 app/_kong_plugins/upstream-oauth/index.md:

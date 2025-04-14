@@ -1,0 +1,31 @@
+description: |
+  This configuration does the following:
+  - Extracts the tracing context using order of precedence: `w3c` > `b3` > `jaeger` > `ot` > `aws` > `datadog`
+  - Injects the tracing context **in the extracted header type**
+  - Defaults to `w3c` for context injection if none of the `extract` header types were found in the request
+
+
+title: 'Preserve incoming format'
+
+weight: 900
+
+# requirements: <- not required
+# - "some req"
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config:
+  propagation:	
+    extract: [ w3c, b3, jaeger, ot, aws, datadog ]
+    inject: [ preserve ]
+    default_format: "w3c"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
