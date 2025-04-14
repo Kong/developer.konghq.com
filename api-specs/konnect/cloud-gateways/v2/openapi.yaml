@@ -2289,7 +2289,7 @@ components:
       description: Filters on the given string field value by exact match inequality.
       type: object
       properties:
-        oeq:
+        neq:
           type: string
       additionalProperties: false
       required:
@@ -2297,7 +2297,7 @@ components:
       title: StringFieldNEQFilter
       x-examples:
         example-1:
-          oeq: not-this-value
+          neq: not-this-value
     StringFieldOEQFilter:
       description: Filters on the given comma separated string by one or more exact match.
       type: object
