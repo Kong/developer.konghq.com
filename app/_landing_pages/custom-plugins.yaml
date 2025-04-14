@@ -23,7 +23,7 @@ rows:
                     Plugins consist of modules interacting with the request/response objects or
                     streams via a PDK to implement arbitrary logic. With custom plugins, you can configure these modules to provide custom functionality to {{site.base_gateway}}.
 
-                    To start creating your own plugins, review the [Getting Started documentation](https://docs.konghq.com/gateway/latest/plugin-development/get-started/),
+                    To start creating your own plugins, review the [getting started documentation](#get-started),
                     or see the following references:
                     * [Plugin Development Kit reference](https://docs.konghq.com/gateway/latest/plugin-development/pdk/)
                     * [Other Language Support](https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/go/)
@@ -92,6 +92,29 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Through partnerships with third parties, Kong lists some [third-party custom plugins](https://docs.konghq.com/hub/?support=third-party-partner%2Ccommunity) on the Kong Plugin Hub. 
+                    Through partnerships with third parties, Kong lists some [third-party custom plugins](/plugins/?support=third-party) on the Kong Plugin Hub. 
                     These plugins are maintained by Kong partners. 
                     If you would like to have your plugin featured on the Kong Plugin Hub, we encourage you to become a [Kong Partner](https://konghq.com/partners).
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Get started"
+              blocks:
+                - type: text
+                  text: |
+                    Learn about custom plugin development by following a series of tutorials that walk you through all the steps to build a new custom plugin for {{site.base_gateway}}.
+                    The plugin you build will transform HTTP traffic as it passes through the API gateway, and give you
+                    a solid starting point for building custom plugins to solve your specific business needs.
+
+                    You will learn how to:
+                    * Set up a new plugin project
+                    * Build automated tests for your custom plugins
+                    * Add plugin configuration to the project allowing for runtime behavior changes
+                    * Consume external services from within your plugin 
+                    * Deploy your plugin
+
+                - type: text
+                  text: <a href="/custom-plugins/get-started/set-up-plugin-project/">Get started &rarr;</a>
