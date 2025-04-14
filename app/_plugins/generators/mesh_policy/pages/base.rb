@@ -34,7 +34,8 @@ module Jekyll
               'get_started_url' => @policy.examples.first.url,
               'reference_url' => Reference.url(@policy),
               'plugin' => @policy,
-              'plugin?' => true
+              'plugin?' => true,
+              'release' => @policy.latest_release_in_range
             ).merge(publication_info)
         end
 
