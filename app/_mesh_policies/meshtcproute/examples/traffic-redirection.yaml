@@ -1,0 +1,31 @@
+title: 'Traffic redirection'
+description: "You can use `MeshTCPRoute` to redirect outgoing traffic from one service to another."
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshTCPRoute
+  name: tcp-route-1
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+          namespace: kuma-demo
+          _port: 3001
+          sectionName: http
+        rules:
+          - default:
+              backendRefs:
+                - kind: MeshService
+                  name: external-backend
+                  namespace: kuma-demo
+                  port: 8080
+                  _port: 8080

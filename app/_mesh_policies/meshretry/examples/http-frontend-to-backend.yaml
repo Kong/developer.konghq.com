@@ -1,0 +1,31 @@
+title: 'Route 5xx requests to backend'
+description: 'HTTP frontend to backend on 5xx'
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshRetry
+  name: frontend-to-backend-retry-http
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+          namespace: kuma-demo
+          sectionName: http
+          _port: 8080
+        default:
+          http:
+            numRetries: 10
+            backOff:
+              baseInterval: 15s
+              maxInterval: 20m
+            retryOn:
+              - "5xx"

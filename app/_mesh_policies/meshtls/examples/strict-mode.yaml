@@ -1,0 +1,18 @@
+title: 'Enable strict mode on specific subset'
+description: 'Enable strict mode on specific subset'
+
+weight: 900
+
+
+config:
+  type: MeshTLS
+  name: strict-mode
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: redis
+    rules:
+      - default:
+          mode: Strict

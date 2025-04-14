@@ -1,0 +1,35 @@
+title: 'Traffic modification'
+description: 'An example of a MeshHTTPRoute that adds x-custom-header with value xyz when frontend tries to consume backend.'
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshHTTPRoute
+  name: http-route-1
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+          namespace: kuma-demo
+          sectionName: http
+          _port: 3001
+        rules:
+          - matches:
+              - path:
+                  type: Exact
+                  value: /
+            default:
+              filters:
+                - type: RequestHeaderModifier
+                  requestHeaderModifier:
+                    set:
+                      - name: x-custom-header
+                        value: xyz

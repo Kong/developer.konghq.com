@@ -1,0 +1,24 @@
+title: '50.5% of requests to service backend from any service is going to be delayed by 5 seconds'
+description: '50.5% of requests to service backend from any service is going to be delayed by 5 seconds'
+
+weight: 900
+
+namespace: kuma-demo
+config:
+  type: MeshFaultInjection
+  mesh: default
+  name: default-fault-injection
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    from:
+      - targetRef:
+          kind: Mesh
+          name: default
+        default:
+          http:
+            - delay:
+                percentage: "50.5"
+                value: 5s

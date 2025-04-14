@@ -1,0 +1,42 @@
+title: 'Prioritize traffic to data planesin specific order'
+description: "Requests to backend will be distributed based on weights, with 99.9% of requests routed to data planes in the same data center, 0.099% to data planes in the same region, and the remainder to other local instances."
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshLoadBalancingStrategy
+  name: local-zone-affinity-cross-backend
+  mesh: default
+  spec:
+    to:
+      - targetRef:
+          kind: MeshMultiZoneService
+          name: backend
+          namespace: kuma-demo
+          sectionName: http
+          _port: 8080
+        default:
+          localityAwareness:
+            localZone:
+              affinityTags:
+                - key: kubernetes.io/hostname
+                  weight: 9000
+                - key: topology.kubernetes.io/zone
+                  weight: 9
+            crossZone:
+              failover:
+                - from: 
+                    zones: ["us-1", "us-2", "us-3"]
+                  to:
+                    type: Only
+                    zones: ["us-1", "us-2", "us-3"]
+                - from:
+                    zones: ["eu-1", "eu-2", "eu-3"]
+                  to:
+                    type: Only
+                    zones: ["eu-1", "eu-2", "eu-3"]
+                - to:
+                    type: Only
+                    zones: ["us-4"]

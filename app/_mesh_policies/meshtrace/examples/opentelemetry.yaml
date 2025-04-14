@@ -1,0 +1,30 @@
+title: 'OpenTelemetry'
+description: "This assumes a OpenTelemetry collector is configured and running. If you haven't already check the [OpenTelementry operator](https://github.com/open-telemetry/opentelemetry-operator)."
+
+weight: 900
+
+
+config:
+  type: MeshTrace
+  name: default
+  mesh: default
+  spec:
+    default:
+      tags:
+        - name: team
+          literal: core
+        - name: env
+          header:
+            name: x-env
+            default: prod
+        - name: version
+          header:
+            name: x-version
+      sampling:
+        overall: 80
+        random: 60
+        client: 40
+      backends:
+        - type: OpenTelemetry
+          openTelemetry:
+            endpoint: otel-collector.com:4317

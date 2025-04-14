@@ -1,0 +1,19 @@
+title: 'Metrics default'
+description: "A default `MeshMetric` policy for the `default` mesh"
+
+weight: 900
+
+
+config:
+  type: MeshMetric
+  mesh: default
+  name: metrics-for-mesh-service
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        framework: "example-web-framework"
+    default:
+      applications:
+        - path: "/metrics/prometheus"
+          port: 8888

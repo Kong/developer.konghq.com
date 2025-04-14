@@ -1,0 +1,34 @@
+title: "Target `MeshHTTPRoute`"
+description: "the `MeshHTTPRoute` policy `route-to-backend-v2` redirects all requests to `/v2*` to `backend` instances with `version: v2` tag. `MeshTimeout` `backend-v2` configures timeouts only for requests that are going through `route-to-backend-v2` route. "
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshHTTPRoute
+  name: route-to-backend-v2
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+          namespace: kuma-demo
+          _port: 3001
+          sectionName: http
+        rules:
+          - matches:
+              - path:
+                  type: PathPrefix
+                  value: /v2
+            default:
+              backendRefs:
+                - kind: MeshService
+                  name: backend-v2
+                  namespace: kuma-demo
+                  port: 3001

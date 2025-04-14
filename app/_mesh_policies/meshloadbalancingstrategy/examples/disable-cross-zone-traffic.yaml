@@ -1,0 +1,25 @@
+title: 'Disable cross-zone traffic'
+description: ' Disable cross zone traffic and prioritize traffic the dataplanes on the same node and availability zone'
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshLoadBalancingStrategy
+  name: local-zone-affinity-backend
+  mesh: default
+  spec:
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+          namespace: kuma-demo
+          sectionName: http
+          _port: 8080
+        default:
+          localityAwareness:
+            localZone:
+              affinityTags:
+                - key: k8s.io/node
+                - key: k8s.io/az
