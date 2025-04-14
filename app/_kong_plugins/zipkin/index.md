@@ -34,7 +34,7 @@ related_resources:
     url: https://konghq.com/blog/engineering/tracing-with-zipkin-in-kong-2-1-0
 ---
 
-When enabled, the Zipking plugin traces requests in a way that's compatible with [zipkin](https://zipkin.io/).
+When enabled, the Zipkin plugin traces requests in a way that's compatible with [zipkin](https://zipkin.io/).
 
 The code is structured around an [OpenTracing](http://opentracing.io/) core using the [opentracing-lua library](https://github.com/Kong/opentracing-lua) to collect timing data of a request in each of {{site.base_gateway}}'s phases.
 The plugin uses an `opentracing-lua` compatible extractor, injector, and reporters to implement Zipkin's protocols.
@@ -120,7 +120,7 @@ Contains the following tags specific to load balancing:
 The Zipkin plugin supports propagation of the following header formats:
 - `w3c`: [W3C trace context](https://www.w3.org/TR/trace-context/)
 - `b3` and `b3-single`: [Zipkin headers](https://github.com/openzipkin/b3-propagation)
-- `jaeger`: [Jaeger headers](https://www.jaegertracing.io/docs/client-libraries/#propagation-format)
+- `jaeger`: [Jaeger headers](https://www.jaegertracing.io/docs/1.20/client-libraries/#propagation-format)
 - `ot`: [OpenTracing headers](https://github.com/opentracing/specification/blob/master/rfc/trace_identifiers.md)
 - `datadog`: [Datadog headers](https://docs.datadoghq.com/tracing/trace_collection/library_config/go/#trace-context-propagation-for-distributed-tracing)
 - `aws`: [AWS X-Ray header](https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html#xray-concepts-tracingheader) {% new_in 3.4 %}
