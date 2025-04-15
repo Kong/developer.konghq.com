@@ -54,17 +54,17 @@ prereqs:
     - name: KONG_TRACING_INSTRUMENTATIONS
     - name: KONG_TRACING_SAMPLING_RATE
   inline:
-  - title: Dynatrace environment variables
+  - title: Tracing environment variables
     position: before
     content: |
-      Set the following {{site.base_gateway}} configuration that's required for Dynatrace:
+      Set the following Dynatrace tracing variables before you configure the Data Plane:
       {: data-deployment-topology="on-prem" }
       ```sh
       export KONG_TRACING_INSTRUMENTATIONS=all
       export KONG_TRACING_SAMPLING_RATE=1.0
       ```
       {: data-deployment-topology="on-prem" }
-      When you create the Data Plane in {{site.konnect_short_name}}, add the following {{site.base_gateway}} configuration variables for Dynatrace:
+      When you create the Data Plane in {{site.konnect_short_name}}, add the following {{site.base_gateway}} configuration variables for Dynatrace tracing:
       {: data-deployment-topology="konnect" }
       ```sh
       -e "KONG_TRACING_INSTRUMENTATIONS=all" \
