@@ -166,7 +166,7 @@ pages:
     path: app/_src/production/deployment/multi-zone.md
     title: 'Multi-zone deployment'
     description: 'Group equivalent MeshServices across zones and expose a unified, zone-agnostic service with global failover capabilities.'
-    url: '/mesh/meshmultizoneservice/'
+    url: '/mesh/mesh-multizone-service-deployment/'
     # related_resources:
     #   -
   -
@@ -301,7 +301,7 @@ pages:
     path: app/_src/using-mesh/managing-ingress-traffic/delegated.md
     title: 'Delegated gateways'
     description: 'Guide to configuring delegated gateways in {{site.mesh_product_name}}, allowing external API gateways to handle ingress while {{site.mesh_product_name}} manages egress to the mesh.'
-    url: '/mesh/gateway-delegated/'
+    url: '/mesh/ingress-gateway-delegated/'
     # related_resources:
     #   -
     min_version:
@@ -310,7 +310,7 @@ pages:
     path: app/_src/using-mesh/managing-ingress-traffic/gateway-api.md
     title: 'Kubernetes Gateway API'
     description: 'How to use Kubernetes Gateway API with {{site.mesh_product_name}}, including support for built-in gateways, HTTP/TCP routing, TLS, GAMMA, and multi-zone limitations.'
-    url: '/mesh/gateway-api/'
+    url: '/mesh/kubernetes-gateway-api/'
     # related_resources:
     #   -
     min_version:
