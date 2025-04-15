@@ -39,27 +39,6 @@ When enabled, the Zipkin plugin traces requests in a way that's compatible with 
 The code is structured around an [OpenTracing](http://opentracing.io/) core using the [opentracing-lua library](https://github.com/Kong/opentracing-lua) to collect timing data of a request in each of {{site.base_gateway}}'s phases.
 The plugin uses an `opentracing-lua` compatible extractor, injector, and reporters to implement Zipkin's protocols.
 
-## Queuing
-
-{% include_cached /plugins/queues.md name=page.name %}
-
-## Trace IDs in serialized logs {% new_in 3.5 %}
-
-When the Zipkin plugin is configured along with a plugin that uses the 
-[Log Serializer](/gateway/pdk/reference/kong.log/#kong-log-serialize),
-the trace ID of each request is added to the key `trace_id` in the serialized log output.
-
-The value of this field is an object that can contain different formats
-of the current request's trace ID. In case of multiple tracing headers in the
-same request, the `trace_id` field includes one trace ID format
-for each different header format, as in the following example:
-
-```
-"trace_id": {
-  "b3": "4bf92f3577b34da6a3ce929d0e0e4736",
-  "datadog": "11803532876627986230"
-},
-```
 
 ## Reporter
 
@@ -212,3 +191,25 @@ See the plugin's [configuration reference](/plugins/zipkin/reference/#schema--co
 > **Note:** If any of the `config.propagation.*` configuration options (`extract`, `clear`,  or `inject`) are configured, the `config.propagation` configuration takes precedence over the deprecated [`config.header_type`](/plugins/zipkin/reference/#schema--config-header-type) and [`config.default_header_type`](/plugins/zipkin/reference/#schema--config-default-header-type) parameters. 
 If none of the `config.propagation.*` configuration options are set, the `config.header_type` and `config.default_header_type` parameters are still used to determine the propagation behavior.
 <br><br>In {{site.base_gateway}} 3.6 or earlier, the plugin detects the propagation format from the headers and will use the appropriate format to propagate the span context. If no appropriate format is found, the plugin will fallback to the default format, which is `b3`.
+
+## Trace IDs in serialized logs {% new_in 3.5 %}
+
+When the Zipkin plugin is configured along with a plugin that uses the 
+[Log Serializer](/gateway/pdk/reference/kong.log/#kong-log-serialize),
+the trace ID of each request is added to the key `trace_id` in the serialized log output.
+
+The value of this field is an object that can contain different formats
+of the current request's trace ID. In case of multiple tracing headers in the
+same request, the `trace_id` field includes one trace ID format
+for each different header format, as in the following example:
+
+```
+"trace_id": {
+  "b3": "4bf92f3577b34da6a3ce929d0e0e4736",
+  "datadog": "11803532876627986230"
+},
+```
+
+## Queuing
+
+{% include_cached /plugins/queues.md name=page.name %}
