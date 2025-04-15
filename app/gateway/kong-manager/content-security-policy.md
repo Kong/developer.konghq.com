@@ -51,7 +51,7 @@ script-src-elem 'self';
 style-src 'self' 'unsafe-inline';
 ```
 
-The value of the `connect-src` directive depends on the the [`admin_gui_api_url`](/gateway/configuration/#admin-gui-api-url) setting.
+The value of the `connect-src` directive depends on the [`admin_gui_api_url`](/gateway/configuration/#admin-gui-api-url) setting.
 
 If `admin_gui_api_url` is **not specified**, the `connect-src` directive depends on the requesting host and port. 
 For example:
