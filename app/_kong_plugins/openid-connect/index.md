@@ -576,7 +576,7 @@ You can filter the log with the keyword `openid-connect`.
 5. Session-related issues are often caused by large cookies. Try storing the session data in `Redis` or `memcache`, as that will make the session cookie much smaller. Set this up using [`config.session_storage`](./reference/#schema--config-session-storage).
 
 6. Try to eliminate indirection in the form of other gateways, load balancers, NATs, and so on, in front of {{site.base_gateway}}, as that makes it easier to find out where the problem is. 
-If one of these other applications is causing issues, looking into using:
+If one of these other applications is causing issues, looking into using the following:
   * [Port maps](/gateway/configuration/#port-maps)
   * [`X-Forwarded-*` headers](/gateway/configuration/#trusted-ips)
 
