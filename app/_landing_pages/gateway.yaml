@@ -2,6 +2,11 @@ metadata:
   title: "{{site.base_gateway}}"
   content_type: landing_page
   description: This page is an introduction to {{site.base_gateway}}.
+  products:
+    - gateway
+  works_on:
+    - on-prem
+    - konnect
 rows:
   - header:
       type: h1
