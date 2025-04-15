@@ -1,5 +1,5 @@
 title: 'gRPC health check from cart to payment service'
-description: 'Protocol fallback'
+description: 'gRPC health check from cart to payment service.'
 
 weight: 900
 

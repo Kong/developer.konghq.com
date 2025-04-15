@@ -1,5 +1,5 @@
-title: 'Outlier detection for inbound traffic to backend service'
-description: 'Outlier detection for inbound traffic to backend service'
+title: 'Basic circuit breaker for outbound traffic'
+description: 'Basic circuit breaker for outbound traffic from web, to backend service'
 
 weight: 900
 
