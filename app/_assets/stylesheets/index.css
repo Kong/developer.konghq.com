@@ -120,6 +120,11 @@
     @apply font-bold text-base tracking-[-.01em];
   }
 
+  main h4:not(.card h4) {
+    @apply pt-3;
+  }
+
+
   table {
     @apply bg-secondary shadow-primary border-none rounded-lg text-sm;
 
