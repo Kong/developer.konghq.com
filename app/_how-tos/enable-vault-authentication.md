@@ -138,6 +138,7 @@ export SECRET_TOKEN=<consumer_secret_token>
 ## 5. Validate
 
 To validate that the authentication is working as expected, send a request to the Route we created in the [prerequisites](#pre-configured-entities) using the credentials we generated:
+<!--vale off-->
 {% validation request-check %}
 url: '/anything'
 status_code: 200
@@ -145,3 +146,4 @@ headers:
   - 'access_token: $ACCESS_TOKEN'
   - 'secret_token: $SECRET_TOKEN'
 {% endvalidation %}
+<!--vale on-->
