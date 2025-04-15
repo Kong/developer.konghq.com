@@ -1,5 +1,5 @@
 description: |
-  This configuration does the following:
+  Configure the Zipkin plugin to inject tracing context in multiple formats:
   - Extracts the tracing context from: `b3`
   - Injects the tracing context using the formats: `w3c`, `b3`, `jaeger`, `ot`, `aws`, `datadog`, `gcp`
 

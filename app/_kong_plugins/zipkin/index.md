@@ -64,56 +64,134 @@ for each different header format, as in the following example:
 ## Reporter
 
 Tracing data is reported to another system using an OpenTracing reporter.
-This plugin records tracing data for a given request, and sends it as a batch to a Zipkin server using [the Zipkin v2 API](https://zipkin.io/zipkin-api/#/default/post_spans). Zipkin version 1.31 or later is required.
+This plugin records tracing data for a given request, and sends it as a batch to a Zipkin server using the [Zipkin v2 API](https://zipkin.io/zipkin-api/#/default/post_spans). Zipkin version 1.31 or later is required.
 
-The [`config.http_endpoint`](/plugins/zipkin/reference/#schema--config-http-endpoint) configuration variable must contain the full URI including scheme, host, port and path sections (for example, your URI likely ends in `/api/v2/spans`).
+The [`config.http_endpoint`](/plugins/zipkin/reference/#schema--config-http-endpoint) configuration variable must contain the full URI including scheme, host, port, and path sections (for example, your URI likely ends in `/api/v2/spans`).
 
 ## Spans
 
-The plugin does *request sampling*. For each request which triggers the plugin, a random number between 0 and 1 is chosen.
+The plugin does *request sampling*. For each request that triggers the plugin, a random number between 0 and 1 is chosen.
 
 If the number is smaller than the configured [`config.sample_ratio`](/plugins/zipkin/reference/#schema--config-sample-ratio), then a trace with several spans will be generated. If `config.sample_ratio` is set to 1, then all requests will generate a trace (this might be very noisy).
 
-For each request that gets traced, the following spans are produced:
+For each request that gets traced, the following spans are produced: request, proxy, and balancer.
 
-* **Request span**: 1 per request. Encompasses the whole request in kong (kind: SERVER).
-  The Proxy and Balancer spans are children of this span. It contains the following logs/annotations for the rewrite phase:
+### Request span
 
-  * `krs`: `kong.rewrite.start`
-  * `krf`: `kong.rewrite.finish`
+_Span kind: SERVER_
 
-  The Request span has the following tags:
+There is 1 request span per request, which encompasses the whole request in {{site.base_gateway}}.
 
-  * `lc`: Hardcoded to `kong`.
-  * `kong.service`: The UUID of the Gateway Service matched when processing the request, if any.
-  * `kong.service_name`: The name of the Gateway Service matched when processing the request, if Gateway Service exists and has a `name` attribute.
-  * `kong.route`: The UUID of the Route matched when processing the request, if any (it can be nil on non-matched requests).
-  * `kong.route_name`: The name of the Route matched when processing the request, if Route exists and has a `name` attribute.
-  * `http.method`: The HTTP method used on the original request (only for HTTP requests).
-  * `http.path`: The path of the request (only for HTTP requests).
-  * If the plugin `tags_header` config option is set, and the request contains headers with the appropriate name and correct encoding tags, then the trace will include the tags.
-  * If the plugin `static_tags` config option is set, then the tags in the config option will be included in the trace.
+The [proxy](#proxy-span) and [balancer](#balancer-span) spans are children of this span. It contains the following logs/annotations for the rewrite phase:
 
-* **Proxy span**: 1 per request, encompassing most of {{site.base_gateway}}'s internal processing of a request (kind: CLIENT).
-  Contains the following logs/annotations for the start/finish of the of the [{{site.base_gateway}} plugin phases](/gateway/entities/plugin/#plugin-contexts):
-  * `kas`: `kong.access.start`
-  * `kaf`: `kong.access.finish`
-  * `kbs`: `kong.body_filter.start`
-  * `kbf`: `kong.body_filter.finish`
-  * `khs`: `kong.header_filter.start`
-  * `khf`: `kong.header_filter.finish`
-  * `kps`: `kong.preread.start` (only for stream requests)
-  * `kpf`: `kong.preread.finish` (only for stream requests)
+* `krs`: `kong.rewrite.start`
+* `krf`: `kong.rewrite.finish`
 
-* **Balancer span(s)**: 0 or more per request, each encompassing one balancer attempt (kind: CLIENT).
-Contains the following tags specific to load balancing:
-  * `kong.balancer.try`: A number indicating the attempt (1 for the first load-balancing attempt, 2 for the second, and so on)
-  * `peer.ipv4` or `peer.ipv6` for the balancer IP
-  * `peer.port` for the balanced port
-  * `error`: Set to `true` if the balancing attempt was unsuccessful, otherwise unset.
-  * `http.status_code`: The HTTP status code received, in case of error
-  * `kong.balancer.state`: An NGINX-specific description of the error, `next/failed` for HTTP failures, or `0` for stream failures
-     Equivalent to `state_name` in OpenResty's balancer's `get_last_failure` function
+The request span has the following tags:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Tag
+    key: tag
+  - title: Description
+    key: description
+rows:
+  - tag: "`lc`"
+    description: |
+      Hardcoded to `kong`.
+  - tag: "`kong.service`" 
+    description: |
+      The UUID of the Gateway Service matched when processing the request, if any.
+  - tag: "`kong.service_name`"
+    description: |
+      The name of the Gateway Service matched when processing the request, if Gateway Service exists and has a `name` attribute.
+  - tag: "`kong.route`"
+    description: |
+      The UUID of the Route matched when processing the request, if any (it can be nil on non-matched requests).
+  - tag: "`kong.route_name`"
+    description: |
+      The name of the Route matched when processing the request, if Route exists and has a `name` attribute.
+  - tag: "`http.method`"
+    description: |
+      The HTTP method used on the original request (only for HTTP requests).
+  - tag: "`http.path`"
+    description: |
+      The path of the request (only for HTTP requests).
+{% endtable %}
+<!--vale on -->
+
+Additional tags: 
+* If the plugin `tags_header` config option is set, and the request contains headers with the appropriate name and correct encoding tags, then the trace will include the tags.
+* If the plugin `static_tags` config option is set, then the tags in the config option will be included in the trace.
+
+### Proxy span
+
+_Span kind: CLIENT_
+
+There is 1 proxy span per request, encompassing most of {{site.base_gateway}}'s internal processing of a request.
+
+The proxy span contains the following logs/annotations for the start/finish of the of the [{{site.base_gateway}} plugin phases](/gateway/entities/plugin/#plugin-contexts):
+
+{% table %}
+columns:
+  - title: Tag
+    key: tag
+  - title: Phase
+    key: phase
+rows:
+  - tag: "`kas`"
+    phase: "`kong.access.start`"
+  - tag: "`kaf`"
+    phase: "`kong.access.finish`"
+  - tag: "`kbs`"
+    phase: "`kong.body_filter.start`"
+  - tag: "`kbf`"
+    phase: "`kong.body_filter.finish`"
+  - tag: "`khs`"
+    phase: "`kong.header_filter.start`"
+  - tag: "`khf`"
+    phase: "`kong.header_filter.finish`"
+  - tag: "`kps`"
+    phase: "`kong.preread.start` (only for stream requests)"
+  - tag: "`kpf`"
+    phase: "`kong.preread.finish` (only for stream requests)"
+{% endtable %}
+<!--vale on-->
+
+### Balancer span
+
+_Span kind: CLIENT_
+
+There are 0 or more balancer spans per request, each encompassing one balancer attempt.
+This span contains the following tags specific to load balancing:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Tag
+    key: tag
+  - title: Description
+    key: description
+rows:
+  - tag: "`kong.balancer.try`"
+    description: |
+      A number indicating the attempt (1 for the first load-balancing attempt, 2 for the second, and so on).
+  - tag: "`peer.ipv4` or `peer.ipv6`"
+    description: The balancer IP.
+  - tag: "`peer.port`"
+    description: The balancer port.
+  - tag: "`error`"
+    description: |
+      Set to `true` if the balancing attempt was unsuccessful, otherwise unset.
+  - tag: "`http.status_code`"
+    description: The HTTP status code received, in case of error.
+  - tag: "`kong.balancer.state`"
+    description: |
+      An NGINX-specific description of the error, `next/failed` for HTTP failures, or `0` for stream failures.
+      Equivalent to `state_name` in OpenResty's balancer's `get_last_failure` function.
+{% endtable %}
+<!--vale on-->
 
 ## Propagation
 

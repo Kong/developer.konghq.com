@@ -1,5 +1,5 @@
 description: |
-  This configuration does the following:
+  Configure the Zipkin plugin to ignore incoming headers:
   - No tracing context extraction
   - Injects the tracing context using the formats: `b3`, `datadog` 
   Some header formats specify different trace and span ID sizes. When the tracing context is extracted and injected from/to headers with different ID sizes, the IDs are truncated or left-padded to align with the target format.

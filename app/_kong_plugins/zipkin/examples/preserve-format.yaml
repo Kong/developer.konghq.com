@@ -1,5 +1,6 @@
 description: |
-  This configuration does the following:
+  Configure the Zipkin plugin to extract tracing context and inject it in the same type, preserving the format.
+  The configuration takes the following form:
   - Extracts the tracing context using order of precedence: `w3c` > `b3` > `jaeger` > `ot` > `aws` > `datadog`
   - Injects the tracing context **in the extracted header type**
   - Defaults to `w3c` for context injection if none of the `extract` header types were found in the request
