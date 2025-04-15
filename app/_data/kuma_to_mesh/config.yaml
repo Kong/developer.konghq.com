@@ -7,7 +7,7 @@ metadata:
   plugin_schema: true
 
 links:
-  '/install/?': '/mesh/introduction/install/'
+  '/install/?': '/mesh/install/'
   '/enterprise/?': '/mesh/'
   '/community/?': 'https://konghq.com/community'
   '/policies/?': '/mesh/policies/'
