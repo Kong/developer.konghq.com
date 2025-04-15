@@ -1,0 +1,159 @@
+---
+title: Configure OpenID Connect with refresh token
+content_type: how_to
+
+related_resources:
+  - text: Authentication in {{site.base_gateway}}
+    url: /gateway/authentication/
+  - text: OpenID Connect authentication flows and grants
+    url: /plugins/openid-connect/#authentication
+  - text: Refresh token grant
+    url: /plugins/openid-connect/#refresh-token-grant-workflow
+
+plugins:
+  - openid-connect
+
+entities:
+  - route
+  - service
+
+products:
+  - gateway
+
+works_on:
+  - on-prem
+  - konnect
+
+min_version:
+  gateway: '3.4'
+
+tools:
+  - deck
+
+prereqs:
+  entities:
+    services:
+      - example-service
+    routes:
+      - example-route
+  inline:
+    - title: Set up Keycloak
+      include_content: prereqs/auth/oidc/keycloak-password
+      icon_url: /assets/icons/keycloak.svg
+
+tags:
+  - authentication
+  - openid-connect
+
+tldr:
+  q: How do I use a refresh token to authenticate directly with my identity provider?
+  a: Using the OpenID Connect plugin, retrieve the refresh token and use it to authenticate with an identity provider (IdP) by passing the refresh token in a `Refresh-Token` header.
+
+cleanup:
+  inline:
+    - title: Destroy the {{site.base_gateway}} container
+      include_content: cleanup/products/gateway
+      icon_url: /assets/icons/gateway.svg
+
+---
+
+## 1. Enable the OpenID Connect plugin with refresh tokens
+
+Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
+set up an instance of the OpenID Connect plugin with the refresh token grant.
+
+We're also enabling the password grant, as well as a refresh token header, so that you can test retrieving the token.
+
+Enable the OpenID Connect plugin on the `example-service` Service:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: openid-connect
+      service: example-service
+      config:
+        issuer: ${issuer}
+        client_id:
+        - ${client-id}
+        client_secret:
+        - ${client-secret}
+        client_auth:
+        - client_secret_post
+        auth_methods:
+        - refresh_token
+        - password
+        refresh_token_param_type:
+        - header
+        refresh_token_param_name: refresh_token
+        upstream_refresh_token_header: refresh_token
+variables:
+  issuer:
+    value: $ISSUER
+  client-id:
+    value: $CLIENT_ID
+  client-secret:
+    value: $CLIENT_SECRET
+{% endentity_examples %}
+
+In this example:
+* `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
+* `auth_methods`: Refresh token and password grant.
+* `refresh_token_param_type`: We want to search for the refresh token in headers only.
+
+## 2. Retrieve the refresh token
+
+Check that you can recover the refresh token:
+
+{% validation request-check %}
+url: /anything
+method: GET
+status_code: 200
+user: "john:doe"
+display_headers: true
+{% endvalidation %}
+
+You should see a `Refresh-Token` header in the response.
+
+Export the token to an environment variable:
+
+```
+export REFRESH_TOKEN={your-refresh-token}
+```
+
+## 3. Validate the refresh token grant
+
+At this point you have created a Gateway Service, routed traffic to the Service, and enabled the OpenID Connect plugin.
+You can now test the refresh token grant.
+
+Access the `example-route` Route by passing the refresh token in a `Refresh-Token` header:
+
+{% validation request-check %}
+url: /anything
+method: GET
+status_code: 200
+display_headers: true
+headers:
+  - "Refresh-Token: $REFRESH_TOKEN"
+{% endvalidation %}
+
+If {{site.base_gateway}} successfully authenticates with Keycloak, you'll see a `200` response with a `Refresh-Token` header.
+
+If you make another request using the same credentials, you'll see that {{site.base_gateway}} adds less latency to the request because it has cached the token endpoint call to Keycloak:
+
+```
+X-Kong-Proxy-Latency: 25
+```
+{:.no-copy-code}
+
+Alternatively, you can use jq to pass the credentials and retrieve the most recent refresh token every time:
+
+{% validation request-check %}
+url: /anything
+method: GET
+status_code: 200
+display_headers: true
+headers:
+  - |
+    Refresh-Token:$(curl --user john:doe http://localhost:8000/anything \
+            | jq -r '.headers."Refresh-Token"')
+{% endvalidation %}
