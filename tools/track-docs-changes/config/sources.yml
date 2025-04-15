@@ -910,7 +910,7 @@ app/gateway/performance/benchmarks.md:
   - app/_src/gateway/production/performance/performance-testing.md
 app/ai-gateway/ai-audit-log-reference.md:
   - app/_src/gateway/production/logging/ai-analytics.md
-app/gateway/kong-manager-configuration.md:
+app/gateway/kong-manager/configuration.md:
   - app/_src/gateway/kong-manager/enable.md 
   - app/_src/gateway/kong-manager/troubleshoot.md
 app/ai-gateway/monitor-ai-llm-metrics.md:
@@ -961,6 +961,8 @@ app/gateway/upgrade/index.md:
   - app/_src/gateway/upgrade/index.md
 app/gateway/upgrade/lts-upgrade.md:
   - app/_src/gateway/upgrade/lts-upgrade.md
+app/gateway/kong-manager/content-security-policy.md:
+  - app/_src/gateway/kong-manager/strengthen-security.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:

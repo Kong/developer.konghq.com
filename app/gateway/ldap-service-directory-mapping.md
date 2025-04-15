@@ -15,7 +15,7 @@ related_resources:
   - text: Kong Manager
     url: /gateway/kong-manager/
   - text: Kong Manager Configuration
-    url: /gateway/kong-manager-configuration/
+    url: /gateway/kong-manager/configuration/
 
 works_on:
   - on-prem
