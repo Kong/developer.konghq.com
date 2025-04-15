@@ -204,7 +204,7 @@ rateLimitedBackOff:
 
 and an HTTP response:
 
-```HTTP
+```
 HTTP/1.1 503 Service Unavailable
 retry-after: 15
 ```
@@ -213,7 +213,7 @@ The retry request will be issued after 15 seconds.
 
 If the response is as follows:
 
-```HTTP
+```
 HTTP/1.1 503 Service Unavailable
 x-ratelimit-reset: 1706096119
 ```
