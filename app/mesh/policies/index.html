@@ -61,11 +61,11 @@ products:
 
     <div class="grid grid-cols-1 md:grid-cols-4 gap-16">
 
-      <div class="flex flex-col md:col-span-3 w-full gap-16" id="plugin-cards">
+      <div class="flex flex-col md:col-span-4 w-full gap-16" id="plugin-cards">
         {% assign mesh_policies = mesh_policies | sort: "title" %}
         <div class="flex flex-col gap-4">
 
-          <div class="grid auto-rows-fr grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div class="grid auto-rows-fr grid-cols-1 md:grid-cols-4 gap-8">
             {% for policy in mesh_policies %}
             {% include cards/mesh_policy.html policy=policy %}
             {% endfor %}
