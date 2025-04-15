@@ -45,6 +45,7 @@ app/_gateway_entities/plugin.md:
 app/_gateway_entities/route.md:
   - app/_src/gateway/key-concepts/routes.md
   - app/_src/gateway/how-kong-works/routing-traffic.md
+  - app/_src/kubernetes-ingress-controller/reference/faq/router.md
 app/_gateway_entities/service.md:
   - app/_src/gateway/key-concepts/services.md
 app/_gateway_entities/target.md:
@@ -286,6 +287,21 @@ app/kubernetes-ingress-controller/observability/prometheus.md:
   - app/_src/kubernetes-ingress-controller/production/observability/prometheus.md
 app/kubernetes-ingress-controller/observability/events.md:
   - app/_src/kubernetes-ingress-controller/production/observability/events.md
+
+app/kubernetes-ingress-controller/faq/custom-nginx-conf.md:
+  - app/_src/kubernetes-ingress-controller/reference/faq/nginx.conf.md
+app/kubernetes-ingress-controller/faq/combining-httproutes.md:
+  - app/_src/kubernetes-ingress-controller/reference/combined-services-from-different-httproutes.md
+app/kubernetes-ingress-controller/faq/migrate-ingress-to-gateway.md:
+  - app/_src/kubernetes-ingress-controller/reference/ingress-to-gateway-migration.md
+app/kubernetes-ingress-controller/reference/feature-gates.md:
+  - app/_src/kubernetes-ingress-controller/reference/feature-gates.md
+app/kubernetes-ingress-controller/reference/required-permissions.md:
+  - app/_src/kubernetes-ingress-controller/reference/required-permissions.md
+app/kubernetes-ingress-controller/reference/configuration-options.md:
+  - app/_src/kubernetes-ingress-controller/reference/cli-arguments-3.4.x.md
+app/kubernetes-ingress-controller/class-annotations.md:
+  - app/_src/kubernetes-ingress-controller/reference/ingress-class-requirement.md
 
 # plugins
 app/_kong_plugins/upstream-oauth/changelog.md:
