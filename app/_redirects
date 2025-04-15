@@ -1,5 +1,5 @@
 # Mesh redirects
-/mesh/policies/introduction    /mesh/policies/
+/mesh/policies/introduction    /mesh/policies-introduction/
 /mesh/reference/http-api       /mesh/
 /mesh/production/cp-deployment/single-zone /mesh/
 /mesh/networking/non-mesh-traffic/ /mesh/
