@@ -54,7 +54,7 @@ prereqs:
     - name: KONG_TRACING_INSTRUMENTATIONS
     - name: KONG_TRACING_SAMPLING_RATE
   inline:
-  - title: Environment variables for Dynatrace
+  - title: Dynatrace environment variables
     position: before
     content: |
       Set the following {{site.base_gateway}} configuration that's required for Dynatrace:
@@ -64,7 +64,7 @@ prereqs:
       export KONG_TRACING_SAMPLING_RATE=1.0
       ```
       {: data-deployment-topology="on-prem" }
-      When you create the Data Plane in {{site.konnect_short_name}}, append the following {{site.base_gateway}} configuration that's required for Dynatrace:
+      When you create the Data Plane in {{site.konnect_short_name}}, add the following {{site.base_gateway}} configuration variables for Dynatrace:
       {: data-deployment-topology="konnect" }
       ```sh
       -e "KONG_TRACING_INSTRUMENTATIONS=all" \
@@ -80,7 +80,7 @@ prereqs:
 
       Export those values as environment variables:
       ```sh
-      export DECK_DYNATRACE_ENVRIONMENT_ID=<environment-id-here>
+      export DECK_DYNATRACE_ENVIRONMENT_ID=<environment-id-here>
       export DECK_DYNATRACE_API_TOKEN=<token-here>
       ```
     icon_url: /assets/icons/third-party/dynatrace.png
@@ -189,7 +189,7 @@ entities:
 
 variables:
   dynatrace_environment_id:
-    value: $DYNATRACE_ENVRIONMENT_ID
+    value: $DYNATRACE_ENVIRONMENT_ID
   dynatrace_api_token:
     value: $DYNATRACE_API_TOKEN
 {% endentity_examples %}
