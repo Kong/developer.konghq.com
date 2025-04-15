@@ -3,7 +3,7 @@ title: MeshProxyPatch
 name: MeshProxyPatches
 products:
     - mesh
-description: "The `MeshProxyPatch` provides configuration options for [low-level Envoy resources](https://www.envoyproxy.io/docs/envoy/latest/api-v3/api) that {{site.mesh_product_name}} policies do not directly expose."
+description: "The `MeshProxyPatch` provides configuration options for low-level Envoy resources that {{site.mesh_product_name}} policies do not directly expose."
 content_type: plugin
 type: policy
 ---
