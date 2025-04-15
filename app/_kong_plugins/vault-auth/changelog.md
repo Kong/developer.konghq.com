@@ -16,8 +16,8 @@ content_type: reference
 
 * The `vaults.vault_token` form field is now marked as
 referenceable, which means it can be securely stored as a
-[secret](/gateway/latest/kong-enterprise/secrets-management/getting-started/)
-in a vault. References must follow a [specific format](/gateway/latest/kong-enterprise/secrets-management/reference-format/).
+[secret](/gateway/secrets-management/)
+in a vault. References must follow a specific format.
 
 * Fixed plugin versions in the documentation. Previously, the plugin versions
 were labelled as `2.7.x`, `2.1.x`, `1.5.x`, `1.3-x`, `0.36-x`, and `0.35-x`.
@@ -28,6 +28,3 @@ They are now updated to align with the plugin's actual versions, `0.3.0`, `0.2.2
 
 * Starting with {{site.base_gateway}} 2.7.0.0, if keyring encryption is enabled
 and you are using Vault, the `vaults.vault_token` and `vault_credentials.secret_token` fields will be encrypted.
-
-[consumer-object]: /gateway/api/admin-ee/latest/#/operations/list-consumer
-[acl-associating]: https://docs.konghq.com/hub/kong-inc/acl/#associating-consumers
