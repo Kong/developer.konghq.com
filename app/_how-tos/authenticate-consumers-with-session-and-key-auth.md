@@ -91,7 +91,7 @@ entities:
 
 ## 3. Enable the Session plugin
 
-The [Session plugin](/plugins/session/) allows you to to manage browser sessions for APIs proxied through the {{site.base_gateway}}.
+The [Session plugin](/plugins/session/) allows you to manage browser sessions for APIs proxied through the {{site.base_gateway}}.
 
 We'll be setting `config.cookie_secure` to `false` for the sake of this tutorial so we don't have to use HTTPS, but in a production instance, leave this as the default value of `true`.
 
