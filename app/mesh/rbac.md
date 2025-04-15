@@ -15,8 +15,8 @@ faqs:
     a: |
         If you remove the default `AccessRoleBinding` and `AccessRole`, you might find yourself locked out and unable to edit any resources. If you encounter this situation, you can regain access to the cluster by following these steps:
 
-        1. [Configure the control-plane](/mesh/{{page.release}}/documentation/configuration/#modifying-the-configuration) by setting the: `KUMA_ACCESS_TYPE` environment variable to `static`, and then restart the control-plane.
-        2. Create the default `AccessRoleBinding` and `AccessRole` (as described in the [default section](/mesh/{{page.release}}/features/rbac/#default)), or add new groups if necessary.
+        1. [Configure the control-plane](/mesh/cp-config/#modifying-the-configuration) by setting the: `KUMA_ACCESS_TYPE` environment variable to `static`, and then restart the control-plane.
+        2. Create the default `AccessRoleBinding` and `AccessRole` (as described in the [default section](/mesh/rbac)), or add new groups if necessary.
         3. Remove the `KUMA_ACCESS_TYPE` environment variable for the control-plane and restart the control-plane.
 
 related_resources:
@@ -221,7 +221,7 @@ roles:
 #### Restricting the default AccessRoleBinding
 
 {:.warning}
-> **Important:** [By default](/mesh/{{page.release}}/features/rbac/#default), {{site.mesh_product_name}} assigns the `admin` role to everyone in the `mesh-system:authenticated` and `mesh-system:unauthenticated` groups. This means every user automatically gets admin rights, even if you create a custom binding for them, they will also inherit the default admin role.
+> **Important:** [By default](/mesh/rbac/), {{site.mesh_product_name}} assigns the `admin` role to everyone in the `mesh-system:authenticated` and `mesh-system:unauthenticated` groups. This means every user automatically gets admin rights, even if you create a custom binding for them, they will also inherit the default admin role.
 
 To limit admin privileges to a specific group, update the default binding. For example, to grant admin rights only to members of the `mesh-system:admin` group, replace the default binding with the following:
 
