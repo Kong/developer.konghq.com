@@ -1,0 +1,6 @@
+# Mesh redirects
+/mesh/policies/introduction    /mesh/policies/
+/mesh/reference/http-api       /mesh/
+/mesh/production/cp-deployment/single-zone /mesh/
+/mesh/networking/non-mesh-traffic/ /mesh/
+/mesh/production/secure-deployment/api-access-control/ /mesh/features/
