@@ -350,6 +350,8 @@ app/_kong_plugins/openid-connect/index.md:
   - app/_hub/kong-inc/openid-connect/overview/_index.md
   - app/_hub/kong-inc/openid-connect/overview/_primary-config-params.md
   - app/_hub/kong-inc/openid-connect/overview/_support.md
+  - app/_hub/kong-inc/openid-connect/how-to/debugging.md
+  - app/_hub/kong-inc/openid-connect/how-to/fapi.md
 app/_kong_plugins/openid-connect/changelog.md:
   - app/_hub/kong-inc/openid-connect/_changelog.md
 app/_kong_plugins/bot-detection/index.md:
