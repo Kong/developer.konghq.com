@@ -98,6 +98,7 @@ Let's use Pongo to test the updated configuration.
    ```
 
 3. Add a [test Gateway Service](/api/gateway/admin-ee/#/operations/create-service):
+
    <!-- vale off -->
    {% control_plane_request %}
    url: /services
@@ -110,6 +111,7 @@ Let's use Pongo to test the updated configuration.
    <!-- vale on -->
 
 4. [Enable the plugin](/api/gateway/admin-ee/#/operations/create-plugin-with-service), this time with the configuration value:
+
    <!-- vale off -->
    {% control_plane_request %}
    url: /services/example_service/plugins
@@ -123,6 +125,7 @@ Let's use Pongo to test the updated configuration.
    <!-- vale on -->
 
 5. [Add a Route](/api/gateway/admin-ee/#/operations/create-route):
+
    <!-- vale off -->
    {% control_plane_request %}
    url: /services/example_service/routes
@@ -136,6 +139,7 @@ Let's use Pongo to test the updated configuration.
    <!-- vale on -->
 
 6. Send a request to the Route:
+
    <!-- vale off -->
    {% validation request-check %}
    url: '/mock/anything'
@@ -153,10 +157,7 @@ Let's use Pongo to test the updated configuration.
 
 ## 4. Add automated configuration testing
 
-1. Update the `setup` function inside the `spec/01-integration_spec.lua` module so that the `my-plugin` that is
-added to the database is configured with a different value for the `response_header_name` field.
-
-   Here is the code:
+1. Update the `setup` function inside the `spec/01-integration_spec.lua` module so that the `my-plugin` that is added to the database is configured with a different value for the `response_header_name` field:
    ```lua
    -- Add the custom plugin to the test route
    blue_print.plugins:insert {
@@ -168,17 +169,98 @@ added to the database is configured with a different value for the `response_hea
    }
    ```
 
-1. Modify the test assertion to match our configured header name.
-
-   Replace this line:
+1. Modify the test assertion to match the new header name:
    ```lua
-   local header_value = assert.response(r).has.header("X-MyPlugin")
-   ```
-  {:.no-copy-code}
-
-   With this line:
-   ```lua
+   -- now validate and retrieve the expected response header 
    local header_value = assert.response(r).has.header("X-CustomHeaderName")
+   ```
+
+   The test file should now look like this:
+   ```lua
+   -- Helper functions provided by Kong Gateway, see https://github.com/Kong/kong/blob/master/spec/helpers.lua
+   local helpers = require "spec.helpers"
+
+   -- matches our plugin name defined in the plugins's schema.lua
+   local PLUGIN_NAME = "my-plugin"
+
+   -- Run the tests for each strategy. Strategies include "postgres" and "off"
+   --   which represent the deployment topologies for Kong Gateway
+   for _, strategy in helpers.all_strategies() do
+  
+     describe(PLUGIN_NAME .. ": [#" .. strategy .. "]", function()
+       -- Will be initialized before_each nested test
+       local client
+   
+       setup(function()
+  
+         -- A BluePrint gives us a helpful database wrapper to
+         --    manage Kong Gateway entities directly.
+         -- This function also truncates any existing data in an existing db.
+         -- The custom plugin name is provided to this function so it mark as loaded
+         local blue_print = helpers.get_db_utils(strategy, nil, { PLUGIN_NAME })
+
+         -- Using the BluePrint to create a test route, automatically attaches it
+         --    to the default "echo" service that will be created by the test framework
+         local test_route = blue_print.routes:insert({
+           paths = { "/mock" },
+         })
+
+         -- Add the custom plugin to the test route
+         blue_print.plugins:insert {
+           name = PLUGIN_NAME, 
+           route = { id = test_route.id },
+           config = {
+             response_header_name = "X-CustomHeaderName",
+           },
+         }
+
+
+         -- start kong
+         assert(helpers.start_kong({
+           -- use the custom test template to create a local mock server
+           nginx_conf = "spec/fixtures/custom_nginx.template",
+           -- make sure our plugin gets loaded
+           plugins = "bundled," .. PLUGIN_NAME,
+         }))
+
+       end)
+
+       -- teardown runs after its parent describe block
+       teardown(function()
+         helpers.stop_kong(nil, true)
+       end)
+
+       -- before_each runs before each child describe
+       before_each(function()
+         client = helpers.proxy_client()
+       end)
+
+       -- after_each runs after each child describe
+       after_each(function()
+         if client then client:close() end
+       end)
+
+       -- a nested describe defines an actual test on the plugin behavior
+       describe("The response", function()
+
+         it("gets the expected header", function()
+
+           -- invoke a test request
+           local r = client:get("/mock/anything", {})
+
+           -- validate that the request succeeded, response status 200
+           assert.response(r).has.status(200)
+
+           -- now validate and retrieve the expected response header 
+           local header_value = assert.response(r).has.header("X-CustomHeaderName")
+
+           -- validate the value of that header
+           assert.equal("response", header_value)
+
+         end)
+       end)
+     end)
+   end
    ```
 
 1. Run the tests:

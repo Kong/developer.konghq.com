@@ -81,7 +81,7 @@ or continue processing the response and not complete the custom header logic.
 In this example, we'll terminate the
 response processing and return a `500` internal server error to the client.
 
-Add the following to the `MyPluginHandler:response` function immediately
+Add the following to the `MyPluginHandler:response` function, immediately
 after the `httpc:request_uri` call:
 
 ```lua
@@ -90,6 +90,37 @@ if err then
     "Error when trying to access third-party service: " .. err,
     { ["Content-Type"] = "text/html" })
 end
+```
+
+After this step, the `handler.lua` file looks like this:
+```lua
+local http  = require("resty.http")
+local cjson = require("cjson.safe")
+
+local MyPluginHandler = {
+  PRIORITY = 1000,
+  VERSION = "0.0.1",
+}
+
+function MyPluginHandler:response(conf)
+
+  kong.log("response handler")
+
+  local httpc = http.new()
+
+  local res, err = httpc:request_uri("http://httpbin.konghq.com/anything", {
+    method = "GET",
+  })
+
+  if err then
+    return kong.response.error(500,
+      "Error when trying to access third-party service: " .. err,
+      { ["Content-Type"] = "text/html" })
+  end
+
+end
+
+return MyPluginHandler
 ```
 
 ## 4. Process JSON data from third-party response
@@ -161,7 +192,7 @@ end
 return MyPluginHandler
 ```
 
-## 6. Update the tests
+## 5. Update the tests
 
 At this stage, using the `pongo run` command to execute the integration tests will result in errors.
 The value of the header has changed from `response` to `http://httpbin.konghq.com/anything`. 
