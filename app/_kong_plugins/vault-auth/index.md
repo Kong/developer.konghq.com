@@ -38,13 +38,13 @@ Credential tokens are stored securely via [Vault](https://www.vaultproject.io/).
 
 Credential lifecycle can be managed through the [Admin API](/api/gateway/admin-ee/), or independently via Vault.
 
-## Token TTL
+## Token time-to-live (TTL)
 
-When reading a token from Vault, {{site.base_gateway}} will search the KV value for the presence of a `ttl` field. When this field is present, Kong will respect the advisory value of the `ttl` field and store the value of the credential in cache for only as long as the `ttl` field defines. This allows tokens created directly in Vault, outside of the Admin API, to be periodically refreshed by {{site.base_gateway}}.
+When reading a token from Vault, {{site.base_gateway}} will search the KV value for the presence of a `ttl` field. When this field is present, {{site.base_gateway}} will respect the advisory value of the `ttl` field and store the value of the credential in the cache for only as long as the `ttl` field defines. This allows {{site.base_gateway}} to periodically refresh tokens created directly in Vault, outside of the Admin API.
 
 ## External token pairs
 
-{{site.base_gateway}} can read access/secret token pairs that have been created directly in Vault, outside of the {{site.base_gateway}} Admin API. Vault KV secret values must contain the following fields:
+{{site.base_gateway}} can read access/secret token pairs that were created directly in Vault, outside of the {{site.base_gateway}} Admin API. Vault KV secret values must contain the following fields:
 
 ```
 {
@@ -61,9 +61,9 @@ When reading a token from Vault, {{site.base_gateway}} will search the KV value 
 
 Additional fields within the secret are ignored. The key must be the `access_token` value; this is the identifier by which {{site.base_gateway}} queries the Vault API to fetch the credential data.
 
-See the Vault documentation for [version 1](https://www.vaultproject.io/docs/secrets/kv/kv-v1.html) or [version 2](https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v2) for further information on the KV secrets engine.
+See the Vault documentation for [version 1](https://www.vaultproject.io/docs/secrets/kv/kv-v1.html) or [version 2](https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v2) for more information on the KV secrets engine.
 
-`vault-auth` token pairs can be created with the Vault HTTP API or the `vault write` command:
+`vault-auth` token pairs can be created with the [Vault HTTP API](https://developer.hashicorp.com/vault/api-docs) or the `vault write` command:
 
 ```bash
 vault write kong-auth/foo - <<EOF

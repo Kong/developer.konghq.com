@@ -129,7 +129,7 @@ headers:
 {% endcontrol_plane_request %}
 <!--vale on-->
 
-This request returns an `access_token` and `secret_token`; add these to your environment:
+This request returns an `access_token` and `secret_token`. Add these to your environment:
 ```sh
 export ACCESS_TOKEN=<consumer_access_token>
 export SECRET_TOKEN=<consumer_secret_token>
@@ -145,5 +145,6 @@ status_code: 200
 headers:
   - 'access_token: $ACCESS_TOKEN'
   - 'secret_token: $SECRET_TOKEN'
+message: OK
 {% endvalidation %}
 <!--vale on-->
