@@ -2,7 +2,7 @@
 
 module Jekyll
   module Data
-    class Series
+    class Series # rubocop:disable Style/Documentation
       attr_reader :site
 
       def initialize(site:)
@@ -11,7 +11,7 @@ module Jekyll
         @series = {}
       end
 
-      def process
+      def process # rubocop:disable Metrics/MethodLength
         build_series_list!
 
         # Add series data to each page and document
@@ -19,18 +19,15 @@ module Jekyll
           set_series_items!(page)
           set_prerequisites!(page)
           set_next_prev!(page)
-
-          page.data['cleanup'] = nil
+          set_cleanup!(page)
         end
 
         @site.documents.each do |page|
           set_series_items!(page)
           set_prerequisites!(page)
           set_next_prev!(page)
-
-          page.data['cleanup'] = nil
+          set_cleanup!(page)
         end
-
       end
 
       private
@@ -42,7 +39,7 @@ module Jekyll
         page.data['series']['items'] = @series[series_id]
       end
 
-      def set_prerequisites!(page)
+      def set_prerequisites!(page) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         return unless page.data['series']
 
         previous_page = page.data['series']['items'].find do |item|
@@ -53,7 +50,9 @@ module Jekyll
 
         series_meta = @site.data['series'][page.data['series']['id']]
 
-        raise "Could not read series meta from app/_data/series.yml with key #{page.data['series']['id']}" unless series_meta
+        unless series_meta
+          raise "Could not read series meta from app/_data/series.yml with key #{page.data['series']['id']}"
+        end
 
         page.data['prereqs']['inline'] ||= []
         page.data['prereqs']['inline'] << {
@@ -67,7 +66,7 @@ module Jekyll
         }
       end
 
-      def set_next_prev!(page)
+      def set_next_prev!(page) # rubocop:disable Metrics/AbcSize
         return unless page.data['series']
 
         page.data['navigation'] = {}
@@ -81,12 +80,18 @@ module Jekyll
         end
       end
 
+      def set_cleanup!(page)
+        return unless page.data['series']
+
+        page.data['cleanup'] = nil
+      end
+
       def add_series_item(id, page)
         @series[id] ||= []
         @series[id] << page
       end
 
-      def build_series_list!
+      def build_series_list! # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         @site.pages.each do |page|
           next unless page.data['series']
 
