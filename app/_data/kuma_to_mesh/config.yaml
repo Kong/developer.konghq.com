@@ -149,7 +149,7 @@ pages:
       - text: Mesh Policies
         url: '/mesh/policies-introduction/'
       - text: Mesh Concepts
-        url: /mesh/concepts
+        url: /mesh/concepts/
   -
     path: app/_src/networking/dns.md
     title: 'DNS'
@@ -159,7 +159,7 @@ pages:
       - text: Use Kong as a delegated Gateway
         url: '/mesh/gateway-delegated/'
       - text: Mesh Concepts
-        url: /mesh/concepts
+        url: /mesh/concepts/
   -
     path: app/_src/networking/hostnamegenerator.md
     title: 'HostnameGenerator'
@@ -440,6 +440,7 @@ pages:
     path: app/_src/using-mesh/managing-ingress-traffic/delegated.md
     title: 'Delegated gateways'
     description: 'Guide to configuring delegated gateways in {{site.mesh_product_name}}, allowing external API gateways to handle ingress while {{site.mesh_product_name}} manages egress to the mesh.'
+    url: '/mesh/ingress-gateway-delegated/'
     related_resources:
       - text: 'Data plane proxy'
         url: '/mesh/data-plane-proxy/'
