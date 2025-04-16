@@ -41,10 +41,10 @@ columns:
     key: end
 
 features:
-  - title: 3.10.x
+  - title: 3.10.x (LTS)
     supported: true
     beginning: 3.10.0.0
-    end: March 2026
+    end: March 2028
   - title: 3.9.x
     supported: true
     beginning: 3.9.0.0
