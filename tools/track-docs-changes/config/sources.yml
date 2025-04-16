@@ -803,7 +803,12 @@ app/_kong_plugins/nonamesecurity/index.md:
   - /app/_hub/nonamesecurity/nonamesecurity-kongtrafficsource/overview/_index.md
 app/_kong_plugins/request-callout/index.md:
   - app/_hub/kong-inc/request-callout/overview/_index.md
-
+app/_kong_plugins/vault-auth/changelog.md:
+  - app/_hub/kong-inc/vault-auth/_changelog.md
+app/_kong_plugins/vault-auth/index.md:
+  - app/_hub/kong-inc/vault-auth/overview/_index.md
+app/_how-tos/enable-vault-authentication.md:
+  - app/_hub/kong-inc/vault-auth/overview/_index.md
 app/_kong_plugins/saml/index.md:
   - app/_hub/kong-inc/saml/overview/_index.md
 app/_kong_plugins/saml/changelog.md:
