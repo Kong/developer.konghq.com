@@ -45,6 +45,8 @@ tags:
   - authentication
   - openid-connect
 
+description: Set up OpenID Connect with the refresh token grant, which looks for a Refresh-Token header.
+
 tldr:
   q: How do I use a refresh token to authenticate directly with my identity provider?
   a: Using the OpenID Connect plugin, retrieve the refresh token and use it to authenticate with an identity provider (IdP) by passing the refresh token in a `Refresh-Token` header.

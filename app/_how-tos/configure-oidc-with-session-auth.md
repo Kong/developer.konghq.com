@@ -45,6 +45,8 @@ tags:
   - authentication
   - openid-connect
 
+description: Set up OpenID Connect with session authentication, which stores credentials in a session cookie and reuses the cookie for subsequent access attempts.
+
 tldr:
   q: How do I use a session cookie to authenticate directly with my identity provider?
   a: Using the OpenID Connect plugin, set up the [session auth flow](/plugins/openid-connect/#session-authentication-workflow) to connect to an identity provider (IdP) to retrieve, store, and use session cookies for authentication.

@@ -45,6 +45,8 @@ tags:
   - authentication
   - openid-connect
 
+description: Set up OpenID Connect with the password grant, which uses a username and password pair for authentication.
+
 tldr:
   q: How do I use a username and password to authenticate directly with my identity provider?
   a: Using the OpenID Connect plugin, set up the [password grant flow](/plugins/openid-connect/#password-grant-workflow) to connect to an identity provider (IdP) by passing a username and password in a header.

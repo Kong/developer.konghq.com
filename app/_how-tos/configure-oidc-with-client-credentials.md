@@ -45,6 +45,8 @@ tags:
   - authentication
   - openid-connect
 
+description: Set up OpenID Connect with the client credentials grant, which uses a client ID and client secret for authentication.
+
 tldr:
   q: How do I use a client ID and client secret to authenticate directly with my identity provider?
   a: Using the OpenID Connect plugin, set up the [client credentials grant flow](/plugins/openid-connect/#client-credentials-grant-workflow) to connect to an identity provider (IdP) by passing a client ID and client secret in a header.
