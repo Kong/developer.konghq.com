@@ -63,9 +63,9 @@ cleanup:
 ## 1. Enable the OpenID Connect plugin with refresh tokens
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
-set up an instance of the OpenID Connect plugin with the refresh token grant.
+set up an instance of the [OpenID Connect plugin](/plugins/openid-connect/) with the refresh token grant.
 
-We're also enabling the password grant, as well as a refresh token header, so that you can test retrieving the token.
+We're also enabling the password grant, as well as a refresh token header, so that we can test retrieving the token.
 
 Enable the OpenID Connect plugin on the `example-service` Service:
 
@@ -105,7 +105,7 @@ In this example:
 
 ## 2. Retrieve the refresh token
 
-Check that you can recover the refresh token:
+Check that you can recover the refresh token by requesting the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
 
 {% validation request-check %}
 url: /anything
