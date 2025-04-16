@@ -16,7 +16,7 @@ This policy will look for errors in the live traffic being exchanged between our
 proxy as unhealthy if certain conditions are met. The policy will ensure that no additional traffic can reach an
 unhealthy data plane proxy until it is healthy again.
 
-Circuit breakers - unlike active [MeshHealthChecks](/docs/policies/meshhealthcheck/) - do not send
+Circuit breakers - unlike active [MeshHealthChecks](/mesh/policies/meshhealthcheck/) - do not send
 additional traffic to our data plane proxies but they rather inspect the existing service traffic. They are also
 commonly used to prevent cascading failures.
 

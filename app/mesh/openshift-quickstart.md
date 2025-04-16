@@ -20,7 +20,7 @@ related_resources:
 ---
 
 
-In this guide, you will learn how to get {{site.mesh_product_name}} up and running quickly in [standalone mode](/mesh/stand-alone/) on [Red Hat OpenShift](https://www.redhat.com/technologies/cloud-computing/openshift). This tutorial assumes some base-level OpenShift knowledge.
+In this guide, you will learn how to get {{site.mesh_product_name}} up and running quickly in [standalone mode](/mesh/single-zone/) on [Red Hat OpenShift](https://www.redhat.com/technologies/cloud-computing/openshift). This tutorial assumes some base-level OpenShift knowledge.
 
 This tutorial doesn't require a license because {{site.mesh_product_name}} can start in evaluation mode, which allows you to have up to five data planes or sidecars. This provides just enough data planes to get comfortable with the product and test it out.
 
