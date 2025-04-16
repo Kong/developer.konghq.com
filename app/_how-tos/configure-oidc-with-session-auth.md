@@ -69,7 +69,7 @@ cleanup:
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with the session auth flow.
 
-We're also enabling the password grant so that you can test retrieving the session cookie.
+We're also enabling the password grant so that we can test retrieving the session cookie.
 
 Enable the OpenID Connect plugin on the `example-service` Service:
 
@@ -104,7 +104,7 @@ In this example:
 
 ## 2. Store the session cookie
 
-Request the Service with basic authentication credentials created in the [prerequisites](#prerequisites) and store the session:
+Request the Service with the basic authentication credentials created in the [prerequisites](#prerequisites) and store the session:
 
 <!--vale off-->
 {% validation request-check %}
