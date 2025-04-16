@@ -41,9 +41,9 @@ columns:
     key: end
 
 features:
-  - title: 3.10
+  - title: 3.10.x
     supported: true
-    beginning: 3.10
+    beginning: 3.10.0.0
     end: April 2026
   - title: 3.9.x
     supported: true
