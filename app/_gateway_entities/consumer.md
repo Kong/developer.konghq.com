@@ -152,7 +152,7 @@ Centralized Consumer management provides the following benefits:
 * Share Consumers across multiple control planes. Users don't need to replicate changes to Consumer identity in multiple control planes and Consumer configuration doesn't conflict.
 * Reduce configuration sync issues between the control plane and the data planes. Consumers that are managed centrally aren't part of the configuration that is pushed down from the control plane to the data planes, so it reduces config size and latency. 
 
-You can manage consumers centrally using the {{site.konnect_short_name}} API. Only Org Admins and Control Plane Admins have CRUD permissions for these consumers. When you create a Consumer centrally, you must assign it to a realm. A realm groups Consumes around an identity, defined by organizational boundaries, such as a production realm or a development realm. Realms are connected to a [geographic region](/konnect/geo/) in {{site.konnect_short_name}}. Centrally managed Consumers exist outside of control planes, so they can be used across control planes.
+You can manage consumers centrally using the {{site.konnect_short_name}} API. Only Org Admins and Control Plane Admins have CRUD permissions for these consumers. When you create a Consumer centrally, you must assign it to a realm. A realm groups Consumes around an identity, defined by organizational boundaries, such as a production realm or a development realm. Realms are connected to a [geographic region](/konnect-geos/) in {{site.konnect_short_name}}. Centrally managed Consumers exist outside of control planes, so they can be used across control planes.
 
 For a complete tutorial, see [Create a centrally-managed Consumer in {{site.konnect_short_name}}](/how-to/create-centrally-managed-consumer/).
 

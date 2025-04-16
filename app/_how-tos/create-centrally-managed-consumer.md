@@ -54,7 +54,7 @@ export KONNECT_CONTROL_PLANE_ID=<control-plane-uuid>
 
 Centrally-managed Consumers are assigned to realms instead of Control Planes. Realms exist outside of the Control Plane.
 
-Use the [`/realms` endpoint](/konnect/api/consumers/latest/#/operations/create-realm) to create a realm and associate it with allowed Control Planes:
+Use the [`/realms` endpoint](/api/konnect/consumers/v1/#/operations/create-realm) to create a realm and associate it with allowed Control Planes:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -79,7 +79,7 @@ export DECK_REALM_ID=<realm-id>
 
 ## 2. Create the centrally-managed Consumer
 
-Use the [create a Consumer](/konnect/api/consumers/latest/#/operations/create-consumer) endpoint to create a centrally-managed Consumer:
+Use the [create a Consumer](/api/konnect/consumers/v1/#/operations/create-consumer) endpoint to create a centrally-managed Consumer:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -103,7 +103,7 @@ export CONSUMER_ID=<consumer-id>
 
 ## 3. Create a Consumer key for authentication
 
-Centrally-managed Consumers require a key for authentication. Configure authentication keys for Consumers using the [create a key](/konnect/api/consumers/latest/#/operations/create-consumer-key) endpoint:
+Centrally-managed Consumers require a key for authentication. Configure authentication keys for Consumers using the [create a key](/api/konnect/consumers/v1/#/operations/create-consumer-key) endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -126,7 +126,7 @@ export CONSUMER_KEY=<consumer-key>
 
 ## 4. Enable authentication with the Key Authentication plugin
 
-Consumers require authentication. Currently, you can only use the [Key Auth plugin](/hub/kong-inc/key-auth/how-to/) to authenticate centrally-managed Consumers. In this example, we'll configure `identity_realms` on first the realm and then the Control Plane. By doing it this way, the Data Plane will first reach out to the realm. If the API key is not found in the realm, the Data Plane will look for the API key in the Control Plane config.
+Consumers require authentication. Currently, you can only use the [Key Auth plugin](/plugins/key-auth/) to authenticate centrally-managed Consumers. In this example, we'll configure `identity_realms` on first the realm and then the Control Plane. By doing it this way, the Data Plane will first reach out to the realm. If the API key is not found in the realm, the Data Plane will look for the API key in the Control Plane config.
 
 Enable the Key Auth plugin on the `example-service`:
 
