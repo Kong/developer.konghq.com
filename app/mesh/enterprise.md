@@ -9,6 +9,8 @@ products:
 tags:
   - enterprise
 
+tier: enterprise
+
 related_resources:
   - text: "Vault Policy"
     url: /mesh/vault/
