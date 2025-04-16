@@ -36,7 +36,7 @@ related_resources:
 
 ## Open Policy Agent (OPA) support
 
-You can use [OPA with {{site.mesh_product_name}}](@TODO)
+You can use [OPA with {{site.mesh_product_name}}](/mesh/policies/meshopa)
 to provide access control for your services.
 
 The agent is included in the data plane proxy sidecar.

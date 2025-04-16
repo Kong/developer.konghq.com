@@ -1,0 +1,144 @@
+metadata:
+  title: "Kong Mesh"
+  content_type: landing_page
+  description: Learn how Kong Mesh works and how to configure it.
+  tags:
+    - kong-mesh
+    - service-mesh
+    - control-plane
+    - data-plane
+
+rows:
+  - header:
+      type: h1
+      text: "Kong Mesh"
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Kong Mesh is a modern service mesh built on top of Kuma and Envoy, designed for simplicity, scalability, and security.
+
+                    With Kong Mesh, you can run and manage a distributed service mesh across Kubernetes and VMs in any environment.
+
+                    **Benefits of Kong Mesh:**
+                    - Built-in mTLS, service discovery, and traffic management.
+                    - Support for multi-zone and multi-mesh topologies.
+                    - Runs on both Kubernetes and Universal (VM) environments.
+                    - Enterprise features like access control and advanced observability.
+
+                    You can manage your mesh deployments using the [Kong Mesh GUI](https://cloud.konghq.com/mesh/).
+          - type: button
+            config:
+              align: left
+              text: Get Started with Kong Mesh
+              url: /mesh/install/
+      - blocks:
+        - type: image
+          config:
+            url: /assets/images/mesh/gw_mesh.png
+            alt_text: "Mesh Diagram"
+
+  - header:
+      type: h2
+      text: "Get Started"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: mTLS with ACM Private CA
+              description: |
+                Secure service communication using Amazon Certificate Manager Private CA.
+              icon: /assets/icons/aws.svg
+              cta:
+                text: Learn more
+                url: /mesh/acm-private-ca-policy/
+      - blocks:
+          - type: card
+            config:
+              title: Kubernetes cert-manager
+              description: |
+                Automate mTLS certificate issuance using cert-manager in Kubernetes environments.
+              icon: /assets/icons/kubernetes.svg
+              cta:
+                text: Learn more
+                url: /mesh/cert-manager/
+      - blocks:
+          - type: card
+            config:
+              title: HashiCorp Vault
+              description: |
+                Use a Vault backend to issue certificates for data plane proxies.
+              icon: /assets/icons/vault.svg
+              cta:
+                text: Learn more
+                url: /mesh/vault/
+  - header:
+      type: h2
+      text: "Policies"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: TrafficPermission
+              description: |
+                Define which services are allowed to communicate with each other. Core to implementing zero-trust security.
+              icon: /assets/icons/mesh.svg
+              cta:
+                text: Learn more
+                url: /mesh/policies/meshtrafficpermission/
+      - blocks:
+          - type: card
+            config:
+              title: RateLimit
+              description: |
+                Limit the number of requests a service can receive in a given time window to protect upstream services.
+              icon: /assets/icons/mesh.svg
+              cta:
+                text: Learn more
+                url: /mesh/policies/meshratelimit/
+      - blocks:
+          - type: card
+            config:
+              title: Timeout
+              description: |
+                Configure connection, idle, and request timeouts to ensure reliable service communication.
+              icon: /assets/icons/mesh.svg
+              cta:
+                text: Learn more
+                url: /mesh/policies/meshtimeout/
+  -
+    columns:  
+      - blocks:
+          - type: card
+            config:
+              title: Retry
+              description: |
+                Automatically retry failed requests with customizable logic for enhanced resiliency.
+              icon: /assets/icons/mesh.svg
+              cta:
+                text: Learn more
+                url: /mesh/policies/meshretry/
+      - blocks:
+          - type: card
+            config:
+              title: FaultInjection
+              description: |
+                Inject faults like delays and aborts to test service resilience and failure handling.
+              icon: /assets/icons/mesh.svg
+              cta:
+                text: Learn more
+                url: /mesh/policies/meshfaultinjection/
+      - blocks:
+          - type: card
+            config:
+              title: CircuitBreaker
+              description: |
+                Monitor and trip connections to unhealthy services to prevent cascading failures.
+              icon: /assets/icons/mesh.svg
+              cta:
+                text: Learn more
+                url: /mesh/policies/meshcircuitbreaker/
