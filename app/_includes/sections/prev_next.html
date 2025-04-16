@@ -1,14 +1,14 @@
 {% unless page.navigation == empty %}
 <div class="flex gap-5 justify-between">
     {% if page.navigation.prev %}
-    <a href="{{ page.navigation.prev.url }}" class="flex flex-col gap-1 p-3 w-1/3 mr-auto rounded-md hover:bg-secondary">
+    <a href="{{ page.navigation.prev.url }}" class="flex flex-col gap-1 p-3 w-1/3 mr-auto rounded-md hover:bg-secondary  hover:no-underline">
         <span class="flex gap-1 px-1 text-xs text-secondary">&larr; Previous</span>
         <span class="text-primary font-semibold">{{page.series.position | minus: 1}}. {{ page.navigation.prev.title | liquify }}</span>
     </a>
     {% endif %}
 
     {% if page.navigation.next %}
-    <a href="{{ page.navigation.next.url }}" class="flex flex-col gap-1 p-3 w-1/3 ml-auto rounded-md items-end hover:bg-secondary">
+    <a href="{{ page.navigation.next.url }}" class="flex flex-col gap-1 p-3 w-1/3 ml-auto rounded-md items-end hover:bg-secondary  hover:no-underline">
         <span class="flex gap-1 px-1 text-xs text-secondary">Next &rarr;</span>
         <span class="text-primary font-semibold">{{page.series.position | plus: 1}}. {{ page.navigation.next.title | liquify }}</span>
     </a>
