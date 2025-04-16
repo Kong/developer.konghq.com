@@ -8,6 +8,8 @@ content_type: plugin
 type: policy
 min_version:
   mesh: '2.6'
+
+icon: policy.svg
 ---
 ## MeshOPA policy plugin
 

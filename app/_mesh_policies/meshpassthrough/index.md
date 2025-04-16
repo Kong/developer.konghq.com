@@ -8,6 +8,8 @@ content_type: plugin
 type: policy
 min_version:
   mesh: '2.8'
+
+icon: policy.svg
 ---
 This policy enables {{site.mesh_product_name}} to configure traffic to external destinations that is allowed to pass outside the mesh.
 When using this policy, the [passthrough mode](/docs/{{ page.release }}/networking/non-mesh-traffic/#outgoing) flag is ignored.

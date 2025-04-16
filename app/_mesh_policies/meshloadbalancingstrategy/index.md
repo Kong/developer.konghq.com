@@ -6,6 +6,7 @@ products:
 description: 'This policy enables {{site.mesh_product_name}} to configure the load balancing strategy for traffic between services in the mesh.'
 content_type: plugin
 type: policy
+icon: policy.svg
 ---
 
 This policy enables {{site.mesh_product_name}} to configure the load balancing strategy for traffic between services in the mesh.
