@@ -55,7 +55,10 @@ module Jekyll
         end
 
         def icon
-          @icon ||= "/assets/icons/mesh_policies/#{@policy.icon}"
+          @policy.icon
+          return unless @policy.icon
+
+          "/assets/icons/mesh_policies/#{@policy.icon}"
         end
       end
     end
