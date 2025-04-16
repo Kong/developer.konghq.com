@@ -128,7 +128,7 @@ app/_gateway_entities/partial.md:
 # how-tos
 ## gateway
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
-  - /app/_hub/kong-inc/rate-limiting-advanced/how-to/_index.md
+  - app/_hub/kong-inc/rate-limiting-advanced/how-to/_index.md
 app/_how-tos/multiple-rate-limits-window-sizes.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
 app/_how-tos/get-started-with-gateway.md:
@@ -219,7 +219,7 @@ app/_how-tos/sign-gateway-audit-logs.md:
 app/_how-tos/validate-gateway-audit-log-signatures.md:
   - app/_src/gateway/kong-enterprise/audit-log.md
 app/_how-tos/configure-oidc-with-session-auth.md:
-  - /app/_hub/kong-inc/openid-connect/how-to/authentication/_session.md
+  - app/_hub/kong-inc/openid-connect/how-to/authentication/_session.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
