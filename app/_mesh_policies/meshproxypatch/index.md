@@ -6,6 +6,7 @@ products:
 description: "The `MeshProxyPatch` provides configuration options for low-level Envoy resources that {{site.mesh_product_name}} policies do not directly expose."
 content_type: plugin
 type: policy
+icon: meshproxypatch.png
 ---
 
 A `MeshProxyPatch` policy can modify:

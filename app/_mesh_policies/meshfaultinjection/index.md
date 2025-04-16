@@ -6,6 +6,7 @@ products:
 description: 'With the MeshFaultInjection policy you can easily test your microservices against resiliency.'
 content_type: plugin
 type: policy
+icon: meshfaultinjection.png
 ---
 
 

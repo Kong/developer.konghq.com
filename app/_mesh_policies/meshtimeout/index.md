@@ -6,6 +6,7 @@ products:
 description: 'Connection timeout specifies the amount of time DP will wait for a TCP connection to be established.'
 content_type: plugin
 type: policy
+icon: meshtimeout.png
 ---
 
 {% warning %}

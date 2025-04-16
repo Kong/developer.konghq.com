@@ -6,6 +6,7 @@ products:
 description: "The `MeshTrafficPermission` policy provides access control within Mesh."
 content_type: plugin
 type: policy
+icon: meshtrafficpermission.png
 ---
 {% warning %}
 This policy uses new policy matching algorithm.

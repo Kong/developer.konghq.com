@@ -8,6 +8,7 @@ content_type: plugin
 type: policy
 min_version:
   mesh: '2.9'
+icon: meshtls.png
 ---
 
 ## TargetRef support matrix

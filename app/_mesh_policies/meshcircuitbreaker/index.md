@@ -6,6 +6,7 @@ products:
 description: 'This policy will look for errors in the live traffic being exchanged between our data plane proxies. It will mark a data'
 content_type: plugin
 type: policy
+icon: meshcircuitbreaker.png
 ---
 
 This policy will look for errors in the live traffic being exchanged between our data plane proxies. It will mark a data

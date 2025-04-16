@@ -6,6 +6,7 @@ products:
 description: 'This policy enables per-instance service request limiting. Policy supports rate limiting of HTTP/HTTP2 requests and TCP connections.'
 content_type: plugin
 type: policy
+icon: meshratelimit.png
 ---
 
 

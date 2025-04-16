@@ -6,6 +6,7 @@ products:
 description: "The `MeshHTTPRoute` policy allows altering and redirecting HTTP requests depending on where the request is coming from and where it's going to."
 content_type: plugin
 type: policy
+icon: meshhttproute.png
 ---
 
 

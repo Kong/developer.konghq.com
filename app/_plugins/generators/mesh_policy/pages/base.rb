@@ -35,7 +35,8 @@ module Jekyll
               'reference_url' => Reference.url(@policy),
               'plugin' => @policy,
               'plugin?' => true,
-              'release' => @policy.latest_release_in_range
+              'release' => @policy.latest_release_in_range,
+              'icon' => icon
             ).merge(publication_info)
         end
 
@@ -51,6 +52,10 @@ module Jekyll
           return {} if @policy.publish?
 
           { 'published' => false }
+        end
+
+        def icon
+          @icon ||= "/assets/icons/mesh_policies/#{@policy.icon}"
         end
       end
     end

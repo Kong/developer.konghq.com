@@ -8,6 +8,8 @@ content_type: plugin
 type: policy
 min_version:
   mesh: '2.6'
+
+icon: meshretry.png
 ---
 
 This policy enables {{site.mesh_product_name}} to know how to behave if there are failed requests which could be retried.

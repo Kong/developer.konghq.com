@@ -6,6 +6,7 @@ products:
 description: 'This policy enables publishing traces to a third party tracing solution.'
 content_type: plugin
 type: policy
+icon: meshtrace.png
 ---
 
 {% warning %}

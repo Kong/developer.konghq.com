@@ -63,6 +63,10 @@ module Jekyll
         @name ||= metadata.fetch('name')
       end
 
+      def icon
+        @icon ||= metadata['icon']
+      end
+
       private
 
       def release_info

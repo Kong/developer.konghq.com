@@ -8,6 +8,8 @@ content_type: plugin
 type: policy
 min_version:
   mesh: '2.6'
+
+icon: meshmetric.png
 ---
 {{site.mesh_product_name}} facilitates consistent traffic metrics across all data plane proxies in your mesh.
 
