@@ -302,6 +302,10 @@ app/kubernetes-ingress-controller/reference/configuration-options.md:
   - app/_src/kubernetes-ingress-controller/reference/cli-arguments-3.4.x.md
 app/kubernetes-ingress-controller/class-annotations.md:
   - app/_src/kubernetes-ingress-controller/reference/ingress-class-requirement.md
+app/_how-tos/kic-plugin-custom.md:
+  - app/_src/kubernetes-ingress-controller/plugins/custom.md
+app/_how-tos/kic-plugin-authentication.md:
+  - app/_src/kubernetes-ingress-controller/plugins/authentication.md
 
 # plugins
 app/_kong_plugins/zipkin/changelog.md:
