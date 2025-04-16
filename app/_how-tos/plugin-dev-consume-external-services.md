@@ -41,7 +41,7 @@ library for HTTP client connectivity to the third-party service.
 
 For JSON support, we'll use the [lua-cjson](https://github.com/mpx/lua-cjson) library.
 
-Add the libraries at the top `handler.lua`:
+Add the libraries to the top of `handler.lua`:
 
 ```lua
 local http  = require("resty.http")
@@ -52,7 +52,7 @@ local cjson = require("cjson.safe")
 
 The `lua-resty-http` library provides a simple HTTP request
 function (`request_uri`) that we can use to reach out to our third-party service. 
-In this example we'll send a `GET` request to the _httpbin.org/anything_ API.
+In this example, we'll send a `GET` request to the _httpbin.org/anything_ API.
 
 Add the following to the top of the `MyPluginHandler:response` function inside the
 `handler.lua` module:
@@ -73,10 +73,9 @@ The {{site.base_gateway}}
 [Plugin Development Kit](/gateway/pdk/reference/) 
 provides you with various functions to help you handle error conditions.
 
-In this example we're processing responses from the upstream service
+In this example, we're processing responses from the upstream service
 and decorating the client response with values from the third-party service. 
-If the request to the third-party service fails, we can terminate processing 
-of the response and return to the client with an error, 
+If the request to the third-party service fails, we can terminate the response processing and return to the client with an error, 
 or continue processing the response and not complete the custom header logic. 
 
 In this example, we'll terminate the
@@ -98,7 +97,7 @@ end
 This third-party service returns a JSON object in the response body. 
 We'll parse and extract a single value from the JSON body.
 
-1. Use the `decode` function in the `lua-cjson` library passing in the `res.body` value received from the `request_uri` function:
+1. In your `handler.lua` file, use the `decode` function in the `lua-cjson` library passing in the `res.body` value received from the `request_uri` function. Add this to your file right below what you added in the previous step:
    ```lua
    local body_table, err = cjson.decode(res.body)
    ```

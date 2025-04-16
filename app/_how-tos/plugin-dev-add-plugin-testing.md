@@ -63,13 +63,13 @@ instead.
 ## 2. Initialize the test environment
 
 Pongo lets you validate a plugin's behavior by giving you tools to quickly run a 
-{{site.base_gateway}} with the plugin installed and available. 
+{{site.base_gateway}} instance with the plugin installed and available. 
 
 {:.info}
 > **Note**: {{site.base_gateway}} runs in a variety of
 > [deployment topologies](/gateway/deployment-models/#deployment-topologies). 
-> By default, Pongo runs {{site.base_gateway}} in _traditional mode_, which uses a database 
-> to store configured entities such as routes, services, and plugins. 
+> By default, Pongo runs {{site.base_gateway}} in [_traditional mode_](/gateway/traditional-mode/), which uses a database 
+> to store configured entities such as Routes, Gateway Services, and plugins. 
 > {{site.base_gateway}} and the database are run in separate containers,
 > letting you cycle the gateway independently of the database. This enables a quick and 
 > iterative approach to validating the plugin's logical behavior while keeping the gateway
@@ -100,7 +100,7 @@ default configuration files. You can run it to start a new project.
    pongo shell
    ```
    Your terminal is now running a shell _inside_ the {{site.base_gateway}} container. Your 
-   shell prompt should change, showing you the gateway version, the host plugin directory, 
+   shell prompt should change, showing you the {{site.base_gateway}} version, the host plugin directory, 
    and current path inside the container. For example, your prompt may look like the following:
    ```sh
    [Kong-3.9.0:my-plugin:/kong]$
@@ -134,11 +134,9 @@ using `curl` and filtering the response with `jq`:
 
 With the plugin installed, we can now configure [{{site.base_gateway}} entities](/gateway/entities/) to invoke and validate the plugin's behavior.
 
-{:.info}
-> **Note**: For each of the following `POST` requests to the Admin API, you should receive
-> a `HTTP/1.1 201 Created` response from {{site.base_gateway}} indicating the successful creation of the entity.
+For each of the following `POST` requests to the Admin API, you should receive a `HTTP/1.1 201 Created` response from {{site.base_gateway}} indicating the successful creation of the entity.
 
-1. Still within the {{site.base_gateway}} container's shell, add a new service:
+1. Still within the {{site.base_gateway}} container's shell, [add a new Gateway Service](/api/gateway/admin-ee/#/operations/create-service):
    <!-- vale off -->
    {% control_plane_request %}
    url: /services
@@ -150,7 +148,7 @@ With the plugin installed, we can now configure [{{site.base_gateway}} entities]
    {% endcontrol_plane_request %}
    <!-- vale on -->
 
-2. Associate the custom plugin with the `example_service` service:
+2. [Enable the custom plugin](/api/gateway/admin-ee/#/operations/create-plugin-with-service) on the `example_service` Service:
    <!-- vale off -->
    {% control_plane_request %}
    url: /services/example_service/plugins
@@ -161,7 +159,7 @@ With the plugin installed, we can now configure [{{site.base_gateway}} entities]
    {% endcontrol_plane_request %}
    <!-- vale on -->
     
-3. Add a new route for sending requests through the `example_service`:
+3. [Add a new Route](/api/gateway/admin-ee/#/operations/create-route) for sending requests through the `example_service`:
    <!-- vale off -->
    {% control_plane_request %}
    url: /services/example_service/routes
@@ -195,12 +193,13 @@ With the plugin installed, we can now configure [{{site.base_gateway}} entities]
    exit
    ```
 
-For quickly getting started, manually validating a plugin using the Pongo shell works
-nicely. For production scenarios, you will likely want to deploy automated testing 
-and maybe a test-driven development (TDD) methodology. 
-Let's see how Pongo can help with this as well.
 
 ## 4. Write an automated test
+
+For quickly getting started, manually validating a plugin using the Pongo shell works
+well. For production scenarios, you will likely want to deploy automated testing 
+and maybe a test-driven development (TDD) methodology. 
+Let's see how Pongo can help with this as well.
 
 Pongo supports running automated tests using the 
 [Busted](https://lunarmodules.github.io/busted/) Lua test framework. In plugin
@@ -212,7 +211,7 @@ For this project, this is the `spec/my-plugin` folder you created earlier.
    touch spec/my-plugin/01-integration_spec.lua
    ```
  
-1. Copy this code in the test file: 
+1. Copy and paste this code in the test file: 
    ```lua
    -- Helper functions provided by Kong Gateway, see https://github.com/Kong/kong/blob/master/spec/helpers.lua
    local helpers = require "spec.helpers"

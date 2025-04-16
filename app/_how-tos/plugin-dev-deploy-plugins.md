@@ -79,7 +79,7 @@ You can now use the {{site.base_gateway}} quickstart script to run the
 custom image and further test the plugin. 
 
 The quickstart script supports
-flags that allow for overriding the Docker 
+flags that allow you to override the Docker 
 repository (`-r`), image (`-i`) and tag (`-t`).
 
 Use the following command to run the quickstart with the custom image:
@@ -93,7 +93,7 @@ curl -Ls https://get.konghq.com/quickstart | \
 Once the {{site.base_gateway}} is running with the custom image, you 
 can manually test the plugin and validate the behavior.
 
-1. Add a test service:
+1. Add a test [Gateway Service](/api/gateway/admin-ee/#/operations/create-service):
    <!-- vale off -->
    {% control_plane_request %}
    url: /services
@@ -105,7 +105,7 @@ can manually test the plugin and validate the behavior.
    {% endcontrol_plane_request %}
    <!-- vale on -->
 
-2. Enable the plugin, this time with the configuration value:
+2. [Enable the plugin](/api/gateway/admin-ee/#/operations/create-plugin-with-service), this time with the configuration value:
    <!-- vale off -->
    {% control_plane_request %}
    url: /services/example_service/plugins
@@ -118,7 +118,7 @@ can manually test the plugin and validate the behavior.
    {% endcontrol_plane_request %}
    <!-- vale on -->
 
-3. Add a route:
+3. [Add a Route](/api/gateway/admin-ee/#/operations/create-route-with-service):
    <!-- vale off -->
    {% control_plane_request %}
    url: /services/example_service/routes
@@ -131,7 +131,7 @@ can manually test the plugin and validate the behavior.
    {% endcontrol_plane_request %}
    <!-- vale on -->
 
-4. Send a request to the route:
+4. Send a request to the Route:
    <!-- vale off -->
    {% validation request-check %}
    url: '/mock/anything'

@@ -88,16 +88,16 @@ end
 Let's use Pongo to test the updated configuration.
 
 1. Launch {{site.base_gateway}} and open a shell:
-  ```sh
-  pongo shell
-  ```
+   ```sh
+   pongo shell
+   ```
 
-2. run the database migrations and start {{site.base_gateway}}:
-  ```sh
-  kms
-  ```
+2. Run the database migrations and start {{site.base_gateway}}:
+   ```sh
+   kms
+   ```
 
-3. Add a test service:
+3. Add a [test Gateway Service](/api/gateway/admin-ee/#/operations/create-service):
    <!-- vale off -->
    {% control_plane_request %}
    url: /services
@@ -109,7 +109,7 @@ Let's use Pongo to test the updated configuration.
    {% endcontrol_plane_request %}
    <!-- vale on -->
 
-4. Enable the plugin, this time with the configuration value:
+4. [Enable the plugin](/api/gateway/admin-ee/#/operations/create-plugin-with-service), this time with the configuration value:
    <!-- vale off -->
    {% control_plane_request %}
    url: /services/example_service/plugins
@@ -122,7 +122,7 @@ Let's use Pongo to test the updated configuration.
    {% endcontrol_plane_request %}
    <!-- vale on -->
 
-5. Add a route:
+5. [Add a Route](/api/gateway/admin-ee/#/operations/create-route):
    <!-- vale off -->
    {% control_plane_request %}
    url: /services/example_service/routes
@@ -135,7 +135,7 @@ Let's use Pongo to test the updated configuration.
    {% endcontrol_plane_request %}
    <!-- vale on -->
 
-6. Send a request to the route:
+6. Send a request to the Route:
    <!-- vale off -->
    {% validation request-check %}
    url: '/mock/anything'
@@ -174,6 +174,7 @@ added to the database is configured with a different value for the `response_hea
    ```lua
    local header_value = assert.response(r).has.header("X-MyPlugin")
    ```
+  {:.no-copy-code}
 
    With this line:
    ```lua

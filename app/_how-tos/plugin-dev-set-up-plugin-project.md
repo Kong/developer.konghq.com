@@ -29,7 +29,7 @@ works_on:
 prereqs:
   skip_product: true
   inline:
-    - title: Lua (optional)
+    - title: (Optional) Lua
       content: While not required, an understanding of the [Lua](https://www.lua.org/about.html) language is helpful for this series.
       icon: /assets/icons/code.svg
 
@@ -128,9 +128,7 @@ indicating the points at which the plugin logic should be executed.
 In this example, we'll add a `response` function, which is executed after a response has been
 received from the upstream service but before returning it to the client. 
 
-Let's add a header to the response before returning it to the client. 
-
-Add the following  function implementation to the `handler.lua` file before the `return MyPluginHandler` statement:
+Let's add a header to the response before returning it to the client. Add the following  function implementation to the `handler.lua` file before the `return MyPluginHandler` statement:
 ```lua
 function MyPluginHandler:response(conf)
     kong.response.set_header("X-MyPlugin", "response")

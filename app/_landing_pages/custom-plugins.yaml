@@ -106,7 +106,7 @@ rows:
                 - type: text
                   text: |
                     Learn about custom plugin development by following a series of tutorials that walk you through all the steps to build a new custom plugin for {{site.base_gateway}}.
-                    The plugin you build will transform HTTP traffic as it passes through the API gateway, and give you
+                    The plugin you build will transform HTTP traffic as it passes through the API gateway and give you
                     a solid starting point for building custom plugins to solve your specific business needs.
 
                     You will learn how to:
