@@ -103,6 +103,8 @@ In this example:
 * `auth_methods`: Refresh token and password grant.
 * `refresh_token_param_type`: We want to search for the refresh token in headers only.
 
+{% include_cached plugins/oidc/client-auth.md %}
+
 ## 2. Retrieve the refresh token
 
 Check that you can recover the refresh token by requesting the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
@@ -139,14 +141,7 @@ headers:
   - "Refresh-Token: $REFRESH_TOKEN"
 {% endvalidation %}
 
-If {{site.base_gateway}} successfully authenticates with Keycloak, you'll see a `200` response with a `Refresh-Token` header.
-
-If you make another request using the same credentials, you'll see that {{site.base_gateway}} adds less latency to the request because it has cached the token endpoint call to Keycloak:
-
-```
-X-Kong-Proxy-Latency: 25
-```
-{:.no-copy-code}
+{% include_cached plugins/oidc/cache.md %}
 
 Alternatively, you can use jq to pass the credentials and retrieve the most recent refresh token every time:
 

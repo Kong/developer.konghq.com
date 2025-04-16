@@ -82,7 +82,7 @@ entities:
         - client_secret_post
         auth_methods:
         - password
-        client_credentials_param_type:
+        password_param_type:
         - header
 variables:
   issuer:
@@ -96,7 +96,9 @@ variables:
 In this example:
 * `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
 * `auth_methods`: Password grant.
-* `client_credentials_param_type`: We want to search for client credentials in headers only.
+* `password_param_type`: We want to search for the username and password in headers only.
+
+{% include_cached plugins/oidc/client-auth.md %}
 
 ## 2. Validate the password grant
 
@@ -114,11 +116,4 @@ user: "john:doe"
 display_headers: true
 {% endvalidation %}
 
-If {{site.base_gateway}} successfully authenticates with Keycloak, you'll see a `200` response with your bearer token in the Authorization header.
-
-If you make another request using the same credentials, you'll see that {{site.base_gateway}} adds less latency to the request because it has cached the token endpoint call to Keycloak:
-
-```
-X-Kong-Proxy-Latency: 25
-```
-{:.no-copy-code}
+{% include_cached plugins/oidc/cache.md %}

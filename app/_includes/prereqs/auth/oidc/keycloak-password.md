@@ -20,7 +20,7 @@ This tutorial requires an identity provider (IdP). If you don't have one, you ca
 Section | Settings
 --------|----------
 **General settings** | - Client type: **OpenID Connect** <br> - Client ID: any unique name, for example `kong`
-**Capability config** | - Toggle **Client authentication** to **on** <br> - Make sure that **Standard flow** and **Direct access grants** are checked.
+**Capability config** | - Toggle **Client authentication** to **on** <br> - Make sure that **Standard flow**, **Direct access grants**, and **Service accounts roles** are checked.
 **Login settings** |  **Valid redirect URIs**: `http://localhost:8000/*`
 
 #### Set up keys and credentials
