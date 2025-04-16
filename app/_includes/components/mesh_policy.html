@@ -1,0 +1,5 @@
+{% capture cta %}
+<a href="{{ policy.url }}">See policy &rarr;</a>
+{% endcapture %}
+
+{% include card.html icon=policy.icon title=policy.name description=policy.description cta_url=policy.url cta_text='See policy &rarr;' %}
