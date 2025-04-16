@@ -69,5 +69,7 @@
     "https://konghq.com/request-demo-kong-mesh/",
     "https://linux.die.net/man/8/iptables",
     "https://auth.openai.com/*",
-    "https://platform.openai.com/*"
+    "https://platform.openai.com/*",
+    "https://docs.sigstore.dev/system_config/installation/",
+    "https://packages.konghq.com/public/kong-mesh-binaries-release/raw/names/security-assets/versions/security-assets.tar.gz"
   ]
