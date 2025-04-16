@@ -137,58 +137,72 @@ With the plugin installed, we can now configure [{{site.base_gateway}} entities]
 For each of the following `POST` requests to the Admin API, you should receive a `HTTP/1.1 201 Created` response from {{site.base_gateway}} indicating the successful creation of the entity.
 
 1. Still within the {{site.base_gateway}} container's shell, [add a new Gateway Service](/api/gateway/admin-ee/#/operations/create-service):
-   <!-- vale off -->
-   {% control_plane_request %}
-   url: /services
-   status_code: 201
-   method: POST
-   body:
-       name: example_service
-       url: https://httpbin.konghq.com
-   {% endcontrol_plane_request %}
-   <!-- vale on -->
+<!-- vale off -->
+{% capture request %}
+{% control_plane_request %}
+url: /services
+status_code: 201
+method: POST
+body:
+    name: example_service
+    url: https://httpbin.konghq.com
+{% endcontrol_plane_request %}
+{% endcapture %}
 
-2. [Enable the custom plugin](/api/gateway/admin-ee/#/operations/create-plugin-with-service) on the `example_service` Service:
-   <!-- vale off -->
-   {% control_plane_request %}
-   url: /services/example_service/plugins
-   status_code: 201
-   method: POST
-   body:
-       name: my-plugin
-   {% endcontrol_plane_request %}
-   <!-- vale on -->
+{{request | indent: 3}}
+<!-- vale on -->
+
+1. [Enable the custom plugin](/api/gateway/admin-ee/#/operations/create-plugin-with-service) on the `example_service` Service:
+<!-- vale off -->
+{% capture request %}
+{% control_plane_request %}
+url: /services/example_service/plugins
+status_code: 201
+method: POST
+body:
+    name: my-plugin
+{% endcontrol_plane_request %}
+{% endcapture %}
+
+{{request | indent: 3}}
+<!-- vale on -->
     
-3. [Add a new Route](/api/gateway/admin-ee/#/operations/create-route) for sending requests through the `example_service`:
-   <!-- vale off -->
-   {% control_plane_request %}
-   url: /services/example_service/routes
-   status_code: 201
-   method: POST
-   body:
-       name: example_route
-       paths:
-         - /mock
-   {% endcontrol_plane_request %}
-   <!-- vale on -->
+1. [Add a new Route](/api/gateway/admin-ee/#/operations/create-route) for sending requests through the `example_service`:
+<!-- vale off -->
+{% capture request %}
+{% control_plane_request %}
+url: /services/example_service/routes
+status_code: 201
+method: POST
+body:
+    name: example_route
+    paths:
+      - /mock
+{% endcontrol_plane_request %}
+{% endcapture %}
 
-   The plugin is now configured and will be invoked when {{site.base_gateway}} proxies
-   requests via the `example_service`. 
-   Prior to forwarding the response from the 
-   upstream, the plugin should append the `X-MyPlugin` header to the list of response headers.
+{{request | indent: 3}}
+<!-- vale on -->
+The plugin is now configured and will be invoked when {{site.base_gateway}} proxies
+requests via the `example_service`. 
+Prior to forwarding the response from the 
+upstream, the plugin should append the `X-MyPlugin` header to the list of response headers.
 
-4. Send a request to test the behavior and use the `-i` flag to display the response headers:
-   <!-- vale off -->
-   {% validation request-check %}
-   url: '/mock/anything'
-   status_code: 200
-   display_headers: true
-   {% endvalidation %}
-   <!-- vale on -->
+1. Send a request to test the behavior and use the `-i` flag to display the response headers:
+<!-- vale off -->
+{% capture request %}
+{% validation request-check %}
+url: '/mock/anything'
+status_code: 200
+display_headers: true
+{% endvalidation %}
+{% endcapture %}
 
-   You should see `X-MyPlugin: response` in the set of headers, indicating that the plugin's logic has been invoked.
+{{request | indent: 3}}
+<!-- vale on --> 
+You should see `X-MyPlugin: response` in the set of headers, indicating that the plugin's logic has been invoked.
 
-5. Exit the {{site.base_gateway}} shell before proceeding to the next step:
+1. Exit the {{site.base_gateway}} shell before proceeding to the next step:
    ```sh
    exit
    ```

@@ -92,65 +92,76 @@ Let's use Pongo to test the updated configuration.
    pongo shell
    ```
 
-2. Run the database migrations and start {{site.base_gateway}}:
+1. Run the database migrations and start {{site.base_gateway}}:
    ```sh
    kms
    ```
 
-3. Add a [test Gateway Service](/api/gateway/admin-ee/#/operations/create-service):
+1. Add a [test Gateway Service](/api/gateway/admin-ee/#/operations/create-service):
+<!-- vale off -->
+{% capture request %}
+{% control_plane_request %}
+url: /services
+status_code: 201
+method: POST
+body:
+    name: example_service
+    url: https://httpbin.konghq.com
+{% endcontrol_plane_request %}
+{% endcapture %}
 
-   <!-- vale off -->
-   {% control_plane_request %}
-   url: /services
-   status_code: 201
-   method: POST
-   body:
-       name: example_service
-       url: https://httpbin.konghq.com
-   {% endcontrol_plane_request %}
-   <!-- vale on -->
+{{request | indent: 3}}
+<!-- vale on -->
 
-4. [Enable the plugin](/api/gateway/admin-ee/#/operations/create-plugin-with-service), this time with the configuration value:
+1. [Enable the plugin](/api/gateway/admin-ee/#/operations/create-plugin-with-service), this time with the configuration value:
+<!-- vale off -->
+{% capture request %}
+{% control_plane_request %}
+url: /services/example_service/plugins
+status_code: 201
+method: POST
+body:
+    name: my-plugin
+    config:
+      response_header_name: X-CustomHeaderName
+{% endcontrol_plane_request %}
+{% endcapture %}
 
-   <!-- vale off -->
-   {% control_plane_request %}
-   url: /services/example_service/plugins
-   status_code: 201
-   method: POST
-   body:
-       name: my-plugin
-       config:
-         response_header_name: X-CustomHeaderName
-   {% endcontrol_plane_request %}
-   <!-- vale on -->
+{{request | indent: 3}}
+<!-- vale on -->
 
-5. [Add a Route](/api/gateway/admin-ee/#/operations/create-route):
+1. [Add a Route](/api/gateway/admin-ee/#/operations/create-route):
+<!-- vale off -->
+{% capture request %}
+{% control_plane_request %}
+url: /services/example_service/routes
+status_code: 201
+method: POST
+body:
+    name: example_route
+    paths:
+      - /mock
+{% endcontrol_plane_request %}
+{% endcapture %}
 
-   <!-- vale off -->
-   {% control_plane_request %}
-   url: /services/example_service/routes
-   status_code: 201
-   method: POST
-   body:
-       name: example_route
-       paths:
-         - /mock
-   {% endcontrol_plane_request %}
-   <!-- vale on -->
+{{request | indent: 3}}
+<!-- vale on -->
 
-6. Send a request to the Route:
+1. Send a request to the Route:
+<!-- vale off -->
+{% capture request %}
+{% validation request-check %}
+url: '/mock/anything'
+status_code: 200
+display_headers: true
+{% endvalidation %}
+{% endcapture %}
 
-   <!-- vale off -->
-   {% validation request-check %}
-   url: '/mock/anything'
-   status_code: 200
-   display_headers: true
-   {% endvalidation %}
-   <!-- vale on -->
+{{request | indent: 3}}
+<!-- vale on --> 
+This time we should see the `X-CustomHeaderName` in the response.
 
-   This time we should see the `X-CustomHeaderName` in the response.
-
-7. Exit the {{site.base_gateway}} shell before proceeding to the next step:
+1. Exit the {{site.base_gateway}} shell before proceeding to the next step:
    ```sh
    exit
    ```
