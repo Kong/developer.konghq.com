@@ -11,7 +11,7 @@ links:
   '/enterprise/?': '/mesh/'
   '/community/?': 'https://konghq.com/community'
   '/policies/?': '/mesh/policies/'
-  '/features/?': '/mesh/features/'
+  '/features/?': '/mesh/enterprise/'
 
 pages:
 # Must for GA
