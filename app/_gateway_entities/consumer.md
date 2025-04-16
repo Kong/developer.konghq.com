@@ -15,6 +15,8 @@ related_resources:
     url: /gateway/entities/plugin/#supported-scopes-by-plugin
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
+  - text: Create a centrally-managed Consumer in {{site.konnect_short_name}}
+    url: /how-to/create-centrally-managed-consumer/
 
 faqs:
   - q: What are credentials, and why do I need them?
@@ -54,7 +56,7 @@ faqs:
     a: |
       Yes, you can manage Consumers using decK, but take caution if you have a large number of Consumers as the sync time will be high.
 
-      To manage a large number of consumers using decK, we recommend a federated configuration management approach where consumers are placed in to Consumer Groups and managed separately from the rest of your configuration.
+      To manage a large number of Consumers using decK, we recommend a federated configuration management approach where Consumers are placed in to Consumer Groups and managed separately from the rest of your configuration.
 
 tools:
     - admin-api
@@ -114,14 +116,14 @@ subgraph Authenticate ["Consumer Identity Added"]
     direction LR
     Service --> Auth
     Auth--identify 
-    consumer-->Consumer
+    Consumer-->Consumer
     end
 end
 
 Consumer--> RL
 end
 RL --apply 
-per-consumer
+per-Consume
 rate limiting--> Upstream
 
 style Authenticate stroke-dasharray: 5 5
@@ -143,7 +145,19 @@ Common use cases for Consumers:
 
 ## Centrally-managed Consumers 
 
-<!-- @todo: migrate from Konnect docs: https://docs.konghq.com/konnect/centralized-consumer-management/ -->
+Consumers can be scoped to a {{site.konnect_short_name}} region and managed centrally, or be scoped to a control plane in Gateway Manager.
+
+Centralized Consumer management provides the following benefits:
+* Set up a Consumer identity centrally instead of defining it in multiple control planes.
+* Share Consumers across multiple control planes. Users don't need to replicate changes to Consumer identity in multiple control planes and Consumer configuration doesn't conflict.
+* Reduce configuration sync issues between the control plane and the data planes. Consumers that are managed centrally aren't part of the configuration that is pushed down from the control plane to the data planes, so it reduces config size and latency. 
+
+You can manage consumers centrally using the {{site.konnect_short_name}} API. Only Org Admins and Control Plane Admins have CRUD permissions for these consumers. When you create a Consumer centrally, you must assign it to a realm. A realm groups Consumes around an identity, defined by organizational boundaries, such as a production realm or a development realm. Realms are connected to a [geographic region](/konnect/geo/) in {{site.konnect_short_name}}. Centrally managed Consumers exist outside of control planes, so they can be used across control planes.
+
+For a complete tutorial, see [Create a centrally-managed Consumer in {{site.konnect_short_name}}](/how-to/create-centrally-managed-consumer/).
+
+{:.info}
+> **Note:** If you are using KIC to manage your data plane nodes in {{site.konnect_short_name}}, ensure that you configure the `telemetry_endpoint` in the data plane. You can find the `telemetry_endpoint` in the {{site.konnect_short_name}} UI in [Gateway Manager](https://cloud.konghq.com/gateway-manager/) in the data plane node instructions.
 
 ## Schema
 

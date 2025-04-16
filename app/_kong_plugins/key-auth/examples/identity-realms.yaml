@@ -5,6 +5,8 @@ description: |
   The order in which you configure the `identity_realms` dictates the priority in which the Data Plane attempts to authenticate the provided API keys.
   See the [realm priority reference](/plugins/key-auth/#identity-realms) for details.
 
+  For a full tutorial of this example, see [Create a centrally-managed Consumer in {{site.konnect_short_name}}](/how-to/create-centrally-managed-consumer/).
+
 title: 'Realms for external Consumers in Konnect'
 
 requirements:
