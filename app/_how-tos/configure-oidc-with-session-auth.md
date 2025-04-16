@@ -104,8 +104,9 @@ In this example:
 
 ## 2. Store the session cookie
 
-Request the Service with basic authentication credentials created in the [prerequites](#prerequisites) and store the session:
+Request the Service with basic authentication credentials created in the [prerequisites](#prerequisites) and store the session:
 
+<!--vale off-->
 {% validation request-check %}
 url: /anything
 method: GET
@@ -114,6 +115,7 @@ user: "john:doe"
 display_headers: true
 cookie_jar: example-user
 {% endvalidation %}
+<!--vale on-->
 
 ## 3. Validate session authentication
 
