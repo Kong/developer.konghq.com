@@ -16,13 +16,14 @@ module Jekyll
       module Presenters
         module KIC
           class Base < Presenters::Base
-            attr_reader :other_plugins, :foreign_key_names, :foreign_keys, :full_resource
+            attr_reader :other_plugins, :foreign_key_names, :foreign_keys, :full_resource, :skip_annotate
 
             def initialize(example_drop:)
               super(example_drop:)
               @foreign_keys = []
               @foreign_key_names = {}
               @other_plugins = ''
+              @skip_annotate = false
             end
 
             def data
@@ -76,6 +77,11 @@ module Jekyll
               if d['tags']
                 tags = d['tags']
                 d.delete('tags')
+              end
+
+              if d['skip_annotate']
+                @skip_annotate = d['skip_annotate']
+                d.delete('skip_annotate')
               end
 
               # Remove foreign keys
