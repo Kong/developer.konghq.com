@@ -65,7 +65,7 @@ Each node manages its own configuration._
 
 ## About {{site.base_gateway}} clusters
 
-A {{site.base_gateway}} cluster does not load balance client traffic accross Data Plane nodes out-of-the-box. You still need a
+A {{site.base_gateway}} cluster does not load balance client traffic across Data Plane nodes out-of-the-box. You still need a
 [load-balancer](/gateway/load-balancing/) in front of your Data Plane nodes to distribute your traffic. Instead,
 a {{site.base_gateway}} cluster means that those nodes will share the same configuration.
 
