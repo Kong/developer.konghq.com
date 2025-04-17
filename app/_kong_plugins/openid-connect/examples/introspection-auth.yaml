@@ -40,12 +40,6 @@ variables:
     value: $CLIENT_SECRET
     description: The client secret needed to connect to your IdP.
 
-variables:
-  issuer:
-    value: "http://keycloak.test:8080/realms/master"
-  client_id:
-    value: kong
-
 tools:
   - deck
   - admin-api
