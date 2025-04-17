@@ -101,6 +101,8 @@ In this example:
 * `auth_methods`: Password grant, for easy testing.
 * `authenticated_groups_claim`: Will look for a groups claim in an ACL.
 
+{% include_cached plugins/oidc/client-auth.md %}
+
 ## 2. Validate the OpenID Connect plugin configuration
 
 Request the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
@@ -113,7 +115,7 @@ user: "john:doe"
 display_headers: true
 {% endvalidation %}
 
-You should get an HTTP 200 response with an `X-Authenticated-Groups` header:
+You should get an HTTP `200` response with an `X-Authenticated-Groups` header:
 
 ```
 "X-Authenticated-Groups": "openid, email, profile"

@@ -7,6 +7,8 @@ description: |
   For a full example that shows you how to set up both the OpenID Connect and ACL plugins with Keycloak as the IdP, 
   see [Configure OpenID Connect with ACL authorization](/how-to/configure-oidc-with-acl-auth/).
 
+  {% include_cached plugins/oidc/client-auth.md %}
+
 weight: 850
 
 requirements:
