@@ -111,6 +111,7 @@ Check that you can recover the token by requesting the Service with the basic au
 ```sh
 export TOKEN=$(curl --user john:doe http://localhost:8000/anything \
   | jq -r .headers.Authorization)
+echo $TOKEN
 ```
 {: data-deployment-topology="on-prem" }
 
