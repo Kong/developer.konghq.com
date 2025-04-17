@@ -1,3 +1,7 @@
+{% if page.all_docs_indices and page.all_docs_indices != empty  %}
+{% include_cached info_box/sections/all_docs_indices.html all_docs_indices=page.all_docs_indices %}
+{% endif %}
+
 {% if page.publisher %}
 {% include_cached info_box/sections/publisher.html publisher=page.publisher third_party=page.third_party support_url=page.support_url source_code_url=page.source_code_url %}
 {% endif %}

@@ -1,0 +1,36 @@
+description: 'Set up Splunk logging with the Kong Splunk Log plugin.'
+
+title: 'Send logs to Splunk'
+
+weight: 900
+
+requirements:
+  - "The Kong Splunk Log plugin is [installed](/plugins/kong-splunk-log/#install-the-kong-splunk-log-plugin)."
+  - You have a Splunk access token.
+  - The `SPLUNK_HOST` environment variable is [set in the environment and added to `nginx.conf`](/plugins/kong-splunk-log/#configure-the-splunk-host).
+
+variables:
+  endpoint:
+    value: $SPLUNK_ENDPOINT
+    description: 
+      The Splunk collector endpoint. For example, `https://hec-splunk.company.com/services/collector`.
+  token:
+    value: $SPLUNK_TOKEN
+    description: Your Splunk access token.
+
+config:
+  splunk_endpoint: ${endpoint}
+  splunk_access_token: ${token}
+  method: POST
+  content_type: application/json
+  timeout: 10000
+  retry_count: 5
+  queue_size: 20
+  flush_timeout: 30
+  keepalive: 60000
+
+tools:
+  - deck
+  - admin-api
+  - kic
+  - terraform

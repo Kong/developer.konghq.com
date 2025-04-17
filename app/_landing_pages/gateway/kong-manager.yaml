@@ -51,11 +51,11 @@ rows:
               - type: text
                 text: |
                   If you're running {{site.base_gateway}} on-prem with a database (either in traditional
-                  or hybrid mode), you can [enable Kong Manager](/gateway/kong-manager-configuration/#enable-kong-manager/). If you run the [{{site.base_gateway}} quickstart script](https://get.konghq.com/quickstart), Kong Manager is automatically enabled.
+                  or hybrid mode), you can [enable Kong Manager](/gateway/kong-manager/configuration/#enable-kong-manager/). If you run the [{{site.base_gateway}} quickstart script](https://get.konghq.com/quickstart), Kong Manager is automatically enabled.
 
                   Access Kong Manager at its default URL: [http://localhost:8002](http://localhost:8002)
 
-                  You can configure Kong Manager settings (like URL and path) and customization (like header and footer colors) using [parameters in `kong.conf`](/gateway/configuration/#kong-manager-section). If you want to enable Kong Manager for multiple domains, see [multiple domains](/gateway/kong-manager-configuration/#multiple-domains).
+                  You can configure Kong Manager settings (like URL and path) and customization (like header and footer colors) using [parameters in `kong.conf`](/gateway/configuration/#kong-manager-section). If you want to enable Kong Manager for multiple domains, see [multiple domains](/gateway/kong-manager/configuration/#multiple-domains).
   
   - columns:
       - blocks:

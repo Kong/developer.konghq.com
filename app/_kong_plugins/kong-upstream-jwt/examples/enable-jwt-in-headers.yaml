@@ -1,0 +1,20 @@
+description: |
+  Enable the Kong Upstream JWT plugin to add a signed JWT into the HTTP Header 
+  `JWT` of requests proxied through {{site.base_gateway}}.
+
+title: 'Enable JWT in headers'
+
+weight: 900
+
+requirements:
+  - "The Kong Upstream JWT plugin is [installed](/plugins/kong-upstream-jwt/#install-the-kong-upstream-jwt-plugin)."
+  - "[Set public and private keys in `kong.conf` and in `nginx.conf`](/plugins/kong-upstream-jwt/#set-public-and-private-keys)"
+
+
+config: []
+
+tools:
+  - deck
+  - admin-api
+  - kic
+  - terraform

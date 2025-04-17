@@ -4,5 +4,5 @@
     "properties": {
         "min_version": { "$ref": "schema:base#/definitions/min_version" }
     },
-    "required": ["content_type", "title", "description", "products", "works_on"]
+    "required": ["content_type", "title", "description", "products"]
   }

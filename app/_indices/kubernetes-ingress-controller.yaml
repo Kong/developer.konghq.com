@@ -29,6 +29,7 @@ sections:
       - path: /kubernetes-ingress-controller/gateway-api/
       - path: /kubernetes-ingress-controller/ingress/
       - path: /kubernetes-ingress-controller/custom-resources/
+      - path: /kubernetes-ingress-controller/class-annotations/
       - path: /kubernetes-ingress-controller/reference/annotations/
       - path: /kubernetes-ingress-controller/admission-webhook/
   - title: Deployment Topologies
@@ -39,8 +40,30 @@ sections:
   - title: Customization
     items:
       - path: /kubernetes-ingress-controller/custom-plugin/
+  - title: Observability
+    items:
+      - path: /kubernetes-ingress-controller/observability/**/*
+  - title: Troubleshooting
+    items:
+      - path: /kubernetes-ingress-controller/troubleshooting/failure-modes/
+      - path: /kubernetes-ingress-controller/troubleshooting/kong-gateway-configuration/
+      - path: /kubernetes-ingress-controller/troubleshooting/konnect/
+      - path: /kubernetes-ingress-controller/troubleshooting/debugging/
+      - path: /kubernetes-ingress-controller/troubleshooting/**/*
+  - title: How To
+    items:
+      - path: /kubernetes-ingress-controller/custom-plugins/
+      - path: /kubernetes-ingress-controller/multiple-auth-methods/
   - title: Reference
     allow_duplicates: true
     items:
       - path: /kubernetes-ingress-controller/reference/custom-resources/
       - path: /kubernetes-ingress-controller/reference/annotations/
+      - path: /kubernetes-ingress-controller/reference/feature-gates/
+      - path: /kubernetes-ingress-controller/reference/configuration-options/
+      - path: /kubernetes-ingress-controller/reference/required-permissions/
+  - title: FAQs
+    items:
+      - path: /kubernetes-ingress-controller/faq/custom-nginx-conf/
+      - path: /kubernetes-ingress-controller/faq/combining-httproutes/
+      - path: /kubernetes-ingress-controller/faq/migrate-ingress-to-gateway/

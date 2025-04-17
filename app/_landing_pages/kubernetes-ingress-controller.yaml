@@ -1,9 +1,173 @@
 metadata:
   title: Kong Ingress Controller
   content_type: landing_page
-  description: "@TODO: Build this page"
+  description: |
+    Configure {{ site.base_gateway }} using Kubernetes CRDs with {{ site.kic_product_name }}
+
 
 rows:
   - header:
       type: h1
-      text: "Kong Ingress Controller"
+      text: "{{site.kic_product_name}} (KIC)"
+
+  - header:
+      type: h2
+      text: What is the {{site.kic_product_name}}?
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              {{ site.kic_product_name }} allows you to run {{ site.base_gateway }} as a Kubernetes Ingress to handle inbound requests for a Kubernetes cluster.
+
+              {{ site.kic_product_name }} takes Kubernetes resources such as `Ingress` and `HTTPRoute` and converts them into a valid {{ site.base_gateway }} configuration. It enables you to configure all the [features](/gateway/#learn) of {{ site.base_gateway }} using Kubernetes CRDs.
+
+              KIC supports all [{{ site.base_gateway }} entities](/gateway/entities/), and can be deployed multiple times within a single cluster to provide [traffic splitting](#TODO).
+          - type: button
+            config:
+              text: View All Documentation &raquo;
+              url: /index/kubernetes-ingress-controller/
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart TB
+                   A(<img src="/assets/icons/git.svg" style="max-height:25px; display:block; margin:0 auto;" /> Cluster Operator)
+                   B(<img src="/assets/icons/kubernetes.svg" style="max-width:25px; display:block; margin:0 auto;" /> API server)
+                   C(<img src="/assets/icons/KogoBlue.svg" style="max-width:25px; display:block; margin:0 auto;" /> Kong Ingress Controller)
+
+                   D@{ shape: processes, label: "<img src='/assets/icons/KogoBlue.svg' style='max-width:25px; display:block; margin:0 auto;' /> Kong Gateways"}
+
+                    A -->|kubectl apply| B
+                    C <-->|Reads configuration| B
+                    C -->|POST /config| D
+
+  - header:
+      type: h2
+      text: Gateway API Support
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              Kong is proud to be a driving force behind the Kubernetes Gateway API standard. With multiple contributors in maintainer and reviewer roles, Kong is all-in on Gateway API as the future of Kubernetes networking.
+
+              {{ site.kic_product_name }} was the first submitted conformance report, and is 100% compliant with the core conformance tests, and many other additional extended tests. Kong has implemented the Gateway API resources as first-class citizens, converting them directly in to {{ site.base_gateway }} configuration rather than using intermediate CRDs. This makes the Gateway API CRDs a native language for {{ site.kic_product_name }}.
+          - type: button
+            config:
+              text: Learn More &raquo;
+              url: /kubernetes-ingress-controller/gateway-api/
+              align: end
+
+  - header:
+      type: h3
+      text: "Deployment Topologies"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/mesh.svg
+            title: Gateway Discovery
+            description: |
+              Kong's recommended deployment topology. Use one {{ site.kic_product_name }} instance to configure multiple {{ site.base_gateway }} instances
+            featured: true
+            cta:
+              url: /kubernetes-ingress-controller/deployment-topologies/gateway-discovery/
+
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/database.svg
+            title: DB-Backed
+            description: |
+              Use {{ site.kic_product_name }} to configure a {{ site.base_gateway }} Control Plane that is attached to a PostgreSQL database.
+            cta:
+              url: /kubernetes-ingress-controller/deployment-topologies/db-backed/
+
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/self-hosted.svg
+            title:
+            description: |
+              Deploy {{ site.kic_product_name }} and {{ site.base_gateway }} as containers within the same Pod. This topology is deprecated.
+            cta:
+              url: /kubernetes-ingress-controller/deployment-topologies/sidecar/
+
+  - columns:
+    - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Common Use Cases"
+            blocks:
+              - type: text
+                text: |
+                  Many {{ site.kic_product_name }} users have the same questions when adding an ingress controller to their cluster:
+
+                  * How do I expose my service on a specific path?
+                  * How do I protect the service with rate limiting?
+                  * How do I cache responses for a period of time to reduce load?
+                  * How do I add authentication to my service?
+
+                  Follow our [getting started guide](/kubernetes-ingress-controller/install/) which takes you through all of these in under 10 minutes, step-by-step. Each page contains copy/paste instructions, and links to additional documentation if you want to learn more.
+    - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Troubleshooting"
+            blocks:
+              - type: text
+                text: |
+                  If {{ site.kic_product_name }} is not working for you the following pages may help:
+
+                  * [Troubleshooting](/index/kubernetes-ingress-controller/#troubleshooting): Common issues that people encounter when running {{ site.kic_product_name }}.
+                  * [FAQ](#TODO): Specific questions about routing behavior, plugin compatibility and more.
+                  * [Feature Gates](#TODO): If something isn't working as expected, ensure that you have the correct feature gates enabled
+                  * [Create a GitHub issue](https://github.com/Kong/kubernetes-ingress-controller/issues/new/choose): Report a bug or make a feature request for {{ site.kic_product_name }}.
+                  * [Join the Kong Slack community](https://konghq.com/community#64fe8580b1a2f3c3804230f1): Get help from the team
+
+
+  - header:
+      type: h3
+      text: "Supported Entities"
+    columns:
+    - blocks:
+      - type: entity_card
+        config:
+          entity: service
+          additional_url: "?tab=kic#set-up-a-gateway-service"
+    - blocks:
+      - type: entity_card
+        config:
+          entity: route
+          additional_url: "?tab=kic#set-up-a-route"
+    - blocks:
+      - type: entity_card
+        config:
+          entity: consumer
+          additional_url: "?tab=kic#set-up-a-consumer"
+    - blocks:
+      - type: entity_card
+        config:
+          entity: consumer-group
+          additional_url: "?tab=kic#set-up-a-consumer-group"
+  - columns:
+    - blocks:
+      - type: entity_card
+        config:
+          entity: plugin
+          additional_url: "?tab=kic#set-up-a-plugin"
+    - blocks:
+      - type: entity_card
+        config:
+          entity: certificate
+          additional_url: "?tab=kic#set-up-a-certificate"
+    - blocks:
+      - type: entity_card
+        config:
+          entity: ca_certificate
+          additional_url: "?tab=kic#set-up-a-ca-certificate"
+    - blocks:
+      - type: entity_card
+        config:
+          entity: vault
+          additional_url: "?tab=kic#set-up-a-vault"

@@ -8,12 +8,6 @@
     </div>
 {% endifhascontent %}
 
-{% if page.all_docs_indices and page.all_docs_indices != empty  %}
-<div class="flex flex-col rounded-md p-5 gap-5 bg-secondary shadow-primary w-full">
-{% include_cached info_box/sections/all_docs_indices.html all_docs_indices=page.all_docs_indices %}
-</div>
-{% endif %}
-
 {% ifhascontent info_box %}
 <div class="flex flex-col rounded-md p-5 gap-5 bg-secondary shadow-primary w-full">
 {% contentblock info_box %}

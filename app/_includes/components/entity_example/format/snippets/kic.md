@@ -10,8 +10,8 @@ echo "
 {% endif %}
 
 {% if include.presenter.entity_type == "plugin" and include.presenter.foreign_keys.size > 0 %}
+{% unless include.presenter.skip_annotate %}
 Next, apply the `KongPlugin` resource by annotating the {{ include.presenter.targets }}:
-
 
 {% if include.presenter.foreign_keys[0] != "Route" %}
 ```bash
@@ -39,5 +39,6 @@ kubectl annotate -n kong ingress {{ include.presenter.foreign_key_names['Route']
 {% endnavtab %}
 {% endnavtabs %}
 {% endif %}
+{% endunless %}
 
 {% endif %}

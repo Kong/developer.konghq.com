@@ -1,0 +1,23 @@
+description: 'Expose an OpenAPI spec of an auth-protected upstream service fronted by the {{site.base_gateway}}.'
+
+title: 'Expose spec'
+
+weight: 900
+
+requirements:
+  - "The Kong Spec Expose plugin is [installed](/plugins/kong-spec-expose/#install-the-kong-spec-expose-plugin)."
+variables:
+  spec:
+    value: $SPEC_URL
+    description: |
+      The spec to allow access to. 
+      For example, `https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v2.0/json/petstore.json`.
+
+config:
+  spec_url: ${spec}
+
+tools:
+  - deck
+  - admin-api
+  - kic
+  - terraform

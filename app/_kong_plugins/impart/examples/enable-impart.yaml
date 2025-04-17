@@ -1,0 +1,24 @@
+description: 'Enable the Impart plugin.'
+
+title: 'Enable Impart'
+
+weight: 900
+
+requirements:
+  - "The Impart plugin is [installed](/plugins/impart/#install-the-impart-plugin)."
+  - "You have an Impart Inspector installed. Navigate to the Impart console for [step-by-step instructions](https://console.impartsecurity.net/orgs/_/integrations?q=kong)."
+
+variables:
+  rpc-addr:
+    value: $INSPECTOR_RPC_ADDRESS
+    description: Socket to communicate with the Impart inspector. For example, `/tmp/impart.sock`.
+
+config:
+ inspector_rpc_addr: ${rpc-addr}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

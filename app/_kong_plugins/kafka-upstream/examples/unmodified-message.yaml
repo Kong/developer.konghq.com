@@ -1,0 +1,33 @@
+description: 'You can return the message argument as the return value, so that the function makes no modifications to the default message.'
+
+title: 'Unmodified message'
+
+weight: 900
+
+requirements: 
+ - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running"
+ - "[Create a Kafka topic](https://kafka.apache.org/quickstart#quickstart_createtopic)"
+
+variables: 
+  topic:
+    description: 'The name of your Kafka topic'
+    value: $KAFKA_TOPIC
+
+config:
+  topic: ${topic} 
+  bootstrap_servers:
+    - host: localhost
+      port: 9092
+  forward_method: true
+  forward_uri: true
+  forward_headers: true
+  forward_body: true
+  message_by_lua_functions:
+    - 'return function(message) return message end'
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

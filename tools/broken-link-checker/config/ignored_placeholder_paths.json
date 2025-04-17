@@ -1,16 +1,5 @@
 [
-    "/dev-portal/",
-    "/analytics/",
-    "/org-management/",
-    "/service-catalog/",
-    "/audit/",
-    "/mesh/install/",
-    "/kic/",
-    "/kic/install/",
-    "/gateway/install/",
-    "/gateway/enterprise/",
     "/tools/",
     "/api-ops/",
-    "/terraform/",
-    "/mesh/"
+    "/terraform/"
 ]

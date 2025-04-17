@@ -114,7 +114,7 @@ Removed:
 * Added the `session_redis_username` and `session_redis_password` configuration
 parameters.
 
-    {:.important}
+    {:.warning}
     > These parameters replace the `session_redis_auth` field, which is
     now **deprecated** and planned to be removed in 3.x.x.
 
@@ -135,7 +135,7 @@ referenceable, which means they can be securely stored as
   fields inside `openid_connect_jwks.previous[...].` and `openid_connect_jwks.keys[...]`
   will be marked as encrypted.
 
-  {:.important}
+  {:.warning}
   > There's a bug in {{site.base_gateway}} that prevents keyring encryption
   from working on deeply nested fields, so the `encrypted=true` setting does not
   currently have any effect on the nested fields in this plugin.

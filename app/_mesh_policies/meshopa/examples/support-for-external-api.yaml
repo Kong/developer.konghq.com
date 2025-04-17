@@ -1,0 +1,26 @@
+title: 'Support-for-external-API'
+description: 'The `agentConfig` field lets you define a custom configuration that points to an external management server'
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshOPA
+  mesh: default
+  name: mopa-1
+  spec:
+    targetRef:
+      kind: Mesh
+    default:
+      agentConfig:
+        inlineString: | # one of: inlineString, secret
+          services:
+            acmecorp:
+              url: https://example.com/control-plane-api/v1
+              credentials:
+                bearer:
+                  token: "bGFza2RqZmxha3NkamZsa2Fqc2Rsa2ZqYWtsc2RqZmtramRmYWxkc2tm"
+          discovery:
+            name: example
+            resource: /configuration/example/discovery

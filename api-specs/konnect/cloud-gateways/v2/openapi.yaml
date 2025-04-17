@@ -1357,7 +1357,7 @@ components:
         The current state of the Transit Gateway. Possible values:
         - `created` - The attachment has been created but is not attached to transit gateway.
         - `initializing` - The attachment is in the process of being initialized and is setting up necessary resources.
-        - `pending` - acceptance The attachment request is awaiting acceptance in customer VPC.
+        - `pending-acceptance` The attachment request is awaiting acceptance in customer VPC.
         - `ready` - The transit gateway attachment is fully operational and can route traffic as configured.
         - `terminating` - The attachment is in the process of being deleted and is no longer accepting new traffic.
         - `terminated` - The attachment has been fully deleted and is no longer available.
@@ -1617,6 +1617,7 @@ components:
         - name
         - transit_gateway_attachment_config
         - id
+        - dns_config
         - state
         - entity_version
         - created_at
@@ -2288,7 +2289,7 @@ components:
       description: Filters on the given string field value by exact match inequality.
       type: object
       properties:
-        oeq:
+        neq:
           type: string
       additionalProperties: false
       required:
@@ -2296,7 +2297,7 @@ components:
       title: StringFieldNEQFilter
       x-examples:
         example-1:
-          oeq: not-this-value
+          neq: not-this-value
     StringFieldOEQFilter:
       description: Filters on the given comma separated string by one or more exact match.
       type: object

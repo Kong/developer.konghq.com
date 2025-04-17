@@ -52,7 +52,7 @@ rows:
               {{site.kic_product_name}} allows you to run {{site.base_gateway}} as a Kubernetes Ingress to handle inbound requests for a Kubernetes cluster.
             cta:
               text: 
-              url: /kic/
+              url: /kubernetes-ingress-controller/
               align: end
       - blocks:
         - type: card

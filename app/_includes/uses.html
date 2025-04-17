@@ -15,7 +15,11 @@
     {% if include.products %}
         {% for product in include.products %}
         {% assign product_info = site.data.products[product] %}
-            {% capture url %}/{{ product }}/{% endcapture %}
+            {% if product == 'kic' %}
+                {% capture url %}/kubernetes-ingress-controller/{% endcapture %}
+            {% else %}
+                {% capture url %}/{{ product }}/{% endcapture %}
+            {% endif %}
             {% include badge.html url=url text=product_info.name %}
         {% endfor %}
     {% endif %}
@@ -32,7 +36,11 @@
         {% for tool in tools %}
         {% assign tool_info = site.data.tools[tool] %}
         {% if tool_info %}
-            {% capture url %}/{{ tool }}/{% endcapture %}
+            {% if tool == 'kic' %}
+                {% capture url %}/kubernetes-ingress-controller/{% endcapture %}
+            {% else %}
+                {% capture url %}/{{ tool }}/{% endcapture %}
+            {% endif %}
             {% include badge.html url=url text=tool_info.name %}
         {% endif %}
         {% endfor %}

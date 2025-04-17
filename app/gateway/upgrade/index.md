@@ -51,7 +51,7 @@ A {{site.base_gateway}} upgrade requires two phases of work: preparing for the u
 
 1. Review version compatibility between your platform version and the version of {{site.base_gateway}} that you are upgrading to:
     * [OS version](/gateway/version-support-policy/)
-    * [Kubernetes version and Helm prerequisites](/kubernetes-ingress-controller/version-support-policy/)
+    * [Kubernetes version and Helm prerequisites](/kubernetes-ingress-controller/support/)
     * [Database and dependency versions](/gateway/third-party-support/)
 1. Determine your [upgrade path](#preparation-choose-an-upgrade-path) based on the release you're starting from and the release you're upgrading to.
 1. [Back up](#preparation-choose-a-backup-strategy) your database or your declarative configuration files.
@@ -223,7 +223,7 @@ Until the upgrade is completed:
 * Review the compatibility between the new version Y and your existing platform. 
 Factors may include, but are not limited to:
   * [OS version](/gateway/version-support-policy/#supported-versions)
-  * [Kubernetes version and Helm prerequisites](/kubernetes-ingress-controller/version-support-policy/)
+  * [Kubernetes version and Helm prerequisites](/kubernetes-ingress-controller/support/)
   * [Hardware resources](/gateway/performance/resource-sizing-guidelines/)
   * [Database and dependency versions](/gateway/third-party-support/)
 * Carefully review all [changelogs](/gateway/changelog/) starting from your current version X,

@@ -1,0 +1,31 @@
+title: 'Health check from web to backend service'
+description: 'Health check from web to backend service'
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshHealthCheck
+  name: web-to-backend-check
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: web
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+          namespace: kuma-demo
+          sectionName: http
+          _port: 3001
+        default:
+          interval: 10s
+          timeout: 2s
+          unhealthyThreshold: 3
+          healthyThreshold: 1
+          http:
+            path: /health
+            expectedStatuses: [200, 201]

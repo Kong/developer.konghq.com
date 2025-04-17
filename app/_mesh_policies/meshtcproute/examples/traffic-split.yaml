@@ -1,0 +1,38 @@
+title: 'Traffic split'
+description: 'Use MeshHTTPRoute to split TCP traffic between different MeshServices.'
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshTCPRoute
+  name: tcp-route-1
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+          namespace: kuma-demo
+          _port: 3001
+          sectionName: http
+        rules:
+          - default:
+              backendRefs:
+                - kind: MeshService
+                  name: backend
+                  namespace: kuma-demo
+                  port: 3001
+                  _version: v0
+                  weight: 90
+                - kind: MeshService
+                  name: backend
+                  namespace: kuma-demo
+                  port: 3001
+                  _version: v1
+                  weight: 10

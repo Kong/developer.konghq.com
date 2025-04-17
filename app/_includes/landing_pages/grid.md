@@ -38,7 +38,7 @@
                   {% for entry in column.blocks %}
                       {% assign include_path = "landing_pages/" | append: entry.type | append : ".md" %}
                       {% capture include_template %}{% include {{ include_path }} type=entry.type config=entry.config tab_group=entry.tab_group %}{% endcapture %}
-                      {{ include_template | markdownify }}
+                      {{ include_template }}
                   {% endfor %}
                 </div>
               {% endfor %}

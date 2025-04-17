@@ -120,6 +120,11 @@
     @apply font-bold text-base tracking-[-.01em];
   }
 
+  main h4:not(.card h4) {
+    @apply pt-3;
+  }
+
+
   table {
     @apply bg-secondary shadow-primary border-none rounded-lg text-sm;
 
@@ -207,6 +212,14 @@
 
   code span {
     @apply text-white;
+  }
+
+  h3[id^="includes-kumahq-kuma-"][id$="-changelog"] {
+    @apply flex items-center gap-1;
+
+    > a {
+      @apply w-auto;
+    }
   }
 }
 
@@ -460,6 +473,10 @@
 
   .card__bordered {
     @apply border border-primary/5 hover:border hover:border-brand-saturated/40 hover:shadow-hover-card;
+  }
+
+  .card__featured {
+    @apply border-brand-saturated/80 hover:border-brand-saturated border-2 relative overflow-hidden hover:shadow-hover-card;
   }
 
   .kong-conf-param h3 > a {

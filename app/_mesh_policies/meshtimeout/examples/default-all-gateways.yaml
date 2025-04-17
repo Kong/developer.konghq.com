@@ -1,0 +1,29 @@
+title: "Default configuration"
+description: "This configuration will be applied on inbounds and outbounds of all gateways"
+
+weight: 900
+
+
+config:
+  type: MeshTimeout
+  name: mesh-gateways-timeout-all-default
+  mesh: default
+  spec:
+    targetRef:
+      kind: Mesh
+      proxyTypes: ["Gateway"]
+    from:
+      - targetRef:
+          kind: Mesh
+        default:
+          idleTimeout: 5m
+          http:
+            streamIdleTimeout: 5s
+            requestHeadersTimeout: 500ms
+    to:
+      - targetRef:
+          kind: Mesh
+        default:
+          idleTimeout: 1h
+          http:
+            streamIdleTimeout: 5s

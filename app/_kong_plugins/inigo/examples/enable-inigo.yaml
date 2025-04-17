@@ -1,0 +1,25 @@
+description: 'Enable the Inigo plugin.'
+
+title: 'Enable Inigo'
+
+weight: 900
+
+requirements:
+  - "[Install the Inigo plugin](/plugins/inigo/#install-the-inigo-plugin)."
+  - "Download and copy the [Inigo library](https://github.com/inigolabs/artifacts/releases/latest) into your `kong run` directory. Library file names start with `inigo-`."
+  - "Create a service and service token in [Inigo](https://app.inigo.io). Set the `INIGO_SERVICE_TOKEN` environment variable with the token's value."
+
+variables:
+  token:
+    value: $INIGO_SERVICE_TOKEN
+    description: Your Inigo service token.
+
+config:
+  token: ${token}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

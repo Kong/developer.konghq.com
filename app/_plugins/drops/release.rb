@@ -20,6 +20,10 @@ module Jekyll
         @release_hash['label']
       end
 
+      def label
+        @label ||= @release_hash['label']
+      end
+
       def to_konnect_version
         @release_hash['ee-version'].sub(/^(\d+\.\d+)\.\d+.*$/, '\1.0.0')
       end

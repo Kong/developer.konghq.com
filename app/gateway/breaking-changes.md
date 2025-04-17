@@ -901,7 +901,7 @@ write all other characters without percent-encoding.
 The version number (`_format_version`) of declarative configuration has been bumped to `3.0` for changes on `route.path`.
 Declarative configurations with older versions will be upgraded to `3.0` during migrations.
 
-{:.important}
+{:.warning}
 > **Do not sync (`deck gateway sync`) declarative configuration files from 2.8 or earlier to 3.0.**
 Old configuration files will overwrite the configuration and create compatibility issues.
 To grab the updated configuration, `deck gateway dump` the 3.0 file after migrations are completed.
@@ -992,7 +992,7 @@ This ensures that all instances are using the new {{site.base_gateway}} package 
 
 #### Hybrid mode considerations
 
-{:.important}
+{:.warning}
 > **Important:** If you are currently running in [hybrid mode](/gateway/deployment-topologies/),
 upgrade the control plane first, and then the data planes.
 

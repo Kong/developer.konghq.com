@@ -1,0 +1,24 @@
+description: 'Enable the DataDome plugin.'
+
+title: 'Enable DataDome'
+
+weight: 900
+
+requirements:
+  - "The DataDome plugin is [installed](/plugins/datadome/#install-the-datadome-plugin)."
+  - "You have a DataDome server-side key, which is available inside your dashboard in the [Integrations](https://app.datadome.co/dashboard/management/integrations) section."
+
+variables:
+  server-side-key:
+    value: $SERVER_SIDE_KEY
+    description: Your DataDome server-side key.
+
+config:
+  datadome_server_side_key: ${server-side-key}
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

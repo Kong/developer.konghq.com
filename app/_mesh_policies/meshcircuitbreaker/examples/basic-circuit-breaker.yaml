@@ -1,0 +1,29 @@
+title: 'Basic circuit breaker for outbound traffic'
+description: 'Basic circuit breaker for outbound traffic from web, to backend service'
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshCircuitBreaker
+  name: web-to-backend-circuit-breaker
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: web
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+          namespace: kuma-demo
+          sectionName: http
+          _port: 8080
+        default:
+          connectionLimits:
+            maxConnections: 2
+            maxPendingRequests: 8
+            maxRetries: 2
+            maxRequests: 2

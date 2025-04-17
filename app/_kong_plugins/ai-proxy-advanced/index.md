@@ -70,7 +70,7 @@ This plugin does not support fallback over targets with different formats. You c
 * OpenAI models and Mistral models with the OpenAI format
 * Mistral models with the OLLAMA format and Llama models with the OLLAMA format
 
-{:.note}
+{:.info}
 > Some errors, such as client errors, result in a failure and don't failover to another target.
 
 ## Request and response formats

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module IndentFilter
-  def indent(input, spaces)
+  def indent(input, spaces=3)
     input
       .gsub("\n</code>", '</code>')
       .split("\n")
