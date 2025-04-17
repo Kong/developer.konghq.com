@@ -224,7 +224,8 @@ app/_how-tos/authenticate-consumers-with-session-and-key-auth.md:
   - app/_hub/kong-inc/session/overview/_index.md
 app/_how-tos/configure-oidc-with-session-auth.md:
   - app/_hub/kong-inc/openid-connect/how-to/authentication/_session.md
-
+app/_how-tos/configure-oidc-with-client-credentials.md:
+  - app/_hub/kong-inc/openid-connect/how-to/authentication/_client-credentials.md
 app/_how-tos/plugin-dev-add-plugin-configuration.md:
   - app/_src/gateway/plugin-development/get-started/config.md
 app/_how-tos/plugin-dev-add-plugin-testing.md:
