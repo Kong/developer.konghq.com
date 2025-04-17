@@ -90,7 +90,7 @@ Starting with {{site.mesh_product_name}} 2.8.0, {{site.mesh_product_name}} produ
 
 See the following documentation to learn more:
 
-* [Verify build provenance for signed {{site.mesh_product_name}} images](/mesh/features/provenance-verification-images/)
+* [Verify build provenance for signed {{site.mesh_product_name}} images](/mesh/provenance-verification-images/)
 
-* [Verify build provenance for signed {{site.mesh_product_name}} binaries](/mesh/features/provenance-verification-binaries/)
+* [Verify build provenance for signed {{site.mesh_product_name}} binaries](/mesh/provenance-verification-binaries/)
 {% endif_version %}

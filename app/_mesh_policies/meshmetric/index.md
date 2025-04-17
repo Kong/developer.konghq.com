@@ -441,9 +441,9 @@ Please upload the certificate and the key to the machine, and then define the fo
 {% endtab %}
 {% endtabs %}
 
-##### activeMTLSBackend
+##### `activeMTLSBackend`
 
-We no longer support activeMTLSBackend, if you need to encrypt and authorize the metrics use [Secure metrics with TLS](#secure-metrics-with-tls) with a combination of [one of the authorization methods](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config).
+We no longer support `activeMTLSBackend`, if you need to encrypt and authorize the metrics use [Secure metrics with TLS](#secure-metrics-with-tls) with a combination of [one of the authorization methods](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config).
 
 ##### Running multiple Prometheus deployments
 
@@ -590,7 +590,7 @@ This configuration tells {{site.mesh_product_name}} data plane proxy to push met
 Dataplane Proxy will scrape metrics from Envoy and other [applications](/docs/{{ page.release }}/policies/meshmetric/#applications) in a Pod/VM.
 and push them to configured OpenTelemetry collector.
 
-When you configure application scraping make sure to specify `application.name` to utilize [OpenTelemetry scoping](https://opentelemetry.io/docs/concepts/instrumentation-scope/) 
+When you configure application scraping make sure to specify `application.name` to use [OpenTelemetry scoping](https://opentelemetry.io/docs/concepts/instrumentation-scope/) 
 
 ##### Limitations
 
@@ -619,7 +619,7 @@ This configuration tells {{site.mesh_product_name}} Dataplane Proxy to push metr
 Dataplane Proxy will scrape metrics from Envoy and other [applications](/docs/{{ page.release }}/policies/meshmetric/#applications) in a Pod/VM
 and push them to configured OpenTelemetry collector, by default every **60 seconds** (use `refreshInterval` to change it).
 
-When you configure application scraping make sure to specify `application.name` to utilize [OpenTelemetry scoping](https://opentelemetry.io/docs/concepts/instrumentation-scope/).
+When you configure application scraping make sure to specify `application.name` to use [OpenTelemetry scoping](https://opentelemetry.io/docs/concepts/instrumentation-scope/).
 
 #### Pushing metrics from application to OpenTelemetry collector directly
 

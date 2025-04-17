@@ -37,7 +37,7 @@ proxy will further extend the [baseEjectionTime](#outlier-detection) multiplied 
 the fourth ejection will be lasting for a period of time of `4 * baseEjectionTime`.
 
 This policy provides **passive** checks.
-If you want to configure **active** checks, please utilize the [MeshHealthCheck](/docs/{{ page.release }}/policies/meshhealthcheck)
+If you want to configure **active** checks, please use the [MeshHealthCheck](/docs/{{ page.release }}/policies/meshhealthcheck)
 policy.
 Data plane proxies with **passive** checks won't explicitly send requests to other data plane proxies to determine if
 target proxies are healthy or not.
@@ -197,7 +197,7 @@ Outlier detection can be configured for [HTTP, TCP or gRPC](/docs/{{ page.releas
 For **gRPC** requests, the outlier detection will use the HTTP status mapped from the `grpc-status` response header.
 {% endwarning %}
 
-- **`disabled`** - (optional) When set to true, outlierDetection configuration won't take any effect.
+- **`disabled`** - (optional) When set to true, `outlierDetection` configuration won't take any effect.
 - **`interval`** - (optional) The time interval between ejection analysis sweeps. This can result in both new ejections
   and hosts being returned to service.
 - **`baseEjectionTime`** - (optional) The base time that a host is ejected for. The real time is equal to the base time
@@ -465,8 +465,8 @@ Locally originated errors and externally originated (transaction) errors are cou
 **Configuration**
 
 - **`successRate.minimumHosts`** - The number of hosts in an Envoy Cluster that must have enough request volume to detect success rate outliers. If the number of hosts is less than this setting, outlier detection via success rate statistics is not performed for any host in the Cluster.
-- **`successRate.requestVolume`** - The minimum number of total requests that must be collected in one interval (as defined by the interval duration configured in outlierDetection section) to include this host in success rate based outlier detection. If the volume is lower than this setting, outlier detection via success rate statistics is not performed for that host.
-- **`successRate.standardDeviationFactor`** - This factor is used to determine the ejection threshold for success rate outlier ejection. The ejection threshold is the difference between the mean success rate, and the product of this factor and the standard deviation of the mean success rate: mean - (standard_deviation *success_rate_standard_deviation_factor). Either int or decimal represented as string.
+- **`successRate.requestVolume`** - The minimum number of total requests that must be collected in one interval (as defined by the interval duration configured in `outlierDetection` section) to include this host in success rate based outlier detection. If the volume is lower than this setting, outlier detection via success rate statistics is not performed for that host.
+- **`successRate.standardDeviationFactor`** - This factor is used to determine the ejection threshold for success rate outlier ejection. The ejection threshold is the difference between the mean success rate, and the product of this factor and the standard deviation of the mean success rate: mean - (`standard_deviation` `*success_rate_standard_deviation_factor`). Either int or decimal represented as string.
 
 **Example**
 

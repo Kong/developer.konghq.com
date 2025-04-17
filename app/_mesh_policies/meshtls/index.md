@@ -46,7 +46,7 @@ The following describes the default configuration settings of the `MeshTLS` poli
 - **`mode`**: Defines the mTLS mode - `Permissive` mode encrypts outbound connections the same way as `Strict` mode, but inbound connections on the server-side accept both TLS and plaintext. Allowed values: `Strict`, `Permissive`.
 
 {% tip %}
-Setting the TLS version and ciphers on both the client and server makes it harder to misconfigure.
+Setting the TLS version and ciphers on both the client and server makes it harder to configure incorrectly.
 If you want to try out a specific version/cipher combination, we recommend creating a [temporary mesh](/docs/{{ page.release }}/production/mesh/#usage), deploying two applications within it, and testing whether communication is working.
 If you have a use case for configuring a different set of allowed versions/ciphers on different workloads, we'd love to hear about it.
 In that case, please open an [issue](https://github.com/kumahq/kuma/issues).

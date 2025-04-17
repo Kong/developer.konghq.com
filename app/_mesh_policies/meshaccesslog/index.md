@@ -417,7 +417,7 @@ backends:
 
 #### OpenTelemetry
 
-An OpenTelemetry (OTel) backend sends data to an OpenTelemetry server.
+An OpenTelemetry (OTEL) backend sends data to an OpenTelemetry server.
 You can configure an OpenTelemetry backend with an endpoint, [attributes](https://opentelemetry.io/docs/specs/otel/logs/data-model/#field-attributes) (which contain additional information about the log) and [body](https://opentelemetry.io/docs/specs/otel/logs/data-model/#field-body) (can be a string message, including multi-line, or it can be a structured data).
 Attributes and endpoints can use placeholders described in the [format section](#format).
 

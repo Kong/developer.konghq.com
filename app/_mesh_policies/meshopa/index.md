@@ -53,7 +53,6 @@ When the `MeshOPA` policy is applied, the control plane configures the following
 {% endif_version %}
 
 
-To learn more about the information in this table, see the [matching docs](/mesh/{{page.release}}/policies/targetref).
 
 ## Configuration
 

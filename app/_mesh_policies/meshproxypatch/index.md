@@ -127,7 +127,7 @@ Available operations:
 Available matchers:
 * `name` - name of the Cluster.
 * `origin` - origin of the Cluster.
-
+<!-- vale off -->
 {% tabs %}
 {% tab Kubernetes %}
 ```yaml
@@ -228,7 +228,7 @@ spec:
 ```
 {% endtab %}
 {% endtabs %}
-
+<!-- vale off -->
 #### Listener
 
 Modifications that are applied on [Listeners](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/listener/v3/listener.proto#config-listener-v3-listener) resources.
@@ -927,6 +927,6 @@ All modifications from `appendModification` list are always merged.
 For example, if there is a policy with `targetRef.kind: Mesh` and second policy with `targetRef.kind: MeshService` that matches a data plane proxy,
 all modifications from both policies will be applied.
 
-## JSONPatch
+## JSON Patch
 
-If you use JSONPatch, remember to always use _camelCase_ instead of _snake_case_ in `path` parameter even though you see _snake_case_ in Envoy Config Dump.
+If you use JSON Patch, remember to always use `camelCase` instead of `snake_case` in `path` parameter even though you see _snake_case_ in Envoy Config Dump.
