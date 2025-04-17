@@ -51,7 +51,7 @@ description: Configure the OpenID Connect plugin together with Consumers to map 
 tldr:
   q: How do I map Consumers to IdP users with OpenID Connect?
   a: |
-    Use the OpenID Connect plugin with [Consumers](/gateway/entities/consumer/) for authorization and dynamically map claim values to Consumers. This allows access only to IdP users that have a matching Consumer in {{site.base_gateway}}, giving you more control over which clients have access to {{site.base_gateway}}.
+    Use the OpenID Connect plugin with [Consumers](/gateway/entities/consumer/) for authorization and dynamically map claim values to Consumers. This only allows IdP users that have a matching Consumer in {{site.base_gateway}} to access your Services, giving you more control over which clients have access to {{site.base_gateway}}.
   
     Set up any type of authentication (the password grant, in this guide) and enable Consumer mapping by setting a claim to map to.
 
@@ -143,7 +143,7 @@ entities:
 
 At this point you have created a Gateway Service, routed traffic to the Service, enabled the OpenID Connect plugin, and created a Consumer that maps to a `preferred_username` of an existing user.
 
-Now, your configured Consumer can access the `example-route` Route:
+Now, your configured Consumer can access the `example-route` Route by using their username and password:
 
 {% validation request-check %}
 url: /anything
