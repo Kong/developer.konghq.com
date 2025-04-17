@@ -220,6 +220,8 @@ app/_how-tos/sign-gateway-audit-logs.md:
   - app/_src/gateway/kong-enterprise/audit-log.md
 app/_how-tos/validate-gateway-audit-log-signatures.md:
   - app/_src/gateway/kong-enterprise/audit-log.md
+app/_how-tos/authenticate-consumers-with-session-and-key-auth.md:
+  - app/_hub/kong-inc/session/overview/_index.md
 app/_how-tos/configure-oidc-with-session-auth.md:
   - app/_hub/kong-inc/openid-connect/how-to/authentication/_session.md
 
@@ -322,6 +324,10 @@ app/_how-tos/kic-plugin-authentication.md:
   - app/_src/kubernetes-ingress-controller/plugins/authentication.md
 
 # plugins
+app/_kong_plugins/session/changelog.md:
+  - app/_hub/kong-inc/session/_changelog.md
+app/_kong_plugins/session/index.md:
+  - app/_hub/kong-inc/session/overview/_index.md
 app/_kong_plugins/zipkin/changelog.md:
   - app/_hub/kong-inc/zipkin/_changelog.md
 app/_kong_plugins/zipkin/index.md:
