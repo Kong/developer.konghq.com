@@ -71,7 +71,7 @@ If your custom plugin includes new entities, you need to create a `daos.lua` fil
 As a `ConfigMap` does not support nested directories, you need to create another `ConfigMap` containing the `migrations` directory:
 
 ```bash
-$ kubectl create configmap kong-plugin-myheader-migrations --from-file=myheader/migrations -n kong
+kubectl create configmap kong-plugin-myheader-migrations --from-file=myheader/migrations -n kong
 ```
 
 ## Deploy your custom plugin
