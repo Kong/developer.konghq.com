@@ -104,7 +104,7 @@ In this example:
 
 <!-- include_cached plugins/oidc/client-auth.md -->
 
-## 2. Retrieve the bearer token using instrospection
+## 2. Retrieve the bearer token using introspection
 
 Check that you can recover the token by requesting the Service with the basic authentication credentials created in the [prerequisites](#prerequisites), and export it to an environment variable:
 
