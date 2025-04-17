@@ -3,7 +3,7 @@ title: MeshTLS
 name: MeshTLSes
 products:
     - mesh
-description: "This policy enables Kong Mesh to configure TLS mode, ciphers and version. Backends and default mode values are taken from the Mesh object."
+description: "This policy enables {{site.mesh_product_name}} to configure TLS mode, ciphers and version. Backends and default mode values are taken from the Mesh object."
 content_type: plugin
 type: policy
 min_version:

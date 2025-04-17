@@ -238,7 +238,7 @@ gojira
 Golang
 Goroutine
 Goroutine
-gpbs
+gbps
 Grafana
 Grafana
 grpc
@@ -437,6 +437,7 @@ mebibytes
 Memcached
 Memcached
 meshopa
+meshopas
 meshpassthrough
 meshpassthroughs
 metainfo
