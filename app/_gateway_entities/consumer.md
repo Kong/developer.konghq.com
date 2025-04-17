@@ -141,6 +141,10 @@ Common use cases for Consumers:
 | Rate limiting | Rate limit specific Consumers based on tiers. |
 | Transformation | Add or remove values from response bodies based on the Consumer. |
 
+## Centrally-managed Consumers 
+
+<!-- @todo: migrate from Konnect docs: https://docs.konghq.com/konnect/centralized-consumer-management/ -->
+
 ## Schema
 
 {% entity_schema %}

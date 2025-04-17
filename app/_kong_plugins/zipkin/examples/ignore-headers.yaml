@@ -1,0 +1,31 @@
+description: |
+  Configure the Zipkin plugin to ignore incoming headers:
+  - No tracing context extraction
+  - Injects the tracing context using the formats: `b3`, `datadog` 
+  Some header formats specify different trace and span ID sizes. When the tracing context is extracted and injected from/to headers with different ID sizes, the IDs are truncated or left-padded to align with the target format.
+
+
+title: 'Ignore incoming headers'
+
+weight: 900
+
+# requirements: <- not required
+# - "some req"
+
+# variables: <- not required
+#   my-region:
+#     description: ''
+#     value: us
+
+config:
+  propagation:	
+    extract: [ ]
+    inject: [ b3, datadog ]
+    default_format: "w3c"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

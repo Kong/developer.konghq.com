@@ -1,8 +1,8 @@
-description: 'This example disables using a key in a query parameter.'
+description: 'This example disables using a key in a query parameter for the Key Auth Encrypted plugin.'
 
 title: 'Disable a key location'
 
-weight: 900
+weight: 901
 
 requirements: 
  - "Before configuring this plugin, you must [enable {{site.base_gateway}}'s encryption Keyring](/gateway/keyring/#enable-keyring). "

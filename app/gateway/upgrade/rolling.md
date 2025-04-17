@@ -87,7 +87,7 @@ _New nodes are gradually deployed and pointed to the `kong.yml` file, while traf
 
 ## Upgrade using the rolling method
 
-{:.note}
+{:.info}
 > The following steps are intended as a guideline.
 The exact execution of these steps will vary depending on your environment. 
 

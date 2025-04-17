@@ -429,7 +429,7 @@ Depending on the field type, only certain content types and operators are suppor
 | `Expression` | `Regex`: `&&`, `||` |
 
 
-{:.note}
+{:.info}
 > **Notes:** 
   * The `~` operator is described as supporting both `String ~ String` and `String ~ Regex`.
   In reality, `Regex` constant values can only be written as `String` on the right hand side.

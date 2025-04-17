@@ -86,7 +86,8 @@ brotli
 burstable
 callees
 CAs
-CAs
+callout
+callouts
 certificate_admin
 charset
 chatbot

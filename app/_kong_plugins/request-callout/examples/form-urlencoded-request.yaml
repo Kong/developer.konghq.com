@@ -1,0 +1,30 @@
+description: |
+  Configure the plugin to send a request in the `x-www-form-urlencoded` format.
+
+  In this example, we're sending a form containing credentials, including a client secret using a [Vault](/gateway/entities/vault/) reference.
+  
+
+title: Send a request containing form data
+
+weight: 900
+
+variables: 
+  url:
+    description: The API endpoint to use to request a token.
+    value: $API_URL
+
+config:
+  callouts:
+  - name: auth
+    request:
+      url: ${url}
+      by_lua: >-
+        kong.ctx.shared.callouts.auth.request.params.body =
+        ngx.encode_args({grant_type="client_credentials",client_id="myclientid",scope="scope",client_secret=kong.vault.get("{vault://env/TEST_SECRET}")})
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

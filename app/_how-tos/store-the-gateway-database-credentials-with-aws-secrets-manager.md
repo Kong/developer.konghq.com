@@ -126,7 +126,8 @@ docker run --rm \
  -e KONG_PG_PASSWORD \
  kong/kong-gateway:latest kong migrations bootstrap
 ```
-{:.note}
+
+{:.info}
 > Note: `kong migrations` does not support secrets managements, so this step passes the database credentials with environment variables.
 
 ## 8. Start {{site.base_gateway}}

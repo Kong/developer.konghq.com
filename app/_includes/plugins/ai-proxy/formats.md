@@ -20,7 +20,7 @@ The following upstream URL patterns are used:
 
 {% include plugins/ai-proxy/tables/upstream-urls.html providers=providers upstream=upstream_url %}
 
-{:.important}
+{:.warning}
 > While only the **Llama2** and **Mistral** models are classed as self-hosted, the target URL can be overridden for any of the supported providers.
 > For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same [`{{ upstream_url }}`](./reference/#{{ upstream_url_slug }}) plugin option.
 

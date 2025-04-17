@@ -48,7 +48,7 @@ Once your collection is created, there are several ways to create requests. Clic
 
 In Insomnia, you can configure every part of your request, and you can also add scripts and documentation.
 
-{:.note}
+{:.info}
 > All of these options apply to HTTP, GraphQL, and event stream requests. WebSocket requests have all of these expect for methods and scripts, and gRPC requests have a completely different configuration. <!-- Link to gRPC docs? -->
 
 |Element|Steps|
@@ -66,7 +66,7 @@ In Insomnia, you can configure every part of your request, and you can also add 
 
 You can simply click **Send** to send a request, but you can also click the context menu to see more options.
 
-{:.note}
+{:.info}
 > These options are only available for HTTP and event stream requests.
 
 |Option|Description|

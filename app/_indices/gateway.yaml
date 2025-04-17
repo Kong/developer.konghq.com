@@ -25,6 +25,8 @@ sections:
           - routing
   - title: Kong Manager
     items:
+      - path: /gateway/kong-manager/
+      - path: /gateway/kong-manager/**/*
       - type: how-to
         products:
           - gateway

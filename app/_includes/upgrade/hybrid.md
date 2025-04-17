@@ -87,7 +87,7 @@ From the two diagrams, you can see that DP nodes X remain connected to the curre
 so you can temporarily point DP nodes X to the new CP node Y.
 This lets you pause the upgrade process if needed, or conduct it over a longer period of time.
 
-{:.important}
+{:.warning}
 > This setup is meant to be temporary, to be used only during the upgrade process.
 > We do not recommend running a combination of new versions of CP nodes and old versions of DP nodes in a long-term production deployment.
 

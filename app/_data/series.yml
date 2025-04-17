@@ -1,3 +1,6 @@
 kic-get-started:
   title: Getting Started with KIC
   url: /index/kubernetes-ingress-controller/#get-started
+plugin-dev-get-started:
+  title: Get started with custom plugin development
+  url: /custom-plugins/#get-started

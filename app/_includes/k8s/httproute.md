@@ -74,7 +74,7 @@ spec:
 {% endcapture %}
 
 {% if include.indent %}
-{{ the_code | indent }}
+{{ the_code | indent: include.indent }}
 {% else %}
 {{ the_code }}
 {% endif %}

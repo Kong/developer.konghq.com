@@ -6,6 +6,10 @@ layout: reference
 products:
     - gateway
 
+breadcrumbs:
+  - /gateway/
+  - /gateway/kong-manager/
+
 min_version:
   gateway: '3.4'
 
