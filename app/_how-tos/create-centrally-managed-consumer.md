@@ -47,9 +47,10 @@ cleanup:
 
 ## 1. Create a realm
 
-First, export your Control Plane UUID so we can use it in the request. You can find this under your Control Plane settings in [Gateway Manager](https://cloud.konghq.com/gateway-manager/):
+First, export your Control Plane UUID and [region](/konnect-geos/) (for example, `us`) so we can use it in the request. You can find these under your Control Plane settings in [Gateway Manager](https://cloud.konghq.com/gateway-manager/):
 ```sh
 export KONNECT_CONTROL_PLANE_ID=<control-plane-uuid>
+export DECK_CONTROL_PLANE_REGION=<region>
 ```
 
 Centrally-managed Consumers are assigned to realms instead of Control Planes. Realms exist outside of the Control Plane.
@@ -141,12 +142,15 @@ entities:
         identity_realms:
         - id: ${realm_id}
           scope: realm
+          region: ${region}
         - id: null
           scope: cp
 
 variables:
   realm_id:
     value: $REALM_ID
+  region:
+    value: $CONTROL_PLANE_REGION
 {% endentity_examples %}
 
 `identity_realms` are scoped to the Control Plane by default (`scope: cp`). The order in which you configure the `identity_realms` dictates the priority in which the data plane attempts to authenticate the provided API keys:
@@ -169,7 +173,7 @@ headers:
 status_code: 200
 {% endvalidation %}
 
-Sending the wrong API key:
+When we send the wrong API key, it won't be authorized:
 
 {% validation unauthorized-check %}
 url: /anything
