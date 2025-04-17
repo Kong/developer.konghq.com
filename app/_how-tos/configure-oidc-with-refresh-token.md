@@ -115,7 +115,7 @@ Check that you can recover the refresh token by requesting the Service with the 
 url: /anything
 method: GET
 status_code: 200
-user: "john:doe"
+user: "alex:doe"
 display_headers: true
 {% endvalidation %}
 
@@ -154,6 +154,6 @@ status_code: 200
 display_headers: true
 headers:
   - |
-    Refresh-Token:$(curl --user john:doe http://localhost:8000/anything \
+    Refresh-Token:$(curl --user alex:doe http://localhost:8000/anything \
             | jq -r '.headers."Refresh-Token"')
 {% endvalidation %}

@@ -27,8 +27,10 @@ Section | Settings
 1. In your client, open the **Credentials** tab.
 1. Set **Client Authenticator** to **Client ID and Secret**.
 1. Copy the **Client Secret**.
-1. Switch to the Users menu and add a user. 
+1. Switch to the Users menu and add a user.
 1. Open the user's **Credentials** tab and add a password.
+
+In this guide, we're going to use an example user named `alex` with the password `doe`.
 
 #### Export to environment variables
 Export your client secret, client ID, and issuer URL to environment variables so that you can pass them more securely.

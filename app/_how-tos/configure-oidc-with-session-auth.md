@@ -115,7 +115,7 @@ Request the Service with the basic authentication credentials created in the [pr
 url: /anything
 method: GET
 status_code: 200
-user: "john:doe"
+user: "alex:doe"
 display_headers: true
 cookie_jar: example-user
 {% endvalidation %}
