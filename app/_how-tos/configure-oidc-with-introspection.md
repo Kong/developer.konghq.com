@@ -49,7 +49,7 @@ description: Set up OpenID Connect with introspection auth, which retrieves a be
 
 tldr:
   q: How do I retrieve a token using my identity provider's introspection endpoint?
-  a: Using the OpenID Connect plugin, set up the [introspection auth workflow](/plugins/openid-connect/#password-grant-workflow) to connect to an identity provider (IdP) to retrieve a token from the IdP's introspection endpoint, then use the token to access the upstream service.
+  a: Using the OpenID Connect plugin, set up the [introspection auth workflow](/plugins/openid-connect/#introspection-authentication-workflow) to connect to an identity provider (IdP) to retrieve a token from the IdP's introspection endpoint, then use the token to access the upstream service.
 
 cleanup:
   inline:
