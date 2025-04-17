@@ -1,6 +1,6 @@
 ---
 title: "Verify Build Provenance for {{site.mesh_product_name}} Binaries"
-description: "Verify the build provenance of signed {{site.mesh_product_name}} binary artifacts using slsa-verifier and GitHub OIDC attestations."
+description: "Verify the build provenance of signed {{site.mesh_product_name}} binary artifacts."
 content_type: reference
 layout: reference
 products:
