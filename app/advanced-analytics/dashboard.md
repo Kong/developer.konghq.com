@@ -36,8 +36,8 @@ This feature allows you to enable or disable data collection for your API traffi
 - **On:** Both basic and advanced analytics data is collected, allowing in-depth insights and reporting.
 - **Off:** Advanced analytics collection stops, but basic API metrics remain available in Gateway Manager.
 
-**Note:** If analytics is disabled, new data will not appear in [Custom Reports](/konnect/analytics/custom-reports/) 
-or [API Requests](/konnect/analytics/api-requests/), but basic usage stats will still be accessible.
+**Note:** If analytics is disabled, new data will not appear in [Custom Reports](/advanced-analytics/reports/) 
+or [API Requests](/api/konnect/analytics-requests/v2/), but basic usage stats will still be accessible.
 
 
 You can assign users to predefined **Analytics teams** in {{site.konnect_short_name}} to control access levels. 
