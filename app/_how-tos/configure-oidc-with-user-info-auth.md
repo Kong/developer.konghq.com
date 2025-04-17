@@ -8,7 +8,7 @@ related_resources:
   - text: OpenID Connect authentication flows and grants
     url: /plugins/openid-connect/#authentication
   - text: User info auth workflow
-    url: /plugins/openid-connect/#user-info-auth-flow
+    url: /plugins/openid-connect/#user-info-authentication-flow
 
 plugins:
   - openid-connect
