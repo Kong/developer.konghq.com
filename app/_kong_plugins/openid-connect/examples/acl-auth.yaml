@@ -2,7 +2,7 @@ title: ACL plugin authorization
 description: |
   Configure the OpenID Connect plugin for ACL-based authorization.
 
-  This example uses password authentication, but you can use any supported [authentication type](./reference/#schema--config-auth-methods) with ACL groups.
+  This example uses password authentication, but you can use any supported [authentication type](/plugins/openid-connect/reference/#schema--config-auth-methods) with ACL groups.
 
   For a full example that shows you how to set up both the OpenID Connect and ACL plugins with Keycloak as the IdP, 
   see [Configure OpenID Connect with ACL authorization](/how-to/configure-oidc-with-acl-auth/).
