@@ -653,6 +653,7 @@ serviceless
 shm
 Sigstore
 slas
+slsa
 slos
 SLT_Enc
 sni
