@@ -848,8 +848,8 @@ app/_kong_plugins/saml/changelog.md:
   - app/_hub/kong-inc/saml/_changelog.md
 app/_how-tos/enable-saml-authentication-with-microsoft-entra.md:
   - app/_hub/kong-inc/saml/overview/_index.md
-# Konnect
 
+# Konnect
 app/advanced-analytics/explorer.md:
   - app/konnect/advanced-analytics/explorer.md
 app/advanced-analytics/llm-reporting.md:
@@ -874,7 +874,9 @@ app/konnect-platform/saml-idp-mapping.md:
   - app/konnect/reference/saml-idp-mappings.md
 app/konnect-platform/self-managed-migration.md:
   - app/konnect/getting-started/migration.md
-
+app/gateway-manager/version-compatibility.md:
+  - app/konnect/gateway-manager/version-compatibility.md
+  - app/_data/tables/version_errors_konnect.yml
 
 # landing pages
 app/_landing_pages/service-catalog.yaml:

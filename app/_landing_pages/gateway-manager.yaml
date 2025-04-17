@@ -194,3 +194,13 @@ rows:
               cta:
                 text: Learn more
                 url: /gateway/cp-dp-communication/
+      - blocks:
+          - type: card
+            config:
+              title: "Troubleshoot version compatibility issues between Data Planes"
+              description: |
+                Reference of all possible compatibility errors between {{site.base_gateway}} Data Planes of different versions.
+              icon: /assets/icons/gateway.svg
+              cta:
+                text: Learn more
+                url: /gateway-manager/version-compatibility/
