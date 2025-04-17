@@ -118,6 +118,7 @@ You should get an HTTP 200 response with an `X-Authenticated-Groups` header:
 ```
 "X-Authenticated-Groups": "openid, email, profile"
 ```
+{:.no-copy-code}
 
 ## 3. Enable the ACL plugin and verify
 
