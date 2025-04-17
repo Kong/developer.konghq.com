@@ -63,6 +63,18 @@ style D stroke:none,fill:#0E44A2,color:#fff
 > _Figure 1: In a traditional deployment, all {{site.base_gateway}} nodes connect to the database. 
 Each node manages its own configuration._
 
+## About {{site.base_gateway}} clusters
+
+A {{site.base_gateway}} cluster does not load balance client traffic accross Data Plane nodes out-of-the-box. You still need a
+[load-balancer](/gateway/load-balancing/) in front of your Data Plane nodes to distribute your traffic. Instead,
+a {{site.base_gateway}} cluster means that those nodes will share the same configuration.
+
+For performance reasons, {{site.base_gateway}} avoids database connections when proxying
+requests, and caches the contents of your database in memory. The cached
+[entities](/gateway/entities/) include Gateway Services, Routes, Consumers, plugins, credentials, and so on. Since those
+values are in memory, any change made via the Admin API of one of the nodes
+must be propagated to the other nodes.
+
 ## Single node clusters
 
 A single {{site.base_gateway}} node connected to a [supported database](/gateway/configuration/#database) creates a
