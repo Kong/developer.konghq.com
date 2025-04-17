@@ -58,7 +58,7 @@ tldr:
 faqs:
   - q: When using Consumer authorization, is Consumer mapping required?
     a: |
-      Consumer mapping is required by default, but you can make Consumer mapping optional and non-authorizing by setting the OpenID Connect plugin's configuration parameter [`config.consumer_optional`](/plugins/openid-connect/#schema--config-consumer-optional) to `true`.
+      Consumer mapping is required by default, but you can make Consumer mapping optional and non-authorizing by setting the OpenID Connect plugin's configuration parameter [`config.consumer_optional`](/plugins/openid-connect/reference/#schema--config-consumer-optional) to `true`.
   - q: Can I use Consumer mapping with ACL allow/deny lists?
     a: |
       Yes, you can combine the Consumer claim with the authorization group claim to further secure your environment. See the how-to on [configuring OIDC with ACL groups](/how-to/configure-oidc-with-acl-auth/) for more information.
