@@ -1,5 +1,5 @@
 ---
-title: Deploy Custom Plugins
+title: Deploy custom plugins
 description: "Install custom plugins in {{ site.base_gateway }} without using a custom image"
 content_type: how_to
 permalink: /kubernetes-ingress-controller/custom-plugins/
@@ -34,7 +34,7 @@ prereqs:
 
 ## Custom plugins
 
-Custom Lua plugins can be stored in a Kubernetes ConfigMap or Secret and mounted in your {{ site.base_gateway }} pod.
+Custom Lua plugins can be stored in a Kubernetes ConfigMap or Secret and mounted in your {{ site.base_gateway }} Pod.
 
 The examples in this guide use a `ConfigMap`, but you can replace any references to `configmap` with `secret` to use a `Secret` instead.
 
@@ -52,7 +52,7 @@ Create a `ConfigMap` from your directory that will be mounted to your {{ site.ba
 kubectl create configmap kong-plugin-myheader --from-file=myheader -n kong
 ```
 
-If your custom plugin includes new entities, you need to create a `daos.lua` in your directory and a `migration` sub-directory containing the scripts to create any database tables and migrate data between different versions (if your schema of your entities changed between different versions). In the case, the directory should like this:
+If your custom plugin includes new entities, you need to create a `daos.lua` file in your directory and a `migration` sub-directory containing the scripts to create any database tables and migrate data between different versions (if your entities' schemas changed between different versions). In this case, the directory should like this:
 
 ```bash
   myheader
@@ -66,6 +66,7 @@ If your custom plugin includes new entities, you need to create a `daos.lua` in 
 
   1 directories, 6 files
 ```
+{:.no-copy-code}
 
 As a `ConfigMap` does not support nested directories, you need to create another `ConfigMap` containing the `migrations` directory:
 
@@ -79,7 +80,7 @@ Kong provides a way to deploy custom plugins using both {{ site.kgo_product_name
 
 The {{ site.kic_product_name }} Helm chart automatically configures all the environment variables required based on the plugins you inject.
 
-1. Create a `values.yaml` file with the following contents. Ensure that you add in other configuration values you might need for your installation to be successful.
+1. Create a `values.yaml` file in your current directory with the following contents. Ensure that you add in other configuration values you might need for your installation to be successful.
 
     ```yaml
     gateway:
@@ -116,9 +117,9 @@ The {{ site.kic_product_name }} Helm chart automatically configures all the envi
 ## Using custom plugins
 
 {:.warning}
-> If you get a "plugin failed schema validation" error, wait until your {{ site.base_gateway }} pods have cycled before trying to create a `KongPlugin` instance
+> If you get a "plugin failed schema validation" error, wait until your {{ site.base_gateway }} Pods have cycled before trying to create a `KongPlugin` instance
 
-After you have setup Kong with the custom plugin installed, you can use it like any other plugin by adding the `konghq.com/plugins` annotation. 
+After you have set up {{ site.base_gateway }} with the custom plugin installed, you can use it like any other plugin by adding the `konghq.com/plugins` annotation. 
 
 1. Create a KongPlugin custom resource:
 

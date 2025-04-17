@@ -1,5 +1,5 @@
 ---
-title: Support Multiple Authentication Methods
+title: Support multiple authentication methods
 description: "Enable multiple authentication methods on a single Service"
 content_type: how_to
 
@@ -42,11 +42,11 @@ cleanup:
 
 ## Allowing multiple authentication methods
 
-The default behavior for Kong authentication plugins is to require credentials for all requests even if a request has been authenticated through another plugin. Configure an anonymous consumer on your authentication plugins to set clients authentication options.
+The default behavior for {{site.base_gateway}} authentication plugins is to require credentials for all requests even if a request has been authenticated through another plugin. Configure an anonymous Consumer on your authentication plugins to set authentication options.
 
-## Create consumers
+## Create Consumers
 
-Create two consumers that use different authentication methods:
+Create two [Consumers](/gateway/entities/consumer/) that use different authentication methods:
 
 * `consumer-1` uses `basic-auth`
 * `consumer-2` uses `key-auth`
@@ -84,7 +84,7 @@ Create two consumers that use different authentication methods:
     ' | kubectl apply -f -
     ```
 
-1.  Create a consumer named `consumer-1`:
+1.  Create a Consumer named `consumer-1`:
 
 {% entity_example %}
 type: consumer
@@ -96,7 +96,7 @@ data:
 indent: 4
 {% endentity_example %}
 
-1.  Create a consumer named `consumer-2`:
+1.  Create a Consumer named `consumer-2`:
 
 {% entity_example %}
 type: consumer
@@ -112,7 +112,7 @@ indent: 4
 
 Once the Consumers and credentials are created, you can add authentication plugins to your Service.
 
-First, create a `key-auth` plugin. Notice the `anonymous` configuration option, which means "if no credentials match, assign the consumer named `anonymous` to the request":
+First, create a [`key-auth`](/plugins/key-auth/) plugin. Notice the `anonymous` configuration option, which means that if no credentials match, the consumer named `anonymous` is assigned to the request:
 
 {% entity_example %}
 type: plugin
@@ -125,7 +125,7 @@ data:
   skip_annotate: true
 {% endentity_example %}
 
-As Consumer 2 is using `basic-auth`, we also need to create a `basic-auth` plugin:
+As Consumer 2 is using `basic-auth`, we also need to create a [`basic-auth`](/plugins/basic-auth/) plugin:
 
 {% entity_example %}
 type: plugin
@@ -138,11 +138,11 @@ data:
   other_plugins: key-auth
 {% endentity_example %}
 
-## Create an anonymous consumer
+## Create an anonymous Consumer
 
-Your endpoints are now secure, but neither consumer can access the endpoint when providing valid credentials. This is because each plugin will verify the consumer using it’s own authentication method.
+Your endpoints are now secure, but neither Consumer can access the endpoint when providing valid credentials. This is because each plugin will verify the Consumer using it’s own authentication method.
 
-To allow multiple authentication methods, create an anonymous consumer which is the default user if no valid credentials are provided:
+To allow multiple authentication methods, create an anonymous Consumer which is the default user if no valid credentials are provided:
 
 {% entity_example %}
 type: consumer
@@ -150,9 +150,9 @@ data:
   username: anonymous
 {% endentity_example %}
 
-All requests to the API will now succeed as the anonymous consumer is being used as a default.
+All requests to the API will now succeed as the anonymous Consumer is being used as a default.
 
-To secure the API once again, add a request termination plugin to the anonymous consumer that returns HTTP 401:
+To secure the API once again, add a request termination plugin to the anonymous Consumer that returns HTTP 401:
 
 {% entity_example %}
 type: plugin
