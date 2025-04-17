@@ -117,6 +117,7 @@ export TOKEN=$(curl --user john:doe http://localhost:8000/anything \
 ```sh
 export TOKEN=$(curl --user john:doe http://$KONNECT_PROXY_URL/anything \
   | jq -r .headers.Authorization)
+echo $TOKEN
 ```
 {: data-deployment-topology="konnect" }
 
