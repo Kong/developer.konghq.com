@@ -238,6 +238,8 @@ app/_how-tos/plugin-dev-set-up-plugin-project.md:
   - app/_src/gateway/plugin-development/get-started/setup.md
 app/_how-tos/configure-oidc-with-user-info-auth.md:
   - app/_hub/kong-inc/openid-connect/how-to/authentication/_user-info.md
+app/_how-tos/configure-oidc-with-introspection.md:
+  - /app/_hub/kong-inc/openid-connect/how-to/authentication/_introspection.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
