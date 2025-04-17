@@ -2,7 +2,7 @@
 
 {% capture details_content %}
 
-This is a Konnect tutorial. 
+This is a Konnect tutorial.
 If you don't have a Konnect account, you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs).
 
 1. The following Konnect items are required to complete this tutorial:
@@ -23,7 +23,6 @@ If you don't have a Konnect account, you can get started quickly with our [onboa
     export DECK_KONNECT_TOKEN=your-token
     export DECK_KONNECT_CONTROL_PLANE_NAME=your-control-plane-name
     export KONNECT_CONTROL_PLANE_URL=https://{region}.api.konghq.com
-    export KONNECT_PROXY_URL=konnect-proxy-url
     ```
 {% else %}
     ```sh
