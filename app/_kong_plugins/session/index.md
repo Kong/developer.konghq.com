@@ -58,10 +58,9 @@ session to use for subsequent requests.
 When a new request comes in and a session is already present, then the Session
 plugin attaches the `ngx.ctx` variables to let the authentication
 plugin know that authentication has already occurred via session validation.
-As this configuration is a logical `OR` scenario, and forbidden anonymous
-access is desirable, you should configure the [Request Termination](/plugins/request-termination/) plugin on an anonymous consumer. 
-Failure to do so allows unauthorized requests. 
-For more information, see [multiple authentication](/gateway/authentication/#using-multiple-authentication-methods).
+As this configuration is a logical `OR` scenario and you likely want to forbid anonymous access, you should configure the [Request Termination](/plugins/request-termination/) plugin on an anonymous Consumer. 
+If not configured, unauthorized requests will be allowed through. 
+For more information, see [multiple authentication](/gateway/authentication/#using-multiple-authentication-methods) and learn how to [prevent unauthorized access in a multi-auth scenario](/how-to/authenticate-consumers-with-session-and-key-auth/).
 
 ## Default settings
 
@@ -92,13 +91,14 @@ plugins, it also sets associated `authenticated_groups` headers.
 
 ## {{site.base_gateway}} storage adapter
 
-The Session plugin extends the functionality of [lua-resty-session](https://github.com/bungle/lua-resty-session)
-with its own session data storage adapter when `storage=kong`. This stores encrypted
+ When `storage` is set to `kong`, the Session plugin extends the functionality of [lua-resty-session](https://github.com/bungle/lua-resty-session)
+with its own session data storage adapter. This stores encrypted
 session data into the current database strategy, and the cookie doesn't contain
-any session data. Data stored in the database is encrypted and the cookie contains only
-the session ID, expiration time, and HMAC signature. Sessions use the built-in {{site.base_gateway}} DAO `ttl` mechanism that destroys sessions after the specified `rolling_timeout` unless renewal
-occurs during normal browser activity. Log out of the application via a XHR request
-(or something similar) to manually handle the redirects.
+any session data. 
+
+Data stored in the database is encrypted, and the cookie contains only the session ID, expiration time, and HMAC signature. 
+Sessions use the built-in {{site.base_gateway}} DAO `ttl` mechanism that destroys sessions after the specified `rolling_timeout` unless renewal occurs during normal browser activity. 
+You can log out of the application via a XHR request (or something similar) to manually handle the redirects.
 
 ## Logging out
 
@@ -120,8 +120,8 @@ Due to limitations of OpenResty, the `header_filter` phase can't connect to the
 database. This poses a problem for initial retrieval of a cookie (fresh session).
 There is a small window of time where the cookie is sent to client, but the database
 insert hasn't been committed yet because the database call is in a `ngx.timer` thread.
-The current workaround is to wait for some interval of time (~100-500ms) after
-`Set-Cookie` header is sent to the client before making subsequent requests. This is
-_not_ a problem during session renewal period as renew happens in the `access` phase.
 
+The workaround for this issue is to wait for some interval of time (~100-500ms) after
+`Set-Cookie` header is sent to the client before making subsequent requests. This is
+_not_ a problem during session renewal period, as renewal happens in the `access` phase.
 

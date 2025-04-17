@@ -40,12 +40,18 @@ prereqs:
 
 tldr:
     q: How do I authenticate Consumers with session cookies?
-    a: You can use the Session plugin, along with an authentication plugin like Key Authentication, to authenticate Consumers with session cookies. Configure the authentication plugin with credentials, an anonymous Consumer, and associate it with a Gateway Service. Create a named Consumer with a credential for the authentication plugin, as well as an anonymous Consumer. Configure the Session plugin and associate it with the Gateway Service, and then configure the Request Termination plugin to prevent anonymous access.
+    a: You can use the Session plugin, along with an authentication plugin like Key Authentication, to authenticate Consumers with session cookies. In summary, you need to:
+    1. Configure the authentication plugin with credentials, an anonymous Consumer, and associate it with a Gateway Service. 
+    2. Create a named Consumer with a credential for the authentication plugin, as well as an anonymous Consumer. 
+    3. Configure the Session plugin and associate it with the Gateway Service, then configure the Request Termination plugin to prevent anonymous access.
 
 cleanup:
   inline:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
+      icon_url: /assets/icons/gateway.svg
+    - title: Clean up Konnect environment
+      include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
 
 min_version:
@@ -159,7 +165,7 @@ Make sure that this cookie works by copying the contents (for example: `session=
 export COOKIE_HEADER='<your-cookie-header-here>'
 ```
 
-Use your session token in the request:
+Use your session token in the request, but don't provide the API key. Even without the key, you will still be authenticated because {{site.base_gateway}} is using the session cookie granted by the Session plugin:
 <!--vale off-->
 {% validation unauthorized-check %}
 url: /anything
@@ -170,13 +176,4 @@ status_code: 200
 {% endvalidation %}
 <!--vale on-->
 
-Now, if you try to authenticate without sending a Key Auth credential, you will still be authenticated because {{site.base_gateway}} is using the session cookie that is granted by the Session plugin:
-
-<!--vale off-->
-{% validation request-check %}
-url: /anything
-status_code: 200
-message: 'OK'
-{% endvalidation %}
-<!--vale on-->
 
