@@ -43,4 +43,4 @@ or [API Requests](/konnect/analytics/api-requests/), but basic usage stats will 
 You can assign users to predefined **Analytics teams** in {{site.konnect_short_name}} to control access levels. 
 This allows specific users to **view** or **manage** Analytics independently.
 
-Learn more in the [Teams Reference](/konnect/org-management/teams-and-roles/teams-reference/).
+Learn more in the [Teams Reference](/konnect-platform/teams-and-roles/).

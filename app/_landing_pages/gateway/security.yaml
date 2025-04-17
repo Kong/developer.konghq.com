@@ -89,7 +89,7 @@ rows:
               
             icon: /assets/icons/team.svg
             cta:
-              url: "/teams-and-roles/"
+              url: "/konnect-platform/teams-and-roles/"
       - blocks:
         - type: card
           config:
