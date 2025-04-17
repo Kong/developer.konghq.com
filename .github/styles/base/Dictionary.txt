@@ -1,12 +1,7 @@
 _prod
 _this
 _workspace
-maglev
 Aadhaar
-meshopa
-meshpassthrough
-meshpassthroughs
-matchers
 acl
 acl
 ACLs
@@ -431,6 +426,8 @@ Luarocks
 M_Account
 M_Link
 M_Resource
+maglev
+matchers
 max_args
 max_headers
 mbps
@@ -438,6 +435,9 @@ md
 mebibytes
 Memcached
 Memcached
+meshopa
+meshpassthrough
+meshpassthroughs
 metainfo
 metamethod
 metatable
