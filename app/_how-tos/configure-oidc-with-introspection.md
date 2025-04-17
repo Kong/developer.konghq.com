@@ -109,14 +109,14 @@ In this example:
 Check that you can recover the token by requesting the Service with the basic authentication credentials created in the [prerequisites](#prerequisites), and export it to an environment variable:
 
 ```sh
-export TOKEN=$(curl --user john:doe http://localhost:8000/anything \
+export TOKEN=$(curl --user alex:doe http://localhost:8000/anything \
   | jq -r .headers.Authorization)
 echo $TOKEN
 ```
 {: data-deployment-topology="on-prem" }
 
 ```sh
-export TOKEN=$(curl --user john:doe http://$KONNECT_PROXY_URL/anything \
+export TOKEN=$(curl --user alex:doe http://$KONNECT_PROXY_URL/anything \
   | jq -r .headers.Authorization)
 echo $TOKEN
 ```

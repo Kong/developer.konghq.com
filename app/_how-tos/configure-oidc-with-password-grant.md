@@ -108,13 +108,13 @@ At this point you have created a Gateway Service, routed traffic to the Service,
 You can now test the password grant.
 
 Access the `example-route` Route by passing the user credentials in `username:password` format.
-The following user has the username `john` and the password `doe`:
+The following user has the username `alex` and the password `doe`:
 
 {% validation request-check %}
 url: /anything
 method: GET
 status_code: 200
-user: "john:doe"
+user: "alex:doe"
 display_headers: true
 {% endvalidation %}
 

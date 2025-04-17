@@ -125,18 +125,18 @@ Request the Service with the basic authentication credentials created in the [pr
 url: /anything
 method: GET
 status_code: 403
-user: "john:doe"
+user: "alex:doe"
 display_headers: true
 {% endvalidation %}
 
 You should get a `403 Forbidden` error code, which means the Service is protected by authentication.
 
-Create a Consumer with a username that matches the user in your IdP, in this case `john`:
+Create a Consumer with a username that matches the user in your IdP, in this case `alex`:
 
 {% entity_examples %}
 entities:
   consumers:
-    - username: john
+    - username: alex
 {% endentity_examples %}
 
 ## 3. Verify Consumer authorization
@@ -149,18 +149,18 @@ Now, your configured Consumer can access the `example-route` Route by using thei
 url: /anything
 method: GET
 status_code: 403
-user: "john:doe"
+user: "alex:doe"
 display_headers: true
 {% endvalidation %}
 
 This time, you should get a `200` response. 
-The OIDC plugin decodes the token it receives from the IdP, finds the `preferred_username` value, and maps it to our Consumer `john`.
+The OIDC plugin decodes the token it receives from the IdP, finds the `preferred_username` value, and maps it to our Consumer `alex`.
 
 In the response, you'll see that the plugin added the `X-Consumer-Id` and `X-Consumer-Username` as request headers, and returned an `Authorization` bearer token:
 
 ```json
 "Authorization": "Bearer abcxyz...",
 "X-Consumer-Id": "some-uuid",
-"X-Consumer-Username": "john"
+"X-Consumer-Username": "alex"
 ```
 {:.no-copy-code}
