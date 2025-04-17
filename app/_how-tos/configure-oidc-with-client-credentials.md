@@ -67,7 +67,7 @@ cleanup:
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with the client credentials grant.
 
-Enable the OpenID Connect plugin on the `example-service` service:
+Enable the OpenID Connect plugin on the `example-service` Service:
 
 {% entity_examples %}
 entities:
