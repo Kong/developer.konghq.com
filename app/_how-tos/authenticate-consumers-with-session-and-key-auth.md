@@ -40,10 +40,11 @@ prereqs:
 
 tldr:
     q: How do I authenticate Consumers with session cookies?
-    a: You can use the Session plugin, along with an authentication plugin like Key Authentication, to authenticate Consumers with session cookies. In summary, you need to:
-    1. Configure the authentication plugin with credentials, an anonymous Consumer, and associate it with a Gateway Service. 
-    2. Create a named Consumer with a credential for the authentication plugin, as well as an anonymous Consumer. 
-    3. Configure the Session plugin and associate it with the Gateway Service, then configure the Request Termination plugin to prevent anonymous access.
+    a: |
+      You can use the Session plugin, along with an authentication plugin like Key Authentication, to authenticate Consumers with session cookies. In summary, you need to:
+      1. Configure the authentication plugin with credentials, an anonymous Consumer, and associate it with a Gateway Service. 
+      2. Create a named Consumer with a credential for the authentication plugin, as well as an anonymous Consumer. 
+      3. Configure the Session plugin and associate it with the Gateway Service, then configure the Request Termination plugin to prevent anonymous access.
 
 cleanup:
   inline:
