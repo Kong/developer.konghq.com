@@ -102,7 +102,7 @@ In this example:
 * `auth_methods`: Introspection and password grant.
 * `bearer_token_param_type`: We want to search for client credentials in headers only.
 
-<!-- include_cached plugins/oidc/client-auth.md -->
+{% include_cached plugins/oidc/client-auth.md %}
 
 ## 2. Retrieve the bearer token using introspection
 
@@ -136,4 +136,4 @@ headers:
   - "Authorization: $TOKEN"
 {% endvalidation %}
 
-<!-- include_cached plugins/oidc/cache.md -->
+{% include_cached plugins/oidc/cache.md %}
