@@ -1,0 +1,47 @@
+title: ACL plugin authorization
+description: |
+  Configure the OpenID Connect plugin for ACL-based authorization.
+
+  This example uses password authentication, but you can use any supported [authentication type](./reference/#schema--config-auth-methods) with ACL groups.
+
+  For a full example that shows you how to set up both the OpenID Connect and ACL plugins with Keycloak as the IdP, 
+  see [Configure OpenID Connect with ACL authorization](/how-to/configure-oidc-with-acl-auth/).
+
+weight: 850
+
+requirements:
+  - A configured identity provider (IdP)
+  - An [ACL plugin](/plugins/acl/) configured with allow or deny lists
+
+config:
+  issuer: ${issuer}
+  client_id:
+    - ${client-id}
+  client_secret:
+    - ${client-secret}
+  client_auth:
+    - client_secret_post
+  auth_methods:
+    - password
+  authenticated_groups_claim:
+    - scope
+
+variables:
+  issuer:
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. 
+      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://example-keycloak-host:8080/realms/example-realm`
+  client-id:
+    value: $CLIENT_ID
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
+  client-secret:
+    value: $CLIENT_SECRET
+    description: The client secret needed to connect to your IdP.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
