@@ -128,7 +128,7 @@ app/_gateway_entities/partial.md:
 # how-tos
 ## gateway
 app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
-  - /app/_hub/kong-inc/rate-limiting-advanced/how-to/_index.md
+  - app/_hub/kong-inc/rate-limiting-advanced/how-to/_index.md
 app/_how-tos/multiple-rate-limits-window-sizes.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
 app/_how-tos/get-started-with-gateway.md:
@@ -212,15 +212,29 @@ app/_how-tos/authenticate-consumers-jwt.md:
   - app/_hub/kong-inc/jwt/overview/_index.md
 app/_how-tos/adjust-header-names-in-request.md:
   - app/_hub/kong-inc/post-function/how-to/_index.md
-app/_how-tos/configure-oidc-with-client-credentials-grant.md:
-  - /app/_hub/kong-inc/openid-connect/how-to/authentication/_client-credentials.md
+app/_how-tos/configure-oidc-with-password-grant.md:
+  - /app/_hub/kong-inc/openid-connect/how-to/authentication/_password-grant.md
+app/_how-tos/configure-oidc-with-refresh-token.md:
+  - /app/_hub/kong-inc/openid-connect/how-to/authentication/_refresh-token.md
 app/_how-tos/sign-gateway-audit-logs.md:
   - app/_src/gateway/kong-enterprise/audit-log.md
 app/_how-tos/validate-gateway-audit-log-signatures.md:
   - app/_src/gateway/kong-enterprise/audit-log.md
 app/_how-tos/authenticate-consumers-with-session-and-key-auth.md:
   - app/_hub/kong-inc/session/overview/_index.md
+app/_how-tos/configure-oidc-with-session-auth.md:
+  - app/_hub/kong-inc/openid-connect/how-to/authentication/_session.md
 
+app/_how-tos/plugin-dev-add-plugin-configuration.md:
+  - app/_src/gateway/plugin-development/get-started/config.md
+app/_how-tos/plugin-dev-add-plugin-testing.md:
+  - app/_src/gateway/plugin-development/get-started/testing.md
+app/_how-tos/plugin-dev-consume-external-services.md:
+  - app/_src/gateway/plugin-development/get-started/http.md
+app/_how-tos/plugin-dev-deploy-plugins.md:
+  - app/_src/gateway/plugin-development/get-started/deploy.md
+app/_how-tos/plugin-dev-set-up-plugin-project.md:
+  - app/_src/gateway/plugin-development/get-started/setup.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
@@ -304,6 +318,10 @@ app/kubernetes-ingress-controller/reference/configuration-options.md:
   - app/_src/kubernetes-ingress-controller/reference/cli-arguments-3.4.x.md
 app/kubernetes-ingress-controller/class-annotations.md:
   - app/_src/kubernetes-ingress-controller/reference/ingress-class-requirement.md
+app/_how-tos/kic-plugin-custom.md:
+  - app/_src/kubernetes-ingress-controller/plugins/custom.md
+app/_how-tos/kic-plugin-authentication.md:
+  - app/_src/kubernetes-ingress-controller/plugins/authentication.md
 
 # plugins
 app/_kong_plugins/session/changelog.md:
@@ -809,7 +827,12 @@ app/_kong_plugins/nonamesecurity/index.md:
   - /app/_hub/nonamesecurity/nonamesecurity-kongtrafficsource/overview/_index.md
 app/_kong_plugins/request-callout/index.md:
   - app/_hub/kong-inc/request-callout/overview/_index.md
-
+app/_kong_plugins/vault-auth/changelog.md:
+  - app/_hub/kong-inc/vault-auth/_changelog.md
+app/_kong_plugins/vault-auth/index.md:
+  - app/_hub/kong-inc/vault-auth/overview/_index.md
+app/_how-tos/enable-vault-authentication.md:
+  - app/_hub/kong-inc/vault-auth/overview/_index.md
 app/_kong_plugins/saml/index.md:
   - app/_hub/kong-inc/saml/overview/_index.md
 app/_kong_plugins/saml/changelog.md:
@@ -916,7 +939,7 @@ app/gateway/performance/benchmarks.md:
   - app/_src/gateway/production/performance/performance-testing.md
 app/ai-gateway/ai-audit-log-reference.md:
   - app/_src/gateway/production/logging/ai-analytics.md
-app/gateway/kong-manager-configuration.md:
+app/gateway/kong-manager/configuration.md:
   - app/_src/gateway/kong-manager/enable.md 
   - app/_src/gateway/kong-manager/troubleshoot.md
 app/ai-gateway/monitor-ai-llm-metrics.md:
@@ -967,6 +990,8 @@ app/gateway/upgrade/index.md:
   - app/_src/gateway/upgrade/index.md
 app/gateway/upgrade/lts-upgrade.md:
   - app/_src/gateway/upgrade/lts-upgrade.md
+app/gateway/kong-manager/content-security-policy.md:
+  - app/_src/gateway/kong-manager/strengthen-security.md
 
 # traffic control
 app/gateway/traffic-control/proxy.md:

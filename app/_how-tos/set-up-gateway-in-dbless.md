@@ -185,7 +185,7 @@ curl -i -X POST http://localhost:8001/config \
   --form config=@kong.yml
 ```
 
-{:.important}
+{:.warning}
 > The `/config` endpoint replaces the entire set of entities in memory
 with the ones specified in the given file.
 

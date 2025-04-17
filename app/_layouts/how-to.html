@@ -29,17 +29,6 @@ layout: with_aside
 {% include info_box/concept.html %}
 {% endcontentfor %}
 
-{% if page.series %}
-{% contentfor series_items %}
-<div class="text-primary font-medium">In This Series</div>
-<ol>
-{% for item in page.series.items %}
-<li {% if page.series.position == item.series.position %}class="font-bold"{% endif %}><a href="{{ item.url }}">{{ item.title | liquify }}</a></li>
-{% endfor %}
-</ol>
-{% endcontentfor %}
-{% endif %}
-
 {% if page.works_on %}
 {% contentfor controls %}
 {% include how-tos/controls.html works_on=page.works_on %}

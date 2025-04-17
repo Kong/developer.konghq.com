@@ -22,7 +22,7 @@ tldr:
 
 prereqs: {}
 
-cleanup: []
+cleanup: {}
 ---
 
 ## TODO

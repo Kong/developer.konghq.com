@@ -6,6 +6,10 @@
 {% include info_box/sections/works_on.html works_on=page.works_on %}
 {% endif %}
 
+{% if page.series %}
+{% include info_box/sections/series.html %}
+{% endif %}
+
 {% if page.tags %}
 {% include info_box/sections/tags.html tags=page.tags %}
 {% endif %}

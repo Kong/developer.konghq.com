@@ -50,6 +50,10 @@ sections:
       - path: /kubernetes-ingress-controller/troubleshooting/konnect/
       - path: /kubernetes-ingress-controller/troubleshooting/debugging/
       - path: /kubernetes-ingress-controller/troubleshooting/**/*
+  - title: How To
+    items:
+      - path: /kubernetes-ingress-controller/custom-plugins/
+      - path: /kubernetes-ingress-controller/multiple-auth-methods/
   - title: Reference
     allow_duplicates: true
     items:
