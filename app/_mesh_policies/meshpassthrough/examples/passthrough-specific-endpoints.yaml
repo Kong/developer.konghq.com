@@ -1,0 +1,38 @@
+title: 'Allow services to communicate with external endpoints'
+description: 'Allow a subset of services to communicate with specific external endpoints'
+
+weight: 900
+
+
+config:
+  type: MeshPassthrough
+  name: allow-some-passthrough
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: demo-app
+    default:
+      passthroughMode: Matched
+      appendMatch:
+      - type: Domain
+        value: httpbin.org
+        protocol: tls
+        port: 443
+      - type: IP
+        value: 10.240.15.39
+        protocol: tcp
+        port: 8888
+      - type: CIDR
+        value: 10.250.0.0/16
+        protocol: tcp
+        port: 10000
+      - type: Domain
+        value: '*.wikipedia.org'
+        protocol: tls
+        port: 443
+      - type: Domain
+        value: httpbin.dev
+        protocol: http
+        port: 80

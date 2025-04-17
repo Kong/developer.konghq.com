@@ -1,0 +1,22 @@
+title: 'TCP rate limiting'
+description: 'TCP rate limit for service backend from all services in the Mesh'
+
+weight: 900
+
+namespace: kuma-demo
+config:
+  type: MeshRateLimit
+  name: backend-rate-limit
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - default:
+          local:
+            tcp:
+              connectionRate:
+                num: 5
+                interval: 10s

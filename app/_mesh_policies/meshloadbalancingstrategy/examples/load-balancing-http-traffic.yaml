@@ -1,0 +1,30 @@
+title: 'Load balance from HTTP header'
+description: "Load balance requests from `frontend` to `backend` based on the HTTP header `x-header`"
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshLoadBalancingStrategy
+  name: ring-hash
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+          namespace: kuma-demo
+          _port: 8080
+          sectionName: http
+        default:
+          loadBalancer:
+            type: RingHash
+            ringHash:
+              hashPolicies:
+                - type: Header
+                  header:
+                    name: x-header

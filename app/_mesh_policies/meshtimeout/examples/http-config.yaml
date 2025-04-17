@@ -1,0 +1,20 @@
+title: 'Simple outbound HTTP configuration'
+description: 'This configuration will be applied to all data plane proxies inside of Mesh.'
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshTimeout
+  name: timeout-global
+  mesh: default
+  spec:
+    to:
+      - targetRef:
+          kind: Mesh
+        default:
+          idleTimeout: 20s
+          connectionTimeout: 2s
+          http:
+            requestTimeout: 2s

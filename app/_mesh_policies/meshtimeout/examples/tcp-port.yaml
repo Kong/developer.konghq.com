@@ -1,0 +1,21 @@
+title: "Configuration for a single inbound port named `tcp-port`"
+description: "Configuration for a single inbound port named `tcp-port`"
+
+weight: 900
+
+namespace: kuma-demo
+
+config:
+  type: MeshTimeout
+  name: inbound-timeout
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+      sectionName: tcp-port
+    rules:
+      - default:
+          idleTimeout: 1h
+          connectionTimeout: 10s

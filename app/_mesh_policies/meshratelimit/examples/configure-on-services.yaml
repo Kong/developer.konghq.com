@@ -1,0 +1,28 @@
+title: 'Configure on Services'
+description: 'Use MeshHTTPRoute to split an HTTP traffic between different MeshServices.'
+
+weight: 900
+
+namespace: kuma-demo
+config:
+  type: MeshRateLimit
+  mesh: default
+  name: backend-rate-limit
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - default:
+          local:
+            http:
+              requestRate:
+                num: 5
+                interval: 10s
+              onRateLimit:
+                status: 423
+                headers:
+                  set:
+                    - name: "x-kuma-rate-limited"
+                      value: "true"

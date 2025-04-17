@@ -1,0 +1,21 @@
+title: "Targeting parts of the infrastructure: West Only"
+description: "To do this, we use a `TargetRef` kind value of `MeshSubset` to filter which data plane proxy a policy applies to."
+
+weight: 900
+
+
+config:
+  type: MeshTrace
+  name: trace-west
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        kuma.io/zone: west
+    default:
+      backends:
+        - type: Zipkin
+          zipkin:
+            url: http://west.zipkincollector:9411/api/v2/spans
+            apiVersion: httpJson

@@ -1,0 +1,20 @@
+title: 'Set specific TLS version and ciphers'
+description: 'Set specific TLS version and ciphers'
+
+weight: 900
+
+
+config:
+  type: MeshTLS
+  name: set-version-and-ciphers
+  mesh: default
+  spec:
+    targetRef:
+      kind: Mesh
+    rules:
+      - default:
+          tlsVersion:
+            min: TLS13
+            max: TLS13
+          tlsCiphers:
+            - ECDHE-ECDSA-AES256-GCM-SHA384

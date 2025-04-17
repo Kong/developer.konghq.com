@@ -1,0 +1,42 @@
+title: 'Logging to multiple backends'
+
+description: 'This configuration logs to three backends: TCP, file and OpenTelemetry.'
+
+weight: 900
+
+namespace: kuma-demo
+
+config:
+  type: MeshAccessLog
+  name: multiple-backends
+  mesh: default
+  spec:
+    rules:
+      - default:
+          backends:
+            - type: Tcp
+              tcp:
+                address: 127.0.0.1:5000
+                format:
+                  type: Json
+                  json:
+                    - key: "start_time"
+                      value: "%START_TIME%"
+            - type: File
+              file:
+                path: /dev/stdout
+                format:
+                  type: Plain
+                  plain: '[%START_TIME%]'
+            - type: OpenTelemetry
+              openTelemetry:
+                endpoint: otel-collector:4317
+                body:
+                  kvlistValue:
+                  values:
+                    - key: "mesh"
+                      value:
+                        stringValue: "%KUMA_MESH%"
+                attributes:
+                  - key: "start_time"
+                    value: "%START_TIME%"

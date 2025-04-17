@@ -49,7 +49,7 @@
       {% vite_javascript_tag plugin_api_spec %}
     {% endif %}
 
-    {% if layout.plugin_schema %}
+    {% if layout.plugin_schema or page.plugin_schema %}
       {% vite_javascript_tag plugin_schema %}
     {% endif %}
 

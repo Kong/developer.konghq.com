@@ -1,0 +1,31 @@
+title: 'Protocol fallback'
+description: 'Protocol fallback'
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshHealthCheck
+  name: web-to-backend-check
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: web
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+          namespace: kuma-demo
+          sectionName: http
+          _port: 3001
+        default:
+          interval: 10s
+          timeout: 2s
+          unhealthyThreshold: 3
+          healthyThreshold: 1
+          tcp: {} # http has "disabled=true" so TCP (a more general protocol) is used as a fallback
+          http:
+            disabled: true

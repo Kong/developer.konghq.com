@@ -1,0 +1,31 @@
+title: 'Lua filter'
+description: "Adds the new x-header: test header to all outgoing HTTP requests to service offers"
+
+weight: 900
+
+
+config:
+  type: MeshProxyPatch
+  mesh: default
+  name: backend-lua-filter
+  spec:
+    targetRef:
+      kind: MeshService
+      name: mesh-gateway_gateways_svc
+    default:
+      appendModifications:
+        - httpFilter:
+            operation: AddBefore
+            match:
+              name: envoy.filters.http.router
+              origin: outbound
+              listenerTags:
+                kuma.io/service: offers
+            value: |
+              name: envoy.filters.http.lua
+              typedConfig:
+                '@type': type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+                inline_code: |
+                  function envoy_on_request(request_handle)
+                    request_handle:headers():add("x-header", "test")
+                  end

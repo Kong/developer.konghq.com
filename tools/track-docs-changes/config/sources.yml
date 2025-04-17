@@ -1205,3 +1205,29 @@ app/mesh/license.md:
   - /app/_src/mesh/production/cp-deployment/license.md
 
 
+app/mesh/sbom.md:
+  - /app/_src/mesh/sbom.md 
+app/mesh/vulnerability-patching-process.md:
+  - /app/_src/mesh/vulnerability-patching-process.md 
+app/mesh/vault.md:
+  - /app/_src/mesh/features/vault.md 
+app/mesh/signed-images.md:
+  - /app/_src/mesh/features/signed-images.md
+app/mesh/enterprise.md:
+  - /app/_src/mesh/features/index.md 
+app/mesh/ubi-images.md:
+  - /app/_src/mesh/features/ubi-images.md
+app/mesh/rbac.md:
+  - /app/_src/mesh/features/rbac.md
+app/mesh/fips-support.md:
+  - /app/_src/mesh/features/fips-support.md
+app/mesh/openshift-quickstart.md:
+  - /app/_src/mesh/features/openshift-quickstart.md
+app/mesh/ca-rotation.md:
+  - /app/_src/mesh/features/ca-rotation.md 
+app/mesh/ecs.md:
+  - /app/_src/mesh/installation/ecs.md 
+app/mesh/production-usuage-values.md:
+  - /app/_src/mesh/production/cp-deployment/production-usage-values.md
+app/mesh/support-policy.md:
+  - /app/_src/mesh/support-policy.md 

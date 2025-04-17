@@ -1,0 +1,25 @@
+title: 'Simple configuration for inbound applied to specific service'
+description: 'This configuration will be applied to `backend` service inbound.'
+
+weight: 900
+
+namespace: kuma-demo
+
+config:
+  type: MeshTimeout
+  name: inbound-timeout
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    rules:
+      - default:
+          idleTimeout: 60s
+          connectionTimeout: 2s
+          http:
+            requestTimeout: 10s
+            streamIdleTimeout: 1h
+            maxStreamDuration: 30m
+            maxConnectionDuration: 30m

@@ -1,0 +1,45 @@
+title: 'Traffic mirror'
+description: '`MeshHTTPRoute` can mirror a fraction of requests to another service.'
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshHTTPRoute
+  name: http-route-1
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+          namespace: kuma-demo
+          sectionName: http 
+          _port: 3001
+        rules:
+          - matches:
+              - headers:
+                  - type: Exact
+                    name: mirror-this-request
+                    value: "true"
+            default:
+              filters:
+                - type: RequestMirror
+                  requestMirror:
+                    percentage: 30
+                    backendRef:
+                      kind: MeshService
+                      name: backend
+                      namespace: kuma-demo
+                      port: 3001
+                      _version: v1-experimental
+              backendRefs:
+                - kind: MeshService
+                  name: backend
+                  namespace: kuma-demo
+                  port: 3001
