@@ -56,12 +56,12 @@ roles on the same Service, the Service Admin role takes precedence.
 
 ## Geographic region assignment
 
-Teams and roles can be assigned to a specific [geographic region](/konnect-geos/) in {{site.konnect_short_name}}. Those teams and roles only access {{site.konnect_short_name}} objects, such as services, that are also located in the same geo they are assigned to.
+Teams and roles can be assigned to a specific [geographic region](/konnect-geos/) in {{site.konnect_short_name}}. Those teams and roles only access {{site.konnect_short_name}} objects, such as Services, that are also located in the same geo they are assigned to.
 
 ## Teams
 
 A team is a group of users with access to the same roles. Teams are useful
-for assigning access by functionality, they can provide granular access to
+for assigning access by functionality, where they can provide granular access to
 any group of {{site.konnect_short_name}} resources based on roles.
 
 You can create and manage teams by navigating to [**Organization**](https://cloud.konghq.com/organization/) > **Teams** in {{site.konnect_short_name}}.
@@ -167,11 +167,11 @@ columns:
   - title: Description
     key: description
 rows:
-  - role: Network Admin 
+  - role: "`Network Admin`"
     description: Access to all read and write permissions related to a network.
-  - role: Network Creator
+  - role: "`Network Creator`"
     description: Access to creating networks.
-  - role: Network Viewer
+  - role: "`Network Viewer`"
     description: Access to read-only permissions to networks.
 {% endtable %}
 
@@ -186,19 +186,19 @@ columns:
   - title: Description
     key: description
 rows:
-  - role: Discovery Admin
+  - role: "`Discovery Admin`"
     description: Access to all read and write permissions related to service discoveries.
-  - role: Discovery Viewer
+  - role: "`Discovery Viewer`"
     description: Access to read-only permissions related to service discoveries.
-  - role: Integration Admin
+  - role: "`Integration Admin`"
     description: Can view and edit all integrations (install/authorize).
-  - role: Integration Viewer
+  - role: "`Integration Viewer`"
     description: Access to read-only permissions to integrations.
-  - role: Service Admin
+  - role: "`Service Admin`"
     description: Can view and edit a select list of services, map resources to those services, and manage all resources and discovery rules.
-  - role: Service Creator
+  - role: "`Service Creator`"
     description: Can create new services, becomes the service admin for any service they create, and can view, edit, and create all resources and discovery rules.
-  - role: Service Viewer
+  - role: "`Service Viewer`"
     description: Can view a select list of services and all resources and discovery rules.
 {% endtable %}
 
@@ -213,17 +213,17 @@ columns:
   - title: Description
     key: description
 rows:
-  - role: Admin
+  - role: "`Admin`"
     description: Owner of an existing Dev Portal instance. The owner has full write access related to any developers and applications in the organization.
-  - role: Appearance Maintainer
+  - role: "`Appearance Maintainer`"
     description: Access the Portal instance and edit its appearance.
-  - role: Creator
+  - role: "`Creator`"
     description: Create new Portals.
-  - role: Maintainer
+  - role: "`Maintainer`"
     description: Edit, view, and delete Dev Portal applications, and view developers.
-  - role: Product Publisher
+  - role: "`Product Publisher`"
     description: Manage publishing products to a Dev Portal.
-  - role: Viewer
+  - role: "`Viewer`"
     description: Read-only access to Dev Portal developers and applications.
 {% endtable %}
 
@@ -238,11 +238,11 @@ columns:
   - title: Description
     key: description
 rows:
-  - role: Creator
+  - role: "`Creator`"
     description: Create new app auth strategies.
-  - role: Maintainer
+  - role: "`Maintainer`"
     description: Edit one or all app auth strategies.
-  - role: Viewer
+  - role: "`Viewer`"
     description: Read-only access to one or all app auth strategies.
 {% endtable %}
 
@@ -258,11 +258,11 @@ columns:
   - title: Description
     key: description
 rows:
-  - role: Creator
+  - role: "`Creator`"
     description: Create new DCR providers.
-  - role: Maintainer
+  - role: "`Maintainer`"
     description: Edit one or all DCR providers.
-  - role: Viewer
+  - role: "`Viewer`"
     description: Read-only access to one or all DCR providers.
 {% endtable %}
 
