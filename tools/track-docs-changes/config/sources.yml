@@ -1077,9 +1077,11 @@ app/gateway-manager/control-plane-groups.md:
 
 app/konnect-platform/konnect-account.md:
   - app/konnect/org-management/deactivation.md
-app/konnect-platform/teams-reference.md:
+app/konnect-platform/teams-and-roles.md:
   - app/konnect/org-management/teams-and-roles/teams-reference.md
-
+  - app/konnect/org-management/teams-and-roles/index.md
+  - app/konnect/org-management/teams-and-roles/roles-reference.md
+  - app/konnect/org-management/teams-and-roles/manage.md
 
 app/service-catalog-integrations.yaml:
   - app/konnect/service-catalog/integrations/index.md

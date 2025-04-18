@@ -45,7 +45,7 @@ The following objects are geo-specific:
 * [Application registration](/dev-portal/app-reg/)
 * [Dev portals](/dev-portal/)
 * [Service meshes and mesh zones](/mesh-manager/)
-* [Custom teams and roles](/teams-and-roles/)
+* [Custom teams and roles](/konnect-platform/teams-and-roles/)
 
 ## Supported geos 
 
