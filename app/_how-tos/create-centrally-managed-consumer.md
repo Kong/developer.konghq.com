@@ -15,6 +15,7 @@ works_on:
     - konnect
 
 tools:
+  - konnect-api
   - deck
 
 min_version:
@@ -49,8 +50,8 @@ cleanup:
 
 First, export your Control Plane UUID and [region](/konnect-geos/) (for example, `us`) so we can use it in the request. You can find these under your Control Plane settings in [Gateway Manager](https://cloud.konghq.com/gateway-manager/):
 ```sh
-export KONNECT_CONTROL_PLANE_ID=<control-plane-uuid>
-export DECK_CONTROL_PLANE_REGION=<region>
+export KONNECT_CONTROL_PLANE_ID={control-plane-uuid}
+export DECK_CONTROL_PLANE_REGION={region}
 ```
 
 Centrally-managed Consumers are assigned to realms instead of Control Planes. Realms exist outside of the Control Plane.
@@ -74,7 +75,7 @@ body:
 
 Export the ID of the realm from the response:
 ```sh
-export DECK_REALM_ID=<realm-id>
+export DECK_REALM_ID={realm-id}
 ```
 
 
@@ -99,7 +100,7 @@ body:
 
 Export the ID of the Consumer from the response:
 ```sh
-export CONSUMER_ID=<consumer-id>
+export CONSUMER_ID={consumer-id}
 ```
 
 ## 3. Create a Consumer key for authentication
@@ -122,7 +123,7 @@ body:
 
 Export the Consumer key from the `secret` field in the response:
 ```sh
-export CONSUMER_KEY=<consumer-key>
+export CONSUMER_KEY={consumer-key}
 ```
 
 ## 4. Enable authentication with the Key Authentication plugin
@@ -153,18 +154,13 @@ variables:
     value: $CONTROL_PLANE_REGION
 {% endentity_examples %}
 
-`identity_realms` are scoped to the Control Plane by default (`scope: cp`). The order in which you configure the `identity_realms` dictates the priority in which the Data Plane attempts to authenticate the provided API keys:
-
-* **Realm is listed first:** The Data Plane will first reach out to the realm. If the API key is not found in the realm, the Data Plane will look for the API key in the Control Plane config. 
-* **Control plane scope listed first:** The Data Plane will initially check the Control Plane configuration (LMDB) for the API key before looking up the API Key in the realm.
-* **Realm only:** You can also configure a single `identity_realms` by omitting the `scope: cp` from the example. In this case, the Data Plane will only attempt to authenticate API keys against the realm. If the API key isn't found, the request will be blocked.
-* **Control plane only:** You can configure a look up only in the Control Plane config by only specifying `scope: cp` for `identity_realms`. In this scenario, the Data Plane will only check the Control Plane configuration (LMDB) for API key authentication. If the API key isn't found, the request will be blocked.
+`identity_realms` are scoped to the Control Plane by default (`scope: cp`). The order in which you configure the `identity_realms` dictates the priority in which the Data Plane attempts to authenticate the provided API keys. See [identity realms precedence](/plugins/key-auth/#identity-realms) for more information.
 
 ## 5. Validate
 
 After configuring the Key Authentication plugin, you can verify that it was configured correctly and is working, by sending requests with and without the API key you created for your centrally-managed Consumer.
 
-This request should be successful:
+Send a request with a valid API key:
 
 {% validation request-check %}
 url: /anything
@@ -172,6 +168,8 @@ headers:
   - 'apikey:$CONSUMER_KEY'
 status_code: 200
 {% endvalidation %}
+
+You will see a successful `200` response.
 
 When we send the wrong API key, it won't be authorized:
 

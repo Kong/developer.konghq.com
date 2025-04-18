@@ -123,7 +123,7 @@ end
 Consumer--> RL
 end
 RL --apply 
-per-Consume
+per-Consumer
 rate limiting--> Upstream
 
 style Authenticate stroke-dasharray: 5 5
@@ -148,16 +148,22 @@ Common use cases for Consumers:
 Consumers can be scoped to a {{site.konnect_short_name}} region and managed centrally, or be scoped to a Control Plane in Gateway Manager.
 
 Centralized Consumer management provides the following benefits:
-* Set up a Consumer identity centrally instead of defining it in multiple Control Planes.
-* Share Consumers across multiple Control Planes. Users don't need to replicate changes to Consumer identity in multiple Control Planes and Consumer configuration doesn't conflict.
-* Reduce configuration sync issues between the Control Plane and the Data Planes. Consumers that are managed centrally aren't part of the configuration that is pushed down from the Control Plane to the Data Planes, so it reduces config size and latency. 
+* **Set up a Consumer identity centrally**: Only define a Consumer once, instead of defining it in multiple Control Planes.
+* **Avoid conflicts from duplicate Consumer configuration**: Users don't need to replicate changes to Consumer identity in multiple Control Planes and Consumer configuration doesn't conflict.
+* **Reduce configuration sync issues between the Control Plane and the Data Planes**: Consumers that are managed centrally aren't part of the configuration that is pushed down from the Control Plane to the Data Planes, so it reduces config size and latency. 
 
-You can manage Consumers centrally using the {{site.konnect_short_name}} API. Only Org Admins and Control Plane Admins have CRUD permissions for these Consumers. When you create a Consumer centrally, you must assign it to a realm. A realm groups Consumes around an identity, defined by organizational boundaries, such as a production realm or a development realm. Realms are connected to a [geographic region](/konnect-geos/) in {{site.konnect_short_name}}. Centrally managed Consumers exist outside of Control Planes, so they can be used across Control Planes.
+Centrally managed Consumers exist outside of Control Planes, so they can be used across Control Planes.
+
+You can manage Consumers centrally using the [{{site.konnect_short_name}} Consumers API](/api/konnect/consumers/v1/). 
+Only Org Admins and Control Plane Admins have CRUD permissions for these Consumers. 
+
+When you create a Consumer centrally, you must assign it to a realm. A realm groups Consumers around an identity, defined by organizational boundaries, such as a production realm or a development realm. 
+Realms are connected to a [geographic region](/konnect-geos/) in {{site.konnect_short_name}}. 
 
 For a complete tutorial, see [Create a centrally-managed Consumer in {{site.konnect_short_name}}](/how-to/create-centrally-managed-consumer/).
 
 {:.info}
-> **Note:** If you are using KIC to manage your Data Plane nodes in {{site.konnect_short_name}}, ensure that you configure the `telemetry_endpoint` in the Data Plane. You can find the `telemetry_endpoint` in the {{site.konnect_short_name}} UI in [Gateway Manager](https://cloud.konghq.com/gateway-manager/) in the Data Plane node instructions.
+> **Note:** If you are using KIC to manage your Data Plane nodes in {{site.konnect_short_name}}, ensure that you configure the [`cluster_telemetry_endpoint`](/gateway/configuration/#cluster-telemetry-endpoint)  in the Data Plane. You can find your specific `cluster_telemetry_endpoint` in [Gateway Manager](https://cloud.konghq.com/gateway-manager/), in the Data Plane node setup instructions.
 
 ## Schema
 
