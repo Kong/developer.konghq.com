@@ -160,7 +160,7 @@ You should see an `access-token` in the response.
 Export the token to an environment variable:
 
 ```
-export ACCESS_TOKEN={your-access-token}
+export ACCESS_TOKEN='{your-access-token}'
 ```
 
 ## 5. Validate the access token flow
