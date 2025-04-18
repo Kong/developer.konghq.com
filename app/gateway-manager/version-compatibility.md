@@ -21,6 +21,8 @@ related_resources:
     url: /gateway/logs/
   - text: "{{site.base_gateway}} debugging"
     url: /gateway/debug/
+  - text: "{{site.konnect_short_name}} compatibility"
+    url: /konnect-compatibility/
 ---
 
 We recommend running one major version (2.x or 3.x) of a Data Plane node per Control Plane, unless you are in the middle of version upgrades to the Data Plane.
