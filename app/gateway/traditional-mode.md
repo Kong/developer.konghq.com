@@ -65,14 +65,14 @@ Each node manages its own configuration._
 
 ## About {{site.base_gateway}} clusters
 
-A {{site.base_gateway}} cluster does not load balance client traffic across Data Plane nodes out-of-the-box. You still need a
-[load-balancer](/gateway/load-balancing/) in front of your Data Plane nodes to distribute your traffic. Instead,
-a {{site.base_gateway}} cluster means that those nodes will share the same configuration.
+Data Plane nodes in the same {{site.base_gateway}} cluster share the same configuration.
+
+To load balance traffic across Data Plane nodes in a cluster, configure a [load balancer](/gateway/load-balancing/) in front of your nodes to distribute the traffic. 
 
 For performance reasons, {{site.base_gateway}} avoids database connections when proxying
 requests, and caches the contents of your database in memory. The cached
 [entities](/gateway/entities/) include Gateway Services, Routes, Consumers, plugins, credentials, and so on. Since those
-values are in memory, any change made via the Admin API of one of the nodes
+values are stored in memory, any change made via the Admin API of one of the nodes
 must be propagated to the other nodes.
 
 ## Single node clusters
