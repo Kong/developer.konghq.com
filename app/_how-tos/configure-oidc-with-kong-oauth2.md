@@ -136,19 +136,14 @@ In this example:
 
 ## 4. Validate the token
 
-Retreive the token from the OAuth token endpoint:
+Retrieve the token from the OAuth token endpoint and export it to an environment variable:
 
 ```sh
-curl -i -X POST --insecure https://localhost:8443/anything/oauth2/token \
+export ACCESS_TOKEN=$(curl -X POST --insecure https://localhost:8443/anything/oauth2/token \
   --data "client_id=client" \
   --data "client_secret=secret" \
-  --data "grant_type=client_credentials"
-```
-
-You should get an HTTP 200 response with the token in the `access_token` field. Export the access token to an environment varible:
-
-```
-export TOKEN=hAilsJRB8et8WBZyNBg2MrC9ZUqT1rO2
+  --data "grant_type=client_credentials" | jq -r .access_token)
+echo $ACCESS_TOKEN
 ```
 
 At this point you have created a Gateway Service, routed traffic to the Service, enabled the OpenID Connect plugin, and retrieved the bearer token. 
@@ -160,7 +155,7 @@ method: GET
 status_code: 200
 display_headers: true
 headers:
-  - "Authorization: Bearer $TOKEN"
+  - "Authorization: Bearer $ACCESS_TOKEN"
 {% endvalidation %}
 
 {% include_cached plugins/oidc/cache.md %}
