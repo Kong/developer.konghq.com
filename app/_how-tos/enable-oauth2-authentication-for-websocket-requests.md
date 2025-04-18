@@ -67,7 +67,11 @@ entities:
         - POST
 {% endentity_examples %}
 
-## 2. Enable the OAuth 2.0 plugin
+## 2. Generate a provision key
+
+{% include /how-tos/steps/oauth-provision-key.md %}
+
+## 3. Enable the OAuth 2.0 plugin
 
 Enable the plugin on:
 * The WebSocket Gateway Service we created in the [prerequisites](#prerequisites), to secure it
@@ -85,7 +89,7 @@ entities:
           - email
           - profile
         global_credentials: true
-        provision_key: somekey
+        provision_key: ${key}
         enable_client_credentials: true
     - name: oauth2
       route: websocket-token-route
@@ -94,19 +98,22 @@ entities:
           - email
           - profile
         global_credentials: true
-        provision_key: somekey
+        provision_key: ${key}
         enable_client_credentials: true
+variables:
+  key:
+    value: $PROVISION_KEY
 {% endentity_examples %}
 
-## 3. Create a Consumer
+## 4. Create a Consumer
 
 {% include /how-tos/steps/oauth-consumer.md %}
 
-## 4. Create an application
+## 5. Create an application
 
 {% include /how-tos/steps/oauth-application.md %}
 
-## 5. Generate a token
+## 6. Generate a token
 
 Use the applications's client credentials to generate a token:
 ```sh
@@ -122,7 +129,7 @@ curl -X POST "https://localhost:8443/token-route/oauth2/token" \
 {:.info}
 > **Note**: This request requires HTTPS, so we need to use the `8443` port instead of `8000`.
 
-## 6. Validate
+## 7. Validate
 
 To validate that the configuration works as expected, open a WebSocket connection to `ws://localhost:8000/anything` using the `Authorization` header with the Bearer token we generated. You can do this using [Insomnia](/insomnia/requests/#how-do-i-create-requests-in-insomnia):
 

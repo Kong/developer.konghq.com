@@ -52,7 +52,11 @@ min_version:
     gateway: '3.4'
 ---
 
-## 1. Enable the OAuth 2.0 Authentication plugin
+## 1. Generate a provision key
+
+{% include /how-tos/steps/oauth-provision-key.md %}
+
+## 2. Enable the OAuth 2.0 Authentication plugin
 
 Enable the [OAuth 2.0 Authentication](/plugins/oauth2/) plugin on the Gateway Service we created in the [prerequisites](#prerequisites).
 
@@ -66,19 +70,22 @@ entities:
           - email
           - profile
         global_credentials: true
-        provision_key: somekey
+        provision_key: ${key}
         enable_client_credentials: true
+variables:
+  key:
+    value: $PROVISION_KEY
 {% endentity_examples %}
 
-## 2. Create a Consumer
+## 3. Create a Consumer
 
 {% include /how-tos/steps/oauth-consumer.md %}
 
-## 3. Create an application
+## 4. Create an application
 
 {% include /how-tos/steps/oauth-application.md %}
 
-## 4. Generate a token
+## 5. Generate a token
 
 Use the applications's client credentials to generate a token and export it to an environment variable:
 ```sh
@@ -91,7 +98,7 @@ export TOKEN=$(curl -X POST "https://localhost:8443/anything/oauth2/token" \
   }' | jq -r '.access_token')
 ```
 
-## 5. Validate
+## 6. Validate
 
 To validate that the configuration works as expected, send a request to the `/anything` Route using the token we generated:
 {% validation request-check %}
