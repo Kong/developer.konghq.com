@@ -110,6 +110,17 @@ If the configuration is correct, you will see the IdP sign-in page.
 
 You can now manage your organization's user permissions entirely from the IdP application.
 
+## Enable OIDC
+
+As an alternative to {{site.konnect_short_name}}'s native authentication, you can enable single sign-on (SSO) using any identity provider (IdP) that supports [OpenID Connect](https://openid.net/connect/).
+This allows your users to log in to {{site.konnect_short_name}} using their existing SSO credentials
+
+To enable OIDC:
+
+1. Send a `POST` or `PATCH` request to the [`/identity-providers` endpoint](/api/konnect/identity/v3/#/operations/create-identity-provider), making sure `oidc` is selected for `type` and `scopes`.
+1. Once the SSO configuration is set, you can enable the OIDC auth method with the [`/authentication-settings` endpoint](/api/konnect/identity/v3/#/operations/update-authentication-settings) by setting `oidc_auth_enabled: true`.
+1. Verify the configuration is valid by logging in at `https://cloud.konghq.com/login/{login-path}`.
+
 ## Team mapping configuration
 
 When you configure SSO for the {{site.konnect_short_name}} platform and Dev Portal, you have the option to configure team mappings from your IdP as well. Team mappings allow you to map teams from your IdP to {{site.konnect_short_name}} Org teams and Dev Portal teams. 
@@ -130,7 +141,7 @@ rows:
     ui: "Go to the [Team Mapping](https://cloud.konghq.com/global/organization/settings#team-mappings ) in the Organization settings."
     api: "[`/identity-provider/team-mappings`](/api/konnect/identity/v3/#/operations/update-idp-team-mappings)"
   - feature: "Dev Portal"
-    ui: "Click on a Dev Portal](https://cloud.konghq.com/portals/) and go to Team Mappings in its settings."
+    ui: "Click on a [Dev Portal](https://cloud.konghq.com/portals/) and go to Team Mappings in its settings."
     api: "[`/portals/{portalId}/identity-provider/team-group-mappings`](/api/konnect/portal-management/v2/#/operations/update-portal-team-group-mappings)"
 
 {% endtable %}

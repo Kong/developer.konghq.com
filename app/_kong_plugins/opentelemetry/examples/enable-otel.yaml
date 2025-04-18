@@ -1,4 +1,4 @@
-description: "Enables the OTEL plugin with an endpoint for tracing and logs. It also adds the `X-Auth-Token` header in the HTTP request sent to the OTLP server."
+description: "Enables the OTEL plugin with an endpoint for tracing and logs. It also adds the `X-Auth-Token` header in the HTTP request sent to the OTLP server. For a complete tutorial with Jaeger, see [Set up Jaeger with OpenTelemetry](/how-to/set-up-jaeger-with-otel/)."
 
 title: 'Enable the OTEL plugin'
 

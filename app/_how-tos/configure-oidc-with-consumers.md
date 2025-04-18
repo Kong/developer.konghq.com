@@ -111,7 +111,7 @@ variables:
 
 In this example:
 * `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
-* `auth_methods`: Password grant, for easy testing.
+* `auth_methods`:  Specifies that the plugin should use the password grant, for easy testing.
 * `consumer_claim` and `consumer_by` : Looks for a `preferred_username` in the token payload and maps it to the Consumer entity by the entity's `username` value.
 
 {% include_cached plugins/oidc/client-auth.md %}
@@ -141,9 +141,7 @@ entities:
 
 ## 3. Verify Consumer authorization
 
-At this point you have created a Gateway Service, routed traffic to the Service, enabled the OpenID Connect plugin, and created a Consumer that maps to a `preferred_username` of an existing user.
-
-Now, your configured Consumer can access the `example-route` Route by using their username and password:
+Now, your configured Consumer can access the `example-route` Route by using their username and password in `username:password` format:
 
 {% validation request-check %}
 url: /anything
