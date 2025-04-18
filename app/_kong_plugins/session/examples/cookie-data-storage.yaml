@@ -1,0 +1,18 @@
+description: 'Stores session data in the cookie itself.'
+
+title: 'Store session data in the cookie'
+
+weight: 900
+
+requirements:
+ - "Another [authentication plugin](/plugins/?category=authentication) configured"
+
+config: 
+  storage: cookie
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

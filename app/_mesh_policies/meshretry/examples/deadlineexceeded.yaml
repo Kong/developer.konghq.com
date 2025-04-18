@@ -1,0 +1,31 @@
+title: 'gRPC frontend to backend on DeadlineExceeded'
+description: 'gRPC frontend to backend on DeadlineExceeded'
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshRetry
+  name: frontend-to-backend-retry-grpc
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      tags:
+        app: frontend
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+          namespace: kuma-demo
+          sectionName: http
+          _port: 8080
+        default:
+          grpc:
+            numRetries: 5
+            backOff:
+              baseInterval: 5s
+              maxInterval: 1m
+            retryOn:
+              - "DeadlineExceeded"

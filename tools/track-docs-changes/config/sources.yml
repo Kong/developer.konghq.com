@@ -61,11 +61,6 @@ app/_gateway_entities/upstream.md:
 app/_gateway_entities/workspace.md:
   - app/_src/gateway/kong-manager/workspaces.md
   - app/_src/gateway/kong-enterprise/workspaces.md
-app/_gateway_entities/route.md:
-  - app/_src/gateway/how-kong-works/routing-traffic.md
-  - app/_src/gateway/key-concepts/routes/index.md
-app/_gateway_entities/upstream.md:
-  - app/_src/gateway/key-concepts/upstreams.md
 app/_gateway_entities/event_hooks.md:
   - app/_src/gateway/latest/kong-enterprise/event-hooks.md
 app/_gateway_entities/rbac.md:
@@ -86,8 +81,6 @@ app/_gateway_entities/vault.md:
 app/_gateway_entities/sni.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_gateway/entities/certificate.md:
-  - app/_src/gateway/how-kong-works/routing-traffic.md
-app/_gateway_entities/route.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 
 app/_gateway_entities/license.md:
@@ -221,9 +214,12 @@ app/_how-tos/sign-gateway-audit-logs.md:
   - app/_src/gateway/kong-enterprise/audit-log.md
 app/_how-tos/validate-gateway-audit-log-signatures.md:
   - app/_src/gateway/kong-enterprise/audit-log.md
+app/_how-tos/authenticate-consumers-with-session-and-key-auth.md:
+  - app/_hub/kong-inc/session/overview/_index.md
 app/_how-tos/configure-oidc-with-session-auth.md:
   - app/_hub/kong-inc/openid-connect/how-to/authentication/_session.md
-
+app/_how-tos/configure-oidc-with-client-credentials.md:
+  - app/_hub/kong-inc/openid-connect/how-to/authentication/_client-credentials.md
 app/_how-tos/plugin-dev-add-plugin-configuration.md:
   - app/_src/gateway/plugin-development/get-started/config.md
 app/_how-tos/plugin-dev-add-plugin-testing.md:
@@ -236,6 +232,14 @@ app/_how-tos/plugin-dev-set-up-plugin-project.md:
   - app/_src/gateway/plugin-development/get-started/setup.md
 app/_how-tos/create-centrally-managed-consumer.md:
   - app/konnect/centralized-consumer-management.md
+app/_how-tos/configure-oidc-with-acl-auth.md:
+  - app/_hub/kong-inc/openid-connect/how-to/authorization/_acl.md
+app/_how-tos/configure-oidc-with-consumers.md:
+  - /app/_hub/kong-inc/openid-connect/how-to/authorization/_consumers.md
+app/_how-tos/configure-oidc-with-user-info-auth.md:
+  - app/_hub/kong-inc/openid-connect/how-to/authentication/_user-info.md
+app/_how-tos/configure-oidc-with-introspection.md:
+  - /app/_hub/kong-inc/openid-connect/how-to/authentication/_introspection.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
@@ -319,8 +323,16 @@ app/kubernetes-ingress-controller/reference/configuration-options.md:
   - app/_src/kubernetes-ingress-controller/reference/cli-arguments-3.4.x.md
 app/kubernetes-ingress-controller/class-annotations.md:
   - app/_src/kubernetes-ingress-controller/reference/ingress-class-requirement.md
+app/_how-tos/kic-plugin-custom.md:
+  - app/_src/kubernetes-ingress-controller/plugins/custom.md
+app/_how-tos/kic-plugin-authentication.md:
+  - app/_src/kubernetes-ingress-controller/plugins/authentication.md
 
 # plugins
+app/_kong_plugins/session/changelog.md:
+  - app/_hub/kong-inc/session/_changelog.md
+app/_kong_plugins/session/index.md:
+  - app/_hub/kong-inc/session/overview/_index.md
 app/_kong_plugins/zipkin/changelog.md:
   - app/_hub/kong-inc/zipkin/_changelog.md
 app/_kong_plugins/zipkin/index.md:
@@ -1007,6 +1019,7 @@ app/gateway/traffic-control/blue-green-deployments.md:
   - app/_src/gateway/production/blue-green.md
 app/konnect-compatibility.md:
   - app/konnect/compatibility.md
+  - app/konnect/upgrade-faq.md
 app/_landing_pages/gateway/traffic-control-and-routing.yaml:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/gateway/incremental-config-sync.md:
@@ -1060,9 +1073,11 @@ app/gateway-manager/control-plane-groups.md:
 
 app/konnect-platform/konnect-account.md:
   - app/konnect/org-management/deactivation.md
-app/konnect-platform/teams-reference.md:
+app/konnect-platform/teams-and-roles.md:
   - app/konnect/org-management/teams-and-roles/teams-reference.md
-
+  - app/konnect/org-management/teams-and-roles/index.md
+  - app/konnect/org-management/teams-and-roles/roles-reference.md
+  - app/konnect/org-management/teams-and-roles/manage.md
 
 app/service-catalog-integrations.yaml:
   - app/konnect/service-catalog/integrations/index.md
@@ -1204,3 +1219,29 @@ app/mesh/license.md:
   - /app/_src/mesh/production/cp-deployment/license.md
 
 
+app/mesh/sbom.md:
+  - /app/_src/mesh/sbom.md 
+app/mesh/vulnerability-patching-process.md:
+  - /app/_src/mesh/vulnerability-patching-process.md 
+app/mesh/vault.md:
+  - /app/_src/mesh/features/vault.md 
+app/mesh/signed-images.md:
+  - /app/_src/mesh/features/signed-images.md
+app/mesh/enterprise.md:
+  - /app/_src/mesh/features/index.md 
+app/mesh/ubi-images.md:
+  - /app/_src/mesh/features/ubi-images.md
+app/mesh/rbac.md:
+  - /app/_src/mesh/features/rbac.md
+app/mesh/fips-support.md:
+  - /app/_src/mesh/features/fips-support.md
+app/mesh/openshift-quickstart.md:
+  - /app/_src/mesh/features/openshift-quickstart.md
+app/mesh/ca-rotation.md:
+  - /app/_src/mesh/features/ca-rotation.md 
+app/mesh/ecs.md:
+  - /app/_src/mesh/installation/ecs.md 
+app/mesh/production-usuage-values.md:
+  - /app/_src/mesh/production/cp-deployment/production-usage-values.md
+app/mesh/support-policy.md:
+  - /app/_src/mesh/support-policy.md 

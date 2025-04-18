@@ -1,0 +1,25 @@
+title: 'Service backend returns 500 for 50% of requests from frontend service'
+description: 'Service backend returns 500 for 50% of requests from frontend service'
+
+weight: 900
+
+namespace: kuma-demo
+config:
+  type: MeshFaultInjection
+  mesh: default
+  name: default-fault-injection
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: backend
+    from:
+      - targetRef:
+          kind: MeshSubset
+          tags:
+            kuma.io/service: frontend
+        default:
+          http:
+            - abort:
+                httpStatus: 500
+                percentage: 50

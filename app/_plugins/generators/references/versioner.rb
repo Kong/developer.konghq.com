@@ -50,7 +50,6 @@ module Jekyll
             # Setting published: false prevents Jekyll from rendering the page.
             page.data.merge!('published' => false)
           end
-
         elsif max_release && max_release < latest_available_release
           page.data.merge!(
             'published' => false,

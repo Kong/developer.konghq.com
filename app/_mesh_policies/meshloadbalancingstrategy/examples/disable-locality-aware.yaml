@@ -1,0 +1,22 @@
+title: 'Disable locality-aware load balancing for backend'
+description: 'Requests to `backend` will be spread evenly across all zones where `backend` is deployed.'
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshLoadBalancingStrategy
+  name: disable-la-to-backend
+  mesh: default
+  spec:
+    to:
+      - targetRef:
+          kind: MeshMultiZoneService
+          name: backend
+          namespace: kuma-demo
+          _port: 8080
+          sectionName: http
+        default:
+          localityAwareness:
+            disabled: true

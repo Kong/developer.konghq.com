@@ -1,5 +1,10 @@
 name: Kong Mesh
 
+tiers:
+  enterprise:
+    text: Enterprise
+    url: /mesh/enterprise/
+
 topologies:
   - universal
   - kubernetes

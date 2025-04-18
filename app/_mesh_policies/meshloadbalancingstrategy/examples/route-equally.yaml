@@ -1,0 +1,22 @@
+title: 'Route to the local zone instances equally'
+description: 'In this example, when a user sends a request to the backend service, the request is routed equally to all instances in the local zone. If there are no instances in the local zone, the request will fail because there is no cross zone traffic.'
+
+weight: 900
+
+namespace: kuma-demo
+use_meshservice: true
+config:
+  type: MeshLoadBalancingStrategy
+  name: local-zone-affinity-backend
+  mesh: default
+  spec:
+    to:
+      - targetRef:
+          kind: MeshService
+          name: backend
+          namespace: kuma-demo
+          sectionName: http
+          _port: 8080
+        default:
+          localityAwareness:
+            localZone: {}

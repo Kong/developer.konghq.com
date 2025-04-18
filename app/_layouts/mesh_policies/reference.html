@@ -1,0 +1,13 @@
+---
+layout: mesh_policies/with_aside
+plugin_schema: true
+---
+
+<div class="flex flex-col">
+  <h2 id="configuration">Configuration</h2>
+  <div id="schema"></div>
+</div>
+
+<script>
+  window.schema = {{ page.schema.as_json | jsonify }}
+</script>

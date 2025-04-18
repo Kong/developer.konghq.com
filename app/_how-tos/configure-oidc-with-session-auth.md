@@ -45,6 +45,8 @@ tags:
   - authentication
   - openid-connect
 
+description: Set up OpenID Connect with session authentication, which stores credentials in a session cookie and reuses the cookie for subsequent access attempts.
+
 tldr:
   q: How do I use a session cookie to authenticate directly with my identity provider?
   a: Using the OpenID Connect plugin, set up the [session auth flow](/plugins/openid-connect/#session-authentication-workflow) to connect to an identity provider (IdP) to retrieve, store, and use session cookies for authentication.
@@ -102,6 +104,8 @@ In this example:
 * `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
 * `auth_methods`: Session auth and password grant.
 
+{% include_cached plugins/oidc/client-auth.md %}
+
 ## 2. Store the session cookie
 
 Request the Service with the basic authentication credentials created in the [prerequisites](#prerequisites) and store the session:
@@ -111,7 +115,7 @@ Request the Service with the basic authentication credentials created in the [pr
 url: /anything
 method: GET
 status_code: 200
-user: "john:doe"
+user: "alex:doe"
 display_headers: true
 cookie_jar: example-user
 {% endvalidation %}
@@ -129,11 +133,4 @@ display_headers: true
 cookie: example-user
 {% endvalidation %}
 
-If {{site.base_gateway}} successfully authenticates with Keycloak, you'll see a `200` response.
-
-If you make another request using the same credentials, you'll see that {{site.base_gateway}} adds less latency to the request because it has cached the token endpoint call to Keycloak:
-
-```
-X-Kong-Proxy-Latency: 25
-```
-{:.no-copy-code}
+{% include_cached plugins/oidc/cache.md %}

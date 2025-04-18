@@ -26,7 +26,7 @@ The default mTLS policy in {{site.mesh_product_name}} supports the following Cer
 * `builtin`: {{site.mesh_product_name}} automatically generates the CA root certificate and key used to generate Data Plane certificates.
 * `provided`: The CA root certificate and key can be provided by the user.
 * `vault`: Uses a CA root certificate and key stored in a HashiCorp Vault server.
-* `acmpca`: Uses [Amazon Certificate Manager Private CA](/mesh/{{page.release}}/features/acmpca/) to generate Data Plane certificates.
+* `acmpca`: Uses [Amazon Certificate Manager Private CA](/mesh/acm-private-ca-policy/) to generate Data Plane certificates.
 * `certmanager`: Uses the Kubernetes [cert-manager](https://cert-manager.io) certificate controller.
 
 ## How Kubernetes cert-manager works

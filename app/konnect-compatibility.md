@@ -22,6 +22,23 @@ related_resources:
     url: /deck/
   - text: "Plugins"
     url: /plugins/
+
+faqs:
+  - q: Are the {{site.konnect_short_name}} Control Plane and associated database migrations or upgrades done by Kong Inc.?
+    a: The {{site.base_gateway}} Control Plane and its dependencies are fully managed by {{site.konnect_short_name}}. As new versions of {{site.base_gateway}} are released, {{site.konnect_short_name}} supports them as long as they are under our [active support schedule](/gateway/version-support-policy/).
+  - q: Will {{site.konnect_short_name}} Control Plane upgrades always show incompatible messages on the Gateway Manager page if the Data Plane nodes are not the same version as the {{site.konnect_short_name}} Control Plane?
+    a: An old configuration may still be 100% compatible with older Data Plane nodes and therefore not show any error messages in the {{site.konnect_short_name}} UI. If there are compatibility issues detected when pushing the payload down to the Data Plane, then this will be reflected in the UI.
+  - q: Will new features be available if the {{site.konnect_short_name}} Control Plane detects incompatible Data Plane nodes?
+    a: |
+      New features will not be available for use or consumption on incompatible Data Plane nodes. You will see new features available in the {{site.konnect_short_name}} UI regardless of the Data Plane that is connected to the Control Plane in {{site.konnect_short_name}}. However, when an update payload is pushed to an incompatible Data Plane, the update will be automatically rejected by the Data Plane. 
+
+      This is managed by a version compatibility layer that checks the payload before the update gets sent to the Data Plane. If there are concerns with the payload, metadata is added to the node. That metadata is what will display incompatibility warnings or errors in the {{site.konnect_short_name}} UI. 
+
+      For example, let's say a parameter is introduced with a new version of a plugin and is available in the {{site.konnect_short_name}} UI. The Data Plane, however, is running an older version of {{site.base_gateway}} and doesn't support the new parameter. If that parameter isn't configured, or is assigned the default value, then no warning or incompatibility metadata will be applied to the node in {{site.konnect_short_name}}, and no warnings or errors will appear.
+  - q: Can I continue to use older versions of configurations as the {{site.konnect_short_name}} Control Plane auto-upgrades?
+    a: Yes. All decK dumps, or YAML configurations, will continue to work in {{site.konnect_short_name}} after they are synced.
+  - q: Are there any disruptions if I choose not to upgrade my Data Plane nodes?
+    a: There is **no** disruption at all if you choose **not** to upgrade your Data Plane nodes as long as the version of the Data Plane is under our [{{site.base_gateway}} active support timeline](/konnect-compatibility/#kong-gateway-version-compatibility). 
 ---
 
 This reference explains which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with.
@@ -41,6 +58,10 @@ columns:
     key: end
 
 features:
+  - title: 3.10.x (LTS)
+    supported: true
+    beginning: 3.10.0.0
+    end: March 2028
   - title: 3.9.x
     supported: true
     beginning: 3.9.0.0

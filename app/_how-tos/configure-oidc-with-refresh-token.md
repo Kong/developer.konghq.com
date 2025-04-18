@@ -45,6 +45,8 @@ tags:
   - authentication
   - openid-connect
 
+description: Set up OpenID Connect with the refresh token grant, which looks for a Refresh-Token header.
+
 tldr:
   q: How do I use a refresh token to authenticate directly with my identity provider?
   a: Using the OpenID Connect plugin, retrieve the refresh token and use it to authenticate with an identity provider (IdP) by passing the refresh token in a `Refresh-Token` header.
@@ -103,6 +105,8 @@ In this example:
 * `auth_methods`: Refresh token and password grant.
 * `refresh_token_param_type`: We want to search for the refresh token in headers only.
 
+{% include_cached plugins/oidc/client-auth.md %}
+
 ## 2. Retrieve the refresh token
 
 Check that you can recover the refresh token by requesting the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
@@ -111,7 +115,7 @@ Check that you can recover the refresh token by requesting the Service with the 
 url: /anything
 method: GET
 status_code: 200
-user: "john:doe"
+user: "alex:doe"
 display_headers: true
 {% endvalidation %}
 
@@ -139,14 +143,7 @@ headers:
   - "Refresh-Token: $REFRESH_TOKEN"
 {% endvalidation %}
 
-If {{site.base_gateway}} successfully authenticates with Keycloak, you'll see a `200` response with a `Refresh-Token` header.
-
-If you make another request using the same credentials, you'll see that {{site.base_gateway}} adds less latency to the request because it has cached the token endpoint call to Keycloak:
-
-```
-X-Kong-Proxy-Latency: 25
-```
-{:.no-copy-code}
+{% include_cached plugins/oidc/cache.md %}
 
 Alternatively, you can use jq to pass the credentials and retrieve the most recent refresh token every time:
 
@@ -157,6 +154,6 @@ status_code: 200
 display_headers: true
 headers:
   - |
-    Refresh-Token:$(curl --user john:doe http://localhost:8000/anything \
+    Refresh-Token:$(curl --user alex:doe http://localhost:8000/anything \
             | jq -r '.headers."Refresh-Token"')
 {% endvalidation %}

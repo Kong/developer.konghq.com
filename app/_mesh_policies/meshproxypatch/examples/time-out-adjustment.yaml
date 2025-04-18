@@ -1,0 +1,25 @@
+title: 'Timeout adjustment for MeshGateway'
+description: "Example how to change `streamIdleTimeout` for `MeshGateway`"
+
+weight: 900
+
+
+config:
+  type: MeshProxyPatch
+  mesh: default
+  name: custom-template-1
+  spec:
+    targetRef:
+      kind: MeshGateway
+      name: gateway
+    default:
+      appendModifications:
+        - networkFilter:
+            operation: Patch
+            match:
+              name: envoy.filters.network.http_connection_manager
+              origin: gateway # you can also specify the name of the listener
+            jsonPatches:
+              - op: replace
+                path: /streamIdleTimeout
+                value: 15s

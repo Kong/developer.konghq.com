@@ -1,0 +1,31 @@
+title: 'Datadog'
+description: "This assumes a Datadog agent is configured and running. If you haven't already check the [Datadog observability page](/docs/{{ page.release }}/explore/observability#configuring-datadog)."
+
+weight: 900
+
+
+config:
+  type: MeshTrace
+  name: default
+  mesh: default
+  spec:
+    default:
+      tags:
+        - name: team
+          literal: core
+        - name: env
+          header:
+            name: x-env
+            default: prod
+        - name: version
+          header:
+            name: x-version
+      sampling:
+        overall: 80
+        random: 60
+        client: 40
+      backends:
+        - type: Datadog
+          datadog:
+            url: http://127.0.0.1:8126
+            splitService: true

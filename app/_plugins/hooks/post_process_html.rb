@@ -19,9 +19,11 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
       # handle new-in badge
       text = if @page_or_doc.url == '/mesh/changelog/'
                # special case, it has links in the headings
-               heading.content
+               heading.content.strip
              else
-               heading.children.find(&:text?).text.strip
+               text = heading.children.find(&:text?)&.text&.strip
+               text = heading.content.strip if text.nil? || text.empty?
+               text
              end
       old_id = heading['id']
       heading['id'] = Jekyll::Utils.slugify(text)

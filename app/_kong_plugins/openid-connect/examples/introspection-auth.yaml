@@ -2,17 +2,26 @@ title: Introspection authentication
 description: |
   Configure the OpenID Connect plugin with introspection authentication.
 
+  In this example, the plugin will only accept a bearer token sent in a header, 
+  but you can also set the `bearer_token_param_type` parameter to `body`, `query`, or any combination of these values.
+
+  For an example of using introspection auth with Keycloak, see the tutorial for [configuring OpenID Connect with introspection](/how-to/configure-oidc-with-introspection/).
+  
+  {% include_cached plugins/oidc/client-auth.md %}
+
 weight: 898
 
 requirements:
   - A configured identity provider (IdP)
 
 config:
-  issuer: $ISSUER
+  issuer: ${issuer}
   client_id:
-    - $CLIENT_ID
+    - ${client-id}
+  client_secret:
+    - ${client-secret}
   client_auth:
-    - private_key_jwt
+    - client_secret_post
   auth_methods:
     - introspection
   bearer_token_param_type:
@@ -20,10 +29,16 @@ config:
 
 variables:
   issuer:
-    value: "http://keycloak.test:8080/realms/master"
-  client_id:
-    value: kong
-
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. 
+      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://example-keycloak-host:8080/realms/example-realm`
+  client-id:
+    value: $CLIENT_ID
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
+  client-secret:
+    value: $CLIENT_SECRET
+    description: The client secret needed to connect to your IdP.
 
 tools:
   - deck

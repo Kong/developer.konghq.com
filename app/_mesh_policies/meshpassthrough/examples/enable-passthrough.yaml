@@ -1,0 +1,17 @@
+title: 'Enable passthrough'
+description: 'Enable pasthrough for all sidecars'
+
+weight: 900
+
+
+config:
+  type: MeshPassthrough
+  name: enable-passthrough
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: demo-app
+    default:
+      passthroughMode: All

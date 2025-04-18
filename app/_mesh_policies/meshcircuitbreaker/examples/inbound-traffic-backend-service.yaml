@@ -1,0 +1,39 @@
+title: 'Outlier detection'
+
+description: 'Outlier detection for inbound traffic to backend service'
+
+weight: 900
+
+namespace: kuma-demo
+
+config:
+  type: MeshCircuitBreaker
+  name: backend-inbound-outlier-detection
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+      labels:
+        app: web
+    rules:
+      - default:
+          outlierDetection:
+            interval: 5s
+            baseEjectionTime: 30s
+            maxEjectionPercent: 20
+            splitExternalAndLocalErrors: true
+            detectors:
+              totalFailures:
+                consecutive: 10
+              gatewayFailures:
+                consecutive: 10
+              localOriginFailures:
+                consecutive: 10
+              successRate:
+                minimumHosts: 5
+                requestVolume: 10
+                standardDeviationFactor: 1.9
+              failurePercentage:
+                requestVolume: 10
+                minimumHosts: 5
+                threshold: 85

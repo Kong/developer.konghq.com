@@ -1,0 +1,15 @@
+title: 'Disable passthrough'
+description: 'Disables pasthrough for all sidecars'
+
+weight: 900
+
+
+config:
+  type: MeshPassthrough
+  name: disable-passthrough
+  mesh: default
+  spec:
+    targetRef:
+      kind: Dataplane
+    default:
+      passthroughMode: None
