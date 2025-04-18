@@ -38,26 +38,26 @@ Add an [OAuth 2.0](https://oauth.net/2/) authentication layer with one of the fo
 
 {:.warning}
 > **Important**: 
-* Once this plugin is applied, any user with a valid credential can access the service.
+* Once this plugin is applied, any user with a valid credential can access the Gateway Service.
   To restrict usage to only some of the authenticated users, also add the
   [ACL](/plugins/acl/) plugin (not covered here) and create allowed or
   denied groups of users.
 * As per the OAuth2 specs, this plugin requires the
-  underlying service to be served over HTTPS. To avoid any
-  confusion, we recommend that you configure the route used to serve the
-  underlying service to only accept HTTPS traffic (using its `protocols`
+  underlying Service to be served over HTTPS. To avoid any
+  confusion, we recommend that you configure the Route used to serve the
+  underlying Service to only accept HTTPS traffic (using its `protocols`
   property).
 
 ## Upstream headers
 
-When a client has been authenticated and authorized, the plugin will append some headers to the request before proxying it to the upstream service, so that you can identify the consumer and the end-user in your code:
+When a client has been authenticated and authorized, the plugin will append some headers to the request before proxying it to the upstream Service, so that you can identify the Consumer and the end-user in your code:
 
 * `X-Consumer-ID`: The ID of the Consumer in {{site.base_gateway}}.
 * `X-Consumer-Custom-ID`: The `custom_id` of the Consumer (if set).
 * `X-Consumer-Username`: The `username` of the Consumer (if set).
-* `X-Credential-Identifier`, the `client_id` of the credential (if set), representing the client and the credential associated. See [Create an Application](#create-an-application) for more information.
-* `X-Authenticated-Scope`, the comma-separated list of scopes that the end user has authenticated, if available (only if the consumer is not the 'anonymous' consumer)
-* `X-Authenticated-Userid`, the logged-in user ID who has granted permission to the client (only if the consumer is not the 'anonymous' consumer)
+* `X-Credential-Identifier`, the `client_id` of the credential (if set), representing the client and the credential associated.
+* `X-Authenticated-Scope`: The comma-separated list of scopes that the end user has authenticated, if available (only if the Consumer is not the 'anonymous' Consumer)
+* `X-Authenticated-Userid`: The logged-in user ID who has granted permission to the client (only if the Consumer is not the 'anonymous' Consumer)
 * `X-Anonymous-Consumer`: Is set to `true` if authentication fails, and the `anonymous` Consumer is set instead.
 
 You can use this information on your side to implement additional logic.
@@ -73,27 +73,28 @@ The clients need to use the `/oauth2/token` endpoint to request an access token.
 
 ### Authorization Code
 
-After provisioning Consumers and associating OAuth 2.0 credentials to them, it is important to understand how the OAuth 2.0 authorization flow works. As opposed to most of the Kong plugins, the OAuth 2.0 plugin requires some little additional work on your side to make everything work well:
-
-* You **must** implement an authorization page on your web application, that will talk with the plugin server-side.
-* *Optionally* you need to explain on your website/documentation how to consume your OAuth 2.0 protected services, so that developers accessing your service know how to build their client implementations
+After provisioning Consumers and associating OAuth 2.0 credentials to them, it's' important to understand how the OAuth 2.0 authorization flow works. As opposed to most of the {{site.base_gateway}} plugins, the OAuth 2.0 plugin requires some additional work on your side to make everything work well:
+* You **must** implement an authorization page on your web application.
+* You may need to explain document how to consume your OAuth 2.0 protected services, so that developers accessing your Service know how to build their client implementations.
 
 #### The flow explained
 
-Building the authorization page is going to be the primary task that the plugin itself cannot do out of the box, because it requires to check that the user is properly logged in, and this operation is strongly tied with your authentication implementation.
+Building the authorization page is going to be the primary task that the plugin itself can't do out of the box, because it requires checking that the user is properly logged in, and this operation is strongly tied with your authentication implementation.
 
 The authorization page is made of two parts:
-
-* The frontend page that the user will see, and that will allow him to authorize the client application to access his data
-* The backend that will process the HTML form displayed in the frontend, that will talk with the OAuth 2.0 plugin on Kong, and that will ultimately redirect the user to a third party URL.
+* The frontend page that the user will see, and that will allow them to authorize the client application to access their data.
+* The backend that will process the HTML form displayed in the frontend, that will talk with the OAuth 2.0 plugin on {{site.base_gateway}}, and that will redirect the user to a third party URL.
 
 You can see a sample implementation in [node.js + express.js](https://github.com/Kong/kong-oauth2-hello-world) on GitHub.
+
+![Diagram representing the Authorization Code flow](app/assets/images/gateway/oauth2-authorization-code-flow.png)
+<!-- @TODO replace this with a mermaid diagram -->
 
 Here's how it works:
 
 1. The client application redirects the end user to the authorization page on your web application, passing `client_id`, `response_type` and `scope` (if required) as query string parameters.
 
-1. The web application makes sure that the user is logged in, then shows the authorization page.
+1. The web application ensures that the user is logged in, then shows the authorization page.
 
 1. The client application sends the `client_id` in the query string, from which the web application can retrieve both the OAuth 2.0 application name and developer name, by making the following request to {{site.base_gateway}}:
    ```bash
@@ -133,14 +134,12 @@ Here's how it works:
 1. Access Tokens can expire, and when that happens the client application needs to renew the Access Token with {{site.base_gateway}} and retrieve a new one.
 
 In this flow, the steps that you need to implement are:
-
 * The login page (step 2)
-* The Authorization page, with its backend that simply collects the values, makes a `POST` request to Kong and redirects the user to whatever URL {{site.base_gateway}} has returned (steps 3 to 7)
+* The Authorization page, with its backend that simply collects the values, makes a `POST` request to {{site.base_gateway}} and redirects the user to whatever URL {{site.base_gateway}} has returned (steps 3 to 7)
 
 ## gRPC requests
 
 The same access tokens can be used by gRPC applications:
-
 ```bash
 grpcurl -H 'authorization: bearer XXX' ...
 ```
@@ -166,7 +165,7 @@ The [Resource Owner Password Credentials Grant](https://tools.ietf.org/html/rfc6
 
 1. On the first request, the client application makes a request with some OAuth2 parameters to your web application.
 
-2. The backend of your web application adds the `provision_key` and `grant_type` parameters to the parameters originally sent by the client, then makes a `POST` request to Kong using the `/oauth2/token` endpoint of the configured plugin. If an `Authorization` header is sent by the client, that must be added too. For example:
+2. The backend of your web application adds the `provision_key` and `grant_type` parameters to the parameters originally sent by the client, then makes a `POST` request to {{site.base_gateway}} using the `/oauth2/token` endpoint of the configured plugin. If an `Authorization` header is sent by the client, that must be added too. For example:
 
     ```bash
     curl https://your.service.com/oauth2/token \
@@ -183,11 +182,11 @@ The [Resource Owner Password Credentials Grant](https://tools.ietf.org/html/rfc6
 
     The `provision_key` is the key the plugin has generated when it has been added to the Service, while `authenticated_userid` is the ID of the end user whose `username` and `password` belong to.
 
-3. Kong will respond with a JSON response
+3. {{site.base_gateway}} will respond with a JSON response
 
-4. The JSON response sent by Kong must be sent back to the original client as it is. If the operation is successful, this response will include an access token, otherwise it will include an error.
+4. The JSON response sent by {{site.base_gateway}} must be sent back to the original client as it is. If the operation is successful, this response will include an access token, otherwise it will include an error.
 
 In this flow, the steps that you need to implement are:
 
-* The backend endpoint that will process the original request and will authenticate the `username` and `password` values sent by the client, and if the authentication is successful, make the request to Kong and return back to the client whatever response Kong has sent back.
+* The backend endpoint that will process the original request and will authenticate the `username` and `password` values sent by the client, and if the authentication is successful, make the request to {{site.base_gateway}} and return back to the client whatever response {{site.base_gateway}} has sent back.
 
