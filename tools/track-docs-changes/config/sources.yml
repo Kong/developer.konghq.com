@@ -351,8 +351,6 @@ app/_kong_plugins/basic-auth/index.md:
   - app/_hub/kong-inc/basic-auth/overview/_index.md
   - app/_hub/kong-inc/basic-auth/_changelog.md
   - app/_src/gateway/kong-plugins/authentication/reference.md
-app/_kong_plugins/graphql-rate-limiting-advanced/index.md:
-  - app/_hub/kong-inc/graphql-rate-limiting-advanced/overview/_index.md
 app/_kong_plugins/jwt/index.md:
   - app/_hub/kong-inc/jwt/_index.md
 app/_kong_plugins/key-auth/index.md:
