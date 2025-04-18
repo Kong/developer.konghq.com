@@ -4,8 +4,8 @@ description: |
 
   In this example, the plugin will only accept a bearer token sent in a header, 
   but you can also set the `bearer_token_param_type` parameter to `body`, `query`, or any combination of these values.
-
-  For an example of using introspection auth with Keycloak, see the tutorial for [configuring OpenID Connect with introspection](/how-to/configure-oidc-with-introspection/).
+  
+  For a complete example of authenticating with a token retrieved through Keycloak's introspection endpoint, see the tutorial for [configuring OpenID Connect with introspection](/how-to/configure-oidc-with-introspection/).
   
   {% include_cached plugins/oidc/client-auth.md %}
 

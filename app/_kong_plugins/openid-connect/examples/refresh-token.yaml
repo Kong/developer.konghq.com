@@ -5,7 +5,7 @@ description: |
   In this example, the OpenID Connect plugin will only accept refresh tokens sent in a header, 
   but you can also set the `refresh_token_param_type` parameter to `body`, `query`, or any combination of these values.
 
-  For an example of using refresh tokens with Keycloak, see the tutorial for [configuring OpenID Connect with the refresh token grant](/how-to/configure-oidc-with-refresh-token/).
+  For a complete example of authenticating with a refresh token using Keycloak, see the tutorial for [configuring OpenID Connect with the refresh token grant](/how-to/configure-oidc-with-refresh-token/).
   
   {% include_cached plugins/oidc/client-auth.md %}
 
