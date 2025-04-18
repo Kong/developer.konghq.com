@@ -94,38 +94,44 @@ By attaching a plugin directly to a Consumer, you can manage specific controls a
 {% mermaid %}
 flowchart LR
 
-Consumer(Consumer 
+Consumer(Consumer
 entity)
-Service(Gateway 
+Service(Gateway
 Service)
 Auth(Auth
 plugin)
-Upstream[Service 
+Upstream[Service
 application]
-RL["Rate Limiting 
+RL["Rate Limiting
 plugin"]
 
-Client --pass
-credentials--> Service
+Client --> Label1[pass credentials]
+Label1 --> Service
+
 subgraph id1 ["`**KONG GATEWAY**`"]
     subgraph padding[ ]
 
-subgraph Authenticate ["Consumer Identity Added"]
-    direction LR
-    Service --> Auth
-    Auth--identify 
-    consumer-->Consumer
+    subgraph Authenticate ["Consumer Identity Added"]
+        direction LR
+        Service --> Auth
+        Auth --> Label2[identify consumer]
+        Label2-->Consumer
     end
 end
 
 Consumer--> RL
 end
-RL --apply 
+RL --> Label3[apply
 per-consumer
-rate limiting--> Upstream
+rate limiting]
+Label3 --> Upstream
 
 style Authenticate stroke-dasharray: 5 5
 style padding stroke:none!important,fill:none!important
+
+%% Style the label node
+classDef labelStyle fill:#bfbfbf,stroke:none,color:white;
+class Label1,Label2,Label3 labelStyle
 
 {% endmermaid %}
 
@@ -141,7 +147,7 @@ Common use cases for Consumers:
 | Rate limiting | Rate limit specific Consumers based on tiers. |
 | Transformation | Add or remove values from response bodies based on the Consumer. |
 
-## Centrally-managed Consumers 
+## Centrally-managed Consumers
 
 <!-- @todo: migrate from Konnect docs: https://docs.konghq.com/konnect/centralized-consumer-management/ -->
 
