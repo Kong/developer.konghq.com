@@ -60,11 +60,6 @@ app/_gateway_entities/upstream.md:
 app/_gateway_entities/workspace.md:
   - app/_src/gateway/kong-manager/workspaces.md
   - app/_src/gateway/kong-enterprise/workspaces.md
-app/_gateway_entities/route.md:
-  - app/_src/gateway/how-kong-works/routing-traffic.md
-  - app/_src/gateway/key-concepts/routes/index.md
-app/_gateway_entities/upstream.md:
-  - app/_src/gateway/key-concepts/upstreams.md
 app/_gateway_entities/event_hooks.md:
   - app/_src/gateway/latest/kong-enterprise/event-hooks.md
 app/_gateway_entities/rbac.md:
@@ -85,8 +80,6 @@ app/_gateway_entities/vault.md:
 app/_gateway_entities/sni.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_gateway/entities/certificate.md:
-  - app/_src/gateway/how-kong-works/routing-traffic.md
-app/_gateway_entities/route.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 
 app/_gateway_entities/license.md:
