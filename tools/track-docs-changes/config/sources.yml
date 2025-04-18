@@ -244,6 +244,8 @@ app/_how-tos/add-correlation-ids-to-gateway-logs.md:
   - app/_hub/kong-inc/correlation-id/overview/_index.md
 app/_how-tos/configure-oidc-with-kong-oauth2.md:
   - app/_hub/kong-inc/openid-connect/how-to/authentication/_kong-oauth-token.md
+app/_how-tos/configure-oidc-with-jwt-auth.md:
+  - app/_hub/kong-inc/openid-connect/how-to/authentication/_jwt-access-token.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
