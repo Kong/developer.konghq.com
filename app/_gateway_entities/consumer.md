@@ -129,7 +129,6 @@ Label3 --> Upstream
 style Authenticate stroke-dasharray: 5 5
 style padding stroke:none!important,fill:none!important
 
-%% Style the label node
 classDef labelStyle fill:#bfbfbf,stroke:none,color:white;
 class Label1,Label2,Label3 labelStyle
 
