@@ -98,8 +98,8 @@ variables:
 
 In this example:
 * `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
-* `auth_methods`: Password grant, for easy testing.
-* `authenticated_groups_claim`: Will look for a groups claim in an ACL.
+* `auth_methods`:  Specifies that the plugin should use the password grant, for easy testing.
+* `authenticated_groups_claim`: Looks for a groups claim in an ACL.
 
 {% include_cached plugins/oidc/client-auth.md %}
 

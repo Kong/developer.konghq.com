@@ -102,7 +102,7 @@ variables:
 
 In this example:
 * `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
-* `auth_methods`: Session auth and password grant.
+* `auth_methods`: Specifies that the plugin should use session authentication with the password grant.
 
 {% include_cached plugins/oidc/client-auth.md %}
 

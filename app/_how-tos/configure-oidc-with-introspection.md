@@ -99,33 +99,34 @@ variables:
 
 In this example:
 * `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
-* `auth_methods`: Introspection and password grant.
-* `bearer_token_param_type`: We want to search for client credentials in headers only.
+* `auth_methods`:  Specifies that the plugin should use introspection and the password grant for authentication.
+* `bearer_token_param_type`: Restricts token lookup to the request headers only.
 
 {% include_cached plugins/oidc/client-auth.md %}
 
 ## 2. Retrieve the bearer token using introspection
 
-Check that you can recover the token by requesting the Service with the basic authentication credentials created in the [prerequisites](#prerequisites), and export it to an environment variable:
+Check that you can recover the token by requesting the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
 
-```sh
-export TOKEN=$(curl --user alex:doe http://localhost:8000/anything \
-  | jq -r .headers.Authorization)
-echo $TOKEN
-```
-{: data-deployment-topology="on-prem" }
+{% validation request-check %}
+url: /anything
+method: GET
+status_code: 200
+user: "alex:doe"
+display_headers: true
+{% endvalidation %}
 
-```sh
-export TOKEN=$(curl --user alex:doe http://$KONNECT_PROXY_URL/anything \
-  | jq -r .headers.Authorization)
-echo $TOKEN
+You'll see an `Authorization` header in the response. 
+
+Export the value of the header to an environment variable:
+
 ```
-{: data-deployment-topology="konnect" }
+export TOKEN={your-bearer-token}
+```
 
 ## 3. Validate the token
 
-At this point you have created a Gateway Service, routed traffic to the Service, enabled the OpenID Connect plugin, and retrieved the bearer token. 
-Access the `example-route` Route by passing the token you retrieved using introspection:
+Now, validate the setup by accessing the `example-route` Route and passing the token you retrieved using introspection:
 
 {% validation request-check %}
 url: /anything

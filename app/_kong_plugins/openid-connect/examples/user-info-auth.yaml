@@ -5,7 +5,7 @@ description: |
   In this example, the OpenID Connect plugin will only accept bearer tokens sent in a header, 
   but you can also set the `bearer_token_param_type` parameter to `body`, `query`, or any combination of these values.
 
-  For an example of using user info auth with Keycloak, see the tutorial for [configuring OpenID Connect with user info](/how-to/configure-oidc-with-user-info-auth/).
+  For a complete example of authenticating with a token retrieved through Keycloak's user info endpoint, see the tutorial for [configuring OpenID Connect with user info](/how-to/configure-oidc-with-user-info-auth/).
   
   {% include_cached plugins/oidc/client-auth.md %}
 
