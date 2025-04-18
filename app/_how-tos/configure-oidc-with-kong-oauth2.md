@@ -73,6 +73,7 @@ entities:
     - username: alex
       oauth2_credentials:
         - client_secret: secret
+          client_id: client
           hash_secret: true
           name: oauth2-app
 {% endentity_examples %}
