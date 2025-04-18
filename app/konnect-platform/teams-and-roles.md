@@ -95,6 +95,17 @@ rows:
     description: Users can create and manage Control Planes.
 {% endtable %} 
 
+### Create a custom team
+
+Custom teams serve as a primary way for organizations to provision users' access to different entities. Custom teams are used to mirror the structure in an organization, any user who is a member of a custom team will inherit all of the roles of this team.
+
+You can create and configure a custom team by doing the following:
+
+1. Create a custom team by sending a `POST` request to the [`/teams` endpoint](/api/konnect/identity/v3/#/operations/create-team) containing the `name` and `description` of your team in the response body. Save the team ID from the response for the next step.
+1. Assign a role to a team by sending  a `POST` request to the [`/assigned-roles` endpoint](/api/konnect/identity/v3/#/operations/teams-assign-role).
+1. For a user to access the roles assigned to a custom team, the user must become a member of the team. A user may be a part of multiple teams and will inherit all of the roles from the teams they belong to. Assign a user to a team by sending a `POST` request to the [`/users` endpoint](/api/konnect/identity/v3/#/operations/add-user-to-team).
+1. If [single sign on](/konnect-platform/konnect-sso/) is enabled, you can optionally enable groups to team mappings. This mapping allows {{site.konnect_short_name}} to automatically map a user to a team according to the group claims provided by the IdP upon login. Update the team mappings by sending a `PUT` request to the [`/team-mappings` endpoint](/api/konnect/identity/v3/#/operations/update-idp-team-mappings) containing `team_ids` in the request body. 
+
 ## Roles
 
 Roles predefine access to a particular resource, or
