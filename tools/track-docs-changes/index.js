@@ -73,7 +73,11 @@ async function main() {
     let prsForSource = {};
 
     for (const sources of Object.values(files)) {
-      sources.forEach(source => uniqueSources.add(source));
+      if (Array.isArray(sources)) {
+        sources.forEach(source => uniqueSources.add(source));
+      } else {
+        console.warn('Unexpected or null value in sources.yml:', sources);
+      }
     }
     const sourcesArray = Array.from(uniqueSources);
 
@@ -89,7 +93,7 @@ async function main() {
       console.log('----------------------------------------');
       console.log(`Dev Site file: ${file}`);
       console.log('Sources in docs.konghq.com:');
-      for (const source of sources) {
+      for (const source of sources || []) {
         const prs = prsForSource[source];
         if (prs.length > 0) {
           console.log(` ${source}:`)
