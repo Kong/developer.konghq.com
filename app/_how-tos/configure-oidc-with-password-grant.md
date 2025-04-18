@@ -97,17 +97,14 @@ variables:
 
 In this example:
 * `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
-* `auth_methods`: Password grant.
-* `password_param_type`: We want to search for the username and password in headers only.
+* `auth_methods`: Specifies that the plugin should use the password grant for authentication.
+* `password_param_type`: Restricts username and password lookup to request headers only.
 
 {% include_cached plugins/oidc/client-auth.md %}
 
 ## 2. Validate the password grant
 
-At this point you have created a Gateway Service, routed traffic to the Service, and enabled the OpenID Connect plugin.
-You can now test the password grant.
-
-Access the `example-route` Route by passing the user credentials in `username:password` format.
+Now, validate the setup by accessing the `example-route` Route and passing the user credentials in `username:password` format.
 The following user has the username `alex` and the password `doe`:
 
 {% validation request-check %}

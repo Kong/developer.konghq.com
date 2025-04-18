@@ -165,7 +165,7 @@ export ACCESS_TOKEN={your-access-token}
 
 ## 5. Validate the access token flow
 
-Now, validate the setup by accessing the `example-route` route and including the bearer token you received from the Kong OAuth plugin:
+Now, validate the setup by accessing the `example-route` Route and passing the bearer token you received from the Kong OAuth plugin:
 
 {% validation request-check %}
 url: /anything
