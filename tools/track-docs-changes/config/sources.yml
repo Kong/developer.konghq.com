@@ -168,7 +168,7 @@ app/_how-tos/verify-build-provenance-for-signed-images.md:
 app/_how-tos/proxy-tls-passthrough.md: 
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_how-tos/configure-fallback-route.md:
-  - app/_src/gateway/how-kong-works/routing-traffic/
+  - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_how-tos/throttle-apis-with-services-and-consumers.md:
   - app/_hub/kong-inc/service-protection/how-to/_index.md
 app/_how-tos/test-certificate-generation-locally-with-ngrok-and-acme.md:
@@ -859,8 +859,8 @@ app/konnect-labels.md:
   - app/konnect/reference/labels.md
 app/konnect-platform/konnect-sso.md:
   - app/konnect/org-management/okta-idp.md
-  - app/konnect/dev-portal/access-and-approval/add-teams/
-  - app/konnect/dev-portal/access-and-approval/sso/
+  - app/konnect/dev-portal/access-and-approval/add-teams.md
+  - app/konnect/dev-portal/access-and-approval/sso.md
   - app/dev-portal/access-and-approvals/sso.md
   - app/konnect/org-management/sso.md
   - app/konnect/api/identity-management/sso.md
@@ -874,7 +874,7 @@ app/gateway-manager/version-compatibility.md:
 
 # landing pages
 app/_landing_pages/service-catalog.yaml:
-  - app/_src/konnect/service-catalog/
+  - app/_src/konnect/service-catalog/index.md
 app/_landing_pages/gateway/enterprise-vs-oss.yaml:
   - app/_src/gateway/index.md
   - app/_data/tables/features/gateway.yml
@@ -945,7 +945,7 @@ app/gateway/performance/benchmarks.md:
 app/ai-gateway/ai-audit-log-reference.md:
   - app/_src/gateway/production/logging/ai-analytics.md
 app/gateway/kong-manager/configuration.md:
-  - app/_src/gateway/kong-manager/enable.md 
+  - app/_src/gateway/kong-manager/enable.md
   - app/_src/gateway/kong-manager/troubleshoot.md
 app/ai-gateway/monitor-ai-llm-metrics.md:
   - app/_src/gateway/production/monitoring/ai-metrics.md
@@ -1008,7 +1008,7 @@ app/gateway/routing/expressions.md:
   - app/_src/gateway/reference/expressions-language/language-references.md
   - app/_src/gateway/reference/expressions-language/performance.md
 app/gateway/routing/expressions-router-examples.md:
-  - app/_src/gateway/reference/expressions-language/index.md 
+  - app/_src/gateway/reference/expressions-language/index.md
 app/gateway/networking/dns-config-reference.md:
   - app/_src/gateway/production/networking/dns-considerations.md
 app/gateway/traffic-control/health-checks-circuit-breakers.md:
@@ -1084,7 +1084,7 @@ app/service-catalog-integrations.yaml:
   - app/konnect/service-catalog/integrations/index.md
 
 app/_landing_pages/dedicated-cloud-gateways.yaml:
-  - app/konnect/gateway-manager/dedicated-cloud-gateways/
+  - app/konnect/gateway-manager/dedicated-cloud-gateways/index.md
 
 
 
@@ -1221,15 +1221,15 @@ app/mesh/license.md:
 
 
 app/mesh/sbom.md:
-  - /app/_src/mesh/sbom.md 
+  - /app/_src/mesh/sbom.md
 app/mesh/vulnerability-patching-process.md:
-  - /app/_src/mesh/vulnerability-patching-process.md 
+  - /app/_src/mesh/vulnerability-patching-process.md
 app/mesh/vault.md:
-  - /app/_src/mesh/features/vault.md 
+  - /app/_src/mesh/features/vault.md
 app/mesh/signed-images.md:
   - /app/_src/mesh/features/signed-images.md
 app/mesh/enterprise.md:
-  - /app/_src/mesh/features/index.md 
+  - /app/_src/mesh/features/index.md
 app/mesh/ubi-images.md:
   - /app/_src/mesh/features/ubi-images.md
 app/mesh/rbac.md:
@@ -1239,10 +1239,10 @@ app/mesh/fips-support.md:
 app/mesh/openshift-quickstart.md:
   - /app/_src/mesh/features/openshift-quickstart.md
 app/mesh/ca-rotation.md:
-  - /app/_src/mesh/features/ca-rotation.md 
+  - /app/_src/mesh/features/ca-rotation.md
 app/mesh/ecs.md:
-  - /app/_src/mesh/installation/ecs.md 
+  - /app/_src/mesh/installation/ecs.md
 app/mesh/production-usuage-values.md:
   - /app/_src/mesh/production/cp-deployment/production-usage-values.md
 app/mesh/support-policy.md:
-  - /app/_src/mesh/support-policy.md 
+  - /app/_src/mesh/support-policy.md
