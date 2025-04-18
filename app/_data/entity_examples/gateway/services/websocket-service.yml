@@ -1,0 +1,2 @@
+name: example-websocket-service
+url: ws://echo.websocket.org/
