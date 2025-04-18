@@ -32,6 +32,10 @@ categories:
 search_aliases:
   - correlation-id
 
+related_resources:
+  - text: Add Correlation IDs to {{site.base_gateway}} logs
+    url: /how-to/add-correlation-ids-to-gateway-logs/
+
 faqs:
   - q: Can I see my correlation IDs in my {{site.base_gateway}} logs?
     a: |

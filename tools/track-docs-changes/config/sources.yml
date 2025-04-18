@@ -240,6 +240,8 @@ app/_how-tos/configure-oidc-with-user-info-auth.md:
   - app/_hub/kong-inc/openid-connect/how-to/authentication/_user-info.md
 app/_how-tos/configure-oidc-with-introspection.md:
   - /app/_hub/kong-inc/openid-connect/how-to/authentication/_introspection.md
+app/_how-tos/add-correlation-ids-to-gateway-logs.md:
+  - app/_hub/kong-inc/correlation-id/overview/_index.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
