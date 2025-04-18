@@ -5,19 +5,25 @@ description: |
   In this example, the OpenID Connect plugin will only accept a bearer token sent in a header, 
   but you can also set the `bearer_token_param_type` parameter to `body`, `query`, `cookie`, or any combination of these values.
 
+  For an example of using Kong OAuth2 tokens authentication with Keycloak, see the tutorial for [configuring OpenID Connect with Kong OAuth2](/how-to/configure-oidc-with-kong-oauth2/).
+  
+  {% include_cached plugins/oidc/client-auth.md %}
+
 weight: 896
 
 requirements:
   - A configured identity provider (IdP)
-  - A Kong Consumer
-  - The Kong OAuth2 plugin configured on a Route
+  - A [Consumer](/gateway/entities/consumer/) with Kong OAuth2 credentials
+  - An [OAuth2 plugin](/plugins/oauth2/) configured on the Service or Route that you want to secure
 
 config:
-  issuer: $ISSUER
+  issuer: ${issuer}
   client_id:
-    - $CLIENT_ID
+    - ${client-id}
+  client_secret:
+    - ${client-secret}
   client_auth:
-    - private_key_jwt
+    - client_secret_post
   auth_methods:
     - kong_oauth2
   bearer_token_param_type:
@@ -25,14 +31,18 @@ config:
 
 variables:
   issuer:
-    value: "http://keycloak.test:8080/realms/master"
-  client_id:
-    value: kong
-
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. 
+      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://example-keycloak-host:8080/realms/example-realm`
+  client-id:
+    value: $CLIENT_ID
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
+  client-secret:
+    value: $CLIENT_SECRET
+    description: The client secret needed to connect to your IdP.
 
 tools:
   - deck
   - admin-api
-  - konnect-api
   - kic
-  - terraform
