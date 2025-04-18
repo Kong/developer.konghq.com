@@ -1,0 +1,105 @@
+metadata:
+  title: "{{site.konnect_short_name}} authentication"
+  content_type: landing_page
+  description: |
+    Secure your {{site.konnect_saas}} organization by setting up teams and roles,
+    or enable an external authenticator to manage
+    {{site.konnect_saas}} authentication and authorization from your own identity
+    provider.
+  tags:
+    - konnect
+    - authentication
+  breadcrumb: /konnect-platform/
+    
+rows:
+  - header:
+      type: h1
+      text: "{{site.konnect_short_name}} authentication"
+      sub_text: |
+        {{site.konnect_saas}} offers multiple options for authentication. You can configure single sign-on with any SAML and OIDC provider or use built-in authentication.
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Built-in authentication through {{site.konnect_short_name}}"
+            blocks:
+              - type: text
+                text: |
+                  The default authentication option in {{site.konnect_saas}} is basic authentication, which is enabled by default. 
+                  
+                  Users can also register for and sign in to Konnect accounts using their social identity from the following providers:
+                  * Google
+                  * GitHub
+                  * Microsoft
+
+                  The only way to disable social login is to [enable OIDC single sign-on](/konnect-platform/konnect-sso/) and disable the built-in authentication scheme. 
+                  This will also disable basic auth logins and delegate user management to the identity provider.
+  - header:
+      type: h2
+      text: "Manage user access"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Teams
+            description: |
+              A team is a group of users with access to the same roles. Teams are useful
+              for assigning access by functionality, where they can provide granular access to
+              any group of {{site.konnect_short_name}} resources based on roles.
+              
+            cta:
+              url: "/konnect-platform/teams-and-roles/#teams"
+      - blocks:
+        - type: card
+          config:
+            title: Roles
+            description: |
+              Roles predefine access to a particular resource, or instances of a particular resource type 
+              (for example, API product roles can be scoped to a particular API product or all API products while Control Plane roles can be scoped to a particular Control Plane or all Control Planes).
+              
+            icon: /assets/icons/plugins/openid-connect.png
+            cta:
+              url: "/konnect-platform/teams-and-roles/#roles"
+  
+  - header:
+      type: h2
+      text: "External authentication"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Okta single sign-on
+            description: |
+              Integrate with Okta for single sign-on in {{site.konnect_short_name}}.
+              
+            cta:
+              url: "/"
+      - blocks:
+        - type: card
+          config:
+            title: Generic single sign-on
+            description: |
+              Configure single sign-on with {{site.konnect_short_name}} using any provider that supports OIDC or SAML. 
+              
+            cta:
+              url: "/konnect-platform/konnect-sso/#sso-configuration"
+      - blocks:
+        - type: card
+          config:
+            title: OIDC authentication
+            description: |
+              Enable OpenID Connect authentication as an alternative to built-in authentication.
+              
+            cta:
+              url: "/konnect-platform/konnect-sso/#enable-oidc"
+      - blocks:
+        - type: card
+          config:
+            title: Team mappings
+            description: |
+              Map teams from your IdP to {{site.konnect_short_name}}.
+              
+            cta:
+              url: "/konnect-platform/konnect-sso/#team-mapping-configuration"
+        
