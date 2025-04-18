@@ -106,21 +106,23 @@ In this example:
 
 ## 2. Retrieve the bearer token using introspection
 
-Check that you can recover the token by requesting the Service with the basic authentication credentials created in the [prerequisites](#prerequisites), and export it to an environment variable:
+Check that you can recover the token by requesting the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
 
-```sh
-export TOKEN=$(curl --user alex:doe http://localhost:8000/anything \
-  | jq -r .headers.Authorization)
-echo $TOKEN
-```
-{: data-deployment-topology="on-prem" }
+{% validation request-check %}
+url: /anything
+method: GET
+status_code: 200
+user: "alex:doe"
+display_headers: true
+{% endvalidation %}
 
-```sh
-export TOKEN=$(curl --user alex:doe http://$KONNECT_PROXY_URL/anything \
-  | jq -r .headers.Authorization)
-echo $TOKEN
+You'll see an `Authorization` header in the response. 
+
+Export the value of the header to an environment variable:
+
 ```
-{: data-deployment-topology="konnect" }
+export TOKEN={your-bearer-token}
+```
 
 ## 3. Validate the token
 

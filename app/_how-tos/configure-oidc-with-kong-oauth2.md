@@ -82,6 +82,12 @@ entities:
 
 The [OAuth2 plugin](/plugins/oauth2/) adds an OAuth 2.0 authentication layer in {{site.base_gateway}} and lets you generate access tokens for Consumers.
 
+First, you'll need a key to provision the plugin. Generate a UUID and export it to an environment variable:
+
+```
+export DECK_PROVISION_KEY=$(uuidgen)
+```
+
 Apply the OAuth2 plugin to the `example-route` Route you created in the [prerequisites](#prerequisites):
 
 {% entity_examples %}
@@ -92,7 +98,10 @@ entities:
       config:
         global_credentials: true
         enable_client_credentials: true
-        provision_key: 
+        provision_key: ${key}
+variables:
+  key:
+    value: $PROVISION_KEY
 {% endentity_examples %}
 
 ## 3. Enable the OpenID Connect plugin with Kong OAuth token authentication
@@ -135,17 +144,26 @@ In this example:
 
 {% include_cached plugins/oidc/client-auth.md %}
 
-## 4. Validate the token
+## 4. Retrieve the access token
 
-Retrieve the token from the OAuth token endpoint and export it to an environment variable:
+Retrieve the token from the OAuth token endpoint:
 
 ```sh
-export ACCESS_TOKEN=$(curl -X POST --insecure https://localhost:8443/anything/oauth2/token \
+curl -X POST --insecure https://localhost:8443/anything/oauth2/token \
   --data "client_id=client" \
   --data "client_secret=secret" \
-  --data "grant_type=client_credentials" | jq -r .access_token)
-echo $ACCESS_TOKEN
+  --data "grant_type=client_credentials"
 ```
+
+You should see an `access-token` in the response.
+
+Export the token to an environment variable:
+
+```
+export ACCESS_TOKEN={your-access-token}
+```
+
+## 5. Validate the access token flow
 
 At this point you have created a Gateway Service, routed traffic to the Service, enabled the OpenID Connect plugin, and retrieved the bearer token. 
 Access the `example-route` Route by passing the token you retrieved from the Kong OAuth plugin:
