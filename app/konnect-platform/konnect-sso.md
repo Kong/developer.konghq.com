@@ -112,12 +112,10 @@ You can now manage your organization's user permissions entirely from the IdP ap
 
 ## Enable OIDC
 
-As an alternative to {{site.konnect_short_name}}'s native authentication, you can set up single sign-on (SSO) access to {{site.konnect_short_name}} using
-any identity provider (IdP) that uses [OpenID Connect](https://openid.net/connect/). 
-This authentication method allows your users to log in to {{site.konnect_short_name}} using their existing SSO credentials, without needing
-a separate set of credentials that are unique to {{site.konnect_short_name}}.
+As an alternative to {{site.konnect_short_name}}'s native authentication, you can enable single sign-on (SSO) using any identity provider (IdP) that supports [OpenID Connect](https://openid.net/connect/).
+This allows your users to log in to {{site.konnect_short_name}} using their existing SSO credentials
 
-You can enable OIDC for {{site.konnect_short_name}} by doing the following:
+To enable OIDC:
 
 1. Send a `POST` or `PATCH` request to the [`/identity-providers` endpoint](/api/konnect/identity/v3/#/operations/create-identity-provider), making sure `oidc` is selected for `type` and `scopes`.
 1. Once the SSO configuration is set, you can enable the OIDC auth method with the [`/authentication-settings` endpoint](/api/konnect/identity/v3/#/operations/update-authentication-settings) by setting `oidc_auth_enabled: true`.

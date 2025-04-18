@@ -97,14 +97,24 @@ rows:
 
 ### Create a custom team
 
-Custom teams serve as a primary way for organizations to provision users' access to different entities. Custom teams are used to mirror the structure in an organization, any user who is a member of a custom team will inherit all of the roles of this team.
+Custom teams let organizations manage user access by grouping roles and permissions. 
 
-You can create and configure a custom team by doing the following:
+Any user added to a custom team automatically inherits all roles assigned to that team.
 
-1. Create a custom team by sending a `POST` request to the [`/teams` endpoint](/api/konnect/identity/v3/#/operations/create-team) containing the `name` and `description` of your team in the response body. Save the team ID from the response for the next step.
-1. Assign a role to a team by sending  a `POST` request to the [`/assigned-roles` endpoint](/api/konnect/identity/v3/#/operations/teams-assign-role).
-1. For a user to access the roles assigned to a custom team, the user must become a member of the team. A user may be a part of multiple teams and will inherit all of the roles from the teams they belong to. Assign a user to a team by sending a `POST` request to the [`/users` endpoint](/api/konnect/identity/v3/#/operations/add-user-to-team).
-1. If [single sign on](/konnect-platform/konnect-sso/) is enabled, you can optionally enable groups to team mappings. This mapping allows {{site.konnect_short_name}} to automatically map a user to a team according to the group claims provided by the IdP upon login. Update the team mappings by sending a `PUT` request to the [`/team-mappings` endpoint](/api/konnect/identity/v3/#/operations/update-idp-team-mappings) containing `team_ids` in the request body. 
+To create and configure a custom team:
+
+1. Create the team  
+   Send a `POST` request to the [`/teams` endpoint](/api/konnect/identity/v3/#/operations/create-team) with the `name` and `description` in the request body. Save the `team_id` from the response.
+
+1. Assign roles to the team  
+   Send a `POST` request to the [`/assigned-roles` endpoint](/api/konnect/identity/v3/#/operations/teams-assign-role) to grant the team specific roles.
+
+1. Add users to the team  
+   To give a user access to the team’s roles, you must assign them to the team.  
+   Send a `POST` request to the [`/users` endpoint](/api/konnect/identity/v3/#/operations/add-user-to-team). Users can belong to multiple teams and inherit roles from each.
+ 
+1. (Optional) Enable group-to-team mappings  
+   If [single sign-on (SSO)](/konnect-platform/konnect-sso/) is enabled, you can configure {{site.konnect_short_name}} to automatically map users to teams based on group claims from your IdP. To do this, send a `PUT` request to the [`/team-mappings` endpoint](/api/konnect/identity/v3/#/operations/update-idp-team-mappings) with `team_ids` in the request body.
 
 ## Roles
 
