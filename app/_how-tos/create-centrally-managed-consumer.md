@@ -15,7 +15,7 @@ works_on:
     - konnect
 
 tools:
-  - konnect-api
+  # - konnect-api
   - deck
 
 min_version:
