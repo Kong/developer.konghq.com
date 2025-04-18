@@ -80,7 +80,7 @@ entities:
 
 ## 2. Enable the OAuth2 plugin
 
-The [OAuth2 plugin](/plugins/oauth2/) adds an OAuth 2.0 authentication layer in {{site.base_gateway}} and lets you generate access tokens for Consumers.
+The [OAuth2 plugin](/plugins/oauth2/) adds an OAuth 2.0 authentication layer to {{site.base_gateway}} and lets you generate access tokens for Consumers.
 
 First, you'll need a key to provision the plugin. Generate a UUID and export it to an environment variable:
 
@@ -139,8 +139,8 @@ variables:
 
 In this example:
 * `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
-* `auth_methods`: Kong OAuth2 token.
-* `bearer_token_param_type`: We want to search for the token in headers only.
+* `auth_methods`: Specifies that the plugin should use Kong's OAuth2 token for authentication.
+* `bearer_token_param_type`: Restricts token lookup to the request headers only.
 
 {% include_cached plugins/oidc/client-auth.md %}
 
@@ -165,8 +165,7 @@ export ACCESS_TOKEN={your-access-token}
 
 ## 5. Validate the access token flow
 
-At this point you have created a Gateway Service, routed traffic to the Service, enabled the OpenID Connect plugin, and retrieved the bearer token. 
-Access the `example-route` Route by passing the token you retrieved from the Kong OAuth plugin:
+Now, validate the setup by accessing the `example-route` route and including the bearer token you received from the Kong OAuth plugin:
 
 {% validation request-check %}
 url: /anything

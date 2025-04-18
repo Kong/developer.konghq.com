@@ -5,7 +5,7 @@ description: |
   In this example, the OpenID Connect plugin will only accept a bearer token sent in a header, 
   but you can also set the `bearer_token_param_type` parameter to `body`, `query`, `cookie`, or any combination of these values.
 
-  For an example of using Kong OAuth2 tokens authentication with Keycloak, see the tutorial for [configuring OpenID Connect with Kong OAuth2](/how-to/configure-oidc-with-kong-oauth2/).
+  For a complete example of authenticating with Kong OAuth2 tokens using Keycloak, see the tutorial for [configuring OpenID Connect with Kong OAuth2](/how-to/configure-oidc-with-kong-oauth2/).
   
   {% include_cached plugins/oidc/client-auth.md %}
 
