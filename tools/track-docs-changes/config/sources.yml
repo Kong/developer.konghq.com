@@ -547,8 +547,6 @@ app/_kong_plugins/aws-lambda/index.md:
   - app/_hub/kong-inc/aws-lambda/overview/_index.md
 app/_kong_plugins/aws-lambda/changelog.md:
   - app/_hub/kong-inc/aws-lambda/_changelog.md
-app/_kong_plugins/ai-rate-limiting-advanced/index.md:
-  - app/_hub/kong-inc/ai-rate-limiting-advanced/overview/_index.md
 app/_kong_plugins/ai-rate-limiting-advanced/changelog.md:
   - app/_hub/kong-inc/ai-rate-limiting-advanced/_changelog.md
 app/_kong_plugins/degraphql/index.md:
