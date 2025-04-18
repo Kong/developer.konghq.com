@@ -207,9 +207,9 @@ app/_how-tos/authenticate-consumers-jwt.md:
 app/_how-tos/adjust-header-names-in-request.md:
   - app/_hub/kong-inc/post-function/how-to/_index.md
 app/_how-tos/configure-oidc-with-password-grant.md:
-  - /app/_hub/kong-inc/openid-connect/how-to/authentication/_password-grant.md
+  - app/_hub/kong-inc/openid-connect/how-to/authentication/_password-grant.md
 app/_how-tos/configure-oidc-with-refresh-token.md:
-  - /app/_hub/kong-inc/openid-connect/how-to/authentication/_refresh-token.md
+  - app/_hub/kong-inc/openid-connect/how-to/authentication/_refresh-token.md
 app/_how-tos/sign-gateway-audit-logs.md:
   - app/_src/gateway/kong-enterprise/audit-log.md
 app/_how-tos/validate-gateway-audit-log-signatures.md:
@@ -235,7 +235,7 @@ app/_how-tos/create-centrally-managed-consumer.md:
 app/_how-tos/configure-oidc-with-acl-auth.md:
   - app/_hub/kong-inc/openid-connect/how-to/authorization/_acl.md
 app/_how-tos/configure-oidc-with-consumers.md:
-  - /app/_hub/kong-inc/openid-connect/how-to/authorization/_consumers.md
+  - app/_hub/kong-inc/openid-connect/how-to/authorization/_consumers.md
 app/_how-tos/configure-oidc-with-user-info-auth.md:
   - app/_hub/kong-inc/openid-connect/how-to/authentication/_user-info.md
 app/_how-tos/configure-oidc-with-introspection.md:
@@ -286,13 +286,13 @@ app/kubernetes-ingress-controller/admission-webhook.md:
 app/_how-tos/kic-install.md:
   - app/_src/kubernetes-ingress-controller/get-started/index.md
 app/_how-tos/kic-get-started-services-routes.md:
-  - /app/_src/kubernetes-ingress-controller/get-started/services-and-routes.md
+  - app/_src/kubernetes-ingress-controller/get-started/services-and-routes.md
 app/_how-tos/kic-get-started-rate-limiting.md:
-  - /app/_src/kubernetes-ingress-controller/get-started/rate-limiting.md
+  - app/_src/kubernetes-ingress-controller/get-started/rate-limiting.md
 app/_how-tos/kic-get-started-proxy-caching.md:
-  - /app/_src/kubernetes-ingress-controller/get-started/proxy-caching.md
+  - app/_src/kubernetes-ingress-controller/get-started/proxy-caching.md
 app/_how-tos/kic-get-started-key-authentication.md:
-  - /app/_src/kubernetes-ingress-controller/get-started/key-authentication.md
+  - app/_src/kubernetes-ingress-controller/get-started/key-authentication.md
 app/kubernetes-ingress-controller/deployment-topologies/sidecar.md:
   - app/_src/kubernetes-ingress-controller/production/deployment-topologies/sidecar.md
 app/kubernetes-ingress-controller/deployment-topologies/db-backed.md:
@@ -374,7 +374,7 @@ app/_kong_plugins/ai-proxy/index.md:
 app/_kong_plugins/cors/index.md:
   - app/_hub/kong-inc/cors/overview/_index.md
 app/_kong_plugins/mocking/index.md:
-  - /app/_hub/kong-inc/mocking/overview/_index.md
+  - app/_hub/kong-inc/mocking/overview/_index.md
 app/_kong_plugins/injection-protection/index.md:
   - app/_hub/kong-inc/injection-protection/overview/_index.md
 app/_kong_plugins/openid-connect/index.md:
@@ -781,13 +781,13 @@ app/_kong_plugins/kafka-upstream/examples/return-fixed-table.yaml:
 app/_kong_plugins/kafka-upstream/examples/insert-and-redact.yaml:
   - app/_hub/kong-inc/kafka-upstream/how-to/_custom-message-format.md
 app/_kong_plugins/aws-request-signing/index.md:
-  - /app/_hub/TheLEGOGroup/aws-request-signing/overview/_index.md
+  - app/_hub/TheLEGOGroup/aws-request-signing/overview/_index.md
 app/gateway/plugins/openwhisk.md:
   - app/_hub/kong-inc/openwhisk/overview/_index.md
 app/_kong_plugins/appsentinels/index.md:
-  - /app/_hub/appsentinels/appsentinels/overview/_index.md
+  - app/_hub/appsentinels/appsentinels/overview/_index.md
 app/_kong_plugins/amberflo/index.md:
-  - /app/_hub/amberflo/kong-plugin-amberflo/overview/_index.md
+  - app/_hub/amberflo/kong-plugin-amberflo/overview/_index.md
 app/_kong_plugins/confluent-consume/index.md:
   - app/_hub/kong-inc/confluent-consume/overview/_index.md
 app/_kong_plugins/kafka-consume/index.md:
@@ -795,23 +795,23 @@ app/_kong_plugins/kafka-consume/index.md:
 app/_kong_plugins/kafka-consume/changelog.md:
   - app/_hub/kong-inc/kafka-consume/_changelog.md
 app/_kong_plugins/datadome/index.md:
-  - /app/_hub/datadome/kong-plugin-datadome/overview/_index.md
+  - app/_hub/datadome/kong-plugin-datadome/overview/_index.md
 app/_kong_plugins/kong-response-size-limiting/index.md:
-  - /app/_hub/optum/kong-response-size-limiting/overview/_index.md
+  - app/_hub/optum/kong-response-size-limiting/overview/_index.md
 app/_kong_plugins/kong-spec-expose/index.md:
-  - /app/_hub/optum/kong-spec-expose/overview/_index.md
+  - app/_hub/optum/kong-spec-expose/overview/_index.md
 app/_kong_plugins/kong-service-virtualization/index.md:
-  - /app/_hub/optum/kong-service-virtualization/overview/_index.md
+  - app/_hub/optum/kong-service-virtualization/overview/_index.md
 app/_kong_plugins/kong-splunk-log/index.md:
-  - /app/_hub/optum/kong-splunk-log/overview/_index.md
+  - app/_hub/optum/kong-splunk-log/overview/_index.md
 app/_kong_plugins/kong-upstream-jwt/index.md:
-  - /app/_hub/optum/kong-upstream-jwt/overview/_index.md
+  - app/_hub/optum/kong-upstream-jwt/overview/_index.md
 app/_kong_plugins/inigo/index.md:
-  - /app/_hub/inigo/inigo/overview/_index.md
+  - app/_hub/inigo/inigo/overview/_index.md
 app/_kong_plugins/imp-appsec-connector/index.md:
-  - /app/_hub/imperva/imp-appsec-connector/overview/_index.md
+  - app/_hub/imperva/imp-appsec-connector/overview/_index.md
 app/_kong_plugins/impart/index.md:
-  - /app/_hub/impart-security/kong-plugin-impart/overview/_index.md
+  - app/_hub/impart-security/kong-plugin-impart/overview/_index.md
 app/_kong_plugins/prometheus/changelog.md:
   - app/_hub/kong-inc/prometheus/_changelog.md
 app/_kong_plugins/prometheus/index.md:
@@ -819,11 +819,11 @@ app/_kong_plugins/prometheus/index.md:
 app/gateway/plugins/wallarm.md:
   - app/_hub/wallarm/wallarm/overview/_index.md
 app/_kong_plugins/moesif/index.md:
-  - /app/_hub/moesif/kong-plugin-moesif/overview/_index.md
+  - app/_hub/moesif/kong-plugin-moesif/overview/_index.md
 app/_kong_plugins/salt-agent/index.md:
-  - /app/_hub/salt/salt/overview/_index.md
+  - app/_hub/salt/salt/overview/_index.md
 app/_kong_plugins/nonamesecurity/index.md:
-  - /app/_hub/nonamesecurity/nonamesecurity-kongtrafficsource/overview/_index.md
+  - app/_hub/nonamesecurity/nonamesecurity-kongtrafficsource/overview/_index.md
 app/_kong_plugins/request-callout/index.md:
   - app/_hub/kong-inc/request-callout/overview/_index.md
 app/_kong_plugins/vault-auth/changelog.md:
@@ -1012,7 +1012,7 @@ app/gateway/routing/expressions-router-examples.md:
 app/gateway/networking/dns-config-reference.md:
   - app/_src/gateway/production/networking/dns-considerations.md
 app/gateway/traffic-control/health-checks-circuit-breakers.md:
-  - /app/_src/gateway/how-kong-works/health-checks.md
+  - app/_src/gateway/how-kong-works/health-checks.md
 app/gateway/traffic-control/load-balancing.md:
   - app/_src/gateway/how-kong-works/load-balancing.md
 app/gateway/traffic-control/blue-green-deployments.md:
@@ -1038,8 +1038,8 @@ app/gateway/third-party-support.md:
   - app/_src/gateway/support/third-party.md
 app/gateway/version-support-policy.md:
   - app/_src/gateway/support/index.md
-  - /app/_src/gateway/kong-enterprise/fips-support/index.md
-/app/gateway/sbom.md:
+  - app/_src/gateway/kong-enterprise/fips-support/index.md
+app/gateway/sbom.md:
   - app/_src/gateway/support/sbom.md
 
 # Serverless GW
@@ -1204,45 +1204,45 @@ app/_how-tos/deploy-mesh-on-kubernetes.md:
 
 
 app/mesh/acm-private-ca-policy.md:
-  - /app/_src/mesh/features/acmpca.md
+  - app/_src/mesh/features/acmpca.md
 app/mesh/access-audit.md:
   - app/_src/mesh/features/access-audit.md
 
 
 app/mesh/cert-manager.md:
-  - /app/_src/mesh/features/cert-manager.md
+  - app/_src/mesh/features/cert-manager.md
 
 
 app/mesh/multi-zone-authentication.md:
   - /mesh/_src/mesh/features/kds-auth.md
 
 app/mesh/license.md:
-  - /app/_src/mesh/production/cp-deployment/license.md
+  - app/_src/mesh/production/cp-deployment/license.md
 
 
 app/mesh/sbom.md:
-  - /app/_src/mesh/sbom.md
+  - app/_src/mesh/sbom.md
 app/mesh/vulnerability-patching-process.md:
-  - /app/_src/mesh/vulnerability-patching-process.md
+  - app/_src/mesh/vulnerability-patching-process.md
 app/mesh/vault.md:
-  - /app/_src/mesh/features/vault.md
+  - app/_src/mesh/features/vault.md
 app/mesh/signed-images.md:
-  - /app/_src/mesh/features/signed-images.md
+  - app/_src/mesh/features/signed-images.md
 app/mesh/enterprise.md:
-  - /app/_src/mesh/features/index.md
+  - app/_src/mesh/features/index.md
 app/mesh/ubi-images.md:
-  - /app/_src/mesh/features/ubi-images.md
+  - app/_src/mesh/features/ubi-images.md
 app/mesh/rbac.md:
-  - /app/_src/mesh/features/rbac.md
+  - app/_src/mesh/features/rbac.md
 app/mesh/fips-support.md:
-  - /app/_src/mesh/features/fips-support.md
+  - app/_src/mesh/features/fips-support.md
 app/mesh/openshift-quickstart.md:
-  - /app/_src/mesh/features/openshift-quickstart.md
+  - app/_src/mesh/features/openshift-quickstart.md
 app/mesh/ca-rotation.md:
-  - /app/_src/mesh/features/ca-rotation.md
+  - app/_src/mesh/features/ca-rotation.md
 app/mesh/ecs.md:
-  - /app/_src/mesh/installation/ecs.md
+  - app/_src/mesh/installation/ecs.md
 app/mesh/production-usuage-values.md:
-  - /app/_src/mesh/production/cp-deployment/production-usage-values.md
+  - app/_src/mesh/production/cp-deployment/production-usage-values.md
 app/mesh/support-policy.md:
-  - /app/_src/mesh/support-policy.md
+  - app/_src/mesh/support-policy.md
