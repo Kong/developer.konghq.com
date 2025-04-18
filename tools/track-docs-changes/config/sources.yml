@@ -844,6 +844,9 @@ app/_kong_plugins/saml/changelog.md:
   - app/_hub/kong-inc/saml/_changelog.md
 app/_how-tos/enable-saml-authentication-with-microsoft-entra.md:
   - app/_hub/kong-inc/saml/overview/_index.md
+app/_how-tos/set-up-jaeger-with-otel.md:
+  - app/_hub/kong-inc/opentelemetry/how-to/_getting-started.md
+
 
 # Konnect
 app/advanced-analytics/explorer.md:
