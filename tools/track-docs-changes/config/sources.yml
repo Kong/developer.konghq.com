@@ -869,6 +869,7 @@ app/konnect-platform/konnect-sso.md:
   - app/konnect/dev-portal/access-and-approval/sso/
   - app/dev-portal/access-and-approvals/sso.md
   - app/konnect/org-management/sso.md
+  - app/konnect/api/identity-management/sso.md
 app/konnect-platform/saml-idp-mapping.md:
   - app/konnect/reference/saml-idp-mappings.md
 app/konnect-platform/self-managed-migration.md:
@@ -1083,6 +1084,7 @@ app/konnect-platform/teams-and-roles.md:
   - app/konnect/org-management/teams-and-roles/index.md
   - app/konnect/org-management/teams-and-roles/roles-reference.md
   - app/konnect/org-management/teams-and-roles/manage.md
+  - app/konnect/api/identity-management/identity-integration.md
 
 app/service-catalog-integrations.yaml:
   - app/konnect/service-catalog/integrations/index.md
