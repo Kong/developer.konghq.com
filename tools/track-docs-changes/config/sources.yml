@@ -352,7 +352,7 @@ app/_kong_plugins/basic-auth/index.md:
   - app/_hub/kong-inc/basic-auth/_changelog.md
   - app/_src/gateway/kong-plugins/authentication/reference.md
 app/_kong_plugins/jwt/index.md:
-  - app/_hub/kong-inc/jwt/_index.md
+  - app/_hub/kong-inc/jwt/overview/_index.md
 app/_kong_plugins/key-auth/index.md:
   - app/_hub/kong-inc/key-auth/overview/_index.md
 app/_kong_plugins/key-auth/examples/identity-realms.yaml:
@@ -750,8 +750,6 @@ app/_how-tos/protect-sensitive-information-with-ai.md:
   - app/_hub/kong-inc/ai-sanitizer/how-to/_index.md
 app/_kong_plugins/jwt/changelog.md:
   - app/_hub/kong-inc/jwt/_changelog.md
-app/_kong_plugins/jwt/index.md:
-  - app/_hub/kong-inc/jwt/overview/_index.md
 app/_kong_plugins/udp-log/index.md:
   - app/_hub/kong-inc/udp-log/overview/_index.md
 app/_kong_plugins/udp-log/changelog.md:
