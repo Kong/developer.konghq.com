@@ -17,7 +17,7 @@ plugins:
 tldr:
     q: How do I add Correlation IDs to my {{site.base_gateway}} logs?
     a: |
-        Define the log format in the `nginx_http_log_format` parameter, and use `$http_<header_name>` to reference the header defined in the [Correlation ID plugin](/plugins/correlation-id/) (`$http_Kong_Request_ID` for the default header name). Reference the name of the format to use in the [`proxy_access_log`](/gateway/configuration/#proxy-access-log) parameter
+        Define the log format in the `nginx_http_log_format` parameter, and use `$http_{header_name}` to reference the header defined in the [Correlation ID plugin](/plugins/correlation-id/) (`$http_Kong_Request_ID` for the default header name). Reference the name of the format to use in the [`proxy_access_log`](/gateway/configuration/#proxy-access-log) parameter.
 
 prereqs:
   skip_product: true
@@ -43,12 +43,12 @@ min_version:
 ## 1. Start {{site.base_gateway}}
 
 Create the {{site.base_gateway}} container with the following environment variables:
-* `KONG_NGINX_HTTP_LOG_FORMAT`: defines the log format to use. In this example, we'll name the format `correlation_id_log`, and include for each request:
+* `KONG_NGINX_HTTP_LOG_FORMAT`: Defines the log format to use. In this example, we'll name the format `correlation_id_log`, and include for each request:
   * The time of the request
   * The method and endpoint
   * The status
   * The value of the header that contains the Correlation ID, `Kong-Request-ID` in this example
-* [`KONG_PROXY_ACCESS_LOG`](/gateway/configuration/#proxy-access-log): specifies the log output file and the log format to use
+* [`KONG_PROXY_ACCESS_LOG`](/gateway/configuration/#proxy-access-log): Specifies the log output file and the log format to use
 
 ```sh
 curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA \
