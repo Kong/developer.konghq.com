@@ -874,6 +874,9 @@ app/gateway-manager/version-compatibility.md:
 app/_landing_pages/konnect-platform.yaml:
   - app/konnect/index.md
   - app/konnect/getting-started/index.md
+  - app/konnect/account-management/index.md
+  - app/konnect/architecture.md
+  - app/_includes/md/konnect/konnect-architecture.md
 
 # landing pages
 app/_landing_pages/service-catalog.yaml:
