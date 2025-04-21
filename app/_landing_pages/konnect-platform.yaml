@@ -124,7 +124,7 @@ rows:
             icon: /assets/icons/lock.svg
             cta:
               text: Learn about {{ site.base_gateway }} authentication methods
-              url: /konnect-platform/konnect-authentication/
+              url: /konnect-authentication/
               align: end
       - blocks:
         - type: card
