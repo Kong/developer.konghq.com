@@ -63,6 +63,9 @@ async function getRecentCommits(repoPath, file) {
 
 async function main() {
   try {
+    console.log(`number of days: ${numberOfDays}`);
+    console.log(`docs path: ${docsPath}`);
+
     console.log("Checking for changes...");
     const config = await fs.readFile(
       path.join(__dirname, "./config/sources.yml"),
