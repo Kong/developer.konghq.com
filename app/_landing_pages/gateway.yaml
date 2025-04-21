@@ -94,7 +94,7 @@ rows:
             icon: /assets/icons/ai.svg
             cta:
               text: Start using Kong AI Gateway
-              url: https://docs.konghq.com/gateway/latest/ai-gateway/
+              url: /ai-gateway/
               align: end
       - blocks:
         - type: card

@@ -871,6 +871,9 @@ app/konnect-platform/self-managed-migration.md:
 app/gateway-manager/version-compatibility.md:
   - app/konnect/gateway-manager/version-compatibility.md
   - app/_data/tables/version_errors_konnect.yml
+app/_landing_pages/konnect-platform.yaml:
+  - app/konnect/index.md
+  - app/konnect/getting-started/index.md
 
 # landing pages
 app/_landing_pages/service-catalog.yaml:
