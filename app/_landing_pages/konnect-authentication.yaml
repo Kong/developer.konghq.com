@@ -1,0 +1,19 @@
+metadata:
+  title: "{{site.konnect_short_name}} authentication"
+  content_type: landing_page
+  description: |
+    Secure your {{site.konnect_saas}} organization by setting up teams and roles,
+    or enable an external authenticator to manage
+    {{site.konnect_saas}} authentication and authorization from your own identity
+    provider.
+  tags:
+    - konnect
+    - authentication
+  breadcrumb: /konnect-platform/
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.konnect_short_name}} authentication"
+      sub_text: |
+        {{site.konnect_saas}}
