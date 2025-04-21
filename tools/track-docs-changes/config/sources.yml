@@ -1070,6 +1070,12 @@ app/gateway-manager/control-plane-groups.md:
   - app/konnect/gateway-manager/control-plane-groups/conflicts.md
   - app/konnect/gateway-manager/control-plane-groups/migrate.md
 
+app/gateway-manager/data-plane-reference.md:
+  - app/konnect/gateway-manager/data-plane-nodes/upgrade.md
+  - app/konnect/gateway-manager/data-plane-nodes/verify-node.md
+  - app/konnect/gateway-manager/data-plane-nodes/secure-communications.md
+  - app/konnect/gateway-manager/data-plane-nodes/custom-dp-labels.md
+
 
 app/konnect-platform/konnect-account.md:
   - app/konnect/org-management/deactivation.md
