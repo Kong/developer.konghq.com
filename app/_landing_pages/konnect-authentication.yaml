@@ -45,9 +45,9 @@ rows:
             title: Teams
             description: |
               A team is a group of users with access to the same roles. Teams are useful
-              for assigning access by functionality, where they can provide granular access to
-              any group of {{site.konnect_short_name}} resources based on roles.
+              for assigning access by functionality.
               
+            icon: /assets/icons/team.svg
             cta:
               url: "/konnect-platform/teams-and-roles/#teams"
       - blocks:
@@ -55,10 +55,9 @@ rows:
           config:
             title: Roles
             description: |
-              Roles predefine access to a particular resource, or instances of a particular resource type 
-              (for example, API product roles can be scoped to a particular API product or all API products while Control Plane roles can be scoped to a particular Control Plane or all Control Planes).
+              Roles predefine access to a particular resource, or instances of a particular resource type.
               
-            icon: /assets/icons/plugins/openid-connect.png
+            icon: /assets/icons/role.svg
             cta:
               url: "/konnect-platform/teams-and-roles/#roles"
   
@@ -72,9 +71,10 @@ rows:
             title: Okta single sign-on
             description: |
               Integrate with Okta for single sign-on in {{site.konnect_short_name}}.
-              
+
+            icon: /assets/icons/third-party/okta.svg  
             cta:
-              url: "/"
+              url: "/konnect-platform/konnect-sso/#configure-a-konnect-application-in-okta"
       - blocks:
         - type: card
           config:
@@ -82,6 +82,7 @@ rows:
             description: |
               Configure single sign-on with {{site.konnect_short_name}} using any provider that supports OIDC or SAML. 
               
+            icon: /assets/icons/insomnia/sso.svg
             cta:
               url: "/konnect-platform/konnect-sso/#sso-configuration"
       - blocks:
@@ -91,6 +92,7 @@ rows:
             description: |
               Enable OpenID Connect authentication as an alternative to built-in authentication.
               
+            icon: /assets/icons/plugins/openid-connect.png
             cta:
               url: "/konnect-platform/konnect-sso/#enable-oidc"
       - blocks:
@@ -100,6 +102,7 @@ rows:
             description: |
               Map teams from your IdP to {{site.konnect_short_name}}.
               
+            icon: /assets/icons/team.svg
             cta:
               url: "/konnect-platform/konnect-sso/#team-mapping-configuration"
         

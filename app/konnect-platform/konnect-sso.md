@@ -31,6 +31,24 @@ faqs:
       * [Okta group filtering](https://support.okta.com/help/s/article/How-to-send-certain-groups-that-the-user-is-assigned-to-in-one-Group-attribute-statement)
 
       You may need to contact the support team of your identity provider in order to learn how to filter groups emitted for the application.
+  - q: In the token payload, the `groups` claim is configured correctly but still appears empty, or it includes some groups but not all when Okta is configured as the IdP. How do I fix this?
+    a: |
+      This issue might happen if the authorization server is pulling in additional
+      groups from third-party applications, for example, Google groups.
+
+      An Okta administrator must duplicate the third-party groups
+      and re-create them directly in Okta. They can do this by exporting the group
+      in CSV format, then importing the CSV file into Okta to populate the new group.
+  - q: "I'm getting a `failed to get state: http: named cookie not present` error when I try to authenticate with Okta, how do I fix this?"
+    a: |
+      This may happen if the wrong issuer URI was used, for example, the URI from your application's settings. The issuer URI must be in the following format, where `default` is
+      the name or ID of the authorization server:
+
+      ```
+      https://example.okta.com/oauth2/default
+      ```
+
+      You can find this URI in your Okta developer account, under **Security** > **API**.
 ---
 
 {{site.konnect_short_name}} supports external single sign-on authentication using an Identity Provider (IdP). Using SSO in {{site.konnect_short_name}}, you can enable authentication for the following:
@@ -109,6 +127,136 @@ Depending on your IdP, choose one of the following to test the configuration:
 If the configuration is correct, you will see the IdP sign-in page. 
 
 You can now manage your organization's user permissions entirely from the IdP application.
+
+## Configure a {{site.konnect_short_name}} application in Okta
+
+If you want to use Okta as your IdP provider for SSO, you need an Okta account with administrator access to configure Applications and Authorization Server settings.
+
+Additionally, if you're configuring Okta SSO for Dev Portal, you'll need a [non-public {{site.konnect_saas}} Dev Portal created](/dev-portal/portals/) in your {{site.konnect_short_name}} organization.
+
+{% navtabs "Okta SSO" %}
+{% navtab "OIDC" %}
+
+1. From the Applications section of the Okta console, select _Create App Integration_ 
+   and choose [OIDC - OpenID Connect](https://help.okta.com/oie/en-us/content/topics/apps/apps_app_integration_wizard_oidc.htm)
+   with _Web Application_ for the _Application type_. Provide the following configuration details:  
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Okta setting
+    key: setting
+  - title: Configuration
+    key: configuration
+rows:
+  - setting: Grant type
+    configuration: Authorization Code
+  - setting: Sign-in redirect URIs
+    configuration: |
+      Konnect Org: `https://cloud.konghq.com/login`  
+      Dev Portal: `https://<portal-url>/login`
+  - setting: Sign-out redirect URIs
+    configuration: |
+      Konnect Org: `https://cloud.konghq.com/login`  
+      Dev Portal: `https://<portal-url>/login`
+{% endtable %}
+<!-- vale on -->
+
+1. Optional: If you want to map Okta group claims to {{site.konnect_short_name}} Organization or Dev Portal Teams, 
+modify the [OpenID Connect ID Token claims](https://developer.okta.com/docs/guides/customize-tokens-groups-claim/main/#add-a-groups-claim-for-the-org-authorization-server) 
+in the **Application** > **Sign On** section of the Okta configuration, setting the following values:
+
+    * **Group claims type**: `Filter`
+    * **Group claims filter**: Enter `groups` for the claim name and enter **Matches regex** as the filter type and `.*` for the filter value.
+
+    This claim specifies which user's groups to include in the token, in this case the wildcard regex specifies that all groups will be included.
+
+    {:.note}
+    > If the authorization server is retrieving additional groups from
+    third-party applications (for example, Google groups), the `groups` claim
+    will not contain them. If it is desired to use these third-party groups, the Okta 
+    administrator will need to duplicate them directly in Okta or use a [custom token](https://developer.okta.com/docs/guides/customize-tokens-groups-claim/main/)
+    to include them in the `groups` claim.
+
+1. [Assign desired groups and users to the new Okta application](https://help.okta.com/en-us/content/topics/users-groups-profiles/usgp-assign-apps.htm).
+
+1. Locate the following values in the Okta console, which will be used later for the
+{{site.konnect_short_name}} configuration.
+
+    * **Client ID**: Located in your Application **General -> Client Credentials** settings.
+    * **Client Secret**: Located in your Application **General -> Client Secrets** settings.
+    * **Issuer URI** : The Issuer is typically found in the **Security -> API -> Authorization Servers** settings.
+    It should look like the following: `https://<okta-org-id>.okta.com/oauth2/default`
+{% endnavtab %}
+{% navtab "SAML" %}
+
+1. From the Applications section of the Okta console, select _Create App Integration_ 
+   and choose [SAML 2.0](https://help.okta.com/en-us/content/topics/apps/apps_app_integration_wizard_saml.htm?cshid=ext_Apps_App_Integration_Wizard-saml). 
+   Provide a name and the following configuration details: 
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Okta setting
+    key: setting
+  - title: Configuration
+    key: configuration
+rows:
+  - setting: Single Sign-On URL
+    configuration: |
+      Konnect Org: `https://global.api.konghq.com/v2/authenticate/login_path/saml/acs`<br> Dev Portal: `https://<portal-url>/api/v2/developer/authenticate/saml/acs`
+  - setting: Audience URI (SP Entity ID)
+    configuration: "`https://cloud.konghq.com/sp/SP_ID`"
+{% endtable %}
+<!-- vale on -->
+
+1. Optional: To include additional user attributes beyond authentication, add the following three attributes in the **Attribute Statements**:
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Name
+    key: name
+  - title: Name format
+    key: format
+  - title: Value
+    key: value
+rows:
+  - name: "`firstName`"
+    format: Unspecified
+    value: user.firstName
+  - name: "`lastName`"
+    format: Unspecified
+    value: user.lastName
+  - name: "`email`"
+    format: Unspecified
+    value: user.email
+{% endtable %}
+<!-- vale on -->
+
+1. Optional: If you want to use group claims for Konnect [developer team mappings](/konnect/dev-portal/access-and-approval/add-teams/), [configure a groups attribute claim](https://developer.okta.com/docs/guides/customize-tokens-groups-claim/main/#add-a-groups-claim-for-a-custom-authorization-server) and fill in the following fields:
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Name
+    key: name
+  - title: Name format
+    key: format
+  - title: Filter
+    key: filter
+  - title: Filter value
+    key: value
+rows:
+  - name: groups
+    format: Unspecified
+    filter: Matches regex
+    value: ".*"
+{% endtable %}
+<!-- vale on -->
+
+1. [Generate a signing certificate](https://help.okta.com/en-us/content/topics/apps/manage-signing-certificates.htm) to use in {{site.konnect_short_name}}.
+
+1. [Assign desired groups and users to the new Okta application](https://help.okta.com/en-us/content/topics/users-groups-profiles/usgp-assign-apps.htm).
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Enable OIDC
 

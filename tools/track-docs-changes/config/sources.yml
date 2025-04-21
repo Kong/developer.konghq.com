@@ -864,6 +864,8 @@ app/konnect-platform/konnect-sso.md:
   - app/dev-portal/access-and-approvals/sso.md
   - app/konnect/org-management/sso.md
   - app/konnect/api/identity-management/sso.md
+  - app/_includes/md/konnect/okta-sso.md
+  - app/konnect/org-management/troubleshoot.md
 app/konnect-platform/saml-idp-mapping.md:
   - app/konnect/reference/saml-idp-mappings.md
 app/konnect-platform/self-managed-migration.md:
