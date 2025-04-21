@@ -258,6 +258,8 @@ rows:
 {% endnavtab %}
 {% endnavtabs %}
 
+Now you can finish [setting up SSO in {{site.konnect_short_name}}](#sso-configuration).
+
 ## Enable OIDC
 
 As an alternative to {{site.konnect_short_name}}'s native authentication, you can enable single sign-on (SSO) using any identity provider (IdP) that supports [OpenID Connect](https://openid.net/connect/).
