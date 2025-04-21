@@ -11,8 +11,7 @@
     <div class="flex justify-between items-center">
       <a href="{{ api_spec.url }}">{{ api_spec.text }}</a>
       {% if api_spec.insomnia_link.exist? %}
-      <a class="flex-shrink-0" href="{{ api_spec.insomnia_link.url }}"><img src="/assets/logos/brand/Insomnia.svg">
-      </a>
+      <a class="flex-shrink-0" href="{{ api_spec.insomnia_link.url }}" data-no-icon><img src="/assets/logos/brand/Insomnia.svg"></a>
       {% endif %}
     </div>
     {% endfor %}

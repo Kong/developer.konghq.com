@@ -5,16 +5,16 @@
                 <h3>Did this doc help?</h3>
                 <div class="flex gap-2">
                     <a class="rounded-md border border-brand py-2 px-3 text-primary hover:no-underline" href="#yes">Yes</a>
-                    <a class="rounded-md border border-brand py-2 px-3 text-primary hover:no-underline" href="{{ site.repos.developer }}/issues/new" target="_blank" rel="noopener noreferrer">No</a>
+                    <a class="rounded-md border border-brand py-2 px-3 text-primary hover:no-underline" href="{{ site.repos.developer }}/issues/new" target="_blank" rel="noopener noreferrer" data-no-icon>No</a>
                 </div>
             </div>
             <div class="flex gap-1 flex-col lg:flex-row">
                 <span>Something wrong?</span>
                 <div class="flex gap-2">
-                    <a class="text-brand" href="{{ site.repos.developer }}/issues/">Report an Issue</a>
+                    <a class="text-brand" href="{{ site.repos.developer }}/issues/" data-no-icon>Report an Issue</a>
                     {% if page.edit_link %}
                         <span class="text-secondary">|</span>
-                        <a class="text-brand" href="{{ page.edit_link }}">Edit this Page</a>
+                        <a class="text-brand" href="{{ page.edit_link }}" data-no-icon>Edit this Page</a>
                     {% endif %}
                 </div>
             </div>
@@ -27,17 +27,17 @@
             </div>
             <div class="flex">
                 <a class="rounded-md border border-brand py-2 px-3 text-primary hover:no-underline"
-                    href="{{ site.repos.developer }}">Contribute</a>
+                    href="{{ site.repos.developer }}" data-no-icon>Contribute</a>
             </div>
         </div>
         <div class="flex flex-col gap-4">
             <h3>Still need help</h3>
             <div class="flex flex-col gap-2">
-                <a class="text-brand flex gap-2" href="https://discuss.konghq.com/">
+                <a class="text-brand flex gap-2" href="https://discuss.konghq.com/" data-no-icon>
                     <div class="flex w-5 h-5 text-brand">{% include_svg '/assets/icons/book.svg' %}</div>
                     Ask in our Forum
                 </a>
-                <a class="text-brand flex gap-2" href="https://support.konghq.com/support/s/">
+                <a class="text-brand flex gap-2" href="https://support.konghq.com/support/s/" data-no-icon>
                     <div class="flex w-5 h-5 text-brand">{% include_svg '/assets/icons/support.svg' %}</div>
                     Contact Support
                 </a>
