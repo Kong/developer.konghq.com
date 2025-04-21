@@ -116,7 +116,7 @@ body:
 {% endcontrol_plane_request %}
 
 <!-- vale on -->
-{{request | indent: 3}}
+
 
 Kong performs a rolling upgrade of the fully-managed Data Plane nodes. This is a zero downtime upgrade because Kong synchronizes the Data Plane with load balancer registration and de-registration and gracefully terminates the old Data Plane nodes to reduce the impact on the ongoing traffic.
 
