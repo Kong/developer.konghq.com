@@ -77,4 +77,10 @@
 {% include prereqs/inline.md prereq=prereq %}
   </div>
   {% endfor %}
+
+  {% if prereqs.validation %}
+    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+      {% include prereqs/validation.md validation=prereqs.validation %}
+    </div>
+  {% endif %}
 </div>

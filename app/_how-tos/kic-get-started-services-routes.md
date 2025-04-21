@@ -28,6 +28,13 @@ works_on:
 
 prereqs:
   skip_product: true
+  validation:
+    title: X should be running
+    command: |
+      curl example.com/foo | jq .config
+    message: |
+      You should see a document containing `telemetry_point` in the format `tp0.<random_string>.example.com`
+
 ---
 
 ## How Kubernetes resources map to {{site.base_gateway}} entities

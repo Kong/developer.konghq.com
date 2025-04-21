@@ -31,6 +31,10 @@ module Jekyll
         @inline ||= prereqs.fetch('inline', [])
       end
 
+      def validation
+        @validation ||= prereqs.fetch('validation', {})
+      end
+
       def data
         product = @page.data.fetch('products', [])[0]
 
