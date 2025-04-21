@@ -139,7 +139,8 @@ Additionally, if you're configuring Okta SSO for Dev Portal, you'll need a [non-
 
 1. From the Applications section of the Okta console, select _Create App Integration_ 
    and choose [OIDC - OpenID Connect](https://help.okta.com/oie/en-us/content/topics/apps/apps_app_integration_wizard_oidc.htm)
-   with _Web Application_ for the _Application type_. Provide the following configuration details:  
+   with _Web Application_ for the _Application type_. Provide the following configuration details: 
+{% capture table %} 
 <!-- vale off -->
 {% table %}
 columns:
@@ -160,6 +161,8 @@ rows:
       Dev Portal: `https://<portal-url>/login`
 {% endtable %}
 <!-- vale on -->
+{% endcapture %}
+{{table | indent: 3}}
 
 1. Optional: If you want to map Okta group claims to {{site.konnect_short_name}} Organization or Dev Portal Teams, 
 modify the [OpenID Connect ID Token claims](https://developer.okta.com/docs/guides/customize-tokens-groups-claim/main/#add-a-groups-claim-for-the-org-authorization-server) 
@@ -192,6 +195,7 @@ in the **Application** > **Sign On** section of the Okta configuration, setting 
 1. From the Applications section of the Okta console, select _Create App Integration_ 
    and choose [SAML 2.0](https://help.okta.com/en-us/content/topics/apps/apps_app_integration_wizard_saml.htm?cshid=ext_Apps_App_Integration_Wizard-saml). 
    Provide a name and the following configuration details: 
+{% capture table %} 
 <!-- vale off -->
 {% table %}
 columns:
@@ -207,8 +211,11 @@ rows:
     configuration: "`https://cloud.konghq.com/sp/SP_ID`"
 {% endtable %}
 <!-- vale on -->
+{% endcapture %}
+{{table | indent: 3}}
 
 1. Optional: To include additional user attributes beyond authentication, add the following three attributes in the **Attribute Statements**:
+{% capture table %} 
 <!-- vale off -->
 {% table %}
 columns:
@@ -230,8 +237,11 @@ rows:
     value: user.email
 {% endtable %}
 <!-- vale on -->
+{% endcapture %}
+{{table | indent: 3}}
 
 1. Optional: If you want to use group claims for {{site.konnect_short_name}} [developer team mappings](#team-mapping-configuration), [configure a groups attribute claim](https://developer.okta.com/docs/guides/customize-tokens-groups-claim/main/#add-a-groups-claim-for-a-custom-authorization-server) and fill in the following fields:
+{% capture table %} 
 <!-- vale off -->
 {% table %}
 columns:
@@ -250,6 +260,8 @@ rows:
     value: ".*"
 {% endtable %}
 <!-- vale on -->
+{% endcapture %}
+{{table | indent: 3}}
 
 1. [Generate a signing certificate](https://help.okta.com/en-us/content/topics/apps/manage-signing-certificates.htm) to use in {{site.konnect_short_name}}.
 
