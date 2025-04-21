@@ -66,11 +66,10 @@ search_aliases:
 
 ## 1. Enable the OpenID Connect plugin with JWT authentication
 
-Stateless JWT Access Token authentication is named `bearer` in the OpenID Connect plugin.
-
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
-set up an instance of the OpenID Connect plugin with bearer authentication. 
-We're also enabling the password grant so that you can test retrieving the bearer auth token.
+set up an instance of the OpenID Connect plugin with bearer authentication. The stateless JWT Access Token authentication is named `bearer` in the OpenID Connect plugin.
+
+We're also enabling the password grant so that you can test retrieving the bearer auth token. 
 
 Enable the OpenID Connect plugin on the `example-service` Service:
 
@@ -110,7 +109,7 @@ In this example:
 
 ## 2. Retrieve the bearer token
 
-Check that you can recover the token by requesting the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
+Check that you can recover the token by sending a request to the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
 
 {% validation request-check %}
 url: /anything
