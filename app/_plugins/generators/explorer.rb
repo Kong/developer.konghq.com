@@ -5,7 +5,6 @@ module Jekyll
   class TagExplorer < Jekyll::Generator
     priority :lowest
     def generate(site)
-      return
       return if Jekyll.env == 'production'
 
       jobs = [
