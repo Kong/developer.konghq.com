@@ -51,6 +51,16 @@
     <!-- OneTrust Cookies Consent Notice end for konghq.com -->
     {% endif %}
 
+    {% if jekyll.environment == "production" %}
+      <!-- Google Tag Manager -->
+      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-K2MGLVKJ');</script>
+      <!-- End Google Tag Manager -->
+    {% endif %}
+
     {% include structured_data.html %}
 
     {% vite_client_tag %}
@@ -82,6 +92,12 @@
   </head>
 
   <body class="bg-primary leading-6 h-full">
+    {% if jekyll.environment == "production" %}
+      <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2MGLVKJ" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+      <!-- End Google Tag Manager (noscript) -->
+    {% endif %}
+
     <div class="min-h-full flex flex-col">
       <blockquote class="danger w-full m-auto">
         Tech Preview: This website is a confidential tech preview. Do not share the link or its contents with anyone outside the Kong organization.
