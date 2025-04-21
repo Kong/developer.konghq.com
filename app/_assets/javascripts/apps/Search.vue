@@ -122,7 +122,7 @@
                 </div>
             </template>
         </ais-state-results>
-        <ais-pagination :padding="2" />
+        <ais-pagination :padding="2" :class-names="{ 'ais-Pagination-link': 'ais-Pagination-link no-icon'}"/>
     </div>
   </ais-instant-search>
 </template>
