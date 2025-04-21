@@ -1,6 +1,11 @@
 name: Check for Changes in the docs repo
 on:
   workflow_dispatch:
+    inputs:
+      days:
+        description: 'Number of days to check for docs changes'
+        required: false
+        default: '7'
   schedule:
     - cron: '0 0 * * 0'
 
@@ -21,8 +26,10 @@ jobs:
       - name: Run docs changes tracker
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DAYS_TO_CHECK_FOR_DOCS_CHANGES: ${{ vars.DAYS_TO_CHECK_FOR_DOCS_CHANGES }}
           DOCS_PATH: './docs'
         run: |
+          DAYS="${{ github.event.inputs.days || '7' }}"
+          export DAYS_TO_CHECK_FOR_DOCS_CHANGES=$DAYS
+
           npm ci --prefix ./tools/track-docs-changes
           node tools/track-docs-changes/index.js
