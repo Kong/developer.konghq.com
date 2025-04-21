@@ -22,7 +22,7 @@ related_resources:
   - text: "Supported third-party dependencies for {{site.base_gateway}}"
     url: /gateway/third-party-support/
   - text: "{{site.konnect_short_name}} compatibility"
-    url: /konnect-compatibility/
+    url: /konnect-platform/konnect-compatibility/
 
 works_on:
   - on-prem
@@ -33,7 +33,7 @@ Kong adopts a structured approach to versioning its products.
 Products follow a pattern of `{MAJOR}.{MINOR}.{PATCH}.{ENTERPRISE_PATCH}`.
 
 This policy **only** applies to {{site.base_gateway}}.
-For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version support policy](/konnect-compatibility/).
+For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version support policy](/konnect-platform/konnect-compatibility/).
 
 {:.info}
 > **Long Term Support Policy Update**
@@ -170,4 +170,4 @@ These versions have reached the end of full support.
 |   0.30   |  2018-01-22   |     2019-01-21      |      2020-01-21       |
 
 {:.info}
-> **Note:** This policy **only** applies to {{site.base_gateway}}. For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version support policy](/konnect-compatibility/#kong-gateway-version-compatibility).
+> **Note:** This policy **only** applies to {{site.base_gateway}}. For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version support policy](/konnect-platform/konnect-compatibility/).

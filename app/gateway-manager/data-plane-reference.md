@@ -84,14 +84,14 @@ rows:
 
 ## Upgrade Data Planes
 
-Self-managed Data Plane nodes can be upgraded to a new {{site.base_gateway}} by initializing new nodes before decommissioning old ones. This method ensures high availability, allowing the new node to commence data processing prior to the removal of the old node. Managed nodes are upgraded automatically after selecting the new version of {{site.base_gateway}}. We recommend running one major version (2.x or 3.x) of a Data Plane node per Control Plane, unless you are in the middle of version upgrades to the Data Plane. Mixing versions may cause [compatibility issues](/konnect-compatibility/).
+Self-managed Data Plane nodes can be upgraded to a new {{site.base_gateway}} by initializing new nodes before decommissioning old ones. This method ensures high availability, allowing the new node to commence data processing prior to the removal of the old node. Managed nodes are upgraded automatically after selecting the new version of {{site.base_gateway}}. We recommend running one major version (2.x or 3.x) of a Data Plane node per Control Plane, unless you are in the middle of version upgrades to the Data Plane. Mixing versions may cause [compatibility issues](/konnect-platform/konnect-compatibility/).
 
 To upgrade a Data Plane node to a new version, follow these steps:
 
 {% navtabs "Upgrade" %}
 {% navtab "Dedicated Cloud Gateways" %}
 
-Using both the `control_plane_id`, `cloud_gateway_network_id`, and the desired [`version`](/konnect/compatibility/) you can use the API to upgrade a Data Plane node:
+Using both the `control_plane_id`, `cloud_gateway_network_id`, and the desired [`version`](/konnect-platform/konnect-compatibility//) you can use the API to upgrade a Data Plane node:
 <!-- vale off -->
 
 {% control_plane_request %}

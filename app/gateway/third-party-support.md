@@ -20,7 +20,7 @@ related_resources:
   - text: "{{site.base_gateway}} breaking changes"
     url: /gateway/breaking-changes/
   - text: "{{site.konnect_short_name}} compatibility"
-    url: /konnect-compatibility/
+    url: /konnect-platform/konnect-compatibility/
 
 works_on:
   - on-prem
