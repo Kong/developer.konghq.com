@@ -58,6 +58,17 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
       heading.inner_html = anchor.to_s
     end
 
+    doc.css('a').each do |link|
+      href = link.attributes['href']&.value
+      next unless href # No href, skip
+      next unless href.start_with?('http') # Not an external link, skip
+
+      changes = true
+
+      link.set_attribute('target', '_blank')
+      link.set_attribute('rel', "noopener nofollow noreferrer #{link.attributes['rel']&.value}")
+    end
+
     @page_or_doc.output = doc.to_html if changes
   end
 end
