@@ -13,7 +13,7 @@ description: "{{site.konnect_short_name}} supports multiple SSO options"
 
 related_resources:
   - text: "Authentication"
-    url: /gateway/authentication/
+    url: /konnect-authentication/
   - text: "SAML IdP mapping"
     url: /konnect-platform/saml-idp-mapping/
 
@@ -231,7 +231,7 @@ rows:
 {% endtable %}
 <!-- vale on -->
 
-1. Optional: If you want to use group claims for Konnect [developer team mappings](/konnect/dev-portal/access-and-approval/add-teams/), [configure a groups attribute claim](https://developer.okta.com/docs/guides/customize-tokens-groups-claim/main/#add-a-groups-claim-for-a-custom-authorization-server) and fill in the following fields:
+1. Optional: If you want to use group claims for {{site.konnect_short_name}} [developer team mappings](#team-mapping-configuration), [configure a groups attribute claim](https://developer.okta.com/docs/guides/customize-tokens-groups-claim/main/#add-a-groups-claim-for-a-custom-authorization-server) and fill in the following fields:
 <!-- vale off -->
 {% table %}
 columns:
