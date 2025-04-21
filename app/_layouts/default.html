@@ -32,6 +32,25 @@
         }
     </script>
 
+    {% if jekyll.environment == "production" %}
+    <!-- OneTrust Cookies Consent Notice start for konghq.com -->
+    <script src="https://cdn.cookielaw.org/consent/2c4de954-6bec-4e93-8086-64cb113f151a/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="2c4de954-6bec-4e93-8086-64cb113f151a" ></script>
+    <script type="text/javascript">
+    function OptanonWrapper() { }
+    </script>
+    <!-- OneTrust Cookies Consent Notice end for konghq.com -->
+    {% endif %}
+
+
+    {% if jekyll.environment == "preview" %}
+    <!-- OneTrust Cookies Consent Notice start for konghq.com -->
+    <script src="https://cdn.cookielaw.org/consent/2c4de954-6bec-4e93-8086-64cb113f151a-test/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="2c4de954-6bec-4e93-8086-64cb113f151a-test" ></script>
+    <script type="text/javascript">
+    function OptanonWrapper() { }
+    </script>
+    <!-- OneTrust Cookies Consent Notice end for konghq.com -->
+    {% endif %}
+
     {% include structured_data.html %}
 
     {% vite_client_tag %}
