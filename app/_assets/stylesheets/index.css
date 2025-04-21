@@ -206,8 +206,8 @@
     @apply text-brand;
   }
 
-  a[href^='http']:not([href^='#']):not([href^='https://insomnia.rest/run']):not([data-no-icon])::after {
-    @apply w-3 h-3 inline-block bg-contain bg-no-repeat self-center bg-[url('/assets/icons/external-link.svg')] ml-1.5 content-[''];
+  a[href^='http']:not([href^='#']):not([href^='https://insomnia.rest/run']):not(.no-icon)::after {
+    @apply w-3 h-3 inline-block bg-contain bg-no-repeat align-middle bg-[url('/assets/icons/external-link.svg')] ml-1.5 content-[''];
   }
 
   code {
