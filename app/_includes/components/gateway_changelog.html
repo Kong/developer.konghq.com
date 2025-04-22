@@ -1,0 +1,19 @@
+{% for version in changelog.versions %}
+<h2 id="{{version.number | slugify }}">{{version.number}}</h2>
+
+{% for type in version.entries_by_type %}
+<h3 id="{{ type[0] | slugify }}-{{ version.number | slugify }}">{{type[0] | capitalize}}</h3>
+
+{% for entries_by_scope in type[1].by_scope %}
+<h4 id="{{entries_by_scope[0] | downcase }}-{{forloop.parentloop.index}}"> {{entries_by_scope[0]}}</h4>
+
+<ul>
+{% for entry in entries_by_scope[1] %}
+<li>{{entry.message | rstrip | markdownify}}</li>
+{% endfor %}
+</ul>
+{% endfor %}
+
+{% endfor %}
+
+{% endfor %}

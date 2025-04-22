@@ -51,6 +51,7 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
 
       # special case, it has links in the headings
       heading.content = heading.text if @page_or_doc.url == '/mesh/changelog/'
+
       toc_item = doc.at_css("#toc a[href='##{old_id}']")
       if toc_item
         toc_item['href'] = "##{heading['id']}"
