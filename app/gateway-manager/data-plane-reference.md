@@ -15,7 +15,7 @@ faqs:
   - q: How can I verify that a Data Plane node is running?
     a: |
       You can verify a Data Plane node by accessing a configured route through its proxy URL. 
-      By default, {{site.base_gateway}} listens on port `8000`, so a request to `http://localhost:8000/<your-route>` (or your custom hostname) 
+      By default, {{site.base_gateway}} listens on port `8000`, so a request to `http://localhost:8000/{your-route}` (or your custom hostname) 
       should return the expected response from your upstream service.
 
   - q: How do I access services through a Data Plane node running on Kubernetes?
@@ -32,8 +32,7 @@ faqs:
          ```
   - q: Can I choose a specific {{site.base_gateway}} version when using Quickstart scripts in Gateway Manager?
     a: |
-      Yes. Gateway Manager allows you to select the {{site.base_gateway}} version for your Quickstart scripts—except when using cloud provider scripts for AWS, Azure, and GCP. 
-      This ensures compatibility and reduces errors caused by version mismatches.
+      Yes. Gateway Manager allows you to select the {{site.base_gateway}} version for your Quickstart scripts—except when using cloud provider scripts for AWS, Azure, and GCP.
 
   - q: Can I SSH directly into Konnect Data Plane nodes?
     a: |
@@ -45,10 +44,12 @@ faqs:
 
 
 related_resources:
-  - text: Dedicated Cloud Gateways
-    url: /dedicated-cloud-gateways/
   - text: Gateway Manager
     url: /gateway-manager/reference/
+  - text: Dedicated Cloud Gateways
+    url: /dedicated-cloud-gateways/
+  - text: Serverless Gateways
+    url: /serverless-gateways/
 ---
 
 
@@ -76,10 +77,9 @@ rows:
 {% endtable %}
 
 
-### Forward proxy support
+## Forward proxy support
 
 {{site.konnect_product_name}} supports using non-transparent forward proxies to connect your {{site.base_gateway}} Data Plane with the {{site.konnect_short_name}} Control Plane. See the [Forward proxy connections](/gateway/cp-dp-communication/) {{site.base_gateway}} documentation for more information.
-
 
 
 ## Upgrade Data Planes
