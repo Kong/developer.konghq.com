@@ -244,6 +244,8 @@ app/_how-tos/add-correlation-ids-to-gateway-logs.md:
   - app/_hub/kong-inc/correlation-id/overview/_index.md
 app/_how-tos/configure-oidc-with-kong-oauth2.md:
   - app/_hub/kong-inc/openid-connect/how-to/authentication/_kong-oauth-token.md
+app/_how-tos/configure-oidc-with-jwt-auth.md:
+  - app/_hub/kong-inc/openid-connect/how-to/authentication/_jwt-access-token.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
@@ -864,6 +866,8 @@ app/konnect-platform/konnect-sso.md:
   - app/dev-portal/access-and-approvals/sso.md
   - app/konnect/org-management/sso.md
   - app/konnect/api/identity-management/sso.md
+  - app/_includes/md/konnect/okta-sso.md
+  - app/konnect/org-management/troubleshoot.md
 app/konnect-platform/saml-idp-mapping.md:
   - app/konnect/reference/saml-idp-mappings.md
 app/konnect-platform/self-managed-migration.md:
@@ -877,6 +881,9 @@ app/_landing_pages/konnect-platform.yaml:
   - app/konnect/account-management/index.md
   - app/konnect/architecture.md
   - app/_includes/md/konnect/konnect-architecture.md
+app/_landing_pages/konnect-authentication.yaml:
+  - app/konnect/org-management/auth.md
+  - app/konnect/org-management/social-identity-login.md
 
 # landing pages
 app/_landing_pages/service-catalog.yaml:

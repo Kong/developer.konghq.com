@@ -121,7 +121,7 @@ You'll see an `Authorization` header in the response.
 Export the value of the header to an environment variable:
 
 ```
-export TOKEN={your-bearer-token}
+export TOKEN='{your-bearer-token}'
 ```
 
 ## 3. Validate the token

@@ -124,7 +124,7 @@ You should see a `Refresh-Token` header in the response.
 Export the token to an environment variable:
 
 ```
-export REFRESH_TOKEN={your-refresh-token}
+export REFRESH_TOKEN='{your-refresh-token}'
 ```
 
 ## 3. Validate the refresh token grant
