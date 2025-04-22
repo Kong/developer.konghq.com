@@ -1,6 +1,7 @@
 ---
 title: Configure OpenID Connect with the authorization code flow
 content_type: how_to
+description: Learn how to configure OpenID Connect with the authorization code flow in Keycloak.
 
 related_resources:
   - text: Authentication in {{site.base_gateway}}
@@ -47,7 +48,7 @@ tags:
 
 tldr:
   q: How do I use an authorization code to open a session with my identity provider, letting users log in through a browser?
-  a: Using the OpenID Connect plugin, set up the [auth code flow](/plugins/openid-connect/#authorization-code-flow) to connect to an identity provider (IdP) through a browser, and use session authentication to store open sessions.
+  a: Using the OpenID Connect plugin, set up the [auth code flow](/plugins/openid-connect/#authorization-code-flow) to connect to an identity provider (IdP) through a browser, and use session authentication to store open sessions. You can do this by specifying `authorization_code` and `session` in the `config.auth_methods` plugin settings.
 
 cleanup:
   inline:
@@ -64,7 +65,6 @@ cleanup:
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with the auth code flow and session authentication.
-These two 
 
 Enable the OpenID Connect plugin on the `example-service` Service:
 
@@ -103,18 +103,18 @@ In this example:
 * `auth_methods`: Specifies that the plugin should use session auth and the authorization code flow.
 * `response_mode`: Set to `form_post` so that authorization codes won’t get logged to access logs.
 * `preserve_query_args`: Preserves the original request query arguments through the authorization code flow redirection.
-* `login_action`: Redirects the client to original request URL after the authorization code flow so that the POST request is turned into a GET request, and the browser address bar is updated with the original request query arguments.
-* `login_tokens`: We don’t want to include any tokens in the browser address bar.
+* `login_action`: Redirects the client to the original request URL after the authorization code flow. This turns the POST request into a GET request, and the browser address bar is updated with the original request query arguments.
+* `login_tokens`: Configures the plugin so that tokens aren't included in the browser address bar.
 * `authorization_endpoint`: Sets a custom endpoint for authorization, overriding the endpoint returned by discovery through the IdP. 
 We need this setting because we're running the example through Docker, otherwise the discovery endpoint will try to access an internal Docker host.
 
 ## 2. Validate authorization code login
 
 Access the Route you configured in the [prerequisites](#prerequisites) with some query arguments. 
-The following command opens a new tab in your default browser:
+In a new browser tab, navigate to the following:
 
 ```sh
-open http://localhost:8000/anything?hello=world
+http://localhost:8000/anything?hello=world
 ```
 
 The browser should be redirected to the Keycloak login page. 
