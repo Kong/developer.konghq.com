@@ -35,16 +35,17 @@ function generateChangelogsByVersion(folderPath, version) {
       }
       change.type = setup.type_mappings[change.type] || change.type;
       if (change.scope === "Plugin") {
-        const match = change.message.match(/(\*\*(.*?):?\*\*?)/);
+        const match = change.message.match(/(\*\*\s?(.*?):?\s?\*\*?)/);
         if (match && match[2]) {
           let plugin = match[2].replace(/-plugin/i, "");
 
           if (setup.skip_plugin_entries.includes(plugin)) {
+            console.log(plugin);
             return;
           }
           plugin = setup.plugin_mappings[plugin] || plugin;
           change.message = change.message.replace(
-            /\*\*.*?:?\*\*?/,
+            /\*\*\s?.*?:?\s?\*\*?/,
             `**${plugin}**`
           );
         }
