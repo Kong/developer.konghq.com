@@ -11,7 +11,7 @@ requirements:
     in your Auth0 API configuration."
   - "Your client is authorized to access your API. 
     After client creation in Auth0, set the client to Authorized, expand its authorization settings, and enable the `openid` scope."
-  - "A Kong service with `url` configured to match your Auth0 API Identifier."
+  - "A [Gateway Service](/gateway/entities/service/) with the `url` configured to match your Auth0 API Identifier."
 
 config:
   issuer: ${issuer}

@@ -9,20 +9,20 @@ description: |
   * **Domain restrictions**: Azure AD doesn't provide identity tokens with the `hd` claim, so the OIDC plugin's domains configuration can't restrict users based on their domain. 
   Using a single-tenant application will restrict access to users in your directory only. 
   Multi-tenant apps allow users with Microsoft accounts from other directories and optionally any Microsoft account (for example `live.com` or Xbox accounts) to sign in.
-  * **Consumer mapping**: If you need to interact with other {{site.base_gateway}} plugins using consumer information, you can map account data received from the IdP to a Kong Consumer. 
+  * **Consumer mapping**: If you need to interact with other {{site.base_gateway}} plugins using consumer information, you can map account data received from the IdP to a {{site.base_gateway}} Consumer. 
   See [OIDC with Consumer authorization](/how-to/configure-oidc-with-consumers/).
-  * **Pseudo-consumer mapping**: For plugins that typically require Consumers, the OIDC plugin can provide a Consumer ID based on the value of a claim without mapping to an actual Consumer. 
+  * **Pseudo-Consumer mapping**: For plugins that typically require Consumers, the OIDC plugin can provide a Consumer ID based on the value of a claim without mapping to an actual Consumer. 
   Setting `credential_claim` to a claim in your plugin configuration extracts the value of that claim and uses it where {{site.base_gateway}} would normally use a Consumer ID. 
   Similarly, setting `authenticated_groups_claim` extracts that claim's value and uses it as a group for the [ACL plugin](/plugins/acl/).
   
   {:.info}
   > **Note**: Azure AD provides two interfaces for its OAuth2/OIDC-related endpoints: v1.0 and v2.0. 
-  Support for some legacy v1.0 behavior is still available on v2.0, including use of v1.0 tokens by default, which is not compatible with Kong's OIDC implementation.
+  Support for some legacy v1.0 behavior is still available on v2.0, including use of v1.0 tokens by default, which is not compatible with {{site.base_gateway}}'s OIDC implementation.
   To force Azure AD to use v2.0 tokens, edit your application manifest and set `accessTokenAcceptedVersion` to 2 and include a `CLIENT_ID/.default` scope in your plugin configuration (see example).
 
 weight: 798
 requirements:
-  - A Gateway Service and Route secured with HTTPS.
+  - A [Gateway Service](/gateway/entities/service/#set-up-a-gateway-service) and [Route](/gateway/entities/route/#set-up-a-route) secured with HTTPS.
   - In Azure AD, configure an authorized redirect URI that is handled by your Route.
   - In Azure AD, [register an app](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app) and add a [client secret credential](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-configure-app-access-web-apis#add-credentials-to-your-web-application) that this plugin will use to access it.
 
@@ -46,8 +46,8 @@ variables:
     value: $ISSUER
     description: |
       The issuer authentication URL for your IdP. 
-      For Azure AD, that typically looks like this: `https://login.microsoftonline.com/{DIRECTORY}/v2.0/.well-known/openid-configuration`.
-      You can find this URL by clicking the Endpoints button on your app registration's Overview page.
+      For Azure AD, that typically looks like this: `https://login.microsoftonline.com/{directory}/v2.0/.well-known/openid-configuration`.
+      You can find this URL by clicking **Endpoints** on your app registration's Overview page.
   client-id:
     value: $CLIENT_ID
     description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP, shown on your Azure AD app registration's Overview page.

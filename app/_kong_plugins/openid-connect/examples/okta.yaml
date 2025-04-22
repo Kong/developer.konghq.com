@@ -6,9 +6,9 @@ description: |
   This means any user with a valid account in the directory will have access.
   If you want to restrict access further, you have several options:
   
-  * **Consumer mapping**: If you need to interact with other {{site.base_gateway}} plugins using consumer information, you can map account data received from the IdP to a Kong Consumer. 
+  * **Consumer mapping**: If you need to interact with other {{site.base_gateway}} plugins using Consumer information, you can map account data received from the IdP to a {{site.base_gateway}} Consumer. 
   See [OIDC with Consumer authorization](/how-to/configure-oidc-with-consumers/).
-  * **Pseudo-consumer mapping**: For plugins that typically require Consumers, the OIDC plugin can provide a Consumer ID based on the value of a claim without mapping to an actual Consumer. 
+  * **Pseudo-Consumer mapping**: For plugins that typically require Consumers, the OIDC plugin can provide a Consumer ID based on the value of a claim without mapping to an actual Consumer. 
   Setting `credential_claim` to a claim in your plugin configuration extracts the value of that claim and uses it where {{site.base_gateway}} would normally use a Consumer ID. 
   Similarly, setting `authenticated_groups_claim` extracts that claim's value and uses it as a group for the [ACL plugin](/plugins/acl/).
   
@@ -43,7 +43,7 @@ variables:
     value: $ISSUER
     description: |
       The issuer authentication URL for your IdP. 
-      For Okta, that typically looks like this: `https://{OKTA_DOMAIN}/oauth2/{AUTH_SERVER}/.well-known/openid-configuration`.
+      For Okta, that typically looks like this: `https://{oktaDomain}/oauth2/{authServer}/.well-known/openid-configuration`.
   client-id: 
     value: $CLIENT_ID
     description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.

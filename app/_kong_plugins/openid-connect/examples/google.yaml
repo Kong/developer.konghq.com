@@ -35,7 +35,7 @@ variables:
     description: The client secret needed to connect to Google.
   redirect-uri:
     value: $REDIRECT_URI
-    description: The authorized redirect URI that you created in Cloud Console, which determines where Google sends responses to your authentication requests.
+    description: The authorized redirect URI that you created in the Cloud Console, which determines where Google sends responses to your authentication requests.
 
 tools:
   - deck

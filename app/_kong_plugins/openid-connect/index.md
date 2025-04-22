@@ -588,7 +588,7 @@ Demonstrating Proof-of-Possession (DPoP) is an alternative technique to the [mut
 sequenceDiagram
     autonumber
     participant client as Client <br>(e.g. mobile app)
-    participant kong as API Gateway <br>(Kong)
+    participant kong as API Gateway <br>({{site.base_gateway}})
     participant upstream as Upstream <br>(backend service,<br> e.g. httpbin)
     participant idp as Authentication Server <br>(e.g. Keycloak)
     activate client
@@ -625,8 +625,7 @@ DPoP is compatible with the following authentication methods:
 * [Introspection authentication](#introspection-authentication-flow)
 * [Session authentication](#session-authentication-workflow)
 
-Session authentication is only compatible with DPoP when used along with one of the other supported authentication methods:
-* If multiple `openid-connect` plugins are configured with the `session` authentication method, we strongly recommend configuring different values of [`config.session_secret`](/plugins/openid-connect/reference/#schema--config-session-secret) across plugin instances for additional security. This avoids sessions being shared across plugins and possibly bypassing the proof of possession validation.
+Session authentication is only compatible with DPoP when used along with one of the other supported authentication methods. If multiple `openid-connect` plugins are configured with the `session` authentication method, we strongly recommend configuring different values of [`config.session_secret`](/plugins/openid-connect/reference/#schema--config-session-secret) across plugin instances for additional security. This avoids sessions being shared across plugins and possibly bypassing the proof of possession validation.
 
 To enable DPoP for OpenID Connect:
 * Ensure that the auth server (IdP) that you're using has DPoP enabled.
