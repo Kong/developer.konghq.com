@@ -118,7 +118,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Authentication
+            title: "{{site.konnect_short_name}} authentication"
             description: |
               {{site.konnect_short_name}} offers multiple options for authentication. 
               You can configure single sign-on with any SAML and OIDC provider or use built-in authentication. 
@@ -230,10 +230,33 @@ rows:
               title: "{{site.konnect_short_name}} network and ports"
               description: |
                 {{site.konnect_short_name}} uses specific ports for communication and proxying.
-              icon: /assets/icons/linked-services.svg
+              icon: /assets/icons/firewall.svg
               cta:
                 text: Learn about {{site.konnect_short_name}} ports
                 url: /konnect-platform/network/
+                align: end
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Data Plane reference
+              description: |
+                Learn about Data Plane nodes in {{site.konnect_short_name}} and how to manage them.
+              icon: /assets/icons/deployment.svg
+              cta:
+                text: "{{site.konnect_short_name}} Data Plane reference"
+                url: /gateway-manager/data-plane-reference/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Dedicated Cloud Gateway reference
+              description: |
+                Learn about how Dedicated Cloud Gateways work.
+              icon: /assets/icons/dedicated-cloud-gateway.svg
+              cta:
+                text: "{{site.konnect_short_name}} Dedicated Cloud Gateways"
+                url: /dedicated-cloud-gateways/reference/
                 align: end
       - blocks:
           - type: card
