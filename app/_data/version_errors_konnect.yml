@@ -1955,7 +1955,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 2.8 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect-compatibility/)
+      [Compatibility](/konnect-platform/konnect-compatibility/)
   - ID: EOL101
     Severity: error
     Description: |
