@@ -533,6 +533,10 @@
   @apply flex flex-col md:gap-8;
 }
 
+.ais-SearchBox {
+  @apply w-full;
+}
+
 .ais-Pagination {
   @apply flex flex-col md:col-span-3 md:col-start-2 w-full gap-16;
 }
@@ -582,7 +586,7 @@
 }
 
 .ais-StateResults {
-  @apply flex flex-col md:col-span-3 w-full gap-16;
+  @apply flex flex-col md:col-span-3  md:col-start-2 w-full gap-16;
 }
 
 .modal-overflow {
