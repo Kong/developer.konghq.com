@@ -124,28 +124,28 @@ rows:
   - header: "`Connection: keep-alive`"
     description: Allows for reusing the Upstream connections.
   - header: "`X-Real-IP: <remote_addr>`"  
-    description: "`$remote_addr` is the variable bearing the same name provided by [ngx_http_core_module](https://nginx.org/docs/http/ngx_http_core_module.html#var_remote_addr). `$remote_addr` is likely overridden by [ngx_http_realip_module](https://nginx.org/docs/http/ngx_http_realip_module.html)."
+    description: "`$remote_addr` is the variable bearing the same name provided by [`ngx_http_core_module`](https://nginx.org/docs/http/ngx_http_core_module.html#var_remote_addr). `$remote_addr` is likely overridden by [ngx_http_realip_module](https://nginx.org/docs/http/ngx_http_realip_module.html)."
   - header: "`X-Forwarded-For: <address>`"      
-    description: "`<address>` is the content of `$realip_remote_addr` provided by [ngx_http_realip_module](https://nginx.org/docs/http/ngx_http_realip_module.html) appended to the request header with the same name."
+    description: "`<address>` is the content of `$realip_remote_addr` provided by [`ngx_http_realip_module`](https://nginx.org/docs/http/ngx_http_realip_module.html) appended to the request header with the same name."
   - header: "`X-Forwarded-Proto: <protocol>`"
     description: |
       `<protocol>` is the protocol used by the client. 
       If `$realip_remote_addr` is one of the **trusted** addresses, the request header with the same name gets forwarded if provided. 
-      Otherwise, the value of the `$scheme` variable provided by [ngx_http_core_module](https://nginx.org/docs/http/ngx_http_core_module.html#var_scheme) will be used.
+      Otherwise, the value of the `$scheme` variable provided by [`ngx_http_core_module`](https://nginx.org/docs/http/ngx_http_core_module.html#var_scheme) will be used.
   - header: "`X-Forwarded-Host: <host>`"
     description: |
       `<host>` is the host name sent by the client. 
-      If `$realip_remote_addr` is one of the **trusted** addresses, the request header with the same name gets forwarded if provided. Otherwise, the value of the `$host` variable provided by [ngx_http_core_module](https://nginx.org/docs/http/ngx_http_core_module.html#var_host) will be used.
+      If `$realip_remote_addr` is one of the **trusted** addresses, the request header with the same name gets forwarded if provided. Otherwise, the value of the `$host` variable provided by [`ngx_http_core_module`](https://nginx.org/docs/http/ngx_http_core_module.html#var_host) will be used.
   - header: "`X-Forwarded-Port: <port>`"
     description: |
       `<port>` is the port of the server which accepted a request.
       If `$realip_remote_addr` is one of the **trusted** addresses, the request header with the same name gets forwarded if provided. 
-      Otherwise, the value of the `$server_port` variable provided by [ngx_http_core_module](https://nginx.org/docs/http/ngx_http_core_module.html#var_server_port) will be used.
+      Otherwise, the value of the `$server_port` variable provided by [`ngx_http_core_module`](https://nginx.org/docs/http/ngx_http_core_module.html#var_server_port) will be used.
   - header: "`X-Forwarded-Prefix: <path>`"
     description:  |
       `<path>` is the path of the request which was accepted by {{site.base_gateway}}. 
       If `$realip_remote_addr` is one of the **trusted** addresses, the request header with the same name gets forwarded if provided. 
-      Otherwise, the value of the `$request_uri` variable (with the query string stripped) provided by [ngx_http_core_module](https://nginx.org/docs/http/ngx_http_core_module.html#var_server_port) will be used. 
+      Otherwise, the value of the `$request_uri` variable (with the query string stripped) provided by [`ngx_http_core_module`](https://nginx.org/docs/http/ngx_http_core_module.html#var_server_port) will be used. 
       **Note**: {{site.base_gateway}} returns `"/"` for an empty path, but it doesn't do any other normalization on the request path.
   - header: All other headers
     description: Forwarded as-is by {{site.base_gateway}}.
