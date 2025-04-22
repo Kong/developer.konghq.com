@@ -78,11 +78,11 @@
         <div class="flex md:flex-col md:col-span-3 md:col-start-2 w-full justify-between gap-2">
             <ais-search-box>
                 <template v-slot="{ currentRefinement, isSearchStalled, refine }">
-                    <div class="flex gap-2 bg-secondary rounded-md border border-brand-saturated/40 py-2 px-3 items-center w-full">
-                        <svg class="hidden md:flex" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <div class="filter-results-field">
+                        <svg class="filter-results-field__image" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M10 18V16H14V18H10ZM6 13V11H18V13H6ZM3 8V6H21V8H3Z" fill="rgb(var(--color-text-terciary))"/>
                         </svg>
-                        <input type="search" class="w-full bg-secondary" placeholder="Filter results" :value="currentRefinement" @input="refine($event.currentTarget.value)">
+                        <input type="search" class="filter-results-field__input" placeholder="Filter results" :value="currentRefinement" @input="refine($event.currentTarget.value)">
                     </div>
                 </template>
             </ais-search-box>

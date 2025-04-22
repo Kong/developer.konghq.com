@@ -50,6 +50,10 @@ class Hub {
       }, this.typeInterval);
     });
 
+    this.textInput.addEventListener("input", () => {
+      this.onChange();
+    });
+
     this.clearFilters.addEventListener("click", () => {
       checkboxes.forEach((checkbox) => {
         if (checkbox.checked) {

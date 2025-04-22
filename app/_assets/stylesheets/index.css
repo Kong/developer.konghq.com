@@ -527,6 +527,18 @@
   .mobile-drawer__footer {
     @apply flex w-full gap-3 p-6 bg-secondary border-t border-primary/5 md:hidden;
   }
+
+  .filter-results-field {
+    @apply relative;
+  }
+
+  .filter-results-field__image {
+    @apply hidden md:flex absolute top-1/2 left-4 -translate-y-1/2;
+  }
+
+  .filter-results-field__input {
+    @apply flex gap-2 bg-secondary rounded-md border border-brand-saturated/40 py-2 px-3 md:pl-11 items-center w-full;
+  }
 }
 
 .ais-InstantSearch {
