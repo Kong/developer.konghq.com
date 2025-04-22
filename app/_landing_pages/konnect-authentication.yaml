@@ -26,15 +26,13 @@ rows:
             blocks:
               - type: text
                 text: |
-                  The default authentication option in {{site.konnect_saas}} is basic authentication, which is enabled by default. 
+                  The default authentication option in {{site.konnect_saas}} is basic authentication where users can log in with a username and password.
                   
                   Users can also register for and sign in to Konnect accounts using their social identity from the following providers:
                   * Google
                   * GitHub
                   * Microsoft
 
-                  The only way to disable social login is to [enable OIDC single sign-on](/konnect-platform/konnect-sso/) and disable the built-in authentication scheme. 
-                  This will also disable basic auth logins and delegate user management to the identity provider.
   - header:
       type: h2
       text: "Manage user access"
