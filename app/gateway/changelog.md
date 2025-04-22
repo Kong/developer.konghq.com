@@ -19,4 +19,4 @@ works_on:
   - konnect
 ---
 
-@todo
+{% gateway_changelog %}
