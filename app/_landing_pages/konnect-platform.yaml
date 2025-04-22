@@ -27,8 +27,8 @@ rows:
 
                     {{site.konnect_short_name}} can help you with the following use cases:
 
-                    * Easiest way to manage {{site.base_gateway}}
-                    * Use features like API cataloguing, external developer portals, and API analytics to share and monetize APIs
+                    * Easily manage {{site.base_gateway}}
+                    * Catalog, share, and monetize APIs
                     * Achieve federated API management with [multi-geo](/konnect-geos/) support
       - blocks:
           - type: image
@@ -66,6 +66,11 @@ rows:
       text: "{{site.konnect_short_name}} architecture"
     columns:
       - blocks:
+          - type: image
+            config:
+              url: /assets/images/konnect/konnect-overview.svg
+              alt_text: Diagram of {{site.konnect_short_name}} architecture
+      - blocks:
         - type: structured_text
           config:
             blocks:
@@ -73,13 +78,8 @@ rows:
                 text: |
                   The {{site.konnect_short_name}} platform runs in [hybrid mode](/gateway/hybrid-mode/) and provides several hosted Control Plane options to manage all service configurations.
                   The Control Plane propagates those configurations to the Data Plane group, which is composed of Data Plane nodes (and in the case of {{site.mesh_product_name}}, proxies). 
-                  The individual nodes can be running either on-premise, in cloud-hosted environments, or fully managed by {{site.konnect_product_name}}.
+                  The individual nodes can be running either on-premise, in cloud-hosted environments, or fully managed by {{site.konnect_short_name}}.
 
-      - blocks:
-          - type: image
-            config:
-              url: /assets/images/konnect/konnect-overview.svg
-              alt_text: Diagram of {{site.konnect_short_name}} architecture
   - header:
       type: h3
       text: "Supported Data Plane hosting options"
