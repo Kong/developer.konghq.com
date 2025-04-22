@@ -1244,3 +1244,99 @@ app/mesh/production-usuage-values.md:
   - app/_src/mesh/production/cp-deployment/production-usage-values.md
 app/mesh/support-policy.md:
   - app/_src/mesh/support-policy.md
+
+
+
+
+## Insomnia
+app/_landing_pages/insomnia.yaml: 
+  - /insomnia/get-started.md
+  - /insomnia/install.md
+app/_landing_pages/insomnia/documents.yaml: 
+  - /insomnia/design-documents.md
+  - /insomnia/get-started-with-documents.md
+app/_landing_pages/insomnia/test.yaml:
+  - /insomnia/request-collections.md
+  - /insomnia/environment-variables.md
+  - /insomnia/unit-testing.md
+app/insomnia/api-specs.md:
+  - /insomnia/design-documents.md
+  - /insomnia/get-started-with-documents.md
+app/insomnia/requests.md:
+  - /insomnia/requests.md
+app/_how-tos/import-an-api-spec-as-a-document.md:
+  - /insomnia/import-export-data.md
+app/_how-tos/chain-requests.md:
+  - /insomnia/chaining-requests.md
+app/_how-tos/generate-a-collection-from-a-design-document/:
+  - /insomnia/request-collections.md
+app/_how-tos/add-custom-linting-rules.md:
+  - /insomnia/linting.md
+  - /inso-cli/cli-command-reference/inso-custom-linting.md
+app/_how-tos/write-pre-request-scripts.md:
+  - /insomnia/pre-request-script.md
+  - /insomnia/after-response-script.md
+app/_how-tos/automate-tests.md:
+  - /inso-cli/cli-command-reference/inso-run-test.md
+app/_landing_pages/inso-cli.yaml:
+  - /inso-cli/install.md
+  - /inso-cli/introduction.md
+  - /inso-cli/cli-command-reference.md
+app/_how-tos/write-data-type-tests.md:
+  - /insomnia/pre-request-script.md
+  - /insomnia/after-response-script.md
+  - /insomnia//insomnia/unit-testing.md
+app/_how-tos/write-content-type-tests.md:
+  - /insomnia/pre-request-script.md
+  - /insomnia/after-response-script.md
+  - /insomnia//insomnia/unit-testing.md
+app/_how-tos/write-http-status-tests.md:
+  - /insomnia/pre-request-script.md
+  - /insomnia/after-response-script.md
+  - /insomnia//insomnia/unit-testing.md
+app/_how-tos/write-headers-in-response-tests.md:
+  - /insomnia/pre-request-script.md
+  - /insomnia/after-response-script.md
+  - /insomnia//insomnia/unit-testing.md
+app/_how-tos/create-an-insomnia-plugin.md:
+  - /insomnia/introduction-to-plugins.md
+app/_landing_pages/insomnia/plugins.yaml:
+  - /insomnia/introduction-to-plugins.md
+app/_landing_pages/insomnia/security.yaml:
+  - /insomnia/security-features.md
+  - /insomnia/security-standards.md
+  - /insomnia/signup-and-auth.md
+  - /insomnia/data-encryption.md
+app/insomnia/rbac.md:
+  - /insomnia/security-features.md
+  - /insomnia/security-standards.md
+  - /insomnia/signup-and-auth.md
+  - /insomnia/data-encryption.md
+app/insomnia/infrastructure-security.md:
+  - /insomnia/security-features.md
+  - /insomnia/security-standards.md
+  - /insomnia/signup-and-auth.md
+  - /insomnia/data-encryption.md
+app/insomnia/collected-data.md:
+  - /insomnia/security-features.md
+  - /insomnia/security-standards.md
+  - /insomnia/signup-and-auth.md
+  - /insomnia/data-encryption.md
+app/insomnia/incident-response.md:
+  - /insomnia/security-features.md
+  - /insomnia/security-standards.md
+  - /insomnia/signup-and-auth.md
+  - /insomnia/data-encryption.md
+app/_landing_pages/insomnia/storage-options.yaml:
+  - /insomnia/insomnia-storage-options-guide.md
+app/insomnia/cloud-sync.md:
+  - /insomnia/insomnia-sync.md
+app/insomnia/git-sync.md:
+  - /insomnia/git-sync.md
+app/insomnia/version-control.md:
+  - /insomnia/git-sync.md
+  - /insomnia/insomnia-sync.md
+app/insomnia/scratch-pad.md:
+  - /insomnia/scratchpad.md
+app/_how-tos/use-the-collection-runner.md:
+  - /insomnia/ai-runner.md

@@ -104,17 +104,7 @@ rows:
               text: Learn more
               url: /how-to/write-data-type-tests/
               align: end
-  - header:
-      type: h2
-      text: Learn
-    columns:
-      - blocks:
-          - type: concept_list
-            config:
-              - topic: test-apis
-                product: insomnia 
-            quantity: 5
-            allow_empty: true
+
 
   - header:
       type: h2
