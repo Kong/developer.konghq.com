@@ -443,20 +443,82 @@ sequenceDiagram
 
 The OpenID Connect plugin has several options for performing coarse-grained authorization:
 
-1. Claims-based authorization
-2. ACL plugin authorization
-3. Consumer authorization
+1. [Claims-based authorization](#claims-based-authorization)
+2. [ACL plugin authorization](#acl-plugin-authorization)
+3. [Consumer authorization](#consumer-authorization)
 
 #### Claims-based authorization
 
-The following option pairs can be configured to manage claims verification during authorization:
+Claims-based authorization uses a pair of options to manage claims verification during authorization.
+The pair can be any of:
 
-1. `config.scopes_claim` and `config.scopes_required`
-2. `config.audience_claim` and `config.audience_required`
-3. `config.groups_claim` and `config.groups_required`
-4. `config.roles_claim` and `config.roles_required`
+1. [`config.scopes_claim`](/plugins/openid-connect/reference/#schema--config-scopes-claim) and 
+[`config.scopes_required`](/plugins/openid-connect/reference/#schema--config-scopes-required)
+2. [`config.audience_claim`](/plugins/openid-connect/reference/#schema--config-audience-claim) and 
+[`config.audience_required`](/plugins/openid-connect/reference/#schema--config-audience-required)
+3. [`config.groups_claim`](/plugins/openid-connect/reference/#schema--config-groups-claim) and 
+[`config.groups_required`](/plugins/openid-connect/reference/#schema--config-groups-required)
+4. [`config.roles_claim`](/plugins/openid-connect/reference/#schema--config-roles-claim) and 
+[`config.roles_required`](/plugins/openid-connect/reference/#schema--config-roles-required)
 
-For example, the first configuration option, `config.scopes_claim`, points to a source, from which the value is retrieved and checked against the value of the second configuration option, `config.scopes_required`.
+For example, the first configuration option, `config.groups_claim`, points to a source, from which the value is retrieved and checked against the value of the second configuration option, `config.groups_required`.
+
+Both the claim type and the required claim content take an array of string elements.
+
+For the claim type (for example, `config.groups_claim`), the array is a list of JSON objects listed in nested order. 
+The plugin uses the order of the items in the array to look up data in a JSON payload.
+
+The value of a claim can be:
+
+* A space-separated string (common for scope claims)
+* An JSON array of strings (common for groups claims)
+* A simple value, such as a string
+
+For example, let's look at the following sample payload, where `groups` is nested inside `user`:
+
+```json
+{
+    "user": {
+        "name": "alex",
+        "groups": [
+            "employee",
+            "marketing"
+        ]
+    }
+}
+```
+
+In this case, you would use `config.groups_claim` to traverse to the groups you need, where `groups` is the JSON object that contains the list of groups:
+
+```yaml
+config:
+  groups_claim:
+  - user
+  - groups
+```
+
+On the other hand, the `config.*_required` parameters are arrays that allow logical AND/OR types of checks:
+
+* **AND**: Space-separated values
+
+  This claim has to have both `employee` AND `marketing`:
+
+  ```yaml
+  config:
+    groups_required:
+    - employee marketing
+  ```
+
+* **OR**: Values in separate array indices
+
+  This claim has to have either `employee` OR `marketing`:
+
+  ```yaml
+  config:
+    groups_required:
+    - employee
+    - marketing
+  ```
 
 #### ACL plugin authorization
 

@@ -246,6 +246,8 @@ app/_how-tos/configure-oidc-with-kong-oauth2.md:
   - app/_hub/kong-inc/openid-connect/how-to/authentication/_kong-oauth-token.md
 app/_how-tos/configure-oidc-with-jwt-auth.md:
   - app/_hub/kong-inc/openid-connect/how-to/authentication/_jwt-access-token.md
+app/_how-tos/configure-oidc-with-claims-based-auth.md:
+  - app/_hub/kong-inc/openid-connect/how-to/authorization/_claims.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
