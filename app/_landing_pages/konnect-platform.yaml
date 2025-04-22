@@ -68,7 +68,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/konnect/konnect-overview.svg
+              url: /assets/images/konnect/konnect-overview.png
               alt_text: Diagram of {{site.konnect_short_name}} architecture
       - blocks:
         - type: structured_text
@@ -120,10 +120,11 @@ rows:
           config:
             title: Authentication
             description: |
-              Authentication is the process of verifying that a requester has permissions to access a resource. 
+              {{site.konnect_short_name}} offers multiple options for authentication. 
+              You can configure single sign-on with any SAML and OIDC provider or use built-in authentication. 
             icon: /assets/icons/lock.svg
             cta:
-              text: Learn about {{ site.base_gateway }} authentication methods
+              text: Learn about {{site.konnect_short_name}} authentication methods
               url: /konnect-authentication/
               align: end
       - blocks:
