@@ -65,9 +65,17 @@ module Jekyll
       def entries_by_version
         @entries_by_version ||= json_changelog.each_with_object({}) do |(version, values), hash|
           values['kong-manager-ee'].map { |e| e['scope'] = 'Kong Manager' } if values.key?('kong-manager-ee')
-          hash[version] ||= []
-          hash[version].concat(values.values.flatten)
+          key = version_to_key(version)
+          hash[key] ||= []
+          hash[key].concat(values.values.flatten)
         end
+      end
+
+      def version_to_key(version)
+        # treat ee and oss versions as ee versions
+        parts = version.split('.').map(&:to_i)
+        parts.fill(0, parts.size...4)
+        parts.join('.')
       end
 
       def json_changelog
