@@ -351,5 +351,5 @@ This means all of the below setup are supported in this mode:
 2. Client <- TLS -> {{site.base_gateway}} <- Cleartext -> Upstream
 3. Client <- Cleartext -> {{site.base_gateway}} <- TLS -> Upstream
 
-**Note:** In L4 proxy mode, only certain plugins support the `tcp` or `tls` protocol. You cna find the list of supported protocols for each plugin in the [Plugin Hub](/plugins/).
+**Note:** In L4 proxy mode, only certain plugins support the `tcp` or `tls` protocol. You can find the list of supported protocols for each plugin in the [Plugin Hub](/plugins/).
 
