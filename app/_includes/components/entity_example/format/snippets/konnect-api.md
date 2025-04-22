@@ -4,6 +4,6 @@ curl -X POST {{ include.presenter.url }} \
     --header "Content-Type: application/json" \
     --header "Authorization: Bearer ${{ include.presenter.pat }}" \
     --data '
-{{ include.presenter.data | json_prettify | indent: 4 }}
+{{ include.presenter.data | json_prettify | escape_env_variables | indent: 4 }}
     '
 ```
