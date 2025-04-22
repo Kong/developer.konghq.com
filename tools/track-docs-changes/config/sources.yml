@@ -866,6 +866,8 @@ app/konnect-platform/konnect-sso.md:
   - app/dev-portal/access-and-approvals/sso.md
   - app/konnect/org-management/sso.md
   - app/konnect/api/identity-management/sso.md
+  - app/_includes/md/konnect/okta-sso.md
+  - app/konnect/org-management/troubleshoot.md
 app/konnect-platform/saml-idp-mapping.md:
   - app/konnect/reference/saml-idp-mappings.md
 app/konnect-platform/self-managed-migration.md:
@@ -873,6 +875,9 @@ app/konnect-platform/self-managed-migration.md:
 app/gateway-manager/version-compatibility.md:
   - app/konnect/gateway-manager/version-compatibility.md
   - app/_data/tables/version_errors_konnect.yml
+app/_landing_pages/konnect-authentication.yaml:
+  - app/konnect/org-management/auth.md
+  - app/konnect/org-management/social-identity-login.md
 
 # landing pages
 app/_landing_pages/service-catalog.yaml:
