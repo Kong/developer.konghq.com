@@ -1,41 +1,65 @@
 title: OpenID Connect with Azure AD
 description: |
-  Authenticate browser clients using an Azure AD identity provider.
+  Authenticate browser clients using an [Azure AD identity provider](https://learn.microsoft.com/en-us/entra/identity/).
+
+  The following configuration example allows users to authenticate and access the upstream service even though no Consumer was created for them. 
+  This means any user with a valid account in the directory will have access.
+  If you want to restrict access further, you have several options:
+  
+  * **Domain restrictions**: Azure AD doesn't provide identity tokens with the `hd` claim, so the OIDC plugin's domains configuration can't restrict users based on their domain. 
+  Using a single-tenant application will restrict access to users in your directory only. 
+  Multi-tenant apps allow users with Microsoft accounts from other directories and optionally any Microsoft account (for example `live.com` or Xbox accounts) to sign in.
+  * **Consumer mapping**: If you need to interact with other {{site.base_gateway}} plugins using consumer information, you can map account data received from the IdP to a Kong Consumer. 
+  See [OIDC with Consumer authorization](/how-to/configure-oidc-with-consumers/).
+  * **Pseudo-consumer mapping**: For plugins that typically require Consumers, the OIDC plugin can provide a Consumer ID based on the value of a claim without mapping to an actual Consumer. 
+  Setting `credential_claim` to a claim in your plugin configuration extracts the value of that claim and uses it where {{site.base_gateway}} would normally use a Consumer ID. 
+  Similarly, setting `authenticated_groups_claim` extracts that claim's value and uses it as a group for the [ACL plugin](/plugins/acl/).
+  
+  {:.info}
+  > **Note**: Azure AD provides two interfaces for its OAuth2/OIDC-related endpoints: v1.0 and v2.0. 
+  Support for some legacy v1.0 behavior is still available on v2.0, including use of v1.0 tokens by default, which is not compatible with Kong's OIDC implementation.
+  To force Azure AD to use v2.0 tokens, edit your application manifest and set `accessTokenAcceptedVersion` to 2 and include a `CLIENT_ID/.default` scope in your plugin configuration (see example).
 
 weight: 798
 requirements:
   - A Gateway Service and Route secured with HTTPS.
-  - In Azure AD, configure a redirect URI that is handled by your Route.
-  - In Azure AD, register an app and add a client secret credential that this plugin will use to access it.
+  - In Azure AD, configure an authorized redirect URI that is handled by your Route.
+  - In Azure AD, [register an app](https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app) and add a [client secret credential](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-configure-app-access-web-apis#add-credentials-to-your-web-application) that this plugin will use to access it.
 
 config:
-  issuer: $ISSUER
+  issuer: ${issuer}
   client_id:
-    - $CLIENT_ID
+    - ${client-id}
   client_secret:
-    - $CLIENT_SECRET
+    - ${client-secret}
   redirect_uri:
-    - $REDIRECT_URI
+    - ${redirect-uri}
   scopes:
     - openid
     - email
     - profile
-    - "$CLIENT_ID/.default"
+    - "${client-id}/.default"
   verify_parameters: false
 
 variables: 
   issuer:
-    value: "https://login.microsoftonline.com/$DIRECTORY_ID/v2.0/.well-known/openid-configuration"
-  client_id: 
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. 
+      For Azure AD, that typically looks like this: `https://login.microsoftonline.com/{DIRECTORY}/v2.0/.well-known/openid-configuration`.
+      You can find this URL by clicking the Endpoints button on your app registration's Overview page.
+  client-id:
     value: $CLIENT_ID
-    description: Replace with the client ID of your IdP. The OpenID Connect plugin uses this value when it calls authenticated endpoints on the identity provider.
-  client_secret: 
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP, shown on your Azure AD app registration's Overview page.
+  client-secret:
     value: $CLIENT_SECRET
-    description: Replace with your IdP client secret.
-  redirect_uri:
-    value: "https://example.com/api"
-
-
+    description: |
+      The URL-encoded representation of the secret you created in the Azure AD **Certificates & Secrets** section. 
+  redirect-uri:
+    value: $REDIRECT_URI
+    description: |
+      The URI you specified when configuring your app. 
+      If you didn't add one initially, you can add a redirect URI via the Authentication section of the app settings.
 
 tools:
   - deck
@@ -43,3 +67,6 @@ tools:
   - konnect-api
   - kic
   - terraform
+
+search_aliases:
+  - Microsoft Entra ID

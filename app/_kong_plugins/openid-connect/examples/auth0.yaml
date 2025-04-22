@@ -1,23 +1,33 @@
 title: OpenID Connect with Auth0
 description: |
-  Authenticate headless service consumers using Auth0's identity provider.
+  Authenticate headless service consumers using [Auth0's identity provider](https://auth0.com/docs/authenticate/identity-providers).
+
+  This example uses a client credentials grant as it is non-interactive, 
+  and because we expect clients to authenticate on behalf of themselves, not an end-user. 
+
 weight: 799
 requirements:
   - "Auth0 API configured with the `openid` scope. Find your `issuer` URL and `audience`
-  in your Auth0 API configuration."
-  - A Kong service with `url` configured to match your Auth0 API Identifier.
+    in your Auth0 API configuration."
+  - "Your client is authorized to access your API. 
+    After client creation in Auth0, set the client to Authorized, expand its authorization settings, and enable the `openid` scope."
+  - "A Kong service with `url` configured to match your Auth0 API Identifier."
 
 config:
+  issuer: ${issuer}
+  audience: ${audience}
   auth_methods:
-    - client_credentials
-  issuer: $ISSUER
-  audience: $AUDIENCE
+  - client_credentials
 
-variables: 
+variables:
   issuer:
-    value: "https://$AUTH0_API_NAME.auth0.com/.well-known/openid-configuration"
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. 
+      For Auth0, that typically looks like this: `https://{AUTH0_API_NAME}.auth0.com/.well-known/openid-configuration`.
   audience:
     value: $AUTH0_API_IDENTIFIER
+    description: Auth0's token endpoint requires [passing the API identifier in the audience parameter](https://auth0.com/docs/api/authentication#client-credentials), which must be added as a custom argument.
 
 tools:
   - deck

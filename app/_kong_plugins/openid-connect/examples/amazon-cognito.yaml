@@ -1,6 +1,7 @@
 title: OpenID Connect with Amazon Cognito
 description: |
-  Configure the OpenID Connect plugin with Amazon Cognito.
+  Configure the OpenID Connect plugin with [Amazon Cognito User Pools](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools.html).
+  User Pools are a multi-tenant LDAP-like user repository combined with an OAuth2 and an OpenID Connect interface.
 
 weight: 800
 
@@ -8,23 +9,24 @@ requirements:
   - Set up an Amazon Cognito User Pool and Application Definition before configuring the plugin.
 
 config:
-  issuer: $ISSUER
+  issuer: ${issuer}
   client_id: 
-    - $CLIENT_ID
+    - ${client-id}
   client_secret: 
-    - $CLIENT_SECRET
+    - ${client-secret}
+
 variables: 
-  issuer: 
-    value: "https://cognito-idp.$REGION.amazonaws.com/$USER_POOL_ID"
-    description: Replace with the discovery endpoint or issuer identifier of your IdP.
-  client_id: 
+  issuer:
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. For Amazon Cognito, that typically looks like this:
+      `https://cognito-idp.${REGION}.amazonaws.com/${REGION}_${POOL_ID}/.well-known/openid-configuration`
+  client-id: 
     value: $CLIENT_ID
-    description: Replace with the client ID of your IdP. The OpenID Connect plugin uses this value when it calls authenticated endpoints on the identity provider.
-  client_secret: 
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
+  client-secret: 
     value: $CLIENT_SECRET
-    description: Replace with your IdP client secret.
-
-
+    description: The client secret needed to connect to your IdP.
 
 tools:
   - deck

@@ -1,38 +1,41 @@
 title: OpenID Connect with Google
 description: |
-  Authenticate browser clients using Google's identity provider.
+  Authenticate browser clients using [Google's identity provider](https://developers.google.com/identity).
 
 weight: 796
 
 requirements:
   - A Gateway Service and Route secured with HTTPS.
-  - Set up a Google API project and create a set of OAuth client ID credentials with the Web application class. 
+  - Set up a [Google API project](https://developers.google.com/identity/protocols/OpenIDConnect) and create a set of [OAuth client ID credentials](https://console.developers.google.com/apis/credentials) with the Web application class. 
   - An authorized redirect URI for the part of the API you want to protect.
 
 config:
-  issuer: $ISSUER
-  client_id: 
-    - $CLIENT_ID
-  client_secret: 
-    - $CLIENT_SECRET
+  issuer: ${issuer}
+  client_id:
+    - ${client-id}
+  client_secret:
+    - ${client-secret}
   redirect_uri:
-    - $REDIRECT_URI
+    - ${redirect-uri}
   scopes:
     - openid
     - email
 
 variables: 
   issuer:
-    value: "https://accounts.google.com/.well-known/openid-configuration"
-  client_id: 
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. 
+      For Google, that typically looks like this: `https://accounts.google.com/.well-known/openid-configuration`
+  client-id:
     value: $CLIENT_ID
-    description: Replace with the client ID of your IdP. The OpenID Connect plugin uses this value when it calls authenticated endpoints on the identity provider.
-  client_secret: 
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
+  client-secret:
     value: $CLIENT_SECRET
-    description: Replace with your IdP client secret.
-  redirect_uri:
-    value: "https://example.com/api"
-
+    description: The client secret needed to connect to Google.
+  redirect-uri:
+    value: $REDIRECT_URI
+    description: The authorized redirect URI that you created in Cloud Console, which determines where Google sends responses to your authentication requests.
 
 tools:
   - deck

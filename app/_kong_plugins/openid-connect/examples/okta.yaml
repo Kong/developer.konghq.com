@@ -1,22 +1,34 @@
 title: OpenID Connect with Okta
 description: |
-  Authenticate browser clients using Okta.
+  Authenticate browser clients using [Okta](https://help.okta.com/en-us/content/index.htm).
+
+  The following configuration example allows users to authenticate and access the upstream service even though no Consumer was created for them. 
+  This means any user with a valid account in the directory will have access.
+  If you want to restrict access further, you have several options:
+  
+  * **Consumer mapping**: If you need to interact with other {{site.base_gateway}} plugins using consumer information, you can map account data received from the IdP to a Kong Consumer. 
+  See [OIDC with Consumer authorization](/how-to/configure-oidc-with-consumers/).
+  * **Pseudo-consumer mapping**: For plugins that typically require Consumers, the OIDC plugin can provide a Consumer ID based on the value of a claim without mapping to an actual Consumer. 
+  Setting `credential_claim` to a claim in your plugin configuration extracts the value of that claim and uses it where {{site.base_gateway}} would normally use a Consumer ID. 
+  Similarly, setting `authenticated_groups_claim` extracts that claim's value and uses it as a group for the [ACL plugin](/plugins/acl/).
+  
 
 weight: 795
 
 requirements:
+  - A developer account with Okta.
   - A Gateway Service and Route secured with HTTPS.
   - A registered application in Okta pointing to the Kong Route.
   - Any network access control to your Kong node must allow traffic to and from Okta, the upstream service, and the client.
 
 config:
-  issuer: $ISSUER
-  client_id: 
-    - $CLIENT_ID
-  client_secret: 
-    - $CLIENT_SECRET
+  issuer: ${issuer}
+  client_id:
+    - ${client-id}
+  client_secret:
+    - ${client-secret}
   redirect_uri:
-    - $REDIRECT_URI
+    - ${redirect-uri}
   scopes_claim:
     - scp
   scopes:
@@ -28,15 +40,20 @@ config:
 
 variables: 
   issuer: 
-    value: "https://$OKTA_DOMAIN/oauth2/$AUTH_SERVER/.well-known/openid-configuration"
-  client_id: 
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. 
+      For Okta, that typically looks like this: `https://{OKTA_DOMAIN}/oauth2/{AUTH_SERVER}/.well-known/openid-configuration`.
+  client-id: 
     value: $CLIENT_ID
-    description: Replace with the client ID of your IdP. The OpenID Connect plugin uses this value when it calls authenticated endpoints on the identity provider.
-  client_secret: 
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
+  client-secret: 
     value: $CLIENT_SECRET
-    description: Replace with your IdP client secret.
-  redirect_uri:
-    value: "https://example.com/api"
+    description: The client secret needed to connect to your IdP.
+  redirect-uri:
+    value: $REDIRECT_URI
+    description: |
+      The `redirect_uri` of the client defined with `client_id`.
 
 tools:
   - deck

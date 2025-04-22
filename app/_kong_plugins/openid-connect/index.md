@@ -554,6 +554,86 @@ rows:
     example: "[Demonstrating Proof-of-Possession](/plugins/openid-connect/examples/dpop/)"
 {% endtable %}
 
+### Certificate-bound access tokens
+
+One of the main vulnerabilities of OAuth is bearer tokens. With OAuth, presenting a valid bearer token is enough proof to access a resource.
+This can create problems since the client presenting the token isn't validated as the legitimate user that the token was issued to.
+
+Certificate-bound access tokens can solve this problem by binding tokens to clients. 
+This ensures the legitimacy of the token because the it requires proof that the sender is authorized to use a particular token to access protected resources. 
+
+Certificate-bound access tokens are supported by the following auth methods:
+
+* [JWT Access Token authentication](#jwt-access-token-authentication-flow)
+* [Introspection authentication](#introspection-authentication-flow)
+* [Session authentication](#session-authentication-workflow)
+
+Session authentication is only compatible with certificate-bound access tokens when used along with one of the other supported authentication methods:
+
+* When the configuration option [`config.proof_of_possession_auth_methods_validation`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-auth-methods-validation) is set to `false` and other non-compatible methods are enabled, if a valid session is found, the proof of possession validation will only be performed if the session was originally created using one of the compatible methods. 
+* If multiple `openid-connect` plugins are configured with the `session` auth method, we strongly recommend configuring different values of [`config.session_secret`](/plugins/openid-connect/reference/#schema--config-session-secret) across plugin instances for additional security. This avoids sessions being shared across plugins and possibly bypassing the proof of possession validation.
+
+To enable certificate-bound access for OpenID Connect:
+* Ensure that the auth server (IdP) that you're using is set up to generate OAuth 2.0 Mutual TLS certificate-bound access tokens.
+* Use the [`proof_of_possession_mtls`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-mtls) configuration option to ensure that the supplied access token belongs to the client by verifying its binding with the client certificate provided in the request.
+
+See the [cert-bound configuration example](/plugins/openid-connect/examples/cert-bound-access-tokens/) for more detail.
+
+### Demonstrating Proof-of-Possession (DPoP)
+
+Demonstrating Proof-of-Possession (DPoP) is an alternative technique to the [mutual TLS certificate-bound access tokens](#mutual-tls-client-authentication). Unlike its alternative, which binds the token to the mTLS client certificate, it binds the token to a JSON Web Key (JWK) provided by the client.
+
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+    autonumber
+    participant client as Client <br>(e.g. mobile app)
+    participant kong as API Gateway <br>(Kong)
+    participant upstream as Upstream <br>(backend service,<br> e.g. httpbin)
+    participant idp as Authentication Server <br>(e.g. Keycloak)
+    activate client
+    client->>client: generate key pair
+    client->>idp: POST /oauth2/token<br>DPoP:$PROOF
+    deactivate client
+    activate idp
+    idp-->>client: DPoP bound access token ($AT)
+    activate client
+    deactivate idp
+    client->>kong: GET https://example.com/resource<br>Authorization: DPoP $AT<br>DPoP: $PROOF
+    activate kong
+    deactivate client
+    kong->>kong: validate $AT and $PROOF
+    kong->>upstream: proxied request <br> GET https://example.com/resource<br>Authorization: Bearer $AT
+    deactivate kong
+    activate upstream
+    upstream-->>kong: upstream response
+    deactivate upstream
+    activate kong
+    kong-->>client: response
+    deactivate kong
+{% endmermaid %}
+<!--vale on-->
+
+You can use the Demonstrating Proof-of-Possession option without mTLS, and even with plain HTTP, although HTTPS is recommended for enhanced security.
+
+When verification of the DPoP proof is enabled, {{site.base_gateway}} removes the `DPoP` header and changes the token type from `dpop` to `bearer`.
+This effectively downgrades the request to use a conventional bearer token, and allows an OAuth2 upstream without DPoP support to work with the DPoP token without losing the protection of the key binding mechanism.
+
+DPoP is compatible with the following authentication methods:
+
+* [JWT Access Token authentication](#jwt-access-token-authentication-flow)
+* [Introspection authentication](#introspection-authentication-flow)
+* [Session authentication](#session-authentication-workflow)
+
+Session authentication is only compatible with DPoP when used along with one of the other supported authentication methods:
+* If multiple `openid-connect` plugins are configured with the `session` authentication method, we strongly recommend configuring different values of [`config.session_secret`](/plugins/openid-connect/reference/#schema--config-session-secret) across plugin instances for additional security. This avoids sessions being shared across plugins and possibly bypassing the proof of possession validation.
+
+To enable DPoP for OpenID Connect:
+* Ensure that the auth server (IdP) that you're using has DPoP enabled.
+* Use the [`config.proof_of_possession_dpop`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-dpop) configuration option to ensure that the supplied access token is bound to the client by verifying its association with the JWT provided in the request.
+
+See the [DPoP configuration example](/plugins/openid-connect/examples/dpop/) for more detail.
+
 ## Debugging the OIDC plugin
 
 If you have issues with the OIDC plugin, try the following debugging methods:
