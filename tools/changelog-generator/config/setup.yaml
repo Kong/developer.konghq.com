@@ -1,0 +1,21 @@
+plugin_mappings:
+    "ai-ratelimit-advanced": "ai-rate-limiting-advanced"
+    "JWT Signer": "jwt-signer"
+    "ai-semantic-caching": "ai-semantic-cache"
+    "ldap-auth-adv": "ldap-auth-advanced"
+    "LDAP AUTH Advanced": "ldap-auth-advanced"
+    "Graphql-rate-limiting-adv": "graphql-rate-limiting-advanced"
+    "Rate-limiting": "rate-limiting"
+    "Rate-limiting-Plugin": "rate-limiting"
+    "Forward Proxy": "forward-proxy"
+
+skip_plugin_entries:
+    - konnect-application-auth
+    - Konnect Application Auth
+
+type_mappings:
+    "breaking_change": "Breaking Change"
+
+defaults:
+    scope: Core
+    type: Feature
