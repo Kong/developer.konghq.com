@@ -59,7 +59,7 @@ module Jekyll
       def versions
         @versions ||= entries_by_version.map do |number, entries|
           Version.new(number:, entries:)
-        end
+        end.sort_by { |v| Gem::Version.new(v.number) }.reverse # rubocop:disable Style/MultilineBlockChain
       end
 
       def entries_by_version
