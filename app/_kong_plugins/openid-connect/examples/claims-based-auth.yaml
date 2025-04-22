@@ -1,11 +1,11 @@
 title: Claims-based authorization
 description: |
-  Configure the OpenID Connect plugin for claims-based authorization.
+  This example configures the OpenID Connect plugin for claims-based authorization.
   
   This example uses password authentication, but you can use any supported [authentication type](/plugins/openid-connect/reference/#schema--config-auth-methods).
 
   For a full example that shows you how to set up the OpenID Connect plugin with claims through Keycloak, 
-  see [Configure OpenID Connect with claims-based authorization](/how-to/configure-oidc-with-consumers/).
+  see [Configure OpenID Connect with claims-based authorization](/how-to/configure-oidc-with-claims-based-auth/).
 
   {% include_cached plugins/oidc/client-auth.md %}
 

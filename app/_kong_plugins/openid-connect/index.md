@@ -497,9 +497,9 @@ config:
   - groups
 ```
 
-On the other hand, the `config.*_required` parameters are arrays that allow logical AND/OR types of checks:
+On the other hand, the `config.*_required` parameters are arrays that allow logical `AND`/`OR` types of checks:
 
-* **AND**: Space-separated values
+* `AND`: Space-separated values
 
   This claim has to have both `employee` AND `marketing`:
 
@@ -509,7 +509,7 @@ On the other hand, the `config.*_required` parameters are arrays that allow logi
     - employee marketing
   ```
 
-* **OR**: Values in separate array indices
+* `OR`: Values in separate array indices
 
   This claim has to have either `employee` OR `marketing`:
 
