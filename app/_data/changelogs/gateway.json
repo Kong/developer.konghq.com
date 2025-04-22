@@ -43,7 +43,8 @@
       },
       {
         "message": "Bumped `ngx_wasm_module` to `a376e67ce02c916304cc9b9ef25a540865ee6740`",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped OpenResty from 1.25.3.2 to 1.27.1.1.",
@@ -102,7 +103,7 @@
       },
       {
         "message": "**AI Plugins**: Changed the serialized log key of AI metrics from `ai.ai-proxy` to `ai.proxy` to avoid conflicts with metrics generated from plugins other than AI Proxy and AI Proxy Advanced. If you are using logging plugins (for example, File Log, HTTP Log, etc.), you will have to update metrics pipeline configurations to reflect this change.\n",
-        "type": "breaking_change",
+        "type": "Breaking Change",
         "scope": "Plugin"
       },
       {
@@ -191,13 +192,13 @@
         "scope": "Core"
       },
       {
-        "message": "**authentication-plugins**: Improved the error message which occurred when an anonymous consumer was configured but did not exist.",
+        "message": "**authentications**: Improved the error message which occurred when an anonymous consumer was configured but did not exist.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
         "message": "**kong.service.request.clear_query_arg**: Changed the encoding of spaces in query arguments from `+`\nto `%20` as a short-term solution to an issue that some users are reporting. While the `+` character is the correct\nencoding of space in querystrings, Kong uses `%20` in many other APIs (inherited from Nginx / OpenResty).\n",
-        "type": "breaking_change",
+        "type": "Breaking Change",
         "scope": "Plugin"
       },
       {
@@ -313,7 +314,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**kafka-consume:** Added the `kafka-consume` plugin, which adds Kafka consumption capabilities to Kong.",
+        "message": "**kafka-consume** Added the `kafka-consume` plugin, which adds Kafka consumption capabilities to Kong.",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -473,7 +474,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**service-protection*: Fixed an issue where the runtime failed due to `sync_rate` not being set if the `strategy` was `local`.\n",
+        "message": "**service-protection**: Fixed an issue where the runtime failed due to `sync_rate` not being set if the `strategy` was `local`.\n",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -484,7 +485,7 @@
       },
       {
         "message": "**openid-connect**: Fixed an issue where forbidden requests were redirected to `unauthorized_redirect_uri` if configured. After the fix, forbidden requests will be redirected to `forbidden_redirect_uri` if configured.\n",
-        "type": "breaking_change",
+        "type": "Breaking Change",
         "scope": "Plugin"
       },
       {
@@ -499,7 +500,8 @@
       },
       {
         "message": "Created connection pools for each `host`, `port`, `username`, `ssl` combination to fix the following issues:\n\n  - Fixed a 401 error where multiple plugins (for example, Rate Limiting Advanced and OpenID Connect) were configured to use different Redis databases.\n  - Prevented malicious clients from gaining access to shared authenticated connections, thus protecting Redis servers.\n  - Restricted clients with limited ACL control to their granted scope.\n",
-        "type": "bugfix"
+        "type": "bugfix",
+        "scope": "Core"
       },
       {
         "message": "**pre-function**: Fixed an issue where a duplicate `protocols` field was accidentally added to the `pre-function` schema.\n",
@@ -507,7 +509,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**ai-semantic-cache*: Fixed an issue where the Refresh header wasn't properly sent to the client.\n",
+        "message": "**ai-semantic-cache**: Fixed an issue where the Refresh header wasn't properly sent to the client.\n",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -538,7 +540,7 @@
       },
       {
         "message": "**ai-rate-limiting-advanced**: `window_size` and `limit` now require an array of numbers instead of a single number.\nIf you configured the plugin before 3.10 and use `kong migrations` to upgrade to 3.10, it will be automatically migrated to use the array.\n",
-        "type": "breaking_change",
+        "type": "Breaking Change",
         "scope": "Plugin"
       },
       {
@@ -582,11 +584,6 @@
         "scope": "Core"
       },
       {
-        "message": "\"**konnect-application-auth**: Fixed an issue where the plugin did not set auth_type on the ctx when using v2 strategies (multi auth). This value is used for analytics in Konnect.\"\n",
-        "type": "bugfix",
-        "scope": "Plugin"
-      },
-      {
         "message": "Fixed an issue where the PEM-formatted private keys in the keys entity were not encrypted when keyring was enabled.",
         "type": "bugfix",
         "scope": "Core"
@@ -603,7 +600,8 @@
       },
       {
         "message": "Added a new feature to invalidate the admin's or the developer's related session while changing the password.\n",
-        "type": "feature"
+        "type": "feature",
+        "scope": "Core"
       },
       {
         "message": "**json-threat-protection**: This plugin now accurately supports proxying for non-`POST/PUT/PATCH` requests.\n",
@@ -622,7 +620,7 @@
       },
       {
         "message": "Free mode is no longer available. Starting Kong without a license will now function the same as Kong with an expired license.",
-        "type": "breaking_change",
+        "type": "Breaking Change",
         "scope": "Core"
       },
       {
@@ -647,49 +645,56 @@
         "type": "bugfix",
         "githubs": [
           3663
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Add Redis shared configuration support in Plugins.",
         "type": "feature",
         "githubs": [
           3701
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Kong Manager now shows the scope option in gray when it can't be changed.",
         "type": "feature",
         "githubs": [
           3664
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Fixed an issue where the license expiration date was calculated incorrectly.",
         "type": "bugfix",
         "githubs": [
           3675
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Fixed an issue where creating `jwt-credential` with special algorithms (`PS256`, `PS384`, `PS512`, and `EdDSA`) couldn't populate `rsa_public_key` in the Kong Manager.\n",
         "type": "bugfix",
         "githubs": [
           3755
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Fixed an issue where editing an upstream would not remove the values of some fields (`client certificate`, `tags`, `timeouts`, and `host_header`, etc) in the Kong Manager.\n",
         "type": "bugfix",
         "githubs": [
           3793
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Kong Manager now returns to the previous page upon canceling plugin editing.",
         "type": "feature",
         "githubs": [
           3690
-        ]
+        ],
+        "scope": "Core"
       }
     ]
   },
@@ -697,7 +702,8 @@
     "kong": [
       {
         "message": "Add Ubuntu 24.04 (Noble Numbat) to build",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "**ai-proxy**: Fixed a bug where tools (function) calls to Anthropic would return empty results.",
@@ -741,11 +747,13 @@
       },
       {
         "message": "Bumped the bundled `datakit` Wasm filter to `0.3.1`",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Updated the default base for RPM Dockerfile from UBI 8 to UBI 9.",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped lua-kong-nginx-module from 0.11.0 to 0.13.1 to fix the upstream cert chain issue and enable the new API for retrieving SSL pointer.\n",
@@ -754,7 +762,8 @@
       },
       {
         "message": "Bumped lua-resty-aws to 1.5.4, to fix a bug inside region prefix generating",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped lua-resty-events to 0.3.1. Optimized the memory usage.",
@@ -763,7 +772,8 @@
       },
       {
         "message": "Updated lua-resty-ljsonschema to 1.2.0. Fixed UTF-8 string length calculation and added support for `null` in `enum` types.",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped lua-resty-lmdb to 1.6.0. Allowing page_size to be 1.",
@@ -777,7 +787,8 @@
       },
       {
         "message": "Bumped `ngx_wasm_module` to `9136e463a6f1d80755ce66c88c3ddecd0eb5e25d`",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "**Prometheus**: Bumped KONG_LATENCY_BUCKETS bucket's maximal capacity to 6000",
@@ -786,11 +797,13 @@
       },
       {
         "message": "Bumped `Wasmtime` version to `26.0.0`",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped OpenSSL to 3.2.3, to fix unbounded memory growth with session handling in TLSv1.3 and other CVEs",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "**Clustering**: Adjust error log levels for control plane connections.",
@@ -894,7 +907,8 @@
       },
       {
         "message": "**Loggly**: Fixed an issue where `/bin/hostname` missing caused an error warning on startup.",
-        "type": "bugfix"
+        "type": "bugfix",
+        "scope": "Core"
       },
       {
         "message": "**Core**: Fixed an issue where `ngx.balancer.recreate_request` API does not refresh body buffer when `ngx.req.set_body_data` is used in balancer phase\n",
@@ -922,7 +936,7 @@
         "scope": "PDK"
       },
       {
-        "message": "**Rate-limiting-Plugin**: Fix a bug where the return values from `get_redis_connection()` are mistaken.",
+        "message": "**rate-limiting**: Fix a bug where the return values from `get_redis_connection()` are mistaken.",
         "scope": "Plugin",
         "type": "bugfix"
       },
@@ -1005,7 +1019,8 @@
       },
       {
         "message": "Added a configuration parameter `admin_gui_auth_login_attempts_ttl` (default to `604800`) to allow users to specify a custom duration to wait before they can try login again if they have exceeded the maximum login attempts. This is only meaningful when `admin_gui_auth_login_attempts` is a positive number.\n",
-        "type": "feature"
+        "type": "feature",
+        "scope": "Core"
       },
       {
         "message": "let the embedding driver cache the embeddings for a given model in the current request\n",
@@ -1029,11 +1044,13 @@
       },
       {
         "message": "Bumped `kong-redis-cluster` to `1.5.5`.\n\n1. Currently, the timeout for acquiring a lock is fixed to `5s`.\n   We added a new option `lock_timeout` to make it configurable.\n2. The lock timeout parameter was incorrectly set to `time_out = 0`.\n   We fix it to `timeout = 0`. This would improve perf as there is no\n   need for each instance to refresh the slots.\n3. Returned detailed error message to downstream\n   component (e.g. Kong Gateway) for better debuggability.\n",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped lua-resty-azure to 1.6.1 to fix a GET request build issue",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Entity counts in `/license/report` were retrieved with `select count` instead of `workspace_entity_counters` table on db mode.",
@@ -1101,12 +1118,12 @@
         "scope": "Plugin"
       },
       {
-        "message": "**AI Rate Limiting Advanced:** Updated the error message for rate limit exceeded to include AI-related information.",
+        "message": "**AI Rate Limiting Advanced** Updated the error message for rate limit exceeded to include AI-related information.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**ai-ratelimit-advanced:** Fixed an issue where the plugin yielded an error when incrementing the rate limit counters in non-yieldable phases.",
+        "message": "**ai-rate-limiting-advanced** Fixed an issue where the plugin yielded an error when incrementing the rate limit counters in non-yieldable phases.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1176,12 +1193,12 @@
         "scope": "Plugin"
       },
       {
-        "message": "**jwe-decrypt:** Fixed an issue where an unnecessary warn log was printed.",
+        "message": "**jwe-decrypt** Fixed an issue where an unnecessary warn log was printed.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Kafka Log:** Fixed an issue where the plugin cannot function correctly when it is configured in a non-default workspace with certificate_id.",
+        "message": "**Kafka Log** Fixed an issue where the plugin cannot function correctly when it is configured in a non-default workspace with certificate_id.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1211,22 +1228,22 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced:** Fixed an issue where counters of the overriding consumer groups didn't fetched when the window_size is different and the workspace is non-default.",
+        "message": "**Rate Limiting Advanced** Fixed an issue where counters of the overriding consumer groups didn't fetched when the window_size is different and the workspace is non-default.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**rate-limiting-advanced:** Fixed an issue where a warn log was printed when event_hooks was disabled.",
+        "message": "**rate-limiting-advanced** Fixed an issue where a warn log was printed when event_hooks was disabled.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**rate-limiting-advanced:** Fixed an issue where multiple plugin instances sharing the same namespace enforced consumer groups and different `window_size`s were used in the consumer group overriding configs, then the rate limiting of some consumer groups would fall back to local strategy. Now every plugin instance sharing the same namespace can set different `window_size`.",
+        "message": "**rate-limiting-advanced** Fixed an issue where multiple plugin instances sharing the same namespace enforced consumer groups and different `window_size`s were used in the consumer group overriding configs, then the rate limiting of some consumer groups would fall back to local strategy. Now every plugin instance sharing the same namespace can set different `window_size`.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**OAS-Plugin**: Fixed an issue where the spec could not be located if the `Content-Type` in the request/response body included parameters (e.g., `application/json; charset=utf8`), while the openapi specification defined in `api_spec` did not include parameters.",
+        "message": "**OAS**: Fixed an issue where the spec could not be located if the `Content-Type` in the request/response body included parameters (e.g., `application/json; charset=utf8`), while the openapi specification defined in `api_spec` did not include parameters.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1276,12 +1293,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**JWT Signer**: Supported `/jwt-signer/jwks` endpoint in dbless mode",
-        "type": "feature",
-        "scope": "Plugin"
-      },
-      {
-        "message": "**Konnect Application Auth**: Added authorization_scope_id to application context.\n",
+        "message": "**jwt-signer**: Supported `/jwt-signer/jwks` endpoint in dbless mode",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -1296,7 +1308,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced:** Fixed an issue where RLA stores long expiration time items cause `no memory` errors.",
+        "message": "**Rate Limiting Advanced** Fixed an issue where RLA stores long expiration time items cause `no memory` errors.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1332,42 +1344,47 @@
         "type": "bugfix",
         "githubs": [
           3547
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Kong Manager will now show a more friendly error message when failing to delete a service.",
         "type": "feature",
         "githubs": [
           3541
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Fixed an issue where Kong Manager was not displaying the overview page when there is a workspace with the name \"portal\" (case-insensitive).",
         "type": "bugfix",
         "githubs": [
           3613
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Fixed an issue where Kong Manager was not redirecting users to the previous page after cancelling the plugin creation.",
         "type": "bugfix",
         "githubs": [
           3554
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Fixed an issue where the username does not allow special characters.",
         "type": "bugfix",
         "githubs": [
           3584
-        ]
+        ],
+        "scope": "Core"
       }
     ]
   },
   "3.8.0.0": {
     "kong": [
       {
-        "message": "**acl:** Added a new config `always_use_authenticated_groups` to support using authenticated groups even when an authenticated consumer already exists.",
+        "message": "**acl** Added a new config `always_use_authenticated_groups` to support using authenticated groups even when an authenticated consumer already exists.",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -1392,7 +1409,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**AI-proxy-plugin**: Add `allow_override` option to allow overriding the upstream model auth parameter or header from the caller's request.\n",
+        "message": "**AI-proxy**: Add `allow_override` option to allow overriding the upstream model auth parameter or header from the caller's request.\n",
         "scope": "Plugin",
         "type": "feature"
       },
@@ -1402,32 +1419,32 @@
         "scope": "Plugin"
       },
       {
-        "message": "**AI-proxy-plugin**: Fixed a bug where certain Azure models would return partial tokens/words \nwhen in response-streaming mode.\n",
+        "message": "**AI-proxy**: Fixed a bug where certain Azure models would return partial tokens/words \nwhen in response-streaming mode.\n",
         "scope": "Plugin",
         "type": "bugfix"
       },
       {
-        "message": "**AI-Transformer-Plugins**: Fixed a bug where cloud identity authentication \nwas not used in `ai-request-transformer` and `ai-response-transformer` plugins.\n",
+        "message": "**AI-Transformers**: Fixed a bug where cloud identity authentication \nwas not used in `ai-request-transformer` and `ai-response-transformer` plugins.\n",
         "scope": "Plugin",
         "type": "bugfix"
       },
       {
-        "message": "**AI-proxy-plugin**: Fixed a bug where Cohere and Anthropic providers don't read the `model` parameter properly \nfrom the caller's request body.\n",
+        "message": "**AI-proxy**: Fixed a bug where Cohere and Anthropic providers don't read the `model` parameter properly \nfrom the caller's request body.\n",
         "scope": "Plugin",
         "type": "bugfix"
       },
       {
-        "message": "**AI-proxy-plugin**: Fixed a bug where using \"OpenAI Function\" inference requests would log a \nrequest error, and then hang until timeout.\n",
+        "message": "**AI-proxy**: Fixed a bug where using \"OpenAI Function\" inference requests would log a \nrequest error, and then hang until timeout.\n",
         "scope": "Plugin",
         "type": "bugfix"
       },
       {
-        "message": "**AI-proxy-plugin**: Fixed a bug where AI Proxy would still allow callers to specify their own model,  \nignoring the plugin-configured model name.\n",
+        "message": "**AI-proxy**: Fixed a bug where AI Proxy would still allow callers to specify their own model,  \nignoring the plugin-configured model name.\n",
         "scope": "Plugin",
         "type": "bugfix"
       },
       {
-        "message": "**AI-proxy-plugin**: Fixed a bug where AI Proxy would not take precedence of the \nplugin's configured model tuning options, over those in the user's LLM request.\n",
+        "message": "**AI-proxy**: Fixed a bug where AI Proxy would not take precedence of the \nplugin's configured model tuning options, over those in the user's LLM request.\n",
         "scope": "Plugin",
         "type": "bugfix"
       },
@@ -1447,13 +1464,14 @@
         "scope": "Plugin"
       },
       {
-        "message": "**AI-proxy-plugin**: Fixed a bug where setting OpenAI SDK model parameter \"null\" caused analytics \nto not be written to the logging plugin(s).\n",
+        "message": "**AI-proxy**: Fixed a bug where setting OpenAI SDK model parameter \"null\" caused analytics \nto not be written to the logging plugin(s).\n",
         "scope": "Plugin",
         "type": "bugfix"
       },
       {
         "message": "Bumped lua-protobuf 0.5.2",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped lua-resty-acme to 0.15.0 to support username/password auth with redis.",
@@ -1467,7 +1485,8 @@
       },
       {
         "message": "Bumped lua-resty-events to 0.3.0 to fix an issue that was preventing the configuration from being updated to the latest version\n",
-        "scope": "Core"
+        "scope": "Core",
+        "type": "Feature"
       },
       {
         "message": "Bumped lua-resty-healthcheck from 3.0.1 to 3.1.0 to fix an issue that was causing high memory usage\n",
@@ -1486,11 +1505,13 @@
       },
       {
         "message": "Bumped LuaRocks from 3.11.0 to 3.11.1",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped `ngx_wasm_module` to `96b4e27e10c63b07ed40ea88a91c22f23981db35`",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped OpenResty to 1.25.3.2 to improve the performance of the LuaJIT hash computation.\n",
@@ -1504,7 +1525,8 @@
       },
       {
         "message": "Bumped `Wasmtime` version to `25.0.1`",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Fixed an issue where validation of the certificate schema failed if the `snis` field was present in the request body.",
@@ -1652,7 +1674,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**OpenTelemetry:** Fixed an issue where migration fails when upgrading from below version 3.3 to 3.7.",
+        "message": "**OpenTelemetry** Fixed an issue where migration fails when upgrading from below version 3.3 to 3.7.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1712,7 +1734,7 @@
         "scope": "Core"
       },
       {
-        "message": "**OpenTelemetry:** Improved accuracy of sampling decisions.",
+        "message": "**OpenTelemetry** Improved accuracy of sampling decisions.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1768,11 +1790,13 @@
       },
       {
         "message": "Made the RPM package relocatable with the default prefix set to `/`.",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "**AI-proxy**: A configuration validation is added to prevent from enabling `log_statistics` upon\nproviders not supporting statistics. Accordingly, the default of `log_statistics` is changed from\n`true` to `false`, and a database migration is added as well for disabling `log_statistics` if it\nhas already been enabled upon unsupported providers.\n",
-        "type": "bugfix"
+        "type": "bugfix",
+        "scope": "Core"
       },
       {
         "message": "Moved internal Unix sockets to a subdirectory (`sockets`) of the Kong prefix.",
@@ -1785,7 +1809,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**OpenTelemetry:** Added support for OpenTelemetry formatted logs.",
+        "message": "**OpenTelemetry** Added support for OpenTelemetry formatted logs.",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -1826,7 +1850,8 @@
       },
       {
         "message": "Debian 10, CentOS 7, and RHEL 7 reached their End of Life (EOL) dates on June 30, 2024. As of version 3.8.0.0 onward, Kong is not building installation packages or Docker images for these operating systems. Kong is no longer providing official support for any Kong version running on these systems.",
-        "type": "deprecation"
+        "type": "deprecation",
+        "scope": "Core"
       },
       {
         "message": "**Request-Transformer**: Fixed an issue where renamed query parameters, url-encoded body parameters, and json body parameters were not handled properly when target name is the same as the source name in the request.",
@@ -1861,22 +1886,22 @@
     ],
     "kong-ee": [
       {
-        "message": "**ai-proxy-advanced:** Added the `ai-proxy-advanced` plugin that supports advanced load balancing between LLM services.",
+        "message": "**ai-proxy-advanced** Added the `ai-proxy-advanced` plugin that supports advanced load balancing between LLM services.",
         "type": "feature",
         "scope": "Plugin"
       },
       {
-        "message": "**ai-semantic-caching**: Introduced AI Semantic Caching plugin, enabling you \nto configure an embeddings-based caching system for Large Language Model responses.\n",
+        "message": "**ai-semantic-cache**: Introduced AI Semantic Caching plugin, enabling you \nto configure an embeddings-based caching system for Large Language Model responses.\n",
         "type": "feature",
         "scope": "Plugin"
       },
       {
-        "message": "**ai-semantic-prompt-guard:** Added the `ai-semantic-prompt-guard` plugin that supports semantic similarity-based prompt guarding.",
+        "message": "**ai-semantic-prompt-guard** Added the `ai-semantic-prompt-guard` plugin that supports semantic similarity-based prompt guarding.",
         "type": "feature",
         "scope": "Plugin"
       },
       {
-        "message": "**confluent:** Added the `confluent` plugin which allows to interface with Confluent.",
+        "message": "**confluent** Added the `confluent` plugin which allows to interface with Confluent.",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -1896,7 +1921,7 @@
         "scope": "Core"
       },
       {
-        "message": "**ai-rate-limiting-advanced:** Added the `bedrock` and `gemini` providers to the providers list in \nthe `ai-rate-limiting-advanced` plugin.\n",
+        "message": "**ai-rate-limiting-advanced** Added the `bedrock` and `gemini` providers to the providers list in \nthe `ai-rate-limiting-advanced` plugin.\n",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -1927,7 +1952,8 @@
       },
       {
         "message": "Improved the performance of Konnect Analytics by fetching Rate Limiting context more efficiently.",
-        "type": "performance"
+        "type": "performance",
+        "scope": "Core"
       },
       {
         "message": "The behavior of the configuration option `analytics_flush_interval` has changed\nfor saving memory resources by flushing analytics messages more frequently.\nIt now controls the maximum time interval between two flushes of\nanalytics messages to the configured backend, which means that\nif there are enough (less than `analytics_buffer_size_limit`)\nmessages have already been buffered,\nthe flush will happen before the configured interval.\nPreviously, Kong always tries to flush messages after the configured interval,\nregardless of the number of messages in the buffer.\n",
@@ -1936,19 +1962,23 @@
       },
       {
         "message": "Improved the performance of Konnect Analytics by optimizing the buffering mechanism.",
-        "type": "performance"
+        "type": "performance",
+        "scope": "Core"
       },
       {
         "message": "Bumped `kong-lua-resty-kafka` to `0.20` to support TCP socket keepalive and allow client_id to be set for the kafka client.\n",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bump lua-resty-jsonschema-rs to 0.1.5",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "bump lua-resty-cookie to 0.3.0",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped libxml2 to 2.12.9.",
@@ -1962,11 +1992,13 @@
       },
       {
         "message": "Bumped `lua-resty-azure` to `1.6.0` to support more Azure authentication methods.\n",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped luaexpat to 1.5.2.",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped msgpack-c to 6.1.0.",
@@ -1975,7 +2007,8 @@
       },
       {
         "message": "Bumped `kong-redis-cluster` to `1.5.4`, fixing the following issues.\n\n1. Fixed an issue where Kong Gateway cannot recover if partial or all pods were restared with new IPs in Kubernetes environment.\n2. Fixed a memory leak issue where master nodes cache expanded infinitely upon refresh.\n3. Fixed an issue where multiple cluster instances were accidently flushed.\n",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "**oauth2-introspection**: Fixed an issue where the consumer's cache cannot be invalidated when oauth2-introspection uses `client_id` as `consumer_by`.",
@@ -2033,7 +2066,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**ai-semantic-caching:** Fix the `ai-semantic-caching` plugin with a condition for calculating latencies when no embeddings, add deep copy for the request table and fix countback.",
+        "message": "**ai-semantic-cache** Fix the `ai-semantic-caching` plugin with a condition for calculating latencies when no embeddings, add deep copy for the request table and fix countback.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -2049,10 +2082,11 @@
       },
       {
         "message": "Fixed an issue where the stale license expiry warning continued to be logged even if the license was updated.",
-        "type": "bugfix"
+        "type": "bugfix",
+        "scope": "Core"
       },
       {
-        "message": "**OAS Validation:** Fixed an issue where parameter serialization does not behave the same as in the OpenAPI specification",
+        "message": "**OAS Validation** Fixed an issue where parameter serialization does not behave the same as in the OpenAPI specification",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -2062,7 +2096,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**OpenID Connect:** Updated the rediscovery to use a short lifetime (5s) if the last discovery failed.",
+        "message": "**OpenID Connect** Updated the rediscovery to use a short lifetime (5s) if the last discovery failed.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -2073,15 +2107,16 @@
       },
       {
         "message": "License expiry warnings are no longer logged and license info is removed from /metrics in Konnect.",
-        "type": "bugfix"
+        "type": "bugfix",
+        "scope": "Core"
       },
       {
-        "message": "**Rate Limiting Advanced:** Fixed an issue where if the `window_size` in the consumer group overriding config is different from the `window_size` in the default config, the rate limiting of that consumer group would fall back to local strategy.",
+        "message": "**Rate Limiting Advanced** Fixed an issue where if the `window_size` in the consumer group overriding config is different from the `window_size` in the default config, the rate limiting of that consumer group would fall back to local strategy.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced:** Fixed an issue where the sync timer may stop working due to race condition.",
+        "message": "**Rate Limiting Advanced** Fixed an issue where the sync timer may stop working due to race condition.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -2106,13 +2141,8 @@
         "scope": "Admin API"
       },
       {
-        "message": "**JWT Signer**: Supported `/jwt-signer/jwks/:jwt_signer_jwks` endpoint in dbless mode.",
+        "message": "**jwt-signer**: Supported `/jwt-signer/jwks/:jwt_signer_jwks` endpoint in dbless mode.",
         "type": "feature",
-        "scope": "Plugin"
-      },
-      {
-        "message": "**Konnect Application Auth**: ensure 'key_names' from correct auth strategy are used.",
-        "type": "bugfix",
         "scope": "Plugin"
       },
       {
@@ -2126,17 +2156,12 @@
         "scope": "Core"
       },
       {
-        "message": "**konnect-application-auth:**  Fixed an issue where Konnect Application Auth exited early if an invalid OIDC application was configured.",
-        "type": "bugfix",
-        "scope": "Plugin"
-      },
-      {
         "message": "**ldap-auth-advanced**: Supported decoding an empty sequence or set represented in long form length",
         "type": "feature",
         "scope": "Plugin"
       },
       {
-        "message": "**ldap-auth-adv**: Added WWW-Authenticate headers to all 401 response.",
+        "message": "**ldap-auth-advanced**: Added WWW-Authenticate headers to all 401 response.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -2147,11 +2172,13 @@
       },
       {
         "message": "Added two configurations, `admin_gui_auth_change_password_attempts` (default value `0`) and `admin_gui_auth_change_password_ttl` (default value `86400`), to limit the number of password change attempts.",
-        "type": "feature"
+        "type": "feature",
+        "scope": "Core"
       },
       {
         "message": "Added a new sub-command `status` to the `kong debug` CLI tool.",
-        "type": "feature"
+        "type": "feature",
+        "scope": "Core"
       },
       {
         "message": "The shared configuration for Redis `kong/enterprise_edition/redis/init.lua` was deprecated in favor of `kong/enterprise_edition/tools/redis/v2/init.lua`",
@@ -2159,12 +2186,12 @@
         "scope": "PDK"
       },
       {
-        "message": "**OpenID-connect:** Fixed an issue where using_pseudo_issuer does not work when patching.",
+        "message": "**OpenID-connect** Fixed an issue where using_pseudo_issuer does not work when patching.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**OpenID-connect:** Added `claims_forbidden` property to restrict access.",
+        "message": "**OpenID-connect** Added `claims_forbidden` property to restrict access.",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -2264,7 +2291,7 @@
         "type": "bugfix"
       },
       {
-        "message": "**Rate Limiting Advanced:** Improved that timer spikes do not occur when there is network instability with the central data store.",
+        "message": "**Rate Limiting Advanced** Improved that timer spikes do not occur when there is network instability with the central data store.",
         "type": "performance",
         "scope": "Plugin"
       },
@@ -2315,63 +2342,72 @@
         "type": "feature",
         "githubs": [
           3488
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "While deleting a workspace, Kong Manager will now list admins that prevent the operation.",
         "type": "feature",
         "githubs": [
           3427
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Kong Manager will now show scoping entities as links in the plugin detail page.",
         "type": "feature",
         "githubs": [
           3454
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Added UI components for building the vault reference easily while configuring referenceable fields for plugins.",
         "type": "feature",
         "githubs": [
           3495
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Fixed an issue where dynamic ordering was configurable for plugins scoped by consumers and/or consumer groups. These plugins does not support dynamic ordering.",
         "type": "bugfix",
         "githubs": [
           3415
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Removed redundant data previously saved in browser's local storage.",
         "type": "bugfix",
         "githubs": [
           3438
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Fixed issues with `cluster_addresses` and `sentinel_addresses` fields for plugins that support Redis clusters.",
         "type": "bugfix",
         "githubs": [
           3375
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Fixed an issue where the overview page for Dev Portal was not correctly rendered.",
         "type": "bugfix",
         "githubs": [
           3395
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Fixed an issue where user info was not refreshed after the active admin was updated.",
         "type": "bugfix",
         "githubs": [
           3386
-        ]
+        ],
+        "scope": "Core"
       }
     ]
   },
@@ -2384,7 +2420,7 @@
       },
       {
         "message": "**AI Proxy**: To support the new messages API of `Anthropic`, the upstream path of the `Anthropic` for `llm/v1/chat` route type has changed from `/v1/complete` to `/v1/messages`.\n",
-        "type": "breaking_change",
+        "type": "Breaking Change",
         "scope": "Plugin",
         "jiras": [
           "FTI-5770"
@@ -2392,7 +2428,8 @@
       },
       {
         "message": "Added package `tzdata` to DEB Docker image for convenient timezone setting.\n",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "AI Proxy now reads most prompt tuning parameters from the client,\nwhile the plugin config parameters under `model_options` are now just defaults.\nThis fixes support for using the respective provider's native SDK.\n",
@@ -2405,7 +2442,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**AI-proxy-plugin**: Fixed the bug that the `route_type` `/llm/v1/chat` didn't include the analytics in the responses.\n",
+        "message": "**AI-proxy**: Fixed the bug that the `route_type` `/llm/v1/chat` didn't include the analytics in the responses.\n",
         "scope": "Plugin",
         "type": "bugfix"
       },
@@ -2441,7 +2478,8 @@
       },
       {
         "message": "Bumped lua-resty-http to 0.17.2.",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped lua-resty-lmdb from 1.4.1 to 1.4.2",
@@ -2460,11 +2498,13 @@
       },
       {
         "message": "Bumped LuaRocks from 3.9.2 to 3.11.0",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped `ngx_wasm_module` to `91d447ffd0e9bb08f11cc69d1aa9128ec36b4526`",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped PCRE from the legacy libpcre 8.45 to libpcre2 10.43",
@@ -2478,15 +2518,18 @@
       },
       {
         "message": "Bumped `V8` version to `12.0.267.17`",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped `Wasmtime` version to `19.0.0`",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Fixed a bug where, if the the ulimit setting (open files) was low, Kong would fail to start as the `lua-resty-timer-ng` exhausted the available `worker_connections`. Decreased the concurrency range of the `lua-resty-timer-ng` library from `[512, 2048]` to `[256, 1024]` to fix this bug.\n",
-        "type": "bugfix"
+        "type": "bugfix",
+        "scope": "Core"
       },
       {
         "message": "TLSv1.1 and lower versions are disabled by default in OpenSSL 3.x.",
@@ -2505,7 +2548,8 @@
       },
       {
         "message": "Added support for debugging with EmmyLuaDebugger.  This feature is a\ntech preview and not officially supported by Kong Inc. for now.\n",
-        "type": "feature"
+        "type": "feature",
+        "scope": "Core"
       },
       {
         "message": "Improved config handling when the CP runs with the router set to the `expressions` flavor:\n  - If mixed config is detected and a lower DP is attached to the CP, no config will be sent at all\n  - If the expression is invalid on the CP, no config will be sent at all\n  - If the expression is invalid on a lower DP, it will be sent to the DP and DP validation will catch this and communicate back to the CP (this could result in partial config application)\n",
@@ -2544,7 +2588,8 @@
       },
       {
         "message": "Improved the robustness of lua-cjson when handling unexpected input.\n",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "**PDK:** Fixed `kong.request.get_forwarded_port` to always return a number,\nwhich was caused by an incorrectly stored string value in `ngx.ctx.host_port`.\n",
@@ -2683,7 +2728,8 @@
       },
       {
         "message": "Fix an issue where external plugins using the protobuf-based protocol would fail to call the `kong.Service.SetUpstream` method with an error `bad argument #2 to 'encode' (table expected, got boolean)`.\n",
-        "type": "bugfix"
+        "type": "bugfix",
+        "scope": "Core"
       },
       {
         "message": "**OpenTelemetry, Zipkin**: The propagation module has been reworked. The new\noptions allow better control over the configuration of tracing headers propagation.\n",
@@ -2737,7 +2783,8 @@
         "type": "feature",
         "githubs": [
           217
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Kong Manager now groups the parameters to provide a better user experience while configuring plugins. Meanwhile, several issues with the plugin form page were fixed.",
@@ -2752,7 +2799,8 @@
           209,
           213,
           216
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Improved the user experience in Kong Manager by fixing various UI-related issues.",
@@ -2770,7 +2818,8 @@
           209,
           213,
           216
-        ]
+        ],
+        "scope": "Core"
       }
     ]
   },
@@ -2885,12 +2934,13 @@
       },
       {
         "message": "\"**Hashicorp Vault**: Starting from this version, a string fully made of spaces cannot be specified as the `role_id` or `secret_id` value in the Hashicorp Vault entity with Approle authentication method.\n\"**Hashicorp Vault**: Starting from this version, at least one of `secret_id` and `secret_id_file` must be specified in the Hashicorp Vault entity with Approle authentication method.\n",
-        "type": "breaking_change",
+        "type": "Breaking Change",
         "scope": "Core"
       },
       {
         "message": "Updated `kong-lua-resty-kafka` to `0.18`.\n",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Updated submodule kong-openid-connect to 2.7.1",
@@ -2899,43 +2949,53 @@
       },
       {
         "message": "Updated `lua-resty-luasocket` to `1.1.2` for fixing [luasocket#427](https://github.com/lunarmodules/luasocket/issues/427).\n",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Updated lua-resty-mail to 1.1.0",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Updated OpenSSL FIPS-provider to 3.0.9",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Updated libpasswdqc to 2.0.3",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Updated lua-resty-cookie to 0.2.0",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Updated lua-resty-passwdqc to 2.0",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Updated xmlua to 1.2.1",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Updated libxml2 to 2.12.6",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Updated libxslt to 1.1.39",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Updated msgpack-c to 6.0.1",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "**DegraphQL**: Fixed an issue where GraphQL variables were not being correctly parsed and coerced into their defined types.\n",
@@ -2948,7 +3008,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**OpenID Connect:** Added support for DPoP (Demonstrating Proof-of-Possession) tokens validation. The feature is available by enabling `proof_of_possession_dpop`",
+        "message": "**OpenID Connect** Added support for DPoP (Demonstrating Proof-of-Possession) tokens validation. The feature is available by enabling `proof_of_possession_dpop`",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -2963,7 +3023,7 @@
         "scope": "Clustering"
       },
       {
-        "message": "**graphql-proxy-cache-advanced:** Addded redis strategy support and `bypass_on_err` config for `graphql-proxy-cache-advanced` plugin.\n",
+        "message": "**graphql-proxy-cache-advanced** Addded redis strategy support and `bypass_on_err` config for `graphql-proxy-cache-advanced` plugin.\n",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -2988,17 +3048,17 @@
         "scope": "Core"
       },
       {
-        "message": "**JWT-Signer:** supports basic auth and mtls auth to external jwks services",
+        "message": "**JWT-Signer** supports basic auth and mtls auth to external jwks services",
         "type": "feature",
         "scope": "Plugin"
       },
       {
-        "message": "**JWT-Signer:** The plugin now supports periodically rotating the jwks. For example, to autmatically rotate `access_token_jwks_uri`, you can set the config `access_token_jwks_uri_rotate_period`",
+        "message": "**JWT-Signer** The plugin now supports periodically rotating the jwks. For example, to autmatically rotate `access_token_jwks_uri`, you can set the config `access_token_jwks_uri_rotate_period`",
         "type": "feature",
         "scope": "Plugin"
       },
       {
-        "message": "**JWT-Signer:** The plugin now supports adding the original JWT(s) to the upstream request header by specifying the names of the upstream request header with `original_access_token_upstream_header` and `original_channel_token_upstream_header`.\nAnd `access_token_upstream_header`, `channel_token_upstream_header`, `original_access_token_upstream_header`, and `original_channel_token_upstream_header` should not have the same value.\n",
+        "message": "**JWT-Signer** The plugin now supports adding the original JWT(s) to the upstream request header by specifying the names of the upstream request header with `original_access_token_upstream_header` and `original_channel_token_upstream_header`.\nAnd `access_token_upstream_header`, `channel_token_upstream_header`, `original_access_token_upstream_header`, and `original_channel_token_upstream_header` should not have the same value.\n",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -3008,12 +3068,12 @@
         "scope": "Plugin"
       },
       {
-        "message": "**LDAP AUTH Advanced:** fix an issue where if the credential is encoded with no username kong will throw an error and return 500",
+        "message": "**ldap-auth-advanced** fix an issue where if the credential is encoded with no username kong will throw an error and return 500",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**LDAP AUTH Advanced:** fix an issue where an exception will be thrown when ldap search fails",
+        "message": "**ldap-auth-advanced** fix an issue where an exception will be thrown when ldap search fails",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -3063,46 +3123,47 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced:** Refactored `kong/tools/public/rate-limiting` to keep the original interfaces unchanged (backward compatibility) and extend a new interface `new_instance` to provide isolation between different plugins. If you are using custom Rate Limiting plugins based on this library, please update the initialization code to the new format like 'local ratelimiting = require(\"kong.tools.public.rate-limiting\").new_instance(\"custom-plugin-name\")'. The old interface will be removed in the upcoming major release.",
+        "message": "**Rate Limiting Advanced** Refactored `kong/tools/public/rate-limiting` to keep the original interfaces unchanged (backward compatibility) and extend a new interface `new_instance` to provide isolation between different plugins. If you are using custom Rate Limiting plugins based on this library, please update the initialization code to the new format like 'local ratelimiting = require(\"kong.tools.public.rate-limiting\").new_instance(\"custom-plugin-name\")'. The old interface will be removed in the upcoming major release.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced:** Fixed an issue where RLA and other similar plugins using the `rate-limiting` library, when used together, would interfere with each other and thus fail to synchronize counter data to the central data store",
+        "message": "**Rate Limiting Advanced** Fixed an issue where RLA and other similar plugins using the `rate-limiting` library, when used together, would interfere with each other and thus fail to synchronize counter data to the central data store",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
         "message": "Removed the Granular Tracing feature, and configurations like `tracing = on` are not available any longer. You should now use [OpenTelemetry Instrumentation](https://docs.konghq.com/gateway/latest/production/tracing/) instead.",
-        "type": "breaking_change",
+        "type": "Breaking Change",
         "scope": "Core"
       },
       {
         "message": "Remove lua-resty-openssl-aux-module dependency",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
-        "message": "**Rate Limiting Advanced:** Falling back to local strategy if sync_rate = 0 when redis goes down",
+        "message": "**Rate Limiting Advanced** Falling back to local strategy if sync_rate = 0 when redis goes down",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced:** The plugin now creates counter syncing timers when being executed instead of being created to reduce some meaningless error logs",
+        "message": "**Rate Limiting Advanced** The plugin now creates counter syncing timers when being executed instead of being created to reduce some meaningless error logs",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced:** Print error log when multiple plugins with the same namespace have different configurations",
+        "message": "**Rate Limiting Advanced** Print error log when multiple plugins with the same namespace have different configurations",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced:** fix an issue where if `sync_rate` is changed from a value greater than `0` to `0`, the namespace will be cleared unexpectedly",
+        "message": "**Rate Limiting Advanced** fix an issue where if `sync_rate` is changed from a value greater than `0` to `0`, the namespace will be cleared unexpectedly",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced:** fix some timer-related issues where the counter syncing timer can't be created or destroyed properly",
+        "message": "**Rate Limiting Advanced** fix some timer-related issues where the counter syncing timer can't be created or destroyed properly",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -3113,7 +3174,8 @@
       },
       {
         "message": "When authenticating Kong Manager with IDPs (e.g., OIDC, LDAP), the source of an RBAC role will be stored in its `role_source` field, which enables the existing roles with a source of `idp` to be removed upon new logins after IDP role mapping has changed. This also allows users to change a role's source between `local` and `idp` via the Admin API manually.",
-        "type": "feature"
+        "type": "feature",
+        "scope": "Core"
       }
     ],
     "kong-manager-ee": [
@@ -3122,14 +3184,16 @@
         "type": "bugfix",
         "githubs": [
           3183
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Corrected the documentation link shown on the RBAC user form page.",
         "type": "bugfix",
         "githubs": [
           3372
-        ]
+        ],
+        "scope": "Core"
       }
     ]
   },
@@ -3247,7 +3311,8 @@
       },
       {
         "message": "Bump `ngx_wasm_module` to `a7087a37f0d423707366a694630f1e09f4c21728`",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped OpenResty from 1.21.4.2 to 1.25.3.1",
@@ -3266,7 +3331,8 @@
       },
       {
         "message": "Bump `Wasmtime` version to `14.0.3`",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bump `dns_stale_ttl` default to 1 hour so stale DNS record can be used for longer time in case of resolver downtime.",
@@ -3375,7 +3441,7 @@
       },
       {
         "message": "**azure-functions**: azure-functions plugin now eliminates upstream/request URI and only use `routeprefix` configuration field to construct request path when requesting Azure API",
-        "type": "breaking_change",
+        "type": "Breaking Change",
         "scope": "Plugin"
       },
       {
@@ -3399,7 +3465,7 @@
         "scope": "Core"
       },
       {
-        "message": "**Forward Proxy:** fallback to the non-streaming proxy when the request body has already been read",
+        "message": "**forward-proxy** fallback to the non-streaming proxy when the request body has already been read",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -3419,7 +3485,7 @@
         "scope": "Core"
       },
       {
-        "message": "**OAS-Validation:** Fix a bug where the plugin throws a runtime error caused by the ref parameter schema not being dereferenced.",
+        "message": "**OAS-Validation** Fix a bug where the plugin throws a runtime error caused by the ref parameter schema not being dereferenced.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -3530,7 +3596,7 @@
       },
       {
         "message": "**BREAKING:** To avoid ambiguity with other Wasm-related nginx.conf directives, the prefix for Wasm `shm_kv` nginx.conf directives was changed from `nginx_wasm_shm_` to `nginx_wasm_shm_kv_`\n",
-        "type": "breaking_change",
+        "type": "Breaking Change",
         "scope": "Core"
       }
     ],
@@ -3562,7 +3628,7 @@
       },
       {
         "message": "**SAML**: adjust the priority of the SAML plugin to 1010 to correct the integration between the SAML plugin and other consumer-based plugins",
-        "type": "breaking_change",
+        "type": "Breaking Change",
         "scope": "Plugin"
       },
       {
@@ -3587,11 +3653,13 @@
       },
       {
         "message": "Bump kong-redis-cluster to '1.5.2'",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bump kong-redis-cluster to '1.5.3'",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bump `dns_stale_ttl` default to 1 hour so stale DNS record can be used for longer time in case of resolver downtime.",
@@ -3600,23 +3668,28 @@
       },
       {
         "message": "bump jq to 1.7.1",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "bump luasec to 1.3.2",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "bump OpenSSL to 3.1.4",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "In OpenSSL 3.2, the default SSL/TLS security level has been changed from 1 to 2. Which means security level set to 112 bits of security. As a result RSA, DSA and DH keys shorter than 2048 bits and ECC keys shorter than 224 bits are prohibited. In addition to the level 1 exclusions any cipher suite using RC4 is also prohibited. SSL version 3 is also not allowed. Compression is disabled.",
-        "type": "breaking_change"
+        "type": "Breaking Change",
+        "scope": "Core"
       },
       {
         "message": "bump lua-resty-aws to 1.3.6",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "**IP-restriction**: add support for consumer group scoping",
@@ -3629,7 +3702,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Rate-limiting**: add support for consumer group scoping",
+        "message": "**rate-limiting**: add support for consumer group scoping",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -3759,36 +3832,6 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Konnect Application Auth**: allow route support\n",
-        "type": "feature",
-        "scope": "Plugin"
-      },
-      {
-        "message": "**Konnect Application Auth**: add application_context support\n",
-        "type": "feature",
-        "scope": "Plugin"
-      },
-      {
-        "message": "**Konnect Application Auth**: add application_context product version id\n",
-        "type": "feature",
-        "scope": "Plugin"
-      },
-      {
-        "message": "**Konnect Application Auth**: add exhausted applications handling to rate limit\n",
-        "type": "feature",
-        "scope": "Plugin"
-      },
-      {
-        "message": "**Konnect Application Auth**: add support for v2 strategies\n",
-        "type": "feature",
-        "scope": "Plugin"
-      },
-      {
-        "message": "**Konnect Application Auth**: add implementation for v2 strategies\n",
-        "type": "feature",
-        "scope": "Plugin"
-      },
-      {
         "message": "Data-plane nodes running in Konnect will now report config reload failures such as invalid configuration or transient errors to the control-plane.",
         "type": "feature",
         "scope": "Clustering"
@@ -3814,7 +3857,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Mtls-auth:** print notice log if revocation check fails with revocation_check_mode = IGNORE_CA_ERROR",
+        "message": "**Mtls-auth** print notice log if revocation check fails with revocation_check_mode = IGNORE_CA_ERROR",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -3830,7 +3873,7 @@
       },
       {
         "message": "**OAS-Validation**: bypass schema validation when content-type is not `application/json`.",
-        "type": "breaking_change",
+        "type": "Breaking Change",
         "scope": "Plugin"
       },
       {
@@ -3874,7 +3917,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Openid-Connect:** configurations `scopes`, `login_redirect_uri`, `logout_redirect_uri` can now be referenced as a secret in the Kong Vault",
+        "message": "**Openid-Connect** configurations `scopes`, `login_redirect_uri`, `logout_redirect_uri` can now be referenced as a secret in the Kong Vault",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -3905,7 +3948,8 @@
       },
       {
         "message": "Fixed critical level logs when starting external plugin servers. Those logs cannot be suppressed due to the limitation of OpenResty. We choose to remove the socket availibilty detection feature.",
-        "type": "bugfix"
+        "type": "bugfix",
+        "scope": "Core"
       },
       {
         "message": "**Plugin Server**: fix an issue where every request causes a new plugin instance to be created",
@@ -3918,7 +3962,7 @@
         "scope": "Portal"
       },
       {
-        "message": "**Rate-limiting**: support to ratelimit by consumer group",
+        "message": "**rate-limiting**: support to ratelimit by consumer group",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -3953,7 +3997,7 @@
         "scope": "Core"
       },
       {
-        "message": "**Request Validator:** The Request Validator plugin now validates the request body schema when json is the suffix value in the request content type's subtype, for example `application/merge-patch+json`.",
+        "message": "**Request Validator** The Request Validator plugin now validates the request body schema when json is the suffix value in the request content type's subtype, for example `application/merge-patch+json`.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -3963,12 +4007,12 @@
         "scope": "CLI Command"
       },
       {
-        "message": "**Rate Limiting Advanced:** Check the error of queries in the redis pipeline",
+        "message": "**Rate Limiting Advanced** Check the error of queries in the redis pipeline",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced:** Enhance the resolution of RLA sliding window weight",
+        "message": "**Rate Limiting Advanced** Enhance the resolution of RLA sliding window weight",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -4004,7 +4048,7 @@
       },
       {
         "message": "The listing endpoints for consumer groups (`/consumer_groups`) and consumers (`/consumers`) now respond with paginated results. The JSON key for the list has been changed to `data` instead of `consumer_groups` or `consumers`.",
-        "type": "breaking_change",
+        "type": "Breaking Change",
         "scope": "Admin API"
       },
       {
@@ -4029,7 +4073,8 @@
         "type": "bugfix",
         "githubs": [
           3055
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Corrected UI descriptions under Teams when mapping roles from external sources (e.g., OIDC, LDAP).",
@@ -4037,42 +4082,48 @@
         "githubs": [
           3000,
           3184
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Added support for creating/editing the route-by-header plugin from the UI.",
         "type": "feature",
         "githubs": [
           3049
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Kong Manager now supports operating keys scoped to a specific keyset without permissions on the `/keys/*` endpoint.",
         "type": "bugfix",
         "githubs": [
           3035
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Added an onboarding flow to make it easier for new customers to start using Kong Gateway.",
         "type": "feature",
         "githubs": [
           3131
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Fixed various issues while authenticating the Admin API via OpenID Connect.",
         "type": "bugfix",
         "githubs": [
           3055
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Now the summary section has a new design in both workspaces page and overview page.",
         "type": "feature",
         "githubs": [
           3113
-        ]
+        ],
+        "scope": "Core"
       }
     ]
   },
@@ -4088,11 +4139,13 @@
       },
       {
         "message": "Bumped lua-resty-healthcheck from 1.6.2 to 1.6.3",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bumped OpenResty from 1.21.4.1 to 1.21.4.2",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Fix several issues in Vault and refactor the Vault code base: - Make DAOs to fallback to empty string when resolving Vault references fail - Use node level mutex when rotation references  - Refresh references on config changes - Update plugin referenced values only once per request - Pass only the valid config options to vault implementations - Resolve multi-value secrets only once when rotating them - Do not start vault secrets rotation timer on control planes - Re-enable negative caching - Reimplement the kong.vault.try function - Remove references from rotation in case their configuration has changed\n",
@@ -4178,7 +4231,8 @@
       },
       {
         "message": "Bumped lua-resty-aws from 1.3.1 to 1.3.2",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Fix a bug related to data interference between requests in the kong.log.serialize function.",
@@ -4187,7 +4241,8 @@
       },
       {
         "message": "Bumped lua-resty-aws from 1.3.2 to 1.3.5",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Fix incorrect LuaJIT register allocation for IR_*LOAD on ARM64",
@@ -4248,7 +4303,8 @@
       },
       {
         "message": "Bumped kong-lapis from 1.14.0.2 to 1.14.0.3",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Bump lua-kong-nginx-module from 0.6.0 to 0.8.0",
@@ -4282,7 +4338,7 @@
       },
       {
         "message": "**Session**: a new configuration field `read_body_for_logout` was added with a default value of `false`, that changes behavior of `logout_post_arg` in a way that it is not anymore considered if the `read_body_for_logout` is not explicitly set to `true`. This is to avoid session plugin from reading request bodies by default on e.g. `POST` request for logout detection.\n",
-        "type": "breaking_change",
+        "type": "Breaking Change",
         "scope": "Plugin"
       },
       {
@@ -4312,7 +4368,8 @@
       },
       {
         "message": "Bump Wasmtime version to 12.0.2",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       }
     ]
   },
@@ -4354,8 +4411,8 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Graphql-rate-limiting-adv**: Fix a bug in the schema validation which prevents from using redis in cluster mode",
-        "type": "breaking_change",
+        "message": "**graphql-rate-limiting-advanced**: Fix a bug in the schema validation which prevents from using redis in cluster mode",
+        "type": "Breaking Change",
         "scope": "Plugin"
       },
       {
@@ -4389,16 +4446,12 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Konnect Application Auth**: support multiple consumer_groups",
-        "type": "feature",
-        "scope": "Plugin"
-      },
-      {
         "message": "Add troubleshooting tool",
         "type": "feature",
         "prs": [
           6450
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "**SAML**: When the redis session storage is incorrectly configured, users now receive a 500 error instead of being redirected endlessly",
@@ -4518,7 +4571,8 @@
       },
       {
         "message": "Add troubleshooting tools to container images",
-        "type": "dependency"
+        "type": "dependency",
+        "scope": "Core"
       },
       {
         "message": "Add troubleshooting lua scripts",
@@ -4583,10 +4637,11 @@
         ],
         "jiras": [
           "KAG-2189"
-        ]
+        ],
+        "scope": "Core"
       },
       {
-        "message": "**OAS Validation:** Fix an issue where non `application/json` content-types are being rejected even though the request body is not required.",
+        "message": "**OAS Validation** Fix an issue where non `application/json` content-types are being rejected even though the request body is not required.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -4621,7 +4676,7 @@
         "scope": "Portal"
       },
       {
-        "message": "**Rate Limiting Advanced:** to use the new Plugin:configure for building namespaces without looping through all the plugins",
+        "message": "**Rate Limiting Advanced** to use the new Plugin:configure for building namespaces without looping through all the plugins",
         "type": "performance",
         "scope": "Plugin"
       },
@@ -4665,14 +4720,16 @@
         "type": "bugfix",
         "githubs": [
           2923
-        ]
+        ],
+        "scope": "Core"
       },
       {
         "message": "Fix an issue that Kong Manager 'Invite Admin' button missing on Teams page if no admin created on DB initialization with RBAC disabled",
         "type": "bugfix",
         "githubs": [
           2932
-        ]
+        ],
+        "scope": "Core"
       }
     ]
   }
