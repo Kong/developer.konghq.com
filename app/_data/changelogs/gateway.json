@@ -2928,11 +2928,6 @@
         "scope": "Admin API"
       },
       {
-        "message": "** Application Registration: ** Added support access the service using consumer credential authentication. To get this functionality, you can enable `enable_proxy_with_consumer_credential`(default is `false`).",
-        "type": "feature",
-        "scope": "Plugin"
-      },
-      {
         "message": "\"**Hashicorp Vault**: Starting from this version, a string fully made of spaces cannot be specified as the `role_id` or `secret_id` value in the Hashicorp Vault entity with Approle authentication method.\n\"**Hashicorp Vault**: Starting from this version, at least one of `secret_id` and `secret_id_file` must be specified in the Hashicorp Vault entity with Approle authentication method.\n",
         "type": "Breaking Change",
         "scope": "Core"
