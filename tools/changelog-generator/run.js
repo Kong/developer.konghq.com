@@ -11,7 +11,6 @@ function generateChangelogsByVersion(folderPath, version) {
     "./config/ignored_folders.json",
     "utf-8"
   );
-  // Questions: do I need to bundle enterprise and OSS?
   const folders = fastGlob.globSync(`${folderPath}/changelog/${version}/*`, {
     onlyDirectories: true,
     ignore: JSON.parse(foldersToIgnore).map(
@@ -34,13 +33,14 @@ function generateChangelogsByVersion(folderPath, version) {
         change.type = setup.defaults.type;
       }
       change.type = setup.type_mappings[change.type] || change.type;
+
+      change.message = change.message.replace(/^"([^"]*)"?\n?$/, "$1");
       if (change.scope === "Plugin") {
         const match = change.message.match(/(\*\*\s?(.*?):?\s?\*\*?)/);
         if (match && match[2]) {
           let plugin = match[2].replace(/-plugin/i, "");
 
           if (setup.skip_plugin_entries.includes(plugin)) {
-            console.log(plugin);
             return;
           }
           plugin = setup.plugin_mappings[plugin] || plugin;

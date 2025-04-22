@@ -1253,17 +1253,17 @@
         "scope": "Clustering"
       },
       {
-        "message": "\"**ai-prompt-guard**: Fixed an issue where the *ai-prompt-guard* plugin could fail when handling requests with multiple models.\"\n",
+        "message": "**ai-prompt-guard**: Fixed an issue where the *ai-prompt-guard* plugin could fail when handling requests with multiple models.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "\"**ai-semantic-cache**: Fixed an issue where the plugin failed when handling requests with multiple models.\"\n",
+        "message": "**ai-semantic-cache**: Fixed an issue where the plugin failed when handling requests with multiple models.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "\"**ai-semantic-prompt-guard**: Fixed an issue where requests with multiple models caused failures.\"\n",
+        "message": "**ai-semantic-prompt-guard**: Fixed an issue where requests with multiple models caused failures.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1273,17 +1273,17 @@
         "scope": "Plugin"
       },
       {
-        "message": "\"**ai-rate-limiting-advanced**: Fixed an issue where the plugin may fail to authenticate to Redis correctly with vault-referenced redis configuration.\"\n",
+        "message": "**ai-rate-limiting-advanced**: Fixed an issue where the plugin may fail to authenticate to Redis correctly with vault-referenced redis configuration.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "\"**graphql-rate-limiting-advanced**: Fixed an issue where the plugin may fail to authenticate to Redis correctly with vault-referenced redis configuration.\"\n",
+        "message": "**graphql-rate-limiting-advanced**: Fixed an issue where the plugin may fail to authenticate to Redis correctly with vault-referenced redis configuration.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "\"**rate-limiting-advanced**: Fixed an issue where the plugin may fail to authenticate to Redis correctly with vault-referenced redis configuration.\"\n",
+        "message": "**rate-limiting-advanced**: Fixed an issue where the plugin may fail to authenticate to Redis correctly with vault-referenced redis configuration.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1313,7 +1313,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "\"**service-protection**: Implemented a new plugin to protect services with request rate limiting.\"\n",
+        "message": "**service-protection**: Implemented a new plugin to protect services with request rate limiting.",
         "type": "feature",
         "scope": "Plugin"
       },
