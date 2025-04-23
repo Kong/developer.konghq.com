@@ -54,6 +54,12 @@
 
   {% endunless %}
 
+  {% if prereqs.kubernetes.keycloak %}
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+    {% include prereqs/kubernetes/keycloak.md config=prereqs.kubernetes.keycloak %}
+  </div>
+  {% endif %}
+
   {% for tool in prereqs.tools %}
   {% assign tool_include = 'prereqs/tools/' | append: tool | append: '.md' %}
   {% capture tool_include_exists %}{% include_exists tool_include %}{% endcapture %}
