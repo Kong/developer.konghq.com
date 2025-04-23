@@ -10,7 +10,6 @@ metadata:
     - konnect
     - authentication
   breadcrumb: /konnect-platform/
-    
 rows:
   - header:
       type: h1
