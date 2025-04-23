@@ -5,7 +5,7 @@
 
 {% capture details_content %}
 
-Create a `values-monitoring.yaml` file to set the scrape interval, use Grafana persistence, and install Kong's dashboard:
+Create a `values-monitoring.yaml` file to set the scrape interval, use Grafana persistence, and install {{site.base_gateway}}'s dashboard:
 ```yaml
 prometheus:
   prometheusSpec:
@@ -45,7 +45,7 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm install promstack prometheus-community/kube-prometheus-stack --namespace monitoring --version 52.1.0 -f values-monitoring.yaml
 ```
 
-By default, kube-prometheus-stack [selects ServiceMonitors and PodMonitors by a`release` label equal to the release name](https://github.com/prometheus-community/helm-charts/blob/kube-prometheus-stack-19.0.1/charts/kube-prometheus-stack/values.yaml#L2128-L2169). We will set the `release` label when installing {{ site.kic_product_name }}.
+By default, kube-prometheus-stack [selects ServiceMonitors and PodMonitors by a `release` label equal to the release name](https://github.com/prometheus-community/helm-charts/blob/kube-prometheus-stack-19.0.1/charts/kube-prometheus-stack/values.yaml#L2128-L2169). We will set the `release` label when we install {{ site.kic_product_name }}.
 
 {% endcapture %}
 

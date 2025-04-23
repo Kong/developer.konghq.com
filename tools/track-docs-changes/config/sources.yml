@@ -340,7 +340,7 @@ app/_how-tos/kic-plugin-mtls.md:
   - app/_src/kubernetes-ingress-controller/plugins/mtls.md
 app/_how-tos/kic-plugin-oidc.md:
   - app/_src/kubernetes-ingress-controller/plugins/oidc.md
-app/_how-tos/kic-observability-promethus-grafana.md:
+app/_how-tos/kic-observability-prometheus-grafana.md:
   - app/_src/kubernetes-ingress-controller/production/observability/prometheus-grafana.md
 app/kubernetes-ingress-controller/observability/events.md:
   - app/_src/kubernetes-ingress-controller/production/observability/events.md
