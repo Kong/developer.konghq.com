@@ -32,7 +32,7 @@ faqs:
       * WebSocket
   - q: Does Insomnia automatically encode special characters in request URLs?
     a: |
-      Yes. Insomnia automatically encodes special characters in request URLs. This behavior ensures proper formatting for HTTP requests, but it may cause issues for users who intentionally want to send unencoded characters.
+      Yes. Insomnia automatically encodes special characters in request URLs. This behavior ensures proper formatting for HTTP requests, but it may cause issues for users who intentionally want to send characters without encoding.
 
   - q: How can I check the actual request URL that Insomnia sends?
     a: |
@@ -41,7 +41,7 @@ faqs:
   - q: What can I do if auto-encoding is causing problems in my request?
     a: |
       Here are a few options for troubleshooting special character encoding issues:
-      * Manually encode your request using tools like [urlencoder](https://www.urlencoder.org/) or [W3Schools](https://www.w3schools.com/tags/ref_urlencode.ASP)
+      * Manually encode your request using tools like [`urlencoder`](https://www.urlencoder.org/) or [W3Schools](https://www.w3schools.com/tags/ref_urlencode.ASP)
       * Use the [Insomnia encoder plugin](https://github.com/sypbiz/insomnia-plugin-encode-uri)
       * Suggest advanced options like:
         - Per-parameter encoding toggle

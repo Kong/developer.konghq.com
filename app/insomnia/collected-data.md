@@ -87,7 +87,7 @@ faqs:
       You should take appropriate measures to secure your local environment from unauthorized access.
   - q: Where does Insomnia store application data?
     a: |
-      Insomnia stores local data in platform-specific appData directories:
+      Insomnia stores local data in platform-specific `appData` directories:
 
       * `%APPDATA%\Insomnia` on Windows
       * `$XDG_CONFIG_HOME/Insomnia` or `~/.config/Insomnia` on Linux
