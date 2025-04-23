@@ -87,15 +87,20 @@ variables:
 
 ## 5. Generate a token
 
-Use the applications's client credentials to generate a token and export it to an environment variable:
+Use the applications's client credentials to generate a token:
 ```sh
-export TOKEN=$(curl -X POST "https://localhost:8443/anything/oauth2/token" \
+curl -X POST "https://localhost:8443/anything/oauth2/token" \
   --header "Content-Type: application/json" \
   --json '{ 
     "client_id": "'$CLIENT_ID'", 
     "client_secret": "'$CLIENT_SECRET'", 
     "grant_type": "client_credentials" 
-  }' | jq -r '.access_token')
+  }'
+```
+
+Export the token to an environment variable:
+```sh
+export TOKEN=<access_token>
 ```
 
 ## 6. Validate
