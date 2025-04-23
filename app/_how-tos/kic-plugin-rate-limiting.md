@@ -10,6 +10,8 @@ breadcrumbs:
   - index: kubernetes-ingress-controller
     section: How To
 
+plugins:
+  - rate-limiting
 
 products:
   - kic
@@ -45,7 +47,7 @@ cleanup:
 
 ## Create a Rate Limiting Plugin
 
-To add rate limiting to the `echo` Service, create a new `rate-limiting` `KongPlugin`:
+To add rate limiting to the `echo` Service, create a new [Rate Limiting](/plugins/rate-limiting/) `KongPlugin`:
 
 {% entity_example %}
 type: plugin
@@ -61,7 +63,7 @@ data:
 
 ## Validate your configuration
 
-Send repeated requests to decrement the remaining limit headers, and block requests after the fifth request.
+Send repeated requests to decrement the remaining limit headers, and block requests after the fifth request:
 
 {% validation rate-limit-check %}
 iterations: 6
@@ -75,30 +77,11 @@ output:
     The `RateLimit-Remaining` header indicates how many requests are remaining before the rate limit is enforced.  The first five responses return `HTTP/1.1 200 OK` which indicates that the request is allowed. The final request returns `HTTP/1.1 429 Too Many Requests` and the request is blocked.
 
     If you receive a `HTTP 429` from the first request, wait 60 seconds for the rate limit timer to reset.
-  expected:
-    - value:
-      - "< HTTP/1.1 200 OK"
-      - "< RateLimit-Remaining: 4"
-    - value:
-      - "< HTTP/1.1 200 OK"
-      - "< RateLimit-Remaining: 3"
-    - value:
-      - "< HTTP/1.1 200 OK"
-      - "< RateLimit-Remaining: 2"
-    - value:
-      - "< HTTP/1.1 200 OK"
-      - "< RateLimit-Remaining: 1"
-    - value:
-      - "< HTTP/1.1 200 OK"
-      - "< RateLimit-Remaining: 0"
-    - value:
-      - "< HTTP/1.1 429 Too Many Requests"
-      - "< RateLimit-Remaining: 0"
 {% endvalidation %}
 
-## Scale to multiple pods
+## 3. Scale to multiple pods
 
-The policy: local setting in the plugin configuration tracks request counters in each Pod’s local memory separately. Counters are not synchronized across Pods, so clients can send requests past the limit without being throttled if they route through different Pods.
+The `policy: local` setting in the plugin configuration tracks request counters in each Pod’s local memory separately. Counters are not synchronized across Pods, so clients can send requests past the limit without being throttled if they route through different Pods.
 
 To test this, scale your Deployment to three replicas:
 
@@ -148,7 +131,7 @@ Using a load balancer that distributes client requests to the same Pod can allev
 
 ## Deploy Redis to your Kubernetes cluster
 
-Redis provides an external database for Kong components to store shared data, such as rate limiting counters. There are several options to install it:
+Redis provides an external database for {{site.base_gateway}} components to store shared data, such as rate limiting counters. There are several options to install it.
 
 Bitnami provides a [Helm chart](https://github.com/bitnami/charts/tree/main/bitnami/redis) for Redis with turnkey options for authentication.
 
@@ -193,11 +176,11 @@ Bitnami provides a [Helm chart](https://github.com/bitnami/charts/tree/main/bitn
     ]'
     ```
 
-    If the `redis_username` is not set , it uses the default `redis` user.
+    If the `redis_username` is not set, it uses the default `redis` user.
 
 ## Test rate limiting in a multi-node deployment
 
-
+Send the following request to test the rate limiting functionality in the multi-Pod deployment:
 {% validation rate-limit-check %}
 iterations: 6
 url: '/echo'

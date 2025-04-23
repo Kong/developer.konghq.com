@@ -9,6 +9,9 @@ breadcrumbs:
   - index: kubernetes-ingress-controller
     section: How To
 
+plugins:
+  - oidc
+  
 products:
   - kic
 
@@ -23,7 +26,7 @@ entities: []
 
 tldr:
   q: How do I configure the OpenID Connect (OIDC) plugin with {{ site.kic_product_name }}?
-  a: Create a `KongPlugin` instance containing your `client_id`, `client_secret` and `grant_type` then annotate a Service or Route with `konghq.com/plugins=my-oidc-plugin`
+  a: Create a `KongPlugin` instance containing your `client_id`, `client_secret`, and `grant_type`, then annotate a Service or Route with `konghq.com/plugins=my-oidc-plugin`.
 
 prereqs:
   enterprise: true
@@ -69,7 +72,7 @@ data:
 
 ## Validate your configuration
 
-Once the resource has been reconciled, you'll be able to call the `/echo` endpoint and {{ site.base_gateway }} will route the request to the `echo` service.
+Once the resource has been reconciled, you'll be able to call the `/echo` endpoint and {{ site.base_gateway }} will route the request to the `echo` Service.
 
 If you make a request without any authentication credentials, the request will fail with a `HTTP 302` and a redirect to the Keycloak login page:
 

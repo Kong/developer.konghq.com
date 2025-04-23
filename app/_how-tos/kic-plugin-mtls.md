@@ -8,7 +8,8 @@ breadcrumbs:
   - /kubernetes-ingress-controller/
   - index: kubernetes-ingress-controller
     section: How To
-
+plugins:
+  - mtls-auth
 products:
   - kic
 
@@ -23,7 +24,7 @@ entities: []
 
 tldr:
   q: How do I enforce mTLS from a client to {{ site.base_gateway }} using {{ site.kic_product_name }}?
-  a: Create a Secret containing a CA Certificate and pass the ID of the certificate to an mTLS plugin configuration
+  a: Create a Secret containing a CA Certificate and pass the ID of the certificate to an mTLS plugin configuration.
 
 prereqs:
   enterprise: true
@@ -55,17 +56,17 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 3
 -subj "/C=US/ST=California/L=San Francisco/O=Kong/OU=Org/CN=www.example.com"
 ```
 
-## Add the certificate to {{ site.base_gateway }}
+## Add the Certificate to {{ site.base_gateway }}
 
-CA certificates in Kong are provisioned by creating `Secret` or `ConfigMap` resource in Kubernetes.
+CA Certificates in {{site.base_gateway}} are provisioned by creating a `Secret` or `ConfigMap` resource in Kubernetes.
 
 Resources holding CA certificates must have the following properties:
-- the `konghq.com/ca-cert: "true"` label applied.
-- a `cert` or `ca.crt` data property which contains a valid CA certificate in PEM format.
-- a `kubernetes.io/ingress.class` annotation whose value matches the value of the controller's `--ingress-class` argument. By default, that value is `kong`.
-- an `id` data property which contains a random UUID.
+- The `konghq.com/ca-cert: "true"` label applied
+- A `cert` or `ca.crt` data property which contains a valid CA certificate in PEM format
+- A `kubernetes.io/ingress.class` annotation whose value matches the value of the controller's `--ingress-class` argument. By default, that value is `kong`.
+- An `id` data property which contains a random UUID
 
-Each CA certificate that you create needs a unique ID. Any random UUID should suffice here and it doesn't have a security implication. You can use [uuidgen](https://linux.die.net/man/1/uuidgen) (Linux, OS X) or [New-Guid](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/new-guid) (Windows) to generate an ID.
+Each CA Certificate that you create needs a unique ID. Any random UUID should suffice here, and it doesn't have a security implication. You can use [uuidgen](https://linux.die.net/man/1/uuidgen) (Linux, macOS) or [New-Guid](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/new-guid) (Windows) to generate an ID.
 
 ```bash
 CERT_ID=$(uuidgen | tr "[:upper:]" "[:lower:]")
@@ -76,7 +77,7 @@ kubectl annotate secret -n kong my-ca-cert 'kubernetes.io/ingress.class=kong'
 
 ## Configure the mtls-auth plugin
 
-The [mtls-auth plugin](/plugins/mtls-auth/) requires a CA Certificate ID that will be used to validate the certificate in the incoming request. In this example we disable revocation checks, but you should enable checks in a production setting.
+The [mtls-auth plugin](/plugins/mtls-auth/) requires a CA Certificate ID that will be used to validate the Certificate in the incoming request. In this example we disable revocation checks, but you should enable checks in a production setting.
 
 {% entity_example %}
 type: plugin
@@ -93,9 +94,9 @@ data:
 
 ## Validate your configuration
 
-At this point {{ site.base_gateway }} will reject requests that do not contain a client certificate.
+At this point, {{ site.base_gateway }} will reject requests that do not contain a client certificate.
 
-1. Send a request to check Kong prompts you for client certificate.
+1. Send a request to check {{site.base_gateway}} prompts for a client certificate:
 
 {% validation request-check %}
 url: /echo
@@ -109,10 +110,10 @@ indent: 4
     As you can see, {{ site.base_gateway }} is restricting the request because it doesn't have the necessary authentication information.
 
    Two things to note here:
-   - `-k` is used because {{ site.base_gateway }} is set up to serve a self-signed certificate by default. For full mutual authentication in production use cases, you must configure Kong to serve a certificate that is signed by a trusted CA.
-   - For some deployments `$PROXY_IP` might contain a port that points to `http` port of Kong. In others, it might happen that it contains a DNS name instead of an IP address. If needed, update the command to send an `https` request to the `https` port of Kong or the load balancer in front of it.
+   - `-k` is used because {{ site.base_gateway }} is set up to serve a self-signed certificate by default. For full mutual authentication in production use cases, you must configure {{ site.base_gateway }} to serve a Certificate that is signed by a trusted CA.
+   - For some deployments `$PROXY_IP` might contain a port that points to `http` port of {{ site.base_gateway }}. In others, it might contain a DNS name instead of an IP address. If needed, update the command to send an `https` request to the `https` port of {{ site.base_gateway }} or the load balancer in front of it.
 
-1. Use the key and certificate to authenticate against Kong and use the service:
+1. Use the key and Certificate to authenticate against {{ site.base_gateway }} and use the Service:
 
 {% validation request-check %}
 url: /echo

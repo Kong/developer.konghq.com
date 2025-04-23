@@ -8,7 +8,9 @@ breadcrumbs:
   - /kubernetes-ingress-controller/
   - index: kubernetes-ingress-controller
     section: How To
-
+plugins:
+  - acl
+  - key-auth
 
 products:
   - kic
@@ -25,7 +27,7 @@ entities: []
 tldr:
   q: How do I apply the ACL plugin using {{ site.kic_product_name }}?
   a: |
-    Create a `Secret` with a `konghq.com/credential: acl` label and apply it to the consumer that you want to access the service
+    Create a `Secret` with a `konghq.com/credential: acl` label and apply it to the Consumer that you want to access the Service.
 
     <details markdown="1">
     <summary>View details</summary>
@@ -88,9 +90,9 @@ cleanup:
 
 ## How the ACL plugin works
 
-The ACL plugin compares a list of required `groups` on a Service or Route entity with the list of groups listed in an ACL credential that is attached to a Consumer. If the Consumer doesn't have the required `group`, the request is denied.
+The ACL plugin compares a list of required `groups` on a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/) entity with the list of groups listed in an ACL credential that is attached to a [Consumer](/gateway/entities/consumer/). If the Consumer doesn't have the required `group`, the request is denied.
 
-It's important to note that there are two distinct concepts with the ACL name:
+There are two distinct concepts with the ACL name:
 
 1. The ACL **plugin**, which contains a list of groups a Service or Route requires
 1. The ACL **credential**, which contains a list of groups a Consumer is in
@@ -99,7 +101,7 @@ Both of these entities must be configured for the ACL plugin to work.
 
 ## Provision consumers
 
-As the ACL plugin is attached to a Consumer, we need two Consumers added to {{ site.base_gateway }} to demonstrate how the ACL plugin works. These Consumers will use the `key-auth` plugin to identify the Consumer from the incoming request.
+Because the ACL plugin is attached to a Consumer, we need two Consumers added to {{ site.base_gateway }} to demonstrate how the ACL plugin works. These Consumers will use the [Key Authentication](/plugins/key-auth/) plugin to identify the Consumer from the incoming request.
 
 1. Create secrets to add `key-auth` credentials for `my-admin` and `my-user`:
 
@@ -127,7 +129,7 @@ As the ACL plugin is attached to a Consumer, we need two Consumers added to {{ s
    ' | kubectl apply -f -
    ```
 
-1. Create two consumers that are identified by these secrets:
+1. Create two Consumers that are identified by these secrets:
 
 {% entity_example %}
 type: consumer
@@ -151,7 +153,7 @@ indent: 4
 
 ## Secure the service
 
-The `key-auth` plugin must be added to a Service or Route to identify the Consumer from the incoming request. Add the `key-auth` plugin to the `echo` service:
+The Key Auth plugin must be added to a Service or Route to identify the Consumer from the incoming request. Add the `key-auth` plugin to the `echo` Service:
 
 {% entity_example %}
 type: plugin
@@ -163,11 +165,11 @@ data:
 
 ## Create ACL credentials
 
-The `key-auth` plugin and other Kong authentication plugins only provide authentication, not authorization. They can identify a consumer, and reject any unidentified requests, but not restrict which consumers can access which protected URLs. Any consumer with a `key-auth` credential can access any protected URL, even when the plugins for those URLs are configured separately.
+The Key Auth plugin and other {{site.base_gateway}} authentication plugins only provide authentication, not authorization. They can identify a Consumer, and reject any unidentified requests, but not restrict which Consumers can access which protected URLs. Any Consumer with a key auth credential can access any protected URL, even when the plugins for those URLs are configured separately.
 
-To provide authorization, or restrictions on which consumers can access which URLs, you need to also add the ACL plugin, which can assign groups to consumers and restrict access to URLs by group. Create two plugins, one which allows only an admin group, and one which allows both admin and user:
+To provide authorization, or restrictions on which Consumers can access which URLs, you need to also add the [ACL](/plugins/acl/) plugin, which can assign groups to Consumers and restrict access to URLs by group. Create two plugins, one which allows only an admin group, and one which allows both admin and user.
 
-1. Generate ACL credentials for both consumers:
+1. Generate ACL credentials for both Consumers:
 
    ```yaml
    echo '
@@ -193,7 +195,7 @@ To provide authorization, or restrictions on which consumers can access which UR
    ' | kubectl apply -f -
    ```
 
-1. Patch the consumers
+1. Patch the Consumers:
 
     ```bash
     kubectl patch -n kong --type json kongconsumer my-admin \
@@ -210,9 +212,9 @@ To provide authorization, or restrictions on which consumers can access which UR
       }]'
     ```
 
-## Adding access control
+## Add access control
 
-Based on our authorization policies, anyone can access `/secured-endpoint` but only administrators can access `/sensitive-endpoint`.
+Based on our authorization policies, anyone can access `/secured-endpoint`, but only administrators can access `/sensitive-endpoint`.
 
 1. Create an ACL plugin that allows requests from anyone in the `admin` or `user` groups to `/secured-endpoint`:
 
@@ -246,7 +248,7 @@ indent: 4
 
 ## Validate your configuration
 
-Your routes are now protected with the `key-auth` and `acl` plugins and the following logic:
+Your Routes are now protected with the Key Auth and ACL plugins and the following logic:
 
 * If the `apikey` header is invalid, the `key-auth` plugin rejects the request
 * If the identified Consumer has the `user` group in the ACL credential, they can access `/secured-endpoint`
