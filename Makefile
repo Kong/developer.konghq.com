@@ -49,6 +49,9 @@ kill-ports:
 vale:
 	-git diff --name-only --diff-filter=d HEAD | grep '\.md$$' | xargs vale
 
+vale-pr:
+	-git diff --name-only HEAD origin/main | grep '\.md$$' | xargs vale
+
 scaffold-plugin:
 	@if [ -z "$(PLUGIN)" ]; then \
 	  echo "Error: Plugin name is required. Usage: make scaffold-plugin PLUGIN=<plugin-name>"; \
