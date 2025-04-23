@@ -1,0 +1,93 @@
+---
+title: Environment Variables
+
+description: Set up environment variables to reuse values across multiple requests.
+
+content_type: reference
+layout: reference
+
+products:
+    - insomnia
+
+related_resources:
+  - text: Storage
+    url: /insomnia/storage/
+  - text: Git sync
+    url: /insomnia/git-sync/
+  - text: Local vault
+    url: /insomnia/local-vault/
+---
+
+
+## Environment variables
+
+An environment is a [JSON object](https://www.json.org/json-en.html) containing key-value pairs of the data you want to reference. Access the environment manager through the environment dropdown menu at the top of the sidebar. From here, you can edit the base environment, create sub environments, assign colors, and more.
+
+{% table %}
+columns:
+  - title: Environment Type
+    key: type
+  - title: Description
+    key: description
+rows:
+  - type: Base Environment
+    description: >-
+      Assigned to every workspace and accessible via the environment manager. Variables here are available throughout the entire workspace. Commonly used for default values that do not vary across environments (e.g., resource names, sample data).
+  - type: Sub Environments
+    description: >-
+      Typically used for environment-specific values (production, staging, development) or user-specific configurations. Activated via the environment dropdown.<br><br><strong>Note:</strong> Sub environments can be marked as Private and will not be synced or exported.
+  - type: Folder Environments
+    description: >-
+      Defined at the folder level.
+{% endtable %}
+
+### Referencing environment variables
+
+Environment variables can be referenced in any text input within the Insomnia application. There are two ways to do this:
+
+1. Summon the autocomplete dropdown by pressing Control+Space
+2. Allow the autocomplete to show automatically as you type
+
+## Global environments
+
+Global environments can be defined on a project level and can be used across multiple collections, including the ability to leverage them in pre-request and after-response scripting.
+
+You can create as many global environments as you wish, so you aren't limited to only one, and decide to store them locally on your computer, or leverage Cloud Sync or Git Sync for collaboration (based on your storage settings for your projects).
+
+## Environment priority order
+
+If you define the same environment variable across different levels of environments, both at a global environment level as well as on a given collection's environments, the lowest-level value will take priority.
+
+- Global Environment (base) *(highest-level)*
+- Global Environment (Sub-environment)
+- Collection Environment (base)
+- Collection Environment (Sub-environment)
+- Folder-level environment *(lowest-level)*
+
+
+## Secret environment variables
+
+Secret environment variables allow you to store sensitive data locally in encrypted form. These variables are masked by default, are not stored in plain text, and are only accessible within the vault namespace (e.g., `vault.foo` for a variable named `foo`).
+
+Insomnia does not persist the vault key automatically. If you lose your vault key, you can reset it, but all stored secrets will be permanently deleted for security reasons.
+
+## Managing secrets
+
+To store secrets:
+
+1. Generate a vault key from the **Preferences** page.
+2. Create a new **sub private environment** within any global environment.
+3. Add your secret variable in the sub private environment and set its type to `Secret`.
+
+## Using secrets in scripts
+
+By default, secret variables are not exposed to scripts. To enable access:
+
+- Go to **Preferences** > **General** > **Security**
+- Enable the option **Enable vault in scripts**
+
+Once enabled, you can access secrets in scripts using:
+
+```js
+insomnia.vault.get('<ENV_NAME>')
+```

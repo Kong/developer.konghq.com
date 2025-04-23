@@ -1252,6 +1252,21 @@ app/mesh/support-policy.md:
 app/_landing_pages/insomnia.yaml: 
   - /insomnia/get-started.md
   - /insomnia/install.md
+  - /insomnia/subscriptions.md
+  - /insomnia/subscription-management
+  - /insomnia/run-in-insomnia-button.md
+  - /insomnia/key-maps.md
+  - /insomnia/ai-runner.md
+app/_landing_pages/insomnia/collections.yaml:
+  - /insomnia/request-collections.md
+app/_landing_pages/insomnia/design.yaml:
+  - /insomnia/generate-code-snippet.md
+app/_landing_pages/design.yaml:
+  - /insomnia/get-started-with-documents.md
+  - /insomnia/migrate-from-designer.md
+app/_how-tos/create-a-design-ducment.md:
+  - /insomnia/get-started-with-documents.md
+  - /insomnia/design-documents.md
 app/_landing_pages/insomnia/documents.yaml: 
   - /insomnia/design-documents.md
   - /insomnia/get-started-with-documents.md
@@ -1259,11 +1274,23 @@ app/_landing_pages/insomnia/test.yaml:
   - /insomnia/request-collections.md
   - /insomnia/environment-variables.md
   - /insomnia/unit-testing.md
+  - /insomnia/cookie-management.md
 app/insomnia/api-specs.md:
   - /insomnia/design-documents.md
   - /insomnia/get-started-with-documents.md
+app/insomnia/allowlist.md:
+  - /insomnia/enterprise-ip-whitelist-guide.md
+  - /insomnia/proxy.md
 app/insomnia/requests.md:
   - /insomnia/requests.md
+  - /insomnia/post-csv-data.md
+  - /insomnia/soap-requests.md
+  - /insomnia/websockets.md
+  - /insomnia/request-timeouts.md
+  - /insomnia/encoding.md
+app/insomnia/request-authentication.md:
+  - /insomnia/ssl-validation.md
+  - /insomnia/authentication.md
 app/_how-tos/import-an-api-spec-as-a-document.md:
   - /insomnia/import-export-data.md
 app/_how-tos/chain-requests.md:
@@ -1293,7 +1320,8 @@ app/_how-tos/write-content-type-tests.md:
 app/_how-tos/write-http-status-tests.md:
   - /insomnia/pre-request-script.md
   - /insomnia/after-response-script.md
-  - /insomnia//insomnia/unit-testing.md
+  - /insomnia/insomnia/unit-testing.md
+  - /insomnia/insomnia/stress-testing.md
 app/_how-tos/write-headers-in-response-tests.md:
   - /insomnia/pre-request-script.md
   - /insomnia/after-response-script.md
@@ -1302,6 +1330,11 @@ app/_how-tos/create-an-insomnia-plugin.md:
   - /insomnia/introduction-to-plugins.md
 app/_landing_pages/insomnia/plugins.yaml:
   - /insomnia/introduction-to-plugins.md
+app/insomnia/plugin-reference.md:
+  - /insomnia/template-tags.md
+  - /insomnia/context-object-reference.md
+  - /insomnia/hooks-and-actions.md
+  - /insomnia/custom-themes.md
 app/_landing_pages/insomnia/security.yaml:
   - /insomnia/security-features.md
   - /insomnia/security-standards.md
@@ -1321,7 +1354,7 @@ app/insomnia/collected-data.md:
   - /insomnia/security-features.md
   - /insomnia/security-standards.md
   - /insomnia/signup-and-auth.md
-  - /insomnia/data-encryption.md
+  - /insomnia/analytics-collected.md
 app/insomnia/incident-response.md:
   - /insomnia/security-features.md
   - /insomnia/security-standards.md
@@ -1339,4 +1372,30 @@ app/insomnia/version-control.md:
 app/insomnia/scratch-pad.md:
   - /insomnia/scratchpad.md
 app/_how-tos/use-the-collection-runner.md:
-  - /insomnia/ai-runner.md
+  - /insomnia/collection-runner.md
+app/insomnia/environment-variables.md:
+  - /insomnia/folder-level-settings.md
+  - /insomnia/environment-variables.md
+  - /insomnia/global-environments.md
+  - /insomnia/secret-environment-variables.md
+app/insomnia/account-management.md:
+  - /insomnia/forgot-passphrase.md
+  - /insomnia/accounts.md
+  - /insomnia/organizations.md
+  - /insomnia/transfer-ownership-organization.md
+  - /insomnia/multiple-owners.md
+  - /insomnia/faq.md
+app/insomnia/invite-controls.md:
+  - /insomnia/invite-control.md
+app/insomnia/data-security.md:
+  - /insomnia/security-standards.md
+  - /insomnia/signup-and-auth.md
+app/insomnia/sbom.md:
+  - /insomnia/sbom.md
+app/_landing_pages/insomnia/authentication-authorization.yaml:
+  - /insomnia/authentication.md
+  - /insomnia/client-certificates.md
+app/insomnia/graphql-queries.md:
+  - app/insomnia/graphql-queries.md
+app/insomnia/external-vault.md:
+  - app/insomnia/external-vault-integration.md

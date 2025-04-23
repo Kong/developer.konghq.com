@@ -112,6 +112,11 @@ rows:
                   individual: false
                   team: true
                   ee: true
+                - title: Text editor key mapping
+                  oss: true
+                  individual: true
+                  team: true
+                  ee: true
                 - title: Enterprise SSO (SAML, OIDC)
                   oss: false
                   individual: false
@@ -156,6 +161,28 @@ rows:
                 text: Learn about security
                 url: /insomnia/security/
                 align: end
+      - blocks:
+        - type: card
+          config:
+            title: Run in Insomnia
+            description: |
+              Generate a **Run in Insomnia** button to start running requests in a few quick clicks. This button can be added to both HTML and Markdown documents. 
+            icon: /assets/icons/data-object.svg
+            cta:
+              text: Create Run Button
+              url: https://insomnia.rest/create-run-button
+              align: end
+      - blocks: 
+        - type: card
+          config: 
+            title: AI Runner
+            description: Accelerate and secure GenAI traffic to one or more LLMs
+            icon: /assets/icons/lock.svg
+            cta: 
+              text: Use AI Runner
+              url: https://app.insomnia.rest/ai
+              align: end
+              
       
 
 

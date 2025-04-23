@@ -21,6 +21,22 @@ products:
 
 breadcrumbs:
   - /insomnia/
+
+faqs:
+  - q: What should I do if I see SSL certificate errors in Insomnia?
+    a: |
+      If you encounter errors like:
+      ```
+      Error: unable to verify the first certificate
+      ```
+      or
+      ```
+      Error: Hostname/IP doesn't match certificate's altnames
+      ```
+      it likely means you're using an invalid or self-signed certificate—common with local development servers.
+
+      To bypass this, go to **Settings** and disable the **Validate SSL Certificates** option.
+
 ---
 
 ## What is request authentication in Insomnia?

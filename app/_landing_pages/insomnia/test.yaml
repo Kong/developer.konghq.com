@@ -35,6 +35,25 @@ rows:
 
   - header:
       type: h2
+      text: "Cookie Management"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Manage cookies across requests"
+              blocks:
+                - type: text
+                  text: |
+                    Insomnia automatically stores cookies from every response and sends them with future requests as needed, just like a web browser.
+
+                    You can manage cookies within each workspace by using the **Cookies** button, which opens the cookie manager. From there, you can view, modify, or delete cookies.
+
+                    Cookie sending and storing are enabled by default, but can be customized per request in the request settings dialog.
+
+                    Use [Request Template Tags](/insomnia/requests/) to reference cookie values in headers, bodies, or query parameters of other requests.
+  - header:
+      type: h2
       text: "Features"
     columns:
       - blocks:
