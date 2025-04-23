@@ -2,6 +2,8 @@ metadata:
   title: "Kong Mesh"
   content_type: landing_page
   description: Learn how Kong Mesh works and how to configure it.
+  products:
+    - mesh
   tags:
     - kong-mesh
     - service-mesh
