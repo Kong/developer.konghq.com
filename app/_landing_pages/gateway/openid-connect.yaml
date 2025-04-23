@@ -29,8 +29,8 @@ rows:
                     where the system you interact with can determine who you are and give you access to the correct resources.
 
                     {{site.base_gateway}} provides an [OpenID Connect plugin](/plugins/openid-connect/) with support for a large variety of auth flows and grants.
-                    With this plugin, you can leverage an IdP for both authentication and authorization without having to manage consumers or groups in {{site.base_gateway}}, 
-                    giving you the ability to provide secure developer access without additional operational overhead and risk. 
+                    With this plugin, you can leverage an IdP for both authentication and authorization without having to manage consumers or groups in {{site.base_gateway}}.
+                    This allows you to provide secure developer access without additional operational overhead and risk. 
 
                     The OIDC plugin also includes session management and support for the Financial-Grade API (FAPI) standard.
 
@@ -79,7 +79,7 @@ rows:
                   key: auth
                 - title: Description
                   key: description
-                - title: Examples in every supported tool
+                - title: Plugin example configuration
                   key: example
                 - title: How-to guide
                   key: howto
@@ -160,7 +160,7 @@ rows:
                   key: auth
                 - title: Description
                   key: description
-                - title: Examples in every supported tool
+                - title: Plugin example configuration
                   key: example
                 - title: How-to guide
                   key: howto
@@ -182,7 +182,7 @@ rows:
                 - auth: Consumer-based authorization
                   description: |
                     You can use {{site.base_gateway}} [Consumers](/gateway/entities/consumer/) for authorization and to dynamically map claim values to Consumers. 
-                  example: "[Consumer authorization example](/plugins/openid-connect/examples/consumer-auth/)"
+                  example: "[Consumer-based authorization example](/plugins/openid-connect/examples/consumer-auth/)"
                   howto: "[OpenID Connect and Keycloak with Consumers](/how-to/configure-oidc-with-consumers/)"
 
   - header:
@@ -259,8 +259,7 @@ rows:
             config:
               title: Debugging the OpenID Connect plugin
               description: |
-                The OIDC plugin is complex, and it can be difficult to get all the pieces in order. 
-                Learn how to debug the plugin configuration.
+                Learn how to debug the OIDC plugin configuration.
               icon: /assets/icons/debug.svg
               cta:
                 text: Debugging OIDC &rarr;
