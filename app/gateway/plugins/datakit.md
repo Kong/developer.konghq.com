@@ -134,9 +134,7 @@ provide data to several other nodes.
 
 Each node triggers at most once.
 
-A node only triggers when data is available to all its connected input ports;
-that is, only when all nodes connected to its inputs have finished
-executing.
+A node only triggers when data is available to all its connected input ports, only when all nodes connected to its inputs have finished executing.
 
 ### Node types
 

@@ -85,7 +85,7 @@ entities:
 
 ## 3. Enable Datakit
 
-Let's test out Datakit by combining responses from two third-party API calls, then returning directly to the client:
+Test out Datakit by combining responses from two third-party API calls, then returning the result directly back to the client:
 
 <!--vale off -->
 {% entity_examples %}
@@ -122,7 +122,7 @@ entities:
 
 ## 4. Validate
 
-Access the Service via the `/anything` path to test Datakit:
+Access the Service using the `/anything` path:
 
 {% validation request-check %}
 url: /anything
