@@ -62,6 +62,14 @@ module.exports = {
           "rgb(var(--color-semantic-purple-primary), <alpha-value>)",
         "semantic-purple-secondary":
           "rgb(var(--color-semantic-purple-secondary), <alpha-value>)",
+        "semantic-orange-primary":
+          "rgb(var(--color-semantic-orange-primary), <alpha-value>)",
+        "semantic-orange-secondary":
+          "rgb(var(--color-semantic-orange-secondary), <alpha-value>)",
+        "semantic-teal-primary":
+          "rgb(var(--color-semantic-teal-primary), <alpha-value>)",
+        "semantic-teal-secondary":
+          "rgb(var(--color-semantic-teal-secondary), <alpha-value>)",
       },
       textColor: {
         primary: "rgb(var(--color-text-primary), <alpha-value>)",
