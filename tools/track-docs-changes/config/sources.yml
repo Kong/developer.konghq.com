@@ -346,6 +346,11 @@ app/_how-tos/kic-plugin-mtls.md:
 app/_how-tos/kic-plugin-oidc.md:
   - app/_src/kubernetes-ingress-controller/plugins/oidc.md
 
+app/kubernetes-ingress-controller/faq/upgrading-ingress-controller.md:
+  - app/_src/kubernetes-ingress-controller/upgrade/kic.md
+app/kubernetes-ingress-controller/faq/upgrading-gateway.md:
+  - app/_src/kubernetes-ingress-controller/upgrade/gateway.md
+
 # plugins
 app/_kong_plugins/session/changelog.md:
   - app/_hub/kong-inc/session/_changelog.md
