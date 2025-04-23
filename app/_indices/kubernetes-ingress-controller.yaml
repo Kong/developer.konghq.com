@@ -54,6 +54,10 @@ sections:
     items:
       - path: /kubernetes-ingress-controller/custom-plugins/
       - path: /kubernetes-ingress-controller/multiple-auth-methods/
+      - path: /kubernetes-ingress-controller/acl/
+      - path: /kubernetes-ingress-controller/rate-limiting/
+      - path: /kubernetes-ingress-controller/mtls/
+      - path: /kubernetes-ingress-controller/oidc/
   - title: Reference
     allow_duplicates: true
     items:

@@ -337,6 +337,14 @@ app/_how-tos/kic-plugin-custom.md:
   - app/_src/kubernetes-ingress-controller/plugins/custom.md
 app/_how-tos/kic-plugin-authentication.md:
   - app/_src/kubernetes-ingress-controller/plugins/authentication.md
+app/_how-tos/kic-plugin-acl.md:
+  - app/_src/kubernetes-ingress-controller/plugins/acl.md
+app/_how-tos/kic-plugin-rate-limiting.md:
+  - app/_src/kubernetes-ingress-controller/plugins/rate-limiting.md
+app/_how-tos/kic-plugin-mtls.md:
+  - app/_src/kubernetes-ingress-controller/plugins/mtls.md
+app/_how-tos/kic-plugin-oidc.md:
+  - app/_src/kubernetes-ingress-controller/plugins/oidc.md
 
 # plugins
 app/_kong_plugins/session/changelog.md:
