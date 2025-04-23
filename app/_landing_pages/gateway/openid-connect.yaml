@@ -96,7 +96,7 @@ rows:
                     The OpenID Connect plugin can issue a session cookie for session authentication, which you can retrieve using any other supported flow or grant.
                     <br><br>
                     [Workflow diagram &rarr;](/plugins/openid-connect/#session-authentication-workflow)
-                  example: "[Session auth flow example](/plugins/openid-connect/examples/session/)"
+                  example: "[Session auth flow example](/plugins/openid-connect/examples/session-auth/)"
                   howto: "[OpenID Connect and Keycloak with session authentication](/how-to/configure-oidc-with-session-auth/)"
                 - auth: Client Credentials grant
                   description: |
@@ -111,7 +111,7 @@ rows:
                     <br><br>
                     [Workflow diagram &rarr;](/plugins/openid-connect/#jwt-access-token-authentication-flow)
                   example: "[JWT Access Token auth example](/plugins/openid-connect/examples/jwt-access-token/)"
-                  howto: "[OpenID Connect and Keycloak with the JWT access token flow](/how-to/configure-oidc-with-jwt-access-token/)"
+                  howto: "[OpenID Connect and Keycloak with the JWT access token flow](/how-to/configure-oidc-with-jwt-auth/)"
                 - auth: Kong OAuth Token authentication
                   description: |
                     The OpenID Connect plugin can verify the tokens issued by the OAuth 2.0 plugin, then use them for authentication.
@@ -124,14 +124,14 @@ rows:
                     Validates an access token against the IdP introspection endpoint before passing the token as a credential to the upstream service.
                     <br><br>
                     [Workflow diagram &rarr;](/plugins/openid-connect/#introspection-authentication-flow)
-                  example: "[Introspection auth flow example](/plugins/openid-connect/examples/introspection/)"
+                  example: "[Introspection auth flow example](/plugins/openid-connect/examples/introspection-auth/)"
                   howto: "[OpenID Connect and Keycloak with introspection auth](/how-to/configure-oidc-with-introspection/)"
                 - auth: User Info authentication
                   description: |
                     Validates an access token against the IdP user info endpoint before passing the token as a credential to the upstream service.
                     <br><br>
                     [Workflow diagram &rarr;](/plugins/openid-connect/#user-info-authentication-flow)
-                  example: "[User Info auth example](/plugins/openid-connect/examples/user-info/)"
+                  example: "[User Info auth example](/plugins/openid-connect/examples/user-info-auth/)"
                   howto: "[OpenID Connect and Keycloak with user info auth](/how-to/configure-oidc-with-user-info-auth/)"
                 - auth: Refresh Token grant
                   description: |
