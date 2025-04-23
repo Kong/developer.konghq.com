@@ -1,20 +1,25 @@
 title: OpenID Connect with Curity
 description: |
   Integrate Kong Gateway and the Curity Identity Server for introspection using the
-  Phantom Token pattern.
+  [Phantom Token pattern](https://curity.io/resources/learn/phantom-token-pattern).
+
+  The OpenID Connect plugin introspects an incoming opaque access token and receives a JWT in the introspection response from the Curity Identity Server. 
+  As part of the introspection, the OpenID Connect plugin validates that required scopes are available in the introspected token. 
+  * If the correct scopes are missing, access to the requested upstream service is denied.
+  * If access is granted, the JWT from the introspection response is added to a header and forwarded to the upstream service where it can be consumed.
 
 weight: 797
 
 requirements:
-  - Curity Identity Server installed.
-  - An introspection endpoint configured with the Token Procedure Approach.
+  - "[Curity Identity Server installed](https://curity.io/resources/getting-started)."
+  - "An introspection endpoint configured with the [Phantom Token Approach](https://curity.io/resources/learn/introspect-with-phantom-token/)."
 
 config:
-  issuer: $ISSUER
-  client_id: 
-    - $CLIENT_ID
-  client_secret: 
-    - $CLIENT_SECRET
+  issuer: ${issuer}
+  client_id:
+    - ${client-id}
+  client_secret:
+    - ${client-secret}
   scopes_required:
     - openid
   hide_credentials: true
@@ -27,15 +32,17 @@ config:
     - introspection
 
 variables: 
-  issuer: 
-    value: "https://idsvr.example.com/oauth/v2/oauth-anonymous"
-  client_id: 
+  issuer:
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. 
+      For Curity, that typically looks like this: `https://idsvr.example.com/oauth/v2/oauth-anonymous`.
+  client-id:
     value: $CLIENT_ID
-    description: Replace with the client ID of your IdP. The OpenID Connect plugin uses this value when it calls authenticated endpoints on the identity provider.
-  client_secret: 
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
+  client-secret:
     value: $CLIENT_SECRET
-    description: Replace with your IdP client secret.
-
+    description: The client secret needed to connect to Curity.
 
 tools:
   - deck
