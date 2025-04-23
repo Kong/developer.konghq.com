@@ -1,7 +1,7 @@
 ---
 title: Insomnia Proxy and Allowlist
 
-description: A reference containing allow listable domains to ensure Insomnia is operating correctly within your organization.
+description: A reference containing allowlistable domains to ensure Insomnia is operating correctly within your organization.
 
 content_type: reference
 layout: reference
