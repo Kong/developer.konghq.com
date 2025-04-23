@@ -1,6 +1,5 @@
 ---
 title: kong.websocket.client
-source_url: https://github.com/Kong/kong-ee/blob/master/kong/enterprise_edition/pdk/websocket.lua
 ---
 
 Client WebSocket PDK functions.
