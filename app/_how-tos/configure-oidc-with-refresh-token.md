@@ -3,6 +3,8 @@ title: Configure OpenID Connect with refresh token
 content_type: how_to
 
 related_resources:
+  - text: OpenID Connect in {{site.base_gateway}}
+    url: /gateway/openid-connect/
   - text: Authentication in {{site.base_gateway}}
     url: /gateway/authentication/
   - text: OpenID Connect authentication flows and grants

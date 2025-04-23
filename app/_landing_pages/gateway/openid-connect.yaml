@@ -1,0 +1,293 @@
+metadata:
+  title: OpenID Connect in {{site.base_gateway}}
+  content_type: landing_page
+  description: Learn about using OpenID Connect with {{site.base_gateway}}.
+  breadcrumbs:
+    - /gateway/
+  products:
+    - gateway
+  works_on:
+  - on-prem
+  - konnect
+  tags:
+  - openid-connect
+  - authentication
+  - authorization
+rows:
+  - header:
+      type: h1
+      text: "OpenID Connect with {{site.base_gateway}}"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    OpenID Connect (OIDC) is a standard built on top of OAuth and JWT (JSON Web Token). 
+                    It provides authentication and authorization, letting you connect {{site.base_gateway}} to an identity provider (IdP),
+                    where the system you interact with can determine who you are and give you access to the correct resources.
+
+                    {{site.base_gateway}} provides an [OpenID Connect plugin](/plugins/openid-connect/) with support for a large variety of auth flows and grants.
+                    With this plugin, you can leverage an IdP for both authentication and authorization without having to manage consumers or groups in {{site.base_gateway}}, 
+                    giving you the ability to provide secure developer access without additional operational overhead and risk. 
+
+                    The OIDC plugin also includes session management and support for the Financial-Grade API (FAPI) standard.
+
+
+  - header:
+      type: h2
+      text: "Get started with OIDC"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Try the authorization code flow
+            description: |
+              The authorization code flow is one of the most commonly used workflows with OpenID Connect. 
+              
+              Set it up with Keycloak as a sample identity provider (IdP) to test out the OIDC plugin.
+            icon: /assets/icons/graduation.svg
+            cta:
+              text: Configure your first OIDC implementation &rarr;
+              url: /how-to/configure-oidc-with-auth-code-flow/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Review supported authentication flows and grants
+            description: Learn about the authentication options that the OIDC plugin supports, and choose the one that suits your use case.
+            icon: /assets/icons/lock.svg
+            cta:
+              text: Learn about supported flows and grants &rarr;
+              url: "#authentication-flows-and-grants"
+              align: end
+      - blocks:
+        - type: plugin
+          config:
+            slug: openid-connect
+
+  - header:
+      type: h2
+      text: "Authentication flows and grants"
+    columns:
+      - blocks:
+          - type: table
+            config:
+              columns:
+                - title: Authentication flow or grant
+                  key: auth
+                - title: Description
+                  key: description
+                - title: Examples in every supported tool
+                  key: example
+                - title: How-to guide
+                  key: howto
+              rows:
+                - auth: Authorization Code flow
+                  description: |
+                    In an Authorization Code flow, clients exchange an authorization code for an access token.
+                    <br><br>
+                    [Workflow diagram &rarr;](/plugins/openid-connect/#authorization-code-flow)
+                  example: "[Authorization Code flow example](/plugins/openid-connect/examples/authorization-code/)"
+                  howto: "[OpenID Connect and Keycloak with the auth code flow](/how-to/configure-oidc-with-auth-code-flow/)"
+                - auth: Session authentication
+                  description: |
+                    The OpenID Connect plugin can issue a session cookie for session authentication, which you can retrieve using any other supported flow or grant.
+                    <br><br>
+                    [Workflow diagram &rarr;](/plugins/openid-connect/#session-authentication-workflow)
+                  example: "[Session auth flow example](/plugins/openid-connect/examples/session/)"
+                  howto: "[OpenID Connect and Keycloak with session authentication](/how-to/configure-oidc-with-session-auth/)"
+                - auth: Client Credentials grant
+                  description: |
+                    With the Client Credentials grant, clients can get an access token by providing a client ID and client secret to an IdP.
+                    <br><br>
+                    [Workflow diagram &rarr;](/plugins/openid-connect/#client-credentials-grant-workflow)
+                  example: "[Client Credentials grant example](/plugins/openid-connect/examples/client-credentials/)"
+                  howto: "[OpenID Connect and Keycloak with the client credentials grant](/how-to/configure-oidc-with-client-credentials/)"
+                - auth: JWT Access Token authentication
+                  description: |
+                    When a user authenticates and authorizes access, the IdP sends a JWT access token, which can be passed as a credential to the upstream service.
+                    <br><br>
+                    [Workflow diagram &rarr;](/plugins/openid-connect/#jwt-access-token-authentication-flow)
+                  example: "[JWT Access Token auth example](/plugins/openid-connect/examples/jwt-access-token/)"
+                  howto: "[OpenID Connect and Keycloak with the JWT access token flow](/how-to/configure-oidc-with-jwt-access-token/)"
+                - auth: Kong OAuth Token authentication
+                  description: |
+                    The OpenID Connect plugin can verify the tokens issued by the OAuth 2.0 plugin, then use them for authentication.
+                    <br><br>
+                    [Workflow diagram &rarr;](/plugins/openid-connect/#kong-oauth-token-authentication-flow)
+                  example: "[Kong OAuth Token auth example](/plugins/openid-connect/examples/kong-oauth-token/)"
+                  howto: "[OpenID Connect and Keycloak with the Kong Oauth2 plugin](/how-to/configure-oidc-with-kong-oauth2/)"
+                - auth: Introspection authentication
+                  description: |
+                    Validates an access token against the IdP introspection endpoint before passing the token as a credential to the upstream service.
+                    <br><br>
+                    [Workflow diagram &rarr;](/plugins/openid-connect/#introspection-authentication-flow)
+                  example: "[Introspection auth flow example](/plugins/openid-connect/examples/introspection/)"
+                  howto: "[OpenID Connect and Keycloak with introspection auth](/how-to/configure-oidc-with-introspection/)"
+                - auth: User Info authentication
+                  description: |
+                    Validates an access token against the IdP user info endpoint before passing the token as a credential to the upstream service.
+                    <br><br>
+                    [Workflow diagram &rarr;](/plugins/openid-connect/#user-info-authentication-flow)
+                  example: "[User Info auth example](/plugins/openid-connect/examples/user-info/)"
+                  howto: "[OpenID Connect and Keycloak with user info auth](/how-to/configure-oidc-with-user-info-auth/)"
+                - auth: Refresh Token grant
+                  description: |
+                    When the client has a refresh token available, the IdP can refresh an expired token and replace it with a new one without user interaction.
+                    <br><br>
+                    [Workflow diagram &rarr;](/plugins/openid-connect/#refresh-token-grant-workflow)
+                  example: "[Refresh Token grant example](/plugins/openid-connect/examples/refresh-token/)"
+                  howto: "[OpenID Connect and Keycloak with the client credentials grant](/how-to/configure-oidc-with-refresh-token/)"
+                - auth: Password grant
+                  description: |
+                    With the Password grant, clients can get an access token by providing a username and password to an IdP.
+                    <br><br>
+                    [Workflow diagram &rarr;](/plugins/openid-connect/#password-grant-workflow)
+                  example: "[Password grant example](/plugins/openid-connect/examples/password/)"
+                  howto: "[OpenID Connect and Keycloak with the password grant](/how-to/configure-oidc-with-password-grant/)"
+  
+  - header:
+      type: h2
+      text: "Authorization methods"
+    columns:
+      - blocks:
+          - type: table
+            config:
+              columns:
+                - title: Authorization method
+                  key: auth
+                - title: Description
+                  key: description
+                - title: Examples in every supported tool
+                  key: example
+                - title: How-to guide
+                  key: howto
+              rows:
+                - auth: Claims-based authorization
+                  description: |
+                    Claims-based authorization uses a pair of options to manage claims verification during authorization.
+                    These pairs can be based on scopes, audience, groups, or roles claims. 
+                    <br><br>
+                    Learn more about [claims-based auth pairs](/plugins/openid-connect/#claims-based-authorization) in the OpenID Connect plugin documentation.
+                  example: "[Claims-based authorization example](/plugins/openid-connect/examples/claims-based-auth/)"
+                  howto: "[OpenID Connect and Keycloak with claims-based authorization](/how-to/configure-oidc-with-claims-based-auth/)"
+                - auth: ACL-based authorization
+                  description: |
+                    You can integrate the OpenID Connect plugin with the [ACL plugin](/plugins/acl/), 
+                    which provides access control functionality in the form of allow and deny lists.
+                  example: "[ACL-based authorization example](/plugins/openid-connect/examples/acl-auth/)"
+                  howto: "[OpenID Connect and Keycloak with the ACL plugin](/how-to/configure-oidc-with-acl-auth/)"
+                - auth: Consumer-based authorization
+                  description: |
+                    You can use {{site.base_gateway}} [Consumers](/gateway/entities/consumer/) for authorization and to dynamically map claim values to Consumers. 
+                  example: "[Consumer authorization example](/plugins/openid-connect/examples/consumer-auth/)"
+                  howto: "[OpenID Connect and Keycloak with Consumers](/how-to/configure-oidc-with-consumers/)"
+
+  - header:
+      type: h2
+      text: Examples with other supported IdPs
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: "Auth0"
+            icon: /assets/icons/third-party/auth0.svg
+            cta:
+              text: Set up OIDC with Auth0 &rarr;
+              url: "/plugins/openid-connect/examples/auth0/"  
+      - blocks:
+        - type: card
+          config:
+            title: "Amazon Cognito"
+            icon: /assets/icons/aws.svg
+            cta:
+              text: Set up OIDC with Cognito &rarr;
+              url: "/plugins/openid-connect/examples/auth0/"  
+      - blocks:
+        - type: card
+          config:
+            title: "Azure AD"
+            icon: /assets/icons/azure.svg
+            cta:
+              text: Set up OIDC with Azure AD &rarr;
+              url: "/plugins/openid-connect/examples/auth0/"
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: "Curity Identity Server"
+            icon: /assets/icons/third-party/curity.svg
+            cta:
+              text: Set up OIDC with Curity &rarr;
+              url: "/plugins/openid-connect/examples/curity/"  
+      - blocks:
+        - type: card
+          config:
+            title: "Google"
+            icon: /assets/icons/google-cloud.svg
+            cta:
+              text: Set up OIDC with Google &rarr;
+              url: "/plugins/openid-connect/examples/google/"  
+      - blocks:
+        - type: card
+          config:
+            title: "Okta"
+            icon: /assets/icons/okta.svg
+            cta:
+              text: Set up OIDC with Okta &rarr;
+              url: "/plugins/openid-connect/examples/okta/"
+
+  - header:
+      type: h2
+      text: References
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Financial-grade API
+              description: |
+                The OpenID Connect plugin supports various features of the FAPI standard, aimed to protect APIs that expose high-value and sensitive data.
+              icon: /assets/icons/security.svg
+              cta:
+                text: See all supported features &rarr;
+                url: /plugins/openid-connect/#financial-grade-api-fapi
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Debugging the OpenID Connect plugin
+              description: |
+                The OIDC plugin is complex, and it can be difficult to get all the pieces in order. 
+                Learn how to debug the plugin configuration.
+              icon: /assets/icons/debug.svg
+              cta:
+                text: Debugging OIDC &rarr;
+                url: /plugins/openid-connect/#debugging-the-oidc-plugin
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Supported identity providers
+              description: |
+                The plugin has been tested with several OpenID Connect providers.
+              icon: /assets/icons/plug.svg
+              cta:
+                text: See all tested identity providers &rarr;
+                url: /plugins/openid-connect/#supported-identity-providers
+                align: end
+
+  - header:
+      type: h2
+      text: How-to guides
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tags:
+                - openid-connect
+              products:
+                - gateway
+              quantity: 6
+              allow_empty: true

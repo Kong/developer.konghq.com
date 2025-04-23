@@ -1,0 +1,1 @@
+{% include components/table.html columns=include.config.columns rows=include.config.rows item_title=include.config.item_title %}
