@@ -108,7 +108,7 @@ curl -X POST "https://localhost:8443/anything/oauth2/token" \
 
 Export the token to an environment variable:
 ```sh
-export TOKEN=<access_token>
+export TOKEN={access_token}
 ```
 
 ## 6. Validate
