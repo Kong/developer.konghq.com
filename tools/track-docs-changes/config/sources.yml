@@ -1,36 +1,36 @@
 # api pages
 app/_api/gateway/admin-ee/_index.md:
- - app/_api/gateway/admin-ee/_index.md
+  - app/_api/gateway/admin-ee/_index.md
 app/_api/gateway/admin-oss/_index.md:
- - app/_api/gateway/admin-oss/_index.md
+  - app/_api/gateway/admin-oss/_index.md
 app/_api/gateway/dev-portal/_index.md:
- - app/_api/dev-portal/_index.md
+  - app/_api/dev-portal/_index.md
 app/_api/gateway/status/_index.md:
- - app/_api/gateway/status/_index.md
+  - app/_api/gateway/status/_index.md
 app/_api/konnect/api-products/_index.md:
- - app/_api/konnect/api-products/_index.md
+  - app/_api/konnect/api-products/_index.md
 app/_api/konnect/analytics-requests/_index.md:
- - app/_api/konnect/api-requests/_index.md
+  - app/_api/konnect/api-requests/_index.md
 app/_api/konnect/application-auth-strategies/_index.md:
- - app/_api/konnect/application-auth-strategies/_index.md
+  - app/_api/konnect/application-auth-strategies/_index.md
 app/_api/konnect/audit-logs/_index.md:
- - app/_api/konnect/audit-logs/_index.md
+  - app/_api/konnect/audit-logs/_index.md
 app/_api/konnect/cloud-gateways/_index.md:
- - app/_api/konnect/cloud-gateways/_index.md
+  - app/_api/konnect/cloud-gateways/_index.md
 app/_api/konnect/control-planes-config/_index.md:
- - app/_api/konnect/control-plane-configuration/_index.md
+  - app/_api/konnect/control-plane-configuration/_index.md
 app/_api/konnect/control-planes/_index.md:
- - app/_api/konnect/control-planes/_index.md
+  - app/_api/konnect/control-planes/_index.md
 app/_api/konnect/dev-portal/_index.md:
- - app/_api/konnect-portal/_index.md
+  - app/_api/konnect-portal/_index.md
 app/_api/konnect/identity/_index.md:
- - app/_api/konnect/identity-management/_index.md
+  - app/_api/konnect/identity-management/_index.md
 app/_api/konnect/mesh-control-planes/_index.md:
- - app/_api/konnect/mesh-manager/_index.md
+  - app/_api/konnect/mesh-manager/_index.md
 app/_api/konnect/portal-management/_index.md:
- - app/_api/konnect/portal-management/_index.md
+  - app/_api/konnect/portal-management/_index.md
 app/_api/konnect/ksearch/_index.md:
- - app/_api/konnect/search/_index.md
+  - app/_api/konnect/search/_index.md
 
 # entities
 app/_gateway_entities/consumer_group.md:
@@ -118,10 +118,9 @@ app/_gateway_entities/admin.md:
 app/_gateway_entities/partial.md:
   - app/_src/gateway/kong-enterprise/partials.md
 
-
 # how-tos
 ## gateway
-app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md: 
+app/_how-tos/add-rate-limiting-tiers-with-kong-gateway.md:
   - app/_hub/kong-inc/rate-limiting-advanced/how-to/_index.md
 app/_how-tos/multiple-rate-limits-window-sizes.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
@@ -165,7 +164,7 @@ app/_how-tos/verify-signatures-for-signed-images.md:
   - app/_src/gateway/kong-enterprise/signed-images.md
 app/_how-tos/verify-build-provenance-for-signed-images.md:
   - app/_src/gateway/kong-enterprise/provenance-verification.md
-app/_how-tos/proxy-tls-passthrough.md: 
+app/_how-tos/proxy-tls-passthrough.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_how-tos/configure-fallback-route.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
@@ -314,10 +313,6 @@ app/kubernetes-ingress-controller/deployment-topologies/db-backed.md:
 #  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
 app/kubernetes-ingress-controller/troubleshooting/failure-modes.md:
   - app/_src/kubernetes-ingress-controller/reference/failure-modes.md
-app/kubernetes-ingress-controller/observability/prometheus.md:
-  - app/_src/kubernetes-ingress-controller/production/observability/prometheus.md
-app/kubernetes-ingress-controller/observability/events.md:
-  - app/_src/kubernetes-ingress-controller/production/observability/events.md
 
 app/kubernetes-ingress-controller/faq/custom-nginx-conf.md:
   - app/_src/kubernetes-ingress-controller/reference/faq/nginx.conf.md
@@ -345,6 +340,12 @@ app/_how-tos/kic-plugin-mtls.md:
   - app/_src/kubernetes-ingress-controller/plugins/mtls.md
 app/_how-tos/kic-plugin-oidc.md:
   - app/_src/kubernetes-ingress-controller/plugins/oidc.md
+app/_how-tos/kic-observability-promethus-grafana.md:
+  - app/_src/kubernetes-ingress-controller/production/observability/prometheus-grafana.md
+app/kubernetes-ingress-controller/observability/events.md:
+  - app/_src/kubernetes-ingress-controller/production/observability/events.md
+app/kubernetes-ingress-controller/observability/prometheus.md:
+  - app/_src/kubernetes-ingress-controller/production/observability/prometheus.md
 
 # plugins
 app/_kong_plugins/session/changelog.md:
@@ -495,11 +496,11 @@ app/_kong_plugins/ai-prompt-guard/index.md:
 app/_kong_plugins/ai-prompt-guard/changelog.md:
   - app/_hub/kong-inc/ai-prompt-guard/_changelog.md
 app/_kong_plugins/ai-prompt-guard/examples/allow-and-deny.yaml:
- - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
+  - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
 app/_kong_plugins/ai-prompt-guard/examples/allow-only.yaml:
- - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
+  - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
 app/_kong_plugins/ai-prompt-guard/examples/deny-only.yaml:
- - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
+  - app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md
 app/_kong_plugins/canary/index.md:
   - app/_hub/kong-inc/canary/overview/_index.md
 app/_kong_plugins/canary/changelog.md:
@@ -956,7 +957,7 @@ app/_landing_pages/ai-gateway/ai-providers.yaml:
 app/_landing_pages/dev-portal.yaml:
   - app/dev-portal/index.md
 
-# references 
+# references
 app/gateway/rate-limiting/strategies.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
@@ -1075,8 +1076,6 @@ app/_landing_pages/gateway/traffic-control-and-routing.yaml:
 app/gateway/incremental-config-sync.md:
   - app/_src/gateway/production/deployment-topologies/hybrid-mode/incremental-config-sync.md
 
-
-
 # policies
 app/gateway/vulnerabilities.md:
   - app/_src/gateway/support/vulnerability-patching-process.md
@@ -1100,8 +1099,6 @@ app/serverless-gateways/index.md:
   - app/konnect/gateway-manager/serverless-gateways/custom-dns.md
   - app/konnect/gateway-manager/serverless-gateways/securing-backend-traffic.md
 
-
-
 app/_landing_pages/gateway-manager.yaml:
   - app/konnect/gateway-manager/index.md
 
@@ -1120,7 +1117,6 @@ app/gateway-manager/control-plane-groups.md:
   - app/konnect/gateway-manager/control-plane-groups/conflicts.md
   - app/konnect/gateway-manager/control-plane-groups/migrate.md
 
-
 app/konnect-platform/konnect-account.md:
   - app/konnect/org-management/deactivation.md
 app/konnect-platform/teams-and-roles.md:
@@ -1135,8 +1131,6 @@ app/service-catalog-integrations.yaml:
 
 app/_landing_pages/dedicated-cloud-gateways.yaml:
   - app/konnect/gateway-manager/dedicated-cloud-gateways/index.md
-
-
 
 app/dedicated-cloud-gateways/azure-peering.md:
   - app/konnect/gateway-manager/dedicated-cloud-gateways/azure-peering.md
@@ -1245,8 +1239,6 @@ app/deck/gateway/deduplicate.md:
 app/deck/gateway/reset.md:
   - app/deck/gateway/reset.md
 
-
-
 ## Mesh
 
 app/mesh/acm-private-ca-policy.md:
@@ -1254,17 +1246,14 @@ app/mesh/acm-private-ca-policy.md:
 app/mesh/access-audit.md:
   - app/_src/mesh/features/access-audit.md
 
-
 app/mesh/cert-manager.md:
   - app/_src/mesh/features/cert-manager.md
-
 
 app/mesh/multi-zone-authentication.md:
   - app/_src/mesh/features/kds-auth.md
 
 app/mesh/license.md:
   - app/_src/mesh/production/cp-deployment/license.md
-
 
 app/mesh/sbom.md:
   - app/_src/mesh/sbom.md
