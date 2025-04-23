@@ -70,7 +70,6 @@ iterations: 6
 url: '/echo'
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
-grep: "(< RateLimit-Remaining|< HTTP)"
 message: null
 output:
   explanation: |
