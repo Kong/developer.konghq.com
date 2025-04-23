@@ -50,6 +50,8 @@ cleanup:
 
 min_version:
     gateway: '3.4'
+
+automated_tests: false
 ---
 
 ## 1. Create an HTTP Service and Route to handle token creation
