@@ -27,7 +27,6 @@ description: Send requests to third-party APIs and use the response data to seed
 
 works_on:
   - on-prem
-  - konnect
 
 products:
   - gateway
@@ -37,10 +36,6 @@ topologies:
     - hybrid
     - db-less
     - traditional
-  konnect_deployments:
-    - hybrid
-    - cloud-gateways
-    - serverless
 
 min_version:
   gateway: '3.9'
