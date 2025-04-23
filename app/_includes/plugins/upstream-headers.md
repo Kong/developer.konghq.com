@@ -8,7 +8,7 @@ can identify the Consumer in your code:
 * `X-Consumer-Username`: The `username` of the Consumer (if set).
 * `X-Credential-Identifier`: The identifier of the credential (only if the Consumer is not the `anonymous` Consumer).
 * `X-Anonymous-Consumer`: Is set to `true` if authentication fails, and the `anonymous` Consumer is set instead.
-{% if include.name == "OAuth2" %}
+{% if include.name == "OAuth 2.0 Authentication" %}
 * `X-Authenticated-Scope`: The comma-separated list of scopes that the end user has authenticated, if available (only if the Consumer is not the 'anonymous' Consumer).
 * `X-Authenticated-Userid`: The logged-in user ID who has granted permission to the client (only if the Consumer is not the 'anonymous' Consumer).
 {% endif %}
