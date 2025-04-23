@@ -12,6 +12,9 @@
 {% navtab "Gateway API" %}
 {% assign gwapi_version = "v1" %}
 
+{:.info}
+> The Gateway API CRDs must be installed _before_ {{ site.kic_product_name }} to use an `HTTPRoute`
+
 ```bash
 echo "
 apiVersion: gateway.networking.k8s.io/{{ gwapi_version }}

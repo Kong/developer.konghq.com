@@ -22,7 +22,7 @@ module Jekyll
               super(example_drop:)
               @foreign_keys = []
               @foreign_key_names = {}
-              @other_plugins = ''
+              @other_plugins = nil
               @skip_annotate = false
             end
 

@@ -32,7 +32,17 @@ module Jekyll
       if example['indent']
         # Indent the output if specified in the example
         indent = ' ' * example['indent'].to_i
-        output = output.split("\n").map { |line| "#{indent}#{line}" }.join("\n")
+        output = output.split("\n").map { |line| "#{indent}#{line}" }
+
+        # Trim indent from ending line in code blocks
+        output.each do |line|
+          if line.start_with?("#{indent}</code>")
+            line.sub!(/^#{indent}/, '') # Remove the indent from the line
+          end
+        end
+
+
+        output = output.join("\n")
       end
 
       output
