@@ -155,7 +155,7 @@ client and your upstream services:
 - `Connection: Upgrade`
 - `Upgrade: websocket`
 
-For more information, see the [Proxy WebSocket traffic](proxy-websocket-traffic) section.
+For more information, see the [Proxy WebSocket traffic](#proxy-websocket-traffic) section.
 
 ## Errors and retries
 
