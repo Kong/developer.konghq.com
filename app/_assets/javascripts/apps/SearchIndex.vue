@@ -1,7 +1,7 @@
 <template>
     <ais-instant-search :search-client="searchClient" :index-name="indexName" :routing="routing" :future="{ preserveSharedStateOnUnmount: true }">
       <ais-configure :hits-per-page.camel="12" :filters="searchParameters"/>
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-16  grid-rows-[1rem_auto_auto]">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-16">
           <div id="filters" class="filters md:flex" >
             <MobileDrawer :areFiltersOpen="areFiltersOpen" @toggleDrawer="toggleFilters">
                 <ais-panel>
@@ -50,7 +50,8 @@
             </MobileDrawer>
           </div>
 
-            <div class="flex md:flex-col md:col-span-3 md:col-start-2 w-full justify-between gap-2">
+          <div class="searchbox-results-container">
+            <div class="flex md:flex-col md:col-span-3 w-full justify-between gap-2">
                 <ais-search-box>
                     <template v-slot="{ currentRefinement, isSearchStalled, refine }">
                         <div class="filter-results-field">
@@ -92,7 +93,8 @@
                 </div>
                 </template>
             </ais-state-results>
-            <ais-pagination :padding="2" :class-names="{ 'ais-Pagination-link': 'ais-Pagination-link no-icon'}"/>
+        </div>
+        <ais-pagination :padding="2" :class-names="{ 'ais-Pagination-link': 'ais-Pagination-link no-icon'}"/>
       </div>
 
     </ais-instant-search>

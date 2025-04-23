@@ -539,6 +539,10 @@
   .filter-results-field__input {
     @apply flex gap-2 bg-secondary rounded-md border border-brand-saturated/40 py-2 px-3 md:pl-11 items-center w-full;
   }
+
+  .searchbox-results-container {
+    @apply grid md:grid-cols-subgrid col-span-3 gap-16 md:grid-rows-[1rem_auto_auto];
+  }
 }
 
 .ais-InstantSearch {
@@ -550,7 +554,7 @@
 }
 
 .ais-Pagination {
-  @apply flex flex-col md:col-span-3 md:col-start-2 w-full gap-16;
+  @apply flex flex-col md:col-span-3 md:col-start-2 col-span-3 w-full gap-16;
 }
 
 .ais-Pagination-list {
@@ -598,7 +602,7 @@
 }
 
 .ais-StateResults {
-  @apply flex flex-col md:col-span-3  md:col-start-2 w-full gap-16;
+  @apply flex flex-col md:col-span-3 w-full gap-16;
 }
 
 .modal-overflow {

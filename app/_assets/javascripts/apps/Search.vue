@@ -2,7 +2,7 @@
   <ais-instant-search :search-client="searchClient" :index-name="indexName" :routing="routing" :future="{ preserveSharedStateOnUnmount: true }">
     <ais-configure :hits-per-page.camel="12" :filters="contentTypeFilters" />
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-16 grid-rows-[1rem_auto_auto]">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-16">
         <div id="filters" class="filters md:flex">
             <MobileDrawer :areFiltersOpen="areFiltersOpen" @toggleDrawer="toggleFilters">
 
@@ -75,53 +75,55 @@
         </MobileDrawer>
         </div>
 
-        <div class="flex md:flex-col md:col-span-3 md:col-start-2 w-full justify-between gap-2">
-            <ais-search-box>
-                <template v-slot="{ currentRefinement, isSearchStalled, refine }">
-                    <div class="filter-results-field">
-                        <svg class="filter-results-field__image" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 18V16H14V18H10ZM6 13V11H18V13H6ZM3 8V6H21V8H3Z" fill="rgb(var(--color-text-terciary))"/>
-                        </svg>
-                        <input type="search" class="filter-results-field__input" placeholder="Filter results" :value="currentRefinement" @input="refine($event.currentTarget.value)">
-                    </div>
-                </template>
-            </ais-search-box>
-            <button class="flex md:hidden items-center gap-2 rounded-md border py-2 px-4 bg-secondary border-brand-saturated/40 text-sm" @click="toggleFilters">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 18V16H14V18H10ZM6 13V11H18V13H6ZM3 8V6H21V8H3Z" fill="rgb(var(--color-text-terciary))"/>
-                </svg>
-                Filters
-            </button>
-        </div>
-
-        <ais-state-results>
-            <template v-slot="{ results: { hits } }">
-                <ais-hits v-show="hits.length > 0">
-                    <template v-slot:item="{ item }">
-                        <div class="card card__bordered min-h-[260px]">
-                            <a :href="getPath(item.url)" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
-                                <div class="flex flex-col gap-3 flex-grow">
-                                    <h4 v-if="item.content_type === 'plugin'"> {{ item.title }} Plugin</h4>
-                                    <h4 v-else>{{ item.title }}</h4>
-
-                                    <span class="text-sm">{{getLowestHierarchyLevel(item.hierarchy)}}</span>
-                                    <p class="text-sm line-clamp-3">
-                                        {{ item.content }}
-                                    </p>
-                                </div>
-
-                                <div class="flex flex-wrap gap-2" v-if="item.tier && item.tier.length > 0">
-                                    <span class="badge">{{ item.tier }}</span>
-                                </div>
-                            </a>
+        <div class="searchbox-results-container">
+            <div class="flex md:flex-col md:col-span-3 w-full justify-between gap-2">
+                <ais-search-box>
+                    <template v-slot="{ currentRefinement, isSearchStalled, refine }">
+                        <div class="filter-results-field">
+                            <svg class="filter-results-field__image" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 18V16H14V18H10ZM6 13V11H18V13H6ZM3 8V6H21V8H3Z" fill="rgb(var(--color-text-terciary))"/>
+                            </svg>
+                            <input type="search" class="filter-results-field__input" placeholder="Filter results" :value="currentRefinement" @input="refine($event.currentTarget.value)">
                         </div>
                     </template>
-                </ais-hits>
-                <div v-show="hits.length === 0">
-                    No results found.
-                </div>
-            </template>
-        </ais-state-results>
+                </ais-search-box>
+                <button class="flex md:hidden items-center gap-2 rounded-md border py-2 px-4 bg-secondary border-brand-saturated/40 text-sm" @click="toggleFilters">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 18V16H14V18H10ZM6 13V11H18V13H6ZM3 8V6H21V8H3Z" fill="rgb(var(--color-text-terciary))"/>
+                    </svg>
+                    Filters
+                </button>
+            </div>
+
+            <ais-state-results>
+                <template v-slot="{ results: { hits } }">
+                    <ais-hits v-show="hits.length > 0">
+                        <template v-slot:item="{ item }">
+                            <div class="card card__bordered min-h-[260px]">
+                                <a :href="getPath(item.url)" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
+                                    <div class="flex flex-col gap-3 flex-grow">
+                                        <h4 v-if="item.content_type === 'plugin'"> {{ item.title }} Plugin</h4>
+                                        <h4 v-else>{{ item.title }}</h4>
+
+                                        <span class="text-sm">{{getLowestHierarchyLevel(item.hierarchy)}}</span>
+                                        <p class="text-sm line-clamp-3">
+                                            {{ item.content }}
+                                        </p>
+                                    </div>
+
+                                    <div class="flex flex-wrap gap-2" v-if="item.tier && item.tier.length > 0">
+                                        <span class="badge">{{ item.tier }}</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </template>
+                    </ais-hits>
+                    <div v-show="hits.length === 0">
+                        No results found.
+                    </div>
+                </template>
+            </ais-state-results>
+        </div>
         <ais-pagination :padding="2" :class-names="{ 'ais-Pagination-link': 'ais-Pagination-link no-icon'}"/>
     </div>
   </ais-instant-search>
