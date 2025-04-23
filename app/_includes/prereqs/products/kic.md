@@ -3,6 +3,9 @@
 {% if prereqs.kubernetes.gateway_api == 'experimental' %}
 {% assign additional_flags = additional_flags | append:' --set controller.ingressController.env.feature_gates="GatewayAlpha=true"' %}
 {% endif %}
+{% if prereqs.kubernetes.prometheus %}
+{% assign additional_flags = additional_flags | append: ' --set gateway.serviceMonitor.enabled=true --set gateway.serviceMonitor.labels.release=promstack' %}
+{% endif %}
 
 {% capture details_content %}
 
