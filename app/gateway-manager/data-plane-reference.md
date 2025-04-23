@@ -3,7 +3,7 @@ title: "Data Plane Reference"
 content_type: reference
 layout: reference
 description: | 
-    Manage Data Plane nodes in {{site.konnect_short_name}}, including platform support, proxy access, version upgrades, certificate renewal, required parameters, and custom metadata labels.'
+    Manage Data Plane nodes in {{site.konnect_short_name}}, including platform support, proxy access, version upgrades, certificate renewal, required parameters, and custom metadata labels.
 
 products:
     - gateway
@@ -18,7 +18,7 @@ faqs:
       By default, {{site.base_gateway}} listens on port `8000`, so a request to `http://localhost:8000/{your-route}` (or your custom hostname) 
       should return the expected response from your upstream service.
 
-  - q: How do I access services through a Data Plane node running on Kubernetes?
+  - q: How do I access Services through a Data Plane node running on Kubernetes?
     a: |
       1. Run the following command to get the external IP and port:
          ```bash
@@ -30,11 +30,11 @@ faqs:
          ```
          http://35.233.198.16:80/mock
          ```
-  - q: Can I choose a specific {{site.base_gateway}} version when using Quickstart scripts in Gateway Manager?
+  - q: Can I choose a specific {{site.base_gateway}} version when using quickstart scripts in Gateway Manager?
     a: |
-      Yes. Gateway Manager allows you to select the {{site.base_gateway}} version for your Quickstart scripts—except when using cloud provider scripts for AWS, Azure, and GCP.
+      Yes. Gateway Manager lets you select the {{site.base_gateway}} version for your quickstart scripts.
 
-  - q: Can I SSH directly into Konnect Data Plane nodes?
+  - q: Can I SSH directly into {{site.konnect_short_name}} Data Plane nodes?
     a: |
       No. Direct SSH access is not possible because the SSH keys are randomly generated and not exposed. 
       To access nodes, use the cloud provider’s tools:
@@ -54,10 +54,13 @@ related_resources:
 
 
 A Data Plane node is a single instance of {{site.base_gateway}} that acts as a proxy and serves traffic.
-In {{site.konnect_short_name}}, Data Plane nodes are managed by [Control Planes](/gateway-manager/control-plane-groups/). Control planes manage and store configurations in {{site.konnect_short_name}}, and Data Plane nodes are configured according to the configuration distributed by the Control Plane.
+In {{site.konnect_short_name}}, Data Plane nodes are managed by [Control Planes](/gateway-manager/control-plane-groups/). 
+Control Planes manage and store configurations in {{site.konnect_short_name}}, and they distribute those configurations to Data Planes nodes. 
+Data Plane nodes don't manage their own configurations.
 
 {{site.konnect_short_name}} provides Data Plane node installation scripts for various platforms. 
-These Data Plane nodes are configured to run in your {{site.konnect_short_name}} environment. Alternatively, {{site.konnect_short_name}} offers fully-managed Data Planes through [Dedicated Cloud Gateways](/dedicated-cloud-gateways).
+These Data Plane nodes are configured to run in your {{site.konnect_short_name}} environment. 
+Alternatively, {{site.konnect_short_name}} offers fully-managed Data Planes through [Dedicated Cloud Gateways](/dedicated-cloud-gateways/).
 
 ## Supported installation options
 
@@ -73,7 +76,7 @@ rows:
   - type: Standard setup
     platforms: macOS (ARM), macOS (Intel), Windows, Linux (Docker)
   - type: Advanced setup
-    platforms: Linux, Kubernetes, AWS, Azure, Google Cloud
+    platforms: Linux, Kubernetes
 {% endtable %}
 
 
