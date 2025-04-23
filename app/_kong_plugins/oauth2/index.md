@@ -87,8 +87,9 @@ The authorization page is made of two parts:
 
 You can see a sample implementation in [node.js + express.js](https://github.com/Kong/kong-oauth2-hello-world) on GitHub.
 
-![Diagram representing the Authorization Code flow](/assets/images/gateway/oauth2-authorization-code-flow.png)
-<!-- @TODO replace this with a mermaid diagram -->
+<!-- @TODO 
+  add a mermaid diagram based on /assets/images/gateway/oauth2-authorization-code-flow.png, 
+  maybe adapt this diagram: https://kongdeveloper.netlify.app/plugins/openid-connect/#kong-oauth-token-auth-flow and add the webapp -->
 
 Here's how it works:
 
