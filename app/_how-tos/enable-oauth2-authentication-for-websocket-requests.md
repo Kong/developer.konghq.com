@@ -37,7 +37,7 @@ prereqs:
         - websocket-route
 tldr:
     q: How do I set up OAuth 2.0 for a WebSocket Service?
-    a: Since the [OAuth 2.0 Authentication](/plugins/oauth2/) plugin can't issue new tokens from a WebSocket Route, create a separate HTTP Service and Route to handle token generation. Enable the plugin on both the WebSocket Service and on the HTTP Route, and make sure to set `config.global_credentials` to `true`
+    a: Since the [OAuth 2.0 Authentication](/plugins/oauth2/) plugin can't issue new tokens from a WebSocket Route, create a separate HTTP Service and Route to handle token generation. Enable the plugin on both the WebSocket Service and on the HTTP Route, and make sure to set `config.global_credentials` to `true`.
 
 cleanup:
   inline:
@@ -52,9 +52,10 @@ min_version:
     gateway: '3.4'
 ---
 
-## 1. Create a new HTTP Service and Route to handle token creation
+## 1. Create an HTTP Service and Route to handle token creation
+In the [prerequisites](#prerequisites), you created a WebSocket Service and Route.
 
-To use the [OAuth 2.0 Authentication](/plugins/oauth2/) with WebSocket services, an additional non-WebSocket Route must be used to issue tokens:
+To use the [OAuth 2.0 Authentication](/plugins/oauth2/) plugin with WebSocket services, you need an additional non-WebSocket Route to issue tokens:
 {% entity_examples %}
 entities:
   routes:
