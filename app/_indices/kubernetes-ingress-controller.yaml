@@ -42,6 +42,9 @@ sections:
       - path: /kubernetes-ingress-controller/custom-plugin/
   - title: Observability
     items:
+      - path: /kubernetes-ingress-controller/observability/prometheus/
+      - path: /kubernetes-ingress-controller/observability/prometheus-grafana/
+      - path: /kubernetes-ingress-controller/observability/events/
       - path: /kubernetes-ingress-controller/observability/**/*
   - title: Troubleshooting
     items:
