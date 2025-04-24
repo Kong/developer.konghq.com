@@ -6,6 +6,9 @@
 {% if prereqs.kubernetes.prometheus %}
 {% assign additional_flags = additional_flags | append: ' --set gateway.serviceMonitor.enabled=true --set gateway.serviceMonitor.labels.release=promstack' %}
 {% endif %}
+{% if prereqs.kubernetes.feature_gates %}
+{% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.feature_gates="' | append: prereqs.kubernetes.feature_gates | append: '"' %}
+{% endif %}
 
 {% capture details_content %}
 
