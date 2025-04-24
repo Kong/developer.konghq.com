@@ -15,8 +15,7 @@ works_on:
   - konnect
 ---
 
-{{ site.kic_product_name }} can manage {{ site.base_gateway }} instances. This page explains how to apply an enterprise license to {{ site.base_gateway }}.
-
+This page explains how to apply an enterprise license to {{ site.kic_product_name }} managed {{ site.base_gateway }} instances.
 ## Applying a license using the KongLicense CRD {% new_in 3.1 %}
 
 {{ site.kic_product_name }} v3.1 introduced a `KongLicense` CRD ([reference](/kubernetes-ingress-controller/reference/custom-resources/#konglicense)) that applies a license to {{ site.base_gateway }} using the Admin API.
@@ -67,7 +66,9 @@ works_on:
      Controller Name:        konghq.com/kong-ingress-controller/5b374a9e.konghq.com
    ```
 
-All {{ site.base_gateway }} instances that are configured by the {{ site.kic_product_name }} will have the license provided in `KongLicense` applied. To update your license, update the `KongLicense` resource and {{ site.kic_product_name }} will dynamically propagate it to all {{site.base_gateway}} instances with no downtime. There is no need to restart your Pods when updating a license.
+All {{ site.base_gateway }} instances that are configured by the {{ site.kic_product_name }} will have the license provided in `KongLicense` applied to them.
+To update your license, update the `KongLicense` resource and {{ site.kic_product_name }} will dynamically propagate across all {{site.base_gateway}} instances with no downtime.
+There is no need to restart your Pods when updating a license.
 
 ## Applying a static license
 
