@@ -52,7 +52,7 @@ Environment variables can be referenced in any text input within the Insomnia ap
 
 Global environments can be defined on a project level and used across multiple collections, including leveraging them in pre-request and after-response scripting.
 
-You can create as many global environments as you want, so you aren't limited to only one. You can store them locally on your computer or luse Cloud Sync or Git Sync for collaboration (based on your storage settings for your projects).
+You can create as many global environments as you want, so you aren't limited to only one. You can store them locally on your computer or use Cloud Sync or Git Sync for collaboration (based on your storage settings for your projects).
 
 ## Environment priority order
 

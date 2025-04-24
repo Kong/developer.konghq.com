@@ -161,4 +161,4 @@ Admins can choose from the following invite domain options:
 
 Invite Control can also disable the ability to invite users entirely. If any current members or pending invites do not comply with the configured domain rules, they can be identified and removed.
 
-This feature supports enterprise-grade governance by ensuring only authorized individuals can access your organizations, alongside tools like [Storage Control](/insomnia/storage-control).
+This feature supports enterprise-grade governance by ensuring only authorized individuals can access your organizations, alongside tools like [Storage Control](/insomnia/storage/).

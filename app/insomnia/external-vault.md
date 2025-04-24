@@ -22,7 +22,7 @@ Supported vault services:
 
 - [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/)
 - [GCP Secret Manager](https://cloud.google.com/security/products/secret-manager?hl=en)
-- [HashiCorp Vault](https://www.vaultproject.io/)
+- [HashiCorp Vault](https://developer.hashicorp.com/vault)
 - [Azure Key Vault](https://azure.microsoft.com/en-us/products/key-vault)
 
 ## AWS Secrets Manager
