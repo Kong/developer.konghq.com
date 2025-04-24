@@ -57,7 +57,7 @@ cleanup:
 
 ---
 
-## 1. Enable the AI Request Transformer plugin
+## Enable the AI Request Transformer plugin
 
 In this example, we expect the client to send requests with a JSON body containing a `city` element. We want to transform this request to add the corresponding `country` before proxying the request to the upstream.
 
@@ -87,7 +87,7 @@ variables:
 {% endentity_examples %}
 
 
-## 2. Validate
+## Validate
 
 To check that the request transformation is working, send a request with a JSON body containing a `city` tag:
 

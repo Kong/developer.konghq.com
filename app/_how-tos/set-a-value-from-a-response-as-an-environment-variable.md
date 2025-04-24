@@ -28,7 +28,7 @@ cleanup:
     icon_url: /assets/icons/insomnia/insomnia.svg
 ---
 
-## 1. Configure the request
+## Configure the request
 
 In this example, we want to generate a token for a {{site.konnect_short_name}} system account and set it as an environment variable. We first need to configure the [Create System Account Access Token](/api/konnect/identity/#/operations/post-system-accounts-id-access-tokens) request to generate the token.
 
@@ -40,7 +40,7 @@ If you imported the [Konnect Identity Management API](/api/konnect/identity/) sp
   * Create an `accountId` variable with the system account ID.
 1. Open the **Create System Account Access Token** request, go to the **Body** tab, and update the token's name and expiration date and time.
 
-## 2. Create the after-response script
+## Create the after-response script
 
 1. Open the **Scripts** tab and click **After-response**.
 1. Add the following script. When this script run it will: 
@@ -60,6 +60,6 @@ If you imported the [Konnect Identity Management API](/api/konnect/identity/) sp
     ```
 1. Click **Send** to send the request. The after-response script will automatically run once the response is returned.
 
-## 3. Validate
+## Validate
 
 To verify that everything ran as expected, you can open the **Tests** tab to see if the test passed and open the environment to check that the new variable was added.

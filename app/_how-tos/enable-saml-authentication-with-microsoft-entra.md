@@ -85,7 +85,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create an anonymous Consumer
+## Create an anonymous Consumer
 
 In this example, we want to manage users through Microsoft Entra only, so we'll use the `anonymous` Consumer:
 {% entity_examples %}
@@ -94,7 +94,7 @@ entities:
         - username: anonymous
 {% endentity_examples %}
 
-## 2. Enable the SAML plugin
+## Enable the SAML plugin
 
 Enable the [SAML plugin](/plugins/saml/) and provide the information to connect to your SAML application.
 We also need to provide a value for [`config.session_secret`](/plugins/saml/reference/#schema--config-session-secret), which should be a random 32-character string.
@@ -124,7 +124,7 @@ variables:
     value: $CERTIFICATE
 {% endentity_examples %}
 
-## 3. Validate
+## Validate
 
 To validate that the SAML configuration works, go to `$KONNECT_PROXY_URL/anything` in a browser.
 {: data-deployment-topology="konnect" }

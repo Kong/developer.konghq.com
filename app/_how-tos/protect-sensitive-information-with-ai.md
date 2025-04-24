@@ -58,7 +58,7 @@ min_version:
 
 ---
 
-## 1. Start the Kong AI PII Anonymizer service
+## Start the Kong AI PII Anonymizer service
 
 Make sure you have [access to the  AI PII service](#ai-pii-anonymizer-service-access), then run the following command to start it locally with Docker:
 
@@ -66,7 +66,7 @@ Make sure you have [access to the  AI PII service](#ai-pii-anonymizer-service-ac
 docker run --platform linux/x86_64 -d --name pii-service -p 9000:8080 kong/ai-pii-service 
 ```
 
-## 2. Enable the AI Proxy plugin
+## Enable the AI Proxy plugin
 
 Use the following command to enable the AI Proxy plugin configured with a chat route using OpenAI:
 
@@ -92,7 +92,7 @@ variables:
     description: The API key to use to connect to OpenAI.
 {% endentity_examples %}
 
-## 3. Enable the AI Sanitizer plugin
+## Enable the AI Sanitizer plugin
 
 Configure the AI Sanitizer plugin to use the AI PII Anonymizer service to anonymize general information and phone numbers:
 
@@ -111,7 +111,7 @@ entities:
         recover_redacted: false
 {% endentity_examples %}
 
-## 4. Validate
+## Validate
 
 To validate, send a request that contains PII, for example:
 

@@ -64,7 +64,7 @@ cleanup:
 
 ---
 
-## 1. Create a Consumer with OAuth2 credentials
+## Create a Consumer with OAuth2 credentials
 
 First, create a Consumer and assign OAuth2 credentials to them. 
 We'll use these credentials to generate access tokens.
@@ -80,7 +80,7 @@ entities:
           name: oauth2-app
 {% endentity_examples %}
 
-## 2. Enable the OAuth2 plugin
+## Enable the OAuth2 plugin
 
 The [OAuth2 plugin](/plugins/oauth2/) adds an OAuth 2.0 authentication layer to {{site.base_gateway}} and lets you generate access tokens for Consumers.
 
@@ -106,7 +106,7 @@ variables:
     value: $PROVISION_KEY
 {% endentity_examples %}
 
-## 3. Enable the OpenID Connect plugin with Kong OAuth token authentication
+## Enable the OpenID Connect plugin with Kong OAuth token authentication
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with Kong OAuth token authentication.
@@ -146,7 +146,7 @@ In this example:
 
 {% include_cached plugins/oidc/client-auth.md %}
 
-## 4. Retrieve the access token
+## Retrieve the access token
 
 Retrieve the token from the OAuth token endpoint:
 
@@ -165,7 +165,7 @@ Export the token to an environment variable:
 export ACCESS_TOKEN='{your-access-token}'
 ```
 
-## 5. Validate the access token flow
+## Validate the access token flow
 
 Now, validate the setup by accessing the `example-route` Route and passing the bearer token you received from the Kong OAuth plugin:
 

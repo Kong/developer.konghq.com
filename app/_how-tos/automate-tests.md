@@ -37,7 +37,7 @@ prereqs:
           icon_url: /assets/icons/insomnia/checkbox-active.svg
 ---
 
-## 1. Run a test with Inso CLI in the command line
+## Run a test with Inso CLI in the command line
 
 You can use the `inso run test` command to execute unit tests written inside Insomnia from your terminal or in a CI/CD environment. Once the command is executed, the Inso CLI will report test results and exit with an exit code. 
 

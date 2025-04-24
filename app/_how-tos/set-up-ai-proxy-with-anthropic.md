@@ -56,7 +56,7 @@ cleanup:
 
 ---
 
-## 1. Configure the plugin
+## Configure the plugin
 
 To set up AI Proxy with Anthropic, we need to specify the [model](https://docs.anthropic.com/en/docs/about-claude/models#model-names) and [Anthropic API version](https://docs.anthropic.com/en/api/versioning#version-history) to use. 
 
@@ -81,6 +81,6 @@ variables:
     value: $ANTHROPIC_API_KEY
 {% endentity_examples %}
 
-## 2. Validate
+## Validate
 
 {% include how-tos/steps/ai-proxy-validate.md %}

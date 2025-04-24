@@ -50,7 +50,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create two Upstreams
+## Create two Upstreams
 
 In this example, we'll route requests based on a `location` header where the value can be either `us-east` or `us-west`. We'll create one [Upstream](/gateway/entities/upstream/) for each location:
 
@@ -67,7 +67,7 @@ entities:
           weight: 100
 {% endentity_examples %}
 
-## 2. Enable the Route by Header plugin on the Service
+## Enable the Route by Header plugin on the Service
 
 Enable the [Route by Header](/plugins/route-by-header/) plugin on the Gateway Service we created in the [prerequisites](#pre-configured-entities) to route requests with the `us-east` header value to `east-upstream` and requests with the `us-weast` value to `west-upstream`. 
 Note that this will override the URL defined in the Service configuration.
@@ -87,7 +87,7 @@ entities:
             location: us-west
 {% endentity_examples %}
 
-## 3. Validate
+## Validate
 To validate, you can try sending requests with both header values and check the host in the response.
 
 This request is routed to `httpbingo.org`:

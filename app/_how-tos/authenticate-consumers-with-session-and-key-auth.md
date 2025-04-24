@@ -59,7 +59,7 @@ min_version:
     gateway: '3.4'
 ---
 
-## 1. Enable the Key Authentication plugin
+## Enable the Key Authentication plugin
 
 Authentication lets you identify a Consumer. In this tutorial, we'll be using the [Key Auth plugin](/plugins/key-auth/) for authentication, which allows users to authenticate with a key when they make a request.
 
@@ -78,7 +78,7 @@ entities:
 {% endentity_examples %}
 <!--vale on-->
 
-## 2. Create Consumers
+## Create Consumers
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. In this tutorial, we'll create one named Consumer with a credential as well as an anonymous Consumer to prevent [anonymous access](/gateway/authentication/#using-multiple-authentication-methods) with the Key Authentication plugin.
 
@@ -96,7 +96,7 @@ entities:
 {% endentity_examples %}
 <!--vale on-->
 
-## 3. Enable the Session plugin
+## Enable the Session plugin
 
 The [Session plugin](/plugins/session/) allows you to manage browser sessions for APIs proxied through the {{site.base_gateway}}.
 
@@ -116,7 +116,7 @@ entities:
 {% endentity_examples %}
 <!--vale on-->
 
-## 4. Enable the Request Termination plugin
+## Enable the Request Termination plugin
 
 In this tutorial, we'll be using the [Request Termination plugin](/plugins/request-termination/) to prevent unauthorized access by anonymous Consumers: 
 
@@ -133,7 +133,7 @@ entities:
 {% endentity_examples %}
 <!--vale on-->
 
-## 5. Validate
+## Validate
 
 After configuring the Key Authentication Encryption plugin, you can verify that it was configured correctly and is working by sending requests with and without the API key you created for your Consumer.
 

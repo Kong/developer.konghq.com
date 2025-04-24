@@ -51,7 +51,7 @@ cleanup:
 
 ---
 
-## 1. Enable the Exit Transformer plugin
+## Enable the Exit Transformer plugin
 
 In this example, we want to customize the message that the client will receive when the requested Route isn't found.
 To do this, we'll use the [Exit Transformer plugin](/plugins/exit-transformer/). To transform `404` responses, we need to set the `handle_unknown` parameter to `true`, and then specify the transformations to perform using one or multiple Lua functions. 
@@ -82,7 +82,7 @@ entities:
 {% endentity_examples %}
 
 
-## 2. Validate
+## Validate
 
 To check that the response transformation is working, send a request to a Route that doesn't exist. For example:
 

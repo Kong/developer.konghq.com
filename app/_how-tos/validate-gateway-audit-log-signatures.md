@@ -64,7 +64,7 @@ cleanup:
 - had issues with the Lua script so I tried a Python script instead
 - validation fails
 
-## 1. Send a request to generate audit logs
+## Send a request to generate audit logs
 
 Send any request to the Admin API to create an audit log entry:
 
@@ -72,7 +72,7 @@ Send any request to the Admin API to create an audit log entry:
 url: /status
 {% endcontrol_plane_request %}
 
-## 2. Generate audit logs
+## Generate audit logs
 
 Use the following command to generate the audit logs and save the result to a JSON file:
 
@@ -80,7 +80,7 @@ Use the following command to generate the audit logs and save the result to a JS
 curl http://localhost:8001/audit/requests  -o logs.json
 ```
 
-## 3. Prepare the log entry for validation
+## Prepare the log entry for validation
 
 In order to validate an audit log signature we need to:
 * Decode the Base64-encoded signature.
@@ -130,7 +130,7 @@ This script will read the first log in the audit log response and generate two f
 * `record_signature`, which contains the decoded signature
 * `canonical_record.txt`, which contains the audit log record in canonical format.
 
-## 4. Validate the audit log signature
+## Validate the audit log signature
 
 Use OpenSSL to validate the signature:
 ```sh

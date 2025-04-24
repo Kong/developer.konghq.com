@@ -59,7 +59,7 @@ min_version:
 
 {{site.base_gateway}} can proxy TLS requests using the client's TLS SNI extension as a forwarding mechanism. This allows a TLS request to be accepted without needing to decrypt it. 
 
-## 1. Retrieve the ID of your certificate
+## Retrieve the ID of your certificate
 
 {% capture request %}
 {% control_plane_request %}
@@ -69,7 +69,7 @@ min_version:
 
 Copy the UUID in the response body to use in the next step. 
 
-## 2. Associate your certificate with an SNI
+## Associate your certificate with an SNI
 
 {% capture request %}
 {% control_plane_request %}
@@ -84,7 +84,7 @@ Copy the UUID in the response body to use in the next step.
 <!-- vale on -->
 
 
-## 3. Validate 
+## Validate 
 
 ```
 echo "" | openssl s_client -connect 127.0.0.1 -port 8443 -servername $SNI_NAME 2>/dev/null | openssl x509 -text -noout | head -10

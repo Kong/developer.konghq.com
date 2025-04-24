@@ -70,7 +70,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create Consumers
+## Create Consumers
 
 You can use multiple authentication plugins with an anonymous Consumer to give clients multiple options for authentication. 
 The anonymous Consumer doesn't correspond to any real user, and acts as a fallback to catch all other unauthorized requests.
@@ -87,7 +87,7 @@ entities:
 
 We're going to assign a different authentication type to each Consumer later.
 
-## 2. Set up authentication
+## Set up authentication
 
 Add the Key Auth and Basic Auth plugins to the `example-service` Gateway Service, and set the `anonymous` fallback to the Consumer we created earlier:
 
@@ -106,7 +106,7 @@ entities:
         anonymous: anonymous
 {% endentity_examples %}
 
-## 3. Test with anonymous Consumer
+## Test with anonymous Consumer
 
 You now have authentication enabled on the Gateway Service, but the `anonymous` Consumer also allows requests from unauthenticated clients.
 
@@ -128,7 +128,7 @@ headers:
 
 In both cases, you should get a 200 response, as the `anonymous` Consumer is allowed.
 
-## 4. Configure credentials
+## Configure credentials
 
 Now, let's configure Consumers with different auth credentials and prevent unauthenticated access. Configure different credentials for the two named users: basic auth for `Dana`, and key auth for `Mahan`:
 
@@ -145,7 +145,7 @@ entities:
 {% endentity_examples %}
 
 
-## 5. Add Request Termination to the anonymous Consumer
+## Add Request Termination to the anonymous Consumer
 
 The anonymous Consumer gets no credentials, as we don't want unauthenticated users accessing our Gateway Service.
 Instead, you can configure the Request Termination plugin to handle anonymous Consumers and redirect their requests with a `401`:
@@ -161,7 +161,7 @@ entities:
             message: '"Error - Authentication required"'
 {% endentity_examples %}
 
-## 6. Validate authentication
+## Validate authentication
 
 Let's check that authentication works.
 

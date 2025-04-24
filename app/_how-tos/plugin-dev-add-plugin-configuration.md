@@ -33,7 +33,7 @@ related_resources:
     url: /custom-plugins/
 ---
 
-## 1. Add configuration fields to the schema 
+## Add configuration fields to the schema 
 
 Let's add some configuration fields to our `schema.lua` file.
 
@@ -74,7 +74,7 @@ local schema = {
 return schema
 ```
 
-## 2. Read configuration values from plugin code 
+## Read configuration values from plugin code 
 
 Modify the `response` function in the `handler.lua` file to read the configuration value from the incoming `conf` parameter instead of the current hardcoded value:
 ```lua
@@ -83,7 +83,7 @@ function MyPluginHandler:response(conf)
 end
 ```
 
-## 3. Manually validate the configuration
+## Manually validate the configuration
 
 Let's use Pongo to test the updated configuration.
 
@@ -166,7 +166,7 @@ This time we should see the `X-CustomHeaderName` in the response.
    exit
    ```
 
-## 4. Add automated configuration testing
+## Add automated configuration testing
 
 1. Update the `setup` function inside the `spec/01-integration_spec.lua` module so that the `my-plugin` that is added to the database is configured with a different value for the `response_header_name` field:
    ```lua

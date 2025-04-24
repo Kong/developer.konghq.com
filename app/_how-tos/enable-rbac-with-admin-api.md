@@ -37,7 +37,7 @@ prereqs:
 ---
 
 
-## 1. Create an RBAC Super Admin
+## Create an RBAC Super Admin
 
 In {{site.base_gateway}}, a Super Admin has the ability to manage [Roles and permissions](/gateway/entities/rbac/#what-is-rbac) across Workspaces. Because the username `super-admin` matches the `super-admin` RBAC Role, the new user is automatically added to the `super-admin` Role. 
 
@@ -97,7 +97,7 @@ The response body contains information about the `super-admin` user including a 
     }
 ```
 
-## 2. Enable RBAC
+## Enable RBAC
 
 With a `super-admin` created, you can proceed to enable RBAC. The `super-admin` User is a requirement because after enabling RBAC, you will be required to pass the `user_token` value as a header in all requests. Enabling RBAC requires restarting or reloading {{site.base_gateway}}. If you are using the deploy script, this is done from within the {{site.base_gateway}} Docker container. 
 
@@ -105,7 +105,7 @@ With a `super-admin` created, you can proceed to enable RBAC. The `super-admin` 
 export KONG_ENFORCE_RBAC=on && kong reload
 ```
 
-## 3. Validate 
+## Validate 
 
 After the Super Admin is created and RBAC is enabled, the `user_token` must be passed with Admin API requests otherwise the API will return a `401 Unauthorized` error.
 

@@ -32,7 +32,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Set up the Docker Compose file
+## Set up the Docker Compose file
 
 Copy the Docker Compose file to `docker-compose.yml`:
 <!-- vale off -->
@@ -117,7 +117,7 @@ EOF
 ```
 <!-- vale on -->
 
-## 2. Start {{site.base_gateway}}
+## Start {{site.base_gateway}}
 
 Start {{site.base_gateway}} with the Docker Compose file: 
 
@@ -125,7 +125,7 @@ Start {{site.base_gateway}} with the Docker Compose file:
 docker compose up -d
 ```
 
-## 3. Validate
+## Validate
 
 You can validate {{site.base_gateway}} is running using cURL against the {{site.base_gateway}} Admin API:
 

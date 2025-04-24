@@ -58,7 +58,7 @@ min_version:
     gateway: '3.4'
 ---
 
-## 1. Enable rate limiting
+## Enable rate limiting
 
 Enable the [Rate Limiting Advanced plugin](/plugins/rate-limiting-advanced/) for the Gateway Service.
 
@@ -89,7 +89,7 @@ otherwise, an error occurs:
 You must provide the same number of windows and limits
 ```
 
-## 2. Validate
+## Validate
 
 After configuring the Rate Limiting Advanced plugin, you can verify that it was configured correctly and is working, by sending more requests then allowed in the configured time limit.
 
