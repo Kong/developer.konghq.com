@@ -7,6 +7,8 @@ content_type: plugin
 publisher: kong-inc
 description: 'Modify the upstream response before returning it to the client, with greater customization capabilities'
 
+tags: 
+  - transformations
 
 products:
     - gateway
@@ -36,6 +38,8 @@ search_aliases:
 related_resources:
   - text: Response Transformer plugin
     url: /plugins/response-transformer/
+  - text: All transformation plugins
+    url: /plugins/?category=transformations
 ---
 
 {% include plugins/request-response-transformer/response-transformer-description.md %}

@@ -1,9 +1,16 @@
 metadata:
   title: Design APIs
   content_type: landing_page
-  description: This page is an introduction to API design in Insomnia.
+  description: Introduction to API design in Insomnia.
+  product:
+    - insomnia
   breadcrumbs:
     - /insomnia/
+  tags:
+    - design-apis
+    - apis
+  search_aliases:
+    - postman
 rows:
   - header:
       type: h1
@@ -19,14 +26,14 @@ rows:
                   text: | 
                     Using Insomnia, you can create or upload an API spec to a document. 
                       
-                      As you write or edit your spec:  
+                      Insomnia can help you write or edit your spec with the following:  
                 - type: text
                   text: |
                     - View a generated preview of your spec in the right pane.
                     - Automatically linted. Errors display at the bottom of the center pane and include error type, line number, and error message
                     - View information about your spec in the left sidebar, such as servers, request body, and schemas.
-                    - Collaboratively create APIs with an unlimited number of contributors (free accounts allow unlimited contributors on one project) and git version control.
-                    - Generate code snippets automatically in over 12 different programming languages
+                    - Collaboratively create APIs with an unlimited number of contributors (free accounts allow unlimited contributors on one project) and [git version control](/insomnia/version-control/).
+                    - Generate code snippets automatically in over 12 different programming languages.
       - blocks:
           - type: image
             config:
@@ -72,7 +79,7 @@ rows:
           config:
             title: Deploy an API with Konnect
             description: Deploy your APIs with API Products in Konnect.
-            icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/kong-gradient.svg
+            icon: /assets/logos/konglogo-gradient-secondary.svg
             cta:
               text: Learn more
               url: /dev-portal/
@@ -107,22 +114,10 @@ rows:
                 text: Learn about design documents
                 url: /insomnia/documents/
                 align: end
-
-  - header:
-      type: h2
-      text: How-to Guides
-    columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              products:
-                  - insomnia
-              quantity: 5
-              allow_empty: true
   
   - header:
       type: h2
-      text: References & Tools
+      text: References and tools
     columns:
       - blocks:
           - type: reference_list

@@ -198,7 +198,7 @@ rows:
     - blocks:
        - type: text
          config: |
-          [View all decK commands and options &rarr;](https://docs.konghq.com/deck/latest/reference/deck/)
+          [View all decK file commands and options &rarr;](/index/deck/#file-manipulation)
 
   - columns:
     - blocks:
