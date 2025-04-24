@@ -14,16 +14,15 @@
           <path d="M8 18H16V16H8V18ZM8 14H16V12H8V14ZM6 22C5.45 22 4.97917 21.8042 4.5875 21.4125C4.19583 21.0208 4 20.55 4 20V4C4 3.45 4.19583 2.97917 4.5875 2.5875C4.97917 2.19583 5.45 2 6 2H14L20 8V20C20 20.55 19.8042 21.0208 19.4125 21.4125C19.0208 21.8042 18.55 22 18 22H6ZM13 9V4H6V20H18V9H13Z" fill="rgb(var(--color-text-terciary))"/>
         </svg>
       </div>
-      <div class="flex flex-col w-full gap-2">
+      <div class="flex flex-col w-full gap-1">
         <div class="text-terciary text-xs">
           {{ breadcrumbs }}
         </div>
         <div class="text-primary font-bold text-sm">
           {{ heading }}
         </div>
-        <div class="text-secondary text-xs">
-          <SearchResultSnippet v-if="highlighetContent" :item="item" attribute="content" />
-          <span v-else>{{ item.content }}</span>
+        <div class="text-secondary text-xs line-clamp-1">
+          <SearchResultSnippet :item="item" attribute="content" />
         </div>
         <div class="flex gap-3 pt-1 items-center">
           <div v-for="product in products" class="flex gap-1.5 items-center">
