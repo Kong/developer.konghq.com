@@ -42,6 +42,9 @@ sections:
       - path: /kubernetes-ingress-controller/custom-plugin/
   - title: Observability
     items:
+      - path: /kubernetes-ingress-controller/observability/prometheus/
+      - path: /kubernetes-ingress-controller/observability/prometheus-grafana/
+      - path: /kubernetes-ingress-controller/observability/events/
       - path: /kubernetes-ingress-controller/observability/**/*
   - title: Troubleshooting
     items:
@@ -54,6 +57,10 @@ sections:
     items:
       - path: /kubernetes-ingress-controller/custom-plugins/
       - path: /kubernetes-ingress-controller/multiple-auth-methods/
+      - path: /kubernetes-ingress-controller/acl/
+      - path: /kubernetes-ingress-controller/rate-limiting/
+      - path: /kubernetes-ingress-controller/mtls/
+      - path: /kubernetes-ingress-controller/oidc/
   - title: Reference
     allow_duplicates: true
     items:
@@ -67,3 +74,5 @@ sections:
       - path: /kubernetes-ingress-controller/faq/custom-nginx-conf/
       - path: /kubernetes-ingress-controller/faq/combining-httproutes/
       - path: /kubernetes-ingress-controller/faq/migrate-ingress-to-gateway/
+      - path: /kubernetes-ingress-controller/faq/upgrading-gateway/
+      - path: /kubernetes-ingress-controller/faq/upgrading-ingress-controller/

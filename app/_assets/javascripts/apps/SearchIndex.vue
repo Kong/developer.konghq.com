@@ -20,7 +20,7 @@
                             <div class="flex flex-col gap-3" v-if="hasRefinements">
                                 <div class="text-sm text-brand font-semibold">Products</div>
                                 <div class="flex flex-col gap-3">
-                                    <ais-static-filter attribute="products" :sort-by="['name']" :values="this.filters.products" />
+                                    <ais-products-filter attribute="products" :values="this.filters.products" />
                                 </div>
                             </div>
                         </template>
@@ -76,13 +76,17 @@
                         <template v-slot:item="{ item }">
                             <div class="flex hover:bg-hover-component/100 hover:first:rounded-t-md hover:last:rounded-b-md  border-b border-primary/5">
                                 <a :href="getPath(item.url)" class="py-4 px-5 w-full text-primary flex justify-between hover:no-underline items-center gap-2">
-                                    <div class="flex flex-col gap-1">
-                                        <span class="text-primary font-bold text-base tracking-[-.01em]">{{ item.title }}</span>
+                                    <div class="flex flex-col gap-1 w-full">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-primary font-bold text-base tracking-[-.01em]">{{ item.title }}</span>
+                                            <div class="flex flex-wrap gap-2" v-if="item.products && item.products.length > 0">
+                                                <ProductIcon v-for="product in item.products" :name="product" />
+                                            </div>
+                                        </div>
                                         <p class="text-sm line-clamp-1">
                                             {{ item.description }}
                                         </p>
                                     </div>
-                                    <div class="flex w-fit shrink-0 badge">{{ getProductName(item.products[0]) }}</div>
                                 </a>
                             </div>
                         </template>
@@ -107,7 +111,9 @@ import { routingConfig } from './search/routing.js';
 import { AisInstantSearch, AisConfigure, AisSearchBox, AisRefinementList, AisHits, AisPagination, AisPanel, AisStateResults } from 'vue-instantsearch/vue3/es';
 import AisStaticFilter from './components/AisStaticFilter.vue';
 import AisStaticTagsFilter from './components/AisStaticTagsFilter.vue';
-import MobileDrawer from './components/MobileDrawer.vue';
+import AisProductsFilter from './components/AisProductsFilter.vue';
+import MobileDrawer from './components/MobileDrawer.vue'
+import ProductIcon from './components/ProductIcon.vue';
 
 import 'instantsearch.css/themes/reset.css';
 
@@ -126,7 +132,9 @@ export default {
         AisStateResults,
         AisStaticFilter,
         AisStaticTagsFilter,
-        MobileDrawer
+        AisProductsFilter,
+        MobileDrawer,
+        ProductIcon
     },
     data() {
         return {

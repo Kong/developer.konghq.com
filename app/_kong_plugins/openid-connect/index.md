@@ -39,6 +39,8 @@ tags:
   - authentication
 
 related_resources:
+  - text: OpenID Connect in {{site.base_gateway}}
+    url: /gateway/openid-connect/
   - text: Authentication in {{site.base_gateway}}
     url: /gateway/authentication/
 ---
@@ -78,7 +80,7 @@ order for the credentials:
 
 1. [Session authentication](#session-authentication-workflow)
 2. [JWT access token authentication](#jwt-access-token-authentication-flow)
-3. [Kong OAuth token authentication](#kong-oauth-token-auth-flow)
+3. [Kong OAuth token authentication](#kong-oauth-token-authentication-flow)
 4. [Introspection authentication](#introspection-authentication-flow)
 5. [User info authentication](#user-info-authentication-flow)
 6. [Refresh token grant](#refresh-token-grant-workflow)
@@ -233,7 +235,7 @@ sequenceDiagram
 
 #### JWT access token authentication flow
 
-For legacy reasons, the stateless `JWT Access Token` authentication is named `bearer` (see [`config.auth_methods`](/plugins/openid-connect/reference/)). 
+For legacy reasons, the stateless `JWT Access Token` authentication is named `bearer` (see [`config.auth_methods`](/plugins/openid-connect/reference/#schema--config-auth-methods)). 
 Stateless authentication means that the signature verification uses the identity provider to publish public keys and the standard claims verification (such as `exp` or expiry). 
 The client may receive the token directly from the identity provider or by other means.
 
@@ -262,7 +264,7 @@ sequenceDiagram
 {% endmermaid %}
 <!--vale on-->
 
-#### Kong OAuth token auth flow
+#### Kong OAuth token authentication flow
 
 The OpenID Connect plugin can verify the tokens issued by the [OAuth 2.0 plugin](/plugins/oauth2/).
 This is very similar to third party identity provider issued [JWT access token authentication](#jwt-access-token-authentication-flow) or [introspection authentication](#introspection-authentication-flow):

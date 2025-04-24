@@ -26,7 +26,8 @@ window.addEventListener("scroll", () => {
   for (const element of anchorsArray) {
     const elementTop = element.getBoundingClientRect().top + window.scrollY;
     // window top + header section + extra padding
-    if (window.scrollY + navHeight + 30 >= elementTop) {
+    let padding = 40;
+    if (window.scrollY + navHeight + padding >= elementTop) {
       const matchingId =
         element.getAttribute("href") || element.getAttribute("id");
       const matchingLink = document.querySelector(

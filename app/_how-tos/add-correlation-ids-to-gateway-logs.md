@@ -23,11 +23,7 @@ prereqs:
   skip_product: true
   inline:
     - title: "{{site.base_gateway}} license"
-      content: |
-        This tutorial requires a {{site.base_gateway}} license. Export your license to an environment variable:
-        ```
-        export KONG_LICENSE_DATA='<license-contents-go-here>'
-        ```
+      include_content: prereqs/gateway-license
       icon_url: /assets/icons/gateway.svg
 
 cleanup:

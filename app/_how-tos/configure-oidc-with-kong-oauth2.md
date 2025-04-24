@@ -3,12 +3,14 @@ title: Configure OpenID Connect with Kong Oauth2 token authentication
 content_type: how_to
 
 related_resources:
+  - text: OpenID Connect in {{site.base_gateway}}
+    url: /gateway/openid-connect/
   - text: Authentication in {{site.base_gateway}}
     url: /gateway/authentication/
   - text: OpenID Connect authentication flows and grants
     url: /plugins/openid-connect/#authentication
   - text: Kong OAuth2 token authentication workflow
-    url: /plugins/openid-connect/#kong-oauth-token-auth-flow
+    url: /plugins/openid-connect/#kong-oauth-token-authentication-flow
 
 plugins:
   - openid-connect

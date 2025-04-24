@@ -43,7 +43,7 @@
                     <div class="flex flex-col gap-3" v-if="hasRefinements">
                         <div class="text-sm text-brand font-semibold">Products</div>
                         <div class="flex flex-col gap-3">
-                            <ais-static-filter attribute="products" :sort-by="['name']" :values="this.filters.products" />
+                            <ais-products-filter attribute="products" :values="this.filters.products" />
                         </div>
                     </div>
                 </template>
@@ -114,6 +114,10 @@
                                     <div class="flex flex-wrap gap-2" v-if="item.tier && item.tier.length > 0">
                                         <span class="badge">{{ item.tier }}</span>
                                     </div>
+
+                                    <div class="flex flex-wrap gap-2" v-if="item.products && item.products.length > 0">
+                                        <ProductIcon v-for="product in item.products" :name="product" />
+                                    </div>
                                 </a>
                             </div>
                         </template>
@@ -137,6 +141,8 @@ import { AisInstantSearch, AisConfigure, AisCurrentRefinements, AisSearchBox, Ai
 import AisStaticFilter from './components/AisStaticFilter.vue';
 import AisStaticTagsFilter from './components/AisStaticTagsFilter.vue';
 import MobileDrawer from './components/MobileDrawer.vue';
+import ProductIcon from './components/ProductIcon.vue';
+import AisProductsFilter from './components/AisProductsFilter.vue';
 
 import 'instantsearch.css/themes/reset.css';
 
@@ -156,7 +162,9 @@ export default {
     AisStateResults,
     AisStaticFilter,
     AisStaticTagsFilter,
-    MobileDrawer
+    AisProductsFilter,
+    MobileDrawer,
+    ProductIcon
   },
   data() {
     return {
