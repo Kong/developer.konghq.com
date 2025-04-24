@@ -21,6 +21,22 @@ min_version:
 related_resources:
   - text: Custom plugins
     url: /custom-plugins/
+  - text: schema.lua reference
+    url: /custom-plugins/schema.lua/
+  - text: handler.lua reference
+    url: /custom-plugins/handler.lua/
+  - text: daos.lua reference
+    url: /custom-plugins/daos.lua/
+  - text: Migration modules
+    url: /custom-plugins/migrations/
+  - text: Data store
+    url: /custom-plugins/data-store/
+  - text: Testing custom plugins
+    url: /custom-plugins/testing
+  - text: Deployment options
+    url: /custom-plugins/deployment-options
+  - text: Installation and distribution
+    url: /custom-plugins/installation-and-distribution
 ---
 
 Kong allows you to develop and deploy custom plugins.
