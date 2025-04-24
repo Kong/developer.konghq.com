@@ -428,6 +428,10 @@
 
     .edgeLabel {
       @apply bg-primary !important;
+
+      p {
+        @apply bg-secondary !important;
+      }
     }
 
     path {
