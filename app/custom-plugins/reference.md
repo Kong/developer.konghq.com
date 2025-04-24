@@ -36,9 +36,9 @@ related_resources:
   - text: Testing custom plugins
     url: /custom-plugins/testing/
   - text: Deployment options
-    url: /custom-plugins/deployment-options
+    url: /custom-plugins/deployment-options/
   - text: Installation and distribution
-    url: /custom-plugins/installation-and-distribution
+    url: /custom-plugins/installation-and-distribution/
 ---
 
 Kong allows you to develop and deploy custom plugins.
