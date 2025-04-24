@@ -37,7 +37,7 @@ sequenceDiagram
     participant Router
     participant Plugins as Plugins
     participant LoadBalancer as Load balancer
-    participant UpstreamService as Upstream Service
+    participant UpstreamService as Upstream service
 
     Client->>Gateway: Sends HTTP request or L4 connection
     Gateway->>Router: Evaluates incoming request against Routes
@@ -74,22 +74,22 @@ At this point, {{site.base_gateway}} executes subsequent plugins added to the Ro
 ## Listeners
 
 From a high-level perspective, {{site.base_gateway}} listens for HTTP traffic on its configured
-proxy ports: `8000` and `8443` by default and L4 traffic on explicitly configured
+proxy ports (`8000` and `8443` by default) and L4 traffic on explicitly configured
 `stream_listen` ports. {{site.base_gateway}} will evaluate any incoming
 HTTP request or L4 connection against the Routes you have configured and try to find a matching
 one.
 
-{{site.base_gateway}} exposes several interfaces which can be tweaked by the following configuration properties:
+{{site.base_gateway}} exposes several interfaces which can be configured by the following properties:
 
-- [`proxy_listen`](/gateway/configuration/#proxy-listen), which defines a list of addresses/ports on which {{site.base_gateway}}
-  accepts public HTTP (gRPC, WebSocket, etc) traffic from clients and proxies it to your upstream services (`8000` by default).
-- [`admin_listen`](/gateway/configuration/#admin-listen), which also defines a list of addresses and ports, but those
-  should be restricted to only be accessed by administrators, as they expose
-  {{site.base_gateway}}'s configuration capabilities: the Admin API (`8001` by default).
+- [`proxy_listen`](/gateway/configuration/#proxy-listen): Defines a list of addresses/ports on which {{site.base_gateway}}
+  accepts public HTTP (gRPC, WebSocket, etc.) traffic from clients and proxies it to your upstream services (`8000` by default).
+- [`admin_listen`](/gateway/configuration/#admin-listen): Also defines a list of addresses and ports, but those
+  should be restricted to only administrators, as they expose
+  {{site.base_gateway}}'s configuration capabilities via the Admin API (`8001` by default).
     {:.warning}
     > **Important**: If you need to expose the `admin_listen` port to the internet in a production environment,
-    > [secure it with authentication](/api/gateway/admin-ee/).
-- [`stream_listen`](/gateway/configuration/#stream-listen), which is similar to `proxy_listen` but for Layer 4 (TCP, TLS)
+    > [secure it with authentication](/gateway/secure-the-admin-api/).
+- [`stream_listen`](/gateway/configuration/#stream-listen): Similar to `proxy_listen`, but for Layer 4 (TCP, TLS)
   generic proxy. This is turned off by default.
 
 {{site.base_gateway}} is a transparent proxy, and it defaults to forwarding the request to your upstream service untouched, with the exception of various headers such as `Connection`, `Date`, and others as required by the HTTP specifications.
@@ -97,7 +97,7 @@ one.
 ## Proxying and upstream timeouts
 
 You can configure the desired
-timeouts for the connection between {{site.base_gateway}} and a given [Upstream](/gateway/entities/upstream/), using the following properties of a [Gateway Service](/gateway/entities/service/):
+timeouts for the connection between {{site.base_gateway}} and a given [Upstream](/gateway/entities/upstream/) using the following properties of a [Gateway Service](/gateway/entities/service/):
 
 - `connect_timeout`: Defines, in milliseconds, the timeout for
   establishing a connection to your upstream service. Defaults to `60000`.
@@ -143,12 +143,13 @@ rows:
       `<path>` is the path of the request which was accepted by {{site.base_gateway}}. 
       If `$realip_remote_addr` is one of the **trusted** addresses, the request header with the same name gets forwarded if provided. 
       Otherwise, the value of the `$request_uri` variable (with the query string stripped) provided by [`ngx_http_core_module`](https://nginx.org/docs/http/ngx_http_core_module.html#var_server_port) will be used. 
-      **Note**: {{site.base_gateway}} returns `"/"` for an empty path, but it doesn't do any other normalization on the request path.
+      {:.info}
+      > **Note**: {{site.base_gateway}} returns `"/"` for an empty path, but it doesn't do any other normalization on the request path.
   - header: All other headers
     description: Forwarded as-is by {{site.base_gateway}}.
 {% endtable %}
 
-One exception to this is made when using the WebSocket protocol. {{site.base_gateway}}
+One exception to this is when you're using the WebSocket protocol,{{site.base_gateway}}
 sets the following headers to allow for upgrading the protocol between the
 client and your upstream services:
 
@@ -169,7 +170,7 @@ There are two configurable elements:
 1. What exactly constitutes an error. Here {{site.base_gateway}} uses the Nginx defaults, which means an error or timeout that occurs while establishing a connection with the server, passing a request to it, or reading the response headers. 
 This is based on Nginx's [`proxy_next_upstream`](https://nginx.org/docs/http/ngx_http_proxy_module.html#proxy_next_upstream) directive. 
 This option is not directly configurable through {{site.base_gateway}}, but can be added using a custom Nginx configuration. 
-See the [Nginx directives reference][/gateway/nginx-directives/] for more details.
+See the [Nginx directives reference](/gateway/nginx-directives/) for more details.
 
 ## Response
 
@@ -211,7 +212,7 @@ Host: my-websocket-api.com
 Upgrade: WebSocket
 ```
 
-This makes {{site.base_gateway}} forward the `Connection` and `Upgrade` headers to your upstream service, instead of dismissing them due to the hop-by-hop nature of a standard HTTP proxy.
+This configures {{site.base_gateway}} to forward the `Connection` and `Upgrade` headers to your upstream service instead of dismissing them due to the hop-by-hop nature of a standard HTTP proxy.
 
 ### WebSocket proxy modes
 
@@ -289,10 +290,10 @@ If you want {{site.base_gateway}} to terminate TLS, you can accept `https`/`wss`
 ## Proxy gRPC traffic
 
 gRPC proxying is natively supported in {{site.base_gateway}}. 
-In order to manage gRPC Services and proxy gRPC requests with {{site.base_gateway}}, create Services and Routes for your gRPC services.
+To manage gRPC Services and proxy gRPC requests with {{site.base_gateway}}, create Services and Routes for your gRPC services.
 
-Only observability and logging plugins are supported with gRPC. 
-Plugins known to be supported with gRPC have `grpc` and `grpcs` in the list of compatible protocols. 
+Only observability and [logging](/plugins/?category=logging) plugins are supported with gRPC. 
+Plugins that support gRPC have `grpc` and `grpcs` in the list of compatible protocols. 
 This is the case for [File Log](/plugins/file-log/), for example.
 
 ## Proxy TCP/TLS traffic
@@ -312,7 +313,7 @@ If you want to terminate TLS with {{site.base_gateway}}, the following condition
 
 On the Service side, depending on whether the connection between {{site.base_gateway}} and the upstream
 service needs to be encrypted, you can set either the `tcp` or `tls` protocol.
-This means all of the below setup are supported in this mode:
+This means the following setup is supported in this mode:
 
 1. Client <- TLS -> {{site.base_gateway}} <- TLS -> Upstream
 1. Client <- TLS -> {{site.base_gateway}} <- Cleartext -> Upstream
