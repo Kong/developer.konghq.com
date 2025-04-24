@@ -19,7 +19,7 @@ description: Learn how to implement custom plugin logic using handler.lua.
 tags:
   - custom-plugins
 
-minimum_version:
+min_version:
   gateway: '3.4'
 
 related_resources:

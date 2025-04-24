@@ -19,6 +19,9 @@ description: Learn how to enable plugin configuration options using schema.lua.
 tags:
   - custom-plugins
 
+min_version:
+  gateway: '3.4'
+
 related_resources:
   - text: Custom plugins
     url: /custom-plugins/

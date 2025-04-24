@@ -10,10 +10,13 @@ works_on:
     - konnect
     - on-prem
 
-description: Learn about how to develop custom plugins for {{site.base_gateway}}
+description: Learn about how to develop custom plugins for {{site.base_gateway}}.
 
 tags:
   - custom-plugins
+
+min_version:
+  gateway: '3.4'
 
 related_resources:
   - text: Custom plugins

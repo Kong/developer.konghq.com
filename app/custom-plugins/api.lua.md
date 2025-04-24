@@ -19,6 +19,9 @@ description: Learn how to extent the Admin API using api.lua.
 tags:
   - custom-plugins
 
+min_version:
+  gateway: '3.4'
+
 related_resources:
   - text: Custom plugins
     url: /custom-plugins/

@@ -19,6 +19,9 @@ description: Learn how to create migration modules to create database tables to 
 tags:
   - custom-plugins
 
+min_version:
+  gateway: '3.4'
+
 related_resources:
   - text: Custom plugins
     url: /custom-plugins/

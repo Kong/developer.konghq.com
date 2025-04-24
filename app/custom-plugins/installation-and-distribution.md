@@ -15,6 +15,12 @@ works_on:
 
 description: Learn about the different ways to deploy a custom plugin.
 
+tags:
+  - custom-plugins
+
+min_version:
+  gateway: '3.4'
+
 related_resources:
   - text: Custom plugins
     url: /custom-plugins/

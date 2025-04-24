@@ -19,6 +19,9 @@ description: Learn how to interact with the {{site.base_gateway}} data store in 
 tags:
   - custom-plugins
 
+min_version:
+  gateway: '3.4'
+
 related_resources:
   - text: Custom plugins
     url: /custom-plugins/
