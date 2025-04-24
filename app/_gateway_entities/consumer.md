@@ -143,7 +143,7 @@ Common use cases for Consumers:
 | Rate limiting | Rate limit specific Consumers based on tiers. |
 | Transformation | Add or remove values from response bodies based on the Consumer. |
 
-## Centrally-managed Consumers 
+## Centrally-managed Consumers {% new_in 3.10 %}
 
 Consumers can be scoped to a {{site.konnect_short_name}} region and managed centrally, or be scoped to a Control Plane in Gateway Manager.
 
@@ -165,7 +165,7 @@ For a complete tutorial, see [Create a centrally-managed Consumer in {{site.konn
 {:.info}
 > **Note:** If you are using KIC to manage your Data Plane nodes in {{site.konnect_short_name}}, ensure that you configure the [`cluster_telemetry_endpoint`](/gateway/configuration/#cluster-telemetry-endpoint)  in the Data Plane. You can find your specific `cluster_telemetry_endpoint` in [Gateway Manager](https://cloud.konghq.com/gateway-manager/), in the Data Plane node setup instructions.
 
-## Schema
+## Consumer schema
 
 {% entity_schema %}
 

@@ -7,9 +7,6 @@ metadata:
     - secrets-management
   breadcrumbs:
     - /gateway/
-  related_links:
-    - text: Securing APIs
-      url: /secure-apis/
   products:
     - gateway
 
