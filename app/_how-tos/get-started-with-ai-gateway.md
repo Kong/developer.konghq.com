@@ -76,6 +76,7 @@ next_steps:
   - text: Learn about all the AI plugins
     url: /plugins/?category=ai
 
+automated_tests: false
 ---
 
 ## 1. Check that {{site.base_gateway}} is running
