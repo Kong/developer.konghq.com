@@ -79,7 +79,7 @@ A migration file is a Lua file which returns a table containing two parts:
   The connector can invoke the `query` method to execute SQL queries. 
   These statements are triggered by `kong migrations finish`. 
   
-  We recommend that destructive operations, such asbremoval of data, changing row types, and insertion of new data, are done on the `teardown` sections.
+  We recommend that destructive operations, such as removal of data, changing row types, and insertion of new data, are done on the `teardown` sections.
 
 All SQL statements should be written so that they are as reentrant as possible. 
 For example, use `DROP TABLE IF EXISTS` instead of `DROP TABLE`, `CREATE INDEX IF NOT EXIST` instead of `CREATE INDEX`, and so on. 

@@ -20,7 +20,7 @@ Once you've created a custom plugin, you'll probably want to write tests for it.
 Unit testing Lua is easy, and [many testing frameworks](http://lua-users.org/wiki/UnitTesting) are available. 
 However, you might also want to write integration tests.
 
-The preferred testing framework for Kong is [busted](https://github.com/lunarmodules/busted) running with the [resty-cli](https://github.com/openresty/resty-cli) interpreter, though you are ree to use a different one. 
+The preferred testing framework for Kong is [busted](https://github.com/lunarmodules/busted) running with the [resty-cli](https://github.com/openresty/resty-cli) interpreter, though you are free to use a different one. 
 In the Kong repository, the busted executable can be found at `bin/busted`.
 
 Kong provides you with a helper to start and stop it from Lua in your test suite: `spec.helpers`. 

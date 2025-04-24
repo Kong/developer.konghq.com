@@ -67,7 +67,7 @@ tree {plugin-name}
 ## Install the plugin
 
 For a {{site.base_gateway}} node to be able to use the custom plugin, the custom plugin's Lua sources must be installed on your host's file system. 
-You can do this wih LuaRocks, Docker, or manually.
+You can do this with LuaRocks, Docker, or manually.
 
 Regardless of which method you are using to install your plugin's sources, you must install it for each node in your {{site.base_gateway}} cluster.
 
@@ -236,7 +236,7 @@ Depending on the platform that {{site.base_gateway}} is running on, there are di
 
 ### LuaRocks
 
-You can use use [LuaRocks](https://luarocks.org/), a package manager for Lua modules. 
+You can use [LuaRocks](https://luarocks.org/), a package manager for Lua modules. 
 Your module doesn't have to live inside the {{site.base_gateway}} repository, but it can if that's how you'd like to maintain your {{site.base_gateway}} setup.
 
 By defining your modules (and their eventual dependencies) in a [rockspec](https://github.com/keplerproject/luarocks/wiki/Creating-a-rock) file, you can install those modules on your platform via LuaRocks. 
