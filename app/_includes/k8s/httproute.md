@@ -1,11 +1,13 @@
-{%- assign path = include.path | default: '/echo' %}
 {%- assign hostname = include.hostname | default: 'kong.example' %}
 {%- assign name = include.name | default: 'echo' %}
 {%- assign namespace = include.namespace | default: 'kong' %}
-{%- assign service = include.service | default: 'echo' %}
-{%- assign port = include.port | default: '1027' %}
 {%- assign ingress_class = include.ingress_class | default: 'kong' %}
-{%- assign route_type = include.route_type | default: 'PathPrefix' %}
+{%- assign route_type = include.route_type | default: 'PathPrefix' | split: "," %}
+{%- assign path = include.path | default: '/echo' | split: "," %}
+{%- assign service = include.service | default: 'echo' | split: "," %}
+{%- assign port = include.port | default: '1027'| split: "," %}
+
+{% assign count = service.size | minus: 1 %}
 
 {% capture the_code %}
 {% navtabs "http-route" %}
@@ -31,15 +33,15 @@ spec:
     namespace: {{ namespace }}{% endunless %}{% unless include.skip_host %}
   hostnames:
   - '{{ hostname }}'{% endunless %}
-  rules:
+  rules:{% for i in (0..count) %}
   - matches:
     - path:
-        type: {{ route_type }}
-        value: {{ path }}
+        type: {{ route_type[i] }}
+        value: {{ path[i] }}
     backendRefs:
-    - name: {{ service }}
+    - name: {{ service[i] }}
       kind: Service
-      port: {{ port }}
+      port: {{ port[i] }}{% endfor %}
 " | kubectl apply -f -
 ```
 
@@ -58,17 +60,17 @@ metadata:
     konghq.com/strip-path: 'true'
 spec:
   ingressClassName: {{ ingress_class }}
-  rules:
+  rules:{% for i in (0..count) %}
   - {% unless include.skip_host %}host: {{ hostname }}
     {% endunless %}http:
       paths:
-      - path: {% if route_type == 'RegularExpression' %}/~{% endif %}{{ path }}
+      - path: {% if route_type[i] == 'RegularExpression' %}/~{% endif %}{{ path[i] }}
         pathType: ImplementationSpecific
         backend:
           service:
-            name: {{ service }}
+            name: {{ service[i] }}
             port:
-              number: {{ port }}
+              number: {{ port[i] }}{% endfor %}
 " | kubectl apply -f -
 ```
 
