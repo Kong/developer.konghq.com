@@ -32,7 +32,7 @@ related_resources:
 Your custom plugins can interact with {{site.base_gateway}} entities in the [PostgreSQL](http://www.postgresql.org/) data store through classes we refer to as Data Access Objects (DAOs).
 
 All entities in {{site.base_gateway}}, including custom entities are represented by:
-* A schema that describes which table the entity relates to in the data store, constraints on its fields such as foreign keys, non-null constraints etc. For custom entities, this is defined in [daos.lua](custom-plugins/daos.lua).
+* A schema that describes which table the entity relates to in the data store, constraints on its fields such as foreign keys, non-null constraints etc. For custom entities, this is defined in [daos.lua](/custom-plugins/daos.lua).
 * An instance of the `DAO` class mapping to the database currently in use.
   This class's methods consume the schema and expose methods to insert, update, select, and delete entities of that type.
 

@@ -34,7 +34,7 @@ related_resources:
   - text: Data store
     url: /custom-plugins/data-store/
   - text: Testing custom plugins
-    url: /custom-plugins/testing
+    url: /custom-plugins/testing/
   - text: Deployment options
     url: /custom-plugins/deployment-options
   - text: Installation and distribution

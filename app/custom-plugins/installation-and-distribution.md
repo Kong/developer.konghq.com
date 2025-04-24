@@ -280,7 +280,7 @@ On the machine where the plugin is developed, run the following steps:
    The public key, `cosign.pub`, should be distributed and used by target machines to validate the downloaded plugin later in the flow. 
 
    There are also key-less methods for signing and verifying artifacts with Cosign. 
-   More information is available in their [documentation](https://docs.sigstore.dev/signing/overview/).
+   More information is available in their [documentation](https://docs.sigstore.dev/cosign/signing/overview/).
 
 1. Login to your OCI-compliant registry. In this case we'll use Docker Hub:
    ```bash

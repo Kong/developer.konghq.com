@@ -43,7 +43,7 @@ For more details, see the example in the [getting started guide](/custom-plugins
 ## Kubernetes
 
 Many users choose to run {{site.base_gateway}} on Kubernetes. {{site.base_gateway}} can 
-be deployed on Kubernetes directly or by using [{{site.kic_product_name}}](/kubernetes-ingress-controller/latest/).
+be deployed on Kubernetes directly or by using [{{site.kic_product_name}}](/kubernetes-ingress-controller/).
 In either case, deploying custom plugins on Kubernetes is achieved by adding the custom plugin 
 code to the cluster in a ConfigMap or Secret and mounting it into the {{site.base_gateway}} proxy pods. Additionally,
 the pods must be configured to load the custom plugin code from the mounted volume.
