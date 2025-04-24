@@ -54,7 +54,7 @@ ingressController:
 
 ## Update custom resource definitions
 
-Custom resource definitions (CRDs) are not upgraded when running `helm upgrade`. To manually upgrade the CRDs in your cluster run the following command:
+Custom resource definitions (CRDs) are not upgraded when running `helm upgrade`. To manually upgrade the CRDs in your cluster, run the following command:
 
 ```bash
 kubectl kustomize https://github.com/kong/kubernetes-ingress-controller/config/crd?ref=v{{ site.data.kic_latest.release }} | kubectl apply -f -
@@ -74,7 +74,7 @@ The primary change in Gateway API v1.1 is the promotion of `GRPCRoute` from v1al
 If you have been using the Standard Channel of the Gateway API, then you don't need to do anything extra.
 Download the latest version of the CRD from the Standard Channel and install it in your cluster directly.
 
-If you have installed the Experimental Channel of Gateway API v1.0, complete the following steps to upgrade to version v1.1 of the CRD:
+If you installed the Experimental Channel of Gateway API v1.0, complete the following steps to upgrade to version v1.1 of the CRD.
 
 1. Install the Experimental Channel of Gateway API v1.1:
 
@@ -86,27 +86,27 @@ If you have installed the Experimental Channel of Gateway API v1.0, complete the
    [without preserving the definition of the old version](https://github.com/kubernetes-sigs/gateway-api/issues/3086).
 
 1. Update all your manifests to use `v1` instead of `v1alpha2`.
-1. [Upgrade to {{ site.kic_product_name }} v3.2](#upgrade).
+1. [Upgrade to {{ site.kic_product_name }} v3.2](#upgrade-kong-ingress-controller).
 
 ### {{ site.kic_product_name }} 3.4
 
-Starting from version 3.4, {{ site.kic_product_name }} supports Gateway API version 1.2.
+Starting in {{ site.kic_product_name }} 3.4, {{ site.kic_product_name }} supports Gateway API version 1.2.
 There is a breaking change in Gateway API 1.2 to remove the `v1alpha2` version of `GRPCRoute` and `ReferenceGrant`.
 
-If you have been using gateway API v1.1 and {{ site.kic_product_name }} 3.2 and above, and there are no `GRPCRoute` and `ReferenceGrant` resources stored in `v1alpha2` version, you can directly upgrade gateway API from v1.1 to v1.2. 
-You can use the following script to ensure your `GRPCRoute` and `ReferenceGrant` CRDs are not using `v1alpha2` storage version:
+If you have been using Gateway API v1.1 and {{ site.kic_product_name }} 3.2 and above, and there are no `GRPCRoute` and `ReferenceGrant` resources stored in `v1alpha2` version, you can directly upgrade Gateway API from v1.1 to v1.2. 
+You can use the following script to ensure your `GRPCRoute` and `ReferenceGrant` CRDs aren't using `v1alpha2` storage version:
 
 ```bash
 kubectl get grpcroutes -A -o jsonpath='{.items[*].apiVersion}' | tr ' ' '\n' | sort | uniq -c
 kubectl get referencegrants -A -o jsonpath='{.items[*].apiVersion}' | tr ' ' '\n' | sort | uniq -c
 ```
 
-If the output contains `v1alpha2`, it means that there are `GRPCRoute`s or `ReferenceGrant`s (or both) using `v1alpha2` storage version and you need to update the manifests before upgrading.
+If the output contains `v1alpha2`, it means that there are one or more `GRPCRoute` or `ReferenceGrant` (or both) using `v1alpha2` storage version and you must update the manifests before upgrading.
 
 Otherwise, upgrade Gateway API and {{ site.kic_product_name }} following these steps:
 
 1. Ensure you are using Gateway API 1.1 (you can upgrade by following the steps in the section above).
-2. Ensure you are using {{ site.kic_product_name }} version 3.2 (or above).
+2. Ensure you are using {{ site.kic_product_name }} version 3.2 or later.
 3. Update all your `GRPCRoute` manifests to use `v1` instead of `v1alpha2` and your `ReferenceGrant` manifests to use `v1beta1` instead of `v1alpha2`. This can be done by following the [upgrade guide from Gateway API](https://gateway-api.sigs.k8s.io/guides/?h=v1.2#v12-upgrade-notes).
 4. Install the standard or experimental channel of Gateway API 1.2.
 
@@ -131,7 +131,7 @@ $ helm upgrade ${YOUR_RELEASE_NAME} kong/kong \
 {% endnavtab %}
 {% endnavtabs %}
 
-After the upgrade completes there is a brief period of time before the new resources are online. You can wait for the relevant Pod resources to cycle by watching them in your release namespace:
+After the upgrade completes, there's a brief period of time before the new resources are online. You can wait for the relevant Pod resources to cycle by watching them in your release namespace:
 
 ```shell
 $ kubectl -n ${YOUR_RELEASE_NAMESPACE} get pods -w
@@ -165,7 +165,7 @@ Upgrading from {{ site.kic_product_name }} 2.12 to 3.x+ is a major version chang
 
 1. **Upgrade Kong to version 3.4.1 or later.**
 
-    {{ site.kic_product_name }} 3.0 requires Kong version 3.4.1 or later. You must upgrade your Kong instances to 3.4.1 before you upgrade to {{ site.kic_product_name }} 3.0.
+    {{ site.kic_product_name }} 3.0 requires {{site.base_gateway}} 3.4.1 or later. You must upgrade your {{site.base_gateway}} instances to 3.4.1 before you upgrade to {{ site.kic_product_name }} 3.0.
 
 1. **Update the {{ site.kic_product_name }} CRDs.**
 
@@ -177,7 +177,7 @@ Upgrading from {{ site.kic_product_name }} 2.12 to 3.x+ is a major version chang
 
 1. **Convert `KongIngress` `route` and `service` fields to annotations.**
 
-    Route (Ingress) and service (Service) configuration fields previously available in KongIngress are now all handled via [dedicated annotations](/kubernetes-ingress-controller/reference/annotations/) and will not be respected if set in `KongIngress`.
+    Route (Ingress) and Service (Service) configuration fields previously available in `KongIngress` are now all handled via [dedicated annotations](/kubernetes-ingress-controller/reference/annotations/) and will not be respected if set in `KongIngress`.
 
     For example, if you set the `route.https_redirect_status_code` in a `KongIngress` resource, you should now use the `konghq.com/https-redirect-status-code` annotation on an Ingress or HTTPRoute resource.
 
@@ -197,18 +197,18 @@ Upgrading from {{ site.kic_product_name }} 2.12 to 3.x+ is a major version chang
     
     * `--sync-rate-limit` is now `--proxy-sync-seconds`.
     * `--konnect-runtime-group-id` is now `--konnect-control-plane-id`.
-    * `--stderrthreshold` and `--debug-log-reduce-redundancy` have been removed
+    * `--stderrthreshold` and `--debug-log-reduce-redundancy` were removed
       following changes to the logging system.
     * `--log-level` no longer accepts the `warn`, `fatal`, and `panic` values due
       to [consolidation of log levels](#logging-changes).
-    * `--update-status-on-shutdown` has been removed after its earlier
+    * `--update-status-on-shutdown` was removed after its earlier
       functionality was removed.
-    * `--kong-custom-entities-secret` has been removed after removal of its
-      functionality in 2.0.
-    * `--leader-elect` has been removed. The controller automatically configures
+    * `--kong-custom-entities-secret` was removed after its
+      functionality was removed in 2.0.
+    * `--leader-elect` was removed. The controller automatically configures
       its leader election mode based on other settings.
     * `--enable-controller-ingress-extensionsv1beta1` and
-      `--enable-controller-ingress-networkingv1beta1` have been removed following
+      `--enable-controller-ingress-networkingv1beta1` were removed following
       removal of support for older Ingress API versions.
 
 ### Notable changes
@@ -217,7 +217,7 @@ The following changes are not considered breaking changes. However, they are not
 
 #### Expression Router
 
-Kong 3.0 introduced a new [expression-based routing engine][expression-router]. This engine allows {{ site.kic_product_name }} to set some match criteria and route matching precedence not possible under the original Kong routing engine. This functionality is necessary to implement some aspects of the Gateway API specification.
+{{site.base_gateway}} 3.0 introduced a new [expression-based routing engine](/gateway/routing/expressions/). This engine allows {{ site.kic_product_name }} to set some match criteria and route matching precedence not possible under the original {{site.base_gateway}} routing engine. This functionality is necessary to implement some aspects of the Gateway API specification.
 
 DB-less configurations in the Helm chart now use the `expressions` [`router_flavor` kong.conf setting][expression-kong-conf] by default to take advantage of this functionality. DB-backed configurations use `traditional_compatible` instead for backwards compatibility, as existing route configuration from older versions cannot yet be migrated in DB mode.
 
@@ -239,7 +239,7 @@ The new logging system changes the default `console` format. In earlier versions
 time="2023-09-21T23:07:26Z" level=info msg="the ingress class name has been set" logger=setup value=kong othervalue=pong
 ```
 
-In 3.0, `console` is a mixture of unlabeled tab-delimited fields (for standard keys such as timestamp, log level, and log section) and JSON (for fields specific to individual log entries:
+In 3.0, `console` is a mixture of unlabeled tab-delimited fields (for standard keys such as timestamp, log level, and log section) and JSON (for fields specific to individual log entries):
 
 ```text
 2023-09-22T00:38:16.026Z        info    setup   the ingress class name has been set     {"value": "kong","othervalue":"pong"}
@@ -251,7 +251,7 @@ The `json` format is unchanged except for the order of fields. Earlier versions 
 {"level":"info","logger":"setup","msg":"the ingress class name has been set","time":"2023-09-21T23:15:15Z","value":"kong"}
 ```
 
-3.0+ prints standard log fields first and entry-specific fields in the order they were added in code:
+{{site.kic_product_name}} 3.0 or later prints standard log fields first and entry-specific fields in the order they were added in code:
 
 ```json
 {"level":"info","time":"2023-09-22T00:28:13.006Z","logger":"setup","msg":"the ingress class name has been set","value":"kong"}

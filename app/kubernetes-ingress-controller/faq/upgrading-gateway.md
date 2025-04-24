@@ -2,7 +2,7 @@
 title: Upgrading {{ site.base_gateway }} using Helm
 
 description: |
-  What do I need to know when upgrading Kong Gateway on Kubernetes? DB-backed mode vs DB-less
+  What do I need to know when upgrading {{site.base_gateway}} on Kubernetes? DB-backed mode vs DB-less
 
 content_type: reference
 layout: reference
@@ -21,17 +21,17 @@ related_resources:
 
 Every {{ site.kic_product_name }} deployment consists of two components that can be upgraded independently (learn more in [deployment methods](/index/kubernetes-ingress-controller/#deployment-topologies)).
 
-- {{ site.kic_product_name }} (a control plane),
-- {{ site.base_gateway }} (a data plane).
+- {{ site.kic_product_name }} (a Control Plane),
+- {{ site.base_gateway }} (a Data Plane).
 
 To see the available {{ site.base_gateway }} images, see [kong/kong-gateway](https://hub.docker.com/r/kong/kong-gateway/tags) on Docker Hub:
 
 ## Prerequisites
 
-- {{ site.kic_product_name }} installed using the `kong/ingress` Helm chart.
-- Enure your Helm charts repository is up-to-date by running `helm repo update`.
-- [yq](https://github.com/mikefarah/yq) installed (for YAML processing).
-- Check the version of {{ site.base_gateway }} and {{ site.kic_product_name }} you're currently  running. 
+- {{ site.kic_product_name }} installed using the `kong/ingress` Helm chart
+- Enure your Helm charts repository is up-to-date by running `helm repo update`
+- [yq](https://github.com/mikefarah/yq) installed (for YAML processing)
+- Check the version of {{ site.base_gateway }} and {{ site.kic_product_name }} you're currently running:
 
    ```bash
    helm get values --all kong -n kong  | yq '{
@@ -53,7 +53,7 @@ To see the available {{ site.base_gateway }} images, see [kong/kong-gateway](htt
 >  **Upgrading {{ site.base_gateway }} in DB mode**
 >
 > There may be database migrations to run when running {{ site.base_gateway }} in DB-backed mode.
-> Refer to [Upgrade {{ site.base_gateway }} 3.x.x](/gateway/upgrade/) to learn more about upgrade paths between different versions of {{ site.base_gateway }}.
+> See [Upgrade {{ site.base_gateway }} 3.x.x](/gateway/upgrade/) to learn more about upgrade paths between different versions of {{ site.base_gateway }}.
 
 ## Upgrade {{ site.base_gateway }} using Helm
 
@@ -62,7 +62,7 @@ To see the available {{ site.base_gateway }} images, see [kong/kong-gateway](htt
     ```yaml
     gateway:
       image:
-        tag: {{site.data.latest_gateway.release}}
+        tag: "{{site.data.latest_gateway.release}}"
     ```
 
 1. Run `helm upgrade` with the `--values` flag.
