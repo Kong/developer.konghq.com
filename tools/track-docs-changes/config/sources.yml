@@ -938,8 +938,6 @@ app/_landing_pages/ai-gateway.yaml:
   - app/_src/gateway/ai-gateway/index.md
 app/_landing_pages/ai-gateway/ai-providers.yaml:
   - app/_src/gateway/ai-gateway/index.md
-app/_landing_pages/dev-portal.yaml:
-  - app/dev-portal/index.md
 
 # references 
 app/gateway/rate-limiting/strategies.md:
@@ -1277,3 +1275,50 @@ app/mesh/production-usuage-values.md:
   - app/_src/mesh/production/cp-deployment/production-usage-values.md
 app/mesh/support-policy.md:
   - app/_src/mesh/support-policy.md
+
+
+## Dev Portal
+
+app/_landing_pages/dev-portal.yaml:
+  - app/dev-portal/index.md
+  - app/dev-portal/portals/index.md
+
+app/dev-portal/portals-customization.md:
+  - app/dev-portal/portals/index.md
+  - app/dev-portal/portals/customization/customization.md
+  - app/dev-portal/portals/customization/appearance.md
+  - app/dev-portal/portals/customization/portal-editor.md
+app/dev-portal/custom-pages.md:
+  - app/dev-portal/custom-pages.md
+app/dev-portal/snippets.md:
+  - app/dev-portal/portals/customization/snippets.md
+app/dev-portal/portal-settings.md:
+  - app/dev-portal/settings/general.md
+  - app/dev-portal/portals/audit-logs/index.md
+app/dev-portal/custom-domains.md:
+  - app/dev-portal/settings/custom-domains.md
+app/dev-portal/security-settings.md:
+  - /app/dev-portal/portals/settings/security.md
+app/dev-portal/team-mapping.md:
+  - app/dev-portal/settings/team-mapping.md
+app/dev-portal/apis:
+  - app/dev-portal/apis/gateway-service-link.md
+  - app/dev-portal/apis/index.md
+  - app/dev-portal/apis/versioning.md
+  - app/dev-portal/apis/docs.md
+app/dev-portal/publishing.md:
+  - app/dev-portal/portals/publishing.md
+
+app/dev-portal/application-registration.md:
+  - /app/dev-portal/app-reg/index.md
+app/dev-portal/auth-strategies.md:
+  - /app/dev-portal/app-reg/auth-strategies/oidc/index.md
+  - /app/dev-portal/app-reg/auth-strategies/key-auth/index.md
+
+app/dev-portal/access-and-approvals.md:
+  - /app/dev-portal/access-and-approvals/teams.md
+  - /app/dev-portal/access-and-approvals/index.md
+app/dev-portal/developer-signup.md:
+  - /app/dev-portal/access-and-approvals/developers.md
+app/dev-portal/sso.md:
+  - /app/dev-portal/access-and-approvals/sso.md
