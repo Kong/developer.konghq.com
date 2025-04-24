@@ -96,7 +96,8 @@ rows:
   - name: "`name`"
     type: "`string`"
     required: true
-    description: The name of database table, which is also used in the DAO name: `kong.db.{name}`.
+    description: |
+      The name of database table, which is also used in the DAO name: `kong.db.{name}`.
   - name: "`primary_key`"
     type: "`table`"
     required: true
