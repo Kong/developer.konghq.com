@@ -1,5 +1,5 @@
 ---
-title: Developer Signup
+title: Developer Sign-up
 content_type: reference
 layout: reference
 
