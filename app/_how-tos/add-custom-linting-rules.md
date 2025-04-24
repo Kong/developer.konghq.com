@@ -26,11 +26,11 @@ prereqs:
 
 ---
 
-## 1. Create add the file ruleset
+## Create add the file ruleset
 
 In the Git repository connected to your document, create a `.spectral.yaml` at the same level as the `.insomnia` folder.
 
-## 2. Define the rules
+## Define the rules
 
 The custom ruleset overrides the default one. If you want to create a completely new ruleset, you can simply add your rules in the file using the [Spectral](https://docs.stoplight.io/docs/spectral/e5b9616d6d50c-rulesets) syntax. If you want to extend an existing ruleset, specify the ruleset with the `extend` property in `.spectral.yaml`.
 
@@ -48,11 +48,11 @@ rules:
       function: truthy
 ```
 
-## 3. Synchronize the changes
+## Synchronize the changes
 
 Commit and push the file on the repository, then pull the changes in Insomnia.
 
-## 4. Validate
+## Validate
 
 Close and reopen the document to apply the changes. In this example, you can validate by creating a new tag without a description:
 ```yaml

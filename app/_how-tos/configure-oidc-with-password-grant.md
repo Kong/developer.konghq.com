@@ -64,7 +64,7 @@ cleanup:
 
 ---
 
-## 1. Enable the OpenID Connect plugin with the password grant
+## Enable the OpenID Connect plugin with the password grant
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with the password grant.
@@ -104,7 +104,7 @@ In this example:
 
 {% include_cached plugins/oidc/client-auth.md %}
 
-## 2. Validate the password grant
+## Validate the password grant
 
 Now, validate the setup by accessing the `example-route` Route and passing the user credentials in `username:password` format.
 The following user has the username `alex` and the password `doe`:

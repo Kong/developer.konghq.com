@@ -56,7 +56,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Enable rate limiting
+## Enable rate limiting
 
 Enable the [Rate Limiting plugin](/plugins/rate-limiting/) for the Service. 
 In this example, the limit is 5 requests per minute and 1000 requests per hour.
@@ -71,7 +71,7 @@ entities:
         hour: 1000
 {% endentity_examples %}
 
-## 2. Validate
+## Validate
 
 After configuring the Rate Limiting plugin, you can verify that it was configured correctly and is working, by sending more requests than allowed in the configured time limit.
 

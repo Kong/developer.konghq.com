@@ -79,12 +79,12 @@ next_steps:
 automated_tests: false
 ---
 
-## 1. Check that {{site.base_gateway}} is running
+## Check that {{site.base_gateway}} is running
 
 {% include how-tos/steps/ping-gateway.md %}
 
 
-## 2. Create a Gateway Service
+## Create a Gateway Service
 
 Create a Service to contain the Route for the LLM provider:
 
@@ -97,7 +97,7 @@ entities:
 
 The URL can point to any empty host, as it won't be used by the plugin.
 
-## 3. Create a Route
+## Create a Route
 
 Create a Route for the LLM provider. In this example we're creating a chat route, so we'll use `/chat` as the path:
 
@@ -111,7 +111,7 @@ entities:
       - /chat
 {% endentity_examples %}
 
-## 4. Enable the AI Proxy plugin
+## Enable the AI Proxy plugin
 
 Enable the AI Proxy plugin to create a chat route:
 
@@ -133,7 +133,7 @@ If needed, you can restrict the models that can be consumed by specifying the mo
 
 You can also provide the OpenAI API key directly in the configuration with the [`config.auth.header_name`](/plugins/ai-proxy/reference/#schema--config-auth-header-name) and [`config.auth.header_value`](/plugins/ai-proxy/reference/#schema--config-auth-header-value) parameters so that the client doesn’t have to send them.
 
-## 5. Validate
+## Validate
 
 To validate, you can send a `POST` request to the `/chat` endpoint, using the correct [input format](/plugins/ai-proxy/#input-formats).
 Since we didn't add the model name and API key in the plugin configuration, make sure to include them in the request:

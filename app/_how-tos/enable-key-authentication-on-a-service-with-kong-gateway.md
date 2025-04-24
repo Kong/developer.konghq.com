@@ -53,7 +53,7 @@ min_version:
     gateway: '3.4'
 ---
 
-## 1. Enable the Key Authentication plugin on the Service:
+## Enable the Key Authentication plugin on the Service:
 
 Enable Key Auth for the Service. 
 
@@ -67,7 +67,7 @@ entities:
         - apikey
 {% endentity_examples %}
 
-## 2. Create a Consumer
+## Create a Consumer
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.
 he Consumer needs an API key to access any {{site.base_gateway}} Services.
@@ -80,7 +80,7 @@ entities:
         - key: hello_world
 {% endentity_examples %}
 
-## 3. Validate
+## Validate
 
 After configuring the Key Authentication plugin, you can verify that it was configured correctly and is working, by sending requests with and without the API key you created for your Consumer.
 

@@ -50,7 +50,7 @@ cleanup:
 
 ---
 
-## 1. Enable the Request Transformer Advanced plugin
+## Enable the Request Transformer Advanced plugin
 
 In this example, we expect the client to send requests with a JSON body containing customer details and a query parameter containing a customer ID.
 
@@ -81,7 +81,7 @@ entities:
 <!--vale on-->
 
 
-## 2. Validate
+## Validate
 
 To check that the request transformation is working, send a `POST` request with the `customer_id` as a query parameter and extra JSON properties in the request body:
 

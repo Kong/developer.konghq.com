@@ -60,7 +60,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create a Consumer
+## Create a Consumer
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. The credentials will be generated in a later step, so we only need to specify a username.
 
@@ -70,7 +70,7 @@ entities:
     - username: alex
 {% endentity_examples %}
 
-## 2. Create a Vault object
+## Create a Vault object
 
 A Vault object represents the connection between {{site.base_gateway}} and a [Vault](https://www.vaultproject.io/) server. It defines the connection and authentication information used to communicate with the Vault API. This allows different instances of the `vault-auth` plugin to communicate with different Vault servers, providing a flexible deployment and consumption model.
 
@@ -101,7 +101,7 @@ Add the value of `id` in the response to your environment, we'll need it in the 
 export DECK_VAULT_ID=<vault_object_id>
 ```
 
-## 3. Enable the Vault Authentication plugin
+## Enable the Vault Authentication plugin
 
 Enable the [Vault Authentication](/plugins/vault-auth/) plugin, and use the ID of the Vault object to link it to the plugin:
 {% entity_examples %}
@@ -117,7 +117,7 @@ variables:
     value: $VAULT_ID
 {% endentity_examples %}
 
-## 4. Generate consumer credentials
+## Generate consumer credentials
 
 Use the `POST /vault-auth/{vault}/credentials/{consumer}` endpoint to generate credentials for the Consumer we created:
 <!--vale off-->
@@ -135,7 +135,7 @@ export ACCESS_TOKEN=<consumer_access_token>
 export SECRET_TOKEN=<consumer_secret_token>
 ```
 
-## 5. Validate
+## Validate
 
 To validate that the authentication is working as expected, send a request to the Route we created in the [prerequisites](#pre-configured-entities) using the credentials we generated:
 <!--vale off-->

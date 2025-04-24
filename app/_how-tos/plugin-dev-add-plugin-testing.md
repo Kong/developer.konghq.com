@@ -33,7 +33,7 @@ related_resources:
     url: /custom-plugins/
 ---
 
-## 1. Install Pongo
+## Install Pongo
 
 [Pongo](https://github.com/Kong/kong-pongo) is a tool that helps you validate and 
 distribute custom plugins for {{site.base_gateway}}. 
@@ -60,7 +60,7 @@ instead.
    pongo help
    ```
 
-## 2. Initialize the test environment
+## Initialize the test environment
 
 Pongo lets you validate a plugin's behavior by giving you tools to quickly run a 
 {{site.base_gateway}} instance with the plugin installed and available. 
@@ -130,7 +130,7 @@ using `curl` and filtering the response with `jq`:
    }
    ```
 
-## 3. Manually test the plugin
+## Manually test the plugin
 
 With the plugin installed, we can now configure [{{site.base_gateway}} entities](/gateway/entities/) to invoke and validate the plugin's behavior.
 
@@ -208,7 +208,7 @@ You should see `X-MyPlugin: response` in the set of headers, indicating that the
    ```
 
 
-## 4. Write an automated test
+## Write an automated test
 
 For quickly getting started, manually validating a plugin using the Pongo shell works
 well. For production scenarios, you will likely want to deploy automated testing 
@@ -310,7 +310,7 @@ For this project, this is the `spec/my-plugin` folder you created earlier.
    ```
    This test validates the plugin's current behavior. See the code comments for details on the design of the test and the test helpers provided by {{site.base_gateway}}.
 
-## 5. Run the test
+## Run the test
 
 Pongo can run automated tests with the `pongo run` command. When this is executed,
 Pongo determines if dependency containers are already running and will use them

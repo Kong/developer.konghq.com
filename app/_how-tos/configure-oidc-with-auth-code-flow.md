@@ -63,7 +63,7 @@ cleanup:
 
 ---
 
-## 1. Enable the OpenID Connect plugin with the auth code flow
+## Enable the OpenID Connect plugin with the auth code flow
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with the auth code flow and session authentication.
@@ -110,7 +110,7 @@ In this example:
 * `authorization_endpoint`: Sets a custom endpoint for authorization, overriding the endpoint returned by discovery through the IdP. 
 We need this setting because we're running the example through Docker, otherwise the discovery endpoint will try to access an internal Docker host.
 
-## 2. Validate authorization code login
+## Validate authorization code login
 
 Access the Route you configured in the [prerequisites](#prerequisites) with some query arguments. 
 In a new browser tab, navigate to the following:

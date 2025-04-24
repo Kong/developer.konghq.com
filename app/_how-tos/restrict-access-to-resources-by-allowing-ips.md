@@ -47,7 +47,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Enable IP restriction
+## Enable IP restriction
 
 Enable the [IP Restriction plugin](/plugins/ip-restriction/) globally. 
 In this example, we'll allow the reserved `192.0.2.0/24` IP range:
@@ -61,7 +61,7 @@ entities:
         - 192.0.2.0/24
 {% endentity_examples %}
 
-## 2. Validate
+## Validate
 
 After configuring the IP Restriction plugin, you can verify that it was configured correctly and is working, by sending a request:
 

@@ -63,7 +63,7 @@ cleanup:
 
 ---
 
-## 1. Enable the OpenID Connect plugin with user info auth
+## Enable the OpenID Connect plugin with user info auth
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with the user info grant.
@@ -106,7 +106,7 @@ In this example:
 
 {% include_cached plugins/oidc/client-auth.md %}
 
-## 2. Retrieve the bearer token using the user info endpoint
+## Retrieve the bearer token using the user info endpoint
 
 Check that you can recover the token by requesting the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
 
@@ -126,7 +126,7 @@ Export the value of the header to an environment variable:
 export TOKEN='{your-bearer-token}'
 ```
 
-## 3. Validate the token
+## Validate the token
 
 Now, validate the setup by accessing the `example-route` Route and passing the token you retrieved through user info:
 

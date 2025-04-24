@@ -63,7 +63,7 @@ tags:
 ---
 
 
-## 1. Associate your certificate with an SNI
+## Associate your certificate with an SNI
 
 Associate the Certificate you created as a [prerequisite](#prerequisites) with an SNI. 
 If the SNI doesn't exist, this request creates a new one:
@@ -78,7 +78,7 @@ body:
   name: $SNI_NAME
 {% endcontrol_plane_request %}
 
-## 2. Validate the certificate
+## Validate the certificate
 
 Using `openssl`, open a connection with {{site.base_gateway}} and check that {{site.base_gateway}} returns the correct certificate for the SNI:
 

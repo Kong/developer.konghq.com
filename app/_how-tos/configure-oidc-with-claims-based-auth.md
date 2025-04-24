@@ -88,7 +88,7 @@ cleanup:
 
 ---
 
-## 1. Enable the OpenID Connect plugin with claims-based authorization
+## Enable the OpenID Connect plugin with claims-based authorization
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin. In this example, we're using the simple password grant with the `scopes_claim` and `scopes_required` claims pair.
@@ -131,7 +131,7 @@ In this example:
 
 {% include_cached plugins/oidc/client-auth.md %}
 
-## 2. Retrieve the bearer token
+## Retrieve the bearer token
 
 Check that you can recover the token by requesting the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
 
@@ -151,7 +151,7 @@ Export the value of the header to an environment variable:
 export TOKEN={your-bearer-token}
 ```
 
-## 3. Validate the token
+## Validate the token
 
 Now, validate the setup by accessing the `example-route` Route and passing the token from the previous step:
 

@@ -41,7 +41,7 @@ tldr:
 
 ---
 
-## 1. Gather the digest information
+## Gather the digest information
 
 Parse the manifest digest for the image using `regctl`, substituting the {{site.ee_product_name}} image you need to verify:
 
@@ -57,7 +57,7 @@ sha256:cb838b4090cfbfb9186be6e95fbeceabc8fdbf604400eaaca1561b1f510128eb
 {:.no-copy-code}
 
 
-## 2. Verify image signature
+## Verify image signature
 
 Run the `cosign verify` command, substituting the `SHA-256` digest and image name from the previous step:
 

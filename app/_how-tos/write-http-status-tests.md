@@ -41,13 +41,13 @@ cleanup:
       icon_url: /assets/icons/insomnia/insomnia.svg
 ---
 
-## 1. Create a test suite
+## Create a test suite
 
 Before you create a test, you need to create a test suite for our collection. 
 
 To do this, click the **Tests** tab and click **New test suite** in the sidebar.
 
-## 2. Create a HTTP status code test
+## Create a HTTP status code test
 
 You can create a test that checks a request against a certain status code. 
 

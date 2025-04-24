@@ -36,13 +36,13 @@ cleanup:
       icon_url: /assets/icons/insomnia/insomnia.svg
 ---
 
-## 1. Create a test suite
+## Create a test suite
 
 Before you create a test, you need to create a test suite for our collection. 
 
 To do this, click the **Tests** tab and click **New test suite** in the sidebar.
 
-## 2. Create a headers in response test
+## Create a headers in response test
 
 Now you can test if a header is returned in the response. 
 

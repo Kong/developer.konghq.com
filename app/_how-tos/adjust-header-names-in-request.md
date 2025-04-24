@@ -58,7 +58,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Enable the Rate Limiting plugin
+## Enable the Rate Limiting plugin
 
 Add a [Rate Limiting](/plugins/rate-limiting/) plugin to the `example-service` you created in the [prerequisites](#prerequisites):
 
@@ -73,7 +73,7 @@ entities:
         policy: local
 {% endentity_examples %}
 
-## 2. Create a header transformation Lua function
+## Create a header transformation Lua function
 
 The [Post-Function](/plugins/post-function/) plugin lets you execute Lua code. 
 We'll pass a function that renames the following headers:
@@ -125,7 +125,7 @@ Add the `rename-headers.lua` file as a decK environment variable so that you can
 export DECK_RENAME_HEADERS="$(cat rename-headers.lua)"
 ```
 
-## 3. Enable the Post-Function plugin
+## Enable the Post-Function plugin
 
 To change the header names, set up a Post-Function plugin instance that runs globally in the `header_filter` phase, and pass the function as an environment variable:
 
@@ -142,7 +142,7 @@ plugins:
 ' | deck gateway apply -
 ```
 
-## 4. Validate
+## Validate
 
 Let's test that the response header names have changed:
 

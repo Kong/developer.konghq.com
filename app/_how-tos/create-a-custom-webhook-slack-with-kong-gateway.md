@@ -44,7 +44,7 @@ min_version:
 ---
 
 
-## 1. Configure an Event Hook using the `webhook-custom` handler
+## Configure an Event Hook using the `webhook-custom` handler
 
 
 Using the `webhook-custom` handler, you can configure an Event Hook that listens for events on a source. The `webhook-custom` handler offers a template that you can configure to create a custom webhook. In this tutorial, we will configure an Event Hook that issues a `POST` request when a `crud` event happens on the Consumer entity. That `POST` request will be made to a Slack webhook application containing a custom message describing the event. 
@@ -74,7 +74,7 @@ Posting this will result in a `200` response. The `config` body in the Event Hoo
 * **`"payload"`**: What this webhook will `POST`. 
 
 
-## 2. Validate the webhook
+## Validate the webhook
 
 
 {:.warning}

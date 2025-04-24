@@ -66,7 +66,7 @@ search_aliases:
   - oidc
 ---
 
-## 1. Enable the OpenID Connect plugin with JWT authentication
+## Enable the OpenID Connect plugin with JWT authentication
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with bearer authentication. The stateless JWT Access Token authentication is named `bearer` in the OpenID Connect plugin.
@@ -109,7 +109,7 @@ In this example:
 
 {% include_cached plugins/oidc/client-auth.md %}
 
-## 2. Retrieve the bearer token
+## Retrieve the bearer token
 
 Check that you can recover the token by sending a request to the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
 
@@ -130,7 +130,7 @@ Copy the token without `Bearer`, and export the value of the header to an enviro
 export TOKEN='{your-token-without-bearer-prefix}'
 ```
 
-## 3. Validate the token
+## Validate the token
 
 Now, validate the setup by accessing the `example-route` Route and passing the bearer token in the query string:
 

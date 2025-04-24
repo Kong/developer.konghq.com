@@ -28,7 +28,7 @@ tldr:
     a: Click **Create** > **Git Clone** and connect to the Git repository.
 ---
 
-## 1. Clone the repository
+## Clone the repository
 
 In your Insomnia project, click **Create** > **Git Clone**, and select whether you want to clone the repository from GitHub, GitLab, or Git.
 
@@ -55,7 +55,7 @@ In your Insomnia project, click **Create** > **Git Clone**, and select whether y
 
 {% endnavtabs %}
 
-## 2. Edit the content
+## Edit the content
 
 The imported workspace opens in Insomnia, you can start working on it. Insomnia opens the repository's default branch, but you can switch to an existing branch or create a new one.
 In the bottom of the window, on the left, you can see the name of the branch you are currently on. You can click it to see the Git sync menu.

@@ -54,7 +54,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Enable the Pre-Function plugin
+## Enable the Pre-Function plugin
 
 The Pre-Function plugin lets you execute Lua code. In this case, we're using the plugin to look for a specific header, `x-custom-auth`. 
 
@@ -78,7 +78,7 @@ entities:
               end
 {% endentity_examples %}
 
-## 2. Validate
+## Validate
 
 Let's test that the code will terminate the request when no header is passed:
 
