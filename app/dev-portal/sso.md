@@ -23,7 +23,7 @@ This allows developers to log in to Dev Portals using their identity provider (I
 
 * Developers are auto-approved by {{site.konnect_short_name}} when using SSO to log in to the Dev Portal.
   * Kong outsources the approval process to the IdP, so access restrictions must be configured in the IdP.
-* If you are using [team mappings from an IdP](/dev-portal/access-and-approvals/teams/), they must come from the same IdP as your Dev Portal SSO.
+* If you are using [team mappings from an IdP](/dev-portal/team-mapping/), they must come from the same IdP as your Dev Portal SSO.
 * Each Dev Portal has its own SSO configuration.
   * You can use the same IdP across multiple Dev Portals or configure different IdPs per portal.
 * Dev Portal SSO is distinct from [{{site.konnect_short_name}} Org-level SSO](/konnect-platform/konnect-authentication/).

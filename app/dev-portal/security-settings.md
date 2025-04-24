@@ -59,22 +59,22 @@ Learn more about configuring IdPs in [Enable Self-Service Developer & Applicatio
 {:.info}
 > *An API must be linked to a {{site.konnect_short_name}} Gateway Service (version 3.6+) to be able to restrict access to your API with Authentication Strategies.*
 
-Registration of Developer accounts and creation of Applications both require approval by portal admins by default. These approvals are managed in [Access and Approvals](/dev-portal/access-and-approvals).
+Registration of Developer accounts and creation of Applications both require approval by portal admins by default. These approvals are managed in [Access and Approvals](/dev-portal/access-and-approval/).
 
 ### Auto approve developers
 * Enabled: anyone can sign up for a Developer account without any further approval process. 
-* Disabled: portal admins will have to approve any new sign up in [Access and Approvals](/dev-portal/access-and-approvals).
+* Disabled: portal admins will have to approve any new sign up in [Access and Approvals](/dev-portal/access-and-approval/).
 
 ### Auto approve applications 
 * Enabled: When any approved Developer creates an Application, it will be automatically approved and created. 
   * Once an application is approved, the Developer will be able to use it to create API Keys. 
-* Disable: portal admins will have to approve any new Applications in [Access and Approvals](/dev-portal/access-and-approval) before a Developer can create API Keys.
+* Disable: portal admins will have to approve any new Applications in [Access and Approvals](/dev-portal/access-and-approval/) before a Developer can create API Keys.
 
 
 
 ## Role-Based Access Control
 
-When RBAC is enabled for a Portal, the option to configure API access policies for Developers will be available when [publishing](/dev-portal/publishing) the API to a portal. Otherwise, any logged in Developer can see any published API that is set to `Visibility: public`.
+When RBAC is enabled for a Portal, the option to configure API access policies for Developers will be available when [publishing](/dev-portal/publishing/) the API to a portal. Otherwise, any logged in Developer can see any published API that is set to `Visibility: public`.
 
 
 ## Authentication Strategy / Creating API Keys
@@ -82,7 +82,7 @@ When RBAC is enabled for a Portal, the option to configure API access policies f
 {:.note}
 > *An API must be linked to a {{site.konnect_short_name}} Gateway Service (version 3.6+) to be able to restrict access to your API with Authentication Strategies.*
 
-Authentication strategies determine how [published APIs](/dev-portal/publishing) are authenticated, and how Developers create API Keys. 
+Authentication strategies determine how [published APIs](/dev-portal/publishing/) are authenticated, and how Developers create API Keys. 
 
 Authentication strategies automatically configure the {{site.konnect_short_name}} Gateway service by enabling the {{site.konnect_short_name}} Application Auth (KAA) plugin on the [Gateway service linked to the API](/dev-portal/apis/#gateway-service-link). The KAA plugin can only be configured from the associated Dev Portal and not the {{site.konnect_short_name}} Gateway Manager.
 

@@ -68,4 +68,4 @@ Learn more about configuring [Custom Domains](/dev-portal/custom-domains)
 ## Audit logs
 
 
-Dev Portal audit logs are set up and managed separately from org-wide {{site.konnect_short_name}} audit logs. For more information see the [audit logs documentation](/audit-logs/).
+Dev Portal audit logs are set up and managed separately from org-wide {{site.konnect_short_name}} audit logs. For more information see the [audit logs documentation](/gateway/audit-logs/).

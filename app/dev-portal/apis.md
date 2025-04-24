@@ -20,7 +20,7 @@ related_resources:
 ---
 
 
-An API is the interface that you publish to your end customer. Developers register [applications](/dev-portal/access-and-approvals/) for use with specific APIs.
+An API is the interface that you publish to your end customer. Developers register [applications](/dev-portal/access-and-approval/) for use with specific APIs.
 
 As an API Producer, you [publish an OpenAPI specification](/dev-portal/publishing) and additional documentation to help users get started with your API.
 
@@ -109,7 +109,7 @@ Publishing an API in the Dev Portal involves several steps:
 
 Once published, the API appears in the selected Portal. If [User Authentication](/dev-portal/security-settings/) is enabled, developers can register, create applications, generate credentials, and begin using the API.
 
-If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a [Team](/dev-portal/access-and-approvals/) to access the API.
+If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must be assigned to a [Team](/dev-portal/access-and-approval/) to access the API.
 
 
 

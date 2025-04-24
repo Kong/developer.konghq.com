@@ -51,7 +51,7 @@ To change the **Visibility** or **Authentication Strategy)) of an API that has b
 Visibility, Authentication strategies, and User authentication can be independently configured to maximize flexibility in how you publish your API to a given Developer audience.
 
 {:.info}
-> *Visibility of [Pages](/dev-portal/custom-pages/) and [Menus](/dev-portal/portal-customization.md) are configured independently from APIs, maximizing your flexibility.*
+> *Visibility of [Pages](/dev-portal/custom-pages/) and [Menus](/dev-portal/portal-customization/) are configured independently from APIs, maximizing your flexibility.*
 
 {:.info}
 > *An API must be linked to a {{site.konnect_short_name}} Gateway Service (version 3.6+) to be able to restrict access to your API with Authentication Strategies.*
