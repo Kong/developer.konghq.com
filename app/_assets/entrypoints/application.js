@@ -42,3 +42,14 @@ mermaid.initialize({
     sequenceNumberColor: "#fff",
   },
 });
+
+window.addEventListener("load", () => {
+  const hash = window.location.hash;
+  if (hash) {
+    // Give time for collapsibles to expand/mermaid to render
+    setTimeout(() => {
+      const el = document.querySelector(hash);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 300); // delay for layout to settle
+  }
+});
