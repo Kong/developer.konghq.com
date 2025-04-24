@@ -265,6 +265,12 @@ app/_how-tos/kic-proxy-tcp-sni.md:
   - app/_src/kubernetes-ingress-controller/guides/services/tcp.md
 app/_how-tos/kic-proxy-udp.md:
   - app/_src/kubernetes-ingress-controller/guides/services/udp.md
+app/_how-tos/kic-proxy-weights.md:
+  - /app/_src/kubernetes-ingress-controller/guides/services/multiple-backends.md
+app/_how-tos/kic-proxy-cross-namespace.md:
+  - /app/_src/kubernetes-ingress-controller/guides/services/cross-namespace.md
+app/_how-tos/kic-plugin-degraphql.md:
+  - app/_src/kubernetes-ingress-controller/guides/services/custom-entity.md
 app/_how-tos/kic-external-service.md:
   - app/_src/kubernetes-ingress-controller/guides/services/external.md
 app/_how-tos/kic-redirect-to-https.md:
@@ -351,6 +357,10 @@ app/kubernetes-ingress-controller/faq/upgrading-ingress-controller.md:
   - app/_src/kubernetes-ingress-controller/upgrade/kic.md
 app/kubernetes-ingress-controller/faq/upgrading-gateway.md:
   - app/_src/kubernetes-ingress-controller/upgrade/gateway.md
+app/kubernetes-ingress-controller/faq/custom-entities.md:
+  - app/_src/kubernetes-ingress-controller/guides/services/custom-entity.md
+
+
 
 # plugins
 app/_kong_plugins/session/changelog.md:
