@@ -2,6 +2,7 @@
 title: SSO reference
 description: 'Set up SSO for the {{site.konnect_short_name}} Dev Portal using OpenID Connect (OIDC) or SAML.'
 content_type: reference
+layout: reference
 products:
   - dev-portal
 tags:

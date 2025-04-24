@@ -90,7 +90,7 @@ Optionally, update the **Default Auth Strategy** in **Settings > Security** to u
 
 ### OpenID Connect configuration parameters {#openid-config-parameters}
 
-For more background information about OpenID Connect plugin parameters, see [Important Configuration Parameters](/hub/kong-inc/openid-connect/#important-configuration-parameters).
+For more background information about OpenID Connect plugin parameters, see [Important Configuration Parameters](/hub/kong-inc/openid-connect/).
 
 {% table %}
 columns:
