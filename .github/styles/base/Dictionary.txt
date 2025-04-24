@@ -13,6 +13,7 @@ Alertmanager
 allow_terminated
 allowlist
 allowlisting
+allowlisted
 Amal
 Amberflo
 amberflo
@@ -497,6 +498,7 @@ no_version
 node_quantifier
 Node.js
 Node.js
+nunjucks
 Noname
 Noname
 nopp

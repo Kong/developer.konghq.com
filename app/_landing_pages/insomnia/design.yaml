@@ -26,6 +26,7 @@ rows:
                     - Automatically linted. Errors display at the bottom of the center pane and include error type, line number, and error message
                     - View information about your spec in the left sidebar, such as servers, request body, and schemas.
                     - Collaboratively create APIs with an unlimited number of contributors (free accounts allow unlimited contributors on one project) and git version control.
+                    - Generate code snippets automatically in over 12 different programming languages
       - blocks:
           - type: image
             config:
@@ -54,7 +55,7 @@ rows:
             icon: /assets/icons/insomnia/stars.svg
             cta:
               text: Learn more
-              url: https://docs.insomnia.rest/insomnia/linting
+              url: /how-to/add-custom-linting-rules/
               align: end
       - blocks:
         - type: card
@@ -74,7 +75,7 @@ rows:
             icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/kong-gradient.svg
             cta:
               text: Learn more
-              url: https://docs.konghq.com/konnect/api-products/
+              url: /dev-portal/
               align: end   
 
   - header:

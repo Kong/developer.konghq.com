@@ -22,14 +22,39 @@ related_resources:
     url: /insomnia/collections/
 
 faqs:
-- q: What type of requests can I send with Insomnia?
-  a: |
-    Insomnia supports:
-    * HTTP
-    * Event streams (SSE)
-    * GraphQL
-    * gRPC
-    * WebSocket
+  - q: What type of requests can I send with Insomnia?
+    a: |
+      Insomnia supports:
+      * HTTP
+      * Event streams (SSE)
+      * GraphQL
+      * gRPC
+      * WebSocket
+  - q: Does Insomnia automatically encode special characters in request URLs?
+    a: |
+      Yes. Insomnia automatically encodes special characters in request URLs. This behavior ensures proper formatting for HTTP requests, but it may cause issues for users who intentionally want to send characters without encoding.
+
+  - q: How can I check the actual request URL that Insomnia sends?
+    a: |
+      After sending a request, open the **Timeline** tab on the right-side panel. This shows the exact encoded request that was transmitted, allowing you to verify how special characters were handled.
+
+  - q: What can I do if auto-encoding is causing problems in my request?
+    a: |
+      Here are a few options for troubleshooting special character encoding issues:
+      * Manually encode your request using tools like [`urlencoder`](https://www.urlencoder.org/) or [W3Schools](https://www.w3schools.com/tags/ref_urlencode.ASP)
+      * Use the [Insomnia encoder plugin](https://github.com/sypbiz/insomnia-plugin-encode-uri)
+      * Suggest advanced options like:
+        - Per-parameter encoding toggle
+        - Global workspace setting for encoding behavior
+        - Character allowlist for fine-grained control
+        - Disabling encoding entirely (not recommended unless necessary)
+  - q: How do I delete a large request body that crashes Insomnia?
+    a: |
+      1. Quit Insomnia and back up your app data directory. See [Application Data](https://docs.insomnia.rest/insomnia/application-data) for location info.
+      2. Open the `insomnia.requests.db` file in a code editor.
+      3. Find the offending request and clear its `body` field.
+      4. Search for any other uses of the same request ID and clear those `body` fields as well.
+      5. Save and relaunch Insomnia.
 ---
 
 ## How do I create requests in Insomnia?
@@ -38,11 +63,20 @@ In Insomnia, requests are contained in collections. Before you can create a requ
 
 Once your collection is created, there are several ways to create requests. Click the `+` button and select an option:
 
-|Option|Steps|
-|---|---|
-|Create a request from scratch|Select the type or request to create (HTTP, Event Stream, GraphQL, gRPC, or WebSocket).|
-|Import a cURL command|Select **From Curl**, then paste your command and click Import.|
-|Import from a file (Postman collection, Swagger, OpenAPI, HAR, WSDL)|Click **From File**, select an import option (file, URL, or clipboard), specify the file to import, then click **Scan** and **Import**.|
+{% table %}
+columns:
+  - title: Option
+    key: option
+  - title: Steps
+    key: steps
+rows:
+  - option: Create a request from scratch
+    steps: Select the type or request to create (HTTP, Event Stream, GraphQL, gRPC, or WebSocket).
+  - option: Import a cURL command
+    steps: Select **From Curl**, then paste your command and click Import.
+  - option: Import from a file (Postman collection, Swagger, OpenAPI, HAR, WSDL)
+    steps: Click **From File**, select an import option (file, URL, or clipboard), specify the file to import, then click **Scan** and **Import**.
+{% endtable %}
 
 ## How can I configure requests?
 
@@ -51,16 +85,35 @@ In Insomnia, you can configure every part of your request, and you can also add 
 {:.info}
 > All of these options apply to HTTP, GraphQL, and event stream requests. WebSocket requests have all of these expect for methods and scripts, and gRPC requests have a completely different configuration. <!-- Link to gRPC docs? -->
 
-|Element|Steps|
-|---|---|
-|Method|Select an HTTP method in the dropdown list, or add a custom method.|
-|Endpoint|Enter a URL, and use environment variables and template tags if needed.|
-|Query parameters|In the **Params** tab, click **Add** to create a new query parameter and enter the name and value. You can also add a description. The value can be single line or multi-line text. You can use the checkbox next to the parameter to remove it from the URL without deleting it completely.|
-|Body|In the **Body** tab, select the type of body from the dropdown list.|
-|Authentication|In  the **Auth** tab, select the authentication type from the dropdown list to get the corresponding form. If the request is in a folder, you can select **Inherit from parent** to use the folder's authentication.|
-|Headers|In the **Headers** tab, click **Add** to create a new header and enter the name and value. You can also add a description. You can use the checkbox next to the header to remove it from the request without deleting it completely.|
-|Scripts|In the **Scripts** tab, select **Pre-request** or **After-response** and write your script.|
-|Docs|In the **Docs** tab, select **Write** to add documentation to the request. You can use Markdown and HTML syntax, and you can click **Preview** to see the rendered content.|
+{% table %}
+columns:
+  - title: Element
+    key: element
+  - title: Steps
+    key: steps
+rows:
+  - element: Method
+    steps: Select an HTTP method in the dropdown list, or add a custom method.
+  - element: Endpoint
+    steps: Enter a URL, and use environment variables and template tags if needed.
+  - element: Query parameters
+    steps: >-
+      In the **Params** tab, click **Add** to create a new query parameter and enter the name and value. You can also add a description. The value can be single line or multi-line text. You can use the checkbox next to the parameter to remove it from the URL without deleting it completely.
+  - element: Body
+    steps: In the **Body** tab, select the type of body from the dropdown list.
+  - element: Authentication
+    steps: >-
+      In the **Auth** tab, select the authentication type from the dropdown list to get the corresponding form. If the request is in a folder, you can select **Inherit from parent** to use the folder's authentication.
+  - element: Headers
+    steps: >-
+      In the **Headers** tab, click **Add** to create a new header and enter the name and value. You can also add a description. You can use the checkbox next to the header to remove it from the request without deleting it completely.
+  - element: Scripts
+    steps: In the **Scripts** tab, select **Pre-request** or **After-response** and write your script.
+  - element: Docs
+    steps: >-
+      In the **Docs** tab, select **Write** to add documentation to the request. You can use Markdown and HTML syntax, and you can click **Preview** to see the rendered content.
+{% endtable %}
+
 
 ## What can I do with requests?
 
@@ -69,13 +122,47 @@ You can simply click **Send** to send a request, but you can also click the cont
 {:.info}
 > These options are only available for HTTP and event stream requests.
 
-|Option|Description|
-|---|---|
-|**Generate Client Code**|Generate code based on you request. You can choose from a variety of languages.|
-|**Send After Delay**|Send the request after the specified amount of time.|
-|**Repeat On Interval**|Send the request on a loop with a specific interval. The loop needs to be stopped manually by clicking **Cancel**.|
+{% table %}
+columns:
+  - title: Option
+    key: option
+  - title: Description
+    key: description
+rows:
+  - option: Generate Client Code
+    description: "Generate code based on your request. You can choose from a variety of languages."
+  - option: Send After Delay
+    description: "Send the request after the specified amount of time."
+  - option: Repeat On Interval
+    description: "Send the request on a loop with a specific interval. The loop needs to be stopped manually by clicking **Cancel**."
+{% endtable %}
 
-<!-- The table is missing Send And Download and Download After Send, but I'm seeing weird behavior so I need to check with the team -->
+
+## WebSocket support in Insomnia
+
+Insomnia supports WebSocket requests alongside REST, GraphQL, and gRPC, allowing bi-directional data flow over a persistent connection. You can configure authentication, headers, and message formats using the request interface.
+
+WebSocket messages can be sent in JSON or raw formats, and received messages appear in the Events panel. Detailed previews are available for both sent and received messages.
+
+## Environment variables and limitations
+
+Insomnia 2022.6 adds support for [environment variables](/insomnia/environment-variables/) and Nunjucks template tags in WebSocket URLs and message bodies.
+
+Limitations include:
+
+* Custom WebSocket protocols aren't supported.
+* Syncing WebSocket requests across different Insomnia versions (pre- and post-2022.6) may result in data loss. Ensure all devices are on version 2022.6 or later when using sync.
+
+## SOAP requests
+
+SOAP (simple object access protocol) is an XML-based protocol used to communicate structured data. To send a SOAP request from Insomnia, select the XML body type and setting the Content-Type header to `text/xml`. Then construct your XML body as required.
+
+## Posting CSV data
+
+To send CSV data in a POST request, set the request body type to **Binary file** and select your CSV file. Ensure that the appropriate `Content-Type` headers (e.g., `text/csv`) are configured based on the API requirements.
+
+This method allows you to send raw CSV files directly in the request payload.
+
 
 ## What can I do with folders in a request collection?
 
