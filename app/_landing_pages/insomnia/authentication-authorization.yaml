@@ -1,5 +1,5 @@
 metadata:
-  title: Authentication and authorization at Insomnia
+  title: Authentication and authorization
   breadcrumbs:
     - /insomnia/
   description: Secure Insomnia with native or external authentication and authorization.
@@ -31,11 +31,34 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    To authenticate with Insomnia, you can use either external authentication (SSO) or native authentication to log in to the Insomnia app. For SSO, you can use any identity provider (IdP) that supports SAML 2.0. 
+                    To authenticate with Insomnia, you can use either external authentication (SSO) or native authentication to log in to the Insomnia app. For SSO, you can use any identity provider (IdP) that supports SAML 2.0.
 
                     If you are looking for information about how to authenticate requests in Insomnia, see [Request authentication](/insomnia/request-authentication/).
 
-  - columns:
+                    To set up authentication for a given request, select the desired authentication type from the **Auth** dropdown. Then, fill out the required fields.
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  **Supported authentication types in Insomnia include:**
+                  
+                  - **Basic Auth**: Username/password or API key based.
+                  - **Digest Auth**: Nonce-based one-time hash authentication.
+                  - **OAuth 1.0**: Token-based auth for services like Twitter.
+                  - **OAuth 2.0**: Common standard for GitHub, Google, etc.
+                  - **Microsoft NTLM**: Used in Windows-based networks.
+                  - **AWS IAM v4**: Used to authenticate AWS API requests.
+                  - **Bearer Token**: Supports prefix and optional sending.
+                  - **Hawk**: MAC-based HTTP authentication.
+                  - **Atlassian ASAP**: S2S protocol from Atlassian.
+                  - **Netrc file**: Auto-login using `.netrc` configuration.
+  
+  - header:
+      type: h3
+      text: "Set up SSO"
+    columns:
       - blocks:
         - type: card
           config:
@@ -56,7 +79,20 @@ rows:
               text: Learn more
               url: /how-to/okta-saml-sso-insomnia/
               align: end
-  
+  - header:
+      type: h2
+      text: "Client Certificates"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Client certificates are used by some APIs as a means of authentication. Insomnia supports assigning a client certificate to a specific domain name and will automatically use them whenever a request to that domain is sent.
+
+                  
+                    Insomnia supports PFX (Mac) and PEM (Windows and Linux) certificates.
   - header:
       type: h2
       text: "Authorization"
