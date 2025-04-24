@@ -27,7 +27,7 @@ related_resources:
     url: /custom-plugins/
   - text: Custom plugins reference
     url: /custom-plugins/reference/
-  - text: handler.lua reference
+  - text: schema.lua reference
     url: /custom-plugins/schema.lua/
 ---
 

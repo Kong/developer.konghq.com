@@ -16,6 +16,10 @@ works_on:
 description: Learn about the different ways to deploy a custom plugin.
 
 related_resources:
+  - text: Custom plugins
+    url: /custom-plugins/
+  - text: Custom plugins reference
+    url: /custom-plugins/reference/
   - text: Installation and distribution
     url: /custom-plugins/installation-and-distribution/
   - text: Deploy a custom plugin with Docker

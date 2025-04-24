@@ -14,6 +14,12 @@ works_on:
     - on-prem
 
 description: Learn about the different ways to deploy a custom plugin.
+
+related_resources:
+  - text: Custom plugins
+    url: /custom-plugins/
+  - text: Custom plugins reference
+    url: /custom-plugins/reference/
 ---
 
 Custom plugins for {{site.base_gateway}} consist of Lua source files that need to be in the file system of each of your {{site.base_gateway}} nodes. 
