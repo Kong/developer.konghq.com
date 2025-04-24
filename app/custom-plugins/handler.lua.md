@@ -340,7 +340,7 @@ regard to other plugins' phases (such as `:access()`, `:log()`, etc.).
 
 All of the plugins bundled with {{site.base_gateway}} have a static priority.
 This can be adjusted dynamically using the `ordering` option. See
-[Dynamic Plugin Ordering](/gateway/{{page.release}}/kong-enterprise/plugin-ordering/)
+[Dynamic plugin ordering](/gateway/entities/plugin/#dynamic-plugin-ordering)
 for more information.
 
 The order of execution for the bundled plugins is:
