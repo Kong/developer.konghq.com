@@ -1,0 +1,7 @@
+beta:
+  text: 'Beta'
+  url: '/stages-of-software-availability/#beta'
+
+tech_preview:
+  url: '/stages-of-software-availability/#tech-preview'
+  text: 'Tech Preview'

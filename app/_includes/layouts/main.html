@@ -9,6 +9,12 @@
                 {% include tier.html products=page.products tier=page.tier %}
             {% endif %}
 
+            {% if layout.uses == false %}
+                {%- if page.beta == true or page.tech_preview == true -%}
+                    {%- include_cached badges/stage.html beta=page.beta tech_preview=page.tech_preview -%}
+                {%- endif -%}
+            {% endif %}
+
             {%- if page.premium_partner -%}
             {%- include badges/premium_partner.html -%}
             {%- endif -%}
@@ -22,7 +28,7 @@
         {% endif %}
 
         {% if layout.uses != false %}
-        {% include uses.html products=page.products tools=page.tools tier=page.tier %}
+        {% include_cached uses.html products=page.products tools=page.tools tier=page.tier beta=page.beta tech_preview=page.tech_preview %}
         {% endif %}
 
         {% ifhascontent nav_header %}

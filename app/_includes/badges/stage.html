@@ -1,0 +1,6 @@
+{% if include.beta %}{% assign type = 'beta' %}{% endif %}
+{% if include.tech_preview %}{% assign type = 'tech_preview' %}{% endif %}
+
+{% assign stage = site.data.stages[type] %}
+
+{% include badge.html url=stage.url text=stage.text css_class="bg-semantic-yellow-secondary text-semantic-yellow-primary" %}
