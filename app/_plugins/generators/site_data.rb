@@ -9,9 +9,19 @@ module Jekyll
     def generate(site) # rubocop:disable Metrics/AbcSize
       site.data['referenceable_fields'] = plugins_data(site, 'plugin_referenceable_fields_path')
       site.data['plugin_priorities'] = plugins_data(site, 'plugin_priorities_path')
-      site.data['gateway_latest'] = site.data.dig('products', 'gateway', 'releases').detect { |r| r['latest'] }
       site.data['searchFilters'] = search_filters(site)
       site.data['searchSources'] = site.data.dig('search', 'sources')
+
+      products = site.data['products'].map do |p|
+        p[0].gsub("-","_")
+      end
+
+      products.each do |product|
+        releases = site.data.dig('products', product, 'releases')
+        next if releases.nil?
+
+        site.data["#{product}_latest"] = releases.detect { |r| r['latest'] }
+      end
     end
 
     def plugins_data(site, key)

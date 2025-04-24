@@ -74,3 +74,5 @@ sections:
       - path: /kubernetes-ingress-controller/faq/custom-nginx-conf/
       - path: /kubernetes-ingress-controller/faq/combining-httproutes/
       - path: /kubernetes-ingress-controller/faq/migrate-ingress-to-gateway/
+      - path: /kubernetes-ingress-controller/faq/upgrading-gateway/
+      - path: /kubernetes-ingress-controller/faq/upgrading-ingress-controller/

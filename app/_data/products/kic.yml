@@ -2,3 +2,13 @@ name: Kong Ingress Controller
 
 topologies:
   - db-less
+
+
+releases:
+  - release: "3.4"
+    lts: true
+    latest: true
+  - release: "3.3"
+  - release: "3.2"
+  - release: "2.12"
+    lts: true
