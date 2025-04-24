@@ -23,7 +23,7 @@ class HowTo {
   }
 
   init() {
-    if (this.deploymentTopologySwitch.length) {
+    if (this.deploymentTopologySwitch) {
       try {
         if (localStorage.getItem(this.deploymentToplogyKey) !== null) {
           const storedOption = localStorage.getItem(this.deploymentToplogyKey);
@@ -41,6 +41,8 @@ class HowTo {
       }
 
       this.toggleTopology(this.deploymentTopologySwitch.value, true);
+    } else {
+      this.updateTOC();
     }
   }
 
@@ -76,6 +78,10 @@ class HowTo {
         });
     }
 
+    this.updateTOC();
+  }
+
+  updateTOC() {
     document.querySelectorAll(".how-to-step--title").forEach((stepTitle) => {
       const id = stepTitle.id;
       const tocItem = document.querySelector(`#toc a[href="#${id}"]`);
