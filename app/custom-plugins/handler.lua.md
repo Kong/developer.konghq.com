@@ -27,6 +27,8 @@ related_resources:
     url: /custom-plugins/
   - text: Custom plugins reference
     url: /custom-plugins/reference/
+  - text: handler.lua reference
+    url: /custom-plugins/schema.lua/
 ---
 
 A {{site.base_gateway}} plugin allows you to inject custom logic (in Lua) at several

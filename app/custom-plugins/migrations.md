@@ -26,6 +26,8 @@ related_resources:
     url: /custom-plugins/reference/
   - text: Data store
     url: /custom-plugins/data-store/
+  - text: daos.lua reference
+    url: /custom-plugins/daos.lua/
 ---
 
 The `{plugin-name}/migrations` folder is used to:

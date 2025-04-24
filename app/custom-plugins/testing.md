@@ -14,6 +14,14 @@ works_on:
     - on-prem
 
 description: Learn how to write tests for custom plugins.
+
+related_resources:
+  - text: Custom plugins
+    url: /custom-plugins/
+  - text: Custom plugins reference
+    url: /custom-plugins/reference/
+  - text: Add custom plugin testing
+    url: /custom-plugins/get-started/add-plugin-testing/
 ---
 
 Once you've created a custom plugin, you'll probably want to write tests for it.

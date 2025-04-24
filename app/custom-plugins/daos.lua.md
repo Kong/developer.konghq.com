@@ -24,6 +24,8 @@ related_resources:
     url: /custom-plugins/
   - text: Custom plugins reference
     url: /custom-plugins/reference/
+  - text: Migration modules
+    url: /custom-plugins/migrations/
 ---
 
 The `daos.lua` file is used to define schemas for custom entities.

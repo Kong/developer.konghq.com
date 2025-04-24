@@ -10,11 +10,14 @@ works_on:
     - konnect
     - on-prem
 
-description: placeholder
+description: Learn about how to develop custom plugins for {{site.base_gateway}}
 
 tags:
   - custom-plugins
 
+related_resources:
+  - text: Custom plugins
+    url: /custom-plugins/
 ---
 
 Kong allows you to develop and deploy custom plugins.
