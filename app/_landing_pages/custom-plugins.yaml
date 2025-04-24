@@ -25,8 +25,9 @@ rows:
 
                     To start creating your own plugins, review the [getting started documentation](#get-started),
                     or see the following references:
-                    * [Plugin Development Kit reference](https://docs.konghq.com/gateway/latest/plugin-development/pdk/)
-                    * [Other Language Support](https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/go/)
+                    * [Custom plugins reference](/custom-plugins/reference/)
+                    * [Plugin Development Kit reference](/gateway/pdk/reference/)
+                    * [Other language support](https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/go/)
 
   - columns:
       - blocks:
