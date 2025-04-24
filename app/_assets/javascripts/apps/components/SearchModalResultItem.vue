@@ -22,7 +22,8 @@
           {{ heading }}
         </div>
         <div class="text-secondary text-xs line-clamp-1">
-          <SearchResultSnippet :item="item" attribute="content" />
+          <SearchResultSnippet v-if="highlighetContent" :item="item" attribute="content" />
+          <span v-else>{{ item.content }}</span>
         </div>
         <div class="flex gap-3 pt-1 items-center">
           <div v-for="product in products" class="flex gap-1.5 items-center">
