@@ -79,6 +79,9 @@ export default {
       if (this.item.content_type === 'how_to') {
         levels.unshift('How-to Guides')
       }
+      if (levels.length > 1) {
+        levels.pop();
+      }
       return levels.join(' > ');
     },
     relativeUrl() {
