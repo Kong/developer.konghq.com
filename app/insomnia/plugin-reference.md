@@ -66,7 +66,7 @@ For custom behavior, you can define tags using the `TemplateTag` interface, prov
 
 You can create a custom Insomnia theme by building a plugin that defines color values for UI components. Themes can be used to adjust background, text, and highlight colors across the application.
 
-To get started, see the [insomnia-plugin-core-themes](https://github.com/Kong/insomnia/tree/develop/plugins/insomnia-plugin-core-themes) module for live examples.
+To get started, see the [Insomnia themes](https://github.com/Kong/insomnia/tree/develop/packages/insomnia/src/plugins/themes) module for live examples.
 
 ### Creating a theme plugin
 

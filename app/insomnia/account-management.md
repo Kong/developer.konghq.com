@@ -12,8 +12,6 @@ products:
 related_resources:
   - text: Incident response
     url: /insomnia/incident-response/
-  - text: Invite controls
-    url: /insomnia/invite-controls/
 faqs:
   - q: What happens if I forget my Insomnia passphrase?
     a: |
