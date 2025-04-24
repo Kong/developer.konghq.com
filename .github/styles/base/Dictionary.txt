@@ -136,6 +136,7 @@ Datadog
 Datadog
 datadog
 datadome
+datakit
 datagram
 datagrams
 dataplane
@@ -327,6 +328,7 @@ Istio's
 istioctl
 istioctl
 item_title
+jaq
 Javascript
 jetstack
 Jira
