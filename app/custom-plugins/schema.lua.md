@@ -37,19 +37,17 @@ data store for {{site.base_gateway}} to retrieve it and pass it to your
 [handler.lua](/custom-plugins/handler.lua/) methods when the plugin is
 being executed.
 
-The configuration consists of a Lua table in what we call a schema. It
-contains key/value properties that the user will set when enabling the plugin
-through the [Admin API](/api/gateway/admin-ee/). {{site.base_gateway}} provides you with a way of validating the user's
+The configuration consists of a Lua table, in what we call a schema. It
+contains key/value properties that the user will set when enabling the plugin.
+{{site.base_gateway}} provides you with a way of validating the user's
 configuration for your plugin.
 
-Your plugin's configuration is being verified against your schema when a user
-issues a request to the Admin API to enable or update a plugin on a given
-Service, Route, or Consumer.
+Your plugin's configuration is verified against your schema when a user
+enables or updates a plugin.
 
-For example, a user performs the following request:
-
+For example, when a user performs the following request:
 ```bash
-curl -X POST http://localhost:8001/services/<service-name-or-id>/plugins \
+curl -X POST http://localhost:8001/services/{service-name-or-id}/plugins \
   -d "name=my-custom-plugin" \
   -d "config.foo=bar"
 ```
@@ -71,28 +69,69 @@ and the appropriate error messages.
 This module is to return a Lua table with properties that will define how your
 plugins can later be configured by users. Available properties are:
 
-| Property name   | Lua type   | Description
-|-----------------|------------|------------
-| `name`          | `string`   | Name of the plugin, e.g. `key-auth`.
-| `fields`        | `table`    | Array of field definitions.
-| `entity_checks` | `function` | Array of conditional entity level validation checks.
+{% table %}
+columns:
+  - title: Name
+    key: name
+  - title: Lua type
+    key: type
+  - title: Description
+    key: description
+columns:
+  - name: "`name`"
+    type: "`string`"
+    description: |
+      Name of the plugin, for example: `key-auth`.
+  - name: "`fields`"
+    type: "`table`"
+    description: Array of field definitions.
+  - name: "`entity_checks`"
+    type: "`function`"
+    description: Array of conditional entity level validation checks.
+{% endtable %}
 
 
 All the plugins inherit some default fields which are:
 
-| Field name      | Lua type   | Description
-|-----------------|------------|------------
-| `id`            | `string`   | Auto-generated plugin id.
-| `name`          | `string`   | Name of the plugin, e.g. `key-auth`.
-| `created_at`    | `number`   | Creation time of the plugin configuration (seconds from epoch).
-| `route`         | `table`    | Route to which plugin is bound, if any.
-| `service`       | `table`    | Service to which plugin is bound, if any.
-| `consumer`      | `table`    | Consumer to which plugin is bound when possible, if any.
-| `protocols`     | `table`    | The plugin will run on specified protocol(s).
-| `enabled`       | `boolean`  | Whether or not the plugin is enabled.
-| `tags`          | `table`    | The tags for the plugin.
+{% table %}
+columns:
+  - title: Name
+    key: name
+  - title: Lua type
+    key: type
+  - title: Description
+    key: description
+columns:
+  - name: "`id`"
+    type: "`string`"
+    description: Auto-generated plugin ID.
+  - name: "`name`"
+    type: "`string`"
+    description: Name of the plugin.
+  - name: "`created_at`"
+    type: "`number`"
+    description: Creation time of the plugin configuration (seconds from epoch).
+  - name: "`route`"
+    type: "`table`"
+    description: Route to which plugin is bound, if any.
+  - name: "`service`"
+    type: "`table`"
+    description: Service to which plugin is bound, if any.
+  - name: "`consumer`"
+    type: "`table`"
+    description: Consumer to which plugin is bound when possible, if any.
+  - name: "`protocols`"
+    type: "`table`"
+    description: Protocols on which the plugin will run.
+  - name: "`enabled`"
+    type: "`boolean`"
+    description: Whether or not the plugin is enabled.
+  - name: "`tags`"
+    type: "`table`"
+    description: Tags for the plugin.
+{% endtable %}
 
-In most of the cases you can ignore most of those and use the defaults. Or let the user
+In most of the cases you can ignore most of those and use the defaults or let the user
 specify value when enabling a plugin.
 
 Here is an example of a potential `schema.lua` file (with some overrides applied):
@@ -130,7 +169,7 @@ return {
 ## Describe your configuration schema
 
 The `config.fields` property of your `schema.lua` file describes the schema of your
-plugin's configuration. It is a flexible array of field definitions where each field
+plugin's configuration. It's a flexible array of field definitions where each field
 is a valid configuration property for your plugin, describing the rules for that
 property. For example:
 
@@ -305,7 +344,7 @@ return {
 }
 ```
 
-Hence, when implementing the `access()` function of your plugin in
+When implementing the `access()` function of your plugin in
 [handler.lua](/custom-plugins/handler.lua/) and given that the user
 enabled the plugin with the default values, you'd have access to:
 
@@ -329,12 +368,9 @@ end
 return CustomHandler
 ```
 
-Note that the above example uses the
-[kong.log.inspect](/gateway/pdk/reference/kong.log/#kong-log-inspect)
+The above example uses the [kong.log.inspect](/gateway/pdk/reference/kong.log/#kong-log-inspect)
 function of the [Plugin Development Kit](/gateway/pdk/reference/) to print out those values to the {{site.base_gateway}}
 logs.
-
----
 
 A more complex example, which could be used for an eventual logging plugin:
 
@@ -399,8 +435,7 @@ curl -X POST http://localhost:8001/services/<service-name-or-id>/plugins \
   -d "config.server.host=http://localhost"
 ```
 
-And the following will be available in
-[handler.lua](/custom-plugins/handler.lua/):
+And the following will be available in [handler.lua](/custom-plugins/handler.lua/):
 
 ```lua
 -- handler.lua

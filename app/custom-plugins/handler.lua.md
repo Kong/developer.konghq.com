@@ -31,10 +31,10 @@ related_resources:
     url: /custom-plugins/schema.lua/
 ---
 
-A {{site.base_gateway}} plugin allows you to inject custom logic (in Lua) at several
-entry-points in the life-cycle of a request/response or a tcp stream
+A {{site.base_gateway}} plugin allows you to inject custom logic in Lua at several
+entry-points in the life-cycle of a request/response or a TCP stream
 connection as it is proxied by {{site.base_gateway}}. To do so, the file
-`kong.plugins.<plugin_name>.handler` must return a table with one or
+`kong.plugins.{plugin_name}.handler` must return a table with one or
 more functions with predetermined names. Those functions will be
 invoked by {{site.base_gateway}} at different phases when it processes traffic.
 
@@ -53,8 +53,8 @@ specific plugin.
 activated by {{site.base_gateway}} as each phase is executed while the request gets proxied.
 
 Phases are limited in what they can do. For example, the `init_worker` phase
-does not have access to the `config` parameter because that information isn't
-available when kong is initializing each worker. On the other hand the `configure`
+doesn't have access to the `config` parameter because that information isn't
+available when {{site.base_gateway}} is initializing each worker. On the other hand the `configure`
 is passed with all the active configurations for the plugin (or `nil` if not configured).
 
 A plugin's `handler.lua` must return a table containing the functions it must
@@ -70,13 +70,13 @@ In addition to functions, a plugin must define two fields:
   matches the version defined in a plugin's Rockspec version, when it exists.
 * `PRIORITY` is used to sort plugins before executing each of their phases.
   Plugins with a higher priority are executed first. See the
-  [plugin execution order](#plugins-execution-order) below
+  [plugin execution order](#plugins-execution-order) section
   for more info about this field.
 
 The following example `handler.lua` file defines custom functions for all
 the possible phases, in both http and stream traffic. It has no functionality
-besides writing a message to the log every time a phase is invoked. Note
-that a plugin doesn't need to provide functions for all phases.
+besides writing a message to the log every time a phase is invoked. 
+A plugin doesn't need to provide functions for all phases.
 
 ```lua
 local CustomHandler = {
@@ -89,13 +89,11 @@ function CustomHandler:init_worker()
   kong.log("init_worker")
 end
 
-{% if_version gte:3.4.x -%}
 function CustomHandler:configure(configs)
   -- Implement logic for the configure phase here
   --(called whenever there is change to any of the plugins)
   kong.log("configure")
 end
-{%- endif_version %}
 
 function CustomHandler:preread(config)
   -- Implement logic for the preread phase here (stream)
@@ -156,7 +154,7 @@ end
 return CustomHandler
 ```
 
-Note that in the example above we are using Lua's `:` shorthand syntax for
+In the example above we are using Lua's `:` shorthand syntax for
 functions taking `self` as a first parameter. An equivalent non-shorthand version
 of the `access` function would be:
 
@@ -168,8 +166,8 @@ end
 ```
 
 The plugin's logic doesn't need to be all defined inside the `handler.lua` file.
-It can be split into several Lua files (also called *modules*).
-The `handler.lua` module can use `require` to include other modules in your plugin.
+It can be split into several Lua files, also called modules.
+The `handler.lua` module can use `require` to include other modules in the plugin.
 
 For example, the following plugin splits the functionality into three files.
 `access.lua` and `body_filter.lua` return functions. They are in the same
@@ -222,7 +220,7 @@ CustomHandler.VERSION  = "1.0.0"
 CustomHandler.PRIORITY = 10
 ```
 
-with the current equivalent:
+With the current equivalent:
 ```lua
 local CustomHandler = {
   VERSION  = "1.0.0",
@@ -238,31 +236,29 @@ methods.
 ### Handler Functions
 
 Requests to services with the `ws` or `wss` protocol take a different path through
-the proxy than regular http requests. Therefore, there are some differences in behavior
+the proxy than regular HTTP requests. Therefore, there are some differences in behavior
 that must be accounted for when developing plugins for them.
 
-The following handlers are _not_ executed for WebSocket services:
+The following handlers are not executed for WebSocket services:
  - `access`
  - `response`
  - `header_filter`
  - `body_filter`
  - `log`
 
-The following handlers are _unique to_ WebSocket services:
+The following handlers are unique to WebSocket services:
   - `ws_handshake`
   - `ws_client_frame`
   - `ws_upstream_frame`
   - `ws_close`
 
-The following handlers are executed for both WebSocket _and_ non-Websocket services:
+The following handlers are executed for both WebSocket and non-Websocket services:
   - `init_worker`
-  {% if_version gte:3.4.x -%}
   - `configure`
-  {% endif_version -%}
   - `certificate` (TLS/SSL requests only)
   - `rewrite`
 
-Even with these differences, it is possible to develop plugins that support both WebSocket
+Even with these differences, it's possible to develop plugins that support both WebSocket
 and non-WebSocket services. For example:
 
 ```lua
@@ -300,7 +296,7 @@ return MultiProtoHandler
 As seen above, the `log` and `ws_close` handlers are parallel to each other. In
 many cases, one can be aliased to the other without having to write any
 additional code. The `access` and `ws_handshake` handlers are also very similar in
-this regard. The notable difference lies in which PDK functions are/aren't available
+this regard. The notable difference lies in which PDK functions are available
 in each context. For instance, the `kong.request.get_body()` PDK function cannot be
 used in an `access` handler because it is fundamentally incompatible with this kind
 of request.
@@ -308,24 +304,22 @@ of request.
 
 ### WebSocket requests to non-WebSocket services
 
-When WebSocket traffic is proxied via an http/https service, it is treated as a
-non-WebSocket request. Therefore, the http handlers (`access`, `header_filter`, etc)
-will be executed and _not_ the WebSocket handlers (`ws_handshake`, `ws_close`, etc).
+When WebSocket traffic is proxied via an HTTP/HTTPS service, it's treated as a
+non-WebSocket request. Therefore, the HTTP handlers (`access`, `header_filter`, etc)
+will be executed and the WebSocket handlers (`ws_handshake`, `ws_close`, etc) will not.
 
 ## Plugin Development Kit
 
 Logic implemented in those phases will most likely have to interact with the
-request/response objects or core components (e.g. access the cache, and
-database). {{site.base_gateway}} provides a [Plugin Development Kit][pdk] (or "PDK") for such
-purposes: a set of Lua functions and variables that can be used by Plugins to
+request and response objects or core components (e.g. access the cache, and
+database). {{site.base_gateway}} provides a [Plugin Development Kit](/gateway/pdk/reference/) (or "PDK") for such
+purposes: a set of Lua functions and variables that can be used by plugins to
 execute various gateway operations in a way that is guaranteed to be
 forward-compatible with future releases of {{site.base_gateway}}.
 
 When you are trying to implement some logic that needs to interact with {{site.base_gateway}}
 (e.g. retrieving request headers, producing a response from a plugin, logging
-some error or debug information), you should consult the [Plugin Development
-Kit Reference][pdk].
-
+some error or debug information), you should consult the [Plugin Development Kit reference docs](/gateway/pdk/reference/).
 
 ## Plugins execution order
 
@@ -352,20 +346,3 @@ for more information.
 The order of execution for the bundled plugins is:
 
 {% plugin_priorities %}
-
-[lua-nginx-module]: https://github.com/openresty/lua-nginx-module
-[pdk]: /gateway/{{page.release}}/plugin-development/pdk
-[HTTP Module]: https://github.com/openresty/lua-nginx-module
-[Stream Module]: https://github.com/openresty/stream-lua-nginx-module
-[`init_worker_by_*`]: https://github.com/openresty/lua-nginx-module#init_worker_by_lua_block
-[`ssl_certificate_by_*`]: https://github.com/openresty/lua-nginx-module#ssl_certificate_by_lua_block
-[`rewrite_by_*`]: https://github.com/openresty/lua-nginx-module#rewrite_by_lua_block
-[`access_by_*`]: https://github.com/openresty/lua-nginx-module#access_by_lua_block
-[`header_filter_by_*`]: https://github.com/openresty/lua-nginx-module#header_filter_by_lua_block
-[`body_filter_by_*`]: https://github.com/openresty/lua-nginx-module#body_filter_by_lua_block
-[`log_by_*`]: https://github.com/openresty/lua-nginx-module#log_by_lua_block
-[`preread_by_*`]: https://github.com/openresty/stream-lua-nginx-module#preread_by_lua_block
-[enable_buffering]: /gateway/{{page.release}}/plugin-development/pdk/kong.service.request/#kongservicerequestenable_buffering
-[`content_by_*`]: https://github.com/openresty/lua-nginx-module#content_by_lua_block
-
-<!-- vale on -->
