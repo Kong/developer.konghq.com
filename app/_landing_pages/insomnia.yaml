@@ -167,9 +167,9 @@ rows:
             title: Run in Insomnia
             description: |
               Generate a **Run in Insomnia** button to start running requests in a few quick clicks. This button can be added to both HTML and Markdown documents. 
-            icon: /assets/icons/data-object.svg
+            icon: /assets/icons/api.svg
             cta:
-              text: Create Run Button
+              text: Create button
               url: https://insomnia.rest/create-run-button
               align: end
       - blocks: 

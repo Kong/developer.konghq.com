@@ -64,7 +64,7 @@ faqs:
     a: |
       Project data includes your API design specifications, collections, tests, and other files that you choose to sync and share through Insomnia’s hosted service.
 
-      Note: Data used with artificial intelligence tools is **not** end-to-end encrypted and is excluded from this protection.
+      Data used with artificial intelligence tools is **not** end-to-end encrypted and is excluded from this protection.
 
   - q: What encryption algorithms does Insomnia use?
     a: |
@@ -93,7 +93,7 @@ faqs:
       * `$XDG_CONFIG_HOME/Insomnia` or `~/.config/Insomnia` on Linux
       * `~/Library/Application Support/Insomnia` on macOS
 
-      You can access this via **Help → Show App Data Folder** in the UI. Files are stored as `insomnia.<resource>.db`.
+      You can access this via **Help** > **Show App Data Folder** in the UI. Files are stored as `insomnia.<resource>.db`.
   - q: Where does Insomnia store logs?
     a: |
       Logs are stored in the following locations:
@@ -102,12 +102,12 @@ faqs:
       * `$XDG_CONFIG_HOME/Insomnia/logs` or `~/.config/Insomnia/logs` on Linux
       * `~/Library/Logs/Insomnia` on macOS
 
-      Access the log folder via **Help → Show App Logs Folder**.
+      Access the log folder via **Help** > **Show App Logs Folder**.
   - q: Where does Insomnia store environment information on a Linux Snap install?
     a: |
       Snap installations store user data and environment settings in the following locations:
-      * `/var/snap/` – for system-level snap data
-      * `~/snap/` – for user-level, versioned snap data
+      * `/var/snap/`: For system-level snap data
+      * `~/snap/`: For user-level, versioned snap data
 ---
 
 If users are logged into their Insomnia account or if they haven't opted out of analytics in the desktop application, we collect usage data to help improve the application. The usage analytics are collected to evaluate user behavior for the purpose of guiding product decisions.

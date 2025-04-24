@@ -64,23 +64,24 @@ rows:
 {% endtable %}
 
 
-Allowlisting these domains ensures uninterrupted access to all functionalities of Insomnia, including updates, documentation, and necessary backend services. Should you experience issues post-allowlisting, it's advisable to seek assistance from your IT support or reach out to Insomnia's customer service at `<support@insomnia.rest> `OR `<https://support.konghq.com/support/s/>`.
+Allowlisting these domains ensures uninterrupted access to all functionalities of Insomnia, including updates, documentation, and necessary backend services. Should you experience issues post-allowlisting, we recommend seeking assistance from your IT support or reaching out to Insomnia's customer service at `<support@insomnia.rest> ` or 
+ the [Kong support website](https://support.konghq.com/support/s/).
 
 ## Proxy
 
 
-Insomnia does not automatically detect system-wide proxy settings. A proxy can be set up manually. Set your HTTP, HTTPS, SOCKS4 or SOCKS5 proxy server and reroute all future requests through that server by accessing Preferences via the cog icon > **General** > **HTTP Network Proxy**.
+Insomnia does not automatically detect system-wide proxy settings. A proxy can be set up manually. Set your HTTP, HTTPS, SOCKS4 or SOCKS5 proxy server and reroute all future requests through that server by accessing Preferences via the settings icon in **General** > **HTTP Network Proxy**.
 
-{:.alert .alert-primary}
-**Note**: Proxy server settings apply to all traffic going through the Insomnia application, and cannot be restricted to entities such as Collections and individual requests.
+{:.warning}
+> **Important**: Proxy server settings apply to all traffic going through the Insomnia application, and cannot be restricted to entities such as Collections and individual requests.
 
-Example usage of HTTP or HTTPS proxy
+Here's an example usage of HTTP or HTTPS proxy:
 
 ```bash
 http://localhost:8005
 ```
 
-For SOCKS4 or SOCKS5 proxy, one of the following prefixes should be used before the hostname depending on the version (**socks4://**, **socks4a://**, **socks5://**, **socks5h://**)
+For SOCKS4 or SOCKS5 proxy, one of the following prefixes should be used before the hostname, depending on the version: **socks4://**, **socks4a://**, **socks5://**, **socks5h://**
 
 ```bash
 socks5h://localhost:8005
@@ -88,11 +89,11 @@ socks5h://localhost:8005
 
 You can also add a comma-separated list of hostnames to the **No Proxy** box and they will be exempt from going through the proxy server.
 
-## Authentication
+### Proxy server authentication
 
 Insomnia supports proxy server authentication via Basic Auth, digest, and NTLM.
 
-If your proxy server requires Basic Auth, you can include the credentials in the URL in the following way:
+If your proxy server requires Basic Auth, you can include the credentials in the URL like the following:
 
 ```bash
 http://username:password@localhost:8005

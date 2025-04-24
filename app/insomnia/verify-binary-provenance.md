@@ -47,24 +47,20 @@ rows:
 
 Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's OIDC identity to generate build provenance for binary artifacts, which is why many of these details are GitHub-related.
 
-## Examples
 
-### Prerequisites
+## Prerequisites
 
 For both examples, you need to:
 
-1. Ensure `slsa-verifier` is installed.
-
-2. [Download Insomnia Core Application Binaries](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.app&channel=stable) with file pattern `Insomnia.Core-<version>.{snap,tar.gz,zip,rpm,dmg,deb,exe,AppImage}`
-
-3. [Download Insomnia Binary Provenance Attestation](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.app&channel=stable) with pattern `insomnia-provenance.intoto.jsonl`
+* Ensure `slsa-verifier` is installed.
+* [Download Insomnia Core Application Binaries](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.app&channel=stable) with the file pattern `Insomnia.Core-<version>.{snap,tar.gz,zip,rpm,dmg,deb,exe,AppImage}`
+* [Download Insomnia Binary Provenance Attestation](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.app&channel=stable) with the pattern `insomnia-provenance.intoto.jsonl`
 
 {:.important .no-icon}
 > The GitHub owner is case-sensitive (`Kong/insomnia` vs `kong/insomnia`).
 
-### Minimal example
+## Minimal example
 
-#### Using slsa-verifier
 
 Run the `slsa-verifier verify-artifact...` command:
 
@@ -93,9 +89,8 @@ The command will print "Verified SLSA provenance" if successful:
 PASSED: Verified SLSA provenance
 ```
 
-### Complete example
+## Complete example
 
-#### Using slsa-verifier
 
 Run the `slsa-verifier verify-artifact ...` command:
 

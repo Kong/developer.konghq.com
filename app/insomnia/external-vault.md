@@ -1,5 +1,5 @@
 ---
-title: External Vault Integration
+title: External vault integration
 description: 'Learn how to configure external vault integrations in Insomnia using AWS, GCP, Azure, and HashiCorp vault providers.'
 content_type: reference
 layout: reference
@@ -16,7 +16,7 @@ related_resources:
 
 
 
-Insomnia supports integration with external vault service providers to retrieve secret values automatically when sending requests.
+Insomnia supports integrating with external vault service providers to retrieve secret values automatically when sending requests.
 
 Supported vault services:
 
@@ -93,8 +93,9 @@ Open **HashiCorp Vault** from the context menu and fill in the fields based on t
 1. Open **Azure Key Vault** from the context menu.
 1. Enter the **Secret Identifier** for the secret you want to access.
 
-## Vault Secrets Cache
+## Vault secrets cache
 
+Vault secret caching works like the following in Insomnia:
 - Secrets retrieved from cloud vault services are cached in memory for 30 minutes by default.
 - If the cache expires or is missing, Insomnia re-fetches the secret automatically.
 - You can configure cache duration and reset the cache in **Preferences > Cloud Credentials**.

@@ -1,7 +1,7 @@
 ---
 title: Account Management
 
-description: Account and organization management reference
+description: Learn how to manage your Insomnia account and organization
 
 content_type: reference
 layout: reference
@@ -19,7 +19,7 @@ faqs:
     a: |
       If you forget your passphrase, your synced data cannot be decrypted. 
       Insomnia uses the SRP protocol, which means the Insomnia Cloud never stores your passphrase. 
-      Your encryption keys are derived from your passphrase, so without it, access to your encrypted data (Requests, Collections, Environments, etc.) is not possible.
+      Your encryption keys are derived from your passphrase, so without it, you can't access your encrypted data (Requests, Collections, Environments, etc.).
 
   - q: Can I reset my Insomnia passphrase?
     a: |
@@ -37,8 +37,8 @@ faqs:
   - q: Is it possible to recover any data after resetting my passphrase?
     a: |
       In some cases, yes:
-      1. If you were invited to collaborate on an organization, you can be re-invited and regain access to that data.
-      2. If others shared organizations or projects with you, users with admin permissions can re-invite you after your reset.
+      * If you were invited to collaborate on an organization, you can be re-invited and regain access to that data.
+      * If others shared organizations or projects with you, users with admin permissions can re-invite you after your reset.
   - q: What platforms does Insomnia run on?
     a: |
       Insomnia is available as a desktop application for 64-bit versions of macOS, Windows, and Linux.
@@ -106,7 +106,7 @@ You can create an Insomnia account using your email, Google, GitHub, or Enterpri
 
 All accounts require setting up an encryption passphrase for end-to-end encryption (E2EE), which protects your data. If the passphrase is lost, encrypted data cannot be recovered.
 
-## Signing into Insomnia
+## Signing in to Insomnia
 
 To sign in, you'll be redirected to a browser to authenticate. Once logged in, you'll return to the app and be prompted to enter your encryption passphrase to access your data.
 
@@ -115,7 +115,7 @@ If the app doesn’t reopen automatically after signing in, you can manually cop
 
 ## Organization management
 
-Users on a Team or Enterprise plan can create new organizations and manage membership. Organization Owners and Administrators have the ability to:
+Users on a Team or Enterprise plan can create new organizations and manage membership from the [Organization dashboard](https://app.insomnia.rest/app/dashboard/organizations). Organization Owners and Administrators have the ability to:
 
 * Invite new users by email
 * Assign and change member roles
@@ -134,13 +134,13 @@ The current Organization Owner can transfer ownership to another member if the f
 
 Ownership transfer ensures continued administrative control within the organization.
 
-## Transferring enterprise ownership and license
+### Transferring enterprise ownership and license
 
-Enterprise owners can transfer their organization and license to another user by accessing the Enterprise Controls within the Insomnia app. The process includes navigating to the Advanced tab and selecting the option to transfer license and ownership.
+Enterprise owners can transfer their organization and license to another user by navigating to the Enterprise Controls in the Insomnia app. Navigate to the **Advanced** tab and select the option to transfer license and ownership.
 
 To complete the transfer, the current owner must provide the new owner's email address (entered twice for confirmation) along with their own email to verify identity.
 
-## Confirmation and access
+### Ownership confirmation and access
 
 After submitting the transfer request, a confirmation email is sent to both the current and new owners. The new owner must accept the transfer to gain access to enterprise controls and assume ownership of the organization and license.
 
@@ -150,3 +150,17 @@ After submitting the transfer request, a confirmation email is sent to both the 
 Enterprise accounts support multiple owners. You can grant co-owner access to other members, allowing them full or restricted control over organizations, billing, projects, and members.
 
 To assign co-ownership, the user must first be a member of your enterprise. You can also grant "Billing Only" permissions for users who need limited administrative access.
+
+## Invite control for enterprise accounts
+
+Enterprise owners can manage who is allowed to be invited to their organizations and projects using the Invite Control feature. This capability restricts invites based on email domains, helping prevent unauthorized or mistaken invitations.
+
+Admins can choose from the following invite domain options:
+
+- **All domains**: No restrictions on email domains.
+- **Only verified domains**: Only previously verified domains are allowed.
+- **Custom domains**: Specific domains defined per organization.
+
+Invite Control can also disable the ability to invite users entirely. If any current members or pending invites do not comply with the configured domain rules, they can be identified and removed.
+
+This feature supports enterprise-grade governance by ensuring only authorized individuals can access your organizations, alongside tools like [Storage Control](/insomnia/storage-control).

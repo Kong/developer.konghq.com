@@ -55,7 +55,7 @@ rows:
             icon: /assets/icons/insomnia/stars.svg
             cta:
               text: Learn more
-              url: /insomnia/test/
+              url: /how-to/add-custom-linting-rules/
               align: end
       - blocks:
         - type: card

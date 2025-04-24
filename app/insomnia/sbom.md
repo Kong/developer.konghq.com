@@ -21,6 +21,6 @@ A software bill of materials (SBOM) is an inventory of all software components (
 
 ## Download SBOM
 
-1. Navigate to Insomnia [GitHub Releases](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.app&channel=stable)
+1. Navigate to Insomnia [GitHub Releases](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.app&channel=stable).
 
-2. Download the `sbom.spdx.json` and `sbom.cyclonedx.json` SBOM files for Insomnia App
+2. Download the `sbom.spdx.json` and `sbom.cyclonedx.json` SBOM files for the Insomnia app.

@@ -27,7 +27,6 @@ faqs:
       If the plugin is officially maintained by the Insomnia team, reach out to [our community](https://insomnia.rest/support).
 ---
 
-## Plugin context reference
 
 Insomnia's plugin context provides various helpers that allow plugins to interact with requests, responses, the app UI, and stored data. This enables advanced customization and extension of the Insomnia application.
 
@@ -39,10 +38,11 @@ The `context.response` object provides access to response metadata, headers, and
 
 ## App, store, and utility helpers
 
-- `context.app`: Exposes UI features like alerts, dialogues, prompts, clipboard access, and app metadata.
-- `context.store`: Provides persistent plugin-specific storage, useful for caching or configuration.
-- `context.data`: Supports import and export of Insomnia data in various formats (e.g., raw, HAR, Insomnia JSON/YAML).
-- `context.network`: Enables sending arbitrary network requests, useful for chaining calls or external integrations.
+Insomnia uses the following app, store, and utility helpers:
+- `context.app`: Exposes UI features like alerts, dialogues, prompts, clipboard access, and app metadata
+- `context.store`: Provides persistent plugin-specific storage, useful for caching or configuration
+- `context.data`: Supports import and export of Insomnia data in various formats (e.g., raw, HAR, Insomnia JSON/YAML)
+- `context.network`: Enables sending arbitrary network requests, useful for chaining calls or external integrations
 
 
 ## Template tags overview
@@ -55,6 +55,7 @@ Built-in tags include support for dynamic data from responses, requests, and gen
 
 ## Request and response chaining
 
+You can use the following tags to chain requests and responses:
 - **Response tags** allow referencing values from previous responses, useful for request chaining (e.g., grabbing a newly created ID).
 - **Request tags** enable referencing values within the current request, like extracting a CSRF token from a cookie to reuse in a header or form field.
 
@@ -71,7 +72,7 @@ To get started, see the [insomnia-plugin-core-themes](https://github.com/Kong/in
 
 Custom themes are written as plugins. Start your plugin project with a name like `insomnia-plugin-my-theme`, and export your theme using the `module.exports.themes` array.
 
-**Example: Dark theme plugin structure**
+#### Example: Dark theme plugin structure
 
 ```ts
 module.exports.themes = [{
@@ -125,7 +126,7 @@ You can customize the following UI areas using `styles` with `background`, `fore
 
 You can extend your theme with custom CSS using the `rawCss` property, though using predefined theme keys is preferred for future compatibility.
 
-**Example: Add transparency to tool tips and dropdowns**
+#### Example: Add transparency to tool tips and dropdowns
 
 ```ts
 module.exports.themes = [{

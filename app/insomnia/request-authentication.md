@@ -33,7 +33,7 @@ faqs:
       ```
       Error: Hostname/IP doesn't match certificate's altnames
       ```
-      it likely means you're using an invalid or self-signed certificate—common with local development servers.
+      This likely means you're using an invalid or self-signed certificate—common with local development servers.
 
       To bypass this, go to **Settings** and disable the **Validate SSL Certificates** option.
 

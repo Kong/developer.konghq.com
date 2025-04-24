@@ -146,12 +146,12 @@ WebSocket messages can be sent in JSON or raw formats, and received messages app
 
 ## Environment variables and limitations
 
-Insomnia 2022.6 adds support for environment variables and Nunjucks template tags in WebSocket URLs and message bodies.
+Insomnia 2022.6 adds support for [environment variables](/insomnia/environment-variables/) and Nunjucks template tags in WebSocket URLs and message bodies.
 
 Limitations include:
 
-1. Custom WebSocket protocols are not supported.
-2. Syncing WebSocket requests across different Insomnia versions (pre- and post-2022.6) may result in data loss. Ensure all devices are on version 2022.6 or later when using sync.
+* Custom WebSocket protocols aren't supported.
+* Syncing WebSocket requests across different Insomnia versions (pre- and post-2022.6) may result in data loss. Ensure all devices are on version 2022.6 or later when using sync.
 
 ## SOAP requests
 
