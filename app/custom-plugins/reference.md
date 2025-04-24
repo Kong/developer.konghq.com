@@ -27,6 +27,8 @@ related_resources:
     url: /custom-plugins/handler.lua/
   - text: daos.lua reference
     url: /custom-plugins/daos.lua/
+  - text: api.lua reference
+    url: /custom-plugins/api.lua/
   - text: Migration modules
     url: /custom-plugins/migrations/
   - text: Data store
