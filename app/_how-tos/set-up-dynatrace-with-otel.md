@@ -8,13 +8,7 @@ related_resources:
 breadcrumbs:
   - /premium-partners/
 
-act_as_plugin: true
-name: Dynatrace
-publisher: dynatrace
 premium_partner: true
-icon: /assets/icons/third-party/dynatrace.png
-categories:
-  - analytics-monitoring
 
 description: Use Dynatrace SaaS to send analytics and monitoring data to Dynatrace dashboards.
 
@@ -41,7 +35,6 @@ tags:
     - analytics
     - monitoring
     - premium
-    - plugins
     - partnership
 
 prereqs:

@@ -13,7 +13,7 @@ works_on:
 plugins:
   - ai-proxy
 
-entities: 
+entities:
   - service
   - route
   - plugin
@@ -23,23 +23,23 @@ tags:
     - ai-gateway
     - openai
 
-tldr: 
+tldr:
   q: What is AI Gateway, and how can I get started with it?
   a: |
-    With Kong's AI Gateway, you can deploy AI infrastructure for traffic 
-    that is sent to one or more LLMs. This lets you semantically route, secure, observe, accelerate, 
+    With Kong's AI Gateway, you can deploy AI infrastructure for traffic
+    that is sent to one or more LLMs. This lets you semantically route, secure, observe, accelerate,
     and govern traffic using a special set of AI plugins that are bundled with {{site.base_gateway}} distributions.
 
-    This tutorial will help you get started with AI Gateway by setting up the AI Proxy plugin with OpenAI. 
+    This tutorial will help you get started with AI Gateway by setting up the AI Proxy plugin with OpenAI.
 
     {:.info}
     > **Note:**
-    > This quickstart runs a Docker container to explore {{ site.base_gateway }}'s capabilities. 
+    > This quickstart runs a Docker container to explore {{ site.base_gateway }}'s capabilities.
     If you want to run {{ site.base_gateway }} as a part of a production-ready API platform, start with the [Install](/gateway/install/) page.
 
 tools:
     - deck
-  
+
 prereqs:
   inline:
     - title: OpenAI
@@ -76,6 +76,7 @@ next_steps:
   - text: Learn about all the AI plugins
     url: /plugins/?category=ai
 
+automated_tests: false
 ---
 
 ## 1. Check that {{site.base_gateway}} is running
@@ -128,9 +129,9 @@ In this example, we're setting up the plugin with minimal configuration, which m
 * The client is allowed to use any model in the `openai` provider and must provide the model name in the request body.
 * The client must provide an `Authorization` header with an OpenAI API key.
 
-If needed, you can restrict the models that can be consumed by specifying the model name explicitly using the [`config.model.name`](/plugins/ai-proxy/reference/#schema--config-model-name) parameter. 
+If needed, you can restrict the models that can be consumed by specifying the model name explicitly using the [`config.model.name`](/plugins/ai-proxy/reference/#schema--config-model-name) parameter.
 
-You can also provide the OpenAI API key directly in the configuration with the [`config.auth.header_name`](/plugins/ai-proxy/reference/#schema--config-model-name) and [`config.auth.header_value`](/plugins/ai-proxy/reference/#schema--config-auth-header-value) parameters so that the client doesn’t have to send them.
+You can also provide the OpenAI API key directly in the configuration with the [`config.auth.header_name`](/plugins/ai-proxy/reference/#schema--config-auth-header-name) and [`config.auth.header_value`](/plugins/ai-proxy/reference/#schema--config-auth-header-value) parameters so that the client doesn’t have to send them.
 
 ## 5. Validate
 

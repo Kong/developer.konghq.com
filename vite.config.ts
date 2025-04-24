@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from 'vite';
 import RubyPlugin from 'vite-plugin-ruby';
 import vue from '@vitejs/plugin-vue';
 import dns from 'dns';
+import svgLoader from 'vite-svg-loader';
 
 function mutateCookieAttributes (proxy) {
   proxy.on('proxyRes', function (proxyRes, req, res) {
@@ -51,7 +52,8 @@ export default ({ command, mode }) => {
     },
     plugins: [
       RubyPlugin(),
-      vue()
+      vue(),
+      svgLoader()
     ],
     build: {
       rollupOptions: {

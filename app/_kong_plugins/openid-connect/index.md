@@ -39,6 +39,8 @@ tags:
   - authentication
 
 related_resources:
+  - text: OpenID Connect in {{site.base_gateway}}
+    url: /gateway/openid-connect/
   - text: Authentication in {{site.base_gateway}}
     url: /gateway/authentication/
 ---
@@ -78,7 +80,7 @@ order for the credentials:
 
 1. [Session authentication](#session-authentication-workflow)
 2. [JWT access token authentication](#jwt-access-token-authentication-flow)
-3. [Kong OAuth token authentication](#kong-oauth-token-auth-flow)
+3. [Kong OAuth token authentication](#kong-oauth-token-authentication-flow)
 4. [Introspection authentication](#introspection-authentication-flow)
 5. [User info authentication](#user-info-authentication-flow)
 6. [Refresh token grant](#refresh-token-grant-workflow)
@@ -233,7 +235,7 @@ sequenceDiagram
 
 #### JWT access token authentication flow
 
-For legacy reasons, the stateless `JWT Access Token` authentication is named `bearer` (see [`config.auth_methods`](/plugins/openid-connect/reference/)). 
+For legacy reasons, the stateless `JWT Access Token` authentication is named `bearer` (see [`config.auth_methods`](/plugins/openid-connect/reference/#schema--config-auth-methods)). 
 Stateless authentication means that the signature verification uses the identity provider to publish public keys and the standard claims verification (such as `exp` or expiry). 
 The client may receive the token directly from the identity provider or by other means.
 
@@ -262,7 +264,7 @@ sequenceDiagram
 {% endmermaid %}
 <!--vale on-->
 
-#### Kong OAuth token auth flow
+#### Kong OAuth token authentication flow
 
 The OpenID Connect plugin can verify the tokens issued by the [OAuth 2.0 plugin](/plugins/oauth2/).
 This is very similar to third party identity provider issued [JWT access token authentication](#jwt-access-token-authentication-flow) or [introspection authentication](#introspection-authentication-flow):
@@ -443,20 +445,82 @@ sequenceDiagram
 
 The OpenID Connect plugin has several options for performing coarse-grained authorization:
 
-1. Claims-based authorization
-2. ACL plugin authorization
-3. Consumer authorization
+1. [Claims-based authorization](#claims-based-authorization)
+2. [ACL plugin authorization](#acl-plugin-authorization)
+3. [Consumer authorization](#consumer-authorization)
 
 #### Claims-based authorization
 
-The following option pairs can be configured to manage claims verification during authorization:
+Claims-based authorization uses a pair of options to manage claims verification during authorization.
+The pair can be any of:
 
-1. `config.scopes_claim` and `config.scopes_required`
-2. `config.audience_claim` and `config.audience_required`
-3. `config.groups_claim` and `config.groups_required`
-4. `config.roles_claim` and `config.roles_required`
+1. [`config.scopes_claim`](/plugins/openid-connect/reference/#schema--config-scopes-claim) and 
+[`config.scopes_required`](/plugins/openid-connect/reference/#schema--config-scopes-required)
+2. [`config.audience_claim`](/plugins/openid-connect/reference/#schema--config-audience-claim) and 
+[`config.audience_required`](/plugins/openid-connect/reference/#schema--config-audience-required)
+3. [`config.groups_claim`](/plugins/openid-connect/reference/#schema--config-groups-claim) and 
+[`config.groups_required`](/plugins/openid-connect/reference/#schema--config-groups-required)
+4. [`config.roles_claim`](/plugins/openid-connect/reference/#schema--config-roles-claim) and 
+[`config.roles_required`](/plugins/openid-connect/reference/#schema--config-roles-required)
 
-For example, the first configuration option, `config.scopes_claim`, points to a source, from which the value is retrieved and checked against the value of the second configuration option, `config.scopes_required`.
+For example, the first configuration option, `config.groups_claim`, points to a source, from which the value is retrieved and checked against the value of the second configuration option, `config.groups_required`.
+
+Both the claim type and the required claim content take an array of string elements.
+
+For the claim type (for example, `config.groups_claim`), the array is a list of JSON objects listed in nested order. 
+The plugin uses the order of the items in the array to look up data in a JSON payload.
+
+The value of a claim can be:
+
+* A space-separated string (common for scope claims)
+* An JSON array of strings (common for groups claims)
+* A simple value, such as a string
+
+For example, let's look at the following sample payload, where `groups` is nested inside `user`:
+
+```json
+{
+    "user": {
+        "name": "alex",
+        "groups": [
+            "employee",
+            "marketing"
+        ]
+    }
+}
+```
+
+In this case, you would use `config.groups_claim` to traverse to the groups you need, where `groups` is the JSON object that contains the list of groups:
+
+```yaml
+config:
+  groups_claim:
+  - user
+  - groups
+```
+
+On the other hand, the `config.*_required` parameters are arrays that allow logical `AND`/`OR` types of checks:
+
+* `AND`: Space-separated values
+
+  This claim has to have both `employee` AND `marketing`:
+
+  ```yaml
+  config:
+    groups_required:
+    - employee marketing
+  ```
+
+* `OR`: Values in separate array indices
+
+  This claim has to have either `employee` OR `marketing`:
+
+  ```yaml
+  config:
+    groups_required:
+    - employee
+    - marketing
+  ```
 
 #### ACL plugin authorization
 
@@ -553,6 +617,85 @@ rows:
       Set [`config.proof_of_possession_dpop`](./reference/#schema--config-proof-of-possession-dpop) to `strict` to enable DPoP.
     example: "[Demonstrating Proof-of-Possession](/plugins/openid-connect/examples/dpop/)"
 {% endtable %}
+
+### Certificate-bound access tokens
+
+One of the main vulnerabilities of OAuth is bearer tokens. With OAuth, presenting a valid bearer token is enough proof to access a resource.
+This can create problems since the client presenting the token isn't validated as the legitimate user that the token was issued to.
+
+Certificate-bound access tokens can solve this problem by binding tokens to clients. 
+This ensures the legitimacy of the token because the it requires proof that the sender is authorized to use a particular token to access protected resources. 
+
+Certificate-bound access tokens are supported by the following auth methods:
+
+* [JWT Access Token authentication](#jwt-access-token-authentication-flow)
+* [Introspection authentication](#introspection-authentication-flow)
+* [Session authentication](#session-authentication-workflow)
+
+Session authentication is only compatible with certificate-bound access tokens when used along with one of the other supported authentication methods:
+
+* When the configuration option [`config.proof_of_possession_auth_methods_validation`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-auth-methods-validation) is set to `false` and other non-compatible methods are enabled, if a valid session is found, the proof of possession validation will only be performed if the session was originally created using one of the compatible methods. 
+* If multiple `openid-connect` plugins are configured with the `session` auth method, we strongly recommend configuring different values of [`config.session_secret`](/plugins/openid-connect/reference/#schema--config-session-secret) across plugin instances for additional security. This avoids sessions being shared across plugins and possibly bypassing the proof of possession validation.
+
+To enable certificate-bound access for OpenID Connect:
+* Ensure that the auth server (IdP) that you're using is set up to generate OAuth 2.0 Mutual TLS certificate-bound access tokens.
+* Use the [`proof_of_possession_mtls`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-mtls) configuration option to ensure that the supplied access token belongs to the client by verifying its binding with the client certificate provided in the request.
+
+See the [cert-bound configuration example](/plugins/openid-connect/examples/cert-bound-access-tokens/) for more detail.
+
+### Demonstrating Proof-of-Possession (DPoP)
+
+Demonstrating Proof-of-Possession (DPoP) is an alternative technique to the [mutual TLS certificate-bound access tokens](#mutual-tls-client-authentication). Unlike its alternative, which binds the token to the mTLS client certificate, it binds the token to a JSON Web Key (JWK) provided by the client.
+
+<!--vale off-->
+{% mermaid %}
+sequenceDiagram
+    autonumber
+    participant client as Client <br>(e.g. mobile app)
+    participant kong as API Gateway <br>({{site.base_gateway}})
+    participant upstream as Upstream <br>(backend service,<br> e.g. httpbin)
+    participant idp as Authentication Server <br>(e.g. Keycloak)
+    activate client
+    client->>client: generate key pair
+    client->>idp: POST /oauth2/token<br>DPoP:$PROOF
+    deactivate client
+    activate idp
+    idp-->>client: DPoP bound access token ($AT)
+    activate client
+    deactivate idp
+    client->>kong: GET https://example.com/resource<br>Authorization: DPoP $AT<br>DPoP: $PROOF
+    activate kong
+    deactivate client
+    kong->>kong: validate $AT and $PROOF
+    kong->>upstream: proxied request <br> GET https://example.com/resource<br>Authorization: Bearer $AT
+    deactivate kong
+    activate upstream
+    upstream-->>kong: upstream response
+    deactivate upstream
+    activate kong
+    kong-->>client: response
+    deactivate kong
+{% endmermaid %}
+<!--vale on-->
+
+You can use the Demonstrating Proof-of-Possession option without mTLS, and even with plain HTTP, although HTTPS is recommended for enhanced security.
+
+When verification of the DPoP proof is enabled, {{site.base_gateway}} removes the `DPoP` header and changes the token type from `dpop` to `bearer`.
+This effectively downgrades the request to use a conventional bearer token, and allows an OAuth2 upstream without DPoP support to work with the DPoP token without losing the protection of the key binding mechanism.
+
+DPoP is compatible with the following authentication methods:
+
+* [JWT Access Token authentication](#jwt-access-token-authentication-flow)
+* [Introspection authentication](#introspection-authentication-flow)
+* [Session authentication](#session-authentication-workflow)
+
+Session authentication is only compatible with DPoP when used along with one of the other supported authentication methods. If multiple `openid-connect` plugins are configured with the `session` authentication method, we strongly recommend configuring different values of [`config.session_secret`](/plugins/openid-connect/reference/#schema--config-session-secret) across plugin instances for additional security. This avoids sessions being shared across plugins and possibly bypassing the proof of possession validation.
+
+To enable DPoP for OpenID Connect:
+* Ensure that the auth server (IdP) that you're using has DPoP enabled.
+* Use the [`config.proof_of_possession_dpop`](/plugins/openid-connect/reference/#schema--config-proof-of-possession-dpop) configuration option to ensure that the supplied access token is bound to the client by verifying its association with the JWT provided in the request.
+
+See the [DPoP configuration example](/plugins/openid-connect/examples/dpop/) for more detail.
 
 ## Debugging the OIDC plugin
 

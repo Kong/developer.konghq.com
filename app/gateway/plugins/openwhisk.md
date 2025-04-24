@@ -19,7 +19,7 @@ breadcrumbs:
 
 act_as_plugin: true
 name: OpenWhisk
-publisher: test
+publisher: kong-inc
 icon: /assets/icons/plugins/openwhisk.png
 categories:
   - serverless

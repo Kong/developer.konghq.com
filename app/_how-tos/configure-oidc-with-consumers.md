@@ -3,6 +3,8 @@ title: Configure OpenID Connect with Consumer authorization
 content_type: how_to
 
 related_resources:
+  - text: OpenID Connect in {{site.base_gateway}}
+    url: /gateway/openid-connect/
   - text: Authentication in {{site.base_gateway}}
     url: /gateway/authentication/
   - text: OpenID Connect authorization options
@@ -43,7 +45,7 @@ prereqs:
       icon_url: /assets/icons/keycloak.svg
 
 tags:
-  - authentication
+  - authorization
   - openid-connect
 
 description: Configure the OpenID Connect plugin together with Consumers to map Consumers to IdP users.

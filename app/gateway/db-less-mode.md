@@ -104,7 +104,14 @@ file loaded into {{site.base_gateway}} is the configured state of the system.
 ## Set up {{site.base_gateway}} in DB-less mode
 
 To use {{site.base_gateway}} in DB-less mode, set the [`database` directive of `kong.conf`](/gateway/configuration/#database) to `off`. You can do this by editing `kong.conf` and setting
-`database=off` or via environment variables. For more information, see [Set up {{site.base_gateway}} in DB-less mode](/how-to/set-up-gateway-in-dbless/).
+`database=off` or via environment variables (`export KONG_DATABASE=off`), and then [starting {{site.base_gateway}}](/gateway/cli/reference/#kong-start) like normal.
+
+You can verify that {{site.base_gateway}} is deployed in DB-less mode by sending the following:
+```sh
+curl -i -X GET http://localhost:8001
+```
+
+This will return the entire {{site.base_gateway}} configuration. Verify that `database` is set to `off` in the response body.
 
 ## Load the declarative configuration file
 

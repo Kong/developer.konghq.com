@@ -19,4 +19,5 @@ done
 {{ r }}{% endfor %}
 {% endfor -%}
 ```
+{:.no-copy-code}
 {% endif %}
