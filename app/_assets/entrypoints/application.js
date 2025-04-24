@@ -46,9 +46,10 @@ mermaid.initialize({
 window.addEventListener("load", () => {
   const hash = window.location.hash;
   if (hash) {
+    const escapedHash = CSS.escape(hash.slice(1));
     // Give time for collapsibles to expand/mermaid to render
     setTimeout(() => {
-      const el = document.querySelector(hash);
+      const el = document.querySelector(`#${escapedHash}`);
       if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 300); // delay for layout to settle
   }
