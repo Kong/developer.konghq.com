@@ -1,6 +1,7 @@
 {%- assign hostname = include.hostname | default: 'kong.example' %}
 {%- assign name = include.name | default: 'echo' %}
 {%- assign namespace = include.namespace | default: 'kong' %}
+{%- assign gateway_namespace = include.gateway_namespace | default: 'kong' %}
 {%- assign ingress_class = include.ingress_class | default: 'kong' %}
 {%- assign route_type = include.route_type | default: 'PathPrefix' | split: "," %}
 {%- assign path = include.path | default: '/echo' | split: "," %}
@@ -30,7 +31,7 @@ metadata:
 spec:
   parentRefs:
   - name: kong{% unless namespace == '' %}
-    namespace: {{ namespace }}{% endunless %}{% unless include.skip_host %}
+    namespace: {{ gateway_namespace }}{% endunless %}{% unless include.skip_host %}
   hostnames:
   - '{{ hostname }}'{% endunless %}
   rules:{% for i in (0..count) %}

@@ -122,7 +122,7 @@ module Jekyll
               end
 
               @full_resource = r
-              @full_resource.to_yaml
+              @full_resource.to_yaml.gsub('"', "'")
             end
 
             def to_s
