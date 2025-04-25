@@ -363,6 +363,7 @@ keyrings
 keyspace
 keystore
 kiali
+Kibana
 kibibytes
 kic
 Knative
@@ -420,6 +421,7 @@ LLMs
 Loggly
 Loggly
 loggly
+Logstash
 lookup
 lookups
 loopback
