@@ -1,0 +1,7 @@
+title: All Dev Portal Documentation
+sections:
+  - title: Uncategorized
+    items:
+      - path: /dev-portal/
+      - path: /dev-portal/**/*
+    auto_exclude: true
