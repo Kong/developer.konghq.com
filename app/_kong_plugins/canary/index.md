@@ -24,6 +24,10 @@ topologies:
     - cloud-gateways
     - serverless
 
+tags:
+  - traffic-control
+  - upgrades
+
 icon: canary.png
 
 categories:
@@ -32,6 +36,10 @@ categories:
 related_resources:
   - text: ACL plugin
     url: /plugins/acl/
+  - text: "{{site.base_gateway}} traffic control and routing"
+    url: /gateway/traffic-control-and-routing/
+  - text: Upgrading {{site.base_gateway}}
+    url: /gateway/upgrade/
 ---
 
 The Canary Release plugin helps minimize risk when deploying a new software version by gradually rolling out changes to a limited group of users. 
@@ -41,27 +49,27 @@ It also allows you to either roll back to the original upstream service or shift
 > **Important**: The Canary plugin is not designed for a Kubernetes-native framework, and shouldn't be used with the {{site.kic_product_name}}. 
 Instead, use the [Gateway API](/kubernetes-ingress-controller/gateway-api/) to manage canary deploys.
 
-## How it works
+## How the Canary Release plugin works
 
 The Canary Release plugin allows you to route traffic to two separate upstream services.
 
 The plugin attaches to a primary upstream service through a Gateway Service, Route, or even globally,
-and then the plugin configuration connects the second upstream service using its `config.upstream_host`, `config.upstream_port`, or `config.upstream_uri`.
+and then the plugin configuration connects the second upstream service using its [`config.upstream_host`](/plugins/canary/reference/#schema--config-upstream-host), [`config.upstream_port`](/plugins/canary/reference/#schema--config-upstream-port), or [`config.upstream_uri`](/plugins/canary/reference/#schema--config-upstream-uri).
 
 The Canary Release plugin supports the following modes of operation:
 
 | Use case | Configured by |
 | ---------|---------------|
-| [Route traffic by fixed percentage](/plugins/canary/examples/route-by-fixed-percentage/) | `config.percentage` |
-| [Route traffic by grouping Consumers into allow/deny ACL groups](/plugins/canary/examples/route-by-acl-group/) | `config.groups` parameter with [ACL plugin](/plugins/acl/) |
-| [Transfer traffic from one upstream service to another over a configured time period](/plugins/canary/examples/transfer-traffic-over-time/) | `config.start` and `config.duration`|
+| [Route traffic by fixed percentage](/plugins/canary/examples/route-by-fixed-percentage/) | [`config.percentage`](/plugins/canary/reference/#schema--config-percentage) |
+| [Route traffic by grouping Consumers into allow/deny ACL groups](/plugins/canary/examples/route-by-acl-group/) | [`config.groups`](/plugins/canary/reference/#schema--config-groups) parameter with the [ACL plugin](/plugins/acl/) |
+| [Transfer traffic from one upstream service to another over a configured time period](/plugins/canary/examples/transfer-traffic-over-time/) | [`config.start`](/plugins/canary/reference/#schema--config-start) and [`config.duration`](/plugins/canary/reference/#schema--config-duration)|
 
 ### Determining where to route a request
 
-The Canary Release plugin decides how to route requests to the canary based on a hash attribute (`config.hash`) and a given number of buckets (`config.steps`).
+The Canary Release plugin decides how to route requests to the canary based on a hash attribute ([`config.hash`](/plugins/canary/reference/#schema--config-hash)) and a given number of buckets ([`config.steps`](/plugins/canary/reference/#schema--config-steps)).
 Each of these buckets can be routed to primary upstream service A or secondary upstream service B.
 
-For example, if you set `config.steps` to 100 steps and `config.percentage` to 10%, the Canary Release plugin creates 100 buckets.
+For example, if you set `config.steps` to 100 steps and [`config.percentage`](/plugins/canary/reference/#schema--config-percentage) to 10%, the Canary Release plugin creates 100 buckets.
 10 buckets will be routed to B while the other 90 will remain routed to A.
 
 The `config.hash` parameter determines which requests end up in a specific bucket, based on their `consumer`, `ip`, or `header`.
@@ -86,7 +94,7 @@ If Consumer, IP, or header can't be identified, the Canary Release plugin automa
 ## Overriding the canary
 
 In some cases, you may want to allow clients to pick either upstream service A or B instead of applying the configured canary rules. 
-By setting `config.canary_by_header_name`, clients can send the value `always` to always use the canary service (B) or send the value `never` to never use the canary service (always use A).
+By setting [`config.canary_by_header_name`](/plugins/canary/reference/#schema--config-canary-by-header-name), clients can send the value `always` to always use the canary service (B) or send the value `never` to never use the canary service (always use A).
 
 ## Finalizing the canary
 
@@ -105,7 +113,7 @@ Removing or disabling the Canary Release plugin before the canary is complete wi
 ## Upstream health checks
 
 This plugin works with both active and passive health checks. 
-You can enable [Upstream health checks](/gateway/traffic-control/health-checks-circuit-breakers/) using the `config.upstream_fallback` parameter.
+You can enable [Upstream health checks](/gateway/traffic-control/health-checks-circuit-breakers/) using the [`config.upstream_fallback`](/plugins/canary/reference/#schema--config-upstream-fallback) parameter.
 This configuration will skip applying the canary upstream if it doesn't have at least one healthy target. 
 
 For this configuration to take effect, the following conditions must be met:

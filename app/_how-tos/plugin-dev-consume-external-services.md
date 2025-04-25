@@ -19,6 +19,10 @@ tldr:
 products:
   - gateway
 
+tags:
+  - custom-plugins
+  - pdk
+
 works_on:
   - on-prem
   - konnect
@@ -29,6 +33,8 @@ prereqs:
 related_resources:
   - text: Custom plugins
     url: /custom-plugins/
+  - text: Plugins
+    url: /gateway/entities/plugins/
 ---
 
 ## 1. Include HTTP and JSON support

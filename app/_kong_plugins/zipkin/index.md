@@ -5,8 +5,11 @@ name: 'Zipkin'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Propagate Zipkin spans and report space to a Zipkin server'
+description: 'Propagate Zipkin spans and report tracing data to a Zipkin server'
 
+tags:
+  - zipkin
+  - tracing
 
 products:
     - gateway
@@ -28,6 +31,9 @@ icon: zipkin.png
 
 categories:
   - analytics-monitoring
+
+search_aliases:
+  - Zipkin
 
 related_resources:
   - text: Tracing With Zipkin in {{site.base_gateway}}
@@ -59,7 +65,7 @@ For each request that gets traced, the following spans are produced: request, pr
 
 _Span kind: SERVER_
 
-There is 1 request span per request, which encompasses the whole request in {{site.base_gateway}}.
+There is one request span per request, which encompasses the whole request in {{site.base_gateway}}.
 
 The [proxy](#proxy-span) and [balancer](#balancer-span) spans are children of this span. It contains the following logs/annotations for the rewrite phase:
 
@@ -108,7 +114,7 @@ Additional tags:
 
 _Span kind: CLIENT_
 
-There is 1 proxy span per request, encompassing most of {{site.base_gateway}}'s internal processing of a request.
+There is one proxy span per request, encompassing most of {{site.base_gateway}}'s internal processing of a request.
 
 The proxy span contains the following logs/annotations for the start/finish of the of the [{{site.base_gateway}} plugin phases](/gateway/entities/plugin/#plugin-contexts):
 
@@ -142,7 +148,7 @@ rows:
 
 _Span kind: CLIENT_
 
-There are 0 or more balancer spans per request, each encompassing one balancer attempt.
+There are zero or more balancer spans per request, each encompassing one balancer attempt.
 This span contains the following tags specific to load balancing:
 
 <!--vale off-->
@@ -155,7 +161,7 @@ columns:
 rows:
   - tag: "`kong.balancer.try`"
     description: |
-      A number indicating the attempt (1 for the first load-balancing attempt, 2 for the second, and so on).
+      A number indicating the attempt (one for the first load-balancing attempt, two for the second, and so on).
   - tag: "`peer.ipv4` or `peer.ipv6`"
     description: The balancer IP.
   - tag: "`peer.port`"

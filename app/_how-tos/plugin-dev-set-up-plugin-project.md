@@ -19,6 +19,9 @@ tldr:
     * `kong/plugins/<plugin-name>/handler.lua`
     * `kong/plugins/<plugin-name>/schema.lua`
 
+tags:
+  - custom-plugins
+  - pdk
 
 products:
   - gateway
@@ -36,6 +39,8 @@ prereqs:
 related_resources:
   - text: Custom plugins
     url: /custom-plugins/
+  - text: Plugins
+    url: /gateway/entities/plugins/
 ---
 
 ## 1. Initialize a new plugin repository

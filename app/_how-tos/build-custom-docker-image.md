@@ -9,7 +9,7 @@ content_type: how_to
 
 tldr: 
   q: How do I build a custom {{site.base_gateway}} Docker image?
-  a: Create a Docker file and use [`docker build`](/how-to/run-docker-images/) to build the image.
+  a: Create a Docker file and use `docker build` to build the image.
 
 works_on:
     - on-prem
@@ -39,13 +39,8 @@ prereqs:
         2. Rename the file to either `kong.deb` or `kong.rpm` depending on the package.
 
 related_resources:
-  - text: Run Docker images
-    url: /how-to/run-docker-images/
   - text: Install {{site.base_gateway}} using Docker Compose
     url: /gateway/install/docker/
-next_steps:
-  - text: Learn how to run custom images 
-    url: /how-to/run-docker-images/
 ---
 
 

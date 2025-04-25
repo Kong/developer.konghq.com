@@ -14,8 +14,7 @@ config:
     - 300
   window_size: 
     - 1800
-  sync_rate:
-    - 10
+  sync_rate: 10
   window_type: sliding
   cost_strategy: node_quantifier
 

@@ -152,7 +152,15 @@ rows:
               cta:
                 text: Learn more about the response phase &rarr;
                 url: /gateway/traffic-control/proxying/#response
-    
+  - header:
+      type: h2
+      text: "Specialized traffic control plugins"
+    column_count: 3
+    columns:
+      - blocks:
+          - type: plugin
+            config:
+              slug: canary    
 
 
 
