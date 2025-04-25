@@ -35,7 +35,7 @@ export PATH=${PATH}:$(pwd)
 In order to migrate your resources from `Ingress` API to Gateway API you need all the `Ingress`-based `yaml` manifests. You can use these manifests as the source to migrate to the new API by creating copies that replace the `Ingress` resources with Gateway API resources. Then, use the `ingress2gateway` tool to create new manifests
 containing the gateway API configurations.
 
-> **Note**: In this guide the Ingress resources refers to Kubernetes networkingv1 `Ingress`es, Kong `TCPIngress`es, and Kong `UDPIngress`es. This means that **All** these resources should be included in the files used as a source for the conversion.
+> **Note**: In this guide the Ingress resources refers to Kubernetes networkingv1 `Ingresses, Kong TCPIngresses, and Kong UDPIngresses. This means that **All** these resources should be included in the files used as a source for the conversion.
 
 1. Export your source and destination paths.
 
