@@ -251,6 +251,8 @@ app/_how-tos/configure-oidc-with-claims-based-auth.md:
   - app/_hub/kong-inc/openid-connect/how-to/authorization/_claims.md
 app/_how-tos/get-started-with-datakit.md:
   - app/_src/gateway/kong-enterprise/datakit/get-started.md
+app/_how-tos/visualize-ai-gateway-metrics-with-kibana.md:
+  - app/_src/gateway/ai-gateway/llm-library-integration-guides/langchain.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
