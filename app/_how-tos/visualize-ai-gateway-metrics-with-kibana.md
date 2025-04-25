@@ -1,9 +1,6 @@
 ---
 title: Visualize AI Gateway metrics 
 content_type: how_to
-related_resources:
-  - text: AI Proxy
-    url: /plugins/ai-proxy/
 
 description: Use a sample Elasticsearch, Logstash, and Kibana stack to visualize data from the AI Proxy plugin.
 
@@ -39,9 +36,6 @@ tldr:
 
         If you're using {{site.konnect_short_name}}, you can visualize AI Gateway metrics with [Advanced Analytics](/advanced-analytics/).
 
-tools:
-    - deck
-
 prereqs:
   skip_product: true
   inline:
@@ -66,6 +60,8 @@ cleanup:
 automated_tests: false
 
 related_resources:
+  - text: AI Gateway
+    url: /ai-gateway/
   - text: Get started with AI Gateway
     url: /how-to/get-started-with-ai-gateway/
   - text: Use LangChain with AI Proxy
