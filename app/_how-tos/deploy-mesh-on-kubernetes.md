@@ -40,7 +40,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Install {{site.mesh_product_name}}
+## Install {{site.mesh_product_name}}
 
 Install {{site.mesh_product_name}} control plane with Helm:
 
@@ -50,7 +50,7 @@ helm repo update
 helm install --create-namespace --namespace kong-mesh-system kong-mesh kong-mesh/kong-mesh
 ```
 
-## 2. Deploy the demo application
+## Deploy the demo application
 
 To start learning how {{site.mesh_product_name}} works, you can use our simple and secure a simple demo application that consists of two services:
 
@@ -64,7 +64,7 @@ kubectl apply -f https://raw.githubusercontent.com/kumahq/kuma-counter-demo/mast
 kubectl wait -n kuma-demo --for=condition=ready pod --selector=app=demo-app --timeout=90s
 ```
 
-## 3. Forward Ports
+## Forward Ports
 
 Port-forward the service to the namespace on port `5000`:
 
@@ -72,6 +72,6 @@ Port-forward the service to the namespace on port `5000`:
 kubectl port-forward svc/demo-app -n kuma-demo 5000:5000
 ```
 
-## 4. Validate
+## Validate
 
 The demo app consists of a web application called Kuma Counter. This application allows us to increment a counter. You can validate the installation was successful by visiting `http://127.0.0.1:5000/` and using the web application. When you click **Increment**, you will see the connection being managed from the terminal.

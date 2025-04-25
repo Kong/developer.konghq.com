@@ -3,6 +3,8 @@ title: Configure OpenID Connect with client credentials
 content_type: how_to
 
 related_resources:
+  - text: OpenID Connect in {{site.base_gateway}}
+    url: /gateway/openid-connect/
   - text: Authentication in {{site.base_gateway}}
     url: /gateway/authentication/
   - text: OpenID Connect authentication flows and grants
@@ -62,7 +64,7 @@ cleanup:
 
 ---
 
-## 1. Enable the OpenID Connect plugin with the client credentials grant
+## Enable the OpenID Connect plugin with the client credentials grant
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with the client credentials grant.
@@ -102,7 +104,7 @@ In this example:
 
 {% include_cached plugins/oidc/client-auth.md %}
 
-## 2. Validate the client credentials grant
+## Validate the client credentials grant
 
 Now, validate the setup by accessing the `example-route` Route using the credentials in `client-id:client-secret` format:
 

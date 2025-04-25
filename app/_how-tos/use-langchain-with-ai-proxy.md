@@ -59,7 +59,7 @@ cleanup:
 
 ---
 
-## 1. Configure the AI Proxy plugin
+## Configure the AI Proxy plugin
 
 Enable the [AI Proxy](/plugins/ai-proxy/) plugin with your OpenAI API key and the model details. In this example, we'll use the GPT-4o model.
 
@@ -80,7 +80,7 @@ variables:
     value: $OPENAI_API_KEY
 {% endentity_examples %}
 
-## 2. Add authentication
+## Add authentication
 
 To secure the access to your Route, create a Consumer and set up an authentication plugin.
 
@@ -104,7 +104,7 @@ entities:
 {% endentity_examples %}
 
 
-## 3. Install LangChain
+## Install LangChain
 
 Load the LangChain SDK into your Python dependencies:
 
@@ -124,7 +124,7 @@ pip install -U langchain-openai
 {% endnavtab %}
 {% endnavtabs %}
 
-## 4. Create a LangChain script
+## Create a LangChain script
 
 Use the following command to create a file named `app.py` containing a LangChain Python script:
 
@@ -167,7 +167,7 @@ With the `base_url` parameter, we can override the OpenAI base URL that LangChai
 
 In the `api_key` parameter, we'll add the API key we created, without the `Bearer` prefix, which is added automatically by LangChain.
 
-## 5. Validate
+## Validate
 
 Run your script to validate that LangChain can access the Route:
 

@@ -31,7 +31,7 @@ related_resources:
     url: /custom-plugins/
 ---
 
-## 1. Include HTTP and JSON support
+## Include HTTP and JSON support
 
 Start by importing two new libraries to the `handler.lua` file to enable 
 HTTP and JSON parsing support. 
@@ -48,7 +48,7 @@ local http  = require("resty.http")
 local cjson = require("cjson.safe")
 ```
 
-## 2. Send third-party HTTP requests
+## Send third-party HTTP requests
 
 The `lua-resty-http` library provides a simple HTTP request
 function (`request_uri`) that we can use to reach out to our third-party service. 
@@ -67,7 +67,7 @@ local res, err = httpc:request_uri("http://httpbin.konghq.com/anything", {
 If the request to the third-party service is successful, the `res` 
 variable will contain the response.
 
-## 3. Handle response errors
+## Handle response errors
 
 The {{site.base_gateway}} 
 [Plugin Development Kit](/gateway/pdk/reference/) 
@@ -120,7 +120,7 @@ function MyPluginHandler:response(conf)
 end
 ```
 
-## 4. Process JSON data from third-party response
+## Process JSON data from third-party response
 
 This third-party service returns a JSON object in the response body. 
 We'll parse and extract a single value from the JSON body.
@@ -187,7 +187,7 @@ end
 return MyPluginHandler
 ```
 
-## 5. Update the tests
+## Update the tests
 
 At this stage, using the `pongo run` command to execute the integration tests will result in errors.
 The value of the header has changed from `response` to `http://httpbin.konghq.com/anything`. 

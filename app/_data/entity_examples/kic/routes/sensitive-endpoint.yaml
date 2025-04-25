@@ -1,0 +1,4 @@
+name: sensitive-endpoint
+path: /sensitive-endpoint
+service: echo
+port: 1027

@@ -3,12 +3,14 @@ title: Configure OpenID Connect with Kong Oauth2 token authentication
 content_type: how_to
 
 related_resources:
+  - text: OpenID Connect in {{site.base_gateway}}
+    url: /gateway/openid-connect/
   - text: Authentication in {{site.base_gateway}}
     url: /gateway/authentication/
   - text: OpenID Connect authentication flows and grants
     url: /plugins/openid-connect/#authentication
   - text: Kong OAuth2 token authentication workflow
-    url: /plugins/openid-connect/#kong-oauth-token-auth-flow
+    url: /plugins/openid-connect/#kong-oauth-token-authentication-flow
 
 plugins:
   - openid-connect
@@ -62,7 +64,7 @@ cleanup:
 
 ---
 
-## 1. Create a Consumer with OAuth2 credentials
+## Create a Consumer with OAuth2 credentials
 
 First, create a Consumer and assign OAuth2 credentials to them. 
 We'll use these credentials to generate access tokens.
@@ -78,7 +80,7 @@ entities:
           name: oauth2-app
 {% endentity_examples %}
 
-## 2. Enable the OAuth2 plugin
+## Enable the OAuth2 plugin
 
 The [OAuth2 plugin](/plugins/oauth2/) adds an OAuth 2.0 authentication layer to {{site.base_gateway}} and lets you generate access tokens for Consumers.
 
@@ -104,7 +106,7 @@ variables:
     value: $PROVISION_KEY
 {% endentity_examples %}
 
-## 3. Enable the OpenID Connect plugin with Kong OAuth token authentication
+## Enable the OpenID Connect plugin with Kong OAuth token authentication
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with Kong OAuth token authentication.
@@ -144,7 +146,7 @@ In this example:
 
 {% include_cached plugins/oidc/client-auth.md %}
 
-## 4. Retrieve the access token
+## Retrieve the access token
 
 Retrieve the token from the OAuth token endpoint:
 
@@ -160,10 +162,10 @@ You should see an `access-token` in the response.
 Export the token to an environment variable:
 
 ```
-export ACCESS_TOKEN={your-access-token}
+export ACCESS_TOKEN='{your-access-token}'
 ```
 
-## 5. Validate the access token flow
+## Validate the access token flow
 
 Now, validate the setup by accessing the `example-route` Route and passing the bearer token you received from the Kong OAuth plugin:
 

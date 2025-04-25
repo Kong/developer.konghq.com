@@ -13,7 +13,7 @@ tldr:
   a: Create a NodeJS module in the Insomnia plugins directory and add it to Insomnia. To publish on the [Plugin Hub](https://insomnia.rest/plugins), publish it as unscoped public package to the npm public registry.
 ---
 
-## 1. Create the plugin directory
+## Create the plugin directory
 
 In order for Insomnia to recognize your plugin as an Insomnia plugin, create a folder in the Insomnia plugins directory:
 * `~/Library/Application Support/Insomnia/plugins/` on MacOS
@@ -22,7 +22,7 @@ In order for Insomnia to recognize your plugin as an Insomnia plugin, create a f
 
 You can easily do this by going to **Preferences** > **Plugins** and clicking **Generate New Plugin**. This option creates a plugin folder along with two starter files: `package.json` and `main.js`. The new plugin is directly added to Insomnia.
 
-## 2. Configure the plugin
+## Configure the plugin
 
 Develop your plugin and make sure the `package.json` file includes the content required to be identified by Insomnia as a plugin. For example:
 
@@ -53,12 +53,12 @@ Develop your plugin and make sure the `package.json` file includes the content r
 
 <!-- Link to plugins reference page -->
 
-## 3. Debug the plugin
+## Debug the plugin
 
 Insomnia enables debugging using Chrome DevTools. Click **View** > **Toggle DevTools** to open it. You can find your plugin in the **Sources** tab or filter the **Console** based on the plugin's name.
 
 
-## 4. Publish the plugin
+## Publish the plugin
 
 If you to publish your plugin on the [Insomnia Plugin Hub](https://insomnia.rest/plugins), it must follow these requirements:
 * The name of the plugin must start with the prefix `insomnia-plugin-`

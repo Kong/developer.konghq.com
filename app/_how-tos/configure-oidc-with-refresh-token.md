@@ -3,6 +3,8 @@ title: Configure OpenID Connect with refresh token
 content_type: how_to
 
 related_resources:
+  - text: OpenID Connect in {{site.base_gateway}}
+    url: /gateway/openid-connect/
   - text: Authentication in {{site.base_gateway}}
     url: /gateway/authentication/
   - text: OpenID Connect authentication flows and grants
@@ -62,7 +64,7 @@ cleanup:
 
 ---
 
-## 1. Enable the OpenID Connect plugin with refresh tokens
+## Enable the OpenID Connect plugin with refresh tokens
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the [OpenID Connect plugin](/plugins/openid-connect/) with the refresh token grant.
@@ -107,7 +109,7 @@ In this example:
 
 {% include_cached plugins/oidc/client-auth.md %}
 
-## 2. Retrieve the refresh token
+## Retrieve the refresh token
 
 Check that you can recover the refresh token by requesting the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
 
@@ -124,10 +126,10 @@ You should see a `Refresh-Token` header in the response.
 Export the token to an environment variable:
 
 ```
-export REFRESH_TOKEN={your-refresh-token}
+export REFRESH_TOKEN='{your-refresh-token}'
 ```
 
-## 3. Validate the refresh token grant
+## Validate the refresh token grant
 
 Now, validate the setup by accessing the `example-route` Route and passing the refresh token in a `Refresh-Token` header:
 

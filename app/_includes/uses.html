@@ -1,10 +1,14 @@
-{% if include.products or include.tools or include.tier %}
+{% if include.products or include.tools or include.tier or include.beta == true or include.tech_preview == true %}
 <div class="flex gap-2 items-center flex-wrap">
+    {%- if include.beta == true or include.tech_preview == true -%}
+        {%- include_cached badges/stage.html beta=include.beta tech_preview=include.tech_preview -%}
+    {%- endif -%}
+
     {% if include.tier %}
         {% include tier.html products=include.products tier=include.tier %}
     {% endif %}
 
-    {% if include.tier %}
+    {% if include.tier or include.beta == true or include.tech_preview == true %}
         {% if include.products or include.tools %}
         <span class="text-sm"> and uses: </span>
         {% endif %}

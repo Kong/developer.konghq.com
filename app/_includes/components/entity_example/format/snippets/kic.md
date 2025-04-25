@@ -24,10 +24,6 @@ kubectl annotate -n kong {% if key == "Service" %}service{% else %}Kong{{ key }}
 {% else %}
 {% navtabs api %}
 {% navtab "Gateway API" %}
-
-{:.info}
-> The Gateway API CRDs must be installed _before_ {{ site.kic_product_name }} to use an `HTTPRoute`
-
 ```bash
 kubectl annotate -n kong httproute {{ include.presenter.foreign_key_names['Route'] }} konghq.com/plugins={{ include.presenter.other_plugins }}{{ include.presenter.full_resource.metadata.name }}
 ```

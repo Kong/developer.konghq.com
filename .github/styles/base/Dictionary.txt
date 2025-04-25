@@ -13,6 +13,7 @@ Alertmanager
 allow_terminated
 allowlist
 allowlisting
+allowlisted
 Amal
 Amberflo
 amberflo
@@ -136,6 +137,7 @@ Datadog
 Datadog
 datadog
 datadome
+datakit
 datagram
 datagrams
 dataplane
@@ -327,6 +329,7 @@ Istio's
 istioctl
 istioctl
 item_title
+jaq
 Javascript
 jetstack
 Jira
@@ -495,6 +498,7 @@ no_version
 node_quantifier
 Node.js
 Node.js
+nunjucks
 Noname
 Noname
 nopp
@@ -791,6 +795,7 @@ unstash
 untemplated
 untyped
 unvetted
+unversioned
 updated_at
 upsert
 upstream
@@ -816,6 +821,8 @@ Valero
 validator
 validators
 vararg
+viewport
+viewports
 vms
 vnet
 Vue

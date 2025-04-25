@@ -35,7 +35,7 @@ min_version:
 ---
 
 
-## 1. Create the RBAC user and assign it the `super-admin` role: 
+## Create the RBAC user and assign it the `super-admin` role: 
 
 1. Create an [RBAC](/gateway/entities/rbac/) user
 <!-- vale off -->
@@ -76,7 +76,7 @@ min_version:
 
 <!--vale on -->
 
-## 2. Validate
+## Validate
 
 You can validate that the `super-admin` role was correctly assigned to the RBAC user using the [`/rbac/users/{user}/roles`](/api/gateway/admin-ee/#/operations/get-rbac-users-name_or_id-roles) endpoint: 
 

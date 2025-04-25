@@ -76,7 +76,7 @@ min_version:
     gateway: '3.4'
 ---
 
-## 1. Generate a Keyring key
+## Generate a Keyring key
 
 Using the [Admin API](/api/gateway/admin-ee/#/operations/post-keyring-generate), generate a new key in the Keyring:
 
@@ -91,7 +91,7 @@ Using the [Admin API](/api/gateway/admin-ee/#/operations/post-keyring-generate),
 
 You will get a `201 Created` response with the key and key ID. The generated key will now be used to encrypt sensitive fields in the database.
 
-## 2. Enable the Key Authentication Encrypted plugin
+## Enable the Key Authentication Encrypted plugin
 
 Authentication lets you identify a Consumer. In this how-to, we'll be using the [Key Auth Encrypted](/plugins/key-auth-enc/) for authentication, which allows users to authenticate with a key when they make a request.
 
@@ -109,7 +109,7 @@ entities:
 {% endentity_examples %}
 <!--vale on-->
 
-## 3. Create a Consumer and key
+## Create a Consumer and key
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. First, you need to create a Consumer:
 
@@ -138,7 +138,7 @@ Copy the `key` in the response and export it as an environment variable:
 export CONSUMER_KEY=<consumer-key>
 ```
 
-## 4. Validate
+## Validate
 
 After configuring the Key Authentication Encryption plugin, you can verify that it was configured correctly and is working by sending requests with and without the API key you created for your Consumer.
 

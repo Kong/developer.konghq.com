@@ -36,8 +36,14 @@ faqs:
   - q: Can I reference {{site.konnect_short_name}} Config Store Vault secrets in `kong.conf`?
     a: No. You can't reference secrets stored in a {{site.konnect_short_name}} Config Store Vault in `kong.conf` because {{site.konnect_short_name}} resolves the secret after {{site.base_gateway}} connects to the control plane. For more information about the fields you can reference as secrets, see [What can be stored as a secret?](/gateway/entities/vault/#what-can-be-stored-as-a-secret).
 
+prereqs:
+  inline:
+    - title: Konnect API
+      include_content: prereqs/konnect-api-for-curl
+
 tools:
-  - konnect-api
+  - deck
+  # - konnect-api
  
 cleanup:
   inline:
@@ -53,7 +59,7 @@ next_steps:
     url: /gateway/entities/vault/
 ---
 
-## 1. Configure a {{site.konnect_short_name}} Config Store
+## Configure a {{site.konnect_short_name}} Config Store
 
 Before you can configure a {{site.konnect_short_name}} Vault, you must first create a Config Store using the [Control Planes Configuration API](/api/konnect/control-planes-config/v2/#/) by sending a `POST` request to the `/config-stores` endpoint:
 
@@ -65,7 +71,7 @@ method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $KONNECT_TOKEN'
+    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     name: my-config-store
 {% endcontrol_plane_request %}
@@ -74,32 +80,29 @@ body:
 Export the Config Store ID in the response body as an environment variable so you can use it later:
 
 ```sh
-export CONFIG_STORE_ID=config-store-uuid
+export DECK_CONFIG_STORE_ID=config-store-uuid
 ```
 
-## 2. Configure {{site.konnect_short_name}} as your Vault
+## Configure {{site.konnect_short_name}} as your Vault
 
-Enable {{site.konnect_short_name}} as your vault with the [Vault entity](/gateway/entities/vault/). Send a `POST` request to the [`/vaults/`](/api/konnect/control-planes-config/v2/#/operations/create-vault) endpoint:
+Enable {{site.konnect_short_name}} as your vault with the [Vault entity](/gateway/entities/vault/):
 
-<!--vale off-->
-{% control_plane_request %}
-url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/vaults/
-status_code: 201
-method: POST
-headers:
-    - 'Accept: application/json'
-    - 'Content-Type: application/json'
-    - 'Authorization: Bearer $KONNECT_TOKEN'
-body:
-    config:
-      config_store_id: $CONFIG_STORE_ID
-    description: Storing secrets in Konnect
-    name: konnect
+{% entity_examples %}
+entities:
+  vaults:
+  - name: konnect
     prefix: mysecretvault
-{% endcontrol_plane_request %}
-<!--vale on-->
+    description: Storing secrets in Konnect
+    config:
+      config_store_id: ${config-store-id}
 
-## 3. Store a secret in your {{site.konnect_short_name}} Vault
+variables:
+  config-store-id:
+    value: $CONFIG_STORE_ID
+{% endentity_examples %}
+
+
+## Store a secret in your {{site.konnect_short_name}} Vault
 
 By storing a secret in a {{site.konnect_short_name}} Vault, you can reference it within [`kong.conf`](/gateway/manage-kong-conf/) or as a referenceable plugin fields without having to store any values in plain-text.
 
@@ -107,32 +110,32 @@ Store your secret by sending a `POST` request to the `/secrets` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
-url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$CONFIG_STORE_ID/secrets/
+url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$DECK_CONFIG_STORE_ID/secrets/
 status_code: 201
 method: POST
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $KONNECT_TOKEN'
+    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 body:
     key: secret-key
     value: my-secret-value
 {% endcontrol_plane_request %}
 <!--vale on-->
 
-## 4. Validate
+## Validate
 
 You can validate that your secret was stored correctly by sending a `GET` request to the `/secrets` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
-url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$CONFIG_STORE_ID/secrets/
+url: /v2/control-planes/$CONTROL_PLANE_ID/config-stores/$DECK_CONFIG_STORE_ID/secrets/
 status_code: 201
 method: GET
 headers:
     - 'Accept: application/json'
     - 'Content-Type: application/json'
-    - 'Authorization: Bearer $KONNECT_TOKEN'
+    - 'Authorization: Bearer $DECK_KONNECT_TOKEN'
 {% endcontrol_plane_request %}
 <!--vale on-->
 

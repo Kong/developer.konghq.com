@@ -1,8 +1,11 @@
 title: Mutual TLS client authentication
 description: |
-  Configure the OpenID Connect plugin to use mutual TLS (mTLS) client authentication.
+  Configure the OpenID Connect plugin to use [mutual TLS (mTLS) client authentication](/plugins/openid-connect/#mutual-tls-client-authentication).
 
   The following uses the password grant, but you can use any supported OpenID Connect auth method.
+
+  The configuration option `config.tls_client_auth_ssl_verify` controls whether the server (IdP) certificate is verified.
+  When set to `true` (default), ensure that [trusted certificate](/gateway/configuration/#lua-ssl-trusted-certificate) and [verify depth](/gateway/configuration/#lua-ssl-verify-depth) are appropriately configured so that the IdP's server certificate is trusted by {{site.base_gateway}}.
 
 weight: 819
 
@@ -11,22 +14,28 @@ requirements:
   - A client certificate and key pair stored in a [Certificate object](/gateway/entities/certificate/)
 
 config:
-  issuer: $ISSUER
+  issuer: ${issuer}
   client_id:
-    - $CLIENT_ID
+    - ${client-id}
   client_auth:
     - tls_client_auth
   auth_methods:
     - password
-  tls_client_auth_cert_id: $CERTIFICATE_ID
+  tls_client_auth_cert_id: ${cert-id}
+  tls_client_auth_ssl_verify: true
 
 variables:
   issuer:
-    value: "http://keycloak.test:8080/realms/master"
-  client_id:
-    value: tls-client
-  tls_client_auth_cert_id:
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. 
+      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://example-keycloak-host:8080/realms/example-realm`.  
+  client-id:
+    value: $CLIENT_ID
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
+  cert-id:
     value: $CERTIFICATE_ID
+    description: The UUID of a Certificate object in {{site.base_gateway}}, which contains a client cert and key pair.
 
 tools:
   - deck

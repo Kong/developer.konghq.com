@@ -59,7 +59,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Validate existing routing rules
+## Validate existing routing rules
 
 In the [prerequisites](#prerequisites), you configured a Gateway Service and a Route. 
 Let's check that the Route works by accessing httpbin's `/anything` Service, which will echo back the request:
@@ -82,7 +82,7 @@ body:
 
 The request will fail with the message `no Route matched with those values`.
 
-## 2. Create a fallback Gateway Service and Route
+## Create a fallback Gateway Service and Route
 
 To avoid 404 errors, create a fallback Gateway Service and a Route with the path `/`. 
 Together, they'll catch any paths that don't match other routing rules and redirect them to the Gateway Service URL.
@@ -106,7 +106,7 @@ entities:
 Since all URIs are prefixed by the root character `/`, 
 if incoming HTTP requests match no other existing Routes, they will match this Route and redirect to the `http://httpbun.com` Gateway Service URL.
 
-## 3. Validate the fallback Route
+## Validate the fallback Route
 
 Try accessing the `/` path again:
 

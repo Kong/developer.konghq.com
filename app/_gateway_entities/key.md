@@ -4,13 +4,26 @@ content_type: reference
 entities:
   - key
 
+tags:
+  - key
+  - secrets-management
+
+products:
+    - gateway
+
 description: A Key object holds a representation of asymmetric keys in various formats.
 
 related_resources:
-  - text: Key-set entity
+  - text: Key Set entity
     url: /gateway/entities/key-set/
+  - text: Keyring
+    url: /gateway/keyring/
+  - text: Secrets management
+    url: /gateway/secrets-management/
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
+  - text: Securing {{site.base_gateway}}
+    url: /gateway/security/
 
 api_specs:
   - gateway/admin-ee
@@ -31,7 +44,7 @@ works_on:
 
 ## What is a Key?
 
-A Key object holds a representation of asymmetric keys, either public or private. When {{site.base_gateway}} or a Kong plugin requires a specific public or private key to perform certain operations, it can use this entity.
+A Key object holds a representation of asymmetric keys, either public or private. When {{site.base_gateway}} or a [Kong plugin](/plugins/) requires a specific public or private key to perform certain operations, it can use this entity.
 
 Keys currently support JWK and PEM formats. Both formats carry the same base information, such as the public and private keys, but may allow you to specify additional meta information. For example, the JWK format carries more information than PEM. One key pair can have multiple different representations (JWK or PEM) while being the same key.
 

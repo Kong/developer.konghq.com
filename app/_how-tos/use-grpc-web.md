@@ -43,7 +43,7 @@ min_version:
 ---
 
 
-## 1. Create a Protobuf definition
+## Create a Protobuf definition
 
 Use the following command to create a sample Protobuf definition:
 
@@ -71,7 +71,7 @@ message HelloResponse {
 
 This sample definition uses `SayHello` method available on [grpcb.in](https://grpcb.in/).
 
-## 2. Add the Protobuf definition to your Docker container
+## Add the Protobuf definition to your Docker container
 
 Since {{site.konnect_short_name}} data plane container names can vary, set your container name as an environment variable:
 {: data-deployment-topology="konnect" }
@@ -92,11 +92,11 @@ docker cp hello.proto $KONNECT_DP_CONTAINER:/usr/local/kong
 ```
 {: data-deployment-topology="konnect" }
 
-## 3. Create a Gateway Service and a Route
+## Create a Gateway Service and a Route
 
 {% include /how-tos/steps/grpc-entities.md %}
 
-## 4. Enable the gRPC-Web plugin
+## Enable the gRPC-Web plugin
 
 Configure the plugin to use the Protobuf definition we created:
 
@@ -109,7 +109,7 @@ entities:
         proto: usr/local/kong/hello.proto
 {% endentity_examples %}
 
-## 5. Validate
+## Validate
 
 To validate that the configuration is working as expected, send a `POST` request to one of the RPC methods used in the Protobuf definition.
 

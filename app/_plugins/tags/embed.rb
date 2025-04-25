@@ -23,7 +23,7 @@ module Jekyll
       embedded_file_path = file_path(@page['release'])
 
       begin
-        content = File.read(embedded_file_path)
+        content = File.read(embedded_file_path).gsub('# Changelog', '')
 
         ignored_links(site).reduce(content) do |result, pattern|
           result.gsub(Regexp.new(pattern), '')

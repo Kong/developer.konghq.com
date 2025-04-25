@@ -1,0 +1,4 @@
+name: secured-endpoint
+path: /secured-endpoint
+service: echo
+port: 1027

@@ -13,6 +13,15 @@ sections:
       - path: /kubernetes-ingress-controller/get-started/rate-limiting/
       - path: /kubernetes-ingress-controller/get-started/proxy-caching/
       - path: /kubernetes-ingress-controller/get-started/key-authentication/
+  - title: Production Deployments
+    allow_duplicates: true
+    items:
+      - path: /kubernetes-ingress-controller/install/
+      - path: /kubernetes-ingress-controller/license/
+      - path: /kubernetes-ingress-controller/kic-high-availability/
+      - path: /kubernetes-ingress-controller/service-health-checks/
+      - path: /kubernetes-ingress-controller/last-known-good-config/
+      - path: /kubernetes-ingress-controller/fallback-configuration/
   - title: Routing
     items:
       - path: /kubernetes-ingress-controller/routing/http/
@@ -23,6 +32,9 @@ sections:
       - path: /kubernetes-ingress-controller/routing/udp-by-port/
       - path: /kubernetes-ingress-controller/routing/external-service/
       - path: /kubernetes-ingress-controller/routing/http-to-https/
+      - path: /kubernetes-ingress-controller/routing/rewriting-paths/
+      - path: /kubernetes-ingress-controller/routing/weights/
+      - path: /kubernetes-ingress-controller/routing/cross-namespace/
   - title: How KIC Works
     items:
       - path: /kubernetes-ingress-controller/architecture/
@@ -37,11 +49,14 @@ sections:
       - path: /kubernetes-ingress-controller/deployment-topologies/gateway-discovery/
       - path: /kubernetes-ingress-controller/deployment-topologies/db-backed/
       - path: /kubernetes-ingress-controller/deployment-topologies/sidecar/
-  - title: Customization
+  - title: Advanced Usage
     items:
-      - path: /kubernetes-ingress-controller/custom-plugin/
+      - path: /kubernetes-ingress-controller/load-balancing/
   - title: Observability
     items:
+      - path: /kubernetes-ingress-controller/observability/prometheus/
+      - path: /kubernetes-ingress-controller/observability/prometheus-grafana/
+      - path: /kubernetes-ingress-controller/observability/events/
       - path: /kubernetes-ingress-controller/observability/**/*
   - title: Troubleshooting
     items:
@@ -54,6 +69,11 @@ sections:
     items:
       - path: /kubernetes-ingress-controller/custom-plugins/
       - path: /kubernetes-ingress-controller/multiple-auth-methods/
+      - path: /kubernetes-ingress-controller/acl/
+      - path: /kubernetes-ingress-controller/rate-limiting/
+      - path: /kubernetes-ingress-controller/mtls/
+      - path: /kubernetes-ingress-controller/oidc/
+      - path: /kubernetes-ingress-controller/degraphql/
   - title: Reference
     allow_duplicates: true
     items:
@@ -62,8 +82,13 @@ sections:
       - path: /kubernetes-ingress-controller/reference/feature-gates/
       - path: /kubernetes-ingress-controller/reference/configuration-options/
       - path: /kubernetes-ingress-controller/reference/required-permissions/
+      - path: /kubernetes-ingress-controller/reference/host-manipulation/
+      - path: /kubernetes-ingress-controller/reference/path-manipulation/
   - title: FAQs
     items:
       - path: /kubernetes-ingress-controller/faq/custom-nginx-conf/
       - path: /kubernetes-ingress-controller/faq/combining-httproutes/
       - path: /kubernetes-ingress-controller/faq/migrate-ingress-to-gateway/
+      - path: /kubernetes-ingress-controller/faq/upgrading-gateway/
+      - path: /kubernetes-ingress-controller/faq/upgrading-ingress-controller/
+      - path: /kubernetes-ingress-controller/faq/custom-entities/

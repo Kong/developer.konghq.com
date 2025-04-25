@@ -69,13 +69,13 @@ cleanup:
       icon_url: /assets/icons/gateway.svg 
 ---
 
-## 1. Create a Docker network
+## Create a Docker network
 ```sh
 docker network create kong-net
 ```
 The Docker network will be used for communication between {{site.base_gateway}} and the database.
 
-## 2. Run the database
+## Run the database
 Create the `kong-database` container for the PostgreSQL database: 
 ```sh
 docker run -d --name kong-database \
@@ -87,27 +87,27 @@ docker run -d --name kong-database \
 ```
 The username and password specified in this command are the PostgreSQL master credentials.
 
-## 3. Create environment variables
+## Create environment variables
 Define the username and password to use to connect {{site.base_gateway}} to the database and store them in environment variables.
 ```sh
 export KONG_PG_USER=kong
 export KONG_PG_PASSWORD=KongPassword
 ```
 
-## 4. Create a database user
+## Create a database user
 Create a user in the PostgreSQL container, using the credentials defined in the previous step:
 ```sh
 docker exec -it kong-database psql -U admin -c \
  "CREATE USER ${KONG_PG_USER} WITH PASSWORD '${KONG_PG_PASSWORD}'"
 ```
 
-## 5. Create a database
+## Create a database
 Create a database named `kong`, with the user you created as the owner:
 ```sh
 docker exec -it kong-database psql -U admin -c "CREATE DATABASE kong OWNER ${KONG_PG_USER};"
 ```
 
-## 6. Create a secret in AWS Secrets Manager
+## Create a secret in AWS Secrets Manager
 Use the AWS CLI to create a new secret named `kong-gateway-database` containing the username and password you defined:
 ```sh
 aws secretsmanager create-secret --name kong-gateway-database \
@@ -115,7 +115,7 @@ aws secretsmanager create-secret --name kong-gateway-database \
  --secret-string '{"pg_user":"'${KONG_PG_USER}'","pg_password":"'${KONG_PG_PASSWORD}'"}'
 ```
 
-## 7. Initialize the database
+## Initialize the database
 Use the `kong migrations bootstrap` command to initialize the database:
 ```sh
 docker run --rm \
@@ -130,7 +130,7 @@ docker run --rm \
 {:.info}
 > Note: `kong migrations` does not support secrets managements, so this step passes the database credentials with environment variables.
 
-## 8. Start {{site.base_gateway}}
+## Start {{site.base_gateway}}
 Create the {{site.base_gateway}} container with your AWS credentials and the vault references in the environment:
 ```sh
 docker run -d --name kong-gateway \
@@ -148,7 +148,7 @@ docker run -d --name kong-gateway \
 ```
 This command returns the ID of the {{site.base_gateway}} container.
 
-## 9. Validate
+## Validate
 To verify that everything worked as expected, you can check its status with this command:
 ```sh
 docker container ls

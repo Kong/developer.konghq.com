@@ -3,6 +3,8 @@ title: Configure OpenID Connect with session authentication
 content_type: how_to
 
 related_resources:
+  - text: OpenID Connect in {{site.base_gateway}}
+    url: /gateway/openid-connect/
   - text: Authentication in {{site.base_gateway}}
     url: /gateway/authentication/
   - text: OpenID Connect authentication flows and grants
@@ -66,7 +68,7 @@ cleanup:
 
 ---
 
-## 1. Enable the OpenID Connect plugin with session auth
+## Enable the OpenID Connect plugin with session auth
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with the session auth flow.
@@ -106,7 +108,7 @@ In this example:
 
 {% include_cached plugins/oidc/client-auth.md %}
 
-## 2. Store the session cookie
+## Store the session cookie
 
 Request the Service with the basic authentication credentials created in the [prerequisites](#prerequisites) and store the session:
 
@@ -121,7 +123,7 @@ cookie_jar: example-user
 {% endvalidation %}
 <!--vale on-->
 
-## 3. Validate session authentication
+## Validate session authentication
 
 Make a request with the stored session cookie:
 

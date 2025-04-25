@@ -72,7 +72,7 @@ next_steps:
     url: /gateway/entities/vault/
 ---
 
-## 1. Create a key in the HashiCorp vault
+## Create a key in the HashiCorp vault
 
 The Keyring integration with HashiCorp Vaults allows you to store and version Keyring data. {{site.base_gateway}} nodes can read the keys directly from the vault to encrypt and decrypt sensitive data. 
 
@@ -81,7 +81,7 @@ First, we need to add a key and key ID to the vault. Let's create a secret named
 vault kv put -mount secret keyring id="8zgITLQh" key="t6NWgbj3g9cbNVC3/D6oZ2Md1Br5gWtRrqb1T2FZy44="
 ```
 
-## 2. Set environment variables
+## Set environment variables
 
 Set the environment variables that will be used by {{site.base_gateway}} to enable the Keyring and connect it to the HashiCorp Vault. Since the Keyring feature requires a {{site.ee_product_name}} license, make sure to include it in the environment too.
 ```sh
@@ -95,7 +95,7 @@ export KONG_KEYRING_VAULT_AUTH_METHOD="token"
 export KONG_KEYRING_VAULT_TOKEN="root"
 ```
 
-## 3. Start {{site.base_gateway}}
+## Start {{site.base_gateway}}
 
 Create the {{site.base_gateway}} container with the environment variables. In this example, we can use the quickstart:
 ```sh
@@ -109,14 +109,14 @@ curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA \
     -e KONG_KEYRING_VAULT_TOKEN
 ```
 
-## 4. Synchronize the vault with the Keyring
+## Synchronize the vault with the Keyring
 
 Once the container is created, use the following command to sync the keyring data from the HashiCorp Vault to the {{site.base_gateway}} Keyring.
 ```sh
 curl -i -X POST http://localhost:8001/keyring/vault/sync
 ```
 
-## 5. Validate
+## Validate
 
 Check that the Keyring contains the key that we created in the HashiCorp Vault:
 ```sh
