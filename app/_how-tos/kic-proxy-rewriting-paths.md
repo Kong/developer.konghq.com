@@ -73,7 +73,7 @@ data:
 
 The `$1` in the annotation is expanded to `$(uri_captures[1])` in the plugin configuration.
 
-Up to nine capture groups are supported using the `konghq.com/rewrite` annotation. If you need more than 9 capture groups, [create a KongPlugin resource](/hub/kong-inc/request-transformer/how-to/basic-example/?tab=kubernetes) to handle the transformation.
+Up to nine capture groups are supported using the `konghq.com/rewrite` annotation. If you need more than 9 capture groups, [create a KongPlugin resource](/plugins/request-transformer/examples/rewrite-path/?format=kic) to handle the transformation.
 
 ## Validate your configuration
 
