@@ -60,6 +60,7 @@
     --kui-color-background: rgb(var(--color-bg-primary));
     --kui-color-background-neutral-weakest: rgb(var(--color-bg-primary));
     --kui-color-border: rgb(var(--color-border-primary), 0.05);
+    --kui-color-background-primary-weakest: rgb(var(--color-brand-saturated), 0.4);
 
     --color-advanced-analytics-brand: var(--color-semantic-yellow-primary);
     --color-advanced-analytics-background: var(--color-semantic-yellow-secondary);
@@ -351,63 +352,65 @@
     @apply flex flex-col gap-3;
   }
 
-  .success, .warning, .danger, .info, .neutral, .decorative {
-    @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-10 relative text-sm;
+  blockquote {
+    &.success, &.warning, &.danger, &.info, &.neutral, &.decorative {
+      @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-10 relative text-sm;
 
-    &:not(.no-icon)::before {
-      @apply text-base absolute left-4 w-4 h-4 content-[''] top-[18px];
-      mask-size: cover;
-      mask:url(/assets/icons/admonitions/info.svg);
+      &:not(.no-icon)::before {
+        @apply text-base absolute left-4 w-4 h-4 content-[''] top-[18px];
+        mask-size: cover;
+        mask:url(/assets/icons/admonitions/info.svg);
+      }
     }
-  }
 
-  .info {
-    @apply bg-semantic-blue-secondary border-semantic-blue-primary;
+    &.info {
+      @apply bg-semantic-blue-secondary border-semantic-blue-primary;
 
-    &:not(.no-icon)::before {
-      @apply bg-semantic-blue-primary;
+      &:not(.no-icon)::before {
+        @apply bg-semantic-blue-primary;
+      }
     }
-  }
 
-  .success {
-    @apply bg-semantic-green-secondary border-semantic-green-primary;
+    &.success {
+      @apply bg-semantic-green-secondary border-semantic-green-primary;
 
-    &:not(.no-icon)::before {
-      @apply bg-semantic-green-primary;
+      &:not(.no-icon)::before {
+        @apply bg-semantic-green-primary;
+      }
     }
-  }
 
-  .warning {
-    @apply bg-semantic-yellow-secondary border-semantic-yellow-primary;
+    &.warning {
+      @apply bg-semantic-yellow-secondary border-semantic-yellow-primary;
 
-    &:not(.no-icon)::before {
-      @apply bg-semantic-yellow-primary;
-      mask:url(/assets/icons/admonitions/warning.svg);
+      &:not(.no-icon)::before {
+        @apply bg-semantic-yellow-primary;
+        mask:url(/assets/icons/admonitions/warning.svg);
+      }
     }
-  }
 
-  .danger {
-    @apply bg-semantic-red-secondary border-semantic-red-primary;
+    &.danger {
+      @apply bg-semantic-red-secondary border-semantic-red-primary;
 
-    &:not(.no-icon)::before {
-      @apply bg-semantic-red-primary;
-      mask:url(/assets/icons/admonitions/danger.svg);
+      &:not(.no-icon)::before {
+        @apply bg-semantic-red-primary;
+        mask:url(/assets/icons/admonitions/danger.svg);
+      }
     }
-  }
 
-  .neutral {
-    @apply bg-semantic-grey-secondary border-semantic-grey-primary;
+    &.neutral {
+      @apply bg-semantic-grey-secondary border-semantic-grey-primary;
 
-    &:not(.no-icon)::before {
-      @apply bg-semantic-grey-primary;
+      &:not(.no-icon)::before {
+        @apply bg-semantic-grey-primary;
+      }
     }
-  }
 
-  .decorative {
-    @apply bg-semantic-purple-secondary border-semantic-purple-primary;
+    &.decorative {
+      @apply bg-semantic-purple-secondary border-semantic-purple-primary;
 
-    &:not(.no-icon)::before {
-      @apply bg-semantic-purple-primary;
+      &:not(.no-icon)::before {
+        @apply bg-semantic-purple-primary;
+      }
     }
   }
 
