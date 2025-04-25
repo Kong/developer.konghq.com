@@ -52,16 +52,21 @@
 
     --color-shadow-hover-card: 24, 128, 240, 0.16;
 
+    --kui-border-width-20: 1px;
+
     --kui-color-text-neutral-stronger: rgb(var(--color-text-secondary));
     --kui-color-text-neutral-strong: rgb(var(--color-text-secondary));
     --kui-color-text-neutral: rgb(var(--color-text-primary));
     --kui-color-text: rgb(var(--color-text-primary));
     --kui-color-text-primary: rgb(var(--color-brand));
+    --kui-color-text-primary-strong: rgb(var(--color-brand));
     --kui-color-text-primary-stronger: rgb(var(--color-brand));
     --kui-color-text-danger: rgb(var(--color-semantic-red-primary));
     --kui-color-background: rgb(var(--color-bg-secondary));
     --kui-color-background-neutral-weakest: rgb(var(--color-bg-primary));
     --kui-color-border: rgb(var(--color-border-primary), 0.05);
+    --kui-color-border-primary: rgb(var(--color-brand));
+    --kui-color-border-primary-strong: rgb(var(--color-brand));
     --kui-shadow-border: rgb(var(--color-brand-saturated), 0.4);
     --kui-shadow-border-primary: rgb(none, none, none);
     --kui-color-background-primary-weakest: rgb(var(--color-brand-saturated), 0.04);
@@ -304,6 +309,22 @@
 }
 
 @layer components {
+  .button {
+    @apply !py-2 !px-4 !rounded-md !text-sm !text-primary !font-semibold hover:!no-underline flex items-center gap-2;
+  }
+
+  .button.button--primary {
+    @apply !bg-brand !text-white;
+  }
+
+  .button.button--secondary {
+    @apply !border !border-brand !text-primary;
+  }
+
+  .button.button--filters {
+    @apply !border-brand !bg-secondary !border-brand-saturated/40 !text-terciary;
+  }
+
   .highlight {
     @apply w-full bg-code-block h-fit;
   }
@@ -687,6 +708,10 @@
   @apply hidden;
 }
 
+.ais-ClearRefinements-button {
+  @apply !leading-[inherit];
+}
+
 .checkbox, .ais-RefinementList-checkbox {
   @apply form-checkbox bg-secondary rounded border border-primary/[.08] dark:border-primary/5;
 }
@@ -711,8 +736,10 @@
   @apply border-brand-saturated border-2;
 }
 
+
+/* Spec Renderer */
 .call-button {
-  @apply border border-brand text-primary font-normal hover:bg-transparent !important;
+  @apply button button--secondary hover:!bg-transparent !border-brand;
 }
 
 .select-items-container {

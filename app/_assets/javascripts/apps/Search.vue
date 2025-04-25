@@ -87,7 +87,7 @@
                         </div>
                     </template>
                 </ais-search-box>
-                <button class="flex md:hidden items-center gap-2 rounded-md border py-2 px-4 bg-secondary border-brand-saturated/40 text-sm" @click="toggleFilters">
+                <button class="button button--secondary button--filters flex md:hidden" @click="toggleFilters">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M10 18V16H14V18H10ZM6 13V11H18V13H6ZM3 8V6H21V8H3Z" fill="rgb(var(--color-text-terciary))"/>
                     </svg>

@@ -185,4 +185,12 @@ const openSlideoutToc = async () => {
 :deep(.default-markdown a[href^="https://"]) {
   @apply bg-none !important;
 }
+
+:deep(.overview-server-list button.secondary) {
+  @apply !bg-brand !text-white;
+}
+
+:deep(.overview-server-list button.tertiary) {
+  @apply !border !border-brand !text-primary;
+}
 </style>
