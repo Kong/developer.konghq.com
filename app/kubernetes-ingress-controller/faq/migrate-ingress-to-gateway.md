@@ -15,7 +15,7 @@ works_on:
   - konnect
 
 related_resources:
-  - text: ingress2gateway guide
+  - text: Ingress to Gateway
     url: /kubernetes-ingress-controller/migrate/ingress-to-gateway/
 ---
 

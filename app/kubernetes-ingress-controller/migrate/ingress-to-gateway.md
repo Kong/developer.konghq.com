@@ -15,7 +15,7 @@ works_on:
   - konnect
 
 related_resources:
-  - text: ingress2gateway FAQ
+  - text: Ingress to Gateway FAQ
     url: /kubernetes-ingress-controller/faq/migrate-ingress-to-gateway/
 
 ---
@@ -66,9 +66,9 @@ containing the gateway API configurations.
 
 The manifests conversion are as follows:
 
-- `Ingress`es are converted to `Gateway` and `HTTPRoute`s
-- `TCPIngress`es are converted to `Gateway` and `TCPRoute`s and `TLSRoute`s
-- `UDPIngress`es are converted to `Gateway` and `UDPRoute`s
+- Ingresses are converted to `Gateway` and `HTTPRoute`s
+- TCPIngresses are converted to `Gateway` and `TCPRoute`s and `TLSRoute`s
+- UDPIngresses are converted to `Gateway` and `UDPRoute`s
 
 ## Migrate from Ingress to Gateway
 
