@@ -100,7 +100,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Add an invalid API key as a secret in Google Cloud Secret Manager
+## Add an invalid API key as a secret in Google Cloud Secret Manager
 
 In this tutorial, first we'll create a secret with an invalid API key in Google Cloud Secret Manager. Later, we'll add the correct API key as another secret version, but this allows us to test if {{site.base_gateway}} picks up the rotated secret correctly.
 
@@ -116,7 +116,7 @@ echo -n "Bearer invalid" | \
 
 The first command is supported on Linux, macOS, and Cloud Shell. For other distributions, see [Create a secret](https://cloud.google.com/secret-manager/docs/creating-and-accessing-secrets#create-a-secret) in Google Cloud documentation.
 
-## 2. Configure Secret Manager as a vault with the Vault entity
+## Configure Secret Manager as a vault with the Vault entity
 
 To enable Secret Manager as your vault in {{site.base_gateway}}, you can use the [Vault entity](/gateway/entities/vault/).
 
@@ -133,7 +133,7 @@ entities:
         ttl: 60
 {% endentity_examples %}
 
-## 3. Enable the AI Proxy plugin
+## Enable the AI Proxy plugin
 
 In this tutorial, you'll use the Mistral API key you stored as a secret to generate an answer to a question using the [AI Proxy plugin](/plugins/ai-proxy/).
 
@@ -155,7 +155,7 @@ entities:
           upstream_url: https://api.mistral.ai/v1/chat/completions
 {% endentity_examples %}
 
-## 4. Validate that {{site.base_gateway}} uses the invalid API key from the secret
+## Validate that {{site.base_gateway}} uses the invalid API key from the secret
 
 First, let's validate that the secret was stored correctly in Google Cloud by calling a secret from your vault using the `kong vault get` command within the data plane container. If the Docker container is named `kong-quickstart-gateway`, you can use the following command:
 
@@ -193,7 +193,7 @@ body:
 
 You should get a `401` error with the message `Unauthorized` because we're currently using an invalid API key.
 
-## 5. Rotate the secret in Secret Manager
+## Rotate the secret in Secret Manager
 
 We can now rotate the secret with the correct API key from Mistral. You can rotate a secret by creating a new secret version with the new secret value. {{site.base_gateway}} will fetch the new secret value based on the `ttl` setting we configured in the Vault entity.
 
@@ -204,7 +204,7 @@ echo -n "$MISTRAL_API_KEY" | \
     gcloud secrets versions add test-secret --data-file=-
 ```
 
-## 6. Validate that {{site.base_gateway}} uses the valid API key from the rotated secret
+## Validate that {{site.base_gateway}} uses the valid API key from the rotated secret
 
 Now we can validate that {{site.base_gateway}} picks up the valid Mistral API key from the rotated secret. Since {{site.base_gateway}} is configured to pick up any rotated secrets every 60 seconds, the following command waits a minute before sending a request:
 

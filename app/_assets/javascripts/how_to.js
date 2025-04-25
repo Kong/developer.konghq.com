@@ -23,7 +23,7 @@ class HowTo {
   }
 
   init() {
-    if (this.deploymentTopologySwitch.length) {
+    if (this.deploymentTopologySwitch) {
       try {
         if (localStorage.getItem(this.deploymentToplogyKey) !== null) {
           const storedOption = localStorage.getItem(this.deploymentToplogyKey);
@@ -41,6 +41,8 @@ class HowTo {
       }
 
       this.toggleTopology(this.deploymentTopologySwitch.value, true);
+    } else {
+      this.updateTOC();
     }
   }
 
@@ -75,6 +77,23 @@ class HowTo {
           this.toggleItem(item, topology, trigger);
         });
     }
+
+    this.updateTOC();
+  }
+
+  updateTOC() {
+    document.querySelectorAll(".how-to-step--title").forEach((stepTitle) => {
+      const id = stepTitle.id;
+      const tocItem = document.querySelector(`#toc a[href="#${id}"]`);
+      // check if step is visible
+      if (stepTitle.offsetParent !== null) {
+        tocItem.classList.add("how-to-step");
+        tocItem.classList.remove("hidden");
+      } else {
+        tocItem.classList.remove("how-to-step");
+        tocItem.classList.add("hidden");
+      }
+    });
   }
 
   toggleItem(item, topology, trigger) {

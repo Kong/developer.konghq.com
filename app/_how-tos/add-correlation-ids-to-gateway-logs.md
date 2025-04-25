@@ -23,11 +23,7 @@ prereqs:
   skip_product: true
   inline:
     - title: "{{site.base_gateway}} license"
-      content: |
-        This tutorial requires a {{site.base_gateway}} license. Export your license to an environment variable:
-        ```
-        export KONG_LICENSE_DATA='<license-contents-go-here>'
-        ```
+      include_content: prereqs/gateway-license
       icon_url: /assets/icons/gateway.svg
 
 cleanup:
@@ -40,7 +36,7 @@ min_version:
     gateway: '3.4'
 ---
 
-## 1. Start {{site.base_gateway}}
+## Start {{site.base_gateway}}
 
 Create the {{site.base_gateway}} container with the following environment variables:
 * `KONG_NGINX_HTTP_LOG_FORMAT`: Defines the log format to use. In this example, we'll name the format `correlation_id_log`, and include for each request:
@@ -56,7 +52,7 @@ curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA \
    -e "KONG_PROXY_ACCESS_LOG=/dev/stdout correlation_id_log"
 ```
 
-## 2. Enable the Correlation ID plugin
+## Enable the Correlation ID plugin
 
 Enable the [Correlation ID](/plugins/correlation-id/) plugin to generate a UUID with a counter in a `Kong-Request-ID` header:
 {% entity_examples %}
@@ -68,7 +64,7 @@ entities:
         generator: uuid#counter
 {% endentity_examples %}
 
-## 3. Create a Service and a Route
+## Create a Service and a Route
 
 To be able to validate the configuration, we need to create a Gateway Service and a Route:
 <!--vale off -->
@@ -86,7 +82,7 @@ entities:
 {% endentity_examples %}
 <!--vale on -->
 
-## 4. Send a request
+## Send a request
 
 Send a request to the Route we created to generate a log entry:
 <!--vale off -->
@@ -98,7 +94,7 @@ display_headers: true
 <!--vale on -->
 You should see a `Kong-Request-ID` header in the response.
 
-## 5. Validate
+## Validate
 
 To validate, check your {{site.base_gateway}} logs. 
 You should see an entry in the format we defined. For example:

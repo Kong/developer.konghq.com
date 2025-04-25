@@ -60,7 +60,7 @@ min_version:
     gateway: '3.4'
 ---
 
-## 1. Create a Gateway Service and a Route
+## Create a Gateway Service and a Route
 
 DeGraphQL needs a GraphQL endpoint to query. 
 In this tutorial, we're going to build a REST API around the `https://api.github.com` GraphQL service. 
@@ -81,7 +81,7 @@ entities:
             - /api
 {% endentity_examples %}
 
-## 2. Configure the DeGraphQL plugin on the Service
+## Configure the DeGraphQL plugin on the Service
 
 Set up the DeGraphQL plugin on the `github` Service:
 
@@ -98,7 +98,7 @@ Instead, the plugin now builds the path and GraphQL query to hit the GraphQL ser
 From this point on, the Service represents your REST API and not the GraphQL endpoint itself.
 It will return a `404 Not Found` status code if no DeGraphQL routes have been configured.
 
-## 3. Configure DeGraphQL routes on the Service
+## Configure DeGraphQL routes on the Service
  
 Now that the plugin is activated on the `github` Service, you can add your own routes
 by defining URIs and associating them to GraphQL queries. 
@@ -126,7 +126,7 @@ custom_entities:
 
 You don’t need to include the GraphQL server path prefix in the URI parameter (`/graphql` by default), so the URI is just `/me`.
 
-## 4. Validate
+## Validate
 
 Now you can send HTTP requests to the GraphQL endpoint without having to pass GraphQL queries directly.
 

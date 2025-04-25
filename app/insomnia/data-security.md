@@ -34,31 +34,96 @@ faqs:
 
 Insomnia data is stored in a pooled model for multi-tenancy. Each row is separated by a tenant identifier within the database. To retrieve data, the Insomnia Admin API request must have the tenant identifier (organization ID) in the request path and an authenticated user who is a member of the target tenant (organization).
 
+## Sign up and authentication
+
+Insomnia uses the [Secure Remote Password (SRP)](http://srp.stanford.edu/) protocol to securely manage authentication without sending or storing passphrases in a readable format. This ensures that sensitive user credentials remain protected during account creation and login.
+
+## Account creation
+
+During sign up, the client generates encryption keys, salts, and RSA key-pairs. It derives secure password representations using HKDF and PBKDF2 and encrypts sensitive keys before sending them to the server. The server stores only the SRP verifier and encrypted data, never the raw passphrase.
+
+## Account login
+
+When logging in, the client repeats the password derivation steps and performs an SRP exchange using stored salts. A session key is then generated and used for encrypted communication, ensuring the passphrase itself is never exposed.
+
 ## Data models
 
 The following are data models we use.
 
-| Data Model | Definition |
-| ---------- | ----------- |
-| `M_Account` | A user that can log in |
-| `M_Resource` | An entity that can be synced (e.g. Request, Workspace, etc.) |
-| `M_ResourceGroup` | A group of M_Resource that can be shared as one |
-| `M_Link` | A relationship linking a M_Account to M_ResourceGroup |
+{% table %}
+columns:
+  - title: Data Model
+    key: model
+  - title: Definition
+    key: definition
+rows:
+  - model: "`M_Account`"
+    definition: A user that can log in
+  - model: "`M_Resource`"
+    definition: An entity that can be synced (e.g. Request, Workspace, etc.)
+  - model: "`M_ResourceGroup`"
+    definition: A group of M_Resource that can be shared as one
+  - model: "`M_Link`"
+    definition: A relationship linking a M_Account to M_ResourceGroup
+{% endtable %}
 
 ## Keys and salts
 
 The following are keys and salts we use.
 
-| Name | Definition | Stored? | Stored with encryption? |
-| ---------- | ----------- | ----------- | ----------- |
-| `PUB_Account` | Public key for M_Account | Y | N |
-| `PRV_Account` | Private key for M_Account | Y | Y |
-| `SYM_Account` | Symmetric key for M_Account | Y | Y |
-| `SYM_ResourceGroup` | Symmetric Key for data encryption | N | N |
-| `SYM_Link` | Encrypted form of SYM_ResourceGroup | Y | Y |
-| `SLT_Auth_1` | Salt for PBKDF2 of passphrase for auth | Y | N |
-| `SLT_Auth_2` | Salt for SRP authentication process | Y | N |
-| `SLT_Enc` | Salt for PBKDF2 of passphrase for encryption | Y | N |
-| `SEC_PWD_Auth` | Secret derived from passphrase using SLT_Auth_1 | N | N |
-| `SEC_PWD_Enc` | Secret derived from passphrase using SLT_Enc | N | N |
-| `SRP_Verifier` | Verification string used for SRP | Y | N |
+{% table %}
+columns:
+  - title: Name
+    key: name
+  - title: Definition
+    key: definition
+  - title: Stored?
+    key: stored
+  - title: Stored with encryption?
+    key: encrypted
+rows:
+  - name: "`PUB_Account`"
+    definition: Public key for M_Account
+    stored: Y
+    encrypted: N
+  - name: "`PRV_Account`"
+    definition: Private key for M_Account
+    stored: Y
+    encrypted: Y
+  - name: "`SYM_Account`"
+    definition: Symmetric key for M_Account
+    stored: Y
+    encrypted: Y
+  - name: "`SYM_ResourceGroup`"
+    definition: Symmetric Key for data encryption
+    stored: N
+    encrypted: N
+  - name: "`SYM_Link`"
+    definition: Encrypted form of SYM_ResourceGroup
+    stored: Y
+    encrypted: Y
+  - name: "`SLT_Auth_1`"
+    definition: Salt for PBKDF2 of passphrase for auth
+    stored: Y
+    encrypted: N
+  - name: "`SLT_Auth_2`"
+    definition: Salt for SRP authentication process
+    stored: Y
+    encrypted: N
+  - name: "`SLT_Enc`"
+    definition: Salt for PBKDF2 of passphrase for encryption
+    stored: Y
+    encrypted: N
+  - name: "`SEC_PWD_Auth`"
+    definition: Secret derived from passphrase using SLT_Auth_1
+    stored: N
+    encrypted: N
+  - name: "`SEC_PWD_Enc`"
+    definition: Secret derived from passphrase using SLT_Enc
+    stored: N
+    encrypted: N
+  - name: "`SRP_Verifier`"
+    definition: Verification string used for SRP
+    stored: Y
+    encrypted: N
+{% endtable %}

@@ -38,7 +38,7 @@ related_resources:
     url: /custom-plugins/
 ---
 
-## 1. Initialize a new plugin repository
+## Initialize a new plugin repository
 
 The first step in developing a custom plugin is to create the required files in the expected folder structure.
 
@@ -68,7 +68,7 @@ for a functioning plugin:
    touch kong/plugins/my-plugin/schema.lua
    ```
 
-## 2. Initialize the schema module
+## Initialize the schema module
 
 The `schema.lua` file defines your plugin's configuration data model. The following is the minimum structure required for a valid plugin.
 
@@ -95,7 +95,7 @@ This creates an empty base table for the plugin's configuration.
 Later in this series, we'll add configurable values to the table to configure the plugin.
 
 
-## 3. Initialize the handler module
+## Initialize the handler module
 
 The `handler.lua` module contains the core logic of your new plugin.
 
@@ -117,12 +117,12 @@ fields for a valid plugin:
 of the plugin, which determines when this plugin is executed relative to other loaded plugins.
 * The `VERSION` field sets the version for this plugin and should follow the `major.minor.revision` format.
  
-## 4. Add handler logic
+## Add handler logic
 
 Plugin logic is defined to be executed at several key points in the lifecycle of
 HTTP requests, TCP streams, and {{site.base_gateway}} itself.
 
-Inside the `handler.lua` module, you can add [functions](/custom-plugins/custom-logic/#available-contexts) to the plugin table, 
+Inside the `handler.lua` module, you can add [functions](/custom-plugins/handler.lua/#available-contexts) to the plugin table, 
 indicating the points at which the plugin logic should be executed. 
 
 In this example, we'll add a `response` function, which is executed after a response has been

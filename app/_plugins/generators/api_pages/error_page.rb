@@ -22,6 +22,7 @@ module Jekyll
           'content_type' => 'reference',
           'canonical_url' => canonical_url,
           'canonical?' => canonical?,
+          'version' => @version,
           'seo_noindex' => seo_noindex,
           'errors' => @errors.map { |k, v| Drops::OAS::Error.new(code: k, values: v) },
           'breadcrumbs' => breadcrumbs

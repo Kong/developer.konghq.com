@@ -41,7 +41,7 @@ The following objects are geo-specific:
 * [Gateway Services](/gateway/entities/service/)
 * [Routes](/gateway/entities/route/)
 * [Consumers](/gateway/entities/consumer/)
-* [API products](/api-products/)
+* [API products](/api/konnect/api-products/)
 * [Application registration](/dev-portal/app-reg/)
 * [Dev portals](/dev-portal/)
 * [Service meshes and mesh zones](/mesh-manager/)

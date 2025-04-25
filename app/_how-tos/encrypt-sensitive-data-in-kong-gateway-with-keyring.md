@@ -38,7 +38,7 @@ min_version:
     gateway: '3.4'
 ---
 
-## 1. Generate an RSA key pair
+## Generate an RSA key pair
 
 These keys are needed for [disaster recovery](/gateway/keyring/#disaster-recovery). You can generate them using OpenSSL:
 ```sh
@@ -46,7 +46,7 @@ openssl genrsa -out private.pem 2048
 openssl rsa -in private.pem -pubout -out public.pem
 ```
 
-## 2. Set environment variables
+## Set environment variables
 
 Set the variables needed to start {{site.base_gateway}} with Keyring enabled. Since the Keyring feature requires a {{site.ee_product_name}} license, make sure to include it in the environment too.
 ```sh
@@ -62,7 +62,7 @@ export KONG_KEYRING_RECOVERY_PUBLIC_KEY=$(cat public.pem | base64)
 * The public key content
 * The base64-encoded public key content
 
-## 3. Start {{site.base_gateway}}
+## Start {{site.base_gateway}}
 
 Create the {{site.base_gateway}} container with the environment variables. In this example, we can use the quickstart:
 ```sh
@@ -72,7 +72,7 @@ curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA \
     -e KONG_KEYRING_RECOVERY_PUBLIC_KEY
 ```
 
-## 4. Generate a key
+## Generate a key
 
 Using the Admin API, generate a new key in the Keyring:
 {% control_plane_request %}
@@ -84,7 +84,7 @@ Using the Admin API, generate a new key in the Keyring:
 
 You will get a `201 Created` response with the key and key ID. The generated key will now be used to encrypt sensitive fields in the database.
 
-## 5. Validate
+## Validate
 
 ### Create a plugin
 

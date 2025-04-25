@@ -54,7 +54,7 @@ min_version:
 
 @todo: Finish/fix this
 
-## 1. Add a CA Certificate
+## Add a CA Certificate
 {% entity_examples %}
 entities:
   ca_certificates:
@@ -65,7 +65,7 @@ entities:
 
 {% endentity_examples %}
 
-## 2. Enable the mTLS plugin
+## Enable the mTLS plugin
 
 {% entity_examples %}
 entities:
@@ -81,7 +81,7 @@ variables:
     value: $CA_CERTIFICATE_ID
 {% endentity_examples %}
 
-## 3. Create a Consumer
+## Create a Consumer
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}. For mutual TLS authentication, each Consumer needs a UUID.
 
@@ -94,7 +94,7 @@ entities:
           subject_name:
 {% endentity_examples %}
 
-## 4. Validate
+## Validate
 
 {% validation request-check %}
 url: /anything

@@ -33,7 +33,7 @@ related_resources:
     url: /custom-plugins/
 ---
 
-## 1. Create a Dockerfile
+## Create a Dockerfile
 
 In this example, we'll use a Dockerfile to deploy our plugin, but there are other [deployment options](/custom-plugins/deployment-options/).
 
@@ -64,7 +64,7 @@ In this example, we'll use a Dockerfile to deploy our plugin, but there are othe
    CMD ["kong", "docker-start"]
    ```
 
-## 2. Build Docker image
+## Build Docker image
 
 Use the following command to build the Docker image:
 ```sh
@@ -73,7 +73,7 @@ docker build -t kong-gateway_my-plugin:latest-0.0.1 .
 
 When building a Docker image we suggest tagging the image to include information about the {{site.base_gateway}} version and a version for the plugin.
 
-## 3. Run the custom image
+## Run the custom image
 
 You can now use the {{site.base_gateway}} quickstart script to run the
 custom image and further test the plugin. 
@@ -88,7 +88,7 @@ curl -Ls https://get.konghq.com/quickstart | \
   bash -s -- -r "" -i kong-gateway_my-plugin -t latest-0.0.1
 ```
 
-## 4. Test the deployed custom plugin
+## Test the deployed custom plugin
 
 Once the {{site.base_gateway}} is running with the custom image, you 
 can manually test the plugin and validate the behavior.

@@ -10,7 +10,11 @@ description: Control which Consumers can access Services and Routes
 related_resources:
   - text: Use the ACL plugin with Consumer Groups
     url: /how-to/use-acl-with-consumer-groups/
+  - text: "{{site.base_gateway}} traffic control and routing"
+    url: /gateway/traffic-control-and-routing/
 
+tags:
+  - traffic-control
 
 products:
     - gateway
@@ -37,8 +41,6 @@ categories:
 search_aliases:
   - access control list
 ---
-
-## Overview
 
 The ACL (access control list) plugin allows you to restrict [Consumer](/gateway/entities/consumer/) access to a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/). You do this by configuring **either** an allow list or a deny list with certain Consumers or [Consumer Groups](/gateway/entities/consumer-group/).
 

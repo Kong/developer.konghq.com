@@ -1,21 +1,37 @@
 ---
-title: "AWS Transit Gateway Peering"
+title: "AWS Transit Gateway peering"
 content_type: reference
 layout: reference
 description: |
   Connect {{site.konnect_short_name}} Dedicated Cloud Gateways to AWS Transit Gateway for private, secure connectivity.
+breadcrumbs:
+  - /konnect-platform/
 products:
   - gateway
 works_on:
   - konnect
 api_specs:
-  - konnect/control-planes-config
+  - konnect/cloud-gateways
+tags:
+  - dedicated-cloud-gateways
+  - aws
+  - hybrid-mode
+search_aliases:
+  - AWS Transit Gateway
+  - AWS
+  - Amazon
 
 related_resources:
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
   - text: Amazon VPC Transit Gateway documentation
     url: https://docs.aws.amazon.com/vpc/latest/tgw/tgw-getting-started.html
+  - text: Hybrid mode
+    url: /gateway/hybrid-mode/
+  - text: AWS PrivateLink Peering
+    url: /dedicated-cloud-gateways/aws-private-link/
+  - text: Azure Peering
+    url: /dedicated-cloud-gateways/azure-peering/
 ---
 
 When you host your Data Plane nodes on [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) in {{site.konnect_short_name}}, you can use AWS Transit Gateway to establish private connectivity between your AWS-hosted services and the {{site.konnect_short_name}} platform. This creates a secure and scalable network path that avoids exposing internal APIs to the public internet.
@@ -27,12 +43,12 @@ flowchart LR
 A(API or Service)
 B(API or Service)
 C(API or Service)
-D(<img src="/assets/icons/third-party/aws-transit-gateway-attachment.svg" style="max-height:32px" class="no-image-expand"/>AWS \n Transit Gateway \n attachment)
-E(<img src="/assets/icons/third-party/aws-transit-gateway.svg" style="max-height:32px" class="no-image-expand"/> AWS \n Transit Gateway)
-F(<img src="/assets/icons/third-party/aws-transit-gateway-attachment.svg" style="max-height:32px" class="no-image-expand"/>AWS \n Transit Gateway \n attachment)
-G(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect \n#40;fully-managed \ndata plane#41;)
-H(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect \n#40;fully-managed \ndata plane#41;)
-I(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect \n#40;fully-managed \ndata plane#41;)
+D(<img src="/assets/icons/third-party/aws-transit-gateway-attachment.svg" style="max-height:32px" class="no-image-expand"/>AWS Transit Gateway attachment)
+E(<img src="/assets/icons/third-party/aws-transit-gateway.svg" style="max-height:32px" class="no-image-expand"/> AWS Transit Gateway)
+F(<img src="/assets/icons/third-party/aws-transit-gateway-attachment.svg" style="max-height:32px" class="no-image-expand"/>AWS Transit Gateway attachment)
+G(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect #40;fully-managed Data Plane#41;)
+H(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect #40;fully-managed Data Plane#41;)
+I(<img src="/assets/logos/konglogo-gradient-secondary.svg" style="max-height:32px" class="no-image-expand"/>Konnect #40;fully-managed Data Plane#41;)
 J(Internet)
 
 subgraph 1 [User AWS Cloud]
@@ -50,7 +66,7 @@ end
 subgraph 4 [Kong AWS Cloud]
     subgraph 5 [Region]
         E<-->F
-        F <--private API \n access--> G & H & I
+        F <--private API access--> G & H & I
         subgraph 6 [Virtual Private Cloud #40;VPC#41;]
         G
         H
@@ -59,13 +75,13 @@ subgraph 4 [Kong AWS Cloud]
     end
 end
 
-G & H & I <--public API \n access--> J
+G & H & I <--public API access--> J
 
 
 {% endmermaid %}
 <!--vale on-->
 
-## AWS Configuration for Transit Gateway Peering
+## AWS configuration for Transit Gateway peering
 
 This process includes three main steps: 
 
@@ -85,10 +101,11 @@ This process includes three main steps:
     1. Go to **VPC > Transit Gateway Attachments** in the AWS Console.
     1. Locate the incoming attachment request from the {{site.konnect_short_name}} AWS Account ID.
     1. Accept the request to establish the connection.
+    1. **Important:** Make sure a Transit Gateway Attachment is set up for each AWS VPC that needs to send or receive traffic.
 
     Each AWS VPC that needs to send or receive traffic must have its own Transit Gateway attachment.
 
-## Konnect Configuration for Transit Gateway Peering
+## {{site.konnect_short_name}} configuration for Transit Gateway peering
 
 To finish setup in {{site.konnect_short_name}}:
 
@@ -124,7 +141,7 @@ rows:
 {% endtable %}
 
 
-## Accept Transit Gateway Attachment in AWS
+## Accept the Transit Gateway attachment in AWS
 
 To accept the Transit Gateway attachment in AWS, do the following:
 

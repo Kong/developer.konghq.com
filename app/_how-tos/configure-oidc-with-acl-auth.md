@@ -65,7 +65,7 @@ cleanup:
 
 ---
 
-## 1. Enable the OpenID Connect plugin
+## Enable the OpenID Connect plugin
 
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin. In this example, we're using the simple password grant with authenticated groups.
@@ -105,7 +105,7 @@ In this example:
 
 {% include_cached plugins/oidc/client-auth.md %}
 
-## 2. Validate the OpenID Connect plugin configuration
+## Validate the OpenID Connect plugin configuration
 
 Request the Service with the basic authentication credentials created in the [prerequisites](#prerequisites):
 
@@ -124,7 +124,7 @@ You should get an HTTP `200` response with an `X-Authenticated-Groups` header:
 ```
 {:.no-copy-code}
 
-## 3. Enable the ACL plugin and verify
+## Enable the ACL plugin and verify
 
 Let's try denying access to the `openid` group first:
 

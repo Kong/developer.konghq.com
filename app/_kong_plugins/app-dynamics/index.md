@@ -74,9 +74,9 @@ If you are using an older version of {{site.base_gateway}}, or if you prefer to 
 The AppDynamics plugin is not bundled in {{site.base_gateway}} packages by default. 
 Before you configure the plugin, you must enable it:
 
-* **Package install:** Set `plugins=bundled,app-dynamics` in [`kong.conf`](/gateway/configuration/) before starting {{site.base_gateway}}
+* **Package install:** Set `plugins=bundled,app-dynamics` in [`kong.conf`](/gateway/configuration/#plugins) before starting {{site.base_gateway}}
 * **Docker:** Set `export KONG_PLUGINS=bundled,app-dynamics` in the environment
-* **Kubernetes:** Set `KONG_PLUGINS=bundled,app-dynamics` using the [Custom Plugin](/kubernetes-ingress-controller/custom-plugin/) instructions.
+* **Kubernetes:** Set `KONG_PLUGINS=bundled,app-dynamics` using the [Custom Plugin](/kubernetes-ingress-controller/custom-plugins/) instructions.
 
 ## Plugin configuration
 

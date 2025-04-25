@@ -1,5 +1,5 @@
 ---
-title: Insomnia concepts
+title: Insomnia terminology reference
 
 description: This page defines some concepts related to Insomnia.
 
@@ -9,9 +9,6 @@ layout: reference
 products:
 - insomnia
 
-# related_resources:
-#   - text: 
-#     url: /
 ---
 
 ## Design document
@@ -42,7 +39,6 @@ For more details, see [Use the Collection Runner](/how-to/use-the-collection-run
 ## Template tag
 A template tag is a type of variable that you can use to reference or transform values. You can reuse an element from a request or a response, get the current timestamp, encode a value, prompt the user for an input value, etc.
 
-<!-- Create tag page and add link -->
 
 ## Pre-request script
 A pre-request script is a feature in a collection that allows you to define actions to perform before running a request. For example, you can set a variable, add a query parameter, remove a header, etc. Once you send the request, the pre-request script runs before the request is actually sent. The results of the script are displayed in the console.

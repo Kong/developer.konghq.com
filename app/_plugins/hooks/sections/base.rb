@@ -32,11 +32,8 @@ module SectionWrapper
         doc.children.first.add_previous_sibling(content) if content && content.children.any?
 
         doc.css('h2').each do |h2|
-          h2_text = h2.children.find(&:text?)&.text&.strip
-          h2_text = h2.content.strip if h2_text.nil? || h2_text.empty?
-          slug = Jekyll::Utils.slugify(h2_text)
-          # extract the text, removing any html tags...
-          title = h2_text
+          title = h2.content
+          slug = h2['id']
 
           wrapper = build_wrapper(section_title(h2, slug, title), h2['data-deployment-topology'])
 

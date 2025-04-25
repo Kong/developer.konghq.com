@@ -13,6 +13,11 @@ sections:
       - path: /kubernetes-ingress-controller/get-started/rate-limiting/
       - path: /kubernetes-ingress-controller/get-started/proxy-caching/
       - path: /kubernetes-ingress-controller/get-started/key-authentication/
+  - title: Production Deployments
+    allow_duplicates: true
+    items:
+      - path: /kubernetes-ingress-controller/install/
+      - path: /kubernetes-ingress-controller/license/
   - title: Routing
     items:
       - path: /kubernetes-ingress-controller/routing/http/
@@ -23,6 +28,7 @@ sections:
       - path: /kubernetes-ingress-controller/routing/udp-by-port/
       - path: /kubernetes-ingress-controller/routing/external-service/
       - path: /kubernetes-ingress-controller/routing/http-to-https/
+      - path: /kubernetes-ingress-controller/routing/rewriting-paths/
       - path: /kubernetes-ingress-controller/routing/weights/
       - path: /kubernetes-ingress-controller/routing/cross-namespace/
   - title: How KIC Works
@@ -39,9 +45,9 @@ sections:
       - path: /kubernetes-ingress-controller/deployment-topologies/gateway-discovery/
       - path: /kubernetes-ingress-controller/deployment-topologies/db-backed/
       - path: /kubernetes-ingress-controller/deployment-topologies/sidecar/
-  - title: Customization
+  - title: Advanced Usage
     items:
-      - path: /kubernetes-ingress-controller/custom-plugin/
+      - path: /kubernetes-ingress-controller/load-balancing/
   - title: Observability
     items:
       - path: /kubernetes-ingress-controller/observability/prometheus/
@@ -72,6 +78,8 @@ sections:
       - path: /kubernetes-ingress-controller/reference/feature-gates/
       - path: /kubernetes-ingress-controller/reference/configuration-options/
       - path: /kubernetes-ingress-controller/reference/required-permissions/
+      - path: /kubernetes-ingress-controller/reference/host-manipulation/
+      - path: /kubernetes-ingress-controller/reference/path-manipulation/
   - title: FAQs
     items:
       - path: /kubernetes-ingress-controller/faq/custom-nginx-conf/

@@ -3,6 +3,7 @@ require 'nokogiri'
 module SectionWrapper
   class HowTo < Base
     def section_title(h2, slug, title)
+      h2.add_class('how-to-step--title')
       Nokogiri::HTML::DocumentFragment.parse <<-HTML
         <a aria-label="Anchor" href="##{slug}" title="#{title}" class="link-anchor flex items-center justify-between hover:no-underline accordion-trigger">
           <div class="flex items-center gap-2 group w-full">

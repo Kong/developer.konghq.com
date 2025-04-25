@@ -63,7 +63,7 @@ min_version:
 ---
 
 
-## 1. Configure a Service and Route
+## Configure a Service and Route
 
 The [ACME](/plugins/acme/) plugin requires a Route to access the proxy to trigger certificate generation.
 
@@ -86,7 +86,7 @@ variables:
     value: $NGROK_HOST
 {% endentity_examples %}
 
-## 2. Enable the plugin
+## Enable the plugin
 
 You can now enable the ACME plugin globally with ngrok as your domain:
 
@@ -106,7 +106,7 @@ variables:
     value: $NGROK_HOST
 {% endentity_examples %}
 
-## 3. Create a certificate
+## Create a certificate
 
 Trigger certificate creation:
 
@@ -116,7 +116,7 @@ curl https://$DECK_NGROK_HOST:8443 --resolve $DECK_NGROK_HOST:8443:127.0.0.1 -vk
 
 This might take a few seconds.
 
-## 4. Validate
+## Validate
 
 Validate that the certificate was correctly created:
 

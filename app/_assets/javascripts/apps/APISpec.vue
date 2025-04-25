@@ -71,6 +71,27 @@ import { KSkeleton, KSelect, KSlideout } from '@kong/kongponents';
 import { MenuIcon } from '@kong/icons'
 import '@kong/kongponents/dist/style.css';
 
+function sortVersionsDescending(versions) {
+  const isVPrefixed = versions[0].label.startsWith('v');
+
+  const toSegments = (v) =>
+    (isVPrefixed ? v.label.slice(1) : v.label)
+      .split('.')
+      .map(Number);
+
+  return versions.sort((a, b) => {
+    const aParts = toSegments(a);
+    const bParts = toSegments(b);
+
+    for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+      const aNum = aParts[i] || 0;
+      const bNum = bParts[i] || 0;
+      if (aNum !== bNum) return bNum - aNum;
+    }
+    return 0;
+  });
+}
+
 const loading = ref(true);
 const { product_id, version_id } = window.apiSpec;
 const versionsAPI = new ApiService().versionsAPI;
@@ -82,9 +103,9 @@ const currentPathDOC = ref(window.location.hash.substring(1));
 const basePath = window.location.pathname;
 const slideoutTocVisible = ref(false)
 
-const versions = window.versions.map((v) => {
+const versions = sortVersionsDescending(window.versions.map((v) => {
   return { ...v, selected: v.id === version_id };
-});
+}));
 
 onBeforeMount(async () =>  {
   await fetchSpec();
@@ -144,5 +165,24 @@ const openSlideoutToc = async () => {
 <style scoped>
 .table-of-contents {
   height: 100%;
+}
+
+:deep(.overview-page-versions .label-badge.primary)   {
+  @apply text-primary !important;
+}
+
+:deep(.overview-page-versions .label-badge.neutral)   {
+  @apply bg-semantic-grey-secondary text-semantic-grey-primary !important;
+}
+
+:deep(.property-field-default-value),
+:deep(.property-field-enum-value),
+:deep( .property-field-example-value) {
+  @apply border border-brand-saturated/40 !important;
+}
+
+:deep(.default-markdown a[href^="http://"]),
+:deep(.default-markdown a[href^="https://"]) {
+  @apply bg-none !important;
 }
 </style>

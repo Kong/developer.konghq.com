@@ -249,6 +249,8 @@ app/_how-tos/configure-oidc-with-jwt-auth.md:
   - app/_hub/kong-inc/openid-connect/how-to/authentication/_jwt-access-token.md
 app/_how-tos/configure-oidc-with-claims-based-auth.md:
   - app/_hub/kong-inc/openid-connect/how-to/authorization/_claims.md
+app/_how-tos/get-started-with-datakit.md:
+  - app/_src/gateway/kong-enterprise/datakit/get-started.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
@@ -269,12 +271,16 @@ app/_how-tos/kic-proxy-weights.md:
   - /app/_src/kubernetes-ingress-controller/guides/services/multiple-backends.md
 app/_how-tos/kic-proxy-cross-namespace.md:
   - /app/_src/kubernetes-ingress-controller/guides/services/cross-namespace.md
+app/_how-tos/kic-proxy-rewriting-paths.md:
+  - app/_src/kubernetes-ingress-controller/guides/requests/rewrite-annotation.md
 app/_how-tos/kic-plugin-degraphql.md:
   - app/_src/kubernetes-ingress-controller/guides/services/custom-entity.md
 app/_how-tos/kic-external-service.md:
   - app/_src/kubernetes-ingress-controller/guides/services/external.md
 app/_how-tos/kic-redirect-to-https.md:
   - app/_src/kubernetes-ingress-controller/guides/services/https-redirect.md
+app/_how-tos/kic-customize-load-balancing.md:
+  - app/_src/kubernetes-ingress-controller/guides/requests/customizing-load-balancing.md
 app/kubernetes-ingress-controller/support.md:
   - app/_src/kubernetes-ingress-controller/support-policy.md
 app/kubernetes-ingress-controller/architecture.md:
@@ -292,6 +298,10 @@ app/kubernetes-ingress-controller/reference/annotations.md:
   - app/_src/kubernetes-ingress-controller/reference/annotations.md
 app/kubernetes-ingress-controller/reference/custom-resources.md:
   - app/_src/kubernetes-ingress-controller/reference/custom-resources-3.4.x.md
+app/kubernetes-ingress-controller/reference/path-manipulation.md:
+  - app/_src/kubernetes-ingress-controller/guides/requests/rewrite-host-and-paths.md
+app/kubernetes-ingress-controller/reference/host-manipulation.md:
+  - app/_src/kubernetes-ingress-controller/guides/requests/rewrite-host-and-paths.md
 app/kubernetes-ingress-controller/admission-webhook.md:
   - app/_src/kubernetes-ingress-controller/concepts/admission-webhook.md
 app/_how-tos/kic-install.md:
@@ -352,6 +362,8 @@ app/kubernetes-ingress-controller/observability/events.md:
   - app/_src/kubernetes-ingress-controller/production/observability/events.md
 app/kubernetes-ingress-controller/observability/prometheus.md:
   - app/_src/kubernetes-ingress-controller/production/observability/prometheus.md
+app/kubernetes-ingress-controller/license.md:
+  - app/_src/kubernetes-ingress-controller/license.md
 
 app/kubernetes-ingress-controller/faq/upgrading-ingress-controller.md:
   - app/_src/kubernetes-ingress-controller/upgrade/kic.md
@@ -896,6 +908,10 @@ app/_kong_plugins/oauth2/changelog.md:
   - app/_hub/kong-inc/oauth2/_changelog.md
 app/_kong_plugins/oauth2/index.md:
   - app/_hub/kong-inc/oauth2/overview/_index.md
+app/gateway/plugins/datakit.md:
+  - app/_src/gateway/kong-enterprise/datakit/index.md
+  - app/_src/gateway/kong-enterprise/datakit/examples.md
+  - app/_src/gateway/kong-enterprise/datakit/configuration.md
 
 # Konnect
 app/advanced-analytics/explorer.md:
@@ -969,8 +985,6 @@ app/_landing_pages/ai-gateway.yaml:
   - app/_src/gateway/ai-gateway/index.md
 app/_landing_pages/ai-gateway/ai-providers.yaml:
   - app/_src/gateway/ai-gateway/index.md
-app/_landing_pages/dev-portal.yaml:
-  - app/dev-portal/index.md
 
 # references
 app/gateway/rate-limiting/strategies.md:
@@ -1092,6 +1106,28 @@ app/gateway/incremental-config-sync.md:
   - app/_src/gateway/production/deployment-topologies/hybrid-mode/incremental-config-sync.md
 app/gateway/traffic-control/proxying.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
+app/custom-plugins/api.lua.md:
+  - app/_src/gateway/plugin-development/admin-api.md
+app/custom-plugins/daos.lua.md:
+  - app/_src/gateway/plugin-development/custom-entities.md
+  - app/_src/gateway/plugin-development/entities-cache.md
+app/custom-plugins/data-store.md:
+  - app/_src/gateway/plugin-development/access-the-datastore.md
+app/custom-plugins/deployment-options.md:
+  - app/_src/gateway/plugin-development/get-started/deploy.md
+app/custom-plugins/handler.lua.md:
+  - app/_src/gateway/plugin-development/custom-logic.md
+app/custom-plugins/installation-and-distribution.md:
+  - app/_src/gateway/plugin-development/distribution.md
+app/custom-plugins/migrations.md:
+  - app/_src/gateway/plugin-development/custom-entities.md
+app/custom-plugins/reference.md:
+  - app/_src/gateway/plugin-development/index.md
+  - app/_src/gateway/plugin-development/file-structure.md
+app/custom-plugins/schema.lua.md:
+  - app/_src/gateway/plugin-development/configuration.md
+app/custom-plugins/testing.md:
+  - app/_src/gateway/plugin-development/tests.md
 
 # policies
 app/gateway/vulnerabilities.md:
@@ -1298,3 +1334,202 @@ app/mesh/production-usuage-values.md:
   - app/_src/mesh/production/cp-deployment/production-usage-values.md
 app/mesh/support-policy.md:
   - app/_src/mesh/support-policy.md
+
+
+
+app/_landing_pages/dev-portal.yaml:
+  - app/dev-portal/index.md
+  - app/dev-portal/portals/index.md
+
+app/dev-portal/portal-customization.md:
+  - app/dev-portal/portals/index.md
+  - app/dev-portal/portals/customization/customization.md
+  - app/dev-portal/portals/customization/appearance.md
+  - app/dev-portal/portals/customization/portal-editor.md
+app/dev-portal/custom-pages.md:
+  - app/dev-portal/custom-pages.md
+app/dev-portal/snippets.md:
+  - app/dev-portal/portals/customization/snippets.md
+app/dev-portal/portal-settings.md:
+  - app/dev-portal/settings/general.md
+  - app/dev-portal/portals/audit-logs/index.md
+app/dev-portal/custom-domains.md:
+  - app/dev-portal/settings/custom-domains.md
+app/dev-portal/security-settings.md:
+  - app/dev-portal/portals/settings/security.md
+app/dev-portal/team-mapping.md:
+  - app/dev-portal/settings/team-mapping.md
+app/dev-portal/apis:
+  - app/dev-portal/apis/gateway-service-link.md
+  - app/dev-portal/apis/index.md
+  - app/dev-portal/apis/versioning.md
+  - app/dev-portal/apis/docs.md
+app/dev-portal/publishing.md:
+  - app/dev-portal/portals/publishing.md
+
+app/dev-portal/application-registration.md:
+  - app/dev-portal/app-reg/index.md
+app/dev-portal/auth-strategies.md:
+  - app/dev-portal/app-reg/auth-strategies/oidc/index.md
+  - app/dev-portal/app-reg/auth-strategies/key-auth/index.md
+
+app/dev-portal/access-and-approval.md:
+  - app/dev-portal/access-and-approvals/teams.md
+  - app/dev-portal/access-and-approvals/index.md
+app/dev-portal/developer-signup.md:
+  - app/dev-portal/access-and-approvals/developers.md
+app/dev-portal/sso.md:
+  - app/dev-portal/access-and-approvals/sso.md
+
+## Insomnia
+app/_landing_pages/insomnia.yaml: 
+  - /insomnia/get-started.md
+  - /insomnia/install.md
+  - /insomnia/subscriptions.md
+  - /insomnia/subscription-management
+  - /insomnia/run-in-insomnia-button.md
+  - /insomnia/key-maps.md
+  - /insomnia/ai-runner.md
+app/_landing_pages/insomnia/collections.yaml:
+  - /insomnia/request-collections.md
+app/_landing_pages/insomnia/design.yaml:
+  - /insomnia/generate-code-snippet.md
+app/_landing_pages/design.yaml:
+  - /insomnia/get-started-with-documents.md
+  - /insomnia/migrate-from-designer.md
+app/_how-tos/create-a-design-ducment.md:
+  - /insomnia/get-started-with-documents.md
+  - /insomnia/design-documents.md
+app/_landing_pages/insomnia/documents.yaml: 
+  - /insomnia/design-documents.md
+  - /insomnia/get-started-with-documents.md
+app/_landing_pages/insomnia/test.yaml:
+  - /insomnia/request-collections.md
+  - /insomnia/environment-variables.md
+  - /insomnia/unit-testing.md
+  - /insomnia/cookie-management.md
+app/insomnia/api-specs.md:
+  - /insomnia/design-documents.md
+  - /insomnia/get-started-with-documents.md
+app/insomnia/allowlist.md:
+  - /insomnia/enterprise-ip-whitelist-guide.md
+  - /insomnia/proxy.md
+app/insomnia/requests.md:
+  - /insomnia/requests.md
+  - /insomnia/post-csv-data.md
+  - /insomnia/soap-requests.md
+  - /insomnia/websockets.md
+  - /insomnia/request-timeouts.md
+  - /insomnia/encoding.md
+app/insomnia/request-authentication.md:
+  - /insomnia/ssl-validation.md
+  - /insomnia/authentication.md
+app/_how-tos/import-an-api-spec-as-a-document.md:
+  - /insomnia/import-export-data.md
+app/_how-tos/chain-requests.md:
+  - /insomnia/chaining-requests.md
+app/_how-tos/generate-a-collection-from-a-design-document/:
+  - /insomnia/request-collections.md
+app/_how-tos/add-custom-linting-rules.md:
+  - /insomnia/linting.md
+  - /inso-cli/cli-command-reference/inso-custom-linting.md
+app/_how-tos/write-pre-request-scripts.md:
+  - /insomnia/pre-request-script.md
+  - /insomnia/after-response-script.md
+app/_how-tos/automate-tests.md:
+  - /inso-cli/cli-command-reference/inso-run-test.md
+app/_landing_pages/inso-cli.yaml:
+  - /inso-cli/install.md
+  - /inso-cli/introduction.md
+  - /inso-cli/cli-command-reference.md
+app/_how-tos/write-data-type-tests.md:
+  - /insomnia/pre-request-script.md
+  - /insomnia/after-response-script.md
+  - /insomnia//insomnia/unit-testing.md
+app/_how-tos/write-content-type-tests.md:
+  - /insomnia/pre-request-script.md
+  - /insomnia/after-response-script.md
+  - /insomnia//insomnia/unit-testing.md
+app/_how-tos/write-http-status-tests.md:
+  - /insomnia/pre-request-script.md
+  - /insomnia/after-response-script.md
+  - /insomnia/insomnia/unit-testing.md
+  - /insomnia/insomnia/stress-testing.md
+app/_how-tos/write-headers-in-response-tests.md:
+  - /insomnia/pre-request-script.md
+  - /insomnia/after-response-script.md
+  - /insomnia//insomnia/unit-testing.md
+app/_how-tos/create-an-insomnia-plugin.md:
+  - /insomnia/introduction-to-plugins.md
+app/_landing_pages/insomnia/plugins.yaml:
+  - /insomnia/introduction-to-plugins.md
+app/insomnia/plugin-reference.md:
+  - /insomnia/template-tags.md
+  - /insomnia/context-object-reference.md
+  - /insomnia/hooks-and-actions.md
+  - /insomnia/custom-themes.md
+app/_landing_pages/insomnia/security.yaml:
+  - /insomnia/security-features.md
+  - /insomnia/security-standards.md
+  - /insomnia/signup-and-auth.md
+  - /insomnia/data-encryption.md
+app/insomnia/rbac.md:
+  - /insomnia/security-features.md
+  - /insomnia/security-standards.md
+  - /insomnia/signup-and-auth.md
+  - /insomnia/data-encryption.md
+app/insomnia/infrastructure-security.md:
+  - /insomnia/security-features.md
+  - /insomnia/security-standards.md
+  - /insomnia/signup-and-auth.md
+  - /insomnia/data-encryption.md
+app/insomnia/collected-data.md:
+  - /insomnia/security-features.md
+  - /insomnia/security-standards.md
+  - /insomnia/signup-and-auth.md
+  - /insomnia/analytics-collected.md
+app/insomnia/incident-response.md:
+  - /insomnia/security-features.md
+  - /insomnia/security-standards.md
+  - /insomnia/signup-and-auth.md
+  - /insomnia/data-encryption.md
+app/_landing_pages/insomnia/storage-options.yaml:
+  - /insomnia/insomnia-storage-options-guide.md
+app/insomnia/cloud-sync.md:
+  - /insomnia/insomnia-sync.md
+app/insomnia/git-sync.md:
+  - /insomnia/git-sync.md
+app/insomnia/version-control.md:
+  - /insomnia/git-sync.md
+  - /insomnia/insomnia-sync.md
+app/insomnia/scratch-pad.md:
+  - /insomnia/scratchpad.md
+app/_how-tos/use-the-collection-runner.md:
+  - /insomnia/collection-runner.md
+app/insomnia/environment-variables.md:
+  - /insomnia/folder-level-settings.md
+  - /insomnia/environment-variables.md
+  - /insomnia/global-environments.md
+  - /insomnia/secret-environment-variables.md
+app/insomnia/account-management.md:
+  - /insomnia/forgot-passphrase.md
+  - /insomnia/accounts.md
+  - /insomnia/organizations.md
+  - /insomnia/transfer-ownership-organization.md
+  - /insomnia/multiple-owners.md
+  - /insomnia/faq.md
+  - /insomnia/invite-control.md
+app/insomnia/data-security.md:
+  - /insomnia/security-standards.md
+  - /insomnia/signup-and-auth.md
+app/insomnia/sbom.md:
+  - /insomnia/sbom.md
+app/_landing_pages/insomnia/authentication-authorization.yaml:
+  - /insomnia/authentication.md
+  - /insomnia/client-certificates.md
+app/insomnia/graphql-queries.md:
+  - app/insomnia/graphql-queries.md
+app/insomnia/external-vault.md:
+  - app/insomnia/external-vault-integration.md
+
+

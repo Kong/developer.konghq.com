@@ -22,19 +22,19 @@ tldr:
     
 ---
 
-## 1. Configure the variables
+## Configure the variables
 
 In this example, we want to get a list of KongAir flights and then get more information about a specific flight. 
 
 In the _Fetch more details about a flight_ request, we need to replace the `flightNumber` variable with an actual value. We can either [get this value from a response](/how-to/chain-requests/), or click the variable and enter a value (_KA0284_ for example).
 
-## 2. Order and select the requests
+## Order and select the requests
 
 Click the name of the collection and click **Run Collection**. In the **Request Order** tab, we can drag and drop the requests to reorder them. In this example, we want to send three requests, starting with the _Health check endpoint for Kubernetes_ requests, then _Get KongAir planned flights_, and finally _Fetch more details about a flight_.
 
 Once the order is defined, select the three requests to run.
 
-## 3. Configure run iterations
+## Configure run iterations
 
 To the collection multiple times in a row, update the **Iterations** field, and add a delay. Let's run the collection three times with a 100ms delay. 
 

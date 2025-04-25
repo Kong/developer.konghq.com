@@ -52,7 +52,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create a Consumer
+## Create a Consumer
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.
 We're going to use JWT [authentication](/gateway/authentication/) in this tutorial, so the Consumer needs a key and secret to access any {{site.base_gateway}} Services. We're specifying the key and secret here, but you can leave it out of the configuration in production if you want {{site.base_gateway}} to autogenerate it. 
@@ -69,7 +69,7 @@ entities:
            secret: C50k0bcahDhLNhLKSUBSR1OMiFGzNZ7X
 {% endentity_examples %}
 
-## 2. Enable authentication
+## Enable authentication
 
 Authentication lets you identify a Consumer. In this how-to, we'll be using the [JWT plugin](/plugins/jwt/) for authentication, which allows users to authenticate with a JWT token when they make a request.
 
@@ -85,7 +85,7 @@ entities:
         key_claim_name: iss
 {% endentity_examples %}
 
-## 3. Sign the Consumer credential
+## Sign the Consumer credential
 
 Since we specified the `HS256` algorithm when we were configuring the Consumer credentials, we need to sign our credential before we can use it for authentication. JWT credentials are signed with a header, payload, and the secret.
 
@@ -121,7 +121,7 @@ Save this as an environment variable:
 export JWT_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJZSmRtYUR2VlRKeHRjV1JDdmtNaWtjOG9FTGdBVk5jeiIsImV4cCI6MTQ0MjQzMDA1NCwibmJmIjoxNDQyNDI2NDU0LCJpYXQiOjE0NDI0MjY0NTR9.WuLdHyvZGj2UAsnBl6YF9A4NqGQpaDftHjX18ooK8YY"
 ```
 
-## 4. Validate
+## Validate
 
 When a Consumer authenticates with JWT, you can now use the signed credential in the authorization header.
 

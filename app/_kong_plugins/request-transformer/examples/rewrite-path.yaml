@@ -1,0 +1,23 @@
+description: |
+  Configure the plugin to rewrite the request path before proxying it to the upstream app/serverless-gateways/index.md:
+  
+  This example uses the first capture group from your route in the upstream url.
+
+  * **Route**: `paths: ['/users/(\d+)']`
+  * **Incoming request**: `GET /users/123`
+  * **Upstream request**: `GET /anything/123`
+
+title: Rewrite a path
+
+weight: 900
+
+config:
+  replace:
+    uri: "/anything/$(uri_captures[1])"
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

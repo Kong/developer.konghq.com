@@ -59,7 +59,7 @@ next_steps:
     url: /gateway/entities/vault/
 ---
 
-## 1. Configure a {{site.konnect_short_name}} Config Store
+## Configure a {{site.konnect_short_name}} Config Store
 
 Before you can configure a {{site.konnect_short_name}} Vault, you must first create a Config Store using the [Control Planes Configuration API](/api/konnect/control-planes-config/v2/#/) by sending a `POST` request to the `/config-stores` endpoint:
 
@@ -83,7 +83,7 @@ Export the Config Store ID in the response body as an environment variable so yo
 export DECK_CONFIG_STORE_ID=config-store-uuid
 ```
 
-## 2. Configure {{site.konnect_short_name}} as your Vault
+## Configure {{site.konnect_short_name}} as your Vault
 
 Enable {{site.konnect_short_name}} as your vault with the [Vault entity](/gateway/entities/vault/):
 
@@ -102,7 +102,7 @@ variables:
 {% endentity_examples %}
 
 
-## 3. Store a secret in your {{site.konnect_short_name}} Vault
+## Store a secret in your {{site.konnect_short_name}} Vault
 
 By storing a secret in a {{site.konnect_short_name}} Vault, you can reference it within [`kong.conf`](/gateway/manage-kong-conf/) or as a referenceable plugin fields without having to store any values in plain-text.
 
@@ -123,7 +123,7 @@ body:
 {% endcontrol_plane_request %}
 <!--vale on-->
 
-## 4. Validate
+## Validate
 
 You can validate that your secret was stored correctly by sending a `GET` request to the `/secrets` endpoint:
 

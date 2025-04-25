@@ -42,7 +42,7 @@ min_version:
 ---
 
 
-## 1. Create the Event Hook
+## Create the Event Hook
 
 The `log` Event Hook configuration specifies an event and a source. In this guide you will create an Event Hook that listens for CRUD events on the [Consumers](/gateway/entities/consumer/) entity. This Event Hook will create a log entry when a CRUD event occurs. 
 
@@ -58,7 +58,7 @@ formats:
   - admin-api
 {% endentity_example %}
 
-## 2. Validate the webhook
+## Validate the webhook
 
 {:.warning}
 > **Important**:  Before you can use Event Hooks for the first time, {{site.base_gateway}} needs to be [reloaded](/how-to/restart-kong-gateway-container/).

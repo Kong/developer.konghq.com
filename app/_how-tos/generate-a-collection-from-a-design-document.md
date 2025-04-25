@@ -21,7 +21,7 @@ prereqs:
 
 ---
 
-## 1. Configure an environment
+## Configure an environment
 
 If your API specification contains variables, you can use the environment to replace them with actual value in all the requests in your collection.
 
@@ -34,7 +34,7 @@ Click **Base Environment**, then click the pencil icon to open the **Manage Envi
 }
 ```
 
-## 2. Generate a collection
+## Generate a collection
 
 Open your document and click the settings icon next to **Preview**. Click **Generate collection**. A collection of requests in created in the **COLLECTION** tab. 
 
@@ -43,7 +43,7 @@ If the operations in the API spec have tags, the requests are organized into fol
 {:.info}
 > Since this collection is linked to a document, it cannot be accessed from the **Collections** list. You can find it in the **COLLECTION** tab of your document.
 
-## 3. Send requests
+## Send requests
 
 If the necessary environment variables are set, you can send a request right away. In this example using the [Konnect API Products specification](/api/konnect/api-products/), we can send the *List API Products* request with only the base URL and Bearer token defined:
 

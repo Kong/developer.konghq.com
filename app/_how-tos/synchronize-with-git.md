@@ -30,7 +30,7 @@ tldr:
     a: Create an empty remote Git repository and an Insomnia workspace. In the workspace, click the button at the bottom of the left pane and connect the repository, then commit and push your content.
 ---
 
-## 1. Select the workspace to synchronize
+## Select the workspace to synchronize
 
 {% navtabs "workspace-sync" %}
 
@@ -46,7 +46,7 @@ tldr:
 
 {% endnavtabs %}
 
-## 2. Connect to the repository
+## Connect to the repository
 
 Select whether you want to clone the repository from GitHub, GitLab, or Git.
 
@@ -73,7 +73,7 @@ Select whether you want to clone the repository from GitHub, GitLab, or Git.
 
 {% endnavtabs %}
 
-## 3. Create a new branch
+## Create a new branch
 
 Insomnia synchronizes with the repository's default branch, but it's a good practice to make changes on a different branch.
 
@@ -81,7 +81,7 @@ Insomnia synchronizes with the repository's default branch, but it's a good prac
 1. Click **Branches**.
 1. Enter a name for the new branch and click **Create**.
 
-## 4. Commit and push the content to your repository
+## Commit and push the content to your repository
 
 1. Click the name of the branch.
 1. Click **Commit**.

@@ -29,7 +29,7 @@
       <div
         class="navtab-content flex flex-col gap-3 prose-ol:{% unless forloop.first %} hidden {% endunless %}"
         role="tabpanel"
-        id="navtab-{{ navtabs_id }}-tabpanel-{{ forloop.index }}"
+        data-id="navtab-{{ navtabs_id }}-tabpanel-{{ forloop.index }}"
         tabindex="0"
         aria-labelledby="navtab-{{ navtabs_id }}-tab-{{ forloop.index }}"
         data-panel="{{ slug }}"

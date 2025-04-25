@@ -31,15 +31,15 @@ prereqs:
       icon_url: /assets/icons/code.svg
 ---
 
-## 1. Select a specification
+## Select a specification
 
 In your workspace, click **Import** and select the source of the import: **File**, **URL**, or **Clipboard**. Based on the source, either choose a file, enter a URL, or copy your API specification.
 
-## 2. Scan the specification
+## Scan the specification
 
 Click **Scan**. You can review the resources to import, then click **Import**
 
-## 3. Open the document
+## Open the document
 
 Open the document created to check your specification. You can see three different views:
 

@@ -61,7 +61,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Generate a key pair
+## Generate a key pair
 
 Use OpenSSL to generate a private key to sign logs and a public key to verify signatures:
 ```sh
@@ -69,7 +69,7 @@ openssl genrsa -out private.pem 2048
 openssl rsa -in private.pem -outform PEM -pubout -out public.pem
 ```
 
-## 2. Add the private key to your container
+## Add the private key to your container
 
 Use the following command to add the private key to the {{site.base_gateway}} Docker container:
 
@@ -77,7 +77,7 @@ Use the following command to add the private key to the {{site.base_gateway}} Do
 docker cp private.pem kong-quickstart-gateway:/usr/local/kong
 ```
 
-## 3. Enable audit log signing
+## Enable audit log signing
 
 Add the following line to [`kong.conf`](/gateway/configuration/#audit-log-signing-key) to sign audit logs using the private key we created:
 ```
@@ -89,7 +89,7 @@ Once this is done, restart the {{site.base_gateway}} container to apply the chan
 docker restart kong-quickstart-gateway
 ```
 
-## 4. Validate
+## Validate
 
 To validate, start by sending any request to generate to generate an audit log entry. For example:
 
