@@ -4,7 +4,6 @@ content_type: reference
 layout: reference
 description: |
   Approve and manage developer registrations and applications for the {{site.konnect_short_name}} Dev Portal.
-content_type: reference
 products:
   - dev-portal
 tags:
