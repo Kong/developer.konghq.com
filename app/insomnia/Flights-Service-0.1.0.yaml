@@ -1,0 +1,363 @@
+_type: export
+__export_format: 4
+__export_date: 2024-10-03T19:39:45.138Z
+__export_source: insomnia.desktop.app:v10.0.0
+resources:
+  - _id: req_f2e7279e9d1b4df79cd6ce393799bccf
+    parentId: wrk_58178f2b60214da2adf4b42acc60a9c4
+    modified: 1727984177042
+    created: 1727984177042
+    url: "{{ _.base_url }}/flights/{{ _.flightNumber }}/details"
+    name: Fetch more details about a flight
+    description: Fetch more details about a flight
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1727984177042
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: wrk_58178f2b60214da2adf4b42acc60a9c4
+    parentId: null
+    modified: 1727983942221
+    created: 1727983942221
+    name: Flights Service 0.1.0
+    description: ""
+    scope: design
+    _type: workspace
+  - _id: req_f3c542ee503a4c3db624eee056fd3381
+    parentId: wrk_58178f2b60214da2adf4b42acc60a9c4
+    modified: 1727984177041
+    created: 1727984177041
+    url: "{{ _.base_url }}/flights/{{ _.flightNumber }}"
+    name: Get a specific flight by flight number
+    description: |
+      Returns a specific flight given its flight number
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1727984177041
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_9fc3e112c165484b9a9a96d33f61e5bc
+    parentId: wrk_58178f2b60214da2adf4b42acc60a9c4
+    modified: 1727984177040
+    created: 1727984177040
+    url: "{{ _.base_url }}/flights"
+    name: Get KongAir planned flights
+    description: |
+      Returns all the scheduled flights for a given day
+    method: GET
+    body: {}
+    parameters:
+      - name: date
+        disabled: true
+        value: string
+    headers: []
+    authentication: {}
+    metaSortKey: -1727984177040
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_1d177c50bee14964a8c20d93e0581641
+    parentId: wrk_58178f2b60214da2adf4b42acc60a9c4
+    modified: 1727984177039
+    created: 1727984177039
+    url: "{{ _.base_url }}/health"
+    name: Health check endpoint for Kubernetes
+    description: Endpoint that returns the service health status.
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1727984177039
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: env_fe1f23234191394ad640422027f690beabd1f076
+    parentId: wrk_58178f2b60214da2adf4b42acc60a9c4
+    modified: 1727984008644
+    created: 1727983944003
+    name: Base Environment
+    data:
+      base_url: https://api.kong-air.com
+      flightNumber: KA0284
+    dataPropertyOrder:
+      "&":
+        - base_url
+        - flightNumber
+    color: null
+    isPrivate: false
+    metaSortKey: 1727983944003
+    _type: environment
+  - _id: jar_fe1f23234191394ad640422027f690beabd1f076
+    parentId: wrk_58178f2b60214da2adf4b42acc60a9c4
+    modified: 1727983944007
+    created: 1727983944007
+    name: Default Jar
+    cookies: []
+    _type: cookie_jar
+  - _id: spc_33a4667cff3f4e62a894973f56ce57aa
+    parentId: wrk_58178f2b60214da2adf4b42acc60a9c4
+    modified: 1727983974344
+    created: 1727983942223
+    fileName: Flights Service 0.1.0
+    contents: >-
+      # OpenAPI Spec for the KongAir Flights service
+
+      openapi: 3.0.0
+
+
+      info:
+        description: KongAir Flights service provides the scheduled flights for KongAir
+        version: 0.1.0
+        title: Flights Service
+
+      servers:
+
+      - url: https://api.kong-air.com
+        description: KongAir API Server
+
+      paths:
+        /health:
+          get:
+            summary: Health check endpoint for Kubernetes
+            description: Endpoint that returns the service health status.
+            responses:
+              '200':
+                description: Service is healthy
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                          example: "OK"
+                headers:
+                 hostname:
+                   description: "The hostname of the machine fulfilling the request."
+                   schema:
+                     type: string
+              '500':
+                description: Service is unhealthy
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                          example: "unhealthy"
+        "/flights":
+          get:
+            summary: Get KongAir planned flights
+            description: |
+              Returns all the scheduled flights for a given day
+            tags:
+            - flight-data
+            operationId: get-flights
+            parameters:
+              - name: date
+                in: query
+                description: Filter by date (defaults to current day)
+                required: false
+                style: form
+                schema:
+                  type: string
+                  format: date
+            responses:
+              '200':
+                description: Successful response with scheduled flights
+                headers:
+                 hostname:
+                   description: "The hostname of the machine fulfilling the request."
+                   schema:
+                     type: string
+                content:
+                  application/json:
+                    schema:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Flight'
+                    examples:
+                      ExampleFlightsList:
+                        summary: A list of scheduled flights
+                        value: 
+                          - {
+                              "number": "KD924",
+                              "route_id": "LHR-SFO",
+                              "scheduled_departure": "2024-03-20T09:12:28Z",
+                              "scheduled_arrival": "2024-03-20T19:12:28Z"
+                            }
+                          - {
+                              "number": "KD925",
+                              "route_id": "SFO-LHR",
+                              "scheduled_departure": "2024-03-21T09:12:28Z",
+                              "scheduled_arrival": "2024-03-21T19:12:28Z"
+                            }
+
+        "/flights/{flightNumber}":
+          get:
+            summary: Get a specific flight by flight number
+            description: |
+              Returns a specific flight given its flight number
+            tags:
+            - flight-data
+            operationId: get-flight-by-number
+            parameters:
+              - name: flightNumber
+                in: path
+                description: The flight number
+                required: true
+                style: simple
+                schema:
+                  type: string
+            responses:
+              '200':
+                description: Successful response with the requested flight
+                headers:
+                 hostname:
+                   description: "The hostname of the machine fulfilling the request."
+                   schema:
+                     type: string
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/Flight'
+                    examples:
+                      ExampleFlightKD924:
+                        value: 
+                          {
+                            "number": "KD924",
+                            "route_id": "LHR-SFO",
+                            "scheduled_departure": "2024-03-20T09:12:28Z",
+                            "scheduled_arrival": "2024-03-20T19:12:28Z"
+                          }
+              '404':
+                description: Flight not found
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+
+        "/flights/{flightNumber}/details":
+          get:
+            summary: Fetch more details about a flight
+            description: Fetch more details about a flight
+            tags:
+            - flight-data
+            operationId: get-flight-details
+            parameters:
+            - name: flightNumber
+              in: path
+              description: The flight number
+              required: true
+              style: simple
+              schema:
+                type: string
+            responses:
+              '200':
+                description: Successful response with the requested flight details
+                headers:
+                 hostname:
+                   description: "The hostname of the machine fulfilling the request."
+                   schema:
+                     type: string
+                content:
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/FlightDetails'
+              '404':
+                description: Flight not found
+                content:
+                  application/json:
+                    schema:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+
+      components:
+        schemas:
+          Flight:
+            type: object
+            properties:
+              number:
+                type: string
+              route_id:
+                type: string
+              scheduled_departure:
+                type: string
+                format: date-time
+              scheduled_arrival:
+                type: string
+                format: date-time
+            required:
+              - number
+              - route_id
+              - scheduled_departure
+              - scheduled_arrival
+          FlightDetails:
+            type: object
+            properties:
+              flight_number:
+                type: string
+              in_flight_entertainment:
+                type: boolean
+              meal_options:
+                type: array
+                items:
+                  type: string
+              aircraft_type:
+                type: string
+            required:
+              - flight_number
+              - in_flight_entertainment
+              - meal_options
+              - aircraft_type
+    contentType: yaml
+    _type: api_spec
+  - _id: env_3720ab39e96f4f43847d6c72c141298a
+    parentId: env_fe1f23234191394ad640422027f690beabd1f076
+    modified: 1727984177036
+    created: 1727984177036
+    name: OpenAPI env api.kong-air.com
+    data:
+      scheme: https
+      base_path: ""
+      host: api.kong-air.com
+    dataPropertyOrder: null
+    color: null
+    isPrivate: false
+    metaSortKey: 1727984177036
+    _type: environment

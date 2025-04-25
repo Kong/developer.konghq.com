@@ -15,6 +15,8 @@ works_on:
     - on-prem
     - konnect
 
+tags: 
+  - transformations
 
 topologies:
   on_prem:
@@ -36,6 +38,8 @@ search_aliases:
 related_resources:
   - text: Response Transformer Advanced plugin
     url: /plugins/response-transformer-advanced/
+  - text: All transformation plugins
+    url: /plugins/?category=transformations
 ---
 
 {% include plugins/request-response-transformer/response-transformer-description.md %}

@@ -203,9 +203,7 @@ curl -Ls get.konghq.com/quickstart | bash -s -- -e "KONG_LICENSE_DATA" \
 From here, you can use the `super-admin` user to manage your RBAC hierarchy. For an in-depth walkthrough of how to do this, review the [Enable RBAC with the Admin API](/how-to/enable-rbac-with-admin-api/) documentation.
 
 {:.info}
-> The `super-admin` user only has permissions to manage RBAC. You must create other admins or users to be able to interact with other {{site.base_gateway}} entities, such as Gateway Services and Routes.
-
-You can also automate the creation of Admins. For more information, see [creating Admins using the Admin API](/how-to/programatically-create-rbac-admins/).
+> The `super-admin` user only has permissions to manage RBAC. You must [create other admins or users](/api/gateway/admin-ee/#/operations/post-rbac-users) to be able to interact with other {{site.base_gateway}} entities, such as Gateway Services and Routes.
 
 ## Schema
 

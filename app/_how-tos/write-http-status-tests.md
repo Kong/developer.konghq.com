@@ -1,8 +1,11 @@
 ---
 title: Write tests for HTTP status codes in Insomnia
 content_type: how_to
+description: Learn how to write HTTP status code tests in Insomnia.
 
 related_resources:
+  - text: Test APIs
+    url: /insomnia/test/
   - text: Write tests for headers in the response in Insomnia
     url: /how-to/write-headers-in-response-test/
   - text: Write tests for content types in Insomnia
@@ -19,6 +22,8 @@ products:
 
 tags:
     - test-apis
+
+automated_tests: false
 
 tldr:
     q: How do I write HTTP status code tests in Insomnia?
@@ -51,5 +56,10 @@ You can create a test that checks a request against a certain status code.
 const response1 = await insomnia.send();
 expect(response1.status).to.equal(200);
 ```
+
+## 3. Validate
+
+We can validate that our test works by testing a request.
+
 1. From the **Select a request** drop down, select the **GET KongAir planned flights** request.
 1. Click the **Play** icon next to your test. In the preview to the right, you should see that the test passes.
