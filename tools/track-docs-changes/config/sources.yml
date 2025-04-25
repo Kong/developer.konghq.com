@@ -1088,6 +1088,28 @@ app/gateway/incremental-config-sync.md:
   - app/_src/gateway/production/deployment-topologies/hybrid-mode/incremental-config-sync.md
 app/gateway/traffic-control/proxying.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
+app/custom-plugins/api.lua.md:
+  - app/_src/gateway/plugin-development/admin-api.md
+app/custom-plugins/daos.lua.md:
+  - app/_src/gateway/plugin-development/custom-entities.md
+  - app/_src/gateway/plugin-development/entities-cache.md
+app/custom-plugins/data-store.md:
+  - app/_src/gateway/plugin-development/access-the-datastore.md
+app/custom-plugins/deployment-options.md:
+  - app/_src/gateway/plugin-development/get-started/deploy.md
+app/custom-plugins/handler.lua.md:
+  - app/_src/gateway/plugin-development/custom-logic.md
+app/custom-plugins/installation-and-distribution.md:
+  - app/_src/gateway/plugin-development/distribution.md
+app/custom-plugins/migrations.md:
+  - app/_src/gateway/plugin-development/custom-entities.md
+app/custom-plugins/reference.md:
+  - app/_src/gateway/plugin-development/index.md
+  - app/_src/gateway/plugin-development/file-structure.md
+app/custom-plugins/schema.lua.md:
+  - app/_src/gateway/plugin-development/configuration.md
+app/custom-plugins/testing.md:
+  - app/_src/gateway/plugin-development/tests.md
 
 # policies
 app/gateway/vulnerabilities.md:

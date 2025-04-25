@@ -122,7 +122,7 @@ of the plugin, which determines when this plugin is executed relative to other l
 Plugin logic is defined to be executed at several key points in the lifecycle of
 HTTP requests, TCP streams, and {{site.base_gateway}} itself.
 
-Inside the `handler.lua` module, you can add [functions](/custom-plugins/custom-logic/#available-contexts) to the plugin table, 
+Inside the `handler.lua` module, you can add [functions](/custom-plugins/handler.lua/#available-contexts) to the plugin table, 
 indicating the points at which the plugin logic should be executed. 
 
 In this example, we'll add a `response` function, which is executed after a response has been
