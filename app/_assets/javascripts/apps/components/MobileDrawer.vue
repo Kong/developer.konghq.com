@@ -5,8 +5,12 @@
                 <slot></slot>
             </div>
             <div class="mobile-drawer__footer">
-                <ais-clear-refinements class="button button--secondary" @click="toggleDrawer">
-                    <template v-slot:resetLabel>Clear Filters</template>
+                <ais-clear-refinements class="button button--secondary">
+                  <template v-slot="{ refine }">
+                      <button @click="refine(); toggleDrawer();">
+                        Clear Filters
+                    </button>
+                  </template>
                 </ais-clear-refinements>
 
                 <button class="button button--primary grow justify-center" @click="toggleDrawer">
