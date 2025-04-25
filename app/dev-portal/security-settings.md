@@ -21,7 +21,7 @@ related_resources:
 Settings allow for visibility and access control around Developers accessing your Dev Portal. 
 
 {:.info}
-> To adjust security settings for Dev Portal admins and users, see [{{site.konnect_short_name}} organization settings](/konnect-platform/konnect-authentication/).
+> To adjust security settings for Dev Portal admins and users, see [{{site.konnect_short_name}} organization settings](/konnect-authentication/).
 
 ## Default visibility
 
