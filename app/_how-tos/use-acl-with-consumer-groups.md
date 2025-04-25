@@ -51,7 +51,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Enable key authentication
+## Enable key authentication
 
 The ACL plugin requires an authentication plugin. In this example, we'll use the [Key Auth plugin](/plugins/key-auth/) plugin, but you can use any authentication plugin.
 
@@ -64,7 +64,7 @@ entities:
           - apikey
 {% endentity_examples %}
 
-## 2. Create Consumer Groups
+## Create Consumer Groups
 
 Let's create two Consumer Groups named `dev` and `admin`. These groups will be used to configure access to the Routes we created in the prerequisites.
 
@@ -75,7 +75,7 @@ entities:
     - name: admin
 {% endentity_examples %}
 
-## 3. Create Consumers
+## Create Consumers
 
 Create Consumers with credentials and assign each of them to a Consumer Group.
 
@@ -94,7 +94,7 @@ entities:
         - key: dana
 {% endentity_examples %}
 
-## 4. Enable the ACL plugin
+## Enable the ACL plugin
 
 Enable the ACL plugin for each Route and use the `config.allow` parameter to allow access to the Consumer Groups. We'll give the `admin` Consumer Group access to both Routes, but the `dev` group will only have access to `no-delete-route`. This means that only the `admin` group will be able to use the `DELETE` method on the `/anything` endpoint.
 
@@ -116,7 +116,7 @@ entities:
         - dev
 {% endentity_examples %}
 
-## 5. Validate
+## Validate
 
 Send requests to both Routes with the two API keys to validate that the access restrictions work as expected.
 

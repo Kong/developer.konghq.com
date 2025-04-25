@@ -57,7 +57,7 @@ cleanup:
 
 ---
 
-## 1. Enable the AI Response Transformer plugin
+## Enable the AI Response Transformer plugin
 
 In this example, we want to inject a new header in the response after it's proxied and before it's returned to the client. To add a new header, we need to:
 * Specify the response format to use in the prompt.
@@ -99,7 +99,7 @@ variables:
 {% endentity_examples %}
 
 
-## 2. Validate
+## Validate
 
 To check that the response transformation is working, send a request:
 

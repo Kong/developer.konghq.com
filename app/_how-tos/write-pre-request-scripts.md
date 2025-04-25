@@ -31,7 +31,7 @@ prereqs:
           icon_url: /assets/icons/menu.svg
 ---
 
-## 1. Add a pre-request script
+## Add a pre-request script
 
 In this example, you will be configuring a pre-request script that sets a variable in the request.
 
@@ -45,7 +45,7 @@ In this example, you will be configuring a pre-request script that sets a variab
 insomnia.environment.set("flightNumber", "KA0285");
 ```
 
-## 2. Validate your pre-request script
+## Validate your pre-request script
 
 Now that you created a pre-request script, you can validate it by sending a GET request to the `/flights/{flightNumber}` endpoint.
 

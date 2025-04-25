@@ -42,7 +42,7 @@ The following objects are geo-specific:
 * [Routes](/gateway/entities/route/)
 * [Consumers](/gateway/entities/consumer/)
 * [API products](/api/konnect/api-products/)
-* [Application registration](/dev-portal/app-reg/)
+* [Application registration](/dev-portal/application-registration/)
 * [Dev portals](/dev-portal/)
 * [Service meshes and mesh zones](/mesh-manager/)
 * [Custom teams and roles](/konnect-platform/teams-and-roles/)

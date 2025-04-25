@@ -56,7 +56,7 @@ min_version:
     gateway: '3.8'
 ---
 
-## 1. Create a JSON threat protection policy
+## Create a JSON threat protection policy
 
 Configure the JSON Threat Protection plugin on the `example-route` Route to set limits on the contents of incoming request bodies.
 
@@ -80,7 +80,7 @@ entities:
         error_message: "Incorrect request format"
 {% endentity_examples %}
 
-## 2. Validate the policy
+## Validate the policy
 
 Let's make a valid request. The following request conforms to the policy that we just created:
 

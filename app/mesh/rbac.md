@@ -289,7 +289,7 @@ rules:
 
 This way {{site.mesh_product_name}} operators can execute any action.
 
-{:.note}
+{:.info}
 > **Note**: This role is automatically created on the start of the control plane.
 
 ### Service owner
@@ -346,7 +346,7 @@ rules:
   It's useful because the service owner of the backend knows what (`MeshTimeout`, `MeshHealthCheck`) should be applied when communicating with their service.
 * Modify the `MeshTrace` or `MeshProxyPatch` that matches the backend service. This changes the configuration of the data plane proxy that implements the `backend` service.
 
-{:.note}
+{:.info}
 > **Note**: When giving users `UPDATE` permission, remember to add `UPDATE` permission to all selectors they can switch between. For example, if a user only has access to `sources` selector, they won't be able to update policy with `destinations` selector or new `targetRef` selectors. Likewise, when a user only has access to the `targetRef` kind `MeshService`, they won't be able to update the policy to use a different `targetRef` kind.
 
 ### Observability operator
@@ -708,7 +708,7 @@ The following steps create a new user and restrict the access to only `MeshTraff
 {% navtab "Universal" %}
 The following steps create a new user and restrict the access to only `TrafficPermission` for the backend service.
 
-{:.note}
+{:.info}
 > **Note**: By default, all requests that originate from localhost are authenticated as the `admin` user in the `mesh-system:admin` group.
 For this example to work, you must either run the control plane with `KUMA_API_SERVER_AUTHN_LOCALHOST_IS_ADMIN` set to `false` or access the control plane using a method other than localhost.
 
@@ -975,7 +975,7 @@ For this example to work, you must either run the control plane with `KUMA_API_S
 {% endnavtab %}
 {% navtab "Universal" %}
 
-{:.note}
+{:.info}
 > **Note**: By default, all requests that originates from localhost are authenticated as the `admin` user belonging to the `mesh-system:admin` group.
 For this example to work, you must either run the control plane with `KUMA_API_SERVER_AUTHN_LOCALHOST_IS_ADMIN` set to `false` or access the control plane via a method other than localhost.
 
@@ -1083,10 +1083,10 @@ In a multi-zone setup, `AccessRole` and `AccessRoleBinding` are not synchronized
 
 ## Wildcard tag value matching
 
-{:.note}
+{:.info}
 > **Note**: This feature is available starting in {{site.mesh_product_name}} 1.9.1
 
-{:.note}
+{:.info}
 > **Note**: This feature currently only works with "Source and Destination" selectors. This limitation restricts using newer policy types like `MeshTrafficPermission`, `MeshAccessLog`, or `MeshHTTPRoute`.
 
 

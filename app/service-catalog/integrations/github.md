@@ -44,10 +44,18 @@ The {{site.konnect_short_name}} application can be managed from GitHub as a [Git
 
 Available GitHub entities:
 
-
-Entity  | Description
--------|-------------
-Repository | A GitHub repository relating to the Service Catalog Service
+<!--vale off-->
+{% table %}
+columns:
+  - title: Entity
+    key: entity
+  - title: Description
+    key: description
+rows:
+  - entity: Repository
+    description: A GitHub repository relating to the Service Catalog Service
+{% endtable %}
+<!--vale on-->
 
 ## Events
 

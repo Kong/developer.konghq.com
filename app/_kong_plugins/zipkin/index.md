@@ -174,8 +174,7 @@ rows:
   - tag: "`kong.balancer.state`"
     description: |
       An NGINX-specific description of the error, `next/failed` for HTTP failures, or `0` for stream failures.
-      Equivalent to `state_name` in OpenResty's balancer's `get_last_failure` function.
-{% endtable %}
+      Equivalent to `state_name` in OpenResty's balancer's `get_last_failure` function.{% endtable %}
 <!--vale on-->
 
 ## Propagation

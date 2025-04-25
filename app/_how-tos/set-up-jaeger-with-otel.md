@@ -148,7 +148,7 @@ faqs:
 
 ---
 
-## 1. Enable the OTEL plugin
+## Enable the OTEL plugin
 
 In this tutorial, we'll be configuring the OpenTelemetry plugin to send {{site.base_gateway}} traces to Jaeger.
 
@@ -170,7 +170,7 @@ variables:
 
 For more information about the ports Jaeger uses, see [API Ports](https://www.jaegertracing.io/docs/2.5/apis/) in the Jaeger documentation.
 
-## 2. Validate
+## Validate
 
 Send a `POST` request to generate traffic that we can use to validate that Jaeger is receiving the traces:
 

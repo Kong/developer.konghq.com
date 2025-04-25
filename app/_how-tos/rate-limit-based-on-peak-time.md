@@ -54,7 +54,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create peak and off-peak Routes
+## Create peak and off-peak Routes
 
 Create a Route to handle peak traffic, and a Route to handle off-peak traffic. 
 We're going to use headers to distinguish between traffic times.
@@ -82,7 +82,7 @@ entities:
           - 'active'
 {% endentity_examples %}
 
-## 2. Apply Rate Limiting Advanced plugin
+## Apply Rate Limiting Advanced plugin
 
 Apply rate limits to both Routes by enabling the Rate Limiting Advanced plugin on each Route:
 
@@ -108,7 +108,7 @@ entities:
 {% endentity_examples %}
 
 
-## 3. Apply the Pre-function plugin to route peak and off-peak traffic
+## Apply the Pre-function plugin to route peak and off-peak traffic
 
 The Pre-Function plugin lets you run Lua code in a plugin phase of your choosing.
 In this case, we're going to write a function that determines the time of day 
@@ -134,7 +134,7 @@ entities:
               end
 {% endentity_examples %}
 
-## 4. Validate
+## Validate
 
 You can now verify that both plugins were configured correctly and are working, by sending more requests than allowed in the configured time limit.
 

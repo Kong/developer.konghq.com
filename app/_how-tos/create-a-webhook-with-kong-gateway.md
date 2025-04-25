@@ -46,7 +46,7 @@ min_version:
     gateway: '3.4'
 ---
 
-## 1. Create a webhook
+## Create a webhook
 
 The `webhook` handler is used to configure webhooks that make a `POST` request to the URL provided during configuration. The Event Hook will push information to this URL with the event data. In this guide you will configure an Event Hook that will issue a `POST` request every time an event type `consumers` has a CRUD event. 
 
@@ -68,7 +68,7 @@ formats:
 Issuing this `POST` request will send a request of type `ping` to the webhook URL verifying that the webhook is configured correctly.
 
 
-## 2. Validate the webhook
+## Validate the webhook
 
 {:.warning}
 > **Important**:  Before you can use Event Hooks for the first time, {{site.base_gateway}} needs to be reloaded.

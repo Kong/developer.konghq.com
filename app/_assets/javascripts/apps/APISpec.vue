@@ -166,4 +166,23 @@ const openSlideoutToc = async () => {
 .table-of-contents {
   height: 100%;
 }
+
+:deep(.overview-page-versions .label-badge.primary)   {
+  @apply text-primary !important;
+}
+
+:deep(.overview-page-versions .label-badge.neutral)   {
+  @apply bg-semantic-grey-secondary text-semantic-grey-primary !important;
+}
+
+:deep(.property-field-default-value),
+:deep(.property-field-enum-value),
+:deep( .property-field-example-value) {
+  @apply border border-brand-saturated/40 !important;
+}
+
+:deep(.default-markdown a[href^="http://"]),
+:deep(.default-markdown a[href^="https://"]) {
+  @apply bg-none !important;
+}
 </style>

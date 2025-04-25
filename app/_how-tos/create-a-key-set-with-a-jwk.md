@@ -53,7 +53,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create a Key Set
+## Create a Key Set
 Using the Admin API, create a Key Set to hold JSON Web keys:
 {% control_plane_request %}
   url: /key-sets
@@ -78,7 +78,7 @@ You will get a `201 Created` response with details about the new Key Set. For ex
 ```
 {:.no-copy-code}
 
-## 2. Create a Key
+## Create a Key
 
 Create a Key and use either the `set.id` from the response in the previous step, or the `set.name` parameter to add it to the Key Set:
 

@@ -59,14 +59,14 @@ next_steps:
     url: /gateway/entities/vault/
 ---
 
-## 1. Create a secret in HashiCorp Vault
+## Create a secret in HashiCorp Vault
 
 Write a secret to HashiCorp Vault:
 ```
 vault kv put secret/customer/acme name="ACME Inc."
 ```
 
-## 2. Create decK environment variables 
+## Create decK environment variables 
 
 We'll use decK environment variables for the `host` and `token` in the {{site.base_gateway}} Vault configuration. This is because these values typically can vary between environments. 
 
@@ -80,7 +80,7 @@ export DECK_HCV_TOKEN='root'
 ```
 
 
-## 3. Create a Vault entity for HashiCorp Vault 
+## Create a Vault entity for HashiCorp Vault 
 
 Using decK, create a Vault entity in the `kong.yaml` file with the required parameters for HashiCorp Vault:
 
@@ -105,7 +105,7 @@ variables:
     value: $HCV_TOKEN
 {% endentity_examples %}
 
-## 4. Validate
+## Validate
 
 Since {{site.konnect_short_name}} data plane container names can vary, set your container name as an environment variable:
 {: data-deployment-topology="konnect" }

@@ -162,7 +162,7 @@ faqs:
 
 ---
 
-## 1. Enable the OTEL plugin
+## Enable the OTEL plugin
 
 In this tutorial, we'll be configuring the OpenTelemetry plugin to send {{site.base_gateway}} traces and logs to Dynatrace SaaS. This configuration is good for testing purposes, but we recommend using a collector, like [Dynatrace Collector](https://docs.dynatrace.com/docs/ingest-from/opentelemetry/collector), in production environments.
 
@@ -187,7 +187,7 @@ variables:
     value: $DYNATRACE_API_TOKEN
 {% endentity_examples %}
 
-## 2. Validate
+## Validate
 
 Send a `POST` request to generate traffic that we can use to validate that Dynatrace is receiving the traces:
 

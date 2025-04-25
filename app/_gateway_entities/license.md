@@ -162,16 +162,43 @@ You can share the report with Kong Support to perform a health-check analysis of
 
 ## Common errors
 
-| Error | Description |
-|-------|-------------|
-| `license path environment variable not set` | The `KONG_LICENSE_DATA` or `KONG_LICENSE_PATH` environment variables weren't defined. No license file could be opened at the default license location (`/etc/kong/license.json`). |
-| `error opening license file` | The license file defined either in the default location, or using the `KONG_LICENSE_PATH` env variable, couldn't be opened. Check that the user executing the Nginx process (e.g., the user executing the Kong CLI utility) has permissions to read this file. |
-| `error reading license file` | The license file defined either in the default location, or using the `KONG_LICENSE_PATH` env variable, could be opened, but an error occurred while reading it. Confirm that the file isn't corrupt, and that there are no kernel error messages reported (e.g., out of memory conditions, etc). |
-| `could not decode license json` | The license file data couldn't be decoded as valid JSON. Confirm that the file isn't corrupt and hasn't been altered since you received it from Kong. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com). |
-| `invalid license format` | The license file data is missing one or more key/value pairs. Confirm that the file isn't corrupt and hasn't been altered since you received it from Kong. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com). |
-| `validation failed` | Verifying the payload of the License with the License's signature failed. Confirm that the file isn't corrupt and hasn't been altered since you received it from Kong. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com). |
-| `license expired` | This error displays when the system time is past the License's `license_expiration_date`. [Contact Kong support](https://support.konghq.com) for a new license. |
-| `invalid license expiration date` | The data in the `license_expiration_date` field is incorrectly formatted. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com). |
+The following table lists some common license errors:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Error
+    key: error
+  - title: Description
+    key: description
+rows:
+  - error: "`license path environment variable not set`"
+    description: |
+      The `KONG_LICENSE_DATA` or `KONG_LICENSE_PATH` environment variables weren't defined. No license file could be opened at the default license location (`/etc/kong/license.json`).
+  - error: "`error opening license file`"
+    description: |
+      The license file defined either in the default location, or using the `KONG_LICENSE_PATH` env variable, couldn't be opened. Check that the user executing the Nginx process (for example, the user executing the Kong CLI utility) has permissions to read this file.
+  - error: "`error reading license file`"
+    description: |
+      The license file defined either in the default location, or using the `KONG_LICENSE_PATH` env variable, could be opened, but an error occurred while reading it. Confirm that the file isn't corrupt, and that there are no kernel error messages reported (for example, out of memory conditions, etc).
+  - error: "`could not decode license json`"
+    description: |
+      The license file data couldn't be decoded as valid JSON. Confirm that the file isn't corrupt and hasn't been altered since you received it from Kong. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com).
+  - error: "`invalid license format`"
+    description: |
+      The license file data is missing one or more key/value pairs. Confirm that the file isn't corrupt and hasn't been altered since you received it from Kong. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com).
+  - error: "`validation failed`"
+    description: |
+      Verifying the payload of the license with the license's signature failed. Confirm that the file isn't corrupt and hasn't been altered since you received it from Kong. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com).
+  - error: "`license expired`"
+    description: |
+      This error displays when the system time is past the license's `license_expiration_date`. [Contact Kong support](https://support.konghq.com) for a new license.
+  - error: "`invalid license expiration date`"
+    description: |
+      The data in the `license_expiration_date` field is incorrectly formatted. Try re-downloading and installing your license file from Kong. If you still receive this error after reinstallation, [contact Kong support](https://support.konghq.com).
+{% endtable %}
+<!--vale on-->
+
 
 ## Schema
 

@@ -121,13 +121,32 @@ of known backends.
 The input for the consistent-hashing algorithm can be one of the following options, 
 determined by the value set in the `hash_on` parameter:
 
-| Option | Description |
-|--------|-------------|
-| `none` | Doesn't use `consistent-hashing`, uses `round-robin` instead (default). Hashing is disabled. |
-| `consumer` | Uses the Consumer ID as the hash input. If no Consumer ID is available, it will fall back on the Credential ID (for example, in case of an external authentication mechanism like LDAP). |
-| `ip` | Uses the originating IP address as the hash input. Review the configuration settings for [determining the real IP](/gateway/configuration/#real_ip_config) when using this option. |
-| `header` | Uses a specified header as the hash input. The header name is specified in either of the Upstream's `hash_on_header` or `hash_fallback_header` fields, depending on whether `header` is a primary or fallback attribute, respectively. |
-| `cookie` | Use a specified cookie with a specified path as the hash input. The cookie name is specified in the Upstream's `hash_on_cookie` field and the path is specified in the Upstream's `hash_on_cookie_path` field. If the specified cookie is not present in the request, it will be set by the response. The generated cookie will have a random UUID value, which is then preserved in the cookie. <br><br> The `hash_fallback` setting is invalid and can't be used if `cookie` is the primary hashing mechanism. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Option
+    key: option
+  - title: Description
+    key: description
+rows:
+  - option: "`none`"
+    description: "Doesn't use `consistent-hashing`, uses `round-robin` instead (default). Hashing is disabled."
+  - option: "`consumer`"
+    description: |
+      Uses the Consumer ID as the hash input. If no Consumer ID is available, it will fall back on the Credential ID (for example, in case of an external authentication mechanism like LDAP).
+  - option: "`ip`"
+    description: |
+      Uses the originating IP address as the hash input. Review the configuration settings for [determining the real IP](/gateway/configuration/#real_ip_config) when using this option.
+  - option: "`header`"
+    description: |
+      Uses a specified header as the hash input. The header name is specified in either of the Upstream's `hash_on_header` or `hash_fallback_header` fields, depending on whether `header` is a primary or fallback attribute, respectively.
+  - option: "`cookie`"
+    description: |
+      Use a specified cookie with a specified path as the hash input. The cookie name is specified in the Upstream's `hash_on_cookie` field and the path is specified in the Upstream's `hash_on_cookie_path` field. If the specified cookie is not present in the request, it will be set by the response. The generated cookie will have a random UUID value, which is then preserved in the cookie. 
+      <br><br> 
+      The `hash_fallback` setting is invalid and can't be used if `cookie` is the primary hashing mechanism.
+{% endtable %}
+<!--vale on-->
 
 The `consistent-hashing` algorithm supports a primary and a fallback hashing attribute. 
 If the primary fails (for example, if the primary is set to `consumer`, but no Consumer is authenticated),

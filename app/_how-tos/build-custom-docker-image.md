@@ -44,7 +44,7 @@ related_resources:
 ---
 
 
-## 1. Create a Dockerfile
+## Create a Dockerfile
 
 Create a [Dockerfile](https://docs.docker.com/reference/dockerfile/) using any of the following templates:
 
@@ -156,7 +156,7 @@ EOF
 {% endnavtab %}
 {% endnavtabs %}
 
-## 2. Build the image
+## Build the image
 
 Using the `docker build` command, you can build the image: 
 
@@ -166,7 +166,7 @@ docker build --platform linux/amd64 --no-cache -t kong-image .
 
 Docker will build the image according to the parameters set in the Dockerfile.
 
-## 3. Validate the image
+## Validate the image
 
 Validate that the image was built correctly using `docker run`: 
 

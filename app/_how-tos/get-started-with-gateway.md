@@ -65,11 +65,11 @@ min_version:
 automated_tests: false
 ---
 
-## 1. Check that {{site.base_gateway}} is running
+## Check that {{site.base_gateway}} is running
 
 {% include how-tos/steps/ping-gateway.md %}
 
-## 2. Create a Gateway Service
+## Create a Gateway Service
 
 {{site.base_gateway}} administrators work with an object model to define their
 desired traffic management policies. Two important objects in that model are 
@@ -92,7 +92,7 @@ In this example, you are configuring the following attributes:
 * `name`: The name of the Service
 * `url` : An attribute that populates the `host`, `port`, and `path` of the Service
 
-## 3. Create a Route 
+## Create a Route 
 
 Routes define how requests are proxied by {{site.base_gateway}}. You can
 create a Route associated with a specific Service by sending a `POST`
@@ -125,7 +125,7 @@ status_code: 200
 
 You should get a `200` response back.
 
-## 4. Enable authentication
+## Enable authentication
 
 Authentication is the process of verifying that the requester has permissions to access a resource. 
 As its name implies, API gateway authentication authenticates the flow of data to and from your upstream services. 
@@ -201,7 +201,7 @@ status_code: 200
 
 You will receive a `200 OK` response.
 
-## 5. Enable load balancing
+## Enable load balancing
 
 Load balancing is a method of distributing API request traffic across
 multiple upstream services. Load balancing improves overall system responsiveness
@@ -257,7 +257,7 @@ curl -s $KONNECT_PROXY_URL/mock/headers \
 ```
 {: data-deployment-topology="konnect" }
 
-## 6. Enable caching
+## Enable caching
 
 One of the ways Kong delivers performance is through caching.
 The [Proxy Cache plugin](/plugins/proxy-cache/) accelerates performance by caching
@@ -333,7 +333,7 @@ X-Cache-Status: Hit
 ```
 {:.no-copy-code}
 
-## 7. Enable rate limiting
+## Enable rate limiting
 
 [Rate limiting](/rate-limiting/) is used to control the rate of requests sent to an upstream service. 
 It can be used to prevent DoS attacks, limit web scraping, and other forms of overuse. 

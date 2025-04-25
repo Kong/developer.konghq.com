@@ -66,7 +66,7 @@ response, or TCP stream connection as it is proxied by {{site.base_gateway}}.
 
 ### Plugin contexts
 
-<!-- @todo - add info from https://docs.konghq.com/gateway/latest/plugin-development/custom-logic/#available-contexts -->
+{% include plugins/plugin-contexts.md %}
 
 ## Scoping plugins
 

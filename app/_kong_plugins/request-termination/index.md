@@ -56,11 +56,23 @@ To change the execution order, configure [dynamic plugin ordering](/gateway/enti
 
 The following table lists some common use cases for the Request Termination plugin:
 
-| If you want to... | Then see... |
-|-------------------|-------------|
-| Temporarily disable a Service <br><br> _For example, if the Service is under maintenance_ | [Block requests on Service](/plugins/request-termination/examples/block-requests-with-error?format=deck&target=service) |
-| Temporarily disable a Route <br><br> _For example, if the rest of the Service is up and running, but a particular endpoint must be disabled_ | [Block requests on Route](/plugins/request-termination/examples/block-requests-with-error?format=deck&target=route) |
-| Temporarily disable a Consumer <br><br> _For example, if you have a Consumer with excessive consumption_ | [Block requests by Consumer](/plugins/request-termination/examples/block-requests-with-error?format=deck&target=consumer) |
-| Block anonymous access with multiple authentication plugins in a logical `OR` setup |[Allow clients to choose their authentication methods and prevent unauthorized access](/how-to/allow-multiple-authentication/) |
-| Debug erroneous requests in live systems using `config.echo` | [Debug requests by echoing response back to client](/plugins/request-termination/examples/echo-response-to-client?format=deck&target=consumer) |
-
+<!--vale off-->
+{% table %}
+columns:
+  - title: "If you want to..."
+    key: "if_you_want_to"
+  - title: "Then see..."
+    key: "then_see"
+rows:
+  - if_you_want_to: "Temporarily disable a Service <br><br> _For example, if the Service is under maintenance_"
+    then_see: "[Block requests on Service](/plugins/request-termination/examples/block-requests-with-error?format=deck&target=service)"
+  - if_you_want_to: "Temporarily disable a Route <br><br> _For example, if the rest of the Service is up and running, but a particular endpoint must be disabled_"
+    then_see: "[Block requests on Route](/plugins/request-termination/examples/block-requests-with-error?format=deck&target=route)"
+  - if_you_want_to: "Temporarily disable a Consumer <br><br> _For example, if you have a Consumer with excessive consumption_"
+    then_see: "[Block requests by Consumer](/plugins/request-termination/examples/block-requests-with-error?format=deck&target=consumer)"
+  - if_you_want_to: "Block anonymous access with multiple authentication plugins in a logical `OR` setup"
+    then_see: "[Allow clients to choose their authentication methods and prevent unauthorized access](/how-to/allow-multiple-authentication/)"
+  - if_you_want_to: "Debug erroneous requests in live systems using `config.echo`"
+    then_see: "[Debug requests by echoing response back to client](/plugins/request-termination/examples/echo-response-to-client?format=deck&target=consumer)"
+{% endtable %}
+<!--vale on-->

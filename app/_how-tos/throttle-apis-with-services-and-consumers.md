@@ -57,7 +57,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create privileged Consumers
+## Create privileged Consumers
 
 In this tutorial, we'll be creating two Consumers that have different rate limits from the limits applied to the Gateway Service. 
 These Consumers act as a type of "privileged" Consumer in this scenario that have higher rate limits, but they will still be prevented from exceeding the Service rate limits. 
@@ -74,7 +74,7 @@ entities:
       - key: tsmith-key
 {% endentity_examples %}
 
-## 2. Enable authentication
+## Enable authentication
 
 Authentication lets you identify a Consumer so that you can apply rate limiting to Consumers.
 This example uses the [Key Authentication](/plugins/key-auth/) plugin, but you can use any authentication plugin that you prefer.
@@ -90,7 +90,7 @@ entities:
           - apikey
 {% endentity_examples %}
 
-## 3. Enable rate limiting on Consumers with the Rate Limiting plugin 
+## Enable rate limiting on Consumers with the Rate Limiting plugin 
 
 Enable the [Rate Limiting plugin](/plugins/rate-limiting/) for the Consumers. 
 In this example, the limit is 6 requests per minute per Consumer.
@@ -112,7 +112,7 @@ entities:
         policy: local
 {% endentity_examples %}
 
-## 4. Enable rate limits on the Service with the Service Protection plugin
+## Enable rate limits on the Service with the Service Protection plugin
 
 Now we can apply a rate limit on the Service itself using the [Service Protection](/plugins/service-protection/) plugin. 
 In this example, we are setting the limit to 10 requests per minute. 
@@ -130,7 +130,7 @@ entities:
         namespace: service-protection-plugin
 {% endentity_examples %}
 
-## 5. Validate
+## Validate
 
 To test that the Service Protection plugin correctly applies rate limits to the Service, you'll run requests from both Consumers in quick succession. 
 

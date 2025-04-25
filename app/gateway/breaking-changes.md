@@ -609,36 +609,72 @@ from session configuration to avoid unpredictable behavior.
 The following parameters and the values that they accept have changed. 
 For details on the new accepted values, see the [Session plugin](/plugins/session/) documentation.
 
-Old parameter name | New parameter name
--------------------|--------------------
-`cookie_lifetime` | `rolling_timeout`
-`cookie_idletime` | `idling_timeout`
-`cookie_samesite` | `cookie_same_site`
-`cookie_httponly` | `cookie_http_only`
-`cookie_discard` | `stale_ttl`
-`cookie_renew` | Removed, no replacement parameter. 
-  
+<!--vale off-->
+{% table %}
+columns:
+  - title: Old parameter name
+    key: old
+  - title: New parameter name
+    key: new
+rows:
+  - old: "`cookie_lifetime`"
+    new: "`rolling_timeout`"
+  - old: "`cookie_idletime`"
+    new: "`idling_timeout`"
+  - old: "`cookie_samesite`"
+    new: "`cookie_same_site`"
+  - old: "`cookie_httponly`"
+    new: "`cookie_http_only`"
+  - old: "`cookie_discard`"
+    new: "`stale_ttl`"
+  - old: "`cookie_renew`"
+    new: "Removed, no replacement parameter."
+{% endtable %}
+<!--vale on-->
+
 {% endnavtab %}
 {% navtab "SAML plugin" %}
 
 The following parameters and the values that they accept have changed. 
 For details on the new accepted values, see the [SAML plugin](/plugins/saml/) documentation.
 
-Old parameter name | New parameter name
--------------------|--------------------
-`session_cookie_lifetime` | `session_rolling_timeout`
-`session_cookie_idletime` | `session_idling_timeout`
-`session_cookie_samesite` | `session_cookie_same_site` 
-`session_cookie_httponly` | `session_cookie_http_only`
-`session_memcache_prefix` | `session_memcached_prefix`
-`session_memcache_socket` | `session_memcached_socket`
-`session_memcache_host` | `session_memcached_host`
-`session_memcache_port` | `session_memcached_port`
-`session_redis_cluster_maxredirections` |  `session_redis_cluster_max_redirections`
-`session_cookie_renew` | Removed, no replacement parameter. 
-`session_cookie_maxsize` | Removed, no replacement parameter. 
-`session_strategy` | Removed, no replacement parameter. 
-`session_compressor` | Removed, no replacement parameter. 
+<!--vale off-->
+{% table %}
+columns:
+  - title: Old parameter name
+    key: old
+  - title: New parameter name
+    key: new
+rows:
+  - old: "`session_cookie_lifetime`"
+    new: "`session_rolling_timeout`"
+  - old: "`session_cookie_idletime`"
+    new: "`session_idling_timeout`"
+  - old: "`session_cookie_samesite`"
+    new: "`session_cookie_same_site`"
+  - old: "`session_cookie_httponly`"
+    new: "`session_cookie_http_only`"
+  - old: "`session_memcache_prefix`"
+    new: "`session_memcached_prefix`"
+  - old: "`session_memcache_socket`"
+    new: "`session_memcached_socket`"
+  - old: "`session_memcache_host`"
+    new: "`session_memcached_host`"
+  - old: "`session_memcache_port`"
+    new: "`session_memcached_port`"
+  - old: "`session_redis_cluster_maxredirections`"
+    new: "`session_redis_cluster_max_redirections`"
+  - old: "`session_cookie_renew`"
+    new: "Removed, no replacement parameter."
+  - old: "`session_cookie_maxsize`"
+    new: "Removed, no replacement parameter."
+  - old: "`session_strategy`"
+    new: "Removed, no replacement parameter."
+  - old: "`session_compressor`"
+    new: "Removed, no replacement parameter."
+{% endtable %}
+<!--vale on-->
+
 
 {% endnavtab %}
 {% navtab "OpenID Connect plugin" %}
@@ -646,24 +682,48 @@ Old parameter name | New parameter name
 The following parameters and the values that they accept have changed. 
 For details on the new accepted values, see the [OpenID Connect plugin](/plugins/openid-connect/) documentation.
 
-Old parameter name | New parameter name
--------------------|--------------------
-`authorization_cookie_lifetime` | `authorization_rolling_timeout`
-`authorization_cookie_samesite` | `authorization_cookie_same_site`
-`authorization_cookie_httponly` | `authorization_cookie_http_only`
-`session_cookie_lifetime` | `session_rolling_timeout`
-`session_cookie_idletime` | `session_idling_timeout`
-`session_cookie_samesite` | `session_cookie_same_site`
-`session_cookie_httponly` | `session_cookie_http_only`
-`session_memcache_prefix` | `session_memcached_prefix`
-`session_memcache_socket` | `session_memcached_socket`
-`session_memcache_host` | `session_memcached_host`
-`session_memcache_port` | `session_memcached_port`
-`session_redis_cluster_maxredirections` | `session_redis_cluster_max_redirections`
-`session_cookie_renew` | Removed, no replacement parameter. 
-`session_cookie_maxsize` | Removed, no replacement parameter. 
-`session_strategy` | Removed, no replacement parameter. 
-`session_compressor` | Removed, no replacement parameter. 
+<!--vale off-->
+{% table %}
+columns:
+  - title: Old parameter name
+    key: old
+  - title: New parameter name
+    key: new
+rows:
+  - old: "`authorization_cookie_lifetime`"
+    new: "`authorization_rolling_timeout`"
+  - old: "`authorization_cookie_samesite`"
+    new: "`authorization_cookie_same_site`"
+  - old: "`authorization_cookie_httponly`"
+    new: "`authorization_cookie_http_only`"
+  - old: "`session_cookie_lifetime`"
+    new: "`session_rolling_timeout`"
+  - old: "`session_cookie_idletime`"
+    new: "`session_idling_timeout`"
+  - old: "`session_cookie_samesite`"
+    new: "`session_cookie_same_site`"
+  - old: "`session_cookie_httponly`"
+    new: "`session_cookie_http_only`"
+  - old: "`session_memcache_prefix`"
+    new: "`session_memcached_prefix`"
+  - old: "`session_memcache_socket`"
+    new: "`session_memcached_socket`"
+  - old: "`session_memcache_host`"
+    new: "`session_memcached_host`"
+  - old: "`session_memcache_port`"
+    new: "`session_memcached_port`"
+  - old: "`session_redis_cluster_maxredirections`"
+    new: "`session_redis_cluster_max_redirections`"
+  - old: "`session_cookie_renew`"
+    new: "Removed, no replacement parameter."
+  - old: "`session_cookie_maxsize`"
+    new: "Removed, no replacement parameter."
+  - old: "`session_strategy`"
+    new: "Removed, no replacement parameter."
+  - old: "`session_compressor`"
+    new: "Removed, no replacement parameter."
+{% endtable %}
+<!--vale on-->
 
 {% endnavtab %}
 {% endnavtabs %}

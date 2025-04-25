@@ -1,6 +1,7 @@
 {%- assign hostname = include.hostname | default: 'kong.example' %}
 {%- assign name = include.name | default: 'echo' %}
 {%- assign namespace = include.namespace | default: 'kong' %}
+{%- assign gateway_namespace = include.gateway_namespace | default: 'kong' %}
 {%- assign ingress_class = include.ingress_class | default: 'kong' %}
 {%- assign route_type = include.route_type | default: 'PathPrefix' | split: "," %}
 {%- assign path = include.path | default: '/echo' | split: "," %}
@@ -11,12 +12,9 @@
 
 {% capture the_code %}
 {% navtabs "http-route" %}
+{% unless include.disable_gateway %}
 {% navtab "Gateway API" %}
 {% assign gwapi_version = "v1" %}
-
-{:.info}
-> The Gateway API CRDs must be installed _before_ {{ site.kic_product_name }} to use an `HTTPRoute`
-
 ```bash
 echo "
 apiVersion: gateway.networking.k8s.io/{{ gwapi_version }}
@@ -25,12 +23,13 @@ metadata:
   name: {{ name }}{% unless namespace == '' %}
   namespace: {{ namespace }}{% endunless %}
   annotations:{% if include.annotation_rewrite %}
-    konghq.com/rewrite: '{{ include.annotation_rewrite }}'{% endif %}
+    konghq.com/rewrite: '{{ include.annotation_rewrite | replace: "$", "\$" }}'{% endif %}{% if include.annotation_plugins %}
+    konghq.com/plugins: {{ include.annotation_plugins }}{% endif %}
     konghq.com/strip-path: 'true'
 spec:
   parentRefs:
   - name: kong{% unless namespace == '' %}
-    namespace: {{ namespace }}{% endunless %}{% unless include.skip_host %}
+    namespace: {{ gateway_namespace }}{% endunless %}{% unless include.skip_host %}
   hostnames:
   - '{{ hostname }}'{% endunless %}
   rules:{% for i in (0..count) %}
@@ -46,6 +45,8 @@ spec:
 ```
 
 {% endnavtab %}
+{% endunless %}
+{% unless include.disable_ingress %}
 {% navtab "Ingress" %}
 
 ```bash
@@ -56,7 +57,7 @@ metadata:
   name: {{ name }}{% unless namespace == '' %}
   namespace: {{ namespace }}{% endunless %}
   annotations:{% if include.annotation_rewrite %}
-    konghq.com/rewrite: '{{ include.annotation_rewrite }}'{% endif %}
+    konghq.com/rewrite: '{{ include.annotation_rewrite | replace: "$", "\$" }}'{% endif %}
     konghq.com/strip-path: 'true'
 spec:
   ingressClassName: {{ ingress_class }}
@@ -75,6 +76,7 @@ spec:
 ```
 
 {% endnavtab %}
+{% endunless %}
 {% endnavtabs %}
 {% endcapture %}
 

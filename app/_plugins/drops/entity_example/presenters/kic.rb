@@ -94,7 +94,13 @@ module Jekyll
               end
 
               resource_type = k8s_entity_type
-              resource_type = 'ClusterPlugin' if resource_type == 'Plugin' && foreign_keys.size == 0
+
+              cluster_config = @example_drop.example.example['cluster_plugin']
+              disable_cluster_plugin = !cluster_config.nil? && cluster_config == false
+
+              if resource_type == 'Plugin' && foreign_keys.empty? && !disable_cluster_plugin
+                resource_type = 'ClusterPlugin'
+              end
 
               r = {
                 'apiVersion' => 'configuration.konghq.com/v1',
@@ -113,6 +119,11 @@ module Jekyll
                 d.delete('name')
               end
 
+              if resource_type == 'Consumer' && d['plugins']
+                r['metadata']['annotations']['konghq.com/plugins'] = d['plugins'].join(",")
+                d.delete('plugins')
+              end
+
               r = r.merge(d)
 
               r['metadata']['annotations']['konghq.com/tags'] = tags.join(', ') if tags
@@ -122,7 +133,7 @@ module Jekyll
               end
 
               @full_resource = r
-              @full_resource.to_yaml
+              @full_resource.to_yaml.gsub('"', "'")
             end
 
             def to_s

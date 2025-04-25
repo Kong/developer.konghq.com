@@ -62,7 +62,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create a policy file
+## Create a policy file
 
 In this example, we want a policy that states that a request must have a header named `my-secret-header` with the value `open-sesame`. Any request without this header, or with a different value, will return an error.
 
@@ -83,7 +83,7 @@ header_present if {
 ' > example.rego
 ```
 
-## 2. Upload the policy to the OPA server
+## Upload the policy to the OPA server
 
 Use the OPA [Policy API](https://www.openpolicyagent.org/docs/latest/rest-api/#create-or-update-a-policy) to upload the policy file to the local OPA server. This will allow {{site.base_gateway}} to access it.
 ```sh
@@ -92,7 +92,7 @@ curl -i -XPUT localhost:8181/v1/policies/example --data-binary @example.rego
 
 You should get a `200 OK` response with an empty object in the response body.
 
-## 2. Create decK environment variables 
+## Create decK environment variables 
 
 We'll use decK environment variables for the `opa_host` and `opa_path` in the OPA plugin configuration. This is because these values typically can vary between environments.
 
@@ -105,7 +105,7 @@ export DECK_OPA_HOST=host.docker.internal
 export DECK_OPA_PATH=/v1/data/example/allow_boolean
 ```
 
-## 3. Enable the OPA plugin
+## Enable the OPA plugin
 
 In this example, we'll enable the plugin globally:
 
@@ -127,7 +127,7 @@ variables:
 {:.info}
 > **Note:** If your OPA server doesn't use the default `8181` port, you'll need to specify the `config.opa_port` parameter too.
 
-## 4. Validate
+## Validate
 
 To validate that the policy is working, send a request without the required header:
 

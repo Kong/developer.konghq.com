@@ -51,7 +51,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create a Consumer
+## Create a Consumer
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.
 We're going to use key [authentication](/gateway/authentication/) in this tutorial, so the Consumer needs an API key to access any {{site.base_gateway}} Services.
@@ -66,7 +66,7 @@ entities:
         - key: example-key
 {% endentity_examples %}
 
-## 2. Enable authentication
+## Enable authentication
 
 Authentication lets you identify a Consumer so that you can apply rate limiting.
 This example uses the [Key Authentication](/plugins/key-auth/) plugin, but you can use any authentication plugin that you prefer.
@@ -82,7 +82,7 @@ entities:
           - apikey
 {% endentity_examples %}
 
-## 3. Enable rate limiting
+## Enable rate limiting
 
 Enable the [Rate Limiting plugin](/plugins/rate-limiting/) for the Consumer. 
 In this example, the limit is 5 requests per minute and 1000 requests per hour.
@@ -97,7 +97,7 @@ entities:
         hour: 1000
 {% endentity_examples %}
 
-## 4. Validate
+## Validate
 
 You can run the following command to test the rate limiting as the Consumer:
 

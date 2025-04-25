@@ -40,7 +40,7 @@ min_version:
     gateway: '3.4'
 ---
 
-## 1. Create a lambda Event Hook
+## Create a lambda Event Hook
 
 A `lambda` Event Hook is an Event Hook that utilizes the `lambda` handler to pass custom code to an Event Hook. Depending on the source and individual event, that code can execute during various stages of the lifecycle of an event. In this guide, you will create an `lambda` Event Hook with custom code that logs an error with a specific message every time you create a [Consumer](/gateway/entities/consumer/). 
 
@@ -70,7 +70,7 @@ formats:
 {% endentity_example %}
 
 
-## 2. Validate the webhook
+## Validate the webhook
 
 {:.warning}
 > **Important**:  Before you can use Event Hooks for the first time, {{site.base_gateway}} needs to be [reloaded](/how-to/restart-kong-gateway-container/).

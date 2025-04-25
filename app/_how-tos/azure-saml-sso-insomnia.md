@@ -37,7 +37,7 @@ prereqs:
     icon_url: /assets/icons/domain.svg
 ---
 
-## 1. Create the SSO connection in Insomnia
+## Create the SSO connection in Insomnia
 
 Before you can configure the SSO connection in Azure, you must start configuring the SSO settings in Insomnia so you have access to the single-sign on URL and audience URI for the Azure settings.
 
@@ -47,7 +47,7 @@ Before you can configure the SSO connection in Azure, you must start configuring
 
 Keep this window open while you configure the settings in Azure.
 
-## 2. Add the Microsoft Entra SAML Toolkit and configure SSO settings
+## Add the Microsoft Entra SAML Toolkit and configure SSO settings
 
 Now that you have the single-sign on URL from Insomnia, you can create a new Microsoft Entra SAML Toolkit. 
 
@@ -69,20 +69,20 @@ Now that you have the single-sign on URL from Insomnia, you can create a new Mic
    | Source attribute | `user.mail` |
 1. In the Entra application, find and copy the **Login URL** and the base64 version of the signing certificate. These will be used in the Insomnia SSO settings.
 
-## 3. Enter the sign on URL and signing certificate in the SSO settings in Insomnia
+## Enter the sign on URL and signing certificate in the SSO settings in Insomnia
 
 Now that Azure SSO is configured and you have the Login URL and certificate from Azure, you can finish configuring the SSO settings in Insomnia.
 
 1. In the Insomnia SSO settings, enter the Login URL and signing certificate from Azure.
 1. To verify the connection, click **Create connection**. If the connection is successful, you will get a message that says "Your SAML connection has been successfully updated."
 
-## 4. Add users or groups to the application in Azure
+## Add users or groups to the application in Azure
 
 You can add users or groups to the application in Azure. They won't be allowed to log in with SSO yet though.
 
 In Azure, [assign users or groups to the app](https://learn.microsoft.com/entra/identity/enterprise-apps/assign-user-or-group-access-portal?pivots=portal#assign-users-and-groups-to-an-application-using-the-microsoft-entra-admin-center). 
 
-## 5. Invite users to Insomnia
+## Invite users to Insomnia
 
 Now that users or groups are assigned to the app in Azure, you can start inviting users to Insomnia. Once they accept the invite, they can log in to Insomnia with SSO.
 

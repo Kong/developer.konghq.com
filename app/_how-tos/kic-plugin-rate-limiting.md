@@ -78,7 +78,7 @@ output:
     If you receive a `HTTP 429` from the first request, wait 60 seconds for the rate limit timer to reset.
 {% endvalidation %}
 
-## 3. Scale to multiple pods
+## Scale to multiple pods
 
 The `policy: local` setting in the plugin configuration tracks request counters in each Pod’s local memory separately. Counters are not synchronized across Pods, so clients can send requests past the limit without being throttled if they route through different Pods.
 

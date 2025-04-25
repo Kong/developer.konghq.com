@@ -128,12 +128,25 @@ Cleaning involves rebuilding the balancer, and is more expensive than just addin
 
 {{site.base_gateway}} supports the following load balancing algorithms:
 
-| Algorithm | Description |
-|------|-------|
-| [Round-robin](/gateway/entities/upstream/#round-robin) | The round-robin algorithm is done in a weighted manner. It provides identical results to the default DNS based load balancing, and also gives you access to active and passive health checks. |
-| [Consistent-hashing](/gateway/entities/upstream/#consistent-hashing) | With the consistent-hashing algorithm, a configurable client input is used to calculate a hash value. This hash value is then tied to a specific upstream service. |
-| [Least-connections](/gateway/entities/upstream/#least-connections) | The least-connections algorithm keeps track of the number of in-flight requests for each upstream service. The weights are used to calculate the connection capacity of an upstream service. Requests are routed to the upstream service with the highest spare capacity.|
-| [Latency](/gateway/entities/upstream/#latency) | The latency algorithm is based on the peak EWMA (Exponentially Weighted Moving Average), which ensures that the balancer selects the upstream service by the lowest latency. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Algorithm
+    key: algorithm
+  - title: Description
+    key: description
+rows:
+  - algorithm: "[Round-robin](/gateway/entities/upstream/#round-robin)"
+    description: The round-robin algorithm is done in a weighted manner. It provides identical results to the default DNS based load balancing, and also gives you access to active and passive health checks.
+  - algorithm: "[Consistent-hashing](/gateway/entities/upstream/#consistent-hashing)"
+    description: With the consistent-hashing algorithm, a configurable client input is used to calculate a hash value. This hash value is then tied to a specific upstream service.
+  - algorithm: "[Least-connections](/gateway/entities/upstream/#least-connections)"
+    description: The least-connections algorithm keeps track of the number of in-flight requests for each upstream service. The weights are used to calculate the connection capacity of an upstream service. Requests are routed to the upstream service with the highest spare capacity.
+  - algorithm: "[Latency](/gateway/entities/upstream/#latency)"
+    description: The latency algorithm is based on the peak EWMA (Exponentially Weighted Moving Average), which ensures that the balancer selects the upstream service by the lowest latency.
+{% endtable %}
+<!--vale on-->
+
 
 ## Conflicts between load balancers
 

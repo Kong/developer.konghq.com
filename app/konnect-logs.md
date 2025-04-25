@@ -74,11 +74,22 @@ Audit logging is configured via a webhook with a SIEM provider of your choice. F
 
 {{site.konnect_short_name}} captures three types of events:
 
-| Event type | Org audit logs |
-| ---------- | ---------- | 
-| Authentication | This is triggered when a user attempts to log into the {{site.konnect_short_name}} web application or use the {{site.konnect_short_name}} API via a personal access token. Also triggered when a system account access token is used. |
-| Authorization | Triggered when a permission check is made for a user or system account against a resource. | 
-| Access logs | Triggered when a request is made to the {{site.konnect_short_name}} API. | 
+<!--vale off-->
+{% table %}
+columns:
+  - title: Event type
+    key: event_type
+  - title: Org audit logs
+    key: org_audit_logs
+rows:
+  - event_type: Authentication
+    org_audit_logs: "This is triggered when a user attempts to log into the {{site.konnect_short_name}} web application or use the {{site.konnect_short_name}} API via a personal access token. Also triggered when a system account access token is used."
+  - event_type: Authorization
+    org_audit_logs: "Triggered when a permission check is made for a user or system account against a resource."
+  - event_type: Access logs
+    org_audit_logs: "Triggered when a request is made to the {{site.konnect_short_name}} API."
+{% endtable %}
+<!--vale on-->
 
 {{site.konnect_short_name}} retains audit logs for 7 days. 
 
@@ -88,22 +99,55 @@ You can view the webhook status in the UI or via the API for the [{{site.konnect
 
 The following table describes the webhook statuses:
 
-| Attribute | Description |
-| --------- | ---------- |
-| `last_attempt at` | The last time {{site.konnect_short_name}} tried to send data to your webhook |
-| `last_response_code` | The last response code from your webhook |
-| `webhook_enabled` | The desired status of the webhook (from `audit-log-webhook.enabled`) |
-| `webhook_status` | The actual status of the webhook |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Attribute
+    key: attribute
+  - title: Description
+    key: description
+rows:
+  - attribute: "`last_attempt_at`"
+    description: "The last time {{site.konnect_short_name}} tried to send data to your webhook"
+  - attribute: "`last_response_code`"
+    description: "The last response code from your webhook"
+  - attribute: "`webhook_enabled`"
+    description: "The desired status of the webhook (from `audit-log-webhook.enabled`)"
+  - attribute: "`webhook_status`"
+    description: "The actual status of the webhook"
+{% endtable %}
+<!--vale on-->
 
-A combination of `webhook_enabled` and `webhook_status` give a full picture of webhook status.
+A combination of `webhook_enabled` and `webhook_status` give a full picture of webhook status:
 
-| `webhook_enabled` | `webhook_status` | Description |
-| --------------- | -------------- | ---------- |
-| true            | `active`       | {{site.konnect_short_name}} is ready to send data to the webhook. Either no attempts have been made yet (`last_attempt_at` is not set), or the last attempt was successful. |
-| true            | `inactive`     | Last attempt to send data failed, but the webhook is still enabled. This usually means that there was an error in the endpoint or the SIEM provider went down that caused the logs to stop streaming. |
-| false           | `active`       | Webhook config is saved. {{site.konnect_short_name}} is not shipping data to it per webhook configuration. |
-| false           | `inactive`     |Last attempt to send data failed, and customer has turned off the webhook. |
-| false           | `unconfigured` | The webhook for this region has not been configured yet. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: "`webhook_enabled`"
+    key: webhook_enabled
+  - title: "`webhook_status`"
+    key: webhook_status
+  - title: Description
+    key: description
+rows:
+  - webhook_enabled: "`true`"
+    webhook_status: "`active`"
+    description: "{{site.konnect_short_name}} is ready to send data to the webhook. Either no attempts have been made yet (`last_attempt_at` is not set), or the last attempt was successful."
+  - webhook_enabled: "`true`"
+    webhook_status: "`inactive`"
+    description: "Last attempt to send data failed, but the webhook is still enabled. This usually means that there was an error in the endpoint or the SIEM provider went down that caused the logs to stop streaming."
+  - webhook_enabled: "`false`"
+    webhook_status: "`active`"
+    description: "Webhook config is saved. {{site.konnect_short_name}} is not shipping data to it per webhook configuration."
+  - webhook_enabled: "`false`"
+    webhook_status: "`inactive`"
+    description: "Last attempt to send data failed, and customer has turned off the webhook."
+  - webhook_enabled: "`false`"
+    webhook_status: "`unconfigured`"
+    description: "The webhook for this region has not been configured yet."
+
+{% endtable %}
+<!--vale on-->
 
 ## Log formats
 
@@ -115,17 +159,34 @@ To minimize payload size, the message body is compressed. The `Content-Encoding`
 
 All log entries include the following attributes:
 
-Property | Description
----------|-------------
-Timestamp | Time and date of the event in UTC.
-`rt` | Milliseconds since Unix epoch.
-`src` | The IP address of the request originator.
-`org_id` | The originating organization ID.
-`principal_id` | The user ID of the user that performed the action.
-`kong_initiated` | Whether the action was performed by Kong
-`trace_id` | The correlation ID of the request. Use this value to find all log entries for a given request.
-`user_agent` | The user agent of the request: application, operating system, vendor, and version.
-`sig` | An ED25519 signature.
+<!--vale off-->
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: Timestamp
+    description: Time and date of the event in UTC.
+  - property: "`rt`"
+    description: Milliseconds since Unix epoch.
+  - property: "`src`"
+    description: The IP address of the request originator.
+  - property: "`org_id`"
+    description: The originating organization ID.
+  - property: "`principal_id`"
+    description: The user ID of the user that performed the action.
+  - property: "~kong_initiated~"
+    description: Whether the action was performed by Kong
+  - property: "`trace_id`"
+    description: The correlation ID of the request. Use this value to find all log entries for a given request.
+  - property: "`user_agent`"
+    description: "The user agent of the request: application, operating system, vendor, and version."
+  - property: "`sig`"
+    description: An ED25519 signature.
+{% endtable %}
+<!--vale on-->
 
 ### Authentication logs
 
@@ -179,11 +240,32 @@ sig=N_4q2pCgeg0Fg4oGJSfUWKScnTCiC79vq8PIX6Sc_rwaxdWKpVfPwkW45yK_oOFV9gHOmnJBffcB
 
 In addition to the defaults, each authentication log entry also contains the following attributes:
 
-Property | Description
----------|-------------
-`AUTHENTICATION_TYPE` | Can be one of the following: <br> - `AUTHENTICATION_TYPE_BASIC`: basic email and password authentication <br> - `AUTHENTICATION_TYPE_SSO`: authentication with single sign-on (SSO) <br> - `AUTHENTICATION_TYPE_PAT`: authentication with a personal access token
-`AUTHENTICATION_OUTCOME` | Can be one of the following: <br> - `AUTHENTICATION_OUTCOME_SUCCESS`: authentication is successful<br> - `AUTHENTICATION_OUTCOME_NOT_FOUND`: user was not found<br> - `AUTHENTICATION_OUTCOME_INVALID_PASSWORD`: invalid password specified <br> - `AUTHENTICATION_OUTCOME_LOCKED`: user account is locked<br> - `AUTHENTICATION_OUTCOME_DISABLED`: user account has been disabled
-`success` | `true` or `false`, depending on whether authentication was successful or not.
+<!--vale off-->
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "AUTHENTICATION_TYPE"
+    description: |
+      Can be one of the following: 
+      <br> - `AUTHENTICATION_TYPE_BASIC`: Basic email and password authentication 
+      <br> - `AUTHENTICATION_TYPE_SSO`: Authentication with single sign-on (SSO) 
+      <br> - `AUTHENTICATION_TYPE_PAT`: Authentication with a personal access token
+  - property: "AUTHENTICATION_OUTCOME"
+    description: |
+      Can be one of the following: 
+      <br> - `AUTHENTICATION_OUTCOME_SUCCESS`: Authentication is successful
+      <br> - `AUTHENTICATION_OUTCOME_NOT_FOUND`: User was not found
+      <br> - `AUTHENTICATION_OUTCOME_INVALID_PASSWORD`: Invalid password specified 
+      <br> - `AUTHENTICATION_OUTCOME_LOCKED`: User account is locked
+      <br> - `AUTHENTICATION_OUTCOME_DISABLED`: User account has been disabled
+  - property: "success"
+    description: "`true` or `false`, depending on whether authentication was successful or not."
+{% endtable %}
+<!--vale on-->
 
 ### Authorization logs
 
@@ -238,12 +320,20 @@ sig=N_4q2pCgeg0Fg4oGJSfUWKScnTCiC79vq8PIX6Sc_rwaxdWKpVfPwkW45yK_oOFV9gHOmnJBffcB
 
 In addition to the defaults, each authorization log entry also contains the following attributes:
 
-Property | Description
----------|-------------
-`action` | The type of action the user performed on the resource. For example, `retrieve`, `list`, or `edit`.
-`granted` | Boolean indicating whether the authorization was granted or not.
-
-
+<!--vale off-->
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "action"
+    description: "The type of action the user performed on the resource. For example, `retrieve`, `list`, or `edit`."
+  - property: "granted"
+    description: "Boolean indicating whether the authorization was granted or not."
+{% endtable %}
+<!--vale on-->
 
 ### Access logs
 
@@ -301,9 +391,21 @@ sig=JxJaQG3Bozrb5WdHE_Y0HaOsim2F1Xsq_bCfk71VgsfldkLAD_SF234cnKNS
 
 In addition to the defaults, each access log entry also contains the following attributes:
 
-Property | Description
----------|-------------
-`request` | The endpoint that was called.
-`query` | The request query parameters, if any.
-`act` | The HTTP request method; for example, `POST`, `PATCH`, `PUT`, or `DELETE`.
-`status` | The HTTP response code; for example, `200` or `403`.
+<!--vale off-->
+{% table %}
+columns:
+  - title: Property
+    key: property
+  - title: Description
+    key: description
+rows:
+  - property: "request"
+    description: "The endpoint that was called."
+  - property: "query"
+    description: "The request query parameters, if any."
+  - property: "act"
+    description: "The HTTP request method; for example, `POST`, `PATCH`, `PUT`, or `DELETE`."
+  - property: "status"
+    description: "The HTTP response code; for example, `200` or `403`."
+{% endtable %}
+<!--vale on-->

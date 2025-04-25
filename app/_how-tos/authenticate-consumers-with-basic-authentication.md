@@ -51,7 +51,7 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create a Consumer
+## Create a Consumer
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.
 We're going to use basic [authentication](/gateway/authentication/) in this tutorial, so the Consumer needs a username and password to access any {{site.base_gateway}} Services.
@@ -67,7 +67,7 @@ entities:
          password: my-password
 {% endentity_examples %}
 
-## 2. Enable authentication
+## Enable authentication
 
 Authentication lets you identify a Consumer. In this how-to, we'll be using the [Basic Authentication plugin](/plugins/basic-auth/) for authentication, which allows users to authenticate with a username and password when they make a request.
 
@@ -81,7 +81,7 @@ entities:
         hide_credentials: true
 {% endentity_examples %}
 
-## 3. Validate
+## Validate
 
 When a Consumer authenticates with basic auth, the authorization header must be base64-encoded. For example, since we are using `jsmith` as the username and `my-password` as the password, then the field’s value is the base64 encoding of `jsmith:my-password`, or `anNtaXRoOm15LXBhc3N3b3Jk`.
 

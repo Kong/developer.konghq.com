@@ -36,13 +36,13 @@ cleanup:
       icon_url: /assets/icons/insomnia/insomnia.svg
 ---
 
-## 1. Create a test suite
+## Create a test suite
 
 Before you create a test, you need to create a test suite for our collection. 
 
 To do this, click the **Tests** tab and click **New test suite** in the sidebar.
 
-## 2. Create a top-level content type in body test
+## Create a top-level content type in body test
 
 Now you can test if a content type is returned in the top-level request body. 
 
@@ -57,7 +57,7 @@ expect(item).to.be.an('object');
 ```
 1. Click the **Play** icon next to your test. In the preview to the right, you should see that the test passes.
 
-## 2. Create a nested content type in body test
+## Create a nested content type in body test
 
 Now you can test if a content type is returned in the nested request body. 
 

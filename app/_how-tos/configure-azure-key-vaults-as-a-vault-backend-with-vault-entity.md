@@ -85,7 +85,7 @@ next_steps:
     url: /gateway/entities/vault/
 ---
 
-## 1. Configure the Vault entity
+## Configure the Vault entity
 
 Using decK, create a Vault entity with the required parameters for Azure:
 
@@ -113,7 +113,7 @@ variables:
     value: $AZURE_CLIENT_ID
 {% endentity_example %}
 
-## 2. Validate
+## Validate
 
 To validate that the secret was stored correctly in Azure, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. If the Docker container is named `kong-quickstart-gateway`, you can use the following command:
 

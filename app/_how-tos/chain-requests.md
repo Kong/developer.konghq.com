@@ -26,11 +26,11 @@ tldr:
     a: Create at least two requests, send one to get a response, then configure a template tag in the second request to reuse a value from the first request's response.
 ---
 
-## 1. Send the first request
+## Send the first request
 
 In the KongAir collection, open the _Get KongAir planned flights_ request and click **Send** to get a list of flights. We can reuse content from the response in the next request.
 
-## 2. Edit the second request
+## Edit the second request
 
 Open the _Fetch more details about a flight_ request. This request requires a flight number in the path. We'll use a template tag to get a flight number from the list of flights from the previous request.
 
@@ -38,21 +38,35 @@ Remove the `_.flightNumber` placeholder and start typing `response` in its place
 
 ![Request URL with drop-down list to select a template tag](/assets/images/insomnia/response-autocomplete.png)
 
-## 3. Configure the template tag
+## Configure the template tag
 
 Click the template tag, and configure it with the following values to get the flight number for the first flight on the list:
 
-|Field|Value|
-|---|---|
-|Function to Perform|Response|
-|Attribute|Body Attribute|
-|Request|GET Get KongAir planned flights|
-|Filter|`$.[0].number`|
-|Trigger Behavior|Never|
+<!--vale off-->
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Value
+    key: value
+rows:
+  - field: "Function to Perform"
+    value: "Response"
+  - field: "Attribute"
+    value: "Body Attribute"
+  - field: "Request"
+    value: "GET Get KongAir planned flights"
+  - field: "Filter"
+    value: "`$.[0].number`"
+  - field: "Trigger Behavior"
+    value: "Never"
+{% endtable %}
+<!--vale on-->
+
 
 Once this is done, we can see the live preview of the value (KA0284 in this example). We can then click **Done** to apply the changes.
 
-## 4. Send the second request
+## Send the second request
 
 Click **Send** on the _Fetch more details about a flight_ to get the information about the first flight on the list. This is the response:
 

@@ -105,13 +105,24 @@ In this example, it's the difference between using two plugins or five plugins. 
 ## Use cases
 
 Common use cases for Consumer Groups:
-
-Use case | Description
----------|------------
-Managing permissions | You can use Consumer Groups to define different sets of users with varying levels of permissions. For example, you can create distinct Consumer Groups for regular users, premium users, and administrators.
-Managing roles | Within an organization, there may be various departments or teams that interact with APIs differently. By creating Consumer Groups for these different roles, you can customize the API usage experience. For instance, an organization could have separate Consumer Groups for the marketing team, development team, and support team.
-Resource quotas and rate limiting | Consumer Groups can be used to enforce resource quotas and rate limiting on different sets of Consumers. For instance, you can apply different rate limits to different Consumer Groups based on their subscription plans.
-Customizing plugin configurations | With the ability to scope plugins specifically to defined groups, different Consumer Groups can have distinct plugin configurations based on their requirements. For example, one group may require additional request transformations while another may not need them at all.
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: usecase
+  - title: Description
+    key: description
+rows:
+  - usecase: "Managing permissions"
+    description: "You can use Consumer Groups to define different sets of users with varying levels of permissions. For example, you can create distinct Consumer Groups for regular users, premium users, and administrators."
+  - usecase: "Managing roles"
+    description: "Within an organization, there may be various departments or teams that interact with APIs differently. By creating Consumer Groups for these different roles, you can customize the API usage experience. For instance, an organization could have separate Consumer Groups for the marketing team, development team, and support team."
+  - usecase: "Resource quotas and rate limiting"
+    description: "Consumer Groups can be used to enforce resource quotas and rate limiting on different sets of Consumers. For instance, you can apply different rate limits to different Consumer Groups based on their subscription plans."
+  - usecase: "Customizing plugin configurations"
+    description: "With the ability to scope plugins specifically to defined groups, different Consumer Groups can have distinct plugin configurations based on their requirements. For example, one group may require additional request transformations while another may not need them at all."
+{% endtable %}
+<!--vale on-->
 
 ## Schema
 

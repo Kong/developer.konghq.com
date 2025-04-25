@@ -36,6 +36,11 @@
 
 {% assign gwapi_version = "v1" %}
 
+{% assign allowedRoutes = "All" %}
+{% if include.config.gateway_api.allowed_routes %}
+{% assign allowedRoutes = include.config.gateway_api.allowed_routes %}
+{% endif %}
+
 ```bash
 echo "
 apiVersion: v1
@@ -65,7 +70,7 @@ spec:
     protocol: HTTP
     allowedRoutes:
       namespaces:
-         from: All
+         from: {{ allowedRoutes }}
 " | kubectl apply -n kong -f -
 ```
 

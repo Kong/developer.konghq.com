@@ -27,6 +27,7 @@ entities:
 
 tags:
     - consumer
+    - authentication
 
 tldr:
     q: How do I centrally manage Consumers in {{site.konnect_short_name}}?
@@ -46,11 +47,11 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-## 1. Create a realm
+## Create a realm
 
-First, export your Control Plane UUID and [region](/konnect-geos/) (for example, `us`) so we can use it in the request. You can find these under your Control Plane settings in [Gateway Manager](https://cloud.konghq.com/gateway-manager/):
+First, export your Control Plane ID and [region](/konnect-geos/) (for example, `us`) so we can use it in the request. You can find these under your Control Plane settings in [Gateway Manager](https://cloud.konghq.com/gateway-manager/):
 ```sh
-export KONNECT_CONTROL_PLANE_ID={control-plane-uuid}
+export KONNECT_CONTROL_PLANE_ID={control-plane-id}
 export DECK_CONTROL_PLANE_REGION={region}
 ```
 
@@ -79,7 +80,7 @@ export DECK_REALM_ID={realm-id}
 ```
 
 
-## 2. Create the centrally-managed Consumer
+## Create the centrally-managed Consumer
 
 Use the [create a Consumer](/api/konnect/consumers/v1/#/operations/create-consumer) endpoint to create a centrally-managed Consumer:
 
@@ -103,7 +104,7 @@ Export the ID of the Consumer from the response:
 export CONSUMER_ID={consumer-id}
 ```
 
-## 3. Create a Consumer key for authentication
+## Create a Consumer key for authentication
 
 Centrally-managed Consumers require a key for authentication. Configure authentication keys for Consumers using the [create a key](/api/konnect/consumers/v1/#/operations/create-consumer-key) endpoint:
 
@@ -126,7 +127,7 @@ Export the Consumer key from the `secret` field in the response:
 export CONSUMER_KEY={consumer-key}
 ```
 
-## 4. Enable authentication with the Key Authentication plugin
+## Enable authentication with the Key Authentication plugin
 
 Consumers require authentication. Currently, you can only use the [Key Auth plugin](/plugins/key-auth/) to authenticate centrally-managed Consumers. In this example, we'll configure `identity_realms` on first the realm and then the Control Plane. By doing it this way, the Data Plane will first reach out to the realm. If the API key is not found in the realm, the Data Plane will look for the API key in the Control Plane config.
 
@@ -156,7 +157,7 @@ variables:
 
 `identity_realms` are scoped to the Control Plane by default (`scope: cp`). The order in which you configure the `identity_realms` dictates the priority in which the Data Plane attempts to authenticate the provided API keys. See [identity realms precedence](/plugins/key-auth/#identity-realms) for more information.
 
-## 5. Validate
+## Validate
 
 After configuring the Key Authentication plugin, you can verify that it was configured correctly and is working, by sending requests with and without the API key you created for your centrally-managed Consumer.
 
@@ -167,6 +168,7 @@ url: /anything
 headers:
   - 'apikey:$CONSUMER_KEY'
 status_code: 200
+display_headers: true
 {% endvalidation %}
 
 You will see a successful `200` response.

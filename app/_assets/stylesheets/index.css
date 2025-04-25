@@ -57,9 +57,26 @@
     --kui-color-text-neutral: rgb(var(--color-text-primary));
     --kui-color-text: rgb(var(--color-text-primary));
     --kui-color-text-primary: rgb(var(--color-brand));
-    --kui-color-background: rgb(var(--color-bg-primary));
+    --kui-color-text-primary-stronger: rgb(var(--color-brand));
+    --kui-color-text-danger: rgb(var(--color-semantic-red-primary));
+    --kui-color-background: rgb(var(--color-bg-secondary));
     --kui-color-background-neutral-weakest: rgb(var(--color-bg-primary));
     --kui-color-border: rgb(var(--color-border-primary), 0.05);
+    --kui-shadow-border: rgb(var(--color-brand-saturated), 0.4);
+    --kui-shadow-border-primary: rgb(none, none, none);
+    --kui-color-background-primary-weakest: rgb(var(--color-brand-saturated), 0.04);
+    --kui-color-background-neutral-weaker: rgb(var(--color-bg-secondary));
+
+    --kui-method-color-text-get: rgb(var(--color-semantic-blue-primary));
+    --kui-method-color-background-get: rgb(var(--color-semantic-blue-secondary));
+    --kui-method-color-text-post: rgb(var(--color-semantic-green-primary));
+    --kui-method-color-background-post: rgb(var(--color-semantic-green-secondary));
+    --kui-method-color-text-delete: rgb(var(--color-semantic-red-primary));
+    --kui-method-color-background-delete: rgb(var(--color-semantic-red-secondary));
+    --kui-method-color-text-patch: rgb(var(--color-semantic-teal-primary));
+    --kui-method-color-background-patch: rgb(var(--color-semantic-teal-secondary));
+    --kui-method-color-text-put: rgb(var(--color-semantic-yellow-primary));
+    --kui-method-color-background-put: rgb(var(--color-semantic-yellow-secondary));
 
     --color-advanced-analytics-brand: var(--color-semantic-yellow-primary);
     --color-advanced-analytics-background: var(--color-semantic-yellow-secondary);
@@ -127,6 +144,18 @@
     --color-semantic-teal-secondary: 16, 61, 70;
 
     --color-shadow-hover-card: 24, 128, 240, 0.4;
+  }
+
+  *::-webkit-scrollbar {
+    @apply w-1 h-1;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    @apply bg-brand rounded-lg;
+  }
+
+  *::-webkit-scrollbar-track {
+    @apply bg-code-block-header rounded-lg;
   }
 
   html {
@@ -291,18 +320,6 @@
     @apply whitespace-pre text-white bg-code-block border-none text-sm;
   }
 
-  pre:not(.shiki)::-webkit-scrollbar {
-    @apply w-1 h-1;
-  }
-
-  pre:not(.shiki)::-webkit-scrollbar-thumb {
-    @apply bg-brand rounded-lg;
-  }
-
-  pre::-webkit-scrollbar-track {
-    @apply bg-code-block-header rounded-lg;
-  }
-
   code.highlighter-rouge {
     @apply px-1;
   }
@@ -351,63 +368,65 @@
     @apply flex flex-col gap-3;
   }
 
-  .success, .warning, .danger, .info, .neutral, .decorative {
-    @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-10 relative text-sm;
+  blockquote {
+    &.success, &.warning, &.danger, &.info, &.neutral, &.decorative {
+      @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-10 relative text-sm;
 
-    &:not(.no-icon)::before {
-      @apply text-base absolute left-4 w-4 h-4 content-[''] top-[18px];
-      mask-size: cover;
-      mask:url(/assets/icons/admonitions/info.svg);
+      &:not(.no-icon)::before {
+        @apply text-base absolute left-4 w-4 h-4 content-[''] top-[18px];
+        mask-size: cover;
+        mask:url(/assets/icons/admonitions/info.svg);
+      }
     }
-  }
 
-  .info {
-    @apply bg-semantic-blue-secondary border-semantic-blue-primary;
+    &.info {
+      @apply bg-semantic-blue-secondary border-semantic-blue-primary;
 
-    &:not(.no-icon)::before {
-      @apply bg-semantic-blue-primary;
+      &:not(.no-icon)::before {
+        @apply bg-semantic-blue-primary;
+      }
     }
-  }
 
-  .success {
-    @apply bg-semantic-green-secondary border-semantic-green-primary;
+    &.success {
+      @apply bg-semantic-green-secondary border-semantic-green-primary;
 
-    &:not(.no-icon)::before {
-      @apply bg-semantic-green-primary;
+      &:not(.no-icon)::before {
+        @apply bg-semantic-green-primary;
+      }
     }
-  }
 
-  .warning {
-    @apply bg-semantic-yellow-secondary border-semantic-yellow-primary;
+    &.warning {
+      @apply bg-semantic-yellow-secondary border-semantic-yellow-primary;
 
-    &:not(.no-icon)::before {
-      @apply bg-semantic-yellow-primary;
-      mask:url(/assets/icons/admonitions/warning.svg);
+      &:not(.no-icon)::before {
+        @apply bg-semantic-yellow-primary;
+        mask:url(/assets/icons/admonitions/warning.svg);
+      }
     }
-  }
 
-  .danger {
-    @apply bg-semantic-red-secondary border-semantic-red-primary;
+    &.danger {
+      @apply bg-semantic-red-secondary border-semantic-red-primary;
 
-    &:not(.no-icon)::before {
-      @apply bg-semantic-red-primary;
-      mask:url(/assets/icons/admonitions/danger.svg);
+      &:not(.no-icon)::before {
+        @apply bg-semantic-red-primary;
+        mask:url(/assets/icons/admonitions/danger.svg);
+      }
     }
-  }
 
-  .neutral {
-    @apply bg-semantic-grey-secondary border-semantic-grey-primary;
+    &.neutral {
+      @apply bg-semantic-grey-secondary border-semantic-grey-primary;
 
-    &:not(.no-icon)::before {
-      @apply bg-semantic-grey-primary;
+      &:not(.no-icon)::before {
+        @apply bg-semantic-grey-primary;
+      }
     }
-  }
 
-  .decorative {
-    @apply bg-semantic-purple-secondary border-semantic-purple-primary;
+    &.decorative {
+      @apply bg-semantic-purple-secondary border-semantic-purple-primary;
 
-    &:not(.no-icon)::before {
-      @apply bg-semantic-purple-primary;
+      &:not(.no-icon)::before {
+        @apply bg-semantic-purple-primary;
+      }
     }
   }
 
@@ -544,6 +563,7 @@
 
   #toc {
     @apply max-h-screen overflow-y-auto;
+    counter-reset: toc-counter;
   }
 
   #toc .tab-button__vertical {
@@ -552,6 +572,16 @@
 
   #toc li > * {
     @apply mb-0;
+  }
+
+  #toc > li .how-to-step {
+    @apply block;
+    counter-increment: toc-counter;
+  }
+
+  #toc > li .how-to-step::before {
+    @apply pr-1;
+    content: counter(toc-counter) ".";
   }
 
   .background-gradient {
@@ -597,6 +627,19 @@
 
   .product-icon--background {
     @apply p-1.5 rounded-[2.22px];
+  }
+
+  .how-to {
+    counter-reset: steps-counter;
+  }
+
+  .how-to-step--title {
+    counter-increment: steps-counter;
+  }
+
+  .how-to-step--title::before {
+    @apply pr-2;
+    content: counter(steps-counter) ".";
   }
 }
 
@@ -666,4 +709,26 @@
 
 .card:target {
   @apply border-brand-saturated border-2;
+}
+
+.call-button {
+  @apply border border-brand text-primary font-normal hover:bg-transparent !important;
+}
+
+.select-items-container {
+  @apply rounded;
+}
+
+.select-item-container {
+  .selected .select-item-label {
+    @apply bg-brand/15 !important;
+  }
+
+  .select-item-label {
+    @apply text-primary bg-secondary border-b border-primary/5 hover:bg-brand/15 !important;
+  }
+}
+
+.select-popover.popover .popover-container {
+  @apply border-none py-0 !important;
 }

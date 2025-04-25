@@ -86,7 +86,7 @@ next_steps:
     url: /gateway/entities/vault/
 ---
 
-## 1. Configure Secret Manager as a vault with the Vault entity
+## Configure Secret Manager as a vault with the Vault entity
 
 To enable Secret Manager as your vault in {{site.base_gateway}}, you can use the [Vault entity](/gateway/entities/vault/).
 
@@ -100,7 +100,7 @@ entities:
         project_id: test-gateway-vault
 {% endentity_examples %}
 
-## 2. Validate
+## Validate
 
 To validate that the secret was stored correctly in Google Cloud, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. If the Docker container is named `kong-quickstart-gateway`, you can use the following command:
 

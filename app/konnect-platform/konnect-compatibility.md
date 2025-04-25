@@ -38,7 +38,7 @@ faqs:
   - q: Can I continue to use older versions of configurations as the {{site.konnect_short_name}} Control Plane auto-upgrades?
     a: Yes. All decK dumps, or YAML configurations, will continue to work in {{site.konnect_short_name}} after they are synced.
   - q: Are there any disruptions if I choose not to upgrade my Data Plane nodes?
-    a: There is **no** disruption at all if you choose **not** to upgrade your Data Plane nodes as long as the version of the Data Plane is under our [{{site.base_gateway}} active support timeline](/konnect-compatibility/#kong-gateway-version-compatibility). 
+    a: There is **no** disruption at all if you choose **not** to upgrade your Data Plane nodes as long as the version of the Data Plane is under our [{{site.base_gateway}} active support timeline](/konnect-platform/konnect-compatibility/#kong-gateway-version-compatibility). 
 ---
 
 This reference explains which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with.
