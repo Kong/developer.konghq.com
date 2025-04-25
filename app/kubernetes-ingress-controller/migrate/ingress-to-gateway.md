@@ -1,8 +1,8 @@
 ---
-title: Rewriting hosts
+title: Migrating from Ingress to Gateway
 
 description: |
-  Customize the Host header that is sent to your upstream service
+  How to migrate from Ingress API to Gateway API
 
 content_type: reference
 layout: reference
@@ -15,111 +15,79 @@ works_on:
   - konnect
 
 related_resources:
-  - text: Using the konghq.com/rewrite annotation
-    url: /kubernetes-ingress-controller/routing/rewriting-paths/
-  - text: Rewriting paths
-    url: /kubernetes-ingress-controller/reference/path-manipulation/
+  - text: ingress2gateway FAQ
+    url: /kubernetes-ingress-controller/faq/migrate-ingress-to-gateway/
+
 ---
 
-{{ site.kic_product_name }} provides two annotations for manipulating the `Host` header. These annotations allow for three different behaviours:
+## Prerequisites
 
-* Preserve the user-provided `Host` header
-* Default to the `Host` of the upstream service
-* Explicitly set the `Host` header to a known value
-
-{% capture preserve_host %}
-{% navtabs api %}
-{% navtab "Gateway API" %}
-```bash
-kubectl patch httproute NAME --type merge -p '{"metadata":{"annotations":{"konghq.com/preserve-host":"false"}}}'
-```
-{% endnavtab %}
-{% navtab "Ingress" %}
-```bash
-kubectl patch ingress NAME -p '{"metadata":{"annotations":{"konghq.com/preserve-host":"false"}}}'
-``` 
-{% endnavtab %}
-{% endnavtabs %}
-{% endcapture %}
-
-### Preserve the Host header
-
-{{ site.kic_product_name }} preserves the hostname in the request by default.
+Download the [Kong preview](https://github.com/kong/ingress2gateway) of the [kubernetes-sigs/ingress2Gateway](https://github.com/kubernetes-sigs/ingress2gateway) CLI tool:
 
 ```bash
-curl -H 'Host:kong.example' "$PROXY_IP/echo?details=true"
+mkdir ingress2gateway && cd ingress2gateway
+curl -L https://github.com/Kong/ingress2gateway/releases/download/v0.1.0/ingress2gateway_$(uname)_$(uname -m).tar.gz | tar -xzv
+export PATH=${PATH}:$(pwd)
 ```
 
-```text
-HTTP request details
----------------------
-Protocol: HTTP/1.1
-Host: kong.example
-Method: GET
-URL: /?details=true
-```
+## Convert all the YAML files
 
-The `Host` header in the request to the upstream matches the `Host` header in the request to {{ site.base_gateway }}.
+In order to migrate your resources from `Ingress` API to Gateway API you need all the `Ingress`-based `yaml` manifests. You can use these manifests as the source to migrate to the new API by creating copies that replace the `Ingress` resources with Gateway API resources. Then, use the `ingress2gateway` tool to create new manifests
+containing the gateway API configurations.
 
-### Use the upstream Host name
+> **Note**: In this guide the Ingress resources refers to Kubernetes networkingv1 `Ingress`es, Kong `TCPIngress`es, and Kong `UDPIngress`es. This means that **All** these resources should be included in the files used as a source for the conversion.
 
-You can disable `preserve-host` if you want the `Host` header to contain the upstream hostname of your service.
-
-Add the `konghq.com/preserve-host` annotation to your Route:
-
-{{ preserve_host }}
-
-The `Host` header in the response now contains the upstream host and port.
-
-```text
-HTTP request details
----------------------
-Protocol: HTTP/1.1
-Host: 192.168.194.11:1027
-Method: GET
-URL: /?details=true
-```
-### Set the Host header explicitly
-
-#### Using Gateway API {% new_in 3.2 %}
-
-You can set the Host header explicitly when using Gateway API's HTTPRoute with [`URLRewrite`](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io%2fv1.HTTPURLRewriteFilter) 
-filter's `hostname` field. You only need to add a `URLRewrite` filter to your HTTPRoute rule.
-
-```yaml
-...
-filters:
-- type: URLRewrite
-  urlRewrite:
-    hostname: internal.myapp.example.com
-```
-
-#### Using the `konghq.com/host-header` annotation
-
-You can set the Host header explicitly if needed by disabling `konghq.com/preserve-host` and setting the `konghq.com/host-header` annotation.
-
-1. Add the [`konghq.com/preserve-host` annotation](/kubernetes-ingress-controller/reference/annotations/#konghq-com-preserve-host) to your Ingress, to disable `preserve-host` and send the hostname provided in the `host-header` annotation:
-
-{{ preserve_host | indent }}
-
-1. Add the [`konghq.com/host-header` annotation](/kubernetes-ingress-controller/reference/annotations/#konghq-com-host-header) to your Service, which sets
-  the `Host` header directly:
-  ```bash
-  kubectl patch service NAME -p '{"metadata":{"annotations":{"konghq.com/host-header":"internal.myapp.example.com"}}}'
-  ```
-
-1. Make a `curl` request with a `Host` header:
+1. Export your source and destination paths.
 
     ```bash
-    curl -H 'Host:kong.example' "$PROXY_IP/echo?details=true"
+    SOURCE_DIR=<your_source_directory>
+    DEST_DIR=<your_destination_directory>
     ```
 
-    The request upstream now uses the header from the `host-header` annotation:
+1. Convert the manifests and create new files in the destination directory.
+
+    ```bash
+    for file in ${SOURCE_DIR}/*.yaml; do ingress2gateway print --input-file ${file} -A --providers=kong --all-resources > ${DEST_DIR}/$(basename -- $file); done
     ```
-    HTTP request details
-    ---------------------
-    Protocol: HTTP/1.1
-    Host: internal.myapp.example.com:1027
-    Method: GET
-    URL: /?details=true
+
+1. Check the new manifest files have been correctly created in the destination directory.
+
+    ```bash
+    ls ${DEST_DIR}
     ```
+
+1. Copy your annotations from the ingress resources to the Routes. The routes' names use the ingress name as prefix to help you track the route that the ingress generated. All the `konghq.com/` annotations must be copied except for these, that have been natively implemented as Gateway API features.
+
+   1. `konghq.com/methods`
+   1. `konghq.com/headers`
+   1. `konghq.com/plugins`
+
+## Check the new manifests
+
+The manifests conversion are as follows:
+
+- `Ingress`es are converted to `Gateway` and `HTTPRoute`s
+- `TCPIngress`es are converted to `Gateway` and `TCPRoute`s and `TLSRoute`s
+- `UDPIngress`es are converted to `Gateway` and `UDPRoute`s
+
+## Migrate from Ingress to Gateway
+
+To migrate from using the ingress resources to the Gateway resources:
+
+1. Apply the new manifest files into the cluster
+
+    ```bash
+    kubectl apply -f ${DEST_DIR}
+    ```
+
+1. Wait for all the gateways to be programmed
+
+    ```bash
+    kubectl wait --for=condition=programmed gateway -A --all
+    ```
+
+## Delete the previous configuration
+
+After all the Gateways have been correctly deployed and are programmed, you can delete the ingress resources. In other words the Gateways should have the status condition `Programmed` set, and status field set to `True` before you delete the ingress resources. delete the ingress resources.
+
+> **Note**: It is a best practice to not delete all the ingress resources at once, but instead iteratively delete one ingress at a time, verify that no connection is lost, then continue.
