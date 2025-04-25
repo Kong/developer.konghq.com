@@ -144,6 +144,18 @@
     --color-shadow-hover-card: 24, 128, 240, 0.4;
   }
 
+  *::-webkit-scrollbar {
+    @apply w-1 h-1;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    @apply bg-brand rounded-lg;
+  }
+
+  *::-webkit-scrollbar-track {
+    @apply bg-code-block-header rounded-lg;
+  }
+
   html {
     font-family: "Inter", system-ui, sans-serif;
     @apply text-secondary font-normal;
@@ -304,18 +316,6 @@
 
   pre code {
     @apply whitespace-pre text-white bg-code-block border-none text-sm;
-  }
-
-  pre:not(.shiki)::-webkit-scrollbar {
-    @apply w-1 h-1;
-  }
-
-  pre:not(.shiki)::-webkit-scrollbar-thumb {
-    @apply bg-brand rounded-lg;
-  }
-
-  pre::-webkit-scrollbar-track {
-    @apply bg-code-block-header rounded-lg;
   }
 
   code.highlighter-rouge {
