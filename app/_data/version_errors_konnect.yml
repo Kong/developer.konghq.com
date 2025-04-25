@@ -1136,7 +1136,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.5.0.0` or above.
     DocumentationURL: |
-      [App Registration](/dev-portal/app-reg/)
+      [App Registration](/dev-portal/application-registration/)
   - ID: D203
     Severity: error
     Description: |
@@ -1159,7 +1159,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.6.0.0` or above.
     DocumentationURL: |
-      [App Registration](/dev-portal/app-reg/)
+      [App Registration](/dev-portal/application-registration/)
   - ID: D205
     Severity: error
     Description: |
@@ -1410,7 +1410,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.6.0.0` or above.
     DocumentationURL: |
-      [App Registration](/dev-portal/app-reg/)
+      [App Registration](/dev-portal/application-registration/)
   - ID: D228
     Severity: error
     Description: |
@@ -1421,7 +1421,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.6.0.0` or above.
     DocumentationURL: |
-      [App Registration](/dev-portal/app-reg/)
+      [App Registration](/dev-portal/application-registration/)
   - ID: D229
     Severity: error
     Description: |
@@ -1433,7 +1433,7 @@ messages:
       Please update Kong Gateway to the corresponding version where the fields were
       added.
     DocumentationURL: |
-      [App Registration](/dev-portal/app-reg/)
+      [App Registration](/dev-portal/application-registration/)
   - ID: D230
     Severity: error
     Description: |
@@ -1445,7 +1445,7 @@ messages:
       Please update Kong Gateway to the corresponding version where the fields were
       added.
     DocumentationURL: |
-      [App Registration](/dev-portal/app-reg/)
+      [App Registration](/dev-portal/application-registration/)
   - ID: D231
     Severity: error
     Description: |
@@ -1457,7 +1457,7 @@ messages:
       Please update Kong Gateway to the corresponding version where the fields were
       added.
     DocumentationURL: |
-      [App Registration](/dev-portal/app-reg/)
+      [App Registration](/dev-portal/application-registration/)
   - ID: D232
     Severity: error
     Description: |
@@ -1955,7 +1955,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 2.8 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect-compatibility/)
+      [Compatibility](/konnect-platform/konnect-compatibility/)
   - ID: EOL101
     Severity: error
     Description: |
@@ -1966,7 +1966,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 2.8 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect-compatibility/)
+      [Compatibility](/konnect-platform/konnect-compatibility/)
   - ID: EOL102
     Severity: error
     Description: |
@@ -1977,7 +1977,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 2.8 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect-compatibility/)
+      [Compatibility](/konnect-platform/konnect-compatibility/)
   - ID: EOL103
     Severity: error
     Description: |
@@ -1988,7 +1988,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 3.4 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect-compatibility/)
+      [Compatibility](/konnect-platform/konnect-compatibility/)
   - ID: EOL104
     Severity: error
     Description: |
@@ -1999,7 +1999,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 3.4 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect-compatibility/)
+      [Compatibility](/konnect-platform/konnect-compatibility/)
   - ID: EOL105
     Severity: error
     Description: |
@@ -2010,7 +2010,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 3.4 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect-compatibility/)
+      [Compatibility](/konnect-platform/konnect-compatibility/)
   - ID: EOL106
     Severity: error
     Description: |
@@ -2021,7 +2021,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 3.4 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect-compatibility/)
+      [Compatibility](/konnect-platform/konnect-compatibility/)
   - ID: P001
     Severity: error
     Description: |
