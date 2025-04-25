@@ -62,8 +62,8 @@ rows:
 
 The service documentation template supports the following Spectral recipes:
 
+<!--vale off-->
 {% table %}
-
 columns:
   - title: Category
     key: category
