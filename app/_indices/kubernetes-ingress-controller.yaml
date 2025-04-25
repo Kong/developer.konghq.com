@@ -22,6 +22,7 @@ sections:
       - path: /kubernetes-ingress-controller/service-health-checks/
       - path: /kubernetes-ingress-controller/last-known-good-config/
       - path: /kubernetes-ingress-controller/fallback-configuration/
+      - path: /kubernetes-ingress-controller/customize-image/
   - title: Routing
     items:
       - path: /kubernetes-ingress-controller/routing/http/
@@ -52,6 +53,7 @@ sections:
   - title: Advanced Usage
     items:
       - path: /kubernetes-ingress-controller/load-balancing/
+      - path: /kubernetes-ingress-controller/split-traffic/
   - title: Observability
     items:
       - path: /kubernetes-ingress-controller/observability/prometheus/
