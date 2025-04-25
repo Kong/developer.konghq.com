@@ -267,10 +267,14 @@ app/_how-tos/kic-proxy-tcp-sni.md:
   - app/_src/kubernetes-ingress-controller/guides/services/tcp.md
 app/_how-tos/kic-proxy-udp.md:
   - app/_src/kubernetes-ingress-controller/guides/services/udp.md
+app/_how-tos/kic-proxy-rewriting-paths.md:
+  - app/_src/kubernetes-ingress-controller/guides/requests/rewrite-annotation.md
 app/_how-tos/kic-external-service.md:
   - app/_src/kubernetes-ingress-controller/guides/services/external.md
 app/_how-tos/kic-redirect-to-https.md:
   - app/_src/kubernetes-ingress-controller/guides/services/https-redirect.md
+app/_how-tos/kic-customize-load-balancing.md:
+  - app/_src/kubernetes-ingress-controller/guides/requests/customizing-load-balancing.md
 app/kubernetes-ingress-controller/support.md:
   - app/_src/kubernetes-ingress-controller/support-policy.md
 app/kubernetes-ingress-controller/architecture.md:
@@ -288,6 +292,10 @@ app/kubernetes-ingress-controller/reference/annotations.md:
   - app/_src/kubernetes-ingress-controller/reference/annotations.md
 app/kubernetes-ingress-controller/reference/custom-resources.md:
   - app/_src/kubernetes-ingress-controller/reference/custom-resources-3.4.x.md
+app/kubernetes-ingress-controller/reference/path-manipulation.md:
+  - app/_src/kubernetes-ingress-controller/guides/requests/rewrite-host-and-paths.md
+app/kubernetes-ingress-controller/reference/host-manipulation.md:
+  - app/_src/kubernetes-ingress-controller/guides/requests/rewrite-host-and-paths.md
 app/kubernetes-ingress-controller/admission-webhook.md:
   - app/_src/kubernetes-ingress-controller/concepts/admission-webhook.md
 app/_how-tos/kic-install.md:

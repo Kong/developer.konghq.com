@@ -11,6 +11,7 @@
 
 {% capture the_code %}
 {% navtabs "http-route" %}
+{% unless include.disable_gateway %}
 {% navtab "Gateway API" %}
 {% assign gwapi_version = "v1" %}
 
@@ -25,7 +26,7 @@ metadata:
   name: {{ name }}{% unless namespace == '' %}
   namespace: {{ namespace }}{% endunless %}
   annotations:{% if include.annotation_rewrite %}
-    konghq.com/rewrite: '{{ include.annotation_rewrite }}'{% endif %}
+    konghq.com/rewrite: '{{ include.annotation_rewrite | replace: "$", "\$" }}'{% endif %}
     konghq.com/strip-path: 'true'
 spec:
   parentRefs:
@@ -46,6 +47,8 @@ spec:
 ```
 
 {% endnavtab %}
+{% endunless %}
+{% unless include.disable_ingress %}
 {% navtab "Ingress" %}
 
 ```bash
@@ -56,7 +59,7 @@ metadata:
   name: {{ name }}{% unless namespace == '' %}
   namespace: {{ namespace }}{% endunless %}
   annotations:{% if include.annotation_rewrite %}
-    konghq.com/rewrite: '{{ include.annotation_rewrite }}'{% endif %}
+    konghq.com/rewrite: '{{ include.annotation_rewrite | replace: "$", "\$" }}'{% endif %}
     konghq.com/strip-path: 'true'
 spec:
   ingressClassName: {{ ingress_class }}
@@ -75,6 +78,7 @@ spec:
 ```
 
 {% endnavtab %}
+{% endunless %}
 {% endnavtabs %}
 {% endcapture %}
 
