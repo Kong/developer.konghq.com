@@ -1299,7 +1299,7 @@ app/_landing_pages/dev-portal.yaml:
   - app/dev-portal/index.md
   - app/dev-portal/portals/index.md
 
-app/dev-portal/portals-customization.md:
+app/dev-portal/portal-customization.md:
   - app/dev-portal/portals/index.md
   - app/dev-portal/portals/customization/customization.md
   - app/dev-portal/portals/customization/appearance.md
@@ -1314,7 +1314,7 @@ app/dev-portal/portal-settings.md:
 app/dev-portal/custom-domains.md:
   - app/dev-portal/settings/custom-domains.md
 app/dev-portal/security-settings.md:
-  - /app/dev-portal/portals/settings/security.md
+  - app/dev-portal/portals/settings/security.md
 app/dev-portal/team-mapping.md:
   - app/dev-portal/settings/team-mapping.md
 app/dev-portal/apis:
@@ -1326,18 +1326,18 @@ app/dev-portal/publishing.md:
   - app/dev-portal/portals/publishing.md
 
 app/dev-portal/application-registration.md:
-  - /app/dev-portal/app-reg/index.md
+  - app/dev-portal/app-reg/index.md
 app/dev-portal/auth-strategies.md:
-  - /app/dev-portal/app-reg/auth-strategies/oidc/index.md
-  - /app/dev-portal/app-reg/auth-strategies/key-auth/index.md
+  - app/dev-portal/app-reg/auth-strategies/oidc/index.md
+  - app/dev-portal/app-reg/auth-strategies/key-auth/index.md
 
-app/dev-portal/access-and-approvals.md:
-  - /app/dev-portal/access-and-approvals/teams.md
-  - /app/dev-portal/access-and-approvals/index.md
+app/dev-portal/access-and-approval.md:
+  - app/dev-portal/access-and-approvals/teams.md
+  - app/dev-portal/access-and-approvals/index.md
 app/dev-portal/developer-signup.md:
-  - /app/dev-portal/access-and-approvals/developers.md
+  - app/dev-portal/access-and-approvals/developers.md
 app/dev-portal/sso.md:
-  - /app/dev-portal/access-and-approvals/sso.md
+  - app/dev-portal/access-and-approvals/sso.md
 
 ## Insomnia
 app/_landing_pages/insomnia.yaml: 
