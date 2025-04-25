@@ -22,6 +22,9 @@ icon: salt-agent.png
 
 search_aliases:
   - salt-agent
+
+tags:
+  - traffic-control
 ---
 
 The Salt Security Kong deployment is used to capture a mirror of application traffic and send it to the Salt Security Service for analysis.

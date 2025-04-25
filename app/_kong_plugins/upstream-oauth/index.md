@@ -32,6 +32,9 @@ icon: upstream-oauth.png
 categories:
   - authentication
 
+tags:
+  - authentication
+
 search_aliases:
   - upstream-oauth
   - upstream authentication
