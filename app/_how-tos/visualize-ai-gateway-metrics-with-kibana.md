@@ -45,9 +45,8 @@ prereqs:
         1. [Create an OpenAI account](https://auth.openai.com/create-account).
         1. [Get an API key](https://platform.openai.com/api-keys). 
         1. Create a decK variable with the API key:
-
         ```sh
-        export OPENAI_AUTH_HEADER='<api-key>'
+        export OPENAI_AUTH_HEADER='Bearer {api-key}'
         ```
     icon_url: /assets/icons/openai.svg
 
@@ -72,15 +71,7 @@ related_resources:
 
 Kong provides a sample stack using Elasticsearch, Logstash, and Kibana to visualize AI Gateway metrics.
 
-The [kong-ai-gateway-observability](https://github.com/KongHQ-CX/kong-ai-gateway-observability) GitHub repository comes with {{site.base_gateway}} instance. 
-
-Clone the repository:
-```sh
-git clone https://github.com/KongHQ-CX/kong-ai-gateway-observability
-cd kong-ai-gateway-observability
-```
-
-You can see the sample {{site.base_gateway}} configuration in [`kong.yaml`](https://github.com/KongHQ-CX/kong-ai-gateway-observability/blob/main/kong.yaml). It includes:
+The [kong-ai-gateway-observability](https://github.com/KongHQ-CX/kong-ai-gateway-observability) GitHub repository comes with a configured {{site.base_gateway}} instance. You can see the sample {{site.base_gateway}} configuration in [`kong.yaml`](https://github.com/KongHQ-CX/kong-ai-gateway-observability/blob/main/kong.yaml). It includes:
 * A [Gateway Service](/gateway/entities/service/)
 * A [Route](/gateway/entities/route/) with the `/gpt4o` path
 * A [Consumer](/gateway/entities/consumer/) with the API key `Bearer department-1-api-key`
@@ -88,8 +79,15 @@ You can see the sample {{site.base_gateway}} configuration in [`kong.yaml`](http
     * [HTTP Log](/plugins/http-log/) to send logs to the pre-configured Logstash server
     * [Key Authentication](/plugins/key-auth/) to authenticate the Consumer
     * [AI Proxy](/plugins/ai-proxy/) configured with OpenAI to enable a chat route
-      {:.info}
-      > The plugin is pre-configured with to fetch the OpenAI key from the `OPENAI_AUTH_HEADER` environment variable, as defined in the [prerequisites](#prerequisites).
+
+{:.info}
+> The AI Proxy plugin is pre-configured with to fetch the OpenAI key from the `OPENAI_AUTH_HEADER` environment variable, as defined in the [prerequisites](#prerequisites).
+
+To use this stack, clone the repository:
+```sh
+git clone https://github.com/KongHQ-CX/kong-ai-gateway-observability
+cd kong-ai-gateway-observability
+```
 
 ## 2. Start the stack
 
@@ -100,7 +98,7 @@ docker compose up
 
 ## 3. Send requests
 
-Once the stack is running, send some requests to the `/gpt4o` endpoint with the Consumer's API key to generate metrics. For example:
+Once the stack is running, open a new terminal and send some requests to the `/gpt4o` endpoint with the Consumer's API key to generate metrics. For example:
 {% validation request-check %}
 url: /gpt4o
 status_code: 201
