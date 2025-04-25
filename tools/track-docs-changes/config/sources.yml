@@ -372,7 +372,12 @@ app/kubernetes-ingress-controller/faq/upgrading-gateway.md:
 app/kubernetes-ingress-controller/faq/custom-entities.md:
   - app/_src/kubernetes-ingress-controller/guides/services/custom-entity.md
 
-
+app/kubernetes-ingress-controller/migrate/kongingress.md:
+  - app/_src/kubernetes-ingress-controller/guides/migrate/kongingress.md
+app/kubernetes-ingress-controller/migrate/ingress-to-gateway.md:
+  - app/_src/kubernetes-ingress-controller/guides/migrate/ingress-to-gateway.md
+app/kubernetes-ingress-controller/migrate/credential-kongcredtype-label.md:
+  - app/_src/kubernetes-ingress-controller/guides/migrate/credential-kongcredtype-label.md
 
 # plugins
 app/_kong_plugins/session/changelog.md:
