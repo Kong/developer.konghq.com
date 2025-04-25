@@ -89,22 +89,22 @@ class TabsComponent {
       setFocus = true;
     }
     this.tabs.forEach((tab) => {
-      const tabPanel = document.getElementById(
-        tab.getAttribute("aria-controls")
-      );
-      if (currentTab === tab) {
-        tab.setAttribute("aria-selected", "true");
-        tab.tabIndex = 0;
-        this.toggleTabClasses(tab, true);
-        tabPanel.classList.remove("hidden");
-        if (setFocus) {
-          tab.focus();
+      const panels = document.querySelectorAll('[data-id="'+tab.getAttribute("aria-controls")+'"]');
+      for (const tabPanel of panels){
+        if (currentTab === tab) {
+          tab.setAttribute("aria-selected", "true");
+          tab.tabIndex = 0;
+          this.toggleTabClasses(tab, true);
+          tabPanel.classList.remove("hidden");
+          if (setFocus) {
+            tab.focus();
+          }
+        } else {
+          tab.setAttribute("aria-selected", "false");
+          tab.tabIndex = -1;
+          this.toggleTabClasses(tab, false);
+          tabPanel.classList.add("hidden");
         }
-      } else {
-        tab.setAttribute("aria-selected", "false");
-        tab.tabIndex = -1;
-        this.toggleTabClasses(tab, false);
-        tabPanel.classList.add("hidden");
       }
     });
 
