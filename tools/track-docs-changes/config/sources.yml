@@ -452,6 +452,10 @@ app/_kong_plugins/openid-connect/examples/azure-ad.yaml:
   - app/_hub/kong-inc/openid-connect/how-to/third-party/_azure-ad.md
 app/_kong_plugins/openid-connect/examples/auth0.yaml:
   - app/_hub/kong-inc/openid-connect/how-to/third-party/_auth0.md
+app/_kong_plugins/openid-connect/examples/headers.yaml:
+  - app/_hub/kong-inc/openid-connect/how-to/_headers.md
+app/_kong_plugins/openid-connect/examples/logout.yaml:
+  - app/_hub/kong-inc/openid-connect/how-to/_logout.md
 app/_kong_plugins/bot-detection/index.md:
   - app/_hub/kong-inc/bot-detection/overview/_index.md
 app/_kong_plugins/acme/index.md:

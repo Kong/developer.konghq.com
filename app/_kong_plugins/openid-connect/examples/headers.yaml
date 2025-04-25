@@ -1,0 +1,59 @@
+title: Passing metadata in headers
+description: |
+  The OpenID Connect plugin can pass claim values, tokens, JWKs, and the session identifier to the upstream service in request headers, 
+  and to the downstream client in response headers. 
+  
+  By default, the plugin passes an access token in an `Authorization: Bearer {access-token}` header to the upstream service. 
+  You can change this header name in [`config.upstream_access_token_header`](/plugins/openid-connect/reference/#schema--config-upstream-access-token-header).
+
+  The claim values can be taken from:
+
+  * An access token
+  * An ID token
+  * An introspection response
+  * A user info response
+
+  The following example assumes that the token payload contains the claim `preferred_username`, 
+  and that you want to pass it to an `Authenticated-User` upstream header.
+
+  {% include_cached plugins/oidc/client-auth.md %}
+
+weight: 700
+
+requirements:
+  - A configured identity provider (IdP)
+
+config:
+  issuer: ${issuer}
+  client_id:
+    - ${client-id}
+  client_secret:
+    - ${client-secret}
+  client_auth:
+    - client_secret_post
+  auth_methods:
+    - password
+  upstream_headers_claims: 
+    - preferred_username
+  upstream_headers_names: 
+    - authenticated_user
+
+variables:
+  issuer:
+    value: $ISSUER
+    description: |
+      The issuer authentication URL for your IdP. 
+      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://example-keycloak-host:8080/realms/example-realm`
+  client-id:
+    value: $CLIENT_ID
+    description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.
+  client-secret:
+    value: $CLIENT_SECRET
+    description: The client secret needed to connect to your IdP.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
