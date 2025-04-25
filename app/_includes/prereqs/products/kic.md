@@ -9,6 +9,14 @@
 {% if prereqs.kubernetes.feature_gates %}
 {% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.feature_gates="' | append: prereqs.kubernetes.feature_gates | append: '"' %}
 {% endif %}
+{% if prereqs.kubernetes.dump_config %}
+{% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.dump_config=true' %}
+{% endif %}
+{% if prereqs.kubernetes.env %}
+{% for env in prereqs.kubernetes.env %}
+{% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.' | append: env %}
+{% endfor %}
+{% endif %}
 
 {% capture details_content %}
 

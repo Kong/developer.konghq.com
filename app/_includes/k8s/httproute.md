@@ -15,10 +15,6 @@
 {% unless include.disable_gateway %}
 {% navtab "Gateway API" %}
 {% assign gwapi_version = "v1" %}
-
-{:.info}
-> The Gateway API CRDs must be installed _before_ {{ site.kic_product_name }} to use an `HTTPRoute`
-
 ```bash
 echo "
 apiVersion: gateway.networking.k8s.io/{{ gwapi_version }}
@@ -27,7 +23,8 @@ metadata:
   name: {{ name }}{% unless namespace == '' %}
   namespace: {{ namespace }}{% endunless %}
   annotations:{% if include.annotation_rewrite %}
-    konghq.com/rewrite: '{{ include.annotation_rewrite | replace: "$", "\$" }}'{% endif %}
+    konghq.com/rewrite: '{{ include.annotation_rewrite | replace: "$", "\$" }}'{% endif %}{% if include.annotation_plugins %}
+    konghq.com/plugins: {{ include.annotation_plugins }}{% endif %}
     konghq.com/strip-path: 'true'
 spec:
   parentRefs:
