@@ -57,10 +57,13 @@
     --kui-color-text-neutral: rgb(var(--color-text-primary));
     --kui-color-text: rgb(var(--color-text-primary));
     --kui-color-text-primary: rgb(var(--color-brand));
-    --kui-color-background: rgb(var(--color-bg-primary));
+    --kui-color-text-danger: rgb(var(--color-semantic-red-primary));
+    --kui-color-background: rgb(var(--color-bg-secondary));
     --kui-color-background-neutral-weakest: rgb(var(--color-bg-primary));
     --kui-color-border: rgb(var(--color-border-primary), 0.05);
-    --kui-color-background-primary-weakest: rgb(var(--color-brand-saturated), 0.4);
+    --kui-shadow-border: rgb(var(--color-brand-saturated), 0.4);
+    --kui-color-background-primary-weakest: rgb(var(--color-brand-saturated), 0.04);
+    --kui-color-background-neutral-weaker: rgb(var(--color-bg-secondary));
 
     --kui-method-color-text-get: rgb(var(--color-semantic-blue-primary));
     --kui-method-color-background-get: rgb(var(--color-semantic-blue-secondary));

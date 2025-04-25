@@ -21,4 +21,10 @@ const schema = window.schema;
 :deep(.kui-icon.link-icon) {
   @apply w-5 h-5 !important;
 }
+:deep(.property-field-default-value),
+:deep(.property-field-pattern-value),
+:deep(.property-field-enum-value),
+:deep( .property-field-example-value) {
+  @apply border border-brand-saturated/40 !important;
+}
 </style>
