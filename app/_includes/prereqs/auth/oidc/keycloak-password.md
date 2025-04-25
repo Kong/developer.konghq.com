@@ -26,9 +26,13 @@ columns:
     key: settings
 rows:
   - section: "**General settings**"
-    settings: "- Client type: **OpenID Connect** <br> - Client ID: any unique name, for example `kong`"
+    settings: |
+      * Client type: **OpenID Connect**
+      * Client ID: any unique name, for example `kong`
   - section: "**Capability config**"
-    settings: "- Toggle **Client authentication** to **on** <br> - Make sure that **Standard flow**, **Direct access grants**, and **Service accounts roles** are checked."
+    settings: |
+      * Toggle **Client authentication** to **on**
+      * Make sure that **Standard flow**, **Direct access grants**, and **Service accounts roles** are checked.
   - section: "**Login settings**"
     settings: "**Valid redirect URIs**: `http://localhost:8000/*`"
 {% endtable %}
