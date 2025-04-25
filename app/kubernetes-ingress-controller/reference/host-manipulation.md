@@ -1,5 +1,5 @@
 ---
-title: Rewriting Hosts
+title: Rewriting hosts
 
 description: |
   Customize the Host header that is sent to your upstream service
@@ -65,7 +65,7 @@ The `Host` header in the request to the upstream matches the `Host` header in th
 
 You can disable `preserve-host` if you want the `Host` header to contain the upstream hostname of your service.
 
-Add the `konghq.com/preserve-host` annotation to your route:
+Add the `konghq.com/preserve-host` annotation to your Route:
 
 {{ preserve_host }}
 

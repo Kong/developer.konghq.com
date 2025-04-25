@@ -54,9 +54,9 @@ related_resources:
 
 {{ site.kic_product_name }} provides the `konghq.com/rewrite` annotation to customize the request path before it is sent to the upstream service.
 
-The annotation can be used on `Ingress` and `HTTPRoute` resources, and configures a [request-transformer](/plugins/request-transformer/) plugin within {{ site.base_gateway }} when added to a route.
+The annotation can be used on `Ingress` and `HTTPRoute` resources, and configures a [request-transformer](/plugins/request-transformer/) plugin within {{ site.base_gateway }} when added to a Route.
 
-The following definition creates a route that matches the path `/external-path/(\w+)` and rewrites it to `/anything/$1` before sending the request upstream. 
+The following definition creates a Route that matches the path `/external-path/(\w+)` and rewrites it to `/anything/$1` before sending the request upstream. 
 
 {% include /k8s/httproute.md disable_gateway=true path='/external-path/(\w+)' name='httpbin' service='httpbin' port='80' skip_host=true route_type='RegularExpression' annotation_rewrite="/anything/$1" %}
 

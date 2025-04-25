@@ -52,9 +52,9 @@ kubectl scale -n kong --replicas 2 deployment echo
 
 By default, Kong will round-robin requests between upstream replicas. If you run `curl -s $PROXY_IP/echo | grep "Pod"` repeatedly, you should see the reported Pod name alternate between two values.
 
-You can configure the Kong upstream associated with the Service to use a different [load balancing strategy](/gateway/load-balancing/), such as consistently sending requests to the same upstream based on a header value (please see the [KongUpstreamPolicy reference](/kubernetes-ingress-controller/reference/custom-resources/#kongupstreampolicy) for the full list of supported algorithms and their configuration options). 
+You can configure the Kong Upstream associated with the Service to use a different [load balancing strategy](/gateway/load-balancing/), such as consistently sending requests to the same upstream based on a header value. See the [KongUpstreamPolicy reference](/kubernetes-ingress-controller/reference/custom-resources/#kongupstreampolicy) for the full list of supported algorithms and their configuration options. 
 
-To modify these behaviours, let's create a KongUpstreamPolicy resource defining the new behaviour:
+Let's create a KongUpstreamPolicy resource defining the new behavior:
 
 ```bash
 echo '
@@ -93,6 +93,7 @@ Running on Pod echo-965f7cf84-frpjc.
 Running on Pod echo-965f7cf84-frpjc.
 Running on Pod echo-965f7cf84-frpjc.
 ```
+{:.no-copy-code}
 
 If you add the header, Kong hashes its value and distributes it to the
 same replica when using the same value:
@@ -116,6 +117,7 @@ Running on Pod echo-965f7cf84-wlvw9.
 Running on Pod echo-965f7cf84-frpjc.
 Running on Pod echo-965f7cf84-wlvw9.
 ```
+{:.no-copy-code}
 
 Increasing the replicas redistributes some subsequent requests onto the new
 replica:
@@ -143,18 +145,19 @@ Running on Pod echo-965f7cf84-5h56p.
 Running on Pod echo-965f7cf84-5h56p.
 Running on Pod echo-965f7cf84-wlvw9.
 ```
+{:.no-copy-code}
 
 
-Kong's load balancer doesn't directly distribute requests to each of the Service's Endpoints. It first distributes them evenly across a number of equal-size buckets. These buckets are then distributed across the available Endpoints according to their weight. For Ingresses, however, there is only one Service, and the controller assigns each Endpoint (represented by a Kong upstream target) equal weight. In this case, requests are evenly hashed across all Endpoints.
+Kong's load balancer doesn't directly distribute requests to each of the Service's endpoints. It first distributes them evenly across a number of equal-size buckets. These buckets are then distributed across the available endpoints according to their weight. For Ingresses, however, there is only one Service, and the controller assigns each endpoint (represented by a Kong Upstream Target) equal weight. In this case, requests are evenly hashed across all endpoints.
 
-Gateway API HTTPRoute rules support distributing traffic across multiple Services. The rule can assign weights to the Services to change the proportion of requests an individual Service receives. In Kong's implementation, all Endpoints of a Service have the same weight. Kong calculates a per-Endpoint upstream target weight such that the aggregate target weight of the Endpoints is equal to the proportion indicated by the HTTPRoute weight.
+Gateway API HTTPRoute rules support distributing traffic across multiple Services. The rule can assign weights to the Services to change the proportion of requests an individual Service receives. In Kong's implementation, all endpoints of a Service have the same weight. Kong calculates a per-endpoint Upstream Target weight such that the aggregate target weight of the endpoints is equal to the proportion indicated by the HTTPRoute weight.
 
 For example, say you have two Services with the following configuration:
 
- * One Service has four Endpoints
- * The other Service has two Endpoints
+ * One Service has four endpoints
+ * The other Service has two endpoints
  * Each Service has weight `50` in the HTTPRoute
 
-The targets created for the two-Endpoint Service have double the weight of the targets created for the four-Endpoint Service (two weight `16` targets and four weight `8` targets). Scaling the four-Endpoint Service to eight would halve the weight of its targets (two weight `16` targets and eight weight `4` targets).
+The Targets created for the two-endpoint Service have double the weight of the Targets created for the four-endpoint Service (two weight `16` Targets and four weight `8` Targets). Scaling the four-endpoint Service to eight would halve the weight of its Targets (two weight `16` Targets and eight weight `4` Targets).
 
-KongUpstreamPolicy can also configure upstream [health checking behavior](#TODO) as well. See [the KongUpstreamPolicy reference](/kubernetes-ingress-controller/reference/custom-resources/#kongupstreampolicy) for the health check fields.
+KongUpstreamPolicy can also configure Upstream [health checking behavior](#TODO) as well. See [the KongUpstreamPolicy reference](/kubernetes-ingress-controller/reference/custom-resources/#kongupstreampolicy) for the health check fields.

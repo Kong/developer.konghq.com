@@ -1,5 +1,5 @@
 ---
-title: Rewriting Paths
+title: Rewriting paths
 
 description: |
   Rewrite the request path before sending it to your upstream service
@@ -33,7 +33,7 @@ Users have the following options to modify the default path handling behavior:
 {:.info}
 > This is the default behavior of {{ site.kic_product_name }}. Set `konghq.com/strip-path="false"` to disable this behavior
 
-Add the [`konghq.com/strip-path` annotation](/kubernetes-ingress-controller/reference/annotations/#konghq-com-strip-path) to your Ingress, which strips the path component of the route/Ingress, leaving the remainder of the path at the root:
+Add the [`konghq.com/strip-path` annotation](/kubernetes-ingress-controller/reference/annotations/#konghq-com-strip-path) to your Ingress, which strips the path component of the Route/Ingress, leaving the remainder of the path at the root:
 
 {% navtabs api %}
 {% navtab "Gateway API" %}
@@ -81,7 +81,7 @@ In many cases, stripping the path prefix is not enough. Internal systems contain
 {:.warning}
 > This feature requires the [`RewriteURIs` feature gate](/kubernetes-ingress-controller/reference/feature-gates/) to be activated and only works with `Ingress` resources
 
-Add the `konghq.com/rewrite` annotation to your Ingress, allows you set a specific path for the upstream request. Any regex matches defined in your route definition are usable (see the [annotation documentation](/kubernetes-ingress-controller/reference/annotations/#konghq-com-rewrite) for more information):
+Add the `konghq.com/rewrite` annotation to your Ingress, which allows you set a specific path for the upstream request. Any regex matches defined in your Route definition are usable (see the [annotation documentation](/kubernetes-ingress-controller/reference/annotations/#konghq-com-rewrite) for more information):
 
 ```bash
 kubectl patch ingress NAME --type merge \
