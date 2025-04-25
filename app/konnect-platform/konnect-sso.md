@@ -131,7 +131,7 @@ You can now manage your organization's user permissions entirely from the IdP ap
 
 If you want to use Okta as your IdP provider for SSO, you need an Okta account with administrator access to configure Applications and Authorization Server settings.
 
-Additionally, if you're configuring Okta SSO for Dev Portal, you'll need a [non-public {{site.konnect_saas}} Dev Portal created](/dev-portal/portals/) in your {{site.konnect_short_name}} organization.
+Additionally, if you're configuring Okta SSO for Dev Portal, you'll need a [non-public {{site.konnect_saas}} Dev Portal created](/dev-portal/security-settings/) in your {{site.konnect_short_name}} organization.
 
 {% navtabs "Okta SSO" %}
 {% navtab "OIDC" %}
