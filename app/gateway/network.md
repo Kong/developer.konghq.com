@@ -37,10 +37,29 @@ The Admin API is used to manage {{site.base_gateway}}. You should [prevent unaut
 
 The following are the default ports used by the Admin API:
 
-| Port | Protocol | `kong.conf` setting | Description | 
-|---------|---------|------------|------------|
-| `8001` | HTTP     | [`admin_listen`](/gateway/configuration/#admin_listen) | Listens for Admin API calls from the command line over HTTP. | 
-| `8444` | HTTPS    | [`admin_listen`](/gateway/configuration/#admin_listen) | Listens for Admin API calls from the command line over HTTPS. | 
+<!--vale off-->
+{% table %}
+columns:
+  - title: Port
+    key: port
+  - title: Protocol
+    key: protocol
+  - title: "`kong.conf` setting"
+    key: kong_conf_setting
+  - title: Description
+    key: description
+rows:
+  - port: "`8001`"
+    protocol: "HTTP"
+    kong_conf_setting: "[`admin_listen`](/gateway/configuration/#admin_listen)"
+    description: "Listens for Admin API calls from the command line over HTTP."
+  - port: "`8444`"
+    protocol: "HTTPS"
+    kong_conf_setting: "[`admin_listen`](/gateway/configuration/#admin_listen)"
+    description: "Listens for Admin API calls from the command line over HTTPS."
+{% endtable %}
+<!--vale on-->
+
 
 ## Other default ports
 

@@ -95,7 +95,6 @@ rows:
   - feature: "Dev Portal"
     ui: "Go to the Identity settings for your [Dev Portal](https://cloud.konghq.com/portals/)"
     api: "[`/portals/{portalId}/identity-providers`](/api/konnect/portal-management/v2/#/operations/create-portal-identity-provider)"
-
 {% endtable %}
 <!--vale on-->
 
@@ -305,7 +304,6 @@ rows:
   - feature: "Dev Portal"
     ui: "Click on a [Dev Portal](https://cloud.konghq.com/portals/) and go to Team Mappings in its settings."
     api: "[`/portals/{portalId}/identity-provider/team-group-mappings`](/api/konnect/portal-management/v2/#/operations/update-portal-team-group-mappings)"
-
 {% endtable %}
 <!--vale on-->
 

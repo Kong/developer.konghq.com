@@ -112,13 +112,26 @@ But the following JSON wouldn't meet the policy standards:
 
 This JSON body violates the policy in the following ways:
 
-| Policy | Violation description |
-|--------|-----------------------|
-| Maximum container depth: 2 | The `country` object is nested within the `address` object, exceeding the maximum depth of 2. |
-| Maximum number of array elements: 2 | The `items` array has 4 elements. |
-| Maximum number of object entries: 4 | The `address` object has 4 keys: `street`, `city`, `country`, and `postal_code`, which is allowed. But the root object has 5 keys: `username`, `age`, `items`, `address`, and `extra_field`. |
-| Maximum length of object keys: 7 | The key `postal_code`, which has a string length of 11, exceeds the maximum string length of the object name. |
-| Maximum length of strings: 6 | Several string values (like `longusername`, `CountryNameTooLong`, and `this_is_a_long_value`) exceed the maximum allowed string length of 6. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Policy
+    key: policy
+  - title: Violation description
+    key: violation_description
+rows:
+  - policy: "Maximum container depth: 2"
+    violation_description: "The `country` object is nested within the `address` object, exceeding the maximum depth of 2."
+  - policy: "Maximum number of array elements: 2"
+    violation_description: "The `items` array has 4 elements."
+  - policy: "Maximum number of object entries: 4"
+    violation_description: "The `address` object has 4 keys: `street`, `city`, `country`, and `postal_code`, which is allowed. But the root object has 5 keys: `username`, `age`, `items`, `address`, and `extra_field`."
+  - policy: "Maximum length of object keys: 7"
+    violation_description: "The key `postal_code`, which has a string length of 11, exceeds the maximum string length of the object name."
+  - policy: "Maximum length of strings: 6"
+    violation_description: "Several string values (like `longusername`, `CountryNameTooLong`, and `this_is_a_long_value`) exceed the maximum allowed string length of 6."
+{% endtable %}
+<!--vale on-->
 
 
 ## Log JSON request body violations

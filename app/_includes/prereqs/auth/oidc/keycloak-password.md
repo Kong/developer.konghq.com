@@ -17,11 +17,22 @@ This tutorial requires an identity provider (IdP). If you don't have one, you ca
 1. In the sidebar, open **Clients**, then click **Create client**.
 1. Configure the client:
 
-Section | Settings
---------|----------
-**General settings** | - Client type: **OpenID Connect** <br> - Client ID: any unique name, for example `kong`
-**Capability config** | - Toggle **Client authentication** to **on** <br> - Make sure that **Standard flow**, **Direct access grants**, and **Service accounts roles** are checked.
-**Login settings** |  **Valid redirect URIs**: `http://localhost:8000/*`
+<!--vale off-->
+{% table %}
+columns:
+  - title: Section
+    key: section
+  - title: Settings
+    key: settings
+rows:
+  - section: "**General settings**"
+    settings: "- Client type: **OpenID Connect** <br> - Client ID: any unique name, for example `kong`"
+  - section: "**Capability config**"
+    settings: "- Toggle **Client authentication** to **on** <br> - Make sure that **Standard flow**, **Direct access grants**, and **Service accounts roles** are checked."
+  - section: "**Login settings**"
+    settings: "**Valid redirect URIs**: `http://localhost:8000/*`"
+{% endtable %}
+<!--vale on-->
 
 #### Set up keys and credentials
 1. In your client, open the **Credentials** tab.

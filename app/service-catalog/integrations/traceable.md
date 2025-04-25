@@ -34,9 +34,19 @@ The Traceable integration lets you connect Traceable Services directly to your S
 
 ## Resources
 
-Entity | Description
--------|-------------
-Traceable Service | A [Traceable Service](https://docs.traceable.ai/docs/domains-services-backends), which holds groups of Traceable API endpoint resources.
+<!--vale off-->
+{% table %}
+columns:
+  - title: Entity
+    key: entity
+  - title: Description
+    key: description
+rows:
+  - entity: Traceable Service
+    description: 
+      A [Traceable Service](https://docs.traceable.ai/docs/domains-services-backends), which holds groups of Traceable API endpoint resources.
+{% endtable %}
+<!--vale on-->
 
 ## Discovery information
 

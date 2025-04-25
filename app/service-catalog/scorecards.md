@@ -38,24 +38,56 @@ A Service Catalog scorecard helps you evaluate services based on validation crit
 
 {{site.konnect_short_name}} provides several scorecard templates to help ensure your services adhere to industry best practices.
 
-| Scorecard template | Description |
-|--------------------|-------------|
-| Service documentation | Ensures that your services are well-documented with ownership information, documentation files, and [API specs](https://apistylebook.stoplight.io/). |
-| Service maturity | Measure performance reflecting industry-defined DORA metrics: deployment frequency, lead time for changes, change failure rate, and time to restore service. |
-| Kong best practices | Best practices that we encourage users to follow when using other {{site.konnect_short_name}} applications. |
-| Security and compliance | Enforces that services are protected through external monitoring and vulnerability management tools. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Scorecard template
+    key: template
+  - title: Description
+    key: description
+rows:
+  - template: Service documentation
+    description: "Ensures that your services are well-documented with ownership information, documentation files, and [API specs](https://apistylebook.stoplight.io/)."
+  - template: Service maturity
+    description: "Measure performance reflecting industry-defined DORA metrics: deployment frequency, lead time for changes, change failure rate, and time to restore service."
+  - template: Kong best practices
+    description: "Best practices that we encourage users to follow when using other {{site.konnect_short_name}} applications."
+  - template: Security and compliance
+    description: Enforces that services are protected through external monitoring and vulnerability management tools.
+{% endtable %}
+<!--vale on-->
 
 
 ## Service documentation linting
 
 The service documentation template supports the following Spectral recipes:
 
-| Category           | Description     | Recipe rules |
-|------------|----------|------|
-| OAS Recommended | Uses Stoplight's style guide. Only considers criteria tagged with `"recommended: true"` | [Stoplight Style Guide](https://apistylebook.stoplight.io/docs/stoplight-style-guide) |
-| OWASP Top 10   | Set of rules to enforce OWASP security guidelines | [OWASP Top 10 API Security Guide](https://apistylebook.stoplight.io/docs/owasp-top-10-2023) |
-| URL Versioning | Set of rules to enforce versioning | [API Versioning Guide](https://apistylebook.stoplight.io/docs/versioning) |
-| Documentation  | Set of rules to enforce documentation best practices | [API Documentation Guidelines](https://apistylebook.stoplight.io/docs/documentation) |
+{% table %}
+
+columns:
+  - title: Category
+    key: category
+  - title: Description
+    key: description
+  - title: Recipe rules
+    key: recipe_rules
+rows:
+  - category: OAS Recommended
+    description: |
+      Uses Stoplight's style guide. Only considers criteria tagged with `"recommended: true"`.
+    recipe_rules: "[Stoplight Style Guide](https://apistylebook.stoplight.io/docs/stoplight-style-guide)"
+  - category: OWASP Top 10
+    description: Set of rules to enforce OWASP security guidelines
+    recipe_rules: "[OWASP Top 10 API Security Guide](https://apistylebook.stoplight.io/docs/owasp-top-10-2023)"
+  - category: URL Versioning
+    description: Set of rules to enforce versioning
+    recipe_rules: "[API Versioning Guide](https://apistylebook.stoplight.io/docs/versioning)"
+  - category: Documentation
+    description: Set of rules to enforce documentation best practices
+    recipe_rules: "[API Documentation Guidelines](https://apistylebook.stoplight.io/docs/documentation)"
+{% endtable %}
+<!--vale on-->
+
 
 ## Enable a scorecard
 

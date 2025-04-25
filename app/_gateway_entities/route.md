@@ -110,11 +110,29 @@ flowchart LR
 
 Common use cases for Routes:
 
-| Use Case | Description |
-|--------|----------|
-| Rate limiting | Use Routes to set different rate limits for clients accessing the service application via specific paths, for example `/internal` or `/external`. <br><br>[Enable a rate limiting plugin on Routes attached to the Service](/plugins/rate-limiting-advanced/) |
-| Perform a simple URL rewrite | Use the Routes entity to rename an endpoint. For example, you can rename your legacy `/api/old/` upstream endpoint to a publicly accessible API endpoint named `/new/api`. |
-| Perform a complex URL rewrite | Use the Routes entity to rewrite a group of paths, such as replacing `/api/<function>/old` with `/new/api/<function>`. <br><br> [Request Transformer Advanced plugin](/plugins/request-transformer-advanced/) |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use Case
+    key: usecase
+  - title: Description
+    key: description
+rows:
+  - usecase: "Rate limiting"
+    description: |
+      Use Routes to set different rate limits for clients accessing the service application via specific paths, for example `/internal` or `/external`. 
+      <br><br>
+      [Enable a rate limiting plugin on Routes attached to the Service](/plugins/rate-limiting-advanced/)
+  - usecase: "Perform a simple URL rewrite"
+    description: |
+      Use the Routes entity to rename an endpoint. For example, you can rename your legacy `/api/old/` upstream endpoint to a publicly accessible API endpoint named `/new/api`.
+  - usecase: "Perform a complex URL rewrite"
+    description: |
+      Use the Routes entity to rewrite a group of paths, such as replacing `/api/<function>/old` with `/new/api/<function>`. 
+      <br><br>
+      [Request Transformer Advanced plugin](/plugins/request-transformer-advanced/)
+{% endtable %}
+<!--vale on-->
 
 ## Configuration formats
 

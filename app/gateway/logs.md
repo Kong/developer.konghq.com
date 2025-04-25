@@ -38,25 +38,51 @@ By default, you can view {{site.base_gateway}} logs at `/usr/local/kong/logs/err
 
 By default, logs are set to the recommended `notice` level. If logs are too chatty, you can increase the level to something like `warn`. 
 
-| Level | Description |
-|-------|-------------|
-| `debug` | Provides debug information about the plugin’s run loop and each individual plugin or other components. This should only be used during debugging. If this is enabled for extended periods of time, it can result in excess disk space consumption. |
-| `info` and `notice` | Provides information about normal behavior, most of which can be ignored. |
-| `warn` | Logs any abnormal behavior that doesn't result in dropped transactions but requires further investigation. |
-| `error` | Used for logging errors that result in a request being dropped. For example, getting a `500` error. The rate of these logs must be monitored. |
-| `crit` | Used when {{site.base_gateway}} is working under critical conditions, affecting several clients. `crit` is the highest severity log level. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Level
+    key: level
+  - title: Description
+    key: description
+rows:
+  - level: "`debug`"
+    description: "Provides debug information about the plugin’s run loop and each individual plugin or other components. This should only be used during debugging. If this is enabled for extended periods of time, it can result in excess disk space consumption."
+  - level: "`info` and `notice`"
+    description: "Provides information about normal behavior, most of which can be ignored."
+  - level: "`warn`"
+    description: "Logs any abnormal behavior that doesn't result in dropped transactions but requires further investigation."
+  - level: "`error`"
+    description: "Used for logging errors that result in a request being dropped. For example, getting a `500` error. The rate of these logs must be monitored."
+  - level: "`crit`"
+    description: "Used when {{site.base_gateway}} is working under critical conditions, affecting several clients. `crit` is the highest severity log level."
+{% endtable %}
+<!--vale on-->
 
 ## Configure log levels
 
 You can change log levels dynamically, without restarting {{site.base_gateway}}, using the Admin API. Alternatively, you can configure log levels using the `log_level` parameter in the [kong.conf file](), but this requires you to [restart {{site.base_gateway}}]().
 
-| Use case | How to configure |
-|----------|--------------|
-| View current log level<sup>1</sup> | [`/debug/node/log-level/`](/api/gateway/admin-ee/3.9/#/operations/get-debug-node-log-level) |
-| Modify the log level for an individual {{site.base_gateway}} node | [`/debug/node/log-level/{log_level}`](/api/gateway/admin-ee/3.9/#/operations/get-debug-node-log-level-log_level/) |
-| Change the log level of the {{site.base_gateway}} cluster | [`/debug/cluster/log-level/{log_level}`](/api/gateway/admin-ee/3.9/#/operations/put-debug-cluster-log-level-log_level/) |
-| Keep the log level of new nodes added to the cluster in sync other nodes in the cluster | Change the `log_level` entry in [`kong.conf`](/gateway/configuration/) to `KONG_LOG_LEVEL` |
-| Change the log level of all control plane {{site.base_gateway}} nodes | [`/debug/cluster/control-planes-nodes/log-level/{log_level}`](/api/gateway/admin-ee/3.9/#/operations/put-debug-cluster-control-planes-nodes-log-level-log_level/) |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: usecase
+  - title: How to configure
+    key: config
+rows:
+  - usecase: "View current log level<sup>1</sup>"
+    config: "[`/debug/node/log-level/`](/api/gateway/admin-ee/#/operations/get-debug-node-log-level)"
+  - usecase: "Modify the log level for an individual {{site.base_gateway}} node"
+    config: "[`/debug/node/log-level/{log_level}`](/api/gateway/admin-ee/#/operations/get-debug-node-log-level-log_level/)"
+  - usecase: "Change the log level of the {{site.base_gateway}} cluster"
+    config: "[`/debug/cluster/log-level/{log_level}`](/api/gateway/admin-ee/#/operations/put-debug-cluster-control-planes-nodes-log-level-log_level/)"
+  - usecase: "Keep the log level of new nodes added to the cluster in sync with other nodes in the cluster"
+    config: "Change the `log_level` entry in [`kong.conf`](/gateway/configuration/) to `KONG_LOG_LEVEL`"
+  - usecase: "Change the log level of all control plane {{site.base_gateway}} nodes"
+    config: "[`/debug/cluster/control-planes-nodes/log-level/{log_level}`](/api/gateway/admin-ee/#/operations/put-debug-cluster-control-planes-nodes-log-level-log_level/)"
+{% endtable %}
+<!--vale on-->
 
 {:.info}
 > <sup>1</sup>: You can't change the log level of the data plane or DB-less nodes.
@@ -196,8 +222,7 @@ rows:
       {% new_in 3.8 %} For semantic caching, the model used to generate the embeddings.
   - property: "`ai.[$plugin_name].cache.embeddings_latency`"
     description: |
-      {% new_in 3.8 %} For semantic caching, the time taken to generate the embeddings.
-{% endtable %}
+      {% new_in 3.8 %} For semantic caching, the time taken to generate the embeddings.{% endtable %}
 <!--vale on-->
 
 ## Next steps

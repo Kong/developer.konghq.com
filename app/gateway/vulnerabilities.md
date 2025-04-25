@@ -47,23 +47,61 @@ This will take the shape of a configuration change recommendation, if available.
 If there is no workaround/recommendation readily available, Kong will use continuous efforts to develop one.
 For a CVSS <9.0, Kong will use commercially-reasonable efforts to provide a workaround or patch within the applicable SLA period.
 
-| CVSS 3.0 Criticality for Kong code | CVSS 3.0 Score | SLA |
-|---|---|---|
-| Critical  | 9.0 - 10.0  |  15 days |
-| High  |  7.0 - 8.9 |  30 days |
-| Medium |  4.0 - 6.9 |  90 days |
-| Low |  0.1 - 3.9 | 180 days  |
+<!--vale off-->
+{% table %}
+columns:
+  - title: "CVSS 3.0 Criticality for Kong code"
+    key: criticality
+  - title: "CVSS 3.0 Score"
+    key: score
+  - title: SLA
+    key: sla
+rows:
+  - criticality: Critical
+    score: "9.0 - 10.0"
+    sla: "15 days"
+  - criticality: High
+    score: "7.0 - 8.9"
+    sla: "30 days"
+  - criticality: Medium
+    score: "4.0 - 6.9"
+    sla: "90 days"
+  - criticality: Low
+    score: "0.1 - 3.9"
+    sla: "180 days"
+{% endtable %}
+<!--vale on-->
+
 
 Vulnerabilities reported in third party-code that {{site.base_gateway}} links directly must have confirmed CVE numbers assigned. 
 Kong will aim to produce patches for all applicable {{site.base_gateway}} versions currently under support within the SLA reproduced in the table below. 
 The SLA clock for these vulnerabilities starts from the day the upstream (third party) announces availability of patches.  
 
-| CVSS 3.0 Criticality for third-party code | CVSS 3.0 Score | SLA |
-|---|---|---|
-| Critical  | 9.0 - 10.0  |  15 days |
-| High  |  7.0 - 8.9 |  30 days |
-| Medium |  4.0 - 6.9 |  90 days |
-| Low |  0.1 - 3.9 | 180 days  |
+<!--vale off-->
+{% table %}
+columns:
+  - title: "CVSS 3.0 Criticality for third-party code"
+    key: criticality
+  - title: "CVSS 3.0 Score"
+    key: score
+  - title: SLA
+    key: sla
+rows:
+  - criticality: Critical
+    score: "9.0 - 10.0"
+    sla: "15 days"
+  - criticality: High
+    score: "7.0 - 8.9"
+    sla: "30 days"
+  - criticality: Medium
+    score: "4.0 - 6.9"
+    sla: "90 days"
+  - criticality: Low
+    score: "0.1 - 3.9"
+    sla: "180 days"
+{% endtable %}
+<!--vale on-->
+
 
 Vulnerabilities reported in third-party code that is part of the convenience Docker images are only addressed by Kong as part of the regularly scheduled release process. 
 These vulnerabilities are not exploitable during normal {{site.base_gateway}} operations. 

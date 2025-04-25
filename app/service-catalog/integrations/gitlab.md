@@ -40,9 +40,18 @@ For each linked project, the UI can show a **Project Summary** with simple data 
 
 ## Resources
 
-Entity  | Description
--------|-------------
-Projects | Organizes all the data for a specific development project that relates to a Service Catalog Service.
+<!--vale off-->
+{% table %}
+columns:
+  - title: Entity
+    key: entity
+  - title: Description
+    key: description
+rows:
+  - entity: Projects
+    description: Organizes all the data for a specific development project that relates to a Service Catalog Service.
+{% endtable %}
+<!--vale on-->
 
 ## Events
 
