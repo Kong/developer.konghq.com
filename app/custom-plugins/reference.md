@@ -106,7 +106,7 @@ To learn how to create a simple plugin with the basic modules, see the [getting 
 
 Some plugins might have to integrate deeper with {{site.base_gateway}}: have their own table in the database, expose endpoints in the Admin API, etc. 
 This can be done by adding new modules to your plugin. 
-Here is what the structure of a plugin looks like when it implements all of the optional modules:
+Below is the structure of a plugin with all optional modules implemented:
 
 ```
 complete-plugin
@@ -120,7 +120,7 @@ complete-plugin
 ```
 {:.no-copy-code}
 
-Here is the complete list of possible modules to implement:
+The complete list of modules you can implement is as follows:
 
 {% table %}
 columns:

@@ -42,7 +42,7 @@ When using LuaRocks, you must create a `rockspec` file, which specifies the pack
 For an example, see the [{{site.base_gateway}} plugin template](https://github.com/Kong/kong-plugin). 
 For more information about the format, see the LuaRocks [documentation on rockspecs](https://github.com/keplerproject/luarocks/wiki/Creating-a-rock).
 
-Pack your rock using the following commands (from the plugin repo):
+To package your plugin as a rock, run the following commands from within the plugin repository:
 
 1. Install it locally (based on the `.rockspec` in the current directory):
     ```sh
@@ -254,7 +254,7 @@ Your module doesn't have to live inside the {{site.base_gateway}} repository, bu
 By defining your modules (and their eventual dependencies) in a [rockspec](https://github.com/keplerproject/luarocks/wiki/Creating-a-rock) file, you can install those modules on your platform via LuaRocks. 
 You can also upload your module on LuaRocks and make it available to anyone.
 
-Here is an [example rockspec](https://github.com/Kong/kong-plugin/blob/master/kong-plugin-myplugin-0.1.0-1.rockspec) using the `builtin` build type to define modules in Lua notation and their corresponding file.
+This [example rockspec](https://github.com/Kong/kong-plugin/blob/master/kong-plugin-myplugin-0.1.0-1.rockspec) uses the `builtin` build type to define modules in Lua notation and their corresponding file.
 
 For more information about the format, see the LuaRocks [documentation on rockspecs](https://github.com/keplerproject/luarocks/wiki/Creating-a-rock).
 

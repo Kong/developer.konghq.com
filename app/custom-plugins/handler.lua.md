@@ -38,10 +38,7 @@ connection as it is proxied by {{site.base_gateway}}. To do so, the file
 more functions with predetermined names. Those functions will be
 invoked by {{site.base_gateway}} at different phases when it processes traffic.
 
-The first parameter they take is always `self`. All functions except `init_worker`
-and `configure` can receive a second parameter which is a table with the plugin
-configuration. The `configure` receives an array of all configurations for the
-specific plugin.
+All functions take `self` as the first parameter. Except for `init_worker` and `configure`, they can also accept a second parameter: a table with the plugin’s configuration. `configure` instead receives an array of all configurations for the plugin.
 
 ## Available contexts
 
@@ -54,7 +51,7 @@ activated by {{site.base_gateway}} as each phase is executed while the request g
 
 Phases are limited in what they can do. For example, the `init_worker` phase
 doesn't have access to the `config` parameter because that information isn't
-available when {{site.base_gateway}} is initializing each worker. On the other hand the `configure`
+available when {{site.base_gateway}} is initializing each worker. On the other hand the `configure` function
 is passed with all the active configurations for the plugin (or `nil` if not configured).
 
 A plugin's `handler.lua` must return a table containing the functions it must
@@ -206,7 +203,7 @@ end
 See [the source code of the Key-Auth Plugin](https://github.com/Kong/kong/blob/master/kong/plugins/key-auth/handler.lua)
 for an example of a real-life handler code.
 
-### Migrating from BasePlugin module
+### Migrating from the BasePlugin module
 
 The `BasePlugin` module is deprecated and has been removed from
 {{site.base_gateway}}. If you have an old plugin that uses this module, replace
@@ -259,7 +256,8 @@ The following handlers are executed for both WebSocket and non-Websocket service
   - `rewrite`
 
 Even with these differences, it's possible to develop plugins that support both WebSocket
-and non-WebSocket services. For example:
+and non-WebSocket services. 
+For example:
 
 ```lua
 -- handler.lua
