@@ -62,6 +62,17 @@
     --kui-color-border: rgb(var(--color-border-primary), 0.05);
     --kui-color-background-primary-weakest: rgb(var(--color-brand-saturated), 0.4);
 
+    --kui-method-color-text-get: rgb(var(--color-semantic-blue-primary));
+    --kui-method-color-background-get: rgb(var(--color-semantic-blue-secondary));
+    --kui-method-color-text-post: rgb(var(--color-semantic-green-primary));
+    --kui-method-color-background-post: rgb(var(--color-semantic-green-secondary));
+    --kui-method-color-text-delete: rgb(var(--color-semantic-red-primary));
+    --kui-method-color-background-delete: rgb(var(--color-semantic-red-secondary));
+    --kui-method-color-text-patch: rgb(var(--color-semantic-teal-primary));
+    --kui-method-color-background-patch: rgb(var(--color-semantic-teal-secondary));
+    --kui-method-color-text-put: rgb(var(--color-semantic-yellow-primary));
+    --kui-method-color-background-put: rgb(var(--color-semantic-yellow-secondary));
+
     --color-advanced-analytics-brand: var(--color-semantic-yellow-primary);
     --color-advanced-analytics-background: var(--color-semantic-yellow-secondary);
     --color-ai-gateway-brand: var(--color-semantic-green-primary);
