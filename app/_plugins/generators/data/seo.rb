@@ -24,7 +24,7 @@ module Jekyll
         case @page.data['content_type']
         when 'how_to', 'landing_page', 'concept', 'plugin'
           true
-        when 'reference'
+        when 'reference', 'api'
           # Reference pages have canonical? set already (in Versioner)
           @page.data['canonical?']
         else
