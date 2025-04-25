@@ -28,7 +28,7 @@ rows:
                     * [Custom plugins reference](/custom-plugins/reference/)
                     * [Plugin Development Kit reference](/gateway/pdk/reference/)
                     * [Other language support](https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/go/)
-
+                    * [Custom plugin installation and distribution](/custom-plugins/installation-and-distribution/)
   - columns:
       - blocks:
           - type: structured_text
