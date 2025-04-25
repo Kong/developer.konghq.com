@@ -180,4 +180,9 @@ const openSlideoutToc = async () => {
 :deep( .property-field-example-value) {
   @apply border border-brand-saturated/40 !important;
 }
+
+:deep(.default-markdown a[href^="http://"]),
+:deep(.default-markdown a[href^="https://"]) {
+  @apply bg-none !important;
+}
 </style>
