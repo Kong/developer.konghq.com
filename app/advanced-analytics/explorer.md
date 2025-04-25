@@ -57,15 +57,47 @@ Explorer also allows you to save the output as custom reports.
 
 Traffic metrics provide insight into which of your services are being used and how they are responding. Within a single report, you have the flexibility to choose one or multiple metrics from the same category.
 
-Metric | Category | Description
--------|------------
-Request Count | Count | Total number of API calls within the selected time frame. This includes requests that were rejected due to rate limiting, failed authentication, and so on.
-Requests per Minute | Rate | Number of API calls per minute within the selected time frame.
-Response Latency | Latency | The amount of time, in milliseconds, that it takes to process an API request. Users can select between average (avg) or different percentiles (p99, p95, and p50). For example, a 99th percentile response latency of 10 milliseconds means that every 1 in 100 requests took at least 10 milliseconds from request received until response returned. 
-Upstream Latency | Latency | The amount of time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the upstream service response. Users can select between different percentiles (p99, p95, and p50). For example, a 99th percentile response latency of 10 milliseconds means that every 1 in 100 requests took at least 10 milliseconds from sending the request to the upstream service until the response returned.
-Kong latency | Latency | The amount of time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the upstream service response. Users can select between different percentiles (p99, p95, and p50). For example, a 99th percentile response latency of 10 milliseconds means that every 1 in 100 requests took at least 10 milliseconds from the time the {{site.base_gateway}} received the request up to when it sends it back to the upstream service.
-Request Size | Size | The size of the request payload received from the client, in bytes. Users can select between the total sum or different percentiles (p99, p95, and p50). For example, a 99th percentile request size of 100 bytes means that the payload size for every 1 in 100 requests was at least 100 bytes.
-Response Size | Size | The size of the response payload returned to the client, in bytes. Users can select between the total sum or different percentiles (p99, p95, and p50). For example, a 99th percentile response size of 100 bytes means that the payload size for every 1 in 100 response back to the original caller was at least 100 bytes.
+<!--vale off-->
+{% table %}
+columns:
+  - title: "Metric"
+    key: "metric"
+  - title: "Category"
+    key: "category"
+  - title: "Description"
+    key: "description"
+rows:
+  - metric: "Request Count"
+    category: "Count"
+    description: |
+      Total number of API calls within the selected time frame. This includes requests that were rejected due to rate limiting, failed authentication, and so on.
+  - metric: "Requests per Minute"
+    category: "Rate"
+    description: |
+      Number of API calls per minute within the selected time frame.
+  - metric: "Response Latency"
+    category: "Latency"
+    description: |
+      The amount of time, in milliseconds, that it takes to process an API request. Users can select between average (avg) or different percentiles (p99, p95, and p50). For example, a 99th percentile response latency of 10 milliseconds means that every 1 in 100 requests took at least 10 milliseconds from request received until response returned.
+  - metric: "Upstream Latency"
+    category: "Latency"
+    description: |
+      The amount of time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the upstream service response. Users can select between different percentiles (p99, p95, and p50). For example, a 99th percentile response latency of 10 milliseconds means that every 1 in 100 requests took at least 10 milliseconds from sending the request to the upstream service until the response returned.
+  - metric: "Kong latency"
+    category: "Latency"
+    description: |
+      The amount of time, in milliseconds, that {{site.base_gateway}} was waiting for the first byte of the upstream service response. Users can select between different percentiles (p99, p95, and p50). For example, a 99th percentile response latency of 10 milliseconds means that every 1 in 100 requests took at least 10 milliseconds from the time the {{site.base_gateway}} received the request up to when it sends it back to the upstream service.
+  - metric: "Request Size"
+    category: "Size"
+    description: |
+      The size of the request payload received from the client, in bytes. Users can select between the total sum or different percentiles (p99, p95, and p50). For example, a 99th percentile request size of 100 bytes means that the payload size for every 1 in 100 requests was at least 100 bytes.
+  - metric: "Response Size"
+    category: "Size"
+    description: |
+      The size of the response payload returned to the client, in bytes. Users can select between the total sum or different percentiles (p99, p95, and p50). For example, a 99th percentile response size of 100 bytes means that the payload size for every 1 in 100 response back to the original caller was at least 100 bytes.
+{% endtable %}
+<!--vale on-->
+
 
 ## Time Intervals
 
@@ -85,19 +117,51 @@ the time frame selector. For example:
 
 The following table describes the time intervals you can select:
 
-| Interval | Aggregation increment frequency | Notes |    
-| ---------|-------------|----------|
-| Last 15 minutes | 1 minute | Data is aggregated in one minute increments. |
-| Last hour| 1 minute | Data is aggregated in one minute increments. |
-| Last six hours | 1 minute | Data is aggregated in one minute increments. |
-| Last 12 hours| 1 hour | Data is aggregated in one hour increments. |
-| Last 24 hours| 1 hour | Data is aggregated in one hour increments. |
-| Last seven days | 1 hour | Data is aggregated in one hour increments. |
-| Last 30 days | Daily | Data is aggregated in daily increments. |
-| Current week | 1 hour | Logs any traffic in the current calendar week. |
-| Current month | 1 hour | Logs any traffic in the current calendar month. |
-| Previous week | 1 hour | Logs any traffic in the previous calendar week. |
-| Previous month | Daily | Logs any traffic in the previous calendar month. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: "Interval"
+    key: "interval"
+  - title: "Aggregation increment frequency"
+    key: "aggregation_increment_frequency"
+  - title: "Notes"
+    key: "notes"
+rows:
+  - interval: "Last 15 minutes"
+    aggregation_increment_frequency: "1 minute"
+    notes: "Data is aggregated in one minute increments."
+  - interval: "Last hour"
+    aggregation_increment_frequency: "1 minute"
+    notes: "Data is aggregated in one minute increments."
+  - interval: "Last six hours"
+    aggregation_increment_frequency: "1 minute"
+    notes: "Data is aggregated in one minute increments."
+  - interval: "Last 12 hours"
+    aggregation_increment_frequency: "1 hour"
+    notes: "Data is aggregated in one hour increments."
+  - interval: "Last 24 hours"
+    aggregation_increment_frequency: "1 hour"
+    notes: "Data is aggregated in one hour increments."
+  - interval: "Last seven days"
+    aggregation_increment_frequency: "1 hour"
+    notes: "Data is aggregated in one hour increments."
+  - interval: "Last 30 days"
+    aggregation_increment_frequency: "Daily"
+    notes: "Data is aggregated in daily increments."
+  - interval: "Current week"
+    aggregation_increment_frequency: "1 hour"
+    notes: "Logs any traffic in the current calendar week."
+  - interval: "Current month"
+    aggregation_increment_frequency: "1 hour"
+    notes: "Logs any traffic in the current calendar month."
+  - interval: "Previous week"
+    aggregation_increment_frequency: "1 hour"
+    notes: "Logs any traffic in the previous calendar week."
+  - interval: "Previous month"
+    aggregation_increment_frequency: "Daily"
+    notes: "Logs any traffic in the previous calendar month."
+{% endtable %}
+<!--vale on-->
 
 
 ## System defined groups

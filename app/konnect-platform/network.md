@@ -112,14 +112,28 @@ The following [geographic regions](/konnect-geos/) and their hostname region ide
 
 Depending on the regions your organization uses, you'll need to allowlist the hostnames and include the region-specific identifier in the hostname in place of `{region}`:
 
-| Hostname      | Description |
-|----------|----------|
-| `cloud.konghq.com`    | The {{site.konnect_short_name}} platform. |
-| `global.api.konghq.com` | The {{site.konnect_short_name}} API for platform authentication, identity, permissions, teams, and organizational entitlements and settings. |
-| `{region}.api.konghq.com` | The {{site.konnect_short_name}} API for the geo. Necessary if you are using decK in your workflow, decK uses this API to access and apply configurations. |
-| `PORTAL_ID.{region}.portal.konghq.com` | The URL for the Dev Portal in the geo. |
-| `CONTROL_PLANE_DNS_PREFIX.{region}.cp0.konghq.com` | Handles configuration for a Control Plane in the geo. Data plane nodes connect to this host to receive configuration updates. This hostname is unique to each organization and Control Plane. |
-| `CONTROL_PLANE_DNS_PREFIX.{region}.tp0.konghq.com` | Gathers telemetry data for a Control Plane in the geo. This hostname is unique to each organization and Control Plane. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Hostname
+    key: hostname
+  - title: Description
+    key: description
+rows:
+  - hostname: "`cloud.konghq.com`"
+    description: The {{site.konnect_short_name}} platform.
+  - hostname: "`global.api.konghq.com`"
+    description: The {{site.konnect_short_name}} API for platform authentication, identity, permissions, teams, and organizational entitlements and settings.
+  - hostname: "`{region}.api.konghq.com`"
+    description: The {{site.konnect_short_name}} API for the geo. Necessary if you are using decK in your workflow, decK uses this API to access and apply configurations.
+  - hostname: "`PORTAL_ID.{region}.portal.konghq.com`"
+    description: The URL for the Dev Portal in the geo.
+  - hostname: "`CONTROL_PLANE_DNS_PREFIX.{region}.cp0.konghq.com`"
+    description: Handles configuration for a Control Plane in the geo. Data plane nodes connect to this host to receive configuration updates. This hostname is unique to each organization and Control Plane.
+  - hostname: "`CONTROL_PLANE_DNS_PREFIX.{region}.tp0.konghq.com`"
+    description: Gathers telemetry data for a Control Plane in the geo. This hostname is unique to each organization and Control Plane.
+{% endtable %}
+<!--vale on-->
 
 ## Mesh Manager hostnames
 

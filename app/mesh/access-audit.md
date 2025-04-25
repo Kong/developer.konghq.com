@@ -73,8 +73,7 @@ rows:
   - item: "`accessAll`"
     description: |
       Equivalent to specifying all possible accesses. 
-      Either access or access all can be specified.
-{% endtable %}
+      Either access or access all can be specified.{% endtable %}
 <!--vale on-->
 
 ## Default Behavior
@@ -143,8 +142,7 @@ rows:
   - item: "`file.rotation.maxSizeMb`"
     description: Maximum size in megabytes of a log file before it gets rotated.
   - item: "`file.rotation.maxAgeDays`"
-    description: Maximum number of days to retain old log files based on the timestamp encoded in their filename.
-{% endtable %}
+    description: Maximum number of days to retain old log files based on the timestamp encoded in their filename.{% endtable %}
 <!--vale on-->
 
 ## Multi-zone

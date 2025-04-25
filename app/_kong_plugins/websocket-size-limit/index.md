@@ -62,11 +62,8 @@ Limits are evaluated based on the message payload length, and not the entire len
 ### Default limits
 
 {{site.base_gateway}} applies the following default limits to incoming messages for all WebSocket services:
-
-| Sender   | Default Limit        |
-|----------|----------------------|
-| client   | `1048576` (`1MiB`)   |
-| upstream | `16777216` (`16MiB`) |
+* Client: `1048576` (`1MiB`) 
+* Upstream: `16777216` (`16MiB`)
 
 This plugin can be used to increase the limit beyond the default using the [`config.client_max_payload`](/plugins/websocket-size-limit/reference/#schema--config-client-max-payload) and 
 [`config.upstream_max_payload`](/plugins/websocket-size-limit/reference/#schema--config-upstream-max-payload) parameters.

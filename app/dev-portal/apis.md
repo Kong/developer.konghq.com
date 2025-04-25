@@ -119,7 +119,7 @@ If [RBAC](/dev-portal/security-settings/) is enabled, approved developers must b
 {{site.konnect_short_name}} APIs support linking to a {{site.konnect_short_name}} Gateway Service to enable Developer self-service and generate credentials or API keys. 
 This link will install the {{site.konnect_short_name}} Application Auth (KAA) plugin on that Service. The KAA plugin can only be configured from the associated Dev Portal and its published APIs.
 
-{:.note}
+{:.info}
 > When linking an **API** to a **Gateway Service**, it is currently a 1:1 mapping.
 
 1. Browse to a **APIs**, or **Published APIs** for a specific Dev Portal, and select a specific API

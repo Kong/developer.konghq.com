@@ -65,13 +65,34 @@ The plugin supports Swagger v2 and OpenAPI 3.0.x and 3.1.0 specifications with a
 
 Starting with {{site.base_gateway}} 3.7, the OAS Validation plugin supports the following OpenAPI specification features:
 
-| Category                        | Supported                      | Not supported                                                            |
-|---------------------------------|--------------------------------|--------------------------------------------------------------------------|
-| Request body                    | `application/json`             | `application/xml`<br>`multipart/form-data`<br>`text/plain`<br>`text/xml` |
-| Response body                   | `application/json`             | -                                                                        |
-| Request parameters              | `path`<br>`query`<br>`header`<br>`cookie` | -                                                             |
-| Schema                          | `allOf`<br>`oneOf`<br>`anyOf`  | -                                                                        |
-| Parameter serialization         | `style`<br>`explode `          | -                                                                        |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Category
+    key: category
+  - title: Supported
+    key: supported
+  - title: Not supported
+    key: not_supported
+rows:
+  - category: "Request body"
+    supported: "`application/json`"
+    not_supported: "`application/xml`<br>`multipart/form-data`<br>`text/plain`<br>`text/xml`"
+  - category: "Response body"
+    supported: "`application/json`"
+    not_supported: "-"
+  - category: "Request parameters"
+    supported: "`path`<br>`query`<br>`header`<br>`cookie`"
+    not_supported: "-"
+  - category: "Schema"
+    supported: "`allOf`<br>`oneOf`<br>`anyOf`"
+    not_supported: "-"
+  - category: "Parameter serialization"
+    supported: "`style`<br>`explode`"
+    not_supported: "-"
+{% endtable %}
+<!--vale on-->
+
 
 ## Using Event Hooks with OAS Validation
 
@@ -84,13 +105,26 @@ For the OAS Validation plugin, Event Hook events can be enabled when a validatio
 
 To configure an Event Hook for the OAS Validation plugin, you'll need to pass the following parameters:
 
-| Event Hook Parameter | Value       |
-|--------------|---------------------|
-| `source`     | `oas-validation`    |
-| `event`      | `validation-failed` |
-| `handler`    | `webhook`           |
-| `on_change`  | `true`              |
-| `config.url` | Your webhook URL    |
+<!--vale off-->
+{% table %}
+columns:
+  - title: "Event Hook Parameter"
+    key: "event_hook_parameter"
+  - title: "Value"
+    key: "value"
+rows:
+  - event_hook_parameter: "`source`"
+    value: "`oas-validation`"
+  - event_hook_parameter: "`event`"
+    value: "`validation-failed`"
+  - event_hook_parameter: "`handler`"
+    value: "`webhook`"
+  - event_hook_parameter: "`on_change`"
+    value: "`true`"
+  - event_hook_parameter: "`config.url`"
+    value: "Your webhook URL"
+{% endtable %}
+<!--vale on-->
 
 If validation fails, the webhook URL receives a response with JSON payload, which includes the forwarded IP address, Gateway Service and Consumer information, and the error message.
 

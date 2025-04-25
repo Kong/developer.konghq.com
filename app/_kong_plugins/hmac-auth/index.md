@@ -139,8 +139,19 @@ include all of the headers and a `digest` of the body.
 
 The following table describes how you can send `GET` requests to the API endpoints to get information about Consumers associated with the HMAC Authentication plugin:
 
-| Use | Endpoint |
-|----|-----------|
-| Paginate through the `hmac-auth` credentials for all Consumers | `/hmac-auths` |
-| Filter the list by Consumer | `/consumers/{usernameOrId}/hmac-auth` |
-| Retrieve a Consumer associated with an HMAC credential | `/hmac-auths/{hmacUsernameOrId}/consumer` |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use
+    key: use
+  - title: Endpoint
+    key: endpoint
+rows:
+  - use: "Paginate through the `hmac-auth` credentials for all Consumers"
+    endpoint: "`/hmac-auths`"
+  - use: "Filter the list by Consumer"
+    endpoint: "`/consumers/{usernameOrId}/hmac-auth`"
+  - use: "Retrieve a Consumer associated with an HMAC credential"
+    endpoint: "`/hmac-auths/{hmacUsernameOrId}/consumer`"
+{% endtable %}
+<!--vale on-->

@@ -137,11 +137,22 @@ style padding stroke:none!important,fill:none!important
 
 Common use cases for Consumers:
 
-|Use case | Description|
-|---------|------------|
-| Authentication | Client authentication is the most common reason for setting up a Consumer. If you're using an authentication plugin, you'll need a Consumer with credentials. |
-| Rate limiting | Rate limit specific Consumers based on tiers. |
-| Transformation | Add or remove values from response bodies based on the Consumer. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: usecase
+  - title: Description
+    key: description
+rows:
+  - usecase: "Authentication"
+    description: "Client authentication is the most common reason for setting up a Consumer. If you're using an authentication plugin, you'll need a Consumer with credentials."
+  - usecase: "Rate limiting"
+    description: "Rate limit specific Consumers based on tiers."
+  - usecase: "Transformation"
+    description: "Add or remove values from response bodies based on the Consumer."
+{% endtable %}
+<!--vale on-->
 
 ## Centrally-managed Consumers {% new_in 3.10 %}
 

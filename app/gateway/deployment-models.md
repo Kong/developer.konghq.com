@@ -43,12 +43,32 @@ In Hybrid Mode, all connected Data Planes receive the full configuration from th
 
 {{site.base_gateway}} uses single tenant and multi-tenant designs in the different deployment strategies. It's important to understand the tradeoffs of each before deciding on a deployment strategy.
 
-| **Design**           | **Advantages**                                    | **Disadvantages**                                  |
-|----------------------|---------------------------------------------------|----------------------------------------------------|
-| **Single Tenancy**    | - Strongest tenant data protection                | - Higher operational burden                        |
-|                      | - Prevents unintended exposure of data across tenants | - Potential resource under-utilization             |
-| **Multi-Tenancy**     | - Lower operational burden                        | - Weaker tenant data protections                   |
-|                      | - Potential resource optimization                 | - "Noisy neighbor" problem                        |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Design
+    key: design
+  - title: Advantages
+    key: advantages
+  - title: Disadvantages
+    key: disadvantages
+rows:
+  - design: "**Single Tenancy**"
+    advantages: |
+      - Strongest tenant data protection
+      - Prevents unintended exposure of data across tenants
+    disadvantages: |
+      - Higher operational burden
+      - Potential resource under-utilization
+  - design: "**Multi-Tenancy**"
+    advantages: |
+      - Lower operational burden
+      - Potential resource optimization
+    disadvantages: |
+      - Weaker tenant data protections
+      - "Noisy neighbor" problem
+{% endtable %}
+<!--vale on-->
 
 Generally, single-tenant solutions promote stronger data segregation and reduce noisy neighbor concerns at the cost of more operational overhead. Multi-tenant solutions allow for greater resource utilization and potentially reduce operational toil while securely commingling tenant data within the software boundaries. 
 
@@ -56,11 +76,27 @@ Generally, single-tenant solutions promote stronger data segregation and reduce 
 
 We’re going to look at the different deployment strategies for {{site.base_gateway}}. We’ll break these strategies down by the combination of tenancy in both the control and Data Planes.
 
-| Deployment topology | Control Plane tenant type | Data Plane tenant type |
-|--------------------|---------------------------|------------------------|
-| Default Model | Single | Single |
-| Workspaces Model | Multi | Multi |
-| Runtime Group Model | Multi | Single |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Deployment topology
+    key: topology
+  - title: Control Plane tenant type
+    key: control_plane
+  - title: Data Plane tenant type
+    key: data_plane
+rows:
+  - topology: Default Model
+    control_plane: Single
+    data_plane: Single
+  - topology: Workspaces Model
+    control_plane: Multi
+    data_plane: Multi
+  - topology: Runtime Group Model
+    control_plane: Multi
+    data_plane: Single
+{% endtable %}
+<!--vale on-->
 
 ### {{site.base_gateway}} Enterprise Default Model
 

@@ -42,13 +42,27 @@ Remove the `_.flightNumber` placeholder and start typing `response` in its place
 
 Click the template tag, and configure it with the following values to get the flight number for the first flight on the list:
 
-|Field|Value|
-|---|---|
-|Function to Perform|Response|
-|Attribute|Body Attribute|
-|Request|GET Get KongAir planned flights|
-|Filter|`$.[0].number`|
-|Trigger Behavior|Never|
+<!--vale off-->
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Value
+    key: value
+rows:
+  - field: "Function to Perform"
+    value: "Response"
+  - field: "Attribute"
+    value: "Body Attribute"
+  - field: "Request"
+    value: "GET Get KongAir planned flights"
+  - field: "Filter"
+    value: "`$.[0].number`"
+  - field: "Trigger Behavior"
+    value: "Never"
+{% endtable %}
+<!--vale on-->
+
 
 Once this is done, we can see the live preview of the value (KA0284 in this example). We can then click **Done** to apply the changes.
 

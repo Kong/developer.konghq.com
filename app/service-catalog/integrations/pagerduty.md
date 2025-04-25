@@ -39,9 +39,19 @@ PagerDuty will ask you to grant consent to {{site.konnect_short_name}}. Both Rea
 
 Available PagerDuty resources:
 
-Entity | Description
--------|------------
-PagerDuty Service | A PagerDuty service is any entity that can have incidents opened on it. In practice it could be a service, but could also be a group of services or an organization/team.
+<!--vale off-->
+{% table %}
+columns:
+  - title: Entity
+    key: entity
+  - title: Description
+    key: description
+rows:
+  - entity: PagerDuty Service
+    description: 
+      A PagerDuty service is any entity that can have incidents opened on it. In practice it could be a service, but could also be a group of services or an organization/team.
+{% endtable %}
+<!--vale on-->
 
 ## Discovery information
 

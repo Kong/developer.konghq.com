@@ -111,8 +111,7 @@ rows:
   - kind: ValidatingWebhookConfiguration
     apiVersion: admissionregistration.k8s.io/v1
     scope: cluster
-    usage: configure validating webhooks
-{% endtable %}
+    usage: configure validating webhooks{% endtable %}
 <!--vale on-->
 
 ### Optional resources
@@ -144,6 +143,5 @@ rows:
   - kind: HorizontalPodAutoscaler
     apiVersion: autoscaling/v2
     scope: namespaced
-    usage: configure autoscaling
-{% endtable %}
+    usage: configure autoscaling{% endtable %}
 <!--vale on-->
