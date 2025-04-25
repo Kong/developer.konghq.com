@@ -36,7 +36,7 @@ spec:
     query: "query{ contacts { name } }"
 ```
 
-This corresponds to the `uri` and `query` parameters documented in the [plugin documentation](/plugins/degraphql/#TODO)
+This corresponds to the `uri` and `query` parameters documented in the [DeGraphQL plugin documentation](/plugins/degraphql/#TODO).
 
 ## Troubleshooting
 

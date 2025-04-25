@@ -1,7 +1,7 @@
 ---
 title: Degraphql
 description: |
-  Configure the degraphql plugin for {{ site.kic_product_name }} using `KongCustomEntity`
+  Configure the DeGraphQL plugin for {{ site.kic_product_name }} using `KongCustomEntity`.
 content_type: how_to
 
 permalink: /kubernetes-ingress-controller/degraphql/
@@ -25,7 +25,7 @@ works_on:
 entities: []
 
 tldr:
-  q: How do I configure the degraphql plugin using {{ site.kic_product_name }}?
+  q: How do I configure the DeGraphQL plugin using {{ site.kic_product_name }}?
   a: |
     Create a `KongCustomEntity` resource that specifies the entity name in `spec.type` and any required properties under `spec.fields`.
 
@@ -39,6 +39,10 @@ cleanup:
     - title: Uninstall KIC from your cluster
       include_content: cleanup/products/kic
       icon_url: /assets/icons/kubernetes.svg
+      
+related_resources:
+    - text: DeGraphQL Plugin
+      url: /plugins/degraphql/
 ---
 
 ## Create a GraphQL Service
@@ -136,11 +140,11 @@ curl -X POST -H "Content-Type:application/json" -H "X-Hasura-Role:admin" http://
 
 ## Create a Route
 
-Our Hasura API will be exposed using the `/contacts` path. Create a `HTTPRoute` or `Ingress` resource pointing to the `hasura` Service that we can attach the `degraphql` plugin to.
+Our Hasura API will be exposed using the `/contacts` path. Create a `HTTPRoute` or `Ingress` resource pointing to the `hasura` Service that we can attach the `degraphql` plugin to:
 
 {% include /k8s/httproute.md release=page.release path='/contacts' name='demo-graphql' service='hasura' port='80' namespace='kong' skip_host=true %}
 
-## Configure the degraphql plugin
+## Configure the DeGraphQL plugin
 
 The `degraphql` plugin accepts a single configuration option, `graphql_server_path`. Create a `KongPlugin` resource and attach it to the `demo-graphql` route that you just created:
 
@@ -155,9 +159,9 @@ data:
   route: demo-graphql
 {% endentity_example %}
 
-The degraphql entity requires you to configure a mapping between paths and GraphQL queries. In this example, we'll map the `/list` path to `query{ contacts { name } }` using the `KongCustomEntity` CRD. The `KongCustomEntity` CRD attaches the `fields` to the `KongPlugin` specified in the `parentRef` field.
+The `degraphql` entity requires you to configure a mapping between paths and GraphQL queries. In this example, we'll map the `/list` path to `query{ contacts { name } }` using the `KongCustomEntity` CRD. The `KongCustomEntity` CRD attaches the `fields` to the `KongPlugin` specified in the `parentRef` field.
 
-The following resource tells {{ site.kic_product_name }} to create a `degraphql_routes` entity in {{ site.base_gateway }} and attach it to the plugin created by the `degraphql-example` `KongPlugin` resource.
+The following resource tells {{ site.kic_product_name }} to create a `degraphql_routes` entity in {{ site.base_gateway }} and attach it to the plugin created by the `degraphql-example` `KongPlugin` resource:
 
 ```yaml
 echo 'apiVersion: configuration.konghq.com/v1alpha1
@@ -178,9 +182,9 @@ spec:
 ' | kubectl apply -f -
 ```
 
-## Test the Service with the degraphql Plugin
+## Test the Service with the DeGraphQL plugin
 
-To test the `degraphql` plugin, call the `/contacts/list` endpoint. The `/contacts` prefix comes from our route definition, and the `/list` segment comes from our `degraphql_routes` definition.
+To test the `degraphql` plugin, call the `/contacts/list` endpoint. The `/contacts` prefix comes from our Route definition, and the `/list` segment comes from our `degraphql_routes` definition.
 
 {% validation request-check %}
 url: /contacts/list
@@ -189,7 +193,7 @@ on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
 {% endvalidation %}
 
-The `curl` command should return the data that we inserted at the beginning of this how-to:
+The cURL command should return the data that we inserted at the beginning of this how-to:
 
 ```json
 {"data":{"contacts":[{"name":"Alice"}]}}

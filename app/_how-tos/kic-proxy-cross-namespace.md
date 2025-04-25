@@ -1,5 +1,5 @@
 ---
-title: Configuring Gateway API resources across namespaces
+title: Configure Gateway API resources across namespaces
 
 description: "Route traffic to a Service in a different namespace using ReferenceGrant"
 content_type: how_to
@@ -20,9 +20,9 @@ works_on:
 entities: []
 
 tldr:
-  q: How do I route HTTP traffic to a service in a different namespace?
+  q: How do I route HTTP traffic to a Service in a different namespace?
   a: |
-    Set `allowedRoutes: All` on your `Gateway` resource and create a `ReferenceGrant` that allows access to Services in the current namespace for `HTTPRoute` instances from a specific namespace.
+    Set `allowedRoutes: All` on your `Gateway` resource and create a `ReferenceGrant` that allows `HTTPRoute` instances from a specific namespace to access Services in the current namespace.
 
 prereqs:
   kubernetes:
@@ -44,7 +44,7 @@ cleanup:
    kubectl create namespace test-source
    kubectl create namespace test-destination
    ```
-1. Create [a `ReferenceGrant` resource](https://gateway-api.sigs.k8s.io/api-types/referencegrant/)
+1. Create a [`ReferenceGrant` resource](https://gateway-api.sigs.k8s.io/api-types/referencegrant/)
    in the destination namespace:
 
    ```bash
@@ -64,11 +64,9 @@ cleanup:
    ' | kubectl apply -f -
    ```
 
-ReferenceGrants allow namespaces to opt in to references from other resources.
-They reside in the namespace of the target resource and list resources and
-namespaces that can talk to specific resources in the ReferenceGrant's
-namespace. The above example allows HTTPRoutes in the `test-source` namespace
-to reference Services in the `test-destination` namespace.
+ReferenceGrants allow namespaces to opt in to references from other resources. They reside in the namespace of the target resource and list resources and namespaces that can talk to specific resources in the ReferenceGrant's namespace. 
+
+In this case, the example configuration allows HTTPRoutes in the `test-source` namespace to reference Services in the `test-destination` namespace.
 
 ## Using a Gateway resource in a different namespace
 
@@ -78,8 +76,8 @@ ReferenceGrants, as they are defined per listener in the Gateway resource, not f
 A listener's [`allowedRoutes` field](https://gateway-api.sigs.k8s.io/concepts/security-model/#1-route-binding)
 lets you define which routing resources can bind to that listener.
 
-The default Gateway in this guide only allows routes from its same namespace
-(`kong`). You'll need to expand its scope to allow routes from the
+The default Gateway in this guide only allows Routes from its same namespace
+(`kong`). You'll need to expand its scope to allow Routes from the
 `test-source` namespace:
 
 ```bash
@@ -106,7 +104,7 @@ spec:
 ```
 {:.no-copy-code}
 
-Listeners can allow routes in their own namespace (`from: Same`), all namespaces (`from: All`), or a
+Listeners can allow Routes in their own namespace (`from: Same`), all namespaces (`from: All`), or a
 labeled set of namespaces (`from: Selector`).
 
 ## Deploy a Service and HTTPRoute
@@ -117,7 +115,7 @@ labeled set of namespaces (`from: Selector`).
    kubectl apply -f {{ site.links.web }}/manifests/kic/echo-service.yaml -n test-destination
    ```
 
-1. Deploy a HTTPRoute that sends traffic to the service.
+1. Deploy an HTTPRoute that sends traffic to the Service:
 
    ```bash
    echo 'apiVersion: gateway.networking.k8s.io/v1
@@ -146,9 +144,9 @@ labeled set of namespaces (`from: Selector`).
 
    Note the `namespace` fields in both the parent and backend references. By
    default, entries here attempt to use the same namespace as the HTTPRoute if
-   you do not specify a namespace.
+   you don't specify a namespace.
 
-1. Send requests through the route.
+1. Validate the configuration by sending requests through the Route:
 
    ```bash
    curl -s "$PROXY_IP/echo"

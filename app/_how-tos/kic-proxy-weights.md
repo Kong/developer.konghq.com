@@ -1,5 +1,5 @@
 ---
-title: Weight Traffic to Specific Backends
+title: Weight traffic to specific backends
 description: "Distribute traffic across multiple Kubernetes Services in a single HTTPRoute"
 content_type: how_to
 
@@ -20,7 +20,7 @@ entities: []
 
 tldr:
   q: How do I route HTTP traffic with a custom weight per backend using {{ site.kic_product_name }}?
-  a: Create a `HTTPRoute` resource, and specify a `weight` property under `spec.rules[*].backendRefs[*].weight`
+  a: Create a `HTTPRoute` resource, and specify a `weight` property under `spec.rules[*].backendRefs[*].weight` to route traffic to specific backends.
 
 prereqs:
   kubernetes:
@@ -45,7 +45,7 @@ kubectl apply -f {{ site.links.web }}/manifests/kic/echo-services.yaml -n kong
 
 ## Create a HTTPRoute
 
-To route HTTP traffic, you need to create a `HTTPRoute` resource pointing at your Kubernetes `Service`.
+To route HTTP traffic, create a `HTTPRoute` resource pointing at your Kubernetes `Service`:
 
 ```bash
 echo 'apiVersion: gateway.networking.k8s.io/v1
@@ -75,7 +75,7 @@ spec:
 
 ## Test your deployment
 
-Send multiple requests through this route and tabulating the results to check an even distribution of requests across the Services:
+Send multiple requests through this Route and tabulate the results to check an even distribution of requests across the Services:
 
 ```bash
 curl -s "$PROXY_IP/echo/hostname?iteration="{1..200} -w "\n" | sort | uniq -c
@@ -93,7 +93,7 @@ The results should look like this:
 
 The `weight` field overrides the default distribution of requests across Services. Each Service instead receives `weight / sum(all Service weights)` percent of the requests. 
 
-1. Add weights to the Services in the HTTPRoute's backend list.
+1. Add weights to the Services in the HTTPRoute's backend list:
 
     ```bash
     kubectl patch -n kong --type json httproute echo -p='[
@@ -110,7 +110,7 @@ The `weight` field overrides the default distribution of requests across Service
     ]'
     ```
 
-1. Send the same requests and roughly 1/3 of the requests go to `echo2` and 2/3 going to `echo`:
+1. Send the same requests again. This time, roughly 1/3 of the requests go to `echo2` and 2/3 go to `echo`:
 
     ```bash
     curl -s "$PROXY_IP/echo/hostname?iteration="{1..200} -w "\n" | sort | uniq -c
