@@ -74,11 +74,22 @@ Audit logging is configured via a webhook with a SIEM provider of your choice. F
 
 {{site.konnect_short_name}} captures three types of events:
 
-| Event type | Org audit logs |
-| ---------- | ---------- | 
-| Authentication | This is triggered when a user attempts to log into the {{site.konnect_short_name}} web application or use the {{site.konnect_short_name}} API via a personal access token. Also triggered when a system account access token is used. |
-| Authorization | Triggered when a permission check is made for a user or system account against a resource. | 
-| Access logs | Triggered when a request is made to the {{site.konnect_short_name}} API. | 
+<!--vale off-->
+{% table %}
+columns:
+  - title: Event type
+    key: event_type
+  - title: Org audit logs
+    key: org_audit_logs
+rows:
+  - event_type: Authentication
+    org_audit_logs: "This is triggered when a user attempts to log into the {{site.konnect_short_name}} web application or use the {{site.konnect_short_name}} API via a personal access token. Also triggered when a system account access token is used."
+  - event_type: Authorization
+    org_audit_logs: "Triggered when a permission check is made for a user or system account against a resource."
+  - event_type: Access logs
+    org_audit_logs: "Triggered when a request is made to the {{site.konnect_short_name}} API."
+{% endtable %}
+<!--vale on-->
 
 {{site.konnect_short_name}} retains audit logs for 7 days. 
 
@@ -88,22 +99,55 @@ You can view the webhook status in the UI or via the API for the [{{site.konnect
 
 The following table describes the webhook statuses:
 
-| Attribute | Description |
-| --------- | ---------- |
-| `last_attempt at` | The last time {{site.konnect_short_name}} tried to send data to your webhook |
-| `last_response_code` | The last response code from your webhook |
-| `webhook_enabled` | The desired status of the webhook (from `audit-log-webhook.enabled`) |
-| `webhook_status` | The actual status of the webhook |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Attribute
+    key: attribute
+  - title: Description
+    key: description
+rows:
+  - attribute: "`last_attempt_at`"
+    description: "The last time {{site.konnect_short_name}} tried to send data to your webhook"
+  - attribute: "`last_response_code`"
+    description: "The last response code from your webhook"
+  - attribute: "`webhook_enabled`"
+    description: "The desired status of the webhook (from `audit-log-webhook.enabled`)"
+  - attribute: "`webhook_status`"
+    description: "The actual status of the webhook"
+{% endtable %}
+<!--vale on-->
 
-A combination of `webhook_enabled` and `webhook_status` give a full picture of webhook status.
+A combination of `webhook_enabled` and `webhook_status` give a full picture of webhook status:
 
-| `webhook_enabled` | `webhook_status` | Description |
-| --------------- | -------------- | ---------- |
-| true            | `active`       | {{site.konnect_short_name}} is ready to send data to the webhook. Either no attempts have been made yet (`last_attempt_at` is not set), or the last attempt was successful. |
-| true            | `inactive`     | Last attempt to send data failed, but the webhook is still enabled. This usually means that there was an error in the endpoint or the SIEM provider went down that caused the logs to stop streaming. |
-| false           | `active`       | Webhook config is saved. {{site.konnect_short_name}} is not shipping data to it per webhook configuration. |
-| false           | `inactive`     |Last attempt to send data failed, and customer has turned off the webhook. |
-| false           | `unconfigured` | The webhook for this region has not been configured yet. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: "`webhook_enabled`"
+    key: webhook_enabled
+  - title: "`webhook_status`"
+    key: webhook_status
+  - title: Description
+    key: description
+rows:
+  - webhook_enabled: "`true`"
+    webhook_status: "`active`"
+    description: "{{site.konnect_short_name}} is ready to send data to the webhook. Either no attempts have been made yet (`last_attempt_at` is not set), or the last attempt was successful."
+  - webhook_enabled: "`true`"
+    webhook_status: "`inactive`"
+    description: "Last attempt to send data failed, but the webhook is still enabled. This usually means that there was an error in the endpoint or the SIEM provider went down that caused the logs to stop streaming."
+  - webhook_enabled: "`false`"
+    webhook_status: "`active`"
+    description: "Webhook config is saved. {{site.konnect_short_name}} is not shipping data to it per webhook configuration."
+  - webhook_enabled: "`false`"
+    webhook_status: "`inactive`"
+    description: "Last attempt to send data failed, and customer has turned off the webhook."
+  - webhook_enabled: "`false`"
+    webhook_status: "`unconfigured`"
+    description: "The webhook for this region has not been configured yet."
+
+{% endtable %}
+<!--vale on-->
 
 ## Log formats
 
@@ -115,6 +159,7 @@ To minimize payload size, the message body is compressed. The `Content-Encoding`
 
 All log entries include the following attributes:
 
+<!--vale off-->
 {% table %}
 columns:
   - title: Property
@@ -141,6 +186,7 @@ rows:
   - property: "`sig`"
     description: An ED25519 signature.
 {% endtable %}
+<!--vale on-->
 
 ### Authentication logs
 
