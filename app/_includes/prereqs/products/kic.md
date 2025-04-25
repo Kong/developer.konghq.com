@@ -30,6 +30,7 @@
 1. Create a `values.yaml` file:
 
    ```yaml
+   cat <<EOF > values.yaml
    gateway:
      image:
        repository: kong/kong-gateway
@@ -39,6 +40,7 @@
            secretKeyRef:
              name: kong-enterprise-license
              key: license
+   EOF
    ```
 {% assign additional_flags = additional_flags | append:' --values ./values.yaml' %}
 {% assign summary = summary | append:' (with an Enterprise license)' %}

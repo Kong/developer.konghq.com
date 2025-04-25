@@ -31,6 +31,7 @@ license_url
 privacy_policy_url
 terms_of_service_url
 no_wrap
+allowed_routes
 urlencoder
 tech_preview
 feature_gates

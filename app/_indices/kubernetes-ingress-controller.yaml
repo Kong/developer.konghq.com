@@ -29,6 +29,8 @@ sections:
       - path: /kubernetes-ingress-controller/routing/external-service/
       - path: /kubernetes-ingress-controller/routing/http-to-https/
       - path: /kubernetes-ingress-controller/routing/rewriting-paths/
+      - path: /kubernetes-ingress-controller/routing/weights/
+      - path: /kubernetes-ingress-controller/routing/cross-namespace/
   - title: How KIC Works
     items:
       - path: /kubernetes-ingress-controller/architecture/
@@ -67,6 +69,7 @@ sections:
       - path: /kubernetes-ingress-controller/rate-limiting/
       - path: /kubernetes-ingress-controller/mtls/
       - path: /kubernetes-ingress-controller/oidc/
+      - path: /kubernetes-ingress-controller/degraphql/
   - title: Reference
     allow_duplicates: true
     items:
@@ -84,3 +87,4 @@ sections:
       - path: /kubernetes-ingress-controller/faq/migrate-ingress-to-gateway/
       - path: /kubernetes-ingress-controller/faq/upgrading-gateway/
       - path: /kubernetes-ingress-controller/faq/upgrading-ingress-controller/
+      - path: /kubernetes-ingress-controller/faq/custom-entities/
