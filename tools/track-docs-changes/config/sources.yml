@@ -372,6 +372,11 @@ app/kubernetes-ingress-controller/faq/upgrading-gateway.md:
 app/kubernetes-ingress-controller/faq/custom-entities.md:
   - app/_src/kubernetes-ingress-controller/guides/services/custom-entity.md
 
+app/kubernetes-ingress-controller/workspaces.md:
+  - app/_src/kubernetes-ingress-controller/guides/security/workspaces.md
+app/kubernetes-ingress-controller/preserve-client-ip.md:
+  - app/_src/kubernetes-ingress-controller/guides/security/client-ip.md
+
 
 
 # plugins
