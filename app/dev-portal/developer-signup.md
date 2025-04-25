@@ -1,5 +1,5 @@
 ---
-title: Developer Sign-up
+title: Developer sign-up
 content_type: reference
 layout: reference
 
@@ -34,34 +34,40 @@ flowchart TD
     D --> |Create in IdP| E
 {% endmermaid %}
 
-
 ## Register and create an application
 
 All developers must register through the {{site.konnect_short_name}} Dev Portal. A {{site.konnect_short_name}} admin will provide the registration URL.
 
-### Register or sign in
+### 1. Register or sign in
 
-Go to the Dev Portal and either:
+Go to the Dev Portal and choose one of the following options:
 
 * Register for access by creating an account
 * Sign in using single sign-on (SSO), if enabled
 
 Once approved, you can create an application.
 
-### Step 2: Create an application
+### 2. Create an application
 
 You can register an application for one or multiple APIs.
 
-* **For a single API**:
-  1. Click **Catalog**
-  1. Select the API and click **Register**
-  1. Choose **Create an application**
+{% navtabs "register-app" %}
+{% navtab "Single API" %}
 
-* **For multiple APIs**:
-  1. Click **My Apps**
-  1. Click **New App** and enter your app details
-  1. Go to **Catalog**, select an API, and click **Register**
-  1. Choose the app you created and click **Request Access**
+1. Click **Catalog**.
+1. Select the API and click **Register**.
+1. Choose **Create an application**.
+
+{% endnavtab %}
+{% navtab "Multiple APIs" %}
+
+1. Click **My Apps**.
+1. Click **New App** and enter your app details.
+1. Go to **Catalog**, select an API, and click **Register**.
+1. Choose the app you created and click **Request Access**.
+
+{% endnavtab %}
+{% endnavtabs %}
 
 Each application supports only one authentication strategy. When combining APIs in a single app, ensure they use the same strategy.
 
@@ -69,7 +75,7 @@ The Reference ID must be unique. For [OIDC](/dev-portal/auth-strategies/#configu
 
 To manage your app, go to the app details and select **Edit** or **Delete**.
 
-### Step 3: Create credentials
+### 3. Create credentials
 
 Choose one of the following methods to generate credentials:
 

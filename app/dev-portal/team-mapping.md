@@ -1,5 +1,5 @@
 ---
-title: Team Mapping
+title: Team mapping
 content_type: reference
 layout: reference
 
@@ -20,7 +20,7 @@ related_resources:
 
 With teams mapped from an IdP, the developers and permissions are mapped automatically in {{site.konnect_short_name}} so you don't have to manually copy over each team of developers.
 
-This guide explains how to map the permissions, including scopes and claims, from your group of developers in your IdP to your organization's team in Konnect. Although this guide uses Okta, Azure Active Directory (AD), and Auth0 as examples, you can use any IdP that conforms to OIDC standards. 
+This guide explains how to map the permissions, including scopes and claims, from your group of developers in your IdP to your organization's team in {{site.konnect_short_name}}. Although this guide uses Okta, Azure Active Directory (AD), and Auth0 as examples, you can use any IdP that conforms to OIDC standards. 
 
 ## Prerequisites
 
@@ -38,7 +38,7 @@ This guide explains how to map the permissions, including scopes and claims, fro
 
 1. Configure any other group settings and attributes as needed.
 
-1. [Enable group push](https://help.okta.com/en-us/content/topics/users-groups-profiles/usgp-enable-group-push.htm) for **{{site.base_gateway}}** to push existing Okta groups and their memberships to Konnect.
+1. [Enable group push](https://help.okta.com/en-us/content/topics/users-groups-profiles/usgp-enable-group-push.htm) for **{{site.base_gateway}}** to push existing Okta groups and their memberships to {{site.konnect_short_name}}.
 
 1. [Add a groups claim for the org authorization server](https://developer.okta.com/docs/guides/customize-tokens-groups-claim/main/#add-a-groups-claim-for-the-org-authorization-server).
 {% endnavtab %}
@@ -55,13 +55,13 @@ This guide explains how to map the permissions, including scopes and claims, fro
 {% endnavtab %}
 {% endnavtabs %}
 
-## Map IdP developer teams in Konnect
+## Map IdP developer teams in {{site.konnect_short_name}}
 
 1. In [**Dev Portal**](https://cloud.konghq.com/portal), click **Settings**.
 
 1. In the **General** setting tab, enable **Portal RBAC**.
     
-    Enabling RBAC allows you to create teams in Konnect. You can disable RBAC after you map teams from your IdP if you don't want to use it.
+    Enabling RBAC allows you to create teams in {{site.konnect_short_name}}. You can disable RBAC after you map teams from your IdP if you don't want to use it.
 
 1. From the **Teams** settings in the side bar, click **New Team** and configure the team.
 
@@ -84,7 +84,6 @@ This guide explains how to map the permissions, including scopes and claims, fro
 
 ## Test developer team mappings
 
-Now that you've configured the IdP team mappings in {{site.konnect_short_name}} for the Dev Portal, you can test the team mappings by logging in to the Dev Portal with a test account that is assigned to the team in your IdP.
+Now that you've configured the IdP team mappings in {{site.konnect_short_name}} for the Dev Portal, you can test the team mappings.
 
-1. Navigate to your Dev Portal URL and log in as a test developer that is assigned to the team in your IdP.
-    You can find your Dev Portal URL in the Dev Portal settings in the **Portal Domain** tab.
+Find your Dev Portal URL in the Dev Portal settings in the **Portal Domain**, navigate to that URL, and log in as a test developer that is assigned to the team in your IdP.

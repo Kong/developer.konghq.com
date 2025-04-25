@@ -20,52 +20,46 @@ related_resources:
     url: /dev-portal/security-settings/
 ---
 
-
+The Dev Portal Setting page allows you to make global changes to your Dev Portal.
 
 ## Name
-This is the name that you will see in your list of Dev Portals in Konnect.
 
-## Display Name
+This is the name that you will see in your list of Dev Portals in {{site.konnect_short_name}}.
 
-This is utilized for SEO in the Portal and sets what users will see in the browser for the `home` / `/` Page, appended to the front matter title.
+## Display name
 
-### Home Page title format
+This is used for SEO in the Portal and sets what users will see in the browser for the `home` / `/` Page, appended to the front matter title.
 
+The format looks like this
 ```
 <title>{front matter title} | {display_name}</title>
 ```
 
+For example, assuming the `home` / `/` page has the following front matter:
 
-### Home Page title example
-
-Assuming the `home` / `/` page has the following front matter
-
-```
+```yaml
 ---
 title: Welcome to KongAir
 description: Start building and innovating with our APIs
 ---
 ```
 
-Assuming Dev Portal Settings has the Display Name set to "Developer Portal", the browser would display:
+If Dev Portal settings have the display name set to "Developer Portal", the browser would display:
 
 ```
 Welcome to KongAir | Developer Portal
 ```
 
-
 ## Description
 
-This description is only displayed in the Konnect, and will not be delivered to users browsing the portal.
+This description is only displayed in {{site.konnect_short_name}}, and will not be delivered to users browsing the portal.
 
-To affect meta description/tags in Pages, refer to [Pages docs](/dev-portal/custom-pages/)
+To change the meta description and tags in pages, see the [pages reference](/dev-portal/custom-pages/).
 
 ## Custom Domains
 
-Learn more about configuring [Custom Domains](/dev-portal/custom-domains)
-
+Learn more about configuring [custom domains](/dev-portal/custom-domains/).
 
 ## Audit logs
 
-
-Dev Portal audit logs are set up and managed separately from org-wide {{site.konnect_short_name}} audit logs. For more information see the [audit logs documentation](/gateway/audit-logs/).
+Dev Portal audit logs are set up and managed separately from org-wide {{site.konnect_short_name}} audit logs. For more information, see the [audit logs documentation](/gateway/audit-logs/).

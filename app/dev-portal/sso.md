@@ -11,7 +11,7 @@ tags:
 works_on:
   - konnect
 related_resources:
-  - text: "Configure SSO for a {{site.konnect_short_name}} Org"
+  - text: "Configure SSO for a {{site.konnect_short_name}} org"
     url: /konnect-platform/konnect-sso/
   - text: "IdP SAML attribute mapping reference"
     url: /konnect-platform/saml-idp-mappings/
@@ -20,7 +20,9 @@ related_resources:
 You can configure single sign-on (SSO) for {{site.konnect_short_name}} Dev Portal with OpenID Connect (OIDC) or SAML.
 This allows developers to log in to Dev Portals using their identity provider (IdP) credentials without needing a separate login. 
 
-## Behavior and Recommendations
+## Behavior and recommendations
+
+When configuring SSO for Dev Portal, keep the following guidelines in mind:
 
 * Developers are auto-approved by {{site.konnect_short_name}} when using SSO to log in to the Dev Portal.
   * Kong outsources the approval process to the IdP, so access restrictions must be configured in the IdP.
@@ -32,10 +34,10 @@ This allows developers to log in to Dev Portals using their identity provider (I
   * Keep built-in authentication enabled while testing your IdP integration.
   * Disable built-in authentication only after successfully validating the SSO login flow.
 
-{:.important}
-> Combining OIDC and SAML simultaneously is not supported. Use only one protocol alongside built-in auth if needed.
+{:.warning}
+> Combining OIDC and SAML is not supported. Use only one protocol alongside built-in auth if needed.
 
-## {{site.konnect_short_name}} Portal Editor Considerations
+## {{site.konnect_short_name}} Portal Editor considerations
 
 To ensure the preview experience in the {{site.konnect_short_name}} Portal Editor works correctly, configure your IdP with the following:
 

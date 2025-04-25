@@ -21,9 +21,12 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The {{site.konnect_short_name}} Dev Portal is a customizable website for developers to locate, access, and consume API services. It enables developers to browse and search API documentation, try API operations, and manage their own credentials. The portal supports both internal and external APIs through flexible deployment options.
+                    The {{site.konnect_short_name}} Dev Portal is a customizable website for developers to locate, access, and consume API services. 
+                    It enables developers to browse and search API documentation, try API operations, and manage their own credentials. 
+                    The Portal supports both internal and external APIs through flexible deployment options.
 
-                    Dev Portal APIs allow you to publish APIs using OpenAPI specifications and Markdown documentation. You can provide highly customizable content at both the site and API level to offer additional context to developers.
+                    Dev Portal APIs allow you to publish APIs using OpenAPI specifications and Markdown documentation. 
+                    You can provide highly customizable content at both the site and API level to offer additional context to developers.
       - blocks:
           - type: image
             config:
@@ -50,7 +53,7 @@ rows:
               title: Add APIs to Dev Portal
               description: |
                 Dev Portal APIs serve as a repository for your API specifications and documentation. 
-                You can optionally version your APIs and publish them to one or more portals. 
+                You can optionally version your APIs and publish them to one or more Portals. 
                 This supports maintaining a central source of truth while offering developer-specific visibility.
               cta:
                 url: "/dev-portal/apis/"
@@ -110,7 +113,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Configure a Custom Domain
+              title: Configure a custom domain
               description: |
                 Add a custom domain to make your Dev Portal accessible through your preferred URL.
               icon: /assets/icons/domain.svg
@@ -120,9 +123,9 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Publish APIs and Docs
+              title: Publish APIs and docs
               description: |
-                Upload OpenAPI specifications and add markdown documentation to APIs published to your portal.
+                Upload OpenAPI specifications and add Markdown documentation to APIs published to your Portal.
               icon: /assets/icons/api.svg
               cta:
                 text: Publish APIs
@@ -130,7 +133,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Configure Audit Logs
+              title: Configure audit logs
               description: |
                 Enable audit logging for your Dev Portal to monitor authentication and access events.
               icon: /assets/icons/logs.svg
@@ -143,7 +146,7 @@ rows:
         - blocks:
             - type: card
               config:
-                title: General Settings
+                title: General settings
                 description: |
                   Change the name, slug, and region of your Dev Portal at any time.
                 icon: /assets/icons/code.svg
@@ -153,7 +156,7 @@ rows:
         - blocks:
             - type: card
               config:
-                title: Security Configuration
+                title: Security configuration
                 description: |
                   Control visibility, enable authentication, and restrict access to APIs or content.
                 icon: /assets/icons/lock.svg
@@ -163,7 +166,7 @@ rows:
         - blocks:
             - type: card
               config:
-                title: Customize the Experience
+                title: Customize the experience
                 description: |
                   Use Portal Editor to add custom pages, change layout, update header/footer menus, and manage navigation.
                 icon: /assets/icons/edit.svg

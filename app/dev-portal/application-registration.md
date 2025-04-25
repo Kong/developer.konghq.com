@@ -1,6 +1,6 @@
 ---
-title: Self-Service Developer & Application Registration
-description: 'Enable self-service registration flows for developers and applications using authentication strategies and {{site.konnect_short_name}} application Auth.'
+title: Self-service developer & application registration
+description: 'Enable self-service registration flows for developers and applications using authentication strategies and {{site.konnect_short_name}} application auth.'
 content_type: reference
 layout: reference
 products:
@@ -21,34 +21,39 @@ faqs:
       To configure Dev Portal security settings, ensure you have:
       * A Gateway Service running version 3.6 or later
       * An [API linked to the Gateway Service](/dev-portal/apis/#gateway-service-link)
-      * An [API published to a Dev Portal](/dev-portal/publishing)
-
+      * An [API published to a Dev Portal](/dev-portal/publishing/)
+      
+      {:.info}
       > Note: APIs must be linked to a Gateway Service to enforce authentication strategies.
 
 ---
 
-{{site.konnect_short_name}} Dev Portal provides flexible options for controlling access to content and APIs. When combined with a Gateway Service, developers visiting a Dev Portal can sign up, create an application, register it with an API, and retrieve API keys without intervention from Dev Portal administrators. Developer sign ups and application creation require admin approval by default, which can be adjusted through the {{site.konnect_short_name}} UI in **Settings > Security**.
+{{site.konnect_short_name}} Dev Portal provides flexible options for controlling access to content and APIs. 
+When combined with a Gateway Service, developers visiting a Dev Portal can sign up, create an application, register it with an API, and retrieve API keys without intervention from Dev Portal administrators. 
+
+Developer sign ups and application creation require admin approval by default, which can be adjusted through the {{site.konnect_short_name}} UI in **Settings > Security**.
 
 Application registration is enabled by:
-* Enabling User Authentication
+* Enabling user authentication
 * Linking an API to a Gateway Service (version 3.6+)
 * Selecting an authentication strategy when publishing the API to a Dev Portal
 
-## Region-Specific applications
+## Region-specific applications
 
-Applications and API keys are specific to a [geographic region](/konnect-geos/). When you enable application registration by selecting an authentication strategy during publication, the resulting applications and API keys are tied to the developers and traffic in that region.
+Applications and API keys are specific to a [geographic region](/konnect-geos/). 
+When you enable application registration by selecting an authentication strategy during publication, the resulting applications and API keys are tied to the developers and traffic in that region.
 
 ## {{site.konnect_short_name}} application auth plugin
 
-When you select an authentication strategy during [API publication](/dev-portal/apis) to a Dev Portal, {{site.konnect_short_name}} automatically configures the **{{site.konnect_short_name}} application Auth** plugin on the linked Gateway Service.
+When you select an authentication strategy during [API publication](/dev-portal/apis/) to a Dev Portal, {{site.konnect_short_name}} automatically configures the **{{site.konnect_short_name}} application auth** (KAA) plugin on the linked Gateway Service.
 
 The KAA plugin enforces authentication using one of the following modes:
 * Key authentication (`key-auth`)
 * OpenID Connect (`oidc`)
 * Dynamic Client Registration (DCR) (coming soon)
 
-If no Gateway Service is linked at the time of configuration, the settings are saved and applied once a service is linked. If a service is later unlinked, the plugin is removed and applied to the next linked service.
-
+If no Gateway Service is linked at the time of configuration, the settings are saved and applied once a Service is linked. 
+If a Service is later unlinked, the plugin is removed and applied to the next linked Service.
 
 ## Dev Portal Security Settings
 

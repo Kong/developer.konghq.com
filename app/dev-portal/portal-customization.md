@@ -1,5 +1,5 @@
 ---
-title: Dev Portal Customization Reference
+title: Dev Portal customization reference
 content_type: reference
 layout: reference
 
@@ -29,43 +29,52 @@ related_resources:
     url: /dev-portal/custom-pages/
 ---
 
-Customization can be found on the left sidebar when a Dev Portal is selected.
+Customization settings can be found on the left sidebar when a Dev Portal is selected.
 
 ## Menus 
+
+You can customize several options for menus found in Portals.
 
 ### Visibility
 
 All menu items have visibility controls. Visibility is `Private` by default, and will only be displayed to logged-in Developers. If `Public` is selected, the menu item will be available to all visitors to your Dev Portal.
 
-### Main Menu
+### Main menu
 
-Main Menus are a flat list of links that will be added to the header of every page in your Dev Portal. These titles/links will be spaced evenly horizontally.
+Main menus are a flat list of links that will be added to the header of every page in your Dev Portal. 
+These titles and links will be spaced evenly horizontally.
 
-### Footer Menu Sections
+### Footer menu sections
 
-Footer Menus allow you to create a set of columns with links for global navigation. Select **Footer Sections Menu** from the dropdown list to begin creating your menus.
+Footer menus allow you to create a set of columns with links for global navigation. Select **Footer Sections Menu** from the dropdown list to begin creating your menus.
 
-Footer Sections create vertical columns across the bottom of every Page, with the Logo from [Appearance](#appearance) on the left side. It's best to create your desired Footer Sections before creating Footer Menu Items.
+Footer sections create vertical columns across the bottom of every page, with the logo from [Appearance](#appearance) on the left side. 
+We recommend creating your desired footer sections before creating footer menu items.
 
-Footer Menu Items are links to any URL you prefer, with a title to be displayed. Items must specify a Footer Menu Section.
+Footer menu items are links to any URL you prefer, with a title to be displayed. Items must specify a footer menu section.
 
-### Footer Bottom Menu
+### Footer bottom menu
 
-Footer Bottom Menu is a flat list of links that will be added to the bottom of every page. Footer Bottom Menus are placed below Footer Menu Sections.
-
+Footer bottom menu is a flat list of links that will be added to the bottom of every page. 
+Footer bottom menus are placed below footer menu sections.
 
 ## SEO
 
-To optimize how search engines crawl your Dev Portal, you have the ability to specify `/robots.txt` directly. 
+To optimize how search engines crawl your Dev Portal, you can provide a `/robots.txt` directly. 
 
+## Portal editor
 
-## Appearance
+The Portal Editor provides you with a variety of tools for creating highly customized content for your Dev Portal. Navigate to a specific Dev Portal, and select **Portal Editor** from the left sidebar.
 
-Appearance settings are applied globally to all pages in your Dev Portal. Appearance can be found in Portal Editor on the left sidebar.
+{:.info}
+> *Pages are built using Markdown Components (MDC). Additional documentation on syntax, as well as tools for generating components, are available on a [dedicated MDC site](https://portaldocs.konghq.com/).*
 
-### Basic Appearance
+### Appearance
 
-Basic appearance settings quickly create basic styles for your default portal template.
+Appearance settings are applied globally to all pages in your Dev Portal. 
+You'll find the Appearance icon in the left sidebar of the Portal Editor.
+
+Basic appearance settings quickly create basic styles for your default Portal template:
 
 {% table %}
 columns:
@@ -75,9 +84,9 @@ columns:
     key: description
 rows:
   - setting: Theme
-    description: Light and dark options are provided. This changes the background and text in your default template. Dark/light is not selectable by Developers.
+    description: You can choose from default light and dark options. This changes the background and text in your default template. Dark or light theme is not selectable by developers.
   - setting: Brand color
-    description: This color will be used to set the primary color in the default template.
+    description: This color is used to set the primary color in the default template.
   - setting: Portal logo
     description: Automatically used in the header and footer menu sections to ensure consistent branding across pages.
   - setting: Favicon
@@ -88,40 +97,16 @@ rows:
 
 For advanced needs, you can also create Custom CSS that applies custom styles to your Dev Portal. Custom CSS provides global customization to all pages in Dev Portal.
 
-## Portal editor
-
-Portal Editor provides you with a variety of tools for creating highly customized content for your Dev Portal. Navigate to a specific Dev Portal, and select **Portal Editor** from the left sidebar.
-
-{:.info}
-> *Pages are built using Markdown Components (MDC). Additional documentation on syntax, as well as tools for generating components, are available on a [dedicated MDC site](https://portaldocs.konghq.com/).*
-
-
 ### Preview panel
 
-Preview will automatically show what your Page should look like when Developers view your Dev Portal. In the event that it fails to refresh after editing the Page, there is a refresh button next to the generated URL at the bottom. 
+The preview will automatically show what your page should look like when developers view your Dev Portal. In the event that it fails to refresh after editing the page, there is a refresh button next to the generated URL at the bottom. 
 
-### Generated URL
-
-Custom pages allow you to define a page structure/tree that organizes your pages and generates the page URL based on page `slug`s. The generated URL is shown at the bottom of the preview pane.
-
-### Viewports
-
-There are three icons above Preview that will allow you to test adaptive designs in some pre-defined viewports.
-
+There are three icons above **Preview** that allow you to test adaptive designs in some predefined viewports:
 * Desktop
 * Tablet
 * Mobile
 
-## Appearance
+### Generated URL
 
-Basic appearance settings like brand colors, logo, and favicon can be customized to easily convey your branding. For advanced needs, you can also create Custom CSS that applies custom styles to your Dev Portal.
-
-You'll find the Appearance icon in the left sidebar of Portal Editor.
-
-[Customize Appearance](/dev-portal/portal-customization/)
-
-## Additional Customization
-
-Some items like top navigation and SEO optimization/`robots.txt` are available in {{site.konnect_short_name}}, outside of the Portal Editor.
-
+Custom pages allow you to define a page structure/tree that organizes your pages and generates the page URL based on page `slug`s. The generated URL is shown at the bottom of the preview pane.
 
