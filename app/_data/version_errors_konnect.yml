@@ -1136,7 +1136,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.5.0.0` or above.
     DocumentationURL: |
-      [App Registration](/dev-portal/app-reg/)
+      [App Registration](/dev-portal/application-registration/)
   - ID: D203
     Severity: error
     Description: |
@@ -1159,7 +1159,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.6.0.0` or above.
     DocumentationURL: |
-      [App Registration](/dev-portal/app-reg/)
+      [App Registration](/dev-portal/application-registration/)
   - ID: D205
     Severity: error
     Description: |
@@ -1410,7 +1410,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.6.0.0` or above.
     DocumentationURL: |
-      [App Registration](/dev-portal/app-reg/)
+      [App Registration](/dev-portal/application-registration/)
   - ID: D228
     Severity: error
     Description: |
@@ -1421,7 +1421,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.6.0.0` or above.
     DocumentationURL: |
-      [App Registration](/dev-portal/app-reg/)
+      [App Registration](/dev-portal/application-registration/)
   - ID: D229
     Severity: error
     Description: |
@@ -1433,7 +1433,7 @@ messages:
       Please update Kong Gateway to the corresponding version where the fields were
       added.
     DocumentationURL: |
-      [App Registration](/dev-portal/app-reg/)
+      [App Registration](/dev-portal/application-registration/)
   - ID: D230
     Severity: error
     Description: |
@@ -1445,7 +1445,7 @@ messages:
       Please update Kong Gateway to the corresponding version where the fields were
       added.
     DocumentationURL: |
-      [App Registration](/dev-portal/app-reg/)
+      [App Registration](/dev-portal/application-registration/)
   - ID: D231
     Severity: error
     Description: |
@@ -1457,7 +1457,7 @@ messages:
       Please update Kong Gateway to the corresponding version where the fields were
       added.
     DocumentationURL: |
-      [App Registration](/dev-portal/app-reg/)
+      [App Registration](/dev-portal/application-registration/)
   - ID: D232
     Severity: error
     Description: |
