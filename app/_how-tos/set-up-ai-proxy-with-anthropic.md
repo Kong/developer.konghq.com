@@ -2,10 +2,15 @@
 title: Set up AI Proxy with Anthropic in {{site.base_gateway}}
 content_type: how_to
 related_resources:
+  - text: AI Gateway
+    url: /ai-gateway/
   - text: AI Proxy
     url: /plugins/ai-proxy/
 
+description: Configure the AI Proxy plugin to create a chat route using Anthropic.
+
 products:
+    # - ai-gateway
     - gateway
 
 works_on:
@@ -76,6 +81,7 @@ entities:
             name: claude-2.1
             options:
                 anthropic_version: "2023-06-01"
+                max_tokens: 1024
 variables:
   anthropic_api_key:
     value: $ANTHROPIC_API_KEY

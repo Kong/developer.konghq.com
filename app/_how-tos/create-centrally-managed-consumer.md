@@ -27,6 +27,7 @@ entities:
 
 tags:
     - consumer
+    - authentication
 
 tldr:
     q: How do I centrally manage Consumers in {{site.konnect_short_name}}?
@@ -48,9 +49,9 @@ cleanup:
 
 ## 1. Create a realm
 
-First, export your Control Plane UUID and [region](/konnect-geos/) (for example, `us`) so we can use it in the request. You can find these under your Control Plane settings in [Gateway Manager](https://cloud.konghq.com/gateway-manager/):
+First, export your Control Plane ID and [region](/konnect-geos/) (for example, `us`) so we can use it in the request. You can find these under your Control Plane settings in [Gateway Manager](https://cloud.konghq.com/gateway-manager/):
 ```sh
-export KONNECT_CONTROL_PLANE_ID={control-plane-uuid}
+export KONNECT_CONTROL_PLANE_ID={control-plane-id}
 export DECK_CONTROL_PLANE_REGION={region}
 ```
 
@@ -167,6 +168,7 @@ url: /anything
 headers:
   - 'apikey:$CONSUMER_KEY'
 status_code: 200
+display_headers: true
 {% endvalidation %}
 
 You will see a successful `200` response.

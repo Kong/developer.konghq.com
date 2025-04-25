@@ -39,7 +39,7 @@ tags:
   - websocket
 
 related_resources:
-  - text: WebSocker Validator plugin
+  - text: WebSocket Validator plugin
     url: /plugins/websocket-validator/
   - text: WebSocket RFC
     url: https://datatracker.ietf.org/doc/html/rfc6455

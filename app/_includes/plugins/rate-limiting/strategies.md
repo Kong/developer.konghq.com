@@ -2,12 +2,30 @@
 The {{include.name}} plugin supports three rate limiting strategies: `local`, `cluster`, and `redis`. 
 This is controlled by the [`config.policy`](/plugins/rate-limiting/reference/#schema--config-policy) parameter.
 
-| Strategy  | Description | Pros | Cons   |
-| --------- |-------------| ---- | ------ |
-| `local`   | Counters are stored in-memory on the node. | Minimal performance impact. | Less accurate. Unless there's a consistent-hashing load balancer in front of Kong, it diverges when scaling the number of nodes.
-| `cluster` | Counters are stored in the {{site.base_gateway}} data store and shared across nodes. | Accurate, no extra components to support. | Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact. <br>Not supported in hybrid mode or {{site.konnect_short_name}} deployments. |
-| `redis`   | Counters are stored on a Redis server and shared across nodes. | Accurate, less performance impact than a `cluster` policy. | Needs a Redis installation. Bigger performance impact than a `local` policy. |
-
+{% table %}
+columns:
+  - title: Strategy
+    key: strategy
+  - title: Description
+    key: description
+  - title: Pros
+    key: pros
+  - title: Cons
+    key: cons
+rows:
+  - strategy: "`local`"
+    description: Counters are stored in-memory on the node.
+    pros: Minimal performance impact.
+    cons: Less accurate. Unless there's a consistent-hashing load balancer in front of Kong, it diverges when scaling the number of nodes.
+  - strategy: "`cluster`"
+    description: Counters are stored in the {{site.base_gateway}} data store and shared across nodes.
+    pros: Accurate, no extra components to support.
+    cons: Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact. <br>Not supported in hybrid mode or {{site.konnect_short_name}} deployments.
+  - strategy: "`redis`"
+    description: Counters are stored on a Redis server and shared across nodes.
+    pros: Accurate, less performance impact than a `cluster` policy.
+    cons: Needs a Redis installation. Bigger performance impact than a `local` policy.
+{% endtable %}
 {% else %}
 
 The {{include.name}} plugin supports three rate limiting strategies: `local`, `cluster`, and `redis`. 
@@ -17,11 +35,30 @@ This is controlled by the [`config.strategy`](/plugins/rate-limiting-advanced/re
 This is controlled by the [`config.policy`](/plugins/rate-limiting/reference/#schema--config-policy) parameter.
 {% endif %}
 
-| Strategy  | Description | Pros | Cons   |
-| --------- |-------------| ---- | ------ |
-| `local`   | Counters are stored in-memory on the node. | Minimal performance impact. | Less accurate. Unless there's a consistent-hashing load balancer in front of Kong, it diverges when scaling the number of nodes.
-| `cluster` | Counters are stored in the {{site.base_gateway}} data store and shared across nodes. | Accurate<sup>1</sup>, no extra components to support. | Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact. <br>Not supported in hybrid mode or {{site.konnect_short_name}} deployments. |
-| `redis`   | Counters are stored on a Redis server and shared across nodes. | Accurate<sup>1</sup>, less performance impact than a `cluster` policy. | Needs a Redis installation. Bigger performance impact than a `local` policy. |
+{% table %}
+columns:
+  - title: Strategy
+    key: strategy
+  - title: Description
+    key: description
+  - title: Pros
+    key: pros
+  - title: Cons
+    key: cons
+rows:
+  - strategy: "`local`"
+    description: Counters are stored in-memory on the node.
+    pros: Minimal performance impact.
+    cons: Less accurate. Unless there's a consistent-hashing load balancer in front of Kong, it diverges when scaling the number of nodes.
+  - strategy: "`cluster`" 
+    description: Counters are stored in the {{site.base_gateway}} data store and shared across nodes.
+    pros: Accurate<sup>1</sup>, no extra components to support.
+    cons: Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact. <br>Not supported in hybrid mode or {{site.konnect_short_name}} deployments.
+  - strategy: "`redis`"
+    description: Counters are stored on a Redis server and shared across nodes.
+    pros: Accurate<sup>1</sup>, less performance impact than a `cluster` policy.
+    cons: Needs a Redis installation. Bigger performance impact than a `local` policy.
+{% endtable %}
 
 {:.info}
 > **\[1\]**: Only when [`config.sync_rate`](./reference/#schema--config-sync-rate) option is set to `0` (synchronous behavior). 

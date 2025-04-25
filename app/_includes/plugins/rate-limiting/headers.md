@@ -1,22 +1,44 @@
 
 When this plugin is enabled, {{site.base_gateway}} sends some additional headers back to the client, indicating the state of the rate limiting policies in place:
 
-| Header | Description |
-|--------|-------------|
-| RateLimit-Limit | Allowed limit in the timeframe. |
-| RateLimit-Remaining | Number of available requests remaining. |
-| RateLimit-Reset | The time remaining, in seconds, until the rate limit quota is reset. |
-| X-RateLimit-Limit-Second | The time limit, in number of seconds. |
-| X-RateLimit-Limit-Minute | The time limit, in number of minutes. |
-| X-RateLimit-Limit-Day | The time limit, in number of days. |
-| X-RateLimit-Limit-Month | The time limit, in number of months. |
-| X-RateLimit-Limit-Year | The time limit, in number of years. |
-| X-RateLimit-Remaining-Second | The number of seconds still left in the time frame. |
-| X-RateLimit-Remaining-Minute | The number of minutes still left in the time frame. |
-| X-RateLimit-Remaining-Day | The number of days still left in the time frame. |
-| X-RateLimit-Remaining-Month | The number of months still left in the time frame. |
-| X-RateLimit-Remaining-Year | The number of years still left in the time frame. |
-| Retry-After |  This header appears on `429` errors, indicating how long the upstream service is expected to be unavailable to the client. <br> {% if include.name == "Rate Limiting Advanced" %} When using `window_type: sliding` and `RateLimit-Reset`, `Retry-After` may increase due to the rate calculation for the sliding window.{% endif %} |
+{% table %}
+columns:
+  - title: Header
+    key: header
+  - title: Description
+    key: description
+rows:
+  - header: RateLimit-Limit
+    description: Allowed limit in the timeframe.
+  - header: RateLimit-Remaining
+    description: Number of available requests remaining.
+  - header: RateLimit-Reset
+    description: The time remaining, in seconds, until the rate limit quota is reset.
+  - header: X-RateLimit-Limit-Second
+    description: The time limit, in number of seconds.
+  - header: X-RateLimit-Limit-Minute
+    description: The time limit, in number of minutes.
+  - header: X-RateLimit-Limit-Day
+    description: The time limit, in number of days.
+  - header: X-RateLimit-Limit-Month
+    description: The time limit, in number of months.
+  - header: X-RateLimit-Limit-Year
+    description: The time limit, in number of years.
+  - header: X-RateLimit-Remaining-Second
+    description: The number of seconds still left in the time frame.
+  - header: X-RateLimit-Remaining-Minute
+    description: The number of minutes still left in the time frame.
+  - header: X-RateLimit-Remaining-Day
+    description: The number of days still left in the time frame.
+  - header: X-RateLimit-Remaining-Month
+    description: The number of months still left in the time frame.
+  - header: X-RateLimit-Remaining-Year
+    description: The number of years still left in the time frame.
+  - header: Retry-After
+    description: |
+        This header appears on `429` errors, indicating how long the upstream service is expected to be unavailable to the client. 
+        <br> {% if include.name == "Rate Limiting Advanced" %} When using `window_type: sliding` and `RateLimit-Reset`, `Retry-After` may increase due to the rate calculation for the sliding window.{% endif %} 
+{% endtable %}
 
 You can optionally hide the limit and remaining headers with the [`config.hide_client_headers`](./reference/#schema--config-hide_client_headers) option.
 
