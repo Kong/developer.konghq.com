@@ -684,3 +684,7 @@
 .card:target {
   @apply border-brand-saturated border-2;
 }
+
+.call-button {
+  @apply border border-brand text-primary font-normal hover:bg-transparent !important;
+}
