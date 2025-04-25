@@ -9,6 +9,8 @@ module Jekyll
       class Base < Liquid::Drop
         extend Forwardable
 
+        attr_reader :example
+
         def_delegators :@example, :variables, :headers
 
         def initialize(example:)

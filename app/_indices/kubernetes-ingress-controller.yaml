@@ -18,6 +18,10 @@ sections:
     items:
       - path: /kubernetes-ingress-controller/install/
       - path: /kubernetes-ingress-controller/license/
+      - path: /kubernetes-ingress-controller/kic-high-availability/
+      - path: /kubernetes-ingress-controller/service-health-checks/
+      - path: /kubernetes-ingress-controller/last-known-good-config/
+      - path: /kubernetes-ingress-controller/fallback-configuration/
   - title: Routing
     items:
       - path: /kubernetes-ingress-controller/routing/http/
