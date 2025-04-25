@@ -173,7 +173,7 @@ in the **Application** > **Sign On** section of the Okta configuration, setting 
 
     This claim specifies which user's groups to include in the token, in this case the wildcard regex specifies that all groups will be included.
 
-    {:.note}
+    {:.info}
     > If the authorization server is retrieving additional groups from
     third-party applications (for example, Google groups), the `groups` claim
     will not contain them. If it is desired to use these third-party groups, the Okta 
