@@ -1,0 +1,113 @@
+openapi: 3.0.2
+info:
+  title: JWT Signer JWKS API
+  version: 1.0.0
+  description: API for managing JWT Signer JSON Web Key Sets (JWKS) in Kong Gateway.
+  contact:
+    name: Kong Inc
+    url: https://konghq.com
+    email: docs@konghq.com
+servers:
+  - url: http://localhost:8001
+    description: Kong Admin API
+
+paths:
+  /jwt-signer/jwks:
+    get:
+      summary: List JWKS entries
+      tags: [JWT Signer]
+      responses:
+        '200':
+          description: A list of JWKS entries
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/JWKS'
+
+  /jwt-signer/jwks/{JwtSignerJwks}:
+    get:
+      summary: Retrieve a JWKS
+      tags: [JWT Signer]
+      parameters:
+        - name: JwtSignerJwks
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: JWKS returned without private keys
+          content:
+            application/jwk-set+json:
+              schema:
+                $ref: '#/components/schemas/JWKS'
+        '404':
+          description: JWKS not found
+    delete:
+      summary: Delete a JWKS
+      tags: [JWT Signer]
+      parameters:
+        - name: JwtSignerJwks
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: JWKS deleted
+        '404':
+          description: JWKS not found
+
+  /jwt-signer/jwks/{JwtSignerJwks}/rotate:
+    post:
+      summary: Rotate keys for a JWKS
+      tags: [JWT Signer]
+      parameters:
+        - name: JwtSignerJwks
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                client_username:
+                  type: string
+                client_password:
+                  type: string
+                client_certificate:
+                  type: string
+      responses:
+        '200':
+          description: JWKS rotated and returned
+          content:
+            application/jwk-set+json:
+              schema:
+                $ref: '#/components/schemas/JWKS'
+        '404':
+          description: JWKS not found
+
+components:
+  schemas:
+    JWKS:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            type: object
+            description: A public key (private parts removed)
+        previous:
+          type: array
+          items:
+            type: object
+            description: A set of previously rotated keys

@@ -1,0 +1,274 @@
+openapi: 3.0.2
+info:
+  title: Basic Auth
+  version: 1.0.0
+  description: API for managing Basic Auth credentials and tokens in Kong Gateway.
+  contact:
+    name: Kong Inc
+    url: https://konghq.com
+    email: docs@konghq.com
+servers:
+  - url: http://localhost:8001
+    description: Kong Admin API
+
+paths:    
+    /basic-auths:
+        get:
+            description: List all Basic-auth credentials
+            operationId: list-basic-auth
+            parameters:
+                - $ref: '#/components/parameters/PaginationSize'
+                - $ref: '#/components/parameters/PaginationOffset'
+                - $ref: '#/components/parameters/PaginationTagsFilter'
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    data:
+                                        items:
+                                            $ref: '#/components/schemas/BasicAuth'
+                                        type: array
+                                type: object
+                    description: A successful response listing Basic-auth credentials
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: List all Basic-auth credentials
+            tags:
+                - Basic-auth credentials
+        post:
+            description: Create a new Basic-auth credential
+            operationId: create-basic-auth
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/BasicAuth'
+                description: Description of the new Basic-auth credential for creation
+                required: true
+            responses:
+                "201":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BasicAuth'
+                    description: Successfully created Basic-auth credential
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Create a new Basic-auth credential
+            tags:
+                - Basic-auth credentials
+    /basic-auths/{BasicAuthId}:
+        delete:
+            description: Delete a Basic-auth credential
+            operationId: delete-basic-auth
+            parameters:
+                - $ref: '#/components/parameters/BasicAuthId'
+            responses:
+                "204":
+                    description: Successfully deleted Basic-auth credential or the resource didn't exist
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Delete a Basic-auth credential
+            tags:
+                - Basic-auth credentials
+        get:
+            description: Get a Basic-auth credential using ID.
+            operationId: get-basic-auth
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BasicAuth'
+                    description: Successfully fetched Basic-auth credential
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Fetch a Basic-auth credential
+            tags:
+                - Basic-auth credentials
+        parameters:
+            - $ref: '#/components/parameters/BasicAuthId'
+        patch:
+            description: Update a Basic-auth credential
+            operationId: update-basic-auth
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/BasicAuth'
+                description: Fields of the Basic-auth credential that need to be updated
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BasicAuth'
+                    description: Successfully updated Basic-auth credential
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+                "404":
+                    description: Resource does not exist
+            summary: Update a Basic-auth credential
+            tags:
+                - Basic-auth credentials
+        put:
+            description: Create or Update Basic-auth credential using ID.
+            operationId: upsert-basic-auth
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/BasicAuth'
+                description: Description of the Basic-auth credential
+                required: true
+            responses:
+                "200":
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BasicAuth'
+                    description: Successfully upserted Basic-auth credential
+                "401":
+                    $ref: '#/components/responses/HTTP401Error'
+            summary: Upsert a Basic-auth credential
+            tags:
+                - Basic-auth credentials
+components:
+  schemas:
+      BasicAuth:
+            additionalProperties: false
+            example:
+                consumer:
+                    id: 84a73fb8-50fc-44a7-a4d5-aa17728ee83f
+                id: b2f34145-0343-41a4-9602-4c69dec2f269
+                password: hashedsoopersecretvalue
+                username: darius
+            properties:
+                consumer:
+                    additionalProperties: false
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
+                created_at:
+                    description: Unix epoch when the resource was created.
+                    readOnly: true
+                    type: integer
+                id:
+                    nullable: true
+                    type: string
+                password:
+                    type: string
+                tags:
+                    items:
+                        type: string
+                    type: array
+                username:
+                    type: string
+            required:
+                - username
+                - password
+            type: object
+      BasicAuthWithoutParents:
+            additionalProperties: false
+            example:
+                id: b2f34145-0343-41a4-9602-4c69dec2f269
+                password: hashedsoopersecretvalue
+                username: darius
+            properties:
+                consumer:
+                    additionalProperties: false
+                    nullable: true
+                    properties:
+                        id:
+                            type: string
+                    type: object
+                    x-foreign: true
+                created_at:
+                    description: Unix epoch when the resource was created.
+                    readOnly: true
+                    type: integer
+                id:
+                    nullable: true
+                    type: string
+                password:
+                    type: string
+                tags:
+                    items:
+                        type: string
+                    type: array
+                username:
+                    type: string
+            required:
+                - username
+                - password
+            type: object
+      UnauthorizedError:
+        properties:
+            message:
+                type: string
+            status:
+                type: integer
+        required:
+            - status
+            - message
+        type: object
+  
+  responses:
+      HTTP401Error:
+            content:
+                application/json:
+                    schema:
+                        properties:
+                            message:
+                                example: Unauthorized
+                                type: string
+                        type: object
+            description: Unauthorized request.
+      InvalidAuthCredError:
+            content:
+                application/json:
+                    example:
+                        message: Unauthorized
+                        status: 401
+                    schema:
+                      $ref: '#/components/schemas/UnauthorizedError'
+            description: Invalid authentication credentials
+  parameters:
+    BasicAuthId:
+            description: ID of the Basic-auth credential to lookup
+            example: 80db1b58-ca7c-4d21-b92a-64eb07725872
+            in: path
+            name: BasicAuthId
+            required: true
+            schema:
+                type: string
+    PaginationOffset:
+            description: Offset from which to return the next set of resources. Use the value of the 'offset' field from the response of a list operation as input here to paginate through all the resources
+            in: query
+            name: offset
+            schema:
+                type: string
+    PaginationSize:
+        description: Number of resources to be returned.
+        in: query
+        name: size
+        schema:
+            default: 100
+            maximum: 1000
+            minimum: 1
+            type: integer
+    PaginationTagsFilter:
+        description: A list of tags to filter the list of resources on. Multiple tags can be concatenated using ',' to mean AND or using '/' to mean OR.
+        example: tag1,tag2
+        in: query
+        name: tags
+        schema:
+            type: string
