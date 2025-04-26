@@ -41,9 +41,14 @@ If you have an L4 Load Balancer that supports Proxy Protocol, and you're termina
 
 Once you have configured the Load Balancer to use Proxy Protocol, you need to set the following environment variables in {{site.base_gateway}} to receive the client IP from the Proxy Protocol header:
 
-- [`KONG_TRUSTED_IPS`](/gateway/latest/reference/configuration/#trusted_ips)
-- [`KONG_PROXY_LISTEN`](/gateway/latest/reference/configuration/#proxy_listen)
-- [`KONG_REAL_IP_HEADER`](/gateway/latest/reference/configuration/#real_ip_header)
+<!--vale off-->
+{% kong_config_table env %}
+config:
+  - name: trusted_ips
+  - name: proxy_listen
+  - name: real_ip_header
+{% endkong_config_table %}
+<!--vale on-->
 
 For example:
 
