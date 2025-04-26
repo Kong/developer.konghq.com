@@ -1,5 +1,5 @@
 ---
-title: "Using Custom Classes to split Internal/External traffic"
+title: "Using Custom Classes to split internal and external traffic"
 
 description: |
   Split traffic across multiple {{ site.base_gateway }} instances in a single Kubernetes cluster
@@ -45,7 +45,7 @@ spec:
 
 ## Creating Gateways
 
-For splitting traffic into different gateways using the Kubernetes Gateway API, create two `Gateway`s in the Kubernetes cluster, where each is reconciled by one {{ site.kic_product_name }} instance:
+For splitting traffic into different gateways using the Kubernetes Gateway API, create two `Gateway`s in the Kubernetes cluster, where each `Gateway` is reconciled by one {{ site.kic_product_name }} instance:
 
 ```bash
 echo 'apiVersion: gateway.networking.k8s.io/v1
@@ -100,7 +100,7 @@ helm upgrade --install kong-external kong/ingress -n external --create-namespace
 
 Rather than setting `spec.ingressClassName: kong` in your `Ingress` definitions, you should now use either `internal` or `external`. Ingress definitions that target `internal` will only be available via {{ site.base_gateway }} running in the `internal` namespace. Definitions that target `external` will only be available via the `external` gateway.
 
-For routes in Kubernetes Gateway APIs (like `HTTPRoute`), refer to the corresponding `Gateway` in its `spec.parentRef`.
+For Routes in Kubernetes Gateway APIs (like `HTTPRoute`), refer to the corresponding `Gateway` in its `spec.parentRef`.
 
 For example, this is how you can create a `Ingress` or `HTTPRoute` for routing internal traffic:
 
