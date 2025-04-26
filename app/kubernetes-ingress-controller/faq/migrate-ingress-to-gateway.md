@@ -13,6 +13,10 @@ products:
 works_on:
   - on-prem
   - konnect
+
+related_resources:
+  - text: Ingress to Gateway
+    url: /kubernetes-ingress-controller/migrate/ingress-to-gateway/
 ---
 
 Kong contributed to the kubernetes-sigs project [`ingress2gateway`](https://github.com/kubernetes-sigs/ingress2gateway) by creating a Kong provider able to convert ingress resources into Gateway resources. The `ingress2Gateway` tool provides a `print` command that gets ingress resources and displays the Gateway API equivalent. The output of this operation can be either directly applied to the cluster, or it can generate a new set of YAML files containing the converted configuration.

@@ -50,11 +50,22 @@ and then the plugin configuration connects the second upstream service using its
 
 The Canary Release plugin supports the following modes of operation:
 
-| Use case | Configured by |
-| ---------|---------------|
-| [Route traffic by fixed percentage](/plugins/canary/examples/route-by-fixed-percentage/) | `config.percentage` |
-| [Route traffic by grouping Consumers into allow/deny ACL groups](/plugins/canary/examples/route-by-acl-group/) | `config.groups` parameter with [ACL plugin](/plugins/acl/) |
-| [Transfer traffic from one upstream service to another over a configured time period](/plugins/canary/examples/transfer-traffic-over-time/) | `config.start` and `config.duration`|
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: use_case
+  - title: Configured by
+    key: configured_by
+rows:
+  - use_case: "[Route traffic by fixed percentage](/plugins/canary/examples/route-by-fixed-percentage/)"
+    configured_by: "`config.percentage`"
+  - use_case: "[Route traffic by grouping Consumers into allow/deny ACL groups](/plugins/canary/examples/route-by-acl-group/)"
+    configured_by: "`config.groups` parameter with [ACL plugin](/plugins/acl/)"
+  - use_case: "[Transfer traffic from one upstream service to another over a configured time period](/plugins/canary/examples/transfer-traffic-over-time/)"
+    configured_by: "`config.start` and `config.duration`"
+{% endtable %}
+<!--vale on-->
 
 ### Determining where to route a request
 

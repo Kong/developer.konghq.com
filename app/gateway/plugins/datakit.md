@@ -86,8 +86,7 @@ rows:
     description: Integrate seamlessly with third-party APIs that assist with service discovery and set new upstream values dynamically.
   - usecase: "[Get and set Kong entity properties](#adjust-kong-gateway-service-and-route-properties)"
     description: |
-      Use Datakit to adjust {{site.base_gateway}} entity configurations. For example, you could replace the service URL or set a header on a route.
-{% endtable %}
+      Use Datakit to adjust {{site.base_gateway}} entity configurations. For example, you could replace the service URL or set a header on a route.{% endtable %}
 <!--vale on-->
 
 ## How does it work?

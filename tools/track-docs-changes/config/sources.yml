@@ -251,6 +251,8 @@ app/_how-tos/configure-oidc-with-claims-based-auth.md:
   - app/_hub/kong-inc/openid-connect/how-to/authorization/_claims.md
 app/_how-tos/get-started-with-datakit.md:
   - app/_src/gateway/kong-enterprise/datakit/get-started.md
+app/_how-tos/visualize-ai-gateway-metrics-with-kibana.md:
+  - app/_src/gateway/ai-gateway/llm-library-integration-guides/langchain.md
 
 ## KIC
 app/_landing_pages/kubernetes-ingress-controller.yaml:
@@ -371,13 +373,16 @@ app/kubernetes-ingress-controller/faq/upgrading-gateway.md:
   - app/_src/kubernetes-ingress-controller/upgrade/gateway.md
 app/kubernetes-ingress-controller/faq/custom-entities.md:
   - app/_src/kubernetes-ingress-controller/guides/services/custom-entity.md
-
 app/kubernetes-ingress-controller/workspaces.md:
   - app/_src/kubernetes-ingress-controller/guides/security/workspaces.md
 app/kubernetes-ingress-controller/preserve-client-ip.md:
   - app/_src/kubernetes-ingress-controller/guides/security/client-ip.md
-
-
+app/kubernetes-ingress-controller/migrate/kongingress.md:
+  - app/_src/kubernetes-ingress-controller/guides/migrate/kongingress.md
+app/kubernetes-ingress-controller/migrate/ingress-to-gateway.md:
+  - app/_src/kubernetes-ingress-controller/guides/migrate/ingress-to-gateway.md
+app/kubernetes-ingress-controller/migrate/credential-kongcredtype-label.md:
+  - app/_src/kubernetes-ingress-controller/guides/migrate/credential-kongcredtype-label.md
 
 # plugins
 app/_kong_plugins/session/changelog.md:
@@ -450,6 +455,10 @@ app/_kong_plugins/openid-connect/examples/azure-ad.yaml:
   - app/_hub/kong-inc/openid-connect/how-to/third-party/_azure-ad.md
 app/_kong_plugins/openid-connect/examples/auth0.yaml:
   - app/_hub/kong-inc/openid-connect/how-to/third-party/_auth0.md
+app/_kong_plugins/openid-connect/examples/headers.yaml:
+  - app/_hub/kong-inc/openid-connect/how-to/_headers.md
+app/_kong_plugins/openid-connect/examples/logout.yaml:
+  - app/_hub/kong-inc/openid-connect/how-to/_logout.md
 app/_kong_plugins/bot-detection/index.md:
   - app/_hub/kong-inc/bot-detection/overview/_index.md
 app/_kong_plugins/acme/index.md:
@@ -1174,7 +1183,11 @@ app/gateway-manager/control-plane-groups.md:
   - app/konnect/gateway-manager/control-plane-groups/index.md
   - app/konnect/gateway-manager/control-plane-groups/conflicts.md
   - app/konnect/gateway-manager/control-plane-groups/migrate.md
-
+app/gateway-manager/data-plane-reference.md:
+  - app/konnect/gateway-manager/data-plane-nodes/upgrade.md
+  - app/konnect/gateway-manager/data-plane-nodes/verify-node.md
+  - app/konnect/gateway-manager/data-plane-nodes/secure-communications.md
+  - app/konnect/gateway-manager/data-plane-nodes/custom-dp-labels.md
 app/konnect-platform/konnect-account.md:
   - app/konnect/org-management/deactivation.md
 app/konnect-platform/teams-and-roles.md:

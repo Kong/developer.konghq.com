@@ -95,7 +95,6 @@ rows:
   - feature: "Dev Portal"
     ui: "Go to the Identity settings for your [Dev Portal](https://cloud.konghq.com/portals/)"
     api: "[`/portals/{portalId}/identity-providers`](/api/konnect/portal-management/v2/#/operations/create-portal-identity-provider)"
-
 {% endtable %}
 <!--vale on-->
 
@@ -132,7 +131,7 @@ You can now manage your organization's user permissions entirely from the IdP ap
 
 If you want to use Okta as your IdP provider for SSO, you need an Okta account with administrator access to configure Applications and Authorization Server settings.
 
-Additionally, if you're configuring Okta SSO for Dev Portal, you'll need a [non-public {{site.konnect_saas}} Dev Portal created](/dev-portal/portals/) in your {{site.konnect_short_name}} organization.
+Additionally, if you're configuring Okta SSO for Dev Portal, you'll need a [non-public {{site.konnect_saas}} Dev Portal created](/dev-portal/security-settings/) in your {{site.konnect_short_name}} organization.
 
 {% navtabs "Okta SSO" %}
 {% navtab "OIDC" %}
@@ -173,7 +172,7 @@ in the **Application** > **Sign On** section of the Okta configuration, setting 
 
     This claim specifies which user's groups to include in the token, in this case the wildcard regex specifies that all groups will be included.
 
-    {:.note}
+    {:.info}
     > If the authorization server is retrieving additional groups from
     third-party applications (for example, Google groups), the `groups` claim
     will not contain them. If it is desired to use these third-party groups, the Okta 
@@ -305,7 +304,6 @@ rows:
   - feature: "Dev Portal"
     ui: "Click on a [Dev Portal](https://cloud.konghq.com/portals/) and go to Team Mappings in its settings."
     api: "[`/portals/{portalId}/identity-provider/team-group-mappings`](/api/konnect/portal-management/v2/#/operations/update-portal-team-group-mappings)"
-
 {% endtable %}
 <!--vale on-->
 

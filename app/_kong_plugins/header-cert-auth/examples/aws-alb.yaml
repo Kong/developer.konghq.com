@@ -10,14 +10,31 @@ requirements:
  - |
   Configure ALB by adding an HTTPS listener:
 
-  | Setting | Mapping |
-  |---------|-------|
-  | Protocol | HTTPS |
-  | Port | 443 |
-  | Routing actions | Forward to target groups |
-  | Certificate source | From AWS Certificate Manager (ACM) |
-  | Certificate (from ACM) | Select the certificate that you want to use | 
-  | Client certificate handling | Select Mutual authentication (mTLS) with Passthrough |
+  <!--vale off-->
+  {% table %}
+
+  columns:
+    - title: Setting
+      key: setting
+    - title: Mapping
+      key: mapping
+  rows:
+    - setting: "Protocol"
+      mapping: "HTTPS"
+    - setting: "Port"
+      mapping: "443"
+    - setting: "Routing actions"
+      mapping: "Forward to target groups"
+    - setting: "Certificate source"
+      mapping: "From AWS Certificate Manager (ACM)"
+    - setting: "Certificate (from ACM)"
+      mapping: "Select the certificate that you want to use"
+    - setting: "Client certificate handling"
+      mapping: "Select Mutual authentication (mTLS) with Passthrough"
+
+  {% endtable %}
+  <!--vale on-->
+
 
 variables: 
   certificate_header_name:

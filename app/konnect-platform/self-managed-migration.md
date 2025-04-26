@@ -141,10 +141,10 @@ a shared Data Plane infrastructure among the constituent Control Planes.
 to a database. See the [plugins page](/plugins/?deployment-topology=konnect) for those that are supported on {{site.konnect_short_name}}.
 
 {{site.konnect_short_name}} also provides [Dedicated Cloud Gateways](/dedicated-cloud-gateways/), which 
-further [limit plugins](/konnect-compatibility/#considerations-for-dedicated-cloud-gateways) that require specialized software agents running on the Data Plane hosts. 
+further [limit plugins](/konnect-platform/konnect-compatibility/#considerations-for-dedicated-cloud-gateways) that require specialized software agents running on the Data Plane hosts. 
 
 To migrate plugins from a self-managed deployment to {{site.konnect_short_name}}, review 
-[Konnect Compatibility page](/konnect-compatibility/#plugin-compatibility) to check for supported and unsupported plugins.
+[Konnect Compatibility page](/konnect-platform/konnect-compatibility/#plugin-compatibility) to check for supported and unsupported plugins.
 Also review any plugin configuration values, as certain values are unsupported in {{site.konnect_short_name}} and may require additional
 changes to your configuration.
 
