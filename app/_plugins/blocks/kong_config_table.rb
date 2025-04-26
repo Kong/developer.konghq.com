@@ -6,7 +6,7 @@ module Jekyll
   class KongConfigTable < Liquid::Block # rubocop:disable Style/Documentation
     def initialize(tag_name, markup, tokens)
       super
-      @name = markup.strip
+      @mode = markup.strip
     end
 
     def render(context) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
@@ -16,7 +16,7 @@ module Jekyll
 
       contents = super
       config = YAML.load(contents)
-      drop = Drops::KongConfigTable.new(config, release(@site, @page))
+      drop = Drops::KongConfigTable.new(config, release(@site, @page), @mode)
 
       context.stack do
         context['config'] = drop
