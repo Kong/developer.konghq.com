@@ -65,7 +65,7 @@ If you are using an L7 Load Balancer where HTTP requests are being terminated at
 You should configure the Load Balancer to inject these headers, and then you need to set the following environment variables in {{site.base_gateway}} to pick up the client IP address from HTTP headers:
 
 <!--vale off-->
-{% kong_config_table %}
+{% kong_config_table env %}
 config:
   - name: trusted_ips
   - name: real_ip_header
