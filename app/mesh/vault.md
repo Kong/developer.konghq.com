@@ -172,7 +172,7 @@ vault write kmesh-pki-default/roles/dataplane-proxies \
   ttl="720h"
 ```
 
-{:.note}
+{:.info}
 > **Note:** Use the `allowed_domains` and `allow_subdomains` parameters
 **only** when `commonName` is set in the mTLS Vault backend.
 
@@ -200,7 +200,7 @@ We suggest using an [orphan token to avoid surprising behavior around expiration
 You need root/sudo permissions to execute the previous command.
 The output should print a Vault token that you then provide as the `conf.fromCp.auth.token` value of the `Mesh` object.
 
-{:.note}
+{:.info}
 > **Note:** There are some failure modes where the `vault` CLI still returns a token
 even though an error was encountered and the token is invalid. For example, if the
 policy creation fails in the previous step, then the `vault token create` command

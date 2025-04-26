@@ -83,8 +83,7 @@ rows:
       {% new_in 3.8 %} For semantic caching, the model used to generate the embeddings.
   - property: "`ai.[$plugin_name].cache.embeddings_latency`"
     description: |
-      {% new_in 3.8 %} For semantic caching, the time taken to generate the embeddings.
-{% endtable %}
+      {% new_in 3.8 %} For semantic caching, the time taken to generate the embeddings.{% endtable %}
 <!--vale on-->
 
 See the following AI plugin log format example:

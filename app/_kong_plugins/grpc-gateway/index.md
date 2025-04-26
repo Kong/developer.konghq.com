@@ -29,6 +29,10 @@ icon: grpc-gateway.png
 categories:
   - transformations
 
+tags:
+  - transformations
+  - grpc
+
 search_aliases:
   - grpc gateway
 

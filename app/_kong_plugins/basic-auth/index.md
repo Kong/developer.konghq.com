@@ -66,13 +66,25 @@ The authentication plugins can be configured to always require authentication or
 
 Common use cases for the Basic Authentication plugin:
 
-|Use case | Description|
-|---------|------------|
-| Allow or deny requests on a Gateway Service or Route | Configure both the [ACL](/plugins/acl/) and Basic Authentication plugins to restrict access to a Service or a Route by adding Consumers to allowed or denied lists using arbitrary ACL groups. |
-| Authenticate on the upstream service | Configure the Basic Authentication plugin on a Route and then configure the Consumer credential in the `config.add.headers` property for the [Request Transformer](/plugins/request-transformer/) plugin. |
-| [Allow clients to choose their authentication method](/how-to/allow-multiple-authentication/) | Enable the Basic Authentication plugin and any other authentication plugins. Use the `config.anonymous` property on the plugins to determine if authentication is always performed or only when the Consumer wasn't already authenticated. |
-| Check credentials per session | When the [Session](/plugins/session/) plugin is enabled in conjunction with an authentication plugin, it runs before credential verification. If no session is found, then the authentication plugin runs again and credentials are checked normally. If the credential verification is successful, then the Session plugin creates a new session for usage with subsequent requests. |
-| Rate limit unauthenticated and authenticated users differently | You can configure a given Service to allow both authenticated and anonymous access. You might use this configuration to grant access to anonymous users with a low rate limit and grant access to authenticated users with a higher rate limit using the [Rate Limiting](/plugins/rate-limiting/) plugin. |
-| [Use basic authentication for Kong Manager](/how-to/enable-basic-auth-on-kong-manager/) | If you want users to authenticate before logging in to Kong Manager, you can configure basic authentication for the GUI. | 
-
-
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: use_case
+  - title: Description
+    key: description
+rows:
+  - use_case: "Allow or deny requests on a Gateway Service or Route"
+    description: "Configure both the [ACL](/plugins/acl/) and Basic Authentication plugins to restrict access to a Service or a Route by adding Consumers to allowed or denied lists using arbitrary ACL groups."
+  - use_case: "Authenticate on the upstream service"
+    description: "Configure the Basic Authentication plugin on a Route and then configure the Consumer credential in the `config.add.headers` property for the [Request Transformer](/plugins/request-transformer/) plugin."
+  - use_case: "[Allow clients to choose their authentication method](/how-to/allow-multiple-authentication/)"
+    description: "Enable the Basic Authentication plugin and any other authentication plugins. Use the `config.anonymous` property on the plugins to determine if authentication is always performed or only when the Consumer wasn't already authenticated."
+  - use_case: "Check credentials per session"
+    description: "When the [Session](/plugins/session/) plugin is enabled in conjunction with an authentication plugin, it runs before credential verification. If no session is found, then the authentication plugin runs again and credentials are checked normally. If the credential verification is successful, then the Session plugin creates a new session for usage with subsequent requests."
+  - use_case: "Rate limit unauthenticated and authenticated users differently"
+    description: "You can configure a given Service to allow both authenticated and anonymous access. You might use this configuration to grant access to anonymous users with a low rate limit and grant access to authenticated users with a higher rate limit using the [Rate Limiting](/plugins/rate-limiting/) plugin."
+  - use_case: "[Use basic authentication for Kong Manager](/how-to/enable-basic-auth-on-kong-manager/)"
+    description: "If you want users to authenticate before logging in to Kong Manager, you can configure basic authentication for the GUI."
+{% endtable %}
+<!--vale on-->

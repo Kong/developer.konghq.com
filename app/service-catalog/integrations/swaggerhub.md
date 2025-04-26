@@ -39,9 +39,20 @@ This will take you to SwaggerHub, where you can use your SwaggerHub API key to g
 
 ## Resources
 
-Entity | Description
--------|-------------
-{{page.bindable_entities}} | A [SwaggerHub API version](https://support.smartbear.com/swaggerhub/docs/en/manage-apis/versioning.html?sbsearch=API%20Versions), which is the unique version identifier for a specific API spec.
+<!--vale off-->
+{% table %}
+columns:
+  - title: Entity
+    key: entity
+  - title: Description
+    key: description
+rows:
+  - entity: "{{page.bindable_entities}}"
+    description: 
+      A [SwaggerHub API version](https://support.smartbear.com/swaggerhub/docs/en/manage-apis/versioning.html?sbsearch=API%20Versions), which is the unique version identifier for a specific API spec.
+{% endtable %}
+<!--vale on-->
+
 
 ## Discovery information
 

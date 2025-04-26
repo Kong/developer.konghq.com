@@ -198,12 +198,39 @@ This predicate example has the following structure:
 
 Predicates are made up of smaller units that you can configure:
 
-| Object | Description | Example |
-|--------|-------------|---------|
-| Field | The field contains value extracted from the incoming request. For example, the request path or the value of a header field. The field value could also be absent in some cases. An absent field value will always cause the predicate to yield `false` no matter the operator. The field always displays to the left of the predicate. | `http.path` |
-| Constant value | The constant value is what the field is compared to based on the provided operator. The constant value always displays to the right of the predicate. | `"/foo/bar"` |
-| Operator | An operator defines the desired comparison action to be performed on the field against the provided constant value. The operator always displays in the middle of the predicate, between the field and constant value. | `^=` |
-| Predicate | A predicate compares a field against a pre-defined value using the provided operator and returns `true` if the field passed the comparison or `false` if it didn't. | `http.path ^= "/foo/bar"` |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Object
+    key: object
+  - title: Description
+    key: description
+  - title: Example
+    key: example
+rows:
+  - object: Field
+    description: |
+      The field contains value extracted from the incoming request. For example, the request path or the value of a header field. The field value could also be absent in some cases. An absent field value will always cause the predicate to yield `false` no matter the operator. The field always displays to the left of the predicate.
+    example: |
+      `http.path`
+  - object: Constant value
+    description: |
+      The constant value is what the field is compared to based on the provided operator. The constant value always displays to the right of the predicate.
+    example: |
+      `"/foo/bar"`
+  - object: Operator
+    description: |
+      An operator defines the desired comparison action to be performed on the field against the provided constant value. The operator always displays in the middle of the predicate, between the field and constant value.
+    example: |
+      `^=`
+  - object: Predicate
+    description: |
+      A predicate compares a field against a pre-defined value using the provided operator and returns `true` if the field passed the comparison or `false` if it didn't.
+    example: |
+      `http.path ^= "/foo/bar"`
+{% endtable %}
+<!--vale on-->
+
 
 ### Field and constant value types
 
@@ -398,71 +425,197 @@ An operator defines the desired comparison action to be performed on the field a
 
 The expressions language supports a rich set of operators that can be performed on various data types.
 
-| Operator       | Name                  | Description                  |
-|----------------|-----------------------|--------------------------------------------------------------------------------------|
-| `==`           | Equals                | Field value is equal to the constant value                                                                                                                                                                   |
-| `!=`           | Not equals            | Field value does not equal the constant value                                                                                                                                                                |
-| `~`            | Regex match           | Field value matches regex                                                                                                                                                                                    |
-| `^=`           | Prefix match          | Field value starts with the constant value                                                                                                                                                                   |
-| `=^`           | Postfix match         | Field value ends with the constant value                                                                                                                                                                     |
-| `>=`           | Greater than or equal | Field value is greater than or equal to the constant value                                                                                                                                                   |
-| `>`            | Greater than          | Field value is greater than the constant value                                                                                                                                                               |
-| `<=`           | Less than or equal    | Field value is less than or equal to the constant value                                                                                                                                                      |
-| `<`            | Less than             | Field value is less than the constant value                                                                                                                                                                  |
-| `in`           | In                    | Field value is inside the constant value. This operator is used with `IpAddr` and `IpCidr` types to perform an efficient IP list check. For example, `net.src.ip in 192.168.0.0/24` only returns `true` if the value of `net.src.ip` is within `192.168.0.0/24`.                                                                                                                                                                    |
-| `not in`       | Not in                | Field value is not inside the constant value. This operator is used with `IpAddr` and `IpCidr` types to perform an efficient IP list check. For example, `net.src.ip in 192.168.0.0/24` only returns `true` if the value of `net.src.ip` is within `192.168.0.0/24`.                                                                                                                                                                |
-| `contains`     | Contains              | Field value contains the constant value. This operator is used to check the existence of a string inside another string. For example, `http.path contains "foo"` returns `true` if `foo` can be found anywhere inside `http.path`. This will match a `http.path` that looks like `/foo`, `/abc/foo`, or `/xfooy`, for example.                            |
-| `&&`           | And                   | Returns `true` if **both** expressions on the left and right side evaluates to `true`                                                                                                                        |
-| `||` | Or | Returns `true` if **any** expressions on the left and right side evaluates to `true` |                                                                                                                    |
-| `(Expression)` | Parenthesis           | Groups expressions together to be evaluated first                                                                                                                                                            |
-| `!`            | Not                   | Negates the result of a parenthesized expression. **Note:** The `!` operator can only be used with parenthesized expression like `!(foo == 1)`, it **cannot** be used with a bare predicate like `! foo == 1` |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Operator
+    key: operator
+  - title: Name
+    key: name
+  - title: Description
+    key: description
+rows:
+  - operator: "`==`"
+    name: Equals
+    description: "Field value is equal to the constant value."
+  - operator: "`!=`"
+    name: Not equals
+    description: "Field value does not equal the constant value."
+  - operator: "`~`"
+    name: Regex match
+    description: "Field value matches regex."
+  - operator: "`^=`"
+    name: Prefix match
+    description: "Field value starts with the constant value."
+  - operator: "`=^`"
+    name: Postfix match
+    description: "Field value ends with the constant value."
+  - operator: "`>=`"
+    name: Greater than or equal
+    description: "Field value is greater than or equal to the constant value."
+  - operator: "`>`"
+    name: Greater than
+    description: "Field value is greater than the constant value."
+  - operator: "`<=`"
+    name: Less than or equal
+    description: "Field value is less than or equal to the constant value."
+  - operator: "`<`"
+    name: Less than
+    description: "Field value is less than the constant value."
+  - operator: "`in`"
+    name: In
+    description: |
+      Field value is inside the constant value. This operator is used with `IpAddr` and `IpCidr` types to perform an efficient IP list check. 
+      <br><br>
+      For example, `net.src.ip in 192.168.0.0/24` only returns `true` if the value of `net.src.ip` is within `192.168.0.0/24`.
+  - operator: "`not in`"
+    name: Not in
+    description: |
+      Field value is not inside the constant value. This operator is used with `IpAddr` and `IpCidr` types to perform an efficient IP list check. 
+      <br><br>
+      For example, `net.src.ip in 192.168.0.0/24` only returns `true` if the value of `net.src.ip` is within `192.168.0.0/24`.
+  - operator: "`contains`"
+    name: Contains
+    description: |
+      Field value contains the constant value. This operator is used to check the existence of a string inside another string. 
+      <br><br>
+      For example, `http.path contains \"foo\"` returns `true` if `foo` can be found anywhere inside `http.path`. This will match a `http.path` that looks like `/foo`, `/abc/foo`, or `/xfooy`, for example.
+  - operator: "`&&`"
+    name: And
+    description: "Returns `true` if **both** expressions on the left and right side evaluates to `true`."
+  - operator: "`||`"
+    name: Or
+    description: "Returns `true` if **any** expressions on the left and right side evaluates to `true`."
+  - operator: "`(Expression)`"
+    name: Parenthesis
+    description: "Groups expressions together to be evaluated first."
+  - operator: "`!`"
+    name: Not
+    description: |
+      Negates the result of a parenthesized expression. 
+      <br><br>
+      The `!` operator can only be used with parenthesized expression like `!(foo == 1)`, it **cannot** be used with a bare predicate like `! foo == 1`."
+{% endtable %}
+<!--vale on-->
 
 ### Allowed type and operator combinations
 
 Depending on the field type, only certain content types and operators are supported. 
 
-| Field type | Supported content types and their supported operators |
-|------------|-------------------------------------------------------|
-| `String` | * `String`: `==`, `!=`, `~`, `^=`, `=^`, `contains`<br>* `Regex`: `~` |
-| `IpAddr` | * `IpCidr`: `in`, `not in`<br> * `IpAddr`: `==` |
-| `Int` | `Int`: `==`, `!=`, `>=`, `>`, `<=`, `<` |
-| `Expression` | `Regex`: `&&`, `||` |
-
+<!--vale off-->
+{% table %}
+columns:
+  - title: Field type
+    key: field
+  - title: Supported content types and their supported operators
+    key: operators
+rows:
+  - field: "`String`"
+    operators: |
+      * `String`: `==`, `!=`, `~`, `^=`, `=^`, `contains`
+      * `Regex`: `~`
+  - field: "`IpAddr`"
+    operators: |
+      * `IpCidr`: `in`, `not in`
+      * `IpAddr`: `==`
+  - field: "`Int`"
+    operators: |
+      * `Int`: `==`, `!=`, `>=`, `>`, `<=`, `<`
+  - field: "`Expression`"
+    operators: |
+      * `Regex`: `&&`, `||`
+{% endtable %}
+<!--vale on-->
 
 {:.info}
 > **Notes:** 
-  * The `~` operator is described as supporting both `String ~ String` and `String ~ Regex`.
-  In reality, `Regex` constant values can only be written as `String` on the right hand side.
-  The presence of `~` operators treats the string value as a regex.
-  Even with the `~` operator, `String` escape rules described previously still apply and it
-  is almost always easier to use raw string literals for the `~` operator.
-  * The `~` operator does not automatically anchor the regex to the beginning of the input.
-  Meaning `http.path ~ r#"/foo/\d"#` could match a path like `/foo/1` or `/some/thing/foo/1`.
-  If you want to match from the beginning of the string (anchoring the regex), then you must
-  manually specify it with the `^` meta-character. For example, `http.path ~ r#"^/foo/\d"#`.
-  * Operator behavior differs when performing IP address-related comparisons.
-    Different families of address types for the field and constant value will
-    cause the predicate to return the following values:
-    * Using `==` or `in`: Returns `false` at runtime.
-    * Using `not in`: Returns `true` at runtime.
+* The `~` operator is described as supporting both `String ~ String` and `String ~ Regex`.
+In reality, `Regex` constant values can only be written as `String` on the right hand side.
+The presence of `~` operators treats the string value as a regex.
+Even with the `~` operator, `String` escape rules described previously still apply and it
+is almost always easier to use raw string literals for the `~` operator.
+* The `~` operator does not automatically anchor the regex to the beginning of the input.
+Meaning `http.path ~ r#"/foo/\d"#` could match a path like `/foo/1` or `/some/thing/foo/1`.
+If you want to match from the beginning of the string (anchoring the regex), then you must
+manually specify it with the `^` meta-character. For example, `http.path ~ r#"^/foo/\d"#`.
+* Operator behavior differs when performing IP address-related comparisons.
+  Different families of address types for the field and constant value will
+  cause the predicate to return the following values:
+  * Using `==` or `in`: Returns `false` at runtime.
+  * Using `not in`: Returns `true` at runtime.
 
 ## Example expressions
 
 ### HTTP examples 
 
-| Name | Example expression | Description |
-|------|--------------------|-------------|
-| Prefix based path matching | `http.path ^= "/foo/bar"` | Matches HTTP requests that have a path starting with `/foo/bar` |
-| Regex based path matching | `http.path ~ r#"/foo/bar/\d+"#` | N/A |
-| Case insensitive path matching | `lower(http.path) == "/foo/bar"` | Ignores case when performing the path match. |
-| Match by header value ("all" style matching) | `http.headers.x_foo ~ r#"bar\d"#` | If there are multiple header values for `X-Foo` and the client sends more than one `X-Foo` header with different values, the above example ensures that **each** instance of the value matches the regex `r#"bar\d"#`. This is called "all" style matching. |
-| Match by header value ("any" style matching) | `any(http.headers.x_foo) ~ r#"bar\d"#` | Returns `true` for the predicate as soon as any of the values pass the comparison. Can be combined with other transformations, like `lower()`. |
-| Regex captures | `http.path ~ r#"/foo/(?P<component>.+)"#` | You can define regex capture groups in any regex operation, which will be made available later for plugins to use. Currently, this is only supported with the `http.path` field. The matched value of `component` will be made available later to plugins such as [Request Transformer Advanced](/plugins/request-transformer-advanced/). |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Name
+    key: name
+  - title: Example expression
+    key: expression
+  - title: Description
+    key: description
+rows:
+  - name: Prefix-based path matching
+    expression: |
+      `http.path ^= "/foo/bar"` 
+    description: "Matches HTTP requests that have a path starting with `/foo/bar`."
+  - name: Regex-based path matching
+    expression: |
+      `http.path ~ r#"/foo/bar/\d+"#`
+    description: "N/A"
+  - name: Case-insensitive path matching
+    expression: |
+      `lower(http.path) == "/foo/bar"`
+    description: Ignores case when performing the path match.
+  - name: |
+      Match by header value ("all" style matching).
+    expression: |
+      `http.headers.x_foo ~ r#"bar\d"#`
+    description: |
+      If there are multiple header values for `X-Foo` and the client sends more than one `X-Foo` header with different values, the above example ensures that **each** instance of the value matches the regex `r#"bar\d"#`.
+      This is called "all" style matching.
+  - name: |
+      Match by header value ("any" style matching)
+    expression: |
+      `any(http.headers.x_foo) ~ r#"bar\d"#`
+    description: |
+      Returns `true` for the predicate as soon as any of the values pass the comparison. 
+      Can be combined with other transformations, like `lower()`.
+  - name: Regex captures
+    expression: |
+      `http.path ~ r#"/foo/(?P<component>.+)"#`
+    description: |
+      You can define regex capture groups in any regex operation, which will be made available later for plugins to use. Currently, this is only supported with the `http.path` field. 
+      The matched value of `component` will be made available later to plugins such as [Request Transformer Advanced](/plugins/request-transformer-advanced/).
+{% endtable %}
+<!--vale on-->
+
+
 
 ### TCP, TLS, and UDP examples
 
-| Name | Example expression | Description |
-|------|--------------------|-------------|
-| Match by source IP and destination port | `net.src.ip in 192.168.1.0/24 && net.dst.port == 8080` | This matches all clients in the `192.168.1.0/24` subnet and the destination port (which is listened to by {{site.base_gateway}}) is `8080`. IPv6 addresses are also supported. |
-| Match by SNI (for TLS routes) | `tls.sni =^ ".example.com"` | This matches all TLS connections with the `.example.com` SNI ending. |
-
+<!--vale off-->
+{% table %}
+columns:
+  - title: Name
+    key: name
+  - title: Example expression
+    key: expression
+  - title: Description
+    key: description
+rows:
+  - name: Match by source IP and destination port
+    expression: |
+      `net.src.ip in 192.168.1.0/24 && net.dst.port == 8080`
+    description: |
+      This matches all clients in the `192.168.1.0/24` subnet and the destination port (which is listened to by {{site.base_gateway}}) is `8080`. IPv6 addresses are also supported.
+  - name: "Match by SNI (for TLS routes)"
+    expression: |
+      `tls.sni =^ ".example.com"` 
+    description: |
+      This matches all TLS connections with the `.example.com` SNI ending.
+{% endtable %}
+<!--vale on-->

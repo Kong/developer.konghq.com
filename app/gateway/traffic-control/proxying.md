@@ -143,6 +143,7 @@ rows:
       `<path>` is the path of the request which was accepted by {{site.base_gateway}}. 
       If `$realip_remote_addr` is one of the **trusted** addresses, the request header with the same name gets forwarded if provided. 
       Otherwise, the value of the `$request_uri` variable (with the query string stripped) provided by [`ngx_http_core_module`](https://nginx.org/docs/http/ngx_http_core_module.html#var_server_port) will be used. 
+      
       {:.info}
       > **Note**: {{site.base_gateway}} returns `"/"` for an empty path, but it doesn't do any other normalization on the request path.
   - header: All other headers

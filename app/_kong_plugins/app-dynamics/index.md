@@ -92,40 +92,129 @@ for more information about the configuration parameters.
 The plugin uses the following environment
 variables:
 
-| Variable | Description | Type | Default |
-|--|--|--|--|
-| `KONG_APPD_CONTROLLER_HOST` | Hostname of the AppDynamics controller. | String | |
-| `KONG_APPD_CONTROLLER_PORT` | Port number to use to communicate with the controller. | Integer | `443` |
-| `KONG_APPD_CONTROLLER_ACCOUNT` | Account name to use with controller. | String | |
-| `KONG_APPD_CONTROLLER_ACCESS_KEY` | Access key to use with the AppDynamics controller. | String |
-| `KONG_APPD_LOGGING_LEVEL` | Logging level of the AppDynamics SDK agent. | Integer | `2` |
-| `KONG_APPD_LOGGING_LOG_DIR` | Directory into which agent log files are written. | String | `/tmp/appd` |
-| `KONG_APPD_TIER_NAME` | Tier name to use for business transactions. | String | |
-| `KONG_APPD_APP_NAME` | Application name to report to AppDynamics. | String | `Kong` |
-| `KONG_APPD_NODE_NAME` | Node name to report to AppDynamics. This value defaults to the system's hostname.| String | `hostname` |
-| `KONG_APPD_INIT_TIMEOUT_MS` | Maximum time to wait for a controller connection when starting, in milliseconds. | Integer | `5000` |
-| `KONG_APPD_CONTROLLER_USE_SSL` | Use SSL encryption in controller communication. `true`, `on`, or `1` are all interpreted as `True`, any other value is considered `false`.| Boolean | `on` |
-| `KONG_APPD_CONTROLLER_HTTP_PROXY_HOST` | Hostname of proxy to use to communicate with controller. | String |  |
-| `KONG_APPD_CONTROLLER_HTTP_PROXY_PORT` | Port number of controller proxy. | Integer |  |
-| `KONG_APPD_CONTROLLER_HTTP_PROXY_USERNAME` | Username to use to identify to proxy. This value is a string that is never shown in logs. This value can be specified as a vault reference.| String |  |
-| `KONG_APPD_CONTROLLER_HTTP_PROXY_PASSWORD` | Password to use to identify to proxy. This value is a string that is never shown in logs. This value can be specified as a vault reference.| String |  |
-| `KONG_APPD_CONTROLLER_CERTIFICATE_FILE` | Path to a self-signed certificate file. For example, `/etc/kong/certs/ca-certs.pem`. <br><br>_Available starting in {{site.base_gateway}} 3.4.3.3_ | String | | 
-| `KONG_APPD_CONTROLLER_CERTIFICATE_DIR` | Path to a certificate directory. For example, `/etc/kong/certs/`. <br><br> _Available starting in {{site.base_gateway}} 3.4.3.3_ | String | | 
-| `KONG_APPD_ANALYTICS_ENABLE` | Enable or disable Analytics Agent reporting. When disabled (default), Analytics-related logging messages are suppressed. <br><br>_Available starting in {{site.base_gateway}} 3.8.x_ | Boolean | `false` | 
+<!--vale off-->
+{% table %}
+columns:
+  - title: Variable
+    key: variable
+  - title: Description
+    key: description
+  - title: Type
+    key: type
+  - title: Default
+    key: default
+rows:
+  - variable: "`KONG_APPD_CONTROLLER_HOST`"
+    description: "Hostname of the AppDynamics controller."
+    type: "String"
+    default: ""
+  - variable: "`KONG_APPD_CONTROLLER_PORT`"
+    description: "Port number to use to communicate with the controller."
+    type: "Integer"
+    default: "`443`"
+  - variable: "`KONG_APPD_CONTROLLER_ACCOUNT`"
+    description: "Account name to use with controller."
+    type: "String"
+    default: ""
+  - variable: "`KONG_APPD_CONTROLLER_ACCESS_KEY`"
+    description: "Access key to use with the AppDynamics controller."
+    type: "String"
+    default: ""
+  - variable: "`KONG_APPD_LOGGING_LEVEL`"
+    description: "Logging level of the AppDynamics SDK agent."
+    type: "Integer"
+    default: "`2`"
+  - variable: "`KONG_APPD_LOGGING_LOG_DIR`"
+    description: "Directory into which agent log files are written."
+    type: "String"
+    default: "`/tmp/appd`"
+  - variable: "`KONG_APPD_TIER_NAME`"
+    description: "Tier name to use for business transactions."
+    type: "String"
+    default: ""
+  - variable: "`KONG_APPD_APP_NAME`"
+    description: "Application name to report to AppDynamics."
+    type: "String"
+    default: "`Kong`"
+  - variable: "`KONG_APPD_NODE_NAME`"
+    description: "Node name to report to AppDynamics. This value defaults to the system's hostname."
+    type: "String"
+    default: "`hostname`"
+  - variable: "`KONG_APPD_INIT_TIMEOUT_MS`"
+    description: "Maximum time to wait for a controller connection when starting, in milliseconds."
+    type: "Integer"
+    default: "`5000`"
+  - variable: "`KONG_APPD_CONTROLLER_USE_SSL`"
+    description: "Use SSL encryption in controller communication. `true`, `on`, or `1` are all interpreted as `True`, any other value is considered `false`."
+    type: "Boolean"
+    default: "`on`"
+  - variable: "`KONG_APPD_CONTROLLER_HTTP_PROXY_HOST`"
+    description: "Hostname of proxy to use to communicate with controller."
+    type: "String"
+    default: ""
+  - variable: "`KONG_APPD_CONTROLLER_HTTP_PROXY_PORT`"
+    description: "Port number of controller proxy."
+    type: "Integer"
+    default: ""
+  - variable: "`KONG_APPD_CONTROLLER_HTTP_PROXY_USERNAME`"
+    description: "Username to use to identify to proxy. This value is a string that is never shown in logs. This value can be specified as a vault reference."
+    type: "String"
+    default: ""
+  - variable: "`KONG_APPD_CONTROLLER_HTTP_PROXY_PASSWORD`"
+    description: "Password to use to identify to proxy. This value is a string that is never shown in logs. This value can be specified as a vault reference."
+    type: "String"
+    default: ""
+  - variable: "`KONG_APPD_CONTROLLER_CERTIFICATE_FILE`"
+    description: "Path to a self-signed certificate file. For example, `/etc/kong/certs/ca-certs.pem`. <br><br>_Available starting in {{site.base_gateway}} 3.4.3.3_"
+    type: "String"
+    default: ""
+  - variable: "`KONG_APPD_CONTROLLER_CERTIFICATE_DIR`"
+    description: "Path to a certificate directory. For example, `/etc/kong/certs/`. <br><br> _Available starting in {{site.base_gateway}} 3.4.3.3_"
+    type: "String"
+    default: ""
+  - variable: "`KONG_APPD_ANALYTICS_ENABLE`"
+    description: "Enable or disable Analytics Agent reporting. When disabled (default), Analytics-related logging messages are suppressed. <br><br>_Available starting in {{site.base_gateway}} 3.8.x_"
+    type: "Boolean"
+    default: "`false`"
+{% endtable %}
+<!--vale on-->
+
 
 ### Possible values for the `KONG_APPD_LOGGING_LEVEL` parameter
 
 The `KONG_APPD_LOGGING_LEVEL` environment variable is a numeric value that controls the desired logging level.
 Each value corresponds to a specific level:
 
-| Value | Name | Description |
-|--|--|--|
-| 0 | `TRACE` | Reports finer-grained informational events than the debug level that may be useful to debug an application. |
-| 1 | `DEBUG` | Reports fine-grained informational events that may be useful to debug an application. |
-| 2 | `INFO` | Default log level. Reports informational messages that highlight the progress of the application at coarse-grained level.|
-| 3 | `WARN` | Reports on potentially harmful situations. |
-| 4 | `ERROR` | Reports on error events that may allow the application to continue running.|
-| 5 | `FATAL` | Fatal errors that prevent the agent from operating. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Value
+    key: value
+  - title: Name
+    key: name
+  - title: Description
+    key: description
+rows:
+  - value: "0"
+    name: "`TRACE`"
+    description: "Reports finer-grained informational events than the debug level that may be useful to debug an application."
+  - value: "1"
+    name: "`DEBUG`"
+    description: "Reports fine-grained informational events that may be useful to debug an application."
+  - value: "2"
+    name: "`INFO`"
+    description: "Default log level. Reports informational messages that highlight the progress of the application at coarse-grained level."
+  - value: "3"
+    name: "`WARN`"
+    description: "Reports on potentially harmful situations."
+  - value: "4"
+    name: "`ERROR`"
+    description: "Reports on error events that may allow the application to continue running."
+  - value: "5"
+    name: "`FATAL`"
+    description: "Fatal errors that prevent the agent from operating."
+{% endtable %}
+<!--vale on-->
 
 ## Agent logging
 

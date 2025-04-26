@@ -37,13 +37,55 @@ Because every audit log entry is made available via {{site.base_gateway}}’s Ad
 
 {{site.base_gateway}} includes details about the following in audit logs:
 
-| Event | Relevant audit log fields | Admin API endpoint | Description |
-|-------|------------------|--------------------|-------------|
-| [RBAC](/gateway/entities/rbac/) | `rbac_user_id`<br>`rbac_user_name` | [`/audit/requests`](/api/gateway/admin-ee/#/operations/get-audit-requests) | When RBAC is enforced, the RBAC user’s UUID will be written to the `rbac_user_id` field in the audit log entry, and the username will be written to the `rbac_user_name` field. |
-| [Workspace](/gateway/entities/workspace/) | `workspace` | [`/audit/requests`](/api/gateway/admin-ee/#/operations/get-audit-requests) | The `workspace` field is the UUID of the Workspace with which the request is associated. |
-| [Kong Manager login](/gateway/kong-manager/) | `"request_source": "kong-manager"`<br>`"method": "GET", "path": "/auth"` | [`/audit/requests`](/api/gateway/admin-ee/#/operations/get-audit-requests) | The `request_source` field tells you that the action occurred in Kong Manager, and the `GET` method and `/auth` path indicate a login event. |
-| [Kong Manager logout](/gateway/kong-manager/) | `"request_source": "kong-manager"`<br>`"method": "DELETE", "path": "/auth?session_logout=true"` | [`/audit/requests`](/api/gateway/admin-ee/#/operations/get-audit-requests) | The `DELETE` method and `/auth?session_logout=true` path indicate a logout event. |
-| Database entity changes | `payload` (contains changed objects)<br>`request_id` | [`/audit/objects`](/api/gateway/admin-ee/#/operations/get-audit-objects) | Entries for all insertions, updates, and deletions to the cluster database. Database update audit logs are also associated with Admin API request unique IDs. Object audit entries contain information about the entity updated, including the entity body itself, its database primary key, and the type of operation performed (create, update, or delete). It's also associated with the `request_id` field. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Event
+    key: event
+  - title: Fields
+    key: fields
+  - title: Endpoint
+    key: endpoint
+  - title: Description
+    key: description
+rows:
+  - event: "[RBAC](/gateway/entities/rbac/)"
+    fields: |
+      `rbac_user_id`
+      <br>
+      `rbac_user_name`
+    endpoint: "[`/audit/requests`](/api/gateway/admin-ee/#/operations/get-audit-requests)"
+    description: |
+      When RBAC is enforced, the RBAC user’s UUID will be written to the `rbac_user_id` field in the audit log entry, and the username will be written to the `rbac_user_name` field.
+  - event: "[Workspace](/gateway/entities/workspace/)"
+    fields: "`workspace`"
+    endpoint: "[`/audit/requests`](/api/gateway/admin-ee/#/operations/get-audit-requests)"
+    description: "The `workspace` field is the UUID of the Workspace with which the request is associated."
+  - event: "[Kong Manager login](/gateway/kong-manager/)"
+    fields: |
+       `"request_source": "kong-manager"`
+       <br>
+       `"method": "GET", "path": "/auth"`
+    endpoint: "[`/audit/requests`](/api/gateway/admin-ee/#/operations/get-audit-requests)"
+    description: |
+      The `request_source` field tells you that the action occurred in Kong Manager, and the `GET` method and `/auth` path indicate a login event.
+  - event: "[Kong Manager logout](/gateway/kong-manager/)"
+    fields: |
+      `"request_source": "kong-manager"`
+      <br>
+      `"method": "DELETE", "path": "/auth?session_logout=true"`
+    endpoint: "[`/audit/requests`](/api/gateway/admin-ee/#/operations/get-audit-requests)"
+    description: "The `DELETE` method and `/auth?session_logout=true` path indicate a logout event."
+  - event: "Database entity changes"
+    fields: |
+      `payload` (contains changed objects)
+      <br>
+      `request_id`
+    endpoint: "[`/audit/objects`](/api/gateway/admin-ee/#/operations/get-audit-objects)"
+    description: 
+      Entries for all insertions, updates, and deletions to the cluster database. Database update audit logs are also associated with Admin API request unique IDs. Object audit entries contain information about the entity updated, including the entity body itself, its database primary key, and the type of operation performed (create, update, or delete). It's also associated with the `request_id` field.
+{% endtable %}
+<!--vale on-->
 
 ## Enable audit logging
 

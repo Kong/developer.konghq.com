@@ -4,9 +4,28 @@ Your proxy will need rules added for any HTTP/HTTPS and TCP/TLS stream listeners
 
 The following are the default proxy ports:
 
-| Port | Protocol | `kong.conf` setting | Description | 
-|---------|---------|------------|------------|
-| `8000` | HTTP     | [`proxy_listen`](/gateway/configuration/#proxy_listen) | Takes incoming HTTP traffic from [Consumers](/gateway/entities/consumer/), and forwards it to upstream services. | 
-| `8443` | HTTPS    | [`proxy_listen`](/gateway/configuration/#proxy_listen) | Takes incoming HTTPS traffic from [Consumers](/gateway/entities/consumer/), and forwards it to upstream services. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Port
+    key: port
+  - title: Protocol
+    key: protocol
+  - title: "`kong.conf` setting"
+    key: kong_conf_setting
+  - title: Description
+    key: description
+rows:
+  - port: "`8000`"
+    protocol: "HTTP"
+    kong_conf_setting: "[`proxy_listen`](/gateway/configuration/#proxy_listen)"
+    description: "Takes incoming HTTP traffic from [Consumers](/gateway/entities/consumer/), and forwards it to upstream services."
+  - port: "`8443`"
+    protocol: "HTTPS"
+    kong_conf_setting: "[`proxy_listen`](/gateway/configuration/#proxy_listen)"
+    description: "Takes incoming HTTPS traffic from [Consumers](/gateway/entities/consumer/), and forwards it to upstream services."
+{% endtable %}
+<!--vale on-->
+
 
 You can also proxy TCP/TLS streams, which is disabled by default. If you want to proxy this traffic, see [`stream_listen` in the Kong configuration reference](/gateway/configuration/) for more information about stream proxy listen options and how to enable it.

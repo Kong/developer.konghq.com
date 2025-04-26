@@ -54,6 +54,8 @@ sections:
     items:
       - path: /kubernetes-ingress-controller/load-balancing/
       - path: /kubernetes-ingress-controller/split-traffic/
+      - path: /kubernetes-ingress-controller/workspaces/
+      - path: /kubernetes-ingress-controller/preserve-client-ip/
   - title: Observability
     items:
       - path: /kubernetes-ingress-controller/observability/prometheus/

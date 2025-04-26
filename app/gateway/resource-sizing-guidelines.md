@@ -39,10 +39,35 @@ traffic patterns.
 
 {{site.base_gateway}} measures performance in the following dimensions:
 
-| Performance dimension | Measured in | Performance limited by... | Description |
-|-----------------------|-------------|-------------|
-| Latency | Microseconds or milliseconds | *Memory-bound*<br>Add more database caching memory to decrease latency | The delay between the downstream client sending a request and receiving a response. Increasing the number of Routes and Plugins in a {{site.base_gateway}} cluster increases the amount of latency that's added to each request. |
-| Throughput | Seconds or minutes |*CPU-bound*<br>Scale {{site.base_gateway}} vertically or horizontally to increase throughput | The number of requests that {{site.base_gateway}} can process in a given time span |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Performance dimension
+    key: dimension
+  - title: Measured in
+    key: measured_in
+  - title: "Performance limited by..."
+    key: performance
+  - title: Description
+    key: description
+rows:
+  - dimension: "Latency"
+    measured_in: "Microseconds or milliseconds"
+    performance: |
+      *Memory-bound*
+      <br>
+      Add more database caching memory to decrease latency.
+    description: |
+      The delay between the downstream client sending a request and receiving a response. Increasing the number of Routes and plugins in a {{site.base_gateway}} cluster increases the amount of latency that's added to each request.
+  - dimension: "Throughput"
+    measured_in: "Seconds or minutes"
+    performance: |
+      *CPU-bound*
+      Scale {{site.base_gateway}} vertically or horizontally to increase throughput.
+    description: "The number of requests that {{site.base_gateway}} can process in a given time span."
+{% endtable %}
+<!--vale on-->
+
 
 When all other factors remain the same, decreasing the latency for
 each request increases the maximum throughput in {{site.base_gateway}}. This is because there is less CPU time spent handling each request, and more
@@ -83,12 +108,52 @@ based on overall configuration and performance requirements.
 
 The following table provides rough usage requirement estimates based on simplified examples with latency and throughput requirements on a per-node basis:
 
-| Size | Number of configured entities | Latency requirements | Throughput requirements | Use cases |
-|---|---|---|---|---|
-| Development | < 100 | < 100 ms | < 500 RPS   | * Dev/test environments<br>* Latency-insensitive gateways |
-| Small | < 1000  | < 20 ms  | < 2500 RPS  | * Production clusters<br>* Greenfield traffic deployments |
-| Medium | < 10000 | < 10 ms  | < 10000 RPS | * Mission-critical clusters<br>* Legacy and greenfield traffic<br>* Central enterprise-grade gateways |
-| Large | < 50000+ | < 10 ms  | < 10000 RPS | * Mission-critical clusters<br>* Legacy and greenfield traffic<br>* Central enterprise-grade gateways |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Size
+    key: size
+  - title: Number of configured entities
+    key: entities
+  - title: Latency requirements
+    key: latency
+  - title: Throughput requirements
+    key: throughput
+  - title: Use cases
+    key: use_cases
+rows:
+  - size: Development
+    entities: "< 100"
+    latency: "< 100 ms"
+    throughput: "< 500 RPS"
+    use_cases: |
+      * Dev/test environments
+      * Latency-insensitive gateways
+  - size: Small
+    entities: "< 1000"
+    latency: "< 20 ms"
+    throughput: "< 2500 RPS"
+    use_cases: |
+      * Production clusters
+      * Greenfield traffic deployments
+  - size: Medium
+    entities: "< 10000"
+    latency: "< 10 ms"
+    throughput: "< 10000 RPS"
+    use_cases: |
+      * Mission-critical clusters
+      * Legacy and greenfield traffic
+      * Central enterprise-grade gateways
+  - size: Large
+    entities: "< 50000+"
+    latency: "< 10 ms"
+    throughput: "< 10000 RPS"
+    use_cases: |
+      * Mission-critical clusters
+      * Legacy and greenfield traffic
+      * Central enterprise-grade gateways{% endtable %}
+<!--vale on-->
+
 
 ### Database resources
 
@@ -126,12 +191,49 @@ database during this time.
 Based on the expected size and demand of the [cluster](/gateway/cluster/), we recommend
 the following resource allocations as a starting point:
 
-| Size  | CPU  | RAM  | Typical cloud instance sizes |
-|---|---|---|---|---|
-| Development | 1-2 cores  | 2-4 GB   | **AWS**: t3.medium<br/>**GCP**: n1-standard-1<br/>**Azure**: Standard A1 v2  |
-| Small  | 1-2 cores  | 2-4 GB   | **AWS**: t3.medium<br/>**GCP**: n1-standard-1<br/>**Azure**: Standard A1 v2  |
-| Medium | 2-4 cores  | 4-8 GB   | **AWS**: m5.large<br/>**GCP**: n1-standard-4<br/>**Azure**: Standard A1 v4  |
-| Large  | 8-16 cores | 16-32 GB | **AWS**: c5.xlarge<br/>**GCP**: n1-highcpu-16<br/>**Azure**: F8s v2  |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Size
+    key: size
+  - title: CPU
+    key: cpu
+  - title: RAM
+    key: ram
+  - title: Typical cloud instance sizes
+    key: cloud_instances
+rows:
+  - size: Development
+    cpu: "1-2 cores"
+    ram: "2-4 GB"
+    cloud_instances: |
+      **AWS**: t3.medium
+      <br> **GCP**: n1-standard-1
+      <br> **Azure**: Standard A1 v2
+  - size: Small
+    cpu: "1-2 cores"
+    ram: "2-4 GB"
+    cloud_instances: |
+      **AWS**: t3.medium
+      <br> **GCP**: n1-standard-1
+      <br> **Azure**: Standard A1 v2
+  - size: Medium
+    cpu: "2-4 cores"
+    ram: "4-8 GB"
+    cloud_instances: |
+      **AWS**: m5.large
+      <br> **GCP**: n1-standard-4
+      <br> **Azure**: Standard A1 v4
+  - size: Large
+    cpu: "8-16 cores"
+    ram: "16-32 GB"
+    cloud_instances: |
+      **AWS**: c5.xlarge
+      <br> **GCP**: n1-highcpu-16
+      <br> **Azure**: F8s v2
+{% endtable %}
+<!--vale on-->
+
 
 We strongly discourage using throttled cloud instance types (such as the
 AWS `t2` or `t3` series of machines) in large clusters, because CPU throttling is detrimental to {{site.base_gateway}}'s performance. We also recommend

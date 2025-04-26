@@ -5,4 +5,5 @@ content_type: reference
 
 ## Changelog
 
-No changes.
+### {{site.base_gateway}} 3.0.x
+* Introduced the WebSocket Size Limit plugin.

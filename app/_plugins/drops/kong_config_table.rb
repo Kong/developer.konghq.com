@@ -8,13 +8,16 @@ module Jekyll
   module Drops
     class KongConfigTable < Liquid::Drop # rubocop:disable Style/Documentation
       class KongConfigField < Liquid::Drop # rubocop:disable Style/Documentation
-        def initialize(config, field) # rubocop:disable Lint/MissingSuper
+        def initialize(config, field, mode) # rubocop:disable Lint/MissingSuper
           @config = config
           @field = field || {}
+          @mode = mode
+
+          @mode = 'conf' if mode.empty?
         end
 
         def name
-          @name ||= @config.fetch('name')
+          @name ||= format_name(@config.fetch('name'), @mode)
         end
 
         def default_value
@@ -28,13 +31,21 @@ module Jekyll
         def description
           @description ||= @config['description'] || @field['description']
         end
+
+        def format_name(name, mode)
+          return name if mode == 'conf'
+          return "KONG_#{name.upcase}" if mode == 'env'
+
+          raise "Unknown kong_config_table mode: #{mode}"
+        end
       end
 
       include Jekyll::SiteAccessor
 
-      def initialize(config, release_number) # rubocop:disable Lint/MissingSuper
+      def initialize(config, release_number, mode) # rubocop:disable Lint/MissingSuper
         @config = config
         @release_number = release_number
+        @mode = mode
 
         validate_config!
       end
@@ -44,12 +55,12 @@ module Jekyll
       end
 
       def params
-        @params ||= @config.fetch('config', []).map { |c| KongConfigField.new(c, kong_conf['params'][c['name']]) }
+        @params ||= @config.fetch('config', []).map { |c| KongConfigField.new(c, kong_conf['params'][c['name']], @mode) }
       end
 
       def directives
         @directives ||= @config.fetch('directives', []).map do |c|
-          KongConfigField.new(c, kong_conf['params'][c['name']])
+          KongConfigField.new(c, kong_conf['params'][c['name']], @mode)
         end
       end
 
