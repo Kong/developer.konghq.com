@@ -283,7 +283,7 @@ rows:
                 See which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with.
               cta:
                 text: View the compatibility policy &rarr;
-                url: /konnect-compatibility/
+                url: /konnect-platform/konnect-compatibility/
                 align: end
       - blocks:
           - type: card
