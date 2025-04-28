@@ -48,6 +48,10 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 
+related_resources:
+  - text: All transformation plugins
+    url: /plugins/?category=transformations
+
 ---
 
 ## Enable the Request Transformer Advanced plugin

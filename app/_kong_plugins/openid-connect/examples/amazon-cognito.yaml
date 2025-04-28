@@ -20,7 +20,7 @@ variables:
     value: $ISSUER
     description: |
       The issuer authentication URL for your IdP. For Amazon Cognito, that typically looks like this:
-      `https://cognito-idp.${REGION}.amazonaws.com/${REGION}_${POOL_ID}/.well-known/openid-configuration`
+      `https://cognito-idp.$REGION.amazonaws.com/$REGION_$POOL_ID/.well-known/openid-configuration`
   client-id: 
     value: $CLIENT_ID
     description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.

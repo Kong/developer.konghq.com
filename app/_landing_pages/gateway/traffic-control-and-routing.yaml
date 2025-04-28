@@ -160,7 +160,11 @@ rows:
       - blocks:
           - type: plugin
             config:
-              slug: canary    
+              slug: canary  
+      - blocks:
+          - type: plugin
+            config:
+              slug: confluent-consume 
 
 
 

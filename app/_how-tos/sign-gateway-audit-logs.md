@@ -29,6 +29,7 @@ entities:
 
 tags:
     - logging
+    - security
 
 tldr:
     q: How do I sign audit logs with a key?

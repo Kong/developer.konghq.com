@@ -27,6 +27,10 @@ konnect_deployments:
   - cloud-gateways
   - serverless
 
+tags:
+  - confluent
+  - traffic-control
+  
 premium_partner: true
 
 icon: confluent-consume.png
@@ -45,6 +49,8 @@ related_resources:
     url: /plugins/confluent/
   - text: Kafka Consume plugin
     url: /plugins/kafka-consume/
+  - text: " {{site.base_gateway}} traffic control and routing"
+    url: /gateway/traffic-control-and-routing/
 ---
 
 This plugin consumes messages from [Confluent Cloud](https://confluent.io/cloud) Kafka topics and makes them available through HTTP endpoints.

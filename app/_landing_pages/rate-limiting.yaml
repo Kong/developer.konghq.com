@@ -85,7 +85,7 @@ rows:
             icon: /assets/icons/mesh.svg
             cta:
               text: Add Rate Limiting with {{site.mesh_product_name}}
-              url: "/mesh/rate-limiting/"
+              url: "/mesh/policies/meshratelimit/"
 
 
   - header:

@@ -32,6 +32,7 @@ search_aliases:
   - pre-function
   - serverless function
   - serverless functions
+  - lua
 
 tags:
   - serverless
@@ -43,6 +44,8 @@ related_resources:
     url: /how-to/filter-requests-based-on-header-names/
   - text: Post-Function plugin
     url: /plugins/post-function/
+  - text: All serverless plugins
+    url: /plugins/?category=serverless
 ---
 
 The Pre-Function plugin (also known as Kong Functions, Pre-Plugin) lets
