@@ -44,7 +44,7 @@ related_resources:
 The Key Authentication plugin lets you add API key authentication to a [Gateway Service](/gateway/entities/service/) or a [Route](/gateway/entities/route/).
 [Consumers](/gateway/entities/consumer/) then add their key either in a query string parameter, a header, or a request body to authenticate their requests.
 
-The advanced version of this plugin, [Key Authentication Encrypted](/plugins/key-auth-enc/), provides the ability to encrypt keys. Keys are encrypted at rest in the API gateway datastore.
+The advanced version of this plugin, [Key Authentication Encrypted](/plugins/key-auth-enc/), provides the ability to encrypt keys. Keys are encrypted at rest in the {{site.base_gateway}} data store.
 
 ## Request behavior matrix
 
@@ -68,7 +68,7 @@ The advanced version of this plugin, [Key Authentication Encrypted](/plugins/key
 
 ## Identity realms {% new_in 3.10 %}
 
-You can authenticate [centrally-managed Consumers](/gateway/entities/consumer/#centralized-consumer-management) in {{site.konnect_short_name}} by configuring the [`config.identity_realms`](./reference/#schema--config-identity-realms) field.
+You can authenticate [centrally-managed Consumers](/gateway/entities/consumer/#centrally-managed-consumers) in {{site.konnect_short_name}} by configuring the [`config.identity_realms`](./reference/#schema--config-identity-realms) field.
 See [Realms for external Consumers in {{site.konnect_short_name}}](/plugins/key-auth/examples/identity-realms/) for an example configuration.
 
 Identity realms are scoped to the Control Plane by default (`scope: cp`). 

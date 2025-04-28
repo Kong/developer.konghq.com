@@ -1,4 +1,4 @@
-<!--used in the following plugins: Header Cert Auth, HMAC Auth, LDAP Auth, Key Auth Encrypted-->
+<!--used in the following plugins: Header Cert Auth, HMAC Auth, LDAP Auth, Key Auth Encrypted, JWT-->
 When a client has been authenticated, the plugin appends some headers to
 the request before proxying it to the upstream service, so that you
 can identify the Consumer in your code:

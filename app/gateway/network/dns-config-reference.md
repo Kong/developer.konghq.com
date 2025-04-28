@@ -1,7 +1,7 @@
 ---
 title: DNS configuration reference
 
-description: This reference explains DNS clients, CORS, and cookie management in {{site.base_gateway}}
+description: This reference explains DNS clients, CORS, and cookie management in {{site.base_gateway}}.
 content_type: reference
 layout: reference
 products:
@@ -17,10 +17,18 @@ plugins:
   - openid-connect
 
 breadcrumbs:
-  - /gateway/networking/dns-config-reference/
+  - /gateway/
+  - /gateway/network/
 
 works_on:
   - on-prem
+
+tags:
+  - network
+
+related_resources:
+  - text: "{{site.base_gateway}} network"
+    url: /gateway/network/
 ---
 
 {{site.base_gateway}} provides Kong Manager, which must be able to interact with the Admin API. This application is subject to security restrictions enforced by browsers, and Kong must send appropriate information to browsers in order for it to function properly.

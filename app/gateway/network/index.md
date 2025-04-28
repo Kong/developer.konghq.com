@@ -17,12 +17,18 @@ related_resources:
   - text: Proxying with {{site.base_gateway}}
     url: /gateway/traffic-control/proxying/
   - text: DNS configuration reference
-    url: /gateway/networking/dns-config-reference/
-  - text: "{{site.base_gateway}} control plane and data plane communication"
+    url: /gateway/network/dns-config-reference/
+  - text: "{{site.base_gateway}} Control Plane and Data Plane communication"
     url: /gateway/cp-dp-communication/
 
 works_on:
   - on-prem
+
+breadcrumbs:
+  - /gateway/
+
+tags:
+  - network
 ---
 
 {{site.base_gateway}} needs port access for two main types of connections: traffic passing through the proxy and managing the {{site.base_gateway}} via the Admin API.

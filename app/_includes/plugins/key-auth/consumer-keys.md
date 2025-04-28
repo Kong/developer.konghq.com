@@ -30,7 +30,7 @@ rows:
     description: |
       To use the key in a request body, set the configuration parameter 
       [`config.key_in_body`](./reference/#schema--config-key-in-body) to `true`. 
-      The default value is `false`."
+      The default value is `false`.
   - use: Key in header
     example: |
       ```bash

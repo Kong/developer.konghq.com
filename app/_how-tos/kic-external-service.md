@@ -38,6 +38,7 @@ cleanup:
 
 ## Create an `ExternalName` Kubernetes service
 
+Use the following command to create an external Kubernetes service:
 ```bash
 echo '
 kind: Service

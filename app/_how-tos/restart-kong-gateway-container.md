@@ -1,6 +1,6 @@
 ---
-title: How to restart {{site.base_gateway}} in a Docker Container
-description: Placeholder
+title: How to restart {{site.base_gateway}} in a Docker container
+description: Restart the {{site.base_gateway}} container without killing it.
 content_type: how_to
 
 works_on:
@@ -17,7 +17,7 @@ tldr:
 faqs:
   - q: What happens when I run `kong restart`?
     a: |
-      `kong restart` kills the `pid` which will kill the container.
+      `kong restart` kills the `pid`, which will kill the container.
 
 
 min_version:

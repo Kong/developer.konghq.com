@@ -6,12 +6,17 @@ layout: reference
 products:
   - mesh
 
+breadcrumbs:
+  - /mesh/
+
 tags:
   - license
   - activation
 
 
 related_resources:
+  - text: "{{site.mesh_product_name}}"
+    url: /mesh/
   - text: "Role-Based Access Control"
     url: /mesh/rbac/
 
@@ -69,13 +74,13 @@ number of services you want to include in your service meshes. Use the following
 Number of DPPs = Number of Pods + Number of VMs.
 ```
 
-## License behaviours
+## License behaviors
 
-With an expired license or invalid license the control-plane will fail to start.
-If the license expires while the control-plane is running it will keep running but a restart of the instance will fail. 
-The control-plane will issue a warning in the logs and the GUI when the license expires in less than 30 days.
+With an expired license or invalid license, the Control Plane will fail to start.
+If the license expires while the Control Plane is running, it will keep running but a restart of the instance will fail. 
+The Control Plane will issue a warning in the logs and the GUI when the license expires in less than 30 days.
 
-With a valid issued license, a Data Plane proxy will always be able to join the service mesh, even if you go above the allowed limit to prevent service disruptions.
+With a valid issued license, a Data Plane proxy will always be able to join the service mesh, even if you go above the allowed limit, to prevent service disruptions.
 If the number of DPPs does go above the limit, you will see a warning in the GUI and in the Control Plane logs. 
 
 With the pre-bundled license, if you go over the maximum allowed number of DPPs, the system will automatically refuse their connections.
@@ -140,6 +145,8 @@ In Universal mode, configure a valid license by using the following environment 
 * `KMESH_LICENSE_INLINE` - value with the actual contents of the license file.
 
 ## Update a license
+
+A {{site.mesh_product_name}} license can be updated in two different ways.
 
 ### Kubernetes
 

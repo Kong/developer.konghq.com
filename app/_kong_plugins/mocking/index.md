@@ -30,7 +30,7 @@ icon: mocking.png
 
 related_resources:
   - text: DNS configuration reference
-    url: /gateway/networking/dns-config-reference/
+    url: /gateway/network/dns-config-reference/
 
 categories:
   - traffic-control
