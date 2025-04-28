@@ -10,7 +10,7 @@ entities:
 works_on:
     - on-prem
 tags:
-  - event_hook
+  - event-hook
   - webhook
   - notifications
 tldr: 

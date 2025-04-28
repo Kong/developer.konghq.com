@@ -3,8 +3,7 @@ title: Define a CA certificate on a Service to verify server certificates
 content_type: how_to
 
 entities: 
-  - ca-certificate
-  - service
+  - certificates
 
 related_resources:
   - text: Define a client certificate on a Service

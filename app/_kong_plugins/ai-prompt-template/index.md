@@ -10,6 +10,7 @@ description: 'Provide fill-in-the-blank AI prompts to users'
 
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem
@@ -30,6 +31,9 @@ topologies:
 icon: ai-prompt-template.png
 
 categories:
+  - ai
+
+tags:
   - ai
 
 search_aliases:

@@ -7,7 +7,7 @@ products:
   - ai-gateway
 
 tags:
-  - ai-gateway
+  - ai
   - logging
 
 min_version:

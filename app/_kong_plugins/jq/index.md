@@ -3,7 +3,6 @@ title: 'jq'
 name: 'jq'
 
 tags:
-  - jq
   - transformations
 
 content_type: plugin

@@ -8,6 +8,8 @@ products:
 tags:
   - authentication
   - sso
+  - beta
+beta: true
 works_on:
   - konnect
 related_resources:

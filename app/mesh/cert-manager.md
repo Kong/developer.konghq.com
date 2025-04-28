@@ -7,7 +7,6 @@ products:
   - mesh
 
 tags:
-  - mesh
   - cert-manager
   - mtls
 

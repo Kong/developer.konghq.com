@@ -10,9 +10,6 @@ works_on:
     - on-prem
     - konnect
 
-tags:
-    - entities
-
 min_version:
   gateway: '3.4'
 

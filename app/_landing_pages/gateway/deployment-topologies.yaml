@@ -4,6 +4,11 @@ metadata:
   description: This page lists the different {{site.base_gateway}} deployment topologies.
   breadcrumbs:
     - /gateway/
+  products:
+    - gateway
+  works_on:
+    - on-prem
+    - konnect
 rows:
   - header:
       type: h1

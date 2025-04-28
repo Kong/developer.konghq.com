@@ -8,7 +8,7 @@ products:
 
 tags:
   - mtls
-  - ca-rotation
+  - certificates
 
 related_resources:
   - text: "Vault Policy"

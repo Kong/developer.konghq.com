@@ -9,7 +9,6 @@ tags:
 - documents
 - collections
 - mock-servers
-- environments
 - git
 
 tier: team

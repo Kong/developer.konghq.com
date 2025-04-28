@@ -8,8 +8,7 @@ works_on:
 products:
     - gateway
 tags:
-  - gateway
-  - container
+  - docker
 
 tldr: 
   q: How do I restart {{site.base_gateway}} when it is running inside of a container

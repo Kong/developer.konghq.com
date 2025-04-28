@@ -4,7 +4,11 @@ metadata:
   description: Learn how to load balancing traffic with {{site.base_gateway}}
   breadcrumbs:
     - /gateway/
-
+  products:
+    - gateway
+  works_on:
+    - on-prem
+    - konnect
 rows:
   - header:
       type: h1

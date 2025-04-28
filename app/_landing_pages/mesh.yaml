@@ -5,8 +5,6 @@ metadata:
   products:
     - mesh
   tags:
-    - kong-mesh
-    - service-mesh
     - control-plane
     - data-plane
 

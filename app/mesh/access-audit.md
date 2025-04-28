@@ -7,7 +7,6 @@ products:
     - mesh
 
 tags:
-  - regions
   - geos
   - network
 

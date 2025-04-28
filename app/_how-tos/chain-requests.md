@@ -6,8 +6,6 @@ products:
     - insomnia
 
 tags:
-    - requests
-    - responses
     - template-tags
     - collections
 

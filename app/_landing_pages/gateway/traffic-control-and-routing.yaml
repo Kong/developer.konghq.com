@@ -1,10 +1,14 @@
 metadata:
   title: "{{site.base_gateway}} traffic control and routing"
-  product: gateway
+  products: 
+    - gateway
   content_type: landing_page
   description: Learn how {{site.base_gateway}} listens for, routes, and proxies traffic.
   breadcrumbs:
     - /gateway/
+  works_on:
+    - on-prem
+    - konnect
   tags:
     - traffic-control
     - routing

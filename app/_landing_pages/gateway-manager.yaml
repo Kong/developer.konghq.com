@@ -4,11 +4,14 @@ metadata:
   description: Learn about managing control planes and data plane nodes with Gateway Manager.
   tags:
     - gateway-manager
-    - control-planes
+    - control-plane
     - data-plane-nodes
   breadcrumbs: 
     - /gateway-manager/
-
+  products:
+    - gateway
+  works_on:
+    - konnect
 
 rows:
   - header:

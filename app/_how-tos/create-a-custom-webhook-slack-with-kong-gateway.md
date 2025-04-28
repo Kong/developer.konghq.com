@@ -9,7 +9,7 @@ entities:
   - event-hook
 
 tags:
-  - eventhooks
+  - event-hook
   - webhook
   - notifications
 

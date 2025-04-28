@@ -15,8 +15,6 @@ related_resources:
     url: /how-to/generate-a-collection-from-a-design-document/
 
 tags:
-    - requests
-    - responses
     - documents
     - collections
     - design-apis

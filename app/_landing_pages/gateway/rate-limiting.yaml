@@ -115,7 +115,6 @@ rows:
             config:
               tags:
                 - rate-limiting
-                - rate-limiting-advanced
               products:
                 - gateway
               quantity: 6
@@ -130,50 +129,18 @@ rows:
             config:
               slug: ai-rate-limiting-advanced
 
-          - type: how_to_list
-            config:
-              tags:
-                - ai-rate-limiting-advanced
-              products:
-                - gateway
-              quantity: 3
-              allow_empty: true
-
       - blocks:
           - type: plugin
             config:
               slug: graphql-rate-limiting-advanced
-          - type: how_to_list
-            config:
-              tags:
-                - graphql-rate-limiting-advanced
-              products:
-                - gateway
-              quantity: 3
-              allow_empty: true
 
       - blocks:
           - type: plugin
             config:
               slug: response-ratelimiting
-          - type: how_to_list
-            config:
-              tags:
-                - response-ratelimiting
-              products:
-                - gateway
-              quantity: 3
-              allow_empty: true
       
       - blocks:
           - type: plugin
             config:
               slug: service-protection
-          - type: how_to_list
-            config:
-              tags:
-                - service-protection
-              products:
-                - gateway
-              quantity: 3
-              allow_empty: true
+

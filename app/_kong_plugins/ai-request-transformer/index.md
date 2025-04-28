@@ -34,7 +34,6 @@ categories:
 
 tags:
   - ai
-  - ai-gateway
 
 search_aliases:
   - ai

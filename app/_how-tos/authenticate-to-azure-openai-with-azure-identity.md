@@ -22,7 +22,7 @@ entities:
   - plugin
 
 tags:
-    - ai-gateway
+    - ai
     - azure-ai
     - azure-identity
 

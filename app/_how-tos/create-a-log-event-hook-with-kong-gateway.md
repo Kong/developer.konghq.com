@@ -10,7 +10,7 @@ products:
     - gateway
 
 tags:
-  - eventhooks
+  - event-hook
   - webhook
   - notifications
 tldr: 

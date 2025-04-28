@@ -9,6 +9,7 @@ products:
 tags:
   - access-control
   - developer-management
+  - beta
 works_on:
   - konnect
 related_resources:
@@ -16,6 +17,7 @@ related_resources:
     url: /dev-portal/application-registration/
   - text: "Developer sign up"
     url: /dev-portal/developer-signup/
+beta: true
 ---
 
 When Dev Portal [security settings](/dev-portal/security-settings/) require manual approval, Portal admins are notified to approve new Developer and Application registrations.

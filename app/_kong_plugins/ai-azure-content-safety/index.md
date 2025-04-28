@@ -9,6 +9,7 @@ description: 'Use Azure AI Content Safety to check and audit AI Proxy plugin mes
 
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem
@@ -29,6 +30,9 @@ topologies:
 icon: ai-azure-content-safety.png
 
 categories:
+  - ai
+
+tags:
   - ai
 
 search_aliases:

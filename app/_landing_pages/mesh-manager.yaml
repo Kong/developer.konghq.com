@@ -2,9 +2,9 @@ metadata:
   title: "Mesh Manager"
   content_type: landing_page
   description: Learn about managing service meshes and control planes with Mesh Manager.
-  tags:
-    - mesh
   breadcrumb: /mesh-manager/
+  products:
+    - mesh
 
 rows:
   - header:

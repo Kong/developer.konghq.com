@@ -4,6 +4,8 @@ metadata:
   description: This page is an introduction to Inso CLI, a command line tool for Insomnia.
   breadcrumbs:
     - /insomnia/
+  products:
+    - insomnia
 rows:
   - header:
       type: h1

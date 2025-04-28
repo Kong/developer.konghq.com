@@ -9,6 +9,9 @@ min_version:
   gateway: '3.8'
 products:
     - gateway
+    - advanced-analytics
+tags:
+  - analytics
 works_on:
     - konnect
 api_specs:
