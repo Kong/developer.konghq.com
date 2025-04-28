@@ -23,7 +23,7 @@ extended_description: |
       new_url: "`https://new.example.com/some-path`"
   {% endtable %}
 
-title: "Use a statisc URL"
+title: "Use a static URL"
 
 weight: 900
 
