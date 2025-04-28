@@ -60,7 +60,7 @@ In production, we recommend defining a custom `lua_shared_dict` via a custom Ngi
 
 Cache entities are stored for a [configurable period of time](./reference/#schema--config-cache-ttl), after which subsequent requests to the same resource will fetch and store the resource again. 
 
-In Traditional Mode, cache entities can also be [forcefully purged via the Admin API](#managing-cache-entities) prior to their expiration time.
+In [Traditional mode](/gateway/traditional-mode/), cache entities can also be [forcefully purged via the Admin API](#managing-cache-entities) prior to their expiration time.
 
 ### Cache key
 

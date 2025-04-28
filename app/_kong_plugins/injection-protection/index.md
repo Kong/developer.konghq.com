@@ -31,6 +31,9 @@ icon: injection-protection.png
 
 categories:
   - security
+
+tags:
+  - security
 ---
 
 You can use the Injection Protection plugin to detect and block known injection patterns consistent with SQL injection, server-side include injection, and more. This plugin can complement your existing firewall solution by adding a layer of customizable protection to prevent injection attacks, or it can eliminate some content-based attacks if you don't have an existing firewall.
@@ -39,7 +42,7 @@ The Injection Protection plugin makes it easier to protect your APIs from SQL in
 You can also configure custom regex matching.
 
 The Injection Protection plugin helps you detect and block known injection patterns by doing the following: 
-* Extracts information from request headers, path/query parameters, or the payload body and evaluates that content against predefined regular expressions
+* Extracts information from request headers, path/query parameters, or the payload body, and evaluates that content against predefined regular expressions
 * Rejects the requests that match the regular expressions with a configurable HTTP status code and error message
 * Logs information about rejected requests for analytics and reporting
 
@@ -99,7 +102,7 @@ threat detected: 'sql', action taken: log_only, found in path_and_query, query p
 ```
 {:.no-copy-code}
 
-Where:
+In this example:
 * The plugin detected a SQL injection threat
 * It created a log entry but took no other actions
 * The threat was found in the request path or query

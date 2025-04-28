@@ -11,6 +11,9 @@ products:
 related_resources:
   - text: "Managing {{site.base_gateway}} configuration"
     url: /gateway/manage-kong-conf/
+
+breadcrumbs:
+  - /gateway/
    
 works_on:
    - on-prem

@@ -48,6 +48,9 @@ api_specs:
 works_on:
   - on-prem
   - konnect
+
+tags:
+  - routing
 ---
 
 ## What is a Route? 
@@ -57,7 +60,7 @@ Routes fulfill two responsibilities in {{ site.base_gateway }}:
 1. Match incoming requests and route them to the correct [Gateway Service](/gateway/entities/service/)
 2. Use plugins to transform the request/response proxied using this Route
 
-A Route must be attached to a [Gateway Service](/gateway/entities/service/), and _may_ have one or more [Plugin](/gateway/entities/plugin/) entities attached.
+A Route must be attached to a [Gateway Service](/gateway/entities/service/), and _may_ have one or more [plugins](/gateway/entities/plugin/) attached.
 
 ## Route and Gateway Service interaction
 
@@ -137,13 +140,13 @@ rows:
 ## Configuration formats
 
 {{site.base_gateway}} provides two methods to define Routes: the traditional JSON format, and a more powerful DSL-based expressions format. 
-The router used is configured via the [`router_flavor`](/gateway/configuration/#router_flavor) property in `kong.conf`.
+The router used is configured via the [`router_flavor`](/gateway/configuration/#router-flavor) property in `kong.conf`.
 
 The router you should use depends on your use case and {{site.base_gateway}} version:
 * **[Expressions router](/gateway/routing/expressions/):** The recommended method for anyone running {{site.base_gateway}} 3.4.x or later. Handles complex routing logic efficiently.
 * **[Traditional router](/gateway/routing/traditional/):** The original {{ site.base_gateway }} routing configuration format. Provide your matching criteria in JSON format.
 
-Setting `router_flavor` to `expressions` allows you to configure both expression based and JSON based routing criteria at the same time. If an `expression` route matches, the JSON format router won't run, regardless of the JSON priority set.
+Setting `router_flavor` to `expressions` allows you to configure both expression based and JSON based routing criteria at the same time. If an `expression` Route matches, the JSON format router won't run, regardless of the JSON priority set.
 
 To disable the DSL-based format, set `router_flavor` to `traditional_compat`. Only JSON routes will be accepted with this configuration.
 
@@ -175,7 +178,7 @@ For more information, see the detailed [expressions](/gateway/routing/expression
 
 ### Route behavior
 
-The Route entity allows you to configure proxy behaviour on a per route basis by setting the `strip_path`, `preserve_host`, and `path_handling` values.
+The Route entity allows you to configure proxy behavior on a per route basis by setting the `strip_path`, `preserve_host`, and `path_handling` values.
 
 In most cases, `strip_path` and `preserve_host` should be `false` (this is the default value), and `path_handling` should be set to `v0`.
 
@@ -185,9 +188,9 @@ In most cases, `strip_path` and `preserve_host` should be `false` (this is the d
 
 <!--vale on-->
 
-It may be desirable to specify a path prefix to match a route, but not
+It may be desirable to specify a path prefix to match a Route, but not
 include it in the upstream request. To do so, use the `strip_path` boolean
-property by configuring a route like so:
+property by configuring a Route like so:
 
 ```json
 {
@@ -199,10 +202,10 @@ property by configuring a route like so:
 }
 ```
 
-Enabling this flag instructs {{site.base_gateway}} that when matching this route, and proceeding
+Enabling this flag instructs {{site.base_gateway}} that when matching this Route, and proceeding
 with the proxying to a service, it should **not** include the matched part of
 the URL path in the upstream request's URL. For example, the following
-client's request to the above route:
+client's request to the above Route:
 
 ```http
 GET /service/path/to/resource HTTP/1.1
@@ -216,7 +219,7 @@ GET /path/to/resource HTTP/1.1
 Host: ...
 ```
 
-The same way, if a regex path is defined on a route that has `strip_path`
+The same way, if a regex path is defined on a Route that has `strip_path`
 enabled, the entirety of the request URL matching sequence will be stripped.
 For example:
 
@@ -251,10 +254,10 @@ Host: ...
 <!--vale on-->
 
 When proxying, {{site.base_gateway}}'s default behavior is to set the upstream request's Host
-header to the hostname specified in the service's `host`. The
+header to the hostname specified in the Gateway Service's `host`. The
 `preserve_host` field accepts a boolean flag instructing {{site.base_gateway}} not to do so.
 
-For example, when the `preserve_host` property is not changed and a route is
+For example, when the `preserve_host` property is not changed and a Route is
 configured like so:
 
 ```json
@@ -273,7 +276,7 @@ GET / HTTP/1.1
 Host: service.com
 ```
 
-{{site.base_gateway}} would extract the Host header value from the service's `host` property, ,
+{{site.base_gateway}} would extract the Host header value from the Service's `host` property,
 and would send the following upstream request:
 
 ```http
@@ -316,9 +319,9 @@ Host: service.com
 
 The `path_handling` parameter accepts `v0` or `v1`.
 
-* `v0` is the behavior used in Kong 0.x, 2.x, and 3.x. It treats `service.path`, `route.path` and request path as *segments* of a URL. It will always join them via slashes. Given a service path `/s`, route path `/r` and request path `/re`, the concatenated path will be `/s/re`. If the resulting path is a single slash, no further transformation is done to it. If it's longer, then the trailing slash is removed.
+* `v0` is the behavior used in Kong 0.x, 2.x, and 3.x. It treats `service.path`, `route.path` and request path as *segments* of a URL. It will always join them via slashes. Given a Service path `/s`, Route path `/r` and request path `/re`, the concatenated path will be `/s/re`. If the resulting path is a single slash, no further transformation is done to it. If it's longer, then the trailing slash is removed.
 
-* `v1` is the behavior used in Kong 1.x. It treats `service.path` as a *prefix*, and ignores the initial slashes of the request and route paths. Given service path `/s`, route path `/r` and request path `/re`, the concatenated path will be `/sre`.
+* `v1` is the behavior used in Kong 1.x. It treats `service.path` as a *prefix*, and ignores the initial slashes of the request and Route paths. Given Service path `/s`, Route path `/r` and request path `/re`, the concatenated path will be `/sre`.
 
 {:.warning}
 > `path_handling` v1 is not supported in the `expressions` router and may be removed in a future version of {{ site.base_gateway }}. We **strongly** recommend using `v0`.

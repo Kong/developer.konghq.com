@@ -21,7 +21,7 @@ dynamic modification of log fields using Lua code.
 * The `authentication.user` and `authentication.password` configuration fields are now marked as
 referenceable, which means they can be securely stored as
 [secrets](/gateway/secrets-management/)
-in a vault. References must follow a [specific format](/gateway/secrets-management/).
+in a vault. References must follow a specific format.
 
 ### {{site.base_gateway}} 2.7.x
 
