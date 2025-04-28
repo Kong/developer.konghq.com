@@ -128,7 +128,7 @@ Normally, each Data Plane node maintains a persistent connection with the Contro
 Plane. 
 The node sends a heartbeat to the Control Plane every 30 seconds to
 keep the connection alive. 
-If it doesn't receive an answer, it tries to reconnect to the Control Plane after a 5-10 second delay. If communication is interrupted and neither side can send or receive config, Data Plane nodes can still continue proxying traffic to clients. 
+If it doesn't receive an answer, it tries to reconnect to the Control Plane after a 5-10 second delay. If communication is interrupted and either side can't send or receive config, Data Plane nodes can still continue proxying traffic to clients. 
 
 Whenever a Data Plane node receives new configuration from the Control Plane,
 it immediately loads that config into memory. 
