@@ -11,6 +11,19 @@
         </div>
         <div class="flex flex-col gap-2 justify-end"></div>
     </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5 w-full max-w-screen-2xl 2xl:mx-auto pb-12 px-6 md:px-8 2xl:px-[156px]">
+        {% for section in site.data.footer %}
+            <div class="flex flex-col gap-2">
+                <div class="font-semibold text-primary">{{section[1].title}}</div>
+
+                {% for link in section[1].links %}
+                    <a href="{{link[1].url}}" class="no-icon text-secondary">{{link[1].text}}</a>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
     <div class="flex border-t border-primary/5 w-full"></div>
     <div
         class="flex gap-5 justify-between flex-start md:items-center font-normal flex-col md:flex-row w-full max-w-screen-2xl 2xl:mx-auto py-4 px-5 md:px-8 2xl:px-[156px]">
