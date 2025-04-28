@@ -26,5 +26,5 @@ They are now updated to align with the plugin's actual versions, `0.3.0`, `0.2.2
 
 ### {{site.base_gateway}} 2.7.x
 
-* Starting with {{site.base_gateway}} 2.7.0.0, if keyring encryption is enabled
+* Starting with {{site.base_gateway}} 2.7.0.0, if Keyring encryption is enabled
 and you are using Vault, the `vaults.vault_token` and `vault_credentials.secret_token` fields will be encrypted.

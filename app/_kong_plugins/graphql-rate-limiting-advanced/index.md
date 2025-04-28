@@ -33,16 +33,23 @@ categories:
 
 search_aliases:
   - graphql-rate-limiting-advanced
+  - GraphQL
 
 related_resources:
+  - text: About rate limiting
+    url: /rate-limiting/
+  - text: Rate limiting with {{site.base_gateway}}
+    url: /gateway/rate-limiting/
   - text: GraphQL Proxy Cache Advanced plugin
     url: /plugins/graphql-proxy-cache-advanced/
+  - text: Governing GraphQL APIs with {{site.base_gateway}}
+    url: https://konghq.com/blog/engineering/governing-graphql-apis-with-kong-gateway
 ---
 
 The GraphQL Rate Limiting Advanced plugin provides rate limiting for [GraphQL queries](https://graphql.org/learn/queries/).
 
 Due to the nature of client-specified GraphQL queries, the same HTTP request to the same URL with the same method can vary greatly in cost depending on the semantics of the GraphQL operation in the body.
-To protect your GraphQL API, this plugin lets you analyze and assign costs to incoming GraphQL queries, then rate limit the consumer’s cost for a given time window.
+To protect your GraphQL API, this plugin lets you analyze and assign costs to incoming GraphQL queries, then rate limit the Consumer’s cost for a given time window.
 
 ## Rate limiting strategies
 
@@ -97,10 +104,30 @@ query { # + 1
 
 Default node costs can be defined by decorating the schema:
 
-| `type_path`                | `mul_arguments`   | `mul_constant`    | `add_arguments`   | `add_constant` |
-|----------------------------|-------------------|-------------------|-------------------|----------------|
-| `Query.allPeople`          | ["first"]         | 1                 | []                | 1              |
-| `Person.vehicleConnection` | ["first"]         | 1                 | []                | 1              |
+{% table %}
+columns:
+  - title: "`type_path`"
+    key: type-path
+  - title: "`mul_arguments`"
+    key: mul-arguments
+  - title: "`mul_constant`"
+    key: mul-constant
+  - title: "`add_arguments`"
+    key: add-arguments
+  - title: "`add_constant`"
+    key: add-constant
+rows:
+  - type-path: "`Query.allPeople`"
+    mul-arguments: '["first"]'
+    mul-constant: 1
+    add-arguments: '[]'
+    add-constant: 1
+  - type-path: "`Person.vehicleConnection`"
+    mul-arguments: '["first"]'
+    mul-constant: 1
+    add-arguments: '[]'
+    add-constant: 1
+{% endtable %}
 
 
 In this example, `vehicleConnection` weight (4) is applied 10 times, and the total weight of it (40) 20 times, which gives us a rough 800:
@@ -125,11 +152,35 @@ query { # + 1
 
 Cost constants can be atomically defined as:
 
-| `type_path`                | `mul_arguments`   | `mul_constant`    | `add_arguments`   | `add_constant` |
-|----------------------------|-------------------|-------------------|-------------------|----------------|
-| `Query.allPeople`          | ["first"]         | 2                 | []                | 2              |
-| `Person.vehicleConnection` | ["first"]         | 1                 | []                | 5              |
-| `Vehicle.name`             | []                | 1                 | []                | 8              |
+{% table %}
+columns:
+  - title: "`type_path`"
+    key: type-path
+  - title: "`mul_arguments`"
+    key: mul-arguments
+  - title: "`mul_constant`"
+    key: mul-constant
+  - title: "`add_arguments`"
+    key: add-arguments
+  - title: "`add_constant`"
+    key: add-constant
+rows:
+  - type-path: "`Query.allPeople`"
+    mul-arguments: '["first"]'
+    mul-constant: 2
+    add-arguments: '[]'
+    add-constant: 2
+  - type-path: "`Person.vehicleConnection`"
+    mul-arguments: '["first"]'
+    mul-constant: 1
+    add-arguments: '[]'
+    add-constant: 5
+  - type-path: "`Vehicle.name`"
+    mul-arguments: '[]'
+    mul-constant: 1
+    add-arguments: '[]'
+    add-constant: 8
+{% endtable %}
 
 In this example, `Vehicle.name` and `Person.vehicleConnection` have specific weights of 8 and 5 respectively. 
 `allPeople` has a weight of 2, and also has double its weight when multiplied by arguments.
@@ -161,12 +212,40 @@ This strategy is roughly based on [GitHub's GraphQL resource limits](https://dev
 
 Let's use the following example configuration: 
 
-| `type_path`                | `mul_arguments` | `mul_constant`    | `add_arguments`   | `add_constant` |
-|----------------------------|-----------------|-------------------|-------------------|----------------|
-| `Query.allPeople`          | ["first"]       | 1                 | []                | 1              |
-| `Person.vehicleConnection` | ["first"]       | 1                 | []                | 1              |
-| `Vehicle.filmConnection`   | ["first"]       | 1                 | []                | 1              |
-| `Film.characterConnection` | ["first"]       | 1                 | []                | 1              |
+{% table %}
+columns:
+  - title: "`type_path`"
+    key: type-path
+  - title: "`mul_arguments`"
+    key: mul-arguments
+  - title: "`mul_constant`"
+    key: mul-constant
+  - title: "`add_arguments`"
+    key: add-arguments
+  - title: "`add_constant`"
+    key: add-constant
+rows:
+  - type-path: "`Query.allPeople`"
+    mul-arguments: '["first"]'
+    mul-constant: 1
+    add-arguments: '[]'
+    add-constant: 1
+  - type-path: "`Person.vehicleConnection`"
+    mul-arguments: '["first"]'
+    mul-constant: 1
+    add-arguments: '[]'
+    add-constant: 1
+  - type-path: "`Vehicle.filmConnection`"
+    mul-arguments: '["first"]'
+    mul-constant: 1
+    add-arguments: '[]'
+    add-constant: 1
+  - type-path: "`Film.characterConnection`"
+    mul-arguments: '["first"]'
+    mul-constant: 1
+    add-arguments: '[]'
+    add-constant: 1
+{% endtable %}
 
 Here's what it looks like in a query:
 ```
@@ -206,12 +285,40 @@ In the example above:
 
 Specific costs per node can be specified by adding a constant:
 
-| `type_path`                | `mul_arguments`   | `mul_constant`    | `add_arguments`   | `add_constant` |
-|----------------------------|-------------------|-------------------|-------------------|----------------|
-| `Query.allPeople`          | ["first"]         | 1                 | []                | 1              |
-| `Person.vehicleConnection` | ["first"]         | 1                 | []                | 42             |
-| `Vehicle.filmConnection`   | ["first"]         | 1                 | []                | 1              |
-| `Film.characterConnection` | ["first"]         | 1                 | []                | 1              |
+{% table %}
+columns:
+  - title: "`type_path`"
+    key: type-path
+  - title: "`mul_arguments`"
+    key: mul-arguments
+  - title: "`mul_constant`"
+    key: mul-constant
+  - title: "`add_arguments`"
+    key: add-arguments
+  - title: "`add_constant`"
+    key: add-constant
+rows:
+  - type-path: "`Query.allPeople`"
+    mul-arguments: '["first"]'
+    mul-constant: 1
+    add-arguments: '[]'
+    add-constant: 1
+  - type-path: "`Person.vehicleConnection`"
+    mul-arguments: '["first"]'
+    mul-constant: 1
+    add-arguments: '[]'
+    add-constant: 42
+  - type-path: "`Vehicle.filmConnection`"
+    mul-arguments: '["first"]'
+    mul-constant: 1
+    add-arguments: '[]'
+    add-constant: 1
+  - type-path: "`Film.characterConnection`"
+    mul-arguments: '["first"]'
+    mul-constant: 1
+    add-arguments: '[]'
+    add-constant: 1
+{% endtable %}
 
 For example: 
 ```
@@ -244,13 +351,31 @@ query {
 
 The GraphQL cost decoration schema includes the following parameters:
 
-| Form parameter    | Default   | Description |
-|-------------------|-----------|-------------|
-| `type_path`       |  none     | Path to the node to decorate. |
-| `add_constant`    | `1`       | Node weight when added.   |
-| `add_arguments`   | `[]`      | List of arguments to add to `add_constant`. |
-| `mul_constant`    | `1`       | Node weight multiplier value. |
-| `mul_arguments`   | `[]`      | List of arguments that multiply weight. |
+{% table %}
+columns:
+  - title: "Form parameter"
+    key: form-parameter
+  - title: "Default"
+    key: default
+  - title: "Description"
+    key: description
+rows:
+  - form-parameter: "`type_path`"
+    default: "none"
+    description: "Path to the node to decorate."
+  - form-parameter: "`add_constant`"
+    default: "`1`"
+    description: "Node weight when added."
+  - form-parameter: "`add_arguments`"
+    default: "`[]`"
+    description: "List of arguments to add to `add_constant`."
+  - form-parameter: "`mul_constant`"
+    default: "`1`"
+    description: "Node weight multiplier value."
+  - form-parameter: "`mul_arguments`"
+    default: "`[]`"
+    description: "List of arguments that multiply weight."
+{% endtable %}
 
 ## Costs API endpoints
 

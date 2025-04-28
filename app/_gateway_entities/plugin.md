@@ -54,7 +54,7 @@ Plugins consist of modules interacting with the request/response objects or stre
 
 These PDKs are sets of functions that a plugin can use to facilitate interactions between plugins and the core (or other components) of Kong.
 
-To start creating your own plugins, review the Getting Started documentation, or see the following references:
+To start creating your own plugins, review the [Getting Started documentation](/custom-plugins/get-started/set-up-plugin-project/), or see the following references:
 
 * Plugin Development Kit reference
 * Other Language Support

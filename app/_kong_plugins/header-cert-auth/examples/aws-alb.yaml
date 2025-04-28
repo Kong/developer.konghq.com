@@ -5,7 +5,7 @@ title: 'Application Load Balancer (ALB) integration'
 weight: 900
 
 requirements:
- - "Add [certificate authority (CA) certificates](/gateway/entities/ca-certificate/) before configuring the plugin."
+ - "Add [certificate authority (CA) Certificates](/gateway/entities/ca-certificate/) before configuring the plugin."
  - "Generated certificates for ALB"
  - |
   Configure ALB by adding an HTTPS listener:

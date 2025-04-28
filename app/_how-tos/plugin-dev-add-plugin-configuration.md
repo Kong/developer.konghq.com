@@ -1,5 +1,5 @@
 ---
-title: Add custom plugin configuration
+title: Add a custom plugin configuration
 description: Add features to your custom plugin.
   
 content_type: how_to
@@ -16,6 +16,10 @@ tldr:
   q: How can I configure features in my custom plugin?
   a: Add configuration fields in the plugins's `schema.lua` file, and define the features using the configuration fields in `handler.lua`.
 
+tags:
+  - custom-plugins
+  - pdk
+
 products:
   - gateway
 
@@ -31,6 +35,8 @@ prereqs:
 related_resources:
   - text: Custom plugins
     url: /custom-plugins/
+  - text: Plugins
+    url: /gateway/entities/plugins/
 ---
 
 ## Add configuration fields to the schema 
@@ -170,7 +176,7 @@ This time we should see the `X-CustomHeaderName` in the response.
 
 1. Update the `setup` function inside the `spec/01-integration_spec.lua` module so that the `my-plugin` that is added to the database is configured with a different value for the `response_header_name` field:
    ```lua
-   -- Add the custom plugin to the test route
+   -- Add the custom plugin to the test Route
    blue_print.plugins:insert {
      name = PLUGIN_NAME, 
      route = { id = test_route.id },
@@ -210,13 +216,13 @@ This time we should see the `X-CustomHeaderName` in the response.
          -- The custom plugin name is provided to this function so it mark as loaded
          local blue_print = helpers.get_db_utils(strategy, nil, { PLUGIN_NAME })
 
-         -- Using the BluePrint to create a test route, automatically attaches it
-         --    to the default "echo" service that will be created by the test framework
+         -- Using the BluePrint to create a test Route, automatically attaches it
+         --    to the default "echo" Service that will be created by the test framework
          local test_route = blue_print.routes:insert({
            paths = { "/mock" },
          })
 
-         -- Add the custom plugin to the test route
+         -- Add the custom plugin to the test Route
          blue_print.plugins:insert {
            name = PLUGIN_NAME, 
            route = { id = test_route.id },

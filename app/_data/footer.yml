@@ -1,0 +1,136 @@
+platform:
+  title: Platform
+  links:
+    api_platform:
+      text: API Platform
+      url: https://konghq.com/products/kong-konnect
+    api_gateway:
+      text: API Gateway
+      url: https://konghq.com/products/kong-gateway
+    ai_gateway:
+      text: AI Gateway
+      url: https://konghq.com/products/kong-ai-gateway
+    service_mesh:
+      text: Service Mesh
+      url: https://konghq.com/products/kong-mesh
+    api_builder:
+      text: API Builder
+      url: https://konghq.com/products/kong-insomnia
+    pricing:
+      text: Pricing
+      url: https://konghq.com/pricing
+
+platform_docs:
+  title: Platorm Docs
+  links:
+    gateway:
+      text: Kong Gateway
+      url: /gateway/
+    ai_gateway:
+      text: Kong AI Gateway
+      url: /ai-gateway/
+    mesh:
+      text: Kong Mesh
+      url: /mesh/
+    insomnia:
+      text: Insomnia
+      url: /insomnia/
+    api_specs:
+      text: OpenAPI Specs
+      url: /api/
+    deck:
+      text: decK
+      url: /deck/
+    inso_cli:
+      text: Inso CLI
+      url: /inso-cli/
+    terraform:
+      text: Terraform
+      url: /terraform/
+    kic:
+      text: Ingress Controller
+      url: /kubernetes-ingress-controller/
+
+plugins:
+  title: Plugins
+  links:
+    ai:
+      text: AI Plugins
+      url: /plugins/?category=ai
+    analytics:
+      text: Analytics Plugins
+      url: /plugins/?category=analytics-monitoring
+    authentication:
+      text: Authentication Plugins
+      url: /plugins/?category=authentication
+    security:
+      text: Security Plugins
+      url: /plugins/?category=security
+    traffic_control:
+      text: Traffic Control Plugins
+      url: /plugins/?category=traffic-control
+    logging:
+      text: Logging Plugins
+      url: /plugins/?category=logging
+    serverless:
+      text: Serverless Plugins
+      url: /plugins/?category=serverless
+    transformer:
+      text: Transformer Plugins
+      url: /plugins/?category=transformations
+
+how_tos:
+  title: How-to Guides
+  links:
+    gateway:
+      text: Kong Gateway How to Guides
+      url: /how-to/?products=gateway
+    insomnia:
+      text: Insomnia How to Guides
+      url: /how-to/?products=insomnia
+    kic:
+      text: KIC How to Gudes
+      url: /how-to/?products=kic
+    mesh:
+      text: Kong Mesh How to Guides
+      url: /how-to/?products=mesh
+    analytics:
+      text: Analytics How To Guides
+      url: /how-to/?products=advanced-analytics
+    api_ops:
+      text: APIOps How To Guides
+      url: /how-to/?products=api-ops
+    deck:
+      text: decK How To Gudes
+      url: /how-to/?tools=deck
+    terraform:
+      text: Terraform How To Guides
+      url: /how-to/?tools=deck
+
+support:
+  title: Support
+  links:
+    community:
+      text: Community
+      url: https://konghq.com/community
+    community_forum:
+      text: Community Forum
+      url: https://discuss.konghq.com/
+    github:
+      text: GitHub
+      url: https://github.com/Kong/kong
+    demos:
+      text: Demos
+      url: https://konghq.com/resources/demos
+    user_calls:
+      text: User Calls
+      url: https://konghq.com/events/user-calls
+    workshops:
+      text: Workshops
+      url: https://konghq.com/events/workshops
+    help:
+      text: Help & Support
+      url: https://support.konghq.com/s/
+    contact:
+      text: Contact Us
+      url: https://konghq.com/company/contact-us

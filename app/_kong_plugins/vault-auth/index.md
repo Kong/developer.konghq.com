@@ -5,8 +5,11 @@ name: 'Vault Authentication'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Add Vault authentication to your services'
+description: 'Add Vault authentication to your Services or Routes'
 
+tags:
+  - authentication
+  - hashicorp-vault
 
 products:
     - gateway
@@ -27,16 +30,21 @@ categories:
 
 search_aliases:
   - vault-auth
+  - HashiCorp Vault
 
 related_resources:
   - text: Enable authentication with Vault in {{site.base_gateway}}
     url: /how-to/enable-vault-authentication/
+  - text: Authentication in {{site.base_gateway}}
+    url: /gateway/authentication/
+  - text: Configure HashiCorp Vault as a vault backend
+    url: /how-to/configure-hashicorp-vault-as-a-vault-backend/
 ---
 
 Add authentication to a Gateway Service or Route with an access token and a secret token. 
-Credential tokens are stored securely via [Vault](https://www.vaultproject.io/). 
+Credential tokens are stored securely via [Vault](https://developer.hashicorp.com/vault). 
 
-Credential lifecycle can be managed through the [Admin API](/api/gateway/admin-ee/), or independently via Vault.
+The credential lifecycle can be managed through the [Admin API](/api/gateway/admin-ee/), or independently via Vault.
 
 ## Token time-to-live (TTL)
 
@@ -48,20 +56,20 @@ When reading a token from Vault, {{site.base_gateway}} will search the KV value 
 
 ```
 {
-  access_token: <string>
-  secret_token: <string>
-  created_at: <integer>
-  updated_at: <integer>
-  ttl: <integer> (optional)
+  access_token: {your-string}
+  secret_token: {your-string}
+  created_at: {your-date-integer}
+  updated_at: {your-date-integer}
+  ttl: {your-integer} # optional
   consumer: {
-    id: <uuid>
+    id: {consumer-uuid}
   }
 }
 ```
 
 Additional fields within the secret are ignored. The key must be the `access_token` value; this is the identifier by which {{site.base_gateway}} queries the Vault API to fetch the credential data.
 
-See the Vault documentation for [version 1](https://www.vaultproject.io/docs/secrets/kv/kv-v1.html) or [version 2](https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v2) for more information on the KV secrets engine.
+See the Vault documentation for [version 1](https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v1) or [version 2](https://developer.hashicorp.com/vault/docs/secrets/kv/kv-v2) for more information on the KV secrets engine.
 
 `vault-auth` token pairs can be created with the [Vault HTTP API](https://developer.hashicorp.com/vault/api-docs) or the `vault write` command:
 

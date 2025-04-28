@@ -11,8 +11,7 @@ config:
     - 100
   window_size:
     - 60
-  sync_rate:
-    - 10
+  sync_rate: 10
   window_type: fixed
   cost_strategy: default
 
