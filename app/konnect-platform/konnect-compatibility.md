@@ -12,7 +12,8 @@ tags:
 works_on:
   - konnect
 
-  
+breadcrumbs:
+  - /konnect-platform/
 related_resources:
   - text: "{{site.base_gateway}}"
     url: /gateway/
