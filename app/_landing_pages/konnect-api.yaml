@@ -16,3 +16,5 @@ rows:
         - type: text
           config: |
             @todo
+
+            Include on this page information relevant for all Konnect APIs that wouldn't appear in the specs, authentication and filtering for example

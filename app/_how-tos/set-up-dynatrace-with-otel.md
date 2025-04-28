@@ -66,7 +66,7 @@ prereqs:
       {: data-deployment-topology="konnect" }
   - title: Dynatrace
     content: |
-      This tutorial requires you to have a Dynatrace SaaS account.
+      This tutorial requires you to have a [Dynatrace](https://www.dynatrace.com/) SaaS account.
 
       1. In Dynatrace, find your [environment ID](https://docs.dynatrace.com/docs/discover-dynatrace/get-started/monitoring-environment#environment-id).
       1. [Generate an API token](https://docs.dynatrace.com/docs/discover-dynatrace/references/dynatrace-api/basics/dynatrace-api-authentication#create-token) with the `openTelemetryTrace.ingest` and `metrics.ingest` scopes.
@@ -80,7 +80,7 @@ prereqs:
 
 tldr:
     q: How do I send {{site.base_gateway}} traces, metrics, and logs to Dynatrace?
-    a: You can use the OpenTelemetry plugin with Dynatrace SaaS to send analytics and monitoring data to Dynatrace dashboards. Set `KONG_TRACING_INSTRUMENTATIONS=all` and `KONG_TRACING_SAMPLING_RATE=1.0`. Enable the OTEL plugin with your Dynatrace tracing and log endpoint, and specify the name you want to track the traces by in `resource_attributes.service.name`, and add the Dynatrace API token as an Authorization header.
+    a: You can use the OpenTelemetry plugin with Dynatrace SaaS to send analytics and monitoring data to Dynatrace dashboards. Set `KONG_TRACING_INSTRUMENTATIONS=all` and `KONG_TRACING_SAMPLING_RATE=1.0`. Enable the OTEL plugin with your Dynatrace tracing and log endpoint, specify the name you want to track the traces by in `resource_attributes.service.name`, and add the Dynatrace API token as an Authorization header.
 
 tools:
     - deck
@@ -126,7 +126,7 @@ faqs:
           processors: []
           exporters: [otlphttp]
       ```
-  - q: If I want to use the Dynatrace Collector between {{site.base_gateway}} and Dynatrace, how do I configure that?
+  - q: I want to use the Dynatrace Collector between {{site.base_gateway}} and Dynatrace, how do I configure that?
     a: |
       Make an `otel-collector-config.yaml` file with the following configuration:
 

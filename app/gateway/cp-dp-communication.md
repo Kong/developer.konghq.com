@@ -107,21 +107,28 @@ faqs:
       * Remove the cache file, then start the Data Plane node with
       [`declarative_config`](/gateway/configuration/#declarative_config)
       to load a fallback YAML config.
+
+tags:
+  - control-plane
+  - data-plane
+
+breadcrumbs:
+  - /gateway/
 ---
 
 
-When {{site.base_gateway}} deployments run either in either [managed](/dedicated-cloud-gateways/) or [hybrid mode](/gateway/hybrid-mode/), this means that there is
+When {{site.base_gateway}} deployments run either in either [managed](/dedicated-cloud-gateways/) or [hybrid mode](/gateway/hybrid-mode/), there is
 a separate Control Plane attached to a Data Plane consisting of one or more Data Plane nodes.
 Data traveling between Control Planes and Data Planes is secured through a
 mutual TLS handshake.
-Data plane nodes initiate the connection to the {{site.base_gateway}} Control Plane.
+Data Plane nodes initiate the connection to the {{site.base_gateway}} Control Plane.
 Once the connection is established, the Control Plane can send configuration data to the 
 connected Data Plane nodes.
 Normally, each Data Plane node maintains a persistent connection with the Control
 Plane. 
 The node sends a heartbeat to the Control Plane every 30 seconds to
 keep the connection alive. 
-If it doesn't receive an answer, it tries to reconnect to the Control Plane after a 5-10 second delay. If communication is interrupted and either side can't send or receive config, Data Plane nodes can still continue  proxying traffic to clients. 
+If it doesn't receive an answer, it tries to reconnect to the Control Plane after a 5-10 second delay. If communication is interrupted and either side can't send or receive config, Data Plane nodes can still continue proxying traffic to clients. 
 
 Whenever a Data Plane node receives new configuration from the Control Plane,
 it immediately loads that config into memory. 
@@ -135,7 +142,7 @@ When operating as a Data Plane (DP) node, {{site.base_gateway}} loads configurat
 1. **Local config cache**: If the `dbless.lmdb` file exists in the [`kong_prefix`](/gateway/configuration/#prefix) directory (default: `/usr/local/kong`), the Data Plane node uses it as its configuration.
 2. **Declarative config file**: If the cache is missing and `declarative_config` is set, the node loads the specified file.
 3. **No configuration**: If neither the cache nor a declarative config file is available, the node starts with an empty configuration and returns 404 for all requests.
-4. **Contact control plane**: In all cases, the Data Plane node attempts to fetch the latest configuration from the control plane. If successful, the configuration is saved to the local cache (`dbless.lmdb`).
+4. **Contact control plane**: In all cases, the Data Plane node attempts to fetch the latest configuration from the Control Plane. If successful, the configuration is saved to the local cache (`dbless.lmdb`).
 
 ## Secure Control Plane and Data Plane communications
 
@@ -180,7 +187,7 @@ rows:
 
 ### Generate a certificate key pair
 
-When you use the {{site.konnect_short_name}} wizard to create a Data Plane node, it generates a certificate key pair. Data planes can establish a connection with this certificate key pair (pinned cert).
+When you use the {{site.konnect_short_name}} wizard to create a Data Plane node, it generates a certificate key pair. Data Planes can establish a connection with this certificate key pair (pinned cert).
 
 1. Navigate to [**Gateway Manager**](https://cloud.konghq.com/gateway-manager/) in {{site.konnect_short_name}}.
 1. Click on the Control Plane you want to create a Data Plane node for.
@@ -241,7 +248,7 @@ traffic.
 ### Shared mode
 
 {:.warning}
-> **Warning:** Protect the Private Key. Ensure the private key file can only be accessed by {{site.base_gateway}} nodes that belong to the cluster. If the key is compromised, you must regenerate and replace certificates and keys on all Control Plane and Data Plane nodes.
+> **Warning:** Protect the private key. Ensure the private key file can only be accessed by {{site.base_gateway}} nodes that belong to the cluster. If the key is compromised, you must regenerate and replace certificates and keys on all Control Plane and Data Plane nodes.
 
 1. On an existing {{site.base_gateway}} instance, create a certificate/key pair:
     ```bash

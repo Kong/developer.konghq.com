@@ -25,7 +25,7 @@ entities:
   - plugin
 
 tags:
-    - ai-gateway
+    - ai
     - openai
 
 tldr:

@@ -5,8 +5,13 @@ layout: reference
 
 products:
     - dev-portal
+
 breadcrumbs: 
   - /dev-portal/
+beta: true
+tags:
+  - beta
+
 works_on:
     - konnect
 search_aliases:

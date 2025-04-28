@@ -1,20 +1,10 @@
 description: |
   {{site.base_gateway}} can perform verification on registered claims, as defined in [RFC 7519](https://tools.ietf.org/html/rfc7519). To perform verification on a claim, add it to the [`config.claims_to_verify`](/plugins/jwt/reference/#schema--config-claims-to-verify) property.
 
-  The following table shows the supported claims:
+  The following claims are supported:
 
-  {% table %}
-  columns:
-    - title: Claim name
-      key: claim
-    - title: Verification
-      key: verification
-  rows:
-    - claim: "`exp`"
-      verification: Identifies the expiration time on or after which the JWT must not be accepted for processing.
-    - claim: "`nbf`"
-      verification: Identifies the time before which the JWT must not be accepted for processing.
-  {% endtable %}
+  * `exp`: Identifies the expiration time on or after which the JWT must not be accepted for processing.
+  * `nbf`: Identifies the time before which the JWT must not be accepted for processing.
 
 title: 'Verify registered claims'
 

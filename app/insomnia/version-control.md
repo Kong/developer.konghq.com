@@ -24,9 +24,8 @@ related_resources:
 
 tags:
     - git
-    - git-sync
     - cloud-sync
-    - version-control
+    - versioning
 
 products:
     - insomnia

@@ -10,6 +10,7 @@ description: Protect sensitive information in client request bodies before they 
 
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem
@@ -31,6 +32,9 @@ icon: ai-sanitizer.png
 
 categories:
     - ai
+tags:
+  - ai
+
 related_resources:
   - text: Use AI to protect sensitive information in requests
     url: /how-to/protect-sensitive-information-with-ai/

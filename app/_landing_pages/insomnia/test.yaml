@@ -4,6 +4,8 @@ metadata:
   description: This page is an introduction to API testing in Insomnia.
   breadcrumbs:
     - /insomnia/
+  products:
+    - insomnia
 rows:
   - header:
       type: h1

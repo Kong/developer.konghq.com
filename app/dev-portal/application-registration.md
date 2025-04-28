@@ -5,9 +5,11 @@ content_type: reference
 layout: reference
 products:
   - dev-portal
+beta: true
 tags:
   - application-registration
   - authentication
+  - beta
 works_on:
   - konnect
 related_resources:

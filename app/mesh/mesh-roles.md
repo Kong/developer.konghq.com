@@ -3,8 +3,7 @@ title: Mesh RBAC Roles
 content_type: reference
 products:
   - gateway
-tiers: 
-  - enterprise
+tier: enterprise
 tools:
     - admin-api
 entities:

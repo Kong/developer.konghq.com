@@ -8,6 +8,9 @@ description: |
 
 products:
     - gateway
+    - advanced-analytics
+tags:
+  - analytics
 works_on:
     - konnect
 api_specs:

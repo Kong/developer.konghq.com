@@ -29,6 +29,9 @@ related_resources:
     url: /kubernetes-ingress-controller/troubleshooting/konnect/
   - text: Failure Modes
     url: /kubernetes-ingress-controller/troubleshooting/failure-modes/
+
+tags:
+  - troubleshooting
 ---
 
 If {{ site.kic_product_name }} is behaving in a way that you don't expect, you can increase the logging to figure what is causing the issue.
@@ -58,7 +61,7 @@ kubectl logs -n kong deployments/kong-controller
 
 ## Inspecting network traffic with a tcpdump sidecar
 
-Inspecting network traffic allows you to review traffic between the Ingress Controller and the Kong Admin API and/or between the Kong proxy and upstream applications. You can use this in situations where logged information doesn't provide sufficient data on the contents of requests and you want to see exactly what was sent over the network.
+Inspecting network traffic allows you to review traffic between the Ingress Controller and the {{site.base_gateway}} Admin API and/or between the {{site.base_gateway}} proxy and upstream applications. You can use this in situations where logged information doesn't provide sufficient data on the contents of requests and you want to see exactly what was sent over the network.
 
 Although you cannot install and use tcpdump within the controller or {{site.base_gateway}} containers, you can add a tcpdump sidecar to your Pod's containers. The sidecar will be able to sniff traffic from other containers in the Pod. You can edit your Deployment to add the sidecar to all managed Pods or a single Pod and add the following under the `containers` section of the Pod spec:
 
@@ -89,7 +92,7 @@ kubectl patch --type=json -n kong deployments.apps ingress-kong -p='[{
 
 If you are using the Kong Helm chart, you can alternately add this to the `sidecarContainers` section of `values.yaml`.
 
-Once the sidecar is running, you can use `kubectl exec -it POD_NAME -c tcpdump` and run a capture. For example, to capture traffic between the controller and Kong Admin API:
+Once the sidecar is running, you can use `kubectl exec -it POD_NAME -c tcpdump` and run a capture. For example, to capture traffic between the controller and the Admin API:
 
 ```bash
 tcpdump -npi any -s0 -w /tmp/capture.pcap host 127.0.0.1 and port 8001

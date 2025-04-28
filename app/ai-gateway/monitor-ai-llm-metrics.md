@@ -8,7 +8,7 @@ products:
   - gateway
 
 tags:
-  - ai-gateway
+  - ai
   - monitoring
 
 plugins:

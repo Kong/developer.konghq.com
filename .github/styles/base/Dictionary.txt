@@ -187,6 +187,7 @@ DPPs
 drilldown
 dynatrace
 Dynatrace
+ecs
 ElastiCache
 ElastiCache
 elbs
@@ -514,7 +515,7 @@ observability
 oc
 odks
 oidc
-Okta
+okta
 Okta
 Okta's
 Okta's
@@ -641,14 +642,13 @@ saml
 sandboxed
 sandboxing
 sanitization
+sbom
 SBOM
-SBOM
-SBOMs
+sboms
 SBOMs
 SCCs
 SCCs
 schema's
-SDKs
 SDKs
 search_by_username
 secret_id
@@ -757,6 +757,7 @@ truthy
 ttl
 TTLs
 txt
+ubi
 udp
 UDPIngress
 udpingress

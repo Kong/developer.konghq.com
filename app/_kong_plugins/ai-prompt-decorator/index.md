@@ -10,6 +10,7 @@ description: Prepend or append an array of llm/v1/chat messages to a user's chat
 
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem
@@ -30,6 +31,9 @@ topologies:
 icon: ai-prompt-decorator.png
 
 categories:
+  - ai
+
+tags:
   - ai
 
 search_aliases:

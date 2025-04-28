@@ -6,6 +6,8 @@ metadata:
     - /insomnia/
   tags:
     - security
+  products:
+    - insomnia
 rows:
   - header:
       type: h1

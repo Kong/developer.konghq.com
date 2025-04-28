@@ -5,7 +5,9 @@ layout: reference
 
 products:
     - dev-portal
-
+beta: true
+tags:
+  - beta
 works_on:
     - konnect
 

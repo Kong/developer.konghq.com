@@ -20,7 +20,7 @@ plugins:
 
 tags:
   - authentication
-  - mtls-auth
+  - mtls
 
 tools:
     - deck

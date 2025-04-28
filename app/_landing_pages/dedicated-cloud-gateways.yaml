@@ -6,6 +6,10 @@ metadata:
     - dedicated-cloud-gateways
     - gateway-manager
     - data-plane-nodes
+  products:
+    - gateway
+  works_on:
+    - konnect
 
 rows:
   - header:

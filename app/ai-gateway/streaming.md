@@ -9,9 +9,10 @@ works_on:
 
 products:
   - gateway
+  - ai-gateway
 
 tags:
-  - ai-gateway
+  - ai
   - streaming
 
 plugins:

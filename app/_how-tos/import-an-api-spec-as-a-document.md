@@ -29,6 +29,12 @@ prereqs:
           * WSDL
           * cURL
       icon_url: /assets/icons/code.svg
+
+related_resources:
+  - text: API specs in Insomnia
+    url: /insomnia/api-specs/
+  - text: Design documents
+    url: /insomnia/documents/
 ---
 
 ## Select a specification

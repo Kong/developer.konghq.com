@@ -1,10 +1,17 @@
 metadata:
   title: "{{site.base_gateway}} traffic control and routing"
-  product: gateway
+  products: 
+    - gateway
   content_type: landing_page
   description: Learn how {{site.base_gateway}} listens for, routes, and proxies traffic.
   breadcrumbs:
     - /gateway/
+  works_on:
+    - on-prem
+    - konnect
+  tags:
+    - traffic-control
+    - routing
 rows:
   - header:
       type: h1
@@ -57,7 +64,7 @@ rows:
             config:
               title: "stream_listen"
               description: |
-                Similar to proxy_listen, but for Layer 4 (TCP, TLS) generic proxy. This is disabled by default.
+                Similar to `proxy_listen`, but for Layer 4 (TCP, TLS) generic proxy. This is disabled by default.
               cta:
                 text: Learn more about stream_listen &rarr;
                 url: /gateway/configuration/#stream-listen

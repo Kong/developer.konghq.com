@@ -10,6 +10,7 @@ description: 'Create RAG pipelines by automatically injecting content from a vec
 
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem
@@ -31,6 +32,9 @@ icon: ai-rag-injector.png
 
 categories:
     - ai
+
+tags:
+  - ai
 ---
 
 The AI RAG Injector plugin simplifies the creation of retrieval-augmented generation (RAG) pipelines by automatically injecting content from a vector database of choice on the existing requests.

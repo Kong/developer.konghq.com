@@ -6,6 +6,7 @@ description: |
     Manage Data Plane nodes in {{site.konnect_short_name}}, including platform support, proxy access, version upgrades, certificate renewal, required parameters, and custom metadata labels.
 
 products:
+    # - gateway-manager
     - gateway
 works_on:
     - konnect
@@ -50,6 +51,13 @@ related_resources:
     url: /dedicated-cloud-gateways/
   - text: Serverless Gateways
     url: /serverless-gateways/
+
+tags:
+  - data-plane
+  - data-plane-nodes
+
+breadcrumbs:
+  - /gateway-manager/
 ---
 
 
@@ -82,7 +90,7 @@ rows:
 
 ## Forward proxy support
 
-{{site.konnect_product_name}} supports using non-transparent forward proxies to connect your {{site.base_gateway}} Data Plane with the {{site.konnect_short_name}} Control Plane. See the [Forward proxy connections](/gateway/cp-dp-communication/) {{site.base_gateway}} documentation for more information.
+{{site.konnect_short_name}} supports using non-transparent forward proxies to connect your {{site.base_gateway}} Data Plane with the {{site.konnect_short_name}} Control Plane. See the [Forward proxy connections](/gateway/cp-dp-communication/) {{site.base_gateway}} documentation for more information.
 
 
 ## Upgrade Data Planes
@@ -170,8 +178,8 @@ the Control Plane.
 * Each disconnected Data Plane node uses cached configuration to continue
 proxying and routing traffic.
 
-Depending on your setup, renewing certificates might mean bringing up a new data
-plane, or generating new certificates and updating Data Plane nodes with the new
+Depending on your setup, renewing certificates might mean bringing up a new Data
+Plane, or generating new certificates and updating Data Plane nodes with the new
 files.
 
 ## Advanced parameter reference

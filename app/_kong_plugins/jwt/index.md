@@ -36,13 +36,13 @@ search_aliases:
 
 The JWT plugin lets you verify requests containing HS256 or RS256 signed JSON Web Tokens, as specified in [RFC 7519](https://tools.ietf.org/html/rfc7519).
 
-When you enable this plugin, it grants JWT credentials (public and secret keys) to each of your consumers, which must be used to sign their JWTs. You can then pass a token through any of the following:
+When you enable this plugin, it grants JWT credentials (public and secret keys) to each of your Consumers, which must be used to sign their JWTs. You can then pass a token through any of the following:
 
 * A query string parameter
 * A cookie
 * HTTP request headers
 
-Kong will either proxy the request to your upstream services if the token’s signature is verified, or discard the request if not. Kong can also perform verifications on some of the registered claims of RFC 7519 (exp and nbf). If Kong finds multiple tokens that differ - even if they are valid - the request will be rejected to prevent JWT smuggling.
+{{site.base_gateway}} will either proxy the request to your upstream services if the token’s signature is verified, or discard the request if not. {{site.base_gateway}} can also perform verifications on some of the registered claims of RFC 7519 (exp and nbf). If {{site.base_gateway}} finds multiple tokens that differ - even if they are valid - the request will be rejected to prevent JWT smuggling.
 
 ## Using the plugin
 
@@ -88,7 +88,7 @@ in that order.
 ```
 
 Then, create the signature using your private keys. Using the JWT debugger at
-[https://jwt.io](https://jwt.io), set the right header (RS256), the claims (`iss`, etc.), and the
+[jwt.io](https://jwt.io), set the right header (RS256), the claims (`iss`, etc.), and the
 associated public key. Then, append the resulting value in the `Authorization` header, for example:
 
 ```bash
@@ -96,22 +96,5 @@ curl http://localhost:8000/{routePath} \
   -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIxM2Q1ODE0NTcyZTc0YTIyYjFhOWEwMDJmMmQxN2MzNyJ9.uNPTnDZXVShFYUSiii78Q-IAfhnc2ExjarZr_WVhGrHHBLweOBJxGJlAKZQEKE4rVd7D6hCtWSkvAAOu7BU34OnlxtQqB8ArGX58xhpIqHtFUkj882JQ9QD6_v2S2Ad-EmEx5402ge71VWEJ0-jyH2WvfxZ_pD90n5AG5rAbYNAIlm2Ew78q4w4GVSivpletUhcv31-U3GROsa7dl8rYMqx6gyo9oIIDcGoMh3bu8su5kQc5SQBFp1CcA5H8sHGfYs-Et5rCU2A6yKbyXtpHrd1Y9oMrZpEfQdgpLae0AfWRf6JutA9SPhst9-5rn4o3cdUmto_TBGqHsFmVyob8VQ'
 ```
 
-## Upstream Headers
-
-When a JWT is valid and a Consumer has been authenticated, the plugin appends
-some headers to the request before proxying it to the Upstream service
-so that you can identify the Consumer in your code:
-
-* `X-Consumer-ID`, the ID of the Consumer on Kong.
-* `X-Consumer-Custom-ID`, the `custom_id` of the Consumer (if set).
-* `X-Consumer-Username`, the `username` of the Consumer (if set).
-* `X-Credential-Identifier`, the identifier of the credential (if set).
-* `X-Anonymous-Consumer`, set to `true` when authentication failed, and
-   the `anonymous` consumer was set instead.
-
-You can use this information on your side to implement additional logic. You can
-use the `X-Consumer-ID` value to query the Kong Admin API and retrieve more information about the Consumer.
-
-[api-object]: /gateway/latest/admin-api/#api-object
-[configuration]: /gateway/latest/reference/configuration
-[consumer-object]: /gateway/api/admin-ee/latest/#/operations/list-consumer
+## Upstream headers
+{% include_cached /plugins/upstream-headers.md %}

@@ -2,7 +2,11 @@ metadata:
   title: Custom Plugins
   content_type: landing_page
   description: This page is an introduction to custom plugins for Kong.
-
+  products:
+    - gateway
+  works_on:
+    - konnect
+    - on-prem
 rows:
   - header:
       type: h1

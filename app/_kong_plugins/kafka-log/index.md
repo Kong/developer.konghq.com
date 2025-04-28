@@ -29,6 +29,9 @@ icon: kafka-log.png
 categories:
   - logging
 
+tags:
+  - logging
+
 search_aliases:
   - kafka-log
 ---

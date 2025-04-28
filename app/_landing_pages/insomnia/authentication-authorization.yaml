@@ -8,6 +8,8 @@ metadata:
     - authentication
     - authorization
     - allowlist
+  products:
+    - insomnia
 
 rows:
   - header:

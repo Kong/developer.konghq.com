@@ -26,7 +26,7 @@ entities:
   - plugin
 
 tags:
-    - ai-gateway
+    - ai
 
 tldr:
     q: How can I use AI to transform a client request before proxying it?
