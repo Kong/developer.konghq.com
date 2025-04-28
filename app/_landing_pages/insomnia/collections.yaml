@@ -4,6 +4,8 @@ metadata:
   description: This page is an introduction to request collections in Insomnia
   breadcrumbs:
     - /insomnia/
+  product:
+    - insomnia
 rows:
   - header:
       type: h1

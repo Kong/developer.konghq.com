@@ -5,7 +5,6 @@ metadata:
     - service-catalog
   description: Integrate third-party applications into your {{site.konnect_short_name}} organization.
   tags:
-    - service-catalog
     - integrations
 
 rows:

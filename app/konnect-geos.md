@@ -12,7 +12,6 @@ tools:
     - kic
     - terraform
 tags:
-  - regions
   - geos
   - network
 

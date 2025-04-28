@@ -7,10 +7,9 @@ products:
   - mesh
 
 tags:
-  - mesh
   - mtls
   - vault
-  - ca-policy
+  - certificates
 
 works_on:
   - on-prem

@@ -4,6 +4,11 @@ metadata:
   description: This page lists the different entities that make up {{site.base_gateway}}.
   breadcrumbs:
     - /gateway/
+  products:
+    - gateway
+  works_on:
+    - on-prem
+    - konnect
 rows:
   -  header:
         type: h1

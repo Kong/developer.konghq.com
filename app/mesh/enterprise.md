@@ -6,9 +6,6 @@ layout: reference
 products:
   - mesh
 
-tags:
-  - enterprise
-
 tier: enterprise
 
 related_resources:

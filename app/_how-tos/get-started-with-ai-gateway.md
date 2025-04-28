@@ -20,7 +20,7 @@ entities:
 
 tags:
     - get-started
-    - ai-gateway
+    - ai
     - openai
 
 tldr:

@@ -8,7 +8,7 @@ products:
 
 tags:
   - support
-  - versions
+  - versioning
   - lifecycle
 
 works_on:

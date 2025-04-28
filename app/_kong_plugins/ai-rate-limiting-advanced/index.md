@@ -28,7 +28,6 @@ content_type: plugin
 description: Provides rate limiting for the providers used by any AI plugins. 
 tags:
   - rate-limiting
-  - ai-rate-limiting-advanced
   - traffic-control
 
 icon: ai-rate-limiting-advanced.png

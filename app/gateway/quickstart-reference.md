@@ -5,9 +5,10 @@ layout: reference
 
 products:
   - gateway
+  - ai-gateway
 
 tags:
-  - ai-gateway
+  - ai
 
 min_version:
   gateway: '3.4'

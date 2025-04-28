@@ -2,7 +2,7 @@ metadata:
   title: Design APIs
   content_type: landing_page
   description: Introduction to API design in Insomnia.
-  product:
+  products:
     - insomnia
   breadcrumbs:
     - /insomnia/

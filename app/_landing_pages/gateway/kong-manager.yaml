@@ -5,7 +5,10 @@ metadata:
   description: Kong Manager is the graphical user interface (GUI) for {{site.base_gateway}}.
   breadcrumbs:
     - /gateway/
-
+  products:
+    - gateway
+  works_on:
+    - on-prem
 rows:
   - header:
       type: h1

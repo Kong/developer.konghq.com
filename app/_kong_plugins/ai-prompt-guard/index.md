@@ -10,6 +10,7 @@ description: 'Check llm/v1/chat or llm/v1/completions requests against a list of
 
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem
@@ -30,6 +31,9 @@ topologies:
 icon: ai-prompt-guard.png
 
 categories:
+  - ai
+
+tags:
   - ai
 
 search_aliases:

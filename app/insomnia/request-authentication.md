@@ -11,10 +11,8 @@ related_resources:
     url: /insomnia/authentication-authorization/
 
 tags:
-    - requests
     - testing
     - authentication
-    - beginner
 
 products:
     - insomnia

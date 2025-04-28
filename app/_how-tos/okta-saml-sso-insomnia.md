@@ -16,7 +16,7 @@ tier: enterprise
 
 tags:
   - sso
-  - third-party
+  - okta
   - authentication
   - security
 

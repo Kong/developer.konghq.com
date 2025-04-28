@@ -29,7 +29,7 @@ entities:
   - plugin
 
 tags:
-    - ai-gateway
+    - ai
     - anthropic
 
 tldr:

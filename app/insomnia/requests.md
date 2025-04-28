@@ -13,8 +13,6 @@ breadcrumbs:
 - /insomnia/
 
 tags:
-- requests
-- responses
 - collections
 
 related_resources:

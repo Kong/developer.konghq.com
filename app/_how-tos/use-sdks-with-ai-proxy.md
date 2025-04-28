@@ -22,7 +22,7 @@ entities:
   - plugin
 
 tags:
-    - ai-gateway
+    - ai
 
 tldr:
     q: ""

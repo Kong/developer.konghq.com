@@ -7,8 +7,8 @@ products:
   - mesh
 
 tags:
-  - ECS
-  - AWS
+  - ecs
+  - aws
 
 
 related_resources:

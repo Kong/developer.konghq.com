@@ -7,6 +7,8 @@ products:
   - dev-portal
 tags:
   - authentication
+  - beta
+beta: true
 works_on:
   - konnect
 related_resources:

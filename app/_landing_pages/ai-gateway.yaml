@@ -8,6 +8,8 @@ metadata:
   works_on:
     - on-prem
     - konnect
+  tags:
+    - ai
 
 rows:
   - header:
@@ -322,7 +324,7 @@ rows:
           - type: how_to_list
             config:
               tags: 
-                - ai-gateway
+                - ai
               quantity: 5
               allow_empty: true
               

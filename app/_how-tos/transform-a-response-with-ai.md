@@ -26,7 +26,7 @@ entities:
   - plugin
 
 tags:
-    - ai-gateway
+    - ai
 
 tldr:
     q: How can I use AI to transform a response before returning it to the client?
