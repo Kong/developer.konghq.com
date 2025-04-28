@@ -56,7 +56,7 @@ rows:
                     - {{site.konnect_short_name}} handles gateway upgrades for you.
                     - Choose between public and private networking modes.
                     - Automatic scaling with Autopilot mode.
-                    - Support for AWS and Azure in multiple [regions](/konnect-geos/).
+                    - Support for AWS and Azure in multiple [regions](/konnect-platform/konnect-geos/).
 
           - type: button
             config:

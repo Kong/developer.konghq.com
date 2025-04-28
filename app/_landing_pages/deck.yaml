@@ -72,7 +72,7 @@ rows:
               - type: unordered_list
                 items:
                     - "**[Terraform](/terraform/)**: Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}} and {{site.base_gateway}}"
-                    - "**[KIC]((/kubernetes-ingress-controller/)**: Manage ingress traffic and routing rules for your services"
+                    - "**[KIC](/kubernetes-ingress-controller/)**: Manage ingress traffic and routing rules for your services"
                     - "**[{{site.base_gateway}} Admin API](/api/gateway/admin-ee/)**: Manage on-prem {{site.base_gateway}} entities via an API"
                     - "**[Control Plane Config API](/api/konnect/control-planes-config/)**: Manage {{site.base_gateway}} entities within {{site.konnect_short_name}} control planes via an API"
 
@@ -244,7 +244,7 @@ rows:
                 * With Terraform, you have to track and maintain Terraform files (*.tf) and the Terraform state (likely using a cloud storage solution). With decK, the entire configuration is stored in the YAML/JSON file(s) only. There is no separate state that needs to be tracked.
                 * decK can export and back up your existing {{site.base_gateway}}'s configuration, meaning, you can take an existing {{site.base_gateway}} installation, and have a backup, as well as a declarative configuration for it. With Terraform, you will have to import each and every entity in {{site.base_gateway}} into Terraform’s state.
                 * decK can check if a configuration file is valid or not (validate sub-command).
-                * decK can quickly reset your {{site.base_gateway}}'s configuration when needed.
+                * decK can quickly [reset](/deck/gateway/reset/) your {{site.base_gateway}}'s configuration when needed.
                 * decK works out of the box with {{site.base_gateway}} features like Workspaces and RBAC.
             - q: Can I run multiple decK processes at the same time?
               a: |

@@ -16,10 +16,13 @@ config:
 variables:
   http_proxy_host:
     value: $PROXY_HOST_NAME
+    description: The name of your HTTP host
   auth_username:
     value: $YOUR_PROXY_USERNAME
+    description: The username you intend to use for authentication.
   auth_password:
     value: $YOUR_PROXY_PASS
+    description: The password associated with the username.
 
 tools:
   - deck

@@ -51,7 +51,7 @@ rows:
                   - type: text
                     text: |
                       **Kong Gateway Control Planes**  
-                      Every [region](/konnect-geos/) in every organization starts with one default control plane. 
+                      Every [region](/konnect-platform/konnect-geos/) in every organization starts with one default control plane. 
                       With {{site.konnect_short_name}}, you can configure additional Kong Gateway control planes, 
                       each of which will have isolated configuration. Use multiple control planes in one 
                       {{site.konnect_short_name}} organization to manage data plane nodes and their configuration 

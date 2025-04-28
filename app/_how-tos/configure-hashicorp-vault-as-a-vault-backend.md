@@ -6,7 +6,7 @@ related_resources:
     url: /how-to/rotate-secrets-in-hashicorp-vault/
   - text: Secrets management
     url: /gateway/secrets-management/
-
+description: "Learn how to reference HashiCorp Vault secrets from {{site.base_gateway}}."
 products:
     - gateway
 
@@ -21,9 +21,11 @@ entities:
   - vault
 
 tags:
-    - security
     - secrets-management
-
+    - security
+    - hashicorp-vault
+search_aliases:
+  - Hashicorp Vault
 tldr:
     q: How can I access HashiCorp Vaults secrets in {{site.base_gateway}}? 
     a: |
@@ -68,11 +70,11 @@ vault kv put secret/customer/acme name="ACME Inc."
 
 ## Create decK environment variables 
 
-We'll use decK environment variables for the `host` and `token` in the {{site.base_gateway}} Vault configuration. This is because these values typically can vary between environments. 
+We'll use decK environment variables for the `host` and `token` in the {{site.base_gateway}} Vault configuration. This is because these values typically vary between environments. 
 
-In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` that HashiCorp Vault is using because {{site.base_gateway}} is running in a container that has a different `localhost` to you.
+In this tutorial, we're using `host.docker.internal` as our host instead of the `localhost` variable that HashiCorp Vault is using. This is because if you used the quick-start script {{site.base_gateway}} is running in a container and uses a different `localhost`.
 
-As stated in the prerequisites, we're using `root` for our `token` in this tutorial since we are running HashiCorp Vault in dev mode.
+Because we are running HashiCorp Vault in dev mode, we are using `root` for our `token` value. 
 
 ```
 export DECK_HCV_HOST=host.docker.internal

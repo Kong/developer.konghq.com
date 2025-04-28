@@ -55,7 +55,7 @@ The JSON Threat Protection plugin validates incoming requests with a JSON body a
 
 The plugin checks the following limits:
 
-- Maximum container depth of the entire JSON
+- Maximum container depth of the entire JSON object
 - Maximum number of array elements
 - Maximum number of object entries
 - Maximum length of object keys
@@ -135,7 +135,7 @@ rows:
 
 
 ## Log JSON request body violations
-In tap mode, if the plugin detects violations in the JSON request body, it logs a warning and proxies the request to the upstream service instead of blocking the request. In other words, in tap mode, the plugin only monitors the traffic.
+In tap mode, if the plugin detects violations in the JSON request body, it logs a warning and proxies the request to the Upstream Service instead of blocking the request. In other words, in tap mode, the plugin only monitors the traffic.
 
 To enable tap mode, set `config.enforce_mode` to `log_only`.
 

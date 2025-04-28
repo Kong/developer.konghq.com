@@ -5,6 +5,7 @@ metadata:
     About the {{site.konnect_short_name}} SaaS API platform
   tags:
     - konnect
+
     
 rows:
   - header:
@@ -29,7 +30,7 @@ rows:
 
                     * Easily manage {{site.base_gateway}}
                     * Catalog, share, and monetize APIs
-                    * Achieve federated API management with [multi-geo](/konnect-geos/) support
+                    * Achieve federated API management with [multi-geo](/konnect-platform/konnect-geos/) support
       - blocks:
           - type: image
             config:

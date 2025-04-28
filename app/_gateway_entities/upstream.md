@@ -71,15 +71,27 @@ The following diagram shows how Upstreams interact with other {{site.base_gatewa
 
 The following are examples of common use cases for Upstreams:
 
-| Use case      | Description                                                                                                                                                                                                                                                                                                                 |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Load balance](#load-balancing-algorithms)  | When an Upstream points to multiple upstream targets, you can configure the Upstream entity to load balance traffic between the targets. If you don't need to load balance, we recommend using the `host` header on a [Route](/gateway/entities/route/) as the preferred method for routing a request and proxying traffic. |
-| [Health check](/gateway/traffic-control/health-checks-circuit-breakers/#active-health-checks)  | Configure Upstreams to dynamically mark a target as healthy or unhealthy. This is an active check where a specific HTTP or HTTPS endpoint in the target is periodically requested and the health of the target is determined based on its response.                                                                         |
-| [Circuit break](/gateway/traffic-control/health-checks-circuit-breakers/#passive-health-checks-circuit-breakers) | Configure Upstreams to allow {{site.base_gateway}} to passively analyze the ongoing traffic being proxied and determine the health of targets based on their behavior responding to requests. <br><br>**Note:** This feature is not supported in {{site.konnect_short_name}} or hybrid mode.                                                               |
+{% table %}
+columns:
+  - title: Use case
+    key: use_case
+  - title: Description
+    key: description
+rows:
+  - use_case: "[Load balance](#load-balancing-algorithms)"
+    description: | 
+      When an Upstream points to multiple upstream targets, you can configure the Upstream entity to load balance traffic between the targets. If you don't need to load balance, we recommend using the `host` header on a [Route](/gateway/entities/route/) as the preferred method for routing a request and proxying traffic.
+  - use_case: "[Health check](/gateway/traffic-control/health-checks-circuit-breakers/#active-health-checks)"
+    description: |
+      Configure Upstreams to dynamically mark a target as healthy or unhealthy. This is an active check where a specific HTTP or HTTPS endpoint in the target is periodically requested and the health of the target is determined based on its response.
+  - use_case: "[Circuit break](/gateway/traffic-control/health-checks-circuit-breakers/#passive-health-checks-circuit-breakers)"
+    description: |
+      Configure Upstreams to allow {{site.base_gateway}} to passively analyze the ongoing traffic being proxied and determine the health of targets based on their behavior responding to requests. **This feature is not supported in {{site.konnect_short_name}} or hybrid mode.**
+{% endtable %}
 
 ## Load balancing algorithms
 
-The load balancer supports the following load balancing algorithms:
+The load balancer supports the following [load balancing algorithms](/gateway/load-balancing/):
 
 - `round-robin`
 - `consistent-hashing`
