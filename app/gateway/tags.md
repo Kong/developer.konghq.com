@@ -72,7 +72,7 @@ you will receive an error.
 ### Filtering examples 
 
 The following examples show how you would filter Gateway Services based on the tags `example` and `admin`:
-
+<!--vale off -->
 {% table %}
 columns:
   - title: Use case
@@ -87,3 +87,4 @@ rows:
   - use_case: Filter Services with the OR (`/`) delimiter to get entities that only match one of the specified tags
     example: "`GET /services?tags=example/admin`"
 {% endtable %}
+<!--vale on -->

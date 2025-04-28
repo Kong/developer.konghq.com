@@ -70,7 +70,7 @@ The following diagram shows how Upstreams interact with other {{site.base_gatewa
 ## Use cases for Upstreams
 
 The following are examples of common use cases for Upstreams:
-
+<!--vale off -->
 {% table %}
 columns:
   - title: Use case
@@ -88,7 +88,7 @@ rows:
     description: |
       Configure Upstreams to allow {{site.base_gateway}} to passively analyze the ongoing traffic being proxied and determine the health of targets based on their behavior responding to requests. **This feature is not supported in {{site.konnect_short_name}} or hybrid mode.**
 {% endtable %}
-
+<!--vale on -->
 ## Load balancing algorithms
 
 The load balancer supports the following [load balancing algorithms](/gateway/load-balancing/):
