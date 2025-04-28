@@ -1,14 +1,14 @@
 description: |
   Enable the plugin and associate it with a Vault object.
-  For a full how-to guide, see [Enable authentication with Vault in {{site.base_gateway}}](/how-to/enable-vault-authentication/)
+  For a full how-to guide, see [Enable authentication with Vault in {{site.base_gateway}}](/how-to/enable-vault-authentication/).
 
 title: Enable Vault authentication
 
 weight: 900
 
 requirements:
-- You have a [HashiCorp Vault](https://developer.hashicorp.com/vault/tutorials/get-started/install-binary#install-vault)
-- You have created a [Vault](/plugins/vault-auth/api/) object
+- A [HashiCorp Vault](https://developer.hashicorp.com/vault/tutorials/get-started/install-binary#install-vault)
+- A [Vault](/plugins/vault-auth/api/) object
 
 config:
   vault: 

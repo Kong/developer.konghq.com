@@ -32,10 +32,18 @@ icon: header-cert-auth.png
 categories:
   - authentication
 
+tags:
+  - authentication
+
 search_aliases:
   - header cert auth
   - header-cert-auth
-  - authentication
+
+related_resources:
+  - text: "About authentication"
+    url: /gateway/authentication/
+  - text: CA Certificates
+    url: /gateway/entities/ca-certificate/
 
 faqs: 
   - q: Will the client need to encrypt the message with a private key and certificate when passing the certificate in the header?
@@ -49,9 +57,9 @@ instead of relying on traditional TLS termination.
 This approach is particularly useful in scenarios where TLS traffic is terminated outside of {{site.base_gateway}} such as at an external CDN or load balancer and the client certificate is passed along in an HTTP header for subsequent validation.
 
 {:.warning}
-> **Important:** To use this plugin, you must add [certificate authority (CA) certificates](/gateway/entities/ca-certificate/). Set them up before configuring the plugin.
+> **Important:** To use this plugin, you must add [certificate authority (CA) Certificates](/gateway/entities/ca-certificate/). Set them up before configuring the plugin.
 
-## How it works
+## How the Header Cert Auth plugin works
 
 This plugin lets {{site.base_gateway}} authenticate API calls using client certificates received in HTTP headers, rather than through traditional TLS termination. 
 This occurs in scenarios where TLS traffic is not terminated at {{site.base_gateway}}, but rather at an external CDN or load balancer, and the client certificate is preserved in an HTTP header for further validation.
@@ -63,7 +71,7 @@ The Header Cert Auth plugin extracts the client certificate from the HTTP header
 If the certificate is valid, the plugin maps the certificate to a Consumer based on the common name (CN) field.
 
 The plugin validates the certificate provided against the configured CA list based on the
-requested Route or Gateway Service:
+requested [Route](/gateway/entities/route/) or [Gateway Service](/gateway/entities/service/):
 * If the certificate is not trusted or has expired, the response is
   `HTTP 401 TLS certificate failed verification`.
 * If a valid certificate is not presented (including when requests are not sent to the HTTPS port),
@@ -91,12 +99,12 @@ nginx_proxy_large_client_header_buffers=8 24k
 
 Or via an environment variable:
 ```
-KONG_NGINX_PROXY_LARGE_CLIENT_HEADER_BUFFERS=8 24k
+export KONG_NGINX_PROXY_LARGE_CLIENT_HEADER_BUFFERS=8 24k
 ```
 
 ## Client certificate request
 
-The `send_ca_dn` option is not supported in this plugin. This is used in mutual TLS authentication, where the server sends the list of trusted CAs to the client, and the client then uses this list to select the appropriate certificate to present. In this case, since the plugin doesn't do TLS handshakes and only parses the client certificate from the header, it isn't applicable.
+The `send_ca_dn` option isn't supported in this plugin. This is used in mutual TLS authentication, where the server sends the list of trusted CAs to the client, and the client then uses this list to select the appropriate certificate to present. In this case, since the plugin doesn't do TLS handshakes and only parses the client certificate from the header, it isn't applicable.
 
 The same applies to SNI functionality. The plugin can verify the certificate without needing to know the specific hostname or domain being accessed. The plugin's authentication logic is decoupled from the TLS handshake and SNI, so it doesn't need to rely on SNI to function correctly.
 
@@ -104,16 +112,12 @@ The format specified in the [`config.certificate_header_format`](./reference/#sc
   * When set to `base64_encoded`, only the base64-encoded body of the certificate should be sent (excluding the `BEGIN CERTIFICATE` and `END CERTIFICATE` delimiters). 
   * When using `url_encoded`, the entire certificate, including the `BEGIN CERTIFICATE` and `END CERTIFICATE` delimiters, should be provided.
 
-For example, given the `certificate_header_name` of x-client-cert:
-
-`base64_encoded`
-
+For example, given the `certificate_header_name` of x-client-cert, a `base64_encoded` example would look like the following:
 ```bash
 x-client-cert: MIIDbDCCAdSgAwIBAgIUa...
 ```
 
-`url_encoded`
-
+A `url_encoded` example would look like the following:
 ```bash
 x-client-cert: -----BEGIN%20CERTIFICATE-----%0AMIIDbDCCAdSgAwIBAgIUa...-----END%20CERTIFICATE-----
 ```
@@ -132,7 +136,7 @@ Common Name (CN). CN is only used if the SAN extension does not exist.
 You can create a Consumer mapping with either of the following:
   * The [`/consumers/{consumer}/header-cert-auth` Admin API endpoint](/api/gateway/admin-ee/#/operations/create-plugin-for-consumer)
   * [decK](/gateway/entities/consumer/#set-up-a-consumer) by specifying `header_cert_auth_credentials` in the configuration like the following:
-    
+
     ```yaml
     consumers:
     - custom_id: my-consumer
@@ -161,7 +165,7 @@ rows:
     description: "The Subject Alternative Name (SAN) or Common Name (CN) that should be mapped to `consumer` (in order of lookup)."
   - parameter: "`ca_certificate`<br>*optional*"
     default: none
-    description: "**If using the Admin API:** UUID of the Certificate Authority (CA). <br><br> **If using declarative configuration:** Full PEM-encoded CA certificate. <br><br>The provided CA UUID or full certificate has to be verifiable by the issuing certificate authority for the mapping to succeed. This is to help distinguish multiple certificates with the same subject name that are issued under different CAs. <br><br>If empty, the subject name matches certificates issued by any CA under the corresponding `config.ca_certificates`."
+    description: "**If using the Admin API:** UUID of the Certificate Authority (CA). <br><br> **If using declarative configuration:** Full PEM-encoded CA certificate. <br><br>The provided CA UUID or full CA Certificate has to be verifiable by the issuing certificate authority for the mapping to succeed. This is to help distinguish multiple certificates with the same subject name that are issued under different CAs. <br><br>If empty, the subject name matches certificates issued by any CA under the corresponding `config.ca_certificates`."
 {% endtable %}
 
 ### Matching behaviors

@@ -19,6 +19,10 @@ tldr:
 products:
   - gateway
 
+tags:
+  - custom-plugins
+  - pdk
+
 tools:
   - admin-api
 
@@ -31,6 +35,8 @@ prereqs:
 related_resources:
   - text: Custom plugins
     url: /custom-plugins/
+  - text: Plugins
+    url: /gateway/entities/plugins/
 ---
 
 ## Install Pongo
@@ -249,13 +255,13 @@ For this project, this is the `spec/my-plugin` folder you created earlier.
          -- The custom plugin name is provided to this function so it mark as loaded
          local blue_print = helpers.get_db_utils(strategy, nil, { PLUGIN_NAME })
 
-         -- Using the BluePrint to create a test route, automatically attaches it
-         --    to the default "echo" service that will be created by the test framework
+         -- Using the BluePrint to create a test Route, automatically attaches it
+         --    to the default "echo" Service that will be created by the test framework
          local test_route = blue_print.routes:insert({
            paths = { "/mock" },
          })
 
-         -- Add the custom plugin to the test route
+         -- Add the custom plugin to the test Route
          blue_print.plugins:insert {
            name = PLUGIN_NAME,
            route = { id = test_route.id },

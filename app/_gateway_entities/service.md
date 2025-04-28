@@ -25,6 +25,12 @@ tools:
     - deck
     - terraform
 
+tags:
+  - service-application
+
+search_aliases:
+  - service application
+
 schema:
     api: gateway/admin-ee
     path: /schemas/Service
@@ -32,6 +38,9 @@ schema:
 api_specs:
     - gateway/admin-ee
     - konnect/control-planes-config
+
+products:
+    - gateway
 
 works_on:
   - on-prem

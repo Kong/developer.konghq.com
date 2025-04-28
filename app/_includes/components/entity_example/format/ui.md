@@ -24,12 +24,12 @@ The following creates a new route called **{{ include.presenter.data['name'] }}*
 4. Set a path or define routing rules. For example, the path can be `{{ include.presenter.data['paths']}}`.
 5. Click **Save**.
 {% when 'service' %}
-The following creates a new service called **{{ include.presenter.data['name'] }}** with basic configuration:
+The following creates a new Service called **{{ include.presenter.data['name'] }}** with basic configuration:
 
 1. In Kong Manager or Gateway Manager, go to **Gateway Services**.
 2. Click **New Gateway Service**.
-3. Enter a unique name for the service. In this example, it's `{{ include.presenter.data['name'] }}`.
-4. Define the endpoint for this service by specifying the full URL or by its separate elements. In this example, the full upstream URL is `{{ include.presenter.data['url'] }}`.
+3. Enter a unique name for the Service. In this example, it's `{{ include.presenter.data['name'] }}`.
+4. Define the endpoint for this Service by specifying the full URL or by its separate elements. In this example, the full upstream URL is `{{ include.presenter.data['url'] }}`.
 5. Click **Save**.
 {% when 'plugin' %}
 1. In Kong Manager or Gateway Manager, go to **Plugins**.

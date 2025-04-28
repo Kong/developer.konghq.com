@@ -25,12 +25,18 @@ tools:
 works_on:
   - on-prem
 
+tags:
+  - custom-plugins
+  - pdk
+
 prereqs:
   skip_product: true
 
 related_resources:
   - text: Custom plugins
     url: /custom-plugins/
+  - text: Plugins
+    url: /gateway/entities/plugins/
 ---
 
 ## Create a Dockerfile
