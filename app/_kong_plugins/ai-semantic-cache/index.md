@@ -49,7 +49,7 @@ The AI Semantic Cache plugin stores user responses to an LLM in a vector databas
 
 Semantic caching enhances data retrieval efficiency by focusing on the meaning or context of queries rather than just exact matches. It stores responses based on the underlying intent and semantic similarities between different queries and can then retrieve those cached queries when a similar request is made.
 
-When a new request is made, the system can retrieve and reuse previously cached responses if they are contextually relevant, even if the phrasing is different. This method reduces redundant processing, speeds up response times, and ensures that answers are more relevant to the user’s intent, ultimately improving overall system performance and user experience. 
+When a new request is made, the system can retrieve and reuse previously cached responses if they are contextually relevant, even if the phrasing is different. This method reduces redundant processing, speeds up response times, and ensures that answers are more relevant to the user’s intent, ultimately improving overall system performance and user experience.
 
 For example, if a user asks, "how to integrate our API with a mobile app" and later asks, "what are the steps for connecting our API to a smartphone application?", the system understands that both questions are asking for the same information. It can then retrieve and reuse previously cached responses, even if the wording is different. This approach reduces processing time and speeds up responses.
 
@@ -61,7 +61,7 @@ The AI Semantic Cache plugin may not be ideal if the following are true:
 
 ## How it works
 
-Semantic caching with the AI Semantic Cache plugin involves three parts: request handling, embedding generation, and response caching. 
+Semantic caching with the AI Semantic Cache plugin involves three parts: request handling, embedding generation, and response caching.
 
 First, a user starts a chat request with the LLM. The AI Semantic Cache plugin queries the vector database to see if there are any semantically similar requests that have already been cached. If there is a match, the vector database returns the cached response to the user.
 
@@ -87,7 +87,7 @@ sequenceDiagram
     Embeddings LLM-->>{{site.base_gateway}}/AI Semantic Cache plugin: Return embeddings
 {% endmermaid %}
 
-The AI Semantic Cache plugin uses a vector database and cache to store responses to requests. The plugin can then retrieve a cached response if a new request matches the semantics of a previous request, or it can tell the vector database to store a new response if there are no matches. 
+The AI Semantic Cache plugin uses a vector database and cache to store responses to requests. The plugin can then retrieve a cached response if a new request matches the semantics of a previous request, or it can tell the vector database to store a new response if there are no matches.
 
 {% mermaid %}
 sequenceDiagram
@@ -126,7 +126,7 @@ Together, these caching methods enhance the efficiency and relevance of AI respo
 
 ### Headers sent to the client
 
-When the AI Semantic Cache plugin is active, {{site.base_gateway}} sends additional headers 
+When the AI Semantic Cache plugin is active, {{site.base_gateway}} sends additional headers
 indicating the cache status and other relevant information:
 
 ```plaintext
@@ -150,4 +150,7 @@ The plugin respects cache control headers to determine if requests and responses
 * `no-store`: Prevents caching of the request or response
 * `no-cache`: Forces validation with the origin server before serving the cached response
 * `private`: Ensures the response is not cached by shared caches
-* `max-age` and `s-maxage`: Sets the maximum age of the cached response. This causes the vector database to drop and delete the cached response message after expiration, so it’s never seen again. 
+* `max-age` and `s-maxage`: Sets the maximum age of the cached response. This causes the vector database to drop and delete the cached response message after expiration, so it’s never seen again.
+
+{:.info}
+> As most AI services always send `no-cache` in the response headers, setting `cache_control` to `true` will always result in a cache bypass. Only consider setting `no-cache` if you are using self-hosted services and have control over the response Cache Control headers.
