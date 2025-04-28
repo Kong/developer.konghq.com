@@ -1,13 +1,13 @@
 title: 'Create a complex chat history'
 
-description: 'Creates a complex chat history that can be continued by any user by configuring the plugin to both prepend and append multiple messages.'
+description: 'Creates a detailed chat history by configuring the plugin to prepend and append multiple messages, allowing any user to continue the conversation.'
 
 weight: 900
 
 requirements:
   - "[AI Proxy plugin](/plugins/ai-proxy/) configured with an LLM service"
 
-config: 
+config:
   prompts:
     prepend:
     - role: system
