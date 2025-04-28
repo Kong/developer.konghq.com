@@ -37,15 +37,15 @@ faqs:
 
        The max size that gets logged is determined by the protocol receiver's implementation of it, and limitations of the transport. 
        * If the Syslog receiver is using the older [RFC3164](https://tools.ietf.org/html/rfc3164#section-4.1) standard, the max size will be 1024 octets.
-       * If syslog receiver is using the modern [RFC 5424](https://tools.ietf.org/html/rfc5424#section-6.1) standard, the minimum max size is 480 octets, and the recommended max size is 2048 octets. 
+       * If the Syslog receiver is using the modern [RFC 5424](https://tools.ietf.org/html/rfc5424#section-6.1) standard, the minimum max size is 480 octets, and the recommended max size is 2048 octets. 
        Transport receivers may receive messages larger than 2048 octets, but could truncate or discard it if not supported by the implementation.
 ---
 
 Log request and response data to Syslog.
 
 {:.info}
-> **Note:** Make sure the Syslog daemon is running on the instance and it's configured with the
-logging level severity the same as or lower than the set [`config.log_level`](./reference/#schema--config-log-level) for this plugin.
+> **Note:** Make sure the Syslog daemon is running on the instance and is configured with a
+logging level severity equal to or lower than the one set in the [`config.log_level`](./reference/#schema--config-log-level) parameter for this plugin.
 
 ## Log format
 

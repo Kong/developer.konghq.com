@@ -74,4 +74,4 @@ functions.
 > **Caution**: `kong.response.exit()` requires a `status` argument only.
 `body` and `headers` may be `nil`.
 If you manipulate the body and headers, first check that they exist and
-instantiate them if they do not exist.
+instantiate them if they don't exist.
