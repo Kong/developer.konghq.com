@@ -387,6 +387,8 @@ app/kubernetes-ingress-controller/migrate/ingress-to-gateway.md:
   - app/_src/kubernetes-ingress-controller/guides/migrate/ingress-to-gateway.md
 app/kubernetes-ingress-controller/migrate/credential-kongcredtype-label.md:
   - app/_src/kubernetes-ingress-controller/guides/migrate/credential-kongcredtype-label.md
+app/_how-tos/kic-verify-upstream-tls.md:
+  - app/_src/kubernetes-ingress-controller/guides/security/verify-upstream-tls.md
 
 # plugins
 app/_kong_plugins/session/changelog.md:
