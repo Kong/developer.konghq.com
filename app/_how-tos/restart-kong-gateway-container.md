@@ -1,5 +1,5 @@
 ---
-title: How to restart {{site.base_gateway}} in a Docker Container
+title: How to restart {{site.base_gateway}} in a Docker container
 description: Restart the {{site.base_gateway}} container without killing it.
 content_type: how_to
 
