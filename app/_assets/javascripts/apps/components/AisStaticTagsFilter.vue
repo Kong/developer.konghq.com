@@ -1,5 +1,5 @@
 <template>
-    <ais-refinement-list class="flex flex-col" attribute="tags" :transformItems="getStaticValues" >
+    <ais-refinement-list class="flex flex-col gap-3" attribute="tags" :transformItems="getStaticValues" >
         <template
             v-slot="{
             items,
@@ -41,7 +41,7 @@ export default {
             if (this.showMore) {
                 return ['overflow-auto', 'h-full'];
             } else {
-                return ['overflow-hidden', 'h-32'];
+                return ['overflow-hidden'];
             }
         }
     },
