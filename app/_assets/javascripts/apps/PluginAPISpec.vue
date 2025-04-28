@@ -24,4 +24,8 @@ const currentPathDOC = ref(window.location.hash.substring(1));
 :deep(.spec-renderer-small-screen-header) {
   @apply top-16 !important;
 }
+
+:deep(.spec-renderer-toc) {
+  @apply bg-transparent !important;
+}
 </style>
