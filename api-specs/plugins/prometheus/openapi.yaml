@@ -1,0 +1,26 @@
+
+openapi: 3.0.2
+info:
+  title: Prometheus
+  version: 1.0.0
+  description: API for managing Prometheus metrics
+  contact:
+    name: Kong Inc
+    url: https://konghq.com
+    email: docs@konghq.com
+servers:
+  - url: http://localhost:8001
+    description: Kong Admin API
+
+paths:   
+  /metrics:
+    get:
+      summary: Prometheus metrics endpoint
+      tags: [Prometheus]
+      responses:
+        '200':
+          description: Prometheus-formatted metrics
+          content:
+            text/plain:
+              schema:
+                type: string
