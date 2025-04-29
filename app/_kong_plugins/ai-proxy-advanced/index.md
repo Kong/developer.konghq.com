@@ -58,11 +58,12 @@ related_resources:
 ## Load balancing
 
 This plugin supports several load-balancing algorithms, similar to those used for Kong upstreams, allowing efficient distribution of requests across different AI models. The supported algorithms include:
-* **Lowest-usage**: The lowest-usage algorithm in AI Proxy Advanced is based on the volume of usage for each model. It balances the load by distributing requests to models with the lowest usage, measured by factors such as prompt token counts, response token counts, or other resource metrics.
+* **Lowest-usage**: The lowest-usage algorithm in AI Proxy Advanced is based on the volume of usage for each model. It balances the load by distributing requests to models with the lowest usage, measured by factors such as prompt token counts, response token counts, cost {% new_in 3.10 %}, or other resource metrics.
 * **Lowest-latency**: The lowest-latency algorithm is based on the response time for each model. It distributes requests to models with the lowest response time.
 * **Semantic**: The semantic algorithm distributes requests to different models based on the similarity between the prompt in the request and the description provided in the model configuration. This allows Kong to automatically select the model that is best suited for the given domain or use case. This feature enhances the flexibility and efficiency of model selection, especially when dealing with a diverse range of AI providers and models.
-* [Round-robin (weighted)](https://docs.konghq.com/gateway/latest/how-kong-works/load-balancing/#round-robin)
-* [Consistent-hashing (sticky-session on given header value)](https://docs.konghq.com/gateway/latest/how-kong-works/load-balancing/#consistent-hashing)
+* [Round-robin (weighted)](/gateway/entities/upstream/#round-robin)
+* [Consistent-hashing (sticky-session on given header value)](/gateway/entities/upstream/#consistent-hashing)
+* [Priority Group](/gateway/latest/how-kong-works/load-balancing/#priority) {% new_in 3.10 %}
 
 
 ## Retry and fallback
@@ -75,7 +76,9 @@ This plugin does not support fallback over targets with different formats. You c
 * Mistral models with the OLLAMA format and Llama models with the OLLAMA format
 
 {:.info}
-> Some errors, such as client errors, result in a failure and don't failover to another target.
+> Some errors, such as client errors, result in a failure and don't failover to another target.<br/><br/> {% new_in 3.10 %} To configure failover in addition to network errors, set [`config.balancer.failover_criteria`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-failover-criteria) to include:
+> * Additional HTTP error codes, like `http_429` or `http_502`
+> * The `non_idempotent` setting, as most AI services accept POST requests
 
 ## Request and response formats
 {% include plugins/ai-proxy/formats.md plugin=page.name params=site.data.plugins.ai-proxy-advanced.parameters %}
