@@ -1,5 +1,6 @@
-<div markdown="1">
+{% capture block %}
 ```bash
 {{ include.config.cmd }} {{ include.config.args | join: " " }}
 ```
-</div>
+{% endcapture %}
+{{block | markdownify}}
