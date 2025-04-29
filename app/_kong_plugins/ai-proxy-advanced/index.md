@@ -70,10 +70,14 @@ This plugin supports several load-balancing algorithms, similar to those used fo
 
 The load balancer has customizable retries and timeouts for requests, and can redirect a request to a different model in case of failure. This allows you to have a fallback in case one of your targets is unavailable.
 
-This plugin does not support fallback over targets with different formats. You can use different providers as long as the formats are compatible.For example, load balancers with these combinations of targets are supported:
+For versions {% new_in 3.10 %} this plugin supports fallback across targets with any supported formats.
+For versions earlier than 3.10, fallback is not supported across targets with different formats. You can still use multiple providers, but only if the formats are compatible.
+For example, load balancers with the following target combinations are supported:
 * Different OpenAI models
 * OpenAI models and Mistral models with the OpenAI format
 * Mistral models with the OLLAMA format and Llama models with the OLLAMA format
+
+
 
 {:.info}
 > Some errors, such as client errors, result in a failure and don't failover to another target.<br/><br/> {% new_in 3.10 %} To configure failover in addition to network errors, set [`config.balancer.failover_criteria`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-failover-criteria) to include:
