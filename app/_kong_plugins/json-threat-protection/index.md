@@ -55,7 +55,7 @@ The JSON Threat Protection plugin validates incoming requests with a JSON body a
 
 The plugin checks the following limits:
 
-- Maximum container depth of the entire JSON
+- Maximum container depth of the entire JSON object
 - Maximum number of array elements
 - Maximum number of object entries
 - Maximum length of object keys

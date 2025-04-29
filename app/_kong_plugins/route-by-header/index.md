@@ -5,7 +5,7 @@ name: 'Route By Header'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Route request based on request headers'
+description: 'Route requests based on specified request headers'
 
 
 products:

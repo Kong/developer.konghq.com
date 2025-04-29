@@ -5,14 +5,18 @@ layout: reference
 
 products:
     - dev-portal
-beta: true
 
+breadcrumbs: 
+  - /dev-portal/
+beta: true
 tags:
   - beta
 
 works_on:
     - konnect
-
+search_aliases:
+  - postman
+  - publish API specs
 description: | 
     An API is the interface that you publish to your end customer. Developers register applications for use with specific API.
 related_resources:

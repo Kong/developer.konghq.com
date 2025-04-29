@@ -30,7 +30,6 @@ breadcrumbs:
   - /gateway/
 
 
-
 tags:
     - load-balancing
 ---

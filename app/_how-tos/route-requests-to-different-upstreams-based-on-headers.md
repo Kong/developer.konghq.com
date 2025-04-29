@@ -25,6 +25,9 @@ plugins:
 
 tags:
   - traffic-control
+  - route-by-header
+search_aliases:
+  - Route by Header plugin
 
 tldr:
     q: How do I use header values to route requests to different Upstreams?
@@ -32,6 +35,11 @@ tldr:
 
 tools:
     - deck
+related_resources:
+  - text: "{{site.base_gateway}} audit logs"
+    url: /gateway/audit-logs/
+  - text: "Blue-green deployments"
+    url: /gateway/traffic-control/blue-green-deployments/
 
 prereqs:
   entities:

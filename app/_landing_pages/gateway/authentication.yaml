@@ -32,7 +32,7 @@ rows:
                   This means upstream services process pre-authorized requests, freeing them from the cost of authentication, which 
                   is a savings in compute time and development effort.
 
-                  {{site.base_gateway}} has a library of plugins that support the most widely used methods of API gateway authentication.
+                  {{site.base_gateway}} has a [library of plugins](/plugins/) that support the most widely used methods of API gateway authentication.
 
   - header:
       type: h2
@@ -76,7 +76,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  Key authentication generates an API key for a consumer, which can be passed in an `apikey` header to access services and routes.            
+                  Key authentication generates an API key for a consumer, which can be passed in an `apikey` header to access Services and Routes.            
 
                   Open-source plugin:
                   - [Get Started](/plugins/key-auth/examples/)
@@ -111,7 +111,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  OAuth 2.0 is a protocol that relies on an application to authorize access to services and routes.
+                  OAuth 2.0 is a protocol that relies on an application to authorize access to Services and Routes.
 
                   - [Get Started](/plugins/oauth2/examples/)
                   - [Plugin reference](/plugins/oauth2/reference/)
@@ -136,7 +136,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  SAML is a standard used to exchange authentication and authorization information between an identity provider and a service provider.      
+                  SAML is a standard used to exchange authentication and authorization information between an identity provider and a Service provider.      
                 
                   - [Get Started](/plugins/saml/examples/)
                   - [Plugin reference](/plugins/saml/reference/)
@@ -166,7 +166,7 @@ rows:
                 text: |
                   {{site.base_gateway}} authentication plugins protect your upstream services from unauthorized access. This means upstream services process pre-authorized requests, freeing them from the cost of authentication, which is a savings in compute time and development effort.
 
-                  {{site.base_gateway}} offers tools that give visibility into all authentication attempts, which provides the ability to build monitoring and alerting capabilities supporting service availability and compliance.
+                  {{site.base_gateway}} offers tools that give visibility into all authentication attempts, which provides the ability to build monitoring and alerting capabilities supporting Service availability and compliance.
 
                   For more information, see [What is API Gateway Authentication](https://konghq.com/learning-center/api-gateway/api-gateway-authentication) in our Learning Center.
  
@@ -188,12 +188,12 @@ rows:
             description: |
               KIC relies on {{site.base_gateway}}'s Plugins, but configuring them with {{site.kic_product_name}} is different. 
               
-              Rather than attaching a configuration directly to a service or route, you create a KongPlugin definition and then annotate your 
+              Rather than attaching a configuration directly to a Service or Route, you create a KongPlugin definition and then annotate your 
               Kubernetes resource with the `konghq.com/plugins` annotation.
             icon: /assets/icons/kubernetes.svg
             cta:
               text: Add authentication using KIC
-              url: "https://docs.konghq.com/kubernetes-ingress-controller/latest/plugins/authentication/"
+              url: "/kubernetes-ingress-controller/get-started/key-authentication/"
       - blocks:
         - type: card
           config:

@@ -3,7 +3,8 @@ title: "Blue-green upgrade for {{site.base_gateway}}"
 description: Learn how to perform a blue-green upgrade for {{site.base_gateway}}.
 content_type: reference
 layout: reference
-
+breadcrumbs:
+    - /gateway/
 products:
     - gateway
 
@@ -13,16 +14,20 @@ works_on:
 tags:
     - upgrades
     - versioning
+    - blue-green
+search_aliases:
+  - blue green 
+  - blue green upgrade
 
 related_resources:
   - text: "Upgrading {{site.base_gateway}}"
     url: /gateway/upgrade/
-  - text: "{{site.base_gateway}} breaking changes"
-    url: /gateway/breaking-changes/
   - text: "Backing up and restoring {{site.base_gateway}}"
     url: /gateway/upgrade/backup-and-restore/
   - text: "In-place upgrade"
     url: /gateway/upgrade/in-place/
+  - text: "{{site.base_gateway}} breaking changes"
+    url: /gateway/breaking-changes/
   - text: "Dual-cluster upgrade"
     url: /gateway/upgrade/dual-cluster/
   - text: Rolling upgrade
@@ -30,7 +35,7 @@ related_resources:
 ---
 
 The blue-green upgrade strategy is a {{site.base_gateway}} upgrade option used primarily for traditional mode deployments 
-and for control planes in hybrid mode. 
+and for Control Planes in hybrid mode. 
 
 This guide refers to the old version as cluster X and the new version as cluster Y.
 
@@ -98,7 +103,7 @@ The exact execution of these steps will vary depending on your environment.
 ### Prerequisites
 
 * Review the [general upgrade guide](/gateway/upgrade/) to prepare for the upgrade and review your options.
-* You have a traditional deployment or you need to upgrade the control planes (CPs) in a hybrid mode deployment.
+* You have a traditional deployment or you need to upgrade the Control Planes (CPs) in a hybrid mode deployment.
 * You have {{site.base_gateway}} 2.8.2.x or later.
 * You can't perform [dual-cluster upgrades](/gateway/upgrade/dual-cluster/) due to resource limitations.
 
