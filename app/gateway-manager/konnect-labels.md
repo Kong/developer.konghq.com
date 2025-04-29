@@ -2,18 +2,24 @@
 title: '{{site.konnect_short_name}} labels'
 content_type: reference
 layout: reference
-
+breadcrumbs: 
+  - /gateway-manager/
 products:
     - gateway
 
 works_on:
   - konnect
-
+tags: 
+   - labels
+   - data-plane
+search_aliases:
+  - data plane labels
 description: Learn about labels in {{site.konnect_short_name}}
 
 related_resources:
-  - text: Use custom data plane labels
-    url: /how-to/use-custom-data-plane-labels/
+  - text: Data Plane reference
+    url: /gateway-manager/data-plane-reference/
+
 ---
 
 Labels are `key:value` pairs. They are case-sensitive attributes associated with entities. 
@@ -36,7 +42,7 @@ Each label must follow these requirements:
 
 ## Setting labels
 
-You can use labels separately on the control plane and data plane nodes:
-* On the control plane, you can set a label for `control plane` and for individual API products.
-* On data plane nodes, set labels through `kong.conf` or via environment variables using the [`cluster_dp_labels`](/gateway/configuration/#cluster-dp-labels) property. 
+You can use labels separately on the Control Plane and Data Plane nodes:
+* On the Control Plane, you can set a label for `control plane` and for individual API products.
+* On Data Plane nodes, set labels through `kong.conf` or via environment variables using the [`cluster_dp_labels`](/gateway/configuration/#cluster-dp-labels) property. 
 These labels are exposed through the [`/nodes`](/api/konnect/control-planes-config/v2/#/operations/list-dataplane-nodes/) endpoint of the {{site.konnect_short_name}} API.

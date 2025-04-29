@@ -45,7 +45,6 @@ rows:
                     
                     **Supported on:** 
                     * [{{site.konnect_short_name}} hybrid](/gateway/hybrid-mode/)
-                    
           - type: button
             config:
               align: left

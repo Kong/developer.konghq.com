@@ -1,0 +1,265 @@
+components:
+  parameters:
+    KeyAuthId:
+      description: ID of the API-key to lookup
+      example: ''
+      in: path
+      name: KeyAuthId
+      required: true
+      schema:
+        type: string
+    PaginationOffset:
+      description: >-
+        Offset from which to return the next set of resources. Use the value of
+        the 'offset' field from the response of a list operation as input here
+        to paginate through all the resources
+      in: query
+      name: offset
+      schema:
+        type: string
+    PaginationSize:
+      description: Number of resources to be returned.
+      in: query
+      name: size
+      schema:
+        default: 100
+        maximum: 1000
+        minimum: 1
+        type: integer
+    PaginationTagsFilter:
+      description: >-
+        A list of tags to filter the list of resources on. Multiple tags can be
+        concatenated using ',' to mean AND or using '/' to mean OR.
+      example: tag1,tag2
+      in: query
+      name: tags
+      schema:
+        type: string
+  responses:
+    HTTP401Error:
+      content:
+        application/json:
+          schema:
+            properties:
+              message:
+                example: Unauthorized
+                type: string
+            type: object
+      description: Unauthorized request.
+  schemas:
+    KeyAuth:
+      additionalProperties: false
+      example:
+        consumer:
+          id: 84a73fb8-50fc-44a7-a4d5-aa17728ee83f
+        id: b2f34145-0343-41a4-9602-4c69dec2f269
+        key: IL1deIyHyQA40WpeLeA1bIUXuvTwlGjo
+      properties:
+        consumer:
+          additionalProperties: false
+          nullable: true
+          properties:
+            id:
+              type: string
+          type: object
+          x-foreign: true
+        created_at:
+          description: Unix epoch when the resource was created.
+          readOnly: true
+          type: integer
+        id:
+          nullable: true
+          type: string
+        key:
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+      required:
+        - key
+      type: object
+    PaginationNextResponse:
+      description: URI to the next page (may be null)
+      type: string
+    PaginationOffsetResponse:
+      description: >-
+        Offset is used to paginate through the API. Provide this value to the
+        next list operation to fetch the next page
+      type: string
+  securitySchemes:
+    adminToken:
+      in: header
+      name: Kong-Admin-Token
+      type: apiKey
+externalDocs:
+  description: Documentation for Kong Gateway and its APIs
+  url: https://docs.konghq.com
+info:
+  contact:
+    email: support@konghq.com
+    name: Kong Inc
+    url: https://konghq.com
+  description: >-
+    OpenAPI 3.0 spec for Kong Gateway's Key Auth plugin
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: Key Auth
+  version: 0.0.1
+openapi: 3.0.0
+paths:
+  /key-auths:
+    get:
+      description: List all API-keys
+      operationId: list-key-auth
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: '#/components/schemas/KeyAuth'
+                    type: array
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+                type: object
+          description: A successful response listing API-keys
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: List all API-keys
+      tags:
+        - API-keys
+    post:
+      description: Create a new API-key
+      operationId: create-key-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyAuth'
+        description: Description of the new API-key for creation
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyAuth'
+          description: Successfully created API-key
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Create a new API-key
+      tags:
+        - API-keys
+  /key-auths/{KeyAuthId}:
+    delete:
+      description: Delete an API-key
+      operationId: delete-key-auth
+      parameters:
+        - $ref: '#/components/parameters/KeyAuthId'
+      responses:
+        '204':
+          description: Successfully deleted API-key or the resource didn't exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Delete an API-key
+      tags:
+        - API-keys
+    get:
+      description: Get an API-key using ID.
+      operationId: get-key-auth
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyAuth'
+          description: Successfully fetched API-key
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Fetch an API-key
+      tags:
+        - API-keys
+    parameters:
+      - $ref: '#/components/parameters/KeyAuthId'
+    patch:
+      description: Update an API-key
+      operationId: update-key-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyAuth'
+        description: Fields of the API-key that need to be updated
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyAuth'
+          description: Successfully updated API-key
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Update an API-key
+      tags:
+        - API-keys
+    put:
+      description: Create or Update API-key using ID.
+      operationId: upsert-key-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyAuth'
+        description: Description of the API-key
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyAuth'
+          description: Successfully upserted API-key
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Upsert a API-key
+      tags:
+        - API-keys
+security:
+  - adminToken: []
+servers:
+  - description: Default Admin API URL
+    url: '{protocol}://{hostname}:{port}{path}'
+    variables:
+      hostname:
+        default: localhost
+        description: Hostname for Kong's Admin API
+      path:
+        default: /
+        description: Base path for Kong's Admin API
+      port:
+        default: '8001'
+        description: Port for Kong's Admin API
+      protocol:
+        default: http
+        description: Protocol for requests to Kong's Admin API
+        enum:
+          - http
+          - https
+tags:
+  - name: API-keys
+

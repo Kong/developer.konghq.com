@@ -14,6 +14,7 @@ config:
 variables:
   http_proxy_host:
     value: $PROXY_HOST_NAME
+    description: The name of your HTTP host.
 
 tools:
   - deck

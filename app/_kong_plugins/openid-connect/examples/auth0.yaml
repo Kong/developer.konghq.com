@@ -15,7 +15,8 @@ requirements:
 
 config:
   issuer: ${issuer}
-  audience: ${audience}
+  audience: 
+  - ${audience}
   auth_methods:
   - client_credentials
 
@@ -24,7 +25,7 @@ variables:
     value: $ISSUER
     description: |
       The issuer authentication URL for your IdP. 
-      For Auth0, that typically looks like this: `https://{AUTH0_API_NAME}.auth0.com/.well-known/openid-configuration`.
+      For Auth0, that typically looks like this: `https://$AUTH0_API_NAME.auth0.com/.well-known/openid-configuration`.
   audience:
     value: $AUTH0_API_IDENTIFIER
     description: Auth0's token endpoint requires [passing the API identifier in the audience parameter](https://auth0.com/docs/api/authentication#client-credentials), which must be added as a custom argument.

@@ -1,0 +1,256 @@
+components:
+  parameters:
+    ConsumerIdForNestedEntities:
+      description: Consumer ID for nested entities
+      example: f28acbfa-c866-4587-b688-0208ac24df21
+      in: path
+      name: ConsumerIdForNestedEntities
+      required: true
+      schema:
+        type: string
+    JWTId:
+      description: ID of the JWT to lookup
+      example: 4a7f5faa-8c96-46d6-8214-c87573ef2ac4
+      in: path
+      name: JWTId
+      required: true
+      schema:
+        type: string
+  schemas:
+    JWT:
+      additionalProperties: false
+      example:
+        algorithm: HS256
+        consumer:
+          id: 84a73fb8-50fc-44a7-a4d5-aa17728ee83f
+        id: 75695322-e8a0-4109-aed4-5416b0308d85
+        key: YJdmaDvVTJxtcWRCvkMikc8oELgAVNcz
+        secret: C50k0bcahDhLNhLKSUBSR1OMiFGzNZ7X
+      properties:
+        algorithm:
+          default: HS256
+          enum:
+            - HS256
+            - HS384
+            - HS512
+            - RS256
+            - RS384
+            - RS512
+            - ES256
+            - ES384
+            - ES512
+            - PS256
+            - PS384
+            - PS512
+            - EdDSA
+          nullable: true
+          type: string
+        consumer:
+          additionalProperties: false
+          nullable: true
+          properties:
+            id:
+              type: string
+          type: object
+          x-foreign: true
+        created_at:
+          description: Unix epoch when the resource was created.
+          readOnly: true
+          type: integer
+        id:
+          nullable: true
+          type: string
+        key:
+          nullable: true
+          type: string
+        rsa_public_key:
+          nullable: true
+          type: string
+        secret:
+          nullable: true
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+      type: object
+    JWTWithoutParents:
+      additionalProperties: false
+      example:
+        algorithm: HS256
+        id: 75695322-e8a0-4109-aed4-5416b0308d85
+        key: YJdmaDvVTJxtcWRCvkMikc8oELgAVNcz
+        secret: C50k0bcahDhLNhLKSUBSR1OMiFGzNZ7X
+      properties:
+        algorithm:
+          default: HS256
+          enum:
+            - HS256
+            - HS384
+            - HS512
+            - RS256
+            - RS384
+            - RS512
+            - ES256
+            - ES384
+            - ES512
+            - PS256
+            - PS384
+            - PS512
+            - EdDSA
+          nullable: true
+          type: string
+        consumer:
+          additionalProperties: false
+          nullable: true
+          properties:
+            id:
+              type: string
+          type: object
+          x-foreign: true
+        created_at:
+          description: Unix epoch when the resource was created.
+          readOnly: true
+          type: integer
+        id:
+          nullable: true
+          type: string
+        key:
+          nullable: true
+          type: string
+        rsa_public_key:
+          nullable: true
+          type: string
+        secret:
+          nullable: true
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+      type: object
+  securitySchemes:
+    adminToken:
+      in: header
+      name: Kong-Admin-Token
+      type: apiKey
+externalDocs:
+  description: Documentation for Kong Gateway and its APIs
+  url: https://docs.konghq.com
+info:
+  contact:
+    email: support@konghq.com
+    name: Kong Inc
+    url: https://konghq.com
+  description: >-
+    JWT Admin API spec
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: JWT Admin API spec
+  version: 0.0.1
+openapi: 3.0.0
+paths:
+  /consumers/{ConsumerIdForNestedEntities}/jwt/{JWTId}:
+    delete:
+      description: Delete a a JWT associated with a Consumer using ID.
+      operationId: delete-jwt-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/JWTId'
+      responses:
+        '204':
+          description: Successfully deleted JWT or the resource didn't exist
+      summary: Delete a a JWT associated with a Consumer
+      tags:
+        - JWTs
+    get:
+      description: Get a JWT associated with a Consumer using ID.
+      operationId: get-jwt-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/JWTId'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWT'
+          description: Successfully fetched JWT
+        '404':
+          description: Resource does not exist
+      summary: Fetch a JWT associated with a Consumer
+      tags:
+        - JWTs
+    patch:
+      description: Update a a JWT associated with a Consumer using ID.
+      operationId: update-jwt-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/JWTId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWT'
+        description: Fields of the JWT that need to be updated
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWT'
+          description: Successfully updated JWT
+        '404':
+          description: Resource does not exist
+      summary: Update a a JWT associated with a Consumer
+      tags:
+        - JWTs
+    put:
+      description: Create or Update a JWT associated with a Consumer using ID.
+      operationId: upsert-jwt-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/JWTId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWTWithoutParents'
+        description: Description of the JWT
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWT'
+          description: Successfully upserted JWT
+      summary: Upsert a JWT associated with a Consumer
+      tags:
+        - JWTs
+security:
+  - adminToken: []
+servers:
+  - description: Default Admin API URL
+    url: '{protocol}://{hostname}:{port}{path}'
+    variables:
+      hostname:
+        default: localhost
+        description: Hostname for Kong's Admin API
+      path:
+        default: /
+        description: Base path for Kong's Admin API
+      port:
+        default: '8001'
+        description: Port for Kong's Admin API
+      protocol:
+        default: http
+        description: Protocol for requests to Kong's Admin API
+        enum:
+          - http
+          - https
+tags:
+  - name: JWTs
+

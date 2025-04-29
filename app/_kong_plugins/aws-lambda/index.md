@@ -6,8 +6,11 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Invoke and manage AWS Lambda functions from {{site.base_gateway}}'
+
 tags:
   - serverless
+  - AWS
+  - request
 
 products:
     - gateway
@@ -33,7 +36,7 @@ categories:
   - serverless
 
 search_aliases:
-  - aws-lambda
+  - AWS Lambda
 ---
 
 This plugin lets you invoke an [AWS Lambda](https://aws.amazon.com/lambda/) function from {{site.base_gateway}}. 

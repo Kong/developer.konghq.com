@@ -5,7 +5,7 @@ name: 'OAuth 2.0 Introspection'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Integrate Kong with a third-party OAuth 2.0 Authorization Server'
+description: 'Integrate {{site.base_gateway}} with a third-party OAuth 2.0 Authorization Server'
 
 
 products:
@@ -29,14 +29,25 @@ icon: oauth2-introspection.png
 categories:
   - authentication
 
+tags:
+  - authentication
+  - oauth2
+
 search_aliases:
   - oauth2-introspection
+  - OAuth 2.0
+
+related_resources:
+  - text: "{{site.base_gateway}} authentication"
+    url: /gateway/authentication/
+  - text: OAuth 2.0 Authentication plugin
+    url: /plugins/oauth2/reference/
 ---
 
-Validate access tokens sent by developers using a third-party OAuth 2.0
+You can validate access tokens sent by developers using a third-party OAuth 2.0
 Authorization Server by leveraging its introspection endpoint
 ([RFC 7662](https://tools.ietf.org/html/rfc7662)). This plugin assumes that
-the Consumer already has an access token that will be validated against a
+the [Consumer](/gateway/entities/consumer/) already has an access token that will be validated against a
 third-party OAuth 2.0 server.
 
 {:.info}
@@ -44,7 +55,7 @@ third-party OAuth 2.0 server.
 OAuth 2.0 Token Introspection as well and offers functionality beyond
 this plugin, such as restricting access by scope.
 
-## How it works
+## How the OAuth 2.0 Introspection works
 
 1. The client uses the third-party OAuth 2.0 server to generate an access token, and uses it to make a request through {{site.base_gateway}}.
 1. The third-party OAuth 2.0 server leverages the OAuth 2.0 Introspection plugin to validate the client's access token.
@@ -83,12 +94,12 @@ To associate the introspection response resolution with a {{site.base_gateway}} 
 ## Upstream headers
 
 When a client has been authenticated, the plugin appends the following headers to the request before proxying it to the upstream API/microservice.
-Use these headers to identify the consumer in your code:
+Use these headers to identify the Consumer in your code:
 
-- `X-Consumer-ID`, the ID of the consumer on Kong (if matched)
-- `X-Consumer-Custom-ID`, the `custom_id` of the consumer (if matched and if existing)
-- `X-Consumer-Username`, the `username of` the consumer (if matched and if existing)
-- `X-Anonymous-Consumer`, set to true if authentication fails, and the `anonymous` consumer is set instead.
+- `X-Consumer-ID`, the ID of the Consumer on {{site.base_gateway}} (if matched)
+- `X-Consumer-Custom-ID`, the `custom_id` of the Consumer (if matched and if existing)
+- `X-Consumer-Username`, the `username of` the Consumer (if matched and if existing)
+- `X-Anonymous-Consumer`, set to true if authentication fails, and the `anonymous` Consumer is set instead.
 - `X-Credential-Scope`, as returned by the Introspection response (if any)
 - `X-Credential-Client-ID`, as returned by the Introspection response (if any)
 - `X-Credential-Identifier`, as returned by the Introspection response (if any)

@@ -1,0 +1,229 @@
+components:
+  parameters:
+    ConsumerIdForNestedEntities:
+      description: Consumer ID for nested entities
+      example: f28acbfa-c866-4587-b688-0208ac24df21
+      in: path
+      name: ConsumerIdForNestedEntities
+      required: true
+      schema:
+        type: string
+    MTLSAuthId:
+      description: ID of the MTLS-auth credential to lookup
+      example: ''
+      in: path
+      name: MTLSAuthId
+      required: true
+      schema:
+        type: string
+  schemas:
+    MTLSAuth:
+      additionalProperties: false
+      example:
+        ca_certificate:
+          id: b2f34145-0343-41a4-9602-4c69dec2f260
+        consumer:
+          id: 84a73fb8-50fc-44a7-a4d5-aa17728ee83f
+        id: b2f34145-0343-41a4-9602-4c69dec2f269
+        subject_name: CA_Subject_Name
+      properties:
+        ca_certificate:
+          additionalProperties: false
+          properties:
+            id:
+              type: string
+          type: object
+          x-foreign: true
+        consumer:
+          additionalProperties: false
+          nullable: true
+          properties:
+            id:
+              type: string
+          type: object
+          x-foreign: true
+        created_at:
+          description: Unix epoch when the resource was created.
+          readOnly: true
+          type: integer
+        id:
+          nullable: true
+          type: string
+        subject_name:
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+      required:
+        - subject_name
+      type: object
+    MTLSAuthWithoutParents:
+      additionalProperties: false
+      example:
+        ca_certificate:
+          id: b2f34145-0343-41a4-9602-4c69dec2f260
+        id: b2f34145-0343-41a4-9602-4c69dec2f269
+        subject_name: CA_Subject_Name
+      properties:
+        ca_certificate:
+          additionalProperties: false
+          properties:
+            id:
+              type: string
+          type: object
+          x-foreign: true
+        consumer:
+          additionalProperties: false
+          nullable: true
+          properties:
+            id:
+              type: string
+          type: object
+          x-foreign: true
+        created_at:
+          description: Unix epoch when the resource was created.
+          readOnly: true
+          type: integer
+        id:
+          nullable: true
+          type: string
+        subject_name:
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+      required:
+        - subject_name
+      type: object
+  securitySchemes:
+    adminToken:
+      in: header
+      name: Kong-Admin-Token
+      type: apiKey
+externalDocs:
+  description: Documentation for Kong Gateway and its APIs
+  url: https://docs.konghq.com
+info:
+  contact:
+    email: support@konghq.com
+    name: Kong Inc
+    url: https://konghq.com
+  description: >-
+    MTLS Auth API spec
+
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: Kong Gateway Admin API
+  version: 0.0.1
+openapi: 3.0.0
+paths:
+  /consumers/{ConsumerIdForNestedEntities}/mtls-auth/{MTLSAuthId}:
+    delete:
+      description: Delete a a MTLS-auth credential associated with a Consumer using ID.
+      operationId: delete-mtls-auth-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/MTLSAuthId'
+      responses:
+        '204':
+          description: >-
+            Successfully deleted MTLS-auth credential or the resource didn't
+            exist
+      summary: Delete a a MTLS-auth credential associated with a Consumer
+      tags:
+        - MTLS-auth credentials
+    get:
+      description: Get a MTLS-auth credential associated with a Consumer using ID.
+      operationId: get-mtls-auth-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/MTLSAuthId'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully fetched MTLS-auth credential
+        '404':
+          description: Resource does not exist
+      summary: Fetch a MTLS-auth credential associated with a Consumer
+      tags:
+        - MTLS-auth credentials
+    patch:
+      description: Update a a MTLS-auth credential associated with a Consumer using ID.
+      operationId: update-mtls-auth-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/MTLSAuthId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MTLSAuth'
+        description: Fields of the MTLS-auth credential that need to be updated
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully updated MTLS-auth credential
+        '404':
+          description: Resource does not exist
+      summary: Update a a MTLS-auth credential associated with a Consumer
+      tags:
+        - MTLS-auth credentials
+    put:
+      description: >-
+        Create or Update a MTLS-auth credential associated with a Consumer using
+        ID.
+      operationId: upsert-mtls-auth-with-consumer
+      parameters:
+        - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
+        - $ref: '#/components/parameters/MTLSAuthId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MTLSAuthWithoutParents'
+        description: Description of the MTLS-auth credential
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MTLSAuth'
+          description: Successfully upserted MTLS-auth credential
+      summary: Upsert a MTLS-auth credential associated with a Consumer
+      tags:
+        - MTLS-auth credentials
+security:
+  - adminToken: []
+servers:
+  - description: Default Admin API URL
+    url: '{protocol}://{hostname}:{port}{path}'
+    variables:
+      hostname:
+        default: localhost
+        description: Hostname for Kong's Admin API
+      path:
+        default: /
+        description: Base path for Kong's Admin API
+      port:
+        default: '8001'
+        description: Port for Kong's Admin API
+      protocol:
+        default: http
+        description: Protocol for requests to Kong's Admin API
+        enum:
+          - http
+          - https
+tags:
+  - name: MTLS-auth credentials
+

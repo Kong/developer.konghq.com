@@ -30,6 +30,7 @@ categories:
 
 tags:
   - logging
+  - udp
 
 search_aliases:
   - udp-log
@@ -37,7 +38,7 @@ search_aliases:
   - logging
 ---
 
-Log request and response data to an UDP server.
+Log request and response data to a UDP server.
 
 ## Log format
 

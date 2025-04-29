@@ -3,7 +3,8 @@
 * North America:
     * Ohio (`us-east-2`)
     * Oregon (`us-west-2`)
-    * California, USA (`us-west-1`)
+    * N. Virginia (`us-east-1`)
+    * N. California(`us-west-1`)
     * Montreal (`ca-central-1`)
 * Europe:
     * Frankfurt (`eu-central-1`)
@@ -18,7 +19,6 @@
     * Mumbai (`ap-south-1`)
     * Hyderabad (`ap-south-2`)
     * Seoul (`ap-northeast-2`)
-    * Jakarta (`ap-southeast-3`)
 * Middle East, and Africa
     * United Arab Emirates (`me-central-1`)
 
@@ -29,5 +29,17 @@
     * Washington (`westus2`)
 * Europe:
     * Frankfurt (`germanywestcentral`)
-    * Ireland (`northeurope`)
     * UK South (`uksouth`)
+    * Ireland (`northeurope`)
+    * France (`francecentral`)  
+
+#### Google
+
+* North America:
+    * South Carolina (`us-east1`)
+    * Montreal (`northamerica-northeast1`)
+* Europe:
+    * Belgium (`europe-west1`)
+* Asia Pacific:
+    * Tokyo (`asia-northeast1`)
+    

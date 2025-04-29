@@ -38,6 +38,10 @@ module Jekyll
         @description ||= example.fetch('description')
       end
 
+      def extended_description
+        @extended_description ||= example['extended_description']
+      end
+
       def requirements
         @requirements ||= example.fetch('requirements', [])
       end

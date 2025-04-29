@@ -42,7 +42,7 @@ Application registration is enabled by:
 
 ## Region-specific applications
 
-Applications and API keys are specific to a [geographic region](/konnect-geos/). 
+Applications and API keys are specific to a [geographic region](/konnect-platform/konnect-geos/). 
 When you enable application registration by selecting an authentication strategy during publication, the resulting applications and API keys are tied to the developers and traffic in that region.
 
 ## {{site.konnect_short_name}} application auth plugin
