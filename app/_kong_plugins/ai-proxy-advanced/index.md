@@ -63,7 +63,7 @@ This plugin supports several load-balancing algorithms, similar to those used fo
 * **Semantic**: The semantic algorithm distributes requests to different models based on the similarity between the prompt in the request and the description provided in the model configuration. This allows Kong to automatically select the model that is best suited for the given domain or use case. This feature enhances the flexibility and efficiency of model selection, especially when dealing with a diverse range of AI providers and models.
 * [Round-robin (weighted)](/gateway/entities/upstream/#round-robin)
 * [Consistent-hashing (sticky-session on given header value)](/gateway/entities/upstream/#consistent-hashing)
-* [Priority Group](/gateway/latest/how-kong-works/load-balancing/#priority) {% new_in 3.10 %}
+* [Priority Group](/gateway/entities/upstream/#round-robin) {% new_in 3.10 %}
 
 
 ## Retry and fallback
