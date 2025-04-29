@@ -1,9 +1,10 @@
-description: |
-  Configure the plugin to call multiple APIs and build a response with elements from different responses.
+description: Configure the Request Callout plugin to call multiple APIs and build a response with elements from different responses.
+
+extended_description: |
+  Configure the Request Callout plugin to call multiple APIs and build a response with elements from different responses.
 
   In this example, we'll get a UUID from `http://httpbin.org/uuid` and an origin URL from `http://httpbin.org/anything`.
   
-
 title: Build a response from multiple APIs
 
 weight: 900

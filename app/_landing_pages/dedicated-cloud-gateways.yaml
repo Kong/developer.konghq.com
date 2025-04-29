@@ -10,6 +10,9 @@ metadata:
     - gateway
   works_on:
     - konnect
+  breadcrumbs:
+    - /gateway/
+    - /gateway/topology-hosting-options/
 
 rows:
   - header:
@@ -23,13 +26,13 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Dedicated Cloud Gateways are data plane nodes that are fully managed by Kong in {{site.konnect_short_name}}.
+                    Dedicated Cloud Gateways are Data Plane nodes that are fully managed by Kong in {{site.konnect_short_name}}.
                     
-                    You don't need to host any data planes, and you maintain control over the size and location of the gateway infrastructure. 
+                    With Dedicated Cloud Gateways, you don't need to host any Data Planes, and you maintain control over the size and location of the Gateway infrastructure. 
                     This allows Kong to autoscale your nodes for you and reduces your operational complexity.
 
                     **Benefits of Dedicated Cloud Gateways:**
-                    - {{site.konnect_short_name}} handles gateway upgrades for you.
+                    - {{site.konnect_short_name}} handles Gateway upgrades for you.
                     - Choose between public and private networking modes.
                     - Automatic scaling with Autopilot mode.
                     - Support for AWS and Azure in multiple [regions](/konnect-platform/konnect-geos/).
@@ -46,8 +49,8 @@ rows:
               diagram: |
                 flowchart TD
                 A(Dedicated Cloud Gateway Control Plane)
-                B(Managed Data Plane Node \n Region 1)
-                C(Managed Data Plane Node \n Region 2)
+                B(Managed Data Plane Node Region 1)
+                C(Managed Data Plane Node Region 2)
 
                 subgraph id1 [Konnect]
                 A
@@ -57,9 +60,6 @@ rows:
                 A --auto-scale configuration---> C
 
                 style id1 stroke-dasharray:3,rx:10,ry:10
-                style A stroke:none,fill:#0E44A2,color:#fff
-                style B stroke:none,fill:#0E44A2,color:#fff
-                style C stroke:none,fill:#0E44A2,color:#fff
 
   - header:
       type: h2
@@ -74,7 +74,7 @@ rows:
                 Private networking provides enhanced security by restricting API exposure.
               icon: /assets/icons/aws.svg
               cta:
-                text: Learn more
+                text: Set up Transit Gateways
                 url: /dedicated-cloud-gateways/transit-gateways/
       - blocks:
           - type: card
@@ -84,17 +84,17 @@ rows:
                 Connect your Data Plane to your {{site.konnect_short_name}} Control Plane with a private connection to stay compliant and save data transfer costs.
               icon: /assets/icons/aws.svg
               cta:
-                text: Learn more
+                text: Set up an AWS Private Link connection
                 url: /dedicated-cloud-gateways/aws-private-link/
       - blocks:
           - type: card
             config:
-              title: Azure VNet Peering
+              title: Azure VNet peering
               description: |
-                Konnect can leverage Azure Virtual Network Peering to create virtual networks, and ingest data from your Azure services and expose them to the internet via Konnect.
+                {{site.konnect_short_name}} can leverage Azure Virtual Network peering to create virtual networks, ingest data from your Azure services, and expose them to the internet via {{site.konnect_short_name}}.
               icon: /assets/icons/azure.svg
               cta:
-                text: Learn more
+                text: Set up Azure VNet peering
                 url: /dedicated-cloud-gateways/azure-peering/
 
   - header:
@@ -104,12 +104,12 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Data Plane Nodes
+              title: Data Plane nodes
               description: |
-                Learn how to set up and manage self-managed and cloud-hosted data plane nodes.
+                Learn how to set up and manage self-managed and cloud-hosted Data Plane nodes.
               icon: /assets/icons/gateway.svg
               cta:
-                text: Learn more
+                text: Set up nodes
                 url: /gateway-manager/data-plane-nodes/
       - blocks:
           - type: card
@@ -119,31 +119,31 @@ rows:
                 Learn about how control planes and data plane nodes communicate with each other.
               icon: /assets/icons/gateway.svg
               cta:
-                text: Learn more
+                text: Learn about CP/DP communication
                 url: /gateway/cp-dp-communication/
   - header:
       type: h2
-      text: "More Information"
+      text: "More information"
     columns:
       - blocks:
           - type: card
             config:
-              title: Supported Regions
+              title: Supported geos
               description: |
-                See which regions are available for Dedicated Cloud Gateways.
+                See which geographical locations are available for Dedicated Cloud Gateways.
               icon: /assets/icons/logs.svg
               cta:
-                text: Learn more
-                url: /konnect-platform/konnect-geos/
+                text: See supported regions
+                url: /konnect-geos/
       - blocks:
           - type: card
             config:
-              title: Custom Domains
+              title: Custom domains
               description: |
                 Use custom DNS settings for Dedicated Cloud Gateways.
               icon: /assets/icons/domain.svg
               cta:
-                text: Learn more
+                text: Set up custom domains
                 url: /dedicated-cloud-gateways/reference/#custom-dns
       - blocks:
           - type: card
@@ -153,25 +153,25 @@ rows:
                 Manage Dedicated Cloud Gateways programmatically using the API.
               icon: /assets/icons/api.svg
               cta:
-                text: Learn more
+                text: See the API
                 url: /api/konnect/cloud-gateways/v2/
       - blocks:
           - type: card
             config:
               title: Reference
               description: |
-                Dedicated Cloud Gateways reference
-              icon: /assets/icons/gateway.svg
+                Dedicated Cloud Gateways reference.
+              icon: /assets/icons/service-document.svg
               cta:
-                text: Learn more
+                text: See the reference
                 url: /dedicated-cloud-gateways/reference/
       - blocks:
           - type: card
             config:
-              title: Custom Plugins
+              title: Custom plugins
               description: |
-                Custom Plugin streaming
-              icon: /assets/icons/gateway.svg
+                Stream custom plugins from the Control Plane to the Data Plane nodes.
+              icon: /assets/icons/plug.svg
               cta:
-                text: Learn more
+                text: Set up custom plugins
                 url: /dedicated-cloud-gateways/reference/#custom-plugins
