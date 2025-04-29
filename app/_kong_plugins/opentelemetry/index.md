@@ -6,7 +6,8 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Propagate spans and report space to a backend server through OTLP protocol.'
-
+extended_description: |
+  Propagate spans and report space to a backend server through OTLP protocol. The OpenTelemetry plugin is fully compatible with the [OpenTelemetry specification](https://opentelemetry.io/docs/specs/) and can be used with any OpenTelemetry compatible backend.
 
 products:
     - gateway

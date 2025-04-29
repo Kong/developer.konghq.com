@@ -6,7 +6,8 @@ weight: 900
 
 requirements: 
   - "An OpenTelemetry backend"
-  - "`tracing_instrumentations = all` and `tracing_sampling_rate = 1.0` set in the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/)."
+  - "`tracing_instrumentations = all`"
+  - "`tracing_sampling_rate = 1.0` set in the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/)."
 
 config:
   traces_endpoint: http://localhost:4318/v1/traces

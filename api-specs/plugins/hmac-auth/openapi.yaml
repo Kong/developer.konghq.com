@@ -102,7 +102,7 @@ info:
     name: Kong Inc
     url: https://konghq.com
   description: >-
-    Hmac Auth
+    Hmac Auth API
 
   license:
     name: Apache 2.0

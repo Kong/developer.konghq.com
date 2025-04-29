@@ -5,7 +5,9 @@ name: 'Post-Function'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Add and manage custom Lua functions to run after other plugins'
+description: 'Add and manage custom Lua functions to execute after other plugins'
+extended_description: |
+
 
 products:
     - gateway
@@ -43,8 +45,7 @@ related_resources:
     url: /plugins/pre-function/
 ---
 
-The Post-Function plugin (also known as Kong Functions, Post-Plugin) lets
-you dynamically run Lua code from {{site.base_gateway}} after other plugins in each phase.
+The Post-Function plugin (also known as Kong Functions, Post-Plugin) lets you dynamically run Lua code from {{site.base_gateway}} **after** other plugins in succession.
 
 This plugin is part of a pair of serverless plugins. 
 If you need to run Lua code _before_ other plugins in each phase, see the [Pre-Function](/plugins/pre-function/) plugin.

@@ -29,6 +29,8 @@ topologies:
     - serverless
 
 icon: degraphql.png
+search_aliases:
+  - graphql
 
 categories:
   - transformations
@@ -68,9 +70,7 @@ B--Query 4-->C
 Note[Queries are passed as 
 parameters to GraphQL]
 
-style C stroke:#E10098!important
-style Note stroke:#e1bb86!important
-style id1 stroke-dasharray:3
+
 
 end
 {% endmermaid %}
@@ -115,7 +115,7 @@ You can access the new route via `org-name/repo-name`:
 
 ```sh
 curl http://localhost:8000/api/kong/kong \
-  --header "Authorization: Bearer ${GITHUB_TOKEN}"
+  --header "Authorization: Bearer $GITHUB_TOKEN"
 ```
 
 
@@ -143,10 +143,10 @@ custom_entities:
                 }
 ```
 
-You can access the new route by appending `repo?owner={owner-name}&name={repo-name}` to the request URL:
+You can access the new route by appending `repo?owner=OWNER_NAME&name=REPO_NAME` to the request URL:
 
 ```sh
 curl "http://localhost:8000/api/repo?owner=kong&name=kuma" \
-  --header "Authorization: Bearer ${GITHUB_TOKEN}"
+  --header "Authorization: Bearer $GITHUB_TOKEN"
 ```
 

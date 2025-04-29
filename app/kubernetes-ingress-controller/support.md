@@ -6,10 +6,14 @@ description: |
 
 content_type: policy
 layout: reference
-
+tags:
+  - support-policy
+search_aliases: 
+  - kic support policy
 products:
   - kic
-
+breadcrumbs:
+  - /kubernetes-ingress-controller/
 works_on:
   - on-prem
   - konnect
@@ -34,31 +38,85 @@ LTS versions of {{site.kic_product_name}} are supported for 3 years after releas
 {:.info}
 > LTS releases are marked **bold**, and are supported for 3 years from release.
 
-| Version    | Release Date   | End of Support |
-| ---------- | -------------- | -------------- |
-| **3.4.x**  | **2024-12-18** | **2027-12-18** |
-| 3.3.x      | 2024-08-26     | 2025-08-26     |
-| 3.2.x      | 2024-06-12     | 2025-06-12     |
-| 3.1.x      | 2024-02-07     | 2025-02-07     |
-| 3.0.x      | 2023-11-03     | 2024-11-03     |
-| **2.12.x** | **2023-09-25** | **2026-09-25** |
-| 2.11.x     | 2023-08-09     | 2024-08-09     |
-| 2.10.x     | 2023-06-02     | 2024-06-02     |
-| 2.9.x      | 2023-03-09     | 2024-03-09     |
-| 2.8.x      | 2022-12-19     | 2023-12-19     |
-| 2.7.x      | 2022-09-27     | 2023-09-27     |
-| 2.6.x      | 2022-09-15     | 2023-09-15     |
-| **2.5.x**  | **2022-07-11** | **2025-03-01** |
-| 2.4.x      | 2022-06-15     | 2023-06-15     |
-| 2.3.x      | 2022-04-05     | 2023-04-05     |
-| 2.2.x      | 2022-02-04     | 2023-02-04     |
-| 2.1.x      | 2022-01-05     | 2023-01-05     |
-| 2.0.x      | 2021-10-07     | 2022-10-07     |
-| 1.3.x      | 2021-05-27     | 2022-05-27     |
-| 1.2.x      | 2021-03-24     | 2022-03-24     |
-| 1.1.x      | 2020-12-09     | 2021-12-09     |
-| 1.0.x      | 2020-10-05     | 2021-10-05     |
-| 0.x.x      | 2018-06-02     | 2019-06-02     |
+{% table %}
+columns:
+  - title: Version
+    key: version
+  - title: Release Date
+    key: release
+  - title: End of Support
+    key: support
+rows:
+  - version: "**3.4.x**"
+    release: "**2024-12-18**"
+    support: "**2027-12-18**"
+  - version: "3.3.x"
+    release: "2024-08-26"
+    support: "2025-08-26"
+  - version: "3.2.x"
+    release: "2024-06-12"
+    support: "2025-06-12"
+  - version: "3.1.x"
+    release: "2024-02-07"
+    support: "2025-02-07"
+  - version: "3.0.x"
+    release: "2023-11-03"
+    support: "2024-11-03"
+  - version: "**2.12.x**"
+    release: "**2023-09-25**"
+    support: "**2026-09-25**"
+  - version: "2.11.x"
+    release: "2023-08-09"
+    support: "2024-08-09"
+  - version: "2.10.x"
+    release: "2023-06-02"
+    support: "2024-06-02"
+  - version: "2.9.x"
+    release: "2023-03-09"
+    support: "2024-03-09"
+  - version: "2.8.x"
+    release: "2022-12-19"
+    support: "2023-12-19"
+  - version: "2.7.x"
+    release: "2022-09-27"
+    support: "2023-09-27"
+  - version: "2.6.x"
+    release: "2022-09-15"
+    support: "2023-09-15"
+  - version: "**2.5.x**"
+    release: "**2022-07-11**"
+    support: "**2025-03-01**"
+  - version: "2.4.x"
+    release: "2022-06-15"
+    support: "2023-06-15"
+  - version: "2.3.x"
+    release: "2022-04-05"
+    support: "2023-04-05"
+  - version: "2.2.x"
+    release: "2022-02-04"
+    support: "2023-02-04"
+  - version: "2.1.x"
+    release: "2022-01-05"
+    support: "2023-01-05"
+  - version: "2.0.x"
+    release: "2021-10-07"
+    support: "2022-10-07"
+  - version: "1.3.x"
+    release: "2021-05-27"
+    support: "2022-05-27"
+  - version: "1.2.x"
+    release: "2021-03-24"
+    support: "2022-03-24"
+  - version: "1.1.x"
+    release: "2020-12-09"
+    support: "2021-12-09"
+  - version: "1.0.x"
+    release: "2020-10-05"
+    support: "2021-10-05"
+  - version: "0.x.x"
+    release: "2018-06-02"
+    support: "2019-06-02"
+{% endtable %}
 
 > _Table 1: Version Support for {{site.kic_product_name}}_
 

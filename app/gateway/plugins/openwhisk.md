@@ -25,7 +25,7 @@ categories:
   - serverless
 source_code_url: https://github.com/Kong/kong-plugin-openwhisk
 
-description: Invoke and manage OpenWhisk actions from Kong
+description: "Invoke and manage OpenWhisk actions from {{site.base_gateway}}"
 
 works_on:
     - on-prem
@@ -54,7 +54,7 @@ The Apache OpenWhisk plugin can be used in combination with other [request plugi
 
 This plugin is not bundled with {{site.base_gateway}}.
 
-1. Install the OpenWhisk plugin using the LuaRocks package manager:
+1. Install the OpenWhisk plugin using the [LuaRocks](https://luarocks.org/) package manager:
 
    ```sh
    luarocks install kong-plugin-openwhisk

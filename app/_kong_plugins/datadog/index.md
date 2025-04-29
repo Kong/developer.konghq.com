@@ -6,7 +6,8 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Visualize metrics on Datadog'
-
+extended_description: |
+  The Datadog plugin lets you log metrics for a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/) to a local [Datadog agent](https://docs.datadoghq.com/agent/basic_agent_usage/).
 products:
     - gateway
 
@@ -34,14 +35,35 @@ This plugin lets you log metrics for a [Gateway Service](/gateway/entities/servi
 ## Metrics
 The Datadog plugin currently logs the following metrics to the Datadog server about a Service or Route:
 
-Metric                     | Description | Namespace
----                        | ---         | ---
-`request_count`            | Tracks the request | `kong.request.count`
-`request_size`             | Tracks the request body size in bytes | `kong.request.size`
-`response_size`            | Tracks the response body size in bytes | `kong.response.size`
-`latency`                  | Tracks the interval between the time the request started and the time the response was received from the upstream server | `kong.latency`
-`upstream_latency`         | Tracks the time it took for the final service to process the request | `kong.upstream_latency`
-`kong_latency`             | Tracks the internal {{site.base_gateway}} latency that it took to run all the plugins | `kong.kong_latency`
+{% table %}
+columns:
+  - title: Metric
+    key: metric
+  - title: Description
+    key: description
+  - title: Namespace
+    key: namespace
+rows:
+  - metric: "`request_count`"
+    description: Tracks the request
+    namespace: "`kong.request.count`"
+  - metric: "`request_size`"
+    description: Tracks the request body size in bytes
+    namespace: "`kong.request.size`"
+  - metric: "`response_size`"
+    description: Tracks the response body size in bytes
+    namespace: "`kong.response.size`"
+  - metric: "`latency`"
+    description: Tracks the interval between the time the request started and the time the response was received from the upstream server
+    namespace: "`kong.latency`"
+  - metric: "`upstream_latency`"
+    description: Tracks the time it took for the final service to process the request
+    namespace: "`kong.upstream_latency`"
+  - metric: "`kong_latency`"
+    description: Tracks the internal {{site.base_gateway}} latency that it took to run all the plugins
+    namespace: "`kong.kong_latency`"
+{% endtable %}
+
 
 The metrics will be sent with the tags `name` and `status` carrying the API name and HTTP status code respectively. If you specify `consumer_identifier` with the metric, a `consumer` tag will be added.
 
@@ -65,10 +87,22 @@ avg:kong.latency.avg{name:sample-service}
 
 When installing a multi-data center setup, you might want to set Datadog's agent host and port for each {{site.base_gateway}} node. This configuration is possible by setting the host and port properties with environment variables.
 
-Field           | Description                                           | Data types
----             | ---                                                   | ---
-`KONG_DATADOG_AGENT_HOST` | The IP address or hostname to send data to | string
-`KONG_DATADOG_AGENT_PORT` | The port to send data to on the upstream server | integer
+{% table %}
+columns:
+  - title: Field
+    key: field
+  - title: Description
+    key: description
+  - title: Data types
+    key: datatype
+rows:
+  - field: "`KONG_DATADOG_AGENT_HOST`"
+    description: The IP address or hostname to send data to
+    datatype: string
+  - field: "`KONG_DATADOG_AGENT_PORT`"
+    description: The port to send data to on the upstream server
+    datatype: integer
+{% endtable %}
 
 {:.info}
 > **Note:** The `host` and `port` fields in the plugin configuration take precedence over environment variables.
@@ -93,19 +127,19 @@ This can be accomplished by providing the IP address of the Kubernetes worker no
 
 Modify the `env` section in `values.yaml`:
 
-    ```yaml
-    env:
-      datadog_agent_host:
-        valueFrom:
-          fieldRef:
-            fieldPath: status.hostIP
-    ```
+```yaml
+env:
+  datadog_agent_host:
+    valueFrom:
+      fieldRef:
+        fieldPath: status.hostIP
+```
 
 Update the Helm deployment:
 
-    ```sh
-    helm upgrade -f values.yaml RELEASE_NAME kong/kong --version VERSION --namespace NAMESPACE
-    ```
+```sh
+helm upgrade -f values.yaml $RELEASE_NAME kong/kong --version $VERSION --namespace $NAMESPACE
+```
 
 Modify the plugin's configuration:
 
@@ -128,29 +162,29 @@ Modify the plugin's configuration:
 
 Modify the `env` section in `values.yaml`:
 
-    ```yaml
-    env:
-      - name: KONG_DATADOG_AGENT_HOST
-        valueFrom:
-          fieldRef:
-            fieldPath: status.hostIP
-    ```
+```yaml
+env:
+  - name: KONG_DATADOG_AGENT_HOST
+    valueFrom:
+      fieldRef:
+        fieldPath: status.hostIP
+```
 
 Modify the plugin's configuration:
 
-    ```yaml
-    apiVersion: configuration.konghq.com/v1
-    kind: KongClusterPlugin
-    metadata:
-      name: datadog
-      annotations:
-        kubernetes.io/ingress.class: kong
-      labels:
-        global: "true"
-    config:
-      host: "{vault://env/kong-datadog-agent-host}"
-      port: 8125
-    ```
+```yaml
+apiVersion: configuration.konghq.com/v1
+kind: KongClusterPlugin
+metadata:
+  name: datadog
+  annotations:
+    kubernetes.io/ingress.class: kong
+  labels:
+    global: "true"
+config:
+  host: "{vault://env/kong-datadog-agent-host}"
+  port: 8125
+```
 {% endnavtab %}
 {% endnavtabs %}
 

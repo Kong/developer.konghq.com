@@ -13,7 +13,8 @@ related_resources:
     url: /how-to/okta-saml-sso-insomnia/
 
 tier: enterprise
-
+breadcrumbs:
+  - /insomnia/
 tags:
   - sso
   - azure
@@ -56,17 +57,36 @@ Now that you have the single-sign on URL from Insomnia, you can create a new Mic
 1. [Navigate to the SSO settings](https://learn.microsoft.com/entra/identity/saas-apps/saml-toolkit-tutorial#configure-microsoft-entra-sso) for the Microsoft Entra SAML toolkit you just created.
 1. Configure the following SAML SSO settings:
    
-   | Azure setting | Value |
-   |--------------|-------|
-   | Identifier (Entity ID) | The **Audience Restriction** field in the Insomnia SSO settings. |
-   | Reply URL | The **SSO URL** in the Insomnia SSO settings. |
-   | Sign on URL | The **SSO URL** in the Insomnia SSO settings. |
+{% table %}
+columns:
+  - title: Azure setting
+    key: setting
+  - title: Value
+    key: value
+rows:
+  - setting: "Identifier (Entity ID)"
+    value: "The **Audience Restriction** field in the Insomnia SSO settings."
+  - setting: "Reply URL"
+    value: "The **SSO URL** in the Insomnia SSO settings."
+  - setting: "Sign on URL"
+    value: "The **SSO URL** in the Insomnia SSO settings."
+{% endtable %}
+
 1. In the [Attributes & Claims settings section](https://learn.microsoft.com/en-us/entra/identity-platform/saml-claims-customization#view-or-edit-claims), add an attribute and configure the following attribute settings:
    
-   | Azure field | Value |
-   |------|-------|
-   | Name | `Email` |
-   | Source attribute | `user.mail` |
+{% table %}
+columns:
+  - title: You need...
+    key: need
+  - title: Use the following plugin policy strategies...
+    key: strategy
+rows:
+  - need: "A high level of accuracy in critical transactions. An example is a transaction with financial consequences."
+    strategy: "`cluster` or `redis`"
+  - need: "Protect backend services from overloading caused by specific users or attacks. High accuracy is not as relevant."
+    strategy: "`local`"
+{% endtable %}
+
 1. In the Entra application, find and copy the **Login URL** and the base64 version of the signing certificate. These will be used in the Insomnia SSO settings.
 
 ## Enter the sign on URL and signing certificate in the SSO settings in Insomnia
