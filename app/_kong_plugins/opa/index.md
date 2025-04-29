@@ -32,18 +32,22 @@ categories:
 search_aliases:
   - open policy agent
 
+tags:
+  - authorization
+  - opa
+
 related_resources:
   - text: Block unauthorized requests in {{site.base_gateway}} with the OPA plugin
     url: /how-to/block-unauthorized-requests-with-opa/
+  - text: How to Implement Secure Access Control with OPA and {{site.base_gateway}}
+    url: https://konghq.com/blog/engineering/secure-access-control-with-opa-and-kong
 ---
-
-## Overview
 
 The OPA plugin allows you to forward requests to [Open Policy Agent](https://openpolicyagent.org/) and process the requests only if the authorization policy allows it. 
 
 For example, if a request comes in, the OPA plugin sends the relevant details to the OPA host (`config.opa_host`) specified in the plugin configuration. If OPA approves the request, the request is allowed to proceed. If OPA denies the request, the request is rejected.
 
-## OPA input
+## OPA input format
 
 When the OPA plugin is enabled, {{site.base_gateway}} uses the following JSON structure to forward request data to OPA.
 It includes request data, headers, and regex capture groups, along with the information about the related [Gateway Service](/gateway/entities/service/#schema), [Route](/gateway/entities/route/#schema), and [Consumer](/gateway/entities/consumer/#schema).
@@ -76,7 +80,7 @@ For definitions of each entity parameter appearing in the example below, see eac
      }
    },
    "client_ip": "127.0.0.1",# client IP address as interpreted by Kong
-   "service": {             # The Kong service resource that this request is forwarded to if OPA allows. Injected only if `include_service_in_opa_input` is set to `true`.
+   "service": {             # The Kong Service resource that this request is forwarded to if OPA allows. Injected only if `include_service_in_opa_input` is set to `true`.
      "host": "httpbin.konghq.com",
      "created_at": 1612819937,
      "connect_timeout": 60000,
@@ -90,7 +94,7 @@ For definitions of each entity parameter appearing in the example below, see eac
      "retries": 5,
      "write_timeout": 60000
    },
-   "route": {               # The Kong route that was matched for this request. Injected only if `include_route_in_opa_input` is set to `true`.
+   "route": {               # The Kong Route that was matched for this request. Injected only if `include_route_in_opa_input` is set to `true`.
      "id": "bc6d8617-76a7-441f-aa40-32eb1f5be9e6",
      "paths": [
        "\\/"
@@ -113,7 +117,7 @@ For definitions of each entity parameter appearing in the example below, see eac
        "id": "e6fd8b19-89e5-44e6-8a2a-79e8bf3c31a5"
      }
    },
-   "consumer": {            # Kong consumer that was used for authentication for this request. Injected only if `include_consumer_in_opa_input` is set to `true`.
+   "consumer": {            # Kong Consumer that was used for authentication for this request. Injected only if `include_consumer_in_opa_input` is set to `true`.
      "id": "bc6d8617-76a7-431f-aa40-32eb1f5be7e6",
      "username": "kong-consumer-username"
    }
@@ -140,13 +144,13 @@ In this case, the OPA response has the following structure:
 ```json
 {
  "result": {
-   "allow": <boolean>,
-   "status": <HTTP status code>,
+   "allow": true,
+   "status": 201,
    "headers": {
-     "<key>": "<value>",
-     "<key2>": "<value2>"
+     "key": "value",
+     "key2": "value2"
    },
-   "message": "<value3> or object",
+   "message": "value3 or object",
  }
 }
 ```

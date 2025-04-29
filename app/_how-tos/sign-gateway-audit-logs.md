@@ -29,6 +29,7 @@ entities:
 
 tags:
     - logging
+    - security
 
 tldr:
     q: How do I sign audit logs with a key?
@@ -38,7 +39,7 @@ prereqs:
   inline: 
     - title: Audit logging
       content: |
-          This tutorial requires audit logging. To enable it, add the following line to `kong.conf`:
+          This tutorial requires audit logging. To enable it, add the following line to [`kong.conf`](/gateway/manage-kong-conf/):
           ```
           audit_log = on
           ```
