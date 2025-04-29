@@ -80,9 +80,22 @@ rows:
               text: 
               url: /gateway/install/
               align: end
+
+      - blocks:
+        - type: card
+          config:
+            title: Choose a deployment mode
+            description: |
+              Learn about the different ways that you can deploy {{ site.base_gateway }} in production: traditional mode, hybrid mode, and DB-less
+            icon: /assets/icons/graph.svg
+            cta:
+              text: 
+              url: /gateway/deployment-topologies/
+              align: end
+        
   - header:
       type: h2
-      text: Learn
+      text: Key functionality
     columns:
       - blocks:
         - type: card
@@ -111,7 +124,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Rate Limiting in {{ site.base_gateway }}
+            title: Rate limiting in {{ site.base_gateway }}
             description: |
               {{ site.base_gateway }} can be configured to apply rate limiting rules on incoming traffic.
 
@@ -125,7 +138,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Analytics & Observability
+            title: Analytics & observability
             description: |
               Understanding the state of your API gateway system is critical to providing reliable API-based systems.
 
@@ -133,7 +146,7 @@ rows:
             icon: /assets/icons/analytics.svg
             cta:
               text: Start monitoring your {{ site.base_gateway }}
-              url: https://docs.konghq.com/gateway/latest/production/monitoring/
+              url: /plugins/?category=analytics-monitoring
               align: end
       - blocks:
         - type: card
@@ -150,7 +163,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Load Balancing
+            title: Load balancing
             description: |
                 Load balancing traffic across your upstream services is vital for ensuring 
                 high availability, scalability, and reliability of your ecosystem. 
@@ -165,7 +178,7 @@ rows:
               align: end
   - header:
       type: h2
-      text: Key References
+      text: Key references
     columns:
       - blocks:
           - type: card
@@ -180,7 +193,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: "{{ site.base_gateway }} Entities"
+              title: "{{ site.base_gateway }} entities"
               description: |
                 Entities are the building blocks make up the Kong API Gateway ecosystem.
                 This includes Services, Routes, Consumers, and more.
@@ -192,7 +205,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: API Reference
+              title: API reference
               description: |
                 Explore the reference documentation for all {{ site.base_gateway }} APIs
               icon: /assets/icons/data-object.svg

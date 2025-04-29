@@ -1,8 +1,12 @@
-description: |
+description: Configure the plugin to send a request to a different URL based on a header value.
+
+extended_description: |
   Configure the plugin to send a request to a different URL based on a header value.
 
   In this example, we're expecting the client to provide a `x-custom-header` header with a value to append to the specified URL.
   
+  You can use the `by_lua` field to dynamically modify any of the request parameters under 
+  [`config.callouts.request`](/plugins/request-callout/#schema--config-callouts-request) for a particular callout.
 
 title: Dynamically change the request URL
 
@@ -20,7 +24,7 @@ config:
       url: ${url}
       method: GET
       by_lua: >-
-        kong.ctx.shared.callouts.callout1.request.params.url = 'http://httpbin.org/' .. (kong.request.get_header('x-custom-header') or '')
+        kong.ctx.shared.callouts.call.request.params.url = 'http://httpbin.org/' .. (kong.request.get_header('x-custom-header') or '')
 
 tools:
   - deck

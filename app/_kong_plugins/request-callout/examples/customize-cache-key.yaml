@@ -1,5 +1,5 @@
 description: |
-  Configure the plugin to cache response results in Redis with a custom key.
+  Configure the Request Callout plugin to cache response results in Redis with a custom key.
   
 
 title: Customize a cache key

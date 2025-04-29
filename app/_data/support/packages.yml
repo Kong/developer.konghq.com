@@ -60,7 +60,7 @@ ubuntu1804:
 ubuntu2004:
   os: Ubuntu
   version: 20.04
-  codename: focals
+  codename: focal
 ubuntu2204:
   os: Ubuntu
   version: 22.04
