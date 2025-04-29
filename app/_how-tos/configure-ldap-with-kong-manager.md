@@ -16,7 +16,7 @@ min_version:
   gateway: '3.4'
 
 breadcrumbs:
-  - /kong-manager/
+  - /gateway/kong-manager/
 search_aliases:
   - email kong manager
 works_on:

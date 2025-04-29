@@ -14,7 +14,10 @@ products:
 works_on:
     - on-prem
     - konnect
-
+tags: 
+  - logging
+search_aliases:
+  - logging plugin
 topologies:
   on_prem:
     - hybrid
@@ -25,6 +28,9 @@ topologies:
     - cloud-gateways
     - serverless
 icon: loggly.png
+related_resources:
+  - text: Data dog
+    url: /plugins/datadog/
 
 categories:
   - logging
