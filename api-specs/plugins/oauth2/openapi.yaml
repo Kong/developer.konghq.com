@@ -1,0 +1,417 @@
+
+openapi: 3.0.2
+info:
+  title: OAuth2 Plugin API
+  version: 1.0.0
+  description: API for managing OAuth2 credentials and tokens in Kong Gateway.
+  contact:
+    name: Kong Inc
+    url: https://konghq.com
+    email: docs@konghq.com
+servers:
+  - url: http://localhost:8001
+    description: Kong Admin API
+
+paths:
+  /consumers/{consumer}/oauth2:
+    post:
+      summary: Create an OAuth2 credential
+      tags: [OAuth2]
+      parameters:
+        - name: consumer
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OAuth2CredentialRequest'
+      responses:
+        '201':
+          description: OAuth2 credential created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuth2Credential'
+        '400':
+          description: Invalid input
+    get:
+      summary: List OAuth2 credentials for a consumer
+      tags: [OAuth2]
+      parameters:
+        - name: consumer
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OAuth2Credential'
+
+  /consumers/{consumer}/oauth2/{client_id_or_id}:
+    get:
+      summary: Get OAuth2 credential by ID or client ID
+      tags: [OAuth2]
+      parameters:
+        - name: consumer
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: client_id_or_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OAuth2 credential found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuth2Credential'
+        '404':
+          description: Credential not found
+    patch:
+      summary: Update an OAuth2 credential
+      tags: [OAuth2]
+      parameters:
+        - name: consumer
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: client_id_or_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OAuth2CredentialUpdate'
+      responses:
+        '200':
+          description: OAuth2 credential updated
+        '400':
+          description: Invalid input
+    delete:
+      summary: Delete an OAuth2 credential
+      tags: [OAuth2]
+      parameters:
+        - name: consumer
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: client_id_or_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Credential deleted
+        '404':
+          description: Credential not found
+
+  /oauth2:
+    post:
+      summary: Create an OAuth2 credential with consumer in body
+      tags: [OAuth2]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OAuth2CredentialRequestWithConsumer'
+      responses:
+        '201':
+          description: OAuth2 credential created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuth2Credential'
+        '400':
+          description: Invalid input
+
+  /oauth2/{client_id_or_id}:
+    put:
+      summary: Create or update an OAuth2 credential by ID
+      tags: [OAuth2]
+      parameters:
+        - name: client_id_or_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OAuth2CredentialRequestWithConsumer'
+      responses:
+        '200':
+          description: OAuth2 credential upserted
+
+  /oauth2_tokens:
+    post:
+      summary: Create an OAuth2 token
+      tags: [OAuth2 Tokens]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OAuth2TokenRequest'
+      responses:
+        '201':
+          description: OAuth2 token created
+    get:
+      summary: List OAuth2 tokens
+      tags: [OAuth2 Tokens]
+      responses:
+        '200':
+          description: List of tokens
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OAuth2Token'
+
+  /oauth2_tokens/{id_or_token}:
+    get:
+      summary: Retrieve OAuth2 token by ID or token
+      tags: [OAuth2 Tokens]
+      parameters:
+        - name: id_or_token
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OAuth2 token found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuth2Token'
+    patch:
+      summary: Update an OAuth2 token
+      tags: [OAuth2 Tokens]
+      parameters:
+        - name: id_or_token
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expires_in:
+                  type: integer
+      responses:
+        '200':
+          description: Token updated
+    put:
+      summary: Create or update OAuth2 token
+      tags: [OAuth2 Tokens]
+      parameters:
+        - name: id_or_token
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OAuth2TokenRequest'
+      responses:
+        '200':
+          description: OAuth2 token upserted
+    delete:
+      summary: Delete an OAuth2 token
+      tags: [OAuth2 Tokens]
+      parameters:
+        - name: id_or_token
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Token deleted
+
+  /oauth2/authorize:
+      post:
+        summary: The endpoint to the Authorization Server that provisions authorization codes for the Authorization Code flow, or the access token when the Implicit Grant flow is enabled. Only POST is supported.
+        tags: [OAuth2]
+        requestBody:
+          required: true
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                type: object
+                properties:
+                  client_id:
+                    type: string
+                  response_type:
+                    type: string
+                    enum: [code, token]
+                  scope:
+                    type: string
+                  state:
+                    type: string
+                  redirect_uri:
+                    type: string
+                required:
+                  - client_id
+                  - response_type
+        responses:
+          '302':
+            description: Redirects to client with code or token
+          '400':
+            description: Invalid request
+          '405':
+            description: Method not allowed
+
+components:
+  schemas:
+    OAuth2CredentialRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        redirect_uris:
+          type: array
+          items:
+            type: string
+        client_secret:
+          type: string
+        hash_secret:
+          type: boolean
+        tags:
+          type: array
+          items:
+            type: string
+
+    OAuth2CredentialRequestWithConsumer:
+      allOf:
+        - $ref: '#/components/schemas/OAuth2CredentialRequest'
+        - type: object
+          required: [consumer]
+          properties:
+            consumer:
+              type: object
+              properties:
+                id:
+                  type: string
+
+    OAuth2CredentialUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        redirect_uris:
+          type: array
+          items:
+            type: string
+        client_secret:
+          type: string
+        hash_secret:
+          type: boolean
+
+    OAuth2Credential:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        client_id:
+          type: string
+        client_secret:
+          type: string
+        redirect_uris:
+          type: array
+          items:
+            type: string
+        hash_secret:
+          type: boolean
+        tags:
+          type: array
+          items:
+            type: string
+        consumer:
+          type: object
+          properties:
+            id:
+              type: string
+
+    OAuth2TokenRequest:
+      type: object
+      required: [credential, service, expires_in]
+      properties:
+        credential:
+          type: object
+          properties:
+            id:
+              type: string
+        service:
+          type: object
+          properties:
+            id:
+              type: string
+        expires_in:
+          type: integer
+
+    OAuth2Token:
+      type: object
+      properties:
+        id:
+          type: string
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        token_type:
+          type: string
+        expires_in:
+          type: integer
+        credential:
+          type: object
+          properties:
+            id:
+              type: string
+        service:
+          type: object
+          properties:
+            id:
+              type: string
+

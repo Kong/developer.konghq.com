@@ -68,10 +68,111 @@
         </a>
       </div>
 
-      <div class='flex gap-8 list-none items-center py-5 '>
+      <div class='flex items-center py-5 gap-8'>
         <div id="search-modal"></div>
-        <a class="hidden md:flex" href='/how-to/' class='text-terciary'>How-to Guides</a>
-        <a class="hidden md:flex" href='/api/' class='text-terciary'>APIs</a>
+
+        <div id="top-nav" class="hidden md:flex gap-8 items-center" role="navigation" aria-label="Main menu">
+          <ul  class="navbar-items ml-0 flex flex-row gap-8 list-none" role="menubar">
+            <li class="navbar-item" aria-haspopup="true" role="menuitem" aria-expanded="false">
+              <span class="navbar-item__trigger" tabindex="0">
+                Platform
+                <span class="navbar-item__trigger_icon">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
+              </span>
+              {% include_cached header/menu_caret.html %}
+              <ul class="hidden navbar-item__menu grid-cols-1" role="menu">
+                <li class="flex w-full">
+                  {% assign konnect = site.data.top_navigation.platform.konnect %}
+                  <a href="{{konnect.url}}">
+                    {{konnect.text}} &rarr;
+                  </a>
+                </li>
+                <li class="flex">
+                  <div class="flex gap-4">
+                    {% for section in site.data.top_navigation.platform.sections %}
+                      <div class="flex flex-col gap-3 text-s">
+                        <span>{{section.title}}</span>
+                        {% for link in section.links %}
+                          {% include header/item.html url=link.url product=link.product text=link.text icon=link.icon %}
+                        {% endfor %}
+                      </div>
+                    {% endfor %}
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <li class="navbar-item" aria-haspopup="true" role="menuitem" aria-expanded="false">
+              <span class="navbar-item__trigger" tabindex="0">
+                How-to Guides
+                <span class="navbar-item__trigger_icon">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
+              </span>
+              {% include_cached header/menu_caret.html %}
+              <ul class="hidden navbar-item__menu grid-cols-1" role="menu">
+                <li class="flex mb-1">
+                  <div class="flex flex-col gap-0.5 text-sm">
+                    <span class="font-semibold text-primary">How to Guides</span>
+                    <span class="text-terciary">Hands-on guides to get things done</span>
+                  </div>
+                </li>
+                {% for how_to in site.data.top_navigation.how_tos %}
+                <li class="flex">
+                  {% include header/item.html url=how_to.url product=how_to.product text=how_to.text icon=how_to.icon %}
+                </li>
+                {% endfor %}
+                <li class="flex">
+                  <a href="/how-to/" class="flex gap-2 items-center w-full">
+                    <span class="text-terciary text-sm ">View all &rarr;</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="navbar-item" aria-haspopup="true" role="menuitem" aria-expanded="false">
+              <span class="navbar-item__trigger" tabindex="0">
+                Plugins
+                <span class="navbar-item__trigger_icon">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
+              </span>
+              {% include_cached header/menu_caret.html %}
+              <ul class="hidden navbar-item__menu" role="menu">
+                {% for category in site.data.plugin_categories %}
+                  <li class="flex">
+                    <a class="flex gap-4 w-full" href="/plugins/?category={{category.slug}}">
+                      <span class="navbar-item__icon">{% include_svg category.icon width="20" height="20" %}</span>
+                      <div class="flex flex-col gap-0.5 text-sm">
+                        <span class="font-semibold text-primary">{{category.text}}</span>
+                        <span class="text-terciary">{{category.desc}}</span>
+                      </div>
+                    </a>
+                  </li>
+                {% endfor %}
+                <li class="flex gap-4">
+                  <a class="text-terciary w-full" href="/plugins">View all &rarr;</a>
+                </li>
+              </ul>
+            </li>
+            <li class="navbar-item" aria-haspopup="true" role="menuitem" aria-expanded="false">
+              <span class="navbar-item__trigger" tabindex="0">
+                Support
+                <span class="navbar-item__trigger_icon">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
+              </span>
+              {% include_cached header/menu_caret.html %}
+              <ul class="hidden navbar-item__menu" role="menu">
+                {% for item in site.data.top_navigation.support %}
+                  <li class="flex">
+                    <a class="flex gap-2 text-primary text-sm w-full no-icon items-center" href="{{item.url}}">
+                      <span class="navbar-item__icon">{% include_svg item.icon width="20" height="20"  %}</span>
+                      {{item.text}}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+          </ul>
+
+          <div class="flex gap-3 items-center">
+            <a class="button button--primary no-icon w-fit" href="https://konghq.com/contact-sales">Get a Demo</a>
+            <a class="button button--secondary no-icon w-fit" href="https://konghq.com/products/kong-konnect/register">Start Free Trial</a>
+          </div>
+        </div>
+
 
         <div class="hidden md:flex">
           <button id="mode-switch">

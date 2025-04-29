@@ -5,7 +5,7 @@ name: 'OpenID Connect'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Integrate Kong with a third-party OpenID Connect provider'
+description: 'Integrate {{site.base_gateway}} with a third-party OpenID Connect provider'
 
 products:
     - gateway
@@ -46,7 +46,7 @@ related_resources:
 ---
 
 The OpenID Connect (OIDC) plugin lets you integrate {{site.base_gateway}} with an identity provider (IdP).
-This plugin can be used to implement Kong as a proxying [OAuth 2.0](https://tools.ietf.org/html/rfc6749) resource server 
+This plugin can be used to implement {{site.base_gateway}} as a proxying [OAuth 2.0](https://tools.ietf.org/html/rfc6749) resource server 
 (RS) and as an OpenID Connect relying party (RP) between the client and the upstream service.
 
 ## What does OpenID Connect do?
@@ -60,8 +60,8 @@ Besides delegating responsibility to an identity provider, OpenID Connect also m
 ## What does Kong’s OpenID Connect plugin do?
 
 The OpenID Connect plugin enables you to integrate OpenID Connect with {{site.base_gateway}} without having to write custom integrations.
-Instead of manually writing code for OpenID Connect within a service, you can place {{site.base_gateway}} in front of the upstream service and have {{site.base_gateway}} handle authentication.
-This separation lets developers focus on the business logic within their application, easily swap out services while preserving authentication at the front door, and effortlessly spread the same authentication to new services.
+Instead of manually writing code for OpenID Connect within an upstream service, you can place {{site.base_gateway}} in front of the upstream service and have {{site.base_gateway}} handle authentication.
+This separation lets developers focus on the business logic within their application, easily swap out upstream services while preserving authentication at the front door, and effortlessly spread the same authentication to new upstream services.
 
 Unlike other authentication types like Key Auth and Basic Auth, with OpenID Connect you don't need to manage user credentials directly. 
 Instead, you can offload the task to a trusted identity provider of your choice.
@@ -172,7 +172,7 @@ sequenceDiagram
     participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
     activate client
     activate kong
-    client->>kong: service with<br>basic authentication
+    client->>kong: Service with<br>basic authentication
     deactivate client
     kong->>kong: load basic<br>authentication credentials
     activate idp
@@ -211,7 +211,7 @@ sequenceDiagram
     participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
     activate client
     activate kong
-    client->>kong: service with access token
+    client->>kong: Service with access token
     deactivate client
     kong->>kong: load access token
     activate idp
@@ -248,7 +248,7 @@ sequenceDiagram
     participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
     activate client
     activate kong
-    client->>kong: service with<br>access token
+    client->>kong: Service with<br>access token
     deactivate client
     kong->>kong: load access token
     kong->>kong: verify signature
@@ -278,7 +278,7 @@ sequenceDiagram
     participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
     activate client
     activate kong
-    client->>kong: service with<br>access token
+    client->>kong: Service with<br>access token
     deactivate client
     kong->>kong: load access token
     kong->>kong: verify kong<br>oauth token
@@ -312,7 +312,7 @@ sequenceDiagram
     participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
     activate client
     activate kong
-    client->>kong: service with<br>refresh token
+    client->>kong: Service with<br>refresh token
     deactivate client
     kong->>kong: load refresh token
     activate idp
@@ -351,7 +351,7 @@ sequenceDiagram
     participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
     activate client
     activate kong
-    client->>kong: service with<br>session cookie
+    client->>kong: Service with<br>session cookie
     deactivate client
     kong->>kong: load session cookie
     kong->>kong: verify session
@@ -382,7 +382,7 @@ sequenceDiagram
     participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
     activate client
     activate kong
-    client->>kong: service with<br>access token
+    client->>kong: Service with<br>access token
     deactivate client
     kong->>kong: load access token
     activate idp
@@ -419,7 +419,7 @@ sequenceDiagram
     participant httpbin as Upstream <br>(upstream service,<br> e.g. httpbin)
     activate client
     activate kong
-    client->>kong: service with<br>basic authentication
+    client->>kong: Service with<br>basic authentication
     deactivate client
     kong->>kong: load <br>basic authentication<br>credentials
     activate idp
@@ -526,11 +526,11 @@ On the other hand, the `config.*_required` parameters are arrays that allow logi
 
 The OpenID Connect plugin can be integrated with the [ACL plugin](/plugins/acl/), which provides access control functionality in the form of allow and deny lists.
 
-You can also pair ACL-based authorization with Kong Consumer authorization.
+You can also pair ACL-based authorization with {{site.base_gateway}} Consumer authorization.
 
 #### Consumer authorization
 
-You can use Kong [Consumers](/gateway/entities/consumer/) for authorization and dynamically map claim values to Consumers. 
+You can use {{site.base_gateway}} [Consumers](/gateway/entities/consumer/) for authorization and dynamically map claim values to Consumers. 
 This means that we restrict the access to only those that do have a matching Consumer. 
 Consumers can have ACL groups attached to them and be further authorized with the [ACL plugin](/plugins/acl/).
 
@@ -701,7 +701,7 @@ See the [DPoP configuration example](/plugins/openid-connect/examples/dpop/) for
 
 If you have issues with the OIDC plugin, try the following debugging methods:
 
-1. Set the {{site.base_gateway}} [log level](/gateway/configuration/#log-level) to `debug`, and check the Kong `error.log`. 
+1. Set the {{site.base_gateway}} [log level](/gateway/configuration/#log-level) to `debug`, and check the {{site.base_gateway}} `error.log`. 
 You can filter the log with the keyword `openid-connect`.
 
 2. Set the OpenID Connect plugin to display errors by setting [`config.display_errors`](./reference/#schema--config-display-errors) to true.

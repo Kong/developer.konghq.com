@@ -37,7 +37,7 @@ variables:
     value: $ISSUER
     description: |
       The issuer authentication URL for your IdP. 
-      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://example-keycloak-host:8080/realms/example-realm`
+      For example, if you're using Keycloak as your IdP, the issuer URL looks like this: `http://localhost:8080/realms/example-realm`
   client-id:
     value: $CLIENT_ID
     description: The client ID that the plugin uses when it calls authenticated endpoints of the IdP.

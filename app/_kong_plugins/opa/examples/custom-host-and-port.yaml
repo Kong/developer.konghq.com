@@ -7,13 +7,13 @@ weight: 900
 requirements:
  - "OPA server running"
 
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
+variables: 
+  opa-host:
+    description: 'The host of your OPA server.'
+    value: $OPA_HOST
 
 config: 
-  opa_host: my-host.com
+  opa_host: ${opa-host}
   opa_port: 8182
   opa_path: /v1/data/my_policies/header
 

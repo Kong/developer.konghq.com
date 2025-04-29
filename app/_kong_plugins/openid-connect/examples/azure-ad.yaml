@@ -46,7 +46,7 @@ variables:
     value: $ISSUER
     description: |
       The issuer authentication URL for your IdP. 
-      For Azure AD, that typically looks like this: `https://login.microsoftonline.com/{directory}/v2.0/.well-known/openid-configuration`.
+      For Azure AD, that typically looks like this: `https://login.microsoftonline.com/$DIRECTORY/v2.0/.well-known/openid-configuration`.
       You can find this URL by clicking **Endpoints** on your app registration's Overview page.
   client-id:
     value: $CLIENT_ID

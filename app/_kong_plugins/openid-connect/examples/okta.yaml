@@ -18,8 +18,8 @@ weight: 795
 requirements:
   - A developer account with Okta.
   - A Gateway Service and Route secured with HTTPS.
-  - A registered application in Okta pointing to the Kong Route.
-  - Any network access control to your Kong node must allow traffic to and from Okta, the upstream service, and the client.
+  - A registered application in Okta pointing to the {{site.base_gateway}} Route.
+  - Any network access control to your {{site.base_gateway}} node must allow traffic to and from Okta, the upstream service, and the client.
 
 config:
   issuer: ${issuer}

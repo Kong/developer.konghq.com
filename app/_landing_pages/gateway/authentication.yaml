@@ -140,6 +140,20 @@ rows:
                 
                   - [Get Started](/plugins/saml/examples/)
                   - [Plugin reference](/plugins/saml/reference/)
+  - column_count: 3
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "OAuth 2.0 Introspection"
+            blocks:
+              - type: text
+                text: |
+                  Integrate {{site.base_gateway}} with a third-party OAuth 2.0 Authorization Server.
+
+                  - [Get Started](/plugins/oauth2-introspection/examples/)
+                  - [Plugin reference](/plugins/oauth2-introspection/reference/)
                   
   - columns:
       - blocks:
