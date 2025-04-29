@@ -28,8 +28,8 @@ rows:
                   Authentication is the process of verifying that a requester has permissions to access a resource. 
                   As its name implies, API gateway authentication controls the flow of data between clients and the gateway.
                   
-                  With {{site.base_gateway}} controlling authentication, requests won’t reach Upstream Services unless the client has successfully authenticated. 
-                  This means Upstream Services process pre-authorized requests, freeing them from the cost of authentication, which 
+                  With {{site.base_gateway}} controlling authentication, requests won’t reach upstream services unless the client has successfully authenticated. 
+                  This means upstream services process pre-authorized requests, freeing them from the cost of authentication, which 
                   is a savings in compute time and development effort.
 
                   {{site.base_gateway}} has a [library of plugins](/plugins/) that support the most widely used methods of API gateway authentication.
@@ -150,7 +150,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  {{site.base_gateway}} authentication plugins protect your Upstream Services from unauthorized access. This means Upstream Services process pre-authorized requests, freeing them from the cost of authentication, which is a savings in compute time and development effort.
+                  {{site.base_gateway}} authentication plugins protect your upstream services from unauthorized access. This means upstream services process pre-authorized requests, freeing them from the cost of authentication, which is a savings in compute time and development effort.
 
                   {{site.base_gateway}} offers tools that give visibility into all authentication attempts, which provides the ability to build monitoring and alerting capabilities supporting Service availability and compliance.
 
@@ -205,8 +205,8 @@ rows:
                   When multiple authentication plugins are configured, they must *all* either be configured to always perform authentication or to only perform authentication if the [Consumer](/gateway/entities/consumer/) wasn't already authenticated. 
                   This configuration is controlled by the `config.anonymous` property in the plugin schema:
 
-                  * **When `config.anonymous` is not set:** Authentication is always performed and a `4xx` error is returned if the Consumer isn't validated. With this method, the last plugin executed will be the one setting the credentials passed to the Upstream Service.
-                  * **When `config.anonymous` is set to a valid Consumer:** Authentication is only performed if the Consumer isn't already authenticated. When authentication fails, it won't return a `40x` response. Instead, it sets the anonymous Consumer as the Consumer. With this method, the first plugin that successfully authenticates the Consumer sets the credentials passed to the Upstream Service or the last plugin that sets its configured anonymous Consumer.
+                  * **When `config.anonymous` is not set:** Authentication is always performed and a `4xx` error is returned if the Consumer isn't validated. With this method, the last plugin executed will be the one setting the credentials passed to the upstream service.
+                  * **When `config.anonymous` is set to a valid Consumer:** Authentication is only performed if the Consumer isn't already authenticated. When authentication fails, it won't return a `40x` response. Instead, it sets the anonymous Consumer as the Consumer. With this method, the first plugin that successfully authenticates the Consumer sets the credentials passed to the upstream service or the last plugin that sets its configured anonymous Consumer.
 
                   If you enable anonymous access so that authentication isn't always performed but you don't want unauthorized users to access the Gateway Service or Route, you can configure the [Request Termination](/plugins/request-termination/) plugin on the anonymous Consumer.
 

@@ -168,7 +168,7 @@ Write updates to {{site.base_gateway}} can now be performed, though we suggest y
 
 {:.info}
 > **Note**: This upgrade strategy is not the same thing as the [blue-green deployment](/gateway/traffic-control/blue-green-deployments/). 
-That process is meant for upgrading your Upstream Services and is not related to {{site.base_gateway}} upgrades.
+That process is meant for upgrading your upstream services and is not related to {{site.base_gateway}} upgrades.
 
 {:.warning}
 > **Caution**: {% include_cached /gateway/migration-finish-warning.md %}

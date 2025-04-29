@@ -1,5 +1,5 @@
 description: |
-  Redirect incoming requests to a target location, usings the request path and query string from the configuration in the redirect URL.
+  Redirect incoming requests to a target location, using the request path and query string from the configuration in the redirect URL.
 
 extended_description: | 
   {% table %}
