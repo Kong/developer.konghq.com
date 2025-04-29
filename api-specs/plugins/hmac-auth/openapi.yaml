@@ -1,0 +1,269 @@
+components:
+  parameters:
+    HMACAuthId:
+      description: ID of the HMAC-auth credential to lookup
+      example: 70e7b00b-72f2-471b-a5ce-9c4171775360
+      in: path
+      name: HMACAuthId
+      required: true
+      schema:
+        type: string
+    PaginationOffset:
+      description: >-
+        Offset from which to return the next set of resources. Use the value of
+        the 'offset' field from the response of a list operation as input here
+        to paginate through all the resources
+      in: query
+      name: offset
+      schema:
+        type: string
+    PaginationSize:
+      description: Number of resources to be returned.
+      in: query
+      name: size
+      schema:
+        default: 100
+        maximum: 1000
+        minimum: 1
+        type: integer
+    PaginationTagsFilter:
+      description: >-
+        A list of tags to filter the list of resources on. Multiple tags can be
+        concatenated using ',' to mean AND or using '/' to mean OR.
+      example: tag1,tag2
+      in: query
+      name: tags
+      schema:
+        type: string
+  responses:
+    HTTP401Error:
+      content:
+        application/json:
+          schema:
+            properties:
+              message:
+                example: Unauthorized
+                type: string
+            type: object
+      description: Unauthorized request.
+  schemas:
+    HMACAuth:
+      additionalProperties: false
+      example:
+        consumer:
+          id: 84a73fb8-50fc-44a7-a4d5-aa17728ee83f
+        id: 75695322-e8a0-4109-aed4-5416b0308d85
+        secret: wQazJ304DW5huJklHgUfjfiSyCyTAEDZ
+        username: xerxes
+      properties:
+        consumer:
+          additionalProperties: false
+          nullable: true
+          properties:
+            id:
+              type: string
+          type: object
+          x-foreign: true
+        created_at:
+          description: Unix epoch when the resource was created.
+          readOnly: true
+          type: integer
+        id:
+          nullable: true
+          type: string
+        secret:
+          nullable: true
+          type: string
+        tags:
+          items:
+            type: string
+          type: array
+        username:
+          type: string
+      required:
+        - username
+      type: object
+    PaginationNextResponse:
+      description: URI to the next page (may be null)
+      type: string
+    PaginationOffsetResponse:
+      description: >-
+        Offset is used to paginate through the API. Provide this value to the
+        next list operation to fetch the next page
+      type: string
+  securitySchemes:
+    adminToken:
+      in: header
+      name: Kong-Admin-Token
+      type: apiKey
+info:
+  contact:
+    email: support@konghq.com
+    name: Kong Inc
+    url: https://konghq.com
+  description: >-
+    Hmac Auth
+
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: HMAC Auth
+  version: 0.0.1
+openapi: 3.0.0
+paths:
+  /hmac-auths:
+    get:
+      description: List all HMAC-auth credentials
+      operationId: list-hmac-auth
+      parameters:
+        - $ref: '#/components/parameters/PaginationSize'
+        - $ref: '#/components/parameters/PaginationOffset'
+        - $ref: '#/components/parameters/PaginationTagsFilter'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: '#/components/schemas/HMACAuth'
+                    type: array
+                  next:
+                    $ref: '#/components/schemas/PaginationNextResponse'
+                  offset:
+                    $ref: '#/components/schemas/PaginationOffsetResponse'
+                type: object
+          description: A successful response listing HMAC-auth credentials
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: List all HMAC-auth credentials
+      tags:
+        - HMAC-auth credentials
+    post:
+      description: Create a new HMAC-auth credential
+      operationId: create-hmac-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HMACAuth'
+        description: Description of the new HMAC-auth credential for creation
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HMACAuth'
+          description: Successfully created HMAC-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Create a new HMAC-auth credential
+      tags:
+        - HMAC-auth credentials
+  /hmac-auths/{HMACAuthId}:
+    delete:
+      description: Delete a HMAC-auth credential
+      operationId: delete-hmac-auth
+      parameters:
+        - $ref: '#/components/parameters/HMACAuthId'
+      responses:
+        '204':
+          description: >-
+            Successfully deleted HMAC-auth credential or the resource didn't
+            exist
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Delete a HMAC-auth credential
+      tags:
+        - HMAC-auth credentials
+    get:
+      description: Get a HMAC-auth credential using ID.
+      operationId: get-hmac-auth
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HMACAuth'
+          description: Successfully fetched HMAC-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Fetch a HMAC-auth credential
+      tags:
+        - HMAC-auth credentials
+    parameters:
+      - $ref: '#/components/parameters/HMACAuthId'
+    patch:
+      description: Update a HMAC-auth credential
+      operationId: update-hmac-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HMACAuth'
+        description: Fields of the HMAC-auth credential that need to be updated
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HMACAuth'
+          description: Successfully updated HMAC-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+        '404':
+          description: Resource does not exist
+      summary: Update a HMAC-auth credential
+      tags:
+        - HMAC-auth credentials
+    put:
+      description: Create or Update HMAC-auth credential using ID.
+      operationId: upsert-hmac-auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HMACAuth'
+        description: Description of the HMAC-auth credential
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HMACAuth'
+          description: Successfully upserted HMAC-auth credential
+        '401':
+          $ref: '#/components/responses/HTTP401Error'
+      summary: Upsert a HMAC-auth credential
+      tags:
+        - HMAC-auth credentials
+security:
+  - adminToken: []
+servers:
+  - description: Default Admin API URL
+    url: '{protocol}://{hostname}:{port}{path}'
+    variables:
+      hostname:
+        default: localhost
+        description: Hostname for Kong's Admin API
+      path:
+        default: /
+        description: Base path for Kong's Admin API
+      port:
+        default: '8001'
+        description: Port for Kong's Admin API
+      protocol:
+        default: http
+        description: Protocol for requests to Kong's Admin API
+        enum:
+          - http
+          - https
+tags:
+  - name: HMAC-auth credentials
+

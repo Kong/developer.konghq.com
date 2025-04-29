@@ -1,0 +1,233 @@
+openapi: 3.0.2
+info:
+  title: ACL Plugin API
+  version: 1.0.0
+  description: API for managing ACL in Kong Gateway
+  contact:
+    name: Kong Inc
+    url: https://konghq.com
+    email: docs@konghq.com
+servers:
+  - url: http://localhost:8001
+    description: Kong Admin API
+
+paths:
+  /acls:
+      get:
+          description: List all ACLs
+          operationId: list-acl
+          parameters:
+              - $ref: '#/components/parameters/PaginationSize'
+              - $ref: '#/components/parameters/PaginationOffset'
+              - $ref: '#/components/parameters/PaginationTagsFilter'
+          responses:
+              "200":
+                  content:
+                      application/json:
+                          schema:
+                              properties:
+                                  data:
+                                      items:
+                                          $ref: '#/components/schemas/ACL'
+                                      type: array
+                              type: object
+                  description: A successful response listing ACLs
+              '400':
+                description: Invalid request
+          summary: List all ACLs
+          tags:
+              - ACLs
+      post:
+          description: Create a new ACL
+          operationId: create-acl
+          requestBody:
+              content:
+                  application/json:
+                      schema:
+                          $ref: '#/components/schemas/ACL'
+              description: Description of the new ACL for creation
+              required: true
+          responses:
+              "201":
+                  content:
+                      application/json:
+                          schema:
+                              $ref: '#/components/schemas/ACL'
+                  description: Successfully created ACL
+              '400':
+                description: Invalid request
+          summary: Create a new ACL
+          tags:
+              - ACLs
+  /acls/{ACLId}:
+      delete:
+          description: Delete an ACL
+          operationId: delete-acl
+          parameters:
+              - $ref: '#/components/parameters/ACLId'
+          responses:
+              "204":
+                  description: Successfully deleted ACL or the resource didn't exist
+              '400':
+                description: Invalid request
+          summary: Delete an ACL
+          tags:
+              - ACLs
+      get:
+          description: Get an ACL using ID.
+          operationId: get-acl
+          responses:
+              "200":
+                  content:
+                      application/json:
+                          schema:
+                              $ref: '#/components/schemas/ACL'
+                  description: Successfully fetched ACL
+              '400':
+                description: Invalid request
+              "404":
+                  description: Resource does not exist
+          summary: Fetch an ACL
+          tags:
+              - ACLs
+      parameters:
+          - $ref: '#/components/parameters/ACLId'
+      patch:
+          description: Update an ACL
+          operationId: update-acl
+          requestBody:
+              content:
+                  application/json:
+                      schema:
+                          $ref: '#/components/schemas/ACL'
+              description: Fields of the ACL that need to be updated
+              required: true
+          responses:
+              "200":
+                  content:
+                      application/json:
+                          schema:
+                              $ref: '#/components/schemas/ACL'
+                  description: Successfully updated ACL
+              '400':
+                description: Invalid request
+              "404":
+                  description: Resource does not exist
+          summary: Update an ACL
+          tags:
+              - ACLs
+      put:
+          description: Create or Update ACL using ID.
+          operationId: upsert-acl
+          requestBody:
+              content:
+                  application/json:
+                      schema:
+                          $ref: '#/components/schemas/ACL'
+              description: Description of the ACL
+              required: true
+          responses:
+              "200":
+                  content:
+                      application/json:
+                          schema:
+                              $ref: '#/components/schemas/ACL'
+                  description: Successfully upserted ACL
+          summary: Upsert a ACL
+          tags:
+              - ACLs
+components:
+  schemas:
+      ACL:
+          additionalProperties: false
+          example:
+              consumer:
+                  id: 84a73fb8-50fc-44a7-a4d5-aa17728ee83f
+              group: foo
+              id: b1f34145-0343-41a4-9602-4c69dec2f269
+          properties:
+              consumer:
+                  additionalProperties: false
+                  nullable: true
+                  properties:
+                      id:
+                          type: string
+                  type: object
+                  x-foreign: true
+              created_at:
+                  description: Unix epoch when the resource was created.
+                  readOnly: true
+                  type: integer
+              group:
+                  type: string
+              id:
+                  nullable: true
+                  type: string
+              tags:
+                  items:
+                      type: string
+                  type: array
+          required:
+              - group
+          type: object
+      ACLWithoutParents:
+          additionalProperties: false
+          example:
+              group: foo
+              id: b1f34145-0343-41a4-9602-4c69dec2f269
+          properties:
+              consumer:
+                  additionalProperties: false
+                  nullable: true
+                  properties:
+                      id:
+                          type: string
+                  type: object
+                  x-foreign: true
+              created_at:
+                  description: Unix epoch when the resource was created.
+                  readOnly: true
+                  type: integer
+              group:
+                  type: string
+              id:
+                  nullable: true
+                  type: string
+              tags:
+                  items:
+                      type: string
+                  type: array
+          required:
+              - group
+          type: object
+  parameters:
+    ACLId:
+            description: ID of the ACL to lookup
+            example: f28acbfa-c866-4587-b688-0208ac24df21
+            in: path
+            name: ACLId
+            required: true
+            schema:
+                type: string
+    PaginationOffset:
+            description: Offset from which to return the next set of resources. Use the value of the 'offset' field from the response of a list operation as input here to paginate through all the resources
+            in: query
+            name: offset
+            schema:
+                type: string
+    PaginationSize:
+        description: Number of resources to be returned.
+        in: query
+        name: size
+        schema:
+            default: 100
+            maximum: 1000
+            minimum: 1
+            type: integer
+    PaginationTagsFilter:
+        description: A list of tags to filter the list of resources on. Multiple tags can be concatenated using ',' to mean AND or using '/' to mean OR.
+        example: tag1,tag2
+        in: query
+        name: tags
+        schema:
+            type: string
