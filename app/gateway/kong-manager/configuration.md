@@ -37,8 +37,6 @@ related_resources:
     url: /how-to/oidc-authenticated-group-mapping/
   - text: Configure LDAP with Kong Manager
     url: /how-to/configure-ldap-with-kong-manager/
-  - text: Configuring Kong Manager to Send Email
-    url: /how-to/configure-kong-manager-email/
 tags:
   - kong-manager
 

@@ -13,15 +13,20 @@ tools:
     - terraform
 tags:
   - geos
-  - network
-
+search_aliases:
+  - geos
+  - data centers
 works_on:
   - konnect
-
-  
+breadcrumbs:
+  - /konnect-platform/
 related_resources:
   - text: "{{site.konnect_short_name}} ports and network requirements"
     url: /konnect-platform/network/
+  - text: "Dedicated Cloud Gateways"
+    url: /dedicated-cloud-gateways/
+  - text: "{{site.konnect_short_name}} Platform"
+    url: /konnect-platform/
 ---
 
 {{site.konnect_short_name}} allows you to host and operate your cloud instance in a geographic region that you specify. This is important for data privacy and regulatory compliance for you organization. 
@@ -48,16 +53,7 @@ The following objects are geo-specific:
 
 ## Supported geos 
 
-### Control planes
-
-{{site.konnect_short_name}} currently supports the following geos:
-
-* AU (Australia)
-* EU (Europe)
-* ME (Middle East)
-* US (United States)
-* IN (India)
-
+{% include_cached /sections/cp-regions.md %}
 
 ### Dedicated Cloud Gateways
 

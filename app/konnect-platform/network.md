@@ -103,7 +103,7 @@ The {{site.konnect_short_name}} Control Plane uses the following ports:
 ## Hostnames
 
 
-The following [geographic regions](/konnect-geos/) and their hostname region identifiers are supported:
+The following [geographic regions](/konnect-platform/konnect-geos/) and their hostname region identifiers are supported:
 * AU (Australia): `au`
 * EU (Europe): `eu`
 * ME (Middle East): `me`

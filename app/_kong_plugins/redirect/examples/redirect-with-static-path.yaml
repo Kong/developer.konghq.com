@@ -1,10 +1,27 @@
 description: |
   Redirect incoming requests to a target location, using the request path and query string from the configuration in the redirect URL.
 
-  | Incoming Request | `config.location` | `config.keep_incoming_path` | New URL |
-  |------------------|------------------|----------------------------|---------|
-  | https://example.com/demo?foo=bar | https://new.example.com | `false` | https://new.example.com/ |
-  | https://example.com/demo?foo=bar | https://new.example.com/some-path | `false` | https://new.example.com/some-path |
+extended_description: | 
+  {% table %}
+  columns:
+    - title: Incoming Request
+      key: incoming
+    - title: `config.location`
+      key: location
+    - title: `config.keep_incoming_path`
+      key: keep_path
+    - title: New URL
+      key: new_url
+  rows:
+    - incoming: "`https://example.com/demo?foo=bar`"
+      location: "`https://new.example.com`"
+      keep_path: "`false`"
+      new_url: "`https://new.example.com/`"
+    - incoming: "`https://example.com/demo?foo=bar`"
+      location: "`https://new.example.com/some-path`"
+      keep_path: "`false`"
+      new_url: "`https://new.example.com/some-path`"
+  {% endtable %}
 
 title: "Use a static URL"
 

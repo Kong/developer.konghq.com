@@ -19,6 +19,8 @@ breadcrumbs:
 related_resources:
   - text: All decK documentation
     url: /index/deck/
+  - text: About decK
+    url: /deck/
 ---
 
 The `deck gateway reset` command deletes all entities in the target control plane.
