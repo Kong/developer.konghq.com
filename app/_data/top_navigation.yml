@@ -1,0 +1,98 @@
+platform:
+  konnect:
+    text: Explore the unified API Platform
+    icon: '/assets/icons/book.svg'
+    url: /konnect/
+
+  sections:
+    - title: Build APIs
+      links:
+        - text: Kong Insomnia
+          icon: /_assets/icons/products/insomnia.svg
+          url: /insomnia/
+          product: insomnia
+        - text: API Design
+          icon: /assets/icons/insomnia/design.svg
+          url: /insomnia/design/
+        - text: API Testing and Debugging
+          icon: /assets/icons/insomnia/checkbox-active.svg
+          url: /insomnia/test/
+    - title: Run APIs
+      links:
+        - text: API Gateway
+          icon: /_assets/icons/products/gateway.svg
+          url: /gateway/
+          product: gateway
+        - text: AI Gateway
+          icon: /_assets/icons/products/ai-gateway.svg
+          url: /ai-gateway/
+          product: ai-gateway
+        - text: Service Mesh
+          icon: /_assets/icons/products/mesh.svg
+          url: /mesh/
+          product: mesh
+        - text: Kong Ingress Controller
+          icon: /_assets/icons/products/kic.svg
+          url: /kong-ingress-controller/
+          product: kic
+    - title: Discover APIs
+      links:
+        - text: Developer Portal
+          icon: /_assets/icons/products/dev-portal.svg
+          url: /dev-portal/
+          product: dev-portal
+        - text: Service Catalog
+          icon: /_assets/icons/products/service-catalog.svg
+          url: /service-catalog/
+          product: service-catalog
+    - title: Govern APIs
+      links:
+        - text: Analytics
+          icon: /_assets/icons/products/advanced-analytics.svg
+          url: /advanced-analytics/
+          product: advanced-analytics
+        - text: APIOps and Automation
+          icon: /_assets/icons/products/api-ops.svg
+          url: /deck/apiops/
+          product: api-ops
+
+how_tos:
+    - text: Kong Gateway
+      icon: /_assets/icons/products/gateway.svg
+      url: /how-to/?products=gateway
+      product: gateway
+    - text: Insomnia
+      icon: /_assets/icons/products/insomnia.svg
+      url: /how-to/?products=insomnia
+      product: insomnia
+    - text: Kong Ingress Controller
+      icon: /_assets/icons/products/kic.svg
+      url: /how-to/?products=kic
+      product: kic
+    - text: Kong Mesh
+      icon: /_assets/icons/products/mesh.svg
+      url: /how-to/?products=mesh
+      product: mesh
+
+support:
+  - text: Community
+    url: 'https://konghq.com/community'
+    icon: '/assets/icons/team.svg'
+  - text: Community Forum
+    url: 'https://discuss.konghq.com/'
+    icon: '/assets/icons/service-document.svg'
+  - text: User Calls
+    url: 'https://konghq.com/events/user-calls'
+    icon: '/assets/icons/phone.svg'
+  - text: Help & Support
+    url: 'https://support.konghq.com/s/'
+    icon: '/assets/icons/support.svg'
+  - text: Github
+    url: 'https://github.com/Kong/kong'
+    icon: '/assets/icons/github.svg'
+  - text: Demos
+    url: 'https://konghq.com/resources/demos'
+    icon: '/assets/icons/presentation.svg'
+  - text: Workshops
+    url: 'https://konghq.com/events/workshops'
+    icon: '/assets/icons/mark.svg'

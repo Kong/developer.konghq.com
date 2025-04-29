@@ -310,15 +310,15 @@
 
 @layer components {
   .button {
-    @apply !py-2 !px-4 !rounded-md !text-sm !text-primary !font-semibold hover:!no-underline flex items-center gap-2;
+    @apply !py-2 !px-4 !rounded-md !text-sm !text-primary !font-semibold hover:!no-underline flex items-center gap-2 !border;
   }
 
   .button.button--primary {
-    @apply !bg-brand !text-white;
+    @apply !bg-brand !text-white !border-transparent;
   }
 
   .button.button--secondary {
-    @apply !border !border-brand !text-primary;
+    @apply !border-brand !text-primary;
   }
 
   .button.button--filters {
@@ -650,6 +650,10 @@
     @apply p-1.5 rounded-[2.22px];
   }
 
+  .product-icon--bordered {
+    @apply border-[0.28px] border-primary/[.08];
+  }
+
   .how-to {
     counter-reset: steps-counter;
   }
@@ -661,6 +665,34 @@
   .how-to-step--title::before {
     @apply pr-2;
     content: counter(steps-counter) ".";
+  }
+
+  .navbar-items {
+    @apply items-center;
+  }
+
+  .navbar-item {
+    @apply relative cursor-pointer;
+  }
+
+  .navbar-item__trigger {
+    @apply flex gap-1 items-center !mb-0;
+  }
+
+  .navbar-item__trigger_icon {
+    @apply flex h-3 w-3 items-center;
+  }
+
+  .navbar-item__menu-caret {
+    @apply absolute left-1/2 transform -translate-x-1/2 -bottom-[11px] !mb-0;
+  }
+
+  .navbar-item__menu {
+    @apply absolute top-9 list-none ml-0 grid grid-cols-2 max-w-max w-svw gap-4 border rounded-lg p-6 bg-secondary border-primary/5 shadow-primary left-1/2 -translate-x-1/2;
+  }
+
+  .navbar-item__icon {
+    @apply inline-flex text-brand w-5 h-5 items-center justify-center !p-0;
   }
 }
 

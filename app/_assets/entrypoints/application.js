@@ -9,6 +9,7 @@ import "~/stylesheets/index.css";
 import mermaid from "mermaid";
 import EntityExample from "@/javascripts/components/entity_example";
 import Tabs from "@/javascripts/components/tabs";
+import TopNav from "@/javascripts/components/top_nav";
 import "@/javascripts/anchor_links";
 import "@/javascripts/accordion";
 import "@/javascripts/copy_code_snippet";
@@ -20,6 +21,7 @@ import "@/javascripts/search_modal";
 import "@/javascripts/mesh_service_switcher";
 
 document.addEventListener("DOMContentLoaded", function () {
+  new TopNav();
   new EntityExample();
   new Tabs();
 });

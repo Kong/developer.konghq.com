@@ -1,24 +1,32 @@
 - text: AI
   slug: ai
   desc: Govern, secure, and control AI traffic with multi-LLM AI Gateway plugins
+  icon: /assets/icons/ai.svg
 - text: Authentication
   slug: authentication
   desc: Protect your services with an authentication layer
+  icon: /assets/icons/lock.svg
 - text: Security
   slug: security
   desc: Protect your services with additional security layer
+  icon: /assets/icons/security.svg
 - text: Traffic Control
   slug: traffic-control
   desc: Manage, throttle and restrict inbound and outbound API traffic
+  icon: /assets/icons/services.svg
 - text: Serverless
   slug: serverless
   desc: Invoke serverless functions in combination with other plugins
+  icon: /assets/icons/serverless.svg
 - text: Analytics & Monitoring
   slug: analytics-monitoring
   desc: Visualize, inspect and monitor APIs and microservices traffic
+  icon: /assets/icons/analytics.svg
 - text: Transformations
   slug: transformations
   desc: Transform request and responses on the fly on Kong
+  icon: /assets/icons/book.svg
 - text: Logging
   slug: logging
   desc: Log request and response data using the best transport for your infrastructure
+  icon: /assets/icons/document-list.svg
