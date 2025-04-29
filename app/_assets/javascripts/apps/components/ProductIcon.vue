@@ -1,5 +1,5 @@
 <template>
-    <div class="product-icon" :class="[name, { 'product-icon--background': background, 'product-icon--bordered': bordered }]" :style="{ 'background-color': `rgb(var(--color-${name}-background))` }">
+    <div class="product-icon" :class="[name, { 'product-icon--background': background, 'product-icon--bordered': bordered }]" :style="{ 'background-color': background && `rgb(var(--color-${name}-background))` }">
         <component :is="iconComponent" v-if="iconComponent" :class="customClass" />
     </div>
 </template>
