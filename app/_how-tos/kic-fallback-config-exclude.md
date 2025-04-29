@@ -1,5 +1,5 @@
 ---
-title: "Fallback configuration: Exclude broken objects"
+title: "Exclude broken objects with fallback configuration"
 description: |
   Remove broken configuration from your {{ site.base_gateway }} configuration automatically
 content_type: how_to
@@ -52,8 +52,8 @@ related_resources:
 
 In this example, we'll consider a situation where:
 
-1. We have two Routes pointing to the same `Service`. One Route is configured with `KongPlugin`s providing authentication and base rate-limiting. Everything works as expected.
-2. We add one more rate-limiting `KongPlugin` that is to be associated with the second Route and a specific `KongConsumer` so that it can be rate-limited in a different way than the base rate-limiting, but we forget associate the `KongConsumer` with the `KongPlugin`. It results in the Route being broken because of duplicated rate-limiting plugins.
+1. We have two Routes pointing to the same `Service`. One Route is configured with `KongPlugin`s providing authentication and base rate limiting. Everything works as expected.
+2. We add one more rate limiting `KongPlugin` that will be associated with the second Route and a specific `KongConsumer` so that it can be rate limited in a different way than the base rate limiting. But, we forget to associate the `KongConsumer` with the `KongPlugin`. It results in the Route being broken because of duplicated rate limiting plugins.
 
 {% include k8s/content/fallback-configuration/scenario-setup.md %}
 
@@ -90,7 +90,7 @@ The results should look like this:
 
 ### Inspecting diagnostic endpoints
 
-The route is not configured because the Fallback Configuration mechanism has excluded the broken `HTTPRoute`.
+The Route isn't configured because the Fallback Configuration mechanism is excluding the broken `HTTPRoute`.
 
 We can verify this by inspecting the diagnostic endpoint:
 
@@ -139,8 +139,9 @@ The results should look like this:
   ]
 }
 ```
+{:.no-copy-code}
 
-## Verify the working route is still operational and can be updated
+## Verify the working Route is still operational and can be updated
 
 We can also ensure the other `HTTPRoute` is still working:
 

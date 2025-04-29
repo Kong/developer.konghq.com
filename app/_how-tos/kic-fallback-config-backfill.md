@@ -1,5 +1,5 @@
 ---
-title: "Fallback configuration: Backfill broken objects"
+title: "Backfill broken objects with fallback configuration"
 description: |
   Use the last known good configuration automatically for any subset of configuration that is invalid in your k8s cluster
 content_type: how_to
@@ -24,7 +24,7 @@ entities: []
 
 tldr:
   q: How do I automatically use the last known good configuration for a subset of my {{ site.kic_product_name }} configuration?
-  a: Enable the `FallbackConfiguration` feature gate and `CONTROLLER_USE_LAST_VALID_CONFIG_FOR_FALLBACK` environment variable for {{ site.kic_product_name }}
+  a: Enable the `FallbackConfiguration` feature gate and the `CONTROLLER_USE_LAST_VALID_CONFIG_FOR_FALLBACK=true` environment variable for {{ site.kic_product_name }}
 
 prereqs:
   kubernetes:
@@ -46,17 +46,17 @@ cleanup:
 related_resources:
   - text: Fallback configuration overview
     url: /kubernetes-ingress-controller/fallback-configuration/
-  - text: "How-To: Exclude broken configuration"
+  - text: "Exclude broken configuration"
     url: /kubernetes-ingress-controller/fallback-configuration/exclude/
 ---
 
 ## Backfilling broken objects
 
-Fallback Configuration supports backfilling broken objects with their last valid version. To demonstrate this, we'll use the same setup as in the default mode, but this time we'll test with the `CONTROLLER_USE_LAST_VALID_CONFIG_FOR_FALLBACK` environment variable to `true`.
+Fallback Configuration supports backfilling broken objects with their last valid version. To demonstrate this, we'll use the same setup as in the default mode, but this time we'll test with the `CONTROLLER_USE_LAST_VALID_CONFIG_FOR_FALLBACK` environment variable set to `true`.
 
 {% include k8s/content/fallback-configuration/scenario-setup.md %}
 
-## Break the route
+## Break the Route
 
 As we've verified that both `HTTPRoute`s are operational, let's break `route-b` again by removing the `rate-limit-consumer` `KongPlugin` from the `KongConsumer`:
 
@@ -66,7 +66,7 @@ kubectl annotate -n kong kongconsumer bob konghq.com/plugins-
 
 ## Verify the broken route was backfilled
 
-Backfilling the broken `HTTPRoute` with its last valid version should have restored the route to its last valid working state. That means we should be able to access `route-b` as before the breaking change:
+Backfilling the broken `HTTPRoute` with its last valid version should have restored the Route to its last valid working state. That means we should be able to access `route-b` as before the breaking change:
 
 {% validation request-check %}
 url: /route-b
@@ -168,15 +168,16 @@ The results should look like this:
   ]
 }
 ```
+{:.no-copy-code}
 
-As `rate-limit-consumer` and `route-b` were reported back as broken by the {{site.base_gateway}}, they were excluded from the configuration. However, the Fallback Configuration mechanism backfilled them with their last valid version, restoring the route to its working state. You may notice that also the `KongConsumer` was backfilled - this is because the `KongConsumer` was depending on the `rate-limit-consumer` plugin in the last valid state.
+As `rate-limit-consumer` and `route-b` were reported back as broken by the {{site.base_gateway}}, they were excluded from the configuration. However, the Fallback Configuration mechanism backfilled them with their last valid version, restoring the Route to its working state. You may notice that also the `KongConsumer` was backfilled. This is because the `KongConsumer` was depending on the `rate-limit-consumer` plugin in the last valid state.
 
 {:.info}
 > **Note:** The Fallback Configuration mechanism will attempt to backfill all the broken objects along with their direct and indirect dependants. The dependencies are resolved based on the last valid Kubernetes objects' cache state.
 
 ## Modify the affected objects
 
-As we're now relying on the last valid version of the broken objects and their dependants, we won't be able to effectively modify them until we fix the problems. Let's try and add another key for the `bob` `KongConsumer`:
+As we're now relying on the last valid version of the broken objects and their dependants, we won't be able to effectively modify them until we fix the problems. Let's try and add another key for the `bob` `KongConsumer`.
 
 Create a new `Secret` with a new key:
 
@@ -242,6 +243,7 @@ Running on Pod echo-bf9d56995-r8c86.
 In namespace default.
 With IP address 192.168.194.8.
 ```
+{:.no-copy-code}
 
 ## Fixing the broken route
 
@@ -271,3 +273,4 @@ Running on Pod echo-bf9d56995-r8c86.
 In namespace default.
 With IP address 192.168.194.8.
 ```
+{:.no-copy-code}

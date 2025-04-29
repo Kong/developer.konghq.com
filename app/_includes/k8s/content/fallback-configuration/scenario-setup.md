@@ -2,7 +2,7 @@
 
 This how-to requires three plugins to demonstrate how fallback configuration works.
 
-1. As the example uses a Consumer, we need to create an authentication plugin to identify the incoming request
+1. As the example uses a [Consumer](/gateway/entities/consumer/), we need to create an authentication plugin to identify the incoming request:
 
 {% entity_example %}
 type: plugin
@@ -14,7 +14,7 @@ data:
 indent: 4
 {% endentity_example %}
 
-1. Unidentified traffic has a base rate limit of 1 request per second:
+1. Unidentified traffic has a base rate limit of one request per second:
 
 {% entity_example %}
 type: plugin
@@ -30,7 +30,7 @@ data:
 indent: 4
 {% endentity_example %}
 
-1. Identified Consumers have a rate limit of 5 requests per second:
+1. Identified Consumers have a rate limit of five requests per second:
 
 {% entity_example %}
 type: plugin
@@ -48,7 +48,7 @@ indent: 4
 
 ## Create Routes
 
-Let's create two routes for testing purposes:
+Let's create two Routes for testing purposes:
 
 * `route-a` has no plugins attached
 * `route-b` has the three plugins created above attached
@@ -58,7 +58,7 @@ Let's create two routes for testing purposes:
 
 ## Create a Consumer
 
-Finally, let's create a `KongConsumer` with credentials and the `rate-limit-consumer` `KongPlugin` associated.
+Finally, let's create a `KongConsumer` with credentials and associate the `rate-limit-consumer` `KongPlugin`.
 
 Create a Secret containing the `key-auth` credential:
 
@@ -87,7 +87,7 @@ data:
   - rate-limit-consumer
 {% endentity_example %}
 
-## Validate the routes
+## Validate the Routes
 
 At this point we can validate that our Routes are working as expected.
 

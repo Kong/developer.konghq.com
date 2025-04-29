@@ -1,5 +1,5 @@
 ---
-title: Configure Service Health Checks
+title: Configure Service health checks
 description: |
   How to enable passive and active health checks for upstream services
 content_type: how_to
@@ -36,34 +36,34 @@ cleanup:
       icon_url: /assets/icons/kubernetes.svg
 
 next_steps:
-  - text: Read more about health-checks and circuit breakers
+  - text: Read more about health checks and circuit breakers
     url: /gateway/traffic-control/health-checks-circuit-breakers/
 ---
 
 ## Health check types
 
-{{ site.base_gateway }} supports active and passive health checks. This allows Kong to automatically short-circuit requests to specific Pods that are misbehaving in your Kubernetes Cluster. The process to re-enable these pods is different between active and passive health checks.
+{{ site.base_gateway }} supports active and passive health checks. This allows {{site.base_gateway}} to automatically short-circuit requests to specific Pods that are misbehaving in your Kubernetes Cluster. The process to re-enable these pods is different between active and passive health checks.
 
 ### Passive health checks
 
 Pods that are marked as unhealthy by {{ site.base_gateway }} are **permanently** marked as unhealthy.
 
-If a passive health check for a service that runs in a cluster and if the Pod that runs the service reports an error, Kong returns a 503, indicating that the service is unavailable. Kong does not proxy anymore requests to the unhealthy pod.
+If a passive health check for a service that runs in a cluster and if the Pod that runs the service reports an error, {{ site.base_gateway }} returns a 503, indicating that the service is unavailable. {{ site.base_gateway }} doesn't proxy any requests to the unhealthy pod.
 
 There is no way to mark the pod as healthy again using {{ site.kic_product_name }} and passive health checks. To resolve the issue, choose on of the following options:
 
-- Delete the current Pod; Kong then sends proxy requests to the new Pod that comes in its place.
-- Scale the deployment; Kong then sends proxy requests to the new Pods and leave the short-circuited Pod out of the loop.
+- **Delete the current Pod:** {{ site.base_gateway }} then sends proxy requests to the new Pod that is in its place.
+- **Scale the deployment:** {{ site.base_gateway }} then sends proxy requests to the new Pods and leaves the short-circuited Pod out of the loop.
 
 ### Active health checks
 
 Pods that are marked as unhealthy by {{ site.base_gateway }} are **temporarily** marked as unhealthy.
 
-{{ site.base_gateway }} will make a request to the healthcheck path periodically. When it has received enough healthy responses it will re-enable the Pod in the load balancer and traffic will be routed to the Pod again.
+{{ site.base_gateway }} will make a request to the healthcheck path periodically. When it has received enough healthy responses, it will re-enable the Pod in the load balancer and traffic will be routed to the Pod again.
 
 ## Enable passive health checking
 
-1.  All health checks are done at Service-level. To configure Kong to short-circuit requests to a Pod if it throws 3 consecutive errors, add a `KongUpstreamPolicy` resource.
+1.  All health checks are done at the Service-level. To configure {{ site.base_gateway }} to short-circuit requests to a Pod if it throws 3 consecutive errors, add a `KongUpstreamPolicy` resource:
 
     ```bash
     echo '
@@ -82,13 +82,13 @@ Pods that are marked as unhealthy by {{ site.base_gateway }} are **temporarily**
     ' | kubectl apply -f -
     ```
 
-1. Associate the KongUpstreamPolicy resource with `httpbin` service.
+1. Associate the KongUpstreamPolicy resource with `httpbin` Service:
 
     ```bash
     kubectl patch -n kong svc httpbin -p '{"metadata":{"annotations":{"konghq.com/upstream-policy":"demo-health-checking"}}}'
     ```
 
-1. Test the Ingress rule by sending 2 requests to `/status/500` that simulate a failure from the upstream service:
+1. Test the Ingress rule by sending two requests to `/status/500` that simulate a failure from the upstream service:
 
 {% validation request-check %}
 url: /httpbin/status/500
@@ -138,11 +138,11 @@ konnect_url: $PROXY_IP
     X-Kong-Proxy-Latency: 0
     Via: kong/{{ site.data.gateway_latest.release }}
     ```
-    Kong has not short-circuited because there were only two failures.
+    {{site.base_gateway}} didn't short-circuit because there were only two failures.
 
 ### Trip the circuit breaker
 
-1. Send 3 requests to `/status/500` to mark the pod as unhealthy. We need three requests as this is the number provided in `unhealthy.httpFailures` in the `KongUpstreamPolicy` resource:
+1. Send three requests to `/status/500` to mark the pod as unhealthy. We need three requests as this is the number provided in `unhealthy.httpFailures` in the `KongUpstreamPolicy` resource:
 
 {% validation request-check %}
 url: /httpbin/status/500
@@ -193,13 +193,13 @@ konnect_url: $PROXY_IP
     }%
     ```
 
-    Because there is only one Pod of `httpbin` service running in the cluster, and that is throwing errors, {{ site.base_gateway }} does not proxy anymore requests. To get resolve this, you can use active health-check, where each instance of {{ site.base_gateway }} actively probes Pods to check if they are healthy.
+    Because there's only one Pod of `httpbin` Service running in the cluster, and that is throwing errors, {{ site.base_gateway }} doesn't proxy any additional requests. To get resolve this, you can use active health-check, where each instance of {{ site.base_gateway }} actively probes Pods to check if they are healthy.
 
 ## Enable active health checking
 
-Active health checking can automatically mark an upstream service as healthy again once it receives enough `healthy` responses:
+Active health checking can automatically mark an upstream service as healthy again once it receives enough `healthy` responses.
 
-1.  Update the KongUpstreamPolicy resource to use active health-checks.
+1.  Update the KongUpstreamPolicy resource to use active health checks:
 
     ```bash
     echo '
@@ -227,7 +227,7 @@ Active health checking can automatically mark an upstream service as healthy aga
     ' | kubectl apply -f -
     ```
 
-    This configures Kong to actively probe `/status/200` every 5 seconds. If a Pod is unhealthy from {{ site.base_gateway }}'s perspective, 3 successful probes changes the status of the Pod to healthy and Kong again starts to forward requests to that Pod. Wait 15 seconds for the pod to be marked as healthy before continuing.
+    This configures {{site.base_gateway}} to actively probe `/status/200` every five seconds. If a Pod is unhealthy from {{ site.base_gateway }}'s perspective, three successful probes change the status of the Pod to healthy, and {{site.base_gateway}} again starts to forward requests to that Pod. Wait 15 seconds for the pod to be marked as healthy before continuing.
 
 1. Make a request to `/status/200` after 15 seconds:
 
@@ -255,7 +255,7 @@ konnect_url: $PROXY_IP
     Via: kong/{{ site.data.gateway_latest.release }}
     ```
 
-1.  Trip the circuit again by sending three requests that returns the `HTTP 500` from httpbin.
+1.  Trip the circuit again by sending three requests that return the `HTTP 500` from httpbin:
 
 {% validation request-check %}
 url: /httpbin/status/500
@@ -267,7 +267,7 @@ on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
 {% endvalidation %}
 
-    The httpbin pod is now marked as unhealthy for 15 seconds. This is the duration required for active health checks to re-classify the httpbin Pod as healthy again (3 requests, with a 5 second interval).
+    The httpbin pod is now marked as unhealthy for 15 seconds. This is the duration required for active health checks to re-classify the httpbin Pod as healthy again (three requests with a five second interval).
 
     ```bash
     curl -i $PROXY_IP/httpbin/status/200

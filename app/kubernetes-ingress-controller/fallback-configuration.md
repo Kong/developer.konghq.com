@@ -1,5 +1,5 @@
 ---
-title: Fallback Configuration
+title: Fallback configuration
 
 description: |
   Prevent {{ site.kic_product_name }} lock-ups when bad configuration is accidentally introduced to your k8s cluster
@@ -12,6 +12,8 @@ products:
 works_on:
   - on-prem
   - konnect
+min_version:
+  - kic: '3.2'
 
 related_resources:
   - text: "How-To: Backfill broken configuration"
@@ -29,17 +31,17 @@ configuration is broken.
 {:.info}
 > **Note:** Fallback Configuration is an opt-in feature. You must enable it by setting `FallbackConfiguration=true` in the controller's feature gates configuration. See [Feature Gates](/kubernetes-ingress-controller/reference/feature-gates) to learn how to do that.
 
-## How it works
+## How fallback configuration works
 
-{{site.kic_product_name}} translates Kubernetes objects it gets from the Kubernetes API and pushes the translation result via Kong’s Admin API to {{site.base_gateway}} instances. However, issues can arise at various stages of this process:
+{{site.kic_product_name}} translates Kubernetes objects it gets from the Kubernetes API and pushes the translation result via {{site.base_gateway}}’s Admin API to {{site.base_gateway}} instances. However, issues can arise at various stages of this process:
 
 1. Admission Webhook: Validates individual Kubernetes objects against schemas and basic rules.
 2. Translation Process: Detects issues like cross-object validation errors.
-3. Kong Response: Kong rejects the configuration and returns an error associated with a specific object.
+3. {{site.base_gateway}} Response: {{site.base_gateway}} rejects the configuration and returns an error associated with a specific object.
 
 Fallback Configuration is triggered when an issue is detected in the 3rd stage and provides the following benefits:
 - Allows unaffected objects to be updated even when there are configuration errors.
-- Automatically builds a fallback configuration that Kong will accept without requiring user intervention by
+- Automatically builds a fallback configuration that {{site.base_gateway}} will accept without requiring user intervention by
   either:
   - Excluding the broken objects along with its dependants.
   - Backfilling the broken object along with its dependants using the last valid Kubernetes objects' in-memory cache (if `CONTROLLER_USE_LAST_VALID_CONFIG_FOR_FALLBACK` environment variable is set to `true`).
@@ -62,10 +64,10 @@ rows:
     behavior: "The last valid configuration is used as a whole to recover (if stored)."
   - gate: "`true`"
     flag: "`false`"
-    behavior: "The Fallback Configuration is triggered - broken objects and their dependants are excluded."
+    behavior: "The Fallback Configuration is triggered, broken objects and their dependents are excluded."
   - gate: "`true`"
     flag: "`true`"
-    behavior: "The Fallback Configuration is triggered - broken objects and their dependants are excluded and backfilled with their last valid version (if stored)."
+    behavior: "The Fallback Configuration is triggered, broken objects and their dependents are excluded and backfilled with their last valid version (if stored)."
 {% endtable %}
 
 
@@ -121,11 +123,11 @@ classDef decision fill:#a6b4c8
 <!--vale on-->
 
 
-### Inspecting the Fallback Configuration process
+### Inspecting the fallback configuration process
 
-Each time {{site.kic_product_name}} successfully applies a fallback configuration, it emits a Kubernetes Event with the `FallbackKongConfigurationSucceeded` reason. It will also emit an Event with `FallbackKongConfigurationApplyFailed` reason in case the fallback configuration gets rejected by {{site.base_gateway}}. You can monitor these events to track the fallback configuration process.
+Each time {{site.kic_product_name}} successfully applies a fallback configuration, it emits a Kubernetes Event with the `FallbackKongConfigurationSucceeded` reason. It will also emit an Event with the `FallbackKongConfigurationApplyFailed` reason in case the fallback configuration gets rejected by {{site.base_gateway}}. You can monitor these events to track the fallback configuration process.
 
-You can check the Event gets emitted by running:
+You can check to see if the Event is emitted by running:
 
 ```bash
 kubectl get events -A --field-selector='reason=FallbackKongConfigurationSucceeded'
@@ -138,5 +140,5 @@ kong        4m26s       Normal   FallbackKongConfigurationSucceeded   pod/kong-c
 ```
 
 {:.info}
-> Another way to monitor the Fallback Configuration mechanism is by Prometheus metrics. Please refer to the [Prometheus Metrics](/kubernetes-ingress-controller/observability/prometheus) for more information.
+> Another way to monitor the Fallback Configuration mechanism is by Prometheus metrics. See [Prometheus Metrics](/kubernetes-ingress-controller/observability/prometheus) for more information.
 
