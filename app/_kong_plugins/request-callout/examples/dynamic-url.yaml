@@ -24,8 +24,7 @@ config:
       url: ${url}
       method: GET
       by_lua: >-
-        kong.ctx.shared.callouts.call.request.params.url = 'http://httpbin.org/' .. (kong.request.get_header('x-custom-header') or '')
-
+        kong.ctx.shared.callouts.call.request.params.url = "http://httpbin.org/".. (kong.request.get_header("x-custom-header") or "")
 tools:
   - deck
   - admin-api
