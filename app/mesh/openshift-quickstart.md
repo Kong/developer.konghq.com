@@ -7,7 +7,7 @@ products:
   - mesh
 
 breadcrumbs:
-  - mesh/
+  - /mesh/
 
 tags:
   - openshift

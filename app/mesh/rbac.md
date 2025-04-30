@@ -6,7 +6,7 @@ layout: reference
 products:
   - mesh
 breadcrumbs:
-  - mesh/
+  - /mesh/
 
 tags:
   - rbac
@@ -32,7 +32,7 @@ related_resources:
 
 Role-Based Access Control (RBAC) lets you restrict access to resources and actions to specified users or groups, based on user roles.
 
-## How it RBAC works
+## How RBAC works
 
 {{site.mesh_product_name}} provides two resources to implement RBAC:
 
@@ -436,7 +436,7 @@ Kubernetes provides their own RBAC system, but it's not sufficient to cover use 
 * You cannot restrict access based on the content of the policy
 
 {{site.mesh_product_name}} RBAC works on top of Kubernetes RBAC.
-For example, to restrict the access for a user to modify `MeshTrafficPermission` for backend Service, they need to be able to create `MeshTrafficPermission` in the first place.
+For example, to restrict the access for a user to modify `MeshTrafficPermission` for the backend Service, they need to be able to create `MeshTrafficPermission` in the first place.
 
 The `subjects` in `AccessRoleBinding` are compatible with Kubernetes users and groups.
 {{site.mesh_product_name}} RBAC on Kubernetes is implemented using Kubernetes Webhook when applying resources. This means you can only use Kubernetes users and groups for `CREATE`, `DELETE` and `UPDATE` access.

@@ -13,7 +13,7 @@ tags:
 
 
 related_resources:
-  - text: Version Support Policy
+  - text: "{{site.mesh_product_name}} version support policy"
     url: /mesh/support-policy/
 ---
 

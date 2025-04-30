@@ -6,12 +6,12 @@ layout: reference
 products:
   - mesh
 breadcrumbs:
-  - mesh/
+  - /mesh/
 tags:
-  - RBAC
-  - FIPS
+  - rbac
+  - fips
   - certificates
-  - UBI
+  - ubi
 
 tier: enterprise
 

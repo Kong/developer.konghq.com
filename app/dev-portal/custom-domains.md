@@ -92,7 +92,7 @@ If your domain doesn't currently have any CAA DNS records, it means all issuers 
 
 To add a custom URL to Dev Portal:
 
-1. In {{site.konnec_short_name}}, select your Dev Portal and click **Settings**:
+1. In {{site.konnect_short_name}}, select your Dev Portal and click **Settings**.
 
 1. Select **Custom hosted domain**.
 

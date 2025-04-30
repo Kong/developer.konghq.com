@@ -78,15 +78,15 @@ rows:
   - header:
       type: h2
       text: "Deployment options"
-  - columns:
+    columns:
       - blocks:
         - type: structured_text
           config:
-            header:
-              text: "Internal Dev Portal"
             blocks:
               - type: text
                 text: |
+                  <img src="/assets/icons/lock.svg" style="display:inline"/> **Internal Dev Portal**
+                  
                   Designed for internal developer enablement and productivity.
                   * Private visibility with authentication enabled
                   * Publish internal-only APIs
@@ -95,11 +95,11 @@ rows:
       - blocks:
         - type: structured_text
           config:
-            header:
-              text: "Partner Dev Portal"
             blocks:
               - type: text
                 text: |
+                  <img src="/assets/icons/team.svg" style="display:inline"/> **Partner Dev Portal**
+                  
                   Ideal for exposing APIs to trusted external developers.
                   * Private or public visibility with auth enabled
                   * Self-service registration and API key provisioning
@@ -108,11 +108,11 @@ rows:
       - blocks:
         - type: structured_text
           config:
-            header:
-              text: "Public Dev Portal"
             blocks:
               - type: text
                 text: |
+                  <img src="/assets/icons/world.svg" style="display:inline"/> **Public Dev Portal**
+                  
                   Open your APIs to the broader developer community.
                   * Public visibility without authentication
                   * Publish APIs suited to general audiences

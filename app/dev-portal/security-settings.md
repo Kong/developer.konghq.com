@@ -78,19 +78,19 @@ Learn more about configuring IdPs in [Self-service developer & application regis
 ### Developer and application approvals
 
 {:.info}
-> An API must be linked to a {{site.konnect_short_name}} Gateway Service {% new_in 3.6 %} to be able to restrict access to your API with authentication strategies.
+> {% new_in 3.6 %} An API must be linked to a {{site.konnect_short_name}} Gateway Service to be able to restrict access to your API with authentication strategies.
 
 Registration of developer accounts and creation of applications both require approval by Dev Portal admins by default. These approvals are managed in [Access and Approvals](/dev-portal/access-and-approval/).
 
 #### Auto approve developers
 
-The following explains the behavior when auto approve developers is configured:
+The following explains the behavior when auto-approval for developers is configured:
 * Enabled: Anyone can sign up for a developer account without any further approval process. 
 * Disabled: Dev Portal admins have to approve any new sign up in [Access and Approvals](/dev-portal/access-and-approval/).
 
 #### Auto approve applications 
 
-The following explains the behavior when auto approve applications is configured:
+The following explains the behavior when auto-approval for applications is configured:
 * Enabled: When any approved developer creates an Application, it will be automatically approved and created. 
   * Once an application is approved, the developer will be able to use it to create API Keys. 
 * Disabled: Dev Portal admins have to approve any new Applications in [Access and Approvals](/dev-portal/access-and-approval/) before a developer can create API Keys.
@@ -102,7 +102,7 @@ When RBAC is enabled for a Dev Portal, the option to configure API access polici
 ### Authentication strategy and creating API keys
 
 {:.info}
-> An API must be linked to a {{site.konnect_short_name}} Gateway Service {% new_in 3.6 %} to be able to restrict access to your API with Authentication Strategies.
+> {% new_in 3.6 %} An API must be linked to a {{site.konnect_short_name}} Gateway Service to be able to restrict access to your API with authentication strategies.
 
 Authentication strategies determine how [published APIs](/dev-portal/publishing/) are authenticated, and how developers create API Keys. 
 
