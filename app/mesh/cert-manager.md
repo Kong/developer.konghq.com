@@ -76,7 +76,7 @@ See `issuerRef` in the [cert-manager API](https://cert-manager.io/docs/reference
 
 If `caCert` is not provided, {{site.mesh_product_name}} assumes that the issuer sets `status.CA` on `CertificateRequests`.
 
-If `secret` is used, it must be [a {{site.mesh_product_name}} Secret](/mesh/secrets/).
+If `secret` is used, it must be a {{site.mesh_product_name}} Secret.
 
 
 Apply the configuration with `kubectl apply -f [..]`.

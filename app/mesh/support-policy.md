@@ -1,10 +1,12 @@
 ---
-title: "Version Support Policy"
+title: "Version support policy"
 description: "Understand the lifecycle and version support guidelines for {{site.mesh_product_name}}, including supported release timelines."
 content_type: reference
 layout: reference
 products:
   - mesh
+breadcrumbs:
+  - /mesh/
 
 tags:
   - support
@@ -22,6 +24,8 @@ related_resources:
 
 ---
 The support for {{site.mesh_product_name}} software versions is explained in this topic.
+
+The following table explains which versions of {{site.mesh_product_name}} are supported:
 
 {% table %}
 columns:
@@ -77,6 +81,6 @@ rows:
 {% endtable %}
 
 
-> *Table 1: Version Support for {{site.mesh_product_name}}*
+> *Table 1: Version support for {{site.mesh_product_name}}*
 
 {% include_cached /support/support-policy.md %}
