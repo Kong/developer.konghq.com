@@ -2,7 +2,7 @@
 title: Create a Key Set with a PEM Key
 content_type: how_to
 
-desription: Create a PEM Key and add it to a Key Set using the /key-sets API endpoint.
+description: Create a PEM Key and add it to a Key Set using the /key-sets API endpoint.
 
 entities: 
   - key

@@ -2,7 +2,7 @@
 title: Create a Key Set with a JSON Web Key
 content_type: how_to
 
-desription: Create a JSON Web Key and add it to a Key Set using the /key-sets API endpoint.
+description: Create a JSON Web Key and add it to a Key Set using the /key-sets API endpoint.
 
 entities: 
   - key
