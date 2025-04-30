@@ -32,7 +32,7 @@ prereqs:
     feature_gates: FallbackConfiguration=true
     dump_config: true
     env:
-      - use_last_valid_config_for_fallback=true
+      use_last_valid_config_for_fallback: true
   entities:
     services:
       - echo-service

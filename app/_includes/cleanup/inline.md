@@ -2,7 +2,7 @@
 
 {% capture details_content %}
 {% if step.content %}
-{{ include.prereq.content }}
+{{ step.content }}
 {% elsif step.include_content %}
 {% assign include_path = step.include_content | append: ".md" %}
 {% include {{ include_path }} %}

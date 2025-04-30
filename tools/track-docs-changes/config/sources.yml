@@ -1415,7 +1415,7 @@ app/dev-portal/sso.md:
   - app/dev-portal/access-and-approvals/sso.md
 
 ## Insomnia
-app/_landing_pages/insomnia.yaml: 
+app/_landing_pages/insomnia.yaml:
   - /insomnia/get-started.md
   - /insomnia/install.md
   - /insomnia/subscriptions.md
@@ -1433,7 +1433,7 @@ app/_landing_pages/design.yaml:
 app/_how-tos/create-a-design-ducment.md:
   - /insomnia/get-started-with-documents.md
   - /insomnia/design-documents.md
-app/_landing_pages/insomnia/documents.yaml: 
+app/_landing_pages/insomnia/documents.yaml:
   - /insomnia/design-documents.md
   - /insomnia/get-started-with-documents.md
 app/_landing_pages/insomnia/test.yaml:
