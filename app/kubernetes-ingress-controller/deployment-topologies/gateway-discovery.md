@@ -2,7 +2,7 @@
 title: Gateway Discovery
 
 description: |
-  Kong's recommended deployment topology. Use one {{ site.kic_product_name }} instance to configure multiple {{ site.base_gateway }} instances
+  Use one {{ site.kic_product_name }} instance to configure multiple {{ site.base_gateway }} instances. Kong's recommended deployment topology. 
 
 content_type: reference
 layout: reference
@@ -24,6 +24,8 @@ related_resources:
     url: /kubernetes-ingress-controller/deployment-topologies/db-backed/
   - text: Sidecar (Traditional)
     url: /kubernetes-ingress-controller/deployment-topologies/sidecar/
+  - text: Architecture
+    url: /kubernetes-ingress-controller/architecture/
 ---
 
 Gateway Discovery is a deployment topology in which {{ site.kic_product_name }} and {{ site.base_gateway }} are separate deployments in the Kubernetes cluster. {{ site.kic_product_name }} uses Kubernetes service discovery to discover the {{ site.base_gateway }} Pods.

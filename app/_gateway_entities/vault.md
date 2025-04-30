@@ -4,7 +4,9 @@ content_type: reference
 entities:
   - vault
 
-description: A Vault is used to store secrets.
+description: |
+  "Vaults allow you to securely store and then reference secrets from within other entities. This ensures that secrets aren't visible in plaintext throughout the platform, in places such as `kong.conf`,
+  declarative configuration files, logs, or the UI."
 
 related_resources:
   - text: Secrets Management

@@ -9,7 +9,11 @@ breadcrumbs:
   - index: kubernetes-ingress-controller
     section: How To
 
-
+related_resources:
+  - text: mTLS
+    url: /kubernetes-ingress-controller/mtls/
+search_aliases:
+  - kic mtls
 products:
   - kic
 

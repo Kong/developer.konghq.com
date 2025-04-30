@@ -2,14 +2,16 @@
 title: Ingress
 
 description: |
-  {{ site.kic_product_name }} can be configured with Ingress resources. Understand how Ingress and IngressClass work with Kong.
+  Understand how Ingress and IngressClass work with {{site.base_gateway}}.
 
 content_type: reference
 layout: reference
-
+breadcrumbs:
+  - /kubernetes-ingress-controller/
 products:
   - kic
-
+search_aliases:
+  - IngressClass
 works_on:
   - on-prem
   - konnect

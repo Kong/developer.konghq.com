@@ -6,12 +6,17 @@ description: |
 
 content_type: reference
 layout: reference
-
+search_aliases:
+  - kic events
+tags: 
+  - events
 breadcrumbs:
   - /kubernetes-ingress-controller/
   - index: kubernetes-ingress-controller
     section: Observability
-
+related_resources:
+  - text: Workspaces
+    url: /kubernetes-ingress-controller/workspaces/
 products:
   - kic
 
@@ -25,7 +30,7 @@ works_on:
 {{ site.kic_product_name }} provides Kubernetes Events to help understand the state of your system. Events occur when an invalid configuration is rejected by {{ site.base_gateway }} (`KongConfigurationApplyFailed`) or when an invalid configuration, such as an upstream service that doesn't exist, is detected (`KongConfigurationTranslationFailed`).
 
 {:.info}
-> The Events are not cleared immediately after you resolve the issues. However, the Event `count` stops increasing after you fix the problem. Events do eventually expire after an hour, by default, but may be outdated. 
+> The Events are not cleared immediately after you resolve the issues. The Event `count` stops increasing after you fix the problem. Events do eventually expire after an hour, by default, but may become outdated.
 
 ## Emitted Events
 

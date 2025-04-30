@@ -6,7 +6,8 @@ description: |
 
 content_type: reference
 layout: reference
-
+breadcrumbs:
+  - /kubernetes-ingress-controller/
 products:
   - kic
 
@@ -14,10 +15,11 @@ works_on:
   - on-prem
   - konnect
 
-
 related_resources:
   - text: Ingress
     url: /kubernetes-ingress-controller/ingress/
+  - text: Install KiC
+    url: /kubernetes-ingress-controller/install/
 
 faqs:
   - q: |
