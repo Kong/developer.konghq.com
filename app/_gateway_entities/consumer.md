@@ -2,7 +2,15 @@
 title: Consumers
 content_type: reference
 entities:
-  - consumer # we could use this to pull the schema too
+  - consumer
+
+products:
+  - gateway
+
+tags:
+  - credentials
+  - authentication
+  - authorization
 
 description: A Consumer typically refers to an entity that consumes or uses the APIs managed by {{site.base_gateway}}.
 
@@ -13,10 +21,10 @@ related_resources:
     url: /gateway/entities/consumer-group/
   - text: Plugins that can be scoped to Consumers
     url: /gateway/entities/plugin/#supported-scopes-by-plugin
+  - text: Consumer how-to guides
+    url: /how-to/?query=consumer
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
-  - text: Create a centrally-managed Consumer in {{site.konnect_short_name}}
-    url: /how-to/create-centrally-managed-consumer/
 
 faqs:
   - q: What are credentials, and why do I need them?
@@ -68,6 +76,7 @@ tools:
 api_specs:
     - gateway/admin-ee
     - konnect/control-planes-config
+    - konnect/consumers
 
 schema:
     api: gateway/admin-ee
@@ -146,7 +155,7 @@ columns:
     key: description
 rows:
   - usecase: "Authentication"
-    description: "Client authentication is the most common reason for setting up a Consumer. If you're using an authentication plugin, you'll need a Consumer with credentials."
+    description: "Client authentication is the most common reason for setting up a Consumer. If you're using an [authentication plugin](/plugins/?category=authentication), you'll need a Consumer with credentials."
   - usecase: "Rate limiting"
     description: "Rate limit specific Consumers based on tiers."
   - usecase: "Transformation"

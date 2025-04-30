@@ -38,15 +38,6 @@ platform_docs:
     api_specs:
       text: OpenAPI Specs
       url: /api/
-    deck:
-      text: decK
-      url: /deck/
-    inso_cli:
-      text: Inso CLI
-      url: /inso-cli/
-    terraform:
-      text: Terraform
-      url: /terraform/
     kic:
       text: Ingress Controller
       url: /kubernetes-ingress-controller/
@@ -69,43 +60,34 @@ plugins:
     traffic_control:
       text: Traffic Control Plugins
       url: /plugins/?category=traffic-control
-    logging:
-      text: Logging Plugins
-      url: /plugins/?category=logging
-    serverless:
-      text: Serverless Plugins
-      url: /plugins/?category=serverless
-    transformer:
-      text: Transformer Plugins
-      url: /plugins/?category=transformations
+    view_all:
+      text: View all &rarr;
+      url: /plugins/
+      cssClass: text-brand
+
 
 how_tos:
   title: How-to Guides
   links:
     gateway:
-      text: Kong Gateway How to Guides
+      text: Kong Gateway
       url: /how-to/?products=gateway
     insomnia:
-      text: Insomnia How to Guides
+      text: Insomnia
       url: /how-to/?products=insomnia
-    kic:
-      text: KIC How to Gudes
-      url: /how-to/?products=kic
     mesh:
-      text: Kong Mesh How to Guides
+      text: Kong Mesh
       url: /how-to/?products=mesh
-    analytics:
-      text: Analytics How To Guides
-      url: /how-to/?products=advanced-analytics
     api_ops:
-      text: APIOps How To Guides
+      text: APIOps
       url: /how-to/?products=api-ops
-    deck:
-      text: decK How To Gudes
-      url: /how-to/?tools=deck
     terraform:
-      text: Terraform How To Guides
+      text: Terraform
       url: /how-to/?tools=deck
+    view_all:
+      text: View all &rarr;
+      url: /how-to/
+      cssClass: text-brand
 
 support:
   title: Support

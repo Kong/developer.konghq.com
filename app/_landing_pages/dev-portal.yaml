@@ -1,7 +1,6 @@
 metadata:
   title: "Dev Portal"
   content_type: landing_page
-  breadcrumb: /dev-portal/
   description: Manage API publishing, developer self-service, and documentation with Konnect Dev Portal.
   products:
     - dev-portal
@@ -35,7 +34,7 @@ rows:
 
   - header:
       type: h2
-      text: "More information"
+      text: "Get started"
 
   - columns:
       - blocks:
@@ -45,8 +44,9 @@ rows:
               description: |
                 {{site.konnect_short_name}} allows you to publish, document, and secure APIs to drive adoption for any developer audience. 
                 You can create multiple Dev Portals based on selected APIs with appropriate visibility and access control settings.
+              icon: /assets/icons/dev-portal.svg
               cta:
-                url: "/dev-portal/portal-settings/"
+                url: "https://cloud.konghq.com/portals/create"
       - blocks:
           - type: card
             config:
@@ -55,8 +55,18 @@ rows:
                 Dev Portal APIs serve as a repository for your API specifications and documentation. 
                 You can optionally version your APIs and publish them to one or more Portals. 
                 This supports maintaining a central source of truth while offering developer-specific visibility.
+              icon: /assets/icons/api.svg
               cta:
                 url: "/dev-portal/apis/"
+      - blocks:
+          - type: card
+            config:
+              title: Publish APIs to Dev Portal
+              description: |
+                Learn how to publish APIs with Dev Portal and control who can see published APIs.
+              icon: /assets/icons/book.svg
+              cta:
+                url: "/dev-portal/publishing/"
       - blocks:
           - type: card
             config:
@@ -64,112 +74,161 @@ rows:
               description: |
                 Configure application registration and role-based access for developers.
                 Grant or revoke access for developers to register applications and acquire credentials.
+              icon: /assets/icons/document-list.svg
+              cta:
+                url: "/dev-portal/application-registration/"
+
+
+  - header:
+      type: h2
+      text: "Deployment options"
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  <img src="/assets/icons/lock.svg" style="display:inline"/> **Internal Dev Portal**
+                  
+                  Designed for internal developer enablement and productivity.
+                  * Private visibility with authentication enabled
+                  * Publish internal-only APIs
+                  * Use Pages for API standards and training
+                  * Secure access via IdP and Teams
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  <img src="/assets/icons/team.svg" style="display:inline"/> **Partner Dev Portal**
+                  
+                  Ideal for exposing APIs to trusted external developers.
+                  * Private or public visibility with auth enabled
+                  * Self-service registration and API key provisioning
+                  * Restrict access via RBAC and visibility settings
+                  * Brand and document your partner use cases
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  <img src="/assets/icons/world.svg" style="display:inline"/> **Public Dev Portal**
+                  
+                  Open your APIs to the broader developer community.
+                  * Public visibility without authentication
+                  * Publish APIs suited to general audiences
+                  * Build custom landing pages and SEO-optimized docs
+  
+  - header:
+      type: h2
+      text: "Customize Dev Portal"
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Custom pages
+              description: |
+                Customize Dev Portal Pages using Markdown Components (MDC).
+              cta:
+                url: /dev-portal/custom-pages/
+      - blocks:
+          - type: card
+            config:
+              title: Snippets
+              description: |
+                Snippets allow you to reuse content and MDC components across Pages.
+              cta:
+                url: /dev-portal/snippets/
+      - blocks:
+          - type: card
+            config:
+              title: Custom domains
+              description: |
+                Use a custom URL for Dev Portal.
+              cta:
+                url: /dev-portal/custom-domains/
+  - column_count: 3
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Customization settings
+              description: |
+                Change the Dev Portal UI appearance.
+              cta:
+                url: /dev-portal/portal-customization/
+      - blocks:
+          - type: card
+            config:
+              title: Dev Portal settings
+              description: |
+                Learn about the settings you can configure for Dev Portal.
+              cta:
+                url: /dev-portal/portal-settings/
+  - header:
+      type: h2
+      text: "Dev Portal authentication and access"
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Access and authentication settings
+              description: |
+                Security settings help you configure visibility and access control for developers accessing your Dev Portal.
+              cta:
+                url: "/dev-portal/security-settings/"
+      - blocks:
+          - type: card
+            config:
+              title: SSO
+              description: |
+                Set up SSO for the {{site.konnect_short_name}} Dev Portal using OpenID Connect (OIDC) or SAML.
+              cta:
+                url: "/dev-portal/sso/"
+      - blocks:
+          - type: card
+            config:
+              title: IdP team mappings
+              description: |
+                Map existing developer teams from a third-party identity provider (IdP) and their permissions to elements in a {{site.konnect_short_name}} Dev Portal.
+              cta:
+                url: "/dev-portal/team-mapping/"
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: Self-service developer and application registration
+              description: |
+                Enable self-service registration flows for developers and applications using authentication strategies and {{site.konnect_short_name}} application auth.
+              cta:
+                url: "/dev-portal/application-registration/"
+      - blocks:
+          - type: card
+            config:
+              title: Developer sign-up
+              description: |
+                Learn how developers can get started with the Dev Portal by registering and creating an application.
               cta:
                 url: "/dev-portal/developer-signup/"
-
-
-  - header:
-      type: h2
-      text: "Deployment Options"
-
-  - columns:
       - blocks:
           - type: card
             config:
-              title: Internal Dev Portal
+              title: Developer and application approvals
               description: |
-                Designed for internal developer enablement and productivity.
-                * Private visibility with authentication enabled
-                * Publish internal-only APIs
-                * Use Pages for API standards and training
-                * Secure access via IdP and Teams
-              icon: /assets/icons/lock.svg
-      - blocks:
-          - type: card
-            config:
-              title: Partner Dev Portal
-              description: |
-                Ideal for exposing APIs to trusted external developers.
-                * Private or public visibility with auth enabled
-                * Self-service registration and API key provisioning
-                * Restrict access via RBAC and visibility settings
-                * Brand and document your partner use cases
-              icon: /assets/icons/team.svg
-            
-      - blocks:
-          - type: card
-            config:
-              title: Public Dev Portal
-              description: |
-                Open your APIs to the broader developer community.
-                * Public visibility without authentication
-                * Publish APIs suited to general audiences
-                * Build custom landing pages and SEO-optimized docs
-              icon: /assets/icons/world.svg
-  - header:
-      type: h2
-      text: "Next steps"
-  - columns:
-      - blocks:
-          - type: card
-            config:
-              title: Configure a custom domain
-              description: |
-                Add a custom domain to make your Dev Portal accessible through your preferred URL.
-              icon: /assets/icons/domain.svg
+                Approve and manage developer registrations and applications for the {{site.konnect_short_name}} Dev Portal.
               cta:
-                text: Set Up Custom Domain
-                url: /dev-portal/custom-domains/
+                url: "/dev-portal/access-and-approval/"
+  - column_count: 3
+    columns:
       - blocks:
           - type: card
             config:
-              title: Publish APIs and docs
+              title: Authentication strategies
               description: |
-                Upload OpenAPI specifications and add Markdown documentation to APIs published to your Portal.
-              icon: /assets/icons/api.svg
+                Learn how to set up authentication strategies for Dev Portal.
               cta:
-                text: Publish APIs
-                url: /dev-portal/publishing/
-      - blocks:
-          - type: card
-            config:
-              title: Configure audit logs
-              description: |
-                Enable audit logging for your Dev Portal to monitor authentication and access events.
-              icon: /assets/icons/logs.svg
-              cta:
-                text: View Audit Logs
-                url: /dev-portal/portal-settings/#audit-logs/
-
-
-  - columns:
-        - blocks:
-            - type: card
-              config:
-                title: General settings
-                description: |
-                  Change the name, slug, and region of your Dev Portal at any time.
-                icon: /assets/icons/code.svg
-                cta:
-                  text: View Settings
-                  url: /dev-portal/portal-settings/
-        - blocks:
-            - type: card
-              config:
-                title: Security configuration
-                description: |
-                  Control visibility, enable authentication, and restrict access to APIs or content.
-                icon: /assets/icons/lock.svg
-                cta:
-                  text: View Security Options
-                  url: /dev-portal/security-settings/
-        - blocks:
-            - type: card
-              config:
-                title: Customize the experience
-                description: |
-                  Use Portal Editor to add custom pages, change layout, update header/footer menus, and manage navigation.
-                icon: /assets/icons/edit.svg
-                cta:
-                  text: Go to Portal Editor
-                  url: /dev-portal/portal-customization/
+                url: "/dev-portal/auth-strategies/"
+  

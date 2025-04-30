@@ -30,7 +30,6 @@ works_on:
 
 Kong AI Gateway provides a standardized logging format for [AI plugins](/plugins/?category=ai), enabling the emission of analytics events and facilitating the aggregation of AI usage analytics across various providers.
 
-
 ## Log details
 
 Each AI plugin returns a set of tokens. Log entries include the following details:
@@ -45,43 +44,43 @@ columns:
 rows:
   - property: "`ai.payload.request`"
     description: The request payload.
-  - property: "`ai.[$plugin_name].payload.response`"
+  - property: "`ai.$PLUGIN_NAME.payload.response`"
     description: The response payload.
-  - property: "`ai.[$plugin_name].usage.prompt_token`"
+  - property: "`ai.$PLUGIN_NAME.usage.prompt_token`"
     description: The number of tokens used for prompting.
-  - property: "`ai.[$plugin_name].usage.completion_token`"
+  - property: "`ai.$PLUGIN_NAME.usage.completion_token`"
     description: The number of tokens used for completion.
-  - property: "`ai.[$plugin_name].usage.total_tokens`"
+  - property: "`ai.$PLUGIN_NAME.usage.total_tokens`"
     description: The total number of tokens used.
-  - property: "`ai.[$plugin_name].usage.cost`"
+  - property: "`ai.$PLUGIN_NAME.usage.cost`"
     description: The total cost of the request (input and output cost).
-  - property: "`ai.[$plugin_name].usage.time_per_token`"
+  - property: "`ai.$PLUGIN_NAME.usage.time_per_token`"
     description: |
       {% new_in 3.8 %} The average time to generate an output token, in milliseconds.
-  - property: "`ai.[$plugin_name].meta.request_model`"
+  - property: "`ai.$PLUGIN_NAME.meta.request_model`"
     description:  The model used for the AI request.
-  - property: "`ai.[$plugin_name].meta.provider_name`"
+  - property: "`ai.$PLUGIN_NAME.meta.provider_name`"
     description:  The name of the AI service provider.
-  - property: "`ai.[$plugin_name].meta.response_model`"
+  - property: "`ai.$PLUGIN_NAME.meta.response_model`"
     description:  The model used for the AI response.
-  - property: "`ai.[$plugin_name].meta.plugin_id`"
+  - property: "`ai.$PLUGIN_NAME.meta.plugin_id`"
     description:  The unique identifier of the plugin.
-  - property: "`ai.[$plugin_name].meta.llm_latency`"
+  - property: "`ai.$PLUGIN_NAME.meta.llm_latency`"
     description: |
       {% new_in 3.8 %} The time, in milliseconds, it took the LLM provider to generate the full response.
-  - property: "`ai.[$plugin_name].cache.cache_status`"
+  - property: "`ai.$PLUGIN_NAME.cache.cache_status`"
     description: |
       {% new_in 3.8 %} The cache status. This can be `Hit`, `Miss`, `Bypass` or `Refresh`.
-  - property: "`ai.[$plugin_name].cache.fetch_latency`"
+  - property: "`ai.$PLUGIN_NAME.cache.fetch_latency`"
     description: |
       {% new_in 3.8 %} The time, in milliseconds, it took to return a cache response.
-  - property: "`ai.[$plugin_name].cache.embeddings_provider`"
+  - property: "`ai.$PLUGIN_NAME.cache.embeddings_provider`"
     description: |
       {% new_in 3.8 %} For semantic caching, the provider used to generate the embeddings.
-  - property: "`ai.[$plugin_name].cache.embeddings_model`"
+  - property: "`ai.$PLUGIN_NAME.cache.embeddings_model`"
     description: |
       {% new_in 3.8 %} For semantic caching, the model used to generate the embeddings.
-  - property: "`ai.[$plugin_name].cache.embeddings_latency`"
+  - property: "`ai.$PLUGIN_NAME.cache.embeddings_latency`"
     description: |
       {% new_in 3.8 %} For semantic caching, the time taken to generate the embeddings.{% endtable %}
 <!--vale on-->
@@ -89,9 +88,9 @@ rows:
 See the following AI plugin log format example:
 ```json
 "ai": {
-    "payload": { "request": "[$optional_payload_request_]" },
-    "[$plugin_name_1]": {
-      "payload": { "response": "[$optional_payload_response]" },
+    "payload": { "request": "$OPTIONAL_PAYLOAD_REQUEST" },
+    "$PLUGIN_NAME_1": {
+      "payload": { "response": "$OPTIONAL_PAYLOAD_RESPONSE" },
       "usage": {
         "prompt_token": 28,
         "total_tokens": 48,
@@ -107,8 +106,8 @@ See the following AI plugin log format example:
         "llm_latency": 2670
       }
     },
-    "[$plugin_name_2]": {
-      "payload": { "response": "[$optional_payload_response]" },
+    "$PLUGIN_NAME_2": {
+      "payload": { "response": "$OPTIONAL_PAYLOAD_RESPONSE" },
       "usage": {
         "prompt_token": 89,
         "total_tokens": 145,
@@ -133,9 +132,9 @@ If you're using the [AI Semantic Cache plugin](/plugins/ai-semantic-cache), logg
 
 ```json
 "ai": {
-    "payload": { "request": "[$optional_payload_request_]" },
-    "[$plugin_name_1]": {
-      "payload": { "response": "[$optional_payload_response]" },
+    "payload": { "request": "$OPTIONAL_PAYLOAD_REQUEST_" },
+    "$PLUGIN_NAME_1": {
+      "payload": { "response": "$OPTIONAL_PAYLOAD_RESPONSE" },
       "usage": {
         "prompt_token": 28,
         "total_tokens": 48,
@@ -155,19 +154,19 @@ If you're using the [AI Semantic Cache plugin](/plugins/ai-semantic-cache), logg
         "fetch_latency": 21
       }
     },
-    "[$plugin_name_2]": {
-      "payload": { "response": "[$optional_payload_response]" },
+    "$PLUGIN_NAME_2": {
+      "payload": { "response": "$OPTIONAL_PAYLOAD_RESPONSE" },
       "usage": {
         "prompt_token": 89,
         "total_tokens": 145,
         "completion_token": 56,
-        "cost": 0.0012,
+        "cost": 0.0012
       },
       "meta": {
         "request_model": "gpt-35-turbo",
         "provider_name": "azure",
         "response_model": "gpt-35-turbo",
-        "plugin_id": "5df193be-47a3-4f1b-8c37-37e31af0568b",
+        "plugin_id": "5df193be-47a3-4f1b-8c37-37e31af0568b"
       },
       "cache": {
         "cache_status": "Hit",
@@ -181,8 +180,6 @@ If you're using the [AI Semantic Cache plugin](/plugins/ai-semantic-cache), logg
 ```
 
 {:.info}
-> **Note:** 
+> **Note:**
 > When returning a cache response, `time_per_token` and `llm_latency` are omitted.
 > The cache response can be returned either as a semantic cache or an exact cache. If it's returned as a semantic cache, it will include additional details such as the embeddings provider, embeddings model, and embeddings latency.
-
-

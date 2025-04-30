@@ -43,7 +43,10 @@ module Jekyll
                 "On #{@page.relative_path}, the breadcrumb `#{normalized_url}` is invalid. No page exists with a matching URL." # rubocop:disable Layout/LineLength
         end
 
-        { 'url' => normalized_url, 'title' => breadcrumb.data['title'] }
+        title = breadcrumb.data['title']
+        title = breadcrumb.data['short_title'] if breadcrumb.data['short_title']
+
+        { 'url' => normalized_url, 'title' => title }
       end
 
       def build_breadcrumbs_from_index_page(entry)

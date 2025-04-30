@@ -20,6 +20,19 @@ schema:
   api: gateway/admin-ee
   path: /schemas/Partial
 
+related_resources:
+  - text: About plugins
+    url: /gateway/entities/plugin/
+  - text: Plugin Hub
+    url: /plugins/
+
+tags:
+  - reuse
+
+search_aliases:
+  - configuration reuse
+  - plugin reuse
+
 works_on:
   - on-prem
 
@@ -27,8 +40,8 @@ min_version:
   gateway: '3.10'
 ---
 
-## What is Partial?
-Some entities in {{site.base_gateway}} share common configuration settings that often need to be repeated. For example, multiple plugins that connect to Redis may require the same connection settings. Without Partials, you would need to replicate this configuration across all plugins. If the settings change, you would need to update each plugin individually.
+## What is a Partial?
+Some entities in {{site.base_gateway}} share common configuration settings that often need to be repeated. For example, multiple [plugins](/gateway/entities/plugin/) that connect to Redis may require the same connection settings. Without Partials, you would need to replicate this configuration across all plugins. If the settings change, you would need to update each plugin individually.
 
 Partials address this issue by allowing you to extract shared configurations into reusable entities that can be linked to multiple plugins. To ensure validation and consistency, Partials have defined types. 
 
@@ -62,7 +75,7 @@ type: plugin
 data:
   name: ai-rate-limiting-advanced
   partials: 
-    - id: my-redis-config
+    - id: 602317b0-9503-45c1-bcbf-c69f13155b49
   config:
     llm_providers:
     - name: openai
@@ -95,11 +108,11 @@ data:
 
 To see which plugins use a specific Partial:
 1. Use [`GET /partials/`](/api/gateway/admin-ee/#/operations/listPartials) to get the list of Partials, and get the ID of the Partial to check.
-1. Use [`GET /partials/{PARTIAL_ID}`](/api/gateway/admin-ee/#/operations/getPartial) to get a list of plugins that use this Partial.
+1. Use [`GET /partials/$PARTIAL_ID`](/api/gateway/admin-ee/#/operations/getPartial) to get a list of plugins that use this Partial.
 
 ## Enable Partials support in custom plugins
 
-You can leverage the Partials feature in your custom plugins by adjusting the plugin schema.
+You can leverage the Partials feature in your [custom plugins](/custom-plugins/reference/) by adjusting the plugin schema.
 To make custom plugins compatible with Partials, add the `supported_partials` key to the schema and specify
 the appropriate Partial type.
 

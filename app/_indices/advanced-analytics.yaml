@@ -1,0 +1,7 @@
+title: All Advanced Analytics Documentation
+sections:
+  - title: Uncategorized
+    items:
+      - path: /advanced-analytics/
+      - path: /advanced-analytics/**/*
+    auto_exclude: true

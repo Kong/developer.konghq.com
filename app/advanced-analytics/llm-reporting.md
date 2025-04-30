@@ -5,13 +5,18 @@ layout: reference
 description: | 
     Advanced Analytics allows you to monitor and optimize your LLM usage by providing detailed insights into objects such as token consumption, costs, and latency.
 
+breadcrumbs:
+  - /advanced-analytics/
+
 min_version:
   gateway: '3.8'
 products:
     - gateway
     - advanced-analytics
+    - ai-gateway
 tags:
   - analytics
+  - ai
 works_on:
     - konnect
 api_specs:
@@ -43,7 +48,6 @@ faqs:
         * **Export as CSV**: If you prefer to analyze your data using other tools, you can download the current view as a CSV file, making it portable and ready for further analysis elsewhere.    
 ---
 
-
 Advanced Analytics allows you to monitor and optimize your LLM usage by providing detailed insights into objects such as token consumption, costs, and latency. 
 
 With LLM usage reporting, you can:
@@ -53,9 +57,6 @@ With LLM usage reporting, you can:
 * Measure latency: Analyze the latency involved in processing LLM requests. 
 
 To use this feature, navigate to the [Explorer dashboard](https://cloud.konghq.com/us/analytics/explorer) and switch between API usage and LLM usage using the dataset dropdown. Metrics and groupings will dynamically adjust based on the selected dataset. 
-
-
-
 
 ## Metrics
 
@@ -130,67 +131,4 @@ rows:
 
 ## Time intervals
 
-The time frame selector controls the time frame of data visualized, which indirectly controls the
-granularity of the data. For example, the “5M” selection displays five minutes in
-one-second resolution data, while longer time frames display minute, hour, or days resolution data.
-
-All time interval presets are **relative**. 
-For custom reports, you can also choose a **custom** date range.
-
-* **Relative** time frames are dynamic and the report captures a snapshot of data
-relative to when a user views the report.
-* **Custom** time frames are static and the report captures a snapshot of data
-during the specified time frame. You can see the exact range below
-the time frame selector. For example:
-
-    ```
-    Jan 26, 2023 12:00 AM - Feb 01, 2023 12:00 AM (PST)
-    ```
-The following table describes the time intervals you can select:
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: "Interval"
-    key: "interval"
-  - title: "Aggregation increment frequency"
-    key: "aggregation_increment_frequency"
-  - title: "Notes"
-    key: "notes"
-rows:
-  - interval: "Last 15 minutes"
-    aggregation_increment_frequency: "1 minute"
-    notes: ""
-  - interval: "Last hour"
-    aggregation_increment_frequency: "1 minute"
-    notes: ""
-  - interval: "Last six hours"
-    aggregation_increment_frequency: "1 minute"
-    notes: ""
-  - interval: "Last 12 hours"
-    aggregation_increment_frequency: "1 hour"
-    notes: ""
-  - interval: "Last 24 hours"
-    aggregation_increment_frequency: "1 hour"
-    notes: ""
-  - interval: "Last seven days"
-    aggregation_increment_frequency: "1 hour"
-    notes: ""
-  - interval: "Last 30 days"
-    aggregation_increment_frequency: "Daily"
-    notes: ""
-  - interval: "Current week"
-    aggregation_increment_frequency: "1 hour"
-    notes: "Logs any traffic in the current calendar week."
-  - interval: "Current month"
-    aggregation_increment_frequency: "1 hour"
-    notes: "Logs any traffic in the current calendar month."
-  - interval: "Previous week"
-    aggregation_increment_frequency: "1 hour"
-    notes: "Logs any traffic in the previous calendar week."
-  - interval: "Previous month"
-    aggregation_increment_frequency: "Daily"
-    notes: "Logs any traffic in the previous calendar month."
-{% endtable %}
-<!--vale on-->
-
+{% include_cached /konnect/analytics-intervals.md %}
