@@ -7,22 +7,22 @@ extended_description: |
   {% table %}
   columns:
     - title: Incoming request
-      key: request
+      key: incoming
     - title: "`config.location`"
       key: location
     - title: "`config.keep_incoming_path`"
-      key: path
+      key: keep_path
     - title: New URL
-      key; url
+      key; new_url
   rows:
-    - request: https://example.com/demo?foo=bar 
-      location: https://new.example.com
-      path: "`true`"
-      url: https://new.example.com/demo?foo=bar 
-    - request: https://example.com/demo?foo=bar 
-      location: https://new.example.com/some-path
-      path: "`true`"
-      url: https://new.example.com/demo?foo=bar 
+    - incoming: "`https://example.com/demo?foo=bar`" 
+      location: "`https://new.example.com`"
+      keep_path: "`true`"
+      new_url: "`https://new.example.com/demo?foo=bar`" 
+    - incoming: "`https://example.com/demo?foo=bar`"
+      location: "`https://new.example.com/some-path`"
+      keep_path: "`true`"
+      new_url: "`https://new.example.com/demo?foo=bar`"
   {% endtable %}
 
 title: "Keep the incoming request path"
@@ -32,6 +32,7 @@ weight: 900
 variables:
   location:
     value: $YOUR_REDIRECT_URL
+    description: The target URL for incoming requests.
 
 config:
   location: ${location}
