@@ -57,6 +57,7 @@ Now that you have the single-sign on URL from Insomnia, you can create a new Mic
 1. [Navigate to the SSO settings](https://learn.microsoft.com/entra/identity/saas-apps/saml-toolkit-tutorial#configure-microsoft-entra-sso) for the Microsoft Entra SAML toolkit you just created.
 1. Configure the following SAML SSO settings:
    
+{% capture table1 %}
 {% table %}
 columns:
   - title: Azure setting
@@ -71,9 +72,13 @@ rows:
   - setting: "Sign on URL"
     value: "The **SSO URL** in the Insomnia SSO settings."
 {% endtable %}
+{% endcapture %}
+
+{{ table1 | indent:3 }}
 
 1. In the [Attributes & Claims settings section](https://learn.microsoft.com/en-us/entra/identity-platform/saml-claims-customization#view-or-edit-claims), add an attribute and configure the following attribute settings:
    
+{% capture table2 %}
 {% table %}
 columns:
   - title: You need...
@@ -86,6 +91,9 @@ rows:
   - need: "Protect backend services from overloading caused by specific users or attacks. High accuracy is not as relevant."
     strategy: "`local`"
 {% endtable %}
+{% endcapture %}
+
+{{ table2 | indent:3 }}
 
 1. In the Entra application, find and copy the **Login URL** and the base64 version of the signing certificate. These will be used in the Insomnia SSO settings.
 

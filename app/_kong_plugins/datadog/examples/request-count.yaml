@@ -1,5 +1,5 @@
 description: |
-  Configure the plugin to log the `request_count` metric and identify the consumers using the `consumerid`.
+  Configure the plugin to log the `request_count` metric and identify the Consumers using the `consumerid`.
 
 title: Log request count
 

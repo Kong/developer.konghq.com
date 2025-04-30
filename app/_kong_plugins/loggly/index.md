@@ -29,7 +29,7 @@ topologies:
     - serverless
 icon: loggly.png
 related_resources:
-  - text: Data dog
+  - text: Datadog
     url: /plugins/datadog/
 
 categories:

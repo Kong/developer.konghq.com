@@ -8,13 +8,6 @@ requirements:
  - You have created a [Consumer with HMAC credentials](/plugins/hmac-auth/#consumer-authentication)
 
 
-values:
-  enforce_headers:
-    description: List of headers that must be signed
-  algorithms:
-    description: List of acceptable HMAC algorithms for the digest
-  validate_request_body:
-    description: Enable or disable request body validation
 config:
   enforce_headers:
   - date 

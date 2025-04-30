@@ -6,9 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Add HMAC Authentication to your Gateway Services'
-extended_description: |
-  This plugin adds HMAC signature authentication to Services and Routes. The implementation is based off the
-  [draft-cavage-http-signatures](https://tools.ietf.org/html/draft-cavage-http-signatures) draft with a slightly different signature scheme.
 
 
 
@@ -40,7 +37,7 @@ search_aliases:
 related_resources:
   - text: DNS configuration reference
     url: /gateway/network/dns-config-reference/
-  - text: ACL Plugin
+  - text: ACL plugin
     url: /plugins/acl/
     
 ---

@@ -6,8 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Visualize metrics on Datadog'
-extended_description: |
-  The Datadog plugin lets you log metrics for a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/) to a local [Datadog agent](https://docs.datadoghq.com/agent/basic_agent_usage/).
 products:
     - gateway
 

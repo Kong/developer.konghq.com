@@ -6,7 +6,6 @@ content_type: plugin
 
 publisher: kong-inc
 description: 'Add and manage custom Lua functions to execute after other plugins'
-extended_description: |
 
 
 products:
