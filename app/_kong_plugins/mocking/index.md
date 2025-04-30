@@ -5,7 +5,7 @@ name: 'Mocking'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Provide mock endpoints to test your APIs against your services'
+description: 'Provide mock endpoints to test your APIs against your Services'
 
 
 products:

@@ -8,8 +8,9 @@ layout: concept
 
 products:
     - insomnia
+breadcrumbs:
+  - /insomnia/
 
-tier: team
 
 related_resources:
   - text: Security at Insomnia

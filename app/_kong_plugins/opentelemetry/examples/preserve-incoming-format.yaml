@@ -10,7 +10,8 @@ weight: 900
 
 requirements: 
   - "An OpenTelemetry backend"
-  - "`tracing_instrumentations = all` and `tracing_sampling_rate = 1.0` set in the [{{site.base_gateway}} configuration file](/gateway/manage-kong-conf/)."
+  - "Set [`tracing_instrumentations = all`](/gateway/configuration/#tracing-instrumentations) in `kong.conf`"
+  - "Set [`tracing_sampling_rate = 1.0`](/gateway/configuration/#tracing-sampling-rate) in `kong.conf`"
 
 # variables: <- not required
 #   my-region:

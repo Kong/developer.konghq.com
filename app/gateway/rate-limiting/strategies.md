@@ -23,15 +23,53 @@ breadcrumbs:
 works_on:
   - on-prem
   - konnect
+
+related_resources:
+  - text: DNS configuration reference
+    url: /gateway/network/dns-config-reference/
+
 ---
 
 All rate limiting plugins support some subset of the following strategies:
 
-| Strategy  | Pros | Cons   | Supported in plugin |
-| --------- | ---- | ------ | ------------------- |
-| `local`   | Minimal performance impact. | Less accurate. Unless there's a consistent-hashing load balancer in front of Kong, it diverges when scaling the number of nodes. | AI Rate Limiting Advanced <br> Rate Limiting Advanced <br> Rate Limiting <br> Response Rate Limiting |
-| `cluster` | Accurate<sup>1</sup>, no extra components to support. | Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact. | AI Rate Limiting Advanced <br> Rate Limiting Advanced <br> Rate Limiting <br> Response Rate Limiting <br> GraphQL Rate Limiting Advanced |
-| `redis`   | Accurate<sup>1</sup>, less performance impact than a `cluster` policy. | Needs a Redis installation. Bigger performance impact than a `local` policy. | AI Rate Limiting Advanced <br> Rate Limiting Advanced <br> Rate Limiting <br> Response Rate Limiting <br> GraphQL Rate Limiting Advanced |
+{% table %}
+columns:
+  - title: Strategy
+    key: strategy
+  - title: Pros
+    key: pros
+  - title: Cons
+    key: cons
+  - title: Supported in plugin
+    key: supported
+rows:
+  - strategy: "`local`"
+    pros: "Minimal performance impact."
+    cons: "Less accurate. Unless there's a consistent-hashing load balancer in front of Kong, it diverges when scaling the number of nodes."
+    supported: |
+      * AI Rate Limiting Advanced
+      * Rate Limiting Advanced
+      * Rate Limiting
+      * Response Rate Limiting
+  - strategy: "`cluster`"
+    pros: "Accurate<sup>1</sup>, no extra components to support."
+    cons: "Each request forces a read and a write on the data store. Therefore, relatively, the biggest performance impact."
+    supported: |
+      * AI Rate Limiting Advanced
+      * Rate Limiting Advanced
+      * Rate Limiting
+      * Response Rate Limiting
+      * GraphQL Rate Limiting Advanced
+  - strategy: "`redis`"
+    pros: "Accurate<sup>1</sup>, less performance impact than a `cluster` policy."
+    cons: "Needs a Redis installation. Bigger performance impact than a `local` policy."
+    supported: |
+      * AI Rate Limiting Advanced
+      * Rate Limiting Advanced
+      * Rate Limiting
+      * Response Rate Limiting
+      * GraphQL Rate Limiting Advanced
+{% endtable %}
 
 <!-- 
 
@@ -92,10 +130,18 @@ to perform more requests than the limit, but there will still be a limit per nod
 ## Policy strategies
 Two common use cases are:
 
-| You need... | Use the following plugin policy strategies... |
-| --------- | ---- | 
-| A high level of accuracy in ?. An example is a transaction with financial consequences. | `cluster` or `redis` | 
-| Protect backend services from overloading that's caused either by specific users or by attacks. ___ accuracy is not as relevant. | `local` |
+{% table %}
+columns:
+  - title: You need...
+    key: need
+  - title: Use the following plugin policy strategies...
+    key: strategy
+rows:
+  - need: "A high level of accuracy in critical transactions. An example is a transaction with financial consequences."
+    strategy: "`cluster` or `redis`"
+  - need: "Protect backend services from overloading caused by specific users or attacks. High accuracy is not as relevant."
+    strategy: "`local`"
+{% endtable %}
 
 If the plugin can't retrieve the selected policy, it falls back to [limiting usage by identifying the IP address](#limit-by-ip-address).
 

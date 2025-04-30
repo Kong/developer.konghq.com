@@ -1,4 +1,4 @@
-description: 'Enforces headers that the client should at least use for HTTP signature creation, as well as body validation. Specifies that the `hmac-sha1` and `hmac-sha256` algorithms should be used to hash the digest.'
+description: 'Enforces headers that the client should use during HTTP signature creation, as well as body validation. Specifies that the `hmac-sha1` and `hmac-sha256` algorithms should be used to hash the digest.'
 
 title: 'Enforce headers, body validation, and HMAC digest algorithms'
 

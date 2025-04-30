@@ -6,7 +6,7 @@ data (TCP, TLS, and UDP).
 The Kong process error file is the Nginx error file.
 You can find it at the following path:
 
-`{prefix}/logs/error.log`
+`$PREFIX/logs/error.log`
 
 Configure the [prefix](/gateway/configuration/#prefix) in 
 `kong.conf`.

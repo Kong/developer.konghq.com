@@ -7,7 +7,6 @@ content_type: plugin
 publisher: kong-inc
 description: 'Propagate spans and report space to a backend server through OTLP protocol.'
 
-
 products:
     - gateway
 
