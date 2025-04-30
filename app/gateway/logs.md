@@ -225,5 +225,7 @@ rows:
       {% new_in 3.8 %} For semantic caching, the time taken to generate the embeddings.{% endtable %}
 <!--vale on-->
 
+<!--
 ## Next steps
 * [Debug {{site.base_gateway}} with logs](/gateway/debug/)
+-->

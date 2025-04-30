@@ -202,7 +202,7 @@ control and monitor the status of the entire {{site.base_gateway}} cluster.
 ## Platform compatibility
 
 You can run {{site.base_gateway}} in hybrid mode on any platform where
-{{site.base_gateway}} is [supported](/install/), including [{{site.konnect_short_name}}](https://cloud.konghq.com/).
+{{site.base_gateway}} is [supported](/gateway/install/), including [{{site.konnect_short_name}}](https://cloud.konghq.com/).
 
 ## Hybrid mode with Kubernetes 
 

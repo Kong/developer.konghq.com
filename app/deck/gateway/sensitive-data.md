@@ -59,7 +59,7 @@ When managing Vaults with declarative configuration, you need to take certain pr
 
 To keep your environment secure and avoid taking down your proxies by accident, make sure to:
 
-- Manage Vaults with distributed configuration via [tags](/eck/gateway/tags/).
+- Manage Vaults with distributed configuration via [tags](/deck/gateway/tags/).
 - Use a separate [RBAC role, user, and token](/deck/gateway/rbac/)
   to manage Vaults. Don't use a generic admin user.
 - Set up a separate CI pipeline for Vaults.
