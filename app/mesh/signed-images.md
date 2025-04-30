@@ -5,25 +5,31 @@ content_type: reference
 layout: reference
 products:
   - mesh
+breadcrumbs:
+ - /mesh/
 
 tags:
   - security
+  - images
+search_aliases:
+  - Docker
+
+min_version:
+  mesh: '2.7.4'
 
 
 related_resources:
-  - text: "Software Bill of Materials"
-    url: /mesh/sbom/
-  - text: "Vulnerability Patching Process"
-    url: /mesh/vulnerability-patching-process/
-  - text: "Certificate Manager"
-    url: /mesh/cert-manager/
-  - text: "ACM Private CA Policy"
-    url: /mesh/acm-private-ca-policy/
+  - text: Verify build provenance for signed {{site.mesh_product_name}} images
+    url: /mesh/provenance-verification-images/
+  - text: Verify build provenance for {{site.mesh_product_name}} binaries
+    url: /mesh/provenance-verification-binaries/
+  - text: Red Hat Universal Base Images
+    url: /mesh/ubi-images/
 ---
 
 
 
-Starting with {{site.mesh_product_name}} 2.7.4, Docker container images are now signed using `cosign` with signatures published to a Docker Hub repository.
+Docker container images are now signed using `cosign` with signatures published to a Docker Hub repository.
 
 This guide provides steps to verify signatures for signed {{site.mesh_product_name}} Docker container images with an example used to verify an image leveraging optional annotations for increased trust.
 
@@ -35,11 +41,11 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
 
 * [`regctl`](https://github.com/regclient/regclient/blob/main/docs/install.md) is installed
 
-* Collect the necessary image details.
+* Collect the necessary image details
 
 * The GitHub owner is case-sensitive (`Kong/kong-mesh` vs `kong/kong-mesh`)
 
-### Example with `kong/kuma-cp`
+### Image signature verification with `kong/kuma-cp`
 
 The {{site.mesh_product_name}} image signature can be verified using `cosign`:
 
@@ -52,14 +58,14 @@ The {{site.mesh_product_name}} image signature can be verified using `cosign`:
 2. Parse the image manifest using `regctl`
 
    ```sh
-   IMAGE_DIGEST=$(regctl manifest digest kong/kuma-cp:{{page.version}})
+   IMAGE_DIGEST=$(regctl manifest digest kong/kuma-cp:{{site.data.mesh_latest.version}})
    ```
 
 3. Run the `cosign verify` command:
 
    ```sh
    cosign verify \
-      kong/kuma-cp:{{page.version}}@${IMAGE_DIGEST} \
+      kong/kuma-cp:{{site.data.mesh_latest.version}}@$IMAGE_DIGEST \
       --certificate-oidc-issuer='https://token.actions.githubusercontent.com' \
       --certificate-identity-regexp='https://github.com/Kong/kong-mesh/.github/workflows/kuma-_build_publish.yaml' \
       -a repo='Kong/kong-mesh' \

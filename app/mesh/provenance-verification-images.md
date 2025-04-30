@@ -1,10 +1,15 @@
 ---
-title: "Verify build provenance for signed{{site.mesh_product_name}} images"
+title: "Verify build provenance for signed {{site.mesh_product_name}} images"
 description: "Learn how to verify build provenance for signed {{site.mesh_product_name}} Docker container images using Cosign or slsa-verifier."
 content_type: reference
 layout: reference
 products:
   - mesh
+breadcrumbs:
+  - /mesh/
+
+min_version:
+  mesh: '2.8'
 
 tags:
   - provenance
@@ -17,13 +22,13 @@ related_resources:
     url: /mesh/signed-images/
   - text: "FIPS Support"
     url: /mesh/enterprise/#fips-140-2-support
-  - text: "Verify build provenance for signed {{site.mesh_product_name}}Binaries"
-    url: /mesh/provenance-verification-images/
+  - text: Verify build provenance for {{site.mesh_product_name}} binaries
+    url: /mesh/provenance-verification-binaries/
   - text: "Red Hat Universal Base Images"
     url: /mesh/ubi-images/
 ---
 
-Starting with 2.8.0, {{site.mesh_product_name}} produces build provenance for Docker container images, which can be verified using `cosign` / `slsa-verifier` with attestations published to a Docker Hub repository.
+{{site.mesh_product_name}} produces build provenance for Docker container images, which can be verified using `cosign` / `slsa-verifier` with attestations published to a Docker Hub repository.
 
 This guide provides steps to verify build provenance for signed {{site.mesh_product_name}} Docker container images with an example to verify an image provenance leveraging any optional annotations for increased trust.
 
@@ -39,7 +44,7 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
 
 * The GitHub owner is case-sensitive (`Kong/kong-mesh` vs `kong/kong-mesh`).
 
-## Example with kong/kuma-cp
+## Image provenance example with kong/kuma-cp
 
 {{site.mesh_product_name}} image provenance can be verified using `cosign` or `slsa-verifier`:
 
@@ -55,14 +60,14 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
 2. Parse the image manifest using `regctl`:
 
    ```sh
-   export IMAGE_DIGEST=$(regctl manifest digest kong/kuma-cp:{{page.version}})
+   export IMAGE_DIGEST=$(regctl manifest digest kong/kuma-cp:{{site.data.mesh_latest.version}})
    ```
 
 3. Run the `cosign verify-attestation ...` command:
 
    ```sh
    cosign verify-attestation \
-      kong/kuma-cp:{{page.version}}@${IMAGE_DIGEST} \
+      kong/kuma-cp:{{site.data.mesh_latest.version}}@$IMAGE_DIGEST \
       --type='slsaprovenance' \
       --certificate-oidc-issuer='https://token.actions.githubusercontent.com' \
       --certificate-identity-regexp='^https://github.com/slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@refs/tags/v[0-9]+.[0-9]+.[0-9]+$' \
@@ -78,18 +83,18 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
 1. Parse the image manifest using `regctl`
 
    ```sh
-   export IMAGE_DIGEST=$(regctl manifest digest kong/kuma-cp:{{page.version}})
+   export IMAGE_DIGEST=$(regctl manifest digest kong/kuma-cp:{{site.data.mesh_latest.version}})
    ```
 
 2. Run the `slsa-verifier verify-image ...` command:
 
    ```sh
    slsa-verifier verify-image \
-      kong/kuma-cp:{{page.version}}@${IMAGE_DIGEST} \
+      kong/kuma-cp:{{site.data.mesh_latest.version}}@$IMAGE_DIGEST \
       --print-provenance \
       --provenance-repository 'kong/notary' \
       --source-uri 'github.com/Kong/kong-mesh' \
-      --source-tag '{{page.version}}'
+      --source-tag '{{site.data.mesh_latest.version}}'
    ```
 
 {% endnavtab %}

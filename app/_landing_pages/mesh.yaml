@@ -31,11 +31,6 @@ rows:
                     - [Enterprise features](/mesh/enterprise/) like access control and advanced observability.
 
                     You can manage your mesh deployments using the [Kong Mesh GUI](https://cloud.konghq.com/mesh/).
-          - type: button
-            config:
-              align: left
-              text: Get Started with Kong Mesh
-              url: /mesh/install/
       - blocks:
         - type: image
           config:
@@ -44,48 +39,79 @@ rows:
 
   - header:
       type: h2
-      text: "Get Started"
+      text: "Get started"
     columns:
       - blocks:
           - type: card
             config:
-              title: Policy Hub
+              title: Install {{site.mesh_product_name}}
               description: |
-                {{site.mesh_product_name}} policies are bundled features for your service traffic and network configuration.
+                Simple guide for installing Kong Mesh on Universal deployments, including downloading binaries and updating your PATH.
               icon: /assets/icons/mesh.svg
               cta:
-                text: Learn more
-                url: /mesh/policies/
+                text: Install &rarr;
+                url: /mesh/install/
       - blocks:
           - type: card
             config:
-              title: mTLS with ACM Private CA
+              title: Universal mode quickstart
               description: |
-                Secure service communication using Amazon Certificate Manager Private CA.
-              icon: /assets/icons/aws.svg
+                Guide to deploying Kong Mesh in Universal mode using Docker containers. Walks through installing the Control Plane, adding demo services, enabling mTLS, and configuring gateways.
+              icon: /assets/icons/world.svg
               cta:
-                text: Learn more
-                url: /mesh/acm-private-ca-policy/
+                text: See the quickstart &rarr;
+                url: /mesh/universal/
       - blocks:
           - type: card
             config:
-              title: Kubernetes cert-manager
+              title: Kubernetes quickstart
               description: |
-                Automate mTLS certificate issuance using cert-manager in Kubernetes environments.
+                Step-by-step guide to deploy Kong Mesh on Kubernetes using Helm and Minikube. Includes demo app setup, GUI exploration, and enabling mTLS for zero-trust security.
               icon: /assets/icons/kubernetes.svg
               cta:
-                text: Learn more
-                url: /mesh/cert-manager/
+                text: See the quickstart &rarr;
+                url: /mesh/kubernetes/
+  - header:
+      type: h2
+      text: "Learn"
+    columns:
       - blocks:
           - type: card
             config:
-              title: HashiCorp Vault
+              title: "About service meshes"
               description: |
-                Use a Vault backend to issue certificates for data plane proxies.
-              icon: /assets/icons/vault.svg
+                Overview of service mesh concepts and how Kong Mesh simplifies secure and reliable service-to-service communication using sidecar proxies and a Control Plane.
               cta:
-                text: Learn more
-                url: /mesh/vault/
+                text: Learn more &rarr;
+                url: /mesh/about/
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} concepts"
+              description: |
+                Understand the core concepts of Kong Mesh, including the Control Plane, Data Plane proxies, inbounds and outbounds, and resources like policies.
+              cta:
+                text: Learn more &rarr;
+                url: /mesh/concepts/
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} architecture"
+              description: |
+                Understand the architecture of a Kong Mesh mesh, including Control and Data Plane components, Kubernetes and Universal modes, and how Services integrate into the mesh.
+              cta:
+                text: Learn more &rarr;
+                url: /mesh/architecture/
+      - blocks:
+          - type: card
+            config:
+              title: "Use {{site.mesh_product_name}}"
+              description: |
+                Access Kong Mesh via GUI, HTTP API, kubectl, or kumactl in Kubernetes or Universal environments. Understand available permissions and Control Plane ports.
+              cta:
+                text: Learn more &rarr;
+                url: /mesh/use-kuma/
+      
   - header:
       type: h2
       text: "Deployment modes"
@@ -97,7 +123,7 @@ rows:
               description: |
                 Group equivalent MeshServices across zones and expose a unified, zone-agnostic service with global failover capabilities.
               cta:
-                text: Learn more
+                text: Learn more &rarr;
                 url: /mesh/mesh-multizone-service-deployment/
       - blocks:
           - type: card
@@ -106,5 +132,137 @@ rows:
               description: |
                 Run {{site.mesh_product_name}} in a single zone with a standalone Control Plane and interconnected Data Plane proxies.
               cta:
-                text: Learn more
+                text: Learn more &rarr;
                 url: /mesh/single-zone/
+  - header:
+      type: h2
+      text: Key references
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} changelog"
+              description: |
+                See new {{site.mesh_product_name}} features and bug fixes.
+              cta:
+                text: View the release notes &rarr;
+                url: /mesh/changelog/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Policy Hub
+              description: |
+                {{site.mesh_product_name}} policies are bundled features for your service traffic and network configuration.
+              cta:
+                text: See policies &rarr;
+                url: /mesh/policies/
+      - blocks:
+          - type: card
+            config:
+              title: Enterprise features
+              description: |
+                Explore the features included with {{site.mesh_product_name}} Enterprise, including mTLS backends, RBAC, FIPS support, and signed container images.
+              cta:
+                text: See enterprise features &rarr;
+                url: /mesh/enterprise/
+  - columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} CLI"
+              description: |
+                Reference for the CLI tools included in Kong Mesh, including usage examples and commands for kumactl, kuma-cp, and kuma-dp.
+              cta:
+                text: View the reference &rarr;
+                url: /mesh/cli/
+                align: end 
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} requirements"
+              description: |
+                See the different requirements to deploy {{site.mesh_product_name}}
+              cta:
+                text: View the requirements &rarr;
+                url: /mesh/requirements/
+                align: end 
+      - blocks:
+          - type: card
+            config:
+              title: "kuma-cp reference"
+              description: |
+                Configuration reference for kuma-cp.
+              cta:
+                text: View the reference &rarr;
+                url: /mesh/reference/kuma-cp/
+                align: end 
+  - header:
+      type: h2
+      text: Security and access
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} audit logs"
+              description: |
+                Track all user and system actions in {{site.mesh_product_name}} using the AccessAudit resource and configurable backends.
+              cta:
+                text: View the reference &rarr;
+                url: /mesh/access-audit/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} RBAC"
+              description: |
+                Use AccessRole and AccessRoleBinding resources in {{site.mesh_product_name}} to implement fine-grained, role-based access to policies and actions.
+              cta:
+                text: View the reference &rarr;
+                url: /mesh/rbac/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "Secure access across services"
+              description: |
+                Learn how secure access is provided across a Kong Mesh deployment.
+              cta:
+                text: View the reference &rarr;
+                url: /mesh/secure-access/
+                align: end
+  - header:
+      type: h2
+      text: Support policies
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} version support policy"
+              description: |
+                The {{site.mesh_product_name}} version support policy outlines the {{site.mesh_product_name}} 
+                versioning scheme and version lifecycle, from release to sunset support.
+              cta:
+                text: View the version support policy &rarr;
+                url: /mesh/support-policy/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} vulnerability patching process"
+              description: |
+                Understand how Kong addresses and patches vulnerabilities in {{site.mesh_product_name}} binaries, third-party dependencies, and Docker images.
+              cta:
+                text: View the vulnerability support policy &rarr;
+                url: /mesh/vulnerability-patching-process
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "{{site.mesh_product_name}} software bill of materials"
+              description: |
+                See the SBOM for {{site.mesh_product_name}} releases.
+              cta:
+                text: View the SBOM &rarr;
+                url: /mesh/sbom/
+                align: end

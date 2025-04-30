@@ -25,7 +25,7 @@ related_resources:
 ## How does multi-zone authentication work?
 
 To add to the security of your deployments, {{site.mesh_product_name}} provides authentication of zone Control Planes to the global Control Plane. Authentication is based on the Zone Token which is also used to authenticate the zone proxy.
-See [zone proxy authentication](/mesh/zone-proxy/) to learn about token characteristics, revocation, rotation, and more.
+See [zone proxy authentication](/mesh/zone-proxy-auth/) to learn about token characteristics, revocation, rotation, and more.
 To enable authentication between Control Planes:
 
 * Generate a token for each Zone Control Plane with the `cp` scope.
