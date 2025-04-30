@@ -122,14 +122,14 @@ Run the following command, specifying the old release name, the namespace where 
 {% navtabs helm %}
 {% navtab "kong/ingress" %}
 ```shell
-$ helm upgrade $YOUR_RELEASE_NAME kong/ingress \
+ helm upgrade $YOUR_RELEASE_NAME kong/ingress \
   --namespace $YOUR_NAMESPACE \
   -f ./values.yaml
 ```
 {% endnavtab %}
 {% navtab "kong/kong" %}
 ```shell
-$ helm upgrade $YOUR_RELEASE_NAME kong/kong \
+ helm upgrade $YOUR_RELEASE_NAME kong/kong \
   --namespace $YOUR_NAMESPACE \
   -f ./values.yaml
 ```
@@ -139,7 +139,7 @@ $ helm upgrade $YOUR_RELEASE_NAME kong/kong \
 After the upgrade completes, there's a brief period of time before the new resources are online. You can wait for the relevant Pod resources to cycle by watching them in your release namespace:
 
 ```shell
-$ kubectl -n $YOUR_RELEASE_NAMESPACE get pods -w
+ kubectl -n $YOUR_RELEASE_NAMESPACE get pods -w
 ```
 
 Once the new pods are in a `Ready` state, the upgrade is complete.
@@ -149,13 +149,13 @@ Once the new pods are in a `Ready` state, the upgrade is complete.
 If you run into problems during or after the upgrade, Helm provides a rollback mechanism to revert to a previous revision of the release.
 
 ```shell
-$ helm rollback --namespace $YOUR_RELEASE_NAMESPACE $YOUR_RELEASE_NAME
+ helm rollback --namespace $YOUR_RELEASE_NAMESPACE $YOUR_RELEASE_NAME
 ```
 
 You can wait for the rollback to complete by watching the relevant Pod resources:
 
 ```shell
-$ kubectl -n $YOUR_RELEASE_NAMESPACE get pods -w
+ kubectl -n $YOUR_RELEASE_NAMESPACE get pods -w
 ```
 
 After a rollback, if you run into issues in production, consider using a testing environment to identify and correct these issues, or reference the [troubleshooting documentation](/index/kubernetes-ingress-controller/#troubleshooting).
