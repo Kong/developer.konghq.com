@@ -14,8 +14,8 @@ description: See where {{site.base_gateway}} logs are located, the different log
 related_resources:
   - text: "Secure {{site.base_gateway}}"
     url: /gateway/security/
-  - text: "{{site.base_gateway}} debugging"
-    url: /gateway/debug/
+#  - text: "{{site.base_gateway}} debugging"
+#    url: /gateway/debug/
   - text: "{{site.base_gateway}} audit logs"
     url: /gateway/audit-logs/
   - text: "{{site.konnect_short_name}} logs"

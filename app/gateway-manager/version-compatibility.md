@@ -19,8 +19,8 @@ related_resources:
     url: /gateway-manager/
   - text: "{{site.base_gateway}} logs"
     url: /gateway/logs/
-  - text: "{{site.base_gateway}} debugging"
-    url: /gateway/debug/
+#  - text: "{{site.base_gateway}} debugging"
+#    url: /gateway/debug/
   - text: "{{site.konnect_short_name}} compatibility"
     url: /konnect-platform/konnect-compatibility/
 ---

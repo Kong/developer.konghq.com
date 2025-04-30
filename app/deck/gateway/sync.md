@@ -1,6 +1,6 @@
 ---
 title: deck gateway sync
-description: Update {{ site.base_gateway }} to match the state defined in the provided configuration
+description: Update {{ site.base_gateway }} to match the state defined in the provided configuration.
 
 content_type: reference
 layout: reference
@@ -17,8 +17,8 @@ breadcrumbs:
   - /deck/gateway/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: deck gateway commands
+    url: /deck/gateway/
 ---
 
 The `deck gateway sync` command configures the target {{ site.base_gateway }} to match the values specified in your declarative configuration.

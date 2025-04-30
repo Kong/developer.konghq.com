@@ -1,6 +1,6 @@
 ---
-title: Configuring Konnect
-description: Configure decK for use with Konnect
+title: Configuring {{site.konnect_short_name}}
+description: Configure decK for use with {{site.konnect_short_name}}.
 
 content_type: reference
 layout: reference
@@ -17,8 +17,10 @@ breadcrumbs:
   - /deck/gateway/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: "{{site.konnect_short_name}}"
+    url: /konnect-platform/
+  - text: deck gateway commands
+    url: /deck/gateway/
 ---
 
 {:.warning}
@@ -26,15 +28,15 @@ related_resources:
 
 You can manage {{site.base_gateway}} core entity configuration in your {{site.konnect_short_name}} organization using decK.
 
-decK can only target one control plane at a time.
+decK can only target one Control Plane at a time.
 
-Managing multiple control planes requires a separate state file per control plane.
+Managing multiple Control Planes requires a separate state file per Control Plane.
 
-decK _does not_ support publishing content to the Dev Portal or managing application registrations. Custom plugins can only be configured if the Plugin schema has been uploaded to Konnect. Please note that creating or managing schemas via decK is not supported.
+decK _does not_ support publishing content to the Dev Portal or managing application registrations. Custom plugins can only be configured if the plugin schema has been uploaded to Konnect. Note that creating or managing schemas via decK is not supported.
 
 ## Using decK with Konnect
 
-To use decK with {{ site.konnect_short_name }}, you must provide a {{ site.konnect_short_name }} authentication method and the name of a control plane to target.
+To use decK with {{ site.konnect_short_name }}, you must provide a {{ site.konnect_short_name }} authentication method and the name of a Control Plane to target.
 
 If you are using personal access tokens or system access tokens, you can provide them using the `--konnect-token` flag:
 
@@ -75,15 +77,15 @@ To target a specific geo, set `konnect-addr` to one of the following:
 - IN geo: `"https://in.api.konghq.com"`
 - ME geo: `"https://me.api.konghq.com"`
 
-### Control planes
+### Control Planes
 
-Each state file targets one control plane.
-If you don't provide a control plane, decK targets the `default` control plane.
+Each state file targets one Control Plane.
+If you don't provide a Control Plane, decK targets the `default` Control Plane.
 
-If you have a custom control plane, you can specify it in the state file,
+If you have a custom Control Plane, you can specify it in the state file,
 or use a flag when running any decK command.
 
-- Target a control plane in your state file with the `_konnect.control_plane_name` parameter:
+- Target a Control Plane in your state file with the `_konnect.control_plane_name` parameter:
 
   ```yaml
   _format_version: "3.0"
@@ -91,13 +93,15 @@ or use a flag when running any decK command.
     control_plane_name: staging
   ```
 
-- Set a control plane using the `--konnect-control-plane-name` flag:
+- Set a Control Plane using the `--konnect-control-plane-name` flag:
 
   ```sh
   deck gateway sync konnect.yaml --konnect-control-plane-name staging
   ```
 
 ## Troubleshooting
+
+The following sections explain how to resolve common issues you may encounter when using decK with {{site.konnect_short_name}}.
 
 ### Authentication with a {{site.konnect_short_name}} token file is not working
 
@@ -116,11 +120,11 @@ Error: checking if workspace exists
 
 Remove the `_workspace` key to resolve this error.
 
-You can now sync the file as-is to apply it to the default control plane or add a key to apply the configuration to a specific control plane.
+You can now sync the file as-is to apply it to the default Control Plane or add a key to apply the configuration to a specific Control Plane.
 
-To apply the configuration to custom control planes, replace `_workspace` with `control_plane_name: ExampleName`.
+To apply the configuration to custom Control Planes, replace `_workspace` with `control_plane_name: ExampleName`.
 
-For example, to export the configuration from workspace `staging` to control plane `staging`, you would change:
+For example, to export the configuration from workspace `staging` to Control Plane `staging`, you would change:
 
 ```yaml
 _workspace: staging
@@ -145,6 +149,6 @@ decK determines the environment using the following order of precedence:
 
 2. If the `--kong-addr` flag is set to a non-default value, decK runs against {{site.base_gateway}}.
 
-3. If {{site.konnect_short_name}} token is set in any way (flag, file, or decK config), decK runs against {{site.konnect_short_name}}.
+3. If a {{site.konnect_short_name}} token is set in any way (flag, file, or decK config), decK runs against {{site.konnect_short_name}}.
 
 4. If none of the above are present, decK runs against {{site.base_gateway}}.

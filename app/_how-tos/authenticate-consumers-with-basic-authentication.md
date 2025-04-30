@@ -29,7 +29,7 @@ tags:
 
 tldr:
     q: How do I authenticate Consumers with basic authentication?
-    a: Create a Consumer with a username and password in the `basicauth_credentials` configuration. Enable the Basic Authentication plugin globally, and authenticate with the base64-encoded Consumer credentials.
+    a: Create a [Consumer](/gateway/entities/consumer/) with a username and password in the `basicauth_credentials` configuration. Enable the [Basic Authentication plugin](/plugins/basic-auth/) globally, and authenticate with the base64-encoded Consumer credentials.
 
 tools:
     - deck
@@ -99,6 +99,7 @@ Then, run the following command to test Consumer authentication:
 
 {% validation request-check %}
 url: '/anything'
+display_headers: true
 headers:
   - 'authorization: Basic anNtaXRoOm15LXBhc3N3b3Jk'
 status_code: 200

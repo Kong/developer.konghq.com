@@ -13,6 +13,7 @@ config:
     - 3600
   window_type: sliding
   disable_penalty: false
+  namespace: my-namespace
 
 tools:
   - deck

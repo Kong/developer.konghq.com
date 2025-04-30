@@ -33,7 +33,7 @@ tldr:
   q: How do I allow different clients to access an upstream service with different authentication types, and forbid access to any unauthenticated clients?
   a: |
     Configure multiple authentication plugins, like [Key Auth](/plugins/key-auth/) and [Basic Auth](/plugins/basic-auth/), and apply them to specific [Consumers](/gateway/entities/consumer/). Set `config.anonymous` in those plugins to the ID of the anonymous Consumer to catch access attempts from anyone else.
-    Then, apply the [Request Termination](/plugins/request-termination/) plugin to requests made with the anonymous Consumer to terminate the requests and send back a specific message.
+    Then, apply the [Request Termination](/plugins/request-termination/) plugin to the anonymous Consumer to terminate the requests and send back a specific message.
 
 faqs:
   - q: What happens if I configure multiple authentication methods but don't use an anonymous Consumer?
@@ -115,6 +115,7 @@ The following validation works because the unauthenticated request falls back to
 {% validation request-check %}
 url: '/anything'
 status_code: 200
+display_headers: true
 {% endvalidation %}
 
 The following validation with fake credentials also works because an incorrect API key is treated as anonymous:
@@ -122,6 +123,7 @@ The following validation with fake credentials also works because an incorrect A
 {% validation request-check %}
 url: '/anything'
 status_code: 200
+display_headers: true
 headers:
   - apikey:nonsense
 {% endvalidation %}
@@ -170,6 +172,7 @@ Try to access the Gateway Service via the `/anything` Route using a nonsense API
 {% validation request-check %}
 url: '/anything'
 status_code: 401
+display_headers: true
 headers:
   - apikey:nonsense
 {% endvalidation %}
@@ -181,6 +184,7 @@ You should get the same result if you try to access the Route without any API ke
 {% validation request-check %}
 url: '/anything'
 status_code: 401
+display_headers: true
 {% endvalidation %}
 
 Finally, try accessing the Route with the configured basic auth credentials:
@@ -189,6 +193,7 @@ Finally, try accessing the Route with the configured basic auth credentials:
 url: '/anything'
 user: "Dana:dana"
 status_code: 200
+display_headers: true
 {% endvalidation %}
 
 This time, authentication should succeed with a `200`.

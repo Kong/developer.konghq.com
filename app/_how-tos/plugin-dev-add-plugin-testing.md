@@ -73,7 +73,7 @@ Pongo lets you validate a plugin's behavior by giving you tools to quickly run a
 
 {:.info}
 > **Note**: {{site.base_gateway}} runs in a variety of
-> [deployment topologies](/gateway/deployment-models/#deployment-topologies). 
+> [deployment topologies](/gateway/deployment-topologies/). 
 > By default, Pongo runs {{site.base_gateway}} in [_traditional mode_](/gateway/traditional-mode/), which uses a database 
 > to store configured entities such as Routes, Gateway Services, and plugins. 
 > {{site.base_gateway}} and the database are run in separate containers,

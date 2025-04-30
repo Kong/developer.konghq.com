@@ -1,6 +1,6 @@
 ---
-title: Select Tags & Lookup Tags
-description: Segment your configuration in to multiple files using Tags
+title: Select tags and lookup tags
+description: Segment your configuration in to multiple files using tags.
 
 content_type: reference
 layout: reference
@@ -17,11 +17,11 @@ breadcrumbs:
   - /deck/gateway/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: deck gateway commands
+    url: /deck/gateway/
 ---
 
-decK can operate on a subset of configuration instead of managing a complete {{ site.base_gateway }} configuration. To do this, decK tags each entity with a value, and ignores any resources that don't have that tag when running `deck gateway dump` or `deck gateway sync` in the future.
+decK can operate on a subset of configuration instead of managing a complete {{ site.base_gateway }} configuration. To do this, decK tags each entity with a value, and ignores any resources that don't have that tag when running [`deck gateway dump`](/deck/gateway/dump/) or [`deck gateway sync`](/deck/gateway/sync/).
 
 Common use cases for splitting your configuration across multiple files include:
 
@@ -29,7 +29,7 @@ Common use cases for splitting your configuration across multiple files include:
 - Allowing each Service owner to manage their own configuration
 - Splitting large configuration files to reduce the time it takes to run `deck gateway sync`
 
-When multiple tags are specified in decK, decK `AND`s those tags together, meaning only entities containing all the tags will be managed by decK. You can specify a combination of up to 5 tags, but we recommend using fewer or only one tag for performance reasons.
+When multiple tags are specified in decK, decK `AND`s those tags together, meaning only entities containing all the tags will be managed by decK. You can specify a combination of up to 5 tags, but we recommend using fewer for performance reasons.
 
 ## Manage part of your configuration
 

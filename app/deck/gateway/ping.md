@@ -1,6 +1,6 @@
 ---
 title: deck gateway ping
-description: Verify that decK can talk to the configured Admin API
+description: Verify that decK can talk to the configured Admin API.
 
 content_type: reference
 layout: reference
@@ -17,23 +17,21 @@ breadcrumbs:
   - /deck/gateway/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: deck gateway commands
+    url: /deck/gateway/
 ---
 
 The `deck file ping` command checks that decK can contact the Admin API. This could be either the {{site.konnect_short_name}} API, or an on-prem installation.
 
 `deck file ping` validates both network connectivity and authentication details.
 
-## Example usage
-
-### On Prem
+## On-prem example
 
 ```bash
 deck gateway ping --kong-addr https://example.com:8001
 ```
 
-### Konnect
+## Konnect example
 
 ```bash
 deck gateway ping \

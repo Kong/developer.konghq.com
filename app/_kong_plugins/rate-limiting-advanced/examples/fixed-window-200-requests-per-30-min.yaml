@@ -10,6 +10,7 @@ config:
   window_size: 
     - 1800
   window_type: fixed
+  namespace: my-namespace
 
 tools:
   - deck

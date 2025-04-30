@@ -49,13 +49,16 @@ api_specs:
 
 works_on:
   - on-prem
+
+tags:
+  - rbac
 ---
 
 ## What is a Workspace?
 
-Workspaces are a way of namespacing {{site.base_gateway}} entities so they can be managed independently. Workspaces work in combination with RBAC to create isolated environments for teams to operate independently of each other. Workspaces can't share entities, like Services, between them, and only Workspace Admins with the correct permissions, in the Workspace, can manage them. 
+Workspaces are a way of namespacing {{site.base_gateway}} entities so they can be managed independently. Workspaces work in combination with [RBAC](/gateway/entities/rbac/) to create isolated environments for teams to operate independently of each other. Workspaces can't share entities, like Services, between them, and only Workspace Admins with the correct permissions, in the Workspace, can manage them. 
 
-Workspaces support [multi-tenancy](/gateway/multi-tenancy/) by isolating {{site.base_gateway}} configuration objects. When paired with RBAC, {{site.base_gateway}} administrators can effectively create tenants within the control plane. The Workspace administrators have segregated and secure access to only their portion of the {{site.base_gateway}} configuration in Kong Manager, the Admin API, and the declarative configuration tool decK.
+Workspaces support multi-tenancy by isolating {{site.base_gateway}} configuration objects. When paired with RBAC, {{site.base_gateway}} administrators can effectively create tenants within the control plane. The Workspace administrators have segregated and secure access to only their portion of the {{site.base_gateway}} configuration in Kong Manager, the Admin API, and the declarative configuration tool decK.
 
 <!--vale off -->
 
@@ -136,7 +139,7 @@ For more information, see [Roles and permissions](/gateway/entities/rbac/).
 
 ## Manage Workspaces with decK 
 
-The following decK flag must be used when interfacing with Workspaces using decK. 
+The following decK flags must be used when interfacing with Workspaces using decK. 
 
 ### Manage multiple Workspaces
 
