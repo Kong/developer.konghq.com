@@ -17,8 +17,9 @@ config:
     provider: bedrock
     name: meta.llama3-70b-instruct-v1:0
     options:
-      aws_region: us-east-1
-      
+      bedrock:
+        aws_region: us-east-1
+
 variables:
   key:
     value: $AWS_ACCESS_KEY_ID
