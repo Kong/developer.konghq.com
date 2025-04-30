@@ -119,6 +119,7 @@ consumer_id
 cors
 cosocket
 CPUs
+crd
 crds
 created_at
 creationTimestamp
@@ -725,6 +726,7 @@ Tal
 targetRef
 tbl
 ingresses
+ingressclass
 tcp
 tcpdump
 TCPIngress
