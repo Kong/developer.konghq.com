@@ -15,7 +15,7 @@
         </button>
       </div>
 
-      <p v-if="vote" class="feedback__reply text-sm text-terciary flex">Thank you! We received your feedback.</p>
+      <p v-if="vote !== null" class="feedback__reply text-sm text-terciary flex">Thank you! We received your feedback.</p>
 
       <form
         v-if="vote === false"
