@@ -4,6 +4,8 @@ content_type: reference
 entities:
   - certificate
 
+products:
+  - gateway
 tags:
   - certificates
 description: A Certificate object represents a public certificate, and can be optionally paired with the corresponding private key.

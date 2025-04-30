@@ -4,6 +4,8 @@ content_type: reference
 entities:
   - license
 
+products:
+  - gateway
 description: A License entity allows you manage self-managed {{site.ee_product_name}} licenses.
 
 tags:

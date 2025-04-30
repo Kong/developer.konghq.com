@@ -4,6 +4,9 @@ content_type: reference
 entities:
   - ca_certificate
 
+products:
+  - gateway
+  
 tags:
   - certificates
 

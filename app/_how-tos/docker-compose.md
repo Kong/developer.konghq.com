@@ -11,8 +11,6 @@ related_resources:
     url: /gateway/install/
   - text: Build a custom Docker image
     url: /how-to/build-custom-docker-image/
-
-description: "Use our provided Docker Compose file to install {{site.base_gateway}}."
 products:
   - gateway
 
