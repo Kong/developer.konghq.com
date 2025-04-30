@@ -12,7 +12,10 @@ works_on:
 
 tools:
   - deck
-
+tags: 
+  - support-policy
+search_aliases:
+  - decK support policy
 breadcrumbs:
   - /deck/
 

@@ -15,7 +15,10 @@ products:
 min_version:
   gateway: '3.4'
 
-
+breadcrumbs:
+  - /gateway/kong-manager/
+search_aliases:
+  - email kong manager
 works_on:
     - on-prem
 
@@ -23,6 +26,7 @@ works_on:
 tags:
     - authentication
     - kong-manager
+    - email
 
 tldr:
     q: How do I automate tests in Insomnia?

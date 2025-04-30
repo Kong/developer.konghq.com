@@ -35,3 +35,4 @@ allowed_routes
 urlencoder
 tech_preview
 feature_gates
+extended_description

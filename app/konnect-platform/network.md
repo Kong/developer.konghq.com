@@ -2,6 +2,8 @@
 title: "Networking in {{site.konnect_short_name}}"
 description: 'Learn about Control Plane and Data Plane networking information like ports, hostnames, and communication in {{site.konnect_short_name}}.'
 content_type: reference
+breadcrumbs:
+  - /konnect-platform/
 layout: reference
 products:
     - gateway
@@ -20,6 +22,8 @@ related_resources:
     url: /gateway/network/
   - text: " {{site.base_gateway}} Control Plane and Data Plane communication"
     url: /gateway/cp-dp-communication/
+  - text: Mesh Manager
+    url: /mesh-manager/
 faqs:
   - q: What types of data travel between the {{site.konnect_short_name}} Control Plane and the Data Plane nodes, and how?
     a: |
@@ -27,7 +31,7 @@ faqs:
       * **Configuration** – The Control Plane sends config data to the Data Plane nodes.
       * **Telemetry** – Data plane nodes send usage data to the Control Plane for Analytics and billing.
 
-      Telemetry includes traffic metrics by service, route, and consuming application. It does not include any customer data. 
+      Telemetry includes traffic metrics by Service, Route, and consuming application. It does not include any customer data. 
       All telemetry is encrypted using mTLS.
   - q: How frequently do Data Planes send telemetry data to the Control Plane?
     a: |
@@ -84,10 +88,25 @@ The following tables detail the required ports for cluster communication, audit 
 
 The {{site.konnect_short_name}} Control Plane uses the following ports:
 
-| Port      | Protocol  | Description |
-|:----------|:----------|:------------|
-| `443`    | TCP <br>HTTPS | Cluster communication port for configuration and telemetry data. The {{site.konnect_short_name}} Control Plane uses this port to listen for connections and to communicate with Data Plane nodes. <br> The cluster communication port must be accessible to Data Plane nodes within the same cluster. This port is protected by mTLS to ensure end-to-end security and integrity. |
-| `8071`   | TCP <br> UDP | Port used for audit logging. |
+{% table %}
+columns:
+  - title: Port
+    key: port
+  - title: Protocol
+    key: protocol
+  - title: Description
+    key: description
+rows:
+  - port: "`443`"
+    protocol: "TCP<br>HTTPS"
+    description: >-
+      Cluster communication port for configuration and telemetry data. The {{site.konnect_short_name}} Control Plane uses this port to listen for connections and to communicate with Data Plane nodes.<br>
+      The cluster communication port must be accessible to Data Plane nodes within the same cluster. This port is protected by mTLS to ensure end-to-end security and integrity.
+  - port: "`8071`"
+    protocol: "TCP<br>UDP"
+    description: "Port used for audit logging."
+{% endtable %}
+
 
 {{site.base_gateway}}'s hosted Control Plane expects traffic on these ports, so they can't be customized. 
 
@@ -124,13 +143,13 @@ rows:
     description: The {{site.konnect_short_name}} platform.
   - hostname: "`global.api.konghq.com`"
     description: The {{site.konnect_short_name}} API for platform authentication, identity, permissions, teams, and organizational entitlements and settings.
-  - hostname: "`{region}.api.konghq.com`"
+  - hostname: "`REGION.api.konghq.com`"
     description: The {{site.konnect_short_name}} API for the geo. Necessary if you are using decK in your workflow, decK uses this API to access and apply configurations.
-  - hostname: "`PORTAL_ID.{region}.portal.konghq.com`"
+  - hostname: "`PORTAL_ID.REGION.portal.konghq.com`"
     description: The URL for the Dev Portal in the geo.
-  - hostname: "`CONTROL_PLANE_DNS_PREFIX.{region}.cp0.konghq.com`"
+  - hostname: "`CONTROL_PLANE_DNS_PREFIX.REGION.cp0.konghq.com`"
     description: Handles configuration for a Control Plane in the geo. Data plane nodes connect to this host to receive configuration updates. This hostname is unique to each organization and Control Plane.
-  - hostname: "`CONTROL_PLANE_DNS_PREFIX.{region}.tp0.konghq.com`"
+  - hostname: "`CONTROL_PLANE_DNS_PREFIX.REGION.tp0.konghq.com`"
     description: Gathers telemetry data for a Control Plane in the geo. This hostname is unique to each organization and Control Plane.
 {% endtable %}
 <!--vale on-->

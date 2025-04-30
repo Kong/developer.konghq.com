@@ -12,6 +12,21 @@ weight: 900
 #     description: ''
 #     value: us
 
+variables:
+  header_name:
+    description: |
+     The HTTP header name to use for the correlation ID.
+    value: $KONG-REQUEST-ID
+  generator:
+    description: |
+      The generator to use for the correlation ID. Accepted values are `uuid`, `uuid#counter`, and `tracker`.
+    value: "uuid#counter"
+  echo_downstream:
+    description: |
+      Whether to echo the header back to downstream (the client).
+    value: "false"
+
+
 config: 
   header_name: Kong-Request-ID
   generator: uuid#counter
