@@ -14,26 +14,24 @@ min_version:
 
 tags:
     - performance
+    - deployment-checklist
 
 breadcrumbs:
-    - /gateway
+    - /gateway/
 
 description: "Review Kong's recommended resource allocation sizing guidelines for {{site.base_gateway}} based on configuration and traffic patterns."
 
 related_resources:
-  - text: Performance benchmark
+  - text: Performance benchmarks
     url: /gateway/performance/benchmarks/
-  - text: Guidelines for establishing a performance benchmark
-    url: /gateway/performance/establish-performance-benchmark/
   - text: Cluster reference
-    url: /gateway/cluster/
+    url: /gateway/traditional-mode/#about-kong-gateway-clusters
 ---
 
 {{site.base_gateway}} is designed to handle large volumes of request
 traffic and to proxy requests with minimal latency. This reference offers recommendations on sizing for
 resource allocation based on expected {{site.base_gateway}} configuration and
 traffic patterns.
-
 
 ## Scaling dimensions
 
@@ -84,18 +82,17 @@ of the underlying hardware on which {{site.base_gateway}} is running.
 ## General resource guidelines
 
 These recommendations are a baseline guide only. 
-For performance-critical environments, you should conduct specific [tuning or benchmarking efforts](/gateway/performance/establish-performance-benchmark/).
+For performance-critical environments, you should conduct specific [tuning or benchmarking efforts](/gateway/performance/benchmarks/).
 
 ### Hybrid mode with large number of entities {% new_in 3.5 %}
 
 When {{site.base_gateway}} is operating in hybrid mode with a large number of
-[entities](/gateway/entities/) (like Routes and Gateway Services), it can benefit from enabling [`dedicated_config_processing`](/gateway/configuration/#dedicated_config_processing).
+[entities](/gateway/entities/) (like Routes and Gateway Services), it can benefit from enabling [`dedicated_config_processing`](/gateway/configuration/#dedicated-config-processing).
 
 When enabled, certain CPU-intensive steps of the data plane reconfiguration operation are offloaded
 to a dedicated worker process. This reduces proxy latency during reconfigurations at the cost of a
 slight increase in memory usage. The benefits of this are most apparent with configurations
 of more than 1,000 entities. 
-
 
 ### {{site.base_gateway}} resources
 
@@ -188,7 +185,7 @@ database during this time.
 
 ### Cluster resource allocations
 
-Based on the expected size and demand of the [cluster](/gateway/cluster/), we recommend
+Based on the expected size and demand of the [cluster](/gateway/traditional-mode/#about-kong-gateway-clusters), we recommend
 the following resource allocations as a starting point:
 
 <!--vale off-->
@@ -280,6 +277,4 @@ the [HTTP Log](/plugins/http-log/) plugin, which uses one queue per log server u
 configuration. 
 
 ## Next steps
-
-* [Conduct performance benchmark tuning tests](/gateway/performance/establish-performance-benchmark/)
-* See {{site.base_gateway}}'s [performance testing benchmark results](/gateway/performance/benchmarks/)
+* See {{site.base_gateway}}'s [performance testing benchmark results](/gateway/performance/benchmarks/) and conduct your own performance tuning tests

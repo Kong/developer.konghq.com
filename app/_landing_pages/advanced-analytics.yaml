@@ -23,7 +23,7 @@ rows:
                   text: |
                     {{site.konnect_short_name}} Advanced Analytics is a real-time, highly contextual analytics platform 
                     that provides deep insights into API health, performance, and usage. It helps businesses optimize their API strategies 
-                    and improve operational efficiency. This feature is offered as a premium service within {{site.konnect_short_name}}.
+                    and improve operational efficiency.
 
                     **Key benefits:**
                     - **Centralized visibility:** Gain insights across all APIs, Services, and Data Planes.
@@ -36,6 +36,30 @@ rows:
           config:
             url: /assets/images/analytics/konnect-api-usage-summary.png
             alt_text: "Summary dashboard of Konnect Advanced Analytics"
+  
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Dashboard"
+              blocks:
+                - type: text
+                  text: |
+                    The [summary dashboard](https://cloud.konghq.com/us/analytics/summary) shows performance and health statistics of all your APIs across your organization on a 
+                    single page and provides insights into your Service usage. 
+
+                    Manage data ingestion from any **Control Plane Dashboard** using the **Advanced Analytics** toggle. 
+                    This toggle lets you enable or disable data collection for your API traffic per Control Plane.
+
+                    **Modes:**
+                    - **On:** Both basic and advanced analytics data is collected, allowing in-depth insights and reporting.
+                    - **Off:** Advanced analytics collection stops, but basic API metrics remain available in Gateway Manager, 
+                    and can still be used for custom reports.
+
+                    You can assign users to predefined [**Analytics teams** in {{site.konnect_short_name}}](/konnect-platform/teams-and-roles/) to control access levels. 
+                    This allows specific users to **view** or **manage** Analytics independently.
+
   - header:
       type: h2
       text: "Features"
@@ -43,40 +67,20 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Summary Dashboard
-              description: |
-                Get a high-level overview of API usage and performance metrics.
-              icon: /assets/icons/monitor.svg
-              cta:
-                text: Learn more
-                url: /advanced-analytics/dashboard/
-      - blocks:
-          - type: card
-            config:
               title: API Explorer
               description: |
-                Explore API usage data with key statistics and visualizations/
+                Explore API usage data with key statistics and visualizations.
               icon: /assets/icons/menu.svg
               cta:
-                text: Learn more
+                text: See the API Explorer
                 url: /advanced-analytics/explorer/
       - blocks:
           - type: card
             config:
-              title: Custom Reports
-              description: |
-                Share insights across teams and track important KPIs.
-              icon: /assets/icons/file.svg
-              cta:
-                text: Learn more
-                url: /advanced-analytics/reports/
-      - blocks:
-          - type: card
-            config:
-              title: LLM Reporting
+              title: LLM reporting
               description: |
                 Understand LLM usage, tokens, and costs.
               icon: /assets/icons/logs.svg
               cta:
-                text: Learn more
+                text: Set up LLM reporting
                 url: /advanced-analytics/llm-reporting/

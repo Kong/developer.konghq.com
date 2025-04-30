@@ -80,7 +80,6 @@ rows:
               text: 
               url: /gateway/install/
               align: end
-
       - blocks:
         - type: card
           config:
@@ -92,7 +91,38 @@ rows:
               text: 
               url: /gateway/deployment-topologies/
               align: end
-        
+  - header:
+    columns:
+      - header:
+          type: h2
+          text: "Deployment checklist"
+        blocks:
+        - type: structured_text
+          config:
+            blocks:
+            - type: unordered_list
+              items:
+                - "[Deployment topologies](/gateway/deployment-topologies/): Learn about the different ways to deploy {{ site.base_gateway }}."
+                - "[Hosting options](/gateway/topology-hosting-options/): Decide where you want to host your Data Plane nodes, and whether you want Kong to host them or host them yourself."
+                - "[Resource sizing guidelines](/gateway/resource-sizing-guidelines/): Review Kong's recommended resource allocation guidelines."
+                - "[Securing {{site.base_gateway}}](/gateway/security/): Secure every aspect of your deployment, from access control, to mTLS, to secret management in vaults."
+                - "[Performance testing benchmarks](/gateway/performance/benchmarks/): See the performance benchmark results for every {{site.base_gateway}} version."
+
+      - header:
+          type: h2
+          text: Tools to manage {{site.base_gateway}}
+        blocks:
+          - type: structured_text
+            config:
+              blocks:
+              - type: unordered_list
+                items:
+                    - "[decK](/deck/): Manage {{site.base_gateway}} configuration through declarative state files"
+                    - "[Terraform](/terraform/): Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}} and {{site.base_gateway}}"
+                    - "[KIC](/kubernetes-ingress-controller/): Manage ingress traffic and routing rules for your services"
+                    - "[{{site.base_gateway}} Admin API](/api/gateway/admin-ee/): Manage on-prem {{site.base_gateway}} entities via an API"
+                    - "[Control Plane Config API](/api/konnect/control-planes-config/): Manage {{site.base_gateway}} entities within {{site.konnect_short_name}} control planes via an API"
+
   - header:
       type: h2
       text: Key functionality
@@ -189,6 +219,18 @@ rows:
               cta:
                 text: View all available plugins
                 url: /plugins/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: "{{ site.base_gateway }} configuration"
+              description: |
+                The {{site.base_gateway}} configuration file `kong.conf` can be used to configure 
+                individual properties of your {{site.base_gateway}} instance.
+              icon: /assets/icons/service-document.svg
+              cta:
+                text: See all the configuration options
+                url: /gateway/configuration/
                 align: end
       - blocks:
           - type: card

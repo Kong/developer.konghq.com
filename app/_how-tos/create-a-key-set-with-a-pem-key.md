@@ -2,15 +2,24 @@
 title: Create a Key Set with a PEM Key
 content_type: how_to
 
+desription: Create a PEM Key and add it to a Key Set using the /key-sets API endpoint.
+
 entities: 
   - key
   - key-set
+
+tags:
+  - security
 
 related_resources:
   - text: Key entity
     url: /gateway/entities/key/
   - text: Key Set entity
     url: /gateway/entities/key-set/
+  - text: Create a Key Set with a JWK
+    url: /how-to/create-a-key-set-with-a-jwk/
+  - text: "Securing {{site.base_gateway}}"
+    url: /gateway/security/
 
 products:
     - gateway

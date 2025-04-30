@@ -3,6 +3,9 @@ title: "{{site.base_gateway}} performance testing benchmarks"
 content_type: reference
 layout: reference
 
+breadcrumbs:
+  - /gateway/
+
 products:
     - gateway
 
@@ -15,13 +18,11 @@ tags:
 min_version:
   gateway: '3.6'
 
-description: "This documentation provides a comprehensive guide for conducting {{site.base_gateway}} performance testing using Kong's test suite, including Kong's own benchmark for the current version."
+description: "View Kong's benchmark for the current {{site.base_gateway}} version and learn about {{site.base_gateway}} performance testing using Kong's test suite."
 
 related_resources:
-  - text: Establish a {{site.base_gateway}} performance benchmark
-    url: /gateway/performance/establish-performance-benchmark/
   - text: "Resource sizing guidelines"
-    url: /gateway/performance/resource-sizing-guidelines/
+    url: /gateway/resource-sizing-guidelines/
 ---
 
 As of {{site.base_gateway}} 3.6.x, Kong publishes performance results on {{site.base_gateway}}, along with the test methodology and details. 
@@ -117,7 +118,7 @@ Kong ran these tests in AWS using EC2 machines. We used [Kubernetes taints](http
 
 ### Test configuration
 
-For these tests, we changed the number of worker processes to match the number of available cores to the node running {{site.base_gateway}}, which was 16 vCPU. Accordingly, we set the number of processes to 16. This follows [Kong’s overall performance guidance](/gateway/performance/resource-sizing-guidelines/). Outside of this change, no other tuning was made.
+For these tests, we changed the number of worker processes to match the number of available cores to the node running {{site.base_gateway}}, which was 16 vCPU. Accordingly, we set the number of processes to 16. This follows [Kong’s overall performance guidance](/gateway/resource-sizing-guidelines/). Outside of this change, no other tuning was made.
 
 ## Conduct your own performance test using Kong's test suite
 
@@ -126,5 +127,3 @@ You can use [Kong's public test suite repo](https://github.com/Kong/kong-gateway
 Once the cluster is generated, you can apply the [provided YAML](https://github.com/Kong/kong-gateway-performance-benchmark/tree/main/deploy-k8s-resources/kong_helm) to configure {{site.base_gateway}} for the included test cases, and the observability plugins for metrics scraping by the Prometheus instance already provisioned in the cluster. If you’d rather define your own test scenarios, you can also define the {{site.base_gateway}} configuration you want to test and apply it to the cluster.
 
 From there, you can use the [included bash scripts to run K6 tests](https://github.com/Kong/kong-gateway-performance-benchmark/tree/main/deploy-k8s-resources/k6_tests). After the tests complete, you can `port-forward` into the cluster and view the Grafana dashboard with the performance results.
-
-For more information about how to conduct your own performance benchmark of {{site.base_gateway}}, see [Establish a {{site.base_gateway}} performance benchmark](/gateway/performance/establish-performance-benchmark).

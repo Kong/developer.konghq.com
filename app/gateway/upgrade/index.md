@@ -224,7 +224,7 @@ Until the upgrade is completed:
 Factors may include, but are not limited to:
   * [OS version](/gateway/version-support-policy/#supported-versions)
   * [Kubernetes version and Helm prerequisites](/kubernetes-ingress-controller/support/)
-  * [Hardware resources](/gateway/performance/resource-sizing-guidelines/)
+  * [Hardware resources](/gateway/resource-sizing-guidelines/)
   * [Database and dependency versions](/gateway/third-party-support/)
 * Carefully review all [changelogs](/gateway/changelog/) starting from your current version X,
  all the way up to the target version Y. 
