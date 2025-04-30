@@ -5,7 +5,7 @@
 {% assign id = "bf6e0f14-78cd-45ad-9325-87ec7ef7b892" %}
 {% endif %}
 
-First, create a {{ kind }} with the root CA certificate.
+First, create a {{ kind }} with the root CA certificate:
 
 ```bash
 kubectl create -n kong {{ source_type }} {% if source_type == "secret" %}generic {%endif%}root-ca \

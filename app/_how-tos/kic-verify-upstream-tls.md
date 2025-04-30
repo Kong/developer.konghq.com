@@ -20,8 +20,8 @@ works_on:
 entities: []
 
 tldr:
-  q: Question?
-  a: Answer
+  q: How do I configure {{ site.base_gateway }} to verify TLS certificates when connecting to upstream services?
+  a: You can configure {{ site.base_gateway }} to verify the certificate it presents by attaching a CA certificate to a Service. This guide shows how to achieve this using the `BackendTLSPolicy` (when using Gateway API) or using Kubernetes Service annotations (when using Ingress API).
 
 prereqs:
   kubernetes:
@@ -35,9 +35,7 @@ cleanup: {}
 
 ## Generate a CA Certificate
 
-{{ site.kic_product_name }} allows you to configure {{ site.base_gateway }} to validate the TLS certificate of an upstream service. You can configure {{ site.base_gateway }} to verify the certificate it presents by attaching a CA certificate to a service. This how-to shows how to achieve this using the `BackendTLSPolicy` (when using Gateway API) or using Kubernetes Service annotations (when using Ingress API).
-
-{{ site.base_gateway }} can validate the certificate chain to a specific depth. To showcase all the possible configurations, we create a certificate chain with a root CA, an intermediate CA, and a leaf server certificate. 
+{{ site.base_gateway }} can validate the certificate chain to a specific depth. To showcase all the possible configurations, create a certificate chain with a root CA, an intermediate CA, and a leaf server certificate:
 
 ```bash
 mkdir certs && cd certs
@@ -59,22 +57,22 @@ cd ..
 
 Running this script generates the following files in `certs` directory:
 
-- `root.key` and `root.crt`: Root CA key and certificate
+- `root.key`, `root.crt`: Root CA key and certificate
 - `inter.key`, `inter.crt`: Intermediate CA key and certificate
 - `leaf.key`, `leaf.crt`: Server key and certificate (valid for `kong.example` SAN)
 - `chain.crt`: Server certificate chain
 
 ## Configure TLS on the echo service
 
-As part of the prerequisites you deployed the `echo` service to your cluster. Let's configure it to serve HTTPS. Create a secret with the server key and the certificate chain (including the intermediate certificate and the leaf certificate).
+As part of the [prerequisites](#prerequisites), you deployed the `echo` Service to your cluster. Let's configure it to serve HTTPS. Create a secret with the server key and the certificate chain (including the intermediate certificate and the leaf certificate).
 
-1. Create a Kubernetes secret containing the certificate
+1. Create a Kubernetes secret containing the certificate:
 
     ```bash
     kubectl create secret -n kong tls goecho-tls --key ./certs/leaf.key --cert ./certs/chain.crt
     ```
 
-1. Patch the `echo` deployment to use the secret and serve HTTPS using it.
+1. Patch the `echo` deployment to use the secret and serve HTTPS using it:
 
     ```bash
     kubectl patch -n kong deployment echo -p '{
@@ -125,8 +123,7 @@ As part of the prerequisites you deployed the `echo` service to your cluster. Le
     }'
     ```
 
-1. Patch the service to use HTTPS by adding the `konghq.com/protocol: https` annotation and the `spec.ports`
-entry.
+1. Patch the Service to use HTTPS by adding the `konghq.com/protocol: https` annotation and the `spec.ports` entry:
 
     ```bash
     kubectl patch -n kong service echo -p '{
@@ -147,13 +144,13 @@ entry.
     }'
     ```
 
-## Expose the echo service
+## Expose the echo Service
 
-Now that the `echo` service is serving an HTTPS endpoint, we need to expose it:
+Now that the `echo` Service is serving an HTTPS endpoint, we need to expose it:
 
 {% include /k8s/httproute.md release=page.release path='/echo' name='echo' service='echo' port='443' host='kong.example' %}
 
-Verify connectivity by making an HTTP request to proxy. The service serves HTTPS but {{ site.base_gateway }} initiates the connection and proxies it as HTTP in this case, thus the request should be made over HTTP. The `Host` header is required to match the hostname of the service.
+Verify connectivity by making an HTTP request to proxy. The Service serves HTTPS but {{ site.base_gateway }} initiates the connection and proxies it as HTTP in this case, so the request should be made over HTTP. The `Host` header  has to match the hostname of the Service.
 
 {% validation request-check %}
 url: /echo
@@ -175,11 +172,11 @@ Through HTTPS connection.
 ```
 {:.no-copy-code}
 
-That means the service is up and running and {{ site.base_gateway }} connects to it successfully over HTTPS, _without verification_.
+That means the Service is up and running and {{ site.base_gateway }} connects to it successfully over HTTPS, _without verification_.
 
 ## Configure the root CA Certificate
 
-Before enabling TLS verification, we need to add the root CA certificate to the {{ site.base_gateway }}'s CA certificates and associate it with the service.
+Before enabling TLS verification, we need to add the root CA certificate to the {{ site.base_gateway }}'s CA certificates and associate it with the Service.
 
 {% navtabs certificate %}
 {% navtab "Gateway API" %}
@@ -212,7 +209,7 @@ The CA is already associated with the `Service` through `BackendTLSPolicy`'s `sp
 
 ## Enable TLS verification
 
-Update your Route to verify the certificate of the upstream Service:
+Update your Route to verify the certificate of the upstream service:
 
 {% navtabs certificate %}
 {% navtab "Gateway API" %}
@@ -242,7 +239,7 @@ spec:
 {% endnavtab %}
 {% navtab "Ingress" %}
 
-Annotate the service with the `konghq.com/tls-verify` annotation:
+Annotate the Service with the `konghq.com/tls-verify` annotation:
 
 ```bash
 kubectl annotate -n kong service echo konghq.com/tls-verify=true
@@ -280,6 +277,11 @@ kubectl annotate --overwrite service echo konghq.com/tls-verify-depth=0
 
 Now, when you issue the same request as before, you should see an error stating that an invalid response was received from the upstream server.
 
+{:.warning}
+> By default, {{ site.base_gateway }} keeps upstream connections alive for 60 seconds ([`upstream_keepalive_idle_timeout`](/gateway/configuration/#upstream-keepalive-idle-timeout)).
+> Due to this, you may need to wait for 60 seconds to see the TLS verification fail.
+> To speed up the process, you can restart the {{ site.base_gateway }} pod.
+
 {% validation request-check %}
 url: /echo
 headers:
@@ -295,11 +297,6 @@ konnect_url: $PROXY_IP
   "request_id":"e2b3182856c96c23d61e880d0a28012f"
 }
 ```
-
-{:.warning}
-> By default, {{ site.base_gateway }} keeps upstream connections alive for 60 seconds ([`upstream_keepalive_idle_timeout`](/gateway/configuration/#upstream-keepalive-idle-timeout))
-> Due to this, you may need to wait for 60 seconds to see the TLS verification fail.
-> To speed up the process, you can restart the {{ site.base_gateway }} pod.
 
 You can inspect {{ site.base_gateway }}'s container logs to see the error.
 
@@ -327,11 +324,12 @@ kubectl patch -n kong backendtlspolicies.gateway.networking.k8s.io goecho-tls-po
 }'
 ```
 
-The results should look like this.
+The results should look like this:
 
 ```text
 backendtlspolicy.gateway.networking.k8s.io/goecho-tls-policy patched
 ```
+{:.no-copy-code}
 {% endnavtab %}
 {% navtab "Ingress" %}
 For example, to limit the verification depth to 1 (i.e., only verify one intermediate certificate),
