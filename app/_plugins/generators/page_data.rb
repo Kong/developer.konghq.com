@@ -11,7 +11,7 @@ module Jekyll
       process_docs(site)
     end
 
-    def process_pages(site)
+    def process_pages(site) # rubocop:disable Metrics/AbcSize
       site.pages.each do |page|
         Data::EditLink::Base.new(site:, page:).process
         Data::Breadcrumbs.new(site:, page:).process
@@ -20,10 +20,11 @@ module Jekyll
         Data::SearchTags::Base.make_for(site:, page:).process
         Data::MinVersion.new(site:, page:).process
         Data::AddAllDocIndices.new(site:, page:).process
+        Data::TitleTag.new(site:, page:).process
       end
     end
 
-    def process_docs(site) # rubocop:disable Metrics/AbcSize
+    def process_docs(site) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
       site.documents.each do |page|
         Data::EditLink::Base.new(site:, page:).process
         Data::Prerequisites.new(site:, page:).process
@@ -33,6 +34,7 @@ module Jekyll
         Data::SearchTags::Base.make_for(site:, page:).process
         Data::MinVersion.new(site:, page:).process
         Data::AddAllDocIndices.new(site:, page:).process
+        Data::TitleTag.new(site:, page:).process
       end
     end
   end

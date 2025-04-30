@@ -18,7 +18,7 @@ keep_files:
 
 # Site settings
 name: Kong Developer
-title: Kong Developer
+title: Kong Docs
 
 links:
   #web: https://developer.konghq.com
