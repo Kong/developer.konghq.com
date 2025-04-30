@@ -18,6 +18,10 @@ spec:
       name: http
       protocol: TCP
       targetPort: 1027
+    - port: 1030
+      name: tls
+      protocol: TCP
+      targetPort: 1030
   selector:
     app: echo
 ---
@@ -45,6 +49,7 @@ spec:
             - containerPort: 1025
             - containerPort: 1026
             - containerPort: 1027
+            - containerPort: 1030
           env:
             - name: NODE_NAME
               valueFrom:

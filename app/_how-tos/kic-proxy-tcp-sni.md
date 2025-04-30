@@ -1,7 +1,6 @@
 ---
-title: Proxy TCP traffic by SNI
-published: false
-description: "Use `TLSRoute` or `TCPIngress` to route TCP traffic secured by TLS"
+title: Proxy TCP traffic over TLS by SNI
+description: "Use `TLSRoute` to route TCP traffic secured by TLS"
 content_type: how_to
 related_resources:
   - text: All KIC documentation
@@ -24,7 +23,7 @@ entities: []
 
 tldr:
   q: How do I route TCP traffic with {{ site.kic_product_name }}?
-  a: Create a `TCPRoute` or `TCPIngress` resource, which will then be converted in to a [{{ site.base_gateway }} Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
+  a: Create a `TCPRoute` resource, which will then be converted in to a [{{ site.base_gateway }} Service](/gateway/entities/service/) and [Route](/gateway/entities/route/). TLS passthrough is _not_ supported using `TCPIngress`.
 
 prereqs:
   kubernetes:
@@ -46,14 +45,62 @@ cleanup:
 
 {% include /k8s/create-certificate.md namespace='kong' hostname='tls9443.kong.example' cert_required=true %}
 
+## Attach the TLS certificate to the echo service
+
+The `echo` service does not listen on the TLS port by default as it requires a certificate stored in a Kubernetes Secret. Patch the `echo` deployment to mount the Secret in the pod and set the `TLS_CERT_FILE` and `TLS_KEY_FILE` environment variables to allow the `echo` service to terminate TLS:
+
+```bash
+kubectl patch -n kong --type=json deployment echo -p='[
+    {
+        "op":"add",
+        "path":"/spec/template/spec/containers/0/env/-",
+        "value":{
+            "name": "TLS_PORT",
+            "value": "1030"
+        }
+    },
+    {
+        "op":"add",
+        "path":"/spec/template/spec/containers/0/env/-",
+        "value":{
+            "name": "TLS_CERT_FILE",
+            "value": "/var/run/certs/tls.crt"
+        }
+    },
+    {
+        "op":"add",
+        "path":"/spec/template/spec/containers/0/env/-",
+        "value":{
+            "name": "TLS_KEY_FILE",
+            "value": "/var/run/certs/tls.key"
+        }
+    },
+    {
+        "op":"add",
+        "path":"/spec/template/spec/containers/0/volumeMounts",
+        "value":[{
+            "mountPath": "/var/run/certs",
+            "name": "secret-test",
+            "readOnly": true
+        }]
+    },
+    {
+        "op":"add",
+        "path":"/spec/template/spec/volumes",
+        "value":[{
+            "name": "secret-test",
+            "secret": {
+              "defaultMode": 420,
+              "secretName": "tls9443.kong.example"
+            }
+        }]
+    }
+]'
+```
+
 ## Route TCP traffic
 
-To publicly expose the service, create a `TCPRoute` resource for Gateway APIs or a `TCPIngress` resource for Ingress.
-
-{% navtabs api %}
-{% navtab "Gateway API" %}
-
-To reconcile the `TCPRoute`, configure an additional TLS listener on your `Gateway` resource:
+To reconcile the `TLSRoute`, configure an additional TLS listener on your `Gateway` resource:
 
 ```bash
 kubectl patch -n kong --type=json gateway kong -p='[
@@ -71,11 +118,12 @@ kubectl patch -n kong --type=json gateway kong -p='[
               }
             },
             "tls": {
-                "certificateRefs":[{
-                    "group":"",
-                    "kind":"Secret",
-                    "name":"tls9443.kong.example"
-                  }]
+              "mode": "Passthrough",
+              "certificateRefs":[{
+                "group":"",
+                "kind":"Secret",
+                "name":"tls9443.kong.example"
+              }]
             }
         }
     }
@@ -99,39 +147,11 @@ spec:
   rules:
     - backendRefs:
       - name: echo
-        port: 1025
-" | kubectl apply -f -
-```
-{% endnavtab %}
-{% navtab "Ingress" %}
-```bash
-echo "apiVersion: configuration.konghq.com/v1beta1
-kind: TCPIngress
-metadata:
-  name: echo-tls
-  namespace: kong
-  annotations:
-    kubernetes.io/ingress.class: kong
-spec:
-  tls:
-  - secretName: tls9443.kong.example
-    hosts:
-      - tls9443.kong.example
-  rules:
-  - host: tls9443.kong.example
-    port: 9443
-    backend:
-      serviceName: echo
-      servicePort: 1025
-" | kubectl apply -f -
+        port: 1030
 " | kubectl apply -f -
 ```
 
-{% endnavtab %}
-{% endnavtabs %}
-
-This configuration instructs {{site.base_gateway}} to forward all traffic it
-receives on port 9000 to the `echo` service on port 1025.
+This configuration instructs {{site.base_gateway}} to forward all traffic it receives on port 9000 to the `echo` service on port 1030.
 
 ## Validate your configuration
 
@@ -142,9 +162,11 @@ In real-world usage, you would create a DNS record for `tls9443.kong.example` po
 ```bash
 echo "hello" | openssl s_client -connect $PROXY_IP:9443 -servername tls9443.kong.example -quiet 2>/dev/null
 ```
+
 Press Ctrl+C to exit.
 
 The results should look like this:
+
 ```text
 Welcome, you are connected to node kind-control-plane.
 Running on Pod echo-5f44d4c6f9-krnhk.
