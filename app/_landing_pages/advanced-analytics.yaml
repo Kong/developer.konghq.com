@@ -23,7 +23,7 @@ rows:
                   text: |
                     {{site.konnect_short_name}} Advanced Analytics is a real-time, highly contextual analytics platform 
                     that provides deep insights into API health, performance, and usage. It helps businesses optimize their API strategies 
-                    and improve operational efficiency.
+                    and improve operational efficiency. This feature is offered as a premium service within {{site.konnect_short_name}}.
 
                     **Key benefits:**
                     - **Centralized visibility:** Gain insights across all APIs, Services, and Data Planes.
