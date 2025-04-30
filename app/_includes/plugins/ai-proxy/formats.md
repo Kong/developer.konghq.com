@@ -28,9 +28,8 @@ The following upstream URL patterns are used:
 > In this mode, {{site.base_gateway}} will still provide useful analytics, logging, and cost calculation.
 
 ### Input formats
-{% new_in 3.9 %} Kong will mediate the request and response format based on the selected [`{{ provider }}`](./reference/#{{ provider_slug }}) and [`{{ route_type }}`](./reference/#{{ route_type_slug }}), as outlined in the table above.
 
-{% new_in 3.10 %} Kong will mediate the request and response format based on the selected [`config.targets[].provider`](/plugins/ai-proxy-advanced/reference/#schema--config-embeddings-model-provider) and [`config.targets[].route_type`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-route-type), as outlined in the table above. By default, Kong uses OpenAI format and can be changed using [`config.targets[].llm_format`](/plugins/ai-proxy-advanced/reference/#schema--config-llm-format). When `llm_format` is not set to `openai`, this plugin will not transform the request when sending to upstream and will keep it as-is.
+{% new_in 3.10 %} Kong will mediate the request and response format based on the selected [`config.targets[].provider`](/plugins/ai-proxy-advanced/reference/#schema--config-embeddings-model-provider) and [`config.targets[].route_type`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-route-type), as outlined in the table above. By default, Kong uses the OpenAI format, which can be changed using [`config.targets[].llm_format`](/plugins/ai-proxy-advanced/reference/#schema--config-llm-format). If `llm_format` is not set to `openai`, the plugin will not transform the request when sending it upstream and will leave it as-is. In versions **before 3.10**, Kong mediated the request and response format based on the selected [`{{ provider }}`](./reference/#{{ provider_slug }}) and [`{{ route_type }}`](./reference/#{{ route_type_slug }}).
 
 The Kong AI Proxy accepts the following inputs formats, standardized across all providers. The `{{ route_type }}` must be configured respective to the required request and response format examples:
 
