@@ -776,6 +776,14 @@
   .navbar-item__icon {
     @apply inline-flex text-brand w-6 h-6 items-center justify-center !p-0;
   }
+
+  .feedback__button--active[value="true"] {
+    @apply bg-semantic-green-secondary;
+  }
+
+  .feedback__button--active[value="false"] {
+    @apply bg-semantic-red-secondary;
+  }
 }
 
 .ais-InstantSearch {
