@@ -1,8 +1,8 @@
 ---
 title: Database backed
 
-description: |
-  Use {{ site.kic_product_name }} to configure a {{ site.base_gateway }} Control Plane that is attached to a PostgreSQL database.
+description: "Use {{ site.kic_product_name }} to configure a {{ site.base_gateway }} Control Plane that is attached to a PostgreSQL database."
+  
 
 content_type: reference
 layout: reference
@@ -24,7 +24,7 @@ related_resources:
   - text: Gateway Discovery
     url: /kubernetes-ingress-controller/deployment-topologies/gateway-discovery/
   - text: Sidecar (Traditional)
-    url: /kubernetes-ingress-controller/deployment-topologies/sidecar/]
+    url: /kubernetes-ingress-controller/deployment-topologies/sidecar/
   - text: Architecture
     url: /kubernetes-ingress-controller/architecture/
 ---
