@@ -216,6 +216,7 @@ filetype
 filetypes
 finalizer
 finalizers
+fips
 firewalled
 firstTimestamp
 flamegraph
