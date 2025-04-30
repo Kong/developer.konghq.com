@@ -96,7 +96,7 @@ rows:
             icon: /assets/icons/gateway.svg
             cta:
               text: Start using {{site.event_gateway}}
-              url: /how-to/get-started-with-event-gateway/
+              url: /how-to/knep/get-started-with-event-gateway/
               align: end
       - blocks:
         - type: card
