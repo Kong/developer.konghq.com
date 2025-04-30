@@ -1,6 +1,9 @@
 
 title: ACME with shm storage
-description: |
+
+description: Configure the ACME plugin with a Lua shared dict as the storage backend. 
+
+extended_description: |
   Configure the ACME plugin with a Lua shared dict as the storage backend. 
   This option doesn't persist between Nginx restarts.
 
@@ -29,13 +32,16 @@ config:
 variables:
   email:
     value: $EMAIL
+    description: The account identifier.
   key_id:
     value: $KEY_ID
+    description: The ID of a [Key](/gateway/entities/key/).
   key_set:
     value: $KEY_SET
+    description: The ID of a [Key Set](/gateway/entities/key-set/) to associate the Key ID with.
   domain:
     value: $DOMAIN
-
+    description: An array of strings representing hosts.
 
 tools:
   - deck

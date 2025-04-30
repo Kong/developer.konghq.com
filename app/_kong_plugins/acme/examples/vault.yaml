@@ -1,10 +1,14 @@
 
 title: ACME with HashiCorp Vault storage
-description: |
+
+description: Configure the ACME plugin with HashiCorp Vault as the storage backend.
+
+extended_description: |
   Configure the ACME plugin with HashiCorp Vault as the storage backend.
 
   {:.info}
   > Note: Only the KV v2 backend is supported.
+
 weight: 870
 
 requirements:
@@ -24,7 +28,7 @@ config:
   storage_config:
     vault:
       host: ${hcv_host}
-      port: ${hcv_port}
+      port: 8200
       kv_path: "acme"
       timeout: 2000
       https: false
@@ -39,19 +43,22 @@ config:
 variables:
   email:
     value: $EMAIL
+    description: The account identifier.
   key_id:
     value: $KEY_ID
+    description: The ID of a [Key](/gateway/entities/key/).
   key_set:
     value: $KEY_SET
+    description: The ID of a [Key Set](/gateway/entities/key-set/) to associate the Key ID with.
   domain:
     value: $DOMAIN
+    description: An array of strings representing hosts.
   hcv_host:
     value: $HCV_HOST
-  hcv_port:
-    value: $HCV_PORT
+    description: The host on which HashiCorp Vault is running.
   jwt_path:
     value: $JWT_PATH
-
+    description: The path to the JSON Web Token to use for authentication.
 
 tools:
   - deck

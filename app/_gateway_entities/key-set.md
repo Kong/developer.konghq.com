@@ -4,6 +4,9 @@ content_type: reference
 entities:
   - key-set
 
+products:
+  - gateway
+
 description: A Key Set is a collection of {{site.base_gateway}} Keys.
 
 related_resources:
