@@ -15,7 +15,7 @@ breadcrumbs:
 products:
   - kic
 search_aliases:
-  - kic postgres
+  - kic PostgreSQL
 works_on:
   - on-prem
   - konnect

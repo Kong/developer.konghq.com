@@ -224,6 +224,7 @@ foogineer
 full_name
 Gateway
 GatewayClass
+gatewayclass
 gcloud
 gcp
 geo

@@ -9,7 +9,7 @@ layout: reference
 tags:
   - crd
 search_aliases: 
-  - kic crd
+  - kic CRD
 products:
   - kic
 breadcrumbs:
