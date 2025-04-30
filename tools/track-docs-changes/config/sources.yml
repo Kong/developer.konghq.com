@@ -1351,12 +1351,11 @@ app/mesh/signed-images.md:
   - app/_src/mesh/features/signed-images.md
 app/mesh/enterprise.md:
   - app/_src/mesh/features/index.md
+  - app/_src/mesh/features/fips-support.md
 app/mesh/ubi-images.md:
   - app/_src/mesh/features/ubi-images.md
 app/mesh/rbac.md:
   - app/_src/mesh/features/rbac.md
-app/mesh/fips-support.md:
-  - app/_src/mesh/features/fips-support.md
 app/mesh/openshift-quickstart.md:
   - app/_src/mesh/features/openshift-quickstart.md
 app/mesh/ca-rotation.md:

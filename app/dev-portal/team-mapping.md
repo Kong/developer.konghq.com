@@ -1,5 +1,5 @@
 ---
-title: Team mapping
+title: Dev Portal team mapping
 content_type: reference
 layout: reference
 
@@ -8,16 +8,23 @@ products:
 beta: true
 tags:
   - beta
+  - authentication
+breadcrumbs:
+  - /dev-portal/
 works_on:
     - konnect
+search_aliases:
+  - Portal
 
-description: "In the {{site.konnect_short_name}}  Dev Portal, you can map existing developer teams from a third-party identity provider (IdP) and their permissions to elements in Konnect."
+description: "Map existing developer teams from a third-party identity provider (IdP) and their permissions to elements in a {{site.konnect_short_name}} Dev Portal."
 
 related_resources:
   - text: Portal customization reference
     url: /dev-portal/portal-customization/
   - text: Portal snippets
     url: /dev-portal/snippets/
+  - text: "Configure SSO for a {{site.konnect_short_name}} org"
+    url: /konnect-platform/konnect-sso/
 ---
 
 With teams mapped from an IdP, the developers and permissions are mapped automatically in {{site.konnect_short_name}} so you don't have to manually copy over each team of developers.

@@ -11,6 +11,18 @@ tags:
 beta: true
 works_on:
   - konnect
+
+breadcrumbs:
+  - /dev-portal/
+
+api_specs:
+  - konnect/portal-management
+
+search_aliases:
+  - OpenID Connect
+  - Key Authentication
+  - Portal
+
 related_resources:
   - text: SSO reference
     url: /dev-portal/sso/
@@ -18,7 +30,7 @@ related_resources:
     url: /dev-portal/application-registration/
 ---
 
-You can define and reuse multiple authentication strategies for different APIs and Dev Portals. For example:
+Dev Portal authentication strategies determine which developers can access which APIs. You can define and reuse multiple authentication strategies for different APIs and Dev Portals. For example:
 
 * `key-auth`: Built-in default
 * `okta-oidc`: OpenID Connect with Okta
@@ -53,7 +65,7 @@ Developers can only use **one auth strategy per application**.
 For example, to register for both Weather v2 and Maps v2 (both use `okta-oidc`), one application is sufficient. 
 To register for Weather v1 and Weather v2, two applications are required.
 
-## Configure key auth strategy
+## Configure the key auth strategy
 
 Key authentication is {{site.konnect_short_name}}'s built-in API authentication strategy. 
 When developers create an application through your Dev Portal, they are automatically issued credentials.

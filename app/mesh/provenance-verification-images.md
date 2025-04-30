@@ -16,7 +16,7 @@ related_resources:
   - text: "Verify signatures for signed {{site.mesh_product_name}} images"
     url: /mesh/signed-images/
   - text: "FIPS Support"
-    url: /mesh/fips-support/
+    url: /mesh/enterprise/#fips-140-2-support
   - text: "Verify build provenance for signed {{site.mesh_product_name}}Binaries"
     url: /mesh/provenance-verification-images/
   - text: "Red Hat Universal Base Images"

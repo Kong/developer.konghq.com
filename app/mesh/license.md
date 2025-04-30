@@ -1,20 +1,22 @@
 ---
-title: "{{site.mesh_product_name}} License"
+title: "{{site.mesh_product_name}} license"
 description: "Understand how licensing works in {{site.mesh_product_name}}, including limits, behaviors, and how to apply a license in both Kubernetes and Universal modes."
 content_type: reference
 layout: reference
 products:
   - mesh
+breadcrumbs:
+  - mesh/
 
 tags:
   - licensing
   - multi-zone
 
 related_resources:
-  - text: "Access Audit"
-    url: /mesh/access-audit/
-  - text: "Certificate Manager"
-    url: /mesh/cert-manager/
+  - text: Enterprise features
+    url: /mesh/enterprise/
+  - text: Install {{site.mesh_product_name}}
+    url: /mesh/install/
 ---
 
 
@@ -41,7 +43,7 @@ A valid license file can be passed to {{site.mesh_product_name}} in a variety of
 When installing the {{site.mesh_product_name}} Control Plane with `kumactl install control-plane`, provide a `--license-path` argument with a full path to a valid license file. For example:
 
 ```sh
-kumactl install control-plane --license-path=/path/to/license.json
+kumactl install control-plane --license-path=./license.json
 ```
 {% endnavtab %}
 {% navtab "Helm" %}
@@ -53,12 +55,12 @@ To install a valid license via Helm:
 
    ```sh
    kubectl create namespace kong-mesh-system
-   kubectl create secret generic kong-mesh-license -n kong-mesh-system --from-file=/path/to/license.json
+   kubectl create secret generic kong-mesh-license -n kong-mesh-system --from-file=./license.json
    ```
 
    Where:
    * `kong-mesh-system` is the namespace where {{site.mesh_product_name}} Control Plane is installed
-   * `/path/to/license.json` is the path to a valid license file. The filename should be `license.json` unless otherwise specified in `values.yaml`.
+   * `./license.json` is the path to a valid license file. The filename should be `license.json` unless otherwise specified in `values.yaml`.
 
 1. Modify the `values.yaml` file to point to the secret. For example:
 
@@ -123,10 +125,10 @@ Licenses are based on:
 
 
 
-In the context of the metric, a Data Plane proxy (DPP) is a standard Data Plane proxy that is deployed next to your services, either as a sidecar container or in a virtual machine. Gateway Data Plane proxies, zone ingresses, and zone egresses are not counted.
+In the context of the metric, a Data Plane proxy (DPP) is a standard Data Plane proxy that is deployed next to your Services, either as a sidecar container or in a virtual machine. Gateway Data Plane proxies, zone ingresses, and zone egresses are not counted.
 
 You can measure the number of Data Plane proxies needed in {{site.mesh_product_name}} by the 
-number of services you want to include in your service meshes. Use the following formula:
+number of Services you want to include in your service meshes. Use the following formula:
 
 ```
 Number of DPPs = Number of Pods + Number of VMs.
@@ -134,7 +136,7 @@ Number of DPPs = Number of Pods + Number of VMs.
 {:.no-copy-code}
 
 
-## License behaviours
+## License behaviors
 
 With an expired license or invalid license, the Control Plane will fail to start.
 If the license expires while the control-plane is running it will keep running but a restart of the instance will fail. 

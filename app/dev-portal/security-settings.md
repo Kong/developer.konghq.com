@@ -1,5 +1,5 @@
 ---
-title: Security settings
+title: Dev Portal access and authentication settings
 content_type: reference
 layout: reference
 
@@ -8,19 +8,35 @@ products:
 beta: true
 tags:
   - beta
+  - access-control
+  - authentication
+
+api_specs:
+  - konnect/portal-management
+
 works_on:
     - konnect
 
-description: "Security settings allow for visibility and access control around Developers accessing your Dev Portal."
+search_aliases:
+  - Portal
+
+breadcrumbs:
+  - /dev-portal/
+
+description: "Security settings help you configure visibility and access control for developers accessing your Dev Portal."
 
 related_resources:
   - text: Dev Portal settings
     url: /dev-portal/portal-settings/
   - text: Custom pages
     url: /dev-portal/custom-pages/
+  - text: Publish APIs with Dev Portal
+    url: /dev-portal/publishing/
+  - text: Custom domains
+    url: /dev-portal/custom-domains/
 ---
 
-Settings allow for visibility and access control around Developers accessing your Dev Portal. 
+The Dev Portal security settings allow for visibility and access control around developers accessing your Dev Portal. To configure these settings, navigate to Dev Portal in the {{site.konnect_short_name}} UI, click a Dev Portal, and then click **Settings** in the sidebar.
 
 {:.info}
 > To adjust security settings for Dev Portal admins and users, see [{{site.konnect_short_name}} organization settings](/konnect-authentication/).
@@ -33,11 +49,11 @@ When new APIs or pages are created, the specified default visibility will be use
 * Public: Visible to anonymous users browsing the Dev Portal
 
 {:.info}
-> Changing the default Visibility only affects new APIs or pages. It does not retroactively change the visibility of existing APIs or pages.
+> Changing the default visibility only affects new APIs or pages. It does not retroactively change the visibility of existing APIs or pages.
 
 ## User authentication
 
-Enabling user authentication will allow anonymous users browsing the Portal to register for a developer account. 
+Enabling user authentication will allow anonymous users browsing the Dev Portal to register for a developer account. 
 
 User authentication must be enabled to configure any further settings related to identity providers, RBAC, developer & application registration, or specifying application auth strategies and API keys.
 
@@ -53,40 +69,44 @@ authentication_enabled: true|false
 ### Identity providers
 
 Identity providers (IdPs) manage authentication of developers signing into the Dev Portal. 
-{{site.konnect_short_name}}'s built-in authentication provider is used by default. This option generates API keys for Developers.
+{{site.konnect_short_name}}'s built-in authentication provider is used by default. This option generates API keys for developers.
 
 OIDC or SAML providers can be configured as integrated IdP providers.
 
 Learn more about configuring IdPs in [Self-service developer & application registration](/dev-portal/application-registration/).
 
-### Developer & application approvals
+### Developer and application approvals
 
 {:.info}
-> An API must be linked to a {{site.konnect_short_name}} Gateway Service (version 3.6+) to be able to restrict access to your API with authentication strategies.
+> {% new_in 3.6 %} An API must be linked to a {{site.konnect_short_name}} Gateway Service to be able to restrict access to your API with authentication strategies.
 
-Registration of developer accounts and creation of applications both require approval by Portal admins by default. These approvals are managed in [Access and Approvals](/dev-portal/access-and-approval/).
+Registration of developer accounts and creation of applications both require approval by Dev Portal admins by default. These approvals are managed in [Access and Approvals](/dev-portal/access-and-approval/).
 
 #### Auto approve developers
-* Enabled: Anyone can sign up for a Developer account without any further approval process. 
-* Disabled: Portal admins have to approve any new sign up in [Access and Approvals](/dev-portal/access-and-approval/).
+
+The following explains the behavior when auto-approval for developers is configured:
+* Enabled: Anyone can sign up for a developer account without any further approval process. 
+* Disabled: Dev Portal admins have to approve any new sign up in [Access and Approvals](/dev-portal/access-and-approval/).
 
 #### Auto approve applications 
-* Enabled: When any approved Developer creates an Application, it will be automatically approved and created. 
+
+The following explains the behavior when auto-approval for applications is configured:
+* Enabled: When any approved developer creates an Application, it will be automatically approved and created. 
   * Once an application is approved, the developer will be able to use it to create API Keys. 
-* Disabled: Portal admins have to approve any new Applications in [Access and Approvals](/dev-portal/access-and-approval/) before a Developer can create API Keys.
+* Disabled: Dev Portal admins have to approve any new Applications in [Access and Approvals](/dev-portal/access-and-approval/) before a developer can create API Keys.
 
-### Role-Based Access Control
+### Dev Portal role-based access control
 
-When RBAC is enabled for a Portal, the option to configure API access policies for Developers will be available when [publishing](/dev-portal/publishing/) the API to a portal. Otherwise, any logged in Developer can see any published API that is set to `Visibility: public`.
+When RBAC is enabled for a Dev Portal, the option to configure API access policies for developers will be available when [publishing](/dev-portal/publishing/) the API to a portal. Otherwise, any logged in developer can see any published API that is set to `Visibility: public`.
 
 ### Authentication strategy and creating API keys
 
 {:.info}
-> An API must be linked to a {{site.konnect_short_name}} Gateway Service (version 3.6+) to be able to restrict access to your API with Authentication Strategies.
+> {% new_in 3.6 %} An API must be linked to a {{site.konnect_short_name}} Gateway Service to be able to restrict access to your API with authentication strategies.
 
-Authentication strategies determine how [published APIs](/dev-portal/publishing/) are authenticated, and how Developers create API Keys. 
+Authentication strategies determine how [published APIs](/dev-portal/publishing/) are authenticated, and how developers create API Keys. 
 
-Authentication strategies automatically configure the {{site.konnect_short_name}} Gateway service by enabling the {{site.konnect_short_name}} Application Auth (KAA) plugin on the [Gateway service linked to the API](/dev-portal/apis/#gateway-service-link). The KAA plugin can only be configured from the associated Dev Portal and not the {{site.konnect_short_name}} Gateway Manager.
+Authentication strategies automatically configure the {{site.konnect_short_name}} Gateway Service by enabling the {{site.konnect_short_name}} Application Auth (KAA) plugin on the [Gateway Service linked to the API](/dev-portal/apis/#gateway-service-link). The KAA plugin can only be configured from the associated Dev Portal and not the {{site.konnect_short_name}} Gateway Manager.
 
 #### Default application authentication strategy 
 
@@ -95,7 +115,7 @@ Determines the default authentication strategy applied to an API as it is publis
 To create a new application authentication strategy, see [Application Auth](/dev-portal/application-registration).
 
 {:.info}
-> The authentication strategy only affects the hosted Service and does not affect developers browsing the Portal from viewing APIs. To change visibility of APIs in the Portal, see [Default Visibility](#default-visibility) and [Role-Based Access Control](#role-based-access-control).
+> The authentication strategy only affects the hosted Service and does not affect developers browsing the Dev Portal from viewing APIs. To change visibility of APIs in the Dev Portal, see [Default Visibility](#default-visibility) and [Role-Based Access Control](#role-based-access-control).
 
 <!--
 ### Kong Dev Portal API 

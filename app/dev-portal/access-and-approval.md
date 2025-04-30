@@ -1,5 +1,5 @@
 ---
-title: Access and approvals
+title: Developer and application approvals in Dev Portal
 content_type: reference
 layout: reference
 description: |
@@ -12,15 +12,23 @@ tags:
   - beta
 works_on:
   - konnect
+breadcrumbs:
+  - /dev-portal/
+search_aliases:
+  - Portal
+api_specs:
+  - konnect/portal-management
 related_resources:
   - text: "Application registration"
     url: /dev-portal/application-registration/
   - text: "Developer sign up"
     url: /dev-portal/developer-signup/
+  - text: Dev Portal access and authentication settings
+    url: /dev-portal/security-settings/
 beta: true
 ---
 
-When Dev Portal [security settings](/dev-portal/security-settings/) require manual approval, Portal admins are notified to approve new Developer and Application registrations.
+When Dev Portal [security settings](/dev-portal/security-settings/) require manual approval, Dev Portal admins are notified to approve new Developer and Application registrations. You can manage developer and application approvals by navigating to your Dev Portal in {{site.konnect_short_name}} and clicking **Developers** or **Applications** in the sidebar.
 
 ## Developer approvals
 
@@ -53,7 +61,7 @@ Developers can belong to multiple teams.
 
 ## Application approvals
 
-When a developer creates an application from the **My Apps** section, the app is added to the list of all applications and may require approval based on your Portal settings.
+When a developer creates an application from the **My Apps** section, the app is added to the list of all applications and may require approval based on your Dev Portal settings.
 
 {% table %}
 columns:

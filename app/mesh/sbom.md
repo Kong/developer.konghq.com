@@ -1,19 +1,20 @@
 ---
 title: "Software Bill of Materials"
 description: "View and download software bill of materials (SBOMs) for {{site.mesh_product_name}} binaries and Docker images, including license, dependency, and security information."
-content_type: reference
+content_type: policy
 layout: reference
 products:
   - mesh
-
+breadcrumbs:
+  - mesh/
 tags:
   - sbom
   - security
 
 
 related_resources:
-  - text: "{{site.mesh_product_name}}"
-    url: /mesh/
+  - text: "{{site.mesh_product_name}} version support policy"
+    url: /mesh/support-policy/
 ---
 
 A software bill of materials (SBOM) is an inventory of all software components (proprietary and open source), open source licenses, and dependencies in a given product. A software bill of materials (SBOM) provides visibility into the software supply chain and any license compliance, security, and quality risks that may exist.

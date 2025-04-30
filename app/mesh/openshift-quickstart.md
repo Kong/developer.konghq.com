@@ -6,13 +6,22 @@ layout: reference
 products:
   - mesh
 
+breadcrumbs:
+  - /mesh/
+
 tags:
   - openshift
   - red-hat
   - kubernetes
 
+search_aliases:
+  - Red Hat
+  - OpenShift
+
 
 related_resources:
+  - text: Single-zone deployment
+    url: /mesh/single-zone/
   - text: "Red Hat Universal Base Images"
     url: /mesh/ubi-images/
   - text: "Verify signatures for signed images"
@@ -22,7 +31,7 @@ related_resources:
 
 In this guide, you will learn how to get {{site.mesh_product_name}} up and running quickly in [standalone mode](/mesh/single-zone/) on [Red Hat OpenShift](https://www.redhat.com/technologies/cloud-computing/openshift). This tutorial assumes some base-level OpenShift knowledge.
 
-This tutorial doesn't require a license because {{site.mesh_product_name}} can start in evaluation mode, which allows you to have up to five data planes or sidecars. This provides just enough data planes to get comfortable with the product and test it out.
+This tutorial doesn't require a license because {{site.mesh_product_name}} can start in evaluation mode, which allows you to have up to five Data Planes or sidecars. This provides just enough Data Planes to get comfortable with the product and test it out.
 
 This quickstart tutorial covers:
 
@@ -80,9 +89,9 @@ In this section, you'll install {{site.mesh_product_name}} in standalone mode. S
     ```bash
     kubectl create secret docker-registry rh-registry-secret -n kong-mesh-system \
         --docker-server=registry.connect.redhat.com \
-        --docker-username=<username> \
-        --docker-password=<password> \
-        --docker-email=<email>
+        --docker-username=$USERNAME \
+        --docker-password=$PASSWORD \
+        --docker-email=$EMAIL
     ```
 
     This authenticates you to Red Hat's image registry, which allows you to pull the certified images.
@@ -113,7 +122,7 @@ In this section, you'll install {{site.mesh_product_name}} in standalone mode. S
     ```bash
     kubectl get pods -n kong-mesh-system
     ```
-    This should return the control plane that is running, like the following:
+    This should return the Control Plane that is running, like the following:
     ```bash
     NAME                                       READY   STATUS    RESTARTS   AGE
     kong-mesh-control-plane-7443h46bd4-cmhsa   1/1     Running   0          19s
@@ -140,9 +149,9 @@ In this section, you'll install {{site.mesh_product_name}} in standalone mode. S
 
 ## Deploy the demo application
 
-In this step, you'll deploy the [`kuma-demo` app](/mesh/kubernetes) to {{site.mesh_product_name}}. This allows you to quickly populate your mesh with services so you can test the capabilities of {{site.mesh_product_name}}.
+In this step, you'll deploy the [`kuma-demo` app](/mesh/kubernetes) to {{site.mesh_product_name}}. This allows you to quickly populate your mesh with Services so you can test the capabilities of {{site.mesh_product_name}}.
 
-The `kuma-demo` app consists of two services:
+The `kuma-demo` app consists of two Services:
 
 * `demo-app`: A web application that lets you increment a numeric counter
 * `redis`: A data store for the counter
@@ -213,5 +222,5 @@ In this section, you will remove all components, including `kuma-demo` and {{sit
 
 Now that you've deleted your demo cluster and components, you can deploy {{site.mesh_product_name}} in a production environment. Follow the instructions in one of the following guides to deploy {{site.mesh_product_name}} using your method of choice:
 
-* [Deploy a standalone control plane](/mesh/production/cp-deployment/stand-alone/)
-* [Deploy a multi-zone global control plane](/mesh/production/cp-deployment/multi-zone/)
+* [Deploy a standalone Control Plane](/mesh/single-zone/)
+* [Deploy a multi-zone global Control Plane](/mesh/mesh-multizone-service-deployment/)
