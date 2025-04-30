@@ -28,7 +28,7 @@ rows:
                     - Built-in mTLS, service discovery, and traffic management.
                     - Support for [multi-zone](/mesh/mesh-multizone-service-deployment/) and multi-mesh topologies.
                     - Runs on both Kubernetes and Universal (VM) environments.
-                    - Enterprise features like access control and advanced observability.
+                    - [Enterprise features](/mesh/enterprise/) like access control and advanced observability.
 
                     You can manage your mesh deployments using the [Kong Mesh GUI](https://cloud.konghq.com/mesh/).
           - type: button
@@ -49,13 +49,13 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Enterprise features
+              title: Policy Hub
               description: |
-                Explore the features included with {{site.mesh_product_name}} Enterprise, including mTLS backends, RBAC, FIPS support, and signed container images.
-              icon: /assets/logos/konglogo-gradient-secondary.svg
+                {{site.mesh_product_name}} policies are bundled features for your service traffic and network configuration.
+              icon: /assets/icons/mesh.svg
               cta:
                 text: Learn more
-                url: /mesh/enterprise/
+                url: /mesh/policies/
       - blocks:
           - type: card
             config:
@@ -108,33 +108,3 @@ rows:
               cta:
                 text: Learn more
                 url: /mesh/single-zone/
-  - header:
-      type: h2
-      text: "Policies"
-    columns:
-      - blocks:
-          - type: mesh_policy
-            config:
-              slug: meshtrafficpermission
-      - blocks:
-          - type: mesh_policy
-            config:
-              slug: meshratelimit
-      - blocks:
-          - type: mesh_policy
-            config:
-              slug: meshtimeout
-  -
-    columns:
-      - blocks:
-          - type: mesh_policy
-            config:
-              slug: meshretry
-      - blocks:
-          - type: mesh_policy
-            config:
-              slug: meshfaultinjection
-      - blocks:
-          - type: mesh_policy
-            config:
-              slug: meshcircuitbreaker
