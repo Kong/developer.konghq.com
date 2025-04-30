@@ -388,6 +388,17 @@ app/kubernetes-ingress-controller/migrate/ingress-to-gateway.md:
 app/kubernetes-ingress-controller/migrate/credential-kongcredtype-label.md:
   - app/_src/kubernetes-ingress-controller/guides/migrate/credential-kongcredtype-label.md
 
+app/_how-tos/kic-service-healthchecks.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/health-checks.md
+app/kubernetes-ingress-controller/last-known-good-config.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/last-known-good-config.md
+app/kubernetes-ingress-controller/fallback-configuration.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/fallback-config.md
+app/_how-tos/kic-fallback-config-exclude.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/fallback-config.md
+app/_how-tos/kic-fallback-config-backfill.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/fallback-config.md
+
 # plugins
 app/_kong_plugins/session/changelog.md:
   - app/_hub/kong-inc/session/_changelog.md
