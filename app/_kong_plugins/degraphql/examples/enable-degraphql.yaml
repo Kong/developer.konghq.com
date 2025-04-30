@@ -7,7 +7,7 @@ extended_description: |
   Connected Gateway Services represent a REST API and not the GraphQL endpoint itself. 
   {{site.base_gateway}} will return a `404 Not Found` status code if no DeGraphQL routes have been configured.
   For a complete tutorial which shows you how to create a service and GraphQL routes, see [Map URIs into GraphQL queries with DeGraphQL](/how-to/map-uris-into-graphql-queries/).
-
+title: 'Enable DeGraphQL'
 weight: 900
 
 requirements:
