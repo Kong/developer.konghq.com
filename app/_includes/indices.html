@@ -1,5 +1,5 @@
 
-{% for group in groups %}
+{% for group in groups %}{% unless group.hidden %}
   <div id="{{ group.title | slugify }}" class="flex flex-col gap-5 heading-section card p-6 rounded-lg shadow-primary">
       <h2>{{ group.title }}</h2>
 
@@ -18,4 +18,4 @@
         </ul>
       </div>
   </div>
-{% endfor %}
+{% endunless %}{% endfor %}

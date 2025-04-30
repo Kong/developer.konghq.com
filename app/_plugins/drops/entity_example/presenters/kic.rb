@@ -114,6 +114,7 @@ module Jekyll
                 }
               }
 
+              should_merge = true
               if %w[Plugin ClusterPlugin].include?(resource_type)
                 d['plugin'] = d['name'] if d['name'] && !d['plugin']
                 d.delete('name')
@@ -124,7 +125,21 @@ module Jekyll
                 d.delete('plugins')
               end
 
-              r = r.merge(d)
+              if resource_type == 'Vault'
+                should_merge = false
+                r['apiVersion'] = 'configuration.konghq.com/v1alpha1'
+
+                # Rename name to backend
+                r['spec'] = {
+                  'backend' => d['name']
+                }
+                r['spec'] = r['spec'].merge(d)
+                r['spec'].delete('name')
+
+                r['metadata']['name'] = "#{r['spec']['backend']}-vault"
+              end
+
+              r = r.merge(d) if should_merge
 
               r['metadata']['annotations']['konghq.com/tags'] = tags.join(', ') if tags
               if resource_type == 'ClusterPlugin'

@@ -75,9 +75,8 @@ module Jekyll
       # Initialize the sections
       index['sections'].each do |section|
         @sections[section['title']] = {
-          'title' => section['title'],
           'pages' => []
-        }
+      }.merge(section)
       end
 
       all = [].concat(site.pages, site.documents)
