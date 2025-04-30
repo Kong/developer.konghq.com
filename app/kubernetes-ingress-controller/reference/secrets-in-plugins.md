@@ -1,5 +1,5 @@
 ---
-title: "Using Kubernetes Secrets in Plugins"
+title: "Using Kubernetes Secrets in plugins"
 description: |
   Populate your KongPlugin configuration using Kubernetes Secrets
 
@@ -22,7 +22,7 @@ works_on:
 {{ site.kic_product_name }} allows you to configure {{ site.base_gateway }} plugins using the contents of a Kubernetes secret. {{ site.kic_product_name }} can read secrets in two ways:
 
 1. Read the complete plugin configuration from a secret
-1. Use `configPatches` to set a single field in a plugin configuration (requires {{ site.kic_product_name }} 3.1+)
+1. Use `configPatches` to set a single field in a plugin configuration (requires {{ site.kic_product_name }} 3.1 or later)
 
 {{ site.kic_product_name }} resolves the referenced secrets and sends a complete configuration to {{ site.base_gateway }}.
 
@@ -75,7 +75,7 @@ The `configPatches` field in the `KongPlugin` resource allows you to set a `path
 
 In the previous Redis rate-limiting example, only the `redis_password` field is sensitive. Instead of storing the whole configuration in a secret, use `configPatches` to patch a single key:
 
-Create a Kubernetes secret that contains a `password` field.
+Create a Kubernetes secret that contains a `password` field:
 
 ```bash
 echo "
@@ -88,7 +88,7 @@ stringData:
 type: Opaque" | kubectl apply -f -
 ```
 
-Define a new rate-limiting `KongPlugin` resource. The majority of the configuration is provided under the `config` key. The `redis_password` field is populated from the `password` field in the `rate-limit-redis` secret using `configPatches`.
+Define a new rate limiting `KongPlugin` resource. The majority of the configuration is provided under the `config` key. The `redis_password` field is populated from the `password` field in the `rate-limit-redis` secret using `configPatches`:
 
 ```bash
 echo "
