@@ -1,10 +1,12 @@
 ---
-title: "Role-Based Access Control"
+title: "Role-based access control"
 description: "Use AccessRole and AccessRoleBinding resources in {{site.mesh_product_name}} to implement fine-grained, role-based access to policies and actions."
 content_type: reference
 layout: reference
 products:
   - mesh
+breadcrumbs:
+  - mesh/
 
 tags:
   - rbac
@@ -30,7 +32,7 @@ related_resources:
 
 Role-Based Access Control (RBAC) lets you restrict access to resources and actions to specified users or groups, based on user roles.
 
-## How it works
+## How it RBAC works
 
 {{site.mesh_product_name}} provides two resources to implement RBAC:
 
@@ -237,7 +239,7 @@ spec:
   - type: Group
     name: mesh-system:admin
   # The `system:serviceaccounts:kube-system` group is required by Kubernetes controllers to manage {{site.mesh_product_name}} 
-  # resources, for example, cleaning up data plane objects when a namespace is removed.
+  # resources, for example, cleaning up Data Plane objects when a namespace is removed.
   - type: Group
     name: system:serviceaccounts:kube-system
   roles:
@@ -257,11 +259,11 @@ roles:
 {% endnavtab %}
 {% endnavtabs %}
 
-## Example roles
+## Example RBAC roles
 
 Let's go through example roles in the organization that can be created using {{site.mesh_product_name}} RBAC.
 
-### {{site.mesh_product_name}} operator (admin)
+### {{site.mesh_product_name}} operator (admin) role
 
 Mesh operator is a part of infrastructure team responsible for {{site.mesh_product_name}} deployment.
 
@@ -290,11 +292,11 @@ rules:
 This way {{site.mesh_product_name}} operators can execute any action.
 
 {:.info}
-> **Note**: This role is automatically created on the start of the control plane.
+> **Note**: This role is automatically created on the start of the Control Plane.
 
-### Service owner
+### Service owner role
 
-Service owner is a part of team responsible for given service. Let's take a `backend` service as an example.
+Service owner is a part of team responsible for given Service. Let's take a `backend` Service as an example.
 
 {% navtabs "codeblock" %}
 {% navtab "Kubernetes" %}
@@ -337,19 +339,19 @@ rules:
 {% endnavtab %}
 {% endnavtabs %}
 
-* Modify `MeshRateLimit` and `MeshTrafficPermission` that allows/restricts access to the backend service.
-  This changes the configuration of the data plane proxy that implements the `backend` service.
+* Modify `MeshRateLimit` and `MeshTrafficPermission` that allows/restricts access to the backend Service.
+  This changes the configuration of the Data Plane proxy that implements the `backend` Service.
 * Modify connection policies (`MeshHTTPRoute`,`MeshTCPRoute`, `MeshHealthCheck`, `MeshCircuitBreaker`, `MeshFaultInjection`, `MeshRetry`, `MeshTimeout`, `MeshRateLimit`, `MeshAccessLog`)
-  that matches the backend service that connects to other services. This changes the configuration of the data plane proxy that implements the `backend` service.
-* Modify connection policies that matches any service that consumes backend service.
-  This changes the configuration of data plane proxies that are connecting to the backend, but the configuration only affects connections to the backend service.
-  It's useful because the service owner of the backend knows what (`MeshTimeout`, `MeshHealthCheck`) should be applied when communicating with their service.
-* Modify the `MeshTrace` or `MeshProxyPatch` that matches the backend service. This changes the configuration of the data plane proxy that implements the `backend` service.
+  that matches the backend Service that connects to other Services. This changes the configuration of the Data Plane proxy that implements the `backend` Service.
+* Modify connection policies that matches any Service that consumes backend Service.
+  This changes the configuration of Data Plane proxies that are connecting to the backend, but the configuration only affects connections to the backend Service.
+  It's useful because the Service owner of the backend knows what (`MeshTimeout`, `MeshHealthCheck`) should be applied when communicating with their Service.
+* Modify the `MeshTrace` or `MeshProxyPatch` that matches the backend Service. This changes the configuration of the Data Plane proxy that implements the `backend` Service.
 
 {:.info}
 > **Note**: When giving users `UPDATE` permission, remember to add `UPDATE` permission to all selectors they can switch between. For example, if a user only has access to `sources` selector, they won't be able to update policy with `destinations` selector or new `targetRef` selectors. Likewise, when a user only has access to the `targetRef` kind `MeshService`, they won't be able to update the policy to use a different `targetRef` kind.
 
-### Observability operator
+### Observability operator role
 
 We may also have an infrastructure team which is responsible for the logging/metrics/tracing systems in the organization.
 Currently, those features are configured on `Mesh`, `MeshAccessLog`, and `MeshTrace` objects.
@@ -388,7 +390,7 @@ This way an observability operator can:
 * Modify `MeshAccessLog` and `MeshTrace` in any mesh
 * Modify any `Mesh`
 
-### Single Mesh operator
+### Single Mesh operator role
 
 {{site.mesh_product_name}} lets us segment the deployment into many logical service meshes configured by Mesh object.
 We may want to give access to one specific Mesh and all objects connected with this Mesh.
@@ -427,25 +429,25 @@ This way all observability operator can:
 * Modify all resources in the demo mesh
 * Modify `demo` Mesh object.
 
-## Kubernetes
+## Kubernetes RBAC
 
 Kubernetes provides their own RBAC system, but it's not sufficient to cover use cases for several reasons:
 * You cannot restrict access to resources of specific Mesh
 * You cannot restrict access based on the content of the policy
 
 {{site.mesh_product_name}} RBAC works on top of Kubernetes RBAC.
-For example, to restrict the access for a user to modify `MeshTrafficPermission` for backend service, they need to be able to create `MeshTrafficPermission` in the first place.
+For example, to restrict the access for a user to modify `MeshTrafficPermission` for backend Service, they need to be able to create `MeshTrafficPermission` in the first place.
 
 The `subjects` in `AccessRoleBinding` are compatible with Kubernetes users and groups.
 {{site.mesh_product_name}} RBAC on Kubernetes is implemented using Kubernetes Webhook when applying resources. This means you can only use Kubernetes users and groups for `CREATE`, `DELETE` and `UPDATE` access.
 `GENERATE_DATAPLANE_TOKEN`, `GENERATE_USER_TOKEN`, `GENERATE_ZONE_CP_TOKEN`, `GENERATE_ZONE_TOKEN` are used when interacting with {{site.mesh_product_name}} API Server, in this case you need to use the user token.
 
-## Default
+## Default role
 
 {{site.mesh_product_name}} creates an `admin` `AccessRole` that allows every action.
 
 
-The `default` `AccessRoleBinding` assigns this role to every authenticated and unauthenticated user.
+In {{site.mesh_product_name}} 2.6.x or later, the `default` `AccessRoleBinding` assigns this role to every authenticated and unauthenticated user.
 
 
 {% navtabs "codeblock" %}
@@ -513,7 +515,7 @@ spec:
   - type: Group
     name: system:masters
   # The `system:serviceaccounts:kube-system` group is required by Kubernetes controllers to manage {{site.mesh_product_name}} 
-  # resources, for example, cleaning up data plane objects when a namespace is removed.
+  # resources, for example, cleaning up Data Plane objects when a namespace is removed.
   - type: Group
     name: system:serviceaccounts:kube-system
   roles:
@@ -533,11 +535,11 @@ roles:
 {% endnavtab %}
 {% endnavtabs %}
 
-## Example
+## Example RBAC configuration
 
 {% navtabs "Example"%}
 {% navtab "targetRef selectors" %}
-The following steps create a new user and restrict the access to only `MeshTrafficPermission` for the backend service.
+The following steps create a new user and restrict the access to only `MeshTrafficPermission` for the backend Service.
 
 {% navtabs "Codeblock" %}
 {% navtab "Kubernetes" %}
@@ -626,7 +628,7 @@ The following steps create a new user and restrict the access to only `MeshTraff
     " | kubectl apply -f -
     ```
 
-4. Create an AccessRole to grant permissions to user `backend-owner` to modify `MeshTrafficPermission` only for the backend service:
+4. Create an AccessRole to grant permissions to user `backend-owner` to modify `MeshTrafficPermission` only for the backend Service:
 
     ```sh
     echo '
@@ -658,7 +660,7 @@ The following steps create a new user and restrict the access to only `MeshTraff
     ' | kubectl apply -f -
     ```
 
-5. Change the service to test user access:
+5. Change the Service to test user access:
 
     ```sh
     kubectl config use-context backend-owner
@@ -681,7 +683,7 @@ The following steps create a new user and restrict the access to only `MeshTraff
         default:
           action: ALLOW
     " | kubectl apply -f -
-    # operation should succeed, access to backend service access is granted
+    # operation should succeed, access to backend Service access is granted
 
     echo "
     apiVersion: kuma.io/v1alpha1
@@ -694,7 +696,7 @@ The following steps create a new user and restrict the access to only `MeshTraff
     spec:
       targetRef:
         kind: MeshService
-        name: not-backend # access to this service is not granted
+        name: not-backend # access to this Service is not granted
       from:
       - targetRef:
           kind: MeshService
@@ -706,11 +708,11 @@ The following steps create a new user and restrict the access to only `MeshTraff
     ```
 {% endnavtab %}
 {% navtab "Universal" %}
-The following steps create a new user and restrict the access to only `TrafficPermission` for the backend service.
+The following steps create a new user and restrict the access to only `TrafficPermission` for the backend Service.
 
 {:.info}
 > **Note**: By default, all requests that originate from localhost are authenticated as the `admin` user in the `mesh-system:admin` group.
-For this example to work, you must either run the control plane with `KUMA_API_SERVER_AUTHN_LOCALHOST_IS_ADMIN` set to `false` or access the control plane using a method other than localhost.
+For this example to work, you must either run the Control Plane with `KUMA_API_SERVER_AUTHN_LOCALHOST_IS_ADMIN` set to `false` or access the Control Plane using a method other than localhost.
 
 1. Extract the admin token and configure `kumactl` with the admin:
 
@@ -904,7 +906,7 @@ For this example to work, you must either run the control plane with `KUMA_API_S
     " | kubectl apply -f -
     ```
 
-4. Create an AccessRole to grant permissions to the `backend-owner` user to modify `TrafficPermission` only for the backend service:
+4. Create an AccessRole to grant permissions to the `backend-owner` user to modify `TrafficPermission` only for the backend Service:
 
     ```sh
     echo '
@@ -936,7 +938,7 @@ For this example to work, you must either run the control plane with `KUMA_API_S
     ' | kubectl apply -f -
     ```
 
-5. Change the service to test user access:
+5. Change the Service to test user access:
 
     ```sh
     kubectl config use-context backend-owner
@@ -954,7 +956,7 @@ For this example to work, you must either run the control plane with `KUMA_API_S
       - match:
           kuma.io/service: backend
     " | kubectl apply -f -
-    # operation should succeed, access to backend service access is granted
+    # operation should succeed, access to backend Service access is granted
 
     echo "
     apiVersion: kuma.io/v1alpha1
@@ -968,7 +970,7 @@ For this example to work, you must either run the control plane with `KUMA_API_S
           kuma.io/service: web
       destinations:
       - match:
-          kuma.io/service: not-backend # access to this service is not granted
+          kuma.io/service: not-backend # access to this Service is not granted
     " | kubectl apply -f -
     # operation should not succeed
     ```
@@ -977,7 +979,7 @@ For this example to work, you must either run the control plane with `KUMA_API_S
 
 {:.info}
 > **Note**: By default, all requests that originates from localhost are authenticated as the `admin` user belonging to the `mesh-system:admin` group.
-For this example to work, you must either run the control plane with `KUMA_API_SERVER_AUTHN_LOCALHOST_IS_ADMIN` set to `false` or access the control plane via a method other than localhost.
+For this example to work, you must either run the Control Plane with `KUMA_API_SERVER_AUTHN_LOCALHOST_IS_ADMIN` set to `false` or access the Control Plane via a method other than localhost.
 
 1. Extract admin token and configure kumactl with admin:
 
@@ -1077,14 +1079,11 @@ For this example to work, you must either run the control plane with `KUMA_API_S
 {% endnavtab %}
 {% endnavtabs %}
 
-## Multi-zone
+## Multi-zone RBAC
 
-In a multi-zone setup, `AccessRole` and `AccessRoleBinding` are not synchronized between the global control plane and the zone control plane.
+In a multi-zone setup, `AccessRole` and `AccessRoleBinding` are not synchronized between the global Control Plane and the zone Control Plane.
 
-## Wildcard tag value matching
-
-{:.info}
-> **Note**: This feature is available starting in {{site.mesh_product_name}} 1.9.1
+## Wildcard tag value matching {% new_in 1.9.1 %}
 
 {:.info}
 > **Note**: This feature currently only works with "Source and Destination" selectors. This limitation restricts using newer policy types like `MeshTrafficPermission`, `MeshAccessLog`, or `MeshHTTPRoute`.

@@ -5,13 +5,22 @@ content_type: reference
 layout: reference
 products:
   - mesh
+breadcrumbs:
+  - mesh/
 
 tags:
   - ecs
   - aws
+  - universal-mode
+search_aliases:
+  - Amazon ECS
 
 
 related_resources:
+  - text: Install {{site.mesh_product_name}}
+    url: /mesh/install/
+  - text: Deploy {{site.mesh_product_name}} on Universal
+    url: /mesh/universal/
   - text: "Access Audit"
     url: /mesh/access-audit/
   - text: "Vault Policy"
@@ -33,7 +42,7 @@ On ECS, {{site.mesh_product_name}} runs in Universal mode. Every ECS task runs w
 
 The Control Plane itself also runs as an ECS service in the cluster.
 
-### Data plane authentication
+### Data Plane authentication
 
 As part of joining and synchronizing with the mesh, every sidecar needs to authenticate with
 the Control Plane.
@@ -50,12 +59,12 @@ With {{site.mesh_product_name}} on ECS, each service enumerates
 other mesh services it contacts
 [in the `Dataplane` specification][@TODO].
 
-## Deployment
+## Deploy Amazon ECS on {{site.mesh_product_name}}
 
 This section covers ECS-specific parts of running {{site.mesh_product_name}}, using the
 [example Cloudformation](https://github.com/Kong/kong-mesh-ecs) as a guide.
 
-### Control plane
+### Control Plane in Universal on ECS 
 
 {{site.mesh_product_name}} runs in Universal mode on ECS. The example setup repository uses an AWS RDS
 database as a PostgreSQL backend. It also uses ECS service discovery to enable ECS
@@ -109,7 +118,7 @@ Services are bootstrapped with a `Dataplane` specification.
 
 Transparent proxy is not supported on ECS, so the `Dataplane` resource for a
 service must enumerate all other mesh services this service contacts and include them
-[in the `Dataplane` specification as `outbounds`][@TODO].
+[in the `Dataplane` specification as `outbounds`](/mesh/data-plane-proxy/#outbounds).
 
 See the example repository to learn
 [how to handle the `Dataplane` template with Cloudformation](https://github.com/Kong/kong-mesh-ecs/blob/main/deploy/counter-demo/demo-app.yaml#L31-L46).

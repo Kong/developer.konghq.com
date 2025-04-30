@@ -1,5 +1,5 @@
 ---
-title: Developer sign-up
+title: Dev Portal developer sign-up
 content_type: reference
 layout: reference
 
@@ -8,8 +8,17 @@ products:
 beta: true
 tags:
   - beta
+  - authentication
 works_on:
     - konnect
+breadcrumbs:
+  - /dev-portal/
+
+search_aliases:
+  - Portal
+
+api_specs:
+  - konnect/dev-portal
 
 description: 'Learn how developers can get started with the Dev Portal by registering and creating an application.'
 

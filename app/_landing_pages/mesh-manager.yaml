@@ -90,7 +90,7 @@ rows:
                 Learn how roles work in Mesh Manager.
               icon: /assets/icons/security.svg
               cta:
-                url: /mesh/mesh-roles/
+                url: /mesh/rbac/
       - blocks:
           - type: card
             config:

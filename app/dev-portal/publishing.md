@@ -1,5 +1,5 @@
 ---
-title: Publishing
+title: Publish APIs with Dev Portal
 content_type: reference
 layout: reference
 
@@ -8,10 +8,17 @@ products:
 beta: true
 tags:
   - beta
+  - publish-apis
 works_on:
     - konnect
 
-description: "Security settings allow for visibility and access control around Developers accessing your Dev Portal."
+search_aliases:
+  - Portal
+
+breadcrumbs:
+  - /dev-portal/
+
+description: "Learn how to publish APIs with Dev Portal and control who can see published APIs."
 
 related_resources:
   - text: Dev Portal settings
@@ -50,42 +57,53 @@ Change the **Visibility** or **Authentication Strategy** of an API that has been
 
 1. Browse to a **Published API**.
 2. Select the **Portals** tab to see where the API has been previously published.
-3. On the three dots menu on the appropriate Dev Portal, select **Edit Publication**.
+3. Click the menu icon next to the appropriate Dev Portal, select **Edit Publication**.
 4. Change **Visibility** and **Authentication Strategy** to the appropriate values.
 5. Click **Save**.
 
 ## Access control scenarios
 
-Visibility, authentication strategies, and user authentication can be independently configured to maximize flexibility in how you publish your API to a given Developer audience.
+Visibility, authentication strategies, and user authentication can be independently configured to maximize flexibility in how you publish your API to a given developer audience. 
 
 {:.info}
 > * The visibility of [pages](/dev-portal/custom-pages/) and [menus](/dev-portal/portal-customization/) is configured independently from APIs, maximizing your flexibility.
-> * An API must be linked to a {{site.konnect_short_name}} Gateway Service (version 3.6+) to be able to restrict access to your API with authentication strategies.
+> * An API must be linked to a {{site.konnect_short_name}} Gateway Service {% new_in 3.6 %} to be able to restrict access to your API with authentication strategies.
 
-### Viewable by anyone, no self-service credentials
+The following table describes various Dev Portal access control scenarios and their settings:
 
-Anyone can view the API's specs and documentation, but cannot generate credentials and API keys. No developer registration is required.
-  * Visibility: Public
-  * Authentication strategy: Disabled
-  * User authentication: Disabled in [Security settings](/dev-portal/security-settings/)
-
-### Viewable by anyone, self-service credentials
-Anyone can view the API's specs and documentation, but must sign up for a developer account and create an Application to generate credentials and API keys.
-  * Visibility: Public
-  * Authentication strategy: `key-auth` (or any other appropriate authentication strategy)
-  * User authentication: Enabled in [security settings](/dev-portal/security-settings/)
-  * RBAC: Disabled, if you don't need to manage fine grained access with Teams, configured in [security settings](/dev-portal/security-settings/)
-
-### Viewable by anyone, self-service credentials with RBAC
-Anyone can view the API's specs and documentation, but must sign up for a developer account and create an Application to generate credentials and API keys. {{site.konnect_short_name}} Admin must assign a developer to a Team to provide specific role-based access.
-  * Visibility: Public
-  * Authentication strategy: `key-auth` (or any other appropriate Authentication strategy)
-  * User authentication: Enabled in [security settings](/dev-portal/security-settings/)
-  * RBAC: Enabled (allows for [Teams](/dev-portal/access-and-approval) assignments for developers, grants credentials with the API Consumer role) in [security settings](/dev-portal/security-settings/)
-
-### Sign up required to view API specs and/or documentation
-All users must sign up for a Developer account in order to view APIs. Optionally, they can create an Application to generate credentials/API keys with RBAC.
-  * Visibility: Private
-  * Authentication strategy: `key-auth` (or any other appropriate Authentication strategy)
-  * User authentication: Enabled in [security settings](/dev-portal/security-settings/)
-  * RBAC(optional): Enabled (allows for [Teams](/dev-portal/access-and-approval) assignments for developers, grants credentials with the API Consumer role) in [security settings](/dev-portal/security-settings/)
+<!--vale off-->
+{% table %}
+columns:
+  - title: Access use case
+    key: use-case
+  - title: Visibility
+    key: visibility
+  - title: Authentication strategy
+    key: strategy
+  - title: User authentication
+    key: user-auth
+  - title: Description
+    key: description
+rows:
+  - use-case: Viewable by anyone, no self-service credentials
+    visibility: Public
+    strategy: Disabled
+    user-auth: "Disabled in [security settings](/dev-portal/security-settings/)"
+    description: Anyone can view the API's specs and documentation, but cannot generate credentials and API keys. No developer registration is required.
+  - use-case: Viewable by anyone, self-service credentials
+    visibility: Public
+    strategy: "`key-auth` (or any other appropriate authentication strategy)"
+    user-auth: "Enabled in [security settings](/dev-portal/security-settings/)"
+    description: Anyone can view the API's specs and documentation, but must sign up for a developer account and create an Application to generate credentials and API keys. RBAC is disabled if fine-grained access management is not needed, configured in [security settings](/dev-portal/security-settings/).
+  - use-case: Viewable by anyone, self-service credentials with RBAC
+    visibility: Public
+    strategy: "`key-auth` (or any other appropriate Authentication strategy)"
+    user-auth: "Enabled in [security settings](/dev-portal/security-settings/)"
+    description: Anyone can view the API's specs and documentation, but must sign up for a developer account and create an Application to generate credentials and API keys. {{site.konnect_short_name}} Admin must assign a developer to a Team to provide specific role-based access. RBAC is enabled to allow [Teams](/dev-portal/access-and-approval) assignments for developers, granting credentials with the API Consumer role.
+  - use-case: Sign up required to view API specs and/or documentation
+    visibility: Private
+    strategy: "`key-auth` (or any other appropriate Authentication strategy)"
+    user-auth: "Enabled in [security settings](/dev-portal/security-settings/)"
+    description: All users must sign up for a Developer account in order to view APIs. They can optionally create an Application to generate credentials/API keys. RBAC can be enabled for [Teams](/dev-portal/access-and-approval) assignments for developers, granting credentials with the API Consumer role, configured in [security settings](/dev-portal/security-settings/).
+{% endtable %}
+<!--vale on-->

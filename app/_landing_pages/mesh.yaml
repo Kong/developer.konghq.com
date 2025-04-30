@@ -26,7 +26,7 @@ rows:
 
                     **Benefits of Kong Mesh:**
                     - Built-in mTLS, service discovery, and traffic management.
-                    - Support for multi-zone and multi-mesh topologies.
+                    - Support for [multi-zone](/mesh/mesh-multizone-service-deployment/) and multi-mesh topologies.
                     - Runs on both Kubernetes and Universal (VM) environments.
                     - Enterprise features like access control and advanced observability.
 
@@ -46,6 +46,16 @@ rows:
       type: h2
       text: "Get Started"
     columns:
+      - blocks:
+          - type: card
+            config:
+              title: Enterprise features
+              description: |
+                Explore the features included with {{site.mesh_product_name}} Enterprise, including mTLS backends, RBAC, FIPS support, and signed container images.
+              icon: /assets/logos/konglogo-gradient-secondary.svg
+              cta:
+                text: Learn more
+                url: /mesh/enterprise/
       - blocks:
           - type: card
             config:
@@ -76,6 +86,28 @@ rows:
               cta:
                 text: Learn more
                 url: /mesh/vault/
+  - header:
+      type: h2
+      text: "Deployment modes"
+    columns:
+      - blocks:
+          - type: card
+            config:
+              title: Multi-zone
+              description: |
+                Group equivalent MeshServices across zones and expose a unified, zone-agnostic service with global failover capabilities.
+              cta:
+                text: Learn more
+                url: /mesh/mesh-multizone-service-deployment/
+      - blocks:
+          - type: card
+            config:
+              title: Single-zone
+              description: |
+                Run {{site.mesh_product_name}} in a single zone with a standalone Control Plane and interconnected Data Plane proxies.
+              cta:
+                text: Learn more
+                url: /mesh/single-zone/
   - header:
       type: h2
       text: "Policies"
