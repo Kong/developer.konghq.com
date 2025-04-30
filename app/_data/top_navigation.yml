@@ -2,7 +2,7 @@ platform:
   konnect:
     text: Explore the unified API Platform
     icon: '/assets/icons/book.svg'
-    url: /konnect/
+    url: /konnect-platform/
 
   sections:
     - title: Build APIs
@@ -33,7 +33,7 @@ platform:
           product: mesh
         - text: Kong Ingress Controller
           icon: /_assets/icons/products/kic.svg
-          url: /kong-ingress-controller/
+          url: /kubernetes-ingress-controller/
           product: kic
     - title: Discover APIs
       links:
