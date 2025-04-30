@@ -98,3 +98,9 @@ sections:
       - path: /kubernetes-ingress-controller/faq/upgrading-gateway/
       - path: /kubernetes-ingress-controller/faq/upgrading-ingress-controller/
       - path: /kubernetes-ingress-controller/faq/custom-entities/
+  - title: Hidden How-Tos
+    hidden: true
+    items:
+      - path: /kubernetes-ingress-controller/vault/hashicorp/
+      - path: /kubernetes-ingress-controller/vault/aws/
+      - path: /kubernetes-ingress-controller/vault/gcp/
