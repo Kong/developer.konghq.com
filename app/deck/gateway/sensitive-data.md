@@ -121,6 +121,6 @@ vaults:
 To test, set the `DECK_HCV_TOKEN` environment variable and run `deck gateway sync`:
 
 ```bash
-export DECK_HCV_TOKEN='TOKEN_GOES_HERE'
+export DECK_HCV_TOKEN='TOKEN GOES HERE'
 deck gateway sync kong.yaml
 ```
