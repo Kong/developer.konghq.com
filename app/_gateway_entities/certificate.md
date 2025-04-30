@@ -4,7 +4,11 @@ content_type: reference
 entities:
   - certificate
 
-description: A certificate object represents a public certificate, and can be optionally paired with the corresponding private key.
+products:
+  - gateway
+tags:
+  - certificates
+description: A Certificate object represents a public certificate, and can be optionally paired with the corresponding private key.
 
 related_resources:
   - text: CA Certificate entity
@@ -15,6 +19,8 @@ related_resources:
     url: /gateway/ssl-certificates/
   - text: Define a client certificate on a Service
     url: /how-to/client-cert-for-service/
+  - text: Certificate how-to guides
+    url: /how-to/?query=certificate
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
 
@@ -36,8 +42,8 @@ schema:
 faqs:
   - q: What's the difference between the Certificate entity and the CA Certificate entity?
     a: Certificates handle SSL/TLS termination for encrypted requests and [CA Certificates](/gateway/entities/ca-certificate/) validate client or server certificates.
-  - q: Is the Certificate entity used in {{site.konnect_short_name}} for data plane nodes as well?
-    a: No, the data plane nodes use a [different certificate](/api/konnect/control-planes-config/).
+  - q: Is the Certificate entity used in {{site.konnect_short_name}} for Data Plane nodes as well?
+    a: No, the Data Plane nodes use a [different certificate](/api/konnect/control-planes-config/).
 
 
 works_on:
@@ -47,7 +53,7 @@ works_on:
 
 ## What is a Certificate?
 
-A Certificate object represents a public certificate, which is used to validate the sender's authorization and name. It can optionally be paired with the corresponding private key to initiate secure connections and encrypt sensitive data. 
+A Certificate entity represents a public certificate, which is used to validate the sender's authorization and name. It can optionally be paired with the corresponding private key to initiate secure connections and encrypt sensitive data. 
 
 {{site.base_gateway}} can use Certificates in the following ways:
 * Handle SSL/TLS termination for one or more hostnames using the associated [SNI object](/gateway/entities/sni/)

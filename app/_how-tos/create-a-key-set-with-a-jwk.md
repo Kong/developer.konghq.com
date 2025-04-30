@@ -2,6 +2,8 @@
 title: Create a Key Set with a JSON Web Key
 content_type: how_to
 
+description: Create a JSON Web Key and add it to a Key Set using the /key-sets API endpoint.
+
 entities: 
   - key
   - key-set
@@ -11,6 +13,13 @@ related_resources:
     url: /gateway/entities/key/
   - text: Key Set entity
     url: /gateway/entities/key-set/
+  - text: Create a Key Set with a PEM Key
+    url: /how-to/create-a-key-set-with-a-pem-key/
+  - text: "Securing {{site.base_gateway}}"
+    url: /gateway/security/
+
+tags:
+  - security
 
 products:
     - gateway

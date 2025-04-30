@@ -25,6 +25,8 @@ related_resources:
     url: /konnect-platform/saml-idp-mapping/
   - text: "{{site.konnect_short_name}} teams and roles"
     url: /konnect-platform/teams-and-roles/
+  - text: Dev Portal SSO
+    url: /dev-portal/sso/
 
 works_on:
   - konnect
@@ -75,7 +77,7 @@ faqs:
 
 {{site.konnect_short_name}} supports external single sign-on authentication using an Identity Provider (IdP). Using SSO in {{site.konnect_short_name}}, you can enable authentication for the following:
 * **The {{site.konnect_short_name}} platform:** Allow [Org admins](/konnect-platform/teams-and-roles/) to log in with SSO. This is an alternative to {{site.konnect_short_name}}'s [built-in authentication](https://cloud.konghq.com/global/organization/settings#authentication-scheme).
-* **Dev Portals:** Allow developers to log in to the [Dev Portal](/dev-portal/) with SSO.
+* **Dev Portals:** Allow developers to log in to the [Dev Portal](/dev-portal/sso/) with SSO.
 
 SSO for each of these is configured through different settings, so enabling one doesn't automatically enable the other. Both methods support OIDC and SAML-based SSO.
 

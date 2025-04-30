@@ -2,16 +2,21 @@
 title: Custom domains
 content_type: reference
 layout: reference
-
+breadcrumbs:
+  - /dev-portal/
 products:
     - dev-portal
+api_specs:
+  - konnect/portal-management
 beta: true
 tags:
   - beta
+search_aliases:
+  - Portal
 works_on:
     - konnect
 
-description: "{{site.konnect_short_name}} integrates domain name management and configuration in Settings. Select your Dev Portal and click Settings to view your configuration."
+description: "Use a custom URL for Dev Portal."
 
 related_resources:
   - text: Portal customization reference
@@ -77,7 +82,7 @@ columns:
 rows:
   - type: CNAME
     name: portal
-    value: "`https://example.edge.us.portal.konghq.com`"
+    value: "`https://$YOUR_PORTAL_URL.edge.us.portal.konghq.com`"
 {% endtable %}
 
 If your domain has specific CAA DNS records that list authorized certificate authorities/issuers, you'll also need to create a new CAA DNS record to permit [Google Trust Services](https://pki.goog/faq/#caa) as an issuer. 
@@ -85,7 +90,9 @@ If your domain doesn't currently have any CAA DNS records, it means all issuers 
 
 ## Update Dev Portal URL settings {#update-portal}
 
-To add a custom URL to Dev Portal, select your Dev Portal, click **Settings**, then follow these steps:
+To add a custom URL to Dev Portal:
+
+1. In {{site.konnect_short_name}}, select your Dev Portal and click **Settings**.
 
 1. Select **Custom hosted domain**.
 

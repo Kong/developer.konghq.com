@@ -10,8 +10,18 @@ tags:
   - beta
 works_on:
     - konnect
+api_specs:
+  - konnect/portal-management
 
-description: "Pages are highly customizable using Markdown Components (MDC) available in Dev Portal."
+search_aliases:
+  - MDC
+  - Markdown Components
+  - Portal
+
+breadcrumbs:
+  - /dev-portal/
+
+description: "Customize Dev Portal Pages using Markdown Components (MDC)."
 faqs:
   - q: What visibility setting is applied when creating a new page?
     a: |
@@ -24,7 +34,7 @@ faqs:
   - q: What is the special behavior of the `home` page?
     a: |
       The `home` page represents the `/` root path of your Dev Portal. 
-      If it is deleted, you’ll need to recreate it using the Pages API.
+      If it is deleted, you’ll need to recreate it using the [Pages API](/api/konnect/portal-management/v3/#/operations/create-portal-page).
 
   - q: Is there a size limit for custom pages?
     a: |
@@ -35,9 +45,11 @@ related_resources:
     url: /dev-portal/portal-customization/
   - text: Portal snippets
     url: /dev-portal/snippets/
+  - text: Custom domains
+    url: /dev-portal/custom-domains/
 ---
 
-Pages are highly customizable using Markdown Components (MDC), allowing to create nested page structures to organize pages and generate URLs/slugs. Visibility controls and Publishing status allow you to stage new pages, and/or restrict access to logged-in developers.
+Pages are highly customizable using Markdown Components (MDC), allowing you to create nested page structures to organize pages and generate URLs/slugs. Visibility controls and Publishing status allow you to stage new pages, and/or restrict access to logged-in developers.
 
 To get started creating pages, navigate to your Dev Portal and select [**Portal Editor**](/dev-portal/portal-customization/#portal-editor) from the left sidebar.
 
@@ -79,6 +91,8 @@ As with creating any page, provide a name and slug, and your page will be create
 
 The Portal requires a number of reserved paths from the root of the URL to properly function.
 You can't override these paths with custom pages or other functionality.
+
+The following table lists the reserved paths:
 
 <!-- vale off -->
 {% table %}

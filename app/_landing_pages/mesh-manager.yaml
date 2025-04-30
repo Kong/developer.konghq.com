@@ -90,13 +90,13 @@ rows:
                 Learn how roles work in Mesh Manager.
               icon: /assets/icons/security.svg
               cta:
-                url: /mesh/mesh-roles/
+                url: /mesh/rbac/
       - blocks:
           - type: card
             config:
-              title: Mesh Reference Guide
+              title: About Kong Mesh
               description: |
                 Find detailed information about Service Meshes and Configuration.
-              icon: /assets/icons/code.svg
+              icon: /assets/icons/book.svg
               cta:
-                url: /mesh/reference/
+                url: /mesh/

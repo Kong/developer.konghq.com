@@ -26,9 +26,9 @@ rows:
 
                     **Benefits of Kong Mesh:**
                     - Built-in mTLS, service discovery, and traffic management.
-                    - Support for multi-zone and multi-mesh topologies.
+                    - Support for [multi-zone](/mesh/mesh-multizone-service-deployment/) and multi-mesh topologies.
                     - Runs on both Kubernetes and Universal (VM) environments.
-                    - Enterprise features like access control and advanced observability.
+                    - [Enterprise features](/mesh/enterprise/) like access control and advanced observability.
 
                     You can manage your mesh deployments using the [Kong Mesh GUI](https://cloud.konghq.com/mesh/).
           - type: button
@@ -46,6 +46,16 @@ rows:
       type: h2
       text: "Get Started"
     columns:
+      - blocks:
+          - type: card
+            config:
+              title: Policy Hub
+              description: |
+                {{site.mesh_product_name}} policies are bundled features for your service traffic and network configuration.
+              icon: /assets/icons/mesh.svg
+              cta:
+                text: Learn more
+                url: /mesh/policies/
       - blocks:
           - type: card
             config:
@@ -78,31 +88,23 @@ rows:
                 url: /mesh/vault/
   - header:
       type: h2
-      text: "Policies"
+      text: "Deployment modes"
     columns:
       - blocks:
-          - type: mesh_policy
+          - type: card
             config:
-              slug: meshtrafficpermission
+              title: Multi-zone
+              description: |
+                Group equivalent MeshServices across zones and expose a unified, zone-agnostic service with global failover capabilities.
+              cta:
+                text: Learn more
+                url: /mesh/mesh-multizone-service-deployment/
       - blocks:
-          - type: mesh_policy
+          - type: card
             config:
-              slug: meshratelimit
-      - blocks:
-          - type: mesh_policy
-            config:
-              slug: meshtimeout
-  -
-    columns:
-      - blocks:
-          - type: mesh_policy
-            config:
-              slug: meshretry
-      - blocks:
-          - type: mesh_policy
-            config:
-              slug: meshfaultinjection
-      - blocks:
-          - type: mesh_policy
-            config:
-              slug: meshcircuitbreaker
+              title: Single-zone
+              description: |
+                Run {{site.mesh_product_name}} in a single zone with a standalone Control Plane and interconnected Data Plane proxies.
+              cta:
+                text: Learn more
+                url: /mesh/single-zone/

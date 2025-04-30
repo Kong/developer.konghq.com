@@ -11,6 +11,15 @@ tags:
 works_on:
     - konnect
 
+api_specs:
+  - konnect/portal-management
+
+search_aliases:
+  - Portal
+
+breadcrumbs:
+  - /dev-portal/
+
 description: "Snippets allow you to reuse content and MDC components across Pages."
 faqs:
   - q: Why aren’t parameterized values appearing in the age Preview?
