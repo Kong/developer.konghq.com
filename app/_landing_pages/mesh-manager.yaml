@@ -94,9 +94,9 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Mesh Reference Guide
+              title: About Kong Mesh
               description: |
                 Find detailed information about Service Meshes and Configuration.
-              icon: /assets/icons/code.svg
+              icon: /assets/icons/book.svg
               cta:
-                url: /mesh/reference/
+                url: /mesh/
