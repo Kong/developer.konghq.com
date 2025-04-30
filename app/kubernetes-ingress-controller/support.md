@@ -95,4 +95,4 @@ The chart includes [custom resource definitions](https://kubernetes.io/docs/conc
 ## See also
 
 - [Version support policy for {{site.base_gateway}}](/gateway/version-support-policy/)
-- [Version support policy for {{site.mesh_product_name}}](/mesh/support/)
+- [Version support policy for {{site.mesh_product_name}}](/mesh/support-policy/)

@@ -7,7 +7,6 @@ content_type: plugin
 publisher: kong-inc
 description: 'Integrate {{site.base_gateway}} with the AppDynamics APM Platform'
 
-
 products:
     - gateway
 
@@ -27,6 +26,10 @@ topologies:
     - hybrid
 
 icon: app-dynamics.png
+
+tags:
+- analytics
+- monitoring
 
 categories:
   - analytics-monitoring
@@ -64,8 +67,8 @@ This directory is included in the {{site.base_gateway}} search path for shared l
 
 If you are using an older version of {{site.base_gateway}}, or if you prefer to install the `libappdynamics.so` file in a different location, you can do so.
 
-- If {{site.base_gateway}} is deployed in RHEL or CentOS, the `libappdynamics.so` file can be in the `/usr/lib64` directory, which is included in the default search path for shared libraries.
-- If {{site.base_gateway}} is deployed in Debian or Ubuntu, the `libappdynamics.so` file can be in the `/usr/lib` directory, which is included in the default search path for shared libraries.
+- If {{site.base_gateway}} is deployed on RHEL or CentOS, the `libappdynamics.so` file can be in the `/usr/lib64` directory, which is included in the default search path for shared libraries.
+- If {{site.base_gateway}} is deployed on Debian or Ubuntu, the `libappdynamics.so` file can be in the `/usr/lib` directory, which is included in the default search path for shared libraries.
 - If above options are not available, the `libappdynamics.so` file can be in one of the locations configured by the [system's shared library loader](https://tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html).
 - Alternatively, the `LD_LIBRARY_PATH` environment variable can be set to the directory containing the `libappdynamics.so` file when starting {{site.base_gateway}}.
 
@@ -113,7 +116,7 @@ rows:
     type: "Integer"
     default: "`443`"
   - variable: "`KONG_APPD_CONTROLLER_ACCOUNT`"
-    description: "Account name to use with controller."
+    description: "Account name to use with the controller."
     type: "String"
     default: ""
   - variable: "`KONG_APPD_CONTROLLER_ACCESS_KEY`"
@@ -165,15 +168,18 @@ rows:
     type: "String"
     default: ""
   - variable: "`KONG_APPD_CONTROLLER_CERTIFICATE_FILE`"
-    description: "Path to a self-signed certificate file. For example, `/etc/kong/certs/ca-certs.pem`. <br><br>_Available starting in {{site.base_gateway}} 3.4.3.3_"
+    description: |
+       {% new_in 3.4.3.3 %} Path to a self-signed certificate file. For example, `/etc/kong/certs/ca-certs.pem`.
     type: "String"
     default: ""
   - variable: "`KONG_APPD_CONTROLLER_CERTIFICATE_DIR`"
-    description: "Path to a certificate directory. For example, `/etc/kong/certs/`. <br><br> _Available starting in {{site.base_gateway}} 3.4.3.3_"
+    description: |
+      {% new_in 3.4.3.3 %} Path to a certificate directory. For example, `/etc/kong/certs/`.
     type: "String"
     default: ""
   - variable: "`KONG_APPD_ANALYTICS_ENABLE`"
-    description: "Enable or disable Analytics Agent reporting. When disabled (default), Analytics-related logging messages are suppressed. <br><br>_Available starting in {{site.base_gateway}} 3.8.x_"
+    description: |
+      {% new_in 3.8 %} Enable or disable Analytics Agent reporting. When disabled (default), Analytics-related logging messages are suppressed.
     type: "Boolean"
     default: "`false`"
 {% endtable %}
@@ -197,7 +203,7 @@ columns:
 rows:
   - value: "0"
     name: "`TRACE`"
-    description: "Reports finer-grained informational events than the debug level that may be useful to debug an application."
+    description: "Reports finer-grained informational events than the `debug` level, which may be useful to debug an application."
   - value: "1"
     name: "`DEBUG`"
     description: "Reports fine-grained informational events that may be useful to debug an application."
@@ -229,11 +235,7 @@ If problems occur with the AppDynamics integration, inspect the AppDynamics agen
 
 ## AppDynamics node name considerations
 
-The AppDynamics plugin sets the `KONG_APPD_NODE_NAME` to the local
-hostname by default, which typically reflects the container ID of the containerized
-application. Multiple instances of the AppDynamics agent must use
-different node names, and one agent must exist for each of {{site.base_gateway}}'s
-worker processes, the node name is suffixed by the worker ID. This
-results in multiple nodes being created for each {{site.base_gateway}}
-instance, one for each worker process.
+The AppDynamics plugin sets the `KONG_APPD_NODE_NAME` to the local hostname by default, which typically reflects the container ID of the containerized application. 
+Multiple instances of the AppDynamics agent must use different node names, and one agent must exist for each of {{site.base_gateway}}'s worker processes, where the node name is suffixed by the worker ID. 
+This results in multiple nodes being created for each {{site.base_gateway}} instance, one for each worker process.
 

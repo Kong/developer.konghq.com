@@ -21,7 +21,7 @@ config:
   storage_config:
     consul:
       host: ${consul_host}
-      port: ${consul_port}
+      port: 8600
       kv_path: "acme"
       token: nil
       timeout: 2000
@@ -29,18 +29,19 @@ config:
 variables:
   email:
     value: $EMAIL
+    description: The account identifier.
   key_id:
     value: $KEY_ID
+    description: The ID of a [Key](/gateway/entities/key/).
   key_set:
     value: $KEY_SET
+    description: The ID of a [Key Set](/gateway/entities/key-set/) to associate the Key ID with.
   domain:
     value: $DOMAIN
+    description: An array of strings representing hosts.
   consul_host:
     value: $CONSUL_HOST
-  consul_port:
-    value: $CONSUL_PORT
-
-
+    description: The HashiCorp Consul hostname.
 
 tools:
   - deck

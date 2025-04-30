@@ -236,6 +236,8 @@ pages:
         url: '/mesh/dns/'
       - text: Mesh requirements
         url: '/mesh/requirements/'
+      - text: Multi-zone authentication
+        url: '/mesh/multi-zone-authentication/'
   -
     path: app/_src/production/deployment/single-zone.md
     title: 'Single-zone deployment'
@@ -246,6 +248,8 @@ pages:
         url: '/mesh/multizoneservice/'
       - text: Mesh DNS
         url: '/mesh/dns/'
+      - text: Get started with Red Hat OpenShift
+        url: /mesh/openshift-quickstart/
     min_version:
       mesh: '2.6'
   -
@@ -355,6 +359,8 @@ pages:
         url: /mesh/meshmultizoneservice/
       - text: Mesh requirements
         url: '/mesh/requirements/'
+      - text: Mesh on Amazon ECS
+        url: '/mesh/ecs/'
 
     min_version:
       mesh: '2.9'
@@ -551,6 +557,10 @@ pages:
         url: '/mesh/policies-introduction/'
       - text: Mesh CLI
         url: /mesh/cli/
+      - text: Mesh on Amazon ECS
+        url: '/mesh/ecs/'
+      - text: Mesh license
+        url: '/mesh/license/'
     min_version:
       mesh: '2.9'
   -

@@ -22,21 +22,24 @@ config:
   storage_config:
     redis:
       host: ${redis_host}
-      port: ${redis_port}
+      port: 6379
+
 variables:
   email:
     value: $EMAIL
+    description: The account identifier.
   key_id:
     value: $KEY_ID
+    description: The ID of a [Key](/gateway/entities/key/).
   key_set:
     value: $KEY_SET
+    description: The ID of a [Key Set](/gateway/entities/key-set/) to associate the Key ID with.
   domain:
     value: $DOMAIN
+    description: An array of strings representing hosts.
   redis_host:
     value: $REDIS_HOST
-  redis_port:
-    value: $REDIS_PORT
-
+    description: The host on which Redis is running.
 
 tools:
   - deck

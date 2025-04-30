@@ -1,5 +1,5 @@
 ---
-title: Dev Portal customization reference
+title: Dev Portal customization
 content_type: reference
 layout: reference
 
@@ -8,10 +8,20 @@ products:
 beta: true
 tags:
   - beta
+
+breadcrumbs:
+  - /dev-portal/
+
+search_aliases:
+  - Portal
+
+api_specs:
+  - konnect/portal-management
+
 works_on:
     - konnect
 
-description: "The {{site.konnect_short_name}} Dev Portal is a customizable application a for developers to locate, access, and consume API services."
+description: "Change the Dev Portal UI appearance."
 faqs:
   - q: What are the limitations of the Dev Portal Preview feature?
     a: |
@@ -27,19 +37,19 @@ related_resources:
     url: /dev-portal/custom-pages/
   - text: Portal snippets
     url: /dev-portal/snippets/
-  - text: Custom pages
-    url: /dev-portal/custom-pages/
+  - text: Custom domains
+    url: /dev-portal/custom-domains/
 ---
 
-Customization settings can be found on the left sidebar when a Dev Portal is selected.
+Dev Portal UI customization settings can be found on the left sidebar when you select a Dev Portal.
 
-## Menus 
+## Menu customization
 
-You can customize several options for menus found in Portals.
+You can customize several options for Dev Portal menus.
 
 ### Visibility
 
-All menu items have visibility controls. Visibility is `Private` by default, and will only be displayed to logged-in Developers. If `Public` is selected, the menu item will be available to all visitors to your Dev Portal.
+All menu items have visibility controls, which determine which developers can see different menus. Visibility is `Private` by default, and will only be displayed to logged-in Developers. If `Public` is selected, the menu item will be available to all visitors to your Dev Portal.
 
 ### Main menu
 
@@ -60,7 +70,7 @@ Footer menu items are links to any URL you prefer, with a title to be displayed.
 Footer bottom menu is a flat list of links that will be added to the bottom of every page. 
 Footer bottom menus are placed below footer menu sections.
 
-## SEO
+## SEO customization
 
 To optimize how search engines crawl your Dev Portal, you can provide a `/robots.txt` directly. 
 
@@ -97,7 +107,7 @@ rows:
 
 ### Custom CSS
 
-For advanced needs, you can also create Custom CSS that applies custom styles to your Dev Portal. Custom CSS provides global customization to all pages in Dev Portal.
+For advanced needs, you can also create custom CSS that applies custom styles to your Dev Portal. Custom CSS provides global customization to all pages in Dev Portal.
 
 ### Preview panel
 
@@ -110,5 +120,5 @@ There are three icons above **Preview** that allow you to test adaptive designs 
 
 ### Generated URL
 
-Custom pages allow you to define a page structure/tree that organizes your pages and generates the page URL based on page `slug`s. The generated URL is shown at the bottom of the preview pane.
+Custom pages allow you to define a page structure/tree that organizes your pages and generates the page URL based on page slugs. The generated URL is shown at the bottom of the preview pane.
 

@@ -48,6 +48,8 @@ This eliminates the need for an AWS API Gateway and simplifies the use of Lambda
 
 ## Install the AWS Request Signing plugin
 
+Set up your AWS account and install the Kong AWS Request Signing plugin via Luarocks.
+
 ### Prerequisites
 
 To use this plugin, you have to prepare your AWS account.

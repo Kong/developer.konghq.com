@@ -10,6 +10,10 @@ description: Let's Encrypt and ACMEv2 integration with {{site.base_gateway}}
 related_resources:
   - text: Test certificate generation locally with ngrok and the ACME plugin
     url: /how-to/test-certificate-generation-locally-with-ngrok-and-acme/
+  - text: Key entity
+    url: /gateway/entities/key/
+  - text: Key Set entity
+    url: /gateway/entities/key-set/
 
 
 products:
@@ -32,6 +36,9 @@ icon: acme.png
 
 categories:
   - security
+
+tags:
+  - security
   - certificates
 
 search_aliases:
@@ -49,10 +56,9 @@ The plugin generates a challenge token and key thumbprint, then presents them to
 
 To use this plugin, you need:
 * A public IP and a resolvable DNS
-* This challenge can only be done on port 80, so {{site.base_gateway}} needs to accept proxy traffic this port. You can configure this with `proxy_listen` in kong.conf.
+* This challenge can only be done on port 80, so {{site.base_gateway}} needs to accept proxy traffic this port. You can configure this with `proxy_listen` in `kong.conf`.
 
-Wildcard (`*`) certificates are not supported. Each domain must have its
-own certificate.
+Wildcard (`*`) certificates are not supported. Each domain must have its own certificate.
 
 **This plugin can only be configured as a global plugin.** 
 The plugin terminates the `/.well-known/acme-challenge/` path for matching domains. 
@@ -72,8 +78,8 @@ certificate entity if they are already defined in {{site.base_gateway}}.
 
 The ACME plugin needs a backend storage to store certificates, challenge tokens, and key thumbprints.
 
-You can set the backend storage for the plugin using the [`config.storage`](/plugins/acme/reference/#config-storage) parameter.
-The backend storage available depends on the [topology](/gateway/deployment-models/) of your {{site.base_gateway}} environment: 
+You can set the backend storage for the plugin using the [`config.storage`](/plugins/acme/reference/#schema--config-storage) parameter.
+The backend storage available depends on the [topology](/gateway/deployment-topologies/) of your {{site.base_gateway}} environment: 
 
 <!--vale off-->
 
@@ -127,7 +133,7 @@ features:
 
 {:.info}
 > **\[1\]**: Due to the current limitations of hybrid mode, `kong` storage only supports certificate generation from
-the Admin API but not the proxy side, as the data planes don't have access to the {{site.base_gateway}} database. 
+the Admin API but not the proxy side, as the Data Planes don't have access to the {{site.base_gateway}} database. 
 See the [hybrid mode workflow](#hybrid-mode-workflow) for details. 
 
 To configure a storage type other than `kong` (default), see the [ACME plugin example configurations](/plugins/acme/examples/).
@@ -170,14 +176,14 @@ sequenceDiagram
 
 <!--vale on-->
 
-In hybrid mode, the process is essentially the same, but both the control plane and data planes need access to the same storage. 
+In hybrid mode, the process is essentially the same, but both the Control Plane and Data Planes need access to the same storage. 
 If the storage is external, they both need to connect to the same external storage cluster.
-We also recommend setting up replicas to avoid having the data planes and control planes connect to same node directly for external storage.
+We also recommend setting up replicas to avoid having the Data Planes and Control Planes connect to same node directly for external storage.
 
 ## Renewing certificates
 
 The plugin runs daily checks and automatically renews all certificates that
-will expire in less than the configured `config.renew_threshold_days` value. If the renewal
+will expire in less than the configured [`config.renew_threshold_days`](/plugins/acme/reference/#schema--config-renew-threshold-days) value. If the renewal
 of an individual certificate throws an error, the plugin will continue renewing the
 other certificates. It will try renewing all certificates, including those that previously
 failed, once per day. 
@@ -201,10 +207,10 @@ For example, if you have the storage type set to  `kong` and change it to `redis
 
 When switching between storage types, we recommend deleting existing certificates.
 
-You can see what certificates {{site.base_gateway}} is currently is aware of using the `/acme/certificates` endpoint of the Admin API.
+You can see what certificates {{site.base_gateway}} is currently is aware of using the [`/acme/certificates`](/plugins/acme/api/#/operations/listCertificates) endpoint of the Admin API.
 
 ## EAB support
 
-The ACME plugin supports external account binding (EAB) with the `config.eab_kid` and `config.eab_hmac_key` values.
+The ACME plugin supports external account binding (EAB) with the [`config.eab_kid`](/plugins/acme/reference/#schema--config-eab-kid) and [`config.eab_hmac_key`](/plugins/acme/reference/#schema--config-eab-hmac-key) values.
 
 If you're using [ZeroSSL](https://zerossl.com/), the provider's external account can be registered automatically, without specifying the KID or HMAC key.

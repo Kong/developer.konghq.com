@@ -3,9 +3,9 @@ title: "Advanced Analytics Explorer"
 content_type: reference
 layout: reference
 description: | 
-    Explorer is an intuitive web-based interface that displays API usage data gathered by Konnect Analytics from your data plane nodes. You can use this tool to promptly diagnose performance issues, monitor LLM token consumption and costs, or capture essential usage metrics. 
-
-
+    Explorer is an intuitive web-based interface that displays API usage data gathered by {{site.konnect_short_name}} Analytics from your Data Plane nodes. You can use this tool to promptly diagnose performance issues, monitor LLM token consumption and costs, or capture essential usage metrics. 
+breadcrumbs:
+  - /advanced-analytics/
 products:
     - gateway
     - advanced-analytics
@@ -35,9 +35,9 @@ faqs:
         * **Status Code Group**
         * **Upstream Status Code**
         * **Upstream Status Code Group**
-  - q: What does "None" mean?
+  - q: What does "None" mean in Advanced Analytics?
     a: |
-      "None" is a field that can capture data that does belong to a specific category.
+      "None" is a field that can capture data that doesn't belong to a specific category.
   - q: What can I do after customizing an Explorer dashboard?
     a: |
         * **Save as a Report**: This function creates a new custom report based on your current view, allowing you to revisit these specific insights at a later time.
@@ -49,16 +49,27 @@ related_resources:
     url: /advanced-analytics/llm-reporting/
 ---
 
-The Explorer interface displays API usage data gathered by {{site.konnect_short_name}} Analytics from your data plane nodes. You can use this tool to:
+The Explorer interface displays API usage data gathered by {{site.konnect_short_name}} Analytics from your Data Plane nodes. You can use this tool to:
 * Diagnose performance issues
 * [Monitor LLM token consumption and costs](/advanced-analytics/llm-reporting/)
 * Capture essential usage metrics
 
-Explorer also allows you to save the output as custom reports.
+The Analytics Explorer also lets you save the output as a custom report.
+
+## Enabling data ingestion
+
+Manage data ingestion from any **Control Plane Dashboard** using the **Advanced Analytics** toggle. 
+This toggle lets you enable or disable data collection for your API traffic per Control Plane.
+
+**Modes:**
+- **On:** Both basic and advanced analytics data is collected, allowing in-depth insights and reporting.
+- **Off:** Advanced analytics collection stops, but basic API metrics remain available in Gateway Manager, 
+and can still be used for custom reports.
+
 ## Metrics
 
-
-Traffic metrics provide insight into which of your services are being used and how they are responding. Within a single report, you have the flexibility to choose one or multiple metrics from the same category.
+Traffic metrics provide insight into which of your Services are being used and how they are responding. 
+Within a single report, you have the flexibility to choose one or multiple metrics from the same category.
 
 <!--vale off-->
 {% table %}
@@ -101,76 +112,14 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+## Time intervals
 
-## Time Intervals
+{% include_cached /konnect/analytics-intervals.md %}
 
-The time frame selector controls the time frame of data visualized, which indirectly controls the
-granularity of the data. For example, the “5M” selection displays five minutes in
-one-second resolution data, while longer time frames display minute, hour, or days resolution data.
+## System-defined groups
 
-All time interval presets are **relative**. This means that time frames are dynamic and the report captures a snapshot of data
-relative to when a user views the report.
-For custom reports, you can also choose a **custom** date range. Custom means that time frames are static and the report captures a snapshot of data
-during the specified time frame. You can see the exact range below
-the time frame selector. For example:
+`Empty` is an optional, system-defined group that indicates that API calls don't have an entity like [Consumers](/gateway/entities/consumer/) or [Routes](/gateway/entities/route), selected for grouping. `Empty` allows you to group API calls that don't match specific groupings so you can gain more comprehensive insights. You can filter by `Is Empty` or `Is Not Empty`. 
 
-    
-    Jan 26, 2023 12:00 AM - Feb 01, 2023 12:00 AM (PST)
-    
-
-The following table describes the time intervals you can select:
-
-<!--vale off-->
-{% table %}
-columns:
-  - title: "Interval"
-    key: "interval"
-  - title: "Aggregation increment frequency"
-    key: "aggregation_increment_frequency"
-  - title: "Notes"
-    key: "notes"
-rows:
-  - interval: "Last 15 minutes"
-    aggregation_increment_frequency: "1 minute"
-    notes: "Data is aggregated in one minute increments."
-  - interval: "Last hour"
-    aggregation_increment_frequency: "1 minute"
-    notes: "Data is aggregated in one minute increments."
-  - interval: "Last six hours"
-    aggregation_increment_frequency: "1 minute"
-    notes: "Data is aggregated in one minute increments."
-  - interval: "Last 12 hours"
-    aggregation_increment_frequency: "1 hour"
-    notes: "Data is aggregated in one hour increments."
-  - interval: "Last 24 hours"
-    aggregation_increment_frequency: "1 hour"
-    notes: "Data is aggregated in one hour increments."
-  - interval: "Last seven days"
-    aggregation_increment_frequency: "1 hour"
-    notes: "Data is aggregated in one hour increments."
-  - interval: "Last 30 days"
-    aggregation_increment_frequency: "Daily"
-    notes: "Data is aggregated in daily increments."
-  - interval: "Current week"
-    aggregation_increment_frequency: "1 hour"
-    notes: "Logs any traffic in the current calendar week."
-  - interval: "Current month"
-    aggregation_increment_frequency: "1 hour"
-    notes: "Logs any traffic in the current calendar month."
-  - interval: "Previous week"
-    aggregation_increment_frequency: "1 hour"
-    notes: "Logs any traffic in the previous calendar week."
-  - interval: "Previous month"
-    aggregation_increment_frequency: "Daily"
-    notes: "Logs any traffic in the previous calendar month."
-{% endtable %}
-<!--vale on-->
-
-
-## System defined groups
-
-Empty is an optional, system-defined group that indicates that API calls don't have an entity like [Consumers](/gateway/entities/consumer/) or [Routes](/gateway/entities/route), selected for grouping. Empty allows you to group API calls that don't match specific groupings so you can gain more comprehensive insights. You can filter by `Is Empty` or `Is Not Empty`. 
-
-Empty can be used in cases like this: 
-* Identify the number of API calls that don't match a Route.
-* Identify API calls without an associated Consumer to keep track of any security holes.
+Some common use cases for `Empty` include:
+* Identifying the number of API calls that don't match a Route.
+* Identifying API calls without an associated Consumer to keep track of any security holes.

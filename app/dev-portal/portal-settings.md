@@ -8,10 +8,20 @@ products:
 beta: true
 tags:
   - beta
+
+breadcrumbs:
+  - /dev-portal/
+
+api_specs:
+  - konnect/portal-management
+
+search_aliases:
+  - Portal
+
 works_on:
     - konnect
 
-description: "Settings allows you to make global changes to your Dev Portal."
+description: "Learn about the settings you can configure for Dev Portal."
 
 related_resources:
   - text: Portal customization reference
@@ -20,6 +30,8 @@ related_resources:
     url: /dev-portal/custom-pages/
   - text: Security settings
     url: /dev-portal/security-settings/
+  - text: Custom domains
+    url: /dev-portal/custom-domains/
 ---
 
 The Dev Portal Setting page allows you to make global changes to your Dev Portal.
@@ -30,14 +42,14 @@ This is the name that you will see in your list of Dev Portals in {{site.konnect
 
 ## Display name
 
-This is used for SEO in the Portal and sets what users will see in the browser for the `home` / `/` Page, appended to the front matter title.
+This is used for SEO in the Portal and sets what users will see in the browser for the `home` or `/` Page, appended to the front matter title.
 
 The format looks like this
 ```
 <title>{front matter title} | {display_name}</title>
 ```
 
-For example, assuming the `home` / `/` page has the following front matter:
+For example, assuming the `home` or `/` page has the following front matter:
 
 ```yaml
 ---
@@ -60,7 +72,7 @@ To change the meta description and tags in pages, see the [pages reference](/dev
 
 ## Custom Domains
 
-Learn more about configuring [custom domains](/dev-portal/custom-domains/).
+You can customize the Dev Portal domain name. Learn more about configuring [custom domains](/dev-portal/custom-domains/).
 
 ## Audit logs
 

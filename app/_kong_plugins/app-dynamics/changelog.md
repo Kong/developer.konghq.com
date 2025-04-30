@@ -1,6 +1,5 @@
 ---
 content_type: reference
-
 ---
 
 ## Changelog
@@ -11,11 +10,11 @@ content_type: reference
 
 ### {{site.base_gateway}} 3.8.x
 
-* Added a new `ANALYTICS_ENABLE` flag. This plugin now also collects more snapshot user data in runtime.
+* Added a new `KONG_APPD_ANALYTICS_ENABLE` flag. This plugin now also collects more snapshot user data in runtime.
 
 ### {{site.base_gateway}} 3.6.x
-* This plugin now supports using self-signed certificates via the `CONTROLLER_CERTIFICATE_FILE`
-and `CONTROLLER_CERTIFICATE_DIR` environment configuration options.
+* This plugin now supports using self-signed certificates via the `KONG_APPD_CONTROLLER_CERTIFICATE_FILE`
+and `KONG_APPD_CONTROLLER_CERTIFICATE_DIR` environment configuration options.
 
 ### {{site.base_gateway}} 3.1.x
 * Introduced the new **AppDynamics** plugin.

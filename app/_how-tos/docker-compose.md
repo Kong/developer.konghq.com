@@ -2,11 +2,15 @@
 title: Install {{site.base_gateway}} using Docker Compose
 description: Use Docker Compose to install {{site.base_gateway}}
 content_type: how_to
+breadcrumbs:
+  - /gateway/
+  - /gateway/install/
 permalink: /gateway/install/docker
 related_resources:
   - text: Install {{site.base_gateway}} on a supported platform
     url: /gateway/install/
-
+  - text: Build a custom Docker image
+    url: /how-to/build-custom-docker-image/
 products:
   - gateway
 
@@ -35,6 +39,7 @@ cleanup:
 ## Set up the Docker Compose file
 
 Copy the Docker Compose file to `docker-compose.yml`:
+
 <!-- vale off -->
 ```bash
 cat <<EOF > docker-compose.yml
@@ -78,7 +83,7 @@ services:
       - '5432:5432'                  # Optional: expose Postgres on localhost for debugging
 
   kong-bootstrap:
-    image: '${GW_IMAGE:-kong/kong-gateway-dev:nightly-ubuntu}'  # Kong Gateway image (default to nightly dev)
+    image: '${GW_IMAGE:-kong/kong-gateway:{{ site.data.gateway_latest.ee-version }}}'  # Kong Gateway image (default to latest version)
     container_name: kong-bootstrap
     networks:
       - kong-ee-net
@@ -92,7 +97,7 @@ services:
     command: kong migrations bootstrap  # Run DB migrations to initialize Kong schema
 
   kong-cp:
-    image: '${GW_IMAGE:-kong/kong-gateway-dev:nightly-ubuntu}'  # Main Kong Gateway Control Plane
+    image: '${GW_IMAGE:-kong/kong-gateway:{{ site.data.gateway_latest.ee-version }}}'  # Main Kong Gateway Control Plane (default to latest version)
     container_name: kong-cp
     restart: on-failure
     networks:
