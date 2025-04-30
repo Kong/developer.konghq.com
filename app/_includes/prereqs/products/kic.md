@@ -1,5 +1,10 @@
 {% assign summary='{{site.kic_product_name}} running' %}
 {% assign additional_flags = '' %}
+{% assign use_values_file = false %}
+{% if prereqs.enterprise %}
+{% assign use_values_file = true %}
+{% endif %}
+
 {% if prereqs.kubernetes.gateway_api == 'experimental' %}
 {% assign additional_flags = additional_flags | append:' --set controller.ingressController.env.feature_gates="GatewayAlpha=true"' %}
 {% endif %}
@@ -12,11 +17,20 @@
 {% if prereqs.kubernetes.dump_config %}
 {% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.dump_config=true' %}
 {% endif %}
+
 {% if prereqs.kubernetes.env %}
 {% for env in prereqs.kubernetes.env %}
-{% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.' | append: env %}
+{% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.' | append: env[0] | append: '=' | append: env[1] %}
 {% endfor %}
 {% endif %}
+
+{% unless use_values_file %}
+{% if prereqs.kubernetes.gateway_env %}
+{% for env in prereqs.kubernetes.gateway_env %}
+{% assign additional_flags = additional_flags | append: ' --set gateway.env.' | append: env[0] | append: '=' | append: env[1] %}
+{% endfor %}
+{% endif %}
+{% endunless %}
 
 {% capture details_content %}
 
@@ -42,12 +56,15 @@
    gateway:
      image:
        repository: kong/kong-gateway
-     env:
+     env:{% if prereqs.kubernetes.gateway_env %}{% for env in prereqs.kubernetes.gateway_env %}
+       {{ env[0] }}: '{{ env[1] }}'{% endfor %}{% endif %}
        LICENSE_DATA:
          valueFrom:
            secretKeyRef:
              name: kong-enterprise-license
-             key: license
+             key: license{% if prereqs.kubernetes.gateway_custom_env %}
+     customEnv:{% for env in prereqs.kubernetes.gateway_custom_env %}
+       {{ env[0] }}: '{{ env[1] }}'{% endfor %}{% endif %}
    EOF
    ```
 {% assign additional_flags = additional_flags | append:' --values ./values.yaml' %}
@@ -60,12 +77,14 @@
    helm install kong kong/ingress -n kong --create-namespace{{ additional_flags }}
    ```
 
+{% unless prereqs.kubernetes.skip_proxy_ip %}
 1. Set `$PROXY_IP` as an environment variable for future commands:
 
    ```bash
    export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
    echo $PROXY_IP
    ```
+{% endunless %}
 
 {% endcapture %}
 

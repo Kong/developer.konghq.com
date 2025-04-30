@@ -1,0 +1,4 @@
+name: httpbin
+path: /httpbin
+service: httpbin
+port: 80

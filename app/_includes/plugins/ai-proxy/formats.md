@@ -22,10 +22,14 @@ The following upstream URL patterns are used:
 
 {:.warning}
 > While only the **Llama2** and **Mistral** models are classed as self-hosted, the target URL can be overridden for any of the supported providers.
-> For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same [`{{ upstream_url }}`](./reference/#{{ upstream_url_slug }}) plugin option.
+> For example, a self-hosted or otherwise OpenAI-compatible endpoint can be called by setting the same [`{{ upstream_url }}`](./reference/#{{ upstream_url_slug }}) plugin option.<br/><br/>
+> {% new_in 3.10 %} If you are using each provider's native SDK, {{site.base_gateway}} allows you to transparently proxy the request without any transformation and return the response unmodified. This can be done by setting [`config.llm_format`](/plugins/ai-proxy-advanced/reference/#schema--config-llm-format) to a value other than `openai`, such as `gemini` or `bedrock`.
+> <br><br>
+> In this mode, {{site.base_gateway}} will still provide useful analytics, logging, and cost calculation.
 
 ### Input formats
-Kong will mediate the request and response format based on the selected [`{{ provider }}`](./reference/#{{ provider_slug }}) and [`{{ route_type }}`](./reference/#{{ route_type_slug }}), as outlined in the table above.
+
+{% new_in 3.10 %} Kong will mediate the request and response format based on the selected [`config.targets[].provider`](/plugins/ai-proxy-advanced/reference/#schema--config-embeddings-model-provider) and [`config.targets[].route_type`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-route-type), as outlined in the table above. By default, Kong uses the OpenAI format, which can be changed using [`config.targets[].llm_format`](/plugins/ai-proxy-advanced/reference/#schema--config-llm-format). If `llm_format` is not set to `openai`, the plugin will not transform the request when sending it upstream and will leave it as-is. In versions **prior to 3.10**, Kong mediated the request and response format based on the selected [`{{ provider }}`](./reference/#{{ provider_slug }}) and [`{{ route_type }}`](./reference/#{{ route_type_slug }}).
 
 The Kong AI Proxy accepts the following inputs formats, standardized across all providers. The `{{ route_type }}` must be configured respective to the required request and response format examples:
 

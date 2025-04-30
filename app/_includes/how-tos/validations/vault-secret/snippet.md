@@ -1,3 +1,8 @@
+{% assign command=include.command %}
+{% if include.command == "" %}
+{% assign command="docker exec {{include.container}}" %}
+{% endif %}
+
 ```bash
-docker exec {{include.container}} kong vault get {{include.secret}}
+{{ command }} kong vault get {{include.secret}}
 ```
