@@ -1,10 +1,12 @@
-description: |
+description: Configure the Request Callout plugin to retry sending requests if requests fail, then return a custom error message and status code.
+
+extended_description: |
   Configure the plugin to:
   * Send a request to an API
   * Retry the request if it fails
   * Return a custom error message and status code
 
-  In this example, we'll retry three times if the request returns an error `500`, `502, or `503`.
+  In this example, we'll retry three times if the request returns an error `500`, `502`, or `503`.
 
 title: Retry failed requests
 

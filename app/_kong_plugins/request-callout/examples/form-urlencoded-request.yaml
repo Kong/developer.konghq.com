@@ -1,8 +1,9 @@
-description: |
-  Configure the plugin to send a request in the `x-www-form-urlencoded` format.
+description: Configure the Request Callout plugin to send a request in the `x-www-form-urlencoded` format.
+  
+extended_description: |
+  Configure the Request Callout plugin to send a request in the `x-www-form-urlencoded` format.
 
   In this example, we're sending a form containing credentials, including a client secret using a [Vault](/gateway/entities/vault/) reference.
-  
 
 title: Send a request containing form data
 

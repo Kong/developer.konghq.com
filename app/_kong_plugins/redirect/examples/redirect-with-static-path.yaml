@@ -6,9 +6,9 @@ extended_description: |
   columns:
     - title: Incoming Request
       key: incoming
-    - title: `config.location`
+    - title: "`config.location`"
       key: location
-    - title: `config.keep_incoming_path`
+    - title: "`config.keep_incoming_path`"
       key: keep_path
     - title: New URL
       key: new_url

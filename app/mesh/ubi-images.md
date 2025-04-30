@@ -6,12 +6,14 @@ layout: reference
 products:
   - mesh
 
+breadcrumbs:
+  - /mesh/
 tags:
   - ubi
   - red-hat
 
 related_resources:
-  - text: "Enterprise Features"
+  - text: "Enterprise features"
     url: /mesh/enterprise/
   - text: "Verify signatures for signed images"
     url: /mesh/signed-images/
@@ -21,17 +23,17 @@ In addition to the standard {{site.mesh_product_name}} images built on Alpine Li
 
 {{site.mesh_product_name}} UBI images are distributed with all standard images, but with the `ubi-` prefix:
 
-* [kuma-dp UBI Image](https://hub.docker.com/r/kong/ubi-kuma-dp)
-* [kuma-cp UBI Image](https://hub.docker.com/r/kong/ubi-kuma-cp)
-* [kumactl UBI Image](https://hub.docker.com/r/kong/ubi-kumactl)
-* [kuma-init UBI Image](https://hub.docker.com/r/kong/ubi-kuma-init)
-* [kuma-prometheus-sd UBI Image](https://hub.docker.com/r/kong/ubi-kuma-prometheus-sd)
+* [kuma-dp UBI image](https://hub.docker.com/r/kong/ubi-kuma-dp)
+* [kuma-cp UBI image](https://hub.docker.com/r/kong/ubi-kuma-cp)
+* [kumactl UBI image](https://hub.docker.com/r/kong/ubi-kumactl)
+* [kuma-init UBI image](https://hub.docker.com/r/kong/ubi-kuma-init)
+* [kuma-prometheus-sd UBI image](https://hub.docker.com/r/kong/ubi-kuma-prometheus-sd)
 
 The base UBI variant for all images is `ubi-minimal`.
 
-## Usage
+## Using {{site.mesh_product_name}} UBI images
 
-To use UBI images, you need to explicitly pass them when the control plane is installed:
+To use UBI images, you need to explicitly pass them when the Control Plane is installed:
 
 {% navtabs "usage"%}
 {% navtab "kumactl" %}

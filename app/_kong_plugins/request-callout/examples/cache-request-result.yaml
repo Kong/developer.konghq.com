@@ -1,6 +1,5 @@
 description: |
-  Configure the plugin to cache the results of the request.
-  
+  Configure the Request Callout plugin to cache the results of the request.
 
 title: Cache the request results
 

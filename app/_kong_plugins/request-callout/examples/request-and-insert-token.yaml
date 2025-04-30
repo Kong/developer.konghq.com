@@ -1,5 +1,7 @@
-description: |
-  Configure the plugin to:
+description: Configure the Request Callout plugin to send a request to an API to get a token, then use the token in the request to the upstream server.
+
+extended_description: |
+  Configure the Request Callout plugin to:
   * Send a request to an API to get a token
   * Use the token in the request to the upstream server
 
@@ -8,9 +10,6 @@ description: |
 title: Request a token and insert it in a request
 
 weight: 900
-
-# requirements: <- not required
-# - "some req"
 
 variables: 
   url:

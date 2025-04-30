@@ -18,7 +18,7 @@ deployment_topologies:
 
 releases:
   - release: "3.4"
-    ee-version: "3.4.3.16"
+    ee-version: "3.4.3.17"
     ce-version: "3.4.2"
     eol: August 2026
     lts: true
@@ -187,7 +187,7 @@ releases:
               - 3.2
               - Confluent Cloud
   - release: "3.7"
-    ee-version: "3.7.1.2"
+    ee-version: "3.7.1.5"
     ce-version: "3.7.1"
     eol: May 2025
     distributions:
@@ -363,8 +363,8 @@ releases:
               - 3.2
               - Confluent Cloud
   - release: "3.8"
-    ee-version: "3.8.0.0"
-    ce-version: "3.8.0"
+    ee-version: "3.8.1.1"
+    ce-version: "3.8.1"
     eol: Sept 2025
     distributions:
       - amazonlinux2:
@@ -699,7 +699,7 @@ releases:
               - 3.2
               - Confluent Cloud
   - release: "3.10"
-    ee-version: "3.10.0.0"
+    ee-version: "3.10.0.1"
     lts: true
     latest: true
     eol: Mar 2028
