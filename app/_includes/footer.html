@@ -28,7 +28,7 @@
                 <div class="font-semibold text-primary">{{section[1].title}}</div>
 
                 {% for link in section[1].links %}
-                    <a href="{{link[1].url}}" class="no-icon text-secondary">{{link[1].text}}</a>
+                    <a href="{{link[1].url}}" class="no-icon {% if link[1].cssClass %} {{link[1].cssClass}} {% else %} text-secondary {% endif %}">{{link[1].text}}</a>
                 {% endfor %}
             </div>
         {% endfor %}
