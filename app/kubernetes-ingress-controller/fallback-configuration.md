@@ -13,7 +13,7 @@ works_on:
   - on-prem
   - konnect
 min_version:
-  - kic: '3.2'
+  kic: '3.2'
 
 related_resources:
   - text: "How-To: Backfill broken configuration"
