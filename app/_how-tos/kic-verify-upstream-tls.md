@@ -308,6 +308,7 @@ kubectl logs -n kong deploy/kong-gateway | grep "GET /echo"
 2024/11/29 11:41:46 [error] 1280#0: *45531 upstream SSL certificate verify error: (22:certificate chain too long) while SSL handshaking to upstream, client: 192.168.194.1, server: kong, request: "GET /echo HTTP/1.1", upstream: "https://192.168.194.19:443/", host: "kong.example", request_id: "678281372fb8907ed06d517cf515de78"
 192.168.194.1 - - [29/Nov/2024:11:41:46 +0000] "GET /echo HTTP/1.1" 502 126 "-" "curl/8.7.1" kong_request_id: "678281372fb8907ed06d517cf515de78"
 ```
+{:.no-copy-code}
 
 {{ site.base_gateway }} is now rejecting the connection because the certificate chain is too long.
 Changing the verification depth to 1 should allow the connection to succeed again.
