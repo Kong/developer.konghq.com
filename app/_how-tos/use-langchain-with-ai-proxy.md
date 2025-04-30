@@ -9,6 +9,7 @@ description: Connect your LangChain integrations with {{site.base_gateway}} with
 
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem
@@ -21,7 +22,7 @@ plugins:
   - ai-proxy
   - key-auth
 
-entities: 
+entities:
   - service
   - route
   - plugin
@@ -29,6 +30,7 @@ entities:
 tags:
     - ai
     - openai
+    - ai-gateway
 
 tldr:
     q: How can use my LangChain integrations with AI Gateway?
@@ -85,8 +87,8 @@ variables:
 To secure the access to your Route, create a Consumer and set up an authentication plugin.
 
 {:.info}
-> Note that LangChain expects authentication as an `Authorization` header with a value starting with `Bearer`. 
-You can use plugins like [OAuth 2.0 Authentication](/plugins/oauth2/) or [OpenID Connect](/plugins/openid-connect/) to generate Bearer tokens. 
+> Note that LangChain expects authentication as an `Authorization` header with a value starting with `Bearer`.
+You can use plugins like [OAuth 2.0 Authentication](/plugins/oauth2/) or [OpenID Connect](/plugins/openid-connect/) to generate Bearer tokens.
 In this example, for testing purposes, we'll recreate this pattern using the [Key Authentication](/plugins/key-auth/) plugin.
 
 {% entity_examples %}
@@ -146,7 +148,7 @@ print(f"$ ChainAnswer:> {response.content}")' > app.py
 {: data-deployment-topology="on-prem" }
 
 ```sh
-echo 'from langchain_openai import ChatOpenAI 
+echo 'from langchain_openai import ChatOpenAI
 import os
 
 kong_url = os.environ['KONNECT_PROXY_URL']
