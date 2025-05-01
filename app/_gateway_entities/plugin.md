@@ -83,7 +83,7 @@ Each plugin can run globally, or be scoped to some combination of the following:
 * [Consumer Groups](/gateway/entities/consumer-group/)
 
 Using scopes, you can customize how {{site.base_gateway}} handles functions in your environment, 
-either before a request is sent to your backend Services or after it receives a response.
+either before a request is sent to your upstream services or after it receives a response.
 For example, if you apply a plugin to a single [**Route**](/gateway/entities/route/), 
 that plugin will only trigger when a request matches the Route's specific path.
 

@@ -1,5 +1,5 @@
 ---
-title: "Audit logs"
+title: "{{site.mesh_product_name}} audit logs"
 description: "Track all user and system actions in {{site.mesh_product_name}} using the AccessAudit resource and configurable backends"
 content_type: reference
 layout: reference

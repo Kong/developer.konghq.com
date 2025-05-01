@@ -9,13 +9,13 @@ breadcrumbs:
     - /mesh/
 
 tags:
-    - changelog
     - release-notes
 
 search_aliases:
     - features
     - known issues
     - bug fixes
+    - changelog
 ---
 
 {% embed CHANGELOG.md %}

@@ -1,5 +1,5 @@
 ---
-title: "Version support policy"
+title: "{{site.mesh_product_name}} version support policy"
 description: "Understand the lifecycle and version support guidelines for {{site.mesh_product_name}}, including supported release timelines."
 content_type: reference
 layout: reference

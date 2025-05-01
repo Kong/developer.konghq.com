@@ -125,7 +125,7 @@ flowchart LR
 
 <!--vale on -->
 
-## RBAC Entities
+## RBAC entities
 
 The following table describes the different RBAC entities:
 

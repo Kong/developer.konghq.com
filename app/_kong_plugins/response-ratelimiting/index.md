@@ -10,7 +10,7 @@ tags:
   - traffic-control
 
 related_resources:
-  - text: Rate Limiting with {{site.base_gateway}}
+  - text: Rate limiting with {{site.base_gateway}}
     url: /gateway/rate-limiting/
 
 products:

@@ -29,7 +29,7 @@ related_resources:
     url: /mesh/enterprise/
 ---
 
-You can use Amazon Certificate Manager as a Certificate Authority for mTLS with {{site.mesh_product_name}}.
+You can use Amazon Certificate Manager as a Certificate Authority (CA) for mTLS with {{site.mesh_product_name}}.
 
 ## Supported mTLS backends
 
