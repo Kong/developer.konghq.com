@@ -33,7 +33,7 @@ related_resources:
   - text: DNS configuration reference
     url: /gateway/network/dns-config-reference/
   - text: Insomnia mock servers
-    url: /insomnia/mock-servers
+    url: /insomnia/mock-servers/
 
 categories:
   - traffic-control
