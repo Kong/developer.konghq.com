@@ -131,20 +131,20 @@ not utilized. Providing email addresses for teams will invite users to the Konne
 
 `organizations`
 
-Each organization defined in the `organizations` section, maps to a Konnect Organization. For each organization, you define 
+Each organization defined in the `organizations` section maps to a Konnect Organization. For each organization, you define 
 authorization configurations and environments. Each environment will result in a set of configured resources with specific naming, 
 metadata, and access control policies.
 
 ## What are Environments?
-Environments may be any conceptual grouping of resources the user desires. Typical examples include "dev" or "prod" engineering stages,
-but you may also desire to form environments around business units or products. 
+Environments may be any conceptual grouping of resources that you want. Typical examples include "dev" or "prod" engineering stages,
+but you could also form environments around business units or products. 
 
 Konnect does not natively support the concept of environments. The orchestrator manages environments synthetically by 
 prefixing resource names, applying labels, and setting different access control policies based on well known environment types. 
 The orchestrator currently supports 2 environment types, DEV and PROD. Various resource configuration decisions are encoded into the Environment type, 
 for example RBAC and portal settings. Environments also require a region configuration which must map to a Konnect supported geographic region.
 
-## What specific Konnect resource are managed by the Konnect Orchestrator?
+## What specific Konnect resources are managed by the Konnect Orchestrator?
 The Konnect Orchestrator does not manage a straight mapping from the input declarative configuration into Konnect resources. 
 Instead, the input configuration is generally an expression of the engineering organization design, and the orchestrator 
 maps that to opinionated configurations for the Konnect resources it manages. The following shows the general configuration
