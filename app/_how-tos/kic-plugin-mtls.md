@@ -10,6 +10,8 @@ breadcrumbs:
     section: How To
 plugins:
   - mtls-auth
+search_aliases:
+  - kic mtls
 products:
   - kic
 
@@ -19,7 +21,9 @@ tools:
 works_on:
   - on-prem
   - konnect
-
+related_resources:
+  - text: Support multiple authentication methods
+    url: /kubernetes-ingress-controller/multiple-auth-methods/
 entities: []
 
 tldr:

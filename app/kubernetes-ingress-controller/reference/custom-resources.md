@@ -6,13 +6,20 @@ description: |
 
 content_type: reference
 layout: reference
-
+tags:
+  - crd
+search_aliases: 
+  - kic CRD
 products:
   - kic
-
+breadcrumbs:
+  - /kubernetes-ingress-controller/
 works_on:
   - on-prem
   - konnect
+related_resources:
+  - text: Gateway API
+    url: /kubernetes-ingress-controller/gateway-api/
 ---
 
 <!-- vale off -->
@@ -473,7 +480,7 @@ KongConsumerGroup is the Schema for the kongconsumergroups API.
 
 KongUpstreamPolicy allows configuring algorithm that should be used for load balancing traffic between Kong
 Upstream's Targets. It also allows configuring health checks for Kong Upstream's Targets.<br /><br />
-Its configuration is similar to Kong Upstream object (https://docs.konghq.com/gateway/latest/admin-api/#upstream-object),
+Its configuration is similar to Kong [Upstream object](/api/gateway/admin-ee/#/Upstreams/list-upstream/)
 and it is applied to Kong Upstream objects created by the controller.<br /><br />
 It can be attached to Services. To attach it to a Service, it has to be annotated with
 `konghq.com/upstream-policy: <name>`, where `<name>` is the name of the KongUpstreamPolicy

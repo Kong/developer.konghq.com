@@ -7,17 +7,24 @@ description: |
 
 content_type: reference
 layout: reference
-
+breadcrumbs:
+  - /kubernetes-ingress-controller/
 products:
   - kic
-
+search_aliases:
+  - kubernetes ingressclass
+  - kic gatewayclass
+  - class annotations
 works_on:
   - on-prem
   - konnect
-
+tags:
+  - kubernetes
 related_resources:
   - text: Gateway API
     url: /kubernetes-ingress-controller/gateway-api/
+  - text: Ingress
+    url: /kubernetes-ingress-controller/ingress/
 ---
 
 

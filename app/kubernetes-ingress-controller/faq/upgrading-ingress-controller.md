@@ -6,10 +6,15 @@ description: |
 
 content_type: reference
 layout: reference
-
+breadcrumbs:
+  - /kubernetes-ingress-controller/
+  - index: kubernetes-ingress-controller
+    section: FAQs
 products:
   - kic
 
+search_aliases: 
+  - upgrade kic
 works_on:
   - on-prem
   - konnect
@@ -117,15 +122,15 @@ Run the following command, specifying the old release name, the namespace where 
 {% navtabs helm %}
 {% navtab "kong/ingress" %}
 ```shell
-$ helm upgrade ${YOUR_RELEASE_NAME} kong/ingress \
-  --namespace ${YOUR_NAMESPACE} \
+ helm upgrade $YOUR_RELEASE_NAME kong/ingress \
+  --namespace $YOUR_NAMESPACE \
   -f ./values.yaml
 ```
 {% endnavtab %}
 {% navtab "kong/kong" %}
 ```shell
-$ helm upgrade ${YOUR_RELEASE_NAME} kong/kong \
-  --namespace ${YOUR_NAMESPACE} \
+ helm upgrade $YOUR_RELEASE_NAME kong/kong \
+  --namespace $YOUR_NAMESPACE \
   -f ./values.yaml
 ```
 {% endnavtab %}
@@ -134,7 +139,7 @@ $ helm upgrade ${YOUR_RELEASE_NAME} kong/kong \
 After the upgrade completes, there's a brief period of time before the new resources are online. You can wait for the relevant Pod resources to cycle by watching them in your release namespace:
 
 ```shell
-$ kubectl -n ${YOUR_RELEASE_NAMESPACE} get pods -w
+ kubectl -n $YOUR_RELEASE_NAMESPACE get pods -w
 ```
 
 Once the new pods are in a `Ready` state, the upgrade is complete.
@@ -144,13 +149,13 @@ Once the new pods are in a `Ready` state, the upgrade is complete.
 If you run into problems during or after the upgrade, Helm provides a rollback mechanism to revert to a previous revision of the release.
 
 ```shell
-$ helm rollback --namespace ${YOUR_RELEASE_NAMESPACE} ${YOUR_RELEASE_NAME}
+ helm rollback --namespace $YOUR_RELEASE_NAMESPACE $YOUR_RELEASE_NAME
 ```
 
 You can wait for the rollback to complete by watching the relevant Pod resources:
 
 ```shell
-$ kubectl -n ${YOUR_RELEASE_NAMESPACE} get pods -w
+ kubectl -n $YOUR_RELEASE_NAMESPACE get pods -w
 ```
 
 After a rollback, if you run into issues in production, consider using a testing environment to identify and correct these issues, or reference the [troubleshooting documentation](/index/kubernetes-ingress-controller/#troubleshooting).
@@ -223,7 +228,6 @@ DB-less configurations in the Helm chart now use the `expressions` [`router_flav
 
 Use of the new routing engine should not change route matching outside of cases where route precedence did not match the [Gateway API specification][gateway-api-precedence]. The new engine does have different performance characteristics than the old engine, but should improve matching and configuration update speed for most configurations.
 
-[expression-router]: https://docs.konghq.com/gateway/latest/key-concepts/routes/expressions/
 [expression-kong-conf]: https://github.com/Kong/kong/blob/3.4.2/kong.conf.default#L1589-L1621
 [gateway-api-precedence]: https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io%2fv1.HTTPRouteRule
 

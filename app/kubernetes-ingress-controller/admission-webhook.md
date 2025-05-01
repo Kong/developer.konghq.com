@@ -6,13 +6,22 @@ description: |
 
 content_type: reference
 layout: reference
-
+breadcrumbs:
+  - /kubernetes-ingress-controller/
+  - index: kubernetes-ingress-controller
+    section: How To
 products:
   - kic
-
+prereqs:
+  kubernetes:
+    gateway_api: true
+    gateway_api_optional: true
 works_on:
   - on-prem
   - konnect
+related_resources:
+  - text: Gateway API
+    url: /kubernetes-ingress-controller/gateway-api/
 ---
 
 The {{site.kic_product_name}} ships with an admission webhook for KongPlugin and KongConsumer resources in the `configuration.konghq.com` API group.  You can generate TLS certificate and the key pair that you need for the admission webhook.
@@ -30,13 +39,15 @@ You can test if the admission webhook is enabled for duplicate KongConsumers, in
 1. Create a KongConsumer with the username `alice`:
 
     ```bash
-    echo "apiVersion: configuration.konghq.com/v1
+    echo '
+    apiVersion: configuration.konghq.com/v1
     kind: KongConsumer
     metadata:
       name: alice
       annotations:
         kubernetes.io/ingress.class: kong
-    username: alice" | kubectl apply -f -
+    username: alice
+    ' | kubectl apply -f -
     ```
     The results should look like this:
     ```
@@ -46,13 +57,15 @@ You can test if the admission webhook is enabled for duplicate KongConsumers, in
 1. Create another KongConsumer with the same username:
 
     ```bash
-    echo "apiVersion: configuration.konghq.com/v1
+    echo '
+    apiVersion: configuration.konghq.com/v1
     kind: KongConsumer
     metadata:
       name: alice2
       annotations:
         kubernetes.io/ingress.class: kong
-    username: alice" | kubectl apply -f -
+    username: alice
+    ' | kubectl apply -f -
     ```
     The results should look like this:
     ```

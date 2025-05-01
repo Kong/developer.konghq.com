@@ -1,8 +1,8 @@
 ---
 title: Database backed
 
-description: |
-  Use {{ site.kic_product_name }} to configure a {{ site.base_gateway }} Control Plane that is attached to a PostgreSQL database.
+description: "Use {{ site.kic_product_name }} to configure a {{ site.base_gateway }} Control Plane that is attached to a PostgreSQL database."
+  
 
 content_type: reference
 layout: reference
@@ -14,7 +14,8 @@ breadcrumbs:
 
 products:
   - kic
-
+search_aliases:
+  - kic PostgreSQL
 works_on:
   - on-prem
   - konnect
@@ -24,15 +25,17 @@ related_resources:
     url: /kubernetes-ingress-controller/deployment-topologies/gateway-discovery/
   - text: Sidecar (Traditional)
     url: /kubernetes-ingress-controller/deployment-topologies/sidecar/
+  - text: Architecture
+    url: /kubernetes-ingress-controller/architecture/
 ---
 
-
-{:.warning}
-> Database backed deployments should only be used in a small set of circumstances. We recommend using [Gateway Discovery](/kubernetes-ingress-controller/deployment-topologies/gateway-discovery/) unless you've been otherwise advised by a member of the Kong team.
 
 Database backed deployments are when {{ site.kic_product_name }} is used to update a Lua control plane that is attached to a PostgreSQL database. {{ site.base_gateway }} may be deployed in either [Traditional](/gateway/traditional-mode/) or [Hybrid](/gateway/hybrid-mode/) mode.
 
 Both [Gateway Discovery](/kubernetes-ingress-controller/deployment-topologies/gateway-discovery/) and [Sidecar](/kubernetes-ingress-controller/deployment-topologies/sidecar/) deployments can be used alongside a database. If you're starting a greenfield project today we recommend using Gateway Discovery.
+
+{:.warning}
+> Database backed deployments should only be used in a small set of circumstances. We recommend using [Gateway Discovery](/kubernetes-ingress-controller/deployment-topologies/gateway-discovery/) unless you've been otherwise advised by a member of the Kong team.
 
 ## Traditional mode
 

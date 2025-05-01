@@ -6,10 +6,12 @@ description: |
 
 content_type: reference
 layout: reference
-
+breadcrumbs:
+  - /kubernetes-ingress-controller/
 products:
   - kic
-
+search_aliases:
+  - kic architecture
 works_on:
   - on-prem
   - konnect
@@ -19,6 +21,8 @@ related_resources:
     url: /kubernetes-ingress-controller/gateway-api/
   - text: Ingress
     url: /kubernetes-ingress-controller/ingress/
+  - text: HTTP Route
+    url: /kubernetes-ingress-controller/routing/http/
 ---
 
 The {{site.kic_product_name}} configures {{site.base_gateway}} using Ingress or [Gateway API](https://gateway-api.sigs.k8s.io/) resources created inside a Kubernetes cluster.

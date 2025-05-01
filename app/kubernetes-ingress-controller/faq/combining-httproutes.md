@@ -18,6 +18,9 @@ products:
 works_on:
   - on-prem
   - konnect
+related_resources:
+  - text: Feature gates
+    url: /kubernetes-ingress-controller/reference/feature-gates/
 ---
 
 {{ site.kic_product_name }} can consolidate rules from multiple `HTTPRoute` resources that target the same backend services into a single {{ site.base_gateway }} service.
@@ -34,7 +37,7 @@ kubectl set env -n kong deployment/kong-controller \
 
 You can refer to the [feature gate reference](/kubernetes-ingress-controller/reference/feature-gates/) to learn more.
 
-## What does `CombinedServicesFromDifferentHTTPRoutes` do?
+## How does `CombinedServicesFromDifferentHTTPRoutes` work?
 
 Any rules with same combination of backend services (combination of namespace, name, port, and weight in `backendRefs` of rules) in all `HTTPRoute`s within the same namespace are translated to one {{site.base_gateway}} Service.
 
@@ -48,7 +51,7 @@ and rules, the {{site.base_gateway}} Service names are generated from the consol
 Names of {{site.base_gateway}} Services are computed from the namespace, name, port, and weight (if specified). The pattern of names is:
 
 ```
-httproute.<namespace>.svc.<backend_ns>.<backend_name>.<backend_port>.[backend_weight]_[next_backends]...
+httproute.NAMESPACE.svc.BACKEND_NS.BACKEND_NAME.BACKEND_PORT.[BACKEND_WEIGHT]_[NEXT_BACKENDs]...
 ```
 
 Where:

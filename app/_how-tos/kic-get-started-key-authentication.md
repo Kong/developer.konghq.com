@@ -20,7 +20,7 @@ tldr:
     Create a `KongPlugin` resource containing an authentication plugin configuration and annotate your Kubernetes service with the plugin name
 
     ```bash
-    kubectl annotate service <YOUR_SERVICE> konghq.com/plugins=key-auth
+    kubectl annotate service YOUR_SERVICE konghq.com/plugins=key-auth
     ```
 
 products:

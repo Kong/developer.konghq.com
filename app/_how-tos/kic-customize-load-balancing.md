@@ -1,5 +1,5 @@
 ---
-title: Customizing load-balancing behavior with KongUpstreamPolicy
+title: Customize load balancing with KongUpstreamPolicy
 short_title: Load Balancing
 description: "Change the load balancing algorithm to consistent-hashing based on an incoming header"
 content_type: how_to
@@ -23,6 +23,10 @@ entities: []
 tldr:
   q: How do I change the load balancing algorithm to consistent-hashing?
   a: Create a `KongUpstreamPolicy` resource then add the `konghq.com/upstream-policy` annotation to your Service
+
+related_resources:
+  - text: KongUpstreamPolicy reference
+    url: /kubernetes-ingress-controller/reference/custom-resources/
 
 prereqs:
   kubernetes:

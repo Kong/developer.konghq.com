@@ -1,15 +1,18 @@
 ---
-title: "Apply an Enterprise License"
+title: "Apply an Enterprise license with {{ site.kic_product_name }}"
 
 description: |
   Learn how to apply a {{ site.base_gateway }} enterprise license using the `KongLicense` CRD or Kubernetes secrets
-
+breadcrumbs:
+  - /kubernetes-ingress-controller/
 content_type: reference
 layout: reference
 
 products:
   - kic
-
+related_resources:
+  - text: Failure modes
+    url: /kubernetes-ingress-controller/troubleshooting/failure-modes/
 works_on:
   - on-prem
   - konnect
@@ -18,7 +21,7 @@ works_on:
 This page explains how to apply an enterprise license to {{ site.kic_product_name }} managed {{ site.base_gateway }} instances.
 ## Applying a license using the KongLicense CRD {% new_in 3.1 %}
 
-{{ site.kic_product_name }} v3.1 introduced a `KongLicense` CRD ([reference](/kubernetes-ingress-controller/reference/custom-resources/#konglicense)) that applies a license to {{ site.base_gateway }} using the Admin API.
+{{ site.kic_product_name }} v3.1 introduced a [`KongLicense` CRD](/kubernetes-ingress-controller/reference/custom-resources/#konglicense) that applies a license to {{ site.base_gateway }} using the Admin API.
 
 1. Create a file named `license.json` containing your {{site.base_gateway}} license.
 

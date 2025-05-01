@@ -18,6 +18,9 @@ products:
 works_on:
   - on-prem
   - konnect
+related_resources:
+  - text: Nginx directives
+    url: /gateway/nginx-directive/
 ---
 
 

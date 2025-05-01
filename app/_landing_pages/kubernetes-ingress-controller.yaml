@@ -21,7 +21,7 @@ rows:
 
               {{ site.kic_product_name }} takes Kubernetes resources such as `Ingress` and `HTTPRoute` and converts them into a valid {{ site.base_gateway }} configuration. It enables you to configure all the [features](/gateway/#learn) of {{ site.base_gateway }} using Kubernetes CRDs.
 
-              KIC supports all [{{ site.base_gateway }} entities](/gateway/entities/), and can be deployed multiple times within a single cluster to provide [traffic splitting](#TODO).
+              KIC supports all [{{ site.base_gateway }} entities](/gateway/entities/), and can be deployed multiple times within a single cluster to provide [traffic splitting](/kubernetes-ingress-controller/split-traffic/).
           - type: button
             config:
               text: View All Documentation &raquo;
@@ -86,7 +86,7 @@ rows:
         - type: card
           config:
             icon: /assets/icons/self-hosted.svg
-            title:
+            title: Sidecar (Traditional)
             description: |
               Deploy {{ site.kic_product_name }} and {{ site.base_gateway }} as containers within the same Pod. This topology is deprecated.
             cta:
@@ -120,8 +120,8 @@ rows:
                   If {{ site.kic_product_name }} is not working for you the following pages may help:
 
                   * [Troubleshooting](/index/kubernetes-ingress-controller/#troubleshooting): Common issues that people encounter when running {{ site.kic_product_name }}.
-                  * [FAQ](#TODO): Specific questions about routing behavior, plugin compatibility and more.
-                  * [Feature Gates](#TODO): If something isn't working as expected, ensure that you have the correct feature gates enabled
+                  * [FAQ](/index/kubernetes-ingress-controller/#faqs): Specific questions about routing behavior, plugin compatibility and more.
+                  * [Feature Gates](/kubernetes-ingress-controller/reference/feature-gates/): If something isn't working as expected, ensure that you have the correct feature gates enabled
                   * [Create a GitHub issue](https://github.com/Kong/kubernetes-ingress-controller/issues/new/choose): Report a bug or make a feature request for {{ site.kic_product_name }}.
                   * [Join the Kong Slack community](https://konghq.com/community#64fe8580b1a2f3c3804230f1): Get help from the team
 

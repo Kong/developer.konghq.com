@@ -392,17 +392,6 @@ app/kubernetes-ingress-controller/migrate/credential-kongcredtype-label.md:
 app/_how-tos/kic-verify-upstream-tls.md:
   - app/_src/kubernetes-ingress-controller/guides/security/verify-upstream-tls.md
 
-app/_how-tos/kic-service-healthchecks.md:
-  - app/_src/kubernetes-ingress-controller/guides/high-availability/health-checks.md
-app/kubernetes-ingress-controller/last-known-good-config.md:
-  - app/_src/kubernetes-ingress-controller/guides/high-availability/last-known-good-config.md
-app/kubernetes-ingress-controller/fallback-configuration.md:
-  - app/_src/kubernetes-ingress-controller/guides/high-availability/fallback-config.md
-app/_how-tos/kic-fallback-config-exclude.md:
-  - app/_src/kubernetes-ingress-controller/guides/high-availability/fallback-config.md
-app/_how-tos/kic-fallback-config-backfill.md:
-  - app/_src/kubernetes-ingress-controller/guides/high-availability/fallback-config.md
-
 # plugins
 app/_kong_plugins/session/changelog.md:
   - app/_hub/kong-inc/session/_changelog.md
@@ -1036,7 +1025,7 @@ app/gateway/logs.md:
   - app/_src/gateway/production/logging/update-log-level-dynamically.md
   - app/_src/gateway/production/logging/ai-analytics.md
   - app/_src/gateway/production/logging/customize-gateway-logs.md
-app/gateway/network/index.md:
+app/gateway/network.md:
   - app/_src/gateway/production/networking/default-ports.md
   - app/_src/gateway/production/networking/firewall.md
 app/gateway/cp-dp-communication.md:
@@ -1123,7 +1112,7 @@ app/gateway/routing/expressions.md:
   - app/_src/gateway/reference/expressions-language/performance.md
 app/gateway/routing/expressions-router-examples.md:
   - app/_src/gateway/reference/expressions-language/index.md
-app/gateway/network/dns-config-reference.md:
+app/gateway/networking/dns-config-reference.md:
   - app/_src/gateway/production/networking/dns-considerations.md
 app/gateway/traffic-control/health-checks-circuit-breakers.md:
   - app/_src/gateway/how-kong-works/health-checks.md
@@ -1419,7 +1408,7 @@ app/dev-portal/sso.md:
   - app/dev-portal/access-and-approvals/sso.md
 
 ## Insomnia
-app/_landing_pages/insomnia.yaml:
+app/_landing_pages/insomnia.yaml: 
   - /insomnia/get-started.md
   - /insomnia/install.md
   - /insomnia/subscriptions.md
@@ -1437,7 +1426,7 @@ app/_landing_pages/design.yaml:
 app/_how-tos/create-a-design-ducment.md:
   - /insomnia/get-started-with-documents.md
   - /insomnia/design-documents.md
-app/_landing_pages/insomnia/documents.yaml:
+app/_landing_pages/insomnia/documents.yaml: 
   - /insomnia/design-documents.md
   - /insomnia/get-started-with-documents.md
 app/_landing_pages/insomnia/test.yaml:
