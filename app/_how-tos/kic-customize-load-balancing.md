@@ -1,5 +1,5 @@
 ---
-title: Customize load-balancing with KongUpstreamPolicy
+title: Customize load balancing with KongUpstreamPolicy
 short_title: Load Balancing
 description: "Change the load balancing algorithm to consistent-hashing based on an incoming header"
 content_type: how_to

@@ -19,7 +19,7 @@ works_on:
   - on-prem
   - konnect
 related_resources:
-  - text: Feature gate
+  - text: Feature gates
     url: /kubernetes-ingress-controller/reference/feature-gates/
 ---
 

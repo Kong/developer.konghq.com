@@ -10,7 +10,7 @@ breadcrumbs:
     section: How To
 
 related_resources:
-  - text: mTLS
+  - text: mTLS in KIC
     url: /kubernetes-ingress-controller/mtls/
 search_aliases:
   - kic mtls

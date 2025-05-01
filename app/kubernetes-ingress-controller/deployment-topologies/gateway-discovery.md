@@ -2,7 +2,7 @@
 title: Gateway Discovery
 
 description: |
-  Use one {{ site.kic_product_name }} instance to configure multiple {{ site.base_gateway }} instances. Kong's recommended deployment topology. 
+  Use one {{ site.kic_product_name }} instance to configure multiple {{ site.base_gateway }} instances. Gateway Discovery is Kong's recommended deployment topology for the {{ site.kic_product_name }}. 
 
 content_type: reference
 layout: reference
