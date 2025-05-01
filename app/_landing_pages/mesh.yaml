@@ -39,6 +39,29 @@ rows:
 
   - header:
       type: h2
+      text: "Install {{site.mesh_product_name}}"
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  You can use the following to get an instance of {{site.mesh_product_name}} in Universal mode running:
+                  
+                  1. Go to the [{{site.mesh_product_name}} packages](https://cloudsmith.io/~kong/repos/{{site.mesh_product_name_path}}-binaries-release/packages/?q=version%3A{{ page.version_data.version }}) page to download and extract the installation archive for your OS, or download and extract the latest release automatically (Linux or macOS):
+                     ```shell
+                     curl -L {{site.links.web}}{% if page.edition != "kuma" %}/{{page.edition}}{% endif %}/installer.sh | VERSION={{ page.version_data.version }} sh -
+                     ```
+                  2. To finish installation, add {{site.mesh_product_name}} binaries to path:
+                     ```shell
+                     export PATH=$(pwd)/{{site.mesh_product_name_path}}-{{site.data.mesh_latest.version}}/bin:$PATH
+                     ```
+                     This directory contains binaries for `kuma-dp`, `kuma-cp`, `kumactl`, `envoy` and `coredns`
+
+  
+  - header:
+      type: h2
       text: "Get started"
     columns:
       - blocks:
