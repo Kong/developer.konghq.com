@@ -803,8 +803,6 @@ app/_kong_plugins/response-transformer/changelog.md:
   - app/_hub/kong-inc/response-transformer/_changelog.md
 app/_kong_plugins/response-transformer/examples/add-header.yaml:
   - app/_hub/kong-inc/response-transformer/overview/_index.md
-app/_kong_plugins/response-transformer/examples/remove-json-properties.yaml:
-  - app/_hub/kong-inc/response-transformer/overview/_index.md
 app/_kong_plugins/response-transformer-advanced/index.md:
   - app/_hub/kong-inc/response-transformer-advanced/overview/_index.md
 app/_kong_plugins/response-transformer-advanced/examples/remove-nested-json.yaml:

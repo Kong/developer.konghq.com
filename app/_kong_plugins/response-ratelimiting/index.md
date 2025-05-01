@@ -9,6 +9,10 @@ tags:
   - rate-limiting
   - traffic-control
 
+related_resources:
+  - text: Rate Limiting with {{site.base_gateway}}
+    url: /gateway/rate-limiting/
+
 products:
     - gateway
 
@@ -47,7 +51,7 @@ Each custom rate limiting object can limit the inbound requests in number of sec
 If the underlying Gateway Service or Route has no authentication layer, the [client IP address](#limit-by-ip-address) is used for identifying clients. 
 Otherwise, the Consumer is used if an authentication plugin has been configured.
 
-## Strategies
+## Rate limiting strategies
 
 {% include_cached /plugins/rate-limiting/strategies.md name=page.name %}
 
@@ -97,7 +101,7 @@ returns a `HTTP/1.1 429` (Too Many Requests) status code and an empty response b
 The plugin appends usage headers for each limit before proxying the request to the
 upstream service, so that you can properly refuse to process the request if there
 are no more limits remaining. 
-The headers are in the form of `X-RateLimit-Remaining-{limit_name}`, for example:
+The headers are in the form of `X-RateLimit-Remaining-LIMIT_NAME`, for example:
 
 ```
 X-RateLimit-Remaining-Videos: 3

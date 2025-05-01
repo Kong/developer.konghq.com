@@ -7,6 +7,11 @@ content_type: plugin
 publisher: kong-inc
 description: 'Validates requests before they reach the upstream service'
 
+related_resources:
+  - text: OAS Validation plugin
+    url: /plugins/oas-validation/
+  - text: WebSocket Validator plugin
+    url: /plugins/websocket-validator/
 
 products:
     - gateway
@@ -28,6 +33,10 @@ icon: request-validator.png
 
 categories:
   - traffic-control
+
+tags:
+  - traffic-control
+  - validation
 
 search_aliases:
   - request-validator

@@ -7,9 +7,19 @@ content_type: plugin
 publisher: kong-inc
 description: 'Expose metrics related to {{site.base_gateway}} and proxied upstream services in Prometheus exposition format'
 
+related_resources:
+  - text: Monitor metrics with Prometheus and Grafana with KIC
+    url: /kubernetes-ingress-controller/observability/prometheus-grafana/
+  - text: Prometheus metrics reference for KIC
+    url: /kubernetes-ingress-controller/observability/prometheus/
 
 products:
     - gateway
+
+tags:
+  - metrics
+  - prometheus
+  - monitoring
 
 works_on:
     - on-prem
@@ -27,6 +37,10 @@ icon: prometheus.png
 
 categories:
   - analytics-monitoring
+
+faqs:
+  - q: If I have multiple Data Plane nodes with the Prometheus plugin enabled, does the metrics data reflect the status of a single node or the aggregated status across all nodes?
+    a: The data are reported per-node (each Data Plane) per-subsystem (HTTP or TCP).
 ---
 
 Expose metrics related to {{site.base_gateway}} and proxied upstream services in 

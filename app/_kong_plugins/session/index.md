@@ -29,12 +29,19 @@ icon: session.png
 categories:
   - authentication
 
+tags:
+  - authentication
+  - session
+
 search_aliases:
   - sessions
+  - cookies
 
 related_resources:
   - text: Authenticate Consumers with the Key Auth and Sessions plugins
     url: /how-to/authenticate-consumers-with-session-and-key-auth/
+  - text: "{{site.base_gateway}} authentication"
+    url: /gateway/authentication/
 ---
 
 The Session plugin can be used to manage browser sessions for APIs proxied
@@ -43,7 +50,7 @@ session data storage, encryption, renewal, expiry, and sending browser cookies.
 It is built using
 [lua-resty-session](https://github.com/bungle/lua-resty-session).
 
-## How it works
+## How the Session plugin works
 
 The Session plugin can be configured globally or with an entity (for example, a [Gateway Service](/gateway/entities/service/) or a [Route](/gateway/entities/route/))
 and is always used in conjunction with another [{{site.base_gateway}} authentication plugin](/plugins/?category=authentication). This
@@ -62,7 +69,7 @@ As this configuration is a logical `OR` scenario and you likely want to forbid a
 If not configured, unauthorized requests will be allowed through. 
 For more information, see [multiple authentication](/gateway/authentication/#using-multiple-authentication-methods) and learn how to [prevent unauthorized access in a multi-auth scenario](/how-to/authenticate-consumers-with-session-and-key-auth/).
 
-## Default settings
+## Default Session plugin settings
 
 By default, the Session plugin favors security using a `Secure`, `HTTPOnly`, and `Samesite=Strict` cookie. [`config.cookie_domain`](/plugins/session/reference/#schema--config-cookie-domain) is automatically set using the Nginx
 variable host, but can be overridden.

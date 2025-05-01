@@ -4,9 +4,9 @@ title: Validate a request body
 
 weight: 900
 
-config: 
+config:
   version: kong
-  body_schema:
+  body_schema: 
     name:
       type: string
       required: true
