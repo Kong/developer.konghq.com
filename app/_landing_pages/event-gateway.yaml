@@ -6,59 +6,89 @@ metadata:
     - event-gateway
   works_on:
     - konnect
-
+  tags:
+    - kafka
+    - events
   
 rows:
   - header:
       type: h1
       text: "{{ site.event_gateway }}"
-      sub_text: "A Kafka-native Gateway built for governance, security, and cost efficient use of Kafka "
+      sub_text: "A Kafka-native Gateway built for governance, security, and cost-efficient use of Kafka"
 
   - columns:
       - blocks:
           - type: structured_text
             config:
-              header:
-                text: "Introducing {{ site.event_gateway }}"
               blocks:
                 - type: text
                   text: | 
-                    The {{site.event_gateway}} ({{site.event_gateway_short}}) is a proxy for Apache Kafka, which can run in front of any
-                    Kafka cluster. 
+                    The event gateway is composed of two core branches: protocol mediation using the {{site.base_gateway}} and
+                    native event processing using the {{site.event_gateway}}.
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Protocol Mediation"
+              blocks:
+                - type: text
+                  text: | 
+                    Protocol mediation enables HTTP clients to produce to and consume from event streams. 
+                    
+                    These are features of the Kong API Gateway and include functionality such as producing and consuming to and from Kafka topics via `http-get` or SSE.
 
-                    Through its extensible policy engine, users can augment, optimize, and secure 
-                    their Kafka deployments with customized business logic to transform, encrypt, and observe Kafka messages. 
+                    In {{site.base_gateway}}, we provide multiple plugins to produce and consume data for Kafka. 
+
+                    [See all protocol mediation plugins &rarr;](#protocol-mediation-plugins)
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Kong Native Event Proxy (Beta)"
+              blocks:
+                - type: text
+                  text: | 
+                    {{site.event_gateway_short}} is a proxy for the native Kafka protocol that sits between native consumers and producers and backend Kafka clusters. 
+                    It supports features such as cluster virtualization, authentication mediation, and encryption of message payloads + keys.
+
+                    Through its extensible policy engine, you can augment, optimize, and secure 
+                    your Kafka deployments with customized business logic to transform, encrypt, and observe Kafka messages. 
                     
                     The {{site.event_gateway}} supports many policies such as
-                    encryption, cluster virtualization, message filtering, and more. 
+                    encryption, cluster virtualization, message filtering, and more.
 
-      - blocks:
-          - type: mermaid
-            config:
-              diagram: |
-                flowchart LR
-                KafkaClient1
-                KafkaClient2
-                KongNativeEventProxy
-                KafkaCluster1
-                KafkaCluster2
-                KafkaCluster3
-                KafkaClient1 --> KongNativeEventProxy
-                KafkaClient2 --> KongNativeEventProxy
-                KongNativeEventProxy --> KafkaCluster1
-                KongNativeEventProxy --> KafkaCluster2
-                KongNativeEventProxy --> KafkaCluster3
-
+                    [Get started with {{site.event_gateway_short}} &rarr;](#get-started-with-knep)
   - header:
       type: h2
-      text: Get started
+      text: Protocol mediation plugins
+    columns:
+      - blocks:       
+        - type: plugin
+          config:
+            slug: kafka-upstream
+      - blocks:
+        - type: plugin
+          config:
+            slug: kafka-consume
+      - blocks:
+        - type: plugin
+          config:
+            slug: confluent
+      - blocks:
+        - type: plugin
+          config:
+            slug: confluent-consume
+  - header:
+      type: h2
+      text: Get started with {{site.event_gateway_short}} (Beta)
     columns:
       - blocks:
         - type: card
           config:
-            title: Get started with {{site.event_gateway}}
+            title: "{{site.event_gateway}} quickstart"
             description: |
-              Install, configure, and start using {{site.event_gateway}} to do something
+              Install, configure, and start using {{site.event_gateway}}
             icon: /assets/icons/gateway.svg
             cta:
               text: Start using {{site.event_gateway}}
@@ -77,14 +107,29 @@ rows:
               text: Configure {{site.event_gateway}}
               url: /api/
               align: end
+  - header:
+      text: "Frequently asked questions about {{site.event_gateway_short}}"
+      type: h2
+    columns:
       - blocks:
-        - type: card
+        - type: faqs
           config:
-            title: How eventing works
-            description: |
-              This is a description of a reference
-            icon: /assets/icons/gateway.svg
-            cta:
-              text: Learn about eventing
-              url: "/event-gateway/eventing/"
-  
+            - q: Are OS-specific distributions currently supported?
+              a: |
+                During the beta of {{site.event_gateway}}, we will only provide support for Docker images. 
+                If you have OS specific requirements, please share with the Kong team.
+            
+            - q: How is {{site.event_gateway_short}} deployed?
+              a: |
+                The {{site.event_gateway_short}} Data Planes are self-managed and deployed by you, the user. 
+                The {{site.event_gateway_short}} Control Plane is part of the {{site.konnect_product_name}} platform.
+            
+            - q: How can I get access to the {{site.event_gateway}}?
+              a: |
+               If you're an existing Kong customer or prospect, please fill out tbe [beta participation form](https://konghq.com/lp/register-kafka-proxy-beta) and we will reach out to you.
+            
+              
+            - q: I am interested in using {{site.event_gateway_short}} but don't have a {{site.konnect_short_name}} account - how do I get started?
+              a: |
+                Start by filling out the [beta participation form](https://konghq.com/lp/register-kafka-proxy-beta). 
+                Once we get in touch, we'll provide instructions on how to set up a {{site.konnect_short_name}} account and enable {{site.event_gateway_short}} for your organization.
