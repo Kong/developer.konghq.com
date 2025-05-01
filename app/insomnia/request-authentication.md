@@ -3,8 +3,6 @@ title: Request authentication reference
 
 content_type: reference
 layout: reference
-breadcrumbs:
-  - /insomnia/
 description: Learn what request authentication is and how to authenticate requests in Insomnia.
 
 related_resources:
