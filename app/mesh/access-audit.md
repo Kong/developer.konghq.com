@@ -85,7 +85,7 @@ rows:
 If `types` is not specified in an `AccessAudit` rule, all types are audited except those defined in the Control Plane config under `kmesh.access.audit.skipDefaultTypes`. These excluded types include status and insight resources that are managed solely by the Control Plane.
 
 
-#### Additonal audit log actions
+#### Additional audit log actions
 
 Aside from `CREATE`, `UPDATE`, `DELETE`, `AccessAudit` also lets you audit all actions that are controllable with RBAC:
 * `GENERATE_DATAPLANE_TOKEN` (you can use `mesh` to audit only tokens generated for specific mesh)
