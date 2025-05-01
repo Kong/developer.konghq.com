@@ -9,7 +9,7 @@ metadata:
     - /mesh/
 
 links:
-  '/install/?': '/mesh/install/'
+  '/install/?': '/mesh/#install-kong-mesh'
   '/enterprise/?': '/mesh/'
   '/community/?': 'https://konghq.com/community'
   '/policies/?': '/mesh/policies/'
@@ -131,7 +131,7 @@ pages:
       - text: Mesh policies
         url: '/mesh/policies-introduction/'
       - text: Install Kong Mesh
-        url: /mesh/install/
+        url: /mesh/#install-kong-mesh
   -
     path: app/_src/introduction/concepts.md
     title: 'Concepts'
@@ -145,7 +145,7 @@ pages:
       - text: Mesh architecture
         url: /mesh/architecture/
       - text: Install Kong Mesh
-        url: /mesh/install/
+        url: /mesh/#install-kong-mesh
     min_version:
       mesh: '2.7'
   -
@@ -249,7 +249,7 @@ pages:
       - text: Mesh requirements
         url: '/mesh/requirements/'
       - text: Install Kong Mesh
-        url: /mesh/install/
+        url: /mesh/#install-kong-mesh
       - text: Multi-zone authentication
         url: '/mesh/multi-zone-authentication/'
       - text: 'Single-zone deployment'
@@ -293,7 +293,7 @@ pages:
       - text: Multi-zone deployment
         url: '/mesh/mesh-multizone-service-deployment/'
       - text: Install Kong Mesh
-        url: /mesh/install/
+        url: /mesh/#install-kong-mesh
   -
     path: app/_src/production/secure-deployment/certificates.md
     title: 'Secure access across services'
@@ -609,30 +609,6 @@ pages:
         url: '/mesh/policies-introduction/'
       - text: Mesh concepts
         url: /mesh/concepts/
-  -
-    path: app/_src/introduction/install.md
-    title: 'Install'
-    description: 'Simple guide for installing {{site.mesh_product_name}} on Universal deployments, including downloading binaries and updating your PATH.'
-    url: '/mesh/install/'
-    related_resources:
-      - text: Mesh changelog
-        url: '/mesh/changelog/'
-      - text: Mesh Policies
-        url: '/mesh/policies-introduction/'
-      - text: Mesh CLI
-        url: /mesh/cli/
-      - text: Mesh on Amazon ECS
-        url: '/mesh/ecs/'
-      - text: Mesh license
-        url: '/mesh/license/'
-      - text: Multi-zone deployment
-        url: '/mesh/mesh-multizone-service-deployment/'
-      - text: Deploy Kong Mesh on Kubernetes
-        url: /mesh/kubernetes/
-      - text: Deploy {{site.mesh_product_name}} in production with Helm
-        url: /mesh/production-usuage-values/
-    min_version:
-      mesh: '2.9'
   -
     path: app/_src/networking/service-discovery.md
     title: 'Service discovery'

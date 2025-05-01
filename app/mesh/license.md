@@ -16,7 +16,7 @@ related_resources:
   - text: Enterprise features
     url: /mesh/enterprise/
   - text: Install {{site.mesh_product_name}}
-    url: /mesh/install/
+    url: /mesh/#install-kong-mesh
 ---
 
 

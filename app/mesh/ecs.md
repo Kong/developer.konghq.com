@@ -18,7 +18,7 @@ search_aliases:
 
 related_resources:
   - text: Install {{site.mesh_product_name}}
-    url: /mesh/install/
+    url: /mesh/#install-kong-mesh
   - text: Deploy {{site.mesh_product_name}} on Universal
     url: /mesh/universal/
   - text: "Access Audit"

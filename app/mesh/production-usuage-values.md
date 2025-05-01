@@ -23,7 +23,7 @@ works_on:
 
 related_resources:
   - text: "Install {{site.mesh_product_name}}"
-    url: /mesh/install/
+    url: /mesh/#install-kong-mesh
   - text: Helm configuration reference
     url: /mesh/reference/kuma-cp/#helm-values-yaml
   - text: "Multi-zone Authentication"

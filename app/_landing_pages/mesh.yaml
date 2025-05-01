@@ -57,23 +57,15 @@ rows:
                      ```shell
                      export PATH=$(pwd)/{{site.mesh_product_name_path}}-{{site.data.mesh_latest.version}}/bin:$PATH
                      ```
-                     This directory contains binaries for `kuma-dp`, `kuma-cp`, `kumactl`, `envoy` and `coredns`
+                     This directory contains binaries for `kuma-dp`, `kuma-cp`, `kumactl`, `envoy`, and `coredns`.
+
+                  For detailed {{site.mesh_product_name}} quickstart guides in different deployment modes, see the get started section below.
 
   
   - header:
       type: h2
       text: "Get started"
     columns:
-      - blocks:
-          - type: card
-            config:
-              title: Install {{site.mesh_product_name}}
-              description: |
-                Simple guide for installing Kong Mesh on Universal deployments, including downloading binaries and updating your PATH.
-              icon: /assets/icons/mesh.svg
-              cta:
-                text: Install &rarr;
-                url: /mesh/install/
       - blocks:
           - type: card
             config:
