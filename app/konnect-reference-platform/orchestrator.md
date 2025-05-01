@@ -60,12 +60,12 @@ On Linux or Windows, install the orchestrator directly from the releases page on
 
 [Releases - Kong/konnect-orchestrator](https://github.com/Kong/konnect-orchestrator/releases)
 
-## How do I run the Orchestrator?
+## How do I use `koctl`?
 
 For the complete instructions for running the orchestrator as part of building an API management platform,
 see the step-by-step [how-To](/konnect-reference-platform/how-to/) guide. 
 
-## Where can I see the Orchestrator source?
+## Where can I see `koctl` source?
 
 The orchestrator is open source and the code can be found in the GitHub repository:
 
