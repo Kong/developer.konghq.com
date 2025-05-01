@@ -34,23 +34,23 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    Protocol mediation enables HTTP clients to produce to and consume from event streams. 
+                    Protocol mediation enables HTTP clients to produce to and consume from event streams using {{site.base_gateway}}.
                     
-                    These are features of the Kong API Gateway and include functionality such as producing and consuming to and from Kafka topics via `http-get` or SSE.
+                    This includes functionality such as producing to and consuming from Kafka topics via `http-get` or SSE.
 
-                    In {{site.base_gateway}}, we provide multiple plugins to produce and consume data for Kafka. 
+                    In {{site.base_gateway}}, we provide multiple plugins to produce and consume data for Kafka, as well as a Kafka logging plugin. 
 
                     [See all protocol mediation plugins &rarr;](#protocol-mediation-plugins)
       - blocks:
           - type: structured_text
             config:
               header:
-                text: "Kong Native Event Proxy (Beta)"
+                text: "{{site.event_gateway}} (Beta)"
               blocks:
                 - type: text
                   text: | 
-                    {{site.event_gateway_short}} is a proxy for the native Kafka protocol that sits between native consumers and producers and backend Kafka clusters. 
-                    It supports features such as cluster virtualization, authentication mediation, and encryption of message payloads + keys.
+                    {{site.event_gateway_short}} is a proxy for the native Kafka protocol that sits between native consumers and producers, and backend Kafka clusters. 
+                    It supports features such as cluster virtualization, authentication mediation, and encryption of message payloads and keys.
 
                     Through its extensible policy engine, you can augment, optimize, and secure 
                     your Kafka deployments with customized business logic to transform, encrypt, and observe Kafka messages. 
@@ -71,6 +71,10 @@ rows:
         - type: plugin
           config:
             slug: kafka-consume
+      - blocks:
+        - type: plugin
+          config:
+            slug: kafka-log
       - blocks:
         - type: plugin
           config:
@@ -99,12 +103,11 @@ rows:
           config:
             title: Configuration reference
             description: |
-              You can configure {{site.event_gateway}} using something
-
-              We can link this to the API spec
+              You can configure {{site.event_gateway}} using declarative YAML configuration files
+              
             icon: /assets/icons/lock.svg
             cta:
-              text: Configure {{site.event_gateway}}
+              text: See all configuration options for {{site.event_gateway}}
               url: /api/
               align: end
   - header:
