@@ -58,7 +58,7 @@ works_on:
 Consumer Groups enable the organization and categorization of [Consumers](/gateway/entities/consumer/) (users or applications) within an API ecosystem. By grouping Consumers together, you eliminate the need to manage them individually, providing a scalable, efficient approach to managing configurations.
 
 With Consumer Groups, you can scope plugins to specifically defined Consumer Groups and a new plugin instance will be created for each individual Consumer Group, making configurations and customizations more flexible and convenient.
-For all plugins available on the consumer groups scope, see the [Plugin Scopes Reference](/gateway/entities/plugin/#supported-scopes-by-plugin).
+For all plugins available on the consumer groups scope, see the [Plugin scopes reference](/gateway/entities/plugin/#supported-scopes-by-plugin).
 
 For example, you could define two groups, Gold and Silver, assign different rate limits to them, then process each group using a different plugin:
 

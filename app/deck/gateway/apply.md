@@ -17,11 +17,11 @@ breadcrumbs:
   - /deck/gateway/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: deck gateway commands
+    url: /deck/gateway/
 ---
 
-The `deck gateway apply` commands create or update entities in {{ site.base_gateway }} without deleting any existing configuration. `deck gateway apply` is useful when building your configuration incrementally.
+The `deck gateway apply` command creates or updates entities in {{ site.base_gateway }} without deleting any existing configuration. `deck gateway apply` is useful when building your configuration incrementally.
 For example:
 
 ```bash
@@ -31,4 +31,4 @@ services:
   url: http://httpbin.konghq.com' | deck gateway apply
 ```
 
-We recommend using `deck gateway dump` to back up the complete configuration to a file once you have finished iterating on your configuration. This file can then be used with `deck gateway sync`.
+We recommend using [`deck gateway dump`](/deck/gateway/dump/) to back up the complete configuration to a file once you have finished iterating on your configuration. This file can then be used with [`deck gateway sync`](/deck/gateway/sync/).

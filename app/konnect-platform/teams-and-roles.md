@@ -2,6 +2,8 @@
 title: "{{site.konnect_short_name}} teams and roles"
 content_type: reference
 layout: reference
+breadcrumbs:
+  - /konnect-platform/
 
 products:
     - gateway
@@ -9,10 +11,13 @@ products:
 works_on:
   - konnect
 
-description: Explains which teams and roles {{site.konnect_short_name}} has and how to manage them.
+search_aliases: 
+  - konnect teams
+  - konnect roles
+description: "{{site.konnect_short_name}} has the ability to create teams and roles within an organization and use them to distribute permissions."
 
 related_resources:
-  - text: "{{site.konnect_short_name}} Account, Pricing, and Organization Deactivation"
+  - text: "{{site.konnect_short_name}} account, pricing, and organization deactivation"
     url: /konnect-platform/konnect-account/
 faqs:
   - q: What is required to manage users, teams, and roles in {{site.konnect_short_name}}?

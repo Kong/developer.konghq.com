@@ -11,7 +11,8 @@ breadcrumbs:
 plugins:
   - acl
   - key-auth
-
+search_aliases:
+  - kic acl
 products:
   - kic
 
@@ -167,7 +168,9 @@ data:
 
 The Key Auth plugin and other {{site.base_gateway}} authentication plugins only provide authentication, not authorization. They can identify a Consumer, and reject any unidentified requests, but not restrict which Consumers can access which protected URLs. Any Consumer with a key auth credential can access any protected URL, even when the plugins for those URLs are configured separately.
 
-To provide authorization, or restrictions on which Consumers can access which URLs, you need to also add the [ACL](/plugins/acl/) plugin, which can assign groups to Consumers and restrict access to URLs by group. Create two plugins, one which allows only an admin group, and one which allows both admin and user.
+To provide authorization, or restrictions on which Consumers can access which URLs, you need to also add the [ACL](/plugins/acl/) plugin, which can assign groups to Consumers and restrict access to URLs by group. 
+
+Create two plugins, one which allows only an admin group, and one which allows both admin and user.
 
 1. Generate ACL credentials for both Consumers:
 
@@ -248,7 +251,7 @@ indent: 4
 
 ## Validate your configuration
 
-Your Routes are now protected with the Key Auth and ACL plugins and the following logic:
+Your Routes are now protected with the Key Auth and ACL plugins using the following logic:
 
 * If the `apikey` header is invalid, the `key-auth` plugin rejects the request
 * If the identified Consumer has the `user` group in the ACL credential, they can access `/secured-endpoint`

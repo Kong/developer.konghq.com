@@ -10,7 +10,7 @@ related_resources:
     url: /gateway/entities/service/
   - text: Routing in {{site.base_gateway}}
     url: /gateway/routing/
-  - text: Create a Web Hook with {{site.base_gateway}}
+  - text: Create a webhook with {{site.base_gateway}}
     url: /how-to/create-a-webhook-with-kong-gateway/
   - text: Push Event Hook information to Slack with {{site.base_gateway}}
     url: /how-to/create-a-custom-webhook-slack-with-kong-gateway/
@@ -34,18 +34,22 @@ api_specs:
 
 works_on:
   - on-prem
+
+tags:
+  - webhook
+  - logging
 ---
 
 ## What is an Event Hook?
 
-An Event Hook is a {{site.base_gateway}} entity that can be configured to listen for specific events from Kong entities. An Event Hook can be configured to send information to logs, webhooks, or third-party applications. 
+An Event Hook is a {{site.base_gateway}} entity that can be configured to listen for specific events from {{site.base_gateway}} entities. An Event Hook can be configured to send information to logs, webhooks, or third-party applications. 
 
 ## How do Event Hooks work?
 
 {{site.base_gateway}} Event Hooks work by configuring the following three elements: 
 
 * Sources: The actions or operation that trigger the Event Hook.
-* Events: The Kong entity that the Event Hook monitors for actions.
+* Events: The {{site.base_gateway}} entity that the Event Hook monitors for actions.
 * Handlers: The mechanism that defines what action is performed when an event is triggered, like sending a webhook, logging, or executing custom code.
 
 <!-- vale off -->

@@ -34,6 +34,9 @@ faqs:
 works_on:
   - on-prem
   - konnect
+
+tags:
+  - rbac
 ---
 
 ## What is an Admin?

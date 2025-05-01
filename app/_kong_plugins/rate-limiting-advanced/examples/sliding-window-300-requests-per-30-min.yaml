@@ -11,6 +11,7 @@ config:
   window_size: 
     - 1800
   window_type: sliding
+  namespace: my-namespace
 
 tools:
   - deck

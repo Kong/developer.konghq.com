@@ -16,8 +16,8 @@ related_resources:
     url: /gateway/security/
   - text: "{{site.base_gateway}} logs"
     url: /gateway/logs/
-  - text: "{{site.base_gateway}} debugging"
-    url: /gateway/debug/
+#  - text: "{{site.base_gateway}} debugging"
+#    url: /gateway/debug/
 
 works_on:
   - on-prem

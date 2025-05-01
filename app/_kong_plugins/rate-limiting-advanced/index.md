@@ -7,7 +7,6 @@ content_type: plugin
 description: Enhanced rate limiting capabilities such as sliding window support, Redis Sentinel support, and increased performance
 tags:
   - rate-limiting
-  - rate-limiting-advanced
   - traffic-control
 related_resources:
   - text: Rate limiting in {{site.base_gateway}}
@@ -17,7 +16,7 @@ related_resources:
   - text: Apply multiple rate limits and window sizes
     url: /how-to/multiple-rate-limits-window-sizes/
   - text: Rate Limiting plugin
-    url: /plugins/rate-limiting-advanced/
+    url: /plugins/rate-limiting/
 
 products:
     - gateway
@@ -56,10 +55,10 @@ Advanced features of this plugin include:
 * [Sliding window support](#window-types), which provides better performance than fixed rate limiting
 * [Multiple limits and window sizes](#multiple-limits-and-window-sizes)
 * Support for Redis Sentinel, Redis cluster, and Redis SSL
-* Control over which requests contribute to incrementing the rate limiting counters via the [`config.disable_penalty`](/plugins/rate-limiting-advanced/) parameter
+* Control over which requests contribute to incrementing the rate limiting counters via the [`config.disable_penalty`](./reference/#schema--config-disable-penalty) parameter
 
 Kong also provides multiple specialized rate limiting plugins, including rate limiting across LLMs and GraphQL queries. 
-See [Rate Limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose the plugin that is most useful in your use case.
+See [Rate limiting in {{site.base_gateway}}](/gateway/rate-limiting/) to choose the plugin that is most useful in your use case.
 
 ## Window types
 
@@ -113,7 +112,7 @@ to perform more requests than the limit, but there will still be a limit per nod
 
 {% include_cached /plugins/rate-limiting/headers.md name=page.name %}
 
-## Rate limiting for consumer groups
+## Rate limiting for Consumer Groups
 
 You can use the [Consumer Groups entity](/gateway/entities/consumer-group/) to manage custom rate limiting configurations for
 subsets of Consumers.

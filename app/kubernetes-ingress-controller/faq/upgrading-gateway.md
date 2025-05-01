@@ -6,10 +6,16 @@ description: |
 
 content_type: reference
 layout: reference
-
+breadcrumbs:
+  - /kubernetes-ingress-controller/
+  - index: kubernetes-ingress-controller
+    section: FAQs
 products:
   - kic
-
+tags: 
+  - helm
+search_aliases: 
+  - upgrade gateway helm
 works_on:
   - on-prem
   - konnect
@@ -62,7 +68,7 @@ To see the available {{ site.base_gateway }} images, see [kong/kong-gateway](htt
     ```yaml
     gateway:
       image:
-        tag: "{{site.data.latest_gateway.release}}"
+        tag: "{{site.data.gateway_latest.release}}"
     ```
 
 1. Run `helm upgrade` with the `--values` flag.

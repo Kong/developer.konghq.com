@@ -24,8 +24,6 @@ related_resources:
     url: /gateway/traffic-control/load-balancing-reference/
   - text: Deployment topologies
     url: /gateway/deployment-topologies/
-  - text: "{{site.base_gateway}} deployment models"
-    url: /gateway/deployment-models/
   - text: Data Plane hosting options
     url: /gateway/topology-hosting-options/
   - text: Hybrid mode

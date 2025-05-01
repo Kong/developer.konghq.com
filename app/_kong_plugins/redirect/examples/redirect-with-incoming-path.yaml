@@ -1,10 +1,29 @@
 description: |
   Redirect incoming requests to a target location, using the request path and query string from the incoming request in the redirect URL.
 
-  | Incoming Request | `config.location` | `config.keep_incoming_path` | New URL |
-  |------------------|------------------|----------------------------|---------|
-  | https://example.com/demo?foo=bar | https://new.example.com | `true` | https://new.example.com/demo?foo=bar |
-  | https://example.com/demo?foo=bar | https://new.example.com/some-path | `true` | https://new.example.com/demo?foo=bar |
+extended_description: | 
+  Redirect incoming requests to a target location, using the request path and query string from the incoming request in the redirect URL.
+
+  {% table %}
+  columns:
+    - title: Incoming request
+      key: incoming
+    - title: "`config.location`"
+      key: location
+    - title: "`config.keep_incoming_path`"
+      key: keep_path
+    - title: New URL
+      key; new_url
+  rows:
+    - incoming: "`https://example.com/demo?foo=bar`" 
+      location: "`https://new.example.com`"
+      keep_path: "`true`"
+      new_url: "`https://new.example.com/demo?foo=bar`" 
+    - incoming: "`https://example.com/demo?foo=bar`"
+      location: "`https://new.example.com/some-path`"
+      keep_path: "`true`"
+      new_url: "`https://new.example.com/demo?foo=bar`"
+  {% endtable %}
 
 title: "Keep the incoming request path"
 
@@ -13,6 +32,7 @@ weight: 900
 variables:
   location:
     value: $YOUR_REDIRECT_URL
+    description: The target URL for incoming requests.
 
 config:
   location: ${location}

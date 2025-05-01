@@ -1,6 +1,6 @@
 ---
 title: deck gateway dump
-description: Export the current state of {{ site.base_gateway }} to a file
+description: Export the current state of {{ site.base_gateway }} to a file.
 
 content_type: reference
 layout: reference
@@ -17,15 +17,15 @@ breadcrumbs:
   - /deck/gateway/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: deck gateway commands
+    url: /deck/gateway/
 ---
 
 decK can back up the configuration of your running {{ site.base_gateway }} using the `deck gateway dump` command.
 
-See the reference for [Entities Managed by decK](/deck/{{page.release}}/reference/entities/) to find out which entity configurations can be backed up.
+See the reference for [Entities managed by decK](/deck/reference/entities/) to find out which entity configurations can be backed up.
 
-The exact command that you need to run changes if you're using workspaces (on-prem only) or not.
+The exact command that you need to run changes if you're using [Workspaces](/gateway/entities/workspace/) (on-prem only) or not.
 
 {:.info}
 > The following commands will back up **all** of the configuration in to a single file. See [tags](/deck/gateway/tags/) to learn how to segment configuration.
@@ -43,13 +43,13 @@ deck gateway dump \
 
 ## Single workspace
 
-If you're using {{ site.ce_product_name }} or the default workspace in {{ site.ee_product_name }}, decK automatically identifies the workspace to back up:
+If you're using the default Workspace, decK automatically identifies the Workspace to back up:
 
 ```bash
 deck gateway dump -o kong.yaml
 ```
 
-To back up a different workspace, pass the `-w` flag:
+To back up a different Workspace, pass the `-w` flag:
 
 ```bash
 deck gateway dump -w $WORKSPACE_NAME -o $WORKSPACE_NAME.yaml
@@ -57,8 +57,8 @@ deck gateway dump -w $WORKSPACE_NAME -o $WORKSPACE_NAME.yaml
 
 ## All workspaces
 
-To back up all {{ site.ee_product_name }} workspaces, pass the `--all-workspaces` flag.
-This creates multiple files in the current directory. Each file is named the same as its workspace:
+To back up all Workspaces, pass the `--all-workspaces` flag.
+This creates multiple files in the current directory. Each file is named the same as its Workspace:
 
 ```bash
 deck gateway dump --all-workspaces

@@ -1,6 +1,6 @@
 ---
-title: Object Defaults
-description: Set custom defaults for {{ site.base_gateway }} entities
+title: Object defaults
+description: Set custom defaults for {{ site.base_gateway }} entities.
 
 content_type: reference
 layout: reference
@@ -17,11 +17,13 @@ breadcrumbs:
   - /deck/gateway/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: Tags
+    url: /deck/gateway/tags/
+  - text: deck gateway commands
+    url: /deck/gateway/
 ---
 
-{{site.base_gateway}} sets some default values for most objects, including Kong
+{{site.base_gateway}} sets some default values for most objects, including
 plugins. You can see what the defaults are for each object in the
 [Admin API reference](/api/gateway/admin-ee/), or use the
 [`/schemas`](#find-defaults-for-an-object) endpoint to
@@ -29,11 +31,11 @@ check the latest object schemas for your instance of the {{site.base_gateway}}.
 
 decK recognizes value defaults and doesn't interpret them as changes to
 configuration. If you push a config for an object to {{site.base_gateway}} with
-`sync`, {{site.base_gateway}} applies its default values to the object,
-but a further `diff` or `sync` does not show any changes.
+[`deck gateway sync`](/deck/gateway/sync/), {{site.base_gateway}} applies its default values to the object,
+but a further [`deck gateway diff`](/deck/gateway/diff/) or `deck gateway sync` does not show any changes.
 
 If you upgrade {{site.base_gateway}} to a version that introduces a new
-property with a default value, a `diff` will catch the difference.
+property with a default value, a `deck gateway diff` will catch the difference.
 
 You can also configure your own [custom defaults](#set-custom-defaults) to
 enforce a set of standard values and avoid repetition in your configuration.
@@ -52,12 +54,12 @@ decK assigns values in the following order of precedence, from highest to lowest
 
 ## Test default value handling
 
-Create a sample `kong.yaml` file with a Service, Route, and Plugin, push it to
+Create a sample `kong.yaml` file with a Service, Route, and plugin, push it to
 {{site.base_gateway}}, and then pull {{site.base_gateway}}'s configuration down
 again to see how decK interprets default values.
 
 1.  Create a `kong.yaml` configuration file with the following
-    sample Service, Route, and Plugin:
+    sample Service, Route, and plugin:
 
     ```yaml
     _format_version: "3.0"
@@ -80,7 +82,7 @@ again to see how decK interprets default values.
     deck gateway diff kong.yaml
     ```
 
-    If you're using a completely empty instance, you will only see the Service, Route, and `basic-auth` Plugin creation messages with no extra data.
+    If you're using a completely empty instance, you will only see the Service, Route, and `basic-auth` plugin creation messages with no extra data.
 
     ```sh
     creating service example_service
@@ -166,10 +168,10 @@ again to see how decK interprets default values.
 You can set custom configuration defaults for the following core
 {{site.base_gateway}} objects:
 
-- Service
-- Route
-- Upstream
-- Target
+- [Service](/gateway/entities/service/)
+- [Route](/gateway/entities/route/)
+- [Upstream](/gateway/entities/upstream/)
+- [Target](/gateway/entities/target/)
 
 Default values get applied to both new and existing objects. See the
 [order of precedence](#value-order-of-precedence) for more detail on how they
@@ -185,11 +187,8 @@ decK supports setting custom object defaults both in self-managed
 
 {:.warning}
 > **Important:** This feature has the following limitations:
-
-- Custom Plugin object defaults are not supported.
-- If an existing property's default value changes in a future {{site.base_gateway}} release,
-  decK has no way of knowing that this change has occurred, as its `defaults`
-  configuration would overwrite the value in your environment.
+> - Custom Plugin object defaults are not supported.
+> - If an existing property's default value changes in a future {{site.base_gateway}} release, decK has no way of knowing that this change has occurred, as its `defaults` configuration would overwrite the value in your environment.
 
 1.  In your `kong.yaml` configuration file, add an `_info` section with
     `defaults`:
@@ -207,9 +206,8 @@ decK supports setting custom object defaults both in self-managed
                   - /mock
     ```
 
-{:.info}
-
-> For production use in larger systems, we recommend that you break out your defaults into a [separate `defaults.yaml` file](/deck/gateway/sync/) or use [tags](/deck/gateway/tags/) to apply the defaults wherever they are needed.
+    {:.info}
+    > For production use in larger systems, we recommend that you break out your defaults into a separate `defaults.yaml` file or use [tags](/deck/gateway/tags/) to apply the defaults wherever they are needed.
 
 1.  Define the properties you want to set for {{site.base_gateway}} objects.
 
@@ -287,7 +285,7 @@ Whether you choose to define a subset of custom defaults or all available option
 Check the schemas to find the most up-to-date default values for an object.
 
 If you want to completely avoid differences between the configuration file and
-the {{site.base_gateway}}, set all possible default values for an object in your
+{{site.base_gateway}}, set all possible default values for an object in your
 `kong.yaml` file.
 
 {% navtabs "entity-target" %}
@@ -470,7 +468,7 @@ Use the Kong Admin API `/schemas` endpoint to find default values:
 curl -i http://localhost:8001/schemas/plugins/<plugin-name>
 ```
 
-decK doesn't support setting custom default values for the Plugin object.
+decK doesn't support setting custom default values for the plugin object.
 
 {% endnavtab %}
 {% endnavtabs %}

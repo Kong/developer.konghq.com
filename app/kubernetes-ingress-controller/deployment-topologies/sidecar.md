@@ -15,6 +15,8 @@ breadcrumbs:
 products:
   - kic
 
+search_aliases:
+  - kic sidecar
 works_on:
   - on-prem
   - konnect
@@ -27,8 +29,6 @@ related_resources:
 ---
 
 
-{:.warning}
-> Sidecar deployments are officially supported, but discouraged. We recommend using [Gateway Discovery](/kubernetes-ingress-controller/deployment-topologies/gateway-discovery/) going forwards.
 
 
 Sidecar deployment is the original method of deployment for {{ site.kic_product_name }}. Both the controller and {{ site.base_gateway }} are deployed in a single Pod and each {{ site.base_gateway }} instance is managed by a different {{ site.kic_product_name }}.
@@ -42,6 +42,9 @@ Sidecar deployments have been deprecated in favor of [Gateway Discovery](/kubern
 * Scale {{ site.kic_product_name }} and {{ site.base_gateway }} independently as needed.
 
 ![Sidecar Architecture Diagram](/assets/images/kic/topology/sidecar.png)
+
+{:.warning}
+> Sidecar deployments are officially supported, but discouraged. We recommend using [Gateway Discovery](/kubernetes-ingress-controller/deployment-topologies/gateway-discovery/) going forwards.
 
 ## Migrating to Gateway Discovery
 

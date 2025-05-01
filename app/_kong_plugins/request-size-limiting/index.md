@@ -32,6 +32,9 @@ categories:
 
 search_aliases:
   - request-size-limiting
+
+tags:
+  - traffic-control
 ---
 
 Block incoming requests where the body is greater than a specific size.

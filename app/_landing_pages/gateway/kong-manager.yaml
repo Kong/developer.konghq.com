@@ -25,8 +25,7 @@ rows:
                   text: | 
                     Kong Manager is the graphical user interface (GUI) for {{site.base_gateway}}.
                     It uses the [Admin API](/api/gateway/admin-ee/) under the hood to administer and control {{site.base_gateway}}. 
-                    If you're running {{site.base_gateway}} on-prem with a database (either in traditional or hybrid mode), you can enable Kong Manager.
-
+                    
                     You can do the following with Kong Manager:
                 - type: unordered_list
                   items:

@@ -3,7 +3,10 @@ title: Migrating from Ingress to Gateway API
 
 description: |
   Which custom Ingress annotations are replaced with Gateway API features?
-
+breadcrumbs:
+  - /kubernetes-ingress-controller/
+  - index: kubernetes-ingress-controller
+    section: FAQs
 content_type: reference
 layout: reference
 
@@ -61,13 +64,13 @@ If configured on an Ingress resource, this value is used as the `gatewayClassNam
 
 _[Annotation description](/kubernetes-ingress-controller/reference/annotations/#konghq-com-methods)_
 
-If configured on an Ingress resource, this value is used to set the `HTTPRoute` method matching configuration. Since many methods can be set as a comma-separated list, each method creates a match copy. All the matches belonging to the same `HTTPRoute` rule are put in OR.
+If configured on an Ingress resource, this value is used to set the `HTTPRoute` method matching configuration. Since many methods can be set as a comma-separated list, each method creates a match copy. All the matches belonging to the same `HTTPRoute` rule are put in `OR`.
 
 ### konghq.com/headers.\*
 
 _[Annotation description](/kubernetes-ingress-controller/reference/annotations/#konghq-com-headers)_
 
-If configured on an Ingress resource, this value sets the `HTTPRoute` header matching configuration. Only exact matching is supported. Because many values can be set for the same header name as a comma-separated list, each header value is used to create a match copy. All the matches belonging to the same `HTTPRoute` rule are put in OR.
+If configured on an Ingress resource, this value sets the `HTTPRoute` header matching configuration. Only exact matching is supported. Because many values can be set for the same header name as a comma-separated list, each header value is used to create a match copy. All the matches belonging to the same `HTTPRoute` rule are put in `OR`.
 
 ### konghq.com/plugins
 
