@@ -5,7 +5,11 @@ description: Cloud sync enables users to store and synchronize their project dat
 
 content_type: concept
 layout: concept
-
+breadcrumbs: 
+  - /insomnia/storage-options/
+search_aliases:
+  - insomnia cloud sync
+  - insomnia storage
 products:
     - insomnia
 
@@ -20,8 +24,6 @@ related_resources:
     url: /insomnia/scratch-pad/
   - text: Local vault
     url: /insomnia/local-vault/
-  - text: SSO
-    url: /insomnia/sso/
   - text: About version control in Insomnia
     url: /insomnia/version-control/
 

@@ -1,6 +1,6 @@
-description: 'Block upstream responses whose body is greater than 128 megabytes.'
+description: 'Blocks upstream responses with a body size greater than 128 megabytes.'
 
-title: Payload with a 128MB limit
+title: Block responses over 128MB
 
 requirements:
   - "The Kong Response Size Limiting plugin is [installed](/plugins/kong-response-size-limiting/#install-the-kong-response-size-limiting-plugin)."

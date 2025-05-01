@@ -1,7 +1,7 @@
 ---
 title: Plugin Reference
 
-description: Insomnia allows you to configure and send different types of requests.
+description: "Learn about Insomnia's plugin context that allow plugins to interact with requests, responses, the app UI, and stored data."
 
 content_type: reference
 layout: reference
@@ -10,13 +10,15 @@ products:
 - insomnia
 
 breadcrumbs:
-- /insomnia/
+- /insomnia/plugins/
 
 tags:
 - plugins
 - template-tags
 
-
+search_aliases:
+  - Insomnia plugins
+  - Insomnia custom plugins
 related_resources:
   - text: Plugins
     url: /insomnia/plugins/
@@ -72,7 +74,7 @@ To get started, see the [Insomnia themes](https://github.com/Kong/insomnia/tree/
 
 Custom themes are written as plugins. Start your plugin project with a name like `insomnia-plugin-my-theme`, and export your theme using the `module.exports.themes` array.
 
-#### Example: Dark theme plugin structure
+#### Example: dark theme plugin structure
 
 ```ts
 module.exports.themes = [{
@@ -126,7 +128,7 @@ You can customize the following UI areas using `styles` with `background`, `fore
 
 You can extend your theme with custom CSS using the `rawCss` property, though using predefined theme keys is preferred for future compatibility.
 
-#### Example: Add transparency to tool tips and dropdowns
+#### Example: add transparency to tool tips and dropdowns
 
 ```ts
 module.exports.themes = [{

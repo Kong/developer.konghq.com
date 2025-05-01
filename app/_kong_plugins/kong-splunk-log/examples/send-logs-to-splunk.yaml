@@ -1,4 +1,4 @@
-description: 'Set up Splunk logging with the Kong Splunk Log plugin.'
+description: 'Configure the Kong Splunk Log plugin to forward request logs to a Splunk instance.'
 
 title: 'Send logs to Splunk'
 
@@ -12,8 +12,9 @@ requirements:
 variables:
   endpoint:
     value: $SPLUNK_ENDPOINT
-    description: 
-      The Splunk collector endpoint. For example, `https://hec-splunk.company.com/services/collector`.
+    description: |
+      The Splunk collector endpoint. 
+      For example, `https://hec-splunk.company.com/services/collector`.
   token:
     value: $SPLUNK_TOKEN
     description: Your Splunk access token.

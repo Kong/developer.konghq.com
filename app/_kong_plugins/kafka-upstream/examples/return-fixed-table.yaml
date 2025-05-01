@@ -1,5 +1,4 @@
-description: 'In the custom function, users can return whatever data they want as the return value. The returned value must be JSON-serializable, otherwise it can’t be sent to Kafka.'
-
+description: 'The custom function can return any data, as long as the return value is JSON-serializable. Non-serializable values cannot be sent to Kafka.'
 title: 'Return a fixed table'
 
 weight: 900

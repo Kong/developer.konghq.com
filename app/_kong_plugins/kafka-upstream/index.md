@@ -29,17 +29,18 @@ icon: kafka-upstream.png
 
 categories:
   - transformations
+related_resources:
+  - text: AI Gateway
+    url: /ai-gateway/
 
 search_aliases:
   - kafka-upstream
 ---
 
-This plugin transforms requests into [Kafka](https://kafka.apache.org/) messages
-in an [Apache Kafka](https://kafka.apache.org/) topic. For more information, see
-[Kafka topics](https://kafka.apache.org/documentation/#intro_concepts_and_terms).
+This plugin converts requests into [Apache Kafka](https://kafka.apache.org/) messages and publishes them to a specified Kafka topic.  
+For more details, see [Kafka topics](https://kafka.apache.org/documentation/#intro_concepts_and_terms).
 
-{{site.base_gateway}} also provides a Kafka Log plugin for publishing logs to a Kafka topic.
-See [Kafka Log](/plugins/kafka-log/).
+{{site.base_gateway}} also offers a separate [Kafka Log](/plugins/kafka-log/) plugin for streaming logs to Kafka topics.
 
 ## Implementation details
 
@@ -60,4 +61,4 @@ When encoding request bodies, several things happen:
 Known limitations:
 
 1. Message compression is not supported.
-2. In {{site.base_gateway}} 3.9 or earlier, the message format is not customizable.
+1. In {{site.base_gateway}} 3.9 or earlier, the message format is not customizable.

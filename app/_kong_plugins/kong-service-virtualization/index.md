@@ -27,7 +27,7 @@ search_aliases:
   - optum
 ---
 
-The Kong Service Virtualization plugin enables mocking virtual API request and response pairs through {{site.base_gateway}}.
+The Kong Service Virtualization plugin enables mocking virtual API request and responses using {{site.base_gateway}}.
 
 ## How it works
 
@@ -60,7 +60,7 @@ In this configuration:
 * The `requestHash` parameter value is a SHA256 (HTTP Request as query parameters or HTTP Body).
 * The `response` parameter value is a Base64 encoded format of the response HTTP Body.
 
-This plugin configuration equates to the following pseudo requests:
+This plugin configuration would equate to the following request:
 
 ```json
 POST:

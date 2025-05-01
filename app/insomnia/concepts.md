@@ -1,8 +1,11 @@
 ---
 title: Insomnia terminology reference
 
-description: This page defines some concepts related to Insomnia.
-
+description: This page defines concepts related to Insomnia.
+breadcrumbs: 
+  - /insomnia/
+search_aliases:
+  - Insomnia terms
 content_type: reference
 layout: reference
 

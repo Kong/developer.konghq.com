@@ -1,9 +1,9 @@
 ---
-title: Transform a 404 response message in {{site.base_gateway}}
+title: 'Customize a 404 error message'
 content_type: how_to
 
 
-description: Use the Exit Transformer plugin transform a 404 response before returning it to the client.
+description: Use the Exit Transformer plugin to transform a 404 response before returning it to the client.
 
 products:
     - gateway
