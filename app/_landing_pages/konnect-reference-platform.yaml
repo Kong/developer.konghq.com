@@ -23,20 +23,176 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    The {{site.konnect_short_name}} Reference Platform is a technical guide designed to help you integrate 
-                    [{{site.konnect_product_name}}](https://konghq.com/products/kong-konnect)
-                    into your engineering organization's technology stack. The platform provides an opinionated framework that will aid you in 
-                    designing your {{site.konnect_short_name}} organization and the building of a _Federated APIOps_ delivery process with 
-                    governance, auditing, and GitOps based automations. The platform provides tools, examples, best practices, and documentation 
-                    to guide you in on-boarding with {{site.konnect_short_name}}. You can choose how to use the components, 
-                    individually or collectively, to fit your needs and engineering requirements.
+                    The {{site.konnect_short_name}} Reference Platform is a technical guide that helps you integrate 
+                    [{{site.konnect_saas}}](https://konghq.com/products/kong-konnect) into your engineering organization and API delivery process.
+
+                    The platform offers an opinionated framework for designing your {{site.konnect_short_name}} organization and helping to build
+                    a _Federated APIOps_ delivery process including governance, auditing, and GitOps based automations. 
+
+                    Included in the platform are tools, examples, best practices, and documentation. How you choose to use the platform 
+                    depends on your organization's needs. You can use the platform as a reference for building your own systems, 
+                    or you can use the tools and examples provided to build your own {{site.konnect_short_name}} Reference Platform.
+      - blocks:
+          - type: mermaid
+            config:
+              diagram: |
+                flowchart LR
+                   A(<img src="/assets/icons/chevron-right-blue.svg" style="max-height:25px; display:block; margin:0 auto;" /> koctl)
+                   subgraph platform [Platform Team Repository]
+                   B(<img src="/assets/icons/git.svg" style="max-width:25px; display:block; margin:0 auto;" /> declarative config)
+                   C@{ shape: processes, label: "<img src="/assets/icons/github.svg" style="max-width:25px; display:block; margin:0 auto;" /> APIOps Workflows<br>(koctl)"}
+                   end
+                   D(<img src="/assets/icons/KogoBlue.svg" style="max-width:25px; display:block; margin:0 auto;" /> Konnect)
+                   subgraph service [Development Team Repositories]
+                   E@{ shape: processes, label: "<img src="/assets/icons/git.svg" style="max-width:25px; display:block; margin:0 auto;" /> Code Repositories"}
+                   F@{ shape: docs, label: "OpenAPI Specs"}
+                   end
+
+                    A -->|configures| platform
+                    B <-->|PRs| C
+                    C -->|applies| D
+                    E --- F
+                    F -->|reads| C
+
+  - header:
+      type: h2
+      text: "Explore Key Features"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
                 - type: text
                   text: |
-                    This document outlines a suggested learning path for using the platform. Start by reading the FAQ section to 
-                    understand its components and their purpose. Each component is then explained in detail, with relevant links to 
-                    guide you on their usage. You can use individual components as needed, but if you decide the full platform is a 
-                    good fit for your organization, follow the how-to guide to set 
-                    up an instance connected to your {{site.konnect_short_name}} account and code repositories.
+                    The {{site.konnect_short_name}} Reference Platform is designed as a versatile reference for helping you build an
+                    API delivery platform that suits your specific organization. Engineering organizations are unique in their needs,
+                    and no single solution will be a perfect fit for every environment.
+
+                    The platform contains various materials that can be used indivdiually or together to build a 
+                    complete API delivery platform. You may start by simply reviewing the documentation, 
+                    code, and APIOps workflows provided and apply the concepts to your own systems. Alternatively, you may choose to 
+                    fully use the {{site.konnect_short_name}} Orchestrator and build your own API Platform based 
+                    on the tools and guidance provided in the platform [how-to guide](/konnect-reference-platform/how-to/).
+
+                    The following sections provide details on the various components and how to use them.
+
+  - column_count: 3
+    columns:
+      - col_span: 1
+        blocks:
+          - type: card
+            config:
+              title: Konnect Orchestrator
+              description: |
+                Swiss army knife for the {{site.konnect_short_name}} Reference Platform
+              icon: /assets/icons/code-snippet.svg
+              cta:
+                text: See more... 
+                url: /konnect-reference-platform/orchestrator/
+      - col_span: 2
+        blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  The {{site.konnect_short_name}} Orchestrator (or `koctl`) is a multi-purpose tool used to setup and apply the {{site.konnect_short_name}} 
+                  Reference Platform concepts to your engineering processes. 
+                  
+                  The `koctl` tool can be installed on your development machine and used to initialize and configure a centralized platform git repository 
+                  which will operate the API delivery process. `koctl` is also used within the APIOps workflows to apply declarative configuration to 
+                  your {{site.konnect_short_name}} organizations. This capability is built in to the workflows installed by `koctl` itself.
+
+                  The [Konnect Orchestrator](/konnect-reference-platform/orchestrator) page provides a complete overview of the tool, including installation 
+                  instructions and usage examples.
+
+  - column_count: 3
+    columns:
+      - col_span: 1
+        blocks:
+          - type: card
+            config:
+              title: Kong Air
+              description: |
+                An example implementation modeled after a fictional airline
+              icon: /assets/icons/organization.svg
+              cta:
+                text: See more... 
+                url: /konnect-reference-platform/kong-air/
+      - col_span: 2
+        blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    The reference platform provides an example implementation with [Kong Air](https://github.com/KongAirlines), 
+                    a fictional airline company. Kong Air's development teams provides a set of APIs related to destinations, flights, and 
+                    other travel-related services.
+
+                    The example is hosted in GitHub and is made up of source code repositories that mimic a multi-team and multi-service engineering 
+                    organization. The "Kong Air engineering team" has implemented the reference platform centered around the 
+                    central [platform git repository](https://github.com/KongAirlines/platform).
+                    
+                    The example s built using the `koctl` tool is designed to be a complete example of how to implement the 
+                    {{site.konnect_short_name}} Reference Platform. 
+
+  - column_count: 3
+    columns:
+      - col_span: 1
+        blocks:
+          - type: card
+            config:
+              title: APIOps Workflows
+              description: |
+                A set of CI/CD workflows that drive an API delivery pipeline
+              icon: /assets/icons/load-balance.svg
+              cta:
+                text: See more... 
+                url: /konnect-reference-platform/apiops/
+      - col_span: 2
+        blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  The {{site.konnect_short_name}} Reference Platform provides a set of API delivery automations via 
+                  CI/CD based workflows. The workflows are installed by the `koctl` tool into your centralized platform repository
+                  and provide the necessary steps to deliver an API from your developer team repositories to your {{site.konnect_short_name}} 
+                  organization.
+
+                  The workflows implement a multi-step process for API delivery. The process is specifically designed to utilize Pull Request
+                  based processes ensuring that all changes are reviewed and approved before being applied to your {{site.konnect_short_name}} 
+                  organization.
+
+  - column_count: 3
+    columns:
+      - col_span: 1
+        blocks:
+          - type: card
+            config:
+              title: How-to Guide
+              description: |
+                Step by step guide for building your own API delivery platform
+              icon: /assets/icons/graduation.svg
+              cta:
+                text: See more... 
+                url: /konnect-reference-platform/how-to/
+      - col_span: 2
+        blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  The how-to guide provides the step-by-step instructions for deploying the {{site.konnect_short_name}} Reference Platform
+                  to your own environment. The guide is designed to be a complete reference for platform engineers to integrate 
+                  {{site.konnect_product_name}} into their engineering organization and API delivery process. 
+                  
+                  Included in the guide are required prerequisites and security configurations for {{site.konnect_short_name}} and your 
+                  git repositories. Once the steps are completed, you will have a fully functional API delivery platform that 
+                  can deliver APIs from your developer team repositories to your {{site.konnect_short_name}} organization.
 
   - header:
       type: h2
@@ -46,69 +202,21 @@ rows:
           - type: faqs
             config:
               - q: "Who can benefit from the reference platform?"
-                a: "The Reference Platform is designed for API platform builders, DevOps engineers, and Service Application teams who 
-                    are looking to implement a Federated API Management platform with {{site.konnect_short_name}}."
-              - q: "What are the components of the Reference Platform?"
-                a: |
-                  |-----------|------------|
-                  | **Documentation** | Includes recommended organization, resource design, configuration, FAQs, and how-to guides. |
-                  | **The {{site.konnect_short_name}} Orchestrator** | A software tool that reconciles declarative configuration with your {{site.konnect_short_name}} organization and manages APIOps code in a _Platform Team_ repository. |
-                  | **Kong Air Example Organization** | A complete example demonstrating RP usage, including team structures, service applications, and automated workflows. |
-                  | **Service Application Team Self-Service** | _(Coming soon)_ A self-service portal for developer teams to onboard their own services to the platform. |
-              - q: "How is automation achieved in the reference platform?"
-                a: "The reference platform uses a GitOps-style automation process for API delivery. The {{site.konnect_short_name}} Orchestrator is a tool that can run as a CLI 
-                    command or continuous reconciliation loop to apply declarative configurations to your {{site.konnect_short_name}} organizations. The APIOps workflows are installed
-                    in your platform repository and are used to manage the API delivery process."
+                a: "The reference is designed for platform engineers, DevOps engineers, software architechts, and development 
+                    teams who are interested in API management platforms."
+              - q: "Why should I use the reference platform?"
+                a: "If you're interested in an API management platform for your organization, these materials can be 
+                    beneficial in helping you understand common patterns or help you quickly build a functional platform using
+                    {{site.konnect_short_name}} and your existing source code repositories."
+              - q: "Is the reference platform difficult to use?"
+                a: "No! The reference provides a tools that make setting up your API management platform easy. There are
+                    a few basic prerequisites required including having a {{site.konnect_short_name}} organization, 
+                    GitHub repositories, and proper authorizations for the {{site.konnect_short_name}} orchestrator tool.
+                    Once these are in place, there are only a few commands to run to get fully setup."
           - type: structured_text
             config:
               blocks:
                 - type: text
                   text: |
-                    See the full [FAQ page](/konnect-reference-platform/faq) for more details.
+                    See the full [FAQ page](/konnect-reference-platform/faq) for more questions and answers.
 
-  - header:
-      type: h2
-      text: "Reference Platform Components"
-    columns:
-      - blocks:
-          - type: card
-            config:
-              title: Kong Air Example Organization
-              description: |
-                Explore KongAirlines, a complete reference implementation showing team structure, service applications, and automated workflows.
-              icon: /assets/icons/organization.svg
-              cta:
-                text: View Kong Air 
-                url: /konnect-reference-platform/kong-air/
-      - blocks:
-          - type: card
-            config:
-              title: Konnect Orchestrator
-              description: |
-                A Go-based tool that can run as a CLI command or continuous reconciliation loop to apply declarative configurations to your 
-                {{site.konnect_short_name}} organizations.
-              icon: /assets/icons/plug.svg
-              cta:
-                text: View Orchestrator Documentation
-                url: /konnect-reference-platform/orchestrator/
-      - blocks:
-          - type: card
-            config:
-              title: APIOps Workflows
-              description: |
-                Implement GitOps-style automation for API delivery with specification governance, diff calculations, and human approval processes.
-              icon: /assets/icons/load-balance.svg
-              cta:
-                text: View APIOps Documentation
-                url: /konnect-reference-platform/apiops/
-      - blocks:
-          - type: card
-            config:
-              title: How-to Guide
-              description: |
-                A complete guide for platform builders to integrate {{site.konnect_product_name}} into their engineering organization and 
-                API delivery process.
-              icon: /assets/icons/graduation.svg
-              cta:
-                text: View Documentation
-                url: /konnect-reference-platform/how-to/
