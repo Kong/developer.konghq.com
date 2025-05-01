@@ -41,6 +41,25 @@ tldr:
 tools:
     - deck
 
+faqs:
+  - q: "How do I fix the `Error: could not get value from external vault (no value found (unable to retrieve secret from gcp secret manager (code : 403, status: PERMISSION_DENIED)))` error when I try to use my secret from the Google Cloud vault?"
+    a: Verify that your [Google Cloud service account has the `Secret Manager Secret Accessor` role](https://console.cloud.google.com/iam-admin/iam?supportedpurview=project). This role is required for {{site.base_gateway}} to access secrets in the vault.
+  - q: I'm using Google Workload Identity, how do I configure a Vault?
+    a: |
+      To use GCP Secret Manager with
+      [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
+      on a GKE cluster, update your pod spec so that the service account (`GCP_SERVICE_ACCOUNT`) is
+      attached to the pod. For configuration information, read the [Workload
+      Identity configuration
+      documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#authenticating_to).
+
+      {:.info}
+      > **Notes:**
+      > * With Workload Identity, setting the `GCP_SERVICE_ACCOUNT` isn't necessary.
+      > * When using GCP Vault as a backend, make sure you have configured `system` as part of the
+      > [`lua_ssl_trusted_certificate` configuration directive](/gateway/configuration/#lua-ssl-trusted-certificate)
+      so that the SSL certificates used by the official GCP API can be trusted by {{site.base_gateway}}.
+
 
 prereqs:
   entities:

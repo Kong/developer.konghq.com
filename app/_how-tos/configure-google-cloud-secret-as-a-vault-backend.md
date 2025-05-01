@@ -6,8 +6,6 @@ related_resources:
     url: /how-to/rotate-secrets-in-google-cloud-secret/
   - text: Secrets management
     url: /gateway/secrets-management/
-  - text: Configure Google Cloud Secret Manager with Workload Identity in {{site.base_gateway}}
-    url: /how-to/configure-google-cloud-secret-manager-with-workload-identity/
 
 products:
     - gateway
@@ -46,6 +44,21 @@ faqs:
     a: Verify that your [Google Cloud service account has the `Secret Manager Secret Accessor` role](https://console.cloud.google.com/iam-admin/iam?supportedpurview=project). This role is required for {{site.base_gateway}} to access secrets in the vault.
   - q: How do I rotate my secrets in Google Cloud and how does {{site.base_gateway}} pick up the new secret values?
     a: You can rotate your secret in Google Cloud by creating a new secret version with the updated value. You'll also want to configure the `ttl` settings in your {{site.base_gateway}} Vault entity so that {{site.base_gateway}} pulls the rotated secret periodically. For more information, see [Store and rotate Mistral API keys as secrets in Google Cloud with {{site.base_gateway}} and the AI Proxy plugin](/how-to/rotate-secrets-in-google-cloud-secret/).
+  - q: I'm using Google Workload Identity, how do I configure a Vault?
+    a: |
+      To use GCP Secret Manager with
+      [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
+      on a GKE cluster, update your pod spec so that the service account (`GCP_SERVICE_ACCOUNT`) is
+      attached to the pod. For configuration information, read the [Workload
+      Identity configuration
+      documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#authenticating_to).
+
+      {:.info}
+      > **Notes:**
+      > * With Workload Identity, setting the `GCP_SERVICE_ACCOUNT` isn't necessary.
+      > * When using GCP Vault as a backend, make sure you have configured `system` as part of the
+      > [`lua_ssl_trusted_certificate` configuration directive](/gateway/configuration/#lua-ssl-trusted-certificate)
+      so that the SSL certificates used by the official GCP API can be trusted by {{site.base_gateway}}.
 
 cleanup:
   inline:

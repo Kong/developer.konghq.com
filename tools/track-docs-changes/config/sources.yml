@@ -78,6 +78,11 @@ app/_gateway_entities/vault.md:
   - app/_src/gateway/kong-enterprise/secrets-management/backends/env.md
   - app/konnect/gateway-manager/configuration/vaults/index.md
   - app/konnect/gateway-manager/configuration/vaults/how-to.md
+  - app/_src/gateway/kong-enterprise/secrets-management/backends/aws-sm.md
+  - app/_src/gateway/kong-enterprise/secrets-management/backends/azure-key-vaults.md
+  - app/_src/gateway/kong-enterprise/secrets-management/backends/gcp-sm.md
+  - app/_src/gateway/kong-enterprise/secrets-management/backends/hashicorp-vault.md
+  
 app/_gateway_entities/sni.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_gateway/entities/certificate.md:
