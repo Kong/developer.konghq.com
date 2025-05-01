@@ -13,7 +13,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "{{ site.event_gateway }}"
+      text: "Event Gateway"
       sub_text: "A Kafka-native Gateway built for governance, security, and cost-efficient use of Kafka"
 
   - columns:
