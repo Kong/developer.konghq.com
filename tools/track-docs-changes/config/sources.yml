@@ -392,6 +392,24 @@ app/kubernetes-ingress-controller/migrate/credential-kongcredtype-label.md:
 app/_how-tos/kic-verify-upstream-tls.md:
   - app/_src/kubernetes-ingress-controller/guides/security/verify-upstream-tls.md
 
+app/_how-tos/kic-vault-hashicorp.md:
+  - app/_src/kubernetes-ingress-controller/guides/security/kong-vault.md
+app/_how-tos/kic-vault-gcp.md:
+  - app/_src/kubernetes-ingress-controller/guides/security/kong-vault.md
+app/_how-tos/kic-vault-aws.md:
+  - app/_src/kubernetes-ingress-controller/guides/security/kong-vault.md
+
+app/_how-tos/kic-service-healthchecks.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/health-checks.md
+app/kubernetes-ingress-controller/last-known-good-config.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/last-known-good-config.md
+app/kubernetes-ingress-controller/fallback-configuration.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/fallback-config.md
+app/_how-tos/kic-fallback-config-exclude.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/fallback-config.md
+app/_how-tos/kic-fallback-config-backfill.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/fallback-config.md
+  
 # plugins
 app/_kong_plugins/session/changelog.md:
   - app/_hub/kong-inc/session/_changelog.md
@@ -1361,8 +1379,6 @@ app/mesh/production-usuage-values.md:
 app/mesh/support-policy.md:
   - app/_src/mesh/support-policy.md
 
-
-
 app/_landing_pages/dev-portal.yaml:
   - app/dev-portal/index.md
   - app/dev-portal/portals/index.md
@@ -1557,5 +1573,3 @@ app/insomnia/graphql-queries.md:
   - app/insomnia/graphql-queries.md
 app/insomnia/external-vault.md:
   - app/insomnia/external-vault-integration.md
-
-

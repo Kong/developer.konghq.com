@@ -36,43 +36,20 @@ faqs:
 prereqs:
   gateway:
     - name: AZURE_CLIENT_SECRET
-  inline:
-    - title: Azure resources
-      position: before
-      content: |
-        This example requires a few Azure resources. You need an Azure subscription and permissions to create or access these resources:
-        - A [registered application](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate) to use for authentication.
-        - A [key vault](https://learn.microsoft.com/en-us/azure/key-vault/general/quick-create-portal) with at least one [secret](https://learn.microsoft.com/en-us/azure/key-vault/secrets/quick-create-portal). Make sure that your application has access to the key vault.
-
-        In this example, the key vault is named `my-example-vault` and contains a secret named `token` whose value is a Bearer token.
-
-        Once the resources are created, you'll need the following credentials to connect {{site.base_gateway}} to your Azure key vault:
-        - Your application's client ID
-        - Your application's client secret
-        - Your Azure tenant ID
-        - Your vault URI, `https://my-example-vault.vault.azure.net/` in this example
-        - You Azure location, `eastus` in this example
-      icon_url: /assets/icons/azure.svg
       
     - title: Environment variables
-      position: before
+      position: after
       content: |
           Set the environment variables needed to authenticate to Azure:
           ```sh
-          export AZURE_CLIENT_SECRET=your-azure-application-client-secret
           export DECK_AZURE_TENANT_ID=your-azure-tenant-id
           export DECK_AZURE_CLIENT_ID=your-azure-application-id
           export DECK_AZURE_VAULT_URI="https://my-example-vault.vault.azure.net/"
           export DECK_AZURE_LOCATION="eastus"
           ```
-
-          Note that the `AZURE_CLIENT_SECRET` variable needs to be passed when creating your Data Plane container.
       icon_url: /assets/icons/file.svg
 cleanup:
   inline:
-    - title: Clean up Azure resources
-      include_content: cleanup/third-party/azure
-      icon_url: /assets/icons/azure.svg
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg

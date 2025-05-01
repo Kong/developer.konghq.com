@@ -18,3 +18,4 @@ sub_text
 unordered_list
 view_more
 x_with_y
+icon_url
