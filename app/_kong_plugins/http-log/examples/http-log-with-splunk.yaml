@@ -1,6 +1,9 @@
 description: |
   Use the HTTP Log plugin to send {{site.base_gateway}} raw text logs to Splunk.
 
+extended_description: |
+  Use the HTTP Log plugin to send {{site.base_gateway}} raw text logs to Splunk.
+  
   {:.info}
   > **Note**: The following example uses Splunk 9.0.2. If you are using a different version of Splunk,
   check the [Splunk documentation](https://docs.splunk.com/Documentation/Splunk/latest/RESTREF/RESTinput)

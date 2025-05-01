@@ -20,6 +20,8 @@ related_resources:
     url: /gateway/audit-logs/
   - text: "{{site.konnect_short_name}} logs"
     url: /konnect-logs/
+  - text: Logging plugins
+    url: /plugins/?category=logging
 
 works_on:
   - on-prem

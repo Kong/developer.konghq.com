@@ -14,20 +14,15 @@ works_on:
     - on-prem
     - konnect
 
-# on_prem:
-#   - hybrid
-#   - db-less
-#   - traditional
-# konnect_deployments:
-#   - hybrid
-#   - cloud-gateways
-#   - serverless
-
 third_party: true
 
 support_url: https://www.impart.security/get-started
 
 icon: impart.png
+
+tags:
+  - impart
+  - security
 
 search_aliases:
   - kong-plugin-impart
@@ -48,7 +43,7 @@ Use the Impart plugin to:
 You must install the Impart Inspector for this plugin to work. 
 Navigate to the Impart console for [step-by-step instructions](https://console.impartsecurity.net/orgs/_/integrations?q=kong).
 
-## How it works
+## How the Impart plugin works
 
 The Impart Kong plugin allows Impart to inspect your HTTP traffic within your own environment to detect threats, anomalies, and other interesting insights. These insights are used to protect your APIs in real time through an integration with {{site.base_gateway}} that introduces minimal additional latency, fails open to ensure reliability, and keeps sensitive data within your own environment to protect your privacy.
 
