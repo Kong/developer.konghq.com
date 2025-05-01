@@ -4,7 +4,7 @@ metadata:
   products:
     - api-ops
   description: |
-    Provides a complete guide for platform builders to integrate {{site.konnect_product_name}} into their engineering 
+    Provides a complete guide for platform builders to integrate {{site.konnect_saas}} into their engineering 
     organization and API delivery process. 
   tags:
     - konnect
