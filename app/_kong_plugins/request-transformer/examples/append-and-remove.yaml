@@ -9,7 +9,7 @@ config:
     querystring:
       - "client_id: abc123"
   remove:
-    header:
+    headers:
       - "Header-Name"
 
 tools:

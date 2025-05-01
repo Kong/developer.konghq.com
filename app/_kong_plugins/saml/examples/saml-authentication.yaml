@@ -23,10 +23,13 @@ config:
 variables:
   identifier:
     value: $IDENTIFIER
+    description: Your SAML application identifier.
   url:
     value: $LOGIN_URL
+    description: Your SAML login URL.
   certificate:
     value: $CERTIFICATE
+    description: The contents of your SAML provider certificate (Base64).
 
 tools:
   - deck

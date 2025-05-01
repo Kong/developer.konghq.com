@@ -246,7 +246,7 @@ Golang
 Goroutine
 Goroutine
 gbps
-Grafana
+grafana
 Grafana
 grpc
 grpcbin

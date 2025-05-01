@@ -29,6 +29,9 @@ icon: request-transformer-advanced.png
 categories:
   - transformations
 
+tags:
+  - transformations
+
 search_aliases:
   - request-transformer-advanced
 
@@ -37,6 +40,8 @@ related_resources:
     url: /plugins/request-transformer/
   - text: Transform a client request in {{site.base_gateway}}
     url: /how-to/transform-a-client-request/
+  - text: AI Request Transformer
+    url: /plugins/ai-request-transformer/
 ---
 
 {% include plugins/request-response-transformer/request-transformer-description.md %}

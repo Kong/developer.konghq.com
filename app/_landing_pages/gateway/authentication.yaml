@@ -154,6 +154,18 @@ rows:
 
                   - [Get Started](/plugins/oauth2-introspection/examples/)
                   - [Plugin reference](/plugins/oauth2-introspection/reference/)
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Sessions for authentication"
+            blocks:
+              - type: text
+                text: |
+                  The Session plugin supports sessions for Kong authentication plugins.
+
+                  - [Get Started](/plugins/session/examples/)
+                  - [Plugin reference](/plugins/session/reference/)
                   
   - columns:
       - blocks:

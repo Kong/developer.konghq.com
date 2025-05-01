@@ -1,21 +1,31 @@
 ---
-title: "Deploy {{site.mesh_product_name}} in Production with Helm"
+title: "Deploy {{site.mesh_product_name}} in production with Helm"
 description: "Deploy a production-grade {{site.mesh_product_name}} installation on Kubernetes using Helm charts for single zone, multi-zone, or federated environments."
 content_type: reference
 layout: reference
 products:
   - mesh
 
+breadcrumbs:
+  - /mesh/
+
 tags:
   - multi-zone
   - control-plane
+  - helm
+  - kubernetes
+
+search_aliases:
+  - k8s
 
 works_on:
   - on-prem
 
 related_resources:
-  - text: "{{site.mesh_product_name}} Installation Overview"
-    url: /mesh/
+  - text: "Install {{site.mesh_product_name}}"
+    url: /mesh/#install-kong-mesh
+  - text: Helm configuration reference
+    url: /mesh/reference/kuma-cp/#helm-values-yaml
   - text: "Multi-zone Authentication"
     url: /mesh/multi-zone-authentication/
 ---
@@ -24,9 +34,9 @@ related_resources:
 
 To install a production-ready {{site.mesh_product_name}}, you must ensure that the service mesh is secure, reliable, and performant. When deploying {{site.mesh_product_name}} on Kubernetes, use the provided values here to deploy your {{site.mesh_product_name}} installation.
 
-Instructions on this page are meant to be the starting point for your installation. It's always recommended to read the full [Helm configuration reference](/mesh/{{ page.release }}/reference/kuma-cp/#helm-valuesyaml) to find support for other options available before executing the install steps. Values provided here will override values in the default reference Helm configuration, and they may be overridden again by further `values.yaml` files or arguments of the `helm` command. See the [Helm documentation](https://helm.sh/docs/chart_template_guide/values_files/) to learn more about how values are calculated.
+Instructions on this page are meant to be the starting point for your installation. It's always recommended to read the full [Helm configuration reference](/mesh/reference/kuma-cp/#helm-values-yaml) to find support for other options available before executing the install steps. Values provided here will override values in the default reference Helm configuration, and they may be overridden again by further `values.yaml` files or arguments of the `helm` command. See the [Helm documentation](https://helm.sh/docs/chart_template_guide/values_files/) to learn more about how values are calculated.
 
-Values on this page may reference resources that need to be created in advance when certain features are enabled, read the file content carefully and prepare these resources according to the notes near the keywords `(action)`. If you decide to disable a feature that requires a pre-existing resource, remove or change those fields according to the full [Helm configuration reference](/mesh/{{ page.release }}/reference/kuma-cp/#helm-valuesyaml).
+Values on this page may reference resources that need to be created in advance when certain features are enabled, read the file content carefully and prepare these resources according to the notes near the keywords `(action)`. If you decide to disable a feature that requires a pre-existing resource, remove or change those fields according to the full [Helm configuration reference](/mesh/reference/kuma-cp/#helm-values-yaml).
 
 
 {% navtabs "install" %}

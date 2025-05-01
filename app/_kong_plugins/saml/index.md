@@ -32,6 +32,10 @@ icon: saml.png
 categories:
   - authentication
 
+tags:
+  - saml
+  - authentication
+
 search_aliases:
   - azure
   - security assertion markup language
@@ -39,6 +43,8 @@ search_aliases:
 related_resources:
   - text: Enable SAML authentication for {{site.base_gateway}} using Microsoft Entra
     url: /how-to/enable-saml-authentication-with-microsoft-entra/
+  - text: "{{site.base_gateway}} authentication"
+    url: /gateway/authentication/
 ---
 
 This plugin provides Security Assertion Markup Language (SAML) v2.0 authentication and authorization between {{site.base_gateway}} and an identity provider.
@@ -70,7 +76,7 @@ The plugin currently supports SAML 2.0 with Microsoft Entra. Refer to the
 [Microsoft Entra SAML documentation](https://learn.microsoft.com/en-us/entra/architecture/auth-saml)
 for more information about SAML authentication with Azure AD.
 
-## How it works
+## How the SAML plugin works
 
 As the SP-initiated mode of SAML requires the client to authenticate
 to the IdP using a web browser, the plugin is only useful when it's
@@ -120,7 +126,7 @@ can be stored in Redis, Memcached, or in the cookie itself.
 > **Note**: The lifetime of the session that is created by the IdP needs
 to be configured in the plugin.
 
-## Troubleshooting
+## Troubleshooting the SAML plugin
 
 You may have a valid certificate specified in the `idp_certificate` field, but you get the following error:
 

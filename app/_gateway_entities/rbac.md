@@ -8,6 +8,10 @@ tools:
     - admin-api
 entities:
   - rbac
+tags:
+  - access-control
+  - authorization
+  - security
 description: RBAC manages {{site.base_gateway}} roles and permissions for Kong Manager and the Admin API.
 schema:
     api: gateway/admin-ee
@@ -26,6 +30,8 @@ related_resources:
     url: /how-to/create-a-super-admin/
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
+  - text: "{{site.konnect_short_name}} roles and teams"
+    url: /konnect-platform/teams-and-roles/
 
 api_specs:
     - gateway/admin-ee
@@ -47,7 +53,7 @@ RBAC in {{site.base_gateway}} conforms to the following core principles:
 
 {{site.base_gateway}} uses a [precedence model](#rbac-precedence-order), from most specificity to least specificity, to determine if a user has access to an endpoint.
 
-## What are Permissions?
+## What are permissions?
 
 Each role may have a number of permissions that determine its ability to interact with a resource. The RBAC system provides a level of granularity that works by assigning actions on a per-resource level using the principle of least privilege. This means that a user can have **read** permissions on `/foo/bar` and **write** permissions on `/foo/bar/far`. 
 
@@ -68,7 +74,7 @@ If {{site.base_gateway}} finds a matching permission for the current user, endpo
 
 ## Role configuration
 
-This diagram helps explain how individual workspace roles and cross-workspace roles interact:
+This diagram helps explain how individual Workspace roles and cross-Workspace roles interact:
 
 <!--vale off -->
 
@@ -119,7 +125,9 @@ flowchart LR
 
 <!--vale on -->
 
-## RBAC Entities
+## RBAC entities
+
+The following table describes the different RBAC entities:
 
 
 {% feature_table %} 
