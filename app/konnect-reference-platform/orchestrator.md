@@ -5,6 +5,7 @@ layout: reference
 
 products:
     - api-ops
+    - reference-platform
 works_on:
   - konnect
 
@@ -24,24 +25,30 @@ related_resources:
   url: /konnect-reference-platform/how-to/
 ---
 
-The Konnect Orchestrator is a software tool provided as part of the [{{site.konnect_short_name}} Reference Platform](/konnect-reference-platform/).
-The orchestrator's job is to enable an API Management Platform for you by integrating [{{site.konnect_product_name}}](https://konghq.com/products/kong-konnect)
-with your existing engineering source code repositories and software delivery workflows.
+The {{site.konnect_short_name}} Orchestrator is a software tool provided as part of the 
+[{{site.konnect_short_name}} Reference Platform](/konnect-reference-platform/).
+The tool is a [Go based project](https://github.com/Kong/konnect-orchestrator) and released 
+as a binary named `koctl`. We will refer to the tool by the `koctl` name in this document.
 
-## What does the Orchestrator do?
+`koctl` is a multi-purpose CLI based tool. With `koctl`, you can initialize a git repository 
+to support an API management platform, configure the repository to support your development teams,
+and apply declarative configurations to your [{{site.konnect_product_name}}](https://konghq.com/products/kong-konnect)
+organizations.
 
-The tool performs the following functions:
+## What specifically can `koctl` do?
 
-* Accepts a declarative configuration as input, specifying a centralized platform team repository and a set of service application 
-  repositories organized as teams.
-* Reconciles the configuration into one or more [{{site.konnect_product_name}}](https://konghq.com/products/kong-konnect) 
-  organizations, applying an opinionated set of resource configurations based on the configuration provided 
-* Maintains APIOps workflows (GitHub actions) in a _platform repository_
-* Hosts an API service which provides data for a self-service UI to onboard teams to your platform
-* Stages versions of service application specifications in a _platform repository_ for delivery to {{site.konnect_short_name}} via the
-  APIOps workflows
+The `koctl` tool is specifically designed to enable and apply the concepts for the 
+[{{site.konnect_short_name}} Reference Platform](/konnect-reference-platform/)
 
-## How do I install the Orchestrator?
+The tool provides the following general functions as part of the platform:
+
+* Initialize a central platform team git repository which supports the API management platform
+* Configures the platform repository with new organizations and environments 
+* Provides an API server and web based UI applicaiton to self-service onboarding for developer teams and their service applications
+* Stages service application API specifications to the platform repository preparing them to be delivered to {{site.konnect_short_name}}
+* Applies declarative configuration within the platform repository CICD pipeline to {{site.konnect_short_name}} organizations
+
+## How do I install `koctl`?
 
 MacOS users can install the orchestrator using Homebrew:
 
@@ -55,12 +62,8 @@ On Linux or Windows, install the orchestrator directly from the releases page on
 
 ## How do I run the Orchestrator?
 
-Currently, the orchestrator is ran from the command line on your development machine. You create a declarative configuration 
-file and pass it to the command as a argument. We are exploring other ways for the orchestrator to operate, such as
-running it within a CI/CD pipeline. 
-
-The most up-to-date instructions for running the orchestrator are found in the step-by-step [how-To](/konnect-reference-platform/how-to/) 
-guide. 
+For the complete instructions for running the orchestrator as part of building an API management platform,
+see the step-by-step [how-To](/konnect-reference-platform/how-to/) guide. 
 
 ## Where can I see the Orchestrator source?
 

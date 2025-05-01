@@ -37,7 +37,7 @@ rows:
             config:
               diagram: |
                 flowchart LR
-                   A(<img src="/assets/icons/chevron-right-blue.svg" style="max-height:25px; display:block; margin:0 auto;" /> koctl)
+                   A(<img src="/assets/icons/chevron-right.svg" style="max-height:25px; display:block; margin:0 auto;" /> koctl)
                    subgraph platform [Platform Team Repository]
                    B(<img src="/assets/icons/git.svg" style="max-width:25px; display:block; margin:0 auto;" /> declarative config)
                    C@{ shape: processes, label: "<img src="/assets/icons/github.svg" style="max-width:25px; display:block; margin:0 auto;" /> APIOps Workflows<br>(koctl)"}
