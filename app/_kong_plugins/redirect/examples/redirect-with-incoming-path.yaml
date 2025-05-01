@@ -13,7 +13,7 @@ extended_description: |
     - title: "`config.keep_incoming_path`"
       key: keep_path
     - title: New URL
-      key; new_url
+      key: new_url
   rows:
     - incoming: "`https://example.com/demo?foo=bar`" 
       location: "`https://new.example.com`"

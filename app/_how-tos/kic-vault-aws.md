@@ -34,38 +34,15 @@ prereqs:
     gateway_custom_env:
       AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
       AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-  inline:
-    - title: AWS configuration
-      position: before
-      content: |
-        This tutorial requires at least one [secret](https://docs.aws.amazon.com/secretsmanager/latest/userguide/create_secret.html) in AWS Secrets Manager. In this example, the secret is named `my-aws-secret` and contains a key/value pair in which the key is `token`.
-
-        You will also need the following authentication information to connect your AWS Secrets Manager with {{site.ee_product_name}}:
-        - Your access key ID
-        - Your secret access key
-        - Your AWS region, `us-east-1` in this example
-      icon_url: /assets/icons/aws.svg
-
-    - title: Environment variables
-      position: before
-      content: |
-          Set the environment variables needed to authenticate to AWS:
-          ```sh
-          export AWS_ACCESS_KEY_ID=your-aws-access-key-id
-          export AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key
-          ```
-
-          These values will be populated in `values.yaml` when installing {{ site.kic_product_name }}
-      icon_url: /assets/icons/file.svg
+  cloud:
+    aws:
+      secret: true
 
 cleanup:
   inline:
     - title: Uninstall KIC from your cluster
       include_content: cleanup/products/kic
       icon_url: /assets/icons/kubernetes.svg
-    - title: Clean up AWS resources
-      include_content: cleanup/third-party/aws
-      icon_url: /assets/icons/aws.svg
 
 next_steps:
   - text: Review the Vaults entity

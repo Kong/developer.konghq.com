@@ -92,9 +92,6 @@ faqs:
 
 cleanup:
   inline:
-    - title: Google Cloud resources
-      include_content: cleanup/third-party/google-cloud
-      icon_url: /assets/icons/google-cloud.svg
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
