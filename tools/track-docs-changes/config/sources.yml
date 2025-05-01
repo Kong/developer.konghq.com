@@ -1024,6 +1024,7 @@ app/gateway/rate-limiting/window-types.md:
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
 app/gateway/routing/index.md:
   - app/_src/gateway/key-concepts/routes/index.md
+  - app/_src/gateway/production/debug-request.md
 app/gateway/manage-kong-conf.md:
   - app/_src/gateway/production/kong-conf.md
 app/gateway/logs.md:
