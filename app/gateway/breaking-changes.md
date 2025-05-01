@@ -807,8 +807,7 @@ for both PostgreSQL and Cassandra.
 
 #### Deprecations and changed parameters
 
-The [StatsD Advanced](/plugins/statsd-advanced/) plugin
-has been deprecated and will be removed in 4.0.
+The StatsD Advanced plugin has been deprecated and will be removed in 4.0.
 All capabilities are now available in the [StatsD](/plugins/statsd/) plugin.
 
 The following plugins have had configuration parameters changed or removed. You will need to carefully review and update your configuration as needed:

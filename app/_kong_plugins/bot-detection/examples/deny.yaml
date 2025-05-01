@@ -4,14 +4,6 @@ description: 'This configuration blocks bots in the `User_Agent` header that mat
 
 weight: 700
 
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
-
 config:
   deny:
   - "[^a-zA-Z0-9]"

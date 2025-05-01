@@ -19,7 +19,13 @@ works_on:
   - on-prem
   - konnect
 
-entities: []
+entities:
+  - service
+  - route
+
+tags:
+  - tcp
+  - routing
 
 tldr:
   q: How do I route TCP traffic with {{ site.kic_product_name }}?
@@ -43,7 +49,7 @@ cleanup:
 
 ## Route TCP traffic
 
-To publicly expose the service, create a `TCPRoute` resource for Gateway APIs or a `TCPIngress` resource for Ingress.
+To publicly expose the Service, create a `TCPRoute` resource for Gateway APIs or a `TCPIngress` resource for Ingress.
 
 {% navtabs api %}
 {% navtab "Gateway API" %}
@@ -107,14 +113,14 @@ spec:
 {% endnavtabs %}
 
 This configuration instructs {{site.base_gateway}} to forward all traffic it
-receives on port 9000 to the `echo` service on port 1025.
+receives on port 9000 to the `echo` Service on port 1025.
 
 ## Validate your configuration
 
-You can now test your route using `telnet`.
+You can now test your Route using `telnet`:
 
 ```shell
-$ telnet $PROXY_IP 9000
+telnet $PROXY_IP 9000
 ```
 
 After you connect, type some text that you want as a response from the echo Service.
@@ -132,5 +138,6 @@ This text will be echoed back.
 ^]
 telnet> Connection closed.
 ```
+{:.no-copy-code}
 
 To exit, press `ctrl+]` then `ctrl+d`.

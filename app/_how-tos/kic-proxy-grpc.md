@@ -19,7 +19,14 @@ works_on:
   - on-prem
   - konnect
 
-entities: []
+entities:
+  - service
+  - route
+
+tags:
+  - tls
+  - grpc
+  - routing
 
 tldr:
   q: How do I route gRPC traffic with {{ site.kic_product_name }}?
@@ -31,6 +38,10 @@ prereqs:
   entities:
     services:
       - grpcbin-service
+  inline:
+    - title: gRPCurl installed
+      include_content: prereqs/grpcurl
+      icon_url: /assets/icons/code.svg 
 
 cleanup:
   inline:

@@ -19,7 +19,13 @@ works_on:
   - on-prem
   - konnect
 
-entities: []
+entities:
+  - service
+  - route
+
+tags:
+  - routing
+  - redirect
 
 tldr:
   q: How do I route traffic outside of my Kubernetes cluster?
@@ -59,10 +65,11 @@ To route HTTP traffic, you need to create a `HTTPRoute` or an `Ingress` resource
 { "protocols": ["https"], "hosts": ["{{ demo_domain }}"],
   "https_redirect_status_code": 301, "paths": ["/echo/"], "name": "example" }
 ```
+{:.no-copy-code}
 
 A request for `http://{{ demo_domain }}/echo/green` receives a 301 response with a `Location: https://{{ demo_domain }}/echo/green` header. Kubernetes resource annotations instruct the controller to create a route with `protocols=[https]` and `https_redirect_status_code` set to the code of your choice (the default if unset is `426`).
 
-1. Configure the protocols that are allowed in the `konghq.com/protocols` annotation.
+1. Configure the protocols that are allowed in the `konghq.com/protocols` annotation:
 {% capture the_code %}
 {% navtabs codeblock %}
 {% navtab "Gateway API" %}
@@ -80,7 +87,7 @@ kubectl annotate -n kong ingress echo konghq.com/protocols=https
 {% endcapture %}
 {{ the_code | indent: 4 }}
 
-1. Configure the status code used to redirect in the `konghq.com/https-redirect-status-code` annotation.
+1. Configure the status code used to redirect in the `konghq.com/https-redirect-status-code` annotation:
    {% capture the_code %}
 {% navtabs codeblock %}
 {% navtab "Gateway API" %}
@@ -119,6 +126,7 @@ With the redirect configuration in place, HTTP requests now receive a redirect r
     < HTTP/1.1 301 Moved Permanently
     < Location: https://{{ demo_domain }}/echo
     ```
+    {:.no-copy-code}
 
 1. Send a curl request to follow redirects using the `-L` flag. This navigates
 to the HTTPS URL and receives a proxied response from the upstream.
@@ -153,6 +161,7 @@ to the HTTPS URL and receives a proxied response from the upstream.
     In namespace default.
     With IP address 10.244.0.7.
     ```
+    {:.no-copy-code}
 
 {{site.base_gateway}} correctly serves the request only on the HTTPS protocol and redirects the user
 if the HTTP protocol is used. The `-k` flag in cURL skips certificate

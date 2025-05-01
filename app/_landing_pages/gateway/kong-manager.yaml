@@ -60,57 +60,57 @@ rows:
 
                   You can configure Kong Manager settings (like URL and path) and customization (like header and footer colors) using [parameters in `kong.conf`](/gateway/configuration/#kong-manager-section). If you want to enable Kong Manager for multiple domains, see [multiple domains](/gateway/kong-manager/configuration/#multiple-domains).
   
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Kong Manager authentication"
-            blocks:
-              - type: text
-                text: |
-                  Kong Manager comes packaged with several authentication methods.
-  - columns:
-      - blocks:
-        - type: card
-          config:
-            title: Enable OIDC for Kong Manager
-            description: |
-              {{site.base_gateway}} offers the ability to bind authentication for Kong Manager admins to an organization’s OpenID Connect Identity Provider.
+  # - columns:
+  #     - blocks:
+  #       - type: structured_text
+  #         config:
+  #           header:
+  #             text: "Kong Manager authentication"
+  #           blocks:
+  #             - type: text
+  #               text: |
+  #                 Kong Manager comes packaged with several authentication methods.
+  # - columns:
+  #     - blocks:
+  #       - type: card
+  #         config:
+  #           title: Enable OIDC for Kong Manager
+  #           description: |
+  #             {{site.base_gateway}} offers the ability to bind authentication for Kong Manager admins to an organization’s OpenID Connect Identity Provider.
               
-            icon: /assets/icons/plugins/openid-connect.png
-            cta:
-              url: "/how-to/enable-oidc-for-kong-manager/"
-      - blocks:
-        - type: card
-          config:
-            title: Enable Basic Auth for Kong Manager
-            description: |
-              Configure basic authentication for Kong Manager.
+  #           icon: /assets/icons/plugins/openid-connect.png
+  #           cta:
+  #             url: "/how-to/enable-oidc-for-kong-manager/"
+  #     - blocks:
+  #       - type: card
+  #         config:
+  #           title: Enable Basic Auth for Kong Manager
+  #           description: |
+  #             Configure basic authentication for Kong Manager.
               
-            icon: /assets/icons/plugins/basic-auth.png
-            cta:
-              url: "/how-to/enable-basic-auth-on-kong-manager/"
-      - blocks:
-        - type: card
-          config:
-            title: Configure LDAP with Kong Manager
-            description: |
-              {{site.base_gateway}} offers the ability to bind authentication for Kong Manager Admins to your Active Directory.
+  #           icon: /assets/icons/plugins/basic-auth.png
+  #           cta:
+  #             url: "/how-to/enable-basic-auth-on-kong-manager/"
+  #     - blocks:
+  #       - type: card
+  #         config:
+  #           title: Configure LDAP with Kong Manager
+  #           description: |
+  #             {{site.base_gateway}} offers the ability to bind authentication for Kong Manager Admins to your Active Directory.
               
-            icon: /assets/icons/plugins/ldap-auth.png
-            cta:
-              url: "/how-to/configure-ldap-with-kong-manager/"
-      - blocks:
-        - type: card
-          config:
-            title: Configure sessions in Kong Manager
-            description: |
-              When a user logs in to Kong Manager with their credentials and sessions are enabled, a session cookie is created. The cookie is used for all subsequent requests and is valid to authenticate the user. 
+  #           icon: /assets/icons/plugins/ldap-auth.png
+  #           cta:
+  #             url: "/how-to/configure-ldap-with-kong-manager/"
+  #     - blocks:
+  #       - type: card
+  #         config:
+  #           title: Configure sessions in Kong Manager
+  #           description: |
+  #             When a user logs in to Kong Manager with their credentials and sessions are enabled, a session cookie is created. The cookie is used for all subsequent requests and is valid to authenticate the user. 
               
-            icon: /assets/icons/plugins/session.png
-            cta:
-              url: "/how-to/configure-sessions-in-kong-manager/"
+  #           icon: /assets/icons/plugins/session.png
+  #           cta:
+  #             url: "/how-to/configure-sessions-in-kong-manager/"
   
   - columns:
       - blocks:
