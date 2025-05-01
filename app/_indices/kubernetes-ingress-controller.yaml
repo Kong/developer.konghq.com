@@ -88,6 +88,7 @@ sections:
       - path: /kubernetes-ingress-controller/reference/required-permissions/
       - path: /kubernetes-ingress-controller/reference/host-manipulation/
       - path: /kubernetes-ingress-controller/reference/path-manipulation/
+      - path: /kubernetes-ingress-controller/reference/secrets-in-plugins/
   - title: FAQs
     items:
       - path: /kubernetes-ingress-controller/faq/custom-nginx-conf/

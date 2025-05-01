@@ -304,6 +304,8 @@ app/kubernetes-ingress-controller/reference/path-manipulation.md:
   - app/_src/kubernetes-ingress-controller/guides/requests/rewrite-host-and-paths.md
 app/kubernetes-ingress-controller/reference/host-manipulation.md:
   - app/_src/kubernetes-ingress-controller/guides/requests/rewrite-host-and-paths.md
+app/kubernetes-ingress-controller/reference/secrets-in-plugins.md:
+  - app/_src/kubernetes-ingress-controller/guides/security/plugin-secrets.md
 app/kubernetes-ingress-controller/admission-webhook.md:
   - app/_src/kubernetes-ingress-controller/concepts/admission-webhook.md
 app/_how-tos/kic-install.md:
