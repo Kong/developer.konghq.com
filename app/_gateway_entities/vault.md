@@ -15,6 +15,8 @@ related_resources:
     url: /gateway/entities/rbac/
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
+  - text: Managing sensitive data with decK
+    url: /deck/gateway/sensitive-data/
 
 
 faqs:
@@ -50,6 +52,9 @@ next_steps:
 works_on:
   - on-prem
   - konnect
+
+tags:
+  - secrets-management
 ---
 
 ## What is a Vault?
@@ -191,25 +196,6 @@ There are two types of refresh configuration available:
 * Refresh on failure: For example, on a database authentication failure, check if the secrets were updated, and try again.
 
 For more information, see [Secret management](/gateway/secrets-management/).
-
-## Best practices for Vaults
-
-<!--@TODO: Move this to deck docs when available-->
-
-### General best practices
-
-To keep your environment secure and avoid taking down your proxies by accident, make sure to:
-* Manage Vaults with distributed configuration via tags.
-* Use a separate [RBAC role, user, and token](/gateway/entities/rbac/).
-to manage Vaults. Don't use a generic admin user.
-* Set up a separate CI pipeline for Vaults.
-
-### Best practices for managing Vaults using decK
-
-For larger teams with many contributors, or organizations with multiple teams, we recommend splitting Vault configurations into separate files and managing them isolated from other [entities'](/gateway/entities/) configuration using tags. We recommend splitting the configuration for the following reasons:
-* Vaults are closer to infrastructure than other {{site.base_gateway}} configurations. Separation of routing policies from infrastructure-specific configurations helps keep configuration organized.
-* Vaults may be shared across teams. In this case, one specific team shouldn't control the Vault's configuration. One team changing the Vault a can have a negative impact on another team.
-* If a Vault is deleted while in use -- that is, if there are still references to secrets in a Vault in configuration -- it can lead to total loss of proxy capabilities. Those secrets would be unrecoverable.
 
 ## Schema
 

@@ -1,6 +1,6 @@
 ---
-title: Managing Sensitive Data
-description: Keep your secrets safe using {{ site.base_gateway }} Vaults with decK
+title: Managing sensitive data
+description: Keep your secrets safe using {{ site.base_gateway }} Vaults with decK.
 
 content_type: reference
 layout: reference
@@ -17,18 +17,20 @@ breadcrumbs:
   - /deck/gateway/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: Vaults
+    url: /gateway/entities/vault/
+  - text: deck gateway commands
+    url: /deck/gateway/
 ---
 
 Hardcoding sensitive information in your declarative configuration files is not recommended. decK provides two options to avoid this anti-pattern:
 
-1. Configure and use [vaults](/gateway/entities/vault/) with {{ site.base_gateway }}.
+1. Configure and use [Vaults](/gateway/entities/vault/) with {{ site.base_gateway }}.
 1. Read environment variables when running decK commands.
 
-## Configuring Kong vaults
+## Configuring {{ site.base_gateway }} Vaults
 
-decK provides full support for managing {{ site.base_gateway }} vaults declaratively.
+decK provides full support for managing {{ site.base_gateway }} Vaults declaratively.
 
 ```yaml
 _format_version: "3.0"
@@ -45,26 +47,26 @@ vaults:
       token: "PUT_YOUR_TOKEN_HERE"
 ```
 
-When managing vaults with declarative configuration, you need to take certain precautions. For larger teams with many contributors, or organizations with multiple teams, we recommend splitting vault configuration and managing it separately.
+When managing Vaults with declarative configuration, you need to take certain precautions. For larger teams with many contributors, or organizations with multiple teams, we recommend splitting Vault configuration and managing it separately.
 
-### Why split out vault configuration?
+### Why split out Vault configuration?
 
 - Vault are closer to infrastructure than other {{site.base_gateway}} configurations. Separation of routing policies from infrastructure-specific configurations helps keep configuration organized.
-- Vaults may be shared across teams. In this case, one specific team shouldn't control the vault's configuration. One team changing the vault can have disastrous impact on another team.
-- If a vault is deleted while in use -- that is, if there are still references to secrets in a vault in configuration -- it can lead to total loss of proxy capabilities. Those secrets would be unrecoverable.
+- Vaults may be shared across teams. In this case, one specific team shouldn't control the Vault's configuration. One team changing the Vault can have disastrous impact on another team.
+- If a Vault is deleted while in use -- that is, if there are still references to secrets in a Vault in configuration -- it can lead to total loss of proxy capabilities. Those secrets would be unrecoverable.
 
-### How should I manage my vault configuration with decK?
+### How should I manage my Vault configuration with decK?
 
 To keep your environment secure and avoid taking down your proxies by accident, make sure to:
 
-- Manage vaults with distributed configuration via tags.
+- Manage Vaults with distributed configuration via [tags](/deck/gateway/tags/).
 - Use a separate [RBAC role, user, and token](/deck/gateway/rbac/)
-  to manage vaults. Don't use a generic admin user.
-- Set up a separate CI pipeline for vaults.
+  to manage Vaults. Don't use a generic admin user.
+- Set up a separate CI pipeline for Vaults.
 
-## Manage vaults with distributed configuration
+## Managing Vaults with distributed configuration
 
-Avoid mixing vault configuration with other {{site.base_gateway}} entities. Instead, manage vaults with [distributed configuration](/deck/gateway/tags/#select-tags) via `select_tags`.
+Avoid mixing Vault configuration with other {{site.base_gateway}} entities. Instead, manage Vaults with [distributed configuration](/deck/gateway/tags/#select-tags) via `select_tags`.
 
 ```yaml
 _format_version: "3.0"
@@ -119,6 +121,6 @@ vaults:
 To test, set the `DECK_HCV_TOKEN` environment variable and run `deck gateway sync`:
 
 ```bash
-export DECK_HCV_TOKEN="TOKEN_GOES_HERE"
+export DECK_HCV_TOKEN='TOKEN GOES HERE'
 deck gateway sync kong.yaml
 ```

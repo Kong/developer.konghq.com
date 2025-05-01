@@ -23,8 +23,6 @@ description: "Explains how {{site.base_gateway}} can be run without a database u
 related_resources:
   - text: Deployment topologies
     url: /gateway/deployment-topologies/
-  - text: "{{site.base_gateway}} deployment models"
-    url: /gateway/deployment-models/
   - text: Data Plane hosting options
     url: /gateway/topology-hosting-options/
   - text: Hybrid mode
@@ -68,10 +66,6 @@ A2 --> A
 B2 --> B
 C2 --> C
 
-style A stroke:none,fill:#0E44A2,color:#fff
-style B stroke:none,fill:#0E44A2,color:#fff
-style C stroke:none,fill:#0E44A2,color:#fff
-
 {% endmermaid %}
 <!-- vale on-->
 
@@ -80,14 +74,14 @@ style C stroke:none,fill:#0E44A2,color:#fff
 
 The key idea in declarative configuration is the notion
 that it is *declarative*, as opposed to an *imperative* style of
-configuration. "Imperative" means that a configuration is given as a series of
-orders. "Declarative" means that the configuration is
+configuration. Imperative means that a configuration is given as a series of
+orders. Declarative means that the configuration is
 given all at once.
 
 The [Admin API](/api/gateway/admin-ee/) is an example of an imperative configuration tool. The
 final state of the configuration is attained through a sequence of API calls:
 one call to create a Service, another call to create a Route, another call to
-add a Plugin, and so on.
+add a plugin, and so on.
 
 Incremental configuration like this has the undesirable
 side-effect that *intermediate states* happen. In the above example, there is
@@ -95,16 +89,16 @@ a window of time in between creating a Route and adding the plugin in which
 the Route didn't have the plugin applied.
 
 A declarative configuration file, on the other hand, contains the settings
-for all desired [entities](/gateway/entities/) in a single file. Once that file is loaded into
+for all needed [entities](/gateway/entities/) in a single file. Once that file is loaded into
 {{site.base_gateway}}, it replaces the entire configuration. When incremental changes are
-desired, they are made to the declarative configuration file, which is then
+needed, they are made to the declarative configuration file, which is then
 reloaded in its entirety. At all times, the configuration described in the
 file loaded into {{site.base_gateway}} is the configured state of the system.
 
 ## Set up {{site.base_gateway}} in DB-less mode
 
 To use {{site.base_gateway}} in DB-less mode, set the [`database` directive of `kong.conf`](/gateway/configuration/#database) to `off`. You can do this by editing `kong.conf` and setting
-`database=off` or via environment variables (`export KONG_DATABASE=off`), and then [starting {{site.base_gateway}}](/gateway/cli/reference/#kong-start) like normal.
+`database=off` or via environment variables (`export KONG_DATABASE=off`), and then [starting {{site.base_gateway}}](/gateway/cli/reference/#kong-start).
 
 You can verify that {{site.base_gateway}} is deployed in DB-less mode by sending the following:
 ```sh
@@ -130,7 +124,7 @@ config:
 
 ## DB-less mode with Kubernetes
 
-You can run DB-less mode with Kubernetes both with and without {{ site.kic_product_name }}.
+You can run DB-less mode with Kubernetes both with and without [{{ site.kic_product_name }}](/kubernetes-ingress-controller/).
 
 ### DB-less mode with {{ site.kic_product_name }}
 

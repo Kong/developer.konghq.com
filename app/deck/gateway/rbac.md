@@ -1,6 +1,6 @@
 ---
 title: Manage RBAC roles
-description: Configure your RBAC configuration declaratively with decK
+description: Configure your RBAC configuration declaratively with decK.
 
 content_type: reference
 layout: reference
@@ -17,14 +17,16 @@ breadcrumbs:
   - /deck/gateway/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: Entities managed by decK
+    url: /deck/reference/entities/
+  - text: deck gateway commands
+    url: /deck/gateway/
 ---
 
-decK can manage {{ site.ee_product_name }} RBAC configuration using the `diff`, `sync`, and `dump` commands.
+decK can manage {{ site.ee_product_name }} Role-Based Access Control (RBAC) configuration using the [`deck gateway diff`](/deck/gateway/diff/), [`deck gateway sync`](/deck/gateway/sync/), and [`deck gateway dump`](/deck/gateway/dump/) commands.
 
 {:.warning}
-> decK can't manage {{ site.konnect_short_name }} permissions as they are set at the organization level, rather than the control plane level. We recommend [terraform-provider-konnect](https://github.com/Kong/terraform-provider-konnect) for your {{ site.konnect_short_name }} RBAC needs.
+> decK can't manage {{ site.konnect_short_name }} permissions as they are set at the organization level, rather than the Control Plane level. We recommend [terraform-provider-konnect](https://github.com/Kong/terraform-provider-konnect) for your {{ site.konnect_short_name }} RBAC needs.
 
 RBAC configuration is usually stored separately from all other configuration, and decK provides the `--rbac-resources-only` flag to ensure that only RBAC resources are in scope when running commands.
 
@@ -63,8 +65,7 @@ Here are some common endpoints hit by decK for normal operations:
 
 - `GET, POST, PATCH, PUT, DELETE /{entityType}` or `GET, POST, PATCH, PUT, DELETE /{workspace}/{entityType}`: Perform read and write operations on entities.
 
-  If you are running {{site.ee_product_name}}, then decK interacts with entities inside workspaces.
-  See the [Entities managed by decK](/deck/reference/entities/) reference for the full list.
+  decK interacts with entities inside workspaces. See the [Entities managed by decK](/deck/reference/entities/) reference for the full list.
 
   Note that decK also performs operations on entities enabled by plugins, such as `/basic-auths`, `/jwts`, and so on.
 

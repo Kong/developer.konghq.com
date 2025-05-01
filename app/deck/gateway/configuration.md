@@ -1,6 +1,6 @@
 ---
 title: Configuring On-Prem Authentication
-description: Configure decK for use with an on-prem {{ site.base_gateway }}
+description: Configure decK for use with an on-prem {{ site.base_gateway }}.
 
 content_type: reference
 layout: reference
@@ -17,15 +17,15 @@ breadcrumbs:
   - /deck/gateway/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: deck gateway commands
+    url: /deck/gateway/
 ---
 
-decK assumes that it is running on the same machine as {{ site.base_gateway }} and that the Admin API requires no authentication by default.
+By default, decK assumes that it's running on the same machine as {{ site.base_gateway }} and that the Admin API requires no authentication.
 
-This page explains the CLI flags required to customise this behavior. If you would like to change the default behavior using environment variables or a configuration file, see the [configuration options](/deck/configuration/) page.
+This page explains the CLI flags required to customize this behavior. If you want to change the default behavior using environment variables or a configuration file, see the [configuration options](/deck/configuration/) page.
 
-The following examples use `deck gateway ping`, but the flags also apply to all other `deck gateway` commands.
+The following examples use [`deck gateway ping`](/deck/gateway/ping/), but the flags also apply to all other [`deck gateway`](/deck/gateway/) commands.
 
 The `--kong-addr` flag configures the URL that decK calls to use the Admin API. The default value is `http://localhost:8001`.
 

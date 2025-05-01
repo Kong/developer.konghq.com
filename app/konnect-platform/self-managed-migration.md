@@ -27,7 +27,7 @@ As a {{site.base_gateway}} user, you can directly migrate to {{site.konnect_shor
 
 As organizations grow and scale, they need more advanced capabilities while lowering 
 operational complexity. This includes features such as:
-* [Multi-tenancy](/gateway/deployment-models/#tenancy-tradeoffs)
+* Multi-tenancy
 * Federated API management
 * Advanced security integrations
 

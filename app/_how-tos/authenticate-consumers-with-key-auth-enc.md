@@ -64,7 +64,7 @@ prereqs:
 tldr:
     q: How do I secure a Service with encrypted key authentication?
     a: |
-      Enable {{site.base_gateway}}'s encryption Keyring and [generate a new key](#1-generate-a-keyring-key) in the Keyring with a `POST` request to the `/keyring/generate` endpoint. Then, [enable the Key Authentication Encrypted](#2-enable-the-key-authentication-encrypted-plugin) plugin on the Gateway Service and [create a Consumer with a valid key](#3-create-a-consumer-and-key). This plugin will require all requests made to this Gateway Service to have a valid API key.
+      Enable {{site.base_gateway}}'s encryption Keyring and [generate a new key](#generate-a-keyring-key) in the Keyring with a `POST` request to the `/keyring/generate` endpoint. Then, [enable the Key Authentication Encrypted](#enable-the-key-authentication-encrypted-plugin) plugin on the Gateway Service and [create a Consumer with a valid key](#create-a-consumer-and-key). This plugin will require all requests made to this Gateway Service to have a valid API key.
 
 cleanup:
   inline:
@@ -135,7 +135,7 @@ The Consumer needs an API key to access any Gateway Services. We recommend not s
 Copy the `key` in the response and export it as an environment variable:
 
 ```bash
-export CONSUMER_KEY=<consumer-key>
+export CONSUMER_KEY='CONSUMER KEY'
 ```
 
 ## Validate
