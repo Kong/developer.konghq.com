@@ -10,8 +10,6 @@
 
 {% assign gw_api_crd_version = "v1.2.0" %}
 
-### Install the Gateway APIs
-
 {% if include.config.gateway_api == "experimental" %}
 
 1. Install the **experimental** Gateway API CRDs before installing {{ site.kic_product_name }}:

@@ -19,7 +19,13 @@ works_on:
   - on-prem
   - konnect
 
-entities: []
+entities:
+  - service
+  - route
+
+tags:
+  - udp
+  - routing
 
 tldr:
   q: How do I route UDP traffic with {{ site.kic_product_name }}?

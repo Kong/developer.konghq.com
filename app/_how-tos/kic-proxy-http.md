@@ -20,11 +20,16 @@ works_on:
   - on-prem
   - konnect
 
-entities: []
+entities:
+  - service
+  - route
 
+tags:
+  - routing
+ 
 tldr:
   q: How do I route HTTP traffic with {{ site.kic_product_name }}?
-  a: Create a `HTTPRoute` or `Ingress` resource, which will then be converted into a [{{ site.base_gateway }} Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
+  a: Create an `HTTPRoute` or `Ingress` resource, which will then be converted into a [{{ site.base_gateway }} Service](/gateway/entities/service/) and [Route](/gateway/entities/route/).
 
 prereqs:
   kubernetes:
@@ -40,15 +45,15 @@ cleanup:
       icon_url: /assets/icons/kubernetes.svg
 ---
 
-## Create a HTTPRoute
+## Create an HTTPRoute
 
-To route HTTP traffic, you need to create a `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`.
+To route HTTP traffic, you need to create an `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`:
 
 {% include /k8s/httproute.md release=page.release path='/echo' name='echo' service='echo' port='1027' skip_host=true %}
 
 ## Validate your configuration
 
-Once the resource has been reconciled, you'll be able to call the `/echo` endpoint and {{ site.base_gateway }} will route the request to the `echo` service.
+Once the resource has been reconciled, you'll be able to call the `/echo` endpoint and {{ site.base_gateway }} will route the request to the `echo` service:
 
 
 {% validation request-check %}

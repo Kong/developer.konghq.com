@@ -1,9 +1,11 @@
 ---
 content_type: reference
-
 ---
 
 ## Changelog
+
+### {{site.base_gateway}} 3.10.x
+* Fixed an issue where the `upstream_status` field was empty in logs when using the `forward-proxy` plugin.
 
 ### {{site.base_gateway}} 3.6.x
 * The plugin now falls back to the non-streaming proxy when the request body was already read.
@@ -21,6 +23,11 @@ content_type: reference
 
   Note that all options respect the trusted IP setting, and will ignore last hop headers if they are not from clients with trusted IPs.
 
+### {{site.base_gateway}} 3.0.x
+Fixed a proxy authentication error caused by incorrect base64 encoding.
+  * Use lowercase when overwriting the Nginx request host header.
+  * The plugin now allows multi-value response headers.
+
 ### {{site.base_gateway}} 2.8.x
 
 * Added `http_proxy_host`, `http_proxy_port`, `https_proxy_host`, and
@@ -34,6 +41,14 @@ content_type: reference
 referenceable, which means they can be securely stored as
 [secrets](/gateway/secrets-management/)
 in a vault. References must follow a [specific format](/gateway/entities/vault/#how-do-i-reference-secrets-stored-in-a-vault).
+* Fixed an issue which occurred when receiving an HTTP `408` from the upstream through a forward proxy. 
+  Nginx exited the process with this code, which resulted in Nginx ending the request without any contents.
+* If the `https_proxy` configuration parameter is not set, it now defaults to `http_proxy` to avoid DNS errors.
+Fixed an `invalid header value` error for HTTPS requests. The plugin
+  now accepts multi-value response headers.
+* Fixed an error where basic authentication headers containing the `=`
+character weren't forwarded.
+* Use lowercase when overwriting the `host` header
 
 ### {{site.base_gateway}} 2.7.x
 

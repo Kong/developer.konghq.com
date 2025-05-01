@@ -13,7 +13,7 @@ config:
 
 variables:
   http_proxy_host:
-    value: $PROXY_HOST_NAME
+    value: $PROXY_HOSTNAME
     description: The name of your HTTP host.
 
 tools:

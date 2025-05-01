@@ -1,12 +1,15 @@
 ---
 content_type: reference
-
 ---
 
 ## Changelog
 
 ### {{site.base_gateway}} 3.8.x
-* [**StatsD**](/plugins/statsd/) (`statsd`)
+* Fixed an issue where the exported workspace was always `default` when the Workspace identifier was set to the Workspace name.
+
+### {{site.base_gateway}} 3.3.x
+* The queuing system has been reworked, causing some plugin parameters to not function as expected anymore. 
+If you use queues in this plugin, new parameters must be configured.
 
 ### {{site.base_gateway}} 3.2.x
 * Added the `tag_style` configuration parameter. This allows you to send metrics with [tags](https://github.com/prometheus/statsd_exporter#tagging-extensions). Defaults to `nil`, which doesn't add any tags to the metrics.
