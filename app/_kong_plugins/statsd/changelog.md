@@ -5,7 +5,7 @@ content_type: reference
 ## Changelog
 
 ### {{site.base_gateway}} 3.8.x
-* Fixed an issue where the exported workspace was always `default` when the workspace identifier was set to the workspace name.
+* Fixed an issue where the exported workspace was always `default` when the Workspace identifier was set to the Workspace name.
 
 ### {{site.base_gateway}} 3.3.x
 * The queuing system has been reworked, causing some plugin parameters to not function as expected anymore. 
