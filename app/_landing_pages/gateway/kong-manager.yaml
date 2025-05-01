@@ -132,7 +132,7 @@ rows:
               The segmentation allows teams of admins sharing the same {{site.base_gateway}} cluster to adopt roles for interacting with specific objects. 
               
             cta:
-              url: "/how-to/enable-oidc-for-kong-manager/"
+              url: "/gateway/entities/workspace/"
       - blocks:
         - type: card
           config:
