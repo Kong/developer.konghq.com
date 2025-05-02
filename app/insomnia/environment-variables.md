@@ -1,5 +1,5 @@
 ---
-title: Environment Variables
+title: Environment variables
 
 description: Configure environment variables to reuse values across multiple requests.
 

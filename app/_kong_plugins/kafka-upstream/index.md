@@ -29,9 +29,6 @@ icon: kafka-upstream.png
 
 categories:
   - transformations
-related_resources:
-  - text: AI Gateway
-    url: /ai-gateway/
 
 search_aliases:
   - kafka-upstream
