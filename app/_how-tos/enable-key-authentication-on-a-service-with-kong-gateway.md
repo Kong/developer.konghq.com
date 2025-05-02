@@ -92,7 +92,7 @@ headers:
 status_code: 200
 {% endvalidation %}
 
-But if you send the the wrong API the request will fail: ``
+But if you send the wrong API the request will fail:
 
 {% validation unauthorized-check %}
 url: /anything
