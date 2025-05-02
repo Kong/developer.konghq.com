@@ -430,6 +430,7 @@ Logstash
 lookup
 lookups
 loopback
+lts
 lua
 Lua's
 Lua's

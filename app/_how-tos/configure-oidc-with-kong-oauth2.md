@@ -11,7 +11,7 @@ related_resources:
     url: /plugins/openid-connect/#authentication
   - text: Kong OAuth2 token authentication workflow
     url: /plugins/openid-connect/#kong-oauth-token-authentication-flow
-  - text: OpenID Connect how tos
+  - text: OpenID Connect tutorials
     url: /how-to/?query=openid-connect
 
 plugins:

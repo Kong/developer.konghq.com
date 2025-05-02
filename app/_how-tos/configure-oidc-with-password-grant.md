@@ -11,7 +11,7 @@ related_resources:
     url: /plugins/openid-connect/#authentication
   - text: Password grant workflow
     url: /plugins/openid-connect/#password-grant-workflow
-  - text: OpenID Connect how tos
+  - text: OpenID Connect tutorials
     url: /how-to/?query=openid-connect
 
 plugins:

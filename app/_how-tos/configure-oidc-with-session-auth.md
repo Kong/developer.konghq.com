@@ -11,7 +11,7 @@ related_resources:
     url: /plugins/openid-connect/#authentication
   - text: Session auth workflow
     url: /plugins/openid-connect/#session-authentication-workflow
-  - text: OpenID Connect how tos
+  - text: OpenID Connect tutorials
     url: /how-to/?query=openid-connect
 
 plugins:

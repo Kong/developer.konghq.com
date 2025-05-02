@@ -11,7 +11,7 @@ related_resources:
     url: /plugins/openid-connect/#authorization
   - text: Consumer authorization in OIDC
     url: /plugins/openid-connect/#consumer-authorization
-  - text: OpenID Connect how tos
+  - text: OpenID Connect tutorials
     url: /how-to/?query=openid-connect
 
 plugins:

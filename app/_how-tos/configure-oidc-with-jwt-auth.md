@@ -11,7 +11,7 @@ related_resources:
     url: /plugins/openid-connect/#authentication
   - text: JWT auth flow
     url: /plugins/openid-connect/#jwt-access-token-authentication-flow
-  - text: OpenID Connect how tos
+  - text: OpenID Connect tutorials
     url: /how-to/?query=openid-connect
 
 plugins:
