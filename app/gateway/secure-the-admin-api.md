@@ -68,7 +68,7 @@ Additional controls, such as similar ACLs applied at a network device level, are
 
 {{site.base_gateway}}’s routing design allows it to serve as a proxy for the Admin API itself. You can use {{site.base_gateway}} to provide fine-grained access control to the Admin API. To do this, you need to bootstrap a new Gateway Service that defines the `admin_listen` address as the Service’s url.
 
-For example, let’s assume that {{site.base_gateway}}'s `admin_listen` parameter is set to `127.0.0.1:8001`, so it is only available from localhost. The port `8000` is serving proxy traffic, exposed via `$HOST.dev:8000`.
+For example, let’s assume that {{site.base_gateway}}'s `admin_listen` parameter is set to `127.0.0.1:8001`, so it is only available from localhost. The port `8000` is serving proxy traffic, exposed via `$HOST:8000`.
 
 We want to expose Admin API via the url `:8000/admin-api`, in a controlled way. We can do so by creating a Service and Route for it inside `127.0.0.1`:
 
@@ -87,7 +87,7 @@ entities:
 
 We can now reach the Admin API through the proxy server:
 ```sh
-curl $HOST.dev:8000/admin-api/services
+curl $HOST:8000/admin-api/services
 ```
 
 Once the Service and Route are set up, you can apply security plugins as you would for any API. You can configure [authentication](/plugins/?category=authentication), [IP restriction](/plugins/ip-restriction/), or [access control lists](/plugins/acl/). For example:
