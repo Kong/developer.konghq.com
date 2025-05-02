@@ -5,7 +5,7 @@ name: 'GraphQL Proxy Caching Advanced'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Cache and serve commonly requested responses in Kong'
+description: 'Cache and serve commonly requested responses in {{site.base_gateway}}'
 
 products:
     - gateway
@@ -49,7 +49,7 @@ related_resources:
 The GrapQL Proxy Cache Advanced plugin provides a reverse GraphQL proxy cache implementation for {{site.base_gateway}}. 
 It caches response entities by GraphQL query or Vary headers.
 
-## How it works
+## How the GrapQL Proxy Cache Advanced plugin works
 
 {% include_cached /plugins/caching/strategies.md name=page.name %}
 
@@ -63,6 +63,7 @@ Internally, cache keys are represented as a hexadecimal-encoded MD5 sum of the c
 ```
 key = md5(UUID | headers | body)
 ```
+{:.no-copy-code}
 
 `headers` contains the headers defined in [`config.vary_headers`](/plugins/graphql-proxy-cache-advanced/reference/#schema--config-vary-headers), which defaults to `none`.
 
