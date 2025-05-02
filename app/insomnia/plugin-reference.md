@@ -1,5 +1,5 @@
 ---
-title: Plugin Reference
+title: Plugin reference
 
 description: "Learn about Insomnia's plugin context that allow plugins to interact with requests, responses, the app UI, and stored data."
 
