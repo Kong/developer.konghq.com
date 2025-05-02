@@ -13968,6 +13968,34 @@ paths:
       operationId: get-debug-node-log-level-log_level
       description: |
         Change the log level of a node.
+  /rbac/users:
+    get:
+      summary: List Users
+      tags:
+        - RBAC
+      responses:
+        '200':
+          $ref: '#/components/responses/rbac-user-response'
+        '401': 
+          $ref: '#/components/responses/HTTP401Error'
+      operationId: get-rbac-users
+      description: |-
+        List all users.
+
+        Note: RBAC users associated with admin aren't listed with `GET /rbac/users`. Instead, use `GET /admins` to list all admins.
+    post:
+      summary: Add a User
+      operationId: post-rbac-users
+      responses:
+        '200':
+          $ref: '#/components/responses/rbac-user-response'
+        '401': 
+          $ref: '#/components/responses/HTTP401Error'
+      tags:
+        - RBAC
+      requestBody:
+        $ref: '#/components/requestBodies/rbac-request'
+      description: Add a User
   '/rbac/users/{name_or_id}':
     parameters:
       - schema:
