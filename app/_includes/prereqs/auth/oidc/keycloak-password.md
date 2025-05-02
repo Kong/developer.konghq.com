@@ -13,7 +13,7 @@ This tutorial requires an identity provider (IdP). If you don't have one, you ca
     ```
 1. Open the admin console.
     
-    The default URL of the console is `http://{your-keycloak-host}:8080/admin/master/console/`.
+    The default URL of the console is `http://$YOUR_KEYCLOAK_HOST:8080/admin/master/console/`.
 1. In the sidebar, open **Clients**, then click **Create client**.
 1. Configure the client:
 
@@ -43,7 +43,7 @@ rows:
 1. Set **Client Authenticator** to **Client ID and Secret**.
 1. Copy the **Client Secret**.
 1. Switch to the Users menu and add a user.
-1. Open the user's **Credentials** tab and add a password.
+1. Open the user's **Credentials** tab and add a password. Be sure to disable **Temporary Password**.
 
 In this guide, we're going to use an example user named `alex` with the password `doe`.
 

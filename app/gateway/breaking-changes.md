@@ -169,7 +169,7 @@ As part of your upgrade to 3.7, remove the following tracing-related parameters 
 * `tracing_debug_header`
 * `generate_trace_details`
 
-We recommend transitioning to [OpenTelemetry Instrumentation](/gateway/tracing/) instead.
+We recommend transitioning to OpenTelemetry Instrumentation instead.
 
 #### Vaults
 
@@ -784,6 +784,7 @@ As of {{ site.base_gateway }} 3.0, Debian and RHEL images are built with minimal
 They only contain the bare minimum required to run {{site.base_gateway}}.
 If you would like further customize the base image and any dependencies, you can
 [build your own Docker images](/how-to/build-custom-docker-image/).
+
 
 If you are using Debian, RHEL, or building your dependencies by hand, there are changes since the
 previous release, so you will need to rebuild them with the latest patches.

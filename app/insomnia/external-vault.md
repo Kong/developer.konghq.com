@@ -7,7 +7,16 @@ products:
   - insomnia
 tags:
   - external-vaults
+  - secret-management
+breadcrumbs:
+  - /insomnia/
+search_aliases:
+  - Amazon
+  - GCP
+  - HCV
 related_resources:
+  - text: Local vault storage in Insomnia
+    url: /insomnia/local-vault/
   - text: Storage options
     url: /insomnia/storage-options/
   - text: Git sync

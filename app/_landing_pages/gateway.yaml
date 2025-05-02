@@ -209,7 +209,7 @@ rows:
   - header:
       type: h2
       text: Key references
-    columns:
+  - columns:
       - blocks:
           - type: card
             config:
@@ -244,6 +244,8 @@ rows:
                 text: Learn about {{ site.base_gateway }} entities
                 url: /gateway/entities/
                 align: end
+  - column_count: 3
+    columns:
       - blocks:
           - type: card
             config:
@@ -254,6 +256,16 @@ rows:
               cta:
                 text: Kong API reference
                 url: /api/gateway/admin-ee/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Upgrade {{site.base_gateway}}
+              description: Learn about different upgrade methods
+              icon: /assets/icons/download.svg
+              cta:
+                text: See reference &rarr;
+                url: /gateway/upgrade/
                 align: end
   - header:
       type: h2

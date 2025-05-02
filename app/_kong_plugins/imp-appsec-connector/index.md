@@ -16,14 +16,9 @@ works_on:
     - on-prem
     - konnect
 
-# on_prem:
-#   - hybrid
-#   - db-less
-#   - traditional
-# konnect_deployments:
-#   - hybrid
-#   - cloud-gateways
-#   - serverless
+tags:
+  - monitoring
+  - service-discovery
 
 third_party: true
 
@@ -42,7 +37,7 @@ This enables security teams to protect business applications and data against un
 
 The plugin operates with a very low CPU and memory footprint, avoiding any negative impact on the inline performance of the Gateway or your applications.
 
-## How it works
+## How the Imperva plugin works
 
 Here's how the Imperva API Security plugin works:
 1. The plugin captures API calls with request/response payloads and sends them to the Imperva API Security service for inspection. 
@@ -56,4 +51,4 @@ Additional [parameters](/plugins/imp-appsec-connector/reference/) are used to co
 
 {:.info}
 > If you are using the [{{site.kic_product_name}}](/kubernetes-ingress-controller/), the installation is slightly different. 
-> Review the [custom plugin docs for the {{site.kic_product_name}}](/kubernetes-ingress-controller/custom-plugin/).
+> Review the [custom plugin docs for the {{site.kic_product_name}}](/kubernetes-ingress-controller/custom-plugins/).

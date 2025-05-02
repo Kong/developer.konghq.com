@@ -15,15 +15,6 @@ works_on:
     - on-prem
     - konnect
 
-# on_prem:
-#   - hybrid
-#   - db-less
-#   - traditional
-# konnect_deployments:
-#   - hybrid
-#   - cloud-gateways
-#   - serverless
-
 third_party: true
 
 source_code_url: https://github.com/inigolabs/inigo-kong
@@ -34,6 +25,10 @@ icon: inigo.png
 search_aliases:
   - inigo
   - graphql
+
+tags:
+  - observability
+  - inigo
 
 related_resources:
   - text: Inigo app
@@ -54,7 +49,7 @@ Designed specifically for GraphQL APIs, this plugin provides:
 Inigo’s plugin gives you unique, in-depth insights into GraphQL usage, from granular field-level details to full query paths, along with overall server health and performance metrics. 
 It enforces security policies, modifies or blocks malicious queries before they reach your GraphQL servers, and alerts you to any API issues.
 
-## How it works
+## How the Inigo plugin works
 
 The Inigo plugin can be enabled on any GraphQL API route.
 1. It syncs with a service configured in Inigo using the provided service token. 

@@ -8,6 +8,11 @@ products:
 
 breadcrumbs:
   - /gateway/
+tags:
+  - versioning
+search_aliases:
+  - lts
+  - long term support
 
 description: |
   The {{site.base_gateway}} version support policy outlines the {{site.base_gateway}} versioning scheme and version lifecycle, from release to sunset support.
@@ -23,6 +28,10 @@ related_resources:
     url: /gateway/third-party-support/
   - text: "{{site.konnect_short_name}} compatibility"
     url: /konnect-platform/konnect-compatibility/
+  - text: "{{site.base_gateway}} upgrades"
+    url: /gateway/upgrade/
+  - text: "{{site.base_gateway}} changelog"
+    url: /gateway/changelog/
 
 works_on:
   - on-prem
@@ -144,30 +153,108 @@ For information about FIPS, see the [Kong compliance page](https://konghq.com/co
 
 These versions have reached the end of full support.
 
-| Version  | Released Date | End of Full Support | End of Sunset Support |
-|:--------:|:-------------:|:-------------------:|:---------------------:|
-|  3.6.x.x |  2024-02-12   |     2025-02-12      |      2026-02-12       |
-|  3.5.x.x |  2023-11-08   |     2024-11-08      |      2025-11-08       |
-|  3.3.x.x |  2023-05-19   |     2024-05-19      |      2025-05-19       |
-|  3.2.x.x |  2023-02-28   |     2024-02-28      |      2025-02-28       |
-|  3.1.x.x |  2022-12-06   |     2023-12-06      |      2024-12-06       |
-|  3.0.x.x |  2022-09-09   |     2023-09-09      |      2024-09-09       |
-|  2.7.x.x |  2021-12-16   |     2023-02-24      |      2024-08-24       |
-|  2.6.x.x |  2021-10-14   |     2023-02-24      |      2024-08-24       |
-|  2.5.x.x |  2021-08-03   |     2022-08-24      |      2023-08-24       |
-|  2.4.x.x |  2021-05-18   |     2022-08-24      |      2023-08-24       |  
-|  2.3.x.x |  2021-02-11   |     2022-08-24      |      2023-08-24       |
-|  2.2.x.x |  2020-11-17   |     2022-08-24      |      2023-08-24       |
-|  2.1.x.x |  2020-08-25   |     2022-08-24      |      2023-08-24       |
-|  1.5.x.x |  2020-04-10   |     2021-04-09      |      2022-04-09       |
-|  1.3.x.x |  2019-11-05   |     2020-11-04      |      2021-11-04       |
-|   0.36   |  2019-08-05   |     2020-08-04      |      2021-08-04       |
-|   0.35   |  2019-05-16   |     2020-05-15      |      2020-11-15       |
-|   0.34   |  2018-11-19   |     2019-11-18      |      2020-11-18       |
-|   0.33   |  2018-07-11   |     2019-06-10      |      2020-06-10       |
-|   0.32   |  2018-05-22   |     2019-05-21      |      2020-05-21       |
-|   0.31   |  2018-03-13   |     2019-03-12      |      2020-03-12       |
-|   0.30   |  2018-01-22   |     2019-01-21      |      2020-01-21       |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Version
+    key: version
+  - title: Released Date
+    key: release-date
+  - title: End of Full Support
+    key: end-full
+  - title: End of Sunset Support
+    key: end-sunset
+rows:
+  - version: "3.6.x.x"
+    release-date: "2024-02-12"
+    end-full: "2025-02-12"
+    end-sunset: "2026-02-12"
+  - version: "3.5.x.x"
+    release-date: "2023-11-08"
+    end-full: "2024-11-08"
+    end-sunset: "2025-11-08"
+  - version: "3.3.x.x"
+    release-date: "2023-05-19"
+    end-full: "2024-05-19"
+    end-sunset: "2025-05-19"
+  - version: "3.2.x.x"
+    release-date: "2023-02-28"
+    end-full: "2024-02-28"
+    end-sunset: "2025-02-28"
+  - version: "3.1.x.x"
+    release-date: "2022-12-06"
+    end-full: "2023-12-06"
+    end-sunset: "2024-12-06"
+  - version: "3.0.x.x"
+    release-date: "2022-09-09"
+    end-full: "2023-09-09"
+    end-sunset: "2024-09-09"
+  - version: "2.7.x.x"
+    release-date: "2021-12-16"
+    end-full: "2023-02-24"
+    end-sunset: "2024-08-24"
+  - version: "2.6.x.x"
+    release-date: "2021-10-14"
+    end-full: "2023-02-24"
+    end-sunset: "2024-08-24"
+  - version: "2.5.x.x"
+    release-date: "2021-08-03"
+    end-full: "2022-08-24"
+    end-sunset: "2023-08-24"
+  - version: "2.4.x.x"
+    release-date: "2021-05-18"
+    end-full: "2022-08-24"
+    end-sunset: "2023-08-24"
+  - version: "2.3.x.x"
+    release-date: "2021-02-11"
+    end-full: "2022-08-24"
+    end-sunset: "2023-08-24"
+  - version: "2.2.x.x"
+    release-date: "2020-11-17"
+    end-full: "2022-08-24"
+    end-sunset: "2023-08-24"
+  - version: "2.1.x.x"
+    release-date: "2020-08-25"
+    end-full: "2022-08-24"
+    end-sunset: "2023-08-24"
+  - version: "1.5.x.x"
+    release-date: "2020-04-10"
+    end-full: "2021-04-09"
+    end-sunset: "2022-04-09"
+  - version: "1.3.x.x"
+    release-date: "2019-11-05"
+    end-full: "2020-11-04"
+    end-sunset: "2021-11-04"
+  - version: "0.36"
+    release-date: "2019-08-05"
+    end-full: "2020-08-04"
+    end-sunset: "2021-08-04"
+  - version: "0.35"
+    release-date: "2019-05-16"
+    end-full: "2020-05-15"
+    end-sunset: "2020-11-15"
+  - version: "0.34"
+    release-date: "2018-11-19"
+    end-full: "2019-11-18"
+    end-sunset: "2020-11-18"
+  - version: "0.33"
+    release-date: "2018-07-11"
+    end-full: "2019-06-10"
+    end-sunset: "2020-06-10"
+  - version: "0.32"
+    release-date: "2018-05-22"
+    end-full: "2019-05-21"
+    end-sunset: "2020-05-21"
+  - version: "0.31"
+    release-date: "2018-03-13"
+    end-full: "2019-03-12"
+    end-sunset: "2020-03-12"
+  - version: "0.30"
+    release-date: "2018-01-22"
+    end-full: "2019-01-21"
+    end-sunset: "2020-01-21"
+{% endtable %}
+<!--vale on-->
 
 {:.info}
 > **Note:** This policy **only** applies to {{site.base_gateway}}. For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version support policy](/konnect-platform/konnect-compatibility/).

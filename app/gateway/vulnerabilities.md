@@ -6,7 +6,11 @@ description: Learn how Kong handles vulnerabilities or potential vulnerabilities
 content_type: policy
 layout: reference
 
-
+tags:
+  - vulnerabilities
+  - patching
+search_aliases:
+  - CVSS
 
 products:
   - gateway

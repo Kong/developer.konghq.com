@@ -1,14 +1,17 @@
 ---
 title: Configure HashiCorp Vault as a vault backend
 content_type: how_to
-related_resources:
-  - text: Rotate secrets in HashiCorp Vault with {{site.base_gateway}}
-    url: /how-to/rotate-secrets-in-hashicorp-vault/
-  - text: Secrets management
-    url: /gateway/secrets-management/
 description: "Learn how to reference HashiCorp Vault secrets from {{site.base_gateway}}."
 products:
     - gateway
+
+related_resources:
+  - text: Secrets management
+    url: /gateway/secrets-management/
+  - text: Store Keyring data in a HashiCorp Vault
+    url: /how-to/store-keyring-in-hashicorp-vault/
+  - text: Configure Hashicorp Vault with {{ site.kic_product_name }}
+    url: "/kubernetes-ingress-controller/vault/hashicorp/"
 
 works_on:
     - on-prem
@@ -55,6 +58,29 @@ cleanup:
 faqs:
   - q: How do I rotate my secrets in HashiCorp Vault and how does {{site.base_gateway}} pick up the new secret values?
     a: You can rotate your secret in HashiCorp Vault by creating a new secret version with the updated value. You'll also want to configure the `ttl` settings in your {{site.base_gateway}} Vault entity so that {{site.base_gateway}} pulls the rotated secret periodically.
+  - q: How does {{site.base_gateway}} retrieve secrets from HashiCorp Vault?
+    a: |
+      {{site.base_gateway}} retrieves secrets from HashiCorp Vault's HTTP API through a two-step process: authentication and secret retrieval.
+
+      **Step 1: Authentication**
+
+      Depending on the authentication method defined in `config.auth_method`, {{site.base_gateway}} authenticates to HashiCorp Vault using one of the following methods:
+
+      - If you're using the `token` auth method, {{site.base_gateway}} uses the `config.token` as the client token.
+      - If you're using the `kubernetes` auth method, {{site.base_gateway}} uses the service account JWT token mounted in the pod (path defined in the `config.kube_api_token_file`) to call the login API for the Kubernetes auth path on the HashiCorp Vault server and retrieve a client token.
+      - {% new_in 3.4 %} If you're using the `approle` auth method, {{site.base_gateway}} uses the AppRole credentials to retrieve a client token. The AppRole role ID is configured by field `config.approle_role_id`, and the secret ID is configured by field `config.approle_secret_id` or `config.approle_secret_id_file`. 
+        - If you set `config.approle_response_wrapping` to `true`, then the secret ID configured by
+        `config.approle_secret_id` or `config.approle_secret_id_file` will be a response wrapping token, 
+        and {{site.base_gateway}} will call the unwrap API `/v1/sys/wrapping/unwrap` to unwrap the response wrapping token to fetch 
+        the real secret ID. {{site.base_gateway}} will use the AppRole role ID and secret ID to call the login API for the AppRole auth path
+        on the HashiCorp Vault server and retrieve a client token.
+      
+      By calling the login API, {{site.base_gateway}} will retrieve a client token and then use it in the next step as the value of `X-Vault-Token` header to retrieve a secret.
+
+      **Step 2: Retrieving the secret**
+
+      {{site.base_gateway}} uses the client token retrieved in the authentication step to call the Read Secret API and retrieve the secret value. The request varies depending on the secrets engine version you're using.
+      {{site.base_gateway}} will parse the response of the read secret API automatically and return the secret value.
 
 next_steps:
   - text: Review the Vaults entity

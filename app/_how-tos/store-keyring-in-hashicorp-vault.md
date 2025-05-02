@@ -6,53 +6,55 @@ related_resources:
     url: /gateway/keyring/
   - text: Configure HashiCorp Vault as a vault backend
     url: /how-to/configure-hashicorp-vault-as-a-vault-backend/
-
+  - text: HashiCorp Vault configuration parameters
+    url: "/gateway/entities/vault/?tab=hashicorp#vault-provider-specific-configuration-parameters"
+description: Learn how to store Keyring data in a HashiCorp Vault.
 products:
     - gateway
 
 works_on:
     - on-prem
-    - konnect
+
+tags:
+  - secrets-management
+
+search_aliases:
+  - HCV
 
 tldr:
-    q: How do I store Keyring data in a HashiCorp vault?
+    q: How do I store Keyring data in a HashiCorp Vault?
     a: Create a HashiCorp Vault and add a key and ID, then set the `kong_keyring_strategy` kong.conf parameter to `vault` and the required `keyring_vault_*` parameters in your configuration, either in `kong.conf` or with environment variables. Use the `/keyring/vault/sync` API to synchronize.
+faqs:
+  - q: How do I rotate my secrets in HashiCorp Vault and how does {{site.base_gateway}} pick up the new secret values?
+    a: You can rotate your secret in HashiCorp Vault by creating a new secret version with the updated value. You'll also want to configure the `ttl` settings in your {{site.base_gateway}} Vault entity so that {{site.base_gateway}} pulls the rotated secret periodically.
+  - q: How does {{site.base_gateway}} retrieve secrets from HashiCorp Vault?
+    a: |
+      {{site.base_gateway}} retrieves secrets from HashiCorp Vault's HTTP API through a two-step process: authentication and secret retrieval.
 
+      **Step 1: Authentication**
+
+      Depending on the authentication method defined in `config.auth_method`, {{site.base_gateway}} authenticates to HashiCorp Vault using one of the following methods:
+
+      - If you're using the `token` auth method, {{site.base_gateway}} uses the `config.token` as the client token.
+      - If you're using the `kubernetes` auth method, {{site.base_gateway}} uses the service account JWT token mounted in the pod (path defined in the `config.kube_api_token_file`) to call the login API for the Kubernetes auth path on the HashiCorp Vault server and retrieve a client token.
+      - {% new_in 3.4 %} If you're using the `approle` auth method, {{site.base_gateway}} uses the AppRole credentials to retrieve a client token. The AppRole role ID is configured by field `config.approle_role_id`, and the secret ID is configured by field `config.approle_secret_id` or `config.approle_secret_id_file`. 
+        - If you set `config.approle_response_wrapping` to `true`, then the secret ID configured by
+        `config.approle_secret_id` or `config.approle_secret_id_file` will be a response wrapping token, 
+        and {{site.base_gateway}} will call the unwrap API `/v1/sys/wrapping/unwrap` to unwrap the response wrapping token to fetch 
+        the real secret ID. {{site.base_gateway}} will use the AppRole role ID and secret ID to call the login API for the AppRole auth path
+        on the HashiCorp Vault server and retrieve a client token.
+      
+      By calling the login API, {{site.base_gateway}} will retrieve a client token and then use it in the next step as the value of `X-Vault-Token` header to retrieve a secret.
+
+      **Step 2: Retrieving the secret**
+
+      {{site.base_gateway}} uses the client token retrieved in the authentication step to call the Read Secret API and retrieve the secret value. The request varies depending on the secrets engine version you're using.
+      {{site.base_gateway}} will parse the response of the read secret API automatically and return the secret value.
 prereqs:
   skip_product: true
   inline: 
     - title: HashiCorp Vault
-      content: |
-        This how-to requires you to have a dev mode or self-managed HashiCorp Vault. The following instructions will guide you through configuring a HashiCorp Vault in dev mode with the resources you need to integrate it with {{site.base_gateway}}.
-
-        {:.warning}
-        > **Important:** This tutorial uses the literal `root` string as your token, which should only be used in testing and development environments.
-
-        1. [Install HashiCorp Vault](https://developer.hashicorp.com/vault/tutorials/get-started/install-binary#install-vault).
-        2. In a terminal, start your Vault dev server with `root` as your token.
-          ```
-          vault server -dev -dev-root-token-id root
-          ```
-        3. In the output from the previous command, copy the `VAULT_ADDR` to export.
-        4. In a new terminal window, export your `VAULT_ADDR` as an environment variable.
-        5. Verify that your Vault is running correctly:
-          ```
-          vault status
-          ```
-        6. Authenticate with Vault:
-          ```
-          vault login root
-          ```
-        7. [Create the `admin-policy.hcl` policy file](https://developer.hashicorp.com/vault/tutorials/policies/policies#write-a-policy). This contains the [permissions you need to create and use secrets](https://developer.hashicorp.com/vault/tutorials/secrets-management/versioned-kv#policy-requirements).
-        8. Upload the policy you just created:
-          ```
-          vault policy write admin admin-policy.hcl
-          ```
-        9. [Verify that you are using the `v2` secrets engine](https://developer.hashicorp.com/vault/tutorials/secrets-management/versioned-kv?variants=vault-deploy%3Aselfhosted#check-the-kv-secrets-engine-version):
-          ```
-          vault read sys/mounts/secret
-          ```
-          The `options` key should have the `map[version:2]` value.
+      include_content: prereqs/hashicorp
       icon_url: /assets/icons/hashicorp.svg
 
 cleanup:
@@ -72,11 +74,11 @@ next_steps:
     url: /gateway/entities/vault/
 ---
 
-## Create a key in the HashiCorp vault
+## Create a key in the HashiCorp Vault
 
-The Keyring integration with HashiCorp Vaults allows you to store and version Keyring data. {{site.base_gateway}} nodes can read the keys directly from the vault to encrypt and decrypt sensitive data. 
+The Keyring integration with HashiCorp Vaults allows you to store and version Keyring data. {{site.base_gateway}} nodes can read the keys directly from the Vault to encrypt and decrypt sensitive data. 
 
-First, we need to add a key and key ID to the vault. Let's create a secret named `keyring`:
+First, we need to add a key and key ID to the Vault. Let's create a secret named `keyring`:
 ```sh
 vault kv put -mount secret keyring id="8zgITLQh" key="t6NWgbj3g9cbNVC3/D6oZ2Md1Br5gWtRrqb1T2FZy44="
 ```
@@ -109,9 +111,9 @@ curl -Ls https://get.konghq.com/quickstart | bash -s -- -e KONG_LICENSE_DATA \
     -e KONG_KEYRING_VAULT_TOKEN
 ```
 
-## Synchronize the vault with the Keyring
+## Synchronize the Vault with the Keyring
 
-Once the container is created, use the following command to sync the keyring data from the HashiCorp Vault to the {{site.base_gateway}} Keyring.
+Once the container is created, use the following command to sync the Keyring data from the HashiCorp Vault to the {{site.base_gateway}} Keyring.
 ```sh
 curl -i -X POST http://localhost:8001/keyring/vault/sync
 ```
