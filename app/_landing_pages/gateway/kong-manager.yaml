@@ -162,18 +162,18 @@ rows:
             cta:
               url: "/gateway/entities/rbac/"
   
-  - header:
-      text: How-to Guides
-      type: h2
-    columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              tags:
-                - kong-manager
-              products:
-                - gateway
-              quantity: 5
+#  - header:
+#      text: How-to Guides
+#      type: h2
+#    columns:
+#      - blocks:
+#          - type: how_to_list
+#            config:
+#              tags:
+#                - kong-manager
+#              products:
+#                - gateway
+#              quantity: 5
   - header:
       type: h2
       text: References & Tools
