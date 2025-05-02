@@ -16,7 +16,7 @@ tldr:
   q: How do I use the {{site.konnect_short_name}} Reference Platform? 
   a: |
     The following is a guide for the step by step process of onboarding an engineering group to 
-    [{{site.konnect_product_name}}](https://konghq.com/products/kong-konnect) using the 
+    [{{site.konnect_saas}}](https://konghq.com/products/kong-konnect) using the 
     [Konnect Reference Platform](/konnect-reference-platform/). These instructions include all the steps required to add a new platform team and 
     relevant service repositories to the reference platform. Alternatively, example engineering groups are provided in order to expedite the evaluation of the 
     platform, see [Kong Airlines](/konnect-reference-platform/kong-air/) for more information. 

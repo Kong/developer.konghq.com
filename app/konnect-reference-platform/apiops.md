@@ -3,8 +3,7 @@ title: Konnect Reference Platform - APIOps
 content_type: reference
 layout: reference
 
-products:
-    - api-ops
+products: []
 
 description: Provides details on how the Konnect Reference Platform uses APIOps
 

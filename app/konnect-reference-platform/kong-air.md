@@ -3,9 +3,8 @@ title: Konnect Reference Platform - Kong Air
 content_type: reference
 layout: reference
 
-products:
-    - api-ops
-    - reference-platform
+products: []
+
 works_on:
   - konnect
 
