@@ -1,32 +1,44 @@
 ---
-title: "Vault Policy"
+title: "HashiCorp Vault CA"
 description: "Configure {{site.mesh_product_name}} to use HashiCorp Vault as a Certificate Authority for mTLS, including setup steps and authentication options."
 content_type: reference
 layout: reference
 products:
   - mesh
+breadcrumbs:
+  - /mesh/
+  - /mesh/enterprise/
 
 tags:
   - mtls
   - vault
   - certificates
+  - hashicorp
+
+search_aliases:
+  - HashiCorp Vault
 
 works_on:
   - on-prem
 
 related_resources:
-  - text: "Access Audit"
-    url: /mesh/access-audit/
-  - text: "Certificate Manager"
+  - text: "{{site.mesh_product_name}} enterprise features"
+    url: /mesh/enterprise/
+  - text: "Kubernetes cert-manager CA policy"
     url: /mesh/cert-manager/
   - text: "ACM Private CA Policy"
     url: /mesh/acm-private-ca-policy/
+  - text: Certificate Authority rotation
+    url: /mesh/ca-rotation/
+  - text: "{{site.base_gateway}} Vault entity"
+    url: /gateway/entities/vault/
 ---
 
+You can configure {{site.mesh_product_name}} to communicate with a Vault. 
 
 ## Vault CA Backend
 
-The default [mTLS policy in {{site.mesh_product_name}}][mtls-policy]
+The default [mTLS policy in {{site.mesh_product_name}}](/mesh/policies/meshtls/)
 supports the following backends:
 
 * `builtin`: {{site.mesh_product_name}} automatically generates the Certificate
@@ -155,7 +167,9 @@ vault write kmesh-pki-default/intermediate/set-signed certificate=@bundle.pem
 {% endnavtab %}
 {% endnavtabs %}
 
-### Create a role for generating Data Plane proxy certificates:
+### Create a role for generating Data Plane proxy certificates
+
+Run the following to create a role for generating Data Plane proxy certificates:
 
 ```sh
 vault write kmesh-pki-default/roles/dataplane-proxies \
@@ -175,7 +189,9 @@ vault write kmesh-pki-default/roles/dataplane-proxies \
 > **Note:** Use the `allowed_domains` and `allow_subdomains` parameters
 **only** when `commonName` is set in the mTLS Vault backend.
 
-### Create a policy to use the new role:
+### Create a policy to use the new role
+
+Run the following to create a policy to use the new role:
 
 ```sh
 cat > kmesh-default-dataplane-proxies.hcl <<- EOM
@@ -187,9 +203,9 @@ EOM
 vault policy write kmesh-default-dataplane-proxies kmesh-default-dataplane-proxies.hcl
 ```
 
-### Configure authentication method:
+### Configure authentication method
 
-To authorize {{site.mesh_product_name}} to vault using a token, generate the following orphan token and pass it to the mesh:
+To authorize {{site.mesh_product_name}} to access Vault using a token, generate the following orphan token and pass it to the mesh:
 
 ```sh
 vault token create -type=service -orphan -format=json -policy="kmesh-default-dataplane-proxies" | jq -r ".auth.client_token"
@@ -208,7 +224,7 @@ the output hides the error message provided in the `vault` CLI output. Manually
 parse the output instead of using `jq` so that the full output of the `vault` CLI
 command is available.
 
-{{site.mesh_product_name}} also supports AWS Instance Role authentication to Vault. Vault must be configured to accept EC2 or IAM role authentication. See [Vault documentation](https://www.vaultproject.io/docs/auth/aws) for details.  With Vault configured, select AWS authentication in the `Mesh` object by setting `conf.fromCp.auth.aws`. {{site.mesh_product_name}} will authenticate using the instance or IRSA role available within the environment.
+{{site.mesh_product_name}} also supports AWS Instance Role authentication to Vault. Vault must be configured to accept EC2 or IAM role authentication. See [Vault documentation](https://developer.hashicorp.com/vault/docs/auth/aws) for details.  With Vault configured, select AWS authentication in the `Mesh` object by setting `conf.fromCp.auth.aws`. {{site.mesh_product_name}} will authenticate using the instance or IRSA role available within the environment.
 
 ### Configure Mesh
 
@@ -321,7 +337,7 @@ If you're running in Universal mode, you can also use the [HTTP API][http-api] t
 
 ## Common name
 
-{{site.mesh_product_name}} uses Service Alternative Name with `spiffe://` format to verify secure connection between services. In this case, the common name in the certificate is not used.
+{{site.mesh_product_name}} uses Service Alternative Name with `spiffe://` format to verify secure connection between Services. In this case, the common name in the certificate is not used.
 You may need to set a common name in the certificate, for compliance reasons. To do this, set the `commonName` field in the Vault mTLS backend configuration.
 The value contains the template that will be used to generate the name.
 

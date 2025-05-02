@@ -246,7 +246,7 @@ Golang
 Goroutine
 Goroutine
 gbps
-Grafana
+grafana
 Grafana
 grpc
 grpcbin
@@ -746,6 +746,7 @@ tfvars
 timeframe
 timeframes
 tlds
+tls
 TLSRoute
 TLSRoutes
 toolchain

@@ -27,7 +27,7 @@ rows:
         * `timer`
     nginx: "[`init_worker_by_*`](https://github.com/openresty/lua-nginx-module#init_worker_by_lua_block) "
     protocols: All protocols
-    description: Executed every time the {{ site.base_gateway }} plugin iterator is rebuilt (after changes to configure plugins).
+    description: {% new_in 3.4 %} Executed every time the {{ site.base_gateway }} plugin iterator is rebuilt (after changes to configure plugins).
   - function: "`certificate`"
     phase: "`certificate`"
     nginx: "[`ssl_certificate_by_*`](https://github.com/openresty/lua-nginx-module#ssl_certificate_by_lua_block)"
@@ -130,7 +130,7 @@ rows:
         * `init_worker`
         * `timer`
     nginx: "[`init_worker_by_*`](https://github.com/openresty/lua-nginx-module#init_worker_by_lua_block)"
-    description: Executed every time the {{ site.base_gateway }} plugin iterator is rebuilt (after changes to configure plugins).
+    description: {% new_in 3.4 %} Executed every time the {{ site.base_gateway }} plugin iterator is rebuilt (after changes to configure plugins).
   - function: "`preread`"
     phase: "`preread`"
     nginx: "[`preread_by_*`](https://github.com/openresty/stream-lua-nginx-module#preread_by_lua_block)"
@@ -159,8 +159,3 @@ Note that UDP streams don't have real connections.  {{site.base_gateway}} will c
 packets with the same origin and destination host and port as a single
 connection.  After a configurable time without any packet, the connection is
 considered closed and the `log` function is executed.
-
-{:.info}
-> The `configure` handler was added in {{ site.base_gateway }} 3.5, and has been backported to 3.4 LTS. 
-We are currently looking feedback for this new phase,
-> and there is a slight possibility that its signature might change in a future.

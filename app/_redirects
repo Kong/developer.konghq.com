@@ -24,7 +24,7 @@
 /mesh/networking/hostnamegenerator      /mesh/hostnamegenerator/
 /mesh/networking/meshmultizoneservice   /mesh/meshmultizoneservice/
 /mesh/:version/reference/kuma-cp    /mesh/reference/kuma-cp/
-/mesh/introduction/install/     /mesh/install/
+/mesh/introduction/install/     /mesh/#install-kong-mesh
 /mesh/explore/cli       /mesh/cli/
 /mesh/production/gui    /mesh/kuma-user-interface-gui/
 /mesh/production/dp-config/dpp-on-kubernetes    /mesh/data-plane-kubernetes/

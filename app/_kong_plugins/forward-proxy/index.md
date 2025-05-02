@@ -29,6 +29,10 @@ icon: forward-proxy.png
 categories:
   - traffic-control
 
+tags:
+  - traffic-control
+  - routing
+
 search_aliases:
   - forward-proxy
 ---

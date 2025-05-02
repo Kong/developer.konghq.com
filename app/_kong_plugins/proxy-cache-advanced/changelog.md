@@ -28,6 +28,10 @@ This is a breaking change only if you are upgrading from a {{site.base_gateway}}
 * Added support for integrating with Redis clusters using the `config.redis.cluster_addresses` configuration parameter.
 * The plugin now catches the error when {{site.base_gateway}} connects to Redis SSL port `6379` with `config.ssl=false`.
 
+### ### {{site.base_gateway}} 3.0.x
+* This plugin doesn't store response data in `ngx.ctx.proxy_cache_hit` anymore.
+Logging plugins that need the response data must now read it from `kong.ctx.shared.proxy_cache_hit`.
+
 ### {{site.base_gateway}} 2.8.x
 
 * Added Redis ACL support (Redis v6.0.0+ and Redis Sentinel v6.2.0+).

@@ -7,7 +7,6 @@ content_type: plugin
 publisher: kong-inc
 description: 'Send metrics to StatsD'
 
-
 products:
     - gateway
 
@@ -15,6 +14,9 @@ works_on:
     - on-prem
     - konnect
 
+tags:
+  - analytics
+  - monitoring
 
 topologies:
   on_prem:
@@ -34,15 +36,12 @@ search_aliases:
   - collectd
 ---
 
-
 The StatsD plugin logs [metrics](#metrics) for a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/) to a StatsD server.
-It can also be used to log metrics on the [Collectd](https://collectd.org/)
-daemon by enabling its
+It can also be used to log metrics on the [Collectd](https://collectd.org/) daemon by enabling its
 [StatsD plugin](https://collectd.org/wiki/index.php/Plugin:StatsD).
 
-By default, the plugin sends a packet for each metric it observes. The `udp_packet_size` option
-configures the greatest datagram size the plugin can combine. It should be less than
-65507 according to UDP protocol. Consider the MTU of the network when setting this parameter.
+By default, the plugin sends a packet for each metric it observes. The [`config.udp_packet_size`](/plugins/statsd/reference/#schema--config-udp-packet-size) option configures the greatest datagram size the plugin can combine. 
+It should be less than 65507, according to UDP protocol. Consider the MTU of the network when setting this parameter.
 
 ## Metrics
 
@@ -139,7 +138,7 @@ rows:
     namespace: "`kong.global.unmatched.kong_latency`"
 {% endtable %}
 
-If you enable the `tag_style` configuration for the StatsD Plugin, the following metrics are sent instead:
+If you enable the `tag_style` configuration for the StatsD plugin, the following metrics are sent instead:
 
 {% table %}
 columns:
@@ -199,7 +198,7 @@ See the [Datadog StatsD Tags](https://docs.datadoghq.com/developers/dogstatsd/da
 `metric.name[tagName=val,tag2Name=val2]:0|c`
 See the [SignalFX StatsD](https://github.com/signalfx/signalfx-agent/blob/main/docs/monitors/collectd-statsd.md#adding-dimensions-to-statsd-metrics) documentation for more information.
 
-When the `tag_style` config is enabled, {{site.base_gateway}} uses a filter label, like `service`, `route`, `workspace`, `consumer`, `node`, or `status`, on the metrics tags to see if these can be found. For `shdict_usage` metrics, only `node` and `shdict` are added.
+When [`config.tag_style`](/plugins/statsd/reference/#schema--config-tag-style) is enabled, {{site.base_gateway}} uses a filter label, like `service`, `route`, `workspace`, `consumer`, `node`, or `status`, on the metrics tags to see if these can be found. For `shdict_usage` metrics, only `node` and `shdict` are added.
 
 For example:
 
@@ -207,11 +206,10 @@ For example:
 kong.request.size,workspace=default,route=d02485d7-8a28-4ec2-bc0b-caabed82b499,status=200,consumer=d24d866a-020a-4605-bc3c-124f8e1d5e3f,service=bdabce05-e936-4673-8651-29d2e9eca382,node=c80a9c5845bd:120|c
 ```
 
+### Metric fields
 
+The StatsD plugin can be configured with any combination of [metrics](#metrics), with each entry containing the following fields:
 
-### Metric Fields
-
-The Plugin can be configured with any combination of [Metrics](#metrics), with each entry containing the following fields:
 <!-- vale off -->
 {% table %}
 columns:

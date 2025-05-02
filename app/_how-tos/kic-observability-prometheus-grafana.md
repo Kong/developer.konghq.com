@@ -1,10 +1,12 @@
 ---
-title: Prometheus & Grafana
+title: Monitor metrics with Prometheus and Grafana
 description: "Monitor {{ site.base_gateway }} Prometheus metrics using {{ site.kic_product_name}} and Grafana"
 content_type: how_to
 related_resources:
   - text: KIC Prometheus metrics reference
     url: /kubernetes-ingress-controller/observability/prometheus/
+  - text: Prometheus plugin
+    url: /plugins/prometheus/
 
 permalink: /kubernetes-ingress-controller/observability/prometheus-grafana/
 breadcrumbs:
@@ -26,9 +28,23 @@ works_on:
 
 entities: []
 
+tags:
+  - prometheus
+  - grafana
+  - metrics
+  - monitoring
+
+search_aliases:
+  - Prometheus
+  - Grafana
+
 tldr:
   q: How do I monitor {{ site.base_gateway }} Prometheus metrics using Grafana?
-  a: Deploy a `servicemonitor` Kubernetes resource using the {{ site.base_gateway }} Helm chart, then use a `KongClusterPlugin` to configure the `prometheus` plugin for all services in the cluster.
+  a: Deploy a `servicemonitor` Kubernetes resource using the {{ site.base_gateway }} Helm chart, then use a `KongClusterPlugin` to configure the `prometheus` plugin for all Services in the cluster.
+
+faqs:
+  - q: If I have multiple Data Plane nodes with the Prometheus plugin enabled, does the metrics data reflect the status of a single node or the aggregated status across all nodes?
+    a: Metrics data is reported per-node (each Data Plane) per-subsystem (HTTP or TCP).
 
 prereqs:
   kubernetes:
@@ -78,7 +94,7 @@ kubectl apply -f {{ site.links.web }}/manifests/kic/multiple-services.yaml -n ko
 
 ## Generate traffic
 
-Once the Service and Routes are deployed, it's time to generate some fake traffic. Open a new terminal and run the following command:
+Once the Service and Routes are deployed, it's time to generate some fake traffic. In the same terminal window, run the following command:
 
 ```bash
 while true;
@@ -95,7 +111,7 @@ done
 
 ## Access Grafana
 
-[Grafana](https://grafana.com/) is an observability tool that you can use to observe Prometheus metrics over time. To access Grafana, you will need to `port-forward` the Services:
+[Grafana](https://grafana.com/) is an observability tool that you can use to observe Prometheus metrics over time. To access Grafana, you will need to `port-forward` the Services in a new terminal window:
 
 ```bash
 kubectl -n monitoring port-forward services/prometheus-operated 9090 &

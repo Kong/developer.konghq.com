@@ -51,3 +51,4 @@ kubectl patch -n kong --type json ingress echo -p='[{
     * Server certificate:
     *  subject: CN={{ include.hostname }}
     ```
+    {:.no-copy-code}

@@ -1,7 +1,7 @@
 description: |
   Configure the plugin to rewrite the request path before proxying it to the upstream app/serverless-gateways/index.md:
   
-  This example uses the first capture group from your route in the upstream url.
+  This example uses the first capture group from your route in the upstream URL.
 
   * **Route**: `paths: ['/users/(\d+)']`
   * **Incoming request**: `GET /users/123`

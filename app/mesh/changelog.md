@@ -5,6 +5,17 @@ layout: reference
 description: "{{site.mesh_product_name}} release notes"
 products:
     - mesh
+breadcrumbs:
+    - /mesh/
+
+tags:
+    - release-notes
+
+search_aliases:
+    - features
+    - known issues
+    - bug fixes
+    - changelog
 ---
 
 {% embed CHANGELOG.md %}
