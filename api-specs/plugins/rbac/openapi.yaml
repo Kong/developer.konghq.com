@@ -1,0 +1,545 @@
+components:
+  responses:
+    InvalidAuthCredError:
+      content:
+        application/json:
+          example:
+            message: Unauthorized
+            status: 401
+          schema:
+            $ref: '#/components/schemas/UnauthorizedError'
+      description: Invalid authentication credentials
+    rbac-role-response:
+      content:
+        application/json:
+          examples:
+            New role response body:
+              value:
+                comment: null
+                created_at: 1557532241
+                id: b5c5cfd4-3330-4796-9b7b-6026e91e3ad6
+                is_default: false
+                name: service_reader
+          schema:
+            properties:
+              comment:
+                type: string
+              created_at:
+                type: integer
+              id:
+                type: string
+              is_default:
+                type: boolean
+              name:
+                type: string
+            type: object
+      description: Add a role.
+    rbac-user-response:
+      content:
+        application/json:
+          examples:
+            Returned user:
+              value:
+                data:
+                  - comment: null
+                    created_at: 1557512629
+                    enabled: true
+                    id: f035f120-a95e-4327-b2ae-8fa264601d75
+                    name: doc_lord
+                    user_token: >-
+                      $2b$09$TIMneYcTosdG9WbzRsqcweAS2zote8g6I8HqXAtbFHR1pds2ymsh6
+                    user_token_ident: 88ea3
+                  - comment: null
+                    created_at: 1557522650
+                    enabled: true
+                    id: fa6881b2-f49f-4007-9475-577cd21d34f4
+                    name: doc_knight
+                    user_token: >-
+                      $2b$09$Za30VKAAAmyoB9zF2PNEF.9hgKcN2BdKkptPMCubPK/Ps08lzZjYG
+                    user_token_ident: 4d870
+                next: null
+          schema:
+            properties:
+              data:
+                items:
+                  properties:
+                    comment:
+                      type: string
+                    created_at:
+                      type: integer
+                    enabled:
+                      type: boolean
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    user_token:
+                      type: string
+                    user_token_ident:
+                      type: string
+                  type: object
+                type: array
+              next:
+                type: string
+            type: object
+      description: Example response
+  schemas:
+    UnauthorizedError:
+      properties:
+        message:
+          type: string
+        status:
+          type: integer
+      required:
+        - status
+        - message
+      type: object
+  securitySchemes:
+    adminToken:
+      in: header
+      name: Kong-Admin-Token
+      type: apiKey
+externalDocs:
+  description: Documentation for Kong Gateway and its APIs
+  url: https://docs.konghq.com
+info:
+  contact:
+    email: support@konghq.com
+    name: Kong Inc
+    url: https://konghq.com
+  description: >-
+    OpenAPI 3.0 spec for Kong Gateway's RBAC plugin
+
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: RBAC API specification
+  version: 0.0.1
+openapi: 3.0.0
+paths:
+  /rbac/roles:
+    get:
+      description: List all roles.
+      operationId: get-rbac-roles
+      responses:
+        '200':
+          $ref: '#/components/responses/rbac-role-response'
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: List Roles
+      tags:
+        - rbac
+    post:
+      description: Add a role.
+      operationId: create-rbac-roles
+      responses:
+        '201':
+          $ref: '#/components/responses/rbac-role-response'
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: Add a Role
+      tags:
+        - rbac
+  /rbac/roles/{nameOrId}:
+    delete:
+      description: Delete a role.
+      operationId: delete-rbac-roles-name_or_id
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: Delete a Role
+      tags:
+        - rbac
+    get:
+      description: Retrieve a role by passing the name or UUID as a path parameter.
+      operationId: get-rbac-roles-name_or_id
+      responses:
+        '200':
+          $ref: '#/components/responses/rbac-role-response'
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: Retrieve a Role
+      tags:
+        - rbac
+    parameters:
+      - description: The RBAC role name or UUID.
+        in: path
+        name: nameOrId
+        required: true
+        schema:
+          type: string
+    patch:
+      description: Updates a role.
+      operationId: update-rbac-roles-name_or_id
+      responses:
+        '200':
+          $ref: '#/components/responses/rbac-role-response'
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: Update a Role
+      tags:
+        - rbac
+    put:
+      description: |
+        If the entity exists, it updates the role with the new payload.
+        If not, it creates a new role with the provided data.
+      operationId: create-rbac-roles-name_or_id
+      responses:
+        '200':
+          $ref: '#/components/responses/rbac-role-response'
+        '201':
+          description: Created
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: Update or Create a Role
+      tags:
+        - rbac
+  /rbac/roles/{nameOrId}/endpoints:
+    get:
+      description: Lists all of a role's associated endpoint permissions.
+      operationId: get-rbac-roles-name_or_id-endpoints
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      properties:
+                        actions:
+                          items:
+                            type: string
+                          type: array
+                        created_at:
+                          type: integer
+                        endpoint:
+                          type: string
+                        negative:
+                          type: boolean
+                        role:
+                          properties:
+                            id:
+                              type: string
+                          type: object
+                        role_source:
+                          default: local
+                          description: The origin of the RBAC user role.
+                          enum:
+                            - local
+                            - idp
+                          type: string
+                        workspace:
+                          type: string
+                      type: object
+                    type: array
+                type: object
+          description: OK
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: List Role Endpoint Permissions
+      tags:
+        - rbac
+    parameters:
+      - description: The RBAC role name or UUID.
+        in: path
+        name: nameOrId
+        required: true
+        schema:
+          type: string
+    post:
+      description: >
+        Add a role endpoint permission for the specified endpoint. Permissions
+        can use exact matches or wildcards (`*`), which can represent one
+        segment of a path.
+      operationId: create-rbac-roles-name_or_id-endpoints
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                actions:
+                  description: Actions permitted for this endpoint.
+                  items:
+                    type: string
+                  type: array
+                comment:
+                  description: A comment describing the RBAC permission object.
+                  type: string
+                endpoint:
+                  description: The endpoint associated with this permission.
+                  type: string
+                negative:
+                  description: If true, explicitly disallows actions tied to this endpoint.
+                  type: boolean
+                workspace:
+                  description: The workspace associated with this permission.
+                  type: string
+              type: object
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                properties:
+                  actions:
+                    items:
+                      type: string
+                    type: array
+                  created_at:
+                    type: integer
+                  endpoint:
+                    type: string
+                  negative:
+                    type: boolean
+                  role:
+                    properties:
+                      id:
+                        type: string
+                    type: object
+                  workspace:
+                    type: string
+                type: object
+          description: Created
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: Add a Role Endpoint Permission
+      tags:
+        - rbac
+  /rbac/roles/{nameOrId}/endpoints/{workspaceNameOrId}/{endpoint}:
+    delete:
+      description: Delete a specific role endpoint permission.
+      operationId: delete-rbac-roles-name_or_id-endpoints-workspace_name_or_id-endpoint
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: Delete a Role Endpoint Permission
+      tags:
+        - rbac
+    get:
+      description: Retrieve a specific role endpoint permission.
+      operationId: get-rbac-roles-name_or_id-endpoints-workspace_name_or_id-endpoint
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  actions:
+                    items:
+                      type: string
+                    type: array
+                  created_at:
+                    type: integer
+                  endpoint:
+                    type: string
+                  negative:
+                    type: boolean
+                  role:
+                    properties:
+                      id:
+                        type: string
+                    type: object
+                  workspace:
+                    type: string
+                type: object
+          description: OK
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: Retrieve a Role Endpoint Permission
+      tags:
+        - rbac
+    parameters:
+      - description: The RBAC role name or UUID.
+        in: path
+        name: nameOrId
+        required: true
+        schema:
+          type: string
+      - description: The workspace name or UUID.
+        in: path
+        name: workspaceNameOrId
+        required: true
+        schema:
+          type: string
+      - description: The endpoint associated with this permission.
+        in: path
+        name: endpoint
+        required: true
+        schema:
+          type: string
+    patch:
+      operationId: create-rbac-roles-name_or_id-endpoints-workspace_name_or_id-endpoint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                actions:
+                  description: Actions permitted for this endpoint.
+                  items:
+                    type: string
+                  type: array
+                negative:
+                  description: If true, explicitly disallows actions tied to this endpoint.
+                  type: boolean
+              type: object
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  actions:
+                    items:
+                      type: string
+                    type: array
+                  created_at:
+                    type: integer
+                  endpoint:
+                    type: string
+                  negative:
+                    type: boolean
+                  role:
+                    properties:
+                      id:
+                        type: string
+                    type: object
+                  workspace:
+                    type: string
+                type: object
+          description: OK
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: Update a Role Endpoint Permission
+      tags:
+        - rbac
+  /rbac/users:
+    get:
+      description: >-
+        List all users.
+
+
+        Note: RBAC users associated with admins aren't listed with `GET
+        /rbac/users`. Instead, use `GET /admins` to list all admins.
+      operationId: get-rbac-users
+      responses:
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: List Users
+      tags:
+        - rbac
+    post:
+      description: Add a User
+      operationId: create-rbac-users
+      responses:
+        '200':
+          $ref: '#/components/responses/rbac-user-response'
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: Add a User
+      tags:
+        - rbac
+  /rbac/users/{nameOrId}:
+    delete:
+      description: Delete a user.
+      operationId: delete-rbac-users-name_or_id
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: Delete a User
+      tags:
+        - rbac
+    get:
+      description: Retrieve a user by passing a name or ID in the path.
+      operationId: get-rbac-users-name_or_id
+      responses:
+        '200':
+          $ref: '#/components/responses/rbac-user-response'
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: Retrieve a User
+      tags:
+        - rbac
+    parameters:
+      - description: The RBAC username or UUID.
+        in: path
+        name: nameOrId
+        required: true
+        schema:
+          type: string
+    patch:
+      description: Update a user. Users are unable to update their own roles.
+      operationId: update-rbac-users-name_or_id
+      responses:
+        '200':
+          $ref: '#/components/responses/rbac-user-response'
+        '401':
+          $ref: '#/components/responses/InvalidAuthCredError'
+      summary: Update a User
+      tags:
+        - rbac
+security:
+  - adminToken: []
+servers:
+  - description: Default Admin API URL
+    url: '{protocol}://{hostname}:{port}{path}'
+    variables:
+      hostname:
+        default: localhost
+        description: Hostname for Kong's Admin API
+      path:
+        default: /
+        description: Base path for Kong's Admin API
+      port:
+        default: '8001'
+        description: Port for Kong's Admin API
+      protocol:
+        default: http
+        description: Protocol for requests to Kong's Admin API
+        enum:
+          - http
+          - https
+tags:
+  - description: >
+      Kong Gateway's RBAC feature is configurable through Kong's Admin API or
+      using Kong Manager.
+
+      <br><br>
+
+      There are four basic entities involving RBAC:
+
+      <br><br>
+
+      - User: The entity interacting with the system. Can be associated with
+      zero, one, or more roles. For example: The user `bob` has the token
+      `1234`.
+
+      - Role: Set of permissions (`role_endpoint` and `role_entity`). Has a name
+      and can be associated with zero, one, or more permissions. For example:
+      The user `bob` is associated with the role `developer`.
+
+      - `role_source`: The origin of the RBAC user role. Specifies where the
+      user role is defined, either locally or through an identity provider
+      (IdP).
+
+      - `role_endpoint`: A set of enabled or disabled actions. For example: The
+      role `developer` has one `role_endpoint` and reads and writes to
+      `/routes`.
+
+      - `role_entity`: A set of enabled or disabled actions. For example: The
+      role `developer` has one `role_entity` attached to a UUID.
+
+      For the admin role in the default workspace, CRUD actions on /groups and
+      /groups/* endpoints are disallowed. 
+
+      For the workspace-admin role in non-default workspaces, CRUD actions on
+      /groups and /groups/* endpoints are disallowed.
+    name: rbac
+
