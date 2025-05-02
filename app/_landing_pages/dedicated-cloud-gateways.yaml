@@ -134,7 +134,7 @@ rows:
               icon: /assets/icons/logs.svg
               cta:
                 text: See supported regions
-                url: /konnect-geos/
+                url: /konnect-platform/konnect-geos/
       - blocks:
           - type: card
             config:
