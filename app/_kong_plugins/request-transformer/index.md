@@ -32,9 +32,14 @@ categories:
 search_aliases:
   - request-transformer
 
+tags:
+  - transformations
+
 related_resources:
   - text: Request Transformer Advanced plugin
     url: /plugins/request-transformer-advanced/
+  - text: AI Request Transformer
+    url: /plugins/ai-request-transformer/
 ---
 
 {% include plugins/request-response-transformer/request-transformer-description.md %}

@@ -4,7 +4,7 @@ title: Basic Auth
 name: Basic Auth
 publisher: kong-inc
 content_type: plugin
-description: Secure services and routes with Basic Authentication
+description: Secure Services and Routes with Basic Authentication
 tags:
     - authentication
 
@@ -32,6 +32,7 @@ categories:
 
 search_aliases:
   - basic-auth
+  - username and password auth
 
 faqs:
   - q: I updated my Consumer's username, why doesn't their password or basic authentication work anymore?
@@ -39,12 +40,14 @@ faqs:
   - q: How do I delete a Consumer credential?
     a: You can delete a specific credential by sending a `DELETE` request to `/{workspace_id_or_name}/consumers/{consumer_id_or_name}/basic-auth/{credentials_id}`.
   - q: I'm migrating from {{site.base_gateway}} to {{site.konnect_short_name}} and using `deck gateway dump`, will this also dump my basic auth credentials?
-    a: No. The basic auth credentials are stored in the database as hashed values. When you dump the configuration with deck, it will retrieve these hashed values, not the original plain-text passwords. Since there is currently no way to extract the initial plain-text values of the basic auth credentials due to how they are stored, you will need to manually set the passwords for basic auth after dumping the configuration or by directly setting up the password in {{site.konnect_short_name}}. There is an ongoing feature request to change the behavior of how basic auth credentials are handled during migrations to make this process more seamless in the future.
+    a: No. The basic auth credentials are stored in the database as hashed values. When you dump the configuration with decK, it will retrieve these hashed values, not the original plain-text passwords. Since there is currently no way to extract the initial plain-text values of the basic auth credentials due to how they are stored, you will need to manually set the passwords for basic auth after dumping the configuration or by directly setting up the password in {{site.konnect_short_name}}.
   - q: Why should I use the Basic Authentication plugin instead of other authentication plugins, like Key Authentication?
-    a: You should basic authentication when you need a simple way to authenticate and security isn't a concern. For example, you could use this to connect internal server networks or as a verification on open data. Use Key Authentication or another authentication plugin if you require additional security.
----
+    a: You should use basic authentication when you need a simple way to authenticate and security isn't a concern. For example, you could use this plugin to connect internal server networks or as a verification on open data. Use Key Authentication or another authentication plugin if you require additional security.
 
-## Overview
+related_resources:
+  - text: Basic Auth how-to guides
+    url: /how-to/?query=basic-auth
+---
 
 The [Basic Authentication](https://datatracker.ietf.org/doc/html/rfc7617 ) plugin enforces username and password authentication for [Consumers](/gateway/entities/consumer/) when making a request to a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/). Consumers represent a developer or an application consuming the service application. 
 
@@ -58,7 +61,7 @@ Then, you can enable the plugin on a Gateway Service, Route, or globally. When a
 
 ### Using multiple authentication plugins
 
-You can use the Basic Authentication plugin along with other authentication plugins. This allows clients  to use different authentication methods to access a given Gateway Service or Route. 
+You can use the Basic Authentication plugin along with other authentication plugins. This allows clients to use different authentication methods to access a given Gateway Service or Route. 
 
 The authentication plugins can be configured to always require authentication or only perform authentication if the Consumer wasn't already authenticated. For more information, see [Using multiple authentication methods](/gateway/authentication/#using-multiple-authentication-methods).
 
@@ -84,7 +87,7 @@ rows:
     description: "When the [Session](/plugins/session/) plugin is enabled in conjunction with an authentication plugin, it runs before credential verification. If no session is found, then the authentication plugin runs again and credentials are checked normally. If the credential verification is successful, then the Session plugin creates a new session for usage with subsequent requests."
   - use_case: "Rate limit unauthenticated and authenticated users differently"
     description: "You can configure a given Service to allow both authenticated and anonymous access. You might use this configuration to grant access to anonymous users with a low rate limit and grant access to authenticated users with a higher rate limit using the [Rate Limiting](/plugins/rate-limiting/) plugin."
-  - use_case: "[Use basic authentication for Kong Manager](/how-to/enable-basic-auth-on-kong-manager/)"
+  - use_case: "Use basic authentication for Kong Manager"
     description: "If you want users to authenticate before logging in to Kong Manager, you can configure basic authentication for the GUI."
 {% endtable %}
 <!--vale on-->

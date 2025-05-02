@@ -5,10 +5,16 @@ content_type: reference
 layout: reference
 products:
   - mesh
+breadcrumbs:
+  - /mesh/
 
 tags:
   - cert-manager
   - mtls
+  - certificates
+
+search_aliases:
+  - Kubernetes cert-manager
 
 works_on:
   - on-prem
@@ -16,7 +22,17 @@ works_on:
 related_resources:
   - text: "mTLS Policy"
     url: /mesh/overview/
+  - text: "HashiCorp Vault CA"
+    url: /mesh/vault/
+  - text: "ACM Private CA Policy"
+    url: /mesh/acm-private-ca-policy/
+  - text: Certificate Authority rotation
+    url: /mesh/ca-rotation/
+  - text: "{{site.mesh_product_name}} enterprise features"
+    url: /mesh/enterprise/
 ---
+
+You can use Kubernetes cert-manager as an mTLS backend for issuing Data Plane certificates in {{site.mesh_product_name}}.
 
 ## Supported mTLS backends
 
@@ -35,7 +51,7 @@ In `certmanager` mTLS mode, {{site.mesh_product_name}} communicates with a local
 You configure {{site.mesh_product_name}} to reference the `Issuer` using standard Kubernetes resources.
 The backend communicates with cert-manager within the Kubernetes cluster.
 
-## Configuration
+## Kubernetes cert-manager configuration
 
 To configure cert-manager in {{site.mesh_product_name}}:
 
@@ -76,7 +92,7 @@ See `issuerRef` in the [cert-manager API](https://cert-manager.io/docs/reference
 
 If `caCert` is not provided, {{site.mesh_product_name}} assumes that the issuer sets `status.CA` on `CertificateRequests`.
 
-If `secret` is used, it must be [a {{site.mesh_product_name}} Secret](/mesh/secrets/).
+If `secret` is used, it must be a {{site.mesh_product_name}} Secret.
 
 
 Apply the configuration with `kubectl apply -f [..]`.

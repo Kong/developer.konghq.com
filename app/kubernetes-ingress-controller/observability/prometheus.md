@@ -12,6 +12,11 @@ breadcrumbs:
   - index: kubernetes-ingress-controller
     section: Observability
 
+tags:
+  - metrics
+  - prometheus
+  - monitoring
+
 products:
   - kic
 
@@ -22,6 +27,12 @@ works_on:
 related_resources:
   - text: Prometheus and Grafana guide
     url: /kubernetes-ingress-controller/observability/prometheus-grafana/
+  - text: Prometheus plugin
+    url: /plugins/prometheus/
+
+faqs:
+  - q: If I have multiple Data Plane nodes with the Prometheus plugin enabled, does the metrics data reflect the status of a single node or the aggregated status across all nodes?
+    a: Metrics data is reported per-node (each Data Plane) per-subsystem (HTTP or TCP).
 
 ---
 

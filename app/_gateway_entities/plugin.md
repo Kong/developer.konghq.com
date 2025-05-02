@@ -11,6 +11,8 @@ related_resources:
     url: /plugins/
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
+  - text: Custom plugins
+    url: /custom-plugins/
 
 tools:
     - admin-api
@@ -18,6 +20,10 @@ tools:
     - deck
     - kic
     - terraform
+
+search_aliases:
+  - add-on
+  - extension
 
 schema:
     api: gateway/admin-ee
@@ -37,9 +43,8 @@ works_on:
 {{site.base_gateway}} is a Lua application designed to load and execute modules. These modules, called plugins, allow you to add more features to your implementation.
 
 Kong provides a set of standard Lua plugins that get bundled with {{site.base_gateway}} and {{site.konnect_short_name}}.
-The set of plugins you have access to depends on your license tier.
 
-You can also develop custom plugins, adding your own custom functionality to {{site.base_gateway}}.
+You can also develop [custom plugins](/custom-plugins/), adding your own custom functionality to {{site.base_gateway}}.
 
 ## Custom plugins
 
@@ -56,8 +61,8 @@ These PDKs are sets of functions that a plugin can use to facilitate interaction
 
 To start creating your own plugins, review the [Getting Started documentation](/custom-plugins/get-started/set-up-plugin-project/), or see the following references:
 
-* Plugin Development Kit reference
-* Other Language Support
+* [Plugin Development Kit reference](/gateway/pdk/reference/)
+* [Custom plugins reference](/custom-plugins/reference/)
 
 ## How do plugins work?
 
@@ -78,7 +83,7 @@ Each plugin can run globally, or be scoped to some combination of the following:
 * [Consumer Groups](/gateway/entities/consumer-group/)
 
 Using scopes, you can customize how {{site.base_gateway}} handles functions in your environment, 
-either before a request is sent to your backend services or after it receives a response.
+either before a request is sent to your upstream services or after it receives a response.
 For example, if you apply a plugin to a single [**Route**](/gateway/entities/route/), 
 that plugin will only trigger when a request matches the Route's specific path.
 
@@ -215,6 +220,8 @@ In some cases, this might be compensated for when you run rate limiting before a
 {{site.base_gateway}} tries to catch basic mistakes, but it can't detect all potentially dangerous configurations.
 
 ## Protocols
+
+Plugins support different protocols.
 
 ### Supported protocols by plugin
 

@@ -2,42 +2,57 @@
 {% if prereqs.expand_accordion == false %}
   {% assign default_accordion = '' %}
 {% endif %}
+
+
+{% assign shouldRenderWorksOn = true %}
+{% if page.series and page.series.position > 1 %}
+{% assign shouldRenderWorksOn = false %}
+{% endif %}
+
 <div class="flex flex-col accordion prerequisites" {{ default_accordion }}data-multiple="false" data-test-id="prereqs">
 
   {% assign inline_before = prereqs.inline | where: "position", "before" %}
   {% for prereq in inline_before %}
   <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-{% include prereqs/inline.md prereq=prereq %}
+    {% include prereqs/inline.md prereq=prereq %}
   </div>
   {% endfor %}
 
-    {% assign shouldRenderWorksOn = true %}
-    {% if page.series and page.series.position > 1 %}
-    {% assign shouldRenderWorksOn = false %}
-    {% endif %}
+  {% if page.works_on contains 'konnect' and shouldRenderWorksOn %}
+    {% unless page.products contains 'gateway' or page.products contains 'ai-gateway' %}
+      <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
+        {% include prereqs/products/konnect-auth-only.md tier=include.tier %}
+      </div>
+    {% endunless %}
+  {% endif %}
 
-    {% if page.works_on contains 'konnect' and shouldRenderWorksOn %}
-      {% unless page.products contains 'gateway' or page.products contains 'ai-gateway' %}
-        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item  last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
-          {% include prereqs/products/konnect-auth-only.md tier=include.tier %}
-        </div>
-      {% endunless %}
-    {% endif %}
+  {% for prereq in prereqs.cloud %}
+  {% assign prereq_include = 'prereqs/cloud/' | append: prereq[0] | append: '.md' %}
+  {% assign config = prereq[1] %}
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+    {% include {{ prereq_include }} config=config products=prereqs.products %}
+  </div>
+  {% endfor %}
 
-    {% if prereqs.kubernetes.gateway_api %}
-    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-      {% include prereqs/kubernetes/gateway-api.md config=prereqs.kubernetes %}
-    </div>
-    {% endif %}
+  {% if prereqs.kubernetes.gateway_api %}
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+    {% include prereqs/kubernetes/gateway-api.md config=prereqs.kubernetes %}
+  </div>
+  {% endif %}
 
-    {% if prereqs.kubernetes.prometheus %}
-    <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-      {% include prereqs/kubernetes/prometheus.md config=prereqs.kubernetes %}
-    </div>
-    {% endif %}
+  {% if prereqs.kubernetes.prometheus %}
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+    {% include prereqs/kubernetes/prometheus.md config=prereqs.kubernetes %}
+  </div>
+  {% endif %}
 
+  {% if prereqs.kubernetes.keycloak %}
+  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+    {% include prereqs/kubernetes/keycloak.md config=prereqs.kubernetes.keycloak %}
+  </div>
+  {% endif %}
 
-    {% unless prereqs.skip_product == true %}
+  {% unless prereqs.skip_product == true %}
     {% if page.products and shouldRenderWorksOn %}
       {% if page.products contains 'gateway' or page.products contains 'ai-gateway' %}
         {% if page.works_on contains 'konnect' %}
@@ -53,26 +68,19 @@
 
       {% for product in prereqs.products %}
         <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-  {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
-  {% include {{ product_include }} tier=include.tier prereqs=prereqs %}
+          {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
+          {% include {{ product_include }} tier=include.tier prereqs=prereqs %}
         </div>
       {% endfor %}
     {% endif %}
-
   {% endunless %}
-
-  {% if prereqs.kubernetes.keycloak %}
-  <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-    {% include prereqs/kubernetes/keycloak.md config=prereqs.kubernetes.keycloak %}
-  </div>
-  {% endif %}
 
   {% for tool in prereqs.tools %}
   {% assign tool_include = 'prereqs/tools/' | append: tool | append: '.md' %}
   {% capture tool_include_exists %}{% include_exists tool_include %}{% endcapture %}
   {% if tool_include_exists == 'true' %}
     <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-{% include {{ tool_include }} %}
+      {% include {{ tool_include }} %}
     </div>
   {% endif %}
   {% endfor %}
@@ -80,14 +88,14 @@
   {% if prereqs.entities? %}
     <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
       {% assign prereq_path = "prereqs/entities/" | append: page.products[0] | append: ".md" %}
-{% include {{ prereq_path }} data=prereqs.data %}
+      {% include {{ prereq_path }} data=prereqs.data %}
     </div>
   {% endif %}
 
   {% assign inline = prereqs.inline | where: "position", empty %}
   {% for prereq in inline %}
   <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-{% include prereqs/inline.md prereq=prereq %}
+    {% include prereqs/inline.md prereq=prereq %}
   </div>
   {% endfor %}
 </div>

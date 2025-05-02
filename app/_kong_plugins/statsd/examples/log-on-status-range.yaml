@@ -1,16 +1,17 @@
-description: 'Log requests in a status range '
+description: 'Log requests in a status range to a StatsD server.'
 
-title: 'Enable Metrics'
+title: 'Enable StatsD metrics'
 
 weight: 900
 
 requirements:
  - "A [Gateway Service](/gateway/entities/service/) and [Route](/gateway/entities/route/) to log metrics from"
+ - "[A StatsD server](https://github.com/statsd/statsd)"
 
 
 config: 
   host: ${host}
-  port: ${port}
+  port: 8125
   allow_status_codes:
   - 200-205
   - 400-499
@@ -22,9 +23,6 @@ variables:
   host:
     value: $HOST
     description: The IP address or hostname of StatsD server to send data to.
-  port:
-    value: $PORT
-    description: The port of StatsD server to send data to.
 tools:
   - deck
   - admin-api

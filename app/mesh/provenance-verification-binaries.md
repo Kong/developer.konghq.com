@@ -1,11 +1,14 @@
 ---
-title: "Verify Build Provenance for {{site.mesh_product_name}} Binaries"
+title: "Verify build provenance for {{site.mesh_product_name}} binaries"
 description: "Verify the build provenance of signed {{site.mesh_product_name}} binary artifacts."
 content_type: reference
 layout: reference
 products:
   - mesh
-
+breadcrumbs:
+  - /mesh/
+min_version:
+  mesh: '2.8'
 tags:
   - slsa
   - provenance
@@ -25,8 +28,7 @@ related_resources:
     url: /mesh/sbom/
 ---
 
-
-Starting with 2.8.0, {{site.mesh_product_name}} produces build provenance for binary artifacts, which can be verified using `slsa-verifier` with attestations published to a Docker Hub repository.
+{{site.mesh_product_name}} produces build provenance for binary artifacts, which can be verified using `slsa-verifier` with attestations published to a Docker Hub repository.
 
 This guide provides steps to verify build provenance for signed {{site.mesh_product_name}} binary artifacts with an example leveraging optional annotations for increased trust.
 
@@ -48,7 +50,7 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
 
 * The GitHub owner is case-sensitive (`Kong/kong-mesh` vs `kong/kong-mesh`).
 
-## Example
+## Verify build provenance
 
 
 1. Change to directory where the `security-assets.tar.gz` and compressed binaries are downloaded
@@ -60,7 +62,7 @@ Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's O
       --print-provenance \
       --provenance-path 'kong-mesh.intoto.jsonl' \
       --source-uri 'github.com/Kong/kong-mesh' \
-      --source-tag '{{page.version}}' \
-      kong-mesh-{{page.version}}-*-*.tar.gz
+      --source-tag '{{site.data.mesh_latest.version}}' \
+      kong-mesh-{{site.data.mesh_latest.version}}-*-*.tar.gz
    ```
 

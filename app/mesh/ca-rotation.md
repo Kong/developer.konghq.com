@@ -5,27 +5,36 @@ content_type: reference
 layout: reference
 products:
   - mesh
+breadcrumbs:
+  - /mesh/
 
 tags:
   - mtls
   - certificates
 
+search_aliases:
+  - mTLS
+
 related_resources:
-  - text: "Vault Policy"
+  - text: "HashiCorp Vault CA"
     url: /mesh/vault/
   - text: "Kubernetes cert-manager CA policy"
     url: /mesh/cert-manager/
+  - text: "ACM Private CA Policy"
+    url: /mesh/acm-private-ca-policy/
   - text: "Multi-zone Authentication"
     url: /mesh/multi-zone-authentication/
   - text: "mTLS Policy"
     url: /mesh/policies/mutual-tls/
+  - text: "{{site.mesh_product_name}} enterprise features"
+    url: /mesh/enterprise/
 ---
 
 
 {{site.mesh_product_name}} lets you provide secure communication between applications with mTLS. You can change the mTLS backend with 
 Certificate Authority rotation, to support a scenario such as migrating from the builtin CA to a Vault CA.
 
-You can define many backends in the `mtls` section of the Mesh configuration. The Data PLane proxy is configured to support 
+You can define many backends in the `mtls` section of the Mesh configuration. The Data Plane proxy is configured to support 
 certificates signed by the CA of each defined backend. However, the proxy uses only one certificate, specified by the `enabledBackend` 
 tag. For example:
 
@@ -71,7 +80,7 @@ mtls:
 {% endnavtab %}
 {% endnavtabs %}
 
-## Usage
+## CA rotation usage
 
 Start with mTLS enabled and a `builtin` backend named `ca-1`:
 
@@ -131,8 +140,8 @@ continuing too soon.
               secret: ca-2-key
     ```
 
-    After the configuration finishes, all Data PLane proxies support CAs from `ca-1` and `ca-2`.
-    But the Data PLane proxy certificates are still signed by the CA from `ca-1`.
+    After the configuration finishes, all Data Plane proxies support CAs from `ca-1` and `ca-2`.
+    But the Data Plane proxy certificates are still signed by the CA from `ca-1`.
 
 2.  Change `enabledBackend` to the new backend:
 

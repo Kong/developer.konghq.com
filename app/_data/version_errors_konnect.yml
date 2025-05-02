@@ -298,7 +298,7 @@ messages:
     Resolution: |
       Please upgrade Kong Gateway to version `3.0.0.0` or above.
     DocumentationURL: |
-      [StatsD Advanced plugin](/plugins/statsd-advanced/)
+      N/A
   - ID: D127
     Severity: error
     Description: |

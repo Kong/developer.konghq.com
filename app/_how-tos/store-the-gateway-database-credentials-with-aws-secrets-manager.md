@@ -58,9 +58,6 @@ prereqs:
 
 cleanup:
   inline:
-    - title: Clean up AWS resources
-      include_content: cleanup/third-party/aws
-      icon_url: /assets/icons/aws.svg
     - title: Clean up Konnect environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg

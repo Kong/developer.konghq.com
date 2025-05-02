@@ -7,7 +7,6 @@ content_type: plugin
 publisher: kong-inc
 description: 'Detect and block bots or custom clients'
 
-
 products:
     - gateway
 
@@ -33,6 +32,8 @@ categories:
 search_aliases:
   - bot-detection
 
+tags:
+  - security
 
 ---
 

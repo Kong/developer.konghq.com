@@ -33,6 +33,10 @@ categories:
 
 search_aliases:
   - azure-functions
+
+tags:
+  - serverless
+  - azure
 ---
 
 This plugin invokes [Azure Functions](https://azure.microsoft.com/en-us/services/functions/).

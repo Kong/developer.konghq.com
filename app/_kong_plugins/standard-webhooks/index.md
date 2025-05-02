@@ -5,7 +5,7 @@ name: 'Standard Webhooks'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Validate that incoming webhooks adhere to the Standard Webhooks specification, which Kong contributes to'
+description: 'Validate that incoming webhooks adhere to the Standard Webhooks specification'
 
 
 products:
@@ -38,8 +38,11 @@ categories:
 
 tags:
   - webhook
-  - event-hook
   - traffic-control
+  - validation
+
+search_aliases:
+  - standard webhooks
 ---
 
 The Standard Webhooks plugin lets you validate incoming webhooks using the [Standard Webhooks](https://github.com/standard-webhooks/standard-webhooks) specification. 

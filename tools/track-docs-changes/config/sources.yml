@@ -392,6 +392,24 @@ app/kubernetes-ingress-controller/migrate/credential-kongcredtype-label.md:
 app/_how-tos/kic-verify-upstream-tls.md:
   - app/_src/kubernetes-ingress-controller/guides/security/verify-upstream-tls.md
 
+app/_how-tos/kic-vault-hashicorp.md:
+  - app/_src/kubernetes-ingress-controller/guides/security/kong-vault.md
+app/_how-tos/kic-vault-gcp.md:
+  - app/_src/kubernetes-ingress-controller/guides/security/kong-vault.md
+app/_how-tos/kic-vault-aws.md:
+  - app/_src/kubernetes-ingress-controller/guides/security/kong-vault.md
+
+app/_how-tos/kic-service-healthchecks.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/health-checks.md
+app/kubernetes-ingress-controller/last-known-good-config.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/last-known-good-config.md
+app/kubernetes-ingress-controller/fallback-configuration.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/fallback-config.md
+app/_how-tos/kic-fallback-config-exclude.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/fallback-config.md
+app/_how-tos/kic-fallback-config-backfill.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/fallback-config.md
+  
 # plugins
 app/_kong_plugins/session/changelog.md:
   - app/_hub/kong-inc/session/_changelog.md
@@ -796,8 +814,6 @@ app/_kong_plugins/response-transformer/changelog.md:
   - app/_hub/kong-inc/response-transformer/_changelog.md
 app/_kong_plugins/response-transformer/examples/add-header.yaml:
   - app/_hub/kong-inc/response-transformer/overview/_index.md
-app/_kong_plugins/response-transformer/examples/remove-json-properties.yaml:
-  - app/_hub/kong-inc/response-transformer/overview/_index.md
 app/_kong_plugins/response-transformer-advanced/index.md:
   - app/_hub/kong-inc/response-transformer-advanced/overview/_index.md
 app/_kong_plugins/response-transformer-advanced/examples/remove-nested-json.yaml:
@@ -934,6 +950,11 @@ app/gateway/plugins/datakit.md:
   - app/_src/gateway/kong-enterprise/datakit/index.md
   - app/_src/gateway/kong-enterprise/datakit/examples.md
   - app/_src/gateway/kong-enterprise/datakit/configuration.md
+app/_kong_plugins/statsd/changelog.md:
+  - app/_hub/kong-inc/statsd/_changelog.md
+app/_kong_plugins/statsd/index.md:
+  - app/_hub/kong-inc/statsd/overview/_index.md
+  - app/_hub/kong-inc/statsd-advanced/overview/_index.md
 
 # Konnect
 app/advanced-analytics/explorer.md:
@@ -1361,8 +1382,6 @@ app/mesh/production-usuage-values.md:
 app/mesh/support-policy.md:
   - app/_src/mesh/support-policy.md
 
-
-
 app/_landing_pages/dev-portal.yaml:
   - app/dev-portal/index.md
   - app/dev-portal/portals/index.md
@@ -1552,5 +1571,3 @@ app/insomnia/graphql-queries.md:
   - app/insomnia/graphql-queries.md
 app/insomnia/external-vault.md:
   - app/insomnia/external-vault-integration.md
-
-

@@ -78,10 +78,10 @@ rows:
             config:
               title: Create a service mesh
               description: |
-                Learn how to set up Kong Mesh in {{site.konnect_short_name}}
+                Set up Kong Mesh in {{site.konnect_short_name}}
               icon: /assets/icons/mesh.svg
               cta:
-                url: /how-to/mesh/create-mesh/
+                url: https://cloud.konghq.com/mesh-manager/create-control-plane
       - blocks:
           - type: card
             config:

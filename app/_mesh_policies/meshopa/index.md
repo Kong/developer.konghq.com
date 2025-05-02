@@ -169,7 +169,7 @@ spec:
 
 ### With secrets
 
-Encoding the policy in a [Secret][secrets] provides some security for policies that contain sensitive data.
+Encoding the policy in a Secret provides some security for policies that contain sensitive data.
 
 {% navtabs "with secrets" %}
 {% navtab "Kubernetes" %}
@@ -728,4 +728,3 @@ The following example shows how to deploy and test a sample MeshOPA policy on Ku
 
 <!-- links -->
 [protocols]: /mesh/policies/
-[secrets]: /mesh/secrets/

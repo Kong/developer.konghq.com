@@ -1,19 +1,35 @@
 ---
 title: "ACM Private CA Policy"
-description: "Track all user and system actions in {{site.mesh_product_name}} using the AccessAudit resource and configurable backends"
+description: "Configure {{site.mesh_product_name}} to use Amazon Certificate Manager as a Certificate Authority for mTLS, including setup steps and authentication options."
 content_type: reference
 layout: reference
 products:
     - mesh
+breadcrumbs:
+  - /mesh/
 
 tags:
-  - mesh-policy
+  - amazon-certificate-manager
   - certificates
+  - mtls
+
+search_aliases:
+  - mTLS
+  - ACM
+  - Amazon Certificate Manager
 
 related_resources:
-  - text: "Mesh"
-    url: /mesh/overview/
+  - text: "HashiCorp Vault CA"
+    url: /mesh/vault/
+  - text: "Kubernetes cert-manager CA policy"
+    url: /mesh/cert-manager/
+  - text: Certificate Authority rotation
+    url: /mesh/ca-rotation/
+  - text: "{{site.mesh_product_name}} enterprise features"
+    url: /mesh/enterprise/
 ---
+
+You can use Amazon Certificate Manager as a Certificate Authority (CA) for mTLS with {{site.mesh_product_name}}.
 
 ## Supported mTLS backends
 
@@ -34,7 +50,7 @@ The system uses the AWS default credential chain (environment variables, config 
 
 Certificates are issued and rotated by the Zone Control Plane for each Data Plane proxy.
 
-## Configuration
+## ACM Private CA configuration
 
 To configure ACM Private CA in {{site.mesh_product_name}}:
 
@@ -112,6 +128,6 @@ These configurations can be applied with `kumactl apply -f [..]`.
 
 ## Multi-zone and ACM Private CA
 
-In a multi-zone environment, the global Control Plane provides the `Mesh` to the zone Control Planes. 
+In a [multi-zone](/mesh/mesh-multizone-service-deployment/) environment, the global Control Plane provides the `Mesh` to the zone Control Planes. 
 However, you must make sure that each zone Control Plane can communicate with ACM Private CA. 
 This is because certificates for Data Plane proxies are requested from ACM Private CA by the zone Control Plane, not the global Control Plane.

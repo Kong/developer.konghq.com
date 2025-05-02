@@ -1,21 +1,26 @@
 ---
-title: "Access audit"
+title: "{{site.mesh_product_name}} audit logs"
 description: "Track all user and system actions in {{site.mesh_product_name}} using the AccessAudit resource and configurable backends"
 content_type: reference
 layout: reference
 products:
     - mesh
+breadcrumbs:
+  - /mesh/
 
 tags:
   - geos
   - network
+  - logging
 
 works_on:
   - on-prem
 
 related_resources:
-  - text: "Mesh"
-    url: /mesh/overview/
+  - text: Observability
+    url: /mesh/observability/
+  - text: Role-based access control
+    url: /mesh/rbac/
 ---
 Access auditing allows you to track all actions executed in {{site.mesh_product_name}}, including actions performed by users and by the Control Plane.
 
@@ -52,6 +57,7 @@ spec:
 {% endnavtab %} 
 {% endnavtabs %} 
 
+The following table describes the different parameters you can set when configuring audit logs:
 <!--vale off-->
 {% table %}
 columns:
@@ -75,11 +81,11 @@ rows:
       Either access or access all can be specified.{% endtable %}
 <!--vale on-->
 
-## Default Behavior
+## Default behavior
 If `types` is not specified in an `AccessAudit` rule, all types are audited except those defined in the Control Plane config under `kmesh.access.audit.skipDefaultTypes`. These excluded types include status and insight resources that are managed solely by the Control Plane.
 
 
-#### Other actions
+#### Additional audit log actions
 
 Aside from `CREATE`, `UPDATE`, `DELETE`, `AccessAudit` also lets you audit all actions that are controllable with RBAC:
 * `GENERATE_DATAPLANE_TOKEN` (you can use `mesh` to audit only tokens generated for specific mesh)
@@ -92,7 +98,7 @@ Aside from `CREATE`, `UPDATE`, `DELETE`, `AccessAudit` also lets you audit all a
 
 
 
-## Backends
+## Audit log backends
 
 The backend is external storage that persists audit logs. There is one available backend: a JSON file.
 
@@ -120,6 +126,8 @@ kmesh:
             maxAgeDays: 30
 ```
 
+The following table describes the different parameters you can set when configuring the audit log backend:
+
 <!--vale off-->
 {% table %}
 columns:
@@ -144,6 +152,6 @@ rows:
     description: Maximum number of days to retain old log files based on the timestamp encoded in their filename.{% endtable %}
 <!--vale on-->
 
-## Multi-zone
+## AccessAudit in multi-zone deployments
 
-In a multi-zone setup, `AccessAudit` is not synchronized between the global Control Plane and the zone Control Plane.
+In a [multi-zone](/mesh/mesh-multizone-service-deployment/) setup, `AccessAudit` is not synchronized between the global Control Plane and the zone Control Plane.

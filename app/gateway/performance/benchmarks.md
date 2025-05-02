@@ -55,58 +55,300 @@ The performance tests cover a number of baseline configurations and common use c
 
 {% navtabs "gateway-version" %}
 
+{% navtab "3.10" %}
+
+{% table %}
+columns:
+  - title: Test case
+    key: test
+  - title: Number of Routes and Consumers
+    key: entities
+  - title: Requests per second (RPS)
+    key: rps
+  - title: P99 (ms)
+    key: p99
+  - title: P95 (ms)
+    key: p95
+rows:
+  - test: Kong proxy with no plugins
+    entities: 1 Route, 0 Consumers
+    rps: 127257.3
+    p99: 7.11
+    p95: 4.07
+  - test: Kong proxy with no plugins
+    entities: 100 Routes, 0 Consumers
+    rps: 124402.3
+    p99: 7.39
+    p95: 4.15
+  - test: Rate limit and no auth
+    entities: 1 Route, 0 Consumers
+    rps: 112025.7
+    p99: 8.38
+    p95: 3.89
+  - test: Rate limit and no auth
+    entities: 100 Routes, 0 Consumers
+    rps: 108439.2
+    p99: 8.74
+    p95: 4.10
+  - test: Rate limit and key auth
+    entities: 1 Route, 1 Consumer
+    rps: 97208.2
+    p99: 9.10
+    p95: 4.81
+  - test: Rate limit and key auth
+    entities: 100 Routes, 100 Consumers
+    rps: 91859.1
+    p99: 9.61
+    p95: 5.11
+  - test: Rate limit and basic auth
+    entities: 1 Route, 1 Consumer
+    rps: 92862.9
+    p99: 9.64
+    p95: 5.05
+  - test: Rate limit and basic auth
+    entities: 100 Routes, 100 Consumers
+    rps: 87535.4
+    p99: 10.15
+    p95: 5.54
+{% endtable %}
+
+{% endnavtab %}
+
 {% navtab "3.9" %}
-| Test type                   | Number of Routes/Consumers  | Requests per second (RPS) | P99 (ms) | P95 (ms) |
-| --------------------------- | --------------------------- | ------------------------- | -------- | -------- |
-| Kong proxy with no plugins  | 1 Route, 0 Consumers        | 134940.8                  | 6.79     | 3.70     |
-| Kong proxy with no plugins  | 100 Routes, 0 Consumers     | 130779.5                  | 7.08     | 3.79     |
-| Rate limit and no auth      | 1 Route, 0 Consumers        | 115281.4                  | 8.38     | 3.87     |
-| Rate limit and no auth      | 100 Routes, 0 Consumers     | 111324.6                  | 8.57     | 3.83     |
-| Rate limit and key auth     | 1 Route, 1 Consumer         | 101822.8                  | 9.09     | 4.46     |
-| Rate limit and key auth     | 100 Routes, 100 Consumers   | 96237.6                   | 10.27    | 4.69     |
-| Rate limit and basic auth   | 1 Route, 1 Consumer         | 94680.2                   | 9.58     | 5.04     |
-| Rate limit and basic auth   | 100 Routes, 100 Consumers   | 89378.4                   | 10.20    | 5.37     |
+
+{% table %}
+columns:
+  - title: Test case
+    key: test
+  - title: Number of Routes and Consumers
+    key: entities
+  - title: Requests per second (RPS)
+    key: rps
+  - title: P99 (ms)
+    key: p99
+  - title: P95 (ms)
+    key: p95
+rows:
+  - test: Kong proxy with no plugins
+    entities: 1 Route, 0 Consumers
+    rps: 134940.8
+    p99: 6.79
+    p95: 3.70
+  - test: Kong proxy with no plugins
+    entities: 100 Routes, 0 Consumers
+    rps: 130779.5
+    p99: 7.08
+    p95: 3.79
+  - test: Rate limit and no auth
+    entities: 1 Route, 0 Consumers
+    rps: 115281.4
+    p99: 8.38
+    p95: 3.87
+  - test: Rate limit and no auth
+    entities: 100 Routes, 0 Consumers
+    rps: 111324.6
+    p99: 8.57
+    p95: 3.83
+  - test: Rate limit and key auth
+    entities: 1 Route, 1 Consumer
+    rps: 101822.8
+    p99: 9.09
+    p95: 4.46
+  - test: Rate limit and key auth
+    entities: 100 Routes, 100 Consumers
+    rps: 96237.6
+    p99: 10.27
+    p95: 4.69
+  - test: Rate limit and basic auth
+    entities: 1 Route, 1 Consumer
+    rps: 94680.2
+    p99: 9.58
+    p95: 5.04
+  - test: Rate limit and basic auth
+    entities: 100 Routes, 100 Consumers
+    rps: 89378.4
+    p99: 10.20
+    p95: 5.37
+{% endtable %}
+
 {% endnavtab %}
 
 {% navtab "3.8" %}
-| Test type                   | Number of Routes/Consumers  | Requests per second (RPS) | P99 (ms) | P95 (ms) |
-| --------------------------- | --------------------------- | ------------------------- | -------- | -------- |
-| Kong proxy with no plugins  | 1 Route, 0 Consumers        | 142443.4                  | 6.24     | 3.55     |
-| Kong proxy with no plugins  | 100 Routes, 0 Consumers     | 137561.7                  | 6.36     | 3.58     |
-| Rate limit and no auth      | 1 Route, 0 Consumers        | 120897.4                  | 8.08     | 3.60     |
-| Rate limit and no auth      | 100 Routes, 0 Consumers     | 116867.2                  | 8.51     | 3.78     |
-| Rate limit and key auth     | 1 Route, 1 Consumer         | 105657.4                  | 8.62     | 4.38     |
-| Rate limit and key auth     | 100 Routes, 100 Consumers   | 100047.6                  | 9.12     | 4.45     |
-| Rate limit and basic auth   | 1 Route, 1 Consumer         | 98031.6                   | 10.47    | 5.02     |
-| Rate limit and basic auth   | 100 Routes, 100 Consumers   | 92548.2                   | 9.80     | 5.25     |
+
+{% table %}
+columns:
+  - title: Test case
+    key: test
+  - title: Number of Routes and Consumers
+    key: entities
+  - title: Requests per second (RPS)
+    key: rps
+  - title: P99 (ms)
+    key: p99
+  - title: P95 (ms)
+    key: p95
+rows:
+  - test: Kong proxy with no plugins
+    entities: 1 Route, 0 Consumers
+    rps: 142443.4
+    p99: 6.24
+    p95: 3.55
+  - test: Kong proxy with no plugins
+    entities: 100 Routes, 0 Consumers
+    rps: 137561.7
+    p99: 6.36
+    p95: 3.58
+  - test: Rate limit and no auth
+    entities: 1 Route, 0 Consumers
+    rps: 120897.4
+    p99: 8.08
+    p95: 3.60
+  - test: Rate limit and no auth
+    entities: 100 Routes, 0 Consumers
+    rps: 116867.2
+    p99: 8.51
+    p95: 3.78
+  - test: Rate limit and key auth
+    entities: 1 Route, 1 Consumer
+    rps: 105657.4
+    p99: 8.62
+    p95: 4.38
+  - test: Rate limit and key auth
+    entities: 100 Routes, 100 Consumers
+    rps: 100047.6
+    p99: 9.12
+    p95: 4.45
+  - test: Rate limit and basic auth
+    entities: 1 Route, 1 Consumer
+    rps: 98031.6
+    p99: 10.47
+    p95: 5.02
+  - test: Rate limit and basic auth
+    entities: 100 Routes, 100 Consumers
+    rps: 92548.2
+    p99: 9.80
+    p95: 5.25
+{% endtable %}
+
 {% endnavtab %}
 
 {% navtab "3.7" %}
-| Test type                   | Number of Routes/Consumers  | Requests per second (RPS) | P99 (ms) | P95 (ms) |
-| --------------------------- | --------------------------- | ------------------------- | -------- | -------- |
-| Kong proxy with no plugins  | 1 Route, 0 Consumers        | 137358.8                  | 7.25     | 4.06     |
-| Kong proxy with no plugins  | 100 Routes, 0 Consumers     | 133953.4                  | 7.20     | 4.17     |
-| Rate limit and no auth      | 1 Route, 0 Consumers        | 121737.2                  | 7.69     | 4.01     |
-| Rate limit and no auth      | 100 Routes, 0 Consumers     | 117521.4                  | 8.53     | 4.22     |
-| Rate limit and key auth     | 1 Route, 1 Consumer         | 103777.6                  | 9.43     | 4.39     |
-| Rate limit and key auth     | 100 Routes, 100 Consumers   | 98777.5                   | 9.16     | 4.79     |
-| Rate limit and basic auth   | 1 Route, 1 Consumer         | 97397.6                   | 9.69     | 4.93     |
-| Rate limit and basic auth   | 100 Routes, 100 Consumers   | 92372.6                   | 10.17    | 5.31     |
+
+{% table %}
+columns:
+  - title: Test case
+    key: test
+  - title: Number of Routes and Consumers
+    key: entities
+  - title: Requests per second (RPS)
+    key: rps
+  - title: P99 (ms)
+    key: p99
+  - title: P95 (ms)
+    key: p95
+rows:
+  - test: Kong proxy with no plugins
+    entities: 1 Route, 0 Consumers
+    rps: 137358.8
+    p99: 7.25
+    p95: 4.06
+  - test: Kong proxy with no plugins
+    entities: 100 Routes, 0 Consumers
+    rps: 133953.4
+    p99: 7.20
+    p95: 4.17
+  - test: Rate limit and no auth
+    entities: 1 Route, 0 Consumers
+    rps: 121737.2
+    p99: 7.69
+    p95: 4.01
+  - test: Rate limit and no auth
+    entities: 100 Routes, 0 Consumers
+    rps: 117521.4
+    p99: 8.53
+    p95: 4.22
+  - test: Rate limit and key auth
+    entities: 1 Route, 1 Consumer
+    rps: 103777.6
+    p99: 9.43
+    p95: 4.39
+  - test: Rate limit and key auth
+    entities: 100 Routes, 100 Consumers
+    rps: 98777.5
+    p99: 9.16
+    p95: 4.79
+  - test: Rate limit and basic auth
+    entities: 1 Route, 1 Consumer
+    rps: 97397.6
+    p99: 9.69
+    p95: 4.93
+  - test: Rate limit and basic auth
+    entities: 100 Routes, 100 Consumers
+    rps: 92372.6
+    p99: 10.17
+    p95: 5.31
+{% endtable %}
+
 {% endnavtab %}
 
 {% navtab "3.6" %}
-| Test type                   | Number of Routes/Consumers  | Requests per second (RPS) | P99 (ms) | P95 (ms) |
-| --------------------------- | --------------------------- | ------------------------- | -------- | -------- |
-| Kong proxy with no plugins  | 1 Route, 0 Consumers        | 137850.4                  | 6.25     | 3.82     |
-| Kong proxy with no plugins  | 100 Routes, 0 Consumers     | 132302.8                  | 6.55     | 3.99     |
-| Rate limit and no auth      | 1 Route, 0 Consumers        | 116413.8                  | 7.59     | 4.56     |
-| Rate limit and no auth      | 100 Routes, 0 Consumers     | 111615.8                  | 7.62     | 4.54     |
-| Rate limit and key auth     | 1 Route, 1 Consumer         | 102261.6                  | 8.47     | 5.05     |
-| Rate limit and key auth     | 100 Routes, 100 Consumers   | 96289.6                   | 8.82     | 5.25     |
-| Rate limit and basic auth   | 1 Route, 1 Consumer         | 95297.8                   | 8.75     | 5.66     |
-| Rate limit and basic auth   | 100 Routes, 100 Consumers   | 89777.4                   | 9.34     | 5.89     |
-{% endnavtab %}
 
+{% table %}
+columns:
+  - title: Test case
+    key: test
+  - title: Number of Routes and Consumers
+    key: entities
+  - title: Requests per second (RPS)
+    key: rps
+  - title: P99 (ms)
+    key: p99
+  - title: P95 (ms)
+    key: p95
+rows:
+  - test: Kong proxy with no plugins
+    entities: 1 Route, 0 Consumers
+    rps: 137850.4
+    p99: 6.25
+    p95: 3.82
+  - test: Kong proxy with no plugins
+    entities: 100 Routes, 0 Consumers
+    rps: 132302.8
+    p99: 6.55
+    p95: 3.99
+  - test: Rate limit and no auth
+    entities: 1 Route, 0 Consumers
+    rps: 116413.8
+    p99: 7.59
+    p95: 4.56
+  - test: Rate limit and no auth
+    entities: 100 Routes, 0 Consumers
+    rps: 111615.8
+    p99: 7.62
+    p95: 4.54
+  - test: Rate limit and key auth
+    entities: 1 Route, 1 Consumer
+    rps: 102261.6
+    p99: 8.47
+    p95: 5.05
+  - test: Rate limit and key auth
+    entities: 100 Routes, 100 Consumers
+    rps: 96289.6
+    p99: 8.82
+    p95: 5.25
+  - test: Rate limit and basic auth
+    entities: 1 Route, 1 Consumer
+    rps: 95297.8
+    p99: 8.75
+    p95: 5.66
+  - test: Rate limit and basic auth
+    entities: 100 Routes, 100 Consumers
+    rps: 89777.4
+    p99: 9.34
+    p95: 5.89
+{% endtable %}
+
+{% endnavtab %}
 {% endnavtabs %}
 
 
