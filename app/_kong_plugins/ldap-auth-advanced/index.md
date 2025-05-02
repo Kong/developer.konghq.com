@@ -36,6 +36,8 @@ search_aliases:
 related_resources:
   - text: LDAP Authentication
     url: /plugins/ldap-auth/
+  - text: Kong Manager
+    url: /gateway/kong-manager/
 ---
 
 {% include /plugins/ldap/description.md %}
@@ -58,19 +60,23 @@ provides features not available in the [LDAP Authentication plugin](/plugins/lda
 
 ### LDAP search and `config.bind_dn`
 
-LDAP directory searching is performed during the request/plugin lifecycle. It's
-used to retrieve the fully qualified DN of the user so a bind
-request can be performed with a user's given LDAP username and password. The authenticated user search uses the `config.bind_dn` property. The
-search uses `scope="sub"`, `filter="<config.attribute>=<username>"`, and
-`base_dn=<config.base_dn>`. Here is an example of how it performs the search
-using the `ldapsearch` command line utility:
+LDAP directory searching is performed during the request and plugin lifecycle to retrieve the fully qualified DN of the user. 
+This allows the plugin to bind using the user's LDAP username and password.
+The search uses:
+
+* `scope="sub"`
+
+* `filter="<attribute>=<username>"`
+
+* `base_dn=<base_dn>`
+Here is an example of how it performs the search using the `ldapsearch` command line utility:
 
 ```bash
 ldapsearch -x \
-  -h "<config.ldap_host>" \
-  -D "<config.bind_dn>" \
-  -b "<config.attribute>=<username><config.base_dn>" \
-  -w "<config.ldap_password>"
+  -h "$LDAP_HOST" \
+  -D "$BIND_DN" \
+  -b "$ATTRIBUTE=$USERNAME,$BASE_DN" \
+  -w "$LDAP_PASSWORD"
 ```
 
 ### Using service directory mapping on the CLI

@@ -1,4 +1,4 @@
-description: Configure the plugin to add LDAP authentication with the LDAPS protocol.
+description: 'Configure the plugin to perform LDAP authentication over a secure LDAPS connection.'
 
 title: Authenticate using the LDAPS protocol
 

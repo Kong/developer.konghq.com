@@ -1,11 +1,15 @@
 ---
-title: Environment Variables
+title: Environment variables
 
-description: Set up environment variables to reuse values across multiple requests.
+description: Configure environment variables to reuse values across multiple requests.
 
 content_type: reference
 layout: reference
-
+breadcrumbs: 
+  - /insomnia/
+search_aliases:
+  - env variables
+  - insomnia secrets
 products:
     - insomnia
 
@@ -16,6 +20,8 @@ related_resources:
     url: /insomnia/git-sync/
   - text: Local vault
     url: /insomnia/local-vault/
+  - text: External vault
+    url: /insomnia/external-vault/
 ---
 
 
@@ -58,10 +64,10 @@ You can create as many global environments as you want, so you aren't limited to
 
 If you define the same environment variable across different levels of environments, both at a global environment level as well as on a given collection's environments, the lowest-level value will take priority:
 
-- Global Environment (base) *(highest-level)*
-- Global Environment (Sub-environment)
-- Collection Environment (base)
-- Collection Environment (Sub-environment)
+- Global environment (base) *(highest-level)*
+- Global environment (Sub-environment)
+- Collection environment (base)
+- Collection environment (Sub-environment)
 - Folder-level environment *(lowest-level)*
 
 

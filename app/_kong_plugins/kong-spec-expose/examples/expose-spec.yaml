@@ -1,6 +1,6 @@
-description: 'Expose an OpenAPI spec of an auth-protected upstream service fronted by the {{site.base_gateway}}.'
+description: 'Expose the OpenAPI specification of an upstream service that is auth-protected by {{site.base_gateway}}.'
 
-title: 'Expose spec'
+title: 'Expose OpenAPI spec'
 
 weight: 900
 
@@ -10,7 +10,7 @@ variables:
   spec:
     value: $SPEC_URL
     description: |
-      The spec to allow access to. 
+      The URL of the OpenAPI spec to expose.
       For example, `https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v2.0/json/petstore.json`.
 
 config:

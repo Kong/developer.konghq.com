@@ -27,13 +27,13 @@ source_code_url: https://github.com/Optum/kong-response-size-limiting/
 license_type: Apache-2.0
 ---
 
-The Kong Response Size Limiting plugin lets you block upstream responses where the body is greater than a specific size in megabytes.
+The Kong Response Size Limiting plugin blocks upstream responses with a body size that exceeds a specified limit in megabytes.
 
-If the body is greater than configured size, proxy consumers will receive the HTTP status code 413 and the message body `"Response size limit exceeded"`.
+When a response exceeds the configured size, the client receives an HTTP `413` status code and the message body: `Response size limit exceeded`.
 
 {:.warning}
-> **Note**: This plugin currently accomplishes response limiting by validating the `Content-Length` header on upstream responses.
-If the upstream service lacks the response header, then this plugin will allow the response to pass.
+> **Note**: This plugin enforces limits based on the `Content-Length` header in the upstream response.  
+> If the upstream service does not include this header, the plugin cannot enforce the limit and the response will be allowed.
 
 ## Install the Kong Response Size Limiting plugin
 

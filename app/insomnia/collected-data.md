@@ -2,10 +2,21 @@
 title: Collected data
 
 description: Insomnia collects usage analytics data to help improve the application.
-
+breadcrumbs: 
+  - /insomnia/security
+search_aliases:
+  - usage analytics
 content_type: reference
 layout: reference
-
+related_resources:
+  - text: Security at Insomnia
+    url: /insomnia/security/
+  - text: About version control in Insomnia
+    url: /insomnia/version-control/
+  - text: Storage options
+    url: /insomnia/storage-options/
+  - text: Insomnia concepts
+    url: /insomnia/concepts/
 products:
     - insomnia
 
@@ -108,6 +119,13 @@ faqs:
       Snap installations store user data and environment settings in the following locations:
       * `/var/snap/`: For system-level snap data
       * `~/snap/`: For user-level, versioned snap data
+  - q: Where is my data stored when using Insomnia sync features?
+    a: |
+      The storage location depends on the sync method you're using:
+
+      * **Cloud sync** – Data is stored in Postgres databases hosted in the Google Cloud Platform (GCP) `us-central1` region.
+      * **Git sync** – Data is stored in the underlying storage of your connected source control system (e.g., GitHub, GitLab) and is not managed by Insomnia.
+
 ---
 
 If users are logged into their Insomnia account or if they haven't opted out of analytics in the desktop application, we collect usage data to help improve the application. The usage analytics are collected to evaluate user behavior for the purpose of guiding product decisions.

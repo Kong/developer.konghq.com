@@ -15,7 +15,7 @@ rows:
   - use: Key in query
     example: |
       ```bash
-      curl http://localhost:8000/{proxyPath}?apikey={some_key}
+      curl http://localhost:8000/$PROXY_PATH?apikey=$APIKEY
       ```
     description: |
       To use the key in URL queries, set the configuration parameter 
@@ -24,7 +24,7 @@ rows:
   - use: Key in body
     example: |
       ```bash
-      curl http://localhost:8000/{proxyPath} \
+      curl http://localhost:8000/$PROXY_PATH \
       --data 'apikey: {some_key}'
       ```
     description: |
@@ -34,8 +34,8 @@ rows:
   - use: Key in header
     example: |
       ```bash
-      curl http://kong:8000/{proxy path} \
-      -H 'apikey: {some_key}'
+      curl http://kong:8000/$PROXY_PATH \
+      -H 'apikey: $APIKEY'
       ```
     description: |
       To use the key in a request body, set the configuration parameter 

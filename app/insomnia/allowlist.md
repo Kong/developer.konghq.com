@@ -5,7 +5,11 @@ description: A reference of domains to allowlist to ensure Insomnia is operating
 
 content_type: reference
 layout: reference
-
+breadcrumbs: 
+  - /insomnia/
+search_aliases:
+  - insomnia proxy
+  - insomnia allowlist
 products:
     - insomnia
 
@@ -32,7 +36,7 @@ columns:
     key: description
 rows:
   - domain: insomnia.rest
-    description: Main website for Insomnia.
+    description: Insomnia homepage
   - domain: ai.insomnia.rest
     description: Redirects to https://app.insomnia.rest/ai.
   - domain: ai-helper.insomnia.rest
@@ -81,7 +85,7 @@ Here's an example usage of HTTP or HTTPS proxy:
 http://localhost:8005
 ```
 
-For SOCKS4 or SOCKS5 proxy, one of the following prefixes should be used before the hostname, depending on the version: **socks4://**, **socks4a://**, **socks5://**, **socks5h://**
+For SOCKS4 or SOCKS5 proxy, one of the following prefixes should be used before the hostname, depending on the version: `socks4://`, `socks4a://`, `socks5://`, `socks5h://`
 
 ```bash
 socks5h://localhost:8005

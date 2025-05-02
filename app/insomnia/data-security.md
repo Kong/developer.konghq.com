@@ -1,14 +1,24 @@
 ---
 title: Data security
 
-description: All Insomnia project data is encrypted end-to-end (E2EE).
+description: Learn the options that Insomnia offers to encrypt and store encrypted data.
 
 content_type: reference
 layout: reference
-
+breadcrumbs: 
+  - /insomnia/security/
+search_aliases:
+  - insomnia data policy
+  - insomnia data encryption
 products:
     - insomnia
-
+related_resources:
+  - text: Security at Insomnia
+    url: /insomnia/security/
+  - text: About version control in Insomnia
+    url: /insomnia/version-control/
+  - text: Insomnia concepts
+    url: /insomnia/concepts/
 faqs:
   - q: How is data encrypted?
     a: All data is encrypted using randomly generated 256 bit symmetric keys for use with AES-GCM-256 (Galois Counter Mode).

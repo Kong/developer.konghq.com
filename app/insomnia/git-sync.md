@@ -9,26 +9,19 @@ layout: concept
 products:
     - insomnia
 breadcrumbs:
-  - /insomnia/
+  - /insomnia/storage-options/
 
 
 related_resources:
-  - text: Security at Insomnia
-    url: /insomnia/security/
   - text: Configure git sync
     url: /how-to/synchronize-with-git/
   - text: Storage options
     url: /insomnia/storage-options/
   - text: Cloud sync
     url: /insomnia/cloud-sync/
-  - text: Scratch pad
-    url: /insomnia/scratch-pad/
   - text: Local vault
     url: /insomnia/local-vault/
-  - text: SSO
-    url: /insomnia/sso/
-  - text: About version control in Insomnia
-    url: /insomnia/version-control/
+
 
 faqs:
   - q: Should I use Git sync or cloud sync?

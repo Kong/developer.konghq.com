@@ -1,8 +1,11 @@
 description: |
-  Starting in {{site.base_gateway}} 3.10, the Kafka Upstream plugin supports sending messages to multiple client-defined Kafka topics by using a query parameter that contains a list of target topic names. 
-  To prevent client requests from sending messages to arbitrary topics, you can also define a topic allowlist.
-  A client can use the `topic-list` query argument to send the message to multiple topics, including any topics in the  `allowed_topic` list, as well as the default topic defined in the `topic` field:
-  `curl 'http://localhost:8000/kafka?topic-list=my-topic,topic1'`
+  As of {{site.base_gateway}} 3.10, the Kafka Upstream plugin supports sending messages to multiple Kafka topics specified by the client through a query parameter. 
+  To control which topics clients can target, you can configure an allowlist of permitted topic names.
+  
+  Clients can use the `topic-list` query parameter to send a message to one or more topics. These can include topics listed in the `allowed_topic` configuration, as well as the default topic specified in the `topic` field.
+
+  Example:
+  `curl http://localhost:8000/kafka?topic-list=my-topic,topic1`
 
 title: 'Send messages to multiple topics'
 

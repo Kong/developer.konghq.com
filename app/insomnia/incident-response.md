@@ -5,10 +5,15 @@ description: We monitor the security of our products and applications through va
 
 content_type: reference
 layout: reference
-
+breadcrumbs:
+  - /insomnia/
 products:
     - insomnia
-
+related_resources:
+  - text: SBOM
+    url: /insomnia/sbom/
+  - text: Collected data
+    url: /insomnia/collected-data/
 faqs:
   - q: Does Insomnia have any compliance certifications?
     a: Not at the moment.
