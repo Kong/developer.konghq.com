@@ -1,5 +1,5 @@
 ---
-title: "Kong Manager Configuration"
+title: "Kong Manager configuration"
 content_type: reference
 layout: reference
 
@@ -75,7 +75,7 @@ This example uses the default Kong Manager path and URL.
 {:.info}
 > **Note:** If you run the [{{site.base_gateway}} quickstart script](https://get.konghq.com/quickstart), Kong Manager is automatically enabled.
 
-To verify that Kong Manager is running, access it on port `8002` at the default URL: [http://localhost:8002/workspaces](http://localhost:8002/workspaces)
+To verify that Kong Manager is running, access it on port `8002` at the default URL: [http://localhost:8002/workspaces](http://localhost:8002/workspaces).
 
 
 ## Multiple domains {% new_in 3.9 %}

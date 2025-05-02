@@ -7,7 +7,9 @@ products:
     - service-catalog
     - gateway
 
-
+tags:
+  - integrations
+  - swaggerhub
 
 breadcrumbs:
   - /service-catalog/
@@ -15,7 +17,7 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: The SwaggerHub integration lets you connect SwaggerHub API specs directly to your Service Catalog Services.
+description: The SwaggerHub integration lets you connect SwaggerHub API specs directly to your Service Catalog services.
 related_resources:
   - text: "Service Catalog"
     url: /service-catalog/
@@ -27,7 +29,7 @@ The SwaggerHub integration lets you connect SwaggerHub API specs directly to you
 
 ## Prerequisites
 
-You need a SwaggerHub API key to authenticate your SwaggerHub account with {{site.konnect_short_name}}.
+You need a [SwaggerHub API key](https://swagger.io/docs/specification/v3_0/authentication/api-keys/) to authenticate your SwaggerHub account with {{site.konnect_short_name}}.
 
 ## Authenticate the SwaggerHub integration
 

@@ -1,5 +1,7 @@
-description: |
-  Write a jq request program. In this example, this simple jq program takes the name `James Dean` in the request and rewrites it to `John Doe`.
+description: Write a jq request program using the jq plugin.
+extended_description: |
+  Write a jq request program. 
+  In this example, this simple jq program takes the name `James Dean` in the request and rewrites it to `John Doe`.
 
 title: 'Write a jq request program'
 

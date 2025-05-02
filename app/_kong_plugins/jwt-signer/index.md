@@ -1,12 +1,11 @@
 ---
-title: '{{site.base_gateway}} JWT Signer'
-name: '{{site.base_gateway}} JWT Signer'
+title: 'JWT Signer'
+name: 'JWT Signer'
 
 content_type: plugin
 
 publisher: kong-inc
 description: 'Verify and sign one or two tokens in a request'
-
 
 products:
     - gateway
@@ -24,6 +23,9 @@ topologies:
 icon: jwt-signer.png
 
 categories:
+  - authentication
+
+tags:
   - authentication
 
 search_aliases:
@@ -120,15 +122,17 @@ and published without revealing their secrets.
 
 ## Allow your upstream service to verify {{site.base_gateway}}-issued tokens
 
-You can give your upstream service the `http://localhost:8001/jwt-signer/jwks/kong` URL for it to verify {{site.base_gateway}}-issued tokens. The response is a standard
-JWKS endpoint response. The `kong` suffix in the URI is the one that you can specify
+You can give your upstream service the [`/jwt-signer/jwks/kong`](/plugins/jwt-signer/api/#/paths/jwt-signer-jwks-JwtSignerJwks/get) URL for it to verify {{site.base_gateway}}-issued tokens. The response is a standard
+JWKS endpoint response. 
+
+The `kong` suffix in the URI is a default value. You can change it with
 with [`config.access_token_issuer`](/plugins/jwt-signer/reference/#schema--config-access-token-issuer) or [`config.channel_token_issuer`](/plugins/jwt-signer/reference/#schema--config-channel-token-issuer).
 
 You can also make a loopback to this endpoint by routing the {{site.base_gateway}} proxy to this URL.
-Then, you can use an authentication plugin to protect access to this endpoint,
+Then, you can use an [authentication plugin](/plugins/?category=authentication) to protect access to this endpoint,
 if needed.
 
-The plugin automatically reloads or regenerates missing JWKS if it can't
+The JWT Signer plugin automatically reloads or regenerates missing JWKS if it can't
 find cached ones. The plugin also tries to reload JWKS if it can't verify
 the signature of the original access token or channel token, such as when
 the original issuer has rotated its keys and signed with the new one that is not
@@ -136,11 +140,13 @@ found in {{site.base_gateway}} cache.
 
 ## Rotate signing token Keys
 
-Sometimes you might want to rotate the keys {{site.base_gateway}} uses for signing tokens specified in
-[`config.access_token_keyset`](/plugins/jwt-signer/reference/#schema--config-access-token-keyset) and [`config.channel_token_keyset`](/plugins/jwt-signer/reference/#schema--config-channel-token-keyset), or perhaps
+Sometimes you might want to rotate the Keys {{site.base_gateway}} uses for signing tokens specified in
+[`config.access_token_keyset`](/plugins/jwt-signer/reference/#schema--config-access-token-keyset) and [`config.channel_token_keyset`](/plugins/jwt-signer/reference/#schema--config-channel-token-keyset), or
 reload tokens specified in [`config.access_token_jwks_uri`](/plugins/jwt-signer/reference/#schema--config-access-token-jwks-uri) and
-[`config.channel_token_jwks_uri`](/plugins/jwt-signer/reference/#schema--config-channel-token-jwks-uri). {{site.base_gateway}} stores and uses at most two set of Keys:
-**current** and **previous**. If you want {{site.base_gateway}} to forget the previous keys, you need to
+[`config.channel_token_jwks_uri`](/plugins/jwt-signer/reference/#schema--config-channel-token-jwks-uri). 
+
+{{site.base_gateway}} stores and uses at most two set of Keys:
+**current** and **previous**. If you want {{site.base_gateway}} to forget the previous Keys, you need to
 rotate Keys **twice**, as it effectively replaces both current and previous Key Sets
 with newly generated tokens or reloaded tokens if the Keys were loaded from
 an external URI.

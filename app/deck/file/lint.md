@@ -1,6 +1,6 @@
 ---
 title: deck file lint
-description: Validate your decK configuration file against predefined rules
+description: Validate your decK configuration file against predefined rules.
 
 content_type: reference
 layout: reference
@@ -17,8 +17,12 @@ breadcrumbs:
   - /deck/file/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: vacuum linting rules
+    url: https://quobix.com/vacuum/rules/
+
+tags:
+  - declarative-config
+  - linting
 ---
 
 `deck file lint` is a flexible JSON/YAML linter that allows you to build rules to validate any file in these formats.
@@ -32,9 +36,11 @@ There are a few key concepts to understand for linting with decK:
 
 For a complete list of available rules, see the [vacuum](https://quobix.com/vacuum/rules/) documentation.
 
-## Example
+## deck file lint example
 
-{{ site.base_gateway }} Services are defined in the `services` block in the decK file. Services support a number of configuration values including a protocol field which specifies the communication protocol used between the gateway and the upstream Service. To ensure this traffic is secure, you may want to validate that only `https` protocols are used. Here is a sample Ruleset file containing a single Rule that accomplishes this.
+{{ site.base_gateway }} Services are defined in the `services` block in the decK file. Services support a number of configuration values including a protocol field which specifies the communication protocol used between the gateway and the upstream Service. To ensure this traffic is secure, you may want to validate that only `https` protocols are used. 
+
+Here is a sample Ruleset file containing a single Rule that accomplishes this:
 
 ```yaml
 rules:
@@ -79,6 +85,7 @@ Failures: 1
 
 [error][7:15] Ensure https usage in Kong GW Services: `http` does not match the expression `^https$`
 ```
+{:.no-copy-code}
 
 Modifying the declarative configuration as follows resolves this violation:
 
@@ -106,16 +113,19 @@ Result:
 ```
 0
 ```
+{:.no-copy-code}
 
 The command results in a `0` (Success) return code. In situations where violations are detected, a non-zero return code is emitted allowing you to abort automated processes and help prevent problematic configurations from leaking into your production codebase and systems.
 
 ## Common patterns
 
+The following sections define some common linting patterns.
+
 ### Ensure that configuration files contain `select_tags`
 
 [`select_tags`](/deck/gateway/tags/#select-tags) allows you to segment your configuration so that it can be managed as multiple, independent configurations.
 
-This linting rule ensures that every configuration file has `select_tags` defined.
+This linting rule ensures that every configuration file has `select_tags` defined:
 
 ```yaml
 rules:

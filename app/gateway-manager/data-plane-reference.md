@@ -4,9 +4,7 @@ content_type: reference
 layout: reference
 description: | 
     Manage Data Plane nodes in {{site.konnect_short_name}}, including platform support, proxy access, version upgrades, certificate renewal, required parameters, and custom metadata labels.
-
 products:
-    # - gateway-manager
     - gateway
 works_on:
     - konnect
@@ -46,7 +44,7 @@ faqs:
 
 related_resources:
   - text: Gateway Manager
-    url: /gateway-manager/reference/
+    url: /gateway-manager/
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
   - text: Serverless Gateways
@@ -55,6 +53,7 @@ related_resources:
 tags:
   - data-plane
   - data-plane-nodes
+  - gateway-manager
 
 breadcrumbs:
   - /gateway-manager/
@@ -87,6 +86,43 @@ rows:
     platforms: Linux, Kubernetes
 {% endtable %}
 
+## Choose a Data Plane node hosting strategy
+
+The following table can help you decide which Data Plane node strategy to use based on your use case:
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Use case
+    key: use_case
+  - title: Data Plane node strategy
+    key: strategy
+  - title: Solution
+    key: solution
+rows:
+  - use_case: Reducing latency is important to your organization.
+    strategy: "[Dedicated Cloud Gateways](/dedicated-cloud-gateways/)"
+    solution: |
+      Supports [multiple regions](/konnect-platform/konnect-geos/) on AWS and Azure.
+  - use_case: Your organization operates in an industry with strict data protection and privacy requirements.
+    strategy: "[Dedicated Cloud Gateways](/dedicated-cloud-gateways/)"
+    solution: Using the private gateway option, Kong provisions a private network load balancer and only exposes the IP address in the UI.
+  - use_case: Your organization needs high availability with zero downtime when upgrading Data Plane nodes.
+    strategy: "[Dedicated Cloud Gateways](/dedicated-cloud-gateways/)"
+    solution: |
+      There's no downtime when upgrading your Data Plane nodes. Additionally, you can pre-warm your cluster by specifying the number of requests per second so that the first requests don’t have to wait for the infrastructure to scale up.
+  - use_case: You have infrastructure in multiple clouds.
+    strategy: "[Dedicated Cloud Gateways](/dedicated-cloud-gateways/)"
+    solution: Dedicated Cloud Gateways allows you to run a multi-cloud solution that allows you to standardize API operations across the board to reduce complexity and increase agility.
+  - use_case: "You need _very_ rapid provisioning for experimentation and sandbox use cases."
+    strategy: "[Serverless Gateways](/serverless-gateways/)"
+    solution: "Serverless Gateways offer sub-minute provisioning times and enable rapid iteration and development lifecycles."
+  - use_case: "You use a cloud provider (other than AWS or Azure) for hosting, or don't want to host in the cloud because of organizational policy."
+    strategy: Self-managed
+    solution: |
+      You can deploy self-managed data plane nodes on macOS, Windows, Linux (Docker), or Kubernetes.
+{% endtable %}
+<!--vale on-->
 
 ## Forward proxy support
 

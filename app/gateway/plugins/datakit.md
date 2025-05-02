@@ -43,9 +43,6 @@ min_version:
 tags:
   - transformations
   - tech-preview
-
-prereqs:
-  skip_product: true
 ---
 
 The {{site.base_gateway}} Datakit is a plugin that allows you to interact with third-party APIs. 
@@ -61,10 +58,10 @@ It allows you to create an API workflow, which can include:
 
 {:.warning}
 > The Datakit plugin is not available in {{site.base_gateway}} packages by default. 
-Before you configure the plugin, you must enable it:
+Before you can configure the plugin, enable it in one of the following ways:
 > * **Package install:** Set `wasm=on` in [`kong.conf`](/gateway/configuration/#wasm) before starting {{site.base_gateway}}
 > * **Docker:** Set `export WASM=on` in the environment
-> * **Kubernetes:** Set `WASM=on` using the [Custom Plugin](/kubernetes-ingress-controller/custom-plugins/) instructions.
+> * **Kubernetes:** Set `WASM=on` using the [Custom Plugin](/kubernetes-ingress-controller/custom-plugins/) instructions
 
 ## Use cases for Datakit
 
@@ -209,13 +206,13 @@ Make an external API call:
 
 #### `jq` node type
 
-Execution of a JQ script for processing JSON. The JQ script is processed
-using the [jaq](https://lib.rs/crates/jaq) implementation of the JQ language.
+Execution of a jq script for processing JSON. The jq script is processed
+using the [jaq](https://lib.rs/crates/jaq) implementation of the jq language.
 
 ##### Input ports
 
 User-defined. Each input port declared by the user will correspond to a
-variable in the JQ execution context. A user can declare the name of the port
+variable in the jq execution context. A user can declare the name of the port
 explicitly, which is the name of the variable. If a port does not have a given
 name, it will get a default name based on the peer node and port to which it
 is connected, and the name will be normalized into a valid variable name (e.g.
@@ -223,13 +220,13 @@ by replacing `.` to `_`).
 
 ##### Output ports
 
-User-defined. When the JQ script produces a JSON value, that is made available
-in the first output port of the node. If the JQ script produces multiple JSON
+User-defined. When the jq script produces a JSON value, that is made available
+in the first output port of the node. If the jq script produces multiple JSON
 values, each value will be routed to a separate output port.
 
 ##### Supported attributes
 
-* `jq`: the JQ script to execute when the node is triggered.
+* `jq`: the jq script to execute when the node is triggered.
 
 ##### Examples
 
@@ -282,7 +279,7 @@ variable name (e.g. by replacing `.` to `_`).
 ##### Supported attributes
 
 * `template`: the Handlebars template to apply when the node is triggered.
-* `content_type`: if set to a MIME type that matches one of DataKit's
+* `content_type`: if set to a MIME type that matches one of Datakit's
   supported payload types, such as `application/json`, the output payload will
   be converted to that format, making its contents available for further
   processing by other nodes (default is `text/plain`, which produces a raw
@@ -357,7 +354,7 @@ Whether a **get** or **set** operation is performed depends upon the node inputs
 * `content_type`: the MIME type of the property (example: `application/json`)
     * **get**: controls how the value is _decoded_ after reading it.
     * **set**: controls how the value is _encoded_ before writing it. This is
-        usually does not need to be specified, as DataKit can typically infer
+        usually does not need to be specified, as Datakit can typically infer
         the correct encoding from the input type.
 
 ##### Examples
@@ -390,7 +387,7 @@ Get the value of `my.json-encoded.property` and decode it as JSON:
 
 ### Implicit nodes
 
-DataKit defines a number of implicit nodes that can be used without being
+Datakit defines a number of implicit nodes that can be used without being
 explicitly declared. These reserved node names cannot be used for user-defined
 nodes. These are:
 
@@ -444,11 +441,11 @@ according to the type and size of the incoming data.
 
 ## Debugging
 
-DataKit includes support for debugging your configuration.
+Datakit includes support for debugging your configuration.
 
 ### Execution tracing
 
-By setting the `X-DataKit-Debug-Trace` header, DataKit records the execution
+By setting the `X-DataKit-Debug-Trace` header, Datakit records the execution
 flow and the values of intermediate nodes, reporting the output in the request
 body in JSON format.
 

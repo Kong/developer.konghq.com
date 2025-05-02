@@ -1,5 +1,5 @@
 ---
-title: Federated Configuration
+title: Federated configuration with decK
 description: Allow independent teams to manage their own configuration in a distributed way
 
 content_type: reference
@@ -17,8 +17,12 @@ breadcrumbs:
   - /deck/apiops/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: APIOps KongAir example
+    url: /deck/apiops/
+
+tags:
+  - federated-config
+  - declarative-config
 ---
 
 As shown in the [APIOps example](/deck/apiops/), decK enables a completely federated API management process.
@@ -103,7 +107,7 @@ consumers:
 
 ### Platform security
 
-To ensure that the APIs are only accessed by authorized users, the platform team applies a global `key-auth` Plugin:
+To ensure that the APIs are only accessed by authorized users, the platform team applies a global `key-auth` plugin:
 
 ```yaml
 _format_version: "3.0"
@@ -116,9 +120,9 @@ plugins:
 
 ### Rate Limiting
 
-Finally, the platform team wants to add a rate limiting Plugin to the `users` Service to protect the underlying database.
+Finally, the platform team wants to add a rate limiting plugin to the `users` Service to protect the underlying database.
 
-They could work with `team-a` to add the Plugin in the team's configuration file, but the platform team want to be able to change values rapidly based on monitoring data. To enable this, the platform team chooses to layer on the rate limiting configuration independently of `team-a`'s configuration.
+They could work with `team-a` to add the plugin in the team's configuration file, but the platform team want to be able to change values rapidly based on monitoring data. To enable this, the platform team chooses to layer on the rate limiting configuration independently of `team-a`'s configuration.
 
 ```yaml
 _format_version: "3.0"
@@ -135,7 +139,6 @@ plugins:
       minute: 10
 ```
 
-As this configuration uses a different `select_tags` value, it will not be edited by `team-a` when they run `deck gateway sync`. The use of `default_lookup_tags` allows the platform team to reference the `users` Service even though it has different tags.
-
+As this configuration uses a different `select_tags` value, it won't be edited by `team-a` when they run `deck gateway sync`. The use of `default_lookup_tags` allows the platform team to reference the `users` Service even though it has different tags.
 
 The example above shows how multiple application and platform teams can manage their configuration independently. Each application team can focus on routing requests to their Service while the platform team handles security and stability concerns.

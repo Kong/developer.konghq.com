@@ -2,8 +2,8 @@
 title: "Control Plane Groups"
 content_type: reference
 layout: reference
-breadcrumb: 
-  - /control-plane-groups/
+breadcrumbs: 
+  - /gateway-manager/
 products:
     - gateway
 works_on:
@@ -13,9 +13,11 @@ tools:
   - konnect-api
 min_version:
     gateway: '3.5'
+tags:
+  - control-plane-group
+  - gateway-manager
 
 description: A Control Plane Group is a read-only Control Plane that combines configuration from its members, which are standard Control Planes.
-
 
 faqs:
   - q: How is a Control Plane Group different from a standard Control Plane?
@@ -37,7 +39,7 @@ faqs:
     a: This creates a conflict that must be resolved. All entities in a Control Plane Group must have unique names and IDs.
 
   - q: Are there any special behaviors for specific entities in a Control Plane Group?
-    a: Yes. For example, a Consumer's credentials become valid across the group, and Vaults from one Control Plane can be accessed by others in the group. Global Plugins affect the entire group.
+    a: Yes. For example, a Consumer's credentials become valid across the group, and Vaults from one Control Plane can be accessed by others in the group. Global plugins affect the entire group.
 
   - q: How do entity associations work in a Control Plane Group?
     a: Associations by ID are constrained to their originating Control Plane. Associations by string can span multiple member Control Planes.
@@ -77,7 +79,6 @@ related_resources:
 #  - text: "{{site.base_gateway}} debugging"
 #    url: /gateway/debug/
 ---
-
 
 ## What is a Control Plane Group?
 
@@ -121,6 +122,7 @@ flowchart LR
 {% endmermaid %}
 <!--vale on-->
 
+In this diagram:
 * Team Blue configures Control Plane Blue, which is then combined with the configuration from Team Green.
 * The Control Plane Group also contains Control Plane Purple, which is managed by a central platform team.
 * The central platform team manages global plugin configuration in Control Plane Purple, which is added to any configuration that teams Blue and Green provide.
@@ -128,6 +130,7 @@ flowchart LR
 ## How do I create a Control Plane Group?
 
 In {{site.konnect_short_name}}, Control Plane Groups can be created using the [Control Planes API](/api/konnect/control-planes/).
+
 <!--vale off-->
 {% control_plane_request %}
 method: POST
@@ -141,6 +144,7 @@ body:
   cluster_type: CLUSTER_TYPE_CONTROL_PLANE_GROUP
 {% endcontrol_plane_request %}
 <!--vale on-->
+
 ## How do I attach Control Planes to a Control Plane Group?
 
 Once you have a Control Plane Group, you can add Control Planes to the Group using the {{site.konnect_short_name}} UI or [API](/api/konnect/control-planes/v2/#/operations/post-control-planes-id-group-memberships-add).
@@ -159,9 +163,9 @@ body:
 {% endcontrol_plane_request %}
 <!--vale on-->
 
-## Configuring core entities
+## Configuring Gateway entities
 
-There are some special cases and behaviors to note for [core entities](/gateway/entities/) in a Control Plane Group.
+There are some special cases and behaviors to note for [Gateway entities](/gateway/entities/) in a Control Plane Group.
 
 All entities in a Control Plane Group must have unique names and IDs. 
 For example, if two members of a Control Plane Group both have a Service named `example_service`, 
@@ -194,12 +198,12 @@ rows:
     associated: Credential
     type: By ID
   - entity: Consumer
-    associated: Consumer group
+    associated: Consumer Group
     type: By ID
   - entity: Consumer
     associated: ACL group
     type: By string
-  - entity: Consumer groups
+  - entity: Consumer Groups
     associated: Plugin
     type: By string
   - entity: Plugin (Non-Global)
@@ -259,19 +263,17 @@ rows:
 
 {% endtable %}
 
-
-
 ## Control Plane conflicts
 
 When combining configurations from individual Control Planes into a Control Plane Group you may receive conflict errors in {{site.konnect_short_name}}, for example: 
 
 ```sh
 Conflicts have been detected between these Control Planes: 
-<control plane name>
-<control plane name>
+CONTROL-PLANE-EXAMPLE
+CONTROL-PLANE-ANOTHER-EXAMPLE
 ```
 
-The Control Plane won't update a Data Plane configuration until a conflict is resolved. 
+The Control Plane won't update a Data Plane configuration until the conflict is resolved. 
 Review the following table of common issues and potential fixes:
 
 {% table %}

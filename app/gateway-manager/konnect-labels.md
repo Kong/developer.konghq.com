@@ -12,6 +12,7 @@ works_on:
 tags: 
    - labels
    - data-plane
+   - gateway-manager
 search_aliases:
   - data plane labels
 description: Learn about labels in {{site.konnect_short_name}}
