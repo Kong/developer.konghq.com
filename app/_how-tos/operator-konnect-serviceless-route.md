@@ -41,7 +41,6 @@ kind: KongRoute
 apiVersion: configuration.konghq.com/v1alpha1
 metadata:
   name: route-without-service
-  namespace: default
 spec:
   name: route-without-service
   protocols:

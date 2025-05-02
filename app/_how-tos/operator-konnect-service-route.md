@@ -38,6 +38,7 @@ TODO
 
 {% konnect_crd %}
 kind: KongService
+apiVersion: configuration.konghq.com/v1alpha1
 metadata:
   name: service
 spec:
@@ -54,7 +55,6 @@ kind: KongRoute
 apiVersion: configuration.konghq.com/v1alpha1
 metadata:
   name: route-with-service
-  namespace: default
 spec:
   name: route-with-service
   protocols:
@@ -66,3 +66,10 @@ spec:
     namespacedRef:
       name: service
 {% endkonnect_crd %}
+
+## Validation
+
+{% validation kubernetes-resource %}
+kind: KongService
+name: service
+{% endvalidation %}

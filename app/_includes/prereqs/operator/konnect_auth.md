@@ -9,7 +9,7 @@ metadata:
 spec:
   type: token
   token: '$KONNECT_TOKEN'
-  serverURL: us.api.konghq.com' | kubectl apply -f -
+  serverURL: us.api.konghq.com
 {% endkonnect_crd %}
 {% endcapture %}
 

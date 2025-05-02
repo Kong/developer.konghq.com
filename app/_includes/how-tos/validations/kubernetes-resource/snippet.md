@@ -1,4 +1,5 @@
-CHECKING THINGS
+Check that `{{ include.config.type }}` is `{{ include.config.status }}` on the resource:
 
-Kind: {{ include.config.kind }}
-Name: {{ include.config.name }}
+```bash
+kubectl get {% if include.config.namespace %}-n {{ include.config.namespace }} {% endif %}{{ include.config.kind }} {{ include.config.name }} -o=jsonpath='{.status.conditions[?(@.type=="{{ include.config.type }}")]}'
+```

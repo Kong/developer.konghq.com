@@ -19,3 +19,6 @@ validations:
     status_code: 200
 
   - id: kubernetes-resource
+    namespace: kong
+    type: Programmed
+    status: "True"
