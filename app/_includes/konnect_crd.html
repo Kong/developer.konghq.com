@@ -1,0 +1,7 @@
+<div data-deployment-topology="konnect" markdown="1" data-test-step="block">
+```bash
+echo '
+{{ config | escape_env_variables }}
+' | kubectl apply -f -
+```
+</div>
