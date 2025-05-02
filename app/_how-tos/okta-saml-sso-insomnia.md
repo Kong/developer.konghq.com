@@ -1,6 +1,6 @@
 ---
 title: Configure Okta SAML SSO in Insomnia
-
+description: Learn how to secure Insomnia by setting up Single Sign-On with Okta.
 content_type: how_to
 
 products:

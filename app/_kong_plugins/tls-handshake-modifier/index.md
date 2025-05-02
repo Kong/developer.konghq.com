@@ -61,5 +61,5 @@ To improve this situation, {{site.base_gateway}} builds an in-memory map of SNIs
 If you want to restrict the handshake request for client certificates to specific requests, all Routes must have SNIs.
 
 {:.warning}
-> When using the plugin with [expressions routes](/gateway/latest/reference/expressions-language/), 
+> When using the plugin with [expressions routes](/gateway/routing/expressions/), 
 the client certificate will always be requested, even if the routes are configured with SNIs. 

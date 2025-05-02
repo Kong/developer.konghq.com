@@ -121,7 +121,7 @@ private keys in `Certificate` entities and `Consumer` entities' credentials.
 {:.warning}
 > **Warning:** `KongPlugin`'s and `KongClusterPlugin`'s `config` fields are not sanitized. If you have sensitive information
 > in your `KongPlugin`'s `config` field, it will be sent to Konnect as is. To avoid this, use the
-> [KongVault](/kubernetes-ingress-controller/{{page.release}}/reference/custom-resources/#kongvault) resource.
+> [KongVault](/kubernetes-ingress-controller/reference/custom-resources/#kongvault) resource.
 
 ### CombinedServicesFromDifferentHTTPRoutes
 

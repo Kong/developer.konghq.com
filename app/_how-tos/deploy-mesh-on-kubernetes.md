@@ -64,7 +64,7 @@ kubectl apply -f https://raw.githubusercontent.com/kumahq/kuma-counter-demo/mast
 kubectl wait -n kuma-demo --for=condition=ready pod --selector=app=demo-app --timeout=90s
 ```
 
-## Forward Ports
+## Forward ports
 
 Port-forward the service to the namespace on port `5000`:
 
