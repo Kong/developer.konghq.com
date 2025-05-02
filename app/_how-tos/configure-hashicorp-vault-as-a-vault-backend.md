@@ -1,16 +1,17 @@
 ---
 title: Configure HashiCorp Vault as a vault backend
 content_type: how_to
-related_resources:
-  - text: Secrets management
-    url: /gateway/secrets-management/
 description: "Learn how to reference HashiCorp Vault secrets from {{site.base_gateway}}."
 products:
     - gateway
 
 related_resources:
+  - text: Secrets management
+    url: /gateway/secrets-management/
   - text: Store Keyring data in a HashiCorp Vault
     url: /how-to/store-keyring-in-hashicorp-vault/
+  - text: Configure Hashicorp Vault with {{ site.kic_product_name }}
+    url: "/kubernetes-ingress-controller/vault/hashicorp/"
 
 works_on:
     - on-prem

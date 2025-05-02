@@ -11,6 +11,8 @@ related_resources:
     url: /plugins/openid-connect/#authorization
   - text: Consumer authorization in OIDC
     url: /plugins/openid-connect/#consumer-authorization
+  - text: OpenID Connect how tos
+    url: /how-to/?query=openid-connect
 
 plugins:
   - openid-connect
@@ -47,6 +49,8 @@ prereqs:
 tags:
   - authorization
   - openid-connect
+search_aliases:
+  - oidc
 
 description: Configure the OpenID Connect plugin together with Consumers to map Consumers to IdP users.
 

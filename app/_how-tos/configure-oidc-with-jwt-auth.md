@@ -11,6 +11,8 @@ related_resources:
     url: /plugins/openid-connect/#authentication
   - text: JWT auth flow
     url: /plugins/openid-connect/#jwt-access-token-authentication-flow
+  - text: OpenID Connect how tos
+    url: /how-to/?query=openid-connect
 
 plugins:
   - openid-connect
@@ -18,6 +20,7 @@ plugins:
 entities:
   - route
   - service
+  - plugin
 
 products:
   - gateway
@@ -127,7 +130,7 @@ When passing the token in a query string, you don't need to include the `Bearer`
 Copy the token without `Bearer`, and export the value of the header to an environment variable:
 
 ```
-export TOKEN='{your-token-without-bearer-prefix}'
+export TOKEN='YOUR_TOKEN_WITHOUT_BEARER_PREFIX'
 ```
 
 ## Validate the token

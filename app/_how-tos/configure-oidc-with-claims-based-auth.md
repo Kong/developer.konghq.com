@@ -11,6 +11,8 @@ related_resources:
     url: /plugins/openid-connect/#authorization
   - text: Claims-based authorization in OIDC
     url: /plugins/openid-connect/#claims-based-authorization
+  - text: OpenID Connect how tos
+    url: /how-to/?query=openid-connect
 
 plugins:
   - openid-connect
@@ -46,6 +48,8 @@ prereqs:
 tags:
   - authorization
   - openid-connect
+search_aliases:
+  - oidc
 
 description: Configure the OpenID Connect plugin for claims-based authorization.
 
@@ -61,7 +65,7 @@ faqs:
     a: |
 
       For troubleshooting or debugging purposes, you may want to check the scopes being passed in the payload. 
-      The signed JWT access token you receive in the response is composed of three parts, each separated with a dot (`.`) character: `{header}.{payload}.{signature}`. 
+      The signed JWT access token you receive in the response is composed of three parts, each separated with a dot (`.`) character: `$HEADER.$PAYLOAD.$SIGNATURE`. 
       The payload portion contains the scopes information, encoded in base64 format.
       
       Decode the payload in any tool you prefer. For example, you can use base64 and jq:
@@ -148,7 +152,7 @@ You'll see an `Authorization` header in the response.
 Export the value of the header to an environment variable:
 
 ```
-export TOKEN={your-bearer-token}
+export TOKEN=YOUR_BEARER_TOKEN
 ```
 
 ## Validate the token

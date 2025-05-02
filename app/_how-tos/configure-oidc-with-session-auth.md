@@ -11,6 +11,8 @@ related_resources:
     url: /plugins/openid-connect/#authentication
   - text: Session auth workflow
     url: /plugins/openid-connect/#session-authentication-workflow
+  - text: OpenID Connect how tos
+    url: /how-to/?query=openid-connect
 
 plugins:
   - openid-connect
@@ -18,6 +20,7 @@ plugins:
 entities:
   - route
   - service
+  - plugin
 
 products:
   - gateway
@@ -46,6 +49,8 @@ prereqs:
 tags:
   - authentication
   - openid-connect
+search_aliases:
+  - oidc
 
 description: Set up OpenID Connect with session authentication, which stores credentials in a session cookie and reuses the cookie for subsequent access attempts.
 

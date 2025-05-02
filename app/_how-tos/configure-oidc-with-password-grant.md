@@ -11,6 +11,8 @@ related_resources:
     url: /plugins/openid-connect/#authentication
   - text: Password grant workflow
     url: /plugins/openid-connect/#password-grant-workflow
+  - text: OpenID Connect how tos
+    url: /how-to/?query=openid-connect
 
 plugins:
   - openid-connect
@@ -18,6 +20,7 @@ plugins:
 entities:
   - route
   - service
+  - plugin
 
 products:
   - gateway
@@ -46,6 +49,8 @@ prereqs:
 tags:
   - authentication
   - openid-connect
+search_aliases:
+  - oidc
 
 description: Set up OpenID Connect with the password grant, which uses a username and password pair for authentication.
 
@@ -69,7 +74,7 @@ cleanup:
 Using the Keycloak and {{site.base_gateway}} configuration from the [prerequisites](#prerequisites), 
 set up an instance of the OpenID Connect plugin with the password grant.
 
-Enable the OpenID Connect plugin on the `example-service` service:
+Enable the OpenID Connect plugin on the `example-service` Service:
 
 {% entity_examples %}
 entities:

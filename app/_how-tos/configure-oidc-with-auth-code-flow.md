@@ -12,6 +12,8 @@ related_resources:
     url: /plugins/openid-connect/#authentications
   - text: Authorization code workflow
     url: /plugins/openid-connect/#authorization-code-flow
+  - text: OpenID Connect how tos
+    url: /how-to/?query=openid-connect
 
 plugins:
   - openid-connect
@@ -19,6 +21,7 @@ plugins:
 entities:
   - route
   - service
+  - plugin
 
 products:
   - gateway
@@ -47,6 +50,8 @@ prereqs:
 tags:
   - authentication
   - openid-connect
+search_aliases:
+  - oidc
 
 tldr:
   q: How do I use an authorization code to open a session with my identity provider, letting users log in through a browser?

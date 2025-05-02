@@ -11,6 +11,8 @@ related_resources:
     url: /plugins/openid-connect/#authentication
   - text: Kong OAuth2 token authentication workflow
     url: /plugins/openid-connect/#kong-oauth-token-authentication-flow
+  - text: OpenID Connect how tos
+    url: /how-to/?query=openid-connect
 
 plugins:
   - openid-connect
@@ -19,6 +21,7 @@ plugins:
 entities:
   - route
   - service
+  - plugin
 
 products:
   - gateway
@@ -46,6 +49,8 @@ prereqs:
 tags:
   - authentication
   - openid-connect
+search_aliases:
+  - oidc
 
 description: Set up OpenID Connect to verify tokens issued by Kong OAuth 2.0 plugin against an IdP.
 
@@ -66,7 +71,7 @@ cleanup:
 
 ## Create a Consumer with OAuth2 credentials
 
-First, create a Consumer and assign OAuth2 credentials to them. 
+First, create a [Consumer](/gateway/entities/consumer/) and assign OAuth2 credentials to them. 
 We'll use these credentials to generate access tokens.
 
 {% entity_examples %}
@@ -162,7 +167,7 @@ You should see an `access-token` in the response.
 Export the token to an environment variable:
 
 ```
-export ACCESS_TOKEN='{your-access-token}'
+export ACCESS_TOKEN='YOUR_ACCESS_TOKEN'
 ```
 
 ## Validate the access token flow

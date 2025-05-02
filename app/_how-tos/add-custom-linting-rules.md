@@ -2,13 +2,18 @@
 title: Add custom linting rules in Insomnia
 
 content_type: how_to
+description: Learn how to add custom linting rules to your APIs in Insomnia.
 
 products:
 - insomnia
 
 tags:
-- documents
-- linting
+  - documents
+  - linting
+
+related_resources:
+  - text: Design APIs with Insomnia
+    url: /insomnia/design/
 
 
 tldr: 
