@@ -1,11 +1,13 @@
 ---
-title: Enable SAML authentication for {{site.base_gateway}} using Microsoft Entra
+title: Enable SAML authentication using Microsoft Entra
 description: Use the SAML plugin to enable SAML authentication for users configured in Microsoft Entra.
 content_type: how_to
 related_resources:
   - text: Authentication
     url: /gateway/authentication/
 
+breadcrumbs:
+  - /gateway/authentication/
 products:
     - gateway
 
@@ -38,7 +40,7 @@ tools:
 faqs:
   - q: Why is my valid certificate not being accepted?
     a: |
-      Standard certificates contain a header and a footer:
+      There may be an issue with the formatting of the Certificate. Standard certificates contain a header and a footer:
       ```
       -----BEGIN CERTIFICATE-----
       <certificate contents>
@@ -98,9 +100,6 @@ entities:
 
 Enable the [SAML plugin](/plugins/saml/) and provide the information to connect to your SAML application.
 We also need to provide a value for [`config.session_secret`](/plugins/saml/reference/#schema--config-session-secret), which should be a random 32-character string.
-
-{:.warning}
-> For testing purposes, we are 
 
 {% entity_examples %}
 entities:

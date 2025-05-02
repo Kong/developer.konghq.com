@@ -2,7 +2,8 @@
 title: "{{site.base_gateway}} logs"
 content_type: reference
 layout: reference
-
+breadcrumbs:
+  - /gateway/
 products:
     - gateway
 
@@ -10,12 +11,11 @@ min_version:
   gateway: '3.5'
 
 description: See where {{site.base_gateway}} logs are located, the different log levels, and how to configure logs and log levels.
-
+search_aliases:
+  - logging
 related_resources:
   - text: "Secure {{site.base_gateway}}"
     url: /gateway/security/
-#  - text: "{{site.base_gateway}} debugging"
-#    url: /gateway/debug/
   - text: "{{site.base_gateway}} audit logs"
     url: /gateway/audit-logs/
   - text: "{{site.konnect_short_name}} logs"

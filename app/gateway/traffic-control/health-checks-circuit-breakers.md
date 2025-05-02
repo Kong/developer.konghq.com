@@ -9,8 +9,10 @@ products:
 works_on:
   - on-prem
   - konnect
-
-
+search_aliases:
+  - circuit breakers
+breadcrumbs:
+  - /gateway/traffic-control-and-routing/
 
 api_specs:
     - gateway/admin-ee
@@ -149,7 +151,7 @@ The interval between active health checks can be configured separately for healt
 
 {:.info}
 > **Note:** Active health checks only support HTTP/HTTPS Targets. They
-don't apply to Upstreams assigned to services with the protocol attribute set to `tcp` or `tls`.
+don't apply to Upstreams assigned to Services with the protocol attribute set to `tcp` or `tls`.
 
 ### Configure active health checks
 

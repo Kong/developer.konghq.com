@@ -5,9 +5,8 @@ content_type: how_to
 related_resources:
   - text: Authentication
     url: /authentication/
-  - text: Key Auth plugin
-    url: /plugins/key-auth/
-
+breadcrumbs: 
+  - /gateway/authentication/
 products:
     - gateway
 
@@ -93,7 +92,7 @@ headers:
 status_code: 200
 {% endvalidation %}
 
-Sending the wrong API key:
+If you send the wrong API key, the request will fail:
 
 {% validation unauthorized-check %}
 url: /anything
