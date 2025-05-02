@@ -7,7 +7,9 @@ products:
     - service-catalog
     - gateway
 
-
+tags:
+  - integrations
+  - gitlab
 
 breadcrumbs:
   - /service-catalog/

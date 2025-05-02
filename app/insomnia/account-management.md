@@ -5,13 +5,17 @@ description: Learn how to manage your Insomnia account and organization
 
 content_type: reference
 layout: reference
-
+breadcrumbs: 
+  - /insomnia/
 products:
     - insomnia
-
+search_aliases:
+  - insomnia account
 related_resources:
   - text: Incident response
     url: /insomnia/incident-response/
+  - text: Storage
+    url: /insomnia/storage/
 faqs:
   - q: What happens if I forget my Insomnia passphrase?
     a: |

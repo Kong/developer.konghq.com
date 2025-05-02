@@ -1,0 +1,9 @@
+title: All Operator Documentation
+sections:
+  - title: Uncategorized
+    items:
+      - path: /operator/**/*
+    auto_exclude: true
+  - title: Konnect
+    items:
+      - path: /operator/konnect/**/*

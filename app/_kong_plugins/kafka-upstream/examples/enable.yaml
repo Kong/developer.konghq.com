@@ -2,7 +2,7 @@ description: 'Enables the Kafka Upstream plugin'
 
 title: 'Enable the Kafka Upstream plugin'
 
-weight: 900
+weight: 999
 
 requirements: 
  - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running"

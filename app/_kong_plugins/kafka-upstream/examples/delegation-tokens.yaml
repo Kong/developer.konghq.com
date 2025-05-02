@@ -2,7 +2,7 @@ description: 'Use delegated tokens generated in Kafka to authenticate the Kafka 
 
 title: 'Delegated tokens authentication'
 
-weight: 900
+weight: 800
 
 requirements: 
  - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running" 

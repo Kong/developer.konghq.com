@@ -9,7 +9,7 @@ breadcrumbs:
   - /mesh/
 
 tags:
-  - support
+  - support-policy
   - versioning
   - lifecycle
 

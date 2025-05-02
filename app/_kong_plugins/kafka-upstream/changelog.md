@@ -29,8 +29,7 @@ in a vault. References must follow a [specific format](/gateway/secrets-manageme
 
    {:.warning}
    > There's a bug in {{site.base_gateway}} that prevents keyring encryption
-   from working on deeply nested fields, so the `encrypted=true` setting does not
-   currently have any effect in this plugin.
+   from working on deeply nested fields. As a result, the `encrypted=true` setting has no effect in this plugin at this time.
 
 ### {{site.base_gateway}} 2.6.x
 *  The Kafka Log plugin now supports TLS, mTLS, and SASL auth.

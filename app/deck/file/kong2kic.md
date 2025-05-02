@@ -17,8 +17,12 @@ breadcrumbs:
   - /deck/file/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: "{{ site.kic_product_name }}"
+    url: /kubernetes-ingress-controller/
+
+tags:
+  - declarative-config
+  - kubernetes
 ---
 
 The `kong2kic` command converts a {{ site.base_gateway }} declarative configuration file in to Kubernetes CRDs that can be used with the [{{ site.kic_product_name }}](/kubernetes-ingress-controller/).
@@ -31,33 +35,70 @@ Consumers, Consumer Groups, Plugins, and other supported Kong entities are conve
 deck file kong2kic -s kong.yaml -o k8s.yaml
 ```
 
-The following table details how Kong configuration entities will be mapped to Kubernetes manifests:
+The following table details how Kong configuration entities are mapped to Kubernetes manifests:
 
-| decK entity                                                                                       | K8s entity                                                        |
-| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| Service                                                                                           | Service with annotations and KongIngress for upstream section     |
-| Route                                                                                             | Ingress (Ingress API) or HTTPRoute (Gateway API) with annotations |
-| Global Plugin                                                                                     | KongClusterPlugin                                                 |
-| Plugin                                                                                            | KongPlugin                                                        |
-| Auth Plugins <br>(`key-auth`, `hmac-auth`, `jwt`,<br> `basic-auth`, `oauth2`, `acl`, `mtls-auth`) | KongPlugin and Secret with credentials section in KongConsumer    |
-| Upstream                                                                                          | KongIngress or kongUpstreamPolicy                                 |
-| Consumer                                                                                          | KongConsumer                                                      |
-| ConsumerGroup                                                                                     | KongConsumerGroup                                                 |
-| Certificate                                                                                       | kubernetes.io/tls Secret                                          |
-| CA Certificate                                                                                    | generic Secret                                                    |
+<!--vale off-->
+{% table %}
+columns:
+  - title: decK entity
+    key: deck_entity
+  - title: K8s entity
+    key: k8s_entity
+rows:
+  - deck_entity: Service
+    k8s_entity: Service with annotations and KongIngress for upstream section
+  - deck_entity: Route
+    k8s_entity: "Ingress (Ingress API) or HTTPRoute (Gateway API) with annotations"
+  - deck_entity: Global Plugin
+    k8s_entity: KongClusterPlugin
+  - deck_entity: Plugin
+    k8s_entity: KongPlugin
+  - deck_entity: "Auth Plugins (`key-auth`, `hmac-auth`, `jwt`, `basic-auth`, `oauth2`, `acl`, `mtls-auth`)"
+    k8s_entity: KongPlugin and Secret with credentials section in KongConsumer
+  - deck_entity: Upstream
+    k8s_entity: KongIngress or kongUpstreamPolicy
+  - deck_entity: Consumer
+    k8s_entity: KongConsumer
+  - deck_entity: ConsumerGroup
+    k8s_entity: KongConsumerGroup
+  - deck_entity: Certificate
+    k8s_entity: "`kubernetes.io/tls` Secret"
+  - deck_entity: CA Certificate
+    k8s_entity: generic Secret
+{% endtable %}
+<!--vale on-->
 
 ## Configuration options
 
 The table below shows the most commonly used configuration options. For a complete list, run `deck file kong2kic --help`.
 
-| Flag            | Description                                                                                         | Default |
-| --------------- | --------------------------------------------------------------------------------------------------- | ------- |
-| `--class-name`  | Value to use for `"kubernetes.io/ingress.class"` (ingress) and for `"parentRefs.name"` (HTTPRoute). | `kong`  |
-| `--format`      | Output file format: `json` or `yaml`.                                                               | `yaml`  |
-| `--ingress`     | Use Kubernetes Ingress API manifests instead of Gateway API manifests.                              | N/A     |
-| `--kic-version` | Generate manifests for KIC v3 or v2. Possible values are 2 or 3.                                    | `3`     |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Flag
+    key: flag
+  - title: Description
+    key: description
+  - title: Default
+    key: default
+rows:
+  - flag: "`--class-name`"
+    description: |
+      Value to use for `"kubernetes.io/ingress.class"` (ingress) and for `"parentRefs.name"` (HTTPRoute).
+    default: "`kong`"
+  - flag: "`--format`"
+    description: "Output file format: `json` or `yaml`."
+    default: "`yaml`"
+  - flag: "`--ingress`"
+    description: Use Kubernetes Ingress API manifests instead of Gateway API manifests.
+    default: "N/A"
+  - flag: "`--kic-version`"
+    description: Generate manifests for KIC v3 or v2. Possible values are 2 or 3.
+    default: "3"
+{% endtable %}
+<!--vale on-->
 
-## Example
+## kong2kic conversion example
 
 Let's see an example of how the following decK state file is converted to Ingress API Kubernetes
 manifests and Gateway API Kubernetes manifests.

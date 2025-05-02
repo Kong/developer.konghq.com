@@ -1,6 +1,6 @@
-description: 'This example disables using a key in a query parameter for the Key Auth plugin.'
+description: 'This example disables passing the API key through a query parameter when using the Key Auth plugin.'
 
-title: 'Disable a key location'
+title: 'Disable API key in query parameters'
 
 weight: 900
 

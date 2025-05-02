@@ -30,6 +30,8 @@ related_resources:
     url: /plugins/key-auth/
   - text: Enable key authentication on a Gateway Service with {{site.base_gateway}}
     url: /how-to/authenticate-consumers-with-key-auth-enc/
+  - text: Keyring
+    url: /gateway/keyring/
 
 search_aliases:
   - key auth encrypted
@@ -39,12 +41,11 @@ search_aliases:
   - key-auth-enc
 ---
 
-The Key Authentication Encrypted plugin lets you add API encrypted key authentication to a [Gateway Service](/gateway/entities/service/) or a [Route](/gateway/entities/route/).
-[Consumers](/gateway/entities/consumer/) then add their key either in a query string parameter, a header, or a request body to authenticate their requests.
+The Key Authentication Encrypted plugin adds encrypted API key authentication to a [Gateway Service](/gateway/entities/service/) or [Route](/gateway/entities/route/).  
+[Consumers](/gateway/entities/consumer/) can authenticate by including their API key in a query string, header, or request body.
 
-This plugin provides more functionality than the 
-[Key Authentication](/plugins/key-auth/) plugin, 
-letting you store API keys in an encrypted format in the {{site.base_gateway}} datastore.
+This plugin extends the functionality of the [Key Authentication](/plugins/key-auth/) plugin by allowing API keys to be stored in encrypted form within the {{site.base_gateway}} datastore.
+
 
 {:.warning}
 > **Important**: Before configuring this plugin, you must [enable {{site.base_gateway}}'s encryption Keyring](/gateway/keyring/#enable-keyring). 

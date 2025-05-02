@@ -17,8 +17,12 @@ breadcrumbs:
   - /deck/file/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: "{{site.konnect_short_name}} Terraform"
+    url: /terraform/
+
+tags:
+  - terraform
+  - declarative-configuration
 ---
 
 The `kong2tf` command converts a {{ site.base_gateway }} declarative configuration file in to Terraform manifests that can be used with [terraform-provider-konnect](https://github.com/kong/terraform-provider-konnect/).
@@ -66,11 +70,11 @@ variable "control_plane_id" {
 
 If `terraform plan` shows unexpected credential changes, it is due to credentials being encrypted in the {{ site.base_gateway }} database. Re-run `deck file kong2tf` with the `--ignore-credential-changes` flag to add a `lifecycle` block that ignores changes in state.
 
-## Limitations
+## Limitations of kong2tf
 
 If you are using custom plugins, `kong2tf` will generate Terraform resources that don't exist.
 
-For example, if you have a Plugin named `demo-functionality`, `kong2tf` will generate `konnect_plugin_demo_functionality` resources. This resource does not exist in the Terraform provider. To use the `demo-functionality` Plugin, use the `konnect_gateway_custom_plugin` and specify `demo-functionality` in the `name` property:
+For example, if you have a plugin named `demo-functionality`, `kong2tf` will generate `konnect_plugin_demo_functionality` resources. This resource does not exist in the Terraform provider. To use the `demo-functionality` plugin, use the `konnect_gateway_custom_plugin` and specify `demo-functionality` in the `name` property:
 
 ```hcl
 resource "konnect_gateway_custom_plugin" "demo_functionality_global" {
@@ -87,12 +91,22 @@ resource "konnect_gateway_custom_plugin" "demo_functionality_global" {
 
 The table below shows the most commonly used configuration options. For a complete list, run `deck file kong2kic --help`.
 
-| Flag                                      | Description                                                                                                             |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `--generate-imports-for-control-plane-id` | Generate Terraform import statements for the control plane ID.                                                          |
-| `--ignore-credential-changes`             | Enable flag to add a `lifecycle` block to each consumer credential that ignores any changes from local to remote state. |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Flag
+    key: flag
+  - title: Description
+    key: description
+rows:
+  - flag: "`--generate-imports-for-control-plane-id`"
+    description: "Generate Terraform import statements for the Control Plane ID."
+  - flag: "`--ignore-credential-changes`"
+    description: "Enable flag to add a `lifecycle` block to each consumer credential that ignores any changes from local to remote state."
+{% endtable %}
+<!--vale on-->
 
-## Example
+## kong2tf conversion example
 
 {% navtabs "deck-kong2tf" %}
 {% navtab "decK state file "%}

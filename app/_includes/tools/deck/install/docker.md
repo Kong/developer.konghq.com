@@ -12,8 +12,6 @@ As decK will run in a Docker container, you'll need to provide the `--kong-addr`
 deck gateway sync --kong-addr http://host.docker.internal:8001 my_deck_file.yaml
 ```
 
-## Set a default kong-addr
-
 If the `kong-addr` you use is fixed, you can set the `DECK_KONG_ADDR` variable in your alias and omit it from each command:
 
 ```bash

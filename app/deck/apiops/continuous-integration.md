@@ -1,5 +1,5 @@
 ---
-title: Continuous Integration
+title: Continuous integration with decK
 description: Run decK in CI/CD systems
 
 content_type: reference
@@ -16,9 +16,9 @@ breadcrumbs:
   - /deck/
   - /deck/apiops/
 
-related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+tags:
+  - declarative-config
+  - ci/cd
 ---
 
 decK is designed to be run in your CI/CD system. Committing your configuration to a repository (either as OpenAPI specifications or as decK files) allows you to audit all changes to your configuration and roll back easily if needed.

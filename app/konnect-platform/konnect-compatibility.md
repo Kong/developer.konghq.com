@@ -8,9 +8,13 @@ products:
 
 tags:
   - compatibility
+  - support-policy
 
 works_on:
   - konnect
+
+search_aliases:
+  - version support policy
 
 breadcrumbs:
   - /konnect-platform/

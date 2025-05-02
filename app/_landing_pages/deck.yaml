@@ -4,6 +4,8 @@ metadata:
   description: This page is an introduction to decK, a command line tool for API Lifecycle Automation.
   tools:
     - deck
+  tags:
+    - declarative-config
 rows:
   - header:
       type: h1
@@ -24,8 +26,8 @@ rows:
             This enables developers and operations teams to manage APIs from development through deployment, 
             ensuring consistency, reliability, and speed in API integrations.
 
-            decK is one of the many tools you can use to manage {{site.base_gateway}} and {{site.konnect_short_name}}. To learn about other tools, 
-            review our [tools page](/tools/).
+            decK is one of the many tools you can use to manage {{site.base_gateway}} and {{site.konnect_short_name}}. 
+            To learn about other tools, review our [tools page](/tools/).
 
   - header:
       type: h2
@@ -56,7 +58,8 @@ rows:
         blocks:
         - type: text
           config:
-            decK is a tool that works with state files, which describe the configuration of {{site.base_gateway}}. These state files store {{site.base_gateway}}'s configuration in a clear, declarative format, allowing you to manage services, routes, plugins, consumers, and other entities that define how requests are processed and routed through the Gateway.
+            decK is a tool that works with state files, which describe the configuration of {{site.base_gateway}}. These state files store {{site.base_gateway}}'s configuration in a clear, declarative format, 
+            allowing you to manage Services, Routes, Consumers, plugins, and other entities that define how requests are processed and routed through the Gateway.
             decK communicates with {{site.base_gateway}} via the [Admin API](/api/gateway/admin-ee/). 
         - type: text
           config:
@@ -74,7 +77,7 @@ rows:
                     - "**[Terraform](/terraform/)**: Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}} and {{site.base_gateway}}"
                     - "**[KIC](/kubernetes-ingress-controller/)**: Manage ingress traffic and routing rules for your services"
                     - "**[{{site.base_gateway}} Admin API](/api/gateway/admin-ee/)**: Manage on-prem {{site.base_gateway}} entities via an API"
-                    - "**[Control Plane Config API](/api/konnect/control-planes-config/)**: Manage {{site.base_gateway}} entities within {{site.konnect_short_name}} control planes via an API"
+                    - "**[Control Plane Config API](/api/konnect/control-planes-config/)**: Manage {{site.base_gateway}} entities within {{site.konnect_short_name}} Control Planes via an API"
 
   - header:
       text: "What can decK do?"
@@ -143,9 +146,9 @@ rows:
                         - validate
                 - text: |
                     Sync Gateway configs to {{site.konnect_short_name}}
-
-                    _Tip: You can add {{site.konnect_short_name}} flags to any deck command
-                    to target a {{site.konnect_short_name}} control plane instead of a self-managed {{site.base_gateway}}._
+                    
+                    _Tip: You can add {{site.konnect_short_name}} flags to any decK command
+                    to target a {{site.konnect_short_name}} Control Plane instead of a self-managed {{site.base_gateway}}._
 
                   action:
                     type: command
@@ -157,6 +160,11 @@ rows:
                         - kong.yaml
                         - --konnect-control-plane-name
                         - staging
+  - columns:
+    - blocks:
+       - type: text
+         config: |
+          [View all decK gateway commands and options &rarr;](/index/deck/#gateway)
 
   - columns:
       - blocks:
@@ -204,8 +212,8 @@ rows:
     - blocks:
       - type: card
         config:
-          title: Get Started
-          description: Learn how to install decK and use it to configure Kong Gateway
+          title: Get started
+          description: Learn how to install decK and use it to configure {{ site.base_gateway }}.
           cta:
             text: Get started &rarr;
             url: /deck/get-started/
@@ -223,7 +231,7 @@ rows:
       - type: card
         config:
           title: Changelog
-          description: Running list of release notes for decK
+          description: Running list of release notes for decK.
           cta:
             text: decK changelog &rarr;
             url: https://github.com/kong/deck/blob/main/CHANGELOG.md/
@@ -231,7 +239,7 @@ rows:
 
 
   - header:
-      text: "Frequently Asked Questions"
+      text: "Frequently asked questions"
       type: h2
     columns:
       - blocks:
@@ -340,7 +348,7 @@ rows:
 
   - header:
       type: h2
-      text: "Related Resources"
+      text: "Related resources"
     columns:
       - blocks:
         - type: related_resources

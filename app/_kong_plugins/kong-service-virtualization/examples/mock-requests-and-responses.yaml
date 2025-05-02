@@ -1,6 +1,7 @@
 description: |
-  Mock two request and response pairs through the Kong Service Virtualization plugin.
-  You can then trigger these mock requests and responses by passing each test name as a request header: 
+  Use the Kong Service Virtualization plugin to mock two request-response pairs.  
+  Trigger each mock by including the test name in the `X-VirtualRequest` header, for example:  
+  
   `X-VirtualRequest: TestCase1` or `X-VirtualRequest: TestCase2`.
 
 title: 'Mock request and response pairs'

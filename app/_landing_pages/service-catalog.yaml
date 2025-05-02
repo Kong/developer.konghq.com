@@ -1,9 +1,9 @@
 metadata:
-  title: "The Konnect Service Catalog"
+  title: "{{site.konnect_short_name}} Service Catalog"
   content_type: landing_page
   products:
     - service-catalog
-  description: Learn how to track and manage services across your organization with the Konnect Service Catalog.
+  description: Learn how to track and manage services across your organization with the {{site.konnect_short_name}} Service Catalog.
   tags:
     - service-catalog
     - governance
@@ -12,14 +12,15 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "The Konnect Service Catalog"
+      text: "{{site.konnect_short_name}} Service Catalog"
+      sub_text: "A centralized catalog of all services running in your {{site.konnect_short_name}} organization"
   
   - columns:
       - blocks:
           - type: structured_text
             config:
               header:
-                text: "What is the Konnect Service Catalog?"
+                text: "What is the {{site.konnect_short_name}} Service Catalog?"
               blocks:
                 - type: text
                   text: |
@@ -35,7 +36,7 @@ rows:
 
   - header:
         type: h2
-        text: "Explore Key Features"
+        text: "Explore key features"
     columns:
       - blocks:
           - type: card
@@ -45,21 +46,21 @@ rows:
                 Connect external tools like GitHub, PagerDuty, and CI/CD pipelines to map services, dependencies, and metadata.
               icon: /assets/icons/plug.svg
               cta:
-                text: View Integrations
+                text: View integrations
                 url: /service-catalog/integrations/
       - blocks:
           - type: card
             config:
               title: Scorecards
               description: |
-                Monitor compliance, security, and best practices across services using automated Scorecards.
+                Monitor compliance, security, and best practices across services using automated scorecards.
               icon: /assets/icons/data-object.svg
               cta:
-                text: View Scorecards
+                text: View scorecards
                 url: /service-catalog/scorecards/
   - header:
       type: h2
-      text: "Frequently Asked Questions"
+      text: "Frequently asked questions"
     columns:
       - blocks:
           - type: faqs

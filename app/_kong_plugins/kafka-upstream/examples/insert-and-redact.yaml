@@ -1,6 +1,6 @@
-description: 'This function inserts consumer info and redact a sensitive request header by calling the `get_consumer` PDK function and manipulating the request header information.'
+description: 'Uses the `get_consumer` PDK function to add consumer information and remove sensitive data from request headers.'
 
-title: 'Insert consumer info and redact a sensitive request header'
+title: 'Inject consumer info and redact sensitive request headers'
 
 weight: 900
 

@@ -1,6 +1,6 @@
 description: 'Enables mTLS'
 
-title: 'Enable mTLS'
+title: 'Enable mutual TLS (mTLS)'
 
 weight: 900
 

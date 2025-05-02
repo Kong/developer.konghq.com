@@ -27,13 +27,17 @@ topologies:
     - serverless
 
 icon: mocking.png
-
+search_aliases:
+  - API mocking
 related_resources:
   - text: DNS configuration reference
     url: /gateway/network/dns-config-reference/
+  - text: Insomnia mock servers
+    url: /insomnia/mock-servers/
 
 categories:
   - traffic-control
+  - api-design
 
 ---
 
@@ -52,7 +56,7 @@ The Mocking plugin can mock the following responses:
 * **`201`**
 * **`204`**
 
-## Behavioral Headers
+## Behavioral headers
 
 
 Behavioral headers allow you to change the behavior of the Mocking plugin for the individual request without changing the configuration.

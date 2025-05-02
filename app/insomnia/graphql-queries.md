@@ -7,7 +7,12 @@ products:
   - insomnia
 tags:
   - graphql
-
+breadcrumbs:
+  - /insomnia/
+permalink: /insomnia/graphql/
+search_aliases:
+  - schema fetching
+  - insomnia graphql
 faqs:
   - q: How does schema fetching work in Insomnia for GraphQL?
     a: |
@@ -59,7 +64,6 @@ The body includes:
 * `query` (string): Your GraphQL query.
 * `variables` (object): Optional.
 * `operationName` (string): Optional. Populated from the first named query, if it exists.
-
 
 
 ```json

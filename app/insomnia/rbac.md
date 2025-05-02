@@ -5,9 +5,19 @@ description: Insomnia allows admins to scope user access with Role-Based Access 
 
 content_type: reference
 layout: reference
-
+breadcrumbs: 
+    - /insomnia/
 products:
     - insomnia
+related_resources:
+  - text: Storage
+    url: /insomnia/storage/
+  - text: Git sync
+    url: /insomnia/git-sync/
+  - text: Local vault
+    url: /insomnia/local-vault/
+  - text: External vault
+    url: /insomnia/external-vault/
 ---
 
 Insomnia Organizations allows Insomnia Users to share Collections and Environments safely and securely with their colleagues using Insomnia Cloud or Git sync for collaboration.

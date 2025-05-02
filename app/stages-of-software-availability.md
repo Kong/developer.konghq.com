@@ -8,16 +8,27 @@ layout: reference
 
 products:
  - gateway
- - api-ops
  - insomnia
  - kic
  - mesh
+ - service-catalog
+ - dev-portal
+ - advanced-analytics
+
+tags:
+  - support-policy
 
 related_resources:
   - text: Support and maintenance policy
     url: https://konghq.com/legal/kong-support-and-maintenance-policy
-  - text: Version support policy
+  - text: "{{site.base_gateway}} version support policy"
     url: /gateway/version-support-policy/
+  - text: "{{site.mesh_product_name}} version support policy"
+    url: /mesh/support-policy/
+  - text: "{{site.kic_product_name}} version support policy"
+    url: /kubernetes-ingress-controller/support/
+  - text: "{{site.konnect_short_name}} compatibility"
+    url: /konnect-platform/konnect-compatibility/
 ---
 
 ## Tech preview
@@ -47,4 +58,4 @@ If feature documentation doesn't have a tech preview, alpha, or beta label, then
 
 You can depend on GA features in production environments.
 
-Interfaces follow a [structured versioning model](/gateway/version-support-policy/) for any changes.
+Interfaces follow a structured versioning model for any changes. See each product's support policy for details.

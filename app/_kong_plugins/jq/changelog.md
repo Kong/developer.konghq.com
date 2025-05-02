@@ -1,9 +1,11 @@
 ---
 content_type: reference
-
 ---
 
 ## Changelog
+
+### {{site.base_gateway}} 3.10.x
+* Fixed an issue where jq did not work properly with the Proxy Cache Advanced plugin.
 
 ### {{site.base_gateway}} 2.8.x
 

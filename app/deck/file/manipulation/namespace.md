@@ -18,8 +18,15 @@ breadcrumbs:
   - /deck/file/manipulation/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: Route entity
+    url: /gateway/entities/route/
+  - text: Federated configuration with decK
+    url: /deck/apiops/federated-configuration/
+
+tags:
+  - declarative-config
+  - routing
+  - federated-config
 ---
 
 When practicing [federated configuration management](/deck/apiops/federated-configuration/), there is a high chance of endpoint collision where two teams unexpectedly use the same API path.
@@ -33,7 +40,7 @@ By default, the `deck file namespace` command operates on all Routes in a file. 
 The simplest way to prevent collisions is to prefix each API Route with a static path. In this case, all Routes in `/path/to/config` will be exposed under a `/billing` path:
 
 ```bash
-deck file namespace --path-prefix=/billing -s /path/to/config.yaml
+deck file namespace --path-prefix=/billing -s ./config.yaml
 ```
 
 To remain transparent to the backend Services, the added path prefix must be removed from the path before the request is routed to the Service. To remove the prefix, the following approaches are used (in order):

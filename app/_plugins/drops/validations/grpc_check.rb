@@ -8,7 +8,7 @@ module Jekyll
     module Validations
       class GrpcCheck < Base # rubocop:disable Style/Documentation
         def validate_yaml!
-          raise ArgumentError, "Missing `method` in {% validation #{name} %}." unless @yaml.key?('method')
+          raise ArgumentError, "Missing `method` in {% validation #{id} %}." unless @yaml.key?('method')
         end
 
         def konnect_url

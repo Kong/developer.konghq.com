@@ -2,13 +2,15 @@
 title: "Datadog"
 content_type: reference
 layout: reference
+icon: /assets/icons/plugins/datadog.png
 
 products:
     - service-catalog
     - gateway
-    
 
-
+tags:
+  - integrations
+  - datadog
 
 breadcrumbs:
   - /service-catalog/
@@ -16,7 +18,7 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: The Datadog integration lets you connect Datadog entities directly to your Service Catalog Services.
+description: The Datadog integration lets you connect Datadog entities directly to your Service Catalog services.
 discovery_support: true
 bindable_entities: "Datadog Monitor, Datadog Dashboard"
 
@@ -46,10 +48,10 @@ columns:
   - title: Description
     key: description
 rows:
-  - entity: "[Datadog Monitor](https://docs.datadoghq.com/monitors/)"
-    description: Provides visibility into performance issues and outages.
-  - entity: "[Datadog Dashboard](https://docs.datadoghq.com/dashboards/)"
-    description: Provides visibility into the performance and health of systems and applications in your org.
+  - entity: "A direct mapping to a [Datadog Monitor](https://docs.datadoghq.com/monitors/)"
+    description: Provides visibility into performance issues and outages. 
+  - entity: "A direct mapping to a [Datadog Dashboard](https://docs.datadoghq.com/dashboards/)"
+    description: Provides visibility into the performance and health of systems and applications in your organization.
 {% endtable %}
 <!--vale on-->
 

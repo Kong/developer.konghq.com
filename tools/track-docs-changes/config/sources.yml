@@ -1528,11 +1528,6 @@ app/insomnia/rbac.md:
   - /insomnia/security-standards.md
   - /insomnia/signup-and-auth.md
   - /insomnia/data-encryption.md
-app/insomnia/infrastructure-security.md:
-  - /insomnia/security-features.md
-  - /insomnia/security-standards.md
-  - /insomnia/signup-and-auth.md
-  - /insomnia/data-encryption.md
 app/insomnia/collected-data.md:
   - /insomnia/security-features.md
   - /insomnia/security-standards.md

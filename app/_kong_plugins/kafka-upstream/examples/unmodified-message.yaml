@@ -1,4 +1,4 @@
-description: 'You can return the message argument as the return value, so that the function makes no modifications to the default message.'
+description: 'Return a message argument as a return value, so that the function makes no modifications to the default message.'
 
 title: 'Unmodified message'
 

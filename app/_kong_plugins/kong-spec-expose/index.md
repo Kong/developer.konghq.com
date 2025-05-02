@@ -27,7 +27,7 @@ search_aliases:
     - optum
 ---
 
-The Kong Spec Expose plugin lets you expose the OpenAPI Spec (OAS), Swagger, or other specification of auth-protected upstream services fronted by the {{site.base_gateway}}.
+The Kong Spec Expose plugin lets you expose an OpenAPI Spec (OAS), Swagger, or other specification of auth-protected upstream services fronted using {{site.base_gateway}}.
 
 ## How it works
 
