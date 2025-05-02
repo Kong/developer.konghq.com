@@ -20,7 +20,7 @@ related_resources:
     url: /gateway/traffic-control-and-routing/
 
 breadcrumbs:
-  - /gateway/
+  - /gateway/traffic-control-and-routing/
 
 works_on:
   - on-prem

@@ -8,7 +8,13 @@ products:
 
 tags:
 - mock-servers
-
+breadcrumbs:
+  - /insomnia/
+related_resources:
+  - text: Authentication & Authorization in Insomnia
+    url: /insomnia/authentication-authorization/
+  - text: Configure Okta SAML SSO in Insomnia
+    url: /how-to/okta-saml-sso-insomnia/
 tldr:
   q: How do I create a cloud-hosted mock server in Insomnia?
   a: In your Insomnia project, click **Create** > **Mock Server**, then enter a name, select **Cloud Mock** and click **Create**. Once the server is created, click **New Mock Route** and configure the route.

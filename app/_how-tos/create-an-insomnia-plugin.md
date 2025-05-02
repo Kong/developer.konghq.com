@@ -4,7 +4,8 @@ content_type: how_to
 
 products:
 - insomnia
-
+breadcrumbs: 
+  - /insomnia/plugins/
 tags:
 - plugins
 

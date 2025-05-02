@@ -13,7 +13,9 @@ products:
 works_on:
     - konnect
     - on-prem
-
+search_aliases:
+  - custom plugin data store
+  - plugin ds
 description: Learn how to interact with the {{site.base_gateway}} data store in your custom plugin.
 
 tags:

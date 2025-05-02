@@ -4,10 +4,16 @@ content_type: how_to
 
 products:
     - insomnia
-
+breadcrumbs:
+  - /insomnia/test/
 tags:
   - documents
-
+  - api
+related_resources:
+  - text: About Insomnia
+    url: /insomnia/
+  - text: Testing with Insomnia
+    url: /insomnia/test;/
 tldr: 
   q: How do I create a new design document?
   a: In your Insomnia workspace, click **Create** > **Design document**, enter a name, and click **Create**.

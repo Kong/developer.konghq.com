@@ -64,7 +64,7 @@ See the custom plugin [installation documentation](/custom-plugins/installation-
 for more details on this option. 
 
 {:.info}
-> **Note**: In addition to bare metal or virtual machine environments, this strategy can work for volume mounts on containerized systems. 
+> **Note**: In addition to bare metal or virtual machine environments, this strategy can work for volume mounts on containerized systems.
 
 ## LuaRocks package
 
@@ -76,12 +76,10 @@ you build an archive from the rockspec file and deliver and extract it to your d
 See the [Packaging sources](/custom-plugins/installation-and-distribution/#packaging-sources) 
 section of the custom plugin installation page for details on this distribution option.
 
-## {{site.konnect_product_name}}
+## {{site.konnect_short_name}}
 
-[{{site.konnect_product_name}}](/konnect-platform/) is Kong's unified API platform as a service. {{site.konnect_short_name}}
+[{{site.konnect_short_name}}](/konnect-platform/) is Kong's unified API platform as a service. {{site.konnect_short_name}}
 supports custom plugins with some limitations. With an on-premise deployment, users manage {{site.base_gateway}}
-data planes as well as the control plane and, optionally, the backing database. In {{site.konnect_product_name}},
+data planes as well as the control plane and, optionally, the backing database. In {{site.konnect_short_name}},
 the control plane and database are fully managed for you which limits support for custom data entities and 
 Admin API extensions in your plugin. 
-
-<!-- TODO add link when this page is migrated: https://docs.konghq.com/konnect/gateway-manager/plugins/add-custom-plugin/ >
