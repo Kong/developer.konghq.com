@@ -125,7 +125,7 @@ and published without revealing their secrets.
 You can give your upstream service the [`/jwt-signer/jwks/kong`](/plugins/jwt-signer/api/#/paths/jwt-signer-jwks-JwtSignerJwks/get) URL for it to verify {{site.base_gateway}}-issued tokens. The response is a standard
 JWKS endpoint response. 
 
-The `kong` suffix in the URI is a default value. You can change it with
+The `kong` suffix in the URI is a default value. You can change it
 with [`config.access_token_issuer`](/plugins/jwt-signer/reference/#schema--config-access-token-issuer) or [`config.channel_token_issuer`](/plugins/jwt-signer/reference/#schema--config-channel-token-issuer).
 
 You can also make a loopback to this endpoint by routing the {{site.base_gateway}} proxy to this URL.
