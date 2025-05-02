@@ -1,7 +1,7 @@
 ---
 title: File manipulation using decK file
-short_title: Overview
-description: Manipulate a decK configuration file programmatically. Layer in additional configuration and lint against your governance rules
+short_title: decK file overview
+description: Manipulate a decK configuration file programmatically. Layer in additional configuration and lint against your governance rules.
 weight: 1000
 
 content_type: reference
@@ -15,7 +15,7 @@ tools:
   - deck
 
 tags:
-  - declarative-configuration
+  - declarative-config
 
 search_aliases:
   - declarative configuration
@@ -25,7 +25,7 @@ breadcrumbs:
 
 related_resources:
   - text: decK file manipulation documentation
-    url: /index/deck/#file-manipulation
+    url: /deck/file/manipulation/
 ---
 
 decK's declarative configuration format is the canonical representation of a {{ site.base_gateway }} configuration in text form.
@@ -64,7 +64,7 @@ rows:
     description: Update values in a {{site.base_gateway}} declarative configuration file.
   - command: |
       [add-plugins](/deck/file/manipulation/plugins/)
-    description: Add new Plugin configurations to a {{site.base_gateway}} declarative configuration file.
+    description: Add new plugin configurations to a {{site.base_gateway}} declarative configuration file.
   - command: |
       [add-tags](/deck/file/manipulation/tags/)
     description: Add new tags to a {{site.base_gateway}} declarative configuration file.

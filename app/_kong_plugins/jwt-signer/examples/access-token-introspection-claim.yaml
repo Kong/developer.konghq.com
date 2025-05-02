@@ -1,4 +1,8 @@
-description: 'Specifies the claim/property in access token introspection results (JSON) to be verified against values of [`config.access_token_introspection_scopes_required`](/plugins/jwt-signer/reference/#schema--config-access-token-introspection-scopes-required).'
+description: Set up the JWT Signer plugin to verify a claim or property in access token introspection results against the configured scopes required.
+
+extended_description: |
+  Specifies the claim or property in access token introspection results (JSON) to be verified against values of 
+  [`config.access_token_introspection_scopes_required`](/plugins/jwt-signer/reference/#schema--config-access-token-introspection-scopes-required).'
 
 title: 'Specify access token introspection claim/property'
 

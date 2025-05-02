@@ -17,8 +17,11 @@ breadcrumbs:
   - /deck/file/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: deck file merge
+    url: /deck/file/merge/
+
+tags:
+  - declarative-config
 ---
 
 The `deck file render` command combines multiple complete configuration files and renders them as one Kong state file.

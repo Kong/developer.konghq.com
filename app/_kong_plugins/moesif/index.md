@@ -71,7 +71,7 @@ For all plugin versions, see the [package on Luarocks](http://luarocks.org/modul
 
 {:.info}
 > If you are using the [{{site.kic_product_name}}](/kubernetes-ingress-controller/), the installation is slightly different. 
-> Review the [custom plugin docs for the {{site.kic_product_name}}](/kubernetes-ingress-controller/custom-plugin/).
+> Review the [custom plugin docs for the {{site.kic_product_name}}](/kubernetes-ingress-controller/custom-plugins/).
 
 ## Identifying users
 

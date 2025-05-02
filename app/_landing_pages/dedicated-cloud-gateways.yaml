@@ -110,7 +110,7 @@ rows:
               icon: /assets/icons/gateway.svg
               cta:
                 text: Set up nodes
-                url: /gateway-manager/data-plane-nodes/
+                url: /gateway-manager/data-plane-reference/
       - blocks:
           - type: card
             config:
@@ -134,7 +134,7 @@ rows:
               icon: /assets/icons/logs.svg
               cta:
                 text: See supported regions
-                url: /konnect-geos/
+                url: /konnect-platform/konnect-geos/
       - blocks:
           - type: card
             config:

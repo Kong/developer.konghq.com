@@ -1,6 +1,6 @@
 ---
 title: deck file convert
-description: Convert decK files from one format to another e.g. {{ site.base_gateway }} 2.x to 3.x
+description: Convert decK files from one format to another, for example {{ site.base_gateway }} 2.x to 3.x
 
 content_type: reference
 layout: reference
@@ -17,8 +17,11 @@ breadcrumbs:
   - /deck/file/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: decK gateway commands
+    url: /deck/gateway/
+
+tags:
+  - declarative-config
 ---
 
 The convert command changes configuration files from one format into another compatible format. For example, a configuration for `kong-gateway-2.x` can be converted into a `kong-gateway-3.x` configuration file.

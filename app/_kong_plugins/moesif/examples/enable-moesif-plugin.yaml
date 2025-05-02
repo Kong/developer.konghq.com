@@ -6,13 +6,13 @@ weight: 900
 
 requirements:
   - "The Moesif plugin is [installed](/plugins/moesif/#install-the-moesif-plugin)."
-  - "You have created a Moesif application."
+  - "You have created a [Moesif application](https://www.moesif.com/docs/platform/organizations-and-team/#applications)."
 
 
 variables:
   app-id:
     value: $MOESIF_APPLICATION_ID
-    description: Your Moesif Application Id from your [Moesif](http://www.moesif.com) dashboard.
+    description: Your Moesif Application ID from your [Moesif](http://www.moesif.com) dashboard.
 
 config:
   application_id: ${app-id}

@@ -7,7 +7,9 @@ products:
     - service-catalog
     - gateway
 
-
+tags:
+  - integrations
+  - traceable
 
 breadcrumbs:
   - /service-catalog/
@@ -15,11 +17,13 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: The Traceable integration lets you connect Traceable entities directly to your Service Catalog Services.
+description: The Traceable integration lets you connect Traceable entities directly to your Service Catalog services.
 
 related_resources:
   - text: "Service Catalog"
     url: /service-catalog/
+  - text: Traceable plugin
+    url: /plugins/traceable/
 discovery_support: true
 bindable_entities: "Traceable Service"
 ---
@@ -44,7 +48,7 @@ columns:
 rows:
   - entity: Traceable Service
     description: 
-      A [Traceable Service](https://docs.traceable.ai/docs/domains-services-backends), which holds groups of Traceable API endpoint resources.
+      A direct mapping to a [Traceable Service](https://docs.traceable.ai/docs/domains-services-backends), which holds groups of Traceable API endpoint resources.
 {% endtable %}
 <!--vale on-->
 

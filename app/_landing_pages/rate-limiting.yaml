@@ -1,5 +1,5 @@
 metadata:
-  title: "Rate Limiting"
+  title: "Rate limiting"
   content_type: landing_page
   description: This page is an introduction to rate limiting with Kong.
   tags:
@@ -11,7 +11,7 @@ rows:
 
   - header:
       type: h2
-      text: "What is Rate Limiting?"
+      text: "What is rate limiting?"
     columns:
       - blocks:
           - type: structured_text
@@ -21,25 +21,24 @@ rows:
                 - type: text
                   text:
                     Rate limiting controls the number of API requests a client can make within a specified time frame.
-                    It's a critical function that helps maintain
-                    the performance and availability of web
+                    It's a critical function that helps maintain the performance and availability of web
                     services and APIs by controlling the request traffic.
 
   - header:
       type: h2
-      text: "Why is Rate Limiting important?"
+      text: "Why is rate limiting important?"
     columns:
       - blocks:
         - type: structured_text
           config:
             blocks:
               - type: text
-                text: "Rate Limiting is necessary when using an API gateway for the following reasons:"
+                text: "Rate limiting is necessary when using an API gateway for the following reasons:"
               - type: unordered_list
                 items:
                   - "**Resource Protection:** Ensures that no single user or client could monopolize resources and degrade the performance or impact the experience of other users."
                   - "**Security:** Helps protect against certain types of security attacks, like DDoS (Distributed Denial of Service) attacks, by limiting the rate at which requests can be made."
-                  - "**Cost Management:** Prevents a sharp increase in usage (therefore cost) from either a bug or deliberately heavy usage by a consumer."
+                  - "**Cost Management:** Prevents a sharp increase in usage (and therefore cost) from either a bug or deliberately heavy usage by a consumer."
                   - "**Quality of Service:** Certain user tiers may be given different rate limits to ensure a level of service. For example, premium users may have a higher rate limit than free users."
                   - "**Enforcing API Tiers/Plans:** Different pricing plans may have different usage limits."
               - type: text
@@ -53,11 +52,11 @@ rows:
         blocks:
         - type: card
           config:
-            title: Rate Limiting in {{site.base_gateway}}
+            title: Rate limiting in {{site.base_gateway}}
             description: |
               {{site.base_gateway}} can be configured to apply rate limiting rules on API traffic entering the system.
 
-              This includes rate limiting by IP, API key, consumer, or other criteria. This is ideal for handling external API traffic with advanced rate limiting policies and comprehensive traffic management.
+              This includes rate limiting by IP, API key, Consumer, or other criteria. This is ideal for handling external API traffic with advanced rate limiting policies and comprehensive traffic management.
             icon: /assets/icons/gateway.svg
             cta:
               text: Add Rate Limiting with {{site.base_gateway}}
@@ -65,11 +64,12 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Rate Limiting in KIC
+            title: Rate limiting in KIC
             description: |
-              Rate limiting capabilities in KIC vary by the ingress controller implementation (e.g., NGINX, Traefik).
+              Rate limiting capabilities in KIC vary by the ingress controller implementation (for example, NGINX or Traefik).
 
-              Basic rate limiting can be configured for external traffic entering the Kubernetes cluster. This is ideal for controlling external traffic entering your Kubernetes environment with simpler rate limiting requirements.
+              Basic rate limiting can be configured for external traffic entering the Kubernetes cluster. 
+              This is ideal for controlling external traffic entering your Kubernetes environment with simpler rate limiting requirements.
             icon: /assets/icons/kubernetes.svg
             cta:
               text: Add Rate Limiting with KIC
@@ -81,15 +81,16 @@ rows:
             description: |
               {{site.mesh_product_name}} can apply rate limiting policies at the service level within the mesh.
 
-              This includes controlling traffic between microservices and managing inter-service communication. This is ideal for internal service-to-service communication where you need fine-grained control over traffic within the mesh.
+              This includes controlling traffic between microservices and managing inter-service communication. 
+              This is ideal for internal service-to-service communication where you need fine-grained control over traffic within the mesh.
             icon: /assets/icons/mesh.svg
             cta:
-              text: Add Rate Limiting with {{site.mesh_product_name}}
+              text: Add rate limiting with {{site.mesh_product_name}}
               url: "/mesh/policies/meshratelimit/"
 
 
   - header:
-      text: How-to Guides
+      text: How-to guides
       type: h2
     columns:
       -
@@ -101,7 +102,7 @@ rows:
               quantity: 5
 
   - header:
-      text: "Related Resources"
+      text: "Related resources"
       type: h2
     columns:
       -

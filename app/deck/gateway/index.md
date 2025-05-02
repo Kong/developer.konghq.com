@@ -16,9 +16,12 @@ tools:
 breadcrumbs:
   - /deck/
 
+tags:
+  - declarative-config
+
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: decK file management commands
+    url: /deck/file/
 ---
 
 decK can configure a running {{ site.base_gateway }} using the `deck gateway` command.
@@ -30,14 +33,29 @@ To learn about decK's APIOps capabilities, see [deck file](/deck/file).
 
 decK provides the following `deck gateway` subcommands:
 
-| Command                             | Description                                                                              |
-| ----------------------------------- | ---------------------------------------------------------------------------------------- |
-| [ping](/deck/gateway/ping/)         | Verify that decK can talk to the configured Admin API.                                   |
-| [validate](/deck/gateway/validate/) | Validate the data in the provided state file against a live Admin API.                   |
-| [diff](/deck/gateway/diff/)         | Diff the current state of {{ site.base_gateway }} against the provided configuration.    |
-| [sync](/deck/gateway/sync/)         | Update {{ site.base_gateway }} to match the state defined in the provided configuration. |
-| [apply](/deck/gateway/apply/)       | Apply configuration to Kong without deleting existing entities.                          |
-| [dump](/deck/gateway/dump/)         | Export the current state of {{ site.base_gateway }} to a file.                           |
-| [reset](/deck/gateway/reset/)       | Delete all entities in {{ site.base_gateway }}.                                          |
+<!--vale off-->
+{% table %}
+columns:
+  - title: Command
+    key: command
+  - title: Description
+    key: description
+rows:
+  - command: "[ping](/deck/gateway/ping/)"
+    description: Verify that decK can talk to the configured Admin API.
+  - command: "[validate](/deck/gateway/validate/)"
+    description: Validate the data in the provided state file against a live Admin API.
+  - command: "[diff](/deck/gateway/diff/)"
+    description: "Diff the current state of {{ site.base_gateway }} against the provided configuration."
+  - command: "[sync](/deck/gateway/sync/)"
+    description: "Update {{ site.base_gateway }} to match the state defined in the provided configuration."
+  - command: "[apply](/deck/gateway/apply/)"
+    description: Apply configuration to Kong without deleting existing entities.
+  - command: "[dump](/deck/gateway/dump/)"
+    description: "Export the current state of {{ site.base_gateway }} to a file."
+  - command: "[reset](/deck/gateway/reset/)"
+    description: "Delete all entities in {{ site.base_gateway }}."
+{% endtable %}
+<!--vale on-->
 
 All of these commands require access to a running {{ site.base_gateway }} to function. If your Admin API requires a token, see the [configuration](/deck/gateway/configuration/) page.

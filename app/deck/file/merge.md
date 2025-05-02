@@ -17,8 +17,13 @@ breadcrumbs:
   - /deck/file/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: deck file render
+    url: /deck/file/render/
+  - text: Using environment variables with decK
+    url: /deck/configuration/#environment-variables
+
+tags:
+  - declarative-config
 ---
 
 The `deck file merge` command merges multiple declarative configuration files in to a single file. This is useful at the end of your pipeline when linting and validation steps are run.
@@ -37,6 +42,5 @@ The merge algorithm works in the following way:
 
 - Top level arrays are concatenated
 - Top level scalar values take the value from the last file passed as an argument
-
 
 `deck file merge` does not perform any validations.
