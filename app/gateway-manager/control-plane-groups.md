@@ -272,6 +272,7 @@ Conflicts have been detected between these Control Planes:
 CONTROL-PLANE-EXAMPLE
 CONTROL-PLANE-ANOTHER-EXAMPLE
 ```
+{:.no-copy-code}
 
 The Control Plane won't update a Data Plane configuration until the conflict is resolved. 
 Review the following table of common issues and potential fixes:
