@@ -4,13 +4,17 @@ content_type: how_to
 related_resources:
   - text: Configure Google Cloud Secret as a vault backend
     url: /how-to/configure-google-cloud-secret-as-a-vault-backend/
+  - text: Configure a GCP Secret Manager Vault with KIC
+    url: /kubernetes-ingress-controller/vault/gcp/
+  - text: Google Cloud Vault configuration parameters
+    url: /gateway/entities/vault/?tab=google-cloud#vault-provider-specific-configuration-parameters
   - text: Secret management
     url: /gateway/secrets-management/
   - text: Google Secret Manager documentation
     url: https://cloud.google.com/secret-manager/docs
   - text: Mistral AI documentation
     url: https://docs.mistral.ai/
-
+description: Learn how to store and rotate secrets in Google Cloud with {{site.base_gateway}}, Mistral, and the AI Proxy plugin.
 products:
     - gateway
 
@@ -89,11 +93,29 @@ prereqs:
 faqs:
   - q: "How do I fix the `Error: could not get value from external vault (no value found (unable to retrieve secret from gcp secret manager (code : 403, status: PERMISSION_DENIED)))` error when I try to use my secret from the Google Cloud vault?"
     a: Verify that your [Google Cloud service account has the `Secret Manager Secret Accessor` role](https://console.cloud.google.com/iam-admin/iam?supportedpurview=project). This role is required for {{site.base_gateway}} to access secrets in the vault.
+  - q: I'm using Google Workload Identity, how do I configure a Vault?
+    a: |
+      To use GCP Secret Manager with
+      [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
+      on a GKE cluster, update your pod spec so that the service account (`GCP_SERVICE_ACCOUNT`) is
+      attached to the pod. For configuration information, read the [Workload
+      Identity configuration
+      documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#authenticating_to).
+
+      {:.info}
+      > **Notes:**
+      > * With Workload Identity, setting the `GCP_SERVICE_ACCOUNT` isn't necessary.
+      > * When using GCP Vault as a backend, make sure you have configured `system` as part of the
+      > [`lua_ssl_trusted_certificate` configuration directive](/gateway/configuration/#lua-ssl-trusted-certificate)
+      so that the SSL certificates used by the official GCP API can be trusted by {{site.base_gateway}}.
 
 cleanup:
   inline:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
+      icon_url: /assets/icons/gateway.svg
+    - title: Clean up Konnect environment
+      include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
 ---
 
@@ -117,7 +139,7 @@ The first command is supported on Linux, macOS, and Cloud Shell. For other distr
 
 To enable Secret Manager as your vault in {{site.base_gateway}}, you can use the [Vault entity](/gateway/entities/vault/).
 
-In this tutorial, we are configuring the time-to-live (`ttl`) as 60 seconds/1 minute. This tells {{site.base_gateway}} to check every minute with Google Cloud to get the rotated secret. We've configured this value so low so that we can quickly validate that the secret rotation is functioning as expected.
+In this tutorial, we are configuring the time-to-live (`ttl`) as 60 seconds/1 minute. This tells {{site.base_gateway}} to check every minute with Google Cloud to get the rotated secret. We've configured a low value so that we can quickly validate that the secret rotation is functioning as expected.
 
 {% entity_examples %}
 entities:
@@ -154,14 +176,7 @@ entities:
 
 ## Validate that {{site.base_gateway}} uses the invalid API key from the secret
 
-First, let's validate that the secret was stored correctly in Google Cloud by calling a secret from your vault using the `kong vault get` command within the data plane container. If the Docker container is named `kong-quickstart-gateway`, you can use the following command:
-
-Since {{site.konnect_short_name}} data plane container names can vary, set your container name as an environment variable:
-{: data-deployment-topology="konnect" }
-```sh
-export KONNECT_DP_CONTAINER='your-dp-container-name'
-```
-{: data-deployment-topology="konnect" }
+First, let's validate that the secret was stored correctly in Google Cloud by calling a secret from your vault using the `kong vault get` command within the Data Plane container.
 
 {% validation vault-secret %}
 secret: '{vault://gcp-sm-vault/test-secret}'

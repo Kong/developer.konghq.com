@@ -5,6 +5,11 @@ content_type: reference
 layout: reference
 products:
    - gateway
+breadcrumbs:
+  - /gateway/
+tags:
+  - certificates
+  - ssl
 
 works_on:
    - on-prem
@@ -33,7 +38,7 @@ plugins:
 ---
 
 {{site.base_gateway}} uses three types of certificates:
-* Client certificates: Used to verify a client as a consumer of a service
+* Client certificates: Used to verify a client as a Consumer of a Service
 * Server certificates: Used to verify that a server is the hostname it claims to be
 * CA Root certificates: Used to verify that client and server certificates are authentic
 

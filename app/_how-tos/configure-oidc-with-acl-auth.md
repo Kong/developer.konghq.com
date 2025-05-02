@@ -11,6 +11,8 @@ related_resources:
     url: /plugins/openid-connect/#authorization
   - text: ACL authorization in OIDC
     url: /plugins/openid-connect/#acl-plugin-authorization
+  - text: OpenID Connect tutorials
+    url: /how-to/?query=openid-connect
 
 plugins:
   - openid-connect
@@ -19,6 +21,7 @@ plugins:
 entities:
   - route
   - service
+  - plugin
 
 products:
   - gateway
@@ -47,6 +50,8 @@ prereqs:
 tags:
   - authorization
   - openid-connect
+search_aliases:
+  - oidc
 
 description: Configure the OpenID Connect and ACL plugins together to apply auth flows to ACL allow or deny lists.
 
@@ -100,7 +105,7 @@ variables:
 
 In this example:
 * `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
-* `auth_methods`:  Specifies that the plugin should use the password grant, for easy testing.
+* `auth_methods`: Specifies that the plugin should use the password grant, for easy testing.
 * `authenticated_groups_claim`: Looks for a groups claim in an ACL.
 
 {% include_cached plugins/oidc/client-auth.md %}

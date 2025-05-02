@@ -11,10 +11,12 @@ description: |
   This provides for encryption-at-rest security controls in a {{site.base_gateway}} cluster.
 
 related_resources:
-- text: Vault entity
-  url: /gateway/entities/vault/
-- text: Certificate entity
-  url: /gateway/entities/certificate/
+  - text: Vault entity
+    url: /gateway/entities/vault/
+  - text: Certificate entity
+    url: /gateway/entities/certificate/
+  - text: Store Keyring data in a HashiCorp Vault
+    url: /how-to/store-keyring-in-hashicorp-vault/
 
 api_specs:
   - gateway/admin-ee

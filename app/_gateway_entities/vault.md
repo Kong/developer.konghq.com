@@ -28,6 +28,74 @@ faqs:
     a: Yes. The plugin development kit (PDK) offers a Vaults module (`kong.vault`) that can be used to resolve, parse, and verify Vault references.
   - q: What data types can I use when referencing a secret in a Vault?
     a: A secret reference points to a string value. No other data types are currently supported.
+  - q: I have a secret with multiple versions, how do I specify an earlier version when I'm referencing the secret?
+    a: |
+      If you have a secret with multiple versions, you can access the current version or any previous version of the secret by specifying a version in the reference.
+
+      In the following AWS example, `AWSCURRENT` refers to the latest secret version and `AWSPREVIOUS` refers to an older version:
+      ```sh
+      # For AWSCURRENT, not specifying version
+      {vault://aws/secret-name/foo}
+
+      # For AWSCURRENT, specifying version == 1
+      {vault://aws/secret-name/foo#1}
+
+      # For AWSPREVIOUS, specifying version == 2
+      {vault://aws/secret-name/foo#2}
+      ```
+      This applies to all providers with versioned secrets.
+  - q: My secret in AWS Secret Manager has a `/` backslash in the secret name. How do I reference this secret in {{site.base_gateway}}?
+    a: |
+      The slash symbol (`/`) is a valid character for the secret name in AWS Secrets Manager. If you want to reference a secret name that starts with a slash or has two consecutive slashes, transform one of the slashes in the name into URL-encoded format. For example:
+      * A secret named `/secret/key` should be referenced as `{vault://aws/%2Fsecret/key}`
+      * A secret named `secret/path//aaa/key` should be referenced as `{vault://aws/secret/path/%2Faaa/key}`
+      
+      Since {{site.base_gateway}} tries to resolve the secret reference as a valid URL, using a slash instead of a URL-encoded slash will result in unexpected secret name fetching.
+  - q: I have secrets stored in multiple AWS Secret Manager regions, how do I reference those secrets in {{site.base_gateway}}?
+    a: |
+      You can create multiple Vault entities, one per region with the `config.region` parameter. You'd then reference the secret by the name of the Vault:
+      ```sh
+      {vault://aws-eu-central-vault/secret-name/foo}
+      {vault://aws-us-west-vault/secret-name/snip}
+      ```
+  - q: I'm using Google Workload Identity, how do I configure a Vault?
+    a: |
+      To use GCP Secret Manager with
+      [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
+      on a GKE cluster, update your pod spec so that the service account (`GCP_SERVICE_ACCOUNT`) is
+      attached to the pod. For configuration information, read the [Workload
+      Identity configuration
+      documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#authenticating_to).
+
+      {:.info}
+      > **Notes:**
+      > * With Workload Identity, setting the `GCP_SERVICE_ACCOUNT` isn't necessary.
+      > * When using GCP Vault as a backend, make sure you have configured `system` as part of the
+      > [`lua_ssl_trusted_certificate` configuration directive](/gateway/configuration/#lua-ssl-trusted-certificate)
+      so that the SSL certificates used by the official GCP API can be trusted by {{site.base_gateway}}.
+  - q: How does {{site.base_gateway}} retrieve secrets from HashiCorp Vault?
+    a: |
+      {{site.base_gateway}} retrieves secrets from HashiCorp Vault's HTTP API through a two-step process: authentication and secret retrieval.
+
+      **Step 1: Authentication**
+
+      Depending on the authentication method defined in `config.auth_method`, {{site.base_gateway}} authenticates to HashiCorp Vault using one of the following methods:
+
+      - If you're using the `token` auth method, {{site.base_gateway}} uses the `config.token` as the client token.
+      - If you're using the `kubernetes` auth method, {{site.base_gateway}} uses the service account JWT token mounted in the pod (path defined in the `config.kube_api_token_file`) to call the login API for the Kubernetes auth path on the HashiCorp Vault server and retrieve a client token.
+      - {% new_in 3.4 %} If you're using the `approle` auth method, {{site.base_gateway}} uses the AppRole credentials to retrieve a client token. The AppRole role ID is configured by field `config.approle_role_id`, and the secret ID is configured by field `config.approle_secret_id` or `config.approle_secret_id_file`. 
+        - If you set `config.approle_response_wrapping` to `true`, then the secret ID configured by
+        `config.approle_secret_id` or `config.approle_secret_id_file` will be a response wrapping token, 
+        and {{site.base_gateway}} will call the unwrap API `/v1/sys/wrapping/unwrap` to unwrap the response wrapping token to fetch 
+        the real secret ID. {{site.base_gateway}} will use the AppRole role ID and secret ID to call the login API for the AppRole auth path
+        on the HashiCorp Vault server and retrieve a client token.
+      
+      By calling the login API, {{site.base_gateway}} will retrieve a client token and then use it in the next step as the value of `X-Vault-Token` header to retrieve a secret.
+
+      **Step 2: Retrieving the secret**
+
+      {{site.base_gateway}} uses the client token retrieved in the authentication step to call the Read Secret API and retrieve the secret value. The request varies depending on the secrets engine version you're using.
+      {{site.base_gateway}} will parse the response of the read secret API automatically and return the secret value.
 
 tools:
     - admin-api
@@ -204,6 +272,261 @@ For more information, see [Secret management](/gateway/secrets-management/).
 The Vault entity can only be used once the database is initialized. Secrets for values that are used before the database is initialized can’t make use of the Vaults entity.
 
 {% entity_schema %}
+
+## Vault provider-specific configuration parameters
+
+When you set up a Vault, each provider has specific parameters that you can or must configure to integrate the Vault entity with a provider.
+
+{% navtabs "provider config" %}
+{% navtab "Env var" %}
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Field name
+    key: field-name
+  - title: Description
+    key: description
+rows:
+  - parameter: "`vaults.config.prefix`"
+    field-name: |
+      config-prefix (Kong Manager)  
+      Environment variable prefix ({{site.konnect_short_name}})
+    description: The prefix for the environment variable that the value will be stored in.
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "AWS" %}
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Field name
+    key: field-name
+  - title: Description
+    key: description
+rows:
+  - parameter: "`vaults.config.region`"
+    field-name: "AWS region"
+    description: The AWS region where your vault is located.
+  - parameter: |
+      `vaults.config.endpoint_url` {% new_in 3.4 %}
+    field-name: "AWS Secrets Manager Endpoint URL"
+    description: The endpoint URL of the AWS Secrets Manager service. If not specified, the default is `https://secretsmanager.{region}.amazonaws.com`. You can override this by specifying a complete URL including the `http/https` scheme.
+  - parameter: |
+      `vaults.config.assume_role_arn` {% new_in 3.4 %}
+    field-name: "Assume AWS IAM role ARN"
+    description: The target IAM role ARN to assume when accessing AWS Secrets Manager. If specified, the backend will assume this role using your current runtime's IAM Role. Leave empty if not using an assumed role.
+  - parameter: |
+      `vaults.config.role_session_name` {% new_in 3.4 %}
+    field-name: "Role Session Name"
+    description: The session name used when assuming a role. Defaults to `KongVault`.
+  - parameter: |
+      `vaults.config.sts_endpoint_url` {% new_in 3.8 %}
+    field-name: "AWS STS Endpoint URL"
+    description: A custom STS endpoint URL used for IAM role assumption. Overrides the default `https://sts.amazonaws.com` or regional variant `https://sts.<region>.amazonaws.com`. Include the full `http/https` scheme. Only specify this if using a private VPC endpoint for STS.
+  - parameter: "`vaults.config.ttl`"
+    field-name: "TTL"
+    description: The time-to-live (in seconds) for cached secrets. A value of 0 (default) disables rotation. If non-zero, use at least 60 seconds.
+  - parameter: "`vaults.config.neg_ttl`"
+    field-name: "Negative TTL"
+    description: The TTL (in seconds) for caching failed secret lookups. A value of 0 (default) disables negative caching. When the TTL expires, Kong will retry fetching the secret.
+  - parameter: "`vaults.config.resurrect_ttl`"
+    field-name: "Resurrect TTL"
+    description: The duration (in seconds) for which expired secrets will continue to be used if the vault is unreachable or the secret is deleted. After this time, Kong stops retrying. The default is 1e8 seconds (~3 years) to ensure resilience during unexpected issues.
+{% endtable %}
+<!--vale on-->
+
+{% endnavtab %}
+
+{% navtab "Azure" %}
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Field name
+    key: field-name
+  - title: Description
+    key: description
+rows:
+  - parameter: "`vaults.config.vault_uri`"
+    field-name: "Vault URI"
+    description: |
+      The URI from which the vault is reachable. This value can be found in your Azure Key Vault Dashboard under the Vault URI entry.
+  - parameter: "`vaults.config.client_id`"
+    field-name: "Client ID"
+    description: |
+      The client ID for your registered application. You can find this in the Azure Dashboard under App Registrations.
+  - parameter: "`vaults.config.tenant_id`"
+    field-name: "Tenant ID"
+    description: |
+      The `DirectoryId` and `TenantId` are the same: both refer to the GUID representing your Azure Active Directory tenant. Microsoft documentation and products may use either term depending on context.
+  - parameter: "`vaults.config.location`"
+    field-name: "Location"
+    description: |
+      Each Azure geography includes one or more regions that meet specific data residency and compliance requirements.
+  - parameter: "`vaults.config.type`"
+    field-name: "Type"
+    description: |
+      Azure Key Vault supports different data types such as keys, secrets, and certificates. Kong currently supports only `secrets`.
+  - parameter: "`vaults.config.ttl`"
+    field-name: "TTL"
+    description: |
+      Time-to-live (in seconds) for a cached secret. A value of 0 (default) means no rotation. For non-zero values, it is recommended to use intervals of at least 60 seconds.
+  - parameter: "`vaults.config.neg_ttl`"
+    field-name: "Negative TTL"
+    description: |
+      Time-to-live (in seconds) for caching failed secret lookups. A value of 0 (default) disables negative caching. After `neg_ttl` expires, Kong retries fetching the secret.
+  - parameter: "`vaults.config.resurrect_ttl`"
+    field-name: "Resurrect TTL"
+    description: |
+      Duration (in seconds) that secrets remain usable after expiration (`config.ttl` limit). Useful when the vault is unreachable or a secret is deleted. Kong retries refreshing the secret for this duration. Afterward, it stops. The default is 1e8 seconds (~3 years) to ensure resiliency during issues.
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "Google" %}
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Field name
+    key: field-name
+  - title: Description
+    key: description
+rows:
+  - parameter: "`vaults.config.project_id`"
+    field-name: "Google Project ID"
+    description: |
+      The project ID from your Google API Console. You can find it by visiting your Google API Console and selecting "Manage all projects" in the projects list.
+  - parameter: "`vaults.config.ttl`"
+    field-name: "TTL"
+    description: |
+      Time-to-live (in seconds) for a cached secret. A value of 0 (default) disables rotation. For non-zero values, use a minimum of 60 seconds.
+  - parameter: "`vaults.config.neg_ttl`"
+    field-name: "Negative TTL"
+    description: |
+      Time-to-live (in seconds) for caching failed secret lookups. A value of 0 (default) disables negative caching. Kong will retry fetching the secret after `neg_ttl` expires.
+  - parameter: "`vaults.config.resurrect_ttl`"
+    field-name: "Resurrect TTL"
+    description: |
+      Time (in seconds) that secrets remain in use after expiration (`config.ttl` ends). Useful if the vault is unreachable or the secret is deleted but not yet replaced. Kong continues to retry for `resurrect_ttl` seconds before giving up. The default is 1e8 seconds (~3 years) to support uninterrupted service during outages.
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
+{% navtab "HashiCorp" %}
+
+<!--vale off-->
+{% table %}
+columns:
+  - title: Parameter
+    key: parameter
+  - title: Field name
+    key: field-name
+  - title: Description
+    key: description
+rows:
+  - parameter: "`vaults.config.protocol`"
+    field-name: |
+      config-protocol (Kong Manager)  
+      Protocol ({{site.konnect_short_name}})
+    description: |
+      The protocol to connect with. Accepts one of `http` or `https`.
+  - parameter: "`vaults.config.host`"
+    field-name: |
+      config-host (Kong Manager)  
+      Host ({{site.konnect_short_name}})
+    description: The hostname of your HashiCorp vault.
+  - parameter: "`vaults.config.port`"
+    field-name: |
+      config-port (Kong Manager)  
+      Port ({{site.konnect_short_name}})
+    description: The port number of your HashiCorp vault.
+  - parameter: "`vaults.config.mount`"
+    field-name: |
+      config-mount (Kong Manager)  
+      Mount ({{site.konnect_short_name}})
+    description: The mount point.
+  - parameter: "`vaults.config.kv`"
+    field-name: |
+      config-kv (Kong Manager)  
+      Kv ({{site.konnect_short_name}})
+    description: |
+      The secrets engine version. Accepts `v1` or `v2`.
+  - parameter: "`vaults.config.token`"
+    field-name: |
+      config-token (Kong Manager)  
+      Token ({{site.konnect_short_name}})
+    description: A token string.
+  - parameter: "`vaults.config.ttl`"
+    field-name: "TTL"
+    description: |
+      Time-to-live (in seconds) for a cached secret. A value of 0 (default) disables rotation. For non-zero values, use at least 60 seconds.
+  - parameter: "`vaults.config.neg_ttl`"
+    field-name: "Negative TTL"
+    description: |
+      Time-to-live (in seconds) for caching failed secret lookups. A value of 0 (default) disables negative caching. Kong retries after `neg_ttl` expires.
+  - parameter: "`vaults.config.resurrect_ttl`"
+    field-name: "Resurrect TTL"
+    description: |
+      Time (in seconds) that secrets remain in use after expiration (`config.ttl` is over). Useful if the vault is unreachable or a secret is deleted. Kong continues retrying for `resurrect_ttl` seconds, then stops. Default is 1e8 seconds (~3 years).
+  - parameter: |
+      `vaults.config.namespace` {% new_in 3.1 %}
+    field-name: "namespace"
+    description: Namespace for the Vault. Vault Enterprise requires a namespace to connect successfully.
+  - parameter: |
+      `vaults.config.auth_method` {% new_in 3.1 %}
+    field-name: "auth-method"
+    description: |
+      Defines the authentication mechanism for connecting to the HashiCorp Vault service. Accepts `token`, `kubernetes`, or `approle`.
+  - parameter: |
+      `vaults.config.kube_role` {% new_in 3.1 %}
+    field-name: "kube-role"
+    description: |
+      Role assigned to the Kubernetes service account. Only used when `keyring_vault_auth_method` is set to `kubernetes`.
+  - parameter: |
+      `vaults.config.kube_api_token_file` {% new_in 3.1 %}
+    field-name: "kube-api-token-file"
+    description: |
+      Path to the Kubernetes service account token file. Defaults to `/run/secrets/kubernetes.io/serviceaccount/token` if unspecified.
+  - parameter: |
+      `vaults.config.kube_auth_path` {% new_in 3.4 %}
+    field-name: "kube-auth-path"
+    description: |
+      Path for enabling the Kubernetes auth method. Defaults to `kubernetes`. Single leading/trailing slashes are trimmed.
+  - parameter: |
+      `vaults.config.approle_auth_path` {% new_in 3.4 %}
+    field-name: "approle_auth_path"
+    description: |
+      Path for enabling the AppRole auth method. Defaults to `AppRole`. Single leading/trailing slashes are trimmed.
+  - parameter: |
+      `vaults.config.approle_role_id` {% new_in 3.4 %}
+    field-name: "approle_role_id"
+    description: Specifies the AppRole role ID in HashiCorp Vault.
+  - parameter: |
+      `vaults.config.approle_secret_id` {% new_in 3.4 %}
+    field-name: "approle_secret_id"
+    description: Defines the AppRole's secret ID in HashiCorp Vault.
+  - parameter: |
+      `vaults.config.approle_secret_id_file` {% new_in 3.4 %}
+    field-name: "approle_secret_id_file"
+    description: Path to a file containing the AppRole secret ID.
+  - parameter: |
+      `vaults.config.approle_response_wrapping` {% new_in 3.4 %}
+    field-name: "approle_response_wrapping"
+    description: |
+      Whether the secret ID is a response-wrapping token. Defaults to `false`. When `true`, Kong unwraps the token to get the actual secret ID. Note: tokens can only be unwrapped once; distribute them individually to Kong nodes.
+{% endtable %}
+<!--vale on-->
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Set up a Vault
 

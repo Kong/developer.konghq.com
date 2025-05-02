@@ -20,6 +20,10 @@ related_resources:
     url: /gateway/audit-logs/
   - text: "{{site.konnect_short_name}} logs"
     url: /konnect-logs/
+  - text: Logging plugins
+    url: /plugins/?category=logging
+  - text: Add Correlation IDs to {{site.base_gateway}} logs
+    url: /how-to/add-correlation-ids-to-gateway-logs/
 
 works_on:
   - on-prem

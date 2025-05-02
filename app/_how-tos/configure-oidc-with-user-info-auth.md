@@ -11,6 +11,8 @@ related_resources:
     url: /plugins/openid-connect/#authentication
   - text: User info auth workflow
     url: /plugins/openid-connect/#user-info-authentication-flow
+  - text: OpenID Connect tutorials
+    url: /how-to/?query=openid-connect
 
 plugins:
   - openid-connect
@@ -18,6 +20,7 @@ plugins:
 entities:
   - route
   - service
+  - plugin
 
 products:
   - gateway
@@ -46,6 +49,8 @@ prereqs:
 tags:
   - authentication
   - openid-connect
+search_aliases:
+  - oidc
 
 description: Set up OpenID Connect with the user info auth, which retrieves a bearer token from the IdP's user info endpoint for authentication.
 
@@ -123,7 +128,7 @@ You'll see an `Authorization` header in the response.
 Export the value of the header to an environment variable:
 
 ```
-export TOKEN='{your-bearer-token}'
+export TOKEN='YOUR_BEARER_TOKEN'
 ```
 
 ## Validate the token

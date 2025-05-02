@@ -2,13 +2,20 @@
 title: "{{site.base_gateway}} 2.8 to 3.4 LTS upgrade"
 content_type: reference
 layout: reference
-
+breadcrumbs:
+  - /gateway/
+  - /gateway/upgrade/
 products:
     - gateway
 
 works_on:
     - on-prem
     - konnect
+search_aliases:
+  - lts
+tags:
+    - upgrades
+    - versioning
 
 description: This guide walks you through upgrade paths for {{site.base_gateway}} 2.8 LTS to 3.4 LTS and helps you prepare for an upgrade.
 

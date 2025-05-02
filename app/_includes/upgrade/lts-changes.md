@@ -22,10 +22,10 @@ rows:
       No
   - category: DB config
     description: |
-      The data plane configuration cache was removed. 
+      The Data Plane configuration cache was removed. 
       Configuration persistence is now done automatically with LMDB.
       <br><br>
-      The data plane config cache mechanism and its related configuration options 
+      The Data Plane config cache mechanism and its related configuration options 
       (`data_plane_config_cache_mode` and `data_plane_config_cache_path`) have been removed in favor of LMDB.
     action: |
       Remove parameters from {{site.base_gateway}} configuration.
@@ -189,13 +189,13 @@ rows:
       [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986), 
        
     action: |
-      After the upgrade, if you configure routes using the old method, 
-      you will receive an alert and need to reconfigure the affected routes using the new route 
+      After the upgrade, if you configure Routes using the old method, 
+      you will receive an alert and need to reconfigure the affected Routes using the new Route 
       configuration method.
 
   - category: Router
     description: |
-      {{site.base_gateway}} no longer uses a heuristic to guess whether a route path is a regex pattern. 
+      {{site.base_gateway}} no longer uses a heuristic to guess whether a Route path is a regex pattern. 
       From 3.0 onward, all regex paths must start with the `~` prefix, and all paths that don't start with `~` are
       considered plain text. 
     action: |
@@ -355,7 +355,7 @@ rows:
     description: |
       **StatsD plugin** 
       <br><br>
-      Any metric name that is related to a service now has a `service.` prefix: 
+      Any metric name that is related to a Gateway Service now has a `service.` prefix: 
       <br><br>
       `kong.service.<service_identifier>.request.count`.
       * The metric `kong.<service_identifier>.request.status.<status>` has been renamed to 
@@ -574,7 +574,7 @@ rows:
       The `/consumer_groups/:id/overrides` endpoint is deprecated in favor of a more generic plugin scoping mechanism. 
 
     action: |
-      Instead of setting overrides, you can apply a plugin instance to a consumer group entity. See the 
+      Instead of setting overrides, you can apply a plugin instance to a Consumer Group entity. See the 
       [Rate Limiting Advanced](/plugins/rate-limiting-advanced/examples/)
       documentation for an example.
 

@@ -43,6 +43,8 @@ related_resources:
     url: /gateway/openid-connect/
   - text: Authentication in {{site.base_gateway}}
     url: /gateway/authentication/
+  - text: OpenID Connect tutorials
+    url: /how-to/?query=openid-connect
 ---
 
 The OpenID Connect (OIDC) plugin lets you integrate {{site.base_gateway}} with an identity provider (IdP).

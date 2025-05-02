@@ -1,5 +1,5 @@
 ---
-title: Rate limit a consumer with {{site.base_gateway}}
+title: Rate limit a Consumer with {{site.base_gateway}}
 content_type: how_to
 related_resources:
   - text: Rate Limiting
@@ -10,7 +10,7 @@ related_resources:
     url: /plugins/rate-limiting/
   - text: Rate Limiting Advanced plugin
     url: /plugins/rate-limiting-advanced/
-
+description: Learn how to rate limit a Consumer with the Rate Limiting and Key Authentication plugins.
 products:
     - gateway
 
@@ -75,7 +75,7 @@ entities:
 ## Enable authentication
 
 Authentication lets you identify a Consumer so that you can apply rate limiting.
-This example uses the [Key Authentication](/plugins/key-auth/) plugin, but you can use any authentication plugin that you prefer.
+This example uses the [Key Authentication](/plugins/key-auth/) plugin, but you can use any [authentication plugin](/plugins/?category=authentication) that you prefer.
 
 Enable the plugin globally, which means it applies to all {{site.base_gateway}} Services and Routes:
 

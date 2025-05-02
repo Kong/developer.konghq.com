@@ -55,7 +55,21 @@ prereqs:
         export AWS_REGION="us-east-1"
         ```
       icon_url: /assets/icons/aws.svg
-
+faqs:
+  - q: My secret in AWS Secret Manager has a `/` backslash in the secret name. How do I reference this secret in {{site.base_gateway}}?
+    a: |
+      The slash symbol (`/`) is a valid character for the secret name in AWS Secrets Manager. If you want to reference a secret name that starts with a slash or has two consecutive slashes, transform one of the slashes in the name into URL-encoded format. For example:
+      * A secret named `/secret/key` should be referenced as `{vault://aws/%2Fsecret/key}`
+      * A secret named `secret/path//aaa/key` should be referenced as `{vault://aws/secret/path/%2Faaa/key}`
+      
+      Since {{site.base_gateway}} tries to resolve the secret reference as a valid URL, using a slash instead of a URL-encoded slash will result in unexpected secret name fetching.
+  - q: I have secrets stored in multiple AWS Secret Manager regions, how do I reference those secrets in {{site.base_gateway}}?
+    a: |
+      You can create multiple Vault entities, one per region with the `config.region` parameter. You'd then reference the secret by the name of the Vault:
+      ```sh
+      {vault://aws-eu-central-vault/secret-name/foo}
+      {vault://aws-us-west-vault/secret-name/snip}
+      ```
 cleanup:
   inline:
     - title: Clean up Konnect environment

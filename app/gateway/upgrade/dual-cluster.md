@@ -3,7 +3,9 @@ title: "Dual-cluster upgrade for {{site.base_gateway}}"
 description: Learn how to perform a dual-cluster upgrade for {{site.base_gateway}}.
 content_type: reference
 layout: reference
-
+breadcrumbs:
+  - /gateway/
+  - /gateway/upgrade/
 products:
     - gateway
 
