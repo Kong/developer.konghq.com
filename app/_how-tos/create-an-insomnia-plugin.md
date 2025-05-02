@@ -11,7 +11,7 @@ tags:
 
 tldr:
   q: How do I create a new Insomnia plugin?
-  a: Create a NodeJS module in the Insomnia plugins directory and add it to Insomnia. To publish on the [Plugin Hub](https://insomnia.rest/plugins), publish it as an un-scoped public package to the npm public registry.
+  a: Create a NodeJS module in the Insomnia plugins directory and add it to Insomnia. To publish on the [Plugin Hub](https://insomnia.rest/plugins), publish it as an unscoped public package to the npm public registry.
 ---
 
 ## Create the plugin directory

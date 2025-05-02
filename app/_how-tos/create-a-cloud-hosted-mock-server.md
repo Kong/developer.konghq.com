@@ -11,7 +11,7 @@ tags:
 breadcrumbs:
   - /insomnia/
 related_resources:
-  - text: Authentication & Authorization in Insomnia
+  - text: Authentication and authorization in Insomnia
     url: /insomnia/authentication-authorization/
   - text: Configure Okta SAML SSO in Insomnia
     url: /how-to/okta-saml-sso-insomnia/
