@@ -32,6 +32,9 @@ icon: tls-metadata-headers.png
 categories:
   - security
 
+tags:
+  - security
+
 search_aliases:
   - tls-metadata-headers
   - certificates
@@ -58,5 +61,5 @@ The TLS Metadata Header plugin accesses the client certificate and extracts the 
 * SHA1 fingerprint
 * Full client certificate chain
 
-If `inject_client_cert_details` is enabled, the TLS Metadata Header plugin injects the extracted TLS client certificate metadata into HTTP headers.
+If [`config.inject_client_cert_details`](./reference/#schema--config-inject-client-cert-details) is enabled, the TLS Metadata Header plugin injects the extracted TLS client certificate metadata into HTTP headers.
 

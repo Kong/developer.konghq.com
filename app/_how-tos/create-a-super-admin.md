@@ -1,7 +1,7 @@
 ---
 title: Create a Super Admin with the Admin API
 content_type: how_to
-
+description: Learn how to create a Super Admin for {{site.base_gateway}}.
 products:
     - gateway
 
@@ -60,7 +60,7 @@ min_version:
 
 {% capture request %}
 {% control_plane_request %}
-  url: /rbac/users/$ADMIN_NAME/role
+  url: /rbac/users/$ADMIN_NAME/roles
   method: POST
   headers:
       - 'Accept: application/json'
@@ -112,4 +112,6 @@ If this was configured correctly the response body will look like this:
 	]
 }
 ```
+{:.no-copy-code}
+
 You can see that the RBAC role assigned to the User is `super-admin`.

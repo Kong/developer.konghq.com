@@ -1,7 +1,7 @@
 ---
 title: Enable RBAC with the Admin API
 content_type: how_to
-
+description: Learn how to enable Role-Based Access Control for {{site.base_gateway}} using the Admin API.
 products:
     - gateway
 
@@ -96,6 +96,7 @@ The response body contains information about the `super-admin` user including a 
     ]
     }
 ```
+{:.no-copy-code}
 
 ## Enable RBAC
 
@@ -125,6 +126,7 @@ If RBAC was enabled correctly, this request will return:
 	"message": "Invalid RBAC credentials"
 }
 ```
+{:.no-copy-code}
 
 Passing the same request with the `user-token` will return a `200` and the list of {{site.base_gateway}} users.
 {% control_plane_request %}

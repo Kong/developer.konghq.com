@@ -38,6 +38,8 @@ The same definitions of `feature gates` and `feature stages` from upstream Kuber
 
 ## Available feature gates
 
+The following feature gates are available:
+
 {% table %}
 columns:
   - title: Feature
@@ -103,6 +105,33 @@ rows:
     until: TBD
 {% endtable %}
 
+* The **since** and **until** columns refer to [KIC Releases](https://github.com/Kong/kubernetes-ingress-controller/releases).
+* Features that are currently in alpha or beta states may become deprecated at any time. Deprecated features are removed during the next minor release.
+* Until a feature becomes GA, there are no guarantees that it will continue being available. For more information, see the [changelog](https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md).
+
+{:.warning}
+>**Important:** To avoid disrupting your services, consider not using features until they have reached GA status.
+
+### SanitizeKonnectConfigDumps
+
+The `SanitizeKonnectConfigDumps` feature enables the sanitization of configuration dumps that are sent to {{site.konnect_short_name}}.
+This means {{site.kic_product_name}} will obfuscate all sensitive information that your Kong config contains, such as
+private keys in `Certificate` entities and `Consumer` entities' credentials.
+
+{:.warning}
+> **Warning:** `KongPlugin`'s and `KongClusterPlugin`'s `config` fields are not sanitized. If you have sensitive information
+> in your `KongPlugin`'s `config` field, it will be sent to Konnect as is. To avoid this, use the
+> [KongVault](/kubernetes-ingress-controller/{{page.release}}/reference/custom-resources/#kongvault) resource.
+
+### CombinedServicesFromDifferentHTTPRoutes
+
+The `CombinedServicesFromDifferentHTTPRoutes` feature enables translating `HTTPRoute` rules
+with the same set of backends (combination of namespace, name, port, and weight) from different `HTTPRoute`s in the same namespace
+into a single {{site.base_gateway}} Service. Enabling the feature gate can reduce the number of translated {{site.base_gateway}} Services.
+
+The names of {{site.base_gateway}} Services will change if the feature gate is enabled.
+You can refer to the [`HTTRoutes` reference page](/kubernetes-ingress-controller/faq/combining-httproutes/) for further details.
+
 
 ## Using feature gates
 
@@ -137,35 +166,3 @@ kubectl set env -n kong deployment/kong-controller \
   CONTROLLER_FEATURE_GATES="FillIDs=true,RewriteURIs=true" \
   -c ingress-controller
 ```
-
-## Feature gate availability
-
-* The **since** and **until** rows in the [feature gates table](#available-feature-gates) refer to [KIC Releases](https://github.com/Kong/kubernetes-ingress-controller/releases).
-* Features that are currently in alpha or beta states may become deprecated at any time. Deprecated features are removed during the next minor release.
-* Until a feature becomes GA, there are no guarantees that it will continue being available. For more information, see the [changelog](https://github.com/Kong/kubernetes-ingress-controller/blob/main/CHANGELOG.md).
-
-{:.warning}
->**Important:** To avoid disrupting your services, consider not using features until they have reached GA status.
-
-
-## Feature gate details
-
-### SanitizeKonnectConfigDumps
-
-The `SanitizeKonnectConfigDumps` feature enables the sanitization of configuration dumps that are sent to {{site.konnect_short_name}}.
-This means {{site.kic_product_name}} will obfuscate all sensitive information that your Kong config contains, such as
-private keys in `Certificate` entities and `Consumer` entities' credentials.
-
-{:.warning}
-> **Warning:** `KongPlugin`'s and `KongClusterPlugin`'s `config` fields are not sanitized. If you have sensitive information
-> in your `KongPlugin`'s `config` field, it will be sent to Konnect as is. To avoid this, use the
-> [KongVault](/kubernetes-ingress-controller/{{page.release}}/reference/custom-resources/#kongvault) resource.
-
-### CombinedServicesFromDifferentHTTPRoutes
-
-The `CombinedServicesFromDifferentHTTPRoutes` feature enables translating `HTTPRoute` rules
-with the same set of backends (combination of namespace, name, port, and weight) from different `HTTPRoute`s in the same namespace
-into a single {{site.base_gateway}} Service. Enabling the feature gate can reduce the number of translated {{site.base_gateway}} Services.
-
-The names of {{site.base_gateway}} Services will change if the feature gate is enabled.
-You can refer to the [`HTTRoutes` reference page](/kubernetes-ingress-controller/faq/combining-httproutes/) for further details.

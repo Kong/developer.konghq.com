@@ -2,7 +2,7 @@
 title: Rewriting hosts
 
 description: |
-  Customize the Host header that is sent to your upstream service
+  Customize the Host header that is sent to your upstream service.
 
 content_type: reference
 layout: reference
@@ -19,6 +19,11 @@ related_resources:
     url: /kubernetes-ingress-controller/routing/rewriting-paths/
   - text: Rewriting paths
     url: /kubernetes-ingress-controller/reference/path-manipulation/
+
+breadcrumbs:
+  - /kubernetes-ingress-controller/
+  - index: kubernetes-ingress-controller
+    section: Reference
 ---
 
 {{ site.kic_product_name }} provides two annotations for manipulating the `Host` header. These annotations allow for three different behaviours:

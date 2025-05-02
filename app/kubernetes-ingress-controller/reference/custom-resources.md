@@ -2,7 +2,7 @@
 title: Custom Resource (CRD) API Reference
 
 description: |
-  See the generated CRD structure containing all possible resource fields and descriptions for each property
+  See the generated CRD structure containing all possible resource fields and descriptions for each property.
 
 content_type: reference
 layout: reference

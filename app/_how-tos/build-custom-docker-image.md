@@ -35,12 +35,15 @@ prereqs:
             ```
     - title: Download the {{site.base_gateway}} base image
       content: |
-        1. [Download](/gateway/install/#linux) the image for your desired operating system.
+        1. [Download](/gateway/install/#linux) the image for your operating system.
         2. Rename the file to either `kong.deb` or `kong.rpm` depending on the package.
 
 related_resources:
   - text: Install {{site.base_gateway}} using Docker Compose
     url: /gateway/install/docker/
+
+tags:
+- docker
 ---
 
 

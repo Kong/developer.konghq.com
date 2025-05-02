@@ -1,5 +1,6 @@
 ---
-title: Configure the Konnect Config Store vault
+title: Configure the {{site.konnect_short_name}} Config Store vault
+description: Learn how to use the {{site.konnect_short_name}} Config Store vault.
 content_type: how_to
 related_resources:
   - text: Secrets management
@@ -80,7 +81,7 @@ body:
 Export the Config Store ID in the response body as an environment variable so you can use it later:
 
 ```sh
-export DECK_CONFIG_STORE_ID=config-store-uuid
+export DECK_CONFIG_STORE_ID='CONFIG STORE ID'
 ```
 
 ## Configure {{site.konnect_short_name}} as your Vault

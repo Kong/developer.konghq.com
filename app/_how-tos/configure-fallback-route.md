@@ -1,7 +1,7 @@
 ---
 title: Configure a fallback Route
 content_type: how_to
-
+description: Learn how to configure a fallback Route to redirect 404s to a specific upstream service.
 related_resources:
   - text: Route
     url: /gateway/entities/route/
@@ -67,6 +67,7 @@ Let's check that the Route works by accessing httpbin's `/anything` Service, whi
 {% validation request-check %}
 url: /anything
 status_code: 200
+display_headers: true
 {% endvalidation %}
 
 You should get a `200` response back.
@@ -76,8 +77,7 @@ Now try to access the same proxy URL, but at the root path (`/`):
 {% validation request-check %}
 url: /
 status_code: 404
-body:
-  message: "no Route matched with those values"
+display_headers: true
 {% endvalidation %}
 
 The request will fail with the message `no Route matched with those values`.
@@ -113,6 +113,7 @@ Try accessing the `/` path again:
 {% validation request-check %}
 url: /
 status_code: 302
+display_headers: true
 {% endvalidation %} 
 
 This time, the request passes with a 302, and the request is redirected to the fallback Service URL. 

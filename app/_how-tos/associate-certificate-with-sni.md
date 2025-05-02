@@ -1,6 +1,7 @@
 ---
 title: Associate a Certificate with an SNI
 content_type: how_to
+description: Learn how to associate a Certificate to an SNI.
 related_resources:
   - text: Secure your API with TLS using SNIs
     url: /how-to/secure-api-with-tls/

@@ -31,6 +31,9 @@ icon: tls-handshake-modifier.png
 categories:
   - security
 
+tags:
+  - security
+
 search_aliases:
   - tls-handshake-modifier
   - certificates
@@ -56,3 +59,7 @@ To improve this situation, {{site.base_gateway}} builds an in-memory map of SNIs
 * On specific requests only when the plugin is applied at the Route level and all Routes have SNIs set.
 
 If you want to restrict the handshake request for client certificates to specific requests, all Routes must have SNIs.
+
+{:.warning}
+> When using the plugin with [expressions routes](/gateway/latest/reference/expressions-language/), 
+the client certificate will always be requested, even if the routes are configured with SNIs. 

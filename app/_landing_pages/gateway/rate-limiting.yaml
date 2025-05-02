@@ -1,5 +1,5 @@
 metadata:
-  title: Gateway Rate Limiting
+  title: Gateway rate limiting
   content_type: landing_page
   description: This page is an introduction to rate limiting with {{site.base_gateway}}.
   breadcrumbs:
@@ -9,10 +9,12 @@ metadata:
   works_on:
   - on-prem
   - konnect
+  tags:
+  - rate-limiting
 rows:
   - header:
       type: h1
-      text: "Rate Limiting with {{site.base_gateway}}"
+      text: "Rate limiting with {{site.base_gateway}}"
 
   - header:
       type: h2
@@ -85,7 +87,7 @@ rows:
                   oss: true
                   ee: true
                 - title: Advanced rate limiting algorithms
-                  subtitle: e.g. Leaky bucket, Sliding window
+                  subtitle: "For example: leaky bucket, sliding window."
                   oss: false
                   ee: true
                 - title: Enhanced window size configuration
@@ -108,7 +110,7 @@ rows:
 
   - header:
       type: h2
-      text: How-to Guides
+      text: How-to guides
     columns:
       - blocks:
           - type: how_to_list
@@ -122,7 +124,7 @@ rows:
 
   - header:
       type: h2
-      text: "Specialized Rate Limiting Plugins"
+      text: "Specialized rate limiting plugins"
     columns:
       - blocks:
           - type: plugin

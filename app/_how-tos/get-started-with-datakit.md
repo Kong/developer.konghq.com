@@ -2,7 +2,7 @@
 title: Get started with Datakit
 content_type: how_to
 tech_preview: true
-
+description: Learn how to configure the Datakit plugin.
 products:
     - gateway
 
@@ -53,7 +53,7 @@ related_resources:
     url: /plugins/datakit/
 ---
 
-## 1. Start {{site.base_gateway}} with the WASM engine
+## Start {{site.base_gateway}} with the WASM engine
 
 Start the {{site.base_gateway}} container with the `KONG_WASM` variable:
 
@@ -63,7 +63,7 @@ curl -Ls https://get.konghq.com/quickstart | bash -s -- \
    -e KONG_WASM=on
 ```
 
-## 2. Create a Service and a Route
+## Create a Service and a Route
 
 To be able to validate the configuration, we need to create a Gateway Service and a Route:
 
@@ -83,7 +83,7 @@ entities:
 {% endentity_examples %}
 <!--vale on -->
 
-## 3. Enable Datakit
+## Enable Datakit
 
 Test out Datakit by combining responses from two third-party API calls, then returning the result directly back to the client:
 
@@ -120,7 +120,7 @@ entities:
 {% endentity_examples %}
 <!--vale on -->
 
-## 4. Validate
+## Validate
 
 Access the Service using the `/anything` path:
 

@@ -1,7 +1,7 @@
 ---
 title: Rate limit a Gateway Service with {{site.base_gateway}}
 content_type: how_to
-
+description: Learn how to configure rate limiting for a Gateway Service.
 related_resources:
   - text: Rate Limiting
     url: /rate-limiting/
