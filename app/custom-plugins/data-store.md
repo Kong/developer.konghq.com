@@ -15,7 +15,7 @@ works_on:
     - on-prem
 search_aliases:
   - custom plugin data store
-  - plugin ds
+  - plugin data store
 description: Learn how to interact with the {{site.base_gateway}} data store in your custom plugin.
 
 tags:
