@@ -15,7 +15,7 @@ tags:
 description: RBAC manages {{site.base_gateway}} roles and permissions for Kong Manager and the Admin API.
 schema:
     api: gateway/admin-ee
-    path: /schemas/RBAC
+    path: /schemas/RbacUser
 
 related_resources:
   - text: Gateway Workspace entity
