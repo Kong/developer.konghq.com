@@ -783,7 +783,7 @@ for the gateway are bundled and you can skip this section.
 As of {{ site.base_gateway }} 3.0, Debian and RHEL images are built with minimal dependencies and run through automated security scanners before being published.
 They only contain the bare minimum required to run {{site.base_gateway}}.
 If you would like further customize the base image and any dependencies, you can
-[build your own Docker images](/how-to/build-custom-docker-images).
+[build your own Docker images](/how-to/build-custom-docker-image/).
 
 
 If you are using Debian, RHEL, or building your dependencies by hand, there are changes since the
