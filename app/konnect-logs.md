@@ -68,8 +68,6 @@ Audit logging provides the following benefits:
 
 ## Configure audit logging
 
-Audit logging is configured via a webhook with a SIEM provider of your choice. For more information, see [Set up an audit log webhook for a {{site.konnect_short_name}} org](/how-to/set-up-konnect-org-audit-log-webhook/).
-
 {{site.konnect_short_name}} captures three types of events:
 
 <!--vale off-->
