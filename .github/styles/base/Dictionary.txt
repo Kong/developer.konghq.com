@@ -234,12 +234,13 @@ getter
 getters
 gevent
 gibibytes
+github
 Github
-Github
+gitlab
 gitops
 glibc
 globbing
-Gluu
+gluu
 Gluu
 gojira
 Golang
@@ -380,6 +381,7 @@ Knative's
 Knatives
 Knatives
 kong
+kongair
 kong_name
 kong-ip
 Kong/kong
