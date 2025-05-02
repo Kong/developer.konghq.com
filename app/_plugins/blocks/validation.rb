@@ -18,13 +18,13 @@ module Jekyll
 
       products = @page.fetch('products', [])
 
-      unless products.include?('gateway') || products.include?('kic') || products.include?('ai-gateway')
+      unless products.include?('gateway') || products.include?('kic') || products.include?('ai-gateway') || products.include?('operator')
         raise ArgumentError,
               "Unsupported product for {% validation #{@name} %}"
       end
 
       config = YAML.load(contents)
-      drop = Drops::Validations::Base.make_for(yaml: config, name: @name)
+      drop = Drops::Validations::Base.make_for(yaml: config, id: @name)
 
       output = context.stack do
         context['config'] = drop
