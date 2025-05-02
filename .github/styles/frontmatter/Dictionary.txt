@@ -24,3 +24,4 @@ moesif
 traceableai
 expand_accordion
 act_as_plugin
+control_plane

@@ -10,7 +10,7 @@ module Jekyll
         def validate_yaml!
           return if @yaml.key?('url')
 
-          raise ArgumentError, "Missing `url` in {% validation #{name} %}."
+          raise ArgumentError, "Missing `url` in {% validation #{id} %}."
         end
       end
     end

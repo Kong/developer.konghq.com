@@ -8,7 +8,7 @@ module Jekyll
     module Validations
       class RateLimitCheck < Base # rubocop:disable Style/Documentation
         def validate_yaml!
-          raise ArgumentError, "Missing `iterations` in {% validation #{name} %}." unless @yaml.key?('iterations')
+          raise ArgumentError, "Missing `iterations` in {% validation #{id} %}." unless @yaml.key?('iterations')
 
           if @yaml.key?('grep') && !@yaml['output']&.key?('expected')
             raise ArgumentError,
@@ -17,7 +17,7 @@ module Jekyll
 
           return if @yaml.key?('url')
 
-          raise ArgumentError, "Missing `url` in {% validation #{name} %}."
+          raise ArgumentError, "Missing `url` in {% validation #{id} %}."
         end
       end
     end
