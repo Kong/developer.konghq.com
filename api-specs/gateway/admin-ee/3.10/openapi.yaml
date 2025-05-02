@@ -667,6 +667,72 @@ components:
                 description: The path at which the Partial configuration will be applied.
                 example: config.redis
       type: object
+    RbacUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        created_at:
+          description: Unix epoch when the resource was created.
+          type: integer
+        updated_at:
+          description: Unix epoch when the resource was last updated.
+          type: integer
+        name:
+          type: string
+          description: The name of the user.
+        user_token:
+          type: string
+          format: password
+          description: The RBAC user token.
+        user_token_ident:
+          type: string
+          description: The user token identifier.
+        comment:
+          type: string
+          description: Any comments associated with the user.
+        enabled:
+          type: boolean
+          description: Whether or not the user has RBAC enabled.
+      required:
+        - name
+        - enabled
+    RbacUserGroup:
+      type: object
+      properties:
+        user:
+          type: string
+          format: uuid
+          description: The RBAC user associated with the group.
+        group:
+          type: string
+          format: uuid
+          description: The group assigned to the user.
+      required:
+        - user
+        - group
+    RbacUserRole:
+      type: object
+      properties:
+        user:
+          type: string
+          format: uuid
+          description: The RBAC user associated with the role.
+        role:
+          type: string
+          format: uuid
+          description: The RBAC role assigned to the user.
+        role_source:
+          type: string
+          enum:
+            - local
+            - idp
+          default: local
+          description: The origin of the RBAC user role.
+      required:
+        - user
+        - role
     Route:
       description: Route entities define rules to match client requests. Each Route is associated with a Service, and a Service may have multiple Routes associated to it. Every request matching a given Route will be proxied to its associated Service. The combination of Routes and Services (and the separation of concerns between them) offers a powerful routing mechanism with which it is possible to define fine-grained entry-points in Kong leading to different upstream services of your infrastructure. You need at least one matching rule that applies to the protocol being matched by the Route.
       example:
@@ -13902,34 +13968,6 @@ paths:
       operationId: get-debug-node-log-level-log_level
       description: |
         Change the log level of a node.
-  /rbac/users:
-    get:
-      summary: List Users
-      tags:
-        - RBAC
-      responses:
-        '200':
-          $ref: '#/components/responses/rbac-user-response'
-        '401': 
-          $ref: '#/components/responses/HTTP401Error'
-      operationId: get-rbac-users
-      description: |-
-        List all users.
-
-        Note: RBAC users associated with admin aren't listed with `GET /rbac/users`. Instead, use `GET /admins` to list all admins.
-    post:
-      summary: Add a User
-      operationId: post-rbac-users
-      responses:
-        '200':
-          $ref: '#/components/responses/rbac-user-response'
-        '401': 
-          $ref: '#/components/responses/HTTP401Error'
-      tags:
-        - RBAC
-      requestBody:
-        $ref: '#/components/requestBodies/rbac-request'
-      description: Add a User
   '/rbac/users/{name_or_id}':
     parameters:
       - schema:
