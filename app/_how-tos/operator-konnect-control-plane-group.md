@@ -36,6 +36,7 @@ prereqs:
 
 TODO
 
+<!-- vale off -->
 {% konnect_crd %}
 kind: KonnectGatewayControlPlane
 metadata:
@@ -49,3 +50,4 @@ spec:
     authRef:
       name: konnect-api-auth
 {% endkonnect_crd %}
+<!-- vale on -->

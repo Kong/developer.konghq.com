@@ -36,6 +36,7 @@ prereqs:
 
 TODO
 
+<!-- vale off -->
 {% konnect_crd %}
 kind: KongService
 apiVersion: configuration.konghq.com/v1alpha1
@@ -49,7 +50,9 @@ spec:
     konnectNamespacedRef:
       name: gateway-control-plane
 {% endkonnect_crd %}
+<!-- vale on -->
 
+<!-- vale off -->
 {% konnect_crd %}
 kind: KongRoute
 apiVersion: configuration.konghq.com/v1alpha1
@@ -66,10 +69,13 @@ spec:
     namespacedRef:
       name: service
 {% endkonnect_crd %}
+<!-- vale on -->
 
 ## Validation
 
+<!-- vale off -->
 {% validation kubernetes-resource %}
 kind: KongService
 name: service
 {% endvalidation %}
+<!-- vale on -->

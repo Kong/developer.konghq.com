@@ -36,6 +36,7 @@ prereqs:
 
 TODO
 
+<!-- vale on -->
 {% konnect_crd %}
 kind: KongRoute
 apiVersion: configuration.konghq.com/v1alpha1
@@ -52,3 +53,4 @@ spec:
     konnectNamespacedRef:
       name: gateway-control-plane
 {% endkonnect_crd %}
+<!-- vale on -->

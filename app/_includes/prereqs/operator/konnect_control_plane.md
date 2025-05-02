@@ -2,6 +2,7 @@
 
 {% capture details_content %}
 
+<!-- vale off -->
 {% konnect_crd %}
 kind: KonnectGatewayControlPlane
 metadata:
@@ -13,5 +14,6 @@ spec:
       name: konnect-api-auth
 {% endkonnect_crd %}
 {% endcapture %}
+<!-- vale on -->
 
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/kubernetes.svg' %}
