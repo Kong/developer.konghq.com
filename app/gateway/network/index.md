@@ -14,6 +14,8 @@ description: Learn which ports {{site.base_gateway}} uses and how to configure t
 related_resources:
   - text: "Secure {{site.base_gateway}}"
     url: /gateway/security/
+  - text: Secure the Admin API
+    url: /gateway/secure-the-admin-api/
   - text: Proxying with {{site.base_gateway}}
     url: /gateway/traffic-control/proxying/
   - text: DNS configuration reference

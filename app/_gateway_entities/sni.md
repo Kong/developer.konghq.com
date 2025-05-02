@@ -11,6 +11,8 @@ related_resources:
     url: /gateway/entities/certificate/
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
+  - text: Using SSL certificates in {{site.base_gateway}}
+    url: /gateway/ssl-certificates/
       
 tools:
     - admin-api

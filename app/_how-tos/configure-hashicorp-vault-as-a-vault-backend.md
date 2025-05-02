@@ -8,6 +8,10 @@ description: "Learn how to reference HashiCorp Vault secrets from {{site.base_ga
 products:
     - gateway
 
+related_resources:
+  - text: Store Keyring data in a HashiCorp Vault
+    url: /how-to/store-keyring-in-hashicorp-vault/
+
 works_on:
     - on-prem
     - konnect

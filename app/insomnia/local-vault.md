@@ -1,13 +1,19 @@
 ---
 title: Local vault storage in Insomnia
 
-description: Local vault is a storage option that allows all project data to be stored locally on your device.
+description: Learn about storing all project data locally on your device with local vault.
 
 content_type: concept
 layout: concept
 
 products:
     - insomnia
+
+tags:
+  - secret-management
+
+breadcrumbs:
+  - /insomnia/
 
 related_resources:
   - text: Storage options
@@ -20,8 +26,8 @@ related_resources:
     url: /insomnia/scratch-pad/
   - text: API specs
     url: /insomnia/api-specs/
-  - text: Write tests for HTTP status codes
-    url: /how-to/write-http-status-tests/
+  - text: External vault integration
+    url: /insomnia/external-vault/
   - text: Security at Insomnia
     url: /insomnia/security/
 
@@ -31,7 +37,7 @@ faqs:
 
 ---
 
-{{ page.description | liquify }}
+Local vault is a storage option that allows all project data to be stored locally on your device.
 This option is ideal for users who prefer or require their data to remain off the cloud for privacy or security reasons.
 
 Key features:

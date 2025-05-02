@@ -1,7 +1,7 @@
 ---
 title: Add Correlation IDs to {{site.base_gateway}} logs
 content_type: how_to
-
+description: Learn how to add correlation IDs to logs with the Correlation ID plugin.
 tools:
   - deck
 
@@ -10,10 +10,16 @@ products:
 
 works_on:
     - on-prem
+tags:
+  - transformations
+  - logging
 
 plugins:
- - correlation-id
+  - correlation-id
 
+related_resources:
+  - text: "{{site.base_gateway}} logs"
+    url: /gateway/logs/
 tldr:
     q: How do I add Correlation IDs to my {{site.base_gateway}} logs?
     a: |
@@ -66,7 +72,7 @@ entities:
 
 ## Create a Service and a Route
 
-To be able to validate the configuration, we need to create a Gateway Service and a Route:
+To validate the configuration, we need to create a Gateway Service and a Route:
 <!--vale off -->
 {% entity_examples %}
 entities:

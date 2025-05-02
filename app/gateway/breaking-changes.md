@@ -169,7 +169,7 @@ As part of your upgrade to 3.7, remove the following tracing-related parameters 
 * `tracing_debug_header`
 * `generate_trace_details`
 
-We recommend transitioning to [OpenTelemetry Instrumentation](/gateway/tracing/) instead.
+We recommend transitioning to OpenTelemetry Instrumentation instead.
 
 #### Vaults
 

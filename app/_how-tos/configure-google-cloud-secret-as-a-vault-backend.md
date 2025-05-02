@@ -6,12 +6,17 @@ related_resources:
     url: /how-to/rotate-secrets-in-google-cloud-secret/
   - text: Secrets management
     url: /gateway/secrets-management/
-
+  - text: Google Cloud Vault configuration parameters
+    url: /gateway/entities/vault/?tab=google-cloud#vault-provider-specific-configuration-parameters
+  - text: Configure Google Cloud Secret Manager as a Vault entity with {{ site.kic_product_name }}
+    url: "/kubernetes-ingress-controller/vault/gcp/"
+description: Learn how to store a secret in Google Cloud Secret Manager, configure GCP as a Vault entity, and reference the stored secret in {{site.base_gateway}}.
 products:
     - gateway
 
 works_on:
     - on-prem
+    - konnect
 
 min_version:
   gateway: '3.4'
@@ -22,6 +27,9 @@ entities:
 tags:
     - security
     - secrets-management
+
+search_aliases:
+  - GCP
 
 tldr:
     q: How do I use Google Cloud Secret Manager as a Vault in {{site.base_gateway}}?
@@ -65,10 +73,15 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+    - title: Clean up Konnect environment
+      include_content: cleanup/platform/konnect
+      icon_url: /assets/icons/gateway.svg
 
 next_steps:
   - text: Review the Vaults entity
     url: /gateway/entities/vault/
+  - text: Rotate secrets in Google Cloud Secret with {{site.base_gateway}}
+    url: /how-to/rotate-secrets-in-google-cloud-secret/
 ---
 
 ## Configure Secret Manager as a vault with the Vault entity
@@ -87,11 +100,12 @@ entities:
 
 ## Validate
 
-To validate that the secret was stored correctly in Google Cloud, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. If the Docker container is named `kong-quickstart-gateway`, you can use the following command:
+To validate that the secret was stored correctly in Google Cloud, you can call a secret from your vault using the `kong vault get` command within the Data Plane container. 
 
-```sh
-docker exec kong-quickstart-gateway kong vault get {vault://gcp-sm-vault/test-secret}
-```
+{% validation vault-secret %}
+secret: '{vault://gcp-sm-vault/test-secret}'
+value: 'secret'
+{% endvalidation %}
 
 If the vault was configured correctly, this command should return the value of the secret. You can use `{vault://gcp-sm-vault/test-secret}` to reference the secret in any referenceable field.
 

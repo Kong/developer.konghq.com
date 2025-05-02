@@ -41,6 +41,7 @@ rows:
               
             icon: /assets/icons/admin-api.svg
             cta:
+              text: Secure the API &rarr;
               url: "/gateway/secure-the-admin-api/"
       - blocks:
         - type: card
@@ -51,6 +52,7 @@ rows:
               
             icon: /assets/icons/logs.svg
             cta:
+              text: Customize logs &rarr;
               url: "/gateway/logs/#customize-what-kong-gateway-logs"
       - blocks:
         - type: card
@@ -61,6 +63,7 @@ rows:
               
             icon: /assets/icons/firewall.svg
             cta:
+              text: See reference &rarr;
               url: "/gateway/network/"
 
   - header:
@@ -76,6 +79,7 @@ rows:
               
             icon: /assets/icons/login.svg
             cta:
+              text: Configure SSO &rarr;
               url: "/konnect-platform/konnect-sso/"
       - blocks:
         - type: card
@@ -86,6 +90,7 @@ rows:
               
             icon: /assets/icons/team.svg
             cta:
+              text: Manage teams and roles &rarr;
               url: "/konnect-platform/teams-and-roles/"
       - blocks:
         - type: card
@@ -96,6 +101,7 @@ rows:
               
             icon: /assets/icons/rbac.svg
             cta:
+              text: Manage RBAC &rarr;
               url: "/gateway/entities/rbac/"
 
   - header:
@@ -111,6 +117,7 @@ rows:
               
             icon: /assets/icons/vault.svg
             cta:
+              text: Learn about secrets management &rarr;
               url: "/gateway/secrets-management/#secrets-management/"
       - blocks:
         - type: card
@@ -121,6 +128,7 @@ rows:
               
             icon: /assets/icons/key.svg
             cta:
+              text: See reference &rarr;
               url: "/gateway/entities/key/"
       - blocks:
         - type: card
@@ -131,6 +139,7 @@ rows:
               
             icon: /assets/icons/group.svg
             cta:
+              text: See reference &rarr;
               url: "/gateway/entities/key-set/"
       - blocks:
         - type: card
@@ -141,6 +150,7 @@ rows:
               
             icon: /assets/icons/keyring.svg
             cta:
+              text: See reference &rarr;
               url: "/gateway/keyring/"
 
   - header:
@@ -156,6 +166,7 @@ rows:
               
             icon: /assets/icons/logs.svg
             cta:
+              text: Configure logs &rarr;
               url: "/gateway/logs/"
       - blocks:
         - type: card
@@ -166,6 +177,7 @@ rows:
               
             icon: /assets/icons/audit.svg
             cta:
+              text: Configure logs &rarr;
               url: "/gateway/audit-logs/"
       - blocks:
         - type: card
@@ -176,6 +188,7 @@ rows:
               
             icon: /assets/icons/audit.svg
             cta:
+              text: Configure logs &rarr;
               url: "/konnect-logs/"
       - blocks:
         - type: card
@@ -186,6 +199,7 @@ rows:
               
             icon: /assets/icons/monitor.svg
             cta:
+              text: See plugins &rarr;
               url: "/plugins/?category=analytics-monitoring%2Clogging"
 
   - columns:
@@ -207,13 +221,15 @@ rows:
               Report security vulnerabilities and see Kong's vulnerability management policy.
             icon: /assets/icons/file.svg
             cta:
+              text: See reference &rarr;
               url: "/gateway/vulnerabilities/"
       - blocks:
         - type: card
           config:
             title: Version support policy
             description: |
-              See Kong's version support policy
+              Read Kong's version support policy
             icon: /assets/icons/insomnia/bug.svg
             cta:
+              text: See reference &rarr;
               url: "/gateway/version-support-policy/"

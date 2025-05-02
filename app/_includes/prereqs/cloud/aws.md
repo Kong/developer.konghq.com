@@ -26,7 +26,7 @@ Note that these variables need to be provided in `customEnv` in your `values.yam
 Note that these variables need to be passed when creating your Data Plane container.
 {% endif %}
 
-Alternative connection methods such as `assume role` and how to use an `aws_session_token` can be found on the [AWS Secrets Manager page](/gateway/secrets-management/aws/)
+Alternative connection methods such as `assume role` and how to use an `aws_session_token` can be found on the [AWS Secrets Manager page](/gateway/entities/vault/?tab=aws#vault-provider-specific-configuration-parameters)
 {% endcapture %}
 
 
