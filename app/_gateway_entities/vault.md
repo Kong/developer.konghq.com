@@ -117,6 +117,8 @@ next_steps:
     url: /how-to/configure-the-konnect-config-store/
   - text: Set up HashiCorp Vault as a vault backend
     url: /how-to/configure-hashicorp-vault-as-a-vault-backend/
+  - text: Keyring
+    url: /gateway/keyring/
 
 
 works_on:

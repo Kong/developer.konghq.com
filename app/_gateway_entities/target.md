@@ -30,6 +30,11 @@ schema:
 api_specs:
     - gateway/admin-ee
     - konnect/control-planes-config
+tags:
+  - service-application
+search_aliases:
+  - hostname
+  - ip address
 
 works_on:
   - on-prem
