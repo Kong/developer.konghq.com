@@ -12,7 +12,9 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
     changes = false
 
     doc.css('h2, h3, h4, h5, h6').each do |heading|
-      next if heading.ancestors('.card').any?
+      should_always_link = heading['class']&.split&.include?('always-link')
+
+      next if heading.ancestors('.card').any? && !should_always_link
       next if heading.ancestors('.accordion-trigger').any?
       next unless heading['id']
 

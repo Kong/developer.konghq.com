@@ -26,6 +26,8 @@ module Jekyll
       page = PageWithoutAFile.new(site, __dir__, 'index', filename)
       page.data['title'] = index['title']
       page.data['layout'] = 'indices'
+      page.data['toc_depth'] = 3
+      page.data['toc_skip_page_title'] = true
       grouped_pages = config_to_grouped_pages(site, index)
       page.content = render(index, grouped_pages, site)
       page
