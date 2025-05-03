@@ -7,159 +7,159 @@ module Jekyll
     def generate(site)
       site.data['indices'] = {}
       Dir.glob(File.join(site.source, '_indices/**/*.yaml')).each do |file|
-        @seen = {}
-        @sections = {}
-        page = build_page(site, file)
+        index = YAML.load_file(file)
 
+        index['groups'] = [{ 'sections' => index.delete('sections') }] if index['sections'] && !index['groups']
+
+        index = normalize_paths(index)
+        index = process_auto_exclude(index)
+
+        page = build_page(site, file, index)
         site.pages << page
         slug = File.basename(file, File.extname(file))
         site.data['indices'][slug] = page
       end
     end
 
-    def build_page(site, file)
+    def build_page(site, file, index)
       filename = File.basename(file).gsub('.yaml', '.html')
       page = PageWithoutAFile.new(site, __dir__, 'index', filename)
-
-      # load yaml
-      index = YAML.load_file(file)
-
-      index = process_auto_exclude(index)
-
       page.data['title'] = index['title']
       page.data['layout'] = 'indices'
-      page.content = render(index, config_to_grouped_pages(site, index), site)
+      page.data['toc_depth'] = 3
+      page.data['toc_skip_page_title'] = true
+      grouped_pages = config_to_grouped_pages(site, index)
+      page.content = render(index, grouped_pages, site)
       page
     end
 
+    def normalize_paths(index)
+      index['groups'].each do |group|
+        group['sections'].each do |section|
+          section['items']&.each do |item|
+            item['path'] = item['path'].to_s if item.is_a?(Hash) && item.key?('path')
+          end
+          section['not_match']&.each do |item|
+            item['path'] = item['path'].to_s if item.is_a?(Hash) && item.key?('path')
+          end
+        end
+      end
+      index
+    end
+
     def process_auto_exclude(index)
-      index['sections'].each do |section|
-        section['items'] ||= []
-        section['not_match'] ||= []
+      all_sections = index['groups'].flat_map { |g| g['sections'] }
 
-        next unless section['auto_exclude']
+      index['groups'].each do |group|
+        group['sections'].each do |section|
+          next unless section['auto_exclude'] || section['auto_exclude_group']
 
-        index['sections'].each do |other|
-          next if section['title'] == other['title']
-
-          # If we have a block containing /foo/**/*
-          # And use auto_exclude on a sub-path, nothing will be included
-          # so we have to add a negative matcher here too
-          not_match = other['items'].reject do |match|
-            section['auto_exclude_except']&.any? do |a|
-              a == match
-            end
+          if section['auto_exclude_group']
+            exclusions = group['sections'].reject { |s| s.equal?(section) }.flat_map { |s| s['items'] || [] }
+          else
+            exclusions = all_sections.reject { |s| s.equal?(section) }.flat_map { |s| s['items'] || [] }
           end
 
-          section['not_match'] = section['not_match'].concat(not_match)
+          section['not_match'] ||= []
+          section['not_match'] = (section['not_match'] + exclusions).uniq { |item| item['path'] }
         end
       end
 
       index
     end
 
-    def add_entry(title, page, match_index, allow_duplicates)
-      url = page.respond_to?(:url) ? page.url : page['url']
-
-      return if @seen[url] unless allow_duplicates
-
-      @sections[title]['pages'] << {
-        'page' => page,
-        'match_index' => match_index
-      }
-
-      @seen[url] = true
-    end
-
     def config_to_grouped_pages(site, index)
-      # Initialize the sections
-      index['sections'].each do |section|
-        @sections[section['title']] = {
-          'pages' => []
-      }.merge(section)
-      end
+      return [] unless index['groups']
 
-      all = [].concat(site.pages, site.documents)
-      all.each do |page|
-        # Some pages are not meant to be in the index
-        # These are usually the /index.md page for folders that serve as an index themselves
-        next if page.data['skip_index']
+      index['groups'].map do |group|
+        @sections = {}
+        seen = {}
 
-        # Take only the latest versioned page
-        next if page_is_versioned(page)
+        group['sections'].each do |section|
+          @sections[section['title']] = {
+            'pages' => []
+          }.merge(section)
+        end
 
-        index['sections'].each do |section|
-          section['items'].each_with_index do |match, i|
-            # It's a path
-            next add_path(page, section['title'], match, section['not_match'], i, section['allow_duplicates']) if match['path']
+        all = [].concat(site.pages, site.documents)
+        all.each do |page|
+          next if page.data['skip_index'] || page_is_versioned(page)
 
-            # How-To Lookup
-            next add_how_to(site, section['title'], match, i, section['allow_duplicates']) if match['type'] == 'how-to'
-
-            # Or a hardcoded page
-            next add_entry(section['title'], match, i, section['allow_duplicates']) if match['url']
-
-            raise "Unknown match type: #{match}"
+          group['sections'].each do |section|
+            section['items'].each_with_index do |match, i|
+              next unless match['path'] || match['type'] == 'how-to' || match['url']
+              add_path(page, section['title'], match, section['not_match'], i, section['allow_duplicates'], seen) if match['path']
+              add_how_to(site, section['title'], match, i, section['allow_duplicates'], seen) if match['type'] == 'how-to'
+              add_entry(section['title'], match, i, section['allow_duplicates'], seen) if match['url']
+            end
           end
         end
+
+        sort_sections!
+
+        {
+          'title' => group['title'],
+          'sections' => @sections.values,
+          'hidden' => group['hidden']
+        }
       end
-
-      sort_sections!
-
-      @sections.values
     end
 
     def page_is_versioned(page)
       page.data['releases'] && !page.data['releases'].empty? && !page.data['canonical?']
     end
 
-    def add_path(page, section, match, not_match, match_index, allow_duplicates)
+    def add_entry(title, page, match_index, allow_duplicates, seen)
+      url = page.respond_to?(:url) ? page.url : page['url']
+      return if seen[url] && !allow_duplicates
+
+      @sections[title]['pages'] << {
+        'page' => page,
+        'match_index' => match_index
+      }
+      seen[url] = true
+    end
+
+    def add_path(page, section, match, not_match, match_index, allow_duplicates, seen)
       return unless File.fnmatch(match['path'], page.url, ::File::FNM_PATHNAME)
 
-      should_match = not_match&.none? do |nm|
+      should_match = !not_match || not_match.none? do |nm|
         next unless nm['path']
 
-        File.fnmatch(nm['path'], page.url, ::File::FNM_PATHNAME)
+        r = File.fnmatch(nm['path'], page.url, ::File::FNM_PATHNAME)
+        r
       end
 
       return unless should_match
 
-      add_entry(section, page, match_index, allow_duplicates)
+      add_entry(section, page, match_index, allow_duplicates, seen)
     end
 
-    def add_how_to(site, section, match, match_index, allow_duplicates)
+    def add_how_to(site, section, match, match_index, allow_duplicates, seen)
       how_tos = fetch_how_tos(site, match)
-
       how_tos.each do |how_to|
-        add_entry(section, how_to, match_index, allow_duplicates)
-      end
-    end
-
-    def sort_sections!
-      @sections.each_key do |title|
-        @sections[title]['pages'] = @sections[title]['pages'].sort_by! do |p|
-          entry = p['page']
-
-          # Handle explicit page definitions where there is no `page` key
-          entry = {} if entry.nil?
-          [
-            # Sort by position in section map
-            p['match_index'],
-            # By explicit weight
-            entry.respond_to?(:data) ? entry.data['weight'] : entry['weight'],
-            # By title
-            entry.respond_to?(:data) ? entry.data['title'].downcase : entry['title']&.downcase
-          ]
-        end
-
-        # Remove the match index
-        @sections[title]['pages'] = @sections[title]['pages'].map { |p| p['page'] || p }.uniq
+        add_entry(section, how_to, match_index, allow_duplicates, seen)
       end
     end
 
     def fetch_how_tos(site, match)
       site.collections['how-tos'].docs.select do |t|
         match_criteria(t.data, match)
+      end
+    end
+
+    def sort_sections!
+      @sections.each_key do |title|
+        @sections[title]['pages'] = @sections[title]['pages'].sort_by! do |p|
+          entry = p['page'] || {}
+          [
+            p['match_index'],
+            entry.respond_to?(:data) ? entry.data['weight'] : entry['weight'],
+            entry.respond_to?(:data) ? entry.data['title']&.downcase : entry['title']&.downcase
+          ]
+        end
+
+        @sections[title]['pages'] = @sections[title]['pages'].map { |p| p['page'] || p }.uniq
       end
     end
 

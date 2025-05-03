@@ -1,9 +1,17 @@
 title: All Operator Documentation
-sections:
-  - title: Uncategorized
-    items:
-      - path: /operator/**/*
-    auto_exclude: true
+groups:
+  - title: Demo 123
+    sections:
+      - title: Demo1
+        items:
+          - path: /operator/**/*
+        auto_exclude: true
   - title: Konnect
-    items:
-      - path: /operator/konnect/**/*
+    sections:
+      - title: K1
+        items:
+          - path: /operator/konnect/**/*
+        auto_exclude_group: true
+      - title: Konnect CRDs
+        items:
+          - path: /operator/konnect/crd/**/*

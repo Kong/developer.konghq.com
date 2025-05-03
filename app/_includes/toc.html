@@ -191,5 +191,7 @@
         <li>
             <a href="#{{page.title | slugify }}" class="tab-button__vertical scroll-to">{{ include.page_title | liquify }}</a>
         </li>{% endcapture %}
+    {% unless include.toc_skip_page_title %}
     {% capture jekyll_toc %}{{ jekyll_toc | split: 'id="toc">'  | join: new_header}}{% endcapture %}
+    {% endunless %}
 {% endcapture %}{% assign tocWorkspace = '' %}{{ deprecation_warnings }}{{ jekyll_toc -}}
