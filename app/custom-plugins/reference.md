@@ -100,7 +100,7 @@ In its simplest form, a plugin consists of two mandatory modules:
 
 Some plugins, such as the [File Log](https://github.com/Kong/kong/tree/master/kong/plugins/file-log) plugin, use only these two modules. However, you can use advanced modules to implement extra functionalities.
 
-To learn how to create a simple plugin with the basic modules, see the [getting started guide](/custom-plugins/#get-started).
+To learn how to create a simple plugin with the basic modules, see the [getting started guide](/custom-plugins/get-started/set-up-plugin-project/).
 
 ### Advanced plugin modules
 

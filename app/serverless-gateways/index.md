@@ -5,7 +5,12 @@ layout: reference
 description: | 
     Serverless gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned.
 
-
+breadcrumbs:
+  - /konnect-platform/
+tags:
+  - serverless-gateway
+  - hybrid-mode
+  - data-plane
 products:
     - gateway
 works_on:
@@ -45,6 +50,8 @@ related_resources:
     url: /dedicated-cloud-gateways/
   - text: Control plane and data plane communication
     url: /gateway/cp-dp-communication/
+  - text: Hybrid mode
+    url: /gateway/hybrid-mode/
 
 ---
 Serverless gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned. Serverless gateways are ideal for developers who want to test or experiment in a pre-production environment.
@@ -179,13 +186,13 @@ status_code: 201
 headers:
   - 'accept: application/json'
   - 'Content-Type: application/json'
-  - 'Authorization: Bearer ${PAT}'
+  - 'Authorization: Bearer $KONNECT_TOKEN'
 body:
   name: request-transformer
   config:
     add:
       headers:
-        - 'Authorization:Bearer ${secretTokenValue}'
+        - 'Authorization:Bearer $SECRET_TOKEN_VALUE'
 {% endcontrol_plane_request %}
 <!--vale on-->
 

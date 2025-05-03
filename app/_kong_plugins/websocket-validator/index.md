@@ -32,8 +32,17 @@ icon: websocket-validator.png
 categories:
   - traffic-control
 
+tags:
+  - websocket
+
 search_aliases:
   - websocket-validator
+
+related_resources:
+  - text: WebSocket Size Limit plugin
+    url: /plugins/websocket-size-limit/
+  - text: Enable OAuth 2.0 authentication for WebSocket requests
+    url: /how-to/enable-oauth2-authentication-for-websocket-requests/
 ---
 
 Validate individual WebSocket messages against a user-specified schema before proxying them.
@@ -42,7 +51,7 @@ The message schema can be configured by type (text or binary) and sender (client
 
 This plugin supports validation against [JSON schema draft4](https://json-schema.org/specification-links#draft-4).
 
-## How it works 
+## How the WebSocket Validator plugin works 
 
 When an incoming message is invalid according to the schema, a close frame is sent to the sender 
 (status: `1007`) and the peer before closing the connection.
@@ -75,12 +84,12 @@ autonumber
 The clients with the names `Alex` and `Kiran` pass validation, but when `missing_name` appears, 
 it's considered invalid and the plugin sends a close frame.
 
-## Configuring the plugin
+## Configuring the WebSocket Validator plugin
 
 At least one of the following complete message validation configuration pairs must be defined:
-  * `config.client.text.type` and `config.client.text.schema`
-  * `config.client.binary.type` and `config.client.binary.schema`
-  * `config.upstream.text.type` and `config.upstream.text.schema`
-  * `config.upstream.binary.type` and `config.upstream.binary.schema`
+  * [`config.client.text.type`](/plugins/websocket-validator/reference/#schema--config-client-text-type) and [`config.client.text.schema`](/plugins/websocket-validator/reference/#schema--config-client-text-schema)
+  * [`config.client.binary.type`](/plugins/websocket-validator/reference/#schema--config-client-binary-type) and [`config.client.binary.schema`](/plugins/websocket-validator/reference/#schema--config-client-binary-schema)
+  * [`config.upstream.text.type`](/plugins/websocket-validator/reference/#schema--config-upstream-text-type) and [`config.upstream.text.schema`](/plugins/websocket-validator/reference/#schema--config-upstream-text-schema)
+  * [`config.upstream.binary.type`](/plugins/websocket-validator/reference/#schema--config-upstream-binary-type) and [`config.upstream.binary.schema`](/plugins/websocket-validator/reference/#schema--config-upstream-binary-schema)
 
 See [Validating client text frames](/plugins/websocket-validator/examples/validate-client-text-frames/) for an example.

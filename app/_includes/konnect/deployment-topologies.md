@@ -2,8 +2,8 @@
 {% mermaid %} 
 flowchart TD
     A(Dev Portal &bull; Gateway Manager &bull; Advanced Analytics &bull; Service Catalog)
-    B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong-managed Control Plane \n #40;Kong Gateway instance#41;)
-    C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane \n #40;Kong Gateway instance#41;)
+    B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong-managed Control Plane #40;Kong Gateway instance#41;)
+    C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane #40;Kong Gateway instance#41;)
 
     subgraph id1 [Konnect]
     A --- B
@@ -18,6 +18,6 @@ flowchart TD
 
     style id1 stroke-dasharray:3,rx:10,ry:10
     style id2 stroke-dasharray:3,rx:10,ry:10
-    style B stroke:none,fill:#0E44A2,color:#fff
+    style B stroke:none,fill:#FFFFF,color:#fff
 {% endmermaid %}
 <!-- vale on-->
