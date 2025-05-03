@@ -98,10 +98,8 @@ module Jekyll
         sort_sections!
 
         {
-          'title' => group['title'],
           'sections' => @sections.values,
-          'hidden' => group['hidden']
-        }
+        }.merge(group)
       end
     end
 
