@@ -25,10 +25,8 @@ tags:
   - secrets-management
   - aws
   - database
-  - postgresql
 search_aliases:
   - Amazon
-  - Postgres
 
 tldr:
     q: How can I connect {{site.base_gateway}} to the database using credentials stored in AWS Secrets Manager?

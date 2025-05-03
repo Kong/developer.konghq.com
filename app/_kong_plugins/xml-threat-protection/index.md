@@ -33,7 +33,6 @@ categories:
 
 tags:
   - security
-  - xml
 
 search_aliases:
   - xml-threat-protection
