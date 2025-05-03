@@ -1,21 +1,25 @@
+{% for group in groups %}
+  {% if group.title %}<h2 id="{{ group.title | slugify }}">{{ group.title }}</h2>{% endif %}
 
-{% for group in groups %}{% unless group.hidden %}
-  <div id="{{ group.title | slugify }}" class="flex flex-col gap-5 heading-section card p-6 rounded-lg shadow-primary">
-      <h2>{{ group.title }}</h2>
-
-      <div class="content">
-        <ul class="list-none ml-0 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {% for page in group.pages %}
-            {% assign title = page.title %}
-            {% if page.short_title %}{% assign title = page.short_title %}{% endif %}
-            <li class="flex flex-col gap-1">
-              <a class="text-brand-saturated !mb-0 text-base tracking-[-.01em]" href="{{ page.url }}">{{ title }}</a>
-              <p class="text-xs text-terciary">
-                {{ page.description }}
-              </p>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-  </div>
-{% endunless %}{% endfor %}
+  {% for section in group.sections %}{% unless section.hidden %}
+    <div id="{% if group.title %}{{ group.title | slugify }}--{% endif %}{{ section.title | slugify }}" class="flex flex-col gap-5 heading-section card p-6 rounded-lg shadow-primary">
+        <div class="section mb-4">
+          <h3 class="text-lg font-semibold mb-2">{{ section.title }}</h3>
+          <div class="content">
+            <ul class="list-none ml-0 grid grid-cols-1 md:grid-cols-3 gap-6">
+              {% for page in section.pages %}
+                {% assign title = page.title %}
+                {% if page.short_title %}{% assign title = page.short_title %}{% endif %}
+                <li class="flex flex-col gap-1">
+                  <a class="text-brand-saturated !mb-0 text-base tracking-[-.01em]" href="{{ page.url }}">{{ title }}</a>
+                  <p class="text-xs text-terciary">
+                    {{ page.description }}
+                  </p>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+    </div>
+  {% endunless %}{% endfor %}
+{% endfor %}
