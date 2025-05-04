@@ -1,5 +1,11 @@
 {% assign summary='{{site.kic_product_name}} running' %}
 {% assign additional_flags = '' %}
+
+{% assign implicit_license = false %}
+{% if include.deployment == 'konnect' %}
+{% assign implicit_license = true %}
+{% endif %}
+
 {% assign use_values_file = false %}
 {% if prereqs.enterprise %}
 {% assign use_values_file = true %}
@@ -41,15 +47,17 @@
    helm repo update
    ```
 
-{% if prereqs.enterprise %}
+{% if prereqs.enterprise and include.deployment == 'on-prem' %}
 1. Create a file named `license.json` containing your {{site.ee_product_name}} license and store it in a Kubernetes secret:
 
    ```bash
    kubectl create namespace kong --dry-run=client -o yaml | kubectl apply -f -
    kubectl create secret generic kong-enterprise-license --from-file=license=./license.json -n kong
    ```
+{% endif %}
 
-1. Create a `values.yaml` file:
+{% if use_values_file %}
+1. Create a `values.yaml` file {% if include.deployment == 'konnect' %} using your Konnect control plane details TODO: Link to install page for Konnect{% endif %}:
 
    ```yaml
    cat <<EOF > values.yaml
@@ -57,18 +65,22 @@
      image:
        repository: kong/kong-gateway
      env:{% if prereqs.kubernetes.gateway_env %}{% for env in prereqs.kubernetes.gateway_env %}
-       {{ env[0] }}: '{{ env[1] }}'{% endfor %}{% endif %}
+       {{ env[0] }}: '{{ env[1] }}'{% endfor %}{% endif %}{% unless implicit_license %}
        LICENSE_DATA:
          valueFrom:
            secretKeyRef:
              name: kong-enterprise-license
-             key: license{% if prereqs.kubernetes.gateway_custom_env %}
+             key: license{% endunless %}{% if prereqs.kubernetes.gateway_custom_env %}
      customEnv:{% for env in prereqs.kubernetes.gateway_custom_env %}
        {{ env[0] }}: '{{ env[1] }}'{% endfor %}{% endif %}
    EOF
    ```
+
 {% assign additional_flags = additional_flags | append:' --values ./values.yaml' %}
+{% if include.deployment == 'on-prem' %}
 {% assign summary = summary | append:' (with an Enterprise license)' %}
+{% endif %}
+
 {% endif %}
 
 1. Install {{ site.kic_product_name }} using Helm:

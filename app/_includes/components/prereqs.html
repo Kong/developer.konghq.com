@@ -67,10 +67,20 @@
       {% endif %}
 
       {% for product in prereqs.products %}
-        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-          {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
-          {% include {{ product_include }} tier=include.tier prereqs=prereqs %}
+        {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
+
+        {% if product == 'kic' %}
+        <div data-deployment-topology="konnect" class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+          {% include {{ product_include }} tier=include.tier prereqs=prereq deployment='konnect' %}
         </div>
+        <div data-deployment-topology="on-prem" class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+          {% include {{ product_include }} tier=include.tier prereqs=prereq deployment='on-prem' %}
+        </div>
+        {% else %}
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+          {% include {{ product_include }} tier=include.tier prereqs=prereq %}
+        </div>
+        {% endif %}
       {% endfor %}
     {% endif %}
   {% endunless %}
