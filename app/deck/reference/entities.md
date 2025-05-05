@@ -1,5 +1,5 @@
 ---
-title: Entities Managed by decK
+title: Entities managed by decK
 description: Understand which entities decK can manage
 
 content_type: reference
@@ -16,8 +16,8 @@ breadcrumbs:
   - /deck/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: "{{site.base_gateway}} entities"
+    url: /gateway/entities/
 ---
 
 decK manages entity configuration for {{site.base_gateway}}, including all core proxy entities.
@@ -51,7 +51,7 @@ features:
     managed: true
   - title: Vaults
     managed: true
-  - title: Keys and key sets
+  - title: Keys and Key Sets
     managed: false
   - title: Licenses
     managed: false
@@ -63,17 +63,20 @@ features:
     managed: false
   - title: Developers
     managed: false
-  - title: Consumer groups
+  - title: Consumer Groups
     managed: true
   - title: Event hooks
     managed: false
   - title: Keyring and data encryption
     managed: false
+  - title: Partials
+    managed: true
 
 {% endfeature_table %}
 
-**\[1\]**: decK can create workspaces and manage entities in a given workspace.
+{:.info}
+> **\[1\]**: decK can create workspaces and manage entities in a given workspace.
 However, decK can't delete workspaces, and it can't update multiple workspaces simultaneously.
 See [Manage multiple workspaces](/deck/gateway/workspaces/) for more information.
 
-While deck can manage a majority of {{site.base_gateway}}'s configuration, we recommend additional arrangements for deployment, backup, and restoring unmanaged entities for a more comprehensive approach.
+While decK can manage a majority of {{site.base_gateway}}'s configuration, we recommend [additional arrangements](/gateway/upgrade/backup-and-restore/) for deployment, backup, and restoring unmanaged entities for a more comprehensive approach.

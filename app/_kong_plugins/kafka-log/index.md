@@ -31,9 +31,13 @@ categories:
 
 tags:
   - logging
+  - events
+  - kafka
 
 search_aliases:
   - kafka-log
+  - events
+  - event-gateway
 ---
 
 Publish request and response logs to an [Apache Kafka](https://kafka.apache.org/) topic. This plugin does not support message compression.

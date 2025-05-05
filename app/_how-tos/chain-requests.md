@@ -26,7 +26,7 @@ tldr:
 
 ## Send the first request
 
-In the KongAir collection, open the _Get KongAir planned flights_ request and click **Send** to get a list of flights. We can reuse content from the response in the next request.
+In the KongAir collection you configured in the [prerequisites](#prerequisites), open the _Get KongAir planned flights_ request and click **Send** to get a list of flights. We can reuse content from the response in the next request.
 
 ## Edit the second request
 
@@ -80,3 +80,4 @@ Click **Send** on the _Fetch more details about a flight_ to get the information
 	]
 }
 ```
+{:.no-copy-code}

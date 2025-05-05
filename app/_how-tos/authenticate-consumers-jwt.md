@@ -27,6 +27,7 @@ entities:
 
 tags:
     - authentication
+    - jwt
 
 tldr:
     q: How do I authenticate Consumers with JWT tokens?
@@ -55,7 +56,9 @@ cleanup:
 ## Create a Consumer
 
 [Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.
-We're going to use JWT [authentication](/gateway/authentication/) in this tutorial, so the Consumer needs a key and secret to access any {{site.base_gateway}} Services. We're specifying the key and secret here, but you can leave it out of the configuration in production if you want {{site.base_gateway}} to autogenerate it. 
+We're going to use JWT [authentication](/gateway/authentication/) in this tutorial, so the Consumer needs a key and secret to access any {{site.base_gateway}} Services. 
+
+We're specifying the key and secret here, but you can leave it out of the configuration in production if you want {{site.base_gateway}} to autogenerate it. 
 
 Create a Consumer:
 
@@ -114,11 +117,16 @@ C50k0bcahDhLNhLKSUBSR1OMiFGzNZ7X
 ```
 {:.no-copy-code}
 
-Using the [JWT debugger](https://jwt.io) with the header (`HS256`), claims (`iss`), and `secret` associated with this `key`, you’ll end up with a JWT token of `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJZSmRtYUR2VlRKeHRjV1JDdmtNaWtjOG9FTGdBVk5jeiIsImV4cCI6MTQ0MjQzMDA1NCwibmJmIjoxNDQyNDI2NDU0LCJpYXQiOjE0NDI0MjY0NTR9.WuLdHyvZGj2UAsnBl6YF9A4NqGQpaDftHjX18ooK8YY`. 
+Using the [JWT debugger](https://jwt.io) with the header (`HS256`), claims (`iss`), and `secret` associated with this `key`, you’ll end up with a JWT token of:
 
-Save this as an environment variable:
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJZSmRtYUR2VlRKeHRjV1JDdmtNaWtjOG9FTGdBVk5jeiJ9.xG-DrlD4vcYBqhuhK_jrwFIALvVvU-qTOiNyIfUhn_Y
+```
+{:.no-copy-code}
+
+Save the token as an environment variable:
 ```bash
-export JWT_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJZSmRtYUR2VlRKeHRjV1JDdmtNaWtjOG9FTGdBVk5jeiIsImV4cCI6MTQ0MjQzMDA1NCwibmJmIjoxNDQyNDI2NDU0LCJpYXQiOjE0NDI0MjY0NTR9.WuLdHyvZGj2UAsnBl6YF9A4NqGQpaDftHjX18ooK8YY"
+export JWT_TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJZSmRtYUR2VlRKeHRjV1JDdmtNaWtjOG9FTGdBVk5jeiJ9.xG-DrlD4vcYBqhuhK_jrwFIALvVvU-qTOiNyIfUhn_Y"
 ```
 
 ## Validate
@@ -130,9 +138,6 @@ First, run the following to verify that unauthorized requests return an error:
 <!--vale off-->
 {% validation unauthorized-check %}
 url: /anything
-headers:
-  - 'authorization: Bearer wrongpassword'
-  - 'Content-Type: application/json'
 status_code: 401
 {% endvalidation %}
 <!--vale on-->
@@ -142,7 +147,7 @@ Then, run the following command to test Consumer authentication:
 {% validation request-check %}
 url: '/anything'
 headers:
-  - 'authorization: Bearer $JWT_TOKEN'
+  - 'Authorization: Bearer $JWT_TOKEN'
   - 'Content-Type: application/json'
 status_code: 200
 {% endvalidation %}

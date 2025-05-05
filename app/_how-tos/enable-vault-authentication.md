@@ -26,12 +26,13 @@ entities:
 
 tags:
     - authentication
+    - hashicorp-vault
 
 tldr:
     q: How can I use Vault to manage authentication in {{site.base_gateway}}?
     a: |
       Create a HashiCorp Vault, then use the `POST /vault-auth` API to create a Vault object with your Vault configuration. 
-      Enable the Vault Authentication and associate it with the Vault object. Create a Consumer and use the `POST /vault-auth/{vault}/credentials/{consumer}` API to generate credentials for the Consumer.
+      Enable the Vault Authentication and associate it with the Vault object. Create a Consumer and use the `POST /vault-auth/$VAULT/credentials/$CONSUMER` API to generate credentials for the Consumer.
 
 tools:
     - deck
@@ -98,7 +99,7 @@ body:
 
 Add the value of `id` in the response to your environment, we'll need it in the next step:
 ```sh
-export DECK_VAULT_ID=<vault_object_id>
+export DECK_VAULT_ID='YOUR_VAULT_ID_HERE'
 ```
 
 ## Enable the Vault Authentication plugin
@@ -131,8 +132,8 @@ headers:
 
 This request returns an `access_token` and `secret_token`. Add these to your environment:
 ```sh
-export ACCESS_TOKEN=<consumer_access_token>
-export SECRET_TOKEN=<consumer_secret_token>
+export ACCESS_TOKEN='YOUR_CONSUMER_ACCESS_TOKEN'
+export SECRET_TOKEN='YOUR_CONSUMER_SECRET_TOKEN'
 ```
 
 ## Validate

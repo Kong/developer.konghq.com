@@ -15,6 +15,10 @@ works_on:
     - on-prem
     - konnect
 
+tags:
+  - traffic-control
+  - events
+  - kafka
 
 topologies:
   on_prem:
@@ -32,6 +36,9 @@ categories:
 
 search_aliases:
   - kafka-upstream
+  - events
+  - event gateway
+
 ---
 
 This plugin converts requests into [Apache Kafka](https://kafka.apache.org/) messages and publishes them to a specified Kafka topic.  

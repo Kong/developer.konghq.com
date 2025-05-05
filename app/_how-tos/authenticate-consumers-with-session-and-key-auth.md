@@ -163,7 +163,7 @@ The response should now have the `Set-Cookie` header.
 Make sure that this cookie works by copying the contents (for example: `session=emjbJ3MdyDsoDUkqmemFqw..|1544654411|4QMKAE3I-jFSgmvjWApDRmZHMB8.`) and exporting it in an environment variable:
 
 ```sh
-export COOKIE_HEADER='<your-cookie-header-here>'
+export COOKIE_HEADER='YOUR-COOKIE-HEADER-HERE'
 ```
 
 Use your session token in the request, but don't provide the API key. Even without the key, you will still be authenticated because {{site.base_gateway}} is using the session cookie granted by the Session plugin:

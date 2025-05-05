@@ -23,8 +23,14 @@ content_type: reference
 * Fixed a bug that would cause an unexpected error when `skip_consumer_lookup` is enabled and 
   `authenticated_group_by` is set to `null`.
 
+**{{site.base_gateway}} 3.1.x**
+* Added the `config.send_ca_dn` configuration parameter to support sending CA
+DNs in the `CertificateRequest` message during SSL handshakes.
+* Added the `config.allow_partial_chain` configuration parameter to allow certificate verification with only an intermediate certificate.
+
 **{{site.base_gateway}} 3.0.x**
 * The deprecated `X-Credential-Username` header has been removed.
+* The plugin priority changed from `1006` to `1600`.
 
 **{{site.base_gateway}} 2.8.1.1**
 

@@ -49,7 +49,7 @@ rows:
               Set it up with Keycloak as a sample identity provider (IdP) to test out the OIDC plugin.
             icon: /assets/icons/graduation.svg
             cta:
-              text: Configure your first OIDC implementation &rarr;
+              text: Configure your first OIDC implementation 
               url: /how-to/configure-oidc-with-auth-code-flow/
               align: end
       - blocks:
@@ -59,7 +59,7 @@ rows:
             description: Learn about the authentication options that the OIDC plugin supports, and choose the one that suits your use case.
             icon: /assets/icons/lock.svg
             cta:
-              text: Learn about supported flows and grants &rarr;
+              text: Learn about supported flows and grants 
               url: "#authentication-flows-and-grants"
               align: end
       - blocks:
@@ -195,7 +195,7 @@ rows:
             title: "Auth0"
             icon: /assets/icons/third-party/auth0.svg
             cta:
-              text: Set up OIDC with Auth0 &rarr;
+              text: Set up OIDC with Auth0 
               url: "/plugins/openid-connect/examples/auth0/"  
       - blocks:
         - type: card
@@ -203,7 +203,7 @@ rows:
             title: "Amazon Cognito"
             icon: /assets/icons/aws.svg
             cta:
-              text: Set up OIDC with Cognito &rarr;
+              text: Set up OIDC with Cognito 
               url: "/plugins/openid-connect/examples/auth0/"  
       - blocks:
         - type: card
@@ -211,7 +211,7 @@ rows:
             title: "Azure AD"
             icon: /assets/icons/azure.svg
             cta:
-              text: Set up OIDC with Azure AD &rarr;
+              text: Set up OIDC with Azure AD 
               url: "/plugins/openid-connect/examples/auth0/"
   - columns:
       - blocks:
@@ -220,7 +220,7 @@ rows:
             title: "Curity Identity Server"
             icon: /assets/icons/third-party/curity.svg
             cta:
-              text: Set up OIDC with Curity &rarr;
+              text: Set up OIDC with Curity 
               url: "/plugins/openid-connect/examples/curity/"  
       - blocks:
         - type: card
@@ -228,7 +228,7 @@ rows:
             title: "Google"
             icon: /assets/icons/google-cloud.svg
             cta:
-              text: Set up OIDC with Google &rarr;
+              text: Set up OIDC with Google 
               url: "/plugins/openid-connect/examples/google/"  
       - blocks:
         - type: card
@@ -236,7 +236,7 @@ rows:
             title: "Okta"
             icon: /assets/icons/okta.svg
             cta:
-              text: Set up OIDC with Okta &rarr;
+              text: Set up OIDC with Okta 
               url: "/plugins/openid-connect/examples/okta/"
 
   - header:
@@ -251,7 +251,7 @@ rows:
                 The OpenID Connect plugin supports various features of the FAPI standard, aimed to protect APIs that expose high-value and sensitive data.
               icon: /assets/icons/security.svg
               cta:
-                text: See all supported features &rarr;
+                text: See all supported features 
                 url: /plugins/openid-connect/#financial-grade-api-fapi
                 align: end
       - blocks:
@@ -262,7 +262,7 @@ rows:
                 Learn how to debug the OIDC plugin configuration.
               icon: /assets/icons/debug.svg
               cta:
-                text: Debugging OIDC &rarr;
+                text: Debugging OIDC 
                 url: /plugins/openid-connect/#debugging-the-oidc-plugin
                 align: end
       - blocks:
@@ -273,7 +273,7 @@ rows:
                 The plugin has been tested with several OpenID Connect providers.
               icon: /assets/icons/plug.svg
               cta:
-                text: See all tested identity providers &rarr;
+                text: See all tested identity providers 
                 url: /plugins/openid-connect/#supported-identity-providers
                 align: end
 

@@ -1,5 +1,5 @@
 ---
-title: Environment Variables
+title: Environment variables for decK
 description: Use environment variables to provide runtime configuration
 
 content_type: reference
@@ -16,8 +16,8 @@ breadcrumbs:
   - /deck/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: "{{site.base_gateway}} entities"
+    url: /gateway/entities/
 ---
 
 decK can read environment variables at runtime, allowing you to pass per-environment configuration.
@@ -45,6 +45,6 @@ vaults:
 To test, set the `DECK_HCV_TOKEN` environment variable and run `deck gateway sync`:
 
 ```bash
-export DECK_HCV_TOKEN="TOKEN_GOES_HERE"
+export DECK_HCV_TOKEN='YOUR_TOKEN_HERE'
 deck gateway sync kong.yaml
 ```

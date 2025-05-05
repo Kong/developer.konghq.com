@@ -148,7 +148,7 @@ rows:
       
           icon: /assets/icons/plugins/traceableai.svg
           cta:
-            text: Set up Traceable in the Service Catalog &rarr;
+            text: Set up Traceable in the Service Catalog 
             url: "/service-catalog/integrations/traceable/"
 
   - header:
@@ -183,5 +183,5 @@ rows:
             
           icon: /assets/icons/third-party/dynatrace.png
           cta:
-            text: Set up Dynatrace with OpenTelemetry &rarr;
+            text: Set up Dynatrace with OpenTelemetry 
             url: "/how-to/set-up-dynatrace-with-otel/"

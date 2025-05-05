@@ -1,5 +1,5 @@
 ---
-title: Security
+title: decK security
 
 description: decK can be used to configure RBAC rules in {{ site.ee_product_name }}
 
@@ -16,9 +16,8 @@ tools:
 breadcrumbs:
   - /deck/
 
-related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+tags:
+  - security
 ---
 
 decK is a CLI tool that runs on your own machine. It can be used to configure RBAC for {{ site.ee_product_name }}, but does not provide a way to secure {{ site.ce_product_name }}.
