@@ -14,6 +14,7 @@
      --json '{{ include.body | json_prettify: 1 | escape_env_variables | indent: 4 | strip }}'{% elsif include.body_cmd %} \
      --json "{{ include.body_cmd }}"{% endif %}{% if include.jq %} | jq {{ include.jq }}{% endif %}{% if include.capture -%}){% endif %}
 {% endfor -%}
+```
 
 {% if include.message %}
 You should see the following response:
