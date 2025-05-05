@@ -1,6 +1,8 @@
 ---
 title: Get started with {{site.event_gateway}}
 content_type: how_to
+breadcrumbs:
+  - /event-gateway/
 
 products:
     - event-gateway
@@ -12,11 +14,11 @@ tags:
     - get-started
     - event-gateway
 
-description: Use this tutorial to get started with {{site.base_gateway}}. # this only appears in search results
+description: Use this tutorial to get started with {{site.base_gateway}}.
 
 tldr: 
   q: What is {{site.event_gateway}}, and how can I get started with it?
-  a: | # this description will appear at the top of the page
+  a: | 
     Info on what you're going to learn about in this how-to 
 
 tools:
@@ -27,9 +29,6 @@ prereqs:
     - title: Install kafkactl
       content: |
         We need Kafkactl install it man!
-    - title: this is a prerequisite
-      content: |
-        Something that you need to do first
 
 cleanup:
   inline:
@@ -40,11 +39,11 @@ cleanup:
 automated_tests: false
 ---
 
-## 1. Create a control plane in Konnect
+## Create a control plane in Konnect
 
 {% include knep/konnect-create-cp.md name='KNEP getting started' %}
 
-## 2. Start a local kafka cluster
+## Start a local kafka cluster
 
 {% include knep/docker-compose-start.md %}
 
@@ -60,7 +59,7 @@ knep  | 2025-04-30T08:59:58.004076Z  WARN tokio-runtime-worker ThreadId(09) add_
 
 This is expected, as we have not yet configured the control plane. We will do this in the next step.
 
-## 3. Configure {{site.event_gateway}} control plane with a passthrough cluster 
+## Configure {{site.event_gateway}} control plane with a passthrough cluster 
 
 Let's create the configuration file for the control plane. This file will define the backend cluster and the virtual cluster.
 ```shell
@@ -103,7 +102,7 @@ body_cmd: "$(jq -Rs '{config: .}' < knep-config.yaml)"
 <!--vale on-->
 
 
-## 4. Check the cluster works
+## Check the cluster works
 
 Now let's check that the cluster works. We can use the Kafka UI to do this by going to [http://localhost:8082](http://localhost:8082) and checking the cluster list. You should see the `direct-kafka-cluster` and `knep-proxy-cluster` cluster listed there.
 
@@ -145,6 +144,6 @@ __consumer_offsets     50             1
 _schemas               1              1
 ```
 
-## 5. Add prefix to the cluster 
+## Add prefix to the cluster 
 
 TODO!
