@@ -1,6 +1,7 @@
 ---
 title: Create an Upstream and Target
-description: "TODO"
+description: "Provision an upstream and attach targets to it in {{site.konnect_short_name}} using Kubernetes CRDs."
+
 content_type: how_to
 
 permalink: /operator/konnect/crd/gateway/upstream-target/
@@ -20,13 +21,16 @@ works_on:
   - konnect
 
 entities: []
-
+search_aliases:
+  - kgo upstream
+  - kgo target
 tags:
   - konnect-crd
  
 tldr:
-  q: Question?
-  a: Answer
+  q: How do I configure load balancing with Upstreams and Targets using KGO?
+  a: Define a `KongUpstream` and associate one or more `KongTarget` resources with it to distribute traffic across backend services.
+
 
 prereqs:
   operator:
@@ -36,29 +40,75 @@ prereqs:
 
 ---
 
-## TODO
+## Create a `KongUpstream`
 
-TODO
+Use the `KongUpstream` resource to define a load balancing group for backend services. Your `KongUpstream` must be associated with a `KonnectGatewayControlPlane` object that you’ve created in your cluster.
 
 <!-- vale off -->
 {% konnect_crd %}
-kind: KonnectExample
+kind: KongUpstream
+apiVersion: configuration.konghq.com/v1alpha1
 metadata:
-  name: example-name
+  name: upstream
 spec:
-  name: example
-  other: field
-  konnect:
-    authRef:
-      name: konnect-api-auth
+  name: upstream
+  controlPlaneRef:
+    type: konnectNamespacedRef
+    konnectNamespacedRef:
+      name: gateway-control-plane
 {% endkonnect_crd %}
 <!-- vale on -->
+
+## Create `KongTargets`
+
+Use the `KongTarget` resource to register two individual backend targets for the Upstream.
+
+First, create `target-a`:
+
+<!-- vale off -->
+{% konnect_crd %}
+kind: KongTarget
+apiVersion: configuration.konghq.com/v1alpha1
+metadata:
+  name: target-a
+spec:
+  upstreamRef:
+    name: upstream
+  target: "10.0.0.1"
+  weight: 30
+{% endkonnect_crd %}
+
+Next, `target-b`:
+
+{% konnect_crd %}
+kind: KongTarget
+apiVersion: configuration.konghq.com/v1alpha1
+metadata:
+  name: target-b
+spec:
+  upstreamRef:
+    name: upstream
+  target: "10.0.0.2"
+  weight: 70
+{% endkonnect_crd %}
+<!-- vale on -->
+
 
 ## Validation
 
 <!-- vale off -->
 {% validation kubernetes-resource %}
-kind: KonnectExample
-name: example-name
+kind: KongUpstream
+name: upstream
+{% endvalidation %}
+
+{% validation kubernetes-resource %}
+kind: KongTarget
+name: target-a
+{% endvalidation %}
+
+{% validation kubernetes-resource %}
+kind: KongTarget
+name: target-b
 {% endvalidation %}
 <!-- vale on -->

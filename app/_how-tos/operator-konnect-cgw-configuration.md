@@ -1,6 +1,6 @@
 ---
 title: Create a Cloud Gateways Dataplane Configuration
-description: "TODO"
+description: "Provision a Dedicated Cloud Gateway Data Plane Group Configuration in {{site.konnect_short_name}} using the `KonnectCloudGatewayDataPlaneGroupConfiguration` CRD."
 content_type: how_to
 
 permalink: /operator/konnect/crd/cloud-gateways/configuration/
@@ -19,13 +19,18 @@ works_on:
   - konnect
 
 entities: []
-
+search_aliases:
+  - kgo data plane group
+  - kgo cloud gateway configuration
 tags:
   - konnect-crd
- 
+related_resources:
+  - text: Dedicated Cloud Gateway
+    url: /dedicated-cloud-gateways/
 tldr:
-  q: Question?
-  a: Answer
+  q: How do I configure a Dedicated Cloud Gateway with data plane groups in {{site.konnect_short_name}}?
+  a: Use the `KonnectCloudGatewayDataPlaneGroupConfiguration` resource to define autoscaling Data Plane groups and associate them with Cloud Gateway networks.
+
 
 prereqs:
   operator:
@@ -35,29 +40,56 @@ prereqs:
 
 ---
 
-## TODO
+## Create a `KonnectCloudGatewayDataPlaneGroupConfiguration`
 
-TODO
+Use the `KonnectCloudGatewayDataPlaneGroupConfiguration` resource to configure data plane groups for a Dedicated Cloud Gateway. Only one configuration can exist per Control Plane.
+
+Creating multiple configurations will result in overwriting the previous one. Each Dedicated Cloud Gateway supports only a single `DataPlaneGroupConfiguration`.
 
 <!-- vale off -->
 {% konnect_crd %}
-kind: KonnectExample
+apiVersion: konnect.konghq.com/v1alpha1
+kind: KonnectCloudGatewayDataPlaneGroupConfiguration
 metadata:
-  name: example-name
+  name: konnect-cg-dpconf
 spec:
-  name: example
-  other: field
-  konnect:
-    authRef:
-      name: konnect-api-auth
+  api_access: private+public
+  version: "3.10"
+  dataplane_groups:
+    - provider: aws
+      region: eu-west-1
+      networkRef:
+        type: namespacedRef
+        namespacedRef:
+          name: konnect-network-1
+      autoscale:
+        type: static
+        static:
+          instance_type: small
+          requested_instances: 2
+      environment:
+        - name: KONG_LOG_LEVEL
+          value: debug
+  controlPlaneRef:
+    type: konnectNamespacedRef
+    konnectNamespacedRef:
+      name: gateway-control-plane
 {% endkonnect_crd %}
 <!-- vale on -->
 
+It will change when the network provisioning is finished.
+
+Since creating a Data Plane Group Configuration can take some time, you can monitor its status by checking the `dataplane_groups` field. Data Plane Group Configurations receive this field when they are successfully provisioned in Konnect.
+
+```
+kubectl get konnectcloudgatewaydataplanegroupconfiguration.konnect.konghq.com eu-west-1 -o=jsonpath='{.status.dataplane_groups}' | yq -p json
+```
+
 ## Validation
 
-<!-- vale off -->
+Data Plane configuration You can check its status using:
+
 {% validation kubernetes-resource %}
-kind: KonnectExample
-name: example-name
+kind: KonnectCloudGatewayDataPlaneGroupConfiguration
+name: konnect-cg-dpconf
 {% endvalidation %}
-<!-- vale on -->

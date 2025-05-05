@@ -1,6 +1,6 @@
 ---
 title: Create a Consumer and Consumer Group
-description: "Provision Consumers, and manage Consumer Groups in Konnect using Kubernetes CRDs."
+description: "Provision Consumers, and manage Consumer Groups in {{site.konnect_short_name}} using Kubernetes CRDs."
 content_type: how_to
 
 permalink: /operator/konnect/crd/gateway/consumer/
@@ -70,7 +70,6 @@ kind: KongConsumerGroup
 apiVersion: configuration.konghq.com/v1beta1
 metadata:
   name: consumer-group
-  namespace: default
 spec:
   name: consumer-group
   controlPlaneRef:
@@ -91,7 +90,6 @@ kind: KongConsumer
 apiVersion: configuration.konghq.com/v1
 metadata:
   name: consumer
-  namespace: default
 username: consumer
 custom_id: 08433C12-2B81-4738-B61D-3AA2136F0212 
 consumerGroups:

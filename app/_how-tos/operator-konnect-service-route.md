@@ -25,8 +25,8 @@ tags:
   - konnect-crd
  
 tldr:
-  q: How can I create a service and route for Konnect using KGO?
-  a: Define a `KongService` and `KongRoute` in your Kubernetes cluster to provision and configure Gateway entities through the Konnect Gateway Manager.
+  q: How can I create a service and route for {{site.konnect_short_name}} using KGO?
+  a: Define a `KongService` and `KongRoute` in your Kubernetes cluster to provision and configure Gateway entities through the {{site.konnect_short_name}} Gateway Manager.
 
 
 prereqs:
