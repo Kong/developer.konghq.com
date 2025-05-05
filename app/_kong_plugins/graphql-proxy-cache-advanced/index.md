@@ -49,7 +49,7 @@ related_resources:
 The GrapQL Proxy Cache Advanced plugin provides a reverse GraphQL proxy cache implementation for {{site.base_gateway}}. 
 It caches response entities by GraphQL query or Vary headers.
 
-## How the GrapQL Proxy Cache Advanced plugin works
+## How the GraphQL Proxy Cache Advanced plugin works
 
 {% include_cached /plugins/caching/strategies.md name=page.name %}
 

@@ -9,7 +9,7 @@ related_resources:
   - text: Configure an AWS Secrets Manager Vault with KIC
     url: /kubernetes-ingress-controller/vault/aws/
   - text: AWS Secrets Manager Vault configuration parameters
-    url: https://kongdeveloper.netlify.app/gateway/entities/vault/?tab=aws#vault-provider-specific-configuration-parameters
+    url: /gateway/entities/vault/?tab=aws#vault-provider-specific-configuration-parameters
 description: Learn how to store your {{site.base_gateway}} PostgreSQL credentials in AWS Secrets Manager.
 products:
   - gateway
@@ -109,7 +109,7 @@ docker run -d --name kong-database \
 The username and password specified in this command are the PostgreSQL master credentials.
 
 ## Create environment variables
-Define the username and password to use to connect {{site.base_gateway}} to the database and store them in environment variables
+Define the username and password to use to connect {{site.base_gateway}} to the database and store them in environment variables:
 ```sh
 export KONG_PG_USER=kong
 export KONG_PG_PASSWORD=KongPassword
@@ -149,7 +149,7 @@ docker run --rm \
 ```
 
 {:.info}
-> **Note:** `kong migrations` does not support secrets managements, so this step passes the database credentials with environment variables.
+> **Note:** `kong migrations` does not support secrets management, so this step passes the database credentials with environment variables.
 
 ## Start {{site.base_gateway}}
 Create the {{site.base_gateway}} container with your AWS credentials and the vault references in the environment:

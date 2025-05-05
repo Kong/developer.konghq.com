@@ -18,6 +18,5 @@ flowchart TD
 
     style id1 stroke-dasharray:3,rx:10,ry:10
     style id2 stroke-dasharray:3,rx:10,ry:10
-    style B stroke:none,fill:#FFFFF,color:#fff
 {% endmermaid %}
 <!-- vale on-->

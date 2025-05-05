@@ -290,7 +290,7 @@ configuration data and there is no other way to recover it.
 
 For technical details, refer to the [disaster recovery documentation](/gateway/keyring/#disaster-recovery).
 
-## Other files to backup
+## Other files to back up
 
 Manually back up the following files:
 
