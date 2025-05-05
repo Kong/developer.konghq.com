@@ -25,8 +25,10 @@ search_aliases:
 tags:
   - konnect-crd
 related_resources:
-  - /key-sets/
-  - /keys/
+  - text: Key Sets
+    url: /key-sets/
+  - text: Keys
+    url: /keys/
 tldr:
   q: How can I manage keys and key sets for {{site.konnect_short_name}} using Kubernetes?
   a: Create `KongKey` and `KongKeySet` resources and associate them using the `keySetRef` field.
