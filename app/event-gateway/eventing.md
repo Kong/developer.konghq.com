@@ -2,7 +2,7 @@
 title: "Eventing reference"
 content_type: reference
 layout: reference
-
+beta: true
 breadcrumbs:
   - /event-gateway/
 

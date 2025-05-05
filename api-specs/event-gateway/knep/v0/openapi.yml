@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
-  title: Kiburi API
-  description: Native Event Gateway API
+  title: Kong Native Event Proxy API (KNEP)
+  description: Kong Native Event Proxy API (KNEP).
   version: 0.0.1
   contact:
     name: Kong
@@ -13,16 +13,18 @@ components:
     Config:
       type: object
       properties:
-        runtime:
-          $ref: "#/components/schemas/Runtime"
-        server_tls:
-          $ref: "#/components/schemas/ServerTls"
         key_sources:
           type: array
           description: "Key sources for configuring encryption or decryption"
           minItems: 1
           items:
             $ref: "#/components/schemas/KeySource"
+        schema_registries:
+          type: array
+          description: "Schema registries configurations that can be referred in a schema_validation policy."
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/SchemaRegistry"
         policies:
           type: array
           description: "Policy configurations that can be referred to in a virtual cluster configuration."
@@ -41,49 +43,70 @@ components:
           description: "A list of backend clusters."
           items:
             $ref: "#/components/schemas/BackendCluster"
+        listeners:
+          type: object
+          description: |
+            Listener configuration on which port proxy serves the traffic.
+            VirtualCluster is then configured to use either all port listeners or all SNI listeners.
+          properties:
+            port:
+              type: array
+              items:
+                $ref: "#/components/schemas/PortListener"
+            sni:
+              type: array
+              items:
+                $ref: "#/components/schemas/SNIListener"
       required: [ virtual_clusters, backend_clusters ]
-    Policy:
+    PortListener:
       type: object
-      description: "Policies are functionality used to alter traffic between clients and Kiburi or Kiburi and backend brokers."
-      oneOf:
-        - $ref: "#/components/schemas/ModifyHeadersPolicy"
-        - $ref: "#/components/schemas/EncryptPolicy"
-        - $ref: "#/components/schemas/DecryptPolicy"
-    Runtime:
-      type: object
+      required: [ listen_address, listen_port_start ]
+      description: "Listeners based on opening port for each virtual broker of virtual clusters configured with port routing"
       properties:
-        drain_duration:
-          type: string
-          format: duration
-          description: "Duration for draining connections before shutdown. At least 1s."
-          default: "30s"
-        shutdown_timeout:
-          type: string
-          format: duration
-          description: "Timeout duration for the shutdown process. At least 1s."
-          default: "60s"
-        health_listener_address:
-          type: string
-          description: "Address and port where the health listener binds."
-          default: "127.0.0.1:8080"
-        virtual_broker_listen_address:
+        listen_address:
           type: string
           description: "IP address virtual brokers listen on."
           example: "127.0.0.1"
-          default: "::"
-    ServerTls:
+        advertised_host:
+          type: string
+          description: |
+            Virtual brokers configured with port routing are advertised to clients using this host. Any kind of host supported by kafka can be used.
+            If not defined, it's listen_address. If listen_address is 0.0.0.0 it's the destination IP of the TCP connection.
+          pattern: ""
+        listen_port_start:
+          type: integer
+          format: int32
+          description: |
+            Starting port from which the proxy will start virtual brokers for virtual clusters configured with port routing.
+            Proxy takes into account offset, min_broker_id configured on virtual cluster to start listening on specific port.
+            Specific port is computed by listen_port_start + offset + id - min_broker_id
+          minimum: 1024
+          maximum: 65535
+    SNIListener:
       type: object
+      description: "Listeners based on TLS SNI routing that expose virtual clusters configured with SNI routing"
+      required: [ listen_address, listen_port, cert, key ]
       properties:
+        listen_address:
+          type: string
+          description: "IP address virtual brokers listen on."
+          example: "127.0.0.1"
         listen_port:
           type: integer
           format: int32
-          description: "Port on which the TLS server listens."
+          description: "Port on which virtual brokers listen on."
           minimum: 1024
           maximum: 65535
-        exposed_port:
+        cert:
+          $ref: "#/components/schemas/DataSource"
+        key:
+          $ref: "#/components/schemas/Secret"
+        advertised_port:
           type: integer
           format: int32
-          description: "Port that is exposed for external communication."
+          description: |
+            Virtual brokers are advertised to clients with this port instead of listen_port.
+            Useful when proxy is behind loadbalancer listening on different port
           minimum: 1024
           maximum: 65535
         sni_suffix:
@@ -93,13 +116,16 @@ components:
             This suffix will be concatenated with the virtual cluster name to form the base name for the SNI.
             If not provided, the virtual cluster name will be used as the base name for the SNI.
             For example with sni_suffix: `.example.com` and virtual cluster name: `my-cluster`, the SNI will be `my-cluster.example.com`.
-              A bootstrap host will be `bootstrap.my-cluster.example.com` and then each brokers will be `broker0.my-cluster.example.com`, `broker1.my-cluster.example.com`, etc.
+            A bootstrap host will be `bootstrap.my-cluster.example.com` and then each brokers will be `broker0.my-cluster.example.com`, `broker1.my-cluster.example.com`, etc.
             This means that your deployment will need to have a wildcard certificate for the domain and a DNS resolver that routes `*.my-cluster.example.com` to the proxy.
-        cert:
-          $ref: "#/components/schemas/DataSource"
-        key:
-          $ref: "#/components/schemas/Secret"
-      required: [ listen_port, exposed_port, cert, key ]
+    Policy:
+      type: object
+      description: "Policies are functionality used to alter traffic between clients and KNEP or KNEP and backend brokers."
+      oneOf:
+        - $ref: "#/components/schemas/ModifyHeadersPolicy"
+        - $ref: "#/components/schemas/EncryptPolicy"
+        - $ref: "#/components/schemas/DecryptPolicy"
+        - $ref: "#/components/schemas/SchemaValidationPolicy"
     EntityName:
       type: string
       description: "A valid entity name following DNS label constraints."
@@ -125,22 +151,27 @@ components:
             port:
               type: object
               description: |
-                Route by port. Every broker gets a canonical port that depends on the broker ID (`id`).
-                The port is calculated as listen_start + id - min_broker_id + 1.
-                For example, if there are 3 brokers (id=0, id=1, id=2) and we picked 9092 as listen_start then we open 4 ports, 9092 as a bootstrap port, and 9093, 9094, 9095.
+                In this mode, every broker gets a canonical port at the config that depends on the broker node ID.
+                The port is calculated as listeners.port.listen_port_start + offset + id - min_broker_id.
+                For example, if there are 3 brokers (id=0, id=1, id=2) and we picked 9092 as listeners.port.listen_port_start and offset 100
+                then we open 3 ports: 9192, 9193, 9194.
                 This is less flexible when it comes to configuring load balancers, but it does not require TLS, so it might be easier to start.
               properties:
-                listen_start:
+                offset:
                   type: integer
-                  description: "The starting port for listening. It will open as many ports as there are brokers starting from this port."
+                  description: "The proxy opens as many ports as there are brokers, starting from offset + listener port in PortListener"
                 min_broker_id:
                   type: integer
-                  description: "The lowest broker ID in the cluster."
-                advertise_host:
+                  description: "The lowest broker node ID in the cluster."
+                bootstrap_port:
                   type: string
-                  description: "The advertised host (DNS name or IP) for the broker. Visible for the clients on Metadata and FindCoordinator requests."
-                  pattern: ""
-              required: [ listen_start, min_broker_id ]
+                  enum: [none, at_offset]
+                  description: |
+                    If set to at_offset, it opens an additional bootstrap port at listener_port_start + offset.
+                    It provides a stable endpoint to use as bootstrap_server for clients, regardless of broker IDs in the cluster.
+                    Additionally, it offsets all ports by one, so for example, if there are 3 brokers (id=0, id=1, id=2) and we picked 9092 as listeners.port.listen_port_start and offset 100
+                    then we open 4 ports: 9192 (bootstrap), 9193 (id=0), 9294 (id=1), 9295 (id=2)
+              required: [ min_broker_id ]
         rewrite_ids:
           type: object
           description: How to handle transaction and consumer group ids
@@ -148,28 +179,28 @@ components:
           properties:
             type:
               type: string
-              enum: [prefix, disabled]
-              default: prefix
+              enum: [disabled, prefix]
+              default: disabled
         topic_rewrite:
           $ref: "#/components/schemas/TopicRewrite"
         limits:
           $ref: "#/components/schemas/VirtualClusterLimits"
         consume_policies:
           type: array
-          description: "Kiburi applies these policies when forwarding Fetch messages to clients. Entries are checked in sequential order and every entry where match evaluates to true is applied."
+          description: "KNEP applies these policies when forwarding Fetch messages to clients. Entries are checked in sequential order and every entry where match evaluates to true is applied."
           minItems: 1
           items:
             $ref: "#/components/schemas/VirtualClusterConsumePolicyMatch"
         produce_policies:
           type: array
-          description: "Kiburi applies these policies when forwarding Produce messages to brokers. Entries are checked in sequential order and every entry where match evaluates to true is applied."
+          description: "KNEP applies these policies when forwarding Produce messages to brokers. Entries are checked in sequential order and every entry where match evaluates to true is applied."
           minItems: 1
           items:
             $ref: "#/components/schemas/VirtualClusterProducePolicyMatch"
         authentication:
           type: array
           description: |
-            How to handle authentication from clients to the Kiburi proxy.
+            How to handle authentication from clients to KNEP.
             It tries to authenticate with every rule sequentially one by one.
             It succeeds on the first match, but fails if no rule matches.
           minItems: 1
@@ -182,7 +213,7 @@ components:
       required: [policies]
       properties:
         match:
-          description: "An ATC expression compatible with Kiburi. See https://docs.konghq.com/gateway/latest/reference/expressions-language/language-references for more information about ATC."
+          description: "An ATC expression compatible with KNEP. See https://docs.konghq.com/gateway/latest/reference/expressions-language/language-references for more information about ATC."
           type: string
           format: kong-atc@1.7
         policies:
@@ -194,10 +225,6 @@ components:
     VirtualClusterConsumePolicy:
       type: object
       description: "A policy that is applied to Fetch messages."
-      properties:
-        type:
-          type: string
-          enum: [ref_name, policy]
       required: [type]
       oneOf:
         - type: object
@@ -224,7 +251,7 @@ components:
       required: [policies]
       properties:
         match:
-          description: "An ATC expression compatible with Kiburi. See https://docs.konghq.com/gateway/latest/reference/expressions-language/language-references for more information about ATC."
+          description: "An ATC expression compatible with KNEP. See https://docs.konghq.com/gateway/latest/reference/expressions-language/language-references for more information about ATC."
           type: string
           format: kong-atc@1.7
         policies:
@@ -236,10 +263,6 @@ components:
     VirtualClusterProducePolicy:
       type: object
       description: "A policy that is applied to Produce messages."
-      properties:
-        type:
-          type: string
-          enum: [ref_name, policy]
       required: [type]
       oneOf:
         - type: object
@@ -266,12 +289,14 @@ components:
       oneOf:
         - $ref: "#/components/schemas/ModifyHeadersPolicy"
         - $ref: "#/components/schemas/DecryptPolicy"
+        - $ref: "#/components/schemas/SchemaValidationPolicy"
     ProducePolicy:
       type: object
       description: "A policy that is applied to Produce messages."
       oneOf:
         - $ref: "#/components/schemas/ModifyHeadersPolicy"
         - $ref: "#/components/schemas/EncryptPolicy"
+        - $ref: "#/components/schemas/SchemaValidationPolicy"
     ModifyHeadersPolicy:
       type: object
       description: "Set or remove record headers"
@@ -293,39 +318,30 @@ components:
               items:
                 type: object
                 required: [type]
-                oneOf:
-                  - type: object
-                    description: "Headers to remove by key."
-                    properties:
-                      type:
-                        type: string
-                        enum: [remove]
-                      remove:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            key:
-                              type: string
-                          required: [key]
-                    required: [type, remove]
-                  - type: object
+                properties:
+                  type:
+                    type: string
+                    enum: [remove, set]
+                  remove:
+                    type: array
+                    items:
+                      type: object
+                      description: "Headers to remove by key."
+                      properties:
+                        key:
+                          type: string
+                      required: [key]
+                  set:
+                    type: array
                     description: "Add key and value to headers or overwrite if the key exists."
-                    properties:
-                      type:
-                        type: string
-                        enum: [set]
-                      set:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            key:
-                              type: string
-                            value:
-                              type: string
-                          required: [key, value]
-                    required: [type, set]
+                    items:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                        value:
+                          type: string
+                      required: [key, value]
     KeySource:
       type: object
       description: "Describes how to find a symmetric key for encryption or decryption."
@@ -367,17 +383,14 @@ components:
                 credentials:
                   type: object
                   description: "AWS API credentials"
-                  required: [iam_user]
-                  properties:
-                    iam_user:
-                      type: object
-                      required: [access_key_id, secret_access_key]
-                      description: "Authenticate as an IAM user"
+                  oneOf:
+                    - type: object
+                      description: "Load credentials from the environment. See https://docs.aws.amazon.com/sdk-for-rust/latest/dg/credproviders.html#credproviders-default-credentials-provider-chain for more information about how credential retrieval."
+                      required: [type]
                       properties:
-                        access_key_id:
+                        type:
                           type: string
-                        secret_access_key:
-                          type: string
+                          enum: [env]
     VirtualClusterKeySource:
       type: object
       description: "Describes how to find a symmetric key for encryption or decryption."
@@ -501,9 +514,89 @@ components:
               minItems: 1
               items:
                 $ref: "#/components/schemas/DecryptionRecordSelector"
+    SchemaRegistry:
+      type: object
+      description: Configuration of schema registry that can be then referenced in schema_validation policy.
+      required: [name, type]
+      properties:
+        name:
+          $ref: "#/components/schemas/EntityName"
+        type:
+          type: string
+          enum: [confluent, json]
+          description: |
+            * confluent - validates against confluent schema registry.
+            * json - simple JSON parsing without the schema.
+        confluent:
+          $ref: "#/components/schemas/ConfluentSchemaRegistry"
+    ConfluentSchemaRegistry:
+      description: Configuration of [Confluent Schema Registry](https://github.com/confluentinc/schema-registry).
+      required: [endpoint, schema_type]
+      properties:
+        schema_type:
+          type: string
+          enum: [avro, json]
+          default: avro
+          description: Type of schema to use.
+        endpoint:
+          type: string
+          format: uri
+          description: URL for schema registry endpoint.
+          minLength: 1
+        timeout:
+          type: string
+          format: duration
+          default: "10s"
+          description: Total time from establishing connection to receive a response from schema registry.
+        authentication:
+          description: How to authenticate to the schema registry.
+          required: [type]
+          properties:
+            type:
+              type: string
+              enum: [basic_auth]
+            basic_auth:
+              type: object
+              description: |
+                Connections are authenticated using basic authentication.
+                https://docs.confluent.io/platform/current/security/authentication/http-basic-auth/overview.html#schema-registry
+                In case of Confluent Cloud a username is API key and a password is API secret.
+              required: [username, password]
+              properties:
+                username:
+                  $ref: "#/components/schemas/DataSource"
+                password:
+                  $ref: "#/components/schemas/Secret"
+    SchemaValidationPolicy:
+      type: object
+      description: This policy can be used to validate record using schema.
+      required: [name, type, spec]
+      properties:
+        name:
+          $ref: "#/components/schemas/EntityName"
+        type:
+          type: string
+          enum: [schema_validation]
+        spec:
+          type: object
+          properties:
+            record_key:
+              $ref: "#/components/schemas/SchemaValidationAction"
+            record_value:
+              $ref: "#/components/schemas/SchemaValidationAction"
+    SchemaValidationAction:
+      type: object
+      description: Configuration of validation of part of the record.
+      required: [schema_registry_name, failure_action]
+      properties:
+        schema_registry_name:
+          $ref: "#/components/schemas/EntityName"
+        failure_action:
+          type: string
+          enum: [reject, mark, skip]
     VirtualClusterLimits:
       type: object
-      description: "Limits on a virtual cluster. The limits are not shared between multiple instances of kiburi proxy."
+      description: "Limits on a virtual cluster. The limits are not shared between multiple instances of KNEP."
       properties:
         connections:
           type: integer
@@ -602,6 +695,24 @@ components:
           enum: [ sasl_plain ]
         mediation:
           $ref: "#/components/schemas/VirtualClusterAuthenticationMediation"
+        sasl_plain:
+          type: object
+          description: |
+            List of principals to be able to authenticate with. When defined gateway will terminate authentication.
+            You can only use it with "anonymous" or "use_backend_cluster" mediation.
+          required: [ principals ]
+          properties:
+            principals:
+              type: array
+              items:
+                type: object
+                minLength: 1
+                required: [ username, password ]
+                properties:
+                  username:
+                    $ref: "#/components/schemas/DataSource"
+                  password:
+                    $ref: "#/components/schemas/Secret"
     VirtualClusterAuthenticationSaslScramSha256:
       type: object
       description: |
@@ -668,12 +779,10 @@ components:
                   minLength: 1
                 timeout:
                   type: string
-                  format: duration
                   default: "10s"
                   description: Total time from establishing connection to receive a response from JWKS endpoint.
                 cache_expiration:
                   type: string
-                  format: duration
                   default: "1h"
                   description: Duration after which the gateway will fetch and cache JWKS.
             validate:
@@ -699,13 +808,13 @@ components:
           $ref: "#/components/schemas/VirtualClusterAuthenticationMediation"
     BackendCluster:
       type: object
-      required: [name, endpoints]
+      required: [name, bootstrap_servers]
       properties:
         name:
           $ref: "#/components/schemas/EntityName"
-        endpoints:
+        bootstrap_servers:
           type: array
-          description: "A list of cluster endpoints in the format address:port."
+          description: "A list of cluster bootstrap servers in the format address:port."
           minItems: 1
           items:
             type: string
@@ -719,8 +828,17 @@ components:
             It is used in two cases:
             * Proxy automatically discovering brokers by sending Metadata request to backend cluster
             * Virtual cluster authentication mediation configured to use_backend_cluster
-          oneOf:
-            - $ref: "#/components/schemas/BackendClusterAuthenticationSaslPlain"
+          required: [ type ]
+          properties:
+            type:
+              type: string
+              enum: [ sasl_plain, sasl_scram_sha256, sasl_scram_sha512 ]
+            sasl_plain:
+              $ref: "#/components/schemas/BackendClusterAuthenticationSaslPlain"
+            sasl_scram_sha256:
+              $ref: "#/components/schemas/BackendClusterAuthenticationSaslScramSha256"
+            sasl_scram_sha512:
+              $ref: "#/components/schemas/BackendClusterAuthenticationSaslScramSha512"
         tls:
           type: object
           properties:
@@ -740,24 +858,32 @@ components:
           required: [insecure_skip_verify]
         metadata_update_interval:
           type: string
-          format: duration
           description: "Interval for updating metadata. At least 1s."
           default: "60s"
     BackendClusterAuthenticationSaslPlain:
       description: "Configuration of SASL with PLAIN mechanism"
-      required: [ type, sasl_plain ]
+      required: [ username, password ]
       properties:
-        type:
-          type: string
-          enum: [ sasl_plain ]
-        sasl_plain:
-          type: object
-          required: [ username, password ]
-          properties:
-            username:
-              $ref: "#/components/schemas/DataSource"
-            password:
-              $ref: "#/components/schemas/Secret"
+        username:
+          $ref: "#/components/schemas/DataSource"
+        password:
+          $ref: "#/components/schemas/Secret"
+    BackendClusterAuthenticationSaslScramSha256:
+      description: "Configuration of SASL with SCRAM-SHA-256 mechanism"
+      required: [ username, password ]
+      properties:
+        username:
+          $ref: "#/components/schemas/DataSource"
+        password:
+          $ref: "#/components/schemas/Secret"
+    BackendClusterAuthenticationSaslScramSha512:
+      description: "Configuration of SASL with SCRAM-SHA-512 mechanism"
+      required: [ username, password ]
+      properties:
+        username:
+          $ref: "#/components/schemas/DataSource"
+        password:
+          $ref: "#/components/schemas/Secret"
     Secret:
       type: object
       required: [type]
