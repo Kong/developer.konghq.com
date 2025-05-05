@@ -2,7 +2,7 @@
 title: Rewriting paths
 
 description: |
-  Rewrite the request path before sending it to your upstream service
+  Rewrite the request path before sending it to your upstream service.
 
 content_type: reference
 layout: reference
@@ -19,6 +19,11 @@ related_resources:
     url: /kubernetes-ingress-controller/routing/rewriting-paths/
   - text: Rewriting hosts
     url: /kubernetes-ingress-controller/reference/host-manipulation/
+  
+breadcrumbs:
+  - /kubernetes-ingress-controller/
+  - index: kubernetes-ingress-controller
+    section: Reference
 ---
 
 Users have the following options to modify the default path handling behavior:

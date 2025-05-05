@@ -1,13 +1,12 @@
 ---
-title: Configure the Konnect Config Store vault
+title: Configure the {{site.konnect_short_name}} Config Store vault
+description: Learn how to use the {{site.konnect_short_name}} Config Store vault.
 content_type: how_to
 related_resources:
   - text: Secrets management
     url: /secrets-management/
   - text: Vault entity
     url: /gateway/entities/vault/
-  - text: Store certificates in Konnect Config Store
-    url: /how-to/store-certificates-in-konnect-config-store/
   - text: Store a Mistral API key as a secret in Konnect Config Store
     url: /how-to/store-a-mistral-api-key-as-a-secret-in-konnect-config-store/
 
@@ -80,7 +79,7 @@ body:
 Export the Config Store ID in the response body as an environment variable so you can use it later:
 
 ```sh
-export DECK_CONFIG_STORE_ID=config-store-uuid
+export DECK_CONFIG_STORE_ID='CONFIG STORE ID'
 ```
 
 ## Configure {{site.konnect_short_name}} as your Vault

@@ -9,27 +9,29 @@ module Jekyll
       class Base < Liquid::Drop # rubocop:disable Style/Documentation
         include Jekyll::SiteAccessor
 
-        def self.make_for(name:, yaml:)
-          case name
+        def self.make_for(id:, yaml:)
+          case id
           when 'rate-limit-check'
-            RateLimitCheck.new(name:, yaml:)
+            RateLimitCheck.new(id:, yaml:)
           when 'unauthorized-check'
-            UnauthorizedCheck.new(name:, yaml:)
+            UnauthorizedCheck.new(id:, yaml:)
           when 'request-check'
-            RequestCheck.new(name:, yaml:)
+            RequestCheck.new(id:, yaml:)
           when 'grpc-check'
-            GrpcCheck.new(name:, yaml:)
+            GrpcCheck.new(id:, yaml:)
           when 'vault-secret'
-            VaultSecret.new(name:, yaml:)
+            VaultSecret.new(id:, yaml:)
+          when 'kubernetes-resource'
+            KubernetesResource.new(id:, yaml:)
           else
-            raise ArgumentError, "Missing Drop for `#{name}`"
+            raise ArgumentError, "Missing Drop for `#{id}`"
           end
         end
 
-        attr_reader :name
+        attr_reader :id
 
-        def initialize(name:, yaml:) # rubocop:disable Lint/MissingSuper
-          @name = name
+        def initialize(id:, yaml:) # rubocop:disable Lint/MissingSuper
+          @id = id
           @yaml = yaml
 
           validate_yaml!
@@ -63,11 +65,11 @@ module Jekyll
         end
 
         def data_validate_konnect
-          JSON.dump({ name: name, config: config.merge(url: konnect_url) })
+          JSON.dump({ name: id, config: config.merge(url: konnect_url) })
         end
 
         def data_validate_on_prem
-          JSON.dump({ name: name, config: config.merge(url: on_prem_url) })
+          JSON.dump({ name: id, config: config.merge(url: on_prem_url) })
         end
 
         def config
@@ -75,15 +77,15 @@ module Jekyll
         end
 
         def template_file
-          @template_file ||= "app/_includes/how-tos/validations/#{name}/index.html"
+          @template_file ||= "app/_includes/how-tos/validations/#{id}/index.html"
         end
 
         private
 
         def configuration
           @configuration ||= begin
-            config = how_tos_config['validations'].detect { |v| v['name'] == name } || {}
-            config.except('name')
+            config = how_tos_config['validations'].detect { |v| v['id'] == id } || {}
+            config.except('id')
           end
         end
 

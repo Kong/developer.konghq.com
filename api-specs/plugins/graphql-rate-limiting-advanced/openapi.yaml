@@ -1,0 +1,236 @@
+openapi: 3.0.2
+info:
+  title: GraphQL Rate Limiting Advanced - Costs API
+  version: 1.0.0
+  description: |
+    Manage GraphQL schema cost decorations to support advanced query cost-based rate limiting.
+tags:
+  - name: GraphQLRateLimitingCosts
+    description: API endpoints for managing GraphQL cost decorations.
+
+paths:
+  /services/{ServiceIdOrName}/graphql-rate-limiting-advanced/costs:
+    get:
+      summary: List cost decorations for a service
+      tags: [GraphQLRateLimitingCosts]
+      parameters:
+        - $ref: '#/components/parameters/ServiceIdOrName'
+      responses:
+        '200':
+          description: List of cost decorations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GraphQLCostDecoration'
+    post:
+      summary: Add a cost decoration to a service
+      tags: [GraphQLRateLimitingCosts]
+      parameters:
+        - $ref: '#/components/parameters/ServiceIdOrName'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQLCostDecorationRequest'
+      responses:
+        '201':
+          description: Cost decoration added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLCostDecoration'
+    put:
+      summary: Replace a cost decoration on a service
+      tags: [GraphQLRateLimitingCosts]
+      parameters:
+        - $ref: '#/components/parameters/ServiceIdOrName'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQLCostDecorationRequest'
+      responses:
+        '200':
+          description: Cost decoration replaced
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLCostDecoration'
+
+  /graphql-rate-limiting-advanced/costs:
+    get:
+      summary: List all cost decorations globally
+      tags: [GraphQLRateLimitingCosts]
+      responses:
+        '200':
+          description: List of global cost decorations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GraphQLCostDecoration'
+    post:
+      summary: Add a global cost decoration
+      tags: [GraphQLRateLimitingCosts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQLCostDecorationRequest'
+      responses:
+        '201':
+          description: Global cost decoration added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLCostDecoration'
+    put:
+      summary: Replace a global cost decoration
+      tags: [GraphQLRateLimitingCosts]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQLCostDecorationRequest'
+      responses:
+        '200':
+          description: Global cost decoration replaced
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLCostDecoration'
+
+  /graphql-rate-limiting-advanced/costs/{CostId}:
+    get:
+      summary: Retrieve a cost decoration by ID
+      tags: [GraphQLRateLimitingCosts]
+      parameters:
+        - $ref: '#/components/parameters/CostId'
+      responses:
+        '200':
+          description: Cost decoration retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLCostDecoration'
+    patch:
+      summary: Update a cost decoration by ID
+      tags: [GraphQLRateLimitingCosts]
+      parameters:
+        - $ref: '#/components/parameters/CostId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphQLCostDecorationRequest'
+      responses:
+        '200':
+          description: Cost decoration updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphQLCostDecoration'
+    delete:
+      summary: Delete a cost decoration by ID
+      tags: [GraphQLRateLimitingCosts]
+      parameters:
+        - $ref: '#/components/parameters/CostId'
+      responses:
+        '204':
+          description: Deleted
+
+components:
+  parameters:
+    ServiceIdOrName:
+      name: ServiceIdOrName
+      in: path
+      required: true
+      schema:
+        type: string
+      description: ID or name of the service.
+    CostId:
+      name: CostId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: ID of the cost decoration.
+
+  schemas:
+    GraphQLCostDecoration:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type_path:
+          type: string
+          description: Path to node to decorate, e.g. `Query.allPeople`
+        add_constant:
+          type: integer
+          default: 1
+          description: Cost added to the node
+        add_arguments:
+          type: array
+          items:
+            type: string
+          default: []
+          description: List of arguments that add cost
+        mul_constant:
+          type: integer
+          default: 1
+          description: Cost multiplier
+        mul_arguments:
+          type: array
+          items:
+            type: string
+          default: []
+          description: List of arguments that multiply cost
+        service:
+          type: string
+          format: uuid
+          nullable: true
+          description: Associated service (null if global)
+      required:
+        - id
+        - type_path
+
+    GraphQLCostDecorationRequest:
+      type: object
+      properties:
+        type_path:
+          type: string
+          description: Path to node to decorate, e.g. `Query.allPeople`
+        add_constant:
+          type: integer
+          default: 1
+        add_arguments:
+          type: array
+          items:
+            type: string
+          default: []
+        mul_constant:
+          type: integer
+          default: 1
+        mul_arguments:
+          type: array
+          items:
+            type: string
+          default: []
+      required:
+        - type_path

@@ -32,6 +32,8 @@ related_resources:
     url: /gateway/db-less-mode/
   - text: Traditional mode
     url: /gateway/traditional-mode/
+  - text: Serverless gateway
+    url: /serverless-gateways/
 
 faqs:
   - q: What types of data travel between the {{site.konnect_saas}} Control Plane and the Data Plane nodes, and how?
@@ -139,23 +141,23 @@ The following diagram shows what {{site.base_gateway}} looks like in self-manage
 flowchart TD
 
 A[(Database)]
-B(<img src="/assets/icons/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> Control plane \n #40;{{site.base_gateway}} instance#41;)
-C(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 3\n #40;{{site.base_gateway}} instance#41;)
-D(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 1\n #40;{{site.base_gateway}} instance#41;)
-E(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data plane 2\n #40;{{site.base_gateway}} instance#41;)
+B(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Control Plane <br> #40;{{site.base_gateway}} instance#41;)
+C(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data Plane 3<br> #40;{{site.base_gateway}} instance#41;)
+D(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data Plane 1<br> #40;{{site.base_gateway}} instance#41;)
+E(<img src="/assets/icons/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Data Plane 2<br> #40;{{site.base_gateway}} instance#41;)
 
-subgraph id1 [Self-managed Control Plane node]
+subgraph id1 [Self-managed CP node]
 A---B
 end
 
 B --Kong proxy 
 configuration---> id2 & id3
 
-subgraph id2 [Self-managed on-premise node]
+subgraph id2 [Self-managed on-prem]
 C
 end
 
-subgraph id3 [Self-managed cloud nodes]
+subgraph id3 [Self-managed cloud]
 D
 E
 end
@@ -163,7 +165,6 @@ end
 style id1 stroke-dasharray:3,rx:10,ry:10
 style id2 stroke-dasharray:3,rx:10,ry:10
 style id3 stroke-dasharray:3,rx:10,ry:10
-style B stroke:none,fill:#0E44A2,color:#fff
 
 {% endmermaid %}
 <!-- vale on-->
@@ -332,6 +333,8 @@ LMDB database on startup.
 
 ## Limitations
 
+When using hybrid mode, you may encounter the following limitations.
+
 ### Configuration inflexibility
 
 In {{site.base_gateway}} 3.9.x or earlier, whenever you make changes to {{site.base_gateway}} entity configuration on the Control Plane, it immediately triggers a cluster-wide update of all Data Plane configurations. This can cause performance issues.
@@ -369,7 +372,7 @@ Custom plugins (either your own plugins or third-party plugins that are not
 shipped with {{site.base_gateway}}) need to be installed on both the Control Plane and the data
 plane in hybrid mode.
 
-### Consumer groups
+### Consumer Groups
 The ability to scope plugins to consumer groups was added in {{site.base_gateway}} version 3.4. Running a mixed-version {{site.base_gateway}} cluster (3.4 Control Plane, and <=3.3 Data Planes) is not supported when using consumer group scoped plugins. 
 
 ### Load balancing

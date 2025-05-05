@@ -44,7 +44,7 @@ The following creates a new Service called **{{ include.presenter.data['name'] }
 {% when 'target' %}
 The following creates a new Upstream and a Target with basic configuration:
 
-1. In Kong Manager or Gateway Manager, Navigate to **Workspaces** > **Upstreams**.
+1. In Kong Manager or Gateway Manager, navigate to **Workspaces** > **Upstreams**.
 2. Click **New Upstream**.
 3. Enter a unique name for the Upstream. For example: `example_upstream`.
 4. Click **Save**.

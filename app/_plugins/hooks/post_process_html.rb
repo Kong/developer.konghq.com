@@ -12,7 +12,9 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
     changes = false
 
     doc.css('h2, h3, h4, h5, h6').each do |heading|
-      next if heading.ancestors('.card').any?
+      should_always_link = heading['class']&.split&.include?('always-link')
+
+      next if heading.ancestors('.card').any? && !should_always_link
       next if heading.ancestors('.accordion-trigger').any?
       next unless heading['id']
 
@@ -26,7 +28,11 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
                text
              end
       old_id = heading['id']
-      heading['id'] = Jekyll::Utils.slugify(text)
+
+      # Index pages have specific heading IDs to account for groups
+      unless @page_or_doc.url.include?("/index/")
+        heading['id'] = Jekyll::Utils.slugify(text)
+      end
 
       # special case, it has links in the headings
       heading.content = heading.text if @page_or_doc.url == '/mesh/changelog/'

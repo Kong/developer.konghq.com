@@ -1,5 +1,5 @@
-Unlike JSON, [gRPC](https://en.wikipedia.org/wiki/GRPC)
-is a binary protocol, using [Protobuf](https://en.wikipedia.org/wiki/Protocol_Buffers)
+Unlike JSON, [gRPC](https://grpc.io/about/)
+is a binary protocol, which uses [Protobuf](https://protobuf.dev/)
 definitions to describe how the data is marshalled and unmarshalled. Because
 binary data is used instead of text, it's a more efficient way to transmit data
 over a network. However, this also makes gRPC harder to work with, because inspecting

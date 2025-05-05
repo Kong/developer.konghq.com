@@ -1,5 +1,5 @@
 title: 'Sliding window 5 requests per minute'
-description: ''
+description: Configure the plugin to set a rate limit of 5 requests per minute.
 
 weight: 900
 

@@ -1,0 +1,25 @@
+metadata:
+  title: Kong Gateway Operator
+  content_type: landing_page
+  description: |
+    TODO
+  products:
+    - operator
+
+rows:
+  - header:
+      type: h1
+      text: "{{site.operator_product_name}} (KGO)"
+
+  - header:
+      type: h2
+      text: What is the {{site.operator_product_name}}?
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              It's a thing
+          - type: button
+            config:
+              text: View All Documentation &raquo;
+              url: /index/operator/

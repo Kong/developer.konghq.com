@@ -1,4 +1,7 @@
 description: |
+  This example validates client text frames.
+
+extended_description: |
   This example validates that client text frames:
   * Are valid JSON
   * Are a JSON object (`{}`)

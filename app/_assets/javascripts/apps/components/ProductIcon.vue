@@ -11,7 +11,7 @@ import APIOps from '@/icons/products/api-ops.svg'
 import devPortal from '@/icons/products/dev-portal.svg'
 import gateway from '@/icons/products/gateway.svg'
 import insomnia from '@/icons/products/insomnia.svg'
-import kgo from '@/icons/products/kgo.svg'
+import operator from '@/icons/products/operator.svg'
 import kic from '@/icons/products/kic.svg'
 import mesh from '@/icons/products/mesh.svg'
 import orgManagement from '@/icons/products/org-management.svg'
@@ -26,7 +26,7 @@ const productIcons = {
   'insomnia': insomnia,
   'org-management': orgManagement,
   'service-catalog': serviceCatalog,
-  kgo,
+  operator,
   kic,
   mesh
 }
@@ -43,7 +43,7 @@ export default {
         return productIcons[this.name] || null
       },
       bordered() {
-        return ['kgo', 'kic'].includes(this.name);
+        return ['operator', 'kic'].includes(this.name);
       }
   },
 }

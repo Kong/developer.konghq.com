@@ -14,8 +14,8 @@ related_resources:
     url: /gateway/entities/admin/
   - text: Workspace entity
     url: /gateway/entities/workspace/
-  - text: LDAP Service Directory Mapping
-    url: /gateway/ldap-service-directory-mapping/
+  # - text: LDAP Service Directory Mapping
+  #   url: /gateway/ldap-service-directory-mapping/
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
 
@@ -66,7 +66,7 @@ This happens in the following order:
 3. Groups are associated with an external directory.
 4. Permissions are assigned to {{site.base_gateway}} users based on Group assignment.
 
-For more information, read the [LDAP Service Directory Mapping](/gateway/ldap-service-directory-mapping/) documentation.
+<!--For more information, read the [LDAP Service Directory Mapping](/gateway/ldap-service-directory-mapping/) documentation.-->
 
 ## Schema
 

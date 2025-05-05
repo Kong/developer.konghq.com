@@ -1,7 +1,7 @@
 ---
 title: Apply multiple rate limits and window sizes
 content_type: how_to
-
+description: Learn how to configure the Rate Limiting Advanced plugin to apply multiple rate limits and window sizes.
 related_resources:
   - text: Rate Limiting
     url: /rate-limiting/
@@ -83,11 +83,7 @@ This example applies rate limiting policies, one of which will trip when 10 hits
 or the other when 100 hits have been counted in 3600 seconds. 
 
 The number of configured window sizes and limits parameters must be equal (as shown above);
-otherwise, an error occurs:
-
-```plaintext
-You must provide the same number of windows and limits
-```
+otherwise, an error occurs.
 
 ## Validate
 

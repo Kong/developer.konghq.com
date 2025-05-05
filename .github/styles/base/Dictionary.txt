@@ -366,6 +366,7 @@ Keycloak
 Keycloak
 keyless
 keyrings
+keyset
 keyspace
 keystore
 kiali
@@ -802,6 +803,7 @@ unpublish
 unpublishing
 unregister
 unregistering
+unscoped
 unshorten
 unshortened
 unstash

@@ -1,5 +1,5 @@
 ---
-title: Enable OAuth 2.0 authentication for WebSocket requests with {{site.base_gateway}}
+title: Enable OAuth 2.0 authentication for WebSocket requests
 content_type: how_to
 
 description: Create an OAuth 2.0 Client Credentials flow for a WebSocket Gateway Service.
@@ -10,7 +10,8 @@ related_resources:
 
 products:
     - gateway
-
+breadcrumbs:
+  - /gateway/
 entities: 
   - service
   - consumer
@@ -134,6 +135,4 @@ curl -X POST "https://localhost:8443/token-route/oauth2/token" \
 
 ## Validate
 
-To validate that the configuration works as expected, open a WebSocket connection to `ws://localhost:8000/anything` using the `Authorization` header with the Bearer token we generated. You can do this using [Insomnia](/insomnia/requests/#how-do-i-create-requests-in-insomnia):
-
-![Insomnia WebSocket request with Bearer token in Authorization header](/assets/images/insomnia/websocket-oauth.png)
+To validate that the configuration works as expected, open a WebSocket connection to `ws://localhost:8000/anything` using the `Authorization` header with the Bearer token we generated. You can do this using [Insomnia](/insomnia/requests/#how-do-i-create-requests-in-insomnia). 

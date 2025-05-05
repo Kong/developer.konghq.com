@@ -13,14 +13,19 @@ works_on:
 
 tools:
     - deck
-
+search_aliases: 
+  - post function
+breadcrumbs: 
+  - /gateway/
 prereqs:
   entities:
     services:
         - example-service
     routes:
         - example-route
-
+related_resources:
+- text: Post Function plugin
+  url: /plugins/post-function/
 min_version:
   gateway: '3.4'
 

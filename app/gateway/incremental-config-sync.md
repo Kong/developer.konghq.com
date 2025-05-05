@@ -30,9 +30,12 @@ tags:
 works_on:
   - on-prem
   - konnect
+
+breadcrumbs:
+    - /gateway/
 ---
 
-In [Hybrid Mode](/gateway/hybrid-mode/), whenever you make changes to [{{site.base_gateway}} entity](/gateway/entities/) configuration on the Control Plane, it immediately triggers a cluster-wide update of all Data Plane configurations. 
+In [Hybrid mode](/gateway/hybrid-mode/), whenever you make changes to [{{site.base_gateway}} entity](/gateway/entities/) configuration on the Control Plane, it immediately triggers a cluster-wide update of all Data Plane configurations. 
 In these updates, {{site.base_gateway}} sends the entire configuration set to the Data Planes. The bigger your configuration set is, the more time it takes to send and process, and the more memory is consumed proportional to the configuration size. This can result in latency spikes and loss in throughput for high-traffic Data Planes under certain conditions.
 
 You can enable incremental configuration sync to address this issue. 
@@ -51,7 +54,7 @@ F(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"/> Kong Control P
 G(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"/> Kong Data Plane)
 H(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"/> Kong Data Plane)
 
- subgraph id1 [<b>With</b> incremental config sync]
+ subgraph id1 [Incremental config sync]
  direction TB
 
  E --"POST Route config
@@ -61,7 +64,7 @@ H(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"/> Kong Data Plan
  A few KB"---> G & H
  end
 
- subgraph id2 [<b>Without</b> incremental config sync]
+ subgraph id2 [No incremental config sync]
  direction TB
 
  A --"POST Route config
@@ -105,6 +108,8 @@ export KONG_INCREMENTAL_SYNC=on
 ```
 
 ## Limitations
+
+When using incremental config sync feature with plugins, you may encounter the following limitations.
 
 ### Using incremental config sync with custom plugins
 

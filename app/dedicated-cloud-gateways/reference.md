@@ -1,5 +1,5 @@
 ---
-title: "Dedicated Cloud Gateways Reference"
+title: "Dedicated Cloud Gateways reference"
 content_type: reference
 layout: reference
 description: "Dedicated Cloud Gateways are Data Plane nodes that are fully managed by Kong in {{site.konnect_short_name}}."
@@ -63,6 +63,9 @@ related_resources:
     url: /dedicated-cloud-gateways/
   - text: Serverless Gateways
     url: /serverless-gateways/
+
+tags:
+  - dedicated-cloud-gateways
 ---
 
 
@@ -78,8 +81,8 @@ Dedicated Cloud Gateways support two different configuration modes:
 {% mermaid %}
 flowchart TD
 A(Dedicated Cloud Gateway Control Plane)
-B(Managed Data Plane Node \n Region 1)
-C(Managed Data Plane Node \n Region 2)
+B(Managed Data Plane Node <br> Region 1)
+C(Managed Data Plane Node <br> Region 2)
 
 subgraph id1 [Konnect]
 A
@@ -106,7 +109,7 @@ headers:
 body:
   name: cloud-gateway-control-plane
   description: A test Control Plane for Dedicated Cloud Gateways.
-  cluster_type: CLUSTER_TYPE_CONTROL_PLAN
+  cluster_type: CLUSTER_TYPE_CONTROL_PLANE
   cloud_gateway: true
   proxy_urls:
     - host: example.com
@@ -208,19 +211,19 @@ To securely connect a Dedicated Cloud Gateway to your backend, you can inject a 
 <!--vale off-->
 {% capture request %}
 {% control_plane_request %}
-url: /v2/control-planes/{controlPlaneId}/core-entities/services/{serviceId}/plugins
+url: /v2/control-planes/$CONTROL_PLANE_ID/core-entities/services/$SERVICE_ID/plugins
 method: POST
 status_code: 201
 headers:
   - 'accept: application/json'
   - 'Content-Type: application/json'
-  - 'Authorization: Bearer ${PAT}'
+  - 'Authorization: Bearer $KONNECT_TOKEN'
 body:
   name: request-transformer
   config:
     add:
       headers:
-        - 'Authorization:Bearer ${secretTokenValue}'
+        - 'Authorization:Bearer $SECRET_TOKEN_VALUE'
 {% endcontrol_plane_request %}
 {% endcapture %}
 {{ request | indent:3 }}
@@ -236,13 +239,13 @@ If you are using Dedicated Cloud Gateways and your upstream services are hosted 
 
 ## Custom plugins
 
-With Dedicated Cloud Gateways, {{site.konnect_short_name}} can stream custom plugins from the Control Plane to the Data Plane. This means that the Control Plane becomes a single source of truth for plugin versions. You only need to upload a plugin once, to the Control Plane, and {{site.konnect_short_name}} handles distributing the plugin code to all Data Planes in that Control Plane. 
+With Dedicated Cloud Gateways, {{site.konnect_short_name}} can stream [custom plugins](/custom-plugins/) from the Control Plane to the Data Plane. This means that the Control Plane becomes a single source of truth for plugin versions. You only need to upload a plugin once, to the Control Plane, and {{site.konnect_short_name}} handles distributing the plugin code to all Data Planes in that Control Plane. 
 
 ### How does custom plugin streaming work? 
 
 With Dedicated Cloud Gateways, {{site.konnect_short_name}} can stream custom plugins from the Control Plane to the Data Plane. The Control Plane becomes the single source of truth for plugin versions. You only need to upload the plugin once, and {{site.konnect_short_name}} handles distribution to all Data Planes in the same Control Plane.
 
-A  custom plugin must meet the following requirements: 
+A custom plugin must meet the following requirements: 
 * Unique name per plugin
 * One `handler.lua` and one `schema.lua` file
 * Cannot run in the `init_worker` phase or create timers
@@ -255,9 +258,9 @@ Plugins can be uploaded to {{site.konnect_short_name}} using the [{{site.konnect
 You can also use [jq](https://jqlang.org/) with the following request template to add the plugin using the API:
 
 ```sh
-curl -X POST https://{region}.api.konghq.com/v2/control-planes/{control-plane-id}/core-entities/custom-plugins \
+curl -X POST $KONNECT_CONTROL_PLANE_URL/v2/control-planes/$CONTROL_PLANE_ID/core-entities/custom-plugins \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer {your-access-token}" \
+  -H "Authorization: Bearer $KONNECT_TOKEN" \
   -d "$(jq -n \
       --arg handler "$(cat handler.lua)" \
       --arg schema "$(cat schema.lua)" \

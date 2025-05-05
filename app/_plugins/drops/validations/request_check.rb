@@ -8,7 +8,7 @@ module Jekyll
     module Validations
       class RequestCheck < Base # rubocop:disable Style/Documentation
         def validate_yaml!
-          raise ArgumentError, "Missing `url` in {% validation #{name} %}." unless @yaml.key?('url')
+          raise ArgumentError, "Missing `url` in {% validation #{id} %}." unless @yaml.key?('url')
         end
 
         def method

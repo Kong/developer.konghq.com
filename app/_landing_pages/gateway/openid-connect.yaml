@@ -203,16 +203,16 @@ rows:
             title: "Amazon Cognito"
             icon: /assets/icons/aws.svg
             cta:
-              text: Set up OIDC with Cognito 
-              url: "/plugins/openid-connect/examples/auth0/"  
+              text: Set up OIDC with Cognito
+              url: "/plugins/openid-connect/examples/amazon-cognito/"  
       - blocks:
         - type: card
           config:
             title: "Azure AD"
             icon: /assets/icons/azure.svg
             cta:
-              text: Set up OIDC with Azure AD 
-              url: "/plugins/openid-connect/examples/auth0/"
+              text: Set up OIDC with Azure AD
+              url: "/plugins/openid-connect/examples/azure-ad/"
   - columns:
       - blocks:
         - type: card

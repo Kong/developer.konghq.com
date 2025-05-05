@@ -7,6 +7,9 @@ metadata:
   works_on:
     - konnect
     - on-prem
+  breadcrumbs:
+    - /gateway/
+    - /gateway/entities/plugin/
 rows:
   - header:
       type: h1
@@ -27,66 +30,103 @@ rows:
                     Plugins consist of modules interacting with the request/response objects or
                     streams via a PDK to implement arbitrary logic. With custom plugins, you can configure these modules to provide custom functionality to {{site.base_gateway}}.
 
-                    To start creating your own plugins, review the [getting started documentation](#get-started),
-                    or see the following references:
-                    * [Custom plugins reference](/custom-plugins/reference/)
-                    * [Plugin Development Kit reference](/gateway/pdk/reference/)
-                    * [Other language support](https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/go/)
-                    * [Custom plugin installation and distribution](/custom-plugins/installation-and-distribution/)
+                    <!--* [Other language support](https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/go/)-->
   - columns:
       - blocks:
-          - type: structured_text
+          - type: card
             config:
-              header:
-                text: "Plugin Development Kits (PDKs)"
-              blocks:
-                - type: text
-                  text:
-                    "PDKs are sets of functions that a plugin can use to facilitate interactions between plugins
-                    and the core (or other components) of Kong. Kong provides PDKs in the following languages:"
+              title: Get started with custom plugins
+              description: |
+                Learn about custom plugin development by following a series of tutorials that walk you through all the steps to build a new custom plugin for {{site.base_gateway}}.
+              icon: /assets/icons/KogoBlue.svg
+              cta:
+                text: See tutorial &rarr;
+                url: "/custom-plugins/get-started/set-up-plugin-project/"
+      - blocks:
+          - type: card
+            config:
+              title: Custom plugins reference
+              description: |
+                Learn about how to develop custom plugins for {{site.base_gateway}}.
+              icon: /assets/icons/plug.svg
+              cta:
+                text: See reference &rarr;
+                url: "/custom-plugins/reference/"
+      - blocks:
+          - type: card
+            config:
+              title: Plugin Development Kit reference
+              description: |
+                The Plugin Development Kit (PDK) is a set of Lua functions and variables
+                that can be used by plugins to implement their own logic.
+              icon: /assets/icons/code.svg
+              cta:
+                text: See reference &rarr;
+                url: "/gateway/pdk/reference/"
+      - blocks:
+          - type: card
+            config:
+              title: Custom plugin installation and distribution
+              description: |
+                Learn about the different ways to deploy a custom plugin.
+              icon: /assets/icons/deployment.svg
+              cta:
+                text: See reference &rarr;
+                url: "/custom-plugins/installation-and-distribution/"
+  # - columns:
+  #    - blocks:
+  #        - type: structured_text
+  #          config:
+  #            header:
+  #              text: "Plugin Development Kits (PDKs)"
+  #            blocks:
+  #              - type: text
+  #                text:
+  #                  "PDKs are sets of functions that a plugin can use to facilitate interactions between plugins
+  #                  and the core (or other components) of Kong. Kong provides PDKs in the following languages:"
 
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "Lua"
-              blocks:
-                - type: text
-                  text: "{{site.base_gateway}} provides a broad plugin development environment including an SDK, database abstractions, migrations"
-                - type: text
-                  text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/">Lua PDK &rarr;</a>
+  # - columns:
+  #    - blocks:
+  #        - type: structured_text
+  #          config:
+  #            header:
+  #              text: "Lua"
+  #            blocks:
+  #              - type: text
+  #                text: "{{site.base_gateway}} provides a broad plugin development environment including an SDK, database abstractions, migrations"
+  #              - type: text
+  #                text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/">Lua PDK &rarr;</a>
 
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "Go"
-              blocks:
-                - type: text
-                  text: "{{site.base_gateway}} supports the Go language with the Go PDK, a library that provides Go bindings for {{site.base_gateway}}"
-                - type: text
-                  text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/go/">Go PDK &rarr;</a>
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "Python"
-              blocks:
-                - type: text
-                  text: "{{site.base_gateway}} support for Python plugin development is provided by the [kong-python-pdk](https://github.com/Kong/kong-python-pdk) library."
-                - type: text
-                  text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/python/">Python PDK &rarr;</a>
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "JavaScript"
-              blocks:
-                - type: text
-                  text: "{{site.base_gateway}} support for the JavaScript language is provided by the [JavaScript PDK](https://github.com/Kong/kong-js-pdk)."
-                - type: text
-                  text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/javascript/">JavaScript PDK &rarr;</a>
+  #    - blocks:
+  #        - type: structured_text
+  #          config:
+  #            header:
+  #              text: "Go"
+  #            blocks:
+  #              - type: text
+  #                text: "{{site.base_gateway}} supports the Go language with the Go PDK, a library that provides Go bindings for {{site.base_gateway}}"
+  #              - type: text
+  #                text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/go/">Go PDK &rarr;</a>
+  #    - blocks:
+  #        - type: structured_text
+  #          config:
+  #            header:
+  #              text: "Python"
+  #            blocks:
+  #              - type: text
+  #                text: "{{site.base_gateway}} support for Python plugin development is provided by the [kong-python-pdk](https://github.com/Kong/kong-python-pdk) library."
+  #              - type: text
+  #                text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/python/">Python PDK &rarr;</a>
+  #    - blocks:
+  #        - type: structured_text
+  #          config:
+  #            header:
+  #              text: "JavaScript"
+  #            blocks:
+  #              - type: text
+  #                text: "{{site.base_gateway}} support for the JavaScript language is provided by the [JavaScript PDK](https://github.com/Kong/kong-js-pdk)."
+  #              - type: text
+  #                text: <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/javascript/">JavaScript PDK &rarr;</a>
 
   - columns:
       - blocks:
@@ -100,26 +140,3 @@ rows:
                     Through partnerships with third parties, Kong lists some [third-party custom plugins](/plugins/?support=third-party) on the Kong Plugin Hub. 
                     These plugins are maintained by Kong partners. 
                     If you would like to have your plugin featured on the Kong Plugin Hub, we encourage you to become a [Kong Partner](https://konghq.com/partners).
-
-  - columns:
-      - blocks:
-          - type: structured_text
-            config:
-              header:
-                text: "Get started"
-              blocks:
-                - type: text
-                  text: |
-                    Learn about custom plugin development by following a series of tutorials that walk you through all the steps to build a new custom plugin for {{site.base_gateway}}.
-                    The plugin you build will transform HTTP traffic as it passes through the API gateway and give you
-                    a solid starting point for building custom plugins to solve your specific business needs.
-
-                    You will learn how to:
-                    * Set up a new plugin project
-                    * Build automated tests for your custom plugins
-                    * Add plugin configuration to the project allowing for runtime behavior changes
-                    * Consume external services from within your plugin 
-                    * Deploy your plugin
-
-                - type: text
-                  text: <a href="/custom-plugins/get-started/set-up-plugin-project/">Get started &rarr;</a>

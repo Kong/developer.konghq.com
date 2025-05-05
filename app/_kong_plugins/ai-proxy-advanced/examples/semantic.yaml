@@ -1,20 +1,23 @@
-
-title: 'Sematic load balancing'
+title: 'Semantic load balancing'
 description: |
-  Configure the plugin to use two OpenAI models: one for questions related to Kong, and another for questions related to Microsoft.
-
-  To set up semantic routing, you need to configure the following parameters:
+  To set up semantic routing, you must configure the following parameters:
 
   * `config.embeddings` to define the model to use to match the model description and the prompts.
   * `config.vectordb` to define the vector database parameters. Only Redis is supported, so you need a Redis instance running in your environment.
   * `config.targets[].description` to define the description to be matched with the prompts.
+
+  This configuration routes incoming requests to the most relevant OpenAI model based on the content of the request:
+
+  * If the request is related to code completions, it will be routed to the `gpt-35-turbo` model.
+  * If the request is about IT support, it will be routed to the `gpt-4o` model.
+  * All other requests, which don’t match the above categories, will be handled by the `gpt-4o-mini` model, serving as a catch-all for general queries.
 
 weight: 900
 
 requirements:
   - An OpenAI account
   - A Redis instance running
- 
+
 config:
   embeddings:
     auth:
@@ -35,33 +38,44 @@ config:
     algorithm: semantic
   targets:
   - model:
-      name: gpt-4
+      name: gpt-35-turbo
+      provider: openai
+      options:
+        max_tokens: 826
+        temperature: 0
+    route_type: llm/v1/chat
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${key}
+    description: "Specialist in code completions"
+  - model:
+      name: gpt-4o
       provider: openai
       options:
         max_tokens: 512
-        temperature: 1.0
+        temperature: 0.3
     route_type: llm/v1/chat
-    auth: 
+    auth:
       header_name: Authorization
       header_value: Bearer ${key}
-    description: "What is Kong?"
+    description: "Requests related to IT support"
   - model:
       name: gpt-4o-mini
       provider: openai
       options:
-        max_tokens: 512
+        max_tokens: 256
         temperature: 1.0
     route_type: llm/v1/chat
-    auth: 
+    auth:
       header_name: Authorization
       header_value: Bearer ${key}
-    description: "What is Microsoft?"
+    description: "CATCHALL"
 
 variables:
   key:
     value: $OPENAI_API_KEY
     description: The API key to use to connect to OpenAI.
-  
+
 tools:
   - deck
   - admin-api

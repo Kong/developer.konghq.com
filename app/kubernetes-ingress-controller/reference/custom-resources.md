@@ -2,7 +2,7 @@
 title: Custom Resource (CRD) API Reference
 
 description: |
-  See the generated CRD structure containing all possible resource fields and descriptions for each property
+  See the generated CRD structure containing all possible resource fields and descriptions for each property.
 
 content_type: reference
 layout: reference
@@ -345,7 +345,7 @@ KongLicense stores a Kong enterprise license to apply to managed Kong gateway in
 | `kind` _string_                                                                                                    | `KongLicense`                                                                                                                       |
 | `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`.                                                                     |
 | `rawLicenseString` _string_                                                                                        | RawLicenseString is a string with the raw content of the license.                                                                   |
-| `enabled` _boolean_                                                                                                | Enabled is set to true to let controllers (like KIC or KGO) to reconcile it. Default value is true to apply the license by default. |
+| `enabled` _boolean_                                                                                                | Enabled is set to true to let controllers (like KIC or KO) to reconcile it. Default value is true to apply the license by default. |
 
 ### KongVault
 

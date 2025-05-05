@@ -2,7 +2,8 @@
 title: "{{site.base_gateway}} logs"
 content_type: reference
 layout: reference
-
+breadcrumbs:
+  - /gateway/
 products:
     - gateway
 
@@ -10,12 +11,11 @@ min_version:
   gateway: '3.5'
 
 description: See where {{site.base_gateway}} logs are located, the different log levels, and how to configure logs and log levels.
-
+search_aliases:
+  - logging
 related_resources:
   - text: "Secure {{site.base_gateway}}"
     url: /gateway/security/
-#  - text: "{{site.base_gateway}} debugging"
-#    url: /gateway/debug/
   - text: "{{site.base_gateway}} audit logs"
     url: /gateway/audit-logs/
   - text: "{{site.konnect_short_name}} logs"
@@ -111,7 +111,7 @@ These changes can be made to {{site.base_gateway}}'s Nginx template and only aff
 
 Let's look at an example where you want to remove any instances of an email address from your {{site.base_gateway}} logs. The email addresses may come through in different formats, for example `/servicename/v2/verify/alice@example.com` or `/v3/verify?alice@example.com`. To keep all of these formats from being added to the logs, you need to use a custom Nginx template.
 
-Make a copy of [{{site.base_gateway}}'s Nginx template](/gateway/nginx-directives/#custom-nginx-templates-and-embedding-kong-gateway), then edit it to add or remove the data you need. The following template shows an example configuration for removing email addresses from logs:
+Make a copy of {{site.base_gateway}}'s Nginx template, then edit it to add or remove the data you need. The following template shows an example configuration for removing email addresses from logs:
 
 ```nginx
 # ---------------------

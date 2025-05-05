@@ -8,7 +8,6 @@ works_on:
     - on-prem
 products:
     - gateway
-
 tags:
   - event-hook
   - webhook

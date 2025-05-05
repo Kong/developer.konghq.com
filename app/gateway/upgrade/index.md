@@ -2,7 +2,8 @@
 title: "Upgrading {{site.base_gateway}}"
 content_type: reference
 layout: reference
-
+breadcrumbs:
+  - /gateway/
 products:
     - gateway
 
@@ -27,7 +28,9 @@ related_resources:
     url: /gateway/upgrade/blue-green/
   - text: "2.8 to 3.4 LTS upgrade"
     url: /gateway/upgrade/lts-upgrade/
-
+tags:
+  - versioning
+  - upgrades
 ---
 
 This guide walks you through preparing for a {{site.base_gateway}} upgrade, helps you determine which upgrade path to use, and helps you decide on the best strategy for each {{site.base_gateway}} deployment mode.
@@ -238,7 +241,7 @@ Factors may include, but are not limited to:
 
 * If you have custom plugins, review the code against changelog and test the custom plugin using the new version Y.
 * If you have modified any Nginx templates like `nginx-kong.conf` and `nginx-kong-stream.conf`, also make those changes to the templates for the new version Y. 
-Refer to [Nginx Directives](/gateway/nginx-directives/) for a detailed customization guide.
+<!--Refer to [Nginx Directives](/gateway/nginx-directives/) for a detailed customization guide.-->
 * If you're using {{site.ee_product_name}}, make sure to [apply the enterprise license](/gateway/entities/license/) to the new Gateway cluster.
 * Always remember to take a [backup](/gateway/upgrade/backup-and-restore/).
 * Cassandra DB support has been removed from {{site.base_gateway}} with 3.4.0.0.

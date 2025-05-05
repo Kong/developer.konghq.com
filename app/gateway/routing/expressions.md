@@ -36,6 +36,9 @@ faqs:
 works_on:
   - on-prem
   - konnect
+
+tags:
+- routing
 ---
 
 The expressions router provides a Domain Specific Language (DSL) that allows for complex routing rule definition. The expressions router ensures good runtime matching performance by providing specific routing comparisons such as non-regex equality checks that are not available in the traditional router.
@@ -94,9 +97,7 @@ The router does the following:
 
 This section explains how to optimize the expressions you write to get the most performance out of the routing engine.
 
-### Number of routes
-
-#### Priority matching
+### Priority matching
 
 Expressions routes are always evaluated in the descending `priority` order they were defined.
 Therefore, it is helpful to put more likely matched routes before (as in, higher priority)
@@ -119,7 +120,7 @@ priority: 50
 It's also best to reduce the number of `Route` entities created by leveraging the
 logical combination capability of the expressions language.
 
-#### Combining routes
+### Combining routes
 
 If multiple routes result in the same `Service` and `Plugin` config being used,
 they should be combined into a single expression `Route` with the `||` logical or operator. By combining routes into a single expression, this results in fewer `Route` objects created and better performance.
@@ -546,7 +547,11 @@ manually specify it with the `^` meta-character. For example, `http.path ~ r#"^/
 
 ## Example expressions
 
+The following tables contain examples of different types of expressions.
+
 ### HTTP examples 
+
+The following expressions can be used to match HTTP requests.
 
 <!--vale off-->
 {% table %}
@@ -565,7 +570,7 @@ rows:
   - name: Regex-based path matching
     expression: |
       `http.path ~ r#"/foo/bar/\d+"#`
-    description: "N/A"
+    description: "Matches HTTP request paths against a regular expression."
   - name: Case-insensitive path matching
     expression: |
       `lower(http.path) == "/foo/bar"`
@@ -596,6 +601,8 @@ rows:
 
 
 ### TCP, TLS, and UDP examples
+
+The following expressions can be used to match TCP, TLS, and UDP requests.
 
 <!--vale off-->
 {% table %}
