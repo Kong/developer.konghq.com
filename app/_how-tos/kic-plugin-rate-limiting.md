@@ -1,5 +1,5 @@
 ---
-title: "Rate limiting wtih {{ site.kic_product_name }}"
+title: "Rate limiting with {{ site.kic_product_name }}"
 short_title: Rate limiting
 description: |
   Configure Rate Limiting using a `local` or `redis` policy
