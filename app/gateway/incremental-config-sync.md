@@ -32,7 +32,7 @@ works_on:
   - konnect
 
 breadcrumbs:
-    - /gateway
+    - /gateway/
 ---
 
 In [Hybrid mode](/gateway/hybrid-mode/), whenever you make changes to [{{site.base_gateway}} entity](/gateway/entities/) configuration on the Control Plane, it immediately triggers a cluster-wide update of all Data Plane configurations. 
