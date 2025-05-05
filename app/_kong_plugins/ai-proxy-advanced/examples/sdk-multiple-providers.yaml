@@ -1,0 +1,56 @@
+title: 'OpenAI SDK: Chat routes with multiple providers'
+description: |
+  Configure two routes to point to two different deployments of an Azure OpenAI model.
+
+  When you apply this configurtion, you can set the SDK endpoint to `http://localhost:8000/azure`. When the Azure instance parameter is set to "my-gpt-3-5", the Python SDK produces the URL `http://localhost:8000/openai/deployments/my-gpt-3-5/chat/completions` and is directed to the respective Azure deployment ID and model.
+weight: 900
+
+min_version:
+    gateway: '3.60'
+
+requirements:
+- Cohere account
+- Mistral account
+
+config:
+  targets:
+    - route_type: llm/v1/chat
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${cohere_key}
+      logging:
+        log_statistics: true
+        log_payloads: false
+      model:
+        provider: cohere
+        name: $(uri_captures.model)
+    - route_type: llm/v1/chat
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${mistral_key}
+      logging:
+        log_statistics: true
+        log_payloads: false
+      model:
+        provider: mistral
+        name: $(uri_captures.model)
+        options:
+          mistral_format: openai
+          upstream_url: https://api.mistral.ai/v1/chat/completions
+
+variables:
+  cohere_key:
+    value: $COHERE_API_KEY
+    description: The API key used to authenticate requests to Cohere.
+  mistral_key:
+    value: $MISTRAL_API_KEY
+    description: The API key used to authenticate requests to Mistral.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
+
+

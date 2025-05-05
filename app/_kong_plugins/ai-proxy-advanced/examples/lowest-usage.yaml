@@ -1,5 +1,5 @@
 
-title: 'Lowest-usage load balancing'
+title: 'Load balancing: Lowest-usage'
 description: 'Configure the plugin to use two OpenAI models and route requests based on the number of tokens in the prompt.'
 
 weight: 900
@@ -19,7 +19,7 @@ config:
         max_tokens: 512
         temperature: 1.0
     route_type: llm/v1/chat
-    auth: 
+    auth:
       header_name: Authorization
       header_value: Bearer ${key}
   - model:
@@ -29,10 +29,10 @@ config:
         max_tokens: 512
         temperature: 1.0
     route_type: llm/v1/chat
-    auth: 
+    auth:
       header_name: Authorization
       header_value: Bearer ${key}
- 
+
 variables:
   key:
     value: $OPENAI_API_KEY

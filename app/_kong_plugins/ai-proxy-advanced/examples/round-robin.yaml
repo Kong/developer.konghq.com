@@ -1,5 +1,5 @@
 
-title: 'Round-robin load balancing'
+title: 'Load balancing: Round-robin'
 description: |
   Configure the plugin to use three OpenAI models and route requests based on their respective weights.
 
@@ -21,7 +21,7 @@ config:
         max_tokens: 512
         temperature: 1.0
     route_type: llm/v1/chat
-    auth: 
+    auth:
       header_name: Authorization
       header_value: Bearer ${key}
     weight: 70
@@ -32,7 +32,7 @@ config:
         max_tokens: 512
         temperature: 1.0
     route_type: llm/v1/chat
-    auth: 
+    auth:
       header_name: Authorization
       header_value: Bearer ${key}
     weight: 25
@@ -43,7 +43,7 @@ config:
         max_tokens: 512
         temperature: 1.0
     route_type: llm/v1/chat
-    auth: 
+    auth:
       header_name: Authorization
       header_value: Bearer ${key}
     weight: 5

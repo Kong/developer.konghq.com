@@ -1,0 +1,46 @@
+title: 'OpenAI SDK: One chat route with dynamic Azure OpenAI deployments'
+description: |
+  Configure a dynamic route to target multiple Azure OpenAI model deployments.
+
+  This configuration uses a dynamic URI capture to determine the deployment ID based on the incoming request path.
+
+  For example, if your SDK sends requests to `http://localhost:8000/openai/deployments/my-gpt-3-5/chat/completions`
+  then AI Proxy Advanced  automatically maps `my-gpt-3-5` as the Azure deployment ID.
+
+  This allows a single route to support multiple Azure model deployments dynamically.
+
+weight: 900
+
+min_version:
+gateway: '3.60'
+
+requirements:
+- Azure OpenAI Service account
+
+config:
+  targets:
+    - route_type: llm/v1/chat
+      auth:
+        header_name: api-key
+        header_value: Bearer ${azure_key}
+      logging:
+        log_statistics: true
+        log_payloads: false
+      model:
+        provider: azure
+        name: $(uri_captures.azure_instance)
+        options:
+          azure_instance: my-openai-instance
+          azure_deployment_id: $(uri_captures.azure_instance)
+
+variables:
+  azure_key:
+    value: $AZURE_API_KEY
+    description: The API key used to authenticate requests to Azure OpenAI Service.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

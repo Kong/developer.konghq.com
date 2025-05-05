@@ -1,0 +1,59 @@
+title: 'OpenAI SDK: Use an unsupported Model'
+description: |
+  {{site.base_gateway}} can attempt to support models that aren’t pre-configured with format transformers or are untested.
+
+  {:.warning}
+  > **Caution**: The following use cases are unsupported but may work depending on your setup. Use at your own discretion.
+
+  When setting up for unsupported models, you must configure the `route_type` to preserve mode. This approach ensures that the request and response are passed through without any transformations.
+
+  For example, using the Whisper-2 audio transcription model, using the below configuration for the Whisper-2 transcription model, you can `POST` a file for transcription, using `multipart/form-data` formatting.
+
+    ```sh
+    curl --location 'http://localhost:8000/openai/v1/audio/transcriptions' \
+        --form 'model=whisper-2' \
+        --form 'file=@"me_saying_hello.m4a"'
+    ```
+
+    The response comes back unaltered:
+
+    ```json
+    {
+      "text": "Hello!"
+    }
+    ```
+
+weight: 900
+
+min_version:
+  gateway: '3.60'
+
+requirements:
+  - OpenAI account
+
+config:
+  targets:
+    - route_type: preserve
+      auth:
+        header_name: Authorization
+        header_value: Bearer ${openai_key}
+      logging:
+        log_statistics: true
+        log_payloads: false
+      model:
+        provider: openai
+        name: whisper-2
+        options:
+          upstream_path: $(uri_captures.op_path)
+
+variables:
+  openai_key:
+    value: $OPENAI_API_KEY
+    description: The API key used to authenticate requests to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
