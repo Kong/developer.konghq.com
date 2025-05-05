@@ -1,6 +1,7 @@
-We will start a docker-compose cluster with Kafka, Kiburi, confluent-schema-registry and a kafka-ui.
+We will start a Docker Compose cluster with Kafka, {{site.event_gateway_short}}, `confluent-schema-registry` and a Kafka UI.
 
-First, we need to create a `docker-compose.yaml` file. This file will define the services we want to run in our local environment.
+First, we need to create a `docker-compose.yaml` file. This file will define the services we want to run in our local environment:
+
 ```shell
 cat <<EOF > docker-compose.yaml
 services:
@@ -87,14 +88,14 @@ EOF
 
 Note that the above config publishes the following ports to the host:
 
-- kafka:9092 for plaintext auth
-- kafka:9094 for SASL username/password auth
-- kafka-ui:8082 for access to the Kafka UI
-- schema-registry:8081 for access to the schema registry
-- knep:9192 to know:9292 for access to the KNEP proxy (the port range is wide to allow many virtual clusters to be created)
-- knep:8080 for probes and metrics access to knep
+- `kafka:9092` for plaintext auth
+- `kafka:9094` for SASL username/password auth
+- `kafka-ui:8082` for access to the Kafka UI
+- `schema-registry:8081` for access to the schema registry
+- `knep:9192` to `know:9292` for access to the {{site.event_gateway_short}} proxy (the port range is wide to allow many virtual clusters to be created)
+- `knep:8080` for probes and metrics access to {{site.event_gateway_short}}
 
-the KNEP container will use environment variables from `knep.env` file. Let's create it:
+The {{site.event_gateway_short}} container will use environment variables from `knep.env` file. Let's create it:
 ```shell
 cat <<EOF > knep.env
 KONNECT_API_TOKEN=\${KONNECT_TOKEN}
