@@ -72,7 +72,7 @@ rows:
               
             ctas:
               - text: Get started
-                url: /openid-connect/
+                url: /gateway/openid-connect/
               - text: Plugin reference
                 url: /plugins/openid-connect/
   - columns:
@@ -110,7 +110,7 @@ rows:
               - text: Get started
                 url: /plugins/session/examples/
               - text: Plugin reference
-                url: /plugins/sessions/
+                url: /plugins/session/
 
   - column_count: 3
     columns:
