@@ -7,7 +7,7 @@ description: |
 weight: 103
 
 min_version:
-    gateway: '3.60'
+  gateway: '3.60'
 
 requirements:
 - Cohere account
