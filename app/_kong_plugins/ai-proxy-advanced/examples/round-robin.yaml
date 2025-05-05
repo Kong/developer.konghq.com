@@ -5,7 +5,7 @@ description: |
 
   In this example, the GPT-4 model will receive 70% of requests, the GPT-4o-mini model will receive 25%, and the GPT-3 model 5%.
 
-weight: 900
+weight: 108
 
 requirements:
   - An OpenAI account

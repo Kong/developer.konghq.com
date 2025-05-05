@@ -12,7 +12,7 @@ description: |
   * If the request is about IT support, it will be routed to the `gpt-4o` model.
   * All other requests, which don’t match the above categories, will be handled by the `gpt-4o-mini` model, serving as a catch-all for general queries.
 
-weight: 900
+weight: 107
 
 requirements:
   - An OpenAI account

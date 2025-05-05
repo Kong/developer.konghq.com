@@ -2,7 +2,7 @@ title: 'OpenAI SDK: Chat routes with dynamic provider selection'
 description: |
   Configure two chat routes that dynamically select between Cohere and Mistral models at runtime based on the model name captured from the request URI.
 
-weight: 900
+weight: 104
 
 min_version:
   gateway: '3.60'

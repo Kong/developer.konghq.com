@@ -6,7 +6,7 @@ description: |
 
     For example, one target connects to a `gpt-35-turbo` deployment (`my-gpt-3-5`), and the other connects to a `gpt-4` deployment (`my-gpt-4`).
 
-weight: 900
+weight: 101
 
 min_version:
 gateway: '3.60'

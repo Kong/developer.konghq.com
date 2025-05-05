@@ -13,7 +13,7 @@ description: |
   In this case, the Python SDK automatically expands the URL to `http://localhost:8000/gpt-4/chat/completions`, and Kong Gateway extracts the model name (gpt-4) from the path to route the request appropriately.
 
 
-weight: 900
+weight: 105
 
 min_version:
     gateway: '3.60'

@@ -23,7 +23,7 @@ description: |
     }
     ```
 
-weight: 900
+weight: 100
 
 min_version:
   gateway: '3.60'

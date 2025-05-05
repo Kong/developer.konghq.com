@@ -2,7 +2,7 @@
 title: 'Load balancing: Lowest-usage'
 description: 'Configure the plugin to use two OpenAI models and route requests based on the number of tokens in the prompt.'
 
-weight: 900
+weight: 110
 
 requirements:
   - An OpenAI account

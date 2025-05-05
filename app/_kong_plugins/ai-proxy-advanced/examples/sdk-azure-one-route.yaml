@@ -9,7 +9,7 @@ description: |
 
   This allows a single route to support multiple Azure model deployments dynamically.
 
-weight: 900
+weight: 102
 
 min_version:
 gateway: '3.60'
