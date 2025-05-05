@@ -5,8 +5,7 @@
 {% assign options_slug = options | slugify | prepend: 'schema--' %}
 
 The plugin allows you to substitute values in the [`{{ model_name }}`](./reference/#{{ model_name_slug }}) and any parameter under [`{{ options }}`](./reference/#{{ options_slug }})
-with specific placeholders, similar to those in the [Request Transformer Advanced](/plugins/request-transformer-advanced/)
-templating system.
+with specific placeholders, similar to those in the [Request Transformer Advanced](/plugins/request-transformer-advanced/) plugin.
 
 The following templated parameters are available:
 
