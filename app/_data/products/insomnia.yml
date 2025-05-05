@@ -1,10 +1,10 @@
 name: Insomnia
 
 tiers:
-  individual:
+  hobby:
     text: Hobby and above
     url: /insomnia/
-  team:
+  pro:
     text: Pro and above
     url: /insomnia/
   enterprise:
