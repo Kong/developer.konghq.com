@@ -1,5 +1,6 @@
 ---
 title: Get started with {{site.base_gateway}}
+description: Learn how to set up a local {{site.base_gateway}} installation and configure it for some common API management tasks. 
 content_type: how_to
 
 products:
@@ -175,7 +176,6 @@ Try to access the Service without providing the key:
 
 {% validation unauthorized-check %}
 url: /mock/anything
-headers: []
 message: No API key found in request
 {% endvalidation %}
 

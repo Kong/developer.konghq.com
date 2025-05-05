@@ -1,14 +1,15 @@
 ---
-title: Store a Mistral API key as a secret in Konnect Config Store
+title: Store a Mistral API key as a secret in {{site.konnect_short_name}} Config Store
+description: Learn how to set up {{site.konnect_short_name}} Config Store as a Vault backend and store a Mistral API key.
 content_type: how_to
 related_resources:
   - text: Secrets management
     url: /secrets-management/
   - text: Vault entity
     url: /gateway/entities/vault/
-  - text: Configure the Konnect Config Store
+  - text: Configure the {{site.konnect_short_name}} Config Store
     url: /how-to/configure-the-konnect-config-store/
-  - text: Reference secrets stored in the Konnect Config Store
+  - text: Reference secrets stored in the {{site.konnect_short_name}} Config Store
     url: /how-to/reference-secrets-from-konnect-config-store/
   - text: AI Proxy plugin
     url: /plugins/ai-proxy/
@@ -27,6 +28,7 @@ entities:
 tags:
     - security
     - secrets-management
+    - ai
 
 tldr:
     q: How do I store my Mistral API key as a secret in a {{site.konnect_short_name}} Vault and then use it with the AI Proxy plugin?
@@ -51,9 +53,9 @@ prereqs:
 
         Export the API key as an environment variable:
         ```sh
-        export MISTRAL_API_KEY='<your-api-key>'
+        export MISTRAL_API_KEY='YOUR API KEY'
         ```
-    - title: Konnect API
+    - title: "{{site.konnect_short_name}} API"
       include_content: prereqs/konnect-api-for-curl
 
 tools:
@@ -65,7 +67,7 @@ faqs:
     a: Set up a {{site.konnect_short_name}} or any other Vault and define the certificate and key in a secret in the Vault. 
 cleanup:
   inline:
-    - title: Clean up Konnect environment
+    - title: Clean up {{site.konnect_short_name}} environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
 
@@ -99,7 +101,7 @@ body:
 Export your Config Store ID as an environment variable so you can use it later:
 
 ```sh
-export DECK_CONFIG_STORE_ID=config-store-uuid
+export DECK_CONFIG_STORE_ID='CONFIG STORE ID'
 ```
 
 ## Configure {{site.konnect_short_name}} as your Vault
@@ -111,7 +113,7 @@ entities:
   vaults:
   - name: konnect
     prefix: mysecretvault
-    description: Storing secrets in Konnect
+    description: Storing secrets in {{site.konnect_short_name}}
     config:
       config_store_id: ${config-store-id}
 

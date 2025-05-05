@@ -37,6 +37,9 @@ icon: service-protection.png
 
 categories:
   - traffic-control
+tags:
+  - traffic-control
+  - rate-limiting
 
 faqs:
   - q: Does the Service Protection plugin replace the Rate Limiting or Rate Limiting Advanced plugins?

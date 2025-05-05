@@ -59,9 +59,15 @@ groups:
       - title: Key Concepts
         items:
           - path: /operator/konnect/concepts/labelling/
-      - title: Konnect CRDs
+      - title: "Konnect CRDs: Control Planes"
         items:
-          - path: /operator/konnect/crd/**/*
+          - path: /operator/konnect/crd/control-planes/**/*
+      - title: "Konnect CRDs: Gateway"
+        items:
+          - path: /operator/konnect/crd/gateway/**/*
+      - title: "Konnect CRDs: Cloud Gateways"
+        items:
+          - path: /operator/konnect/crd/cloud-gateways/**/*
       - title: Troubleshooting
         items:
           - path: /operator/konnect/troubleshooting/status/

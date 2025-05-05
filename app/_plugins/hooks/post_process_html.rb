@@ -28,7 +28,11 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
                text
              end
       old_id = heading['id']
-      heading['id'] = Jekyll::Utils.slugify(text)
+
+      # Index pages have specific heading IDs to account for groups
+      unless @page_or_doc.url.include?("/index/")
+        heading['id'] = Jekyll::Utils.slugify(text)
+      end
 
       # special case, it has links in the headings
       heading.content = heading.text if @page_or_doc.url == '/mesh/changelog/'

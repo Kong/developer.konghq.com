@@ -55,8 +55,15 @@ module Jekyll
                 "On #{@page.relative_path}, the breadcrumb entry `#{entry}` is invalid. It must contain an `index` key."
         end
 
-        slug = Jekyll::Utils.slugify(entry['section'])
-        { 'url' => "/index/#{entry['index']}/##{slug}", 'title' => entry['section'] }
+        slug = Jekyll::Utils.slugify(entry['group'])
+        title = entry['group']
+
+        if entry['section']
+          slug = "#{slug}--#{Jekyll::Utils.slugify(entry['section'])}"
+          title = entry['section']
+        end
+
+        { 'url' => "/index/#{entry['index']}/##{slug}", 'title' => title }
       end
 
       def find_page_by_url(url)

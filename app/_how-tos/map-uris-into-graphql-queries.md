@@ -1,7 +1,7 @@
 ---
 title: Map URIs into GraphQL queries with DeGraphQL
 content_type: how_to
-
+description: Learn how to use the DeGraphQL plugin to map URIs into GraphQL queries.
 related_resources:
   - text: GraphQL plugins
     url: /plugins/?terms=graphql
@@ -43,7 +43,7 @@ prereqs:
 
       Export the token into an environment variable:
       ```
-      export GITHUB_TOKEN={your-token-goes-here}
+      export GITHUB_TOKEN='YOUR TOKEN GOES HERE'
       ```
     icon_url: /assets/icons/git.svg
 

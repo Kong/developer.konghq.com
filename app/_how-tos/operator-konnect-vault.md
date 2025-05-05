@@ -1,16 +1,16 @@
 ---
-title: Create a {{ site.kic_product_name }} Control Plane
+title: Create a Vault
 description: "TODO"
 content_type: how_to
 
-permalink: /operator/konnect/crd/control-planes/kubernetes/
+permalink: /operator/konnect/crd/gateway/vault/
 breadcrumbs:
   - /operator/
   - index: operator
     group: Konnect
   - index: operator
     group: Konnect
-    section: "Konnect CRDs: Control Planes"
+    section: "Konnect CRDs: Gateway"
 
 products:
   - operator
@@ -31,6 +31,7 @@ prereqs:
   operator:
     konnect:
       auth: true
+      control_plane: true
 
 ---
 
@@ -40,14 +41,23 @@ TODO
 
 <!-- vale off -->
 {% konnect_crd %}
-kind: KonnectGatewayControlPlane
+kind: KonnectExample
 metadata:
-  name: gateway-control-plane
+  name: example-name
 spec:
-  name: kic-control-plane
-  cluster_type: CLUSTER_TYPE_K8S_INGRESS_CONTROLLER
+  name: example
+  other: field
   konnect:
     authRef:
       name: konnect-api-auth
 {% endkonnect_crd %}
+<!-- vale on -->
+
+## Validation
+
+<!-- vale off -->
+{% validation kubernetes-resource %}
+kind: KonnectExample
+name: example-name
+{% endvalidation %}
 <!-- vale on -->

@@ -3,11 +3,14 @@ title: Create a Control Plane Group
 description: "TODO"
 content_type: how_to
 
-permalink: /operator/konnect/crd/control-plane-group/
+permalink: /operator/konnect/crd/control-planes/control-plane-group/
 breadcrumbs:
   - /operator/
   - index: operator
-    section: Konnect
+    group: Konnect
+  - index: operator
+    group: Konnect
+    section: "Konnect CRDs: Control Planes"
 
 products:
   - operator

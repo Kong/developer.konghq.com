@@ -1,5 +1,5 @@
 ---
-title: Rate Limiting Window Types
+title: Rate limiting window types
 
 description: This page describes the rate limiting window types supported by {{site.base_gateway}} plugins.
 
@@ -7,8 +7,10 @@ content_type: reference
 layout: reference
 
 related_resources:
-  - text: Rate Limiting
+  - text: Rate limiting
     url: /rate-limiting/
+  - text: Gateway rate limiting
+    url: /gateway/rate-limiting/
 
 plugins:
   - rate-limiting-advanced
@@ -25,6 +27,9 @@ breadcrumbs:
 works_on:
   - on-prem
   - konnect
+
+tags:
+- rate-limiting
 ---
 
 The Rate Limiting Advanced, AI Rate Limiting Advanced, and GraphQL Rate Limiting Advanced plugins support the following window types:
