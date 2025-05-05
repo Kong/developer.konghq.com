@@ -97,6 +97,11 @@ module Jekyll
 
         sort_sections!
 
+        # Remove the sections config so it doesn't overwrite
+        # the grouped pages
+        group.delete('sections') || {}
+
+        # Merge everything together
         {
           'sections' => @sections.values,
         }.merge(group)
