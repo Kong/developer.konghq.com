@@ -1,21 +1,22 @@
-description: 'Define the Key Set to be inspected by the Plugin'
+description: 'Define the Key Set to be inspected by the plugin'
 
 title: 'Inspect specific Key Set'
 
 weight: 900
 
 requirements:
- - "[Key Set](/gateway/entities/key-set)"
+ - You have created a [Key Set](/gateway/entities/key-set).
 
 
 config: 
   key-sets:
-    - $KEY-SET
+    - ${key-set}
 
 
 variables:
-  key-sets:
-    value: $MY_KEY-SET
+  key-set:
+    value: $MY_KEY_SET
+    description: The ID of the Key Set to inspect.
 tools:
   - admin-api
   - konnect-api

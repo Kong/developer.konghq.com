@@ -1,7 +1,7 @@
 ---
 title: Write tests for headers in the response in Insomnia
 content_type: how_to
-
+description: Learn how to write header tests in Insomnia.
 related_resources:
   - text: Write tests for HTTP status codes in Insomnia
     url: /how-to/write-http-status-tests/
@@ -38,17 +38,15 @@ cleanup:
 
 ## Create a test suite
 
-Before you create a test, you need to create a test suite for our collection. 
-
-To do this, click the **Tests** tab and click **New test suite** in the sidebar.
+{% include /how-tos/steps/insomnia-test-suite.md %}
 
 ## Create a headers in response test
 
-Now you can test if a header is returned in the response. 
+Now we can test if a header is returned in the response. 
 
 1. Click **New test** and enter a name for the test, such as "Header in the body". 
 1. From the **Select a request** drop down, select the **GET KongAir planned flights** request.
-1. The following Javascript checks if there are any headers in the response. Enter the following in the Javascript for your test:
+1. Enter the following JavaScript to check if there are any headers in the response:
 ```javascript
 const response1 = await insomnia.send();
 expect(Object.keys(response1.headers).length).to.be.greaterThan(0);
@@ -56,4 +54,4 @@ const body = JSON.parse(response1.data);
 const item = body[1];
 expect(item).to.be.an('object');
 ```
-1. Click the **Play** icon next to your test. In the preview to the right, you should see that the test passes.
+{% include /how-tos/steps/insomnia-run-tests.md %}

@@ -1,7 +1,7 @@
 ---
 title: Write pre-request scripts to add dynamic behavior in Insomnia
 content_type: how_to
-
+description: Write a pre-request script to dynamically set a variable in a request.
 related_resources:
   - text: Automate tests in Insomnia
     url:  /how-to/automate-tests/
@@ -33,21 +33,21 @@ prereqs:
 
 ## Add a pre-request script
 
-In this example, you will be configuring a pre-request script that sets a variable in the request.
+In this example, we'll configure a pre-request script that sets a variable in the request:
 
 1. In Insomnia, navigate to the "Flight Service 0.1.0" document.
 1. Click the **Collections** tab.
 1. In the sidebar of your collection, select the **GET A specific flight by flight number** request.
 1. Click the **Scripts** tab on the request.
 1. Insomnia provides example pre-request scripts. From the Pre-request tab of Scripts, click **Variable Snippets** at the bottom of the pane and select **Set an environment variable**.
-1. In the example script, replace `variable_name` with `flightNumber` and `variable_value` with `KA0285`. Your script should look like the following:
+1. In the example script, replace `variable_name` with `flightNumber` and `variable_value` with `KA0285`. The script should look like the following:
 ```javascript
 insomnia.environment.set("flightNumber", "KA0285");
 ```
 
-## Validate your pre-request script
+## Validate the pre-request script
 
-Now that you created a pre-request script, you can validate it by sending a GET request to the `/flights/{flightNumber}` endpoint.
+Now that we created a pre-request script, we can validate it by sending a GET request to the `/flights/{flightNumber}` endpoint:
 
 1. Click **Send**. You should get a `200` status code and the following response:
 ```json

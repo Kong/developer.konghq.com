@@ -1,7 +1,7 @@
 ---
 title: Import content to Insomnia from a Git repository
 content_type: how_to
-
+description: Import existing Insomnia content from a Git repository.
 products:
 - insomnia
 
@@ -11,7 +11,7 @@ tags:
 - mock-servers
 - git
 
-tier: team
+tier: pro
 
 prereqs:
     inline:
