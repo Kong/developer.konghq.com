@@ -2,7 +2,7 @@
 title: Configure Azure SAML SSO in Insomnia
 
 content_type: how_to
-
+description: Configure SSO with SAML 2.0 and Azure in Insomnia.
 products:
     - insomnia
 

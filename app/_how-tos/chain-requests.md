@@ -2,6 +2,7 @@
 title: Chain requests in Insomnia
 content_type: how_to
 
+description: Reuse content from a response in another request through Insomnia.
 products:
     - insomnia
 

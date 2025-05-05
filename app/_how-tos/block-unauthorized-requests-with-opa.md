@@ -1,5 +1,7 @@
 ---
 title: Block unauthorized requests in {{site.base_gateway}} with the OPA plugin
+
+description: Set up an OPA policy in {{site.base_gateway}} to block unauthorized requests.
 content_type: how_to
 
 products:
