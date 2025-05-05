@@ -87,8 +87,10 @@ module Jekyll
 
           group['sections'].each do |section|
             section['items'].each_with_index do |match, i|
-              next unless match['path'] || match['type'] == 'how-to' || match['url']
+              next unless match['path'] || match['type'] == 'how-to' || match['type'] == 'how-to-search' || match['url']
+
               add_path(page, section['title'], match, section['not_match'], i, section['allow_duplicates'], seen) if match['path']
+              add_how_to_search(site, section['title'], match, i, section['allow_duplicates'], seen) if match['type'] == 'how-to-search'
               add_how_to(site, section['title'], match, i, section['allow_duplicates'], seen) if match['type'] == 'how-to'
               add_entry(section['title'], match, i, section['allow_duplicates'], seen) if match['url']
             end
@@ -136,6 +138,25 @@ module Jekyll
       return unless should_match
 
       add_entry(section, page, match_index, allow_duplicates, seen)
+    end
+
+    # Supports tags, products, tools and plugins in the search config
+    def add_how_to_search(site, section, match, match_index, allow_duplicates, seen)
+      search = {
+        'title' => match['title'],
+        'description' => match['description'],
+        'url' => how_to_search_link(match)
+      }
+      add_entry(section, search, match_index, allow_duplicates, seen)
+    end
+
+    def how_to_search_link(config)
+      config = config.slice('products', 'tags', 'tools', 'plugins')
+      query_string = URI.encode_www_form(config)
+      url_segment = '/how-to'
+      raise "No search URL found in config: #{config} - '#{query_string}'" if query_string.empty?
+
+      "#{url_segment}?#{query_string}"
     end
 
     def add_how_to(site, section, match, match_index, allow_duplicates, seen)
