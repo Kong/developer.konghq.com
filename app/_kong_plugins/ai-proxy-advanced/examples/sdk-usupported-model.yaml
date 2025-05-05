@@ -1,4 +1,4 @@
-title: 'OpenAI SDK: Use an unsupported Model'
+title: 'OpenAI SDK: Use an unsupported LLM model'
 description: |
   {{site.base_gateway}} can attempt to support models that aren’t pre-configured with format transformers or are untested.
 
@@ -24,9 +24,6 @@ description: |
     ```
 
 weight: 100
-
-min_version:
-  gateway: '3.60'
 
 requirements:
   - OpenAI account

@@ -4,9 +4,6 @@ description: |
 
 weight: 104
 
-min_version:
-  gateway: '3.60'
-
 requirements:
 - Cohere account
 - Mistral account

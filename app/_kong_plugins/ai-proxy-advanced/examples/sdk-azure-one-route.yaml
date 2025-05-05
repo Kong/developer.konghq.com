@@ -11,9 +11,6 @@ description: |
 
 weight: 102
 
-min_version:
-gateway: '3.60'
-
 requirements:
 - Azure OpenAI Service account
 
