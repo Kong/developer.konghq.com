@@ -2,7 +2,8 @@
 title: "{{site.base_gateway}} breaking changes"
 content_type: reference
 layout: reference
-
+breadcrumbs:
+  - /gateway/
 products:
     - gateway
 
@@ -90,6 +91,25 @@ Breaking changes in the 3.10.0.0 release.
 
 Manually specifying a `node_id` via Kong configuration (`kong.conf`) is deprecated. 
 The `node_id` parameter is planned to be removed in 4.x.
+
+#### AI Rate Limiting advanced plugin
+
+This release adds support for the Hugging Face provider.
+
+To import the decK configuration files that are exported from earlier versions, use the following script to transform it so that the configuration file can be compatible with the latest version:
+
+```
+yq -i '(
+.plugins[] | select(.name == "ai-rate-limiting-advanced") | .config.llm_providers[] | select(.name == "huggingface") | .name
+) |= "requestPrompt" |
+(
+.consumers[] | .plugins[] | select(.name == "ai-rate-limiting-advanced") | .config.llm_providers[] | select(.name == "huggingface") | .name
+) |= "requestPrompt" |
+(
+.consumer_groups[] | .plugins[] | select(.name == "ai-rate-limiting-advanced") | .config.llm_providers[] | select(.name == "huggingface") | .name
+) |= "requestPrompt"
+' config.yaml
+```
 
 ## 3.8.x breaking changes
 

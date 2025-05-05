@@ -8,6 +8,9 @@ products:
 works_on:
   - konnect
 
+api_specs:
+  - konnect/audit-logs
+
 
 description: Use {{site.konnect_short_name}} audit logs to help you detect and respond to potential security incidents when they occur.
 

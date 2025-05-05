@@ -32,6 +32,8 @@ related_resources:
     url: /gateway/db-less-mode/
   - text: Traditional mode
     url: /gateway/traditional-mode/
+  - text: Serverless gateway
+    url: /serverless-gateways/
 
 faqs:
   - q: What types of data travel between the {{site.konnect_saas}} Control Plane and the Data Plane nodes, and how?

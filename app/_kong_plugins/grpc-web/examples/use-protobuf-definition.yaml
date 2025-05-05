@@ -1,5 +1,7 @@
 description: |
   Configure the plugin to call a Protobuf definition named `hello.proto`.
+extended_description: |
+  Configure the plugin to call a Protobuf definition named `hello.proto`.
   For a full how-to guide, see [Use the gRPC-Web plugin to proxy HTTP requests to a gRPC service](/how-to/use-grpc-web).
 
 title: Use a Protobuf definition

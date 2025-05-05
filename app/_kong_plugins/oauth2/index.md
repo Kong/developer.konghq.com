@@ -7,7 +7,11 @@ content_type: plugin
 publisher: kong-inc
 description: 'Add OAuth 2.0 authentication to your Services and Routes'
 
-
+tags:
+  - authentication
+  - oauth2
+search_aliases:
+  - OAuth 2.0
 products:
     - gateway
 
@@ -30,6 +34,8 @@ related_resources:
     url: /how-to/enable-oauth2-authentication-for-websocket-requests/
   - text: Configure OIDC with Kong Oauth2 token authentication
     url: /how-to/configure-oidc-with-kong-oauth2/
+  - text: "{{site.base_gateway}} authentication"
+    url: /gateway/authentication/
 ---
 
 Add an [OAuth 2.0](https://oauth.net/2/) authentication layer with one of the following grant flows:
@@ -57,14 +63,14 @@ Add an [OAuth 2.0](https://oauth.net/2/) authentication layer with one of the fo
 ## OAuth 2.0 flows
 
 The OAuth2 plugin can run in one of two flows: client credentials or authorization code.
-### Client Credentials
+### Client credentials
 
-The [Client Credentials](https://tools.ietf.org/html/rfc6749#section-4.4) flow works out of the box, without building any authorization page.
+The [client credentials](https://tools.ietf.org/html/rfc6749#section-4.4) flow works out of the box, without building any authorization page.
 The clients need to use the `/oauth2/token` endpoint to request an access token. For more details, see [Enable OAuth 2.0 authentication with {{site.base_gateway}}](/how-to/enable-oauth2-authentication-with-kong-gateway/).
 
-### Authorization Code
+### Authorization code
 
-The Authorization Code flow requires a few extra setup steps. 
+The authorization code flow requires a few extra setup steps. 
 After provisioning Consumers and associating OAuth 2.0 credentials to them, you must also:
 * Implement an authorization page on your web application.
 * Provide internal documentation on how to consume your OAuth 2.0 protected services, so that developers accessing your Service know how to build their client implementations.
@@ -91,20 +97,20 @@ Here's how it works:
 
 1. The client application sends the `client_id` in the query string, from which the web application can retrieve both the OAuth 2.0 application name and developer name, by making the following request to {{site.base_gateway}}:
    ```bash
-   curl localhost:8001/oauth2?client_id=XXX
+   curl localhost:8001/oauth2?client_id=$CLIENT_ID
    ```
 
 1. If the end user authorizes the application, the form submits the data to your backend with a `POST` request, sending the `client_id`, `response_type`, and `scope` parameters that were placed in `<input type="hidden" .. />` fields.
 
 1. The backend makes a `POST` request to {{site.base_gateway}} at your Service address, on the `/oauth2/authorize` endpoint, with the `provision_key`, `authenticated_userid`, `client_id`, `response_type`, and `scope` parameters. If an `Authorization` header was sent by the client, that must be added too. For example:
    ```bash
-   curl https://your.service.com/oauth2/authorize \
+   curl https://$SERVICE.com/oauth2/authorize \
      --header "Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW" \
-     --data "client_id=XXX" \
-     --data "response_type=XXX" \
-     --data "scope=XXX" \
-     --data "provision_key=XXX" \
-     --data "authenticated_userid=XXX"
+     --data "client_id=$CLIENT_ID" \
+     --data "response_type=$RESPONSE_TYPE" \
+     --data "scope=$SCOPE" \
+     --data "provision_key=$PROVISION_KEY" \
+     --data "authenticated_userid=$USER_ID"
    ```
 
    The `provision_key` is the key the plugin generates when it's added to the Service. `authenticated_userid` is the ID of the logged-in end user who grants the permission.
@@ -134,7 +140,7 @@ In this flow, the steps that you need to implement are:
 
 OAuth2 access tokens can be used by gRPC applications:
 ```bash
-grpcurl -H 'authorization: bearer XXX' ...
+grpcurl -H 'authorization: bearer $TOKEN' ...
 ```
 
 The rest of the credentials flow uses HTTPS and not gRPC. Depending on your application, you may have to configure the `oauth2` plugin on two separate Routes: one under `protocols: ["https"]` and another under `protocols: ["grpcs"]`.
@@ -161,16 +167,16 @@ The [Resource Owner Password Credentials Grant](https://tools.ietf.org/html/rfc6
 2. The backend of your web application adds the `provision_key` and `grant_type` parameters to the parameters originally sent by the client, then makes a `POST` request to {{site.base_gateway}} using the `/oauth2/token` endpoint of the configured plugin. If an `Authorization` header is sent by the client, that must be added too. For example:
 
     ```bash
-    curl https://your.service.com/oauth2/token \
+    curl https://$SERVICE.com/oauth2/token \
       --header "Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW" \
-      --data "client_id=XXX" \
-      --data "client_secret=XXX" \
+      --data "client_id=$CLIENT_ID" \
+      --data "client_secret=$CLIENT_SECRET" \
       --data "grant_type=password" \
-      --data "scope=XXX" \
-      --data "provision_key=XXX" \
-      --data "authenticated_userid=XXX" \
-      --data "username=XXX" \
-      --data "password=XXX"
+      --data "scope=$SCOPE" \
+      --data "provision_key=$PROVISION_KEY" \
+      --data "authenticated_userid=$USER_ID" \
+      --data "username=$USERNAME" \
+      --data "password=$PASSWORD"
     ```
 
     The `provision_key` is the key the plugin has generated when it has been added to the Service, while `authenticated_userid` is the ID of the end user whose `username` and `password` belong to.

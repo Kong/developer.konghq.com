@@ -171,7 +171,7 @@ There are two configurable elements:
 1. What exactly constitutes an error. Here {{site.base_gateway}} uses the Nginx defaults, which means an error or timeout that occurs while establishing a connection with the server, passing a request to it, or reading the response headers. 
 This is based on Nginx's [`proxy_next_upstream`](https://nginx.org/docs/http/ngx_http_proxy_module.html#proxy_next_upstream) directive. 
 This option is not directly configurable through {{site.base_gateway}}, but can be added using a custom Nginx configuration. 
-See the [Nginx directives reference](/gateway/nginx-directives/) for more details.
+<!--See the [Nginx directives reference](/gateway/nginx-directives/) for more details.-->
 
 ## Response
 

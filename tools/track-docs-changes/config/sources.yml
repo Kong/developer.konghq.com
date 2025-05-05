@@ -708,8 +708,6 @@ app/_kong_plugins/ldap-auth-advanced/changelog.md:
 app/_includes/plugins/ldap/description.md:
   - app/_hub/kong-inc/ldap-auth-advanced/overview/_index.md
   - app/_hub/kong-inc/ldap-auth/overview/_index.md
-app/_includes/plugins/ldap/service-directory-mapping.md:
-  - app/_includes/md/gateway/ldap-service-directory-mapping.md
 app/_includes/plugins/ldap/usage.md:
   - app/_hub/kong-inc/ldap-auth-advanced/overview/_index.md
   - app/_hub/kong-inc/ldap-auth/overview/_index.md

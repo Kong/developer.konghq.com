@@ -19,6 +19,10 @@ works_on:
 
 tags:
   - kong-manager
+  - security
+search_aliases:
+  - CSP
+  - content security policy
 
 related_resources:
   - text: Content Security Policy (CSP) on MDN Web Docs
@@ -65,11 +69,10 @@ For example:
 
 ## Customize the CSP header
 
-Sometimes, the default CSP may not fit your needs. You can customize the Content Security Policy by setting the [`admin_gui_csp_header_value`](/gateway/configuration/#admin-gui-csp-header-value) parameter in your Kong configuration. 
-For example:
+Sometimes, the default CSP may not fit your needs. You can customize the Content Security Policy by setting the [`admin_gui_csp_header_value`](/gateway/configuration/#admin-gui-csp-header-value) parameter in your {{site.base_gateway}} configuration:
 
 ```
-admin_gui_csp_header_value = default-src 'self'; connect-src 'self' https://my-admin-api.tld;
+admin_gui_csp_header_value = default-src 'self'; connect-src 'self' https://$ADMIN_API.tld;
 ```
 
 {:.warning}

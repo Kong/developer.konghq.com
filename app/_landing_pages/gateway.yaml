@@ -107,6 +107,7 @@ rows:
                 - "[Resource sizing guidelines](/gateway/resource-sizing-guidelines/): Review Kong's recommended resource allocation guidelines."
                 - "[Securing {{site.base_gateway}}](/gateway/security/): Secure every aspect of your deployment, from access control, to mTLS, to secret management in vaults."
                 - "[Performance testing benchmarks](/gateway/performance/benchmarks/): See the performance benchmark results for every {{site.base_gateway}} version."
+                - "[Kong Manager](/gateway/kong-manager/): Set up the GUI for {{site.base_gateway}}."
 
       - header:
           type: h2

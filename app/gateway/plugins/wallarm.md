@@ -7,8 +7,6 @@ content_type: reference
 permalink: /plugins/wallarm/
 
 related_resources:
-  - text: Kong Plugin Hub
-    url: /plugins/
   - text: Wallarm documentation
     url: https://docs.wallarm.com/admin-en/installation-kong-en/?utm_source=konghub
   - text: Wallarm API Security Platform
@@ -30,6 +28,12 @@ description:  Wallarm is AI-Powered Security Platform for protecting microservic
 works_on:
     - on-prem
     - konnect
+
+tags:
+  - security
+
+search_aliases:
+  - Wallarm
 
 products:
   - gateway
