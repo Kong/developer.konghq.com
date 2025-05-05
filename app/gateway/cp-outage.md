@@ -24,6 +24,8 @@ related_resources:
     url: /gateway-manager/data-plane-reference/
   - text: "{{site.base_gateway}} Control Plane and Data Plane communication"
     url: /gateway/cp-dp-communication/
+
+
 ---
 
 {{site.base_gateway}} can be set up to support configuring new Data Planes in the event of a Control Plane outage. Data Plane resilience works by designating one or more backup nodes and allowing it read/write access to a data store. This backup node will automatically push valid {{site.base_gateway}} configurations to the data store. In the event of a Control Plane outage, when a new node is created, it will pull the latest {{site.base_gateway}} configuration from the data store, configure itself, and start proxying requests. 
@@ -53,8 +55,8 @@ The S3 compatible storage volume is only accessed when the Data Plane node is cr
 Data Plane resilience is managed by [`kong.conf`](/gateway/manage-kong-conf/) with the following parameters: 
 
 ```
-cluster_fallback_config_import: on
-cluster_fallback_config_storage: $STORAGE_ENDPOINT
+cluster_fallback_config_import = on
+cluster_fallback_config_storage = $STORAGE_ENDPOINT
 cluster_fallback_config_export = off
 ```
 
@@ -103,8 +105,8 @@ kong-exporter:
     environment:
       <<: *other-kong-envs
       AWS_REGION: 'us-east-2'
-      AWS_ACCESS_KEY_ID: <access_key_write>
-      AWS_SECRET_ACCESS_KEY: <secret_access_key_write>
+      AWS_ACCESS_KEY_ID: $ACCESS_KEY_WRITE
+      AWS_SECRET_ACCESS_KEY: $SECRET_ACCESS_KEY_WRITE
       KONG_CLUSTER_FALLBACK_CONFIG_STORAGE: s3://test-bucket/test-prefix
       KONG_CLUSTER_FALLBACK_CONFIG_EXPORT: "on"
 
@@ -127,8 +129,8 @@ kong-dp-importer:
     environment:
       <<: *other-kong-envs
       AWS_REGION: 'us-east-2'
-      AWS_ACCESS_KEY_ID: <access_key_read>
-      AWS_SECRET_ACCESS_KEY: <secret_access_key_read>
+      AWS_ACCESS_KEY_ID: $ACCESS_KEY_READ
+      AWS_SECRET_ACCESS_KEY: $SECRET_ACCESS_KEY_READ
       KONG_CLUSTER_FALLBACK_CONFIG_STORAGE: s3://test-bucket/test-prefix
       KONG_CLUSTER_FALLBACK_CONFIG_IMPORT: "on"
 ```
@@ -174,7 +176,7 @@ You can configure new Data Planes to load a configuration from the GCP cloud sto
       - '8443:8443'
     environment:
       <<: *other-kong-envs
-      GCP_SERVICE_ACCOUNT: <GCP_JSON_STRING_READ>
+      GCP_SERVICE_ACCOUNT: $GCP_JSON_STRING_READ
       KONG_CLUSTER_FALLBACK_CONFIG_STORAGE: gcs://test-bucket/test-prefix
       KONG_CLUSTER_FALLBACK_CONFIG_IMPORT: "on"
 ```
@@ -194,8 +196,8 @@ The example below uses MinIO to demonstrate configuring a backup node:
     environment:
       <<: *other-kong-envs
       AWS_REGION: 'us-east-2'
-      AWS_ACCESS_KEY_ID: <access_key_write>
-      AWS_SECRET_ACCESS_KEY: <secret_access_key_write>
+      AWS_ACCESS_KEY_ID: $ACCESS_KEY_WRITE
+      AWS_SECRET_ACCESS_KEY: $SECRET_ACCESS_KEY_WRITE
       KONG_CLUSTER_FALLBACK_CONFIG_EXPORT: "on"
       KONG_CLUSTER_FALLBACK_CONFIG_STORAGE: s3://test-bucket/test-prefix
       AWS_CONFIG_STORAGE_ENDPOINT: http://minio:9000/

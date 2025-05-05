@@ -34,6 +34,9 @@ faqs:
 works_on:
   - on-prem
   - konnect
+
+tags:
+- routing
 ---
 
 The traditional router is {{ site.base_gateway }}'s original routing configuration format. It uses JSON to provide a list of routing criteria, including `host`, `path`, and `headers`.

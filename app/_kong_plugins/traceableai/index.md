@@ -37,6 +37,9 @@ icon: traceableai.svg
 search_aliases:
   - traceable ai
   - traceableai
+
+tags:
+  - tracing
 ---
 
 Traceable's Kong plugin lets Traceable capture a copy of the API traffic, both request and response data, that is flowing through {{site.base_gateway}}. The plugin then forwards the data to a locally running [Traceable module extension (TME)](https://docs.traceable.ai/docs/kong).

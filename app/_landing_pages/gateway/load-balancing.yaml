@@ -1,5 +1,5 @@
 metadata:
-  title: Load Balancing with {{site.base_gateway}}
+  title: Load balancing with {{site.base_gateway}}
   content_type: landing_page
   description: Learn how to load balancing traffic with {{site.base_gateway}}
   breadcrumbs:
@@ -9,6 +9,8 @@ metadata:
   works_on:
     - on-prem
     - konnect
+  tags:
+    - load-balancing
 rows:
   - header:
       type: h1
@@ -163,7 +165,7 @@ rows:
                measured by factors such as prompt token counts, response token counts, or other resource metrics.
             cta:
               text: Lowest-usage load balancing in AI Gateway &rarr;
-              url: /plugins/ai-proxy-advanced/examples/anthropic-chat-route/
+              url: /plugins/ai-proxy-advanced/examples/lowest-usage/
   - columns:
       - blocks:
         - type: card

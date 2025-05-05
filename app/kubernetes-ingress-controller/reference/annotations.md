@@ -1,8 +1,8 @@
 ---
-title: Annotation Reference
+title: Annotation reference
 
 description: |
-  Which annotations does {{ site.kic_product_name }} use? Which Kubernetes resources can I annotate?
+  Learn about the annotations {{ site.kic_product_name }} uses and the Kubernetes resources you can annotate.
 
 content_type: reference
 layout: reference
@@ -13,6 +13,11 @@ products:
 works_on:
   - on-prem
   - konnect
+
+breadcrumbs:
+  - /kubernetes-ingress-controller/
+  - index: kubernetes-ingress-controller
+    section: Reference
 ---
 
 {{ site.kic_product_name }} uses annotations to add functionality to various Kubernetes resources. Annotations are used when there isn't a standardized way to configure the required functionality.
