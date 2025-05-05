@@ -3,6 +3,8 @@ title: "{{site.base_gateway}} audit logs"
 content_type: reference
 layout: reference
 
+breadcrumbs:
+  - /gateway/
 products:
     - gateway
 

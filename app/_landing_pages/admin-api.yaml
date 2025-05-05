@@ -6,6 +6,8 @@ metadata:
     - gateway
   works_on:
     - on-prem
+  breadcrumbs:
+    - /tools/
 
 rows:
   - header:

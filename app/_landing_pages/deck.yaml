@@ -6,6 +6,8 @@ metadata:
     - deck
   tags:
     - declarative-config
+  breadcrumbs:
+    - /tools/
 rows:
   - header:
       type: h1
