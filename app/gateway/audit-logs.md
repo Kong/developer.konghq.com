@@ -3,6 +3,8 @@ title: "{{site.base_gateway}} audit logs"
 content_type: reference
 layout: reference
 
+breadcrumbs:
+  - /gateway/
 products:
     - gateway
 
@@ -13,7 +15,7 @@ tags:
 min_version:
     gateway: '3.4'
 
-description: placeholder
+description: "{{site.base_gateway}} audit logs provide details about HTTP requests handled by the Admin API, as well as database changes."
 
 related_resources:
   - text: "Secure {{site.base_gateway}}"
@@ -24,12 +26,19 @@ related_resources:
 #    url: /gateway/debug/
   - text: "{{site.konnect_short_name}} logs"
     url: /konnect-logs/
+  - text: Sign {{site.base_gateway}} audit logs with an RSA key
+    url: /how-to/sign-gateway-audit-logs/
 
 works_on:
   - on-prem
 ---
 
-You can generate {{site.base_gateway}} audit logs using the Admin API and the data is written to {{site.base_gateway}}'s database. Audit logs provide details about HTTP requests handled by the Admin API as well as database changes. This allows cluster administrators to keep track of changes made to the cluster configuration throughout its lifetime, aiding in compliance efforts and providing valuable data points during forensic investigations. 
+You can generate {{site.base_gateway}} audit logs using the Admin API.
+Audit logs provide details about:
+* HTTP requests handled by the Admin API
+* Database changes
+
+This allows cluster administrators to keep track of changes made to the cluster configuration throughout its lifetime, aiding in compliance efforts and providing valuable data points during forensic investigations. 
 
 Because every audit log entry is made available via {{site.base_gateway}}’s Admin API, you can send audit log entries into existing logging warehouses, SIEM solutions, or other remote services for duplication and inspection.
 
@@ -89,7 +98,7 @@ rows:
 
 ## Enable audit logging
 
-Audit logging is disabled by default. Configure it with the [`audit_log`](/gateway/configuration/#audit_log) {{site.base_gateway}} configuration in `kong.conf`:
+Audit logging is disabled by default. Configure it with the [`audit_log`](/gateway/configuration/#audit-log) {{site.base_gateway}} configuration in `kong.conf`:
 
 ```bash
 audit_log = on
@@ -108,26 +117,17 @@ As with other Kong configurations, changes take effect on [`kong reload`](/how-t
 You may want to ignore audit log generation for certain Admin API
 requests, such as requests to the `/status` endpoint for
 health checking, or to ignore requests to a specific path prefix, for example, a given Workspace.
+You can use the following configuration options in `kong.conf`:
 
-Use the [`audit_log_ignore_methods`](/gateway/configuration/#audit_log_ignore_methods) and
-[`audit_log_ignore_paths`](/gateway/configuration/#audit_log_ignore_paths) configuration options:
+<!--vale off-->
+{% kong_config_table %}
+config:
+  - name: audit_log_ignore_methods
+  - name: audit_log_ignore_paths
+{% endkong_config_table %}
+<!--vale on-->
 
-```
-audit_log_ignore_methods = GET,OPTIONS
-# don't generate an audit log entry for GET or OPTIONS HTTP requests
-audit_log_ignore_paths = /foo,/status,^/services,/routes$,/one/.+/two,/upstreams/
-# don't generate an audit log entry for requests that match the above regular expressions
-```
-
-As with request audit logs, you may want to skip generation of audit logs
-for certain database tables. This is configurable via the
-[`audit_log_ignore_tables`](/gateway/configuration/#audit_log_ignore_tables) Kong config option:
-
-```
-audit_log_ignore_tables = consumers
-# don't generate database audit logs for changes to the Consumers table
-```
-
+For example, if you set `audit_log_ignore_methods = GET,OPTIONS`, you won't get any audit log entries for `GET` or `OPTIONS` requests.
 
 The values of `audit_log_ignore_paths` are matched via a Perl-compatible regular expression.
 
@@ -156,11 +156,22 @@ The following request paths generate an audit log entry in the database:
 - `/routes/`
 - `/upstreams`
 
+As with request audit logs, you may want to skip generation of audit logs
+for certain database tables:
+
+<!--vale off-->
+{% kong_config_table %}
+config:
+  - name: audit_log_ignore_tables
+{% endkong_config_table %}
+<!--vale on-->
+
+For example, `audit_log_ignore_tables = consumers` would skip generating audit logs for changes to the Consumers table.
 
 ## Audit log retention
 
 Audit log records are kept in the database for a duration defined by the
-[`audit_log_record_ttl`](/gateway/configuration/#audit_log_record_ttl)
+[`audit_log_record_ttl`](/gateway/configuration/#audit-log-record-ttl)
 {{site.base_gateway}} configuration property. Records in the database older than the seconds configured in `audit_log_record_ttl` are automatically purged.
 
 PostgreSQL purges records via the stored procedure that is executed on insert into the 
@@ -170,9 +181,9 @@ if no new records are inserted to the audit table following the expiration times
 
 ## Sign audit logs with a private RSA key
 
-To provide non-repudiation, audit logs may be signed with a private RSA key by using [`audit_log_signing_key`](/gateway/configuration/#audit_log_signing_key). When
-enabled, a lexically sorted representation of each audit log entry is signed by
-the defined private key; the signature is stored in an additional field within
+To provide non-repudiation, audit logs may be signed with a private RSA key by using [`audit_log_signing_key`](/gateway/configuration/#audit-log-signing-key). 
+When enabled, a lexically sorted representation of each audit log entry is signed by
+the defined private key, and the signature is stored in an additional field within
 the record itself. The public key should be stored elsewhere and can be used
 later to validate the signature of the record. For more information, see [Sign {{site.base_gateway}} audit logs with an RSA key](/how-to/sign-gateway-audit-logs/).
 

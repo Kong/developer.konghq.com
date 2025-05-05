@@ -9,11 +9,11 @@ for _ in {1..{{include.iterations}}}; do
   sleep {{include.sleep}}{%- endif %}
 done
 ```
-
+{% if include.output.explanation %}
 <br />
 {{ include.output.explanation }}
 <br />
-
+{% endif %}
 {% if include.output.expected %}
 ```text{% for v in include.output.expected %}{% for r in v.value %}
 {{ r }}{% endfor %}

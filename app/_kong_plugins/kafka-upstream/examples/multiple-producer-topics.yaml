@@ -11,6 +11,9 @@ title: 'Send messages to multiple topics'
 
 weight: 900
 
+min_version:
+  gateway: '3.10'
+
 requirements: 
  - "[Kafka installed](https://kafka.apache.org/quickstart#quickstart_download) and running"
  - "[Create a Kafka topic](https://kafka.apache.org/quickstart#quickstart_createtopic)"

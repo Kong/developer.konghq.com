@@ -1,5 +1,5 @@
 ---
-title: Version Support
+title: decK version support
 
 description: The decK version support policy outlines the decK versioning scheme and version lifecycle.
 
@@ -20,8 +20,8 @@ breadcrumbs:
   - /deck/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: Tools for managing {{ site.base_gateway }} and {{ site.konnect_short_name }}
+    url: /tools/
 ---
 
 ## {{site.konnect_short_name}}
@@ -32,7 +32,7 @@ decK is an officially supported way to configure {{ site.konnect_short_name }} d
 
 The {{ site.konnect_short_name }} API returns the most recent {{ site.base_gateway }} API response. If you are experiencing issues with decK and {{ site.konnect_short_name }}, update decK to the latest available version.
 
-## On-prem
+## Self-managed {{site.base_gateway}}
 
 decK guarantees compatibility with all supported {{ site.base_gateway }} versions.
 

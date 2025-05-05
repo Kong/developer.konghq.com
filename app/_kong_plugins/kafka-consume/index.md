@@ -32,11 +32,22 @@ icon: kafka-consume.png
 categories:
    - traffic-control
 
+tags:
+  - traffic-control
+  - events
+  - kafka
+
+search_aliases:
+  - events
+  - event gateway
+
 related_resources:
   - text: Kafka Log plugin
     url: /plugins/kafka-log/
   - text: Kafka Upstream plugin
     url: /plugins/kafka-upstream/
+  - text: Confluent plugin
+    url: /plugins/confluent/
   - text: Confluent Consume plugin
     url: /plugins/confluent-consume/
 ---

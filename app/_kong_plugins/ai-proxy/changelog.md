@@ -86,7 +86,7 @@ AI Proxy now has a [`preserve` option for `route_type`](/plugins/ai-proxy/refere
 where the requests and responses are passed directly to the upstream LLM. This enables compatibility with any
 models and SDKs that may be used when calling the AI services.
 [#12903](https://github.com/Kong/kong/issues/12903)
-* **Enterprise feature:** You can now use Azure's native authentication mechanism to [secure your cloud-hosted models](/how-to/authenticate-to-azure-openai-with-azure-identity).
+* **Enterprise feature:** You can now use Azure's native authentication mechanism to secure your cloud-hosted models.
 
 ### {{site.base_gateway}} 3.6.x
 

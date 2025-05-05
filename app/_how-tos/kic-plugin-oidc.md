@@ -1,5 +1,6 @@
 ---
-title: OIDC
+title: "OIDC with {{ site.kic_product_name }}"
+short_title: OIDC
 description: "Authenticate requests using the OpenID Connect protocol and {{ site.base_gateway }}"
 content_type: how_to
 
@@ -12,6 +13,14 @@ breadcrumbs:
 plugins:
   - oidc
   
+search_aliases:
+  - oidc
+  - openid-connect
+
+tags:
+  - openid-connect
+  - authentication
+
 products:
   - kic
 
@@ -46,7 +55,7 @@ cleanup:
 
 ## About OpenID Connect
 
-{{ site.base_gateway }} Enterprise’s OIDC plugin can authenticate requests using OpenID Connect protocol. Learn how to setup the OIDC plugin using the {{ site.kic_product_name }}.
+{{site.ee_product_name}}'s OIDC plugin can authenticate requests using the OpenID Connect protocol. Learn how to set up the OIDC plugin using the {{ site.kic_product_name }}.
 
 {% include prereqs/kubernetes/keycloak.md render_inline=true %}
 
@@ -81,6 +90,7 @@ url: /echo
 status_code: 302
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
+display_headers: true
 {% endvalidation %}
 
 If you provide a password the request will be proxied successfully:

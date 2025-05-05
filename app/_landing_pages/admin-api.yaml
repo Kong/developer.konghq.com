@@ -6,6 +6,8 @@ metadata:
     - gateway
   works_on:
     - on-prem
+  breadcrumbs:
+    - /tools/
 
 rows:
   - header:
@@ -27,7 +29,7 @@ rows:
             * 8001 for HTTP
             * 8444 for HTTPS
 
-            This can be customized with the `admin_listen` parameter in in the [{{site.base_gateway}} configuration](/gateway/configuration/).
+            This can be customized with the `admin_listen` parameter in in the [{{site.base_gateway}} configuration](/gateway/configuration/#admin-listen).
   
   - header:
       text: "Specification"
@@ -36,11 +38,11 @@ rows:
     - blocks:
       - type: card
         config:
-          title: API Specification
+          title: API specification
           description: Learn how to use the Admin API.
           icon: /assets/icons/service-document.svg
           cta:
-            url: /api/gateway/admin-ee/3.9/
+            url: /api/gateway/admin-ee/
             align: end
     - blocks:
       - type: card
@@ -49,7 +51,7 @@ rows:
           description: Open the Admin API specification in Insomnia.
           icon: /assets/icons/insomnia/insomnia.svg
           cta:
-            url: https://insomnia.rest/run/?uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2Fgateway%2Fadmin-ee%2F3.9%2Fopenapi.yaml&label=Gateway+Admin+-+EE
+            url: https://insomnia.rest/run/?uri=https%3A%2F%2Fraw.githubusercontent.com%2FKong%2Fdeveloper.konghq.com%2Fmain%2Fapi-specs%2Fgateway%2Fadmin-ee%2F3.10%2Fopenapi.yaml&label=Gateway+Admin+-+EE
             align: end
 
   - header:
@@ -76,66 +78,14 @@ rows:
             align: end
 
   - header:
-      type: h2
-      text: "Supported content types"
-    columns:
-      - blocks:
-          - type: text
-            config: |
-                The Admin API accepts three content types on every endpoint:
-          - type: feature_table
-            config:
-              columns:
-                - title: Description
-                  key: desc
-                - title: Example
-                  key: example
-              features:
-                - title: |
-                    `application/json`
-                  desc: JSON representation of the data to send. This content type is useful for complex request bodies.
-                  example: |
-                    ```sh
-                    curl -i -X POST http://localhost:8001/routes \
-                    -H "Content-Type: application/json" \
-                    -d '{"name": "test-route", "paths": [ "/path/one", "/path/two" ], "service": {"name": "test-service"}}'
-                    ```
-                - title: |
-                    `application/x-www-form-urlencoded`
-                  desc: |
-                    Form representation of the data to send. This content type can be used in most cases. 
-                    * To specify nested objects us the `.` character.
-                    * To specify array values, you can either send the values in order, or add an index in square brackets.
-                  example: |
-                    ```sh
-                    curl -i -X POST http://localhost:8001/routes \
-                        -d "name=test-route" \
-                        -d "paths[]=/path/one" \
-                        -d "paths[]=/path/two" \
-                        -d "service.name=test-service"
-                    ```
-                - title: |
-                    `multipart/form-data`
-                  desc: |
-                    For representation of the data to send. This content type is useful if you need to send binary data. 
-                    
-                    It's similar to `application/x-www-form-urlencoded`, however:
-                    * References to arrays must have indices.
-                    * You can reference files using the `@` prefix.
-                  example: |
-                    ```sh
-                    curl -i -X POST http://localhost:8001/services/plugin-testing/plugins \
-                        -F "name=pre-function" \
-                        -F "config.access=@custom-auth.lua"
-                    ```                 
-
-  - header:
-      text: "Frequently Asked Questions"
+      text: "Frequently asked questions"
       type: h2
     columns:
       - blocks:
         - type: faqs
           config:
+            - q: Does the Kong Admin API work with Gateway entities in {{site.konnect_short_name}}?
+              a: It does not. All of the apps in {{site.konnect_short_name}} have their own APIs. To manage entities in the Gateway Manager, you can use the [Konnect Control Plane Config API](https://kongdeveloper.netlify.app/api/konnect/control-planes-config/v2/).
             - q: Can I use the Admin API in DB-less mode?
               a: |
                 In DB-less mode, you configure {{site.base_gateway}} declaratively. The Admin API for each {{site.base_gateway}} node functions independently, reflecting the memory state of that particular node. 

@@ -32,6 +32,10 @@ icon: oas-validation.png
 categories:
   - traffic-control
 
+tags:
+  - traffic-control
+  - openapi
+
 search_aliases:
   - specification
   - openapi

@@ -134,7 +134,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    See the full feature comparison on our [pricing page&rarr;](https://insomnia.rest/pricing)
+                    See the full feature comparison on our [pricing page &rarr;](https://insomnia.rest/pricing)
 
   - header:
       type: h2
