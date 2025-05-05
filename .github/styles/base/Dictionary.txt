@@ -366,6 +366,7 @@ Keycloak
 Keycloak
 keyless
 keyrings
+keyset
 keyspace
 keystore
 kiali
