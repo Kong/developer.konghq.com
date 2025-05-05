@@ -3,11 +3,14 @@ title: Create a Control Plane
 description: "TODO"
 content_type: how_to
 
-permalink: /operator/konnect/crd/control-plane/
+permalink: /operator/konnect/crd/control-planes/hybrid/
 breadcrumbs:
   - /operator/
   - index: operator
-    section: Konnect
+    group: Konnect
+  - index: operator
+    group: Konnect
+    section: "Konnect CRDs: Control Planes"
 
 products:
   - operator

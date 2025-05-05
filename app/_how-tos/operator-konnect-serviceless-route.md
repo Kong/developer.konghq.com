@@ -3,11 +3,14 @@ title: Create a Serviceless Route
 description: "TODO"
 content_type: how_to
 
-permalink: /operator/konnect/crd/serviceless-route/
+permalink: /operator/konnect/crd/gateway/serviceless-route/
 breadcrumbs:
   - /operator/
   - index: operator
-    section: Konnect
+    group: Konnect
+  - index: operator
+    group: Konnect
+    section: "Konnect CRDs: Gateway"
 
 products:
   - operator

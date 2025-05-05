@@ -3,11 +3,14 @@ title: Create a Service and Route
 description: "TODO"
 content_type: how_to
 
-permalink: /operator/konnect/crd/service-and-route/
+permalink: /operator/konnect/crd/gateway/service-and-route/
 breadcrumbs:
   - /operator/
   - index: operator
-    section: Konnect
+    group: Konnect
+  - index: operator
+    group: Konnect
+    section: "Konnect CRDs: Gateway"
 
 products:
   - operator
