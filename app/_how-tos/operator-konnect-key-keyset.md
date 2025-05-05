@@ -24,7 +24,7 @@ search_aliases:
   - kgo keyset
 tags:
   - konnect-crd
-releated_resources:
+related_resources:
   - /key-sets/
   - /keys/
 tldr:
