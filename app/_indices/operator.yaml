@@ -1,9 +1,75 @@
 title: All Operator Documentation
-sections:
-  - title: Uncategorized
-    items:
-      - path: /operator/**/*
-    auto_exclude: true
+groups:
+  - title: Unsorted
+    sections:
+      - items:
+          - path: /operator/**/*
+        auto_exclude: true
+  - title: About {{ site.operator_product_name }}
+    sections:
+      - items:
+          - path: /operator/install/
+          - path: /operator/support/
+          - path: /operator/version-compatibility/
+          - path: /operator/changelog/
+  - title: Gateway Deployment
+    description: |
+      This is a short description explaining the content in this block
+    sections:
+      - title: Get Started
+        items:
+          - path: /operator/dataplanes/get-started/hybrid/
+          - path: /operator/dataplanes/get-started/kic/
+      - title: Key Concepts
+        items:
+          - path: /operator/dataplanes/gateway-api/
+          - path: /operator/dataplanes/gateway-configuration/
+          - path: /operator/dataplanes/managed-gateways/
+      - title: How-To
+        items:
+          - path: /operator/dataplanes/how-to/set-dataplane-image/
+          - path: /operator/dataplanes/how-to/deploy-sidecars/
+          - path: /operator/dataplanes/how-to/use-custom-ca-certificate/
+          - path: /operator/dataplanes/how-to/deploy-custom-plugins/
+          - path: /operator/dataplanes/how-to/autoscale-gateway/
+          - path: /operator/dataplanes/how-to/autoscale-upstreams/
+      - title: Observability
+        items:
+          - path: /operator/dataplanes/reference/metrics/operator/
+          - path: /operator/dataplanes/reference/metrics/gateway/
+      - title: Advanced Usage
+        items:
+          - path: /operator/dataplanes/reference/poddisruptionbudget/
+          - path: /operator/dataplanes/reference/podtemplatespec/
+      - title: Upgrading
+        items:
+          - path: /operator/dataplanes/reference/upgrade/operator/
+          - path: /operator/dataplanes/reference/upgrade/gateway/rolling/
+          - path: /operator/dataplanes/reference/upgrade/gateway/blue-green/
+      - title: Troubleshooting
+        items:
+          - path: /operator/dataplanes/troubleshooting/status/
+          - path: /operator/dataplanes/faq/license/
+
   - title: Konnect
-    items:
-      - path: /operator/konnect/**/*
+    sections:
+      - title: Get Started
+        items:
+          - path: /operator/konnect/get-started/**/*
+      - title: Key Concepts
+        items:
+          - path: /operator/konnect/concepts/labelling/
+      - title: Konnect CRDs
+        items:
+          - path: /operator/konnect/crd/**/*
+      - title: Troubleshooting
+        items:
+          - path: /operator/konnect/troubleshooting/status/
+          - path: /operator/konnect/faq/
+      - title: Reference
+        items:
+          - path: /operator/konnect/reference/crds/
+          - path: /operator/konnect/reference/crds/konnectextension/
+          - path: /operator/konnect/reference/crds/kongpluginbinding/
+          - path: /operator/konnect/reference/configuration/
+          - path: /operator/konnect/faq/

@@ -32,6 +32,9 @@ categories:
 search_aliases:
   - grpc web
 
+tags:
+  - grpc
+
 related_resources:
   - text: gRPC-Gateway plugin
     url: /plugins/grpc-gateway/

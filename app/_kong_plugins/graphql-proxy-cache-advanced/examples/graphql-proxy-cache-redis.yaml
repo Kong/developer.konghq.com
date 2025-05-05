@@ -13,15 +13,12 @@ config:
   cache_ttl: 500
   redis:
     host: ${redis_host}
-    port: ${redis_port}
+    port: 6379
 
 variables:
   redis_host:
     value: $REDIS_HOST
     description: The hostname of your Redis instance, such as `example.com`.
-  redis_port:
-    value: $REDIS_PORT
-    description: The port of your Redis instance.
 
 tools:
   - deck

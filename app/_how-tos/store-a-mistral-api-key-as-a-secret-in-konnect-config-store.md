@@ -11,8 +11,6 @@ related_resources:
     url: /how-to/configure-the-konnect-config-store/
   - text: Reference secrets stored in the {{site.konnect_short_name}} Config Store
     url: /how-to/reference-secrets-from-konnect-config-store/
-  - text: Store certificates in {{site.konnect_short_name}} Config Store
-    url: /how-to/store-certificates-in-konnect-config-store/
   - text: AI Proxy plugin
     url: /plugins/ai-proxy/
   - text: Mistral AI documentation

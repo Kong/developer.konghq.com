@@ -802,6 +802,7 @@ unpublish
 unpublishing
 unregister
 unregistering
+unscoped
 unshorten
 unshortened
 unstash

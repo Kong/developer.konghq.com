@@ -3,7 +3,9 @@ title: "Back up and restore {{site.base_gateway}}"
 description: Learn how to back up and restore your {{site.base_gateway}} data.
 content_type: reference
 layout: reference
-
+breadcrumbs:
+    - /gateway/
+    - /gateway/upgrade/
 products:
     - gateway
 
@@ -14,8 +16,6 @@ tags:
     - upgrades
     - backup
     - restore
-
-
 
 related_resources:
   - text: "Upgrading {{site.base_gateway}}"
@@ -73,6 +73,8 @@ Due to these limitations, we recommend prioritizing the [database-native method]
 
 ## Back up Gateway entities
 
+The following sections explain the different backup methods.
+
 ### Database-native backup
 
 When upgrading your {{site.base_gateway}} to a newer version, you have to perform a database migration using the [`kong migrations`](/gateway/cli/reference/#kong-migrations) utility. The `kong migrations` commands are not reversible. We recommend backing up data before any starting any upgrade in case of any migration issues.
@@ -107,18 +109,18 @@ For a database-backed deployment, we recommend using decK as a secondary backup 
     specify the admin token. You can specify this token with any decK command:
 
     ```sh
-    deck gateway ping --headers “Kong-Admin-Token: <password>”
+    deck gateway ping --headers “Kong-Admin-Token: $PASSWORD”
     ```
 
 2. Use decK to dump the configuration.
 You can back up a particular Workspace or all Workspaces at once:
 
     ```sh
-    deck gateway dump --all-workspaces -o /path/to/kong_backup.yaml
+    deck gateway dump --all-workspaces -o ./kong_backup.yaml
     ```
     or
     ```sh
-    deck gateway dump --workspace it_dept -o /path/to/kong_backup.yaml
+    deck gateway dump --workspace it_dept -o ./kong_backup.yaml
     ```
 
 3. Store the resulting file or files in a secure location.
@@ -133,7 +135,7 @@ As a final fail-safe for a database-backed deployment, you can also back up the 
 > Never use this method as your primary backup, as it might not accurately represent the final state of your database.
 
 ```sh
-kong config db_export /path/to/kong_backup.yaml
+kong config db_export ./kong_backup.yaml
 ```
 
 {% endnavtab %}
@@ -147,6 +149,8 @@ You can find your declarative config file at the path set via the [`declarative_
 {% endnavtabs %}
 
 ## Restore Gateway entities
+
+The following sections explain the different methods of restoring {{site.base_gateway}} entities after a backup.
 
 ### Database-native restore
 
@@ -198,18 +202,18 @@ In traditional or hybrid mode, use decK to restore your configuration from a bac
 2. Validate the declarative config:
 
     ```sh
-    deck gateway validate /path/to/kong_backup.yaml [--online] 
+    deck gateway validate ./kong_backup.yaml [--online] 
     ```
 
 3. Once verified, restore a particular workspace or all workspaces at once:
 
     ```sh
-    deck gateway sync /path/to/kong_backup.yaml --all-workspaces 
+    deck gateway sync ./kong_backup.yaml --all-workspaces 
     ```
     or
 
     ```sh
-    deck gateway sync /path/to/kong_backup.yaml --workspace it_dept
+    deck gateway sync ./kong_backup.yaml --workspace it_dept
     ```
 
 {% endnavtab %}
@@ -221,13 +225,13 @@ use the kong config CLI to restore your configuration from the backup declarativ
 1. Validate the backup configuration file before restoring it:
 
     ```sh
-    kong config parse /path/to/kong_backup.yaml
+    kong config parse ./kong_backup.yaml
     ```
 
 2. Import entities into your database:
 
     ```sh
-    kong config db_import /path/to/kong_backup.yaml
+    kong config db_import ./kong_backup.yaml
     ```
 
 2. Restart or reload your {{site.base_gateway}} instance:
@@ -250,26 +254,26 @@ In DB-less mode, use the kong config CLI to restore your configuration from a de
 1. Validate the backup configuration file before restoring it:
 
     ```sh
-    kong config parse /path/to/kong_backup.yaml
+    kong config parse ./kong_backup.yaml
     ```
 
 2. Restart or reload your {{site.base_gateway}} instance using the backup configuration file:
 
     ```sh
-    export KONG_DECLARATIVE_CONFIG=/path/to/kong_backup.yaml; kong restart -c /path/to/kong.conf
+    export KONG_DECLARATIVE_CONFIG=./kong_backup.yaml; kong restart -c ./kong.conf
     ```
 
     or
 
     ```
-    export KONG_DECLARATIVE_CONFIG=/path/to/kong_backup.yaml; kong reload -c /path/to/kong.conf
+    export KONG_DECLARATIVE_CONFIG=./kong_backup.yaml; kong reload -c ./kong.conf
     ```
 
     Alternatively, post the declarative backup file to the `:8001/config` endpoint:
 
     ```sh
     curl -sS http://localhost:8001/config?check_hash=1 \
-      -F 'config=@/path/to/kong_backup.yaml' ; echo
+      -F 'config=@./kong_backup.yaml' ; echo
     ```
 
 {% endnavtab %}
@@ -277,7 +281,7 @@ In DB-less mode, use the kong config CLI to restore your configuration from a de
 
 ## Keyring materials backup and restore
 
-If you have enabled Keyring and data encryption, you must separately back up and restore Keyring materials.
+If you have enabled [Keyring](/gateway/keyring/) and data encryption, you must separately back up and restore Keyring materials.
 
 {:.warning}
 > **Caution**: Make sure to store the encryption key in a safe place.
@@ -286,7 +290,7 @@ configuration data and there is no other way to recover it.
 
 For technical details, refer to the [disaster recovery documentation](/gateway/keyring/#disaster-recovery).
 
-## Other files
+## Other files to back up
 
 Manually back up the following files:
 

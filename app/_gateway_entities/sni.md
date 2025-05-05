@@ -20,6 +20,10 @@ tools:
     - kic
     - deck
     - terraform
+tags:
+  - security
+search_aliases:
+  - hostname
 
 api_specs:
     - gateway/admin-ee

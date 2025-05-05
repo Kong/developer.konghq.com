@@ -29,7 +29,8 @@ metadata:
 spec:
   parentRefs:
   - name: kong{% unless namespace == '' %}
-    namespace: {{ gateway_namespace }}{% endunless %}{% unless include.skip_host %}
+    namespace: {{ gateway_namespace }}{% endunless %}{% unless include.section_name == '' %}
+    sectionName: {{ include.section_name }}{% endunless %}{% unless include.skip_host %}
   hostnames:
   - '{{ hostname }}'{% endunless %}
   rules:{% for i in (0..count) %}
@@ -60,7 +61,11 @@ metadata:
     konghq.com/rewrite: '{{ include.annotation_rewrite | replace: "$", "\$" }}'{% endif %}
     konghq.com/strip-path: 'true'
 spec:
-  ingressClassName: {{ ingress_class }}
+  ingressClassName: {{ ingress_class }}{% if include.section_name == 'https' %}
+  tls:
+    - secretName: {{ hostname }}
+      hosts:
+        - {{ hostname }}{% endif %}
   rules:{% for i in (0..count) %}
   - {% unless include.skip_host %}host: {{ hostname }}
     {% endunless %}http:

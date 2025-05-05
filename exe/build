@@ -2,4 +2,10 @@
 
 set -e
 
+# Use preview URL as the base URL for manifests in Netlify PR previews
+if [[ ! -z "$DEPLOY_PRIME_URL" ]]; then
+    echo "Setting deploy URL to $DEPLOY_PRIME_URL"
+    sed -i "s#https://kongdeveloper.netlify.app#$DEPLOY_PRIME_URL#" jekyll.yml
+fi
+
 bundle exec jekyll build --config jekyll.yml --profile

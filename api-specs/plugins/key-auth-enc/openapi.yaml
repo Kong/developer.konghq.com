@@ -1,0 +1,146 @@
+openapi: 3.0.2
+info:
+  title: Key Auth Encrypted Plugin API
+  version: 1.0.0
+  description: >
+    The Key Auth Encrypted (`key-auth-enc`) plugin adds encrypted API key authentication to services.
+tags:
+  - name: KeyAuthEnc
+    description: Manage encrypted key credentials for API key authentication.
+
+paths:
+  /consumers/{ConsumerUsernameOrId}/key-auths-enc:
+    get:
+      summary: List encrypted key credentials for a consumer
+      tags: [KeyAuthEnc]
+      parameters:
+        - $ref: '#/components/parameters/ConsumerUsernameOrId'
+      responses:
+        '200':
+          description: List of credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/KeyAuthEncCredential'
+    post:
+      summary: Create encrypted key credential for a consumer
+      tags: [KeyAuthEnc]
+      parameters:
+        - $ref: '#/components/parameters/ConsumerUsernameOrId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyAuthEncCredentialRequest'
+      responses:
+        '201':
+          description: Credential created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyAuthEncCredential'
+
+  /consumers/{ConsumerUsernameOrId}/key-auths-enc/{CredentialId}:
+    get:
+      summary: Get encrypted key credential
+      tags: [KeyAuthEnc]
+      parameters:
+        - $ref: '#/components/parameters/ConsumerUsernameOrId'
+        - $ref: '#/components/parameters/CredentialId'
+      responses:
+        '200':
+          description: Credential retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyAuthEncCredential'
+    patch:
+      summary: Update encrypted key credential
+      tags: [KeyAuthEnc]
+      parameters:
+        - $ref: '#/components/parameters/ConsumerUsernameOrId'
+        - $ref: '#/components/parameters/CredentialId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/KeyAuthEncCredentialRequest'
+      responses:
+        '200':
+          description: Credential updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KeyAuthEncCredential'
+    delete:
+      summary: Delete encrypted key credential
+      tags: [KeyAuthEnc]
+      parameters:
+        - $ref: '#/components/parameters/ConsumerUsernameOrId'
+        - $ref: '#/components/parameters/CredentialId'
+      responses:
+        '204':
+          description: Deleted
+
+components:
+  parameters:
+    ConsumerUsernameOrId:
+      name: ConsumerUsernameOrId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: ID or username of the consumer.
+    CredentialId:
+      name: CredentialId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: ID of the encrypted credential.
+
+  schemas:
+    KeyAuthEncCredential:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        created_at:
+          type: integer
+          format: int64
+        key:
+          type: string
+          description: Encrypted key credential.
+        tags:
+          type: array
+          items:
+            type: string
+        consumer:
+          type: string
+          format: uuid
+          description: ID of the associated consumer.
+      required:
+        - id
+        - key
+        - consumer
+
+    KeyAuthEncCredentialRequest:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Optional. If omitted, a key will be auto-generated and encrypted.
+        tags:
+          type: array
+          items:
+            type: string
+      required: []

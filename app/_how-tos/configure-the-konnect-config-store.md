@@ -7,8 +7,6 @@ related_resources:
     url: /secrets-management/
   - text: Vault entity
     url: /gateway/entities/vault/
-  - text: Store certificates in Konnect Config Store
-    url: /how-to/store-certificates-in-konnect-config-store/
   - text: Store a Mistral API key as a secret in Konnect Config Store
     url: /how-to/store-a-mistral-api-key-as-a-secret-in-konnect-config-store/
 

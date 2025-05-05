@@ -31,8 +31,14 @@ icon: xml-threat-protection.png
 categories:
   - traffic-control
 
+tags:
+  - security
+
 search_aliases:
   - xml-threat-protection
+  - XXE
+  - XML bomb
+  - XML attack
 
 related_resources:
   - text: JSON Threat Protection plugin
@@ -63,9 +69,9 @@ The buffer is counted from the last byte parsed (for example, the closing tag on
 If the buffer size is greater than the allowed value, the request is rejected.
 
 For example, assume the following limits are defined:
-* `config.localname`: 1 kB
-* `config.attribute`: 10 kB
-* `config.max_attributes`: 10
+* [`config.localname`](/plugins/xml-threat-protection/reference/#schema--config-localname): 1 kB
+* [`config.attribute`](/plugins/xml-threat-protection/reference/#schema--config-attribute): 10 kB
+* [`config.max_attributes`](/plugins/xml-threat-protection/reference/#schema--config-max-attributes): 10
 
 If a request comes containing an element with 100 attributes, each 1 GB, the parser reads the payload and tries to fire a callback
 for a new element of at least 100 GB in size, since it also contains all attributes. 

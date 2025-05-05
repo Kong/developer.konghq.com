@@ -8,14 +8,15 @@ products:
 works_on:
   - konnect
 
+api_specs:
+  - konnect/audit-logs
+
 
 description: Use {{site.konnect_short_name}} audit logs to help you detect and respond to potential security incidents when they occur.
 
 related_resources:
   - text: "Dedicated Cloud Gateways"
     url: /dedicated-cloud-gateways/
-  - text: "Set up an audit log webhook for a {{site.konnect_short_name}} org"
-    url: /how-to/set-up-konnect-org-audit-log-webhook/
   - text: "{{site.konnect_short_name}} Org audit log API"
     url: /api/konnect/audit-logs/v2/
   - text: "{{site.base_gateway}} audit logs"
@@ -69,8 +70,6 @@ Audit logging provides the following benefits:
 
 
 ## Configure audit logging
-
-Audit logging is configured via a webhook with a SIEM provider of your choice. For more information, see [Set up an audit log webhook for a {{site.konnect_short_name}} org](/how-to/set-up-konnect-org-audit-log-webhook/).
 
 {{site.konnect_short_name}} captures three types of events:
 

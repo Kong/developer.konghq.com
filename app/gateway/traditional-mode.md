@@ -2,7 +2,8 @@
 title: "Traditional mode"
 content_type: reference
 layout: reference
-
+breadcrumbs: 
+  - /gateway/deployment-topologies/
 products:
     - gateway
 
@@ -163,4 +164,4 @@ Admin API `/cache` endpoint.
   > **Note**: Be wary of using this endpoint on a node running in production with warm cache.
   > If the node is receiving a lot of traffic, purging its cache at the same time
   > will trigger many requests to your database, and could cause a
-  > [dog-pile effect](https://en.wikipedia.org/wiki/Cache_stampede).
+  > [cache stampede](https://en.wikipedia.org/wiki/Cache_stampede).

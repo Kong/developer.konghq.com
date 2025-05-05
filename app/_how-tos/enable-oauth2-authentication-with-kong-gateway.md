@@ -38,7 +38,7 @@ prereqs:
 
 tldr:
     q: How do I set up OAuth 2.0 with {{site.base_gateway}}?
-    a: Enable the [OAuth 2.0 Authentication](/plugins/oauth2/) plugin, then create a Consumer and an application using the `/consumers/{consumer}/oauth2` API. Send a request to the `/{route_path}/oauth/token` with the client credentials to generate a token.
+    a: Enable the [OAuth 2.0 Authentication](/plugins/oauth2/) plugin, then create a Consumer and an application using the `/consumers/$CONSUMER/oauth2` API. Send a request to the `/$ROUTE_PATH/oauth/token` with the client credentials to generate a token.
 
 faqs:
   - q: Can I integrate the Kong OAuth2 token flow with OpenID Connect?

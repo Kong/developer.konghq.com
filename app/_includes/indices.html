@@ -1,11 +1,22 @@
+{% for group in groups %}
+<div class="grid grid-cols-1 gap-10">
+  <div>
+  {% if group.title %}<h2 id="{{ group.title | slugify }}">{{ group.title | liquify }}</h2>{% endif %}
 
-{% for group in groups %}{% unless group.hidden %}
-  <div id="{{ group.title | slugify }}" class="flex flex-col gap-5 heading-section card p-6 rounded-lg shadow-primary">
-      <h2>{{ group.title }}</h2>
+  {% if group.description %}
+  <p class="text-base text-terciary mt-2">{{ group.description | liquify }}</p>
+  {% endif %}
+  </div>
+
+  {% for section in group.sections %}{% unless section.hidden %}
+    <div class="flex flex-col gap-5 heading-section card p-6 rounded-lg shadow-primary">
+      {% if section.title %}
+      <h3 id="{% if group.title %}{{ group.title | slugify }}--{% endif %}{{ section.title | slugify }}" class="always-link mb-2">{{ section.title | liquify }}</h3>
+      {% endif %}
 
       <div class="content">
         <ul class="list-none ml-0 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {% for page in group.pages %}
+          {% for page in section.pages %}
             {% assign title = page.title %}
             {% if page.short_title %}{% assign title = page.short_title %}{% endif %}
             <li class="flex flex-col gap-1">
@@ -17,5 +28,7 @@
           {% endfor %}
         </ul>
       </div>
-  </div>
-{% endunless %}{% endfor %}
+    </div>
+  {% endunless %}{% endfor %}
+</div>
+{% endfor %}

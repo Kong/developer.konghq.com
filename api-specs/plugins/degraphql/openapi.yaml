@@ -1,0 +1,129 @@
+openapi: 3.0.2
+info:
+  title: DeGraphQL Plugin API
+  version: 1.0.0
+  description: >
+    The DeGraphQL plugin maps REST-style URIs to GraphQL queries on an upstream GraphQL service.
+tags:
+  - name: DeGraphQL
+    description: Manage URI-to-GraphQL mappings for services using the DeGraphQL plugin.
+paths:
+  /services/{ServiceIdOrName}/degraphql/routes:
+    get:
+      summary: List DeGraphQL routes
+      tags: [DeGraphQL]
+      parameters:
+        - $ref: '#/components/parameters/ServiceIdOrName'
+      responses:
+        '200':
+          description: List of DeGraphQL routes for the service
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeGraphQLRoute'
+    post:
+      summary: Create a DeGraphQL route
+      tags: [DeGraphQL]
+      parameters:
+        - $ref: '#/components/parameters/ServiceIdOrName'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeGraphQLRouteRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeGraphQLRoute'
+
+  /services/{ServiceIdOrName}/degraphql/routes/{DeGraphQLRouteId}:
+    patch:
+      summary: Update a DeGraphQL route
+      tags: [DeGraphQL]
+      parameters:
+        - $ref: '#/components/parameters/ServiceIdOrName'
+        - $ref: '#/components/parameters/DeGraphQLRouteId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeGraphQLRouteRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeGraphQLRoute'
+    delete:
+      summary: Delete a DeGraphQL route
+      tags: [DeGraphQL]
+      parameters:
+        - $ref: '#/components/parameters/ServiceIdOrName'
+        - $ref: '#/components/parameters/DeGraphQLRouteId'
+      responses:
+        '204':
+          description: Deleted
+
+components:
+  parameters:
+    ServiceIdOrName:
+      name: ServiceIdOrName
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The ID or name of the Service.
+    DeGraphQLRouteId:
+      name: DeGraphQLRouteId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: The ID of the DeGraphQL route.
+
+  schemas:
+    DeGraphQLRoute:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        service:
+          type: string
+          format: uuid
+        uri:
+          type: string
+          description: URI path to match (without the GraphQL prefix).
+        query:
+          type: string
+          description: GraphQL query to execute when the path is matched.
+      required:
+        - id
+        - service
+        - uri
+        - query
+
+    DeGraphQLRouteRequest:
+      type: object
+      properties:
+        uri:
+          type: string
+          description: URI path to match (without the GraphQL prefix).
+        query:
+          type: string
+          description: GraphQL query to execute when the path is matched.
+      required:
+        - uri
+        - query
