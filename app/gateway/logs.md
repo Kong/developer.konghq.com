@@ -104,11 +104,13 @@ If {{site.base_gateway}} returns an error by calling the PDK `kong.response.erro
 
 This feature can be customized for upstreams and downstreams using the `headers` and `headers_upstream` configuration options in [`kong.conf`](/gateway/configuration/):
 
+<!--vale off-->
 {% kong_config_table %}
 config:
   - name: headers
   - name: headers_upstream
 {% endkong_config_table %}
+<!--vale on-->
 
 ## Customize what {{site.base_gateway}} logs
 
