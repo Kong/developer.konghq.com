@@ -105,7 +105,7 @@ When {{site.kic_product_name}} fails to apply translated {{site.base_gateway}} c
 
 If {{site.kic_product_name}} fails to apply the translated configuration, it then tries to apply the last successful {{site.base_gateway}} configuration to new instances of {{site.base_gateway}} to attempt a best effort at making them available.
 
-If the `FallbackConfiguration` feature gate is enabled, {{site.kic_product_name}} discovers the Kubernetes objects that caused the invalid configuration, and tries to build a fallback configuration from valid objects and parts of the last valid configuration that are built from the broken objects. See [fallback configuration](/kubernetes-ingress-controller/high-availability/fallback-configuration/) for more information.
+If the `FallbackConfiguration` feature gate is enabled, {{site.kic_product_name}} discovers the Kubernetes objects that caused the invalid configuration, and tries to build a fallback configuration from valid objects and parts of the last valid configuration that are built from the broken objects. See [fallback configuration](/kubernetes-ingress-controller/fallback-configuration/) for more information.
 
 ### Debugging configuration failures
 
