@@ -277,9 +277,9 @@ app/_how-tos/kic-proxy-tcp-sni.md:
 app/_how-tos/kic-proxy-udp.md:
   - app/_src/kubernetes-ingress-controller/guides/services/udp.md
 app/_how-tos/kic-proxy-weights.md:
-  - /app/_src/kubernetes-ingress-controller/guides/services/multiple-backends.md
+  - app/_src/kubernetes-ingress-controller/guides/services/multiple-backends.md
 app/_how-tos/kic-proxy-cross-namespace.md:
-  - /app/_src/kubernetes-ingress-controller/guides/services/cross-namespace.md
+  - app/_src/kubernetes-ingress-controller/guides/services/cross-namespace.md
 app/_how-tos/kic-proxy-rewriting-paths.md:
   - app/_src/kubernetes-ingress-controller/guides/requests/rewrite-annotation.md
 app/_how-tos/kic-plugin-degraphql.md:
