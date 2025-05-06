@@ -92,7 +92,7 @@
                       <div class="flex flex-col gap-3 text-s">
                         <span>{{section.title}}</span>
                         {% for link in section.links %}
-                          {% include header/item.html url=link.url product=link.product text=link.text icon=link.icon %}
+                          {% include header/item.html url=link.url product=link.product text=link.text icon=link.icon color=link.color %}
                         {% endfor %}
                       </div>
                     {% endfor %}
@@ -106,13 +106,7 @@
                 <span class="navbar-item__trigger_icon">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
               </span>
               {% include_cached header/menu_caret.html %}
-              <ul class="hidden navbar-item__menu grid-cols-1" role="menu">
-                <li class="flex mb-1">
-                  <div class="flex flex-col gap-0.5 text-sm">
-                    <span class="font-semibold text-primary">How to Guides</span>
-                    <span class="text-terciary">Hands-on guides to get things done</span>
-                  </div>
-                </li>
+              <ul class="hidden navbar-item__menu gap-3 grid-cols-1" role="menu">
                 {% for how_to in site.data.top_navigation.how_tos %}
                 <li class="flex">
                   {% include header/item.html url=how_to.url product=how_to.product text=how_to.text icon=how_to.icon %}
@@ -131,7 +125,7 @@
                 <span class="navbar-item__trigger_icon">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
               </span>
               {% include_cached header/menu_caret.html %}
-              <ul class="hidden navbar-item__menu" role="menu">
+              <ul class="hidden navbar-item__menu gap-6" role="menu">
                 {% for category in site.data.plugin_categories %}
                   <li class="flex">
                     <a class="flex gap-2 w-full" href="/plugins/?category={{category.slug}}">
@@ -153,7 +147,7 @@
                 <span class="navbar-item__trigger_icon">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
               </span>
               {% include_cached header/menu_caret.html %}
-              <ul class="hidden navbar-item__menu" role="menu">
+              <ul class="hidden navbar-item__menu gap-6" role="menu">
                 {% for item in site.data.top_navigation.support %}
                   <li class="flex">
                     <a class="flex gap-2 text-primary text-sm w-full no-icon items-center" href="{{item.url}}">

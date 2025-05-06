@@ -25,6 +25,14 @@ module.exports = {
       pattern: /gap-[1-12]/,
       variants: ["md", "lg"],
     },
+    {
+      pattern:
+        /bg-semantic-(red|yellow|blue|green|grey|purple|orange|teal)-(primary|secondary)/,
+    },
+    {
+      pattern:
+        /text-semantic-(red|yellow|blue|green|grey|purple|orange|teal)-(primary|secondary)/,
+    },
     "self-start",
     "self-center",
     "self-end",
