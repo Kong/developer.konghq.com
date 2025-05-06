@@ -13,7 +13,7 @@ The following templated parameters are available:
 * `$(uri_captures.path_parameter_name)`: The value of a captured URI path parameter.
 * `$(query_params.query_parameter_name)`: The value of a query string parameter.
 
-You can combine these parameters with an OpenAI-compatible SDK in multiple ways using the AI Proxy Advanced plugin, depending on your specific use case:
+You can combine these parameters with an OpenAI-compatible SDK in multiple ways using the AI Proxy and AI Proxy Advanced plugins, depending on your specific use case:
 
 <!--vale off-->
 {% table %}
@@ -23,20 +23,22 @@ columns:
   - title: Description
     key: description
 rows:
-  - action: "[Select different models dynamically on one provider](/plugins/ai-proxy-advanced/examples/sdk-dynamic-model-selection/)"
+  - action: "[Select different models dynamically on one provider](./examples/sdk-dynamic-model-selection/)"
     description: |
       Allow users to select the target model based on a request header or parameter. Supports flexible routing across different models on the same provider.
-  - action: "[Select different providers dynamically](/plugins/ai-proxy-advanced/examples/sdk-dynamic-provider-selection/)"
+  - action: "[Select different providers dynamically](./examples/sdk-dynamic-provider-selection/)"
     description: |
       Proxy the same request to different LLM providers, allowing users to dynamically choose their preferred provider.
-  - action: "[Target multiple Azure deployments with two routes](/plugins/ai-proxy-advanced/examples/sdk-static-azure-deployments/)"
+  - action: "[Target multiple Azure deployments with two routes](./examples/sdk-static-azure-deployments/)"
     description: |
       Use two static routes to expose different Azure OpenAI deployments. Each route maps to a specific deployment.
-  - action: "[Target multiple Azure deployments dynamically on one route](/plugins/ai-proxy-advanced/examples/sdk-dynamic-azure-deployments/)"
+  - action: "[Target multiple Azure deployments dynamically on one route](./examples/sdk-dynamic-azure-deployments/)"
     description: |
       Use one dynamic route with URI captures to route requests to different Azure OpenAI deployments based on the path.
-  - action: "[Use unsupported models with OpenAI-compatible SDKs](/plugins/ai-proxy-advanced/examples/sdk-unsupported-model/)"
+  - action: "[Use unsupported models with OpenAI-compatible SDKs](./examples/sdk-unsupported-model/)"
     description: |
       Proxy models that are not officially supported, like Whisper-2, through an OpenAI-compatible interface using preserve routing.
 {% endtable %}
 <!--vale on-->
+
+
