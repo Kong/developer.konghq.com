@@ -357,6 +357,7 @@ jwks
 jwt
 jwts
 kafka
+kafkactl
 kbps
 kds
 keepalive
@@ -381,6 +382,7 @@ Knative's
 Knative's
 Knatives
 Knatives
+knep
 kong
 kongair
 kong_name
