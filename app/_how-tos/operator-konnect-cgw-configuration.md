@@ -77,7 +77,6 @@ spec:
 {% endkonnect_crd %}
 <!-- vale on -->
 
-It will change when the network provisioning is finished.
 
 Since creating a Data Plane Group Configuration can take some time, you can monitor its status by checking the `dataplane_groups` field. Data Plane Group Configurations receive this field when they are successfully provisioned in Konnect.
 

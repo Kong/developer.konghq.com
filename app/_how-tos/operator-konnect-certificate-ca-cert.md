@@ -30,7 +30,7 @@ tags:
  
 tldr:
   q: How do I configure TLS and CA certificates for {{site.konnect_short_name}} using KGO?
-  a: Use `KongCertificate` and `KongCACertificate` to manage TLS credentials and CA roots, and assign SNIs using `KongSNI`.
+  a: Use `KongCertificate` and `KongCACertificate` to manage TLS credentials and CA Certificates
 
 
 prereqs:
