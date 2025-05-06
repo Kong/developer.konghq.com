@@ -25,8 +25,8 @@
 - text: Transformations
   slug: transformations
   desc: Transform request and responses on the fly on Kong
-  icon: /assets/icons/book.svg
+  icon: /assets/icons/refresh.svg
 - text: Logging
   slug: logging
   desc: Log request and response data using the best transport for your infrastructure
-  icon: /assets/icons/document-list.svg
+  icon: /assets/icons/service-document.svg

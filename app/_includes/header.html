@@ -120,7 +120,7 @@
                 {% endfor %}
                 <li class="flex">
                   <a href="/how-to/" class="flex gap-2 items-center w-full">
-                    <span class="text-terciary text-sm ">View all &rarr;</span>
+                    <span class="text-brand text-sm ">View all &rarr;</span>
                   </a>
                 </li>
               </ul>
@@ -134,17 +134,16 @@
               <ul class="hidden navbar-item__menu" role="menu">
                 {% for category in site.data.plugin_categories %}
                   <li class="flex">
-                    <a class="flex gap-4 w-full" href="/plugins/?category={{category.slug}}">
+                    <a class="flex gap-2 w-full" href="/plugins/?category={{category.slug}}">
                       <span class="navbar-item__icon">{% include_svg category.icon width="20" height="20" %}</span>
-                      <div class="flex flex-col gap-0.5 text-sm">
-                        <span class="font-semibold text-primary">{{category.text}}</span>
-                        <span class="text-terciary">{{category.desc}}</span>
+                      <div class="flex flex-col">
+                        <span class="text-sm text-primary">{{category.text}}</span>
                       </div>
                     </a>
                   </li>
                 {% endfor %}
                 <li class="flex gap-4">
-                  <a class="text-terciary w-full" href="/plugins">View all &rarr;</a>
+                  <a class="text-brand w-full" href="/plugins">View all &rarr;</a>
                 </li>
               </ul>
             </li>
