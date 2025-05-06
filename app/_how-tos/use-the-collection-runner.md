@@ -8,7 +8,7 @@ products:
 tags:
     - collections
 
-description: Use the Collection Runner in Insomnia to send multiple requests in a specific order.
+description: Send multiple requests in a specific order using the Collection Runner.
 prereqs:
     inline:
         - title: Create and configure a collection
