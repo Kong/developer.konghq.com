@@ -43,23 +43,21 @@ cleanup:
 
 ## Create a test suite
 
-Before you create a test, you need to create a test suite for our collection. 
-
-To do this, click the **Tests** tab and click **New test suite** in the sidebar.
+{% include /how-tos/steps/insomnia-test-suite.md %}
 
 ## Create a HTTP status code test
 
-You can create a test that checks a request against a certain status code. 
+We can create a test that checks a request against a certain status code. 
 
-1. From the Test Suite you just created, click **New test**. Insomnia creates a default `Return 200` request for you:
+From the Test Suite we just created, click **New test**. Insomnia creates a default `Return 200` request:
 ```javascript
 const response1 = await insomnia.send();
 expect(response1.status).to.equal(200);
 ```
 
-## 3. Validate
+## Validate
 
 We can validate that our test works by testing a request.
 
-1. From the **Select a request** drop down, select the **GET KongAir planned flights** request.
-1. Click the **Play** icon next to your test. In the preview to the right, you should see that the test passes.
+From the **Select a request** drop down, select the **GET KongAir planned flights** request.
+{% include /how-tos/steps/insomnia-run-tests.md %}

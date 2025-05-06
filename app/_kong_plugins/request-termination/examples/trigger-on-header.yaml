@@ -1,6 +1,9 @@
 description: |
   Block requests if a specific header exists in the request.
 
+extended_description: |
+  Block requests if a specific header exists in the request.
+
   You can also combine `config.trigger` with the [`config.echo` debugging parameter](/plugins/request-termination/examples/echo-response-to-client/)
   to avoid disturbing real traffic while debugging. 
 
@@ -15,7 +18,8 @@ config:
 
 variables:
   trigger:
-    value: $X-MY-HEADER
+    value: $X_MY_HEADER
+    description: The name of the header that triggers the block.
 
 tools:
   - deck

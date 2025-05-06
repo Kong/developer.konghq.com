@@ -32,6 +32,9 @@ icon: jwe-decrypt.png
 categories:
   - authentication
 
+tags:
+  - authentication
+
 search_aliases:
   - jwe-decrypt
 ---

@@ -27,7 +27,7 @@ For more details, see [Collections](/insomnia/collections/)
 ## Mock server
 A mock server is a self-hosted or cloud-hosted way to simulate an API endpoint. You can create a mock server and define endpoints manually, or generate them from existing responses. You can customize the response code, body, and headers.
 
-For more details, see [Documents](/insomnia/mock-servers/)
+For more details, see [Mock servers](/insomnia/mock-servers/).
 
 ## Scratch Pad
 The Insomnia Scratch Pad is a local workspace that you can use to send requests. It doesn't require creating an Insomnia account. The Scratch Pad functions as a collection, and you have access to all collection features.

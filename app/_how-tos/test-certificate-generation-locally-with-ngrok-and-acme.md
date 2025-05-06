@@ -1,8 +1,9 @@
 ---
 title: Test certificate generation locally with ngrok and the ACME plugin
+description: Use ngrok and the ACME plugin to test certificate generation locally.
 content_type: how_to
 related_resources:
-  - text: "{{site.base_gateway}} Security"
+  - text: "{{site.base_gateway}} security"
     url: /gateway/security/
 
 products:
@@ -45,9 +46,8 @@ prereqs:
         1. Copy the Forwarding URL from the output and strip the `https://`.
         1. In a new terminal window, export it as a decK environment variable:
         ```sh
-        export DECK_NGROK_HOST=<your-forwarding-url>
+        export DECK_NGROK_HOST='YOUR FORWARDING URL'
         ```
-      icon_url: /assets/icons/code.png
 
 tools:
   - deck

@@ -1,7 +1,7 @@
 ---
 title: Write tests for data types in Insomnia
 content_type: how_to
-
+description: Learn how to write data type tests in Insomnia.
 related_resources:
   - text: Write tests for headers in the response in Insomnia
     url: /how-to/write-headers-in-response-test/ 
@@ -38,23 +38,21 @@ cleanup:
 
 ## Create a test suite
 
-Before you create a test, you need to create a test suite for our collection. 
-
-To do this, click the **Tests** tab and click **New test suite** in the sidebar.
+{% include /how-tos/steps/insomnia-test-suite.md %}
 
 ## Create a top-level data type in body test
 
-Now you can test if a data type is returned in the top-level request body. 
+Now we can test if a data type is returned in the top-level request body. 
 
 1. Click **New test** and enter a name for the test, such as "Data type in body (top-level)". 
 1. From the **Select a request** drop down, select the **GET KongAir planned flights** request.
-1. The following Javascript checks if an array is present in the top-level body of the response. Enter the following in the Javascript for your test:
+1. Enter the following JavaScript to check if an array is present in the top-level body of the response:
 ```javascript
 const response1 = await insomnia.send();
 const body = JSON.parse(response1.data);
 expect(body).to.be.an('array');
 ```
-1. Click the **Play** icon next to your test. In the preview to the right, you should see that the test passes.
+{% include /how-tos/steps/insomnia-run-tests.md %}
 
 ## Create a top-level data type in body test
 
@@ -62,7 +60,7 @@ Now you can test if a data type is returned in the top-level request body.
 
 1. Click **New test** and enter a name for the test, such as "Data type in body (nested)". 
 1. From the **Select a request** drop down, select the **GET Fetch more details about a flight** request.
-1. The following Javascript checks if the first string in the `meal_options` array is present in the body of the response. Enter the following in the Javascript for your test:
+1. Enter the following JavaScript to check if the first string in the `meal_options` array is present in the body of the response:
 ```javascript
 const response1 = await insomnia.send();
 const body = JSON.parse(response1.data);
@@ -73,4 +71,4 @@ if (body.meal_options.length > 0) {
     expect(body.meal_options[0]).to.be.a('string');
 }
 ```
-1. Click the **Play** icon next to your test. In the preview to the right, you should see that the test passes.
+{% include /how-tos/steps/insomnia-run-tests.md %}

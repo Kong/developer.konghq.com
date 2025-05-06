@@ -5,6 +5,9 @@ metadata:
   description: Introduction to Insomnia, the open source desktop application that simplifies designing, debugging, and testing APIs. 
   products:
     - insomnia
+  tags:
+    - design-apis
+    - test-apis
 rows:
   - header:
       type: h1
@@ -75,59 +78,57 @@ rows:
           - type: feature_table
             config:
               columns:
-                - title: Free
-                  key: oss
-                - title: Individual
-                  key: individual
-                - title: Team
-                  key: team
+                - title: Hobby
+                  key: hobby
+                - title: Pro
+                  key: pro
                 - title: Enterprise
                   key: ee
               features:
                 - title: Local storage
-                  oss: true
+                  hobby: true
                   individual: true
-                  team: true
+                  pro: true
                   ee: true
                 - title: API Testing tools
-                  oss: true
+                  hobby: true
                   individual: true
-                  team: true
+                  pro: true
                   ee: true
                 - title: Cloud-hosted mock server
-                  oss: true
+                  hobby: true
                   individual: true
-                  team: true
+                  pro: true
                   ee: true
                 - title: Automated API testing
-                  oss: true
+                  hobby: true
                   individual: true
-                  team: true
+                  pro: true
                   ee: true
                 - title: Cloud Sync
-                  oss: true
+                  hobby: true
                   individual: true
-                  team: true
+                  pro: true
                   ee: true
                 - title: Git Sync
-                  oss: false
+                  hobby: false
                   individual: false
-                  team: true
+                  pro: true
                   ee: true
                 - title: Text editor key mapping
-                  oss: true
+                  hobby: true
                   individual: true
-                  team: true
+                  pro: true
                   ee: true
                 - title: Enterprise SSO (SAML, OIDC)
-                  oss: false
+                  hobby: false
                   individual: false
-                  team: false
+                  pro: false
                   ee: true
                 - title: Enterprise support
-                  oss: false
+                  hobby: false
                   individual: false
-                  team: false
+                  pro: false
                   ee: true
           - type: structured_text
             config:

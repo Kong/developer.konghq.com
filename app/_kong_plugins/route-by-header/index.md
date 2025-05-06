@@ -29,6 +29,9 @@ icon: route-by-header.png
 categories:
   - traffic-control
 
+tags:
+  - traffic-control
+
 search_aliases:
   - route-by-header
   - route by request header
@@ -41,7 +44,7 @@ related_resources:
 This plugin allows you to route a request to a specific [Upstream](/gateway/entities/upstream/) if it matches one of the
 configured rules. 
 
-## How it works
+## How the Route By Header plugin works
 
 Each routing rule consists of a `condition` object and an `upstream_name` object. 
 For each request coming into {{site.base_gateway}}, the plugin will try to find a rule in which
