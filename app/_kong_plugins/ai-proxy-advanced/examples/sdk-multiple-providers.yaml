@@ -1,8 +1,9 @@
 title: 'OpenAI SDK: Chat routes with multiple providers'
-description: |
+description: Configure two routes to point to two different deployments of an Azure OpenAI model.
+extended_description: |
   Configure two routes to point to two different deployments of an Azure OpenAI model.
 
-  When you apply this configurtion, you can set the SDK endpoint to `http://localhost:8000/azure`. When the Azure instance parameter is set to "my-gpt-3-5", the Python SDK produces the URL `http://localhost:8000/openai/deployments/my-gpt-3-5/chat/completions` and is directed to the respective Azure deployment ID and model.
+  When you apply this configuration, you can set the SDK endpoint to `http://localhost:8000/azure`. When the Azure instance parameter is set to `my-gpt-3-5`, the Python SDK produces the URL `http://localhost:8000/openai/deployments/my-gpt-3-5/chat/completions` and is directed to the respective Azure deployment ID and model.
 
 weight: 103
 
