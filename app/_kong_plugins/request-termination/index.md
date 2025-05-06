@@ -28,6 +28,9 @@ icon: request-termination.png
 categories:
   - traffic-control
 
+tags:
+  - traffic-control
+
 search_aliases:
   - request-termination
 

@@ -1,7 +1,7 @@
 ---
 title: Use the Collection Runner in Insomnia
 content_type: how_to
-
+description: Use the Collection Runner to run multiple requests in a specific order.
 products:
     - insomnia
 
