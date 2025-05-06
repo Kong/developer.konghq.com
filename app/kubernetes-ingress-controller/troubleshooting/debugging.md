@@ -21,13 +21,13 @@ works_on:
   - konnect
 
 related_resources:
-  - text: "Debugging {{site.base_gateway}} Configuration"
+  - text: "Debugging {{site.base_gateway}} configuration"
     url: /kubernetes-ingress-controller/troubleshooting/kong-gateway-configuration/
   - text: Debugging Kubernetes API Server connectivity
     url: /kubernetes-ingress-controller/troubleshooting/kubernetes-api-server/
   - text: "Debugging KIC in {{site.konnect_short_name}}"
     url: /kubernetes-ingress-controller/troubleshooting/konnect/
-  - text: Failure Modes
+  - text: Failure modes
     url: /kubernetes-ingress-controller/troubleshooting/failure-modes/
 
 tags:

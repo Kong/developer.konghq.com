@@ -13,8 +13,8 @@ You will also need the following authentication information to connect your AWS 
 - Your AWS region, `us-east-1` in this example
 
 ```sh
-export AWS_ACCESS_KEY_ID='YOUR-AWS-ACCESS-KEY-ID'
-export AWS_SECRET_ACCESS_KEY='YOUR-AWS-SECRET-ACCESS-KEY'
+export AWS_ACCESS_KEY_ID='YOUR AWS ACCESS KEY ID'
+export AWS_SECRET_ACCESS_KEY='YOUR AWS SECRET ACCESS KEY'
 ```
 
 {:.warning}

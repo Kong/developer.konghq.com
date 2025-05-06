@@ -3,7 +3,7 @@ title: Debugging Kubernetes API Server connectivity
 short_title: Kubernetes API Server
 
 description: |
-  How do I customize {{ site.kic_product_name }}'s connection to the Kubernetes API Server?
+  Learn how to customize {{ site.kic_product_name }}'s connection to the Kubernetes API Server.
 
 content_type: reference
 layout: reference
@@ -19,6 +19,9 @@ products:
 works_on:
   - on-prem
   - konnect
+
+tags:
+  - troubleshooting
 
 related_resources:
   - text: "Debugging KIC in {{site.konnect_short_name}}"
@@ -77,71 +80,31 @@ If you're using a service account to connect to the API server, Dashboard expect
 
 Verify with the following commands:
 
-```shell
-# start a container that contains curl
-$ kubectl run test --image=tutum/curl -- sleep 10000
-
-# check that container is running
-$ kubectl get pods
-NAME                   READY     STATUS    RESTARTS   AGE
-test-701078429-s5kca   1/1       Running   0          16s
-
-# check if secret exists
-$ kubectl exec test-701078429-s5kca ls /var/run/secrets/kubernetes.io/serviceaccount/
-ca.crt
-namespace
-token
-
-# get service IP of master
-$ kubectl get services
-NAME         CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-kubernetes   10.0.0.1     <none>        443/TCP   1d
-
-# check base connectivity from cluster inside
-$ kubectl exec test-701078429-s5kca -- curl -k https://10.0.0.1
-Unauthorized
-
-# connect using tokens
-$ TOKEN_VALUE=$(kubectl exec test-701078429-s5kca -- cat /var/run/secrets/kubernetes.io/serviceaccount/token)
-$ echo $TOKEN_VALUE
-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3Mi....9A
-$ kubectl exec test-701078429-s5kca -- curl --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H  "Authorization: Bearer $TOKEN_VALUE" https://10.0.0.1
-{
-  "paths": [
-    "/api",
-    "/api/v1",
-    "/apis",
-    "/apis/apps",
-    "/apis/apps/v1alpha1",
-    "/apis/authentication.k8s.io",
-    "/apis/authentication.k8s.io/v1beta1",
-    "/apis/authorization.k8s.io",
-    "/apis/authorization.k8s.io/v1beta1",
-    "/apis/autoscaling",
-    "/apis/autoscaling/v1",
-    "/apis/batch",
-    "/apis/batch/v1",
-    "/apis/batch/v2alpha1",
-    "/apis/certificates.k8s.io",
-    "/apis/certificates.k8s.io/v1alpha1",
-    "/apis/extensions",
-    "/apis/extensions/v1beta1",
-    "/apis/policy",
-    "/apis/policy/v1alpha1",
-    "/apis/rbac.authorization.k8s.io",
-    "/apis/rbac.authorization.k8s.io/v1alpha1",
-    "/apis/storage.k8s.io",
-    "/apis/storage.k8s.io/v1beta1",
-    "/healthz",
-    "/healthz/ping",
-    "/logs",
-    "/metrics",
-    "/swaggerapi/",
-    "/ui/",
-    "/version"
-  ]
-}
-```
+1. Start a container that contains curl:
+   ```
+   kubectl run test --image=tutum/curl -- sleep 10000
+   ```
+1. Check that the container is running:
+   ```sh
+   kubectl get pods
+   ```
+1. Check if secret exists:
+   ```sh
+   kubectl exec $POD_NAME ls /var/run/secrets/kubernetes.io/serviceaccount/
+   ```
+1. Get the cluster IP:
+   ```sh
+   kubectl get services
+   ```
+1. Check the base connectivity from the cluster:
+   ```sh
+   kubectl exec $POD_NAME -- curl -k $CLUSTER_IP
+   ```
+1. Connect using tokens:
+   ```sh
+   export TOKEN_VALUE=$(kubectl exec $POD_NAME -- cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+   kubectl exec $POD_NAME -- curl --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H  "Authorization: Bearer $TOKEN_VALUE" $CLUSTER_IP
+   ```
 
 If it isn't working, there are two possible reasons:
 
@@ -155,7 +118,7 @@ If it isn't working, there are two possible reasons:
     Delete the secret:
 
     ```bash
-    kubectl delete secret {SECRET_NAME}
+    kubectl delete secret $SECRET_NAME
     ```
 
     It will automatically be recreated.

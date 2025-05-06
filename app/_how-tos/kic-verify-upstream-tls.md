@@ -1,6 +1,6 @@
 ---
 title: Verify Upstream TLS
-description: How to configure {{ site.base_gateway }} to verify TLS certificates when connecting to upstream services
+description: Learn how to configure {{ site.base_gateway }} to verify TLS certificates when connecting to upstream services.
 content_type: how_to
 
 min_version:
@@ -17,8 +17,6 @@ works_on:
   - on-prem
   - konnect
 
-entities: []
-
 tldr:
   q: How do I configure {{ site.base_gateway }} to verify TLS certificates when connecting to upstream services?
   a: You can configure {{ site.base_gateway }} to verify the certificate it presents by attaching a CA certificate to a Service. This guide shows how to achieve this using the `BackendTLSPolicy` (when using Gateway API) or using Kubernetes Service annotations (when using Ingress API).
@@ -30,7 +28,11 @@ prereqs:
     services:
       - echo-service
 
-cleanup: {}
+cleanup:
+  inline:
+    - title: Uninstall KIC from your cluster
+      include_content: cleanup/products/kic
+      icon_url: /assets/icons/kubernetes.svg
 ---
 
 ## Generate a CA Certificate
@@ -269,7 +271,7 @@ kubectl patch -n kong backendtlspolicies.gateway.networking.k8s.io goecho-tls-po
 {% endnavtab %}
 {% navtab "Ingress" %}
 ```shell
-kubectl annotate --overwrite service echo konghq.com/tls-verify-depth=0
+kubectl annotate -n kong --overwrite service echo konghq.com/tls-verify-depth=0
 ```
 
 {% endnavtab %}
@@ -297,6 +299,7 @@ konnect_url: $PROXY_IP
   "request_id":"e2b3182856c96c23d61e880d0a28012f"
 }
 ```
+{:.no-copy-code}
 
 You can inspect {{ site.base_gateway }}'s container logs to see the error.
 

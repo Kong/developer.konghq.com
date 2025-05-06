@@ -4,5 +4,5 @@ This tutorial uses OpenAI:
 1. Create a decK variable with the API key:
 
 ```sh
-export DECK_OPENAI_API_KEY='YOUR-OPENAI-KEY'
+export DECK_OPENAI_API_KEY='YOUR OPENAI API KEY'
 ```
