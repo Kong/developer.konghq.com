@@ -7,7 +7,7 @@
 
 @layer base {
   :root {
-    --removed-body-scroll-bar-size: 15px;
+    --removed-body-scroll-bar-size: 4px;
 
     --color-bg-primary: 247, 251, 255;
     --color-bg-secondary: 255, 255, 255;
