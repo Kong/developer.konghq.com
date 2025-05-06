@@ -7,8 +7,6 @@ products:
 
 tags:
     - collections
-
-description: Send multiple requests in a specific order using the Collection Runner.
 prereqs:
     inline:
         - title: Create and configure a collection
