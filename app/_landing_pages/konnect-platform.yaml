@@ -282,7 +282,7 @@ rows:
               description: |
                 See which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with.
               cta:
-                text: View the compatibility policy &rarr;
+                text: View the compatibility policy 
                 url: /konnect-platform/konnect-compatibility/
                 align: end
       - blocks:
@@ -292,7 +292,7 @@ rows:
               description: |
                 This reference lists all of the tested and supported versions of {{site.base_gateway}}'s third-party dependencies.
               cta:
-                text: View the supported third-party dependencies &rarr;
+                text: View the supported third-party dependencies 
                 url: /gateway/third-party-support/
                 align: end
       - blocks:
@@ -302,7 +302,7 @@ rows:
               description: |
                 Learn about new {{site.konnect_short_name}} features.
               cta:
-                text: View the changelog &rarr;
+                text: View the changelog 
                 url: https://app.getbeamer.com/kongreleases/en
                 align: end
   - columns:
@@ -314,7 +314,7 @@ rows:
                 Learn how Kong handles vulnerabilities or potential vulnerabilities in {{site.base_gateway}} or 
                 third-party code, and how to report any security issues.
               cta:
-                text: View the vulnerability policy &rarr;
+                text: View the vulnerability policy 
                 url: /gateway/vulnerabilities/
                 align: end
       - blocks:
@@ -324,7 +324,7 @@ rows:
               description: |
                 Learn about the different {{site.konnect_short_name}} plans and account management.
               cta:
-                text: View {{site.konnect_short_name}} account information &rarr;
+                text: View {{site.konnect_short_name}} account information 
                 url: /konnect-platform/konnect-account/
                 align: end
       - blocks:
@@ -334,7 +334,7 @@ rows:
               description: |
                 Learn about {{site.konnect_short_name}} plans and pricing.
               cta:
-                text: View {{site.konnect_short_name}} pricing &rarr;
+                text: View {{site.konnect_short_name}} pricing 
                 url: https://konghq.com/pricing
                 align: end
   

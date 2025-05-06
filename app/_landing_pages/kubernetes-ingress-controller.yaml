@@ -3,12 +3,18 @@ metadata:
   content_type: landing_page
   description: |
     Configure {{ site.base_gateway }} using Kubernetes CRDs with {{ site.kic_product_name }}
-
+  tags:
+    - kubernetes
+  tools:
+    - kic
+  products:
+    - kic
 
 rows:
   - header:
       type: h1
       text: "{{site.kic_product_name}} (KIC)"
+      sub_text: "Configure {{ site.base_gateway }} using Kubernetes CRDs with {{ site.kic_product_name }}"
 
   - header:
       type: h2
@@ -22,10 +28,7 @@ rows:
               {{ site.kic_product_name }} takes Kubernetes resources such as `Ingress` and `HTTPRoute` and converts them into a valid {{ site.base_gateway }} configuration. It enables you to configure all the [features](/gateway/#learn) of {{ site.base_gateway }} using Kubernetes CRDs.
 
               KIC supports all [{{ site.base_gateway }} entities](/gateway/entities/), and can be deployed multiple times within a single cluster to provide [traffic splitting](/kubernetes-ingress-controller/split-traffic/).
-          - type: button
-            config:
-              text: View All Documentation &raquo;
-              url: /index/kubernetes-ingress-controller/
+
       - blocks:
           - type: mermaid
             config:
@@ -43,7 +46,7 @@ rows:
 
   - header:
       type: h2
-      text: Gateway API Support
+      text: Gateway API support
     columns:
       - blocks:
           - type: text
@@ -51,15 +54,12 @@ rows:
               Kong is proud to be a driving force behind the Kubernetes Gateway API standard. With multiple contributors in maintainer and reviewer roles, Kong is all-in on Gateway API as the future of Kubernetes networking.
 
               {{ site.kic_product_name }} was the first submitted conformance report, and is 100% compliant with the core conformance tests, and many other additional extended tests. Kong has implemented the Gateway API resources as first-class citizens, converting them directly in to {{ site.base_gateway }} configuration rather than using intermediate CRDs. This makes the Gateway API CRDs a native language for {{ site.kic_product_name }}.
-          - type: button
-            config:
-              text: Learn More &raquo;
-              url: /kubernetes-ingress-controller/gateway-api/
-              align: end
-
+              
+              [Learn more about the Gateway API &rarr;](/kubernetes-ingress-controller/gateway-api/)
+          
   - header:
       type: h3
-      text: "Deployment Topologies"
+      text: "Deployment topologies"
     columns:
       - blocks:
         - type: card
@@ -97,7 +97,7 @@ rows:
         - type: structured_text
           config:
             header:
-              text: "Common Use Cases"
+              text: "Common use cases"
             blocks:
               - type: text
                 text: |
@@ -121,14 +121,14 @@ rows:
 
                   * [Troubleshooting](/index/kubernetes-ingress-controller/#troubleshooting): Common issues that people encounter when running {{ site.kic_product_name }}.
                   * [FAQ](/index/kubernetes-ingress-controller/#faqs): Specific questions about routing behavior, plugin compatibility and more.
-                  * [Feature Gates](/kubernetes-ingress-controller/reference/feature-gates/): If something isn't working as expected, ensure that you have the correct feature gates enabled
+                  * [Feature gates](/kubernetes-ingress-controller/reference/feature-gates/): If something isn't working as expected, ensure that you have the correct feature gates enabled
                   * [Create a GitHub issue](https://github.com/Kong/kubernetes-ingress-controller/issues/new/choose): Report a bug or make a feature request for {{ site.kic_product_name }}.
                   * [Join the Kong Slack community](https://konghq.com/community#64fe8580b1a2f3c3804230f1): Get help from the team
 
 
   - header:
       type: h3
-      text: "Supported Entities"
+      text: "Supported entities"
     columns:
     - blocks:
       - type: entity_card

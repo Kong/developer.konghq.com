@@ -1,7 +1,7 @@
 ---
-title: decK Configuration
+title: decK configuration
 
-description: Configure decK using CLI flags, environment variables or a configuration file
+description: Configure decK using CLI flags, environment variables, or a configuration file
 
 content_type: reference
 layout: reference
@@ -17,8 +17,8 @@ breadcrumbs:
   - /deck/
 
 related_resources:
-  - text: All decK documentation
-    url: /index/deck/
+  - text: Using environment variables with decK
+    url: /deck/reference/env-variables/
 ---
 
 decK can be configured using CLI flags, environment variables, and a configuration file on disk.

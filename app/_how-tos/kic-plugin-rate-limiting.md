@@ -1,5 +1,6 @@
 ---
-title: Rate Limiting
+title: "Rate limiting with {{ site.kic_product_name }}"
+short_title: Rate limiting
 description: |
   Configure Rate Limiting using a `local` or `redis` policy
 content_type: how_to
@@ -9,6 +10,9 @@ breadcrumbs:
   - /kubernetes-ingress-controller/
   - index: kubernetes-ingress-controller
     section: How To
+
+tags:
+  - rate-limiting
 
 plugins:
   - rate-limiting
@@ -126,7 +130,7 @@ output:
       - "< RateLimit-Remaining: 1"
 {% endvalidation %}
 
-Using a load balancer that distributes client requests to the same Pod can alleviate this somewhat, but changes to the number of replicas can still disrupt accurate accounting. To consistently enforce the limit, the plugin needs to use a shared set of counters across all Pods. The redis policy can do this when a Redis instance is available.
+Using a load balancer that distributes client requests to the same Pod can alleviate this somewhat, but changes to the number of replicas can still disrupt accurate accounting. To consistently enforce the limit, the plugin needs to use a shared set of counters across all Pods. The `redis` policy can do this when a Redis instance is available.
 
 ## Deploy Redis to your Kubernetes cluster
 

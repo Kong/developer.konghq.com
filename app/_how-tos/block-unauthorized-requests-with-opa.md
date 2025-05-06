@@ -1,5 +1,7 @@
 ---
 title: Block unauthorized requests in {{site.base_gateway}} with the OPA plugin
+
+description: Set up an OPA policy in {{site.base_gateway}} to block unauthorized requests.
 content_type: how_to
 
 products:
@@ -136,6 +138,7 @@ To validate that the policy is working, send a request without the required head
 url: /anything
 status_code: 403
 method: GET
+display_headers: true
 {% endvalidation %}
 <!--vale on-->
 
@@ -147,6 +150,7 @@ status_code: 403
 method: GET
 headers:
     - 'my-secret-header: open'
+display_headers: true
 {% endvalidation %}
 <!--vale on-->
 
@@ -161,6 +165,7 @@ status_code: 200
 method: GET
 headers:
     - 'my-secret-header: open-sesame'
+display_headers: true
 {% endvalidation %}
 <!--vale on-->
 

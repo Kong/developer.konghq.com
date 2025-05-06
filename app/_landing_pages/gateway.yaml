@@ -265,7 +265,7 @@ rows:
               description: Learn about different upgrade methods
               icon: /assets/icons/download.svg
               cta:
-                text: See reference &rarr;
+                text: See reference 
                 url: /gateway/upgrade/
                 align: end
   - header:
@@ -280,7 +280,7 @@ rows:
                 The {{site.base_gateway}} version support policy outlines the {{site.base_gateway}} 
                 versioning scheme and version lifecycle, from release to sunset support.
               cta:
-                text: View the version support policy &rarr;
+                text: View the version support policy 
                 url: /gateway/version-support-policy/
                 align: end
       - blocks:
@@ -290,7 +290,7 @@ rows:
               description: |
                 This reference lists all of the tested and supported versions of {{site.base_gateway}}'s third-party dependencies.
               cta:
-                text: View the supported third-party dependencies &rarr;
+                text: View the supported third-party dependencies 
                 url: /gateway/third-party-support/
                 align: end
       - blocks:
@@ -301,7 +301,7 @@ rows:
                 Learn how Kong handles vulnerabilities or potential vulnerabilities in {{site.base_gateway}} or 
                 third-party code, and how to report any security issues.
               cta:
-                text: View the vulnerability policy &rarr;
+                text: View the vulnerability policy 
                 url: /gateway/vulnerabilities/
                 align: end
   - header:

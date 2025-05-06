@@ -6,6 +6,8 @@ metadata:
     - deck
   tags:
     - declarative-config
+  breadcrumbs:
+    - /tools/
 rows:
   - header:
       type: h1
@@ -215,7 +217,7 @@ rows:
           title: Get started
           description: Learn how to install decK and use it to configure {{ site.base_gateway }}.
           cta:
-            text: Get started &rarr;
+            text: Get started 
             url: /deck/get-started/
             align: end
     - blocks:
@@ -224,7 +226,7 @@ rows:
           title: APIOps
           description: Learn how to manage {{ site.base_gateway }} configuration in a federated environment.
           cta:
-            text: Manage {{ site.base_gateway }} declaratively &rarr;
+            text: Manage {{ site.base_gateway }} declaratively 
             url: /deck/apiops/
             align: end
     - blocks:
@@ -233,7 +235,7 @@ rows:
           title: Changelog
           description: Running list of release notes for decK.
           cta:
-            text: decK changelog &rarr;
+            text: decK changelog 
             url: https://github.com/kong/deck/blob/main/CHANGELOG.md/
             align: end
 

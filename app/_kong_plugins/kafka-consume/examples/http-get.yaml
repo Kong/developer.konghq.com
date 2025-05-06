@@ -1,4 +1,4 @@
-description: Configure the plugin to consume messages via HTTP GET requests.
+description: Configure the Kafka Consume plugin to consume messages via HTTP GET requests.
 
 title: HTTP GET
 

@@ -5,4 +5,4 @@
 
 {% assign url = entity.url | append: include.config.additional_url %}
 
-{% include card.html title=entity.title description=entity.description cta_text='See reference &rarr;' cta_url=url %}
+{% include card.html title=entity.title description=entity.description cta_text='See reference' cta_url=url %}

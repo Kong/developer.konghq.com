@@ -1,4 +1,4 @@
-description: 'Enables mTLS'
+description: 'Enable mTLS on Kafka Upstream connections.'
 
 title: 'Enable mutual TLS (mTLS)'
 

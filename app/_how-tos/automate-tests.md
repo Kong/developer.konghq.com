@@ -2,6 +2,8 @@
 title: Automate tests in Insomnia
 content_type: how_to
 
+description: Automate tests written in Insomnia using the Inso CLI.
+
 related_resources:
   - text: Write tests for headers in the response in Insomnia
     url: /how-to/write-headers-in-response-test/ 

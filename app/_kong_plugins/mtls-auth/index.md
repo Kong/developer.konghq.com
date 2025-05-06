@@ -34,6 +34,10 @@ search_aliases:
   - mtls authentication
   - mtls-auth
   - certificates
+
+tags:
+  - mtls
+  - authentication
 ---
 
 The MTLS Auth plugin lets you add mutual TLS authentication based on a client-supplied or a server-supplied certificate, 
@@ -42,19 +46,19 @@ and on the configured trusted certificate authority (CA) list.
 
 ## How does the mTLS plugin work?
 
-The mTLS plugin automatically maps certificates to consumers based on the common name field.
-To authenticate a consumer with mTLS, it must provide a valid certificate and
+The mTLS plugin automatically maps certificates to Consumers based on the common name field.
+To authenticate a Consumer with mTLS, it must provide a valid certificate and
 complete a mutual TLS handshake with {{site.base_gateway}}.
 
 The plugin validates the certificate provided against the configured CA list based on the
 requested Route or Service:
 * If the certificate is not trusted, or expired, the response is `HTTP 401 TLS certificate failed verification`.
 * If no valid certificate is provided (including HTTP requests), the response is `HTTP 401 No required TLS certificate was sent`.  
-  However, if `config.anonymous` is set, the request is allowed using the anonymous consumer.
+  However, if `config.anonymous` is set, the request is allowed using the anonymous Consumer.
 
 ### Client certificate request
 
-Client certificates are requested during the `ssl_certificate_by_lua` phase, where {{site.base_gateway}} doesn't have access to Route or Workspace information. 
+Client certificates are requested during the [`ssl_certificate_by_lua` phase](/gateway/entities/plugin/#plugin-contexts), where {{site.base_gateway}} doesn't have access to Route or Workspace information. 
 Because of this, {{site.base_gateway}} requests a client certificate during every TLS handshake if the `mtls-auth` plugin is configured on any Route or Service.
 
 In most cases, if a client doesn't present a certificate, it won't affect proxying—unless the specific Route or Service requires `mtls-auth`.
@@ -72,7 +76,6 @@ Certificate request behavior based on plugin scope:
 * **Plugin applied at the Route level**:
   * If any Route lacks an SNI, mTLS is enforced on every request.
   * If all Routes have SNIs, mTLS is enforced only for matching SNI requests.
-
 
 SNIs must be set for all Routes that mutual TLS authentication uses.
 

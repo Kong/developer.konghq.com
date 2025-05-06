@@ -1,8 +1,10 @@
 ---
-title: Get Started with decK
+title: Get started with decK
 description: Learn how to install decK and use it to configure {{site.base_gateway}}
 content_type: how_to
 permalink: /deck/get-started/
+breadcrumbs:
+  - /deck/
 
 related_resources: []
 
@@ -28,6 +30,7 @@ entities:
 
 tags:
   - authentication
+  - declarative-config
 
 tldr:
   q: How do I use decK?
@@ -133,9 +136,20 @@ If you make a request without the authentication header, you will see a `No API 
 
 This page provided each configuration snippet separately to focus on what each snippet provides. For production usage, you should apply the whole configuration each time.
 
-To export the complete configuration, run `deck gateway dump -o kong.yaml`, then open `kong.yaml` in your favorite editor.
+To export the complete configuration, run:
+```
+deck gateway dump -o kong.yaml
+``` 
 
-Try changing Alice's authentication key to `test` and then run `deck gateway sync kong.yaml` to sync the entire configuration. You'll see the following output:
+Open the newly created `kong.yaml` in your favorite editor.
+
+Try changing Alice's authentication key to `test` and then sync the entire configuration back up:
+
+```
+deck gateway sync kong.yaml
+```
+
+You'll see the following output:
 
 ```
 creating key-auth test for consumer alice

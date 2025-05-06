@@ -1,4 +1,4 @@
-description: 'Enables TLS'
+description: 'Enables TLS on Kafka Upstream connections.'
 
 title: 'Enable TLS'
 

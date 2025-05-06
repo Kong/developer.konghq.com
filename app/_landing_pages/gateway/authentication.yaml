@@ -1,7 +1,7 @@
 metadata:
   title: "Authentication"
   content_type: landing_page
-  description: An introduction to authentication with Kong.
+  description: An introduction to authentication with {{site.base_gateway}}.
   tags:
     - authentication
   breadcrumbs:
@@ -28,15 +28,130 @@ rows:
                   Authentication is the process of verifying that a requester has permissions to access a resource. 
                   As its name implies, API gateway authentication controls the flow of data between clients and the gateway.
                   
-                  With {{site.base_gateway}} controlling authentication, requests won’t reach upstream services unless the client has successfully authenticated. 
+                  With {{site.base_gateway}} controlling authentication, requests won't reach upstream services unless the client has successfully authenticated. 
                   This means upstream services process pre-authorized requests, freeing them from the cost of authentication, which 
                   is a savings in compute time and development effort.
 
-                  {{site.base_gateway}} has a [library of plugins](/plugins/) that support the most widely used methods of API gateway authentication.
+                  {{site.base_gateway}} has a [library of plugins](/plugins/?category=authentication) that support the most widely used methods of API gateway authentication.
 
   - header:
       type: h2
-      text: "Admin API Authentication"
+      text: "Common authentication methods"
+
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Basic authentication
+            description: |
+              Basic authentication is a simple authentication method that uses a base64-encoded username and password combination as token.
+              
+            ctas:
+              - text: Get started
+                url: /plugins/basic-auth/examples/
+              - text: Plugin reference
+                url: /plugins/basic-auth/
+      - blocks:
+        - type: card
+          config:
+            title: "OAuth 2.0 authentication"
+            description: |
+              OAuth 2.0 is a protocol that relies on an application to authorize access to Services and Routes.              
+            ctas:
+              - text: Get started
+                url: /plugins/oauth2/examples/
+              - text: Plugin reference
+                url: /plugins/oauth2/
+
+      - blocks:
+        - type: card
+          config:
+            title: OpenID Connect Authentication
+            description: |
+                OpenID Connect (OIDC) is an authentication protocol based on OAuth 2.0. It works with identity providers to verify a user's identity without storing credentials.
+              
+            ctas:
+              - text: Get started
+                url: /gateway/openid-connect/
+              - text: Plugin reference
+                url: /plugins/openid-connect/
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: "SAML Authentication"
+            description: |
+              SAML is a standard used to exchange authentication and authorization information between an identity provider and a 
+              service provider.      
+              
+            ctas:
+              - text: Get started
+                url: /plugins/saml/examples/
+              - text: Plugin reference
+                url: /plugins/saml/
+      - blocks:
+        - type: card
+          config:
+            title: "OAuth 2.0 Introspection"
+            description: |
+              Integrate {{site.base_gateway}} with a third-party OAuth 2.0 Authorization Server.              
+            ctas:
+              - text: Get started
+                url: /plugins/oauth2-introspection/examples/
+              - text: Plugin reference
+                url: /plugins/oauth2-introspection/
+      - blocks:
+        - type: card
+          config:
+            title: Sessions for authentication
+            description: |
+              The Session plugin supports sessions for Kong authentication plugins.              
+            ctas:
+              - text: Get started
+                url: /plugins/session/examples/
+              - text: Plugin reference
+                url: /plugins/session/
+
+  - column_count: 3
+    columns:
+    - blocks:
+        - type: card
+          config:
+            title: Key authentication
+            description: |
+              Key authentication generates an API key for a Consumer, which can be passed in an `apikey` header to access Services and Routes.            
+              
+            ctas:
+              - text: Get started with open-source Key Auth
+                url: /plugins/key-auth/examples/
+              - text: Key Auth plugin reference
+                url: /plugins/key-auth/
+              - text: Get started with Key Auth Encrypted
+                url: /plugins/key-auth-enc/examples/
+              - text: Key Auth Encrypted plugin reference
+                url: /plugins/key-auth-enc/
+
+    - blocks:
+        - type: card
+          config:
+            title: LDAP authentication
+            description: |
+              LDAP is a protocol that uses a directory to check credentials provided by a client.
+              
+            ctas:
+              - text: Get started with open-source LDAP
+                url: /plugins/ldap-auth/examples/
+              - text: LDAP Auth plugin reference
+                url: /plugins/ldap-auth/
+              - text: Get started with LDAP Auth Advanced
+                url: /plugins/ldap-auth-advanced/examples/
+              - text: LDAP Auth Advanced plugin reference
+                url: /plugins/ldap-auth-advanced/
+      
+
+  - header:
+      type: h2
+      text: "Admin authentication"
     columns:
     - blocks:
       - type: entity_card
@@ -54,119 +169,7 @@ rows:
       - type: entity_card
         config:
           entity: workspace
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Basic Authentication"
-            blocks:
-              - type: text
-                text: |
-                  Basic authentication is a simple authentication method that uses a base64-encoded username and password combination as token.
-
-                  - [Get Started](/plugins/basic-auth/examples/)
-                  - [Plugin reference](/plugins/basic-auth/reference/)
-
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Key Authentication"
-            blocks:
-              - type: text
-                text: |
-                  Key authentication generates an API key for a consumer, which can be passed in an `apikey` header to access Services and Routes.            
-
-                  Open-source plugin:
-                  - [Get Started](/plugins/key-auth/examples/)
-                  - [Plugin reference](/plugins/key-auth/reference/)
-                  
-                  Advanced Enterprise plugin with enhanced encryption:
-                  - [Get Started](/plugins/key-auth-enc/examples/)
-                  - [Plugin reference](/plugins/key-auth-enc/reference/)
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "LDAP Authentication"
-            blocks:
-              - type: text
-                text: |
-                  LDAP is a protocol that uses a directory to check credentials provided by a client.
-
-                  Open source plugin:
-                  - [Get Started](/plugins/ldap-auth/examples/)
-                  - [Plugin reference](/plugins/ldap-auth/reference/)
-
-                  Advanced Enterprise plugin with enhanced capabilities:
-                  - [Get Started](/plugins/ldap-auth-advanced/examples/)
-                  - [Plugin reference](/plugins/ldap-auth-advanced/reference/)
-  - columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "OAuth 2.0 Authentication"
-            blocks:
-              - type: text
-                text: |
-                  OAuth 2.0 is a protocol that relies on an application to authorize access to Services and Routes.
-
-                  - [Get Started](/plugins/oauth2/examples/)
-                  - [Plugin reference](/plugins/oauth2/reference/)
-
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "OpenID Connect Authentication"
-            blocks:
-              - type: text
-                text: |
-                  OpenID Connect (OIDC) is an authentication protocol based on OAuth 2.0. It works with identity providers to verify a user's identity without storing credentials.
-
-                  - [Get Started](/plugins/openid-connect/examples/)
-                  - [Plugin reference](/plugins/openid-connect/reference/)
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "SAML Authentication"
-            blocks:
-              - type: text
-                text: |
-                  SAML is a standard used to exchange authentication and authorization information between an identity provider and a Service provider.      
-                
-                  - [Get Started](/plugins/saml/examples/)
-                  - [Plugin reference](/plugins/saml/reference/)
-  - column_count: 3
-    columns:
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "OAuth 2.0 Introspection"
-            blocks:
-              - type: text
-                text: |
-                  Integrate {{site.base_gateway}} with a third-party OAuth 2.0 Authorization Server.
-
-                  - [Get Started](/plugins/oauth2-introspection/examples/)
-                  - [Plugin reference](/plugins/oauth2-introspection/reference/)
-      - blocks:
-        - type: structured_text
-          config:
-            header:
-              text: "Sessions for authentication"
-            blocks:
-              - type: text
-                text: |
-                  The Session plugin supports sessions for Kong authentication plugins.
-
-                  - [Get Started](/plugins/session/examples/)
-                  - [Plugin reference](/plugins/session/reference/)
-                  
+  
   - columns:
       - blocks:
         - type: structured_text
@@ -231,8 +234,10 @@ rows:
                   When multiple authentication plugins are configured, they must *all* either be configured to always perform authentication or to only perform authentication if the [Consumer](/gateway/entities/consumer/) wasn't already authenticated. 
                   This configuration is controlled by the `config.anonymous` property in the plugin schema:
 
-                  * **When `config.anonymous` is not set:** Authentication is always performed and a `4xx` error is returned if the Consumer isn't validated. With this method, the last plugin executed will be the one setting the credentials passed to the upstream service.
-                  * **When `config.anonymous` is set to a valid Consumer:** Authentication is only performed if the Consumer isn't already authenticated. When authentication fails, it won't return a `40x` response. Instead, it sets the anonymous Consumer as the Consumer. With this method, the first plugin that successfully authenticates the Consumer sets the credentials passed to the upstream service or the last plugin that sets its configured anonymous Consumer.
+                  * **When `config.anonymous` is not set:** Authentication is always performed and a `4xx` error is returned if the Consumer isn't validated. 
+                  With this method, the last plugin executed will be the one setting the credentials passed to the upstream service.
+                  * **When `config.anonymous` is set to a valid Consumer:** Authentication is only performed if the Consumer isn't already authenticated. When authentication fails, it won't return a `40x` response. 
+                  Instead, it sets the anonymous Consumer as the Consumer. With this method, the first plugin that successfully authenticates the Consumer sets the credentials passed to the upstream service or the last plugin that sets its configured anonymous Consumer.
 
                   If you enable anonymous access so that authentication isn't always performed but you don't want unauthorized users to access the Gateway Service or Route, you can configure the [Request Termination](/plugins/request-termination/) plugin on the anonymous Consumer.
 
@@ -240,7 +245,7 @@ rows:
                   > **Note:** If you configure the OAuth2 plugin and don't set `config.anonymous`, then the OAuth2 endpoints for requesting tokens and so forth will require authentication by the other configured auth plugins.
 
   - header:
-      text: How-to Guides
+      text: How-to guides
       type: h2
     columns:
         - blocks:
