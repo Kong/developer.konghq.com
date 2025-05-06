@@ -18,14 +18,19 @@ groups:
     sections:
       - title: Get Started
         items:
-          - path: /operator/dataplanes/get-started/hybrid/
-          - path: /operator/dataplanes/get-started/kic/
+          - title: Deploy Hybrid DataPlanes
+            url: /operator/dataplanes/get-started/hybrid/install/
+            description: Deploy {{ site.base_gateway }} data planes using {{ site.operator_product_name }}
+          - title: Deploy {{ site.kic_product_name }}
+            url: /operator/dataplanes/get-started/kic/install/
+            description: Use Kubernetes resources like `Gateway` to configure {{ site.kic_product_name }} and {{ site.base_gateway }}
       - title: Key Concepts
         items:
           - path: /operator/dataplanes/gateway-api/
           - path: /operator/dataplanes/gateway-configuration/
           - path: /operator/dataplanes/managed-gateways/
           - path: /operator/dataplanes/konnectextension/
+          - path: /operator/dataplanes/faq/license/
       - title: How-To
         items:
           - path: /operator/dataplanes/how-to/set-dataplane-image/
@@ -33,7 +38,7 @@ groups:
           - path: /operator/dataplanes/how-to/use-custom-ca-certificate/
           - path: /operator/dataplanes/how-to/deploy-custom-plugins/
           - path: /operator/dataplanes/how-to/autoscale-gateway/
-          - path: /operator/dataplanes/how-to/autoscale-upstreams/
+          - path: /operator/dataplanes/how-to/autoscale-workloads/
       - title: Observability
         items:
           - path: /operator/dataplanes/reference/metrics/operator/
@@ -44,13 +49,12 @@ groups:
           - path: /operator/dataplanes/reference/podtemplatespec/
       - title: Upgrading
         items:
-          - path: /operator/dataplanes/reference/upgrade/operator/
-          - path: /operator/dataplanes/reference/upgrade/gateway/rolling/
-          - path: /operator/dataplanes/reference/upgrade/gateway/blue-green/
+          - path: /operator/dataplanes/upgrade/operator/
+          - path: /operator/dataplanes/upgrade/gateway/rolling/
+          - path: /operator/dataplanes/upgrade/gateway/blue-green/
       - title: Troubleshooting
         items:
           - path: /operator/dataplanes/troubleshooting/status/
-          - path: /operator/dataplanes/faq/license/
 
   - title: Konnect
     sections:
