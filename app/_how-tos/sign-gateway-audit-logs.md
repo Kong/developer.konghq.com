@@ -29,6 +29,7 @@ entities:
 
 tags:
     - logging
+    - audit-logging
     - security
 
 tldr:

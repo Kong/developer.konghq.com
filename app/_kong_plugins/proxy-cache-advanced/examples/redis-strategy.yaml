@@ -1,4 +1,6 @@
-description: |
+description: "Cache responses to GET requests with a 200 response code in Redis."
+
+extended_description: |
   Cache responses to GET requests with a 200 response code in Redis. 
   The `keepalive_pool_size` setting will keep a maximum of 50 concurrent connections open.
 

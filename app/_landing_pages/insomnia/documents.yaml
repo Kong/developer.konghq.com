@@ -6,6 +6,9 @@ metadata:
     - /insomnia/
   products:
     - insomnia
+  tags:
+    - test-apis
+    - documents
 rows:
   - header:
       type: h1
@@ -31,7 +34,7 @@ rows:
           - type: image
             config:
               url: /assets/images/insomnia/graphic-api-design-hero.png
-              alt_text: Image of a Document. 
+              alt_text: Image of a document. 
   
   - header:
       type: h2
@@ -52,11 +55,11 @@ rows:
                      
                 - type: text
                   text: |
-                    - Built for spec-first development.
-                    - View a generated preview of your spec in Insomnia.
-                    - Automatic linting, with the ability to write custom linting rules.
-                    - Errors console.
-                    - Automatically parse and categorize data from your API spec such as server request body, and schemas.
+                    - Built for spec-first development
+                    - View a generated preview of your spec in Insomnia
+                    - Automatic linting, with the ability to write custom linting rules
+                    - View the errors console
+                    - Automatically parse and categorize data from your API spec such as server request body, and schemas
           - type: button
             config:
               align: left
@@ -103,8 +106,8 @@ rows:
 
                 - type: unordered_list
                   items: 
-                    - Use boiler-plate tests and examples, and 
-                    - auto-complete
+                    - Use boiler-plate tests and examples
+                    - Auto-complete
                     - Automation capabilities
           - type: button
             config:
@@ -149,7 +152,7 @@ rows:
               url: /how-to/write-headers-in-response-tests/
               align: end
   - header:
-      text: "Frequently Asked Questions"
+      text: "Frequently asked questions"
       type: h2
     columns:
       - blocks:
@@ -158,27 +161,4 @@ rows:
             - q: What's the difference between a collection and a design document?
               a: Documents are a data object that can contain an API spec, a collection of API requests, and tests. Collections are simply a series of API requests that you intend to interact with Insomnia.
             - q: Does Insomnia support GraphQL?
-              a: Yes 
-  - header:
-      type: h2
-      text: Learn
-    columns:
-      - blocks:
-          - type: concept_list
-            config:
-              - topic: documents
-                product: insomnia 
-            quantity: 5
-            allow_empty: true
-
-  - header:
-      type: h2
-      text: References & Tools
-    columns:
-      - blocks:
-          - type: reference_list
-            config:
-              products:
-                  - insomnia
-              quantity: 5
-              allow_empty: true
+              a: Yes, Insomnia supports GraphQL.

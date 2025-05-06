@@ -7,7 +7,6 @@ products:
 
 tags:
     - collections
-
 prereqs:
     inline:
         - title: Create and configure a collection

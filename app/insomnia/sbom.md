@@ -1,10 +1,16 @@
 ---
-title: "Insomnia software bill of materials"
+title: "Insomnia software bill of materials (SBOM)"
 content_type: policy
 layout: reference
 
 products:
   - insomnia
+
+breadcrumbs:
+  - /insomnia/
+
+tags:
+  - sbom
 
 description: Kong provides a software bill of materials (SBOM) for Insomnia
 
@@ -15,11 +21,9 @@ related_resources:
     url: /gateway/vulnerabilities/
 ---
 
+A software bill of materials (SBOM) is an inventory of all software components (proprietary and open source), open source licenses, and dependencies in a given product. A software bill of materials provides visibility into the software supply chain and any license compliance, security, and quality risks that may exist.
 
-
-A software bill of materials (SBOM) is an inventory of all software components (proprietary and open source), open source licenses, and dependencies in a given product. A software bill of materials (SBOM) provides visibility into the software supply chain and any license compliance, security, and quality risks that may exist.
-
-## Download SBOM
+## Download Insomnia SBOM
 
 1. Navigate to Insomnia [GitHub Releases](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.app&channel=stable).
 

@@ -271,7 +271,9 @@ Data Planes to the newer version for the Data Planes to continue to read from
 the Control Plane.
 
 If the compatibility checks fail, the Control Plane stops
-pushing out new config to the incompatible Data Planes to avoid breaking them. For more information, see [Version Compatibility in Control Planes](/gateway/cp-version-compatibility/).
+pushing out new config to the incompatible Data Planes to avoid breaking them. 
+In {{site.konnect_short_name}}, you will see compatibility errors on the Control Plane that has conflicts.
+See [version compatibility in Control Planes](/gateway-manager/version-compatibility/) for all errors and resolutions.
 
 If a config can not be pushed to a Data Plane due to failure of the
 compatibility checks, the Control Plane will contain `warn` level lines in the

@@ -43,7 +43,7 @@ In {{site.base_gateway}}, a Super Admin has the ability to manage [Roles and per
 
 1. Create an [RBAC](/gateway/entities/rbac/) Super Admin by sending a `POST` request to the [`/rbac/users`](/api/gateway/admin-ee/3.9/#/operations/post-rbac-users) endpoint:
 <!-- vale off -->
-{% capture request %}
+{% capture request1 %}
 {% control_plane_request %}
   url: /rbac/users
   method: POST
@@ -56,18 +56,18 @@ In {{site.base_gateway}}, a Super Admin has the ability to manage [Roles and per
 {% endcontrol_plane_request %}
 {% endcapture %}
 
-{{request | indent: 3}}
+{{request1 | indent: 3}}
 <!-- vale on -->
     
 
 2. Validate the user was created correctly by sending a `GET` request to the [`/rbac/users/{name_or_id}/roles`](/api/gateway/admin-ee/3.9/#/operations/get-rbac-users-name_or_id-roles) endpoint:  
 
-{% capture request %}
+{% capture request2 %}
 {% control_plane_request %}
   url: /rbac/users/super-admin/roles
 {% endcontrol_plane_request %}
 {% endcapture %}
-{{request | indent: 3}}
+{{request2 | indent: 3}}
 
 The response body contains information about the `super-admin` user including a comment field that details what permissions the `super-admin` role contains and a hashed `user_token`. 
 

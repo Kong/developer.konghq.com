@@ -4,7 +4,7 @@ description: Learn how to set up {{site.konnect_short_name}} Config Store as a V
 content_type: how_to
 related_resources:
   - text: Secrets management
-    url: /secrets-management/
+    url: /gateway/secrets-management/
   - text: Vault entity
     url: /gateway/entities/vault/
   - text: Configure the {{site.konnect_short_name}} Config Store

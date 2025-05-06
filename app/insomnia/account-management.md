@@ -1,5 +1,5 @@
 ---
-title: Account Management
+title: Account management
 
 description: Learn how to manage your Insomnia account and organization
 

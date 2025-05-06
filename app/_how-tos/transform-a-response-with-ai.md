@@ -27,6 +27,7 @@ entities:
 
 tags:
     - ai
+    - transformations
 
 tldr:
     q: How can I use AI to transform a response before returning it to the client?
@@ -108,6 +109,7 @@ url: /anything
 status_code: 200
 headers:
     - 'Accept: application/json'
+display_headers: true
 {% endvalidation %}
 
 The response should contain the new header: `new-header: header-value`.
