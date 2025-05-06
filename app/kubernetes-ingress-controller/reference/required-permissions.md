@@ -2,7 +2,7 @@
 title: Permissions required to install {{ site.kic_product_name }}
 
 description: |
-  What permissions are required to install {{site.kic_product_name}} if I'm not a super admin of the cluster? What permissions are required to run {{site.kic_product_name}}?
+  Learn about the permissions required to install and run {{site.kic_product_name}}.
 
 breadcrumbs:
   - /kubernetes-ingress-controller/
@@ -53,65 +53,65 @@ columns:
   - title: Purpose
     key: usage
 rows:
-  - kind: CustomResourceDefinition
-    apiVersion: apiextensions.k8s.io/v1
-    scope: cluster
-    usage: install CRDs
+  - kind: "`CustomResourceDefinition`"
+    apiVersion: "`apiextensions.k8s.io/v1`"
+    scope: Cluster
+    usage: Install CRDs
 
-  - kind: ClusterRole
-    apiVersion: rbac.authorization.k8s.io/v1
-    scope: cluster
-    usage: install RBAC rules
+  - kind: "`ClusterRole`"
+    apiVersion: "`rbac.authorization.k8s.io/v1`"
+    scope: Cluster
+    usage: Install RBAC rules
 
-  - kind: ClusterRoleBinding
-    apiVersion: rbac.authorization.k8s.io/v1
-    scope: cluster
-    usage: install RBAC rules
+  - kind: "`ClusterRoleBinding`"
+    apiVersion: "`rbac.authorization.k8s.io/v1`"
+    scope: Cluster
+    usage: Install RBAC rules
 
-  - kind: Role
-    apiVersion: rbac.authorization.k8s.io/v1
-    scope: namespaced
-    usage: install RBAC rules
+  - kind: "`Role`"
+    apiVersion: "`rbac.authorization.k8s.io/v1`"
+    scope: Namespaced
+    usage: Install RBAC rules
 
-  - kind: RoleBinding
-    apiVersion: rbac.authorization.k8s.io/v1
-    scope: namespaced
-    usage: install RBAC rules
+  - kind: "`RoleBinding`"
+    apiVersion: "`rbac.authorization.k8s.io/v1`"
+    scope: Namespaced
+    usage: Install RBAC rules
 
-  - kind: Deployment
-    apiVersion: apps/v1
-    scope: namespaced
-    usage: install components
+  - kind: "`Deployment`"
+    apiVersion: "`apps/v1`"
+    scope: Namespaced
+    usage: Install components
 
-  - kind: Service
-    apiVersion: v1
-    scope: namespaced
-    usage: install components
+  - kind: "`Service`"
+    apiVersion: "`v1`"
+    scope: Namespaced
+    usage: Install components
 
-  - kind: ServiceAccount
-    apiVersion: v1
-    scope: namespaced
-    usage: install components
+  - kind: "`ServiceAccount`"
+    apiVersion: "`v1`"
+    scope: Namespaced
+    usage: Install components
 
-  - kind: Secret
-    apiVersion: v1
-    scope: namespaced
-    usage: set configurations and credentials
+  - kind: "`Secret`"
+    apiVersion: "`v1`"
+    scope: Namespaced
+    usage: Set configurations and credentials
 
-  - kind: ConfigMap
-    apiVersion: v1
-    scope: namespaced
-    usage: set configurations
+  - kind: "`ConfigMap`"
+    apiVersion: "`v1`"
+    scope: Namespaced
+    usage: Set configurations
 
-  - kind: IngressClass
-    apiVersion: networking.k8s.io/v1
-    scope: cluster
-    usage: install ingress class
+  - kind: "`IngressClass`"
+    apiVersion: "`networking.k8s.io/v1`"
+    scope: Cluster
+    usage: Install ingress class
 
-  - kind: ValidatingWebhookConfiguration
-    apiVersion: admissionregistration.k8s.io/v1
-    scope: cluster
-    usage: configure validating webhooks{% endtable %}
+  - kind: "`ValidatingWebhookConfiguration`"
+    apiVersion: "`admissionregistration.k8s.io/v1`"
+    scope: Cluster
+    usage: Configure validating webhooks{% endtable %}
 <!--vale on-->
 
 ### Optional resources
@@ -130,18 +130,18 @@ columns:
   - title: Purpose
     key: usage
 rows:
-  - kind: PersistentVolumeClaim
-    apiVersion: v1
-    scope: namespaced
-    usage: claim volume for DB
+  - kind: "`PersistentVolumeClaim`"
+    apiVersion: "`v1`"
+    scope: Namespaced
+    usage: Claim volume for DB
 
-  - kind: Job
-    apiVersion: v1
-    scope: namespaced
-    usage: create DB migration jobs
+  - kind: "`Job`"
+    apiVersion: "`v1`"
+    scope: Namespaced
+    usage: Create DB migration jobs
 
-  - kind: HorizontalPodAutoscaler
-    apiVersion: autoscaling/v2
-    scope: namespaced
+  - kind: "`HorizontalPodAutoscaler`"
+    apiVersion: "`autoscaling/v2`"
+    scope: Namespaced
     usage: configure autoscaling{% endtable %}
 <!--vale on-->

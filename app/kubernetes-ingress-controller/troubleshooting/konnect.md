@@ -3,7 +3,7 @@ title: Debugging KIC in Konnect
 short_title: KIC in Konnect
 
 description: |
-  Gain insights in to the KIC in Konnect synchronization process using traces
+  Gain insights into the KIC in Konnect synchronization process using traces.
 
 content_type: reference
 layout: reference
@@ -20,14 +20,17 @@ works_on:
   - on-prem
   - konnect
 
+tags:
+  - troubleshooting
+
 related_resources:
-  - text: "Debugging {{site.base_gateway}} Configuration"
+  - text: "Debugging {{site.base_gateway}} configuration"
     url: /kubernetes-ingress-controller/troubleshooting/kong-gateway-configuration/
   - text: Debugging Kubernetes API Server connectivity
     url: /kubernetes-ingress-controller/troubleshooting/kubernetes-api-server/
   - text: "Debugging KIC in {{site.konnect_short_name}}"
     url: /kubernetes-ingress-controller/troubleshooting/konnect/
-  - text: Failure Modes
+  - text: Failure modes
     url: /kubernetes-ingress-controller/troubleshooting/failure-modes/
 ---
 
@@ -48,5 +51,6 @@ Here is an example of a failed request/response log entry:
 ```text
 Request failed  {"x_b3_traceid": "66c731200000000034ce3297e8e64544", "x_b3_spanid": "4e6955874299011d", "x_datadog_trace_id": "3805034363203503428", "x_datadog_parent_id": "5650141246939267357", "v": 0, "method": "GET", "url": "https://us.kic.api.konghq.tech/kic/api/control-planes/81bc4af5-ed3c-40b4-bb88-b5a05fbe34a1/oauth2?size=1000", "status_code": 404}
 ```
+{:.no-copy-code}
 
 If your issue requires further investigation on the {{ site.konnect_short_name }} side, attach logs with tracing information to your support ticket.   

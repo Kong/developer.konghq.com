@@ -14,6 +14,9 @@ works_on:
   - on-prem
   - konnect
 
+tags:
+  - migration
+
 related_resources:
   - text: Ingress to Gateway FAQ
     url: /kubernetes-ingress-controller/faq/migrate-ingress-to-gateway/
@@ -27,7 +30,7 @@ Download the [Kong preview](https://github.com/kong/ingress2gateway) of the [kub
 ```bash
 mkdir ingress2gateway && cd ingress2gateway
 curl -L https://github.com/Kong/ingress2gateway/releases/download/v0.1.0/ingress2gateway_$(uname)_$(uname -m).tar.gz | tar -xzv
-export PATH=${PATH}:$(pwd)
+export PATH=$PATH:$(pwd)
 ```
 
 ## Convert all the YAML files
@@ -40,20 +43,20 @@ containing the gateway API configurations.
 1. Export your source and destination paths.
 
     ```bash
-    SOURCE_DIR=<your_source_directory>
-    DEST_DIR=<your_destination_directory>
+    export SOURCE_DIR='YOUR SOURCE DIRECTORY'
+    export DEST_DIR='YOUR DESTINATION DIRECTORY'
     ```
 
 1. Convert the manifests and create new files in the destination directory.
 
     ```bash
-    for file in ${SOURCE_DIR}/*.yaml; do ingress2gateway print --input-file ${file} -A --providers=kong --all-resources > ${DEST_DIR}/$(basename -- $file); done
+    for file in $SOURCE_DIR/*.yaml; do ingress2gateway print --input-file ${file} -A --providers=kong --all-resources > ${DEST_DIR}/$(basename -- $file); done
     ```
 
 1. Check the new manifest files have been correctly created in the destination directory.
 
     ```bash
-    ls ${DEST_DIR}
+    ls $DEST_DIR
     ```
 
 1. Copy your annotations from the ingress resources to the Routes. The routes' names use the ingress name as prefix to help you track the route that the ingress generated. All the `konghq.com/` annotations must be copied except for these, that have been natively implemented as Gateway API features.
@@ -77,7 +80,7 @@ To migrate from using the ingress resources to the Gateway resources:
 1. Apply the new manifest files into the cluster
 
     ```bash
-    kubectl apply -f ${DEST_DIR}
+    kubectl apply -f $DEST_DIR
     ```
 
 1. Wait for all the gateways to be programmed

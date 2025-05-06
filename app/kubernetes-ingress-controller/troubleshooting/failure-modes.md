@@ -1,8 +1,8 @@
 ---
-title: "Failure Modes"
+title: "Failure modes"
 
 description: |
-  What are the different ways that {{ site.kic_product_name }} can fail?
+  Learn about the different ways {{ site.kic_product_name }} can fail.
 
 content_type: reference
 layout: reference
@@ -19,8 +19,11 @@ works_on:
   - on-prem
   - konnect
 
+tags:
+  - troubleshooting
+
 related_resources:
-  - text: "Debugging {{site.base_gateway}} Configuration"
+  - text: "Debugging {{site.base_gateway}} configuration"
     url: /kubernetes-ingress-controller/troubleshooting/kong-gateway-configuration/
   - text: Debugging Kubernetes API Server connectivity
     url: /kubernetes-ingress-controller/troubleshooting/kubernetes-api-server/
@@ -44,7 +47,7 @@ rows:
 - error: "`Reconciler error` in logs"
   mode: "[Errors in reconciling Kubernetes resources](#errors-in-reconciling-kubernetes-resources)"
 - error: |
-    Non-existent service referenced by an `Ingress`.
+    Non-existent service referenced by an `Ingress`
 
     *Example:* `Ingress` with a non-existent backend service
   mode: "[Failures in translating configuration](#failures-in-translating-configuration)"
@@ -54,7 +57,7 @@ rows:
     *Example:* `Ingress` with invalid regex in the path
   mode: "[Failures in applying configuration to {{site.base_gateway}}](#failures-in-applying-configuration-to-kong-gateway)"
 - error: |
-    Errors when sending configuration to {{site.konnect_product_name}} 
+    Errors when sending configuration to {{site.konnect_short_name}} 
 
     *Example:* Failed request logs
   mode: "[Failures in uploading configuration to {{site.konnect_short_name}}](#failures-in-uploading-configuration-to-konnect)"
@@ -87,10 +90,14 @@ You can use `kubectl get events -n <namespace> --field-selector reason="KongConf
 
 ```bash
 kubectl get events -n test --field-selector reason="KongConfigurationTranslationFailed"
+```
 
+The response would look like this:
+```
 LAST SEEN   TYPE      REASON                               OBJECT                    MESSAGE
 18m         Warning   KongConfigurationTranslationFailed   ingress/ing-1   failed to resolve Kubernetes Service for backend: failed to fetch Service test/httpbin-deployment-1: Service test/httpbin-deployment-1 not found
 ```
+{:.no-copy-code}
 
 ## Failures in applying configuration to {{site.base_gateway}}
 
@@ -137,12 +144,15 @@ You can get the Kubernetes events:
 
 ```bash
 kubectl get events --all-namespaces --field-selector reason=KongConfigurationApplyFailed
+```
+
+Both the events attached to the invalid ingress and attached to the {{site.kic_product_name}} pod are recorded:
+```
 NAMESPACE   LAST SEEN   TYPE      REASON                         OBJECT                                 MESSAGE
 default     2m9s        Warning   KongConfigurationApplyFailed   ingress/ingress-invalid-regex          invalid paths.1: should start with: / (fixed path) or ~/ (regex path)
 kong        15s         Warning   KongConfigurationApplyFailed   pod/kong-controller-779cb796f4-7q7c2   failed to apply Kong configuration to https://10.244.1.43:8444: HTTP status 400 (message: "failed posting new config to /config")
 ```
-
-Both the events attached to the invalid ingress and attached to the {{site.kic_product_name}} pod are recorded.
+{:.no-copy-code}
 
 To see more details about the `HTTP 400` error, enable the [dump config](/kubernetes-ingress-controller/troubleshooting/kong-gateway-configuration/#dumping-generated-kong-configuration) setting on the controller.
 

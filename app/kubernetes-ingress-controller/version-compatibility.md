@@ -1,8 +1,8 @@
 ---
-title: Version Compatibility
+title: Version compatibility
 
 description: |
-  Which versions of {{ site.kic_product_name }} are compatible with specific versions of {{ site.base_gateway }}, Kubernetes, Gateway API and Istio?
+  Learn about the versions of {{ site.kic_product_name }} compatible with specific versions of {{ site.base_gateway }}, Kubernetes, Gateway API and Istio.
 
 content_type: reference
 layout: reference
@@ -14,7 +14,7 @@ works_on:
   - on-prem
   - konnect
 related_resources:
-  - text: "{{ site.kic_product_name }} Support Policy"
+  - text: "{{ site.kic_product_name }} support policy"
     url: /kubernetes-ingress-controller/support/
   - text: "{{site.base_gateway}} version support"
     url: /gateway/version-support-policy/
