@@ -31,10 +31,20 @@ prereqs: {}
 
 ---
 
-## TODO
+## Deploy a DataPlane
 
-TODO
+The `DataPlane` image can be specified by providing a custom `image` value for the `proxy` container. This value is provided in the `PodTemplateSpec` field in either the `DataPlane` or the `GatewayConfiguration` resource.
+
+{% operator_podtemplatespec_example %}
+kubectl_apply: true
+dataplane:
+  spec:
+    containers:
+      - name: proxy
+        image: 'kong/kong-gateway:{{ site.data.gateway_latest.release }}'
+{% endoperator_podtemplatespec_example %}
+
 
 ## Validation
 
-TODO
+TODO: get the Kong Gateway pod and check the image key

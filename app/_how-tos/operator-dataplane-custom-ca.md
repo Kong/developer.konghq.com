@@ -1,6 +1,6 @@
 ---
 title: Use a Custom CA Certificate
-description: "TODO"
+description: "Use a custom CA certificate when generating DataPlane certificates for {{ site.konnect_short_name }}"
 content_type: how_to
 
 permalink: /operator/dataplanes/how-to/use-custom-ca-certificate/
@@ -24,17 +24,49 @@ tags:
   - konnect-crd
  
 tldr:
-  q: Question?
-  a: Answer
+  q: How do I use a custom CA certificate to sign new DataPlane certificates?
+  a: Provide the `spec.clientAuth.certificateSecret` field when defining your `KonnectExtension` resource
 
 prereqs: {}
 
 ---
 
-## TODO
+## Use a custom CA certificate
 
-TODO
+{{ site.operator_product_name }} generates TLS certificates to enable {{ site.base_gateway }} to authenticate with Konnect. By default, {{ site.operator_product_name }} will act as it's own CA. If you would prefer to use your own CA, upload the CA certificate as a Kubernetes secret.
 
-## Validation
+## Generate a certificate
 
-TODO
+1. Generate a new certificate and key:
+
+    ```sh
+    openssl req -new -x509 -nodes -newkey rsa:2048 -subj "/CN=kongdp/C=US" -keyout ./tls.key -out ./tls.crt
+    ```
+
+1. Create a Kubernetes secret that contains the certificate:
+
+    ```sh
+    kubectl create secret tls konnect-client-tls --cert=./tls.crt --key=./tls.key
+    ```
+
+1. Label the secret to tell {{ site.operator_product_name }} to reconcile it:
+
+    ```sh
+    kubectl label secret konnect-client-tls konghq.com/konnect-dp-cert=true
+    ```
+
+## Create a KonnectExtension
+
+{{ site.operator_product_name }} inspects the `spec.clientAuth.certificateSecret` to decide how to provision certificates. Create a `KonnectExtension` with `spec.clientAuth.certificateSecret.provisioning: Manual`:
+
+{% include /k8s/konnectextension.md use_custom_ca=true %}
+
+## Validate your configuration
+
+TODO: How do we validate this config? Fetch the secret and check the CA? Make sure it's not the default?
+
+```
+# Fetch the secret name from the KonnectExtension resource
+# Get secret from k8s, base64 decode
+# Check the CA issuer using openssl
+```
