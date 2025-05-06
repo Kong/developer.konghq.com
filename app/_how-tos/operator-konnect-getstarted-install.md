@@ -1,6 +1,6 @@
 ---
-title: Install Kong Gateway Operator
-description: Install the Kong Gateway Operator with Helm and enable Konnect CRD support.
+title: Install {{site.operator_product_name}}
+description: Install the {{site.operator_product_name}}with Helm and enable Konnect CRD support.
 content_type: how_to
 permalink: /operator/konnect/get-started/install/
 breadcrumbs:
@@ -16,7 +16,7 @@ series:
   position: 1
 
 tldr:
-  q: How do I install Kong Gateway Operator with Konnect CRD support?
+  q: How do I install {{site.operator_product_name}}with Konnect CRD support?
   a: |
     ```bash
     helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace \
@@ -38,9 +38,9 @@ prereqs:
 
 ---
 
-## Install Kong Gateway Operator
+## Install {{site.operator_product_name}}
 
-The Kong Gateway Operator can deploy and manage Data Planes connected to a {{ site.konnect_short_name }} Control Plane. Configuration for services, routes, and plugins is managed entirely through {{site.konnect_short_name}} and propagated automatically to Data Planes.
+The {{site.operator_product_name}} can deploy and manage Data Planes connected to a {{ site.konnect_short_name }} Control Plane. Configuration for services, routes, and plugins is managed entirely through {{site.konnect_short_name}} and propagated automatically to Data Planes.
 
 ## Add the Helm repo
 
@@ -56,7 +56,7 @@ kubectl create namespace kong
 
 ## Install the Operator
 
-Use Helm to install the Kong Gateway Operator with {{ site.konnect_short_name }}  support enabled:
+Use Helm to install the {{site.operator_product_name}} with {{ site.konnect_short_name }}  support enabled:
 
 ```sh
 helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace \
