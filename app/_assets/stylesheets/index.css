@@ -479,6 +479,12 @@
     }
   }
 
+  @-moz-document url-prefix() {
+    .mermaid .flowchart-link {
+      fill: none !important;
+    }
+  }
+
   .mermaid svg[aria-roledescription="sequence"] {
     .actor {
       @apply fill-[rgb(var(--color-bg-secondary))] !important;
