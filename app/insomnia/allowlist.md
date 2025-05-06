@@ -1,5 +1,5 @@
 ---
-title: Insomnia Proxy and Allowlist
+title: Insomnia proxy and allowlist
 
 description: A reference of domains to allowlist to ensure Insomnia is operating correctly within your organization.
 

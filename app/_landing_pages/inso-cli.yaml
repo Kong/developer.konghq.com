@@ -44,7 +44,7 @@ rows:
         - type: text
           config: |
             When you run a command, Inso CLI will look for Insomnia data in two places:
-            * In the .insomnia directory in the working directory. This directory is created automatically when [Git sync](/insomnia/git-sync/) is set up.
+            * In the .insomnia directory in the working directory. This directory is created automatically when [Git sync](/insomnia/storage/#git-sync) is set up.
             * In the Insomnia app data directory if Insomnia is installed.
 
             You can also use the `--workingDir` or `--src` options to specify a different data source. For more information, see the [Inso CLI reference](/inso-cli/reference/).

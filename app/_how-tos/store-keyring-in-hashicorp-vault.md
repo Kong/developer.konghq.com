@@ -17,6 +17,7 @@ works_on:
 
 tags:
   - secrets-management
+  - hashicorp-vault
 
 search_aliases:
   - HCV
@@ -87,7 +88,7 @@ vault kv put -mount secret keyring id="8zgITLQh" key="t6NWgbj3g9cbNVC3/D6oZ2Md1B
 
 Set the environment variables that will be used by {{site.base_gateway}} to enable the Keyring and connect it to the HashiCorp Vault. Since the Keyring feature requires a {{site.ee_product_name}} license, make sure to include it in the environment too.
 ```sh
-export KONG_LICENSE_DATA="<license-contents-go-here>"
+export KONG_LICENSE_DATA="LICENSE-CONTENTS-GO-HERE"
 export KONG_KEYRING_ENABLED="on"
 export KONG_KEYRING_STRATEGY="vault"
 export KONG_KEYRING_VAULT_HOST="http://host.docker.internal:8200"

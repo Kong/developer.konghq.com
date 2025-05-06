@@ -7,7 +7,7 @@
 
 @layer base {
   :root {
-    --removed-body-scroll-bar-size: 15px;
+    --removed-body-scroll-bar-size: 4px;
 
     --color-bg-primary: 247, 251, 255;
     --color-bg-secondary: 255, 255, 255;
@@ -672,11 +672,11 @@
   }
 
   .navbar-item {
-    @apply relative cursor-pointer;
+    @apply relative;
   }
 
   .navbar-item__trigger {
-    @apply flex gap-1 items-center !mb-0;
+    @apply flex gap-1 items-center !mb-0 cursor-pointer;
   }
 
   .navbar-item__trigger_icon {

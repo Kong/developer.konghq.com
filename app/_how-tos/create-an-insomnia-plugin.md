@@ -7,7 +7,7 @@ products:
 breadcrumbs: 
   - /insomnia/plugins/
 tags:
-- plugins
+- insomnia-plugins
 
 tldr:
   q: How do I create a new Insomnia plugin?

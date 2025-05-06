@@ -11,9 +11,16 @@ tools:
 products:
     - gateway
 
+breadcrumbs:
+  - /gateway/
+  - /gateway/security/
+
 works_on:
     - on-prem
 
+tags:
+  - security
+  - encryption
 
 tldr:
     q: How do I configure a Keyring to encrypt data?
@@ -50,7 +57,7 @@ openssl rsa -in private.pem -pubout -out public.pem
 
 Set the variables needed to start {{site.base_gateway}} with Keyring enabled. Since the Keyring feature requires a {{site.ee_product_name}} license, make sure to include it in the environment too.
 ```sh
-export KONG_LICENSE_DATA="<license-contents-go-here>"
+export KONG_LICENSE_DATA="LICENSE-CONTENTS-GO-HERE"
 export KONG_KEYRING_ENABLED=on
 export KONG_KEYRING_STRATEGY=cluster
 export KONG_KEYRING_RECOVERY_PUBLIC_KEY=$(cat public.pem | base64)

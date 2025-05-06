@@ -2,7 +2,7 @@ This tutorial requires {{site.ee_product_name}}.
 1. Export your license to an environment variable:
 
     ```
-    export KONG_LICENSE_DATA='LICENSE_CONTENTS_GO_HERE'
+    export KONG_LICENSE_DATA='LICENSE-CONTENTS-GO-HERE'
     ```
 
 2. Run the quickstart script with RBAC enabled:
@@ -21,7 +21,3 @@ This tutorial requires {{site.ee_product_name}}.
     ```
     For more information about the values see the [Bootstrap RBAC](/how-to/enable-rbac-with-admin-api/) guide.
     {:.no-copy-code}
-
-
-
-

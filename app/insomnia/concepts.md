@@ -32,7 +32,7 @@ For more details, see [Mock servers](/insomnia/mock-servers/).
 ## Scratch Pad
 The Insomnia Scratch Pad is a local workspace that you can use to send requests. It doesn't require creating an Insomnia account. The Scratch Pad functions as a collection, and you have access to all collection features.
 
-For more details, see [Scratch Pad](/insomnia/scratch-pad/).
+For more details, see [Scratch Pad](/insomnia/storage/#scratch-pad).
 
 ## Collection Runner
 The Collection Runner is a tool that allows you to send multiple requests in a specific order. You can also chain requests to reuse elements from a request or response in another one.
