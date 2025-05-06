@@ -1,5 +1,6 @@
 title: 'OpenAI SDK: Chat route with dynamic model selection'
-description: |
+description: Configure a chat route that reads the target model from the request path instead of hardcoding it in the configuration.
+extended_description: |
   Configure a chat route that reads the target model from the request path instead of hardcoding it in the configuration.
 
   Applying this configuration will let you target different models dynamically using an OpenAI-compatible SDK.
