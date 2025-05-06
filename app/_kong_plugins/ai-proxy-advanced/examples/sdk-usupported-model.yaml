@@ -9,7 +9,7 @@ extended_description: |
 
   When setting up for unsupported models, you must configure the `route_type` to preserve mode. This approach ensures that the request and response are passed through without any transformations.
 
-  For example, using the Whisper-2 audio transcription model, using the below configuration for the Whisper-2 transcription model, you can `POST` a file for transcription, using `multipart/form-data` formatting.
+  For example, using the following configuration with `multipart/form-data` formatting, you can `POST` a file for transcription using the Whisper-2 transcription model:
 
     ```sh
     curl --location 'http://localhost:8000/openai/v1/audio/transcriptions' \
