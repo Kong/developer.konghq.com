@@ -1,11 +1,12 @@
 title: 'OpenAI SDK: One chat route with dynamic Azure OpenAI deployments'
-description: |
+description: Configure a dynamic route to target multiple Azure OpenAI model deployments.
+extended_description: |
   Configure a dynamic route to target multiple Azure OpenAI model deployments.
 
   This configuration uses a dynamic URI capture to determine the deployment ID based on the incoming request path.
 
   For example, if your SDK sends requests to `http://localhost:8000/openai/deployments/my-gpt-3-5/chat/completions`
-  then AI Proxy Advanced  automatically maps `my-gpt-3-5` as the Azure deployment ID.
+  then AI Proxy Advanced automatically maps `my-gpt-3-5` as the Azure deployment ID.
 
   This allows a single route to support multiple Azure model deployments dynamically.
 
