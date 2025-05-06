@@ -1,6 +1,8 @@
 title: 'OpenAI SDK: Use an unsupported LLM model'
 description: |
   {{site.base_gateway}} can attempt to support models that aren’t pre-configured with format transformers or are untested.
+extended_description: |
+  {{site.base_gateway}} can attempt to support models that aren’t pre-configured with format transformers or are untested.
 
   {:.warning}
   > **Caution**: The following use cases are unsupported but may work depending on your setup. Use at your own discretion.
