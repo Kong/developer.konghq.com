@@ -3,18 +3,24 @@ platform:
     text: |
           Manage everything in one place?
           Explore Konnect, our unified API platform.
-    icon: '/assets/icons/book.svg'
-    url: /konnect-platform/
+    icon: '/assets/logos/Konnect-logo.svg'
+    link:
+      url: /konnect-platform/
+      text: Learn more &rarr;
 
   tools:
     - text: decK
       url: /deck/
+      icon: /assets/icons/codeblock.svg
     - text: Inso CLI
       url: /inso-cli/
+      icon: /assets/icons/code.svg
     - text: Terraform
       url: /terraform/
+      icon: /_assets/icons/products/kic.svg
     - text: Ingress controller
       url: /kubernetes-ingress-controller/
+      icon: /_assets/icons/products/kic.svg
 
   sections:
     - title: Build APIs

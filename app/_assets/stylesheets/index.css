@@ -672,11 +672,11 @@
   }
 
   .navbar-item {
-    @apply relative cursor-pointer;
+    @apply relative;
   }
 
   .navbar-item__trigger {
-    @apply flex gap-1 items-center !mb-0;
+    @apply flex gap-1 items-center !mb-0 cursor-pointer;
   }
 
   .navbar-item__trigger_icon {

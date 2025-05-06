@@ -5,5 +5,5 @@
     >
       {% include_svg include.icon height="12" width="12" %}
     </span>
-    <span class="text-primary text-sm ">{{include.text}} &rarr;</span>
+    <span class="text-primary text-sm ">{{include.text}} {% unless include.no_arrow %} &rarr;{% endunless %}</span>
 </a>
