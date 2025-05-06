@@ -26,7 +26,9 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    As AI adoption accelerates, applications are evolving beyond basic LLM calls into complex, multi-actor systems—including user apps, agents, orchestration layers, and context servers—all interacting with foundation models in real time. To support this shift, developers are adopting protocols like Model Context Protocol (MCP) and Agent2Agent (A2A) to standardize how components exchange tools, data, and decisions.
+                    As AI adoption accelerates, applications are evolving beyond basic LLM calls into complex, multi-actor systems—including user apps, agents, orchestration layers, and context servers—all interacting with foundation models in real time.
+
+                    To support this shift, developers are adopting protocols like Model Context Protocol (MCP) and Agent2Agent (A2A) to standardize how components exchange tools, data, and decisions.
 
                     But infrastructure often falls behind, with challenges around authentication, rate limiting, data security, observability, and constant provider changes.
 
@@ -36,7 +38,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/gateway/ai-gateway-overview.svg
+              url: /assets/images/gateway/ai-gateway-overview-2.svg
               alt_text: Overview of AI gateway
   - columns:
       - blocks:
