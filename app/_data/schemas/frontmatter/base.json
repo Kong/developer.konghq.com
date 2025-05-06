@@ -54,6 +54,7 @@
           "deck",
           "inso-cli",
           "kic",
+          "operator",
           "terraform",
           "admin-api",
           "konnect-api",

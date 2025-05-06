@@ -34,6 +34,9 @@ module Jekyll
       def data
         product = @page.data.fetch('products', [])[0]
 
+        # Use KIC rendering for Operator for now
+        product = 'kic' if product == 'operator'
+
         yaml = {}
         yaml = { '_format_version' => '3.0' } if product == 'gateway'
 

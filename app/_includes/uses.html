@@ -28,14 +28,21 @@
         {% endfor %}
     {% endif %}
 
+    {% assign show_tool = true %}
+    {% if include.products contains 'kic' and include.tools contains 'kic' and include.tools.size == 1 %}
+    {% assign show_tool = false %}
+    {% endif %}
+    {% if include.products contains 'operator' and include.tools contains 'operator' and include.tools.size == 1 %}
+    {% assign show_tool = false %}
+    {% endif %}
 
     {% if include.products and include.tools %}
-      {% unless include.products contains 'kic' and include.tools contains 'kic' and include.tools.size == 1 %}
+        {% if show_tool %}
         {% assign tool = include.tools | find_exp: "tool", "site.data.tools[tool]" %}
         {% if tool %}
             <span class="text-brand-saturated/40">|</span>
         {% endif %}
-      {% endunless %}
+        {% endif %}
     {% endif %}
 
     {% if include.tools %}
@@ -43,14 +50,14 @@
         {% for tool in sorted_tools %}
         {% assign tool_info = site.data.tools[tool] %}
         {% if tool_info %}
-          {% unless tool == 'kic' and include.products contains 'kic' %}
+          {% if show_tool %}
             {% if tool == 'kic' %}
                 {% capture url %}/kubernetes-ingress-controller/{% endcapture %}
             {% else %}
                 {% capture url %}/{{ tool }}/{% endcapture %}
             {% endif %}
             {% include badge.html url=url text=tool_info.name %}
-          {% endunless %}
+          {% endif %}
         {% endif %}
         {% endfor %}
     {% endif %}

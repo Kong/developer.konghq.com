@@ -6,7 +6,7 @@ module Jekyll
       attr_reader :example
 
       def self.make_for(example:)
-        raise ArgumentError, 'Missing `type` for entity_example.}' unless example['type']
+        raise ArgumentError, 'Missing `type` for entity_example.' unless example['type']
 
         if example['type'] == 'plugin'
           Plugin.new(example:)
