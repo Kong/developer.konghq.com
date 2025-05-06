@@ -24,7 +24,7 @@ entities: []
 tags:
   - konnect-crd
 related_resources:
-  - text: Dedicated Cloud Gateway
+  - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
 tldr:
   q: How do I create a Dedicated Cloud Gateway Network using KGO?
@@ -47,7 +47,7 @@ prereqs:
         Export the value of your desired ID: 
 
         ```
-        export cloud_gateway_provider_account_id = $YOUR_CLOUD_GATEWAY_PROVIDER_ID
+        export CLOUD_GATEWAY_PROVIDER_ID='YOUR PROVIDER ID'
         ```
   
         
@@ -68,7 +68,7 @@ metadata:
   name: konnect-network-1
 spec:
   name: network1
-  cloud_gateway_provider_account_id: $cloud_gateway_provider_account_id
+  cloud_gateway_provider_account_id: '$CLOUD_GATEWAY_PROVIDER_ID'
   availability_zones:
     - euw1-az1
     - euw1-az2

@@ -1,6 +1,6 @@
 ---
-title: Create a Cloud Gateways Dataplane Configuration
-description: "Provision a Dedicated Cloud Gateway Data Plane Group Configuration in {{site.konnect_short_name}} using the `KonnectCloudGatewayDataPlaneGroupConfiguration` CRD."
+title: Create a Cloud Gateway Data Plane group configuration
+description: "Provision a Dedicated Cloud Gateway Data Plane group configuration in {{site.konnect_short_name}} using the `KonnectCloudGatewayDataPlaneGroupConfiguration` CRD."
 content_type: how_to
 
 permalink: /operator/konnect/crd/cloud-gateways/configuration/
@@ -28,7 +28,7 @@ related_resources:
   - text: Dedicated Cloud Gateway
     url: /dedicated-cloud-gateways/
 tldr:
-  q: How do I configure a Dedicated Cloud Gateway with data plane groups in {{site.konnect_short_name}}?
+  q: How do I configure a Dedicated Cloud Gateway with Data Plane groups in {{site.konnect_short_name}}?
   a: Use the `KonnectCloudGatewayDataPlaneGroupConfiguration` resource to define autoscaling Data Plane groups and associate them with Cloud Gateway networks.
 
 
@@ -82,12 +82,11 @@ It will change when the network provisioning is finished.
 Since creating a Data Plane Group Configuration can take some time, you can monitor its status by checking the `dataplane_groups` field. Data Plane Group Configurations receive this field when they are successfully provisioned in Konnect.
 
 ```
-kubectl get konnectcloudgatewaydataplanegroupconfiguration.konnect.konghq.com eu-west-1 -o=jsonpath='{.status.dataplane_groups}' | yq -p json
+kubectl get -n kong konnectcloudgatewaydataplanegroupconfiguration.konnect.konghq.com eu-west-1 -o=jsonpath='{.status.dataplane_groups}' | yq -p json
 ```
 
 ## Validation
 
-Data Plane configuration You can check its status using:
 
 {% validation kubernetes-resource %}
 kind: KonnectCloudGatewayDataPlaneGroupConfiguration

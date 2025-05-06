@@ -1,6 +1,6 @@
 ---
-title: Create a Key and Keyset
-description: "Provision keys and key sets in {{site.konnect_short_name}} Gateway Manager using CRDs, and associate Keys with Key-sets."
+title: Create a Key and Key Set
+description: "Provision Keys and Key Sets in {{site.konnect_short_name}} Gateway Manager using CRDs, and associate Keys with Key Sets."
 content_type: how_to
 
 permalink: /operator/konnect/crd/gateway/key-keyset/
@@ -30,7 +30,7 @@ related_resources:
   - text: Keys
     url: /keys/
 tldr:
-  q: How can I manage keys and key sets for {{site.konnect_short_name}} using Kubernetes?
+  q: How can I manage Keys and Key Sets for {{site.konnect_short_name}} using Kubernetes?
   a: Create `KongKey` and `KongKeySet` resources and associate them using the `keySetRef` field.
 
 prereqs:
@@ -44,7 +44,6 @@ prereqs:
 ## Create a `KongKey`
 
 Use the `KongKey` resource to define a Key in {{site.konnect_short_name}}. You can create PEM or JWK keys.
-It will make it part of the Gateway Control Plane’s configuration.
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -81,7 +80,7 @@ spec:
 
 ## Create a `KongKeySet`
 
-Provision a Key-set to logically group related keys.
+Provision a Key Set to logically group related keys.
 
 <!-- vale off -->
 {% konnect_crd %}

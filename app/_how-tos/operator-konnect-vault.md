@@ -40,7 +40,7 @@ prereqs:
 
 ## Create a `KongVault`
 
-Use the `KongVault` resource to provision a Vault in {{site.konnect_short_name}}. The Vault defines a secure configuration backend, such as environment variables. Your `KongVault` must be associated with a `KonnectGatewayControlPlane` object that you’ve created in your cluster. It will make it part of the Gateway Control Plane’s configuration.
+Use the `KongVault` resource to provision a Vault in {{site.konnect_short_name}}. The Vault defines a secure configuration backend. Your `KongVault` must be associated with a `KonnectGatewayControlPlane` object that you’ve created in your cluster.
 
 <!-- vale off -->
 {% konnect_crd %}

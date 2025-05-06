@@ -1,6 +1,6 @@
 ---
-title: Create a Data Plane Client Certificate
-description: "Provision a data plane client certificate in {{site.konnect_short_name}} using the `KongDataPlaneClientCertificate` CRD."
+title: Create a Data Plane client certificate
+description: "Provision a Data Plane client certificate in {{site.konnect_short_name}} using the `KongDataPlaneClientCertificate` CRD."
 content_type: how_to
 
 
@@ -28,7 +28,7 @@ tags:
  
 tldr:
   q: How do I create a data plane client certificate using KGO?
-  a: Use the `KongDataPlaneClientCertificate` resource to provision a TLS certificate for authenticating data planes in {{site.konnect_short_name}}.
+  a: Use the `KongDataPlaneClientCertificate` resource to provision a TLS certificate for authenticating Data Planes in {{site.konnect_short_name}}.
 
 prereqs:
   operator:

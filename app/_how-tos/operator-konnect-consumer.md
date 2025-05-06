@@ -1,6 +1,6 @@
 ---
 title: Create a Consumer and Consumer Group
-description: "Provision Consumers, and manage Consumer Groups in {{site.konnect_short_name}} using Kubernetes CRDs."
+description: "Provision Consumers and manage Consumer Groups in {{site.konnect_short_name}} using Kubernetes CRDs."
 content_type: how_to
 
 permalink: /operator/konnect/crd/gateway/consumer/
@@ -28,7 +28,7 @@ tags:
  
 tldr:
   q: How can I configure Consumers and Consumer Groups with KGO?
-  a: Use the `KongConsumer`, `KongCredential`, and `KongConsumerGroup` CRDs to configure consumers, and groups in Konnect Gateway Manager through your Kubernetes cluster.
+  a: Use the `KongConsumer` and `KongConsumerGroup` CRDs to configure consumers and groups in Konnect Gateway Manager through your Kubernetes cluster.
 
 
 prereqs:

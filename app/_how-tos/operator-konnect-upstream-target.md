@@ -1,6 +1,6 @@
 ---
 title: Create an Upstream and Target
-description: "Provision an upstream and attach targets to it in {{site.konnect_short_name}} using Kubernetes CRDs."
+description: "Provision an Upstream and attach Targets to it in {{site.konnect_short_name}} using Kubernetes CRDs."
 
 content_type: how_to
 
@@ -61,7 +61,7 @@ spec:
 
 ## Create `KongTargets`
 
-Use the `KongTarget` resource to register two individual backend targets for the Upstream.
+Use the `KongTarget` resource to register two individual backend Targets for the Upstream.
 
 First, create `target-a`:
 
