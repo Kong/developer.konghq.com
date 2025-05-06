@@ -36,8 +36,8 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/gateway/ai-gateway-overview.png
-              alt_text: Image of the {{site.konnect_short_name}} dashboard
+              url: /assets/images/gateway/ai-gateway-overview.svg
+              alt_text: Overview of AI gateway
   - columns:
       - blocks:
         - type: structured_text
