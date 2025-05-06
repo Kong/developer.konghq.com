@@ -50,7 +50,7 @@ containing the gateway API configurations.
 1. Convert the manifests and create new files in the destination directory.
 
     ```bash
-    for file in $SOURCE_DIR/*.yaml; do ingress2gateway print --input-file ${file} -A --providers=kong --all-resources > ${DEST_DIR}/$(basename -- $file); done
+    for file in $SOURCE_DIR/*.yaml; do ingress2gateway print --input-file ${file} -A --providers=kong --all-resources > $DEST_DIR/$(basename -- $file); done
     ```
 
 1. Check the new manifest files have been correctly created in the destination directory.

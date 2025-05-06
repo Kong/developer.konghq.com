@@ -88,7 +88,7 @@ Verify with the following commands:
    ```sh
    kubectl get pods
    ```
-1. Check if secret exists
+1. Check if secret exists:
    ```sh
    kubectl exec $POD_NAME ls /var/run/secrets/kubernetes.io/serviceaccount/
    ```
