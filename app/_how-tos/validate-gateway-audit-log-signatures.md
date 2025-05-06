@@ -26,11 +26,12 @@ min_version:
 
 tags:
     - logging
+    - audit-logging
+    - security
 
 tldr:
     q: How do I validate audit log signatures?
-    a: placeholder
-
+    a: Enable audit logging and log signing, generate request logs, then Base64 decode and transform the logs into canonical format. You can then use OpenSSL to validate the signature.
 
 prereqs:
   inline: 
@@ -129,6 +130,12 @@ f.write(canonical)' > validate.py
 This script will read the first log in the audit log response and generate two files:
 * `record_signature`, which contains the decoded signature
 * `canonical_record.txt`, which contains the audit log record in canonical format.
+
+Run the script to generate the files:
+
+```sh
+python3 validate.py
+```
 
 ## Validate the audit log signature
 

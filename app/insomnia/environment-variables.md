@@ -17,9 +17,9 @@ related_resources:
   - text: Storage
     url: /insomnia/storage/
   - text: Git sync
-    url: /insomnia/git-sync/
+    url: /insomnia/storage/#git-sync
   - text: Local vault
-    url: /insomnia/local-vault/
+    url: /insomnia/storage/#local-vault
   - text: External vault
     url: /insomnia/external-vault/
 ---

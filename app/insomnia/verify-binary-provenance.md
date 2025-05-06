@@ -9,6 +9,13 @@ layout: reference
 products:
     - insomnia
 
+breadcrumbs:
+  - /insomnia/
+
+related_resources:
+  - text: Insomnia security
+    url: /insomnia/security/
+
 ---
 
 Kong produces build provenance for Insomnia Application binary artifacts, which can be verified using `cosign` / `slsa-verifier`.
@@ -31,45 +38,43 @@ columns:
   - title: Example Value
     key: example
 rows:
-  - shorthand: "`<repo>`"
+  - shorthand: "`REPO`"
     description: GitHub repository
     example: "`insomnia`"
-  - shorthand: "`version`"
+  - shorthand: "`VERSION`"
     description: Artifact version to download
     example: "`9.3.0`"
-  - shorthand: "`<binary-files>`"
+  - shorthand: "`BINARY_FILES`"
     description: Single space separated Insomnia binary files
     example: "`Insomnia.Core-9.3.0.{snap,tar.gz,zip,rpm,dmg,deb,exe,AppImage}`"
-  - shorthand: "`<provenance-file>`"
+  - shorthand: "`PROVENANCE_FILE`"
     description: Binary provenance file
     example: "`inso-provenance.intoto.jsonl`"
 {% endtable %}
 
 Because Kong uses GitHub Actions to build and release, Kong also uses GitHub's OIDC identity to generate build provenance for binary artifacts, which is why many of these details are GitHub-related.
 
-
 ## Prerequisites
 
 For both examples, you need to:
 
 * Ensure `slsa-verifier` is installed.
-* [Download Insomnia Core Application Binaries](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.app&channel=stable) with the file pattern `Insomnia.Core-<version>.{snap,tar.gz,zip,rpm,dmg,deb,exe,AppImage}`
+* [Download Insomnia Core Application Binaries](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.app&channel=stable) with the file pattern `Insomnia.Core-VERSION.{snap,tar.gz,zip,rpm,dmg,deb,exe,AppImage}`
 * [Download Insomnia Binary Provenance Attestation](https://updates.insomnia.rest/downloads/release/latest?app=com.insomnia.app&channel=stable) with the pattern `insomnia-provenance.intoto.jsonl`
 
-{:.important .no-icon}
+{:.warning}
 > The GitHub owner is case-sensitive (`Kong/insomnia` vs `kong/insomnia`).
 
 ## Minimal example
-
 
 Run the `slsa-verifier verify-artifact...` command:
 
 ```sh
 slsa-verifier verify-artifact \
    --print-provenance \
-   --provenance-path '<provenance-file>' \
-   --source-uri 'github.com/Kong/<repo>' \
-   <binary-files>
+   --provenance-path '$PROVENANCE_FILE' \
+   --source-uri 'github.com/Kong/$REPO' \
+   $BINARY_FILES
 ```
 
 Here's the same example using sample values instead of placeholders:
@@ -97,10 +102,10 @@ Run the `slsa-verifier verify-artifact ...` command:
 ```sh
 slsa-verifier verify-artifact \
    --print-provenance \
-   --provenance-path '<provenance-file>' \
-   --source-uri 'github.com/Kong/<repo>' \
+   --provenance-path '$PROVENANCE_FILE' \
+   --source-uri 'github.com/Kong/$REPO' \
    --build-workflow-input 'version=9.3.0' \
-   <binary-files>
+   $BINARY_FILES
 ```
 
 Here's the same example using sample values instead of placeholders:

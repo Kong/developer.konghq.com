@@ -31,4 +31,4 @@ faqs:
     a: Our [open source GitHub repository](https://github.com/kong/insomnia) and [support channels](https://insomnia.rest/support).
 ---
 
-{{ page.description | liquify }}
+We monitor the security of our products and applications through various ongoing activities, including logs.

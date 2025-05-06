@@ -6,7 +6,8 @@ description: |
 content_type: reference
 layout: reference
 
-
+breadcrumbs:
+  - /gateway/
 products:
    - gateway
 
@@ -65,10 +66,8 @@ and use `kong reload` instead of `kong restart`.
 
 ## Environment variables
 
-[All parameters defined in `kong.conf`](/gateway/configuration/) 
-can be managed via environment variables.
-When loading properties from `kong.conf`, {{site.base_gateway}} checks existing
-environment variables first.
+[All parameters defined in `kong.conf`](/gateway/configuration/) can be managed via environment variables.
+When loading properties from `kong.conf`, {{site.base_gateway}} checks existing environment variables first.
 
 To configure a setting using an environment variable, declare an environment
 variable with the name of the setting, prefixed with `KONG_`. This will override the existing value in `kong.conf`.
@@ -94,13 +93,13 @@ You can override this behavior by specifying a custom path for your
 configuration file using the `-c / --conf` argument with most Kong CLI commands:
 
 ```bash
-kong start --conf /path/to/kong.conf
+kong start --conf ./kong.conf
 ```
 
 
 ## Verifying configuration
 
-To verify that your configuration is valid, use `kong check` command. 
+To verify that your configuration is valid, use the [`kong check`](/gateway/cli/reference/#kong-check) command. 
 The `kong check` command evaluates all parameters set in `kong.conf`
 including any set as [environment variables](#environment-variables).
 
@@ -114,6 +113,7 @@ If your configuration is valid, you will see the following response:
 ```bash
 configuration at /etc/kong/kong.conf is valid
 ```
+{:.no-copy-code}
 
 ## Debugging the configuration file
 

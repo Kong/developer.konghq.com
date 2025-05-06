@@ -6,7 +6,7 @@ layout: reference
 description: Learn what request authentication is and how to authenticate requests in Insomnia.
 
 related_resources:
-  - text: Authentication & authorization
+  - text: Authentication and authorization
     url: /insomnia/authentication-authorization/
 
 tags:
@@ -18,6 +18,7 @@ products:
 
 breadcrumbs:
   - /insomnia/
+  - /insomnia/authentication-authorization/
 
 faqs:
   - q: What should I do if I see SSL certificate errors in Insomnia?
@@ -30,13 +31,11 @@ faqs:
       ```
       Error: Hostname/IP doesn't match certificate's altnames
       ```
-      This likely means you're using an invalid or self-signed certificate—common with local development servers.
+      This likely means you're using an invalid or self-signed certificate, which is a common issue with local development servers.
 
       To bypass this, go to **Settings** and disable the **Validate SSL Certificates** option.
 
 ---
-
-## What is request authentication in Insomnia?
 
 Some requests require authentication to ensure that the client requests access data securely. In Insomnia, you can configure different authentication types and parameters when you send a request so that it can authenticate. 
 
