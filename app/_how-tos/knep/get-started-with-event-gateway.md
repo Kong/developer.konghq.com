@@ -24,13 +24,13 @@ tldr:
     Info on what you're going to learn about in this how-to 
 
 tools:
-    - konnect-api # placeholder so the build doesn't fail
+    - konnect-api
   
 prereqs:
   inline:
     - title: Install kafkactl
       content: |
-        We need Kafkactl install it man!
+        Install [kafkactl](https://github.com/deviceinsight/kafkactl). You'll need it to interact with Kafka clusters. 
 
 cleanup:
   inline:
@@ -41,11 +41,11 @@ cleanup:
 automated_tests: false
 ---
 
-## Create a control plane in Konnect
+## Create a Control Plane in {{site.konnect_short_name}}
 
 {% include knep/konnect-create-cp.md name='KNEP getting started' %}
 
-## Start a local kafka cluster
+## Start a local Kafka cluster
 
 {% include knep/docker-compose-start.md %}
 
@@ -58,12 +58,14 @@ You should see something like this:
 ```
 knep  | 2025-04-30T08:59:58.004076Z  WARN tokio-runtime-worker ThreadId(09) add_task{task_id="konnect_watch_config"}:task_run:check_dataplane_config{cp_config_url="/v2/control-planes/c6d325ec-0bd6-4fbc-b2c1-6a56c0a3edb0/declarative-config/native-event-proxy"}: knep::konnect: src/konnect/mod.rs:218: Konnect API returned 404, is the control plane ID correct?
 ```
+{:.no-copy-code}
 
-This is expected, as we have not yet configured the control plane. We will do this in the next step.
+This is expected, as we have not yet configured the Control Plane. We'll do this in the next step.
 
 ## Configure {{site.event_gateway}} control plane with a passthrough cluster 
 
-Let's create the configuration file for the control plane. This file will define the backend cluster and the virtual cluster.
+Let's create the configuration file for the Control Plane. This file will define the backend cluster and the virtual cluster:
+
 ```shell
 cat <<EOF > knep-config.yaml
 virtual_clusters:
@@ -92,7 +94,7 @@ listeners:
 EOF
 ```
 
-Send a basic config to the control plane:
+Send a basic config to the Control Plane using the `/declarative-config` endpoint:
 
 <!--vale off-->
 {% konnect_api_request %}
@@ -106,7 +108,8 @@ body_cmd: "$(jq -Rs '{config: .}' < knep-config.yaml)"
 
 ## Check the cluster works
 
-Now let's check that the cluster works. We can use the Kafka UI to do this by going to [http://localhost:8082](http://localhost:8082) and checking the cluster list. You should see the `direct-kafka-cluster` and `knep-proxy-cluster` cluster listed there.
+Now let's check that the cluster works. We can use the Kafka UI to do this by going to [http://localhost:8082](http://localhost:8082) and checking the cluster list. 
+You should see the `direct-kafka-cluster` and `knep-proxy-cluster` cluster listed there.
 
 You can also use the `kafkactl` command to check the cluster. First, let's set up the `kafkactl` config file:
 ```shell
@@ -122,19 +125,20 @@ current-context: knep
 EOF
 ```
 
-Now let's check the kafka cluster directly:
+Now let's check the Kafka cluster directly:
 ```shell
 kafkactl -C kafkactl.yaml --context direct list topics
 ```
 
-You should see the topics listed there. Now let's check the same command but through the KNEP proxy:
+You should see the topics listed there. Now let's check the same command but through the {{site.event_gateway_short}} proxy:
 ```shell
 TOPIC                  PARTITIONS     REPLICATION FACTOR
 __consumer_offsets     50             1
 _schemas               1              1
 ```
+{:.no-copy-code}
 
-and now through the KNEP proxy:
+And now through the {{site.event_gateway_short}} proxy:
 ```shell
 kafkactl -C kafkactl.yaml --context knep list topics
 ```
@@ -145,6 +149,7 @@ TOPIC                  PARTITIONS     REPLICATION FACTOR
 __consumer_offsets     50             1
 _schemas               1              1
 ```
+{:.no-copy-code}
 
 ## Add prefix to the cluster 
 
