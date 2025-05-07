@@ -142,3 +142,6 @@ mesh_install_archive_name: kong-mesh
 mesh:
   ignored_links_regex:
     - '\[.*\]\(https:\/\/github\.com\/[kK]ong\/kong-mesh.*\)'
+
+# Version vars
+latest_gateway_oss_version: "3.9"
