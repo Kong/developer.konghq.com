@@ -35,6 +35,8 @@ columns:
 rows:
   - command: "[patch](/deck/file/manipulation/patch/)"
     description: Update existing values.
+  - command: "[add-plugins](/deck/file/manipulation/plugins/)"
+    description: Add tags to specific entities.
   - command: "[add-tags](/deck/file/manipulation/tags/#add-tags)"
     description: Add tags to specific entities.
   - command: "[remove-tags](/deck/file/manipulation/tags/#remove-tags)"

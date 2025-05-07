@@ -79,6 +79,10 @@ Certificate request behavior based on plugin scope:
 
 SNIs must be set for all Routes that mutual TLS authentication uses.
 
+{:.warning}
+> When using the plugin with [expressions routes](/gateway/routing/expressions/), 
+the client certificate will always be requested, even if the routes are configured with SNIs. 
+
 ### Sending the CA DNs during TLS handshake
 
 By default, {{site.base_gateway}} does not send the CA Distinguished Name (CA DN) list during the TLS handshake. Specifically, the `certificate_authorities` field in the `CertificateRequest` message is empty.
