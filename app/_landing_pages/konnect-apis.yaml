@@ -2,6 +2,17 @@ metadata:
   title: "{{site.konnect_short_name}} APIs"
   content_type: landing_page
   description: This page is an introduction to the {{site.konnect_short_name}} APIs.
+  products:
+    - gateway
+    - portal
+    - mesh
+    - analytics
+  tools: 
+    - konnect-api
+  works_on:
+    - konnect
+  breadcrumbs:
+    - /tools/
 
 rows:
   - header:
