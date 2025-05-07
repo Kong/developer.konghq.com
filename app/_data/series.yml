@@ -7,3 +7,9 @@ plugin-dev-get-started:
 kgo-get-started:
   title: Get Started with the Kong Gateway Operator
   url: /index/operator/#get-started
+operator-get-started-hybrid:
+  title: Deploy Hybrid DataPlanes with {{ site.operator_product_name }}
+  url: /operator/dataplanes/get-started/hybrid/install/
+operator-get-started-kic:
+  title: Deploy {{ site.kic_product_name }} with {{ site.operator_product_name }}
+  url: /operator/dataplanes/get-started/kic/install/

@@ -15,9 +15,6 @@ works_on:
 
 entities: []
 
-tags:
-  - konnect-crd
- 
 tldr:
   q: Question?
   a: Answer
