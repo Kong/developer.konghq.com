@@ -6,29 +6,32 @@ sections:
         description: Overview of AI gateway capabilities
         url: /ai-gateway/
       - title: Quickstart
-        description: Get started quickly with AI Gateway setup and usage
+        description: Get started quickly with AI Gateway setup and usage.
         url: /ai-gateway/#quickstart
       - title: AI Gateway Capabilities
-        description: Learn about the core capabilities of AI Gateway
+        description: Learn about the core capabilities of AI Gateway.
         url: /ai-gateway/#ai-gateway-capabilities
       - title: AI Usage Governance
-        description: Understand how to manage and govern AI usage effectively
+        description: Understand how to manage and govern AI usage effectively.
         url: /ai-gateway/#ai-usage-governance
       - title: Data Governance
-        description: Explore how AI Gateway helps enforce data governance policies
+        description: Explore how AI Gateway helps enforce data governance policies.
         url: /ai-gateway/#data-governance
       - title: Prompt Engineering
-        description: Best practices and tools for designing effective prompts
+        description: Best practices and tools for designing effective prompts.
         url: /ai-gateway/#prompt-engineering
       - title: Guardrails and Content Safety
-        description: Implement safeguards to ensure safe and compliant AI outputs
+        description: Implement safeguards to ensure safe and compliant AI outputs.
         url: /ai-gateway/#guardrails-and-content-safety
       - title: Request Transformations
-        description: Customize and transform AI requests with Gateway features
+        description: Customize and transform AI requests with Gateway features.
         url: /ai-gateway/#request-transformations
       - title: Streaming
-        description: Learn how AI Proxy streaming works
+        description: Learn how AI Proxy streaming works.
         url: /ai-gateway/streaming/
+      - title: Audit log
+        description: Learn About AI gateway logging capabilities.
+        url: /ai-gateway/ai-audit-log-reference/
   - title: AI Gateway plugins
     items:
       - path: /plugins/?category=ai
@@ -88,3 +91,4 @@ sections:
       - path: /how-to/set-up-ai-proxy-advanced-with-anthropic/
       - path: /how-to/set-up-ai-proxy-with-anthropic/
       - path: /how-to/store-a-mistral-api-key-as-a-secret-in-konnect-config-store/
+      - path: /how-to/rotate-secrets-in-google-cloud-secret/
