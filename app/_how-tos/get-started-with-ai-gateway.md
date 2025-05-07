@@ -1,7 +1,7 @@
 ---
 title: Get started with AI Gateway
 content_type: how_to
-
+description: Learn quickly ho to get started wi AI Gateway
 products:
     - ai-gateway
     - gateway

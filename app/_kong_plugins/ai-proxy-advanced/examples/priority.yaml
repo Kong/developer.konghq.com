@@ -1,8 +1,7 @@
 
 title: 'Priority load balancing'
-description: |
-  Configure the plugin to use three OpenAI models and create priority groups based on their respective weights.
-
+description: Configure the plugin to use three OpenAI models and create priority groups based on their respective weights.
+extended_description: |
   In this example, the GPT-4 model and the GPT-4o-mini model form a group, and the GPT-3 model forms another group.
 
   Since the first group has a weight of 70 and the second one a weight of 25, the plugin will first try to route requests to GPT-4 or GPT-4o-mini.
@@ -27,7 +26,7 @@ config:
         max_tokens: 512
         temperature: 1.0
     route_type: llm/v1/chat
-    auth: 
+    auth:
       header_name: Authorization
       header_value: Bearer ${key}
     weight: 70
@@ -38,7 +37,7 @@ config:
         max_tokens: 512
         temperature: 1.0
     route_type: llm/v1/chat
-    auth: 
+    auth:
       header_name: Authorization
       header_value: Bearer ${key}
     weight: 70
@@ -49,7 +48,7 @@ config:
         max_tokens: 512
         temperature: 1.0
     route_type: llm/v1/chat
-    auth: 
+    auth:
       header_name: Authorization
       header_value: Bearer ${key}
     weight: 25

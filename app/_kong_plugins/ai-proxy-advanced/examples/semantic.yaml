@@ -1,5 +1,6 @@
 title: 'Semantic load balancing'
-description: |
+description: Configure semantic load balancing with AI Proxy Advanced plugin
+extended_description: |
   To set up semantic routing, you must configure the following parameters:
 
   * `config.embeddings` to define the model to use to match the model description and the prompts.
