@@ -5,7 +5,7 @@ description: "Answers to common questions about managing {{site.konnect_short_na
 content_type: reference
 layout: reference
 search_aliases:
-  - KGO faq
+  - KGO FAQ
 products:
   - operator
 breadcrumbs:
