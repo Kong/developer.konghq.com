@@ -5,12 +5,6 @@ content_type: reference
 
 ## Changelog
 
-### {{site.base_gateway}} 3.10.x
-* Improved performance on OpenAPI 3.0.
-* Added support for the `discriminator` keyword in OpenAPI specs.
-* Added support for the `oneOf`, `anyOf`, `allOf`, and `not` keywords.
-* Fixed an issue where query params without values caused an assertion failure.
-
 ### {{site.base_gateway}} 3.9.x
 * Fixed an issue where the error message was omitted if `config.notify_only_request_body_validation_failure` or `config.notify_only_response_body_validation_failure` was set to `false`.
 * Fixed an issue where the `config.include_base_path` setting did not work when multiple servers were provided.

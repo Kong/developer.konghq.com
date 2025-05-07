@@ -53,8 +53,6 @@ Enabling this plugin is recommended for any API that accepts JSON input, especia
 
 The JSON Threat Protection plugin validates incoming requests with a JSON body against policy limits that you've configured for the plugin, regardless of whether the `Content-Type` header exists or is set to `application/json`. If a request violates the policy limits, you can configure it to either block the request (block mode) or monitor and log it (tap mode).
 
-{% new_in 3.10 %} The JSON Threat Protection plugin validates the JSON body of incoming `POST`, `PUT`, and `PATCH` requests. Other HTTP methods will not be validated by this plugin.
-
 The plugin checks the following limits:
 
 - Maximum container depth of the entire JSON object
@@ -69,7 +67,6 @@ Additionally, you can set a policy that restricts the JSON body size (`max_body_
 > **Notes**: 
 > * Length calculation for JSON strings and object entry names is based on UTF-8 characters, not bytes.
 > * `max_body_size` and `nginx_http_client_max_body_size` are independent of each other. Therefore, if `nginx_http_client_max_body_size` is set to a larger value while `max_body_size` is smaller and block mode is enabled, any request with a body size greater than `max_body_size` but less than `nginx_http_client_max_body_size` will be terminated.
-> * This plugin does not support chunked encoding.
 
 ### Example JSON body violation
 

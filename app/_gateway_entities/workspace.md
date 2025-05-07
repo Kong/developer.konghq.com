@@ -91,17 +91,17 @@ flowchart LR
 
 ### How does {{site.base_gateway}} resolve entity conflicts between Workspaces?
 
-Routing rules are configured at the Data Plane level. The Data Plane routes client traffic based on the configuration applied across all Workspaces. Configuring entities related to routing, such as [Gateway Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/), alter the client traffic routing behavior of the Data Plane, but {{site.base_gateway}} will always attempt to ensure that routing rules don't contain conflicts. 
+Routing rules are configured at the data plane level. The data plane routes client traffic based on the configuration applied across all Workspaces. Configuring entities related to routing, such as [Gateway Services](/gateway/entities/service/) and [Routes](/gateway/entities/route/), alter the client traffic routing behavior of the data plane, but {{site.base_gateway}} will always attempt to ensure that routing rules don't contain conflicts. 
 
 To route traffic to the appropriate Workspace, {{site.base_gateway}} uses a conflict detection algorithm.
 
 When a Service or Route is **created** or **modified**, the {{site.base_gateway}} Router checks for the existence of that object before allowing the operation to proceed in this order:
 
 1. If the Service or Route created is unique across all Workspaces, the new entity is created. 
-1. If an existing Service or Route object in the current Workspace has the same routing rules as the one being created or modified, the operation proceeds. 
-1. If an equivalent Service or Route is found in a different Workspace, and the host is provided:
+1. If an existing Service or Route object in the current Workspace has the same name as the one being created, a `409 Conflict` error is returned. 
+2. If an equivalent Service or Route is found in a different Workspace, and the host is provided:
     1. If the host field matches in both Workspaces, a `409 Conflict` error is returned.
-    1. If the host field doesn't match, the operation proceeds.
+    1. If the host field doesn't match, the new entity can be created.
     1. If the host is an absolute value, a `409 Conflict` error is returned.
 
 ## Roles, groups, and permissions

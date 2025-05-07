@@ -4,10 +4,10 @@ content_type: reference
 
 ## Changelog
 
-### {{site.base_gateway}} 3.10.x
+### {{site.base_gateway}} 3.10.0.0
 * Added support for allowing multiple rate limits for the same providers. This means `window_size` and `limit` now require an array of numbers instead of a single number. If you configured the plugin before 3.10 and use `kong migrations` to upgrade to 3.10, it will be automatically migrated to use the array.
 
-### {{site.base_gateway}} 3.9.x
+### {{site.base_gateway}} 3.9.0.0
 * Added support for the Hugging Face provider to the AI Rate Limiting Advanced plugin.
   To import the decK configuration files that are exported from earlier versions, use the following script to transform it so that the configuration file can be compatible with the latest version:
 
