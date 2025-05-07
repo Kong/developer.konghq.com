@@ -47,6 +47,10 @@ platform:
           icon: /_assets/icons/products/ai-gateway.svg
           url: /ai-gateway/
           product: ai-gateway
+        - text: Event Gateway
+          icon: /_assets/icons/products/event-gateway.svg
+          url: /event-gateway/
+          product: ai-gateway
         - text: Service Mesh
           icon: /_assets/icons/products/mesh.svg
           url: /mesh/

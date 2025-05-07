@@ -87,6 +87,8 @@
     --color-advanced-analytics-background: var(--color-semantic-yellow-secondary);
     --color-ai-gateway-brand: var(--color-semantic-green-primary);
     --color-ai-gateway-background: var(--color-semantic-green-secondary);
+    --color-event-gateway-brand: var(--color-semantic-green-primary);
+    --color-event-gateway-background: var(--color-semantic-green-secondary);
     --color-api-ops-brand: var(--color-semantic-teal-primary);
     --color-api-ops-background: var(--color-semantic-teal-secondary);
     --color-gateway-brand: var(--color-semantic-green-primary);
