@@ -18,7 +18,7 @@ breadcrumbs:
 Tags and labels are a way to organize and categorize your resources. This doc explains how to annotate your {{site.konnect_short_name}} entities managed by {{site.kgo_product_name}} with tags and labels depending on particular entity's support for those.
 
 ## Labeling
-Labels are key-value pairs you can attach to certain objects. Currently, the only {{site.konnect_short_name}} entity that supports labels is [`KonnectGatewayControlPlane`](/operator/konnect/gatewaycontrolplane).
+Labels are key-value pairs you can attach to certain objects. Currently, the only {{site.konnect_short_name}} entity that supports labels is [`KonnectGatewayControlPlane`](/operator/konnect/crd/control-planes/hybrid/).
 You can add labels to the `KonnectGatewayControlPlane` object by specifying the `labels` field in the `spec` section.
 
 ```yaml
