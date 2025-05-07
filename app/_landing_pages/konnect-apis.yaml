@@ -4,9 +4,9 @@ metadata:
   description: This page is an introduction to the {{site.konnect_short_name}} APIs.
   products:
     - gateway
-    - portal
+    - dev-portal
     - mesh
-    - analytics
+    - advanced-analytics
   tools: 
     - konnect-api
   works_on:
