@@ -392,7 +392,7 @@
   }
 
   blockquote {
-    &.success, &.warning, &.danger, &.info, &.neutral, &.decorative {
+    &.success, &.warning, &.danger, &.info, &.neutral, &.decorative, &.ai {
       @apply rounded-md p-4 gap-2 border-l-[3px] text-primary flex flex-col pl-10 relative text-sm;
 
       &:not(.no-icon)::before {
@@ -449,6 +449,14 @@
 
       &:not(.no-icon)::before {
         @apply bg-semantic-purple-primary;
+      }
+    }
+
+    &.ai {
+      @apply bg-semantic-teal-secondary border-semantic-teal-primary;
+
+      &:not(.no-icon)::before {
+        @apply bg-semantic-teal-primary;
       }
     }
   }
