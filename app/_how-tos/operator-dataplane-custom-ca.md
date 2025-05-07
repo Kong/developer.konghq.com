@@ -19,7 +19,7 @@ works_on:
   - konnect
 
 tldr:
-  q: How do I use a custom CA certificate to sign new DataPlane certificates?
+  q: How do I use a custom CA certificate to sign new `DataPlane` certificates?
   a: Provide the `spec.clientAuth.certificateSecret` field when defining your `KonnectExtension` resource
 ---
 

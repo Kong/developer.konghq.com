@@ -1,6 +1,6 @@
 ---
 title: Deploy Custom Plugins
-description: "TODO"
+description: "Package and deploy custom Kong plugins as OCI images using the{{ site.operator_product_name }} and reference them in {{site.base_gateway}} resources."
 content_type: how_to
 
 permalink: /operator/dataplanes/how-to/deploy-custom-plugins/
@@ -35,8 +35,11 @@ prereqs:
       - kongplugininstallation
 
 tldr:
-  q: Question?
-  a: Answer
+  q: How can I deploy a custom plugin using the {{ site.operator_product_name }}?
+  a: |
+    Build and push a plugin as a container image, then use a `KongPluginInstallation`
+    to register it with the operator. Reference it in your `GatewayConfiguration` to
+    make it available in Data Planes and configure its behavior using a `KongPlugin` resource.
 ---
 
 ## Plugin distribution using an OCI registry

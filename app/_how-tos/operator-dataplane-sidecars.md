@@ -25,7 +25,7 @@ tldr:
 
 ---
 
-## Deploy Side
+## Deploy Sidecar
 
 {{ site.operator_product_name }} uses [PodTemplateSpec](/operator/dataplanes/reference/podtemplatespec/) to customize deployments.
 

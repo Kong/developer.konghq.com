@@ -1,6 +1,6 @@
 ---
 title: Autoscale workloads with Prometheus
-description: "TODO"
+description: 'Use the Gateway Operator and Prometheus metrics to automatically scale Kong Gateway Data Plane workloads.'
 content_type: how_to
 
 permalink: /operator/dataplanes/how-to/autoscale-workloads/datadog/
@@ -20,8 +20,11 @@ works_on:
   - on-prem
 
 tldr:
-  q: Question
-  a: Answer
+  q: How can I autoscale {{site.base_gateway}} workloads using Prometheus metrics?
+  a: |
+    Deploy a `DataPlaneMetricsExtension` to collect metrics (like latency) from a target service,
+    expose those metrics on the `/metrics` endpoint, and configure the operator to reference this
+    data for scaling decisions.
 
 ---
 
