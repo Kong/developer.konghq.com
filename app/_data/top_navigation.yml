@@ -17,7 +17,7 @@ platform:
       icon: /assets/icons/code.svg
     - text: Terraform
       url: /terraform/
-      icon: /_assets/icons/products/kic.svg
+      icon: /assets/icons/terraform.svg
     - text: Ingress controller
       url: /kubernetes-ingress-controller/
       icon: /_assets/icons/products/kic.svg
