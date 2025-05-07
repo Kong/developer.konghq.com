@@ -1,0 +1,16 @@
+title: All AI Gateway documentation
+sections:
+  - title: Overview
+    items:
+      - path: /ai-gateway/
+      - path: /deck/get-started/
+      - path: /deck/**/*
+    auto_exclude: true
+  - title: AI Plugins
+    description: |
+      Documentation for all plugins available in AI Gateway
+    sections:
+      - title:
+        items:
+          - path:
+          - path:
