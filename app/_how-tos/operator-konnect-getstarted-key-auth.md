@@ -128,4 +128,4 @@ konnect_url: $PROXY_IP
 on_prem_url: $PROXY_IP
 {% endvalidation %}
 
-    The results will return succesfully.
+    The results will return successfully.
