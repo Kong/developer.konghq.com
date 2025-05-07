@@ -73,7 +73,9 @@ data:
 <!-- vale on -->
 
 
-## Deploy DP
+## Deploy a Data Plane
+
+Apply a `DataPlane` resource to deploy a {{site.base_gateway}} instance that connects to your {{site.konnect_short_name}} Control Plane:
 
 ```bash
 echo '
@@ -96,7 +98,11 @@ spec:
 ' | kubectl apply -f -
 ```
 
-Get IP:
+## Get the Proxy IP
+
+Retrieve the external IP address of the deployed Data Plane service:
+
+
 
 ```bash
 NAME=$(kubectl get -o yaml -n kong service | yq '.items[].metadata.name | select(contains("dataplane-ingress"))')
@@ -109,7 +115,7 @@ curl -i $PROXY_IP
 
 After the plugin is applied, try sending more than 5 requests in a single minute to `echo-route`. You should begin receiving `429 Too Many Requests` responses once the limit is exceeded.
 
-To test the rate-limiting plugin, rapidly send six requests to `$PROXY_IP/echo`:
+To test the rate-limiting plugin, rapidly send six requests to `$PROXY_IP/anything`:
 
 {% validation rate-limit-check %}
 iterations: 6

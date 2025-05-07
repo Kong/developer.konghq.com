@@ -53,7 +53,7 @@ spec:
 
 ## Validate
 
-You can verify that authentication worked correctly using `kubectl get` as in: 
+Run the following command to verify that the authentication configuration was created successfully:
 
 ```bash
 kubectl get konnectapiauthconfiguration konnect-api-auth -n kong

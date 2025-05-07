@@ -38,11 +38,12 @@ prereqs:
 
 ## Create a `KonnectGatewayControlPlane`
 
-To manage Gateway configurations from your Kubernetes cluster, define a `KonnectGatewayControlPlane` resource. This resource identifies which control plane in {{site.konnect_short_name}} your CRDs will target.
+Use the `KonnectGatewayControlPlane` resource to define the {{site.konnect_short_name}} Control Plane that your CRDs will target. This enables your cluster to send configuration to Konnect.
 
-You must also create a `KonnectAPIAuthConfiguration` first to provide authentication credentials to the {{site.konnect_short_name}} API.
+A `KonnectAPIAuthConfiguration` must already exist to authenticate with the Konnect API. If you haven’t created one yet, see [Create API Authentication](/operator/konnect/get-started/authentication/).
 
-Defines a control plane configuration named `gateway-control-plane`:
+Apply the following configuration to define a Control Plane named `gateway-control-plane`:
+
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -58,7 +59,8 @@ spec:
 {% endkonnect_crd %}
 <!-- vale on -->
 
-This links your local configuration to a specific {{site.konnect_short_name}} control plane using the credentials provided in `konnect-api-auth`.
+This resource links your cluster to a specific Control Plane instance in {{site.konnect_short_name}} using the credentials provided in `konnect-api-auth`.
+
 
 ## Bind the Control Plane using a `KonnectExtension`
 
@@ -84,7 +86,7 @@ spec:
 {% endkonnect_crd %}
 <!-- vale on -->
 
-The `KonnectExtension` will automatically discover the associated control plane and credentials, and handle authentication and binding internally.
+The `KonnectExtension` resource handles automatic certificate generation and establishes secure communication between your cluster and {{site.konnect_short_name}}.
 
 ## Validation
 
@@ -95,4 +97,4 @@ name: gateway-control-plane
 {% endvalidation %}
 <!-- vale on -->
 
-Once created, your cluster is fully connected to the {{site.konnect_short_name}} Control Plane and ready to manage resources like `KongService`, `KongRoute`, and more.
+Once these resources are in place, your cluster is connected to {{site.konnect_short_name}} and can begin managing entities such as `KongService`, `KongRoute`, and `KongPlugin`.

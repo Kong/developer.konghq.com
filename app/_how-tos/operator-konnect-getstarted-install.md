@@ -44,11 +44,15 @@ The {{site.operator_product_name}} can deploy and manage Data Planes connected t
 
 ## Add the Helm repo
 
+Add the Helm chart repository to your local Helm client and update the repo to fetch the latest charts:
+
 ```bash
 helm repo add kong https://charts.konghq.com
 helm repo update kong
 ```
 ## Create the `kong` namespace
+
+Create the `kong` namespace in your Kubernetes cluster, which is where the Getting Started guide will run:
 
 ```sh
 kubectl create namespace kong
@@ -67,13 +71,13 @@ helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespa
 
 ### Wait for readiness
 
-Once installed, wait for the Operator to become available:
+Wait for the {{site.operator_product_name}}'s controller deployment to become available before proceeding, ensuring it’s ready to manage resources:
 
 ```sh
 kubectl -n kong-system wait --for=condition=Available=true --timeout=120s deployment/kgo-gateway-operator-controller-manager
 ```
 
-Once the Operator is ready, you can begin provisioning Gateway Control Planes and Data Planes using {{site.konnect_short_name}} CRDs, the output will look like: 
+Once the {{site.operator_product_name}} is ready, you can begin provisioning Gateway Control Planes and Data Planes using {{site.konnect_short_name}} CRDs, the output will look like: 
 
 ```sh
 deployment.apps/kgo-gateway-operator-controller-manager condition met

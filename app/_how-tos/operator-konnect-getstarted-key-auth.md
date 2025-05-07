@@ -120,7 +120,7 @@ data:
 
 {% validation request-check %}
 indent: 4
-url: /echo
+url: /anything
 headers:
   - 'apikey:hello_world'
 status_code: 200
@@ -128,11 +128,4 @@ konnect_url: $PROXY_IP
 on_prem_url: $PROXY_IP
 {% endvalidation %}
 
-    The results should look like this:
-
-    ```
-    Welcome, you are connected to node orbstack.
-    Running on Pod echo-965f7cf84-mvf6g.
-    In namespace default.
-    With IP address 192.168.194.10.
-    ```
+    The results will return succesfully.

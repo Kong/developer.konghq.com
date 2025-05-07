@@ -38,7 +38,15 @@ prereqs:
       control_plane: true
 ---
 
-## Setup
+## Set up the `proxy-cache` plugin
+
+Use the `KongPlugin` CRD to enable proxy caching on a `KongService`. The following example:
+
+* Caches `200 OK` responses
+* Applies to `GET` and `HEAD` requests
+* Targets responses with `application/json` content type
+* Stores cached data in memory
+* Sets the cache TTL to 300 seconds (5 minutes)
 
 {% entity_example %}
 type: plugin
@@ -62,6 +70,8 @@ data:
 {% endentity_example %}
 
 ## Validation
+
+Send six requests to the same endpoint and inspect the cache status. The first request will miss, but subsequent ones will hit because they are served from the cache.
 
 {% validation rate-limit-check %}
 iterations: 6

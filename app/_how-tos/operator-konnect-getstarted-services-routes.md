@@ -38,9 +38,11 @@ prereqs:
 
 ## How Kubernetes resources map to {{site.base_gateway}} entities
 
-A Service inside Kubernetes is a way to abstract an application that is running on a set of Pods. This maps to two entities in {{site.base_gateway}}: Service and Upstream.
+A Kubernetes Service represents an application running on a group of Pods. In {{site.base_gateway}}, this maps to a `Service` and `Upstream`.
 
-The Service entity in {{site.base_gateway}} holds the protocol information needed to talk to the upstream service and various other protocol-specific settings. The Upstream object defines load balancing and health-checking behavior.
+* The **KongService** defines protocol-specific information and connection settings to reach the upstream application.
+* The **Upstream** defines load balancing and health checking behavior across backend targets.
+
 
 <!--vale off-->
 {% mermaid %}
@@ -79,7 +81,7 @@ flowchart LR
 
 ## Create a `KongService` 
 
-Create a Gateway Service in the [{{site.konnect_short_name}} Gateway Manager](/gateway-manager/). The Service must reference an existing `KonnectGatewayControlPlane`.
+The `KongService` resource is used to define an upstream service that {{site.konnect_short_name}} will route traffic to. This must include a reference to a `KonnectGatewayControlPlane` to associate the service with your Konnect environment.
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -99,7 +101,7 @@ spec:
 
 ## Create a `KongRoute`
 
-To expose the Service, create a `KongRoute` associated with the `KongService` defined above.
+Define a `KongRoute` to expose the Service you created. The Route determines how requests are matched and routed to the associated Service.
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -122,7 +124,8 @@ spec:
 
 ## Validation
 
-To validate, check that the Route and Service were configured correctly: 
+You can validate from the command line or [Gateway Manager UI](/gateway-manager/) to confirm that both the `KongService` and `KongRoute` have been provisioned and are in a valid state:
+
 
 <!-- vale off -->
 {% validation kubernetes-resource %}
