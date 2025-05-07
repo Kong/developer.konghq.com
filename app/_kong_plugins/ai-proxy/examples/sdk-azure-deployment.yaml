@@ -1,0 +1,53 @@
+title: 'OpenAI SDK: Use the Azure deployment relevant to a specific model name'
+description: Configure a dynamic route to target multiple Azure OpenAI model deployments.
+extended_description: |
+  Configure a header capture to insert the requested model name directly into the plugin configuration for Kong AI Gateway deployment with Azure OpenAI, as a string substitution.
+
+  Using the below configuration, you can target an Azure model deployment named `west-europe-gpt-4o` with the following sample request:
+  ```
+  cat <<EOF > request.json
+  {
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "This is my question."
+        }
+      ]
+    }
+  ]
+  }
+  EOF
+
+  curl http://localhost:8000/1/chat/completions \
+  -H "x-test: azure-chat-open-model-managed-identity" \
+  -H "x-model-name: gpt-4o" \
+  -d @request.json
+  ```
+
+weight: 102
+
+requirements:
+- Azure OpenAI Service account
+
+config:
+  route_type: "llm/v1/chat"
+  auth:
+    azure_use_managed_identity: true
+  model:
+    provider: "azure"
+    model: "$(headers.x-model-name)"
+    options:
+      azure_instance: "llm-deployment-v1"
+      azure_deployment_id: "west-europe-$(headers.x-model-name)"
+      azure_api_version: "2024-10-01"
+
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform

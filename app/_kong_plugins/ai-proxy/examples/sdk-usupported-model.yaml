@@ -31,19 +31,18 @@ requirements:
   - OpenAI account
 
 config:
-  targets:
-    - route_type: preserve
-      auth:
-        header_name: Authorization
-        header_value: Bearer ${openai_key}
-      logging:
-        log_statistics: true
-        log_payloads: false
-      model:
-        provider: openai
-        name: whisper-2
-        options:
-          upstream_path: $(uri_captures.op_path)
+    route_type: preserve
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${openai_key}
+    logging:
+      log_statistics: true
+      log_payloads: false
+    model:
+      provider: openai
+      name: whisper-2
+      options:
+        upstream_path: $(uri_captures.op_path)
 
 variables:
   openai_key:

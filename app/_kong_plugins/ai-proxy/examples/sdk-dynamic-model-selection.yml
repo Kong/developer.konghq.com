@@ -20,17 +20,16 @@ requirements:
 - OpenAI account
 
 config:
-  targets:
-    - route_type: llm/v1/chat
-      auth:
-        header_name: Authorization
-        header_value: Bearer ${openai_key}
-      logging:
-        log_statistics: true
-        log_payloads: false
-      model:
-        provider: openai
-        name: $(uri_captures.model)
+    route_type: llm/v1/chat
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${openai_key}
+    logging:
+      log_statistics: true
+      log_payloads: false
+    model:
+      provider: openai
+      name: $(uri_captures.model)
 
 variables:
   openai_key:

@@ -2,6 +2,22 @@ title: 'OpenAI SDK: Chat routes with dynamic provider selection'
 description: |
   Configure two chat routes that dynamically select between Cohere and Mistral models at runtime based on the model name captured from the request URI.
 
+  Using this configuration, you can select the desired provider using the SDK:
+
+  ```
+  client = OpenAI(
+  base_url="http://127.0.0.1:8000/cohere"
+  )
+  ```
+
+  or:
+
+  ```
+  client = OpenAI(
+  base_url="http://127.0.0.1:8000/mistral"
+  )
+  ```
+
 weight: 104
 
 requirements:
@@ -9,30 +25,26 @@ requirements:
 - Mistral account
 
 config:
-  targets:
-    - route_type: llm/v1/chat
-      auth:
-        header_name: Authorization
-        header_value: Bearer ${cohere_key}
-      logging:
-        log_statistics: true
-        log_payloads: false
-      model:
-        provider: cohere
-        name: $(uri_captures.model)
-    - route_type: llm/v1/chat
-      auth:
-        header_name: Authorization
-        header_value: Bearer ${mistral_key}
-      logging:
-        log_statistics: true
-        log_payloads: false
-      model:
-        provider: mistral
-        name: $(uri_captures.model)
-        options:
-          mistral_format: openai
-          upstream_url: https://api.mistral.ai/v1/chat/completions
+  - route_type: "llm/v1/chat"
+    auth:
+      header_name: "Authorization"
+      header_value: Bearer ${cohere_key}
+    logging:
+      log_statistics: true
+      log_payloads: false
+    model:
+      provider: "cohere"
+      name: "$(uri_captures.model)"
+  - route_type: "llm/v1/chat"
+    auth:
+      header_name: "Authorization"
+      header_value: Bearer ${mistral_key}
+    logging:
+      log_statistics: true
+      log_payloads: false
+    model:
+      provider: "mistral"
+      name: "$(uri_captures.model)"
 
 variables:
   cohere_key:
