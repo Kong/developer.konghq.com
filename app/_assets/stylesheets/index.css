@@ -728,7 +728,7 @@
   }
 
   .navbar-items {
-    @apply items-center ml-0 list-none flex flex-col flex-grow lg:flex-row gap-7 lg:gap-8 w-full p-6 lg:p-0;
+    @apply items-center ml-0 list-none flex flex-col flex-grow lg:flex-row gap-7 md:gap-3 xl:gap-8 w-full p-6 lg:p-0;
   }
 
   .navbar-item {
