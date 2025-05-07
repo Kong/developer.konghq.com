@@ -30,11 +30,11 @@ rows:
 
                     * Easily manage {{site.base_gateway}}
                     * Catalog, share, and monetize APIs
-                    * Achieve federated API management with [multi-geo](/konnect-platform/konnect-geos/) support
+                    * Achieve federated API management with [multi-geo](/konnect/geos/) support
       - blocks:
           - type: image
             config:
-              url: /assets/images/konnect/konnect-dashboard.png
+              url: /assets/images/konnect/dashboard.png
               alt_text: Image of the {{site.konnect_short_name}} dashboard
   
   - header:
@@ -55,11 +55,11 @@ rows:
         - type: card
           config:
             title: Getting started guide
-            description: Learn how to use {{site.base_gateway}} on Konnect or on-prem
+            description: Learn how to use {{site.base_gateway}} in {{site.konnect_short_name}} or on-prem
             icon: /assets/icons/graduation.svg
             cta:
               text: 
-              url: /how-to/get-started-with-gateway/
+              url: /gateway/get-started/
               align: end
   
   - header:
@@ -69,7 +69,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/konnect/konnect-overview.png
+              url: /assets/images/konnect/overview.png
               alt_text: Diagram of {{site.konnect_short_name}} architecture
       - blocks:
         - type: structured_text
@@ -234,7 +234,7 @@ rows:
               icon: /assets/icons/firewall.svg
               cta:
                 text: Learn about {{site.konnect_short_name}} ports
-                url: /konnect-platform/network/
+                url: /konnect/network/
                 align: end
   - columns:
       - blocks:
@@ -283,7 +283,7 @@ rows:
                 See which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with.
               cta:
                 text: View the compatibility policy 
-                url: /konnect-platform/konnect-compatibility/
+                url: /konnect/compatibility/
                 align: end
       - blocks:
           - type: card
@@ -325,7 +325,7 @@ rows:
                 Learn about the different {{site.konnect_short_name}} plans and account management.
               cta:
                 text: View {{site.konnect_short_name}} account information 
-                url: /konnect-platform/konnect-account/
+                url: /konnect/account/
                 align: end
       - blocks:
           - type: card

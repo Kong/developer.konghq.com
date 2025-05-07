@@ -219,7 +219,7 @@ rows:
             icon: /assets/icons/gateway.svg
             cta:
               text: Add SSO to {{site.konnect_short_name}}
-              url: "/konnect-platform/konnect-sso/"
+              url: "/konnect/sso/"
 
   - columns:
       - blocks:

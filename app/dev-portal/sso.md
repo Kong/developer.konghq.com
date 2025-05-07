@@ -24,9 +24,9 @@ related_resources:
   - text: Dev Portal team mapping
     url: /dev-portal/team-mapping/
   - text: "Configure SSO for a {{site.konnect_short_name}} org"
-    url: /konnect-platform/konnect-sso/
+    url: /konnect/sso/
   - text: "IdP SAML attribute mapping reference"
-    url: /konnect-platform/saml-idp-mappings/
+    url: /konnect/saml-idp-mappings/
   - text: Dev Portal access and authentication settings
     url: /dev-portal/security-settings/
   - text: Authentication strategies

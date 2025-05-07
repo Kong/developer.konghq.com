@@ -57,7 +57,7 @@ rows:
                     - **Off:** Advanced analytics collection stops, but basic API metrics remain available in Gateway Manager, 
                     and can still be used for custom reports.
 
-                    You can assign users to predefined [**Analytics teams** in {{site.konnect_short_name}}](/konnect-platform/teams-and-roles/) to control access levels. 
+                    You can assign users to predefined [**Analytics teams** in {{site.konnect_short_name}}](/konnect/teams-and-roles/) to control access levels. 
                     This allows specific users to **view** or **manage** Analytics independently.
 
   - header:

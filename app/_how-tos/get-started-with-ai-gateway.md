@@ -2,6 +2,7 @@
 title: Get started with AI Gateway
 content_type: how_to
 
+permalink: /ai-gateway/get-started/
 products:
     - ai-gateway
     - gateway

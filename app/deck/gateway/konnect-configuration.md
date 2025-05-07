@@ -18,7 +18,7 @@ breadcrumbs:
 
 related_resources:
   - text: "{{site.konnect_short_name}}"
-    url: /konnect-platform/
+    url: /konnect/
   - text: deck gateway commands
     url: /deck/gateway/
 ---
@@ -67,7 +67,7 @@ deck gateway ping \
 
 The default API decK uses is `https://us.api.konghq.com`.
 
-{{site.base_gateway}} supports AU, EU, IN, ME, and US [geographic regions](/konnect-platform/konnect-geos/).
+{{site.base_gateway}} supports AU, EU, IN, ME, and US [geographic regions](/konnect/geos/).
 
 To target a specific geo, set `konnect-addr` to one of the following:
 

@@ -44,7 +44,7 @@ search_aliases:
 
 related_resources:
   - text: Get started with AI Gateway
-    url: /how-to/get-started-with-ai-gateway/
+    url: /ai-gateway/get-started/
   - text: AI Prompt Guard plugin
     url: /plugins/ai-prompt-guard/
   - text: AI Proxy plugin

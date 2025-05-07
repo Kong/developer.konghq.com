@@ -17,7 +17,7 @@ related_resources:
   - text: "Authentication"
     url: /gateway/authentication/
   - text: "{{site.konnect_short_name}} SSO"
-    url: /konnect-platform/konnect-sso/
+    url: /konnect/sso/
   - text: "{{site.konnect_short_name}} ports and network requirements"
     url: /network/
 

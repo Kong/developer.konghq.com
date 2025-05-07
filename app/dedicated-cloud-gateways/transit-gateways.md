@@ -5,7 +5,7 @@ layout: reference
 description: |
   Connect {{site.konnect_short_name}} Dedicated Cloud Gateways to AWS Transit Gateway for private, secure connectivity.
 breadcrumbs:
-  - /konnect-platform/
+  - /konnect/
 products:
   - gateway
 works_on:

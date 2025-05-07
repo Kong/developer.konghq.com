@@ -54,7 +54,7 @@ rows:
                     text: |
                       **{{site.base_gateway}} Control Planes**
 
-                      Every [region](/konnect-platform/konnect-geos/) in every organization starts with one default Control Plane. 
+                      Every [region](/konnect/geos/) in every organization starts with one default Control Plane. 
                       With {{site.konnect_short_name}}, you can configure additional {{site.base_gateway}} Control Planes, 
                       each of which will have isolated configuration. Use multiple Control Planes in one 
                       {{site.konnect_short_name}} organization to manage Data Plane nodes and their configuration 
@@ -79,13 +79,13 @@ rows:
                 Control Plane)
                 B(Fully-managed 
                 Control Plane)
-                C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Self-managed 
+                C(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> Self-managed 
                 Data Plane nodes 
                 #40;locally-hosted#41;)
-                D(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Self-managed 
+                D(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> Self-managed 
                 Data Plane nodes 
                 #40;hosted by you in cloud provider#41;)
-                E(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px" class="no-image-expand"/> Fully-managed 
+                E(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> Fully-managed 
                 Data Plane nodes 
                 #40;hosted by Kong#41;)
 

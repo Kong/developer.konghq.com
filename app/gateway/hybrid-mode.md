@@ -173,7 +173,7 @@ style id3 stroke-dasharray:3,rx:10,ry:10
 The Control Plane connects to the database, and the Data Planes receive configuration from the Control Plane._
 
 When you create a new Data Plane node, it establishes a connection to the
-Control Plane. The Control Plane listens on port [`8005` ({{site.base_gateway}})](/gateway/network/) or [`443` ({{site.konnect_short_name}})](/konnect-platform/network/) for connections and
+Control Plane. The Control Plane listens on port [`8005` ({{site.base_gateway}})](/gateway/network/) or [`443` ({{site.konnect_short_name}})](/konnect/network/) for connections and
 tracks any incoming data from its Data Planes.
 
 Once connected, every API or Kong Manager/{{site.konnect_short_name}} UI action on the Control Plane

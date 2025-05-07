@@ -103,7 +103,7 @@ rows:
   - use_case: Reducing latency is important to your organization.
     strategy: "[Dedicated Cloud Gateways](/dedicated-cloud-gateways/)"
     solution: |
-      Supports [multiple regions](/konnect-platform/konnect-geos/) on AWS and Azure.
+      Supports [multiple regions](/konnect/geos/) on AWS and Azure.
   - use_case: Your organization operates in an industry with strict data protection and privacy requirements.
     strategy: "[Dedicated Cloud Gateways](/dedicated-cloud-gateways/)"
     solution: Using the private gateway option, Kong provisions a private network load balancer and only exposes the IP address in the UI.
@@ -135,14 +135,14 @@ Self-managed Data Plane nodes can be upgraded to a new {{site.base_gateway}} by 
 This method ensures high availability, allowing the new node to start data processing prior to the removal of the old node. 
 
 Managed nodes are upgraded automatically after selecting the new version of {{site.base_gateway}}. 
-We recommend running one major version (2.x or 3.x) of a Data Plane node per Control Plane, unless you are in the middle of version upgrades to the Data Plane. Mixing versions may cause [compatibility issues](/konnect-platform/konnect-compatibility/).
+We recommend running one major version (2.x or 3.x) of a Data Plane node per Control Plane, unless you are in the middle of version upgrades to the Data Plane. Mixing versions may cause [compatibility issues](/konnect/compatibility/).
 
 To upgrade a Data Plane node to a new version, follow these steps:
 
 {% navtabs "Upgrade" %}
 {% navtab "Dedicated Cloud Gateways" %}
 
-Using the `control_plane_id`, `cloud_gateway_network_id`, and the desired [`version`](/konnect-platform/konnect-compatibility/), you can use the API to upgrade a Data Plane node:
+Using the `control_plane_id`, `cloud_gateway_network_id`, and the desired [`version`](/konnect/compatibility/), you can use the API to upgrade a Data Plane node:
 <!-- vale off -->
 
 {% control_plane_request %}

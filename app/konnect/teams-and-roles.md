@@ -3,7 +3,7 @@ title: "{{site.konnect_short_name}} teams and roles"
 content_type: reference
 layout: reference
 breadcrumbs:
-  - /konnect-platform/
+  - /konnect/
 
 products:
     - gateway
@@ -18,7 +18,7 @@ description: "{{site.konnect_short_name}} has the ability to create teams and ro
 
 related_resources:
   - text: "{{site.konnect_short_name}} account, pricing, and organization deactivation"
-    url: /konnect-platform/konnect-account/
+    url: /konnect/account/
 faqs:
   - q: What is required to manage users, teams, and roles in {{site.konnect_short_name}}?
     a: You must be part of the **Organization Admin team** to manage users, teams, and roles.
@@ -41,12 +41,12 @@ You must be part of the Organization Admin team to manage users, teams, and
 roles.
 
 {:.info}
-> **Note:** If the Okta integration is [enabled](/konnect-platform/konnect-sso/),
+> **Note:** If the Okta integration is [enabled](/konnect/sso/),
 {{site.konnect_short_name}} users and teams become read-only. An organization
 admin can view all registered users in {{site.konnect_short_name}}, but cannot
 edit their team membership from the {{site.konnect_short_name}} side. To manage
 automatically-created users, adjust user permissions through Okta, or
-[adjust team mapping](/konnect-platform/konnect-sso/).
+[adjust team mapping](/konnect/sso/).
 
 ## Access precedence
 
@@ -61,7 +61,7 @@ roles on the same Service, the Service Admin role takes precedence.
 
 ## Geographic region assignment
 
-Teams and roles can be assigned to a specific [geographic region](/konnect-platform/konnect-geos/) in {{site.konnect_short_name}}. Those teams and roles only access {{site.konnect_short_name}} objects, such as Services, that are also located in the same geo they are assigned to.
+Teams and roles can be assigned to a specific [geographic region](/konnect/geos/) in {{site.konnect_short_name}}. Those teams and roles only access {{site.konnect_short_name}} objects, such as Services, that are also located in the same geo they are assigned to.
 
 ## Teams
 
@@ -119,7 +119,7 @@ To create and configure a custom team:
    Send a `POST` request to the [`/users` endpoint](/api/konnect/identity/v3/#/operations/add-user-to-team). Users can belong to multiple teams and inherit roles from each.
  
 1. (Optional) Enable group-to-team mappings  
-   If [single sign-on (SSO)](/konnect-platform/konnect-sso/) is enabled, you can configure {{site.konnect_short_name}} to automatically map users to teams based on group claims from your IdP. To do this, send a `PUT` request to the [`/team-mappings` endpoint](/api/konnect/identity/v3/#/operations/update-idp-team-mappings) with `team_ids` in the request body.
+   If [single sign-on (SSO)](/konnect/sso/) is enabled, you can configure {{site.konnect_short_name}} to automatically map users to teams based on group claims from your IdP. To do this, send a `PUT` request to the [`/team-mappings` endpoint](/api/konnect/identity/v3/#/operations/update-idp-team-mappings) with `team_ids` in the request body.
 
 ## Roles
 

@@ -52,7 +52,7 @@ related_resources:
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
   - text: Get started with AI Gateway
-    url: /how-to/get-started-with-ai-gateway/
+    url: /ai-gateway/get-started/
 
 ---
 

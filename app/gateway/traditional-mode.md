@@ -46,15 +46,11 @@ across your available nodes.
 flowchart TD
 
 A[(Database)]
-B(<img src="/assets/icons/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
-C(<img src="/assets/icons/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
-D(<img src="/assets/icons/kogo-white.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
+B(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
+C(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
+D(<img src="/assets/icons/gateway.svg" style="max-height:20px" class="no-image-expand"/> {{site.base_gateway}} instance)
 
 A <---> B & C & D
-
-style B stroke:none,fill:#0E44A2,color:#fff
-style C stroke:none,fill:#0E44A2,color:#fff
-style D stroke:none,fill:#0E44A2,color:#fff
 
 {% endmermaid %}
 <!-- vale on-->

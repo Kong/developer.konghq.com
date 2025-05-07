@@ -14,7 +14,7 @@ works_on:
 
 related_resources:
   - text: "About {{site.konnect_short_name}}"
-    url: /konnect-platform/
+    url: /konnect/
   - text: Hybrid mode
     url: /gateway/hybrid-mode/
   - text: Control Plane and Data Plane communication
@@ -79,6 +79,7 @@ RBAC configuration directly.
 
 The following are the general steps for setting up IAM in {{site.konnect_short_name}} for your migration:
 
+<<<<<<< HEAD:app/konnect-platform/self-managed-migration.md
 1. [Sign up](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs) for
   {{site.konnect_short_name}} (if necessary), and use the [Org Switcher](https://cloud.konghq.com/org-switcher?ref=account)
   to create or select the organization you are going to migrate your self-managed deployment to.
@@ -89,6 +90,18 @@ The following are the general steps for setting up IAM in {{site.konnect_short_n
   from the predefined list of available roles in {{site.konnect_short_name}}.
 5. Use the {{site.konnect_short_name}} IdP Team Mappings feature to
   [map the {{site.konnect_short_name}} teams to your IdP provider groups](/konnect-platform/konnect-sso/#team-mapping-configuration).
+=======
+1. [Sign up](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs) for 
+  {{site.konnect_short_name}} (if necessary), and use the [Org Switcher](https://cloud.konghq.com/org-switcher?ref=account) 
+  to create or select the organization you are going to migrate your self-managed deployment to. 
+2. [Set up single sign-on (SSO) access to {{site.konnect_short_name}} using an existing IdP provider](/konnect/sso/).
+3. [Create teams](/konnect/teams-and-roles/) in {{site.konnect_short_name}} or use 
+  [predefined teams](/konnect/teams-and-roles/#predefined-teams) to create your desired organizational structure.
+4. For any custom teams, assign the appropriate roles
+  from the predefined list of available roles in {{site.konnect_short_name}}.
+5. Use the {{site.konnect_short_name}} IdP Team Mappings feature to 
+  [map the {{site.konnect_short_name}} teams to your IdP provider groups](/konnect/sso/#team-mapping-configuration).
+>>>>>>> 5ed2ed11 (various QA tasks):app/konnect/self-managed-migration.md
 
 ## Migrating from Workspaces to Control Planes
 
@@ -138,14 +151,14 @@ a shared Data Plane infrastructure among the constituent Control Planes.
 
 ## Plugin migration
 
-{{site.konnect_short_name}} supports the majority of [plugins](https://kongdeveloper.netlify.app/gateway/entities/plugin/) available to {{site.base_gateway}}. Since {{site.konnect_short_name}} runs in hybrid mode, this limits support for plugins that require direct access
+{{site.konnect_short_name}} supports the majority of [plugins](/plugins/) available to {{site.base_gateway}}. Since {{site.konnect_short_name}} runs in hybrid mode, this limits support for plugins that require direct access
 to a database. See the [plugins page](/plugins/?deployment-topology=konnect) for those that are supported on {{site.konnect_short_name}}.
 
-{{site.konnect_short_name}} also provides [Dedicated Cloud Gateways](/dedicated-cloud-gateways/), which
-further [limit plugins](/konnect-platform/konnect-compatibility/#considerations-for-dedicated-cloud-gateways) that require specialized software agents running on the Data Plane hosts.
+{{site.konnect_short_name}} also provides [Dedicated Cloud Gateways](/dedicated-cloud-gateways/), which 
+further [limit plugins](/konnect/compatibility/#considerations-for-dedicated-cloud-gateways) that require specialized software agents running on the Data Plane hosts. 
 
-To migrate plugins from a self-managed deployment to {{site.konnect_short_name}}, review
-[Konnect Compatibility page](/konnect-platform/konnect-compatibility/#plugin-compatibility) to check for supported and unsupported plugins.
+To migrate plugins from a self-managed deployment to {{site.konnect_short_name}}, review 
+[Konnect Compatibility page](/konnect/compatibility/#plugin-compatibility) to check for supported and unsupported plugins.
 Also review any plugin configuration values, as certain values are unsupported in {{site.konnect_short_name}} and may require additional
 changes to your configuration.
 

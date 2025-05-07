@@ -62,7 +62,7 @@ rows:
             description: Run the {{site.base_gateway}} quickstart and enable the AI Proxy plugin.
             icon: /assets/icons/rocket.svg
             cta:
-              url: /how-to/get-started-with-ai-gateway/
+              url: /ai-gateway/get-started/
               align: end
       - blocks:
         - type: card

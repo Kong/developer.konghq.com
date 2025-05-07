@@ -976,7 +976,7 @@ app/konnect-logs.md:
   - app/konnect/gateway-manager/dedicated-cloud-gateways/data-plane-logs.md
 app/konnect-labels.md:
   - app/konnect/reference/labels.md
-app/konnect-platform/konnect-sso.md:
+app/konnect/sso.md:
   - app/konnect/org-management/okta-idp.md
   - app/konnect/dev-portal/access-and-approval/add-teams.md
   - app/konnect/dev-portal/access-and-approval/sso.md
@@ -985,14 +985,14 @@ app/konnect-platform/konnect-sso.md:
   - app/konnect/api/identity-management/sso.md
   - app/_includes/md/konnect/okta-sso.md
   - app/konnect/org-management/troubleshoot.md
-app/konnect-platform/saml-idp-mapping.md:
+app/konnect/saml-idp-mapping.md:
   - app/konnect/reference/saml-idp-mappings.md
-app/konnect-platform/self-managed-migration.md:
+app/konnect/self-managed-migration.md:
   - app/konnect/getting-started/migration.md
 app/gateway-manager/version-compatibility.md:
   - app/konnect/gateway-manager/version-compatibility.md
   - app/_data/tables/version_errors_konnect.yml
-app/_landing_pages/konnect-platform.yaml:
+app/_landing_pages/konnect.yaml:
   - app/konnect/index.md
   - app/konnect/getting-started/index.md
   - app/konnect/account-management/index.md
@@ -1061,7 +1061,7 @@ app/gateway/cp-dp-communication.md:
   - app/_src/gateway/reference/faq.md
   - app/_src/gateway/production/deployment-topologies/hybrid-mode/setup.md
   - app/konnect/gateway-manager/data-plane-nodes/renew-certificates.md
-app/konnect-platform/network.md:
+app/konnect/network.md:
   - app/konnect/network.md
 app/gateway/resource-sizing-guidelines.md:
   - app/_src/gateway/production/sizing-guidelines.md
@@ -1223,9 +1223,9 @@ app/gateway-manager/data-plane-reference.md:
   - app/konnect/gateway-manager/data-plane-nodes/verify-node.md
   - app/konnect/gateway-manager/data-plane-nodes/secure-communications.md
   - app/konnect/gateway-manager/data-plane-nodes/custom-dp-labels.md
-app/konnect-platform/konnect-account.md:
+app/konnect/account.md:
   - app/konnect/org-management/deactivation.md
-app/konnect-platform/teams-and-roles.md:
+app/konnect/teams-and-roles.md:
   - app/konnect/org-management/teams-and-roles/teams-reference.md
   - app/konnect/org-management/teams-and-roles/index.md
   - app/konnect/org-management/teams-and-roles/roles-reference.md

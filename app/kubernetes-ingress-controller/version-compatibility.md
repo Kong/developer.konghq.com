@@ -19,7 +19,7 @@ related_resources:
   - text: "{{site.base_gateway}} version support"
     url: /gateway/version-support-policy/
   - text: "{{site.konnect_short_name}} compatibility"
-    url: /konnect-platform/konnect-compatibility/
+    url: /konnect/compatibility/
     
 tags:
   - compatibility
