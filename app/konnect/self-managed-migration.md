@@ -79,29 +79,16 @@ RBAC configuration directly.
 
 The following are the general steps for setting up IAM in {{site.konnect_short_name}} for your migration:
 
-<<<<<<< HEAD:app/konnect-platform/self-managed-migration.md
 1. [Sign up](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs) for
   {{site.konnect_short_name}} (if necessary), and use the [Org Switcher](https://cloud.konghq.com/org-switcher?ref=account)
   to create or select the organization you are going to migrate your self-managed deployment to.
-2. [Set up single sign-on (SSO) access to {{site.konnect_short_name}} using an existing IdP provider](/konnect-platform/konnect-sso/).
-3. [Create teams](/konnect-platform/teams-and-roles/) in {{site.konnect_short_name}} or use
-  [predefined teams](/konnect-platform/teams-and-roles/#predefined-teams) to create your desired organizational structure.
-4. For any custom teams, assign the appropriate roles
-  from the predefined list of available roles in {{site.konnect_short_name}}.
-5. Use the {{site.konnect_short_name}} IdP Team Mappings feature to
-  [map the {{site.konnect_short_name}} teams to your IdP provider groups](/konnect-platform/konnect-sso/#team-mapping-configuration).
-=======
-1. [Sign up](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs) for 
-  {{site.konnect_short_name}} (if necessary), and use the [Org Switcher](https://cloud.konghq.com/org-switcher?ref=account) 
-  to create or select the organization you are going to migrate your self-managed deployment to. 
 2. [Set up single sign-on (SSO) access to {{site.konnect_short_name}} using an existing IdP provider](/konnect/sso/).
-3. [Create teams](/konnect/teams-and-roles/) in {{site.konnect_short_name}} or use 
+3. [Create teams](/konnect/teams-and-roles/) in {{site.konnect_short_name}} or use
   [predefined teams](/konnect/teams-and-roles/#predefined-teams) to create your desired organizational structure.
 4. For any custom teams, assign the appropriate roles
   from the predefined list of available roles in {{site.konnect_short_name}}.
-5. Use the {{site.konnect_short_name}} IdP Team Mappings feature to 
+5. Use the {{site.konnect_short_name}} IdP Team Mappings feature to
   [map the {{site.konnect_short_name}} teams to your IdP provider groups](/konnect/sso/#team-mapping-configuration).
->>>>>>> 5ed2ed11 (various QA tasks):app/konnect/self-managed-migration.md
 
 ## Migrating from Workspaces to Control Planes
 
