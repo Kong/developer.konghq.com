@@ -34,7 +34,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/konnect/dashboard.png
+              url: /assets/images/konnect/konnect-dashboard.png
               alt_text: Image of the {{site.konnect_short_name}} dashboard
   
   - header:
@@ -69,7 +69,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/konnect/overview.png
+              url: /assets/images/konnect/konnect-overview.png
               alt_text: Diagram of {{site.konnect_short_name}} architecture
       - blocks:
         - type: structured_text
@@ -126,7 +126,7 @@ rows:
             icon: /assets/icons/lock.svg
             cta:
               text: Learn about {{site.konnect_short_name}} authentication methods
-              url: /konnect-authentication/
+              url: /konnect/authentication/
               align: end
       - blocks:
         - type: card

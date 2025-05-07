@@ -20,7 +20,7 @@ api_specs:
 
 related_resources:
   - text: "Authentication"
-    url: /konnect-authentication/
+    url: /konnect/authentication/
   - text: "SAML IdP mapping"
     url: /konnect/saml-idp-mapping/
   - text: "{{site.konnect_short_name}} teams and roles"

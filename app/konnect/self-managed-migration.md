@@ -6,7 +6,7 @@ description: "Learn how to migrate from self-managed {{site.base_gateway}} to {{
 content_type: reference
 layout: reference
 breadcrumbs:
-  - /konnect-platform/
+  - /konnect/
 products:
   - gateway
 works_on:

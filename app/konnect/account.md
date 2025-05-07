@@ -3,7 +3,7 @@ title: "{{site.konnect_short_name}} Account, Pricing, and Organization Deactivat
 
 description: Learn how to cancel and deactivate an account in {{site.konnect_short_name}}
 breadcrumbs:
-  - /konnect-platform/
+  - /konnect/
 content_type: policy
 layout: reference
 
