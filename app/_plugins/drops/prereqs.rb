@@ -20,7 +20,16 @@ module Jekyll
       end
 
       def any?
-        [tools, prereqs, @page.data.fetch('products', [])].any?(&:any?)
+        # Don't treat the "skip" prereqs as actual prereqs
+        filtered_prereqs = prereqs.reject do |k,v|
+          next true if k == 'show_works_on' && v == false
+          next true if k == 'skip_product' && v == true
+        end
+
+        products = @page.data.fetch('products', [])
+        products = [] if prereqs['skip_product']
+
+        [tools, filtered_prereqs, products].any?(&:any?)
       end
 
       def entities?
@@ -33,6 +42,9 @@ module Jekyll
 
       def data
         product = @page.data.fetch('products', [])[0]
+
+        # Use KIC rendering for Operator for now
+        product = 'kic' if product == 'operator'
 
         yaml = {}
         yaml = { '_format_version' => '3.0' } if product == 'gateway'
