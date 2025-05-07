@@ -13,7 +13,7 @@ breadcrumbs:
 
 series:
   id: kgo-get-started
-  position: 5
+  position: 6
 
 tldr:
   q: How do I enable response caching with {{site.konnect_short_name}} CRDs?
@@ -21,6 +21,9 @@ tldr:
     Apply the `proxy-cache` plugin using the `KongPlugin` CRD.
 
 products:
+  - operator
+
+tools:
   - operator
 
 works_on:
@@ -35,4 +38,59 @@ prereqs:
       control_plane: true
 ---
 
-@TODO
+## Setup
+
+{% entity_example %}
+type: plugin
+cluster_plugin: false
+data:
+  name: proxy-cache-all-endpoints
+  plugin: proxy-cache
+  config:
+    response_code:
+    - 200
+    request_method:
+    - GET
+    - HEAD
+    content_type:
+    - application/json
+    cache_ttl: 300
+    strategy: memory
+
+  kongservice: service
+  other_plugins: rate-limiting
+{% endentity_example %}
+
+## Validation
+
+{% validation rate-limit-check %}
+iterations: 6
+url: '/anything'
+headers:
+  - 'apikey:example-key'
+on_prem_url: $PROXY_IP
+konnect_url: $PROXY_IP
+grep: "(Status|< HTTP)"
+message: null
+output:
+  explanation: |
+    The first request results in `X-Cache-Status: Miss`. This means that the request is sent to the upstream service. The next four responses return `X-Cache-Status: Hit` which indicates that the request was served from a cache. If you receive a `HTTP 429` from the first request, wait 60 seconds for the rate limit timer to reset.
+  expected:
+    - value:
+      - "< HTTP/1.1 200 OK"
+      - "< X-Cache-Status: Miss"
+    - value:
+      - "< HTTP/1.1 200 OK"
+      - "< X-Cache-Status: Hit"
+    - value:
+      - "< HTTP/1.1 200 OK"
+      - "< X-Cache-Status: Hit"
+    - value:
+      - "< HTTP/1.1 200 OK"
+      - "< X-Cache-Status: Hit"
+    - value:
+      - "< HTTP/1.1 200 OK"
+      - "< X-Cache-Status: Hit"
+    - value:
+      - "< HTTP/1.1 429 Too Many Requests"
+{% endvalidation %}

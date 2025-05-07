@@ -23,6 +23,9 @@ tldr:
 products:
   - operator
 
+tools:
+  - operator
+
 works_on:
   - konnect
 
@@ -55,31 +58,62 @@ The following example enables rate limiting on a route with the following settin
 - Shared across consumers (no per-consumer limits)
 
 <!-- vale off -->
-{% konnect_crd %}
-apiVersion: configuration.konghq.com/v1alpha1
-kind: KongPlugin
-metadata:
+{% entity_example %}
+type: plugin
+cluster_plugin: false
+data:
   name: rate-limiting
-  namespace: kong
-spec:
-  name: rate-limiting
+  plugin: rate-limiting
   config:
     minute: 5
     policy: local
-  controlPlaneRef:
-    type: konnectNamespacedRef
-    konnectNamespacedRef:
-      name: gateway-control-plane
-{% endkonnect_crd %}
+
+  kongroute: route
+{% endentity_example %}
 <!-- vale on -->
+
+
+## Deploy DP
+
+```bash
+echo '
+apiVersion: gateway-operator.konghq.com/v1beta1
+kind: DataPlane
+metadata:
+  name: dataplane-example
+  namespace: kong
+spec:
+  extensions:
+  - kind: KonnectExtension
+    name: my-konnect-config
+    group: konnect.konghq.com
+  deployment:
+    podTemplateSpec:
+      spec:
+        containers:
+        - name: proxy
+          image: kong/kong-gateway:{{ site.data.gateway_latest.release }}
+' | kubectl apply -f -
+```
+
+Get IP:
+
+```bash
+NAME=$(kubectl get -o yaml -n kong service | yq '.items[].metadata.name | select(contains("dataplane-ingress"))')
+export PROXY_IP=$(kubectl get svc -n kong $NAME -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
+curl -i $PROXY_IP
+```
+
 
 ## Validation
 
-<!-- vale off -->
-{% validation kubernetes-resource %}
-kind: KongPlugin
-name: rate-limiting
-{% endvalidation %}
-<!-- vale on -->
-
 After the plugin is applied, try sending more than 5 requests in a single minute to `echo-route`. You should begin receiving `429 Too Many Requests` responses once the limit is exceeded.
+
+To test the rate-limiting plugin, rapidly send six requests to `$PROXY_IP/echo`:
+
+{% validation rate-limit-check %}
+iterations: 6
+url: '/anything'
+on_prem_url: $PROXY_IP
+konnect_url: $PROXY_IP
+{% endvalidation %}

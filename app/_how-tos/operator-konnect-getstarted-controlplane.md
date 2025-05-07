@@ -70,6 +70,7 @@ kind: KonnectExtension
 apiVersion: konnect.konghq.com/v1alpha1
 metadata:
   name: my-konnect-config
+  namespace: kong
 spec:
   clientAuth:
     certificateSecret:

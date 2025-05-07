@@ -89,7 +89,7 @@ metadata:
   name: service
 spec:
   name: service
-  host: example.com
+  host: httpbin.konghq.com
   controlPlaneRef:
     type: konnectNamespacedRef
     konnectNamespacedRef:
@@ -111,8 +111,8 @@ spec:
   name: route
   protocols:
   - http
-  hosts:
-  - example.com
+  paths:
+  - /
   serviceRef:
     type: namespacedRef
     namespacedRef:

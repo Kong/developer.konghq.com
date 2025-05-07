@@ -3,6 +3,8 @@
 require_relative './base'
 
 FOREIGN_KEYS = %w[
+  kongservice
+  kongroute
   service
   route
   consumer
