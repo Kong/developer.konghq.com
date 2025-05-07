@@ -1,4 +1,6 @@
-exports.handler = async (event, context) => {
+export async function handler(event, context) {
+  const webhookUrl = process.env.SLACK_WEBHOOK_URL;
+
   if (event.httpMethod !== "PUT") {
     return {
       statusCode: 405,
@@ -10,11 +12,15 @@ exports.handler = async (event, context) => {
   try {
     const { pageUrl, feedbackId, message } = JSON.parse(event.body);
 
-    // Request to webhook goes here...
-    console.log("Feedback update:");
-    console.log(pageUrl);
-    console.log(feedbackId);
-    console.log(message);
+    const payload = {
+      text: `Update feedback received:\n• Page: ${pageUrl}\n• Feedback Id: ${feedbackId}\n• Message: ${message}`,
+    };
+
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: { "Content-Type": "application/json" },
+    });
 
     return {
       statusCode: 200,
@@ -28,4 +34,4 @@ exports.handler = async (event, context) => {
       headers: { "Content-Type": "application/json" },
     };
   }
-};
+}

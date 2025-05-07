@@ -1,6 +1,16 @@
-const { v4: uuidv4 } = require("uuid");
+import { v4 as uuidv4 } from "uuid";
 
-exports.handler = async (event, context) => {
+export async function handler(event, context) {
+  const webhookUrl = process.env.SLACK_WEBHOOK_URL;
+
+  if (!webhookUrl) {
+    console.log("Missing Slack webhook URL.");
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: "Missing Slack webhook URL" }),
+    };
+  }
+
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -22,15 +32,26 @@ exports.handler = async (event, context) => {
       };
     }
 
-    console.log("Feedback create:");
-    console.log(pageUrl);
-    console.log(feedbackId);
-    console.log(vote);
-
-    // Request to webhook goes here...
     if (feedbackId) {
       id = feedbackId;
     }
+
+    const payload = {
+      text: `New feedback received:\n• Page: ${pageUrl}\n• Vote: ${
+        vote ? "Yes" : "No"
+      }\n• Feedback Id: ${id}`,
+    };
+
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Slack API returned status ${response.status}`);
+    }
+
     return {
       statusCode: 201,
       body: JSON.stringify({
@@ -47,4 +68,4 @@ exports.handler = async (event, context) => {
       headers: { "Content-Type": "application/json" },
     };
   }
-};
+}
