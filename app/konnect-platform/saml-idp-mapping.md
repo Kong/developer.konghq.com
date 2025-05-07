@@ -8,7 +8,8 @@ works_on:
     - konnect
 api_specs:
     - konnect/control-planes-config
-
+breadcrumbs:
+  - /konnect-platform/
 description: Attribute mapping tables necessary for configuring SSO with SAML
 
 

@@ -28,7 +28,7 @@ related_resources:
 
 ## Data Plane logs
 
-Data Plane logs provide users with the ability to view, filter, search, and download logs for the Data Plane nodes associated with a Dedicated Cloud Gateway. 
+Data Plane logs provide users with the ability to view, filter, search, and download logs for the Data Plane nodes associated with a Dedicated Cloud Gateway.
 Reviewing logs is essential for debugging, monitoring, and understanding the behavior of Data Plane nodes.
 
 
@@ -44,23 +44,23 @@ columns:
   - title: Description
     key: description
 rows:
-  - feature: View Logs
+  - feature: View logs
     description: Access detailed logs for all Data Plane nodes in your gateway.
-  - feature: Filter Logs
+  - feature: Filter logs
     description: Type keywords or phrases in the **Filter Log Messages** box to refine log content.
-  - feature: Download Logs
+  - feature: Download logs
     description: Click the download icon near the log table to save logs locally.
-  - feature: Data Plane Node Selection
+  - feature: Data Plane node selection
     description: Use the **Node ID** input box to view logs from a specific Data Plane node.
-  - feature: Date Range Selection
+  - feature: Date range selection
     description: Use the date picker tool to specify a date range for logs.
-  - feature: Group-Specific Logs
+  - feature: Group-specific logs
     description: Navigate to a specific Data Plane group within the Gateway Manager to view logs limited to that group.
 {% endtable %}
 
 ## {{site.konnect_short_name}} Audit logs
 
-Audit logs can help you detect and respond to potential security incidents when they occur. 
+Audit logs can help you detect and respond to potential security incidents when they occur.
 
 Audit logging provides the following benefits:
 * **Security**: System events can be used to show abnormalities to be investigated, forensic information related to breaches, or provide evidence for compliance and regulatory purposes.
@@ -90,7 +90,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-{{site.konnect_short_name}} retains audit logs for 7 days. 
+{{site.konnect_short_name}} retains audit logs for 7 days.
 
 ## Audit log webhook status
 
@@ -197,13 +197,13 @@ Example log entry:
 {% navtab "CEF" %}
 ```
 2025-05-19T00:03:39Z
-konghq.com CEF:0|ExampleOrg|Konnect|1.0|AUTHENTICATION_TYPE_PAT|AUTHENTICATION_OUTCOME_SUCCESS|0|rt=3958q3097698 
-src=127.0.0.1 
-request=/api/v1/personal-access-tokens/introspect 
-success=true 
-org_id=b065b594-6afc-4658-9101-5d9cf3f36b7b 
-principal_id=87655c36-8d63-48fe-9a1e-53b28dfbc19b 
-trace_id=3895213347334635099 
+konghq.com CEF:0|ExampleOrg|Konnect|1.0|AUTHENTICATION_TYPE_PAT|AUTHENTICATION_OUTCOME_SUCCESS|0|rt=3958q3097698
+src=127.0.0.1
+request=/api/v1/personal-access-tokens/introspect
+success=true
+org_id=b065b594-6afc-4658-9101-5d9cf3f36b7b
+principal_id=87655c36-8d63-48fe-9a1e-53b28dfbc19b
+trace_id=3895213347334635099
 user_agent=grpc-go/1.51.0
 sig=N_4q2pCgeg0Fg4oGJSfUWKScnTCiC79vq8PIX6Sc_rwaxdWKpVfPwkW45yK_oOFV9gHOmnJBffcB1NmTSwRRDg
 ```
@@ -249,16 +249,16 @@ columns:
 rows:
   - property: "AUTHENTICATION_TYPE"
     description: |
-      Can be one of the following: 
-      <br> - `AUTHENTICATION_TYPE_BASIC`: Basic email and password authentication 
-      <br> - `AUTHENTICATION_TYPE_SSO`: Authentication with single sign-on (SSO) 
+      Can be one of the following:
+      <br> - `AUTHENTICATION_TYPE_BASIC`: Basic email and password authentication
+      <br> - `AUTHENTICATION_TYPE_SSO`: Authentication with single sign-on (SSO)
       <br> - `AUTHENTICATION_TYPE_PAT`: Authentication with a personal access token
   - property: "AUTHENTICATION_OUTCOME"
     description: |
-      Can be one of the following: 
+      Can be one of the following:
       <br> - `AUTHENTICATION_OUTCOME_SUCCESS`: Authentication is successful
       <br> - `AUTHENTICATION_OUTCOME_NOT_FOUND`: User was not found
-      <br> - `AUTHENTICATION_OUTCOME_INVALID_PASSWORD`: Invalid password specified 
+      <br> - `AUTHENTICATION_OUTCOME_INVALID_PASSWORD`: Invalid password specified
       <br> - `AUTHENTICATION_OUTCOME_LOCKED`: User account is locked
       <br> - `AUTHENTICATION_OUTCOME_DISABLED`: User account has been disabled
   - property: "success"
@@ -276,14 +276,14 @@ Example log entry:
 {% navtab "CEF" %}
 ```
 2025-05-19T00:03:39Z
-konghq.com CEF:0|ExampleOrg|Konnect|1.0|konnect|Authz.portals|1|rt=16738287345642 
-src=127.0.0.6 
-action=retrieve 
-granted=true 
-org_id=b065b594-6afc-4658-9101-5d9cf3f36b7b 
-principal_id=87655c36-8d63-48fe-9a1e-53b28dfbc19b 
-actor_id= 
-trace_id=8809518331550410226 
+konghq.com CEF:0|ExampleOrg|Konnect|1.0|konnect|Authz.portals|1|rt=16738287345642
+src=127.0.0.6
+action=retrieve
+granted=true
+org_id=b065b594-6afc-4658-9101-5d9cf3f36b7b
+principal_id=87655c36-8d63-48fe-9a1e-53b28dfbc19b
+actor_id=
+trace_id=8809518331550410226
 user_agent=grpc-node/1.24.11 grpc-c/8.0.0 (linux; chttp2; ganges)
 sig=N_4q2pCgeg0Fg4oGJSfUWKScnTCiC79vq8PIX6Sc_rwaxdWKpVfPwkW45yK_oOFV9gHOmnJBffcB1NmTSwRRDg
 ```
@@ -343,17 +343,17 @@ Example log entry:
 {% navtabs "logs" %}
 {% navtab "CEF" %}
 ```
-2025-05-16T20:09:54Z 
-konghq.com CEF:0|KongInc|Konnect|1.0|KongGateway|Ingress|1|rt=1684267794226 
+2025-05-16T20:09:54Z
+konghq.com CEF:0|KongInc|Konnect|1.0|KongGateway|Ingress|1|rt=1684267794226
 src=127.0.0.6
-request=/konnect-api/api/vitals/v1/explore 
-act=POST 
-status=200 
-org_id=b065b594-6afc-4658-9101-5d9cf3f36b7b 
-principal_id=87655c36-8d63-48fe-9a1e-53b28dfbc19b 
-user_agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 
-trace_id=1146381705542353508 
-query={"end":"1684270800","start":"1684098000"} 
+request=/konnect-api/api/vitals/v1/explore
+act=POST
+status=200
+org_id=b065b594-6afc-4658-9101-5d9cf3f36b7b
+principal_id=87655c36-8d63-48fe-9a1e-53b28dfbc19b
+user_agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36
+trace_id=1146381705542353508
+query={"end":"1684270800","start":"1684098000"}
 sig=JxJaQG3Bozrb5WdHE_Y0HaOsim2F1Xsq_bCfk71VgsfldkLAD_SF234cnKNS
 ```
 {:.no-copy-code}
