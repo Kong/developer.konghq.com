@@ -63,6 +63,7 @@
     --kui-color-text-primary-stronger: rgb(var(--color-brand));
     --kui-color-text-danger: rgb(var(--color-semantic-red-primary));
     --kui-color-background: rgb(var(--color-bg-secondary));
+    --kui-color-background-primary-weaker: rgb(var(--color-semantic-blue-secondary));
     --kui-color-background-neutral-weakest: rgb(var(--color-bg-primary));
     --kui-color-border: rgb(var(--color-border-primary), 0.05);
     --kui-color-border-primary: rgb(var(--color-brand));
