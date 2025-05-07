@@ -15,10 +15,7 @@
     {% if page.seo_noindex == true %}
       <meta name="robots" content="nofollow,noindex" />
     {% else %}
-      {% comment %}
-      TODO: uncomment this when the site goes live
       <meta name="robots" content="follow,index" />
-      {% endcomment %}
     {% endif %}
 
     {% include search_tags.html %}
