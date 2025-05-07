@@ -9,9 +9,9 @@ If you don't have a Konnect account, you can get started quickly with our [onboa
 
 2. Set the personal access token as an environment variable:
 
-    ```sh
-    export KONNECT_TOKEN=your-token
-    ```
+   ```sh
+   export KONNECT_TOKEN='YOUR KONNECT TOKEN'
+   ```
 {% endcapture %}
 
 

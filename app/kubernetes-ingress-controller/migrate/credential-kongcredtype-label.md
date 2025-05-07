@@ -1,8 +1,8 @@
 ---
-title: Add Credential Type Labels
+title: Add credential type labels
 
 description: |
-  Add the `konghq.com/credential` label to your Secrets to improve performance and security
+  Add the `konghq.com/credential` label to your Secrets to improve performance and security.
 
 content_type: reference
 layout: reference
@@ -13,6 +13,10 @@ products:
 works_on:
   - on-prem
   - konnect
+
+tags:
+  - migration
+  - security
 
 ---
 

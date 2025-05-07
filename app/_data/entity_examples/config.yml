@@ -108,6 +108,9 @@ formats:
   kic:
     label: 'KIC'
 
+  operator:
+    label: 'Operator'
+
   terraform:
     label: 'Terraform'
 

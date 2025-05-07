@@ -9,6 +9,7 @@ module Jekyll
           'deck'        => 'Deck',
           'konnect-api' => 'KonnectAPI',
           'kic'         => 'KIC',
+          'operator'    => 'KIC',
           'ui'          => 'UI',
           'terraform'   => 'Terraform'
         }

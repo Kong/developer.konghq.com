@@ -137,19 +137,6 @@ import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
 import { createTagsPlugin } from '@algolia/autocomplete-plugin-tags';
 import SearchModalResultItem from './components/SearchModalResultItem.vue';
 
-const hasPermanentScrollbars = () => {
-  const div = document.createElement('div');
-  div.style.width = '100px';
-  div.style.height = '100px';
-  div.style.overflow = 'scroll';
-  div.style.visibility = 'hidden';
-  document.body.appendChild(div);
-
-  const alwaysVisible = div.offsetWidth > div.clientWidth;
-  document.body.removeChild(div);
-
-  return alwaysVisible;
-}
 
 export default {
   name: "Autocomplete",
@@ -159,7 +146,6 @@ export default {
   data() {
     return {
       activeTab: 'all',
-      permanentScrollbars: hasPermanentScrollbars()
     }
   },
   mounted() {
@@ -393,9 +379,7 @@ export default {
       this.showModal = true;
       document.body.style.setProperty("overflow", "hidden");
       document.body.style.setProperty("overscroll-behavior", "contain");
-      if (this.permanentScrollbars) {
-        document.body.style.setProperty("margin-right", "var(--removed-body-scroll-bar-size)");
-      }
+      document.body.style.setProperty("margin-right", "var(--removed-body-scroll-bar-size)");
       this.tagsPlugin.data.setTags(this.originalTags);
 
       nextTick(() => {
@@ -406,9 +390,7 @@ export default {
     closeModal() {
       document.body.style.overflow = "";
       document.body.style.removeProperty("overscoll-behavior");
-      if (this.permanentScrollbars) {
-        document.body.style.removeProperty("margin-right");
-      }
+      document.body.style.removeProperty("margin-right");
     },
   },
 };

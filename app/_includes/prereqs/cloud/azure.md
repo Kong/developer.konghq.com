@@ -22,7 +22,7 @@ Once the resources are created, you'll need the following credentials to connect
       
 Set the environment variables needed to authenticate to Azure:
 ```sh
-export AZURE_CLIENT_SECRET=your-azure-application-client-secret
+export AZURE_CLIENT_SECRET='YOUR AZURE APPLICATION CLIENT SECRET'
 ```
 
 Note that the `AZURE_CLIENT_SECRET` variable needs to be passed when creating your Data Plane container.

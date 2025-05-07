@@ -3,7 +3,7 @@ title: Collected data
 
 description: Insomnia collects usage analytics data to help improve the application.
 breadcrumbs: 
-  - /insomnia/security
+  - /insomnia/security/
 search_aliases:
   - usage analytics
 content_type: reference
@@ -14,7 +14,7 @@ related_resources:
   - text: About version control in Insomnia
     url: /insomnia/version-control/
   - text: Storage options
-    url: /insomnia/storage-options/
+    url: /insomnia/storage/
   - text: Insomnia concepts
     url: /insomnia/concepts/
 products:

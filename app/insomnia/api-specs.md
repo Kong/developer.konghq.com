@@ -3,8 +3,8 @@ title: API specs in Insomnia
 
 description: API specifications explain how an API behaves and how it interacts with other APIs.
 
-content_type: concept
-layout: concept
+content_type: reference
+layout: reference
 
 related_resources:
   - text: Design APIs in Insomnia
@@ -42,7 +42,8 @@ breadcrumbs:
 
 ## What are API specs?
 
-{{ page.description | liquify }}
+API specifications explain how an API behaves and how it interacts with other APIs.
+
 API specs can function like API documentation, but they also explain the values, parameters, and objects in the schema of the API. An API spec helps users know how to make requests to the APIs contained within the spec.
 
 ## How does Insomnia parse API specs?

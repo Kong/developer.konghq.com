@@ -17,7 +17,7 @@
 4. Create a UUID and export it so the value can be used through the rest of the guide:
 
     ```sh
-    export CERT_ID=$(uuidgen) && echo "CERT_ID=$CERT_ID"
+    export CERT_ID=$(uuidgen) && echo $CERT_ID
     ```
 
 4. Using the contents of `my-key.pem`, `my-cert.pem`, and the `CERT_ID`, add the 

@@ -40,16 +40,6 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Infrastructure security
-            description: Learn about what infrastructure security Insomnia uses
-            icon: /assets/icons/insomnia/infrastructure-security.svg
-            cta:
-              text: Learn more
-              url: /insomnia/infrastructure-security/
-              align: end
-      - blocks:
-        - type: card
-          config:
             title: Collected data
             description: Learn about what data Insomnia collects and how to opt out of data collection
             icon: /assets/icons/insomnia/data-collected.svg

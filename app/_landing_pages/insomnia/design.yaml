@@ -8,7 +8,7 @@ metadata:
     - /insomnia/
   tags:
     - design-apis
-    - apis
+    - api
   search_aliases:
     - postman
 rows:
@@ -72,7 +72,7 @@ rows:
             icon: /assets/icons/insomnia/local-git-cloud-storage.svg
             cta:
               text: Learn more
-              url: /insomnia/git-sync/
+              url: /insomnia/storage/#git-sync
               align: end 
       - blocks:
         - type: card
@@ -115,14 +115,3 @@ rows:
                 url: /insomnia/documents/
                 align: end
   
-  - header:
-      type: h2
-      text: References and tools
-    columns:
-      - blocks:
-          - type: reference_list
-            config:
-              products:
-                - insomnia
-              quantity: 5
-              allow_empty: true

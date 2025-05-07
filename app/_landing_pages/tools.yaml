@@ -28,7 +28,7 @@ rows:
           config:
             title: "{{site.konnect_short_name}} APIs"
             description: |
-              Use the {{site.konnect_short_name}} APIs to manage your ecosystem, including {{site.base_gateway}} configuration management, Analytics, Dev Portal, and more.
+              {{site.konnect_short_name}} APIs allow you to manage your ecosystem, including {{site.base_gateway}} configuration management, Analytics, Dev Portal, and more.
             cta:
               text: 
               url: /konnect-api/

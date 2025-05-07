@@ -56,10 +56,9 @@ cleanup:
 
 ## Enable the Pre-Function plugin
 
-The Pre-Function plugin lets you execute Lua code. In this case, we're using the plugin to look for a specific header, `x-custom-auth`. 
+The [Pre-Function](/plugins/pre-function/) plugin lets you execute Lua code that runs before other plugins in a particular phase. In this case, we're using the plugin to look for a specific header, `x-custom-auth`. 
 
 The following example applies the Pre-Function plugin globally, in the access phase:
-
 
 {% entity_examples %}
 entities:
@@ -85,6 +84,7 @@ Let's test that the code will terminate the request when no header is passed:
 {% validation request-check %}
 url: '/anything'
 status_code: 401
+display_headers: true
 {% endvalidation %}
 
 You should get a `401` status code with the message `Invalid Credentials`.
@@ -96,6 +96,7 @@ url: '/anything'
 status_code: 200
 headers:
 - 'x-custom-auth: example'
+display_headers: true
 {% endvalidation %}
 
 This time, the request will pass through and you'll see a `200` response. 

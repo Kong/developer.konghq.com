@@ -117,7 +117,7 @@ rows:
               
             icon: /assets/icons/vault.svg
             cta:
-              text: Learn about secrets management 
+              text: See reference
               url: "/gateway/secrets-management/#secrets-management/"
       - blocks:
         - type: card

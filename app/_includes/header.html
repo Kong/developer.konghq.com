@@ -64,7 +64,7 @@
             <path d="M129.501 12.7227L132.659 21.6781H132.784L135.942 12.7227H137.293L133.387 23.3611H132.057L128.15 12.7227H129.501Z" fill="#428CDC"/>
             <path d="M119.153 23.3611V12.7227H125.573V13.8655H120.441V17.4601H125.241V18.6029H120.441V22.2183H125.656V23.3611H119.153Z" fill="#428CDC"/>
             <path d="M110.751 23.3611H107.468V12.7227H110.896C111.928 12.7227 112.811 12.9356 113.545 13.3616C114.28 13.7841 114.842 14.3918 115.234 15.1849C115.625 15.9745 115.821 16.9199 115.821 18.0211C115.821 19.1293 115.623 20.0834 115.228 20.8833C114.834 21.6798 114.259 22.2928 113.504 22.7222C112.749 23.1481 111.831 23.3611 110.751 23.3611ZM108.756 22.2183H110.668C111.547 22.2183 112.276 22.0486 112.855 21.7092C113.433 21.3699 113.864 20.8868 114.148 20.26C114.432 19.6332 114.574 18.8869 114.574 18.0211C114.574 17.1623 114.434 16.4229 114.153 15.803C113.873 15.1797 113.454 14.7018 112.896 14.3693C112.339 14.0334 111.644 13.8655 110.813 13.8655H108.756V22.2183Z" fill="#428CDC"/>
-            </svg>
+          </svg>
         </a>
       </div>
 
@@ -79,40 +79,63 @@
                 <span class="navbar-item__trigger_icon">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
               </span>
               {% include_cached header/menu_caret.html %}
-              <ul class="hidden navbar-item__menu grid-cols-1" role="menu">
-                <li class="flex w-full">
-                  {% assign konnect = site.data.top_navigation.platform.konnect %}
-                  <a href="{{konnect.url}}">
-                    {{konnect.text}} &rarr;
-                  </a>
-                </li>
-                <li class="flex">
-                  <div class="flex gap-4">
+              <div class="hidden navbar-item__menu grid grid-rows-1 [grid-template-columns:max-content_minmax(0,317px)] bg-primary !p-0" role="menu">
+                <div class="flex py-6 px-6">
+                  <div class="flex flex-col gap-6">
                     {% for section in site.data.top_navigation.platform.sections %}
-                      <div class="flex flex-col gap-3 text-s">
-                        <span>{{section.title}}</span>
-                        {% for link in section.links %}
-                          {% include header/item.html url=link.url product=link.product text=link.text icon=link.icon %}
-                        {% endfor %}
+                      <div class="flex flex-col gap-5 text-sm">
+                        <span class="font-semibold">{{section.title}}</span>
+                        <div class="grid grid-cols-2 gap-4">
+                          {% for link in section.links %}
+                          {% include header/item.html url=link.url product=link.product text=link.text icon=link.icon color=link.color no_arrow=true %}
+                          {% endfor %}
+                        </div>
                       </div>
+                    {% unless forloop.last %}
+                      <div class="flex border-t border-primary/5 w-full"></div>
+                    {% endunless %}
                     {% endfor %}
                   </div>
-                </li>
-              </ul>
+                </div>
+
+                <div class="flex flex-col gap-4 p-6 bg-secondary justify-between rounded-r-lg">
+                  <div class="flex flex-col gap-4">
+                    <span class="font-semibold">Tools</span>
+                    <ul class="ml-0 gap-3">
+                      {% for tool in site.data.top_navigation.platform.tools %}
+                      <li class="flex">
+                        <a class="flex py-1 gap-3 w-full text-primary text-sm items-center" href="{{tool.url}}">
+                          <span class="h-5 w-5">{% include_svg tool.icon height="100%" width="100%" %}</span>
+                          <span >{{ tool.text }}</span>
+                        </a>
+                      </li>
+                      {% endfor %}
+                      <li class="flex">
+                        <a class="flex py-1 gap-3 w-full text-brand text-sm items-center" href="/tools/">
+                          View all &rarr;
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div class="flex shadow-primary relative border rounded-lg border-transparent background-gradient heading-section">
+                    <div class="flex flex-col gap-3 p-6 rounded-md bg-primary">
+                      {% include_svg site.data.top_navigation.platform.konnect.icon %}
+                      <p class="text-sm text-secondary">{{site.data.top_navigation.platform.konnect.text}}</p>
+                      <a class="text-sm text-brand" href="{{site.data.top_navigation.platform.konnect.link.url}}">{{site.data.top_navigation.platform.konnect.link.text}}</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </li>
+
             <li class="navbar-item" aria-haspopup="true" role="menuitem" aria-expanded="false">
               <span class="navbar-item__trigger" tabindex="0">
-                How-to Guides
+                Guides
                 <span class="navbar-item__trigger_icon">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
               </span>
               {% include_cached header/menu_caret.html %}
-              <ul class="hidden navbar-item__menu grid-cols-1" role="menu">
-                <li class="flex mb-1">
-                  <div class="flex flex-col gap-0.5 text-sm">
-                    <span class="font-semibold text-primary">How to Guides</span>
-                    <span class="text-terciary">Hands-on guides to get things done</span>
-                  </div>
-                </li>
+              <ul class="hidden navbar-item__menu gap-3 grid-cols-1" role="menu">
                 {% for how_to in site.data.top_navigation.how_tos %}
                 <li class="flex">
                   {% include header/item.html url=how_to.url product=how_to.product text=how_to.text icon=how_to.icon %}
@@ -120,7 +143,7 @@
                 {% endfor %}
                 <li class="flex">
                   <a href="/how-to/" class="flex gap-2 items-center w-full">
-                    <span class="text-terciary text-sm ">View all &rarr;</span>
+                    <span class="text-brand text-sm ">View all &rarr;</span>
                   </a>
                 </li>
               </ul>
@@ -131,22 +154,26 @@
                 <span class="navbar-item__trigger_icon">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
               </span>
               {% include_cached header/menu_caret.html %}
-              <ul class="hidden navbar-item__menu" role="menu">
+              <ul class="hidden navbar-item__menu gap-6" role="menu">
                 {% for category in site.data.plugin_categories %}
                   <li class="flex">
-                    <a class="flex gap-4 w-full" href="/plugins/?category={{category.slug}}">
+                    <a class="flex gap-2 w-full" href="/plugins/?category={{category.slug}}">
                       <span class="navbar-item__icon">{% include_svg category.icon width="20" height="20" %}</span>
-                      <div class="flex flex-col gap-0.5 text-sm">
-                        <span class="font-semibold text-primary">{{category.text}}</span>
-                        <span class="text-terciary">{{category.desc}}</span>
+                      <div class="flex flex-col">
+                        <span class="text-sm text-primary">{{category.text}}</span>
                       </div>
                     </a>
                   </li>
                 {% endfor %}
                 <li class="flex gap-4">
-                  <a class="text-terciary w-full" href="/plugins">View all &rarr;</a>
+                  <a class="text-brand w-full" href="/plugins">View all &rarr;</a>
                 </li>
               </ul>
+            </li>
+            <li class="navbar-item" aria-haspopup="true" role="menuitem" aria-expanded="false">
+              <a class="navbar-item__trigger text-brand font-semibold" tabindex="0" href="/api/">
+                APIs
+              </a>
             </li>
             <li class="navbar-item" aria-haspopup="true" role="menuitem" aria-expanded="false">
               <span class="navbar-item__trigger" tabindex="0">
@@ -154,7 +181,7 @@
                 <span class="navbar-item__trigger_icon">{% include_svg '/assets/icons/chevron-down.svg' %}</span>
               </span>
               {% include_cached header/menu_caret.html %}
-              <ul class="hidden navbar-item__menu" role="menu">
+              <ul class="hidden navbar-item__menu gap-6" role="menu">
                 {% for item in site.data.top_navigation.support %}
                   <li class="flex">
                     <a class="flex gap-2 text-primary text-sm w-full no-icon items-center" href="{{item.url}}">

@@ -97,8 +97,10 @@
   {% endif %}
 
   {% if prereqs.entities? %}
+    {% assign product=page.products[0] %}
+    {% if product == 'operator' %}{% assign product='kic' %}{% endif %}
     <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-      {% assign prereq_path = "prereqs/entities/" | append: page.products[0] | append: ".md" %}
+      {% assign prereq_path = "prereqs/entities/" | append: product | append: ".md" %}
       {% include {{ prereq_path }} data=prereqs.data %}
     </div>
   {% endif %}

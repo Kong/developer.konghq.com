@@ -6,10 +6,13 @@ metadata:
     - /insomnia/
   products:
     - insomnia
+  tags:
+    - test-apis
 rows:
   - header:
       type: h1
       text: "Test APIs with Insomnia"
+      sub_text: Create manual and automated tests for your APIs
     columns:
       - blocks:
           - type: structured_text
@@ -19,9 +22,7 @@ rows:
               blocks:
                 - type: text
                   text: | 
-                    Using Insomnia you can create manual and automated tests for your APIs. 
-                    
-                    Insomnia has several features that can help you ensure the quality of your APIs: 
+                    Insomnia has several testing features that can help you ensure the quality of your APIs: 
                 - type: unordered_list
                   items:
                     - Pre-request and after-response scripting to add logic to your requests
@@ -122,28 +123,3 @@ rows:
               text: Learn more
               url: /how-to/write-data-type-tests/
               align: end
-
-
-  - header:
-      type: h2
-      text: How-to Guides
-    columns:
-      - blocks:
-          - type: how_to_list
-            config:
-              products:
-                  - insomnia
-              quantity: 5
-              allow_empty: true
-  
-  - header:
-      type: h2
-      text: References & Tools
-    columns:
-      - blocks:
-          - type: reference_list
-            config:
-              products:
-                  - insomnia
-              quantity: 5
-              allow_empty: true

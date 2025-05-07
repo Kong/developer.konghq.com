@@ -41,7 +41,7 @@ module Jekyll
       end
 
       def tools
-        @tools ||= @page.data.fetch('tools', [])
+        @tools ||= @page.data.fetch('tools', []).reject { |t| t == 'operator' }
       end
 
       def product_expanded(product)

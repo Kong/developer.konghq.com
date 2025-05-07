@@ -11,7 +11,8 @@
      -u {{include.user}}{%- endif %}{% if include.cookie_jar %} \
      --cookie-jar {{include.cookie_jar}}{%- endif %}{% if include.cookie %} \
      --cookie {{include.cookie}}{%- endif %}{% if include.body %} \
-     --json '{{ include.body | json_prettify: 1 | escape_env_variables | indent: 4 | strip }}'{% endif %}{% if include.jq %} | jq {{ include.jq }}{% endif %}{% if include.capture -%}){% endif %}
+     --json '{{ include.body | json_prettify: 1 | escape_env_variables | indent: 4 | strip }}'{% elsif include.body_cmd %} \
+     --json "{{ include.body_cmd }}"{% endif %}{% if include.jq %} | jq {{ include.jq }}{% endif %}{% if include.capture -%}){% endif %}
 {% endfor -%}
 ```
 

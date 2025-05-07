@@ -10,9 +10,9 @@ works_on:
     - on-prem
 
 tldr: 
-  q: How do I create a {{site.base_gateway}} Super Admin using the Admin API
+  q: How do I create a {{site.base_gateway}} Super Admin using the Admin API?
   a: |
-    After enabling [RBAC](/gateway/entities/rbac/#enable-rbac), you can create a Super-Admin user by issuing a `POST` request to the [`/rbac/users/`](/api/gateway/admin-ee/#/operations/post-rbac-users) endpoint. Then associate the user to the `super-admin` role.
+    After enabling [RBAC](/gateway/entities/rbac/#enable-rbac), you can create a Super Admin user by issuing a `POST` request to the [`/rbac/users/`](/api/gateway/admin-ee/#/operations/post-rbac-users) endpoint. Then associate the user to the `super-admin` role.
 
 prereqs:
     inline:
@@ -35,9 +35,9 @@ min_version:
 ---
 
 
-## Create the RBAC user and assign it the `super-admin` role: 
+## Create the super-admin RBAC user
 
-1. Create an [RBAC](/gateway/entities/rbac/) user
+1. Create an [RBAC](/gateway/entities/rbac/) user:
 <!-- vale off -->
 {% capture request %}
 {% control_plane_request %}
@@ -56,9 +56,9 @@ min_version:
 {{request | indent: 3}}
 
 
-1. Associate the user to the `super-admin` role.
+1. Associate the user to the `super-admin` role:
 
-{% capture request %}
+{% capture request2 %}
 {% control_plane_request %}
   url: /rbac/users/$ADMIN_NAME/roles
   method: POST
@@ -72,7 +72,7 @@ min_version:
 {% endcontrol_plane_request %}
 {% endcapture %}
 
-{{request | indent: 3}}
+{{request2 | indent: 3}}
 
 <!--vale on -->
 
@@ -114,4 +114,4 @@ If this was configured correctly the response body will look like this:
 ```
 {:.no-copy-code}
 
-You can see that the RBAC role assigned to the User is `super-admin`.
+You can see that the RBAC role assigned to the user is `super-admin`.
