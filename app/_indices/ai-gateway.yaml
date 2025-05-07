@@ -2,15 +2,89 @@ title: All AI Gateway documentation
 sections:
   - title: Overview
     items:
-      - path: /ai-gateway/
-      - path: /deck/get-started/
-      - path: /deck/**/*
-    auto_exclude: true
-  - title: AI Plugins
-    description: |
-      Documentation for all plugins available in AI Gateway
-    sections:
-      - title:
-        items:
-          - path:
-          - path:
+      - title: AI Gateway Overview
+        description: Overview of AI gateway capabilities
+        url: /ai-gateway/
+      - title: Quickstart
+        description: Get started quickly with AI Gateway setup and usage
+        url: /ai-gateway/#quickstart
+      - title: AI Gateway Capabilities
+        description: Learn about the core capabilities of AI Gateway
+        url: /ai-gateway/#ai-gateway-capabilities
+      - title: AI Usage Governance
+        description: Understand how to manage and govern AI usage effectively
+        url: /ai-gateway/#ai-usage-governance
+      - title: Data Governance
+        description: Explore how AI Gateway helps enforce data governance policies
+        url: /ai-gateway/#data-governance
+      - title: Prompt Engineering
+        description: Best practices and tools for designing effective prompts
+        url: /ai-gateway/#prompt-engineering
+      - title: Guardrails and Content Safety
+        description: Implement safeguards to ensure safe and compliant AI outputs
+        url: /ai-gateway/#guardrails-and-content-safety
+      - title: Request Transformations
+        description: Customize and transform AI requests with Gateway features
+        url: /ai-gateway/#request-transformations
+      - title: Streaming
+        description: Learn how AI Proxy streaming works
+        url: /ai-gateway/streaming/
+  - title: AI Gateway plugins
+    items:
+      - path: /plugins/?category=ai
+      - path: /plugins/ai-azure-content-safety/
+      - path: /plugins/ai-prompt-decorator/
+      - path: /plugins/ai-prompt-guard/
+      - path: /plugins/ai-prompt-template/
+      - path: /plugins/ai-proxy/
+      - path: /plugins/ai-proxy-advanced/
+      - path: /plugins/ai-rag-injector/
+      - path: /plugins/ai-rate-limiting-advanced/
+      - path: /plugins/ai-request-transformer/
+      - path: /plugins/ai-response-transformer/
+      - path: /plugins/ai-semantic-prompt-guard/
+      - path: /plugins/ai-sanitizer/
+  - title: AI providers
+    items:
+      - path: /ai-gateway/ai-providers/**
+      - path: /plugins/ai-proxy-advanced/examples/**/*
+      - path: /plugins/ai-proxy/examples/**/*
+  # - title: AI usage governance
+  #   items:
+  #     - title: AI Prompt Guard
+  #       description: Apply prompt safety checks and governance
+  #       url: /plugins/ai-prompt-guard/
+  #     - title: AI Semantic Prompt Guard
+  #       description: Enforce semantic rules and validations on AI prompts
+  #       url: /plugins/ai-semantic-prompt-guard/
+  # - title: AI Prompt engineering
+  #   items:
+  #     - title: AI Prompt Template
+  #       description: Create and manage reusable AI prompt templates
+  #       url: /plugins/ai-prompt-template/
+  #     - title: AI Prompt Decorator
+  #       description: Dynamically adjust and modify AI prompts
+  #       url: /plugins/ai-prompt-decorator/
+  # - title: Guardrails and content safety
+  #   items:
+  #     - title: AI Azure Content Safety
+  #       description: Integrate Azure-based safety filters into AI workflows
+  #       url: /plugins/ai-azure-content-safety/
+  #     - title: Amazon Bedrock Guardrails
+  #       description: Apply input format validations for Amazon Bedrock integrations
+  #       url: /plugins/ai-proxy/#input-formats
+  # - title: Request transformations
+  #   items:
+  #     - title: AI Request Transformer
+  #       description: Modify and transform AI request payloads dynamically
+  #       url: /plugins/ai-request-transformer/
+  #     - title: AI Response Transformer
+  #       description: Transform AI responses before sending them to clients
+  #       url: /plugins/ai-response-transformer/
+  - title: How-tos
+    items:
+      - path: /how-to/get-started-with-ai-gateway/
+      - path: /how-to/protect-sensitive-information-with-ai/
+      - path: /how-to/set-up-ai-proxy-advanced-with-anthropic/
+      - path: /how-to/set-up-ai-proxy-with-anthropic/
+      - path: /how-to/store-a-mistral-api-key-as-a-secret-in-konnect-config-store/
