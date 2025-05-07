@@ -109,22 +109,23 @@ You can set the Host header explicitly if needed by disabling `konghq.com/preser
 
 1. Add the [`konghq.com/host-header` annotation](/kubernetes-ingress-controller/reference/annotations/#konghq-com-host-header) to your Service, which sets
   the `Host` header directly:
-  ```bash
-  kubectl patch service NAME -p '{"metadata":{"annotations":{"konghq.com/host-header":"internal.myapp.example.com"}}}'
-  ```
+
+   ```bash
+   kubectl patch service NAME -p '{"metadata":{"annotations":{"konghq.com/host-header":"internal.myapp.example.com"}}}'
+   ```
 
 1. Make a `curl` request with a `Host` header:
 
-    ```bash
-    curl -H 'Host:kong.example' "$PROXY_IP/echo?details=true"
-    ```
+   ```bash
+   curl -H 'Host:kong.example' "$PROXY_IP/echo?details=true"
+   ```
 
-    The request upstream now uses the header from the `host-header` annotation:
-    ```
-    HTTP request details
-    ---------------------
-    Protocol: HTTP/1.1
-    Host: internal.myapp.example.com:1027
-    Method: GET
-    URL: /?details=true
-    ```
+   The request upstream now uses the header from the `host-header` annotation:
+   ```
+   HTTP request details
+   ---------------------
+   Protocol: HTTP/1.1
+   Host: internal.myapp.example.com:1027
+   Method: GET
+   URL: /?details=true
+   ```
