@@ -3,7 +3,7 @@ description: Configure two static routes to target two specific Azure OpenAI mod
 extended_description: |
     Configure two static routes to target two specific Azure OpenAI model deployments.
 
-    Each route uses a predefined deployment ID and model name. This setup is useful when you know the deployments you want to expose through the AI Proxy Advanced plugin.
+    Each route uses a predefined deployment ID and model name. This setup is useful when you know the deployments you want to expose through the AI Proxy plugin.
 
     For example, one target connects to a `gpt-35-turbo` deployment (`my-gpt-3-5`), and the other connects to a `gpt-4` deployment (`my-gpt-4`).
 
