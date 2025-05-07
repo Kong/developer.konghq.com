@@ -8,6 +8,8 @@ User-agent: Screaming Frog SEO Spider
 Allow: *
 
 User-agent: *
+{% unless jekyll.environment == "production" %}
 Disallow: /
+{% endunless %}
 
 Sitemap: {{ site.links.web }}/sitemap.xml
