@@ -44,7 +44,7 @@ kind: KonnectGatewayControlPlane
 name: gateway-control-plane
 {% endvalidation %}
 
-At this point, labels should be visible in the[ Gateway Manager](https://cloud.konghq.com/us/gateway-manager/) UI.
+At this point, labels should be visible in the [Gateway Manager](https://cloud.konghq.com/us/gateway-manager/) UI.
 
 ## Tagging
 
@@ -77,4 +77,4 @@ kind: KongService
 name: service
 {% endvalidation %}
 
-At this point, tags should be visible in the[ Gateway Manager](https://cloud.konghq.com/us/gateway-manager/) UI.
+At this point, tags should be visible in the [Gateway Manager](https://cloud.konghq.com/us/gateway-manager/) UI.
