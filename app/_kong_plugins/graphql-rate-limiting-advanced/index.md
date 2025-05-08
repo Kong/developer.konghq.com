@@ -379,10 +379,8 @@ rows:
 
 ## Costs API endpoints
 
-<!-- @todo: update this link when api specs are added -->
 
-The GraphQL Proxy Cache Advanced plugin exposes several [`/graphql-rate-limiting-advanced`](/api/gateway/admin-ee/) 
-endpoints for cost decoration through the Kong Admin API.
+The GraphQL Proxy Cache Advanced plugin exposes several [`/graphql-rate-limiting-advanced`](/plugins/graphql-rate-limiting-advanced/api/) endpoints for cost decoration through the Kong Admin API.
 
 You can use the Admin API to:
 * Create costs on Gateway Services or globally

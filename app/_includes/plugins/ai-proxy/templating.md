@@ -15,5 +15,3 @@ The following templated parameters are available:
 * `$(query_params.query_parameter_name)`
 
 This can be used to OpenAI-compatible SDK with this plugin in multiple ways, depending on the required use case.
-
-@todo: SDK examples
