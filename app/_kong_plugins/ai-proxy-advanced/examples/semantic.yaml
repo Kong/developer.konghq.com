@@ -1,5 +1,5 @@
 title: 'Semantic load balancing'
-description: Configure semantic load balancing with AI Proxy Advanced plugin
+description: Configure semantic load balancing with the AI Proxy Advanced plugin
 extended_description: |
   Configure semantic load balancing with AI Proxy Advanced plugin. To set up semantic routing, you must configure the following parameters:
 
