@@ -1,7 +1,7 @@
 ---
 title: Throttle APIs with different rate limits for Services and Consumers
 content_type: how_to
-
+description: Use the Rate Limiting and Service Protection plugins to set different rate limits for Services and Consumers.
 related_resources:
   - text: Rate Limiting
     url: /rate-limiting/
@@ -34,8 +34,8 @@ tags:
     - rate-limiting
 
 tldr:
-    q: How do I throttle APIs to protect them from DDoS attacks while allowing multiple privileged consumers to access the Service with higher rate limits?
-    a: Configure the [Rate Limiting](/plugins/rate-limiting/) plugin on two consumers with `config.minute` set to a specific limit, then configure the [Service Protection](/plugins/service-protection/) plugin with `config.window_size` and `config.limit` set to a different limit. This setup will limit all requests on the Service to your configured limit, even if the Consumers are sending requests simultaneously. 
+    q: How do I throttle APIs to protect them from DDoS attacks while allowing multiple privileged Consumers to access the Service with higher rate limits?
+    a: Configure the [Rate Limiting](/plugins/rate-limiting/) plugin on two Consumers with `config.minute` set to a specific limit, then configure the [Service Protection](/plugins/service-protection/) plugin with `config.window_size` and `config.limit` set to a different limit. This setup will limit all requests on the Service to your configured limit, even if the Consumers are sending requests simultaneously. 
 
 tools:
     - deck

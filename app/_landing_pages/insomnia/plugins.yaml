@@ -1,13 +1,17 @@
 metadata:
-  title: Insomnia Plugins
+  title: Insomnia plugins
   content_type: landing_page
   description: This page is an introduction to Insomnia plugins.
   products:
     - insomnia
+  tags:
+    - insomnia-plugins
+  breadcrumbs:
+    - /insomnia/
 rows:
   - header:
       type: h1
-      text: "Insomnia Plugins"
+      text: "Insomnia plugins"
     columns:
       - blocks:
           - type: structured_text
@@ -22,7 +26,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Plugin Hub
+            title: Insomnia Plugin Hub
             description: Browse plugins created by the community
             icon: https://raw.githubusercontent.com/Kong/docs.konghq.com/4fe28d484696339fa19ced4230e72ecd1ff97bda/app/assets/images/icons/documentation/icn-api-plugins-color.svg
             cta:

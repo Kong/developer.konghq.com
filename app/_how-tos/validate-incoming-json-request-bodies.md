@@ -1,5 +1,6 @@
 ---
 title: Validate incoming JSON request bodies with JSON Threat Protection
+description: Use the JSON Threat Protection plugin to enforce a JSON threat protection policy. 
 content_type: how_to
 related_resources:
   - text: "{{site.base_gateway}} Security"
@@ -97,6 +98,7 @@ body:
    - Viva
 method: POST
 status_code: 200
+display_headers: true
 {% endvalidation %}
 
 You should get a `200` response, and the request gets proxied to the upstream service.
@@ -116,6 +118,7 @@ body:
    - Viva
 method: POST
 status_code: 400
+display_headers: true
 {% endvalidation %}
 
 In this case, the string `Antonio` is longer than the maximum allowed string length of 6, so the request is blocked.

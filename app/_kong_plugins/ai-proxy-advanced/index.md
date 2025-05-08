@@ -2,6 +2,8 @@
 title: 'AI Proxy Advanced'
 name: 'AI Proxy Advanced'
 
+ai_gateway_enterprise: true
+
 content_type: plugin
 
 publisher: kong-inc

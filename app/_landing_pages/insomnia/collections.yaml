@@ -1,10 +1,10 @@
 metadata:
-  title: Collections
+  title: Request collections in Insomnia
   content_type: landing_page
   description: This page is an introduction to request collections in Insomnia
   breadcrumbs:
     - /insomnia/
-  product:
+  products:
     - insomnia
 rows:
   - header:
@@ -22,9 +22,9 @@ rows:
                     Collections are a way to group requests in Insomnia. You can use them to:
                 - type: unordered_list
                   items: 
-                    - Create and send requests
-                    - Run multiple requests with the Collection Runner
-                    - Write scripts to modify requests or check responses
+                    - "[Create and send requests](#send-requests)"
+                    - "[Run multiple requests](#get-started-with-requests) with the Collection Runner"
+                    - "[Write scripts](#write-scripts) to modify requests or check responses"
       - blocks:
           - type: image
             config:
@@ -60,6 +60,7 @@ rows:
         - type: card
           config:
             title: Requests reference
+            description: Configure and send different types of requests
             cta:
               text: Learn more
               url: /insomnia/requests/
@@ -68,6 +69,7 @@ rows:
         - type: card
           config:
             title: Use the Collection Runner
+            description: Use the Collection Runner to send multiple requests in a specific order
             cta:
               text: Learn more
               url: /how-to/use-the-collection-runner/
@@ -76,6 +78,7 @@ rows:
         - type: card
           config:
             title: Chain requests
+            description: Reuse content from a response in another request
             cta:
               text: Learn more
               url: /how-to/chain-requests/
@@ -84,6 +87,7 @@ rows:
         - type: card
           config:
             title: Request authentication
+            description: Learn what request authentication is and how to authenticate requests in Insomnia
             cta:
               text: Learn more
               url: /insomnia/request-authentication/
@@ -119,12 +123,13 @@ rows:
         - type: card
           config:
             title: Write pre-request scripts to add dynamic behavior
+            description: Use pre-request scripts on a Collection in Insomnia to carry out pre-processing such as setting variable values, parameters, headers, and body data for requests.
             cta:
               text: Learn more
               url: /how-to/write-pre-request-scripts/
               align: end
   - header:
-      text: "Frequently Asked Questions"
+      text: "Frequently asked questions"
       type: h2
     columns:
       - blocks:
@@ -143,26 +148,3 @@ rows:
                 - WSDL files
             - q: Can I run collections in CI/CD environments?
               a: Yes, you can use the [`inso run collection`](/inso-cli/reference/run_collection/) command in Inso CLI to run a collection automatically.
-  - header:
-      type: h2
-      text: Learn
-    columns:
-      - blocks:
-          - type: concept_list
-            config:
-              - topic: documents
-                product: insomnia 
-            quantity: 5
-            allow_empty: true
-
-  - header:
-      type: h2
-      text: References & Tools
-    columns:
-      - blocks:
-          - type: reference_list
-            config:
-              products:
-                - insomnia
-              quantity: 5
-              allow_empty: true

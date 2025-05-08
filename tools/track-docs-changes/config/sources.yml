@@ -277,9 +277,9 @@ app/_how-tos/kic-proxy-tcp-sni.md:
 app/_how-tos/kic-proxy-udp.md:
   - app/_src/kubernetes-ingress-controller/guides/services/udp.md
 app/_how-tos/kic-proxy-weights.md:
-  - /app/_src/kubernetes-ingress-controller/guides/services/multiple-backends.md
+  - app/_src/kubernetes-ingress-controller/guides/services/multiple-backends.md
 app/_how-tos/kic-proxy-cross-namespace.md:
-  - /app/_src/kubernetes-ingress-controller/guides/services/cross-namespace.md
+  - app/_src/kubernetes-ingress-controller/guides/services/cross-namespace.md
 app/_how-tos/kic-proxy-rewriting-paths.md:
   - app/_src/kubernetes-ingress-controller/guides/requests/rewrite-annotation.md
 app/_how-tos/kic-plugin-degraphql.md:
@@ -1538,17 +1538,14 @@ app/insomnia/incident-response.md:
   - /insomnia/security-standards.md
   - /insomnia/signup-and-auth.md
   - /insomnia/data-encryption.md
-app/_landing_pages/insomnia/storage-options.yaml:
+app/insomnia/storage.md:
   - /insomnia/insomnia-storage-options-guide.md
-app/insomnia/cloud-sync.md:
-  - /insomnia/insomnia-sync.md
-app/insomnia/git-sync.md:
   - /insomnia/git-sync.md
+  - /insomnia/insomnia-sync.md
+  - /insomnia/scratchpad.md
 app/insomnia/version-control.md:
   - /insomnia/git-sync.md
   - /insomnia/insomnia-sync.md
-app/insomnia/scratch-pad.md:
-  - /insomnia/scratchpad.md
 app/_how-tos/use-the-collection-runner.md:
   - /insomnia/collection-runner.md
 app/insomnia/environment-variables.md:

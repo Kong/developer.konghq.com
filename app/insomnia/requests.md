@@ -153,11 +153,11 @@ Limitations include:
 
 ## SOAP requests
 
-SOAP (simple object access protocol) is an XML-based protocol used to communicate structured data. To send a SOAP request from Insomnia, select the XML body type and setting the Content-Type header to `text/xml`. Then construct your XML body as required.
+SOAP (simple object access protocol) is an XML-based protocol used to communicate structured data. To send a SOAP request from Insomnia, select the XML body type and setting the Content-Type header to `text/xml`. Then, construct your XML body as required.
 
 ## Posting CSV data
 
-To send CSV data in a POST request, set the request body type to **Binary file** and select your CSV file. Ensure that the appropriate `Content-Type` headers (e.g., `text/csv`) are configured based on the API requirements.
+To send CSV data in a POST request, set the request body type to **Binary file** and select your CSV file. Ensure that the appropriate `Content-Type` headers (for example, `text/csv`) are configured based on the API requirements.
 
 This method allows you to send raw CSV files directly in the request payload.
 

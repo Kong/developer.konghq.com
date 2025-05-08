@@ -2,7 +2,8 @@
 title: "{{site.konnect_short_name}} Account, Pricing, and Organization Deactivation"
 
 description: Learn how to cancel and deactivate an account in {{site.konnect_short_name}}
-
+breadcrumbs:
+  - /konnect-platform/
 content_type: policy
 layout: reference
 
@@ -20,11 +21,11 @@ faqs:
   - q: How do I close my Plus or Enterprise account?
     a: |
       To close a Plus or Enterprise account, you can:
-      * Go to [**My Account**](https://cloud.konghq.com/global/account) > **Delete Account**. 
+      * Go to [**My Account**](https://cloud.konghq.com/global/account) > **Delete Account**.
       * Go to Organization > Settings > General > **Deactivate Organization**
       * Request deactivation from [Kong Support](https://support.konghq.com/).
   - q: When is my free account deactivated?
-    a: | 
+    a: |
       A free {{site.konnect_short_name}} organization is automatically deactivated after 30
       days of inactivity.
 
@@ -56,13 +57,13 @@ faqs:
       * Reactivate an organization that has been deactivated
       * Unlock an email for use with another organization
   - q: How do I manage and view billing and usage?
-    a: | 
+    a: |
       You can view service, Dev Portal, and API call usage from the [Billing and Usage](https://cloud.konghq.com/settings/billing-settings).
 ---
 
-{{site.konnect_short_name}} offers [two plans](https://konghq.com/pricing). 
+{{site.konnect_short_name}} offers [two plans](https://konghq.com/pricing).
 
-* **{{site.konnect_short_name}} Plus**: {{site.konnect_short_name}} Plus is the simplest way to get started with {{site.konnect_short_name}}, allowing you to only pay for the services you consume. New accounts are automatically given a month of free credits as part of 30-day trial. You can claim your Konnect Plus credits by [signing up](https://konghq.com/products/kong-konnect/register). 
+* **{{site.konnect_short_name}} Plus**: {{site.konnect_short_name}} Plus is the simplest way to get started with {{site.konnect_short_name}}, allowing you to only pay for the services you consume. New accounts are automatically given a month of free credits as part of 30-day trial. You can claim your Konnect Plus credits by [signing up](https://konghq.com/products/kong-konnect/register).
 * **{{site.konnect_short_name}} Enterprise**: {{site.konnect_short_name}} Enterprise is our contract-based option that includes 24x7x365 support and professional services access to help you build and maintain your own custom environment. Learn more about enterprise on our [pricing page](https://konghq.com/pricing)
 
 

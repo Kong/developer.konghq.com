@@ -6,9 +6,9 @@
           <path d="M19.6 21L13.3 14.7C12.8 15.1 12.225 15.4167 11.575 15.65C10.925 15.8833 10.2333 16 9.5 16C7.68333 16 6.14583 15.3708 4.8875 14.1125C3.62917 12.8542 3 11.3167 3 9.5C3 7.68333 3.62917 6.14583 4.8875 4.8875C6.14583 3.62917 7.68333 3 9.5 3C11.3167 3 12.8542 3.62917 14.1125 4.8875C15.3708 6.14583 16 7.68333 16 9.5C16 10.2333 15.8833 10.925 15.65 11.575C15.4167 12.225 15.1 12.8 14.7 13.3L21 19.6L19.6 21ZM9.5 14C10.75 14 11.8125 13.5625 12.6875 12.6875C13.5625 11.8125 14 10.75 14 9.5C14 8.25 13.5625 7.1875 12.6875 6.3125C11.8125 5.4375 10.75 5 9.5 5C8.25 5 7.1875 5.4375 6.3125 6.3125C5.4375 7.1875 5 8.25 5 9.5C5 10.75 5.4375 11.8125 6.3125 12.6875C7.1875 13.5625 8.25 14 9.5 14Z" fill="currentColor"/>
         </svg>
       </span>
-      <span class="hidden md:flex text-sm">Search</span>
+      <span class="hidden xl:flex text-sm">Search</span>
     </span>
-    <span class="hidden md:flex items-center gap-1 flex-shrink-0">
+    <span class="hidden xl:flex items-center gap-1 flex-shrink-0">
       <span class="sr-only">Command or control key</span>
       <span aria-hidden="true" class="badge h-5 flex items-center">
         <div class="text-primary">
@@ -137,19 +137,6 @@ import { getAlgoliaResults } from '@algolia/autocomplete-preset-algolia';
 import { createTagsPlugin } from '@algolia/autocomplete-plugin-tags';
 import SearchModalResultItem from './components/SearchModalResultItem.vue';
 
-const hasPermanentScrollbars = () => {
-  const div = document.createElement('div');
-  div.style.width = '100px';
-  div.style.height = '100px';
-  div.style.overflow = 'scroll';
-  div.style.visibility = 'hidden';
-  document.body.appendChild(div);
-
-  const alwaysVisible = div.offsetWidth > div.clientWidth;
-  document.body.removeChild(div);
-
-  return alwaysVisible;
-}
 
 export default {
   name: "Autocomplete",
@@ -159,14 +146,21 @@ export default {
   data() {
     return {
       activeTab: 'all',
-      permanentScrollbars: hasPermanentScrollbars()
     }
   },
   mounted() {
     window.addEventListener("keydown", this.handleKeyPress);
+    const homepageSearchInput = document.getElementById("homepage-search-input");
+    if (homepageSearchInput) {
+      homepageSearchInput.addEventListener("click", this.openModal);
+    }
   },
   beforeUnmount() {
     window.removeEventListener("keydown", this.handleKeyPress);
+    const homepageSearchInput = document.getElementById("homepage-search-input");
+    if (homepageSearchInput) {
+      homepageSearchInput.removeEventListener("click", this.openModal);
+    }
   },
   setup(props) {
     const inputElement = ref(null);
@@ -393,9 +387,7 @@ export default {
       this.showModal = true;
       document.body.style.setProperty("overflow", "hidden");
       document.body.style.setProperty("overscroll-behavior", "contain");
-      if (this.permanentScrollbars) {
-        document.body.style.setProperty("margin-right", "var(--removed-body-scroll-bar-size)");
-      }
+      document.body.style.setProperty("margin-right", "var(--removed-body-scroll-bar-size)");
       this.tagsPlugin.data.setTags(this.originalTags);
 
       nextTick(() => {
@@ -406,9 +398,7 @@ export default {
     closeModal() {
       document.body.style.overflow = "";
       document.body.style.removeProperty("overscoll-behavior");
-      if (this.permanentScrollbars) {
-        document.body.style.removeProperty("margin-right");
-      }
+      document.body.style.removeProperty("margin-right");
     },
   },
 };

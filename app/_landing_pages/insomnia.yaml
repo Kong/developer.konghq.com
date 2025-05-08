@@ -1,21 +1,22 @@
 metadata:
   title: Insomnia
-  product: insomnia
   content_type: landing_page
   description: Introduction to Insomnia, the open source desktop application that simplifies designing, debugging, and testing APIs. 
   products:
     - insomnia
+  tags:
+    - design-apis
+    - test-apis
 rows:
   - header:
       type: h1
       text: "Insomnia"
+      sub_text: Simplify designing, debugging, and testing APIs with Insomnia
 
   - columns:
       - blocks:
           - type: structured_text
             config:
-              header:
-                text: "Introducing Kong Insomnia"
               blocks:
                 - type: text
                   text: | 
@@ -75,59 +76,57 @@ rows:
           - type: feature_table
             config:
               columns:
-                - title: Free
-                  key: oss
-                - title: Individual
-                  key: individual
-                - title: Team
-                  key: team
+                - title: Hobby
+                  key: hobby
+                - title: Pro
+                  key: pro
                 - title: Enterprise
                   key: ee
               features:
                 - title: Local storage
-                  oss: true
+                  hobby: true
                   individual: true
-                  team: true
+                  pro: true
                   ee: true
                 - title: API Testing tools
-                  oss: true
+                  hobby: true
                   individual: true
-                  team: true
+                  pro: true
                   ee: true
                 - title: Cloud-hosted mock server
-                  oss: true
+                  hobby: true
                   individual: true
-                  team: true
+                  pro: true
                   ee: true
                 - title: Automated API testing
-                  oss: true
+                  hobby: true
                   individual: true
-                  team: true
+                  pro: true
                   ee: true
                 - title: Cloud Sync
-                  oss: true
+                  hobby: true
                   individual: true
-                  team: true
+                  pro: true
                   ee: true
                 - title: Git Sync
-                  oss: false
+                  hobby: false
                   individual: false
-                  team: true
+                  pro: true
                   ee: true
                 - title: Text editor key mapping
-                  oss: true
+                  hobby: true
                   individual: true
-                  team: true
+                  pro: true
                   ee: true
                 - title: Enterprise SSO (SAML, OIDC)
-                  oss: false
+                  hobby: false
                   individual: false
-                  team: false
+                  pro: false
                   ee: true
                 - title: Enterprise support
-                  oss: false
+                  hobby: false
                   individual: false
-                  team: false
+                  pro: false
                   ee: true
           - type: structured_text
             config:
@@ -150,7 +149,7 @@ rows:
               icon: /assets/icons/data-object.svg
               cta:
                 text: Learn more about storage
-                url: /insomnia/storage-options/
+                url: /insomnia/storage/
                 align: end
       - blocks:
           - type: card
@@ -185,12 +184,10 @@ rows:
               url: https://app.insomnia.rest/ai
               align: end
               
-      
-
 
   - header:
       type: h2
-      text: How-to Guides
+      text: How-to guides
     columns:
       - blocks:
           - type: how_to_list
@@ -202,7 +199,7 @@ rows:
 
   - header:
       type: h2
-      text: References & Tools
+      text: References & tools
     columns:
       - blocks:
           - type: reference_list

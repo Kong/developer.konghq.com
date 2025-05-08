@@ -22,6 +22,10 @@ plugins:
   - ai-proxy
   - ai-sanitizer
 
+tags:
+  - ai
+  - security
+
 tldr:
   q: How can I anonymize PII in requests using AI?
   a: Start an AI PII Anonymizer service, and enable the AI Sanitizer plugin to use this service to anonymize the specified information.
@@ -135,3 +139,4 @@ If the plugin was configured correctly, you will received a response with all PI
 ```
 Your name is Jesse Mason and your phone number is 001-204-028-1684x83574.
 ```
+{:.no-copy-code}

@@ -1,6 +1,7 @@
-title: 'Load balancing: Semantic'
-description: |
-  To set up semantic routing, you must configure the following parameters:
+title: 'Semantic load balancing'
+description: Configure semantic load balancing with the AI Proxy Advanced plugin
+extended_description: |
+  Configure semantic load balancing with the AI Proxy Advanced plugin. To set up semantic routing, you must configure the following parameters:
 
   * `config.embeddings` to define the model to use to match the model description and the prompts.
   * `config.vectordb` to define the vector database parameters. Only Redis is supported, so you need a Redis instance running in your environment.

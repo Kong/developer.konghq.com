@@ -1,8 +1,26 @@
 platform:
   konnect:
-    text: Explore the unified API Platform
-    icon: '/assets/icons/book.svg'
-    url: /konnect-platform/
+    text: |
+          Manage everything in one place?
+          Explore Konnect, our unified API platform.
+    icon: '/assets/logos/Konnect-logo.svg'
+    link:
+      url: /konnect-platform/
+      text: Learn more &rarr;
+
+  tools:
+    - text: decK
+      url: /deck/
+      icon: /assets/icons/codeblock.svg
+    - text: Inso CLI
+      url: /inso-cli/
+      icon: /assets/icons/code.svg
+    - text: Terraform
+      url: /terraform/
+      icon: /assets/icons/terraform.svg
+    - text: Ingress controller
+      url: /kubernetes-ingress-controller/
+      icon: /_assets/icons/products/kic.svg
 
   sections:
     - title: Build APIs
@@ -12,11 +30,13 @@ platform:
           url: /insomnia/
           product: insomnia
         - text: API Design
-          icon: /assets/icons/insomnia/design.svg
+          icon: /assets/icons/design.svg
           url: /insomnia/design/
+          color: purple
         - text: API Testing and Debugging
-          icon: /assets/icons/insomnia/checkbox-active.svg
+          icon: /assets/icons/code-snippet.svg
           url: /insomnia/test/
+          color: purple
     - title: Run APIs
       links:
         - text: API Gateway
@@ -27,6 +47,10 @@ platform:
           icon: /_assets/icons/products/ai-gateway.svg
           url: /ai-gateway/
           product: ai-gateway
+        - text: Event Gateway
+          icon: /_assets/icons/products/event-gateway.svg
+          url: /event-gateway/
+          product: event-gateway
         - text: Service Mesh
           icon: /_assets/icons/products/mesh.svg
           url: /mesh/
@@ -35,16 +59,6 @@ platform:
           icon: /_assets/icons/products/kic.svg
           url: /kubernetes-ingress-controller/
           product: kic
-    - title: Discover APIs
-      links:
-        - text: Developer Portal
-          icon: /_assets/icons/products/dev-portal.svg
-          url: /dev-portal/
-          product: dev-portal
-        - text: Service Catalog
-          icon: /_assets/icons/products/service-catalog.svg
-          url: /service-catalog/
-          product: service-catalog
     - title: Govern APIs
       links:
         - text: Analytics
@@ -55,6 +69,24 @@ platform:
           icon: /_assets/icons/products/api-ops.svg
           url: /deck/apiops/
           product: api-ops
+        - text: Scorecards
+          icon: /assets/icons/monochrome/document.svg
+          url: /service-catalog/scorecards/
+          color: red
+        - text: API Security & Access Control
+          icon: /assets/icons/monochrome/security.svg
+          url: /gateway/security/
+          color: grey
+    - title: Discover APIs
+      links:
+        - text: Developer Portal
+          icon: /_assets/icons/products/dev-portal.svg
+          url: /dev-portal/
+          product: dev-portal
+        - text: Service Catalog
+          icon: /_assets/icons/products/service-catalog.svg
+          url: /service-catalog/
+          product: service-catalog
 
 how_tos:
     - text: Kong Gateway

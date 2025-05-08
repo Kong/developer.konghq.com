@@ -4,7 +4,7 @@ description: Learn how to use the {{site.konnect_short_name}} Config Store vault
 content_type: how_to
 related_resources:
   - text: Secrets management
-    url: /secrets-management/
+    url: /gateway/secrets-management/
   - text: Vault entity
     url: /gateway/entities/vault/
   - text: Store a Mistral API key as a secret in Konnect Config Store

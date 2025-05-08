@@ -1,0 +1,1 @@
+1. Click the **Play** icon next to the test. In the preview to the right, you should see that the test passes.

@@ -16,11 +16,11 @@ search_aliases:
   - HCV
 related_resources:
   - text: Local vault storage in Insomnia
-    url: /insomnia/local-vault/
+    url: /insomnia/storage/#local-vault
   - text: Storage options
-    url: /insomnia/storage-options/
+    url: /insomnia/storage/
   - text: Git sync
-    url: /insomnia/git-sync/
+    url: /insomnia/storage/#git-sync
 ---
 
 

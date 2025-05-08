@@ -2,7 +2,7 @@
 title: Migrating from KongIngress to KongUpstreamPolicy
 
 description: |
-  How to remove the deprecated KongIngress resource from your deployment
+  Learn how to remove the deprecated KongIngress resource from your deployment.
 
 content_type: reference
 layout: reference
@@ -13,6 +13,15 @@ products:
 works_on:
   - on-prem
   - konnect
+
+tags:
+  - migration
+
+related_resources:
+  - text: KongUpstreamPolicy
+    url: /kubernetes-ingress-controller/reference/annotations/#konghq-com-upstream-policy
+  - text: Annotation reference
+    url: /kubernetes-ingress-controller/reference/annotations/
 
 ---
 

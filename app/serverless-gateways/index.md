@@ -3,7 +3,7 @@ title: "Serverless Gateway"
 content_type: reference
 layout: reference
 description: | 
-    Serverless gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned.
+    Serverless gateways are lightweight API gateways. Their Control Plane is hosted by {{site.konnect_short_name}} and Data Plane nodes are automatically provisioned.
 
 breadcrumbs:
   - /konnect-platform/
@@ -28,7 +28,7 @@ faqs:
     a: No, configuration is handled automatically during the provisioning of the Serverless Gateway Control Plane.
   - q: Does Serverless Gateway support private networking?
     a: |
-        No, serverless gateways only supports public networking. There are currently no capabilities for private networking between your data centers and hosted Kong data planes. For use cases where private networking is required, [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) configured with AWS is a better choice.
+        No, serverless gateways only supports public networking. There are currently no capabilities for private networking between your data centers and hosted Kong Data Planes. For use cases where private networking is required, [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) configured with AWS is a better choice.
   - q: Does plugin functionality change with serverless gateways?
     a: |
       * Any plugins that depend on a local agent will not work with serverless gateways.
@@ -48,13 +48,13 @@ faqs:
 related_resources:
   - text: Dedicated Cloud Gateways
     url: /dedicated-cloud-gateways/
-  - text: Control plane and data plane communication
+  - text: Control Plane and Data Plane communication
     url: /gateway/cp-dp-communication/
   - text: Hybrid mode
     url: /gateway/hybrid-mode/
 
 ---
-Serverless gateways are lightweight API gateways. Their control plane is hosted by {{site.konnect_short_name}} and data plane nodes are automatically provisioned. Serverless gateways are ideal for developers who want to test or experiment in a pre-production environment.
+Serverless gateways are lightweight API gateways. Their Control Plane is hosted by {{site.konnect_short_name}} and Data Plane nodes are automatically provisioned. Serverless gateways are ideal for developers who want to test or experiment in a pre-production environment.
 
 Serverless gateways offer the following benefits:
 * {{site.konnect_short_name}} manages provisioning and placement.
@@ -71,12 +71,12 @@ When you create a serverless gateway, {{site.konnect_short_name}} creates a Cont
 
 ## How do I provision a serverless gateway?
 
-Provisioning a serverless gateway includes creating the serverless control plane and hosted data plane.
+Provisioning a serverless gateway includes creating the serverless Control Plane and hosted Data Plane.
 	
-1. Create a serverless gateway control plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/v2/#/operations/create-control-plane).
+1. Create a serverless gateway Control Plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/v2/#/operations/create-control-plane).
 <!-- vale off -->
-{% capture request %}
-  {% control_plane_request %}
+{% capture request1 %}
+{% control_plane_request %}
   url: /v2/control-planes/$CONTROL_PLANE_ID/
   status_code: 201
   method: POST
@@ -87,21 +87,19 @@ Provisioning a serverless gateway includes creating the serverless control plane
   body:
 
       name: serverless-gateway-control-plane
-      description: A test control plane for Serverless Gateways.
+      description: A test Control Plane for Serverless Gateways.
       cluster_type: CLUSTER_TYPE_SERVERLESS
       cloud_gateway: false
       auth_type: pinned_client_certs
-  {% endcontrol_plane_request %}
-  {% endcapture %}
+{% endcontrol_plane_request %}
+{% endcapture %}
 
-{{request | indent: 3}}
+{{ request1 | indent:3 }}
 <!--vale on -->
-
 2. Create a hosted Data Plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/v2/#/operations/create-configuration):
-
 <!--vale off -->
-{% capture request %}
-  {% control_plane_request %}
+{% capture request2 %}
+{% control_plane_request %}
   url: /v2/cloud-gateways/configurations
   status_code: 201
   method: PUT
@@ -115,10 +113,10 @@ Provisioning a serverless gateway includes creating the serverless control plane
       dataplane_groups: 
         - region: na
       kind: serverless.v0
-  {% endcontrol_plane_request %}
-  {% endcapture %}
+{% endcontrol_plane_request %}
+{% endcapture %}
 
-{{request | indent: 3}}
+{{ request2 | indent:3 }}
 <!--vale on -->
 
 ## How do I configure a custom domain?
@@ -127,7 +125,7 @@ Provisioning a serverless gateway includes creating the serverless control plane
 
 ### {{site.konnect_short_name}} configuration
 
-1. Open **Gateway Manager**, choose a control plane to open the **Overview** dashboard, then click **Connect**.
+1. Open **Gateway Manager**, choose a Control Plane to open the **Overview** dashboard, then click **Connect**.
     
     The **Connect** menu will open and display the URL for the **Public Edge DNS**. Save this URL.
 

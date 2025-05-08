@@ -42,6 +42,8 @@ module Jekyll
       def set_prerequisites!(page) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         return unless page.data['series']
 
+        page.data['prereqs'] = page.data['prereqs'] || {}
+
         previous_page = page.data['series']['items'].find do |item|
           item.data['series']['position'] == page.data['series']['position'] - 1
         end

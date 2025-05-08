@@ -1,6 +1,7 @@
+title: 'Priority load balancing'
+description: Configure the plugin to use three OpenAI models and create priority groups based on their respective weights.
+extended_description: |
 
-title: 'Load balancing: Priority'
-description: |
   Configure the plugin to use three OpenAI models and create priority groups based on their respective weights.
 
   In this example, the GPT-4 model and the GPT-4o-mini model form a group, and the GPT-3 model forms another group.

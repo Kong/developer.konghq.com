@@ -1,12 +1,13 @@
 ---
 title: Generate a collection from a design document
 content_type: how_to
-
+description: Learn how to generate a request collection from an existing design document.
 products:
     - insomnia
 
 tags:
   - documents
+  - collections
 
 tldr: 
   q: How do I generate a collection from an API spec?
@@ -30,7 +31,7 @@ Click **Base Environment**, then click the pencil icon to open the **Manage Envi
 ```json
 {
 	"base_url": "https://us.api.konghq.com/v2",
-	"bearerToken": "<my token>"
+	"bearerToken": "MY TOKEN"
 }
 ```
 

@@ -35,7 +35,7 @@ rows:
               alt_text: "Mesh Manager Dashboard"
   - header:
       type: h2
-      text: "Mesh Architecture"
+      text: "Mesh architecture"
     columns:
       - blocks:
           - type: structured_text
@@ -71,7 +71,7 @@ rows:
                   S3 <-->|Inbound/Outbound Traffic| CP2
   - header:
       type: h2
-      text: "Get Started"
+      text: "Get started"
     columns:
       - blocks:
           - type: card
@@ -85,7 +85,7 @@ rows:
       - blocks:
           - type: card
             config:
-              title: Mesh Roles
+              title: Mesh roles
               description: |
                 Learn how roles work in Mesh Manager.
               icon: /assets/icons/security.svg
@@ -96,7 +96,7 @@ rows:
             config:
               title: About Kong Mesh
               description: |
-                Find detailed information about Service Meshes and Configuration.
+                Find detailed information about service meshes and configuration.
               icon: /assets/icons/book.svg
               cta:
                 url: /mesh/

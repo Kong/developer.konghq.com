@@ -1,13 +1,12 @@
 ---
 title: Use the Collection Runner in Insomnia
 content_type: how_to
-
+description: Use the Collection Runner to run multiple requests in a specific order.
 products:
     - insomnia
 
 tags:
     - collections
-
 prereqs:
     inline:
         - title: Create and configure a collection
