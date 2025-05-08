@@ -222,7 +222,7 @@ rows:
       - type: card
         config:
           title: Streaming
-          description: Streaming user requests with AI Gateway.
+          description: Streaming user requests with AI Gateway
           icon: /assets/icons/network.svg
           cta:
             url: /ai-gateway/streaming/
