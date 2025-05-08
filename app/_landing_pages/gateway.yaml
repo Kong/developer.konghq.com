@@ -268,6 +268,16 @@ rows:
                 text: See reference 
                 url: /gateway/upgrade/
                 align: end
+      - blocks:
+          - type: card
+            config:
+              title: Changelog
+              description: Changelog for supported {{site.ee_product_name}} versions
+              icon: /assets/icons/service-document.svg
+              cta:
+                text: See changelog
+                url: /gateway/changelog/
+                align: end
   - header:
       type: h2
       text: Support policies
