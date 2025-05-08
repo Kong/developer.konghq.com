@@ -31,8 +31,16 @@ tldr:
   q: Question?
   a: Answer
 ---
+{% assign gwapi_version = "1.2.1" %}
+
+## Install CRDs
+
+```shell
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v{{ gwapi_version }}/standard-install.yaml
+```
 
 ## Install {{ site.operator_product_name }}
+
 
 1. Add the Kong Helm charts:
 
@@ -44,9 +52,10 @@ tldr:
 1. Install {{ site.kic_product_name }} using Helm:
 
    ```bash
-   helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace  \
+   helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace \
      --set image.tag={{ site.data.operator_latest.release }} \
-     --set kubernetes-configuration-crds.enabled=true
+     --set kubernetes-configuration-crds.enabled=true \
+     --set env.ENABLE_CONTROLLER_KONNECT=true
    ```
 
 ## Wait for {{ site.operator_product_name }} to be ready

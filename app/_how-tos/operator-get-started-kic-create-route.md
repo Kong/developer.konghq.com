@@ -40,7 +40,7 @@ prereqs:
 1. In order to route a request using {{ site.base_gateway }} we need a service running in our cluster. Install an `echo` service using the following command:
 
     ```bash
-    kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml
+    kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong
     ```
 
 1.  Create a `HTTPRoute` to send any requests that start with `/echo` to the echo service.
@@ -51,6 +51,7 @@ prereqs:
     apiVersion: gateway.networking.k8s.io/{{ gatewayApiVersion }}
     metadata:
       name: echo
+      namespace: kong
     spec:
       parentRefs:
         - group: gateway.networking.k8s.io
@@ -77,7 +78,7 @@ prereqs:
 1. Run `kubectl get gateway kong -n default` to get the IP address for the gateway and set that as the value for the variable `PROXY_IP`.
 
     ```bash
-    export PROXY_IP=$(kubectl get gateway kong -n default -o jsonpath='{.status.addresses[0].value}')
+    export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
     ```
 
     {:.note}

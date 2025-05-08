@@ -60,7 +60,7 @@ kind: GatewayConfiguration
 apiVersion: gateway-operator.konghq.com/v1beta1
 metadata:
   name: kong
-  namespace: default
+  namespace: kong
 spec:
   extensions:
     - kind: KonnectExtension
@@ -88,7 +88,7 @@ echo 'kind: GatewayConfiguration
 apiVersion: gateway-operator.konghq.com/{{ gatewayConfigApiVersion }}
 metadata:
   name: kong
-  namespace: default
+  namespace: kong
 spec:
   dataPlaneOptions:
     deployment:
@@ -119,19 +119,20 @@ kind: GatewayClass
 apiVersion: gateway.networking.k8s.io/{{ gatewayApiVersion }}
 metadata:
   name: kong
+  namespace: kong
 spec:
   controllerName: konghq.com/gateway-operator
   parametersRef:
     group: gateway-operator.konghq.com
     kind: GatewayConfiguration
     name: kong
-    namespace: default
+    namespace: kong
 ---
 kind: Gateway
 apiVersion: gateway.networking.k8s.io/{{ gatewayApiVersion }}
 metadata:
   name: kong
-  namespace: default
+  namespace: kong
 spec:
   gatewayClassName: kong
   listeners:
@@ -143,7 +144,7 @@ spec:
 You can verify that everything works by checking the `Gateway` resource via `kubectl`:
 
 ```bash
-kubectl get gateway kong -o wide
+kubectl get -n kong gateway kong -o wide
 ```
 
 You should see the following output:
@@ -161,6 +162,7 @@ If the `Gateway` has `Programmed` condition set to `True` then you can visit {{s
 {% validation kubernetes-resource %}
 kind: Gateway
 name: kong
+namespace: kong
 {% endvalidation %}
 <!-- vale on -->
 
