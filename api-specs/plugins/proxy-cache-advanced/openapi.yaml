@@ -8,8 +8,8 @@ info:
     name: Kong Inc
     url: 'https://konghq.com'
 externalDocs:
-  description: Kong Gateway Enterprise Admin API
-  url: 'https://docs.konghq.com'
+  description: Proxy Cache Advanced Plugin API Specification
+  url: 'https://developer.konghq.com'
 servers:
   - description: Default Admin API URL
     url: '{protocol}://{hostname}:{port}{path}'
