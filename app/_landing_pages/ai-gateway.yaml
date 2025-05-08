@@ -16,7 +16,6 @@ rows:
       type: h1
       text: "Kong AI Gateway"
       sub_text: Connectivity and governance layer for modern AI-native applications built on top of {{site.base_gateway}}
-
   - columns:
       - blocks:
           - type: structured_text
@@ -109,9 +108,9 @@ rows:
       - blocks:
         - type: card
           config:
-            title: AI provider proxy
+            title: Universal API
             description: Route client requests to various AI providers.
-            icon: /assets/icons/plugins/ai-proxy.png
+            icon: /assets/icons/plugins/universal-api.svg
             cta:
               url: /plugins/ai-proxy/
               align: end
@@ -238,6 +237,42 @@ rows:
             align: end
 
   - header:
+    type: h2
+  - columns:
+    - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Universal API"
+            blocks:
+              - type: text
+                text: |
+                  Kong’s AI Gateway Universal API, delivered through the [AI Proxy](/plugins/ai-proxy/) and [AI Proxy Advanced](/plugins/ai-proxy-advanced/) plugins, simplifies AI model integration by providing a single, standardized interface for interacting with models across multiple providers.
+
+                    - [**Easy to use**](/plugins/ai-proxy/examples/openai-chat-route/): Configure once and access any AI model with minimal integration effort.
+
+                    - [**Load balancing**](/plugins/ai-proxy-advanced/#load-balancing): Automatically distribute AI requests across multiple models or providers for optimal performance and cost efficiency.
+
+                    - [**Retry and fallback**](/plugins/ai-proxy-advanced/#retry-and-fallback): Optimize AI requests based on model performance, cost, or other factors.
+
+                    - **Cross-plugin integration**: Leverage AI in non-AI API workflows through other Kong Gateway plugins.
+
+    - blocks:
+        - type: image
+          config:
+            url: /assets/images/gateway/universal-api.svg
+            alt_text: Overview of AI gateway
+  - columns:
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-proxy
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-proxy-advanced
+
+  - header:
       type: h2
       text: "AI usage governance"
     columns:
@@ -253,6 +288,66 @@ rows:
                     Kong AI Gateway provides additional plugins to help developers control AI data and usage.
                     These plugins are used in combination with the AI Proxy plugin, allowing you to build secure and specialized AI experiences for your users.
 
+  - header:
+      type: h3
+      text: "Load balancing"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    AI Gateway load balancer routes requests across AI models for optimal speed, cost, and reliability.
+
+                    - Choose from algorithms like consistent hashing, lowest-latency, usage-based, round-robin, and semantic matching.
+
+                    - Built-in retries and fallback ensure resilience across providers {% new_in 3.10%}.
+
+                    - Dynamically selects models based on real-time performance and prompt relevance.
+
+                    - Supports mixed environments including OpenAI, Mistral, and Llama models.
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                    {% mermaid %}
+                    flowchart LR
+                    Application(((Application))) --->|Request| AIGateway[/AI Gateway/]
+                    AIGateway --->|2xx Response| Application(((Application)))
+
+                    subgraph AI_Processing [Fallback processing]
+                        direction LR
+                        AIGateway ----> LLM1([LLM Model 1])
+                        AIGateway ---->|Request| LLM2([LLM Model 2])
+                        LLM2 -->|2xx Response| AIGateway[/AI Gateway/]
+                    end
+                    %% Style the 4xx path (3rd link = index 2)
+                    linkStyle 2 stroke-dasharray: 5 5
+                    linkStyle 4 stroke-dasharray: 5 5
+                    linkStyle 1 stroke-dasharray: 5 5
+                    {% endmermaid %}
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Load balancing
+            description: Learn about the load balancing algorithms available for AI Gateway.
+            icon: /assets/icons/load-balance.svg
+            cta:
+              url: /gateway/load-balancing/#load-balancing-algorithms-for-ai-gateway
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Retry and fallback
+            description: Learn about the load balancing algorithms available for AI Gateway.
+            icon: /assets/icons/redo.svg
+            cta:
+              url: /gateway/load-balancing/#load-balancing-algorithms-for-ai-gateway
+              align: end
 
   - header:
       type: h3
