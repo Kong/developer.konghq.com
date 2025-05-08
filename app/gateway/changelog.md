@@ -4,6 +4,8 @@ title: "{{site.base_gateway}} changelog"
 description: |
   placeholder
 content_type: reference
+breadcrumbs:
+  - /gateway/
 layout: reference
 products:
    - gateway

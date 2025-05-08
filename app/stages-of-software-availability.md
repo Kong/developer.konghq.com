@@ -5,7 +5,6 @@ description: This document describes the different stages of software availabili
 
 content_type: policy
 layout: reference
-
 tags:
   - support-policy
 
