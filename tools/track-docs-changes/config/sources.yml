@@ -33,7 +33,7 @@ app/_api/konnect/ksearch/_index.md:
   - app/_api/konnect/search/_index.md
 
 # entities
-app/_gateway_entities/consumer_group.md:
+app/_gateway_entities/consumer-group.md:
   - app/_src/gateway/key-concepts/consumer-groups.md
 app/_gateway_entities/consumer.md:
   - app/_src/gateway/key-concepts/consumers.md
@@ -61,7 +61,7 @@ app/_gateway_entities/upstream.md:
 app/_gateway_entities/workspace.md:
   - app/_src/gateway/kong-manager/workspaces.md
   - app/_src/gateway/kong-enterprise/workspaces/index.md
-app/_gateway_entities/event_hooks.md:
+app/_gateway_entities/event-hook.md:
   - app/_src/gateway/kong-enterprise/event-hooks/index.md
 app/_gateway_entities/rbac.md:
   - app/_src/gateway/production/access-control/enable-rbac.md
@@ -85,7 +85,7 @@ app/_gateway_entities/vault.md:
   
 app/_gateway_entities/sni.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
-app/_gateway/entities/certificate.md:
+app/_gateway_entities/certificate.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 
 app/_gateway_entities/license.md:
@@ -97,7 +97,7 @@ app/_gateway_entities/license.md:
   - app/_src/gateway/licenses/report-v2.md
   - app/_src/gateway/licenses/examples.md
 
-app/_gateway_entities/keyring.md:
+app/gateway/keyring.md:
   - app/_src/gateway/kong-enterprise/db-encryption.md
 app/_how-tos/encrypt-sensitive-data-in-kong-gateway-with-keyring.md:
   - app/_src/gateway/kong-enterprise/db-encryption.md
@@ -185,7 +185,7 @@ app/_how-tos/validate-incoming-json-request-bodies.md:
 app/_how-tos/rotate-secrets-in-google-cloud-secret.md:
   - app/_src/gateway/kong-enterprise/secrets-management/secrets-rotation.md
 app/_how-tos/use-acl-with-consumer-groups.md:
-  - app/_hub/kong-inc/acl/how-to/_consumer-groups.md.md
+  - app/_hub/kong-inc/acl/how-to/_consumer-groups.md
 app/_how-tos/get-started-with-ai-gateway.md:
   - app/_src/gateway/get-started/ai-gateway.md
 app/_how-tos/configure-confluent-data-streaming.md:
@@ -966,7 +966,7 @@ app/advanced-analytics/explorer.md:
   - app/konnect/analytics/explorer.md
 app/advanced-analytics/llm-reporting.md:
   - app/konnect/analytics/explorer.md
-app/konnect-geos.md:
+app/konnect-platform/konnect-geos.md:
   - app/konnect/geo.md
 app/_landing_pages/advanced-analytics.md:
   - app/konnect/advanced-analytics/index.md
@@ -975,7 +975,7 @@ app/konnect-platform/audit-logs.md:
   - app/konnect/reference/audit-logs.md
 app/gateway-manager/konnect-logs.md:
   - app/konnect/gateway-manager/dedicated-cloud-gateways/data-plane-logs.md
-app/konnect-labels.md:
+app/gateway-manager/konnect-labels.md:
   - app/konnect/reference/labels.md
 app/konnect-platform/sso.md:
   - app/konnect/org-management/okta-idp.md
@@ -1052,7 +1052,7 @@ app/gateway/logs.md:
   - app/_src/gateway/production/logging/update-log-level-dynamically.md
   - app/_src/gateway/production/logging/ai-analytics.md
   - app/_src/gateway/production/logging/customize-gateway-logs.md
-app/gateway/network.md:
+app/gateway/network/index.md:
   - app/_src/gateway/production/networking/default-ports.md
   - app/_src/gateway/production/networking/firewall.md
 app/gateway/cp-dp-communication.md:
@@ -1129,9 +1129,6 @@ app/gateway/kong-manager/content-security-policy.md:
   - app/_src/gateway/kong-manager/strengthen-security.md
 
 # traffic control
-app/gateway/traffic-control/proxy.md:
-  - app/_src/gateway/how-kong-works/routing-traffic.md
-  - app/_includes/md/admin-listen.md
 app/gateway/routing/expressions.md:
   - app/_src/gateway/reference/expressions-language/index.md
   - app/_src/gateway/key-concepts/routes/expressions.md
@@ -1139,7 +1136,7 @@ app/gateway/routing/expressions.md:
   - app/_src/gateway/reference/expressions-language/performance.md
 app/gateway/routing/expressions-router-examples.md:
   - app/_src/gateway/reference/expressions-language/index.md
-app/gateway/networking/dns-config-reference.md:
+app/gateway/network/dns-config-reference.md:
   - app/_src/gateway/production/networking/dns-considerations.md
 app/gateway/traffic-control/health-checks-circuit-breakers.md:
   - app/_src/gateway/how-kong-works/health-checks.md
@@ -1147,7 +1144,7 @@ app/gateway/traffic-control/load-balancing.md:
   - app/_src/gateway/how-kong-works/load-balancing.md
 app/gateway/traffic-control/blue-green-deployments.md:
   - app/_src/gateway/production/blue-green.md
-app/konnect-compatibility.md:
+app/konnect-platform/konnect-compatibility.md:
   - app/konnect/compatibility.md
   - app/konnect/upgrade-faq.md
 app/_landing_pages/gateway/traffic-control-and-routing.yaml:
@@ -1156,6 +1153,7 @@ app/gateway/incremental-config-sync.md:
   - app/_src/gateway/production/deployment-topologies/hybrid-mode/incremental-config-sync.md
 app/gateway/traffic-control/proxying.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
+  - app/_includes/md/admin-listen.md
 app/custom-plugins/api.lua.md:
   - app/_src/gateway/plugin-development/admin-api.md
 app/custom-plugins/daos.lua.md:
@@ -1410,7 +1408,7 @@ app/dev-portal/security-settings.md:
   - app/dev-portal/portals/settings/security.md
 app/dev-portal/team-mapping.md:
   - app/dev-portal/settings/team-mapping.md
-app/dev-portal/apis:
+app/dev-portal/apis.md:
   - app/dev-portal/apis/gateway-service-link.md
   - app/dev-portal/apis/index.md
   - app/dev-portal/apis/versioning.md
@@ -1445,10 +1443,9 @@ app/_landing_pages/insomnia/collections.yaml:
   - /insomnia/request-collections.md
 app/_landing_pages/insomnia/design.yaml:
   - /insomnia/generate-code-snippet.md
-app/_landing_pages/design.yaml:
   - /insomnia/get-started-with-documents.md
   - /insomnia/migrate-from-designer.md
-app/_how-tos/create-a-design-ducment.md:
+app/_how-tos/create-a-design-document.md:
   - /insomnia/get-started-with-documents.md
   - /insomnia/design-documents.md
 app/_landing_pages/insomnia/documents.yaml: 
@@ -1479,7 +1476,7 @@ app/_how-tos/import-an-api-spec-as-a-document.md:
   - /insomnia/import-export-data.md
 app/_how-tos/chain-requests.md:
   - /insomnia/chaining-requests.md
-app/_how-tos/generate-a-collection-from-a-design-document/:
+app/_how-tos/generate-a-collection-from-a-design-document.md:
   - /insomnia/request-collections.md
 app/_how-tos/add-custom-linting-rules.md:
   - /insomnia/linting.md
@@ -1496,11 +1493,11 @@ app/_landing_pages/inso-cli.yaml:
 app/_how-tos/write-data-type-tests.md:
   - /insomnia/pre-request-script.md
   - /insomnia/after-response-script.md
-  - /insomnia//insomnia/unit-testing.md
+  - /insomnia/insomnia/unit-testing.md
 app/_how-tos/write-content-type-tests.md:
   - /insomnia/pre-request-script.md
   - /insomnia/after-response-script.md
-  - /insomnia//insomnia/unit-testing.md
+  - /insomnia/insomnia/unit-testing.md
 app/_how-tos/write-http-status-tests.md:
   - /insomnia/pre-request-script.md
   - /insomnia/after-response-script.md
@@ -1509,7 +1506,7 @@ app/_how-tos/write-http-status-tests.md:
 app/_how-tos/write-headers-in-response-tests.md:
   - /insomnia/pre-request-script.md
   - /insomnia/after-response-script.md
-  - /insomnia//insomnia/unit-testing.md
+  - /insomnia/insomnia/unit-testing.md
 app/_how-tos/create-an-insomnia-plugin.md:
   - /insomnia/introduction-to-plugins.md
 app/_landing_pages/insomnia/plugins.yaml:
