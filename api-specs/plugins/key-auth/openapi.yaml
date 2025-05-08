@@ -93,7 +93,7 @@ components:
       name: Kong-Admin-Token
       type: apiKey
 externalDocs:
-  description: Documentation for the Key Auth plugin
+  description: Key Auth Plugin API Specification
   url: https://developer.konghq.com
 info:
   contact:
