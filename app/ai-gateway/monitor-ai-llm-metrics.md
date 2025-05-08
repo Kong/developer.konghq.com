@@ -6,7 +6,8 @@ layout: reference
 products:
   - ai-gateway
   - gateway
-
+breadcrumbs:
+  - /ai-gateway/
 tags:
   - ai
   - monitoring

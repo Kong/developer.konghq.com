@@ -5,7 +5,10 @@ layout: reference
 
 products:
     - gateway
-
+breadcrumbs:
+  - /gateway/
+works_on:
+  - on-prem
 description: |
   A Keyring is a mechanism that encrypts sensitive data fields, such as consumer secrets, before storing them in the database.
   This provides for encryption-at-rest security controls in a {{site.base_gateway}} cluster.

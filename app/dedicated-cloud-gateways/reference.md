@@ -6,7 +6,8 @@ description: "Dedicated Cloud Gateways are Data Plane nodes that are fully manag
 
 products:
     - gateway
-
+breadcrumbs:
+  - /dedicated-cloud-gateways/
 works_on:
   - konnect
 

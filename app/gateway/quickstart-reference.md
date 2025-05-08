@@ -6,9 +6,13 @@ layout: reference
 products:
   - gateway
   - ai-gateway
-
+breadcrumbs:
+  - /gateway/
 tags:
-  - ai
+  - quickstart
+search_aliases:
+  - Gateway quickstart
+  - quickstart
 
 min_version:
   gateway: '3.4'
@@ -25,7 +29,6 @@ related_resources:
 
 works_on:
   - on-prem
-  - konnect
 ---
 
 Kong offers a quickstart script that allows you to easily run a local instance of the latest version of {{site.base_gateway}} for testing purposes.

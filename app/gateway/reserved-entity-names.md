@@ -5,7 +5,10 @@ layout: reference
 
 products:
     - gateway
-
+breadcrumbs: 
+  - /gateway/
+search_aliases:
+  - reserved names
 works_on:
     - on-prem
     - konnect
@@ -13,7 +16,7 @@ works_on:
 min_version:
   gateway: '3.4'
 
-description: See which {{site.base_gateway}} entity names are reserved.
+description: Reserved and unsuable {{site.base_gateway}} entity names.
 
 related_resources:
   - text: Gateway entities

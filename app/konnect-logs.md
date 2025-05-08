@@ -2,7 +2,8 @@
 title: "{{site.konnect_short_name}} logs"
 content_type: reference
 layout: reference
-
+breadcrumbs: 
+  - /konnect/
 products:
     - gateway
 works_on:
@@ -11,9 +12,12 @@ works_on:
 api_specs:
   - konnect/audit-logs
 
+tags:
+  - logging
+search_aliases: 
+  - data plane logs
 
-description: Use {{site.konnect_short_name}} audit logs to help you detect and respond to potential security incidents when they occur.
-
+description: "Review logs for Data Plane activity and system events in {{site.konnect_short_name}}."
 related_resources:
   - text: "Dedicated Cloud Gateways"
     url: /dedicated-cloud-gateways/
