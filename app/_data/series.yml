@@ -4,3 +4,6 @@ kic-get-started:
 plugin-dev-get-started:
   title: Get started with custom plugin development
   url: /custom-plugins/get-started/set-up-plugin-project/
+kgo-get-started:
+  title: Get Started with the Kong Gateway Operator
+  url: /index/operator/#get-started
