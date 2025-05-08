@@ -5,12 +5,6 @@ content_type: reference
 layout: reference
 products:
   - konnect-platform
-tools:
-    - admin-api
-    - konnect-api
-    - deck
-    - kic
-    - terraform
 tags:
   - geos
 search_aliases:

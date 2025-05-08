@@ -9,12 +9,6 @@ products:
   - konnect-platform
 works_on:
   - konnect
-tools:
-    - admin-api
-    - konnect-api
-    - deck
-    - kic
-    - terraform
 related_resources:
   - text: "{{site.base_gateway}} ports"
     url: /gateway/network-ports-firewall/
