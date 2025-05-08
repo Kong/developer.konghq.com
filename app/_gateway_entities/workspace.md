@@ -25,7 +25,7 @@ related_resources:
 faqs:
   - q: Do I have to enable Workspaces? 
     a: |
-     No, {{site.base_gateway}} Enterprise ships with the `default` Workspace. You can create additional Workspaces, but the default Workspace will always remain, and can't be deleted.
+     No, {{site.ee_product_name}} ships with the `default` Workspace. You can create additional Workspaces, but the default Workspace will always remain, and can't be deleted.
   - q: Are there entities that can't exist in a Workspace?
     a: |
       There are certain entities that can't exist within a Workspace:

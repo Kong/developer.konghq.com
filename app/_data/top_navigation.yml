@@ -5,7 +5,7 @@ platform:
           Explore Konnect, our unified API platform.
     icon: '/assets/logos/Konnect-logo.svg'
     link:
-      url: /konnect-platform/
+      url: /konnect/
       text: Learn more &rarr;
 
   tools:
@@ -65,10 +65,6 @@ platform:
           icon: /_assets/icons/products/advanced-analytics.svg
           url: /advanced-analytics/
           product: advanced-analytics
-        - text: APIOps and Automation
-          icon: /_assets/icons/products/api-ops.svg
-          url: /deck/apiops/
-          product: api-ops
         - text: Scorecards
           icon: /assets/icons/monochrome/document.svg
           url: /service-catalog/scorecards/

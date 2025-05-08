@@ -19,7 +19,7 @@ related_resources:
   - text: "{{site.base_gateway}}"
     url: /gateway/
   - text: Get started with {{site.base_gateway}}
-    url: /how-to/get-started-with-gateway/
+    url: /gateway/get-started/
   - text: Kong AI Gateway
     url: /ai-gateway/
 

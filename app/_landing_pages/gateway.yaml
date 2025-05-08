@@ -68,7 +68,7 @@ rows:
             icon: /assets/icons/graduation.svg
             cta:
               text: 
-              url: /how-to/get-started-with-gateway/
+              url: /gateway/get-started/
               align: end
       - blocks:
         - type: card

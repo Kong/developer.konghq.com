@@ -3,13 +3,13 @@ title: IdP SAML attribute mapping reference
 content_type: reference
 layout: reference
 products:
-  - gateway
+  - konnect-platform
 works_on:
     - konnect
 api_specs:
     - konnect/control-planes-config
 breadcrumbs:
-  - /konnect-platform/
+  - /konnect/
 description: Attribute mapping tables necessary for configuring SSO with SAML
 
 
@@ -17,7 +17,7 @@ related_resources:
   - text: "Authentication"
     url: /gateway/authentication/
   - text: "{{site.konnect_short_name}} SSO"
-    url: /konnect-platform/konnect-sso/
+    url: /konnect-platform/sso/
   - text: "{{site.konnect_short_name}} ports and network requirements"
     url: /network/
 

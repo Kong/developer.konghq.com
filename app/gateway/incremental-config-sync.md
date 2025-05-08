@@ -46,13 +46,13 @@ When entity configuration changes, instead of sending the entire configuration s
 flowchart TD
 
 A[Client]
-B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"/> Kong Control Plane)
-C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"/> Kong Data Plane)
-D(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"/> Kong Data Plane)
+B(<img src="/assets/icons/gateway.svg" style="max-height:20px"/> Kong Control Plane)
+C(<img src="/assets/icons/gateway.svg" style="max-height:20px"/> Kong Data Plane)
+D(<img src="/assets/icons/gateway.svg" style="max-height:20px"/> Kong Data Plane)
 E[Client]
-F(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"/> Kong Control Plane)
-G(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"/> Kong Data Plane)
-H(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"/> Kong Data Plane)
+F(<img src="/assets/icons/gateway.svg" style="max-height:20px"/> Kong Control Plane)
+G(<img src="/assets/icons/gateway.svg" style="max-height:20px"/> Kong Data Plane)
+H(<img src="/assets/icons/gateway.svg" style="max-height:20px"/> Kong Data Plane)
 
  subgraph id1 [Incremental config sync]
  direction TB

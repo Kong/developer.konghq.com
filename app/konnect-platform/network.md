@@ -3,18 +3,12 @@ title: "Networking in {{site.konnect_short_name}}"
 description: 'Learn about Control Plane and Data Plane networking information like ports, hostnames, and communication in {{site.konnect_short_name}}.'
 content_type: reference
 breadcrumbs:
-  - /konnect-platform/
+  - /konnect/
 layout: reference
 products:
-    - gateway
+  - konnect-platform
 works_on:
   - konnect
-tools:
-    - admin-api
-    - konnect-api
-    - deck
-    - kic
-    - terraform
 related_resources:
   - text: "{{site.base_gateway}} ports"
     url: /gateway/network-ports-firewall/
@@ -122,7 +116,7 @@ rows:
 ## Hostnames
 
 
-The following [geographic regions](/konnect-platform/konnect-geos/) and their hostname region identifiers are supported:
+The following [geographic regions](/konnect-platform/geos/) and their hostname region identifiers are supported:
 * AU (Australia): `au`
 * EU (Europe): `eu`
 * ME (Middle East): `me`
