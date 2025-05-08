@@ -50,6 +50,7 @@ apiVersion: gateway-operator.konghq.com/v1beta1
 kind: DataPlane
 metadata:
   name: dataplane-example
+  namespace: kong
 spec:
   extensions:
   - kind: KonnectExtension
@@ -64,13 +65,15 @@ spec:
 ' | kubectl apply -f -
 ```
 
-## Check the Programmed status
+## Check the Ready status
 
-If the `DataPlane` has `Programmed` condition set to `True` then you can visit {{site.konnect_short_name}} and see the dataplane in the list of connected dataplanes for your control plane:
+If the `DataPlane` has `Ready` condition set to `True` then you can visit {{site.konnect_short_name}} and see the dataplane in the list of connected dataplanes for your control plane:
 
 <!-- vale off -->
 {% validation kubernetes-resource %}
 kind: dataplane
-name: kong
+name: dataplane-example
+conditionType: Ready
+reason: Ready
 {% endvalidation %}
 <!-- vale on -->

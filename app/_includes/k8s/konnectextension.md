@@ -4,7 +4,7 @@ kind: KonnectExtension
 apiVersion: konnect.konghq.com/v1alpha1
 metadata:
   name: my-konnect-config
-  namespace: default
+  namespace: kong
 spec:{% if include.use_custom_ca %}
   clientAuth:
     certificateSecret:

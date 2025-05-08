@@ -1,1 +1,6 @@
 name: Kong Gateway Operator
+
+releases:
+  - release: "1.5"
+    latest: true
+  - release: "1.4"

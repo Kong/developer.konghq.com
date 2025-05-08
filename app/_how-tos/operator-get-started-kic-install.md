@@ -43,15 +43,6 @@ tldr:
 
 1. Install {{ site.kic_product_name }} using Helm:
 
-   {: data-deployment-topology="konnect" }
-   ```bash
-   helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace  \
-     --set image.tag={{ site.data.operator_latest.release }} \
-     --set kubernetes-configuration-crds.enabled=true
-     --values ./values.yaml
-   ```
-
-   {: data-deployment-topology="on-prem" }
    ```bash
    helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace  \
      --set image.tag={{ site.data.operator_latest.release }} \

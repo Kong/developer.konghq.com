@@ -95,7 +95,8 @@ After the service and route are created, send traffic to the proxy and it will f
 To make a request to the proxy, fetch the LoadBalancer IP address using `kubectl get services`:
 
 ```bash
-export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
+NAME=$(kubectl get -o yaml -n kong service | yq '.items[].metadata.name | select(contains("dataplane-ingress"))')
+export PROXY_IP=$(kubectl get svc -n kong $NAME -o jsonpath='{range .status.loadBalancer.ingress[0]}{@.ip}{@.hostname}{end}')
 echo "Proxy IP: $PROXY_IP"
 ```
 
