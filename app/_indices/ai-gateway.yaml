@@ -199,9 +199,6 @@ sections:
         url: /plugins/ai-proxy-advanced/examples/semantic/
   - title: How-tos
     items:
-      - path: /how-to/get-started-with-ai-gateway/
-      - path: /how-to/protect-sensitive-information-with-ai/
-      - path: /how-to/set-up-ai-proxy-advanced-with-anthropic/
-      - path: /how-to/set-up-ai-proxy-with-anthropic/
-      - path: /how-to/store-a-mistral-api-key-as-a-secret-in-konnect-config-store/
-      - path: /how-to/rotate-secrets-in-google-cloud-secret/
+      - type: how-to
+        products:
+          - ai-gateway

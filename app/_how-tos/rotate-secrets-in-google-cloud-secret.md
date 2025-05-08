@@ -17,6 +17,7 @@ related_resources:
 description: Learn how to store and rotate secrets in Google Cloud with {{site.base_gateway}}, Mistral, and the AI Proxy plugin.
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem
@@ -28,7 +29,7 @@ min_version:
 plugins:
   - ai-proxy
 
-entities: 
+entities:
   - vault
   - service
   - route
@@ -183,7 +184,7 @@ secret: '{vault://gcp-sm-vault/test-secret}'
 value: 'Bearer invalid'
 {% endvalidation %}
 
-If the vault was configured correctly, this command should return `Bearer invalid`. 
+If the vault was configured correctly, this command should return `Bearer invalid`.
 
 Now, let's validate that when we make a call to the Route associated with the AI Proxy plugin, that it is using this invalid API key stored in our secret:
 
