@@ -80,7 +80,7 @@ the upstream path of the `Anthropic` for `llm/v1/chat` route type has changed fr
 while the plugin config parameters under [`model_options`](/plugins/ai-proxy/reference/#schema--config-model-options) are now just defaults.
 This fixes support for using the respective provider's native SDK.
 [#12903](https://github.com/Kong/kong/issues/12903)
-* You can now [use an existing OpenAI-compatible SDK](/how-to/use-sdks-with-ai-proxy/) (for example, Python OpenAI) to call
+* You can now use an existing OpenAI-compatible SDK (for example, Python OpenAI) to call
 different models, providers, and configurations with Kong AI Gateway.
 AI Proxy now has a [`preserve` option for `route_type`](/plugins/ai-proxy/reference/#schema--config-route-type), 
 where the requests and responses are passed directly to the upstream LLM. This enables compatibility with any

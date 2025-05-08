@@ -57,7 +57,7 @@ using the identity of the ECS task it's running as.
 
 With {{site.mesh_product_name}} on ECS, each service enumerates
 other mesh services it contacts
-[in the `Dataplane` specification][@TODO].
+[in the `Dataplane` specification](/mesh/data-plane-universal/).
 
 ## Deploy Amazon ECS on {{site.mesh_product_name}}
 

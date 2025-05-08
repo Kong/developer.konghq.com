@@ -59,12 +59,6 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 ---
 
-@todo: fix this
-
-- based on https://docs.konghq.com/gateway/latest/kong-enterprise/audit-log/#validating-signatures
-- had issues with the Lua script so I tried a Python script instead
-- validation fails
-
 ## Send a request to generate audit logs
 
 Send any request to the Admin API to create an audit log entry:

@@ -90,10 +90,7 @@ For more information, see the [matching docs](/docs/{{ page.release }}/policies/
 ## Configuration
 
 Unlike other outbound policies, `MeshTCPRoute` doesn't contain `default`
-directly in the `to` array. The `default` section is nested inside `rules`,
-so the policy structure looks like the following:
-
-[//]: # (TODO: https://github.com/kumahq/kuma-website/issues/2020)
+directly in the `to` array. The `default` section is nested inside `rules`. For more information review the [MeshTCPRoute policy documentation](/policies/meshtcproute/).
 
 {% if_version lte:2.8.x %}
 ```yaml
