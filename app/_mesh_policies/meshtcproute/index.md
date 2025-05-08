@@ -90,7 +90,7 @@ For more information, see the [matching docs](/docs/{{ page.release }}/policies/
 ## Configuration
 
 Unlike other outbound policies, `MeshTCPRoute` doesn't contain `default`
-directly in the `to` array. The `default` section is nested inside `rules`. For more information review the [MeshTCPRoute policy documentation](/policies/meshtcproute/).
+directly in the `to` array. The `default` section is nested inside `rules`. For more information review the [MeshTCPRoute policy documentation](/mesh/policies/meshtcproute/reference/).
 
 {% if_version lte:2.8.x %}
 ```yaml
