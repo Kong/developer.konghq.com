@@ -12,7 +12,7 @@ min_version:
 breadcrumbs:
   - /konnect/
 
-description: "Learn how to configure SSO in {{site.konnect_short_name}}."
+description: "Learn how to configure single sign-on (SSO) for the {{site.konnect_short_name}} platform."
 
 api_specs:
     - konnect/identity
