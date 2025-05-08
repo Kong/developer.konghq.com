@@ -31,11 +31,6 @@ works_on:
 
 entities: []
 
-prereqs:
-  operator:
-    konnect:
-      auth: true
-      control_plane: true
 ---
 
 ## Set up the `proxy-cache` plugin

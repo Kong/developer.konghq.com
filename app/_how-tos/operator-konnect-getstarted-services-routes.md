@@ -28,12 +28,6 @@ works_on:
 
 entities: []
 
-prereqs:
-  operator:
-    konnect:
-      auth: true
-      control_plane: true
-
 ---
 
 ## How Kubernetes resources map to {{site.base_gateway}} entities

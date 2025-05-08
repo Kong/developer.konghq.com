@@ -31,12 +31,6 @@ works_on:
 
 entities: []
 
-prereqs:
-  operator:
-    konnect:
-      auth: true
-      control_plane: true
-
 ---
 
 ## About rate limiting

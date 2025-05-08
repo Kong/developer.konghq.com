@@ -28,12 +28,6 @@ works_on:
 
 entities: []
 
-prereqs:
-  operator:
-    konnect:
-      auth: true
-      control_plane: false
-
 ---
 
 ## Create a `KonnectGatewayControlPlane`
