@@ -1576,3 +1576,8 @@ app/insomnia/graphql-queries.md:
   - app/insomnia/graphql-queries.md
 app/insomnia/external-vault.md:
   - app/insomnia/external-vault-integration.md
+
+
+## Terraform
+app/_landing_pages/terraform.yaml:
+  - /app/konnect/reference/terraform.md
