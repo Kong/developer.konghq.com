@@ -97,7 +97,7 @@ mesh_product_name: Kong Mesh
 kic_product_name: Kong Ingress Controller
 konnect_saas: Kong Konnect
 operator_product_name: Kong Gateway Operator
-event_gateway: Kong Native Event Gateway
+event_gateway: Kong Native Event Proxy
 event_gateway_short: KNEP
 
 repos:
@@ -142,3 +142,6 @@ mesh_install_archive_name: kong-mesh
 mesh:
   ignored_links_regex:
     - '\[.*\]\(https:\/\/github\.com\/[kK]ong\/kong-mesh.*\)'
+
+# Version vars
+latest_gateway_oss_version: "3.9"

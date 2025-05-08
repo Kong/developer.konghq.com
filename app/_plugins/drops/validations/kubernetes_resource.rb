@@ -12,11 +12,7 @@ module Jekyll
           raise ArgumentError, "Missing `name` in {% validation #{id} %}." unless @yaml.key?('name')
         end
 
-        def data_validate_konnect
-          JSON.dump({ name: id, config: config })
-        end
-
-        def data_validate_on_prem
+        def data_validate
           JSON.dump({ name: id, config: config })
         end
       end

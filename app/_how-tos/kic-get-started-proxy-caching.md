@@ -84,7 +84,7 @@ output:
   expected:
     - value:
       - "< HTTP/1.1 200 OK"
-      - "< X-Cache-Status: Hit"
+      - "< X-Cache-Status: Miss"
     - value:
       - "< HTTP/1.1 200 OK"
       - "< X-Cache-Status: Hit"

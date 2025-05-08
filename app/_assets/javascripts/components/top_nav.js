@@ -1,11 +1,17 @@
 export default class TopNav {
   constructor() {
     this.elem = document.getElementById("top-nav");
+    this.mobileMenuOpen = document.getElementById("top-nav-open");
+    this.mobileMenuClose = document.getElementById("top-nav-close");
+    this.mobileBackButton = document.getElementById("top-nav-back");
+    this.allNavBarItems = document.querySelectorAll(".navbar-item");
     this.init();
   }
 
   init() {
-    this.elem.addEventListener("click", this.onClick.bind(this));
+    this.elem.querySelectorAll(".navbar-item__trigger").forEach((item) => {
+      item.addEventListener("click", this.onClick.bind(this));
+    });
     this.elem.addEventListener("keydown", this.onKeyDown.bind(this));
 
     document.addEventListener("click", this.onDocumentClick.bind(this));
@@ -14,11 +20,29 @@ export default class TopNav {
     const triggers = this.elem.querySelectorAll(
       ".navbar-item__trigger, .button"
     );
+
     triggers.forEach((navBarItemTrigger) => {
-      navBarItemTrigger.addEventListener("focus", () => {
-        this.closeAllMenus();
+      navBarItemTrigger.addEventListener("focus", (elem) => {
+        if (!this.isMobileMenuOpened()) {
+          this.closeAllMenus();
+        }
       });
     });
+
+    this.mobileMenuOpen.addEventListener(
+      "click",
+      this.openMobileMenu.bind(this)
+    );
+
+    this.mobileMenuClose.addEventListener(
+      "click",
+      this.closeMobileMenu.bind(this)
+    );
+
+    this.mobileBackButton.addEventListener(
+      "click",
+      this.onMobileBackButtonClick.bind(this)
+    );
   }
 
   onClick(event) {
@@ -30,18 +54,19 @@ export default class TopNav {
       return;
     }
 
-    const thisMenu = closestTrigger
-      .closest(".navbar-item")
-      .querySelector(".navbar-item__menu");
+    if (!closestTrigger.closest(".navbar-item").getAttribute("aria-haspopup")) {
+      return;
+    }
 
-    const allMenus = this.elem.querySelectorAll(".navbar-item__menu");
-    allMenus.forEach((menu) => {
-      if (menu !== thisMenu) {
-        this.toggleMenuVisible(menu, false);
-      }
-    });
+    const thisNavBarItem = closestTrigger.closest(".navbar-item");
 
     this.toggleMenu(closestTrigger);
+
+    this.allNavBarItems.forEach((navBarItem) => {
+      if (navBarItem !== thisNavBarItem) {
+        this.toggleMenuVisible(navBarItem, false);
+      }
+    });
   }
 
   onKeyDown(event) {
@@ -65,44 +90,89 @@ export default class TopNav {
     }
   }
 
-  toggleMenu(target) {
-    const menu = target
-      .closest(".navbar-item")
-      .querySelector(".navbar-item__menu");
+  onMobileBackButtonClick(event) {
+    event.stopPropagation();
 
-    const shouldShow = menu.classList.contains("hidden");
-    this.toggleMenuVisible(menu, shouldShow);
+    this.allNavBarItems.forEach((item) => {
+      item.classList.remove("hidden", "navbar-item--opened");
+    });
+    this.toggleControls();
+  }
+
+  toggleMenu(target) {
+    const navBarItem = target.closest(".navbar-item");
+
+    const visible = navBarItem.classList.contains("navbar-item--opened");
+    this.toggleMenuVisible(navBarItem, !visible);
+    this.toggleControls();
+  }
+
+  toggleControls(show) {
+    Array.from(this.elem.querySelector(".top-nav__controls").children).forEach(
+      (child) => {
+        child.classList.toggle("hidden");
+      }
+    );
   }
 
   toggleMenuVisible(element, show) {
-    const menu = element;
-    const navBarItem = element.closest(".navbar-item");
-    const triggerIcon = navBarItem.querySelector(".navbar-item__trigger_icon");
-    const menuCaret = navBarItem.querySelector(".navbar-item__menu-caret");
-
-    menu.classList.toggle("hidden", !show);
+    const navBarItem = element;
+    const menu = navBarItem.querySelector(".navbar-item__menu");
 
     if (show) {
+      navBarItem.classList.add("navbar-item--opened");
       navBarItem.setAttribute("aria-expanded", "true");
-      triggerIcon.classList.add("rotate-180");
-      menuCaret.classList.remove("hidden");
-      menu.querySelectorAll("a").forEach((link) => {
-        link.removeAttribute("tabindex");
-      });
+      if (this.isMobileMenuOpened()) {
+        navBarItem.classList.remove("hidden");
+      }
+      if (menu) {
+        menu.querySelectorAll("a").forEach((link) => {
+          link.removeAttribute("tabindex");
+        });
+      }
     } else {
+      navBarItem.classList.remove("navbar-item--opened");
       navBarItem.setAttribute("aria-expanded", "false");
-      triggerIcon.classList.remove("rotate-180");
-      menuCaret.classList.add("hidden");
-      menu.querySelectorAll("a").forEach((link) => {
-        link.setAttribute("tabindex", "-1");
-      });
+
+      if (this.isMobileMenuOpened()) {
+        if (this.elem.querySelector(".navbar-item--opened")) {
+          navBarItem.classList.add("hidden");
+        } else {
+          navBarItem.classList.remove("hidden");
+        }
+      }
+      if (menu) {
+        menu.querySelectorAll("a").forEach((link) => {
+          link.setAttribute("tabindex", "-1");
+        });
+      }
     }
   }
 
+  openMobileMenu(event) {
+    event.stopPropagation();
+    this.elem.classList.add("top-nav--opened", "duration-500");
+
+    document.body.style.setProperty("overflow", "hidden");
+    document.body.style.setProperty("overscroll-behavior", "contain");
+  }
+
+  closeMobileMenu(event) {
+    event.stopPropagation();
+
+    this.closeAllMenus();
+    this.elem.classList.remove("top-nav--opened");
+    document.body.style.overflow = "";
+    document.body.style.removeProperty("overscoll-behavior");
+  }
+
+  isMobileMenuOpened() {
+    return this.elem.classList.contains("top-nav--opened");
+  }
+
   closeAllMenus() {
-    const allMenus = this.elem.querySelectorAll(".navbar-item__menu");
-    allMenus.forEach((menu) => {
-      this.toggleMenuVisible(menu, false);
+    this.allNavBarItems.forEach((item) => {
+      this.toggleMenuVisible(item, false);
     });
   }
 }

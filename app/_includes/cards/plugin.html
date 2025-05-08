@@ -4,6 +4,8 @@
 {% if plugin.publisher == 'kong-inc' %}{% assign support = support | append: ",kong-inc" %}{% endif %}
 {% assign trusted_content = "" %}
 {% if plugin.premium_partner %}{% assign trusted_content =  "premium-partner" %}{% endif %}
+{% assign name = plugin.name %}
+{% if plugin.act_as_plugin %}{% assign name = plugin.act_as_plugin_name %}{% endif %}
 <div
   class="card card__bordered min-h-[260px]"
   data-card="plugin"
@@ -18,7 +20,7 @@
         <img src="{{ plugin.icon }}" class="w-8 h-8"/>
 
         <div class="flex flex-col gap-3 flex-grow">
-            <h4>{{ plugin.name | liquify }}</h4>
+            <h4>{{ name | liquify }}</h4>
 
             <p class="text-sm line-clamp-3">
                 {{ plugin.description | liquify | markdownify | markdown }}
