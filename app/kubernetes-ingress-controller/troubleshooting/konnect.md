@@ -49,7 +49,7 @@ If you set the `LOG_LEVEL` to `trace`, {{ site.kic_product_name }} will log the 
 Here is an example of a failed request/response log entry:
 
 ```text
-Request failed  {"x_b3_traceid": "66c731200000000034ce3297e8e64544", "x_b3_spanid": "4e6955874299011d", "x_datadog_trace_id": "3805034363203503428", "x_datadog_parent_id": "5650141246939267357", "v": 0, "method": "GET", "url": "https://us.kic.api.konghq.tech/kic/api/control-planes/81bc4af5-ed3c-40b4-bb88-b5a05fbe34a1/oauth2?size=1000", "status_code": 404}
+Request failed  {"x_b3_traceid": "66c731200000000034ce3297e8e64544", "x_b3_spanid": "4e6955874299011d", "x_datadog_trace_id": "3805034363203503428", "x_datadog_parent_id": "5650141246939267357", "v": 0, "method": "GET", "url": "https://us.kic.api.konghq.com/kic/api/control-planes/81bc4af5-ed3c-40b4-bb88-b5a05fbe34a1/oauth2?size=1000", "status_code": 404}
 ```
 {:.no-copy-code}
 

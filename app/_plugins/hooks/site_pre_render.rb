@@ -12,6 +12,9 @@ Jekyll::Hooks.register :site, :pre_render do |site|
     next unless page.data['act_as_plugin']
 
     slug = page.dir.split('/').last
+
+    # add custom_name, name is the actual file name in jekyll
+    page.data['act_as_plugin_name'] = page.data['name']
     site.data['act_as_plugins'][slug] = page
   end
 

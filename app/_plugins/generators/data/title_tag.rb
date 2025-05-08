@@ -36,35 +36,6 @@ module Jekyll
                    .join(' - ')
                    .concat(" | #{@site.config['title']}")
       end
-
-      def feature
-        # TODO:
-        #   special considerations:
-        #     * api pages: - done
-        #        * error pages - done
-        #        * /api/ => OpenAPI Specifications - done
-        #        * /api/name/latest => name - OpenAPI Specification - done
-        #        * /api/name/old => name - version - OpenAPI Specification - done
-        #     * plugin pages: - done
-        #        * add the type of page to the title - done
-        #         * configuration, changelog, api - done
-        #         * plugin_example? example name - done
-        #     * mesh policies - done
-        #     * versioned reference pages
-        #     * landing pages
-        #     * concept pages
-        #     * html pages
-        #     * else?
-        # TODO: same for mesh policies
-        return 'Plugin' if @page.url.start_with?('/plugins/')
-        return 'OpenAPI Specifications' if @page.url.start_with?('/api/')
-
-        if product
-          @site.data.dig('products', product, 'name')
-        elsif tool
-          @site.data.dig('tools', tool, 'name')
-        end
-      end
     end
   end
 end

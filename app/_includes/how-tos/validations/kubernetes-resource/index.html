@@ -1,5 +1,3 @@
-{% if page.works_on contains 'konnect' %}
-<div data-deployment-topology="konnect" markdown="1" data-test-step="{{ config.data_validate_konnect | escape }}">
+<div markdown="1" data-test-step="{{ config.data_validate | escape }}">
   {% include how-tos/validations/kubernetes-resource/snippet.md config=config %}
 </div>
-{% endif %}

@@ -16,10 +16,12 @@ import kic from '@/icons/products/kic.svg'
 import mesh from '@/icons/products/mesh.svg'
 import orgManagement from '@/icons/products/org-management.svg'
 import serviceCatalog from '@/icons/products/service-catalog.svg'
+import eventGateway from '@/icons/products/event-gateway.svg'
 
 const productIcons = {
   'advanced-analytics': advancedAnalytics,
   'ai-gateway': AIGateway,
+  'event-gateway': eventGateway,
   'api-ops': APIOps,
   'dev-portal': devPortal,
   'gateway': gateway,
