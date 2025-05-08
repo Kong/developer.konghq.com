@@ -3,7 +3,8 @@ title: Konnect Reference Platform - Kong Air
 content_type: reference
 layout: reference
 
-products: []
+products:
+  - reference-platform
 
 works_on:
   - konnect

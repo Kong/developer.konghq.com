@@ -157,7 +157,7 @@ rows:
               title: Konnect Orchestrator
               description: |
                 Swiss army knife for the {{site.konnect_short_name}} Reference Platform
-              icon: /assets/icons/code-snippet.svg
+              icon: /assets/icons/code.svg
               cta:
                 text: See more... 
                 url: /konnect-reference-platform/orchestrator/
