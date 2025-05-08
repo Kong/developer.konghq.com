@@ -1,0 +1,4 @@
+ignoredPaths:
+  - 'app/_explorer.html'
+  - 'app/_explorer/'
+  - 'app/index/'
