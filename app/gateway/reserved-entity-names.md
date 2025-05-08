@@ -16,7 +16,7 @@ works_on:
 min_version:
   gateway: '3.4'
 
-description: Reserved and unsuable {{site.base_gateway}} entity names.
+description: Reserved and unusable {{site.base_gateway}} entity names.
 
 related_resources:
   - text: Gateway entities
