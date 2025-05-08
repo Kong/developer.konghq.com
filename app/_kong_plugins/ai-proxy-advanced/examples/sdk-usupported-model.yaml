@@ -5,6 +5,17 @@ extended_description: |
   {{site.base_gateway}} can attempt to support models that aren’t pre-configured with format transformers or are untested.
 
   {:.warning}
+  > Prepend the following `routes:`` block for this configuration to work properly:
+  > ```
+  > routes:
+  >  - name: openai-any
+  >    paths:
+  >      - "~/openai/(?<op_path>[^#?]+)"
+  >    methods:
+  >      - POST
+  > ```
+
+  {:.warning}
   > **Caution**: The following use cases are unsupported but may work depending on your setup. Use at your own discretion.
 
   When setting up for unsupported models, you must configure the `route_type` to preserve mode. This approach ensures that the request and response are passed through without any transformations.

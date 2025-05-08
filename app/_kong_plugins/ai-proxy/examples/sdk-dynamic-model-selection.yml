@@ -3,6 +3,17 @@ description: Configure a chat route that reads the target model from the request
 extended_description: |
   Configure a chat route that reads the target model from the request path instead of hardcoding it in the configuration.
 
+  {:.warning}
+  > Prepend the following `routes:`` block for this configuration to work properly:
+  > ```
+  > routes:
+  >  - name: openai-chat
+  >    paths:
+  >      - "~/(?<model>[^#?/]+)/chat/completions$"
+  >    methods:
+  >      - POST
+  > ```
+
   Applying this configuration will let you target different models dynamically using an OpenAI-compatible SDK.
   For example:
 

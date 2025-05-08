@@ -3,6 +3,15 @@ description: Configure a dynamic route to target multiple Azure OpenAI model dep
 extended_description: |
   Configure a header capture to insert the requested model name directly into the plugin configuration for Kong AI Gateway deployment with Azure OpenAI, as a string substitution.
 
+  {:.warning}
+  > Prepend the following `routes:` block for this configuration to work properly:
+  > ```
+  > routes:
+  >   - name: azure-chat-model-from-path
+  >     paths:
+  >        - "~/azure/.*"
+  > ```
+
   Using the below configuration, you can target an Azure model deployment named `west-europe-gpt-4o` with the following sample request:
   ```
   cat <<EOF > request.json

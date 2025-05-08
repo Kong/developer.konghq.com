@@ -1,7 +1,18 @@
-title: 'OpenAI SDK: Chat routes with multiple providers'
-description: Configure two routes to point to two different deployments of an Azure OpenAI model.
+title: 'OpenAI SDK: Proxy multiple models deployed in the same Azure instance'
+description: Configure one route to proxy multiple models deployed in the same Azure instance.
 extended_description: |
-  Configure two routes to point to two different deployments of an Azure OpenAI model.
+  Configure one route to proxy multiple models deployed in the same Azure instance.
+
+  {:.warning}
+  > Prepend the following `routes:` block for this configuration to work properly:
+  > ```
+  > routes:
+  >  - name: azure-chat
+  >    paths:
+  >      - "~/openai/deployments/(?<azure_instance>[^#?/]+)/chat/completions"
+  >    methods:
+  >      - POST
+  > ```
 
   When you apply this configuration, you can set the SDK endpoint to `http://localhost:8000/azure`. When the Azure instance parameter is set to `my-gpt-3-5`, the Python SDK produces the URL `http://localhost:8000/openai/deployments/my-gpt-3-5/chat/completions` and is directed to the respective Azure deployment ID and model.
 
@@ -12,38 +23,24 @@ requirements:
 - Mistral account
 
 config:
-  targets:
-    - route_type: llm/v1/chat
-      auth:
-        header_name: Authorization
-        header_value: Bearer ${cohere_key}
-      logging:
-        log_statistics: true
-        log_payloads: false
-      model:
-        provider: cohere
-        name: $(uri_captures.model)
-    - route_type: llm/v1/chat
-      auth:
-        header_name: Authorization
-        header_value: Bearer ${mistral_key}
-      logging:
-        log_statistics: true
-        log_payloads: false
-      model:
-        provider: mistral
-        name: $(uri_captures.model)
-        options:
-          mistral_format: openai
-          upstream_url: https://api.mistral.ai/v1/chat/completions
+  route_type: "llm/v1/chat"
+  auth:
+    header_name: "api-key"
+    header_value: ${azure_key}
+  logging:
+    log_statistics: true
+    log_payloads: false
+  model:
+    provider: "azure"
+    name: "$(uri_captures.azure_instance)"
+    options:
+      azure_instance: "my-openai-instace"
+      azure_deployment_id: "$(uri_captures.azure_instance)"
 
 variables:
-  cohere_key:
-    value: $COHERE_API_KEY
+  azure_key:
+    value: $AZURE_API_KEY
     description: The API key used to authenticate requests to Cohere.
-  mistral_key:
-    value: $MISTRAL_API_KEY
-    description: The API key used to authenticate requests to Mistral.
 
 tools:
   - deck
