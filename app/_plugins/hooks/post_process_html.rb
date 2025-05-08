@@ -31,7 +31,7 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
 
       # Index pages have specific heading IDs to account for groups
       unless @page_or_doc.url.include?("/index/")
-        heading['id'] = Jekyll::Utils.slugify(text)
+        heading['id'] = Jekyll::Utils.slugify(text) unless @page_or_doc.url == '/gateway/changelog/'
       end
 
       # special case, it has links in the headings
