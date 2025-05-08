@@ -136,7 +136,7 @@ components:
       type: apiKey
 externalDocs:
   description: Documentation for Kong Gateway and its APIs
-  url: https://docs.konghq.com
+  url: https://developer.konghq.com
 info:
   contact:
     email: support@konghq.com

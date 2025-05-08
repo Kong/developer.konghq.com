@@ -103,8 +103,8 @@ components:
       name: Kong-Admin-Token
       type: apiKey
 externalDocs:
-  description: Documentation for Kong Gateway and its APIs
-  url: https://docs.konghq.com
+  description: Documentation for the MTLS Auth plugin
+  url: https://developer.konghq.com
 info:
   contact:
     email: support@konghq.com
