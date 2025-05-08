@@ -168,7 +168,11 @@ async function checkForMissingSourceFileMappingsToExternalSources(
     }
     const missingSource =
       sources[sourceFile] === undefined &&
-      kumaToMeshSourcesDevSitePaths[sourceFile] === undefined;
+      kumaToMeshSourcesDevSitePaths[sourceFile] === undefined &&
+      !config.ignoredDevSiteSources.includes(sourceFile) &&
+      !config.docsUrlsToDevSiteUrls.some(
+        (entry) => entry.source_file === sourceFile
+      );
     if (missingSource) {
       missing.push(sourceFile);
     }
