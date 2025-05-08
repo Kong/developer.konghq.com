@@ -22,14 +22,20 @@ module Jekyll
       sources = Hash.new { |h, k| h[k] = [] }
 
       site.pages.each do |page|
-        sources["app/#{page.relative_path}"] << page.url
+        sources[file_path(page)] << page.url
       end
 
       site.documents.each do |doc|
-        sources["app/#{doc.relative_path}"] << doc.url
+        sources[file_path(doc)] << doc.url
       end
 
       site.pages << Page.new(site, sources)
+    end
+
+    def file_path(page)
+      return page.relative_path if page.relative_path.start_with?('app')
+
+      "app/#{page.relative_path}"
     end
   end
 end
