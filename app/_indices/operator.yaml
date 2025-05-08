@@ -58,7 +58,9 @@ groups:
           - path: /operator/konnect/get-started/**/*
       - title: Key Concepts
         items:
-          - path: /operator/konnect/concepts/labelling/
+          - path: /operator/konnect/reconciliation-loop/
+          - path: /operator/konnect/labelling/
+          - path: /operator/konnect/kongpluginbinding/
       - title: "Konnect CRDs: Control Planes"
         items:
           - path: /operator/konnect/crd/control-planes/**/*
@@ -71,11 +73,7 @@ groups:
       - title: Troubleshooting
         items:
           - path: /operator/konnect/troubleshooting/status/
-          - path: /operator/konnect/faq/
       - title: Reference
         items:
           - path: /operator/konnect/reference/crds/
-          - path: /operator/konnect/reference/crds/konnectextension/
-          - path: /operator/konnect/reference/crds/kongpluginbinding/
-          - path: /operator/konnect/reference/configuration/
-          - path: /operator/konnect/faq/
+          - path: /operator/konnect/reference/faq/
