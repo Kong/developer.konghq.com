@@ -132,7 +132,7 @@ You can use this setting to [strengthen security in Kong Manager](https://docs.k
 
 **Existing plugins**:
 
-* [**All AI plugins**](https://docs.konghq.com/hub/?category=ai):
+* [**All AI plugins**](/plugins/?category=ai):
   * Added support for the `pgvector` database.
   * Added support for the new Ollama streaming content type in the AI driver.
   * Added support for boto3 SDKs for Bedrock provider, and for Google GenAI SDKs for Gemini provider.
@@ -238,12 +238,12 @@ You can use this setting to [strengthen security in Kong Manager](https://docs.k
 
 #### Plugins
 
-* [**All AI plugins**](https://docs.konghq.com/hub/?category=ai):
+* [**All AI plugins**](/plugins/?category=ai):
   * Fixed an issue where AI upstream URL trailing would be empty.
   * Fixed an issue where templates weren't being resolved correctly.
   * The plugins now support nested fields.
 
-* [**All authentication plugins**](https://docs.konghq.com/hub/?category=authentication):
+* [**All authentication plugins**](/plugins/?category=authentication):
   * Improved the error message which occurred when an anonymous consumer was configured but didn't exist.
 
 * [**AI Proxy**](/plugins/ai-proxy/) (`ai-proxy`)
@@ -363,7 +363,7 @@ This release contains upgraded dependencies and a new interface for validating e
 
 #### Plugins
 
-* [**AI Plugins**](https://docs.konghq.com/hub/?category=ai): 
+* [**AI Plugins**](/plugins/?category=ai): 
   * Fixed an issue where templates weren't being resolved correctly.
   * Added nested field support.
 
@@ -1014,7 +1014,7 @@ key length, and string length, then log or terminate violating requests.
   when an authenticated consumer already exists.
   [#13184](https://github.com/Kong/kong/issues/13184)
 
-* [**All AI plugins**](https://docs.konghq.com/hub/?category=ai):
+* [**All AI plugins**](/plugins/?category=ai):
   * Latency data is now pushed to logs and metrics.
    [#13428](https://github.com/Kong/kong/issues/13428)
   * Kong AI Gateway now supports all AWS Bedrock Converse API models.
@@ -1219,7 +1219,7 @@ were reset to `null` if the deprecated `timeout` was `null`.
     disabling `log_statistics` if it has already been enabled upon unsupported providers.
     [#12860](https://github.com/Kong/kong/issues/12860)
 
-* [**AI plugins**](https://docs.konghq.com/hub/?category=ai)
+* [**AI plugins**](/plugins/?category=ai)
   * Fixed an issue where certain AI plugins couldn't be applied per consumer or per service.
   [#13209](https://github.com/Kong/kong/issues/13209)
   * Fixed an issue where multi-modal inputs weren't properly validated and calculated.
@@ -5402,8 +5402,8 @@ See the documentation for more detail on [interpreting audit logs](https://docs.
     If not set, the start time defaults to the current timestamp.
     
 * **Improved Plugin Documentation**
-    * Split the plugin compatibility table into a [technical compatibility page](https://docs.konghq.com/hub/plugins/compatibility/).
-    * Updated the plugin compatibility information for more clarity on [supported network protocols](https://docs.konghq.com/hub/plugins/compatibility/#protocols) and on [entity scopes](https://docs.konghq.com/hub/plugins/compatibility/#scopes). 
+    * Split the plugin compatibility table into a technical compatibility page.
+    * Updated the plugin compatibility information for more clarity on supported network protocols and on entity scopes. 
     * Revised docs for the following plugins to include examples:
       * [CORS](/plugins/cors/)
       * [File Log](/plugins/file-log/)
@@ -5876,7 +5876,7 @@ see [Key management](https://docs.konghq.com/gateway/latest/reference/key-manage
   - Added `requestContext` field into `awsgateway_compatible` input data
   [#9380](https://github.com/Kong/kong/pull/9380)
 
-- [**Authentication plugins**](https://docs.konghq.com/hub/#authentication):
+- [**Authentication plugins**](/plugins/#authentication):
   - The `anonymous` field can now be configured as the username of the consumer.
   This field allows you to configure a string to use as an “anonymous” consumer if authentication fails.
 
@@ -6393,7 +6393,7 @@ The new router can be used in traditional-compatible mode, or use the new expres
 Kong Gateway version.
 [#8772](https://github.com/Kong/kong/pull/8772)
 
-    [Plugin documentation](https://docs.konghq.com/hub/) now refers to the Kong Gateway version instead of
+    [Plugin documentation](/plugins/) now refers to the Kong Gateway version instead of
     the individual plugin version.
 
 * **New plugins**:
