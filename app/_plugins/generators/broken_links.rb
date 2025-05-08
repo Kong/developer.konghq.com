@@ -22,6 +22,8 @@ module Jekyll
       sources = Hash.new { |h, k| h[k] = [] }
 
       site.pages.each do |page|
+        next if page.url.start_with?('/assets/')
+
         sources[file_path(page)] << page.url
       end
 
