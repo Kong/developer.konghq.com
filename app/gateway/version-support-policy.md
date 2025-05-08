@@ -27,7 +27,7 @@ related_resources:
   - text: "Supported third-party dependencies for {{site.base_gateway}}"
     url: /gateway/third-party-support/
   - text: "{{site.konnect_short_name}} compatibility"
-    url: /konnect-platform/konnect-compatibility/
+    url: /konnect-platform/compatibility/
   - text: "{{site.base_gateway}} upgrades"
     url: /gateway/upgrade/
   - text: "{{site.base_gateway}} changelog"
@@ -42,7 +42,7 @@ Kong adopts a structured approach to versioning its products.
 Products follow a pattern of `{MAJOR}.{MINOR}.{PATCH}.{ENTERPRISE_PATCH}`.
 
 This policy **only** applies to {{site.base_gateway}}.
-For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version support policy](/konnect-platform/konnect-compatibility/).
+For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version support policy](/konnect-platform/compatibility/).
 
 {:.info}
 > **Long Term Support Policy Update**
@@ -257,4 +257,4 @@ rows:
 <!--vale on-->
 
 {:.info}
-> **Note:** This policy **only** applies to {{site.base_gateway}}. For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version support policy](/konnect-platform/konnect-compatibility/).
+> **Note:** This policy **only** applies to {{site.base_gateway}}. For {{site.konnect_short_name}}, review the [{{site.konnect_short_name}} version support policy](/konnect-platform/compatibility/).

@@ -2,8 +2,8 @@
 {% mermaid %} 
 flowchart TD
     A(Dev Portal &bull; Gateway Manager &bull; Advanced Analytics &bull; Service Catalog)
-    B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong-managed Control Plane #40;Kong Gateway instance#41;)
-    C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane #40;Kong Gateway instance#41;)
+    B(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Kong-managed Control Plane #40;Kong Gateway instance#41;)
+    C(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane #40;Kong Gateway instance#41;)
 
     subgraph id1 [Konnect]
     A --- B

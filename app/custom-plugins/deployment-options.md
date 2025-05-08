@@ -78,7 +78,7 @@ section of the custom plugin installation page for details on this distribution 
 
 ## {{site.konnect_short_name}}
 
-[{{site.konnect_short_name}}](/konnect-platform/) is Kong's unified API platform as a service. {{site.konnect_short_name}}
+[{{site.konnect_short_name}}](/konnect/) is Kong's unified API platform as a service. {{site.konnect_short_name}}
 supports custom plugins with some limitations. With an on-premise deployment, users manage {{site.base_gateway}}
 data planes as well as the control plane and, optionally, the backing database. In {{site.konnect_short_name}},
 the control plane and database are fully managed for you which limits support for custom data entities and 

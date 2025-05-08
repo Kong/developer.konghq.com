@@ -1,0 +1,204 @@
+title: All AI Gateway documentation
+sections:
+  - title: Overview
+    items:
+      - title: AI Gateway Overview
+        description: Overview of AI gateway capabilities
+        url: /ai-gateway/
+      - title: Quickstart
+        description: Get started quickly with AI Gateway setup and usage.
+        url: /ai-gateway/#quickstart
+      - title: AI Gateway Capabilities
+        description: Learn about the core capabilities of AI Gateway.
+        url: /ai-gateway/#ai-gateway-capabilities
+      - title: AI Usage Governance
+        description: Understand how to manage and govern AI usage effectively.
+        url: /ai-gateway/#ai-usage-governance
+      - title: Data Governance
+        description: Explore how AI Gateway helps enforce data governance policies.
+        url: /ai-gateway/#data-governance
+      - title: Prompt Engineering
+        description: Best practices and tools for designing effective prompts.
+        url: /ai-gateway/#prompt-engineering
+      - title: Guardrails and Content Safety
+        description: Implement safeguards to ensure safe and compliant AI outputs.
+        url: /ai-gateway/#guardrails-and-content-safety
+      - title: Request Transformations
+        description: Customize and transform AI requests with Gateway features.
+        url: /ai-gateway/#request-transformations
+      - title: Streaming
+        description: Learn how AI Proxy streaming works.
+        url: /ai-gateway/streaming/
+      - title: Audit log
+        description: Learn about AI Gateway logging capabilities.
+        url: /ai-gateway/ai-audit-log-reference/
+      - title: Monitor AI LLM Metrics
+        description: Explore how to monitor AI LLM metrics in AI Gateway.
+        url: /ai-gateway/monitor-ai-llm-metrics/
+      - title: Advanced Analytics
+        description: Access advanced analytics features in AI Gateway.
+        url: /ai-gateway/advanced-analytics/
+  - title: AI providers
+    items:
+      - path: /ai-gateway/ai-providers/**
+      - title: Anthropic Chat Route - AI Proxy Advanced
+        description: Set up Anthropic chat routing with the AI Proxy Advanced plugin.
+        url: /plugins/ai-proxy-advanced/examples/anthropic-chat-route/
+      - title: Azure AI with Managed Identity - AI Proxy Advanced
+        description: Connect Azure AI services using Managed Identity through the AI Proxy Advanced plugin.
+        url: /plugins/ai-proxy-advanced/examples/azure-ai-with-managed-identity/
+      - title: Azure Chat Route - AI Proxy Advanced
+        description: Configure Azure chat routing with the AI Proxy Advanced plugin.
+        url: /plugins/ai-proxy-advanced/examples/azure-chat-route/
+      - title: Bedrock Chat Route - AI Proxy Advanced
+        description: Set up Bedrock chat routing with the AI Proxy Advanced plugin.
+        url: /plugins/ai-proxy-advanced/examples/bedrock-chat-route/
+      - title: Cohere Chat Route - AI Proxy Advanced
+        description: Integrate Cohere chat routing with the AI Proxy Advanced plugin.
+        url: /plugins/ai-proxy-advanced/examples/cohere-chat-route/
+      - title: Gemini Chat Route - AI Proxy Advanced
+        description: Configure Gemini chat routing with the AI Proxy Advanced plugin.
+        url: /plugins/ai-proxy-advanced/examples/gemini-chat-route/
+      - title: Hugging Face Chat Route - AI Proxy Advanced
+        description: Set up Hugging Face chat routing with the AI Proxy Advanced plugin.
+        url: /plugins/ai-proxy-advanced/examples/huggingface-chat-route/
+      - title: Llama 2 Chat Route - AI Proxy Advanced
+        description: Integrate Llama 2 chat routing with the AI Proxy Advanced plugin.
+        url: /plugins/ai-proxy-advanced/examples/llama2-chat-route/
+      - title: Mistral Chat Route - AI Proxy Advanced
+        description: Set up Mistral chat routing with the AI Proxy Advanced plugin.
+        url: /plugins/ai-proxy-advanced/examples/mistral-chat-route/
+      - title: OpenAI Chat Route - AI Proxy Advanced
+        description: Configure OpenAI chat routing with the AI Proxy Advanced plugin.
+        url: /plugins/ai-proxy-advanced/examples/openai-chat-route/
+      - title: Anthropic Chat Route - AI Proxy
+        description: Set up Anthropic chat routing with the AI Proxy plugin.
+        url: /plugins/ai-proxy/examples/anthropic-chat-route/
+      - title: Azure AI with Managed Identity - AI Proxy
+        description: Connect Azure AI services using Managed Identity through the AI Proxy plugin.
+        url: /plugins/ai-proxy/examples/azure-ai-with-managed-identity/
+      - title: Azure Chat Route - AI Proxy
+        description: Configure Azure chat routing with the AI Proxy plugin.
+        url: /plugins/ai-proxy/examples/azure-chat-route/
+      - title: Bedrock Chat Route - AI Proxy
+        description: Set up Bedrock chat routing with the AI Proxy plugin.
+        url: /plugins/ai-proxy/examples/bedrock-chat-route/
+      - title: Cohere Chat Route - AI Proxy
+        description: Integrate Cohere chat routing with the AI Proxy plugin.
+        url: /plugins/ai-proxy/examples/cohere-chat-route/
+      - title: Gemini Chat Route - AI Proxy
+        description: Configure Gemini chat routing with the AI Proxy plugin.
+        url: /plugins/ai-proxy/examples/gemini-chat-route/
+      - title: Hugging Face Chat Route - AI Proxy
+        description: Set up Hugging Face chat routing with the AI Proxy plugin.
+        url: /plugins/ai-proxy/examples/huggingface-chat-route/
+      - title: Llama 2 Chat Route - AI Proxy
+        description: Integrate Llama 2 chat routing with the AI Proxy plugin.
+        url: /plugins/ai-proxy/examples/llama2-chat-route/
+      - title: Mistral Chat Route - AI Proxy
+        description: Set up Mistral chat routing with the AI Proxy plugin.
+        url: /plugins/ai-proxy/examples/mistral-chat-route/
+      - title: OpenAI Chat Route - AI Proxy
+        description: Configure OpenAI chat routing with the AI Proxy plugin.
+        url: /plugins/ai-proxy/examples/openai-chat-route/
+  - title: AI Gateway plugins
+    items:
+      - path: /plugins/?category=ai
+      - path: /plugins/ai-azure-content-safety/
+      - path: /plugins/ai-prompt-decorator/
+      - path: /plugins/ai-prompt-guard/
+      - path: /plugins/ai-prompt-template/
+      - path: /plugins/ai-proxy/
+      - path: /plugins/ai-proxy-advanced/
+      - path: /plugins/ai-rag-injector/
+      - path: /plugins/ai-rate-limiting-advanced/
+      - path: /plugins/ai-request-transformer/
+      - path: /plugins/ai-response-transformer/
+      - path: /plugins/ai-semantic-prompt-guard/
+      - path: /plugins/ai-sanitizer/
+  - title: Plugin configuration reference
+    items:
+      - path: /plugins/ai-prompt-decorator/reference/**/*
+      - path: /plugins/ai-prompt-guard/reference/**/*
+      - path: /plugins/ai-prompt-template/reference/**/*
+      - path: /plugins/ai-proxy/reference/**/*
+      - path: /plugins/ai-proxy-advanced/reference/**/*
+      - path: /plugins/ai-rag-injector/reference/**/*
+      - path: /plugins/ai-rate-limiting-advanced/reference/**/*
+      - path: /plugins/ai-request-transformer/reference/**/*
+      - path: /plugins/ai-response-transformer/reference/**/*
+      - path: /plugins/ai-semantic-prompt-guard/reference/**/*
+      - path: /plugins/ai-sanitizer/reference/**/*
+  - title: Plugin configuration examples
+    items:
+      - path: /plugins/ai-prompt-decorator/examples/**/*
+      - path: /plugins/ai-prompt-guard/examples/**/*
+      - path: /plugins/ai-prompt-template/examples/**/*
+      - path: /plugins/ai-proxy/examples/**/*
+      - path: /plugins/ai-proxy-advanced/examples/**/*
+      - path: /plugins/ai-rag-injector/examples/**/*
+      - path: /plugins/ai-rate-limiting-advanced/examples/**/*
+      - path: /plugins/ai-request-transformer/examples/**/*
+      - path: /plugins/ai-response-transformer/examples/**/*
+      - path: /plugins/ai-semantic-prompt-guard/examples/**/*
+      - path: /plugins/ai-sanitizer/examples/**/*
+  - title: Plugin changelogs
+    items:
+      - title: AI Prompt Decorator Changelog
+        description: See the latest updates and improvements for the AI Prompt Decorator plugin.
+        url: /plugins/ai-prompt-decorator/changelog/
+      - title: AI Prompt Guard Changelog
+        description: See the latest updates and improvements for the AI Prompt Guard plugin.
+        url: /plugins/ai-prompt-guard/changelog/
+      - title: AI Prompt Template Changelog
+        description: See the latest updates and improvements for the AI Prompt Template plugin.
+        url: /plugins/ai-prompt-template/changelog/
+      - title: AI Proxy Changelog
+        description: See the latest updates and improvements for the AI Proxy plugin.
+        url: /plugins/ai-proxy/changelog/
+      - title: AI Proxy Advanced Changelog
+        description: See the latest updates and improvements for the AI Proxy Advanced plugin.
+        url: /plugins/ai-proxy-advanced/changelog/
+      - title: AI RAG Injector Changelog
+        description: See the latest updates and improvements for the AI RAG Injector plugin.
+        url: /plugins/ai-rag-injector/changelog/
+      - title: AI Rate Limiting Advanced Changelog
+        description: See the latest updates and improvements for the AI Rate Limiting Advanced plugin.
+        url: /plugins/ai-rate-limiting-advanced/changelog/
+      - title: AI Request Transformer Changelog
+        description: See the latest updates and improvements for the AI Request Transformer plugin.
+        url: /plugins/ai-request-transformer/changelog/
+      - title: AI Response Transformer Changelog
+        description: See the latest updates and improvements for the AI Response Transformer plugin.
+        url: /plugins/ai-response-transformer/changelog/
+      - title: AI Semantic Prompt Guard Changelog
+        description: See the latest updates and improvements for the AI Semantic Prompt Guard plugin.
+        url: /plugins/ai-semantic-prompt-guard/changelog/
+      - title: AI Sanitizer Changelog
+        description: See the latest updates and improvements for the AI Sanitizer plugin.
+        url: /plugins/ai-sanitizer/changelog/
+  - title: AI load balancing
+    items:
+      - title: Consistent Hashing - AI Proxy Advanced
+        description: Set up consistent hashing for load balancing.
+        url: /plugins/ai-proxy-advanced/examples/consistent-hashing/
+      - title: Lowest Latency - AI Proxy Advanced
+        description: Configure load balancing based on the lowest latency.
+        url: /plugins/ai-proxy-advanced/examples/lowest-latency/
+      - title: Lowest Usage - AI Proxy Advanced
+        description: Set up load balancing based on the lowest usage.
+        url: /plugins/ai-proxy-advanced/examples/lowest-usage/
+      - title: Priority - AI Proxy Advanced
+        description: Configure priority-based load balancing.
+        url: /plugins/ai-proxy-advanced/examples/priority/
+      - title: Round Robin - AI Proxy Advanced
+        description: Set up round-robin load balancing.
+        url: /plugins/ai-proxy-advanced/examples/round-robin/
+      - title: Semantic - AI Proxy Advanced
+        description: Set up semantic load balancing.
+        url: /plugins/ai-proxy-advanced/examples/semantic/
+  - title: How-tos
+    items:
+      - type: how-to
+        products:
+          - ai-gateway

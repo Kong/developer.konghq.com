@@ -63,6 +63,7 @@
     --kui-color-text-primary-stronger: rgb(var(--color-brand));
     --kui-color-text-danger: rgb(var(--color-semantic-red-primary));
     --kui-color-background: rgb(var(--color-bg-secondary));
+    --kui-color-background-primary-weaker: rgb(var(--color-semantic-blue-secondary));
     --kui-color-background-neutral-weakest: rgb(var(--color-bg-primary));
     --kui-color-border: rgb(var(--color-border-primary), 0.05);
     --kui-color-border-primary: rgb(var(--color-brand));
@@ -728,7 +729,7 @@
   }
 
   .navbar-items {
-    @apply items-center ml-0 list-none flex flex-col flex-grow lg:flex-row gap-7 lg:gap-8 w-full p-6 lg:p-0;
+    @apply items-center ml-0 list-none flex flex-col flex-grow lg:flex-row gap-7 md:gap-3 xl:gap-8 w-full p-6 lg:p-0;
   }
 
   .navbar-item {
@@ -775,6 +776,14 @@
 
   .navbar-item__icon {
     @apply inline-flex text-brand w-6 h-6 items-center justify-center !p-0;
+  }
+
+  .feedback__button--active[value="true"] {
+    @apply bg-semantic-green-secondary;
+  }
+
+  .feedback__button--active[value="false"] {
+    @apply bg-semantic-red-secondary;
   }
 }
 

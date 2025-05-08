@@ -80,7 +80,7 @@ rows:
             icon: /assets/icons/login.svg
             cta:
               text: Configure SSO 
-              url: "/konnect-platform/konnect-sso/"
+              url: "/konnect-platform/sso/"
       - blocks:
         - type: card
           config:

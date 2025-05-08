@@ -61,15 +61,15 @@ rows:
               diagram: |
                 flowchart TD
                 A(Dev Portal &bull; Gateway Manager &bull; Analytics &bull; Service Catalog)
-                B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Control Plane
+                B(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Control Plane
                 #40;Kong Gateway instance#41;)
-                B2(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Control Plane 
+                B2(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Control Plane 
                 #40;Kong Gateway instance#41;)
-                C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane 1
+                C(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane 1
                 #40;Kong Gateway instance#41;)
-                D(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane 2
+                D(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane 2
                 #40;Local Kong Gateway instance#41;)
-                E(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane 3
+                E(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane 3
                 #40;Cloud-hosted Kong Gateway instance#41;)
                 subgraph id1 [Konnect]
                 A --- B & B2
@@ -138,9 +138,9 @@ rows:
                 flowchart TD
 
                 A[(Database)]
-                B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong Gateway instance)
-                C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong Gateway instance)
-                D(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong Gateway instance)
+                B(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Kong Gateway instance)
+                C(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Kong Gateway instance)
+                D(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Kong Gateway instance)
 
                 A <---> B & C & D
   - header:
@@ -196,16 +196,6 @@ rows:
               align: left
               text: Learn more about DB-less mode
               url: /gateway/db-less-mode/
-      - blocks:
-          - type: mermaid
-            config:
-              diagram: |
-                flowchart TD
-                  A(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong Gateway instance)
-
-                  A2(fa:fa-file kong.yml)
-
-                  A2 --> A
   - header:
       type: h3
       text: "Data Plane hosting options in DB-less mode"

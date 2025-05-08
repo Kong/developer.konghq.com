@@ -59,8 +59,6 @@ faqs:
       ```
   - q: Do you retain server logs, or event logs?
     a: All server logs stored are kept within GCP and only accessed by engineers authorized to manage the Insomnia servers.
-  - q: I use the Insomnia app scratch pad locally, does Insomnia collect my data too?
-    a: unsure 
   - q: I use the desktop Insomnia app, how do I opt out of data collection?
     a: If you use the Insomnia desktop application without an account, users have the choice to opt out of sending this information in the desktop application user interface. Users can opt out of sharing analytics data with Insomnia via the Insomnia app Preference Page by scrolling down to the Network Activity section and checking or unchecking the box next to Send Usage Statistics.
   - q: Do you retain server logs, or event logs?

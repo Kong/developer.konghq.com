@@ -4,13 +4,13 @@ content_type: reference
 layout: reference
 
 products:
-    - gateway
+  - konnect-platform
 
 min_version:
   gateway: '3.4'
 
 breadcrumbs:
-  - /konnect-platform/
+  - /konnect/
 
 description: "Learn how to configure SSO in {{site.konnect_short_name}}."
 
@@ -20,7 +20,7 @@ api_specs:
 
 related_resources:
   - text: "Authentication"
-    url: /konnect-authentication/
+    url: /konnect/authentication/
   - text: "SAML IdP mapping"
     url: /konnect-platform/saml-idp-mapping/
   - text: "{{site.konnect_short_name}} teams and roles"

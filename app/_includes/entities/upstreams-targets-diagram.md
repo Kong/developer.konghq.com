@@ -12,9 +12,9 @@ flowchart LR
   httpbin.konghq.com")
   E("Target:
   httpbun.com")
-  F(Service application:
+  F(Upstream service:
   httpbin.konghq.com)
-  G(Service application:
+  G(Upstream service:
   httpbun.com)
 
   A --> B
@@ -27,7 +27,7 @@ flowchart LR
 
   end
 
-  subgraph id2 ["`**Target service applications**`"]
+  subgraph id2 ["`**Target upstream services**`"]
     D --> F
     E --> G
 
