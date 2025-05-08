@@ -152,3 +152,24 @@ To accept the Transit Gateway attachment in AWS, do the following:
 Ensure that each AWS VPC requiring traffic forwarding has its own Transit Gateway attachment.
 
 After the attachment is active, create a route in your AWS VPC to forward traffic to the {{site.konnect_short_name}} managed VPC through the Transit Gateway. This ensures proper traffic flow from {{site.konnect_short_name}} to your Services and back.
+
+### Configure AWS Transit Gateway and VPC Routing Tables
+
+To properly route traffic between your AWS VPCs and Dedicated Cloud Gateways via AWS Transit Gateway, additional routing steps are required:
+
+1. From your AWS Console, navigate to **VPC > Transit Gateways**.
+1. Select your transit gateway, then select **Transit Gateway Attachments**.
+1. Click **Create transit gateway attachment** and attach each AWS VPC that needs connectivity to your Kong DCGW.
+1. After attachments are created, navigate to **Transit Gateway Route Tables**.
+1. If the attachment is associated with (and propagating to) the route table, the VPC CIDRs appears automatically. 
+1. If not, select the relevant Transit Gateway route table, then click **Create route** to add routes to your Kong DCGW VPC CIDR range and AWS VPC CIDR ranges. Ensure these CIDR blocks do not overlap.
+1. Next, navigate to your AWS VPCs, select **Route Tables**, and update your route tables:
+    * Add a new route for the Kong DCGW VPC CIDR with the **Target** set to your **Transit Gateway ID**.
+    * For example:  
+      `Destination: 192.168.0.0/16` -> `Target: tgw-xxxxxxxx`
+1. Verify your AWS Security Groups and Network ACLs:
+    * Allow necessary inbound/outbound traffic for ports and protocols used by your upstream applications and Kong DCGW.
+    * Ensure Network ACLs permit traffic between AWS VPCs and Kong DCGW.
+1. Confirm connectivity by testing communication between your AWS VPC resources and Kong DCGW endpoints with `ping`, `telnet`, or `traceroute`).    
+
+Once the transit gateway attachment is successful and you've configured routing in your AWS VPC, add a route where the upstream services are running, and configure the route to forward all traffic for the {{site.konnect_short_name}} managed VPC via the transit gateway. This ensures that traffic from the {{site.konnect_short_name}} data plane reaches the service and the response packets are routed back correctly.
