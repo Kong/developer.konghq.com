@@ -1573,3 +1573,74 @@ app/insomnia/graphql-queries.md:
   - app/insomnia/graphql-queries.md
 app/insomnia/external-vault.md:
   - app/insomnia/external-vault-integration.md
+
+
+## Operator
+
+
+app/_how-tos/operator-dataplane-autoscale-datadog.md:
+  - 
+app/_how-tos/operator-dataplane-autoscale-prometheus.md:
+  - 
+app/_how-tos/operator-dataplane-custom-ca.md:
+  - 
+app/_how-tos/operator-dataplane-custom-plugins.md:
+  - 
+app/_how-tos/operator-dataplane-image.md:
+  - 
+app/_how-tos/operator-dataplane-sidecars.md:
+  - 
+app/_how-tos/operator-get-started-hybrid-create-route.md:
+  - 
+app/_how-tos/operator-get-started-hybrid-deploy-dataplane.md:
+  - 
+app/_how-tos/operator-get-started-hybrid-install.md:
+  - 
+app/_how-tos/operator-get-started-kic-create-gateway.md:
+  - 
+app/_how-tos/operator-get-started-kic-create-route.md:
+  - 
+app/_how-tos/operator-get-started-kic-install.md:
+  - 
+app/_how-tos/operator-install.md:
+  - 
+app/_how-tos/operator-konnect-certificate-ca-cert.md:
+  - 
+app/_how-tos/operator-konnect-cgw-configuration.md:
+  - 
+app/_how-tos/operator-konnect-cgw-network.md:
+  - 
+app/_how-tos/operator-konnect-consumer.md:
+  - 
+app/_how-tos/operator-konnect-control-plane-group.md:
+  - 
+app/_how-tos/operator-konnect-control-plane-kic.md:
+  - 
+app/_how-tos/operator-konnect-control-plane.md:
+  - 
+app/_how-tos/operator-konnect-dp-certificate.md:
+  - 
+app/_how-tos/operator-konnect-getstarted-authentication.md:
+  - 
+app/_how-tos/operator-konnect-getstarted-controlplane.md:
+  - 
+app/_how-tos/operator-konnect-getstarted-install.md:
+  - 
+app/_how-tos/operator-konnect-getstarted-key-auth.md:
+  - 
+app/_how-tos/operator-konnect-getstarted-proxy-cache.md:
+  - 
+app/_how-tos/operator-konnect-getstarted-ratelimiting.md:
+  - 
+app/_how-tos/operator-konnect-getstarted-services-routes.md:
+  - 
+app/_how-tos/operator-konnect-key-keyset.md:
+  - 
+app/_how-tos/operator-konnect-service-route.md:
+  - 
+app/_how-tos/operator-konnect-serviceless-route.md:
+  - 
+app/_how-tos/operator-konnect-upstream-target.md:
+  - 
+app/_how-tos/operator-konnect-vault.md:
+  - 
