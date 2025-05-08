@@ -25,7 +25,7 @@ module Jekyll
       config = add_defaults(config)
 
       # Process YAML for the code block
-      config = config.to_yaml.split("\n").slice(1..-1).join("\n") # Remove the first line (---)
+      config = config.to_yaml.delete_prefix("---\n").chomp.gsub(/version: '(.*)'/, 'version: "\1"')
 
       context.stack do
         context['config'] = config
