@@ -92,6 +92,7 @@ callouts
 certificate_admin
 charset
 chatbot
+cidr
 cleartext
 client_payload
 client_status
@@ -842,6 +843,7 @@ viewport
 viewports
 vms
 vnet
+vpc
 Vue
 Vue
 walkthrough
