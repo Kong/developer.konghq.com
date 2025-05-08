@@ -6,7 +6,8 @@ description: |
 
 content_type: reference
 layout: reference
-
+breadcrumbs: 
+  - /kubernetes-ingress-controller/
 products:
   - kic
 

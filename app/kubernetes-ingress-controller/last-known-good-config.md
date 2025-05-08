@@ -8,7 +8,8 @@ layout: reference
 
 products:
   - kic
-
+breadcrumbs: 
+  - /kubernetes-ingress-controller/
 works_on:
   - on-prem
   - konnect

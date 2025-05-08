@@ -6,13 +6,20 @@ description: |
 
 content_type: reference
 layout: reference
-
+breadcrumbs: 
+  - /kubernetes-ingress-controller/
 products:
   - kic
 
 works_on:
   - on-prem
   - konnect
+related_resources:
+  - text: KongUpstreamPolicy
+    url: /kubernetes-ingress-controller/reference/annotations/#konghq-com-upstream-policy
+  - text: Annotation reference
+    url: /kubernetes-ingress-controller/reference/annotations/
+
 ---
 
 {{ site.kic_product_name }} automatically creates a `kong` `IngressClass` when installed. All of the example ingress definitions in the documentation set `spec.ingressClassName: kong`, which allows things to work by default.

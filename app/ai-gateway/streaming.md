@@ -10,7 +10,8 @@ works_on:
 products:
   - gateway
   - ai-gateway
-
+breadcrumbs:
+  - /ai-gateway/
 tags:
   - ai
   - streaming
