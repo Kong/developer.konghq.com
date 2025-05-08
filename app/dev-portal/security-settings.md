@@ -39,7 +39,7 @@ related_resources:
 The Dev Portal security settings allow for visibility and access control around developers accessing your Dev Portal. To configure these settings, navigate to Dev Portal in the {{site.konnect_short_name}} UI, click a Dev Portal, and then click **Settings** in the sidebar.
 
 {:.info}
-> To adjust security settings for Dev Portal admins and users, see [{{site.konnect_short_name}} organization settings](/konnect/authentication/).
+> To adjust security settings for Dev Portal admins and users, see [{{site.konnect_short_name}} organization settings](/konnect-platform/authentication/).
 
 ## Default visibility
 

@@ -47,7 +47,7 @@ When configuring SSO for Dev Portal, keep the following guidelines in mind:
 * If you are using [team mappings from an IdP](/dev-portal/team-mapping/), they must come from the same IdP as your Dev Portal SSO.
 * Each Dev Portal has its own SSO configuration.
   * You can use the same IdP across multiple Dev Portals or configure different IdPs per portal.
-* Dev Portal SSO is distinct from [{{site.konnect_short_name}} Org-level SSO](/konnect/authentication/).
+* Dev Portal SSO is distinct from [{{site.konnect_short_name}} Org-level SSO](/konnect-platform/authentication/).
 * You can combine built-in authentication with either OIDC or SAML (not both).
   * Keep built-in authentication enabled while testing your IdP integration.
   * Disable built-in authentication only after successfully validating the SSO login flow.
