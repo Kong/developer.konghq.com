@@ -24,7 +24,7 @@ related_resources:
   - text: Portal snippets
     url: /dev-portal/snippets/
   - text: "Configure SSO for a {{site.konnect_short_name}} org"
-    url: /konnect/sso/
+    url: /konnect-platform/sso/
 ---
 
 With teams mapped from an IdP, the developers and permissions are mapped automatically in {{site.konnect_short_name}} so you don't have to manually copy over each team of developers.

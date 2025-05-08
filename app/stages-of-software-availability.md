@@ -19,7 +19,7 @@ related_resources:
   - text: "{{site.kic_product_name}} version support policy"
     url: /kubernetes-ingress-controller/support/
   - text: "{{site.konnect_short_name}} compatibility"
-    url: /konnect/compatibility/
+    url: /konnect-platform/compatibility/
 ---
 
 ## Tech preview

@@ -49,7 +49,7 @@ cleanup:
 
 ## Create a realm
 
-First, export your Control Plane ID and [region](/konnect/geos/) (for example, `us`) so we can use it in the request. You can find these under your Control Plane settings in [Gateway Manager](https://cloud.konghq.com/gateway-manager/):
+First, export your Control Plane ID and [region](/konnect-platform/geos/) (for example, `us`) so we can use it in the request. You can find these under your Control Plane settings in [Gateway Manager](https://cloud.konghq.com/gateway-manager/):
 ```sh
 export KONNECT_CONTROL_PLANE_ID={control-plane-id}
 export DECK_CONTROL_PLANE_REGION={region}

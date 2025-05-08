@@ -1955,7 +1955,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 2.8 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect/compatibility/)
+      [Compatibility](/konnect-platform/compatibility/)
   - ID: EOL101
     Severity: error
     Description: |
@@ -1966,7 +1966,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 2.8 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect/compatibility/)
+      [Compatibility](/konnect-platform/compatibility/)
   - ID: EOL102
     Severity: error
     Description: |
@@ -1977,7 +1977,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 2.8 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect/compatibility/)
+      [Compatibility](/konnect-platform/compatibility/)
   - ID: EOL103
     Severity: error
     Description: |
@@ -1988,7 +1988,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 3.4 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect/compatibility/)
+      [Compatibility](/konnect-platform/compatibility/)
   - ID: EOL104
     Severity: error
     Description: |
@@ -1999,7 +1999,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 3.4 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect/compatibility/)
+      [Compatibility](/konnect-platform/compatibility/)
   - ID: EOL105
     Severity: error
     Description: |
@@ -2010,7 +2010,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 3.4 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect/compatibility/)
+      [Compatibility](/konnect-platform/compatibility/)
   - ID: EOL106
     Severity: error
     Description: |
@@ -2021,7 +2021,7 @@ messages:
       To ensure continued Konnect support, please upgrade to the latest 3.4 LTS
       version.
     DocumentationURL: |
-      [Compatibility](/konnect/compatibility/)
+      [Compatibility](/konnect-platform/compatibility/)
   - ID: P001
     Severity: error
     Description: |

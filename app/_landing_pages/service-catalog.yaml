@@ -74,4 +74,4 @@ rows:
               - q: "What if I notice discrepancies in Service Catalog data?"
                 a: "Check integration settings, verify connected tools, and ensure data synchronization is working correctly."
               - q: "Can I control access to specific Service Catalog data?"
-                a: "Yes, access can be managed through [teams and roles](/konnect/teams-and-roles/)."
+                a: "Yes, access can be managed through [teams and roles](/konnect-platform/teams-and-roles/)."

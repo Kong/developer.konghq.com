@@ -80,7 +80,7 @@ rows:
             icon: /assets/icons/login.svg
             cta:
               text: Configure SSO 
-              url: "/konnect/sso/"
+              url: "/konnect-platform/sso/"
       - blocks:
         - type: card
           config:
@@ -91,7 +91,7 @@ rows:
             icon: /assets/icons/team.svg
             cta:
               text: Manage teams and roles 
-              url: "/konnect/teams-and-roles/"
+              url: "/konnect-platform/teams-and-roles/"
       - blocks:
         - type: card
           config:

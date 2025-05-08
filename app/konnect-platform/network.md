@@ -6,7 +6,7 @@ breadcrumbs:
   - /konnect/
 layout: reference
 products:
-    - gateway
+  - konnect-platform
 works_on:
   - konnect
 tools:
@@ -122,7 +122,7 @@ rows:
 ## Hostnames
 
 
-The following [geographic regions](/konnect/geos/) and their hostname region identifiers are supported:
+The following [geographic regions](/konnect-platform/geos/) and their hostname region identifiers are supported:
 * AU (Australia): `au`
 * EU (Europe): `eu`
 * ME (Middle East): `me`

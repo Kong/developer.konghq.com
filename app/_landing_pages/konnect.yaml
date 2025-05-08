@@ -30,7 +30,7 @@ rows:
 
                     * Easily manage {{site.base_gateway}}
                     * Catalog, share, and monetize APIs
-                    * Achieve federated API management with [multi-geo](/konnect/geos/) support
+                    * Achieve federated API management with [multi-geo](/konnect-platform/geos/) support
       - blocks:
           - type: image
             config:
@@ -126,7 +126,7 @@ rows:
             icon: /assets/icons/lock.svg
             cta:
               text: Learn about {{site.konnect_short_name}} authentication methods
-              url: /konnect/authentication/
+              url: /konnect-platform/authentication/
               align: end
       - blocks:
         - type: card
@@ -234,7 +234,7 @@ rows:
               icon: /assets/icons/firewall.svg
               cta:
                 text: Learn about {{site.konnect_short_name}} ports
-                url: /konnect/network/
+                url: /konnect-platform/network/
                 align: end
   - columns:
       - blocks:
@@ -283,7 +283,7 @@ rows:
                 See which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with.
               cta:
                 text: View the compatibility policy 
-                url: /konnect/compatibility/
+                url: /konnect-platform/compatibility/
                 align: end
       - blocks:
           - type: card
@@ -325,7 +325,7 @@ rows:
                 Learn about the different {{site.konnect_short_name}} plans and account management.
               cta:
                 text: View {{site.konnect_short_name}} account information 
-                url: /konnect/account/
+                url: /konnect-platform/account/
                 align: end
       - blocks:
           - type: card

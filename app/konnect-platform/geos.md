@@ -4,7 +4,7 @@ description: '{{site.konnect_short_name}} allows you to host and operate your cl
 content_type: reference
 layout: reference
 products:
-    - gateway
+  - konnect-platform
 tools:
     - admin-api
     - konnect-api
@@ -22,7 +22,7 @@ breadcrumbs:
   - /konnect/
 related_resources:
   - text: "{{site.konnect_short_name}} ports and network requirements"
-    url: /konnect/network/
+    url: /konnect-platform/network/
   - text: "Dedicated Cloud Gateways"
     url: /dedicated-cloud-gateways/
   - text: "{{site.konnect_short_name}} Platform"
@@ -49,7 +49,7 @@ The following objects are geo-specific:
 * [Application registration](/dev-portal/application-registration/)
 * [Dev portals](/dev-portal/)
 * [Service meshes and mesh zones](/mesh-manager/)
-* [Custom teams and roles](/konnect/teams-and-roles/)
+* [Custom teams and roles](/konnect-platform/teams-and-roles/)
 
 ## Supported geos 
 

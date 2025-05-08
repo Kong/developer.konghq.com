@@ -54,7 +54,7 @@ rows:
                     text: |
                       **{{site.base_gateway}} Control Planes**
 
-                      Every [region](/konnect/geos/) in every organization starts with one default Control Plane. 
+                      Every [region](/konnect-platform/geos/) in every organization starts with one default Control Plane. 
                       With {{site.konnect_short_name}}, you can configure additional {{site.base_gateway}} Control Planes, 
                       each of which will have isolated configuration. Use multiple Control Planes in one 
                       {{site.konnect_short_name}} organization to manage Data Plane nodes and their configuration 

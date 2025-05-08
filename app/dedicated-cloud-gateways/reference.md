@@ -72,7 +72,7 @@ tags:
 ## How do Dedicated Cloud Gateways work?
 
 When you create a Dedicated Cloud Gateway, {{site.konnect_short_name}} creates a **Control Plane**. 
-This Control Plane, like other {{site.konnect_short_name}} Control Planes, is hosted by {{site.konnect_short_name}}. You can then deploy Data Planes in different [regions](/konnect/geos/#dedicated-cloud-gateways).
+This Control Plane, like other {{site.konnect_short_name}} Control Planes, is hosted by {{site.konnect_short_name}}. You can then deploy Data Planes in different [regions](/konnect-platform/geos/#dedicated-cloud-gateways).
 
 Dedicated Cloud Gateways support two different configuration modes:
 * **Autopilot Mode:** Configure expected requests per second, and {{site.konnect_short_name}} pre-warms and autoscales the Data Plane nodes automatically.

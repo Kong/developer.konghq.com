@@ -31,7 +31,7 @@ related_resources:
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
   - text: "{{site.konnect_short_name}} roles and teams"
-    url: /konnect/teams-and-roles/
+    url: /konnect-platform/teams-and-roles/
 
 api_specs:
     - gateway/admin-ee

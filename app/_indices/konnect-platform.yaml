@@ -1,0 +1,7 @@
+title: All Konnect platform Documentation
+sections:
+  - items:
+      - path: /konnect-platform/
+      - path: /konnect-platform/**/*
+    auto_exclude: true
+
