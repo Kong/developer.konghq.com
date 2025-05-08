@@ -19,6 +19,7 @@ import "@/javascripts/dropdowns";
 import "@/javascripts/toc";
 import "@/javascripts/search_modal";
 import "@/javascripts/mesh_service_switcher";
+import "@/javascripts/feedback";
 
 document.addEventListener("DOMContentLoaded", function () {
   new TopNav();
