@@ -177,4 +177,4 @@ Validate that the image was built correctly using `docker run`:
 docker run -it --rm kong-image kong version
 ```
 
-If the image was built correctly, a Docker container will start and output the {{site.base_gateway}} enterprise version to the console. 
+If the image was built correctly, a Docker container will start and output the {{site.ee_product_name}} version to the console. 

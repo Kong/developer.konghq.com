@@ -10,8 +10,9 @@ related_resources:
 description: Configure the AI Proxy Advanced plugin to create a chat route using Anthropic.
 
 products:
-    # - ai-gateway
     - gateway
+    - ai-gateway
+
 
 works_on:
     - on-prem
@@ -24,7 +25,7 @@ min_version:
 plugins:
   - ai-proxy-advanced
 
-entities: 
+entities:
   - service
   - route
   - plugin
@@ -65,7 +66,7 @@ cleanup:
 
 ## Configure the plugin
 
-To set up AI Proxy Advanced with Anthropic, we need to specify the [model](https://docs.anthropic.com/en/docs/about-claude/models#model-names) and [Anthropic API version](https://docs.anthropic.com/en/api/versioning#version-history) to use. 
+To set up AI Proxy Advanced with Anthropic, we need to specify the [model](https://docs.anthropic.com/en/docs/about-claude/models#model-names) and [Anthropic API version](https://docs.anthropic.com/en/api/versioning#version-history) to use.
 
 In this example, we'll use the Claude 2.1 model and version 2023-06-01 of the API:
 

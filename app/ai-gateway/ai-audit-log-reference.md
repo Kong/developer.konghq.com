@@ -5,6 +5,7 @@ layout: reference
 
 products:
   - ai-gateway
+  - gateway
 
 tags:
   - ai
@@ -12,7 +13,8 @@ tags:
 
 min_version:
   gateway: '3.6'
-
+breadcrumbs:
+  - /ai-gateway/
 description: "Kong AI Gateway provides a standardized logging format for AI plugins, enabling the emission of analytics events and facilitating the aggregation of AI usage analytics across various providers."
 
 related_resources:

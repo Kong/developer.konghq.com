@@ -8,7 +8,10 @@ products:
 
 works_on:
    - on-prem
-
+   - konnect
+breadcrumbs:
+  - /gateway-manager/
+  
 tags:
     - control-plane
     - data-plane

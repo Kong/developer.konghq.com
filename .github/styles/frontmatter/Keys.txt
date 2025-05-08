@@ -39,3 +39,4 @@ extended_description
 skip_proxy_ip
 gateway_custom_env
 gateway_env
+ai_gateway_enterprise

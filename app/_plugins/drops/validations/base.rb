@@ -23,6 +23,10 @@ module Jekyll
             VaultSecret.new(id:, yaml:)
           when 'kubernetes-resource'
             KubernetesResource.new(id:, yaml:)
+          when 'kubernetes-resource-property'
+            KubernetesResourceProperty.new(id:, yaml:)
+          when 'custom-command'
+            CustomCommand.new(id:, yaml:)
           else
             raise ArgumentError, "Missing Drop for `#{id}`"
           end

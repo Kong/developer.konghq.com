@@ -23,3 +23,13 @@ You should see the following response:
 {{ include.message }}
 ```
 {% endif %}
+
+
+{% if include.expected_headers %}
+{% assign header_count = include.expected_headers | size %}
+You should see the following header{% if header_count > 1 %}s{% endif %}:
+
+```text{% for header in include.expected_headers %}
+{{ header }}{% endfor %}
+```
+{% endif %}

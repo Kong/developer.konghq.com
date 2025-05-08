@@ -240,7 +240,7 @@ Would point to a secret object called `pg` inside a HashiCorp Vault, which may r
 <!-- vale on -->
 
 Vault references must be used for the whole referenced value. 
-Imagine that you're calling a service application with the authentication token `ABC123`:
+Imagine that you're calling a upstream service with the authentication token `ABC123`:
 
 {% feature_table %}
 item_title: Works

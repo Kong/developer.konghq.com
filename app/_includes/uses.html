@@ -21,6 +21,8 @@
         {% assign product_info = site.data.products[product] %}
             {% if product == 'kic' %}
                 {% capture url %}/kubernetes-ingress-controller/{% endcapture %}
+            {% elsif product == 'konnect-platform' %}
+                {% capture url %}/index/konnect-platform/{% endcapture %}
             {% else %}
                 {% capture url %}/{{ product }}/{% endcapture %}
             {% endif %}

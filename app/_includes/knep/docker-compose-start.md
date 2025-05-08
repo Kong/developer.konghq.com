@@ -99,7 +99,7 @@ The {{site.event_gateway_short}} container will use environment variables from `
 ```shell
 cat <<EOF > knep.env
 KONNECT_API_TOKEN=\${KONNECT_TOKEN}
-KONNECT_API_HOSTNAME=us.api.konghq.tech
+KONNECT_API_HOSTNAME=us.api.konghq.com
 KONNECT_CONTROL_PLANE_ID=\${KONNECT_CONTROL_PLANE_ID}
 EOF
 ```

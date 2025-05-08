@@ -9,7 +9,8 @@ products:
 works_on:
     - konnect
     - on-prem
-
+breadcrumbs:
+  - /custom-plugins/
 description: Learn about how to develop custom plugins for {{site.base_gateway}}.
 
 tags:

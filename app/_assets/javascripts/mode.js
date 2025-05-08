@@ -1,12 +1,19 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const modeSwitch = document.getElementById('mode-switch');
+  const darkModeSwitches = document.querySelectorAll(".dark-mode-switch");
 
-    modeSwitch.addEventListener('click', () => {
-        document.documentElement.classList.toggle('dark');
-        if (document.documentElement.classList.contains('dark')) {
-            localStorage.setItem('mode', 'dark');
-        } else {
-            localStorage.setItem('mode', '');
-        }
+  darkModeSwitches.forEach((el) => {
+    el.addEventListener("click", () => {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("mode", "dark");
     });
+  });
+
+  const lightModeSwitches = document.querySelectorAll(".light-mode-switch");
+
+  lightModeSwitches.forEach((el) => {
+    el.addEventListener("click", () => {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("mode", "");
+    });
+  });
 });

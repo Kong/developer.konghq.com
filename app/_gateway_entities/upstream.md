@@ -13,7 +13,7 @@ tools:
     - deck
     - terraform
 
-description: An Upstream enables load balancing by providing a virtual hostname and collection of Targets (service application instances).
+description: An Upstream enables load balancing by providing a virtual hostname and collection of Targets (upstream service instances).
 
 related_resources:
   - text: Gateway Service entity
@@ -48,7 +48,7 @@ works_on:
 
 ## What is an Upstream?
 
-An Upstream enables load balancing by providing a virtual hostname and collection of [Targets](/gateway/entities/target/), or service application instances, to which client requests are forwarded.
+An Upstream enables load balancing by providing a virtual hostname and collection of [Targets](/gateway/entities/target/), or upstream service instances, to which client requests are forwarded.
 
 You can use Upstreams to [health check](/gateway/traffic-control/health-checks-circuit-breakers/#active-health-checks), [circuit break](/gateway/traffic-control/health-checks-circuit-breakers/#passive-health-checks-circuit-breakers), and [load balance](#load-balancing-algorithms) incoming requests over multiple [Gateway Services](/gateway/entities/service/). In addition, the Upstream entity has more advanced functionality algorithms like least-connections, consistent-hashing, and lowest-latency.
 
@@ -60,7 +60,7 @@ The `example_upstream` Upstream can then point to two different [Targets](/gatew
 In a real environment, the Upstream points to the same Service running on multiple systems.
 
 This setup allows you to load balance between upstream targets.
-For example, if a service application is deployed across two different servers or upstream targets, {{site.base_gateway}} needs to load balance across both servers.
+For example, if a upstream service is deployed across two different servers or upstream targets, {{site.base_gateway}} needs to load balance across both servers.
 If one of the servers (like `httpbin.konghq.com` in the previous example) is unavailable, it automatically detects the problem and routes all traffic to the working server (`httpbun.com`).
 
 The following diagram shows how Upstreams interact with other {{site.base_gateway}} entities:

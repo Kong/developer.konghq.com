@@ -4,6 +4,8 @@ content_type: how_to
 breadcrumbs:
   - /event-gateway/
 
+permalink: /event-gateway/get-started/
+
 beta: true
 
 products:

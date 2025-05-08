@@ -62,7 +62,7 @@ rows:
             description: Run the {{site.base_gateway}} quickstart and enable the AI Proxy plugin.
             icon: /assets/icons/rocket.svg
             cta:
-              url: /how-to/get-started-with-ai-gateway/
+              url: /ai-gateway/get-started/
               align: end
       - blocks:
         - type: card
@@ -217,6 +217,25 @@ rows:
             cta:
               url: /advanced-analytics/
               align: end
+  - columns:
+    - blocks:
+      - type: card
+        config:
+          title: Streaming
+          description: Streaming user requests with AI Gateway
+          icon: /assets/icons/network.svg
+          cta:
+            url: /ai-gateway/streaming/
+            align: end
+    - blocks:
+      - type: card
+        config:
+          title: Secrets management
+          description: Use Konnect Config Store to store and reference your LLM provider API keys
+          icon: /assets/icons/lock.svg
+          cta:
+            url: /how-to/configure-the-konnect-config-store/
+            align: end
 
   - header:
       type: h2

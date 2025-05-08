@@ -5,7 +5,7 @@ platform:
           Explore Konnect, our unified API platform.
     icon: '/assets/logos/Konnect-logo.svg'
     link:
-      url: /konnect-platform/
+      url: /konnect/
       text: Learn more &rarr;
 
   tools:
@@ -17,7 +17,7 @@ platform:
       icon: /assets/icons/code.svg
     - text: Terraform
       url: /terraform/
-      icon: /_assets/icons/products/kic.svg
+      icon: /assets/icons/terraform.svg
     - text: Ingress controller
       url: /kubernetes-ingress-controller/
       icon: /_assets/icons/products/kic.svg
@@ -47,6 +47,10 @@ platform:
           icon: /_assets/icons/products/ai-gateway.svg
           url: /ai-gateway/
           product: ai-gateway
+        - text: Event Gateway
+          icon: /_assets/icons/products/event-gateway.svg
+          url: /event-gateway/
+          product: event-gateway
         - text: Service Mesh
           icon: /_assets/icons/products/mesh.svg
           url: /mesh/
@@ -61,10 +65,6 @@ platform:
           icon: /_assets/icons/products/advanced-analytics.svg
           url: /advanced-analytics/
           product: advanced-analytics
-        - text: APIOps and Automation
-          icon: /_assets/icons/products/api-ops.svg
-          url: /deck/apiops/
-          product: api-ops
         - text: Scorecards
           icon: /assets/icons/monochrome/document.svg
           url: /service-catalog/scorecards/
