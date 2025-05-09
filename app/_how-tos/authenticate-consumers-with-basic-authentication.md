@@ -5,7 +5,7 @@ related_resources:
   - text: Authentication
     url: /gateway/authentication/
 
-description: Use the Basic Authetication plugin to allow Consumers to authenticate with a username and password.
+description: Use the Basic Authentication plugin to allow Consumers to authenticate with a username and password.
 products:
     - gateway
 
