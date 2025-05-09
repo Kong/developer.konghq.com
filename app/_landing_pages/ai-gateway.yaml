@@ -112,7 +112,7 @@ rows:
             description: Route client requests to various AI providers.
             icon: /assets/icons/plugins/universal-api.svg
             cta:
-              url: /plugins/ai-proxy/
+              url: ./#universal-api
               align: end
       - blocks:
         - type: card
@@ -140,7 +140,7 @@ rows:
             description: Learn about the load balancing algorithms available for AI Gateway.
             icon: /assets/icons/load-balance.svg
             cta:
-              url: /gateway/load-balancing/#load-balancing-algorithms-for-ai-gateway
+              url: ./#load-balancing
               align: end
       - blocks:
         - type: card
@@ -255,7 +255,7 @@ rows:
 
                     - [**Retry and fallback**](/plugins/ai-proxy-advanced/#retry-and-fallback): Optimize AI requests based on model performance, cost, or other factors.
 
-                    - **Cross-plugin integration**: Leverage AI in non-AI API workflows through other Kong Gateway plugins.
+                    - [**Cross-plugin integration**](/how-to/visualize-ai-gateway-metrics-with-kibana/): Leverage AI in non-AI API workflows through other Kong Gateway plugins.
 
     - blocks:
         - type: image
@@ -321,13 +321,11 @@ rows:
                     subgraph AI_Processing [Fallback processing]
                         direction LR
                         AIGateway ----> LLM1([LLM Model 1])
-                        AIGateway ---->|Request| LLM2([LLM Model 2])
+                        AIGateway ---->|Request| LLM2([LLM Model 2 #40;fallback#41;])
                         LLM2 -->|2xx Response| AIGateway[/AI Gateway/]
                     end
                     %% Style the 4xx path (3rd link = index 2)
                     linkStyle 2 stroke-dasharray: 5 5
-                    linkStyle 4 stroke-dasharray: 5 5
-                    linkStyle 1 stroke-dasharray: 5 5
                     {% endmermaid %}
   - columns:
       - blocks:
