@@ -1,2 +1,10 @@
 - app/sitemap.xml
+- app/gateway/ssl-certificates.md
+- app/_kong_plugins/ai-proxy/examples/sdk-azure-deployment.yaml
+- app/_kong_plugins/ai-proxy/examples/sdk-dynamic-model-selection.yml
+- app/_kong_plugins/ai-proxy/examples/sdk-multiple-providers.yaml
+- app/_kong_plugins/ai-proxy/examples/sdk-usupported-model.yaml
+- app/_kong_plugins/ai-proxy-advanced/examples/sdk-azure-one-route.yaml
+- app/_kong_plugins/ai-proxy-advanced/examples/sdk-dynamic-model-selection.yml
+- app/_kong_plugins/ai-proxy-advanced/examples/sdk-unsupported-model.yaml
 - app/api
