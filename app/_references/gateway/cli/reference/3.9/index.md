@@ -6,6 +6,7 @@
 #
 title: CLI Reference
 source_url: https://github.com/Kong/kong/tree/master/autodoc/cli
+description: The Kong CLI allows you to start, stop, and manage your Kong instances. 
 ---
 
 The provided CLI (*Command Line Interface*) allows you to start, stop, and

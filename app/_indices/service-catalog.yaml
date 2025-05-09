@@ -1,12 +1,11 @@
 title: All Service Catalog Documentation
 sections:
-  - title: Uncategorized
+  - title: Overview
     items:
       - path: /service-catalog/
-      - path: /service-catalog/**/*
-    auto_exclude: true
-  - title: How-tos
+      - path: /service-catalog/scorecards/
+      - path: /service-catalog/integrations/
+  - title: Integrations
     items:
-      - type: how-to
-        products:
-          - service-catalog
+      - path: /service-catalog/integrations/**/*
+    auto_exclude: true

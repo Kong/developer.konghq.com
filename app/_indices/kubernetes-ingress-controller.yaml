@@ -1,6 +1,6 @@
 title: All KIC Documentation
 sections:
-  - title: Uncategorized
+  - title: Overview
     items:
       - path: /kubernetes-ingress-controller/
       - path: /kubernetes-ingress-controller/support/
@@ -71,6 +71,8 @@ sections:
       - path: /kubernetes-ingress-controller/troubleshooting/konnect/
       - path: /kubernetes-ingress-controller/troubleshooting/debugging/
       - path: /kubernetes-ingress-controller/troubleshooting/**/*
+      - path: /kubernetes-ingress-controller/fallback-configuration/backfill/
+      - path: /kubernetes-ingress-controller/fallback-configuration/exclude/
   - title: How To
     items:
       - path: /kubernetes-ingress-controller/custom-plugins/
@@ -91,6 +93,11 @@ sections:
       - path: /kubernetes-ingress-controller/reference/host-manipulation/
       - path: /kubernetes-ingress-controller/reference/path-manipulation/
       - path: /kubernetes-ingress-controller/reference/secrets-in-plugins/
+  - title: Migration
+    items:
+      - path: /kubernetes-ingress-controller/migrate/ingress-to-gateway/
+      - path: /kubernetes-ingress-controller/migrate/kongingress/
+      - path: /kubernetes-ingress-controller/migrate/credential-kongcredtype-label/
   - title: FAQs
     items:
       - path: /kubernetes-ingress-controller/faq/custom-nginx-conf/

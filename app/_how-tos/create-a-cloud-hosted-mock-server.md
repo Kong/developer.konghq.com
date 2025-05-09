@@ -6,6 +6,7 @@ content_type: how_to
 products:
 - insomnia
 
+description: Create a cloud-hosted mock server in your Insomnia project by choosing the Cloud Mock option.
 tags:
 - mock-servers
 breadcrumbs:
@@ -22,9 +23,9 @@ tldr:
 
 ## Create the mock server
 
-In your Insomnia project, click **Create** > **Mock Server**. In  the dialog box, enter a name for the server, select **Cloud Mock**, and click **Create**.
+In your Insomnia project, click **Create** > **Mock Server**. In the dialog box, enter a name for the server, select **Cloud Mock**, and click **Create**.
 
-The mock servers opens and you can start adding routes.
+The mock server opens and you can start adding routes.
 
 ## Create a route
 

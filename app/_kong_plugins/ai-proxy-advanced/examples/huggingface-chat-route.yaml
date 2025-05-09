@@ -2,7 +2,7 @@
 title: 'Chat route with Hugging Face'
 description: 'Configure a chat route using Hugging Face with the SmolLM model.'
 
-weight: 900
+weight: 116
 
 requirements:
 - Hugging Face account
@@ -16,7 +16,7 @@ config:
       model:
         provider: huggingface
         name: HuggingFaceTB/SmolVLM-Base
-    
+
 variables:
   key:
     value: $HUGGINGFACE_TOKEN

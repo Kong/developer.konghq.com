@@ -1,12 +1,17 @@
 title: Event Gateway Documentation Index
 sections:
-  - title: Uncategorized
+  - title: Overview
     items:
       - path: /event-gateway/
-      - path: /event-gateway/**/*
     auto_exclude: true
-  - title: How-Tos
+  - title: Protocol Mediation in Kong Gateway
     items:
-      - type: how-to
-        products:
-          - event-gateway
+      - path: /plugins/kafka-consume/
+      - path: /plugins/kafka-upstream/
+      - path: /plugins/kafka-log/
+      - path: /plugins/confluent/
+      - path: /plugins/confluent-consume/
+    auto_exclude: true
+  - title: "Kafka Native Event Proxy (KNEP)"
+    items:
+      - path: /knep/get-started/

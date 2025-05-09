@@ -510,7 +510,7 @@ The Routes entity can dynamically serve TLS certificates on a per-connection bas
 * [Certificates](/gateway/entities/certificate/)
 * [SNIs](/gateway/entities/sni/)
 
-To do this, create a Certificate [associated with an SNI](/how-to/associate-certificate-with-sni/), and then create a secure Route that uses the Certificate:
+To do this, create a Certificate associated with an SNI, and then create a secure Route that uses the Certificate:
 
 {% entity_example %}
 type: route

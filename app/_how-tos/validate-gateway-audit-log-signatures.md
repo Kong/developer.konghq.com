@@ -57,6 +57,9 @@ cleanup:
     - title: Destroy the {{site.base_gateway}} container
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
+
+published: false
+# validation fails
 ---
 
 ## Send a request to generate audit logs

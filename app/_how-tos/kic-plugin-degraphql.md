@@ -1,7 +1,7 @@
 ---
 title: Degraphql
 description: |
-  Configure the DeGraphQL plugin for {{ site.kic_product_name }} using `KongCustomEntity`.
+  Configure the DeGraphQL plugin for {{ site.kic_product_name }} using KongCustomEntity.
 content_type: how_to
 
 permalink: /kubernetes-ingress-controller/degraphql/

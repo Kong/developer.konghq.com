@@ -1,5 +1,5 @@
 metadata:
-  title: "{{site.konnect_short_name}} Platform"
+  title: "{{site.konnect_short_name}}"
   content_type: landing_page
   description: |
     About the {{site.konnect_short_name}} SaaS API platform

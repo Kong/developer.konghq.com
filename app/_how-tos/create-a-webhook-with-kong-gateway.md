@@ -1,6 +1,8 @@
 ---
-title: Create a Web Hook with {{site.base_gateway}}
+title: Create a webhook with {{site.base_gateway}}
 content_type: how_to
+
+description: Configure the Event Hook entity as a webhook to listen for events and push information to the configured URL.
 
 products:
     - gateway
