@@ -5,7 +5,7 @@ extended_description: |
   {{site.base_gateway}} can attempt to support models that aren’t pre-configured with format transformers or are untested.
 
   {:.warning}
-  > Prepend the following `routes:`` block for this configuration to work properly:
+  > Prepend the following `routes:` block for this configuration to work properly:
   > ```
   > routes:
   >  - name: openai-any
