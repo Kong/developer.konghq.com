@@ -26,9 +26,9 @@ related_resources:
     url: /konnect-reference-platform/faq/
 ---
 
-The [{{site.konnect_short_name}} Reference Platform](/konnect-reference-platform) is a technical
+The [{{site.konnect_short_name}} Reference Platform](/konnect-reference-platform/) is a technical
 guide for building an API delivery system and integrating with 
-[{{site.konnect_saas}}](https://konghq.com/products/kong-konnect). There are
+[{{site.konnect_saas}}](https://konghq.com/products/kong-konnect/). There are
 different ways to use the tools and materials provided. If you want to deploy the full 
 platform you can follow the [how-to guide](/konnect-reference-platform/how-to/) 
 which provides step-by-step instructions to set up an entire API delivery pipeline. 

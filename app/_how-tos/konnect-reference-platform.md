@@ -214,7 +214,7 @@ These instructions detail how to use `koctl` to run the self service UI locally 
 
 {: .info}
 > Just like any web based app, running the self service UI locally on Docker will not allow you to share access 
-to the application with your users. It may be preferrable for you to run the self service UI in a more 
+to the application with your users. It may be preferable for you to run the self service UI in a more 
 production-like environment allowing your users to access the app from their own machines. 
 These instructions do not cover that use case at this time. The Dockerfiles and built images can be found
 in the GitHub repository [https://github.com/Kong/konnect-orchestrator](https://github.com/Kong/konnect-orchestrator)
@@ -246,9 +246,9 @@ and service repository to add to the platform
    `[Konnect Orchestrator] - Add Service <service-name>`
 
 {: .info}
-> In order for the referene platform logic to work, there must be an OpenAPI specification found in the service repository. 
+> In order for the reference platform logic to work, there must be an OpenAPI specification found in the service repository. 
 The orchestrator will look for a file named `openapi.yaml` in the root of the repository. If necessary, the path can be
-overriden by changing the `spec-path` field in the `teams.yaml` configuration file staged by the PR.
+overridden by changing the `spec-path` field in the `teams.yaml` configuration file staged by the PR.
 
 1. The `platform` owner should then review and merge the PR. This will trigger the running of the `koctl apply` 
 workflow which will 1) Apply the necessary configuration to the {{site.konnect_short_name}} Organization and 2) copy the service 
