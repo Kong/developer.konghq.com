@@ -182,14 +182,14 @@ rows:
       - blocks:
         - type: card
           config:
-            title: "{{site.konnect_short_name}} logs"
+            title: "{{site.konnect_short_name}} platform audit logs"
             description: |
                Use audit logs to help you detect and respond to potential security incidents when they occur.
               
             icon: /assets/icons/audit.svg
             cta:
               text: Configure logs 
-              url: "/konnect-logs/"
+              url: "/konnect-platform/audit-logs/"
       - blocks:
         - type: card
           config:

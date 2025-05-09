@@ -17,8 +17,6 @@ related_resources:
     url: /gateway/entities/sni/
   - text: SSL certificates reference
     url: /gateway/ssl-certificates/
-  - text: Define a client certificate on a Service
-    url: /how-to/client-cert-for-service/
   - text: Certificate how-to guides
     url: /how-to/?query=certificate
   - text: Reserved entity names
