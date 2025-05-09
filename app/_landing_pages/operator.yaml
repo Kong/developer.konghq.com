@@ -34,12 +34,21 @@ rows:
             description: |
               Deploy a {{ site.base_gateway }} attached to any {{ site.konnect_short_name }} or on-prem Control Plane using 
               the `DataPlane` resource.
-
-              Or, deploy and manage {{ site.kic_product_name }} and {{ site.base_gateway }} automatically using Kubernetes
-              Gateway API resources such as `Gateway` and `HTTPRoute`
             cta:
               text: Deploy a DataPlane
               url: /operator/dataplanes/get-started/hybrid/install/
+
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/KogoBlue.svg
+            title: Deploy {{ site.kic_product_name }}
+            description: |
+              Deploy and manage {{ site.kic_product_name }} and {{ site.base_gateway }} automatically using Kubernetes
+              Gateway API resources such as `Gateway` and `HTTPRoute`
+            cta:
+              text: Deploy {{ site.kic_product_name }}
+              url: /operator/dataplanes/get-started/kic/install/
 
       - blocks:
         - type: card
@@ -49,12 +58,9 @@ rows:
             description: |
               Configure your {{ site.konnect_short_name }} organization using CRDs. Create control planes and configure {{ site.base_gateway }} 
               entities, or configure Dedicated Cloud Gateways deployments. 
-              
-              We're actively developing this feature, but our aim is that CRD support for {{ site.konnect_short_name }} 
-              will allow you to do _everything_ you can do with the API using CRDs.
             cta:
               text: Create and configure a Control Plane in {{ site.konnect_short_name }}
-              url: /operator/dataplanes/get-started/kic/install/
+              url: /operator/konnect/crd/control-planes/hybrid/
 
   - header:
       type: h2
