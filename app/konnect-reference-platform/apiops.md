@@ -1,20 +1,20 @@
 ---
-title: Konnect Reference Platform - APIOps
+title: APIOps
 content_type: reference
 layout: reference
 
 products:
   - reference-platform
 
-description: Provides details on how the Konnect Reference Platform uses APIOps
+description: Provides details on how the {{site.konnect_short_name}} Reference Platform uses APIOps
 
 breadcrumbs:
   - /konnect-reference-platform/
 
 related_resources:
-- text: Reference Platform Home
+- text: About {{site.konnect_short_name}} Reference Platform
   url: /konnect-reference-platform/
-- text: Reference Platform How-To
+- text: How to deploy
   url: /konnect-reference-platform/how-to/
 - text: Reference Platform FAQ
   url: /konnect-reference-platform/faq/
@@ -31,7 +31,7 @@ we will explore support for other popular CI/CD tools.
 ### How are the APIOps workflows deployed?
 
 The GitHub Actions workflow files are can be installed by the 
-[{{site.konnect_short_name}} Orchestrator](/konnect-reference-platform/orchestrator) 
+[{{site.konnect_short_name}} Orchestrator](/konnect-reference-platform/orchestrator/) 
 to a central platform repository. The process of initializing the platform repository is covered in the 
 [how-to guide](/konnect-reference-platform/how-to/).
 
@@ -46,7 +46,7 @@ During the orchestrators reconciliation loop, it will check for changes to API s
 in the configured service repositories and stage changed specifications to the platform repository as a PR. 
 When these PRs are reviewed and approved by platform administrators, the APIOps workflows are triggered.
 
-### What are the workflows in the Konnect Reference Platform?
+### What are the workflows in the {{site.konnect_short_name}} Reference Platform?
 
 There are 3 main workflows used to deliver APIs to {{site.base_gateway}}. These workflows are completed in
 sequence, with administrator approval between each step. Completion of final workflow results in a deployed

@@ -1,5 +1,5 @@
 ---
-title: Konnect Reference Platform - Kong Air
+title: Kong Air
 content_type: reference
 layout: reference
 
@@ -9,20 +9,21 @@ products:
 works_on:
   - konnect
 
-description: Provides example usage of the Konnect Reference Platform 
+description: "Provides example usage of the {{site.konnect_short_name}} Reference Platform"
+  
 
 breadcrumbs:
   - /konnect-reference-platform/
 
 related_resources:
-- text: Reference Platform - Home
-  url: /konnect-reference-platform/
-- text: Reference Platform - FAQ
-  url: /konnect-reference-platform/faq/
-- text: Reference Platform - Orchestrator
-  url: /konnect-reference-platform/orchestrator/
-- text: Reference Platform - How-To
-  url: /konnect-reference-platform/how-to/
+  - text: Reference Platform
+    url: /konnect-reference-platform/
+  - text: Orchestrator
+    url: /konnect-reference-platform/orchestrator/
+  - text: How to deploy the Reference Platform
+    url: /konnect-reference-platform/how-to/
+  - text: Frequently Asked Questions
+    url: /konnect-reference-platform/faq/
 ---
 
 The [{{site.konnect_short_name}} Reference Platform](/konnect-reference-platform) is a technical

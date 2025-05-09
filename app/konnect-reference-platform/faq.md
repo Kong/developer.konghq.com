@@ -1,5 +1,5 @@
 ---
-title: Konnect Reference Platform - FAQ
+title: Frequently asked questions
 content_type: reference
 layout: reference
 

@@ -1,5 +1,5 @@
 ---
-title: Konnect Reference Platform - Konnect Orchestrator
+title: "{{site.konnect_short_name}} Orchestrator"
 content_type: reference
 layout: reference
 
@@ -15,14 +15,14 @@ breadcrumbs:
   - /konnect-reference-platform/
 
 related_resources:
-- text: Reference Platform - Home
-  url: /konnect-reference-platform/
-- text: Reference Platform - FAQ
-  url: /konnect-reference-platform/faq/
-- text: Reference Platform - Kong Air
-  url: /konnect-reference-platform/kong-air/
-- text: Reference Platform - How-To
-  url: /konnect-reference-platform/how-to/
+  - text: About {{site.konnect_short_name}} Reference Platform
+    url: /konnect-reference-platform/
+  - text: About Kong Air
+    url: /konnect-reference-platform/kong-air/
+  - text: How to deploy
+    url: /konnect-reference-platform/how-to/
+  - text: Reference Platform FAQ
+    url: /konnect-reference-platform/faq/
 ---
 
 The {{site.konnect_short_name}} Orchestrator is a software tool provided as part of the 
@@ -81,7 +81,7 @@ see the step-by-step [how-To](/konnect-reference-platform/how-to/) guide.
 
 [https://github.com/Kong/konnect-orchestrator](https://github.com/Kong/konnect-orchestrator)
 
-## What are Environments?
+## What are environments?
 Environments may be any conceptual grouping of resources that you want. Typical examples include "dev" or "prod" engineering stages,
 but you could also form environments around business units or products. 
 

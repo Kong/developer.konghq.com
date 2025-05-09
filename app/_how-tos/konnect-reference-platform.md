@@ -1,8 +1,8 @@
 ---
-title: Konnect Reference Platform - How to
+title: "Deploy {{site.konnect_short_name}} Reference Platform"
 content_type: how_to
 permalink: /konnect-reference-platform/how-to/
-
+description: "How to use the {{site.konnect_short_name}} Reference Platform"
 
 products:
   - reference-platform
@@ -18,7 +18,6 @@ tldr:
     your own {{site.konnect_saas}} Organization and GitHub repositories.
 
 tags:
-    - get-started
     - reference-platform
 
 prereqs:
@@ -159,7 +158,7 @@ Open the PR in the GitHub web console and review the changes. Once satisfied wit
 merge the PR into the `main` branch of the repository. You now have a `platform` repository that is ready to be used with the 
 reference platform including GitHub actions that can facilitate the APIOps workflows and other configurations to support API delivery and governance.
 
-## Add an Organization to the platform repository
+## Add an organization to the platform repository
 
 As described earlier, the reference platform can support one or more {{site.konnect_short_name}} Organizations. Generally a single
 organization design is sufficient, and you will only need to run the following instructions once. But if you wish to add multiple

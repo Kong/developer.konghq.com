@@ -1,4 +1,4 @@
-title: Konnect Reference Platform
+title: "{{site.konnect_short_name}} Reference Platform"
 sections:
   - title: Overview
     items:
@@ -6,4 +6,4 @@ sections:
       - path: /konnect-reference-platform/orchestrator/
       - path: /konnect-reference-platform/apiops/
       - path: /konnect-reference-platform/kong-air/
-      - path: /konnect-reference-platform/orchestrator/
+      - path: /konnect-reference-platform/how-to/
