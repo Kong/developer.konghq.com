@@ -51,7 +51,7 @@ the following functions are provided to support the reference platform features:
 
 * Initialize a central platform team git repository that supports the API management platform
 * Configure the platform repository with new organizations and environments 
-* Run an API server and web based UI applicaiton to enable self-service onboarding for 
+* Run an API server and web based UI application to enable self-service onboarding for 
   developer teams and their service applications
 * Stage service application API specifications to the platform repository preparing them to be 
   delivered to {{site.konnect_short_name}}
