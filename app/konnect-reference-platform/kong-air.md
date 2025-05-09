@@ -82,7 +82,7 @@ the `flights` service OpenAPI specification is found in the
 
 The orchestrator is configured to monitor this service application repositories and detect changes 
 that are copied to the platform repository. Once the specifications are staged in the platform repository, 
-the [APIOps workflow](/konnect-reference-platform/api-ops) process kicks in and guides the platform team in 
+the [APIOps workflow](/konnect-reference-platform/apiops/) process kicks in and guides the platform team in 
 delivering changes to {{site.konnect_short_name}}. 
 
 ![Kong Air decK sync](/assets/images/reference-platform/kong-air-sync.png)
