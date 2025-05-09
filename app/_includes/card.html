@@ -22,7 +22,7 @@
 {% if include.ctas %}
 <div class="flex flex-col w-full text-primary text-sm">
   {% for cta in include.ctas %}
-  <a class="flex justify-between py-3 {% unless forloop.last %}border-b border-primary/5{% endunless %} hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline dark:text-white" href="{{ cta.url }}">{{ cta.text | liquify }} <span class="text-terciary">→</span></a>
+  <a class="no-icon flex justify-between py-3 {% unless forloop.last %}border-b border-primary/5{% endunless %} hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline dark:text-white" href="{{ cta.url }}">{{ cta.text | liquify }} <span class="text-terciary">→</span></a>
   {% endfor %}
 </div>
 {% endif %}
