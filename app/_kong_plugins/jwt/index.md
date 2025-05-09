@@ -48,7 +48,7 @@ When you enable this plugin, it grants JWT credentials (public and secret keys) 
 
 To use the plugin, you need to do the following:
 1. Create a [Consumer](/gateway/entities/consumer/) and associate one or more JWT credentials (holding the public and private keys used to verify the token) to it. The Consumer represents a developer using the final upstream service.
-1. Create a JWT credential for the Consumer, either with the `/consumers/{consumer}/jwt` endpoint or by specifying `jwt_secrets:` for the Consumer in a declarative config file. <!--TODO: link to API for parameters available-->
+1. Create a JWT credential for the Consumer, either with the [`/consumers/{consumer}/jwt`](/plugins/jwt/api/) endpoint or by specifying `jwt_secrets:` for the Consumer in a declarative config file.
    
    {:.warning}
    > **Note for decK and {{site.kic_product_name}} users:** The declarative configuration used in decK and the {{site.kic_product_name}} imposes some additional validation requirements that differ from the requirements listed above. Because they cannot rely on defaults and do not implement their own algorithm-specific requirements, all fields other than `rsa_public_key` fields are required.

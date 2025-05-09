@@ -6,7 +6,7 @@ description: |
     Serverless gateways are lightweight API gateways. Their Control Plane is hosted by {{site.konnect_short_name}} and Data Plane nodes are automatically provisioned.
 
 breadcrumbs:
-  - /konnect-platform/
+  - /konnect/
 tags:
   - serverless-gateway
   - hybrid-mode

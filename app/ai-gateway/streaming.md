@@ -10,7 +10,8 @@ works_on:
 products:
   - gateway
   - ai-gateway
-
+breadcrumbs:
+  - /ai-gateway/
 tags:
   - ai
   - streaming
@@ -58,7 +59,7 @@ The client won't have to wait for the entire response. Instead, tokens will appe
 ## How AI Proxy streaming works
 
 In streaming mode, a client can set `"stream": true` in their request, and the LLM server will stream each part of the response text (usually token-by-token) as a server-sent event.
-{{site.base_gateway}} captures each batch of events and translates them into the {{site.base_gateway}} inference format. This ensures that all providers are compatible with the same framework including [OpenAI-compatible SDKs](/how-to/use-sdks-with-ai-proxy/) or similar.
+{{site.base_gateway}} captures each batch of events and translates them into the {{site.base_gateway}} inference format. This ensures that all providers are compatible with the same framework including OpenAI-compatible SDKs or similar.
 
 In a standard LLM transaction, requests proxied directly to the LLM look like this:
 

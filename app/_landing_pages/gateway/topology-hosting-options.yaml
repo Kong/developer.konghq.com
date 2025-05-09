@@ -22,13 +22,13 @@ rows:
                   text: |
                     When you deploy {{site.base_gateway}}, you can choose how your Data Plane nodes are hosted based on the [deployment topology](/gateway/deployment-topologies/) you're using.
 
-  - header:
-      type: h2
-      text: "Dedicated Cloud Gateways"
-    columns:
+  - columns:
       - blocks:
           - type: structured_text
             config:
+              header:
+                type: h2
+                text: "Dedicated Cloud Gateways"
               blocks:
                 - type: text
                   text: |
@@ -41,7 +41,7 @@ rows:
                     - {{site.konnect_short_name}} handles gateway upgrades for you.
                     - Choose between public and private networking modes.
                     - Automatic scaling with Autopilot mode.
-                    - Support for AWS and Azure in multiple [regions](/konnect-platform/konnect-geos/).
+                    - Support for AWS and Azure in multiple [regions](/konnect-platform/geos/).
                     
                     **Supported on:** 
                     * [{{site.konnect_short_name}} hybrid](/gateway/hybrid-mode/)
@@ -70,29 +70,15 @@ rows:
                 A --auto-scale configuration---> C
 
                 style id1 stroke-dasharray:3,rx:10,ry:10
-  - header:
-      type: h3
-      text: "Supported deployment topologies"
-    column_count: 3
-    columns: 
-      - blocks:
-        - type: card
-          config:
-            title: "{{site.konnect_short_name}} hybrid mode"
-            description: |
-              Learn about {{site.konnect_short_name}} hybrid mode for Kong-hosted Control Planes.
-              
-            icon: /assets/icons/deployment.svg
-            cta:
-              url: "/gateway/hybrid-mode/"
+
   
-  - header:
-      type: h2
-      text: "Serverless gateways"
-    columns:
+  - columns:
       - blocks:
           - type: structured_text
             config:
+              header:
+                type: h2
+                text: "Serverless gateways"
               blocks:
                 - type: text
                   text: |
@@ -119,9 +105,9 @@ rows:
               diagram: |
                 flowchart TD
                   A(Dev Portal &bull; Gateway Manager &bull; Advanced Analytics &bull; Service Catalog)
-                  B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Kong-managed Control Plane 
+                  B(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Kong-managed Control Plane 
                   #40;Kong Gateway instance#41;)
-                  C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane 
+                  C(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane 
                   #40;Kong Gateway instance#41;)
 
                   subgraph id1 [Konnect]
@@ -137,29 +123,15 @@ rows:
 
                   style id1 stroke-dasharray:3,rx:10,ry:10
                   style id2 stroke-dasharray:3,rx:10,ry:10
-  - header:
-      type: h3
-      text: "Supported deployment topologies"
-    column_count: 3
-    columns: 
-      - blocks:
-        - type: card
-          config:
-            title: "{{site.konnect_short_name}} hybrid mode"
-            description: |
-              Learn about {{site.konnect_short_name}} hybrid mode for Kong-hosted Control Planes.
-              
-            icon: /assets/icons/deployment.svg
-            cta:
-              url: "/gateway/hybrid-mode/"
+
   
-  - header:
-      type: h2
-      text: "Self-hosted"
-    columns:
+  - columns:
       - blocks:
           - type: structured_text
             config:
+              header:
+                type: h2
+                text: "Self-hosted"
               blocks:
                 - type: text
                   text: |
@@ -182,13 +154,13 @@ rows:
               diagram: |
                 flowchart TD
                   A[(Database)]
-                  B(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Control Plane 
+                  B(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Control Plane 
                   #40;Kong Gateway instance#41;)
-                  C(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane
+                  C(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane
                   #40;Kong Gateway instance#41;)
-                  D(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"> Data Plane 1
+                  D(<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane 1
                   #40;Kong Gateway instance#41;)
-                  E(<img src="/assets/logos/KogoBlue.svg" style="max-height:20px"/> Data Plane 2
+                  E(<img src="/assets/icons/gateway.svg" style="max-height:20px"/> Data Plane 2
                   #40;Kong Gateway instance#41;)
 
                   subgraph id1 [Self-managed Control Plane]
@@ -205,40 +177,6 @@ rows:
 
                   style id1 stroke-dasharray:3,rx:10,ry:10
                   style id2 stroke-dasharray:3,rx:10,ry:10
-  - header:
-      type: h3
-      text: "Supported deployment topologies"
-    columns: 
-      - blocks:
-        - type: card
-          config:
-            title: "{{site.konnect_short_name}} and {{site.base_gateway}} hybrid mode"
-            description: |
-              Learn about the hybrid mode deployment topology.
-              
-            icon: /assets/icons/deployment.svg
-            cta:
-              url: "/gateway/hybrid-mode/"
-      - blocks:
-        - type: card
-          config:
-            title: "{{site.base_gateway}} traditional mode"
-            description: |
-              Learn about the traditional mode deployment topology.
-              
-            icon: /assets/icons/deployment.svg
-            cta:
-              url: "/gateway/traditional-mode/"
-      - blocks:
-        - type: card
-          config:
-            title: "{{site.base_gateway}} DB-less mode"
-            description: |
-              Learn about the DB-less mode deployment topology.
-              
-            icon: /assets/icons/deployment.svg
-            cta:
-              url: "/gateway/db-less-mode/"
-      
+  
      
       

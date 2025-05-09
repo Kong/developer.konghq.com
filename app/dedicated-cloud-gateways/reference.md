@@ -6,7 +6,8 @@ description: "Dedicated Cloud Gateways are Data Plane nodes that are fully manag
 
 products:
     - gateway
-
+breadcrumbs:
+  - /dedicated-cloud-gateways/
 works_on:
   - konnect
 
@@ -72,7 +73,7 @@ tags:
 ## How do Dedicated Cloud Gateways work?
 
 When you create a Dedicated Cloud Gateway, {{site.konnect_short_name}} creates a **Control Plane**. 
-This Control Plane, like other {{site.konnect_short_name}} Control Planes, is hosted by {{site.konnect_short_name}}. You can then deploy Data Planes in different [regions](/konnect-platform/konnect-geos/#dedicated-cloud-gateways).
+This Control Plane, like other {{site.konnect_short_name}} Control Planes, is hosted by {{site.konnect_short_name}}. You can then deploy Data Planes in different [regions](/konnect-platform/geos/#dedicated-cloud-gateways).
 
 Dedicated Cloud Gateways support two different configuration modes:
 * **Autopilot Mode:** Configure expected requests per second, and {{site.konnect_short_name}} pre-warms and autoscales the Data Plane nodes automatically.
@@ -272,3 +273,10 @@ Once uploaded, you can manage custom plugins using any of the following methods:
 * [decK](/deck/)
 * [Control Plane Config API](/api/konnect/control-planes-config/v2/)
 * [{{site.konnect_short_name}} UI](https://cloud.konghq.com/)
+
+## Limits
+Serverless Gateways have the following limits:
+* Request rate limit: Serverless Gateways support up to 100 requests per second (RPS) per gateway.
+* Maximum request size: Incoming requests are limited to a maximum payload size of 10MB.
+
+For workloads that exceed these limits, consider using [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) for higher throughput and larger request sizes.

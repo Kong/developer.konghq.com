@@ -38,4 +38,5 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+This can be used to OpenAI-compatible SDK with this plugin in multiple ways, depending on the required use case.
 

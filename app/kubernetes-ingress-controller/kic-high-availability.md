@@ -2,13 +2,14 @@
 title: KIC high availability
 
 description: |
-  How to run multiple KIC instances with leader election
+  How to run multiple {{ site.kic_product_name }} instances with leader election
 content_type: reference
 layout: reference
 
 products:
   - kic
-
+breadcrumbs: 
+  - /kubernetes-ingress-controller/
 works_on:
   - on-prem
   - konnect

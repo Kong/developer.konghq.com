@@ -4,6 +4,8 @@ content_type: how_to
 breadcrumbs:
   - /event-gateway/
 
+permalink: /event-gateway/get-started/
+
 beta: true
 
 products:
@@ -151,6 +153,10 @@ _schemas               1              1
 ```
 {:.no-copy-code}
 
+
+<!-- 
+
 ## Add prefix to the cluster 
 
 TODO!
+ -->

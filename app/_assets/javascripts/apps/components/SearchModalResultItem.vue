@@ -59,7 +59,11 @@ export default {
         return this.item.title;
       }
       if (this.item.content_type === 'plugin') {
-        return `${this.item.hierarchy.lvl1} Plugin`;
+        if (this.item.products && this.item.products.includes('mesh')) {
+          return `${this.item.hierarchy.lvl1} Policy`;
+        } else {
+          return `${this.item.hierarchy.lvl1} Plugin`;
+        }
       }
       const levels = Object.entries(this.item.hierarchy)
         .filter(([key, value]) => key !== 'lvl0' && value !== null);
@@ -75,7 +79,11 @@ export default {
         .map(([key, value]) => value);
 
       if (this.item.content_type === 'plugin') {
-        levels.unshift('Plugins')
+        if (this.item.products && this.item.products.includes('mesh')) {
+          levels.unshift('Policies')
+        } else {
+          levels.unshift('Plugins')
+        }
       }
       if (this.item.content_type === 'how_to') {
         levels.unshift('How-to Guides')

@@ -1,5 +1,5 @@
 metadata:
-  title: "{{site.konnect_short_name}} authentication"
+  title: "{{site.konnect_short_name}} platform authentication"
   content_type: landing_page
   description: |
     Secure your {{site.konnect_saas}} organization by setting up teams and roles,
@@ -9,7 +9,9 @@ metadata:
   tags:
     - konnect
     - authentication
-  breadcrumb: /konnect-platform/
+  products:
+    - konnect-platform
+  breadcrumb: /konnect/
 rows:
   - header:
       type: h1
@@ -71,7 +73,7 @@ rows:
 
             icon: /assets/icons/third-party/okta.svg  
             cta:
-              url: "/konnect-platform/konnect-sso/#configure-a-konnect-application-in-okta"
+              url: "/konnect-platform/sso/#configure-a-konnect-application-in-okta"
       - blocks:
         - type: card
           config:
@@ -81,7 +83,7 @@ rows:
               
             icon: /assets/icons/insomnia/sso.svg
             cta:
-              url: "/konnect-platform/konnect-sso/#sso-configuration"
+              url: "/konnect-platform/sso/#sso-configuration"
       - blocks:
         - type: card
           config:
@@ -91,7 +93,7 @@ rows:
               
             icon: /assets/icons/plugins/openid-connect.png
             cta:
-              url: "/konnect-platform/konnect-sso/#enable-oidc"
+              url: "/konnect-platform/sso/#enable-oidc"
       - blocks:
         - type: card
           config:
@@ -101,5 +103,5 @@ rows:
               
             icon: /assets/icons/team.svg
             cta:
-              url: "/konnect-platform/konnect-sso/#team-mapping-configuration"
+              url: "/konnect-platform/sso/#team-mapping-configuration"
         

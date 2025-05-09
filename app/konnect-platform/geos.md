@@ -4,13 +4,7 @@ description: '{{site.konnect_short_name}} allows you to host and operate your cl
 content_type: reference
 layout: reference
 products:
-    - gateway
-tools:
-    - admin-api
-    - konnect-api
-    - deck
-    - kic
-    - terraform
+  - konnect-platform
 tags:
   - geos
 search_aliases:
@@ -19,14 +13,14 @@ search_aliases:
 works_on:
   - konnect
 breadcrumbs:
-  - /konnect-platform/
+  - /konnect/
 related_resources:
   - text: "{{site.konnect_short_name}} ports and network requirements"
     url: /konnect-platform/network/
   - text: "Dedicated Cloud Gateways"
     url: /dedicated-cloud-gateways/
   - text: "{{site.konnect_short_name}} Platform"
-    url: /konnect-platform/
+    url: /konnect/
 ---
 
 {{site.konnect_short_name}} allows you to host and operate your cloud instance in a geographic region that you specify. This is important for data privacy and regulatory compliance for you organization. 

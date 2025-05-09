@@ -48,8 +48,7 @@ In either case, deploying custom plugins on Kubernetes is achieved by adding the
 code to the cluster in a ConfigMap or Secret and mounting it into the {{site.base_gateway}} proxy pods. Additionally,
 the pods must be configured to load the custom plugin code from the mounted volume.
 
-Kong provides a [Helm chart](/kubernetes-ingress-controller/custom-plugins/) which simplifies this process by configuring the necessary environment for the proxy pods
-based on the plugin you configure. For a [non-Helm deployment](), you will need to modify the environment directly.
+Kong provides a [Helm chart](/kubernetes-ingress-controller/custom-plugins/) which simplifies this process by configuring the necessary environment for the proxy pods based on the plugin you configure. For a non-Helm deployment, you will need to modify the environment directly.
 <!-- @TODO: add link to non-helm deployment docs, page does not exist yet, see https://kongdeveloper.netlify.app/kubernetes-ingress-controller/custom-plugins/#deploy-your-custom-plugin -->
 
 ## Package path
@@ -78,7 +77,7 @@ section of the custom plugin installation page for details on this distribution 
 
 ## {{site.konnect_short_name}}
 
-[{{site.konnect_short_name}}](/konnect-platform/) is Kong's unified API platform as a service. {{site.konnect_short_name}}
+[{{site.konnect_short_name}}](/konnect/) is Kong's unified API platform as a service. {{site.konnect_short_name}}
 supports custom plugins with some limitations. With an on-premise deployment, users manage {{site.base_gateway}}
 data planes as well as the control plane and, optionally, the backing database. In {{site.konnect_short_name}},
 the control plane and database are fully managed for you which limits support for custom data entities and 
