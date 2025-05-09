@@ -1578,4 +1578,4 @@ app/insomnia/external-vault.md:
 
 ## Terraform
 app/_landing_pages/terraform.yaml:
-  - /app/konnect/reference/terraform.md
+  - app/konnect/reference/terraform.md
