@@ -72,6 +72,9 @@ cleanup:
 next_steps:
   - text: Review the Vaults entity
     url: /gateway/entities/vault/
+
+published: false
+# Fails to authenticate with Azure
 ---
 
 ## Configure the Vault entity

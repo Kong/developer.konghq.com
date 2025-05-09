@@ -198,7 +198,7 @@ features:
     enterprise: true
     supports_konnect: true
   - title: Azure Key Vaults
-    url: /how-to/configure-azure-key-vaults-as-a-vault-backend-with-vault-entity/
+    <!--url: /how-to/configure-azure-key-vaults-as-a-vault-backend-with-vault-entity/-->
     oss: false
     enterprise: true
     supports_konnect: true
