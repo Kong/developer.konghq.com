@@ -6,6 +6,7 @@ ignoredPaths:
   - 'app/how-to.html'
   - 'app/robots.txt'
   - 'app/_api/'
+  - 'app/404.html'
 docsUrlsToDevSiteUrls:
   - new_path: "/plugins/acl/reference/"
     old_path: "/hub/kong-inc/acl/configuration/"
