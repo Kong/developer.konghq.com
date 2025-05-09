@@ -23,7 +23,7 @@ related_resources:
 [APIOps](/deck/apiops/) is the practice of applying DevOps and GitOps principles to the API lifecycle. It is the application
 of process automation and tools that enable teams to manage APIs in a more efficient and repeatable way. 
 The [{{site.konnect_short_name}} Reference Platform](/konnect-reference-platform) uses APIOps to automate the 
-delivery of APIs to {{site.konnect_short_name}} in an auditable, consistent, and repeatable manner.
+delivery of APIs to {{site.konnect_short_name}} in an verifiable, consistent, and repeatable manner.
 
 Currently the {{site.konnect_short_name}} Reference Platform supports GitHub Actions for APIOps workflows. In future versions
 we will explore support for other popular CI/CD tools.
