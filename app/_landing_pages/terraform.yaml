@@ -84,7 +84,7 @@ rows:
         - type: card
           config:
             icon: /assets/icons/mesh.svg
-            title: {{site.base_gateway}}
+            title: "{{site.base_gateway}}"
             description: |
               Designed for use with {{site.base_gateway}} on-prem, the `kong-gateway` provider allows you to manage Kong Entities using Terraform
 
