@@ -603,6 +603,14 @@ docsUrlsToDevSiteUrls:
 
 
 ignoredDevSiteSources:
+  - app/_how-tos/operator-konnect-serviceless-route.md
+  - app/_how-tos/operator-konnect-getstarted-authentication.md
+  - app/_how-tos/operator-konnect-getstarted-controlplane.md
+  - app/_how-tos/operator-konnect-getstarted-install.md
+  - app/_how-tos/operator-konnect-getstarted-key-auth.md
+  - app/_how-tos/operator-konnect-getstarted-proxy-cache.md
+  - app/_how-tos/operator-konnect-getstarted-ratelimiting.md
+  - app/_how-tos/operator-konnect-getstarted-services-routes.md
   - app/_how-tos/set-a-value-from-a-response-as-an-environment-variable.md
   - app/_how-tos/authenticate-consumers-with-basic-authentication.md
   - app/_how-tos/store-a-mistral-api-key-as-a-secret-in-konnect-config-store.md
