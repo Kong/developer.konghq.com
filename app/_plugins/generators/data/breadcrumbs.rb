@@ -59,7 +59,8 @@ module Jekyll
         title = entry['group']
 
         if entry['section']
-          slug = "#{slug}--#{Jekyll::Utils.slugify(entry['section'])}"
+          slug = "#{slug}--" if entry['group']
+          slug = "#{slug}#{Jekyll::Utils.slugify(entry['section'])}"
           title = entry['section']
         end
 

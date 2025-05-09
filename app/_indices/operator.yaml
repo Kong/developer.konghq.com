@@ -11,13 +11,18 @@ groups:
       - items:
           - path: /operator/**/*
         auto_exclude: true
-  - title: About {{ site.operator_product_name }}
+  - title: About Kong Gateway Operator
     sections:
       - items:
+          - path: /operator/
           - path: /operator/install/
-          - path: /operator/support/
-          - path: /operator/version-compatibility/
+          - path: /operator/support-policy/
           - path: /operator/changelog/
+  - title: Reference
+    sections:
+      - items:
+          - path: /operator/reference/custom-resources/
+          - path: /operator/reference/version-compatibility/
   - title: Gateway Deployment
     description: |
       This is a short description explaining the content in this block
@@ -62,6 +67,9 @@ groups:
       - title: Troubleshooting
         items:
           - path: /operator/dataplanes/troubleshooting/status/
+      - title: Reference
+        items:
+          - path: /operator/reference/custom-resources/
 
   - title: Konnect
     sections:
@@ -86,6 +94,7 @@ groups:
         items:
           - path: /operator/konnect/troubleshooting/status/
       - title: Reference
+        allow_duplicates: true
         items:
-          - path: /operator/konnect/reference/crds/
+          - path: /operator/reference/custom-resources/
           - path: /operator/konnect/reference/faq/
