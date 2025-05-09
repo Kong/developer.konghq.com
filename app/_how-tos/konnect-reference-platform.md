@@ -28,6 +28,11 @@ prereqs:
   show_works_on: false
   expand_accordion: false
   inline:
+    - title: Reference Platform Background
+      content: |
+        Before proceeding with deploying your own {{site.konnect_short_name}} Reference Platform,
+        review the [landing page](/konnect-reference-platform) to ensure you have an 
+        understanding of the platform and its purpose.
     - title: "{{site.konnect_saas}} Account"
       content: |
         A [{{site.konnect_saas}}](https://konghq.com/products/kong-konnect) account is required to create and 
@@ -54,17 +59,10 @@ prereqs:
           [Releases · Kong/konnect-orchestrator](https://github.com/Kong/konnect-orchestrator/releases)
     - title: Docker
       content: |
-        This guide uses Docker to run a web application for onboarding services to the {{site.konnect_short_name}}.
+        This guide uses Docker to run a web application for onboarding teams and services to the 
+        {{site.konnect_short_name}} Reference Platform.
         You must have [Docker](https://docs.docker.com/get-started/get-docker/) (or Docker equivalent software) installed
-        on your development machine.
-    - title: Docker
-      content: |
-        If you do not have Docker installed, you can download it from [Docker](https://www.docker.com/get-started).
-    - title: Reference Platform Background
-      content: |
-        Before proceeding with deploying your own {{site.konnect_short_name}} Reference Platform,
-        review the [landing page](/konnect-reference-platform) to ensure you have an 
-        understanding of the platform and its purpose.
+        on your development machine to run the web app.
     - title: Operating System Compatibility
       content: |
         These instructions are specific to *nix style operating systems. For MS Windows, the user will need to 
@@ -214,11 +212,16 @@ to browse and select their service repositories.
 1. Register the new application and securely save the `Client ID` 
 1. Click the _Generate a new client secret_ button and securely save the `Client Secret` value
 
-## Run the Self Service UI 
+## Run the self service UI 
 
-`koctl` provides a command to run the self service UI locally using Docker. For more advanced users, the self service UI components
-will need to be ran independently and configured with network access between them and for users. For now, we will run the simple local
-Docker setup.
+These instructions detail how to use `koctl` to run the self service UI locally using Docker.
+
+{: .info}
+> Just like any web based app, running the self service UI locally on Docker will not allow you to share access 
+to the application with your users. It may be preferrable for you to run the self service UI in a more 
+production-like environment allowing your users to access the app from their own machines. 
+These instructions do not cover that use case at this time. The Dockerfiles and built images can be found
+in the GitHub repository [https://github.com/Kong/konnect-orchestrator](https://github.com/Kong/konnect-orchestrator)
 
 1. Run the `run` command from your shell:
 
@@ -235,41 +238,46 @@ Docker setup.
 
 ## Add a team and service to the platform
 
-Open the self-service UI at `http://localhost:8080` in your browser and sign in with your 
-GitHub account.
+1. Open the self-service UI at `http://localhost:8080` in your browser and sign in with your 
+GitHub account
+1. Select a GitHub Account or Organization you have access to and it will populate the list of repositories available
+and service repository to add to the platform
+1. Select the repository you wish to add to the platform
+1. Select the Production and Development branches in their respective drop down menus
+1. Select or Add a team
+1. Click the _Add Service to Platform_ button and the orchestrator will file a PR to the `platform` repository
+1. Once you have added the service, you will see the pending PR in the _Pull Requests_ section of the self-service UI. The PR will have the following title: 
+   `[Konnect Orchestrator] - Add Service <service-name>`
 
-Select a github organization and service repository to add to the platform
+{: .info}
+> In order for the referene platform logic to work, there must be an OpenAPI specification found in the service repository. 
+The orchestrator will look for a file named `openapi.yaml` in the root of the repository. If necessary, the path can be
+overriden by changing the `spec-path` field in the `teams.yaml` configuration file staged by the PR.
 
-There must be an OpenAPI specification found in the service repository. 
-The orchestrator will look for a file named `openapi.yaml` or `openapi.json` in the root of the repository.
-
-## Merge the PR to add the team and service
-
-Once you have added the team and service, a new PR is written that adds the necessary declarative configuration to
-the `platform` repository. 
-
-Review and Merge the PR and review the initial GitHub action workflow that is executed.
+1. The `platform` owner should then review and merge the PR. This will trigger the running of the `koctl apply` 
+workflow which will 1) Apply the necessary configuration to the {{site.konnect_short_name}} Organization and 2) copy the service 
+API specification to the `platform` repository. The API specification will be staged as a PR in the `platform` repository.
 
 ## Execute the APIOps Workflow
 
-* Login to GitHub and review the PRs created by the orchestrator in your platform repository. There should be initial PRs created to merge 
-in an API specification for each service added to the configuration. 
+Once the `koctl apply` workflow has successfully completed, the orchestrator will have created two PRs in the `platform` repository one for
+each environment (`dev` and `prod`). These PRs contain the addition of the service repository API specification to the `platform` repository
+and the addition of various _patching_ files that are used to apply service specific configurations to the resulting decK configuration files.
 
-* Approve and merge the initial PRs and verify the API delivery process is properly configured by validating resulting PRs that
-stage {{site.base_gateway}} configuration for deployment.
+Approving these initial PRs will initiate the APIOps workflows to deliver the APIs to {{site.konnect_short_name}}. To see how the APIOps workflows
+operate, reference the [APIOps page](/konnect-reference-platform/apiops) for the full details.
 
 ## View your populated {{site.konnect_short_name}} Organization 
 
-Your platform is now setup! The orchestrator has created resources for you within the {{site.konnect_short_name}} Organization and staged
-API specifications for delivery to the {{site.base_gateway}} in the platform repository.
-
-* Login to your [{{site.konnect_short_name}} account](https://cloud.konghq.com/) and review the resources created by the orchestrator.
-
+Once the APIOps workflows are complete, your platform is now setup! The APIOps workflows are in place, and the orchestrator has created 
+resources for you within the {{site.konnect_short_name}} Organization. Login to your 
+[{{site.konnect_short_name}} account](https://cloud.konghq.com/) and review the resources created by the orchestrator. 
 
 ## What's next?
 
-* Review the [APIOps page](/konnect-reference-platform/apiops) for more information on how the API delivery process works within the 
-  platform git repository. 
-
+* [Explore the Kong Developer](/) site fully to learn about the features and capabilities of 
+  {{site.base_gateway}} and {{site.konnect_short_name}}.
+* For unanswered questions on the reference platform, check out the [FAQ page](/konnect-reference-platform/faq) for 
+  additional information.
 * If you have questions or feedback about the reference platform, 
 please reach out on the [Kong Community Forums](https://discuss.konghq.com/).
