@@ -1,10 +1,8 @@
 ---
-title: Konnect Reference Platform - How To
+title: Konnect Reference Platform - How to
 content_type: how_to
 permalink: /konnect-reference-platform/how-to/
 
-breadcrumbs:
-  - /konnect-reference-platform/
 
 products:
   - reference-platform
@@ -21,7 +19,6 @@ tldr:
 
 tags:
     - get-started
-    - konnect
     - reference-platform
 
 prereqs:
@@ -71,7 +68,7 @@ prereqs:
 automated_tests: false
 ---
 
-## {{site.konnect_short_name}} Organization Setup
+## {{site.konnect_short_name}} organization setup
 
 For most use cases, a single {{site.konnect_short_name}} organization is sufficient. 
 However, you may determine that your requirements include multiple {{site.konnect_short_name}} organizations which 
@@ -98,7 +95,7 @@ In order to authorize the tool, use the following steps to create a system accou
 1. Use the _Manage Tokens_ feature to generate a new access token for the `konnect-orchestrator` system 
    account and securely save the token secret 
 
-## Platform Git Repository Setup
+## Platform Git repository setup
 
 Regardless of the number of {{site.konnect_short_name}} Organizations used, the reference platform [operates around a **single** _Platform Team_
 git repository](/konnect-reference-platform/#design-overview). This repository will contain copies of the development teams API specifications, 
@@ -107,7 +104,7 @@ APIOps workflows, and other configurations that the orchestrator will manage.
 From the GitHub web console, create (if necessary) a `platform` GitHub repository in your GitHub organization. An example repository
 can be found in the [KongAirlines GitHub organization](https://github.com/KongAirlines/platform).
 
-{: .info}
+{:.info}
 > While we refer to this repository as the `platform` repository, the repository name on GitHub is arbitrary. 
 The {{site.konnect_short_name}} Orchestrator will file PRs to this repository under the `.github/workflows` and `konnect` sub-directories. 
 You can use an existing repository as long as PRs with changes to these locations is acceptable.
@@ -133,7 +130,7 @@ In order to authorize the orchestrator, you need to create a GitHub access token
 
 1. Once the token is generated, securely save the token secret
 
-## Initialize the Platform repository
+## Initialize the platform repository
 
 The orchestrator provides an `init` command to initialize the platform GitHub repository for you.
 The command will prompt you for the `platform` team GitHub repository URL and the GitHub token created previously.
@@ -162,7 +159,7 @@ Open the PR in the GitHub web console and review the changes. Once satisfied wit
 merge the PR into the `main` branch of the repository. You now have a `platform` repository that is ready to be used with the 
 reference platform including GitHub actions that can facilitate the APIOps workflows and other configurations to support API delivery and governance.
 
-## Add an Organization to the Platform repository
+## Add an Organization to the platform repository
 
 As described earlier, the reference platform can support one or more {{site.konnect_short_name}} Organizations. Generally a single
 organization design is sufficient, and you will only need to run the following instructions once. But if you wish to add multiple
@@ -185,7 +182,7 @@ follow the prompts to provide the necessary information.
 1. Once you have entered the necessary information, select the `Go!` button and the `koctl` tool will proceed
    with adding a PR that sets up the organization within the `platform` repository
 
-## Merge the Organization PR
+## Merge the organization PR
 
 Once the `koctl add organization` command has completed, you will see a message indicating that a PR has been filed to the `platform` repository, 
 including a link directly to the PR. The PR will have the following title: `[Konnect Orchestrator] - Add <org-name> Organization`.
@@ -267,7 +264,7 @@ and the addition of various _patching_ files that are used to apply service spec
 Approving these initial PRs will initiate the APIOps workflows to deliver the APIs to {{site.konnect_short_name}}. To see how the APIOps workflows
 operate, reference the [APIOps page](/konnect-reference-platform/apiops) for the full details.
 
-## View your populated {{site.konnect_short_name}} Organization 
+## View your populated {{site.konnect_short_name}} organization 
 
 Once the APIOps workflows are complete, your platform is now setup! The APIOps workflows are in place, and the orchestrator has created 
 resources for you within the {{site.konnect_short_name}} Organization. Login to your 
