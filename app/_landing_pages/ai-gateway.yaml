@@ -307,26 +307,7 @@ rows:
                     - Dynamically selects models based on real-time performance and prompt relevance.
 
                     - Supports mixed environments including OpenAI, Mistral, and Llama models.
-      - blocks:
-        - type: structured_text
-          config:
-            blocks:
-              - type: text
-                text: |
-                    {% mermaid %}
-                    flowchart LR
-                    Application(((Application))) --->|Request| AIGateway[/AI Gateway/]
-                    AIGateway --->|2xx Response| Application(((Application)))
 
-                    subgraph AI_Processing [Fallback processing]
-                        direction LR
-                        AIGateway ----> LLM1([LLM Model 1])
-                        AIGateway ---->|Request| LLM2([LLM Model 2 #40;fallback#41;])
-                        LLM2 -->|2xx Response| AIGateway[/AI Gateway/]
-                    end
-                    %% Style the 4xx path (3rd link = index 2)
-                    linkStyle 2 stroke-dasharray: 5 5
-                    {% endmermaid %}
   - columns:
       - blocks:
         - type: card
@@ -357,8 +338,18 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    AI Gateway provides the ability to govern outgoing AI prompts via an allow/deny list configuration.
-                    Denied prompts result in 4xx HTTP code responses to clients preventing the egress of offending requests.
+
+                      AI Gateway simplifies and strengthens governance over AI workflows by enforcing prompt controls and protecting sensitive data at scale.
+                      - Configure allow/deny lists to block unauthorized prompts, returning clear 4xx responses to clients and preventing unwanted data egress.
+                      - Automatically detect and redact personally identifiable information across 20+ data categories and 12 languages — no custom code needed.
+                      - Keep data secure and compliant with a high-performance solution that runs inside your environment.
+                      - Enforce data protection policies at the gateway layer, eliminating the need for complex, service-by-service filters.
+
+      - blocks:
+        - type: image
+          config:
+            url: /assets/images/gateway/pii-sanitization.png
+            alt_text: Overview of AI gateway
   - columns:
       - blocks:
         - type: plugin
@@ -368,6 +359,10 @@ rows:
         - type: plugin
           config:
             slug: ai-semantic-prompt-guard
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-sanitizer
 
   - header:
       type: h3
@@ -441,6 +436,33 @@ rows:
         - type: plugin
           config:
             slug: ai-response-transformer
+
+
+  - header:
+      type: h3
+      text: "Automated RAG"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    AI Gateway automates retrieval-augmented generation (RAG) to deliver more accurate and reliable AI responses — without burdening developers.
+
+                    - Instantly generate embeddings, fetch relevant context from vector databases, and enrich prompts inline — no custom RAG code required.
+
+                    - Insert vetted data directly into prompts at the platform layer, ensuring consistency, security, and control across all AI workflows.
+
+                    - Eliminate the need for app-by-app RAG implementations, dramatically reducing development time and operational complexity.
+
+                    - Minimize hallucinations and boost LLM accuracy by providing up-to-date, domain-specific context at the moment of generation.
+  - columns:
+      - blocks:
+        - type: plugin
+          config:
+            slug: ai-rag-injector
+
 
   - header:
       type: h2
