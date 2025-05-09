@@ -13,6 +13,12 @@ breadcrumbs:
     group: Gateway Deployment
     section: Advanced Usage
 
+related_resources:
+  - text: Autoscale with Prometheus
+    url: /operator/dataplanes/how-to/autoscale-workloads/prometheus/
+  - text: Autoscale with Datadog
+    url: /operator/dataplanes/how-to/autoscale-workloads/datadog/
+
 ---
 
 {{ site.base_gateway }} provides extensive metrics through its [Prometheus plugin](/plugins/prometheus/). However, these metrics are labelled with Kong entities such as `Service` and `Route` rather than Kubernetes resources.

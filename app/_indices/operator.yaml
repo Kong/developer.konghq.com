@@ -6,6 +6,10 @@ groups:
       - items:
           - path: /operator/dataplanes/get-started/hybrid/**/*
           - path: /operator/dataplanes/get-started/kic/**/*
+
+          # These are linked from /operator/dataplanes/reference/autoscale-workloads/
+          - path: /operator/dataplanes/how-to/autoscale-workloads/prometheus/
+          - path: /operator/dataplanes/how-to/autoscale-workloads/datadog/
   - title: Unsorted
     sections:
       - items:
@@ -41,7 +45,6 @@ groups:
           - path: /operator/dataplanes/gateway-api/
           - path: /operator/dataplanes/gateway-configuration/
           - path: /operator/dataplanes/managed-gateways/
-          - path: /operator/dataplanes/konnectextension/
           - path: /operator/dataplanes/faq/license/
       - title: How-To
         items:
@@ -69,6 +72,7 @@ groups:
           - path: /operator/dataplanes/troubleshooting/status/
       - title: Reference
         items:
+          - path: /operator/dataplanes/konnectextension/
           - path: /operator/reference/custom-resources/
 
   - title: Konnect
