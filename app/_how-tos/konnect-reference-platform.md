@@ -52,6 +52,14 @@ prereqs:
         * On Linux or Windows, install directly from the release page
             
           [Releases · Kong/konnect-orchestrator](https://github.com/Kong/konnect-orchestrator/releases)
+    - title: Docker
+      content: |
+        This guide uses Docker to run a web application for onboarding services to the {{site.konnect_short_name}}.
+        You must have [Docker](https://docs.docker.com/get-started/get-docker/) (or Docker equivalent software) installed
+        on your development machine.
+    - title: Docker
+      content: |
+        If you do not have Docker installed, you can download it from [Docker](https://www.docker.com/get-started).
     - title: Reference Platform Background
       content: |
         Before proceeding with deploying your own {{site.konnect_short_name}} Reference Platform,
@@ -203,7 +211,8 @@ to browse and select their service repositories.
 1. Set the _Homepage URL_ to your `platform` team repository (or any other URL you choose)
 1. Set the _Authorization callback URL_ to the localhost URL of the self service application:
    `http://localhost:8080/auth/github/callback`
-1. Register the new application and securely save the `Client ID` and `Client Secret` values
+1. Register the new application and securely save the `Client ID` 
+1. Click the _Generate a new client secret_ button and securely save the `Client Secret` value
 
 ## Run the Self Service UI 
 
@@ -226,7 +235,8 @@ Docker setup.
 
 ## Add a team and service to the platform
 
-Open the URL `http://localhost:8080` in your browser and sign in with your GitHub account.
+Open the self-service UI at `http://localhost:8080` in your browser and sign in with your 
+GitHub account.
 
 Select a github organization and service repository to add to the platform
 
