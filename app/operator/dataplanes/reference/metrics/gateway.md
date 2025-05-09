@@ -1,5 +1,5 @@
 ---
-title: "Custom Resource Definitions"
+title: "{{ site.base_gateway }} metrics"
 description: "TODO"
 content_type: reference
 layout: reference
@@ -8,11 +8,11 @@ products:
 breadcrumbs:
   - /operator/
   - index: operator
-    group: Konnect
+    group: Gateway Deployment
   - index: operator
-    group: Konnect
-    section: Reference
+    group: Gateway Deployment
+    section: Observability
 
 ---
 
-@TODO
+TODO

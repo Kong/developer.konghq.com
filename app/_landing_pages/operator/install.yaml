@@ -1,0 +1,76 @@
+metadata:
+  title: Install Kong Gateway Operator
+  content_type: landing_page
+  description: |
+    Install {{ site.operator_product_name }} using Helm
+  products:
+    - operator
+  breadcrumbs:
+    - /operator/
+
+rows:
+  - header:
+      type: h1
+      text: "Install {{site.operator_product_name}} (KGO)"
+
+  - header:
+      type: h2
+      text: How do I install {{site.operator_product_name}}?
+    columns:
+      - blocks:
+          - type: text
+            config: |
+              ```bash
+              helm upgrade --install kgo kong/gateway-operator -n kong-system --create-namespace  \
+                --set image.tag={{ site.data.operator_latest.release }} \
+                --set kubernetes-configuration-crds.enabled=true \
+                --set env.ENABLE_CONTROLLER_KONNECT=true
+              ```
+
+          - type: faqs
+            config:
+              - q: Can {{ site.operator_product_name }} be installed with Kustomize or any other tools?
+                a: Helm is the only officially supported installation method.
+              - q: How to I customize which controllers I want to run?
+                a: |
+                  Create a `values.yaml` file and set a `enable_controller_*` value under `env` e.g. `env.enable_controller_dataplane_bluegreen: false`
+
+  - header:
+      type: h2
+      text: "Next Steps"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/kogo-white.svg
+            title: Deploy {{ site.base_gateway }}
+            description: |
+              Deploy a {{ site.base_gateway }} attached to any {{ site.konnect_short_name }} or on-prem Control Plane using 
+              the `DataPlane` resource.
+            cta:
+              text: Deploy a DataPlane
+              url: /operator/dataplanes/get-started/hybrid/deploy-dataplane/
+
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/KogoBlue.svg
+            title: Deploy {{ site.kic_product_name }}
+            description: |
+              Deploy and manage {{ site.kic_product_name }} and {{ site.base_gateway }} automatically using Kubernetes
+              Gateway API resources such as `Gateway` and `HTTPRoute`
+            cta:
+              text: Deploy {{ site.kic_product_name }}
+              url: /operator/dataplanes/get-started/kic/create-gateway/
+
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/dedicated-cloud-gateway.svg
+            title: Configure {{ site.konnect_short_name }}
+            description: |
+              Configure your {{ site.konnect_short_name }} organization using CRDs. Create control planes and configure {{ site.base_gateway }} 
+              entities, or configure Dedicated Cloud Gateways deployments. 
+            cta:
+              text: Create and configure a Control Plane in {{ site.konnect_short_name }}
+              url: /operator/konnect/crd/control-planes/hybrid/

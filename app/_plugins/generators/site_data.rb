@@ -21,6 +21,7 @@ module Jekyll
         next if releases.nil?
 
         site.data["#{product}_latest"] = releases.detect { |r| r['latest'] }
+        site.data["#{product}_releases"] = releases
       end
     end
 

@@ -12,7 +12,7 @@ breadcrumbs:
     section: Get Started
 
 series:
-  id: kgo-get-started
+  id: operator-konnectcrds-get-started
   position: 4
 
 tldr:

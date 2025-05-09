@@ -1,6 +1,5 @@
 <!-- Shared between KIC and KGO plugin installation -->
-
-## Create a custom plugin
+## Create a custom plugin{% if include.is_optional %} (Optional){% endif %}
 
 {:.info}
 > If you already have a real plugin, you can skip this step.
