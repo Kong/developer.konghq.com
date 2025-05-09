@@ -2,7 +2,7 @@
 title: Configuring Custom Entities
 
 description: |
-  How do I configure Custom Entities such as `degraphql_routes` using KIC?
+  How do I configure Custom Entities such as degraphql_routes using KIC?
 
 breadcrumbs:
   - /kubernetes-ingress-controller/

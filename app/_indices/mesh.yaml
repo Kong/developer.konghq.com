@@ -3,8 +3,6 @@ sections:
   - title: Overview
     items:
       - path: /mesh/
-      - path: /mesh/about/
-      - path: /mesh/architecture/
       - title: Mesh policies
         description: Bundled features for your service traffic and network configuration.
         url: /mesh/policies/
@@ -14,11 +12,13 @@ sections:
       - path: /mesh/enterprise/
       - path: /mesh/vulnerability-patching-process/
       - path: /mesh/support-policy/
+
   - title: Install & Configure
     items:
       - title: Kong Mesh quickstart
         description: Run an instance of Kong Mesh in Universal mode with one command.
         url: /mesh/#install-kong-mesh
+      - path: /mesh/requirements/
       - path: /mesh/universal/
       - path: /mesh/kubernetes/
       - path: /mesh/ecs/
@@ -27,35 +27,68 @@ sections:
       - title: Mesh Manager
         description: Manage service meshes and Control Planes in Konnect.
         url: /mesh-manager/
+  
+  - title: How Mesh Works
+    items:
+      - path: /mesh/about/
+      - path: /mesh/concepts/
+      - path: /mesh/architecture/
+      - path: /mesh/ingress/
+      - path: /mesh/kuma-user-interface-gui/
+
+  - title: Production Deployments
+    items:
+      - path: /mesh/license/
+      - path: /mesh/production-usage-values/
+
+  - title: Upgrade
+    items:
+      - path: /mesh/upgrade/
+      - path: /mesh/upgrade-notes/
+      - path: /mesh/migration-to-the-new-policies/
+
   - title: Policies
     items:
+      - path: /mesh/policies-introduction/
       - path: /mesh/policies/**/*
       - path: /mesh/acm-private-ca-policy/
       - path: /mesh/cert-manager/
       - path: /mesh/vault/
     auto_exclude: true
+  
+  - title: Built-in Gateways
+    items:
+      - path: /mesh/add-builtin-gateway/
+      - path: /mesh/managing-ingress-traffic/gateway/
+      - path: /mesh/gateway-listeners/
+      - path: /mesh/gateway-routes/
+
+  - title: Deletegated Gateways
+    items:
+      - path: /mesh/ingress-gateway-delegated/
+      - path: /mesh/gateway-delegated/
 
   - title: Authentication and Authorization
     items:
       - path: /mesh/multi-zone-authentication/
       - path: /mesh/rbac/
+      - path: /mesh/authentication-with-the-api-server/
+      - path: /mesh/dp-auth/
+      - path: /mesh/zone-proxy-auth/
 
   - title: References
     items:
-      - path: /mesh/licence/
+      - path: /mesh/cli/
       - path: /mesh/access-audit/
       - path: /mesh/provenance-verification-binaries/
       - path: /mesh/provenance-verification-images/
       - path: /mesh/signed-images/
       - path: /mesh/sbom/
+      - path: /mesh/reference/kuma-cp/
+      - path: /mesh/data-collection/
 
   - title: Hidden paths
     hidden: true
     items:
       - path: /mesh/policies/*/examples/**/*
       - path: /mesh/policies/*/reference/
-
-  - title: Uncategorized
-    items:
-      - path: /mesh/**/*
-    auto_exclude: true
