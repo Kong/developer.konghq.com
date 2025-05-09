@@ -5,7 +5,7 @@ ignoredPaths:
   - 'app/_redirects'
   - 'app/how-to.html'
   - 'app/robots.txt'
-
+  - 'app/_api/'
 docsUrlsToDevSiteUrls:
   - new_path: "/plugins/acl/reference/"
     old_path: "/hub/kong-inc/acl/configuration/"
@@ -603,6 +603,23 @@ docsUrlsToDevSiteUrls:
 
 
 ignoredDevSiteSources:
+  - app/_how-tos/set-a-value-from-a-response-as-an-environment-variable.md
+  - app/_how-tos/authenticate-consumers-with-basic-authentication.md
+  - app/_how-tos/store-a-mistral-api-key-as-a-secret-in-konnect-config-store.md
+  - app/_how-tos/set-a-value-from-a-response-as-an-environment-variable.md
+  - app/_how-tos/store-a-mistral-api-key-as-a-secret-in-konnect-config-store.md
+  - app/_api/event-gateway/knep/_index.md
+  - app/_how-tos/restart-kong-gateway-container.md
+  - app/_how-tos/knep/get-started-with-event-gateway.md
+  - app/_how-tos/docker-compose.md
+  - app/_gateway_entities/ca-certificate.md
+  - app/_landing_pages/tools.yaml
+  - app/_landing_pages/rate-limiting.yaml
+  - app/_landing_pages/premium-partners.yaml
+  - app/_landing_pages/gateway/security.yaml
+  - app/_landing_pages/gateway/load-balancing.yaml
+  - app/_landing_pages/gateway/entities.yaml
+  - app/_landing_pages/event-gateway.yaml
   - app/gateway/tags.md
   - app/insomnia/concepts.md
   - app/_references/inso-cli/reference/10.3/export.md

@@ -338,15 +338,7 @@ app/kubernetes-ingress-controller/deployment-topologies/sidecar.md:
   - app/_src/kubernetes-ingress-controller/production/deployment-topologies/sidecar.md
 app/kubernetes-ingress-controller/deployment-topologies/db-backed.md:
   - app/_src/kubernetes-ingress-controller/production/deployment-topologies/db-backed.md
-#app/kubernetes-ingress-controller/deployment-topologies/gateway-discovery.md:
-#app/kubernetes-ingress-controller/troubleshooting/kubernetes-api-server.md:
-#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
-#app/kubernetes-ingress-controller/troubleshooting/kong-gateway-configuration.md:
-#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
-#app/kubernetes-ingress-controller/troubleshooting/konnect.md:
-#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
-#app/kubernetes-ingress-controller/troubleshooting/debugging.md:
-#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
+
 app/kubernetes-ingress-controller/troubleshooting/failure-modes.md:
   - app/_src/kubernetes-ingress-controller/reference/failure-modes.md
 
@@ -995,7 +987,7 @@ app/advanced-analytics/explorer.md:
   - app/konnect/analytics/explorer.md
 app/advanced-analytics/llm-reporting.md:
   - app/konnect/analytics/explorer.md
-app/konnect-platform/konnect-geos.md:
+app/konnect-platform/geos.md:
   - app/konnect/geo.md
 app/_landing_pages/advanced-analytics.md:
   - app/konnect/advanced-analytics/index.md
@@ -1578,6 +1570,10 @@ app/insomnia/storage.md:
   - /insomnia/git-sync.md
   - /insomnia/insomnia-sync.md
   - /insomnia/scratchpad.md
+app/_how-tos/import-content-from-a-git-repository.md:
+  - /insomnia/git-sync.md
+app/_how-tos/synchronize-with-git.md:
+  - /insomnia/git-sync.md
 app/insomnia/version-control.md:
   - /insomnia/git-sync.md
   - /insomnia/insomnia-sync.md
@@ -1609,6 +1605,16 @@ app/insomnia/graphql-queries.md:
 app/insomnia/external-vault.md:
   - app/insomnia/external-vault-integration.md
 
+app/_landing_pages/insomnia/mock-servers.yaml:
+  - /insomnia/api-mocking.md
+app/_how-tos/create-a-cloud-hosted-mock-server.md:
+  - /insomnia/api-mocking.md
+app/insomnia/verify-binary-provenance.md:
+  - /insomnia/verify-binary-provenance.md
+app/_how-tos/azure-saml-sso-insomnia.md:
+  - /insomnia/enterprise-configure-azure-saml.md
+app/_how-tos/okta-saml-sso-insomnia.md:
+  - /insomnia/enterprise-configure-okta-saml.md
 
 
 ## Terraform
@@ -2122,3 +2128,172 @@ app/api-specs/plugins/openid-connect/openapi.yaml:
 
 app/mesh/policies/index.html:
   - app/_src/.repos/kuma/app/_src/policies/introduction.md
+
+
+
+# KIC ???
+
+#app/kubernetes-ingress-controller/troubleshooting/kubernetes-api-server.md:
+#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
+#app/kubernetes-ingress-controller/troubleshooting/kong-gateway-configuration.md:
+#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
+#app/kubernetes-ingress-controller/troubleshooting/konnect.md:
+#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
+#app/kubernetes-ingress-controller/troubleshooting/debugging.md:
+#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
+
+app/kubernetes-ingress-controller/deployment-topologies/gateway-discovery.md:
+  - /app/_src/kubernetes-ingress-controller/production/deployment-topologies/gateway-discovery.md
+app/kubernetes-ingress-controller/kic-high-availability.md:
+  - /app/_src/kubernetes-ingress-controller/guides/high-availability/kic.md
+app/kubernetes-ingress-controller/troubleshooting/debugging.md:
+  - /app/_src/kubernetes-ingress-controller/reference/troubleshooting.md
+app/kubernetes-ingress-controller/troubleshooting/kong-gateway-configuration.md:
+  - /app/_src/kubernetes-ingress-controller/reference/troubleshooting.md
+app/operator/konnect/kongpluginbinding.md:
+  - /app/_src/gateway-operator/guides/konnect-entities/konnect-plugin-binding.md
+app/kubernetes-ingress-controller/troubleshooting/konnect.md:
+  - /app/_src/kubernetes-ingress-controller/reference/troubleshooting.md
+app/kubernetes-ingress-controller/troubleshooting/kubernetes-api-server.md:
+  - /app/_src/kubernetes-ingress-controller/reference/troubleshooting.md
+
+app/_how-tos/enable-mutual-tls-authentication-on-a-service.md:
+  - app/_src/kubernetes-ingress-controller/plugins/mtls.md
+
+## Operator COME BACK TO THIS 
+
+app/operator/konnect/labelling.md:
+  - app/_src/gateway-operator/guides/konnect-entities/tagging-and-labeling.md
+app/operator/konnect/reference/faq.md:
+  - app/_src/gateway-operator/guides/konnect-entities/faq.md
+app/operator/konnect/reference/crds.md:
+  - /app/_src/gateway-operator/concepts/gateway-api.md
+  - /app/_src/gateway-operator/guides/konnect-entities/architecture.md
+app/_how-tos/operator-dataplane-autoscale-datadog.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md
+app/_how-tos/operator-dataplane-autoscale-prometheus.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md
+app/_how-tos/operator-dataplane-custom-ca.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-dataplane-custom-plugins.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-dataplane-image.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-dataplane-sidecars.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-get-started-hybrid-create-route.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-get-started-hybrid-deploy-dataplane.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-get-started-hybrid-install.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-get-started-kic-create-gateway.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-get-started-kic-create-route.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-get-started-kic-install.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-install.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-certificate-ca-cert.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-cgw-configuration.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-cgw-network.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-consumer.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-control-plane-group.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-control-plane-kic.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-control-plane.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-dp-certificate.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-getstarted-authentication.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-getstarted-controlplane.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-getstarted-install.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-getstarted-key-auth.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-getstarted-proxy-cache.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-getstarted-ratelimiting.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-getstarted-services-routes.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-key-keyset.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-service-route.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-serviceless-route.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-upstream-target.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/_how-tos/operator-konnect-vault.md:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+app/operator/konnect/reconciliation-loop.md:
+  - app/_src/gateway-operator/guides/konnect-entities/architecture.md
+app/operator/konnect/troubleshooting/status.md:
+  - app/_src/gateway-operator/production/monitoring/status/overview.md
+app/operator/support-policy.md:
+  - app/_src/gateway-operator/support.md
+
+## Just missing
+
+app/gateway/traffic-control/load-balancing-reference.md:
+  - app/_src/gateway/how-kong-works/load-balancing.md
+app/mesh/provenance-verification-binaries.md:
+  - app/_src/mesh/features/provenance-verification-binaries.md
+app/mesh/provenance-verification-images:
+  - app/_src/mesh/features/provenance-verification-images.md
+app/gateway/routing/traditional.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
+app/_landing_pages/advanced-analytics.yaml:
+  - app/konnect/analytics/index.md
+app/_landing_pages/custom-plugins.yaml:
+  - app/_src/gateway/kong-plugins/index.md
+app/_landing_pages/gateway/openid-connect.yaml:
+  - app/_hub/kong-inc/openid-connect/overview/_index.md
+app/_landing_pages/konnect-api.yaml:
+  - app/konnect/api/index.md
+app/_landing_pages/mesh.yaml:
+  - app/_src/mesh/index.md
+app/_landing_pages/operator.yaml:
+  - app/_src/gateway-operator/index.md
+app/_landing_pages/service-catalog/integrations.yaml:
+  - app/konnect/service-catalog/integrations/index.md
+
+app/_how-tos/add-rate-limiting-for-a-consumer-with-kong-gateway.md: 
+  - app/_src/gateway/get-started/rate-limiting.md
+app/_how-tos/add-rate-limiting-to-a-service-with-kong-gateway.md:
+  - app/_src/gateway/get-started/rate-limiting.md
+app/_how-tos/associate-certificate-with-sni.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
+
+app/_how-tos/create-a-custom-webhook-slack-with-kong-gateway.md:
+  - app/_src/gateway/kong-enterprise/event-hooks/index.md
+app/_how-tos/create-a-lambda-event-hook-with-kong-gateway.md:
+  - app/_src/gateway/kong-enterprise/event-hooks/index.md
+app/_how-tos/create-a-log-event-hook-with-kong-gateway.md:
+  - app/_src/gateway/kong-enterprise/event-hooks/index.md
+app/_how-tos/create-a-webhook-with-kong-gateway.md:
+  - app/_src/gateway/kong-enterprise/event-hooks/index.md
+app/_how-tos/deploy-mesh-on-kubernetes.md:
+  - app/_src/quickstart/kubernetes-demo.md
+app/_how-tos/enable-key-authentication-on-a-service-with-kong-gateway.md:
+  - app/_src/gateway/get-started/key-authentication.md
+app/_how-tos/map-uris-into-graphql-queries.md:
+  - app/_hub/kong-inc/degraphql/overview/_index.md
+app/_how-tos/restrict-access-to-resources-by-allowing-ips.md:
+  - app/_hub/kong-inc/ip-restriction/overview/_index.md
+app/_how-tos/transform-a-client-request.md:
+  - app/_hub/kong-inc/response-transformer-advanced/overview/_index.md
+app/_how-tos/use-sdks-with-ai-proxy.md:
+  - app/_hub/kong-inc/ai-proxy/how-to/_sdk-usage.md
+app/mesh/provenance-verification-images.md:
+  - app/_src/mesh/features/provenance-verification-images.md
+
