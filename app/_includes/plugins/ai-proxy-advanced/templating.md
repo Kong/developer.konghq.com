@@ -13,7 +13,7 @@ The following templated parameters are available:
 * `$(uri_captures.path_parameter_name)`: The value of a captured URI path parameter.
 * `$(query_params.query_parameter_name)`: The value of a query string parameter.
 
-You can combine these parameters with an OpenAI-compatible SDK in multiple ways using the AI Proxy plugin, depending on your specific use case:
+You can combine these parameters with an OpenAI-compatible SDK in multiple ways using the AI Proxy and AI Proxy Advanced plugins, depending on your specific use case:
 
 <!--vale off-->
 {% table %}
@@ -23,20 +23,16 @@ columns:
   - title: Description
     key: description
 rows:
-  - action: "[Use chat route with dynamic model selection](./examples/sdk-dynamic-model-selection/)"
+  - action: "[Select different models dynamically on one provider](./examples/sdk-dynamic-model-selection/)"
     description: |
-      Configure a chat route that reads the target model from the request path instead of hardcoding it in the configuration.
-  - action: "[Use the Azure deployment relevant to a specific model name](./examples/sdk-azure-deployment/)"
+      Allow users to select the target model based on a request header or parameter. Supports flexible routing across different models on the same provider.
+  - action: "[Use one chat route with dynamic Azure OpenAI deployments](./examples/sdk-azure-one-route/)"
     description: |
-      Configure a header capture to insert the requested model name directly into the plugin configuration for Kong AI Gateway deployment with Azure OpenAI, as a string substitution.
-  - action: "[Proxy multiple models deployed in the same Azure instance](./examples/sdk-multiple-providers/)"
-    description: |
-      Configure one route to proxy multiple models deployed in the same Azure instance.
+      Configure a dynamic route to target multiple Azure OpenAI model deployments.
   - action: "[Use unsupported models with OpenAI-compatible SDKs](./examples/sdk-unsupported-model/)"
     description: |
       Proxy models that are not officially supported, like Whisper-2, through an OpenAI-compatible interface using preserve routing.
 {% endtable %}
 <!--vale on-->
 
-This can be used to OpenAI-compatible SDK with this plugin in multiple ways, depending on the required use case.
 
