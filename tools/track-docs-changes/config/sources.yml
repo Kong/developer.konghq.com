@@ -981,6 +981,20 @@ app/_kong_plugins/statsd/changelog.md:
 app/_kong_plugins/statsd/index.md:
   - app/_hub/kong-inc/statsd/overview/_index.md
   - app/_hub/kong-inc/statsd-advanced/overview/_index.md
+app/_kong_plugins/ai-proxy/examples/sdk-azure-deployment.yaml:
+  - app/_hub/kong-inc/ai-proxy/_how-to/sdk-usage.md
+app/_kong_plugins/ai-proxy/examples/sdk-dynamic-model-selection.yml:
+  - app/_hub/kong-inc/ai-proxy/_how-to/sdk-usage.md
+app/_kong_plugins/ai-proxy/examples/sdk-multiple-providers.yaml:
+  - app/_hub/kong-inc/ai-proxy/_how-to/sdk-usage.md
+app/_kong_plugins/ai-proxy/examples/sdk-usupported-model.yaml:
+  - app/_hub/kong-inc/ai-proxy/_how-to/sdk-usage.md
+app/_kong_plugins/ai-proxy-advanced/examples/sdk-azure-one-route.yaml:
+  - app/_hub/kong-inc/ai-proxy-advanced/_how-to/sdk-usage.md
+app/_kong_plugins/ai-proxy-advanced/examples/sdk-dynamic-model-selection.yml:
+  - app/_hub/kong-inc/ai-proxy-advanced/_how-to/sdk-usage.md
+app/_kong_plugins/ai-proxy-advanced/examples/sdk-unsupported-model.yaml:
+  - app/_hub/kong-inc/ai-proxy-advanced/_how-to/sdk-usage.md
 
 # Konnect
 app/advanced-analytics/explorer.md:
