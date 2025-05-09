@@ -6,7 +6,7 @@ extended_description: |
   This configuration uses a dynamic URI capture to determine the deployment ID based on the incoming request path.
 
   {:.warning}
-  > Prepend the following `routes:` block for this configuration to work properly:
+  > For this plugin to work properly, you need a Gateway Route with the following configuration:
   > ```
   > routes:
   >   - name: azure-chat-model-from-path
@@ -17,7 +17,7 @@ extended_description: |
   For example, if your SDK sends requests to `http://localhost:8000/openai/deployments/my-gpt-3-5/chat/completions`
   then AI Proxy Advanced automatically maps `my-gpt-3-5` as the Azure deployment ID.
 
-  This allows a single route to support multiple Azure model deployments dynamically.
+  This allows a single Route to support multiple Azure model deployments dynamically.
 
 weight: 102
 

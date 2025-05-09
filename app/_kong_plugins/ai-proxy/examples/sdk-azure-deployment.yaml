@@ -4,7 +4,7 @@ extended_description: |
   Configure a header capture to insert the requested model name directly into the plugin configuration for Kong AI Gateway deployment with Azure OpenAI, as a string substitution.
 
   {:.warning}
-  > Prepend the following `routes:` block for this configuration to work properly:
+  > For this plugin to work properly, you need a Gateway Route with the following configuration:
   > ```
   > routes:
   >   - name: azure-chat-model-from-path

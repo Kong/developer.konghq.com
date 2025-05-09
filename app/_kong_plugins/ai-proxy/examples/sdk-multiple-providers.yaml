@@ -4,7 +4,7 @@ extended_description: |
   Configure one route to proxy multiple models deployed in the same Azure instance.
 
   {:.warning}
-  > Prepend the following `routes:` block for this configuration to work properly:
+  > For this plugin to work properly, you need a Gateway Route with the following configuration:
   > ```
   > routes:
   >  - name: azure-chat

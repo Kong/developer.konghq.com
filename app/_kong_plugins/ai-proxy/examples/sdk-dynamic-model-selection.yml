@@ -4,7 +4,7 @@ extended_description: |
   Configure a chat route that reads the target model from the request path instead of hardcoding it in the configuration.
 
   {:.warning}
-  > Prepend the following `routes:` block for this configuration to work properly:
+  > For this plugin to work properly, you need a Gateway Route with the following configuration:
   > ```
   > routes:
   >  - name: openai-chat
