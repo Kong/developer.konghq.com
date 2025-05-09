@@ -35,7 +35,7 @@ sections:
       - path: /mesh/vault/
     auto_exclude: true
 
-  - title: Authentication and authorization
+  - title: Authentication and Authorization
     items:
       - path: /mesh/multi-zone-authentication/
       - path: /mesh/rbac/
@@ -55,8 +55,7 @@ sections:
       - path: /mesh/policies/*/examples/**/*
       - path: /mesh/policies/*/reference/
 
-  
-  # - title: Uncategorized
-  #   items:
-  #     - path: /mesh/**/*
-  #   auto_exclude: true
+  - title: Uncategorized
+    items:
+      - path: /mesh/**/*
+    auto_exclude: true

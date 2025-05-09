@@ -1,12 +1,75 @@
 title: All Insomnia Documentation
 sections:
-  - title: Uncategorized
+  - title: Overview
     items:
       - path: /insomnia/
-      - path: /insomnia/**/*
-    auto_exclude: true
-  - title: How-tos
+      - path: /insomnia/collections/
+      - path: /insomnia/documents/
+      - path: /insomnia/api-specs/
+      - path: /insomnia/external-vault/
+      - path: /insomnia/storage/
+      - path: /insomnia/concepts/
+
+  - title: Design
     items:
+      - path: /insomnia/design/
+      - path: /how-to/create-a-design-document/
+      - path: /how-to/add-custom-linting-rules/
+      - path: /how-to/import-an-api-spec-as-a-document/
+      - path: /how-to/generate-a-collection-from-a-design-document/
+      - path: /how-to/import-content-from-a-git-repository/
+
+  - title: Test
+    items:
+      - path: /insomnia/test/
+      - path: /insomnia/mock-servers/
+      - path: /how-to/write-content-type-tests/
+      - path: /how-to/write-data-type-tests/
+      - path: /how-to/write-headers-in-response-tests/
+      - path: /how-to/write-http-status-tests/
+      - path: /how-to/create-a-cloud-hosted-mock-server/
+      - path: /how-to/automate-tests/
+
+  - title: Requests
+    items:
+      - path: /insomnia/requests/
+      - path: /how-to/write-pre-request-scripts/
+      - path: /how-to/chain-requests/
+      - path: /how-to/use-the-collection-runner/
+      - path: /insomnia/graphql/
+      - path: /how-to/set-a-value-from-a-response-as-an-environment-variable/
+  
+  - title: Plugins
+    items:
+      - path: /insomnia/plugins/
+      - path: /how-to/create-an-insomnia-plugin/
+      - path: /insomnia/plugin-reference/
+
+  - title: Authentication and authorization
+    items: 
+      - path: /insomnia/authentication-authorization/
+      - path: /insomnia/rbac/
+      - path: /insomnia/request-authentication/
       - type: how-to
         products:
           - insomnia
+        tags:
+          - authentication
+
+  - title: Data security
+    items:
+      - path: /insomnia/security/
+      - path: /insomnia/data-security/
+      - path: /insomnia/collected-data/
+      - path: /insomnia/incident-response/
+
+  - title: Reference
+    items:
+      - path: /inso-cli/
+      - path: /insomnia/account-management/
+      - path: /insomnia/allowlist/
+      - path: /insomnia/environment-variables/
+      - path: /insomnia/sbom/
+      - path: /how-to/synchronize-with-git/
+      - path: /insomnia/verify-binary-provenance/
+      - path: /insomnia/version-control/
