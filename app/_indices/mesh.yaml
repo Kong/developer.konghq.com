@@ -1,12 +1,62 @@
 title: All Mesh Documentation
 sections:
-  - title: Uncategorized
+  - title: Overview
     items:
       - path: /mesh/
-      - path: /mesh/**/*
-    auto_exclude: true
-  - title: How-tos
+      - path: /mesh/about/
+      - path: /mesh/architecture/
+      - title: Mesh policies
+        description: Bundled features for your service traffic and network configuration.
+        url: /mesh/policies/
+      - title: Mesh release notes
+        description: Release notes for supported Kong Mesh versions.
+        url: /mesh/changelog/
+      - path: /mesh/enterprise/
+      - path: /mesh/vulnerability-patching-process/
+      - path: /mesh/support-policy/
+  - title: Install & Configure
     items:
-      - type: how-to
-        products:
-          - mesh
+      - title: Kong Mesh quickstart
+        description: Run an instance of Kong Mesh in Universal mode with one command.
+        url: /mesh/#install-kong-mesh
+      - path: /mesh/universal/
+      - path: /mesh/kubernetes/
+      - path: /mesh/ecs/
+      - path: /mesh/openshift-quickstart/
+      - path: /mesh/ubi-images/
+      - title: Mesh Manager
+        description: Manage service meshes and Control Planes in Konnect.
+        url: /mesh-manager/
+  - title: Policies
+    items:
+      - path: /mesh/policies/**/*
+      - path: /mesh/acm-private-ca-policy/
+      - path: /mesh/cert-manager/
+      - path: /mesh/vault/
+    auto_exclude: true
+
+  - title: Authentication and authorization
+    items:
+      - path: /mesh/multi-zone-authentication/
+      - path: /mesh/rbac/
+
+  - title: References
+    items:
+      - path: /mesh/licence/
+      - path: /mesh/access-audit/
+      - path: /mesh/provenance-verification-binaries/
+      - path: /mesh/provenance-verification-images/
+      - path: /mesh/signed-images/
+      - path: /mesh/sbom/
+
+  - title: Hidden paths
+    hidden: true
+    items:
+      - path: /mesh/policies/*/examples/**/*
+      - path: /mesh/policies/*/reference/
+
+  
+  # - title: Uncategorized
+  #   items:
+  #     - path: /mesh/**/*
+  #   auto_exclude: true

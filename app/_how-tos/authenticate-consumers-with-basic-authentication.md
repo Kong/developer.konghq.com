@@ -1,10 +1,11 @@
 ---
-title: Authenticate Consumers with the Basic Authentication plugin
+title: Authenticate Consumers with basic authentication
 content_type: how_to
 related_resources:
   - text: Authentication
     url: /gateway/authentication/
 
+description: Use the Basic Authetication plugin to allow Consumers to authenticate with a username and password.
 products:
     - gateway
 
