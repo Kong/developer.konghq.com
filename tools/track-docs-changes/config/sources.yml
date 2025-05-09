@@ -11,6 +11,7 @@ app/_api/konnect/api-products/_index.md:
   - app/_api/konnect/api-products/_index.md
 app/_api/konnect/analytics-requests/_index.md:
   - app/_api/konnect/api-requests/_index.md
+  - app/konnect/analytics/api-requests.md
 app/_api/konnect/application-auth-strategies/_index.md:
   - app/_api/konnect/application-auth-strategies/_index.md
 app/_api/konnect/audit-logs/_index.md:
@@ -35,6 +36,7 @@ app/_api/konnect/ksearch/_index.md:
 # entities
 app/_gateway_entities/consumer-group.md:
   - app/_src/gateway/key-concepts/consumer-groups.md
+  - app/_src/gateway/kong-enterprise/consumer-groups/index.md
 app/_gateway_entities/consumer.md:
   - app/_src/gateway/key-concepts/consumers.md
   - app/konnect/centralized-consumer-management.md
@@ -82,7 +84,7 @@ app/_gateway_entities/vault.md:
   - app/_src/gateway/kong-enterprise/secrets-management/backends/azure-key-vaults.md
   - app/_src/gateway/kong-enterprise/secrets-management/backends/gcp-sm.md
   - app/_src/gateway/kong-enterprise/secrets-management/backends/hashicorp-vault.md
-  
+
 app/_gateway_entities/sni.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 app/_gateway_entities/certificate.md:
@@ -122,6 +124,13 @@ app/_gateway_entities/admin.md:
 
 app/_gateway_entities/partial.md:
   - app/_src/gateway/kong-enterprise/partials.md
+
+app/gateway/install.md:
+  - app/_src/gateway/install/index.md
+  - app/_src/gateway/install/linux/amazon-linux.md
+  - app/_src/gateway/install/linux/debian.md
+  - app/_src/gateway/install/linux/rhel.md
+  - app/_src/gateway/install/linux/ubuntu.md
 
 # how-tos
 ## gateway
@@ -432,6 +441,8 @@ app/_kong_plugins/upstream-oauth/index.md:
   - app/_hub/kong-inc/upstream-oauth/overview/_index.md
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/ai-rate-limiting-advanced/overview/_index.md
+app/_kong_plugins/ai-rate-limiting-advanced/examples/llm-provider-rate-limiting.yaml:
+  - app/_hub/kong-inc/ai-rate-limiting-advanced/how-to/_index.md
 app/_kong_plugins/basic-auth/index.md:
   - app/_hub/kong-inc/basic-auth/overview/_index.md
   - app/_hub/kong-inc/basic-auth/_changelog.md
@@ -561,6 +572,10 @@ app/_kong_plugins/ai-semantic-cache/changelog.md:
   - app/_hub/kong-inc/ai-semantic-cache/_changelog.md
 app/_kong_plugins/ai-semantic-cache/index.md:
   - app/_hub/kong-inc/ai-semantic-cache/overview/_index.md
+app/_kong_plugins/ai-semantic-cache/examples/mistral.yaml:
+  - app/_hub/kong-inc/ai-semantic-cache/how-to/llm-provider-integration-guides/_mistral.md
+app/_kong_plugins/ai-semantic-cache/examples/openai.yaml:
+  - app/_hub/kong-inc/ai-semantic-cache/how-to/llm-provider-integration-guides/_openai.md
 app/_kong_plugins/xml-threat-protection/index.md:
   - app/_hub/kong-inc/xml-threat-protection/overview/_index.md
 app/_kong_plugins/xml-threat-protection/changelog.md:
@@ -583,6 +598,8 @@ app/_kong_plugins/graphql-proxy-cache-advanced/index.md:
   - app/_hub/kong-inc/graphql-proxy-cache-advanced/overview/_index.md
 app/_kong_plugins/graphql-proxy-cache-advanced/changelog.md:
   - app/_hub/kong-inc/graphql-proxy-cache-advanced/_changelog.md
+app/_kong_plugins/graphql-proxy-cache-advanced/examples/graphql-proxy-cache-in-memory.yaml:
+  - app/_hub/kong-inc/graphql-proxy-cache-advanced/how-to/_index.md
 app/_kong_plugins/ai-prompt-template/index.md:
   - app/_hub/kong-inc/ai-prompt-template/overview/_index.md
 app/_kong_plugins/ai-prompt-template/changelog.md:
@@ -608,6 +625,13 @@ app/_kong_plugins/ai-semantic-prompt-guard/index.md:
   - app/_hub/kong-inc/ai-semantic-prompt-guard/overview/_index.md
 app/_kong_plugins/ai-semantic-prompt-guard/changelog.md:
   - app/_hub/kong-inc/ai-semantic-prompt-guard/_changelog.md
+app/_kong_plugins/ai-semantic-prompt-guard/examples/allow-and-deny-prompts.yaml:
+  - app/_hub/kong-inc/ai-semantic-prompt-guard/how-to/_index.md
+app/_kong_plugins/ai-semantic-prompt-guard/examples/allow-prompts.yaml:
+  - app/_hub/kong-inc/ai-semantic-prompt-guard/how-to/_index.md
+app/_kong_plugins/ai-semantic-prompt-guard/examples/deny-prompts.yaml:
+  - app/_hub/kong-inc/ai-semantic-prompt-guard/how-to/_index.md
+
 app/_kong_plugins/ai-response-transformer/index.md:
   - app/_hub/kong-inc/ai-response-transformer/overview/_index.md
 app/_kong_plugins/ai-response-transformer/changelog.md:
@@ -633,7 +657,7 @@ app/_kong_plugins/websocket-size-limit/index.md:
 app/_kong_plugins/websocket-validator/index.md:
   - app/_hub/kong-inc/websocket-validator/overview/_index.md
 app/_kong_plugins/app-dynamics/changelog.md:
-  - app/_hub/kong-inc/app-dynamics/changelog.md
+  - app/_hub/kong-inc/app-dynamics/_changelog.md
 app/_kong_plugins/app-dynamics/index.md:
   - app/_hub/kong-inc/app-dynamics/overview/_index.md
 app/_kong_plugins/ai-azure-content-safety/index.md:
@@ -735,15 +759,19 @@ app/_kong_plugins/grpc-gateway/changelog.md:
 app/_kong_plugins/grpc-web/changelog.md:
   - app/_hub/kong-inc/grpc-web/_changelog.md
 app/_kong_plugins/oauth2-introspection/index.md:
-  - app/_hub/kong-inc/oauth2/overview/_index.md
+  - app/_hub/kong-inc/oauth2-introspection/overview/_index.md
 app/_kong_plugins/oauth2-introspection/changelog.md:
-  - app/_hub/kong-inc/oauth2/_changelog.md
+  - app/_hub/kong-inc/oauth2-introspection/_changelog.md
 app/_kong_plugins/mtls-auth/index.md:
   - app/_hub/kong-inc/mtls-auth/overview/_index.md
 app/_kong_plugins/mtls-auth/changelog.md:
   - app/_hub/kong-inc/mtls-auth/_changelog.md
 app/_kong_plugins/http-log/index.md:
   - app/_hub/kong-inc/http-log/overview/_index.md
+  - app/_hub/kong-inc/http-log/overview/_log-format.md
+  - app/_hub/kong-inc/http-log/overview/_using-custom-fields.md
+app/_kong_plugins/http-log/examples/http-log-with-splunk.yaml:
+  - app/_hub/kong-inc/http-log/how-to/_splunk.md
 app/_kong_plugins/http-log/changelog.md:
   - app/_hub/kong-inc/http-log/_changelog.md
 app/_kong_plugins/pre-function/index.md:
@@ -765,6 +793,7 @@ app/_kong_plugins/ai-proxy/examples/anthropic-chat-route.yaml:
   - app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_anthropic.md
 app/_kong_plugins/ai-proxy/examples/azure-ai-with-managed-identity.yaml:
   - app/_hub/kong-inc/ai-proxy/how-to/_cloud-provider-authentication.md
+  - app/_hub/kong-inc/ai-proxy-advanced/how-to/_cloud-provider-authentication.md
 app/_kong_plugins/ai-proxy/examples/azure-chat-route.yaml:
   - app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_azure.md
 app/_kong_plugins/ai-proxy/examples/bedrock-chat-route.yaml:
@@ -999,7 +1028,7 @@ app/_landing_pages/konnect.yaml:
   - app/konnect/account-management/index.md
   - app/konnect/architecture.md
   - app/_includes/md/konnect/konnect-architecture.md
-app/_landing_pages/konnect-authentication.yaml:
+app/_landing_pages/konnect-platform/authentication.yaml:
   - app/konnect/org-management/auth.md
   - app/konnect/org-management/social-identity-login.md
 
@@ -1079,6 +1108,10 @@ app/gateway/kong-manager/configuration.md:
   - app/_src/gateway/kong-manager/troubleshoot.md
 app/ai-gateway/monitor-ai-llm-metrics.md:
   - app/_src/gateway/production/monitoring/ai-metrics.md
+app/ai-gateway/streaming.md:
+  - app/_hub/kong-inc/ai-proxy/how-to/_streaming.md
+  - app/_hub/kong-inc/ai-proxy-advanced/how-to/_streaming.md
+
 app/gateway/reserved-entity-names.md:
   - app/_src/gateway/reference/reserved-entity-names.md
 app/gateway/breaking-changes.md:
@@ -1144,7 +1177,7 @@ app/gateway/traffic-control/load-balancing.md:
   - app/_src/gateway/how-kong-works/load-balancing.md
 app/gateway/traffic-control/blue-green-deployments.md:
   - app/_src/gateway/production/blue-green.md
-app/konnect-platform/konnect-compatibility.md:
+app/konnect-platform/compatibility.md:
   - app/konnect/compatibility.md
   - app/konnect/upgrade-faq.md
 app/_landing_pages/gateway/traffic-control-and-routing.yaml:
@@ -1262,7 +1295,11 @@ app/_landing_pages/mesh-manager.yaml:
 app/_landing_pages/deck.yaml:
   - app/deck/index.md
   - app/deck/installation.md
-  - app/deck/faqs.md
+  - app/deck/reference/faq.md
+  - app/deck/install/index.md
+  - app/deck/install/binary.md
+  - app/deck/install/docker.md
+  - app/deck/install/github-actions.md
 app/_how-tos/deck-get-started.md:
   - app/deck/get-started.md
 app/deck/file/validate.md:
@@ -1396,18 +1433,18 @@ app/dev-portal/portal-customization.md:
   - app/dev-portal/portals/customization/appearance.md
   - app/dev-portal/portals/customization/portal-editor.md
 app/dev-portal/custom-pages.md:
-  - app/dev-portal/custom-pages.md
+  - app/dev-portal/portals/customization/custom-pages.md
 app/dev-portal/snippets.md:
   - app/dev-portal/portals/customization/snippets.md
 app/dev-portal/portal-settings.md:
-  - app/dev-portal/settings/general.md
+  - app/dev-portal/portals/settings/general.md
   - app/dev-portal/portals/audit-logs/index.md
 app/dev-portal/custom-domains.md:
-  - app/dev-portal/settings/custom-domains.md
+  - app/dev-portal/portals/settings/custom-domains.md
 app/dev-portal/security-settings.md:
   - app/dev-portal/portals/settings/security.md
 app/dev-portal/team-mapping.md:
-  - app/dev-portal/settings/team-mapping.md
+  - app/dev-portal/portals/settings/team-mapping.md
 app/dev-portal/apis.md:
   - app/dev-portal/apis/gateway-service-link.md
   - app/dev-portal/apis/index.md
@@ -1605,7 +1642,7 @@ app/gateway/configuration.md:
   - app/_src/gateway/reference/configuration/configuration-3.0.-3.3.x.md
 
 app/mesh/changelog.md:
-  - app/gateway/changelog.md
+  - app/mesh/changelog.md
 
 app/mesh/latest_version.md:
   - app/mesh/latest_version.html
@@ -2069,7 +2106,7 @@ app/_kong_plugins/websocket-validator/changelog.md:
   - app/_hub/kong-inc/websocket-validator/_changelog.md
 
 app/_kong_plugins/jwe-decrypt/index.md:
-  - app/_hub/kong-inc/jwe-decrypt/overview/index.md
+  - app/_hub/kong-inc/jwe-decrypt/overview/_index.md
 
 app/api-specs/plugins/acl/openapi.yaml:
   - app/_hub/kong-inc/acl/_api.md
@@ -2081,3 +2118,7 @@ app/api-specs/plugins/graphql-rate-limiting-advanced/openapi.yaml:
   - app/_hub/kong-inc/graphql-rate-limiting-advanced/_api.md
 app/api-specs/plugins/openid-connect/openapi.yaml:
   - app/_hub/kong-inc/openid-connect/_api.md
+
+
+app/mesh/policies/index.html:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md
