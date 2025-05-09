@@ -29,6 +29,14 @@ related_resources:
     url: /plugins/?category=ai
   - text: "{{site.base_gateway}} load balancing"
     url: /gateway/load-balancing/
+  - text: "{{site.base_gateway}} round-robin load balancing"
+    url: /gateway/entities/upstream/#round-robin
+  - text: "{{site.base_gateway}} round-robin load balancing"
+    url: /gateway/entities/upstream/#consistent-hashing
+  - text: "{{site.base_gateway}} least connections load balancing"
+    url: /gateway/entities/upstream/#least-connections
+  - text: "{{site.base_gateway}} latency load balancing"
+    url: /gateway/entities/upstream/#latency
 
 ---
 
@@ -42,6 +50,8 @@ The AI Proxy Advanced plugin supports several load balancing algorithms, similar
 ### Load balancing strategies
 
 Kong AI Gateway supports multiple load balancing strategies to optimize traffic distribution across AI models. Each algorithm is suited for different performance goals such as balancing load, improving cache-hit ratios, reducing latency, or ensuring [failover reliability](#retry-and-fallback).
+
+The table below provides a detailed overview of the available algorithms, along with considerations to keep in mind when selecting the best option for your use case.
 
 <!--vale off-->
 {% table %}
@@ -185,9 +195,9 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-#### Retry and fallback settings
+#### Retry and fallback scenarios
 
-The AI Gateway load balancer offers several configuration options to fine-tune request retries, timeouts, and failover behavior. The table below summarizes the key configuration parameters available:
+The AI Gateway load balancer can be customized to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The table below maps common scenarios to key configuration options that control load balancing behavior:
 
 <!--vale off-->
 {% table %}
@@ -217,3 +227,15 @@ rows:
       Route requests intelligently by considering cost, balancing model performance with budget optimization.
 {% endtable %}
 <!--vale on-->
+
+#### Version compatibility for fallbacks
+
+{:.info}
+> **{{site.base_gateway}} version compatibility for fallbacks:**
+> {% new_in 3.10 %}
+> - Full fallback support across targets, even with different API formats.
+> - Mix models from different providers if needed (e.g., OpenAI and Mistral).
+>
+> Pre-v3.10:
+> - Fallbacks only allowed between targets using the same API format.
+> - Example: OpenAI-to-OpenAI fallback is supported; OpenAI-to-OLLAMA is not.
