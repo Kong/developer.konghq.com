@@ -564,12 +564,6 @@
 - docs_url: "/gateway-operator/latest/get-started/konnect/create-route/"
   dev_site_url: ''
   status: "?"
-- docs_url: "/gateway-operator/latest/get-started/kic/install/"
-  dev_site_url: ''
-  status: "?"
-- docs_url: "/gateway-operator/latest/get-started/kic/create-route/"
-  dev_site_url: ''
-  status: "?"
 - docs_url: "/gateway-operator/latest/production/"
   dev_site_url: ''
   status: "?"
@@ -580,12 +574,6 @@
   dev_site_url: ''
   status: "?"
 - docs_url: "/gateway-operator/latest/production/upgrade/gateway-operator/"
-  dev_site_url: ''
-  status: "?"
-- docs_url: "/gateway-operator/latest/customization/data-plane-image/"
-  dev_site_url: ''
-  status: "?"
-- docs_url: "/gateway-operator/latest/customization/sidecars/"
   dev_site_url: ''
   status: "?"
 - docs_url: "/gateway-operator/latest/customization/pod-template-spec/"
@@ -633,19 +621,7 @@
 - docs_url: "/gateway-operator/latest/guides/autoscaling-workloads/overview/"
   dev_site_url: ''
   status: "?"
-- docs_url: "/gateway-operator/latest/guides/autoscaling-workloads/prometheus/"
-  dev_site_url: ''
-  status: "?"
-- docs_url: "/gateway-operator/latest/guides/autoscaling-workloads/datadog/"
-  dev_site_url: ''
-  status: "?"
 - docs_url: "/gateway-operator/latest/customization/pod-disruption-budget/"
-  dev_site_url: ''
-  status: "?"
-- docs_url: "/gateway-operator/latest/guides/plugin-distribution/"
-  dev_site_url: ''
-  status: "?"
-- docs_url: "/gateway-operator/latest/guides/konnect-entities/certificate-and-cacertificate/"
   dev_site_url: ''
   status: "?"
 - docs_url: "/gateway-operator/latest/guides/konnect-entities/konnect-plugin-binding/"
