@@ -9,230 +9,343 @@ ignoredPaths:
 docsUrlsToDevSiteUrls:
   - new_path: "/plugins/acl/reference/"
     old_path: "/hub/kong-inc/acl/configuration/"
+    source_file: app/_kong_plugins/acl/reference.md
   - new_path: "/plugins/acme/reference/"
     old_path: "/hub/kong-inc/acme/configuration/"
+    source_file: app/_kong_plugins/acme/reference.md
   - new_path: "/plugins/ai-azure-content-safety/reference/"
     old_path: "/hub/kong-inc/ai-azure-content-safety/configuration/"
+    source_file: app/_kong_plugins/ai-azure-content-safety/reference.md
   - new_path: "/plugins/ai-prompt-decorator/reference/"
     old_path: "/hub/kong-inc/ai-prompt-decorator/configuration/"
+    source_file: app/_kong_plugins/ai-prompt-decorator/reference.md
   - new_path: "/plugins/ai-prompt-guard/reference/"
     old_path: "/hub/kong-inc/ai-prompt-guard/configuration/"
+    source_file: app/_kong_plugins/ai-prompt-guard/reference.md
   - new_path: "/plugins/ai-prompt-template/reference/"
     old_path: "/hub/kong-inc/ai-prompt-template/configuration/"
+    source_file: app/_kong_plugins/ai-prompt-template/reference.md
   - new_path: "/plugins/ai-proxy/reference/"
     old_path: "/hub/kong-inc/ai-proxy/configuration/"
+    source_file: app/_kong_plugins/ai-proxy/reference.md
   - new_path: "/plugins/ai-proxy-advanced/reference/"
     old_path: "/hub/kong-inc/ai-proxy-advanced/configuration/"
+    source_file: app/_kong_plugins/ai-proxy-advanced/reference.md
   - new_path: "/plugins/ai-rag-injector/reference/"
     old_path: "/hub/kong-inc/ai-rag-injector/configuration/"
+    source_file: app/_kong_plugins/ai-rag-injector/reference.md
   - new_path: "/plugins/ai-rate-limiting-advanced/reference/"
     old_path: "/hub/kong-inc/ai-rate-limiting-advanced/configuration/"
+    source_file: app/_kong_plugins/ai-rate-limiting-advanced/reference.md
   - new_path: "/plugins/ai-request-transformer/reference/"
     old_path: "/hub/kong-inc/ai-request-transformer/configuration/"
+    source_file: app/_kong_plugins/ai-request-transformer/reference.md
   - new_path: "/plugins/ai-response-transformer/reference/"
     old_path: "/hub/kong-inc/ai-response-transformer/configuration/"
+    source_file: app/_kong_plugins/ai-response-transformer/reference.md
   - new_path: "/plugins/ai-sanitizer/reference/"
     old_path: "/hub/kong-inc/ai-sanitizer/configuration/"
+    source_file: app/_kong_plugins/ai-sanitizer/reference.md
   - new_path: "/plugins/ai-semantic-cache/reference/"
     old_path: "/hub/kong-inc/ai-semantic-cache/configuration/"
+    source_file: app/_kong_plugins/ai-semantic-cache/reference.md
   - new_path: "/plugins/ai-semantic-prompt-guard/reference/"
     old_path: "/hub/kong-inc/ai-semantic-prompt-guard/configuration/"
+    source_file: app/_kong_plugins/ai-semantic-prompt-guard/reference.md
   - new_path: "/plugins/amberflo/reference/"
     old_path: "/hub/amberflo/kong-plugin-amberflo/configuration/"
+    source_file: app/_kong_plugins/amberflo/reference.md
   - new_path: "/plugins/app-dynamics/reference/"
     old_path: "/hub/kong-inc/app-dynamics/configuration/"
+    source_file: app/_kong_plugins/app-dynamics/reference.md
   - new_path: "/plugins/appsentinels/reference/"
     old_path: "/hub/appsentinels/appsentinels/configuration/"
+    source_file: app/_kong_plugins/appsentinels/reference.md
   - new_path: "/plugins/aws-lambda/reference/"
     old_path: "/hub/kong-inc/aws-lambda/configuration/"
+    source_file: app/_kong_plugins/aws-lambda/reference.md
   - new_path: "/plugins/aws-request-signing/reference/"
     old_path: "/hub/TheLEGOGroup/aws-request-signing/configuration/"
+    source_file: app/_kong_plugins/aws-request-signing/reference.md
   - new_path: "/plugins/azure-functions/reference/"
     old_path: "/hub/kong-inc/azure-functions/configuration/"
+    source_file: app/_kong_plugins/azure-functions/reference.md
   - new_path: "/plugins/basic-auth/reference/"
     old_path: "/hub/kong-inc/basic-auth/configuration/"
+    source_file: app/_kong_plugins/basic-auth/reference.md
   - new_path: "/plugins/bot-detection/reference/"
     old_path: "/hub/kong-inc/bot-detection/configuration/"
+    source_file: app/_kong_plugins/bot-detection/reference.md
   - new_path: "/plugins/canary/reference/"
     old_path: "/hub/kong-inc/canary/configuration/"
+    source_file: app/_kong_plugins/canary/reference.md
   - new_path: "/plugins/confluent/reference/"
     old_path: "/hub/kong-inc/confluent/configuration/"
+    source_file: app/_kong_plugins/confluent/reference.md
   - new_path: "/plugins/confluent-consume/reference/"
     old_path: "/hub/kong-inc/confluent-consume/configuration/"
+    source_file: app/_kong_plugins/confluent-consume/reference.md
   - new_path: "/plugins/correlation-id/reference/"
     old_path: "/hub/kong-inc/correlation-id/configuration/"
+    source_file: app/_kong_plugins/correlation-id/reference.md
   - new_path: "/plugins/cors/reference/"
     old_path: "/hub/kong-inc/cors/configuration/"
+    source_file: app/_kong_plugins/cors/reference.md
   - new_path: "/plugins/datadog/reference/"
     old_path: "/hub/kong-inc/datadog/configuration/"
+    source_file: app/_kong_plugins/datadog/reference.md
   - new_path: "/plugins/datadome/reference/"
     old_path: "/hub/datadome/kong-plugin-datadome/configuration/"
+    source_file: app/_kong_plugins/datadome/reference.md
   - new_path: "/plugins/degraphql/reference/"
     old_path: "/hub/kong-inc/degraphql/configuration/"
+    source_file: app/_kong_plugins/degraphql/reference.md
   - new_path: "/plugins/exit-transformer/reference/"
     old_path: "/hub/kong-inc/exit-transformer/configuration/"
+    source_file: app/_kong_plugins/exit-transformer/reference.md
   - new_path: "/plugins/file-log/reference/"
     old_path: "/hub/kong-inc/file-log/configuration/"
+    source_file: app/_kong_plugins/file-log/reference.md
   - new_path: "/plugins/forward-proxy/reference/"
     old_path: "/hub/kong-inc/forward-proxy/configuration/"
+    source_file: app/_kong_plugins/forward-proxy/reference.md
   - new_path: "/plugins/graphql-proxy-cache-advanced/reference/"
     old_path: "/hub/kong-inc/graphql-proxy-cache-advanced/configuration/"
+    source_file: app/_kong_plugins/graphql-proxy-cache-advanced/reference.md
   - new_path: "/plugins/graphql-rate-limiting-advanced/reference/"
     old_path: "/hub/kong-inc/graphql-rate-limiting-advanced/configuration/"
+    source_file: app/_kong_plugins/graphql-rate-limiting-advanced/reference.md
   - new_path: "/plugins/grpc-gateway/reference/"
     old_path: "/hub/kong-inc/grpc-gateway/configuration/"
+    source_file: app/_kong_plugins/grpc-gateway/reference.md
   - new_path: "/plugins/grpc-web/reference/"
     old_path: "/hub/kong-inc/grpc-web/configuration/"
+    source_file: app/_kong_plugins/grpc-web/reference.md
   - new_path: "/plugins/header-cert-auth/reference/"
     old_path: "/hub/kong-inc/header-cert-auth/configuration/"
+    source_file: app/_kong_plugins/header-cert-auth/reference.md
   - new_path: "/plugins/hmac-auth/reference/"
     old_path: "/hub/kong-inc/hmac-auth/configuration/"
+    source_file: app/_kong_plugins/hmac-auth/reference.md
   - new_path: "/plugins/http-log/reference/"
     old_path: "/hub/kong-inc/http-log/configuration/"
+    source_file: app/_kong_plugins/http-log/reference.md
   - new_path: "/plugins/imp-appsec-connector/reference/"
     old_path: "/hub/imperva/imp-appsec-connector/configuration/"
+    source_file: app/_kong_plugins/imp-appsec-connector/reference.md
   - new_path: "/plugins/impart/reference/"
     old_path: "/hub/impart-security/kong-plugin-impart/configuration/"
+    source_file: app/_kong_plugins/impart/reference.md
   - new_path: "/plugins/inigo/reference/"
     old_path: "/hub/inigo/inigo/configuration/"
+    source_file: app/_kong_plugins/inigo/reference.md
   - new_path: "/plugins/injection-protection/reference/"
     old_path: "/hub/kong-inc/injection-protection/configuration/"
+    source_file: app/_kong_plugins/injection-protection/reference.md
   - new_path: "/plugins/ip-restriction/reference/"
     old_path: "/hub/kong-inc/ip-restriction/configuration/"
+    source_file: app/_kong_plugins/ip-restriction/reference.md
   - new_path: "/plugins/jq/reference/"
     old_path: "/hub/kong-inc/jq/configuration/"
+    source_file: app/_kong_plugins/jq/reference.md
   - new_path: "/plugins/json-threat-protection/reference/"
     old_path: "/hub/kong-inc/json-threat-protection/configuration/"
+    source_file: app/_kong_plugins/json-threat-protection/reference.md
   - new_path: "/plugins/jwe-decrypt/index/"
     old_path: "/hub/kong-inc/jwe-decrypt/configuration/"
+    source_file: app/_kong_plugins/jwe-decrypt/reference.md
   - new_path: "/plugins/jwe-decrypt/reference/"
     old_path: "/hub/kong-inc/jwe-decrypt/configuration/"
+    source_file: app/_kong_plugins/jwe-decrypt/reference.md
   - new_path: "/plugins/jwt/reference/"
     old_path: "/hub/kong-inc/jwt/configuration/"
+    source_file: app/_kong_plugins/jwt/reference.md
   - new_path: "/plugins/jwt-signer/reference/"
     old_path: "/hub/kong-inc/jwt-signer/configuration/"
+    source_file: app/_kong_plugins/jwt-signer/reference.md
   - new_path: "/plugins/kafka-consume/reference/"
     old_path: "/hub/kong-inc/kafka-consume/configuration/"
+    source_file: app/_kong_plugins/kafka-consume/reference.md
   - new_path: "/plugins/kafka-log/reference/"
     old_path: "/hub/kong-inc/kafka-log/configuration/"
+    source_file: app/_kong_plugins/kafka-log/reference.md
   - new_path: "/plugins/kafka-upstream/reference/"
     old_path: "/hub/kong-inc/kafka-upstream/configuration/"
+    source_file: app/_kong_plugins/kafka-upstream/reference.md
   - new_path: "/plugins/key-auth/reference/"
     old_path: "/hub/kong-inc/key-auth/configuration/"
+    source_file: app/_kong_plugins/key-auth/reference.md
   - new_path: "/plugins/key-auth-enc/reference/"
     old_path: "/hub/kong-inc/key-auth-enc/configuration/"
+    source_file: app/_kong_plugins/key-auth-enc/reference.md
   - new_path: "/plugins/kong-response-size-limiting/reference/"
     old_path: "/hub/optum/kong-response-size-limiting/configuration/"
+    source_file: app/_kong_plugins/kong-response-size-limiting/reference.md
   - new_path: "/plugins/kong-service-virtualization/reference/"
     old_path: "/hub/optum/kong-service-virtualization/configuration/"
+    source_file: app/_kong_plugins/kong-service-virtualization/reference.md
   - new_path: "/plugins/kong-spec-expose/reference/"
     old_path: "/hub/optum/kong-spec-expose/configuration/"
+    source_file: app/_kong_plugins/kong-spec-expose/reference.md
   - new_path: "/plugins/kong-splunk-log/reference/"
     old_path: "/hub/optum/kong-splunk-log/configuration/"
+    source_file: app/_kong_plugins/kong-splunk-log/reference.md
   - new_path: "/plugins/kong-upstream-jwt/reference/"
     old_path: "/hub/optum/kong-upstream-jwt/configuration/"
+    source_file: app/_kong_plugins/kong-upstream-jwt/reference.md
   - new_path: "/plugins/ldap-auth/reference/"
     old_path: "/hub/kong-inc/ldap-auth/configuration/"
+    source_file: app/_kong_plugins/ldap-auth/reference.md
   - new_path: "/plugins/ldap-auth-advanced/reference/"
     old_path: "/hub/kong-inc/ldap-auth-advanced/configuration/"
+    source_file: app/_kong_plugins/ldap-auth-advanced/reference.md
   - new_path: "/plugins/loggly/reference/"
     old_path: "/hub/kong-inc/loggly/configuration/"
+    source_file: app/_kong_plugins/loggly/reference.md
   - new_path: "/plugins/mocking/reference/"
     old_path: "/hub/kong-inc/mocking/configuration/"
+    source_file: app/_kong_plugins/mocking/reference.md
   - new_path: "/plugins/moesif/reference/"
     old_path: "/hub/moesif/kong-plugin-moesif/configuration/"
+    source_file: app/_kong_plugins/moesif/reference.md
   - new_path: "/plugins/mtls-auth/reference/"
     old_path: "/hub/kong-inc/mtls-auth/configuration/"
+    source_file: app/_kong_plugins/mtls-auth/reference.md
   - new_path: "/plugins/nonamesecurity/reference/"
     old_path: "/hub/nonamesecurity/nonamesecurity-kongtrafficsource/configuration/"
+    source_file: app/_kong_plugins/nonamesecurity/reference.md
   - new_path: "/plugins/oas-validation/reference/"
     old_path: "/hub/kong-inc/oas-validation/configuration/"
+    source_file: app/_kong_plugins/oas-validation/reference.md
   - new_path: "/plugins/oauth2/reference/"
     old_path: "/hub/kong-inc/oauth2/configuration/"
+    source_file: app/_kong_plugins/oauth2/reference.md
   - new_path: "/plugins/oauth2-introspection/reference/"
     old_path: "/hub/kong-inc/oauth2-introspection/configuration/"
+    source_file: app/_kong_plugins/oauth2-introspection/reference.md
   - new_path: "/plugins/opa/reference/"
     old_path: "/hub/kong-inc/opa/configuration/"
+    source_file: app/_kong_plugins/opa/reference.md
   - new_path: "/plugins/openid-connect/reference/"
     old_path: "/hub/kong-inc/openid-connect/configuration/"
+    source_file: app/_kong_plugins/openid-connect/reference.md
   - new_path: "/plugins/opentelemetry/reference/"
     old_path: "/hub/kong-inc/opentelemetry/configuration/"
+    source_file: app/_kong_plugins/opentelemetry/reference.md
   - new_path: "/plugins/post-function/reference/"
     old_path: "/hub/kong-inc/post-function/configuration/"
+    source_file: app/_kong_plugins/post-function/reference.md
   - new_path: "/plugins/pre-function/reference/"
     old_path: "/hub/kong-inc/pre-function/configuration/"
+    source_file: app/_kong_plugins/pre-function/reference.md
   - new_path: "/plugins/prometheus/reference/"
     old_path: "/hub/kong-inc/prometheus/configuration/"
+    source_file: app/_kong_plugins/prometheus/reference.md
   - new_path: "/plugins/proxy-cache/reference/"
     old_path: "/hub/kong-inc/proxy-cache/configuration/"
+    source_file: app/_kong_plugins/proxy-cache/reference.md
   - new_path: "/plugins/proxy-cache-advanced/reference/"
     old_path: "/hub/kong-inc/proxy-cache-advanced/configuration/"
+    source_file: app/_kong_plugins/proxy-cache-advanced/reference.md
   - new_path: "/plugins/rate-limiting/reference/"
     old_path: "/hub/kong-inc/rate-limiting/configuration/"
+    source_file: app/_kong_plugins/rate-limiting/reference.md
   - new_path: "/plugins/rate-limiting-advanced/reference/"
     old_path: "/hub/kong-inc/rate-limiting-advanced/configuration/"
+    source_file: app/_kong_plugins/rate-limiting-advanced/reference.md
   - new_path: "/plugins/redirect/reference/"
     old_path: "/hub/kong-inc/redirect/configuration/"
+    source_file: app/_kong_plugins/redirect/reference.md
   - new_path: "/plugins/request-callout/reference/"
     old_path: "/hub/kong-inc/request-callout/configuration/"
+    source_file: app/_kong_plugins/request-callout/reference.md
   - new_path: "/plugins/request-size-limiting/reference/"
     old_path: "/hub/kong-inc/request-size-limiting/configuration/"
+    source_file: app/_kong_plugins/request-size-limiting/reference.md
   - new_path: "/plugins/request-termination/reference/"
     old_path: "/hub/kong-inc/request-termination/configuration/"
+    source_file: app/_kong_plugins/request-termination/reference.md
   - new_path: "/plugins/request-transformer/reference/"
     old_path: "/hub/kong-inc/request-transformer/configuration/"
+    source_file: app/_kong_plugins/request-transformer/reference.md
   - new_path: "/plugins/request-transformer-advanced/reference/"
     old_path: "/hub/kong-inc/request-transformer-advanced/configuration/"
+    source_file: app/_kong_plugins/request-transformer-advanced/reference.md
   - new_path: "/plugins/request-validator/reference/"
     old_path: "/hub/kong-inc/request-validator/configuration/"
+    source_file: app/_kong_plugins/request-validator/reference.md
   - new_path: "/plugins/response-ratelimiting/reference/"
     old_path: "/hub/kong-inc/response-ratelimiting/configuration/"
+    source_file: app/_kong_plugins/response-ratelimiting/reference.md
   - new_path: "/plugins/response-transformer/reference/"
     old_path: "/hub/kong-inc/response-transformer/configuration/"
+    source_file: app/_kong_plugins/response-transformer/reference.md
   - new_path: "/plugins/response-transformer-advanced/reference/"
     old_path: "/hub/kong-inc/response-transformer-advanced/configuration/"
+    source_file: app/_kong_plugins/response-transformer-advanced/reference.md
   - new_path: "/plugins/route-by-header/reference/"
     old_path: "/hub/kong-inc/route-by-header/configuration/"
+    source_file: app/_kong_plugins/route-by-header/reference.md
   - new_path: "/plugins/route-transformer-advanced/reference/"
     old_path: "/hub/kong-inc/route-transformer-advanced/configuration/"
+    source_file: app/_kong_plugins/route-transformer-advanced/reference.md
   - new_path: "/plugins/salt-agent/reference/"
     old_path: "/hub/salt/salt/configuration/"
+    source_file: app/_kong_plugins/salt-agent/reference.md
   - new_path: "/plugins/saml/reference/"
     old_path: "/hub/kong-inc/saml/configuration/"
+    source_file: app/_kong_plugins/saml/reference.md
   - new_path: "/plugins/service-protection/reference/"
     old_path: "/hub/kong-inc/service-protection/configuration/"
+    source_file: app/_kong_plugins/service-protection/reference.md
   - new_path: "/plugins/session/reference/"
     old_path: "/hub/kong-inc/session/configuration/"
+    source_file: app/_kong_plugins/session/reference.md
   - new_path: "/plugins/standard-webhooks/reference/"
     old_path: "/hub/kong-inc/standard-webhooks/configuration/"
+    source_file: app/_kong_plugins/standard-webhooks/reference.md
   - new_path: "/plugins/statsd/reference/"
     old_path: "/hub/kong-inc/statsd/configuration/"
+    source_file: app/_kong_plugins/statsd/reference.md
   - new_path: "/plugins/syslog/reference/"
     old_path: "/hub/kong-inc/syslog/configuration/"
+    source_file: app/_kong_plugins/syslog/reference.md
   - new_path: "/plugins/tcp-log/reference/"
     old_path: "/hub/kong-inc/tcp-log/configuration/"
+    source_file: app/_kong_plugins/tcp-log/reference.md
   - new_path: "/plugins/tls-handshake-modifier/reference/"
     old_path: "/hub/kong-inc/tls-handshake-modifier/configuration/"
+    source_file: app/_kong_plugins/tls-handshake-modifier/reference.md
   - new_path: "/plugins/tls-metadata-headers/reference/"
     old_path: "/hub/kong-inc/tls-metadata-headers/configuration/"
+    source_file: app/_kong_plugins/tls-metadata-headers/reference.md
   - new_path: "/plugins/traceableai/reference/"
     old_path: "/hub/traceableai/traceableai/configuration/"
+    source_file: app/_kong_plugins/traceableai/reference.md
   - new_path: "/plugins/udp-log/reference/"
     old_path: "/hub/kong-inc/udp-log/configuration/"
+    source_file: app/_kong_plugins/udp-log/reference.md
   - new_path: "/plugins/upstream-oauth/reference/"
     old_path: "/hub/kong-inc/upstream-oauth/configuration/"
+    source_file: app/_kong_plugins/upstream-oauth/reference.md
   - new_path: "/plugins/upstream-timeout/reference/"
     old_path: "/hub/kong-inc/upstream-timeout/configuration/"
+    source_file: app/_kong_plugins/upstream-timeout/reference.md
   - new_path: "/plugins/vault-auth/reference/"
     old_path: "/hub/kong-inc/vault-auth/configuration/"
+    source_file: app/_kong_plugins/vault-auth/reference.md
   - new_path: "/plugins/websocket-size-limit/reference/"
     old_path: "/hub/kong-inc/websocket-size-limit/configuration/"
+    source_file: app/_kong_plugins/websocket-size-limit/reference.md
   - new_path: "/plugins/websocket-validator/reference/"
     old_path: "/hub/kong-inc/websocket-validator/configuration/"
+    source_file: app/_kong_plugins/websocket-validator/reference.md
   - new_path: "/plugins/xml-threat-protection/reference/"
     old_path: "/hub/kong-inc/xml-threat-protection/configuration/"
+    source_file: app/_kong_plugins/xml-threat-protection/reference.md
   - new_path: "/plugins/zipkin/reference/"
     old_path: "/hub/kong-inc/zipkin/configuration/"
+    source_file: app/_kong_plugins/zipkin/reference.md
   - new_path: "/plugins/acl/examples/"
     old_path: "/hub/kong-inc/acl/how-to/basic-example/"
   - new_path: "/plugins/acme/examples/"
