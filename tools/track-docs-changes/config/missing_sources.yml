@@ -604,6 +604,12 @@ docsUrlsToDevSiteUrls:
 
 
 ignoredDevSiteSources:
+  - app/_how-tos/konnect-reference-platform.md
+  - app/_landing_pages/konnect-reference-platform.yaml
+  - app/konnect-reference-platform/apiops.md
+  - app/konnect-reference-platform/faq.md
+  - app/konnect-reference-platform/kong-air.md
+  - app/konnect-reference-platform/orchestrator.md
   - app/_how-tos/operator-konnect-getstarted-authentication.md
   - app/_how-tos/operator-konnect-getstarted-controlplane.md
   - app/_how-tos/operator-konnect-getstarted-install.md
