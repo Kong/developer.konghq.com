@@ -24,6 +24,8 @@
             {% elsif product == 'konnect-platform' %}
                 {% capture url %}/index/konnect-platform/{% endcapture %}
             {% else %}
+            {% elsif product == 'reference-platform' %}
+                {% capture url %}/index/reference-platform/{% endcapture %}
                 {% capture url %}/{{ product }}/{% endcapture %}
             {% endif %}
             {% include badge.html url=url text=product_info.name %}
