@@ -22,7 +22,9 @@ related_resources:
   - text: "{{site.base_gateway}} audit logs"
     url: /gateway/audit-logs/
   - text: "{{site.konnect_short_name}} logs"
-    url: /konnect-logs/
+    url: /gateway-manager/konnect-logs/
+  - text: "{{site.konnect_short_name}} platform audit logs"
+    url: /konnect-platform/audit-logs/
   - text: Logging plugins
     url: /plugins/?category=logging
   - text: Add Correlation IDs to {{site.base_gateway}} logs

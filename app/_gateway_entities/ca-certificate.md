@@ -19,8 +19,6 @@ related_resources:
     url: /plugins/mtls-auth/
   - text: Header Cert Authentication plugin
     url: /plugins/header-cert-auth/
-  - text: Define Service-level CA certificate
-    url: /how-to/ca-cert-for-server-on-service/
   - text: SSL certificates reference
     url: /gateway/ssl-certificates/
   - text: CA Certificate how-to guides
@@ -56,7 +54,7 @@ When you create a CA Certificate, it will appear under every Workspace.
 
 To verify server certificates, you can define your CA Certificate:
 - [Globally](/gateway/ssl-certificates/), to cover verification of all upstream server certificates
-- [On a specific Gateway service](/how-to/ca-cert-for-server-on-service/)
+- On a specific Gateway service
 
 To verify client certificates, you can use the [Mutual TLS Authentication plugin](/plugins/mtls-auth/) or the [Header Cert Authentication plugin](/plugins/header-cert-auth/).
 

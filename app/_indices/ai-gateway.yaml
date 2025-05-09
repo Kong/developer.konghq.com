@@ -37,7 +37,7 @@ sections:
         url: /ai-gateway/monitor-ai-llm-metrics/
       - title: Advanced Analytics
         description: Access advanced analytics features in AI Gateway.
-        url: /ai-gateway/advanced-analytics/
+        url: /advanced-analytics/
   - title: AI providers
     items:
       - path: /ai-gateway/ai-providers/**
@@ -46,7 +46,7 @@ sections:
         url: /plugins/ai-proxy-advanced/examples/anthropic-chat-route/
       - title: Azure AI with Managed Identity - AI Proxy Advanced
         description: Connect Azure AI services using Managed Identity through the AI Proxy Advanced plugin.
-        url: /plugins/ai-proxy-advanced/examples/azure-ai-with-managed-identity/
+        url: /plugins/ai-proxy/examples/azure-ai-with-managed-identity/
       - title: Azure Chat Route - AI Proxy Advanced
         description: Configure Azure chat routing with the AI Proxy Advanced plugin.
         url: /plugins/ai-proxy-advanced/examples/azure-chat-route/
