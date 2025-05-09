@@ -75,7 +75,7 @@ You can see examples of these workflows in action in the [Kong Airlines example 
 
 The workflows are triggered by changes to files in the platform repository. The workflows are coded to 
 only run when specific files have changed. When the orchestrator updates an API Specification file, the initial
-workflow is ran, staging changes to the platform repository. The administrators only need to review and approve the
+workflow is ran, staging changes back to the platform repository. The administrators only need to review and approve the
 PRs created by the sequenced workflows to ensure a correct and successful deployment to {{site.base_gateway}}.
 
 The following diagram shows details and sequencing on the APIOps workflows.
@@ -84,17 +84,17 @@ The following diagram shows details and sequencing on the APIOps workflows.
 {% mermaid %}
 flowchart LR
 
-subgraph Apply[Orchestrator Apply]
-    direction TB
-    a-o[Konnect Orchestrator]
+subgraph PlatformRepo[Platform Repo Workflows]
+    direction LR
+    manual[Manual trigger] --> Apply
+
+subgraph Apply[koctl Apply]
+    a-o[koctl]
     a-s@{ shape: lin-cyl, label: "Service Repository"} 
     a-o -- "reads<br>openapi.yaml" --> a-s
-    a-o -- "creates PR" --> a-p-r@{ shape: lin-cyl, label: "Platform Repository"}
-    a-p-r --> a-f@{ shape: lin-doc, label: "openapi.yaml"}
-    a-l@{ shape: rect, label: "deck file lint" } -.-> a-f -.-> a-l 
+    a-o -- "creates PR" --> a-f@{ shape: lin-doc, label: "openapi.yaml"}
+    a-l@{ shape: rect, label: "OAS conformance" } -.-> a-f -.-> a-l 
 end
-
-subgraph PlatformRepo[Platform Repo Workflows]
 
 subgraph SpecToDeck["OpenAPI to Kong"]
     direction TB
@@ -102,7 +102,7 @@ subgraph SpecToDeck["OpenAPI to Kong"]
     std-f --> std-w@{ shape: rect, label: "deck file patch"}
     std-w --> std-w2@{ shape: rect, label: "deck file openapi2kong"}
     std-w2 -- "creates PR" --> std-pr@{ shape: lin-doc, label: "kong-from-oas.yaml"}
-    lint@{ shape: rect, label: "decK file lint" } -.-> std-pr -.-> lint
+    lint@{ shape: rect, label: "decK Conformance" } -.-> std-pr -.-> lint
 end
 
 subgraph StageDeckChange["Stage decK changes"]
