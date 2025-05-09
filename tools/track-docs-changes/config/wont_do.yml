@@ -1,0 +1,254 @@
+# Pages marked as won't do for which we don't have a page in the dev site
+---
+- docs_url: "/konnect/org-management/access-tokens/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/getting-started/app-registration/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/community-expectations/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/community/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/conditional-rendering/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/contribution-templates/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/analytics/dashboard/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/gateway-manager/declarative-config/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/diagrams/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/api/errors/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/api/filtering/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/hackathons/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/includes/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/gateway-manager/data-plane-nodes/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/gateway-manager/plugins/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/api-products/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/kong-plugins/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/analytics/use-cases/latency/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/markdown-rules/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/notices/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/gateway-manager/data-plane-nodes/parameter-reference/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/partner-plugins/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/api-products/productize-service/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/gateway/latest/reference/rate-limiting/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/api-products/service-documentation/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/org-management/sessions-reference/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/single-sourced-plugins/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/single-sourced-versions/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/style-guide/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/org-management/system-accounts/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/analytics/use-cases/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/user-interfaces/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/konnect/org-management/users/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/variables/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/contributing/word-choice/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/gateway/latest/production/monitoring/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/gateway/latest/production/canary/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/gateway/latest/migrate-cassandra-to-postgres/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/gateway/latest/kong-manager/get-started/services-and-routes/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/gateway/latest/kong-manager/get-started/rate-limiting/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/gateway/latest/kong-manager/get-started/proxy-caching/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/gateway/latest/kong-manager/get-started/consumers/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/gateway/latest/kong-manager/get-started/load-balancing/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/gateway/latest/kong-manager/consumer-groups/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/gateway/latest/plugin-development/wasm/filter-development-guide/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/gateway/latest/plugin-development/wasm/filter-configuration/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/gateway/latest/reference/wasm/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/introduction/how-kong-mesh-works/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/production/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/production/cp-deployment/single-zone/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/production/cp-deployment/multi-zone/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/production/cp-deployment/kubernetes/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/mutual-tls/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/external-services/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/service-health-probes/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/protocol-support-in-kong-mesh/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/networking/non-mesh-traffic/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/general-notes-about-kong-mesh-policies/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/how-kong-mesh-chooses-the-right-policy-to-apply/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/traffic-permissions/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/traffic-route/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/traffic-metrics/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/traffic-trace/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/traffic-log/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/locality-aware/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/fault-injection/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/health-check/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/circuit-breaker/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/retry/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/timeout/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/rate-limit/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/virtual-outbound/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/policies/meshgatewayroute/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/features/opa/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/features/windows/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/reference/http-api/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/mesh/latest/reference/proxy-template/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/hub/kong-inc/application-registration/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/hub/kong-inc/application-registration/configuration/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/hub/kong-inc/application-registration/how-to/basic-example/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/hub/kong-inc/application-registration/how-to/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/hub/okta/okta/"
+  dev_site_url: ''
+  status: won't do
+- docs_url: "/gateway/api/admin-oss/latest/"
+  dev_site_url: ''
+  status: won't do
