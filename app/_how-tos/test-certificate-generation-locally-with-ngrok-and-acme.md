@@ -22,6 +22,7 @@ plugins:
 
 tags:
     - security
+    - certificates
 
 tldr:
     q: How do I test certificate generation locally with the ACME plugin?

@@ -157,6 +157,7 @@ declaratively
 deduplicate
 deduplication
 degraphql
+degraphql_routes
 denylist
 deployer
 dereference

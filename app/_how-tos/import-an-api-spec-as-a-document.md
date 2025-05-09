@@ -5,6 +5,8 @@ content_type: how_to
 products:
     - insomnia
 
+description: Import an API specification into Insomnia from a file, URL, or your clipboard.
+
 tags:
   - documents
 

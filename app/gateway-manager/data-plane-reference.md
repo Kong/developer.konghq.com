@@ -1,5 +1,5 @@
 ---
-title: "Data Plane Reference"
+title: "Data Plane reference"
 content_type: reference
 layout: reference
 description: | 

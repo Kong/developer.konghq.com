@@ -1,5 +1,5 @@
 ---
-title: "Migrating from Self-Managed {{site.base_gateway}} to Konnect"
+title: "Migrating from self-managed {{site.base_gateway}} to {{site.konnect_short_name}}"
 
 description: "Learn how to migrate from self-managed {{site.base_gateway}} to {{site.konnect_short_name}}."
 

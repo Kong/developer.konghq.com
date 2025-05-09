@@ -8,6 +8,10 @@ products:
 works_on:
     - on-prem
 
+tags:
+  - authorization
+  - access-control
+
 related_resources:
   - text: Gateway RBAC entity
     url: /gateway/entities/rbac/

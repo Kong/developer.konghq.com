@@ -1,12 +1,13 @@
 ---
-title: Authentication strategies
-description: 'Learn how to set up authentication strategies for Dev Portal.'
+title: Application authentication strategies
+description: 'Learn how to set up authentication strategies for application registration in Dev Portal.'
 content_type: reference
 layout: reference
 products:
   - dev-portal
 tags:
   - authentication
+  - application-registration
   - beta
 beta: true
 works_on:
@@ -30,7 +31,8 @@ related_resources:
     url: /dev-portal/application-registration/
 ---
 
-Dev Portal authentication strategies determine which developers can access which APIs. You can define and reuse multiple authentication strategies for different APIs and Dev Portals. For example:
+Dev Portal application authentication strategies determine which developers can access which APIs. 
+You can define and reuse multiple authentication strategies for different APIs and Dev Portals. For example:
 
 * `key-auth`: Built-in default
 * `okta-oidc`: OpenID Connect with Okta

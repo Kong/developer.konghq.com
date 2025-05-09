@@ -1,5 +1,5 @@
 ---
-title: "{{site.base_gateway}} Vulnerability Patching Process"
+title: "{{site.base_gateway}} vulnerability patching process"
 
 description: Learn how Kong handles vulnerabilities or potential vulnerabilities in {{site.base_gateway}} or third-party code, and how to report any security issues.
 

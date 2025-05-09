@@ -1,7 +1,13 @@
 title: All Advanced Analytics Documentation
 sections:
-  - title: Uncategorized
+  - title: Overview
     items:
       - path: /advanced-analytics/
-      - path: /advanced-analytics/**/*
     auto_exclude: true
+  - title: References
+    items:
+      - path: /advanced-analytics/explorer/
+      - path: /advanced-analytics/llm-reporting/
+      - title: Analytics teams and roles
+        description: Assign users to predefined Analytics teams in Konnect to control access levels.
+        url: /konnect-platform/teams-and-roles/
