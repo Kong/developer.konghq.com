@@ -338,18 +338,13 @@ rows:
               blocks:
                 - type: text
                   text: |
+                      AI Gateway enforces governance on outgoing AI prompts through allow/deny lists, blocking unauthorized requests with 4xx responses. It also provides built-in PII sanitization, automatically detecting and redacting sensitive data across 20+ categories and 12 languages. Running privately and self-hosted for full control and compliance, AI Gateway ensures consistent protection without burdening developers, which helps simplify AI adoption at scale.
 
-                      AI Gateway simplifies and strengthens governance over AI workflows by enforcing prompt controls and protecting sensitive data at scale.
-                      - Configure allow/deny lists to block unauthorized prompts, returning clear 4xx responses to clients and preventing unwanted data egress.
-                      - Automatically detect and redact personally identifiable information across 20+ data categories and 12 languages — no custom code needed.
-                      - Keep data secure and compliant with a high-performance solution that runs inside your environment.
-                      - Enforce data protection policies at the gateway layer, eliminating the need for complex, service-by-service filters.
-
-      - blocks:
-        - type: image
-          config:
-            url: /assets/images/gateway/pii-sanitization.png
-            alt_text: Overview of AI gateway
+      # - blocks:
+      #   - type: image
+      #     config:
+      #       url: /assets/images/gateway/pii-sanitization.png
+      #       alt_text: Overview of AI gateway
   - columns:
       - blocks:
         - type: plugin
@@ -448,15 +443,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    AI Gateway automates retrieval-augmented generation (RAG) to deliver more accurate and reliable AI responses — without burdening developers.
-
-                    - Instantly generate embeddings, fetch relevant context from vector databases, and enrich prompts inline — no custom RAG code required.
-
-                    - Insert vetted data directly into prompts at the platform layer, ensuring consistency, security, and control across all AI workflows.
-
-                    - Eliminate the need for app-by-app RAG implementations, dramatically reducing development time and operational complexity.
-
-                    - Minimize hallucinations and boost LLM accuracy by providing up-to-date, domain-specific context at the moment of generation.
+                    AI Gateway automates the entire retrieval-augmented generation (RAG) process, enriching prompts with relevant, vetted data without requiring custom development. Embeddings are generated automatically, context is fetched from vector databases, and prompt enrichment happens inline at the gateway layer. This reduces LLM hallucinations, improves response quality, and ensures consistency and security across all AI workflows.
   - columns:
       - blocks:
         - type: plugin
