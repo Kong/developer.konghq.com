@@ -2151,6 +2151,8 @@ app/_how-tos/enable-mutual-tls-authentication-on-a-service.md:
 
 ## Operator 
 
+app/_how-tos/operator-konnect-serviceless-route.md:
+  - app/_src/gateway-operator/guides/konnect-entities/service-and-route.md
 app/operator/konnect/labelling.md:
   - app/_src/gateway-operator/guides/konnect-entities/tagging-and-labeling.md
 app/operator/konnect/reference/faq.md:
