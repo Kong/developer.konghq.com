@@ -13,7 +13,7 @@ The following templated parameters are available:
 * `$(uri_captures.path_parameter_name)`: The value of a captured URI path parameter.
 * `$(query_params.query_parameter_name)`: The value of a query string parameter.
 
-You can combine these parameters with an OpenAI-compatible SDK in multiple ways using the AI Proxy aplugin, depending on your specific use case:
+You can combine these parameters with an OpenAI-compatible SDK in multiple ways using the AI Proxy plugin, depending on your specific use case:
 
 <!--vale off-->
 {% table %}
