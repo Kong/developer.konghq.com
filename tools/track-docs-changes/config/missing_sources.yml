@@ -603,7 +603,6 @@ docsUrlsToDevSiteUrls:
 
 
 ignoredDevSiteSources:
-  - app/_how-tos/operator-konnect-serviceless-route.md
   - app/_how-tos/operator-konnect-getstarted-authentication.md
   - app/_how-tos/operator-konnect-getstarted-controlplane.md
   - app/_how-tos/operator-konnect-getstarted-install.md
