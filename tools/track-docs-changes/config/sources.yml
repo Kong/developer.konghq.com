@@ -2129,18 +2129,7 @@ app/api-specs/plugins/openid-connect/openapi.yaml:
 app/mesh/policies/index.html:
   - app/_src/.repos/kuma/app/_src/policies/introduction.md
 
-
-
-# KIC ???
-
-#app/kubernetes-ingress-controller/troubleshooting/kubernetes-api-server.md:
-#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
-#app/kubernetes-ingress-controller/troubleshooting/kong-gateway-configuration.md:
-#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
-#app/kubernetes-ingress-controller/troubleshooting/konnect.md:
-#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
-#app/kubernetes-ingress-controller/troubleshooting/debugging.md:
-#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
+# KIC
 
 app/kubernetes-ingress-controller/deployment-topologies/gateway-discovery.md:
   - /app/_src/kubernetes-ingress-controller/production/deployment-topologies/gateway-discovery.md
@@ -2160,7 +2149,7 @@ app/kubernetes-ingress-controller/troubleshooting/kubernetes-api-server.md:
 app/_how-tos/enable-mutual-tls-authentication-on-a-service.md:
   - app/_src/kubernetes-ingress-controller/plugins/mtls.md
 
-## Operator COME BACK TO THIS 
+## Operator 
 
 app/operator/konnect/labelling.md:
   - app/_src/gateway-operator/guides/konnect-entities/tagging-and-labeling.md
@@ -2170,71 +2159,55 @@ app/operator/konnect/reference/crds.md:
   - /app/_src/gateway-operator/concepts/gateway-api.md
   - /app/_src/gateway-operator/guides/konnect-entities/architecture.md
 app/_how-tos/operator-dataplane-autoscale-datadog.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md
+  - app/_src/gateway-operator/guides/autoscaling-workloads/datadog.md
 app/_how-tos/operator-dataplane-autoscale-prometheus.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md
+  - app/_src/gateway-operator/guides/autoscaling-workloads/prometheus.md
 app/_how-tos/operator-dataplane-custom-ca.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/guides/konnect-entities/certificate-and-cacertificate.md
 app/_how-tos/operator-dataplane-custom-plugins.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/guides/plugin-distribution.md
 app/_how-tos/operator-dataplane-image.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/customization/data-plane-image.md
 app/_how-tos/operator-dataplane-sidecars.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/customization/sidecars.md
 app/_how-tos/operator-get-started-hybrid-create-route.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/get-started/kic/create-route.md
 app/_how-tos/operator-get-started-hybrid-deploy-dataplane.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
 app/_how-tos/operator-get-started-hybrid-install.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
 app/_how-tos/operator-get-started-kic-create-gateway.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
 app/_how-tos/operator-get-started-kic-create-route.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/get-started/kic/create-route.md
 app/_how-tos/operator-get-started-kic-install.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/get-started/kic/install.md
 app/_how-tos/operator-install.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/get-started/konnect/install.md
 app/_how-tos/operator-konnect-certificate-ca-cert.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/production/certificates/custom_ca.md
 app/_how-tos/operator-konnect-cgw-configuration.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/guides/konnect-entities/cloud-gateways-data-plane-group-configuration.md
 app/_how-tos/operator-konnect-cgw-network.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/guides/konnect-entities/cloud-gateways-network.md
 app/_how-tos/operator-konnect-consumer.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/guides/konnect-entities/consumer-and-consumergroup.md
 app/_how-tos/operator-konnect-control-plane-group.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/guides/konnect-entities/gatewaycontrolplane.md
 app/_how-tos/operator-konnect-control-plane-kic.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
 app/_how-tos/operator-konnect-control-plane.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
 app/_how-tos/operator-konnect-dp-certificate.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
-app/_how-tos/operator-konnect-getstarted-authentication.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
-app/_how-tos/operator-konnect-getstarted-controlplane.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
-app/_how-tos/operator-konnect-getstarted-install.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
-app/_how-tos/operator-konnect-getstarted-key-auth.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
-app/_how-tos/operator-konnect-getstarted-proxy-cache.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
-app/_how-tos/operator-konnect-getstarted-ratelimiting.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
-app/_how-tos/operator-konnect-getstarted-services-routes.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/guides/konnect-entities/dpcertificate.md
 app/_how-tos/operator-konnect-key-keyset.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/guides/konnect-entities/key-and-keyset.md
 app/_how-tos/operator-konnect-service-route.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
-app/_how-tos/operator-konnect-serviceless-route.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/guides/konnect-entities/service-and-route.md
 app/_how-tos/operator-konnect-upstream-target.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/guides/konnect-entities/upstream-and-target.md
 app/_how-tos/operator-konnect-vault.md:
-  - app/_src/.repos/kuma/app/_src/policies/introduction.md 
+  - app/_src/gateway-operator/guides/konnect-entities/vault.md
 app/operator/konnect/reconciliation-loop.md:
   - app/_src/gateway-operator/guides/konnect-entities/architecture.md
 app/operator/konnect/troubleshooting/status.md:
@@ -2242,7 +2215,7 @@ app/operator/konnect/troubleshooting/status.md:
 app/operator/support-policy.md:
   - app/_src/gateway-operator/support.md
 
-## Just missing
+## Things that were missing
 
 app/gateway/traffic-control/load-balancing-reference.md:
   - app/_src/gateway/how-kong-works/load-balancing.md
@@ -2273,7 +2246,6 @@ app/_how-tos/add-rate-limiting-to-a-service-with-kong-gateway.md:
   - app/_src/gateway/get-started/rate-limiting.md
 app/_how-tos/associate-certificate-with-sni.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
-
 app/_how-tos/create-a-custom-webhook-slack-with-kong-gateway.md:
   - app/_src/gateway/kong-enterprise/event-hooks/index.md
 app/_how-tos/create-a-lambda-event-hook-with-kong-gateway.md:
