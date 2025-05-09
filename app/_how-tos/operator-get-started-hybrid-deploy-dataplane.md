@@ -1,6 +1,6 @@
 ---
 title: Deploy a DataPlane
-description: "TODO"
+description: "Deploy a DataPlane using {{ site.operator_product_name }}."
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/hybrid/deploy-dataplane/
@@ -67,7 +67,7 @@ spec:
 
 ## Check the Ready status
 
-If the `DataPlane` has `Ready` condition set to `True` then you can visit {{site.konnect_short_name}} and see the dataplane in the list of connected dataplanes for your control plane:
+If the `DataPlane` has `Ready` condition set to `True` then you can visit {{site.konnect_short_name}} and see the dataplane in the list of connected Data Planes for your Control Plane:
 
 <!-- vale off -->
 {% validation kubernetes-resource %}

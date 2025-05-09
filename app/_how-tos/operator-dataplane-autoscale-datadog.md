@@ -1,6 +1,6 @@
 ---
-title: Autoscale workloads with Prometheus
-description: 'Use the Gateway Operator and Prometheus metrics to automatically scale Kong Gateway Data Plane workloads.'
+title: Autoscale workloads with Datadog
+description: 'Use the Gateway Operator and Datadog metrics to automatically scale {{site.base_gateway}} Data Plane workloads.'
 content_type: how_to
 
 permalink: /operator/dataplanes/how-to/autoscale-workloads/datadog/
@@ -20,7 +20,7 @@ works_on:
   - on-prem
 
 tldr:
-  q: How can I autoscale {{site.base_gateway}} workloads using Prometheus metrics?
+  q: How can I autoscale {{site.base_gateway}} workloads using Datadog metrics?
   a: |
     Deploy a `DataPlaneMetricsExtension` to collect metrics (like latency) from a target service,
     expose those metrics on the `/metrics` endpoint, and configure the operator to reference this
@@ -36,7 +36,7 @@ TODO
 
 ## Example
 
-This example deploys an `echo` `Service` which will have its latency measured and exposed on {{ site.operator_product_name }}'s `/metrics` endpoint. The service allows us to run any shell command, which we'll use to add artificial latency later for testing purposes.
+This example deploys an `echo` `Service` which will have its latency measured and exposed on {{ site.operator_product_name }}'s `/metrics` endpoint. The Service allows us to run any shell command, which we'll use to add artificial latency later for testing purposes.
 
 ```yaml
 echo '
@@ -100,7 +100,7 @@ spec:
                   fieldPath: status.podIP' | kubectl apply -f -
 ```
 
-Next, create a `DataPlaneMetricsExtension` that points to the `echo` service, attach it to a `GatewayConfiguration` resource and deploy a `Gateway` with a `HTTPRoute` so that we can make a HTTP request to the service.
+Next, create a `DataPlaneMetricsExtension` that points to the `echo` Service, attach it to a `GatewayConfiguration` resource and deploy a `Gateway` with a `HTTPRoute` so that we can make a HTTP request to the Service.
 
 ```yaml
 echo '

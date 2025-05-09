@@ -1,6 +1,6 @@
 ---
-title: Create a route
-description: "TODO"
+title: Create a Route with {{ site.operator_product_name }} and {{ site.kic_product_name }}
+description: "Learn how to configure a Route using {{ site.operator_product_name }} and {{ site.kic_product_name }}."
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/kic/create-route/
@@ -37,13 +37,13 @@ prereqs:
 
 ## Configure the echo service
 
-1. In order to route a request using {{ site.base_gateway }} we need a service running in our cluster. Install an `echo` service using the following command:
+1. In order to route a request using {{ site.base_gateway }} we need a Service running in our cluster. Install an `echo` Service using the following command:
 
     ```bash
     kubectl apply -f {{site.links.web}}/manifests/kic/echo-service.yaml -n kong
     ```
 
-1.  Create a `HTTPRoute` to send any requests that start with `/echo` to the echo service.
+1.  Create an `HTTPRoute` to send any requests that start with `/echo` to the echo Service.
 
     ```yaml
     echo '
@@ -102,5 +102,3 @@ indent: 4
     In namespace default.
     With IP address 192.168.194.10.
     ```
-
-   Congratulations! You just configured {{ site.operator_product_name }}, {{ site.kic_product_name }} and {{ site.base_gateway }} using open standards.

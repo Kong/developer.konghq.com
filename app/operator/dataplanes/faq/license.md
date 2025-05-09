@@ -1,5 +1,5 @@
 ---
-title: "Enterprise License"
+title: "Enterprise license"
 description: "Provide your {{ site.base_gateway }} license using the KongLicense CRD or as an environment variable"
 content_type: reference
 layout: reference

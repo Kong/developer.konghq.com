@@ -1,5 +1,5 @@
 ---
-title: "Custom Resource Definitions"
+title: "Custom resource definitions"
 description: "TODO"
 content_type: reference
 layout: reference

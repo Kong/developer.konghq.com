@@ -1,6 +1,6 @@
 ---
 title: Create a Gateway
-description: "TODO"
+description: "Configure {{ site.operator_product_name }}, {{ site.kic_product_name }}, and {{ site.base_gateway }} using open standards."
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/kic/create-gateway/
@@ -111,7 +111,7 @@ spec:
 
 ## GatewayClass
 
-To use the Gateway API resources to configure your routes, you need to create a `GatewayClass` instance and create a `Gateway` resource that listens on the ports that you need.
+To use the Gateway API resources to configure your Routes, you need to create a `GatewayClass` instance and create a `Gateway` resource that listens on the ports that you need.
 
 ```yaml
 echo '
@@ -156,7 +156,7 @@ kong   kong    172.18.0.102   True         9m5s
 
 ## Check the Programmed status
 
-If the `Gateway` has `Programmed` condition set to `True` then you can visit {{site.konnect_short_name}} and see your configuration being synced by {{ site.kic_product_name }}.
+If the `Gateway` has `Programmed` condition set to `True`, you can visit {{site.konnect_short_name}} and see your configuration being synced by {{ site.kic_product_name }}.
 
 <!-- vale off -->
 {% validation kubernetes-resource %}
@@ -165,5 +165,3 @@ name: kong
 namespace: kong
 {% endvalidation %}
 <!-- vale on -->
-
-   Congratulations! You just configured {{ site.operator_product_name }}, {{ site.kic_product_name }} and {{ site.base_gateway }} using open standards.

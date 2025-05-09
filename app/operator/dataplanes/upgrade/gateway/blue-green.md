@@ -1,6 +1,6 @@
 ---
-title: "Blue/Green Upgrades for {{ site.base_gateway }}"
-description: "Create a new {{ site.base_gateway }} service any time your deployment changes, then promote it to be live after testing"
+title: "Blue/green upgrades for {{ site.base_gateway }}"
+description: "Create a new {{ site.base_gateway }} Service any time your deployment changes, then promote it to be live after testing"
 content_type: reference
 layout: reference
 products:
@@ -18,7 +18,7 @@ breadcrumbs:
 {:.warning}
 > This method is only available when running in [hybrid mode](/operator/dataplanes/get-started/hybrid/install/)
 
-Blue/Green upgrades can be accomplished when working with the `DataPlane` resource directly.
+Blue/green upgrades can be accomplished when working with the `DataPlane` resource directly.
 
 1. To enable blue/green deployments set the `spec.deployment.rollout.strategy` on your `DataPlane` resource:
 
@@ -128,7 +128,7 @@ Blue/Green upgrades can be accomplished when working with the `DataPlane` resour
 
     Here you can see the ingress `Service` name that was created for you to validate the new set of `Pod`s.
     
-    It's addresses (together with their `type`s and `sourceType`s) are stored `status.rollout.services[].ingress`.
+    Its addresses (together with their `type`s and `sourceType`s) are stored `status.rollout.services[].ingress`.
 
     Notice that `status.rollout.conditions[]` contains a condition with Type `RolledOut` and `Reason` set to `AwaitingPromotion`.
     This means that everything is ready to promote the `DataPlane` with staged changes.

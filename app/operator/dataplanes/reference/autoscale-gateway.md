@@ -15,11 +15,11 @@ breadcrumbs:
 
 ---
 
-{{ site.operator_product_name }} can deploy data planes that will horizontally autoscale based on user defined criteria.
+{{ site.operator_product_name }} can deploy Data Planes that will horizontally autoscale based on user defined criteria.
 
-This page shows how to autoscale data planes based on their average CPU utilization.
+This page shows how to autoscale Data Planes based on their average CPU utilization.
 
-## Before we begin
+## Prerequisites
 
 {{ site.operator_product_name }} uses Kubernetes [`HorizontalPodAutoscaler`][hpa] to perform horizontal autoscaling of data planes.
 
@@ -94,7 +94,7 @@ spec:
 ```
 
 {:.note}
-> Please consult the [CRD reference]( /gateway-operator/{{ page.release }}/reference/custom-resources/#scaling ) for all scaling options.
+> See the [CRD reference](/operator/dataplanes/reference/custom-resources/) for all scaling options.
 
 A `DataPlane` is created when the manifest above is applied. This creates 2 `Pod`s running {{site.base_gateway}}, as well as a `HorizontalPodAutoscaler` which will manage the replica count of those `Pod`s to ensure that the average CPU utilization is around 50%.
 
@@ -139,13 +139,13 @@ You can test if the autoscaling works by using a load testing tool (e.g. k6s) to
     }
     ```
 
-1. Start the load test.
+1. Start the load test:
 
    ```
    k6 run k6.js
    ```
 
-1. Observe the scaling events in the cluster while the test is running.
+1. Observe the scaling events in the cluster while the test is running:
 
     ```bash
     kubectl get events --field-selector involvedObject.name=horizontal-autoscaling --field-selector involvedObject.kind=HorizontalPodAutoscaler

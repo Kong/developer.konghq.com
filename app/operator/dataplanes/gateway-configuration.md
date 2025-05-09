@@ -1,5 +1,5 @@
 ---
-title: "Gateway Configuration"
+title: "Gateway configuration"
 description: "Customize your {{ site.kic_product_name }} and {{ site.base_gateway }} deployments when using the Gateway resource"
 content_type: reference
 layout: reference

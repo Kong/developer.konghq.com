@@ -1,6 +1,6 @@
 ---
-title: Create a route
-description: "TODO"
+title: Create a Route with {{ site.operator_product_name }}
+description: "Create a {{ site.base_gateway }} Service and Route using {{ site.operator_product_name }}."
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/hybrid/create-route/
@@ -32,11 +32,11 @@ tldr:
 ---
 
 {:data-deployment-topology='konnect'}
-## Create a service
+## Create a Service
 
 Creating the `KongService` object in your Kubernetes cluster will provision a {{site.konnect_product_name}} service in your [Gateway Manager](/konnect/gateway-manager).  You can refer to the CR [API](/gateway-operator/{{ page.release }}/reference/custom-resources/#kongservice) to see all the available fields.
 
-Your `KongService` must be associated with a `KonnectGatewayControlPlane` object that you've created in your cluster.  It will make it part of the Gateway control plane's configuration.
+Your `KongService` must be associated with a `KonnectGatewayControlPlane` object that you've created in your cluster.
 
 Create a `KongService` by applying the following YAML manifest:
 
@@ -59,13 +59,13 @@ spec:
 
 At this point, you should see the Service in the Gateway Manager UI.
 
-## Create a route
+## Create a Route
 
-Creating the `KongRoute` object in your Kubernetes cluster will provision a {{site.konnect_product_name}} route in
-your [Gateway Manager](/konnect/gateway-manager).
-You can refer to the CR [API](/gateway-operator/{{ page.release }}/reference/custom-resources/#kongroute) to see all the available fields.
+Creating the `KongRoute` object in your Kubernetes cluster will provision a {{site.konnect_product_name}} Route in
+your [Gateway Manager](/gateway-manager/).
+You can refer to the CR [API](/operator/dataplanes/reference/custom-resources/#kongroute) to see all the available fields.
 
-### Associate a route with a service
+### Associate a Route with a Service
 
 You can create a `KongRoute` associated with a `KongService` by applying the following YAML manifest:
 
@@ -90,7 +90,7 @@ spec:
 
 ## Send test traffic
 
-After the service and route are created, send traffic to the proxy and it will forward the request to httpbin.konghq.com. You can use httpbin's `/anything` endpoint to echo the request made in the response.
+After the Service and Route are created, send traffic to the proxy. {{site.base_gateway}} will forward the request to `httpbin.konghq.com`. You can use the `/anything` endpoint to echo the request made in the response.
 
 To make a request to the proxy, fetch the LoadBalancer IP address using `kubectl get services`:
 
@@ -111,5 +111,3 @@ status_code: 200
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
 {% endvalidation %}
-
-Congratulations! You just deployed and configured {{ site.base_gateway }} in {{ site.konnect_short_name }} using nothing but {{ site.operator_product_name }} and Kubernetes CRDs.

@@ -1,5 +1,5 @@
 ---
-title: Deploy Sidecars
+title: Deploy sidecars
 description: "Deploy sidecar containers alongside {{ site.base_gateway }} using PodTemplateSpec"
 content_type: how_to
 
@@ -51,6 +51,7 @@ data:
 
 ## Configure PodTemplateSpec
 
+<!--vale off-->
 {% operator_podtemplatespec_example %}
 dataplane:
   metadata:
@@ -89,6 +90,7 @@ dataplane:
       - name: KONG_PROXY_ACCESS_LOG
         value: /etc/kong/log/proxy_access.log
 {% endoperator_podtemplatespec_example %}
+<!--vale on-->
 
 ## Validation
 

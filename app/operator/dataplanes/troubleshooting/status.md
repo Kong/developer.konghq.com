@@ -20,20 +20,20 @@ Resources managed by {{ site.operator_product_name }} provide the `status` field
 To see object's status you can use the `kubectl get` command:
 
 ```bash
-kubectl get <TYPE> <NAME> -o jsonpath-as-json='{.status}'
+kubectl get $TYPE $NAME -o jsonpath-as-json='{.status}'
 ```
 
-The above command will yield a json object which depends on the actual schema of the status field and the state of the object.
+The above command will yield a JSON object which depends on the actual schema of the status field and the state of the object.
 
 ## ControlPlane
 
-Assuming a `ControlPlane` called `kong` you can obtain its status using the following `kubectl` command:
+Assuming a `ControlPlane` called `kong`, you can obtain its status using the following `kubectl` command:
 
 ```bash
 kubectl get controlplane kong -o jsonpath-as-json='{.status}'
 ```
 
-Which will show output similar to:
+Which will show an output similar to:
 
 ```json
 [
@@ -84,7 +84,7 @@ spec:
           image: kong/kong-gateway:{{ site.gateway_latest.release }} ' | kubectl apply -f -
 ```
 
-To wait for the `DataPlane` to get ready we can use the following command:
+To wait for the `DataPlane` to get ready, we can use the following command:
 
 ```bash
 kubectl wait -n default dataplane example --for=condition=Ready
@@ -139,7 +139,7 @@ kubectl get -n default dataplane dataplane-example -o jsonpath-as-json='{.status
 
 ## Troubleshooting using status condition
 
-If your `DataPlane` does not work you can investigate its `.status.conditions` field.
+If your `DataPlane` doesn't work, you can investigate its `.status.conditions` field.
 
 ```bash
 kubectl get -n default dataplane dataplane-example -o jsonpath-as-json='{.status.conditions}'

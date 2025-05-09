@@ -15,17 +15,17 @@ breadcrumbs:
 
 ---
 
-Kong Dataplane instances can be configured in Konnect by means of the [`KonnectExtension`](/gateway-operator/dataplane/reference/custom-resources/#konnectextension-1) resource. This resource can be used to provision isolated `DataPlane`s (Hybrid mode) or pairs of `ControlPlane`s  and `DataPlane`s ({{ site.kic_product_name }} mode).
+Kong Data Plane instances can be configured in {{site.konnect_short_name}} using the [`KonnectExtension`](/operator/dataplanes/reference/custom-resources/#konnectextension-1) resource. This resource can be used to provision isolated `DataPlane`s (Hybrid mode) or pairs of `ControlPlane`s  and `DataPlane`s ({{ site.kic_product_name }} mode).
 
 The `KonnectExtension` resource can be referenced by `ControlPlane`s, `DataPlane`s, or `GatewayConfiguration`s from the extension point in their spec. Dedicated guides will guide you to through these kinds of setup.
 
-## Konnect ControlPlane reference
+## {{site.konnect_short_name}} Control Plane reference
 
-`KonnectExtension` can be attached to Konnect `ControlPlane`s of type Hybrid or KIC. This reference can be performed in two different ways: via Konnect ID or via Kubernetes object reference to an in cluster `KonnectGatewayControlPlane`.
+`KonnectExtension` can be attached to {{site.konnect_short_name}} `ControlPlane`s of type Hybrid or KIC. This reference can be performed in two different ways: via {{site.konnect_short_name}} ID or via Kubernetes object reference to an in cluster `KonnectGatewayControlPlane`.
 
-### Reference by Konnect ID
+### Reference by {{site.konnect_short_name}} ID
 
-The Konnect ControlPlane can be referenced by its ID, without having any `KonnectGatewayControlPlane` resource deployed in the cluster. The ControlPlane ID can be fetched by the Konnect UI, in the ControlPlane page. Whit this configuration, the `KonnectExtension` object requires to have the `konnect.configuration.authref` field set, as follows in the snippet below:
+The {{site.konnect_short_name}} Control Plane can be referenced by its ID, without having any `KonnectGatewayControlPlane` resource deployed in the cluster. The Control Plane ID can be fetched by the {{site.konnect_short_name}} UI, in the Control Plane page. Whit this configuration, the `KonnectExtension` object requires to have the `konnect.configuration.authref` field set, as follows in the snippet below:
 
 ```yaml
 spec:
@@ -43,7 +43,7 @@ The `authRef.name` fields refers to an object of type [`KonnectAPIAuthConfigurat
 
 ### Reference By Kubernetes object
 
-Alternatively, the `KonnectExtension` can reference an object in the cluster. This reference allows to attach the `DataPlane`s to the Konnect ControlPlane via a local object [(a.k.a. `KonnectGatewayControlPlane`)](/operator/konnect/crd/control-planes/hybrid/). When this type of reference is used, the `KonnectAPIAuthConfiguration` data is inferred by the `KonnectGatewayControlPlane` objects. For this reason, it's not possible to set the `konnect.configuration.authref` field in this scenario.
+Alternatively, the `KonnectExtension` can reference an object in the cluster. This reference allows to attach the `DataPlane`s to the {{site.konnect_short_name}} Control Plane via a local object [(a.k.a. `KonnectGatewayControlPlane`)](/operator/konnect/crd/control-planes/hybrid/). When this type of reference is used, the `KonnectAPIAuthConfiguration` data is inferred by the `KonnectGatewayControlPlane` objects. For this reason, it's not possible to set the `konnect.configuration.authref` field in this scenario.
 
 ```yaml
 spec:
@@ -55,9 +55,9 @@ spec:
           name: gateway-control-plane # The KonnectGatewayControlPlane resource name
 ```
 
-## DataPlane authentication
+## Data Plane authentication
 
-The `DataPlane`, in order to be configured in Konnect, needs a client certificate. This certificate can be manually created and managed by the user, or automatically provisioned by KGO.
+The `DataPlane`, in order to be configured in {{site.konnect_short_name}}, needs a client certificate. This certificate can be manually created and managed by the user, or automatically provisioned by {{ site.operator_product_name }}.
 
 ### Manual certificate provisioning
 
@@ -75,7 +75,7 @@ In order to manually create and set up a certificate to be used for Konnect `Dat
     kubectl create secret tls konnect-client-tls --cert=./tls.crt --key=./tls.key
     ```
 
-1. Label the secret to tell KGO to reconcile it:
+1. Label the secret to tell {{ site.operator_product_name }} to reconcile it:
 
     ```bash
     kubectl label secret konnect-client-tls konghq.com/konnect-dp-cert=true
@@ -94,7 +94,7 @@ spec:
 
 ### Automatic certificate provisioning
 
-Alternatively, you can leave the certificate provisioning and management to KGO, which will take care of creating a new certificate, write it into a Kubernetes `Secret` and manage the `Secret`'s lifecycle on behalf of you. To do so, you can configure a `KonnectExtension` as follows:
+Alternatively, you can leave the certificate provisioning and management to {{ site.operator_product_name }}, which will take care of creating a new certificate, write it into a Kubernetes `Secret` and manage the `Secret`'s lifecycle on behalf of you. To do so, you can configure a `KonnectExtension` as follows:
 
 ```yaml
 spec:
@@ -107,7 +107,7 @@ or you can just leave the `spec.clientAuth` field empty, and the automatic provi
 
 ## Set DataPlane labels
 
-Multiple labels can be configured to the Konnect `DataPlane` via the following field:
+Multiple labels can be configured to the {{site.konnect_short_name}} `DataPlane` via the following field:
 
 ```yaml
 spec:

@@ -1,6 +1,6 @@
 ---
-title: Deploy Custom Plugins
-description: "Package and deploy custom Kong plugins as OCI images using the{{ site.operator_product_name }} and reference them in {{site.base_gateway}} resources."
+title: Deploy custom plugins with {{ site.operator_product_name }}
+description: "Package and deploy custom Kong plugins as OCI images using the {{ site.operator_product_name }} and reference them in {{site.base_gateway}} resources."
 content_type: how_to
 
 permalink: /operator/dataplanes/how-to/deploy-custom-plugins/
@@ -62,7 +62,7 @@ COPY myheader /
 ' > Dockerfile
 ```
 
-where `myheader` is a directory that contains `handler.lua` and `schema.lua`.
+In this example, `myheader` is a directory that contains `handler.lua` and `schema.lua`.
 
 Build the image:
 
@@ -73,8 +73,8 @@ docker build -t myheader:1.0.0 .
 Next, push the image to a public or private registry available to the Kubernetes cluster where {{ site.operator_product_name }} is running.
 
 ```bash
-docker tag myheader:1.0.0 <YOUR-REGISTRY-ADDRESS>/myheader:1.0.0
-docker push <YOUR-REGISTRY-ADDRESS>/myheader:1.0.0
+docker tag myheader:1.0.0 $YOUR_REGISTRY_ADDRESS/myheader:1.0.0
+docker push $YOUR_REGISTRY_ADDRESS/myheader:1.0.0
 ```
 
 In this example, the plugin is available in the public registry (Docker Hub) as `kong/plugin-example:1.0.0`. The following steps use the same source.
@@ -176,6 +176,7 @@ In this example, the plugin is available in the public registry (Docker Hub) as 
    Next, add the `HTTPRoute` with the custom plugin. The configuration of the plugin is provided with the `KongPlugin` CRD, where the
    field `plugin` is set to the name of the `KongPluginInstallation` resource.
 
+<!--vale off-->
    {% entity_example %}
    type: plugin
    data:
@@ -187,11 +188,13 @@ In this example, the plugin is available in the public registry (Docker Hub) as 
      service: echo
    indent: 4
    {% endentity_example %}
+   <!--vale on-->
 
 ## Validate your configuration
 
 Ensure that everything is up and running and make a request to the service.
 
+<!--vale off-->
 {% validation request-check %}
 url: '/echo'
 status_code: 200
@@ -200,3 +203,4 @@ expected_headers:
 on_prem_url: $PROXY_IP
 konnect_url: $PROXY_IP
 {% endvalidation %}
+<!--vale on-->

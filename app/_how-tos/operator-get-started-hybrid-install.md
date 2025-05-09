@@ -1,6 +1,6 @@
 ---
 title: Install {{ site.operator_product_name }}
-description: "TODO"
+description: "Learn how to install {{ site.operator_product_name }}."
 content_type: how_to
 
 permalink: /operator/dataplanes/get-started/hybrid/install/
@@ -37,7 +37,7 @@ prereqs:
 
 ## TODO
 
-{{ site.operator_product_name }} can deploy and manage data planes attached to a {{ site.konnect_short_name }} control plane. All the services, routes, and plugins are configured in {{ site.konnect_short_name }} and sent to the data planes automatically.
+{{ site.operator_product_name }} can deploy and manage Data Planes attached to a {{ site.konnect_short_name }} Control Plane. All the Services, Routes, and plugins are configured in {{ site.konnect_short_name }} and sent to the Data Planes automatically.
 
 ## Install CRDs
 
@@ -75,4 +75,4 @@ expected:
   return_code: 0
 {% endvalidation %}
 
-Once the `gateway-operator-controller-manager` deployment is ready, you can deploy a `DataPlane` resource that is attached to a {{ site.konnect_short_name }} control plane.
+Once the `gateway-operator-controller-manager` deployment is ready, you can deploy a `DataPlane` resource that is attached to a {{ site.konnect_short_name }} Control Plane.

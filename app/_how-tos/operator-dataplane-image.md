@@ -29,6 +29,7 @@ tldr:
 
 The `DataPlane` image can be specified by providing a custom `image` value for the `proxy` container. This value is provided in the `PodTemplateSpec` field in either the `DataPlane` or the `GatewayConfiguration` resource.
 
+<!--vale off-->
 {% operator_podtemplatespec_example %}
 kubectl_apply: true
 dataplane:
@@ -37,11 +38,13 @@ dataplane:
       - name: proxy
         image: 'kong/kong-gateway:3.9'
 {% endoperator_podtemplatespec_example %}
+<!--vale on-->
 
 ## Validation
 
 To validate that the correct image was used, fetch the pod created by {{ site.operator_product_name }} and check the `.spec.containers[].image` value:
 
+<!--vale off-->
 {% validation kubernetes-resource-property %}
 kind: pod
 name_selector: |
@@ -50,3 +53,4 @@ path: |
   .spec.containers[] | select(.name == "proxy") | .image
 expected: "kong/kong-gateway:3.10"
 {% endvalidation %}
+<!--vale on-->
