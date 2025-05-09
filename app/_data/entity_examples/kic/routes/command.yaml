@@ -1,0 +1,4 @@
+name: command
+path: /command
+service: command
+port: 1027
