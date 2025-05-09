@@ -2,7 +2,7 @@
 title: "Deploy {{site.konnect_short_name}} Reference Platform"
 content_type: how_to
 permalink: /konnect-reference-platform/how-to/
-description: "How to use the {{site.konnect_short_name}} Reference Platform"
+description: "How to deploy the {{site.konnect_short_name}} Reference Platform"
 
 products:
   - reference-platform
@@ -24,18 +24,18 @@ prereqs:
   show_works_on: false
   expand_accordion: false
   inline:
-    - title: Reference Platform Background
+    - title: Reference Platform background
       content: |
         Before proceeding with deploying your own {{site.konnect_short_name}} Reference Platform,
         review the [landing page](/konnect-reference-platform) to ensure you have an 
         understanding of the platform and its purpose.
-    - title: "{{site.konnect_saas}} Account"
+    - title: "{{site.konnect_saas}} account"
       content: |
         A [{{site.konnect_saas}}](https://konghq.com/products/kong-konnect) account is required to create and 
         manage {{site.konnect_short_name}} Organizations and resources. 
         If you do not have a {{site.konnect_short_name}} account, you can sign up for a free trial 
         at [https://konghq.com/products/kong-konnect/register](https://konghq.com/products/kong-konnect/register).
-    - title: GitHub Account
+    - title: GitHub account
       content: |
         A GitHub account is required with the authorization to create and administer repositories. For now, 
         GitHub is the only supported Version Control System and these instructions are specific to it.
@@ -59,7 +59,7 @@ prereqs:
         {{site.konnect_short_name}} Reference Platform.
         You must have [Docker](https://docs.docker.com/get-started/get-docker/) (or Docker equivalent software) installed
         on your development machine to run the web app.
-    - title: Operating System Compatibility
+    - title: Operating system compatibility
       content: |
         These instructions are specific to *nix style operating systems. For MS Windows, the user will need to 
         make adjustments to commands and instructions.
