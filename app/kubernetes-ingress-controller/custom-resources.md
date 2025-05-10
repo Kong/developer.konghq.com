@@ -6,10 +6,14 @@ description: |
 
 content_type: reference
 layout: reference
-
+breadcrumbs: 
+  - /kubernetes-ingress-controller/
+search_aliases: 
+  - KIC custom resources
 products:
   - kic
-
+tags: 
+  - custom-resources
 works_on:
   - on-prem
   - konnect

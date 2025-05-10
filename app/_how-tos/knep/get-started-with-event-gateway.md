@@ -4,6 +4,8 @@ content_type: how_to
 breadcrumbs:
   - /event-gateway/
 
+permalink: /knep/get-started/
+
 beta: true
 
 products:
@@ -16,7 +18,7 @@ tags:
     - get-started
     - event-gateway
 
-description: Use this tutorial to get started with {{site.base_gateway}}.
+description: Use this tutorial to get started with {{site.event_gateway}}.
 
 tldr: 
   q: What is {{site.event_gateway}}, and how can I get started with it?
@@ -151,6 +153,10 @@ _schemas               1              1
 ```
 {:.no-copy-code}
 
+
+<!-- 
+
 ## Add prefix to the cluster 
 
 TODO!
+ -->

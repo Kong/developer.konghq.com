@@ -5,8 +5,8 @@ entities:
   - vault
 
 description: |
-  Vaults allow you to securely store and then reference secrets from within other entities. This ensures that secrets aren't visible in plaintext throughout the platform, in places such as `kong.conf`,
-  declarative configuration files, logs, or the UI.
+  Vaults allow you to securely store and then reference secrets from within other entities,
+  ensuring that secrets aren't visible in plaintext throughout the platform.
 
 related_resources:
   - text: Secrets Management
@@ -198,7 +198,7 @@ features:
     enterprise: true
     supports_konnect: true
   - title: Azure Key Vaults
-    url: /how-to/configure-azure-key-vaults-as-a-vault-backend-with-vault-entity/
+    <!--url: /how-to/configure-azure-key-vaults-as-a-vault-backend-with-vault-entity/-->
     oss: false
     enterprise: true
     supports_konnect: true
@@ -240,7 +240,7 @@ Would point to a secret object called `pg` inside a HashiCorp Vault, which may r
 <!-- vale on -->
 
 Vault references must be used for the whole referenced value. 
-Imagine that you're calling a service application with the authentication token `ABC123`:
+Imagine that you're calling a upstream service with the authentication token `ABC123`:
 
 {% feature_table %}
 item_title: Works

@@ -56,132 +56,188 @@ edit_and_issue_links: false
     </div>
 
     <div class="flex flex-col gap-3">
-        <h2>Runtimes</h2>
+        <h2>Platform runtimes</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="card flex-col gap-5 p-6 pb-4">
                 <img src="/assets/icons/gateway.svg" class="w-8 h-8"/>
                 <div class="flex flex-col gap-3">
                     <h3>Gateway</h3>
-                    <p class="text-sm text-secondary">A lightweight, fast, and flexible cloud-native API gateway.</p>
+                    <p class="text-sm text-secondary">A lightweight, fast, and flexible cloud-native API gateway</p>
                 </div>
                 <div class="flex flex-col w-full text-primary text-sm">
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/gateway/">Overview <span class="text-terciary">&rarr;</span></a>
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/gateway/install/">Install <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/how-to/?products=gateway">How-to Guides <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/gateway">All Documentation<span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/how-to/?products=gateway">How-to guides <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/gateway/">All documentation<span class="text-terciary">&rarr;</span></a>
+                </div>
+            </div>
+            <div class="card flex-col gap-5 p-6 pb-4">
+                <img src="/assets/icons/ai.svg" class="w-8 h-8"/>
+                <div class="flex flex-col gap-3">
+                    <h3>AI Gateway</h3>
+                    <p class="text-sm text-secondary">Connectivity and governance layer for modern AI-native applications built on top of Kong Gateway</p>
+                </div>
+                <div class="flex flex-col w-full text-primary text-sm">
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/ai-gateway/">Overview <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/ai-gateway/get-started/">Install <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/how-to/?products=ai-gateway">How-to guides <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/ai-gateway/">All documentation<span class="text-terciary">&rarr;</span></a>
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
                 <img src="/assets/icons/mesh.svg" class="w-8 h-8"/>
                 <div class="flex flex-col gap-3">
                     <h3>Mesh</h3>
-                    <p class="text-sm text-secondary">Secure and control traffic with Kong Mesh's distributed service mesh capabilities.</p>
+                    <p class="text-sm text-secondary">Modern service mesh built on top of Kuma and Envoy, designed for simplicity, scalability, and security</p>
                 </div>
                 <div class="flex flex-col w-full text-primary text-sm">
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/mesh/">Overview <span class="text-terciary">&rarr;</span></a>
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/mesh/#install-kong-mesh">Install <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/how-to/?products=mesh">How-to Guides <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/mesh">All Documentation<span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/how-to/?products=mesh">How-to guides <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/mesh/">All documentation<span class="text-terciary">&rarr;</span></a>
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
                 <img src="/assets/icons/kubernetes.svg" class="w-8 h-8"/>
                 <div class="flex flex-col gap-3">
                     <h3>KIC</h3>
-                    <p class="text-sm text-secondary">Kong’s Kubernetes-native controller to manage API traffic for containerized apps.</p>
+                    <p class="text-sm text-secondary">Kong’s Kubernetes-native controller to manage API traffic for containerized apps</p>
                 </div>
                 <div class="flex flex-col w-full text-primary text-sm">
-                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/kubernetes-ingress-controller">Overview <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/kubernetes-ingress-controller/">Overview <span class="text-terciary">&rarr;</span></a>
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/kubernetes-ingress-controller/install/">Install <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/how-to/?products=kic">How-to Guides <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/kubernetes-ingress-controller">All Documentation<span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/how-to/?products=kic">How-to guides <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/kubernetes-ingress-controller/">All documentation<span class="text-terciary">&rarr;</span></a>
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
                 <img src="/assets/icons/kubernetes.svg" class="w-8 h-8"/>
                 <div class="flex flex-col gap-3">
                     <h3>Operator</h3>
-                    <p class="text-sm text-secondary">TODO</p>
+                    <p class="text-sm text-secondary">Deploy and manage Kong on Kubernetes using Kubernetes resources</p>
                 </div>
                 <div class="flex flex-col w-full text-primary text-sm">
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/operator/">Overview <span class="text-terciary">&rarr;</span></a>
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/operator/install/">Install <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/how-to/?products=operator">How-to Guides <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3 hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/operator">All Documentation<span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/how-to/?products=operator">How-to guides <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/operator/">All documentation<span class="text-terciary">&rarr;</span></a>
+                </div>
+            </div>
+            <div class="card flex-col gap-5 p-6 pb-4">
+                <img src="/assets/icons/event.svg" class="w-8 h-8"/>
+                <div class="flex flex-col gap-3">
+                    <h3>Event Gateway</h3>
+                    <p class="text-sm text-secondary">A Kafka-native Gateway built for governance, security, and cost-efficient use of Kafka</p>
+                </div>
+                <div class="flex flex-col w-full text-primary text-sm">
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/event-gateway/">Overview <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/knep/get-started/">Install <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/event-gateway/">All documentation<span class="text-terciary">&rarr;</span></a>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="flex flex-col gap-3">
-        <h2>Apps</h2>
+        <h2>Platform services and apps</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="card flex-col gap-5 p-6 pb-4">
                 <img src="/assets/icons/dev-portal.svg" class="w-8 h-8"/>
                 <div class="flex flex-col gap-3">
-                    <h3>Portal</h3>
-                    <p class="text-sm text-secondary">Empower API consumers with self-service API documentation and developer tools.</p>
+                    <h3>Dev Portal</h3>
+                    <p class="text-sm text-secondary">Empower API consumers with self-service API documentation and developer tools</p>
                 </div>
                 <div class="flex flex-col w-full text-primary text-sm">
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/dev-portal/">Overview <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/portal">All Documentation<span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/dev-portal/">All documentation<span class="text-terciary">&rarr;</span></a>
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
                 <img src="/assets/icons/analytics.svg" class="w-8 h-8"/>
                 <div class="flex flex-col gap-3">
                     <h3>Advanced Analytics</h3>
-                    <p class="text-sm text-secondary">Gain visibility into API performance and usage patterns with Kong's Advanced Analytics.</p>
+                    <p class="text-sm text-secondary">Gain visibility into API performance and usage patterns with Kong's Advanced Analytics</p>
                 </div>
                 <div class="flex flex-col w-full text-primary text-sm">
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/advanced-analytics/">Overview <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/advanced-analytics/">All Documentation<span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/advanced-analytics/">All documentation<span class="text-terciary">&rarr;</span></a>
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
                 <img src="/assets/icons/service-hub.svg" class="w-8 h-8"/>
                 <div class="flex flex-col gap-3">
                     <h3>Service Catalog</h3>
-                    <p class="text-sm text-secondary">Manage and discover services within the Kong ecosystem effortlessly.</p>
+                    <p class="text-sm text-secondary">Manage and discover services within the Kong ecosystem effortlessly</p>
                 </div>
                 <div class="flex flex-col w-full text-primary text-sm">
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/service-catalog/">Overview <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/service-catalog">All Documentation<span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/service-catalog/">All documentation<span class="text-terciary">&rarr;</span></a>
+                </div>
+            </div>
+            <div class="card flex-col gap-5 p-6 pb-4">
+                <img src="/assets/icons/gateway.svg" class="w-8 h-8"/>
+                <div class="flex flex-col gap-3">
+                    <h3>Gateway Manager</h3>
+                    <p class="text-sm text-secondary">Catalog, connect to, and monitor the status of all Control Planes (CPs) and Data Plane nodes (DPs) in one place</p>
+                </div>
+                <div class="flex flex-col w-full text-primary text-sm">
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/gateway-manager/">Overview <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/gateway/#gateway-manager">All documentation<span class="text-terciary">&rarr;</span></a>
+                </div>
+            </div>
+            <div class="card flex-col gap-5 p-6 pb-4">
+                <img src="/assets/icons/mesh.svg" class="w-8 h-8"/>
+                <div class="flex flex-col gap-3">
+                    <h3>Mesh Manager</h3>
+                    <p class="text-sm text-secondary">Create, manage, and view your Kong Mesh service meshes using the Konnect platform</p>
+                </div>
+                <div class="flex flex-col w-full text-primary text-sm">
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/mesh-manager/">Overview <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/mesh/">All Mesh documentation<span class="text-terciary">&rarr;</span></a>
                 </div>
             </div>
         </div>
     </div>
     <div class="flex flex-col gap-3">
-        <h2>Platform</h2>
+        <h2>Platform management</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="card flex-col gap-5 p-6 pb-4">
                 <img src="/assets/icons/organization.svg" class="w-8 h-8"/>
                 <div class="flex flex-col gap-3">
-                    <h3>Org Management</h3>
-                    <p class="text-sm text-secondary">Streamline and govern organization-wide API access and operations.</p>
+                    <h3>Org management</h3>
+                    <p class="text-sm text-secondary">Streamline and govern organization-wide API access and operations</p>
                 </div>
                 <div class="flex flex-col w-full text-primary text-sm">
-                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/konnect-platform/konnect-account/">Overview <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/how-to/">How-to Guides <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/konnect-platform#org-management">All Documentation<span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/konnect-platform/account/">Overview <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/konnect-platform/">All documentation<span class="text-terciary">&rarr;</span></a>
+                </div>
+            </div>
+            <div class="card flex-col gap-5 p-6 pb-4">
+                <img src="/assets/icons/security.svg" class="w-8 h-8"/>
+                <div class="flex flex-col gap-3">
+                    <h3>Platform auth</h3>
+                    <p class="text-sm text-secondary">Secure the Konnect Platform usin single sign-on with any SAML and OIDC provider or use built-in authentication</p>
+                </div>
+                <div class="flex flex-col w-full text-primary text-sm">
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/konnect-platform/authentication/">Overview <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/konnect-platform/">All documentation<span class="text-terciary">&rarr;</span></a>
                 </div>
             </div>
             <div class="card flex-col gap-5 p-6 pb-4">
                 <img src="/assets/icons/edit.svg" class="w-8 h-8"/>
                 <div class="flex flex-col gap-3">
-                    <h3>Auditing</h3>
-                    <p class="text-sm text-secondary">Streamline and govern organization-wide API access and operations.</p>
+                    <h3>Audit logs</h3>
+                    <p class="text-sm text-secondary">Detect and respond to potential security incidents when they occur</p>
                 </div>
                 <div class="flex flex-col w-full text-primary text-sm">
-                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/konnect-logs/#konnect-audit-logs">Overview <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/how-to/">How-to Guides <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/konnect-platform#auditing">All Documentation<span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/konnect-platform/#auditing">Overview <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/konnect-platform/">All documentation<span class="text-terciary">&rarr;</span></a>
                 </div>
             </div>
         </div>
     </div>
     <div class="flex flex-col gap-3">
-        <h2>Products</h2>
+        <h2>Development tools</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="card flex-col gap-5 p-6 pb-4">
                 <img src="/assets/icons/insomnia/insomnia-logo-bug.svg" class="w-8 h-8"/>
@@ -191,8 +247,41 @@ edit_and_issue_links: false
                 </div>
                 <div class="flex flex-col w-full text-primary text-sm">
                     <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/insomnia/">Overview <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/how-to/?products=insomnia">How-to Guides <span class="text-terciary">&rarr;</span></a>
-                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/insomnia">All Documentation<span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/how-to/?products=insomnia">How-to guides <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/insomnia">All documentation<span class="text-terciary">&rarr;</span></a>
+                </div>
+            </div>
+            <div class="card flex-col gap-5 p-6 pb-4">
+                <img src="/assets/icons/code.svg" class="w-8 h-8"/>
+                <div class="flex flex-col gap-3">
+                    <h3>decK</h3>
+                    <p class="text-sm text-secondary">Comprehensive toolkit of commands for orchestrating and automating the entire process of API delivery</p>
+                </div>
+                <div class="flex flex-col w-full text-primary text-sm">
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/decK/">Overview <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/index/deck/">All documentation<span class="text-terciary">&rarr;</span></a>
+                </div>
+            </div>
+            <div class="card flex-col gap-5 p-6 pb-4">
+                <img src="/assets/icons/code.svg" class="w-8 h-8"/>
+                <div class="flex flex-col gap-3">
+                    <h3>Kong APIs</h3>
+                    <p class="text-sm text-secondary">Manage runtimes and platform apps using the Kong APIs</p>
+                </div>
+                <div class="flex flex-col w-full text-primary text-sm">
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/konnect-api/">Konnect APIs <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/admin-api/">Kong Admin API <span class="text-terciary">&rarr;</span></a>
+                    <a class="flex justify-between py-3  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/api/">All API references<span class="text-terciary">&rarr;</span></a>
+                </div>
+            </div>
+            <div class="card flex-col gap-5 p-6 pb-4">
+                <img src="/assets/icons/mesh.svg" class="w-8 h-8"/>
+                <div class="flex flex-col gap-3">
+                    <h3>Terraform</h3>
+                    <p class="text-sm text-secondary">Manage your Kong configuration with Terraform</p>
+                </div>
+                <div class="flex flex-col w-full text-primary text-sm">
+                    <a class="flex justify-between py-3 border-b border-primary/5  hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline" href="/terraform/">Overview <span class="text-terciary">&rarr;</span></a>
                 </div>
             </div>
         </div>

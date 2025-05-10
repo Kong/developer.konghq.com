@@ -1,7 +1,7 @@
 metadata:
-  title: "{{site.event_gateway}}"
+  title: "Event Gateway"
   content_type: landing_page
-  description: This page is an introduction to {{site.event_gateway}}.
+  description: "Learn about Kong's event gateway capabilities through {{site.base_gateway}} and {{site.event_gateway}}."
   products:
     - event-gateway
   works_on:
@@ -96,7 +96,7 @@ rows:
             icon: /assets/icons/gateway.svg
             cta:
               text: Start using {{site.event_gateway}}
-              url: /how-to/knep/get-started-with-event-gateway/
+              url: /knep/get-started/
               align: end
       - blocks:
         - type: card

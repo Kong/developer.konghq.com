@@ -18,7 +18,7 @@ breadcrumbs:
 
 related_resources:
   - text: "{{site.konnect_short_name}}"
-    url: /konnect-platform/
+    url: /konnect/
   - text: deck gateway commands
     url: /deck/gateway/
 ---
@@ -67,7 +67,7 @@ deck gateway ping \
 
 The default API decK uses is `https://us.api.konghq.com`.
 
-{{site.base_gateway}} supports AU, EU, IN, ME, and US [geographic regions](/konnect-platform/konnect-geos/).
+{{site.base_gateway}} supports AU, EU, IN, ME, and US [geographic regions](/konnect-platform/geos/).
 
 To target a specific geo, set `konnect-addr` to one of the following:
 
@@ -99,6 +99,9 @@ or use a flag when running any decK command.
   deck gateway sync konnect.yaml --konnect-control-plane-name staging
   ```
 
+## Making decK work with AWS PrivateLink
+
+You can make Admin API calls for control plane configuration using decK with a private connection through AWS PrivateLink to stay compliant and save data transfer costs. Once you set up [AWS PrivateLink](/dedicated-cloud-gateways/aws-private-link/) for your environment, you can make decK calls by using the domain `region.svc.konghq.com/api/`.
 ## Troubleshooting
 
 The following sections explain how to resolve common issues you may encounter when using decK with {{site.konnect_short_name}}.

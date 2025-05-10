@@ -2,7 +2,7 @@
 title: 'Chat route with Mistral'
 description: 'Configure a chat route using the Mistral Tiny model with the OpenAI format.'
 
-weight: 900
+weight: 114
 
 requirements:
 - Mistral account

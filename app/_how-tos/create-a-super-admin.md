@@ -9,6 +9,9 @@ rbac: true
 works_on:
     - on-prem
 
+tags:
+  - authorization
+
 tldr: 
   q: How do I create a {{site.base_gateway}} Super Admin using the Admin API?
   a: |

@@ -1,5 +1,5 @@
 metadata:
-  title: "{{site.konnect_short_name}} Platform"
+  title: "{{site.konnect_short_name}}"
   content_type: landing_page
   description: |
     About the {{site.konnect_short_name}} SaaS API platform
@@ -30,7 +30,7 @@ rows:
 
                     * Easily manage {{site.base_gateway}}
                     * Catalog, share, and monetize APIs
-                    * Achieve federated API management with [multi-geo](/konnect-platform/konnect-geos/) support
+                    * Achieve federated API management with [multi-geo](/konnect-platform/geos/) support
       - blocks:
           - type: image
             config:
@@ -55,11 +55,11 @@ rows:
         - type: card
           config:
             title: Getting started guide
-            description: Learn how to use {{site.base_gateway}} on Konnect or on-prem
+            description: Learn how to use {{site.base_gateway}} in {{site.konnect_short_name}} or on-prem
             icon: /assets/icons/graduation.svg
             cta:
               text: 
-              url: /how-to/get-started-with-gateway/
+              url: /gateway/get-started/
               align: end
   
   - header:
@@ -126,7 +126,7 @@ rows:
             icon: /assets/icons/lock.svg
             cta:
               text: Learn about {{site.konnect_short_name}} authentication methods
-              url: /konnect-authentication/
+              url: /konnect-platform/authentication/
               align: end
       - blocks:
         - type: card
@@ -283,7 +283,7 @@ rows:
                 See which browsers, software versions, tools, and applications {{site.konnect_short_name}} is compatible with.
               cta:
                 text: View the compatibility policy 
-                url: /konnect-platform/konnect-compatibility/
+                url: /konnect-platform/compatibility/
                 align: end
       - blocks:
           - type: card
@@ -325,7 +325,7 @@ rows:
                 Learn about the different {{site.konnect_short_name}} plans and account management.
               cta:
                 text: View {{site.konnect_short_name}} account information 
-                url: /konnect-platform/konnect-account/
+                url: /konnect-platform/account/
                 align: end
       - blocks:
           - type: card

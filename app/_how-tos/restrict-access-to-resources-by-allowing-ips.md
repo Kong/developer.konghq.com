@@ -5,6 +5,8 @@ content_type: how_to
 products:
     - gateway
 
+description: Enable the IP Restriction plugin to instruct {{site.base_gateway}} to only accept requests from specific IP addresses.
+
 works_on:
     - on-prem
     - konnect

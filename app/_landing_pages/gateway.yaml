@@ -68,7 +68,7 @@ rows:
             icon: /assets/icons/graduation.svg
             cta:
               text: 
-              url: /how-to/get-started-with-gateway/
+              url: /gateway/get-started/
               align: end
       - blocks:
         - type: card
@@ -267,6 +267,16 @@ rows:
               cta:
                 text: See reference 
                 url: /gateway/upgrade/
+                align: end
+      - blocks:
+          - type: card
+            config:
+              title: Changelog
+              description: Changelog for supported {{site.ee_product_name}} versions
+              icon: /assets/icons/service-document.svg
+              cta:
+                text: See changelog
+                url: /gateway/changelog/
                 align: end
   - header:
       type: h2

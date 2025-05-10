@@ -2,6 +2,17 @@ metadata:
   title: "{{site.konnect_short_name}} APIs"
   content_type: landing_page
   description: This page is an introduction to the {{site.konnect_short_name}} APIs.
+  products:
+    - gateway
+    - dev-portal
+    - mesh
+    - advanced-analytics
+  tools: 
+    - konnect-api
+  works_on:
+    - konnect
+  breadcrumbs:
+    - /tools/
 
 rows:
   - header:
@@ -15,6 +26,212 @@ rows:
     - blocks:
         - type: text
           config: |
-            @todo
+            The {{site.konnect_short_name}} APIs allow you to manage your ecosystem, including {{site.base_gateway}} configuration management, Analytics, Dev Portal, and more.
+  
+  - columns:
+    - blocks:
+      - type: api
+        config:
+          title: Konnect Control Planes Config
+    - blocks:
+      - type: api
+        config:
+          title: Konnect Developer Portal
+    - blocks:
+      - type: card
+        config:
+          title: All API specifications
+          description: Learn how to use all the {{site.konnect_short_name}} APIs.
+          cta:
+            url: /api/
+            text: See reference
 
-            Include on this page information relevant for all Konnect APIs that wouldn't appear in the specs, authentication and filtering for example
+  - header:
+      type: h2
+      text: "{{site.konnect_short_name}} API authentication"
+    columns:
+    - blocks:
+        - type: text
+          config: |
+            The recommended method of authentication for {{site.konnect_short_name}} is the Personal Access Token (PAT), which can be obtained from the [personal access token page](https://cloud.konghq.com/global/account/tokens) in {{site.konnect_short_name}}. 
+            You can also use the Identity API to generate [system account access tokens](/api/konnect/identity/v3/#/operations/post-system-accounts-id-access-tokens).
+
+            The access token must be passed in the `Authorization` header of all requests, for example: 
+
+            ```
+            curl -X GET 'https://global.api.konghq.com/v2/users/' --header 'Authorization: Bearer kpat_xgfT'
+            ```
+
+            Before you generate a PAT, keep the following in mind:
+
+            * A PAT is granted all of the permissions that the user has access to via their most up-to-date role assignment.
+            * The PAT has a maximum duration of 12 months.
+            * There is a limit of 10 personal access tokens per user.
+            * Unused tokens are deleted and revoked after 12 months of inactivity.
+
+  - header:
+      type: h2
+      text: "{{site.konnect_short_name}} API filtering"
+    columns:
+    - blocks:
+        - type: text
+          config: |
+            The {{site.konnect_short_name}} APIs support the ability to filter over selected collections and only return results that you are interested in. 
+
+            Not every filter operation described here is available in every {{site.konnect_short_name}} API. Specific APIs may support a subset of these options. 
+            For the most accurate information on available filters for each API endpoint, always refer to the [individual API specification](/api/).
+    
+  - header:
+      type: h3
+      text: "Available fields"
+    columns:
+    - blocks:
+      - type: structured_text
+        config:
+          blocks:
+          - type: unordered_list
+            items:
+              - "**Users**: `id`, `email`, `full_name`, `active`"
+              - "**Teams**: `id`, `name`, `system_team`"
+              - "**Assigned Roles**: `role`,`entity_type`, `entity_region`, `entity_id`"
+
+  - header:
+      type: h3
+      text: "Numeric and timestamp fields"
+    columns:
+    - blocks:
+      - type: structured_text
+        config:
+          blocks:
+          - type: text
+            text: |
+              When matching against both numeric and timestamp fields, you can filter in the following formats:
+          - type: unordered_list
+            items:
+              - "**Equal**: `?filter[field][eq]=value` or `?filter[field]=value`"
+              - "**Contains**: `?filter[field][contains]=value`"
+              - "**Less Than**: `?filter[field][lt]=value`"
+              - "**Less Than or Equal**: `?filter[field][lte]=value`"
+              - "**Greater Than**: `?filter[field][gt]=value`"
+              - "**Greater Than or Equal**: `?filter[field][gte]=value`"
+          - type: text
+            text: |
+              If the qualifier is omitted, `?filter[field]=value` for example, the filtering behavior will perform an **exact** style equal match.      
+
+  - header:
+      type: h3
+      text: "Filtering examples"
+    columns:
+    - blocks:
+        - type: text
+          config: |
+            The examples in the table below filter the following response:
+            ```json
+            {
+              "data": [
+                {
+                  "id": "500d74f4-37e1-4f59-b51a-8cf7c7903692",
+                  "email": "CharlieCruz@konghq.com",
+                  "name": "Charlie",
+                  "full_name": "Charlie Cruz",
+                  "active": true,
+                  "created_at": "2022-05-10T15:10:25Z"
+                },
+                {
+                  "id": "500d74f4-37e1-4b13-b51a-8cf7c7903692",
+                  "email": "AlexCruz@konghq.com",
+                  "name": "Alex",
+                  "full_name": "Alex Cruz",
+                  "active": true,
+                  "created_at": "2022-05-10T15:10:25Z",
+                  "updated_at": "2022-10-19T15:33:02Z"
+                },
+                {
+                  "id": "500d74f4-37e1-4d13-b51a-8cf7c7903692",
+                  "email": "AlexGarcia@konghq.com",
+                  "name": "Alex",
+                  "full_name": "Alex Garcia",
+                  "active": true,
+                  "created_at": "2022-05-10T15:10:25Z",
+                  "updated_at": "2022-10-19T15:33:02Z"
+                }
+              ]
+            }
+            ```
+        - type: table
+          config:
+            columns:
+              - title: Filter
+                key: filter
+              - title: Result
+                key: result
+            rows:
+              - filter: |
+                  Filter on a single parameter: 
+                  
+                  `?filter[name][contains]=Charlie`
+
+                result: |
+                  ```json
+                  {
+                    "data": [
+                      {
+                        "id": "500d74f4-37e1-4f59-b51a-8cf7c7903692",
+                        "email": "CharlieCruz@konghq.com",
+                        "name": "Charlie",
+                        "full_name": "Charlie Cruz",
+                        "active": true,
+                        "created_at": "2022-05-10T15:10:25Z"
+                      }
+                    ]
+                  }
+                  ```
+              - filter: |
+                  Filter on multiple parameters:
+
+                  `?filter[full_name][contains]=Cruz&filter[name]=Alex`
+                result: |
+                  ```json
+                  {
+                    "data": [
+                      {
+                        "id": "500d74f4-37e1-4f59-b51a-8cf7c7903692",
+                        "email": "AlexCruz@konghq.com",
+                        "name": "Alex",
+                        "full_name": "Alex Cruz",
+                        "active": true,
+                        "created_at": "2022-05-10T15:10:25Z",
+                        "updated_at": "2022-10-19T15:33:02Z"
+                      }
+                    ]
+                  }
+                  ```
+              - filter: |
+                  Filter on the existence of a key:
+                  
+                  `?filter[updated_at]`
+                result: |
+                  ```json
+                  {
+                    "data": [
+                      {
+                        "id": "500d74f4-37e1-4b13-b51a-8cf7c7903692",
+                        "email": "AlexCruz@konghq.com",
+                        "name": "Alex",
+                        "full_name": "Alex Cruz",
+                        "active": true,
+                        "created_at": "2022-05-10T15:10:25Z",
+                        "updated_at": "2022-10-19T15:33:02Z"
+                      },
+                      {
+                        "id": "500d74f4-37e1-4d13-b51a-8cf7c7903692",
+                        "email": "AlexGarcia@konghq.com",
+                        "name": "Alex",
+                        "full_name": "Alex Garcia",
+                        "active": true,
+                        "created_at": "2022-05-10T15:10:25Z",
+                        "updated_at": "2022-10-19T15:33:02Z"
+                      }
+                    ]
+                  }
+                  ```

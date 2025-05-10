@@ -6,7 +6,7 @@ entities:
 
 description: |
   A Route uses specific URL patterns and HTTP verbs to match incoming requests and pass them to a Gateway Service. 
-  This determines which service applications will process a given request.
+  This determines which upstream services will process a given request.
 
 related_resources:
   - text: Gateway Service entity
@@ -64,7 +64,7 @@ A Route must be attached to a [Gateway Service](/gateway/entities/service/), and
 
 ## Route and Gateway Service interaction
 
-Routes, in conjunction with [Gateway Services](/gateway/entities/service/), let you expose service applications to clients with {{site.base_gateway}}. 
+Routes, in conjunction with [Gateway Services](/gateway/entities/service/), let you expose upstream services to clients with {{site.base_gateway}}. 
 Routes also allow the same client to access multiple applications and apply different policies based on the Route used.
 
 For example, say you have two client applications that need to access the `example_service` Gateway Service: an internal client and an external client.
@@ -87,7 +87,7 @@ flowchart LR
   B("`Route (external.example.com)`")
   B2(Rate Limiting plugin)
   C("`Service (example-service)`")
-  D(Service application)
+  D(Upstream service)
   E(Internal client 
   application)
   F("`Route (internal.example.com)`")
@@ -123,7 +123,7 @@ columns:
 rows:
   - usecase: "Rate limiting"
     description: |
-      Use Routes to set different rate limits for clients accessing the service application via specific paths, for example `/internal` or `/external`. 
+      Use Routes to set different rate limits for clients accessing the upstream service via specific paths, for example `/internal` or `/external`. 
       <br><br>
       [Enable a rate limiting plugin on Routes attached to the Service](/plugins/rate-limiting-advanced/)
   - usecase: "Perform a simple URL rewrite"
@@ -154,7 +154,7 @@ To disable the DSL-based format, set `router_flavor` to `traditional_compat`. On
 
 You can match incoming requests against the following routing criteria:
 
-- Protocols: The protocol used to communicate with the service application
+- Protocols: The protocol used to communicate with the upstream service
 - Hosts: Lists of domains that match a Route
 - Methods: HTTP methods that match a Route
 - Headers: Lists of values that are expected in the header of a request
@@ -510,7 +510,7 @@ The Routes entity can dynamically serve TLS certificates on a per-connection bas
 * [Certificates](/gateway/entities/certificate/)
 * [SNIs](/gateway/entities/sni/)
 
-To do this, create a Certificate [associated with an SNI](/how-to/associate-certificate-with-sni/), and then create a secure Route that uses the Certificate:
+To do this, create a Certificate associated with an SNI, and then create a secure Route that uses the Certificate:
 
 {% entity_example %}
 type: route

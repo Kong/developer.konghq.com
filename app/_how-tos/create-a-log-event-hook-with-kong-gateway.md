@@ -2,6 +2,8 @@
 title: Configure an Event Hook to log events with {{site.base_gateway}}
 content_type: how_to
 
+description: Configure an Event Hook to write to the log file every time a CRUD event happens on the Consumer entity.
+
 entities:
   - event-hook
 works_on:

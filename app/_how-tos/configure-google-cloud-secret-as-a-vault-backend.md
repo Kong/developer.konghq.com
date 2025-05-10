@@ -1,5 +1,5 @@
 ---
-title: Configure Google Cloud Secret Manager as a Vault entity in {{site.base_gateway}}
+title: Configure Google Cloud Secret Manager as a vault backend
 content_type: how_to
 related_resources:
   - text: Rotate secrets in Google Cloud Secret with {{site.base_gateway}}

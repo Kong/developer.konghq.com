@@ -1048,6 +1048,22 @@ components:
             - ready
             - terminating
             - terminated
+        state_metadata:
+          description: |
+            Metadata describing the backing state of the dataplane group and why it may be in an erroneous state.
+          type: object
+          additionalProperties: false
+          properties:
+            reported_status:
+              description: Reported status of the dataplane group from backing infrastructure.
+              type: string
+              example: ERROR
+            reason:
+              description: |
+                Reason why the dataplane group may be in an erroneous state, reported from backing infrastructure.
+              type: string
+              example: |
+                Dataplane group could not be deployed due to insufficient cloud provider compute instances.
         private_ip_addresses:
           description: |
             List of private IP addresses of the internal load balancer that proxies traffic to this data-plane group.

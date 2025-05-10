@@ -78,9 +78,6 @@ how_tos:
     mesh:
       text: Kong Mesh
       url: /how-to/?products=mesh
-    api_ops:
-      text: APIOps
-      url: /how-to/?products=api-ops
     terraform:
       text: Terraform
       url: /how-to/?tools=deck

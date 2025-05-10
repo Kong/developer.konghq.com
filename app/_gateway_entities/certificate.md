@@ -17,8 +17,6 @@ related_resources:
     url: /gateway/entities/sni/
   - text: SSL certificates reference
     url: /gateway/ssl-certificates/
-  - text: Define a client certificate on a Service
-    url: /how-to/client-cert-for-service/
   - text: Certificate how-to guides
     url: /how-to/?query=certificate
   - text: Reserved entity names
@@ -61,7 +59,7 @@ A Certificate entity represents a public certificate, which is used to validate 
 
 ## SNI association
 
-Certificates can be [associated with an SNI](/how-to/associate-certificate-with-sni/) to handle SSL/TLS termination for one or more hostnames. Then, an SNI can be used when configuring a [Service](/gateway/entities/service/) or a [Route](/gateway/entities/route/) to assign Certificates to a Route.
+Certificates can be associated with an SNI to handle SSL/TLS termination for one or more hostnames. Then, an SNI can be used when configuring a [Service](/gateway/entities/service/) or a [Route](/gateway/entities/route/) to assign Certificates to a Route.
 You can assign Certificates dynamically across all SNIs using an [SNI Wildcard](/gateway/entities/sni/#sni-routing). For example: 
 
 {% entity_example %}

@@ -6,7 +6,7 @@ layout: reference
 products:
   - gateway
 
-description: "Tags are strings associated with entities in {{site.base_gateway}}, which you can use to filter entities on most `GET` endpoints."
+description: "Tags are strings associated with entities in {{site.base_gateway}}, which you can use to filter entities on most GET endpoints."
 
 related_resources:
   - text: Gateway entities

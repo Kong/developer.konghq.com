@@ -1,6 +1,6 @@
 ---
-title: Configuring On-Prem Authentication
-description: Configure decK for use with an on-prem {{ site.base_gateway }}.
+title: Configuring on-prem authentication
+description: Configure decK for use with an on-prem {{ site.base_gateway }}
 
 content_type: reference
 layout: reference

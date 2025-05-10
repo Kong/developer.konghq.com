@@ -58,6 +58,14 @@ rows:
 {% endtable %}
 <!--vale on-->
 
+## Create a scorecard
+
+To enable a scorecard on a service:
+     
+1. From [Service Catalog](https://cloud.konghq.com/us/service-catalog/), click **Scorecard** in the sidebar.
+2. Select **New Scorecard**.
+3. Name the scorecard, configure scorecard criteria, and select which services you want the scorecard to apply to.
+
 
 ## Service documentation linting
 
@@ -90,10 +98,3 @@ rows:
 <!--vale on-->
 
 
-## Create a scorecard
-
-To enable a scorecard on a service:
-     
-1. From [Service Catalog](https://cloud.konghq.com/us/service-catalog/), click **Scorecard** in the sidebar.
-2. Select **New Scorecard**.
-3. Name the scorecard, configure scorecard criteria, and select which services you want the scorecard to apply to.

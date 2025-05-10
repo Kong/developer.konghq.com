@@ -3,6 +3,10 @@ title: Get started with {{site.base_gateway}}
 description: Learn how to set up a local {{site.base_gateway}} installation and configure it for some common API management tasks. 
 content_type: how_to
 
+permalink: /gateway/get-started/
+breadcrumbs:
+  - /gateway/
+
 products:
     - gateway
 
@@ -29,7 +33,7 @@ tldr:
   q: What is {{site.base_gateway}}, and how can I get started with it?
   a: |
     [{{site.base_gateway}}](/gateway/) is a lightweight, fast, and flexible cloud-native API gateway. 
-    {{site.base_gateway}} sits in front of your service applications, dynamically controlling, analyzing, and 
+    {{site.base_gateway}} sits in front of your upstream services, dynamically controlling, analyzing, and 
     routing requests and responses. {{site.base_gateway}} implements your API traffic policies 
     by using a flexible, low-code, plugin-based approach. 
     <br><br>
@@ -237,7 +241,7 @@ You now have an Upstream with two Targets, `httpbin.konghq.com` and `httpbun.com
 
 {:.info}
 > For the purposes of our example, the Upstream is pointing to two different Targets. 
-More commonly, Targets will be instances of the same service application running on different host systems.
+More commonly, Targets will be instances of the same upstream service running on different host systems.
 
 ### Validate load balancing
 

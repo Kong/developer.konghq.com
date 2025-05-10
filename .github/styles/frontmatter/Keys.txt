@@ -17,6 +17,7 @@ url
 tier
 tldr
 works_on
+show_works_on
 konnect_product_id
 versioned
 search_aliases

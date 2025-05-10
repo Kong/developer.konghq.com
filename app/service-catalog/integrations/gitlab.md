@@ -16,6 +16,7 @@ breadcrumbs:
 
 works_on:
     - konnect
+
 description: The GitLab integration allows you to associate your Service Catalog Service to one or more GitLab projects
 
 related_resources:

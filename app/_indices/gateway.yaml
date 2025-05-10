@@ -3,8 +3,65 @@ sections:
   - title: Overview
     items:
       - path: /gateway/
-      - path: /gateway/**/*
-    auto_exclude: true
+      - path: /plugins/
+      - path: /admin-api/
+      - path: /gateway/entities/
+      - path: /gateway/manage-kong-conf/
+      - path: /gateway/changelog/
+      - path: /gateway/breaking-changes/
+      - path: /gateway/version-support-policy/
+      - path: /gateway/third-party-support/
+      - path: /gateway/vulnerabilities/
+  - title: Get Started with Gateway
+    allow_duplicates: true
+    items:
+      - path: /gateway/get-started/
+      - path: /gateway/install/
+      - path: /gateway/install/**/*
+      - path: /gateway/quickstart-reference/
+  - title: How Gateway Works
+    allow_duplicates: true
+    items:
+      - path: /gateway/entities/service/
+      - path: /gateway/entities/route/
+      - path: /gateway/entities/consumer/
+      - path: /gateway/entities/plugin/
+      - path: /gateway/entities/upstream/
+      - path: /gateway/entities/target/
+      - path: /gateway/rate-limiting/
+      - path: /gateway/load-balancing/
+      - path: /gateway/traffic-control-and-routing/
+      - path: /gateway/cp-dp-communication/
+
+
+  - title: Deployment Topologies
+    items: 
+      - path: /gateway/deployment-topologies/
+      - path: /gateway/hybrid-mode/
+      - path: /gateway/traditional-mode/
+      - path: /gateway/db-less-mode/
+
+  - title: Production Deployments
+    allow_duplicates: true
+    items:
+      - path: /gateway/entities/license/
+      - path: /gateway/install/
+      - path: /gateway/resource-sizing-guidelines/
+      - path: /gateway/sbom/
+      - path: /gateway/security/
+      - path: /gateway/topology-hosting-options/
+      - path: /gateway/secure-the-admin-api/
+      - path: /gateway/network/**/*
+      - path: /gateway/cp-outage/
+      - path: /gateway/incremental-config-sync/
+      - path: /how-to/build-a-custom-docker-image/
+
+  - title: Upgrade and Migration
+    items:
+      - path: /gateway/upgrade/
+      - path: /gateway/upgrade/**/*
+      - path: /gateway/self-managed-migration/
+
   - title: Secrets Management
     items:
       - path: /gateway/secrets-management/
@@ -14,15 +71,135 @@ sections:
           - gateway
         tags:
           - secrets-management
-  - title: Routing
+  - title: Securing Gateway Deployments
     items:
+      - path: /gateway/security/
+      - path: /gateway/keyring/
+      - path: /gateway/entities/key/
+      - path: /gateway/entities/key-set/
+      - path: /gateway/audit-logs/
+      - type: how-to
+        products:
+          - gateway
+        tags:
+          - security
+      - type: how-to
+        products:
+          - gateway
+        tags:
+          - audit-logging
+
+
+  - title: Routing and Traffic Control
+    allow_duplicates: true
+    items:
+      - path: /gateway/traffic-control-and-routing/
       - path: /gateway/entities/route/
       - path: /gateway/routing/**/*
+      - path: /gateway/traffic-control/**/*
       - type: how-to
         products:
           - gateway
         tags:
           - routing
+      - type: how-to
+        products:
+          - gateway
+        tags:
+          - traffic-control
+      - title: Traffic control plugins
+        description: Gateway plugins for controlling traffic
+        url: /plugins/?category=traffic-control
+  - title: Rate Limiting
+    allow_duplicates: true
+    items:
+      - path: /gateway/rate-limiting/
+      - path: /gateway/rate-limiting/**/*
+      - type: how-to
+        products:
+          - gateway
+        tags:
+          - rate-limiting
+  - title: Certificates
+    items:
+      - path: /gateway/entities/certificate/
+      - path: /gateway/entities/ca-certificate/
+      - path: /gateway/entities/sni/
+      - path: /gateway/ssl-certificates/
+      - type: reference
+        products:
+          - gateway
+        tags:
+          - certificates
+      - type: how-to
+        products:
+          - gateway
+        tags:
+          - certificates
+  
+  - title: Authentication
+    items:
+      - path: /gateway/authentication/
+      - path: /gateway/openid-connect/
+      - type: how-to
+        products:
+          - gateway
+        plugins:
+          - key-auth
+          - key-auth-enc
+          - basic-auth
+          - jwt
+          - basic-auth
+          - hmac-auth
+          - mtls
+          - vault-auth
+          - oauth2
+          - ldap-auth
+          - ldap-auth-advanced
+        tags:
+          - authentication
+    auto_exclude: true
+
+  - title: Authorization
+    items:
+      - path: /gateway/entities/workspace/
+      - path: /gateway/entities/rbac/
+      - path: /gateway/entities/admin/
+      - path: /gateway/entities/group/
+      - type: how-to
+        products:
+          - gateway
+        tags:
+          - authorization
+    auto_exclude: true
+
+  - title: Analytics and Monitoring
+    items:
+      - type: how-to
+        products:
+          - gateway
+        tags:
+          - analytics
+          - monitoring
+      - title: Analytics and monitoring plugins
+        description: Gateway plugins for monitoring your deployments.
+        url: /plugins/?category=analytics-and-monitoring
+      
+  - title: Custom Plugin Development
+    items:
+      - path: /custom-plugins/
+      - path: /custom-plugins/get-started/set-up-plugin-project/
+      - path: /custom-plugins/get-started/add-plugin-testing/
+      - path: /custom-plugins/get-started/add-plugin-configuration/
+      - path: /custom-plugins/get-started/consume-external-services/
+      - path: /custom-plugins/get-started/deploy-plugins/
+      - path: /custom-plugins/reference/
+
+  - title: Plugin Development Kit (PDK)
+    items:
+      - path: /gateway/pdk/reference/
+      - path: /gateway/pdk/reference/**/*
+  
   - title: Kong Manager
     items:
       - path: /gateway/kong-manager/
@@ -32,25 +209,21 @@ sections:
           - gateway
         tags:
           - kong-manager
-  - title: Certificates
+  - title: Gateway Manager
     items:
-      - type: how-to
-        products:
-          - gateway
-        tags:
-          - certificates
-  - title: Authentication
-    items:
-      - type: how-to
-        products:
-          - gateway
-        plugins:
-          - key-auth
-          - basic-auth
-          - jwt
+      - path: /gateway-manager/
+      - path: /gateway-manager/**/*
 
-  - title: Other How-Tos
+  - title: Reference
+    allow_duplicates: true
     items:
-      - type: how-to
-        products:
-          - gateway
+      - path: /gateway/configuration/
+      - path: /gateway/cli/reference/
+      - path: /gateway/reserved-entity-names/
+      - path: /gateway/tags/
+      - path: /gateway/performance/benchmarks/
+      - path: /gateway/logs/
+      - path: /gateway/entities/consumer-group/
+      - path: /gateway/entities/event-hook/
+      - path: /gateway/entities/partial/
+      - path: /how-to/restart-kong-gateway-container/

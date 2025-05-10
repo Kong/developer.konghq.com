@@ -1,7 +1,31 @@
 title: All Dev Portal Documentation
 sections:
-  - title: Uncategorized
+  - title: Overview
     items:
       - path: /dev-portal/
+      - path: /dev-portal/apis/
+      - title: Publish APIs
+        description: Learn how to publish APIs with Dev Portal and control who can see published APIs.
+        url: /dev-portal/publishing/
       - path: /dev-portal/**/*
-    auto_exclude: true
+    auto_exclude: true   
+  - title: Application registration
+    items:
+      - title: Developer sign-up
+        description: Register for the Dev Portal and create an application.
+        url: /dev-portal/developer-signup/
+      - path: /dev-portal/application-registration/
+      - path: /dev-portal/auth-strategies/
+  - title: Customize
+    items:
+      - path: /dev-portal/custom-pages/
+      - path: /dev-portal/custom-domains/
+      - path: /dev-portal/customization-settings/
+      - path: /dev-portal/portal-customization/
+      - path: /dev-portal/snippets/
+  - title: Access and approvals
+    items:
+      - path: /dev-portal/access-and-approval/
+      - path: /dev-portal/team-mapping/
+      - path: /dev-portal/sso/
+      - path: /dev-portal/security-settings/
