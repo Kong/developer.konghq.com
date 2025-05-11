@@ -4,7 +4,7 @@
 
 {% capture card_content %}
 {% if include.icon %}
-<img src="{{ include.icon }}" class="w-8 h-8"/>
+<img src="{{ include.icon }}" class="h-8 w-auto self-start"/>
 {% endif %}
 
 <h4>{{ include.title | liquify }}</h4>

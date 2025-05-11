@@ -49,7 +49,7 @@ rows:
       - blocks:
         - type: card
           config:
-            icon: /assets/icons/mesh.svg
+            icon: /assets/logos/Konnect-logo.svg
             title: Konnect
             description: |
               This is the official Konnect Terraform provider. You can use it to configure Dedicated Cloud Gateways, Control Planes, Gateway Entities, Portal, Teams, and more
@@ -64,7 +64,7 @@ rows:
       - blocks:
         - type: card
           config:
-            icon: /assets/icons/mesh.svg
+            icon: /assets/logos/Konnect-logo.svg
             title: Konnect (Beta)
             description: |
               Konnect regularly ships new features, and they start out as a _beta_ release. In order to provide early access to these features using Terraform, we provide the `konnect-beta` provider.
@@ -83,7 +83,7 @@ rows:
       - blocks:
         - type: card
           config:
-            icon: /assets/icons/mesh.svg
+            icon: /assets/icons/gateway.svg
             title: "{{site.base_gateway}}"
             description: |
               Designed for use with {{site.base_gateway}} on-prem, the `kong-gateway` provider allows you to manage Kong Entities using Terraform
@@ -195,7 +195,7 @@ rows:
             blocks:
               - type: text
                 text: |
-                  Configure a new team in your Konnect org with admin access to Control Plane management.
+                  Configure a new team in your Konnect org with admin access to all Control Planes in the US region.
         - type: text
           config: |
             ```hcl
@@ -214,5 +214,54 @@ rows:
               entity_type_name = "Control Planes"
               role_name        = "Admin"
               team_id          = konnect_team.my_team.id
+            }
+            ```
+        - type: structured_text
+          config:
+            header:
+              text: "Manage Consumers and Consumer Groups"
+            blocks:
+              - type: text
+                text: |
+                  Create a Consumer and a Consumer Group, then add the Consumer to the group.
+        - type: text
+          config: |
+            ```hcl
+            # Create a consumer and a basic auth credential for that consumer
+            resource "konnect_gateway_consumer" "alice" {
+              username         = "alice"
+              custom_id        = "alice"
+              control_plane_id = konnect_gateway_control_plane.tfdemo.id
+            }
+
+            # Then a consumer group, and add the consumer to a group
+            resource "konnect_gateway_consumer_group" "gold" {
+              name             = "gold"
+              control_plane_id = konnect_gateway_control_plane.tfdemo.id
+            }
+
+            resource "konnect_gateway_consumer_group_member" "ag" {
+              consumer_id       = konnect_gateway_consumer.alice.id
+              consumer_group_id = konnect_gateway_consumer_group.gold.id
+              control_plane_id  = konnect_gateway_control_plane.tfdemo.id
+            }
+            ```
+        - type: structured_text
+          config:
+            header:
+              text: "Create a Basic Auth credential"
+            blocks:
+              - type: text
+                text: |
+                  Add an authentication mechanism for a {{ site.base_gateway }} Consumer
+        - type: text
+          config: |
+            ```hcl
+            resource "konnect_gateway_basic_auth" "my_basicauth" {
+              username = "alice"
+              password = "demo"
+
+              consumer_id      = konnect_gateway_consumer.alice.id
+              control_plane_id = konnect_gateway_control_plane.tfdemo.id
             }
             ```
