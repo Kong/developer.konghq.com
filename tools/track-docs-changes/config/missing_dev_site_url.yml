@@ -13,7 +13,7 @@
   dev_site_url: '/gateway/get-started/'
   status: migrated
 - docs_url: "/konnect/gateway-manager/plugins/add-custom-plugin/"
-  dev_site_url: ''
+  dev_site_url: '/custom-plugins/'
   status: "?"
 - docs_url: "/gateway/latest/kong-manager/auth/rbac/add-role/"
   dev_site_url: '/gateway/entities/rbac/'
