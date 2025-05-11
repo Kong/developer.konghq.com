@@ -1,6 +1,6 @@
 ---
 title: Configure Basic Auth using {{ site.base_gateway }} and Terraform
-description: TODO
+description: Create a Control Plane, Service, Route, Consumer and Basic Auth plugin using Terraform
 content_type: how_to
 permalink: /terraform/how-to/gateway-authentication/
 breadcrumbs:
