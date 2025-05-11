@@ -23,7 +23,7 @@ rows:
         - type: button
           config:
             text: Get Started with Terraform and Konnect &raquo;
-            url: "#TODO"
+            url: "/terraform/how-to/gateway-authentication/"
     - blocks:
         - type: structured_text
           config:

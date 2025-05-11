@@ -1,0 +1,1 @@
+This how-to requires you to [install Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli).
