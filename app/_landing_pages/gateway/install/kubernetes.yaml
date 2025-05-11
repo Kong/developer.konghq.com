@@ -1,0 +1,85 @@
+metadata:
+  title: Install {{ site.base_gateway }} on Kubernetes
+  content_type: landing_page
+  description: Learn about the different options to install {{ site.base_gateway }} on Kubernetes
+  tags:
+    - kubernetes
+  breadcrumbs:
+    - /gateway/
+    - /gateway/install/
+  products:
+    - gateway
+    - kic
+
+  works_on:
+  - on-prem
+  - konnect
+rows:
+  - header:
+      type: h1
+      text: Kubernetes installation
+    columns:
+      - blocks:
+        - type: text
+          config: |
+            This is a test
+  - header:
+      type: h2
+      text: Install {{ site.base_gateway }}
+    columns:
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/logos/Konnect-logo.svg
+            title: "{{ site.base_gateway }} on Konnect"
+            description: |
+              Deploy {{ site.base_gateway }} in Hybrid mode, using {{ site.konnect_short_name }} as a hosted Control Plane.
+
+              Configure your Control Planes using [deck](/deck/), [terraform](/terraform/) or [{{ site.konnect_short_name }} CRDs](/operator/konnect/).
+            featured: true
+            ctas:
+              - text: Using Helm
+                url: "#TODO"
+              - text: Using {{ site.operator_product_name }}
+                url: "#TODO"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/logos/Konnect-logo.svg
+            title: "{{ site.kic_product_name_short }} on Konnect"
+            description: |
+              Deploy {{ site.base_gateway }} and {{ site.kic_product_name }}. Keep all of your configuration in your own cluster while seeing a
+              consolidated view of all configuration and traffic in {{ site.konnect_short_name }}.
+
+              Configure your Control Planes using Gateway API resources such as `HTTPRoute`, or the Kubernetes `Ingress` resource.
+            ctas:
+              - text: Using Helm
+                url: "#TODO"
+              - text: Using {{ site.operator_product_name }}
+                url: "#TODO"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/gateway.svg
+            title: "{{ site.base_gateway }} On-Prem"
+            description: |
+              Designed for use with {{site.base_gateway}} on-prem, the `kong-gateway` provider allows you to manage Kong Entities using Terraform
+              This provider is currently available as a **BETA** release
+            ctas:
+              - text: Using Helm
+                url: "#TODO"
+              - text: Using {{ site.operator_product_name }}
+                url: "#TODO"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/kubernetes.svg
+            title: "{{ site.kic_product_name_short }} On-Prem"
+            description: |
+              The `kong-mesh` provider allows you to manage Mesh policies in an on-prem deployment of Kong Mesh
+              This provider is currently available as a **BETA** release
+            ctas:
+              - text: Using Helm
+                url: "#TODO"
+              - text: Using {{ site.operator_product_name }}
+                url: "#TODO"
