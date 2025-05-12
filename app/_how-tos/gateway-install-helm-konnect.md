@@ -1,6 +1,6 @@
 ---
 title: Install {{ site.base_gateway }} in Konnect with Helm
-description: TODO
+description: Create a Control Plane in Konnect, then deploy a Data Plane to your Kubernetes cluster using Helm.
 content_type: how_to
 permalink: /gateway/install/kubernetes/konnect/
 breadcrumbs:
