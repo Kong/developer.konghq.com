@@ -52,15 +52,17 @@ class HowTo {
   }
 
   toggleTopology(topology, trigger) {
-    this.prerequisites
-      .querySelectorAll("[data-deployment-topology]")
-      .forEach((item) => {
-        let shouldTrigger = trigger;
-        if (shouldTrigger && item.ariaExpanded === "true") {
-          shouldTrigger = false;
-        }
-        this.toggleItem(item, topology, shouldTrigger);
-      });
+    if (this.prerequisites){
+      this.prerequisites
+        .querySelectorAll("[data-deployment-topology]")
+        .forEach((item) => {
+          let shouldTrigger = trigger;
+          if (shouldTrigger && item.ariaExpanded === "true") {
+            shouldTrigger = false;
+          }
+          this.toggleItem(item, topology, shouldTrigger);
+        });
+    }
 
     document
       .querySelectorAll(
