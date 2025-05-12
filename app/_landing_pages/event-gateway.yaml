@@ -58,7 +58,7 @@ rows:
                     The {{site.event_gateway}} supports many policies such as
                     encryption, cluster virtualization, message filtering, and more.
 
-                    [Get started with {{site.event_gateway_short}} &rarr;](#get-started-with-knep-beta)
+                    [Get started with {{site.event_gateway_short}} &rarr;](/knep/get-started/)
   - header:
       type: h2
       text: Protocol mediation plugins
