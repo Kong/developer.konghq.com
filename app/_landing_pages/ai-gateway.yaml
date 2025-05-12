@@ -450,7 +450,7 @@ rows:
             description: Learn about the load balancing algorithms available for AI Gateway.
             icon: /assets/icons/load-balance.svg
             cta:
-              url: /gateway/load-balancing/#load-balancing-algorithms-for-ai-gateway
+              url: /ai-gateway/load-balancing/
               align: end
       - blocks:
         - type: card
