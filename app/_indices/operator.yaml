@@ -1,38 +1,50 @@
 title: All Operator Documentation
 groups:
-  - title: Unsorted
+  - title: Hidden
+    hidden: true
     sections:
       - items:
-          - path: /operator/**/*
-        auto_exclude: true
-  - title: About {{ site.operator_product_name }}
+          - path: /operator/dataplanes/get-started/hybrid/**/*
+          - path: /operator/dataplanes/get-started/kic/**/*
+
+          # These are linked from /operator/dataplanes/reference/autoscale-workloads/
+          - path: /operator/dataplanes/how-to/autoscale-workloads/prometheus/
+          - path: /operator/dataplanes/how-to/autoscale-workloads/datadog/
+  - title: About Kong Gateway Operator
     sections:
       - items:
+          - path: /operator/
           - path: /operator/install/
-          - path: /operator/support/
-          - path: /operator/version-compatibility/
+          - path: /operator/support-policy/
           - path: /operator/changelog/
+  - title: Reference
+    sections:
+      - items:
+          - path: /operator/reference/custom-resources/
+          - path: /operator/reference/version-compatibility/
   - title: Gateway Deployment
-    description: |
-      This is a short description explaining the content in this block
     sections:
       - title: Get Started
+        allow_duplicates: true
         items:
-          - path: /operator/dataplanes/get-started/hybrid/
-          - path: /operator/dataplanes/get-started/kic/
+          - title: Deploy Hybrid DataPlanes
+            url: /operator/dataplanes/get-started/hybrid/install/
+            description: Deploy {{ site.base_gateway }} data planes using {{ site.operator_product_name }}
+          - title: Deploy {{ site.kic_product_name }}
+            url: /operator/dataplanes/get-started/kic/install/
+            description: Use Kubernetes resources like `Gateway` to configure {{ site.kic_product_name }} and {{ site.base_gateway }}
       - title: Key Concepts
         items:
           - path: /operator/dataplanes/gateway-api/
           - path: /operator/dataplanes/gateway-configuration/
           - path: /operator/dataplanes/managed-gateways/
+          - path: /operator/dataplanes/faq/license/
       - title: How-To
         items:
           - path: /operator/dataplanes/how-to/set-dataplane-image/
           - path: /operator/dataplanes/how-to/deploy-sidecars/
           - path: /operator/dataplanes/how-to/use-custom-ca-certificate/
           - path: /operator/dataplanes/how-to/deploy-custom-plugins/
-          - path: /operator/dataplanes/how-to/autoscale-gateway/
-          - path: /operator/dataplanes/how-to/autoscale-upstreams/
       - title: Observability
         items:
           - path: /operator/dataplanes/reference/metrics/operator/
@@ -41,15 +53,20 @@ groups:
         items:
           - path: /operator/dataplanes/reference/poddisruptionbudget/
           - path: /operator/dataplanes/reference/podtemplatespec/
+          - path: /operator/dataplanes/reference/autoscale-gateway/
+          - path: /operator/dataplanes/reference/autoscale-workloads/
       - title: Upgrading
         items:
-          - path: /operator/dataplanes/reference/upgrade/operator/
-          - path: /operator/dataplanes/reference/upgrade/gateway/rolling/
-          - path: /operator/dataplanes/reference/upgrade/gateway/blue-green/
+          - path: /operator/dataplanes/upgrade/operator/
+          - path: /operator/dataplanes/upgrade/gateway/rolling/
+          - path: /operator/dataplanes/upgrade/gateway/blue-green/
       - title: Troubleshooting
         items:
           - path: /operator/dataplanes/troubleshooting/status/
-          - path: /operator/dataplanes/faq/license/
+      - title: Reference
+        items:
+          - path: /operator/dataplanes/konnectextension/
+          - path: /operator/reference/custom-resources/
 
   - title: Konnect
     sections:
@@ -74,6 +91,8 @@ groups:
         items:
           - path: /operator/konnect/troubleshooting/status/
       - title: Reference
+        allow_duplicates: true
         items:
-          - path: /operator/konnect/reference/crds/
+          - path: /operator/reference/custom-resources/
           - path: /operator/konnect/reference/faq/
+          - path: /operator/konnect/reference/migrate-1.4-1.5/

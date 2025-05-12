@@ -47,7 +47,7 @@ class HowTo {
         console.log(error);
       }
 
-      this.toggleTopology(this.deploymentTopologySwitch.value, true);
+      this.toggleTopology(this.deploymentTopologySwitch.value);
     } else {
       this.updateTOC();
     }
@@ -73,18 +73,12 @@ class HowTo {
     window.location.href = url.toString();
   }
 
-  toggleTopology(topology, trigger) {
-    if (this.prerequisites){
-      this.prerequisites
-        .querySelectorAll("[data-deployment-topology]")
-        .forEach((item) => {
-          let shouldTrigger = trigger;
-          if (shouldTrigger && item.ariaExpanded === "true") {
-            shouldTrigger = false;
-          }
-          this.toggleItem(item, topology, shouldTrigger);
-        });
-    }
+  toggleTopology(topology) {
+    this.prerequisites
+      .querySelectorAll("[data-deployment-topology]")
+      .forEach((item) => {
+        this.toggleItem(item, topology);
+      });
 
     document
       .querySelectorAll(
@@ -98,8 +92,15 @@ class HowTo {
       this.cleanup
         .querySelectorAll("[data-deployment-topology]")
         .forEach((item) => {
-          this.toggleItem(item, topology, trigger);
+          this.toggleItem(item, topology);
         });
+    }
+
+    const event = new Event("accordion:update", { bubbles: true });
+    this.prerequisites.dispatchEvent(event);
+
+    if (this.cleanup) {
+      this.cleanup.dispatchEvent(event);
     }
 
     this.updateTOC();
@@ -120,15 +121,9 @@ class HowTo {
     });
   }
 
-  toggleItem(item, topology, trigger) {
+  toggleItem(item, topology) {
     if (item.dataset.deploymentTopology === topology) {
       item.classList.remove("hidden");
-      if (trigger) {
-        const accordionTrigger = item.querySelector(".accordion-trigger");
-        if (accordionTrigger) {
-          accordionTrigger.click();
-        }
-      }
     } else {
       item.classList.add("hidden");
     }

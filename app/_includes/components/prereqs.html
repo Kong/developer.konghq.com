@@ -13,6 +13,8 @@
 {% assign shouldRenderWorksOn = prereqs.show_works_on %}
 {% endif %}
 
+{% assign product=page.products[0] %}
+
 <div class="flex flex-col accordion prerequisites" {{ default_accordion }}data-multiple="false" data-test-id="prereqs">
 
   {% assign inline_before = prereqs.inline | where: "position", "before" %}
@@ -40,7 +42,7 @@
 
   {% if prereqs.kubernetes.gateway_api %}
   <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-    {% include prereqs/kubernetes/gateway-api.md config=prereqs.kubernetes %}
+    {% include prereqs/kubernetes/gateway-api.md config=prereqs.kubernetes product=product %}
   </div>
   {% endif %}
 
@@ -106,7 +108,6 @@
   {% endif %}
 
   {% if prereqs.entities? %}
-    {% assign product=page.products[0] %}
     {% if product == 'operator' %}{% assign product='kic' %}{% endif %}
     <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
       {% assign prereq_path = "prereqs/entities/" | append: product | append: ".md" %}

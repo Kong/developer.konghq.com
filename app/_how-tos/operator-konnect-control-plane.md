@@ -1,6 +1,6 @@
 ---
 title: Create a Control Plane
-description: "TODO"
+description: "Create a Hybrid mode Control Plane in {{ site.konnect_short_name }}"
 content_type: how_to
 
 permalink: /operator/konnect/crd/control-planes/hybrid/
@@ -24,8 +24,8 @@ tags:
   - konnect-crd
  
 tldr:
-  q: Question?
-  a: Answer
+  q: How do I create a Hybrid mode Control Plane in {{ site.konnect_short_name }}?
+  a: Create a `KonnectGatewayControlPlane` object and add {{ site.konnect_short_name }} authentication.
 
 prereqs:
   operator:
@@ -34,9 +34,9 @@ prereqs:
 
 ---
 
-## TODO
+## Create a `KonnectGatewayControlPlane`
 
-TODO
+Create a `KonnectGatewayControlPlane` object and add the {{ site.konnect_short_name }} authentication resource we created in the [prerequisites](#prerequisites).
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -49,4 +49,13 @@ spec:
     authRef:
       name: konnect-api-auth
 {% endkonnect_crd %}
+<!-- vale on -->
+
+## Validation
+
+<!-- vale off -->
+{% validation kubernetes-resource %}
+kind: KonnectGatewayControlPlane
+name: gateway-control-plane
+{% endvalidation %}
 <!-- vale on -->
