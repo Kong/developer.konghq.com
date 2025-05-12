@@ -25,8 +25,8 @@ works_on:
 entities: []
 
 tldr:
-  q: Question?
-  a: Answer
+  q: How can I deploy a DataPlane with {{ site.operator_product_name }}?
+  a: Create a `DataPlane` object and use the `KonnectExtension` reference.
 
 prereqs:
   show_works_on: true
@@ -42,7 +42,7 @@ prereqs:
 {:data-deployment-topology='konnect'}
 ## Create the DataPlane
 
-Configure a Kong `DataPlane` by using your `KonnectExtension` reference.
+Configure a Kong `DataPlane` by using your `KonnectExtension` reference:
 
 ```bash
 echo '

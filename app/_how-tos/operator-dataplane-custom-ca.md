@@ -31,7 +31,7 @@ tldr:
 
 ## Use a custom CA certificate
 
-{{ site.operator_product_name }} generates TLS certificates to enable {{ site.base_gateway }} to authenticate with Konnect. By default, {{ site.operator_product_name }} will act as it's own CA. If you would prefer to use your own CA, upload the CA certificate as a Kubernetes secret.
+{{ site.operator_product_name }} generates TLS certificates to enable {{ site.base_gateway }} to authenticate with Konnect. By default, {{ site.operator_product_name }} will act as its own CA. If you would prefer to use your own CA, upload the CA certificate as a Kubernetes secret.
 
 ## Generate a certificate
 

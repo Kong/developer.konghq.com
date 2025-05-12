@@ -17,7 +17,7 @@ At Kong’s discretion a specific minor version can be marked as a LTS version. 
 
 LTS versions of {{site.operator_product_name}} are supported for 3 years after release. Standard versions are supported for 1 year after release.
 
-{:.note}
+{:.info}
 > {{site.operator_product_name}} is a recently released product and does not currently provide an LTS version.
 
 {% support_policy operator %}

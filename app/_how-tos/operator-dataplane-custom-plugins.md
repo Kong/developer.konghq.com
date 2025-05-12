@@ -176,7 +176,7 @@ In this example, the plugin is available in the public registry (Docker Hub) as 
    Next, add the `HTTPRoute` with the custom plugin. The configuration of the plugin is provided with the `KongPlugin` CRD, where the
    field `plugin` is set to the name of the `KongPluginInstallation` resource.
 
-<!--vale off-->
+   <!--vale off-->
    {% entity_example %}
    type: plugin
    data:

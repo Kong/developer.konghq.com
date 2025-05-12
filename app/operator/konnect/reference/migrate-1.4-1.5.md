@@ -30,15 +30,15 @@ This document helps to migrate from the `gateway-operator.konghq.com` to the `ko
     ```
 
     <!-- Requires https://github.com/Kong/docs.konghq.com/pull/8588 to merge -->
-    To verify version compatibility with kubernetes-configuration CRDs, please consult the [version compatibility table][version_compat].
+    To verify version compatibility with kubernetes-configuration CRDs, please consult the [version compatibility table](/operator/reference/version-compatibility/#kubernetes-configuration-crds).
 
-    > NOTE: In case CRDs were installed via `helm` you might need to force conflicts:
+    {:.info}
+    > Note: In case CRDs were installed via `helm` you might need to force conflicts:
 
     ```bash
     kustomize build https://github.com/kong/kubernetes-configuration/crd/gateway-operator | kubectl apply --server-side --force-conflicts -f -
     ```
 
-    [version_compat]: https://docs.konghq.com/gateway-operator/1.5.x/reference/version-compatibility/#kubernetes-configuration-crds
 
 1. Upgrade to new controller version (e.g. set the `image.tag` in `values.yaml` to `v1.5.0`)
 

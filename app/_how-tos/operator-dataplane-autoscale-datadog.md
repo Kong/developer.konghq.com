@@ -149,7 +149,7 @@ agents:
 ' > values.yaml
 ```
 
-to install [Datadog's helm chart](https://github.com/DataDog/helm-charts/tree/main/charts/datadog):
+To install [Datadog's helm chart](https://github.com/DataDog/helm-charts/tree/main/charts/datadog):
 
 ```bash
 helm repo add datadog https://helm.datadoghq.com

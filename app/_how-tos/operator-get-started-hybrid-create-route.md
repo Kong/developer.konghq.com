@@ -26,8 +26,8 @@ works_on:
   - konnect
 
 tldr:
-  q: Question?
-  a: Answer
+  q: How can I create a Route with {{ site.operator_product_name }}?
+  a: Create a `KongService` object , then create a `KongRoute` and associate it to the `KongService`.
 
 ---
 

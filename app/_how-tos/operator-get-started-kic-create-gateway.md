@@ -26,8 +26,8 @@ works_on:
 entities: []
 
 tldr:
-  q: Question?
-  a: Answer
+  q: How can I create a Gateway with {{ site.operator_product_name }} and {{ site.kic_product_name }}?
+  a: Create a `GatewayConfiguration` object, the. create`GatewayClass` instance and a `Gateway` resource.
 
 prereqs:
   show_works_on: true

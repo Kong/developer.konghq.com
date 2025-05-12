@@ -15,7 +15,7 @@ breadcrumbs:
 
 ---
 
-Kong Data Plane instances can be configured in {{site.konnect_short_name}} using the [`KonnectExtension`](/operator/reference/custom-resources/#konnectextension-1) resource. This resource can be used to provision isolated `DataPlane`s (Hybrid mode) or pairs of `ControlPlane`s  and `DataPlane`s ({{ site.kic_product_name }} mode).
+Kong Data Plane instances can be configured in {{site.konnect_short_name}} using the [`KonnectExtension`](/operator/reference/custom-resources/#konnectextension) resource. This resource can be used to provision isolated `DataPlane`s (Hybrid mode) or pairs of `ControlPlane`s  and `DataPlane`s ({{ site.kic_product_name }} mode).
 
 The `KonnectExtension` resource can be referenced by `ControlPlane`s, `DataPlane`s, or `GatewayConfiguration`s from the extension point in their spec. Dedicated guides will guide you to through these kinds of setup.
 

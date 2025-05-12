@@ -25,8 +25,8 @@ works_on:
 entities: []
 
 tldr:
-  q: Question?
-  a: Answer
+  q: How do I install {{ site.operator_product_name }}?
+  a: Update the Helm repository and use Helm to install {{ site.operator_product_name }}.
 
 prereqs:
   show_works_on: false

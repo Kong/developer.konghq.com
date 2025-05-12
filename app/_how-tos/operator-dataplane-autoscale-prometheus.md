@@ -151,26 +151,26 @@ spec:
 After applying the above manifest you can check one of the metrics exposed by {{ site.operator_product_name }}
 to verify that the scrape config has been applied.
 
-To access the Prometheus UI, create a port-forward and visit <http://localhost:9090>
+To access the Prometheus UI, create a port-forward and visit <http://localhost:9090>:
 
 ```bash
 kubectl port-forward service/prometheus-kube-prometheus-prometheus 9090:9090 -n prometheus
 ```
 
-This can be verified by going to your Prometheus UI and querying e.g.:
+This can be verified by going to your Prometheus UI and querying:
 
 ```
 up{service=~"kgo-gateway-operator-metrics-service"}
 ```
 
 {:.important}
-> Prometheus metrics can take up to 2 minutes to appear
+> Prometheus metrics can take up to 2 minutes to appear.
 
 ## Install prometheus-adapter
 
 The `prometheus-adapter` package makes Prometheus metrics usable in Kubernetes.
 
-To deploy `prometheus-adapter` you'll need to decide what time series to expose so that Kubernetes can consume it.
+To deploy `prometheus-adapter`, you'll need to decide what time series to expose so that Kubernetes can consume it.
 
 {:.info}
 > **Note:** {{ site.operator_product_name }} enriches specific metrics for use with `prometheus-adapter`. See the [overview](/operator/dataplanes/reference/autoscale-workloads/#metrics-support-for-enrichment) for a complete list.
@@ -221,7 +221,7 @@ Keep this running while we move on to next steps.
 
 ## Verify metrics are exposed in Kubernetes
 
-When all is configured you should be able to see the metric you've configured in `prometheus-adapter` exposed via the Kubernetes Custom Metrics API:
+When all is configured, you should be able to see the metric you've configured in `prometheus-adapter` exposed via the Kubernetes Custom Metrics API:
 
 ```bash
 kubectl get --raw '/apis/custom.metrics.k8s.io/v1beta1/namespaces/kong/services/command/kong_upstream_latency_ms_60s_average' | jq
@@ -255,14 +255,14 @@ This should result in:
 ```
 {:.no-copy-code}
 
-{:.note}
+{:.info}
 > **Note:** `102312m` is a Kubernetes way of expressing numbers as integers.
 > `value` represents the latency in microseconds, and is approximately equivalent to 102 milliseconds (ms).
 
 ## Use exposed metric in HorizontalPodAutoscaler
 
-When the metric configured in `prometheus-adapter` is available through Kubernetes' Custom Metrics API
-we can use it in `HorizontalPodAutoscaler` to autoscale our workload: specifically the `command` `Deployment`.
+When the metric configured in `prometheus-adapter` is available through Kubernetes's Custom Metrics API,
+we can use it in `HorizontalPodAutoscaler` to autoscale our workload, specifically the `command` `Deployment`.
 
 This can be done by using the following manifest, which will scale the underlying `command` `Deployment` between 1 and 10 replicas, trying to keep the average latency across last 60s at 40ms.
 

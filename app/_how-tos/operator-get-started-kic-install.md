@@ -28,8 +28,8 @@ prereqs:
   skip_product: true
 
 tldr:
-  q: Question?
-  a: Answer
+  q: How do I install {{ site.operator_product_name }} with Helm?
+  a: Update the Helm repository and use Helm to install {{ site.operator_product_name }}.
 ---
 {% assign gwapi_version = "1.2.1" %}
 

@@ -26,8 +26,8 @@ works_on:
 entities: []
 
 tldr:
-  q: Question?
-  a: Answer
+  q: How can I create a Route with {{ site.operator_product_name }} and {{ site.kic_product_name }}?
+  a: Create a Service, then create an `HTTPRoute`.
 
 prereqs:
   skip_product: true
