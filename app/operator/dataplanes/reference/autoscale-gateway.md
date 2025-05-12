@@ -1,6 +1,6 @@
 ---
 title: "Autoscaling {{ site.base_gateway }}"
-description: "TODO"
+description: "Horizontally scale {{ site.base_gateway }} based on CPU usage"
 content_type: reference
 layout: reference
 products:
@@ -21,15 +21,32 @@ This page shows how to autoscale Data Planes based on their average CPU utilizat
 
 ## Prerequisites
 
-{{ site.operator_product_name }} uses Kubernetes [`HorizontalPodAutoscaler`][hpa] to perform horizontal autoscaling of data planes.
+{{ site.operator_product_name }} uses Kubernetes [`HorizontalPodAutoscaler`](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) to perform horizontal autoscaling of data planes.
+
+### Install {{ site.operator_product_name }}
+
+{% include prereqs/products/operator.md raw=true %}
+
+### Install a metrics server
 
 {:.warning}
-> In order to be able to use `HorizontalPodAutoscaler` in your clusters you'll need to have a [metrics server][metrics_server_github] installed.
-> More info on the metrics server can be found in [official Kubernetes docs][metrics_server].
+> In order to be able to use `HorizontalPodAutoscaler` in your clusters you'll need to have a [metrics server](https://github.com/kubernetes-sigs/metrics-server) installed.
+> More info on the metrics server can be found in [official Kubernetes docs](https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/#metrics-server).
 
-[metrics_server]: https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/#metrics-server
-[metrics_server_github]: https://github.com/kubernetes-sigs/metrics-server
-[hpa]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+To install a metrics server to test, run the following command:
+
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+kubectl patch deployment metrics-server \
+  -n kube-system \
+  --type='json' \
+  -p='[{
+    "op": "add",
+    "path": "/spec/template/spec/containers/0/args/-",
+    "value": "--kubelet-insecure-tls"
+  }]'
+```
+
 
 ## Create a DataPlane with horizontal autoscaling enabled
 
@@ -47,6 +64,7 @@ apiVersion: gateway-operator.konghq.com/v1beta1
 kind: DataPlane
 metadata:
   name: horizontal-autoscaling
+  namespace: kong
 spec:
   deployment:
     scaling:
@@ -99,7 +117,7 @@ spec:
 A `DataPlane` is created when the manifest above is applied. This creates 2 `Pod`s running {{site.base_gateway}}, as well as a `HorizontalPodAutoscaler` which will manage the replica count of those `Pod`s to ensure that the average CPU utilization is around 50%.
 
 ```bash
-kubectl get hpa
+kubectl get hpa -n kong
 ```
 
 The output will show the `HorizontalPodAutoscaler` resource:
@@ -108,6 +126,7 @@ The output will show the `HorizontalPodAutoscaler` resource:
 NAME                     REFERENCE                                           TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
 horizontal-autoscaling   Deployment/dataplane-horizontal-autoscaling-4q72p   2%/50%    2         10        2          30s
 ```
+{:.no-copy-code}
 
 ## Test autoscaling with a load test
 
@@ -116,12 +135,13 @@ You can test if the autoscaling works by using a load testing tool (e.g. k6s) to
 1. Fetch the DataPlane address and store it in the `PROXY_IP` variable:
 
     ```bash
-    export PROXY_IP=$(kubectl get dataplanes.gateway-operator.konghq.com -o jsonpath='{.status.addresses[0].value}' horizontal-autoscaling)
+    export PROXY_IP=$(kubectl get -n kong dataplanes.gateway-operator.konghq.com -o jsonpath='{.status.addresses[0].value}' horizontal-autoscaling)
     ```
 
 1. Install [`k6s`](https://k6.io/), then create a configuration file containing the following code:
 
     ```javascript
+    echo '
     import http from "k6/http";
     import { check } from "k6";
 
@@ -137,6 +157,7 @@ You can test if the autoscaling works by using a load testing tool (e.g. k6s) to
       let res = http.get(`https://${__ENV.PROXY_IP}`);
       check(res, { "status was 404": (r) => r.status == 404 });
     }
+    ' > k6.js
     ```
 
 1. Start the load test:
@@ -148,7 +169,7 @@ You can test if the autoscaling works by using a load testing tool (e.g. k6s) to
 1. Observe the scaling events in the cluster while the test is running:
 
     ```bash
-    kubectl get events --field-selector involvedObject.name=horizontal-autoscaling --field-selector involvedObject.kind=HorizontalPodAutoscaler
+    kubectl get events -n kong --field-selector involvedObject.name=horizontal-autoscaling --field-selector involvedObject.kind=HorizontalPodAutoscaler --field-selector='reason=SuccessfulRescale' -w
     ```
 
     The output will show the scaling events:
@@ -159,11 +180,12 @@ You can test if the autoscaling works by using a load testing tool (e.g. k6s) to
     2m55s       Normal    SuccessfulRescale              horizontalpodautoscaler/horizontal-autoscaling   New size: 10; reason: cpu resource utilization (percentage of request) above target
     85s         Normal    SuccessfulRescale              horizontalpodautoscaler/horizontal-autoscaling   New size: 2; reason: All metrics below target
     ```
+    {:.no-copy-code}
 
     The `DataPlane`'s `status` field will also be updated with the number of ready/target replicas:
 
     ```bash
-    kubectl get dataplanes.gateway-operator.konghq.com horizontal-autoscaling -o jsonpath-as-json='{.status}'
+    kubectl get -n kong dataplanes.gateway-operator.konghq.com horizontal-autoscaling -o jsonpath-as-json='{.status}'
     ```
 
     ```json
@@ -176,3 +198,4 @@ You can test if the autoscaling works by using a load testing tool (e.g. k6s) to
         }
     ]
     ```
+    {:.no-copy-code}

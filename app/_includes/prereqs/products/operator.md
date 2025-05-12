@@ -15,7 +15,7 @@
 1. Create a `kong` namespace:
 
    ```bash
-   kubectl create namespace kong
+   kubectl create namespace kong --dry-run=client -o yaml | kubectl apply -f -
    ```
 
 1. Install {{ site.kic_product_name }} using Helm:
@@ -44,4 +44,8 @@
 {% endif %}
 {% endcapture %}
 
+{% if include.raw %}
+{{ details_content }}
+{% else %}
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/kubernetes.svg' %}
+{% endif %}

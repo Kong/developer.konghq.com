@@ -1,6 +1,6 @@
 ---
 title: "Autoscaling workloads"
-description: "TODO: Scale your Kubernetes workloads using latency information from {{ site.base_gateway }}"
+description: "Scale your Kubernetes workloads using latency information from {{ site.base_gateway }}"
 content_type: reference
 layout: reference
 products:
