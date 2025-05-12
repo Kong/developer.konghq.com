@@ -40,7 +40,6 @@ related_resources:
 
 ---
 
-## Load balancing in AI Gateway
 
 Kong AI Gateway gives you advanced load balancing capabilities to efficiently distribute requests across multiple LLM models. This helps you ensure fault tolerance, optimize resource utilization, and balance traffic across your AI systems.
 
