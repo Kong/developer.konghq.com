@@ -13,6 +13,7 @@ products:
 
 works_on:
   - on-prem
+  - konnect
 
 min_version:
   gateway: '3.4'
@@ -76,7 +77,7 @@ next_steps:
 
 ## Configure the Vault entity
 
-Using decK, create a Vault entity with the required parameters for AWS:
+Using decK, create a [Vault entity](/gateway/entities/vault/) with the required parameters for AWS:
 
 {% entity_example %}
 type: vault
@@ -88,12 +89,23 @@ data:
     region: us-east-1
 {% endentity_example %}
 
+{% entity_examples %}
+entities:
+  vaults:
+    - name: aws
+      prefix: aws-vault
+      description: Storing secrets in AWS Secrets Manager
+      config:
+        region: us-east-1
+{% endentity_examples %}
+
 ## Validate
 
-To validate that the secret was stored correctly in AWS you can use the `kong vault get` command within the Data Plane container. If the Docker container is named `kong-quickstart-gateway`, you can use the following command:
+To validate that the secret was stored correctly in AWS you can use the `kong vault get` command within the Data Plane container. 
 
-```sh
-docker exec kong-quickstart-gateway kong vault get {vault://aws-vault/my-aws-secret/token}
-```
+{% validation vault-secret %}
+secret: '{vault://aws-vault/my-aws-secret/token}'
+value: 'secret'
+{% endvalidation %}
 
 If the vault was configured correctly, this command should return the value of the secret. Then, you can use `{vault://aws-vault/my-aws-secret/token}` to reference the secret in any referenceable field.
