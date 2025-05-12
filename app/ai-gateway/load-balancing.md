@@ -78,7 +78,7 @@ rows:
       * Ideal for maintaining session persistence.
   - strategy: "[Lowest-usage](/plugins/ai-proxy-advanced/examples/lowest-usage/)"
     description: |
-      Routes requests to the least-utilized models based on resource usage metrics. In the configuration, the [`tokens_count_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-tokens-count-strategy) (e.g., `prompt-tokens`) defines how usage is measured, focusing on prompt tokens or other resource indicators.
+      Routes requests to the least-utilized models based on resource usage metrics. In the configuration, the [`tokens_count_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-tokens-count-strategy) (for example, `prompt-tokens`) defines how usage is measured, focusing on prompt tokens or other resource indicators.
     considerations: |
       * Dynamically balances load based on measured usage.
       * Useful for optimizing cost and avoiding overloading heavier models.
