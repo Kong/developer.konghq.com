@@ -31,7 +31,7 @@ related_resources:
     url: /gateway/load-balancing/
   - text: "{{site.base_gateway}} round-robin load balancing"
     url: /gateway/entities/upstream/#round-robin
-  - text: "{{site.base_gateway}} round-robin load balancing"
+  - text: "{{site.base_gateway}} consistent-hashing load balancing"
     url: /gateway/entities/upstream/#consistent-hashing
   - text: "{{site.base_gateway}} least connections load balancing"
     url: /gateway/entities/upstream/#least-connections
