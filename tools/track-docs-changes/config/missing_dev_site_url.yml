@@ -4,7 +4,7 @@
   dev_site_url: '/dev-portal/'
   status: "?"
 - docs_url: "/konnect/gateway-manager/active-tracing/"
-  dev_site_url: ''
+  dev_site_url: '/konnect-platform/active-tracing/'
   status: "?"
 - docs_url: "/gateway/latest/kong-manager/auth/rbac/add-admin/"
   dev_site_url: '/gateway/entities/admin/'
@@ -433,7 +433,7 @@
   dev_site_url: '/gateway/install/kubernetes/'
   status: "?"
 - docs_url: "/gateway/latest/install/post-install/set-up-data-store/"
-  dev_site_url: ''
+  dev_site_url: '/how-to/configure-datastore/'
   status: migrated
 - docs_url: "/gateway/latest/production/networking/configure-postgres-tls/"
   dev_site_url: '/gateway/configuration/#datastore'
@@ -547,7 +547,7 @@
   dev_site_url: '/operator/dataplanes/get-started/hybrid/install/'
   status: "?"
 - docs_url: "/gateway-operator/latest/topologies/dbless/"
-  dev_site_url: ''
+  dev_site_url: '/operator/dataplanes/get-started/kic/install/'
   status: "?"
 - docs_url: "/gateway-operator/latest/concepts/gateway-api/"
   dev_site_url: '/operator/dataplanes/gateway-api/'
@@ -724,7 +724,7 @@
   dev_site_url: '/terraform/'
   status: "?"
 - docs_url: "/mesh/latest/features/meshglobalratelimit/"
-  dev_site_url: ''
+  dev_site_url: '/mesh/policies/meshglobalratelimit/'
   status: migrated
 - docs_url: "/mesh/2.5.x/gettingstarted/"
   dev_site_url: '/mesh/#get-started'
