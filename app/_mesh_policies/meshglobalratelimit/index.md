@@ -439,7 +439,7 @@ spec:
 
 ### External service support
 
-To rate limit requests to [External Service](/mesh/{{page.release}}/policies/external-services) you must deploy [ZoneEgress](/mesh/{{page.release}}/production/cp-deployment/zoneegress/).
+To rate limit requests to [External Service](/mesh/meshexternalservice/) you must deploy [ZoneEgress](/mesh/zoneegress/).
 
 After deploying Zone Egress, you must enable mTLS in your mesh and configure zone egress routing. Here's an example mesh configuration:
 
