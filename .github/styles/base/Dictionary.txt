@@ -628,6 +628,7 @@ reportingComponent
 reportingInstance
 requery
 Requeue
+requeue
 resourceVersion
 Resty
 Resty

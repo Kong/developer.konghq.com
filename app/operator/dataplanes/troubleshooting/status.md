@@ -15,7 +15,7 @@ breadcrumbs:
 
 ---
 
-Resources managed by {{ site.operator_product_name }} provide the `status` field like other Kubernetes objets.
+Resources managed by {{ site.operator_product_name }} provide the `status` field like other Kubernetes objects.
 
 To see object's status you can use the `kubectl get` command:
 
