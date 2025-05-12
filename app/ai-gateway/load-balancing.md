@@ -85,7 +85,7 @@ rows:
       * Ensures more efficient resource allocation across available models.
   - strategy: "[Lowest-latency](/plugins/ai-proxy-advanced/examples/lowest-latency/)"
     description: |
-      Routes requests to the models with the lowest observed latency. In the configuration, the [`latency_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-latency-strategy) parameter (e.g., `latency_strategy: e2e`) defines how latency is measured, typically based on end-to-end response times.
+      Routes requests to the models with the lowest observed latency. In the configuration, the [`latency_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-latency-strategy) parameter (for example, `latency_strategy: e2e`) defines how latency is measured, typically based on end-to-end response times.
     considerations: |
       * Prioritizes models with the fastest response times.
       * Optimizes for real-time performance in time-sensitive applications.
