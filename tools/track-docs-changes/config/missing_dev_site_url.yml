@@ -220,7 +220,7 @@
   dev_site_url: '/dev-portal/'
   status: "?"
 - docs_url: "/gateway/3.4.x/kong-enterprise/dev-portal/authentication/managing-developers/"
-  dev_site_url: '/dev-portal/
+  dev_site_url: '/dev-portal/'
   status: "?"
 - docs_url: "/gateway/3.4.x/kong-enterprise/dev-portal/customize/markdown-extended/"
   dev_site_url: '/dev-portal/'
@@ -679,7 +679,7 @@
   dev_site_url: '/kubernetes-ingress-controller/'
   status: "?"
 - docs_url: "/kubernetes-ingress-controller/latest/reference/troubleshooting/"
-  dev_site_url: '/index/kubernetes-ingress-controller/#troubleshooting
+  dev_site_url: '/index/kubernetes-ingress-controller/#troubleshooting'
   status: migrated
 - docs_url: "/kubernetes-ingress-controller/latest/gateway-api/"
   dev_site_url: '/kubernetes-ingress-controller/gateway-api/'
