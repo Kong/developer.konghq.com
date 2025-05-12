@@ -67,7 +67,7 @@ rows:
 
 ## Audit log webhook status
 
-You can view the webhook status in the UI or via the API for the [{{site.konnect_short_name}} org audit logs](/api/konnect/audit-logs/v2/#/operations/get-audit-log-webhook-status).
+You can view the webhook status in the UI or via the API for the [{{site.konnect_short_name}} org audit logs](/api/konnect/audit-logs/#/operations/get-audit-log-webhook-status).
 
 The following table describes the webhook statuses:
 

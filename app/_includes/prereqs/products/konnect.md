@@ -12,7 +12,7 @@ If you don't have a Konnect account, you can get started quickly with our [onboa
     * Konnect Proxy URL: By default, a self-hosted Data Plane uses `http://localhost:8000`. You can set up Data Plane nodes for your Control Plane from the [Gateway Manager](https://cloud.konghq.com/gateway-manager/) in Konnect.
 {% else %}
     * Personal access token (PAT): Create a new personal access token by opening the [Konnect PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
-    * Control Plane ID: You can use an existing Control Plane or [create a new one](https://cloud.konghq.com/gateway-manager/create-control-plane) to use for this tutorial. You can find your control plane UUID by navigating to the control plane in the Konnect UI or by sending a `GET` request to the [`/control-planes` endpoint](/api/konnect/control-planes/v2/#/operations/list-control-planes).
+    * Control Plane ID: You can use an existing Control Plane or [create a new one](https://cloud.konghq.com/gateway-manager/create-control-plane) to use for this tutorial. You can find your control plane UUID by navigating to the control plane in the Konnect UI or by sending a `GET` request to the [`/control-planes` endpoint](/api/konnect/control-planes/#/operations/list-control-planes).
     * Control Plane URL: `https://us.api.konghq.com`. If needed, replace `us` with your organization's region (for example, `eu` or `au`).
     * Konnect Proxy URL: By default, a self-hosted Data Plane uses `http://localhost:8000`. You can set up Data Plane nodes for your Control Plane from the [Gateway Manager](https://cloud.konghq.com/gateway-manager/) in Konnect.
 {% endif %}

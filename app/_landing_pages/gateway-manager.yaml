@@ -171,7 +171,7 @@ rows:
               entity: vault
   - header:
       type: h2
-      text: "Learn More"
+      text: "Learn more"
     columns:
       - blocks:
           - type: card
@@ -214,3 +214,15 @@ rows:
               cta:
                 text: Learn more
                 url: /gateway-manager/version-compatibility/
+
+  - header:
+      type: h2
+      text: References
+    columns:
+      - blocks:
+          - type: reference_list
+            config:
+              tags:
+                - gateway-manager
+              quantity: 5
+              allow_empty: true

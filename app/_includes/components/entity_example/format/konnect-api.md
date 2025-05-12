@@ -22,5 +22,5 @@
 
 {% if include.render_context %}
 {% include components/entity_example/replace_variables.md missing_variables=include.presenter.missing_variables %}
-See the <a href="/api/konnect/control-planes-config/v2/#/">Konnect API reference</a> to learn about region-specific URLs and personal access tokens.
+See the <a href="/api/konnect/control-planes-config/">Konnect API reference</a> to learn about region-specific URLs and personal access tokens.
 {% endif %}

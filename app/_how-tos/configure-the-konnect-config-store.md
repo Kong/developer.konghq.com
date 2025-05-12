@@ -27,7 +27,7 @@ tldr:
     q: How do I use a {{site.konnect_short_name}}-native Vault?
     a: |
       1. Use the {{site.konnect_short_name}} API to create a Config Store using the `/config-stores` endpoint.
-      2. Create a {{site.konnect_short_name}} Vault using the [`/vaults/` endpoint](/api/konnect/control-planes-config/v2/#/operations/create-vault).
+      2. Create a {{site.konnect_short_name}} Vault using the [`/vaults/` endpoint](/api/konnect/control-planes-config/#/operations/create-vault).
       3. Store your secret as a key/value pair using the `/secrets` endpoint. 
       4. Reference the secret using the Vault prefix and key (for example: `{vault://mysecretvault/secret-key}`).
 
@@ -60,7 +60,7 @@ next_steps:
 
 ## Configure a {{site.konnect_short_name}} Config Store
 
-Before you can configure a {{site.konnect_short_name}} Vault, you must first create a Config Store using the [Control Planes Configuration API](/api/konnect/control-planes-config/v2/#/) by sending a `POST` request to the `/config-stores` endpoint:
+Before you can configure a {{site.konnect_short_name}} Vault, you must first create a Config Store using the [Control Planes Configuration API](/api/konnect/control-planes-config/) by sending a `POST` request to the `/config-stores` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}

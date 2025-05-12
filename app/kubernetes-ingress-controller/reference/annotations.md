@@ -514,7 +514,7 @@ This annotation sets the certificate and key-pair {{site.base_gateway}} should u
 
 The value of this annotation should be the name of the Kubernetes TLS Secret resource which contains the TLS cert and key pair.
 
-Under the hood, the controller creates a [Certificate](/gateway/entities/certificate/) in {{site.base_gateway}} and then sets the [`service.client_certificate`](/api/konnect/control-planes-config/v2/#/operations/create-service) for the service.
+Under the hood, the controller creates a [Certificate](/gateway/entities/certificate/) in {{site.base_gateway}} and then sets the [`service.client_certificate`](/api/konnect/control-planes-config/#/operations/create-service) for the service.
 
 ### konghq.com/host-header
 

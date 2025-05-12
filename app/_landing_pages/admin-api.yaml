@@ -92,9 +92,9 @@ rows:
                 This is the case because there is no database coordination between nodes. Therefore, the Admin API is mostly read-only.
 
                 When running {{site.base_gateway}} in DB-less mode, the Admin API can only perform tasks related to handling the declarative config:
-                * [Validating configurations against schemas](/api/gateway/admin-ee/3.9/#/operations/post-schemas-entity-validate)
-                * [Validating plugin configurations against schemas](/api/gateway/admin-ee/3.9/#/operations/post-schemas-plugins-validate)
-                * [Reloading the declarative configuration](/api/gateway/admin-ee/3.9/#/operations/post-config)
+                * [Validating configurations against schemas](/api/gateway/admin-ee/#/operations/post-schemas-entity-validate)
+                * [Validating plugin configurations against schemas](/api/gateway/admin-ee/#/operations/post-schemas-plugins-validate)
+                * [Reloading the declarative configuration](/api/gateway/admin-ee/#/operations/post-config)
             
             - q: How can I send a request for a specific Workspace?
               a: |

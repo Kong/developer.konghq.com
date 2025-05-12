@@ -21,6 +21,9 @@ related_resources:
     url: /how-to/?query=certificate
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
+  - text: "{{site.konnect_short_name}} Control Plane resource limits"
+    url: /gateway-manager/control-plane-resource-limits/
+
 
 tools:
     - admin-api
