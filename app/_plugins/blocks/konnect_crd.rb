@@ -24,11 +24,14 @@ module Jekyll
       config = YAML.load(contents)
       config = add_defaults(config)
 
+      should_create_namespace = config.delete('create_namespace')
+
       # Process YAML for the code block
       config = config.to_yaml.delete_prefix("---\n").chomp.gsub(/version: '(.*)'/, 'version: "\1"')
 
       context.stack do
         context['config'] = config
+        context['should_create_namespace'] = should_create_namespace
         Liquid::Template.parse(File.read('app/_includes/konnect_crd.html')).render(context)
       end
     rescue Psych::SyntaxError => e

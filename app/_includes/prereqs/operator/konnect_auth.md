@@ -4,6 +4,7 @@
 
 <!-- vale off -->
 {% konnect_crd %}
+create_namespace: kong
 kind: KonnectAPIAuthConfiguration
 metadata:
   name: konnect-api-auth

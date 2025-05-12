@@ -19,4 +19,4 @@ NAME=$({{ get_command | strip }} | yq '{{ include.config.name_selector | strip }
   | yq '{{ path | strip }}'
 ```
 
-You should see the value `{{ include.config.expected }}`
+You should see the value `{{ include.config.expected }}`.

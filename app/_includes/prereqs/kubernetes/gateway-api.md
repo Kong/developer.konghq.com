@@ -39,6 +39,18 @@
 {% assign allowedRoutes = include.config.gateway_api.allowed_routes %}
 {% endif %}
 
+{% assign controllerName = "" %}
+{% if product == 'kic' %}
+{% assign controllerName = "konghq.com/kic-gateway-controller" %}
+{% endif %}
+{% if product == 'operator' %}
+{% assign controllerName = "konghq.com/gateway-operator" %}
+{% endif %}
+
+{% if controllerName == "" %}
+{% raise "k8s controller name was not provided" %}
+{% endif %}
+
 ```bash
 echo "
 apiVersion: v1
@@ -54,7 +66,7 @@ metadata:
     konghq.com/gatewayclass-unmanaged: 'true'
 
 spec:
-  controllerName: konghq.com/kic-gateway-controller
+  controllerName: {{ controllerName }}
 ---
 apiVersion: gateway.networking.k8s.io/{{ gwapi_version }}
 kind: Gateway
