@@ -145,8 +145,6 @@ TODO: document how to generate and use zone token on universal.-->
 {% endif_version %}
 
 
-To learn more about the information in this table, see the [matching docs](/mesh/{{page.release}}/policies/targetref).
-
 ## Configuration
 
 In the following sections, you can find examples for the `MeshGlobalRateLimit` configuration.
