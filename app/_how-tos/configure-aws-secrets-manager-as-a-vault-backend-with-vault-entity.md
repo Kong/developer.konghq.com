@@ -79,16 +79,6 @@ next_steps:
 
 Using decK, create a [Vault entity](/gateway/entities/vault/) with the required parameters for AWS:
 
-{% entity_example %}
-type: vault
-data:
-  name: aws
-  prefix: aws-vault
-  description: Storing secrets in AWS Secrets Manager
-  config:
-    region: us-east-1
-{% endentity_example %}
-
 {% entity_examples %}
 entities:
   vaults:
