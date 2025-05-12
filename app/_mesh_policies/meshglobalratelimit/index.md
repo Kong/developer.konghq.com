@@ -1,17 +1,17 @@
 ---
-title: MeshGlobalRateLimit Policy (beta)
+title: MeshGlobalRateLimit Policy
 name: MeshGlobalRateLimits
 beta: true
 tier: enterprise
 products:
     - mesh
-description: 'This policy adds Global Rate Limit support for {{site.mesh_product_name}}.'
+description: 'This policy adds global rate limit support for {{site.mesh_product_name}}.'
 content_type: plugin
 type: policy
 icon: meshratelimit.png
 ---
 
-This policy adds Global Rate Limit support for {{site.mesh_product_name}}.
+This policy adds global rate limit support for {{site.mesh_product_name}}.
 
 ## What is global rate limiting 
 
@@ -34,7 +34,7 @@ make to your public API. To do that, you must coordinate request counting betwee
 Global rate limit moves counters from data plane proxy to distributed cache. Because of this, you can configure longer time units (like
 week, month, or year) which will be immune to your service restarts.
 
-## How Global Rate limit works
+## How global rate limit works
 
 Global rate limiting is a more complex than local rate limit. It needs an additional service that will manage the global counters.
 
