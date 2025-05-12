@@ -4,7 +4,7 @@
 
 {% capture card_content %}
 {% if include.icon %}
-<img src="{{ include.icon }}" class="w-8 h-8"/>
+<img src="{{ include.icon }}" class="h-8 w-auto self-start"/>
 {% endif %}
 
 <h4>{{ include.title | liquify }}</h4>
@@ -22,13 +22,13 @@
 {% if include.ctas %}
 <div class="flex flex-col w-full text-primary text-sm">
   {% for cta in include.ctas %}
-  <a class="flex justify-between py-3 {% unless forloop.last %}border-b border-primary/5{% endunless %} hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline dark:text-white" href="{{ cta.url }}">{{ cta.text | liquify }} <span class="text-terciary">→</span></a>
+  <a class="no-icon flex justify-between py-3 {% unless forloop.last %}border-b border-primary/5{% endunless %} hover:bg-hover-component/100 hover:px-6 hover:-mx-6 hover:no-underline dark:text-white" href="{{ cta.url }}">{{ cta.text | liquify }} <span class="text-terciary">→</span></a>
   {% endfor %}
 </div>
 {% endif %}
 {% endcapture %}
 
-<div class="card {% if include.featured %}card__featured{% else %}card__bordered{% endif %} {{ include.css_class}} ">
+<div {% if include.id %}id="{{ include.id }}"{% endif %} class="card {% if include.featured %}card__featured{% else %}card__bordered{% endif %} {{ include.css_class}} ">
     {% if include.featured %}
     <div class="text-xs absolute transform rotate-45 bg-brand-saturated dark:bg-terciary text-center text-white font-semibold py-1 right-[-35px] top-[32px] w-[170px]">
     {% if include.featured != true %}

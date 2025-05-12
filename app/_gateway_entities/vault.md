@@ -19,6 +19,8 @@ related_resources:
     url: /gateway/reserved-entity-names/
   - text: Managing sensitive data with decK
     url: /deck/gateway/sensitive-data/
+  - text: "{{site.konnect_short_name}} Control Plane resource limits"
+    url: /gateway-manager/control-plane-resource-limits/
 
 
 faqs:

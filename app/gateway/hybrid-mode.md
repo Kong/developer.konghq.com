@@ -286,7 +286,7 @@ unable to send updated configuration to DP node with hostname: localhost.localdo
 
 The following API endpoints return the version of the Data Plane node and the latest config hash the node is using:
 * On-prem {{site.base_gateway}}: [`/clustering/data-planes` Admin API](/api/gateway/admin-ee/#/operations/getDataPlanes)
-* {{site.konnect_short_name}}:  [`/expected-config-hash` Control Plane Config API](/api/konnect/control-planes-config/v2/#/operations/get-expected-config-hash) 
+* {{site.konnect_short_name}}:  [`/expected-config-hash` Control Plane Config API](/api/konnect/control-planes-config/#/operations/get-expected-config-hash) 
 This data helps detect version incompatibilities from the Control Plane side.
 
 ## Fault tolerance
@@ -393,7 +393,7 @@ are exposed to the [Status API](/gateway/configuration/#status_listen) on Data P
 - `GET /upstreams/{upstream}/targets/all/`
 - `GET /upstreams/{upstream}/targets/{target}`
 
-See Upstream objects in the [Admin API](/api/gateway/admin-ee/#/operations/list-upstream) and [Control Plane Config API](/api/konnect/control-planes-config/v2/#/operations/list-upstream) documentation for more information about the
+See Upstream objects in the [Admin API](/api/gateway/admin-ee/#/operations/list-upstream) and [Control Plane Config API](/api/konnect/control-planes-config/#/operations/list-upstream) documentation for more information about the
 endpoints.
 
 ## Keyring encryption in hybrid mode

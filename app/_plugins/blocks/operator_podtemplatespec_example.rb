@@ -25,7 +25,7 @@ module Jekyll
 
       <<~TEXT
         {:.info}
-        > The the following example uses the `DataPlane` resource, but you can also configure your `GatewayConfiguration` resource as needed. For more information see the [PodTemplateSpec](/operator/dataplanes/reference/podtemplatespec/) page.
+        > The following example uses the `DataPlane` resource, but you can also configure your `GatewayConfiguration` resource as needed. For more information see the [PodTemplateSpec](/operator/dataplanes/reference/podtemplatespec/) page.
 
         ```yaml
         #{kubectl_apply && "echo '"}

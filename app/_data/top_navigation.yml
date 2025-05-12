@@ -34,7 +34,7 @@ platform:
           url: /insomnia/design/
           color: purple
         - text: API Testing and Debugging
-          icon: /assets/icons/code-snippet.svg
+          icon: /assets/icons/monochrome/code-snippet.svg
           url: /insomnia/test/
           color: purple
     - title: Run APIs
@@ -59,6 +59,10 @@ platform:
           icon: /_assets/icons/products/kic.svg
           url: /kubernetes-ingress-controller/
           product: kic
+        - text: Kubernetes Operator
+          icon: /_assets/icons/products/operator.svg
+          url: /operator/
+          product: operator
     - title: Govern APIs
       links:
         - text: Analytics

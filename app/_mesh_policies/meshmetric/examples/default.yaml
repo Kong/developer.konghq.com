@@ -3,7 +3,7 @@ description: "A default `MeshMetric` policy for the `default` mesh"
 
 weight: 900
 
-
+namespace: kuma-demo
 config:
   type: MeshMetric
   mesh: default

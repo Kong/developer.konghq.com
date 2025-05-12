@@ -47,7 +47,7 @@ Expose metrics related to {{site.base_gateway}} and proxied upstream services in
 [Prometheus](https://prometheus.io/docs/introduction/overview/) 
 exposition format, which can be scraped by a Prometheus Server.
 
-Metrics tracked by this plugin are available on both the [Admin API](/api/gateway/admin-ee/#/) and [Status API](/api/gateway/status/v1/#/paths/metrics/get) at the `/metrics`
+Metrics tracked by this plugin are available on both the [Admin API](/api/gateway/admin-ee/) and [Status API](/api/gateway/status/#/paths/metrics/get) at the `/metrics`
 endpoint. The URL to those APIs will be specific to your
 installation. See [Accessing the metrics](#accessing-the-metrics) for more information.
 
@@ -137,7 +137,7 @@ allow access to the `/metrics` endpoint to Prometheus:
    is enabled, then its `/metrics` endpoint can be used.
    This is the preferred method.
 
-1. The `/metrics` endpoint is also available on the [Admin API](/api/gateway/admin-ee/#/), which can be used
+1. The `/metrics` endpoint is also available on the [Admin API](/api/gateway/admin-ee/), which can be used
    if the Status API is not enabled. This endpoint is unavailable
    when [RBAC](/gateway/entities/rbac/) is enabled on the
    Admin API, as Prometheus doesn't support key authentication to pass the token.

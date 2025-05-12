@@ -67,7 +67,7 @@ related_resources:
     url: /how-to/use-langchain-with-ai-proxy/
 ---
 
-## 1. Clone the sample repository
+## Clone the sample repository
 
 Kong provides a sample stack using Elasticsearch, Logstash, and Kibana to visualize AI Gateway metrics.
 
@@ -89,14 +89,14 @@ git clone https://github.com/KongHQ-CX/kong-ai-gateway-observability
 cd kong-ai-gateway-observability
 ```
 
-## 2. Start the stack
+## Start the stack
 
 Use the following command to start the sample stack:
 ```sh
 docker compose up
 ```
 
-## 3. Send requests
+## Send requests
 
 Once the stack is running, open a new terminal and send some requests to the `/gpt4o` endpoint with the Consumer's API key to generate metrics. For example:
 {% validation request-check %}
@@ -115,7 +115,7 @@ body:
           content: "What is 1+1?"
 {% endvalidation %}
 
-## 4. Visualize the metrics
+## Visualize the metrics
 
 Go to the following URL to visualize your metrics in Kibana:
 ```

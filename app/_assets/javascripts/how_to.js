@@ -9,6 +9,13 @@ class HowTo {
     this.cleanup = document.querySelector(".cleanup");
     this.deploymentToplogyKey = "deployment-topology-switch";
 
+   
+    this.switchType = "toggle";
+    this.topologySwitcherOption = document.querySelector("[data-topology-switcher]")
+    if (this.topologySwitcherOption){
+      this.switchType = this.topologySwitcherOption.dataset.topologySwitcher;
+    }
+
     this.init();
     this.addEventListeners();
   }
@@ -40,7 +47,7 @@ class HowTo {
         console.log(error);
       }
 
-      this.toggleTopology(this.deploymentTopologySwitch.value, true);
+      this.toggleTopology(this.deploymentTopologySwitch.value);
     } else {
       this.updateTOC();
     }
@@ -48,18 +55,29 @@ class HowTo {
 
   onChange(event) {
     localStorage.setItem(this.deploymentToplogyKey, event.target.value);
-    this.toggleTopology(event.target.value, true);
+    if (this.switchType == "page") {
+      this.switchPageTopology(event.target.value);
+    } else {
+      this.toggleTopology(event.target.value, true);
+    }
   }
 
-  toggleTopology(topology, trigger) {
+  switchPageTopology(topology){
+    const url = new URL(window.location.href);
+    const segments = url.pathname.split('/');
+    if (!segments[segments.length - 1]){
+      segments.pop();
+    }
+    segments[segments.length - 1] = topology;
+    url.pathname = segments.join('/');
+    window.location.href = url.toString();
+  }
+
+  toggleTopology(topology) {
     this.prerequisites
       .querySelectorAll("[data-deployment-topology]")
       .forEach((item) => {
-        let shouldTrigger = trigger;
-        if (shouldTrigger && item.ariaExpanded === "true") {
-          shouldTrigger = false;
-        }
-        this.toggleItem(item, topology, shouldTrigger);
+        this.toggleItem(item, topology);
       });
 
     document
@@ -74,8 +92,15 @@ class HowTo {
       this.cleanup
         .querySelectorAll("[data-deployment-topology]")
         .forEach((item) => {
-          this.toggleItem(item, topology, trigger);
+          this.toggleItem(item, topology);
         });
+    }
+
+    const event = new Event("accordion:update", { bubbles: true });
+    this.prerequisites.dispatchEvent(event);
+
+    if (this.cleanup) {
+      this.cleanup.dispatchEvent(event);
     }
 
     this.updateTOC();
@@ -96,15 +121,9 @@ class HowTo {
     });
   }
 
-  toggleItem(item, topology, trigger) {
+  toggleItem(item, topology) {
     if (item.dataset.deploymentTopology === topology) {
       item.classList.remove("hidden");
-      if (trigger) {
-        const accordionTrigger = item.querySelector(".accordion-trigger");
-        if (accordionTrigger) {
-          accordionTrigger.click();
-        }
-      }
     } else {
       item.classList.add("hidden");
     }

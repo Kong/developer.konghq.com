@@ -1,18 +1,267 @@
 metadata:
   title: Terraform providers for Kong
   content_type: landing_page
-  description: This page is an introduction to the Terraform providers for {{site.base_gateway}} and {{site.konnect_short_name}}.
+  description: This page is an introduction to the Terraform providers for {{site.konnect_short_name}}, {{site.base_gateway}} and {{ site.mesh_product_name }}.
 
 rows:
   - header:
       type: h1
-      text: "Terraform providers for Kong"
+      text: "Kong ❤️ Terraform"
+
+  - columns:
+    - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "What is Terraform?"
+            blocks:
+              - type: text
+                text: |
+                  Terraform is an infrastructure as code tool from HashiCorp. Primarily used for managing
+                  infrastructure such as AWS, GCP or Azure deployments, Terraform can also be used to manage
+                  your Kong configuration.
+        - type: button
+          config:
+            text: Get Started with Terraform and Konnect &raquo;
+            url: "/terraform/how-to/gateway-authentication/"
+    - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "When should I use Terraform?"
+            blocks:
+              - type: text
+                text: |
+                  A common question we hear from you all is:
+
+                  _"Why would I choose Terraform, and when would I choose [deck](/deck/)?"_
+
+                  You should choose Terraform if one or more of the following is true:
+
+                  * You have existing review and approval processes built around Terraform
+                  * Your internal users are already familiar with HCL / Terraform
+
 
   - header:
       type: h2
-      text: What is Terraform?
+      text: "Available Providers"
     columns:
-    - blocks:
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/logos/Konnect-logo.svg
+            title: Konnect
+            description: |
+              This is the official Konnect Terraform provider. You can use it to configure Dedicated Cloud Gateways, Control Planes, Gateway Entities, Portal, Teams, and more
+            featured: true
+            ctas:
+              - text: GitHub
+                url: "https://github.com/Kong/terraform-provider-konnect"
+              - text: Terraform Registry
+                url: "https://registry.terraform.io/providers/Kong/konnect/latest"
+              - text: Examples
+                url: "https://github.com/Kong/terraform-provider-konnect/tree/main/examples/scenarios"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/logos/Konnect-logo.svg
+            title: Konnect (Beta)
+            description: |
+              Konnect regularly ships new features, and they start out as a _beta_ release. In order to provide early access to these features using Terraform, we provide the `konnect-beta` provider.
+
+              The **BETA** provider currently supports:
+
+              * Kong Mesh
+              * Portal v3
+            ctas:
+              - text: GitHub
+                url: "https://github.com/Kong/terraform-provider-konnect-beta"
+              - text: Terraform Registry
+                url: "https://registry.terraform.io/providers/Kong/konnect-beta/latest"
+              - text: Examples
+                url: "https://github.com/Kong/terraform-provider-konnect-beta/tree/main/examples/scenarios"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/gateway.svg
+            title: "{{site.base_gateway}}"
+            description: |
+              Designed for use with {{site.base_gateway}} on-prem, the `kong-gateway` provider allows you to manage Kong Entities using Terraform
+
+              This provider is currently available as a **BETA** release
+            ctas:
+              - text: GitHub
+                url: "https://github.com/Kong/terraform-provider-kong-gateway"
+              - text: Terraform Registry
+                url: "https://registry.terraform.io/providers/Kong/kong-gateway/latest"
+              - text: Examples
+                url: "https://github.com/Kong/terraform-provider-kong-gateway/tree/main/examples/scenarios"
+      - blocks:
+        - type: card
+          config:
+            icon: /assets/icons/mesh.svg
+            title: Kong Mesh
+            description: |
+              The `kong-mesh` provider allows you to manage Mesh policies in an on-prem deployment of Kong Mesh
+
+              This provider is currently available as a **BETA** release
+            ctas:
+              - text: GitHub
+                url: "https://github.com/Kong/terraform-provider-kong-mesh"
+              - text: Terraform Registry
+                url: "https://registry.terraform.io/providers/Kong/kong-mesh/latest"
+              - text: Examples
+                url: "https://docs.konghq.com/mesh/latest/guides/deploy-kong-mesh-using-terraform-and-konnect/"
+
+  - header:
+      type: h2
+      text: "Sample Workflows"
+      sub_text: |
+        The GitHub repositories for each provider contain pre-built scenarios.
+
+        Here are a couple of examples of what's possible:
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Rate Limit a Service"
+            blocks:
+              - type: text
+                text: |
+                 Deploy a Gateway Control Plane with a Gateway Service, Route, and a rate limiting policy of 5 requests per minute on the Route.
         - type: text
           config: |
-            @todo
+            ```hcl
+            # Create a new Control Plane
+            resource "konnect_gateway_control_plane" "tfdemo" {
+              name         = "Terraform Control Plane"
+              description  = "This is a sample description"
+              cluster_type = "CLUSTER_TYPE_CONTROL_PLANE"
+              auth_type    = "pinned_client_certs"
+
+              proxy_urls = [
+                {
+                  host     = "example.com",
+                  port     = 443,
+                  protocol = "https"
+                }
+              ]
+            }
+
+            # Configure a service and a route that we can use to test
+            resource "konnect_gateway_service" "httpbin" {
+              name             = "HTTPBin"
+              protocol         = "https"
+              host             = "httpbin.org"
+              port             = 443
+              path             = "/"
+              control_plane_id = konnect_gateway_control_plane.tfdemo.id
+            }
+
+            resource "konnect_gateway_route" "anything" {
+              methods = ["GET"]
+              name    = "Anything"
+              paths   = ["/anything"]
+
+              strip_path = false
+
+              control_plane_id = konnect_gateway_control_plane.tfdemo.id
+              service = {
+                id = konnect_gateway_service.httpbin.id
+              }
+            }
+
+            # Apply a rate limit of 5 requests per minute
+            resource "konnect_gateway_plugin_rate_limiting" "my_rate_limiting_plugin" {
+              enabled = true
+              config = {
+                minute = 5
+                policy = "local"
+              }
+
+              protocols        = ["http", "https"]
+              control_plane_id = konnect_gateway_control_plane.tfdemo.id
+              route = {
+                id = konnect_gateway_route.anything.id
+              }
+            }
+            ```
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Manage a Konnect team"
+            blocks:
+              - type: text
+                text: |
+                  Configure a new team in your Konnect org with admin access to all Control Planes in the US region.
+        - type: text
+          config: |
+            ```hcl
+            resource "konnect_team" "my_team" {
+              name        = "My Terraform Team"
+              description = "This is a team that is managed by Terraform"
+
+              labels = {
+                example = "here"
+              }
+            }
+
+            resource "konnect_team_role" "my_team_role" {
+              entity_id        = "*"
+              entity_region    = "us"
+              entity_type_name = "Control Planes"
+              role_name        = "Admin"
+              team_id          = konnect_team.my_team.id
+            }
+            ```
+        - type: structured_text
+          config:
+            header:
+              text: "Manage Consumers and Consumer Groups"
+            blocks:
+              - type: text
+                text: |
+                  Create a Consumer and a Consumer Group, then add the Consumer to the group.
+        - type: text
+          config: |
+            ```hcl
+            # Create a consumer and a basic auth credential for that consumer
+            resource "konnect_gateway_consumer" "alice" {
+              username         = "alice"
+              custom_id        = "alice"
+              control_plane_id = konnect_gateway_control_plane.tfdemo.id
+            }
+
+            # Then a consumer group, and add the consumer to a group
+            resource "konnect_gateway_consumer_group" "gold" {
+              name             = "gold"
+              control_plane_id = konnect_gateway_control_plane.tfdemo.id
+            }
+
+            resource "konnect_gateway_consumer_group_member" "ag" {
+              consumer_id       = konnect_gateway_consumer.alice.id
+              consumer_group_id = konnect_gateway_consumer_group.gold.id
+              control_plane_id  = konnect_gateway_control_plane.tfdemo.id
+            }
+            ```
+        - type: structured_text
+          config:
+            header:
+              text: "Create a Basic Auth credential"
+            blocks:
+              - type: text
+                text: |
+                  Add an authentication mechanism for a {{ site.base_gateway }} Consumer
+        - type: text
+          config: |
+            ```hcl
+            resource "konnect_gateway_basic_auth" "my_basicauth" {
+              username = "alice"
+              password = "demo"
+
+              consumer_id      = konnect_gateway_consumer.alice.id
+              control_plane_id = konnect_gateway_control_plane.tfdemo.id
+            }
+            ```

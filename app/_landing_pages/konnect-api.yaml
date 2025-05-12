@@ -54,7 +54,7 @@ rows:
         - type: text
           config: |
             The recommended method of authentication for {{site.konnect_short_name}} is the Personal Access Token (PAT), which can be obtained from the [personal access token page](https://cloud.konghq.com/global/account/tokens) in {{site.konnect_short_name}}. 
-            You can also use the Identity API to generate [system account access tokens](/api/konnect/identity/v3/#/operations/post-system-accounts-id-access-tokens).
+            You can also use the Identity API to generate [system account access tokens](/api/konnect/identity/#/operations/post-system-accounts-id-access-tokens).
 
             The access token must be passed in the `Authorization` header of all requests, for example: 
 
