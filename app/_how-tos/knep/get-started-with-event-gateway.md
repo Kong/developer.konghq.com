@@ -21,15 +21,19 @@ tags:
 description: Use this tutorial to get started with {{site.event_gateway}}.
 
 tldr: 
-  q: What is {{site.event_gateway}}, and how can I get started with it?
+  q: How can I get started with {{site.event_gateway}}?
   a: | 
-    Info on what you're going to learn about in this how-to 
+    Get started with {{site.event_gateway}} by setting up a {{site.konnect_short_name}} Control Plane and a Kafka cluster, then configuring the Control Plane using the `/declarative_config` endpoint of the Control Plane Config API.
 
 tools:
     - konnect-api
   
 prereqs:
   inline:
+    - title: Sign up for the {{site.event_gateway_short}} beta
+      content: |
+        If you're an existing Kong customer or prospect, please fill out the [beta participation form](https://konghq.com/lp/register-kafka-proxy-beta) and we will reach out to you.
+
     - title: Install kafkactl
       content: |
         Install [kafkactl](https://github.com/deviceinsight/kafkactl). You'll need it to interact with Kafka clusters. 
@@ -41,6 +45,11 @@ cleanup:
       icon_url: /assets/icons/gateway.svg
 
 automated_tests: false
+related_resources:
+  - text: "{{site.event_gateway_short}} configuration schema"
+    url: /api/event-gateway/knep/
+  - text: Event Gateway
+    url: /event-gateway/
 ---
 
 ## Create a Control Plane in {{site.konnect_short_name}}
@@ -62,7 +71,7 @@ knep  | 2025-04-30T08:59:58.004076Z  WARN tokio-runtime-worker ThreadId(09) add_
 ```
 {:.no-copy-code}
 
-This is expected, as we have not yet configured the Control Plane. We'll do this in the next step.
+This is expected, as we haven't configured the Control Plane yet. We'll do this in the next step.
 
 ## Configure {{site.event_gateway}} control plane with a passthrough cluster 
 
@@ -132,7 +141,7 @@ Now let's check the Kafka cluster directly:
 kafkactl -C kafkactl.yaml --context direct list topics
 ```
 
-You should see the topics listed there. Now let's check the same command but through the {{site.event_gateway_short}} proxy:
+You should see the topics listed there:
 ```shell
 TOPIC                  PARTITIONS     REPLICATION FACTOR
 __consumer_offsets     50             1
@@ -140,7 +149,7 @@ _schemas               1              1
 ```
 {:.no-copy-code}
 
-And now through the {{site.event_gateway_short}} proxy:
+Now let's check the same command but through {{site.event_gateway_short}}:
 ```shell
 kafkactl -C kafkactl.yaml --context knep list topics
 ```
