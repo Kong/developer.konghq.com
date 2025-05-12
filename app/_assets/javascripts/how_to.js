@@ -9,6 +9,13 @@ class HowTo {
     this.cleanup = document.querySelector(".cleanup");
     this.deploymentToplogyKey = "deployment-topology-switch";
 
+   
+    this.switchType = "toggle";
+    this.topologySwitcherOption = document.querySelector("[data-topology-switcher]")
+    if (this.topologySwitcherOption){
+      this.switchType = this.topologySwitcherOption.dataset.topologySwitcher;
+    }
+
     this.init();
     this.addEventListeners();
   }
@@ -48,7 +55,22 @@ class HowTo {
 
   onChange(event) {
     localStorage.setItem(this.deploymentToplogyKey, event.target.value);
-    this.toggleTopology(event.target.value);
+    if (this.switchType == "page") {
+      this.switchPageTopology(event.target.value);
+    } else {
+      this.toggleTopology(event.target.value, true);
+    }
+  }
+
+  switchPageTopology(topology){
+    const url = new URL(window.location.href);
+    const segments = url.pathname.split('/');
+    if (!segments[segments.length - 1]){
+      segments.pop();
+    }
+    segments[segments.length - 1] = topology;
+    url.pathname = segments.join('/');
+    window.location.href = url.toString();
   }
 
   toggleTopology(topology) {

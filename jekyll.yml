@@ -96,6 +96,7 @@ konnect_short_name: Konnect
 konnect_product_name: Kong Konnect
 mesh_product_name: Kong Mesh
 kic_product_name: Kong Ingress Controller
+kic_product_name_short: KIC
 konnect_saas: Kong Konnect
 operator_product_name: Kong Gateway Operator
 event_gateway: Kong Native Event Proxy

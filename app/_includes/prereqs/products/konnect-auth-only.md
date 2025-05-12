@@ -15,4 +15,8 @@ If you don't have a Konnect account, you can get started quickly with our [onboa
 {% endcapture %}
 
 
+{% if include.raw %}
+{{ details_content }}
+{% else %}
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/gateway.svg' %}
+{% endif %}
