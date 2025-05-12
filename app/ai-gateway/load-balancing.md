@@ -1,8 +1,8 @@
 ---
-title: "Load balancing with AI gateway [WIP]"
+title: "Load balancing with AI gateway"
 layout: reference
 content_type: reference
-description: This guide provides an overview of load balancing and reatry and fallback strategies in AI Proxy Advanced plugin.
+description: This guide provides an overview of load balancing and reatry and fallback strategies in AI Proxy Advanced plugin.retry
 
 works_on:
  - on-prem
@@ -44,7 +44,7 @@ related_resources:
 
 Kong AI Gateway gives you advanced load balancing capabilities to efficiently distribute requests across multiple LLM models. This helps you ensure fault tolerance, optimize resource utilization, and balance traffic across your AI systems.
 
-With the AI Proxy Advanced plugin, you can select from several load balancing algorithms—similar to those used for Kong upstreams but extended for AI model routing. You configure load balancing using the [Upstream entity]([Upstream entity](/gateway/entities/upstream/)), giving you flexibility to fine-tune how requests are routed to various AI providers and LLM models.
+With the AI Proxy Advanced plugin, you can select from several load balancing algorithms—similar to those used for Kong upstreams but extended for AI model routing. You configure load balancing using the [Upstream entity](/gateway/entities/upstream/), giving you flexibility to fine-tune how requests are routed to various AI providers and LLM models.
 
 ### Load balancing strategies
 
@@ -166,7 +166,7 @@ rows:
     description: |
       Sets the maximum time allowed to establish a TCP connection with a target.
       Lower it for faster detection of unreachable servers; raise it if some servers may respond slowly under load.
-  - setting: "[`read_timeout`](plugins/ai-proxy-advanced/reference/#schema--config-balancer-read-timeout)"
+  - setting: "[`read_timeout`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-read-timeout)"
     description: |
       Defines the maximum time to wait for a server response after sending a request.
       Lower it for real-time applications needing quick responses; increase it for long-running operations.
@@ -204,7 +204,7 @@ rows:
     description: |
       Ensure that the same user consistently routes to the same target, enabling sticky sessions and reliable fallback behavior.
   - scenario: "Models have different costs"
-    action: "Set [`tokens_count_strategy`](/reference/#schema--config-balancer-tokens-count-strategy) to `cost`"
+    action: "Set [`tokens_count_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-tokens-count-strategy) to `cost`"
     description: |
       Route requests intelligently by considering cost, balancing model performance with budget optimization.
 {% endtable %}
