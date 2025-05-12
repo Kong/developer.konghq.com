@@ -34,7 +34,7 @@ platform:
           url: /insomnia/design/
           color: purple
         - text: API Testing and Debugging
-          icon: /assets/icons/code-snippet.svg
+          icon: /assets/icons/monochrome/code-snippet.svg
           url: /insomnia/test/
           color: purple
     - title: Run APIs
