@@ -24,8 +24,8 @@ tags:
   - konnect-crd
  
 tldr:
-  q: Question?
-  a: Answer
+  q: How can I create a Control Plane group?
+  a: Create a `KonnectGatewayControlPlane` object, then create a Control Plane group using a `KonnectGatewayControlPlane` object with the `CLUSTER_TYPE_CONTROL_PLANE_GROUP` cluster type.
 
 prereqs:
   operator:
@@ -36,6 +36,8 @@ prereqs:
 ---
 
 ## Create a `KonnectGatewayControlPlane`
+
+Create a Control Plane using the `KonnectGatewayControlPlane` object:
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -51,6 +53,8 @@ spec:
 <!-- vale on -->
 
 ## Create a `KonnectGatewayControlPlane` with members
+
+Create a new `KonnectGatewayControlPlane` object, add the `CLUSTER_TYPE_CONTROL_PLANE_GROUP` cluster type, and add the Control Plane created in the previous step as a member:
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -72,7 +76,7 @@ spec:
 
 <!-- vale off -->
 {% validation kubernetes-resource %}
-kind: KongDataPlaneClientCertificate
+kind: KonnectGatewayControlPlane
 name: control-plane-group
 {% endvalidation %}
 <!-- vale on -->

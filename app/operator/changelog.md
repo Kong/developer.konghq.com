@@ -10,7 +10,7 @@ breadcrumbs:
 
 ---
 
-Changelog for supported {{ site.kgo_product_name }} versions.
+Changelog for supported {{ site.operator_product_name }} versions.
 
 ## 1.5.1
 
@@ -468,7 +468,7 @@ v1.2.3 contains all the changes that v1.2.2 intended to contain.
   `GatewayConfiguration` API.
 - ✨ `Gateway` listeners are dynamically mapped to the `DataPlane` proxy service ports.
 - 🧠 The new feature `AIGateway` has been released in `alpha` stage.
-- ✨ {{site.kgo_product_name}} exposes metrics with latency that can be used for autoscaling of your workloads.
+- ✨ {{site.operator_product_name}} exposes metrics with latency that can be used for autoscaling of your workloads.
 - ✨ Automated handling of certificates for Konnect's PKI mode with cert-manager.
 
 ## Added

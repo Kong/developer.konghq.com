@@ -24,8 +24,8 @@ tags:
   - konnect-crd
  
 tldr:
-  q: Question?
-  a: Answer
+  q: How do I create a Hybrid mode Control Plane in {{ site.konnect_short_name }}?
+  a: Create a `KonnectGatewayControlPlane` object and add {{ site.konnect_short_name }} authentication.
 
 prereqs:
   operator:
@@ -35,6 +35,8 @@ prereqs:
 ---
 
 ## Create a `KonnectGatewayControlPlane`
+
+Create a `KonnectGatewayControlPlane` object and add the {{ site.konnect_short_name }} authentication resource we created in the [prerequisites](#prerequisites).
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -53,7 +55,7 @@ spec:
 
 <!-- vale off -->
 {% validation kubernetes-resource %}
-kind: KongDataPlaneClientCertificate
+kind: KonnectGatewayControlPlane
 name: gateway-control-plane
 {% endvalidation %}
 <!-- vale on -->

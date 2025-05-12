@@ -25,7 +25,7 @@ The `KonnectExtension` resource can be referenced by `ControlPlane`s, `DataPlane
 
 ### Reference by {{site.konnect_short_name}} ID
 
-The {{site.konnect_short_name}} Control Plane can be referenced by its ID, without having any `KonnectGatewayControlPlane` resource deployed in the cluster. The Control Plane ID can be fetched by the {{site.konnect_short_name}} UI, in the Control Plane page. Whit this configuration, the `KonnectExtension` object requires to have the `konnect.configuration.authref` field set, as follows in the snippet below:
+The {{site.konnect_short_name}} Control Plane can be referenced by its ID, without having any `KonnectGatewayControlPlane` resource deployed in the cluster. The Control Plane ID can be fetched by the {{site.konnect_short_name}} UI, in the Control Plane page. With this configuration, the `KonnectExtension` object requires to have the `konnect.configuration.authref` field set, as follows in the snippet below:
 
 ```yaml
 spec:

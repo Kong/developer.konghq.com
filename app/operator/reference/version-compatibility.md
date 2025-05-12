@@ -12,7 +12,7 @@ breadcrumbs:
 
 ---
 
-The following table presents the general compatibility of {{site.kgo_product_name}} with {{ site.kic_product_name }} minor versions.
+The following table presents the general compatibility of {{site.operator_product_name}} with {{ site.kic_product_name }} minor versions.
 
 ## Kubernetes
 
@@ -28,7 +28,7 @@ versions:
   - 3.2
   - 3.3
   - 3.4
-compatible_product: "{{site.kgo_product_name}}"
+compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
   1.0.x: [2.11, 2.12, 3.0, 3.1, 3.2, 3.3, 3.4]
   1.1.x: [2.11, 2.12, 3.0, 3.1, 3.2, 3.3, 3.4]
@@ -41,7 +41,7 @@ compatible_versions:
 
 ### General
 
-The following table presents the general compatibility of {{site.kgo_product_name}} with specific Kubernetes versions.
+The following table presents the general compatibility of {{site.operator_product_name}} with specific Kubernetes versions.
 Users should expect all the combinations marked with true to work and to be supported.
 
 {% version_compatibility_table %}
@@ -55,7 +55,7 @@ versions:
   - 1.30
   - 1.31
   - 1.32
-compatible_product: "{{site.kgo_product_name}}"
+compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
   1.0.x: [1.25, 1.26, 1.27, 1.28, 1.29, 1.30, 1.31, 1.32]
   1.1.x: [1.25, 1.26, 1.27, 1.28, 1.29, 1.30, 1.31, 1.32]
@@ -68,8 +68,8 @@ compatible_versions:
 
 ### Gateway API
 
-The following table presents the compatibility of {{site.kgo_product_name}} with specific [Gateway API][gateway-api] versions.
-As {{site.kgo_product_name}} implements Gateway API features using the upstream
+The following table presents the compatibility of {{site.operator_product_name}} with specific [Gateway API][gateway-api] versions.
+As {{site.operator_product_name}} implements Gateway API features using the upstream
 project, which defines [its own compatibility declarations][gateway-api-supported-versions], the expected compatibility
 of Gateway API features might be limited to those.
 
@@ -81,7 +81,7 @@ versions:
   - 1.1.0
   - 1.2.0
   - 1.3.0
-compatible_product: "{{site.kgo_product_name}}"
+compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
   1.0.x: [0.8.1, 1.0.0, 1.1.0]
   1.1.x: [0.8.1, 1.0.0, 1.1.0]
@@ -97,19 +97,19 @@ compatible_versions:
 
 ### `kubernetes-configuration` CRDs
 
-Starting with 1.5, {{ site.kgo_product_name }} works with [`kubernetes-configuration`][kcfg] CRDs.
+Starting with 1.5, {{ site.operator_product_name }} works with [`kubernetes-configuration`][kcfg] CRDs.
 These CRDs are backwards compatible with CRDs from gateway-operator 1.4 and older unless stated otherwise in the release notes in [kuberentes-configuration CHANGELOG.md][kcfg_changelog].
 
-Older versions of {{site.kgo_product_name}} used `gateway-operator` CRDs, packaged with the operator helm chart.
+Older versions of {{site.operator_product_name}} used `gateway-operator` CRDs, packaged with the operator helm chart.
 
-Below table contains a compatibility matrix for `kubernetes-configuration` CRDs and {{ site.kgo_product_name }} versions.
+Below table contains a compatibility matrix for `kubernetes-configuration` CRDs and {{ site.operator_product_name }} versions.
 
 {% version_compatibility_table %}
 product: "kubernetes-configuration"
 versions:
   - 1.3.x
   - 1.4.x
-compatible_product: "{{site.kgo_product_name}}"
+compatible_product: "{{site.operator_product_name}}"
 compatible_versions:
   1.4.x: []
   1.5.x: [1.3.x]

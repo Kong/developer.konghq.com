@@ -1,6 +1,6 @@
 ---
-title: Create a Serviceless Route
-description: "Create a Kong Route that does not have an attached Service. Useful when used witht the Lambda plugin."
+title: Create a serviceless Route
+description: "Create a Kong Route that does not have an attached Service. Useful when used with the Lambda plugin."
 content_type: how_to
 
 permalink: /operator/konnect/crd/gateway/serviceless-route/
@@ -24,8 +24,8 @@ tags:
   - konnect-crd
  
 tldr:
-  q: Question?
-  a: Answer
+  q: How do I create a Route without an attached Service?
+  a: Create a `KongRoute` object and specify a `controlPlaneRef`.
 
 prereqs:
   operator:
@@ -36,6 +36,8 @@ prereqs:
 ---
 
 ## Create a `KongRoute`
+
+Create a `KongRoute` object and reference the Control Plane with `controlPlaneRef` to make the Route work without a Service.
 
 <!-- vale on -->
 {% konnect_crd %}
