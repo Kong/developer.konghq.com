@@ -216,7 +216,7 @@ rows:
 > **{{site.base_gateway}} version compatibility for fallbacks:**
 > {% new_in 3.10 %}
 > - Full fallback support across targets, even with different API formats.
-> - Mix models from different providers if needed (e.g., OpenAI and Mistral).
+> - Mix models from different providers if needed (for example, OpenAI and Mistral).
 >
 > Pre-v3.10:
 > - Fallbacks only allowed between targets using the same API format.
