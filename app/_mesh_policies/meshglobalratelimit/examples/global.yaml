@@ -1,0 +1,29 @@
+title: 'Rate limit the whole mesh'
+
+description: Simplify your per service configuration, by configuring the ratelimit service backend for the whole mesh.
+
+weight: 900
+
+config:
+  type: MeshGlobalRateLimit
+  name: ratelimit-backend
+  mesh: default
+  spec:
+    targetRef:
+      kind: Mesh
+    from:
+      - targetRef:
+          kind: Mesh
+        default:
+          http:
+            onRateLimit:
+              status: 423
+              headers:
+                set:
+                  - name: "x-kuma-rate-limited"
+                    value: "true"
+          mode: Limit
+          backend:
+            rateLimitService:
+              url: http://kong-mesh-ratelimit-service:10003
+              timeout: 25ms
