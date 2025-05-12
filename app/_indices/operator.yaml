@@ -10,11 +10,6 @@ groups:
           # These are linked from /operator/dataplanes/reference/autoscale-workloads/
           - path: /operator/dataplanes/how-to/autoscale-workloads/prometheus/
           - path: /operator/dataplanes/how-to/autoscale-workloads/datadog/
-  - title: Unsorted
-    sections:
-      - items:
-          - path: /operator/**/*
-        auto_exclude: true
   - title: About Kong Gateway Operator
     sections:
       - items:
@@ -28,8 +23,6 @@ groups:
           - path: /operator/reference/custom-resources/
           - path: /operator/reference/version-compatibility/
   - title: Gateway Deployment
-    description: |
-      This is a short description explaining the content in this block
     sections:
       - title: Get Started
         allow_duplicates: true
