@@ -87,3 +87,8 @@
 /mesh/policies/meshgatewayroute /mesh/policies/meshhttproute/
 /mesh/policies/proxy-template  /mesh/policies/
 /mesh/policies/mutual-tls/   /mesh/policies/
+
+
+## Kubernetes
+
+/gateway/install/kubernetes/  /gateway/install/kubernetes/konnect/
