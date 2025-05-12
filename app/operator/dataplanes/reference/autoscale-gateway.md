@@ -112,7 +112,7 @@ spec:
 ```
 
 {:.note}
-> See the [CRD reference](/operator/dataplanes/reference/custom-resources/) for all scaling options.
+> See the [CRD reference](/operator/reference/custom-resources/) for all scaling options.
 
 A `DataPlane` is created when the manifest above is applied. This creates 2 `Pod`s running {{site.base_gateway}}, as well as a `HorizontalPodAutoscaler` which will manage the replica count of those `Pod`s to ensure that the average CPU utilization is around 50%.
 

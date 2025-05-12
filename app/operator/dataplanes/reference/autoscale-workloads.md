@@ -25,7 +25,7 @@ related_resources:
 
 {{ site.operator_product_name }} can scrape {{ site.base_gateway }} and enrich it with Kubernetes metadata so that it can be used by users to autoscale their workloads.
 
-{{ site.operator_product_name }} provides [`DataPlaneMetricsExtension`](/operator/dataplanes/reference/custom-resources/#dataplanemetricsextension), which scrapes the Kong metrics and enriches them with Kubernetes labels before exposing them on it's own `/metrics` endpoint.
+{{ site.operator_product_name }} provides [`DataPlaneMetricsExtension`](/operator/reference/custom-resources/#dataplanemetricsextension), which scrapes the Kong metrics and enriches them with Kubernetes labels before exposing them on it's own `/metrics` endpoint.
 
 These enriched metrics can be used with the Kubernetes [`HorizontalPodAutoscaler`](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) to autoscale workloads.
 
@@ -33,8 +33,8 @@ These enriched metrics can be used with the Kubernetes [`HorizontalPodAutoscaler
 
 Attaching a `DataPlaneMetricsExtension` resource to a `ControlPlane` will:
 
-- Create a managed Prometheus `KongPlugin` instance with the [configuration](/plugins/prometheus/reference/) defined in [`MetricsConfig`](/operator/dataplanes/reference/custom-resources/#metricsconfig)
-- Append the managed plugin to the selected `Service`s (through `DataPlaneMetricsExtension`'s [`serviceSelector`](/operator/dataplanes/reference/custom-resources/#serviceselector) field)
+- Create a managed Prometheus `KongPlugin` instance with the [configuration](/plugins/prometheus/reference/) defined in [`MetricsConfig`](/operator/reference/custom-resources/#metricsconfig)
+- Append the managed plugin to the selected `Service`s (through `DataPlaneMetricsExtension`'s [`serviceSelector`](/operator/reference/custom-resources/#serviceselector) field)
    `konghq.com/plugins` annotation
 - Scrape {{ site.base_gateway }}'s metrics and enrich them with Kubernetes metadata
 - Expose those metrics on {{ site.operator_product_name }}'s `/metrics` endpoint

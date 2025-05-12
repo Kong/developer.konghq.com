@@ -39,11 +39,11 @@ spec:
         name: konnect-api-auth # Reference to the KonnectAPIAuthConfiguration object
 ```
 
-The `authRef.name` fields refers to an object of type [`KonnectAPIAuthConfiguration`](/gateway-operator/reference/custom-resources/#konnectapiauthconfiguration) that needs to exist in the same namespace as the `KonnectExtension`. Such objects contains all the data (server, token, etc.) to interact with konnect.
+The `authRef.name` fields refers to an object of type [`KonnectAPIAuthConfiguration`](/operator/reference/custom-resources/#konnectapiauthconfiguration) that needs to exist in the same namespace as the `KonnectExtension`. Such objects contains all the data (server, token, etc.) to interact with konnect.
 
 ### Reference By Kubernetes object
 
-Alternatively, the `KonnectExtension` can reference an object in the cluster. This reference allows to attach the `DataPlane`s to the {{site.konnect_short_name}} Control Plane via a local object [(a.k.a. `KonnectGatewayControlPlane`)](/operator/konnect/crd/control-planes/hybrid/). When this type of reference is used, the `KonnectAPIAuthConfiguration` data is inferred by the `KonnectGatewayControlPlane` objects. For this reason, it's not possible to set the `konnect.configuration.authref` field in this scenario.
+Alternatively, the `KonnectExtension` can reference an object in the cluster. This reference allows to attach the `DataPlane`s to the {{site.konnect_short_name}} Control Plane via a local object [(a.k.a. `KonnectGatewayControlPlane`)](/operator/reference/custom-resources/#konnectgatewaycontrolplane). When this type of reference is used, the `KonnectAPIAuthConfiguration` data is inferred by the `KonnectGatewayControlPlane` objects. For this reason, it's not possible to set the `konnect.configuration.authref` field in this scenario.
 
 ```yaml
 spec:

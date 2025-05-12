@@ -34,7 +34,7 @@ tldr:
 {:data-deployment-topology='konnect'}
 ## Create a Service
 
-Creating the `KongService` object in your Kubernetes cluster will provision a {{site.konnect_product_name}} service in your [Gateway Manager](/konnect/gateway-manager).  You can refer to the CR [API](/gateway-operator/{{ page.release }}/reference/custom-resources/#kongservice) to see all the available fields.
+Creating the `KongService` object in your Kubernetes cluster will provision a {{site.konnect_product_name}} service in your [Gateway Manager](/gateway-manager/).  You can refer to the CR [API](/operator/reference/custom-resources/#kongservice) to see all the available fields.
 
 Your `KongService` must be associated with a `KonnectGatewayControlPlane` object that you've created in your cluster.
 
@@ -63,7 +63,7 @@ At this point, you should see the Service in the Gateway Manager UI.
 
 Creating the `KongRoute` object in your Kubernetes cluster will provision a {{site.konnect_product_name}} Route in
 your [Gateway Manager](/gateway-manager/).
-You can refer to the CR [API](/operator/dataplanes/reference/custom-resources/#kongroute) to see all the available fields.
+You can refer to the CR [API](/operator/reference/custom-resources/#kongroute) to see all the available fields.
 
 ### Associate a Route with a Service
 

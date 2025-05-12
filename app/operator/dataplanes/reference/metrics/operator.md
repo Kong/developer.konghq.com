@@ -125,7 +125,7 @@ curl -k --header "Authorization: Bearer $(TOKEN)" https://localhost:8443/metrics
 
 ## {{site.konnect_short_name}} Metrics {% new_in 1.5 %}
 
-If [{{site.konnect_short_name}} entity management](/operator/konnect/) is enabled, {{ site.operator_product_name }} exposes metrics to show statistics of counts and durations of calling {{site.konnect_short_name}}'s CRUD APIs.
+If [{{site.konnect_short_name}} entity management](/index/operator/#konnect--get-started) is enabled, {{ site.operator_product_name }} exposes metrics to show statistics of counts and durations of calling {{site.konnect_short_name}}'s CRUD APIs.
 The metrics are grouped by server URLs, entity types, operation types (create/update/delete/get), and the status (success/fail).
 
 * Counts of {{site.konnect_short_name}} entity operations are in the metric `gateway_operator_konnect_entity_operation_count`. It's a Prometheus counter.

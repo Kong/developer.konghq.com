@@ -27,7 +27,7 @@ This CRD has the following fields:
 * `spec.targets`: Refers to the entity or combination of entities that the plugin is attached to. At least one target has to be specified when `spec.scope` is `OnlyTargets` (default).
 * `spec.controlPlaneRef`: Refers to the {{site.konnect_product_name}} control plane this `KongPluginBinding` is associated with.
 
-You can refer to the CR [API](/gateway-operator/reference/custom-resources/#kongpluginbinding) to see all the available fields.
+You can refer to the CR [API](/operator/reference/custom-resources/#kongpluginbinding) to see all the available fields.
 
 ## Using an unmanaged `KongPluginBinding`
 
