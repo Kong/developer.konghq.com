@@ -36,7 +36,7 @@ tags:
 
 tldr:
     q: How can I use Azure Content Safety plugin with AI Gateway?
-    a: To use the Azure Content Safety pluugin, you must have [An Azure subscription and a Content Safety instance](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text?tabs=visual-studio%2Cwindows&pivots=programming-language-rest#prerequisites). Then, [Create a service, route, and `ai-proxy` plugin](/plugins/ai-proxy/) and configure a required authentication method.
+    a: To use the Azure Content Safety plugin, you must have [An Azure subscription and a Content Safety instance](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text?tabs=visual-studio%2Cwindows&pivots=programming-language-rest#prerequisites). Then, you must configure an [AI proxy plugin](./#configure-this-ai-proxy-plugin) and then create the [AI Azure Content Safety plugin](./#configure-the-ai-azure-content-safety-plugin).
 
 tools:
     - deck
@@ -46,7 +46,7 @@ prereqs:
   - title: OpenAI
     include_content: prereqs/openai
     icon_url: /assets/icons/openai.svg
-  - title:
+  - title: Azure Content Safety key
     content: |
         To complete this task, you must have an Azure subscription and Content Safety Key (static key generated from Azure Portal). Follow the [quickstart from Microsoft](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text?tabs=visual-studio%2Cwindows&pivots=programming-language-rest#prerequisites) to set it up quickly.
   entities:
@@ -88,24 +88,25 @@ variables:
     value: $OPENAI_API_KEY
 {% endentity_examples %}
 
-## Configure the plugin
+## Configure the AI Azure Safety plugin
 
-We configure the plugin with an array of supported categories, as defined by Azure Content Safety:
+{:.info}
+> We configure the plugin with an array of supported categories, as defined by Azure Content Safety:
+> * [Content Services REST API documentation](https://azure-ai-content-safety-api-docs.developer.azure-api.net/api-details#api=content-safety-service-2023-10-01&operation=TextOperations_AnalyzeText)
+> * [Harm categories in Azure AI Content Safety](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories)
 
-* [Content Services REST API documentation](https://azure-ai-content-safety-api-docs.developer.azure-api.net/api-details#api=content-safety-service-2023-10-01&operation=TextOperations_AnalyzeText)
-* [Harm categories in Azure AI Content Safety](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories)
-
-In this plugin configuration:
+**In this guide, we will use the following configuration first:**
 
 * We map each harm category (`Hate`, `SelfHarm`, `Sexual`, and `Violence`) to `categories.name`.
-* We set `rejection_level: 2` for each category, which instructs the plugin to reject content when Azure classifies it at severity level 2 or higher. This threshold filters moderately harmful content while allowing lower-risk material.
-- We configure `output_type: FourSeverityLevels` to tell Azure to use a four-level severity scale (1–4) when evaluating content. In this setup, rejection occurs if the content reaches level 2 or above. If needed, we could instead configure `output_type: EightSeverityLevels` for finer-grained filtering.
+* We set `rejection_level: 2` for each category.<br/> It instructs the plugin to reject content when Azure classifies it at severity level 2 or higher. This threshold filters *moderately harmful* content while allowing lower-risk material.
+- We configure `output_type: FourSeverityLevels`.<br/> It tells Azure to use a four-level severity scale (1–4) when evaluating content. If needed, we could instead configure `output_type: EightSeverityLevels` for finer-grained filtering.
+
     {:.info}
     > For more details about severity grading, see [Azure severity grading](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/content-filter#content-filtering-categories).
 
-- We also set `reveal_failure_reason: true` to make sure that if the plugin blocks content, the caller receives a clear explanation. Revealing failure reasons helps with transparency and debugging. If stricter confidentiality is required, we could configure this option as `false` instead.
+- We also set `reveal_failure_reason: true`<br/> We want to make sure that if the plugin blocks content, the caller receives a clear explanation. Revealing failure reasons helps with transparency and debugging. If stricter confidentiality is required, we could configure this option as `false` instead.
 
-Here’s the full plugin configuration we will use in this guide:
+Here’s the full plugin configuration:
 
 {% entity_examples %}
 entities:
@@ -114,7 +115,6 @@ entities:
       service: SERVICE_NAME|ID
       config:
         content_safety_url: "https://my-acs-instance.cognitiveservices.azure.com/contentsafety/text:analyze"
-        use_azure_managed_identity: false
         content_safety_key: "{vault://env/AZURE_CONTENT_SAFETY_KEY}"
         categories:
           - name: Hate
@@ -129,6 +129,9 @@ entities:
         reveal_failure_reason: true
         output_type: FourSeverityLevels
 {% endentity_examples %}
+
+{:.warning}
+> Make sure that the content_safety_url points at the `/contentsafety/text:analyze` endpoint
 
 ## Test the configuration
 
@@ -163,7 +166,7 @@ The plugin folds the text to inspect by concatenating the contents into the foll
 You are a mathematician.; What is 1 + 1?; The answer is 3.; You lied, I hate you!
 ```
 
-Based on the plugin's configuration, Azure responds with the following analysis:
+Then, based on the plugin's configuration, Azure responds with the following analysis:
 
 ```json
 {
@@ -176,7 +179,7 @@ Based on the plugin's configuration, Azure responds with the following analysis:
 }
 ```
 
-This breaches the plugin's configured (inclusive and greater) threshold of `2` for `Hate` [based on Azure's ruleset](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories?tabs=definitions#hate-and-fairness-severity-levels), and sends a 400 error code to the client:
+This breaches the plugin's configured (inclusive and greater) threshold of `2` for `Hate` [based on Azure's ruleset](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories?tabs=definitions#hate-and-fairness-severity-levels), and sends a `400` error code to the client:
 
 ```json
 {
@@ -186,7 +189,7 @@ This breaches the plugin's configured (inclusive and greater) threshold of `2` f
 }
 ```
 
-### (Optional) Hide the failure from the client
+### (Optional) Hide the failure reason from the API response
 
 If you don't want to reveal to the caller why their request failed, you can set `config.reveal_failure_reason` to `false`, in which
 case the response looks like this:
@@ -201,6 +204,8 @@ case the response looks like this:
 
 ### (Optional) Use blocklists
 
+<!-- FYI: TO BE CHECKED, FOR SOME REASON I KEEP GETTING 500 WHENEVER THE BLOCKLIST IS ENABLED -->
+
 The plugin supports previously-created blocklists in Azure Content Safety.
 
 Using the [Azure Content Safety API](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/how-to/use-blocklist)
@@ -210,4 +215,31 @@ You can then reference their unique names in the plugin configuration.
 In the following example, the plugin takes two existing blocklists from Azure, `company_competitors` and
 `financial_properties`:
 
-TODO
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-azure-content-safety
+      config:
+        content_safety_url: "https://my-acs-instance.cognitiveservices.azure.com/contentsafety/text:analyze"
+        content_safety_key: "{vault://env/AZURE_CONTENT_SAFETY_KEY}"
+        categories:
+          - name: Hate
+            rejection_level: 2
+          - name: SelfHarm
+            rejection_level: 2
+          - name: Sexual
+            rejection_level: 2
+          - name: Violence
+            rejection_level: 2
+        blocklist_names:
+          - company_competitors
+          - financial_properties
+        halt_on_blocklist_hit: true
+        text_source: concatenate_user_content
+        reveal_failure_reason: true
+        output_type: FourSeverityLevels
+{% endentity_examples %}
+
+{{site.base_gateway}} will then command Content Safety to enable and execute these blocklists against the content. The plugin property `config.halt_on_blocklist_hit` is used to tell Content Safety to stop analyzing the content as soon as any blocklist hit matches.
+
+Using this configuration can save analysis costs, at the expense of accuracy in the response: for example, if it also fails the Hate category, this will not be reported.
