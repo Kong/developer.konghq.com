@@ -266,7 +266,7 @@ rows:
     description: "Set to `on` for any Data Plane node connected to {{site.konnect_short_name}}."
   - parameter: "`vitals`"
     field: "n/a"
-    description: "Set to `off` to stop collecting Analytics data, or set to `on` to collect data and send it to the Control Plane for Analytics dashboards and metrics."
+    description: "Legacy vitals analytics reporting mechanism. Set to `off` for all {{site.base_gateway}} versions >= 3.0. Set to `on` for {{site.base_gateway}} 2.8.x to collect vitals data and send it to the control plane for Analytics dashboards and metrics."
 {% endtable %}
 
 
