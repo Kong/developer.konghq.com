@@ -73,7 +73,7 @@ When you create a serverless gateway, {{site.konnect_short_name}} creates a Cont
 
 Provisioning a serverless gateway includes creating the serverless Control Plane and hosted Data Plane.
 	
-1. Create a serverless gateway Control Plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/v2/#/operations/create-control-plane).
+1. Create a serverless gateway Control Plane by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/#/operations/create-control-plane).
 <!-- vale off -->
 {% capture request1 %}
 {% control_plane_request %}
@@ -96,7 +96,7 @@ Provisioning a serverless gateway includes creating the serverless Control Plane
 
 {{ request1 | indent:3 }}
 <!--vale on -->
-2. Create a hosted Data Plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/v2/#/operations/create-configuration):
+2. Create a hosted Data Plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration):
 <!--vale off -->
 {% capture request2 %}
 {% control_plane_request %}
