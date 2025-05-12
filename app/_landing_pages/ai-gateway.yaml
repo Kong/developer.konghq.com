@@ -105,71 +105,34 @@ rows:
                     You can enable the AI Gateway features through a set of modern and specialized plugins, using the same model you use for any other {{site.base_gateway}} plugin.
                     When deployed alongside existing {{site.base_gateway}} plugins, {{site.base_gateway}} users can quickly assemble a sophisticated AI management platform without custom code or deploying new and unfamiliar tools.
   - columns:
-      - blocks:
-        - type: card
-          config:
-            title: Universal API
-            description: Route client requests to various AI providers.
-            icon: /assets/icons/plugins/universal-api.svg
-            cta:
-              url: ./#universal-api
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Data governance
-            description: Use AI plugins to control AI data and usage.
-            icon: /assets/icons/security.svg
-            cta:
-              url: ./#data-governance
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Rate limiting
-            description: Manage traffic to your LLM API.
-            icon: /assets/icons/plugins/ai-rate-limiting-advanced.png
-            cta:
-              url: /plugins/ai-rate-limiting-advanced/
-              align: end
+    - blocks:
+      - type: card
+        config:
+          title: Universal API
+          description: Route client requests to various AI providers.
+          icon: /assets/icons/plugins/universal-api.svg
+          cta:
+            url: ./#universal-api
+            align: end
+    - blocks:
+      - type: card
+        config:
+          title: Rate limiting
+          description: Manage traffic to your LLM API.
+          icon: /assets/icons/plugins/ai-rate-limiting-advanced.png
+          cta:
+            url: /plugins/ai-rate-limiting-advanced/
+            align: end
+    - blocks:
+      - type: card
+        config:
+          title: Semantic caching
+          description: Semantically cache responses from LLMs.
+          icon: /assets/icons/plugins/ai-semantic-cache.png
+          cta:
+            url: /plugins/ai-semantic-cache/
+            align: end
   - columns:
-      - blocks:
-        - type: card
-          config:
-            title: Load balancing
-            description: Learn about the load balancing algorithms available for AI Gateway.
-            icon: /assets/icons/load-balance.svg
-            cta:
-              url: ./#load-balancing
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Prompt engineering
-            description: Create prompt templates and manipulate client prompts.
-            icon: /assets/icons/code.svg
-            cta:
-              url: ./#prompt-engineering
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Guardrails
-            description: Inspect requests and configure content safety and moderation.
-            icon: /assets/icons/lock.svg
-            cta:
-              url: ./#guardrails-and-content-safety
-              align: end
-  - columns:
-      - blocks:
-        - type: card
-          config:
-            title: Semantic caching
-            description: Semantically cache responses from LLMs.
-            icon: /assets/icons/plugins/ai-semantic-cache.png
-            cta:
-              url: /plugins/ai-semantic-cache/
-              align: end
       - blocks:
         - type: card
           config:
@@ -188,7 +151,53 @@ rows:
             cta:
               url: ./#request-transformations
               align: end
+      - blocks:
+        - type: card
+          config:
+            title: Automated RAG injection
+            description: Automatically embed RAG logic into your workflows.
+            icon: /assets/icons/plugins/ai-rag-injector.png
+            cta:
+              url: ./#automated-rag
+              align: end
   - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Data governance
+            description: Use AI plugins to control AI data and usage.
+            icon: /assets/icons/security.svg
+            cta:
+              url: ./#data-governance
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Guardrails
+            description: Inspect requests and configure content safety and moderation.
+            icon: /assets/icons/lock.svg
+            cta:
+              url: ./#guardrails-and-content-safety
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Prompt engineering
+            description: Create prompt templates and manipulate client prompts.
+            icon: /assets/icons/code.svg
+            cta:
+              url: ./#prompt-engineering
+              align: end
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Load balancing
+            description: Learn about the load balancing algorithms available for AI Gateway.
+            icon: /assets/icons/load-balance.svg
+            cta:
+              url: ./#load-balancing
+              align: end
       - blocks:
         - type: card
           config:
@@ -207,6 +216,7 @@ rows:
             cta:
               url: /ai-gateway/monitor-ai-llm-metrics/
               align: end
+  - columns:
       - blocks:
         - type: card
           config:
@@ -216,25 +226,25 @@ rows:
             cta:
               url: /advanced-analytics/
               align: end
-  - columns:
-    - blocks:
-      - type: card
-        config:
-          title: Streaming
-          description: Streaming user requests with AI Gateway
-          icon: /assets/icons/network.svg
-          cta:
-            url: /ai-gateway/streaming/
-            align: end
-    - blocks:
-      - type: card
-        config:
-          title: Secrets management
-          description: Use Konnect Config Store to store and reference your LLM provider API keys
-          icon: /assets/icons/lock.svg
-          cta:
-            url: /how-to/configure-the-konnect-config-store/
-            align: end
+      - blocks:
+        - type: card
+          config:
+            title: Streaming
+            description: Streaming user requests with AI Gateway
+            icon: /assets/icons/network.svg
+            cta:
+              url: /ai-gateway/streaming/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Secrets management
+            description: Use Konnect Config Store to store and reference your LLM provider API keys
+            icon: /assets/icons/lock.svg
+            cta:
+              url: /how-to/configure-the-konnect-config-store/
+              align: end
+
 
   - header:
     type: h2
@@ -273,60 +283,34 @@ rows:
             slug: ai-proxy-advanced
 
   - header:
-      type: h2
-      text: "AI usage governance"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    With the growing adoption of AI technologies, developers and their organizations are exposed to a set of new risks.
-                    In particular, the risk of having sensitive data leaked to AI providers, exposing organizations and their customers to data breaches and other security risks.
-
-                    Kong AI Gateway provides additional plugins to help developers control AI data and usage.
-                    These plugins are used in combination with the AI Proxy plugin, allowing you to build secure and specialized AI experiences for your users.
-
-  - header:
-      type: h3
-      text: "Load balancing"
-    columns:
-      - blocks:
-          - type: structured_text
-            config:
-              blocks:
-                - type: text
-                  text: |
-                    AI Gateway load balancer routes requests across AI models for optimal speed, cost, and reliability.
-
-                    - Choose from algorithms like consistent hashing, lowest-latency, usage-based, round-robin, and semantic matching.
-
-                    - Built-in retries and fallback ensure resilience across providers {% new_in 3.10%}.
-
-                    - Dynamically selects models based on real-time performance and prompt relevance.
-
-                    - Supports mixed environments including OpenAI, Mistral, and Llama models.
-
+    type: h2
   - columns:
       - blocks:
-        - type: card
-          config:
-            title: Load balancing
-            description: Learn about the load balancing algorithms available for AI Gateway.
-            icon: /assets/icons/load-balance.svg
-            cta:
-              url: /gateway/load-balancing/#load-balancing-algorithms-for-ai-gateway
-              align: end
+          - type: structured_text
+            config:
+              header:
+                text: "AI Usage Governance"
+              blocks:
+                - type: text
+                  text: |
+                    As AI technologies see broader adoption, developers and organizations face new risks—most notably, the risk of sensitive data leaking to AI providers, exposing businesses and their customers to potential breaches and security threats.
+
+                    Managing how data flows to and from AI models has become critical not just for security, but also for compliance and reliability. Without the right controls in place, organizations risk losing visibility into how AI is used across their systems.
+
       - blocks:
-        - type: card
-          config:
-            title: Retry and fallback
-            description: Learn about the load balancing algorithms available for AI Gateway.
-            icon: /assets/icons/redo.svg
-            cta:
-              url: /gateway/load-balancing/#load-balancing-algorithms-for-ai-gateway
-              align: end
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    <p/><p/>
+                    Kong AI Gateway helps mitigate these challenges by offering a suite of plugins that extend beyond basic AI traffic management.
+
+                    - [**Data governance**](./#data-governance): Control how sensitive information is handled and shared with AI models.
+                    - [**Prompt engineering**](./#prompt-engineering): Customize and optimize prompts to deliver consistent, high-quality AI outputs.
+                    - [**Guardrails and content safety**](./#guardrails-and-content-safety): Enforce policies to prevent inappropriate, unsafe, or non-compliant responses.
+                    - [**Automated RAG injection**](./#automated-rag): Seamlessly inject relevant, vetted data into AI prompts without manual RAG implementations.
+                    - [**Load balancing**](./#load-balancing): Distribute AI traffic efficiently across multiple model endpoints to ensure performance and reliability.
 
   - header:
       type: h3
@@ -339,12 +323,6 @@ rows:
                 - type: text
                   text: |
                       AI Gateway enforces governance on outgoing AI prompts through allow/deny lists, blocking unauthorized requests with 4xx responses. It also provides built-in PII sanitization, automatically detecting and redacting sensitive data across 20+ categories and 12 languages. Running privately and self-hosted for full control and compliance, AI Gateway ensures consistent protection without burdening developers, which helps simplify AI adoption at scale.
-
-      # - blocks:
-      #   - type: image
-      #     config:
-      #       url: /assets/images/gateway/pii-sanitization.png
-      #       alt_text: Overview of AI gateway
   - columns:
       - blocks:
         - type: plugin
@@ -443,13 +421,46 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    AI Gateway automates the entire retrieval-augmented generation (RAG) process, enriching prompts with relevant, vetted data without requiring custom development. Embeddings are generated automatically, context is fetched from vector databases, and prompt enrichment happens inline at the gateway layer. This reduces LLM hallucinations, improves response quality, and ensures consistency and security across all AI workflows.
+                    LLMs are only as reliable as the data they can access. When faced with incomplete information, they often produce confident yet incorrect responses—known as “hallucinations.” These hallucinations occur when LLMs lack the necessary domain knowledge.To address this, developers use the **Retrieval-augmented Generation (RAG)** approach, which enriches models with relevant data pulled from vector databases.
+
+                    While standard RAG workflows are resource-heavy, as they require teams to generate embeddings and manually curate them in vector databases, Kong’s **AI RAG Injector** plugin automates this entire process. Instead of embedding RAG logic into every application individually, platform teams can inject vetted data into prompts directly at the gateway layer without any manual interventions.
   - columns:
       - blocks:
         - type: plugin
           config:
             slug: ai-rag-injector
 
+  - header:
+      type: h3
+      text: "Load balancing"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    AI Gateway’s load balancer routes requests across AI models to optimize for speed, cost, and reliability. It supports algorithms like consistent hashing, lowest-latency, usage-based, round-robin, and semantic matching, with built-in retries and fallback for resilience {% new_in 3.10%}. The balancer dynamically selects models based on real-time performance and prompt relevance, and works across mixed environments including OpenAI, Mistral, and Llama models.
+
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Load balancing
+            description: Learn about the load balancing algorithms available for AI Gateway.
+            icon: /assets/icons/load-balance.svg
+            cta:
+              url: /gateway/load-balancing/#load-balancing-algorithms-for-ai-gateway
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Retry and fallback
+            description: Learn about the load balancing algorithms available for AI Gateway.
+            icon: /assets/icons/redo.svg
+            cta:
+              url: /gateway/load-balancing/#load-balancing-algorithms-for-ai-gateway
+              align: end
 
   - header:
       type: h2
