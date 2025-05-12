@@ -1,0 +1,1682 @@
+app/_api/gateway/admin-ee/_index.md:
+  - /api/gateway/admin-ee/
+app/_api/dev-portal/_index.md:
+  - /api/gateway/dev-portal/
+app/_api/gateway/status/_index.md:
+  - /api/gateway/status/
+app/_api/konnect/api-products/_index.md:
+  - /api/konnect/api-products/
+app/_api/konnect/api-requests/_index.md:
+  - /api/konnect/analytics-requests/
+app/konnect/analytics/api-requests.md:
+  - /api/konnect/analytics-requests/
+app/_api/konnect/application-auth-strategies/_index.md:
+  - /api/konnect/application-auth-strategies/
+app/_api/konnect/audit-logs/_index.md:
+  - /api/konnect/audit-logs/
+app/_api/konnect/cloud-gateways/_index.md:
+  - /api/konnect/cloud-gateways/
+app/_api/konnect/control-plane-configuration/_index.md:
+  - /api/konnect/control-planes-config/
+app/_api/konnect/control-planes/_index.md:
+  - /api/konnect/control-planes/
+app/_api/konnect-portal/_index.md:
+  - /api/konnect/dev-portal/
+app/_api/konnect/identity-management/_index.md:
+  - /api/konnect/identity/
+app/_api/konnect/mesh-manager/_index.md:
+  - /api/konnect/mesh-control-planes/
+app/_api/konnect/portal-management/_index.md:
+  - /api/konnect/portal-management/
+app/_api/konnect/search/_index.md:
+  - /api/konnect/ksearch/
+app/_src/gateway/key-concepts/consumer-groups.md:
+  - /gateway/entities/consumer-group/
+app/_src/gateway/kong-enterprise/consumer-groups/index.md:
+  - /gateway/entities/consumer-group/
+app/_src/gateway/key-concepts/consumers.md:
+  - /gateway/entities/consumer/
+app/konnect/centralized-consumer-management.md:
+  - /gateway/entities/consumer/
+app/hub/plugins/overview/index.md:
+  - /gateway/entities/plugin/
+app/hub/plugins/compatibility/index.md:
+  - /gateway/entities/plugin/
+app/_src/gateway/kong-enterprise/plugin-ordering/index.md:
+  - /gateway/entities/plugin/
+app/_src/gateway/kong-enterprise/plugin-ordering/get-started.md:
+  - /gateway/entities/plugin/
+app/_src/gateway/key-concepts/routes/index.md:
+  - /gateway/entities/route/
+app/_src/gateway/how-kong-works/routing-traffic.md:
+  - /gateway/entities/route/
+app/_src/kubernetes-ingress-controller/reference/faq/router.md:
+  - /gateway/entities/route/
+app/_src/gateway/key-concepts/services.md:
+  - /gateway/entities/service/
+app/_src/gateway/get-started/load-balancing.md:
+  - /gateway/get-started/
+app/_src/gateway/key-concepts/upstreams.md:
+  - /gateway/entities/upstream/
+app/_src/gateway/how-kong-works/load-balancing.md:
+  - /gateway/traffic-control/load-balancing-reference/
+app/_src/gateway/how-kong-works/health-checks.md:
+  - /gateway/traffic-control/health-checks-circuit-breakers/
+app/_src/gateway/kong-manager/workspaces.md:
+  - /gateway/entities/workspace/
+app/_src/gateway/kong-enterprise/workspaces/index.md:
+  - /gateway/entities/workspace/
+app/_src/gateway/kong-enterprise/event-hooks/index.md:
+  - /gateway/entities/event-hook/
+app/_src/gateway/production/access-control/enable-rbac.md:
+  - /gateway/entities/rbac/
+app/_src/gateway/production/access-control/start-securely.md:
+  - /gateway/entities/rbac/
+app/_src/gateway/production/access-control/register-admin-api.md:
+  - /how-to/enable-rbac-with-admin-api/
+app/_src/gateway/kong-manager/auth/rbac/index.md:
+  - /gateway/entities/rbac/
+app/konnect/dev-portal/access-and-approval/manage-teams.md:
+  - /gateway/entities/rbac/
+app/_src/gateway/kong-manager/auth/ldap/service-directory-mapping.md:
+  - /gateway/entities/group/
+app/_src/gateway/kong-enterprise/secrets-management/advanced-usage.md:
+  - /gateway/entities/vault/
+app/_src/gateway/kong-enterprise/secrets-management/index.md:
+  - /gateway/secrets-management/
+app/_src/gateway/kong-enterprise/secrets-management/backends/env.md:
+  - /gateway/entities/vault/
+app/konnect/gateway-manager/configuration/vaults/index.md:
+  - /gateway/entities/vault/
+app/konnect/gateway-manager/configuration/vaults/how-to.md:
+  - /gateway/entities/vault/
+app/_src/gateway/kong-enterprise/secrets-management/backends/aws-sm.md:
+  - /how-to/configure-aws-secrets-manager-as-a-vault-backend-with-vault-entity/
+app/_src/gateway/kong-enterprise/secrets-management/backends/azure-key-vaults.md:
+  - /how-to/configure-azure-key-vaults-as-a-vault-backend-with-vault-entity/
+app/_src/gateway/kong-enterprise/secrets-management/backends/gcp-sm.md:
+  - /how-to/configure-google-cloud-secret-as-a-vault-backend/
+app/_src/gateway/kong-enterprise/secrets-management/backends/hashicorp-vault.md:
+  - /how-to/configure-hashicorp-vault-as-a-vault-backend/
+app/_src/gateway/licenses/index.md:
+  - /gateway/entities/license/
+app/_src/gateway/licenses/download.md:
+  - /gateway/entities/license/
+app/_src/gateway/licenses/deploy.md:
+  - /gateway/entities/license/
+app/_includes/md/enterprise/deploy-license.md:
+  - /gateway/entities/license/
+app/_src/gateway/install/docker/index.md:
+  - /gateway/entities/license/
+app/_src/gateway/licenses/report-v2.md:
+  - /gateway/entities/license/
+app/_src/gateway/licenses/examples.md:
+  - /gateway/entities/license/
+app/_src/gateway/kong-enterprise/db-encryption.md:
+  - /gateway/keyring/
+app/_src/gateway/reference/key-management.md:
+  - /gateway/entities/key/
+app/_src/gateway/kong-manager/auth/super-admin.md:
+  - /how-to/create-a-super-admin/
+app/_src/gateway/kong-enterprise/partials.md:
+  - /gateway/entities/partial/
+app/_src/gateway/install/index.md:
+  - /gateway/install/
+app/_src/gateway/install/linux/amazon-linux.md:
+  - /gateway/install/
+app/_src/gateway/install/linux/debian.md:
+  - /gateway/install/
+app/_src/gateway/install/linux/rhel.md:
+  - /gateway/install/
+app/_src/gateway/install/linux/ubuntu.md:
+  - /gateway/install/
+app/_hub/kong-inc/rate-limiting-advanced/how-to/_index.md:
+  - /how-to/add-rate-limiting-tiers-with-kong-gateway/
+app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md:
+  - /plugins/rate-limiting-advanced/
+app/_src/gateway/get-started/index.md:
+  - /gateway/get-started/
+app/_src/gateway/get-started/services-and-routes.md:
+  - /gateway/get-started/
+app/_src/gateway/get-started/rate-limiting.md:
+  - /gateway/get-started/
+app/_src/gateway/get-started/proxy-caching.md:
+  - /gateway/get-started/
+app/_src/gateway/get-started/key-authentication.md:
+  - /gateway/get-started/
+app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_anthropic.md:
+  - /how-to/set-up-ai-proxy-advanced-with-anthropic/
+app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_anthropic.md:
+  - /how-to/set-up-ai-proxy-with-anthropic/
+app/_src/gateway/kong-enterprise/secrets-management/secrets-rotation.md:
+  - /gateway/secrets-management/
+app/_src/gateway/kong-manager/auth/rbac.md:
+  - /how-to/enable-rbac-with-admin-api/
+app/_src/gateway/kong-enterprise/secrets-management/how-to/aws-secrets-manager.md:
+  - /how-to/store-the-gateway-database-credentials-with-aws-secrets-manager/
+app/konnect/gateway-manager/configuration/config-store.md:
+  - /how-to/configure-the-konnect-config-store/
+app/_src/gateway/kong-enterprise/signed-images.md:
+  - /how-to/verify-signatures-for-signed-images/
+app/_hub/kong-inc/service-protection/how-to/_index.md:
+  - /how-to/throttle-apis-with-services-and-consumers/
+app/_hub/kong-inc/acme/how-to/_index.md:
+  - /how-to/test-certificate-generation-locally-with-ngrok-and-acme/
+app/_hub/kong-inc/acme/how-to/_local-testing-development.md:
+  - /how-to/test-certificate-generation-locally-with-ngrok-and-acme/
+app/_src/gateway/kong-plugins/authentication/allowing-multiple-authentication-methods.md:
+  - /how-to/allow-multiple-authentication/
+app/_hub/kong-inc/json-threat-protection/overview/_index.md:
+  - /plugins/json-threat-protection/
+app/_hub/kong-inc/acl/how-to/_consumer-groups.md.md:
+  - /how-to/use-acl-with-consumer-groups/
+app/_src/gateway/get-started/ai-gateway.md:
+  - /ai-gateway/get-started/
+app/_hub/kong-inc/opentelemetry/how-to/_dynatrace.md:
+  - /how-to/set-up-dynatrace-with-otel/
+app/_src/gateway/ai-gateway/llm-library-integration-guides/langchain.md:
+  - /how-to/use-langchain-with-ai-proxy/
+app/_src/gateway/install/docker/build-custom-images.md:
+  - /how-to/build-custom-docker-image/
+app/_hub/kong-inc/key-auth-enc/overview/_index.md:
+  - /plugins/key-auth-enc/
+app/_hub/kong-inc/grpc-gateway/how-to/_index.md:
+  - /how-to/use-grpc-gateway/
+app/_hub/kong-inc/grpc-web/how-to/_index.md:
+  - /how-to/use-grpc-web/
+app/_hub/kong-inc/pre-function/how-to/_index.md:
+  - /how-to/filter-requests-based-on-header-names/
+app/_hub/kong-inc/pre-function/how-to/_ratelimit.md:
+  - /how-to/rate-limit-based-on-peak-time/
+app/_hub/kong-inc/jwt/overview/_index.md:
+  - /plugins/jwt/
+app/_hub/kong-inc/post-function/how-to/_index.md:
+  - /how-to/adjust-header-names-in-request/
+app/_hub/kong-inc/openid-connect/how-to/authentication/_password-grant.md:
+  - /how-to/configure-oidc-with-password-grant/
+app/_hub/kong-inc/openid-connect/how-to/authentication/_refresh-token.md:
+  - /how-to/configure-oidc-with-refresh-token/
+app/_src/gateway/kong-enterprise/audit-log.md:
+  - /gateway/audit-logs/
+app/_hub/kong-inc/session/overview/_index.md:
+  - /plugins/session/
+app/_hub/kong-inc/openid-connect/how-to/authentication/_session.md:
+  - /how-to/configure-oidc-with-session-auth/
+app/_hub/kong-inc/openid-connect/how-to/authentication/_client-credentials.md:
+  - /how-to/configure-oidc-with-client-credentials/
+app/_src/gateway/plugin-development/get-started/config.md:
+  - /custom-plugins/get-started/add-plugin-configuration/
+app/_src/gateway/plugin-development/get-started/testing.md:
+  - /custom-plugins/get-started/add-plugin-testing/
+app/_src/gateway/plugin-development/get-started/http.md:
+  - /custom-plugins/get-started/consume-external-services/
+app/_src/gateway/plugin-development/get-started/deploy.md:
+  - /custom-plugins/get-started/deploy-plugins/
+app/_src/gateway/plugin-development/get-started/setup.md:
+  - /custom-plugins/get-started/set-up-plugin-project/
+app/_hub/kong-inc/openid-connect/how-to/authorization/_acl.md:
+  - /how-to/configure-oidc-with-acl-auth/
+app/_hub/kong-inc/openid-connect/how-to/authorization/_consumer.md:
+  - /how-to/configure-oidc-with-consumers/
+app/_hub/kong-inc/openid-connect/how-to/authentication/_user-info.md:
+  - /how-to/configure-oidc-with-user-info-auth/
+app/_hub/kong-inc/openid-connect/how-to/authentication/_introspection.md:
+  - /how-to/configure-oidc-with-introspection/
+app/_hub/kong-inc/correlation-id/overview/_index.md:
+  - /plugins/correlation-id/
+app/_hub/kong-inc/openid-connect/how-to/authentication/_kong-oauth-token.md:
+  - /how-to/configure-oidc-with-kong-oauth2/
+app/_hub/kong-inc/openid-connect/how-to/authentication/_authorization-code.md:
+  - /how-to/configure-oidc-with-auth-code-flow/
+app/_hub/kong-inc/openid-connect/how-to/authentication/_jwt-access-token.md:
+  - /how-to/configure-oidc-with-jwt-auth/
+app/_hub/kong-inc/openid-connect/how-to/authorization/_claims.md:
+  - /how-to/configure-oidc-with-claims-based-auth/
+app/_src/gateway/kong-enterprise/datakit/get-started.md:
+  - /how-to/get-started-with-datakit/
+app/_src/kubernetes-ingress-controller/index.md:
+  - /kubernetes-ingress-controller/
+app/_src/kubernetes-ingress-controller/guides/services/http.md:
+  - /kubernetes-ingress-controller/routing/http/
+app/_src/kubernetes-ingress-controller/guides/services/tls.md:
+  - /kubernetes-ingress-controller/routing/https-tls-termination/
+app/_src/kubernetes-ingress-controller/guides/services/grpc.md:
+  - /kubernetes-ingress-controller/routing/grpc/
+app/_src/kubernetes-ingress-controller/guides/services/tcp.md:
+  - /kubernetes-ingress-controller/routing/tcp-by-port/
+app/_src/kubernetes-ingress-controller/guides/services/udp.md:
+  - /kubernetes-ingress-controller/routing/udp-by-port/
+app/_src/kubernetes-ingress-controller/guides/services/multiple-backends.md:
+  - /kubernetes-ingress-controller/routing/weights/
+app/_src/kubernetes-ingress-controller/guides/services/cross-namespace.md:
+  - /kubernetes-ingress-controller/routing/cross-namespace/
+app/_src/kubernetes-ingress-controller/guides/requests/rewrite-annotation.md:
+  - /kubernetes-ingress-controller/routing/rewriting-paths/
+app/_src/kubernetes-ingress-controller/guides/services/custom-entity.md:
+  - /kubernetes-ingress-controller/degraphql/
+app/_src/kubernetes-ingress-controller/guides/services/external.md:
+  - /kubernetes-ingress-controller/routing/external-service/
+app/_src/kubernetes-ingress-controller/guides/services/https-redirect.md:
+  - /kubernetes-ingress-controller/routing/http-to-https/
+app/_src/kubernetes-ingress-controller/guides/requests/customizing-load-balancing.md:
+  - /kubernetes-ingress-controller/load-balancing/
+app/_src/kubernetes-ingress-controller/support-policy.md:
+  - /kubernetes-ingress-controller/support/
+app/_src/kubernetes-ingress-controller/concepts/architecture.md:
+  - /kubernetes-ingress-controller/architecture/
+app/_src/kubernetes-ingress-controller/concepts/gateway-api.md:
+  - /kubernetes-ingress-controller/gateway-api/
+app/_src/kubernetes-ingress-controller/concepts/ingress.md:
+  - /kubernetes-ingress-controller/ingress/
+app/_src/kubernetes-ingress-controller/reference/version-compatibility.md:
+  - /kubernetes-ingress-controller/version-compatibility/
+app/_src/kubernetes-ingress-controller/concepts/custom-resources.md:
+  - /kubernetes-ingress-controller/custom-resources/
+app/_src/kubernetes-ingress-controller/concepts/annotations.md:
+  - /kubernetes-ingress-controller/reference/annotations/
+app/_src/kubernetes-ingress-controller/reference/annotations.md:
+  - /kubernetes-ingress-controller/reference/annotations/
+app/_src/kubernetes-ingress-controller/reference/custom-resources-3.4.x.md:
+  - /kubernetes-ingress-controller/reference/custom-resources/
+app/_src/kubernetes-ingress-controller/guides/requests/rewrite-host-and-paths.md:
+  - /index/kubernetes-ingress-controller/#reference
+app/_src/kubernetes-ingress-controller/guides/security/plugin-secrets.md:
+  - /kubernetes-ingress-controller/reference/secrets-in-plugins/
+app/_src/kubernetes-ingress-controller/concepts/admission-webhook.md:
+  - /kubernetes-ingress-controller/admission-webhook/
+app/_src/kubernetes-ingress-controller/get-started/index.md:
+  - /kubernetes-ingress-controller/install/
+app/_src/kubernetes-ingress-controller/get-started/services-and-routes.md:
+  - /kubernetes-ingress-controller/get-started/services-and-routes/
+app/_src/kubernetes-ingress-controller/get-started/rate-limiting.md:
+  - /kubernetes-ingress-controller/get-started/rate-limiting/
+app/_src/kubernetes-ingress-controller/get-started/proxy-caching.md:
+  - /kubernetes-ingress-controller/get-started/proxy-caching/
+app/_src/kubernetes-ingress-controller/get-started/key-authentication.md:
+  - /kubernetes-ingress-controller/get-started/key-authentication/
+app/_src/kubernetes-ingress-controller/production/deployment-topologies/sidecar.md:
+  - /kubernetes-ingress-controller/deployment-topologies/sidecar/
+app/_src/kubernetes-ingress-controller/production/deployment-topologies/db-backed.md:
+  - /kubernetes-ingress-controller/deployment-topologies/db-backed/
+app/_src/kubernetes-ingress-controller/reference/failure-modes.md:
+  - /kubernetes-ingress-controller/troubleshooting/failure-modes/
+app/_src/kubernetes-ingress-controller/reference/faq/nginx.conf.md:
+  - /kubernetes-ingress-controller/faq/custom-nginx-conf/
+app/_src/kubernetes-ingress-controller/reference/combined-services-from-different-httproutes.md:
+  - /kubernetes-ingress-controller/faq/combining-httproutes/
+app/_src/kubernetes-ingress-controller/reference/ingress-to-gateway-migration.md:
+  - /kubernetes-ingress-controller/faq/migrate-ingress-to-gateway/
+app/_src/kubernetes-ingress-controller/reference/feature-gates.md:
+  - /kubernetes-ingress-controller/reference/feature-gates/
+app/_src/kubernetes-ingress-controller/reference/required-permissions.md:
+  - /kubernetes-ingress-controller/reference/required-permissions/
+app/_src/kubernetes-ingress-controller/reference/cli-arguments-3.4.x.md:
+  - /kubernetes-ingress-controller/reference/configuration-options/
+app/_src/kubernetes-ingress-controller/reference/ingress-class-requirement.md:
+  - /kubernetes-ingress-controller/class-annotations/
+app/_src/kubernetes-ingress-controller/plugins/custom.md:
+  - /kubernetes-ingress-controller/custom-plugins/
+app/_src/kubernetes-ingress-controller/plugins/authentication.md:
+  - /kubernetes-ingress-controller/multiple-auth-methods/
+app/_src/kubernetes-ingress-controller/plugins/acl.md:
+  - /kubernetes-ingress-controller/acl/
+app/_src/kubernetes-ingress-controller/plugins/rate-limiting.md:
+  - /kubernetes-ingress-controller/rate-limiting/
+app/_src/kubernetes-ingress-controller/plugins/mtls.md:
+  - /kubernetes-ingress-controller/mtls/
+app/_src/kubernetes-ingress-controller/plugins/oidc.md:
+  - /kubernetes-ingress-controller/oidc/
+app/_src/kubernetes-ingress-controller/production/observability/prometheus-grafana.md:
+  - /kubernetes-ingress-controller/observability/prometheus-grafana/
+app/_src/kubernetes-ingress-controller/production/observability/events.md:
+  - /kubernetes-ingress-controller/observability/events/
+app/_src/kubernetes-ingress-controller/production/observability/prometheus.md:
+  - /kubernetes-ingress-controller/observability/prometheus/
+app/_src/kubernetes-ingress-controller/license.md:
+  - /kubernetes-ingress-controller/license/
+app/_src/kubernetes-ingress-controller/upgrade/kic.md:
+  - /kubernetes-ingress-controller/faq/upgrading-ingress-controller/
+app/_src/kubernetes-ingress-controller/upgrade/gateway.md:
+  - /kubernetes-ingress-controller/faq/upgrading-gateway/
+app/_src/kubernetes-ingress-controller/guides/customize/image.md:
+  - /kubernetes-ingress-controller/customize-image/
+app/_src/kubernetes-ingress-controller/guides/custom-class/internal-external.md:
+  - /kubernetes-ingress-controller/split-traffic/
+app/_src/kubernetes-ingress-controller/guides/security/workspaces.md:
+  - /kubernetes-ingress-controller/workspaces/
+app/_src/kubernetes-ingress-controller/guides/security/client-ip.md:
+  - /kubernetes-ingress-controller/preserve-client-ip/
+app/_src/kubernetes-ingress-controller/guides/migrate/kongingress.md:
+  - /kubernetes-ingress-controller/migrate/kongingress/
+app/_src/kubernetes-ingress-controller/guides/migrate/ingress-to-gateway.md:
+  - /kubernetes-ingress-controller/migrate/ingress-to-gateway/
+app/_src/kubernetes-ingress-controller/guides/migrate/credential-kongcredtype-label.md:
+  - /kubernetes-ingress-controller/migrate/credential-kongcredtype-label/
+app/_src/kubernetes-ingress-controller/guides/security/verify-upstream-tls.md:
+  - /kubernetes-ingress-controller/verify-upstream-tls/
+app/_src/kubernetes-ingress-controller/guides/security/kong-vault.md:
+  - /gateway/secrets-management/
+app/_src/kubernetes-ingress-controller/guides/high-availability/health-checks.md:
+  - /kubernetes-ingress-controller/service-health-checks/
+app/_src/kubernetes-ingress-controller/guides/high-availability/last-known-good-config.md:
+  - /kubernetes-ingress-controller/last-known-good-config/
+app/_src/kubernetes-ingress-controller/guides/high-availability/fallback-config.md:
+  - /kubernetes-ingress-controller/fallback-configuration/
+app/_hub/kong-inc/session/_changelog.md:
+  - /plugins/session/changelog/
+app/_hub/kong-inc/zipkin/_changelog.md:
+  - /plugins/zipkin/changelog/
+app/_hub/kong-inc/zipkin/overview/_index.md:
+  - /plugins/zipkin/
+app/_hub/kong-inc/upstream-oauth/_changelog.md:
+  - /plugins/upstream-oauth/changelog/
+app/_hub/kong-inc/upstream-oauth/overview/_index.md:
+  - /plugins/upstream-oauth/
+app/_hub/kong-inc/ai-rate-limiting-advanced/overview/_index.md:
+  - /plugins/ai-rate-limiting-advanced/
+app/_hub/kong-inc/ai-rate-limiting-advanced/how-to/_index.md:
+  - /plugins/ai-rate-limiting-advanced/examples/llm-provider-rate-limiting/
+app/_hub/kong-inc/basic-auth/overview/_index.md:
+  - /plugins/basic-auth/
+app/_hub/kong-inc/basic-auth/_changelog.md:
+  - /plugins/basic-auth/changelog/
+app/_src/gateway/kong-plugins/authentication/reference.md:
+  - /gateway/authentication/
+app/_hub/kong-inc/key-auth/overview/_index.md:
+  - /plugins/key-auth/
+app/_hub/kong-inc/key-auth/how-to/_index.md:
+  - /plugins/key-auth/examples/identity-realms/
+app/_hub/kong-inc/key-auth/_changelog.md:
+  - /plugins/key-auth/changelog/
+app/_hub/kong-inc/rate-limiting/overview/_index.md:
+  - /plugins/rate-limiting/
+app/_hub/kong-inc/rate-limiting/_changelog.md:
+  - /plugins/rate-limiting/changelog/
+app/_hub/kong-inc/rate-limiting-advanced/_changelog.md:
+  - /plugins/rate-limiting-advanced/changelog/
+app/_hub/kong-inc/ai-proxy-advanced/overview/_index.md:
+  - /plugins/ai-proxy-advanced/
+app/_hub/kong-inc/ai-proxy/overview/_index.md:
+  - /plugins/ai-proxy/
+app/_hub/kong-inc/cors/overview/_index.md:
+  - /plugins/cors/
+app/_hub/kong-inc/mocking/overview/_index.md:
+  - /plugins/mocking/
+app/_hub/kong-inc/injection-protection/overview/_index.md:
+  - /plugins/injection-protection/
+app/_hub/kong-inc/openid-connect/overview/_index.md:
+  - /plugins/openid-connect/
+app/_hub/kong-inc/openid-connect/overview/_primary-config-params.md:
+  - /plugins/openid-connect/
+app/_hub/kong-inc/openid-connect/overview/_support.md:
+  - /plugins/openid-connect/
+app/_hub/kong-inc/openid-connect/how-to/_debugging.md:
+  - /plugins/openid-connect/
+app/_hub/kong-inc/openid-connect/how-to/_fapi.md:
+  - /plugins/openid-connect/
+app/_hub/kong-inc/openid-connect/_changelog.md:
+  - /plugins/openid-connect/changelog/
+app/_hub/kong-inc/openid-connect/how-to/client-authentication/_mtls.md:
+  - /plugins/openid-connect/examples/mtls-client-auth/
+app/_hub/kong-inc/openid-connect/how-to/_cert-bound-access-tokens.md:
+  - /plugins/openid-connect/examples/cert-bound-access-tokens/
+app/_hub/kong-inc/openid-connect/how-to/_demonstrating-proof-of-possession.md:
+  - /plugins/openid-connect/examples/dpop/
+app/_hub/kong-inc/openid-connect/how-to/third-party/_okta.md:
+  - /plugins/openid-connect/examples/okta/
+app/_hub/kong-inc/openid-connect/how-to/third-party/_curity.md:
+  - /plugins/openid-connect/examples/curity/
+app/_hub/kong-inc/openid-connect/how-to/third-party/_cognito.md:
+  - /plugins/openid-connect/examples/amazon-cognito/
+app/_hub/kong-inc/openid-connect/how-to/third-party/_google.md:
+  - /plugins/openid-connect/examples/google/
+app/_hub/kong-inc/openid-connect/how-to/third-party/_azure-ad.md:
+  - /plugins/openid-connect/examples/azure-ad/
+app/_hub/kong-inc/openid-connect/how-to/third-party/_auth0.md:
+  - /plugins/openid-connect/examples/auth0/
+app/_hub/kong-inc/openid-connect/how-to/_headers.md:
+  - /plugins/openid-connect/examples/headers/
+app/_hub/kong-inc/openid-connect/how-to/_logout.md:
+  - /plugins/openid-connect/examples/logout/
+app/_hub/kong-inc/bot-detection/overview/_index.md:
+  - /plugins/bot-detection/
+app/_hub/kong-inc/acme/overview/_index.md:
+  - /plugins/acme/
+app/_hub/kong-inc/acme/_changelog.md:
+  - /plugins/acme/changelog/
+app/_hub/kong-inc/acme/how-to/_redis.md:
+  - /plugins/acme/examples/redis/
+app/_hub/kong-inc/service-protection/overview/_index.md:
+  - /plugins/service-protection/
+app/_hub/kong-inc/json-threat-protection/_changelog.md:
+  - /plugins/json-threat-protection/changelog/
+app/_hub/kong-inc/opa/overview/_index.md:
+  - /plugins/opa/
+app/_hub/kong-inc/tls-metadata-headers/_changelog.md:
+  - /plugins/tls-metadata-headers/changelog/
+app/_hub/kong-inc/tls-metadata-headers/overview/_index.md:
+  - /plugins/tls-metadata-headers/
+app/_hub/kong-inc/ip-restriction/overview/_index.md:
+  - /plugins/ip-restriction/
+app/_hub/kong-inc/ip-restriction/_changelog.md:
+  - /plugins/ip-restriction/changelog/
+app/_hub/kong-inc/standard-webhooks/overview/_index.md:
+  - /plugins/standard-webhooks/
+app/_hub/kong-inc/standard-webhooks/_changelog.md:
+  - /plugins/standard-webhooks/changelog/
+app/_hub/kong-inc/upstream-timeout/overview/_index.md:
+  - /plugins/upstream-timeout/
+app/_hub/kong-inc/upstream-timeout/_changelog.md:
+  - /plugins/upstream-timeout/changelog/
+app/_hub/kong-inc/tls-handshake-modifier/overview/_index.md:
+  - /plugins/tls-handshake-modifier/
+app/_hub/kong-inc/acl/how-to/_index.md:
+  - /plugins/acl/
+app/_hub/kong-inc/acl/overview/_index.md:
+  - /plugins/acl/
+app/_hub/kong-inc/acl/_changelog.md:
+  - /plugins/acl/changelog/
+app/_hub/kong-inc/forward-proxy/overview/_index.md:
+  - /plugins/forward-proxy/
+app/_hub/kong-inc/forward-proxy/_changelog.md:
+  - /plugins/forward-proxy/changelog/
+app/_hub/kong-inc/redirect/overview/_index.md:
+  - /plugins/redirect/
+app/_hub/kong-inc/redirect/_changelog.md:
+  - /plugins/redirect/changelog/
+app/_hub/kong-inc/request-termination/overview/_index.md:
+  - /plugins/request-termination/
+app/_hub/kong-inc/request-termination/_changelog.md:
+  - /plugins/request-termination/changelog/
+app/_hub/kong-inc/request-size-limiting/overview/_index.md:
+  - /plugins/request-size-limiting/
+app/_hub/kong-inc/request-size-limiting/_changelog.md:
+  - /plugins/request-size-limiting/changelog/
+app/_hub/kong-inc/oas-validation/overview/_index.md:
+  - /plugins/oas-validation/
+app/_hub/kong-inc/oas-validation/_changelog.md:
+  - /plugins/oas-validation/changelog/
+app/_hub/kong-inc/ai-prompt-decorator/_changelog.md:
+  - /plugins/ai-prompt-decorator/changelog/
+app/_hub/kong-inc/ai-prompt-decorator/overview/_index.md:
+  - /plugins/ai-prompt-decorator/
+app/_hub/kong-inc/ai-semantic-cache/_changelog.md:
+  - /plugins/ai-semantic-cache/changelog/
+app/_hub/kong-inc/ai-semantic-cache/overview/_index.md:
+  - /plugins/ai-semantic-cache/
+app/_hub/kong-inc/ai-semantic-cache/how-to/llm-provider-integration-guides/_mistral.md:
+  - /plugins/ai-semantic-cache/examples/mistral/
+app/_hub/kong-inc/ai-semantic-cache/how-to/llm-provider-integration-guides/_openai.md:
+  - /plugins/ai-semantic-cache/examples/openai/
+app/_hub/kong-inc/xml-threat-protection/overview/_index.md:
+  - /plugins/xml-threat-protection/
+app/_hub/kong-inc/xml-threat-protection/_changelog.md:
+  - /plugins/xml-threat-protection/changelog/
+app/_hub/kong-inc/ai-prompt-guard/overview/_index.md:
+  - /plugins/ai-prompt-guard/
+app/_hub/kong-inc/ai-prompt-guard/_changelog.md:
+  - /plugins/ai-prompt-guard/changelog/
+app/_hub/kong-inc/ai-prompt-guard/how-to/_index.md:
+  - /plugins/ai-prompt-guard/examples/
+app/_hub/kong-inc/canary/overview/_index.md:
+  - /plugins/canary/
+app/_hub/kong-inc/canary/_changelog.md:
+  - /plugins/canary/changelog/
+app/_hub/kong-inc/graphql-proxy-cache-advanced/overview/_index.md:
+  - /plugins/graphql-proxy-cache-advanced/
+app/_hub/kong-inc/graphql-proxy-cache-advanced/_changelog.md:
+  - /plugins/graphql-proxy-cache-advanced/changelog/
+app/_hub/kong-inc/graphql-proxy-cache-advanced/how-to/_index.md:
+  - /plugins/graphql-proxy-cache-advanced/examples/graphql-proxy-cache-in-memory/
+app/_hub/kong-inc/ai-prompt-template/overview/_index.md:
+  - /plugins/ai-prompt-template/
+app/_hub/kong-inc/ai-prompt-template/_changelog.md:
+  - /plugins/ai-prompt-template/changelog/
+app/_hub/kong-inc/ai-prompt-template/how-to/_index.md:
+  - /plugins/ai-prompt-template/examples/
+app/_hub/kong-inc/graphql-rate-limiting-advanced/overview/_index.md:
+  - /plugins/graphql-rate-limiting-advanced/
+app/_hub/kong-inc/graphql-rate-limiting-advanced/how-to/_index.md:
+  - /plugins/graphql-rate-limiting-advanced/
+app/_hub/kong-inc/graphql-rate-limiting-advanced/_api.md:
+  - /plugins/graphql-rate-limiting-advanced/api/
+app/_hub/kong-inc/graphql-rate-limiting-advanced/how-to/_costs.md:
+  - /plugins/graphql-rate-limiting-advanced/
+app/_hub/kong-inc/graphql-rate-limiting-advanced/_changelog.md:
+  - /plugins/graphql-rate-limiting-advanced/changelog/
+app/_hub/kong-inc/jq/overview/_index.md:
+  - /plugins/jq/
+app/_hub/kong-inc/jq/_changelog.md:
+  - /plugins/jq/changelog/
+app/_hub/kong-inc/ai-semantic-prompt-guard/overview/_index.md:
+  - /plugins/ai-semantic-prompt-guard/
+app/_hub/kong-inc/ai-semantic-prompt-guard/_changelog.md:
+  - /plugins/ai-semantic-prompt-guard/changelog/
+app/_hub/kong-inc/ai-semantic-prompt-guard/how-to/_index.md:
+  - /plugins/ai-semantic-prompt-guard/examples/
+app/_hub/kong-inc/ai-response-transformer/overview/_index.md:
+  - /plugins/ai-response-transformer/
+app/_hub/kong-inc/ai-response-transformer/_changelog.md:
+  - /plugins/ai-response-transformer/changelog/
+app/_hub/kong-inc/ai-response-transformer/how-to/_index.md:
+  - /how-to/transform-a-response-with-ai/
+app/_hub/kong-inc/ai-request-transformer/overview/_index.md:
+  - /plugins/ai-request-transformer/
+app/_hub/kong-inc/ai-request-transformer/_changelog.md:
+  - /plugins/ai-request-transformer/changelog/
+app/_hub/kong-inc/ai-request-transformer/how-to/_index.md:
+  - /how-to/transform-a-client-request-with-ai/
+app/_hub/kong-inc/response-ratelimiting/overview/_index.md:
+  - /plugins/response-ratelimiting/
+app/_hub/kong-inc/response-ratelimiting/_changelog.md:
+  - /plugins/response-ratelimiting/changelog/
+app/_hub/kong-inc/confluent/_changelog.md:
+  - /plugins/confluent/changelog/
+app/_hub/kong-inc/confluent/overview/_index.md:
+  - /plugins/confluent/
+app/_hub/kong-inc/websocket-size-limit/overview/_index.md:
+  - /plugins/websocket-size-limit/
+app/_hub/kong-inc/websocket-validator/overview/_index.md:
+  - /plugins/websocket-validator/
+app/_hub/kong-inc/app-dynamics/_changelog.md:
+  - /plugins/app-dynamics/changelog/
+app/_hub/kong-inc/app-dynamics/overview/_index.md:
+  - /plugins/app-dynamics/
+app/_hub/kong-inc/ai-azure-content-safety/overview/_index.md:
+  - /plugins/ai-azure-content-safety/
+app/_hub/kong-inc/ai-azure-content-safety/_changelog.md:
+  - /plugins/ai-azure-content-safety/changelog/
+app/_hub/traceableai/traceableai/overview/_index.md:
+  - /plugins/traceableai/
+app/_hub/kong-inc/confluent-consume/_changelog.md:
+  - /plugins/confluent-consume/changelog/
+app/_hub/kong-inc/azure-functions/overview/_index.md:
+  - /plugins/azure-functions/
+app/_hub/kong-inc/azure-functions/_changelog.md:
+  - /plugins/azure-functions/changelog/
+app/_hub/kong-inc/aws-lambda/overview/_index.md:
+  - /plugins/aws-lambda/
+app/_hub/kong-inc/aws-lambda/_changelog.md:
+  - /plugins/aws-lambda/changelog/
+app/_hub/kong-inc/ai-rate-limiting-advanced/_changelog.md:
+  - /plugins/ai-rate-limiting-advanced/changelog/
+app/_hub/kong-inc/degraphql/overview/_index.md:
+  - /plugins/degraphql/
+app/_hub/kong-inc/degraphql/_changelog.md:
+  - /plugins/degraphql/changelog/
+app/_hub/kong-inc/file-log/overview/_index.md:
+  - /plugins/file-log/
+app/_hub/kong-inc/file-log/_changelog.md:
+  - /plugins/file-log/changelog/
+app/_hub/kong-inc/correlation-id/_changelog.md:
+  - /plugins/correlation-id/changelog/
+app/_hub/kong-inc/exit-transformer/overview/_index.md:
+  - /plugins/exit-transformer/
+app/_hub/kong-inc/exit-transformer/_changelog.md:
+  - /plugins/exit-transformer/changelog/
+app/_hub/kong-inc/header-cert-auth/_changelog.md:
+  - /plugins/header-cert-auth/changelog/
+app/_hub/kong-inc/header-cert-auth/how-to/_manual-mapping-cert-consumers.md:
+  - /plugins/header-cert-auth/
+app/_hub/kong-inc/header-cert-auth/overview/_index.md:
+  - /plugins/header-cert-auth/
+app/_hub/kong-inc/proxy-cache/overview/_index.md:
+  - /plugins/proxy-cache/
+app/_hub/kong-inc/proxy-cache/_changelog.md:
+  - /plugins/proxy-cache/changelog/
+app/_hub/kong-inc/hmac-auth/_changelog.md:
+  - /plugins/hmac-auth/changelog/
+app/_hub/kong-inc/hmac-auth/overview/_index.md:
+  - /plugins/hmac-auth/
+app/_hub/kong-inc/proxy-cache-advanced/overview/_index.md:
+  - /plugins/proxy-cache-advanced/
+app/_hub/kong-inc/proxy-cache-advanced/_changelog.md:
+  - /plugins/proxy-cache-advanced/changelog/
+app/_hub/kong-inc/jwt-signer/_changelog.md:
+  - /plugins/jwt-signer/changelog/
+app/_hub/kong-inc/jwt-signer/overview/_index.md:
+  - /plugins/jwt-signer/
+app/_hub/kong-inc/key-auth-enc/_changelog.md:
+  - /plugins/key-auth-enc/changelog/
+app/_hub/kong-inc/ldap-auth/overview/_index.md:
+  - /plugins/ldap-auth/
+app/_hub/kong-inc/ldap-auth/_changelog.md:
+  - /plugins/ldap-auth/changelog/
+app/_hub/kong-inc/ldap-auth-advanced/overview/_index.md:
+  - /plugins/ldap-auth-advanced/
+app/_hub/kong-inc/ldap-auth-advanced/_changelog.md:
+  - /plugins/ldap-auth-advanced/changelog/
+app/_hub/kong-inc/datadog/_changelog.md:
+  - /plugins/datadog/changelog/
+app/_hub/kong-inc/datadog/overview/_index.md:
+  - /plugins/datadog/
+app/_hub/kong-inc/loggly/overview/_index.md:
+  - /plugins/loggly/
+app/_hub/kong-inc/loggly/_changelog.md:
+  - /plugins/loggly/changelog/
+app/_hub/kong-inc/opentelemetry/overview/_index.md:
+  - /plugins/opentelemetry/
+app/_hub/kong-inc/opentelemetry/how-to/_spans.md:
+  - /plugins/opentelemetry/
+app/_hub/kong-inc/opentelemetry/_changelog.md:
+  - /plugins/opentelemetry/changelog/
+app/_hub/kong-inc/grpc-gateway/overview/_index.md:
+  - /plugins/grpc-gateway/
+app/_hub/kong-inc/grpc-web/overview/_index.md:
+  - /plugins/grpc-web/
+app/_hub/kong-inc/grpc-gateway/_changelog.md:
+  - /plugins/grpc-gateway/changelog/
+app/_hub/kong-inc/grpc-web/_changelog.md:
+  - /plugins/grpc-web/changelog/
+app/_hub/kong-inc/oauth2-introspection/overview/_index.md:
+  - /plugins/oauth2-introspection/
+app/_hub/kong-inc/oauth2-introspection/_changelog.md:
+  - /plugins/oauth2-introspection/changelog/
+app/_hub/kong-inc/mtls-auth/overview/_index.md:
+  - /plugins/mtls-auth/
+app/_hub/kong-inc/mtls-auth/_changelog.md:
+  - /plugins/mtls-auth/changelog/
+app/_hub/kong-inc/http-log/overview/_index.md:
+  - /plugins/http-log/
+app/_hub/kong-inc/http-log/overview/_log-format.md:
+  - /plugins/http-log/
+app/_hub/kong-inc/http-log/overview/_using-custom-fields.md:
+  - /plugins/http-log/
+app/_hub/kong-inc/http-log/how-to/_splunk.md:
+  - /plugins/http-log/examples/http-log-with-splunk/
+app/_hub/kong-inc/http-log/_changelog.md:
+  - /plugins/http-log/changelog/
+app/_hub/kong-inc/pre-function/overview/_index.md:
+  - /plugins/pre-function/
+app/_hub/kong-inc/pre-function/how-to/_phases.md:
+  - /plugins/pre-function/
+app/_hub/kong-inc/pre-function/_changelog.md:
+  - /plugins/pre-function/changelog/
+app/_hub/kong-inc/post-function/overview/_index.md:
+  - /plugins/post-function/
+app/_hub/kong-inc/post-function/how-to/_phases.md:
+  - /plugins/post-function/
+app/_hub/kong-inc/post-function/_changelog.md:
+  - /plugins/post-function/changelog/
+app/_hub/kong-inc/ai-proxy/how-to/_cloud-provider-authentication.md:
+  - /plugins/ai-proxy/examples/azure-ai-with-managed-identity/
+app/_hub/kong-inc/ai-proxy-advanced/how-to/_cloud-provider-authentication.md:
+  - /plugins/ai-proxy/examples/azure-ai-with-managed-identity/
+app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_azure.md:
+  - /plugins/ai-proxy/examples/azure-chat-route/
+app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_bedrock.md:
+  - /plugins/ai-proxy/examples/bedrock-chat-route/
+app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_cohere.md:
+  - /plugins/ai-proxy/examples/cohere-chat-route/
+app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_gemini.md:
+  - /plugins/ai-proxy/examples/gemini-chat-route/
+app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_huggingface.md:
+  - /plugins/ai-proxy/examples/huggingface-chat-route/
+app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_llama2.md:
+  - /plugins/ai-proxy/examples/llama2-chat-route/
+app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_mistral.md:
+  - /plugins/ai-proxy/examples/mistral-chat-route/
+app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_openai.md:
+  - /plugins/ai-proxy/examples/openai-chat-route/
+app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_azure.md:
+  - /plugins/ai-proxy-advanced/examples/azure-chat-route/
+app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_bedrock.md:
+  - /plugins/ai-proxy-advanced/examples/bedrock-chat-route/
+app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_cohere.md:
+  - /plugins/ai-proxy-advanced/examples/cohere-chat-route/
+app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_gemini.md:
+  - /plugins/ai-proxy-advanced/examples/gemini-chat-route/
+app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_huggingface.md:
+  - /plugins/ai-proxy-advanced/examples/huggingface-chat-route/
+app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_llama2.md:
+  - /plugins/ai-proxy-advanced/examples/llama2-chat-route/
+app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_mistral.md:
+  - /plugins/ai-proxy-advanced/examples/mistral-chat-route/
+app/_hub/kong-inc/ai-proxy-advanced/how-to/llm-provider-integration-guides/_openai.md:
+  - /plugins/ai-proxy-advanced/examples/openai-chat-route/
+app/_hub/kong-inc/ai-proxy-advanced/how-to/_load-balancing.md:
+  - /plugins/ai-proxy-advanced/examples/
+app/_hub/kong-inc/route-by-header/overview/_index.md:
+  - /plugins/route-by-header/
+app/_hub/kong-inc/response-transformer/overview/_index.md:
+  - /plugins/response-transformer/
+app/_hub/kong-inc/response-transformer/_changelog.md:
+  - /plugins/response-transformer/changelog/
+app/_hub/kong-inc/response-transformer-advanced/overview/_index.md:
+  - /plugins/response-transformer-advanced/
+app/_hub/kong-inc/request-transformer/overview/_index.md:
+  - /plugins/request-transformer/
+app/_hub/kong-inc/request-transformer/_changelog.md:
+  - /plugins/request-transformer/changelog/
+app/_hub/kong-inc/request-transformer-advanced/overview/_index.md:
+  - /plugins/request-transformer-advanced/
+app/_hub/kong-inc/request-transformer-advanced/_changelog.md:
+  - /plugins/request-transformer-advanced/changelog/
+app/_hub/kong-inc/request-validator/overview/_index.md:
+  - /plugins/request-validator/
+app/_hub/kong-inc/request-validator/_changelog.md:
+  - /plugins/request-validator/changelog/
+app/_hub/kong-inc/ai-rag-injector/overview/_index.md:
+  - /plugins/ai-rag-injector/
+app/_hub/kong-inc/ai-rag-injector/_changelog.md:
+  - /plugins/ai-rag-injector/changelog/
+app/_hub/kong-inc/ai-sanitizer/overview/_index.md:
+  - /plugins/ai-sanitizer/
+app/_hub/kong-inc/ai-sanitizer/_changelog.md:
+  - /plugins/ai-sanitizer/changelog/
+app/_hub/kong-inc/ai-sanitizer/how-to/_index.md:
+  - /how-to/protect-sensitive-information-with-ai/
+app/_hub/kong-inc/jwt/_changelog.md:
+  - /plugins/jwt/changelog/
+app/_hub/kong-inc/udp-log/overview/_index.md:
+  - /plugins/udp-log/
+app/_hub/kong-inc/udp-log/_changelog.md:
+  - /plugins/udp-log/changelog/
+app/_hub/kong-inc/kafka-log/_changelog.md:
+  - /plugins/kafka-log/changelog/
+app/_hub/kong-inc/kafka-log/overview/_index.md:
+  - /plugins/kafka-log/
+app/_hub/kong-inc/tcp-log/overview/_index.md:
+  - /plugins/tcp-log/
+app/_hub/kong-inc/tcp-log/_changelog.md:
+  - /plugins/tcp-log/changelog/
+app/_hub/kong-inc/syslog/overview/_index.md:
+  - /plugins/syslog/
+app/_hub/kong-inc/syslog/_changelog.md:
+  - /plugins/syslog/changelog/
+app/_hub/kong-inc/route-transformer-advanced/overview/_index.md:
+  - /plugins/route-transformer-advanced/
+app/_hub/kong-inc/kafka-upstream/overview/_index.md:
+  - /plugins/kafka-upstream/
+app/_hub/kong-inc/kafka-upstream/_changelog.md:
+  - /plugins/kafka-upstream/changelog/
+app/_hub/kong-inc/kafka-upstream/how-to/_multiple-topics-and-acl.md:
+  - /plugins/kafka-upstream/examples/multiple-producer-topics/
+app/_hub/kong-inc/kafka-upstream/how-to/_custom-message-format.md:
+  - /plugins/kafka-upstream/examples/
+app/_hub/TheLEGOGroup/aws-request-signing/overview/_index.md:
+  - /plugins/aws-request-signing/
+app/_hub/kong-inc/openwhisk/overview/_index.md:
+  - /plugins/openwhisk/
+app/_hub/appsentinels/appsentinels/overview/_index.md:
+  - /plugins/appsentinels/
+app/_hub/amberflo/kong-plugin-amberflo/overview/_index.md:
+  - /plugins/amberflo/
+app/_hub/kong-inc/confluent-consume/overview/_index.md:
+  - /plugins/confluent-consume/
+app/_hub/kong-inc/kafka-consume/overview/_index.md:
+  - /plugins/kafka-consume/
+app/_hub/kong-inc/kafka-consume/_changelog.md:
+  - /plugins/kafka-consume/changelog/
+app/_hub/datadome/kong-plugin-datadome/overview/_index.md:
+  - /plugins/datadome/
+app/_hub/optum/kong-response-size-limiting/overview/_index.md:
+  - /plugins/kong-response-size-limiting/
+app/_hub/optum/kong-spec-expose/overview/_index.md:
+  - /plugins/kong-spec-expose/
+app/_hub/optum/kong-service-virtualization/overview/_index.md:
+  - /plugins/kong-service-virtualization/
+app/_hub/optum/kong-splunk-log/overview/_index.md:
+  - /plugins/kong-splunk-log/
+app/_hub/optum/kong-upstream-jwt/overview/_index.md:
+  - /plugins/kong-upstream-jwt/
+app/_hub/inigo/inigo/overview/_index.md:
+  - /plugins/inigo/
+app/_hub/imperva/imp-appsec-connector/overview/_index.md:
+  - /plugins/imp-appsec-connector/
+app/_hub/impart-security/kong-plugin-impart/overview/_index.md:
+  - /plugins/impart/
+app/_hub/kong-inc/prometheus/_changelog.md:
+  - /plugins/prometheus/changelog/
+app/_hub/kong-inc/prometheus/overview/_index.md:
+  - /plugins/prometheus/
+app/_hub/wallarm/wallarm/overview/_index.md:
+  - /plugins/wallarm/
+app/_hub/moesif/kong-plugin-moesif/overview/_index.md:
+  - /plugins/moesif/
+app/_hub/salt/salt/overview/_index.md:
+  - /plugins/salt-agent/
+app/_hub/nonamesecurity/nonamesecurity-kongtrafficsource/overview/_index.md:
+  - /plugins/nonamesecurity/
+app/_hub/kong-inc/request-callout/overview/_index.md:
+  - /plugins/request-callout/
+app/_hub/kong-inc/vault-auth/_changelog.md:
+  - /plugins/vault-auth/changelog/
+app/_hub/kong-inc/vault-auth/overview/_index.md:
+  - /plugins/vault-auth/
+app/_hub/kong-inc/saml/overview/_index.md:
+  - /plugins/saml/
+app/_hub/kong-inc/saml/_changelog.md:
+  - /plugins/saml/changelog/
+app/_hub/kong-inc/opentelemetry/how-to/_getting-started.md:
+  - /how-to/set-up-jaeger-with-otel/
+app/_hub/kong-inc/oauth2/overview/_index.md:
+  - /plugins/oauth2/
+app/_hub/kong-inc/oauth2/_changelog.md:
+  - /plugins/oauth2/changelog/
+app/_src/gateway/kong-enterprise/datakit/index.md:
+  - /plugins/datakit/
+app/_src/gateway/kong-enterprise/datakit/examples.md:
+  - /plugins/datakit/
+app/_src/gateway/kong-enterprise/datakit/configuration.md:
+  - /plugins/datakit/
+app/_hub/kong-inc/statsd/_changelog.md:
+  - /plugins/statsd/changelog/
+app/_hub/kong-inc/statsd/overview/_index.md:
+  - /plugins/statsd/
+app/_hub/kong-inc/statsd-advanced/overview/_index.md:
+  - /plugins/statsd/
+app/konnect/analytics/explorer.md:
+  - /advanced-analytics/explorer/
+app/konnect/geo.md:
+  - /konnect-platform/geos/
+app/konnect/org-management/audit-logging/index.md:
+  - /konnect-platform/audit-logs/
+app/konnect/reference/audit-logs.md:
+  - /konnect-platform/audit-logs/
+app/konnect/gateway-manager/dedicated-cloud-gateways/data-plane-logs.md:
+  - /gateway-manager/konnect-logs/
+app/konnect/reference/labels.md:
+  - /gateway-manager/konnect-labels/
+app/konnect/org-management/okta-idp.md:
+  - /konnect-platform/sso/
+app/konnect/dev-portal/access-and-approval/add-teams.md:
+  - /konnect-platform/sso/
+app/konnect/dev-portal/access-and-approval/sso.md:
+  - /konnect-platform/sso/
+app/dev-portal/access-and-approvals/sso.md:
+  - /dev-portal/sso/
+app/konnect/org-management/sso.md:
+  - /konnect-platform/sso/
+app/konnect/api/identity-management/sso.md:
+  - /konnect-platform/sso/
+app/_includes/md/konnect/okta-sso.md:
+  - /konnect-platform/sso/
+app/konnect/org-management/troubleshoot.md:
+  - /konnect-platform/sso/
+app/konnect/reference/saml-idp-mappings.md:
+  - /konnect-platform/saml-idp-mapping/
+app/konnect/getting-started/migration.md:
+  - /gateway/self-managed-migration/
+app/konnect/gateway-manager/version-compatibility.md:
+  - /gateway-manager/version-compatibility/
+app/_data/tables/version_errors_konnect.yml:
+  - /gateway-manager/version-compatibility/
+app/konnect/index.md:
+  - /konnect/
+app/konnect/getting-started/index.md:
+  - /konnect/
+app/konnect/account-management/index.md:
+  - /konnect/
+app/konnect/architecture.md:
+  - /konnect/
+app/_includes/md/konnect/konnect-architecture.md:
+  - /konnect/
+app/konnect/org-management/auth.md:
+  - /konnect-platform/authentication/
+app/konnect/org-management/social-identity-login.md:
+  - /konnect-platform/authentication/
+app/konnect/service-catalog/index.md:
+  - /service-catalog/
+app/_src/gateway/index.md:
+  - /gateway/
+app/_src/gateway/kong-enterprise/secrets-management/getting-started.md:
+  - /gateway/secrets-management/
+app/_src/gateway/admin-api/index_latest.md:
+  - /admin-api/
+app/_src/gateway/kong-manager/index.md:
+  - /gateway/kong-manager/
+app/_src/gateway/kong-manager/auth/index.md:
+  - /gateway/kong-manager/
+app/_src/gateway/production/deployment-topologies/index.md:
+  - /gateway/deployment-topologies/
+app/konnect/gateway-manager/serverless-gateways/index.md:
+  - /gateway/topology-hosting-options/
+app/konnect/gateway-manager/dedicated-cloud-gateways/index.md:
+  - /dedicated-cloud-gateways/
+app/_src/gateway/ai-gateway/index.md:
+  - /ai-gateway/
+app/_src/gateway/production/kong-conf.md:
+  - /gateway/manage-kong-conf/
+app/_src/gateway/production/logging/log-reference.md:
+  - /gateway/logs/
+app/_src/gateway/production/logging/update-log-level-dynamically.md:
+  - /gateway/logs/
+app/_src/gateway/production/logging/ai-analytics.md:
+  - /ai-gateway/ai-audit-log-reference/
+app/_src/gateway/production/logging/customize-gateway-logs.md:
+  - /gateway/logs/
+app/_src/gateway/production/networking/default-ports.md:
+  - /gateway/network/
+app/_src/gateway/production/networking/firewall.md:
+  - /gateway/network/
+app/_src/gateway/production/networking/cp-dp-proxy.md:
+  - /gateway/cp-dp-communication/
+app/konnect/gateway-manager/data-plane-nodes/secure-communications.md:
+  - /gateway/cp-dp-communication/
+app/konnect/network-resiliency.md:
+  - /gateway/cp-dp-communication/
+app/_src/gateway/reference/faq.md:
+  - /gateway/cp-dp-communication/
+app/_src/gateway/production/deployment-topologies/hybrid-mode/setup.md:
+  - /gateway/hybrid-mode/
+app/konnect/gateway-manager/data-plane-nodes/renew-certificates.md:
+  - /gateway/cp-dp-communication/
+app/konnect/network.md:
+  - /konnect-platform/network/
+app/_src/gateway/production/sizing-guidelines.md:
+  - /gateway/resource-sizing-guidelines/
+app/_src/gateway/production/running-kong/secure-admin-api.md:
+  - /gateway/secure-the-admin-api/
+app/_src/gateway/production/performance/performance-testing.md:
+  - /gateway/performance/benchmarks/
+app/_src/gateway/kong-manager/enable.md:
+  - /gateway/kong-manager/configuration/
+app/_src/gateway/kong-manager/troubleshoot.md:
+  - /gateway/kong-manager/configuration/
+app/_src/gateway/production/monitoring/ai-metrics.md:
+  - /ai-gateway/monitor-ai-llm-metrics/
+app/_hub/kong-inc/ai-proxy/how-to/_streaming.md:
+  - /ai-gateway/streaming/
+app/_hub/kong-inc/ai-proxy-advanced/how-to/_streaming.md:
+  - /ai-gateway/streaming/
+app/_src/gateway/reference/reserved-entity-names.md:
+  - /gateway/reserved-entity-names/
+app/_src/gateway/breaking-changes/310x.md:
+  - /gateway/breaking-changes/
+app/_src/gateway/breaking-changes/39x.md:
+  - /gateway/breaking-changes/
+app/_src/gateway/breaking-changes/28x.md:
+  - /gateway/breaking-changes/
+app/_src/gateway/breaking-changes/30x.md:
+  - /gateway/breaking-changes/
+app/_src/gateway/breaking-changes/31x.md:
+  - /gateway/breaking-changes/
+app/_src/gateway/breaking-changes/32x.md:
+  - /gateway/breaking-changes/
+app/_src/gateway/breaking-changes/33x.md:
+  - /gateway/breaking-changes/
+app/_src/gateway/breaking-changes/34x.md:
+  - /gateway/breaking-changes/
+app/_src/gateway/breaking-changes/35x.md:
+  - /gateway/breaking-changes/
+app/_src/gateway/breaking-changes/36x.md:
+  - /gateway/breaking-changes/
+app/_src/gateway/breaking-changes/37x.md:
+  - /gateway/breaking-changes/
+app/_src/gateway/breaking-changes/38x.md:
+  - /gateway/breaking-changes/
+app/_src/gateway/kong-enterprise/cp-outage-handling-faq.md:
+  - /gateway/cp-outage/
+app/_src/gateway/kong-enterprise/cp-outage-handling.md:
+  - /gateway/cp-outage/
+app/_src/gateway/production/deployment-topologies/hybrid-mode/index.md:
+  - /gateway/hybrid-mode/
+app/_src/gateway/production/deployment-topologies/kubernetes.md:
+  - /gateway/hybrid-mode/
+app/_src/gateway/production/deployment-topologies/traditional/index.md:
+  - /gateway/traditional-mode/
+app/_src/gateway/production/clustering.md:
+  - /gateway/traditional-mode/
+app/_src/gateway/upgrade/in-place.md:
+  - /gateway/upgrade/in-place/
+app/_src/gateway/upgrade/rolling-upgrade.md:
+  - /gateway/upgrade/rolling/
+app/_src/gateway/upgrade/dual-cluster.md:
+  - /gateway/upgrade/dual-cluster/
+app/_src/gateway/upgrade/backup-and-restore.md:
+  - /gateway/upgrade/backup-and-restore/
+app/_src/gateway/production/deployment-topologies/db-less-and-declarative-config.md:
+  - /gateway/db-less-mode/
+app/_src/gateway/upgrade/blue-green.md:
+  - /gateway/upgrade/blue-green/
+app/_src/gateway/upgrade/index.md:
+  - /gateway/upgrade/
+app/_src/gateway/upgrade/lts-upgrade.md:
+  - /gateway/upgrade/lts-upgrade/
+app/_src/gateway/kong-manager/strengthen-security.md:
+  - /gateway/kong-manager/content-security-policy/
+app/_src/gateway/reference/expressions-language/index.md:
+  - /gateway/routing/expressions/
+app/_src/gateway/key-concepts/routes/expressions.md:
+  - /gateway/routing/expressions/
+app/_src/gateway/reference/expressions-language/language-references.md:
+  - /gateway/routing/expressions/
+app/_src/gateway/reference/expressions-language/performance.md:
+  - /gateway/routing/expressions/
+app/_src/gateway/production/networking/dns-considerations.md:
+  - /gateway/network/dns-config-reference/
+app/_src/gateway/production/blue-green.md:
+  - /gateway/traffic-control/blue-green-deployments/
+app/konnect/compatibility.md:
+  - /konnect-platform/compatibility/
+app/konnect/upgrade-faq.md:
+  - /konnect-platform/compatibility/
+app/_src/gateway/production/deployment-topologies/hybrid-mode/incremental-config-sync.md:
+  - /gateway/incremental-config-sync/
+app/_includes/md/admin-listen.md:
+  - /gateway/traffic-control/proxying/
+app/_src/gateway/plugin-development/admin-api.md:
+  - /custom-plugins/api.lua/
+app/_src/gateway/plugin-development/custom-entities.md:
+  - /custom-plugins/migrations/
+app/_src/gateway/plugin-development/entities-cache.md:
+  - /custom-plugins/daos.lua/
+app/_src/gateway/plugin-development/access-the-datastore.md:
+  - /custom-plugins/data-store/
+app/_src/gateway/plugin-development/custom-logic.md:
+  - /custom-plugins/handler.lua/
+app/_src/gateway/plugin-development/distribution.md:
+  - /custom-plugins/installation-and-distribution/
+app/_src/gateway/plugin-development/index.md:
+  - /custom-plugins/reference/
+app/_src/gateway/plugin-development/file-structure.md:
+  - /custom-plugins/reference/
+app/_src/gateway/plugin-development/configuration.md:
+  - /custom-plugins/schema.lua/
+app/_src/gateway/plugin-development/tests.md:
+  - /custom-plugins/testing/
+app/_src/gateway/support/vulnerability-patching-process.md:
+  - /gateway/vulnerabilities/
+app/_src/gateway/stability.md:
+  - /stages-of-software-availability/
+app/konnect/availability-stages.md:
+  - /stages-of-software-availability/
+app/_src/gateway/support/browser.md:
+  - /gateway/third-party-support/
+app/_src/gateway/support/third-party.md:
+  - /gateway/third-party-support/
+app/_src/gateway/support/index.md:
+  - /gateway/version-support-policy/
+app/_src/gateway/kong-enterprise/fips-support/index.md:
+  - /gateway/version-support-policy/
+app/_src/gateway/support/sbom.md:
+  - /gateway/sbom/
+app/konnect/gateway-manager/serverless-gateways/custom-dns.md:
+  - /serverless-gateways/
+app/konnect/gateway-manager/serverless-gateways/provision-serverless-gateway.md:
+  - /serverless-gateways/
+app/konnect/gateway-manager/serverless-gateways/securing-backend-traffic.md:
+  - /serverless-gateways/
+app/konnect/gateway-manager/index.md:
+  - /gateway-manager/
+app/konnect/gateway-manager/dedicated-cloud-gateways/provision-cloud-gateway.md:
+  - /dedicated-cloud-gateways/reference/
+app/konnect/gateway-manager/dedicated-cloud-gateways/securing-backend-traffic.md:
+  - /dedicated-cloud-gateways/reference/
+app/konnect/gateway-manager/dedicated-cloud-gateways/custom-dns.md:
+  - /dedicated-cloud-gateways/reference/
+app/konnect/gateway-manager/dedicated-cloud-gateways/custom-plugins.md:
+  - /dedicated-cloud-gateways/reference/
+app/konnect/private-connections/aws-privatelink.md:
+  - /dedicated-cloud-gateways/aws-private-link/
+app/konnect/gateway-manager/dedicated-cloud-gateways/transit-gateways.md:
+  - /dedicated-cloud-gateways/transit-gateways/
+app/konnect/gateway-manager/control-plane-groups/index.md:
+  - /gateway-manager/control-plane-groups/
+app/konnect/gateway-manager/control-plane-groups/conflicts.md:
+  - /gateway-manager/control-plane-groups/
+app/konnect/gateway-manager/control-plane-groups/migrate.md:
+  - /gateway-manager/control-plane-groups/
+app/konnect/gateway-manager/data-plane-nodes/upgrade.md:
+  - /gateway-manager/data-plane-reference/
+app/konnect/gateway-manager/data-plane-nodes/verify-node.md:
+  - /gateway-manager/data-plane-reference/
+app/konnect/gateway-manager/data-plane-nodes/custom-dp-labels.md:
+  - /gateway-manager/data-plane-reference/
+app/konnect/org-management/deactivation.md:
+  - /konnect-platform/account/
+app/konnect/org-management/teams-and-roles/teams-reference.md:
+  - /konnect-platform/teams-and-roles/
+app/konnect/org-management/teams-and-roles/index.md:
+  - /konnect-platform/teams-and-roles/
+app/konnect/org-management/teams-and-roles/roles-reference.md:
+  - /konnect-platform/teams-and-roles/
+app/konnect/org-management/teams-and-roles/manage.md:
+  - /konnect-platform/teams-and-roles/
+app/konnect/api/identity-management/identity-integration.md:
+  - /konnect-platform/teams-and-roles/
+app/konnect/gateway-manager/dedicated-cloud-gateways/azure-peering.md:
+  - /dedicated-cloud-gateways/azure-peering/
+app/konnect/service-catalog/integrations/datadog.md:
+  - /service-catalog/integrations/datadog/
+app/konnect/service-catalog/integrations/github.md:
+  - /service-catalog/integrations/github/
+app/konnect/service-catalog/integrations/gitlab.md:
+  - /service-catalog/integrations/gitlab/
+app/konnect/service-catalog/integrations/traceable.md:
+  - /service-catalog/integrations/traceable/
+app/konnect/service-catalog/integrations/swaggerhub.md:
+  - /service-catalog/integrations/swaggerhub/
+app/konnect/service-catalog/integrations/pagerduty.md:
+  - /service-catalog/integrations/pagerduty/
+app/konnect/service-catalog/scorecards/index.md:
+  - /service-catalog/scorecards/
+app/konnect/mesh-manager/index.md:
+  - /mesh-manager/
+app/deck/index.md:
+  - /deck/
+app/deck/installation.md:
+  - /deck/
+app/deck/reference/faq.md:
+  - /deck/
+app/deck/install/index.md:
+  - /deck/
+app/deck/install/binary.md:
+  - /deck/
+app/deck/install/docker.md:
+  - /deck/
+app/deck/install/github-actions.md:
+  - /deck/
+app/deck/get-started.md:
+  - /deck/get-started/
+app/deck/file/validate.md:
+  - /deck/file/validate/
+app/deck/file/manipulation/namespace.md:
+  - /deck/file/manipulation/namespace/
+app/deck/file/manipulation/index.md:
+  - /deck/file/manipulation/
+app/deck/file/manipulation/plugins.md:
+  - /deck/file/manipulation/plugins/
+app/deck/file/manipulation/tags.md:
+  - /deck/file/manipulation/tags/
+app/deck/file/manipulation/patch.md:
+  - /deck/file/manipulation/patch/
+app/deck/file/lint.md:
+  - /deck/file/lint/
+app/deck/file/kong2kic.md:
+  - /deck/file/kong2kic/
+app/deck/file/render.md:
+  - /deck/file/render/
+app/deck/file/index.md:
+  - /deck/file/
+app/deck/file/merge.md:
+  - /deck/file/merge/
+app/deck/file/openapi2kong.md:
+  - /deck/file/openapi2kong/
+app/deck/file/convert.md:
+  - /deck/file/convert/
+app/deck/file/kong2tf.md:
+  - /deck/file/kong2tf/
+app/deck/apiops/federated-configuration.md:
+  - /deck/apiops/federated-configuration/
+app/deck/apiops/index.md:
+  - /deck/apiops/
+app/deck/apiops/continuous-integration.md:
+  - /deck/apiops/continuous-integration/
+app/deck/support.md:
+  - /deck/support/
+app/deck/configuration.md:
+  - /deck/configuration/
+app/deck/reference/entities.md:
+  - /deck/reference/entities/
+app/deck/reference/3.0-upgrade.md:
+  - /deck/reference/3.0-upgrade/
+app/deck/reference/env-variables.md:
+  - /deck/reference/env-variables/
+app/deck/security.md:
+  - /deck/security/
+app/deck/gateway/defaults.md:
+  - /deck/gateway/defaults/
+app/deck/gateway/diff.md:
+  - /deck/gateway/diff/
+app/deck/gateway/validate.md:
+  - /deck/gateway/validate/
+app/deck/gateway/dump.md:
+  - /deck/gateway/dump/
+app/deck/gateway/workspaces.md:
+  - /deck/gateway/workspaces/
+app/deck/gateway/ping.md:
+  - /deck/gateway/ping/
+app/deck/gateway/apply.md:
+  - /deck/gateway/apply/
+app/deck/gateway/konnect-configuration.md:
+  - /deck/gateway/konnect-configuration/
+app/deck/gateway/index.md:
+  - /deck/gateway/
+app/deck/gateway/configuration.md:
+  - /deck/gateway/configuration/
+app/deck/gateway/tags.md:
+  - /deck/gateway/tags/
+app/deck/gateway/sync.md:
+  - /deck/gateway/sync/
+app/deck/gateway/rbac.md:
+  - /deck/gateway/rbac/
+app/deck/gateway/sensitive-data.md:
+  - /deck/gateway/sensitive-data/
+app/deck/gateway/deduplicate.md:
+  - /deck/gateway/deduplicate/
+app/deck/gateway/reset.md:
+  - /deck/gateway/reset/
+app/_src/mesh/features/acmpca.md:
+  - /mesh/acm-private-ca-policy/
+app/_src/mesh/features/access-audit.md:
+  - /mesh/access-audit/
+app/_src/mesh/features/cert-manager.md:
+  - /mesh/cert-manager/
+app/_src/mesh/features/kds-auth.md:
+  - /mesh/multi-zone-authentication/
+app/_src/mesh/production/cp-deployment/license.md:
+  - /mesh/license/
+app/_src/mesh/sbom.md:
+  - /mesh/sbom/
+app/_src/mesh/vulnerability-patching-process.md:
+  - /mesh/vulnerability-patching-process/
+app/_src/mesh/features/vault.md:
+  - /mesh/vault/
+app/_src/mesh/features/signed-images.md:
+  - /mesh/signed-images/
+app/_src/mesh/features/index.md:
+  - /mesh/enterprise/
+app/_src/mesh/features/fips-support.md:
+  - /mesh/enterprise/
+app/_src/mesh/features/ubi-images.md:
+  - /mesh/ubi-images/
+app/_src/mesh/features/rbac.md:
+  - /mesh/rbac/
+app/_src/mesh/features/openshift-quickstart.md:
+  - /mesh/openshift-quickstart/
+app/_src/mesh/features/ca-rotation.md:
+  - /mesh/ca-rotation/
+app/_src/mesh/installation/ecs.md:
+  - /mesh/ecs/
+app/_src/mesh/production/cp-deployment/production-usage-values.md:
+  - /mesh/production-usage-values/
+app/_src/mesh/support-policy.md:
+  - /mesh/support-policy/
+app/dev-portal/index.md:
+  - /dev-portal/
+app/dev-portal/portals/index.md:
+  - /dev-portal/
+app/dev-portal/portals/customization/customization.md:
+  - /dev-portal/portal-customization/
+app/dev-portal/portals/customization/appearance.md:
+  - /dev-portal/portal-customization/
+app/dev-portal/portals/customization/portal-editor.md:
+  - /dev-portal/portal-customization/
+app/dev-portal/portals/customization/custom-pages.md:
+  - /dev-portal/custom-pages/
+app/dev-portal/portals/customization/snippets.md:
+  - /dev-portal/snippets/
+app/dev-portal/portals/settings/general.md:
+  - /dev-portal/portal-settings/
+app/dev-portal/portals/audit-logs/index.md:
+  - /dev-portal/portal-settings/
+app/dev-portal/portals/settings/custom-domains.md:
+  - /dev-portal/custom-domains/
+app/dev-portal/portals/settings/security.md:
+  - /dev-portal/security-settings/
+app/dev-portal/portals/settings/team-mapping.md:
+  - /dev-portal/team-mapping/
+app/dev-portal/apis/gateway-service-link.md:
+  - /dev-portal/apis/
+app/dev-portal/apis/index.md:
+  - /dev-portal/apis/
+app/dev-portal/apis/versioning.md:
+  - /dev-portal/apis/
+app/dev-portal/apis/docs.md:
+  - /dev-portal/apis/
+app/dev-portal/portals/publishing.md:
+  - /dev-portal/publishing/
+app/dev-portal/app-reg/index.md:
+  - /dev-portal/application-registration/
+app/dev-portal/app-reg/auth-strategies/oidc/index.md:
+  - /dev-portal/auth-strategies/
+app/dev-portal/app-reg/auth-strategies/key-auth/index.md:
+  - /dev-portal/auth-strategies/
+app/dev-portal/access-and-approvals/teams.md:
+  - /dev-portal/access-and-approval/
+app/dev-portal/access-and-approvals/index.md:
+  - /dev-portal/access-and-approval/
+app/dev-portal/access-and-approvals/developers.md:
+  - /dev-portal/developer-signup/
+app/index.html:
+  - /
+app/hub/index.html:
+  - /plugins/
+app/search.html:
+  - /search/
+app/gateway/changelog.md:
+  - /gateway/changelog/
+app/_src/gateway/reference/configuration/configuration-3.10.x.md:
+  - /gateway/configuration/
+app/_src/gateway/reference/configuration/configuration-3.9.x.md:
+  - /gateway/configuration/
+app/_src/gateway/reference/configuration/configuration-3.8.x.md:
+  - /gateway/configuration/
+app/_src/gateway/reference/configuration/configuration-3.7.x.md:
+  - /gateway/configuration/
+app/_src/gateway/reference/configuration/configuration-3.6.x.md:
+  - /gateway/configuration/
+app/_src/gateway/reference/configuration/configuration-3.5.x.md:
+  - /gateway/configuration/
+app/_src/gateway/reference/configuration/configuration-3.4.x.md:
+  - /gateway/configuration/
+app/_src/gateway/reference/configuration/configuration-3.0.-3.3.x.md:
+  - /gateway/configuration/
+app/mesh/changelog.md:
+  - /mesh/changelog/
+app/mesh/latest_version.html:
+  - /mesh/latest_version/
+app/_src/.repos/kuma/app/_src/policies/meshaccesslog.md:
+  - /mesh/policies/meshaccesslog/
+app/_src/.repos/kuma/app/_src/policies/meshcircuitbreaker.md:
+  - /mesh/policies/meshcircuitbreaker/
+app/_src/.repos/kuma/app/_src/policies/meshfaultinjection.md:
+  - /mesh/policies/meshfaultinjection/
+app/_src/.repos/kuma/app/_src/policies/meshhealthcheck.md:
+  - /mesh/policies/meshhealthcheck/
+app/_src/.repos/kuma/app/_src/policies/meshhttproute.md:
+  - /mesh/policies/meshhttproute/
+app/_src/.repos/kuma/app/_src/policies/meshloadbalancingstrategy.md:
+  - /mesh/policies/meshloadbalancingstrategy/
+app/_src/.repos/kuma/app/_src/policies/meshmetric.md:
+  - /mesh/policies/meshmetric/
+app/_src/mesh/features/meshopa.md:
+  - /mesh/policies/meshopa/
+app/_src/.repos/kuma/app/_src/policies/meshpassthrough.md:
+  - /mesh/policies/meshpassthrough/
+app/_src/.repos/kuma/app/_src/policies/meshproxypatch.md:
+  - /mesh/policies/meshproxypatch/
+app/_src/.repos/kuma/app/_src/policies/meshratelimit.md:
+  - /mesh/policies/meshratelimit/
+app/_src/.repos/kuma/app/_src/policies/meshretry.md:
+  - /mesh/policies/meshretry/
+app/_src/.repos/kuma/app/_src/policies/meshtcproute.md:
+  - /mesh/policies/meshtcproute/
+app/_src/.repos/kuma/app/_src/policies/meshtimeout.md:
+  - /mesh/policies/meshtimeout/
+app/_src/.repos/kuma/app/_src/policies/meshtls.md:
+  - /mesh/policies/meshtls/
+app/_src/.repos/kuma/app/_src/policies/meshtrace.md:
+  - /mesh/policies/meshtrace/
+app/_src/.repos/kuma/app/_src/policies/meshtrafficpermission.md:
+  - /mesh/policies/meshtrafficpermission/
+app/_src/gateway/reference/cli.md:
+  - /gateway/cli/reference/
+app/_src/gateway/plugin-development/pdk/index.md:
+  - /gateway/pdk/reference/
+app/_src/gateway/plugin-development/pdk/kong.client.md:
+  - /gateway/pdk/reference/kong.client/
+app/_src/gateway/plugin-development/pdk/kong.client.tls.md:
+  - /gateway/pdk/reference/kong.client.tls/
+app/_src/gateway/plugin-development/pdk/kong.cluster.md:
+  - /gateway/pdk/reference/kong.cluster/
+app/_src/gateway/plugin-development/pdk/kong.ctx.md:
+  - /gateway/pdk/reference/kong.ctx/
+app/_src/gateway/plugin-development/pdk/kong.ip.md:
+  - /gateway/pdk/reference/kong.ip/
+app/_src/gateway/plugin-development/pdk/kong.jwe.md:
+  - /gateway/pdk/reference/kong.jwe/
+app/_src/gateway/plugin-development/pdk/kong.log.md:
+  - /gateway/pdk/reference/kong.log/
+app/_src/gateway/plugin-development/pdk/kong.nginx.md:
+  - /gateway/pdk/reference/kong.nginx/
+app/_src/gateway/plugin-development/pdk/kong.node.md:
+  - /gateway/pdk/reference/kong.node/
+app/_src/gateway/plugin-development/pdk/kong.plugin.md:
+  - /gateway/pdk/reference/kong.plugin/
+app/_src/gateway/plugin-development/pdk/kong.request.md:
+  - /gateway/pdk/reference/kong.request/
+app/_src/gateway/plugin-development/pdk/kong.response.md:
+  - /gateway/pdk/reference/kong.response/
+app/_src/gateway/plugin-development/pdk/kong.router.md:
+  - /gateway/pdk/reference/kong.router/
+app/_src/gateway/plugin-development/pdk/kong.service.md:
+  - /gateway/pdk/reference/kong.service/
+app/_src/gateway/plugin-development/pdk/kong.service.request.md:
+  - /gateway/pdk/reference/kong.service.request/
+app/_src/gateway/plugin-development/pdk/kong.service.response.md:
+  - /gateway/pdk/reference/kong.service.response/
+app/_src/gateway/plugin-development/pdk/kong.table.md:
+  - /gateway/pdk/reference/kong.table/
+app/_src/gateway/plugin-development/pdk/kong.telemetry.log.md:
+  - /gateway/pdk/reference/kong.telemetry.log/
+app/_src/gateway/plugin-development/pdk/kong.tracing.md:
+  - /gateway/pdk/reference/kong.tracing/
+app/_src/gateway/plugin-development/pdk/kong.vault.md:
+  - /gateway/pdk/reference/kong.vault/
+app/_src/gateway/plugin-development/pdk/kong.websocket.client.md:
+  - /gateway/pdk/reference/kong.websocket.client/
+app/_src/gateway/plugin-development/pdk/kong.websocket.upstream.md:
+  - /gateway/pdk/reference/kong.websocket.upstream/
+app/_hub/kong-inc/request-callout/_changelog.md:
+  - /plugins/request-callout/changelog/
+app/_hub/kong-inc/ai-proxy/_changelog.md:
+  - /plugins/ai-proxy/changelog/
+app/_hub/kong-inc/ai-proxy-advanced/_changelog.md:
+  - /plugins/ai-proxy-advanced/changelog/
+app/_hub/kong-inc/bot-detection/_changelog.md:
+  - /plugins/bot-detection/changelog/
+app/_hub/kong-inc/cors/_changelog.md:
+  - /plugins/cors/changelog/
+app/_hub/kong-inc/injection-protection/_changelog.md:
+  - /plugins/injection-protection/changelog/
+app/_hub/kong-inc/jwe-decrypt/_changelog.md:
+  - /plugins/jwe-decrypt/changelog/
+app/_hub/kong-inc/mocking/_changelog.md:
+  - /plugins/mocking/changelog/
+app/_hub/kong-inc/opa/_changelog.md:
+  - /plugins/opa/changelog/
+app/_hub/kong-inc/response-transformer-advanced/_changelog.md:
+  - /plugins/response-transformer-advanced/changelog/
+app/_hub/kong-inc/route-by-header/_changelog.md:
+  - /plugins/route-by-header/changelog/
+app/_hub/kong-inc/route-transformer-advanced/_changelog.md:
+  - /plugins/route-transformer-advanced/changelog/
+app/_hub/kong-inc/service-protection/_changelog.md:
+  - /plugins/service-protection/changelog/
+app/_hub/kong-inc/tls-handshake-modifier/_changelog.md:
+  - /plugins/tls-handshake-modifier/changelog/
+app/_hub/kong-inc/websocket-size-limit/_changelog.md:
+  - /plugins/websocket-size-limit/changelog/
+app/_hub/kong-inc/websocket-validator/_changelog.md:
+  - /plugins/websocket-validator/changelog/
+app/_hub/kong-inc/jwe-decrypt/overview/_index.md:
+  - /plugins/jwe-decrypt/
+app/_hub/kong-inc/acl/_api.md:
+  - /plugins/acl/api/
+app/_hub/kong-inc/acme/_api.md:
+  - /plugins/acme/api/
+app/_hub/kong-inc/graphql-proxy-cache-advanced/_api.md:
+  - /plugins/graphql-proxy-cache-advanced/api/
+app/_hub/kong-inc/openid-connect/_api.md:
+  - /plugins/openid-connect/api/
+app/_src/.repos/kuma/app/_src/policies/introduction.md:
+  - /mesh/policies-introduction/
+app/_src/kubernetes-ingress-controller/production/deployment-topologies/gateway-discovery.md:
+  - /kubernetes-ingress-controller/deployment-topologies/gateway-discovery/
+app/_src/kubernetes-ingress-controller/guides/high-availability/kic.md:
+  - /kubernetes-ingress-controller/kic-high-availability/
+app/_src/kubernetes-ingress-controller/reference/troubleshooting.md:
+  - /index/kubernetes-ingress-controller/#troubleshooting
+app/_src/gateway-operator/guides/konnect-entities/konnect-plugin-binding.md:
+  - /operator/konnect/kongpluginbinding/
+app/_src/gateway-operator/guides/konnect-entities/service-and-route.md:
+  - /operator/konnect/crd/gateway/service-and-route/
+app/_src/gateway-operator/guides/konnect-entities/tagging-and-labeling.md:
+  - /operator/konnect/labelling/
+app/_src/gateway-operator/guides/konnect-entities/faq.md:
+  - /operator/konnect/reference/faq/
+app/_src/gateway-operator/concepts/gateway-api.md:
+  - /operator/konnect/reference/crds/
+app/_src/gateway-operator/guides/konnect-entities/architecture.md:
+  - /operator/konnect/reference/crds/
+app/_src/gateway-operator/get-started/konnect/install.md:
+  - /operator/install/
+app/_src/gateway-operator/production/certificates/custom_ca.md:
+  - /operator/konnect/crd/gateway/certificate-ca-cert/
+app/_src/gateway-operator/guides/konnect-entities/cloud-gateways-data-plane-group-configuration.md:
+  - /operator/konnect/crd/cloud-gateways/configuration/
+app/_src/gateway-operator/guides/konnect-entities/cloud-gateways-network.md:
+  - /operator/konnect/crd/cloud-gateways/network/
+app/_src/gateway-operator/guides/konnect-entities/consumer-and-consumergroup.md:
+  - /operator/konnect/crd/gateway/consumer/
+app/_src/gateway-operator/guides/konnect-entities/gatewaycontrolplane.md:
+  - /operator/konnect/crd/control-planes/control-plane-group/
+app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md:
+  - /operator/dataplanes/get-started/kic/create-gateway/
+app/_src/gateway-operator/guides/konnect-entities/dpcertificate.md:
+  - /operator/konnect/crd/gateway/dataplane-certificate/
+app/_src/gateway-operator/guides/konnect-entities/key-and-keyset.md:
+  - /operator/konnect/crd/gateway/key-keyset/
+app/_src/gateway-operator/guides/konnect-entities/upstream-and-target.md:
+  - /operator/konnect/crd/gateway/upstream-target/
+app/_src/gateway-operator/guides/konnect-entities/vault.md:
+  - /operator/konnect/crd/gateway/vault/
+
+app/_src/gateway-operator/production/monitoring/status/overview.md:
+  - /operator/konnect/troubleshooting/status/
+app/_src/gateway-operator/support.md:
+  - /operator/support-policy/
+app/_src/mesh/features/provenance-verification-binaries.md:
+  - /mesh/provenance-verification-binaries/
+app/konnect/analytics/index.md:
+  - /advanced-analytics/
+app/_src/gateway/kong-plugins/index.md:
+  - /custom-plugins/
+app/konnect/api/index.md:
+  - /konnect-api/
+app/_src/mesh/index.md:
+  - /mesh/
+app/_src/gateway-operator/index.md:
+  - /operator/
+app/konnect/service-catalog/integrations/index.md:
+  - /service-catalog/integrations/
+app/konnect/reference/terraform.md:
+  - /terraform/
+app/_src/quickstart/kubernetes-demo.md:
+  - /how-to/deploy-mesh-on-kubernetes/
+app/_src/mesh/features/provenance-verification-images.md:
+  - /mesh/provenance-verification-images/
+app/_src/.repos/kuma/app/_src/guides/consumer-producer-policies.md:
+  - /mesh/consumer-producer-policies/
+app/_src/.repos/kuma/app/_src/guides/federate.md:
+  - /mesh/federate/
+app/_src/.repos/kuma/app/_src/guides/gateway-api.md:
+  - /mesh/gateway-api/
+app/_src/.repos/kuma/app/_src/guides/gateway-builtin.md:
+  - /mesh/add-builtin-gateway/
+app/_src/.repos/kuma/app/_src/guides/gateway-delegated.md:
+  - /mesh/gateway-delegated/
+app/_src/.repos/kuma/app/_src/guides/migration-to-the-new-policies.md:
+  - /mesh/migration-to-the-new-policies/
+app/_src/.repos/kuma/app/_src/guides/otel-metrics.md:
+  - /mesh/collect-metrics-with-opentelemetry/
+app/_src/.repos/kuma/app/_src/guides/progressively-rolling-in-strict-mtls.md:
+  - /mesh/progressively-rolling-in-strict-mtls/
+app/_src/.repos/kuma/app/_src/introduction/architecture.md:
+  - /mesh/architecture/
+app/_src/.repos/kuma/app/_src/introduction/concepts.md:
+  - /mesh/concepts/
+app/_src/.repos/kuma/app/_src/introduction/kuma-requirements.md:
+  - /mesh/requirements/
+app/_src/.repos/kuma/app/_src/networking/dns.md:
+  - /mesh/dns/
+app/_src/.repos/kuma/app/_src/networking/hostnamegenerator.md:
+  - /mesh/hostnamegenerator/
+app/_src/.repos/kuma/app/_src/networking/meshexternalservice.md:
+  - /mesh/meshexternalservice/
+app/_src/.repos/kuma/app/_src/networking/meshmultizoneservice.md:
+  - /mesh/meshmultizoneservice/
+app/_src/.repos/kuma/app/_src/networking/meshservice.md:
+  - /mesh/meshservice/
+app/_src/.repos/kuma/app/_src/production/deployment/multi-zone.md:
+  - /mesh/mesh-multizone-service-deployment/
+app/_src/.repos/kuma/app/_src/production/deployment/single-zone.md:
+  - /mesh/single-zone/
+app/_src/.repos/kuma/app/_src/production/dp-config/cni.md:
+  - /mesh/cni/
+app/_src/.repos/kuma/app/_src/production/mesh.md:
+  - /mesh/mesh-multi-tenancy/
+app/_src/.repos/kuma/app/_src/production/secure-deployment/certificates.md:
+  - /mesh/secure-access/
+app/_src/.repos/kuma/app/_src/production/secure-deployment/dp-auth.md:
+  - /mesh/dp-auth/
+app/_src/.repos/kuma/app/_src/production/upgrades-tuning/fine-tuning.md:
+  - /mesh/performance-tuning/
+app/_src/.repos/kuma/app/_src/production/upgrades-tuning/upgrade-notes.md:
+  - /mesh/upgrade-notes/
+app/_src/.repos/kuma/app/_src/production/upgrades-tuning/upgrades.md:
+  - /mesh/upgrade/
+app/_src/.repos/kuma/app/_src/quickstart/kubernetes-demo.md:
+  - /mesh/kubernetes/
+app/_src/.repos/kuma/app/_src/quickstart/universal-docker-demo.md:
+  - /mesh/universal/
+app/_src/.repos/kuma/app/_src/reference/kubernetes-annotations.md:
+  - /mesh/annotations/
+app/_src/.repos/kuma/app/_src/reference/kuma-cp.md:
+  - /mesh/reference/kuma-cp/
+app/_src/.repos/kuma/app/_src/using-mesh/managing-ingress-traffic/builtin-k8s.md:
+  - /mesh/gateway-pods-k8s/
+app/_src/.repos/kuma/app/_src/using-mesh/managing-ingress-traffic/builtin-listeners.md:
+  - /mesh/gateway-listeners/
+app/_src/.repos/kuma/app/_src/using-mesh/managing-ingress-traffic/builtin-routes.md:
+  - /mesh/gateway-routes/
+app/_src/.repos/kuma/app/_src/using-mesh/managing-ingress-traffic/builtin.md:
+  - /mesh/managing-ingress-traffic/gateway/
+app/_src/.repos/kuma/app/_src/using-mesh/managing-ingress-traffic/delegated.md:
+  - /mesh/ingress-gateway-delegated/
+app/_src/.repos/kuma/app/_src/using-mesh/managing-ingress-traffic/gateway-api.md:
+  - /mesh/kubernetes-gateway-api/
+app/_src/.repos/kuma/app/_src/using-mesh/managing-ingress-traffic/overview.md:
+  - /mesh/ingress/
+app/_src/.repos/kuma/app/_src/documentation/configuration.md:
+  - /mesh/cp-config/
+app/_src/.repos/kuma/app/_src/documentation/health.md:
+  - /mesh/dataplane-health/
+app/_src/.repos/kuma/app/_src/explore/cli.md:
+  - /mesh/cli/
+app/_src/.repos/kuma/app/_src/explore/observability.md:
+  - /mesh/observability/
+app/_src/.repos/kuma/app/_src/introduction/about-service-meshes.md:
+  - /mesh/about/
+app/_src/.repos/kuma/app/_src/networking/service-discovery.md:
+  - /mesh/service-discovery/
+app/_src/.repos/kuma/app/_src/networking/transparent-proxying.md:
+  - /mesh/transparent-proxying/
+app/_src/.repos/kuma/app/_src/production/cp-deployment/zone-ingress.md:
+  - /mesh/zone-ingress/
+app/_src/.repos/kuma/app/_src/production/cp-deployment/zoneegress.md:
+  - /mesh/zone-egress/
+app/_src/.repos/kuma/app/_src/production/cp-deployment/zoneproxy-auth.md:
+  - /mesh/zone-proxy-auth/
+app/_src/.repos/kuma/app/_src/production/dp-config/dpp-on-kubernetes.md:
+  - /mesh/data-plane-kubernetes/
+app/_src/.repos/kuma/app/_src/production/dp-config/dpp-on-universal.md:
+  - /mesh/data-plane-universal/
+app/_src/.repos/kuma/app/_src/production/dp-config/dpp.md:
+  - /mesh/data-plane-proxy/
+app/_src/.repos/kuma/app/_src/production/dp-config/ipv6.md:
+  - /mesh/ipv6-support/
+app/_src/.repos/kuma/app/_src/production/dp-config/transparent-proxying.md:
+  - /mesh/configure-transparent-proxying/
+app/_src/.repos/kuma/app/_src/production/gui.md:
+  - /mesh/kuma-user-interface-gui/
+app/_src/.repos/kuma/app/_src/production/secure-deployment/api-server-auth.md:
+  - /mesh/authentication-with-the-api-server/
+app/_src/.repos/kuma/app/_src/production/secure-deployment/dp-membership.md:
+  - /mesh/configure-data-plane-proxy-membership/
+app/_src/.repos/kuma/app/_src/production/secure-deployment/secrets.md:
+  - /mesh/manage-secrets/
+app/_src/.repos/kuma/app/_src/production/use-mesh.md:
+  - /mesh/use-kuma/
+app/_src/.repos/kuma/app/_src/reference/data-collection.md:
+  - /mesh/data-collection/
+
+app/_src/gateway-operator/guides/autoscaling-workloads/datadog.md:
+  - /operator/dataplanes/how-to/autoscale-workloads/datadog/
+app/_src/gateway-operator/guides/autoscaling-workloads/prometheus.md:
+  - /operator/dataplanes/how-to/autoscale-workloads/prometheus/
+app/_src/gateway-operator/guides/konnect-entities/certificate-and-cacertificate.md:
+  - /operator/dataplanes/how-to/use-custom-ca-certificate/
+app/_src/gateway-operator/guides/plugin-distribution.md:
+  - /operator/dataplanes/how-to/deploy-custom-plugins/
+app/_src/gateway-operator/customization/data-plane-image.md:
+  - /operator/dataplanes/how-to/set-dataplane-image/
+app/_src/gateway-operator/customization/sidecars.md:
+  - /operator/dataplanes/how-to/deploy-sidecars/
+app/_src/gateway-operator/get-started/kic/create-route.md:
+  - /operator/dataplanes/get-started/hybrid/create-route/
+app/_src/gateway-operator/get-started/kic/install.md:
+  - /operator/dataplanes/get-started/kic/install/

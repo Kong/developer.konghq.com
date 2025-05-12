@@ -23,6 +23,8 @@ related_resources:
     url: /gateway/reserved-entity-names/
   - text: Traffic control and routing
     url: /gateway/traffic-control-and-routing/
+  - text: "{{site.konnect_short_name}} Control Plane resource limits"
+    url: /gateway-manager/control-plane-resource-limits/
 
 next_steps:
   - text: Learn about the Expressions router
@@ -510,7 +512,7 @@ The Routes entity can dynamically serve TLS certificates on a per-connection bas
 * [Certificates](/gateway/entities/certificate/)
 * [SNIs](/gateway/entities/sni/)
 
-To do this, create a Certificate [associated with an SNI](/how-to/associate-certificate-with-sni/), and then create a secure Route that uses the Certificate:
+To do this, create a Certificate associated with an SNI, and then create a secure Route that uses the Certificate:
 
 {% entity_example %}
 type: route

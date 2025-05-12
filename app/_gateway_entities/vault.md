@@ -5,8 +5,8 @@ entities:
   - vault
 
 description: |
-  Vaults allow you to securely store and then reference secrets from within other entities. This ensures that secrets aren't visible in plaintext throughout the platform, in places such as `kong.conf`,
-  declarative configuration files, logs, or the UI.
+  Vaults allow you to securely store and then reference secrets from within other entities,
+  ensuring that secrets aren't visible in plaintext throughout the platform.
 
 related_resources:
   - text: Secrets Management
@@ -19,6 +19,8 @@ related_resources:
     url: /gateway/reserved-entity-names/
   - text: Managing sensitive data with decK
     url: /deck/gateway/sensitive-data/
+  - text: "{{site.konnect_short_name}} Control Plane resource limits"
+    url: /gateway-manager/control-plane-resource-limits/
 
 
 faqs:
@@ -198,7 +200,7 @@ features:
     enterprise: true
     supports_konnect: true
   - title: Azure Key Vaults
-    url: /how-to/configure-azure-key-vaults-as-a-vault-backend-with-vault-entity/
+    <!--url: /how-to/configure-azure-key-vaults-as-a-vault-backend-with-vault-entity/-->
     oss: false
     enterprise: true
     supports_konnect: true

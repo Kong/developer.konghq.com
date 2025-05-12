@@ -8,7 +8,8 @@ related_resources:
     url: /plugins/rate-limiting-advanced/
   - text: Consumer Group API documentation
     url: /api/gateway/admin-ee/#/operations/get-consumer_groups
-  
+
+description: Enforce customized rate limiting tiers by setting individual rate limits for different groups of Consumers.
 products:
     - gateway
 

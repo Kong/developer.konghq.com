@@ -5,6 +5,8 @@ related_resources:
   - text: Authentication
     url: /gateway/authentication/
 
+description: Learn how to allow different clients to access an upstream service with different authentication types, and forbid access to any unauthenticated clients.
+
 products:
     - gateway
 

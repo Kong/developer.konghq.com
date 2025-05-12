@@ -26,10 +26,6 @@ related_resources:
     url: /gateway/entities/service/
   - text: Configuration reference
     url: /gateway/configuration/
-  - text: Define a client certificate on a Service
-    url: /how-to/client-cert-for-service/
-  - text: Define Service-level CA certificate
-    url: /how-to/ca-cert-for-server-on-service/
 
 plugins:
   - mtls-auth
@@ -63,7 +59,7 @@ rows:
   - use_case: Service-level client certificate
     description: Configure Gateway Services to send individual client certificates to their upstream applications.
     method: |
-      Upload the certificate and private key to a Certificate entity, then pass the entity's ID to a Gateway Service. See the [how-to guide for setting up client certificates for a Service](/how-to/client-cert-for-service/).
+      Upload the certificate and private key to a Certificate entity, then pass the entity's ID to a Gateway Service.
 {% endtable %}
 <!--vale on-->
 
@@ -94,7 +90,6 @@ rows:
       Define individual CA root certificates for each Gateway Service.
     method: |
       Upload the certificate and private key to a CA Certificate entity, then pass the entity's ID to a Gateway Service. 
-      See the [how-to guide for setting up CA certificates for a Service](/how-to/ca-cert-for-server-on-service/).
   - use_case: Verify client certificates
     description: |
       Verify client certificates by passing CA certificates to the [mTLS Auth](/plugins/mtls-auth/) plugin.

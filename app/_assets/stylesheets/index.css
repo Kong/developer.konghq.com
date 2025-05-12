@@ -90,8 +90,6 @@
     --color-ai-gateway-background: var(--color-semantic-green-secondary);
     --color-event-gateway-brand: var(--color-semantic-green-primary);
     --color-event-gateway-background: var(--color-semantic-green-secondary);
-    --color-api-ops-brand: var(--color-semantic-teal-primary);
-    --color-api-ops-background: var(--color-semantic-teal-secondary);
     --color-gateway-brand: var(--color-semantic-green-primary);
     --color-gateway-background: var(--color-semantic-green-secondary);
     --color-insomnia-brand: var(--color-semantic-purple-primary);
@@ -104,8 +102,10 @@
     --color-service-catalog-background: var(--color-semantic-red-secondary);
     --color-dev-portal-brand: var(--color-semantic-teal-primary);
     --color-dev-portal-background: var(--color-semantic-teal-secondary);
-    --color-org-management-brand: var(--color-semantic-grey-primary);
-    --color-org-management-background: var(--color-semantic-grey-secondary);
+    --color-konnect-platform-brand: var(--color-semantic-grey-primary);
+    --color-konnect-platform-background: var(--color-semantic-grey-secondary);
+    --color-reference-platform-brand: var(--color-semantic-teal-primary);
+    --color-reference-platform-background: var(--color-semantic-teal-secondary);
     --color-kgo-brand: var(--color-semantic-blue-primary);
     --color-kgo-background: var(--color-semantic-blue-secondary);
     --color-api-products-brand: var(--color-semantic-orange-primary);

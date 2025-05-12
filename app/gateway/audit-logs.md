@@ -24,8 +24,8 @@ related_resources:
     url: /gateway/logs/
 #  - text: "{{site.base_gateway}} debugging"
 #    url: /gateway/debug/
-  - text: "{{site.konnect_short_name}} logs"
-    url: /konnect-logs/
+  - text: "{{site.konnect_short_name}} platform audit logs"
+    url: /konnect-platform/audit-logs/
   - text: Sign {{site.base_gateway}} audit logs with an RSA key
     url: /how-to/sign-gateway-audit-logs/
 

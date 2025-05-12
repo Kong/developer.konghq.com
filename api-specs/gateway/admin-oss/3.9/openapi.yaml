@@ -3607,7 +3607,7 @@ components:
                 next: /tags/example?offset=1fb491c4-f4a7-4bca-aeba-7f3bcee4d2f9
 externalDocs:
   description: Kong Gateway Admin API (OSS)
-  url: 'https://developer.konghq.com'
+  url: 'https://docs.konghq.com'
 info:
   contact:
     email: docs@konghq.com
@@ -3616,7 +3616,7 @@ info:
   description: |-
     OpenAPI 3.0 spec for Kong Gateway's open source Admin API.
 
-    You can know more about Kong Gateway at [developer.konghq.com](https://developer.konghq.com)
+    You can know more about Kong Gateway at [docs.konghq.com](https://docs.konghq.com)
     .Give Kong a star at [Kong/kong](https://github.com/kong/kong) repository.
   license:
     name: Apache 2.0

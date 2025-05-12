@@ -7,7 +7,9 @@ metadata:
   tags:
     - service-catalog
     - governance
+    - beta
   breadcrumb: /service-catalog/
+  beta: true
 
 rows:
   - header:

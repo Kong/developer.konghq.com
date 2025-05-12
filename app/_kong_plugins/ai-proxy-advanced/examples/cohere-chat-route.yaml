@@ -2,7 +2,7 @@
 title: 'Chat route with Cohere'
 description: 'Configure a chat route using the Cohere command model.'
 
-weight: 900
+weight: 118
 
 requirements:
 - Cohere account

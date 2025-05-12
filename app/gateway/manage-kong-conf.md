@@ -2,7 +2,7 @@
 title: "Managing {{site.base_gateway}} configuration"
 
 description: |
-  The {{site.base_gateway}} configuration file `kong.conf` can be used to configure individual properties of your {{site.base_gateway}} instance.
+  The {{site.base_gateway}} configuration file kong.conf can be used to configure individual properties of your {{site.base_gateway}} instance.
 content_type: reference
 layout: reference
 

@@ -21,10 +21,10 @@ rows:
                 text: "Introducing {{ site.base_gateway }}"
               blocks:
                 - type: text
-                  text: | 
+                  text: |
                     {{ site.base_gateway }} is a lightweight, fast, and flexible cloud-native API gateway. An API gateway is a reverse proxy that lets you manage, configure, and route requests to your APIs.
-                    
-                    {{ site.base_gateway }} runs in front of any RESTful API and can be extended through modules and plugins. 
+
+                    {{ site.base_gateway }} runs in front of any RESTful API and can be extended through modules and plugins.
                     It’s designed to run on decentralized architectures, including hybrid-cloud and multi-cloud deployments.
       - blocks:
           - type: image
@@ -37,24 +37,41 @@ rows:
       text: "Install {{ site.base_gateway }}"
     columns:
       - blocks:
-        - type: structured_text
+        - type: text
+          config: |
+            You can use the [quickstart script](https://get.konghq.com/quickstart) to get an instance of {{ site.base_gateway }} running almost instantly:
+        - type: tabs
+          tab_group: run-gateway
           config:
-            blocks:
-              - type: text
-                text: |
-                  You can use the [quickstart script](https://get.konghq.com/quickstart) to get an instance of {{ site.base_gateway }} running almost instantly:
-                  
-                  ```sh
-                  curl -Ls https://get.konghq.com/quickstart | bash -s
-                  ```
+            - title: Konnect
+              content: |
+                This command requires a [Konnect Access Token](https://cloud.konghq.com/global/account/tokens).
 
-                  This script sets up two Docker containers: an Enterprise Gateway instance running in free mode, and a 
-                  PostgreSQL database.
-                  
-                  Pass the `-- -h` option to the script to see all possible configuration options, including how to pass a license
-                  to the script, switch to an open-source Gateway image, [enable RBAC](/gateway/entities/rbac/#enable-rbac), and more.
+                ```sh
+                curl -Ls https://get.konghq.com/quickstart | bash -s -- -k $KONNECT_TOKEN
+                ```
 
-                  Visit the [Gateway install page](/gateway/install/) for all other installation options.
+                The script creates a Control Plane in Konnect and deploys a local Data Plane using Docker.
+
+                All licensing is handled automatically by Konnect.
+            - title: On-Prem
+              content: |
+                You must provide your Kong Gateway license in the `KONG_LICENSE_DATA` environment variable.
+
+                ```sh
+                curl -Ls https://get.konghq.com/quickstart | bash -s -- -e $KONG_LICENSE_DATA
+                ```
+
+                This script sets up two Docker containers: an Enterprise Gateway instance, and a
+                PostgreSQL database.
+
+
+        - type: text
+          config: |
+            Pass the `-- -h` option to the script to see all possible configuration options, including how to pass a license
+            to the script, switch to an open-source Gateway image, [enable RBAC](/gateway/entities/rbac/#enable-rbac), and more.
+
+            Visit the [Gateway install page](/gateway/install/) for all other installation options.
 
   - header:
       type: h2
@@ -67,7 +84,6 @@ rows:
             description: Learn how to use {{site.base_gateway}} on Konnect or on-prem
             icon: /assets/icons/graduation.svg
             cta:
-              text: 
               url: /gateway/get-started/
               align: end
       - blocks:
@@ -77,7 +93,6 @@ rows:
             description: Set up {{ site.base_gateway }} on any supported platform
             icon: /assets/icons/deployment.svg
             cta:
-              text: 
               url: /gateway/install/
               align: end
       - blocks:
@@ -88,7 +103,6 @@ rows:
               Learn about the different ways that you can deploy {{ site.base_gateway }} in production: traditional mode, hybrid mode, and DB-less
             icon: /assets/icons/graph.svg
             cta:
-              text: 
               url: /gateway/deployment-topologies/
               align: end
   - header:
@@ -133,7 +147,7 @@ rows:
           config:
             title: AI Gateway
             description: |
-              Kong AI Gateway is a powerful set of AI features built on top of {{ site.base_gateway }}, 
+              Kong AI Gateway is a powerful set of AI features built on top of {{ site.base_gateway }},
               designed to help developers and organizations effectively adopt AI quickly and securely.
             icon: /assets/icons/ai.svg
             cta:
@@ -145,7 +159,7 @@ rows:
           config:
             title: Authentication
             description: |
-              Authentication is the process of verifying that a requester has permissions to access a resource. 
+              Authentication is the process of verifying that a requester has permissions to access a resource.
               {{ site.base_gateway }} has a library of plugins that support the most widely used methods of API gateway authentication.
             icon: /assets/icons/lock.svg
             cta:
@@ -164,7 +178,7 @@ rows:
             cta:
               text: Add Rate Limiting with {{ site.base_gateway }}
               url: "/gateway/rate-limiting/"
-  
+
   - columns:
       - blocks:
         - type: card
@@ -184,7 +198,7 @@ rows:
           config:
             title: "Securing {{site.base_gateway}}"
             description: |
-              {{site.base_gateway}} provides security features such as authorization, sensitive data encryption, 
+              {{site.base_gateway}} provides security features such as authorization, sensitive data encryption,
               and logs that you can use to secure your {{site.base_gateway}} deployments.
             icon: /assets/icons/security.svg
             cta:
@@ -196,9 +210,9 @@ rows:
           config:
             title: Load balancing
             description: |
-                Load balancing traffic across your upstream services is vital for ensuring 
-                high availability, scalability, and reliability of your ecosystem. 
-                
+                Load balancing traffic across your upstream services is vital for ensuring
+                high availability, scalability, and reliability of your ecosystem.
+
                 {{site.base_gateway}} provides multiple ways to load balance across upstream services,
                 along with health checks and circuit breakers to ensure target health.
 
@@ -226,7 +240,7 @@ rows:
             config:
               title: "{{ site.base_gateway }} configuration"
               description: |
-                The {{site.base_gateway}} configuration file `kong.conf` can be used to configure 
+                The {{site.base_gateway}} configuration file `kong.conf` can be used to configure
                 individual properties of your {{site.base_gateway}} instance.
               icon: /assets/icons/service-document.svg
               cta:
@@ -265,7 +279,7 @@ rows:
               description: Learn about different upgrade methods
               icon: /assets/icons/download.svg
               cta:
-                text: See reference 
+                text: See reference
                 url: /gateway/upgrade/
                 align: end
       - blocks:
@@ -287,10 +301,10 @@ rows:
             config:
               title: "{{site.base_gateway}} version support policy"
               description: |
-                The {{site.base_gateway}} version support policy outlines the {{site.base_gateway}} 
+                The {{site.base_gateway}} version support policy outlines the {{site.base_gateway}}
                 versioning scheme and version lifecycle, from release to sunset support.
               cta:
-                text: View the version support policy 
+                text: View the version support policy
                 url: /gateway/version-support-policy/
                 align: end
       - blocks:
@@ -300,7 +314,7 @@ rows:
               description: |
                 This reference lists all of the tested and supported versions of {{site.base_gateway}}'s third-party dependencies.
               cta:
-                text: View the supported third-party dependencies 
+                text: View the supported third-party dependencies
                 url: /gateway/third-party-support/
                 align: end
       - blocks:
@@ -308,10 +322,10 @@ rows:
             config:
               title: "Kong vulnerability patching process"
               description: |
-                Learn how Kong handles vulnerabilities or potential vulnerabilities in {{site.base_gateway}} or 
+                Learn how Kong handles vulnerabilities or potential vulnerabilities in {{site.base_gateway}} or
                 third-party code, and how to report any security issues.
               cta:
-                text: View the vulnerability policy 
+                text: View the vulnerability policy
                 url: /gateway/vulnerabilities/
                 align: end
   - header:

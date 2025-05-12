@@ -13,6 +13,8 @@ related_resources:
     url: /gateway/reserved-entity-names/
   - text: Using SSL certificates in {{site.base_gateway}}
     url: /gateway/ssl-certificates/
+  - text: "{{site.konnect_short_name}} Control Plane resource limits"
+    url: /gateway-manager/control-plane-resource-limits/
       
 tools:
     - admin-api

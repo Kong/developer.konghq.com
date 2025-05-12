@@ -12,7 +12,7 @@ min_version:
 breadcrumbs:
   - /konnect/
 
-description: "Learn how to configure SSO in {{site.konnect_short_name}}."
+description: "Learn how to configure single sign-on (SSO) for the {{site.konnect_short_name}} platform."
 
 api_specs:
     - konnect/identity
@@ -117,10 +117,10 @@ columns:
 rows:
   - feature: "{{site.konnect_short_name}} platform"
     ui: "Go to the [Authentication Scheme organization settings](https://cloud.konghq.com/global/organization/settings#authentication-scheme)<sup>1</sup>"
-    api: "[`/identity-providers`](/api/konnect/identity/v3/#/operations/create-identity-provider)<sup>1</sup>"
+    api: "[`/identity-providers`](/api/konnect/identity/#/operations/create-identity-provider)<sup>1</sup>"
   - feature: "Dev Portal"
     ui: "Go to the Identity settings for your [Dev Portal](https://cloud.konghq.com/portals/)"
-    api: "[`/portals/{portalId}/identity-providers`](/api/konnect/portal-management/v2/#/operations/create-portal-identity-provider)"
+    api: "[`/portals/{portalId}/identity-providers`](/api/konnect/portal-management/#/operations/create-portal-identity-provider)"
 {% endtable %}
 <!--vale on-->
 
@@ -305,9 +305,9 @@ This allows your users to log in to {{site.konnect_short_name}} using their exis
 
 To enable OIDC:
 
-1. Send a `POST` or `PATCH` request to the [`/identity-providers` endpoint](/api/konnect/identity/v3/#/operations/create-identity-provider), making sure `oidc` is selected for `type` and `scopes`. The `profile` and `email` scopes are recommended so {{site.konnect_short_name}} 
+1. Send a `POST` or `PATCH` request to the [`/identity-providers` endpoint](/api/konnect/identity/#/operations/create-identity-provider), making sure `oidc` is selected for `type` and `scopes`. The `profile` and `email` scopes are recommended so {{site.konnect_short_name}} 
 obtains the user's name and email address in the token response.
-1. Once the SSO configuration is set, you can enable the OIDC auth method with the [`/authentication-settings` endpoint](/api/konnect/identity/v3/#/operations/update-authentication-settings) by setting `oidc_auth_enabled: true`.
+1. Once the SSO configuration is set, you can enable the OIDC auth method with the [`/authentication-settings` endpoint](/api/konnect/identity/#/operations/update-authentication-settings) by setting `oidc_auth_enabled: true`.
 1. Verify the configuration is valid by logging in at `https://cloud.konghq.com/login/$YOUR_LOGIN_PATH`.
 
 ## Team mapping configuration
@@ -328,10 +328,10 @@ columns:
 rows:
   - feature: "{{site.konnect_short_name}} platform"
     ui: "Go to the [Team Mapping](https://cloud.konghq.com/global/organization/settings#team-mappings ) in the Organization settings."
-    api: "[`/identity-provider/team-mappings`](/api/konnect/identity/v3/#/operations/update-idp-team-mappings)"
+    api: "[`/identity-provider/team-mappings`](/api/konnect/identity/#/operations/update-idp-team-mappings)"
   - feature: "Dev Portal"
     ui: "Click on a [Dev Portal](https://cloud.konghq.com/portals/) and go to Team Mappings in its settings."
-    api: "[`/portals/{portalId}/identity-provider/team-group-mappings`](/api/konnect/portal-management/v2/#/operations/update-portal-team-group-mappings)"
+    api: "[`/portals/{portalId}/identity-provider/team-group-mappings`](/api/konnect/portal-management/#/operations/update-portal-team-group-mappings)"
 {% endtable %}
 <!--vale on-->
 

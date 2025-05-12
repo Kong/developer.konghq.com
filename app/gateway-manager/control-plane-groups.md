@@ -147,7 +147,7 @@ body:
 
 ## How do I attach Control Planes to a Control Plane Group?
 
-Once you have a Control Plane Group, you can add Control Planes to the Group using the {{site.konnect_short_name}} UI or [API](/api/konnect/control-planes/v2/#/operations/post-control-planes-id-group-memberships-add).
+Once you have a Control Plane Group, you can add Control Planes to the Group using the {{site.konnect_short_name}} UI or [API](/api/konnect/control-planes/#/operations/post-control-planes-id-group-memberships-add).
 <!--vale off-->
 
 {% control_plane_request %}

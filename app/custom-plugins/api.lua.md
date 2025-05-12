@@ -14,7 +14,7 @@ works_on:
     - konnect
     - on-prem
 
-description: Learn how to extent the Admin API using api.lua.
+description: Learn how to extend the Admin API using api.lua.
 
 tags:
   - custom-plugins

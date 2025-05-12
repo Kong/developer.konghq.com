@@ -2,7 +2,7 @@
 title: 'Chat route with Amazon Bedrock'
 description: 'Configure a chat route using Amazon Bedrock with the Meta Llama 3 70B Instruct model and the US East 1 AWS region.'
 
-weight: 900
+weight: 119
 
 requirements:
 - AWS account with access to Bedrock

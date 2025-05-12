@@ -1,5 +1,5 @@
 ---
-title: Dev Portal settings
+title: Global Dev Portal configuration
 content_type: reference
 layout: reference
 

@@ -1,5 +1,5 @@
 ---
-title: Configure AWS Secrets Manager as a vault backend using the Vault entity
+title: Configure AWS Secrets Manager as a vault backend
 content_type: how_to
 related_resources:
   - text: Secrets management
@@ -7,6 +7,7 @@ related_resources:
   - text: "{{site.base_gateway}} CLI: kong vault"
     url: /gateway/cli/reference/#kong-vault
 
+description: Learn how to set up AWS Secrets Manager as a Vault in {{site.base_gateway}} and reference a secret stored there.
 products:
   - gateway
 

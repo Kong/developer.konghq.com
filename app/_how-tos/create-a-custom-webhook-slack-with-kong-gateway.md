@@ -7,7 +7,7 @@ products:
     - gateway
 entities:
   - event-hook
-
+description: Using an Event Hook and a Slack application URL, create a custom webhook to push information to Slack.
 tags:
   - event-hook
   - webhook

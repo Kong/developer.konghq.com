@@ -1422,7 +1422,7 @@ to be set for the Kafka client.
 
 ### Known issues
 
-* In the [JSON Threat Protection plugin](/plugins/json-threat-protection/configuration/), the default value of `-1`
+* In the [JSON Threat Protection plugin](/plugins/json-threat-protection/reference/), the default value of `-1`
 for any of the `max_*` parameters indicates unlimited.
 In some environments (such as ARM64-based environments), the default value is interpreted incorrectly.
 The plugin can erroneously block valid requests if any of the parameters continue with the default values.
@@ -1698,13 +1698,13 @@ and reports audit results into the Kong log serializer for reporting purposes.
   while the plugin config parameters under `model_options` are now just defaults.
   This fixes support for using the respective provider's native SDK.
  [#12903](https://github.com/Kong/kong/issues/12903)
-  * AI Proxy now has a [`preserve` option for `route_type`](/plugins/ai-proxy/configuration/#config-route_type), 
+  * AI Proxy now has a `preserve` option for `route_type`, 
   where the requests and responses are passed directly to the upstream LLM. This enables compatibility with any
   models and SDKs that may be used when calling the AI services.
  [#12903](https://github.com/Kong/kong/issues/12903)
-  * Added support for [streaming event-by-event responses](/plugins/ai-proxy/how-to/streaming/) back to the client on supported providers.
+  * Added support for streaming event-by-event responses back to the client on supported providers.
  [#12792](https://github.com/Kong/kong/issues/12792)
-  * **Enterprise-only feature**: Added support for [Managed Identity authentication](/plugins/ai-proxy/how-to/cloud-provider-authentication/) 
+  * **Enterprise-only feature**: Added support for Managed Identity authentication 
   when using the Azure provider with AI Proxy.
 
 * [**Prometheus**](/plugins/prometheus/) (`prometheus`) 
@@ -1727,37 +1727,37 @@ options allow better control over the configuration of tracing header propagatio
  [#12670](https://github.com/Kong/kong/issues/12670)
 
 * [**OpenID Connect**](/plugins/openid-connect/) (`openid-connect`)
-  * Added support for [DPoP (Demonstrating Proof-of-Possession) token validation](/plugins/openid-connect/how-to/demonstrating-proof-of-possession/). 
-  You can enable it using the configuration parameter [`proof_of_possession_dpop`](/plugins/openid-connect/configuration/#config-proof_of_possession_dpop).
+  * Added support for DPoP (Demonstrating Proof-of-Possession) token validation. 
+  You can enable it using the configuration parameter `proof_of_possession_dpop`.
   * Added support for JWT Secured Authorization Requests (JAR) on Authorization and Pushed Authorization (PAR) endpoints. 
-  See the configuration parameter [`require_signed_request_object`](/plugins/openid-connect/configuration/#config-require_signed_request_object).
+  See the configuration parameter `require_signed_request_object`.
   * Added support for JARM response modes: `query.jwt`, `form_post.jwt`, `fragment.jwt`, and `jwt`.
 
 * [**GraphQL Proxy Cache Advanced**](/plugins/graphql-proxy-cache-advanced/)
   * Added Redis strategy support.
-  * Added the ability to resolve unhandled errors with bypass, with the request going upstream. Enable it using the [`bypass_on_err`](/plugins/graphql-proxy-cache-advanced/configuration/#config-bypass_on_err) configuration option.
+  * Added the ability to resolve unhandled errors with bypass, with the request going upstream. Enable it using the `bypass_on_err` configuration option.
 
 * [**JWT Signer**](/plugins/jwt-signer/) (`jwt-signer`)
   * Added support for basic authentication and mTLS authentication to external JWKS services.
-  * The plugin now supports periodically rotating the JWKS. For example, to automatically rotate `access_token_jwks_uri`, you can set the configuration option [`access_token_jwks_uri_rotate_period`](/plugins/jwt-signer/configuration/#config-access_token_jwks_uri_rotate_period).
-  * The plugin now supports adding the original JWT(s) to the upstream request header by specifying the names of the upstream request header with [`original_access_token_upstream_header`](/plugins/jwt-signer/configuration/#config-original_access_token_upstream_header) and [`original_channel_token_upstream_header`](/plugins/jwt-signer/configuration/#config-original_channel_token_upstream_header).
-  * [`access_token_upstream_header`](/plugins/jwt-signer/configuration/#config-access_token_upstream_header), [`channel_token_upstream_header`](/plugins/jwt-signer/configuration/#config-channel_token_upstream_header), [`original_access_token_upstream_header`](/plugins/jwt-signer/configuration/#config-original_access_token_upstream_header), and [`original_channel_token_upstream_header`](/plugins/jwt-signer/configuration/#config-original_channel_token_upstream_header) should not have the same value.
-  * The plugin now supports pseudo JSON values in [`add_claims`](/plugins/jwt-signer/configuration/#config-add_claims) and [`set_claims`](/plugins/jwt-signer/configuration/#config-set_claims). We can achieve the goal of passing multiple values to a key by passing a JSON string as the value. 
-  * Added [`add_access_token_claims`](/plugins/jwt-signer/configuration/#config-add_access_token_claims), [`set_access_token_claims`](/plugins/jwt-signer/configuration/#config-set_access_token_claims), [`add_channel_token_claims`](/plugins/jwt-signer/configuration/#config-add_channel_token_claims), [`set_channel_token_claims`](/plugins/jwt-signer/configuration/#config-set_channel_token_claims) for individually adding claims to access tokens and channel tokens.
-  * Added [`remove_access_token_claims`](/plugins/jwt-signer/configuration/#config-remove_access_token_claims) and [`remove_channel_token_claims`](/plugins/jwt-signer/configuration/#config-remove_channel_token_claims) to support the removal of claims.
+  * The plugin now supports periodically rotating the JWKS. For example, to automatically rotate `access_token_jwks_uri`, you can set the configuration option `access_token_jwks_uri_rotate_period`.
+  * The plugin now supports adding the original JWT(s) to the upstream request header by specifying the names of the upstream request header with `original_access_token_upstream_header` and `original_channel_token_upstream_header`.
+  * `access_token_upstream_header`, `channel_token_upstream_header`, `original_access_token_upstream_header`, and `original_channel_token_upstream_header` should not have the same value.
+  * The plugin now supports pseudo JSON values in `add_claims` and `set_claims`. We can achieve the goal of passing multiple values to a key by passing a JSON string as the value. 
+  * Added `add_access_token_claims`, `set_access_token_claims`, `add_channel_token_claims`, `set_channel_token_claims` for individually adding claims to access tokens and channel tokens.
+  * Added `remove_access_token_claims` and `remove_channel_token_claims` to support the removal of claims.
 
 * [**Mocking**](/plugins/mocking/) (`mocking`)  
-  * Added the [`custom_base_path`](/plugins/mocking/configuration/#config-custom_base_path) field to specify a custom base path.
+  * Added the `custom_base_path` field to specify a custom base path.
   Use it with the [`deck file namespace`](https://docs.konghq.com/deck/latest/reference/deck_file_namespace/) command.
 
 * [**Mutual TLS Authentication**](/plugins/mtls-auth/) (`mtls-auth`)
-  * Added the [`default_consumer`](/plugins/mtls-auth/configuration/#config-default_consumer) option, 
+  * Added the `default_consumer` option, 
   which lets you use a default consumer when the client certificate is valid 
   but doesn't match any existing consumers.
 
 * [**OAS Validation**](/plugins/oas-validation/) (`oas-validation`)
-  * Added the new field [`api_spec_encoded`](/plugins/oas-validation/configuration/#config-api_spec_encoded) to indicate whether the `api_spec` is URI-Encoded.
-  * Add the [`custom_base_path`](/plugins/oas-validation/configuration/#config-custom_base_path) field to specifiy a custom base path.
+  * Added the new field `api_spec_encoded` to indicate whether the `api_spec` is URI-Encoded.
+  * Add the `custom_base_path`field to specifiy a custom base path.
   Use it with the [`deck file namespace`](https://docs.konghq.com/deck/latest/reference/deck_file_namespace/) command.
   * The plugin now supports OpenAPI Specification v3.1.0. The plugin now switches to a new JSONSchema validator when the specification version is v3.1.0.
 
@@ -2174,7 +2174,7 @@ It now ignores records when the RR type differs from that of the query when pars
 ### Features
 #### Plugins
 
-* [**Portal Application Registration**](/plugins/application-registration/) (`application-registration`)
+* **Portal Application Registration** (`application-registration`)
   * Added support for accessing the service using consumer credential authentication. 
   To use this functionality, enable `enable_proxy_with_consumer_credential` (default is `false`).
 
@@ -2398,7 +2398,7 @@ configuration parameters are set in `admin_gui_auth_conf` (like `session_secret`
   [#12300](https://github.com/Kong/kong/issues/12300)  [#12301](https://github.com/Kong/kong/issues/12301)
 
 * [**Azure Functions**](/plugins/azure-functions/) (`azure-functions`): 
-  * The Azure Functions plugin now eliminates the upstream/request URI and only uses the [`routeprefix`](/plugins/azure-functions/configuration/#config-routeprefix) 
+  * The Azure Functions plugin now eliminates the upstream/request URI and only uses the `routeprefix` 
 configuration field to construct the request path when requesting the Azure API.
 
 * [**OAS Validation**](/plugins/oas-validation/) (`oas-validation`) 
@@ -2572,10 +2572,10 @@ Learn more about these plugins in the [AI Gateway quickstart](https://docs.kongh
   * Added support for explicit proof key for code exchange (PKCE).
   * Added support for pushed authorization requests (PAR).
   * Added support for the `tls_client_auth` and `self_signed_tls_client_auth` authentication methods, allowing 
-  [mTLS client authentication](/plugins/openid-connect/how-to/client-authentication/mtls/) with the IdP.
+  mTLS client authentication with the IdP.
 
 * [**OpenTelemetry**](/plugins/opentelemetry/) (`opentelemetry`)
-  * Tracing sampling rate can now be set via the [`config.sampling_rate`](/plugins/opentelemetry/configuration/#configsampling_rate) property of the OpenTelemetry plugin 
+  * Tracing sampling rate can now be set via the `config.sampling_rate`property of the OpenTelemetry plugin 
   instead of just being a global setting for Kong Gateway.
  [#12054](https://github.com/Kong/kong/issues/12054)
 
@@ -2855,7 +2855,7 @@ To avoid this issue, install 3.5.0.6 instead of this patch.
 
 #### Plugin
 
-* [**Portal Application Registration**](/plugins/application-registration/) (`application-registration`)
+* **Portal Application Registration** (`application-registration`)
   * Added support for accessing the service using consumer credential authentication. 
   To use this functionality, enable `enable_proxy_with_consumer_credential` (default is `false`).
 
@@ -3774,7 +3774,7 @@ It now ignores records when the RR type differs from that of the query when pars
 ### Features
 #### Plugins
 
-* [**Portal Application Registration**](/plugins/application-registration/) (`application-registration`)
+* **Portal Application Registration** (`application-registration`)
   * Added support for accessing the service using consumer credential authentication. 
   To use this functionality, enable `enable_proxy_with_consumer_credential` (default is `false`).
 
@@ -4913,7 +4913,7 @@ prepared to process user requests.
   [#9799](https://github.com/Kong/kong/pull/9799)
 
 * [**Request Transformer Advanced**](/plugins/request-transformer-advanced/) (`request-transformer-advanced`)
-  * The plugin now honors the following Kong Gateway configuration parameters: [`untrusted_lua`](https://docs.konghq.com/gateway/latest/reference/configuration/#untrusted_lua), [`untrusted_lua_sandbox_requires`](https://docs.konghq.com/gateway/latest/reference/configuration/#untrusted_lua_sandbox_requires), [`untrusted_lua_sandbox_environment`](https://docs.konghq.com/gateway/latest/reference/configuration/#untrusted_lua_sandbox_environment). These parameters apply to advanced templates (Lua expressions).
+  * The plugin now honors the following Kong Gateway configuration parameters: `untrusted_lua`, `untrusted_lua_sandbox_requires`, `untrusted_lua_sandbox_environment`. These parameters apply to advanced templates (Lua expressions).
 
 * [**Request Validator**](/plugins/request-validator/) (`request-validator`)
   * Errors are now logged for validation failures.
@@ -5025,7 +5025,7 @@ It has now been reverted back to `kong-enterprise-edition.service` to keep consi
   * Fixed an issue where the rate limiting `cluster_events` broadcast the wrong data in traditional cluster mode.
   * The control plane no longer creates namespace or syncs.
 
-* [**StatsD Advanced**](/plugins/statsd-advanced/) (`statsd-advanced`)
+* **StatsD Advanced**
   * Changed the plugin's name to `statsd-advanced` instead of `statsd`. 
 
 * [**LDAP Authentication Advanced**](/plugins/ldap-auth-advanced/) (`ldap-auth-advanced`)
@@ -6489,7 +6489,7 @@ Kong Gateway version.
   * Updated the Grafana dashboard that comes packaged with Kong
 
 * [StatsD](/plugins/statsd/) (`statsd`)
-  * **Newly open-sourced plugin capabilities**: All capabilities of the [StatsD Advanced](/plugins/statsd-advanced/) plugin are now bundled in the [StatsD](/plugins/statsd) plugin.
+  * **Newly open-sourced plugin capabilities**: All capabilities of the StatsD Advanced plugin are now bundled in the [StatsD](/plugins/statsd) plugin.
     [#9046](https://github.com/Kong/kong/pull/9046)
 
 * [Zipkin](/plugins/zipkin/) (`zipkin`)
@@ -6763,7 +6763,7 @@ Debian 8 reached end-of-life in June 30, 2020.
   * The default policy is now local for all deployment modes.
   [#9344](https://github.com/Kong/kong/pull/9344)
 
-* **Deprecated**: [StatsD Advanced](/plugins/statsd-advanced/) (`statsd-advanced`):
+* **Deprecated**: StatsD Advanced (`statsd-advanced`):
   * The StatsD Advanced plugin has been deprecated and will be removed in 4.0.
   All capabilities are now available in the [StatsD](/plugins/statsd/) plugin.
 
@@ -7945,7 +7945,7 @@ in the organization.
   * Include provided query string parameters when sending logs to the `http_endpoint`
 * [Forward Proxy](/plugins/forward-proxy/) (`forward-proxy`)
   * Use lowercase when overwriting the `host` header
-* [StatsD Advanced](/plugins/statsd-advanced/) (`statsd-advanced`)
+* StatsD Advanced
   * Added support for setting `workspace_identifier` to `workspace_name`
 * [Rate Limiting Advanced](/plugins/rate-limiting-advanced/) (`rate-limiting-advanced`)
   * Skip namespace creation if the plugin is not enabled. This prevents the error "[rate-limiting-advanced] no shared dictionary was specified" being logged.

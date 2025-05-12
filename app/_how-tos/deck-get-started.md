@@ -29,7 +29,6 @@ entities:
   - consumer
 
 tags:
-  - authentication
   - declarative-config
 
 tldr:

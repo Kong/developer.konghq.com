@@ -97,7 +97,7 @@ A --auto-scale configuration---> C
 <!--vale on -->
 ## How do I provision a Control Plane?
 
-1. Create a Dedicated Cloud Gateway Control Plane using by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/v2/#/operations/create-control-plane):
+1. Create a Dedicated Cloud Gateway Control Plane using by issuing a `POST` request to the [Control Plane API](/api/konnect/control-planes/#/operations/create-control-plane):
 <!-- vale off -->
 {% capture request %}
 {% control_plane_request %}
@@ -121,7 +121,7 @@ body:
 {{request | indent: 3}}
 <!--vale on -->
 
-2. Create a Dedicated Cloud Gateway Data Plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/v2/#/operations/create-configuration):
+2. Create a Dedicated Cloud Gateway Data Plane by issuing a `PUT` request to the [Cloud Gateways API](/api/konnect/cloud-gateways/#/operations/create-configuration):
 <!--vale off -->
 {% capture request %}
   {% control_plane_request %}

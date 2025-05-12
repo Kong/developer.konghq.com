@@ -12,7 +12,7 @@ title: 'Realms for external Consumers in Konnect'
 requirements:
   - |
     You have a realm configured with an associated Control Plane in {{site.konnect_short_name}}. 
-    You can do this with the [`/realms`](/api/konnect/consumers/v1/#/operations/list-realms) endpoint.
+    You can do this with the [`/realms`](/api/konnect/consumers/#/operations/list-realms) endpoint.
 weight: 899
 
 min_version:

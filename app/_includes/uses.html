@@ -16,14 +16,18 @@
         <span class="text-sm">Uses: </span>
     {% endif %}
 
+    {% assign hasTool = false %}
     {% if include.products %}
         {% for product in include.products %}
+        {% assign hasTool = true %}
         {% assign product_info = site.data.products[product] %}
             {% if product == 'kic' %}
                 {% capture url %}/kubernetes-ingress-controller/{% endcapture %}
             {% elsif product == 'konnect-platform' %}
                 {% capture url %}/index/konnect-platform/{% endcapture %}
             {% else %}
+            {% elsif product == 'reference-platform' %}
+                {% capture url %}/index/reference-platform/{% endcapture %}
                 {% capture url %}/{{ product }}/{% endcapture %}
             {% endif %}
             {% include badge.html url=url text=product_info.name %}
@@ -41,7 +45,7 @@
     {% if include.products and include.tools %}
         {% if show_tool %}
         {% assign tool = include.tools | find_exp: "tool", "site.data.tools[tool]" %}
-        {% if tool %}
+        {% if hasProduct and tool %}
             <span class="text-brand-saturated/40">|</span>
         {% endif %}
         {% endif %}

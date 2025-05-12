@@ -2,6 +2,7 @@
 title: GitLab
 content_type: reference
 layout: reference
+beta: true
 
 products:
     - service-catalog
@@ -17,7 +18,7 @@ breadcrumbs:
 
 works_on:
     - konnect
-description: The GitLab integration allows you to associate your Service Catalog Service to one or more [GitLab projects](https://docs.gitlab.com/ee/user/get_started/get_started_projects.html). 
+description: The GitLab integration allows you to associate your Service Catalog Service to one or more GitLab projects. 
 
 related_resources:
   - text: "Service Catalog"
