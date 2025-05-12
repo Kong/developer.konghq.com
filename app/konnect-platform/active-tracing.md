@@ -93,7 +93,7 @@ Here is a list of known issues in the tech preview:
 
 ## Sample trace
 
-A sample trace is shown below. By inspecting the **spans**, it is clear that the **bulk of the latency** occurs in the **pre-function plugin** during the **access phase**.
+A sample trace is shown below. By inspecting the spans, it's clear that the bulk of the latency occurs in the pre-function plugin during the access phase.
 
 ![Active-Tracing Spans](/assets/images/konnect/active-tracing-spans.png)
 
