@@ -15,9 +15,22 @@ breadcrumbs:
 products:
   - operator
 
+tools:
+  - operator
+
 works_on:
   - konnect
   - on-prem
+
+prereqs:
+  enterprise: true
+  kubernetes:
+    gateway_api: true
+  entities:
+    services:
+      - command-service
+    routes:
+      - command
 
 tldr:
   q: How can I autoscale {{site.base_gateway}} workloads using Datadog metrics?
@@ -30,158 +43,291 @@ tldr:
 
 {% assign gatewayApiVersion = "v1" %}
 
-## TODO
+## Autoscaling Workloads
 
-TODO
+This tutorial shows how to autoscale workloads based on Service latency. The `command` service created in the prerequisites allows us to inject an artificial delay in to responses to trigger autoscaling.
 
-## Example
+## Create a `DataPlaneMetricsExtension`
 
-This example deploys an `echo` `Service` which will have its latency measured and exposed on {{ site.operator_product_name }}'s `/metrics` endpoint. The Service allows us to run any shell command, which we'll use to add artificial latency later for testing purposes.
+The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monitor Service latency and expose it on the `/metrics` endpoint.
 
-```yaml
-echo '
-apiVersion: v1
-kind: Service
-metadata:
-  name: echo
-  namespace: default
-spec:
-  ports:
-    - protocol: TCP
-      name: http
-      port: 80
-      targetPort: http
-  selector:
-    app: echo
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: echo
-  name: echo
-  namespace: default
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: echo
-  template:
+1. Create a `DataPlaneMetricsExtension` that points to the `command` service:
+
+    ```yaml
+    echo '
+    kind: DataPlaneMetricsExtension
+    apiVersion: gateway-operator.konghq.com/v1alpha1
     metadata:
-      labels:
-        app: echo
+      name: kong
+      namespace: kong
     spec:
-      containers:
-        - name: echo
-          image: registry.k8s.io/e2e-test-images/agnhost:2.40
-          command:
-            - /agnhost
-            - netexec
-            - --http-port=8080
-          ports:
-            - containerPort: 8080
-              name: http
-          env:
-            - name: NODE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            - name: POD_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.podIP' | kubectl apply -f -
-```
+      serviceSelector:
+        matchNames:
+        - name: command
+      config:
+        latency: true
+    ' | kubectl apply -f -
+    ```
 
-Next, create a `DataPlaneMetricsExtension` that points to the `echo` Service, attach it to a `GatewayConfiguration` resource and deploy a `Gateway` with a `HTTPRoute` so that we can make a HTTP request to the Service.
+1. Create a GatewayConfiguration that uses it:
+
+    ```yaml
+    echo '
+    kind: GatewayConfiguration
+    apiVersion: gateway-operator.konghq.com/v1beta1
+    metadata:
+      name: kong
+      namespace: kong
+    spec:
+      controlPlaneOptions:
+        extensions:
+        - kind: DataPlaneMetricsExtension
+          group: gateway-operator.konghq.com
+          name: kong
+    ' | kubectl apply -f -
+    ```
+
+1. Patch the GatewayClass to use the config:
+
+    ```bash
+    kubectl patch -n kong --type=json gatewayclass kong -p='[
+        {
+            "op":"add",
+            "path":"/spec/parametersRef",
+            "value":{
+                    "group": "gateway-operator.konghq.com",
+                    "kind": "GatewayConfiguration",
+                    "name": "kong",
+                    "namespace": "kong",
+            }
+        }
+    ]'
+    ```
+
+
+{{ site.operator_product_name }} can be integrated with [Datadog Metrics](https://docs.datadoghq.com/metrics/) in order to use {{ site.base_gateway }} latency metrics to autoscale workloads based on their metrics.
+
+## Install Datadog in your Kubernetes cluster
+
+### Datadog API and application keys
+
+To install Datadog agents in your cluster you will need a Datadog API key
+and an application key. Please refer to [this Datadog manual page](https://docs.datadoghq.com/account_management/api-app-keys/) to obtain those.
+
+### Installing
+
+To install Datadog in your cluster, you can follow [this guide](https://docs.datadoghq.com/containers/kubernetes/installation/?tab=helm)
+or use the following `values.yaml`:
 
 ```yaml
 echo '
-kind: DataPlaneMetricsExtension
-apiVersion: gateway-operator.konghq.com/v1alpha1
-metadata:
-  name: kong
-  namespace: default
-spec:
-  serviceSelector:
-    matchNames:
-    - name: echo
-  config:
-    latency: true
----
-kind: GatewayConfiguration
-apiVersion: gateway-operator.konghq.com/v1beta1
-metadata:
-  name: kong
-  namespace: default
-spec:
-  dataPlaneOptions:
-    deployment:
-      replicas: 1
-      podTemplateSpec:
-        spec:
-          containers:
-          - name: proxy
-            image: kong/kong-gateway:{{ site.data.kong_latest_gateway.ee-version }}
-  controlPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-          - name: controller
-    extensions:
-    - kind: DataPlaneMetricsExtension
-      group: gateway-operator.konghq.com
-      name: kong
----
-kind: GatewayClass
-apiVersion: gateway.networking.k8s.io/{{ gatewayApiVersion }}
-metadata:
-  name: kong
-spec:
-  controllerName: konghq.com/gateway-operator
-  parametersRef:
-    group: gateway-operator.konghq.com
-    kind: GatewayConfiguration
-    name: kong
-    namespace: default
----
-kind: Gateway
-apiVersion: gateway.networking.k8s.io/{{ gatewayApiVersion }}
-metadata:
-  name: kong
-  namespace: default
-spec:
-  gatewayClassName: kong
-  listeners:
-  - name: http
-    protocol: HTTP
-    port: 80
----
-apiVersion: gateway.networking.k8s.io/{{ gatewayApiVersion }}
-kind: HTTPRoute
-metadata:
-  name: httproute-echo
-  namespace: default
-  annotations:
-    konghq.com/strip-path: "true"
-spec:
-  parentRefs:
-  - name: kong
-  rules:
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /echo
-    backendRefs:
-    - name: echo
-      kind: Service
-      port: 80 ' | kubectl apply -f -
+datadog:
+  kubelet:
+    tlsVerify: false
+
+clusterAgent:
+  enabled: true
+  # Enable the metricsProvider to be able to scale based on metrics in Datadog
+  metricsProvider:
+    # Set this to true to enable Metrics Provider
+    enabled: true
+    # Enable usage of DatadogMetric CRD to autoscale on arbitrary Datadog queries
+    useDatadogMetrics: true
+
+  prometheusScrape:
+    enabled: true
+    serviceEndpoints: true
+
+agents:
+  containers:
+    agent:
+      env:
+      - name: DD_HOSTNAME
+        valueFrom:
+          fieldRef:
+            fieldPath: spec.nodeName
+' > values.yaml
 ```
+
+to install [Datadog's helm chart](https://github.com/DataDog/helm-charts/tree/main/charts/datadog):
+
+```bash
+helm repo add datadog https://helm.datadoghq.com
+helm repo update
+helm install -n datadog datadog --set datadog.apiKey=${DD_APIKEY} --set datadog.AppKey=${DD_APPKEY} datadog/datadog
+```
+
+## Send traffic
+
+To trigger autoscaling, run the following command in a new terminal window. This will cause the underlying deployment to sleep for 100ms on each request and thus increase the average response time to that value.
+
+```bash
+while curl -k "http://$(kubectl get gateway kong -o custom-columns='name:.status.addresses[0].value' --no-headers -n default)/echo/shell?cmd=sleep%200.1" ; do sleep 1; done
+```
+
+Keep this running while we move on to next steps.
+
+## Annotate {{ site.operator_product_name }} with Datadog checks config
+
+Add the following annotation on {{ site.operator_product_name }}'s Pod to tell Datadog how to scrape {{ site.operator_product_name }}'s metrics:
+
+```bash
+POD_NAME=$(kubectl get pods -n kong-system -o custom-columns='name:.metadata.name' --no-headers)
+kubectl annotate -n kong-system pod $POD_NAME \
+  'ad.datadoghq.com/kube-rbac-proxy.checks={
+    "openmetrics": {
+      "instances": [
+        {
+          "prometheus_url": "https://%%host%%:8080/metrics",
+          "namespace": "autoscaling",
+          "metrics": [
+            "kong_upstream_latency_ms_bucket",
+            "kong_upstream_latency_ms_sum",
+            "kong_upstream_latency_ms_count"
+          ],
+          "send_histograms_buckets": true,
+          "send_distribution_buckets": true
+        }
+      ]
+    }
+  }'
+```
+
+After applying the above you should see `avg:autoscaling.kong_upstream_latency_ms{service:echo}` metrics in your Datadog Metrics explorer.
+
+## Expose Datadog metrics to Kubernetes
+
+To use an external metric in `HorizontalPodAutoscaler`, we need to configure the Datadog agent to expose it.
+
+There are several ways to achieve this but we'll use a Kubernetes native way and
+use the [`DatadogMetric` CRD](https://docs.datadoghq.com/containers/guide/cluster_agent_autoscaling_metrics/?tab=helm#autoscaling-with-datadogmetric-queries):
+
+```yaml
+echo '
+apiVersion: datadoghq.com/v1alpha1
+kind: DatadogMetric
+metadata:
+  name: echo-kong-upstream-latency-ms-avg
+  namespace: default
+spec:
+  query: autoscaling.kong_upstream_latency_ms{service:echo} ' | kubectl apply -f -
+```
+
+You can check the status of `DatadogMetric` with:
+
+```bash
+kubectl get -n default datadogmetric echo-kong-upstream-latency-ms-avg -w
+```
+
+Which should look like this:
+
+```bash
+NAME                                ACTIVE   VALID   VALUE               REFERENCES         UPDATE TIME
+echo-kong-upstream-latency-ms-avg   True     True    104.46194839477539                     38s
+```
+
+You should be able to get the metric via Kubernetes External Metrics API within 30 seconds:
+
+```bash
+kubectl get --raw "/apis/external.metrics.k8s.io/v1beta1/namespaces/default/datadogmetric@default:echo-kong-upstream-latency-ms-avg" | jq
+```
+
+```json
+{
+  "kind": "ExternalMetricValueList",
+  "apiVersion": "external.metrics.k8s.io/v1beta1",
+  "metadata": {},
+  "items": [
+    {
+      "metricName": "datadogmetric@default:echo-kong-upstream-latency-ms-avg",
+      "metricLabels": null,
+      "timestamp": "2024-03-08T18:03:02Z",
+      "value": "104233138021n"
+    }
+  ]
+}
+```
+{:.no-copy-code}
+
+{:.info}
+> **Note:** `104233138021n` is a Kubernetes way of expressing numbers as integers.
+> Since `value` here represents latency in milliseconds, it is approximately equivalent to 104.23ms.
+
+### Use `DatadogMetric` in `HorizontalPodAutoscaler`
+
+When we have the metric already available in Kubernetes External API we can use it in HPA like so:
+
+The `echo-kong-upstream-latency-ms-avg` `DatadogMetric` from `default` namespace can be used by the Kubernetes `HorizontalPodAutoscaler` to autoscale our workload: specifically the `echo` `Deployment`.
+
+The following manifest will scale the underlying `echo` `Deployment` between 1 and 10 replicas, trying to keep the average latency across last 30s at 40ms.
+
+```yaml
+echo '
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: echo
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: echo
+  minReplicas: 1
+  maxReplicas: 10
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 1
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 10
+    scaleUp:
+      stabilizationWindowSeconds: 1
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 2
+      - type: Pods
+        value: 4
+        periodSeconds: 2
+      selectPolicy: Max
+
+  metrics:
+  - type: External
+    external:
+      metric:
+        name: datadogmetric@default:echo-kong-upstream-latency-ms-avg
+      target:
+        type: Value
+        value: 40 ' | kubectl apply -f -
+```
+
+When everything is configured correctly, `DatadogMetric`'s status will update and it will now have a reference to the `HorizontalPodAutoscaler`:
+
+Get the `DatadogMetric` using `kubectl`:
+
+```bash
+kubectl get -n default datadogmetric echo-kong-upstream-latency-ms-avg -w
+```
+
+You will see the HPA reference in the output:
+
+```bash
+NAME                                ACTIVE   VALID   VALUE               REFERENCES         UPDATE TIME
+echo-kong-upstream-latency-ms-avg   True     True    104.46194839477539  hpa:default/echo  38s
+```
+{:.no-copy-code}
+
+If everything went well we should see the `SuccessfulRescale` events:
+
+```bash
+12m          Normal   SuccessfulRescale   horizontalpodautoscaler/echo   New size: 2; reason: Service metric kong_upstream_latency_ms_30s_average above target
+12m          Normal   SuccessfulRescale   horizontalpodautoscaler/echo   New size: 4; reason: Service metric kong_upstream_latency_ms_30s_average above target
+12m          Normal   SuccessfulRescale   horizontalpodautoscaler/echo   New size: 8; reason: Service metric kong_upstream_latency_ms_30s_average above target
+12m          Normal   SuccessfulRescale   horizontalpodautoscaler/echo   New size: 10; reason: Service metric kong_upstream_latency_ms_30s_average above target
+
+# Then when latency drops
+4s          Normal   SuccessfulRescale   horizontalpodautoscaler/echo   New size: 1; reason: All metrics below target
+```
+{:.no-copy-code}
