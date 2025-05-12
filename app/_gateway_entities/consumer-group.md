@@ -48,7 +48,7 @@ faqs:
 
 schema:
     api: gateway/admin-ee
-    path: /schemas/Consumer-Group
+    path: /schemas/ConsumerGroup
 
 
 works_on:
