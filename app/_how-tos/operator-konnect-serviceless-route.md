@@ -1,6 +1,6 @@
 ---
 title: Create a Serviceless Route
-description: "TODO"
+description: "Create a Kong Route that does not have an attached Service. Useful when used witht the Lambda plugin."
 content_type: how_to
 
 permalink: /operator/konnect/crd/gateway/serviceless-route/
@@ -35,9 +35,7 @@ prereqs:
 
 ---
 
-## TODO
-
-TODO
+## Create a `KongRoute`
 
 <!-- vale on -->
 {% konnect_crd %}
@@ -56,4 +54,13 @@ spec:
     konnectNamespacedRef:
       name: gateway-control-plane
 {% endkonnect_crd %}
+<!-- vale on -->
+
+## Validation
+
+<!-- vale off -->
+{% validation kubernetes-resource %}
+kind: KongRoute
+name: route-without-service
+{% endvalidation %}
 <!-- vale on -->

@@ -20,3 +20,13 @@ You should{% if expected.stdout %} also{% endif %} see the following content on 
 {{ expected.stderr }}
 ```
 {% endif %}
+
+Check the return code of the command {% if expected.return_code == 0 %}to make sure it completed successfully{% endif %}:
+
+{% if expected.return_code %}
+```bash
+if [[ ! $? -neq {{ expected.return_code }} ]]; then
+echo "Did not receive the expected return code"
+fi
+```
+{% endif %}

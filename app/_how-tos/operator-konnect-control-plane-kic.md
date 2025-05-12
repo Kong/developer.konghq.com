@@ -1,6 +1,6 @@
 ---
 title: Create a {{ site.kic_product_name }} Control Plane
-description: "TODO"
+description: "Create a new {{ site.kic_product_name }} Control Plane in {{ site.konnect_short_name }}"
 content_type: how_to
 
 permalink: /operator/konnect/crd/control-planes/kubernetes/
@@ -34,9 +34,7 @@ prereqs:
 
 ---
 
-## TODO
-
-TODO
+## Create a `KonnectGatewayControlPlane`
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -50,4 +48,13 @@ spec:
     authRef:
       name: konnect-api-auth
 {% endkonnect_crd %}
+<!-- vale on -->
+
+## Validation
+
+<!-- vale off -->
+{% validation kubernetes-resource %}
+kind: KongDataPlaneClientCertificate
+name: gateway-control-plane
+{% endvalidation %}
 <!-- vale on -->

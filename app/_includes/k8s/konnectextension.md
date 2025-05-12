@@ -9,8 +9,8 @@ spec:{% if include.use_custom_ca %}
   clientAuth:
     certificateSecret:
       provisioning: Manual
-        secretRef:
-          name: konnect-client-tls{% else %}
+      secretRef:
+        name: konnect-client-tls{% else %}
   clientAuth:
     certificateSecret:
       provisioning: Automatic{% endif %}

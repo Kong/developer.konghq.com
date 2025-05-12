@@ -91,7 +91,3 @@ dataplane:
         value: /etc/kong/log/proxy_access.log
 {% endoperator_podtemplatespec_example %}
 <!--vale on-->
-
-## Validation
-
-TODO: Check the log output for vector and look for a specific string?

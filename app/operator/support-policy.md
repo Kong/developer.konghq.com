@@ -1,15 +1,12 @@
 ---
 title: "Support Policy"
-description: "TODO"
+description: "Check if your version of {{ site.operator_product_name }} is supported"
 content_type: reference
 layout: reference
 products:
   - operator
 breadcrumbs:
   - /operator/
-
-tags:
-  - TODO
 
 ---
 

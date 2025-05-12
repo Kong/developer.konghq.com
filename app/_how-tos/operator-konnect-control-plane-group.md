@@ -1,6 +1,6 @@
 ---
 title: Create a Control Plane Group
-description: "TODO"
+description: "Create a Control Plane, and a Control Plane Group that contains the Control Plane"
 content_type: how_to
 
 permalink: /operator/konnect/crd/control-planes/control-plane-group/
@@ -35,9 +35,22 @@ prereqs:
 
 ---
 
-## TODO
+## Create a `KonnectGatewayControlPlane`
 
-TODO
+<!-- vale off -->
+{% konnect_crd %}
+kind: KonnectGatewayControlPlane
+metadata:
+  name: gateway-control-plane
+spec:
+  name: gateway-control-plane
+  konnect:
+    authRef:
+      name: konnect-api-auth
+{% endkonnect_crd %}
+<!-- vale on -->
+
+## Create a `KonnectGatewayControlPlane` with members
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -53,4 +66,13 @@ spec:
     authRef:
       name: konnect-api-auth
 {% endkonnect_crd %}
+<!-- vale on -->
+
+## Validation
+
+<!-- vale off -->
+{% validation kubernetes-resource %}
+kind: KongDataPlaneClientCertificate
+name: control-plane-group
+{% endvalidation %}
 <!-- vale on -->

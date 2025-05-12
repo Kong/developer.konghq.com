@@ -35,7 +35,7 @@ prereqs:
 
 {% assign gwapi_version = "1.2.1" %}
 
-## TODO
+## Deploying Data Planes
 
 {{ site.operator_product_name }} can deploy and manage Data Planes attached to a {{ site.konnect_short_name }} Control Plane. All the Services, Routes, and plugins are configured in {{ site.konnect_short_name }} and sent to the Data Planes automatically.
 

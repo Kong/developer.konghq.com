@@ -1,6 +1,6 @@
 ---
 title: "Custom resource definitions"
-description: "TODO"
+description: "Explore schemas of the available Custom Resources for {{ site.operator_product_name }}"
 content_type: reference
 layout: reference
 products:
