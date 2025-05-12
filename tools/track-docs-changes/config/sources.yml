@@ -1388,7 +1388,8 @@ app/deck/gateway/deduplicate.md:
   - app/deck/gateway/deduplicate.md
 app/deck/gateway/reset.md:
   - app/deck/gateway/reset.md
-
+app/_how-tos/configure-datastore.md:
+  - app/_src/gateway/install/post-install/set-up-data-store.md
 ## Mesh
 
 app/mesh/acm-private-ca-policy.md:
