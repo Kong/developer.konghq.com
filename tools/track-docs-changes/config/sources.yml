@@ -1037,6 +1037,8 @@ app/_landing_pages/konnect.yaml:
 app/_landing_pages/konnect-platform/authentication.yaml:
   - app/konnect/org-management/auth.md
   - app/konnect/org-management/social-identity-login.md
+app/konnect-platform/active-tracing.md:
+  - app/konnect/gateway-manager/active-tracing.md
 
 # landing pages
 app/_landing_pages/service-catalog.yaml:
