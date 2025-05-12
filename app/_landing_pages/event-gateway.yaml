@@ -129,7 +129,7 @@ rows:
             
             - q: How can I get access to the {{site.event_gateway}}?
               a: |
-               If you're an existing Kong customer or prospect, please fill out tbe [beta participation form](https://konghq.com/lp/register-kafka-proxy-beta) and we will reach out to you.
+               If you're an existing Kong customer or prospect, please fill out the [beta participation form](https://konghq.com/lp/register-kafka-proxy-beta) and we will reach out to you.
             
               
             - q: I am interested in using {{site.event_gateway_short}} but don't have a {{site.konnect_short_name}} account - how do I get started?
