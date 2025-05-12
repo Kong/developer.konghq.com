@@ -94,7 +94,7 @@ rows:
     description: |
       Routes requests based on semantic similarity between the prompt and model descriptions. In the configuration, embeddings are generated using a specified model (e.g., `text-embedding-3-small`), and similarity is calculated using vector search.
     considerations: |
-      * Uses vector search (e.g., Redis) to find the best match based on prompt embeddings.
+      * Uses vector search (for example, Redis) to find the best match based on prompt embeddings.
       * `distance_metric` and `threshold` settings fine-tune matching sensitivity.
       * Best for routing prompts to domain-specialized models, like coding, analytics, text generation.
   - strategy: "[Priority](/plugins/ai-proxy-advanced/examples/priority/)"
