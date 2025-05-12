@@ -42,7 +42,7 @@ rows:
       - blocks:
         - type: card
           config:
-            icon: /assets/icons/kogo-white.svg
+            icon: /assets/icons/gateway.svg
             title: Deploy {{ site.base_gateway }}
             description: |
               Deploy a {{ site.base_gateway }} attached to any {{ site.konnect_short_name }} or on-prem Control Plane using 
@@ -54,7 +54,7 @@ rows:
       - blocks:
         - type: card
           config:
-            icon: /assets/icons/KogoBlue.svg
+            icon: /assets/icons/kubernetes.svg
             title: Deploy {{ site.kic_product_name }}
             description: |
               Deploy and manage {{ site.kic_product_name }} and {{ site.base_gateway }} automatically using Kubernetes

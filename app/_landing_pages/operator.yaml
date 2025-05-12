@@ -2,7 +2,7 @@ metadata:
   title: Kong Gateway Operator
   content_type: landing_page
   description: |
-    {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Deploy Data Planes, configure {{ site.konnect_short_name }} and more.
+    {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Deploy Data Planes, configure {{ site.konnect_short_name }}, and more.
   products:
     - operator
 
@@ -10,6 +10,7 @@ rows:
   - header:
       type: h1
       text: "{{site.operator_product_name}} (KGO)"
+      sub_text: Deploy and manage Kong on Kubernetes using Kubernetes resources
 
   - header:
       type: h2
@@ -19,20 +20,20 @@ rows:
           - type: text
             config: |
               {{ site.operator_product_name }} is the Kubernetes-native way to interact with Kong. Driven entirely by Kubernetes 
-              Custom Resource Definitions (CRDs), {{ site.operator_product_name }} allows you todeploy and configure Kong's products 
+              Custom Resource Definitions (CRDs), {{ site.operator_product_name }} allows you to deploy and configure Kong's products 
               in a 100% declarative way.
 
   - header:
       type: h2
-      text: "Operator Capabilities"
+      text: "Operator capabilities"
     columns:
       - blocks:
         - type: card
           config:
-            icon: /assets/icons/kogo-white.svg
+            icon: /assets/icons/gateway.svg
             title: Deploy {{ site.base_gateway }}
             description: |
-              Deploy a {{ site.base_gateway }} attached to any {{ site.konnect_short_name }} or on-prem Control Plane using 
+              Deploy a {{ site.base_gateway }} attached to any {{ site.konnect_short_name }} or self-managed Control Plane using 
               the `DataPlane` resource.
             cta:
               text: Deploy a DataPlane
@@ -41,7 +42,7 @@ rows:
       - blocks:
         - type: card
           config:
-            icon: /assets/icons/KogoBlue.svg
+            icon: /assets/icons/kubernetes.svg
             title: Deploy {{ site.kic_product_name }}
             description: |
               Deploy and manage {{ site.kic_product_name }} and {{ site.base_gateway }} automatically using Kubernetes
@@ -78,7 +79,7 @@ rows:
             Join the conversation and tell us how you're using {{ site.konnect_short_name }} CRDs today and what you'd like to see next.
         - type: button
           config:
-            text: Open a GitHub Issue
+            text: Open a GitHub issue
             url: https://github.com/kong/gateway-operator/issues/new
       - blocks:
         - type: table
