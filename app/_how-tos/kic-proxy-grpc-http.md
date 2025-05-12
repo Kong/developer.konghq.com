@@ -1,6 +1,6 @@
 ---
 title: Proxy GRPC Traffic over HTTP
-description: "Use `GRPCRoute` to route traffic to a plain text GRPC listener"
+description: "Use GRPCRoute to route traffic to a plain text GRPC listener"
 content_type: how_to
 related_resources:
   - text: All KIC documentation

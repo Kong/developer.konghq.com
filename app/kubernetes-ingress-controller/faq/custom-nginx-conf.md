@@ -2,7 +2,7 @@
 title: Use a custom nginx.conf file
 
 description: |
-  How do I use a custom nginx.conf file with `ConfigMap` or `Secret`?
+  How do I use a custom nginx.conf file with ConfigMap or Secret?
 
 breadcrumbs:
   - /kubernetes-ingress-controller/

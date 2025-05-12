@@ -49,7 +49,7 @@ cleanup:
 
 ## Create a realm
 
-First, export your Control Plane ID and [region](/konnect-platform/konnect-geos/) (for example, `us`) so we can use it in the request. You can find these under your Control Plane settings in [Gateway Manager](https://cloud.konghq.com/gateway-manager/):
+First, export your Control Plane ID and [region](/konnect-platform/geos/) (for example, `us`) so we can use it in the request. You can find these under your Control Plane settings in [Gateway Manager](https://cloud.konghq.com/gateway-manager/):
 ```sh
 export KONNECT_CONTROL_PLANE_ID={control-plane-id}
 export DECK_CONTROL_PLANE_REGION={region}
@@ -57,7 +57,7 @@ export DECK_CONTROL_PLANE_REGION={region}
 
 Centrally-managed Consumers are assigned to realms instead of Control Planes. Realms exist outside of the Control Plane.
 
-Use the [`/realms` endpoint](/api/konnect/consumers/v1/#/operations/create-realm) to create a realm and associate it with allowed Control Planes:
+Use the [`/realms` endpoint](/api/konnect/consumers/#/operations/create-realm) to create a realm and associate it with allowed Control Planes:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -82,7 +82,7 @@ export DECK_REALM_ID={realm-id}
 
 ## Create the centrally-managed Consumer
 
-Use the [create a Consumer](/api/konnect/consumers/v1/#/operations/create-consumer) endpoint to create a centrally-managed Consumer:
+Use the [create a Consumer](/api/konnect/consumers/#/operations/create-consumer) endpoint to create a centrally-managed Consumer:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -106,7 +106,7 @@ export CONSUMER_ID={consumer-id}
 
 ## Create a Consumer key for authentication
 
-Centrally-managed Consumers require a key for authentication. Configure authentication keys for Consumers using the [create a key](/api/konnect/consumers/v1/#/operations/create-consumer-key) endpoint:
+Centrally-managed Consumers require a key for authentication. Configure authentication keys for Consumers using the [create a key](/api/konnect/consumers/#/operations/create-consumer-key) endpoint:
 
 <!--vale off-->
 {% control_plane_request %}

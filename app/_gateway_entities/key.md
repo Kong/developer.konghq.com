@@ -24,6 +24,9 @@ related_resources:
     url: /gateway/reserved-entity-names/
   - text: Securing {{site.base_gateway}}
     url: /gateway/security/
+  - text: "{{site.konnect_short_name}} Control Plane resource limits"
+    url: /gateway-manager/control-plane-resource-limits/
+
 
 api_specs:
   - gateway/admin-ee

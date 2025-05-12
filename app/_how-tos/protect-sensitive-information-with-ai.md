@@ -4,12 +4,13 @@ content_type: how_to
 
 description: Use the AI Sanitizer plugin to protect sensitive information in requests.
 
-entities: 
+entities:
   - certificate
   - service
 
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - on-prem
@@ -67,7 +68,7 @@ min_version:
 Make sure you have [access to the  AI PII service](#ai-pii-anonymizer-service-access), then run the following command to start it locally with Docker:
 
 ```sh
-docker run --platform linux/x86_64 -d --name pii-service -p 9000:8080 kong/ai-pii-service 
+docker run --platform linux/x86_64 -d --name pii-service -p 9000:8080 kong/ai-pii-service
 ```
 
 ## Enable the AI Proxy plugin
@@ -89,7 +90,7 @@ entities:
           options:
             max_tokens: 512
             temperature: 1.0
-      
+
 variables:
   key:
     value: $OPENAI_API_KEY
@@ -104,7 +105,7 @@ Configure the AI Sanitizer plugin to use the AI PII Anonymizer service to anonym
 entities:
   plugins:
     - name: ai-sanitizer
-      config: 
+      config:
         anonymize:
             - phone
             - general
@@ -134,7 +135,7 @@ body:
           content: "My name is John Doe, my phone number is 123-456-7890."
 {% endvalidation %}
 
-If the plugin was configured correctly, you will received a response with all PII information scrubbed, for example: 
+If the plugin was configured correctly, you will received a response with all PII information scrubbed, for example:
 
 ```
 Your name is Jesse Mason and your phone number is 001-204-028-1684x83574.

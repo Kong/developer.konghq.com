@@ -2,6 +2,7 @@
 title: Create an Event Hook that can run custom code with {{site.base_gateway}}
 content_type: how_to
 
+description: Execute custom Lua code on an event by configuring an Event Hook entity with the lambda handler, 
 entities:
   - event-hook
 works_on:

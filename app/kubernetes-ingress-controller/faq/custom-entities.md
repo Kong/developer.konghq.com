@@ -2,7 +2,7 @@
 title: Configuring Custom Entities
 
 description: |
-  How do I configure Custom Entities such as `degraphql_routes` using KIC?
+  How do I configure Custom Entities such as degraphql_routes using KIC?
 
 breadcrumbs:
   - /kubernetes-ingress-controller/
@@ -36,7 +36,7 @@ spec:
     query: "query{ contacts { name } }"
 ```
 
-This corresponds to the `uri` and `query` parameters documented in the [DeGraphQL plugin documentation](/plugins/degraphql/#TODO).
+This corresponds to the `uri` and `query` parameters documented in the [DeGraphQL plugin documentation](/plugins/degraphql/).
 
 ## Troubleshooting
 

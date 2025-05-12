@@ -4,6 +4,7 @@ content_type: how_to
 
 products:
 - insomnia
+description: Create a NodeJS module in the Insomnia plugins directory and add it to Insomnia.
 breadcrumbs: 
   - /insomnia/plugins/
 tags:

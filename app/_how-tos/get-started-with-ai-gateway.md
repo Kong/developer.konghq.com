@@ -1,6 +1,7 @@
 ---
 title: Get started with AI Gateway
 content_type: how_to
+permalink: /ai-gateway/get-started/
 description: Learn how to quickly get started with AI Gateway
 products:
     - ai-gateway

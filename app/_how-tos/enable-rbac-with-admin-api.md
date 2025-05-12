@@ -8,6 +8,10 @@ products:
 works_on:
     - on-prem
 
+tags:
+  - authorization
+  - access-control
+
 related_resources:
   - text: Gateway RBAC entity
     url: /gateway/entities/rbac/
@@ -22,7 +26,7 @@ related_resources:
 tldr: 
   q: How do I configure RBAC?
   a: |
-     To configure RBAC, create a [Super Admin user](/gateway/entities/rbac/#default-kong-gateway-roles) using the [`/rbac/users` endpoint](/api/gateway/admin-ee/3.9/#/operations/post-rbac-users), then enable RBAC on {{site.base_gateway}} by setting the `enable_rbac` setting to `on` in `kong.conf`.
+     To configure RBAC, create a [Super Admin user](/gateway/entities/rbac/#default-kong-gateway-roles) using the [`/rbac/users` endpoint](/api/gateway/admin-ee/#/operations/post-rbac-users), then enable RBAC on {{site.base_gateway}} by setting the `enable_rbac` setting to `on` in `kong.conf`.
 
 min_version:
     gateway: '3.4'
@@ -41,7 +45,7 @@ prereqs:
 
 In {{site.base_gateway}}, a Super Admin has the ability to manage [Roles and permissions](/gateway/entities/rbac/#what-is-rbac) across Workspaces. Because the username `super-admin` matches the `super-admin` RBAC Role, the new user is automatically added to the `super-admin` Role. 
 
-1. Create an [RBAC](/gateway/entities/rbac/) Super Admin by sending a `POST` request to the [`/rbac/users`](/api/gateway/admin-ee/3.9/#/operations/post-rbac-users) endpoint:
+1. Create an [RBAC](/gateway/entities/rbac/) Super Admin by sending a `POST` request to the [`/rbac/users`](/api/gateway/admin-ee/#/operations/post-rbac-users) endpoint:
 <!-- vale off -->
 {% capture request1 %}
 {% control_plane_request %}
@@ -60,7 +64,7 @@ In {{site.base_gateway}}, a Super Admin has the ability to manage [Roles and per
 <!-- vale on -->
     
 
-2. Validate the user was created correctly by sending a `GET` request to the [`/rbac/users/{name_or_id}/roles`](/api/gateway/admin-ee/3.9/#/operations/get-rbac-users-name_or_id-roles) endpoint:  
+2. Validate the user was created correctly by sending a `GET` request to the [`/rbac/users/{name_or_id}/roles`](/api/gateway/admin-ee/#/operations/get-rbac-users-name_or_id-roles) endpoint:  
 
 {% capture request2 %}
 {% control_plane_request %}

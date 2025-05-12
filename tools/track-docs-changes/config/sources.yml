@@ -11,6 +11,7 @@ app/_api/konnect/api-products/_index.md:
   - app/_api/konnect/api-products/_index.md
 app/_api/konnect/analytics-requests/_index.md:
   - app/_api/konnect/api-requests/_index.md
+  - app/konnect/analytics/api-requests.md
 app/_api/konnect/application-auth-strategies/_index.md:
   - app/_api/konnect/application-auth-strategies/_index.md
 app/_api/konnect/audit-logs/_index.md:
@@ -33,8 +34,9 @@ app/_api/konnect/ksearch/_index.md:
   - app/_api/konnect/search/_index.md
 
 # entities
-app/_gateway_entities/consumer_group.md:
+app/_gateway_entities/consumer-group.md:
   - app/_src/gateway/key-concepts/consumer-groups.md
+  - app/_src/gateway/kong-enterprise/consumer-groups/index.md
 app/_gateway_entities/consumer.md:
   - app/_src/gateway/key-concepts/consumers.md
   - app/konnect/centralized-consumer-management.md
@@ -61,7 +63,7 @@ app/_gateway_entities/upstream.md:
 app/_gateway_entities/workspace.md:
   - app/_src/gateway/kong-manager/workspaces.md
   - app/_src/gateway/kong-enterprise/workspaces/index.md
-app/_gateway_entities/event_hooks.md:
+app/_gateway_entities/event-hook.md:
   - app/_src/gateway/kong-enterprise/event-hooks/index.md
 app/_gateway_entities/rbac.md:
   - app/_src/gateway/production/access-control/enable-rbac.md
@@ -82,10 +84,10 @@ app/_gateway_entities/vault.md:
   - app/_src/gateway/kong-enterprise/secrets-management/backends/azure-key-vaults.md
   - app/_src/gateway/kong-enterprise/secrets-management/backends/gcp-sm.md
   - app/_src/gateway/kong-enterprise/secrets-management/backends/hashicorp-vault.md
-  
+
 app/_gateway_entities/sni.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
-app/_gateway/entities/certificate.md:
+app/_gateway_entities/certificate.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
 
 app/_gateway_entities/license.md:
@@ -97,7 +99,7 @@ app/_gateway_entities/license.md:
   - app/_src/gateway/licenses/report-v2.md
   - app/_src/gateway/licenses/examples.md
 
-app/_gateway_entities/keyring.md:
+app/gateway/keyring.md:
   - app/_src/gateway/kong-enterprise/db-encryption.md
 app/_how-tos/encrypt-sensitive-data-in-kong-gateway-with-keyring.md:
   - app/_src/gateway/kong-enterprise/db-encryption.md
@@ -122,6 +124,13 @@ app/_gateway_entities/admin.md:
 
 app/_gateway_entities/partial.md:
   - app/_src/gateway/kong-enterprise/partials.md
+
+app/gateway/install.md:
+  - app/_src/gateway/install/index.md
+  - app/_src/gateway/install/linux/amazon-linux.md
+  - app/_src/gateway/install/linux/debian.md
+  - app/_src/gateway/install/linux/rhel.md
+  - app/_src/gateway/install/linux/ubuntu.md
 
 # how-tos
 ## gateway
@@ -329,15 +338,7 @@ app/kubernetes-ingress-controller/deployment-topologies/sidecar.md:
   - app/_src/kubernetes-ingress-controller/production/deployment-topologies/sidecar.md
 app/kubernetes-ingress-controller/deployment-topologies/db-backed.md:
   - app/_src/kubernetes-ingress-controller/production/deployment-topologies/db-backed.md
-#app/kubernetes-ingress-controller/deployment-topologies/gateway-discovery.md:
-#app/kubernetes-ingress-controller/troubleshooting/kubernetes-api-server.md:
-#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
-#app/kubernetes-ingress-controller/troubleshooting/kong-gateway-configuration.md:
-#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
-#app/kubernetes-ingress-controller/troubleshooting/konnect.md:
-#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
-#app/kubernetes-ingress-controller/troubleshooting/debugging.md:
-#  - TODO - /index/kubernetes-ingress-controller/#troubleshooting
+
 app/kubernetes-ingress-controller/troubleshooting/failure-modes.md:
   - app/_src/kubernetes-ingress-controller/reference/failure-modes.md
 
@@ -432,6 +433,8 @@ app/_kong_plugins/upstream-oauth/index.md:
   - app/_hub/kong-inc/upstream-oauth/overview/_index.md
 app/_kong_plugins/ai-rate-limiting-advanced/index.md:
   - app/_hub/kong-inc/ai-rate-limiting-advanced/overview/_index.md
+app/_kong_plugins/ai-rate-limiting-advanced/examples/llm-provider-rate-limiting.yaml:
+  - app/_hub/kong-inc/ai-rate-limiting-advanced/how-to/_index.md
 app/_kong_plugins/basic-auth/index.md:
   - app/_hub/kong-inc/basic-auth/overview/_index.md
   - app/_hub/kong-inc/basic-auth/_changelog.md
@@ -561,6 +564,10 @@ app/_kong_plugins/ai-semantic-cache/changelog.md:
   - app/_hub/kong-inc/ai-semantic-cache/_changelog.md
 app/_kong_plugins/ai-semantic-cache/index.md:
   - app/_hub/kong-inc/ai-semantic-cache/overview/_index.md
+app/_kong_plugins/ai-semantic-cache/examples/mistral.yaml:
+  - app/_hub/kong-inc/ai-semantic-cache/how-to/llm-provider-integration-guides/_mistral.md
+app/_kong_plugins/ai-semantic-cache/examples/openai.yaml:
+  - app/_hub/kong-inc/ai-semantic-cache/how-to/llm-provider-integration-guides/_openai.md
 app/_kong_plugins/xml-threat-protection/index.md:
   - app/_hub/kong-inc/xml-threat-protection/overview/_index.md
 app/_kong_plugins/xml-threat-protection/changelog.md:
@@ -583,6 +590,8 @@ app/_kong_plugins/graphql-proxy-cache-advanced/index.md:
   - app/_hub/kong-inc/graphql-proxy-cache-advanced/overview/_index.md
 app/_kong_plugins/graphql-proxy-cache-advanced/changelog.md:
   - app/_hub/kong-inc/graphql-proxy-cache-advanced/_changelog.md
+app/_kong_plugins/graphql-proxy-cache-advanced/examples/graphql-proxy-cache-in-memory.yaml:
+  - app/_hub/kong-inc/graphql-proxy-cache-advanced/how-to/_index.md
 app/_kong_plugins/ai-prompt-template/index.md:
   - app/_hub/kong-inc/ai-prompt-template/overview/_index.md
 app/_kong_plugins/ai-prompt-template/changelog.md:
@@ -608,6 +617,13 @@ app/_kong_plugins/ai-semantic-prompt-guard/index.md:
   - app/_hub/kong-inc/ai-semantic-prompt-guard/overview/_index.md
 app/_kong_plugins/ai-semantic-prompt-guard/changelog.md:
   - app/_hub/kong-inc/ai-semantic-prompt-guard/_changelog.md
+app/_kong_plugins/ai-semantic-prompt-guard/examples/allow-and-deny-prompts.yaml:
+  - app/_hub/kong-inc/ai-semantic-prompt-guard/how-to/_index.md
+app/_kong_plugins/ai-semantic-prompt-guard/examples/allow-prompts.yaml:
+  - app/_hub/kong-inc/ai-semantic-prompt-guard/how-to/_index.md
+app/_kong_plugins/ai-semantic-prompt-guard/examples/deny-prompts.yaml:
+  - app/_hub/kong-inc/ai-semantic-prompt-guard/how-to/_index.md
+
 app/_kong_plugins/ai-response-transformer/index.md:
   - app/_hub/kong-inc/ai-response-transformer/overview/_index.md
 app/_kong_plugins/ai-response-transformer/changelog.md:
@@ -633,7 +649,7 @@ app/_kong_plugins/websocket-size-limit/index.md:
 app/_kong_plugins/websocket-validator/index.md:
   - app/_hub/kong-inc/websocket-validator/overview/_index.md
 app/_kong_plugins/app-dynamics/changelog.md:
-  - app/_hub/kong-inc/app-dynamics/changelog.md
+  - app/_hub/kong-inc/app-dynamics/_changelog.md
 app/_kong_plugins/app-dynamics/index.md:
   - app/_hub/kong-inc/app-dynamics/overview/_index.md
 app/_kong_plugins/ai-azure-content-safety/index.md:
@@ -735,15 +751,19 @@ app/_kong_plugins/grpc-gateway/changelog.md:
 app/_kong_plugins/grpc-web/changelog.md:
   - app/_hub/kong-inc/grpc-web/_changelog.md
 app/_kong_plugins/oauth2-introspection/index.md:
-  - app/_hub/kong-inc/oauth2/overview/_index.md
+  - app/_hub/kong-inc/oauth2-introspection/overview/_index.md
 app/_kong_plugins/oauth2-introspection/changelog.md:
-  - app/_hub/kong-inc/oauth2/_changelog.md
+  - app/_hub/kong-inc/oauth2-introspection/_changelog.md
 app/_kong_plugins/mtls-auth/index.md:
   - app/_hub/kong-inc/mtls-auth/overview/_index.md
 app/_kong_plugins/mtls-auth/changelog.md:
   - app/_hub/kong-inc/mtls-auth/_changelog.md
 app/_kong_plugins/http-log/index.md:
   - app/_hub/kong-inc/http-log/overview/_index.md
+  - app/_hub/kong-inc/http-log/overview/_log-format.md
+  - app/_hub/kong-inc/http-log/overview/_using-custom-fields.md
+app/_kong_plugins/http-log/examples/http-log-with-splunk.yaml:
+  - app/_hub/kong-inc/http-log/how-to/_splunk.md
 app/_kong_plugins/http-log/changelog.md:
   - app/_hub/kong-inc/http-log/_changelog.md
 app/_kong_plugins/pre-function/index.md:
@@ -765,6 +785,7 @@ app/_kong_plugins/ai-proxy/examples/anthropic-chat-route.yaml:
   - app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_anthropic.md
 app/_kong_plugins/ai-proxy/examples/azure-ai-with-managed-identity.yaml:
   - app/_hub/kong-inc/ai-proxy/how-to/_cloud-provider-authentication.md
+  - app/_hub/kong-inc/ai-proxy-advanced/how-to/_cloud-provider-authentication.md
 app/_kong_plugins/ai-proxy/examples/azure-chat-route.yaml:
   - app/_hub/kong-inc/ai-proxy/how-to/llm-provider-integration-guides/_azure.md
 app/_kong_plugins/ai-proxy/examples/bedrock-chat-route.yaml:
@@ -960,23 +981,38 @@ app/_kong_plugins/statsd/changelog.md:
 app/_kong_plugins/statsd/index.md:
   - app/_hub/kong-inc/statsd/overview/_index.md
   - app/_hub/kong-inc/statsd-advanced/overview/_index.md
+app/_kong_plugins/ai-proxy/examples/sdk-azure-deployment.yaml:
+  - app/_hub/kong-inc/ai-proxy/_how-to/sdk-usage.md
+app/_kong_plugins/ai-proxy/examples/sdk-dynamic-model-selection.yml:
+  - app/_hub/kong-inc/ai-proxy/_how-to/sdk-usage.md
+app/_kong_plugins/ai-proxy/examples/sdk-multiple-providers.yaml:
+  - app/_hub/kong-inc/ai-proxy/_how-to/sdk-usage.md
+app/_kong_plugins/ai-proxy/examples/sdk-usupported-model.yaml:
+  - app/_hub/kong-inc/ai-proxy/_how-to/sdk-usage.md
+app/_kong_plugins/ai-proxy-advanced/examples/sdk-azure-one-route.yaml:
+  - app/_hub/kong-inc/ai-proxy-advanced/_how-to/sdk-usage.md
+app/_kong_plugins/ai-proxy-advanced/examples/sdk-dynamic-model-selection.yml:
+  - app/_hub/kong-inc/ai-proxy-advanced/_how-to/sdk-usage.md
+app/_kong_plugins/ai-proxy-advanced/examples/sdk-unsupported-model.yaml:
+  - app/_hub/kong-inc/ai-proxy-advanced/_how-to/sdk-usage.md
 
 # Konnect
 app/advanced-analytics/explorer.md:
   - app/konnect/analytics/explorer.md
 app/advanced-analytics/llm-reporting.md:
   - app/konnect/analytics/explorer.md
-app/konnect-geos.md:
+app/konnect-platform/geos.md:
   - app/konnect/geo.md
 app/_landing_pages/advanced-analytics.md:
   - app/konnect/advanced-analytics/index.md
-app/konnect-logs.md:
+app/konnect-platform/audit-logs.md:
   - app/konnect/org-management/audit-logging/index.md
   - app/konnect/reference/audit-logs.md
+app/gateway-manager/konnect-logs.md:
   - app/konnect/gateway-manager/dedicated-cloud-gateways/data-plane-logs.md
-app/konnect-labels.md:
+app/gateway-manager/konnect-labels.md:
   - app/konnect/reference/labels.md
-app/konnect-platform/konnect-sso.md:
+app/konnect-platform/sso.md:
   - app/konnect/org-management/okta-idp.md
   - app/konnect/dev-portal/access-and-approval/add-teams.md
   - app/konnect/dev-portal/access-and-approval/sso.md
@@ -987,18 +1023,18 @@ app/konnect-platform/konnect-sso.md:
   - app/konnect/org-management/troubleshoot.md
 app/konnect-platform/saml-idp-mapping.md:
   - app/konnect/reference/saml-idp-mappings.md
-app/konnect-platform/self-managed-migration.md:
+app/gateway/self-managed-migration.md:
   - app/konnect/getting-started/migration.md
 app/gateway-manager/version-compatibility.md:
   - app/konnect/gateway-manager/version-compatibility.md
   - app/_data/tables/version_errors_konnect.yml
-app/_landing_pages/konnect-platform.yaml:
+app/_landing_pages/konnect.yaml:
   - app/konnect/index.md
   - app/konnect/getting-started/index.md
   - app/konnect/account-management/index.md
   - app/konnect/architecture.md
   - app/_includes/md/konnect/konnect-architecture.md
-app/_landing_pages/konnect-authentication.yaml:
+app/_landing_pages/konnect-platform/authentication.yaml:
   - app/konnect/org-management/auth.md
   - app/konnect/org-management/social-identity-login.md
 
@@ -1051,7 +1087,7 @@ app/gateway/logs.md:
   - app/_src/gateway/production/logging/update-log-level-dynamically.md
   - app/_src/gateway/production/logging/ai-analytics.md
   - app/_src/gateway/production/logging/customize-gateway-logs.md
-app/gateway/network.md:
+app/gateway/network/index.md:
   - app/_src/gateway/production/networking/default-ports.md
   - app/_src/gateway/production/networking/firewall.md
 app/gateway/cp-dp-communication.md:
@@ -1078,6 +1114,10 @@ app/gateway/kong-manager/configuration.md:
   - app/_src/gateway/kong-manager/troubleshoot.md
 app/ai-gateway/monitor-ai-llm-metrics.md:
   - app/_src/gateway/production/monitoring/ai-metrics.md
+app/ai-gateway/streaming.md:
+  - app/_hub/kong-inc/ai-proxy/how-to/_streaming.md
+  - app/_hub/kong-inc/ai-proxy-advanced/how-to/_streaming.md
+
 app/gateway/reserved-entity-names.md:
   - app/_src/gateway/reference/reserved-entity-names.md
 app/gateway/breaking-changes.md:
@@ -1128,9 +1168,6 @@ app/gateway/kong-manager/content-security-policy.md:
   - app/_src/gateway/kong-manager/strengthen-security.md
 
 # traffic control
-app/gateway/traffic-control/proxy.md:
-  - app/_src/gateway/how-kong-works/routing-traffic.md
-  - app/_includes/md/admin-listen.md
 app/gateway/routing/expressions.md:
   - app/_src/gateway/reference/expressions-language/index.md
   - app/_src/gateway/key-concepts/routes/expressions.md
@@ -1138,7 +1175,7 @@ app/gateway/routing/expressions.md:
   - app/_src/gateway/reference/expressions-language/performance.md
 app/gateway/routing/expressions-router-examples.md:
   - app/_src/gateway/reference/expressions-language/index.md
-app/gateway/networking/dns-config-reference.md:
+app/gateway/network/dns-config-reference.md:
   - app/_src/gateway/production/networking/dns-considerations.md
 app/gateway/traffic-control/health-checks-circuit-breakers.md:
   - app/_src/gateway/how-kong-works/health-checks.md
@@ -1146,7 +1183,7 @@ app/gateway/traffic-control/load-balancing.md:
   - app/_src/gateway/how-kong-works/load-balancing.md
 app/gateway/traffic-control/blue-green-deployments.md:
   - app/_src/gateway/production/blue-green.md
-app/konnect-compatibility.md:
+app/konnect-platform/compatibility.md:
   - app/konnect/compatibility.md
   - app/konnect/upgrade-faq.md
 app/_landing_pages/gateway/traffic-control-and-routing.yaml:
@@ -1155,6 +1192,7 @@ app/gateway/incremental-config-sync.md:
   - app/_src/gateway/production/deployment-topologies/hybrid-mode/incremental-config-sync.md
 app/gateway/traffic-control/proxying.md:
   - app/_src/gateway/how-kong-works/routing-traffic.md
+  - app/_includes/md/admin-listen.md
 app/custom-plugins/api.lua.md:
   - app/_src/gateway/plugin-development/admin-api.md
 app/custom-plugins/daos.lua.md:
@@ -1223,7 +1261,7 @@ app/gateway-manager/data-plane-reference.md:
   - app/konnect/gateway-manager/data-plane-nodes/verify-node.md
   - app/konnect/gateway-manager/data-plane-nodes/secure-communications.md
   - app/konnect/gateway-manager/data-plane-nodes/custom-dp-labels.md
-app/konnect-platform/konnect-account.md:
+app/konnect-platform/account.md:
   - app/konnect/org-management/deactivation.md
 app/konnect-platform/teams-and-roles.md:
   - app/konnect/org-management/teams-and-roles/teams-reference.md
@@ -1263,7 +1301,11 @@ app/_landing_pages/mesh-manager.yaml:
 app/_landing_pages/deck.yaml:
   - app/deck/index.md
   - app/deck/installation.md
-  - app/deck/faqs.md
+  - app/deck/reference/faq.md
+  - app/deck/install/index.md
+  - app/deck/install/binary.md
+  - app/deck/install/docker.md
+  - app/deck/install/github-actions.md
 app/_how-tos/deck-get-started.md:
   - app/deck/get-started.md
 app/deck/file/validate.md:
@@ -1382,7 +1424,7 @@ app/mesh/ca-rotation.md:
   - app/_src/mesh/features/ca-rotation.md
 app/mesh/ecs.md:
   - app/_src/mesh/installation/ecs.md
-app/mesh/production-usuage-values.md:
+app/mesh/production-usage-values.md:
   - app/_src/mesh/production/cp-deployment/production-usage-values.md
 app/mesh/support-policy.md:
   - app/_src/mesh/support-policy.md
@@ -1397,19 +1439,19 @@ app/dev-portal/portal-customization.md:
   - app/dev-portal/portals/customization/appearance.md
   - app/dev-portal/portals/customization/portal-editor.md
 app/dev-portal/custom-pages.md:
-  - app/dev-portal/custom-pages.md
+  - app/dev-portal/portals/customization/custom-pages.md
 app/dev-portal/snippets.md:
   - app/dev-portal/portals/customization/snippets.md
 app/dev-portal/portal-settings.md:
-  - app/dev-portal/settings/general.md
+  - app/dev-portal/portals/settings/general.md
   - app/dev-portal/portals/audit-logs/index.md
 app/dev-portal/custom-domains.md:
-  - app/dev-portal/settings/custom-domains.md
+  - app/dev-portal/portals/settings/custom-domains.md
 app/dev-portal/security-settings.md:
   - app/dev-portal/portals/settings/security.md
 app/dev-portal/team-mapping.md:
-  - app/dev-portal/settings/team-mapping.md
-app/dev-portal/apis:
+  - app/dev-portal/portals/settings/team-mapping.md
+app/dev-portal/apis.md:
   - app/dev-portal/apis/gateway-service-link.md
   - app/dev-portal/apis/index.md
   - app/dev-portal/apis/versioning.md
@@ -1444,10 +1486,9 @@ app/_landing_pages/insomnia/collections.yaml:
   - /insomnia/request-collections.md
 app/_landing_pages/insomnia/design.yaml:
   - /insomnia/generate-code-snippet.md
-app/_landing_pages/design.yaml:
   - /insomnia/get-started-with-documents.md
   - /insomnia/migrate-from-designer.md
-app/_how-tos/create-a-design-ducment.md:
+app/_how-tos/create-a-design-document.md:
   - /insomnia/get-started-with-documents.md
   - /insomnia/design-documents.md
 app/_landing_pages/insomnia/documents.yaml: 
@@ -1478,7 +1519,7 @@ app/_how-tos/import-an-api-spec-as-a-document.md:
   - /insomnia/import-export-data.md
 app/_how-tos/chain-requests.md:
   - /insomnia/chaining-requests.md
-app/_how-tos/generate-a-collection-from-a-design-document/:
+app/_how-tos/generate-a-collection-from-a-design-document.md:
   - /insomnia/request-collections.md
 app/_how-tos/add-custom-linting-rules.md:
   - /insomnia/linting.md
@@ -1495,11 +1536,11 @@ app/_landing_pages/inso-cli.yaml:
 app/_how-tos/write-data-type-tests.md:
   - /insomnia/pre-request-script.md
   - /insomnia/after-response-script.md
-  - /insomnia//insomnia/unit-testing.md
+  - /insomnia/insomnia/unit-testing.md
 app/_how-tos/write-content-type-tests.md:
   - /insomnia/pre-request-script.md
   - /insomnia/after-response-script.md
-  - /insomnia//insomnia/unit-testing.md
+  - /insomnia/insomnia/unit-testing.md
 app/_how-tos/write-http-status-tests.md:
   - /insomnia/pre-request-script.md
   - /insomnia/after-response-script.md
@@ -1508,7 +1549,7 @@ app/_how-tos/write-http-status-tests.md:
 app/_how-tos/write-headers-in-response-tests.md:
   - /insomnia/pre-request-script.md
   - /insomnia/after-response-script.md
-  - /insomnia//insomnia/unit-testing.md
+  - /insomnia/insomnia/unit-testing.md
 app/_how-tos/create-an-insomnia-plugin.md:
   - /insomnia/introduction-to-plugins.md
 app/_landing_pages/insomnia/plugins.yaml:
@@ -1543,6 +1584,10 @@ app/insomnia/storage.md:
   - /insomnia/git-sync.md
   - /insomnia/insomnia-sync.md
   - /insomnia/scratchpad.md
+app/_how-tos/import-content-from-a-git-repository.md:
+  - /insomnia/git-sync.md
+app/_how-tos/synchronize-with-git.md:
+  - /insomnia/git-sync.md
 app/insomnia/version-control.md:
   - /insomnia/git-sync.md
   - /insomnia/insomnia-sync.md
@@ -1573,3 +1618,670 @@ app/insomnia/graphql-queries.md:
   - app/insomnia/graphql-queries.md
 app/insomnia/external-vault.md:
   - app/insomnia/external-vault-integration.md
+
+app/_landing_pages/insomnia/mock-servers.yaml:
+  - /insomnia/api-mocking.md
+app/_how-tos/create-a-cloud-hosted-mock-server.md:
+  - /insomnia/api-mocking.md
+app/insomnia/verify-binary-provenance.md:
+  - /insomnia/verify-binary-provenance.md
+app/_how-tos/azure-saml-sso-insomnia.md:
+  - /insomnia/enterprise-configure-azure-saml.md
+app/_how-tos/okta-saml-sso-insomnia.md:
+  - /insomnia/enterprise-configure-okta-saml.md
+
+
+## Terraform
+app/_landing_pages/terraform.yaml:
+  - app/konnect/reference/terraform.md
+
+# Missing urls
+app/404.html:
+  - app/404.html
+
+app/index.html:
+  - app/index.html
+
+app/plugins.html:
+  - app/hub/index.html
+
+app/search.html:
+  - app/search.html
+
+app/gateway/changelog.md:
+  - app/gateway/changelog.md
+
+app/gateway/configuration.md:
+  - app/_src/gateway/reference/configuration/configuration-3.10.x.md
+  - app/_src/gateway/reference/configuration/configuration-3.9.x.md
+  - app/_src/gateway/reference/configuration/configuration-3.8.x.md
+  - app/_src/gateway/reference/configuration/configuration-3.7.x.md
+  - app/_src/gateway/reference/configuration/configuration-3.6.x.md
+  - app/_src/gateway/reference/configuration/configuration-3.5.x.md
+  - app/_src/gateway/reference/configuration/configuration-3.4.x.md
+  - app/_src/gateway/reference/configuration/configuration-3.0.-3.3.x.md
+
+app/mesh/changelog.md:
+  - app/mesh/changelog.md
+
+app/mesh/latest_version.md:
+  - app/mesh/latest_version.html
+
+app/_mesh_policies/meshaccesslog/index.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshaccesslog.md
+app/_mesh_policies/meshaccesslog/reference.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshaccesslog.md
+app/_mesh_policies/meshaccesslog/examples/log-incoming-traffic.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshaccesslog.md
+app/_mesh_policies/meshaccesslog/examples/log-outgoing-traffic.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshaccesslog.md
+app/_mesh_policies/meshaccesslog/examples/logging-to-multiple-backends.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshaccesslog.md
+
+app/_mesh_policies/meshcircuitbreaker/index.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshcircuitbreaker.md
+app/_mesh_policies/meshcircuitbreaker/reference.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshcircuitbreaker.md
+app/_mesh_policies/meshcircuitbreaker/examples/basic-circuit-breaker.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshcircuitbreaker.md
+app/_mesh_policies/meshcircuitbreaker/examples/inbound-traffic-backend-service.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshcircuitbreaker.md
+
+app/_mesh_policies/meshfaultinjection/index.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshfaultinjection.md
+app/_mesh_policies/meshfaultinjection/reference.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshfaultinjection.md
+app/_mesh_policies/meshfaultinjection/examples/list-faults-applied-from-frontend.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshfaultinjection.md
+app/_mesh_policies/meshfaultinjection/examples/return-requests-delayed.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshfaultinjection.md
+app/_mesh_policies/meshfaultinjection/examples/return-requests-from-frontend.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshfaultinjection.md
+
+app/_mesh_policies/meshhealthcheck/index.md:
+ - app/_src/.repos/kuma/app/_src/policies/meshhealthcheck.md
+app/_mesh_policies/meshhealthcheck/reference.md:
+ - app/_src/.repos/kuma/app/_src/policies/meshhealthcheck.md
+app/_mesh_policies/meshhealthcheck/examples/grpcs-health-check-from-cart.yaml:
+ - app/_src/.repos/kuma/app/_src/policies/meshhealthcheck.md
+app/_mesh_policies/meshhealthcheck/examples/health-check-backend.yaml:
+ - app/_src/.repos/kuma/app/_src/policies/meshhealthcheck.md
+app/_mesh_policies/meshhealthcheck/examples/protocol-fallback.yaml:
+ - app/_src/.repos/kuma/app/_src/policies/meshhealthcheck.md
+
+app/_mesh_policies/meshhttproute/index.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshhttproute.md
+app/_mesh_policies/meshhttproute/reference.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshhttproute.md
+app/_mesh_policies/meshhttproute/examples/traffic-mirror.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshhttproute.md
+app/_mesh_policies/meshhttproute/examples/traffic-modification.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshhttproute.md
+app/_mesh_policies/meshhttproute/examples/traffic-split.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshhttproute.md
+
+app/_mesh_policies/meshloadbalancingstrategy/index.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshloadbalancingstrategy.md
+app/_mesh_policies/meshloadbalancingstrategy/reference.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshloadbalancingstrategy.md
+app/_mesh_policies/meshloadbalancingstrategy/examples/disable-cross-zone-traffic.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshloadbalancingstrategy.md
+app/_mesh_policies/meshloadbalancingstrategy/examples/disable-locality-aware.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshloadbalancingstrategy.md
+app/_mesh_policies/meshloadbalancingstrategy/examples/load-balancing-http-traffic.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshloadbalancingstrategy.md
+app/_mesh_policies/meshloadbalancingstrategy/examples/prioritize-traffic-to-data-planes.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshloadbalancingstrategy.md
+app/_mesh_policies/meshloadbalancingstrategy/examples/route-equally.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshloadbalancingstrategy.md
+
+app/_mesh_policies/meshmetric/index.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshmetric.md
+app/_mesh_policies/meshmetric/reference.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshmetric.md
+app/_mesh_policies/meshmetric/examples/default.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshmetric.md
+
+app/_mesh_policies/meshopa/index.md:
+  - app/_src/mesh/features/meshopa.md
+app/_mesh_policies/meshopa/reference.md:
+  - app/_src/mesh/features/meshopa.md
+app/_mesh_policies/meshopa/examples/support-for-external-api.yaml:
+  - app/_src/mesh/features/meshopa.md
+
+app/_mesh_policies/meshpassthrough/index.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshpassthrough.md
+app/_mesh_policies/meshpassthrough/reference.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshpassthrough.md
+app/_mesh_policies/meshpassthrough/examples/disable-passthrough.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshpassthrough.md
+app/_mesh_policies/meshpassthrough/examples/enable-passthrough.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshpassthrough.md
+app/_mesh_policies/meshpassthrough/examples/passthrough-specific-endpoints.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshpassthrough.md
+
+app/_mesh_policies/meshproxypatch/index.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshproxypatch.md
+app/_mesh_policies/meshproxypatch/reference.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshproxypatch.md
+app/_mesh_policies/meshproxypatch/examples/lua-filter.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshproxypatch.md
+app/_mesh_policies/meshproxypatch/examples/time-out-adjustment.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshproxypatch.md
+
+app/_mesh_policies/meshratelimit/index.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshratelimit.md
+app/_mesh_policies/meshratelimit/reference.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshratelimit.md
+app/_mesh_policies/meshratelimit/examples/configure-on-services.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshratelimit.md
+app/_mesh_policies/meshratelimit/examples/tcp-rate-limit.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshratelimit.md
+
+app/_mesh_policies/meshretry/index.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshretry.md
+app/_mesh_policies/meshretry/reference.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshretry.md
+app/_mesh_policies/meshretry/examples/deadlineexceeded.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshretry.md
+app/_mesh_policies/meshretry/examples/http-frontend-to-backend.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshretry.md
+app/_mesh_policies/meshretry/examples/tcp-frontend-to-backend.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshretry.md
+
+app/_mesh_policies/meshtcproute/index.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshtcproute.md
+app/_mesh_policies/meshtcproute/reference.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshtcproute.md
+app/_mesh_policies/meshtcproute/examples/traffic-redirection.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtcproute.md
+app/_mesh_policies/meshtcproute/examples/traffic-split.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtcproute.md
+
+app/_mesh_policies/meshtimeout/index.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshtimeout.md
+app/_mesh_policies/meshtimeout/reference.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshtimeout.md
+app/_mesh_policies/meshtimeout/examples/backend-inbound.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtimeout.md
+app/_mesh_policies/meshtimeout/examples/default-all-gateways.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtimeout.md
+app/_mesh_policies/meshtimeout/examples/http-config.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtimeout.md
+app/_mesh_policies/meshtimeout/examples/target-mesh-httproute.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtimeout.md
+app/_mesh_policies/meshtimeout/examples/tcp-config.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtimeout.md
+app/_mesh_policies/meshtimeout/examples/tcp-port.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtimeout.md
+app/_mesh_policies/meshtimeout/examples/timeout-all-services.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtimeout.md
+
+app/_mesh_policies/meshtls/index.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshtls.md
+app/_mesh_policies/meshtls/reference.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshtls.md
+app/_mesh_policies/meshtls/examples/set-specific-tls-version.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtls.md
+app/_mesh_policies/meshtls/examples/strict-mode.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtls.md
+
+app/_mesh_policies/meshtrace/index.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshtrace.md
+app/_mesh_policies/meshtrace/reference.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshtrace.md
+app/_mesh_policies/meshtrace/examples/datadog.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtrace.md
+app/_mesh_policies/meshtrace/examples/opentelemetry.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtrace.md
+app/_mesh_policies/meshtrace/examples/target-east.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtrace.md
+app/_mesh_policies/meshtrace/examples/target-west.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtrace.md
+app/_mesh_policies/meshtrace/examples/zipkin.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtrace.md
+
+app/_mesh_policies/meshtrafficpermission/index.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshtrafficpermission.md
+app/_mesh_policies/meshtrafficpermission/reference.md:
+  - app/_src/.repos/kuma/app/_src/policies/meshtrafficpermission.md
+app/_mesh_policies/meshtrafficpermission/examples/service-allow-requests.yaml:
+  - app/_src/.repos/kuma/app/_src/policies/meshtrafficpermission.md
+
+app/_references/gateway/cli/reference/3.10/index.md:
+  - app/_src/gateway/reference/cli.md
+app/_references/gateway/cli/reference/3.4/index.md:
+  - app/_src/gateway/reference/cli.md
+app/_references/gateway/cli/reference/3.7/index.md:
+  - app/_src/gateway/reference/cli.md
+app/_references/gateway/cli/reference/3.8/index.md:
+  - app/_src/gateway/reference/cli.md
+app/_references/gateway/cli/reference/3.9/index.md:
+  - app/_src/gateway/reference/cli.md
+
+app/_references/gateway/pdk/reference/3.10/index.md:
+ - app/_src/gateway/plugin-development/pdk/index.md
+app/_references/gateway/pdk/reference/3.10/kong.client.md:
+  - app/_src/gateway/plugin-development/pdk/kong.client.md
+app/_references/gateway/pdk/reference/3.10/kong.client.tls.md:
+  - app/_src/gateway/plugin-development/pdk/kong.client.tls.md
+app/_references/gateway/pdk/reference/3.10/kong.cluster.md:
+  - app/_src/gateway/plugin-development/pdk/kong.cluster.md
+app/_references/gateway/pdk/reference/3.10/kong.ctx.md:
+  - app/_src/gateway/plugin-development/pdk/kong.ctx.md
+app/_references/gateway/pdk/reference/3.10/kong.ip.md:
+  - app/_src/gateway/plugin-development/pdk/kong.ip.md
+app/_references/gateway/pdk/reference/3.10/kong.jwe.md:
+  - app/_src/gateway/plugin-development/pdk/kong.jwe.md
+app/_references/gateway/pdk/reference/3.10/kong.log.md:
+  - app/_src/gateway/plugin-development/pdk/kong.log.md
+app/_references/gateway/pdk/reference/3.10/kong.nginx.md:
+  - app/_src/gateway/plugin-development/pdk/kong.nginx.md
+app/_references/gateway/pdk/reference/3.10/kong.node.md:
+  - app/_src/gateway/plugin-development/pdk/kong.node.md
+app/_references/gateway/pdk/reference/3.10/kong.plugin.md:
+  - app/_src/gateway/plugin-development/pdk/kong.plugin.md
+app/_references/gateway/pdk/reference/3.10/kong.request.md:
+  - app/_src/gateway/plugin-development/pdk/kong.request.md
+app/_references/gateway/pdk/reference/3.10/kong.response.md:
+  - app/_src/gateway/plugin-development/pdk/kong.response.md
+app/_references/gateway/pdk/reference/3.10/kong.router.md:
+  - app/_src/gateway/plugin-development/pdk/kong.router.md
+app/_references/gateway/pdk/reference/3.10/kong.service.md:
+  - app/_src/gateway/plugin-development/pdk/kong.service.md
+app/_references/gateway/pdk/reference/3.10/kong.service.request.md:
+  - app/_src/gateway/plugin-development/pdk/kong.service.request.md
+app/_references/gateway/pdk/reference/3.10/kong.service.response.md:
+  - app/_src/gateway/plugin-development/pdk/kong.service.response.md
+app/_references/gateway/pdk/reference/3.10/kong.table.md:
+  - app/_src/gateway/plugin-development/pdk/kong.table.md
+app/_references/gateway/pdk/reference/3.10/kong.telemetry.log.md:
+  - app/_src/gateway/plugin-development/pdk/kong.telemetry.log.md
+app/_references/gateway/pdk/reference/3.10/kong.tracing.md:
+  - app/_src/gateway/plugin-development/pdk/kong.tracing.md
+app/_references/gateway/pdk/reference/3.10/kong.vault.md:
+  - app/_src/gateway/plugin-development/pdk/kong.vault.md
+app/_references/gateway/pdk/reference/3.10/kong.websocket.client.md:
+  - app/_src/gateway/plugin-development/pdk/kong.websocket.client.md
+app/_references/gateway/pdk/reference/3.10/kong.websocket.upstream.md:
+  - app/_src/gateway/plugin-development/pdk/kong.websocket.upstream.md
+
+app/_references/gateway/pdk/reference/3.9/index.md:
+ - app/_src/gateway/plugin-development/pdk/index.md
+app/_references/gateway/pdk/reference/3.9/kong.client.md:
+  - app/_src/gateway/plugin-development/pdk/kong.client.md
+app/_references/gateway/pdk/reference/3.9/kong.client.tls.md:
+  - app/_src/gateway/plugin-development/pdk/kong.client.tls.md
+app/_references/gateway/pdk/reference/3.9/kong.cluster.md:
+  - app/_src/gateway/plugin-development/pdk/kong.cluster.md
+app/_references/gateway/pdk/reference/3.9/kong.ctx.md:
+  - app/_src/gateway/plugin-development/pdk/kong.ctx.md
+app/_references/gateway/pdk/reference/3.9/kong.ip.md:
+  - app/_src/gateway/plugin-development/pdk/kong.ip.md
+app/_references/gateway/pdk/reference/3.9/kong.jwe.md:
+  - app/_src/gateway/plugin-development/pdk/kong.jwe.md
+app/_references/gateway/pdk/reference/3.9/kong.log.md:
+  - app/_src/gateway/plugin-development/pdk/kong.log.md
+app/_references/gateway/pdk/reference/3.9/kong.nginx.md:
+  - app/_src/gateway/plugin-development/pdk/kong.nginx.md
+app/_references/gateway/pdk/reference/3.9/kong.node.md:
+  - app/_src/gateway/plugin-development/pdk/kong.node.md
+app/_references/gateway/pdk/reference/3.9/kong.plugin.md:
+  - app/_src/gateway/plugin-development/pdk/kong.plugin.md
+app/_references/gateway/pdk/reference/3.9/kong.request.md:
+  - app/_src/gateway/plugin-development/pdk/kong.request.md
+app/_references/gateway/pdk/reference/3.9/kong.response.md:
+  - app/_src/gateway/plugin-development/pdk/kong.response.md
+app/_references/gateway/pdk/reference/3.9/kong.router.md:
+  - app/_src/gateway/plugin-development/pdk/kong.router.md
+app/_references/gateway/pdk/reference/3.9/kong.service.md:
+  - app/_src/gateway/plugin-development/pdk/kong.service.md
+app/_references/gateway/pdk/reference/3.9/kong.service.request.md:
+  - app/_src/gateway/plugin-development/pdk/kong.service.request.md
+app/_references/gateway/pdk/reference/3.9/kong.service.response.md:
+  - app/_src/gateway/plugin-development/pdk/kong.service.response.md
+app/_references/gateway/pdk/reference/3.9/kong.table.md:
+  - app/_src/gateway/plugin-development/pdk/kong.table.md
+app/_references/gateway/pdk/reference/3.9/kong.telemetry.log.md:
+  - app/_src/gateway/plugin-development/pdk/kong.telemetry.log.md
+app/_references/gateway/pdk/reference/3.9/kong.tracing.md:
+  - app/_src/gateway/plugin-development/pdk/kong.tracing.md
+app/_references/gateway/pdk/reference/3.9/kong.vault.md:
+  - app/_src/gateway/plugin-development/pdk/kong.vault.md
+app/_references/gateway/pdk/reference/3.9/kong.websocket.client.md:
+  - app/_src/gateway/plugin-development/pdk/kong.websocket.client.md
+app/_references/gateway/pdk/reference/3.9/kong.websocket.upstream.md:
+  - app/_src/gateway/plugin-development/pdk/kong.websocket.upstream.md
+
+app/_references/gateway/pdk/reference/3.8/index.md:
+ - app/_src/gateway/plugin-development/pdk/index.md
+app/_references/gateway/pdk/reference/3.8/kong.client.md:
+  - app/_src/gateway/plugin-development/pdk/kong.client.md
+app/_references/gateway/pdk/reference/3.8/kong.client.tls.md:
+  - app/_src/gateway/plugin-development/pdk/kong.client.tls.md
+app/_references/gateway/pdk/reference/3.8/kong.cluster.md:
+  - app/_src/gateway/plugin-development/pdk/kong.cluster.md
+app/_references/gateway/pdk/reference/3.8/kong.ctx.md:
+  - app/_src/gateway/plugin-development/pdk/kong.ctx.md
+app/_references/gateway/pdk/reference/3.8/kong.ip.md:
+  - app/_src/gateway/plugin-development/pdk/kong.ip.md
+app/_references/gateway/pdk/reference/3.8/kong.jwe.md:
+  - app/_src/gateway/plugin-development/pdk/kong.jwe.md
+app/_references/gateway/pdk/reference/3.8/kong.log.md:
+  - app/_src/gateway/plugin-development/pdk/kong.log.md
+app/_references/gateway/pdk/reference/3.8/kong.nginx.md:
+  - app/_src/gateway/plugin-development/pdk/kong.nginx.md
+app/_references/gateway/pdk/reference/3.8/kong.node.md:
+  - app/_src/gateway/plugin-development/pdk/kong.node.md
+app/_references/gateway/pdk/reference/3.8/kong.plugin.md:
+  - app/_src/gateway/plugin-development/pdk/kong.plugin.md
+app/_references/gateway/pdk/reference/3.8/kong.request.md:
+  - app/_src/gateway/plugin-development/pdk/kong.request.md
+app/_references/gateway/pdk/reference/3.8/kong.response.md:
+  - app/_src/gateway/plugin-development/pdk/kong.response.md
+app/_references/gateway/pdk/reference/3.8/kong.router.md:
+  - app/_src/gateway/plugin-development/pdk/kong.router.md
+app/_references/gateway/pdk/reference/3.8/kong.service.md:
+  - app/_src/gateway/plugin-development/pdk/kong.service.md
+app/_references/gateway/pdk/reference/3.8/kong.service.request.md:
+  - app/_src/gateway/plugin-development/pdk/kong.service.request.md
+app/_references/gateway/pdk/reference/3.8/kong.service.response.md:
+  - app/_src/gateway/plugin-development/pdk/kong.service.response.md
+app/_references/gateway/pdk/reference/3.8/kong.table.md:
+  - app/_src/gateway/plugin-development/pdk/kong.table.md
+app/_references/gateway/pdk/reference/3.8/kong.telemetry.log.md:
+  - app/_src/gateway/plugin-development/pdk/kong.telemetry.log.md
+app/_references/gateway/pdk/reference/3.8/kong.tracing.md:
+  - app/_src/gateway/plugin-development/pdk/kong.tracing.md
+app/_references/gateway/pdk/reference/3.8/kong.vault.md:
+  - app/_src/gateway/plugin-development/pdk/kong.vault.md
+app/_references/gateway/pdk/reference/3.8/kong.websocket.client.md:
+  - app/_src/gateway/plugin-development/pdk/kong.websocket.client.md
+app/_references/gateway/pdk/reference/3.8/kong.websocket.upstream.md:
+  - app/_src/gateway/plugin-development/pdk/kong.websocket.upstream.md
+
+app/_references/gateway/pdk/reference/3.7/index.md:
+ - app/_src/gateway/plugin-development/pdk/index.md
+app/_references/gateway/pdk/reference/3.7/kong.client.md:
+  - app/_src/gateway/plugin-development/pdk/kong.client.md
+app/_references/gateway/pdk/reference/3.7/kong.client.tls.md:
+  - app/_src/gateway/plugin-development/pdk/kong.client.tls.md
+app/_references/gateway/pdk/reference/3.7/kong.cluster.md:
+  - app/_src/gateway/plugin-development/pdk/kong.cluster.md
+app/_references/gateway/pdk/reference/3.7/kong.ctx.md:
+  - app/_src/gateway/plugin-development/pdk/kong.ctx.md
+app/_references/gateway/pdk/reference/3.7/kong.ip.md:
+  - app/_src/gateway/plugin-development/pdk/kong.ip.md
+app/_references/gateway/pdk/reference/3.7/kong.jwe.md:
+  - app/_src/gateway/plugin-development/pdk/kong.jwe.md
+app/_references/gateway/pdk/reference/3.7/kong.log.md:
+  - app/_src/gateway/plugin-development/pdk/kong.log.md
+app/_references/gateway/pdk/reference/3.7/kong.nginx.md:
+  - app/_src/gateway/plugin-development/pdk/kong.nginx.md
+app/_references/gateway/pdk/reference/3.7/kong.node.md:
+  - app/_src/gateway/plugin-development/pdk/kong.node.md
+app/_references/gateway/pdk/reference/3.7/kong.plugin.md:
+  - app/_src/gateway/plugin-development/pdk/kong.plugin.md
+app/_references/gateway/pdk/reference/3.7/kong.request.md:
+  - app/_src/gateway/plugin-development/pdk/kong.request.md
+app/_references/gateway/pdk/reference/3.7/kong.response.md:
+  - app/_src/gateway/plugin-development/pdk/kong.response.md
+app/_references/gateway/pdk/reference/3.7/kong.router.md:
+  - app/_src/gateway/plugin-development/pdk/kong.router.md
+app/_references/gateway/pdk/reference/3.7/kong.service.md:
+  - app/_src/gateway/plugin-development/pdk/kong.service.md
+app/_references/gateway/pdk/reference/3.7/kong.service.request.md:
+  - app/_src/gateway/plugin-development/pdk/kong.service.request.md
+app/_references/gateway/pdk/reference/3.7/kong.service.response.md:
+  - app/_src/gateway/plugin-development/pdk/kong.service.response.md
+app/_references/gateway/pdk/reference/3.7/kong.table.md:
+  - app/_src/gateway/plugin-development/pdk/kong.table.md
+app/_references/gateway/pdk/reference/3.7/kong.tracing.md:
+  - app/_src/gateway/plugin-development/pdk/kong.tracing.md
+app/_references/gateway/pdk/reference/3.7/kong.vault.md:
+  - app/_src/gateway/plugin-development/pdk/kong.vault.md
+app/_references/gateway/pdk/reference/3.7/kong.websocket.client.md:
+  - app/_src/gateway/plugin-development/pdk/kong.websocket.client.md
+app/_references/gateway/pdk/reference/3.7/kong.websocket.upstream.md:
+  - app/_src/gateway/plugin-development/pdk/kong.websocket.upstream.md
+
+app/_references/gateway/pdk/reference/3.4/index.md:
+ - app/_src/gateway/plugin-development/pdk/index.md
+app/_references/gateway/pdk/reference/3.4/kong.client.md:
+  - app/_src/gateway/plugin-development/pdk/kong.client.md
+app/_references/gateway/pdk/reference/3.4/kong.client.tls.md:
+  - app/_src/gateway/plugin-development/pdk/kong.client.tls.md
+app/_references/gateway/pdk/reference/3.4/kong.cluster.md:
+  - app/_src/gateway/plugin-development/pdk/kong.cluster.md
+app/_references/gateway/pdk/reference/3.4/kong.ctx.md:
+  - app/_src/gateway/plugin-development/pdk/kong.ctx.md
+app/_references/gateway/pdk/reference/3.4/kong.ip.md:
+  - app/_src/gateway/plugin-development/pdk/kong.ip.md
+app/_references/gateway/pdk/reference/3.4/kong.jwe.md:
+  - app/_src/gateway/plugin-development/pdk/kong.jwe.md
+app/_references/gateway/pdk/reference/3.4/kong.log.md:
+  - app/_src/gateway/plugin-development/pdk/kong.log.md
+app/_references/gateway/pdk/reference/3.4/kong.nginx.md:
+  - app/_src/gateway/plugin-development/pdk/kong.nginx.md
+app/_references/gateway/pdk/reference/3.4/kong.node.md:
+  - app/_src/gateway/plugin-development/pdk/kong.node.md
+app/_references/gateway/pdk/reference/3.4/kong.plugin.md:
+  - app/_src/gateway/plugin-development/pdk/kong.plugin.md
+app/_references/gateway/pdk/reference/3.4/kong.request.md:
+  - app/_src/gateway/plugin-development/pdk/kong.request.md
+app/_references/gateway/pdk/reference/3.4/kong.response.md:
+  - app/_src/gateway/plugin-development/pdk/kong.response.md
+app/_references/gateway/pdk/reference/3.4/kong.router.md:
+  - app/_src/gateway/plugin-development/pdk/kong.router.md
+app/_references/gateway/pdk/reference/3.4/kong.service.md:
+  - app/_src/gateway/plugin-development/pdk/kong.service.md
+app/_references/gateway/pdk/reference/3.4/kong.service.request.md:
+  - app/_src/gateway/plugin-development/pdk/kong.service.request.md
+app/_references/gateway/pdk/reference/3.4/kong.service.response.md:
+  - app/_src/gateway/plugin-development/pdk/kong.service.response.md
+app/_references/gateway/pdk/reference/3.4/kong.table.md:
+  - app/_src/gateway/plugin-development/pdk/kong.table.md
+app/_references/gateway/pdk/reference/3.4/kong.tracing.md:
+  - app/_src/gateway/plugin-development/pdk/kong.tracing.md
+app/_references/gateway/pdk/reference/3.4/kong.vault.md:
+  - app/_src/gateway/plugin-development/pdk/kong.vault.md
+app/_references/gateway/pdk/reference/3.4/kong.websocket.client.md:
+  - app/_src/gateway/plugin-development/pdk/kong.websocket.client.md
+app/_references/gateway/pdk/reference/3.4/kong.websocket.upstream.md:
+  - app/_src/gateway/plugin-development/pdk/kong.websocket.upstream.md
+
+app/_kong_plugins/request-callout/changelog.md:
+  - app/_hub/kong-inc/request-callout/_changelog.md
+app/_kong_plugins/ai-proxy/changelog.md:
+  - app/_hub/kong-inc/ai-proxy/_changelog.md
+app/_kong_plugins/ai-proxy-advanced/changelog.md:
+  - app/_hub/kong-inc/ai-proxy-advanced/_changelog.md
+app/_kong_plugins/basic-auth/changelog.md:
+  - app/_hub/kong-inc/basic-auth/_changelog.md
+app/_kong_plugins/bot-detection/changelog.md:
+  - app/_hub/kong-inc/bot-detection/_changelog.md
+app/_kong_plugins/cors/changelog.md:
+  - app/_hub/kong-inc/cors/_changelog.md
+app/_kong_plugins/injection-protection/changelog.md:
+  - app/_hub/kong-inc/injection-protection/_changelog.md
+app/_kong_plugins/jwe-decrypt/changelog.md:
+  - app/_hub/kong-inc/jwe-decrypt/_changelog.md
+app/_kong_plugins/mocking/changelog.md:
+  - app/_hub/kong-inc/mocking/_changelog.md
+app/_kong_plugins/opa/changelog.md:
+  - app/_hub/kong-inc/opa/_changelog.md
+app/_kong_plugins/response-transformer-advanced/changelog.md:
+  - app/_hub/kong-inc/response-transformer-advanced/_changelog.md
+app/_kong_plugins/route-by-header/changelog.md:
+  - app/_hub/kong-inc/route-by-header/_changelog.md
+app/_kong_plugins/route-transformer-advanced/changelog.md:
+  - app/_hub/kong-inc/route-transformer-advanced/_changelog.md
+app/_kong_plugins/service-protection/changelog.md:
+  - app/_hub/kong-inc/service-protection/_changelog.md
+app/_kong_plugins/tls-handshake-modifier/changelog.md:
+  - app/_hub/kong-inc/tls-handshake-modifier/_changelog.md
+app/_kong_plugins/websocket-size-limit/changelog.md:
+  - app/_hub/kong-inc/websocket-size-limit/_changelog.md
+app/_kong_plugins/websocket-validator/changelog.md:
+  - app/_hub/kong-inc/websocket-validator/_changelog.md
+
+app/_kong_plugins/jwe-decrypt/index.md:
+  - app/_hub/kong-inc/jwe-decrypt/overview/_index.md
+
+app/api-specs/plugins/acl/openapi.yaml:
+  - app/_hub/kong-inc/acl/_api.md
+app/api-specs/plugins/acme/openapi.yaml:
+  - app/_hub/kong-inc/acme/_api.md
+app/api-specs/plugins/graphql-proxy-cache-advanced/openapi.yaml:
+  - app/_hub/kong-inc/graphql-proxy-cache-advanced/_api.md
+app/api-specs/plugins/graphql-rate-limiting-advanced/openapi.yaml:
+  - app/_hub/kong-inc/graphql-rate-limiting-advanced/_api.md
+app/api-specs/plugins/openid-connect/openapi.yaml:
+  - app/_hub/kong-inc/openid-connect/_api.md
+
+
+app/mesh/policies/index.html:
+  - app/_src/.repos/kuma/app/_src/policies/introduction.md
+
+# KIC
+
+app/kubernetes-ingress-controller/deployment-topologies/gateway-discovery.md:
+  - app/_src/kubernetes-ingress-controller/production/deployment-topologies/gateway-discovery.md
+app/kubernetes-ingress-controller/kic-high-availability.md:
+  - app/_src/kubernetes-ingress-controller/guides/high-availability/kic.md
+app/kubernetes-ingress-controller/troubleshooting/debugging.md:
+  - app/_src/kubernetes-ingress-controller/reference/troubleshooting.md
+app/kubernetes-ingress-controller/troubleshooting/kong-gateway-configuration.md:
+  - app/_src/kubernetes-ingress-controller/reference/troubleshooting.md
+app/operator/konnect/kongpluginbinding.md:
+  - app/_src/gateway-operator/guides/konnect-entities/konnect-plugin-binding.md
+app/kubernetes-ingress-controller/troubleshooting/konnect.md:
+  - app/_src/kubernetes-ingress-controller/reference/troubleshooting.md
+app/kubernetes-ingress-controller/troubleshooting/kubernetes-api-server.md:
+  - app/_src/kubernetes-ingress-controller/reference/troubleshooting.md
+
+app/_how-tos/enable-mutual-tls-authentication-on-a-service.md:
+  - app/_src/kubernetes-ingress-controller/plugins/mtls.md
+
+## Operator 
+
+app/_how-tos/operator-konnect-serviceless-route.md:
+  - app/_src/gateway-operator/guides/konnect-entities/service-and-route.md
+app/operator/konnect/labelling.md:
+  - app/_src/gateway-operator/guides/konnect-entities/tagging-and-labeling.md
+app/operator/konnect/reference/faq.md:
+  - app/_src/gateway-operator/guides/konnect-entities/faq.md
+app/operator/konnect/reference/crds.md:
+  - app/_src/gateway-operator/concepts/gateway-api.md
+  - app/_src/gateway-operator/guides/konnect-entities/architecture.md
+app/_how-tos/operator-dataplane-autoscale-datadog.md:
+  - app/_src/gateway-operator/guides/autoscaling-workloads/datadog.md
+app/_how-tos/operator-dataplane-autoscale-prometheus.md:
+  - app/_src/gateway-operator/guides/autoscaling-workloads/prometheus.md
+app/_how-tos/operator-dataplane-custom-ca.md:
+  - app/_src/gateway-operator/guides/konnect-entities/certificate-and-cacertificate.md
+app/_how-tos/operator-dataplane-custom-plugins.md:
+  - app/_src/gateway-operator/guides/plugin-distribution.md
+app/_how-tos/operator-dataplane-image.md:
+  - app/_src/gateway-operator/customization/data-plane-image.md
+app/_how-tos/operator-dataplane-sidecars.md:
+  - app/_src/gateway-operator/customization/sidecars.md
+app/_how-tos/operator-get-started-hybrid-create-route.md:
+  - app/_src/gateway-operator/get-started/kic/create-route.md
+app/_how-tos/operator-get-started-hybrid-deploy-dataplane.md:
+  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
+app/_how-tos/operator-get-started-hybrid-install.md:
+  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
+app/_how-tos/operator-get-started-kic-create-gateway.md:
+  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
+app/_how-tos/operator-get-started-kic-create-route.md:
+  - app/_src/gateway-operator/get-started/kic/create-route.md
+app/_how-tos/operator-get-started-kic-install.md:
+  - app/_src/gateway-operator/get-started/kic/install.md
+app/_how-tos/operator-install.md:
+  - app/_src/gateway-operator/get-started/konnect/install.md
+app/_how-tos/operator-konnect-certificate-ca-cert.md:
+  - app/_src/gateway-operator/production/certificates/custom_ca.md
+app/_how-tos/operator-konnect-cgw-configuration.md:
+  - app/_src/gateway-operator/guides/konnect-entities/cloud-gateways-data-plane-group-configuration.md
+app/_how-tos/operator-konnect-cgw-network.md:
+  - app/_src/gateway-operator/guides/konnect-entities/cloud-gateways-network.md
+app/_how-tos/operator-konnect-consumer.md:
+  - app/_src/gateway-operator/guides/konnect-entities/consumer-and-consumergroup.md
+app/_how-tos/operator-konnect-control-plane-group.md:
+  - app/_src/gateway-operator/guides/konnect-entities/gatewaycontrolplane.md
+app/_how-tos/operator-konnect-control-plane-kic.md:
+  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
+app/_how-tos/operator-konnect-control-plane.md:
+  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
+app/_how-tos/operator-konnect-dp-certificate.md:
+  - app/_src/gateway-operator/guides/konnect-entities/dpcertificate.md
+app/_how-tos/operator-konnect-key-keyset.md:
+  - app/_src/gateway-operator/guides/konnect-entities/key-and-keyset.md
+app/_how-tos/operator-konnect-service-route.md:
+  - app/_src/gateway-operator/guides/konnect-entities/service-and-route.md
+app/_how-tos/operator-konnect-upstream-target.md:
+  - app/_src/gateway-operator/guides/konnect-entities/upstream-and-target.md
+app/_how-tos/operator-konnect-vault.md:
+  - app/_src/gateway-operator/guides/konnect-entities/vault.md
+app/operator/konnect/reconciliation-loop.md:
+  - app/_src/gateway-operator/guides/konnect-entities/architecture.md
+app/operator/konnect/troubleshooting/status.md:
+  - app/_src/gateway-operator/production/monitoring/status/overview.md
+app/operator/support-policy.md:
+  - app/_src/gateway-operator/support.md
+
+## Things that were missing
+
+app/gateway/traffic-control/load-balancing-reference.md:
+  - app/_src/gateway/how-kong-works/load-balancing.md
+app/mesh/provenance-verification-binaries.md:
+  - app/_src/mesh/features/provenance-verification-binaries.md
+app/mesh/provenance-verification-images:
+  - app/_src/mesh/features/provenance-verification-images.md
+app/gateway/routing/traditional.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
+app/_landing_pages/advanced-analytics.yaml:
+  - app/konnect/analytics/index.md
+app/_landing_pages/custom-plugins.yaml:
+  - app/_src/gateway/kong-plugins/index.md
+app/_landing_pages/gateway/openid-connect.yaml:
+  - app/_hub/kong-inc/openid-connect/overview/_index.md
+app/_landing_pages/konnect-api.yaml:
+  - app/konnect/api/index.md
+app/_landing_pages/mesh.yaml:
+  - app/_src/mesh/index.md
+app/_landing_pages/operator.yaml:
+  - app/_src/gateway-operator/index.md
+app/_landing_pages/service-catalog/integrations.yaml:
+  - app/konnect/service-catalog/integrations/index.md
+
+app/_how-tos/add-rate-limiting-for-a-consumer-with-kong-gateway.md:
+  - app/_src/gateway/get-started/rate-limiting.md
+app/_how-tos/add-rate-limiting-to-a-service-with-kong-gateway.md:
+  - app/_src/gateway/get-started/rate-limiting.md
+app/_how-tos/associate-certificate-with-sni.md:
+  - app/_src/gateway/how-kong-works/routing-traffic.md
+app/_how-tos/create-a-custom-webhook-slack-with-kong-gateway.md:
+  - app/_src/gateway/kong-enterprise/event-hooks/index.md
+app/_how-tos/create-a-lambda-event-hook-with-kong-gateway.md:
+  - app/_src/gateway/kong-enterprise/event-hooks/index.md
+app/_how-tos/create-a-log-event-hook-with-kong-gateway.md:
+  - app/_src/gateway/kong-enterprise/event-hooks/index.md
+app/_how-tos/create-a-webhook-with-kong-gateway.md:
+  - app/_src/gateway/kong-enterprise/event-hooks/index.md
+app/_how-tos/deploy-mesh-on-kubernetes.md:
+  - app/_src/quickstart/kubernetes-demo.md
+app/_how-tos/enable-key-authentication-on-a-service-with-kong-gateway.md:
+  - app/_src/gateway/get-started/key-authentication.md
+app/_how-tos/map-uris-into-graphql-queries.md:
+  - app/_hub/kong-inc/degraphql/overview/_index.md
+app/_how-tos/restrict-access-to-resources-by-allowing-ips.md:
+  - app/_hub/kong-inc/ip-restriction/overview/_index.md
+app/_how-tos/transform-a-client-request.md:
+  - app/_hub/kong-inc/response-transformer-advanced/overview/_index.md
+app/_how-tos/use-sdks-with-ai-proxy.md:
+  - app/_hub/kong-inc/ai-proxy/how-to/_sdk-usage.md
+app/mesh/provenance-verification-images.md:
+  - app/_src/mesh/features/provenance-verification-images.md
+

@@ -36,10 +36,6 @@ sections:
       - path: /deck/gateway/validate/
       - path: /deck/gateway/ping/
       - path: /deck/gateway/reset/
-      - path: /deck/gateway/**/*
-    auto_exclude: true
-    auto_exclude_except:
-      - path: /deck/**/*
   - title: Advanced Gateway Configuration
     items:
       - path: /deck/gateway/tags/

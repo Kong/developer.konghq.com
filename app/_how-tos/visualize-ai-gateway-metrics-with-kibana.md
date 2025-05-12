@@ -62,7 +62,7 @@ related_resources:
   - text: AI Gateway
     url: /ai-gateway/
   - text: Get started with AI Gateway
-    url: /how-to/get-started-with-ai-gateway/
+    url: /ai-gateway/get-started/
   - text: Use LangChain with AI Proxy
     url: /how-to/use-langchain-with-ai-proxy/
 ---

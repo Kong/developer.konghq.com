@@ -1,7 +1,7 @@
 ---
 title: Proxying with {{site.base_gateway}}
 
-description: "Proxying is when {{site.base_gateway}} matches an HTTP request with a [registered Route](/gateway/entities/route/) and forwards the request."
+description: "Proxying is when {{site.base_gateway}} matches an HTTP request with a registered Route and forwards the request."
 
 content_type: reference
 layout: reference

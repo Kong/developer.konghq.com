@@ -1,11 +1,13 @@
 metadata:
-  title: "Service Catalog Integrations"
+  title: "Service Catalog integrations"
   content_type: landing_page
   products:
     - service-catalog
   description: Integrate third-party applications into your {{site.konnect_short_name}} organization.
   tags:
     - integrations
+    - beta
+  beta: true
 
 rows:
   - header:
@@ -85,3 +87,12 @@ rows:
               cta:
                 text: Learn more
                 url: /service-catalog/integrations/datadog/
+      - blocks:
+          - type: card
+            config:
+              title: Slack
+              description: Expand Konnect Service Catalog functionality with features from Slack.
+              icon: /assets/icons/third-party/slack.svg
+              cta:
+                text: Learn more
+                url: /service-catalog/integrations/slack/

@@ -85,16 +85,16 @@ rows:
         - type: faqs
           config:
             - q: Does the Kong Admin API work with Gateway entities in {{site.konnect_short_name}}?
-              a: It does not. All of the apps in {{site.konnect_short_name}} have their own APIs. To manage entities in the Gateway Manager, you can use the [Konnect Control Plane Config API](https://kongdeveloper.netlify.app/api/konnect/control-planes-config/v2/).
+              a: It does not. All of the apps in {{site.konnect_short_name}} have their own APIs. To manage entities in the Gateway Manager, you can use the [Konnect Control Plane Config API](/api/konnect/control-planes-config/v2/).
             - q: Can I use the Admin API in DB-less mode?
               a: |
                 In DB-less mode, you configure {{site.base_gateway}} declaratively. The Admin API for each {{site.base_gateway}} node functions independently, reflecting the memory state of that particular node. 
                 This is the case because there is no database coordination between nodes. Therefore, the Admin API is mostly read-only.
 
                 When running {{site.base_gateway}} in DB-less mode, the Admin API can only perform tasks related to handling the declarative config:
-                * [Validating configurations against schemas](/api/gateway/admin-ee/3.9/#/operations/post-schemas-entity-validate)
-                * [Validating plugin configurations against schemas](/api/gateway/admin-ee/3.9/#/operations/post-schemas-plugins-validate)
-                * [Reloading the declarative configuration](/api/gateway/admin-ee/3.9/#/operations/post-config)
+                * [Validating configurations against schemas](/api/gateway/admin-ee/#/operations/post-schemas-entity-validate)
+                * [Validating plugin configurations against schemas](/api/gateway/admin-ee/#/operations/post-schemas-plugins-validate)
+                * [Reloading the declarative configuration](/api/gateway/admin-ee/#/operations/post-config)
             
             - q: How can I send a request for a specific Workspace?
               a: |

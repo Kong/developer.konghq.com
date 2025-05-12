@@ -59,7 +59,7 @@ Admins can only interact with entities from within their Workspace. Depending on
 
 ## Invite an Admin
 
-Inviting an Admin can only be done if you have [enabled RBAC](/gateway/entities/rbac/#enable-rbac). You can invite an Admin by issuing a `POST` request to [`/admins`](/api/gateway/admin-ee/3.9/#/operations/post-admins). 
+Inviting an Admin can only be done if you have [enabled RBAC](/gateway/entities/rbac/#enable-rbac). You can invite an Admin by issuing a `POST` request to [`/admins`](/api/gateway/admin-ee/#/operations/post-admins). 
 
 If you haven't configured email capabilities your Admin won't receive an invite link, but will still be created.
 

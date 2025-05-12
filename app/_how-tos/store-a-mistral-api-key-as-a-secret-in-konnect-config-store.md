@@ -18,11 +18,12 @@ related_resources:
 
 products:
     - gateway
+    - ai-gateway
 
 works_on:
     - konnect
 
-entities: 
+entities:
   - vault
 
 tags:
@@ -34,9 +35,9 @@ tldr:
     q: How do I store my Mistral API key as a secret in a {{site.konnect_short_name}} Vault and then use it with the AI Proxy plugin?
     a: |
       1. Use the {{site.konnect_short_name}} API to create a Config Store using the `/config-stores` endpoint.
-      2. Create a {{site.konnect_short_name}} Vault using the [`/vaults/` endpoint](/api/konnect/control-planes-config/v2/#/operations/create-vault).
-      3. Store your Mistral API key as a key/value pair using the `/secrets` endpoint. 
-      4. Reference the secret using the Vault prefix and key (for example: `{vault://mysecretvault/mistral-key}`) in the [AI Proxy plugin](/plugins/ai-proxy/) `header_value`. 
+      2. Create a {{site.konnect_short_name}} Vault using the [`/vaults/` endpoint](/api/konnect/control-planes-config/#/operations/create-vault).
+      3. Store your Mistral API key as a key/value pair using the `/secrets` endpoint.
+      4. Reference the secret using the Vault prefix and key (for example: `{vault://mysecretvault/mistral-key}`) in the [AI Proxy plugin](/plugins/ai-proxy/) `header_value`.
 
 prereqs:
   entities:
@@ -64,7 +65,7 @@ tools:
 
 faqs:
   - q: How do I replace certificates used in {{site.base_gateway}} data plane nodes with a secret reference?
-    a: Set up a {{site.konnect_short_name}} or any other Vault and define the certificate and key in a secret in the Vault. 
+    a: Set up a {{site.konnect_short_name}} or any other Vault and define the certificate and key in a secret in the Vault.
 cleanup:
   inline:
     - title: Clean up {{site.konnect_short_name}} environment
@@ -82,7 +83,7 @@ next_steps:
 
 ## Configure a {{site.konnect_short_name}} Config Store
 
-Before you can configure a {{site.konnect_short_name}} Vault, you must first create a Config Store using the [Control Planes Configuration API](/api/konnect/control-planes-config/v2/#/) by sending a `POST` request to the `/config-stores` endpoint:
+Before you can configure a {{site.konnect_short_name}} Vault, you must first create a Config Store using the [Control Planes Configuration API](/api/konnect/control-planes-config/) by sending a `POST` request to the `/config-stores` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}
@@ -162,7 +163,7 @@ entities:
       model:
         provider: mistral
         name: mistral-tiny
-        options: 
+        options:
           mistral_format: openai
           upstream_url: https://api.mistral.ai/v1/chat/completions
 {% endentity_examples %}

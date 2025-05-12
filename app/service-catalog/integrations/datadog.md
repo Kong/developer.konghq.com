@@ -3,6 +3,7 @@ title: "Datadog"
 content_type: reference
 layout: reference
 icon: /assets/icons/plugins/datadog.png
+beta: true
 
 products:
     - service-catalog

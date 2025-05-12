@@ -2,6 +2,8 @@
 title: Set a value from a response as an environment variable in Insomnia
 content_type: how_to
 
+description: Send a request, then create an after-response script to get the value you want to use and set it as an environment variable.
+
 products:
 - insomnia
 breadcrumbs:

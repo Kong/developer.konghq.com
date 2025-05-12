@@ -1,4 +1,3 @@
-
 title: 'Priority load balancing'
 description: Configure the plugin to use three OpenAI models and create priority groups based on their respective weights.
 extended_description: |
@@ -10,7 +9,7 @@ extended_description: |
   Since the first group has a weight of 70 and the second one a weight of 25, the plugin will first try to route requests to GPT-4 or GPT-4o-mini.
   If both fail, the plugin will choose the GPT-3 model.
 
-weight: 900
+weight: 109
 
 min_version:
     gateway: '3.10'

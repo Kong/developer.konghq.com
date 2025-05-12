@@ -25,6 +25,8 @@ related_resources:
     url: /how-to/?query=consumer
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
+  - text: "{{site.konnect_short_name}} Control Plane resource limits"
+    url: /gateway-manager/control-plane-resource-limits/
 
 faqs:
   - q: What are credentials, and why do I need them?
@@ -178,7 +180,7 @@ You can manage Consumers centrally using the [{{site.konnect_short_name}} Consum
 Only Org Admins and Control Plane Admins have CRUD permissions for these Consumers. 
 
 When you create a Consumer centrally, you must assign it to a realm. A realm groups Consumers around an identity, defined by organizational boundaries, such as a production realm or a development realm. 
-Realms are connected to a [geographic region](/konnect-platform/konnect-geos/) in {{site.konnect_short_name}}. 
+Realms are connected to a [geographic region](/konnect-platform/geos/) in {{site.konnect_short_name}}. 
 
 For a complete tutorial, see [Create a centrally-managed Consumer in {{site.konnect_short_name}}](/how-to/create-centrally-managed-consumer/).
 

@@ -40,7 +40,7 @@ related_resources:
   - text: "{{site.base_gateway}} logs"
     url: /gateway/logs/
   - text: "{{site.konnect_short_name}} logs"
-    url: /konnect-logs/
+    url: /gateway-manager/konnect-logs/
 
 faqs:
   - q: When does the HTTP Log plugin record log entries in a request/response timeline?

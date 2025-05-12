@@ -6243,7 +6243,7 @@ components:
 
 externalDocs:
   description: Kong Gateway Enterprise Admin API
-  url: 'https://docs.konghq.com'
+  url: 'https://developer.konghq.com'
 info:
   contact:
     email: docs@konghq.com
@@ -6252,7 +6252,7 @@ info:
   description: |-
     OpenAPI 3.0 spec for Kong Gateway's Enterprise Admin API.
 
-    You can learn more about Kong Gateway at [docs.konghq.com](https://docs.konghq.com)
+    You can learn more about Kong Gateway at [developer.konghq.com](https://developer.konghq.com)
     .Give Kong a star at [Kong/kong](https://github.com/kong/kong) repository.
   license:
     name: Apache 2.0

@@ -81,6 +81,15 @@ faqs:
       "preferred_username": "alex"
       ```
       {:.no-copy-code}
+  - q: How can I check that I'm able to connect to my IdP?
+    a: |
+      If you're running a self-managed {{site.base_gateway}} instance, you can check that the OpenID connect plugin is able to access the issuer URL with the `/openid-connect/issuers/` endpoint:
+      
+      ```
+      curl http://localhost:8001/openid-connect/issuers
+      ```
+
+      The results should contain the Keycloak OpenID Connect discovery document and keys. If the results only show the issuer URL and ID, then the connection was unsuccessful.
 cleanup:
   inline:
     - title: Clean up Konnect environment
@@ -114,11 +123,11 @@ entities:
         - client_secret_post
         auth_methods:
         - password
+        - bearer
         scopes_claim:
         - scope
         scopes_required:
         - openid
-        - email
 variables:
   issuer:
     value: $ISSUER
@@ -130,8 +139,8 @@ variables:
 
 In this example:
 * `issuer`, `client ID`, `client secret`, and `client auth`: Settings that connect the plugin to your IdP (in this case, the sample Keycloak app).
-* `auth_methods`: Password grant, for easy testing.
-* `scopes_claim` and `scopes_required`: Looks for a claim named `scope` in the payload, and checks that the scope is one of `openid` or `email`.
+* `auth_methods`: Password grant, for easy testing, and the bearer grant so that we can authenticate using the JWT that we retrieve.
+* `scopes_claim` and `scopes_required`: Looks for a claim named `scope` in the payload, and checks that the scope contains `openid`.
 
 {% include_cached plugins/oidc/client-auth.md %}
 

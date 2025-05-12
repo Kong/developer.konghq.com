@@ -164,4 +164,4 @@ For example, say you have two Services with the following configuration:
 
 The Targets created for the two-endpoint Service have double the weight of the Targets created for the four-endpoint Service (two weight `16` Targets and four weight `8` Targets). Scaling the four-endpoint Service to eight would halve the weight of its Targets (two weight `16` Targets and eight weight `4` Targets).
 
-KongUpstreamPolicy can also configure Upstream [health checking behavior](#TODO) as well. See [the KongUpstreamPolicy reference](/kubernetes-ingress-controller/reference/custom-resources/#kongupstreampolicy) for the health check fields.
+KongUpstreamPolicy can also configure Upstream health checking behavior as well. See [the KongUpstreamPolicy reference](/kubernetes-ingress-controller/reference/custom-resources/#kongupstreampolicy) for the health check fields.

@@ -102,7 +102,8 @@
                             <div class="card card__bordered min-h-[260px]">
                                 <a :href="getPath(item.url)" class="flex flex-col gap-5 hover:no-underline text-secondary w-full p-6">
                                     <div class="flex flex-col gap-3 flex-grow">
-                                        <h4 v-if="item.content_type === 'plugin'"> {{ item.title }} Plugin</h4>
+                                        <h4 v-if="item.content_type === 'plugin' && item.products && item.products.includes('mesh')"> {{ item.title }} Policy</h4>
+                                        <h4 v-else-if="item.content_type === 'plugin' && item.products && item.products.includes('gateway')"> {{ item.title }} Plugin</h4>
                                         <h4 v-else>{{ item.title }}</h4>
 
                                         <span class="text-sm">{{getLowestHierarchyLevel(item.hierarchy)}}</span>

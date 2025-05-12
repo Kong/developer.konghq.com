@@ -5,16 +5,6 @@ description: This document describes the different stages of software availabili
 
 content_type: policy
 layout: reference
-
-products:
- - gateway
- - insomnia
- - kic
- - mesh
- - service-catalog
- - dev-portal
- - advanced-analytics
-
 tags:
   - support-policy
 
@@ -28,7 +18,7 @@ related_resources:
   - text: "{{site.kic_product_name}} version support policy"
     url: /kubernetes-ingress-controller/support/
   - text: "{{site.konnect_short_name}} compatibility"
-    url: /konnect-platform/konnect-compatibility/
+    url: /konnect-platform/compatibility/
 ---
 
 ## Tech preview

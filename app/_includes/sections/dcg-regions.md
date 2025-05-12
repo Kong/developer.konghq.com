@@ -31,7 +31,7 @@
     * Frankfurt (`germanywestcentral`)
     * UK South (`uksouth`)
     * Ireland (`northeurope`)
-    * France (`francecentral`)  
+    * France (`francecentral`)
 
 #### Google
 

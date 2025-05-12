@@ -1,22 +1,31 @@
-title: All Konnect platform Documentation
+title: All Konnect Platform Documentation
 sections:
-  - title: Uncategorized
-    items:
-      - path: /konnect-platform/
-      - path: /konnect-platform/**/*
-    auto_exclude: true
   - title: Org Management
     items:
-      - path: /konnect-platform/org-management
-      - path: /konnect-platform/org-management/**/*
+      - path: /konnect-platform/account/
+      - path: /konnect-platform/geos/
+      - path: /konnect-platform/network/
+      - path: /konnect-platform/compatibility/
+      - path: /konnect-platform/**/*
     auto_exclude: true
+
+  - title: Platform Auth
+    items:
+      - path: /konnect-platform/authentication/
+      - path: /konnect-platform/teams-and-roles/
+      - path: /konnect-platform/saml-idp-mapping/
+      - path: /konnect-platform/sso/
+  
   - title: Auditing
     items:
-      - path: /konnect-platform/auditing/
-      - path: /konnect-platform/auditing/**/*
-    auto_exclude: true
-  - title: How-tos
-    items:
-      - type: how-to
-        products:
-          - analytics
+      - path: /konnect-platform/audit-logs/
+      - title: Authentication logs
+        description: Authentication attempts and their outcomes are logged whenever a user logs in to the Konnect application or the Dev Portal.
+        url: /konnect-platform/audit-logs/#authentication-logs
+      - title: Authorization logs
+        description: Authorization log entries are created for every permission check in Konnect.
+        url: /konnect-platform/audit-logs/#authorization-logs
+      - title: Access logs
+        description: Access logs include information about create, update, and delete requests to the Konnect API.
+        url: /konnect-platform/audit-logs/#access-logs
+

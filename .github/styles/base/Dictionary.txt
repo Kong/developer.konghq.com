@@ -92,6 +92,8 @@ callouts
 certificate_admin
 charset
 chatbot
+cidr
+cidrs
 cleartext
 client_payload
 client_status
@@ -155,6 +157,7 @@ declaratively
 deduplicate
 deduplication
 degraphql
+degraphql_routes
 denylist
 deployer
 dereference
@@ -842,6 +845,8 @@ viewport
 viewports
 vms
 vnet
+vpc
+vpcs
 Vue
 Vue
 walkthrough

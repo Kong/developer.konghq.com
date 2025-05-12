@@ -1,6 +1,6 @@
 ---
 title: Proxy TCP traffic over TLS by SNI
-description: "Use `TLSRoute` to route TCP traffic secured by TLS"
+description: "Use TLSRoute to route TCP traffic secured by TLS"
 content_type: how_to
 related_resources:
   - text: All KIC documentation

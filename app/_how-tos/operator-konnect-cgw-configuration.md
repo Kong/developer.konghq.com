@@ -54,7 +54,7 @@ metadata:
   name: konnect-cg-dpconf
 spec:
   api_access: private+public
-  version: '3.10'
+  version: "3.10"
   dataplane_groups:
     - provider: aws
       region: eu-west-1

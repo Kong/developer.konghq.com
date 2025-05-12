@@ -5,6 +5,8 @@ related_resources:
   - text: Keyring
     url: /gateway/keyring/
 
+description: Enable Keyring encryption in {{site.base_gateway}} to encrypt sensitive data in Gateway and plugin configuration.
+
 tools:
   - deck
 

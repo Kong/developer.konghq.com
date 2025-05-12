@@ -1,0 +1,55 @@
+title: 'OpenAI SDK: Chat route with dynamic model selection'
+description: Configure a chat route that reads the target model from the request path instead of hardcoding it in the configuration.
+extended_description: |
+  Configure a chat route that reads the target model from the request path instead of hardcoding it in the configuration.
+
+  {:.warning}
+  > For this plugin to work properly, you need a Gateway Route with the following configuration:
+  > ```
+  > routes:
+  >  - name: openai-chat
+  >    paths:
+  >      - "~/(?<model>[^#?/]+)/chat/completions$"
+  >    methods:
+  >      - POST
+  > ```
+
+  Applying this configuration will let you target different models dynamically using an OpenAI-compatible SDK.
+  For example:
+
+  ```python
+  client = OpenAI(
+    base_url="http://localhost:8000/gpt-4"
+  )
+  ```
+  In this case, the Python SDK automatically expands the URL to `http://localhost:8000/gpt-4/chat/completions`, and {{site.base_gateway}} extracts the model name (gpt-4) from the path to route the request appropriately.
+
+
+weight: 105
+
+requirements:
+- OpenAI account
+
+config:
+    route_type: llm/v1/chat
+    auth:
+      header_name: Authorization
+      header_value: Bearer ${openai_key}
+    logging:
+      log_statistics: true
+      log_payloads: false
+    model:
+      provider: openai
+      name: $(uri_captures.model)
+
+variables:
+  openai_key:
+    value: $OPENAI_API_KEY
+    description: The API key to authenticate requests to OpenAI.
+
+tools:
+  - deck
+  - admin-api
+  - konnect-api
+  - kic
+  - terraform
