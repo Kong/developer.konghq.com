@@ -12,6 +12,7 @@ rows:
   - header:
       type: h1
       text: "Dev Portal"
+      sub_text: Empower API consumers with self-service API documentation and developer tools
 
   - columns:
       - blocks:

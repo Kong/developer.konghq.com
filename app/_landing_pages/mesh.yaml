@@ -12,6 +12,7 @@ rows:
   - header:
       type: h1
       text: "Kong Mesh"
+      sub_text: Modernized service mesh for development and governance
 
   - columns:
       - blocks:
@@ -20,8 +21,6 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Kong Mesh is a modern service mesh built on top of Kuma and Envoy, designed for simplicity, scalability, and security.
-
                     With Kong Mesh, you can run and manage a distributed service mesh across Kubernetes and VMs in any environment.
 
                     **Benefits of Kong Mesh:**
