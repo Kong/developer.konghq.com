@@ -179,7 +179,7 @@ rows:
     description: Negotiated cipher
 {% endtable %}
 <!--vale on-->
-## kong.phase.certificate
+### kong.phase.certificate
 
 A span capturing the execution of the `certificate` phase of request processing. Any plugins configured for running in this phase will show up as individual child spans.
 
