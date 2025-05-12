@@ -59,6 +59,10 @@ platform:
           icon: /_assets/icons/products/kic.svg
           url: /kubernetes-ingress-controller/
           product: kic
+        - text: Kubernetes Operator
+          icon: /_assets/icons/products/operator.svg
+          url: /operator/
+          product: operator
     - title: Govern APIs
       links:
         - text: Analytics
