@@ -22,10 +22,11 @@ rows:
       - blocks:
         - type: text
           config: |
-            {{ site.base_gateway }} can be installed on Kubernetes in a variety of ways. The easiest way to get started 
-            is using {{ site.konnect_short_name }} as your Control Plane.
-
+            {{ site.base_gateway }}'s high performance and low resource requirements make it the perfect Gateway for Kubernetes.
             
+            You can configure {{ site.base_gateway }} using native Kubernetes resources with {{ site.kic_product_name }}, or using
+            the [Admin API](/admin-api/).
+
   - header:
       type: h2
       text: Install {{ site.base_gateway }}
@@ -39,7 +40,7 @@ rows:
             description: |
               Deploy {{ site.base_gateway }} in Hybrid mode, using {{ site.konnect_short_name }} as a hosted Control Plane.
 
-              Configure your Control Planes using [deck](/deck/), [terraform](/terraform/) or [{{ site.konnect_short_name }} CRDs](/operator/konnect/).
+              Configure your Control Planes using [deck](/deck/), [Terraform](/terraform/) or [{{ site.konnect_short_name }} CRDs](/operator/konnect/).
             ctas:
               - text: Using Helm
                 url: "#TODO"
