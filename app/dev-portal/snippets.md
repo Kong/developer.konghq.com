@@ -22,7 +22,7 @@ breadcrumbs:
 
 description: "Snippets allow you to reuse content and MDC components across Pages."
 faqs:
-  - q: Why aren’t parameterized values appearing in the age Preview?
+  - q: Why aren’t parameterized values appearing in the page Preview?
     a: |
       The preview may not be able to display parameterized values. When the page is rendered in the Portal, parameters will be resolved. 
       Depending on the syntax used, the preview may not accurately reflect those values in Page or Snippet views.
