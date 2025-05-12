@@ -2,6 +2,7 @@
 title: SwaggerHub
 content_type: reference
 layout: reference
+beta: true
 
 products:
     - service-catalog

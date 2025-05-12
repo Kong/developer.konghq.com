@@ -35,7 +35,7 @@ tldr:
     q: How do I store my Mistral API key as a secret in a {{site.konnect_short_name}} Vault and then use it with the AI Proxy plugin?
     a: |
       1. Use the {{site.konnect_short_name}} API to create a Config Store using the `/config-stores` endpoint.
-      2. Create a {{site.konnect_short_name}} Vault using the [`/vaults/` endpoint](/api/konnect/control-planes-config/v2/#/operations/create-vault).
+      2. Create a {{site.konnect_short_name}} Vault using the [`/vaults/` endpoint](/api/konnect/control-planes-config/#/operations/create-vault).
       3. Store your Mistral API key as a key/value pair using the `/secrets` endpoint.
       4. Reference the secret using the Vault prefix and key (for example: `{vault://mysecretvault/mistral-key}`) in the [AI Proxy plugin](/plugins/ai-proxy/) `header_value`.
 
@@ -83,7 +83,7 @@ next_steps:
 
 ## Configure a {{site.konnect_short_name}} Config Store
 
-Before you can configure a {{site.konnect_short_name}} Vault, you must first create a Config Store using the [Control Planes Configuration API](/api/konnect/control-planes-config/v2/#/) by sending a `POST` request to the `/config-stores` endpoint:
+Before you can configure a {{site.konnect_short_name}} Vault, you must first create a Config Store using the [Control Planes Configuration API](/api/konnect/control-planes-config/) by sending a `POST` request to the `/config-stores` endpoint:
 
 <!--vale off-->
 {% control_plane_request %}

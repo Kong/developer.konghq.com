@@ -23,6 +23,8 @@ related_resources:
     url: /gateway/reserved-entity-names/
   - text: Traffic control and routing
     url: /gateway/traffic-control-and-routing/
+  - text: "{{site.konnect_short_name}} Control Plane resource limits"
+    url: /gateway-manager/control-plane-resource-limits/
 
 next_steps:
   - text: Learn about the Expressions router

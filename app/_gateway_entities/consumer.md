@@ -25,6 +25,8 @@ related_resources:
     url: /how-to/?query=consumer
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
+  - text: "{{site.konnect_short_name}} Control Plane resource limits"
+    url: /gateway-manager/control-plane-resource-limits/
 
 faqs:
   - q: What are credentials, and why do I need them?

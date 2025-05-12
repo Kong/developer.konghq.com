@@ -22,6 +22,9 @@ related_resources:
       url: /gateway/entities/plugin/#supported-scopes-by-plugin
     - text: Reserved entity names
       url: /gateway/reserved-entity-names/
+    - text: "{{site.konnect_short_name}} Control Plane resource limits"
+      url: /gateway-manager/control-plane-resource-limits/
+
 
 api_specs:
     - gateway/admin-ee
@@ -45,7 +48,7 @@ faqs:
 
 schema:
     api: gateway/admin-ee
-    path: /schemas/Consumer-Group
+    path: /schemas/ConsumerGroup
 
 
 works_on:

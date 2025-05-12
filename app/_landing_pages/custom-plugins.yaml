@@ -40,7 +40,7 @@ rows:
                 Learn about custom plugin development by following a series of tutorials that walk you through all the steps to build a new custom plugin for {{site.base_gateway}}.
               icon: /assets/icons/KogoBlue.svg
               cta:
-                text: See tutorial &rarr;
+                text: See tutorial
                 url: "/custom-plugins/get-started/set-up-plugin-project/"
       - blocks:
           - type: card
@@ -50,7 +50,7 @@ rows:
                 Learn about how to develop custom plugins for {{site.base_gateway}}.
               icon: /assets/icons/plug.svg
               cta:
-                text: See reference &rarr;
+                text: See reference
                 url: "/custom-plugins/reference/"
       - blocks:
           - type: card
@@ -61,7 +61,7 @@ rows:
                 that can be used by plugins to implement their own logic.
               icon: /assets/icons/code.svg
               cta:
-                text: See reference &rarr;
+                text: See reference
                 url: "/gateway/pdk/reference/"
       - blocks:
           - type: card
@@ -71,7 +71,7 @@ rows:
                 Learn about the different ways to deploy a custom plugin.
               icon: /assets/icons/deployment.svg
               cta:
-                text: See reference &rarr;
+                text: See reference
                 url: "/custom-plugins/installation-and-distribution/"
   # - columns:
   #    - blocks:

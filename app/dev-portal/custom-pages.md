@@ -34,7 +34,7 @@ faqs:
   - q: What is the special behavior of the `home` page?
     a: |
       The `home` page represents the `/` root path of your Dev Portal. 
-      If it is deleted, you’ll need to recreate it using the [Pages API](/api/konnect/portal-management/v3/#/operations/create-portal-page).
+      If it is deleted, you’ll need to recreate it using the [Pages API](/api/konnect/portal-management/#/operations/create-portal-page).
 
   - q: Is there a size limit for custom pages?
     a: |

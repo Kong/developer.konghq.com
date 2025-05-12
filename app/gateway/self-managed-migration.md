@@ -121,7 +121,7 @@ a list of Workspaces for a particular {{site.base_gateway}} deployment by using 
    {:.info}
    > **Note**: {{site.base_gateway}} provides a `default` Workspace, and similarly {{site.konnect_short_name}} provides a `default` Control Plane. Neither of these can be deleted, so migrating the `default` Workspace to the `default` Control Plane is a logical choice.
 
-1. Create a new Control Plane for each non-default Workspace using the {{site.konnect_short_name}} Control Plane API [`/control-planes` endpoint](/api/konnect/control-planes/v2/#/operations/create-control-plane).
+1. Create a new Control Plane for each non-default Workspace using the {{site.konnect_short_name}} Control Plane API [`/control-planes` endpoint](/api/konnect/control-planes/#/operations/create-control-plane).
    To use the {{site.konnect_short_name}} APIs, you must create a new personal access token by opening the [{{site.konnect_short_name}} PAT page](https://cloud.konghq.com/global/account/tokens) and selecting **Generate Token**.
 
 1. Log in into the [{{site.konnect_short_name}} UI](https://cloud.konghq.com/gateway-manager/) and validate the new Control Planes.
@@ -158,7 +158,7 @@ on [custom plugin support](/gateway/entities/plugin/#custom-plugins) requirement
 Migrating custom plugins to {{site.konnect_short_name}} requires uploading and associating your custom plugin's `schema.lua` file to
 the desired Control Plane. This can be done using the
 Konnect UI in [Gateway Manager](https://cloud.konghq.com/gateway-manager/) or the
-[Konnect Control Planes Config API](/api/konnect/control-planes-config/v2/#/operations/list-plugin-schemas).
+[Konnect Control Planes Config API](/api/konnect/control-planes-config/#/operations/list-plugin-schemas).
 
 Just like in self-managed deployments, the custom plugin code must be distributed to the Data Plane instances.
 
@@ -201,7 +201,7 @@ In this example, replace `$KONNECT_PAT` with your {{site.konnect_short_name}} PA
 In addition to decK, {{site.konnect_short_name}} provides
 other tools that could be used for migrating your configuration. Each tool requires a different process. See their documentation for more information:
 
-* [Konnect Control Planes Config API](/api/konnect/control-planes-config/v2/#/)
+* [Konnect Control Planes Config API](/api/konnect/control-planes-config/)
 * [{{site.konnect_short_name}} Terraform Provider](/terraform/)
 
 ## Migrating Data Planes
