@@ -33,7 +33,7 @@ prereqs:
       - command
 
 tldr:
-  q: How can I autoscale Kong Gateway workloads using Prometheus metrics?
+  q: How can I autoscale {{ site.base_gateway }} workloads using Prometheus metrics?
   a: |
     Deploy a `DataPlaneMetricsExtension` to expose latency metrics from a Service,
     then configure the {{site.operator_product_name}} to associate those metrics with the Data Plane.
