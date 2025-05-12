@@ -21,7 +21,7 @@ prereqs:
   inline:
     - title: Install {{site.base_gateway}}
       content: |
-       [Install {{site.base_gateway}}](/gateway/install/)
+       [Install {{site.base_gateway}}](/gateway/install/#linux)
     - title: Install PostgreSQL
       include_content: prereqs/postgres
     - title: Configure environment variables
