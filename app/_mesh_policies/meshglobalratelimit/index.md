@@ -27,7 +27,7 @@ local and global rate limit.
 
 Local rate limit is applied per service instance. Because of this, counters can be stored in memory and rate limit 
 decisions can be made instantaneously. Local rate limiting should be enough in most cases (for example, DoS protection and controlling traffic throughput).
-You can find more information about local rate limit and how to configure it in [MeshRateLimit docs](/mesh/{{page.release}}/policies/meshratelimit).
+You can find more information about local rate limit and how to configure it in [MeshRateLimit docs](/mesh/policies/meshratelimit).
 
 There are some cases when local rate limit won't solve your problems. For example, you may want to limit the number of requests that non-paying users can 
 make to your public API. To do that, you must coordinate request counting between service instances, which the global rate limit can help you with.
