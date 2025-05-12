@@ -27,18 +27,18 @@ topology_switcher: page
 
 ---
 
-## Konnect Setup
+## Konnect setup
 
 {% include prereqs/products/konnect-auth-only.md raw=true %}
 
-## Helm Setup
+## Helm setup
 
 ```bash
 helm repo add kong https://charts.konghq.com
 helm repo update
 ```
 
-## Create Certificates
+## Create certificates
 
 ```bash
 openssl req -new -x509 -nodes -newkey ec:<(openssl ecparam -name secp384r1) -keyout ./tls.key -out ./tls.crt -days 1095 -subj "/CN=kong_clustering"
@@ -85,7 +85,7 @@ body:
 
 ## Deploy a Data Plane
 
-Export the Control Plane ID and Telemetry endpoint for later:
+Export the Control Plane ID and telemetry endpoint for later:
 
 ```bash
 CONTROL_PLANE_ENDPOINT=$(echo $CONTROL_PLANE_DETAILS | jq -r '.config.control_plane_endpoint | sub("https://";"")')
