@@ -1524,8 +1524,7 @@ app/_src/gateway-operator/guides/konnect-entities/upstream-and-target.md:
   - /operator/konnect/crd/gateway/upstream-target/
 app/_src/gateway-operator/guides/konnect-entities/vault.md:
   - /operator/konnect/crd/gateway/vault/
-app/_src/gateway-operator/guides/konnect-entities/architecture.md:
-  - /operator/konnect/reconciliation-loop/
+
 app/_src/gateway-operator/production/monitoring/status/overview.md:
   - /operator/konnect/troubleshooting/status/
 app/_src/gateway-operator/support.md:
@@ -1664,3 +1663,20 @@ app/_src/.repos/kuma/app/_src/production/use-mesh.md:
   - /mesh/use-kuma/
 app/_src/.repos/kuma/app/_src/reference/data-collection.md:
   - /mesh/data-collection/
+
+app/_src/gateway-operator/guides/autoscaling-workloads/datadog.md:
+  - /operator/dataplanes/how-to/autoscale-workloads/datadog/
+app/_src/gateway-operator/guides/autoscaling-workloads/prometheus.md:
+  - /operator/dataplanes/how-to/autoscale-workloads/prometheus/
+app/_src/gateway-operator/guides/konnect-entities/certificate-and-cacertificate.md:
+  - /operator/dataplanes/how-to/use-custom-ca-certificate/
+app/_src/gateway-operator/guides/plugin-distribution.md:
+  - /operator/dataplanes/how-to/deploy-custom-plugins/
+app/_src/gateway-operator/customization/data-plane-image.md:
+  - /operator/dataplanes/how-to/set-dataplane-image/
+app/_src/gateway-operator/customization/sidecars.md:
+  - /operator/dataplanes/how-to/deploy-sidecars/
+app/_src/gateway-operator/get-started/kic/create-route.md:
+  - /operator/dataplanes/get-started/hybrid/create-route/
+app/_src/gateway-operator/get-started/kic/install.md:
+  - /operator/dataplanes/get-started/kic/install/
