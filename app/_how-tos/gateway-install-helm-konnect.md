@@ -146,7 +146,3 @@ manager:
 ```bash
 helm install kong kong/kong --values ./values-dp.yaml -n kong --create-namespace
 ```
-
-## Testing
-
-Foo bar. Use deck apply to sync some example config
