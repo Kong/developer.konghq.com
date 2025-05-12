@@ -370,7 +370,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    AI Gateway provides features that allow you to moderate content and ensure content safety.
+                    As a platform owner, you may need to moderate all user request content against reputable services to comply with specific sensitive categories when proxying Large Language Model (LLM) traffic. Kong AI Gateway provides built-in capabilities to handle content moderation and ensure content safety, that help you enforce compliance and protect your users across AI-powered applications.
   - columns:
       - blocks:
         - type: plugin

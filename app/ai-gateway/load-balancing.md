@@ -42,10 +42,9 @@ related_resources:
 
 ## Load balancing in AI Gateway
 
-Kong AI Gateway provides advanced load balancing capabilities to efficiently distribute requests across multiple LLM models. It ensures fault tolerance, efficient resource utilization, and load distribution across AI models
+Kong AI Gateway gives you advanced load balancing capabilities to efficiently distribute requests across multiple LLM models. This helps you ensure fault tolerance, optimize resource utilization, and balance traffic across your AI systems.
 
-The AI Proxy Advanced plugin supports several load balancing algorithms, similar to those used for Kong upstreams, and extends them for AI model routing. Kong AI Gateway uses the [Upstream entity](/gateway/entities/upstream/) to configure load balancing, offering multiple algorithm options to fine-tune traffic distribution to various AI Providers and LLM models.
-
+With the AI Proxy Advanced plugin, you can select from several load balancing algorithms—similar to those used for Kong upstreams but extended for AI model routing. You configure load balancing using the [Upstream entity]([Upstream entity](/gateway/entities/upstream/)), giving you flexibility to fine-tune how requests are routed to various AI providers and LLM models.
 
 ### Load balancing strategies
 
@@ -124,45 +123,28 @@ The load balancer includes built-in support for **retries** and **fallbacks**. W
 
 4. If retries are exhausted without success, the load balancer returns a failure to the client.
 
+<!-- vale off -->
 {% mermaid %}
-sequenceDiagram
-    participant Client
-    participant AI Gateway
-    participant Provider1 as AI Provider 1
-    participant Provider2 as AI Provider 2 (fallback)
-
-    %% Step 1
-    Client ->> AI Gateway: (1) Send request
-
-    %% Step 2
-    AI Gateway ->> Provider1: (2) Select target & forward request
-
-    %% Step 3
-    alt AI Provider 1 success
-        Provider1 -->> AI Gateway: 2xx Response
-    else AI Provider 1 failure
-        AI Gateway ->> Provider1: Retry (3a) (if allowed)
-        alt Retry success
-            Provider1 -->> AI Gateway: 2xx Response
-        else Retry failure
-            AI Gateway ->> Provider2: Fallback to another AI provider (3b)
-            alt AI Provider 2 success
-                Provider2 -->> AI Gateway: 2xx Response
-            else AI Provider 2 failure
-                AI Gateway -->> Client: (4) Return failure
-            end
-        end
+flowchart LR
+    Client(((Application))) --> LBLB
+    subgraph AIGateway
+        LBLB[/Load Balancer/]
     end
-
-    %% Final response
-    AI Gateway -->> Client: 2xx Response (on success)
+    LBLB -->|Request| AIProvider1(AI Provider 1)
+    AIProvider1 --> Decision1{Is Success?}
+    Decision1 -->|Yes| Client
+    Decision1 -->|No| AIProvider2(AI Provider 2)
+    subgraph Retry
+        AIProvider2 --> Decision2{Is Success?}
+    end
+    Decision2 ------>|Yes| Client
 {% endmermaid %}
+<!-- vale on -->
+> _Figure 1:_ A simplified diagram of fallback and retry processing in AI Gateway's load balancer.
 
 #### Retry and fallback configuration
 
-The AI Gateway load balancer offers several configuration options to fine-tune request retries, timeouts, and failover behavior.
-
-The table below summarizes the key configuration parameters available:
+The AI Gateway load balancer offers several configuration options to fine-tune request retries, timeouts, and failover behavior:
 
 <!--vale off-->
 {% table %}
@@ -172,23 +154,23 @@ columns:
   - title: Description
     key: description
 rows:
-  - setting: "`retries`"
+  - setting: "[`retries`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-retries)"
     description: |
       Defines how many times to retry a failed request before reporting failure to the client.
       Increase for better resilience to transient errors; decrease if you need lower latency and faster failure.
-  - setting: "`failover_criteria`"
+  - setting: "[`failover_criteria`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-failover-criteria)"
     description: |
       Specifies which types of failures (e.g., `http_429`, `http_500`) should trigger a failover to a different target.
       Customize based on your tolerance for specific errors and desired failover behavior.
-  - setting: "`connect_timeout`"
+  - setting: "[`connect_timeout`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-connect-timeout)"
     description: |
       Sets the maximum time allowed to establish a TCP connection with a target.
       Lower it for faster detection of unreachable servers; raise it if some servers may respond slowly under load.
-  - setting: "`read_timeout`"
+  - setting: "[`read_timeout`](plugins/ai-proxy-advanced/reference/#schema--config-balancer-read-timeout)"
     description: |
       Defines the maximum time to wait for a server response after sending a request.
       Lower it for real-time applications needing quick responses; increase it for long-running operations.
-  - setting: "`write_timeout`"
+  - setting: "[`write_timeout`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-write-timeout)"
     description: |
       Sets the maximum time allowed to send the request payload to the server.
       Increase if large request bodies are common; keep short for small, fast payloads.
@@ -197,7 +179,7 @@ rows:
 
 #### Retry and fallback scenarios
 
-The AI Gateway load balancer can be customized to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The table below maps common scenarios to key configuration options that control load balancing behavior:
+You can customize AI Gateway load balancer to fit different application needs, such as minimizing latency, enabling sticky sessions, or optimizing for cost. The table below maps common scenarios to key configuration options that control load balancing behavior:
 
 <!--vale off-->
 {% table %}
@@ -210,19 +192,19 @@ columns:
     key: description
 rows:
   - scenario: "Requests must not hang longer than 3 seconds"
-    action: "Adjust `connect_timeout`, `read_timeout`, `write_timeout`"
+    action: "Adjust [`connect_timeout`](/plugins/ai-proxy-advanced/reference/#schema--config-vectordb-redis-connect-timeout), [`read_timeout`](/plugins/ai-proxy-advanced/reference/#schema--config-vectordb-redis-read-timeout), [`write_timeout`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-write-timeout)"
     description: |
       Shorten these timeouts to quickly fail if a server is slow or unresponsive, ensuring faster error handling and responsiveness.
   - scenario: "Prioritize the lowest-latency target"
-    action: "Set `latency_strategy` to `e2e`"
+    action: "Set [`latency_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-latency-strategy) to `e2e`"
     description: |
       Optimize routing based on full end-to-end response time, selecting the target that minimizes total latency.
   - scenario: "Need predictable fallback for the same user"
-    action: "Use `hash_on_header`"
+    action: "Use [`hash_on_header`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-hash-on-header)"
     description: |
       Ensure that the same user consistently routes to the same target, enabling sticky sessions and reliable fallback behavior.
   - scenario: "Models have different costs"
-    action: "Set `tokens_count_strategy` to `cost`"
+    action: "Set [`tokens_count_strategy`](/reference/#schema--config-balancer-tokens-count-strategy) to `cost`"
     description: |
       Route requests intelligently by considering cost, balancing model performance with budget optimization.
 {% endtable %}
