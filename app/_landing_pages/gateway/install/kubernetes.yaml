@@ -22,7 +22,10 @@ rows:
       - blocks:
         - type: text
           config: |
-            This is a test
+            {{ site.base_gateway }} can be installed on Kubernetes in a variety of ways. The easiest way to get started 
+            is using {{ site.konnect_short_name }} as your Control Plane.
+
+            
   - header:
       type: h2
       text: Install {{ site.base_gateway }}
@@ -30,13 +33,13 @@ rows:
       - blocks:
         - type: card
           config:
+            id: konnect
             icon: /assets/logos/Konnect-logo.svg
             title: "{{ site.base_gateway }} on Konnect"
             description: |
               Deploy {{ site.base_gateway }} in Hybrid mode, using {{ site.konnect_short_name }} as a hosted Control Plane.
 
               Configure your Control Planes using [deck](/deck/), [terraform](/terraform/) or [{{ site.konnect_short_name }} CRDs](/operator/konnect/).
-            featured: true
             ctas:
               - text: Using Helm
                 url: "#TODO"
@@ -45,6 +48,7 @@ rows:
       - blocks:
         - type: card
           config:
+            id: konnect-kic
             icon: /assets/logos/Konnect-logo.svg
             title: "{{ site.kic_product_name_short }} on Konnect"
             description: |
@@ -60,6 +64,7 @@ rows:
       - blocks:
         - type: card
           config:
+            id: gateway
             icon: /assets/icons/gateway.svg
             title: "{{ site.base_gateway }} On-Prem"
             description: |
@@ -73,6 +78,7 @@ rows:
       - blocks:
         - type: card
           config:
+            id: kic
             icon: /assets/icons/kubernetes.svg
             title: "{{ site.kic_product_name_short }} On-Prem"
             description: |
