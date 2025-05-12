@@ -23,6 +23,7 @@ works_on:
   - on-prem
 
 prereqs:
+  enterprise: true
   kubernetes:
     gateway_api: true
   entities:
@@ -41,76 +42,72 @@ tldr:
 
 {% assign gatewayApiVersion = "v1" %}
 
+## Autoscaling Workloads
+
+This tutorial shows how to autoscale workloads based on Service latency. The `command` service created in the prerequisites allows us to inject an artificial delay in to responses to trigger autoscaling.
+
 ## Create a `DataPlaneMetricsExtension`
 
-This example deploys a `command` `Service` which will have its latency measured and exposed on {{ site.operator_product_name }}'s `/metrics` endpoint. The Service allows us to run any shell command, which we'll use to add artificial latency later for testing purposes.
+The `DataPlaneMetricsExtension` allows {{ site.operator_product_name }} to monitor Service latency and expose it on the `/metrics` endpoint.
 
-Next, create a `DataPlaneMetricsExtension` that points to the `command` service, attach it to a `GatewayConfiguration` resource and deploy a `Gateway` with a `HTTPRoute` so that we can make a HTTP request to the Service.
+1. Create a `DataPlaneMetricsExtension` that points to the `command` service:
 
-```yaml
-echo '
-kind: DataPlaneMetricsExtension
-apiVersion: gateway-operator.konghq.com/v1alpha1
-metadata:
-  name: kong
-  namespace: default
-spec:
-  serviceSelector:
-    matchNames:
-    - name: command
-  config:
-    latency: true
-
-```
-
-Create a GatewayConfiguration that uses it:
-
-```yaml
----
-kind: GatewayConfiguration
-apiVersion: gateway-operator.konghq.com/v1beta1
-metadata:
-  name: kong
-  namespace: default
-spec:
-  dataPlaneOptions:
-    deployment:
-      replicas: 1
-      podTemplateSpec:
-        spec:
-          containers:
-          - name: proxy
-            image: kong/kong-gateway:latest
-  controlPlaneOptions:
-    deployment:
-      podTemplateSpec:
-        spec:
-          containers:
-          - name: controller
-    extensions:
-    - kind: DataPlaneMetricsExtension
-      group: gateway-operator.konghq.com
+    ```yaml
+    echo '
+    kind: DataPlaneMetricsExtension
+    apiVersion: gateway-operator.konghq.com/v1alpha1
+    metadata:
       name: kong
-```
+      namespace: kong
+    spec:
+      serviceSelector:
+        matchNames:
+        - name: command
+      config:
+        latency: true
+    ' | kubectl apply -f -
+    ```
 
-Patch the GatewayClass to use the config:
+1. Create a GatewayConfiguration that uses it:
 
-```bash
-kubectl patch etc etc. Set spec.parametersRef:
-
-spec:
-  parametersRef:
-    group: gateway-operator.konghq.com
+    ```yaml
+    echo '
     kind: GatewayConfiguration
-    name: kong
-    namespace: default
-```
+    apiVersion: gateway-operator.konghq.com/v1beta1
+    metadata:
+      name: kong
+      namespace: kong
+    spec:
+      controlPlaneOptions:
+        extensions:
+        - kind: DataPlaneMetricsExtension
+          group: gateway-operator.konghq.com
+          name: kong
+    ' | kubectl apply -f -
+    ```
+
+1. Patch the GatewayClass to use the config:
+
+    ```bash
+    kubectl patch -n kong --type=json gatewayclass kong -p='[
+        {
+            "op":"add",
+            "path":"/spec/parametersRef",
+            "value":{
+                    "group": "gateway-operator.konghq.com",
+                    "kind": "GatewayConfiguration",
+                    "name": "kong",
+                    "namespace": "kong",
+            }
+        }
+    ]'
+    ```
 
 ## Install Prometheus
 
-{:.note}
+{:.info}
 > **Note:** You can reuse your current Prometheus setup and skip this step
-> but please be aware that it needs to be able to scrape {{ site.kgo_product_name }}'s metrics
+> but please be aware that it needs to be able to scrape {{ site.operator_product_name }}'s metrics
 > (e.g. through [`ServiceMonitor`](https://github.com/prometheus-operator/prometheus-operator/blob/release-0.53/Documentation/api.md#servicemonitor)) and note down the namespace
 > in which it's deployed.
 
@@ -127,9 +124,9 @@ spec:
    helm upgrade --install --create-namespace -n prometheus prometheus prometheus-community/kube-prometheus-stack
    ```
 
-## Create a ServiceMonitor to scrape {{ site.kgo_product_name }}
+## Create a ServiceMonitor to scrape {{ site.operator_product_name }}
 
-To make Prometheus scrape {{ site.kgo_product_name }}'s `/metrics` endpoint, we'll need to create a `ServiceMonitor`:
+To make Prometheus scrape {{ site.operator_product_name }}'s `/metrics` endpoint, we'll need to create a `ServiceMonitor`:
 
 ```yaml
 echo '
@@ -143,17 +140,15 @@ metadata:
 spec:
   endpoints:
   - port: https
-    scheme: https
+    scheme: http
     path: /metrics
     bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
-    tlsConfig:
-      insecureSkipVerify: true
   selector:
     matchLabels:
       control-plane: controller-manager ' | kubectl apply -f -
 ```
 
-After applying the above manifest you can check one of the metrics exposed by {{ site.kgo_product_name }}
+After applying the above manifest you can check one of the metrics exposed by {{ site.operator_product_name }}
 to verify that the scrape config has been applied.
 
 To access the Prometheus UI, create a port-forward and visit <http://localhost:9090>
@@ -177,13 +172,14 @@ The `prometheus-adapter` package makes Prometheus metrics usable in Kubernetes.
 
 To deploy `prometheus-adapter` you'll need to decide what time series to expose so that Kubernetes can consume it.
 
-{:.note}
-> **Note:** {{ site.kgo_product_name }} enriches specific metrics for use with `prometheus-adapter`. See the [overview](/gateway-operator/{{ page.release }}/guides/autoscaling-workloads/overview/#metrics-support-for-enrichment) for a complete list.
+{:.info}
+> **Note:** {{ site.operator_product_name }} enriches specific metrics for use with `prometheus-adapter`. See the [overview](/operator/dataplanes/reference/autoscale-workloads/#metrics-support-for-enrichment) for a complete list.
 
 Create a `values.yaml` file to deploy the [`prometheus-adapter` helm chart](https://artifacthub.io/packages/helm/prometheus-community/prometheus-adapter).
 This configuration calculates a `kong_upstream_latency_ms_60s_average` metric, which exposes a 60s moving average of upstream response latency:
 
 ```yaml
+echo $'
 prometheus:
   # Update this value if Prometheus is installed in a different namespace
   url: http://prometheus-kube-prometheus-prometheus.prometheus.svc
@@ -191,7 +187,7 @@ prometheus:
 rules:
   default: false
   custom:
-  - seriesQuery: '{__name__=~"^kong_upstream_latency_ms_(sum|count)",kubernetes_namespace!="",kubernetes_name!="",kubernetes_kind!=""}'
+  - seriesQuery: \'{__name__=~"^kong_upstream_latency_ms_(sum|count)",kubernetes_namespace!="",kubernetes_name!="",kubernetes_kind!=""}\'
     resources:
       overrides:
         exported_namespace:
@@ -204,6 +200,7 @@ rules:
       sum by (exported_service) (rate(kong_upstream_latency_ms_sum{<<.LabelMatchers>>}[60s:10s]))
         /
       sum by (exported_service) (rate(kong_upstream_latency_ms_count{<<.LabelMatchers>>}[60s:10s]))
+' > values.yaml
 ```
 
 Install `prometheus-adapter` using Helm:
@@ -217,7 +214,7 @@ helm upgrade --install --create-namespace -n prometheus --values values.yaml pro
 To trigger autoscaling, run the following command in a new terminal window. This will cause the underlying deployment to sleep for 100ms on each request and thus increase the average response time to that value.
 
 ```bash
-while curl -k "http://$(kubectl get gateway kong -o custom-columns='name:.status.addresses[0].value' --no-headers -n default)/echo/shell?cmd=sleep%200.1" ; do sleep 1; done
+while curl -k "http://$(kubectl get -n kong gateway kong -o custom-columns='name:.status.addresses[0].value' --no-headers)/command/shell?cmd=sleep%200.1" ; do sleep 1; done
 ```
 
 Keep this running while we move on to next steps.
@@ -227,10 +224,10 @@ Keep this running while we move on to next steps.
 When all is configured you should be able to see the metric you've configured in `prometheus-adapter` exposed via the Kubernetes Custom Metrics API:
 
 ```bash
-kubectl get --raw '/apis/custom.metrics.k8s.io/v1beta1/namespaces/default/services/echo/kong_upstream_latency_ms_60s_average' | jq
+kubectl get --raw '/apis/custom.metrics.k8s.io/v1beta1/namespaces/kong/services/command/kong_upstream_latency_ms_60s_average' | jq
 ```
 
-{:.note}
+{:.warning}
 > **Note:** The `prometheus-adapter` may take up to 2 minutes to populate the custom metrics
 
 This should result in:
@@ -244,8 +241,8 @@ This should result in:
     {
       "describedObject": {
         "kind": "Service",
-        "namespace": "default",
-        "name": "echo",
+        "namespace": "kong",
+        "name": "command",
         "apiVersion": "/v1"
       },
       "metricName": "kong_upstream_latency_ms_60s_average",
@@ -256,6 +253,7 @@ This should result in:
   ]
 }
 ```
+{:.no-copy-code}
 
 {:.note}
 > **Note:** `102312m` is a Kubernetes way of expressing numbers as integers.
@@ -264,22 +262,22 @@ This should result in:
 ## Use exposed metric in HorizontalPodAutoscaler
 
 When the metric configured in `prometheus-adapter` is available through Kubernetes' Custom Metrics API
-we can use it in `HorizontalPodAutoscaler` to autoscale our workload: specifically the `echo` `Deployment`.
+we can use it in `HorizontalPodAutoscaler` to autoscale our workload: specifically the `command` `Deployment`.
 
-This can be done by using the following manifest, which will scale the underlying `echo` `Deployment` between 1 and 10 replicas, trying to keep the average latency across last 60s at 40ms.
+This can be done by using the following manifest, which will scale the underlying `command` `Deployment` between 1 and 10 replicas, trying to keep the average latency across last 60s at 40ms.
 
 ```yaml
 echo '
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: echo
-  namespace: default
+  name: command
+  namespace: kong
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: echo
+    name: command
   minReplicas: 1
   maxReplicas: 10
   behavior:
@@ -307,7 +305,7 @@ spec:
       describedObject:
         apiVersion: v1
         kind: Service
-        name: echo
+        name: command
       target:
         type: Value
         value: "40" ' | kubectl apply -f -
@@ -318,20 +316,22 @@ spec:
 You can watch `SuccessfulRescale` events using the following `kubectl` command:
 
 ```bash
-kubectl get events -n default --field-selector involvedObject.name=echo --field-selector involvedObject.kind=HorizontalPodAutoscaler -w
+kubectl get events -n kong --field-selector involvedObject.name=command --field-selector involvedObject.kind=HorizontalPodAutoscaler -w
 ```
 
 If everything went well we should see the `SuccessfulRescale` events:
 
 ```bash
-12m          Normal   SuccessfulRescale   horizontalpodautoscaler/echo   New size: 2; reason: Service metric kong_upstream_latency_ms_60s_average above target
-12m          Normal   SuccessfulRescale   horizontalpodautoscaler/echo   New size: 4; reason: Service metric kong_upstream_latency_ms_60s_average above target
-12m          Normal   SuccessfulRescale   horizontalpodautoscaler/echo   New size: 8; reason: Service metric kong_upstream_latency_ms_60s_average above target
-12m          Normal   SuccessfulRescale   horizontalpodautoscaler/echo   New size: 10; reason: Service metric kong_upstream_latency_ms_60s_average above target
+12m          Normal   SuccessfulRescale   horizontalpodautoscaler/command   New size: 2; reason: Service metric kong_upstream_latency_ms_60s_average above target
+12m          Normal   SuccessfulRescale   horizontalpodautoscaler/command   New size: 4; reason: Service metric kong_upstream_latency_ms_60s_average above target
+12m          Normal   SuccessfulRescale   horizontalpodautoscaler/command   New size: 8; reason: Service metric kong_upstream_latency_ms_60s_average above target
+12m          Normal   SuccessfulRescale   horizontalpodautoscaler/command   New size: 10; reason: Service metric kong_upstream_latency_ms_60s_average above target
 ```
+{:.no-copy-code}
 
 Then when latency drops (when you stop sending traffic with the `curl` command) you should observe the `SuccessfulRescale` events scaling your workloads down:
 
 ```bash
-4s          Normal   SuccessfulRescale   horizontalpodautoscaler/echo   New size: 1; reason: All metrics below target
+4s          Normal   SuccessfulRescale   horizontalpodautoscaler/command   New size: 1; reason: All metrics below target
 ```
+{:.no-copy-code}
