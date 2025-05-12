@@ -456,10 +456,10 @@ rows:
         - type: card
           config:
             title: Retry and fallback
-            description: Learn about the load balancing algorithms available for AI Gateway.
+            description: Learn about how AI Gateway load balancers handle retry and fallback.
             icon: /assets/icons/redo.svg
             cta:
-              url: /gateway/load-balancing/#load-balancing-algorithms-for-ai-gateway
+              url: /ai-gateway/load-balancing/#retry-and-fallback
               align: end
 
   - header:
