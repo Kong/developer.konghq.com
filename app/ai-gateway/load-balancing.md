@@ -2,7 +2,7 @@
 title: "Load balancing with AI gateway"
 layout: reference
 content_type: reference
-description: This guide provides an overview of load balancing and reatry and fallback strategies in AI Proxy Advanced plugin.retry
+description: This guide provides an overview of load balancing and retry and fallback strategies in AI Proxy Advanced plugin.retry
 
 works_on:
  - on-prem
