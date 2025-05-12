@@ -5,7 +5,7 @@ beta: true
 tier: enterprise
 products:
     - mesh
-description: 'This policy adds Global Rate Limit support for Kong Mesh.'
+description: 'This policy adds Global Rate Limit support for {{site.mesh_product_name}}.'
 content_type: plugin
 type: policy
 icon: meshratelimit.png
