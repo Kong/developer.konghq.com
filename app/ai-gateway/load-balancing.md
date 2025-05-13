@@ -100,7 +100,9 @@ rows:
       * Best for routing prompts to domain-specialized models, like coding, analytics, text generation.
   - algorithm: "[Priority](/plugins/ai-proxy-advanced/examples/priority/)"
     description: |
-      Routes requests to models based on assigned priority groups and weights. In the configuration, models are grouped by priority and can have individual [`weight`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-weight) settings (for example, `weight: 70` for GPT-4), allowing proportional load distribution within each priority tier. *By default*, all models have the same priority. The balancer always chooses one of the targets of the group with the highest priority first. If all targets in the highest priority group are down, the balancer chooses one of the targets in the next highest priority.
+      Routes requests to models based on assigned priority groups and weights. In the configuration, models are grouped by priority and can have individual [`weight`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-weight) settings (for example, `weight: 70` for GPT-4), allowing proportional load distribution within each priority tier. 
+      
+      By default, all models have the same priority. The balancer always chooses one of the targets in the group with the highest priority first. If all targets in the highest priority group are down, the balancer chooses one of the targets in the next highest priority group.
     considerations: |
       * Traffic first targets higher-priority groups; lower-priority groups are used only if needed (failover).
       * Useful for balancing reliability, cost-efficiency, and resource optimization.
