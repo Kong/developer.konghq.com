@@ -30,7 +30,11 @@ works_on:
   - konnect
 ---
 
-Kong AI Gateway provides a standardized logging format for [AI plugins](/plugins/?category=ai), enabling the emission of analytics events and facilitating the aggregation of AI usage analytics across various providers.
+Kong AI Gateway emits structured analytics logs for [AI plugins](/plugins/?category=ai) through the standard [Kong Gateway logging infrastructure](/gateway/logging/). This means AI-specific logs are written to [the same locations](gateway/logs/#where-are-kong-gateway-logs-located) as other Kong logs, such as `/usr/local/kong/logs/error.log`, or to Docker container logs if you're running in a containerized environment.
+
+Like other Kong logs, AI Gateway logs are subject to the [global log level](/gateway/logs/#configure-log-levels) configured via the [`kong.conf`](/gateway/configuration/) file or the Admin API. You can control log verbosity by adjusting the `log_level` setting (e.g., `info`, `notice`, `warn`, `error`, `crit`) to determine which log entries are captured.
+
+You can also use [logging plugins](/plugins/?category=logging) to route these logs to external systems, such as file systems, log aggregators, or monitoring tools.
 
 ## Log details
 
@@ -44,7 +48,7 @@ columns:
   - title: Description
     key: description
 rows:
-  - property: "`ai.payload.request`"
+  - property: "`ai.$PLUGIN_NAME.payload.request`"
     description: The request payload.
   - property: "`ai.$PLUGIN_NAME.payload.response`"
     description: The response payload.
@@ -87,7 +91,8 @@ rows:
       {% new_in 3.8 %} For semantic caching, the time taken to generate the embeddings.{% endtable %}
 <!--vale on-->
 
-See the following AI plugin log format example:
+The following example shows a structured AI Gateway log entry:
+
 ```json
 "ai": {
     "payload": { "request": "$OPTIONAL_PAYLOAD_REQUEST" },
@@ -130,7 +135,9 @@ See the following AI plugin log format example:
 
 ## Cache logging {% new_in 3.8 %}
 
-If you're using the [AI Semantic Cache plugin](/plugins/ai-semantic-cache), logging will include some additional details about caching:
+If you're using the [AI Semantic Cache plugin](/plugins/ai-semantic-cache), AI Gateway logs include additional fields under the cache object for each plugin entry. These fields provide insight into cache behavior—such as whether a response was served from cache, how long it took to fetch, and which embedding provider and model were used if applicable.
+
+The following example shows how cache-related metadata appears alongside usage and model details in a structured AI log entry:
 
 ```json
 "ai": {
