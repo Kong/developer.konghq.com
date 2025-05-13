@@ -1,0 +1,147 @@
+metadata:
+  title: "Kong MCP Server"
+  content_type: landing_page
+  description: This page is an introduction to MCP capabilites in Kong.
+  products:
+    - ai-gateway
+    - gateway
+  works_on:
+    - on-prem
+    - konnect
+  tags:
+    - ai
+
+rows:
+  - header:
+      type: h1
+      text: "Kong MCP Server"
+      sub_text: A Model Context Protocol
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Introducing Kong MCP Server"
+              blocks:
+                - type: text
+                  text: |
+                    Text
+
+
+      - blocks:
+          - type: image
+            config:
+              url: /assets/images/gateway/ai-gateway-overview.svg
+              alt_text: Overview of AI gateway
+  - columns:
+      - blocks:
+        - type: structured_text
+          config:
+            header:
+              text: "Quickstart"
+            blocks:
+              - type: text
+                text: |
+                  Launch a [demo instance](/gateway/quickstart-reference/#ai-gateway-quickstart) of {{site.base_gateway}} running AI Proxy:
+                  ```sh
+                  curl -Ls https://get.konghq.com/ai | bash
+                  ```
+
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Get started
+            description: Run the {{site.base_gateway}} quickstart and enable the AI Proxy plugin.
+            icon: /assets/icons/rocket.svg
+            cta:
+              url: /mcp/get-started/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: MCP Overview
+            description: Learn how MCP server works.
+            icon: /assets/icons/plug.svg
+            cta:
+              url: /plugins/?category=ai
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: AI providers
+            description: Learn about the various providers supported by AI Gateway.
+            icon: /assets/icons/ai.svg
+            cta:
+              url: /ai-gateway/ai-providers/
+              align: end
+
+
+  - header:
+      type: h2
+      text: "AI Gateway capabilities"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Text
+      - blocks:
+        - type: card
+          config:
+            title: AI provider proxy
+            description: Route client requests to various AI providers.
+            icon: /assets/icons/plugins/ai-proxy.png
+            cta:
+              url: /plugins/ai-proxy/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Data governance
+            description: Use AI plugins to control AI data and usage.
+            icon: /assets/icons/security.svg
+            cta:
+              url: ./#data-governance
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Rate limiting
+            description: Manage traffic to your LLM API.
+            icon: /assets/icons/plugins/ai-rate-limiting-advanced.png
+            cta:
+              url: /plugins/ai-rate-limiting-advanced/
+              align: end
+
+
+  - header:
+      type: h2
+      text: How-to Guides
+
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tags:
+                - ai
+              quantity: 5
+              allow_empty: true
+
+  - header:
+      text: "Frequently Asked Questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: Question 1
+              a: |
+                Yes
+
+            - q: Question 2
+              a: |
+                Yes
