@@ -72,7 +72,7 @@ rows:
       * Focuses purely on traffic distribution, not cache-hit ratios.
   - algorithm: "[Consistent-hashing](/plugins/ai-proxy-advanced/examples/consistent-hashing/)"
     description: |
-      Routes requests based on a hash of a configurable client input, such as a header or user ID. The [`hash_on_header`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-hash-on-header) setting (for example, `X-Hashing-Header`) defines the source for the hash and drives all routing decisions. *By default*, the header is set to `X-Kong-LLM-Request-ID`.
+      Routes requests based on a hash of a configurable client input, such as a header or user ID. The [`hash_on_header`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-hash-on-header) setting (for example, `X-Hashing-Header`) defines the source for the hash and drives all routing decisions. By default, the header is set to `X-Kong-LLM-Request-ID`.
     considerations: |
       * Especially effective with consistent keys like user IDs.
       * Requires diverse hash inputs for balanced distribution.
