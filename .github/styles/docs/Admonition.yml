@@ -1,0 +1,6 @@
+extends: existence
+message: "Avoid using '%s'; replace attribute blocks with semantic shortcodes or components."
+level: warning
+ignorecase: false
+raw:
+  - '{:\.(note|warning|important)}'
