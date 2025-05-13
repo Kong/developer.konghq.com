@@ -65,7 +65,7 @@ columns:
 rows:
   - algorithm: "[Round-robin (weighted)](/plugins/ai-proxy-advanced/examples/round-robin/)"
     description: |
-      Distributes requests across models in a circular pattern with weight-based allocation. The [`weight`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-weight) parameter (for example, `weight: 70`) controls the proportion of traffic sent to each model. *By default*, all models have the same weight and receive the same percentage of requests.
+      Distributes requests across models in a circular pattern with weight-based allocation. The [`weight`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-weight) parameter (for example, `weight: 70`) controls the proportion of traffic sent to each model. By default, all models have the same weight and receive the same percentage of requests.
     considerations: |
       * Traffic is routed proportionally based on weights.
       * Requests follow a sequence adjusted by weight.
