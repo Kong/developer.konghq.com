@@ -1,6 +1,16 @@
 
 title: 'Load balancing: Lowest-usage'
 description: 'Configure the plugin to use two OpenAI models and route requests based on the number of tokens in the prompt.'
+extended_description: |
+  Configure the plugin to use two OpenAI models and route requests based on the number of tokens in the prompt.
+
+  {:.info}
+  > The lowest-usage algorithm distributes requests to the model with the lowest usage volume. By default, the usage is calculated based on the total number of tokens in the prompt and in the response. However, you can customize this using the [`config.balancer.tokens_count_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-tokens-count-strategy) parameter. You can use:
+  > * `prompt-tokens` to count only the tokens in the prompt
+  > * `completion-tokens` to count only the tokens in the response
+  > * `total-tokens` to count both tokens in the prompt and in the response
+  > * {% new_in 3.10 %} `cost` to count the cost of the tokens.<br/> The `cost` parameter must set in each model configuration to use this strategy and `log_statistics` must be enabled.
+
 
 weight: 110
 

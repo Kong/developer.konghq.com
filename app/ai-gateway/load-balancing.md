@@ -1,8 +1,10 @@
 ---
-title: "Load balancing with AI gateway"
+title: "Load balancing with AI Proxy Advanced"
 layout: reference
 content_type: reference
 description: This guide provides an overview of load balancing and retry and fallback strategies in the AI Proxy Advanced plugin.
+breadcrumbs:
+  - /ai-gateway/load-balancing/
 
 works_on:
  - on-prem
@@ -45,7 +47,7 @@ Kong AI Gateway gives you advanced load balancing capabilities to efficiently di
 
 With the AI Proxy Advanced plugin, you can select from several load balancing algorithms—similar to those used for Kong upstreams but extended for AI model routing. You configure load balancing using the [Upstream entity](/gateway/entities/upstream/), giving you flexibility to fine-tune how requests are routed to various AI providers and LLM models.
 
-### Load balancing strategies
+### Load balancing algorithms
 
 Kong AI Gateway supports multiple load balancing strategies to optimize traffic distribution across AI models. Each algorithm is suited for different performance goals such as balancing load, improving cache-hit ratios, reducing latency, or ensuring [failover reliability](#retry-and-fallback).
 
@@ -54,51 +56,51 @@ The table below provides a detailed overview of the available algorithms, along 
 <!--vale off-->
 {% table %}
 columns:
-  - title: Strategy
-    key: strategy
+  - title: Algorithm
+    key: algorithm
   - title: Description
     key: description
   - title: Considerations
     key: considerations
 rows:
-  - strategy: "[Round-robin (weighted)](/plugins/ai-proxy-advanced/examples/round-robin/)"
+  - algorithm: "[Round-robin (weighted)](/plugins/ai-proxy-advanced/examples/round-robin/)"
     description: |
-      Distributes requests across models in a circular pattern with weight-based allocation. The [`weight`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-weight) parameter (for example, `weight: 70`) controls the proportion of traffic sent to each model.
+      Distributes requests across models in a circular pattern with weight-based allocation. The [`weight`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-weight) parameter (for example, `weight: 70`) controls the proportion of traffic sent to each model. *By default*, all models have the same weight and receive the same percentage of requests.
     considerations: |
       * Traffic is routed proportionally based on weights.
       * Requests follow a sequence adjusted by weight.
       * Focuses purely on traffic distribution, not cache-hit ratios.
-  - strategy: "[Consistent-hashing](/plugins/ai-proxy-advanced/examples/consistent-hashing/)"
+  - algorithm: "[Consistent-hashing](/plugins/ai-proxy-advanced/examples/consistent-hashing/)"
     description: |
-      Routes requests based on a hash of a configurable client input, such as a header or user ID. The [`hash_on_header`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-hash-on-header) setting (for example, `X-Hashing-Header`) defines the source for the hash and drives all routing decisions.
+      Routes requests based on a hash of a configurable client input, such as a header or user ID. The [`hash_on_header`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-hash-on-header) setting (for example, `X-Hashing-Header`) defines the source for the hash and drives all routing decisions. *By default*, the header is set to `X-Kong-LLM-Request-ID`.
     considerations: |
       * Especially effective with consistent keys like user IDs.
       * Requires diverse hash inputs for balanced distribution.
       * Ideal for maintaining session persistence.
-  - strategy: "[Lowest-usage](/plugins/ai-proxy-advanced/examples/lowest-usage/)"
+  - algorithm: "[Lowest-usage](/plugins/ai-proxy-advanced/examples/lowest-usage/)"
     description: |
       Routes requests to the least-utilized models based on resource usage metrics. In the configuration, the [`tokens_count_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-tokens-count-strategy) (for example, `prompt-tokens`) defines how usage is measured, focusing on prompt tokens or other resource indicators.
     considerations: |
       * Dynamically balances load based on measured usage.
       * Useful for optimizing cost and avoiding overloading heavier models.
       * Ensures more efficient resource allocation across available models.
-  - strategy: "[Lowest-latency](/plugins/ai-proxy-advanced/examples/lowest-latency/)"
+  - algorithm: "[Lowest-latency](/plugins/ai-proxy-advanced/examples/lowest-latency/)"
     description: |
-      Routes requests to the models with the lowest observed latency. In the configuration, the [`latency_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-latency-strategy) parameter (for example, `latency_strategy: e2e`) defines how latency is measured, typically based on end-to-end response times.
+      Routes requests to the models with the lowest observed latency. In the configuration, the [`latency_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-latency-strategy) parameter (for example, `latency_strategy: e2e`) defines how latency is measured, typically based on end-to-end response times. *By default*, the latency is calculated based on the time the model takes to generate each token (`tpot`)
     considerations: |
       * Prioritizes models with the fastest response times.
       * Optimizes for real-time performance in time-sensitive applications.
       * Less suitable for long-lived or persistent connections (e.g., WebSockets).
-  - strategy: "[Semantic](/plugins/ai-proxy-advanced/examples/semantic/)"
+  - algorithm: "[Semantic](/plugins/ai-proxy-advanced/examples/semantic/)"
     description: |
       Routes requests based on semantic similarity between the prompt and model descriptions. In the configuration, embeddings are generated using a specified model (e.g., `text-embedding-3-small`), and similarity is calculated using vector search.
     considerations: |
       * Uses vector search (for example, Redis) to find the best match based on prompt embeddings.
       * `distance_metric` and `threshold` settings fine-tune matching sensitivity.
       * Best for routing prompts to domain-specialized models, like coding, analytics, text generation.
-  - strategy: "[Priority](/plugins/ai-proxy-advanced/examples/priority/)"
+  - algorithm: "[Priority](/plugins/ai-proxy-advanced/examples/priority/)"
     description: |
-      Routes requests to models based on assigned priority groups and weights. In the configuration, models are grouped by priority and can have individual [`weight`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-weight) settings (for example, `weight: 70` for GPT-4), allowing proportional load distribution within each priority tier.
+      Routes requests to models based on assigned priority groups and weights. In the configuration, models are grouped by priority and can have individual [`weight`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-weight) settings (for example, `weight: 70` for GPT-4), allowing proportional load distribution within each priority tier. *By default*, all models have the same priority. The balancer always chooses one of the targets of the group with the highest priority first. If all targets in the highest priority group are down, the balancer chooses one of the targets in the next highest priority.
     considerations: |
       * Traffic first targets higher-priority groups; lower-priority groups are used only if needed (failover).
       * Useful for balancing reliability, cost-efficiency, and resource optimization.
