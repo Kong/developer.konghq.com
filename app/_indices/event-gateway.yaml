@@ -8,10 +8,10 @@ sections:
     items:
       - path: /plugins/kafka-consume/
       - path: /plugins/kafka-upstream/
-      - path: /plugins/kafka-log/
       - path: /plugins/confluent/
       - path: /plugins/confluent-consume/
     auto_exclude: true
   - title: "Kafka Native Event Proxy (KNEP)"
     items:
-      - path: /knep/get-started/
+      - path: /event-gateway/get-started/
+      - path: /event-gateway/policies/
