@@ -58,7 +58,7 @@ faqs:
       * Unlock an email for use with another organization
   - q: How do I manage and view billing and usage?
     a: |
-      You can view service, Dev Portal, and API call usage from the [Billing and Usage](https://cloud.konghq.com/settings/billing-settings).
+      You can view service, Dev Portal, and API call usage from the [Billing and Usage](https://cloud.konghq.com/global/plan-and-usage/).
 ---
 
 {{site.konnect_short_name}} offers [two plans](https://konghq.com/pricing).
