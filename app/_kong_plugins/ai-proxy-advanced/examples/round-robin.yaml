@@ -1,8 +1,8 @@
-title: 'Round-robin load balancing'
+title: 'Load balancing: Round-robin'
 description: Configure the plugin to use three OpenAI models and route requests based on their respective weights.
 extended_description: |
 
-  Configure the  plugin to use three OpenAI models and route requests based on their respective weights.
+  Configure the plugin to use three OpenAI models and route requests based on their respective weights.
 
   In this example, the GPT-4 model will receive 70% of requests, the GPT-4o-mini model will receive 25%, and the GPT-3 model 5%.
 
