@@ -15,25 +15,50 @@ rows:
   - header:
       type: h1
       text: "Kong MCP Server"
-      sub_text: A Model Context Protocol
+      sub_text: Modernize AI Agent Infrastructure with Gateway-Driven MCP Scaling
 
   - columns:
       - blocks:
           - type: structured_text
             config:
-              header:
-                text: "Introducing Kong MCP Server"
               blocks:
                 - type: text
                   text: |
-                    Text
-
-
+                    Kong MCP is a Model Context Protocol server that enables AI assistants to interact with Kong Konnect using natural language to access analytics, configurations, and control plane operations.
+  - columns:
       - blocks:
-          - type: image
+          - type: structured_text
             config:
-              url: /assets/images/gateway/ai-gateway-overview.svg
-              alt_text: Overview of AI gateway
+              header:
+                text: "Bring MCP to Production with Kong’s AI Gateway"
+              blocks:
+                - type: text
+                  text: |
+                    AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Control Plane (MCP) addresses this by enabling agents to reason, plan, and act across services—but scaling MCP in remote, distributed environments introduces new operational challenges.
+
+                    Key concerns like authentication, context propagation, load balancing, and service discovery are familiar to those working in API infrastructure. As such, the API gateway—already proven in securing and scaling HTTP services—offers a strong foundation for bringing MCP to production.
+
+                    Kong’s AI Gateway, part of the Kong Konnect platform, extends these capabilities to MCP. By applying established gateway patterns to emerging agent interfaces, Kong enables teams to manage remote MCP traffic with enterprise-grade security, performance, and developer experience
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Conversational Control of Kong Konnect"
+              blocks:
+                - type: text
+                  text: |
+                      Kong Model Context Protocol (MCP) server that connects AI assistants like Claude to Kong Konnect’s API Gateway. It enables natural language access to key gateway tools, including analytics, configuration inspection, and control plane management.
+
+                      **Key features:**
+
+                      * Query API analytics with customizable filters
+                      * List and inspect services, routes, consumers, and plugins
+                      * Manage control planes and control plane groups
+                      * Integrate with Claude and other MCP-compatible AI assistants
+
+
+
+
   - columns:
       - blocks:
         - type: structured_text
@@ -67,20 +92,11 @@ rows:
             cta:
               url: /plugins/?category=ai
               align: end
-      - blocks:
-        - type: card
-          config:
-            title: AI providers
-            description: Learn about the various providers supported by AI Gateway.
-            icon: /assets/icons/ai.svg
-            cta:
-              url: /ai-gateway/ai-providers/
-              align: end
 
 
   - header:
       type: h2
-      text: "AI Gateway capabilities"
+      text: "MCP Server Capabilities"
     columns:
       - blocks:
           - type: structured_text
@@ -88,34 +104,36 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Text
+                      AI Gateway enforces governance on outgoing AI prompts through allow/deny lists, blocking unauthorized requests with 4xx responses. It also provides built-in PII sanitization, automatically detecting and redacting sensitive data across 20+ categories and 12 languages. Running privately and self-hosted for full control and compliance, AI Gateway ensures consistent protection without burdening developers, which helps simplify AI adoption at scale.
+  - columns:
       - blocks:
         - type: card
           config:
-            title: AI provider proxy
-            description: Route client requests to various AI providers.
-            icon: /assets/icons/plugins/ai-proxy.png
+            title: Discover APIs
+            description: Learn about something.
+            icon: /assets/icons/ai.svg
             cta:
-              url: /plugins/ai-proxy/
+              url: /mcp/
               align: end
       - blocks:
         - type: card
           config:
-            title: Data governance
-            description: Use AI plugins to control AI data and usage.
-            icon: /assets/icons/security.svg
+            title: Discover infrastructure
+            description: Learn about something else.
+            icon: /assets/icons/ai.svg
             cta:
-              url: ./#data-governance
+              url: /mcp/
               align: end
       - blocks:
         - type: card
           config:
-            title: Rate limiting
-            description: Manage traffic to your LLM API.
-            icon: /assets/icons/plugins/ai-rate-limiting-advanced.png
+            title: Enable a new ecosystem of AI use cases
+            description: Learn about something else.
+            icon: /assets/icons/ai.svg
             cta:
-              url: /plugins/ai-rate-limiting-advanced/
+              url: /mcp/
               align: end
+
 
 
   - header:
