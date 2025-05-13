@@ -4,7 +4,7 @@ content_type: how_to
 breadcrumbs:
   - /event-gateway/
 
-permalink: /knep/get-started/
+permalink: /event-gateway/get-started/
 
 beta: true
 
