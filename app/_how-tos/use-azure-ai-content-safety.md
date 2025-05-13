@@ -49,6 +49,9 @@ prereqs:
   - title: Azure Content Safety key
     content: |
         To complete this task, you must have an Azure subscription and Content Safety Key (static key generated from Azure Portal). Follow the [quickstart from Microsoft](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text?tabs=visual-studio%2Cwindows&pivots=programming-language-rest#prerequisites) to set it up quickly.
+  - title: Azure Content Safety blocklist
+    content: |
+        If you choose to use a blocklist in [step 5](./#optional-use-blocklists), you must first create an Azure Content Blocklist. For details, see the [Use a blocklist guide](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/how-to/use-blocklist?tabs=windows%2Crest).
   entities:
     services:
         - example-service
@@ -189,7 +192,7 @@ This breaches the plugin's configured (inclusive and greater) threshold of `2` f
 }
 ```
 
-### (Optional) Hide the failure reason from the API response
+## (Optional) Hide the failure reason from the API response
 
 If you don't want to reveal to the caller why their request failed, you can set `config.reveal_failure_reason` to `false`, in which
 case the response looks like this:
@@ -202,14 +205,13 @@ case the response looks like this:
 }
 ```
 
-### (Optional) Use blocklists
+## (Optional) Use blocklists
 
 <!-- FYI: TO BE CHECKED, FOR SOME REASON I KEEP GETTING 500 WHENEVER THE BLOCKLIST IS ENABLED -->
 
-The plugin supports previously-created blocklists in Azure Content Safety.
+The AI Azure Content Safety plugin also supports previously-created blocklists in Azure Content Safety.
 
-Using the [Azure Content Safety API](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/how-to/use-blocklist)
-or the Azure Portal, you can create a series of blocklists for banned phrases or patterns.
+You can create blocklists using the [Azure Content Safety API](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/how-to/use-blocklist) or the Azure Portal, to define a series of blocklists for banned phrases or patterns.
 You can then reference their unique names in the plugin configuration.
 
 In the following example, the plugin takes two existing blocklists from Azure, `company_competitors` and
@@ -239,6 +241,8 @@ entities:
         reveal_failure_reason: true
         output_type: FourSeverityLevels
 {% endentity_examples %}
+
+TO DO: Add expected responses when sent requests contain any of the blocked phrases.
 
 {{site.base_gateway}} will then command Content Safety to enable and execute these blocklists against the content. The plugin property `config.halt_on_blocklist_hit` is used to tell Content Safety to stop analyzing the content as soon as any blocklist hit matches.
 
