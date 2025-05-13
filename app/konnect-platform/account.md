@@ -12,6 +12,15 @@ products:
 works_on:
     - konnect
 
+tags:
+  - organization
+  - account-management
+
+search_aliases:
+  - billing
+  - pricing
+  - deactivate
+
 related_resources:
   - text: "{{site.base_gateway}} version support policy"
     url: /gateway/version-support-policy/
