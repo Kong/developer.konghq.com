@@ -3647,7 +3647,7 @@ Stats and Clusters in the GUI:
 
 Extra `retryOn` options for Retry:
 
-* add extran HTTP retryOn options [#4744](https://github.com/kumahq/kuma/pull/4744) @johnharris85
+* add extra HTTP retryOn options [#4744](https://github.com/kumahq/kuma/pull/4744) @johnharris85
 
 Better support for TCP logging:
 
