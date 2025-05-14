@@ -2748,7 +2748,7 @@ Based on [Kuma 2.5.0](https://github.com/kumahq/kuma/releases/tag/2.5.0)
 * feat(cni): k8s make namespace configurable [#6721](https://github.com/kumahq/kuma/pull/6721) @mmorel-35
 * feat(config): improve configurability [#6583](https://github.com/kumahq/kuma/pull/6583) @slonka
 * feat(docker/kumactl): make entrypoint consistent with kuma-cp and kuma-dp images [#6596](https://github.com/kumahq/kuma/pull/6596) @bartsmykla
-* feat(envoyadmin): support passing kds envoy operations vian HTTP proxy [#6915](https://github.com/kumahq/kuma/pull/6915) @jakubdyszkiewicz
+* feat(envoyadmin): support passing kds envoy operations via an HTTP proxy [#6915](https://github.com/kumahq/kuma/pull/6915) @jakubdyszkiewicz
 * feat(helm): Add logOutputPath support to chart [#6649](https://github.com/kumahq/kuma/pull/6649) @ashman1984
 * feat(helm): add possibility to extend secrets for cp in helm charts when reusing kuma charts [#6883](https://github.com/kumahq/kuma/pull/6883) @Automaat
 * feat(helm): enable NodePort customization [#6770](https://github.com/kumahq/kuma/pull/6770) @mmorel-35

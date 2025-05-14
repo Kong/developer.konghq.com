@@ -5,7 +5,7 @@ name: 'TLS Metadata Headers'
 content_type: plugin
 
 publisher: kong-inc
-description: 'Proxies TLS client certificate metadata to upstream services vian HTTP headers'
+description: 'Proxies TLS client certificate metadata to upstream services via an HTTP headers'
 
 
 products:

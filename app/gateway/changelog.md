@@ -6410,7 +6410,7 @@ Kong Gateway version.
 
   * [TLS Metadata Headers](/plugins/tls-metadata-headers/) (`tls-metadata-headers`)
 
-    Proxy TLS client certificate metadata to upstream services vian HTTP headers.
+    Proxy TLS client certificate metadata to upstream services via an HTTP headers.
 
   * [WebSocket Size Limit](/plugins/websocket-size-limit/) (`websocket-size-limit`)
 

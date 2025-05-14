@@ -135,7 +135,7 @@ If no appropriate format is found, the plugin will fallback to the default forma
 
 ### OTLP exporter
 
-The OpenTelemetry plugin implements the [OTLP/HTTP](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/otlp.md#otlphttp) exporter, which uses Protobuf payloads encoded in binary format and is sent vian HTTP/1.1.
+The OpenTelemetry plugin implements the [OTLP/HTTP](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/otlp.md#otlphttp) exporter, which uses Protobuf payloads encoded in binary format and is sent via an HTTP/1.1.
 
 [`config.connect_timeout`](/plugins/opentelemetry/reference/#schema--config-connect-timeout), [`config.read_timeout`](/plugins/opentelemetry/reference/#schema--config-read-timeout), and [`config.send_timeout`](/plugins/opentelemetry/reference/#schema--config-send-timeout) are used to set the timeouts for the HTTP request.
 

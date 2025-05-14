@@ -57,7 +57,7 @@ Add your token issuer to the **Identity Providers** in your AWS account so that 
 
 For more information on the required AWS setup, visit the [plugin repo](https://github.com/LEGO/kong-aws-request-signing#aws-setup-required).
 
-Once your AWS account is set up, you can use the plugin to communicate with your Lambdan HTTPS endpoint.
+Once your AWS account is set up, you can use the plugin to communicate with your Lambda HTTPS endpoint.
 
 ### Install
 
