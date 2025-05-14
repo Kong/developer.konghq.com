@@ -43,7 +43,7 @@ module Jekyll
     def search_filters(site)
       {
         products: site.data.fetch('products').map { |k, v| { label: v['name'], value: k } },
-        tools: site.data.fetch('tools').except('kic').map { |k, v| { label: v['name'], value: k } },
+        tools: site.data.fetch('tools').except('kic', 'operator').map { |k, v| { label: v['name'], value: k } },
         works_on: site.data.dig('products', 'gateway', 'deployment_topologies').map do |t|
           { label: t['text'], value: t['slug'] }
         end
