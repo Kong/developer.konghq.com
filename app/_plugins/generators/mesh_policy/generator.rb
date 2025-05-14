@@ -16,6 +16,8 @@ module Jekyll
       end
 
       def run
+        return if site.config.dig('skip', 'mesh_policy')
+
         Dir.glob(File.join(site.source, "#{POLICIES_FOLDER}/*/")).each do |folder|
           slug = folder.gsub("#{site.source}/#{POLICIES_FOLDER}/", '').chomp('/')
 
