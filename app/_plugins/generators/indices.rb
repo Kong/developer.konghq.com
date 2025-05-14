@@ -28,6 +28,10 @@ module Jekyll
       page.data['layout'] = 'indices'
       page.data['toc_depth'] = 3
       page.data['toc_skip_page_title'] = true
+
+      # Needed for edit link and site regeneration
+      page.instance_variable_set(:@relative_path, "_indices/#{filename.gsub('.html', '.yaml')}")
+
       grouped_pages = config_to_grouped_pages(site, index)
       page.content = render(index, grouped_pages, site)
       page
