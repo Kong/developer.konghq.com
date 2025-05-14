@@ -56,7 +56,7 @@ rows:
             config:
               title: AI plugins
               description: |
-                Learn how to use AI plugins to govern usage, security and more.
+                Learn how to use AI plugins to govern LLM usage, security and more.
               icon: /assets/icons/plug.svg
               cta:
                 url: /plugins/?category=ai
