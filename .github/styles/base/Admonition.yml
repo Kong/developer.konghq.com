@@ -3,4 +3,4 @@ message: "'%s' is a legacy admonition. Use ':.info', ':.danger', or ':.warning' 
 level: error
 ignorecase: false
 raw:
-  - '{:\.(note|warning|important)}'
+  - '{:\.(note|important)}'

@@ -1890,7 +1890,7 @@ the new `latencies.receive` metric, so if desired, the old value can be
 calculated as `latencies.kong + latencies.receive`.
   [#12795](https://github.com/Kong/kong/issues/12795)
 
-  {:.note}
+  {:.info}
   > **Note:** This also affects payloads from all logging plugins that use the log serializer:
   `file-log`, `tcp-log`, `udp-log`,`http-log`, `syslog`, and `loggly`.
 
@@ -6234,7 +6234,7 @@ This lets you run plugins such as `rate-limiting` before authentication plugins.
   To enable FIPS mode, set [`fips`](https://docs.konghq.com/gateway/3.0.x/reference/configuration/#fips) to `on`.
   FIPS mode is only supported in Ubuntu 20.04.
 
-  {:.note}
+  {:.info}
   > **Note**: The Kong Gateway FIPS package is not currently compatible with SSL
   > connections to PostgreSQL.
 
