@@ -110,7 +110,7 @@ greatly reduces the load on the main database instance since read-only
 queries are no longer sent to it.
 
 To learn more about how to configure this feature, refer to the
-[Datastore section](/gateway/configuration/#datastore)
+[Datastore section](/gateway/configuration/#datastore-section)
 of the {{site.base_gateway}} configuration reference.
 
 ## What information is cached?
