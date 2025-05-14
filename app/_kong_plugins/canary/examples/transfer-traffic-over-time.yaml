@@ -1,4 +1,5 @@
-description: |
+description:  Schedule a canary release to start at a specific time, in UNIX timestamp seconds since epoch, and finish migrating 100% of traffic in a specified length of time, in seconds.
+extended_description: |
   Schedule a canary release to start at a specific time, in UNIX timestamp seconds since epoch, and finish migrating 100% of traffic in a specified length of time, in seconds.
 
   Setting `config.start` to `null` sets the start time to the current time, and starts the canary release immediately.

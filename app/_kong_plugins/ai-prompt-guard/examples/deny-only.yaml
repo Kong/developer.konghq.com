@@ -1,4 +1,5 @@
-description: |
+description: Configure the AI Prompt Guard plugin to deny messages following a specific pattern. 
+extended_description: |
   Configure the plugin to deny messages following a specific pattern. 
   For requests to pass through in this example, 
   the user messages in the prompt must not be a card number field that starts with 5.

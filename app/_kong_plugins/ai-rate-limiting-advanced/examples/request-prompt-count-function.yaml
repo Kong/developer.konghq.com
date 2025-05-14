@@ -1,4 +1,5 @@
-description: |
+description: Protect your LLM services by rate limiting requests based on a custom token.
+extended_description: |
   Protect your LLM services with rate limiting. 
   The AI Rate Limiting Advanced plugin will analyze query costs and token response 
   to provide an enterprise-grade rate limiting strategy.

@@ -1,4 +1,6 @@
 description: |
+  Run the Post-Function plugin in multiple phases.
+extended_description: |
   You can run the Post-Function plugin in multiple phases.
   For example, if you want to run code in the `access` and `header_filter` phases, configure both parameters,
   pointing each parameter to your Lua code files or including the code directly. 

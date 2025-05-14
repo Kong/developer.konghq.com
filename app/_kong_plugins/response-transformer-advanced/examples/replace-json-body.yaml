@@ -1,4 +1,4 @@
-description: Configure the plugin to replace the entire JSON body for `500` responses.
+description: Configure the plugin to replace the entire JSON body for 500 responses.
 
 title: Replace the JSON body
 

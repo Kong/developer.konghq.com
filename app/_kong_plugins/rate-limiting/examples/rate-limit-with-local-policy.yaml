@@ -1,7 +1,7 @@
 title: Rate limiting with local policy
 description: |
   Users are allowed either 5 requests per second, or 1000 requests per hour.
-  The `local` policy stores counters in-memory on the node.
+  The local policy stores counters in-memory on the node.
 
 weight: 900
 

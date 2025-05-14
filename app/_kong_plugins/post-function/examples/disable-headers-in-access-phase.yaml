@@ -1,4 +1,7 @@
 description: |
+  Pass Lua code as a string to the Post-Function plugin.
+
+extended_description: |
   You can pass Lua code as a string to the Post-Function plugin.
 
   In this example, the plugin runs in the access phase to disable the `X-Forwarded-Host` header

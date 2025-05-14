@@ -1,4 +1,5 @@
-description: 'Configure the OPA plugin to connect to an OPA server with a custom host and port and get the `/my_policies/header` policy.'
+description: 'Configure the OPA plugin to connect to an OPA server with a custom host and port and get a policy.'
+extended_description: 'Configure the OPA plugin to connect to an OPA server with a custom host and port and get the `/my_policies/header` policy.'
 
 title: 'Custom OPA host and port'
 

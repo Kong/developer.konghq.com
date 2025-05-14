@@ -1,6 +1,6 @@
 
 title: 'Chat route with Anthropic'
-description: 'Configure a chat route using Anthropic with the latest Claude 3.5 Sonnet model and version `2023-06-01` of the Anthropic API.'
+description: 'Configure a chat route using Anthropic with the latest Claude 3.5 Sonnet model and version 2023-06-01 of the Anthropic API.'
 
 weight: 121
 

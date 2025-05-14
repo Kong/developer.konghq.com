@@ -1,6 +1,6 @@
 title: 'Allow bots based on custom regex'
 
-description: 'This configuration allows bots in the `User_Agent` header that match the custom regex you configure. `User_Agent` headers in requests that match are processed per usual.'
+description: 'Allow bots in the User_Agent header that match the custom regex you configure. User_Agent headers in requests that match are processed per usual.'
 
 weight: 800
 

@@ -1,5 +1,6 @@
 title: OpenID Connect with Amazon Cognito
-description: |
+description: Configure the OpenID Connect plugin with Amazon Cognito User Pools.
+extended_description: |
   Configure the OpenID Connect plugin with [Amazon Cognito User Pools](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-pools.html).
   User Pools are a multi-tenant LDAP-like user repository combined with an OAuth2 and an OpenID Connect interface.
 

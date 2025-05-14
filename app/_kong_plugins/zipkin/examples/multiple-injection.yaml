@@ -1,4 +1,6 @@
 description: |
+  Configure the Zipkin plugin to inject tracing context in multiple formats.
+extended_description: |
   Configure the Zipkin plugin to inject tracing context in multiple formats:
   - Extracts the tracing context from: `b3`
   - Injects the tracing context using the formats: `w3c`, `b3`, `jaeger`, `ot`, `aws`, `datadog`, `gcp`
@@ -7,14 +9,6 @@ description: |
 title: 'Multiple format injection'
 
 weight: 900
-
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
 
 config:
   propagation:	

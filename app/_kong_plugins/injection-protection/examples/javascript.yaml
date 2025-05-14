@@ -1,16 +1,12 @@
-description: 'Detects arbitrarily injected JavaScript that is part of a cross site scripting attack and will execute in the browser. Uses the following regex for matching: `<\s*script\b[^>]*>[^<]+<\s*/\s*script\s*>`'
+description: Detects arbitrarily injected JavaScript that is part of a cross site scripting attack and will execute in the browser. 
+
+extended_description: |
+  Detects arbitrarily injected JavaScript that is part of a cross site scripting attack and will execute in the browser. 
+  Uses the following regex for matching: `<\s*script\b[^>]*>[^<]+<\s*/\s*script\s*>`
 
 title: 'JavaScript injection'
 
 weight: 900
-
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
 
 config: 
   injection_types: 

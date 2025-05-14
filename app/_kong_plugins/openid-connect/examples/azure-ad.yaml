@@ -1,5 +1,8 @@
 title: OpenID Connect with Azure AD
 description: |
+  Authenticate browser clients using an Azure AD identity provider.
+
+extended_description: |
   Authenticate browser clients using an [Azure AD identity provider](https://learn.microsoft.com/en-us/entra/identity/).
 
   The following configuration example allows users to authenticate and access the upstream service even though no Consumer was created for them. 

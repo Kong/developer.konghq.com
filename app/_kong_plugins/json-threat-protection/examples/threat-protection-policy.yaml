@@ -1,4 +1,5 @@
-description: |
+description: Run the JSON Threat Protection plugin in block mode. 
+extended_description: |
   Run the JSON Threat Protection plugin in block mode. 
   
   Define a JSON threat protection policy and block any invalid requests. 
