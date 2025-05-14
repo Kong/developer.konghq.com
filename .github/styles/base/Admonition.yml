@@ -1,0 +1,6 @@
+extends: existence
+message: "'%s' is a legacy admonition. Use ':.info', ':.danger', or ':.warning' instead."
+level: error
+ignorecase: false
+raw:
+  - '{:\.(note|important)}'

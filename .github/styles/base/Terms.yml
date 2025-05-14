@@ -18,3 +18,5 @@ swap:
   timezone: time zone
   utilize: use
   whitelist: allowlist
+  'a HTTP': 'an HTTP'
+  

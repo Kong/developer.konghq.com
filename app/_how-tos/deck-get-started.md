@@ -76,7 +76,7 @@ entities:
         - "/"
 {% endentity_examples %}
 
-You can now make a HTTP request to your running {{ site.base_gateway }} instance and see it proxied to httpbin:
+You can now make an HTTP request to your running {{ site.base_gateway }} instance and see it proxied to httpbin:
 
 {% validation request-check %}
 url: '/anything'

@@ -53,7 +53,7 @@ cleanup:
 
 All Gateway Services are assumed to be either HTTP or HTTPS by default. We need to update the Service to specify gRPC as the protocol by adding a `konghq.com/protocol` annotation.
 
-Annotate the `grpcbin` Service you installed in the [prerequisites](#prerequisites) with `grpc` to inform {{site.base_gateway}} that this service is a gRPC (with TLS) service and not a HTTP service:
+Annotate the `grpcbin` Service you installed in the [prerequisites](#prerequisites) with `grpc` to inform {{site.base_gateway}} that this service is a gRPC (with TLS) service and not an HTTP service:
 
 ```bash
 kubectl annotate service -n kong grpcbin 'konghq.com/protocol=grpc'

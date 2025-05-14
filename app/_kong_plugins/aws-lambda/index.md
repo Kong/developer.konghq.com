@@ -72,7 +72,7 @@ precedence order:
 
 If you also specify the [`config.aws_assume_role_arn`](./reference/#schema--config-aws_assume_role_arn) parameter, the plugin will try to perform
 an additional [AssumeRole](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html)
-action. This requires the {{site.base_gateway}} process to make a HTTPS request to the AWS STS service API after
+action. This requires the {{site.base_gateway}} process to make an HTTPS request to the AWS STS service API after
 configuring the AWS access key/secret or fetching credentials automatically from EC2/ECS/EKS IAM roles.
 If it succeeds, the plugin will fetch temporary security credentials that give the plugin the access permission configured in the target assumed role. The plugin will then try to invoke the Lambda function based on the target assumed role.
 

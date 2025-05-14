@@ -81,7 +81,7 @@ prereqs:
     export PROXY_IP=$(kubectl get gateway kong -n kong -o jsonpath='{.status.addresses[0].value}')
     ```
 
-    {:.note}
+    {:.info}
     > Note: if your cluster can not provision LoadBalancer type Services then the IP you receive may only be routable from within the cluster.
 
 1. Make a call to the `$PROXY_IP` that you configured.

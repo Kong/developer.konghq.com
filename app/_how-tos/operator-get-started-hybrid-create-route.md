@@ -100,7 +100,7 @@ export PROXY_IP=$(kubectl get svc -n kong $NAME -o jsonpath='{range .status.load
 echo "Proxy IP: $PROXY_IP"
 ```
 
-{:.note}
+{:.info}
 > Note: If your cluster can't provision LoadBalancer type Services, then you might not receive an IP address.
 
 Test the routing rules by sending a request to the proxy IP address:
