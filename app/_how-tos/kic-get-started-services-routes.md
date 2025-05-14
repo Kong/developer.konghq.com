@@ -83,7 +83,7 @@ kubectl apply -f {{ site.links.web }}/manifests/kic/echo-service.yaml -n kong
 
 ## Create a HTTPRoute / Ingress
 
-To route traffic to the `echo` service, create a `HTTPRoute` or `Ingress` resource:
+To route traffic to the `echo` service, create an `HTTPRoute` or `Ingress` resource:
 
 {% include /k8s/httproute.md release=page.release path='/echo' name='echo' service='echo' port='1027' skip_host=true %}
 

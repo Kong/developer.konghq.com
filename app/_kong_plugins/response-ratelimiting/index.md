@@ -94,7 +94,7 @@ X-RateLimit-Remaining-Videos-Minute: 10
 ```
 
 If any of the configured limits configured is reached, the plugin
-returns a `HTTP/1.1 429` (Too Many Requests) status code and an empty response body.
+returns an `HTTP/1.1 429` (Too Many Requests) status code and an empty response body.
 
 ### Upstream headers
 

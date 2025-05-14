@@ -79,7 +79,7 @@ output:
   explanation: |
     The `RateLimit-Remaining` header indicates how many requests are remaining before the rate limit is enforced.  The first five responses return `HTTP/1.1 200 OK` which indicates that the request is allowed. The final request returns `HTTP/1.1 429 Too Many Requests` and the request is blocked.
 
-    If you receive a `HTTP 429` from the first request, wait 60 seconds for the rate limit timer to reset.
+    If you receive an `HTTP 429` from the first request, wait 60 seconds for the rate limit timer to reset.
 {% endvalidation %}
 
 ## Scale to multiple pods
