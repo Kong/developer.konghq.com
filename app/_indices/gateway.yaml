@@ -33,13 +33,57 @@ sections:
       - path: /gateway/traffic-control-and-routing/
       - path: /gateway/cp-dp-communication/
 
-
   - title: Deployment Topologies
     items: 
       - path: /gateway/deployment-topologies/
       - path: /gateway/hybrid-mode/
       - path: /gateway/traditional-mode/
       - path: /gateway/db-less-mode/
+      
+  - title: Data Plane Hosting Options
+    items:
+    - path: /gateway/topology-hosting-options/
+    - title: Choose a hosting strategy
+      description: Decide which Data Plane node strategy to use based on your use case.
+      url: /gateway-manager/data-plane-reference/#choose-a-data-plane-node-hosting-strategy
+    - title: Serverless Gateways
+      description: Lightweight API gateways, where the Control Plane is hosted by Konnect and Data Plane nodes are automatically provisioned. 
+      url: /gateway/topology-hosting-options/#serverless-gateways
+    - path: /dedicated-cloud-gateways/
+    - title: Self-managed Data Planes
+      description: Host your own Data Plane nodes on the supported system of your choice.
+      url: /gateway/install/
+  
+  - title: Serverless Gateways
+    items:
+    - title: Provision a serverless gateway
+      description: Create a serverless Control Plane and hosted Data Plane.
+      url: /serverless-gateways/#how-do-i-provision-a-serverless-gateway
+    - title: Custom domains
+      description: Konnect integrates domain name management and configuration with serverless gateways.
+      url: /serverless-gateways/#how-do-i-configure-a-custom-domain
+    - title: FAQs
+      description: Frequently asked questions about serverless gateways.
+      url: /serverless-gateways/#faqs
+
+  - title: Dedicated Cloud Gateways
+    items:
+    - title: Provision a Dedicated Cloud Gateway
+      description: Use the Konnect Cloud Gateways API to provision a Control Plane.
+      url: /dedicated-cloud-gateways/reference/#how-do-i-provision-a-control-plane
+    - title: Custom plugin streaming
+      description: Stream custom plugins from the Control Plane to the Data Plane. 
+      url: /dedicated-cloud-gateways/reference/#custom-plugins
+    - title: Supported geos
+      description: Supported geos for Dedicated Cloud Gateways
+      url: /konnect-platform/geos/#dedicated-cloud-gateways
+    - title: Upgrade Data Planes
+      description: Upgrade Data Plane nodes in a Dedicated Cloud Gateway.
+      url: /gateway-manager/data-plane-reference/#upgrade-data-planes
+    - title: Cloud Gateways API
+      description: Konnect API for managing Dedicated Cloud Gateways infrastructure.
+      url: /api/konnect/cloud-gateways/
+    - path: /dedicated-cloud-gateways/**/*
 
   - title: Production Deployments
     allow_duplicates: true
@@ -49,7 +93,6 @@ sections:
       - path: /gateway/resource-sizing-guidelines/
       - path: /gateway/sbom/
       - path: /gateway/security/
-      - path: /gateway/topology-hosting-options/
       - path: /gateway/secure-the-admin-api/
       - path: /gateway/network/**/*
       - path: /gateway/cp-outage/
