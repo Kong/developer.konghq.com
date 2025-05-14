@@ -47,7 +47,7 @@ cleanup:
 
 {% assign demo_domain='example.com' %}
 
-## Create a HTTPRoute
+## Create an HTTPRoute
 
 To route HTTP traffic, you need to create an `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`.
 
@@ -57,9 +57,9 @@ To route HTTP traffic, you need to create an `HTTPRoute` or an `Ingress` resourc
 
 {% include /k8s/add-tls.md namespace='kong' hostname=demo_domain cert_required=true %}
 
-## Configure a HTTPS redirect
+## Configure an HTTPS redirect
 
-{{site.base_gateway}} handles HTTPS redirects by automatically issuing redirects to requests whose characteristics match a HTTPS-only route except for the protocol. For example, with a {{site.base_gateway}} Route like the following:
+{{site.base_gateway}} handles HTTPS redirects by automatically issuing redirects to requests whose characteristics match an HTTPS-only route except for the protocol. For example, with a {{site.base_gateway}} Route like the following:
 
 ```json
 { "protocols": ["https"], "hosts": ["{{ demo_domain }}"],
@@ -114,7 +114,7 @@ kubectl annotate -n kong ingress echo konghq.com/https-redirect-status-code="301
 ## Validate your configuration
 
 With the redirect configuration in place, HTTP requests now receive a redirect rather than being proxied upstream:
-1. Send a HTTP request:
+1. Send an HTTP request:
     ```bash
     curl -ksvo /dev/null http://{{ demo_domain }}/echo --resolve {{ demo_domain }}:80:$PROXY_IP 2>&1 | grep -i http
     ```

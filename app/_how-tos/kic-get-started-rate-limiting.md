@@ -1,7 +1,7 @@
 ---
 title: Rate Limiting
 description: |
-  Add rate limiting to a HTTPRoute or Ingress using the KongPlugin resource
+  Add rate limiting to an HTTPRoute or Ingress using the KongPlugin resource
 content_type: how_to
 
 permalink: /kubernetes-ingress-controller/get-started/rate-limiting/
@@ -15,7 +15,7 @@ series:
   position: 3
 
 tldr:
-  q: How to I rate limit a HTTPRoute or Ingress with {{ site.kic_product_name }}?
+  q: How to I rate limit an HTTPRoute or Ingress with {{ site.kic_product_name }}?
   a: |
     Create a `KongPlugin` resource containing a `rate-limiting` configuration. Set `config.minute` to the number of requests allowed per minute.
 

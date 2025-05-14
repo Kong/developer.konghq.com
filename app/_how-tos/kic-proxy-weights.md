@@ -43,7 +43,7 @@ Deploy the Services and create routing resources:
 kubectl apply -f {{ site.links.web }}/manifests/kic/echo-services.yaml -n kong
 ```
 
-## Create a HTTPRoute
+## Create an HTTPRoute
 
 To route HTTP traffic, create an `HTTPRoute` resource pointing at your Kubernetes `Service`:
 

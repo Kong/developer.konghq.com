@@ -55,7 +55,7 @@ spec:
 ' | kubectl apply -f -
 ```
 
-## Create a HTTPRoute
+## Create an HTTPRoute
 
 To route HTTP traffic, you need to create an `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`.
 
