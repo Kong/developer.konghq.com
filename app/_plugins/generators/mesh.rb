@@ -5,6 +5,8 @@ module Jekyll
     priority :high
 
     def generate(site)
+      return if site.config.dig('skip', 'mesh')
+
       site.data.dig('kuma_to_mesh', 'config').fetch('pages', []).each do |page_config|
         page = KumatoMesh::Page.new(site:, page_config:).to_jekyll_page
         KumatoMesh::Converter.new(page).process

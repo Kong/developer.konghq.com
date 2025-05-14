@@ -5,6 +5,8 @@ module Jekyll
     priority :low
 
     def generate(site)
+      return if site.config.dig('skip', 'indices')
+
       site.data['indices'] = {}
       Dir.glob(File.join(site.source, '_indices/**/*.yaml')).each do |file|
         index = YAML.load_file(file)

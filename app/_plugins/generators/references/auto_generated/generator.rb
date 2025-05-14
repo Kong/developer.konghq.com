@@ -15,6 +15,8 @@ module Jekyll
         end
 
         def run
+          return if @site.config.dig('skip', 'auto_generated')
+
           generate_pages!
           generate_canonicals!
           set_release_info!
