@@ -74,7 +74,7 @@ rows:
             config:
               title: About AI Gateway
               description: |
-                Learn about AI Gateway.
+                Learn more about capabilities of AI Gateway.
               icon: /assets/icons/ai.svg
               cta:
                 url: /ai-gateway/
