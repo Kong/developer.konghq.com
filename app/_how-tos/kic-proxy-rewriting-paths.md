@@ -80,7 +80,7 @@ Up to nine capture groups are supported using the `konghq.com/rewrite` annotatio
 
 ## Validate your configuration
 
-To validate that your rewrite is working, make a HTTP request to `/external-path/123`:
+To validate that your rewrite is working, make an HTTP request to `/external-path/123`:
 
 {% validation request-check %}
 url: /external-path/123

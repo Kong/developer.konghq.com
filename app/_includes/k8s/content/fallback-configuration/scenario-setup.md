@@ -93,7 +93,7 @@ At this point we can validate that our Routes are working as expected.
 
 ### Route A
 
-`route-a` is accessible without any authentication and will return a `HTTP 200`:
+`route-a` is accessible without any authentication and will return an `HTTP 200`:
 
 {% validation request-check %}
 url: /route-a

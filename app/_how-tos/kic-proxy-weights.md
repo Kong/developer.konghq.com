@@ -20,7 +20,7 @@ entities: []
 
 tldr:
   q: How do I route HTTP traffic with a custom weight per backend using {{ site.kic_product_name }}?
-  a: Create a `HTTPRoute` resource, and specify a `weight` property under `spec.rules[*].backendRefs[*].weight` to route traffic to specific backends.
+  a: Create an `HTTPRoute` resource, and specify a `weight` property under `spec.rules[*].backendRefs[*].weight` to route traffic to specific backends.
 
 prereqs:
   kubernetes:
@@ -43,9 +43,9 @@ Deploy the Services and create routing resources:
 kubectl apply -f {{ site.links.web }}/manifests/kic/echo-services.yaml -n kong
 ```
 
-## Create a HTTPRoute
+## Create an HTTPRoute
 
-To route HTTP traffic, create a `HTTPRoute` resource pointing at your Kubernetes `Service`:
+To route HTTP traffic, create an `HTTPRoute` resource pointing at your Kubernetes `Service`:
 
 ```bash
 echo 'apiVersion: gateway.networking.k8s.io/v1

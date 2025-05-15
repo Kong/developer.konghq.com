@@ -168,7 +168,7 @@ konnect_url: $PROXY_IP
     Via: kong/{{ site.data.gateway_latest.release }}
     ```
 
-1. Make a request to `/status/200` and note that {{ site.base_gateway }} returns a `HTTP 503`:
+1. Make a request to `/status/200` and note that {{ site.base_gateway }} returns an `HTTP 503`:
 
 {% validation request-check %}
 url: /httpbin/status/200

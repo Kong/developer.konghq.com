@@ -48,7 +48,7 @@ If a validation fails, a `400 Bad Request` response is returned.
 
 ## Content-Type validation
 
-The request `Content-Type` header is validated against the plugin's [`config.allowed_content_types`](./reference/#schema--config-allowed-content-types) setting. If the `Content-Type` is not listed, the request will be rejected, and return a `HTTP/400` error: `{"message":"specified Content-Type is not allowed"}`.
+The request `Content-Type` header is validated against the plugin's [`config.allowed_content_types`](./reference/#schema--config-allowed-content-types) setting. If the `Content-Type` is not listed, the request will be rejected, and return an `HTTP/400` error: `{"message":"specified Content-Type is not allowed"}`.
 
 The parameter is strictly validated, which means a request with a parameter (for example, `application/json; charset=UTF-8`) is NOT considered valid for one without the same parameter (for example, `application/json`). The type, subtype, parameter names, and the value of the charset parameter are not case sensitive based on the RFC explanation.
 
