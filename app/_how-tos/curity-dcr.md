@@ -12,7 +12,8 @@ products:
 
 works_on:
     - konnect
-
+beta: true
+automated_tests: false
 entities: []
 
 tags:
@@ -42,7 +43,17 @@ prereqs:
     - title: Curity
       include_content: prereqs/curity
       icon_url: /assets/icons/okta.svg
-
+related_resources:
+  - text: Application registration
+    url: /dev-portal/application-registration/
+  - text: About Dev Portal Dynamic Client Registration
+    url: /dev-portal/dynamic-client-registration/
+  - text: About Dev Portal OIDC authentication
+    url: /dev-portal/auth-strategies/#dev-portal-oidc-authentication
+  - text: Application authentication strategies
+    url: /dev-portal/auth-strategies/
+  - text: Dev Portal developer sign-up
+    url: /dev-portal/developer-signup/
 cleanup:
   inline:
     - title: Clean up {{site.konnect_short_name}} environment
@@ -121,122 +132,33 @@ After configuring Curity, you can integrate it with the Dev Portal for Dynamic C
 
 This tutorial uses the {{site.konnect_short_name}} UI to configure DCR, but you can also use the [Application Registration API](/api/konnect/application-auth-strategies/v2/#/operations/).
 
-1. Sign in to {{site.konnect_short_name}}, then select **Dev Portal** from the menu.
+1. Log in to {{site.konnect_short_name}} and select [Dev Portal](https://cloud.konghq.com/portals/) from the menu.
 
-2. Navigate to **Application Auth** to access the authentication settings for your API Products.
+2. Navigate to [**Application Auth**](https://cloud.konghq.com/portals/application-auth) to see the authentication strategies for your API Products.
 
-3. Open the **DCR Providers** to view all configured DCR Providers
+3. Click the **DCR Providers** tab to see all existing DCR providers.
 
-4. Select **New DCR Provider** button to create a Curity configuration. Provide a name for internal use within {{site.konnect_short_name}}. The name and provider type information will not be exposed to Dev Portal developers.
+4. Click [**New DCR Provider**](https://cloud.konghq.com/portals/application-auth/dcr-provider/create) to create a new Curity configuration:
+   1. Enter a name for internal reference within {{site.konnect_short_name}}. This name and the provider type won't be visible to developers on the Dev Portal.
+   1. Enter the **Issuer URL** of your Curity authorization server, formatted as `https://CURITY_INSTANCE_DOMAIN/oauth/v2/oauth-anonymous/.well-known/openid-configuration`.
+   1. Select Curity as the **Provider Type**. 
+   1. Enter the **Client ID** of the admin client created in Curity above into the **Initial Client ID** field. Then, enter the saved **Client Secret** into the **Initial Client Secret** field.
+      {:.info}
+      > **Note:**The Initial Client Secret will be stored in isolated, encrypted storage and will not be accessible through any Konnect API.
+   1. Save your DCR provider. You should now see it in the list of DCR providers.
 
-5. Enter the **Issuer URL** of your Curity authorization server, formatted as `https://CURITY_INSTANCE_DOMAIN/oauth/v2/oauth-anonymous/.well-known/openid-configuration`.
+7. Navigate to the **Auth Strategy** tab, then click [**New Auth Strategy**](https://cloud.konghq.com/portals/application-auth/auth-strategy/create) to create an auth strategy that uses the DCR provider:
 
-6. Select Curity as the **Provider Type**.
+   1. Provide a name for internal use within {{site.konnect_short_name}} and a display name for visibility on your Portal.
+   1. In the **Auth Type** dropdown menu select DCR. 
+   1. In the **DCR Provider** dropdown, select the name of the DCR provider config you just created. Your **Issuer URL** will be prepopulated with the Issuer URL you added to the DCR provider.
+   1. If you are using the Curity configuration described in the previous sections, enter the `sub` into the **Claims** field and leave the **Scopes** field empty. If you configured Curity differently, then ensure you add the correct **Scopes** and **Claims**.
 
-7. Enter the **Client ID** of the admin client created in Curity above into the **Initial Client ID** field. Then, enter the saved **Client Secret** into the **Initial Client Secret** field.
+      {:.info}
+      > **Note:**  Avoid using the `openid` scope with client credentials as it restricts the use. If no scopes are specified, `openid` will be the default.
 
-    {:.note}
-    > **Note:**The Initial Client Secret will be stored in isolated, encrypted storage and will not be accessible through any Konnect API.
+   1. Select the relevant **Auth Methods** you need (`client_credentials`, `bearer`, `session`), and click **Save**.
 
-8. Save your DCR Provider. You should now see it in the list of DCR providers.
+## Validate
 
-9. Click the **Auth Strategy** tab to see all your Auth Strategies. Select **New Auth Strategy** to create an auth strategy that uses the DCR Provider you created.
-
-10. Enter a name for internal use in {{site.konnect_short_name}} and a display name that will be displayed the portal. In the **Auth Type** dropdown menu select DCR. In the **DCR Provider** dropdown, select the name of the DCR Provider config you created. Your **Issuer URL** will be prepopulated with the issuer URL you added to the DCR Provider.
-
-11. If you are using the Curity configuration described in the previous sections, enter the `sub` into the **Claims** field and leave the **Scopes** field empty. If you configured Curity differently, then ensure you add the correct **Scopes** and **Claims**.
-
-12. Select the relevant **Auth Methods** you require (`client_credentials`, `bearer`, `session`) and **Save**.  
-
-{% endnavtab %}
-{% navtab API %}
-After configuring Curity, you can integrate it with the Dev Portal for Dynamic Client Registration (DCR). This process involves two steps: creating the DCR provider and configuring the authentication strategy. DCR providers are reusable configurations, meaning once you've set up the Curity DCR provider, it can be used across multiple authentication strategies without needing to be reconfigured.
-
-1. Start by creating the DCR provider. Send a `POST` request to the [`dcr-providers`](/konnect/api/application-auth-strategies/latest/#/DCR%20Providers/create-dcr-provider) endpoint with your DCR configuration details:
-
-```sh
-curl --request POST \
-  --url https://us.api.konghq.com/v2/dcr-providers \
-  --header 'Authorization: $KPAT' \
-  --header 'content-type: application/json' \
-  --data '{
-  "name": "DCR Curity",
-  "provider_type": "Curity",
-  "issuer": "https://CURITY_INSTANCE_DOMAIN/oauth/v2/oauth-anonymous/.well-known/openid-configuration",
-  "dcr_config": {
-    "dcr_token": "my_dcr_token"
-  }'
-```
-
-You will receive a response that includes a `dcr_provider` object similar to the following:
-
-   ```sh
-   "dcr_provider": {
-   "id": "33f8380e-7798-4566-99e3-2edf2b57d289",
-   "name": "DCR Curity",
-   "display_name": "Credentials",
-   "provider_type": "Curity"
-   }
-   ```
-
-Save the `id` value for creating the authentication strategy.
-
-2. With the `dcr_id` obtained from the first step, create an authentication strategy. Sen a `POST` request to the [`create-auth-strategies`](/konnect/api/application-auth-strategies/latest/#/App%20Auth%20Strategies/create-app-auth-strategy) endpoint describing an authentication strategy:
-
-   ```sh
-   curl --request POST \
-   --url https://us.api.konghq.com/v2/application-auth-strategies \
-   --header 'Authorization: $KPAT' \
-   --header 'content-type: application/json' \
-   --data '{
-   "name": "Curity auth strategy",
-   "display_name": "Curity",
-   "strategy_type": "Curity",
-   "configs": {
-      "openid-connect": {
-         "issuer": "https://my-issuer.auth0.com/api/v2/",
-         "credential_claim": [
-         "client_id"
-         ],
-         "scopes": [
-         "openid",
-         "email"
-         ],
-         "auth_methods": [
-         "client_credentials",
-         "bearer"
-         ]
-      }
-   },
-   "dcr_provider_id": "93f8380e-7798-4566-99e3-2edf2b57d289"
-   }'
-
-   ```
-
-{% endnavtab %}
-{% endnavtabs %}
-
-## Create an application with DCR
-
-From the **My Apps** page in the Dev Portal, follow these instructions:
-
-1. Click **New App**.
-
-2. Fill out the **Create New Application** form with your application name, authentication strategy, and description.
-
-3. Click **Create** to save your application.
-
-4. After your application is created, you will see the **Client ID** and **Client Secret**.
-   Store these values, they will only be shown once.
-
-5. Click **Proceed** to continue to the application's details page.
-
-For developers to authorize requests, they must attach the client ID and secret pair obtained previously in the header. They can do this by using any API product, such as [Insomnia](https://insomnia.rest/), or directly using the command line:
-
-{% validation request-check %}
-url: '/$ROUTE_PATH'
-headers:
-  - 'Authorization: Basic $CLIENT_ID:$CLIENT_SECRET'
-  - 'Content-Type: application/json'
-status_code: 200
-{% endvalidation %}
+{% include konnect/dcr-validate.md %}

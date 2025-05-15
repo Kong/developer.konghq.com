@@ -29,6 +29,12 @@ related_resources:
     url: /dev-portal/sso/
   - text: Application registration
     url: /dev-portal/application-registration/
+  - text: About Dev Portal Dynamic Client Registration
+    url: /dev-portal/dynamic-client-registration/
+  - text: About OIDC Dynamic Client Registration
+    url: https://openid.net/specs/openid-connect-registration-1_0.html
+  - text: Dev Portal developer sign-up
+    url: /dev-portal/developer-signup/
 ---
 
 Dev Portal application authentication strategies determine which developers can access which APIs. 
@@ -83,7 +89,42 @@ To create an additional key auth strategy:
 1. Select **Key auth** as the auth type.
 1. Click **Save**.
 
-## Configure OIDC
+## Dev Portal OIDC authentication
+
+OpenID Connect (OIDC) is an open authentication protocol that lets users sign in to multiple sites using one set of credentials. Using the OIDC authentication strategy allows developers visiting your Dev Portal to authenticate using OIDC.
+
+There are two ways to use OIDC with the Dev Portal:
+- [Linking static clients (Self-managed OIDC)](#link-static-clients-with-self-managed-oidc): Developers bring their own pre-registered application from the IdP and manually link the client ID to their Portal application.
+- [Dynamic Client Registration (DCR)](/dev-portal/dynamic-client-registration/): The Dev Portal automatically creates and manages applications in the IdP as developers need them.
+
+The following table compares the two Dev Portal OIDC methods:
+<!--vale off-->
+{% table %}
+columns:
+  - title: Feature
+    key: feature
+  - title: Self-managed OIDC (Static)
+    key: static-oidc
+  - title: DCR OIDC (Dynamic)
+    key: dynamic-oidc
+rows:
+  - feature: "App creation in IdP"
+    static-oidc: "Manual by developer"
+    dynamic-oidc: "Automated by Dev Portal"
+  - feature: "Client ID management"
+    static-oidc: "Manual"
+    dynamic-oidc: "Automated"
+  - feature: "Use case"
+    static-oidc: "Full developer control"
+    dynamic-oidc: "Streamlined onboarding"
+  - feature: "IdP support required"
+    static-oidc: "Any OIDC IdP"
+    dynamic-oidc: "IdP must support DCR"
+{% endtable %}
+<!--vale on-->
+
+
+### Configure OIDC in Dev Portal
 
 If you don't have an OIDC auth strategy set up, follow these steps to create one:
 
@@ -144,3 +185,21 @@ rows:
       *Default: disabled*
     required: "**False**"
 {% endtable %}
+
+### Link static clients with self-managed OIDC 
+
+With this model, developers bring their own pre-registered application from the IdP and manually link the client ID to their Portal application. You should use this model if:
+- You want developers to have full control over their IdP applications.
+- Your IdP doesn't support DCR, or you do not want to enable it.
+- You require manual review or approval of all IdP applications.
+
+Self-managed OIDC follows this workflow:
+
+1. Developer registers an application directly in the IdP (such as Okta, Auth0, Azure, etc.).
+2. Developer copies the client ID (and secret, if needed).
+3. Developer creates or links an application in the Dev Portal, providing the client ID.
+4. The Dev Portal uses the provided client ID for OIDC authentication.
+
+{:.info}
+> **Note:** The Dev Portal doesn't create or manage IdP applications in this model. All application management is manual and handled by the developer or IdP admin.
+
