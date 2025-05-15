@@ -46,18 +46,67 @@ Roles and permissions are administered using the {{site.base_gateway}} RBAC enti
 
 RBAC in {{site.base_gateway}} conforms to the following core principles: 
 
-* In {{site.base_gateway}} there are Users
-* Every user has a Role
-* Roles are assigned Permissions
-* A Group is a collection of Roles
+* In {{site.base_gateway}} there are users
+* Every user has a role
+* Roles are assigned permissions
+* A group is a collection of roles
 
 {{site.base_gateway}} uses a [precedence model](#rbac-precedence-order), from most specificity to least specificity, to determine if a user has access to an endpoint.
 
-## What are permissions?
+## Users, roles, and permissions
 
 Each role may have a number of permissions that determine its ability to interact with a resource. The RBAC system provides a level of granularity that works by assigning actions on a per-resource level using the principle of least privilege. This means that a user can have **read** permissions on `/foo/bar` and **write** permissions on `/foo/bar/far`. 
 
-{% include entities/permissions-table.md %}
+### User types in {{site.base_gateway}}
+
+{{site.base_gateway}} has the following RBAC user types:
+
+{% table %}
+columns:
+  - title: User type
+    key: user
+  - title: Purpose
+    key: purpose
+  - title: Most useful for
+    key: use
+  - title: What tools does it have access to?
+    key: tools
+rows:
+  - user: Admin
+    purpose: |
+      An admin belongs to a Workspace and has at least one role with a set of permissions. If an admin is in a Workspace without a role, they can’t see or interact with anything. 
+      <br><br>
+      Admins can manage entities inside Workspaces, including users and their roles.
+    use: "Personal administrative accounts for {{site.base_gateway}} and Kong Manager"
+    tools: |
+      * Admin API
+      * Kong Manager
+      * decK
+  - user: Super admin
+    purpose: | 
+      Specialized admins with the ability to:
+      <br><br>
+      * Manage all Workspaces
+      * Further customize permissions
+      * Create entirely new roles
+      * Invite or deactivate admins
+      * Assign or revoke admin roles
+    use: Managing RBAC
+    tools: |
+      * Admin API
+      * Kong Manager
+      * decK
+  - user: User
+    purpose: |
+      RBAC users without administrator permissions. 
+      They have access to manage Kong Gateway, but can’t adjust teams, groups, or user permissions.
+    use: "Service accounts for {{site.base_gateway}}, used as part of an automated process"
+    tools: |
+      * Admin API
+      * decK
+{% endtable %}
+
+{% include_cached entities/permissions-table.md %}
 
 ## RBAC precedence order
 
@@ -71,6 +120,46 @@ For each request, {{site.base_gateway}} checks for an RBAC rule assigned to the 
 4. Wildcard allow or deny permissions against any endpoint in any Workspace. 
 
 If {{site.base_gateway}} finds a matching permission for the current user, endpoint, or Workspace, it allows or denies the request based on it. Once {{site.base_gateway}} finds an applicable rule, the algorithm stops and doesn't check less specific permissions. If no permission is found (approval or denial), the request is denied. 
+
+### Wildcards in endpoint permissions
+
+To create an endpoint permission via `/rbac/roles/:role/endpoints`, 
+you must pass the parameters below, all of which can be replaced by a `*` character:
+
+* `endpoint`: `*` matches **any endpoint**
+* `workspace`: `*` matches **any workspace**
+* `actions`: `*` evaluates to **all actions—read, update, create, delete**
+
+`endpoint`, in addition to a single `*`, also accepts `*`
+within the endpoint itself, replacing a URL segment between `/`. For example,
+all of the following are valid endpoints:
+
+- `/rbac/*`: where `*` replaces any possible segment, for example `/rbac/users` 
+and `/rbac/roles`
+- `/services/*/plugins`: `*` matches any service name or ID
+
+{:.info}
+> **Note** `*` **is not** a generic, shell-like, glob pattern.
+> Therefore, `/rbac/*` or `/workspaces/*` alone don't match all of the RBAC and Workspaces endpoints. 
+> <br><br>
+> For example, to cover all of the RBAC API, you would have to define permissions for the following endpoints:
+>
+> - `/rbac/*`
+> - `/rbac/*/*`
+> - `/rbac/*/*/*`
+> - `/rbac/*/*/*/*`
+> - `/rbac/*/*/*/*/*`
+
+If `workspace` is omitted, it defaults to the current request's workspace. For
+example, a role-endpoint permission created with `/teamA/roles/admin/endpoints`
+is scoped to workspace `teamA`.
+
+#### Wildcards in entity permissions
+
+For entity permissions created via `/rbac/roles/:role/entities`,
+the following parameter accepts a `*` character:
+
+- `entity_id`: `*` matches **any entity ID**
 
 ## Role configuration
 
@@ -158,7 +247,6 @@ features:
       The ID of the entity associated with the RBAC role. For example: The role developer has one `role_entity` attached to a UUID. 
 
 {% endfeature_table %}
-
 
 
 ## Enable RBAC
