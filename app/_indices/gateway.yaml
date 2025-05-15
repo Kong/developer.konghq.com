@@ -75,7 +75,7 @@ sections:
       description: Stream custom plugins from the Control Plane to the Data Plane. 
       url: /dedicated-cloud-gateways/reference/#custom-plugins
     - title: Supported geos
-      description: Supported geos for Dedicated Cloud Gateways
+      description: Supported geos for Dedicated Cloud Gateways.
       url: /konnect-platform/geos/#dedicated-cloud-gateways
     - title: Upgrade Data Planes
       description: Upgrade Data Plane nodes in a Dedicated Cloud Gateway.
