@@ -1,4 +1,4 @@
-description: Set up the plugin to invoke an Azure function located in the `azurewebsites.net` domain.
+description: Set up the plugin to invoke an Azure function located in a custom domain.
 
 title: Invoke an Azure function
 

@@ -1,5 +1,5 @@
 description: |
-  Configure the plugin with a template and block any requests that don't include a template.
+  Configure the AI Prompt Template plugin with a template and block any requests that don't include a template.
 
 title: 'Block untemplated requests'
 

@@ -1,4 +1,5 @@
-description: |
+description: Modify GraphQL rate limiting costs using a score factor.
+extended_description: |
   GraphQL query cost depends on multiple factors, based on {{site.base_gateway}}'s resolvers and the implementation of the schema. 
   Depending on the cost strategy, individual query costs could become high when using quantifiers, or very low with no quantifiers at all. 
   By using `config.score_factor`, the cost can be divided or multiplied to a certain order of magnitude.

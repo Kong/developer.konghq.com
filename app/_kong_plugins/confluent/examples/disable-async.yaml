@@ -1,4 +1,5 @@
-description: 'Streams data to Confluent Cloud, but disables [asynchronous events](https://developer.confluent.io/courses/microservices/asynchronous-events/).'
+description: 'Streams data to Confluent Cloud, but disables asynchronous events.'
+extended_description: 'Streams data to Confluent Cloud, but disables [asynchronous events](https://developer.confluent.io/courses/microservices/asynchronous-events/).'
 
 title: 'Disable asynchronous events'
 

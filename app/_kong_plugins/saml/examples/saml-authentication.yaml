@@ -1,5 +1,7 @@
 description: |
   Configure the plugin to enable SAML authentication using an anonymous Consumer.
+extended_description: |
+  Configure the plugin to enable SAML authentication using an anonymous Consumer.
 
   For a full how-to guide, see [Enable SAML authentication for {{site.base_gateway}} using Microsoft Entra](/how-to/enable-saml-authentication-with-microsoft-entra/).
 

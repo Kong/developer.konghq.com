@@ -1,5 +1,8 @@
 description: |
-  Configure the plugin to rewrite the request path before proxying it to the upstream app/serverless-gateways/index.md:
+  Configure the plugin to rewrite the request path before proxying it to the upstream.
+  
+extended_description: |
+  Configure the plugin to rewrite the request path before proxying it to the upstream.
   
   This example uses the first capture group from your route in the upstream URL.
 

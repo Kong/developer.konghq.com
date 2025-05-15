@@ -1,4 +1,6 @@
 description: |
+  Configure the Zipkin plugin to extract, clear, and inject tracing context. 
+extended_description: |
   Configure the Zipkin plugin to extract, clear, and inject the following:
   * Extract the tracing context using order of precedence: `w3c` > `b3` > `jaeger` > `ot` > `aws` > `datadog`
   * Clear `b3` and `uber-trace-id` headers after extraction, if present in the request
@@ -7,14 +9,6 @@ description: |
 title: 'Extract, clear, and inject'
 
 weight: 900
-
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
 
 config:
   propagation:	

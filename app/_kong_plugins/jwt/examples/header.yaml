@@ -1,4 +1,4 @@
-description: "Allows you to include the JWT in a request to {{site.base_gateway}} in the `Authorization` header."
+description: "Allows you to include the JWT in a request to {{site.base_gateway}} in the Authorization header."
 
 title: 'Include in header'
 

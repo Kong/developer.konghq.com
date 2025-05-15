@@ -4,14 +4,6 @@ title: 'Generate a single UUID on a per-worker basis'
 
 weight: 900
 
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
-
 variables:
   header_name:
     description: |

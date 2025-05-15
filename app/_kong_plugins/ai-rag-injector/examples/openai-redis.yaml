@@ -1,4 +1,4 @@
-description: Configure the plugin to inject content to use Redis as vector database and the OpenAI `text-embedding-3-large` model for embedding.
+description: Configure the AI RAG Injector plugin to inject content to use Redis as vector database and the OpenAI text-embedding-3-large model for embedding.
 
 title: RAG injection with OpenAI and Redis
 
