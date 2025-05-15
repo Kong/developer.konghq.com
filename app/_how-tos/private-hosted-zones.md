@@ -102,7 +102,3 @@ body:
 ## Validate
 
 After a few moments, your private hosted zone will be associated with the Dedicated Cloud Gateway VPC and ​​you can now resolve `*.prod.internal` over the VPC peering or a Transit Gateway connection.
-
-extra http
-an HTTP
-a http
