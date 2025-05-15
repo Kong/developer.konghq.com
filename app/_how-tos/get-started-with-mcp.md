@@ -1,0 +1,315 @@
+---
+title: Get started with MCP Gateway
+content_type: how_to
+description: Learn how to quickly get started with AI Gateway
+products:
+    - ai-gateway
+    - gateway
+
+works_on:
+    - konnect
+
+plugins:
+  - ai-proxy
+
+entities:
+  - plugin
+
+tags:
+    - get-started
+    - ai
+
+tldr:
+  q: What is MCP Gateway, and how can I get started with it?
+  a: |
+
+    With Kong's Model Context Protocol (MCP) Gateway, you can enable AI assistants like Claude or Cursor to interact directly with Kong Konnect’s API Gateway. This integration allows you to query analytics data, inspect configuration details, and manage control planes—all through natural language conversation.
+
+    This tutorial will help you get started with MCP by connecting an AI assistant to Kong Konnect.
+
+    {:.info}
+    > This quickstart is intended for experimentation with AI-assisted API management. For deploying Konnect in production, refer to the [Install Konnect](/konnect/install/) guide.
+
+
+tools:
+    - deck
+
+prereqs:
+  inline:
+    - title: OpenAI
+      content: |
+        This tutorial uses the AI Proxy plugin with OpenAI. You'll need to [create an OpenAI account](https://auth.openai.com/create-account) and [get an API key](https://platform.openai.com/api-keys). Once you have your API key, create an environment variable:
+
+        ```sh
+        export OPENAI_KEY='<api-key>'
+        ```
+      icon_url: /assets/icons/openai.svg
+    - title: Claude account and Claude desktop
+      content: |
+        To complete this tutorial, you'll need to have [Claude](https://claude.ai) account and [Claude desktop](https://claude.ai/download).
+      icon_url: /assets/icons/third-party/claude.svg
+    - title: Node.js
+      content: |
+        To use [Kong MCP Gateway](https://github.com/Kong/mcp-konnect), you'll need Node.js version `≥20.0`. Run `node --version` in your terminal to check your installed version.
+      icon_url: /assets/icons/gateway.svg
+cleanup:
+  inline:
+    - title: Clean up Konnect environment
+      include_content: cleanup/platform/konnect
+      icon_url: /assets/icons/gateway.svg
+    - title: Destroy the {{site.base_gateway}} container
+      include_content: cleanup/products/gateway
+      icon_url: /assets/icons/gateway.svg
+
+min_version:
+    gateway: '3.6'
+
+next_steps:
+  - text: Set up load balancing using AI Proxy Advanced plugin
+    url: /plugins/ai-proxy-advanced/
+  - text: Cache traffic using the AI Semantic cache plugin
+    url: /plugins/ai-semantic-cache/
+  - text: Secure traffic with the AI Prompt Guard
+    url: /plugins/ai-prompt-guard/
+  - text: Learn about all the AI plugins
+    url: /plugins/?category=ai
+
+faqs:
+  - q: Why am I getting a connection error?
+    a: |
+      * **Verify your API key** is valid and has the necessary permissions.
+      * **Check the API region** is correctly specified (`KONNECT_REGION`).
+      * **Ensure network access** to the Kong Konnect API is not blocked by a firewall or proxy.
+
+  - q: Why am I seeing authentication errors?
+    a: |
+      * **Regenerate your API key** from the Kong Konnect portal if it's expired or revoked.
+      * **Confirm environment variables** like `KONNECT_ACCESS_TOKEN` are set and available to the process.
+
+  - q: Why is my data not found?
+    a: |
+      * **Check resource IDs** used in your request (e.g., control plane or service IDs).
+      * **Ensure the resources exist** in the correct control plane and region.
+      * **Validate time ranges** used in analytics queries to ensure they cover a period with data.
+
+automated_tests: false
+---
+
+## Check that {{site.base_gateway}} is running
+
+{% include how-tos/steps/ping-gateway.md %}
+
+## Configure Kong MCP Server
+
+To get started with Kong MCP server, first clone the repository and install dependencies.
+
+1. Clone the repository
+
+    ```bash
+    git clone https://github.com/Kong/mcp-konnect.git
+    cd mcp-konnect
+    ```
+2. Install Dependencies
+   Use `npm` to install the required packages:
+
+    ```bash
+    npm install
+    ```
+
+3. Build the Project
+   Compile the MCP server:
+
+    ```bash
+    npm run build
+    ```
+
+## Configure environment variables
+
+Before running the MCP server, set the required environment variables to connect to your Kong Konnect account.
+
+```bash
+# Required: Your Kong Konnect API key
+export KONNECT_ACCESS_TOKEN=kpat_api_key_here
+
+# Optional: The API region to use (defaults to US)
+# Possible values: US, EU, AU, ME, IN
+export KONNECT_REGION=us
+```
+
+## Configure Claude Desktop
+
+Claude uses a configuration file to register custom MCP servers. You’ll need to create or edit this file based on your operating system:
+
+* **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+* **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+Now, add the following configuration to the file:
+
+```json
+{
+  "mcpServers": {
+    "kong-konnect": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/mcp-konnect/build/index.js"
+      ],
+      "env": {
+        "KONNECT_ACCESS_TOKEN": "kpat_api_key_here",
+        "KONNECT_REGION": "us"
+      }
+    }
+  }
+}
+```
+
+{:.warning}
+> Replace `/absolute/path/to/mcp-konnect/build/index.js` with the full path to your local MCP server build.
+> Make sure the `KONNECT_ACCESS_TOKEN` matches the one you set earlier.
+
+## Restart Claude desktop
+
+After saving the `claude_desktop_config.json` file, restart Claude for Desktop. The Kong Konnect tools will now be available for Claude to use in conversation.
+
+
+## Analyze API traffic using Claude and Kong MCP Server
+
+### Step 1: List All Control Planes
+
+{% navtabs "list-all-control-planes" %}
+{% navtab "Prompt" %}
+
+Use this prompt to retrieve all control planes in your Kong Konnect organization:
+
+```text
+List all control planes in my Kong Konnect organization.
+```
+{% endnavtab %}
+{% navtab "MCP Server Response" %}
+
+The following is a sample response from Kong MCP Server:
+
+```json
+{
+  "metadata": {
+    "pageSize": 100,
+    "pageNumber": 1,
+    "filters": {
+      "name": null,
+      "clusterType": null,
+      "cloudGateway": null,
+      "labels": null
+    },
+    "sort": null
+  },
+  "controlPlanes": [
+    {
+      "controlPlaneId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "name": "default",
+      "description": "",
+      "labels": {},
+      "metadata": {
+        "createdAt": "2022-10-06T23:54:23.695Z",
+        "updatedAt": "2024-07-09T07:40:37.224Z"
+      }
+    }
+  ]
+}
+
+```
+{% endnavtab %}
+{% endnavtabs %}
+
+### Step 2: List Services in a Control Plane
+
+{% navtabs "list-all-services-in-control-plane" %}
+{% navtab "Prompt" %}
+
+Once you’ve identified a control plane, ask Claude to list its services:
+
+```text
+
+List all services for control plane [CONTROL_PLANE_NAME or ID].
+```
+{% endnavtab %}
+{% navtab "MCP Server Response" %}
+
+```json
+{
+  "metadata": {
+    "controlPlaneId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "size": 50,
+    "offset": null
+  },
+  "services": [
+    {
+      "serviceId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+      "name": "AIManagerModelService_1747139045696",
+      "host": "localhost",
+      "port": 80,
+      "protocol": "http",
+      "retries": 5,
+      "connectTimeout": 60000,
+      "writeTimeout": 60000,
+      "readTimeout": 60000,
+      "tags": [
+        "ai-manager-created"
+      ],
+      "enabled": true,
+      "metadata": {
+        "createdAt": 1747139045,
+        "updatedAt": 1747139045
+      }
+    },
+    ...
+  ],
+  "relatedTools": [
+    "Use list-routes to find routes that point to these services",
+    "Use list-plugins to see plugins configured for these services"
+  ]
+}
+```
+
+{% endnavtab %}
+{% endnavtabs %}
+
+### Step 3: Query API Traffic for a Service
+
+To analyze traffic and detect error trends, run a query like this:
+
+```text
+Prompt:
+Show me all API requests for service [SERVICE_NAME or ID] in the last hour that had 5xx status codes.
+```
+
+## Troubleshoot consumer issues
+
+### Step 1: List consumers in a Control Plane
+
+Start by getting the list of consumers for a control plane:
+
+```text
+Prompt:
+List all consumers for control plane [CONTROL_PLANE_NAME or ID].
+```
+
+### Step 2: Analyze requests by a specific Consumer
+
+To view traffic made by a specific consumer in the last 24 hours:
+
+```text
+Prompt:
+Show me all requests made by consumer [CONSUMER_NAME or ID] in the last 24 hours.
+```
+
+### Step 3: Identify common errors for a Consumer
+
+Ask Claude to identify frequent issues experienced by that consumer:
+
+```text
+Prompt:
+What are the most common errors experienced by this consumer?
+```
+
+
+
+

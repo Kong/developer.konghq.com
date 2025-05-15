@@ -1,5 +1,5 @@
 metadata:
-  title: "Kong MCP Server"
+  title: "Kong MCP Gateway"
   content_type: landing_page
   description: This page is an introduction to MCP capabilites in Kong.
   products:
@@ -14,7 +14,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Kong MCP Server"
+      text: "Kong MCP Gateway"
       sub_text: Modernize AI Agent Infrastructure with Gateway-Driven MCP Scaling
 
   - columns:
@@ -87,7 +87,7 @@ rows:
         - type: card
           config:
             title: MCP Overview
-            description: Learn how MCP server works.
+            description: Learn how MCP Gateway works.
             icon: /assets/icons/plug.svg
             cta:
               url: /plugins/?category=ai
@@ -96,7 +96,7 @@ rows:
 
   - header:
       type: h2
-      text: "MCP Server Capabilities"
+      text: "MCP Gateway Capabilities"
     columns:
       - blocks:
           - type: structured_text
