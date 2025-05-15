@@ -35,7 +35,7 @@ rows:
       - blocks:
           - type: image
             config:
-              url: /assets/images/mesh-manager/konnect-mesh-control-plane-dashboard.png
+              url: /assets/images/konnect/ai-manager.svg
               alt_text: "AI Manager Dashboard"
 
   - header:
