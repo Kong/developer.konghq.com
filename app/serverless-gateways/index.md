@@ -194,3 +194,8 @@ body:
 {% endcontrol_plane_request %}
 <!--vale on-->
 
+## Limits
+Serverless Gateways have the following limits:
+* Request rate limit: Serverless Gateways support up to 100 requests per second (RPS) per gateway.
+* Maximum request size: Incoming requests are limited to a maximum payload size of 10MB.
+For workloads that exceed these limits, consider using [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) for higher throughput and larger request sizes.
