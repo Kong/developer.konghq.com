@@ -436,10 +436,10 @@
   dev_site_url: '/how-to/configure-datastore/'
   status: migrated
 - docs_url: "/gateway/latest/production/networking/configure-postgres-tls/"
-  dev_site_url: '/gateway/configuration/#datastore'
+  dev_site_url: '/gateway/configuration/#datastore-section'
   status: "?"
 - docs_url: "/gateway/latest/production/networking/troubleshoot-postgres-tls/"
-  dev_site_url: '/gateway/configuration/#datastore'
+  dev_site_url: '/gateway/configuration/#datastore-section'
   status: "?"
 - docs_url: "/gateway/latest/production/environment-variables/"
   dev_site_url: '/gateway/manage-kong-conf/#environment-variables'

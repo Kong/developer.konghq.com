@@ -18,7 +18,7 @@ kubectl annotate -n kong {{ source_type }} root-ca kubernetes.io/ingress.class=k
 {% if include.associate_with_service %}
 Now, associate the root CA certificate with the `Service` passing its name to `konghq.com/ca-certificates-{{ source_type }}s` annotation.
 
-{:.note}
+{:.info}
 > The `konghq.com/ca-certificates-{{ source_type }}s` annotation is a comma-separated list of `{{ kind }}`s holding CA certificates.
 > You can add multiple `{{ kind }}`s to the list.
 

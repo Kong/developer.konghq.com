@@ -960,9 +960,10 @@ components:
           type: integer
           example: 1
         max_rps:
-          description: 'Max number of requests per second that the deployment target should support. If not set, this defaults to 10x base_rps.'
+          description: 'Max number of requests per second that the deployment target should support. If not set, this defaults to 10x base_rps. This field is deprecated and shouldn''t be used in new configurations as it will be removed in a future version. max_rps is now calculated as 10x base_rps.'
           type: integer
           example: 1000
+          deprecated: true
       additionalProperties: false
       required:
         - kind
@@ -1232,6 +1233,24 @@ components:
         - terminated
       readOnly: true
       title: Network State
+    NetworkStateMetadata:
+      description: |
+        Metadata describing the backing state of the network and why it may be in an erroneous state.
+      type: object
+      properties:
+        reported_status:
+          description: Reported status of the network from backing infrastructure.
+          type: string
+          example: INVALID
+        reason:
+          description: |
+            Reason why the network may be in an erroneous state, reported from backing infrastructure.
+          type: string
+          example: |
+            Network could not be deployed due to insufficient cloud provider compute instances.
+      additionalProperties: false
+      readOnly: true
+      title: Network State Metadata
     NetworkProviderMetadata:
       description: Metadata describing attributes returned by cloud-provider for the network.
       type: object
@@ -1290,6 +1309,8 @@ components:
           $ref: '#/components/schemas/NetworkCIDRBlock'
         state:
           $ref: '#/components/schemas/NetworkState'
+        state_metadata:
+          $ref: '#/components/schemas/NetworkStateMetadata'
         provider_metadata:
           $ref: '#/components/schemas/NetworkProviderMetadata'
         transit_gateway_count:

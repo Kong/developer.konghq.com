@@ -20,7 +20,7 @@ entities: []
 
 tldr:
   q: How do I route HTTPS traffic with {{ site.kic_product_name }}?
-  a: Create a `HTTPRoute` or `Ingress` resource, which will then be converted into a [{{ site.base_gateway }} Service](/gateway/entities/service/) and [Route](/gateway/entities/route/). Specify a Kubernetes Secret containing a TLS certificate to terminate HTTPS requests using {{ site.base_gateway }}.
+  a: Create an `HTTPRoute` or `Ingress` resource, which will then be converted into a [{{ site.base_gateway }} Service](/gateway/entities/service/) and [Route](/gateway/entities/route/). Specify a Kubernetes Secret containing a TLS certificate to terminate HTTPS requests using {{ site.base_gateway }}.
 
 prereqs:
   kubernetes:
@@ -72,9 +72,9 @@ kubectl patch -n kong --type=json gateway kong -p='[
 ]'
 ```
 
-## Create a HTTPRoute
+## Create an HTTPRoute
 
-To route HTTP traffic, you need to create a `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`.
+To route HTTP traffic, you need to create an `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`.
 
 {% include /k8s/httproute.md release=page.release path='/echo' name='echo' service='echo' port='1027' hostname='demo.example.com' section_name='https' %}
 

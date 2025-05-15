@@ -4389,6 +4389,12 @@ components:
       bearerFormat: JWT
       description: |
         The Konnect access token is meant to be used by the Konnect dashboard and the decK CLI authenticate with.
+    serviceAccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        The Service access token is meant to be used between internal services.
 tags:
   - name: Auth Settings
   - name: Invites
@@ -4407,3 +4413,4 @@ security:
   - personalAccessToken: []
   - systemAccountAccessToken: []
   - konnectAccessToken: []
+  - serviceAccessToken: []

@@ -30,7 +30,7 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
       old_id = heading['id']
 
       # Index pages have specific heading IDs to account for groups
-      unless @page_or_doc.url.include?("/index/")
+      unless heading.attr('data-skip-process-heading-id') && heading.attr('data-skip-process-heading-id') == 'true'
         heading['id'] = Jekyll::Utils.slugify(text)
       end
 

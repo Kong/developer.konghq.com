@@ -186,7 +186,7 @@ export PROXY_IP=$(kubectl get svc --namespace kong kong-gateway-proxy -o jsonpat
 curl -i $PROXY_IP
 ```
 
-You will receive a `HTTP 404` response as there are no routes configured:
+You will receive an `HTTP 404` response as there are no routes configured:
 
 ```
 HTTP/1.1 404 Not Found

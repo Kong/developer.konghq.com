@@ -83,7 +83,7 @@ data:
 
 Once the resource has been reconciled, you'll be able to call the `/echo` endpoint and {{ site.base_gateway }} will route the request to the `echo` Service.
 
-If you make a request without any authentication credentials, the request will fail with a `HTTP 302` and a redirect to the Keycloak login page:
+If you make a request without any authentication credentials, the request will fail with an `HTTP 302` and a redirect to the Keycloak login page:
 
 {% validation request-check %}
 url: /echo
