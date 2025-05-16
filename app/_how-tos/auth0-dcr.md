@@ -24,9 +24,9 @@ search_aliases:
     - OpenID Connect
 
 tldr:
-    q: placeholder
+    q: How do I automatically create and manage Dev Portal applications in Auth0?
     a: |
-      placeholder
+      You can use Dynamic Client Registration to automatically create Dev Portal applications in Auth0. First, authorize an Auth0 application so {{site.konnect_short_name}} can use the Auth0 Management API on your behalf. Next, create an API audience that {{site.konnect_short_name}} applications will be granted access to. Then, create a new DCR provider in your Dev Portal settings and create a new auth strategy for DCR.
 
 prereqs:
   skip_product: true
@@ -70,27 +70,25 @@ next_steps:
     url: /dev-portal/access-and-approval/
 ---
 
-## Configure Auth0
+## Configure access to the Auth0 Management API
 
 To use dynamic client registration (DCR) with Auth0 as the identity provider (IdP), there are two important configurations to prepare in Auth0. First, you must authorize an Auth0 application so {{site.konnect_short_name}} can use the Auth0 Management API on your behalf. Next, you will create an API audience that {{site.konnect_short_name}} applications will be granted access to.
 
-To get started configuring Auth0, log in to your Auth0 dashboard and complete the following:
-
-### Configure access to the Auth0 Management API
-
 {{site.konnect_short_name}} will use a client ID and secret from an Auth0 application that has been authorized to perform specific actions in the Auth0 Management API.
+
+To get started configuring Auth0, log in to your Auth0 dashboard and complete the following:
 
 1. From the sidebar, select **Applications > Applications**.
 
-2. Click the **Create Application** button.
+2. Click **Create Application**.
 
-3. Give the application a memorable name, like "{{site.konnect_short_name}} Portal DCR Admin."
+3. Give the application a memorable name, like "{{site.konnect_short_name}} Portal DCR Admin".
 
 4. Select the application type **Machine to Machine Applications** and click **create**.
 
 5. Authorize the application to access the Auth0 Management API by selecting it from the dropdown. Its URL will follow the pattern: `https://AUTH0_TENANT_SUBDOMAIN.REGION.auth0.com/api/v2/`.
 
-6. In the **Permissions** section, select the following permissions to grant access, then click **Authorize**.
+6. In the **Permissions** section, select the following permissions to grant access, then click **Authorize**:
    * `read:client_grants`
    * `create:client_grants`
    * `delete:client_grants`
@@ -101,18 +99,17 @@ To get started configuring Auth0, log in to your Auth0 dashboard and complete th
    * `update:clients`
    * `update:client_keys`
   
-   {:.note}
+   {:.info}
    > **Note:** If you’re using Developer Managed Scopes, add `read:resource_servers` to the permissions for your initial client application.
 
-7. On the application's **Settings** tab, locate the values for **Client ID** and **Client Secret** – you will need them in a later step.
+7. On the application's **Settings** tab, locate the values for **Client ID** and **Client Secret**, you'll need them in a later step.
 
-### Configure the API audience
+## Configure the API audience
 
-{:.note}
-> **Note:** You can use an existing API entity if there is one already defined in Auth0 that represents the audience you are/will be serving with {{site.konnect_short_name}}  Dev Portal applications.
+You can use an existing API entity if there is one already defined in Auth0 that represents the audience you are/will be serving with {{site.konnect_short_name}}  Dev Portal applications.
 In most cases, it is a good idea to create a new API that is specific to your Konnect Portal applications.
 
-To create a new API audience:
+To create a new API audience in Auth0:
 
 1. In the sidebar, navigate to **Applications > APIs**.
 
@@ -124,7 +121,7 @@ To create a new API audience:
 
 5. Click **Create**.
 
-6. Make a note of the **Identifier** value (also known as the **Audience**); you will need it when configuring the authentication strategy in `{{site.konnect_short_name}}`.
+6. Make a note of the **Identifier** value (also known as the **Audience**), you'll need it when configuring the authentication strategy in `{{site.konnect_short_name}}`.
 
 ## Configure the Dev Portal
 
@@ -141,10 +138,11 @@ This tutorial uses the {{site.konnect_short_name}} UI to configure DCR, but you 
 4. Click [**New DCR Provider**](https://cloud.konghq.com/portals/application-auth/dcr-provider/create) to create a new Auth0 configuration:
    1. Enter a name for internal reference within {{site.konnect_short_name}}. This name and the provider type won't be visible to developers on the Dev Portal.
    1. Enter the **Issuer URL** of your Auth0 tenant, formatted as: `https://AUTH0_TENANT_SUBDOMAIN.us.auth0.com`. *Do not* include a trailing slash at the end of the URL.
+      
       {:.info}
       > **Note:** You can find the value for your `AUTH0_TENANT_SUBDOMAIN` by checking the **Tenant Name** under **Settings** > **General**.
    1. Select Auth0 as the **Provider Type**. 
-   1. Enter the **Client ID** of the previously created admin application in Auth0 into the **Initial Client ID** field. Then, enter the **Client Secret** of the same application into the **Initial Client Secret** field.
+   1. Enter the **Client ID** of the previously created admin application in Auth0 into the **Client ID** field. Then, enter the **Client Secret** of the same application into the **Initial Client Secret** field.
    1. If you're using a custom domain for Auth0, enter the audience of the initial client as the **Client Audience**. Otherwise, leave this field blank.
    1. Optional: If you're using developer-managed scopes, select the **Use Developer Managed Scopes** checkbox.
    1. Save your DCR provider. You should now see it in the list of DCR providers.
