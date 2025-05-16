@@ -7,12 +7,12 @@ description: Enable the Key Authentication plugin on a Gateway Service to requir
 related_resources:
   - text: Authentication
     url: /authentication/
-breadcrumbs: 
+breadcrumbs:
   - /gateway/authentication/
 products:
     - gateway
 
-entities: 
+entities:
   - service
   - consumer
   - route
@@ -56,7 +56,7 @@ min_version:
 
 ## Enable the Key Authentication plugin on the Service:
 
-Enable Key Auth for the Service. 
+Enable Key Auth for the Service.
 
 {% entity_examples %}
 entities:
@@ -70,8 +70,7 @@ entities:
 
 ## Create a Consumer
 
-[Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.
-he Consumer needs an API key to access any {{site.base_gateway}} Services.
+[Consumers](/gateway/entities/consumer/) let you identify the client that's interacting with {{site.base_gateway}}.The Consumer needs an API key to access any {{site.base_gateway}} Services.
 
 {% entity_examples %}
 entities:
@@ -87,11 +86,13 @@ After configuring the Key Authentication plugin, you can verify that it was conf
 
 This request should be successful:
 
+This request includes an invalid API key and should return a `400` response:
+
 {% validation request-check %}
 url: /anything
 headers:
   - 'apikey:hello_world'
-status_code: 200
+status_code: 400
 {% endvalidation %}
 
 If you send the wrong API key, the request will fail:
