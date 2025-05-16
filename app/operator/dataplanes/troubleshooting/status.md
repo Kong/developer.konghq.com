@@ -81,7 +81,7 @@ spec:
       spec:
         containers:
         - name: proxy
-          image: kong/kong-gateway:{{ site.gateway_latest.release }} ' | kubectl apply -f -
+          image: kong/kong-gateway:{{ site.data.gateway_latest.release }} ' | kubectl apply -f -
 ```
 
 To wait for the `DataPlane` to get ready, we can use the following command:
