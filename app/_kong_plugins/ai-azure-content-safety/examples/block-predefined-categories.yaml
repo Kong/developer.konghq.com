@@ -1,4 +1,7 @@
 description: |
+  Configure the AI Azure Content Safety plugin to block content matching harm categories defined by Azure.
+
+extended_description: |
   Configure the plugin to block content matching the `Hate` and `Violence` categories [defined by Azure](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories?tabs=warning).
 
 title: Block content in predefined categories

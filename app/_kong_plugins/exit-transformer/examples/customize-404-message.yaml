@@ -1,4 +1,5 @@
-description: |
+description: Configure the Exit Transformer plugin to transform 404 responses and add a custom error message.
+extended_description: |
   Configure the plugin to transform 404 responses and add a custom error message.
   See [Transform a 404 response message](/how-to/transform-a-404-response-message/) for a full how-to guide with this example.
 

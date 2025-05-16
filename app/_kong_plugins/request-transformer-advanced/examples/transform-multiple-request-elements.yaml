@@ -1,4 +1,5 @@
-description: |
+description: Configure the plugin to perform the following transformations on the request before proxying to the upstream server.
+extended_description: |
   Configure the plugin to perform the following transformations on the request before proxying to the upstream server:
   * Specify a list of allowed JSON properties
   * Remove a query parameter and add it to the JSON body instead

@@ -1,4 +1,6 @@
 description: |
+  Configure the plugin to log request counts and identify the Consumers using their Consumer ID.
+extended_description: |
   Configure the plugin to log the `request_count` metric and identify the Consumers using the `consumerid`.
 
 title: Log request count

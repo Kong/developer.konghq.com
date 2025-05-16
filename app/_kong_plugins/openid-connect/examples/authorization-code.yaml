@@ -2,6 +2,9 @@ title: Authorization code flow
 description: |
   This example configures the OpenID Connect plugin with an authorization code flow.
 
+extended_description: |
+  This example configures the OpenID Connect plugin with an authorization code flow.
+
   For a full example that shows you how to set up the authorization code flow with Keycloak, 
   see [Configure OpenID Connect with the auth code flow](/how-to/configure-oidc-with-auth-code-flow/).
 

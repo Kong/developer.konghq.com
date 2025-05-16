@@ -1,4 +1,4 @@
-description: Configure the plugin to remove a `custom_property` JSON property from the response before returning it to the client.
+description: Configure the plugin to remove a custom JSON property from the response before returning it to the client.
 
 title: Remove a JSON property
 

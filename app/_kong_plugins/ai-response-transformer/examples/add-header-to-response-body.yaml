@@ -1,4 +1,6 @@
-description: |
+description:  Configure the AI Response Transfomer plugin to use OpenAI GPT-4 to add a header to the response before returning it to the client.
+
+extended_description: |
   Configure the plugin to use OpenAI GPT-4 to add a header to the response before returning it to the client.
   See [Transform a response using OpenAI](/how-to/transform-a-response-with-ai) for a full how-to guide with this example.
 

@@ -1,5 +1,5 @@
 description: |
-  Set up the plugin to invoke a Lambda function with the `RequestResponse` invocation type.
+  Set up the plugin to invoke a Lambda function with the RequestResponse invocation type.
 
 title: RequestResponse invocation
 

@@ -1,16 +1,11 @@
-description: 'Detects denial-of-service (DoS) attacks that match Java exception messages. Uses the following regex for matching: `.*?Exception in thread.*`'
+description: 'Detects denial-of-service (DoS) attacks that match Java exception messages.'
+extended_description: |
+  Detects denial-of-service (DoS) attacks that match Java exception messages. 
+  Uses the following regex for matching: `.*?Exception in thread.*`
 
 title: 'Java exception injection'
 
 weight: 900
-
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
 
 config: 
   injection_types:

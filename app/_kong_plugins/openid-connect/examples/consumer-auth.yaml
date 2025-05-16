@@ -2,6 +2,9 @@ title: Consumer authorization
 description: |
   Configure Consumer mapping with the OpenID Connect plugin.
   
+extended_description: |
+  Configure Consumer mapping with the OpenID Connect plugin.
+  
   This example uses password authentication, but you can use any supported [authentication type](/plugins/openid-connect/reference/#schema--config-auth-methods) with Consumers.
 
   For a full example that shows you how to set up the OpenID Connect plugin to map Consumers to IdP users, 

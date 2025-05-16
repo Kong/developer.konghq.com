@@ -1,16 +1,12 @@
-description: 'Detects injection of a SQL query using the input data from the client to the application. Uses the following regex for matching: `[\s]*((delete)|(exec)|(drop\s*table)|(insert)|(shutdown)|(update)|(\bor\b))`'
+description: Detects scripts injected in HTML pages. 
+extended_description: |
+  Detects injection of a SQL query using the input data from the client to the application. 
+  Uses the following regex for matching: 
+  `[\s]*((delete)|(exec)|(drop\s*table)|(insert)|(shutdown)|(update)|(\bor\b))`
 
 title: 'SQL injection'
 
 weight: 900
-
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
 
 config: 
   injection_types: 

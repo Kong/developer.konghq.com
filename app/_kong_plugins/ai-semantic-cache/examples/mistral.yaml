@@ -1,6 +1,6 @@
 title: 'Set up with Mistral'
 
-description: 'Enable the plugin with Mistral as your LLM and a Redis vector database.'
+description: 'Enable AI Semantic Caching with Mistral as your LLM and a Redis vector database.'
 
 weight: 900
 

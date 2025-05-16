@@ -1,5 +1,5 @@
 description: |
-  This example validates client text frames.
+  This example validates client text frames for WebSocket messages.
 
 extended_description: |
   This example validates that client text frames:

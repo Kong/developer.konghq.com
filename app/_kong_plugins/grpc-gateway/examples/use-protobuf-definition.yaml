@@ -1,4 +1,5 @@
-description: |
+description: Configure the grpc-Gateway plugin to call a Protobuf definition.
+extended_description: |
   Configure the plugin to call a Protobuf definition named `hello-gateway.proto`.
   For a full how-to guide, see [Use the gRPC-Gateway plugin to proxy HTTP requests to a gRPC service](/how-to/use-grpc-gateway).
 

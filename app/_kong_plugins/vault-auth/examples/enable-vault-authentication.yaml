@@ -1,5 +1,7 @@
 description: |
   Enable the plugin and associate it with a Vault object.
+extended_description: |
+  Enable the plugin and associate it with a Vault object.
   For a full how-to guide, see [Enable authentication with Vault in {{site.base_gateway}}](/how-to/enable-vault-authentication/).
 
 title: Enable Vault authentication

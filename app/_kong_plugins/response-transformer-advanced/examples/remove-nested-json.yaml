@@ -1,4 +1,4 @@
-description: Configure the plugin to remove a nested `customers.info.phone` JSON property
+description: Configure the plugin to remove a nested JSON property.
 
 title: Remove nested JSON content
 

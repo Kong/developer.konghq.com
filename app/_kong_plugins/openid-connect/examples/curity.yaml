@@ -1,6 +1,9 @@
 title: OpenID Connect with Curity
 description: |
-  Integrate Kong Gateway and the Curity Identity Server for introspection using the
+  Integrate {{site.base_gateway}} and the Curity Identity Server for introspection using the
+  Phantom Token pattern.
+extended_description: |
+  Integrate {{site.base_gateway}} and the Curity Identity Server for introspection using the
   [Phantom Token pattern](https://curity.io/resources/learn/phantom-token-pattern).
 
   The OpenID Connect plugin introspects an incoming opaque access token and receives a JWT in the introspection response from the Curity Identity Server. 

@@ -1,4 +1,5 @@
-description: |
+description: Configure the AI Prompt Guard plugin to allow messages following a specific pattern. 
+extended_description: |
   Configure the plugin to allow messages following a specific pattern. 
   For requests to pass through in this example, 
   any of the user role messages in the prompt must have all card fields adhering to this standard:
