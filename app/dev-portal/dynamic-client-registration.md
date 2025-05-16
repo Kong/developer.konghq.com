@@ -18,7 +18,7 @@ search_aliases:
   - dcr
   - oidc
 description: | 
-    placeholder
+    Describes supported DCR identity providers and supported DCR authentication methods. 
 related_resources:
   - text: Application registration
     url: /dev-portal/application-registration/
