@@ -47,6 +47,12 @@ class HowTo {
         console.log(error);
       }
 
+      const urlParams = new URLSearchParams(window.location.search);
+      const deployment = urlParams.get("deployment");
+      if (deployment) {
+        this.deploymentTopologySwitch.value = deployment;
+      }
+
       this.toggleTopology(this.deploymentTopologySwitch.value);
     } else {
       this.updateTOC();
