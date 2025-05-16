@@ -1,10 +1,7 @@
 ---
 title: Automatically create and manage Dev Portal applications in Azure AD with Dynamic Client Registration
-description: placeholder
+description: Learn how to configure Dynamic Client Registration to automatically create Dev Portal applications in Azure AD.
 content_type: how_to
-related_resources:
-  - text: placeholder
-    url: /
 
 products:
     - gateway
@@ -29,9 +26,9 @@ search_aliases:
     - Entra
 
 tldr:
-    q: placeholder
+    q: How do I automatically create and manage Dev Portal applications in Azure AD?
     a: |
-      placeholder
+      You can use Dynamic Client Registration to automatically create Dev Portal applications in Azure AD. First, create an application in Azure and configure the `Application.ReadWrite.OwnedBy` and `User.Read` API permissions, select **Accounts in this organizational directory only** for the supported account types, and create a client secret. Then, create a new DCR provider in your Dev Portal settings and create a new auth strategy for DCR.
 
 prereqs:
   skip_product: true
@@ -80,7 +77,7 @@ next_steps:
 
 In Azure, create the main application:
 
-1. In Azure Active Directory, click **App registrations** and then click **New registration**.
+1. In Azure Active Directory, click [**App registrations**](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade) and then click **New registration**.
 
 2. Enter a name for the application.
 3. Ensure **Accounts in this organizational directory only** is selected for **Supported account types**.
@@ -114,6 +111,7 @@ This tutorial uses the {{site.konnect_short_name}} UI to configure DCR, but you 
    1. Enter the **Issuer URL** of your Azure tenant, formatted as: `https://sts.windows.net/YOUR_TENANT_ID`. *Do not* include a trailing slash at the end of the URL.
    1. Select Azure as the **Provider Type**. 
    1. Enter your Application (Client) ID from Azure into the **Initial Client ID** field, and the client secret of the Azure admin application into the **Initial Client Secret** field.
+      
       {:.info}  
       > **Note:** The Initial Client Secret will be stored in isolated, encrypted storage and will not be accessible through any Konnect API.
    1. Save your DCR provider. You should now see it in the list of DCR providers.
@@ -125,6 +123,16 @@ This tutorial uses the {{site.konnect_short_name}} UI to configure DCR, but you 
    1. In the **DCR Provider** dropdown, select the name of the DCR provider config you just created. Your **Issuer URL** will be prepopulated with the Issuer URL you added to the DCR provider.
    1. In the **Credential Claims** field, enter `appid`.
    1. Select the relevant **Auth Methods** you need (`client_credentials`, `bearer`, `session`), and click **Save**.
+
+## Apply the Azure DCR auth strategy to an API
+
+Now that the application auth strategy is configured, you can apply it to an API.
+
+1. Navigate to your Dev Portal in {{site.konnect_short_name}} and click **Published APIs** in the sidebar.
+
+1. Click **Publish API**, select the API you want to publish, and select your Azure auth strategy for the **Authentication strategy**.
+
+1. Click **Publish API**.
 
 ## Validate
 

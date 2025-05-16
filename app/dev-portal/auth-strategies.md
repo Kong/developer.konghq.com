@@ -4,6 +4,7 @@ description: 'Learn how to set up authentication strategies for application regi
 content_type: reference
 layout: reference
 products:
+  - gateway
   - dev-portal
 tags:
   - authentication

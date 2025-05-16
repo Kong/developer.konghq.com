@@ -1,10 +1,7 @@
 ---
 title: Automatically create and manage Dev Portal applications in Auth0 with Dynamic Client Registration
-description: placeholder
+description: Learn how to configure Dynamic Client Registration to automatically create Dev Portal applications in Auth0.
 content_type: how_to
-related_resources:
-  - text: placeholder
-    url: /
 
 products:
     - gateway
@@ -162,6 +159,15 @@ This tutorial uses the {{site.konnect_short_name}} UI to configure DCR, but you 
    1. Enter the **Audience** value from your associated Auth0 API in the **Audience** field. If you're using developer-managed scopes, the scopes selected by the developer should belong to this audience.
    1. Select the relevant **Auth Methods** you need (`client_credentials`, `bearer`, `session`), and click **Save**.
 
+## Apply the Auth0 DCR auth strategy to an API
+
+Now that the application auth strategy is configured, you can apply it to an API.
+
+1. Navigate to your Dev Portal in {{site.konnect_short_name}} and click **Published APIs** in the sidebar.
+
+1. Click **Publish API**, select the API you want to publish, and select your Auth0 auth strategy for the **Authentication strategy**.
+
+1. Click **Publish API**.
 
 ## Validate
 

@@ -1,10 +1,7 @@
 ---
 title: Automatically create Dev Portal applications in Okta with Dynamic Client Registration
-description: placeholder
+description: Learn how to configure Dynamic Client Registration to automatically create Dev Portal applications in Okta.
 content_type: how_to
-related_resources:
-  - text: placeholder
-    url: /
 
 products:
     - gateway
