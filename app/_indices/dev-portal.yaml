@@ -16,6 +16,11 @@ sections:
         url: /dev-portal/developer-signup/
       - path: /dev-portal/application-registration/
       - path: /dev-portal/auth-strategies/
+      - path: /dev-portal/dynamic-client-registration/
+      - path: /how-to/okta-dcr/
+      - path: /how-to/curity-dcr/
+      - path: /how-to/azure-ad-dcr/
+      - path: /how-to/auth0-dcr/
   - title: Customize
     items:
       - path: /dev-portal/custom-pages/

@@ -30,6 +30,14 @@ related_resources:
     url: /dev-portal/auth-strategies/
   - text: Developer sign-up
     url: /dev-portal/developer-signup/
+  - text: Configure Dynamic Client Registration with Okta
+    url: /how-to/okta-dcr/
+  - text: Configure Dynamic Client Registration with Curity
+    url: /how-to/curity-dcr/
+  - text: Configure Dynamic Client Registration with Auth0
+    url: /how-to/auth0-dcr/
+  - text: Configure Dynamic Client Registration with Azure
+    url: /how-to/azure-dcr/
 
 ---
 
@@ -48,6 +56,14 @@ Application registration is enabled by:
   
   This only applies to new APIs, it doesn't retroactively change existing APIs.
 
+## Enable self-service app registration
+
+Navigate to **Settings > Security** in your Dev Portal to manage registration flows.
+
+For private portals, user authentication is enabled by default, and the default application Auth Strategy is `key-auth`.
+
+For public content with restricted access, use visibility settings to show public Pages or APIs to anonymous users while restricting actions to logged-in users.
+
 ## Region-specific applications
 
 Applications and API keys are specific to a [geographic region](/konnect-platform/geos/). 
@@ -55,7 +71,7 @@ When you enable application registration by selecting an authentication strategy
 
 ## {{site.konnect_short_name}} application auth plugin
 
-When you select an authentication strategy during [API publication](/dev-portal/apis/) to a Dev Portal, {{site.konnect_short_name}} automatically configures the **{{site.konnect_short_name}} application auth** (KAA) plugin on the linked Gateway Service.
+When you select an [authentication strategy](/dev-portal/auth-strategies/) during [API publication](/dev-portal/apis/) to a Dev Portal, {{site.konnect_short_name}} automatically configures the **{{site.konnect_short_name}} application auth** (KAA) plugin on the linked Gateway Service.
 
 The KAA plugin enforces authentication using one of the following modes:
 * Key authentication (`key-auth`)
@@ -64,11 +80,3 @@ The KAA plugin enforces authentication using one of the following modes:
 
 If no Gateway Service is linked at the time of configuration, the settings are saved and applied once a Service is linked. 
 If a Service is later unlinked, the plugin is removed and applied to the next linked Service.
-
-## Enable self-service app registration
-
-Navigate to **Settings > Security** in your Dev Portal to manage registration flows.
-
-For private portals, user authentication is enabled by default, and the default application Auth Strategy is `key-auth`.
-
-For public content with restricted access, use visibility settings to show public Pages or APIs to anonymous users while restricting actions to logged-in users.
