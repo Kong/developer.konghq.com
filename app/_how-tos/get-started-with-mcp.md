@@ -1,12 +1,16 @@
 ---
 title: Get started with MCP Gateway
 content_type: how_to
+permalink: /mcp/get-started/
+breadcrumbs:
+    - /mcp/
 description: Learn how to quickly get started with AI Gateway
 products:
     - ai-gateway
     - gateway
 
 works_on:
+    - on-prem
     - konnect
 
 plugins:
@@ -276,10 +280,58 @@ List all services for control plane [CONTROL_PLANE_NAME or ID].
 
 To analyze traffic and detect error trends, run a query like this:
 
+{% navtabs "query-api-traffic" %}
+{% navtab "Prompt" %}
+
 ```text
 Prompt:
 Show me all API requests for service [SERVICE_NAME or ID] in the last hour that had 5xx status codes.
 ```
+{% endnavtab %}
+{% navtab "Sample response" %}
+
+```json
+{
+  "requests": [
+    {
+      "requestId": "ca19e138bf16f1678e5ecb0f253aba37",
+      "timestamp": "2025-05-16T05:19:11.332Z",
+      "httpMethod": "GET",
+      "uri": "/v1/ingest",
+      "statusCode": "500",
+      "consumerId": null,
+      "serviceId": "986dc7ab-6238-48d8-b989-78c5f4910066:5050365a-faf2-4269-b53d-aff042b9178e",
+      "routeId": "986dc7ab-6238-48d8-b989-78c5f4910066:1055be1b-1677-47da-ba62-c6d5f8c25b90",
+      "latency": {
+        "totalMs": 6,
+        "gatewayMs": 0,
+        "upstreamMs": 6
+      },
+      "clientIp": "205.234.240.66",
+      "apiProduct": null,
+      "apiProductVersion": null,
+      "applicationId": null,
+      "authType": "",
+      "headers": {
+        "host": "5a385ad748.eu.tp0.konghq.tech:443",
+        "userAgent": ""
+      },
+      "dataPlane": {
+        "nodeId": "986dc7ab-6238-48d8-b989-78c5f4910066:e4f2fa05-d918-4b53-8479-891157dc8499",
+        "version": "3.11.0.0"
+      },
+      "controlPlane": {
+        "id": "986dc7ab-6238-48d8-b989-78c5f4910066",
+        "group": null
+      }
+      ...
+    }
+  ]
+}
+```
+
+{% endnavtab %}
+{% endnavtabs %}
 
 ## Troubleshoot consumer issues
 
