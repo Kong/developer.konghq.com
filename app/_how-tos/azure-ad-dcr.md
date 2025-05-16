@@ -33,7 +33,7 @@ tldr:
 prereqs:
   skip_product: true
   inline:
-    - title: Kong Konnect
+    - title: "{{site.konnect_product_name}}"
       include_content: prereqs/products/konnect-account-only
       icon_url: /assets/icons/gateway.svg
     - title: Dev Portal

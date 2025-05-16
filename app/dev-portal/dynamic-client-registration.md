@@ -57,7 +57,7 @@ DCR support in {{site.konnect_short_name}} provides multiple methods by which ap
 Each method is available when using the following DCR identity providers:
 * [Okta](/how-to/okta-dcr/)
 * [Curity](/how-to/curity-dcr/)
-* [Azure](/how-to/azure-dcr/)
+* [Azure](/how-to/azure-ad-dcr/)
 * [Auth0](/how-to/auth0-dcr/)
 
 {:.info}
@@ -101,7 +101,7 @@ After successfully authenticating using either client credentials or a bearer ac
 
 ## Configure a custom IdP for Dynamic Client Registration
 
-{{site.konnect_short_name}} Dev Portal supports a variety of the most widely adopted identity provider (IdP) for [Dynamic Client Registration (DCR)](/konnect/dev-portal/applications/dynamic-client-registration/):
+{{site.konnect_short_name}} Dev Portal supports a variety of the most widely adopted identity provider (IdP) for Dynamic Client Registration (DCR):
 
 * Auth0
 * Azure
