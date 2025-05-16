@@ -34,8 +34,8 @@ entities:
   - route
 
 plugins:
-   - key-auth
-- ai-proxy
+  - key-auth
+  - ai-proxy
 
 tags:
   - authentication
