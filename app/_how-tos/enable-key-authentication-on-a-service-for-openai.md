@@ -12,7 +12,7 @@ related_resources:
     url: /gateway/authentication/
   - text: Key auth
     url: /plugins/key-auth/
-  - text: dupa
+  - text: AI Proxy plugin
     url: /plugins/ai-proxy/
   - text: AI Gateway
     url: /ai-gateway/
