@@ -1,0 +1,91 @@
+---
+title: Set up an AWS VPC peering connection using the API
+description: 'Use the {{site.konnect_short_name}} Cloud Gateways API to create a VPC peering connection with your AWS VPC.'
+content_type: how_to
+permalink: /dedicated-cloud-gateways/aws-vpc-peering/
+breadcrumbs:
+  - /dedicated-cloud-gateways/
+products:
+  - gateway
+works_on:
+  - konnect
+tldr:
+  q: How do I set up a VPC peering connection with my Dedicated Cloud Gateway using the API?
+  a: Use the {{site.konnect_short_name}} API to initiate peering, then accept the request in AWS and update your route table.
+related_resources:
+  - text: Dedicated Cloud Gateways
+    url: /dedicated-cloud-gateways/
+  - text: AWS VPC Peering Documentation
+    url: https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html
+prereqs:
+  skip_product: true
+  inline:
+    - title: "Dedicated Cloud Gateway"
+      include_content: prereqs/dedicated-cloud-gateways
+
+    - title: "AWS credentials and VPC"
+      content: |
+        You'll need:
+
+        - An AWS account with permission to accept VPC peering requests and update route tables
+        - A target AWS VPC ID
+        - The AWS region of your VPC
+        - The VPC's CIDR block
+
+        Save these values:
+
+        ```sh
+        export AWS_ACCOUNT_ID='123456789012'
+        export AWS_VPC_ID='vpc-0f1e2d3c4b5a67890'
+        export AWS_REGION='us-east-2'
+        export AWS_VPC_CIDR='10.0.0.0/16'
+        ```
+
+---
+
+## Initiate the VPC peering connection
+
+Send the following request to the Cloud Gateways API:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/cloud-gateways/networks/$NETWORK_ID/transit-gateways
+status_code: 201
+region: global
+method: POST
+headers:
+  - 'Accept: application/json'
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $KONNECT_TOKEN'
+body:
+  name: us-east-2 vpc peering
+  cidr_blocks:
+    - $AWS_VPC_CIDR
+  transit_gateway_attachment_config:
+    kind: aws-vpc-peering-attachment
+    peer_account_id: $AWS_ACCOUNT_ID
+    peer_vpc_id: $AWS_VPC_ID
+    peer_vpc_region: $AWS_REGION
+{% endkonnect_api_request %}
+<!--vale on-->
+
+
+
+## Accept the peering request in AWS
+
+1. Go to the AWS Console → **VPC** → **Peering Connections**.
+2. Locate the pending request from {{site.konnect_short_name}}.
+3. Select the request and choose **Accept Request**.
+
+
+## Update your AWS route table
+
+1. In the AWS Console, go to **VPC** → **Route Tables**.
+2. Select the route table for your VPC's subnet.
+3. Add a new route:
+    - **Destination**: The CIDR block of the {{site.konnect_short_name}} network (provided in the peering details).
+    - **Target**: The accepted VPC peering connection.
+4. Save your changes.
+
+This ensures private traffic routing between your VPC and the Dedicated Cloud Gateway.
+
