@@ -21,35 +21,149 @@ works_on:
 min_version:
     gateway: '3.10'
 
-on_prem:
-  - hybrid
-  - db-less
-  - traditional
-konnect_deployments:
-  - hybrid
-  - cloud-gateways
-  - serverless
+topologies:
+  on_prem:
+    - hybrid
+    - db-less
+    - traditional
+  konnect_deployments:
+    - hybrid
+    - cloud-gateways
+    - serverless
 
 icon: ai-rag-injector.png
 
 categories:
-    - ai
+  - ai
 
 tags:
   - ai
+
+search_aliases:
+  - ai-semantic-cache
+  - ai
+  - llm
+  - artificial
+  - intelligence
+  - language
+  - model
 ---
 
-The AI RAG Injector plugin simplifies the creation of retrieval-augmented generation (RAG) pipelines by automatically injecting content from a vector database of choice on the existing requests.
+## What is Retrieval Augmented Generation (RAG)?
 
-This plugin provides the following benefits:
-* Improves productivity and accelerates creating RAG pipelines, as you don't have to build the semantic association.
-* Lets you lock down sensitive vector databases, so that developers don't have direct access. AI Gateway becomes the client, instead of the developer applications.
-* Enables building RAG pipelines in more places, even in places where connectivity to the vector database was originally not possible.
+Retrieval-Augmented Generation (RAG) is a technique that improves the accuracy and relevance of language model responses by enriching prompts with external data at runtime. Instead of relying solely on what the model was trained on, RAG retrieves contextually relevant information—such as documents, support articles, or internal knowledge—from connected data sources like vector databases.
+
+This retrieved context is then automatically injected into the prompt before the model generates a response. RAG is a critical safeguard in specialized or high-stakes applications, where factual accuracy matters. LLMs are prone to hallucinations—plausible-sounding but factually incorrect or fabricated responses. RAG helps mitigate this by grounding the model’s output in real, verifiable data.
+
+<!-- vale off -->
+{% table %}
+columns:
+  - title: Use Case
+    key: use_case
+  - title: Description
+    key: description
+rows:
+  - use_case: Healthcare
+    description: |
+      RAG can help surface up-to-date clinical guidelines or patient records in a timely manner—critical when treatment decisions depend on the most current information.
+  - use_case: Legal
+    description: |
+      Lawyers can use RAG-powered assistants to instantly retrieve relevant case law, legal precedents, or compliance documentation during client consultations.
+  - use_case: Finance
+    description: |
+      In fast-moving markets, RAG enables models to deliver financial insights based on current data—avoiding outdated or misleading responses driven by stale training snapshots.
+{% endtable %}
+<!-- vale on -->
+
+## Why use the AI RAG Injector plugin
+
+The **AI RAG Injector** plugin automates the retrieval and injection of contextual data for RAG pipelines—no manual prompt engineering or retrieval logic required. Integrated at the gateway level, it handles embedding generation, vector search, and context injection transparently for each request.
+
+* **Simplifies RAG workflows:** Automatically embeds prompts, queries the vector DB, and injects relevant context—no custom retrieval logic needed.
+* **Platform-level control:** Shifts RAG logic from app code to infrastructure, allowing platform teams to enforce global policies, update configurations centrally, and reduce developer overhead.
+* **Improved security:** Vector DB access is limited to the AI Gateway, eliminating the need to expose it to individual dev teams or AI agents.
+* **Enables RAG in restricted environments:** Supports RAG even where direct access to the vector database is not possible, such as external-facing or isolated services.
+* **Developer productivity:** Developers can focus on building AI features without needing to manage embeddings, similarity search, or context handling.
 
 {% include plugins/ai-plugins-note.md %}
 
-## How it works
+## Overview
+
+When a user sends a prompt, the RAG Injector plugin queries a configured vector database for relevant context and injects that information into the request before passing it to the language model. The result is a more informed, accurate response—without requiring any changes to your model or application logic.
 
 1. You configure the AI RAG Injector plugin via the Admin API or decK, setting up the RAG content to send to the vector database.
 1. When a request reaches the AI Gateway, the plugin generates embeddings for request prompts, then queries the vector database for the top-k most similar embeddings.
 1. The plugin injects the retrieved content from the vector search result into the request body, and forwards the request to the upstream service.
+
+The following diagram is a simplified overview of how the plugin works (check the [section below](#rag-generation-process)) for more detailed description:
+
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    participant User
+    participant LLM
+    participant VectorDB as Vector DB (Data Source)
+
+    User->>LLM: Submit prompt
+    LLM->>VectorDB: Query for relevant context
+    VectorDB-->>LLM: Return relevant context
+    LLM-->>User: Generate and return response
+{% endmermaid %}
+<!-- vale on -->
+
+### RAG Generation process
+
+The RAG workflow consists of two critical phases:
+(1) **Data preparation**, which processes and embeds unstructured data into a vector index for efficient semantic search, and
+(2) **Retrieval and generation**, where the system uses similarity search to dynamically assemble contextual prompts that guide the language model’s output.
+
+The diagram below shows how data flows through both phases of the RAG pipeline—from ingestion and embedding to real-time query handling and response generation.
+
+#### Phase 1: Data Preparation
+
+This phase sets up the foundation for semantic retrieval by converting raw data into a format that can be indexed and searched efficiently.
+
+**Step breakdown:**
+
+1. A document loader pulls content from various sources, such as PDFs, websites, emails, or internal systems.
+2. The system breaks the unstructured data into smaller, semantically meaningful chunks to support precise retrieval.
+3. Each chunk is transformed into a vector embedding—a numeric representation that captures its semantic content.
+4. These embeddings are saved to a vector database, enabling fast, similarity-based search during query time.
+
+#### Phase 2: Retrieval and Generation
+
+This phase runs in real time, taking user input and producing a context-aware response using the indexed data.
+
+**Step breakdown:**
+
+1. The user’s query is converted into an embedding using the same model used during data preparation.
+2. A semantic similarity search locates the most relevant content chunks in the vector database.
+3. The system builds a custom prompt by combining the retrieved chunks with the original query.
+4. The LLM generates a contextually accurate response using both the retrieved context and its own internal knowledge.
+
+<!-- vale off -->
+{% mermaid %}
+sequenceDiagram
+    actor User
+    participant RawData as Raw Data
+    participant EmbeddingModel as Embedding Model
+    participant VectorDB as Vector Database
+    participant LLM
+
+    par Data Preparation Phase
+        RawData->>EmbeddingModel: Load (1) and chunk documents (2), generate embeddings (3)
+        EmbeddingModel->>VectorDB: (4) Store embeddings
+    end
+
+    par Retrieval & Generation Phase
+        User->>EmbeddingModel: (1) Submit query and generate query embedding
+        EmbeddingModel->>VectorDB: (2) Search vector DB
+        VectorDB-->>EmbeddingModel: Return relevant chunks
+        EmbeddingModel->>LLM: (3) Assemble prompt and send
+        LLM-->>User: (4) Generate and return response
+    end
+{% endmermaid %}
+<!-- vale on -->
+
+
+Rather than guessing from memory, the LLM paired with the RAG pipeline now has the ability to look up the information it needs in real time, which will dramatically reduce hallucinations and increase the accuracy of the AI output.
