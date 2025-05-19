@@ -6,6 +6,7 @@ module Jekyll
     priority :lowest
     def generate(site)
       return if Jekyll.env == 'production'
+      return if site.config.dig('skip', 'explorer')
 
       jobs = [
         {

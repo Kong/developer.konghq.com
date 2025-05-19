@@ -4,7 +4,7 @@ description: Create a Control Plane, Service, Route, Consumer and Basic Auth plu
 content_type: how_to
 permalink: /terraform/how-to/gateway-authentication/
 breadcrumbs:
-  - /kubernetes-ingress-controller/
+  - /terraform/
 
 tools:
   - terraform

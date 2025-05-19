@@ -1,4 +1,6 @@
 description: |
+  Configure the Zipkin plugin to ignore incoming headers.
+extended_description: |
   Configure the Zipkin plugin to ignore incoming headers:
   - No tracing context extraction
   - Injects the tracing context using the formats: `b3`, `datadog` 
@@ -8,14 +10,6 @@ description: |
 title: 'Ignore incoming headers'
 
 weight: 900
-
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
 
 config:
   propagation:	

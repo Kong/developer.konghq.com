@@ -140,7 +140,7 @@ using `curl` and filtering the response with `jq`:
 
 With the plugin installed, we can now configure [{{site.base_gateway}} entities](/gateway/entities/) to invoke and validate the plugin's behavior.
 
-For each of the following `POST` requests to the Admin API, you should receive a `HTTP/1.1 201 Created` response from {{site.base_gateway}} indicating the successful creation of the entity.
+For each of the following `POST` requests to the Admin API, you should receive an `HTTP/1.1 201 Created` response from {{site.base_gateway}} indicating the successful creation of the entity.
 
 1. Still within the {{site.base_gateway}} container's shell, [add a new Gateway Service](/api/gateway/admin-ee/#/operations/create-service):
 <!-- vale off -->

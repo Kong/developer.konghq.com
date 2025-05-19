@@ -42,6 +42,7 @@
 /mesh/production/dp-config/dpp  /mesh/data-plane-proxy/
 /mesh/production/use-mesh       /mesh/use-kuma/
 /mesh/production/cp-deployment/zoneegress   /mesh/zone-egress/
+/mesh/:version/production/cp-deployment/zoneegress   /mesh/zone-egress/
 /mesh/production/secure-deployment/certificates/    /mesh/secure-access/
 /mesh/production/deployment/single-zone     /mesh/single-zone/
 /mesh/production/upgrades-tuning/fine-tuning    /mesh/performance-tuning/
@@ -86,3 +87,8 @@
 /mesh/policies/meshgatewayroute /mesh/policies/meshhttproute/
 /mesh/policies/proxy-template  /mesh/policies/
 /mesh/policies/mutual-tls/   /mesh/policies/
+
+
+## Kubernetes
+
+/gateway/install/kubernetes/  /gateway/install/kubernetes/konnect/

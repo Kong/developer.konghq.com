@@ -1,4 +1,7 @@
 description: |
+  Limit client WebSocket messages to 4 KiB.
+
+extended_description: |
   Limit client messages to 4 KiB.
 
   {{site.base_gateway}} applies a default limit of `1048576` (1MiB) to all client messages. You can also use the `client_max_payload` parameter to raise the default limit.

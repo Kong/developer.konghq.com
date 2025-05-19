@@ -24,10 +24,27 @@ module Jekyll
       config = YAML.load(contents)
       drop = Drops::KonnectApiRequest.new(yaml: config)
 
-      context.stack do
+      output = context.stack do
         context['config'] = drop
         Liquid::Template.parse(File.read(drop.template_file)).render(context)
       end
+
+      if drop.config['indent']
+        # Indent the output if specified in the example
+        indent = ' ' * drop.config['indent'].to_i
+        output = output.split("\n").map { |line| "#{indent}#{line}" }
+
+        # Trim indent from ending line in code blocks
+        output.each do |line|
+          if line.start_with?("#{indent}</code>")
+            line.sub!(/^#{indent}/, '') # Remove the indent from the line
+          end
+        end
+
+        output = output.join("\n")
+      end
+
+      output
     rescue Psych::SyntaxError => e
       message = <<~STRING
         On `#{@page['path']}`, the following {% konnect_api_request %} block contains a malformed yaml:

@@ -1,4 +1,4 @@
-description: 'Specifies a custom header (`X-Custom-Auth`) to use when sending the access token (obtained from the IdP) to the upstream service.'
+description: 'Configure the Upstream OAuth plugin with a custom header to use when sending the access token (obtained from the IdP) to the upstream service.'
 
 title: 'Use a custom access token header'
 

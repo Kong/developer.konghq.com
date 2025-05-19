@@ -11,6 +11,7 @@ rows:
   - header:
       type: h1
       text: "Konnect Advanced Analytics"
+      sub_text: A single location for context-rich, business-critical API and AI insights
 
   - columns:
       - blocks:

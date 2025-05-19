@@ -1,4 +1,5 @@
-description:  |
+description: Configure the OpenTelemetry plugin to extract and preserve the tracing context in the same header type.
+extended_description:  |
   This plugin configuration does the following:
   - Extract the tracing context using order of precedence: `w3c` > `b3` > `jaeger` > `ot` > `aws` > `datadog`
   - Inject the tracing context **in the extracted header type**

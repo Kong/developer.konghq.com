@@ -1,7 +1,7 @@
 ---
 title: Services and Routes
 description: |
-  Use the a HTTPRoute or Ingress to configure a Service and a Route.
+  Use the an HTTPRoute or Ingress to configure a Service and a Route.
 content_type: how_to
 
 permalink: /kubernetes-ingress-controller/get-started/services-and-routes/
@@ -17,7 +17,7 @@ series:
 tldr:
   q: How do I create a Service and a Route with {{ site.kic_product_name }}?
   a: |
-    Create a HTTPRoute that points to a Kubernetes service in your cluster.
+    Create an HTTPRoute that points to a Kubernetes service in your cluster.
 
 products:
   - kic
@@ -81,9 +81,9 @@ Let's start by deploying an `echo` service which returns information about the K
 kubectl apply -f {{ site.links.web }}/manifests/kic/echo-service.yaml -n kong
 ```
 
-## Create a HTTPRoute / Ingress
+## Create an HTTPRoute / Ingress
 
-To route traffic to the `echo` service, create a `HTTPRoute` or `Ingress` resource:
+To route traffic to the `echo` service, create an `HTTPRoute` or `Ingress` resource:
 
 {% include /k8s/httproute.md release=page.release path='/echo' name='echo' service='echo' port='1027' skip_host=true %}
 

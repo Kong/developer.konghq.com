@@ -1,6 +1,6 @@
 ---
 title: Create a {{ site.kic_product_name }} Control Plane
-description: "TODO"
+description: "Create a new {{ site.kic_product_name }} Control Plane in {{ site.konnect_short_name }}"
 content_type: how_to
 
 permalink: /operator/konnect/crd/control-planes/kubernetes/
@@ -24,8 +24,8 @@ tags:
   - konnect-crd
  
 tldr:
-  q: Question?
-  a: Answer
+  q: How can I create a {{ site.kic_product_name }} Control Plane in {{ site.konnect_short_name }}?
+  a: Create a `KonnectGatewayControlPlane` object with the cluster type `CLUSTER_TYPE_K8S_INGRESS_CONTROLLER`.
 
 prereqs:
   operator:
@@ -34,9 +34,9 @@ prereqs:
 
 ---
 
-## TODO
+## Create a `KonnectGatewayControlPlane`
 
-TODO
+Create a Control Plane and add the cluster type `CLUSTER_TYPE_K8S_INGRESS_CONTROLLER`:
 
 <!-- vale off -->
 {% konnect_crd %}
@@ -50,4 +50,13 @@ spec:
     authRef:
       name: konnect-api-auth
 {% endkonnect_crd %}
+<!-- vale on -->
+
+## Validation
+
+<!-- vale off -->
+{% validation kubernetes-resource %}
+kind: KonnectGatewayControlPlane
+name: gateway-control-plane
+{% endvalidation %}
 <!-- vale on -->

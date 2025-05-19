@@ -1,6 +1,8 @@
 title: Session authentication
 description: |
   Configure the OpenID Connect plugin to issue session cookies that can be used for further session authentication.
+extended_description: |
+  Configure the OpenID Connect plugin to issue session cookies that can be used for further session authentication.
 
   For a complete example of retrieving, storing, and using session cookies for authentication with Keycloak, see the tutorial for [configuring OpenID Connect with session authentication](/how-to/configure-oidc-with-session-auth/).
   

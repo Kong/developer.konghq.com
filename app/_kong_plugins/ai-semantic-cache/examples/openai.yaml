@@ -1,6 +1,6 @@
 title: 'Set up with OpenAI'
 
-description: 'Enable the plugin with OpenAI as your LLM and a Redis vector database.'
+description: 'Enable AI Semantic Caching with OpenAI as your LLM and a Redis vector database.'
 
 weight: 900
 

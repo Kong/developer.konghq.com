@@ -1,5 +1,7 @@
 title: Mutual TLS client authentication
 description: |
+  Configure the OpenID Connect plugin to use mutual TLS (mTLS) client authentication.
+extended_description: |
   Configure the OpenID Connect plugin to use [mutual TLS (mTLS) client authentication](/plugins/openid-connect/#mutual-tls-client-authentication).
 
   The following uses the password grant, but you can use any supported OpenID Connect auth method.

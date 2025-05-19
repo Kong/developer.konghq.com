@@ -1,4 +1,4 @@
-description: 'Cache responses to GET requests with a `200` response code for 300 seconds before renewing the cache.'
+description: 'Cache responses to GET requests with a 200 response code for 300 seconds before renewing the cache.'
 
 title: 'Cache responses to successful GET requests'
 

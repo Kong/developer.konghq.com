@@ -4,14 +4,6 @@ description: 'This configuration detects all the built-in injection attacks supp
 
 weight: 900
 
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
-
 config: 
   injection_types: 
     - sql

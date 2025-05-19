@@ -1,5 +1,7 @@
 title: Claims-based authorization
 description: |
+  Configure the OpenID Connect plugin for claims-based authorization.
+extended_description: |
   This example configures the OpenID Connect plugin for claims-based authorization.
   
   This example uses password authentication, but you can use any supported [authentication type](/plugins/openid-connect/reference/#schema--config-auth-methods).

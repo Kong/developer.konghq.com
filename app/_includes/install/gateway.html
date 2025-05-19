@@ -122,19 +122,25 @@
 
     <div class="flex flex-col gap-2">
         <div class="flex gap-2">
-            <h3 class="font-semibold text-base leading-6">Deploy on Kubernetes</h3>
+            <h3 class="font-semibold text-base leading-6">Deploy {{ site.base_gateway }} on Kubernetes</h3>
         </div>
 
         <div class="flex text-secondary">
             <p>
-                Use standard Kubernetes deployment methods to install {{site.base_gateway}}.
+                Deploy {{ site.base_gateway }} on Kubernetes, and configure it using the UI, decK or Terraform.
             </p>
         </div>
 
-        <a href="/gateway/install/kubernetes/" class="flex w-full p-5 gap-4 rounded-md shadow-primary text-sm text-white font-semibold bg-terciary items-center justify-between hover:no-underline hover:bg-hover-component/100 hover:text-primary">
-            Install via Kubernetes
+        <div class="flex gap-2">
+        <a href="/gateway/install/kubernetes/konnect/" class="flex w-full p-5 gap-4 rounded-md shadow-primary text-sm text-white font-semibold bg-terciary items-center justify-between hover:no-underline hover:bg-hover-component/100 hover:text-primary">
+            Install via Helm
             <span class="flex text-terciary h-5 w-5">&rarr;</span>
         </a>
+        <a href="/operator/dataplanes/get-started/hybrid/install/" class="flex w-full p-5 gap-4 rounded-md shadow-primary text-sm text-white font-semibold bg-terciary items-center justify-between hover:no-underline hover:bg-hover-component/100 hover:text-primary">
+            Install via Kong Gateway Operator
+            <span class="flex text-terciary h-5 w-5">&rarr;</span>
+        </a>
+        </div>
     </div>
 
     <div class="border-t border-primary/5"></div>
@@ -146,13 +152,19 @@
 
         <div class="flex text-secondary">
             <p>
-                {{site.kic_product_name}} can be installed using the <code>kong/ingress</code> Helm chart.
+                Configure {{ site.base_gateway }} using Kubernetes-native resources such as <code>httproute</code> and <code>ingress</code>.
             </p>
         </div>
 
+        <div class="flex gap-2">
         <a href="/kubernetes-ingress-controller/install/" class="flex w-full p-5 gap-4 rounded-md shadow-primary text-sm text-white font-semibold bg-terciary items-center justify-between hover:no-underline hover:bg-hover-component/100 hover:text-primary">
-            Install via KIC
+            Install via Helm
             <span class="flex text-terciary h-5 w-5">&rarr;</span>
         </a>
+        <a href="/operator/dataplanes/get-started/kic/install/" class="flex w-full p-5 gap-4 rounded-md shadow-primary text-sm text-white font-semibold bg-terciary items-center justify-between hover:no-underline hover:bg-hover-component/100 hover:text-primary">
+            Install via Kong Gateway Operator
+            <span class="flex text-terciary h-5 w-5">&rarr;</span>
+        </a>
+        </div>
     </div>
 </div>

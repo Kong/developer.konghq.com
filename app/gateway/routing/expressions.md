@@ -480,7 +480,7 @@ rows:
     description: |
       Field value contains the constant value. This operator is used to check the existence of a string inside another string. 
       <br><br>
-      For example, `http.path contains \"foo\"` returns `true` if `foo` can be found anywhere inside `http.path`. This will match a `http.path` that looks like `/foo`, `/abc/foo`, or `/xfooy`, for example.
+      For example, `http.path contains \"foo\"` returns `true` if `foo` can be found anywhere inside `http.path`. This will match an `HTTP.path` that looks like `/foo`, `/abc/foo`, or `/xfooy`, for example.
   - operator: "`&&`"
     name: And
     description: "Returns `true` if **both** expressions on the left and right side evaluates to `true`."

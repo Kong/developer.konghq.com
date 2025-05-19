@@ -1,5 +1,7 @@
 title: Limit query cost
-description: |
+description: Define a maximum cost applied to any query, regardless of whether or not the call is within the rate limits for a consumer.
+
+extended_description: |
   Define a maximum cost applied to any query, regardless of whether or not the call is within the rate limits for a consumer.
 
   By defining a `max_cost` on the upstream service, you ensure that no query will run with a cost higher than the set `max_cost`. 

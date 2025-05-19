@@ -1,5 +1,5 @@
 {% for section in config.sections %}
-<h2 id="{{ section.title | slugify }}">{{section.title}}</h2>
+<h2 id="{{ section.title | slugify }}-section" data-skip-process-heading-id="true">{{section.title}}</h2>
 
 {% if section.description != empty %}
 <div class="flex flex-col text-secondary content kong-conf-section-description">

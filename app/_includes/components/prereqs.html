@@ -13,6 +13,8 @@
 {% assign shouldRenderWorksOn = prereqs.show_works_on %}
 {% endif %}
 
+{% assign product=page.products[0] %}
+
 <div class="flex flex-col accordion prerequisites" {{ default_accordion }}data-multiple="false" data-test-id="prereqs">
 
   {% assign inline_before = prereqs.inline | where: "position", "before" %}
@@ -40,7 +42,7 @@
 
   {% if prereqs.kubernetes.gateway_api %}
   <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-    {% include prereqs/kubernetes/gateway-api.md config=prereqs.kubernetes %}
+    {% include prereqs/kubernetes/gateway-api.md config=prereqs.kubernetes product=product %}
   </div>
   {% endif %}
 
@@ -70,10 +72,19 @@
         </div>
       {% endif %}
 
+      {% if page.products contains 'kic'  %}
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
+          {% include prereqs/kubernetes/kic-konnect-cp.md prereqs=prereqs %}
+        </div>
+      {% endif %}
+
       {% for product in prereqs.products %}
-        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-          {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
-          {% include {{ product_include }} tier=include.tier prereqs=prereqs %}
+        {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
+          {% include {{ product_include }} prereqs=prereqs topology="konnect" %}
+        </div>
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" }'>
+          {% include {{ product_include }} prereqs=prereqs topology="on-prem" %}
         </div>
       {% endfor %}
     {% endif %}
@@ -106,7 +117,6 @@
   {% endif %}
 
   {% if prereqs.entities? %}
-    {% assign product=page.products[0] %}
     {% if product == 'operator' %}{% assign product='kic' %}{% endif %}
     <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
       {% assign prereq_path = "prereqs/entities/" | append: product | append: ".md" %}

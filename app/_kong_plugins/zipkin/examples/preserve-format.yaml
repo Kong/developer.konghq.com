@@ -1,5 +1,7 @@
 description: |
   Configure the Zipkin plugin to extract tracing context and inject it in the same type, preserving the format.
+extended_description: |
+  Configure the Zipkin plugin to extract tracing context and inject it in the same type, preserving the format.
   The configuration takes the following form:
   - Extracts the tracing context using order of precedence: `w3c` > `b3` > `jaeger` > `ot` > `aws` > `datadog`
   - Injects the tracing context in the extracted header type
@@ -9,14 +11,6 @@ description: |
 title: 'Preserve incoming format'
 
 weight: 900
-
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
 
 config:
   propagation:	

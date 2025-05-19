@@ -17,6 +17,7 @@ rows:
   - header:
       type: h1
       text: "Gateway Manager"
+      sub_text: Manage all Kong runtimes in a single console
 
   - columns:
       - blocks:

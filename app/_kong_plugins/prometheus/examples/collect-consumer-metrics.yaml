@@ -1,4 +1,5 @@
-description: 'Collects per-Consumer metrics. The `kong_http_requests_total` and `kong_bandwidth_bytes` metrics fill in the Consumer label when available.'
+description: 'Collects per-Consumer metrics.'
+extended_description: 'Collects per-Consumer metrics. The `kong_http_requests_total` and `kong_bandwidth_bytes` metrics fill in the Consumer label when available.'
 
 title: 'Collect per-Consumer metrics'
 

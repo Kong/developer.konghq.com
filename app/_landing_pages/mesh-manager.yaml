@@ -10,6 +10,7 @@ rows:
   - header:
       type: h1
       text: "Mesh Manager"
+      sub_text: Manage all of your {{site.mesh_product_name}} service meshes in a single console
 
   - columns:
       - blocks:

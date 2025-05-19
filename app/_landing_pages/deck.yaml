@@ -12,6 +12,7 @@ rows:
   - header:
       type: h1
       text: "decK"
+      sub_text: Kong's command line tool for API Lifecycle Automation
 
   - header:
       type: h2

@@ -1,6 +1,7 @@
 title: 'Custom regex injection'
 
-description: |
+description: Specify a custom regex for the Injection Protection plugin.
+extended_description: |
   You can specify a custom regex for matching by using the `custom_injections` parameter in the Injection Protection plugin config. 
   To create a custom regex, you must define the following:
 
@@ -9,14 +10,6 @@ description: |
   * The content you want to check for a regex match (such as headers, path and query, and body)
 
 weight: 900
-
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
 
 config:
   injection_types: []

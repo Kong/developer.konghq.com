@@ -1,5 +1,7 @@
 title: Demonstrating Proof-of-Possession (DPoP)
 description: |
+  Configure the OpenID Connect plugin for Demonstrating Proof-of-Possession (DPoP).
+extended_description: |
   Configure the OpenID Connect plugin for [Demonstrating Proof-of-Possession](/plugins/openid-connect/#demonstrating-proof-of-possession-dpop) by using the `proof_of_possession_dpop` configuration option. 
   
   This method binds the access token to a JSON Web Key (JWK) provided by the client.

@@ -13,6 +13,7 @@ rows:
   - header:
       type: h1
       text: "Service Catalog Integrations"
+      sub_text: "Integrate third-party applications into your {{site.konnect_short_name}} organization."
 
   - columns:
       - blocks:

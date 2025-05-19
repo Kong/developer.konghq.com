@@ -1,35 +1,45 @@
-{% assign summary='{{site.kic_product_name}} running' %}
 {% assign additional_flags = '' %}
+
+{% assign is_konnect = false %}
+{% if include.topology == "konnect" %}
+  {% assign is_konnect = true %}
+{% endif %}
+
 {% assign use_values_file = false %}
-{% if prereqs.enterprise %}
-{% assign use_values_file = true %}
+{% if prereqs.enterprise or is_konnect %}
+  {% assign use_values_file = true %}
+{% endif %}
+
+{% assign use_kong_license = false %}
+{% if prereqs.enterprise and include.topology != "konnect" %}
+  {% assign use_kong_license = true %}
 {% endif %}
 
 {% if prereqs.kubernetes.gateway_api == 'experimental' %}
-{% assign additional_flags = additional_flags | append:' --set controller.ingressController.env.feature_gates="GatewayAlpha=true"' %}
+  {% assign additional_flags = additional_flags | append:' --set controller.ingressController.env.feature_gates="GatewayAlpha=true"' %}
 {% endif %}
 {% if prereqs.kubernetes.prometheus %}
-{% assign additional_flags = additional_flags | append: ' --set gateway.serviceMonitor.enabled=true --set gateway.serviceMonitor.labels.release=promstack' %}
+  {% assign additional_flags = additional_flags | append: ' --set gateway.serviceMonitor.enabled=true --set gateway.serviceMonitor.labels.release=promstack' %}
 {% endif %}
 {% if prereqs.kubernetes.feature_gates %}
-{% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.feature_gates="' | append: prereqs.kubernetes.feature_gates | append: '"' %}
+  {% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.feature_gates="' | append: prereqs.kubernetes.feature_gates | append: '"' %}
 {% endif %}
 {% if prereqs.kubernetes.dump_config %}
-{% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.dump_config=true' %}
+  {% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.dump_config=true' %}
 {% endif %}
 
 {% if prereqs.kubernetes.env %}
-{% for env in prereqs.kubernetes.env %}
-{% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.' | append: env[0] | append: '=' | append: env[1] %}
-{% endfor %}
+  {% for env in prereqs.kubernetes.env %}
+    {% assign additional_flags = additional_flags | append: ' --set controller.ingressController.env.' | append: env[0] | append: '=' | append: env[1] %}
+  {% endfor %}
 {% endif %}
 
 {% unless use_values_file %}
-{% if prereqs.kubernetes.gateway_env %}
-{% for env in prereqs.kubernetes.gateway_env %}
-{% assign additional_flags = additional_flags | append: ' --set gateway.env.' | append: env[0] | append: '=' | append: env[1] %}
-{% endfor %}
-{% endif %}
+  {% if prereqs.kubernetes.gateway_env %}
+    {% for env in prereqs.kubernetes.gateway_env %}
+    {% assign additional_flags = additional_flags | append: ' --set gateway.env.' | append: env[0] | append: '=' | append: env[1] %}
+    {% endfor %}
+  {% endif %}
 {% endunless %}
 
 {% capture details_content %}
@@ -41,34 +51,60 @@
    helm repo update
    ```
 
-{% if prereqs.enterprise %}
+{% if use_kong_license %}
 1. Create a file named `license.json` containing your {{site.ee_product_name}} license and store it in a Kubernetes secret:
 
    ```bash
    kubectl create namespace kong --dry-run=client -o yaml | kubectl apply -f -
    kubectl create secret generic kong-enterprise-license --from-file=license=./license.json -n kong
    ```
+{% endif %}
 
+{% if use_values_file %}
 1. Create a `values.yaml` file:
 
    ```yaml
-   cat <<EOF > values.yaml
+   cat <<EOF > values.yaml{% if is_konnect %}
+   controller:
+     ingressController:
+       image:
+         tag: "3.4"
+       env:
+         feature_gates: "FillIDs=true"
+       konnect:
+         license:
+           enabled: true
+         enabled: true
+         controlPlaneID: "$CONTROL_PLANE_ID"
+         tlsClientCertSecretName: konnect-client-tls
+         apiHostname: "us.kic.api.konghq.com"{% endif %}
    gateway:
      image:
-       repository: kong/kong-gateway
-     env:{% if prereqs.kubernetes.gateway_env %}{% for env in prereqs.kubernetes.gateway_env %}
-       {{ env[0] }}: '{{ env[1] }}'{% endfor %}{% endif %}
+       repository: kong/kong-gateway{% if prereqs.kubernetes.gateway_env or is_konnect or use_kong_license %}
+     env:{% for env in prereqs.kubernetes.gateway_env %}
+       {{ env[0] }}: '{{ env[1] }}'{% endfor %}{% endif %}{% if use_kong_license %}
        LICENSE_DATA:
          valueFrom:
            secretKeyRef:
              name: kong-enterprise-license
-             key: license{% if prereqs.kubernetes.gateway_custom_env %}
+             key: license{% endif %}{% if is_konnect %}
+       konnect_mode: 'on'
+       vitals: "off"
+       cluster_mtls: pki
+       cluster_telemetry_endpoint: "$CONTROL_PLANE_TELEMETRY:443"
+       cluster_telemetry_server_name: "$CONTROL_PLANE_TELEMETRY"
+       cluster_cert: /etc/secrets/konnect-client-tls/tls.crt
+       cluster_cert_key: /etc/secrets/konnect-client-tls/tls.key
+       lua_ssl_trusted_certificate: system
+       proxy_access_log: "off"
+       dns_stale_ttl: "3600"
+     secretVolumes:
+        - konnect-client-tls{% endif %}{% if prereqs.kubernetes.gateway_custom_env %}
      customEnv:{% for env in prereqs.kubernetes.gateway_custom_env %}
        {{ env[0] }}: '{{ env[1] }}'{% endfor %}{% endif %}
    EOF
    ```
 {% assign additional_flags = additional_flags | append:' --values ./values.yaml' %}
-{% assign summary = summary | append:' (with an Enterprise license)' %}
 {% endif %}
 
 1. Install {{ site.kic_product_name }} using Helm:
@@ -87,5 +123,15 @@
 {% endunless %}
 
 {% endcapture %}
+
+{% assign summary='{{site.kic_product_name}} running' %}
+
+{% if use_kong_license %}
+{% assign summary = summary | append:' (with an Enterprise license)' %}
+{% endif %}
+
+{% if is_konnect %}
+{% assign summary = summary | append:' (attached to Konnect)' %}
+{% endif %}
 
 {% include how-tos/prereq_cleanup_item.html summary=summary details_content=details_content icon_url='/assets/icons/kubernetes.svg' %}

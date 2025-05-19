@@ -33,7 +33,10 @@ tags:
 
 tldr:
   q: How do I use decK?
-  a: Create a declarative configuration file named `kong.yaml` and run `deck gateway sync kong.yaml`
+  a: |
+    This page teaches you how to use decK to create a Gateway Service, Route, Plugins, and Consumers using a declarative configuration file (`kong.yaml`). It uses the `deck gateway apply` command to build the configuration up incrementally. 
+    
+    At any point, you can run `deck gateway dump` to see the entire configuration of {{site.base_gateway}} at once. 
 
 tools:
   - deck
@@ -47,8 +50,6 @@ cleanup:
       include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 ---
-
-This page teaches you how to use decK to create a Service, Route, Plugins, and Consumers. It uses the `deck gateway apply` command to build the configuration up incrementally. At any point, you can run `deck gateway dump` to see the entire configuration of {{ site.base_gateway }} at once.
 
 ## Create a Service
 
@@ -75,7 +76,7 @@ entities:
         - "/"
 {% endentity_examples %}
 
-You can now make a HTTP request to your running {{ site.base_gateway }} instance and see it proxied to httpbin:
+You can now make an HTTP request to your running {{ site.base_gateway }} instance and see it proxied to httpbin:
 
 {% validation request-check %}
 url: '/anything'

@@ -1,5 +1,5 @@
 description: |
-  Configure the plugin to use OpenAI GPT-4 to translate the client request to a different language. 
+  Configure the AI Request Transformer plugin to use OpenAI GPT-4 to translate the client request to a different language. 
   In this example, we'll translate the client's question to French.
 
 title: Translate a request body

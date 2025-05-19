@@ -47,10 +47,7 @@ kill-ports:
 	@VITE_PROCESS=$$(lsof -ti:3036) && kill -9 $$VITE_PROCESS || true
 
 vale:
-	-git diff --name-only --diff-filter=d HEAD | grep '\.md$$' | xargs vale
-
-vale-pr:
-	-git diff --name-only HEAD origin/main | grep '\.md$$' | xargs vale
+	-git diff --name-only --diff-filter=d origin/main HEAD | grep '\.md$$' | xargs vale
 
 scaffold-plugin:
 	@if [ -z "$(PLUGIN)" ]; then \

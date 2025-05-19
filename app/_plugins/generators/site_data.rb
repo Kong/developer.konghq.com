@@ -13,7 +13,7 @@ module Jekyll
       site.data['searchSources'] = site.data.dig('search', 'sources')
 
       products = site.data['products'].map do |p|
-        p[0].gsub("-","_")
+        p[0].gsub('-', '_')
       end
 
       products.each do |product|
@@ -21,6 +21,7 @@ module Jekyll
         next if releases.nil?
 
         site.data["#{product}_latest"] = releases.detect { |r| r['latest'] }
+        site.data["#{product}_releases"] = releases
       end
     end
 
@@ -42,7 +43,7 @@ module Jekyll
     def search_filters(site)
       {
         products: site.data.fetch('products').map { |k, v| { label: v['name'], value: k } },
-        tools: site.data.fetch('tools').map { |k, v| { label: v['name'], value: k } },
+        tools: site.data.fetch('tools').except('kic', 'operator').map { |k, v| { label: v['name'], value: k } },
         works_on: site.data.dig('products', 'gateway', 'deployment_topologies').map do |t|
           { label: t['text'], value: t['slug'] }
         end

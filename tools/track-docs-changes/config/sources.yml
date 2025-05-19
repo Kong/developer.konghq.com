@@ -1037,6 +1037,8 @@ app/_landing_pages/konnect.yaml:
 app/_landing_pages/konnect-platform/authentication.yaml:
   - app/konnect/org-management/auth.md
   - app/konnect/org-management/social-identity-login.md
+app/konnect-platform/active-tracing.md:
+  - app/konnect/gateway-manager/active-tracing.md
 
 # landing pages
 app/_landing_pages/service-catalog.yaml:
@@ -1386,7 +1388,8 @@ app/deck/gateway/deduplicate.md:
   - app/deck/gateway/deduplicate.md
 app/deck/gateway/reset.md:
   - app/deck/gateway/reset.md
-
+app/_how-tos/configure-datastore.md:
+  - app/_src/gateway/install/post-install/set-up-data-store.md
 ## Mesh
 
 app/mesh/acm-private-ca-policy.md:
@@ -1619,6 +1622,74 @@ app/insomnia/graphql-queries.md:
 app/insomnia/external-vault.md:
   - app/insomnia/external-vault-integration.md
 
+
+## Operator 
+
+app/_how-tos/operator-konnect-serviceless-route.md:
+  - app/_src/gateway-operator/guides/konnect-entities/service-and-route.md
+app/operator/konnect/labelling.md:
+  - app/_src/gateway-operator/guides/konnect-entities/tagging-and-labeling.md
+app/operator/konnect/reference/faq.md:
+  - app/_src/gateway-operator/guides/konnect-entities/faq.md
+app/operator/konnect/reference/crds.md:
+  - /app/_src/gateway-operator/concepts/gateway-api.md
+  - /app/_src/gateway-operator/guides/konnect-entities/architecture.md
+app/_how-tos/operator-dataplane-autoscale-datadog.md:
+  - app/_src/gateway-operator/guides/autoscaling-workloads/datadog.md
+app/_how-tos/operator-dataplane-autoscale-prometheus.md:
+  - app/_src/gateway-operator/guides/autoscaling-workloads/prometheus.md
+app/_how-tos/operator-dataplane-custom-ca.md:
+  - app/_src/gateway-operator/guides/konnect-entities/certificate-and-cacertificate.md
+app/_how-tos/operator-dataplane-custom-plugins.md:
+  - app/_src/gateway-operator/guides/plugin-distribution.md
+app/_how-tos/operator-dataplane-image.md:
+  - app/_src/gateway-operator/customization/data-plane-image.md
+app/_how-tos/operator-dataplane-sidecars.md:
+  - app/_src/gateway-operator/customization/sidecars.md
+app/_how-tos/operator-get-started-hybrid-create-route.md:
+  - app/_src/gateway-operator/get-started/kic/create-route.md
+app/_how-tos/operator-get-started-hybrid-deploy-dataplane.md:
+  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
+app/_how-tos/operator-get-started-hybrid-install.md:
+  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
+app/_how-tos/operator-get-started-kic-create-gateway.md:
+  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
+app/_how-tos/operator-get-started-kic-create-route.md:
+  - app/_src/gateway-operator/get-started/kic/create-route.md
+app/_how-tos/operator-get-started-kic-install.md:
+  - app/_src/gateway-operator/get-started/kic/install.md
+app/_how-tos/operator-install.md:
+  - app/_src/gateway-operator/get-started/konnect/install.md
+app/_how-tos/operator-konnect-certificate-ca-cert.md:
+  - app/_src/gateway-operator/production/certificates/custom_ca.md
+app/_how-tos/operator-konnect-cgw-configuration.md:
+  - app/_src/gateway-operator/guides/konnect-entities/cloud-gateways-data-plane-group-configuration.md
+app/_how-tos/operator-konnect-cgw-network.md:
+  - app/_src/gateway-operator/guides/konnect-entities/cloud-gateways-network.md
+app/_how-tos/operator-konnect-consumer.md:
+  - app/_src/gateway-operator/guides/konnect-entities/consumer-and-consumergroup.md
+app/_how-tos/operator-konnect-control-plane-group.md:
+  - app/_src/gateway-operator/guides/konnect-entities/gatewaycontrolplane.md
+app/_how-tos/operator-konnect-control-plane-kic.md:
+  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
+app/_how-tos/operator-konnect-control-plane.md:
+  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
+app/_how-tos/operator-konnect-dp-certificate.md:
+  - app/_src/gateway-operator/guides/konnect-entities/dpcertificate.md
+app/_how-tos/operator-konnect-key-keyset.md:
+  - app/_src/gateway-operator/guides/konnect-entities/key-and-keyset.md
+app/_how-tos/operator-konnect-service-route.md:
+  - app/_src/gateway-operator/guides/konnect-entities/service-and-route.md
+app/_how-tos/operator-konnect-upstream-target.md:
+  - app/_src/gateway-operator/guides/konnect-entities/upstream-and-target.md
+app/_how-tos/operator-konnect-vault.md:
+  - app/_src/gateway-operator/guides/konnect-entities/vault.md
+app/operator/konnect/reconciliation-loop.md:
+  - app/_src/gateway-operator/guides/konnect-entities/architecture.md
+app/operator/konnect/troubleshooting/status.md:
+  - app/_src/gateway-operator/production/monitoring/status/overview.md
+app/operator/support-policy.md:
+  - app/_src/gateway-operator/support.md
 app/_landing_pages/insomnia/mock-servers.yaml:
   - /insomnia/api-mocking.md
 app/_how-tos/create-a-cloud-hosted-mock-server.md:
@@ -2162,74 +2233,6 @@ app/kubernetes-ingress-controller/troubleshooting/kubernetes-api-server.md:
 
 app/_how-tos/enable-mutual-tls-authentication-on-a-service.md:
   - app/_src/kubernetes-ingress-controller/plugins/mtls.md
-
-## Operator 
-
-app/_how-tos/operator-konnect-serviceless-route.md:
-  - app/_src/gateway-operator/guides/konnect-entities/service-and-route.md
-app/operator/konnect/labelling.md:
-  - app/_src/gateway-operator/guides/konnect-entities/tagging-and-labeling.md
-app/operator/konnect/reference/faq.md:
-  - app/_src/gateway-operator/guides/konnect-entities/faq.md
-app/operator/konnect/reference/crds.md:
-  - app/_src/gateway-operator/concepts/gateway-api.md
-  - app/_src/gateway-operator/guides/konnect-entities/architecture.md
-app/_how-tos/operator-dataplane-autoscale-datadog.md:
-  - app/_src/gateway-operator/guides/autoscaling-workloads/datadog.md
-app/_how-tos/operator-dataplane-autoscale-prometheus.md:
-  - app/_src/gateway-operator/guides/autoscaling-workloads/prometheus.md
-app/_how-tos/operator-dataplane-custom-ca.md:
-  - app/_src/gateway-operator/guides/konnect-entities/certificate-and-cacertificate.md
-app/_how-tos/operator-dataplane-custom-plugins.md:
-  - app/_src/gateway-operator/guides/plugin-distribution.md
-app/_how-tos/operator-dataplane-image.md:
-  - app/_src/gateway-operator/customization/data-plane-image.md
-app/_how-tos/operator-dataplane-sidecars.md:
-  - app/_src/gateway-operator/customization/sidecars.md
-app/_how-tos/operator-get-started-hybrid-create-route.md:
-  - app/_src/gateway-operator/get-started/kic/create-route.md
-app/_how-tos/operator-get-started-hybrid-deploy-dataplane.md:
-  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
-app/_how-tos/operator-get-started-hybrid-install.md:
-  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
-app/_how-tos/operator-get-started-kic-create-gateway.md:
-  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
-app/_how-tos/operator-get-started-kic-create-route.md:
-  - app/_src/gateway-operator/get-started/kic/create-route.md
-app/_how-tos/operator-get-started-kic-install.md:
-  - app/_src/gateway-operator/get-started/kic/install.md
-app/_how-tos/operator-install.md:
-  - app/_src/gateway-operator/get-started/konnect/install.md
-app/_how-tos/operator-konnect-certificate-ca-cert.md:
-  - app/_src/gateway-operator/production/certificates/custom_ca.md
-app/_how-tos/operator-konnect-cgw-configuration.md:
-  - app/_src/gateway-operator/guides/konnect-entities/cloud-gateways-data-plane-group-configuration.md
-app/_how-tos/operator-konnect-cgw-network.md:
-  - app/_src/gateway-operator/guides/konnect-entities/cloud-gateways-network.md
-app/_how-tos/operator-konnect-consumer.md:
-  - app/_src/gateway-operator/guides/konnect-entities/consumer-and-consumergroup.md
-app/_how-tos/operator-konnect-control-plane-group.md:
-  - app/_src/gateway-operator/guides/konnect-entities/gatewaycontrolplane.md
-app/_how-tos/operator-konnect-control-plane-kic.md:
-  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
-app/_how-tos/operator-konnect-control-plane.md:
-  - app/_src/gateway-operator/get-started/kic/create-gateway-konnect-crds.md
-app/_how-tos/operator-konnect-dp-certificate.md:
-  - app/_src/gateway-operator/guides/konnect-entities/dpcertificate.md
-app/_how-tos/operator-konnect-key-keyset.md:
-  - app/_src/gateway-operator/guides/konnect-entities/key-and-keyset.md
-app/_how-tos/operator-konnect-service-route.md:
-  - app/_src/gateway-operator/guides/konnect-entities/service-and-route.md
-app/_how-tos/operator-konnect-upstream-target.md:
-  - app/_src/gateway-operator/guides/konnect-entities/upstream-and-target.md
-app/_how-tos/operator-konnect-vault.md:
-  - app/_src/gateway-operator/guides/konnect-entities/vault.md
-app/operator/konnect/reconciliation-loop.md:
-  - app/_src/gateway-operator/guides/konnect-entities/architecture.md
-app/operator/konnect/troubleshooting/status.md:
-  - app/_src/gateway-operator/production/monitoring/status/overview.md
-app/operator/support-policy.md:
-  - app/_src/gateway-operator/support.md
 
 ## Things that were missing
 
