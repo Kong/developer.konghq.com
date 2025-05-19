@@ -47,6 +47,8 @@ related_resources:
     url: /advanced-analytics/
   - text: LLM Reporting
     url: /advanced-analytics/llm-reporting/
+  - text: Dev Portal analytics
+    url: /dev-portal/analytics/
 ---
 
 The Explorer interface displays API usage data gathered by {{site.konnect_short_name}} Analytics from your Data Plane nodes. You can use this tool to:
