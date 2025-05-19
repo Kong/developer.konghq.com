@@ -36,7 +36,8 @@ tags:
 
 tldr:
   q: How do I use the AI RAG Injector plugin to safeguard that my company chatbot responds with relevant questions regarding compliance policies?
-  a: Answer
+  a: Use the AI RAG Injector plugin to integrate your company’s compliance policy documents as retrieval-augmented knowledge. Configure the plugin to inject context from these documents into chatbot prompts, ensuring it can generate relevant, accurate compliance-related questions dynamically during conversations.
+
 
 tools:
   - deck
