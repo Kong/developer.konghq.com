@@ -49,7 +49,7 @@ prereqs:
       icon_url: /assets/icons/openai.svg
     - title: Azure Content Safety key
       content: |
-          To complete this task, you must have an Azure subscription and Content Safety Key (static key generated from Azure Portal). Follow the [quickstart from Microsoft](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text?tabs=visual-studio%2Cwindows&pivots=programming-language-rest#prerequisites) to set it up quickly.
+          To complete this task, you must have an Azure subscription and Content Safety Key (static key generated from Azure Portal). Follow the [quickstart from Microsoft](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text?tabs=visual-studio%2Cwindows&pivots=programming-language-rest#prerequisites) to set it up.
       icon_url: /assets/icons/azure.svg
     # - title: Azure Content Safety blocklist
     #   content: |
@@ -190,7 +190,7 @@ Then, based on the plugin's configuration, Azure responds with the following ana
 }
 ```
 
-This breaches the plugin's configured (inclusive and greater) threshold of `2` for `Hate` [based on Azure's ruleset](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories?tabs=definitions#hate-and-fairness-severity-levels), and sends a `400` error code to the client:
+This breaches the plugin's configured threshold of ≥`2` for `Hate` [based on Azure's ruleset](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories?tabs=definitions#hate-and-fairness-severity-levels), and sends a `400` error code to the client:
 
 ```json
 {
