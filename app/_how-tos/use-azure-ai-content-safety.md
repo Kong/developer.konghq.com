@@ -1,6 +1,7 @@
 ---
 title: Use Azure Content Safety plugin
 content_type: how_to
+
 related_resources:
   - text: AI Proxy
     url: /plugins/ai-proxy/
@@ -22,7 +23,7 @@ min_version:
 
 plugins:
   - ai-proxy
-  - key-auth
+  - ai-azure-content-safety
 
 entities:
   - service
@@ -30,28 +31,30 @@ entities:
   - plugin
 
 tags:
-    - ai
-    - openai
-    - ai-gateway
+  - ai
+  - openai
+  - ai-gateway
 
 tldr:
-    q: How can I use Azure Content Safety plugin with AI Gateway?
-    a: To use the Azure Content Safety plugin, you must have [An Azure subscription and a Content Safety instance](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text?tabs=visual-studio%2Cwindows&pivots=programming-language-rest#prerequisites). Then, you must configure an [AI proxy plugin](./#configure-this-ai-proxy-plugin) and then create the [AI Azure Content Safety plugin](./#configure-the-ai-azure-content-safety-plugin).
+  q: How can I use Azure Content Safety plugin with AI Gateway?
+  a: To use the Azure Content Safety plugin, you must have [An Azure subscription and a Content Safety instance](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text?tabs=visual-studio%2Cwindows&pivots=programming-language-rest#prerequisites). Then, you must configure an [AI proxy plugin](./#configure-this-ai-proxy-plugin) and then create the [AI Azure Content Safety plugin](./#configure-the-ai-azure-content-safety-plugin).
 
 tools:
     - deck
 
 prereqs:
   inline:
-  - title: OpenAI
-    include_content: prereqs/openai
-    icon_url: /assets/icons/openai.svg
-  - title: Azure Content Safety key
-    content: |
-        To complete this task, you must have an Azure subscription and Content Safety Key (static key generated from Azure Portal). Follow the [quickstart from Microsoft](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text?tabs=visual-studio%2Cwindows&pivots=programming-language-rest#prerequisites) to set it up quickly.
-  - title: Azure Content Safety blocklist
-    content: |
-        If you choose to use a blocklist in [step 5](./#optional-use-blocklists), you must first create an Azure Content Blocklist. For details, see the [Use a blocklist guide](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/how-to/use-blocklist?tabs=windows%2Crest).
+    - title: OpenAI
+      include_content: prereqs/openai
+      icon_url: /assets/icons/openai.svg
+    - title: Azure Content Safety key
+      content: |
+          To complete this task, you must have an Azure subscription and Content Safety Key (static key generated from Azure Portal). Follow the [quickstart from Microsoft](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text?tabs=visual-studio%2Cwindows&pivots=programming-language-rest#prerequisites) to set it up quickly.
+      icon_url: /assets/icons/azure.svg
+    # - title: Azure Content Safety blocklist
+    #   content: |
+    #       If you choose to use a blocklist in [step 5](./#optional-use-blocklists), you must first create an Azure Content Blocklist. For details, see the [Use a blocklist guide](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/how-to/use-blocklist?tabs=windows%2Crest).
+    #   icon_url: /assets/icons/azure.svg
   entities:
     services:
         - example-service
@@ -93,16 +96,18 @@ variables:
 
 ## Configure the AI Azure Safety plugin
 
+
 {:.info}
-> We configure the plugin with an array of supported categories, as defined by Azure Content Safety:
+> In this tutorial, we configure the plugin with an array of supported harm categories, as defined by Azure AI Content Safety. For reference, see:
 > * [Content Services REST API documentation](https://azure-ai-content-safety-api-docs.developer.azure-api.net/api-details#api=content-safety-service-2023-10-01&operation=TextOperations_AnalyzeText)
 > * [Harm categories in Azure AI Content Safety](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories)
 
-**In this guide, we will use the following configuration first:**
+
+**We'll start with the following configuration:**
 
 * We map each harm category (`Hate`, `SelfHarm`, `Sexual`, and `Violence`) to `categories.name`.
 * We set `rejection_level: 2` for each category.<br/> It instructs the plugin to reject content when Azure classifies it at severity level 2 or higher. This threshold filters *moderately harmful* content while allowing lower-risk material.
-- We configure `output_type: FourSeverityLevels`.<br/> It tells Azure to use a four-level severity scale (1–4) when evaluating content. If needed, we could instead configure `output_type: EightSeverityLevels` for finer-grained filtering.
+- We configure `output_type: FourSeverityLevels`.<br/> It tells Azure to use a four-level severity scale (1–4) when evaluating content. For finer-grained filtering, we could instead configure `output_type: EightSeverityLevels`.
 
     {:.info}
     > For more details about severity grading, see [Azure severity grading](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/content-filter#content-filtering-categories).
@@ -118,7 +123,7 @@ entities:
       service: SERVICE_NAME|ID
       config:
         content_safety_url: "https://my-acs-instance.cognitiveservices.azure.com/contentsafety/text:analyze"
-        content_safety_key: "{vault://env/AZURE_CONTENT_SAFETY_KEY}"
+        content_safety_key: ${azure_content_safety_key}
         categories:
           - name: Hate
             rejection_level: 2
@@ -131,6 +136,9 @@ entities:
         text_source: concatenate_user_content
         reveal_failure_reason: true
         output_type: FourSeverityLevels
+variables:
+  azure_content_safety_key:
+    value: AZURE_CONTENT_SAFETY_KEY
 {% endentity_examples %}
 
 {:.warning}
@@ -205,9 +213,9 @@ case the response looks like this:
 }
 ```
 
-## (Optional) Use blocklists
+<!-- UNTIL A FIX FOR THIS BUG https://konghq.atlassian.net/browse/AG-288 IS PUSHED TO PRODUCTION, LET'S HIDE THIS SECTION. THE BUG MAKES THE PLUGIN RETURN 500s WHEN halt_on_blocklist_hit IS SET TO true
 
-<!-- FYI: TO BE CHECKED, FOR SOME REASON I KEEP GETTING 500 WHENEVER THE BLOCKLIST IS ENABLED -->
+## (Optional) Use blocklists
 
 The AI Azure Content Safety plugin also supports previously-created blocklists in Azure Content Safety.
 
@@ -246,4 +254,4 @@ TO DO: Add expected responses when sent requests contain any of the blocked phra
 
 {{site.base_gateway}} will then command Content Safety to enable and execute these blocklists against the content. The plugin property `config.halt_on_blocklist_hit` is used to tell Content Safety to stop analyzing the content as soon as any blocklist hit matches.
 
-Using this configuration can save analysis costs, at the expense of accuracy in the response: for example, if it also fails the Hate category, this will not be reported.
+Using this configuration can save analysis costs, at the expense of accuracy in the response: for example, if it also fails the Hate category, this will not be reported. -->
