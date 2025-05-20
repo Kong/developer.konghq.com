@@ -8,6 +8,7 @@ sections:
         description: Learn how to publish APIs with Dev Portal and control who can see published APIs.
         url: /dev-portal/publishing/
       - path: /dev-portal/**/*
+      - path: /dev-portal/analytics/
     auto_exclude: true   
   - title: Application registration
     items:
