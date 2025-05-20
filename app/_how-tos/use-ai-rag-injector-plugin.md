@@ -135,7 +135,7 @@ entities:
           host: ${redis_host}
           port: 6379
         distance_metric: cosine
-        dimensions: 76
+        dimensions: 3072
 variables:
   openai_api_key:
     value: $OPENAI_API_KEY
