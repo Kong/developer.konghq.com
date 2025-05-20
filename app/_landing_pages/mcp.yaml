@@ -1,7 +1,7 @@
 metadata:
-  title: "Kong MCP Gateway"
+  title: "Kong MCP Traffic Gateway"
   content_type: landing_page
-  description: This page is an introduction to MCP Gateway capabilites in Kong.
+  description: This page is an introduction to MCP Traffic Gateway capabilites in Kong.
   products:
     - ai-gateway
     - gateway
@@ -14,7 +14,7 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Kong MCP Gateway"
+      text: "Kong MCP Traffic Gateway"
       sub_text: Modernize AI Agent Infrastructure with Gateway-Driven MCP Scaling
 
   - columns:
@@ -24,7 +24,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Kong MCP Gateway is an MCP server that enables AI assistants to interact with Kong Konnect using natural language to access analytics, configurations, and control plane operations.
+                    Kong MCP Traffic Gateway is an MCP server that enables AI assistants to interact with Kong Konnect using natural language to access analytics, configurations, and control plane operations.
   - columns:
       - blocks:
           - type: structured_text
@@ -70,7 +70,7 @@ rows:
         - type: card
           config:
             title: MCP Overview
-            description: Learn how MCP Gateway works.
+            description: Learn how MCP Traffic Gateway works.
             icon: /assets/icons/plug.svg
             cta:
               url: /plugins/?category=ai
@@ -79,7 +79,7 @@ rows:
 
   - header:
       type: h2
-      text: "MCP Gateway Capabilities"
+      text: "MCP Traffic Gateway Capabilities"
     columns:
       - blocks:
           - type: structured_text
@@ -93,7 +93,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Secure AI connections with Kong MCP Gateway
+            title: Secure AI connections with Kong MCP Traffic Gateway
             description: Learn how to set up Key Authentication for an OpenAI chat route
             icon: /assets/icons/lock.svg
             cta:
@@ -102,7 +102,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Govern AI connections with Kong MCP Gateway
+            title: Govern AI connections with Kong MCP Traffic Gateway
             description: Learn about something.
             icon: /assets/icons/network.svg
             cta:
@@ -111,43 +111,12 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Monitor AI traffic with Kong MCP Gateway
-            description: Learn about something.
+            title: Monitor AI traffic with Kong MCP Traffic Gateway
+            description: Learn how to monitor AI trafic for MCP Traffic gateway.
             icon: /assets/icons/monitor.svg
             cta:
               url: /ai-gateway/monitor-ai-llm-metrics/
               align: end
-
-  - columns:
-      - blocks:
-        - type: card
-          config:
-            title: Discover APIs
-            description: Learn about something.
-            icon: /assets/icons/ai.svg
-            cta:
-              url: /mcp/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Discover infrastructure
-            description: Learn about something else.
-            icon: /assets/icons/ai.svg
-            cta:
-              url: /mcp/
-              align: end
-      - blocks:
-        - type: card
-          config:
-            title: Enable a new ecosystem of AI use cases
-            description: Learn about something else.
-            icon: /assets/icons/ai.svg
-            cta:
-              url: /mcp/
-              align: end
-
-
 
   - header:
       type: h2
