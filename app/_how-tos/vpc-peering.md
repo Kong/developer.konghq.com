@@ -9,6 +9,7 @@ products:
   - gateway
 works_on:
   - konnect
+automated_tests: false
 tldr:
   q: How do I set up a VPC peering connection with my Dedicated Cloud Gateway using the API?
   a: Use the {{site.konnect_short_name}} API to initiate peering, then accept the request in AWS and update your route table.
@@ -56,9 +57,8 @@ method: POST
 headers:
   - 'Accept: application/json'
   - 'Content-Type: application/json'
-  - 'Authorization: Bearer $KONNECT_TOKEN'
 body:
-  name: us-east-2 vpc peering
+  name: us-east-1 vpc peering
   cidr_blocks:
     - $AWS_VPC_CIDR
   transit_gateway_attachment_config:
@@ -70,13 +70,11 @@ body:
 <!--vale on-->
 
 
-
 ## Accept the peering request in AWS
 
 1. Go to the AWS Console → **VPC** → **Peering Connections**.
 2. Locate the pending request from {{site.konnect_short_name}}.
 3. Select the request and choose **Accept Request**.
-
 
 ## Update your AWS route table
 
