@@ -129,3 +129,25 @@ variables:
 {% endentity_examples %}
 
 
+## Test the configuration
+
+Using this configuration, given the following AI Chat request:
+
+```json
+"messages": [
+    {
+      "role": "user",
+      "content": "Say something about war!"
+    }
+  ]
+```
+
+Or
+
+```json
+sample
+```
+
+The caller will receive a `400` response, and the messages will not be passed through the MCP Traffic Gateway
+
+
