@@ -14,7 +14,7 @@ products:
 
 related_resources:
   - text: Security at Insomnia
-    url: /insomnia/security/
+    url: /insomnia/manage-insomnia/#security
   - text: SSO
     url: /insomnia/authentication-authorization/#set-up-sso
 

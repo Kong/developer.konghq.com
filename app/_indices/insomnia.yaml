@@ -58,7 +58,7 @@ sections:
 
   - title: Data security
     items:
-      - path: /insomnia/security/
+      - path: /insomnia/manage-insomnia/#security
       - path: /insomnia/data-security/
       - path: /insomnia/collected-data/
       - path: /insomnia/incident-response/

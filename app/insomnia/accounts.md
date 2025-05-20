@@ -29,6 +29,8 @@ Accounts created from June 4th 2024 onwards with a free subscription have E2EE d
 
 You can enable or disable E2EE from the **Encryption** tab in your account settings.
 
+for more details about how E2EE works, see [End-to-End Encryption](/insomnia/end-to-end-encryption/).
+
 ### Passphrase
 
 Insomnia uses the [Secure Remote Password (SRP) protocol](https://datatracker.ietf.org/doc/html/rfc2945) to handle data encryption, which means:
