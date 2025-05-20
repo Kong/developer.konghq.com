@@ -113,6 +113,7 @@ Then, configure the AI RAG Injector plugin
 entities:
   plugins:
   - name: ai-rag-injector
+    id: 3194f12e-60c9-4cb6-9cbc-c8fd7a00cff1
     config:
       inject_template: |
         You are an AI assistant designed to answer employee questions using only the approved compliance content provided between the <RAG></RAG> tags.
