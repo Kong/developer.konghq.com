@@ -137,13 +137,14 @@ This phase runs in real time, taking user input and producing a context-aware re
 **Step breakdown:**
 
 1. The user’s query is converted into an embedding using the same model used during data preparation.
-2. A semantic similarity search locates the most relevant content chunks in the vector database.
-3. The system builds a custom prompt by combining the retrieved chunks with the original query.
-4. The LLM generates a contextually accurate response using both the retrieved context and its own internal knowledge.
+1. A semantic similarity search locates the most relevant content chunks in the vector database.
+1. The system builds a custom prompt by combining the retrieved chunks with the original query.
+1. The LLM generates a contextually accurate response using both the retrieved context and its own internal knowledge.
 
 <!-- vale off -->
 {% mermaid %}
 sequenceDiagram
+    autonumber
     actor User
     participant RawData as Raw Data
     participant EmbeddingModel as Embedding Model
@@ -151,16 +152,38 @@ sequenceDiagram
     participant LLM
 
     par Data Preparation Phase
-        RawData->>EmbeddingModel: Load (1) and chunk documents (2), generate embeddings (3)
-        EmbeddingModel->>VectorDB: (4) Store embeddings
+        activate RawData
+        RawData->>EmbeddingModel: Load and chunk documents, generate embeddings
+        deactivate RawData
+
+        activate EmbeddingModel
+        EmbeddingModel->>VectorDB: Store embeddings
+        deactivate EmbeddingModel
+
+        activate VectorDB
+        deactivate VectorDB
     end
 
     par Retrieval & Generation Phase
+        activate User
         User->>EmbeddingModel: (1) Submit query and generate query embedding
+
+        activate EmbeddingModel
         EmbeddingModel->>VectorDB: (2) Search vector DB
+        deactivate EmbeddingModel
+
+        activate VectorDB
         VectorDB-->>EmbeddingModel: Return relevant chunks
+        deactivate VectorDB
+
+        activate EmbeddingModel
         EmbeddingModel->>LLM: (3) Assemble prompt and send
+        deactivate EmbeddingModel
+
+        activate LLM
         LLM-->>User: (4) Generate and return response
+        deactivate LLM
+        deactivate User
     end
 {% endmermaid %}
 <!-- vale on -->

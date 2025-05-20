@@ -17,7 +17,6 @@ products:
 
 works_on:
   - on-prem
-  - konnect
 
 min_version:
   gateway: '3.6'
@@ -57,12 +56,17 @@ prereqs:
       icon_url: /assets/icons/database.svg
     - title: Langchain splitters
       content: |
-       To complete this tutorial, you'll need Python and `pip` installed on your machine.
+        To complete this tutorial, you'll need **Python (version 3.7 or later)** and `pip` installed on your machine. You can verify it by running:
 
-       Once that's set up, install the required packages by running the following command in your terminal:
-       ```
-       pip install langchain langchain_text_splitters requests
-       ```
+        ```bash
+        python --version
+        pip --version
+         ```
+
+        Once that's set up, install the required packages by running the following command in your terminal:
+        ```
+        pip install langchain langchain_text_splitters requests
+        ```
       icon_url: /assets/icons/python.svg
   entities:
     services:
@@ -147,7 +151,7 @@ variables:
 
 Before sending data to the AI Gateway, split your input into manageable chunks using a text splitting tool like `langchain_text_splitters`. This helps optimize downstream processing and improves semantic retrieval performance.
 
-Please refer to [langchain text_splitters documents](https://python.langchain.com/docs/concepts/text_splitters/) if your documents
+Refer to [langchain text_splitters documents](https://python.langchain.com/docs/concepts/text_splitters/) if your documents
 are structured data other than plain texts.
 
 The following Python script demonstrates how to split text using `RecursiveCharacterTextSplitter` and ingest the resulting chunks into the AI Gateway:
@@ -156,7 +160,74 @@ The following Python script demonstrates how to split text using `RecursiveChara
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import requests
 
-TEXT = ["Your long input document goes here."]
+TEXT = ["""
+Acme Corp. Travel Policy
+1. Purpose
+This policy outlines the guidelines for employees traveling on company business to ensure efficient, cost-effective, and accountable use of company funds.
+2. Scope
+This policy applies to all employees traveling on company business, including domestic and international travel.
+3. Travel Approval
+
+    All travel must be pre-approved by the employee's supervisor and, if applicable, by higher management, based on business need and cost-effectiveness.
+    Travel requests should be submitted at least [Number] weeks/days in advance, including destination, purpose, dates, and estimated costs.
+    Travel requests should be submitted using the designated travel request form.
+
+4. Transportation
+
+    Air Travel:
+
+    Employees should book the most cost-effective airfare, considering time and cost.
+
+Business class or first-class travel is only permitted with prior approval and for exceptional circumstances.
+Employees should choose direct flights whenever possible.
+
+Ground Transportation:
+
+    For travel to and from airports or within the destination, employees should use cost-effective options such as shuttles, public transportation, or car services.
+
+Personal vehicle use is permitted for business travel, with reimbursement at the standard IRS mileage rate.
+Parking and tolls: are reimbursable when necessary.
+
+Train Travel:
+
+    Train travel is considered an appropriate mode of transportation for certain destinations and will be reimbursed if the cost is less than other means of transportation.
+
+5. Lodging
+
+    Employees should choose lodging that is cost-effective and meets the needs of the business trip.
+    Hotel selection: should be based on location, proximity to meeting venues, and cost.
+    Employees should book accommodations in advance to secure the best rates.
+    Travelers should share hotel rooms with other employees when feasible and appropriate.
+
+6. Meals
+
+    Meals are reimbursable during business travel, but expenses should be kept reasonable and appropriate.
+    Employees should present receipts for all meal expenses.
+    Alcoholic beverages: are not reimbursable.
+    When attending business functions with meals provided, expenses for meals purchased elsewhere are not reimbursed unless specifically authorized in advance.
+
+7. Other Expenses
+
+    Entertainment expenses: are generally not reimbursable, except for business-related entertainment that is necessary for client relations.
+    Telephone expenses: are reimbursable when necessary for business travel, but should be kept to a minimum.
+    Internet access: is reimbursable when necessary for business travel.
+
+8. Reimbursement
+
+    Employees should submit all travel expenses for reimbursement within 27 days of the trip.
+    Employees should submit receipts for all travel expenses.
+    Reimbursement will be made in accordance with company policy.
+
+9. Compliance
+
+    All employees are expected to comply with this travel policy.
+    Violation of this policy may result in disciplinary action.
+
+10. Policy Updates
+
+    This policy may be updated from time to time as needed.
+    Employees will be notified of any changes to this policy.
+"""]
 
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
 docs = text_splitter.create_documents(TEXT)
@@ -171,9 +242,17 @@ for doc in docs:
     print(response.json())
 ```
 
-Now, you can feed the split chunks into AI Gateway using the Kong Admin API.
+Save the script as `inject_policy.py`, then run it:
+
+```bash
+python ./inject_policy.py
+```
+
+This will output the number of chunks created and display the response from the injector endpoint for each chunk.
 
 ### Ingest content to the vector database
+
+Now, you can feed the split chunks into AI Gateway using the Kong Admin API.
 
 The following example shows how to ingest content to the vector database for building the knowledge base. The AI RAG Injector plugin uses the OpenAI `text-embedding-3-large` model to generate embeddings for the content and stores them in Redis.
 
@@ -185,20 +264,187 @@ curl localhost:8001/ai-rag-injector/3194f12e-60c9-4cb6-9cbc-c8fd7a00cff1/ingest_
   }'
 ```
 
+## Test RAG configuration
 
-## Make an AI request to the AI Proxy Advanced plugin
+### In-scope questions
 
-Once vector database has ingested data and built a knowledge base, you can make requests to it.
-For example:
+Use the following in-scope questions to verify that the AI responds accurately based on the approved compliance content and does not rely on external knowledge.
 
-```bash
-curl  --http1.1 localhost:8000/chat \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -d '{
-     "messages": [{"role": "user", "content": "What is kong"}]
-   }' | jq
-```
+{% navtabs "In scope" %}
+{% navtab "Basic" %}
+
+  Use simple user questions that map directly to travel policy clauses:
+
+  ```bash
+  curl --http1.1 localhost:8000/chat \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+      "messages": [{"role": "user", "content": "Are alcoholic beverages reimbursable?"}]
+    }' | jq
+  ````
+
+  You can also ask this question:
+
+  ```bash
+  curl --http1.1 localhost:8000/chat \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+      "messages": [{"role": "user", "content": "What documentation is required for travel reimbursement?"}]
+    }' | jq
+  ```
+
+{% endnavtab %}
+{% navtab "Intermediate" %}
+
+  Use slightly more complex prompts involving multi-step policy logic or multiple clauses:
+
+  ```bash
+  curl --http1.1 localhost:8000/chat \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+      "messages": [{"role": "user", "content": "Can I get reimbursed for internet charges during a business trip?"}]
+    }' | jq
+  ```
+
+  Also, you can ask a more complex query about booking a hotel:
+
+  ```bash
+  curl --http1.1 localhost:8000/chat \
+    -H "Content-Type: application/json" \
+    -d '{
+      "messages": [{"role": "user", "content": "Do I need to book my hotel in advance for business travel?"}]
+    }' | jq
+  ```
+
+{% endnavtab %}
+{% navtab "Edge Cases" %}
+
+  Use prompts that test boundaries of the compliance language:
+
+  ```bash
+  curl --http1.1 localhost:8000/chat \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+      "messages": [{"role": "user", "content": "Am I allowed to share a hotel room with another employee?"}]
+    }' | jq
+  ```
+
+  Or ask about public transportation:
+
+  ```bash
+  curl --http1.1 localhost:8000/chat \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+      "messages": [{"role": "user", "content": "What’s the policy on using public transportation during travel?"}]
+    }' | jq
+  ```
+{% endnavtab %}
+{% endnavtabs %}
+
+### Out-of-scope questions
+
+Use the following out-of-scope questions to confirm that the AI correctly refuses to answer queries that fall outside the ingested compliance content.
+
+{% navtabs "test" %}
+{% navtab "General Company Info" %}
+
+  These questions ask about Acme Corp. in general, not about the travel policy:
+
+  ```bash
+  curl --http1.1 localhost:8000/chat \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+      "messages": [{"role": "user", "content": "What does Acme Corp. do?"}]
+    }' | jq
+  ````
+
+  ```bash
+  curl --http1.1 localhost:8000/chat \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+      "messages": [{"role": "user", "content": "Where is Acme Corp. headquartered?"}]
+    }' | jq
+  ```
+
+{% endnavtab %}
+{% navtab "External Knowledge" %}
+
+  These questions require general or external knowledge that is not included in the ingested content:
+
+  ```bash
+  curl --http1.1 localhost:8000/chat \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+      "messages": [{"role": "user", "content": "Who is the CEO of OpenAI?"}]
+    }' | jq
+  ```
+
+  ```bash
+  curl --http1.1 localhost:8000/chat \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+      "messages": [{"role": "user", "content": "How does Redis handle vector storage?"}]
+    }' | jq
+  ```
+{% endnavtab %}
+{% navtab "Other HR Policies" %}
+
+These prompts reference company policies that are not part of the travel policy content:
+
+  ```bash
+  curl --http1.1 localhost:8000/chat \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+      "messages": [{"role": "user", "content": "How much vacation time do I get per year?"}]
+    }' | jq
+  ```
+
+  ```bash
+  curl --http1.1 localhost:8000/chat \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+      "messages": [{"role": "user", "content": "What’s the parental leave policy at Acme Corp.?"}]
+    }' | jq
+  ```
+
+{% endnavtab %}
+{% navtab "Ambiguous or Unsupported Topics" %}
+
+These prompts are vague, outside compliance scope, or might encourage hallucination if guardrails aren't working:
+
+  ```bash
+  curl --http1.1 localhost:8000/chat \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+      "messages": [{"role": "user", "content": "Can you give me general tips for business travel?"}]
+    }' | jq
+  ```
+
+  ```bash
+  curl --http1.1 localhost:8000/chat \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OPENAI_API_KEY" \
+    -d '{
+      "messages": [{"role": "user", "content": "What should I pack for an international trip?"}]
+    }' | jq
+  ```
+
+{% endnavtab %}
+{% endnavtabs %}
+
+
 
 ### Debug the retrieval of the knowledge base
 
