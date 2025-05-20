@@ -40,6 +40,11 @@ related_resources:
     url: /dev-portal/developer-signup/
   - text: Link static clients with self-managed OIDC
     url: /dev-portal/auth-strategies/#link-static-clients-with-self-managed-oidc
+faqs:
+  - q: What connections and protocols are involved between Dev Portal and our organization when DCR is enabled?
+    a: "{{site.konnect_short_name}} will make HTTP requests to the IdP for DCR. The details of the request are IdP-specific."
+  - q: What connections and protocols are involved when a custom HTTP DCR bridge is configured for a custom IdP?
+    a: Kong uses HTTPS to transmit events to the domain you've provided and includes a key that can be used on your custom handler implementation to verify the events are from {{site.konnect_short_name}}.
 ---
 
 Dynamic Client Registration (DCR) within {{site.konnect_short_name}} Dev Portal allows applications created in the portal to automatically create a linked application in a third-party Identity Provider (IdP).
@@ -126,7 +131,7 @@ sequenceDiagram
 
 > _**Figure 1:** This diagram illustrates how an HTTP DCR bridge creates an application in an IdP when a developer submits an application in the {{site.konnect_short_name}} Dev Portal. First, the developer creates an application in the Dev Portal, which triggers the portal to send the application details to the HTTP DCR bridge. The bridge then sends a `POST create application` request to the IdP. If the IdP successfully processes the request, it returns a `200` status code along with the credentials for the developer’s application. These credentials are then displayed to the developer in the Dev Portal._
 
-###  Configure custom DCR using the {{site.konnect_short_name}} Dev Portal DCR Handler
+### Configure custom DCR using the {{site.konnect_short_name}} Dev Portal DCR Handler
 
 To use an unsupported IdP with DCR, you must implement an API that conforms to the [{{site.konnect_short_name}} Dev Portal DCR Handler spec](https://github.com/Kong/konnect-portal-dcr-handler/blob/main/openapi/openapi.yaml). Kong provides an example reference implementation in the [{{site.konnect_short_name}} Dev Portal DCR Handler repository](https://github.com/Kong/konnect-portal-dcr-handler). This is an example HTTP DCR bridge implementation and is not meant to be deployed in production. We encourage you to use this implementation as a guide to create your own implementation.
 

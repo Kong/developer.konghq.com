@@ -179,6 +179,7 @@ Now that the application auth strategy is configured, you can apply it to an API
 > * `konnect_org_id`: ID of the Konnect Organization the application belongs to
 > * `konnect_application_id`: ID of the application in the Dev Portal
 
+<!-- commenting this out until we figure out the new/correct workflow
 ## Using Auth0 actions
 
 [Auth0 actions](https://auth0.com/docs/customize/actions) allow you to customize your application in Auth0. With Auth0 actions, you can configure a custom application name in Auth0, rather than using the default name set by the developer in the Dev Portal. For example, you can set the application name to be a combination of `konnect_portal_id`, `konnect_developer_id`, and `konnect_application_id`. For certain other actions, changes can be made directly via the API object passed to `onExecuteCredentialsExchange`.
@@ -263,3 +264,4 @@ Now that the application auth strategy is configured, you can apply it to an API
    ```
 
 3. Make sure to apply this action to the "Machine to Machine" flow. It will run each time a `client_credentials` request is made. After a request is made, you can view the updated application name in the Auth0 dashboard.
+-->

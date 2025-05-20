@@ -74,9 +74,9 @@ When you enable application registration by selecting an authentication strategy
 When you select an [authentication strategy](/dev-portal/auth-strategies/) during [API publication](/dev-portal/apis/) to a Dev Portal, {{site.konnect_short_name}} automatically configures the **{{site.konnect_short_name}} application auth** (KAA) plugin on the linked Gateway Service.
 
 The KAA plugin enforces authentication using one of the following modes:
-* Key authentication (`key-auth`)
-* OpenID Connect (`oidc`)
-* Dynamic Client Registration (DCR) (coming soon)
+* [Key authentication (`key-auth`)](/dev-portal/auth-strategies/#configure-the-key-auth-strategy)
+* [OpenID Connect (`oidc`)](/dev-portal/auth-strategies/#dev-portal-oidc-authentication)
+* [Dynamic Client Registration (DCR)](/dev-portal/dynamic-client-registration/)
 
 If no Gateway Service is linked at the time of configuration, the settings are saved and applied once a Service is linked. 
 If a Service is later unlinked, the plugin is removed and applied to the next linked Service.
