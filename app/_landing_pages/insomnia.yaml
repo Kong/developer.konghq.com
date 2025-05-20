@@ -160,7 +160,7 @@ rows:
               icon: /assets/icons/lock.svg
               cta:
                 text: Learn about security
-                url: /insomnia/security/
+                url: /insomnia/manage-insomnia/#security
                 align: end
       - blocks:
         - type: card

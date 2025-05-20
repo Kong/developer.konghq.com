@@ -1,0 +1,95 @@
+metadata:
+  title: Manage Insomnia
+  description: Learn how to manage Insomnia accounts, organizations, users, and security.
+  content_type: landing_page
+  breadcrumbs:
+    - /insomnia/
+  tags:
+    - security
+  products:
+    - insomnia
+  search_aliases:
+    - insomnia security
+    - insomnia account management
+rows:
+  - header:
+      type: h1
+      text: "Manage Insomnia"            
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: Accounts
+            description: Create and manage your Insomnia account.
+            cta:
+              text: Learn more
+              url: /insomnia/accounts/
+      - blocks:
+        - type: card
+          config:
+            title: Organizations
+            description: Use organizations to share resources with other users.
+            cta:
+              text: Learn more
+              url: /insomnia/organizations/
+      - blocks:
+        - type: card
+          config:
+            title: Users
+            description: Manage users in your Enterprise account using teams, domain capture, and seats.
+            cta:
+              text: Learn more
+              url: /insomnia/user-management/
+  - header:
+      type: h2
+      text: "Security"
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: RBAC
+            description: Use Role-Based Access Control (RBAC) to scope access to Insomnia resources.
+            cta:
+              text: Learn more
+              url: /insomnia/rbac/
+      - blocks:
+        - type: card
+          config:
+            title: SSO
+            description: Set up Single Sign-On (SSO) for your enterprise account.
+            cta:
+              text: Learn more
+              url: /insomnia/sso/
+      - blocks:
+        - type: card
+          config:
+            title: SCIM
+            description: Set up System for Cross-domain Identity Management (SCIM) provisioning for your enterprise account.
+            cta:
+              text: Learn more
+              url: /insomnia/scmi/
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: E2EE
+            description: Learn about how End-to-End Encryption (E2EE) works in Insomnia.
+            cta:
+              text: Learn more
+              url: /insomnia/end-to-end-encryption/
+      - blocks:
+        - type: card
+          config:
+            title: Data security
+            description: Learn about the data models, keys, and salts used in Insomnia.
+            cta:
+              text: Learn more
+              url: /insomnia/data-security/
+      - blocks:
+        - type: card
+          config:
+            title: Incident response and vulnerability management
+            description: Learn about how Insomnia reports incidents and manages security vulnerabilities.
+            cta:
+              text: Learn more
+              url: /insomnia/incident-response/
