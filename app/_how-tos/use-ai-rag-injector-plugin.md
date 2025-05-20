@@ -146,6 +146,9 @@ variables:
 
 Before sending data to the AI Gateway, split your input into manageable chunks using a text splitting tool like `langchain_text_splitters`. This helps optimize downstream processing and improves semantic retrieval performance.
 
+Please refer to [langchain text_splitters documents](https://python.langchain.com/docs/concepts/text_splitters/) if your documents
+are structured data other than plain texts.
+
 The following Python script demonstrates how to split text using `RecursiveCharacterTextSplitter` and ingest the resulting chunks into the AI Gateway:
 
 ```python
