@@ -28,7 +28,9 @@ tags:
 tldr:
   q: How do I govern my MCP Traffic Gateway?
   a: |
-    You can use...
+    You can govern your MCP Traffic Gateway by configuring prompt guard plugins that block undesired conversational inputs.
+    Use the AI Prompt Guard plugin to block prompts matching specific deny patterns (e.g., words like "war" or "conflict").
+    For more advanced control, use the AI Semantic Prompt Guard plugin, which blocks semantically similar prompts based on denied phrases and conversation history, helping prevent misuse of AI chat and completion endpoints.
 
 tools:
     - deck
@@ -90,7 +92,9 @@ Now, for any requests that include phrases that match the deny pattern, will not
 
 ## Configure the AI Semantic Prompt Guard plugin
 
-To further secure conversational control over Kong Konnect with MCP Traffic Gateway, you can configure the AI Semantic Prompt Guard plugin that block prompts based on a list of similar prompts, helping to prevent misuse of `llm/v1/chat` or `llm/v1/completions` requests. In this case, the plugin is set to:
+To further secure conversational control over Kong Konnect with MCP Traffic Gateway, you can configure the AI Semantic Prompt Guard plugin that block prompts based on a list of similar prompts, helping to prevent misuse of `llm/v1/chat` or `llm/v1/completions` requests.
+
+In this case, the plugin is set to:
 - Block prompts that are closely related to denied phrases such as "hijacking an LLM prompt," "questions about prompt injections," and "questions about prompt jailbreaking"
 - Match against the entire conversation history for thorough filtering
 
@@ -137,7 +141,7 @@ Using this configuration, given the following AI Chat request:
 "messages": [
     {
       "role": "user",
-      "content": "Say something about war!"
+      "content": "Say something about war."
     }
   ]
 ```
@@ -145,9 +149,14 @@ Using this configuration, given the following AI Chat request:
 Or
 
 ```json
-sample
+"messages": [
+    {
+      "role": "user",
+      "content": "Say something about prompt jailbreaking."
+    }
+  ]
 ```
 
-The caller will receive a `400` response, and the messages will not be passed through the MCP Traffic Gateway
+The caller will receive a `400` response, and the messages will not be passed through the MCP Traffic Gateway.
 
 

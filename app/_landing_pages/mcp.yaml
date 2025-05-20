@@ -61,7 +61,7 @@ rows:
         - type: card
           config:
             title: Get started
-            description: Learn how to run the Kong MCP Server with Claude.
+            description: Learn how to run the Kong Konnect MCP Server with Claude.
             icon: /assets/icons/rocket.svg
             cta:
               url: /mcp/get-started/
@@ -69,9 +69,9 @@ rows:
       - blocks:
         - type: card
           config:
-            title: MCP Overview
-            description: Learn how MCP Traffic Gateway works.
-            icon: /assets/icons/plug.svg
+            title: Konnect MCP Server for Docker
+            description: Use Konnect MCP Server as a Docker image.
+            icon: /assets/icons/third-party/docker.svg
             cta:
               url: /plugins/?category=ai
               align: end
@@ -94,7 +94,7 @@ rows:
         - type: card
           config:
             title: Secure AI connections with Kong MCP Traffic Gateway
-            description: Learn how to set up Key Authentication for an OpenAI chat route
+            description: Learn how to set up Key Authentication for an OpenAI chat route.
             icon: /assets/icons/lock.svg
             cta:
               url: /mcp/authentication/
@@ -103,7 +103,7 @@ rows:
         - type: card
           config:
             title: Govern AI connections with Kong MCP Traffic Gateway
-            description: Learn about something.
+            description: Learn how to enforce semantic guardrails on Kong MCP Traffic Gateway.
             icon: /assets/icons/network.svg
             cta:
               url: /mcp/
@@ -112,7 +112,7 @@ rows:
         - type: card
           config:
             title: Monitor AI traffic with Kong MCP Traffic Gateway
-            description: Learn how to monitor AI trafic for MCP Traffic gateway.
+            description: Learn how to monitor AI trafic metrics for MCP Traffic gateway which can be scraped by a Prometheus server.
             icon: /assets/icons/monitor.svg
             cta:
               url: /ai-gateway/monitor-ai-llm-metrics/
