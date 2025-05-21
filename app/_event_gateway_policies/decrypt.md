@@ -2,7 +2,6 @@
 title: Decrypt
 name: Decrypt
 content_type: reference
-layout: reference
 description: Reference for the Decrypt policy.
 products:
     - event-gateway
@@ -10,14 +9,14 @@ works_on:
     - konnect
 tags:
     - event-gateway
-breadcrumbs:
-  - /event-gateway
-  - /event-gateway/policies
-#schema:
-#  api: gateway/admin-ee
-#  path: /schemas/Route
+
+schema:
+  api: event-gateway/knep
+  path: /schemas/DecryptPolicy
+
 api_specs:
   - event-gateway/knep
+
 beta: true
 ---
 
