@@ -42,8 +42,12 @@ rows:
       - blocks:
         - type: event_gateway_policy_card
           config:
-            policy: decrypt
+            policy: encrypt
       - blocks:
         - type: event_gateway_policy_card
           config:
-            policy: decrypt
+            policy: modify-headers
+      - blocks:
+        - type: event_gateway_policy_card
+          config:
+            policy: schema-validation

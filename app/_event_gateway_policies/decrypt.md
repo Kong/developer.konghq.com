@@ -2,7 +2,7 @@
 title: Decrypt
 name: Decrypt
 content_type: reference
-description: Reference for the Decrypt policy.
+description: Decrypt messages that were previously encrypted using the referenced key
 products:
     - event-gateway
 works_on:
@@ -22,16 +22,17 @@ beta: true
 icon: /assets/icons/graph.svg
 ---
 
-This policy is used to decrypt messages that were previously encrypted using the referenced key. Use it to enforce standards for decryption across event gateway clients.
+This policy is used to decrypt messages that were previously encrypted using the referenced key. 
+Use this policy to enforce standards for decryption across {{site.event_gateway}} clients.
 
 ## Schema
 
 {% entity_schema %}
 
-## Example Configuration
+## Example configuration
 
 ```yaml
-policies
+policies:
   - name: decrypt-everything
     type: decrypt
     spec:
