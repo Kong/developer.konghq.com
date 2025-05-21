@@ -115,7 +115,7 @@ rows:
             description: Learn how to enforce semantic guardrails on Kong MCP Traffic Gateway.
             icon: /assets/icons/network.svg
             cta:
-              url: /mcp/
+              url: /mcp/govern-mcp/
               align: end
       - blocks:
         - type: card
