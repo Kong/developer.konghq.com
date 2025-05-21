@@ -1787,7 +1787,6 @@ paths:
         - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
       requestBody:
         description: Description of new JWT for creation
-        required: true
         content:
           application/json:
             schema:
@@ -1843,7 +1842,6 @@ paths:
         - $ref: '#/components/parameters/JWTId'
       requestBody:
         description: Description of the JWT
-        required: true
         content:
           application/json:
             schema:
@@ -1895,7 +1893,6 @@ paths:
         - $ref: '#/components/parameters/ConsumerIdForNestedEntities'
       requestBody:
         description: Description of new API-key for creation
-        required: true
         content:
           application/json:
             schema:
@@ -1951,7 +1948,6 @@ paths:
         - $ref: '#/components/parameters/KeyAuthId'
       requestBody:
         description: Description of the API-key
-        required: true
         content:
           application/json:
             schema:
@@ -5307,6 +5303,7 @@ components:
           nullable: true
         key:
           type: string
+          nullable: true
         tags:
           type: array
           items:
@@ -5321,8 +5318,6 @@ components:
         id: b2f34145-0343-41a4-9602-4c69dec2f269
         key: IL1deIyHyQA40WpeLeA1bIUXuvTwlGjo
       additionalProperties: false
-      required:
-        - key
     KeyAuthWithoutParents:
       type: object
       properties:
@@ -5342,6 +5337,7 @@ components:
           nullable: true
         key:
           type: string
+          nullable: true
         tags:
           type: array
           items:
@@ -5354,8 +5350,6 @@ components:
         id: b2f34145-0343-41a4-9602-4c69dec2f269
         key: IL1deIyHyQA40WpeLeA1bIUXuvTwlGjo
       additionalProperties: false
-      required:
-        - key
     KeySet:
       type: object
       properties:
