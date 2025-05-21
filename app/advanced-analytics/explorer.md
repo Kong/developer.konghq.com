@@ -20,6 +20,7 @@ schema:
 faqs:
   - q: What data can I collect Analytics from?
     a: |
+        * **API**
         * **API Product**
         * **API Product Version**
         * **Application**
@@ -30,6 +31,7 @@ faqs:
         * **Data Plane Node Version**
         * **Gateway Services**
         * **Response Source**
+        * **Portal**
         * **Route**
         * **Status Code**
         * **Status Code Group**
