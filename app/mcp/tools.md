@@ -31,16 +31,15 @@ related_resources:
       url: 'https://github.com/Kong/mcp-konnect'
     - text: Kong MCP Konnect on Docker
       url: 'https://hub.docker.com/r/mcp/kong'
+      icon: /assets/icons/third-party/docker.svg
     - text: AI Gateway
       url: /ai-gateway/
-      icon_url: /assets/icons/rocket.svg
----
 
-# MCP Server Tools Overview
+---
 
 Kong’s MCP (Managed Control Plane) Server provides a set of API-accessible tools to support analytics, configuration management, and control plane administration. These tools help users monitor traffic, query resource metadata, and manage control plane hierarchies programmatically.
 
-## Analytics Tools
+## Analytics tools
 
 Analytics tools allow you to query and analyze API request data collected from Kong Gateway deployments connected to MCP. These tools support detailed filtering and flexible time ranges for insight generation.
 
@@ -74,7 +73,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-## Configuration Tools
+## Configuration tools
 
 Configuration tools provide read-access to the Kong resource objects associated with a control plane, enabling inventory audits, automation, or UI rendering for dashboards.
 
@@ -114,7 +113,7 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-## Control Plane Tools
+## Control Plane tools
 
 These tools help users manage multiple control planes and their organizational relationships. Useful for environments with many clusters and regional deployments.
 

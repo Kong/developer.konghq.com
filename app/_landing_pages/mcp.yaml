@@ -15,7 +15,7 @@ rows:
   - header:
       type: h1
       text: "Kong MCP Traffic Gateway"
-      sub_text: Modernize AI agent infrastructure with AI gateway-driven MCP scaling
+      sub_text: Modernize AI agent infrastructure with AI gateway-driven MCP capabilities
 
   - columns:
       - blocks:
@@ -24,7 +24,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Kong MCP Traffic Gateway enables AI assistants to interact with Kong Konnect using natural language to access analytics, configurations, and control plane operations.
+                    Kong MCP Traffic Gateway enables AI assistants to interact with Kong {{site.konnect_product_name}} using natural language to access analytics, configurations, and control plane operations.
   - columns:
       - blocks:
           - type: structured_text
@@ -43,11 +43,11 @@ rows:
           - type: structured_text
             config:
               header:
-                text: "Conversational Control of Kong Konnect"
+                text: "Conversational control of Kong {{site.konnect_product_name}}"
               blocks:
                 - type: text
                   text: |
-                      Kong MCP server connects AI assistants like Claude to Kong Konnect’s API Gateway. It enables natural language access to key gateway tools, including analytics, configuration inspection, and control plane management.
+                      Kong MCP server connects AI assistants like Claude to Kong {{site.konnect_product_name}}’s API Gateway. It enables natural language access to key gateway tools, including analytics, configuration inspection, and control plane management.
 
                       **Key features:**
 
@@ -61,7 +61,7 @@ rows:
         - type: card
           config:
             title: Get started
-            description: Learn how to run the Kong Konnect MCP Server with Claude.
+            description: Learn how to run the Kong {{site.konnect_product_name}} MCP Server with Claude.
             icon: /assets/icons/rocket.svg
             cta:
               url: /mcp/get-started/
@@ -69,8 +69,8 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Konnect MCP Server for Docker
-            description: Use Konnect MCP Server as a Docker image.
+            title: "{{site.konnect_product_name}} MCP Server for Docker"
+            description: Use {{site.konnect_product_name}} MCP Server as a Docker image.
             icon: /assets/icons/third-party/docker.svg
             cta:
               url: https://hub.docker.com/r/mcp/kong
@@ -78,11 +78,11 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Konnect MCP Server tools
-            description: Learn what tools you can use to have conversational control over Konnect with MCP Server tools.
+            title: "{{site.konnect_product_name}} MCP Server tools"
+            description: Learn what tools you can use to have conversational control over {{site.konnect_product_name}} with MCP Server tools.
             icon: /assets/icons/book.svg
             cta:
-              url: /plugins/?category=ai
+              url: /mcp/tools/
               align: end
 
 
