@@ -25,7 +25,11 @@ module Jekyll
       end
 
       def to_konnect_version
-        @release_hash['ee-version'].sub(/^(\d+\.\d+)\.\d+.*$/, '\1.0.0')
+        if @release_hash['ee-version']
+          @release_hash['ee-version'].sub(/^(\d+\.\d+)\.\d+.*$/, '\1.0.0')
+        else
+          @release_hash['name']
+        end
       end
 
       def number

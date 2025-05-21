@@ -22,9 +22,9 @@ beta: true
 
 This policy is used to decrypt messages that were previously encrypted using the referenced key. Use it to enforce standards for decryption across event gateway clients.
 
-## Configuration Fields
+## Schema
 
-This is where I'd like to embed the schema from the knep OpenAPI spec :)
+{% entity_schema %}
 
 ## Example Configuration
 
