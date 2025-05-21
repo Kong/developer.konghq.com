@@ -24,24 +24,8 @@ related_resources:
 prereqs:
   skip_product: true
   inline:
-  - title: "Dedicated Cloud Gateways"
-    content: |
-      This tutorial requires a working Dedicated Cloud Gateways instance. 
-      You'll also need the following information from the network: 
-        * `VPCID`
-        * `network-id`
-        You can retrieve that using the following endpoint: 
-
-        {% control_plane_request %}
-        url: /v2/cloud-gateways/networks
-        {% endcontrol_plane_request %}
-        Save the desired values as environment variables:
-        ```sh
-        export DCGW_VPC_ID='YOUR_DCGW_VPC_ID'
-        export NETWORK='YOUR_DCGW_NETWORK_ID'
-        ```
-
-
+  - title: "Dedicated Cloud Gateway"
+    include_content: prereqs/dedicated-cloud-gateways
   - title: "AWS CLI"
     include_content: prereqs/aws-cli
   - title: "AWS private hosted zone"
@@ -73,8 +57,8 @@ Using the AWS CLI, create an associate between the hosted zone and the VPC:
 
 ```sh
 aws route53 create-vpc-association-authorization \
-  --hosted-zone-id Z1234567890ABCDEXAMPLE \
-  --vpc VPCRegion=us-east-1,VPCId=$KONG_DCGW_VPC_ID
+  --hosted-zone-id Z082811935OXJB57VZOSV \
+  --vpc VPCRegion=us-east-2,VPCId=$AWS_VPC_ID
 ```
 
 
@@ -83,22 +67,31 @@ aws route53 create-vpc-association-authorization \
 Connect the Dedicated Cloud Gateway to an AWS Route 53 private hosted zone:
 
 <!--vale off-->
-{% control_plane_request %}
-url: /v2/cloud-gateways/networks/$NETWORK_ID/private-dns
+{% konnect_api_request %}
+url: /v2/cloud-gateways/networks/$KONNECT_NETWORK_ID/private-dns
 status_code: 201
+region: global
 method: POST
 headers:
   - 'Accept: application/json'
   - 'Content-Type: application/json'
-  - 'Authorization: Bearer $KONNECT_TOKEN'
 body:
   name: us-east-2 private dns
   private_dns_attachment_config:
     kind: aws-private-hosted-zone-attachment
-    hosted_zone_id: $AWS_HOSTED-ZONE-ID
-{% endcontrol_plane_request %}
+    hosted_zone_id: $AWS_HOSTED_ZONE_ID
+{% endkonnect_api_request %}
 <!--vale on-->
 
-## Validate
+## Validation
 
-After a few moments, your private hosted zone will be associated with the Dedicated Cloud Gateway VPC and ​​you can now resolve `*.prod.internal` over the VPC peering or a Transit Gateway connection.
+After a few moments, your private hosted zone will be associated with the Dedicated Cloud Gateway VPC and ​​you can now resolve requests over the VPC peering connection. To validate that everything was configured correctly, issue a `GET` request to the [`/private-dns`](/api/konnect/control-planes/#/operations/private-networks) endpoint to retrieve zone information:
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/cloud-gateways/networks/$KONNECT_NETWORK_ID/private-dns
+status_code: 200
+region: global
+method: GET
+{% endkonnect_api_request %}
+<!--vale on-->
