@@ -20,6 +20,10 @@ api_specs:
 beta: true
 
 icon: /assets/icons/graph.svg
+
+related_resources:
+  - text: Decrypt policy
+    url: /event-gateway/policies/decrypt/
 ---
 
 This policy can be used to encrypt portions of Kafka records.

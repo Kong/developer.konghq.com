@@ -15,3 +15,10 @@ sections:
     items:
       - path: /event-gateway/get-started/
       - path: /event-gateway/policies/
+      - title: KNEP OpenAPI specification
+        description: Configuration schema for the Kong Native Event Proxy
+        url: /api/event-gateway/knep/v0/
+  - title: "KNEP Policies"
+    items:
+      - path: /event-gateway/policies/*/**
+

@@ -19,6 +19,10 @@ api_specs:
 
 beta: true
 
+related_resources:
+  - text: Encrypt policy
+    url: /event-gateway/policies/encrypt/
+
 icon: /assets/icons/graph.svg
 ---
 
