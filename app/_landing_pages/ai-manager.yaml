@@ -10,7 +10,7 @@ rows:
   - header:
       type: h1
       text: "AI Manager"
-      sub_text: Manage all of your LLMs in a single console
+      sub_text: Manage all of your LLMs in a single dashboard
 
   - columns:
       - blocks:
