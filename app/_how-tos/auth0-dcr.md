@@ -42,9 +42,6 @@ prereqs:
         You'll need an [Auth0 account](https://auth0.com/) to complete this tutorial.
       icon_url: /assets/icons/third-party/auth0.svg
 
-faqs:
-  - q: placeholder
-    a: placeholder
 cleanup:
   inline:
     - title: Clean up {{site.konnect_short_name}} environment
