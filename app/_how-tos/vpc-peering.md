@@ -1,5 +1,5 @@
 ---
-title: Set up an AWS VPC peering connection using the API
+title: Set up an AWS VPC peering connection
 description: 'Use the {{site.konnect_short_name}} Cloud Gateways API to create a VPC peering connection with your AWS VPC.'
 content_type: how_to
 permalink: /dedicated-cloud-gateways/aws-vpc-peering/
@@ -39,7 +39,7 @@ prereqs:
         export AWS_ACCOUNT_ID='123456789012'
         export AWS_VPC_ID='vpc-0f1e2d3c4b5a67890'
         export AWS_REGION='us-east-2'
-        export AWS_VPC_CIDR='10.0.0.0/16'
+        export AWS_VPC_CIDR='10.1.0.0/16'
         ```
 
 ---
@@ -50,7 +50,7 @@ Send the following request to the Cloud Gateways API:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v2/cloud-gateways/networks/$NETWORK_ID/transit-gateways
+url: /v2/cloud-gateways/networks/$KONNECT_NETWORK_ID/transit-gateways
 status_code: 201
 region: global
 method: POST
@@ -58,7 +58,7 @@ headers:
   - 'Accept: application/json'
   - 'Content-Type: application/json'
 body:
-  name: us-east-1 vpc peering
+  name: us-east-2 vpc peering
   cidr_blocks:
     - $AWS_VPC_CIDR
   transit_gateway_attachment_config:
@@ -73,27 +73,29 @@ body:
 ## Accept the peering request in AWS
 
 1. Go to the AWS Console → **VPC** → **Peering Connections**.
-2. Locate the pending request from {{site.konnect_short_name}}.
-3. Select the request and choose **Accept Request**.
+1. Locate the pending request from {{site.konnect_short_name}}.
+1. Select the request and choose **Accept Request**.
 
 ## Update your AWS route table
 
 1. In the AWS Console, go to **VPC** → **Route Tables**.
-2. Select the route table for your VPC's subnet.
-3. Add a new route:
+1. Select the route table for your VPC's subnet.
+1. Add a new route:
     - **Destination**: The CIDR block of the {{site.konnect_short_name}} network (provided in the peering details).
     - **Target**: The accepted VPC peering connection.
-4. Save your changes.
+1. Save your changes.
 
 This ensures private traffic routing between your VPC and the Dedicated Cloud Gateway.
 
 ## Validation
 
+To validate that everything was configured correctly, issue a `GET` request to the [`/transit-gateways`](/api/konnect/control-planes/#/operations/list-transit-gateways) endpoint to retreive VPC peering information:
 
 <!--vale off-->
 {% konnect_api_request %}
-url: /v2/cloud-gateways/networks/$NETWORK_ID/transit-gateways
+url: /v2/cloud-gateways/networks/$KONNECT_NETWORK_ID/transit-gateways
 status_code: 200
+region: global
 method: GET
 {% endkonnect_api_request %}
 <!--vale on-->
