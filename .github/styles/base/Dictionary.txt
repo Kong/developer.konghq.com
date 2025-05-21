@@ -337,6 +337,7 @@ Istio's
 istioctl
 istioctl
 item_title
+jailbreaking
 jaq
 Javascript
 jetstack

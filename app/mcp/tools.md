@@ -40,7 +40,7 @@ Kong’s MCP Server provides a set of API-accessible tools to support analytics,
 
 ## Analytics tools
 
-Analytics tools allow you to query and analyze API request data collected from Kong Gateway deployments connected to MCP. These tools support detailed filtering and flexible time ranges for insight generation.
+Analytics tools allow you to query and analyze API request data collected from {{site.base_gateway}} deployments connected to MCP. These tools support detailed filtering and flexible time ranges for insight generation.
 
 <!--vale off-->
 {% table %}
