@@ -29,8 +29,19 @@ layout: plugins/without_aside
   </nav>
   <div class="flex md:hidden bg-secondary rounded-md justify-between py-2 px-4 gap-2 w-full shadow-primary items-center">
     <select id="plugin-example-dropdown" class="bg-secondary grow max-w-full">
-      {% for example in page.examples %}
-          <option value="{{ example.url }}" {% if example == page.url %}selected{% endif %}>{{ example.title }}</option>
+      {% if page.basic_examples %}
+        <optgroup label="Basic use cases">
+          {% for example in page.basic_examples %}
+            <option value="{{ example.url }}" {% if example == page.url %}selected{% endif %}>{{ example.title }}</option>
+          {% endfor %}
+        </optgroup>
+      {% endif %}
+      {% for group_examples in page.examples_by_group %}
+        <optgroup label="{{group_examples[0]}}">
+          {% for example in group_examples[1] %}
+            <option value="{{ example.url }}" {% if example == page.url %}selected{% endif %}>{{ example.title }}</option>
+          {% endfor %}
+        </optgroup>
       {% endfor %}
   </select>
   </div>
