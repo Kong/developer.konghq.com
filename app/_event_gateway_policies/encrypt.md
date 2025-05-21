@@ -30,7 +30,11 @@ This policy can be used to encrypt portions of Kafka records.
 
 ## Example configuration
 
-Here's a sample configuration that will encrypt a specific key:
+Example configurations for the Encrypt policy.
+
+### Encrypt a key
+
+Encrypt a specific key:
 ```yaml
 policies:
   - name: encrypt-keys
@@ -46,9 +50,17 @@ policies:
         id: id
 ```
 
-Here's a sample configuration that will encrypt everything in a specific `key_source` location:
+### Encrypt everything
+
+Encrypt everything in a specific `key_source` location:
 
 ```yaml
+key_sources:
+  - name: aws
+    type: aws
+    aws:
+      credentials:
+        type: env
 policies:
   - name: encrypt-everything
     type: encrypt

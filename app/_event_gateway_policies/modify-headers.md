@@ -30,16 +30,22 @@ This policy is used to set or remove record headers.
 
 ## Example configuration
 
+Example configurations for the Modify Headers policy.
+
+### Remove and replace a header
+
+The following example removes a header named `example-header1` and replaces it with `example-header2`:
+
 ```yaml
 policies:
-  - name: remove-key-headers
+  - name: modify-headers
     type: modify_headers
     spec:
       actions:
       - type: remove
         remove:
-        - key: key
+        - key: example-header
         set:
-        - key: key
-          value: value
+        - key: example-header2
+          value: example
 ```

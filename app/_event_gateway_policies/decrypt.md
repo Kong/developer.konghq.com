@@ -31,7 +31,37 @@ Use this policy to enforce standards for decryption across {{site.event_gateway}
 
 ## Example configuration
 
+Example configurations for the Decrypt policy.
+
+### Decrypt a key
+
+Decrypt a specific key:
+
 ```yaml
+policies:
+  - name: decrypt-key
+    type: decrypt
+    spec:
+      failure:
+        mode: error
+      key_sources:
+      - type: ref_name
+        ref_name: ref_name
+      decrypt:
+      - type: key
+```
+
+### Decrypt everything
+
+Decrypt everything in a specific `key_source` location:
+
+```yaml
+key_sources:
+  - name: aws
+    type: aws
+    aws:
+      credentials:
+        type: env
 policies:
   - name: decrypt-everything
     type: decrypt
