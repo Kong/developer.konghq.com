@@ -87,3 +87,13 @@ body:
 
 This ensures private traffic routing between your VPC and the Dedicated Cloud Gateway.
 
+## Validation
+
+
+<!--vale off-->
+{% konnect_api_request %}
+url: /v2/cloud-gateways/networks/$NETWORK_ID/transit-gateways
+status_code: 200
+method: GET
+{% endkonnect_api_request %}
+<!--vale on-->
