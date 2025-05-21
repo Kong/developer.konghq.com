@@ -236,19 +236,27 @@ print("Injecting %d chunks..." % len(docs))
 
 for doc in docs:
     response = requests.post(
-        "http://localhost:8001/ai-rag-injector/3194f12e-60c9-4cb6-9cbc-c8fd7a00cff1/ingest_chunk",
+        "http://localhost:8001/ai-rag-injector/{plugin_ID}/ingest_chunk", # Replace the placeholder with your AI RAG Injector plugin ID
         data={'content': doc.page_content}
     )
     print(response.json())
 ```
 
-Save the script as `inject_policy.py`, then run it:
+Save the script as `inject_policy.py`, then run it in your terminal:
 
 ```bash
 python ./inject_policy.py
 ```
 
 This will output the number of chunks created and display the response from the injector endpoint for each chunk.
+
+```text
+Injecting 4 chunks...
+{"metadata":{"ingest_duration":1476,"embeddings_tokens_count":157,"chunk_id":"99a45541-b772-4147-8846-276ecc51190f"}}
+{"metadata":{"ingest_duration":1323,"embeddings_tokens_count":140,"chunk_id":"2aaa9b63-7ee3-42cd-b64a-b9513a176941"}}
+{"metadata":{"ingest_duration":1286,"embeddings_tokens_count":141,"chunk_id":"78b9b3f5-9e3f-48c3-bde8-432d496b6086"}}
+{"metadata":{"ingest_duration":2892,"embeddings_tokens_count":168,"chunk_id":"d3a6f548-9181-4159-95aa-dd3c2e221501"}}
+```
 
 ### Ingest content to the vector database
 
@@ -257,12 +265,14 @@ Now, you can feed the split chunks into AI Gateway using the Kong Admin API.
 The following example shows how to ingest content to the vector database for building the knowledge base. The AI RAG Injector plugin uses the OpenAI `text-embedding-3-large` model to generate embeddings for the content and stores them in Redis.
 
 ```bash
-curl localhost:8001/ai-rag-injector/3194f12e-60c9-4cb6-9cbc-c8fd7a00cff1/ingest_chunk \
+curl localhost:8001/ai-rag-injector/{plugin_ID}/ingest_chunk \
   -H "Content-Type: application/json" \
   -d '{
     "content": "<chunk>"
   }'
 ```
+{:.info}
+Replace the `plugin_ID` placeholder with your AI RAG Injector plugin ID.
 
 ## Test RAG configuration
 
@@ -450,7 +460,6 @@ These prompts are vague, outside compliance scope, or might encourage hallucinat
 
 {% endnavtab %}
 {% endnavtabs %}
-
 
 
 ### Debug the retrieval of the knowledge base
