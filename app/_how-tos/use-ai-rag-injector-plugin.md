@@ -271,7 +271,7 @@ curl localhost:8001/ai-rag-injector/3194f12e-60c9-4cb6-9cbc-c8fd7a00cff1/ingest_
 Use the following in-scope questions to verify that the AI responds accurately based on the approved compliance content and does not rely on external knowledge.
 
 {% navtabs "In scope" %}
-{% navtab "Basic" %}
+{% navtab "Basic questions" %}
 
   Use simple user questions that map directly to travel policy clauses:
 
@@ -296,7 +296,7 @@ Use the following in-scope questions to verify that the AI responds accurately b
   ```
 
 {% endnavtab %}
-{% navtab "Intermediate" %}
+{% navtab "Intermediate questions" %}
 
   Use slightly more complex prompts involving multi-step policy logic or multiple clauses:
 
@@ -320,7 +320,7 @@ Use the following in-scope questions to verify that the AI responds accurately b
   ```
 
 {% endnavtab %}
-{% navtab "Edge Cases" %}
+{% navtab "Edge cases" %}
 
   Use prompts that test boundaries of the compliance language:
 
@@ -358,7 +358,7 @@ Use the following out-of-scope questions to confirm that the AI correctly refuse
 ```
 
 {% navtabs "test" %}
-{% navtab "General Company Info" %}
+{% navtab "General company info" %}
 
   These questions ask about Acme Corp. in general, not about the travel policy:
 
@@ -381,7 +381,7 @@ Use the following out-of-scope questions to confirm that the AI correctly refuse
   ```
 
 {% endnavtab %}
-{% navtab "External Knowledge" %}
+{% navtab "External knowledge" %}
 
   These questions require general or external knowledge that is not included in the ingested content:
 
@@ -403,7 +403,7 @@ Use the following out-of-scope questions to confirm that the AI correctly refuse
     }' | jq
   ```
 {% endnavtab %}
-{% navtab "Other HR Policies" %}
+{% navtab "Other HR policies" %}
 
 These prompts reference company policies that are not part of the travel policy content:
 
@@ -426,7 +426,7 @@ These prompts reference company policies that are not part of the travel policy 
   ```
 
 {% endnavtab %}
-{% navtab "Ambiguous or Unsupported Topics" %}
+{% navtab "Ambiguous or unsupported topics" %}
 
 These prompts are vague, outside compliance scope, or might encourage hallucination if guardrails aren't working:
 
