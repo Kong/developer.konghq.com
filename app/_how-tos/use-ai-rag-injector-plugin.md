@@ -348,7 +348,14 @@ Use the following in-scope questions to verify that the AI responds accurately b
 
 ### Out-of-scope questions
 
-Use the following out-of-scope questions to confirm that the AI correctly refuses to answer queries that fall outside the ingested compliance content.
+Use the following out-of-scope questions to confirm that the AI correctly refuses to answer queries that fall outside the ingested compliance content. Upon these requests, AI should return the following response:
+
+```json
+"message": {
+    "role": "assistant",
+    "content": "I'm sorry, I cannot answer that based on the available compliance information.",
+  }
+```
 
 {% navtabs "test" %}
 {% navtab "General Company Info" %}
@@ -451,7 +458,7 @@ These prompts are vague, outside compliance scope, or might encourage hallucinat
 To evaluate which documents are retrieved for a specific prompt, use the following command:
 
 ```bash
-curl localhost:8001/ai-rag-injector/3194f12e-60c9-4cb6-9cbc-c8fd7a00cff1/lookup_chunks \
+curl localhost:8001/ai-rag-injector/{plugin_ID}/lookup_chunks \
   -H "Content-Type: application/json" \
   -d '{
     "prompt": "the prompt to debug",
