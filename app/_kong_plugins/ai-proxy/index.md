@@ -54,6 +54,9 @@ related_resources:
   - text: Get started with AI Gateway
     url: /ai-gateway/get-started/
 
+examples_groups:
+  - slug: open-ai
+    text: OpenAI use cases
 ---
 
 {% include plugins/ai-proxy/overview.md plugin=page.name params=site.data.plugins.ai-proxy.parameters %}
