@@ -117,7 +117,7 @@ entities:
           strategy: redis
           distance_metric: cosine
           threshold: 0.5
-          dimensions: 1024
+          dimensions: 3027
           redis:
             host: localhost
             port: 6379
