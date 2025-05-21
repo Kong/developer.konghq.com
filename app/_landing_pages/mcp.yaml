@@ -30,7 +30,7 @@ rows:
           - type: structured_text
             config:
               header:
-                text: "Secure, observe and govern MCP servers with Kong AI Gateway"
+                text: "Manage MCP servers with Kong AI Gateway"
               blocks:
                 - type: text
                   text: |
