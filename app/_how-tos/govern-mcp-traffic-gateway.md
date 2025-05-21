@@ -52,7 +52,7 @@ prereqs:
 
 cleanup:
   inline:
-    - title: Clean up Konnect environment
+    - title: Clean up {{site.konnect_product_name}} environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
     - title: Destroy the {{site.base_gateway}} container
@@ -92,7 +92,7 @@ Now, for any requests that include phrases that match the deny pattern, will not
 
 ## Configure the AI Semantic Prompt Guard plugin
 
-To further secure conversational control over Kong Konnect with MCP Traffic Gateway, you can configure the AI Semantic Prompt Guard plugin that block prompts based on a list of similar prompts, helping to prevent misuse of `llm/v1/chat` or `llm/v1/completions` requests.
+To further secure conversational control over Kong {{site.konnect_product_name}} with MCP Traffic Gateway, you can configure the AI Semantic Prompt Guard plugin that block prompts based on a list of similar prompts, helping to prevent misuse of `llm/v1/chat` or `llm/v1/completions` requests.
 
 In this case, the plugin is set to:
 - Block prompts that are closely related to denied phrases such as "hijacking an LLM prompt," "questions about prompt injections," and "questions about prompt jailbreaking"

@@ -27,12 +27,12 @@ tldr:
   q: What is MCP Gateway, and how can I get started with it?
   a: |
 
-    With Kong's Model Context Protocol (MCP) Gateway, you can enable AI assistants like Claude or Cursor to interact directly with Kong Konnect’s API Gateway. This integration allows you to query analytics data, inspect configuration details, and manage control planes—all through natural language conversation.
+    With Kong's Model Context Protocol (MCP) Gateway, you can enable AI assistants like Claude or Cursor to interact directly with Kong {{site.konnect_product_name}}’s API Gateway. This integration allows you to query analytics data, inspect configuration details, and manage control planes—all through natural language conversation.
 
-    This tutorial will help you get started with MCP by connecting an AI assistant to Kong Konnect.
+    This tutorial will help you get started with MCP by connecting an AI assistant to Kong {{site.konnect_product_name}}.
 
     {:.info}
-    > This quickstart is intended for experimentation with AI-assisted API management. For deploying Konnect in production, refer to the [Install Konnect](/konnect/install/) guide.
+    > This quickstart is intended for experimentation with AI-assisted API management. For deploying {{site.konnect_product_name}} in production, refer to the [Install {{site.konnect_product_name}}](/konnect/install/) guide.
 
 
 tools:
@@ -58,7 +58,7 @@ prereqs:
       icon_url: /assets/icons/gateway.svg
 cleanup:
   inline:
-    - title: Clean up Konnect environment
+    - title: Clean up {{site.konnect_product_name}} environment
       include_content: cleanup/platform/konnect
       icon_url: /assets/icons/gateway.svg
     - title: Destroy the {{site.base_gateway}} container
@@ -83,11 +83,11 @@ faqs:
     a: |
       * **Verify your API key** is valid and has the necessary permissions.
       * **Check the API region** is correctly specified (`KONNECT_REGION`).
-      * **Ensure network access** to the Kong Konnect API is not blocked by a firewall or proxy.
+      * **Ensure network access** to the Kong {{site.konnect_product_name}} API is not blocked by a firewall or proxy.
 
   - q: Why am I seeing authentication errors?
     a: |
-      * **Regenerate your API key** from the Kong Konnect portal if it's expired or revoked.
+      * **Regenerate your API key** from the Kong {{site.konnect_product_name}} portal if it's expired or revoked.
       * **Confirm environment variables** like `KONNECT_ACCESS_TOKEN` are set and available to the process.
 
   - q: Why is my data not found?
@@ -129,10 +129,10 @@ To get started with Kong MCP server, first clone the repository and install depe
 
 ## Configure environment variables
 
-Before running the MCP server, set the required environment variables to connect to your Kong Konnect account.
+Before running the MCP server, set the required environment variables to connect to your Kong {{site.konnect_product_name}} account.
 
 ```bash
-# Required: Your Kong Konnect API key
+# Required: Your Kong {{site.konnect_product_name}} API key
 export KONNECT_ACCESS_TOKEN=kpat_api_key_here
 
 # Optional: The API region to use (defaults to US)
@@ -172,7 +172,7 @@ Now, add the following configuration to the file:
 
 ## Restart Claude desktop
 
-After saving the `claude_desktop_config.json` file, restart Claude for Desktop. The Kong Konnect tools will now be available for Claude to use in conversation.
+After saving the `claude_desktop_config.json` file, restart Claude for Desktop. The Kong {{site.konnect_product_name}} tools will now be available for Claude to use in conversation.
 
 
 ## Analyze API traffic using Claude and Kong MCP Server
@@ -182,10 +182,10 @@ After saving the `claude_desktop_config.json` file, restart Claude for Desktop. 
 {% navtabs "list-all-control-planes" %}
 {% navtab "Prompt" %}
 
-Use this prompt to retrieve all control planes in your Kong Konnect organization:
+Use this prompt to retrieve all control planes in your Kong {{site.konnect_product_name}} organization:
 
 ```text
-List all control planes in my Kong Konnect organization.
+List all control planes in my Kong {{site.konnect_product_name}} organization.
 ```
 {% endnavtab %}
 {% navtab "MCP Server Response" %}
