@@ -15,7 +15,7 @@ rows:
   - header:
       type: h1
       text: "Kong MCP Traffic Gateway"
-      sub_text: Modernize AI Agent Infrastructure with Gateway-Driven MCP Scaling
+      sub_text: Modernize AI agent infrastructure with AI gateway-driven MCP scaling
 
   - columns:
       - blocks:
@@ -24,7 +24,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Kong MCP Traffic Gateway is an MCP server that enables AI assistants to interact with Kong Konnect using natural language to access analytics, configurations, and control plane operations.
+                    Kong MCP Traffic Gateway enables AI assistants to interact with Kong Konnect using natural language to access analytics, configurations, and control plane operations.
   - columns:
       - blocks:
           - type: structured_text
@@ -34,11 +34,11 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Control Plane (MCP) addresses this by enabling agents to reason, plan, and act across services—but scaling MCP in remote, distributed environments introduces new operational challenges.
+                    AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Context Protocol (MCP) addresses this by enabling agents to reason, plan, and act across services. However, scaling MCP in remote, distributed environments introduces new operational challenges.
 
                     Key concerns like authentication, context propagation, load balancing, and service discovery are familiar to those working in API infrastructure. As such, the API gateway—already proven in securing and scaling HTTP services—offers a strong foundation for bringing MCP to production.
 
-                    Kong’s AI Gateway, part of the Kong Konnect platform, extends these capabilities to MCP. By applying established gateway patterns to emerging agent interfaces, Kong enables teams to manage remote MCP traffic with enterprise-grade security, performance, and developer experience
+                    Kong’s AI Gateway extends these capabilities to MCP. By applying established gateway patterns to emerging agent interfaces, Kong enables teams to manage remote MCP traffic with enterprise-grade security, performance, and developer experience
       - blocks:
           - type: structured_text
             config:
@@ -47,7 +47,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                      Kong Model Context Protocol (MCP) server that connects AI assistants like Claude to Kong Konnect’s API Gateway. It enables natural language access to key gateway tools, including analytics, configuration inspection, and control plane management.
+                      Kong MCP server connects AI assistants like Claude to Kong Konnect’s API Gateway. It enables natural language access to key gateway tools, including analytics, configuration inspection, and control plane management.
 
                       **Key features:**
 
@@ -72,6 +72,15 @@ rows:
             title: Konnect MCP Server for Docker
             description: Use Konnect MCP Server as a Docker image.
             icon: /assets/icons/third-party/docker.svg
+            cta:
+              url: https://hub.docker.com/r/mcp/kong
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Konnect MCP Server Tools
+            description: Learn what tools you can use to have conversational control over Konnect with MCP Server tools.
+            icon: /assets/icons/book.svg
             cta:
               url: /plugins/?category=ai
               align: end
