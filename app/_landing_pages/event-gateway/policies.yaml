@@ -26,9 +26,8 @@ rows:
           blocks:
             - type: text
               text: |
-                Here's a description of what policies are in KNEP.
-
-                If you want to use them you should really try hard to use them.
+                Policies can be used to intercept client connections and transform messages between the client and the broker. 
+                They can be used to do things like enforcing encryption strategies, validating schemas, and modifying message headers.
 
   - header:
       type: h2
