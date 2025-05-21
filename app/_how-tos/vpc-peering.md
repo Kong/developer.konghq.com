@@ -89,7 +89,7 @@ This ensures private traffic routing between your VPC and the Dedicated Cloud Ga
 
 ## Validation
 
-To validate that everything was configured correctly, issue a `GET` request to the [`/transit-gateways`](/api/konnect/control-planes/#/operations/list-transit-gateways) endpoint to retreive VPC peering information:
+To validate that everything was configured correctly, issue a `GET` request to the [`/transit-gateways`](/api/konnect/control-planes/#/operations/list-transit-gateways) endpoint to retrieve VPC peering information:
 
 <!--vale off-->
 {% konnect_api_request %}
