@@ -32,57 +32,18 @@ rows:
 
   - header:
       type: h2
-      text: "List of policies for KNEP"
+      text: "KNEP Policies"
 
     columns:
-
       - blocks:
-        - type: card
+        - type: event_gateway_policy_card
           config:
-            title: Decrypt
-            description: |
-              Decrypts messages received from the broker using a predefined encryption key.
-              Use this policy to enforce standard decryption for all event gateway clients.
-            icon: /assets/icons/event.svg
-            ctas:
-              - text: Policy reference
-                url: /event-gateway/policies/decrypt/
-                align: end
-
+            policy: decrypt
       - blocks:
-        - type: card
+        - type: event_gateway_policy_card
           config:
-            title: Encrypt
-            description: |
-              Encrypts messages sent to the broker from the client using a predefined encryption key.
-              Use this policy to enforce standard encryption for all event gateway clients.
-            icon: /assets/icons/event.svg
-            ctas:
-              - text: Policy reference
-                url: /event-gateway/policies/encrypt/
-                align: end
-
+            policy: decrypt
       - blocks:
-        - type: card
+        - type: event_gateway_policy_card
           config:
-            title: Schema Validation
-            description: Here's what schema validation is
-            icon: /assets/icons/event.svg
-            ctas:
-              - text: Policy reference
-                url: /event-gateway/policies/schema-validation/
-                align: end
-
-  - column_count: 3
-    columns:
-
-      - blocks:
-        - type: card
-          config:
-            title: Virtual Topics
-            description: Here's what virtual topics are
-            icon: /assets/icons/event.svg
-            ctas:
-              - text: Policy reference
-                url: /event-gateway/policies/virtual-topics/
-                align: end
+            policy: decrypt
