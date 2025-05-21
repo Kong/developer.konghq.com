@@ -52,7 +52,7 @@ columns:
 rows:
   - tool: "Query API Requests"
     description: |
-      Retrieve historical request data across gateways with multiple filters. Analyze trends, diagnose issues, or monitor performance.
+      Retrieve historical request data across gateways with multiple filters. Analyze trends, diagnose issues, or monitor performance.<br/><br/>
 
       **Inputs**:
       - `timeRange`: Range of data to query (e.g., 15M, 1H, 24H)
@@ -62,7 +62,7 @@ rows:
       - `maxResults`: Cap the number of returned entries
   - tool: "Get Consumer Requests"
     description: |
-      Analyze API requests made by a specific consumer, with filters for success/failure and time range.
+      Analyze API requests made by a specific consumer, with filters for success/failure and time range.<br/><br/>
 
       **Inputs**:
       - `consumerId`: Target consumer
@@ -86,14 +86,14 @@ columns:
 rows:
   - tool: "List Services"
     description: |
-      Enumerates all services within a specific control plane.
+      Enumerates all services within a specific control plane.<br/><br/>
 
       **Inputs**:
       - `controlPlaneId`: Target control plane ID
       - `size`, `offset`: Pagination controls
   - tool: "List Routes"
     description: |
-      Lists all route configurations deployed within a control plane.
+      Lists all route configurations deployed within a control plane.<br/><br/>
 
       **Inputs**:
       - `controlPlaneId`, `size`, `offset`
@@ -105,7 +105,7 @@ rows:
       - `controlPlaneId`, `size`, `offset`
   - tool: "List Plugins"
     description: |
-      Retrieves all plugins configured under the specified control plane.
+      Retrieves all plugins configured under the specified control plane.<br/><br/>
 
       **Inputs**:
       - `controlPlaneId`, `size`, `offset`
@@ -126,26 +126,26 @@ columns:
 rows:
   - tool: "List Control Planes"
     description: |
-      Lists all control planes in the organization, with options to filter and sort.
+      Lists all control planes in the organization, with options to filter and sort.<br/><br/>
 
       **Inputs**:
       - `pageSize`, `pageNumber`: Pagination
       - `filterName`, `filterClusterType`, `filterCloudGateway`, `labels`, `sort`: Query refinement options
   - tool: "Get Control Plane"
     description: |
-      Retrieves detailed metadata about a specific control plane.
+      Retrieves detailed metadata about a specific control plane.<br/><br/>
 
       **Inputs**:
       - `controlPlaneId`: Unique ID of the control plane
   - tool: "List Control Plane Group Memberships"
     description: |
-      Lists all control planes that belong to a specified group.
+      Lists all control planes that belong to a specified group.<br/><br/>
 
       **Inputs**:
       - `groupId`, `pageSize`, `pageAfter`
   - tool: "Check Control Plane Group Membership"
     description: |
-      Verifies whether a given control plane belongs to any group.
+      Verifies whether a given control plane belongs to any group.<br/><br/>
 
       **Inputs**:
       - `controlPlaneId`: Control plane to check
