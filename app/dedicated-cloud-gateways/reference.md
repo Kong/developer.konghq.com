@@ -64,6 +64,10 @@ related_resources:
     url: /dedicated-cloud-gateways/
   - text: Serverless Gateways
     url: /serverless-gateways/
+  - text: Private hosted zones
+    url: /dedicated-cloud-gateways/private-hosted-zones/
+  - text: Outbound DNS resolver
+    url: /dedicated-cloud-gateways/outbound-dns-resolver/
 
 tags:
   - dedicated-cloud-gateways
@@ -274,9 +278,3 @@ Once uploaded, you can manage custom plugins using any of the following methods:
 * [Control Plane Config API](/api/konnect/control-planes-config/v2/)
 * [{{site.konnect_short_name}} UI](https://cloud.konghq.com/)
 
-## Limits
-Serverless Gateways have the following limits:
-* Request rate limit: Serverless Gateways support up to 100 requests per second (RPS) per gateway.
-* Maximum request size: Incoming requests are limited to a maximum payload size of 10MB.
-
-For workloads that exceed these limits, consider using [Dedicated Cloud Gateways](/dedicated-cloud-gateways/) for higher throughput and larger request sizes.
