@@ -1,1 +1,6 @@
 name: Event Gateway
+
+releases:
+  - release: "0.0"
+    name: "v0"
+    latest: true
