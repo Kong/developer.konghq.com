@@ -86,7 +86,9 @@ rows:
       * Ensures more efficient resource allocation across available models.
   - algorithm: "[Lowest-latency](/plugins/ai-proxy-advanced/examples/lowest-latency/)"
     description: |
-      Routes requests to the models with the lowest observed latency. In the configuration, the [`latency_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-latency-strategy) parameter (for example, `latency_strategy: e2e`) defines how latency is measured, typically based on end-to-end response times. By default, the latency is calculated based on the time the model takes to generate each token (`tpot`)
+      Routes requests to the models with the lowest observed latency. In the configuration, the [`latency_strategy`](/plugins/ai-proxy-advanced/reference/#schema--config-balancer-latency-strategy) parameter (for example, `latency_strategy: e2e`) defines how latency is measured, typically based on end-to-end response times. By default, the latency is calculated based on the time the model takes to generate each token (`tpot`).
+
+      The latency algorithm is based on peak EWMA (Exponentially Weighted Moving Average), which ensures that the balancer selects the backend by the lowest latency. The latency metric used is the full request cycle, from TCP connect to body response time. Since it’s a moving average, the metrics will decay over time.
     considerations: |
       * Prioritizes models with the fastest response times.
       * Optimizes for real-time performance in time-sensitive applications.
@@ -100,8 +102,8 @@ rows:
       * Best for routing prompts to domain-specialized models, like coding, analytics, text generation.
   - algorithm: "[Priority](/plugins/ai-proxy-advanced/examples/priority/)"
     description: |
-      Routes requests to models based on assigned priority groups and weights. In the configuration, models are grouped by priority and can have individual [`weight`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-weight) settings (for example, `weight: 70` for GPT-4), allowing proportional load distribution within each priority tier. 
-      
+      Routes requests to models based on assigned priority groups and weights. In the configuration, models are grouped by priority and can have individual [`weight`](/plugins/ai-proxy-advanced/reference/#schema--config-targets-weight) settings (for example, `weight: 70` for GPT-4), allowing proportional load distribution within each priority tier.
+
       By default, all models have the same priority. The balancer always chooses one of the targets in the group with the highest priority first. If all targets in the highest priority group are down, the balancer chooses one of the targets in the next highest priority group.
     considerations: |
       * Traffic first targets higher-priority groups; lower-priority groups are used only if needed (failover).
