@@ -94,6 +94,31 @@ rows:
 
   - header:
       type: h2
+      text: "Tools to manage AI Gateway"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Kong AI Gateway, working alongside {{site.base_gateway}}, supports multiple tools for managing configuration and resources. Use the following tools to automate, integrate, or streamline AI Gateway operations across environments.
+
+                    Whether you use APIs, declarative configuration, or Kubernetes-native tooling, these options give you the flexibility to manage Kong AI Gateway in the way that best fits your deployment model.
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: unordered_list
+                  items:
+                    - "[AI Manager](/ai-manager/): GUI for managing all your Kong AI gateway resources in one place."
+                    - "[decK](/deck/): Manage Kong AI Gateway and {{site.base_gateway}} configuration through declarative state files"
+                    - "[Terraform](/terraform/): Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}} and {{site.base_gateway}}"
+                    - "[KIC](/kubernetes-ingress-controller/): Manage ingress traffic and routing rules for your services"
+                    - "[{{site.base_gateway}} Admin API](/api/gateway/admin-ee/): Manage on-prem {{site.base_gateway}} entities via an API"
+                    - "[Control Plane Config API](/api/konnect/control-planes-config/): Manage {{site.base_gateway}} entities within {{site.konnect_short_name}} control planes via an API"
+  - header:
+      type: h2
       text: "AI Gateway capabilities"
     columns:
       - blocks:
