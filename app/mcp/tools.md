@@ -34,10 +34,9 @@ related_resources:
       icon: /assets/icons/third-party/docker.svg
     - text: AI Gateway
       url: /ai-gateway/
-
 ---
 
-Kong’s MCP (Managed Control Plane) Server provides a set of API-accessible tools to support analytics, configuration management, and control plane administration. These tools help users monitor traffic, query resource metadata, and manage control plane hierarchies programmatically.
+Kong’s MCP Server provides a set of API-accessible tools to support analytics, configuration management, and control plane administration. These tools help users monitor traffic, query resource metadata, and manage control plane hierarchies programmatically.
 
 ## Analytics tools
 
