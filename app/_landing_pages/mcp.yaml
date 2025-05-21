@@ -78,7 +78,7 @@ rows:
       - blocks:
         - type: card
           config:
-            title: Konnect MCP Server Tools
+            title: Konnect MCP Server tools
             description: Learn what tools you can use to have conversational control over Konnect with MCP Server tools.
             icon: /assets/icons/book.svg
             cta:
@@ -88,7 +88,7 @@ rows:
 
   - header:
       type: h2
-      text: "MCP Traffic Gateway Capabilities"
+      text: "MCP Traffic Gateway capabilities"
     columns:
       - blocks:
           - type: structured_text
@@ -103,10 +103,10 @@ rows:
         - type: card
           config:
             title: Secure AI connections with Kong MCP Traffic Gateway
-            description: Learn how to set up Key Authentication for an OpenAI chat route.
+            description: Learn how to secure MCP traffic.
             icon: /assets/icons/lock.svg
             cta:
-              url: /mcp/authentication/
+              url: /mcp/secure/
               align: end
       - blocks:
         - type: card
