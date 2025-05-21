@@ -49,4 +49,4 @@ tools:
   - kic
   - terraform
 
-
+group: open-ai

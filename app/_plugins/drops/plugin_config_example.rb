@@ -109,6 +109,10 @@ module Jekyll
         @id ||= SecureRandom.hex(10)
       end
 
+      def group
+        @group ||= @example['group']
+      end
+
       private
 
       def example
