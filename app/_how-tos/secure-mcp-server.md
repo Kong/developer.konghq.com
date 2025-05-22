@@ -11,7 +11,6 @@ tldr:
   a: |
     This tutorial demonstrates how to secure MCP traffic using the **Key Authentication** plugin, distribute traffic with the **AI Proxy Advanced** plugin, and control LLM usage through the **AI Rate Limiting Advanced** plugin.
 
-    ```
     {:.info}
     > To offload user credential management to a trusted Identity Provider, consider using the [OpenID Connect](/plugins/openid-connect/) plugin.
     >
