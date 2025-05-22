@@ -102,9 +102,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Kong AI Gateway, working alongside {{site.base_gateway}}, supports multiple tools for managing configuration and resources. Use the following tools to automate, integrate, or streamline AI Gateway operations across environments.
-
-                    Whether you use APIs, declarative configuration, or Kubernetes-native tooling, these options give you the flexibility to manage Kong AI Gateway in the way that best fits your deployment model.
+                    Kong AI Gateway, working alongside {{site.base_gateway}}, supports multiple tools for managing configuration and resources. Use the following tools to automate, integrate, or streamline AI Gateway operations in a way that best fits your deployment model.
       - blocks:
           - type: structured_text
             config:
