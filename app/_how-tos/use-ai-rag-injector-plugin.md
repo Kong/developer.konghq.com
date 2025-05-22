@@ -122,6 +122,7 @@ Next, configure the AI RAG Injector plugin to inject precise, context-specific i
 entities:
   plugins:
   - name: ai-rag-injector
+    id: b924e3e8-7893-4706-aacb-e75793a1d2e9
     config:
       inject_template: |
         You are an AI assistant designed to answer employee questions using only the approved compliance content provided between the <RAG></RAG> tags.
