@@ -76,7 +76,7 @@ headers:
   - 'Accept: application/json'
   - 'Content-Type: application/json'
 body:
-  name: us-east-2 private dns
+  name: $AWS_PRIVATE_DNS_NAME
   private_dns_attachment_config:
     kind: aws-private-hosted-zone-attachment
     hosted_zone_id: $AWS_HOSTED_ZONE_ID
