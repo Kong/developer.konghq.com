@@ -26,8 +26,6 @@ To create a new account, go to [app.insomnia.rest](https://app.insomnia.rest/app
 
 Your account is created with a Hobby plan. You can click **Upgrade** from the Insomnia dashboard to upgrade to a Pro plan or activate an Enterprise plan.
 
-To learn more about how to manage your enterprise account, see the [enterprise documentation](/insomnia/enterprise/).
-
 ## End-to-End Encryption
 
 Accounts created from June 4th 2024 onwards with a free subscription have E2EE disabled by default. While your data remains encrypted at rest and in transit, E2EE offers an additional layer of security by encrypting data such that only the parties involved in the communication can decrypt it.
