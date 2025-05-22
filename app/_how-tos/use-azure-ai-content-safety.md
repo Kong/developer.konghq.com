@@ -49,7 +49,7 @@ prereqs:
       icon_url: /assets/icons/openai.svg
     - title: Azure Content Safety key
       content: |
-          To complete this task, you must have an Azure subscription and Content Safety Key (static key generated from Azure Portal). Follow the [quickstart from Microsoft](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text?tabs=visual-studio%2Cwindows&pivots=programming-language-rest#prerequisites) to set it up.
+          To complete this tutorial, you need an Azure subscription and a Content Safety key (static key from the Azure Portal). If you need to set this up, follow [Microsoft's Azure quickstart](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text?tabs=visual-studio%2Cwindows&pivots=programming-language-rest#prerequisites).
       icon_url: /assets/icons/azure.svg
     # - title: Azure Content Safety blocklist
     #   content: |
@@ -75,7 +75,7 @@ automated_tests: false
 
 ## Configure the AI Proxy plugin
 
-Enable the [AI Proxy](/plugins/ai-proxy/) plugin with your OpenAI API key and the model details. In this example, we'll use the GPT-4o model.
+Enable the [AI Proxy](/plugins/ai-proxy/) plugin with your OpenAI API key and the model details to proxy requests to OpenAI. In this example, we'll use the GPT-4o model.
 
 {% entity_examples %}
 entities:
