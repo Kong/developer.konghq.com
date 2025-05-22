@@ -8,7 +8,14 @@ permalink: /mcp/secure/
 
 tldr:
   q: How do I secure MCP traffic with authentication, load balancing, and rate limiting?
-  a: Enable the Key Authentication plugin to protect access, use `ai-proxy-advanced` for load balancing, and `ai-rate-limiting-advanced` to control usage per consumer. This ensures reliable, authenticated, and cost-controlled access to your AI services.
+  a: |
+    This tutorial demonstrates how to secure MCP traffic using the **Key Authentication** plugin, distribute traffic with the **AI Proxy Advanced** plugin, and control LLM usage through the **AI Rate Limiting Advanced** plugin.
+
+    ```
+    {:.info}
+    > To offload user credential management to a trusted Identity Provider, consider using the [OpenID Connect](/plugins/openid-connect/) plugin.
+    >
+    > If you need to restrict access to a service or route using allow/deny lists, you can also use the [ACL](/plugins/acl/) plugin by assigning consumers to arbitrary ACL groups.
 
 related_resources:
   - text: Authentication
@@ -76,6 +83,9 @@ min_version:
   gateway: '3.10'
 ---
 
+{:.info}
+>
+
 ## Configure the AI Plugin on the MCP Service
 
 Start by creating a service named `mcp-service` that proxies requests to OpenAI's Chat API using the AI Proxy Plugin:
@@ -131,7 +141,7 @@ entities:
         - key: secret-chat-key
 {% endentity_examples %}
 
-## Customize AI Plugin Per Consumer
+## Customize AI Plugin per Consumer
 
 To override the default model behavior for `chat-client`, attach a plugin directly to the consumer:
 
@@ -153,71 +163,9 @@ entities:
             temperature: 0.7
 {% endentity_examples %}
 
-## Configure AI load balancing
+## Test the Key Authentication setup
 
-After handling authentication and authorization, Kong can perform **credential mediation** by injecting the necessary upstream credentials into the request on behalf of the client. This approach abstracts credential management from end-users and applications, reducing the surface area for credential exposure and ensuring tighter control over access to backend services such as LLM APIs.
-
-The `ai-proxy-advanced` plugin facilitates credential mediation by allowing you to configure outbound request headers—such as `Authorization`—using secrets securely referenced from a vault. In the example below, Kong fetches an OpenAI API token from a configured vault path (`vault://ai/openai-token`) and injects it into requests targeting the `gpt-4o` model.
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: ai-proxy-advanced
-      service: mcp-service
-      config:
-        balancer:
-          algorithm: "round-robin"
-          tokens_count_strategy: "total-tokens"
-          latency_strategy: "tpot"
-          retries: 3
-        targets:
-        - route_type: "llm/v1/chat"
-          auth:
-            header_name: "Authorization"
-            header_value: "{vault://ai/openai-token}"
-          logging:
-            log_statistics: true
-            log_payloads: true
-          model:
-            provider: "openai"
-            name: "gpt-4o"
-            options:
-              max_tokens: 1024
-              temperature: 1.0
-              input_cost: 2.5
-              output_cost: 10
-variables:
-  openai_key:
-    value: OPENAI_API_KEY
-{% endentity_examples %}
-
-This plugin balances traffic across OpenAI targets and applies retry logic while logging payloads and stats for monitoring.
-
-## Se up AI rate limiting
-
-You can also use the `ai-rate-limiting-advanced` plugin to protect your MCP service and manage API usage costs:
-
-{% entity_examples %}
-entities:
-  plugins:
-    - name: ai-rate-limiting-advanced
-      service: mcp-service
-      config:
-        strategy: local
-        window_type: fixed
-        llm_providers:
-          - name: openai
-            window_size:
-              - 60
-              - 3600
-            limit:
-              - 10000
-              - 1000000
-{% endentity_examples %}
-
-This configuration allows up to **10,000 tokens per minute** and **1,000,000 tokens per hour** per consumer.
-
-## Test the setup
+Now we can test the set up for requiring API keys:
 
 {% navtabs "use-valid-api-key" %}
 {% navtab "Valid request using key auth" %}
@@ -271,3 +219,69 @@ curl -X POST "$KONNECT_PROXY_URL/llm/v1/chat" \
 
 {% endnavtab %}
 {% endnavtabs %}
+
+## Configure AI load balancing
+
+After handling authentication and authorization, Kong can perform **credential mediation** by injecting the necessary upstream credentials into the request on behalf of the client. This approach abstracts credential management from end-users and applications, reducing the surface area for credential exposure and ensuring tighter control over access to backend services such as LLM APIs.
+
+The `ai-proxy-advanced` plugin facilitates credential mediation by allowing you to configure outbound request headers—such as `Authorization`—using secrets securely referenced from a vault. In the example below, Kong fetches an OpenAI API token from a configured vault path (`vault://ai/openai-token`) and injects it into requests targeting the `gpt-4o` model.
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-proxy-advanced
+      service: mcp-service
+      config:
+        balancer:
+          algorithm: "round-robin"
+          tokens_count_strategy: "total-tokens"
+          latency_strategy: "tpot"
+          retries: 3
+        targets:
+        - route_type: "llm/v1/chat"
+          auth:
+            header_name: "Authorization"
+            header_value: "{vault://ai/openai-token}"
+          logging:
+            log_statistics: true
+            log_payloads: true
+          model:
+            provider: "openai"
+            name: "gpt-4o"
+            options:
+              max_tokens: 1024
+              temperature: 1.0
+              input_cost: 2.5
+              output_cost: 10
+variables:
+  openai_key:
+    value: OPENAI_API_KEY
+{% endentity_examples %}
+
+This plugin balances traffic across OpenAI targets and applies retry logic while logging payloads and stats for monitoring.
+
+## Configure AI rate limiting
+
+You can also use the `ai-rate-limiting-advanced` plugin to protect your MCP service and manage API usage costs:
+
+{% entity_examples %}
+entities:
+  plugins:
+    - name: ai-rate-limiting-advanced
+      service: mcp-service
+      config:
+        strategy: local
+        window_type: fixed
+        llm_providers:
+          - name: openai
+            window_size:
+              - 60
+              - 3600
+            limit:
+              - 10000
+              - 1000000
+{% endentity_examples %}
+
+This configuration allows up to **10,000 tokens per minute** and **1,000,000 tokens per hour** per consumer.
+
+
