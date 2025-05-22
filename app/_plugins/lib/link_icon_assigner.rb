@@ -29,7 +29,7 @@ module Jekyll
     end
 
     def process
-      @resource['icon'] = "/assets/icons/#{determine_icon}.svg"
+      @resource['icon'] ||= "/assets/icons/#{determine_icon}.svg"
       @resource
     end
 

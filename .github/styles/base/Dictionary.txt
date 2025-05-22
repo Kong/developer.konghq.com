@@ -337,6 +337,7 @@ Istio's
 istioctl
 istioctl
 item_title
+jailbreaking
 jaq
 Javascript
 jetstack
@@ -421,6 +422,7 @@ Kustomize
 kustomize
 kustomize
 kv
+langchain
 lapis
 lastTimestamp
 Librato
@@ -555,6 +557,7 @@ params
 passthrough
 PayPal
 PayPal
+PDFs
 pdk
 pdks
 pem
@@ -753,6 +756,7 @@ Terraform
 Terraform
 Terraform's
 Terraform's
+text_splitters
 tfvars
 timeframe
 timeframes

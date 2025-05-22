@@ -1,0 +1,156 @@
+metadata:
+  title: "Kong MCP Traffic Gateway"
+  content_type: landing_page
+  description: This page is an introduction to MCP Traffic Gateway capabilites in Kong.
+  products:
+    - ai-gateway
+    - gateway
+  works_on:
+    - on-prem
+    - konnect
+  tags:
+    - ai
+
+rows:
+  - header:
+      type: h1
+      text: "Kong MCP Traffic Gateway"
+      sub_text: Modernize AI agent infrastructure with AI gateway-driven MCP capabilities
+
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    Kong MCP Traffic Gateway enables AI assistants to interact with Kong {{site.konnect_product_name}} using natural language to access analytics, configurations, and control plane operations.
+  - columns:
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Manage MCP servers with Kong AI Gateway"
+              blocks:
+                - type: text
+                  text: |
+                    AI agents are rapidly becoming core components of modern software, driving the need for structured, reliable interfaces to access tools and data. The Model Context Protocol (MCP) addresses this by enabling agents to reason, plan, and act across services. However, scaling MCP in remote, distributed environments introduces new operational challenges.
+
+                    Key concerns like authentication, context propagation, load balancing, and service discovery are familiar to those working in API infrastructure. As such, the API gateway—already proven in securing and scaling HTTP services—offers a strong foundation for bringing MCP to production.
+
+                    Kong’s AI Gateway extends these capabilities to MCP. By applying established gateway patterns to emerging agent interfaces, Kong enables teams to manage remote MCP traffic with enterprise-grade security, performance, and developer experience
+      - blocks:
+          - type: structured_text
+            config:
+              header:
+                text: "Conversational control of Kong {{site.konnect_product_name}}"
+              blocks:
+                - type: text
+                  text: |
+                      Kong MCP server connects AI assistants like Claude to Kong {{site.konnect_product_name}}’s API Gateway. It enables natural language access to key gateway tools, including analytics, configuration inspection, and control plane management.
+
+                      **Key features:**
+
+                      * Query API analytics with customizable filters
+                      * List and inspect services, routes, consumers, and plugins
+                      * Manage control planes and control plane groups
+                      * Integrate with Claude and other MCP-compatible AI assistants
+
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Get started
+            description: Learn how to run the Kong {{site.konnect_product_name}} MCP Server with Claude.
+            icon: /assets/icons/rocket.svg
+            cta:
+              url: /mcp/get-started/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.konnect_product_name}} MCP Server for Docker"
+            description: Use {{site.konnect_product_name}} MCP Server as a Docker image.
+            icon: /assets/icons/third-party/docker.svg
+            cta:
+              url: https://hub.docker.com/r/mcp/kong
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: "{{site.konnect_product_name}} MCP Server tools"
+            description: Learn what tools you can use to have conversational control over {{site.konnect_product_name}} with MCP Server tools.
+            icon: /assets/icons/book.svg
+            cta:
+              url: /mcp/tools/
+              align: end
+
+
+  - header:
+      type: h2
+      text: "MCP Traffic Gateway capabilities"
+    columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                      Modern AI applications rely on MCP to coordinate communication between user interfaces, agents, tools, and LLMs. Kong’s AI Gateway provides the secure, scalable foundation MCP needs—handling authentication, rate limiting, and deep observability across all interactions. With native support for MCP servers and dynamic model routing, Kong makes it easy to operationalize complex AI workflows at scale.
+
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Secure AI connections with Kong MCP Traffic Gateway
+            description: Learn how to secure MCP traffic.
+            icon: /assets/icons/lock.svg
+            cta:
+              url: /mcp/secure/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Govern AI connections with Kong MCP Traffic Gateway
+            description: Learn how to enforce semantic guardrails on Kong MCP Traffic Gateway.
+            icon: /assets/icons/network.svg
+            cta:
+              url: /mcp/govern-mcp/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Monitor AI traffic with Kong MCP Traffic Gateway
+            description: Learn how to monitor AI trafic metrics for MCP Traffic gateway which can be scraped by a Prometheus server.
+            icon: /assets/icons/monitor.svg
+            cta:
+              url: /ai-gateway/monitor-ai-llm-metrics/
+              align: end
+
+  - header:
+      type: h2
+      text: How-to Guides
+
+    columns:
+      - blocks:
+          - type: how_to_list
+            config:
+              tags:
+                - ai
+              quantity: 5
+              allow_empty: true
+
+  - header:
+      text: "Frequently Asked Questions"
+      type: h2
+    columns:
+      - blocks:
+        - type: faqs
+          config:
+            - q: Question 1
+              a: |
+                Yes
+
+            - q: Question 2
+              a: |
+                Yes
