@@ -21,6 +21,7 @@ rows:
           config:
             title: Accounts
             description: Create and manage your Insomnia account.
+            icon: /assets/icons/profile.svg
             cta:
               text: Learn more
               url: /insomnia/accounts/
@@ -29,6 +30,7 @@ rows:
           config:
             title: Organizations
             description: Use organizations to share resources with other users.
+            icon: /assets/icons/organization.svg
             cta:
               text: Learn more
               url: /insomnia/organizations/
@@ -37,9 +39,10 @@ rows:
           config:
             title: Users
             description: Manage users in your Enterprise account using teams, domain capture, and seats.
+            icon: /assets/icons/team.svg
             cta:
               text: Learn more
-              url: /insomnia/user-management/
+              url: /insomnia/enterprise-user-management/
   - header:
       type: h2
       text: "Security"
@@ -49,6 +52,7 @@ rows:
           config:
             title: RBAC
             description: Use Role-Based Access Control (RBAC) to scope access to Insomnia resources.
+            icon: /assets/icons/rbac.svg
             cta:
               text: Learn more
               url: /insomnia/rbac/
@@ -57,6 +61,7 @@ rows:
           config:
             title: SSO
             description: Set up Single Sign-On (SSO) for your enterprise account.
+            icon: /assets/icons/key.svg
             cta:
               text: Learn more
               url: /insomnia/sso/
@@ -65,15 +70,17 @@ rows:
           config:
             title: SCIM
             description: Set up System for Cross-domain Identity Management (SCIM) provisioning for your enterprise account.
+            icon: /assets/icons/domain.svg
             cta:
               text: Learn more
-              url: /insomnia/scmi/
+              url: /insomnia/scim/
   - columns:
       - blocks:
         - type: card
           config:
             title: E2EE
             description: Learn about how End-to-End Encryption (E2EE) works in Insomnia.
+            icon: /assets/icons/lock.svg
             cta:
               text: Learn more
               url: /insomnia/end-to-end-encryption/
@@ -82,6 +89,7 @@ rows:
           config:
             title: Data security
             description: Learn about the data models, keys, and salts used in Insomnia.
+            icon: /assets/icons/security.svg
             cta:
               text: Learn more
               url: /insomnia/data-security/
@@ -90,6 +98,7 @@ rows:
           config:
             title: Incident response and vulnerability management
             description: Learn about how Insomnia reports incidents and manages security vulnerabilities.
+            icon: /assets/icons/warning.svg
             cta:
               text: Learn more
               url: /insomnia/incident-response/
