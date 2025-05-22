@@ -76,7 +76,7 @@ resource "konnect_gateway_control_plane" "my_cp" {
 ' > main.tf
 ```
 
-# Configure a service and a route
+## Configure a service and a route
 
 After creating a Control Plane, you can configure a Service and a Route.
 

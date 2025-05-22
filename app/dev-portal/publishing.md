@@ -14,7 +14,8 @@ works_on:
 
 search_aliases:
   - Portal
-
+api_specs:
+  - konnect/api-builder
 breadcrumbs:
   - /dev-portal/
 
