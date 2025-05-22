@@ -24,13 +24,13 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Kong MCP Traffic Gateway enables AI assistants to interact with Kong {{site.konnect_product_name}} using natural language to access analytics, configurations, and control plane operations.
+                    Kong MCP Traffic Gateway enables AI assistants to interact with {{site.konnect_product_name}} using natural language to access analytics, configurations, and control plane operations.
   - columns:
       - blocks:
           - type: structured_text
             config:
               header:
-                text: "Manage MCP servers with Kong AI Gateway"
+                text: "Manage MCP traffic with Kong AI Gateway"
               blocks:
                 - type: text
                   text: |
