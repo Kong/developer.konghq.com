@@ -69,7 +69,7 @@ Active tracing requires the following Data Plane version and environment variabl
     - Konnect Self-Managed Hybrid Gateways
     - Konnect Dedicated Cloud Gateways
     - Konnect Serverless Gateways
-    Kong Ingress Controller environments and Native Event Proxy Gateways are not supported at this time.
+    {{site.kic_product_name}} and Native Event Proxy Gateways are not supported at this time.
 
 ### Start a trace session
 
