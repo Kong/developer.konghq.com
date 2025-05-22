@@ -92,6 +92,7 @@ callouts
 certificate_admin
 charset
 chatbot
+chatbots
 cidr
 cidrs
 cleartext
