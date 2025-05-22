@@ -4,9 +4,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8">
     <title>{{ page.title_tag | liquify }}</title>
-    <meta name="description" content="{{ page.description | liquify }}">
+
+    {% assign description = page.description %}
+    {% unless page.description %}{% assign description = site.description %}{% endunless %}
+
+    <meta name="description" content="{{ description | liquify }}">
 
     <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico" />
+
+    <meta property="og:site_name" content="{{ site.title }}">
+    <meta property="og:title" content="{{ page.title_tag | liquify }}">
+    <meta property="og:description" content="{{ description | liquify }}">
+    <meta property="og:image" content="{{ site.links.web }}assets/images/thumbnail.svg">
+    <meta property="og:url" content="{{ site.links.web }}{{ page.canonical_url }}">
 
     {% if page.canonical_url %}
       <link rel="canonical" href="{{ site.links.web }}{{ page.canonical_url }}" />
