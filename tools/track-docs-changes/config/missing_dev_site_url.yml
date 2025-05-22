@@ -16,10 +16,10 @@
   dev_site_url: '/custom-plugins/'
   status: "?"
 - docs_url: "/gateway/latest/kong-manager/auth/rbac/add-role/"
-  dev_site_url: '/gateway/entities/rbac/'
+  dev_site_url: '/how-to/configure-rbac-user-in-kong-gateway/'
   status: post-ga
 - docs_url: "/gateway/latest/kong-manager/auth/rbac/add-user/"
-  dev_site_url: '/gateway/entities/rbac/'
+  dev_site_url: '/how-to/configure-rbac-user-in-kong-gateway/'
   status: post-ga
 - docs_url: "/gateway/3.4.x/kong-enterprise/dev-portal/customize/adding-javascript-assets/"
   dev_site_url: '/dev-portal/'
@@ -499,7 +499,7 @@
   dev_site_url: '/gateway/kong-manager/'
   status: post-ga
 - docs_url: "/gateway/latest/kong-manager/auth/rbac/enable/"
-  dev_site_url: '/gateway/kong-manager/'
+  dev_site_url: '/how-to/enable-rbac-with-admin-api/'
   status: post-ga
 - docs_url: "/gateway/latest/plugin-development/get-started/"
   dev_site_url: '/custom-plugins/get-started/set-up-plugin-project/'
