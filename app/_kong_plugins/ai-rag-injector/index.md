@@ -100,7 +100,7 @@ The **AI RAG Injector** plugin automates the retrieval and injection of contextu
 
 ## How the AI RAG Injector plugin works
 
-When a user sends a prompt, the RAG Injector plugin queries a configured vector database for relevant context and injects that information into the request before passing it to the language model. 
+When a user sends a prompt, the RAG Injector plugin queries a configured vector database for relevant context and injects that information into the request before passing it to the language model.
 
 1. You configure the AI RAG Injector plugin via the Admin API or decK, setting up the RAG content to send to the vector database.
 1. When a request reaches the AI Gateway, the plugin generates embeddings for request prompts, then queries the vector database for the top-k most similar embeddings.
@@ -112,13 +112,15 @@ The following diagram is a simplified overview of how the plugin works.  See the
 {% mermaid %}
 sequenceDiagram
     participant User
-    participant LLM
+    participant AIGateway as AI Gateway (RAG Injector Plugin)
     participant VectorDB as Vector DB (Data Source)
+    participant Upstream as Upstream Service
 
-    User->>LLM: Submit prompt
-    LLM->>VectorDB: Query for relevant context
-    VectorDB-->>LLM: Return relevant context
-    LLM-->>User: Generate and return response
+    User->>AIGateway: Send request with prompt
+    AIGateway->>VectorDB: Query for similar embeddings
+    VectorDB-->>AIGateway: Return relevant context
+    AIGateway->>Upstream: Inject context and forward enriched request
+    Upstream-->>User: Return response
 {% endmermaid %}
 <!-- vale on -->
 
