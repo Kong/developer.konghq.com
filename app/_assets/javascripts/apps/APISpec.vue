@@ -30,7 +30,7 @@
     <KSkeleton v-if="loading" type="spinner" class="mx-auto items-center justify-center min-h-52 flex"/>
 
     <div v-if="!loading" class="flex gap-10 w-full">
-      <aside class="sticky top-16 left-0 flex-col gap-3 flex-shrink-0 w-64 hidden md:flex h-screen">
+      <aside class="sticky top-24 left-0 flex-col gap-3 flex-shrink-0 w-64 hidden md:flex h-screen">
         <KSelect
           :items="versions"
           @selected="onVersionSelect"
