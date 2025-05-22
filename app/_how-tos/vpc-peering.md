@@ -81,7 +81,7 @@ body:
 1. In the AWS Console, go to **VPC** → **Route Tables**.
 1. Select the route table for your VPC's subnet.
 1. Select **Edit routes** from the Actions menu. Click **Add route**.:
-    - **Destination**: The CIDR block of the {{site.konnect_short_name}} network (provided in the peering details).
+    - **Destination**: The CIDR block of the {{site.konnect_short_name}} network.
     - **Target**: The accepted VPC peering connection.
 1. Save your changes.
 
