@@ -14,6 +14,8 @@ tags:
 
 works_on:
     - konnect
+api_specs:
+  - konnect/api-builder
 search_aliases:
   - postman
   - publish API specs
