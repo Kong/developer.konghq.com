@@ -70,7 +70,7 @@ Active tracing requires the following Data Plane version and environment variabl
 - Konnect Dedicated Cloud Gateways
 - Konnect Serverless Gateways
 > <br><br>
-> {{site.kic_product_name}} and {{site.event_gateway}} Gateways are not compatible with active tracing at this time.
+> Active tracing is not supported on {{site.kic_product_name}} and {{site.event_gateway}} Gateways at this time.
 
 ### Start a trace session
 
