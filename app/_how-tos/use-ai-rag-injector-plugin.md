@@ -164,7 +164,7 @@ Before sending data to the AI Gateway, split your input into manageable chunks u
 Refer to [langchain text_splitters documents](https://python.langchain.com/docs/concepts/text_splitters/) if your documents
 are structured data other than plain texts.
 
-The following Python script demonstrates how to split text using `RecursiveCharacterTextSplitter` and ingest the resulting chunks into the AI Gateway. This script uses the AI RAG Injector plugin ID we set in the previous step, so be sure to replace it if your plugin has a different ID. 
+The following Python script demonstrates how to split text using `RecursiveCharacterTextSplitter` and ingest the resulting chunks into the AI Gateway. This script uses the AI RAG Injector plugin ID we set in the previous step, so be sure to replace it if your plugin has a different ID.
 
 Save the script as `inject_policy.py`:
 
@@ -300,7 +300,8 @@ body:
 This will return something like the following:
 
 ```sh
-{"metadata":{"embeddings_tokens_count":3,"chunk_id":"8d615894-b576-499d-87b9-c44ebe950e7f","ingest_duration":550}}
+{"metadata":{"embeddings_tokens_count":3,"chunk_id": "3fa85f64-5717-4562-b3fc-2c963fabcdef","ingest_duration":550}}
+```
 
 ## Test RAG configuration
 
