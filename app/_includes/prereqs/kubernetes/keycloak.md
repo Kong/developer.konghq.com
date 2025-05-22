@@ -14,7 +14,7 @@ kubectl apply -f https://raw.githubusercontent.com/keycloak/keycloak-quickstarts
 
 We'll use {{ site.base_gateway }} to expose Keycloak in our cluster on a custom domain:
 
-{% include /k8s/httproute.md release=page.release path='/' name='keycloak' service='keycloak' port='8080' hostname='keycloak.$PROXY_IP.nip.io' %}
+{% include_cached /k8s/httproute.md path='/' name='keycloak' service='keycloak' port='8080' hostname='keycloak.$PROXY_IP.nip.io' %}
 
 ### Register a client and user
 
