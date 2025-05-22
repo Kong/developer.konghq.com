@@ -49,7 +49,7 @@ prereqs:
       icon_url: /assets/icons/openai.svg
     - title: Redis stack
       content: |
-          To complete this tutorial, you must have a [Redis stack](https://redis.io/docs/latest/) configured in your environment. 
+          To complete this tutorial, you must have a [Redis stack](https://redis.io/docs/latest/) configured in your environment.
           Set your Redis host as an environment variable:
           ```sh
           export DECK_REDIS_HOST='YOUR-REDIS-HOST'
@@ -91,7 +91,7 @@ cleanup:
 
 ## Configure the AI Proxy Advanced plugin
 
-First, you'll need to configure the AI Proxy Advanced plugin:
+First, you'll need to configure the AI Proxy Advanced plugin to proxy prompt requests to your model provider, and handle authentication:
 
 {% entity_examples %}
 entities:
@@ -116,21 +116,20 @@ variables:
 
 ## Configure the AI RAG Injector plugin
 
-Then, configure the AI RAG Injector plugin
+Next, configure the AI RAG Injector plugin to inject precise, context-specific instructions and relevant knowledge from a company's private compliance data into the AI prompt. This configuration ensures the AI answers employee questions accurately using only approved information through retrieval-augmented generation (RAG).
 
 {% entity_examples %}
 entities:
   plugins:
   - name: ai-rag-injector
-    id: 3194f12e-60c9-4cb6-9cbc-c8fd7a00cff1
     config:
       inject_template: |
         You are an AI assistant designed to answer employee questions using only the approved compliance content provided between the <RAG></RAG> tags.
         Do not use external or general knowledge, and do not answer if the information is not available in the RAG content.
         <RAG><CONTEXT></RAG>
-        User's question: <PROMPT>
+        User'\''s question: <PROMPT>
         Respond only with information found in the <RAG> section. If the answer is not clearly present, reply with:
-        "I'm sorry, I cannot answer that based on the available compliance information."
+        "I'\''m sorry, I cannot answer that based on the available compliance information."
       embeddings:
         auth:
           header_name: Authorization
@@ -141,15 +140,13 @@ entities:
       vectordb:
         strategy: redis
         redis:
-          host: ${redis_host}
+          host: localhost
           port: 6379
         distance_metric: cosine
         dimensions: 3072
 variables:
   openai_api_key:
     value: $OPENAI_API_KEY
-  redis_host:
-    value: $REDIS_HOST
 {% endentity_examples %}
 
 ## Split input data before ingestion
