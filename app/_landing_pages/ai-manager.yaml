@@ -26,7 +26,7 @@ rows:
                     using the {{site.konnect_short_name}} platform.
 
                     Key features include:
-                    * **Routing and load balancing** – Assign gateway services and define how traffic is distributed across models.
+                    * **Routing and [load balancing](/ai-gateway/load-balancing/)**: Assign Gateway Services and define how traffic is distributed across models.
                     * **Streaming and aauthentication** – Enable streaming responses and manage authentication through the AI Gateway.
                     * **Access control** – Create and apply access tiers to control how clients interact with LLMs.
                     * **Usage analytics** – Monitor request and token volumes, track error rates, and measure average latency with historical comparisons.
