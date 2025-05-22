@@ -26,7 +26,7 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    Dedicated Cloud Gateways are Data Plane nodes that are fully managed by Kong in {{site.konnect_short_name}}. Each Dedicated Cloud Gateway runs on isolated infrastructure within Kong-managed environments in AWS, Azure, or GCP —offering the performance and security of dedicated infrastructure with the operational ease of SaaS.
+                    Dedicated Cloud Gateways are Data Plane nodes that are fully managed by Kong in {{site.konnect_short_name}}. Each Dedicated Cloud Gateway runs on isolated infrastructure within Kong-managed environments in AWS, Azure, or GCP — offering the performance and security of dedicated infrastructure with the operational ease of SaaS.
                     
                     With Dedicated Cloud Gateways, you don't need to host any Data Planes, and you maintain control over the size and location of the Gateway infrastructure. 
                     This allows Kong to autoscale your nodes for you and reduces your operational complexity.
