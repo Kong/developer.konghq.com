@@ -73,3 +73,5 @@ tools:
 
 search_aliases:
   - Microsoft Entra ID
+
+group: providers

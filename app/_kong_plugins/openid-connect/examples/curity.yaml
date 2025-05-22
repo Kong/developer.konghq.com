@@ -56,3 +56,5 @@ tools:
 
 search_aliases:
   - curity identity server
+
+group: providers

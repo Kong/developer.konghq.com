@@ -48,3 +48,5 @@ tools:
   - konnect-api
   - kic
   - terraform
+
+group: authentication
