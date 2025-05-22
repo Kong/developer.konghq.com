@@ -63,6 +63,14 @@ Active tracing requires the following Data Plane version and environment variabl
   - `KONG_CLUSTER_RPC=on`
   - `KONG_ACTIVE_TRACING=on`
 
+> **Note:** Active tracing is currently limited to:
+>
+> - Konnect Self-Managed Hybrid Gateways
+> - Konnect Dedicated Cloud Gateways
+> - Konnect Serverless Gateways
+>
+> Kong Ingress Controller environments and Native Event Proxy Gateways are not supported at this time.
+
 ### Start a trace session
 
 1. Navigate to **Gateway Manager**.
