@@ -109,7 +109,7 @@ rows:
               blocks:
                 - type: unordered_list
                   items:
-                    - "[AI Manager](/ai-manager/): GUI for managing all your Kong AI gateway resources in one place."
+                    - "[AI Manager](/ai-manager/): GUI for managing all your Kong AI Gateway resources in one place."
                     - "[decK](/deck/): Manage Kong AI Gateway and {{site.base_gateway}} configuration through declarative state files."
                     - "[Terraform](/terraform/): Manage infrastructure as code and automated deployments to streamline setup and configuration of {{site.konnect_short_name}} and {{site.base_gateway}}."
                     - "[KIC](/kubernetes-ingress-controller/): Manage ingress traffic and routing rules for your services."
