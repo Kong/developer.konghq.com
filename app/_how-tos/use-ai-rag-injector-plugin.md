@@ -149,6 +149,11 @@ variables:
     value: $OPENAI_API_KEY
 {% endentity_examples %}
 
+{:.info}
+> If your Redis instance runs in a separate Docker container from Kong, use `host.docker.internal` for `vectordb.redis.host`.
+>
+> If you're using a model other than `text-embedding-3-large`, be sure to update the `vectordb.dimensions` value to match the model’s embedding size.
+
 ## Split input data before ingestion
 
 Before sending data to the AI Gateway, split your input into manageable chunks using a text splitting tool like `langchain_text_splitters`. This helps optimize downstream processing and improves semantic retrieval performance.
@@ -244,6 +249,15 @@ for doc in docs:
     print(response.json())
 ```
 
+{:.info}
+> You can replace `print(response.json())` with `print(response.text)` to view the raw HTTP response body as a plain string instead of a parsed JSON object. This is useful for debugging cases where:
+>
+> * The response isn't valid JSON (e.g., plain text error message or HTML).
+> * You want to inspect the exact response content without triggering a JSON parse error.
+>
+> Use `response.text` when troubleshooting unexpected server responses or plugin misconfigurations.
+
+
 Save the script as `inject_policy.py`, then run it in your terminal:
 
 ```bash
@@ -254,10 +268,10 @@ This will output the number of chunks created and display the response from the 
 
 ```text
 Injecting 4 chunks...
-{"metadata":{"ingest_duration":1476,"embeddings_tokens_count":157,"chunk_id":"99a45541-b772-4147-8846-276ecc51190f"}}
-{"metadata":{"ingest_duration":1323,"embeddings_tokens_count":140,"chunk_id":"2aaa9b63-7ee3-42cd-b64a-b9513a176941"}}
-{"metadata":{"ingest_duration":1286,"embeddings_tokens_count":141,"chunk_id":"78b9b3f5-9e3f-48c3-bde8-432d496b6086"}}
-{"metadata":{"ingest_duration":2892,"embeddings_tokens_count":168,"chunk_id":"d3a6f548-9181-4159-95aa-dd3c2e221501"}}
+{"metadata":{"ingest_duration":1476,"embeddings_tokens_count":157,"chunk_id":"a1b2c3d4-e5f6-7890-ab12-34567890abcd"}}
+{"metadata":{"ingest_duration":1323,"embeddings_tokens_count":140,"chunk_id":"b2c3d4e5-f678-9012-bc34-567890abcdef"}}
+{"metadata":{"ingest_duration":1286,"embeddings_tokens_count":141,"chunk_id":"c3d4e5f6-7890-1234-cd56-7890abcdef12"}}
+{"metadata":{"ingest_duration":2892,"embeddings_tokens_count":168,"chunk_id":"d4e5f678-9012-3456-de78-90abcdef1234"}}
 ```
 
 ### Ingest content to the vector database
@@ -447,7 +461,7 @@ These prompts are vague, outside compliance scope, or might encourage hallucinat
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $OPENAI_API_KEY" \
     -d '{
-      "messages": [{"role": "user", "content": "Can you give me general tips for business travel?"}]
+      "messages": [{"role": "user", "content": "What is the best destination for international travel?"}]
     }' | jq
   ```
 
