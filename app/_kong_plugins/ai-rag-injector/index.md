@@ -42,7 +42,7 @@ related_resources:
     url: /ai-gateway/
   - text: AI Semantic Cache plugin
     url: /plugins/ai-semantic-cache/
-  - text: Configure the AI RAG Injector plugin with OpenAI
+  - text: Ensure chatbots adhere to compliance policies with the AI RAG Injector plugin
     url: /how-to/use-ai-rag-injector-plugin/
 
 tags:

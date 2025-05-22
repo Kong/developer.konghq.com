@@ -141,13 +141,15 @@ entities:
       vectordb:
         strategy: redis
         redis:
-          host: localhost
+          host: ${redis_host}
           port: 6379
         distance_metric: cosine
         dimensions: 3072
 variables:
   openai_api_key:
     value: $OPENAI_API_KEY
+  redis_host:
+    value: $REDIS_HOST
 {% endentity_examples %}
 
 {:.info}
@@ -162,7 +164,9 @@ Before sending data to the AI Gateway, split your input into manageable chunks u
 Refer to [langchain text_splitters documents](https://python.langchain.com/docs/concepts/text_splitters/) if your documents
 are structured data other than plain texts.
 
-The following Python script demonstrates how to split text using `RecursiveCharacterTextSplitter` and ingest the resulting chunks into the AI Gateway:
+The following Python script demonstrates how to split text using `RecursiveCharacterTextSplitter` and ingest the resulting chunks into the AI Gateway. This script uses the AI RAG Injector plugin ID we set in the previous step, so be sure to replace it if your plugin has a different ID. 
+
+Save the script as `inject_policy.py`:
 
 ```python
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -244,7 +248,7 @@ print("Injecting %d chunks..." % len(docs))
 
 for doc in docs:
     response = requests.post(
-        "http://localhost:8001/ai-rag-injector/{plugin_ID}/ingest_chunk", # Replace the placeholder with your AI RAG Injector plugin ID
+        "http://localhost:8001/ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk", # Replace the placeholder with your AI RAG Injector plugin ID
         data={'content': doc.page_content}
     )
     print(response.json())
@@ -259,13 +263,13 @@ for doc in docs:
 > Use `response.text` when troubleshooting unexpected server responses or plugin misconfigurations.
 
 
-Save the script as `inject_policy.py`, then run it in your terminal:
+Run the `inject_policy.py` script in your terminal:
 
 ```bash
-python ./inject_policy.py
+python3 ./inject_policy.py
 ```
 
-This will output the number of chunks created and display the response from the injector endpoint for each chunk.
+This will output the number of chunks created and display the response from the injector endpoint for each chunk:
 
 ```text
 Injecting 4 chunks...
@@ -274,6 +278,7 @@ Injecting 4 chunks...
 {"metadata":{"ingest_duration":1286,"embeddings_tokens_count":141,"chunk_id":"c3d4e5f6-7890-1234-cd56-7890abcdef12"}}
 {"metadata":{"ingest_duration":2892,"embeddings_tokens_count":168,"chunk_id":"d4e5f678-9012-3456-de78-90abcdef1234"}}
 ```
+{:.no-copy-code}
 
 ### Ingest content to the vector database
 
@@ -281,101 +286,122 @@ Now, you can feed the split chunks into AI Gateway using the Kong Admin API.
 
 The following example shows how to ingest content to the vector database for building the knowledge base. The AI RAG Injector plugin uses the OpenAI `text-embedding-3-large` model to generate embeddings for the content and stores them in Redis.
 
-```bash
-curl localhost:8001/ai-rag-injector/{plugin_ID}/ingest_chunk \
-  -H "Content-Type: application/json" \
-  -d '{
-    "content": "<chunk>"
-  }'
-```
-{:.info}
-Replace the `plugin_ID` placeholder with your AI RAG Injector plugin ID.
+<!--vale off-->
+{% control_plane_request %}
+url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/ingest_chunk
+status_code: 201
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+body:
+    content: <chunk>
+{% endcontrol_plane_request %}
+<!--vale on-->
+This will return something like the following:
+
+```sh
+{"metadata":{"embeddings_tokens_count":3,"chunk_id":"8d615894-b576-499d-87b9-c44ebe950e7f","ingest_duration":550}}
 
 ## Test RAG configuration
 
+Now you can send various questions to the AI to verify that RAG is working correctly.
+
 ### In-scope questions
 
-Use the following in-scope questions to verify that the AI responds accurately based on the approved compliance content and does not rely on external knowledge.
+Use the following in-scope questions to verify that the AI responds accurately based on the approved compliance content and doesn't rely on external knowledge.
 
 {% navtabs "In scope" %}
 {% navtab "Basic questions" %}
 
   Use simple user questions that map directly to travel policy clauses:
 
-  ```bash
-  curl --http1.1 localhost:8000/chat \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-      "messages": [{"role": "user", "content": "Are alcoholic beverages reimbursable?"}]
-    }' | jq
-  ````
+  {% validation request-check %}
+  url: /anything
+  headers:
+    - 'Content-Type: application/json'
+    - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+  body:
+    messages:
+      - role: user
+        content: Are alcoholic beverages reimbursable?
+  {% endvalidation %}
 
   You can also ask this question:
 
-  ```bash
-  curl --http1.1 localhost:8000/chat \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-      "messages": [{"role": "user", "content": "What documentation is required for travel reimbursement?"}]
-    }' | jq
-  ```
+  {% validation request-check %}
+  url: /anything
+  headers:
+    - 'Content-Type: application/json'
+    - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+  body:
+    messages:
+      - role: user
+        content: What documentation is required for travel reimbursement?
+  {% endvalidation %}
 
 {% endnavtab %}
 {% navtab "Intermediate questions" %}
 
   Use slightly more complex prompts involving multi-step policy logic or multiple clauses:
 
-  ```bash
-  curl --http1.1 localhost:8000/chat \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-      "messages": [{"role": "user", "content": "Can I get reimbursed for internet charges during a business trip?"}]
-    }' | jq
-  ```
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: Can I get reimbursed for internet charges during a business trip?
+{% endvalidation %}
 
   Also, you can ask a more complex query about booking a hotel:
 
-  ```bash
-  curl --http1.1 localhost:8000/chat \
-    -H "Content-Type: application/json" \
-    -d '{
-      "messages": [{"role": "user", "content": "Do I need to book my hotel in advance for business travel?"}]
-    }' | jq
-  ```
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: Do I need to book my hotel in advance for business travel?
+{% endvalidation %}
 
 {% endnavtab %}
 {% navtab "Edge cases" %}
 
   Use prompts that test boundaries of the compliance language:
 
-  ```bash
-  curl --http1.1 localhost:8000/chat \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-      "messages": [{"role": "user", "content": "Am I allowed to share a hotel room with another employee?"}]
-    }' | jq
-  ```
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: Am I allowed to share a hotel room with another employee?
+{% endvalidation %}
 
   Or ask about public transportation:
 
-  ```bash
-  curl --http1.1 localhost:8000/chat \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-      "messages": [{"role": "user", "content": "What’s the policy on using public transportation during travel?"}]
-    }' | jq
-  ```
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: What’s the policy on using public transportation during travel?
+{% endvalidation %}
 {% endnavtab %}
 {% endnavtabs %}
 
 ### Out-of-scope questions
 
-Use the following out-of-scope questions to confirm that the AI correctly refuses to answer queries that fall outside the ingested compliance content. Upon these requests, AI should return the following response:
+Use the following out-of-scope questions to confirm that the AI correctly refuses to answer queries that fall outside the ingested compliance content. AI should return the following response to these requests:
 
 ```json
 "message": {
@@ -383,97 +409,114 @@ Use the following out-of-scope questions to confirm that the AI correctly refuse
     "content": "I'm sorry, I cannot answer that based on the available compliance information.",
   }
 ```
+{:.no-copy-code}
 
 {% navtabs "test" %}
 {% navtab "General company info" %}
 
   These questions ask about Acme Corp. in general, not about the travel policy:
 
-  ```bash
-  curl --http1.1 localhost:8000/chat \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-      "messages": [{"role": "user", "content": "What does Acme Corp. do?"}]
-    }' | jq
-  ````
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: What does Acme Corp. do?
+{% endvalidation %}
 
-  ```bash
-  curl --http1.1 localhost:8000/chat \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-      "messages": [{"role": "user", "content": "Where is Acme Corp. headquartered?"}]
-    }' | jq
-  ```
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: Where is Acme Corp. headquartered?
+{% endvalidation %}
 
 {% endnavtab %}
 {% navtab "External knowledge" %}
 
   These questions require general or external knowledge that is not included in the ingested content:
 
-  ```bash
-  curl --http1.1 localhost:8000/chat \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-      "messages": [{"role": "user", "content": "Who is the CEO of OpenAI?"}]
-    }' | jq
-  ```
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: Who is the CEO of OpenAI?
+{% endvalidation %}
 
-  ```bash
-  curl --http1.1 localhost:8000/chat \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-      "messages": [{"role": "user", "content": "How does Redis handle vector storage?"}]
-    }' | jq
-  ```
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: How does Redis handle vector storage?
+{% endvalidation %}
 {% endnavtab %}
 {% navtab "Other HR policies" %}
 
-These prompts reference company policies that are not part of the travel policy content:
+These prompts reference company policies that aren't part of the travel policy content:
 
-  ```bash
-  curl --http1.1 localhost:8000/chat \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-      "messages": [{"role": "user", "content": "How much vacation time do I get per year?"}]
-    }' | jq
-  ```
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: How much vacation time do I get per year?
+{% endvalidation %}
 
-  ```bash
-  curl --http1.1 localhost:8000/chat \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-      "messages": [{"role": "user", "content": "What’s the parental leave policy at Acme Corp.?"}]
-    }' | jq
-  ```
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: What’s the parental leave policy at Acme Corp.?
+{% endvalidation %}
 
 {% endnavtab %}
 {% navtab "Ambiguous or unsupported topics" %}
 
 These prompts are vague, outside compliance scope, or might encourage hallucination if guardrails aren't working:
 
-  ```bash
-  curl --http1.1 localhost:8000/chat \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-      "messages": [{"role": "user", "content": "What is the best destination for international travel?"}]
-    }' | jq
-  ```
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: What is the best destination for international travel?
+{% endvalidation %}
 
-  ```bash
-  curl --http1.1 localhost:8000/chat \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $OPENAI_API_KEY" \
-    -d '{
-      "messages": [{"role": "user", "content": "What should I pack for an international trip?"}]
-    }' | jq
-  ```
+{% validation request-check %}
+url: /anything
+headers:
+  - 'Content-Type: application/json'
+  - 'Authorization: Bearer $DECK_OPENAI_API_KEY'
+body:
+  messages:
+    - role: user
+      content: What should I pack for an international trip?
+{% endvalidation %}
 
 {% endnavtab %}
 {% endnavtabs %}
@@ -483,21 +526,27 @@ These prompts are vague, outside compliance scope, or might encourage hallucinat
 
 To evaluate which documents are retrieved for a specific prompt, use the following command:
 
-```bash
-curl localhost:8001/ai-rag-injector/{plugin_ID}/lookup_chunks \
-  -H "Content-Type: application/json" \
-  -d '{
-    "prompt": "the prompt to debug",
-    "exclude_contents": false
-  }'
-```
+<!--vale off-->
+{% control_plane_request %}
+url: /ai-rag-injector/b924e3e8-7893-4706-aacb-e75793a1d2e9/lookup_chunks
+status_code: 201
+headers:
+    - 'Accept: application/json'
+    - 'Content-Type: application/json'
+body:
+    prompt: Am I allowed to share a hotel room with another employee?
+    exclude_contents: false
+{% endcontrol_plane_request %}
+<!--vale on-->
+
+This will return which content in the compliance policy AI is using to answer the user question.
 
 {:.info}
 > To omit the chunk content and only return the chunk ID, set `exclude_contents` to true.
 
 ## Update content for ingesting
 
-If you are running {{site.base_gateway}} in traditional mode, you can update content for ingesting by sending a request to the `/ai-rag-injector/:plugin_id/ingest_chunk` endpoint.
+If you are running {{site.base_gateway}} in traditional mode, you can update content for ingesting by sending a request to the `/ai-rag-injector/{pluginId}/ingest_chunk` endpoint.
 
 However, this won't work in hybrid mode or {{site.konnect_short_name}} because the control plane can't access the plugin's backend storage.
 
@@ -590,8 +639,8 @@ To update content for ingesting in hybrid mode or {{site.konnect_short_name}}, y
 
    ```
 
-3. Run the script from your Kong instance:
+3. Run the script from your Kong instance. This uses your AI RAG Injector plugin ID and the content you want to update. Here's an example:
 
    ```sh
-   kong runner ingest_api.lua <plugin_id> <content_to_update>
+   kong runner ingest_api.lua b924e3e8-7893-4706-aacb-e75793a1d2e9 ./inject_policy.py
    ```
