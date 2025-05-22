@@ -35,6 +35,15 @@ icon: ai-rag-injector.png
 
 categories:
   - ai
+related_resources:
+  - text: All AI Gateway plugins
+    url: /plugins/?category=ai
+  - text: About AI Gateway
+    url: /ai-gateway/
+  - text: AI Semantic Cache plugin
+    url: /plugins/ai-semantic-cache/
+  - text: Configure the AI RAG Injector plugin with OpenAI
+    url: /how-to/use-ai-rag-injector-plugin/
 
 tags:
   - ai
@@ -53,33 +62,35 @@ search_aliases:
 
 Retrieval-Augmented Generation (RAG) is a technique that improves the accuracy and relevance of language model responses by enriching prompts with external data at runtime. Instead of relying solely on what the model was trained on, RAG retrieves contextually relevant information—such as documents, support articles, or internal knowledge—from connected data sources like vector databases.
 
-This retrieved context is then automatically injected into the prompt before the model generates a response. RAG is a critical safeguard in specialized or high-stakes applications, where factual accuracy matters. LLMs are prone to hallucinations—plausible-sounding but factually incorrect or fabricated responses. RAG helps mitigate this by grounding the model’s output in real, verifiable data.
+This retrieved context is then automatically injected into the prompt before the model generates a response. RAG is a critical safeguard in specialized or high-stakes applications, where factual accuracy matters. LLMs are prone to hallucinations, plausible-sounding but factually incorrect or fabricated responses. RAG helps mitigate this by grounding the model’s output in real, verifiable data.
+
+The following table describes the different use cases for RAG based on industry:
 
 <!-- vale off -->
 {% table %}
 columns:
-  - title: Use Case
+  - title: Industry
+    key: industry
+  - title: Use case
     key: use_case
-  - title: Description
-    key: description
 rows:
-  - use_case: Healthcare
-    description: |
-      RAG can help surface up-to-date clinical guidelines or patient records in a timely manner—critical when treatment decisions depend on the most current information.
-  - use_case: Legal
-    description: |
+  - industry: Healthcare
+    use_case: |
+      RAG can help surface up-to-date clinical guidelines or patient records in a timely manner, critical when treatment decisions depend on the most current information.
+  - industry: Legal
+    use_case: |
       Lawyers can use RAG-powered assistants to instantly retrieve relevant case law, legal precedents, or compliance documentation during client consultations.
-  - use_case: Finance
-    description: |
-      In fast-moving markets, RAG enables models to deliver financial insights based on current data—avoiding outdated or misleading responses driven by stale training snapshots.
+  - industry: Finance
+    use_case: |
+      In fast-moving markets, RAG enables models to deliver financial insights based on current data, avoiding outdated or misleading responses driven by stale training snapshots.
 {% endtable %}
 <!-- vale on -->
 
 ## Why use the AI RAG Injector plugin
 
-The **AI RAG Injector** plugin automates the retrieval and injection of contextual data for RAG pipelines—no manual prompt engineering or retrieval logic required. Integrated at the gateway level, it handles embedding generation, vector search, and context injection transparently for each request.
+The **AI RAG Injector** plugin automates the retrieval and injection of contextual data for RAG pipelines without doing manual prompt engineering or retrieval logic. Integrated at the gateway level, it handles embedding generation, vector search, and context injection transparently for each request.
 
-* **Simplifies RAG workflows:** Automatically embeds prompts, queries the vector DB, and injects relevant context—no custom retrieval logic needed.
+* **Simplifies RAG workflows:** Automatically embeds prompts, queries the vector DB, and injects relevant context without custom retrieval logic.
 * **Platform-level control:** Shifts RAG logic from app code to infrastructure, allowing platform teams to enforce global policies, update configurations centrally, and reduce developer overhead.
 * **Improved security:** Vector DB access is limited to the AI Gateway, eliminating the need to expose it to individual dev teams or AI agents.
 * **Enables RAG in restricted environments:** Supports RAG even where direct access to the vector database is not possible, such as external-facing or isolated services.
@@ -87,15 +98,15 @@ The **AI RAG Injector** plugin automates the retrieval and injection of contextu
 
 {% include plugins/ai-plugins-note.md %}
 
-## Overview
+## How the AI RAG Injector plugin works
 
-When a user sends a prompt, the RAG Injector plugin queries a configured vector database for relevant context and injects that information into the request before passing it to the language model. The result is a more informed, accurate response—without requiring any changes to your model or application logic.
+When a user sends a prompt, the RAG Injector plugin queries a configured vector database for relevant context and injects that information into the request before passing it to the language model. 
 
 1. You configure the AI RAG Injector plugin via the Admin API or decK, setting up the RAG content to send to the vector database.
 1. When a request reaches the AI Gateway, the plugin generates embeddings for request prompts, then queries the vector database for the top-k most similar embeddings.
 1. The plugin injects the retrieved content from the vector search result into the request body, and forwards the request to the upstream service.
 
-The following diagram is a simplified overview of how the plugin works (check the [section below](#rag-generation-process)) for more detailed description:
+The following diagram is a simplified overview of how the plugin works.  See the [following section](#rag-generation-process) for a more detailed description.
 
 <!-- vale off -->
 {% mermaid %}
@@ -114,10 +125,9 @@ sequenceDiagram
 ### RAG Generation process
 
 The RAG workflow consists of two critical phases:
-(1) **Data preparation**, which processes and embeds unstructured data into a vector index for efficient semantic search, and
-(2) **Retrieval and generation**, where the system uses similarity search to dynamically assemble contextual prompts that guide the language model’s output.
+1. **Data preparation**: Processes and embeds unstructured data into a vector index for efficient semantic search
+1. **Retrieval and generation**: The system uses similarity search to dynamically assemble contextual prompts that guide the language model’s output.
 
-The diagram below shows how data flows through both phases of the RAG pipeline—from ingestion and embedding to real-time query handling and response generation.
 
 #### Phase 1: Data Preparation
 
@@ -127,8 +137,8 @@ This phase sets up the foundation for semantic retrieval by converting raw data 
 
 1. A document loader pulls content from various sources, such as PDFs, websites, emails, or internal systems.
 2. The system breaks the unstructured data into smaller, semantically meaningful chunks to support precise retrieval.
-3. Each chunk is transformed into a vector embedding—a numeric representation that captures its semantic content.
-4. These embeddings are saved to a vector database, enabling fast, similarity-based search during query time.
+3. Each chunk is transformed into a vector embedding (a numeric representation that captures its semantic content).
+4. These embeddings are saved to a vector database, enabling a fast, similarity-based search during query time.
 
 #### Phase 2: Retrieval and Generation
 
@@ -140,6 +150,8 @@ This phase runs in real time, taking user input and producing a context-aware re
 1. A semantic similarity search locates the most relevant content chunks in the vector database.
 1. The system builds a custom prompt by combining the retrieved chunks with the original query.
 1. The LLM generates a contextually accurate response using both the retrieved context and its own internal knowledge.
+
+The diagram below shows how data flows through both phases of the RAG pipeline, from ingestion and embedding to real-time query handling and response generation:
 
 <!-- vale off -->
 {% mermaid %}

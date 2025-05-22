@@ -1,5 +1,5 @@
 ---
-title: Use AI RAG Injector plugin
+title: Ensure chatbots adhere to compliance policies with the AI RAG Injector plugin
 content_type: how_to
 related_resources:
   - text: AI Gateway
@@ -9,7 +9,7 @@ related_resources:
   - text: AI Proxy Advanced
     url: /plugins/ai-proxy-advanced/
 
-description: Configure the AI RAG Injector plugin.
+description: Learn how to configure the AI RAG Injector plugin.
 
 products:
   - gateway
@@ -23,6 +23,7 @@ min_version:
 
 plugins:
   - ai-proxy-advanced
+  - ai-rag-injector
 
 entities:
   - service
@@ -34,7 +35,7 @@ tags:
   - openai
 
 tldr:
-  q: How do I use the AI RAG Injector plugin to safeguard that my company chatbot responds with relevant questions regarding compliance policies?
+  q: How do I use the AI RAG Injector plugin to ensure that my company chatbot responds with relevant questions regarding compliance policies?
   a: Use the AI RAG Injector plugin to integrate your company’s compliance policy documents as retrieval-augmented knowledge. Configure the plugin to inject context from these documents into chatbot prompts, ensuring it can generate relevant, accurate compliance-related questions dynamically during conversations.
 
 
@@ -48,9 +49,13 @@ prereqs:
       icon_url: /assets/icons/openai.svg
     - title: Redis stack
       content: |
-          To complete this task, you must have a Redis stack configured in your environment. Check [Redis website](https://redis.io/docs/latest/) to learn more.
+          To complete this tutorial, you must have a [Redis stack](https://redis.io/docs/latest/) configured in your environment. 
+          Set your Redis host as an environment variable:
+          ```sh
+          export DECK_REDIS_HOST='YOUR-REDIS-HOST'
+          ```
       icon_url: /assets/icons/redis.svg
-    - title: PgVector (optionally)
+    - title: PgVector (optional)
       content: |
         Test
       icon_url: /assets/icons/database.svg
@@ -59,13 +64,13 @@ prereqs:
         To complete this tutorial, you'll need **Python (version 3.7 or later)** and `pip` installed on your machine. You can verify it by running:
 
         ```bash
-        python --version
-        pip --version
+        python3
+        python3 -m pip --version
          ```
 
         Once that's set up, install the required packages by running the following command in your terminal:
         ```
-        pip install langchain langchain_text_splitters requests
+        python3 -m pip install langchain langchain_text_splitters requests
         ```
       icon_url: /assets/icons/python.svg
   entities:
@@ -129,7 +134,7 @@ entities:
       embeddings:
         auth:
           header_name: Authorization
-          header_value: Bearer ${openai_key}
+          header_value: Bearer ${openai_api_key}
         model:
           provider: openai
           name: text-embedding-3-large
