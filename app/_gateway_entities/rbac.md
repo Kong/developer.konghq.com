@@ -28,6 +28,8 @@ related_resources:
     url: /gateway/entities/admin/
   - text: Create a Super Admin
     url: /how-to/create-a-super-admin/
+  - text: Create an RBAC user with custom permissions
+    url: /how-to/configure-rbac-user-in-kong-gateway/
   - text: Reserved entity names
     url: /gateway/reserved-entity-names/
   - text: "{{site.konnect_short_name}} roles and teams"

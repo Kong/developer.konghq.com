@@ -1,5 +1,5 @@
 ---
-title: Configure a {{site.base_gateway}} RBAC user
+title: Configure a {{site.base_gateway}} RBAC user with custom permissions
 content_type: how_to
 description: Learn how to create a {{site.base_gateway}} RBAC user and configure it with roles and permissions.
 products:
@@ -22,17 +22,29 @@ related_resources:
     url: /gateway/entities/admin/
   - text: Gateway Workspaces
     url: /gateway/entities/workspace/
+  - text: Create a Super Admin
+    url: /how-to/create-a-super-admin/
 
 tldr: 
   q: How do I configure a {{site.base_gateway}} user with a role and permissions?
   a: |
-     To configure an RBAC user in {{site.base_gateway}}, create the user with the `/rbac/users` endpoint of the Admin API, then assign roles and permissions to the new user.
+     To configure an RBAC user in {{site.base_gateway}}, create the user with the `/rbac/users` endpoint of the Admin API, create a custom role with endpoint permissions using `/rbac/roles`, then assign the role to the new user.
+
+faqs:
+  - q: When accessing a restricted resource with an RBAC user via the Admin API, why do I get `Invalid RBAC credentials` instead of a permissions error?
+    a: If you see an `Invalid RBAC credentials` error, this means that the user token you provided is incorrect or doesn't exist. Check your credentials and try again.
 
 prereqs:
   skip_product: true
   inline:
     - title: Start {{site.base_gateway}} with RBAC
       include_content: prereqs/enable-rbac
+      icon_url: /assets/icons/gateway.svg
+
+cleanup:
+  inline:
+    - title: Destroy the {{site.base_gateway}} container
+      include_content: cleanup/products/gateway
       icon_url: /assets/icons/gateway.svg
 ---
 
@@ -57,7 +69,7 @@ Create an [RBAC](/gateway/entities/rbac/) user by sending a `POST` request to th
 
 By omitting the Workspace in the request, the user gets added to the `default` Workspace.
 
-## Create a role
+## Create a role with endpoint permissions
 
 Let's say that in our environment, we need a subset of users to access Gateway Services only. 
 Create a new role:
@@ -71,7 +83,7 @@ body:
   name: dev
 {% endcontrol_plane_request %}
 
-Then, assign endpoint permissions to the role, allowing access to the `/services/` endpoint:
+Then, assign endpoint permissions to the role, allowing access **only** to the `/services` endpoint:
 
 {% control_plane_request %}
 url: /rbac/roles/dev/endpoints
@@ -79,7 +91,7 @@ method: POST
 headers:
   - 'Kong-Admin-Token:kong'
 body:
-  endpoint: '/services/*'
+  endpoint: '/services/'
   workspace: default
   actions: 
     - '*'
@@ -91,18 +103,17 @@ Assign the `dev` role to the user you created earlier:
 
 {% control_plane_request %}
 url: /rbac/users/alex/roles
-
 method: POST
 headers:
   - 'Kong-Admin-Token:kong'
 body:
-  roles:
-    - name: dev
+  roles: dev
 {% endcontrol_plane_request %}
 
 ## Validate 
 
 You can validate that the user has correct permissions by trying to access entities with the user's access token.
+First, try to access `/routes`, which this user doesn't have permissions for:
 
 {% control_plane_request %}
 url: /routes
@@ -111,14 +122,23 @@ headers:
 display_headers: true
 {% endcontrol_plane_request %}
 
-If RBAC was enabled correctly, this request will return a `403 Forbidden` message.
+If RBAC was enabled correctly, this request returns the following error message:
 
-Passing the same request with the `user-token` will return a `200` and the list of Gateway Services:
+```
+{"message":"alex, you do not have permissions to read this resource"}%          
+```
+{:.no-copy-code}
+
+Now, try adding a Service using the `/services` endpoint: 
 
 {% control_plane_request %}
 url: /services
+method: POST
+body:
+  name: test-service
+  host: httpbin.konghq.com
 headers:
   - "Kong-Admin-Token:alex-token"
 {% endcontrol_plane_request %}
 
-This time, the request succeeds and the us
+This time, the request succeeds with a `200` and creates a new Service.
