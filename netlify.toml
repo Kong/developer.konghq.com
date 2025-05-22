@@ -11,6 +11,9 @@
   JEKYLL_ENV = "preview"
   BUNDLE_WITHOUT = "development"
 
+[context.test]
+  environment = { JEKYLL_ENV = "test" }
+
 [dev]
   autoLaunch = false
   targetPort = 4000

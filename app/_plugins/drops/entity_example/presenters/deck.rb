@@ -54,6 +54,7 @@ module Jekyll
             def config
               plugin = { 'name' => @example_drop.data.fetch('name') }
               plugin.merge!(target.key => target_value) if target.key != 'global'
+              plugin.merge!('partials' => partials) unless partials.empty?
               config_field = @example_drop.data.fetch('config', {})
               plugin.merge!('config' => config_field) unless config_field.empty?
               plugin.merge!('ordering' => ordering) unless ordering.nil?
@@ -92,6 +93,10 @@ module Jekyll
                                 else
                                   target.value || formats['deck']['variables'][target.key]['placeholder']
                                 end
+            end
+
+            def partials
+              @partials ||= @example_drop.data.fetch('partials', [])
             end
           end
         end
