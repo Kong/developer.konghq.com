@@ -85,12 +85,12 @@ entities:
         route_type: llm/v1/chat
         auth:
           header_name: Authorization
-          header_value: Bearer ${openai_key}
+          header_value: Bearer ${openai_api_key}
         model:
           provider: openai
           name: gpt-4o
 variables:
-  openai_key:
+  openai_api_key:
     value: $OPENAI_API_KEY
 {% endentity_examples %}
 
@@ -120,7 +120,6 @@ Here’s the full plugin configuration:
 entities:
   plugins:
     - name: ai-azure-content-safety
-      service: SERVICE_NAME|ID
       config:
         content_safety_url: "https://my-acs-instance.cognitiveservices.azure.com/contentsafety/text:analyze"
         content_safety_key: ${azure_content_safety_key}
