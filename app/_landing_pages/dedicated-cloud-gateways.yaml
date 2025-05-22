@@ -31,7 +31,7 @@ rows:
                     With Dedicated Cloud Gateways, you don't need to host any Data Planes, and you maintain control over the size and location of the Gateway infrastructure. 
                     This allows Kong to autoscale your nodes for you and reduces your operational complexity.
 
-                    Behind the scenes, every Konnect Dedicated Cloud Gateway customer gets their own single-tenant cloud environment—ensuring consistent performance, tenant isolation, and strong security boundaries. The Konnect control plane remains multi-tenant, but your Dedicated Cloud Gateways are not.
+                    Behind the scenes, every {{site.konnect_short_name}} Dedicated Cloud Gateway runs in an individual single-tenant cloud environment, ensuring consistent performance, tenant isolation, and strong security boundaries. The {{site.konnect_short_name}} Control Plane remains multi-tenant.
 
                     **Benefits of Dedicated Cloud Gateways:**
                     - {{site.konnect_short_name}} handles Gateway upgrades for you.
