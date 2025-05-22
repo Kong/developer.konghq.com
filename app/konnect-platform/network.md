@@ -72,6 +72,8 @@ faqs:
 
       Each Data Plane node maintains a persistent connection with the Control Plane and sends a heartbeat every 30 seconds. 
       If the Control Plane doesn't respond, the Data Plane node attempts to reconnect after a 5–10 second delay.
+  - q: What IP addresses are associated with {{site.konnect_short_name}} regional hostnames?
+    a: Visit [https://ip-addresses.origin.konghq.com/ip-addresses.json](https://ip-addresses.origin.konghq.com/ip-addresses.json) for the list of IPs associated to regional hostnames. You can also subscribe to [https://ip-addresses.origin.konghq.com/rss](https://ip-addresses.origin.konghq.com/rss) for updates.
 
 ---
 
