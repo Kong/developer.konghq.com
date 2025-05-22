@@ -28,7 +28,7 @@ prereqs:
       content: |
         You'll need:
 
-        - An AWS account with permission to accept VPC peering requests and update route tables
+        - An AWS account with [permission to accept VPC peering requests](https://docs.aws.amazon.com/vpc/latest/peering/security-iam.html#vpc-peering-iam-accept) and update route tables
         - A target AWS VPC ID
         - The AWS region of your VPC
         - The VPC's CIDR block
@@ -72,9 +72,9 @@ body:
 
 ## Accept the peering request in AWS
 
-1. Go to the AWS Console → **VPC** → **Peering Connections**.
+1. Go to the AWS Console → **VPC** → **VPC Peering Connections**.
 1. Locate the pending request from {{site.konnect_short_name}}.
-1. Select the request and choose **Accept Request**.
+1. Select the request and from the Actions menu, select **Accept request**.
 
 ## Update your AWS route table
 
