@@ -1,7 +1,7 @@
 ---
 title: Enterprise user management
 
-description: Learn how to manage your Insomnia enterprise users and licenses.
+description: Learn how to manage your Insomnia Enterprise users and licenses.
 
 content_type: reference
 layout: reference
@@ -41,7 +41,6 @@ You can also manage teams using SCIM provisioning. For more information, see [SC
 
 ## Licenses and seats
 
-The [**Licenses** tab](https://app.insomnia.rest/app/enterprise/licenses) in your enterprise settings allows you to manage who can access enterprise resources.
+The [**Licenses** tab](https://app.insomnia.rest/app/enterprise/licenses) in your Enterprise settings allows you to manage who can access Enterprise resources.
 
-From this tab, you can remove users from your enterprise account. These users will still be able to log in, but they will not have access to enterprise data and their seat will be freed.
-
+From this tab, you can remove users from your Enterprise account. These users will still be able to log in, but they will not have access to Enterprise data and their seat will be freed.
