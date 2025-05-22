@@ -279,6 +279,7 @@ Injecting 4 chunks...
 {"metadata":{"ingest_duration":2892,"embeddings_tokens_count":168,"chunk_id":"d4e5f678-9012-3456-de78-90abcdef1234"}}
 ```
 {:.no-copy-code}
+{:.no-copy-code}
 
 ### Ingest content to the vector database
 
