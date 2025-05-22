@@ -19,6 +19,7 @@ keep_files:
 # Site settings
 name: Kong Developer
 title: Kong Docs
+description: "Documentation for Kong, the Cloud Connectivity Company for APIs and Microservices."
 
 links:
   web: https://developer.konghq.com
