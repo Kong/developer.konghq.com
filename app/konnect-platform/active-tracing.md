@@ -63,13 +63,14 @@ Active tracing requires the following Data Plane version and environment variabl
   - `KONG_CLUSTER_RPC=on`
   - `KONG_ACTIVE_TRACING=on`
 
-    {:.info}
-    > **Note:**
-    > Active tracing is currently limited to
-    - Konnect Self-Managed Hybrid Gateways
-    - Konnect Dedicated Cloud Gateways
-    - Konnect Serverless Gateways
-    {{site.kic_product_name}} and Native Event Proxy Gateways are not supported at this time.
+{:.info}
+> **Note:**
+> Active tracing is currently limited to:
+- Konnect Self-Managed Hybrid Gateways
+- Konnect Dedicated Cloud Gateways
+- Konnect Serverless Gateways
+> <br><br>
+> {{site.kic_product_name}} and {{site.event_gateway}} Gateways are not supported at this time.
 
 ### Start a trace session
 
