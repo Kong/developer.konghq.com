@@ -32,7 +32,7 @@ prereqs:
   - title: "AWS CLI"
     include_content: prereqs/aws-cli
 
-  - title: "Route 53 inbound resolver endpoint"
+  - title: "Amazon Route 53 inbound resolver endpoint"
     content: |
       You need to create an [inbound Route 53 resolver endpoint](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-get-started.html) in your VPC to receive DNS queries from your Dedicated Cloud Gateway.
 
@@ -78,7 +78,7 @@ body:
 ## Validate
 
 Once the resolver is configured, it may take a few minutes to become active, you can validate success by issuing a `GET` request to
-[`/private-dns`](/api/konnect/cloud-gateways/#/operations/private-dns)
+[`/private-dns`](/api/konnect/cloud-gateways/#/operations/private-dns):
 
 <!--vale off-->
 {% konnect_api_request %}
