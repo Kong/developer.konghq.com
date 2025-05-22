@@ -92,6 +92,7 @@ callouts
 certificate_admin
 charset
 chatbot
+chatbots
 cidr
 cidrs
 cleartext
@@ -422,6 +423,7 @@ Kustomize
 kustomize
 kustomize
 kv
+langchain
 lapis
 lastTimestamp
 Librato
@@ -562,6 +564,7 @@ pem
 perf
 performant
 petstore
+PDFs
 pgdump
 pgvector
 pipeline
@@ -754,6 +757,7 @@ Terraform
 Terraform
 Terraform's
 Terraform's
+text_splitters
 tfvars
 timeframe
 timeframes
