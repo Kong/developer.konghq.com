@@ -50,7 +50,7 @@ cleanup:
 
 ## Create an RBAC user
 
-An RBAC user has the ability to access the Kong Gateway Admin API.
+An RBAC user has the ability to access the {{site.base_gateway}} Admin API.
 The permissions assigned to their role will define the types of actions they can perform with various Admin API objects.
 
 Create an [RBAC](/gateway/entities/rbac/) user by sending a `POST` request to the [`/rbac/users`](/api/gateway/admin-ee/#/operations/post-rbac-users) endpoint:

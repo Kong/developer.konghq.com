@@ -101,7 +101,7 @@ rows:
   - user: User
     purpose: |
       RBAC users without administrator permissions. 
-      They have access to manage Kong Gateway, but can’t adjust teams, groups, or user permissions.
+      They have access to manage {{site.base_gateway}}, but can’t adjust teams, groups, or user permissions.
     use: "Service accounts for {{site.base_gateway}}, used as part of an automated process"
     tools: |
       * Admin API
