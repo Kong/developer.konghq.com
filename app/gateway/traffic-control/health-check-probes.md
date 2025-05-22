@@ -13,7 +13,6 @@ works_on:
 tags:
   - status
   - monitoring
-  - health
 faqs:
   - q: What happens if a node is not ready?
     a: |
