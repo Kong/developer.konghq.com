@@ -1,0 +1,55 @@
+metadata:
+  title: Insomnia enterprise
+  description: Learn how to manage Insomnia enterprise accounts, organizations, users, and security.
+  content_type: landing_page
+  breadcrumbs:
+    - /insomnia/
+  tags:
+    - security
+  products:
+    - insomnia
+  search_aliases:
+    - insomnia security
+    - insomnia account management
+rows:
+  - header:
+      type: h1
+      text: "Insomnia enterprise"            
+    columns:
+      - blocks:
+        - type: card
+          config:
+            title: User management
+            description: Manage your enterprise account and users.
+            icon: /assets/icons/team.svg
+            cta:
+              text: Learn more
+              url: /insomnia/enterprise-user-management/
+      - blocks:
+        - type: card
+          config:
+            title: Organizations
+            description: Use organizations to share resources with other users.
+            icon: /assets/icons/organization.svg
+            cta:
+              text: Learn more
+              url: /insomnia/organizations/
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: SSO
+            description: Set up Single Sign-On (SSO) for your enterprise account.
+            icon: /assets/icons/key.svg
+            cta:
+              text: Learn more
+              url: /insomnia/sso/
+      - blocks:
+        - type: card
+          config:
+            title: SCIM
+            description: Set up System for Cross-domain Identity Management (SCIM) provisioning for your enterprise account.
+            icon: /assets/icons/domain.svg
+            cta:
+              text: Learn more
+              url: /insomnia/scim/

@@ -7,6 +7,7 @@ content_type: reference
 layout: reference
 breadcrumbs: 
   - /insomnia/
+  - /insomnia/enterprise/
 products:
     - insomnia
 search_aliases:
@@ -60,4 +61,4 @@ To complete the transfer, the new owner will need to log in to their account and
 
 Navigating between organizations can be difficult when you have a large number of organizations, since they can look identical in the Insomnia sidebar. This will be improved in a future release, but in the meantime we recommend you:
 * Use the drop-down list instead of the sidebar. It contains the same content but the drop-down list is easier to read.
-* Add different icons to your organizations to differentiate them in the sidebar. To do that, go to [your organization](https://app.insomnia.rest/app/dashboard/organizations).
+* Add different icons to your organizations to differentiate them in the sidebar. To do that, go to the **Profile** tab in [your organization](https://app.insomnia.rest/app/dashboard/organizations).
