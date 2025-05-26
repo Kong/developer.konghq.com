@@ -31,6 +31,15 @@ rows:
             cta:
               text: Learn more
               url: /insomnia/enterprise-account-management/#add-co-owners
+      - blocks:
+        - type: card
+          config:
+            title: Domains
+            description: Use domains to manage Enterprise users.
+            icon: /assets/icons/domain.svg
+            cta:
+              text: Learn more
+              url: /insomnia/enterprise-account-management/#add-domains
   - columns:
       - blocks:
         - type: card
