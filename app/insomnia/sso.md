@@ -19,7 +19,7 @@ Insomnia allows you to configure Single Sign-On (SSO) to authenticate users with
 
 ## Configure SSO
 
-To configure SCIM, you need to:
+To configure SSO, you need to:
 1. Add and verify a [domain](https://app.insomnia.rest/app/enterprise/domains/list).
 1. Configure SSO in your IdP and get the sign in URL and the certificate
 1. Enable [SSO](https://app.insomnia.rest/app/enterprise/sso/list) with the relevant parameters for your IdP.
