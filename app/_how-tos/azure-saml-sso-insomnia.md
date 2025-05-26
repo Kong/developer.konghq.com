@@ -27,14 +27,14 @@ tldr:
 
 prereqs:
   inline:
-  - title: Insomnia permissions
-    include_content: prereqs/insomnia-sso
+  - title: Insomnia role
+    include_content: prereqs/insomnia-owner
     icon_url: /assets/icons/insomnia/insomnia.svg
   - title: Azure permissions
     include_content: prereqs/azure-sso
     icon_url: /assets/icons/azure.svg
   - title: Domain permissions
-    include_content: prereqs/sso-domain
+    include_content: prereqs/insomnia-verified-domain
     icon_url: /assets/icons/domain.svg
 ---
 
