@@ -21,6 +21,10 @@ related_resources:
 
 ## Enable Enterprise membership
 
+To upgrade your account to the Enterprise pla:
+1. Contact the [sales team](https://insomnia.rest/pricing/contact) to get an activation code.
+1. Go to [Change subscription plan](https://app.insomnia.rest/app/subscription/update), select the Enterprise plan, and enter your activation code.
+
 ## Add domains
 
 You can use domains in your Insomnia Enterprise account to manage users.
