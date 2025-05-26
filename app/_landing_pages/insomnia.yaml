@@ -34,10 +34,8 @@ rows:
             config:
               url: /assets/images/insomnia/entry-page.png
               alt_text: Image of the Insomnia UI
-  - header:
-      type: h2
-      text: Features
-    columns:
+
+  - columns:
       - blocks:
         - type: card
           config:
@@ -74,6 +72,35 @@ rows:
             cta:
               text: Learn more
               url: /insomnia/environment-variables/
+
+  - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Insomnia Enterprise
+            description: Learn about the features available with the Enterprise plan.
+            icon:  /assets/icons/organization.svg
+            cta:
+              text: Learn more
+              url: /insomnia/enterprise/
+      - blocks:
+        - type: card
+          config:
+            title: Inso CLI
+            description: Automate Insomnia tasks using the Inso CLI tool.
+            icon:  /assets/icons/terminal.svg
+            cta:
+              text: Learn more
+              url: /inso-cli/
+      - blocks:
+        - type: card
+          config:
+            title: Plugins
+            description: Extend Insomnia with powerful plugins.
+            icon: /assets/icons/plug.svg
+            cta:
+              text: Learn more
+              url: /insomnia/plugins/
 
   - header:
       type: h2
@@ -138,28 +165,6 @@ rows:
             cta:
               text: Learn more
               url: /insomnia/scim/
-  - header:
-      type: h2
-      text: Tools
-    columns:
-      - blocks:
-        - type: card
-          config:
-            title: Inso CLI
-            description: Automate Insomnia tasks using the Inso CLI tool.
-            icon:  /assets/icons/terminal.svg
-            cta:
-              text: Learn more
-              url: /inso-cli/
-      - blocks:
-        - type: card
-          config:
-            title: Plugins
-            description: Extend Insomnia with powerful plugins.
-            icon: /assets/icons/plug.svg
-            cta:
-              text: Learn more
-              url: /insomnia/plugins/
 
   - header:
       type: h2
