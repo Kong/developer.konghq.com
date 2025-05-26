@@ -33,3 +33,5 @@ To configure SCIM, you need to:
 
 For a detailed how-to guide, see [Configure SCIM for Insomnia with Okta](/how-to/configure-scim-for-insomnia-with-okta/).
 
+{:.warning}
+> New users provisioned through SCIM will receive an email containing an initial passphrase needed to log in to Insomnia. If they don't have this passphrase, they can reset it.
