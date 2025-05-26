@@ -57,6 +57,10 @@ To transfer an organization:
 
 To complete the transfer, the new owner will need to log in to their account and accept the request to transfer.
 
+## Manage organization storage
+
+{% include insomnia/enterprise-storage.md %}
+
 ## Organization best practices
 
 Navigating between organizations can be difficult when you have a large number of organizations, since they can look identical in the Insomnia sidebar. This will be improved in a future release, but in the meantime we recommend you:

@@ -1,6 +1,6 @@
 metadata:
-  title: Insomnia enterprise
-  description: Learn how to manage Insomnia enterprise accounts, organizations, users, and security.
+  title: Insomnia Enterprise
+  description: Learn more about the features available in the Insomnia Enterprise plan.
   content_type: landing_page
   breadcrumbs:
     - /insomnia/
@@ -8,33 +8,39 @@ metadata:
     - security
   products:
     - insomnia
-  search_aliases:
-    - insomnia security
-    - insomnia account management
 rows:
   - header:
       type: h1
-      text: "Insomnia enterprise"            
+      text: "Insomnia Enterprise"            
     columns:
       - blocks:
         - type: card
           config:
-            title: User management
-            description: Manage your enterprise account and users.
+            title: Teams
+            description: Organize your Enterprise users into teams.
             icon: /assets/icons/team.svg
             cta:
               text: Learn more
-              url: /insomnia/enterprise-user-management/
+              url: /insomnia/enterprise-user-management/#teams
       - blocks:
         - type: card
           config:
-            title: Organizations
-            description: Use organizations to share resources with other users.
-            icon: /assets/icons/organization.svg
+            title: Co-owners
+            description: Invite users to be co-owners of your account.
+            icon: /assets/icons/profile.svg
             cta:
               text: Learn more
-              url: /insomnia/organizations/
+              url: /insomnia/enterprise-account-management/#add-co-owners
   - columns:
+      - blocks:
+        - type: card
+          config:
+            title: Reports
+            description: Get reports on active and inactive users.
+            icon: /assets/icons/analytics.svg
+            cta:
+              text: Learn more
+              url: /insomnia/enterprise-user-management/#user-activity-reports
       - blocks:
         - type: card
           config:
