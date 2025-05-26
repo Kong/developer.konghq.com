@@ -21,7 +21,7 @@ related_resources:
   - text: Team RBAC and domain capture
     url: https://konghq.com/blog/product-releases/insomnia-teams-rbac-and-domain-capture
 
-faq:
+faqs:
   - q: Why is there not a new free seat in my account after removing a user from my organization?
     a: Removing a user from an organization is not enough to free their seat, you need to remove the user from the [Licenses](https://app.insomnia.rest/app/enterprise/licenses) page.
 ---
@@ -38,8 +38,7 @@ You can also manage teams using SCIM provisioning. For more information, see [SC
 {:.info}
 > **Notes**:
 > * Roles are defined on the team level, which means that if the same team is linked to multiple organizations, the team members will have the same role in all linked organizations.
-> * Teams can't be deleted manually in Insomnia. However, Teams deleted through SCIM will also be deleted in Insomnia.
-
+> * Teams can't be deleted manually in Insomnia. However, teams deleted through SCIM will also be deleted in Insomnia.
 
 ## Domain capture
 
