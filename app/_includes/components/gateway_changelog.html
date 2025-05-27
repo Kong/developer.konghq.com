@@ -2,7 +2,7 @@
 <h2 id="{{version.number | slugify }}">{{version.number}}</h2>
 
 {% for type in version.entries_by_type %}
-<h3 id="{{ type[0] | slugify }}-{{ version.number | slugify }}">{{type[0] | capitalize}}</h3>
+<h3 id="{{ type[0] | slugify }}-{{ version.number | slugify }}">{{type[0] | capitalize | titleize}}</h3>
 
 {% for entries_by_scope in type[1].by_scope %}
 <h4 id="{{entries_by_scope[0] | downcase }}-{{forloop.parentloop.index}}"> {{entries_by_scope[0]}}</h4>
