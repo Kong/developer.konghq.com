@@ -32,7 +32,7 @@ You can invite users to collaborate on your projects by adding them to your orga
 
 To do that, you can
 * Go to [your organizations](https://app.insomnia.rest/app/dashboard/organizations), select to organization in which you want to invite users, and go to **Collaborators** tab to invite them.
-* In the Insomnia app, select the relevant organization and click the **Invite** button in the header.
+* {% new_in 10.1 %} In the Insomnia app, select the relevant organization and click the **Invite** button in the header.
 
 Invited users will receive an email, they will need to log in to Insomnia and accept the invite.
 
