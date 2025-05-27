@@ -205,7 +205,3 @@ rows:
 {% endtable %}
 <!--vale on-->
 
-
-## Schema
-
-{% entity_schema %}
