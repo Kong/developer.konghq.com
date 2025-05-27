@@ -99,9 +99,7 @@ In [hybrid mode](/gateway/hybrid-mode/) (`data_plane`) or [DB-less mode](/gatewa
 {% endnavtab %}
 {% navtab "Hybrid mode (control plane role)" %}
 
-In hybrid mode (`control_plane`), readiness returns `200 OK` when:
-
-1. The database is connected
+In hybrid mode (`control_plane`), readiness returns `200 OK` when the database is connected.
 
 {% endnavtab %}
 {% endnavtabs %}
