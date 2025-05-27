@@ -233,3 +233,17 @@ rows:
               cta:
                 url: "/dev-portal/auth-strategies/"
   
+  - header:
+      type: h2
+      text: "Dev Portal analytics"
+    columns:
+      - blocks:
+        - type: structured_text
+          config:
+            blocks:
+              - type: text
+                text: |
+                  In Dev Portal, you can view both analytics for developer applications as well as platform-wide analytics for all Dev Portals. 
+
+                  For more information, see [Dev Portal analytics](/dev-portal/analytics/).
+  
