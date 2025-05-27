@@ -26,6 +26,16 @@ To create a new account, go to [app.insomnia.rest](https://app.insomnia.rest/app
 
 Your account is created with a Hobby plan. You can click **Upgrade** from the Insomnia dashboard to upgrade to a Pro plan or activate an Enterprise plan.
 
+## Invite users
+
+You can invite users to collaborate on your projects by adding them to your organizations.
+
+To do that, you can
+* Go to [your organizations](https://app.insomnia.rest/app/dashboard/organizations), select to organization in which you want to invite users, and go to **Collaborators** tab to invite them.
+* In the Insomnia app, select the relevant organization and click the **Invite** button in the header.
+
+Invited users will receive an email, they will need to log in to Insomnia and accept the invite.
+
 ## End-to-End Encryption
 
 Accounts created from June 4th 2024 onwards with a free subscription have E2EE disabled by default. While your data remains encrypted at rest and in transit, E2EE offers an additional layer of security by encrypting data such that only the parties involved in the communication can decrypt it.
