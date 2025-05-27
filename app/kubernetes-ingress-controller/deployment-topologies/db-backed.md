@@ -87,7 +87,7 @@ style note stroke:none,fill:none
 {% endmermaid %}
 <!--vale on-->
 
-{{ site.kic_product_name }} sends configuration to a random {{ site.base_gateway }} instance, which writes the configuration to the database. All other nodes read the configuration from the database.
+> _**Figure 1**: {{ site.kic_product_name }} sends configuration to a random {{ site.base_gateway }} instance, which writes the configuration to the database. All other nodes read the configuration from the database._
 
 ## Hybrid mode
 
@@ -140,3 +140,5 @@ style note stroke:none,fill:none
 
 {% endmermaid %}
 <!--vale on-->
+
+> _**Figure 2**: {{ site.kic_product_name }} sends configuration to a Control Plane, which distributes configuration to all Data Planes and writes the configuration to the database.
