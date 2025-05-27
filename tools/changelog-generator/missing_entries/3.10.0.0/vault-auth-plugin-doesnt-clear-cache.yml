@@ -1,0 +1,4 @@
+message: |
+  **Vault Auth**: The Vault Auth plugin doesn't clear its cache when incremental sync is turned on. This means that deleted secrets will remain in the cache, and can still be accessed by the plugin.
+type: "known-issues"
+scope: "Plugin"

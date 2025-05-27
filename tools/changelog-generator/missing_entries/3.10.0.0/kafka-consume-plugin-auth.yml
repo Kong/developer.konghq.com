@@ -1,0 +1,6 @@
+message: |
+  **Kafka Consume**: Kong Gateway allows you to configure the Kafka Consume plugin without authentication settings, but authentication must be configured for the plugin to work.
+
+  If authentication is not configured, or if the authentication strategy is missing, the plugin will fail with a generic authentication error.
+type: "known-issues"
+scope: "Plugin"

@@ -9,7 +9,7 @@
     "dependencies": {
         "fast-glob": "^3.3.3",
         "js-yaml": "^4.1.0",
-        "lodash.merge": "^4.6.2",
+        "lodash.mergewith": "^4.6.2",
         "minimist": "^1.2.8"
     }
 }
