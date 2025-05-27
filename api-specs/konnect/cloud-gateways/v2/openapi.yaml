@@ -990,7 +990,7 @@ components:
         value:
           description: Value assigned to the environment variable field for the data-plane group.
           type: string
-          example: INFO
+          example: info
           maxLength: 120
           minLength: 1
       required:
