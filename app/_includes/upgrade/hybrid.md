@@ -42,7 +42,7 @@ flowchart TD
     DPX(fa:fa-layer-group Current Data Plane X nodes)
     API(API requests)
 
-    DBA -.- CPX -."DP connects to either \nCP X...".- DPX
+    DBA -.- CPX -."DP connects to either <br/> CP X...".- DPX
     Admin -.X.- CPX & CPY
     DBB --pg_restore--- CPY -."...OR to CP Y".- DPX
     API--> DPX
@@ -62,15 +62,15 @@ Upgrading the CP nodes using the [in-place strategy](/gateway/upgrade/in-place/)
 {% mermaid %}
 flowchart 
     DBA[(Database)]
-    CPX(Current Control Plane X \n #40;inactive#41;)
-    Admin(No admin \n write operations)
+    CPX(Current Control Plane X <br/> #40;inactive#41;)
+    Admin(No admin <br/> write operations)
     CPY(New Control Plane Y)
     DPX(fa:fa-layer-group Current Data Plane X nodes)
     API(API requests)
 
-    DBA -..- CPX -."DP connects to either \nCP X...".- DPX
+    DBA -..- CPX -."DP connects to either <br/> CP X...".- DPX
     Admin -.X.- CPX & CPY
-    DBA --"kong migrations up \n kong migrations finish"--- CPY -."...OR to CP Y".- DPX
+    DBA --"kong migrations up <br/> kong migrations finish"--- CPY -."...OR to CP Y".- DPX
     API--> DPX
 
     style API stroke:none!important,fill:none!important
@@ -104,22 +104,22 @@ Using the [dual-cluster strategy](/gateway/upgrade/dual-cluster/) with a
 
 {% mermaid %}
 flowchart TD
-    DBX[(Current \n database)]
-    DBY[(New \n database)]
+    DBX[(Current <br/> database)]
+    DBY[(New <br/> database)]
     CPX(Current Control Plane X)
     CPY(New Control Plane Y)
     DPX(Current Data Planes X)
     DPY(New Data Planes Y)
     API(API requests)
     LB(Load balancer)
-    Admin(No admin \n write operations)
-    Admin2(No admin \n write operations)
+    Admin(No admin <br/> write operations)
+    Admin2(No admin <br/> write operations)
     
     subgraph A [ ]
         Admin -.X.- CPX
         DBX -.- CPX
         DBY --- CPY
-        CPX -."Current DP connects to \neither CP X...".- DPX
+        CPX -."Current DP connects to <br/> either CP X...".- DPX
         Admin2 -.X.- CPY
         CPY -."...OR to CP Y".- DPX
         DPX -.90%..- LB
@@ -152,20 +152,20 @@ strategy with a [rolling upgrade](/gateway/upgrade/rolling/) workflow:
 {% mermaid %}
 flowchart 
     DBA[(Database)]
-    CPX(Current Control Plane X \n #40;inactive#41;)
+    CPX(Current Control Plane X <br/> #40;inactive#41;)
     CPY(New Control Plane Y)
     DPX(Current Data Planes X)
     DPY(New Data Planes Y)
     API(API requests)
     LB(Load balancer)
-    Admin(No admin \n write operations)
-    Admin2(No admin \n write operations)
+    Admin(No admin <br/> write operations)
+    Admin2(No admin <br/> write operations)
 
     subgraph A [ ]
         Admin -.X.- CPX
         DBA -.X.- CPX
         DBA --- CPY
-        CPX -."Current DP connects to \neither CP X...".- DPX
+        CPX -."Current DP connects to <br/> either CP X...".- DPX
         Admin2 -.X.- CPY
         CPY -."OR to CP Y".- DPX -.90%..- LB
         CPY --- DPY --10%---- LB 
