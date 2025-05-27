@@ -3,6 +3,7 @@ title: External vault integration
 description: 'Learn how to configure external vault integrations in Insomnia using AWS, GCP, Azure, and HashiCorp vault providers.'
 content_type: reference
 layout: reference
+tier: enterprise
 products:
   - insomnia
 tags:
