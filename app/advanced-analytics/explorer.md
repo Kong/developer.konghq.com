@@ -20,6 +20,7 @@ schema:
 faqs:
   - q: What data can I collect Analytics from?
     a: |
+        * **API**
         * **API Product**
         * **API Product Version**
         * **Application**
@@ -30,6 +31,7 @@ faqs:
         * **Data Plane Node Version**
         * **Gateway Services**
         * **Response Source**
+        * **Portal**
         * **Route**
         * **Status Code**
         * **Status Code Group**
@@ -47,6 +49,8 @@ related_resources:
     url: /advanced-analytics/
   - text: LLM Reporting
     url: /advanced-analytics/llm-reporting/
+  - text: Dev Portal analytics
+    url: /dev-portal/analytics/
 ---
 
 The Explorer interface displays API usage data gathered by {{site.konnect_short_name}} Analytics from your Data Plane nodes. You can use this tool to:

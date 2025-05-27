@@ -3,14 +3,6 @@ description: Configure the plugin to set a rate limit of 5 requests per minute.
 
 weight: 900
 
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
-
 config: 
   window_size: [60]
   window_type: sliding

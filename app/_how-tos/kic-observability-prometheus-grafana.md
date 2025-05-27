@@ -90,7 +90,7 @@ Deploy the Services and create routing resources:
 kubectl apply -f {{ site.links.web }}/manifests/kic/multiple-services.yaml -n kong
 ```
 
-{% include /k8s/httproute.md release=page.release name='sample-routes' path='/billing,/comments,/invoice' service='billing,comments,invoice' port='80,80,80' skip_host=true %}
+{% include_cached /k8s/httproute.md name='sample-routes' path='/billing,/comments,/invoice' service='billing,comments,invoice' port='80,80,80' skip_host=true %}
 
 ## Generate traffic
 

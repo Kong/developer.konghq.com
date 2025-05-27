@@ -2,6 +2,9 @@ title: Refresh token grant
 description: |
   Configure the OpenID Connect plugin to use the refresh token grant.
 
+extended_description: |
+  Configure the OpenID Connect plugin to use the refresh token grant.
+
   In this example, the OpenID Connect plugin will only accept refresh tokens sent in a header, 
   but you can also set the `refresh_token_param_type` parameter to `body`, `query`, or any combination of these values.
 
@@ -48,3 +51,5 @@ tools:
   - konnect-api
   - kic
   - terraform
+
+group: authentication

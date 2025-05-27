@@ -45,7 +45,7 @@ cleanup:
 
 {% include /how-tos/steps/insomnia-test-suite.md %}
 
-## Create a HTTP status code test
+## Create an HTTP status code test
 
 We can create a test that checks a request against a certain status code. 
 

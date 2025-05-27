@@ -1,4 +1,5 @@
-description:  |
+description: Configure the OpenTelemetry plugin to extract tracing context in one format and inject tracing context in multiple formats.
+extended_description:  |
   This plugin configuration does the following:
   - Extracts the tracing context from: `b3`
   - Injects the tracing context using the formats: `w3c`, `b3`, `jaeger`, `ot`, `aws`, `datadog`, `gcp`
@@ -11,11 +12,6 @@ requirements:
   - "An OpenTelemetry backend"
   - "Set [`tracing_instrumentations = all`](/gateway/configuration/#tracing-instrumentations) in `kong.conf`"
   - "Set [`tracing_sampling_rate = 1.0`](/gateway/configuration/#tracing-sampling-rate) in `kong.conf`"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
 
 config: 
   traces_endpoint: http://localhost:4318/v1/traces

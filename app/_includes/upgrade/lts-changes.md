@@ -555,7 +555,7 @@ rows:
     description: |
       The default PostgreSQL SSL version has been bumped to TLS 1.2. In `kong.conf`:
       <br><br>
-      * The default [`pg_ssl_version`](/gateway/configuration/#datastore)
+      * The default [`pg_ssl_version`](/gateway/configuration/#datastore-section)
       is now `tlsv1_2`.
       * Constrained the valid values of this configuration option to only accept the following: `tlsv1_1`, `tlsv1_2`, `tlsv1_3` or `any`.
       <br><br>

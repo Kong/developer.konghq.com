@@ -5,7 +5,7 @@ entities:
   - admin
 
 description: |
-  Admins can manage {{site.base_gateway}} entities inside Workspaces, including Users and their Roles.
+  Admins can manage {{site.base_gateway}} entities inside Workspaces, including users and their roles.
 
 
 related_resources:
@@ -28,18 +28,23 @@ schema:
   api: gateway/admin-ee
   path: /schemas/Admin
 faqs:
-  - q: What happens when an Admin doesn't have a Role assigned?
-    a: If an Admin is in a Workspace without a Role, they can’t see or interact with anything. Admins can manage entities inside Workspaces, including Users and their Roles.
+  - q: What happens when an admin doesn't have a role assigned?
+    a: If an admin is in a Workspace without a role, they can’t see or interact with anything. Admins can manage entities inside Workspaces, including users and their roles.
+  - q: What is a super admin?
+    a: A super admin is a role that has the ability to assign and modify RBAC roles and permissions. A generic admin without this role can't manage RBAC.
+  - q: How can I invite and manage admins in Kong Manager?
+    a: If you want to manage admins from the Kong Manager UI, go to Teams > Admins. From here, you can invite new admins, manage existing admins, and find invitation links for invited admins.
+  - q: Can admins manage multiple Workspaces?
+    a: No, each admin is specific to one Workspace.
 
 works_on:
   - on-prem
-  - konnect
 
 tags:
   - rbac
 ---
 
-## What is an Admin?
+## What is an admin?
 Admins in {{site.base_gateway}} are [RBAC](/gateway/entities/rbac/) entities used to used to manage all administrators for a specific [Workspace](/gateway/entities/workspace/). 
 Admins can be managed using the Admin API or Kong Manager and are used in the following operations:
 
@@ -51,17 +56,15 @@ Admins can be managed using the Admin API or Kong Manager and are used in the fo
 * [Viewing associated Workspaces](/api/gateway/admin-ee/#/operations/get-admins-name_or_id-workspaces)
 
 
-Admins can only interact with entities from within their Workspace. Depending on the Admin's specific Role, they can enforce RBAC Roles and Permissions across that Workspace, including creating and inviting other Admins. 
+Admins can only interact with entities from within their Workspace. Depending on the admin's specific role, they can enforce RBAC roles and permissions across that Workspace, including creating and inviting other admins. 
 
 ## Schema
 
 {% entity_schema %}
 
-## Invite an Admin
+## Invite an admin
 
-Inviting an Admin can only be done if you have [enabled RBAC](/gateway/entities/rbac/#enable-rbac). You can invite an Admin by issuing a `POST` request to [`/admins`](/api/gateway/admin-ee/#/operations/post-admins). 
-
-If you haven't configured email capabilities your Admin won't receive an invite link, but will still be created.
+Inviting an admin can only be done if you have [enabled RBAC](/gateway/entities/rbac/#enable-rbac). You can invite an admin by issuing a `POST` request to [`/admins`](/api/gateway/admin-ee/#/operations/post-admins). 
 
 {% entity_example %}
 type: admin
@@ -73,3 +76,9 @@ headers:
   admin-api:
     - "Kong-Admin-Token: $ADMIN_TOKEN"
 {% endentity_example %}
+
+If you haven't configured email capabilities your admin won't receive an invite link, but the link will still be created. 
+You can copy the generated invite link from the Kong Manager UI and provide it directly to your intended admin.
+
+By default, the invite link expires after 259,200 seconds (3 days). 
+You can customize this time frame by adjusting the [`admin_invitation_expiry`](/gateway/configuration/#admin-invitation-expiry) parameter in `kong.conf`.

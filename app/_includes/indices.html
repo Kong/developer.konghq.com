@@ -3,7 +3,7 @@
 <div class="grid grid-cols-1 gap-10">
   {% if group.title or group.description  %}
   <div>
-  {% if group.title %}<h2 id="{{ group.title | slugify }}">{{ group.title | liquify }}</h2>{% endif %}
+  {% if group.title %}<h2 id="{{ group.title | slugify }}" data-skip-process-heading-id="true">{{ group.title | liquify }}</h2>{% endif %}
 
   {% if group.description %}
   <p class="text-base text-terciary mt-2">{{ group.description | liquify }}</p>
@@ -14,7 +14,7 @@
   {% for section in group.sections %}{% unless section.hidden %}
     <div class="flex flex-col gap-5 heading-section card p-6 rounded-lg shadow-primary">
       {% if section.title %}
-      <h3 id="{% if group.title %}{{ group.title | slugify }}--{% endif %}{{ section.title | slugify }}" class="always-link mb-2">{{ section.title | liquify }}</h3>
+      <h3 id="{% if group.title %}{{ group.title | slugify }}--{% endif %}{{ section.title | slugify }}" class="always-link mb-2" data-skip-process-heading-id="true">{{ section.title | liquify }}</h3>
       {% endif %}
 
       <div class="content">
@@ -22,6 +22,7 @@
           {% for page in section.pages %}
             {% assign title = page.title %}
             {% if page.short_title %}{% assign title = page.short_title %}{% endif %}
+            {% if page.plugin? and page.example? %}{% assign title = page.example_title %}{% endif %}
             <li class="flex flex-col gap-1">
               <a class="text-brand-saturated !mb-0 text-base tracking-[-.01em]" href="{{ page.url }}">{{ title }}</a>
               <p class="text-xs text-terciary">

@@ -56,6 +56,17 @@ module Jekyll
         end.sort_by { |e| -e.weight } # rubocop:disable Style/MultilineBlockChain
       end
 
+      def basic_examples
+        @basic_examples ||= examples.select { |e| e.group.nil? }
+      end
+
+      def examples_by_group
+        @examples_by_group ||= examples.reject { |e| e.group.nil? }.group_by(&:group).transform_keys do |key|
+          group = metadata.fetch('examples_groups', []).detect { |group| group['slug'] == key }
+          group['text']
+        end
+      end
+
       def schema
         @schema ||= schemas.detect { |s| s.release == latest_release_in_range }
       end

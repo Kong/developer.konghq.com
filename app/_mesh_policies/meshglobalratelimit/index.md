@@ -55,7 +55,7 @@ its data plane proxy will make a request to the ratelimit service to check if th
 checks if the counter for this service is below limits. If it is below limits, it updates the counter and allows the request to pass. If counters are above
 limits, deny response is returned. 
 
-{:.note}
+{:.info}
 > **Note**: Configuring global rate limit will increase your service response times because it needs additional requests to the ratelimit service and Redis.
 
 ### Ratelimit service configuration

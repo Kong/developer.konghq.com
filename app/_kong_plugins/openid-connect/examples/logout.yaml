@@ -1,5 +1,7 @@
 title: Session logout
 description:  |
+  Configure the OpenID Connect plugin with the ability for users to log out of their sessions.
+extended_description:  |
   When you're using [session authentication](/plugins/openid-connect/#session-authentication-workflow) and the [authorization code flow](/plugins/openid-connect/#authorization-code-flow), 
   you may also want to implement the ability for users to log out of their sessions.
 
@@ -51,3 +53,5 @@ tools:
   - konnect-api
   - kic
   - terraform
+
+group: other

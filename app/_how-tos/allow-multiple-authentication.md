@@ -50,7 +50,7 @@ faqs:
       If you want anonymous access to be forbidden, you **must** configure the Request Termination plugin on the anonymous Consumer.
   - q: Can I use the anonymous Consumer with OpenID Connect?
     a: |
-      If you are using the [OpenID Connect](/plugins/openid-connect/) plugin for handling Consumer authentication, you must set both [`config.anonymous`](/plugins/openid-connect/reference/#config-anonymous) and [`config.consumer_claim`](/plugins/openid-connect/reference/#config-consumer_claim) in the plugin's configuration, as setting `config.anonymous` alone doesn't map that Consumer.
+      If you are using the [OpenID Connect](/plugins/openid-connect/) plugin for handling Consumer authentication, you must set both [`config.anonymous`](/plugins/openid-connect/reference/#schema--config-anonymous) and [`config.consumer_claim`](/plugins/openid-connect/reference/#schema--config-consumer-claim) in the plugin's configuration, as setting `config.anonymous` alone doesn't map that Consumer.
   
 tools:
   - deck

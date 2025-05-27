@@ -7,6 +7,7 @@
         :exampleVisible="false"
         :headerVisible="false"
         :enablePropertyLinks="true"
+        :maxExpandedDepth="4"
       />
     </main>
   </div>

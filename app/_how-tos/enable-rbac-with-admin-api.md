@@ -114,7 +114,7 @@ export KONG_ENFORCE_RBAC=on && kong reload
 
 After the Super Admin is created and RBAC is enabled, the `user_token` must be passed with Admin API requests otherwise the API will return a `401 Unauthorized` error.
 
-You can validate that RBAC is enabled by attempting to create a user like you did in the first step without passing the `user_token`:
+You can validate that RBAC is enabled by attempting to access the user list without a `user_token`:
 
 <!-- vale off -->
 

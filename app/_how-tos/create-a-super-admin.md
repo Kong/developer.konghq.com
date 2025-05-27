@@ -11,6 +11,8 @@ works_on:
 
 tags:
   - authorization
+  - access-control
+  - rbac
 
 tldr: 
   q: How do I create a {{site.base_gateway}} Super Admin using the Admin API?
@@ -35,6 +37,24 @@ prereqs:
 
 min_version:
     gateway: '3.4'
+
+cleanup:
+  inline:
+    - title: Destroy the {{site.base_gateway}} container
+      include_content: cleanup/products/gateway
+      icon_url: /assets/icons/gateway.svg
+
+related_resources:
+  - text: Gateway RBAC
+    url: /gateway/entities/rbac/
+  - text: Gateway Groups
+    url: /gateway/entities/group/
+  - text: Gateway Admins
+    url: /gateway/entities/admin/
+  - text: Gateway Workspaces
+    url: /gateway/entities/workspace/
+  - text: Create an RBAC user with custom permissions
+    url: /how-to/configure-rbac-user-in-kong-gateway/
 ---
 
 

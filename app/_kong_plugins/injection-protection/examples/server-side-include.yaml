@@ -1,16 +1,11 @@
-description: 'Detects scripts injected in HTML pages. Uses the following regex for matching: `<!--#(include|exec|echo|config|printenv)\s+.*`'
+description: Detects scripts injected in HTML pages. 
+extended_description: |
+  Detects scripts injected in HTML pages. 
+  Uses the following regex for matching: `<!--#(include|exec|echo|config|printenv)\s+.*`
 
 title: 'Server-side include injection'
 
 weight: 900
-
-# requirements: <- not required
-# - "some req"
-
-# variables: <- not required
-#   my-region:
-#     description: ''
-#     value: us
 
 config: 
   injection_types: 

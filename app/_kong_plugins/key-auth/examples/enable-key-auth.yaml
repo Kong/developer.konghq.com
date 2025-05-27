@@ -1,4 +1,5 @@
-description: |
+description: Enables the Key Auth plugin and sets `apikey` as the key name.
+extended_description: |
   This example enables the plugin and sets `apikey` as the key name.
 
   For a full walkthrough, see the [tutorial on enabling key authentication for a Gateway Service with {{site.base_gateway}}](/how-to/enable-key-authentication-on-a-service-with-kong-gateway/).

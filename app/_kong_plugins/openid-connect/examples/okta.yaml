@@ -1,5 +1,7 @@
 title: OpenID Connect with Okta
 description: |
+  Authenticate browser clients using Okta.
+extended_description: |
   Authenticate browser clients using [Okta](https://help.okta.com/en-us/content/index.htm).
 
   The following configuration example allows users to authenticate and access the upstream service even though no Consumer was created for them. 
@@ -61,3 +63,5 @@ tools:
   - konnect-api
   - kic
   - terraform
+
+group: providers

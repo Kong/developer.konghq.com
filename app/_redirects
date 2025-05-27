@@ -92,3 +92,8 @@
 ## Kubernetes
 
 /gateway/install/kubernetes/  /gateway/install/kubernetes/konnect/
+
+
+## Event gateway
+
+/knep/get-started/  /event-gateway/get-started/

@@ -150,7 +150,7 @@ As part of the [prerequisites](#prerequisites), you deployed the `echo` Service 
 
 Now that the `echo` Service is serving an HTTPS endpoint, we need to expose it:
 
-{% include /k8s/httproute.md release=page.release path='/echo' name='echo' service='echo' port='443' host='kong.example' %}
+{% include_cached /k8s/httproute.md path='/echo' name='echo' service='echo' port='443' host='kong.example' %}
 
 Verify connectivity by making an HTTP request to proxy. The Service serves HTTPS but {{ site.base_gateway }} initiates the connection and proxies it as HTTP in this case, so the request should be made over HTTP. The `Host` header  has to match the hostname of the Service.
 

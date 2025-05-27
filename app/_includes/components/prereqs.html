@@ -72,11 +72,26 @@
         </div>
       {% endif %}
 
-      {% for product in prereqs.products %}
-        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
-          {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
-          {% include {{ product_include }} tier=include.tier prereqs=prereqs %}
+      {% if page.products contains 'kic'  %}
+        <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
+          {% include prereqs/kubernetes/kic-konnect-cp.md prereqs=prereqs %}
         </div>
+      {% endif %}
+
+      {% for product in prereqs.products %}
+        {% assign product_include = 'prereqs/products/' | append: product | append: '.md' %}
+        {% if prereqs.works_on %}
+          <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="konnect" data-test-setup="konnect">
+            {% include {{ product_include }} prereqs=prereqs topology="konnect" %}
+          </div>
+          <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0" data-deployment-topology="on-prem" data-test-setup='{ "gateway": "{{page.min_version.gateway}}" }'>
+            {% include {{ product_include }} prereqs=prereqs topology="on-prem" %}
+          </div>
+        {% else %}
+          <div class="flex flex-col gap-1.5 border-b border-primary/5 accordion-item last:border-b-0">
+            {% include {{ product_include }} prereqs=prereqs %}
+          </div>
+        {% endif %}
       {% endfor %}
     {% endif %}
   {% endunless %}

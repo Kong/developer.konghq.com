@@ -69,7 +69,7 @@ Suggested `values.yaml` file:
 {% embed helm-values-prod/values.global-cp.yaml versioned %}
 ```
 
-The values on this page may reference resources that need to be created in advance when certain features are enabled, read the file content carefully and prepare these resources according to the notes near the keywords `(action)`. If you decide to disable a feature that requires a pre-existing resource, remove or change those fields according to the full [Helm configuration reference](/mesh/{{ page.release }}/reference/kuma-cp/#helm-valuesyaml).
+The values on this page may reference resources that need to be created in advance when certain features are enabled, read the file content carefully and prepare these resources according to the notes near the keywords `(action)`. If you decide to disable a feature that requires a pre-existing resource, remove or change those fields according to the full [Helm configuration reference](/mesh/reference/kuma-cp/#helm-valuesyaml).
 
 {% endnavtab %}
 

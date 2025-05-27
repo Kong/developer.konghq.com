@@ -11,6 +11,9 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
     doc = Nokogiri::HTML(@page_or_doc.output)
     changes = false
 
+    h2_id = nil
+    h3_id = nil
+
     doc.css('h2, h3, h4, h5, h6').each do |heading|
       should_always_link = heading['class']&.split&.include?('always-link')
 
@@ -30,8 +33,20 @@ class AddLinksToHeadings # rubocop:disable Style/Documentation
       old_id = heading['id']
 
       # Index pages have specific heading IDs to account for groups
-      unless @page_or_doc.url.include?("/index/")
+      unless heading.attr('data-skip-process-heading-id') && heading.attr('data-skip-process-heading-id') == 'true'
         heading['id'] = Jekyll::Utils.slugify(text)
+      end
+
+      if @page_or_doc.url == '/gateway/changelog/'
+        if heading.name == 'h2'
+          h2_id = heading['id']
+          h3_id = nil
+        elsif heading.name == 'h3'
+          h3_id = heading['id']
+        end
+        # Fix for gateway's changelog anchor links
+        # All releases have the same entries
+        heading['id'] = [h2_id, h3_id, heading['id']].compact.uniq.join('-')
       end
 
       # special case, it has links in the headings

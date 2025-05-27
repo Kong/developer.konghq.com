@@ -169,11 +169,11 @@ data:
   consumer: anonymous
 {% endentity_example %}
 
-## Create a HTTPRoute
+## Create an HTTPRoute
 
-To route HTTP traffic, you need to create a `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`.
+To route HTTP traffic, you need to create an `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`.
 
-{% include /k8s/httproute.md release=page.release path='/echo' name='echo' service='echo' port='1027' skip_host=true %}
+{% include_cached /k8s/httproute.md path='/echo' name='echo' service='echo' port='1027' skip_host=true %}
 
 ## Validate your configuration
 

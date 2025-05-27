@@ -59,7 +59,7 @@ It allows you to create an API workflow, which can include:
 {:.warning}
 > The Datakit plugin is not available in {{site.base_gateway}} packages by default. 
 Before you can configure the plugin, enable it in one of the following ways:
-> * **Package install:** Set `wasm=on` in [`kong.conf`](/gateway/configuration/#wasm) before starting {{site.base_gateway}}
+> * **Package install:** Set `wasm=on` in [`kong.conf`](/gateway/configuration/#wasm-section) before starting {{site.base_gateway}}
 > * **Docker:** Set `export WASM=on` in the environment
 > * **Kubernetes:** Set `WASM=on` using the [Custom Plugin](/kubernetes-ingress-controller/custom-plugins/) instructions
 

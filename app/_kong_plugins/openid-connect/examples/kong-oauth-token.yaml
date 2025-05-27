@@ -1,5 +1,8 @@
 title: Kong OAuth token authentication
 description: |
+  Configure the OpenID Connect plugin to verify the tokens issued by Kong OAuth 2.0 plugin. 
+
+extended_description: |
   Configure the OpenID Connect plugin to verify the tokens issued by [Kong OAuth 2.0](/plugins/oauth2/) plugin. 
 
   In this example, the OpenID Connect plugin will only accept a bearer token sent in a header, 
@@ -46,3 +49,5 @@ tools:
   - deck
   - admin-api
   - kic
+
+group: authentication

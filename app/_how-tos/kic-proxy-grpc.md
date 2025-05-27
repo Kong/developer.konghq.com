@@ -54,7 +54,7 @@ cleanup:
 
 All services are assumed to be either HTTP or HTTPS by default. We need to update the service to specify gRPC over TLS as the protocol by adding a `konghq.com/protocol` annotation.
 
-The annotation `grpcs` informs {{site.base_gateway}} that this service is a gRPC (with TLS) service and not a HTTP service.
+The annotation `grpcs` informs {{site.base_gateway}} that this service is a gRPC (with TLS) service and not an HTTP service.
 
 ```bash
 kubectl annotate service -n kong grpcbin 'konghq.com/protocol=grpcs'

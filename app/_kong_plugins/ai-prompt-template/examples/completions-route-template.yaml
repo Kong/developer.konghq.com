@@ -1,5 +1,5 @@
 description: |
-  Configure the plugin with a template to use for completions routes.
+  Configure the AI Prompt Template plugin with a template to use for completions routes.
 
 title: 'Completion route template'
 

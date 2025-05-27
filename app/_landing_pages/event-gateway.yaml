@@ -14,7 +14,7 @@ rows:
   - header:
       type: h1
       text: "Event Gateway"
-      sub_text: "A Kafka-native Gateway built for governance, security, and cost-efficient use of Kafka"
+      sub_text: "A protocol-native Gateway built for governance, security, and cost-efficient use of Kafka"
 
   - columns:
       - blocks:
@@ -58,7 +58,7 @@ rows:
                     The {{site.event_gateway}} supports many policies such as
                     encryption, cluster virtualization, message filtering, and more.
 
-                    [Get started with {{site.event_gateway_short}} &rarr;](/knep/get-started/)
+                    [Get started with {{site.event_gateway_short}} &rarr;](/event-gateway/get-started/)
   - header:
       type: h2
       text: Protocol mediation plugins
@@ -71,10 +71,6 @@ rows:
         - type: plugin
           config:
             slug: kafka-consume
-      - blocks:
-        - type: plugin
-          config:
-            slug: kafka-log
       - blocks:
         - type: plugin
           config:
@@ -96,19 +92,29 @@ rows:
             icon: /assets/icons/gateway.svg
             cta:
               text: Start using {{site.event_gateway}}
-              url: /knep/get-started/
+              url: /event-gateway/get-started/
               align: end
       - blocks:
         - type: card
           config:
-            title: Configuration reference
+            title: Proxy configuration reference
             description: |
               You can configure {{site.event_gateway}} using declarative YAML configuration files
               
             icon: /assets/icons/lock.svg
             cta:
-              text: See all configuration options for {{site.event_gateway}}
+              text: See all configuration options for {{site.event_gateway_short}}
               url: /api/event-gateway/knep/
+              align: end
+      - blocks:
+        - type: card
+          config:
+            title: Policy reference
+            description: Learn how to use policies to apply access control, create virtual topics, validate schemas, and more
+            icon: /assets/icons/graph.svg
+            cta:
+              text: See policy reference for {{site.event_gateway_short}}
+              url: /event-gateway/policies/
               align: end
   - header:
       text: "Frequently asked questions about {{site.event_gateway_short}}"

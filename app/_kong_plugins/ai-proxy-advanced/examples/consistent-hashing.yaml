@@ -1,6 +1,6 @@
 
 title: 'Load balancing: Consistent-hashing'
-description: 'Configure the plugin to use two OpenAI models and route requests based on the custom `X-Hashing-Header` header.'
+description: 'Configure the plugin to use two OpenAI models and route requests based on the custom X-Hashing-Header header.'
 
 weight: 112
 

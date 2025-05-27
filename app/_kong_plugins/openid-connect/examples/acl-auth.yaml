@@ -1,6 +1,8 @@
 title: ACL plugin authorization
 description: |
   Configure the OpenID Connect plugin for ACL-based authorization.
+extended_description: |
+  Configure the OpenID Connect plugin for ACL-based authorization.
 
   This example uses password authentication, but you can use any supported [authentication type](/plugins/openid-connect/reference/#schema--config-auth-methods) with ACL groups.
 
@@ -47,3 +49,5 @@ tools:
   - konnect-api
   - kic
   - terraform
+
+group: authentication

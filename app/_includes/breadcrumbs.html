@@ -1,8 +1,8 @@
-{% if page.breadcrumbs %}
-<div class="flex gap-1 justify-start text-xs items-center xl:basis-3/4">
+{% if include.breadcrumbs %}
+<div class="flex gap-1 justify-start text-xs items-center xl:basis-3/4 {% if include.sticky %} md:sticky md:top-20 {% endif %}">
   <a class="text-terciary" href="/">Home</a>
   <span>/</span>
-  {% for breadcrumb in page.breadcrumbs %}
+  {% for breadcrumb in include.breadcrumbs %}
     <a class="text-terciary" href="{{ breadcrumb.url }}">{{ breadcrumb.title | liquify }}</a>
     {% unless forloop.last %}<span>/</span>{% endunless %}
   {% endfor %}

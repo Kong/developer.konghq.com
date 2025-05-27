@@ -45,6 +45,23 @@ related_resources:
     url: /gateway/authentication/
   - text: OpenID Connect tutorials
     url: /how-to/?query=openid-connect
+
+examples_groups:
+  - slug: authentication
+    text: Authentication flows and grants
+  - slug: client-auth
+    text: Client authentication
+  - slug: authorization
+    text: Authorization
+  - slug: providers
+    text: Common provider configurations
+  - slug: fapi
+    text: Financial-grade API
+  - slug: other
+    text: Other examples
+
+basic_examples: false
+    
 ---
 
 The OpenID Connect (OIDC) plugin lets you integrate {{site.base_gateway}} with an identity provider (IdP).

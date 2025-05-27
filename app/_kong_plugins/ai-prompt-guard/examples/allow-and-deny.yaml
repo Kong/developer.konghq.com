@@ -1,5 +1,6 @@
-description: |
-  Configure the plugin with a combination of `allow` and `deny` rules. 
+description: Configure the AI Prompt Guard plugin with a combination of allow and deny rules. 
+extended_description: |
+  Configure the plugin with a combination of allow and deny rules. 
   For requests to pass through in this example, the messages from the callers:
 
   * Must contain at least one of the product names in the allow list

@@ -23,7 +23,7 @@ entities: []
 
 tldr:
   q: How do I route traffic outside of my Kubernetes cluster?
-  a: Configure an `ExternalName` service, then create a `HTTPRoute` to route traffic to the service.
+  a: Configure an `ExternalName` service, then create an `HTTPRoute` to route traffic to the service.
 
 prereqs:
   kubernetes:
@@ -55,11 +55,11 @@ spec:
 ' | kubectl apply -f -
 ```
 
-## Create a HTTPRoute
+## Create an HTTPRoute
 
-To route HTTP traffic, you need to create a `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`.
+To route HTTP traffic, you need to create an `HTTPRoute` or an `Ingress` resource pointing at your Kubernetes `Service`.
 
-{% include /k8s/httproute.md release=page.release path='/httpbin' name='proxy-from-k8s-to-httpbin' service='proxy-to-httpbin' port='80' skip_host=true %}
+{% include_cached /k8s/httproute.md path='/httpbin' name='proxy-from-k8s-to-httpbin' service='proxy-to-httpbin' port='80' skip_host=true %}
 
 ## Validate your configuration
 

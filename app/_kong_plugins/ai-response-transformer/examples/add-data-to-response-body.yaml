@@ -1,5 +1,5 @@
 description: |
-  Configure the plugin to use OpenAI GPT-4 to add an element to the response body before returning it to the client.
+  Configure the AI Response Transformer plugin to use OpenAI GPT-4 to add an element to the response body before returning it to the client.
 
 title: Add data to a response body
 

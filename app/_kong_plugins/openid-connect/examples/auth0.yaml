@@ -1,5 +1,7 @@
 title: OpenID Connect with Auth0
 description: |
+  Authenticate headless service consumers using Auth0's identity provider.
+extended_description: |
   Authenticate headless service consumers using [Auth0's identity provider](https://auth0.com/docs/authenticate/identity-providers).
 
   This example uses a client credentials grant as it is non-interactive, 
@@ -36,3 +38,5 @@ tools:
   - konnect-api
   - kic
   - terraform
+
+group: authentication

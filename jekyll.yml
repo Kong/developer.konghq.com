@@ -19,6 +19,7 @@ keep_files:
 # Site settings
 name: Kong Developer
 title: Kong Docs
+description: "Documentation for Kong, the Cloud Connectivity Company for APIs and Microservices."
 
 links:
   web: https://developer.konghq.com
@@ -31,6 +32,8 @@ plugins:
 # Collections
 collections:
   gateway_entities:
+    output: true
+  event_gateway_policies:
     output: true
   how-tos:
     output: true
@@ -57,6 +60,17 @@ defaults:
       breadcrumbs:
         - "/gateway/"
         - "/gateway/entities/"
+  - scope:
+      path: "_event_gateway_policies"
+      type: "event_gateway_policies"
+    values:
+      layout: "gateway_entity"
+      permalink: "/event-gateway/policies/:path/"
+      products:
+        - event-gateway
+      breadcrumbs:
+        - "/event-gateway/"
+        - "/event-gateway/policies/"
   - scope:
       path: "_references"
       type: "references"

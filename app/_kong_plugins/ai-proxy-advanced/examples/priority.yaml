@@ -1,4 +1,4 @@
-title: 'Priority load balancing'
+title: 'Load balancing: Priority'
 description: Configure the plugin to use three OpenAI models and create priority groups based on their respective weights.
 extended_description: |
 

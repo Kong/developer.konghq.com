@@ -2,6 +2,9 @@ title: User info authentication
 description: |
   Configure the OpenID Connect plugin to use user info authentication.
 
+extended_description: |
+  Configure the OpenID Connect plugin to use user info authentication.
+
   In this example, the OpenID Connect plugin will only accept bearer tokens sent in a header, 
   but you can also set the `bearer_token_param_type` parameter to `body`, `query`, or any combination of these values.
 
@@ -47,3 +50,5 @@ tools:
   - konnect-api
   - kic
   - terraform
+
+group: authentication
