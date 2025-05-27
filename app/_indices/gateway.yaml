@@ -270,3 +270,4 @@ sections:
       - path: /gateway/entities/event-hook/
       - path: /gateway/entities/partial/
       - path: /how-to/restart-kong-gateway-container/
+      - path: /gateway/nginx-directives/
