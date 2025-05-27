@@ -231,7 +231,9 @@ rows:
               blocks:
                 - type: text
                   text: |
-                    See the full feature comparison on our [pricing page &rarr;](https://insomnia.rest/pricing)
+                    For more details about Enterprise capabilities, see [Insomnia Enterprise](/insomnia/enterprise/).
+                    
+                    See the full feature comparison on our [pricing page](https://insomnia.rest/pricing).
 
   - header:
       type: h2

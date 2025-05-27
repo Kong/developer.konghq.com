@@ -11,8 +11,19 @@ metadata:
 rows:
   - header:
       type: h1
-      text: "Insomnia Enterprise"            
+      text: "Insomnia Enterprise"     
     columns:
+      - blocks:
+          - type: structured_text
+            config:
+              blocks:
+                - type: text
+                  text: |
+                    The Enterprise plan for Insomnia provides advanced options for user management and security.
+
+                    For compare plans, see the [pricing page](https://insomnia.rest/pricing).
+                    
+  - columns:
       - blocks:
         - type: card
           config:
@@ -40,7 +51,6 @@ rows:
             cta:
               text: Learn more
               url: /insomnia/enterprise-account-management/#add-domains
-  - columns:
       - blocks:
         - type: card
           config:
@@ -50,6 +60,7 @@ rows:
             cta:
               text: Learn more
               url: /insomnia/enterprise-user-management/#user-activity-reports
+  - columns:
       - blocks:
         - type: card
           config:
@@ -68,3 +79,21 @@ rows:
             cta:
               text: Learn more
               url: /insomnia/scim/
+      - blocks:
+        - type: card
+          config:
+            title: Vault integrations
+            description: Integrate with your AWS, GCP, Azure, and HashiCorp vaults.
+            icon: /assets/icons/lock.svg
+            cta:
+              text: Learn more
+              url: /insomnia/external-vault/
+      - blocks:
+        - type: card
+          config:
+            title: Storage control
+            description: Define the storage options allowed for your organizations.
+            icon: /assets/icons/database.svg
+            cta:
+              text: Learn more
+              url: /insomnia/enterprise-account-management/#manage-storage
