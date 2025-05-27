@@ -22,9 +22,9 @@ related_resources:
     url: /insomnia/storage/
   - text: Git sync
     url: /insomnia/storage/#git-sync
+min_version:
+  insomnia: '11'
 ---
-
-
 
 Insomnia supports integrating with external vault service providers to retrieve secret values automatically when sending requests.
 
