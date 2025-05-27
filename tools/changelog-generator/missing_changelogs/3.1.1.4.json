@@ -1,0 +1,71 @@
+{
+  "kong-ee": [
+    {
+      "message": "Kong Manager with OIDC: Added the configuration option[`admin_auto_create`](https://docs.konghq.com/gateway/latest/kong-manager/auth/oidc/mapping/) to enable or disable automatic admin creation. This option is `true` by default.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed the UDP socket leak in `resty.dns.client` caused by frequent DNS queries.[#10691](https://github.com/Kong/kong/pull/10691)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Hybrid mode: Fixed an issue where Vitals/Analytics couldn’t communicate through the cluster telemetry endpoint.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where `alpine` and `ubuntu` ARM64 artifacts incorrectly handled HTTP/2 requests, causing the protocol to fail.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed the OpenResty `ngx.print` chunk encoding duplicate free buffer issue that led to the corruption of chunk-encoded response data.[#10816](https://github.com/Kong/kong/pull/10816)[#10824](https://github.com/Kong/kong/pull/10824)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed the Dynatrace implementation. Due to a build system issue, Kong Gateway 3.1.x packages prior to 3.1.1.4 didn’t contain the debug symbols that Dynatrace requires.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "**Request Transformer Advanced**: Fixed an issue that was causing some requests to be proxied with the wrong query parameters.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "kong-manager-ee": [
+    {
+      "message": "Fixed configuration fields for the StatsD plugin: \n- Added missing metric fields: `consumer_identifier`, `service_identifier`, and `workspace_identifier`.\n- Removed the non-existent `custom_identifier` field.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where the `Copy JSON` for a plugin didn’t copy the full plugin configuration.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where the Zipkin plugin didn’t allow the addition of `static_tags` through the Kong Manager UI.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Added missing default values to the Vault configuration page.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed the broken Konnect link in free mode banners.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "OIDC authentication issues: \n- The `/auth` endpoint, used by Kong Manager for OIDC authentication, now correctly supports the HTTP POST method.\n- Fixed an issue with OIDC authentication in Kong Manager, where the default roles (`workspace-super-admin`, `workspace-read-only`, `workspace-portal-admin`, and `workspace-admin`) were missing from any newly created workspace.\n- Fixed an issue where users with newly registered Dev Portal accounts created through OIDC were unable to log into Dev Portal until the Kong Gateway container was restarted. This happened when `by_username_ignore_case` was set to `true`, which incorrectly caused consumers to always load from cache.",
+      "type": "bugfix",
+      "scope": "Core"
+    }
+  ]
+}

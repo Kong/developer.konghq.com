@@ -1,0 +1,100 @@
+{
+  "kong-ee": [
+    {
+      "message": "The Redis strategy of Rate Limiting now catches connection failures.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Added the parameter `admin_auto_create` for automatically creating a Kong admin.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Kong Manager supports the `POST` response method for OIDC based authentication",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue with the plugin iterator where sorting would become mixed up when dynamic reordering was applied. This fix ensures proper sorting behavior in all scenarios.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where `resty.dns.client` leaked UDP sockets.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed a bug where setting `anonymous_reports=false` would not silence anonymous reports.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue with hybrid mode where vitals and analytics could not communicate through the cluster telemetry endpoint.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed the HTTP2 request handle in ARM artifacts.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed the OpenResty `ngx.print` chunk encoding duplicate free buffer issue that led to the corruption of chunk-encoded response data. [#10816](https://github.com/Kong/kong/pull/10816)[#10824](https://github.com/Kong/kong/pull/10824)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where a crashing Go plugin server process would cause subsequent requests proxied through Kong to execute Go plugins with inconsistent configurations. The issue only affects scenarios where the same Go plugin is applied to different route or service entities.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed the Dynatrace implementation.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Request Transformer Advanced: Fixed an issue that was causing some requests to be proxied with the wrong query parameters.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Response Transformer Advanced: Fixed an issue where large decimals were rounded when the plugin was being used.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Rate Limiting Advanced: Fixed an issue where the control plane was trying to sync the rate-limiting-advanced counters with Redis.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Rate Limiting Advanced: Fixed an issue where the `rl cluster_events` broadcasted the wrong data in traditional cluster mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Oauth2: Fixed a bug that `refresh_token` could be shared across instances.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Bumped `OpenSSL` from 1.1.1t to 3.1.1",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped`lua-resty-openssl` from 0.8.15 to 0.8.22",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-resty-kafka` from 0.15 to 0.16",
+      "type": "dependency",
+      "scope": "Core"
+    }
+  ],
+  "kong-manager-ee": []
+}

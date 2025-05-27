@@ -1,0 +1,10 @@
+{
+  "kong-ee": [
+    {
+      "message": "Fixed the accidental removal of the `ca-certificates` dependency from packages and images. This prevented SSL connections from using common root certificate authorities.",
+      "type": "bugfix",
+      "scope": "Core"
+    }
+  ],
+  "kong-manager-ee": []
+}
