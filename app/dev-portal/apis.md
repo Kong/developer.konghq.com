@@ -42,7 +42,7 @@ Learn how to manage documents for your APIs in Dev Portal.
 
 ### Create a new API document
 
-1. Navigate to a specific API from [APIs](/dev-portal/apis) or [Published APIs](/dev-portal/publishing).
+1. Navigate to a specific API from [APIs](https://cloud.konghq.com/portals/apis/) or [Published APIs](/dev-portal/publishing).
 2. Select the **Documentation** tab.
 3. Click **New Document**.
 4. Select **Start with a file** then **Upload a Markdown document**, or **Start with an empty document** and provide the Markdown content.

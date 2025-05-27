@@ -171,7 +171,7 @@ rows:
                 url: /dev-portal/portal-settings/
   - header:
       type: h2
-      text: "Dev Portal authentication and access"
+      text: "Developer authentication and access"
   - columns:
       - blocks:
           - type: card
@@ -197,6 +197,10 @@ rows:
                 Map existing developer teams from a third-party identity provider (IdP) and their permissions to elements in a {{site.konnect_short_name}} Dev Portal.
               cta:
                 url: "/dev-portal/team-mapping/"
+  
+  - header:
+      type: h2
+      text: "Application registration"
   - columns:
       - blocks:
           - type: card
@@ -232,6 +236,14 @@ rows:
                 Learn how to set up authentication strategies for Dev Portal.
               cta:
                 url: "/dev-portal/auth-strategies/"
+      - blocks:
+          - type: card
+            config:
+              title: Dynamic Client Registration
+              description: |
+                Learn how to dynamically create developer applications in an IdP.
+              cta:
+                url: "/dev-portal/dynamic-client-registration/"
   
   - header:
       type: h2
@@ -246,4 +258,3 @@ rows:
                   In Dev Portal, you can view both analytics for developer applications as well as platform-wide analytics for all Dev Portals. 
 
                   For more information, see [Dev Portal analytics](/dev-portal/analytics/).
-  

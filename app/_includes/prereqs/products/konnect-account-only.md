@@ -1,0 +1,1 @@
+This tutorial requires a {{site.konnect_short_name}} Plus account. If you don't have a {{site.konnect_short_name}} account, you can get started quickly with our [onboarding wizard](https://konghq.com/products/kong-konnect/register?utm_medium=referral&utm_source=docs).

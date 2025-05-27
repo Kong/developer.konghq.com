@@ -130,7 +130,7 @@ creationTimestamp
 cronjob
 cryptocurrency
 Curity
-Curity
+curity
 DAO
 DAO
 dao
@@ -153,6 +153,7 @@ db_export
 db_import
 db-ip
 dbless
+dcr
 DECK_
 deck_files
 declaratively
