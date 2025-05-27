@@ -16,6 +16,8 @@ related_resources:
     url: /gateway/configuration/
   - text: "{{site.base_gateway}} CLI"
     url: /gateway/cli/reference/
+  - text: Nginx directive reference
+    url: /gateway/nginx-directives/
 
 works_on:
    - on-prem
