@@ -41,4 +41,40 @@ When {{ site.kic_product_name }} starts running it looks for services that match
 
 {{ site.kic_product_name }} proceeds to send configuration to all detected {{ site.base_gateway }} instances using the `POST /config` endpoint on each running Data Plane. Once the Data Plane has loaded configuration, it is marked as ready and can start proxying traffic.
 
-![Gateway Discovery Architecture Diagram](/assets/images/kic/topology/gateway-discovery.png)
+<!--vale off-->
+{% mermaid %}
+flowchart LR
+
+A[<img src="/assets/icons/kubernetes.svg" style="max-height:20px"> API Server]
+KIC1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC 
+&lpar;Active&rpar;]
+KIC2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC
+&lpar;Standby&rpar;]
+KIC3[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC
+&lpar;Standby&rpar;]
+DP1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
+DP2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
+DP3[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
+DP4[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
+
+A-.KIC watches 
+API server.- KIC1
+
+subgraph B["Deployment with
+leader election"]
+subgraph C[" "]
+  KIC1
+end
+  KIC2
+  KIC3
+end
+
+KIC1 ----> DP1 & DP2 & DP3 & DP4
+
+style B stroke-dasharray: 5 5
+style C stroke:none,fill:none
+
+{% endmermaid %}
+<!--vale on-->
+
+> _**Figure 1**: In a Gateway discovery deployment, one active {{ site.kic_product_name }} instance sends configuration to many {{site.base_gateway}}s, which are scaled independently. Multiple KIC instances can be run for high availability requirements._

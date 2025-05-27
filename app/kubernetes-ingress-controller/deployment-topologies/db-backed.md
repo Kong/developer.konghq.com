@@ -41,7 +41,51 @@ Both [Gateway Discovery](/kubernetes-ingress-controller/deployment-topologies/ga
 
 Traditional mode is when every {{ site.base_gateway }} instance acts as both a Control Plane and a Data Plane. All nodes connect to the database and load the latest configuration at a regular interval.
 
-![Traditional Architecture Diagram](/assets/images/kic/topology/db-backed-traditional.png)
+<!--vale off-->
+{% mermaid %}
+flowchart LR
+
+A[<img src="/assets/icons/kubernetes.svg" style="max-height:20px"> API Server]
+KIC1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC 
+&lpar;Active&rpar;]
+KIC2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC
+&lpar;Standby&rpar;]
+KIC3[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC
+&lpar;Standby&rpar;]
+DP1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
+DP2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
+DP3[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
+DP4[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
+
+A-.KIC watches 
+API server.- KIC1
+
+subgraph B[" "]
+  KIC1
+  KIC2
+  KIC3
+  note[Deployment with
+leader election]
+end
+
+subgraph C[" "]
+DB
+DP1
+DP2
+DP3
+DP4
+end
+
+KIC1 --> DP1
+DP1 --> DB[(Config 
+database)]
+DB --> DP2 & DP3 & DP4
+
+style B stroke-dasharray: 5 5
+style C stroke:none,fill:none
+style note stroke:none,fill:none
+{% endmermaid %}
+<!--vale on-->
 
 {{ site.kic_product_name }} sends configuration to a random {{ site.base_gateway }} instance, which writes the configuration to the database. All other nodes read the configuration from the database.
 
@@ -51,4 +95,48 @@ Database backed Hybrid mode is similar to Traditional mode, but instead of every
 
 In Hybrid mode, {{ site.kic_product_name }} uses Gateway Discovery to find the Control Plane and send {{ site.base_gateway }} configuration to the Admin API. This configuration is persisted to the PostgreSQL database and transmitted to the Data Planes using the {{ site.base_gateway }} CP/DP protocol.
 
-![Hybrid Mode Architecture Diagram](/assets/images/kic/topology/db-backed-hybrid.png)
+<!--vale off-->
+{% mermaid %}
+flowchart LR
+
+A[<img src="/assets/icons/kubernetes.svg" style="max-height:20px"> API Server]
+KIC1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC 
+&lpar;Active&rpar;]
+KIC2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC
+&lpar;Standby&rpar;]
+KIC3[<img src="/assets/icons/gateway.svg" style="max-height:20px"> KIC
+&lpar;Standby&rpar;]
+CP[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Control Plane]
+DP1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
+DP2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
+DP3[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
+DB[(Config 
+database)]
+
+A-.KIC watches 
+API server.-KIC1
+
+subgraph B[" "]
+  KIC1
+  KIC2
+  KIC3
+  note[Deployment with
+leader election]
+end
+
+subgraph C[" "]
+  DP1
+  DP2
+  DP3
+end
+
+KIC1 --> CP
+CP --> DP1 & DP2 & DP3
+CP --> DB
+
+style B stroke-dasharray: 5 5
+style C stroke-dasharray: 5 5
+style note stroke:none,fill:none
+
+{% endmermaid %}
+<!--vale on-->
