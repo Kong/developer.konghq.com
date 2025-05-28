@@ -10600,7 +10600,7 @@
         "scope": "Core"
       },
       {
-        "message": "**New plugins** :: : \n- \n\n**OpenTelemetry**:\n\nExport tracing instrumentations to any OTLP/HTTP compatible backend.`opentelemetry_tracing` configuration must be enabled to collect the core tracing spans of Kong Gateway.[#8826](https://github.com/Kong/kong/pull/8826)\n\n- \n\n**TLS Handshake Modifier**:\n\nMake certificates available to other plugins acting on the same request.\n\n- \n\n**TLS Metadata Headers**:\n\nProxy TLS client certificate metadata to upstream services via an HTTP headers.\n\n- \n\n**WebSocket Size Limit**:\n\nAllows operators to specify a maximum size for incoming WebSocket messages.\n\n- \n\n**WebSocket Validator**:\n\nValidate individual WebSocket messages against a user-specified schema before proxying them.",
+        "message": "**New plugins**: \n- \n\n**OpenTelemetry**:\n\nExport tracing instrumentations to any OTLP/HTTP compatible backend.`opentelemetry_tracing` configuration must be enabled to collect the core tracing spans of Kong Gateway.[#8826](https://github.com/Kong/kong/pull/8826)\n\n- \n\n**TLS Handshake Modifier**:\n\nMake certificates available to other plugins acting on the same request.\n\n- \n\n**TLS Metadata Headers**:\n\nProxy TLS client certificate metadata to upstream services via an HTTP headers.\n\n- \n\n**WebSocket Size Limit**:\n\nAllows operators to specify a maximum size for incoming WebSocket messages.\n\n- \n\n**WebSocket Validator**:\n\nValidate individual WebSocket messages against a user-specified schema before proxying them.",
         "type": "feature",
         "scope": "Plugin"
       }
