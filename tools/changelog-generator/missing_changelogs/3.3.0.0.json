@@ -21,7 +21,7 @@
       "scope": "Core"
     },
     {
-      "message": "Plugin batch queuing: [**HTTP Log**](/plugins/http-log/) (`http-log`), [**StatsD**](/plugins/statsd/) (`statsd`), [**OpenTelemetry**](/plugins/opentelemetry/) (`opentelemetry`), and [**Datadog**](/plugins/datadog/) (`datadog`)\n\nThe queuing system has been reworked, causing some plugin parameters to not function as expected anymore. If you use queues in these plugins, new parameters must be configured. See each plugin’s documentation for details.",
+      "message": "Plugin batch queuing: [HTTP Log](/plugins/http-log/), [StatsD](/plugins/statsd/), [OpenTelemetry](/plugins/opentelemetry/), and [Datadog](/plugins/datadog/) \n\nThe queuing system has been reworked, causing some plugin parameters to not function as expected anymore. If you use queues in these plugins, new parameters must be configured. See each plugin’s documentation for details.",
       "type": "breaking_change",
       "scope": "Plugin"
     },
@@ -41,12 +41,12 @@
       "scope": "Plugin"
     },
     {
-      "message": "****Pre-function**: `kong.cache` now points to a cache instance that is dedicated to the Serverless Functions plugins. It does not provide access to the global Kong Gateway cache. Access to certain fields in `kong.conf` has also been restricted.[#10417](https://github.com/Kong/kong/pull/10417)",
+      "message": "**Pre-function** and **Post-function**: `kong.cache` now points to a cache instance that is dedicated to the Serverless Functions plugins. It does not provide access to the global Kong Gateway cache. Access to certain fields in `kong.conf` has also been restricted.[#10417](https://github.com/Kong/kong/pull/10417)",
       "type": "breaking_change",
       "scope": "Plugin"
     },
     {
-      "message": "**Zipkin** This plugin now uses queues for internal buffering. The standard queue parameter set is available to control queuing behavior.[#10753](https://github.com/Kong/kong/pull/10753): ",
+      "message": "**Zipkin**: This plugin now uses queues for internal buffering. The standard queue parameter set is available to control queuing behavior.[#10753](https://github.com/Kong/kong/pull/10753)",
       "type": "breaking_change",
       "scope": "Plugin"
     },

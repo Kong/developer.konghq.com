@@ -246,7 +246,7 @@
       "scope": "Plugin"
     },
     {
-      "message": "**Session**: Added new config `cookie_persistent`, which allows the browser to persist cookies even if the browser is closed. This defaults to `false` which means cookies are not persisted across browser restarts. Thanks [@tschaume](https://github.com/tschaume)for this contribution![#8187](https://github.com/Kong/kong/pull/8187)",
+      "message": "**Session**: Added new config `cookie_persistent`, which allows the browser to persist cookies even if the browser is closed. This defaults to `false` which means cookies are not persisted across browser restarts. Thanks [@tschaume](https://github.com/tschaume)for this contribution! [#8187](https://github.com/Kong/kong/pull/8187)",
       "type": "feature",
       "scope": "Plugin"
     },
