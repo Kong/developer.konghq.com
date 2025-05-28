@@ -56,27 +56,27 @@
       "scope": "Core"
     },
     {
-      "message": "Request Transformer Advanced: Fixed an issue that was causing some requests to be proxied with the wrong query parameters.",
+      "message": "**Request Transformer Advanced**: Fixed an issue that was causing some requests to be proxied with the wrong query parameters.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "Response Transformer Advanced: Fixed an issue where large decimals were rounded when the plugin was being used.",
+      "message": "**Response Transformer Advanced**: Fixed an issue where large decimals were rounded when the plugin was being used.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "Rate Limiting Advanced: Fixed an issue where the control plane was trying to sync the rate-limiting-advanced counters with Redis.",
+      "message": "**Rate Limiting Advanced**: Fixed an issue where the control plane was trying to sync the rate-limiting-advanced counters with Redis.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "Rate Limiting Advanced: Fixed an issue where the `rl cluster_events` broadcasted the wrong data in traditional cluster mode.",
+      "message": "**Rate Limiting Advanced**: Fixed an issue where the `rl cluster_events` broadcasted the wrong data in traditional cluster mode.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "Oauth2: Fixed a bug that `refresh_token` could be shared across instances.",
+      "message": "**Oauth2**: Fixed a bug that `refresh_token` could be shared across instances.",
       "type": "bugfix",
       "scope": "Plugin"
     },
