@@ -206,7 +206,7 @@
       "scope": "Plugin"
     },
     {
-      "message": "**Rate Limiting**: The HTTP status code and response body for rate-limited requests can now be customized. Thanks, [@utix](https://github.com/utix)![#8930](https://github.com/Kong/kong/pull/8930)",
+      "message": "**Rate Limiting**: The HTTP status code and response body for rate-limited requests can now be customized. Thanks, [@utix](https://github.com/utix)! [#8930](https://github.com/Kong/kong/pull/8930)",
       "type": "feature",
       "scope": "Plugin"
     },

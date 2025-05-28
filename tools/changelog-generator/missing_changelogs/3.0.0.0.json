@@ -191,7 +191,7 @@
       "scope": "Plugin"
     },
     {
-      "message": "**New plugins**: \n- \n\n**OpenTelemetry**:\n\nExport tracing instrumentations to any OTLP/HTTP compatible backend.`opentelemetry_tracing` configuration must be enabled to collect the core tracing spans of Kong Gateway.[#8826](https://github.com/Kong/kong/pull/8826)\n\n- \n\n**TLS Handshake Modifier**:\n\nMake certificates available to other plugins acting on the same request.\n\n- \n\n**TLS Metadata Headers**:\n\nProxy TLS client certificate metadata to upstream services via an HTTP headers.\n\n- \n\n**WebSocket Size Limit**:\n\nAllows operators to specify a maximum size for incoming WebSocket messages.\n\n- \n\n**WebSocket Validator**:\n\nValidate individual WebSocket messages against a user-specified schema before proxying them.",
+      "message": "New plugins:\n- **OpenTelemetry**: Export tracing instrumentations to any OTLP/HTTP compatible backend.`opentelemetry_tracing` configuration must be enabled to collect the core tracing spans of Kong Gateway.[#8826](https://github.com/Kong/kong/pull/8826)\n- **TLS Handshake Modifier**: Make certificates available to other plugins acting on the same request.\n- **TLS Metadata Headers**: Proxy TLS client certificate metadata to upstream services via an HTTP headers.\n- **WebSocket Size Limit**: Allows operators to specify a maximum size for incoming WebSocket messages.\n- **WebSocket Validator**: Validate individual WebSocket messages against a user-specified schema before proxying them.",
       "type": "feature",
       "scope": "Plugin"
     },
@@ -267,11 +267,6 @@
     },
     {
       "message": "**Prometheus**: Decreased performance penalty to proxy traffic when collecting metrics.",
-      "type": "feature",
-      "scope": "Plugin"
-    },
-    {
-      "message": "**Prometheus**: The following metric names were adjusted to add units to standardize where possible: \n- `http_status` to `http_requests_total`.\n- \n\n`latency` to `kong_request_latency_ms` (HTTP), `kong_upstream_latency_ms`, `kong_kong_latency_ms`, and `session_duration_ms` (stream).\n\nKong latency and upstream latency can operate at orders of different magnitudes. Separate these buckets to reduce memory overhead.\n\n- `kong_bandwidth` to `kong_bandwidth_bytes`.\n- `nginx_http_current_connections` and `nginx_stream_current_connections` were merged into to `nginx_hconnections_total` (or `nginx_current_connections`?)\n- \n\n`request_count` and `consumer_status` were merged into http\\_requests\\_total.\n\nIf the `per_consumer` config is set to `false`, the `consumer` label will be empty. If the `per_consumer` config is `true`, the `consumer` label will be filled.",
       "type": "feature",
       "scope": "Plugin"
     },
@@ -531,22 +526,22 @@
       "scope": "PDK"
     },
     {
-      "message": "DAOs in plugins must be listed in an array, so that their loading order is explicit. Loading them in a hash-like table is no longer supported.[#8988](https://github.com/Kong/kong/pull/8988): ",
+      "message": "DAOs in plugins must be listed in an array, so that their loading order is explicit. Loading them in a hash-like table is no longer supported.[#8988](https://github.com/Kong/kong/pull/8988)",
       "type": "breaking_change",
       "scope": "Plugin"
     },
     {
-      "message": "Plugins MUST now have a valid `PRIORITY` (integer) and `VERSION` (“x.y.z” format) field in their `handler.lua` file, otherwise the plugin will fail to load.[#8836](https://github.com/Kong/kong/pull/8836): ",
+      "message": "Plugins MUST now have a valid `PRIORITY` (integer) and `VERSION` (“x.y.z” format) field in their `handler.lua` file, otherwise the plugin will fail to load.[#8836](https://github.com/Kong/kong/pull/8836)",
       "type": "breaking_change",
       "scope": "Plugin"
     },
     {
-      "message": "The old `kong.plugins.log-serializers.basic` library was removed in favor of the PDK function `kong.log.serialize`. Upgrade your plugins to use the PDK.[#8815](https://github.com/Kong/kong/pull/8815): ",
+      "message": "The old `kong.plugins.log-serializers.basic` library was removed in favor of the PDK function `kong.log.serialize`. Upgrade your plugins to use the PDK.[#8815](https://github.com/Kong/kong/pull/8815)",
       "type": "breaking_change",
       "scope": "Plugin"
     },
     {
-      "message": "The support for deprecated legacy plugin schemas was removed. If your custom plugins still use the old (`0.x era`) schemas, you are now forced to upgrade them.[#8815](https://github.com/Kong/kong/pull/8815): ",
+      "message": "The support for deprecated legacy plugin schemas was removed. If your custom plugins still use the old (`0.x era`) schemas, you are now forced to upgrade them.[#8815](https://github.com/Kong/kong/pull/8815)",
       "type": "breaking_change",
       "scope": "Plugin"
     },
@@ -656,7 +651,7 @@
       "scope": "Plugin"
     },
     {
-      "message": "Kong plugins no longer support `CREDENTIAL_USERNAME` (`X-Credential-Username`). Use the constant `CREDENTIAL_IDENTIFIER` (`X-Credential-Identifier`) when setting the upstream headers for a credential.[#8815](https://github.com/Kong/kong/pull/8815): ",
+      "message": "Kong plugins no longer support `CREDENTIAL_USERNAME` (`X-Credential-Username`). Use the constant `CREDENTIAL_IDENTIFIER` (`X-Credential-Identifier`) when setting the upstream headers for a credential.[#8815](https://github.com/Kong/kong/pull/8815)",
       "type": "breaking_change",
       "scope": "Plugin"
     },
@@ -701,7 +696,7 @@
       "scope": "Plugin"
     },
     {
-      "message": "**Prometheus**: The following metric names were adjusted to add units to standardize where possible: \n- `http_status` to `http_requests_total`.\n- \n\n`latency` to `kong_request_latency_ms` (HTTP), `kong_upstream_latency_ms`, `kong_kong_latency_ms`, and `session_duration_ms` (stream).\n\nKong latency and upstream latency can operate at orders of different magnitudes. Separate these buckets to reduce memory overhead.\n\n- `kong_bandwidth` to `kong_bandwidth_bytes`.\n- `nginx_http_current_connections` and `nginx_stream_current_connections` were merged into to `nginx_connections_total`.\n- \n\n`request_count` and `consumer_status` were merged into `http_requests_total`.\n\nIf the `per_consumer` config is set to `false`, the `consumer` label will be empty. If the `per_consumer` config is `true`, the `consumer` label will be filled.",
+      "message": "**Prometheus**: The following metric names were adjusted to add units to standardize where possible: \n- `http_status` to `http_requests_total`.\n- \n`latency` to `kong_request_latency_ms` (HTTP), `kong_upstream_latency_ms`, `kong_kong_latency_ms`, and `session_duration_ms` (stream).\n\nKong latency and upstream latency can operate at orders of different magnitudes. Separate these buckets to reduce memory overhead.\n\n- `kong_bandwidth` to `kong_bandwidth_bytes`.\n- `nginx_http_current_connections` and `nginx_stream_current_connections` were merged into to `nginx_connections_total`.\n- `request_count` and `consumer_status` were merged into `http_requests_total`.\n\nIf the `per_consumer` config is set to `false`, the `consumer` label will be empty. If the `per_consumer` config is `true`, the `consumer` label will be filled.",
       "type": "breaking_change",
       "scope": "Plugin"
     },
@@ -771,7 +766,7 @@
       "scope": "Plugin"
     },
     {
-      "message": "****Pre-function**: Removed the deprecated `config.functions` configuration parameter from the Serverless Functions plugins’ schemas. Use the `config.access` phase instead.[#8559](https://github.com/Kong/kong/pull/8559)",
+      "message": "**Pre-function**: Removed the deprecated `config.functions` configuration parameter from the Serverless Functions plugins’ schemas. Use the `config.access` phase instead.[#8559](https://github.com/Kong/kong/pull/8559)",
       "type": "breaking_change",
       "scope": "Plugin"
     },
@@ -1001,12 +996,12 @@
       "scope": "Admin API"
     },
     {
-      "message": "Plugins with colliding priorities have now deterministic sorting based on their name.[#8957](https://github.com/Kong/kong/pull/8957): ",
+      "message": "Plugins with colliding priorities have now deterministic sorting based on their name.[#8957](https://github.com/Kong/kong/pull/8957)",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "External plugins: Kong Gateway now handles logging better when a plugin instance loses the `instances_id` in an event handler.[#8652](https://github.com/Kong/kong/pull/8652): ",
+      "message": "External plugins: Kong Gateway now handles logging better when a plugin instance loses the `instances_id` in an event handler.[#8652](https://github.com/Kong/kong/pull/8652)",
       "type": "bugfix",
       "scope": "Plugin"
     },
@@ -1101,7 +1096,7 @@
       "scope": "Plugin"
     },
     {
-      "message": "****Pre-function**: Fixed a problem that could cause a crash.[#9269](https://github.com/Kong/kong/pull/9269)",
+      "message": "**Pre-function**: Fixed a problem that could cause a crash.[#9269](https://github.com/Kong/kong/pull/9269)",
       "type": "bugfix",
       "scope": "Plugin"
     },

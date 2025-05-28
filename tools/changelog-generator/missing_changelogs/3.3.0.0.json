@@ -386,17 +386,17 @@
       "scope": "Plugin"
     },
     {
-      "message": "[**Rate Limiting Advanced**](/plugins/rate-limiting-advanced/): The `redis` rate limiting strategy now returns an error when Redis Cluster is down.",
+      "message": "**Rate Limiting Advanced**: The `redis` rate limiting strategy now returns an error when Redis Cluster is down.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "[**Rate Limiting Advanced**](/plugins/rate-limiting-advanced/): Fixed an issue where the rate limiting `cluster_events` broadcast the wrong data in traditional cluster mode.",
+      "message": "**Rate Limiting Advanced**: Fixed an issue where the rate limiting `cluster_events` broadcast the wrong data in traditional cluster mode.",
       "type": "bugfix",
       "scope": "Plugin"
     },
     {
-      "message": "[**Rate Limiting Advanced**](/plugins/rate-limiting-advanced/): The control plane no longer creates namespace or syncs.",
+      "message": "**Rate Limiting Advanced**: The control plane no longer creates namespace or syncs.",
       "type": "bugfix",
       "scope": "Plugin"
     },

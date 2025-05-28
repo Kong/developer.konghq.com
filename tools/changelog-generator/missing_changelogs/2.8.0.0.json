@@ -26,17 +26,17 @@
       "scope": "Core"
     },
     {
-      "message": "You can customize the transparent dynamic TLS SNI name.\n\nThanks, [@Murphy-hub](https://github.com/Murphy-hub)![#8196](https://github.com/Kong/kong/pull/8196)",
+      "message": "You can customize the transparent dynamic TLS SNI name.\n\nThanks, [@Murphy-hub](https://github.com/Murphy-hub)! [#8196](https://github.com/Kong/kong/pull/8196)",
       "type": "feature",
       "scope": "Core"
     },
     {
-      "message": "Routes now support matching headers with regular expressions.\n\nThanks, [@vanhtuan0409](https://github.com/vanhtuan0409)![#6079](https://github.com/Kong/kong/pull/6079)",
+      "message": "Routes now support matching headers with regular expressions.\n\nThanks, [@vanhtuan0409](https://github.com/vanhtuan0409)! [#6079](https://github.com/Kong/kong/pull/6079)",
       "type": "feature",
       "scope": "Core"
     },
     {
-      "message": "You can now configure [`cluster_max_payload`](https://docs.konghq.com/gateway/latest/reference/configuration/#cluster_max_payload)for hybrid mode deployments. This configuration option sets the maximum payload size allowed to be sent across from the control plane to the data plane. If your environment has large configurations that generate `payload too big` errors and don’t get applied to the data planes, use this setting to adjust the limit.\n\nThanks, [@andrewgkew](https://github.com/andrewgkew)![#8337](https://github.com/Kong/kong/pull/8337)",
+      "message": "You can now configure [`cluster_max_payload`](https://docs.konghq.com/gateway/latest/reference/configuration/#cluster_max_payload)for hybrid mode deployments. This configuration option sets the maximum payload size allowed to be sent across from the control plane to the data plane. If your environment has large configurations that generate `payload too big` errors and don’t get applied to the data planes, use this setting to adjust the limit.\n\nThanks, [@andrewgkew](https://github.com/andrewgkew)! [#8337](https://github.com/Kong/kong/pull/8337)",
       "type": "feature",
       "scope": "Core"
     },
@@ -176,7 +176,7 @@
       "scope": "Plugin"
     },
     {
-      "message": "**Response Rate Limiting**: Added the `redis_username` configuration parameter.\n\nThanks, [@27ascii](https://github.com/27ascii) for the original contribution![#8213](https://github.com/Kong/kong/pull/8213)",
+      "message": "**Response Rate Limiting**: Added the `redis_username` configuration parameter.\n\nThanks, [@27ascii](https://github.com/27ascii) for the original contribution! [#8213](https://github.com/Kong/kong/pull/8213)",
       "type": "feature",
       "scope": "Plugin"
     },
@@ -206,7 +206,7 @@
       "scope": "Plugin"
     },
     {
-      "message": "**ACME**: Added the `rsa_key_size` configuration parameter.\n\nThanks, [lodrantl](https://github.com/lodrantl)![#8114](https://github.com/Kong/kong/pull/8114)",
+      "message": "**ACME**: Added the `rsa_key_size` configuration parameter.\n\nThanks, [lodrantl](https://github.com/lodrantl)! [#8114](https://github.com/Kong/kong/pull/8114)",
       "type": "feature",
       "scope": "Plugin"
     },
@@ -261,7 +261,7 @@
       "scope": "Core"
     },
     {
-      "message": "The Cassandra connector now records migration consistency level.\n\nThanks, [@mpenick](https://github.com/mpenick)![#8226](https://github.com/Kong/kong/pull/8226)",
+      "message": "The Cassandra connector now records migration consistency level.\n\nThanks, [@mpenick](https://github.com/mpenick)! [#8226](https://github.com/Kong/kong/pull/8226)",
       "type": "bugfix",
       "scope": "Core"
     },
@@ -301,7 +301,7 @@
       "scope": "Plugin"
     },
     {
-      "message": "**External Plugins** : Unwrap `ConsumerSpec` and `AuthenticateArgs`.\n\nThanks, [@raptium](https://github.com/raptium)![#8280](https://github.com/Kong/kong/pull/8280)",
+      "message": "**External Plugins** : Unwrap `ConsumerSpec` and `AuthenticateArgs`.\n\nThanks, [@raptium](https://github.com/raptium)! [#8280](https://github.com/Kong/kong/pull/8280)",
       "type": "bugfix",
       "scope": "Plugin"
     },
@@ -311,7 +311,7 @@
       "scope": "Plugin"
     },
     {
-      "message": "**CORS**: The CORS plugin does not send the `Vary: Origin` header anymore when the header `Access-Control-Allow-Origin` is set to `*`.\n\nThanks, [@jkla-dr](https://github.com/jkla-dr)![#8401](https://github.com/Kong/kong/pull/8401)",
+      "message": "**CORS**: The CORS plugin does not send the `Vary: Origin` header anymore when the header `Access-Control-Allow-Origin` is set to `*`.\n\nThanks, [@jkla-dr](https://github.com/jkla-dr)! [#8401](https://github.com/Kong/kong/pull/8401)",
       "type": "bugfix",
       "scope": "Plugin"
     },
