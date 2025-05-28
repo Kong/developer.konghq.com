@@ -127,7 +127,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**AI Plugins**: Fixed an issue where AI upstream URL trailing would be empty.\n",
+        "message": "**AI Plugins**: Fixed an issue where AI upstream URL trailing would be empty.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -3932,7 +3932,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Openid-Connect** configurations `scopes`, `login_redirect_uri`, `logout_redirect_uri` can now be referenced as a secret in the Kong Vault",
+        "message": "**Openid-Connect**: configurations `scopes`, `login_redirect_uri`, `logout_redirect_uri` can now be referenced as a secret in the Kong Vault",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -4158,7 +4158,7 @@
         "scope": "Core"
       },
       {
-        "message": "Fix several issues in Vault and refactor the Vault code base: - Make DAOs to fallback to empty string when resolving Vault references fail - Use node level mutex when rotation references  - Refresh references on config changes - Update plugin referenced values only once per request - Pass only the valid config options to vault implementations - Resolve multi-value secrets only once when rotating them - Do not start vault secrets rotation timer on control planes - Re-enable negative caching - Reimplement the kong.vault.try function - Remove references from rotation in case their configuration has changed\n",
+        "message": "Fix several issues in Vault and refactor the Vault code base:\n - Make DAOs to fallback to empty string when resolving Vault references fail\n - Use node level mutex when rotation references\n  - Refresh references on config changes \n- Update plugin referenced values only once per request\n - Pass only the valid config options to vault implementations\n - Resolve multi-value secrets only once when rotating them\n - Do not start vault secrets rotation timer on control planes\n - Re-enable negative caching\n - Reimplement the kong.vault.try function\n - Remove references from rotation in case their configuration has changed",
         "type": "bugfix",
         "scope": "PDK"
       },
@@ -8506,7 +8506,7 @@
         ]
       },
       {
-        "message": "Fix several issues in Vault and refactor the Vault code base: - Make DAOs to fallback to empty string when resolving Vault references fail - Use node level mutex when rotation references  - Refresh references on config changes - Update plugin referenced values only once per request - Pass only the valid config options to vault implementations - Resolve multi-value secrets only once when rotating them - Do not start vault secrets rotation timer on control planes - Re-enable negative caching - Reimplement the kong.vault.try function - Remove references from rotation in case their configuration has changed\n",
+        "message": "Fix several issues in Vault and refactor the Vault code base:\n - Make DAOs to fallback to empty string when resolving Vault references fail\n - Use node level mutex when rotation references\n  - Refresh references on config changes\n - Update plugin referenced values only once per request\n - Pass only the valid config options to vault implementations\n - Resolve multi-value secrets only once when rotating them\n - Do not start vault secrets rotation timer on control planes\n - Re-enable negative caching\n - Reimplement the kong.vault.try function\n - Remove references from rotation in case their configuration has changed",
         "type": "bugfix",
         "scope": "PDK",
         "prs": [
@@ -8579,7 +8579,7 @@
   "3.4.1.0": {
     "kong": [
       {
-        "message": "Fix several issues in Vault and refactor the Vault code base: - Make DAOs to fallback to empty string when resolving Vault references fail - Use node level mutex when rotation references  - Refresh references on config changes - Update plugin referenced values only once per request - Pass only the valid config options to vault implementations - Resolve multi-value secrets only once when rotating them - Do not start vault secrets rotation timer on control planes - Re-enable negative caching - Reimplement the kong.vault.try function - Remove references from rotation in case their configuration has changed\n",
+        "message": "Fix several issues in Vault and refactor the Vault code base:\n - Make DAOs to fallback to empty string when resolving Vault references fail\n - Use node level mutex when rotation references\n - Refresh references on config changes\n - Update plugin referenced values only once per request\n - Pass only the valid config options to vault implementations\n - Resolve multi-value secrets only once when rotating them\n - Do not start vault secrets rotation timer on control planes\n - Re-enable negative caching\n - Reimplement the kong.vault.try function\n - Remove references from rotation in case their configuration has changed",
         "type": "bugfix",
         "scope": "PDK",
         "prs": [
@@ -9615,7 +9615,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**New plugins**: \n- \n\n**OpenTelemetry**:\n\nExport tracing instrumentations to any OTLP/HTTP compatible backend.`opentelemetry_tracing` configuration must be enabled to collect the core tracing spans of Kong Gateway.[#8826](https://github.com/Kong/kong/pull/8826)\n\n- \n\n**TLS Handshake Modifier**:\n\nMake certificates available to other plugins acting on the same request.\n\n- \n\n**TLS Metadata Headers**:\n\nProxy TLS client certificate metadata to upstream services via an HTTP headers.\n\n- \n\n**WebSocket Size Limit**:\n\nAllows operators to specify a maximum size for incoming WebSocket messages.\n\n- \n\n**WebSocket Validator**:\n\nValidate individual WebSocket messages against a user-specified schema before proxying them.",
+        "message": "New plugins:\n- **OpenTelemetry**: Export tracing instrumentations to any OTLP/HTTP compatible backend.`opentelemetry_tracing` configuration must be enabled to collect the core tracing spans of Kong Gateway.[#8826](https://github.com/Kong/kong/pull/8826)\n- **TLS Handshake Modifier**: Make certificates available to other plugins acting on the same request.\n- **TLS Metadata Headers**: Proxy TLS client certificate metadata to upstream services via an HTTP headers.\n- **WebSocket Size Limit**: Allows operators to specify a maximum size for incoming WebSocket messages.\n- **WebSocket Validator**: Validate individual WebSocket messages against a user-specified schema before proxying them.",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -9692,11 +9692,6 @@
       {
         "message": "**Prometheus**: Decreased performance penalty to proxy traffic when collecting metrics.",
         "type": "breaking_change",
-        "scope": "Plugin"
-      },
-      {
-        "message": "**Prometheus**: The following metric names were adjusted to add units to standardize where possible: \n- `http_status` to `http_requests_total`.\n- \n\n`latency` to `kong_request_latency_ms` (HTTP), `kong_upstream_latency_ms`, `kong_kong_latency_ms`, and `session_duration_ms` (stream).\n\nKong latency and upstream latency can operate at orders of different magnitudes. Separate these buckets to reduce memory overhead.\n\n- `kong_bandwidth` to `kong_bandwidth_bytes`.\n- `nginx_http_current_connections` and `nginx_stream_current_connections` were merged into to `nginx_hconnections_total` (or `nginx_current_connections`?)\n- \n\n`request_count` and `consumer_status` were merged into http\\_requests\\_total.\n\nIf the `per_consumer` config is set to `false`, the `consumer` label will be empty. If the `per_consumer` config is `true`, the `consumer` label will be filled.",
-        "type": "feature",
         "scope": "Plugin"
       },
       {
@@ -9955,22 +9950,22 @@
         "scope": "PDK"
       },
       {
-        "message": "DAOs in plugins must be listed in an array, so that their loading order is explicit. Loading them in a hash-like table is no longer supported.[#8988](https://github.com/Kong/kong/pull/8988): ",
+        "message": "DAOs in plugins must be listed in an array, so that their loading order is explicit. Loading them in a hash-like table is no longer supported.[#8988](https://github.com/Kong/kong/pull/8988)",
         "type": "breaking_change",
         "scope": "Plugin"
       },
       {
-        "message": "Plugins MUST now have a valid `PRIORITY` (integer) and `VERSION` (“x.y.z” format) field in their `handler.lua` file, otherwise the plugin will fail to load.[#8836](https://github.com/Kong/kong/pull/8836): ",
+        "message": "Plugins MUST now have a valid `PRIORITY` (integer) and `VERSION` (“x.y.z” format) field in their `handler.lua` file, otherwise the plugin will fail to load.[#8836](https://github.com/Kong/kong/pull/8836)",
         "type": "breaking_change",
         "scope": "Plugin"
       },
       {
-        "message": "The old `kong.plugins.log-serializers.basic` library was removed in favor of the PDK function `kong.log.serialize`. Upgrade your plugins to use the PDK.[#8815](https://github.com/Kong/kong/pull/8815): ",
+        "message": "The old `kong.plugins.log-serializers.basic` library was removed in favor of the PDK function `kong.log.serialize`. Upgrade your plugins to use the PDK.[#8815](https://github.com/Kong/kong/pull/8815)",
         "type": "breaking_change",
         "scope": "Plugin"
       },
       {
-        "message": "The support for deprecated legacy plugin schemas was removed. If your custom plugins still use the old (`0.x era`) schemas, you are now forced to upgrade them.[#8815](https://github.com/Kong/kong/pull/8815): ",
+        "message": "The support for deprecated legacy plugin schemas was removed. If your custom plugins still use the old (`0.x era`) schemas, you are now forced to upgrade them.[#8815](https://github.com/Kong/kong/pull/8815)",
         "type": "breaking_change",
         "scope": "Plugin"
       },
@@ -10080,7 +10075,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "Kong plugins no longer support `CREDENTIAL_USERNAME` (`X-Credential-Username`). Use the constant `CREDENTIAL_IDENTIFIER` (`X-Credential-Identifier`) when setting the upstream headers for a credential.[#8815](https://github.com/Kong/kong/pull/8815): ",
+        "message": "Kong plugins no longer support `CREDENTIAL_USERNAME` (`X-Credential-Username`). Use the constant `CREDENTIAL_IDENTIFIER` (`X-Credential-Identifier`) when setting the upstream headers for a credential.[#8815](https://github.com/Kong/kong/pull/8815)",
         "type": "breaking_change",
         "scope": "Plugin"
       },
@@ -10115,7 +10110,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Prometheus**: The following metric names were adjusted to add units to standardize where possible: \n- `http_status` to `http_requests_total`.\n- \n\n`latency` to `kong_request_latency_ms` (HTTP), `kong_upstream_latency_ms`, `kong_kong_latency_ms`, and `session_duration_ms` (stream).\n\nKong latency and upstream latency can operate at orders of different magnitudes. Separate these buckets to reduce memory overhead.\n\n- `kong_bandwidth` to `kong_bandwidth_bytes`.\n- `nginx_http_current_connections` and `nginx_stream_current_connections` were merged into to `nginx_connections_total`.\n- \n\n`request_count` and `consumer_status` were merged into `http_requests_total`.\n\nIf the `per_consumer` config is set to `false`, the `consumer` label will be empty. If the `per_consumer` config is `true`, the `consumer` label will be filled.",
+        "message": "**Prometheus**: The following metric names were adjusted to add units to standardize where possible: \n- `http_status` to `http_requests_total`.\n- \n`latency` to `kong_request_latency_ms` (HTTP), `kong_upstream_latency_ms`, `kong_kong_latency_ms`, and `session_duration_ms` (stream).\n\nKong latency and upstream latency can operate at orders of different magnitudes. Separate these buckets to reduce memory overhead.\n\n- `kong_bandwidth` to `kong_bandwidth_bytes`.\n- `nginx_http_current_connections` and `nginx_stream_current_connections` were merged into to `nginx_connections_total`.\n- `request_count` and `consumer_status` were merged into `http_requests_total`.\n\nIf the `per_consumer` config is set to `false`, the `consumer` label will be empty. If the `per_consumer` config is `true`, the `consumer` label will be filled.",
         "type": "breaking_change",
         "scope": "Plugin"
       },
@@ -10140,7 +10135,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "****Pre-function**: Removed the deprecated `config.functions` configuration parameter from the Serverless Functions plugins’ schemas. Use the `config.access` phase instead.[#8559](https://github.com/Kong/kong/pull/8559)",
+        "message": "**Pre-function**: Removed the deprecated `config.functions` configuration parameter from the Serverless Functions plugins’ schemas. Use the `config.access` phase instead.[#8559](https://github.com/Kong/kong/pull/8559)",
         "type": "breaking_change",
         "scope": "Plugin"
       },
@@ -10370,12 +10365,12 @@
         "scope": "Admin API"
       },
       {
-        "message": "Plugins with colliding priorities have now deterministic sorting based on their name.[#8957](https://github.com/Kong/kong/pull/8957): ",
+        "message": "Plugins with colliding priorities have now deterministic sorting based on their name.[#8957](https://github.com/Kong/kong/pull/8957)",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "External plugins: Kong Gateway now handles logging better when a plugin instance loses the `instances_id` in an event handler.[#8652](https://github.com/Kong/kong/pull/8652): ",
+        "message": "External plugins: Kong Gateway now handles logging better when a plugin instance loses the `instances_id` in an event handler.[#8652](https://github.com/Kong/kong/pull/8652)",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -10470,7 +10465,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "****Pre-function**: Fixed a problem that could cause a crash.[#9269](https://github.com/Kong/kong/pull/9269)",
+        "message": "**Pre-function**: Fixed a problem that could cause a crash.[#9269](https://github.com/Kong/kong/pull/9269)",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -11336,17 +11331,17 @@
         "scope": "Core"
       },
       {
-        "message": "You can customize the transparent dynamic TLS SNI name.\n\nThanks, [@Murphy-hub](https://github.com/Murphy-hub)![#8196](https://github.com/Kong/kong/pull/8196)",
+        "message": "You can customize the transparent dynamic TLS SNI name.\n\nThanks, [@Murphy-hub](https://github.com/Murphy-hub)! [#8196](https://github.com/Kong/kong/pull/8196)",
         "type": "feature",
         "scope": "Core"
       },
       {
-        "message": "Routes now support matching headers with regular expressions.\n\nThanks, [@vanhtuan0409](https://github.com/vanhtuan0409)![#6079](https://github.com/Kong/kong/pull/6079)",
+        "message": "Routes now support matching headers with regular expressions.\n\nThanks, [@vanhtuan0409](https://github.com/vanhtuan0409)! [#6079](https://github.com/Kong/kong/pull/6079)",
         "type": "feature",
         "scope": "Core"
       },
       {
-        "message": "You can now configure [`cluster_max_payload`](https://docs.konghq.com/gateway/latest/reference/configuration/#cluster_max_payload)for hybrid mode deployments. This configuration option sets the maximum payload size allowed to be sent across from the control plane to the data plane. If your environment has large configurations that generate `payload too big` errors and don’t get applied to the data planes, use this setting to adjust the limit.\n\nThanks, [@andrewgkew](https://github.com/andrewgkew)![#8337](https://github.com/Kong/kong/pull/8337)",
+        "message": "You can now configure [`cluster_max_payload`](https://docs.konghq.com/gateway/latest/reference/configuration/#cluster_max_payload)for hybrid mode deployments. This configuration option sets the maximum payload size allowed to be sent across from the control plane to the data plane. If your environment has large configurations that generate `payload too big` errors and don’t get applied to the data planes, use this setting to adjust the limit.\n\nThanks, [@andrewgkew](https://github.com/andrewgkew)! [#8337](https://github.com/Kong/kong/pull/8337)",
         "type": "feature",
         "scope": "Core"
       },
@@ -11486,7 +11481,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Response Rate Limiting**: Added the `redis_username` configuration parameter.\n\nThanks, [@27ascii](https://github.com/27ascii) for the original contribution![#8213](https://github.com/Kong/kong/pull/8213)",
+        "message": "**Response Rate Limiting**: Added the `redis_username` configuration parameter.\n\nThanks, [@27ascii](https://github.com/27ascii) for the original contribution! [#8213](https://github.com/Kong/kong/pull/8213)",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -11516,7 +11511,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**ACME**: Added the `rsa_key_size` configuration parameter.\n\nThanks, [lodrantl](https://github.com/lodrantl)![#8114](https://github.com/Kong/kong/pull/8114)",
+        "message": "**ACME**: Added the `rsa_key_size` configuration parameter.\n\nThanks, [lodrantl](https://github.com/lodrantl)! [#8114](https://github.com/Kong/kong/pull/8114)",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -11571,7 +11566,7 @@
         "scope": "Core"
       },
       {
-        "message": "The Cassandra connector now records migration consistency level.\n\nThanks, [@mpenick](https://github.com/mpenick)![#8226](https://github.com/Kong/kong/pull/8226)",
+        "message": "The Cassandra connector now records migration consistency level.\n\nThanks, [@mpenick](https://github.com/mpenick)! [#8226](https://github.com/Kong/kong/pull/8226)",
         "type": "bugfix",
         "scope": "Core"
       },
@@ -11611,7 +11606,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**External Plugins** : Unwrap `ConsumerSpec` and `AuthenticateArgs`.\n\nThanks, [@raptium](https://github.com/raptium)![#8280](https://github.com/Kong/kong/pull/8280)",
+        "message": "**External Plugins** : Unwrap `ConsumerSpec` and `AuthenticateArgs`.\n\nThanks, [@raptium](https://github.com/raptium)! [#8280](https://github.com/Kong/kong/pull/8280)",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -11621,7 +11616,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**CORS**: The CORS plugin does not send the `Vary: Origin` header anymore when the header `Access-Control-Allow-Origin` is set to `*`.\n\nThanks, [@jkla-dr](https://github.com/jkla-dr)![#8401](https://github.com/Kong/kong/pull/8401)",
+        "message": "**CORS**: The CORS plugin does not send the `Vary: Origin` header anymore when the header `Access-Control-Allow-Origin` is set to `*`.\n\nThanks, [@jkla-dr](https://github.com/jkla-dr)! [#8401](https://github.com/Kong/kong/pull/8401)",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -12959,17 +12954,17 @@
         "scope": "Plugin"
       },
       {
-        "message": "[**Rate Limiting Advanced**](/plugins/rate-limiting-advanced/): The `redis` rate limiting strategy now returns an error when Redis Cluster is down.",
+        "message": "**Rate Limiting Advanced**: The `redis` rate limiting strategy now returns an error when Redis Cluster is down.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "[**Rate Limiting Advanced**](/plugins/rate-limiting-advanced/): Fixed an issue where the rate limiting `cluster_events` broadcast the wrong data in traditional cluster mode.",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where the rate limiting `cluster_events` broadcast the wrong data in traditional cluster mode.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "[**Rate Limiting Advanced**](/plugins/rate-limiting-advanced/): The control plane no longer creates namespace or syncs.",
+        "message": "**Rate Limiting Advanced**: The control plane no longer creates namespace or syncs.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -13134,12 +13129,12 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Pre-function**  and **Post-function**: `kong.cache` now points to a cache instance that is dedicated to the Serverless Functions plugins. It does not provide access to the global Kong Gateway cache. Access to certain fields in `kong.conf` has also been restricted.[#10417](https://github.com/Kong/kong/pull/10417)",
+        "message": "**Zipkin**: This plugin now uses queues for internal buffering. The standard queue parameter set is available to control queuing behavior.[#10753](https://github.com/Kong/kong/pull/10753)",
         "type": "breaking_change",
         "scope": "Plugin"
       },
       {
-        "message": "**Zipkin**: This plugin now uses queues for internal buffering. The standard queue parameter set is available to control queuing behavior.[#10753](https://github.com/Kong/kong/pull/10753)",
+        "message": "**Pre-function** and **Post-function**: `kong.cache` now points to a cache instance that is dedicated to the Serverless Functions plugins. It does not provide access to the global Kong Gateway cache. Access to certain fields in `kong.conf` has also been restricted.[#10417](https://github.com/Kong/kong/pull/10417)",
         "type": "breaking_change",
         "scope": "Plugin"
       }
@@ -13169,7 +13164,7 @@
         "scope": "Core"
       },
       {
-        "message": "Sessions library upgrade [#10199](https://github.com/Kong/kong/pull/10199):\n\n- \n\nThe [`lua-resty-session`](https://github.com/bungle/lua-resty-session) library has been upgraded to v4.0.0. This version includes a full rewrite of the session library, and is not backwards compatible.\n\nThis library is used by the following plugins: [**Session**](/plugins/session/), [**OpenID Connect**](/plugins/openid-connect/), and [**SAML**](/plugins/saml/). This also affects any session configuration that uses the Session or OpenID Connect plugin in the background, including sessions for Kong Manager and Dev Portal.\n\nAll existing sessions are invalidated when upgrading to this version. For sessions to work as expected in this version, all nodes must run Kong Gateway 3.2.x or later. For that reason, we recommend that during upgrades, proxy nodes with mixed versions run for as little time as possible. During that time, the invalid sessions could cause failures and partial downtime.\n\n- \n\nParameters:\n\n  - The new parameter `idling_timeout`, which replaces `cookie_lifetime`, now has a default value of 900. Unless configured differently, sessions expire after 900 seconds (15 minutes) of idling.\n  - The new parameter `absolute_timeout` has a default value of 86400. Unless configured differently, sessions expire after 86400 seconds (24 hours).\n  - Many session parameters have been renamed or removed. Although your configuration will continue to work as previously configured, we recommend adjusting your configuration to avoid future unexpected behavior. Refer to the [upgrade guide for 3.2](https://docs.konghq.com/gateway/latest/upgrade/#session-library-upgrade) for all session configuration changes and guidance on how to convert your existing session configuration.",
+        "message": "Sessions library upgrade [#10199](https://github.com/Kong/kong/pull/10199):\n\n- The [`lua-resty-session`](https://github.com/bungle/lua-resty-session) library has been upgraded to v4.0.0. This version includes a full rewrite of the session library, and is not backwards compatible.<br>This library is used by the following plugins: [**Session**](/plugins/session/), [**OpenID Connect**](/plugins/openid-connect/), and [**SAML**](/plugins/saml/). This also affects any session configuration that uses the Session or OpenID Connect plugin in the background, including sessions for Kong Manager and Dev Portal.<br>All existing sessions are invalidated when upgrading to this version. For sessions to work as expected in this version, all nodes must run Kong Gateway 3.2.x or later. For that reason, we recommend that during upgrades, proxy nodes with mixed versions run for as little time as possible. During that time, the invalid sessions could cause failures and partial downtime.\n\n- Parameters:\n\n  - The new parameter `idling_timeout`, which replaces `cookie_lifetime`, now has a default value of 900. Unless configured differently, sessions expire after 900 seconds (15 minutes) of idling.\n  - The new parameter `absolute_timeout` has a default value of 86400. Unless configured differently, sessions expire after 86400 seconds (24 hours).\n  - Many session parameters have been renamed or removed. Although your configuration will continue to work as previously configured, we recommend adjusting your configuration to avoid future unexpected behavior. Refer to the [upgrade guide for 3.2](https://docs.konghq.com/gateway/latest/upgrade/#session-library-upgrade) for all session configuration changes and guidance on how to convert your existing session configuration.",
         "type": "breaking_change",
         "scope": "Core"
       },
@@ -13219,12 +13214,12 @@
         "scope": "Core"
       },
       {
-        "message": "**FIPS Support** : \n- \n\nThe OpenID Connect, Key Authentication - Encrypted, and JWT Signer plugins are now [FIPS 140-2 compliant](https://docs.konghq.com/gateway/latest/kong-enterprise/fips-support/).\n\nIf you are migrating from Kong Gateway 3.1 to 3.2 in FIPS mode and are using the `key-auth-enc` plugin, you should send [PATCH or POST requests](/plugins/key-auth-enc/#create-a-key) to all existing `key-auth-enc` credentials to re-hash them in SHA256.\n\n- \n\nFIPS-compliant Kong Gateway packages now support PostgreSQL SSL connections.",
+        "message": "**FIPS Support**: \n- The OpenID Connect, Key Authentication - Encrypted, and JWT Signer plugins are now [FIPS 140-2 compliant](https://docs.konghq.com/gateway/latest/kong-enterprise/fips-support/).\nIf you are migrating from Kong Gateway 3.1 to 3.2 in FIPS mode and are using the `key-auth-enc` plugin, you should send [PATCH or POST requests](/plugins/key-auth-enc/#create-a-key) to all existing `key-auth-enc` credentials to re-hash them in SHA256.\n\n- FIPS-compliant Kong Gateway packages now support PostgreSQL SSL connections.",
         "type": "feature",
         "scope": "Core"
       },
       {
-        "message": "**Plugin entity** : Added an optional `instance_name` field, which identifies a particular plugin entity.[#10077](https://github.com/Kong/kong/pull/10077): ",
+        "message": "**Plugin entity**: Added an optional `instance_name` field, which identifies a particular plugin entity.[#10077](https://github.com/Kong/kong/pull/10077): ",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -13562,16 +13557,6 @@
         "message": "Bumped `libxml` from 2.10.2 to 2.10.3 to resolve [CVE-2022-40303](https://nvd.nist.gov/vuln/detail/cve-2022-40303) and [CVE-2022-40304](https://nvd.nist.gov/vuln/detail/cve-2022-40304)",
         "type": "dependency",
         "scope": "Core"
-      },
-      {
-        "message": "Sessions library upgrade [#10199](https://github.com/Kong/kong/pull/10199):\n\n- The [`lua-resty-session`](https://github.com/bungle/lua-resty-session) library has been upgraded to v4.0.0. This version includes a full rewrite of the session library, and is not backwards compatible.\n\nThis library is used by the following plugins: [**Session**](/plugins/session/), [**OpenID Connect**](/plugins/openid-connect/), and [**SAML**](/plugins/saml/). This also affects any session configuration that uses the Session or OpenID Connect plugin in the background, including sessions for Kong Manager and Dev Portal.\n\nAll existing sessions are invalidated when upgrading to this version. For sessions to work as expected in this version, all nodes must run Kong Gateway 3.2.x or later. For that reason, we recommend that during upgrades, proxy nodes with mixed versions run for as little time as possible. During that time, the invalid sessions could cause failures and partial downtime.\n\n- Parameters:\n\n  - The new parameter `idling_timeout`, which replaces `cookie_lifetime`, now has a default value of 900. Unless configured differently, sessions expire after 900 seconds (15 minutes) of idling.\n  - The new parameter `absolute_timeout` has a default value of 86400. Unless configured differently, sessions expire after 86400 seconds (24 hours).\n  - Many session parameters have been renamed or removed. Although your configuration will continue to work as previously configured, we recommend adjusting your configuration to avoid future unexpected behavior. Refer to the [upgrade guide for 3.2](https://docs.konghq.com/gateway/latest/upgrade/#session-library-upgrade) for all session configuration changes and guidance on how to convert your existing session configuration.",
-        "type": "breaking_change",
-        "scope": "Core"
-      },
-      {
-        "message": "**FIPS Support**: \n- The OpenID Connect, Key Authentication - Encrypted, and JWT Signer plugins are now [FIPS 140-2 compliant](https://docs.konghq.com/gateway/latest/kong-enterprise/fips-support/).\n\nIf you are migrating from Kong Gateway 3.1 to 3.2 in FIPS mode and are using the `key-auth-enc` plugin, you should send [PATCH or POST requests](/plugins/key-auth-enc/#create-a-key) to all existing `key-auth-enc` credentials to re-hash them in SHA256.\n\n- FIPS-compliant Kong Gateway packages now support PostgreSQL SSL connections.",
-        "type": "feature",
-        "scope": "Core"
       }
     ],
     "kong-manager-ee": []
@@ -13784,7 +13769,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting**: The HTTP status code and response body for rate-limited requests can now be customized. Thanks, [@utix](https://github.com/utix)![#8930](https://github.com/Kong/kong/pull/8930)",
+        "message": "**Rate Limiting**: The HTTP status code and response body for rate-limited requests can now be customized. Thanks, [@utix](https://github.com/utix)! [#8930](https://github.com/Kong/kong/pull/8930)",
         "type": "feature",
         "scope": "Plugin"
       },
