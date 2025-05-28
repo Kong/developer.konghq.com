@@ -4,12 +4,60 @@ module Jekyll
   module Drops
     class GatewayChangelog < Liquid::Drop # rubocop:disable Style/Documentation
       class Entries < Liquid::Drop # rubocop:disable Style/Documentation
+        NO_LINK = '_no_link_'
+
         def initialize(entries:) # rubocop:disable Lint/MissingSuper
           @entries = entries
+
+          group_plugin_entries
         end
 
         def by_scope
-          @by_scope ||= @entries.group_by { |e| e['scope'] }
+          @by_scope ||= begin
+            grouped = @entries.group_by { |e| e['scope'] }
+            grouped['Plugin'] = group_plugin_entries if grouped.key?('Plugin')
+            grouped
+          end
+        end
+
+        def group_plugin_entries
+          @group_plugin_entries ||= strip_plugin_from_messages(
+            group_messages_by_plugin(
+              @entries.group_by { |e| e['scope'] }.fetch('Plugin', [])
+            )
+          ).sort.to_h
+        end
+
+        private
+
+        def leading_markdown_link(message)
+          match = message.match(/^\[.*?\]\(.*?\)\s*:/)
+          p match
+          match ? match[0] : nil
+        end
+
+        def leading_markdown_bold(message)
+          match = message.match(/^\*\*(.*)\*\*\s*:/)
+          p match
+          match ? match[0] : nil
+        end
+
+        def group_messages_by_plugin(data)
+          data.group_by do |entry|
+            leading_markdown_link(entry['message']) || leading_markdown_bold(entry['message']) || NO_LINK
+          end
+        end
+
+        def strip_plugin_from_messages(hash)
+          hash.each_with_object({}) do |(key, value), h|
+            h[key] = value.map do |v|
+              if key != NO_LINK
+                message = v['message'].sub(/^#{Regexp.escape(key)}/, '')
+                v['message'] = message
+              end
+              v
+            end
+          end
         end
       end
 
