@@ -50,7 +50,7 @@ services:
       retries: 5
 
   knep:
-    image: kong/kong-native-event-proxy:{{ site.data.event-gateway_latest.version }}
+    image: kong/kong-native-event-proxy:latest
     container_name: knep
     depends_on:
       - broker
