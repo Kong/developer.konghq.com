@@ -1,0 +1,560 @@
+{
+  "kong-ee": [
+    {
+      "message": "**Alpine deprecation reminder:** Kong has announced our intent to remove support for Alpine images and packages later this year. These images and packages are still available in 3.3. We will stop building Alpine images and packages in Kong Gateway 3.4.",
+      "type": "breaking_change",
+      "scope": "Core"
+    },
+    {
+      "message": "**Cassandra deprecation and removal reminder:** Using Cassandra as a backend database for Kong Gateway is deprecated. It is planned for removal with Kong Gateway 3.4.",
+      "type": "breaking_change",
+      "scope": "Core"
+    },
+    {
+      "message": "The `traditional_compat` router mode has been made more compatible with the behavior of `traditional` mode by splitting routes with multiple paths into multiple `atc` routes with separate priorities. Since the introduction of the new router in Kong Gateway 3.0, `traditional_compat` mode assigned only one priority to each route, even if different prefix path lengths and regular expressions were mixed in a route. This was not how multiple paths were handled in the`traditional` router and the behavior has now been changed so that a separate priority value is assigned to each path in a route.[#10615](https://github.com/Kong/kong/pull/10615)",
+      "type": "breaking_change",
+      "scope": "Core"
+    },
+    {
+      "message": "**Tracing** : `tracing_sampling_rate` now defaults to 0.01 (trace one of every 100 requests) instead of the previous 1 (trace all requests). Tracing all requests causes unnecessary resource drain for most production systems.[#10774](https://github.com/Kong/kong/pull/10774)",
+      "type": "breaking_change",
+      "scope": "Core"
+    },
+    {
+      "message": "Plugin batch queuing: [**HTTP Log**](/plugins/http-log/) (`http-log`), [**StatsD**](/plugins/statsd/) (`statsd`), [**OpenTelemetry**](/plugins/opentelemetry/) (`opentelemetry`), and [**Datadog**](/plugins/datadog/) (`datadog`)\n\nThe queuing system has been reworked, causing some plugin parameters to not function as expected anymore. If you use queues in these plugins, new parameters must be configured. See each plugin’s documentation for details.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Plugin batch queuing: The module `kong.tools.batch_queue` has been renamed to `kong.tools.queue` and the API was changed. If your custom plugin uses queues, it must be updated to use the new API.[#10172](https://github.com/Kong/kong/pull/10172)",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**AppDynamics**: The plugin version has been updated to match Kong Gateway’s version.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**HTTP Log**: If the log server responds with a 3xx HTTP status code, the plugin now considers it to be an error and retries according to the retry configuration. Previously, 3xx status codes would be interpreted as a success, causing the log entries to be dropped.[#10172](https://github.com/Kong/kong/pull/10172)",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "****Pre-function**: `kong.cache` now points to a cache instance that is dedicated to the Serverless Functions plugins. It does not provide access to the global Kong Gateway cache. Access to certain fields in `kong.conf` has also been restricted.[#10417](https://github.com/Kong/kong/pull/10417)",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Zipkin** This plugin now uses queues for internal buffering. The standard queue parameter set is available to control queuing behavior.[#10753](https://github.com/Kong/kong/pull/10753): ",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "When using the [data plane resilience feature](https://docs.konghq.com/gateway/latest/kong-enterprise/cp-outage-handling-faq/), the server-side certificate of the backend Amazon S3 or GCP Cloud Storage service will now be validated if it goes through HTTPS.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "When [managing secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/) with an AWS or GCP backend, the backend server’s certificate is now validated if it goes through HTTPS.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Kong Enterprise now supports [using AWS IAM database authentication to connect to the Amazon RDS](https://docs.konghq.com/gateway/latest/kong-enterprise/aws-iam-auth-to-rds-database/) (PostgreSQL) database.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Kong Manager: \n- Kong Manager and Konnect now share the same UI for the navbar, sidebar, and all entity lists.\n- Improved display for the routes list when the expressions router is enabled.\n- **CA Certificates** and **TLS Verify** are now supported in the Kong Gateway service form.\n- Added a GitHub star in the free mode navbar.\n- Upgraded the Konnect CTA in free mode.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "SBOM files in SPDX and CycloneDX are now generated for Kong Gateway’s Docker images.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "You can now configure [labels for data planes](https://docs.konghq.com/konnect/runtime-manager/runtime-instances/custom-dp-labels/)to provide metadata information for Konnect.[#10471](https://github.com/Kong/kong/pull/10471)",
+      "type": "feature",
+      "scope": "kong-gateway-with-konnect"
+    },
+    {
+      "message": "Sending analytics to Konnect from Kong Gateway DB-less mode is now supported.",
+      "type": "feature",
+      "scope": "kong-gateway-with-konnect"
+    },
+    {
+      "message": "`runloop` and `init` error response content types are now compliant with the `Accept` header value.[#10366](https://github.com/Kong/kong/pull/10366)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "You can now configure custom error templates.[#10374](https://github.com/Kong/kong/pull/10374)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "The maximum number of request headers, response headers, URI arguments, and POST arguments that are parsed by default can now be configured with the following new configuration parameters:[`lua_max_req_headers`](https://docs.konghq.com/gateway/latest/reference/configuration/#lua_max_req_headers), [`lua_max_resp_headers`](https://docs.konghq.com/gateway/latest/reference/configuration/#lua_max_resp_headers), [`lua_max_uri_args`](https://docs.konghq.com/gateway/latest/reference/configuration/#lua_max_uri_args), and [`lua_max_post_args`](https://docs.konghq.com/gateway/latest/reference/configuration/#lua_max_post_args).[#10443](https://github.com/Kong/kong/pull/10443)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Added PostgreSQL triggers on the core entites and entities in bundled plugins to delete expired rows in an efficient and timely manner.[#10389](https://github.com/Kong/kong/pull/10389)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Added support for configurable node IDs.[#10385](https://github.com/Kong/kong/pull/10385)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Request and response buffering options are now enabled for incoming HTTP 2.0 requests.\n\nThanks [@PidgeyBE](https://github.com/PidgeyBE) for contributing this change. [#10204](https://github.com/Kong/kong/pull/10204) [#10595](https://github.com/Kong/kong/pull/10595)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Added `KONG_UPSTREAM_DNS_TIME` to `ngx.ctx` to record the time it takes for DNS resolution when Kong proxies to an upstream.[#10355](https://github.com/Kong/kong/pull/10355)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Dynamic log levels now have a default timeout of 60 seconds.[#10288](https://github.com/Kong/kong/pull/10288)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Added a new `updated_at` field for the following entities: `ca_certificates`, `certificates`, `consumers`, `targets`, `upstreams`, `plugins`, `workspaces`, `clustering_data_planes`, `consumer_group_consumers`, `consumer_group_plugins`, `consumer_groups`, `credentials`, `document_objects`, `event_hooks`, `files`, `group_rbac_roles`, `groups`, `keyring_meta`, `legacy_files`, `login_attempts`, `parameters`, `rbac_role_endpoints`, `rbac_role_entities`, `rbac_roles`, `rbac_users`, and `snis`.[#10400](https://github.com/Kong/kong/pull/10400)",
+      "type": "feature",
+      "scope": "Admin API"
+    },
+    {
+      "message": "The `/upstreams/<upstream>/health?balancer_health=1` endpoint always shows the balancer health through a new attribute: `balancer_health`. This always returns `HEALTHY` or `UNHEALTHY`, reporting the true state of the balancer, even if the overall upstream health status is `HEALTHCHECKS_OFF`. This is useful for debugging.[#5885](https://github.com/Kong/kong/pull/5885)",
+      "type": "feature",
+      "scope": "Admin API"
+    },
+    {
+      "message": "**Beta** : OpenAPI specs are now available for the Kong Gateway Admin API: \n- [Kong Gateway Admin API - OSS spec](https://docs.konghq.com/gateway/api/admin-oss/3.3.x/)\n- [Kong Gateway Admin API - Enterprise spec](https://docs.konghq.com/gateway/api/admin-ee/3.3.0.x/)",
+      "type": "feature",
+      "scope": "Admin API"
+    },
+    {
+      "message": "The `status_listen` server has been enhanced with the addition of the`/status/ready` API for monitoring Kong Gateway’s health. This endpoint provides a `200` response upon receiving a `GET` request, but only if a valid, non-empty configuration is loaded and Kong Gateway is prepared to process user requests.\n\nLoad balancers frequently utilize this functionality to ascertain Kong Gateway’s availability to distribute incoming requests. [#10610](https://github.com/Kong/kong/pull/10610)[#10787](https://github.com/Kong/kong/pull/10787)",
+      "type": "feature",
+      "scope": "status-api"
+    },
+    {
+      "message": "**Beta** : An OpenAPI spec is now available for the [Kong Gateway Status API](https://docs.konghq.com/gateway/api/status/v1/).",
+      "type": "feature",
+      "scope": "status-api"
+    },
+    {
+      "message": "The PDK now supports getting a plugin’s ID with `kong.plugin.get_id`.[#9903](https://github.com/Kong/kong/pull/9903)",
+      "type": "feature",
+      "scope": "PDK"
+    },
+    {
+      "message": "Tracing module: Renamed spans to simplify filtering on tracing backends. See [`kong.tracing`](https://docs.konghq.com/gateway/latest/plugin-development/pdk/kong.tracing/) for details. [#10577](https://github.com/Kong/kong/pull/10577)",
+      "type": "feature",
+      "scope": "PDK"
+    },
+    {
+      "message": "**ACME**: This plugin now supports configuring an `account_key` in `keys` and `key_sets`.[#9746](https://github.com/Kong/kong/pull/9746)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**ACME**: This plugin now supports configuring a `namespace` for Redis storage, which defaults to an empty string for backwards compatibility.[#10562](https://github.com/Kong/kong/pull/10562)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Proxy Cache**: Added the configuration parameter `ignore_uri_case` to allow handling the cache key URI as lowercase.[#10453](https://github.com/Kong/kong/pull/10453)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Proxy Cache Advanced**: Added wildcard and parameter match support for `content_type`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Proxy Cache Advanced**: Added the configuration parameter `ignore_uri_case` to allow handling the cache key URI as lowercase.[#10453](https://github.com/Kong/kong/pull/10453)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**HTTP Log**: Added the `application/json; charset=utf-8` option for the `Content-Type` header to support log collectors that require that character set declaration.[#10533](https://github.com/Kong/kong/pull/10533)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Datadog**: The `host` configuration parameter is now referenceable.[#10484](https://github.com/Kong/kong/pull/10484)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Zipkin** and **OpenTelemetry**: These plugins now convert `traceid` in HTTP response headers to hex format.[#10534](https://github.com/Kong/kong/pull/10534)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenTelemetry**: Spans are now correctly correlated in downstream Datadog traces.[10531](https://github.com/Kong/kong/pull/10531)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenTelemetry**: Added the `header_type` field. Previously, the `header_type` was hardcoded to `preserve`. Now it can be set to one of the following values: `preserve`, `ignore`, `b3`, `b3-single`,`w3c`, `jaeger`, or `ot`.[#10620](https://github.com/Kong/kong/pull/10620)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenTelemetry**: Added the new span attribute `http.client_ip` to capture the client IP when behind a proxy.[#10723](https://github.com/Kong/kong/pull/10723)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenTelemetry**: Added the `http_response_header_for_traceid` configuration parameter. Setting a string value in this field sets a corresponding header in the response.[#10379](https://github.com/Kong/kong/pull/10379)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**AWS Lambda**: Added the configuration parameter `disable_https` to support scheme configuration on the lambda service API endpoint.[#9799](https://github.com/Kong/kong/pull/9799)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Request Transformer Advanced**: The plugin now honors the following Kong Gateway configuration parameters: `untrusted_lua`, `untrusted_lua_sandbox_requires`, `untrusted_lua_sandbox_environment`. These parameters apply to advanced templates (Lua expressions).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Request Validator**: Errors are now logged for validation failures.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**JWT Signer**: Added the configuration field `add_claims`, which lets you add extra claims to JWT.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "The Kong Enterprise systemd unit was incorrectly renamed to `kong.service` in 3.2.x.x versions. It has now been reverted back to `kong-enterprise-edition.service` to keep consistent with previous releases.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where Kong Gateway failed to generate a keyring when RBAC was enabled.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed `lua_ssl_verify_depth` in FIPS mode to match the same depth of normal mode.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Removed the email field from the developer registration response.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Websocket requests now generate balancer spans when tracing is enabled.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where management of licenses via the `/licenses/` endpoint would fail if the current license is not valid.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Resolved an issue with the plugin iterator where sorting would become mixed up when dynamic reordering was applied. This fix ensures proper sorting behavior in all scenarios.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Kong Manager: \n- Fixed an issue where changing the vault name in Kong Manager would throw an error.\n- Fixed an issue with tabs, where vertical tab content became blank when selecting a tab that is currently active.\n- Fixed an issue where the `/register` route occasionally jumped to `/login` instead.\n- Removed the **Custom Identifier** field from the StatsD plugin. This field appeared in Kong Manager under Metrics, but the field doesn’t exist in the plugin’s schema.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "The standard expired license notification no longer appears in logs for data planes running in Konnect mode (`konnect_mode=on`), as it does not apply to them.",
+      "type": "bugfix",
+      "scope": "kong-gateway-with-konnect"
+    },
+    {
+      "message": "New license alert behavior for data planes running in Konnect mode: \n- If there are at least 16 days left before expiration, no alerts are issued.\n- If the license expires within 16 days, a warning level alert is issued every day.\n- If the license is expired, a critical level alert is issued every day.",
+      "type": "bugfix",
+      "scope": "kong-gateway-with-konnect"
+    },
+    {
+      "message": "Fixed an issue where the upstream keepalive pool had a CRC32 collision.[#9856](https://github.com/Kong/kong/pull/9856)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Hybrid mode: \n- Fixed an issue where the control plane didn’t downgrade configuration for the AWS Lambda and Zipkin plugins for older versions of data planes.[#10346](https://github.com/Kong/kong/pull/10346)\n- Fixed an issue where the control plane didn’t rename fields correctly for the Session plugin for older versions of data planes.[#10352](https://github.com/Kong/kong/pull/10352)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where validation of regex routes was occasionally skipped when the old-fashioned config style was used for DB-less Kong Gateway.[#10348](https://github.com/Kong/kong/pull/10348)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where tracing could cause unexpected behavior.[#10364](https://github.com/Kong/kong/pull/10364)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where balancer passive healthchecks would use the wrong status code when Kong Gateway changed the status code from the upstream in the `header_filter` phase. [#10325](https://github.com/Kong/kong/pull/10325)[#10592](https://github.com/Kong/kong/pull/10592)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where schema validations failing in a nested record did not propagate the error correctly.[#10449](https://github.com/Kong/kong/pull/10449)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where dangling Unix sockets would prevent Kong Gateway from restarting in Docker containers if it was not cleanly stopped.[#10468](https://github.com/Kong/kong/pull/10468)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where the sorting function for traditional router sources or destinations led to `invalid order function for sorting` errors.[#10514](https://github.com/Kong/kong/pull/10514)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed the UDP socket leak in `resty.dns.client` caused by frequent DNS queries.[#10691](https://github.com/Kong/kong/pull/10691)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed a typo in the mlcache option `shm_set_tries`.[#10712](https://github.com/Kong/kong/pull/10712)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where a slow startup of the Go plugin server caused a deadlock.[#10561](https://github.com/Kong/kong/pull/10561)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Tracing: \n- Fixed an issue that caused the `sampled` flag of incoming propagation headers to be handled incorrectly and only affect some spans.[#10655](https://github.com/Kong/kong/pull/10655)\n- Fixed an issue that was preventing `http_client` spans from being created for OpenResty HTTP client requests.[#10680](https://github.com/Kong/kong/pull/10680)\n- Fixed an approximation issue that resulted in reduced precision of the balancer span start and end times.[#10681](https://github.com/Kong/kong/pull/10681)\n- `tracing_sampling_rate` now defaults to 0.01 (trace one of every 100 requests) instead of the previous 1 (trace all requests). Tracing all requests causes unnecessary resource drain for most production systems.[#10774](https://github.com/Kong/kong/pull/10774)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue with vault references, which caused Kong Gateway to error out when trying to stop.[#10775](https://github.com/Kong/kong/pull/10775)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where vault configuration stayed sticky and cached even when configurations were changed.[#10776](https://github.com/Kong/kong/pull/10776)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed the following PostgreSQL TTL clean-up timer issues: \n- Timers will now only run on traditional and control plane nodes that have enabled the Admin API.[#10405](https://github.com/Kong/kong/pull/10405)\n- Kong Gateway now runs a batch delete loop on each TTL-enabled table with a number of `50.000` rows per batch.[#10407](https://github.com/Kong/kong/pull/10407)\n- The cleanup job now runs every 5 minutes instead of every 60 seconds.[#10389](https://github.com/Kong/kong/pull/10389)\n- Kong Gateway now deletes expired rows based on the database server-side timestamp to avoid potential problems caused by the differences in clock time between Kong Gateway and the database server.[#10389](https://github.com/Kong/kong/pull/10389)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where an empty value for the URI argument `custom_id` crashed the `/consumer` API.[#10475](https://github.com/Kong/kong/pull/10475)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "`request.get_uri_captures` now returns the unnamed part tagged as an array for jsonification.[#10390](https://github.com/Kong/kong/pull/10390)",
+      "type": "bugfix",
+      "scope": "PDK"
+    },
+    {
+      "message": "Fixed an issue for tracing PDK where the sampling rate didn’t work.[#10485](https://github.com/Kong/kong/pull/10485)",
+      "type": "bugfix",
+      "scope": "PDK"
+    },
+    {
+      "message": "**JWE Decrypt**, **OAS Validation**, and **Vault Authentication**: Added the missing schema field `protocols` for `jwe-decrypt`, `oas-validation`, and `vault-auth`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "[**Rate Limiting Advanced**](/plugins/rate-limiting-advanced/): The `redis` rate limiting strategy now returns an error when Redis Cluster is down.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "[**Rate Limiting Advanced**](/plugins/rate-limiting-advanced/): Fixed an issue where the rate limiting `cluster_events` broadcast the wrong data in traditional cluster mode.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "[**Rate Limiting Advanced**](/plugins/rate-limiting-advanced/): The control plane no longer creates namespace or syncs.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**StatsD Advanced**: Changed the plugin’s name to `statsd-advanced` instead of `statsd`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**LDAP Authentication Advanced**: The plugin now performs authentication before authorization, and returns a 403 HTTP code when a user isn’t in the authorized groups.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**LDAP Authentication Advanced**: The plugin now supports setting the groups to an empty array when groups are not empty.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenTelemetry**: Fixed an issue where reconfiguring the plugin didn’t take effect.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenTelemetry**: Fixed an issue that caused spans to be propagated incorrectly resulting in the wrong hierarchy being rendered on tracing backends.[#10663](https://github.com/Kong/kong/pull/10663)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Request Validator**: Fixed an issue where the validation function for the `allowed_content_types` parameter was too strict, making it impossible to use media types that contained a `-` character.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Forward Proxy**: Fixed an issue which caused the wrong `latencies.proxy` to be used in the logging plugins. This plugin now evaluates `ctx.WAITING_TIME` in the forward proxy instead of doing it in the subsequent phase.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Request Termination**: Fixed an issue with the `echo` option, which caused the plugin to not return the `uri-captures`.[#10390](https://github.com/Kong/kong/pull/10390)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Request Transformer**: Fixed an issue where requests would intermittently be proxied with incorrect query parameters.[10539](https://github.com/Kong/kong/pull/10539)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Request Transformer**: The plugin now honors the value of the `untrusted_lua` configuration parameter.[#10327](https://github.com/Kong/kong/pull/10327)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OAuth2**: Fixed an issue where the OAuth2 token was being cached as `nil` if the wrong service was accessed first.[#10522](https://github.com/Kong/kong/pull/10522)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OAuth2**: This plugin now prevents an authorization code created by one plugin instance from being exchanged for an access token created by a different plugin instance.[#10011](https://github.com/Kong/kong/pull/10011)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**gRPC Gateway**: Fixed an issue where having a `null` value in the JSON payload caused an uncaught exception to be thrown during `pb.encode`.[#10687](https://github.com/Kong/kong/pull/10687)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**gRPC Gateway**: Fixed an issue where empty arrays in JSON were incorrectly encoded as `\"{}\"`. They are now encoded as `\"[]\"` to comply with standards.[#10790](https://github.com/Kong/kong/pull/10790)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Updated the datafile library dependency to fix the following issues: \n- Kong Gateway didn’t work when installed on a read-only file system.\n- Kong Gateway didn’t work when started from systemd.",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-resty-session` from 4.0.2 to 4.0.3[#10338](https://github.com/Kong/kong/pull/10338)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-protobuf` from 0.3.3 to 0.5.0[#10137](https://github.com/Kong/kong/pull/10413)[#10790](https://github.com/Kong/kong/pull/10790)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-resty-timer-ng` from 0.2.3 to 0.2.5[#10419](https://github.com/Kong/kong/pull/10419)[#10664](https://github.com/Kong/kong/pull/10664)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-resty-openssl` from 0.8.17 to 0.8.20[#10463](https://github.com/Kong/kong/pull/10463)[#10476](https://github.com/Kong/kong/pull/10476)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-resty-http` from 0.17.0.beta.1 to 0.17.1[#10547](https://github.com/Kong/kong/pull/10547)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-resty-aws` from 1.1.2 to 1.2.2",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-resty-gcp` from 0.0.11 to 0.0.12",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `LuaSec` from 1.2.0 to 1.3.1[#10528](https://github.com/Kong/kong/pull/10528)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-resty-acme` from 0.10.1 to 0.11.0[#10562](https://github.com/Kong/kong/pull/10562)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-resty-events` from 0.1.3 to 0.1.4[#10634](https://github.com/Kong/kong/pull/10634)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-kong-nginx-module` from 0.5.1 to 0.6.0[#10288](https://github.com/Kong/kong/pull/10288)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-resty-lmdb` from 1.0.0 to 1.1.0[#10766](https://github.com/Kong/kong/pull/10766)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `kong-openid-connect` from 2.5.4 to 2.5.5",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Due to known issues, Kong recommends not enabling page-level LMDB encryption in versions 3.0.x-3.3.x.\n\nDon’t set `declarative_config_encryption_mode`; leave it at its default value of `off`. Continue relying on disk-level encryption to encrypt the configuration on disk.",
+      "type": "known-issues",
+      "scope": "Core"
+    },
+    {
+      "message": "When sending an invalid configuration to the `/config` endpoint while running in DB-less mode and with `flatten_errors=1` set, Kong Gateway incorrectly returns a 500. This should be a 400 because the configuration is invalid.",
+      "type": "known-issues",
+      "scope": "Core"
+    },
+    {
+      "message": "When the OpenID Connect (OIDC) plugin is configured to reference HashiCorp Vault in the `config.client_secret` field (for example, `{vault://hcv/clientSecret}`), it does not look up the secret correctly.",
+      "type": "known-issues",
+      "scope": "Core"
+    }
+  ],
+  "kong-manager-ee": []
+}
