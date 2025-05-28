@@ -1,0 +1,95 @@
+{
+  "kong-ee": [
+    {
+      "message": "Fixed an issue in hybrid mode where, if a service was set to `enabled: false` and that service had a route with an enabled plugin, any new data planes would receive empty configuration.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed a timer leak that occurred when `worker_consistency` was set to `eventual` in `kong.conf`. This issue caused timers to be exhausted and failed to start any other timers used by Kong Gateway, resulting in a `too many pending timers` error.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed memory leaks coming from `lua-resty-lock`.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed global plugins can operate out of the workspace scope",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where Kong Manager did not display all Dev Portal developers in the organization.",
+      "type": "bugfix",
+      "scope": "kong-manager-and-dev-portal"
+    },
+    {
+      "message": "Fixed an issue that prevented developer role assignments from displaying in Kong Manager. When viewing a role under the Permissions tab in the Dev Portal section, the list of developers wouldn’t update when a new developer was added. Kong Manager was constructing the wrong URL when retrieving Dev Portal assignees.",
+      "type": "bugfix",
+      "scope": "kong-manager-and-dev-portal"
+    },
+    {
+      "message": "Fixed empty string handling in Kong Manager. Previously, Kong Manager was handling empty strings as `\"\"` instead of a null value.",
+      "type": "bugfix",
+      "scope": "kong-manager-and-dev-portal"
+    },
+    {
+      "message": "Improved Kong Manager styling by fixing an issue where content didn’t fit on object detail pages.",
+      "type": "bugfix",
+      "scope": "kong-manager-and-dev-portal"
+    },
+    {
+      "message": "Fixed an issue that sometimes prevented clicking Kong Manager links and buttons in Safari.",
+      "type": "bugfix",
+      "scope": "kong-manager-and-dev-portal"
+    },
+    {
+      "message": "Fixed an issue where users were being navigated to the object detail page after clicking on the “Copy ID” button from the object list.",
+      "type": "bugfix",
+      "scope": "kong-manager-and-dev-portal"
+    },
+    {
+      "message": "Fixed an issue where the number of requests and error rate were not correctly displaying when Vitals was disabled.",
+      "type": "bugfix",
+      "scope": "kong-manager-and-dev-portal"
+    },
+    {
+      "message": "**Rate Limiting**: Fixed a PostgreSQL deadlock issue that occurred when the `cluster` policy was used with two or more metrics (for example, `second` and `day`.)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**HTTP Log**: Log output is now restricted to the workspace the plugin is running in. Previously, the plugin could log requests from outside of its workspace.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Mocking**: Fixed an issue where `204` responses were not handled correctly and you would see the following error:`\"No examples exist in API specification for this resource\"`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Mocking**: `204` response specs now support empty content elements.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Amazon Linux 1** : Support for running Kong Gateway on Amazon Linux 1 is now deprecated, as the[Amazon Linux (1) AMI has ended standard support as of December 31, 2020](https://aws.amazon.com/blogs/aws/update-on-amazon-linux-ami-end-of-life). Starting with Kong Gateway 3.0.0.0, Kong is not building new Amazon Linux 1 images or packages, and Kong will not test package installation on Amazon Linux 1.\n\nIf you need to install Kong Gateway on Amazon Linux 1, see the documentation for [previous versions](https://docs.konghq.com/gateway/2.8.x/install-and-run/amazon-linux/).",
+      "type": "deprecated",
+      "scope": "Core"
+    },
+    {
+      "message": "**Debian 8** : Support for running Kong Gateway on Debian 8 (“Jessie”) is now deprecated, as Debian 8 (“Jessie”) has reached End of Life (EOL). Starting with Kong Gateway 3.0.0.0, Kong is not building new Debian 8 (“Jessie”) images or packages, and Kong will not test package installation on Debian 8 (“Jessie”).\n\nIf you need to install Kong Gateway on Debian 8 (“Jessie”), see the documentation for [previous versions](https://docs.konghq.com/gateway/2.8.x/install-and-run/debian/).",
+      "type": "deprecated",
+      "scope": "Core"
+    },
+    {
+      "message": "**Ubuntu 16.04** : Support for running Kong Gateway on Ubuntu 16.04 (“Xenial”) is now deprecated, as [Standard Support for Ubuntu 16.04 has ended as of April, 2021](https://wiki.ubuntu.com/Releases). Starting with Kong Gateway 3.0.0.0, Kong is not building new Ubuntu 16.04 images or packages, and Kong will not test package installation on Ubuntu 16.04.\n\nIf you need to install Kong Gateway on Ubuntu 16.04, see the documentation for [previous versions](https://docs.konghq.com/gateway/2.8.x/install-and-run/ubuntu/).",
+      "type": "deprecated",
+      "scope": "Core"
+    }
+  ],
+  "kong-manager-ee": []
+}

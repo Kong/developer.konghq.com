@@ -1,0 +1,95 @@
+{
+  "kong-ee": [
+    {
+      "message": "Fixed an issue with RBAC where `endpoint=/kong workspace=*` would not let the `/kong` endpoint be accessed from all workspaces",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue with RBAC where admins without a top level `endpoint=*` permission could not add any RBAC rules, even if they had `endpoint=/rbac` permissions. These admins can now add RBAC rules for their current workspace only.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Kong Manager \n- Serverless functions can now be saved when there is a comma in the provided value\n- Custom plugins now show an Edit button when viewing the plugin configuration\n- Editing Dev Portal permissions no longer returns a 404 error\n- Fix an issue where admins with access to only non-default workspaces could not see any workspaces\n- Show the workspace name when an admin only has access to non-default workspaces\n- Add support for table filtering and sorting when using Cassandra\n- Support the # character in RBAC tokens on the RBAC edit page\n- Performing an action on an upstream target no longer leads to a 404 error",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Developer Portal \n- Information about the current session is now bound to an nginx worker thread. This prevents data leaks when a worker is handling multiple requests at the same time: Information about the current session is now bound to an nginx worker thread. This prevents data leaks when a worker is handling multiple requests at the same time",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Keys are no longer rotated unexpectedly when a node restarts",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Add cache when performing RBAC token verification",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "The log message “plugins iterator was changed while rebuilding it” was incorrectly logged as an `error`. This release converts it to the `info` log level.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed a 500 error when rate limiting counters are full with the Rate Limiting Advanced plugin",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Improved the performance of the router, plugins iterator and balancer by adding conditional rebuilding",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "**HTTP Log**: Include provided query string parameters when sending logs to the `http_endpoint`",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Forward Proxy**: Use lowercase when overwriting the `host` header",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "StatsD Advanced: Added support for setting `workspace_identifier` to `workspace_name`",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced**: Skip namespace creation if the plugin is not enabled. This prevents the error “[rate-limiting-advanced] no shared dictionary was specified” being logged.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**LDAP Auth Advanced**: Support passwords that contain a `:` character",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenID Connect**: Provide valid upstream headers e.g. `X-Consumer-Id`, `X-Consumer-Username`",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**JWT Signer**: Implement the `enable_hs_signatures` option to enable JWTs signed with HMAC algorithms",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Bumped `openssl` from 1.1.1k to 1.1.1n to resolve CVE-2022-0778 [#8635](https://github.com/Kong/kong/pull/8635)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `openresty` from 1.19.3.2 to 1.19.9.1 [#7727](https://github.com/Kong/kong/pull/7727)",
+      "type": "dependency",
+      "scope": "Core"
+    }
+  ],
+  "kong-manager-ee": []
+}

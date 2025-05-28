@@ -1,0 +1,71 @@
+{
+  "kong-ee": [
+    {
+      "message": "Added GCP integration support for the secrets manager. GCP is now available as a vault backend.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "**AWS Lambda**: Added support for cross-account invocation through the `aws_assume_role_arn` and`aws_role_session_name` configuration parameters.[#8900](https://github.com/Kong/kong/pull/8900)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue with excessive log file disk utilization on control planes.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue with keyring encryption, where keyring was not decrypting keys after a soft reload.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "The router now detects static route collisions inside the current workspace, as well as with other workspaces.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "When using a custom plugin in a hybrid mode deployment, the control plane now detects compatibility issues and stops sending the plugin configuration to data planes that can’t use it. The control plane continues sending the custom plugin configuration to compatible data planes.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Optimized the Kong PDK function `kong.response.get_source()`.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "**Mocking**: Fixed an issue where the plugin didn’t accept empty values in examples.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**ACME**: The `domains` plugin parameter can now be left empty. When `domains` is empty, all TLDs are allowed. Previously, the parameter was labelled as optional, but leaving it empty meant that the plugin retrieved no certificates at all.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Response Transformer Advanced**: Fixed an issue with nested array parsing.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced**: Fixed an issue with `cluster` strategy timestamp precision in Cassandra.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "kong-manager-ee": [
+    {
+      "message": "Fixed an issue with admin creation. Previously, when an admin was created with no roles, the admin would have access to the first workspace listed alphabetically.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed several issues with SNI listing. Previously, the SNI list was empty after sorting by the SSL certificate ID field. In 2.8.1.1, the SSL certificate ID field in the SNI list was empty.",
+      "type": "bugfix",
+      "scope": "Core"
+    }
+  ]
+}

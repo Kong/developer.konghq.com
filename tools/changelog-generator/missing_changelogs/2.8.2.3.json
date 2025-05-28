@@ -1,0 +1,70 @@
+{
+  "kong-ee": [
+    {
+      "message": "Fixed a role precedence issue with RBAC. RBAC rules involving deny (negative) rules now correctly take precedence over allow (non-negative) roles.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed workspace filtering pagination on the overview page.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed a router issue where, in an environment with more than 50,000 routes, attempting to update a route caused a `500` error response.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed a timer leak that occurred whenever the generic messaging protocol connection broke in hybrid mode.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed a `tlshandshake` method error that occurred when SSL was configured on PostgreSQL, and the Kong Gateway had `stream_listen` configured with a stream proxy.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "**HTTP Log**: Fixed the `could not update kong admin` internal error caused by empty headers. This error occurred when using this plugin with the Kong Ingress Controller.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**JWT**: Fixed an issue where the JWT plugin could potentially forward an unverified token to the upstream.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**JWT Signer**: Fixed the error `attempt to call local 'err' (a string value)`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Mocking**: Fixed UUID pattern matching.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: Provided options to reduce the plugin’s impact on performance. Added new `kong.conf` options to switch high cardinality metrics `on` or `off`: [`prometheus_plugin_status_code_metrics`](https://docs.konghq.com/gateway/2.8.x/reference/configuration/#prometheus_plugin_status_code_metrics), [`prometheus_plugin_latency_metrics`](https://docs.konghq.com/gateway/2.8.x/reference/configuration/#prometheus_plugin_latency_metrics), [`prometheus_plugin_bandwidth_metrics`](https://docs.konghq.com/gateway/2.8.x/reference/configuration/#prometheus_plugin_bandwidth_metrics), and [`prometheus_plugin_upstream_health_metrics`](https://docs.konghq.com/gateway/2.8.x/reference/configuration/#prometheus_plugin_upstream_health_metrics).",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced**: Fixed a maintenance cycle lock leak in the `kong_locks` dictionary. Kong Gateway now clears old namespaces from the maintenance cycle schedule when a namespace is updated.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Request Transformer**: Fixed an issue where empty arrays were being converted to empty objects. Empty arrays are now preserved.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "A required PCRE library is dynamically linked, where prior versions statically linked the library. Depending on the system PCRE version, this may cause regex compilation to fail when routing requests. Starting in 2.8.2.4 and later, Kong Gateway will return to statically linking the PCRE library.",
+      "type": "known-issues",
+      "scope": "Core"
+    }
+  ],
+  "kong-manager-ee": []
+}
