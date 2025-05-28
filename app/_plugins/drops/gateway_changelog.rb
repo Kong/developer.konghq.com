@@ -76,6 +76,10 @@ module Jekyll
                                        .transform_values { |entries| Entries.new(entries:) }
         end
 
+        def release_date
+          @release_date ||= site.data.dig('products', 'gateway', 'release_dates', @number)
+        end
+
         private
 
         def process_entries!
