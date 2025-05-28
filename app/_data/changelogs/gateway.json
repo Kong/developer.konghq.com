@@ -314,7 +314,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**kafka-consume** Added the `kafka-consume` plugin, which adds Kafka consumption capabilities to Kong.",
+        "message": "**kafka-consume**: Added the `kafka-consume` plugin, which adds Kafka consumption capabilities to Kong.",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -534,7 +534,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**AI Plugins**:\n- Fixed an issue where templates weren't being resolved correctly.\n- The plugins now support nested fields.\n",
+        "message": "**AI Plugins**: - Fixed an issue where templates weren't being resolved correctly.\n- The plugins now support nested fields.\n",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1138,12 +1138,12 @@
         "scope": "Plugin"
       },
       {
-        "message": "**AI Rate Limiting Advanced** Updated the error message for rate limit exceeded to include AI-related information.",
+        "message": "**AI Rate Limiting Advanced**: Updated the error message for rate limit exceeded to include AI-related information.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**ai-rate-limiting-advanced** Fixed an issue where the plugin yielded an error when incrementing the rate limit counters in non-yieldable phases.",
+        "message": "**ai-rate-limiting-advanced**: Fixed an issue where the plugin yielded an error when incrementing the rate limit counters in non-yieldable phases.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1183,7 +1183,7 @@
         "scope": "Clustering"
       },
       {
-        "message": "**degraphql** Fixed an issue where the degraphql routes were updated from the control plane but not updated in the degraphql router on the data plane.",
+        "message": "**degraphql**: Fixed an issue where the degraphql routes were updated from the control plane but not updated in the degraphql router on the data plane.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1213,12 +1213,12 @@
         "scope": "Plugin"
       },
       {
-        "message": "**jwe-decrypt** Fixed an issue where an unnecessary warn log was printed.",
+        "message": "**jwe-decrypt**: Fixed an issue where an unnecessary warn log was printed.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Kafka Log** Fixed an issue where the plugin cannot function correctly when it is configured in a non-default workspace with certificate_id.",
+        "message": "**Kafka Log**: Fixed an issue where the plugin cannot function correctly when it is configured in a non-default workspace with certificate_id.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1248,17 +1248,17 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** Fixed an issue where counters of the overriding consumer groups didn't fetched when the window_size is different and the workspace is non-default.",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where counters of the overriding consumer groups didn't fetched when the window_size is different and the workspace is non-default.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**rate-limiting-advanced** Fixed an issue where a warn log was printed when event_hooks was disabled.",
+        "message": "**rate-limiting-advanced**: Fixed an issue where a warn log was printed when event_hooks was disabled.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**rate-limiting-advanced** Fixed an issue where multiple plugin instances sharing the same namespace enforced consumer groups and different `window_size`s were used in the consumer group overriding configs, then the rate limiting of some consumer groups would fall back to local strategy. Now every plugin instance sharing the same namespace can set different `window_size`.",
+        "message": "**rate-limiting-advanced**: Fixed an issue where multiple plugin instances sharing the same namespace enforced consumer groups and different `window_size`s were used in the consumer group overriding configs, then the rate limiting of some consumer groups would fall back to local strategy. Now every plugin instance sharing the same namespace can set different `window_size`.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1328,7 +1328,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** Fixed an issue where RLA stores long expiration time items cause `no memory` errors.",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where RLA stores long expiration time items cause `no memory` errors.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1404,7 +1404,7 @@
   "3.8.0.0": {
     "kong": [
       {
-        "message": "**acl** Added a new config `always_use_authenticated_groups` to support using authenticated groups even when an authenticated consumer already exists.",
+        "message": "**acl**: Added a new config `always_use_authenticated_groups` to support using authenticated groups even when an authenticated consumer already exists.",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -1694,7 +1694,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**OpenTelemetry** Fixed an issue where migration fails when upgrading from below version 3.3 to 3.7.",
+        "message": "**OpenTelemetry**: Fixed an issue where migration fails when upgrading from below version 3.3 to 3.7.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1754,7 +1754,7 @@
         "scope": "Core"
       },
       {
-        "message": "**OpenTelemetry** Improved accuracy of sampling decisions.",
+        "message": "**OpenTelemetry**: Improved accuracy of sampling decisions.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -1829,7 +1829,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**OpenTelemetry** Added support for OpenTelemetry formatted logs.",
+        "message": "**OpenTelemetry**: Added support for OpenTelemetry formatted logs.",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -1906,7 +1906,7 @@
     ],
     "kong-ee": [
       {
-        "message": "**ai-proxy-advanced** Added the `ai-proxy-advanced` plugin that supports advanced load balancing between LLM services.",
+        "message": "**ai-proxy-advanced**: Added the `ai-proxy-advanced` plugin that supports advanced load balancing between LLM services.",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -1916,12 +1916,12 @@
         "scope": "Plugin"
       },
       {
-        "message": "**ai-semantic-prompt-guard** Added the `ai-semantic-prompt-guard` plugin that supports semantic similarity-based prompt guarding.",
+        "message": "**ai-semantic-prompt-guard**: Added the `ai-semantic-prompt-guard` plugin that supports semantic similarity-based prompt guarding.",
         "type": "feature",
         "scope": "Plugin"
       },
       {
-        "message": "**confluent** Added the `confluent` plugin which allows to interface with Confluent.",
+        "message": "**confluent**: Added the `confluent` plugin which allows to interface with Confluent.",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -1941,7 +1941,7 @@
         "scope": "Core"
       },
       {
-        "message": "**ai-rate-limiting-advanced** Added the `bedrock` and `gemini` providers to the providers list in \nthe `ai-rate-limiting-advanced` plugin.\n",
+        "message": "**ai-rate-limiting-advanced**: Added the `bedrock` and `gemini` providers to the providers list in \nthe `ai-rate-limiting-advanced` plugin.\n",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -2086,7 +2086,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**ai-semantic-cache** Fix the `ai-semantic-caching` plugin with a condition for calculating latencies when no embeddings, add deep copy for the request table and fix countback.",
+        "message": "**ai-semantic-cache**: Fix the `ai-semantic-caching` plugin with a condition for calculating latencies when no embeddings, add deep copy for the request table and fix countback.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -2106,7 +2106,7 @@
         "scope": "Core"
       },
       {
-        "message": "**OAS Validation** Fixed an issue where parameter serialization does not behave the same as in the OpenAPI specification",
+        "message": "**OAS Validation**: Fixed an issue where parameter serialization does not behave the same as in the OpenAPI specification",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -2116,7 +2116,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**OpenID Connect** Updated the rediscovery to use a short lifetime (5s) if the last discovery failed.",
+        "message": "**OpenID Connect**: Updated the rediscovery to use a short lifetime (5s) if the last discovery failed.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -2131,7 +2131,7 @@
         "scope": "Core"
       },
       {
-        "message": "**Rate Limiting Advanced** Fixed an issue where if the `window_size` in the consumer group overriding config is different from the `window_size` in the default config, the rate limiting of that consumer group would fall back to local strategy.",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where if the `window_size` in the consumer group overriding config is different from the `window_size` in the default config, the rate limiting of that consumer group would fall back to local strategy.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -2206,12 +2206,12 @@
         "scope": "PDK"
       },
       {
-        "message": "**OpenID-connect** Fixed an issue where using_pseudo_issuer does not work when patching.",
+        "message": "**OpenID-connect**: Fixed an issue where using_pseudo_issuer does not work when patching.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**OpenID-connect** Added `claims_forbidden` property to restrict access.",
+        "message": "**OpenID-connect**: Added `claims_forbidden` property to restrict access.",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -2311,7 +2311,7 @@
         "type": "bugfix"
       },
       {
-        "message": "**Rate Limiting Advanced** Improved that timer spikes do not occur when there is network instability with the central data store.",
+        "message": "**Rate Limiting Advanced**: Improved that timer spikes do not occur when there is network instability with the central data store.",
         "type": "performance",
         "scope": "Plugin"
       },
@@ -3023,7 +3023,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**OpenID Connect** Added support for DPoP (Demonstrating Proof-of-Possession) tokens validation. The feature is available by enabling `proof_of_possession_dpop`",
+        "message": "**OpenID Connect**: Added support for DPoP (Demonstrating Proof-of-Possession) tokens validation. The feature is available by enabling `proof_of_possession_dpop`",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -3038,7 +3038,7 @@
         "scope": "Clustering"
       },
       {
-        "message": "**graphql-proxy-cache-advanced** Addded redis strategy support and `bypass_on_err` config for `graphql-proxy-cache-advanced` plugin.\n",
+        "message": "**graphql-proxy-cache-advanced**: Addded redis strategy support and `bypass_on_err` config for `graphql-proxy-cache-advanced` plugin.\n",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -3063,17 +3063,17 @@
         "scope": "Core"
       },
       {
-        "message": "**JWT-Signer** supports basic auth and mtls auth to external jwks services",
+        "message": "**JWT-Signer**: supports basic auth and mtls auth to external jwks services",
         "type": "feature",
         "scope": "Plugin"
       },
       {
-        "message": "**JWT-Signer** The plugin now supports periodically rotating the jwks. For example, to autmatically rotate `access_token_jwks_uri`, you can set the config `access_token_jwks_uri_rotate_period`",
+        "message": "**JWT-Signer**: The plugin now supports periodically rotating the jwks. For example, to autmatically rotate `access_token_jwks_uri`, you can set the config `access_token_jwks_uri_rotate_period`",
         "type": "feature",
         "scope": "Plugin"
       },
       {
-        "message": "**JWT-Signer** The plugin now supports adding the original JWT(s) to the upstream request header by specifying the names of the upstream request header with `original_access_token_upstream_header` and `original_channel_token_upstream_header`.\nAnd `access_token_upstream_header`, `channel_token_upstream_header`, `original_access_token_upstream_header`, and `original_channel_token_upstream_header` should not have the same value.\n",
+        "message": "**JWT-Signer**: The plugin now supports adding the original JWT(s) to the upstream request header by specifying the names of the upstream request header with `original_access_token_upstream_header` and `original_channel_token_upstream_header`.\nAnd `access_token_upstream_header`, `channel_token_upstream_header`, `original_access_token_upstream_header`, and `original_channel_token_upstream_header` should not have the same value.\n",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -3083,12 +3083,12 @@
         "scope": "Plugin"
       },
       {
-        "message": "**ldap-auth-advanced** fix an issue where if the credential is encoded with no username kong will throw an error and return 500",
+        "message": "**ldap-auth-advanced**: fix an issue where if the credential is encoded with no username kong will throw an error and return 500",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**ldap-auth-advanced** fix an issue where an exception will be thrown when ldap search fails",
+        "message": "**ldap-auth-advanced**: fix an issue where an exception will be thrown when ldap search fails",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -3138,12 +3138,12 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** Refactored `kong/tools/public/rate-limiting` to keep the original interfaces unchanged (backward compatibility) and extend a new interface `new_instance` to provide isolation between different plugins. If you are using custom Rate Limiting plugins based on this library, please update the initialization code to the new format like 'local ratelimiting = require(\"kong.tools.public.rate-limiting\").new_instance(\"custom-plugin-name\")'. The old interface will be removed in the upcoming major release.",
+        "message": "**Rate Limiting Advanced**: Refactored `kong/tools/public/rate-limiting` to keep the original interfaces unchanged (backward compatibility) and extend a new interface `new_instance` to provide isolation between different plugins. If you are using custom Rate Limiting plugins based on this library, please update the initialization code to the new format like 'local ratelimiting = require(\"kong.tools.public.rate-limiting\").new_instance(\"custom-plugin-name\")'. The old interface will be removed in the upcoming major release.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** Fixed an issue where RLA and other similar plugins using the `rate-limiting` library, when used together, would interfere with each other and thus fail to synchronize counter data to the central data store",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where RLA and other similar plugins using the `rate-limiting` library, when used together, would interfere with each other and thus fail to synchronize counter data to the central data store",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -3158,27 +3158,27 @@
         "scope": "Core"
       },
       {
-        "message": "**Rate Limiting Advanced** Falling back to local strategy if sync_rate = 0 when redis goes down",
+        "message": "**Rate Limiting Advanced**: Falling back to local strategy if sync_rate = 0 when redis goes down",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** The plugin now creates counter syncing timers when being executed instead of being created to reduce some meaningless error logs",
+        "message": "**Rate Limiting Advanced**: The plugin now creates counter syncing timers when being executed instead of being created to reduce some meaningless error logs",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** Print error log when multiple plugins with the same namespace have different configurations",
+        "message": "**Rate Limiting Advanced**: Print error log when multiple plugins with the same namespace have different configurations",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** fix an issue where if `sync_rate` is changed from a value greater than `0` to `0`, the namespace will be cleared unexpectedly",
+        "message": "**Rate Limiting Advanced**: fix an issue where if `sync_rate` is changed from a value greater than `0` to `0`, the namespace will be cleared unexpectedly",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** fix some timer-related issues where the counter syncing timer can't be created or destroyed properly",
+        "message": "**Rate Limiting Advanced**: fix some timer-related issues where the counter syncing timer can't be created or destroyed properly",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -4995,7 +4995,7 @@
         "scope": "Core"
       },
       {
-        "message": "**Rate Limiting Advanced** Fixed an issue where the sync timer may stop working due to race condition.",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where the sync timer may stop working due to race condition.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -5658,7 +5658,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**ai-rate-limiting-advanced** Fixed an issue where the plugin yielded an error when incrementing the rate limit counters in non-yieldable phases.",
+        "message": "**ai-rate-limiting-advanced**: Fixed an issue where the plugin yielded an error when incrementing the rate limit counters in non-yieldable phases.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -5678,7 +5678,7 @@
         "scope": "Clustering"
       },
       {
-        "message": "**degraphql** Fixed an issue where the degraphql routes were updated from the control plane but not updated in the degraphql router on the data plane.",
+        "message": "**degraphql**: Fixed an issue where the degraphql routes were updated from the control plane but not updated in the degraphql router on the data plane.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -5688,7 +5688,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**rate-limiting-advanced** Fixed an issue where a warn log was printed when event_hooks was disabled.",
+        "message": "**rate-limiting-advanced**: Fixed an issue where a warn log was printed when event_hooks was disabled.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -5881,12 +5881,12 @@
         "scope": "Core"
       },
       {
-        "message": "**Rate Limiting Advanced** Fixed an issue where if the `window_size` in the consumer group overriding config is different from the `window_size` in the default config, the rate limiting of that consumer group would fall back to local strategy.",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where if the `window_size` in the consumer group overriding config is different from the `window_size` in the default config, the rate limiting of that consumer group would fall back to local strategy.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** Fixed an issue where the sync timer may stop working due to race condition.",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where the sync timer may stop working due to race condition.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -6005,7 +6005,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** Improved that timer spikes do not occur when there is network instability with the central data store.",
+        "message": "**Rate Limiting Advanced**: Improved that timer spikes do not occur when there is network instability with the central data store.",
         "type": "performance",
         "scope": "Plugin"
       },
@@ -6097,7 +6097,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**ldap-auth-advanced** fix an issue where an exception will be thrown when ldap search fails",
+        "message": "**ldap-auth-advanced**: fix an issue where an exception will be thrown when ldap search fails",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -6313,7 +6313,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** Refactored `kong/tools/public/rate-limiting` to keep the original interfaces unchanged (backward compatibility) and extend a new interface `new_instance` to provide isolation between different plugins. If you are using custom Rate Limiting plugins based on this library, please update the initialization code to the new format like 'local ratelimiting = require(\"kong.tools.public.rate-limiting\").new_instance(\"custom-plugin-name\")'. The old interface will be removed in the upcoming major release.",
+        "message": "**Rate Limiting Advanced**: Refactored `kong/tools/public/rate-limiting` to keep the original interfaces unchanged (backward compatibility) and extend a new interface `new_instance` to provide isolation between different plugins. If you are using custom Rate Limiting plugins based on this library, please update the initialization code to the new format like 'local ratelimiting = require(\"kong.tools.public.rate-limiting\").new_instance(\"custom-plugin-name\")'. The old interface will be removed in the upcoming major release.",
         "type": "bugfix",
         "scope": "Plugin"
       }
@@ -6415,7 +6415,7 @@
         "scope": "Core"
       },
       {
-        "message": "**Rate Limiting Advanced** Fixed an issue where RLA and other similar plugins using the `rate-limiting` library, when used together, would interfere with each other and thus fail to synchronize counter data to the central data store",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where RLA and other similar plugins using the `rate-limiting` library, when used together, would interfere with each other and thus fail to synchronize counter data to the central data store",
         "type": "bugfix",
         "scope": "Plugin"
       }
@@ -6541,7 +6541,7 @@
         "scope": "Clustering"
       },
       {
-        "message": "**ldap-auth-advanced** fix an issue where if the credential is encoded with no username kong will throw an error and return 500",
+        "message": "**ldap-auth-advanced**: fix an issue where if the credential is encoded with no username kong will throw an error and return 500",
         "type": "bugfix",
         "scope": "Plugin"
       }
@@ -6906,7 +6906,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**ldap-auth-advanced** fix an issue where if the credential is encoded with no username kong will throw an error and return 500",
+        "message": "**ldap-auth-advanced**: fix an issue where if the credential is encoded with no username kong will throw an error and return 500",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -6966,12 +6966,12 @@
         "scope": "Portal"
       },
       {
-        "message": "**Rate Limiting Advanced** Refactored `kong/tools/public/rate-limiting` to keep the original interfaces unchanged (backward compatibility) and extend a new interface `new_instance` to provide isolation between different plugins. If you are using custom Rate Limiting plugins based on this library, please update the initialization code to the new format like 'local ratelimiting = require(\"kong.tools.public.rate-limiting\").new_instance(\"custom-plugin-name\")'. The old interface will be removed in the upcoming major release.",
+        "message": "**Rate Limiting Advanced**: Refactored `kong/tools/public/rate-limiting` to keep the original interfaces unchanged (backward compatibility) and extend a new interface `new_instance` to provide isolation between different plugins. If you are using custom Rate Limiting plugins based on this library, please update the initialization code to the new format like 'local ratelimiting = require(\"kong.tools.public.rate-limiting\").new_instance(\"custom-plugin-name\")'. The old interface will be removed in the upcoming major release.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** Fixed an issue where RLA and other similar plugins using the `rate-limiting` library, when used together, would interfere with each other and thus fail to synchronize counter data to the central data store",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where RLA and other similar plugins using the `rate-limiting` library, when used together, would interfere with each other and thus fail to synchronize counter data to the central data store",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -6981,22 +6981,22 @@
         "scope": "Core"
       },
       {
-        "message": "**Rate Limiting Advanced** Falling back to local strategy if sync_rate = 0 when redis goes down",
+        "message": "**Rate Limiting Advanced**: Falling back to local strategy if sync_rate = 0 when redis goes down",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** The plugin now creates counter syncing timers when being executed instead of being created to reduce some meaningless error logs",
+        "message": "**Rate Limiting Advanced**: The plugin now creates counter syncing timers when being executed instead of being created to reduce some meaningless error logs",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** fix an issue where if `sync_rate` is changed from a value greater than `0` to `0`, the namespace will be cleared unexpectedly",
+        "message": "**Rate Limiting Advanced**: fix an issue where if `sync_rate` is changed from a value greater than `0` to `0`, the namespace will be cleared unexpectedly",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** fix some timer-related issues where the counter syncing timer can't be created or destroyed properly",
+        "message": "**Rate Limiting Advanced**: fix some timer-related issues where the counter syncing timer can't be created or destroyed properly",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -7355,17 +7355,17 @@
         "scope": "Core"
       },
       {
-        "message": "**mTLS-auth** Fixed an issue where a 500 error occurs when the configuration changes with the mTLS plugin enabled.",
+        "message": "**mTLS-auth**: Fixed an issue where a 500 error occurs when the configuration changes with the mTLS plugin enabled.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** Fixed an issue where counters of the overriding consumer groups didn't fetched when the window_size is different and the workspace is non-default.",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where counters of the overriding consumer groups didn't fetched when the window_size is different and the workspace is non-default.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**rate-limiting-advanced** Fixed an issue where multiple plugin instances sharing the same namespace enforced consumer groups and different `window_size`s were used in the consumer group overriding configs, then the rate limiting of some consumer groups would fall back to local strategy. Now every plugin instance sharing the same namespace can set different `window_size`.",
+        "message": "**rate-limiting-advanced**: Fixed an issue where multiple plugin instances sharing the same namespace enforced consumer groups and different `window_size`s were used in the consumer group overriding configs, then the rate limiting of some consumer groups would fall back to local strategy. Now every plugin instance sharing the same namespace can set different `window_size`.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -7380,7 +7380,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** Fixed an issue where RLA stores long expiration time items cause `no memory` errors.",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where RLA stores long expiration time items cause `no memory` errors.",
         "type": "bugfix",
         "scope": "Plugin"
       }
@@ -7452,7 +7452,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** Fixed an issue where the sync timer may stop working due to race condition.",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where the sync timer may stop working due to race condition.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -7472,7 +7472,7 @@
         "scope": "Core"
       },
       {
-        "message": "**Rate Limiting Advanced** Enhance the resolution of RLA sliding window weight",
+        "message": "**Rate Limiting Advanced**: Enhance the resolution of RLA sliding window weight",
         "type": "feature",
         "scope": "Plugin"
       }
@@ -7494,7 +7494,7 @@
         "scope": "Core"
       },
       {
-        "message": "**Rate Limiting Advanced** Fixed an issue where if the `window_size` in the consumer group overriding config is different from the `window_size` in the default config, the rate limiting of that consumer group would fall back to local strategy.",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where if the `window_size` in the consumer group overriding config is different from the `window_size` in the default config, the rate limiting of that consumer group would fall back to local strategy.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -7504,7 +7504,7 @@
         "scope": "Core"
       },
       {
-        "message": "**ldap-auth-advanced** Fixed an issue where an exception will be thrown when ldap search fails",
+        "message": "**ldap-auth-advanced**: Fixed an issue where an exception will be thrown when ldap search fails",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -7609,7 +7609,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** Improved that timer spikes do not occur when there is network instability with the central data store.",
+        "message": "**Rate Limiting Advanced**: Improved that timer spikes do not occur when there is network instability with the central data store.",
         "type": "performance",
         "scope": "Plugin"
       }
@@ -7646,7 +7646,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** Refactored `kong/tools/public/rate-limiting` to keep the original interfaces unchanged (backward compatibility) and extend a new interface `new_instance` to provide isolation between different plugins. If you are using custom Rate Limiting plugins based on this library, please update the initialization code to the new format like 'local ratelimiting = require(\"kong.tools.public.rate-limiting\").new_instance(\"custom-plugin-name\")'. The old interface will be removed in the upcoming major release.",
+        "message": "**Rate Limiting Advanced**: Refactored `kong/tools/public/rate-limiting` to keep the original interfaces unchanged (backward compatibility) and extend a new interface `new_instance` to provide isolation between different plugins. If you are using custom Rate Limiting plugins based on this library, please update the initialization code to the new format like 'local ratelimiting = require(\"kong.tools.public.rate-limiting\").new_instance(\"custom-plugin-name\")'. The old interface will be removed in the upcoming major release.",
         "type": "bugfix",
         "scope": "Plugin"
       }
@@ -7720,7 +7720,7 @@
         "scope": "PDK"
       },
       {
-        "message": "**Rate Limiting Advanced** Fixed an issue where RLA and other similar plugins using the `rate-limiting` library, when used together, would interfere with each other and thus fail to synchronize counter data to the central data store",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where RLA and other similar plugins using the `rate-limiting` library, when used together, would interfere with each other and thus fail to synchronize counter data to the central data store",
         "type": "bugfix",
         "scope": "Plugin"
       }
@@ -7800,7 +7800,7 @@
         "scope": "Core"
       },
       {
-        "message": "**forward-proxy** fallback to the non-streaming proxy when the request body has already been read",
+        "message": "**forward-proxy**: fallback to the non-streaming proxy when the request body has already been read",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -7940,22 +7940,22 @@
         "scope": "Core"
       },
       {
-        "message": "**Rate Limiting Advanced** Falling back to local strategy if sync_rate = 0 when redis goes down",
+        "message": "**Rate Limiting Advanced**: Falling back to local strategy if sync_rate = 0 when redis goes down",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** The plugin now creates counter syncing timers when being executed instead of being created to reduce some meaningless error logs",
+        "message": "**Rate Limiting Advanced**: The plugin now creates counter syncing timers when being executed instead of being created to reduce some meaningless error logs",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** fix an issue where if `sync_rate` is changed from a value greater than `0` to `0`, the namespace will be cleared unexpectedly",
+        "message": "**Rate Limiting Advanced**: fix an issue where if `sync_rate` is changed from a value greater than `0` to `0`, the namespace will be cleared unexpectedly",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "**Rate Limiting Advanced** fix some timer-related issues where the counter syncing timer can't be created or destroyed properly",
+        "message": "**Rate Limiting Advanced**: fix some timer-related issues where the counter syncing timer can't be created or destroyed properly",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -8039,7 +8039,7 @@
         "scope": "Core"
       },
       {
-        "message": "**ldap-auth-advanced** fix an issue where if the credential is encoded with no username kong will throw an error and return 500",
+        "message": "**ldap-auth-advanced**: fix an issue where if the credential is encoded with no username kong will throw an error and return 500",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -8242,7 +8242,7 @@
         "scope": "Core"
       },
       {
-        "message": "**OAS-Validation** Fix a bug where the plugin throws a runtime error caused by the ref parameter schema not being dereferenced.",
+        "message": "**OAS-Validation**: Fix a bug where the plugin throws a runtime error caused by the ref parameter schema not being dereferenced.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -8374,7 +8374,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**Openid-Connect** configurations `scopes`, `login_redirect_uri`, `logout_redirect_uri` can now be referenced as a secret in the Kong Vault",
+        "message": "**Openid-Connect**: configurations `scopes`, `login_redirect_uri`, `logout_redirect_uri` can now be referenced as a secret in the Kong Vault",
         "type": "feature",
         "scope": "Plugin"
       },
@@ -9062,22 +9062,22 @@
         "scope": "Core"
       },
       {
-        "message": "Request Transformer Advanced: Fixed an issue that was causing some requests to be proxied with the wrong query parameters.",
+        "message": "**Request Transformer Advanced**: Fixed an issue that was causing some requests to be proxied with the wrong query parameters.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "Response Transformer Advanced: Fixed an issue where large decimals were rounded when the plugin was being used.",
+        "message": "**Response Transformer Advanced**: Fixed an issue where large decimals were rounded when the plugin was being used.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "Rate Limiting Advanced: Fixed an issue where the control plane was trying to sync the rate-limiting-advanced counters with Redis.",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where the control plane was trying to sync the rate-limiting-advanced counters with Redis.",
         "type": "bugfix",
         "scope": "Plugin"
       },
       {
-        "message": "Rate Limiting Advanced: Fixed an issue where the `rl cluster_events` broadcasted the wrong data in traditional cluster mode.",
+        "message": "**Rate Limiting Advanced**: Fixed an issue where the `rl cluster_events` broadcasted the wrong data in traditional cluster mode.",
         "type": "bugfix",
         "scope": "Plugin"
       },
@@ -9615,7 +9615,7 @@
         "scope": "Plugin"
       },
       {
-        "message": "**New plugins** :: : \n- \n\n**OpenTelemetry**:\n\nExport tracing instrumentations to any OTLP/HTTP compatible backend.`opentelemetry_tracing` configuration must be enabled to collect the core tracing spans of Kong Gateway.[#8826](https://github.com/Kong/kong/pull/8826)\n\n- \n\n**TLS Handshake Modifier**:\n\nMake certificates available to other plugins acting on the same request.\n\n- \n\n**TLS Metadata Headers**:\n\nProxy TLS client certificate metadata to upstream services via an HTTP headers.\n\n- \n\n**WebSocket Size Limit**:\n\nAllows operators to specify a maximum size for incoming WebSocket messages.\n\n- \n\n**WebSocket Validator**:\n\nValidate individual WebSocket messages against a user-specified schema before proxying them.",
+        "message": "**New plugins**: \n- \n\n**OpenTelemetry**:\n\nExport tracing instrumentations to any OTLP/HTTP compatible backend.`opentelemetry_tracing` configuration must be enabled to collect the core tracing spans of Kong Gateway.[#8826](https://github.com/Kong/kong/pull/8826)\n\n- \n\n**TLS Handshake Modifier**:\n\nMake certificates available to other plugins acting on the same request.\n\n- \n\n**TLS Metadata Headers**:\n\nProxy TLS client certificate metadata to upstream services via an HTTP headers.\n\n- \n\n**WebSocket Size Limit**:\n\nAllows operators to specify a maximum size for incoming WebSocket messages.\n\n- \n\n**WebSocket Validator**:\n\nValidate individual WebSocket messages against a user-specified schema before proxying them.",
         "type": "feature",
         "scope": "Plugin"
       },
