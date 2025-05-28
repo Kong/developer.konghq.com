@@ -166,12 +166,7 @@
       "scope": "Plugin"
     },
     {
-      "message": "**Prometheus**: ",
-      "type": "feature",
-      "scope": "Plugin"
-    },
-    {
-      "message": "The Prometheus plugin has been optimized to reduce proxy latency impacts during scraping. [#10949](https://github.com/Kong/kong/pull/10949)[#11040](https://github.com/Kong/kong/pull/11040)[#11065](https://github.com/Kong/kong/pull/11065): ",
+      "message": "**Prometheus**: has been optimized to reduce proxy latency impacts during scraping. [#10949](https://github.com/Kong/kong/pull/10949)[#11040](https://github.com/Kong/kong/pull/11040)[#11065](https://github.com/Kong/kong/pull/11065)",
       "type": "feature",
       "scope": "Plugin"
     },
@@ -396,7 +391,7 @@
       "scope": "Plugin"
     },
     {
-      "message": "[**Rate Limiting Advanced**](/plugins/rate-limiting-advanced/): Fixed an issue that impacted the accuracy with the `redis` policy. Thanks [@giovanibrioni](https://github.com/giovanibrioni) for contributing this change.[#10559](https://github.com/Kong/kong/pull/10559)",
+      "message": "**Rate Limiting Advanced**: Fixed an issue that impacted the accuracy with the `redis` policy. Thanks [@giovanibrioni](https://github.com/giovanibrioni) for contributing this change.[#10559](https://github.com/Kong/kong/pull/10559)",
       "type": "bugfix",
       "scope": "Plugin"
     },
@@ -478,7 +473,7 @@
   ],
   "kong-manager-ee": [
     {
-      "message": "Introduced the **Kong Manager Open Source Edition (OSS)**, a free and open-source UI for Kong Gateway OSS![#11131](https://github.com/Kong/kong/pull/11131)\n\n[Kong Manager OSS](https://docs.konghq.com/gateway/latest/kong-manager-oss/) allows you to view and edit all Kong Gateway objects using the Admin API. It interacts directly with the Kong Admin API and does not require a separate database. This UI provides a great way to see all of your Kong Gateway configuration at glance.\n\nStarting with 3.4.0.0, Kong Manager OSS is bundled with Kong Gateway OSS. Install a new Kong Gateway OSS instance to try it out!\n\nThe quickest way to get started is using the [quickstart script](https://github.com/Kong/kong-manager#getting-started).\n\nCheck out the [Kong Manager OSS repo](https://github.com/Kong/kong-manager)to learn more about it.",
+      "message": "Introduced the **Kong Manager Open Source Edition (OSS)**, a free and open-source UI for Kong Gateway OSS! [#11131](https://github.com/Kong/kong/pull/11131)\n\n[Kong Manager OSS](https://docs.konghq.com/gateway/latest/kong-manager-oss/) allows you to view and edit all Kong Gateway objects using the Admin API. It interacts directly with the Kong Admin API and does not require a separate database. This UI provides a great way to see all of your Kong Gateway configuration at glance.\n\nStarting with 3.4.0.0, Kong Manager OSS is bundled with Kong Gateway OSS. Install a new Kong Gateway OSS instance to try it out!\n\nThe quickest way to get started is using the [quickstart script](https://github.com/Kong/kong-manager#getting-started).\n\nCheck out the [Kong Manager OSS repo](https://github.com/Kong/kong-manager) to learn more about it.",
       "type": "feature",
       "scope": "Core"
     },
