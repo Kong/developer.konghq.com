@@ -32,13 +32,11 @@ module Jekyll
 
         def leading_markdown_link(message)
           match = message.match(/^\[.*?\]\(.*?\)\s*:/)
-          p match
           match ? match[0] : nil
         end
 
         def leading_markdown_bold(message)
           match = message.match(/^\*\*(.*)\*\*\s*:/)
-          p match
           match ? match[0] : nil
         end
 
