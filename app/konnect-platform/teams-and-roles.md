@@ -212,14 +212,8 @@ columns:
   - title: Description
     key: description
 rows:
-  - role: "`Discovery Admin`"
-    description: Access to all read and write permissions related to service discoveries.
-  - role: "`Discovery Viewer`"
-    description: Access to read-only permissions related to service discoveries.
   - role: "`Integration Admin`"
     description: Can view and edit all integrations (install/authorize).
-  - role: "`Integration Viewer`"
-    description: Access to read-only permissions to integrations.
   - role: "`Service Admin`"
     description: Can view and edit a select list of services, map resources to those services, and manage all resources and discovery rules.
   - role: "`Service Creator`"
