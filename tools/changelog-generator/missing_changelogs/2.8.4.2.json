@@ -1,0 +1,46 @@
+{
+  "kong-ee": [
+    {
+      "message": "Fixed a bug where internal redirects, such as those produced by the `error_page` directive, could interfere with worker process handling the request when _buffered proxying_ is being used.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue with the Oauth 2.0 Introspection plugin where a request with JSON that is not a table failed.: ",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed an issue where the slow startup of the Go plugin server caused a deadlock.: ",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Bumped `OpenSSL` from 1.1.1t to 3.1.1",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lodash` for Dev Portal from 4.17.11 to 4.17.21",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lodash` for Kong Manager from 4.17.15 to 4.17.21",
+      "type": "dependency",
+      "scope": "Core"
+    }
+  ],
+  "kong-manager-ee": [
+    {
+      "message": "Fixed an issue where the Zipkin plugin didn’t allow the addition of `static_tags` through the Kong Manager UI.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where some of the icons were not rendering correctly.",
+      "type": "bugfix",
+      "scope": "Core"
+    }
+  ]
+}

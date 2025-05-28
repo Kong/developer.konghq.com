@@ -1,0 +1,40 @@
+{
+  "kong-ee": [
+    {
+      "message": "**Request Validator**: The plugin now allows requests carrying a `content-type` with a parameter to match its `content-type` without a parameter.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Redis Cluster: Added username and password authentication to Redis Cluster 6 and later versions.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where the RBAC token was not re-hashed after an update on the `user_token` field.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed the Dynatrace implementation. Due to a build system issue, Kong Gateway 2.8.4 packages prior to 2.8.4.1 didn’t contain the debug symbols that Dynatrace requires.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "**Forward Proxy**: Fixed an issue which occurred when receiving an HTTP `408` from the upstream through a forward proxy. Nginx exited the process with this code, which resulted in Nginx ending the request without any contents.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Request Validator**: The plugin now allows requests carrying a `content-type` with a parameter to match its `content-type` without a parameter.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Bumped `pgmoon` from 2.2.0.1 to 2.3.2.0.",
+      "type": "dependency",
+      "scope": "Core"
+    }
+  ],
+  "kong-manager-ee": []
+}
