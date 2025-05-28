@@ -83,7 +83,7 @@
   ],
   "kong-manager-ee": [
     {
-      "message": "Fixed issues with the plugin list:: : \n- Added missing icons and categories for the TLS Handshake Modifier and TLS Metadata Headers plugins.\n- Removed entries for the following deprecated plugins: Kubernetes Sidecar Injector, Collector, and Upstream TLS.\n- Removed Apache OpenWhisk plugin from Kong Manager. This plugin must be [installed manually via LuaRocks](/plugins/openwhisk/).\n- Removed the internal-only Konnect Application Auth plugin.",
+      "message": "Fixed issues with the plugin list: \n- Added missing icons and categories for the TLS Handshake Modifier and TLS Metadata Headers plugins.\n- Removed entries for the following deprecated plugins: Kubernetes Sidecar Injector, Collector, and Upstream TLS.\n- Removed Apache OpenWhisk plugin from Kong Manager. This plugin must be [installed manually via LuaRocks](/plugins/openwhisk/).\n- Removed the internal-only Konnect Application Auth plugin.",
       "type": "bugfix",
       "scope": "Core"
     },
