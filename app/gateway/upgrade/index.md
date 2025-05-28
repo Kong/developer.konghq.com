@@ -241,7 +241,7 @@ Factors may include, but are not limited to:
 
 * If you have custom plugins, review the code against changelog and test the custom plugin using the new version Y.
 * If you have modified any Nginx templates like `nginx-kong.conf` and `nginx-kong-stream.conf`, also make those changes to the templates for the new version Y. 
-See the [Nginx Directives](/gateway/nginx-directives/) for a detailed customization guide.
+See the [Nginx Directives reference](/gateway/nginx-directives/) for a detailed customization guide.
 * If you're using {{site.ee_product_name}}, make sure to [apply the enterprise license](/gateway/entities/license/) to the new Gateway cluster.
 * Always remember to take a [backup](/gateway/upgrade/backup-and-restore/).
 * Cassandra DB support has been removed from {{site.base_gateway}} with 3.4.0.0.

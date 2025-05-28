@@ -2,7 +2,7 @@
 title: "Nginx directives"
 
 description: |
-  Learn which Nginx directives you can use in the `kong.conf` file.
+  Learn which Nginx directives you can use in the `kong.conf` file and how to adjust them.
 content_type: reference
 layout: reference
 
@@ -27,18 +27,17 @@ You can use Nginx directives in the `kong.conf` file.
 ## Injecting individual Nginx directives
 
 Entries in `kong.conf` that are prefixed with `nginx_http_`,
-`nginx_proxy_` or `nginx_admin_` are converted to Nginx
+`nginx_proxy_`, or `nginx_admin_` are converted to Nginx
 directives.
 
-- Entries prefixed with `nginx_http_` will be injected into the overall `http`
+- Entries prefixed with `nginx_http_` are injected into the overall `http`
 block directive.
 
-- Entries prefixed with `nginx_proxy_` will be injected into the `server` block
+- Entries prefixed with `nginx_proxy_` are injected into the `server` block
 directive handling {{site.base_gateway}}'s proxy ports.
 
-- Entries prefixed with `nginx_admin_` will be injected into the `server` block
+- Entries prefixed with `nginx_admin_` are injected into the `server` block
 directive handling {{site.base_gateway}}'s Admin API ports.
-
 See the [NGINX Injected Directives section](/gateway/configuration/#nginx-injected-directives-section) for all supported namespaces.
 
 For example, if you add the following line to your `kong.conf` file:
@@ -97,13 +96,13 @@ You can make the {{site.base_gateway}} node serve this port by adding the follow
 entry to your `kong.conf` file:
 
 ```
-nginx_http_include = /path/to/your/my-server.kong.conf
+nginx_http_include =./my-server.kong.conf
 ```
 
 You can also use environment variables:
 
 ```bash
-export KONG_NGINX_HTTP_INCLUDE="/path/to/your/my-server.kong.conf"
+export KONG_NGINX_HTTP_INCLUDE="./my-server.kong.conf"
 ```
 
 When you start {{site.base_gateway}}, the `server` section from that file will be added to
@@ -118,26 +117,26 @@ HTTP/1.1 200 OK
 
 If you use a relative path in an `nginx_http_include` property, that
 path will be interpreted relative to the value of the `prefix` property of
-your `kong.conf` file (or the value of the `-p` flag of `kong start` if you
-used it to override the prefix when starting {{site.base_gateway}}).
+your `kong.conf` file, or the value of the `-p` flag of `kong start` if you
+used it to override the prefix when starting {{site.base_gateway}}.
 
 ## Custom Nginx templates and embedding {{site.base_gateway}}
 
 You can use custom Nginx
 configuration templates directly in two cases: 
 
-- You must modify {{site.base_gateway}}'s default
-Nginx configuration. Specifically values that are not adjustable in `kong.conf`, you can modify the template used by {{site.base_gateway}} for producing its
+- You need to modify {{site.base_gateway}}'s default
+Nginx configuration. Specifically, if you need to edit values that are not adjustable in `kong.conf`, you can modify the template used by {{site.base_gateway}} for producing its
 Nginx configuration and launch {{site.base_gateway}} using your customized template.
 
-- You must embed {{site.base_gateway}} in an already running OpenResty instance, you
+- You need to embed {{site.base_gateway}} in an already running OpenResty instance. In this case, you
 can reuse {{site.base_gateway}}'s generated configuration and include it in your existing
 configuration.
 
 ### Custom Nginx templates
 
-{{site.base_gateway}} can be started, reloaded and restarted with an `--nginx-conf` argument,
-which must specify an Nginx configuration template. The template uses the
+You can pass an `--nginx-conf` argument to specify an Nginx configuration template when starting, reloading, and restarting {{site.base_gateway}} with [Kong CLI commands](/gateway/cli/reference/).
+The template uses the
 [Penlight](http://stevedonovan.github.io/Penlight/api/index.html) [templating engine](http://stevedonovan.github.io/Penlight/api/libraries/pl.template.html), which is compiled using
 the {{site.base_gateway}} configuration.
 
@@ -147,29 +146,24 @@ The following Lua functions are available in the [templating engine](http://stev
 - `tostring`
 - `os.getenv`
 
-The default template for
-{{site.base_gateway}} can be found using this command on the system
-running your {{site.base_gateway}} instance:
-`find / -type d -name "templates" | grep kong`.
-For open-source {{site.base_gateway}}, you can also see the
-[templates directory](https://github.com/kong/kong/tree/master/kong/templates).
+You can find the default template by using this command on the system running your {{site.base_gateway}} instance:
+```
+find / -type d -name "templates" | grep kong
+```
 
 The template is split in two
-Nginx configuration files: `nginx.lua` and `nginx_kong.lua`. The former is
-minimal and includes the latter, which contains everything {{site.base_gateway}} requires
-to run. When `kong start` runs, right before starting Nginx, it copies these
-two files into the prefix directory, which looks like so:
-
+Nginx configuration files: `nginx.lua` and `nginx_kong.lua`. 
+`nginx.lua` is minimal and includes `nginx_kong.lua`, which contains everything {{site.base_gateway}} requires to run. 
+When `kong start` runs, it copies both files into the prefix directory right before starting Nginx, which looks like this:
 ```
 /usr/local/kong
 ├── nginx-kong.conf
 └── nginx.conf
 ```
 
-If you must tweak global settings that are defined by {{site.base_gateway}} but not adjustable
-via the {{site.base_gateway}} configuration in `kong.conf`, you can inline the contents of the
-`nginx_kong.lua` configuration template into a custom template file (in this
-example called `custom_nginx.template`) like this:
+If you need to adjust global settings that are defined by {{site.base_gateway}} but aren't configurable via parameters in `kong.conf`, you can inline the contents of the
+`nginx_kong.lua` configuration template into a custom template file. 
+For example, the following file named `custom_nginx.template` adjusts some logging settings:
 
 ```
 # ---------------------
