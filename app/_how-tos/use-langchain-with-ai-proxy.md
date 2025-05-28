@@ -180,7 +180,7 @@ python3 ./app.py
 
 The response should look like this:
 ```sh
-$ ChainAnswer:> I am an AI language model created by OpenAI, designed to assist with understanding and generating human-like text based on the input I receive. I can help answer questions, provide explanations, and assist with a variety of tasks involving language. What would you like to know or discuss today?
+ChainAnswer:> I am an AI language model created by OpenAI, designed to assist with understanding and generating human-like text based on the input I receive. I can help answer questions, provide explanations, and assist with a variety of tasks involving language. What would you like to know or discuss today?
 ```
 {:.no-copy-code}
 

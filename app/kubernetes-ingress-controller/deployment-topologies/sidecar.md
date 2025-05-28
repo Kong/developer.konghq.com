@@ -29,8 +29,6 @@ related_resources:
 ---
 
 
-
-
 Sidecar deployment is the original method of deployment for {{ site.kic_product_name }}. Both the controller and {{ site.base_gateway }} are deployed in a single Pod and each {{ site.base_gateway }} instance is managed by a different {{ site.kic_product_name }}.
 
 This is the simplest deployment method as everything is contained in a single deployment and the controller can communicate with {{ site.base_gateway }} on `localhost`.
@@ -41,7 +39,37 @@ Sidecar deployments have been deprecated in favor of [Gateway Discovery](/kubern
 * Reduce load on the Kubernetes API server. There are fewer clients, and no thrashing behaviour as multiple controllers argue of the `programmed` state of a resource.
 * Scale {{ site.kic_product_name }} and {{ site.base_gateway }} independently as needed.
 
-![Sidecar Architecture Diagram](/assets/images/kic/topology/sidecar.png)
+<!--vale off-->
+{% mermaid %}
+flowchart LR
+
+A1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Ingress Controller]
+A2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Ingress Controller]
+A3[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Ingress Controller]
+B1[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
+B2[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
+B3[<img src="/assets/icons/gateway.svg" style="max-height:20px"> Data Plane]
+C[<img src="/assets/icons/kubernetes.svg" style="max-height:20px"> API Server]
+
+subgraph Pod 3
+  A1 --> B1
+end
+
+subgraph Pod 2
+  A2 --> B2
+end
+
+subgraph Pod 1
+  A3 --> B3
+end
+
+C -.KIC watches 
+API server.- A1 & A2 & A3
+
+{% endmermaid %}
+<!--vale on-->
+
+> _**Figure 1**: In a sidecar deployment, each Pod gets its own {{site.kic_product_name}}, which sends configuration to its own {{site.base_gateway}} instance._
 
 {:.warning}
 > Sidecar deployments are officially supported, but discouraged. We recommend using [Gateway Discovery](/kubernetes-ingress-controller/deployment-topologies/gateway-discovery/) going forwards.
@@ -58,7 +86,7 @@ kong-kong-7f5bddf88c-f5r9h   2/2     Running   0          89s
 Verify that one of the running containers is `ingress-controller`:
 
 ```bash
-$ kubectl get pods -n kong kong-kong-7f5bddf88c-wfm6b -o jsonpath='{.spec.containers[*].name}'
+kubectl get pods -n kong kong-kong-7f5bddf88c-wfm6b -o jsonpath='{.spec.containers[*].name}'
 ```
 
 The result should contain `ingress-controller`:
