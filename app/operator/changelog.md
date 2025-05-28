@@ -1,5 +1,5 @@
 ---
-title: "Changelog"
+title: "{{ site.operator_product_name }} Changelog"
 description: "New features, bug fixes and breaking changes for {{ site.operator_product_name }}"
 content_type: reference
 layout: reference
