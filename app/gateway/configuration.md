@@ -11,6 +11,8 @@ products:
 related_resources:
   - text: "Managing {{site.base_gateway}} configuration"
     url: /gateway/manage-kong-conf/
+  - text: Nginx directive reference
+    url: /gateway/nginx-directives/
 
 breadcrumbs:
   - /gateway/

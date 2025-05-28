@@ -1076,6 +1076,8 @@ app/_landing_pages/ai-gateway/ai-providers.yaml:
   - app/_src/gateway/ai-gateway/index.md
 
 # references
+app/gateway/nginx-directives.md:
+  - app/_src/gateway/reference/nginx-directives.md
 app/gateway/rate-limiting/strategies.md:
   - app/_hub/kong-inc/rate-limiting-advanced/overview/_index.md
   - app/_hub/kong-inc/rate-limiting/overview/_index.md
