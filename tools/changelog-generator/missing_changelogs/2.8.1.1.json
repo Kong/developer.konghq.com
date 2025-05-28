@@ -1,0 +1,80 @@
+{
+  "kong-ee": [
+    {
+      "message": "You can now enable application status and application request emails for the Developer Portal using the following configuration parameters: \n- [`portal_application_status_email`](https://docs.konghq.com/gateway/latest/reference/configuration/#portal_application_status_email): Enable to send application request status update emails to developers.\n- [`portal_application_request_email`](https://docs.konghq.com/gateway/latest/reference/configuration/#portal_application_request_email): Enable to send service access request emails to users specified in `smtp_admin_emails`.\n- [`portal_smtp_admin_emails`](https://docs.konghq.com/gateway/latest/reference/configuration/#portal_smtp_admin_emails): Specify the email addresses to send portal admin emails to, overriding values set in `smtp_admin_emails`.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Added the ability to use `email.developer_meta` fields in portal email templates. For example, `{{email.developer_meta.preferred_name}}`.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "**AWS Lambda**: When working in proxy integration mode, the `statusCode` field now accepts string datatypes.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**mTLS Authentication**: Introduced certificate revocation list (CRL) and OCSP server support with the following parameters: `http_proxy_host`, `http_proxy_port`, `https_proxy_host`, and `https_proxy_port`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Kafka Upstream**: Added support for the `SCRAM-SHA-512` authentication mechanism.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Improved Kong Admin API and Kong Manager performance for organizations with many entities.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue with keyring encryption, where the control plane would crash if any errors occurred during the initialization of the [keyring module](https://docs.konghq.com/gateway/latest/plan-and-deploy/security/db-encryption/).",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where Kong Manager did not display all RBAC users and Consumers in the organization.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where some areas in a row of a list were not clickable.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "**Rate Limiting Advanced**: Fixed rate limiting advanced errors that appeared when the Rate Limiting Advanced plugin was not in use.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced**: Fixed an error where rate limiting counters were not updating response headers due to incorrect key expiration tracking. Redis key expiration is now tracked properly in `lua_shared_dict kong_rate_limiting_counters`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Forward Proxy**: Fixed an `invalid header value` error for HTTPS requests. The plugin now accepts multi-value response headers.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Forward Proxy**: Fixed an error where basic authentication headers containing the `=`character weren’t forwarded.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Forward Proxy**: Fixed request errors that occurred when a scheme had no proxy set. The`https` proxy now falls back to the `http` proxy if not specified, and the`http` proxy falls back to `https`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**GraphQL Rate Limiting Advanced**: Fixed `deserialize_parse_tree` logic when building GraphQL AST with non-nullable or list types.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "kong-manager-ee": []
+}

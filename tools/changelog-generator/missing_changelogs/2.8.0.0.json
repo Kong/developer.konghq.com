@@ -1,0 +1,496 @@
+{
+  "kong-ee": [
+    {
+      "message": "Improved tables in Kong Manager: (for PostgreSQL-backed instances only) \n- Click on a table row to access the entry instead of using the old **View** icon.\n- Search and filter tables through the **Filters** dropdown, which is located above the table.\n- Sort any table by clicking on a column title.\n- Tables now have pagination.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Kong Manager with OIDC: Added the configuration option[`admin_auto_create_rbac_token_disabled`](https://docs.konghq.com/gateway/latest/configure/auth/kong-manager/oidc-mapping/)to enable or disable RBAC tokens when automatically creating admins with OpenID Connect.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "If a license is present,`license_key` is now included in the `api` signal for[`anonymous_reports`](https://docs.konghq.com/gateway/latest/reference/configuration/#anonymous_reports).",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "The new `/developers/export` endpoint lets you export the list of developers and their statuses into CSV format.",
+      "type": "feature",
+      "scope": "dev-portal"
+    },
+    {
+      "message": "**Beta feature** : Kong Gateway 2.8.0.0 introduces[secrets management and vault support](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/). You can now store confidential values such as usernames and passwords as secrets in secure vaults. Kong Gateway can then reference these secrets, making your environment more secure.\n\nThe beta includes `get` support for the following vault implementations:\n\n- [AWS Secrets Manager](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/backends/aws-sm/)\n- [HashiCorp Vault](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/backends/hashicorp-vault/)\n- [Environment variable](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/backends/env/)\n\nAs part of this support, some plugins have certain fields marked as_referenceable_. See the plugin section of the Kong Gateway 2.8 changelog for details.\n\nTest out secrets management using the[getting started guide](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/), and check out the documentation for the Kong Admin API [`/vaults-beta` entity](https://docs.konghq.com/gateway/latest/admin-api/#vaults-beta-entity).\n\n{:.important}\n> This feature is in beta. It has limited support and implementation details may change. This means it is intended for testing in staging environments only, and **should not** be deployed in production environments.",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "You can customize the transparent dynamic TLS SNI name.\n\nThanks, [@Murphy-hub](https://github.com/Murphy-hub)![#8196](https://github.com/Kong/kong/pull/8196)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Routes now support matching headers with regular expressions.\n\nThanks, [@vanhtuan0409](https://github.com/vanhtuan0409)![#6079](https://github.com/Kong/kong/pull/6079)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "You can now configure [`cluster_max_payload`](https://docs.konghq.com/gateway/latest/reference/configuration/#cluster_max_payload)for hybrid mode deployments. This configuration option sets the maximum payload size allowed to be sent across from the control plane to the data plane. If your environment has large configurations that generate `payload too big` errors and don’t get applied to the data planes, use this setting to adjust the limit.\n\nThanks, [@andrewgkew](https://github.com/andrewgkew)![#8337](https://github.com/Kong/kong/pull/8337)",
+      "type": "feature",
+      "scope": "Core"
+    },
+    {
+      "message": "Improved the calculation of declarative configuration hash for big configurations. The new method is faster and uses less memory.[#8204](https://github.com/Kong/kong/pull/8204)",
+      "type": "feature",
+      "scope": "Performance"
+    },
+    {
+      "message": "Multiple improvements in the Router, including:\n\n- The router builds twice as fast\n- Failures are cached and discarded faster (negative caching)\n- Routes with header matching are cached\n\nThese changes should be particularly noticeable when rebuilding in DB-less environments.[#8087](https://github.com/Kong/kong/pull/8087)[#8010](https://github.com/Kong/kong/pull/8010)",
+      "type": "feature",
+      "scope": "Performance"
+    },
+    {
+      "message": "The current declarative configuration hash is now returned by the `status`endpoint when Kong node is running in DB-less or data plane mode.[#8214](https://github.com/Kong/kong/pull/8214)[#8425](https://github.com/Kong/kong/pull/8425)",
+      "type": "feature",
+      "scope": "Admin API"
+    },
+    {
+      "message": "**Canary**: Added the ability to configure `canary_by_header_name`. This parameter accepts a header name that, when present on a request, overrides the configured canary functionality. \n- If the configured header is present with the value `always`, the request will always go to the canary upstream.\n- If the header is present with the value `never`, the request will never go to the canary upstream.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Canary**: If the configured header is present with the value `always`, the request will always go to the canary upstream.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Canary**: If the header is present with the value `never`, the request will never go to the canary upstream.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: Added three new metrics: \n- `kong_db_entities_total` (gauge): total number of entities in the database.\n- `kong_db_entity_count_errors` (counter): measures the number of errors encountered during the measurement of `kong_db_entities_total`.\n- `kong_nginx_timers` (gauge): total number of Nginx timers, in Running or Pending state. Tracks `ngx.timer.running_count()` and`ngx.timer.pending_count()`.[#8387](https://github.com/Kong/kong/pull/8387)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `kong_db_entities_total` (gauge): total number of entities in the database.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `kong_db_entity_count_errors` (counter): measures the number of errors encountered during the measurement of `kong_db_entities_total`.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Prometheus**: `kong_nginx_timers` (gauge): total number of Nginx timers, in Running or Pending state. Tracks `ngx.timer.running_count()` and`ngx.timer.pending_count()`.[#8387](https://github.com/Kong/kong/pull/8387)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenID Connect**: Added Redis ACL support (Redis v6.0.0+) for storing and retrieving a session. Use the `session_redis_username` and `session_redis_password` configuration parameters to configure it.\n\n{:.important}\n> These parameters replace the `session_redis_auth` field, which is now **deprecated** and planned to be removed in 3.x.x.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenID Connect**: Added support for distributed claims. Set the `resolve_distributed_claims` configuration parameter to `true` to tell OIDC to explicitly resolve distributed claims.\n\nDistributed claims are represented by the `_claim_names` and `_claim_sources` members of the JSON object containing the claims.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenID Connect**: **Beta feature:** The `client_id`, `client_secret`, `session_secret`, `session_redis_username`, and `session_redis_password` configuration fields are now marked as referenceable, which means they can be securely stored as[secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Forward Proxy Advanced**: Added `http_proxy_host`, `http_proxy_port`, `https_proxy_host`, and`https_proxy_port` configuration parameters for mTLS support.\n\n{:.important}\n> These parameters replace the `proxy_port` and `proxy_host` fields, which are now **deprecated** and planned to be removed in 3.x.x.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Forward Proxy Advanced**: The `auth_password` and `auth_username` configuration fields are now marked as referenceable, which means they can be securely stored as[secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Kafka Upstream**: Added the ability to identify a Kafka cluster using the `cluster_name` configuration parameter. By default, this field generates a random string. You can also set your own custom cluster identifier.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Kafka Upstream**: **Beta feature:** The `authentication.user` and `authentication.password` configuration fields are now marked as referenceable, which means they can be securely stored as[secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**LDAP Authentication Advanced**: **Beta feature:** The `ldap_password` and `bind_dn` configuration fields are now marked as referenceable, which means they can be securely stored as[secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Vault Authentication**: **Beta feature:** The `vaults.vault_token` form field is now marked as referenceable, which means it can be securely stored as a[secret](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**GraphQL Rate Limiting Advanced**: Added Redis ACL support (Redis v6.0.0+ and Redis Sentinel v6.2.0+).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**GraphQL Rate Limiting Advanced**: Added the `redis.username` and `redis.sentinel_username` configuration parameters.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**GraphQL Rate Limiting Advanced**: **Beta feature:** The `redis.username`, `redis.password`, `redis.sentinel_username`, and `redis.sentinel_password`configuration fields are now marked as referenceable, which means they can be securely stored as[secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting**: ",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced**: Added Redis ACL support (Redis v6.0.0+ and Redis Sentinel v6.2.0+).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced**: Added the `redis.username` and `redis.sentinel_username` configuration parameters.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced**: **Beta feature:** The `redis.username`, `redis.password`, `redis.sentinel_username`, and `redis.sentinel_password`configuration fields are now marked as referenceable, which means they can be securely stored as[secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Response Rate Limiting**: Added Redis ACL support (Redis v6.0.0+ and Redis Sentinel v6.2.0+).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Response Rate Limiting**: Added the `redis_username` configuration parameter.\n\nThanks, [@27ascii](https://github.com/27ascii) for the original contribution![#8213](https://github.com/Kong/kong/pull/8213)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Response Transformer Advanced**: Use response buffering from the PDK.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Proxy Cache Advanced**: Added Redis ACL support (Redis v6.0.0+ and Redis Sentinel v6.2.0+).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Proxy Cache Advanced**: Added the `redis.sentinel_username` and `redis.sentinel_password` configuration parameters.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Proxy Cache Advanced**: **Beta feature:** The `redis.password`, `redis.sentinel_username`, and `redis.sentinel_password`configuration fields are now marked as referenceable, which means they can be securely stored as [secrets](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/getting-started/)in a vault. References must follow a [specific format](https://docs.konghq.com/gateway/latest/kong-enterprise/secrets-management/reference-format/).",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**jq**: Use response buffering from the PDK.",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**ACME**: Added the `rsa_key_size` configuration parameter.\n\nThanks, [lodrantl](https://github.com/lodrantl)![#8114](https://github.com/Kong/kong/pull/8114)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Fixed a timer leak that caused the timers to be exhausted and failed to start any other timers used by Kong, showing the error `too many pending timers`.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where, if `data_plane_config_cache_mode` was set to `off`, the data plane received no updates from the control plane.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed `attempt to index local 'workspace'` error, which occurred when accessing Routes or Services using TLS.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where [`cluster_telemetry_server_name`](https://docs.konghq.com/gateway/latest/reference/configuration/#cluster_telemetry_server_name)was not automatically generated and registered if it was not explicitly set.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed the [`cluster_allowed_common_names`](https://docs.konghq.com/gateway/latest/reference/configuration/#cluster_allowed_common_names)setting. When using PKI for certificate verification in hybrid mode, you can now configure a list of Common Names allowed to connect to a control plane with the option. If not set, only data planes with the same parent domain as the control plane cert are allowed.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "When the SMTP configuration was broken or unresponsive, the API would respond with an error message that was a JavaScript Object (`[Object object]`) instead of a string. This happened when a user was registering on any given portal with broken SMTP. Now, if there is an error, the API responds with the string`Error sending email`.",
+      "type": "bugfix",
+      "scope": "dev-portal"
+    },
+    {
+      "message": "The `/document_objects` and `/services/:id/document_objects` endpoints no longer accept multiple documents per service. This was an issue, as each service can only have one document. Instead, posting a document to one of these endpoints now overrides the previous document.",
+      "type": "bugfix",
+      "scope": "dev-portal"
+    },
+    {
+      "message": "When the Router encounters an SNI FQDN with a trailing dot (`.`), the dot will be ignored, since according to[RFC-3546](https://datatracker.ietf.org/doc/html/rfc3546#section-3.1)the dot is not part of the hostname.[#8269](https://github.com/Kong/kong/pull/8269)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed a bug in the Router that would not prioritize the routes with both a wildcard and a port (`route.*:80`) over wildcard-only routes (`route.*`), which have less specificity.[#8233](https://github.com/Kong/kong/pull/8233)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "The internal DNS client isn’t confused by the single-dot (`.`) domain, which can appear in `/etc/resolv.conf` in special cases like `search .`[#8307](https://github.com/Kong/kong/pull/8307)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "The Cassandra connector now records migration consistency level.\n\nThanks, [@mpenick](https://github.com/mpenick)![#8226](https://github.com/Kong/kong/pull/8226)",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Targets now keep their health status when upstreams are updated.[#8394](https://github.com/Kong/kong/pull/8394)",
+      "type": "bugfix",
+      "scope": "balancer"
+    },
+    {
+      "message": "One debug message which was erroneously using the `error` log level has been downgraded to the appropriate `debug` log level.[#8410](https://github.com/Kong/kong/pull/8410)",
+      "type": "bugfix",
+      "scope": "balancer"
+    },
+    {
+      "message": "Replaced a cryptic error message with a more useful one when there is a failure on SSL when connecting with the control plane.[#8260](https://github.com/Kong/kong/pull/8260)",
+      "type": "bugfix",
+      "scope": "Clustering"
+    },
+    {
+      "message": "Fixed an incorrect `next` field that appeared when paginating Upstreams.[#8249](https://github.com/Kong/kong/pull/8249)",
+      "type": "bugfix",
+      "scope": "Admin API"
+    },
+    {
+      "message": "Phase names are now correctly selected when performing phase checks.[#8208](https://github.com/Kong/kong/pull/8208)",
+      "type": "bugfix",
+      "scope": "PDK"
+    },
+    {
+      "message": "Fixed a bug in the go-PDK where, if `kong.request.getrawbody` was big enough to be buffered into a temporary file, it would return an an empty string.[#8390](https://github.com/Kong/kong/pull/8390)",
+      "type": "bugfix",
+      "scope": "PDK"
+    },
+    {
+      "message": "**External Plugins** : Fixed incorrect handling of the Headers Protobuf Structure and representation of null values, which provoked an error on init with the go-pdk.[#8267](https://github.com/Kong/kong/pull/8267)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**External Plugins** : Unwrap `ConsumerSpec` and `AuthenticateArgs`.\n\nThanks, [@raptium](https://github.com/raptium)![#8280](https://github.com/Kong/kong/pull/8280)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**External Plugins** : Fixed a problem in the stream subsystem, where it would attempt to load HTTP headers.[#8414](https://github.com/Kong/kong/pull/8414)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**CORS**: The CORS plugin does not send the `Vary: Origin` header anymore when the header `Access-Control-Allow-Origin` is set to `*`.\n\nThanks, [@jkla-dr](https://github.com/jkla-dr)![#8401](https://github.com/Kong/kong/pull/8401)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**AWS Lambda**: Fixed incorrect behavior when configured to use an HTTP proxy and deprecated the `proxy_scheme` config attribute for removal in 3.0.[#8406](https://github.com/Kong/kong/pull/8406)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OAuth2**: The plugin clears the `X-Authenticated-UserId` and`X-Authenticated-Scope` headers when it is configured in logical OR and is used in conjunction with another authentication plugin.[#8422](https://github.com/Kong/kong/pull/8422)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Datadog**: The plugin schema now lists the default values for configuration options in a single place instead of in two separate places.[#8315](https://github.com/Kong/kong/pull/8315)",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting**: Fixed a 500 error associated with performing arithmetic functions on a nil value by adding a nil value check after performing `ngx.shared.dict` operations.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced**: Fixed a 500 error that occurred when consumer groups were enforced but no proper configurations were provided. Now, if no specific consumer group configuration exists, the consumer group defaults to the original plugin configuration.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced**: Fixed a timer leak that caused the timers to be exhausted and failed to start any other timers used by Kong, showing the error `too many pending timers`.\n\nBefore, the plugin used one timer for each namespace maintenance process, increasing timer usage on instances with a large number of rate limiting namespaces. Now, it uses a single timer for all namespace maintenance.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Rate Limiting Advanced**: Fixed an issue where the `local` strategy was not working with DB-less and hybrid deployments. We now allow `sync_rate = null` and `sync_rate = -1`when a `local` strategy is defined.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Exit Transformer**: Fixed an issue where the Exit Transformer plugin would break the plugin iterator, causing later plugins not to run.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**mTLS Authentication**: Fixed `attempt to index local 'workspace'` error, which occurred when accessing Routes or Services using TLS.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OAuth2 Introspection**: Fixed issues with TLS connections when the IDP is behind a reverse proxy.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Proxy Cache Advanced**: Fixed a `X-Cache-Status:Miss` error that occurred when caching large files.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Proxy Cache Advanced**: Fixed a `X-Cache-Status:Miss` error that occurred when caching large files.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Response Transformer Advanced**: In the `body_filter` phase, the plugin now sets the body to an empty string instead of `nil`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**jq**: If plugin has no output, it will now return the raw body instead of attempting to restore the original response body.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**OpenID Connect**: Fixed negative caching, which was loading wrong a configuration value.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**JWT Signer**: Fixed an issue where the `enable_hs_signatures` configuration parameter did not work. The plugin now defines expiry earlier to avoid arithmetic on a nil value.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "Bumped OpenSSL from 1.1.1l to 1.1.1m[#8191](https://github.com/Kong/kong/pull/8191)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `resty.session` from 3.8 to 3.10[#8294](https://github.com/Kong/kong/pull/8294)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lua-resty-openssl` to 0.8.5[#8368](https://github.com/Kong/kong/pull/8368)",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lodash` for Dev Portal from 4.17.11 to 4.17.21",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "Bumped `lodash` for Kong Manager from 4.17.15 to 4.17.21",
+      "type": "dependency",
+      "scope": "Core"
+    },
+    {
+      "message": "The external `go-pluginserver` project is considered deprecated in favor of the [embedded server approach](https://docs.konghq.com/gateway/latest/reference/external-plugins/).",
+      "type": "deprecated",
+      "scope": "Core"
+    },
+    {
+      "message": "Starting with Kong Gateway 2.8.0.0, Kong is not building new open-source CentOS images. Support for running open-source Kong Gateway on CentOS on is now deprecated, as [CentOS has reached End of Life (OEL)](https://www.centos.org/centos-linux-eol/).\n\nRunning Kong Gateway Enterprise on CentOS is currently supported, but CentOS is planned to be fully deprecated in Kong Gateway 3.x.x.",
+      "type": "deprecated",
+      "scope": "Core"
+    },
+    {
+      "message": "OpenID Connect plugin: The `session_redis_auth` field is now deprecated and planned to be removed in 3.x.x. Use`session_redis_username` and `session_redis_password` instead.",
+      "type": "deprecated",
+      "scope": "Core"
+    },
+    {
+      "message": "Forward Proxy Advanced plugin: The `proxy_port` and `proxy_host` fields are now deprecated and planned to be removed in 3.x.x. Use`http_proxy_host` and `http_proxy_port`, or `https_proxy_host` and`https_proxy_port` instead.",
+      "type": "deprecated",
+      "scope": "Core"
+    },
+    {
+      "message": "AWS Lambda plugin: The `proxy_scheme` field is now deprecated and planned to be removed in 3.x.x.",
+      "type": "deprecated",
+      "scope": "Core"
+    }
+  ],
+  "kong-manager-ee": [
+    {
+      "message": "Fixed an issue where OIDC authentication into Kong Manager failed when used with Azure AD.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed a performance issue with the Teams page in Kong Manager.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue with checkboxes in Kong Manager, where the checkbox for the OAuth2 plugin’s `hash_secret` value was labelled as _Required_ and users were not able to uncheck it.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where Kong Manager was not updating plugin configuration when attempting to clear the `service.id` from a plugin.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixes an issue with Route creation in Kong Manager, where a new route would default to `http` as the supported protocol. Now, creating a Route picks up the correct default value, which is `http,https`.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Kong Manager now accurately lists `udp` as a protocol option for Route and Service objects on their configuration pages.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue with Kong Manager OIDC authentication, which caused the error`“attempt to call method 'select_by_username_ignore_case' (a nil value)”`and prevented login with OIDC.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed a latency issue with OAuth2 token creation. These tokens are no longer tracked by the workspace entity counter, as the count is not needed by the Kong Manager UI.",
+      "type": "bugfix",
+      "scope": "Core"
+    },
+    {
+      "message": "Fixed an issue where the plugin list table couldn’t be sorted by the **Applied To** column.",
+      "type": "bugfix",
+      "scope": "Core"
+    }
+  ]
+}
