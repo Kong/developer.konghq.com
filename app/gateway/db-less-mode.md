@@ -29,6 +29,8 @@ related_resources:
     url: /gateway/hybrid-mode/
   - text: Traditional mode
     url: /gateway/traditional-mode/
+  - text: "CLI reference: kong config"
+    url: /gateway/cli/reference/#kong-config
 ---
 
 {{site.base_gateway}} can be run without a database using only in-memory storage for entities. 
@@ -107,10 +109,21 @@ curl -i -X GET http://localhost:8001
 
 This will return the entire {{site.base_gateway}} configuration. Verify that `database` is set to `off` in the response body.
 
+## Generate a declarative configuration file
+
+To get started using declarative configuration, you need a JSON or YAML file containing {{site.base_gateway}} entity definitions.
+
+The following command generates a file named `kong.yml` in the current directory containing configuration examples:
+
+```
+kong config init
+```
+
 ## Load the declarative configuration file
 
-There are two ways to load a declarative configuration file into {{site.base_gateway}}: using
-`kong.conf` or the using the [`/config` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-config).
+There are two ways to load a declarative configuration file into {{site.base_gateway}}: 
+* At start-up, using `kong.conf`
+* At runtime, using the [`/config` Admin API endpoint](/api/gateway/admin-ee/#/operations/post-config)
 
 You can use the following `kong.conf` parameters to load the declarative config file:
 
