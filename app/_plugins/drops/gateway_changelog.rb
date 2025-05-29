@@ -74,6 +74,7 @@ module Jekyll
         def entries_by_type
           @entries_by_type ||= @entries.group_by { |e| e['type'] }
                                        .transform_values { |entries| Entries.new(entries:) }
+                                       .sort_by { |k, _| order.index(k) || Float::INFINITY }.to_h
         end
 
         def release_date
@@ -99,6 +100,10 @@ module Jekyll
             name_or_slug = name_or_slug.downcase
             p.data['name'].downcase == name_or_slug || p.data['slug'] == name_or_slug
           end
+        end
+
+        def order
+          @order ||= site.data.dig('changelogs', 'config', 'order') || []
         end
       end
 
