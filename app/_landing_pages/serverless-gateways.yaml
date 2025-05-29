@@ -77,4 +77,4 @@ rows:
               icon: /assets/icons/serverless.svg
               cta:
                 text: Set up serverless Gateways
-                url: /gateway/serverless-gateway-reference/
+                url: /serverless-gateways/reference/
