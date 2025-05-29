@@ -930,7 +930,7 @@ app/_src/gateway/kong-manager/auth/index.md:
   - /gateway/kong-manager/
 app/_src/gateway/production/deployment-topologies/index.md:
   - /gateway/deployment-topologies/
-app/konnect/gateway-manager/serverless-gateways/index.md:
+app/gateway/serverless-gateway-reference.md:
   - /gateway/topology-hosting-options/
 app/konnect/gateway-manager/dedicated-cloud-gateways/index.md:
   - /dedicated-cloud-gateways/
