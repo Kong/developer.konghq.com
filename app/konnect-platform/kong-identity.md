@@ -2,7 +2,7 @@
 title: Kong Identity
 content_type: reference
 layout: reference
-
+tech_preivew: true
 products:
   - gateway
 permalink: /kong-identity/
