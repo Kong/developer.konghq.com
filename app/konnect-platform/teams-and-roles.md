@@ -214,6 +214,10 @@ columns:
 rows:
   - role: "`Integration Admin`"
     description: Can view and edit all integrations (install/authorize).
+  - role: "`Scorecard Viewer`"
+    description: Access read-only permissions related to Scorecards.
+  - role: "`Scorecard Admin`"
+    description: Can view and edit a select list of Scorecards.
   - role: "`Service Admin`"
     description: Can view and edit a select list of services, map resources to those services, and manage all resources and discovery rules.
   - role: "`Service Creator`"
