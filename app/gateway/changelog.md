@@ -27,5 +27,7 @@ search_aliases:
   - known issues
   - changes
 ---
+Changelog for supported {{site.ee_product_name}} versions.
 
+For product versions that have reached the end of sunset support, see the [changelog archives](https://legacy-gateway--kongdocs.netlify.app/enterprise/changelog/).
 {% gateway_changelog %}
