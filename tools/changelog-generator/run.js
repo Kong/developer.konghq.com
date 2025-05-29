@@ -55,6 +55,7 @@ function generateChangelogsByVersion(folderPath, version) {
   });
 
   const destinationPath = `./tmp/${version}.json`;
+  fs.mkdirSync("./tmp");
   fs.writeFileSync(destinationPath, JSON.stringify(changelog, null, 2), "utf8");
   console.log(`Changelog file written to ${destinationPath}.`);
 }
