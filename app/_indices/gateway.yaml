@@ -58,13 +58,13 @@ sections:
     items:
     - title: Provision a serverless gateway
       description: Create a serverless Control Plane and hosted Data Plane.
-      url: /serverless-gateway-reference/#how-do-i-provision-a-serverless-gateway
+      url: /serverless-gateways/reference/#how-do-i-provision-a-serverless-gateway
     - title: Custom domains
       description: Konnect integrates domain name management and configuration with serverless gateways.
-      url: /serverless-gateway-reference/#how-do-i-configure-a-custom-domain
+      url: /serverless-gateways/reference/#how-do-i-configure-a-custom-domain
     - title: FAQs
       description: Frequently asked questions about serverless gateways.
-      url: /serverless-gateway-reference/#faqs
+      url: /serverless-gateways/reference/#faqs
 
   - title: Dedicated Cloud Gateways
     items:
