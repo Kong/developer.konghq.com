@@ -57,7 +57,7 @@ Changelog for supported {{ site.operator_product_name }} versions.
   [#1388](https://github.com/Kong/gateway-operator/pull/1388)
   [#1410](https://github.com/Kong/gateway-operator/pull/1410)
   [#1555](https://github.com/Kong/gateway-operator/pull/1555)
-  For more information on this please see [this guide](/gateway-operator/latest/guides/hardening/control-plane-watch-namespaces/).
+  <!--For more information on this please see [this guide](/gateway-operator/latest/guides/hardening/control-plane-watch-namespaces/).-->
 - Implemented `Mirror` and `Origin` `KonnectGatewayControlPlane`s.
   [#1496](https://github.com/Kong/gateway-operator/pull/1496)
 
