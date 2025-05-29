@@ -15,7 +15,8 @@ breadcrumbs:
   - index: operator
     group: Gateway Deployment
     section: "Get Started"
-
+min_version:
+  kgo: '1.6.1'
 products:
   - operator
 
@@ -31,7 +32,7 @@ tldr:
   q: How do I install {{ site.operator_product_name }} with Helm?
   a: Update the Helm repository and use Helm to install {{ site.operator_product_name }}.
 ---
-{% assign gwapi_version = "1.2.1" %}
+{% assign gwapi_version = "1.3.0" %}
 
 ## Install CRDs
 
