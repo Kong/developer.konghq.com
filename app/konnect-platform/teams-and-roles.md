@@ -214,6 +214,8 @@ columns:
 rows:
   - role: "`Integration Admin`"
     description: Can view and edit all integrations (install/authorize).
+  - role: "`Integration Viewer`"
+    description: Access to read-only permissions to integrations.
   - role: "`Scorecard Viewer`"
     description: Access read-only permissions related to Scorecards.
   - role: "`Scorecard Admin`"
