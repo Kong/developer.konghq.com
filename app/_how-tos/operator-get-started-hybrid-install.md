@@ -22,6 +22,10 @@ products:
 works_on:
   - konnect
 
+min_version:
+  kgo: '1.6.1'
+
+
 entities: []
 
 tldr:
@@ -33,7 +37,7 @@ prereqs:
   skip_product: true
 ---
 
-{% assign gwapi_version = "1.2.1" %}
+{% assign gwapi_version = "1.3.0" %}
 
 ## Deploying Data Planes
 

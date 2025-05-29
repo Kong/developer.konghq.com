@@ -32,7 +32,7 @@
 
 1. Create a `Gateway` and `GatewayClass` instance to use.
 
-{% assign gwapi_version = "v1" %}
+{% assign gwapi_version = "1.3.0" %}
 
 {% assign allowedRoutes = "All" %}
 {% if include.config.gateway_api.allowed_routes %}
