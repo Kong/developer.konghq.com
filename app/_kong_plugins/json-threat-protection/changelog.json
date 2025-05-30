@@ -1,0 +1,45 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "**json-threat-protection**: Added the schema field `allow_duplicate_object_entry_name` to allow or disallow duplicate object keys in JSON payloads. When set to `false`, the plugin will reject JSON payloads with duplicate object keys. The default value is `true`, which is same as the previous behavior.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**json-threat-protection**: This plugin now accurately supports proxying for non-`POST/PUT/PATCH` requests.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.0.0": [
+    {
+      "message": "**json-threat-protection**: Fixed an issue where the length counting of escape sequences, non-ASCII characters, and object entry names in JSON Strings was incorrect; now using UTF-8 character count instead of bytes.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**json-threat-protection**: Fixed an issue where certain default parameter values were incorrectly interpreted as 0 in some environments (e.g., ARM64-based):\n* `max_container_depth`\n* `max_object_entry_count`\n* `max_object_entry_name_length`\n* `max_array_element_count`\n* `max_string_value_length`\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.1.0": [
+    {
+      "message": "**json-threat-protection**: Fixed an issue where the length counting of escape sequences, non-ASCII characters, and object entry names in JSON Strings was incorrect; now using UTF-8 character count instead of bytes.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**json-threat-protection**: Fixed an issue where certain default parameter values were incorrectly interpreted as 0 in some environments (e.g., ARM64-based):\n* `max_container_depth`\n* `max_object_entry_count`\n* `max_object_entry_name_length`\n* `max_array_element_count`\n* `max_string_value_length`\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "**json-threat-protection**: Added JSON threat protection plugin. Validates JSON nesting depth, array elements, object entries, key length, and string length. Logs or terminates violating requests.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

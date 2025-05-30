@@ -1,0 +1,65 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "**app-dynamics**: Fixed a segmentation fault caused by a missing destructor call on process exit.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.1.1": [
+    {
+      "message": "**app-dynamics**: Fixed segmentation fault caused by missing destructor call on process exit.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.0.0": [
+    {
+      "message": "**app-dynamics**: Fixed an issue where the `snapshot` of the fields upstream, service, route and consumer was missing in the AppDynamics plugin.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.1.1": [
+    {
+      "message": "**app-dynamics**: Fixed segmentation fault caused by missing destructor call on process exit.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "**app-dynamics**: Added new ANALYTICS_ENABLE flag and collected more snapshot userdata in runtime.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.1.5": [
+    {
+      "message": "**app-dynamics**: Fixed segmentation fault caused by missing destructor call on process exit.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.17": [
+    {
+      "message": "**app-dynamics**: Fixed segmentation fault caused by missing destructor call on process exit.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "**AppDynamics**: The plugin version has been updated to match Kong Gateway’s version.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ],
+  "3.1.0.0": [
+    {
+      "message": "**AppDynamics**: Integrate Kong Gateway with the AppDynamics APM Platform.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ]
+}

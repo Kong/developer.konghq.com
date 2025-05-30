@@ -1,0 +1,108 @@
+{
+  "3.10.0.0": [
+    {
+      "message": "**jwt-signer**: Fixed an issue where the jwt-signer plugin failed to upsert jwks if the jwks contains extra custom fields.\n",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.9.0.0": [
+    {
+      "message": "**jwt-signer**: Supported `/jwt-signer/jwks` endpoint in dbless mode",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.8.0.0": [
+    {
+      "message": "**jwt-signer**: Supported `/jwt-signer/jwks/:jwt_signer_jwks` endpoint in dbless mode.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.7.0.0": [
+    {
+      "message": "**JWT-Signer**: supports basic auth and mtls auth to external jwks services",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**JWT-Signer**: The plugin now supports periodically rotating the jwks. For example, to autmatically rotate `access_token_jwks_uri`, you can set the config `access_token_jwks_uri_rotate_period`",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**JWT-Signer**: The plugin now supports adding the original JWT(s) to the upstream request header by specifying the names of the upstream request header with `original_access_token_upstream_header` and `original_channel_token_upstream_header`.\nAnd `access_token_upstream_header`, `channel_token_upstream_header`, `original_access_token_upstream_header`, and `original_channel_token_upstream_header` should not have the same value.\n",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.6.0.0": [
+    {
+      "message": "**jwt-signer**: support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.5.0.4": [
+    {
+      "message": "**jwt-signer**: support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.4.3.5": [
+    {
+      "message": "**jwt-signer**: support for consumer group scoping by using pdk `kong.client.authenticate` function",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "3.3.0.0": [
+    {
+      "message": "**JWT Signer**: Added the configuration field `add_claims`, which lets you add extra claims to JWT.",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.2.1.0": [
+    {
+      "message": "**Improved Plugin Documentation**: Revised docs for the following plugins to include examples: \n- [CORS](/plugins/cors/)\n- [File Log](/plugins/file-log/)\n- [HTTP Log](/plugins/http-log/)\n- [JWT Signer](/plugins/jwt-signer/)\n- [Key Auth](/plugins/key-auth/)\n- [OpenID Connect](/plugins/openid-connect/)\n- [Rate Limiting Advanced](/plugins/rate-limiting-advanced/)\n- [SAML](/plugins/saml/)\n- [StatsD](/plugins/statsd/)",
+      "type": "feature",
+      "scope": "Plugin"
+    },
+    {
+      "message": "**Improved Plugin Documentation**: [JWT Signer](/plugins/jwt-signer/)",
+      "type": "feature",
+      "scope": "Plugin"
+    }
+  ],
+  "3.0.0.0": [
+    {
+      "message": "Updated the priority for some plugins.: `jwt-signer` changed from `999` to `1020`.",
+      "type": "breaking_change",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.2.3": [
+    {
+      "message": "**JWT Signer**: Fixed the error `attempt to call local 'err' (a string value)`.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.1.0": [
+    {
+      "message": "**JWT Signer**: Implement the `enable_hs_signatures` option to enable JWTs signed with HMAC algorithms",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ],
+  "2.8.0.0": [
+    {
+      "message": "**JWT Signer**: Fixed an issue where the `enable_hs_signatures` configuration parameter did not work. The plugin now defines expiry earlier to avoid arithmetic on a nil value.",
+      "type": "bugfix",
+      "scope": "Plugin"
+    }
+  ]
+}
