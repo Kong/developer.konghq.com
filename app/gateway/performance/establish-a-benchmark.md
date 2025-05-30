@@ -8,10 +8,10 @@ breadcrumbs:
 
 products:
     - gateway
+    - kic
 
 works_on:
     - on-prem
-    - konnect
 
 tags:
     - performance
