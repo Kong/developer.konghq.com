@@ -21,8 +21,8 @@ description: "Use a custom URL for Dev Portal."
 related_resources:
   - text: Portal customization reference
     url: /dev-portal/portal-customization/
-  - text: Custom pages
-    url: /dev-portal/custom-pages/
+  - text: Pages and content
+    url: /dev-portal/pages-and-content/
   - text: Dev Portal settings
     url: /dev-porta/portal-settings/
 faqs:

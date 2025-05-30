@@ -26,8 +26,8 @@ description: "Learn about the settings you can configure for Dev Portal."
 related_resources:
   - text: Portal customization reference
     url: /dev-portal/portal-customization/
-  - text: Custom pages
-    url: /dev-portal/custom-pages/
+  - text: Pages and content
+    url: /dev-portal/pages-and-content/
   - text: Security settings
     url: /dev-portal/security-settings/
   - text: Custom domains
@@ -68,7 +68,7 @@ Welcome to KongAir | Developer Portal
 
 This description is only displayed in {{site.konnect_short_name}}, and will not be delivered to users browsing the portal.
 
-To change the meta description and tags in pages, see the [pages reference](/dev-portal/custom-pages/).
+To change the meta description and tags in pages, see the [pages reference](/dev-portal/pages-and-content/).
 
 ## Custom Domains
 

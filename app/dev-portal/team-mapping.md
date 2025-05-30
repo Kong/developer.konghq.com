@@ -21,8 +21,8 @@ description: "Map existing developer teams from a third-party identity provider 
 related_resources:
   - text: Portal customization reference
     url: /dev-portal/portal-customization/
-  - text: Portal snippets
-    url: /dev-portal/snippets/
+  - text: Pages and content
+    url: /dev-portal/pages-and-content/
   - text: "Configure SSO for a {{site.konnect_short_name}} org"
     url: /konnect-platform/sso/
 ---

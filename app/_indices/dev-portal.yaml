@@ -24,11 +24,10 @@ sections:
       - path: /how-to/auth0-dcr/
   - title: Customize
     items:
-      - path: /dev-portal/custom-pages/
+      - path: /dev-portal/pages-and-content/
       - path: /dev-portal/custom-domains/
       - path: /dev-portal/customization-settings/
       - path: /dev-portal/portal-customization/
-      - path: /dev-portal/snippets/
   - title: Access and approvals
     items:
       - path: /dev-portal/access-and-approval/
