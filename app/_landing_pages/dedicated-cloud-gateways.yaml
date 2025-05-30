@@ -170,6 +170,16 @@ rows:
       - blocks:
           - type: card
             config:
+              title: VPC Peering
+              description: |
+                Set up an AWS VPC peering connection using the API
+              icon: /assets/icons/service-document.svg
+              cta:
+                text: How to configure VPC peering with AWS
+                url: /dedicated-cloud-gateways/aws-vpc-peering/
+      - blocks:
+          - type: card
+            config:
               title: Custom plugins
               description: |
                 Stream custom plugins from the Control Plane to the Data Plane nodes.
