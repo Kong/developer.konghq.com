@@ -76,7 +76,7 @@ definitions:
       A Route defines rules to match client requests to upstream services. 
       Each Route is associated with a Gateway Service, and a Service may have multiple Routes associated with it.
     url: |
-      [Route entity](/gateway/entites/routes/)
+      [Route entity](/gateway/entities/routes/)
   - term: Gateway Service
     description: |
       Gateway Services represent the upstream services in your system. These applications are the business logic components of your system responsible for responding to requests.
