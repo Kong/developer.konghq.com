@@ -49,7 +49,7 @@ Before you conduct a benchmark test, make sure the testbed is configured correct
 Here are a few general recommendations before you begin the benchmark tests:
 * Use fewer nodes of {{site.base_gateway}} with 4 or 8 Nginx workers with corresponding CPU resource 
 allocations rather than many smaller {{site.base_gateway}} nodes.
-* Run {{site.base_gateway}} in [DB-less](/gateway/topologies/db-less-mode/) or [hybrid mode](/gateway/topologies/hybrid-mode/). 
+* Run {{site.base_gateway}} in [DB-less](/gateway/db-less-mode/) or [hybrid mode](/gateway/hybrid-mode/). 
 In these modes, {{site.base_gateway}}’s proxy nodes aren't connected to a database, which can become another 
 variable that might affect performance.
 
@@ -59,7 +59,7 @@ You can use [{{site.base_gateway}}'s public test suite](https://github.com/Kong/
 
 Once you have implemented the recommendations in the [prerequisites](#prerequisites), you can begin the benchmark test: 
 
-1. Configure a Route with a [Request Termination plugin](/plugins/request-termination/) and measure {{site.base_gateway}}'s performance. 
+1. [Configure a Route](/gateway/entities/route/#set-up-a-route) with a [Request Termination plugin](/plugins/request-termination/) and measure {{site.base_gateway}}'s performance. 
 In this case, {{site.base_gateway}} responds to the request and doesn't send any traffic to the upstream server.
 1. Run this test a few times to spot unexpected bottlenecks. 
 Either {{site.base_gateway}}, the benchmarking client (such as k6 or Apache JMeter), or some other component will likely be an unexpected bottleneck. 

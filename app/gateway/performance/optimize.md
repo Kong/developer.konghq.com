@@ -47,7 +47,7 @@ Maintain a log of changes to help you figure out the next steps when you get stu
 
 Recommendations to improve {{site.base_gateway}} performance.
 
-### Check and increase the ulimit
+## Check and increase the ulimit
 
 **Action:** Increase the `ulimit` if it's less than `16384`. 
 
@@ -65,7 +65,7 @@ If the value of `ulimit` is less than 16384, increase it.
 Also check and set the appropriate `ulimit` in the client and upstream server, since a connection bottleneck 
 in these systems leads to suboptimal performance.
 
-### Increase connection reuse
+## Increase connection reuse
 
 **Action:** Set both [`upstream_keepalive_max_requests`](/gateway/configuration/#upstream-keepalive-max-requests) and 
 [`nginx_http_keepalive_requests`](/gateway/configuration/#nginx-http-keepalive-requests) to `100000`.
@@ -75,7 +75,7 @@ connections or insufficient connections can result in underuse of network bandwi
 
 To increase connection reuse, you can increase `upstream_keepalive_max_requests` and `nginx_http_keepalive_requests` to `100000`, or all the way up to `500000`.
 
-### Avoid autoscaling
+## Avoid autoscaling
 
 **Action:** Ensure that {{site.base_gateway}} is not scaled in/out (horizontal) or up/down (vertical).
 
@@ -88,7 +88,7 @@ Scale {{site.base_gateway}} out before testing the benchmark to avoid autoscalin
 Monitor the number of {{site.base_gateway}} nodes to ensure new nodes are spawned during the benchmark and 
 existing nodes are not replaced.
 
-### Use multiple cores effectively
+## Use multiple cores effectively
 
 **Action:** On most VM setups, set [`nginx_worker_processes`](/gateway/configuration/#nginx-worker-processes) to `auto`. 
 On Kubernetes, set `nginx_worker_processes` to one or two less than the worker node CPUs. 
@@ -106,7 +106,7 @@ For example, if you configure `nginx_worker_processes=4`, you must request 4 CPU
   
   Each additional worker uses additional memory, so you must ensure that {{site.base_gateway}} isn't triggering the Linux Out-of-Memory Killer.
 
-### Resource contention
+## Resource contention
 
 **Action:** Make sure the client (like Apache JMeter or k6), {{site.base_gateway}}, and upstream servers are on different 
 machines (VM or bare metal) and run on the same local network with low latencies.
@@ -118,7 +118,7 @@ Resource contention (usually CPU and network) between these can lead to suboptim
 * Ensure the client, {{site.base_gateway}}, and upstream servers run on the same local network with low latencies.
 If requests between the client and {{site.base_gateway}} or {{site.base_gateway}} and the upstream server traverse the internet, then the results will contain unnecessary noise. 
 
-### Upstream servers maxing out
+## Upstream servers maxing out
 
 **Action:** Verify that the upstream server isn't maxing out.
 
@@ -128,7 +128,7 @@ the upstream server or a system other than {{site.base_gateway}} is likely the b
 
 You must also ensure that upstream servers are not autoscaled.
 
-### Client maxing out
+## Client maxing out
 
 **Action:** The client must use keep-alive connections.
 
@@ -139,11 +139,11 @@ The client must also use keep-alive connections. For example, [k6](https://k6.io
 and the [HTTPClient4](https://hc.apache.org/httpcomponents-client-4.5.x/index.html) implementation in Apache JMeter both enable keep-alive by default. 
 Verify that this is set up appropriately for your test setup.
 
-### Custom plugins
+## Custom plugins
 
 **Action:** Ensure that custom plugins aren't interfering with performance.
 
-**Explanation:** Custom plugins can sometimes cause issues with performance. 
+**Explanation:** [Custom plugins](/custom-plugins/) can sometimes cause issues with performance. 
 First, determine if custom plugins are the source of the performance issues. 
 You can do this by measuring three configuration variations:
 
@@ -155,7 +155,7 @@ If {{site.base_gateway}}’s baseline performance is poor, then it's likely that
 tuning or external factors are affecting it. For external factors, see the other sections in this guide.
 A large difference between the performance in the second and third steps indicates that performance problems could be due to custom plugins.
 
-### Cloud provider performance issues
+## Cloud provider performance issues
 
 **Action:** Ensure you aren't using burstable instances or hitting bandwidth, TCP connection per unit time, or PPS limits. 
 
@@ -167,14 +167,14 @@ For more information, see the [Burstable performance instances](https://docs.aws
 * Ensure you aren't hitting bandwidth limits, TCP connections per unit time limits, or Packet Per Second (PPS) limits. 
 For more information, see the [Amazon EC2 instance network bandwidth](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-network-bandwidth.html) AWS documentation.
 
-### Configuration changes during benchmark tests
+## Configuration changes during benchmark tests
 
 **Action:** Don't change {{site.base_gateway}} configuration during a benchmark test.
 
 **Explanation:** If you change the configuration during a test, {{site.base_gateway}}'s tail latencies can increase sharply. 
 Avoid doing this unless you are measuring {{site.base_gateway}}'s performance under a configuration change.
 
-### Large request and response bodies
+## Large request and response bodies
 
 **Action:** Keep request bodies below 8 KB and response bodies below 32 KB.
 
@@ -184,12 +184,12 @@ A request body of less than 8 KB and a response body of less than 32 KB is consi
 If your request or response bodies are larger, {{site.base_gateway}} will buffer the request and response using the disk, 
 which significantly impacts {{site.base_gateway}}'s performance.
 
-### Bottlenecks in third-party systems
+## Bottlenecks in third-party systems
 
 More often than not, the bottlenecks in {{site.base_gateway}} are caused by bottlenecks in third-party systems used by {{site.base_gateway}}. 
 The following sections explain common third-party bottlenecks and how to fix them.
 
-#### Redis
+### Redis
 
 **Action:** If you use Redis and any plugin is enabled, the CPU can cause a bottleneck. 
 Scale Redis vertically by giving it an additional CPU.
@@ -198,14 +198,14 @@ Scale Redis vertically by giving it an additional CPU.
 The CPU generally creates a bottleneck for Redis, so check CPU usage first.
 If this is the case, scale Redis vertically by giving it an additional CPU.
 
-#### DNS client {% new_in 3.8 %}
+### DNS client {% new_in 3.8 %}
 
 **Action:** Migrate to the new DNS client.
 
 **Explanation:** The new DNS client is designed to be more performant than the old one, so migrating will improve performance.
 For more information, see the [migration docs](/gateway/network/dns-config-reference/#migrate-to-new-dns-client).
 
-#### DNS TTL
+### DNS TTL
 
 **Action:** Increase [`dns_stale_ttl`](/gateway/configuration/#dns-stale-ttl) or [`resolver_stale_ttl`](/gateway/configuration/#resolver-stale-ttl) {% new_in 3.8 %} to `300` or up to `86400`.
 
@@ -216,7 +216,7 @@ You can increase `dns_stale_ttl` or `resolver_stale_ttl`, depending on the {{sit
 
 If DNS servers are the root cause, you will see `coredns` pods creating a bottleneck on the CPU.
 
-### Blocking I/O for access logs
+## Blocking I/O for access logs
 
 **Action:** Disable access logs for high throughput benchmarking tests by setting the `proxy_access_log` 
 configuration parameter to `off`.
@@ -225,7 +225,7 @@ configuration parameter to `off`.
 However, access logs are enabled by default, and if the disk powering a {{site.base_gateway}} node is slow for any reason, it can result in performance loss.
 Disable access logs for high throughput benchmarking tests by setting the `proxy_access_log` configuration parameter to `off`.
 
-### Internal errors in {{site.base_gateway}}
+## Internal errors in {{site.base_gateway}}
 
 **Action:** Make sure that there are no errors in {{site.base_gateway}}’s [error log](/gateway/configuration/#log-level).
 

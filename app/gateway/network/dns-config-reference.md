@@ -147,7 +147,7 @@ Review the `Set-Cookie` information to see when the cookie was set to expire
 and subsequent requests to determine if any other response has issued a
 `Set-Cookie` that deleted it (by setting expiration to a date in the past).
 
-## Migrate to new DNS client {% new_in 3.8 %}
+## Migrate to the new DNS client {% new_in 3.8 %}
 
 The 3.8 DNS client introduces a new standardized way to configure a Gateway Service, and helps improve performance.
 When migrating to the new client, review the following changes and make adjustments as necessary.
@@ -168,11 +168,11 @@ Once you change the SRV format, it will continue to work with the old client, an
 
 #### CNAME
 
-CNAME dereferencing is not needed with the new DNS client. 
+The new DNS client doesn't need CNAME dereferencing. 
 This task is entirely handled by the DNS server, per the industry standard.
 
 {:.info}
-> The new DNS client does not consider the order of record types when querying a domain. 
+> The new DNS client doesn't consider the order of record types when querying a domain. 
 It only queries either IP addresses (A and AAAA records) or SRV records, but not both.
 
 ### Custom directives
