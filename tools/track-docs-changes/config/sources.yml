@@ -1448,9 +1448,8 @@ app/dev-portal/portal-customization.md:
   - app/dev-portal/portals/customization/customization.md
   - app/dev-portal/portals/customization/appearance.md
   - app/dev-portal/portals/customization/portal-editor.md
-app/dev-portal/custom-pages.md:
+app/dev-portal/pages-and-content.md:
   - app/dev-portal/portals/customization/custom-pages.md
-app/dev-portal/snippets.md:
   - app/dev-portal/portals/customization/snippets.md
 app/dev-portal/portal-settings.md:
   - app/dev-portal/portals/settings/general.md

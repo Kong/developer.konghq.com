@@ -61,8 +61,6 @@ related_resources:
     url: https://portaldocs.konghq.com/
   - text: Portal customization reference
     url: /dev-portal/portal-customization/
-  - text: Portal snippets
-    url: /dev-portal/snippets/
   - text: Custom domains
     url: /dev-portal/custom-domains/
 ---
@@ -81,7 +79,7 @@ For example, if the `about` has a child page, `contact`, the URL for the `contac
 
 ### Page visibility and publishing
 
-You can choose to make a page public or private and publish or unpublish it. To control page visiblity and publishing, click a page in the Portal Editor and click the menu at the top right.
+You can choose to make a page public or private and publish or unpublish it. To control page visibility and publishing, click a page in the Portal Editor and click the menu at the top right.
 
 ### Reserved paths
 
