@@ -43,9 +43,7 @@ After making adjustments, perform additional benchmarks.
 Always measure, make some changes, and measure again.
 Maintain a log of changes to help you figure out the next steps when you get stuck or trace back to another approach.
 
-## Optimizations
-
-Recommendations to improve {{site.base_gateway}} performance.
+The following recommendations can help you improve {{site.base_gateway}} performance.
 
 ## Check and increase the ulimit
 

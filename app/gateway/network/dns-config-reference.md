@@ -152,6 +152,9 @@ and subsequent requests to determine if any other response has issued a
 The 3.8 DNS client introduces a new standardized way to configure a Gateway Service, and helps improve performance.
 When migrating to the new client, review the following changes and make adjustments as necessary.
 
+{:.info}
+> While migration isn't necessary and the old DNS client is still supported, we recommend migrating to the new DNS client for better performance and observable statistics via the `/status/dns` API endpoint.
+
 ### Record types
 
 The new DNS client introduces some changes in the support for different record types. 
